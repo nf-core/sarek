@@ -1,2 +1,2 @@
 # CAW
-Cancer Analysis Workflow prototype
+Cancer Analysis Workflow Prototype at SciLifeLab
