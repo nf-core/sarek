@@ -18,8 +18,8 @@ params.out = "$PWD"
   
 
 /*
-validate input
-*/
+ * validate input
+ */
 
 
 genome_file = file(params.genome)
@@ -39,7 +39,10 @@ if( !np2.exists() ) exit 2, "Missing read ${np2}"
 
 
 /*
- *  processes, would be nice to refactor to have same process for tumor normal
+ * processes, would be nice to refactor to have same process for tumor normal
+ *
+ * maybe create a channel that spits out pairs of tumor/normal fastq pairs
+ * but Im not figuring out how to right now, so stick with full 4 files (tumor/normal pair)
  */	
 
 process mapping_tumor_bwa {
@@ -151,15 +154,18 @@ process make_intervals_tumor {
 
 	input:
 	file tumor_md_bam
-
+	file normal_md_bam
+	file genome_file
+	file 1000g_indels
+	file mills_indels
 
 	output:
 	file '*.intervals' into intervals_tumor
-	file genome_file
-	file 1000g_indels
+
+
 
 	"""
-	java -Xmx7g -jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar -T RealignerTargetCreator -I ${tumor_md_bam} -R ${genome_file} -known ${1000g_indels} -known ${mills_indels} -o ${params.sample}.intervals
+	java -Xmx7g -jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar -T RealignerTargetCreator -I ${tumor_md_bam} -I ${normal_md_bam} -R ${genome_file} -known ${1000g_indels} -known ${mills_indels} -o ${params.sample}.intervals
 	"""
 
 }
@@ -167,6 +173,21 @@ process make_intervals_tumor {
 
 
 // realigntarget
+
+/*
+java -jar $GATK_HOME/GenomeAnalysisTK.jar \
+-T RealignerTargetCreator \
+-R $REFERENCE \
+-I $NBAM -I $TBAM \
+-known $KGINDELS \
+-known $MILLS \
+-o $SPAIR".intervals" \
+-nt 16
+if test $? = 0;then
+    echo "RealignerTargetCreator went well!"
+fi
+
+*/
 // realign
 // fixmate
 // recal
