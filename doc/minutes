@@ -1,0 +1,21 @@
+Malin
+- good progress with ASCAT
+- still have to prune the ASCAT-NGS scripts
+- MT is not working for MuTect2
+    messing up coordinates
+    -T NumberOfComputeThreads
+    manually one chromosome per process (10-20hours) 
+
+Pelin
+- catchup from previous meetings: 
+    trello cards burn-down sheet
+    have to take our cards 
+    populating the commands fields
+    Szilva: make it work
+
+- documents on github
+
+- VarDict latest on uppmax for szilva
+
+- Szilva memory issues on MuTect2
+
