@@ -1,21 +1,50 @@
-Malin
-- good progress with ASCAT
-- still have to prune the ASCAT-NGS scripts
-- MT is not working for MuTect2
-    messing up coordinates
-    -T NumberOfComputeThreads
-    manually one chromosome per process (10-20hours) 
+Minutes of the stakeholders' meeting on 29 March 2016
+-----------------------------------------------------
+(Max gave a general overview, Szilva few slides about the tools used, see presentation Max upladed o Google drive)
 
-Pelin
-- catchup from previous meetings: 
-    trello cards burn-down sheet
-    have to take our cards 
-    populating the commands fields
-    Szilva: make it work
+Björn: details about what NBIS/WABI is
 
-- documents on github
+Malin:
+- ASCAT gives us information about ploidity and sample heterogeneity
+- in fact it gives an estimate about ploidity for each chromosome
+- details about resources needed to run MuTect2
 
-- VarDict latest on uppmax for szilva
+Susanne Fransson:
+- neuroblastoma: not in the CNS, tumor or peripherial NS
+- different stages: different genomic profiles of patients
+- MYC copy gain many cases
+- they certainly want to have SV included into the pipeline
+- Why NGS? 
+    - to refine the picture, find things that are not possible with MA only
+- 15 cases/y
+- looking for classification, find actionable SVs as a research project, not for clinical diagnosis
 
-- Szilva memory issues on MuTect2
+Monica Nister, Teresita Díaz De Ståhl:
+- national biobank to get all the solid childhood tumor samples
+- it is still a research topic
+- 200 cases/year
+- no improvement in the last 20 years
+- as before, they are going to build up a set of actionable mutations once there is data analyzed
+- they already have a workflow where NGS is only a brick
+- not only the difference in tumor/normal, but the germline mutations are needed (practically
+    everything, as these can lead to disease, and there is no clear picture yet)
+- there are some samples sequenced already (WES)
+- they are using GATK-BP, also other tools like SNPEff, Provean, SIFT, VarScan
+- for children there are 0-50 somatic mutations (there are 1000s for adults)
 
+Other topic mentioned:
+- annotations should be delivered later
+- benchmarking needed, especially for SV
+    - Tommy Martinsson has a fairly good SV benchmark data, though my understanding was that most of the
+    data they have is microarray
+- MN suggests we should bring in other groups doing cancer research (especially from clinics)
+- actually everybody agrees that we should collaborate more with clinics
+- MN: it would be nice to have methylation and RNA-Seq data also
+- it is not even clear whether NGS is necessary, this is one thing to find out
+
+* Seems all the groups are in a need of general bioinformatics support.
+* Storage space is already an issue (and certainly will be even more important in the future)
+* Although the main goal is not to have a routine clinical cancer NGS workflow next month, the
+general direction is towards something that can be used in hospitals ASAP.
+* We have to have channels for communication (besides email - can/should we use slack?)
+* They are happy with having VCF/BAM files as result by now
