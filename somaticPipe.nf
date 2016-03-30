@@ -10,20 +10,29 @@ params.tpair1 = "data/${params.sample}.tumor_R1.fastq.gz"
 params.npair1 = "data/${params.sample}.normal_R1.fastq.gz"
 params.tpair2 = "data/${params.sample}.tumor_R2.fastq.gz"
 params.npair2 = "data/${params.sample}.normal_R2.fastq.gz"
-params.genome = "/proj/b2011196/nobackup/data/reference/GATK/bundle_2_8/b37/human_g1k_v37.fasta"
+//params.genome = "/proj/b2011196/nobackup/data/reference/GATK/bundle_2_8/b37/human_g1k_v37.fasta"
+params.genome = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta"
 params.genomeidx = "${params.genome}.fai"
 params.out = "$PWD"
-//params.genome = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta"
+params.kgindels = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/1000G_phase1.indels.b37.vcf"
+params.dbsnp = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/dbsnp_138.b37.vcf"
+params.millsindels = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/Mills_and_1000G_gold_standard.indels.b37.vcf"
+
+
 
   
 
 /*
-validate input
-*/
+ * validate input
+ */
 
 
 genome_file = file(params.genome)
 genome_index = file(params.genomeidx)
+kgindels = file(params.kgindels)
+dbsnp = file(params.dbsnp)
+millsindels = file(params.millsindels)
+
 tp1 = file(params.tpair1)
 tp2 = file(params.tpair2)
 np1 = file(params.npair1)
@@ -32,6 +41,9 @@ np2 = file(params.npair2)
 
 if( !genome_file.exists() ) exit 1, "Missing reference: ${genome_file}"
 if( !genome_index.exists() ) exit 1, "Missing index: ${genome_index}"
+if( !kgindels.exists() ) exit 1, "Missing index: ${kgindels}"
+if( !dbsnp.exists() ) exit 1, "Missing index: ${dbsnp}"
+if( !millsindels.exists() ) exit 1, "Missing index: ${millsindels}"
 if( !tp1.exists() ) exit 2, "Missing read ${tp1}"
 if( !tp2.exists() ) exit 2, "Missing read ${tp2}"
 if( !np1.exists() ) exit 2, "Missing read ${np1}"
@@ -39,7 +51,10 @@ if( !np2.exists() ) exit 2, "Missing read ${np2}"
 
 
 /*
- *  processes, would be nice to refactor to have same process for tumor normal
+ * processes, would be nice to refactor to have same process for tumor normal
+ *
+ * maybe create a channel that spits out pairs of tumor/normal fastq pairs
+ * but Im not figuring out how to right now, so stick with full 4 files (tumor/normal pair)
  */	
 
 process mapping_tumor_bwa {
@@ -58,7 +73,7 @@ process mapping_tumor_bwa {
 	file tp2
 
 	output:
-	file '*.bam' into tumor_bam
+	file '*.tumor.bam' into tumor_bam
 
 	"""
 	bwa mem -R "@RG\\tID:${params.sample}.tumor\\tSM:${params.sample}\\tLB:${params.sample}.tumor\\tPL:illumina" -B 3 -t ${task.cpus} -M ${params.genome} ${tp1} ${tp2} | samtools view -bS -t ${genome_index} - | samtools sort - > ${params.sample}.tumor.bam
@@ -81,7 +96,7 @@ process mapping_normal_bwa {
 	file np2
 
 	output:
-	file '*.bam' into normal_bam // can we now use bam in the following?
+	file '*.normal.bam' into normal_bam // can we now use bam in the following?
 
 	"""
 	bwa mem -R "@RG\\tID:${params.sample}.normal\\tSM:${params.sample}\\tLB:${params.sample}.normal\\tPL:illumina" -B 3 -t ${task.cpus} -M ${params.genome} ${np1} ${np2} | samtools view -bS -t ${genome_index} - | samtools sort - > ${params.sample}.normal.bam
@@ -105,7 +120,7 @@ process mark_duplicates_tumor {
 	file tumor_bam
 	
 	output:
-	file '*md.bam' into tumor_md_bam
+	file '*.tumor.md.bam' into tumor_md_bam
 
 
 	"""
@@ -126,7 +141,7 @@ process mark_duplicates_normal {
 	file normal_bam
 	
 	output:
-	file '*md.bam' into normal_md_bam
+	file '*.normal.md.bam' into normal_md_bam
 
 
 	"""
@@ -135,41 +150,64 @@ process mark_duplicates_normal {
 
 }
 
-gatk_bundle  = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37"
-1000g_indels = file("${gatk_bundle}/1000G_phase1.indels.b37.vcf")
-dbsnp        = file("${gatk_bundle}/dbsnp_138.b37.vcf")
-mills_indels = file("${gatk_bundle}/Mills_and_1000G_gold_standard.indels.b37.vcf")
-
 
 
 /*
+ * // realigntarget
  * here we may need to merge tumor/normal???
  */
 
-process make_intervals_tumor {
+process create_intervals {
 
+	// cpus = 16
 
 	input:
 	file tumor_md_bam
-
+	file normal_md_bam
+	file genome_file
+	file genome_idx
+	file kgindels
+	file millsindels
 
 	output:
-	file '*.intervals' into intervals_tumor
-	file genome_file
-	file 1000g_indels
+	file '*.intervals' into intervals
+
+
 
 	"""
-	java -Xmx7g -jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar -T RealignerTargetCreator -I ${tumor_md_bam} -R ${genome_file} -known ${1000g_indels} -known ${mills_indels} -o ${params.sample}.intervals
+	java -Xmx7g -jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar -T RealignerTargetCreator -I ${tumor_md_bam} -I ${normal_md_bam} -R ${genome_file} -known ${kgindels} -known ${millsindels} -o ${params.sample}.intervals
 	"""
 
 }
 
+/*
+ * realign
+ *
+ * here we need to split into tumor/normal again
+ */
+
+process realign {
 
 
-// realigntarget
-// realign
-// fixmate
-// recal
+	input:
+	file tumor_md_bam
+	file normal_md_bam
+	file genome_file
+	file kgindels
+	file millsindels
+	file genome_idx
+	file intervals 
+
+	output:
+	file '*.tumor.real.bam' into real_tumor_bam
+	file '*.normal.real.bam' into real_normal_bam
+
+
+	"""
+	java -Xmx7g -jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar -T IndelRealigner -I ${tumor_md_bam} -I ${normal_md_bam} -R ${genome_file} -targetIntervals ${intervals} -known ${kgindels} -known ${millsindels} -nWayOut '.real.bam'
+	"""
+
+}
 
 
 /*

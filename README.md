@@ -1,6 +1,28 @@
 # CAW
 Cancer Analysis Workflow Prototype at SciLifeLab
 
+## Quick start
+
+Install [nextflow][nextflow] and then run
+
+```
+nextflow somaticPipe.nf
+```
+
+which will run the full workflow on a small test data set (se below).
+
+To run you own sample, override with:
+
+```
+nextflow somaticPipe.nf --sample <SAMPLE>
+```
+
+Note that the workflow assumes that there are input files for <SAMPLE>:
+./data/<SAMPLE>.tumor_R1.fastq.gz
+./data/<SAMPLE>.tumor_R2.fastq.gz
+./data/<SAMPLE>.normal_R1.fastq.gz
+./data/<SAMPLE>.normal_R2.fastq.gz
+
 
 ## Test data
 
@@ -24,3 +46,4 @@ And finally gzipping...
 
 
 [TCGA]: https://cghub.ucsc.edu/datasets/benchmark_download.html
+[nextflow]: http://www.nextflow.io
