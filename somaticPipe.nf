@@ -13,6 +13,7 @@ params.npair2 = "data/${params.sample}.normal_R2.fastq.gz"
 //params.genome = "/proj/b2011196/nobackup/data/reference/GATK/bundle_2_8/b37/human_g1k_v37.fasta"
 params.genome = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta"
 params.genomeidx = "${params.genome}.fai"
+params.genomedict = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.dict"
 params.out = "$PWD"
 params.kgindels = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/1000G_phase1.indels.b37.vcf"
 params.dbsnp = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/dbsnp_138.b37.vcf"
@@ -29,6 +30,7 @@ params.millsindels = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundl
 
 genome_file = file(params.genome)
 genome_index = file(params.genomeidx)
+genome_dict = file(params.genomedict)
 kgindels = file(params.kgindels)
 dbsnp = file(params.dbsnp)
 millsindels = file(params.millsindels)
@@ -40,6 +42,7 @@ np2 = file(params.npair2)
 
 
 if( !genome_file.exists() ) exit 1, "Missing reference: ${genome_file}"
+if( !genome_dict.exists() ) exit 1, "Missing reference: ${genome_dict}"
 if( !genome_index.exists() ) exit 1, "Missing index: ${genome_index}"
 if( !kgindels.exists() ) exit 1, "Missing index: ${kgindels}"
 if( !dbsnp.exists() ) exit 1, "Missing index: ${dbsnp}"
@@ -96,7 +99,7 @@ process mapping_normal_bwa {
 	file np2
 
 	output:
-	file '*.normal.bam' into normal_bam // can we now use bam in the following?
+	file '*.normal.bam' into normal_bam 
 
 	"""
 	bwa mem -R "@RG\\tID:${params.sample}.normal\\tSM:${params.sample}\\tLB:${params.sample}.normal\\tPL:illumina" -B 3 -t ${task.cpus} -M ${params.genome} ${np1} ${np2} | samtools view -bS -t ${genome_index} - | samtools sort - > ${params.sample}.normal.bam
@@ -121,6 +124,7 @@ process mark_duplicates_tumor {
 	
 	output:
 	file '*.tumor.md.bam' into tumor_md_bam
+	file '*.tumor.md.bai' into tumor_md_bai
 
 
 	"""
@@ -142,7 +146,7 @@ process mark_duplicates_normal {
 	
 	output:
 	file '*.normal.md.bam' into normal_md_bam
-
+	file '*.normal.md.bai' into normal_md_bai
 
 	"""
 	java -Xmx7g -jar /sw/apps/bioinfo/picard/1.118/milou/MarkDuplicates.jar INPUT=${normal_bam} METRICS_FILE=${normal_bam}.metrics TMP_DIR=. ASSUME_SORTED=true VALIDATION_STRINGENCY=LENIENT CREATE_INDEX=TRUE OUTPUT=${params.sample}.normal.md.bam	
@@ -150,42 +154,67 @@ process mark_duplicates_normal {
 
 }
 
+process create_intervals {
+	
+	input:
+	file tumor_md_bam
+	file tumor_md_bai
+	file normal_md_bam
+	file normal_md_bai
+	file genome_file
+	file genome_index
+	file genome_dict
+	file kgindels
+	file millsindels
+
+	output:
+//	file 'a_ok' into results	
+	file '*.intervals' into intervals
+	"""
+	ls -l $tumor_md_bam $normal_md_bam $genome_file $genome_index $kgindels $millsindels> a_ok
+ 	java -Xmx7g -jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar -T RealignerTargetCreator -I $tumor_md_bam -I $normal_md_bam -R $genome_file -known $kgindels -known $millsindels -o ${params.sample}.intervals
+	"""
+
+}
 
 
 /*
  * // realigntarget
  * here we may need to merge tumor/normal???
  */
-
+/*
 process create_intervals {
-
-	// cpus = 16
 
 	input:
 	file tumor_md_bam
 	file normal_md_bam
 	file genome_file
-	file genome_idx
+	file genome_index
 	file kgindels
 	file millsindels
 
 	output:
-	file '*.intervals' into intervals
+	file b_ok into intervals
+	//	file '*.intervals' into intervals
+	//file 'intervals' into intervals
 
 
 
 	"""
-	java -Xmx7g -jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar -T RealignerTargetCreator -I ${tumor_md_bam} -I ${normal_md_bam} -R ${genome_file} -known ${kgindels} -known ${millsindels} -o ${params.sample}.intervals
+	ls -l $tumor_md_bam $normal_md_bam $genome_file $genome_index $kgindels $millsindels > b_ok
+	//
+	
 	"""
 
 }
-
+*/
 /*
  * realign
  *
  * here we need to split into tumor/normal again
  */
 
+/*
 process realign {
 
 
@@ -209,7 +238,7 @@ process realign {
 
 }
 
-
+*/
 /*
 
 GATK_HOME:=/sw/apps/bioinfo/GATK/3.3.0
