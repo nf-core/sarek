@@ -10,14 +10,16 @@ params.tpair1 = "data/${params.sample}.tumor_R1.fastq.gz"
 params.npair1 = "data/${params.sample}.normal_R1.fastq.gz"
 params.tpair2 = "data/${params.sample}.tumor_R2.fastq.gz"
 params.npair2 = "data/${params.sample}.normal_R2.fastq.gz"
-//params.genome = "/proj/b2011196/nobackup/data/reference/GATK/bundle_2_8/b37/human_g1k_v37.fasta"
 params.genome = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta"
 params.genomeidx = "${params.genome}.fai"
 params.genomedict = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.dict"
 params.out = "$PWD"
 params.kgindels = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/1000G_phase1.indels.b37.vcf"
+params.kgidx = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/1000G_phase1.indels.b37.vcf.idx"
 params.dbsnp = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/dbsnp_138.b37.vcf"
+params.dbsnpidx = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/dbsnp_138.b37.vcf.idx"
 params.millsindels = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/Mills_and_1000G_gold_standard.indels.b37.vcf"
+params.millsidx = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/Mills_and_1000G_gold_standard.indels.b37.vcf.idx"
 
 
 
@@ -32,8 +34,11 @@ genome_file = file(params.genome)
 genome_index = file(params.genomeidx)
 genome_dict = file(params.genomedict)
 kgindels = file(params.kgindels)
+kgidx = file(params.kgidx)
 dbsnp = file(params.dbsnp)
+dbsnpidx = file(params.dbsnpidx)
 millsindels = file(params.millsindels)
+millsidx = file(params.millsidx)
 
 tp1 = file(params.tpair1)
 tp2 = file(params.tpair2)
@@ -42,11 +47,11 @@ np2 = file(params.npair2)
 
 
 if( !genome_file.exists() ) exit 1, "Missing reference: ${genome_file}"
-if( !genome_dict.exists() ) exit 1, "Missing reference: ${genome_dict}"
+if( !genome_dict.exists() ) exit 1, "Missing index: ${genome_dict}"
 if( !genome_index.exists() ) exit 1, "Missing index: ${genome_index}"
-if( !kgindels.exists() ) exit 1, "Missing index: ${kgindels}"
-if( !dbsnp.exists() ) exit 1, "Missing index: ${dbsnp}"
-if( !millsindels.exists() ) exit 1, "Missing index: ${millsindels}"
+if( !kgindels.exists() ) exit 1, "Missing vcf: ${kgindels}"
+if( !dbsnp.exists() ) exit 1, "Missing vcf: ${dbsnp}"
+if( !millsindels.exists() ) exit 1, "Missing vcf: ${millsindels}"
 if( !tp1.exists() ) exit 2, "Missing read ${tp1}"
 if( !tp2.exists() ) exit 2, "Missing read ${tp2}"
 if( !np1.exists() ) exit 2, "Missing read ${np1}"
@@ -79,7 +84,11 @@ process mapping_tumor_bwa {
 	file '*.tumor.bam' into tumor_bam
 
 	"""
-	bwa mem -R "@RG\\tID:${params.sample}.tumor\\tSM:${params.sample}\\tLB:${params.sample}.tumor\\tPL:illumina" -B 3 -t ${task.cpus} -M ${params.genome} ${tp1} ${tp2} | samtools view -bS -t ${genome_index} - | samtools sort - > ${params.sample}.tumor.bam
+	bwa mem -R "@RG\\tID:${params.sample}.tumor\\tSM:${params.sample}\\tLB:${params.sample}.tumor\\tPL:illumina" \
+	-B 3 -t ${task.cpus} \
+	-M ${params.genome} ${tp1} ${tp2} \
+	| samtools view -bS -t ${genome_index} - \
+	| samtools sort - > ${params.sample}.tumor.bam
 	"""	
 
 }
@@ -102,14 +111,19 @@ process mapping_normal_bwa {
 	file '*.normal.bam' into normal_bam 
 
 	"""
-	bwa mem -R "@RG\\tID:${params.sample}.normal\\tSM:${params.sample}\\tLB:${params.sample}.normal\\tPL:illumina" -B 3 -t ${task.cpus} -M ${params.genome} ${np1} ${np2} | samtools view -bS -t ${genome_index} - | samtools sort - > ${params.sample}.normal.bam
+	bwa mem -R "@RG\\tID:${params.sample}.normal\\tSM:${params.sample}\\tLB:${params.sample}.normal\\tPL:illumina" \
+	-B 3 -t ${task.cpus} \
+	-M ${params.genome} ${np1} ${np2} \
+	| samtools view -bS -t ${genome_index} - \
+	| samtools sort - > ${params.sample}.normal.bam
 	"""	
 
 }
 
-/*
- * mark duplicates
- */
+
+//
+// mark duplicates, tumor/normal
+//
 
 
 
@@ -123,12 +137,19 @@ process mark_duplicates_tumor {
 	file tumor_bam
 	
 	output:
-	file '*.tumor.md.bam' into tumor_md_bam
-	file '*.tumor.md.bai' into tumor_md_bai
+	file '*.tumor.md.bam' into tumor_md_bam_intervals, tumor_md_bam_real
+	file '*.tumor.md.bai' into tumor_md_bai_intervals, tumor_md_bai_real
 
 
 	"""
-	java -Xmx7g -jar /sw/apps/bioinfo/picard/1.118/milou/MarkDuplicates.jar INPUT=${tumor_bam} METRICS_FILE=${tumor_bam}.metrics TMP_DIR=. ASSUME_SORTED=true VALIDATION_STRINGENCY=LENIENT CREATE_INDEX=TRUE OUTPUT=${params.sample}.tumor.md.bam	
+	java -Xmx7g -jar /sw/apps/bioinfo/picard/1.118/milou/MarkDuplicates.jar \
+	INPUT=${tumor_bam} \
+	METRICS_FILE=${tumor_bam}.metrics \
+	TMP_DIR=. \
+	ASSUME_SORTED=true \
+	VALIDATION_STRINGENCY=LENIENT \
+	CREATE_INDEX=TRUE \
+	OUTPUT=${params.sample}.tumor.md.bam	
 	"""
 
 
@@ -145,134 +166,217 @@ process mark_duplicates_normal {
 	file normal_bam
 	
 	output:
-	file '*.normal.md.bam' into normal_md_bam
-	file '*.normal.md.bai' into normal_md_bai
+	file '*.normal.md.bam' into normal_md_bam_intervals, normal_md_bam_real
+	file '*.normal.md.bai' into normal_md_bai_intervals, normal_md_bai_real
 
 	"""
-	java -Xmx7g -jar /sw/apps/bioinfo/picard/1.118/milou/MarkDuplicates.jar INPUT=${normal_bam} METRICS_FILE=${normal_bam}.metrics TMP_DIR=. ASSUME_SORTED=true VALIDATION_STRINGENCY=LENIENT CREATE_INDEX=TRUE OUTPUT=${params.sample}.normal.md.bam	
+	java -Xmx7g -jar /sw/apps/bioinfo/picard/1.118/milou/MarkDuplicates.jar \
+	INPUT=${normal_bam} \
+	METRICS_FILE=${normal_bam}.metrics \
+	TMP_DIR=. \
+	ASSUME_SORTED=true \
+	VALIDATION_STRINGENCY=LENIENT \
+	CREATE_INDEX=TRUE \
+	OUTPUT=${params.sample}.normal.md.bam	
 	"""
 
 }
 
+//
+// create realign intervals, use both tumor+normal as input
+//
+
+
+
 process create_intervals {
+
+
+	cpus 4
 	
 	input:
-	file tumor_md_bam
-	file tumor_md_bai
-	file normal_md_bam
-	file normal_md_bai
-	file genome_file
-	file genome_index
-	file genome_dict
-	file kgindels
-	file millsindels
+	file tumor_md_bam_intervals
+	file tumor_md_bai_intervals
+	file normal_md_bam_intervals
+	file normal_md_bai_intervals
+	file gf from genome_file 
+	file gi from genome_index
+	file gd from genome_dict
+	file ki from kgindels
+	file mi from millsindels
 
 	output:
-//	file 'a_ok' into results	
 	file '*.intervals' into intervals
+
 	"""
-	ls -l $tumor_md_bam $normal_md_bam $genome_file $genome_index $kgindels $millsindels> a_ok
- 	java -Xmx7g -jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar -T RealignerTargetCreator -I $tumor_md_bam -I $normal_md_bam -R $genome_file -known $kgindels -known $millsindels -o ${params.sample}.intervals
-	"""
+	java -Xmx7g -jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
+	-T RealignerTargetCreator \
+	-I $tumor_md_bam_intervals -I $normal_md_bam_intervals \
+	-R $gf \
+	-known $ki \
+	-known $mi \
+	-nt ${task.cpus} \
+	-o ${params.sample}.intervals
+ 	"""	
+
 
 }
 
+//	ls -l $tumor_md_bam $tumor_md_bai $normal_md_bam $normal_md_bai $genome_file $genome_index $genome_dict $kgindels $millsindels > ${params.sample}.intervals
 
-/*
- * // realigntarget
- * here we may need to merge tumor/normal???
- */
-/*
-process create_intervals {
 
-	input:
-	file tumor_md_bam
-	file normal_md_bam
-	file genome_file
-	file genome_index
-	file kgindels
-	file millsindels
-
-	output:
-	file b_ok into intervals
-	//	file '*.intervals' into intervals
-	//file 'intervals' into intervals
+//
+// realign, use nWayOut to split into tumor/normal again
+//
 
 
 
-	"""
-	ls -l $tumor_md_bam $normal_md_bam $genome_file $genome_index $kgindels $millsindels > b_ok
-	//
-	
-	"""
 
-}
-*/
-/*
- * realign
- *
- * here we need to split into tumor/normal again
- */
-
-/*
 process realign {
 
 
 	input:
-	file tumor_md_bam
-	file normal_md_bam
-	file genome_file
-	file kgindels
-	file millsindels
-	file genome_idx
-	file intervals 
+	file tumor_md_bam_real
+	file tumor_md_bai_real
+	file normal_md_bam_real
+	file normal_md_bai_real
+	file gf from genome_file
+	file gi from genome_index
+	file gd from genome_dict
+	file ki from kgindels
+	file mi from millsindels
+	file intervals
 
 	output:
-	file '*.tumor.real.bam' into real_tumor_bam
-	file '*.normal.real.bam' into real_normal_bam
+	file '*.tumor.md.real.bam' into tumor_real_bam_table, tumor_real_bam_recal
+	file '*.tumor.md.real.bai' into tumor_real_bai_table, tumor_real_bai_recal
+	file '*.normal.md.real.bam' into normal_real_bam_table, normal_real_bam_recal
+	file '*.normal.md.real.bai' into normal_real_bai_table, normal_real_bai_recal
 
 
 	"""
-	java -Xmx7g -jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar -T IndelRealigner -I ${tumor_md_bam} -I ${normal_md_bam} -R ${genome_file} -targetIntervals ${intervals} -known ${kgindels} -known ${millsindels} -nWayOut '.real.bam'
+	java -Xmx7g -jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
+	-T IndelRealigner \
+	-I $tumor_md_bam_real \
+	-I $normal_md_bam_real \
+	-R $gf \
+	-targetIntervals $intervals \
+	-known $ki \
+	-known $mi \
+	-nWayOut '.real.bam'
 	"""
 
 }
 
-*/
+
+//
+
+
+
+process create_recal_table_tumor {
+
+	cpus 2
+
+	input:
+	file tumor_real_bam_table
+	file tumor_real_bai_table
+	file genome_file
+	file genome_dict
+	file genome_index
+	file dbsnp
+	file dbsnpidx
+	file kgindels
+	file kgidx
+	file millsindels
+	file millsidx
+
+	output:
+	file '*.tumor.recal.table' into tumor_recal_table
+
+
+	"""
+	java -Xmx7g \
+	-jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
+	-T BaseRecalibrator \
+	-l INFO -R $genome_file \
+	-I $tumor_real_bam_table \
+	-knownSites $dbsnp \
+	-knownSites $kgindels \
+	-knownSites $millsindels \
+	-nct ${task.cpus} \
+	-o ${params.sample}.tumor.recal.table
+	"""
+}
+
+
+process recalibrate_bam_tumor {
+
+
+	
+	input:
+	file tumor_real_bam_recal
+	file tumor_real_bai_recal
+	file genome_file
+	file genome_dict
+	file genome_index
+	file dbsnp
+	file dbsnpidx
+	file kgindels
+	file kgidx
+	file millsindels
+	file millsidx
+	file tumor_recal_table
+
+	output:
+	file '*.tumor.recal.bam' into tumor_recal_bam
+
+	"""
+	java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
+	-jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
+	-R $genome_file \
+	-I $tumor_real_bam_recal \
+	-T PrintReads \
+	--BQSR $tumor_recal_table \
+	-o ${params.sample}.tumor.recal.bam
+	"""
+
+
+}
+
 /*
 
-GATK_HOME:=/sw/apps/bioinfo/GATK/3.3.0
-GATK_BUNDLE:=/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37
-DBSNP:=$(GATK_BUNDLE)/dbsnp_138.b37.vcf
-1000_G_P1_INDELS:=$(GATK_BUNDLE)/1000G_phase1.indels.b37.vcf
-MILLS_1000G_GS_INDELS:=$(GATK_BUNDLE)/Mills_and_1000G_gold_standard.indels.b37.vcf
+process genotype_gvcf_tumor {
 
-.PRECIOUS: %.sorted.md.real.fm.recal.table
+	cpus 2
+	
+	input:
+	file tumor_recal_bam
+	file genome_file
+	file genome_dict
+	file genome_index
+	file dbsnp
+	file dbsnpidx
+	file kgindels
+	file kgidx
+	file millsindels
+	file millsidx	
 
-# realign, first create intervals
-%.intervals : %.bam %.bam.bai
-        java -Xmx$(MEM)g -jar $(GATK_HOME)/GenomeAnalysisTK.jar -T RealignerTargetCreator -I $< -R $(REF_FASTA) -known $(1000_G_P1_INDELS) -known $(MILLS_1000G_GS_INDELS) -o $@.tmp && mv $@.tmp $@
+	output:
+	file '*.tumor.g.vcf.gz' into 'tumor_gvcf'
 
-%.real.bam : %.bam %.intervals %.bam.bai
-        java -Xmx$(MEM)g -Djava.io.tmpdir=$$SNIC_TMP -jar $(GATK_HOME)/GenomeAnalysisTK.jar -T IndelRealigner -I $< -R $(REF_FASTA) -known $(1000_G_P1_INDELS) -known $(MILLS_1000G_GS_INDELS) -targetIntervals $*.intervals -o $@.tmp && mv $@.tmp $@
+	"""
+        java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
+	-jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
+	-R $genome_file \
+	-T HaplotypeCaller \
+	-I $tumor_recal_bam \
+	--emitRefConfidence GVCF \
+	--variant_index_type LINEAR \
+	--dbsnp $dbsnp \
+	--variant_index_parameter 128000 \
+	-nct ${task.cpus} \
+	-o ${params.sample}.tumor.g.vcf.gz
+	"""
 
-
-# recalibrate bases, gatk style:
-# first create recal table:
-%.recal.table : %.bam %.bam.bai
-        java -Xmx$(MEM)g -Djava.io.tmpdir=$$SNIC_TMP -jar $(GATK_HOME)/GenomeAnalysisTK.jar -l INFO -R $(REF_FASTA) -I $< -T BaseRecalibrator -knownSites $(DBSNP) -knownSites $(1000_G_P1_INDELS) -knownSites $(MILLS_1000G_GS_INDELS) -o $@.tmp && mv $@.tmp $@
-
-# then recal bam file:
-%.recal.bam : %.bam %.recal.table %.bam.bai
-        java -Xmx$(MEM)g -Djava.io.tmpdir=$$SNIC_TMP -jar $(GATK_HOME)/GenomeAnalysisTK.jar -R $(REF_FASTA) -I $< -T PrintReads --BQSR $*.recal.table -o $@.tmp && mv $@.tmp $@ && mv $@.tmp.bai $@.bai
-
-
-# make gvcf:
-%.g.vcf : %.bam
-        java -Xmx$(MEM)g -Djava.io.tmpdir=$$SNIC_TMP -jar $(GATK_HOME)/GenomeAnalysisTK.jar -R $(REF_FASTA) -T HaplotypeCaller -I $< --emitRefConfidence GVCF --variant_index_type LINEAR --dbsnp $(DBSNP) --variant_index_parameter 128000 -nct $(THREADS) -o $@.tmp && mv $@.tmp $@ && mv $@.tmp.idx $@.idx
-
-%.g.vcf.gz : %.bam
-        java -Xmx$(MEM)g -Djava.io.tmpdir=$$SNIC_TMP -jar $(GATK_HOME)/GenomeAnalysisTK.jar -R $(REF_FASTA) -T HaplotypeCaller -I $< --emitRefConfidence GVCF --variant_index_type LINEAR --dbsnp $(DBSNP) --variant_index_parameter 128000 -nct $(THREADS) -o $@.tmp.gz && mv $@.tmp.gz $@ && mv $@.tmp.tbi $@.tbi
-
-
+}
 */
+
