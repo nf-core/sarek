@@ -268,7 +268,7 @@ process realign {
 }
 
 
-//
+
 
 
 
@@ -328,6 +328,7 @@ process recalibrate_bam_tumor {
 
 	output:
 	file '*.tumor.recal.bam' into tumor_recal_bam
+	file '*.tumor.recal.bai' into tumor_recal_bai
 
 	"""
 	java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
@@ -342,7 +343,6 @@ process recalibrate_bam_tumor {
 
 }
 
-/*
 
 process genotype_gvcf_tumor {
 
@@ -350,6 +350,7 @@ process genotype_gvcf_tumor {
 	
 	input:
 	file tumor_recal_bam
+	file tumor_recal_bai
 	file genome_file
 	file genome_dict
 	file genome_index
@@ -364,7 +365,7 @@ process genotype_gvcf_tumor {
 	file '*.tumor.g.vcf.gz' into 'tumor_gvcf'
 
 	"""
-        java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
+        java -Xmx7g \
 	-jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
 	-R $genome_file \
 	-T HaplotypeCaller \
@@ -378,5 +379,115 @@ process genotype_gvcf_tumor {
 	"""
 
 }
-*/
+
+
+
+process create_recal_table_normal {
+
+	cpus 2
+
+	input:
+	file normal_real_bam_table
+	file normal_real_bai_table
+	file genome_file
+	file genome_dict
+	file genome_index
+	file dbsnp
+	file dbsnpidx
+	file kgindels
+	file kgidx
+	file millsindels
+	file millsidx
+
+	output:
+	file '*.normal.recal.table' into normal_recal_table
+
+
+	"""
+	java -Xmx7g \
+	-jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
+	-T BaseRecalibrator \
+	-l INFO -R $genome_file \
+	-I $normal_real_bam_table \
+	-knownSites $dbsnp \
+	-knownSites $kgindels \
+	-knownSites $millsindels \
+	-nct ${task.cpus} \
+	-o ${params.sample}.normal.recal.table
+	"""
+}
+
+
+process recalibrate_bam_normal {
+
+
+	
+	input:
+	file normal_real_bam_recal
+	file normal_real_bai_recal
+	file genome_file
+	file genome_dict
+	file genome_index
+	file dbsnp
+	file dbsnpidx
+	file kgindels
+	file kgidx
+	file millsindels
+	file millsidx
+	file normal_recal_table
+
+	output:
+	file '*.normal.recal.bam' into normal_recal_bam
+	file '*.normal.recal.bai' into normal_recal_bai
+
+	"""
+	java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
+	-jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
+	-R $genome_file \
+	-I $normal_real_bam_recal \
+	-T PrintReads \
+	--BQSR $normal_recal_table \
+	-o ${params.sample}.normal.recal.bam
+	"""
+
+
+}
+
+
+process genotype_gvcf_normal {
+
+	cpus 2
+	
+	input:
+	file normal_recal_bam
+	file normal_recal_bai
+	file genome_file
+	file genome_dict
+	file genome_index
+	file dbsnp
+	file dbsnpidx
+	file kgindels
+	file kgidx
+	file millsindels
+	file millsidx	
+
+	output:
+	file '*.normal.g.vcf.gz' into 'normal_gvcf'
+
+	"""
+        java -Xmx7g \
+	-jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
+	-R $genome_file \
+	-T HaplotypeCaller \
+	-I $normal_recal_bam \
+	--emitRefConfidence GVCF \
+	--variant_index_type LINEAR \
+	--dbsnp $dbsnp \
+	--variant_index_parameter 128000 \
+	-nct ${task.cpus} \
+	-o ${params.sample}.normal.g.vcf.gz
+	"""
+
+}
+
 
