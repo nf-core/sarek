@@ -1,3 +1,31 @@
+05 April 2016
+-------------
+Szilva:
+    - Experimenting with VarDictJava: it is a bit tricky to start, but not that bad. There are issues with 
+      postfiltering (using differnet sort of R scritps) and the VCF format.  
+    - Pelin suggested to check the BCBIO script that makes VCF from its output - it is there, though is a rather 
+      obfuscated Perl stuff
+    - Please have a look at https://www.zenhub.io/ - it is a Trello-like stuff for github, maybe we can avoid double
+      bookkeeping using this.
+
+Pelin:
+    - if I followed correctly (please clear up if not) had a asked Jesper about the involvement, and we should find 
+      out whether the newly recruited people from KI and/or GU are willing to go into this and write the corresponding parts
+
+Pall:
+    - had problems with NF when joining two flows. Seems most of the struggle is over, now we can have joined flows
+    - have to have a refined workflow chart with clear inputs and outputs to continue
+
+Malin:
+    - trying to get ASCAT running on a real sample on Milou and it will take some more days before having results to show you.
+
+
+Malin and Pall will be on a retreat for the rest of the week, we have agreed to postpone the hardware meeting to next week.
+There was no meeting regarding the Genomics England guy in Uppsala; hoping they will make it eventually. Until that we
+have to live with their http://www.opencb.org/ page that has rather little information about hardware considerations.
+
+
+
 Minutes of the stakeholders' meeting on 29 March 2016
 -----------------------------------------------------
 (Max gave a general overview, Szilva few slides about the tools used, see presentation Max upladed o Google drive)
