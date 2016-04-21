@@ -1,3 +1,29 @@
+21 April 2016
+-------------
+For the hackathon we need:
+ * decide what SV caller to use: SJ will talk to Pelin before lunch, but
+ probably Jesper is the best ask: running on a large number of samples is
+ different than on few benchmark cases, but hopefully we can use Jesper's
+ variation database even if we are going to use a different tool
+
+ * Teresita has some experience with Delly2 already, she will be at our
+ hackathon on Tuesday/Wednesday next week
+
+ * Final workflow to be decided on Tuesday
+ * Have to ask Oslo about the access of ICGC 40x data (SJ)
+
+ * Pall has concerns about the system we are going to use: in theory the final
+ system will be irma, but we have to write the flow in a way that can be
+ integrated into frameworks other than the NGI pipeline
+ ** we [c|sh]ould use amanita and picea
+ * NGI pipeline/hello engine/analysis db: Szilva has some progress, it is not
+ straightforward to plug in any engine, but solvable. The analysisdb should
+ be added and discussed with Phil/Denis/Joel some time.
+ * Teresita has better experiences with MuTect2 (it is indeed slow, but results
+ are fine)
+ * Maxime already managed to run the code written by Pall, he is waiting for a
+ decent laptop and an UPPMAX account
+
 19 April 2016
 -------------
 Max: organized a meeting to Valtteri - Tue 10:00 Gamma
