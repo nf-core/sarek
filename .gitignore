@@ -1,1 +1,4 @@
 data/chr17_testdata
+work/
+.nextflow*
+trace*

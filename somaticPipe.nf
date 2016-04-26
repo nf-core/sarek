@@ -121,9 +121,9 @@ process mapping_normal_bwa {
 }
 
 
-//
-// mark duplicates, tumor/normal
-//
+/*
+ *  mark duplicates, tumor/normal
+ */
 
 
 
@@ -182,9 +182,9 @@ process mark_duplicates_normal {
 
 }
 
-//
-// create realign intervals, use both tumor+normal as input
-//
+/*
+ * create realign intervals, use both tumor+normal as input
+ */
 
 
 
@@ -221,12 +221,10 @@ process create_intervals {
 
 }
 
-//	ls -l $tumor_md_bam $tumor_md_bai $normal_md_bam $normal_md_bai $genome_file $genome_index $genome_dict $kgindels $millsindels > ${params.sample}.intervals
 
-
-//
-// realign, use nWayOut to split into tumor/normal again
-//
+/*
+ * realign, use nWayOut to split into tumor/normal again
+ */
 
 
 
