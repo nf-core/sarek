@@ -52,10 +52,10 @@ if( !genome_index.exists() ) exit 1, "Missing index: ${genome_index}"
 if( !kgindels.exists() ) exit 1, "Missing vcf: ${kgindels}"
 if( !dbsnp.exists() ) exit 1, "Missing vcf: ${dbsnp}"
 if( !millsindels.exists() ) exit 1, "Missing vcf: ${millsindels}"
-if( !tp1.exists() ) exit 2, "Missing read ${tp1}"
-if( !tp2.exists() ) exit 2, "Missing read ${tp2}"
-if( !np1.exists() ) exit 2, "Missing read ${np1}"
-if( !np2.exists() ) exit 2, "Missing read ${np2}"
+//if( !tp1.exists() ) exit 2, "Missing read ${tp1}"
+//if( !tp2.exists() ) exit 2, "Missing read ${tp2}"
+//if( !np1.exists() ) exit 2, "Missing read ${np1}"
+//if( !np2.exists() ) exit 2, "Missing read ${np2}"
 
 
 // Pattern to grab all fastq pairs:
@@ -94,6 +94,8 @@ process mapping_bwa {
 
 	cpus 1
 
+
+
 	input:
 	file genome_file
 	set val(name), file(reads:'*') from read
@@ -101,8 +103,15 @@ process mapping_bwa {
 	output:
 	file "${name}.bam" into mapped_bam
 
+	script:
+	lanePattern = ~/_L00[1-8]/
+	id = (name - lanePattern)
+
+
 	"""
+	mkdir -p ../../../${id}
        	bwa mem -R "@RG\\tID:${params.sample}\\tSM:${params.sample}\\tLB:${params.sample}\\tPL:illumina" -B 3 -t ${task.cpus} -M ${params.genome} ${reads} | samtools view -bS -t ${genome_index} - | samtools sort - > ${name}.bam
+	ln -s ${name}.bam ../../../${id}
 	"""	
 //	mkdir -f bam_${name}
 }
