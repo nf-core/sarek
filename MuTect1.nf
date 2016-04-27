@@ -41,9 +41,7 @@ dbsnpidx = file(params.dbsnpidx)
 process MuTect1 {
     module 'bioinfo-tools'
     module 'mutect'
-
-    println $MUTECT_HOME
-
+    println "$MUTECT_HOME"
 
     cpus 2
 
@@ -57,9 +55,12 @@ process MuTect1 {
     file normal_bai
 
     output:
-    file '*.VarDict.vcf' into vardict_vc_call
+    file '*.mutect1.vcf' into mutect1_vcf
+    file '*.mutect1.out' into mutect1_out
+
 
     """
-    VarDict -G ${params.genome} -f 0.01 -N TSN -b "${normal_bam}|${tumor_bam}" -z 1 -F 0x500  -c 1 -S 2 -E 3 -g 4 -R chr17:1000000-1100000 | testsomatic.R | var2vcf_somatic.pl > test.VarDict.vcf
+        java -jar $MUTECT_HOME/muTect-1.1.5.jar --analysis_type MuTect --reference_sequence ${params.genome} --cosmic ${params.cosmic} --dbsnp ${params.dbsnp} --input_file:normal "${normal_bam}" --input_file:tumor "${tumor_bam}" --out test.mutect1.out --vcf test.mutect1.vcf
+
     """
 }
