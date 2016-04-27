@@ -26,15 +26,26 @@ if(!normal_bai.exists()) exit 1, "Missing normal file index ${normal_bai}"
  
 params.genome = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta"
 params.genomeidx = "${params.genome}.fai"
+params.cosmic = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/b37_cosmic_v54_120711.vcf"
+params.cosmicidx = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/b37_cosmic_v54_120711.vcf.idx"
+params.dbsnp = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/dbsnp_138.b37.vcf"
+params.dbsnpidx = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/dbsnp_138.b37.vcf.idx"
 
 genome_file = file(params.genome)
 genome_index = file(params.genomeidx)
+cosmic = file(params.cosmic)
+cosmicidx = file(params.cosmicidx)
+dbsnp = file(params.dbsnp)
+dbsnpidx = file(params.dbsnpidx)
 
-process vardictjava_VC {
+process MuTect1 {
     module 'bioinfo-tools'
-    module 'VarDictJava/1.4.5'
+    module 'mutect'
 
-    cpus 1
+    println $MUTECT_HOME
+
+
+    cpus 2
 
     input:
     file genome_file
