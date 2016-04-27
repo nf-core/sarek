@@ -1,6 +1,8 @@
 #!/usr/bin/env nextflow
 /*
  *      Sample run data for VarDictJava
+ * use like (on milou):
+ * ./nextflow run VarDictJava.nf --tumor_bam ~/dev/chr17_testdata/HCC1143.tumor.bam --normal_bam ~/dev/chr17_testdata/HCC1143.normal.bam
  */
 
 //
