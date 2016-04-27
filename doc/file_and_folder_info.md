@@ -13,8 +13,7 @@ Sample = "Normal", "Tumor 1", "Tumor 2" etc corresponding to all physical sample
 
 The file structure for one ID is shown below. 
 
-
-![folder_structure.jpg]
+![Project folder structure](folder_structure.jpg "Folder structure")
 
 
 ## Input Fastq file name conventions
