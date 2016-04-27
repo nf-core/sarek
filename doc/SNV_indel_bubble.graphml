@@ -218,7 +218,7 @@ Indicate caller in "info" field. <y:LabelModel>
               <y:Geometry height="84.1875" width="413.625" x="607.0875" y="452.8318710805596"/>
               <y:Fill color="#E8EEF7" color2="#B7C9E3" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="258.806640625" x="77.4091796875" y="33.02734375">Normal_Tumor.somatic.snvs_and_indels.vcf<y:LabelModel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="226.94921875" x="93.337890625" y="33.02734375">Normal_Tumor.all.snvs_and_indels.vcf<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>
@@ -234,7 +234,7 @@ Indicate caller in "info" field. <y:LabelModel>
               <y:Geometry height="84.1875" width="413.625" x="215.1875" y="668.4256210805596"/>
               <y:Fill color="#E8EEF7" color2="#B7C9E3" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="226.94921875" x="93.337890625" y="33.02734375">Normal_Tumor.all.snvs_and_indels.vcf<y:LabelModel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="258.806640625" x="77.4091796875" y="33.02734375">Normal_Tumor.somatic.snvs_and_indels.vcf<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>
