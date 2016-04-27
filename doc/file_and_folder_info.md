@@ -22,19 +22,19 @@ The file structure for one ID is shown below.
 The input fastq files for one ID (Individual) should be organized into one subfolder for every sample, where all fastq files for that sample should be collected.
 
 ID  
-    sample1
-        sample1_lib_flowcell-index_lane_R1_1000.fastq.gz  
-        sample1_lib_flowcell-index_lane_R2_1000.fastq.gz  
-        sample1_lib_flowcell-index_lane_R1_1000.fastq.gz  
-        sample1_lib_flowcell-index_lane_R2_1000.fastq.gz  
-    sample2  
-        sample2_lib_flowcell-index_lane_R1_1000.fastq.gz  
-        sample2_lib_flowcell-index_lane_R2_1000.fastq.gz  
-    sample3  
-        sample3_lib_flowcell-index_lane_R1_1000.fastq.gz  
-        sample3_lib_flowcell-index_lane_R2_1000.fastq.gz  
-        sample3_lib_flowcell-index_lane_R1_1000.fastq.gz  
-        sample3_lib_flowcell-index_lane_R2_1000.fastq.gz  
++--sample1  
++------sample1_lib_flowcell-index_lane_R1_1000.fastq.gz  
++------sample1_lib_flowcell-index_lane_R2_1000.fastq.gz  
++------sample1_lib_flowcell-index_lane_R1_1000.fastq.gz  
++------sample1_lib_flowcell-index_lane_R2_1000.fastq.gz  
++--sample2  
++------sample2_lib_flowcell-index_lane_R1_1000.fastq.gz  
++------sample2_lib_flowcell-index_lane_R2_1000.fastq.gz  
++--sample3  
++------sample3_lib_flowcell-index_lane_R1_1000.fastq.gz  
++------sample3_lib_flowcell-index_lane_R2_1000.fastq.gz  
++------sample3_lib_flowcell-index_lane_R1_1000.fastq.gz  
++------sample3_lib_flowcell-index_lane_R2_1000.fastq.gz  
 
 
 
