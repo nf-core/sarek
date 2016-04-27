@@ -5,20 +5,17 @@ Cancer Analysis Workflow Prototype at SciLifeLab
 
 The workflow is started for a set of samples taken from the same person (i.e. a cancer patient), identified by "ID".
 
-ID = Individual
+ID = Individual  
+Sample = "Normal", "Tumor 1", "Tumor 2" etc corresponding to all physical samples  
 
-Every sample taken from the same ID has a unique identifier. So for one ID there are several Samples
-
-Sample = "Normal", "Tumor 1", "Tumor 2" etc corresponding to all physical samples
-
-The file structure for one ID is shown below. 
+Below is an overview of the intended folder structure for an analyzed project. 
 
 ![Project folder structure](folder_structure.jpg "Folder structure")
 
 
 ## Input Fastq file name conventions
 
-The input fastq files for one ID (Individual) should be organized into one subfolder for every sample, where all fastq files for that sample should be collected.
+The input folder, containing the fastq files for one ID (Individual) should be organized into one subfolder for every sample. All fastq files for that sample should be collected here.
 
 ID  
 +--sample1  
