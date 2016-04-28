@@ -46,7 +46,7 @@ flowcell = identifyer of flow cell for the sequencing run
 lane = identifier of the lane of the sequencing run  
   
 Read group information will be parsed from fastq file names according to this:  
-RGID = “sample_lib_flowcell-index_lane"  
+RGID = “sample_lib_flowcell_index_lane"  
 RGPL = “Illumina"  
 PU = sample  
 RGLB = lib  
