@@ -40,7 +40,7 @@ process manta{
     module 'bioinfo-tools'
     module 'manta'
 
-    cpus 1
+    cpus 8
 
     input:
     file genome_file
@@ -60,7 +60,7 @@ process manta{
 
     """
     configManta.py --normalBam ${params.normal_bam} --tumorBam ${params.tumor_bam} --reference ${params.genome} --runDir ${params.sample}_manta_dir
-    python ${params.sample}_manta_dir/runWorkflow.py -m local -j 1
+    python ${params.sample}_manta_dir/runWorkflow.py -m local -j 8
     gunzip -c ${params.sample}_manta_dir/results/variants/somaticSV.vcf.gz > ${params.sample}.somaticSV.vcf
     gunzip -c ${params.sample}_manta_dir/results/variants/candidateSV.vcf.gz > ${params.sample}.candidateSV.vcf
     gunzip -c ${params.sample}_manta_dir/results/variants/diploidSV.vcf.gz > ${params.sample}.diploidSV.vcf
