@@ -1,4 +1,5 @@
 # Notes
 
-## TODO MAX :
-Write Nextflow to run all MuTect1, VarDictJava and FreeBayes
+## TODO MAXIME
+make a script from the beginning (fastq) till the vcf
+(use the somaticPipe.nf without haplotypecaller)
