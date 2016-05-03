@@ -43,8 +43,8 @@ process MuTect1 {
 	"""
 	nextflow run $baseDir/MuTect1.nf \
 	-w ~/dev/CAW/work \
-	--tumor_bam params.tumor_bam \
-	--normal_bam params.normal_bam \
+	--tumor_bam ${params.tumor_bam} \
+	--normal_bam ${params.normal_bam} \
 	--genome ${params.genome} \
 	--genomeidx ${params.genomeidx} \
 	--cosmic ${params.cosmic} \
