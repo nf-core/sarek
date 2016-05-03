@@ -1,14 +1,13 @@
 #!/usr/bin/env nextflow
 
 /*
- * Sample run data for MuTect1
+ * Sample run data for Variant Calling
  * use like (on milou):
- * ./nextflow run MuTect1.nf --tumor_bam ~/dev/chr17_testdata/HCC1143.tumor.bam --normal_bam ~/dev/chr17_testdata/HCC1143.normal.bam
+ * ./nextflow run variantCalling.nf --tumor_bam ~/dev/chr17_testdata/HCC1143.tumor.bam --normal_bam ~/dev/chr17_testdata/HCC1143.normal.bam
  */
 
-//
 // First checking the existence of the BAM file and its index for the tumor
-params.tumor_bam = "tumor.bam" // override with --tumor_bam <SAMPLE>
+params.tumor_bam = "tumor.bam"
 tumor_bam = file(params.tumor_bam)
 if(!tumor_bam.exists()) exit 1, "Missing tumor file ${tumor_bam}; please specify --tumor_bam <SAMPLE> --normal_bam <SAMPLE> " 
 // the index
@@ -17,7 +16,7 @@ tumor_bai = file(params.tumor_bai)
 if(!tumor_bai.exists()) exit 1, "Missing tumor file index ${tumor_bai}" 
 
 // Ditto for the normal
-params.normal_bam = "normal.bam" // override with --normal_bam <SAMPLE>
+params.normal_bam = "normal.bam"
 normal_bam = file(params.normal_bam)
 if(!normal_bam.exists()) exit 1, "Missing normal file ${normal_bam}; please specify --tumor_bam <SAMPLE> --normal_bam <SAMPLE>"  
 // the normal index
@@ -41,33 +40,35 @@ dbsnp			= file(params.dbsnp)
 dbsnpidx		= file(params.dbsnpidx)
 
 process MuTect1 {
-
-    cpus 2
-
-    input:
-    file genome_file
-    file genome_index
-    
-    file tumor_bam
-    file tumor_bai
-    file normal_bam
-    file normal_bai
-
-    output:
-    file '*.mutect1.vcf' into mutect1_vcf
-    file '*.mutect1.out' into mutect1_out
-
-
-    """
-    java -jar ${params.mutect1_home}/muTect-1.1.5.jar \
-    --analysis_type MuTect \
-    --reference_sequence ${params.genome} \
-    --cosmic ${params.cosmic} \
-    --dbsnp ${params.dbsnp} \
-    --input_file:normal ${normal_bam} \
-    --input_file:tumor ${tumor_bam} \
-    --out test.mutect1.out \
-    --vcf test.mutect1.vcf \
-    -L 17:1000000-2000000
-    """
+	"""
+	nextflow run $baseDir/MuTect1.nf \
+	-w ~/dev/CAW/work \
+	--tumor_bam ${params.tumor_bam} \
+	--normal_bam ${params.normal_bam} \
+	--genome ${params.genome} \
+	--genomeidx ${params.genomeidx} \
+	--cosmic ${params.cosmic} \
+	--cosmicidx ${params.cosmicidx} \
+	--dbsnp ${params.dbsnp} \
+	--dbsnpidx ${params.dbsnpidx} \
+	--mutect1_home ${params.mutect1_home}
+	"""
 }
+
+// process FreeBayes {
+// 	"""
+// 	nextflow run $baseDir/FreeBayes.nf \
+// 	-w ~/workspace/nextflow/work \
+// 	--tumor_bam params.tumor_bam
+// 	--normal_bam params.normal_bam
+// 	"""
+// }
+
+// process VarDictJava {
+// 	"""
+// 	nextflow run $baseDir/VarDictJava.nf \
+// 	-w ~/workspace/nextflow/work \
+// 	--tumor_bam params.tumor_bam
+// 	--normal_bam params.normal_bam
+// 	"""
+// }
