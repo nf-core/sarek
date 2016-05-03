@@ -6,6 +6,8 @@
  * ./nextflow run variantCalling.nf --tumor_bam ~/dev/chr17_testdata/HCC1143.tumor.bam --normal_bam ~/dev/chr17_testdata/HCC1143.normal.bam
  */
 
+version="0.0.1"
+
 // First checking the existence of the BAM file and its index for the tumor
 params.tumor_bam = "tumor.bam"
 tumor_bam = file(params.tumor_bam)
@@ -13,7 +15,7 @@ if(!tumor_bam.exists()) exit 1, "Missing tumor file ${tumor_bam}; please specify
 // the index
 params.tumor_bai = params.tumor_bam.replaceFirst(/.bam/,".bam.bai")
 tumor_bai = file(params.tumor_bai)
-if(!tumor_bai.exists()) exit 1, "Missing tumor file index ${tumor_bai}" 
+if(!tumor_bai.exists()) exit 1, "Missing tumor file index ${tumor_bai}; please run samtools index ${normal_bam}" 
 
 // Ditto for the normal
 params.normal_bam = "normal.bam"
@@ -22,7 +24,7 @@ if(!normal_bam.exists()) exit 1, "Missing normal file ${normal_bam}; please spec
 // the normal index
 params.normal_bai = params.normal_bam.replaceFirst(/.bam/,".bam.bai")
 normal_bai = file(params.normal_bai)
-if(!normal_bai.exists()) exit 1, "Missing normal file index ${normal_bai}"
+if(!normal_bai.exists()) exit 1, "Missing normal file index ${normal_bai}; please run samtools index ${normal_bam}"
  
 params.genome		= "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta"
 params.genomeidx	= "${params.genome}.fai"
@@ -72,3 +74,17 @@ process MuTect1 {
 // 	--normal_bam params.normal_bam
 // 	"""
 // }
+
+workflow.onComplete {
+	text = Channel.from(
+		"CANCER ANALYSIS WORKFLOW",
+		"Version     : $version",
+		"Command line: ${workflow.commandLine}",
+		"Completed at: ${workflow.complete}",
+		"Duration    : ${workflow.duration}",
+		"Success     : ${workflow.success}",
+		"workDir     : ${workflow.workDir}",
+		"Exit status : ${workflow.exitStatus}",
+		"Error report: ${workflow.errorReport ?: '-'}")
+	text.subscribe { log.info "$it" }
+}
