@@ -5,11 +5,6 @@
  * and read pairs by using the command line options
  */
 
-params.sample = "tcga.cl" // override with --sample <SAMPLE>
-params.tpair1 = "data/${params.sample}.tumor_R1.fastq.gz"
-params.npair1 = "data/${params.sample}.normal_R1.fastq.gz"
-params.tpair2 = "data/${params.sample}.tumor_R2.fastq.gz"
-params.npair2 = "data/${params.sample}.normal_R2.fastq.gz"
 params.genome = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta"
 params.genomeidx = "${params.genome}.fai"
 params.genomedict = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.dict"
@@ -20,13 +15,15 @@ params.dbsnp = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/
 params.dbsnpidx = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/dbsnp_138.b37.vcf.idx"
 params.millsindels = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/Mills_and_1000G_gold_standard.indels.b37.vcf"
 params.millsidx = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/Mills_and_1000G_gold_standard.indels.b37.vcf.idx"
+params.sample = "sample.config.tsv" // override on cl
 
+if (!params.sample) {
+  exit 1, "Please specify the sample config file"
+}
 
-
-  
 
 /*
- * validate input
+ * validate input and params
  */
 
 
@@ -39,11 +36,7 @@ dbsnp = file(params.dbsnp)
 dbsnpidx = file(params.dbsnpidx)
 millsindels = file(params.millsindels)
 millsidx = file(params.millsidx)
-
-tp1 = file(params.tpair1)
-tp2 = file(params.tpair2)
-np1 = file(params.npair1)
-np2 = file(params.npair2)
+sconfig = file(params.sample)
 
 
 if( !genome_file.exists() ) exit 1, "Missing reference: ${genome_file}"
@@ -52,38 +45,33 @@ if( !genome_index.exists() ) exit 1, "Missing index: ${genome_index}"
 if( !kgindels.exists() ) exit 1, "Missing vcf: ${kgindels}"
 if( !dbsnp.exists() ) exit 1, "Missing vcf: ${dbsnp}"
 if( !millsindels.exists() ) exit 1, "Missing vcf: ${millsindels}"
-//if( !tp1.exists() ) exit 2, "Missing read ${tp1}"
-//if( !tp2.exists() ) exit 2, "Missing read ${tp2}"
-//if( !np1.exists() ) exit 2, "Missing read ${np1}"
-//if( !np2.exists() ) exit 2, "Missing read ${np2}"
 
-
-// Pattern to grab all fastq pairs:
-params.r = "data/*_R[12].fastq.gz"
 
 /*
- * processes, would be nice to refactor to have same process for tumor normal
+ * Read config file, lets presume its "subject sample fastq1 fastq2"
+ * for now and channel this out for mapping
  *
- * maybe create a channel that spits out pairs of tumor/normal fastq pairs
- * but Im not figuring out how to right now, so stick with full 4 files (tumor/normal pair)
+ */
+
+
+fastqs = Channel
+.from(sconfig.readLines())
+.map { line ->
+  list = line.split()
+  mergeId = list[0]
+  id = list[1]
+  idRun = list[2]
+  fq1path = file(list[3])
+  fq2path = file(list[4])
+  [ mergeId, id, idRun, fq1path, fq2path ]
+}
+
+
+/*
+ * processes
+ *
  */	
 
-
-
-
-
-Channel
-    .fromPath( params.r )
-    .ifEmpty { error "Cannot find any reads matching: ${params.r}" }
-    .map { path -> 
-       def prefix = readPrefix(path, params.r)
-       tuple(prefix, path) 
-    }
-    .groupTuple(sort: true)
-    .set { read } 
-
-
-// read .subscribe {println it}
 
 process mapping_bwa {
 
@@ -91,29 +79,31 @@ process mapping_bwa {
 	module 'bwa'
 	module 'samtools/1.3'
 
-
 	cpus 1
-
-
 
 	input:
 	file genome_file
-	set val(name), file(reads:'*') from read
+	set mergeId, id, idRun, file(fq1), file(fq2) from fastqs
 
 	output:
-	file "${name}.bam" into mapped_bam
+//	file "${name}.bam" into mapped_bam
+	set mergeId, id, idRun, file("${idRun}.bam") into bams
+
+//	script:
+//	lanePattern = ~/_L00[1-8]/
+//	id = (name - lanePattern)
+
+
+
+// here I use params.genome for bwa ref so I dont have to link to all bwa index files
 
 	script:
-	lanePattern = ~/_L00[1-8]/
-	id = (name - lanePattern)
-
+	rgString="\"@RG\\tID:${idRun}\\tSM:${mergeId}\\tLB:${id}\\tPL:illumina\""
 
 	"""
-	mkdir -p ../../../${id}
-       	bwa mem -R "@RG\\tID:${params.sample}\\tSM:${params.sample}\\tLB:${params.sample}\\tPL:illumina" -B 3 -t ${task.cpus} -M ${params.genome} ${reads} | samtools view -bS -t ${genome_index} - | samtools sort - > ${name}.bam
-	ln -s ${name}.bam ../../../${id}
-	"""	
-//	mkdir -f bam_${name}
+	bwa mem -R ${rgString} -B 3 -t ${task.cpus} -M ${params.genome} ${fq1} ${fq2} | samtools view -bS -t ${genome_index} - | samtools sort - > ${idRun}.bam
+	"""
+
 }
 
 
@@ -603,3 +593,51 @@ process mapping_normal_bwa {
 
 }
 
+
+/* unused crap:
+
+
+if (!params.index) {
+  exit 1, "Please specify the input table file"
+
+//params.sample = "tcga.cl" // override with --sample <SAMPLE>
+//params.tpair1 = "data/${params.sample}.tumor_R1.fastq.gz"
+//params.npair1 = "data/${params.sample}.normal_R1.fastq.gz"
+//params.tpair2 = "data/${params.sample}.tumor_R2.fastq.gz"
+//params.npair2 = "data/${params.sample}.normal_R2.fastq.gz"
+
+
+//tp1 = file(params.tpair1)
+//tp2 = file(params.tpair2)
+//np1 = file(params.npair1)
+//np2 = file(params.npair2)
+
+
+//if( !tp1.exists() ) exit 2, "Missing read ${tp1}"
+//if( !tp2.exists() ) exit 2, "Missing read ${tp2}"
+//if( !np1.exists() ) exit 2, "Missing read ${np1}"
+//if( !np2.exists() ) exit 2, "Missing read ${np2}"
+
+
+// Pattern to grab all fastq pairs:
+params.r = "data/*_R[12].fastq.gz"
+Channel
+    .fromPath( params.r )
+    .ifEmpty { error "Cannot find any reads matching: ${params.r}" }
+    .map { path -> 
+       def prefix = readPrefix(path, params.r)
+       tuple(prefix, path) 
+    }
+    .groupTuple(sort: true)
+    .set { read } 
+
+
+// read .subscribe {println it}
+
+//      ln -s ${name}.bam ../../../${id}
+//	mkdir -f bam_${name}
+//	mkdir -p ../../../${id}
+//       	bwa mem -R "@RG\\tID:${params.sample}\\tSM:${params.sample}\\tLB:${params.sample}\\tPL:illumina" -B 3 -t ${task.cpus} -M ${params.genome} ${reads} | samtools view -bS -t ${genome_index} - | samtools sort - > ${name}.bam
+
+
+*/
