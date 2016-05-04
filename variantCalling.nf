@@ -25,13 +25,15 @@ if(!normal_bam.exists()) exit 1, "Missing normal file ${normal_bam}; please spec
 params.normal_bai = params.normal_bam.replaceFirst(/.bam/,".bam.bai")
 normal_bai = file(params.normal_bai)
 if(!normal_bai.exists()) exit 1, "Missing normal file index ${normal_bai}; please run samtools index ${normal_bam}"
- 
-params.genome		= "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta"
-params.genomeidx	= "${params.genome}.fai"
-params.cosmic		= "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/b37_cosmic_v54_120711.vcf"
-params.cosmicidx	= "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/b37_cosmic_v54_120711.vcf.idx"
-params.dbsnp		= "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/dbsnp_138.b37.vcf"
-params.dbsnpidx		= "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/dbsnp_138.b37.vcf.idx"
+
+params.nextflowDir	= "~/dev/CAW/work"
+params.dataTestDir	= "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37"
+params.genome		= "${params.dataTestDir}/human_g1k_v37_decoy.fasta"
+params.genomeidx	= "${params.dataTestDir}/human_g1k_v37_decoy.fasta.fai"
+params.cosmic		= "${params.dataTestDir}/b37_cosmic_v54_120711.vcf"
+params.cosmicidx	= "${params.dataTestDir}/b37_cosmic_v54_120711.vcf.idx"
+params.dbsnp		= "${params.dataTestDir}/dbsnp_138.b37.vcf"
+params.dbsnpidx		= "${params.dataTestDir}/dbsnp_138.b37.vcf.idx"
 params.mutect1_home	= "/sw/apps/bioinfo/mutect/1.1.5/milou"
 
 genome_file		= file(params.genome)
@@ -44,7 +46,7 @@ dbsnpidx		= file(params.dbsnpidx)
 process MuTect1 {
 	"""
 	nextflow run $baseDir/MuTect1.nf \
-	-w ~/dev/CAW/work \
+	-w ${params.nextflowDir} \
 	--tumor_bam ${params.tumor_bam} \
 	--normal_bam ${params.normal_bam} \
 	--genome ${params.genome} \
