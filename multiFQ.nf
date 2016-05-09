@@ -107,27 +107,38 @@ process mapping_bwa {
 }
 
 
+// Merge or rename bam
+singleBam = Channel.create()
+groupedBam = Channel.create()
+
+//bams.groupTuple(by: [0,3,4])
+bams.groupTuple(by: [1,3])
+.choice(singleBam, groupedBam) {
+  it[2].size() > 1 ? 1 : 0
+}
 
 process merge_bam {
 
-	module 'bioinfo-tools'
-	module 'picard'
+    input:
+    set mergeId, prefix, file(bam), controlId, mark, view from groupedBam
 
-	input:
-	file (bams:'*') from mapped_bam.toList() 
+    output:
+    set mergeId, prefix, file("${mergeId}.bam"), controlId, mark, view into mergedBam
 
-	output:
-	file ble
-
-
-	
-	
-//	java -jar picard.jar MergeSamFiles I=input_1.bam I=input_2.bam O=merged_files.bam
-
-	"""
-	ls ${bams} > ble
-        """
+    script:
+    cpus = task.cpus
+    prefix = prefix.sort().join(':')
+    """
+    (
+      samtools view -H ${bam} | grep -v '@RG';
+      for f in ${bam}; do 
+        samtools view -H \$f | grep '@RG';
+      done
+    ) > header.txt && \
+    samtools merge -@ ${cpus} -h header.txt ${mergeId}.bam ${bam}
+    """
 }
+
 
 
 
@@ -536,6 +547,35 @@ process genotype_gvcf_normal {
 
 
 // ### UNUSED CRAP:
+
+
+
+
+/* unused crap:
+
+
+process merge_bam {
+
+	module 'bioinfo-tools'
+	module 'picard'
+
+	input:
+	file (bams:'*') from mapped_bam.toList() 
+
+	output:
+	file ble
+
+
+	
+	
+//	java -jar picard.jar MergeSamFiles I=input_1.bam I=input_2.bam O=merged_files.bam
+
+	"""
+	ls ${bams} > ble
+        """
+}
+
+
  
 
 process mapping_tumor_bwa {
@@ -594,7 +634,6 @@ process mapping_normal_bwa {
 }
 
 
-/* unused crap:
 
 
 if (!params.index) {
