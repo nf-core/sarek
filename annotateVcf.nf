@@ -8,8 +8,8 @@
 
 version="0.0.1"
 
-snpeffHome = ${params.snpeffHome}
-snpeffDb   = ${params.snpeffDb}
+snpeffHome = "${params.snpeffHome}"
+snpeffDb   = file(params.snpeffDb)
 
 // Basic argument handling
 
