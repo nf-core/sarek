@@ -35,8 +35,8 @@ dbsnpIndex  = file(params.dbsnpIndex)
 
 // Basic argument handling
 
-switch (params){
-  case help :
+switch (params) {
+  case {params.help} :
     text = Channel.from(
       "CANCER ANALYSIS WORKFLOW ~ version $version",
       "    --help",
@@ -46,7 +46,7 @@ switch (params){
     text.subscribe { println "$it" }
     exit 1
 
-  case version :
+  case {params.version} :
     text = Channel.from(
       "CANCER ANALYSIS WORKFLOW",
       "  Version $version",
@@ -56,6 +56,20 @@ switch (params){
       "Cmd line: $workflow.commandLine")
     text.subscribe { println "$it" }
     exit 1
+}
+
+workflow.onComplete {
+  text = Channel.from(
+    "CANCER ANALYSIS WORKFLOW",
+    "Version     : $version",
+    "Command line: ${workflow.commandLine}",
+    "Completed at: ${workflow.complete}",
+    "Duration    : ${workflow.duration}",
+    "Success     : ${workflow.success}",
+    "workDir     : ${workflow.workDir}",
+    "Exit status : ${workflow.exitStatus}",
+    "Error report: ${workflow.errorReport ?: '-'}")
+    text.subscribe { log.info "$it" }
 }
 
 process mutect1 {
@@ -91,17 +105,3 @@ process mutect1 {
 //  --normal_bam params.normal_bam
 //  """
 // }
-
-workflow.onComplete {
-  text = Channel.from(
-    "CANCER ANALYSIS WORKFLOW",
-    "Version     : $version",
-    "Command line: ${workflow.commandLine}",
-    "Completed at: ${workflow.complete}",
-    "Duration    : ${workflow.duration}",
-    "Success     : ${workflow.success}",
-    "workDir     : ${workflow.workDir}",
-    "Exit status : ${workflow.exitStatus}",
-    "Error report: ${workflow.errorReport ?: '-'}")
-    text.subscribe { log.info "$it" }
-}
