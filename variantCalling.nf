@@ -26,57 +26,81 @@ params.normal_bai = params.normal_bam.replaceFirst(/.bam/,".bam.bai")
 normal_bai = file(params.normal_bai)
 if(!normal_bai.exists()) exit 1, "Missing normal file index ${normal_bai}; please run samtools index ${normal_bam}"
 
-genome_file		= file(params.genome)
-genome_index	= file(params.genomeidx)
-cosmic			= file(params.cosmic)
-cosmicidx		= file(params.cosmicidx)
-dbsnp			= file(params.dbsnp)
-dbsnpidx		= file(params.dbsnpidx)
+genomeFile  = file(params.genome)
+genomeIndex = file(params.genomeIndex)
+cosmic      = file(params.cosmic)
+cosmicIndex = file(params.cosmicIndex)
+dbsnp       = file(params.dbsnp)
+dbsnpIndex  = file(params.dbsnpIndex)
 
-process MuTect1 {
-	"""
-	nextflow run $baseDir/MuTect1.nf \
-	-w ${params.nextflowDir} \
-	--tumor_bam ${params.tumor_bam} \
-	--normal_bam ${params.normal_bam} \
-	--genome ${params.genome} \
-	--genomeidx ${params.genomeidx} \
-	--cosmic ${params.cosmic} \
-	--cosmicidx ${params.cosmicidx} \
-	--dbsnp ${params.dbsnp} \
-	--dbsnpidx ${params.dbsnpidx} \
-	--mutect1_home ${params.mutect1_home}
-	"""
+// Basic argument handling
+
+switch (params) {
+  case {params.help} :
+    text = Channel.from(
+      "CANCER ANALYSIS WORKFLOW ~ version $version",
+      "    --help",
+      "       you're reading it",
+      "    --version",
+      "       displays version number")
+    text.subscribe { println "$it" }
+    exit 1
+
+  case {params.version} :
+    text = Channel.from(
+      "CANCER ANALYSIS WORKFLOW",
+      "  Version $version",
+      "Project : $workflow.projectDir",
+      "Git info: $workflow.repository - $workflow.revision [$workflow.commitId]",
+      "Cmd line: $workflow.commandLine")
+    text.subscribe { println "$it" }
+    exit 1
+}
+
+workflow.onComplete {
+  text = Channel.from(
+    "CANCER ANALYSIS WORKFLOW",
+    "Version     : $version",
+    "Command line: ${workflow.commandLine}",
+    "Completed at: ${workflow.complete}",
+    "Duration    : ${workflow.duration}",
+    "Success     : ${workflow.success}",
+    "workDir     : ${workflow.workDir}",
+    "Exit status : ${workflow.exitStatus}",
+    "Error report: ${workflow.errorReport ?: '-'}")
+    text.subscribe { log.info "$it" }
+}
+
+process mutect1 {
+  """
+  nextflow run $baseDir/MuTect1.nf \
+  -w ${params.cawDir} \
+  --tumor_bam ${params.tumor_bam} \
+  --normal_bam ${params.normal_bam} \
+  --genome ${params.genome} \
+  --genomeidx ${params.genomeIndex} \
+  --cosmic ${params.cosmic} \
+  --cosmicidx ${params.cosmicIndex} \
+  --dbsnp ${params.dbsnp} \
+  --dbsnpidx ${params.dbsnpIndex} \
+  --mutect1_home ${params.mutect1Home}
+  """
 }
 
 // process FreeBayes {
-// 	"""
-// 	nextflow run $baseDir/FreeBayes.nf \
-// 	-w ~/workspace/nextflow/work \
-// 	--tumor_bam params.tumor_bam
-// 	--normal_bam params.normal_bam
-// 	"""
+//  """
+//  nextflow run $baseDir/FreeBayes.nf \
+//  -w ~/workspace/nextflow/work \
+//  --tumor_bam params.tumor_bam
+//  --normal_bam params.normal_bam
+//  """
 // }
 
 // process VarDictJava {
-// 	"""
-// 	nextflow run $baseDir/VarDictJava.nf \
-// 	-w ~/workspace/nextflow/work \
-// 	--tumor_bam params.tumor_bam
-// 	--normal_bam params.normal_bam
-// 	"""
+//  """
+//  nextflow run $baseDir/VarDictJava.nf \
+//  -w ~/workspace/nextflow/work \
+//  --tumor_bam params.tumor_bam
+//  --normal_bam params.normal_bam
+//  """
 // }
-
-workflow.onComplete {
-	text = Channel.from(
-		"CANCER ANALYSIS WORKFLOW",
-		"Version     : $version",
-		"Command line: ${workflow.commandLine}",
-		"Completed at: ${workflow.complete}",
-		"Duration    : ${workflow.duration}",
-		"Success     : ${workflow.success}",
-		"workDir     : ${workflow.workDir}",
-		"Exit status : ${workflow.exitStatus}",
-		"Error report: ${workflow.errorReport ?: '-'}")
-	text.subscribe { log.info "$it" }
-}
