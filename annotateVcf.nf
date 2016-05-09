@@ -53,8 +53,8 @@ process snpeff {
   """
   nextflow run $baseDir/snpeff.nf \
   -w ${params.cawDir} \
-  --snpeffHome ${params.snpeffHome}
-  --snpeffDb ${params.snpeffDb}
+  --snpeffHome ${params.snpeffHome} \
+  --snpeffDb ${params.snpeffDb} \
   --sampleVcf ${params.sampleVcf}
   """
 }
