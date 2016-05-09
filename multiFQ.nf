@@ -73,7 +73,7 @@ fastqs = Channel
  */	
 
 
-process mapping_bwa {
+process MappingBwa {
 
 	module 'bioinfo-tools'
 	module 'bwa'
@@ -98,7 +98,7 @@ process mapping_bwa {
 // here I use params.genome for bwa ref so I dont have to link to all bwa index files
 
 	script:
-	rgString="\"@RG\\tID:${idRun}\\tSM:${mergeId}\\tLB:${id}\\tPL:illumina\""
+	rgString="\"@RG\\tID:${idRun}\\tSM:${id}\\tLB:${id}\\tPL:illumina\""
 
 	"""
 	bwa mem -R ${rgString} -B 3 -t ${task.cpus} -M ${params.genome} ${fq1} ${fq2} | samtools view -bS -t ${genome_index} - | samtools sort - > ${idRun}.bam
@@ -107,100 +107,95 @@ process mapping_bwa {
 }
 
 
+/*
+ * Borrowed code from chip.nf
+ * 
+ * Now, we decide whether bam is standalone or should be merged by sample (id (column 1) from channel bams)
+ *  
+ */
+
 // Merge or rename bam
 singleBam = Channel.create()
 groupedBam = Channel.create()
 
 //bams.groupTuple(by: [0,3,4])
-bams.groupTuple(by: [1,3])
+bams.groupTuple(by: [1])
 .choice(singleBam, groupedBam) {
   it[2].size() > 1 ? 1 : 0
 }
 
-process merge_bam {
+process MergeBam {
+    
+    module 'bioinfo-tools'
+    module 'samtools/1.3'
 
     input:
-    set mergeId, prefix, file(bam), controlId, mark, view from groupedBam
+    set mergeId, id, idRun, file(bam) from groupedBam
 
     output:
-    set mergeId, prefix, file("${mergeId}.bam"), controlId, mark, view into mergedBam
+    set mergeId, id, idRun, file("${id}.bam") into mergedBam
 
     script:
-    cpus = task.cpus
-    prefix = prefix.sort().join(':')
+//    cpus = task.cpus
+    idRun = idRun.sort().join(':')
+
     """
-    (
-      samtools view -H ${bam} | grep -v '@RG';
-      for f in ${bam}; do 
-        samtools view -H \$f | grep '@RG';
-      done
-    ) > header.txt && \
-    samtools merge -@ ${cpus} -h header.txt ${mergeId}.bam ${bam}
+    echo ${idRun} > id.txt
+    samtools merge ${id}.bam ${bam}
     """
+//    (
+//      samtools view -H ${bam} | egrep -v '@RG|@PG';
+//      for f in ${bam}; do 
+//        samtools view -H \$f | grep '@RG';
+//      done
+//    ) > header.txt && \
+//    samtools merge -h header.txt ${id}.bam ${bam}
+
 }
 
+/*
+ * merge all merged and single bams to a single channel
+ */
 
+bamList = Channel.create()
+bamList = singleBam
+.mix(mergedBam)
+//.map { mergeId, id, idRun, bam ->
+//  [mergeId, id, bam].flatten()
+// }
 
 
 
 /*
- *  mark duplicates, tumor/normal
+ *  mark duplicates all bams
  */
 
 
+process MarkDuplicates {
 
-process mark_duplicates {
-
-	module 'bioinfo-tools'
-	module 'picard'
+//	module 'bioinfo-tools'
+//	module 'picard'
 
 
 	input:
-	file "*.bam" from mapped_bam
+	set mergeId, id, idRun, file(mergedBam) from bamList
 	
 	output:
-	file '*.md.bam' into md_bam_intervals, md_bam_real
-	file '*.md.bai' into md_bai_intervals, md_bai_real
+	set mergeId, id, file("${id}.md.bam") into markdupBam
 
 
 	"""
+	echo ${mergeId} ${id} ${idRun} ${mergedBam} > ble
 	java -Xmx7g -jar /sw/apps/bioinfo/picard/1.118/milou/MarkDuplicates.jar \
-	INPUT=${tumor_bam} \
-	METRICS_FILE=${tumor_bam}.metrics \
+	INPUT=${mergedBam} \
+	METRICS_FILE=${mergedBam}.metrics \
 	TMP_DIR=. \
 	ASSUME_SORTED=true \
 	VALIDATION_STRINGENCY=LENIENT \
 	CREATE_INDEX=TRUE \
-	OUTPUT=${params.sample}.tumor.md.bam	
+	OUTPUT=${id}.md.bam
 	"""
 
-
-
-}
-
-process mark_duplicates_normal {
-
-	module 'bioinfo-tools'
-	module 'picard'
-
-
-	input:
-	file normal_bam
-	
-	output:
-	file '*.normal.md.bam' into normal_md_bam_intervals, normal_md_bam_real
-	file '*.normal.md.bai' into normal_md_bai_intervals, normal_md_bai_real
-
-	"""
-	java -Xmx7g -jar /sw/apps/bioinfo/picard/1.118/milou/MarkDuplicates.jar \
-	INPUT=${normal_bam} \
-	METRICS_FILE=${normal_bam}.metrics \
-	TMP_DIR=. \
-	ASSUME_SORTED=true \
-	VALIDATION_STRINGENCY=LENIENT \
-	CREATE_INDEX=TRUE \
-	OUTPUT=${params.sample}.normal.md.bam	
-	"""
 
 }
 
@@ -209,7 +204,7 @@ process mark_duplicates_normal {
  */
 
 
-
+/*
 process create_intervals {
 
 
@@ -242,7 +237,7 @@ process create_intervals {
 
 
 }
-
+*/
 
 /*
  * realign, use nWayOut to split into tumor/normal again
@@ -250,7 +245,7 @@ process create_intervals {
 
 
 
-
+/*
 process realign {
 
 
@@ -286,12 +281,12 @@ process realign {
 	"""
 
 }
+*/
 
 
 
 
-
-
+/*
 process create_recal_table_tumor {
 
 	cpus 2
@@ -326,8 +321,9 @@ process create_recal_table_tumor {
 	-o ${params.sample}.tumor.recal.table
 	"""
 }
+*/
 
-
+/*
 process recalibrate_bam_tumor {
 
 
@@ -362,8 +358,9 @@ process recalibrate_bam_tumor {
 
 
 }
+*/
 
-
+/*
 process genotype_gvcf_tumor {
 
 	cpus 2
@@ -399,9 +396,9 @@ process genotype_gvcf_tumor {
 	"""
 
 }
+*/
 
-
-
+/*
 process create_recal_table_normal {
 
 	cpus 2
@@ -436,8 +433,9 @@ process create_recal_table_normal {
 	-o ${params.sample}.normal.recal.table
 	"""
 }
+*/
 
-
+/*
 process recalibrate_bam_normal {
 
 
@@ -472,8 +470,10 @@ process recalibrate_bam_normal {
 
 
 }
+*/
 
 
+/*
 process genotype_gvcf_normal {
 
 	cpus 2
@@ -510,6 +510,8 @@ process genotype_gvcf_normal {
 
 }
 
+*/
+
 
 // ############################### FUNCTIONS
 
@@ -545,13 +547,34 @@ process genotype_gvcf_normal {
 }
 
 
-
-// ### UNUSED CRAP:
-
+/* unused crap: ######################################################################
 
 
+process mark_duplicates_normal {
 
-/* unused crap:
+	module 'bioinfo-tools'
+	module 'picard'
+
+
+	input:
+	file normal_bam
+	
+	output:
+	file '*.normal.md.bam' into normal_md_bam_intervals, normal_md_bam_real
+	file '*.normal.md.bai' into normal_md_bai_intervals, normal_md_bai_real
+
+	"""
+	java -Xmx7g -jar /sw/apps/bioinfo/picard/1.118/milou/MarkDuplicates.jar \
+	INPUT=${normal_bam} \
+	METRICS_FILE=${normal_bam}.metrics \
+	TMP_DIR=. \
+	ASSUME_SORTED=true \
+	VALIDATION_STRINGENCY=LENIENT \
+	CREATE_INDEX=TRUE \
+	OUTPUT=${params.sample}.normal.md.bam	
+	"""
+
+}
 
 
 process merge_bam {
