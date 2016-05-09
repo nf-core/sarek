@@ -26,6 +26,88 @@ params.out = "$PWD"
 //The uppmax module system does not include the split reads extraction script
 params.splitreads_extract="/sw/apps/bioinfo/LUMPY/0.2.12/milou/scripts/extractSplitReads_BwaMem"
 
+
+process normal_discordant{
+
+    module 'bioinfo-tools'
+    module 'samtools'
+
+    input:
+    
+    file normal_bam
+    file normal_bai
+
+    output:
+    file "${params.sample}_normal.D.bam" into normal_discordant_bam
+
+    """
+    samtools view -b -F 1294 ${params.normal_bam} > ${params.sample}_normal.D.unsorted.bam
+    samtools sort ${params.sample}_normal.D.unsorted.bam ${params.sample}_normal.D
+    rm ${params.sample}_normal.D.unsorted.bam
+    """
+
+}
+
+process tumor_discordant{
+
+    module 'bioinfo-tools'
+    module 'samtools'
+
+    input:
+    file tumor_bam
+    file tumor_bai
+
+    output:
+    file "${params.sample}_tumor.D.bam" into tumor_discordant_bam
+
+    """
+    samtools view -b -F 1294 ${params.tumor_bam} > ${params.sample}_tumor.D.unsorted.bam
+    samtools sort ${params.sample}_tumor.D.unsorted.bam ${params.sample}_tumor.D
+    rm ${params.sample}_tumor.D.unsorted.bam 
+    """
+
+}
+
+process normal_split{
+
+    module 'bioinfo-tools'
+    module 'samtools'
+
+    input:
+    file normal_bam
+    file normal_bai
+
+    output:
+    file "${params.sample}_normal.S.bam" into normal_split_bam
+
+    """
+    samtools view -h ${params.normal_bam} | ${params.splitreads_extract} -i stdin | samtools view -Sb - > ${params.sample}_normal.S.unsorted.bam
+    samtools sort ${params.sample}_normal.S.unsorted.bam ${params.sample}_normal.S
+    rm ${params.sample}_normal.S.unsorted.bam
+    """
+}
+
+process tumor_split{
+
+    module 'bioinfo-tools'
+    module 'samtools'
+
+    input:
+    file tumor_bam
+    file tumor_bai
+
+    output:
+    file "${params.sample}_tumor.S.bam" into tumor_split_bam
+
+
+    """
+    samtools view -h ${params.tumor_bam} | ${params.splitreads_extract} -i stdin | samtools view -Sb - > ${params.sample}_tumor.S.unsorted.bam
+    samtools sort ${params.sample}_tumor.S.unsorted.bam ${params.sample}_tumor.S
+    rm ${params.sample}_tumor.S.unsorted.bam
+    """
+
+}
+
 process lumpy{
 
     module 'bioinfo-tools'
@@ -40,26 +122,17 @@ process lumpy{
     file tumor_bai
     file normal_bai
 
+    file normal_discordant_bam
+    file tumor_discordant_bam
+
+    file normal_split_bam
+    file tumor_split_bam
+
     output:
        file "${params.sample}.tumor_normal.lumpySV.vcf" into lumpy_vcf
 
     """
-    samtools view -b -F 1294 ${params.tumor_bam} > ${params.sample}_tumor.D.unsorted.bam
-    samtools view -b -F 1294 ${params.normal_bam} > ${params.sample}_normal.D.unsorted.bam
-
-    samtools sort ${params.sample}_tumor.D.unsorted.bam ${params.sample}_tumor.D
-    samtools sort ${params.sample}_normal.D.unsorted.bam ${params.sample}_normal.D
-
-    rm ${params.sample}_tumor.D.unsorted.bam ${params.sample}_normal.D.unsorted.bam
-
-    samtools view -h ${params.tumor_bam} | ${params.splitreads_extract} -i stdin | samtools view -Sb - > ${params.sample}_tumor.S.unsorted.bam
-    samtools view -h ${params.normal_bam} | ${params.splitreads_extract} -i stdin | samtools view -Sb - > ${params.sample}_normal.S.unsorted.bam
-
-    samtools sort ${params.sample}_tumor.S.unsorted.bam ${params.sample}_tumor.S
-    samtools sort ${params.sample}_normal.S.unsorted.bam ${params.sample}_normal.S
-    rm ${params.sample}_tumor.S.unsorted.bam ${params.sample}_normal.S.unsorted.bam
-
-    lumpyexpress -B ${params.normal_bam},${params.tumor_bam} -S ${params.sample}_normal.S.bam,${params.sample}_tumor.S.bam -D ${params.sample}_normal.D.bam,${params.sample}_tumor.D.bam -o ${params.sample}.tumor_normal.lumpySV.vcf
-    rm ${params.sample}_normal.S.bam ${params.sample}_tumor.S.bam ${params.sample}_normal.D.bam ${params.sample}_tumor.D.bam
+    lumpyexpress -B ${params.normal_bam},${params.tumor_bam} -S ${normal_split_bam},${tumor_split_bam} -D ${normal_discordant_bam},${tumor_discordant_bam} -o ${params.sample}.tumor_normal.lumpySV.vcf
+    rm ${normal_split_bam} ${tumor_split_bam} ${normal_discordant_bam} ${tumor_discordant_bam}
     """
 }
