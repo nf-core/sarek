@@ -50,7 +50,6 @@ switch (params) {
     text = Channel.from(
       "CANCER ANALYSIS WORKFLOW",
       "  Version $version",
-      "  Last update on $dateUpdate",
       "Project : $workflow.projectDir",
       "Git info: $workflow.repository - $workflow.revision [$workflow.commitId]",
       "Cmd line: $workflow.commandLine")
