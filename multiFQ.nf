@@ -97,6 +97,7 @@ process MappingBwa {
 
 // here I use params.genome for bwa ref so I dont have to link to all bwa index files
 
+
 	script:
 	rgString="\"@RG\\tID:${idRun}\\tSM:${id}\\tLB:${id}\\tPL:illumina\""
 
@@ -164,8 +165,8 @@ process MergeBam {
 bamList = Channel.create()
 bamList = singleBam
 .mix(mergedBam)
-//.map { mergeId, id, idRun, bam -> [mergeId, id, bam].flatten()
 .map { mergeId, id, idRun, bam -> [mergeId, id, bam].flatten()
+//.map { mergeId, id, idRun, bam -> [mergeId, id, bam].flatten()
 }
 
 
