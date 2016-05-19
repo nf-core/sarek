@@ -111,7 +111,6 @@ process tumor_split{
 process lumpy{
 
     module 'bioinfo-tools'
-    module 'samtools'
     module 'LUMPY/0.2.12'
 
     input:
