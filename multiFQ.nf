@@ -97,6 +97,7 @@ process MappingBwa {
 
 // here I use params.genome for bwa ref so I dont have to link to all bwa index files
 
+
 	script:
 	rgString="\"@RG\\tID:${idRun}\\tSM:${id}\\tLB:${id}\\tPL:illumina\""
 
@@ -121,7 +122,7 @@ groupedBam = Channel.create()
 //bams.groupTuple(by: [0,3,4])
 bams.groupTuple(by: [1])
 .choice(singleBam, groupedBam) {
-  it[2].size() > 1 ? 1 : 0
+  it[3].size() > 1 ? 1 : 0
 }
 
 process MergeBam {
@@ -134,15 +135,18 @@ process MergeBam {
 
     output:
     set mergeId, id, idRun, file("${id}.bam") into mergedBam
+//    set mergeId, id, file("${id}.bam") into mergedBam
 
     script:
 //    cpus = task.cpus
     idRun = idRun.sort().join(':')
 
     """
-    echo ${idRun} > id.txt
+    echo ${mergeId} ${id} ${idRun} ${bam} > ble
     samtools merge ${id}.bam ${bam}
     """
+
+//    echo ${idRun} > id.txt
 //    (
 //      samtools view -H ${bam} | egrep -v '@RG|@PG';
 //      for f in ${bam}; do 
@@ -157,13 +161,13 @@ process MergeBam {
  * merge all merged and single bams to a single channel
  */
 
+
 bamList = Channel.create()
 bamList = singleBam
 .mix(mergedBam)
-//.map { mergeId, id, idRun, bam ->
-//  [mergeId, id, bam].flatten()
-// }
-
+.map { mergeId, id, idRun, bam -> [mergeId[0], id, bam].flatten()
+//.map { mergeId, id, idRun, bam -> [mergeId, id, bam].flatten()
+}
 
 
 /*
@@ -178,17 +182,27 @@ process MarkDuplicates {
 
 
 	input:
-	set mergeId, id, idRun, file(mergedBam) from bamList
+//	set mergeId, id, idRun, file(mBam) from bamList
+	set mergeId, id, file(mBam) from bamList
+//
+//	wtf is coming through the channel??
+//
+
 	
 	output:
-	set mergeId, id, file("${id}.md.bam") into markdupBam
+//	set mergeId, idRun, file("${idRun}.md.bam"), file("${idRun}.md.bai") into markdupBamInts
+	set mergeId, idRun, file("${id}.md.bam"), file("${id}.md.bai") into markdupBamInts
+//	set mergeId, idRun, file("${idRun}.md.bam"), file("${idRun}.md.bai") into markdupBam
+	set mergeId, idRun, file("${id}.md.bam"), file("${id}.md.bai") into markdupBam
+
+//	echo "${mergeId} : ${id} : ${idRun} : ${mBam}" > ble
 
 
 	"""
-	echo ${mergeId} ${id} ${idRun} ${mergedBam} > ble
+	echo "${mergeId} : ${id} : ${mBam}" > ble
 	java -Xmx7g -jar /sw/apps/bioinfo/picard/1.118/milou/MarkDuplicates.jar \
-	INPUT=${mergedBam} \
-	METRICS_FILE=${mergedBam}.metrics \
+	INPUT=${mBam} \
+	METRICS_FILE=${mBam}.metrics \
 	TMP_DIR=. \
 	ASSUME_SORTED=true \
 	VALIDATION_STRINGENCY=LENIENT \
@@ -196,6 +210,8 @@ process MarkDuplicates {
 	OUTPUT=${id}.md.bam
 	"""
 
+// 	debug
+//	echo ${mergeId} ${id} ${idRun} ${mergedBam} > ble
 
 }
 
@@ -203,18 +219,25 @@ process MarkDuplicates {
  * create realign intervals, use both tumor+normal as input
  */
 
+// group the bams by overall subject/patient id (mergeId)
+mdbi=Channel.create()
+mdbi=markdupBamInts
+.groupTuple()
+//. map {$mergeId, $idRun, $bam, $bai -> $mergeId, $idRun "-I $bam", $bai}
 
-/*
-process create_intervals {
+// group the bams by overall subject/patient id (mergeId)
+mdb=Channel.create()
+mdb=markdupBam
+.groupTuple()
+//. map {$mergeId, $idRun, $bam, $bai -> $mergeId, $idRun "-I $bam", $bai}
 
+
+process CreateIntervals {
 
 	cpus 4
 	
 	input:
-	file tumor_md_bam_intervals
-	file tumor_md_bai_intervals
-	file normal_md_bam_intervals
-	file normal_md_bai_intervals
+	set mergeId, id, file(mdBam), file(mdBai) from mdbi
 	file gf from genome_file 
 	file gi from genome_index
 	file gd from genome_dict
@@ -222,57 +245,60 @@ process create_intervals {
 	file mi from millsindels
 
 	output:
-	file '*.intervals' into intervals
+	file("${mergeId}.intervals") into intervals
+
+
+	script:
+//	ifile="${id}.md.bam"
+//	input="-I $mdBam.join(' -I ')"
+//	input = GATKInput.spread(mdBam)
+	input = mdBam.collect{"-I $it"}.join(' ')
+
 
 	"""
+	echo ${mergeId} ${id} ${mdBam} > ble
 	java -Xmx7g -jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
 	-T RealignerTargetCreator \
-	-I $tumor_md_bam_intervals -I $normal_md_bam_intervals \
+	$input \
 	-R $gf \
 	-known $ki \
 	-known $mi \
 	-nt ${task.cpus} \
-	-o ${params.sample}.intervals
+	-o ${mergeId}.intervals
+
  	"""	
 
-
 }
-*/
+
 
 /*
  * realign, use nWayOut to split into tumor/normal again
  */
 
 
-
-/*
 process realign {
 
 
 	input:
-	file tumor_md_bam_real
-	file tumor_md_bai_real
-	file normal_md_bam_real
-	file normal_md_bai_real
+	set mergeId, id, file(mdBam), file(mdBai) from mdb
 	file gf from genome_file
 	file gi from genome_index
 	file gd from genome_dict
 	file ki from kgindels
 	file mi from millsindels
-	file intervals
+	file intervals from intervals
 
 	output:
-	file '*.tumor.md.real.bam' into tumor_real_bam_table, tumor_real_bam_recal
-	file '*.tumor.md.real.bai' into tumor_real_bai_table, tumor_real_bai_recal
-	file '*.normal.md.real.bam' into normal_real_bam_table, normal_real_bam_recal
-	file '*.normal.md.real.bai' into normal_real_bai_table, normal_real_bai_recal
+	set mergeId, id, file("${id}.real.bam") into realBams
 
+
+	script:
+	input = mdBam.collect{"-I $it"}.join(' ')
 
 	"""
 	java -Xmx7g -jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
 	-T IndelRealigner \
-	-I $tumor_md_bam_real \
-	-I $normal_md_bam_real \
+	$input \
 	-R $gf \
 	-targetIntervals $intervals \
 	-known $ki \
@@ -281,8 +307,6 @@ process realign {
 	"""
 
 }
-*/
-
 
 
 
