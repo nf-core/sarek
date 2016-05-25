@@ -6,22 +6,9 @@
  * ./nextflow run Mutect1.nf --tumorBam ~/dev/chr17_testdata/HCC1143.tumor.bam --normalBam ~/dev/chr17_testdata/HCC1143.normal.bam
  */
 
-tumorBam    = file(params.tumorBam)
-normalBam   = file(params.normalBam)
-genomeFile  = file(params.genome)
-cosmic      = file(params.cosmic)
-dbsnp       = file(params.dbsnp)
-
 process Mutect1 {
 
   cpus 2
-
-  input:
-  file genomeFile
-  file cosmic
-  file dbsnp
-  file tumorBam
-  file normalBam
 
   output:
   file '*.mutect1.vcf' into mutect1Vcf
@@ -30,11 +17,11 @@ process Mutect1 {
   """
   java -jar ${params.mutect1Home}/muTect-1.1.5.jar \
   --analysis_type MuTect \
-  --reference_sequence ${genomeFile} \
-  --cosmic ${cosmic} \
-  --dbsnp ${dbsnp} \
-  --input_file:normal ${normalBam} \
-  --input_file:tumor ${tumorBam} \
+  --reference_sequence ${params.genome} \
+  --cosmic ${params.cosmic} \
+  --dbsnp ${params.dbsnp} \
+  --input_file:normal ${params.normalBam} \
+  --input_file:tumor ${params.tumorBam} \
   --out test.mutect1.out \
   --vcf test.mutect1.vcf \
   -L 17:1000000-2000000
