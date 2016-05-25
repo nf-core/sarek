@@ -9,7 +9,6 @@
 tumorBam = file(params.tumorBam)
 normalBam = file(params.normalBam)
 genomeFile = file(params.genome)
-genomeIndex = file(params.genomeIndex)
 
 process Vardict {
   module 'bioinfo-tools'
@@ -19,8 +18,6 @@ process Vardict {
 
   input:
   file genomeFile
-  file genomeIndex
-
   file tumorBam
   file normalBam
 
@@ -28,7 +25,7 @@ process Vardict {
   file '*.VarDict.vcf' into vardict_vc_call
 
   """
-  VarDict -G ${params.genome} \
+  VarDict -G ${genomeFile} \
   -f 0.01 -N TSN \
   -b "${normalBam}|${tumorBam}" \
   -z 1 -F 0x500 \
