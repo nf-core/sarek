@@ -22,6 +22,8 @@ process Mutect1 {
 
   input:
   file genomeFile
+  file cosmic
+  file dbsnp
   file genomeIndex
   file tumorBam
   file normalBam
@@ -33,11 +35,11 @@ process Mutect1 {
   """
   java -jar ${params.mutect1Home}/muTect-1.1.5.jar \
   --analysis_type MuTect \
-  --reference_sequence ${params.genome} \
-  --cosmic ${params.cosmic} \
-  --dbsnp ${params.dbsnp} \
-  --input_file:normal ${normal_bam} \
-  --input_file:tumor ${tumor_bam} \
+  --reference_sequence ${genomeFile} \
+  --cosmic ${cosmic} \
+  --dbsnp ${dbsnp} \
+  --input_file:normal ${normalBam} \
+  --input_file:tumor ${tumorBam} \
   --out test.mutect1.out \
   --vcf test.mutect1.vcf \
   -L 17:1000000-2000000
