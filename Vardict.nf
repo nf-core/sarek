@@ -7,9 +7,7 @@
  */
 
 tumorBam = file(params.tumorBam)
-tumorBai = file(params.tumorBai)
 normalBam = file(params.normalBam)
-normalBai = file(params.normalBai)
 genomeFile = file(params.genome)
 genomeIndex = file(params.genomeidx)
 
@@ -24,9 +22,7 @@ process Vardict {
   file genomeIndex
 
   file tumorBam
-  file tumorBai
   file normalBam
-  file normalBai
 
   output:
   file '*.VarDict.vcf' into vardict_vc_call

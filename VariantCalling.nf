@@ -3,7 +3,7 @@
 /*
  * Sample run data for Variant Calling
  * use like (on milou):
- * interactive -p devel -A b2013064 -t 60 nextflow -c milou.config run variantCalling.nf --tumorBam ~/dev/chr17_testdata/HCC1143.tumor.bam --normalBam ~/dev/chr17_testdata/HCC1143.normal.bam
+ * interactive -p devel -A b2013064 -t 60 nextflow -c milou.config run VariantCalling.nf --tumorBam ~/dev/data/HCC1143.tumor.bam --normalBam ~/dev/data/HCC1143.normal.bam
  */
 
 String version="0.0.1"
@@ -91,6 +91,7 @@ if(!normalBam.exists()) exit 1, "Missing normal file ${normalBam}; please specif
 if(!normalBai.exists()) exit 1, "Missing normal file index ${normalBai}; please run samtools index ${normalBam}"
 
 process Mutect1 {
+
   input:
   file tumorBam
   file normalBam
@@ -125,6 +126,7 @@ process Mutect1 {
 // }
 
 process Vardict {
+
   input:
   file tumorBam
   file normalBam
@@ -141,4 +143,11 @@ process Vardict {
   --cosmic ${params.cosmic} \
   --dbsnp ${params.dbsnp}
   """
+}
+
+process MergeVcf {
+  input:
+  file mutect1Vcf
+  file vardictVcf
+
 }

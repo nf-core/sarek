@@ -3,7 +3,7 @@
 /*
  * Sample run data for MuTect1
  * use like (on milou):
- * ./nextflow run Mutect1.nf --tumor_bam ~/dev/chr17_testdata/HCC1143.tumor.bam --normal_bam ~/dev/chr17_testdata/HCC1143.normal.bam
+ * ./nextflow run Mutect1.nf --tumorBam ~/dev/chr17_testdata/HCC1143.tumor.bam --normalBam ~/dev/chr17_testdata/HCC1143.normal.bam
  */
 
 tumorBam    = file(params.tumorBam)
@@ -24,9 +24,7 @@ process Mutect1 {
   file genomeFile
   file genomeIndex
   file tumorBam
-  file tumorBai
   file normalBam
-  file normalBai
 
   output:
   file '*.mutect1.vcf' into mutect1Vcf
