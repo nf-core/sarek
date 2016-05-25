@@ -6,28 +6,20 @@
  * ./nextflow run Vardict.nf --tumorBam ~/dev/chr17_testdata/HCC1143.tumor.bam --normalBam ~/dev/chr17_testdata/HCC1143.normal.bam
  */
 
-tumorBam = file(params.tumorBam)
-normalBam = file(params.normalBam)
-genomeFile = file(params.genome)
-
 process Vardict {
+
   module 'bioinfo-tools'
   module 'VarDictJava/1.4.5'
 
   cpus 1
 
-  input:
-  file genomeFile
-  file tumorBam
-  file normalBam
-
   output:
   file '*.VarDict.vcf' into vardict_vc_call
 
   """
-  VarDict -G ${genomeFile} \
+  VarDict -G ${params.genome} \
   -f 0.01 -N TSN \
-  -b "${normalBam}|${tumorBam}" \
+  -b "${params.normalBam}|${params.tumorBam}" \
   -z 1 -F 0x500 \
   -c 1 -S 2 -E 3 -g 4 \
   -R chr17:1000000-1100000 | testsomatic.R | var2vcf_somatic.pl > test.VarDict.vcf
