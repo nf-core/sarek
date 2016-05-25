@@ -11,7 +11,6 @@ normalBam   = file(params.normalBam)
 genomeFile  = file(params.genome)
 cosmic      = file(params.cosmic)
 dbsnp       = file(params.dbsnp)
-mutect1Home = ${params.mutect1Home}
 
 process Mutect1 {
 
