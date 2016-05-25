@@ -146,8 +146,15 @@ process Vardict {
 }
 
 process MergeVcf {
+
   input:
   file mutect1Vcf
   file vardictVcf
 
+  """
+  java -Xmx7g
+  -jar ${picardHome}/MergeVcfs.jar \
+  ${mutect1Vcf} \
+  ${vardictVcf}
+  """
 }
