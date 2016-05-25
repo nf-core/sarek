@@ -9,7 +9,7 @@
 tumorBam = file(params.tumorBam)
 normalBam = file(params.normalBam)
 genomeFile = file(params.genome)
-genomeIndex = file(params.genomeidx)
+genomeIndex = file(params.genomeIndex)
 
 process Vardict {
   module 'bioinfo-tools'
