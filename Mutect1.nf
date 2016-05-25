@@ -9,11 +9,8 @@
 tumorBam    = file(params.tumorBam)
 normalBam   = file(params.normalBam)
 genomeFile  = file(params.genome)
-genomeIndex = file(params.genomeIndex)
 cosmic      = file(params.cosmic)
-cosmicIndex = file(params.cosmicIndex)
 dbsnp       = file(params.dbsnp)
-dbsnpIndex  = file(params.dbsnpIndex)
 mutect1Home = ${params.mutect1Home}
 
 process Mutect1 {
@@ -24,7 +21,6 @@ process Mutect1 {
   file genomeFile
   file cosmic
   file dbsnp
-  file genomeIndex
   file tumorBam
   file normalBam
 
