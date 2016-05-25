@@ -16,12 +16,22 @@ process Vardict {
   output:
   file '*.VarDict.vcf' into vardict_vc_call
 
+
+  // perl /sw/apps/bioinfo/VarDictJava/1.4.5/milou/VarDictJava/vardict.pl -G ${params.genome} \
+  // -f 0.01 -N TSN \
+  // -b "${params.normalBam}|${params.tumorBam}" \
+  // -z 1 -F 0x500 \
+  // -c 1 -S 2 -E 3 -g 4 \
+  // -R chr17:1000000-1100000 | testsomatic.R | var2vcf_somatic.pl > test.VarDict.vcf
+
   """
-  VarDict -G ${params.genome} \
+  vardict -G ${params.genome} \
   -f 0.01 -N TSN \
   -b "${params.normalBam}|${params.tumorBam}" \
   -z 1 -F 0x500 \
   -c 1 -S 2 -E 3 -g 4 \
-  -R chr17:1000000-1100000 | testsomatic.R | var2vcf_somatic.pl > test.VarDict.vcf
+  -R chr17:1000000-1100000 | \
+  /sw/apps/bioinfo/VarDictJava/1.4.5/milou/VarDictJava/VarDict/testsomatic.R | \
+  /sw/apps/bioinfo/VarDictJava/1.4.5/milou/VarDictJava/VarDict/var2vcf_somatic.pl > test.VarDict.vcf
   """
 }
