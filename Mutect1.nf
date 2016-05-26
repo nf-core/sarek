@@ -10,10 +10,6 @@ process Mutect1 {
 
   cpus 2
 
-  output:
-  file '*.mutect1.vcf' into mutect1Vcf
-  file '*.mutect1.out' into mutect1Out
-
   """
   java -jar ${params.mutect1Home}/muTect-1.1.5.jar \
   --analysis_type MuTect \

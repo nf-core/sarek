@@ -97,7 +97,8 @@ process Mutect1 {
   file normalBam
 
   output:
-  file mutect1Vcf
+  file '*.mutect1.vcf' into mutect1Vcf
+  file '*.mutect1.out' into mutect1Out
 
   """
   nextflow run $baseDir/Mutect1.nf \
