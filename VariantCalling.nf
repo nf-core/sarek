@@ -92,6 +92,9 @@ if(!normalBai.exists()) exit 1, "Missing normal file index ${normalBai}; please 
 
 process Mutect1 {
 
+  module 'bioinfo-tools'
+  moduule 'mutect/1.1.5'
+
   input:
   file tumorBam
   file normalBam
@@ -100,15 +103,19 @@ process Mutect1 {
   file '*.mutect1.vcf' into mutect1Vcf
   file '*.mutect1.out' into mutect1Out
 
+  cpus 2
+
   """
-  nextflow run $baseDir/Mutect1.nf \
-  -w ${params.cawDir} \
-  --tumorBam ${params.tumorBam} \
-  --normalBam ${params.normalBam} \
-  --genome ${params.genome} \
+  java -jar ${params.mutect1Home}/muTect-1.1.5.jar \
+  --analysis_type MuTect \
+  --reference_sequence ${params.genome} \
   --cosmic ${params.cosmic} \
   --dbsnp ${params.dbsnp} \
-  --mutect1Home ${params.mutect1Home}
+  --input_file:normal ${params.normalBam} \
+  --input_file:tumor ${params.tumorBam} \
+  --out test.mutect1.out \
+  --vcf test.mutect1.vcf \
+  -L 17:1000000-2000000
   """
 }
 
@@ -128,21 +135,35 @@ process Mutect1 {
 
 process Vardict {
 
+  module 'bioinfo-tools'
+  module 'VarDictJava/1.4.5'
+
+  cpus 1
+
   input:
   file tumorBam
   file normalBam
 
   output:
-  file vardictVcf
+  file '*.VarDict.vcf' into vardictVcf
+
+
+  // perl /sw/apps/bioinfo/VarDictJava/1.4.5/milou/VarDictJava/vardict.pl -G ${params.genome} \
+  // -f 0.01 -N TSN \
+  // -b "${params.normalBam}|${params.tumorBam}" \
+  // -z 1 -F 0x500 \
+  // -c 1 -S 2 -E 3 -g 4 \
+  // -R chr17:1000000-1100000 | testsomatic.R | var2vcf_somatic.pl > test.VarDict.vcf
 
   """
-  nextflow run $baseDir/Vardict.nf \
-  -w ${params.cawDir} \
-  --tumorBam ${params.tumorBam} \
-  --normalBam ${params.normalBam} \
-  --genome ${params.genome} \
-  --cosmic ${params.cosmic} \
-  --dbsnp ${params.dbsnp}
+  vardict -G ${params.genome} \
+  -f 0.01 -N ${tumorBam} \
+  -b "${params.tumorBam}|${params.normalBam}" \
+  -z 1 -F 0x500 \
+  -c 1 -S 2 -E 3 -g 4 \
+  -R chr17:1000000-1100000 | \
+  {params.vardictHome}/testsomatic.R | \
+  {params.vardictHome}/var2vcf_somatic.pl -f 0.01 -N "${tumorBam}|${normalBam}" > test.VarDict.vcf
   """
 }
 
