@@ -137,6 +137,7 @@ process Vardict {
 
   module 'bioinfo-tools'
   module 'VarDictJava/1.4.5'
+  module 'samtools/1.3'
 
   cpus 1
 
@@ -162,8 +163,8 @@ process Vardict {
   -z 1 -F 0x500 \
   -c 1 -S 2 -E 3 -g 4 \
   -R chr17:1000000-1100000 | \
-  {params.vardictHome}/testsomatic.R | \
-  {params.vardictHome}/var2vcf_somatic.pl -f 0.01 -N "${tumorBam}|${normalBam}" > test.VarDict.vcf
+  ${params.vardictHome}/testsomatic.R | \
+  ${params.vardictHome}/var2vcf_somatic.pl -f 0.01 -N "${tumorBam}|${normalBam}" > test.VarDict.vcf
   """
 }
 
