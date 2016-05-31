@@ -1,58 +1,69 @@
 #!/usr/bin/env nextflow
- 
 /*
- * Defines pipeline parameters in order to specify the refence genomes
- * and read pairs by using the command line options
+    Cancer Analysis Workflow for tumor/normal samples. Usage:
+    
+    $ nextflow run simplified.nf -c <config> --sample <sample.tsv>
+
+    Parameters (like location of the genome reference, dbSNP location) have to be given at the command-line.
+    We are not giving paramters here, but checking the existence of files.
+
+    You also must give the sample .tsv file that is defining the tumor/normal pairs. See explanation below.
  */
 
-params.genome = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta"
-params.genomeidx = "${params.genome}.fai"
-params.genomedict = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.dict"
-params.out = "$PWD"
-params.kgindels = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/1000G_phase1.indels.b37.vcf"
-params.kgidx = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/1000G_phase1.indels.b37.vcf.idx"
-params.dbsnp = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/dbsnp_138.b37.vcf"
-params.dbsnpidx = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/dbsnp_138.b37.vcf.idx"
-params.millsindels = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/Mills_and_1000G_gold_standard.indels.b37.vcf"
-params.millsidx = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/Mills_and_1000G_gold_standard.indels.b37.vcf.idx"
-params.sample = "sample.config.tsv" // override on cl
+//
+// we want to list all the missing parameters at the beginning, hence checking only this value
+// and exiting only at the very end if some of the parameters failed
+//
+allParamsDefined = true    
 
+/*
+    Use this closure to loop through all the parameters.
+    We can get an AssertionError exception from the file() method as well.
+ */
+checkExistence = {
+    paramFile,paramToCheck -> 
+    try {
+        paramFile= file(paramToCheck)
+        assert paramFile.exists()
+    } catch(AssertionError ae) {
+        println("Missing file: ${paramFile} ${paramToCheck}")
+        allParamsDefined = false;
+    }
+}
+
+refs = [ "genome_file": params.genome,      // genome reference
+    "genome_index" : params.genomeIndex,    // genome reference index
+    "genome_dict": params.genomeDict,       // genome reference dictionary
+    "kgindels": params.kgIndels,            // 1000 Genomes SNPs 
+    "kgidx": params.kgIndex,                // 1000 Genomes SNPs index
+    "dbsnp": params.dbsnp,                  // dbSNP
+    "dbsnpidx": params.dbsnpIndex,          // dbSNP index
+    "millsindels": params.millsIndels,      // Mill's Golden set of SNPs
+    "millsidx": params.millsIndex,          // Mill's Golden set index
+    "sample": params.sample                 // the sample sheet (multilane data refrence table, see below)
+  ]
+refs.each(checkExistence)
+
+if(!allParamsDefined) {
+    exit 1, "Missing file or parameter: please review your config file. Use the -c <config> command line option and --sample <sample.tsv> for data."
+}
+
+/*
+    Time to check the sample file. Its format is like: "subject sample lane fastq1 fastq2": 
+
+tcga.cl	tcga.cl.normal	tcga.cl.normal_1	data/tcga.cl.normal_L001_R1.fastq.gz	data/tcga.cl.normal_L001_R2.fastq.gz
+tcga.cl	tcga.cl.tumor	tcga.cl.tumor_1	data/tcga.cl.tumor_L001_R1.fastq.gz	data/tcga.cl.tumor_L001_R2.fastq.gz
+tcga.cl tcga.cl.tumor	tcga.cl.tumor_2	data/tcga.cl.tumor_L002_R1.fastq.gz	data/tcga.cl.tumor_L002_R2.fastq.gz
+ */
+sconfig = file(params.sample)
 if (!params.sample) {
   exit 1, "Please specify the sample config file"
 }
 
-
-/*
- * validate input and params
- */
-
-
-genome_file = file(params.genome)
-genome_index = file(params.genomeidx)
-genome_dict = file(params.genomedict)
-kgindels = file(params.kgindels)
-kgidx = file(params.kgidx)
-dbsnp = file(params.dbsnp)
-dbsnpidx = file(params.dbsnpidx)
-millsindels = file(params.millsindels)
-millsidx = file(params.millsidx)
-sconfig = file(params.sample)
-
-
-if( !genome_file.exists() ) exit 1, "Missing reference: ${genome_file}"
-if( !genome_dict.exists() ) exit 1, "Missing index: ${genome_dict}"
-if( !genome_index.exists() ) exit 1, "Missing index: ${genome_index}"
-if( !kgindels.exists() ) exit 1, "Missing vcf: ${kgindels}"
-if( !dbsnp.exists() ) exit 1, "Missing vcf: ${dbsnp}"
-if( !millsindels.exists() ) exit 1, "Missing vcf: ${millsindels}"
-
-
 /*
  * Read config file, lets presume its "subject sample fastq1 fastq2"
  * for now and channel this out for mapping
- *
  */
-
 
 fastqs = Channel
 .from(sconfig.readLines())
@@ -66,13 +77,11 @@ fastqs = Channel
   [ mergeId, id, idRun, fq1path, fq2path ]
 }
 
+fastqs = logChannelContent("FASTQ files and IDs to process: ",fastqs)
 
 /*
  * processes
- *
  */	
-
-
 process MappingBwa {
 
 	module 'bioinfo-tools'
@@ -82,18 +91,11 @@ process MappingBwa {
 	cpus 1
 
 	input:
-	file genome_file
+	file refs["genome_file"]
 	set mergeId, id, idRun, file(fq1), file(fq2) from fastqs
 
 	output:
-//	file "${name}.bam" into mapped_bam
 	set mergeId, id, idRun, file("${idRun}.bam") into bams
-
-//	script:
-//	lanePattern = ~/_L00[1-8]/
-//	id = (name - lanePattern)
-
-
 
 // here I use params.genome for bwa ref so I dont have to link to all bwa index files
 
@@ -102,28 +104,29 @@ process MappingBwa {
 	rgString="\"@RG\\tID:${idRun}\\tSM:${id}\\tLB:${id}\\tPL:illumina\""
 
 	"""
-	bwa mem -R ${rgString} -B 3 -t ${task.cpus} -M ${params.genome} ${fq1} ${fq2} | samtools view -bS -t ${genome_index} - | samtools sort - > ${idRun}.bam
+	bwa mem -R ${rgString} -B 3 -t ${task.cpus} -M ${params.genome} ${fq1} ${fq2} | samtools view -bS -t ${refs["genomeIndex"]} - | samtools sort - > ${idRun}.bam
 	"""
-
 }
-
 
 /*
  * Borrowed code from chip.nf
  * 
  * Now, we decide whether bam is standalone or should be merged by sample (id (column 1) from channel bams)
- *  
+ * http://www.nextflow.io/docs/latest/operator.html?highlight=grouptuple#grouptuple 
+ * 
  */
 
 // Merge or rename bam
 singleBam = Channel.create()
 groupedBam = Channel.create()
 
-//bams.groupTuple(by: [0,3,4])
 bams.groupTuple(by: [1])
-.choice(singleBam, groupedBam) {
-  it[3].size() > 1 ? 1 : 0
-}
+    .choice(singleBam, groupedBam) {
+        it[3].size() > 1 ? 1 : 0
+    }
+
+singleBam = logChannelContent("Single BAMs before merge:",singleBam )
+groupedBam = logChannelContent("Grouped BAMs before merge:",groupedBam)
 
 process MergeBam {
     
@@ -135,68 +138,44 @@ process MergeBam {
 
     output:
     set mergeId, id, idRun, file("${id}.bam") into mergedBam
-//    set mergeId, id, file("${id}.bam") into mergedBam
 
     script:
-//    cpus = task.cpus
     idRun = idRun.sort().join(':')
 
     """
     echo ${mergeId} ${id} ${idRun} ${bam} > ble
     samtools merge ${id}.bam ${bam}
     """
-
-//    echo ${idRun} > id.txt
-//    (
-//      samtools view -H ${bam} | egrep -v '@RG|@PG';
-//      for f in ${bam}; do 
-//        samtools view -H \$f | grep '@RG';
-//      done
-//    ) > header.txt && \
-//    samtools merge -h header.txt ${id}.bam ${bam}
-
 }
 
 /*
  * merge all merged and single bams to a single channel
  */
-
-
 bamList = Channel.create()
 bamList = singleBam
-.mix(mergedBam)
-.map { mergeId, id, idRun, bam -> [mergeId[0], id, bam].flatten()
-//.map { mergeId, id, idRun, bam -> [mergeId, id, bam].flatten()
+    .mix(mergedBam)
+    .map { mergeId, id, idRun, bam -> [mergeId[0], id, bam].flatten()
 }
 
+bamList = logChannelContent("BAM list for MarkDuplicates",bamList)
 
 /*
  *  mark duplicates all bams
  */
-
-
 process MarkDuplicates {
 
-//	module 'bioinfo-tools'
-//	module 'picard'
-
+	module 'bioinfo-tools'
+	module 'picard'
 
 	input:
-//	set mergeId, id, idRun, file(mBam) from bamList
+	set mergeId, id, idRun, file(mBam) from bamList
 	set mergeId, id, file(mBam) from bamList
 //
-//	wtf is coming through the channel??
+//	Channel content should be in the log before
 //
-
-	
 	output:
-//	set mergeId, idRun, file("${idRun}.md.bam"), file("${idRun}.md.bai") into markdupBamInts
 	set mergeId, idRun, file("${id}.md.bam"), file("${id}.md.bai") into markdupBamInts
-//	set mergeId, idRun, file("${idRun}.md.bam"), file("${idRun}.md.bai") into markdupBam
 	set mergeId, idRun, file("${id}.md.bam"), file("${id}.md.bai") into markdupBam
-
-//	echo "${mergeId} : ${id} : ${idRun} : ${mBam}" > ble
-
 
 	"""
 	echo "${mergeId} : ${id} : ${mBam}" > ble
@@ -209,51 +188,49 @@ process MarkDuplicates {
 	CREATE_INDEX=TRUE \
 	OUTPUT=${id}.md.bam
 	"""
-
-// 	debug
-//	echo ${mergeId} ${id} ${idRun} ${mergedBam} > ble
-
 }
 
 /*
  * create realign intervals, use both tumor+normal as input
  */
 
-// group the bams by overall subject/patient id (mergeId)
+// group the bam itervals by overall subject/patient id (mergeId)
 mdbi=Channel.create()
 mdbi=markdupBamInts
 .groupTuple()
-//. map {$mergeId, $idRun, $bam, $bai -> $mergeId, $idRun "-I $bam", $bai}
+
+mdbi = logChannelContent("Grouped BAM intervals by overall subject/patient ID ",  mdbi)
 
 // group the bams by overall subject/patient id (mergeId)
 mdb=Channel.create()
 mdb=markdupBam
 .groupTuple()
-//. map {$mergeId, $idRun, $bam, $bai -> $mergeId, $idRun "-I $bam", $bai}
 
+mdb = logChannelContent("Grouped BAMs by overall subject/patient ID ",  mdb)
 
+/*
+    Creating target intervals for indel realigner.
+    Though VCF indexes are not needed explicitly, we are adding them so they will be linked, and not re-created on the fly.
+ */
 process CreateIntervals {
 
 	cpus 4
 	
 	input:
 	set mergeId, id, file(mdBam), file(mdBai) from mdbi
-	file gf from genome_file 
-	file gi from genome_index
-	file gd from genome_dict
-	file ki from kgindels
-	file mi from millsindels
+	file gf from file(refs["genome_file"]) 
+	file gi from file(refs["genome_index"])
+	file gd from file(refs["genome_dict"])
+	file ki from file(refs["kgindels"])
+    file kix from file(refs["kgidx"])
+	file mi from file(refs["millsindels"])
+	file mix from file(refs["millsidx"])
 
 	output:
 	file("${mergeId}.intervals") into intervals
 
-
 	script:
-//	ifile="${id}.md.bam"
-//	input="-I $mdBam.join(' -I ')"
-//	input = GATKInput.spread(mdBam)
 	input = mdBam.collect{"-I $it"}.join(' ')
-
 
 	"""
 	echo ${mergeId} ${id} ${mdBam} > ble
@@ -267,276 +244,45 @@ process CreateIntervals {
 	-o ${mergeId}.intervals
 
  	"""	
-
 }
 
 
-/*
- * realign, use nWayOut to split into tumor/normal again
- */
-
-
-process realign {
-
-
-	input:
-	set mergeId, id, file(mdBam), file(mdBai) from mdb
-	file gf from genome_file
-	file gi from genome_index
-	file gd from genome_dict
-	file ki from kgindels
-	file mi from millsindels
-	file intervals from intervals
-
-	output:
-	set mergeId, id, file("${id}.real.bam") into realBams
-
-
-	script:
-	input = mdBam.collect{"-I $it"}.join(' ')
-
-	"""
-	java -Xmx7g -jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
-	-T IndelRealigner \
-	$input \
-	-R $gf \
-	-targetIntervals $intervals \
-	-known $ki \
-	-known $mi \
-	-nWayOut '.real.bam'
-	"""
-
-}
-
-
-
-/*
-process create_recal_table_tumor {
-
-	cpus 2
-
-	input:
-	file tumor_real_bam_table
-	file tumor_real_bai_table
-	file genome_file
-	file genome_dict
-	file genome_index
-	file dbsnp
-	file dbsnpidx
-	file kgindels
-	file kgidx
-	file millsindels
-	file millsidx
-
-	output:
-	file '*.tumor.recal.table' into tumor_recal_table
-
-
-	"""
-	java -Xmx7g \
-	-jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
-	-T BaseRecalibrator \
-	-l INFO -R $genome_file \
-	-I $tumor_real_bam_table \
-	-knownSites $dbsnp \
-	-knownSites $kgindels \
-	-knownSites $millsindels \
-	-nct ${task.cpus} \
-	-o ${params.sample}.tumor.recal.table
-	"""
-}
-*/
-
-/*
-process recalibrate_bam_tumor {
-
-
-	
-	input:
-	file tumor_real_bam_recal
-	file tumor_real_bai_recal
-	file genome_file
-	file genome_dict
-	file genome_index
-	file dbsnp
-	file dbsnpidx
-	file kgindels
-	file kgidx
-	file millsindels
-	file millsidx
-	file tumor_recal_table
-
-	output:
-	file '*.tumor.recal.bam' into tumor_recal_bam
-	file '*.tumor.recal.bai' into tumor_recal_bai
-
-	"""
-	java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
-	-jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
-	-R $genome_file \
-	-I $tumor_real_bam_recal \
-	-T PrintReads \
-	--BQSR $tumor_recal_table \
-	-o ${params.sample}.tumor.recal.bam
-	"""
-
-
-}
-*/
-
-/*
-process genotype_gvcf_tumor {
-
-	cpus 2
-	
-	input:
-	file tumor_recal_bam
-	file tumor_recal_bai
-	file genome_file
-	file genome_dict
-	file genome_index
-	file dbsnp
-	file dbsnpidx
-	file kgindels
-	file kgidx
-	file millsindels
-	file millsidx	
-
-	output:
-	file '*.tumor.g.vcf.gz' into 'tumor_gvcf'
-
-	"""
-        java -Xmx7g \
-	-jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
-	-R $genome_file \
-	-T HaplotypeCaller \
-	-I $tumor_recal_bam \
-	--emitRefConfidence GVCF \
-	--variant_index_type LINEAR \
-	--dbsnp $dbsnp \
-	--variant_index_parameter 128000 \
-	-nct ${task.cpus} \
-	-o ${params.sample}.tumor.g.vcf.gz
-	"""
-
-}
-*/
-
-/*
-process create_recal_table_normal {
-
-	cpus 2
-
-	input:
-	file normal_real_bam_table
-	file normal_real_bai_table
-	file genome_file
-	file genome_dict
-	file genome_index
-	file dbsnp
-	file dbsnpidx
-	file kgindels
-	file kgidx
-	file millsindels
-	file millsidx
-
-	output:
-	file '*.normal.recal.table' into normal_recal_table
-
-
-	"""
-	java -Xmx7g \
-	-jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
-	-T BaseRecalibrator \
-	-l INFO -R $genome_file \
-	-I $normal_real_bam_table \
-	-knownSites $dbsnp \
-	-knownSites $kgindels \
-	-knownSites $millsindels \
-	-nct ${task.cpus} \
-	-o ${params.sample}.normal.recal.table
-	"""
-}
-*/
-
-/*
-process recalibrate_bam_normal {
-
-
-	
-	input:
-	file normal_real_bam_recal
-	file normal_real_bai_recal
-	file genome_file
-	file genome_dict
-	file genome_index
-	file dbsnp
-	file dbsnpidx
-	file kgindels
-	file kgidx
-	file millsindels
-	file millsidx
-	file normal_recal_table
-
-	output:
-	file '*.normal.recal.bam' into normal_recal_bam
-	file '*.normal.recal.bai' into normal_recal_bai
-
-	"""
-	java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
-	-jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
-	-R $genome_file \
-	-I $normal_real_bam_recal \
-	-T PrintReads \
-	--BQSR $normal_recal_table \
-	-o ${params.sample}.normal.recal.bam
-	"""
-
-
-}
-*/
-
-
-/*
-process genotype_gvcf_normal {
-
-	cpus 2
-	
-	input:
-	file normal_recal_bam
-	file normal_recal_bai
-	file genome_file
-	file genome_dict
-	file genome_index
-	file dbsnp
-	file dbsnpidx
-	file kgindels
-	file kgidx
-	file millsindels
-	file millsidx	
-
-	output:
-	file '*.normal.g.vcf.gz' into 'normal_gvcf'
-
-	"""
-        java -Xmx7g \
-	-jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
-	-R $genome_file \
-	-T HaplotypeCaller \
-	-I $normal_recal_bam \
-	--emitRefConfidence GVCF \
-	--variant_index_type LINEAR \
-	--dbsnp $dbsnp \
-	--variant_index_parameter 128000 \
-	-nct ${task.cpus} \
-	-o ${params.sample}.normal.g.vcf.gz
-	"""
-
-}
-
-*/
-
-
+///*
+// * realign, use nWayOut to split into tumor/normal again
+// */
+//process realign {
+//
+//	input:
+//	set mergeId, id, file(mdBam), file(mdBai) from mdb
+//	file gf from file(refs["genome_file"])
+//	file gi from file(refs["genome_index"])
+//	file gd from file(refs["genome_dict"])
+//	file ki from file(refs["kgindels"])
+//    file kix from file(refs["kgidx"])
+//	file mi from file(refs["millsindels"])
+//	file mix from file(refs["millsidx"])
+//	file intervals from intervals
+//
+//	output:
+//	//set mergeId, id, file("${id}.real.bam") into realBams
+//	set mergeId, id, file("${mergeId}.real.bam") into realBams
+//
+//	script:
+//	input = mdBam.collect{"-I $it"}.join(' ')
+//
+//	"""
+//	java -Xmx7g -jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
+//	-T IndelRealigner \
+//	$input \
+//	-R $gf \
+//	-targetIntervals $intervals \
+//	-known $ki \
+//	-known $mi \
+//	-nWayOut '.real.bam'
+//	"""
+//
+//}
+//
 // ############################### FUNCTIONS
 
  def readPrefix( Path actual, template ) {
@@ -570,160 +316,18 @@ process genotype_gvcf_normal {
     return fileName
 }
 
-
-/* unused crap: ######################################################################
-
-
-process mark_duplicates_normal {
-
-	module 'bioinfo-tools'
-	module 'picard'
-
-
-	input:
-	file normal_bam
-	
-	output:
-	file '*.normal.md.bam' into normal_md_bam_intervals, normal_md_bam_real
-	file '*.normal.md.bai' into normal_md_bai_intervals, normal_md_bai_real
-
-	"""
-	java -Xmx7g -jar /sw/apps/bioinfo/picard/1.118/milou/MarkDuplicates.jar \
-	INPUT=${normal_bam} \
-	METRICS_FILE=${normal_bam}.metrics \
-	TMP_DIR=. \
-	ASSUME_SORTED=true \
-	VALIDATION_STRINGENCY=LENIENT \
-	CREATE_INDEX=TRUE \
-	OUTPUT=${params.sample}.normal.md.bam	
-	"""
-
+/*
+    Paolo Di Tommaso told that it should be solved by the Channel view() method, but frankly that was not working
+    as expected. This simple function makes two channels from one, and logs the content for one (thus consuming that channel)
+    and returns with the intact copy for further processing.
+ */
+def logChannelContent(aMessage, aChannel) {
+   
+    resChannel = Channel.create()
+    logChannel = Channel.create()
+    Channel
+        .from aChannel
+        .separate(resChannel,logChannel) {a -> [a,a] }
+    logChannel.subscribe { log.info aMessage + " -- $it" }
+    return resChannel
 }
-
-
-process merge_bam {
-
-	module 'bioinfo-tools'
-	module 'picard'
-
-	input:
-	file (bams:'*') from mapped_bam.toList() 
-
-	output:
-	file ble
-
-
-	
-	
-//	java -jar picard.jar MergeSamFiles I=input_1.bam I=input_2.bam O=merged_files.bam
-
-	"""
-	ls ${bams} > ble
-        """
-}
-
-
- 
-
-process mapping_tumor_bwa {
-
-	module 'bioinfo-tools'
-	module 'bwa'
-	module 'samtools/1.3'
-
-
-	cpus 1
-
-	input:
-	file genome_file
-	
-	file tp1
-	file tp2
-
-	output:
-	file '*.tumor.bam' into tumor_bam
-
-	"""
-	bwa mem -R "@RG\\tID:${params.sample}.tumor\\tSM:${params.sample}\\tLB:${params.sample}.tumor\\tPL:illumina" \
-	-B 3 -t ${task.cpus} \
-	-M ${params.genome} ${tp1} ${tp2} \
-	| samtools view -bS -t ${genome_index} - \
-	| samtools sort - > ${params.sample}.tumor.bam
-	"""	
-
-}
-
-process mapping_normal_bwa {
-
-	module 'bioinfo-tools'
-	module 'bwa'
-	module 'samtools/1.3'
-
-	cpus 1
-
-
-	input:
-	file genome_file
-	file np1
-	file np2
-
-	output:
-	file '*.normal.bam' into normal_bam 
-
-	"""
-	bwa mem -R "@RG\\tID:${params.sample}.normal\\tSM:${params.sample}\\tLB:${params.sample}.normal\\tPL:illumina" \
-	-B 3 -t ${task.cpus} \
-	-M ${params.genome} ${np1} ${np2} \
-	| samtools view -bS -t ${genome_index} - \
-	| samtools sort - > ${params.sample}.normal.bam
-	"""	
-
-}
-
-
-
-
-if (!params.index) {
-  exit 1, "Please specify the input table file"
-
-//params.sample = "tcga.cl" // override with --sample <SAMPLE>
-//params.tpair1 = "data/${params.sample}.tumor_R1.fastq.gz"
-//params.npair1 = "data/${params.sample}.normal_R1.fastq.gz"
-//params.tpair2 = "data/${params.sample}.tumor_R2.fastq.gz"
-//params.npair2 = "data/${params.sample}.normal_R2.fastq.gz"
-
-
-//tp1 = file(params.tpair1)
-//tp2 = file(params.tpair2)
-//np1 = file(params.npair1)
-//np2 = file(params.npair2)
-
-
-//if( !tp1.exists() ) exit 2, "Missing read ${tp1}"
-//if( !tp2.exists() ) exit 2, "Missing read ${tp2}"
-//if( !np1.exists() ) exit 2, "Missing read ${np1}"
-//if( !np2.exists() ) exit 2, "Missing read ${np2}"
-
-
-// Pattern to grab all fastq pairs:
-params.r = "data/*_R[12].fastq.gz"
-Channel
-    .fromPath( params.r )
-    .ifEmpty { error "Cannot find any reads matching: ${params.r}" }
-    .map { path -> 
-       def prefix = readPrefix(path, params.r)
-       tuple(prefix, path) 
-    }
-    .groupTuple(sort: true)
-    .set { read } 
-
-
-// read .subscribe {println it}
-
-//      ln -s ${name}.bam ../../../${id}
-//	mkdir -f bam_${name}
-//	mkdir -p ../../../${id}
-//       	bwa mem -R "@RG\\tID:${params.sample}\\tSM:${params.sample}\\tLB:${params.sample}\\tPL:illumina" -B 3 -t ${task.cpus} -M ${params.genome} ${reads} | samtools view -bS -t ${genome_index} - | samtools sort - > ${name}.bam
-
-
-*/
