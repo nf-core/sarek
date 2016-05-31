@@ -149,8 +149,6 @@ process MergeBam {
 }
 
 process RenameSingle {
-    module 'bioinfo-tools'
-    module 'samtools/1.3'
 
     input:
     set mergeId, id, idRun, file(bam) from singleBam 
@@ -162,8 +160,7 @@ process RenameSingle {
     idRun = idRun.sort().join(':')
 
     """
-    echo ${mergeId} ${id} ${idRun} ${bam} > ble
-    samtools merge ${id}.bam ${bam}
+    mv ${bam} ${id}.bam
     """
 }
 
@@ -179,18 +176,12 @@ bamList = logChannelContent("Mixed channels ",bamList)
 bamList = bamList.map { mergeId, id, idRun, bam -> [mergeId[0], id, bam].flatten() }
 bamList = logChannelContent("Mapped and flattened ", bamList) 
 
-//bamList = singleMergedBam
-//    .mix(mergedBam)
-//    .map { mergeId, id, idRun, bam -> [mergeId[0], id, bam].flatten()
-//}
-
 bamList = logChannelContent("BAM list for MarkDuplicates",bamList)
 
 /*
  *  mark duplicates all bams
  */
 process MarkDuplicates {
-    tag { $bamList } 
 
 	module 'bioinfo-tools'
 	module 'picard'
@@ -243,9 +234,8 @@ mdb = logChannelContent("Grouped BAMs by overall subject/patient ID ",  mdb)
     Though VCF indexes are not needed explicitly, we are adding them so they will be linked, and not re-created on the fly.
  */
 process CreateIntervals {
-    tag { $mdbi}
 
-	cpus 4
+	cpus 6 
 	
 	input:
 	set mergeId, id, file(mdBam), file(mdBai) from mdbi
@@ -283,7 +273,6 @@ intervals = logChannelContent("Intervals passed to realignment: ",intervals)
  * realign, use nWayOut to split into tumor/normal again
  */
 process realign {
-    tag { "$mergeId" }
 
 	input:
 	set mergeId, id, file(mdBam), file(mdBai) from mdb
