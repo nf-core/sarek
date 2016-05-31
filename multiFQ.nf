@@ -148,14 +148,41 @@ process MergeBam {
     """
 }
 
+process RenameSingle {
+    module 'bioinfo-tools'
+    module 'samtools/1.3'
+
+    input:
+    set mergeId, id, idRun, file(bam) from singleBam 
+
+    output:
+    set mergeId, id, idRun, file("${id}.bam") into singleMergedBam
+
+    script:
+    idRun = idRun.sort().join(':')
+
+    """
+    echo ${mergeId} ${id} ${idRun} ${bam} > ble
+    samtools merge ${id}.bam ${bam}
+    """
+}
+
+singleMergedBam = logChannelContent("SINGLES :",singleMergedBam )
+mergedBam = logChannelContent("GROUPED :",mergedBam)
 /*
  * merge all merged and single bams to a single channel
  */
 bamList = Channel.create()
-bamList = singleBam
-    .mix(mergedBam)
-    .map { mergeId, id, idRun, bam -> [mergeId[0], id, bam].flatten()
-}
+//bamList = mergedBam.mix(singleMergedBam.toList())
+bamList = mergedBam.mix(singleMergedBam)
+bamList = logChannelContent("Mixed channels ",bamList)
+bamList = bamList.map { mergeId, id, idRun, bam -> [mergeId[0], id, bam].flatten() }
+bamList = logChannelContent("Mapped and flattened ", bamList) 
+
+//bamList = singleMergedBam
+//    .mix(mergedBam)
+//    .map { mergeId, id, idRun, bam -> [mergeId[0], id, bam].flatten()
+//}
 
 bamList = logChannelContent("BAM list for MarkDuplicates",bamList)
 
@@ -163,15 +190,18 @@ bamList = logChannelContent("BAM list for MarkDuplicates",bamList)
  *  mark duplicates all bams
  */
 process MarkDuplicates {
+    tag { $bamList } 
 
 	module 'bioinfo-tools'
 	module 'picard'
 
 	input:
-	set mergeId, id, idRun, file(mBam) from bamList
+	//set mergeId, id, idRun, file(mBam) from bamList
 	set mergeId, id, file(mBam) from bamList
 //
 //	Channel content should be in the log before
+//  The output channels are duplicated nevertheless, one copy goes to RealignerTargetCreator (CreateIntervals)
+//  and the other to IndelRealigner
 //
 	output:
 	set mergeId, idRun, file("${id}.md.bam"), file("${id}.md.bai") into markdupBamInts
@@ -199,7 +229,7 @@ mdbi=Channel.create()
 mdbi=markdupBamInts
 .groupTuple()
 
-mdbi = logChannelContent("Grouped BAM intervals by overall subject/patient ID ",  mdbi)
+mdbi = logChannelContent("BAMs for RealignerTargetCreator grouped by overall subject/patient ID ",  mdbi)
 
 // group the bams by overall subject/patient id (mergeId)
 mdb=Channel.create()
@@ -213,6 +243,7 @@ mdb = logChannelContent("Grouped BAMs by overall subject/patient ID ",  mdb)
     Though VCF indexes are not needed explicitly, we are adding them so they will be linked, and not re-created on the fly.
  */
 process CreateIntervals {
+    tag { $mdbi}
 
 	cpus 4
 	
@@ -246,46 +277,47 @@ process CreateIntervals {
  	"""	
 }
 
+intervals = logChannelContent("Intervals passed to realignment: ",intervals)
 
-///*
-// * realign, use nWayOut to split into tumor/normal again
-// */
-//process realign {
-//
-//	input:
-//	set mergeId, id, file(mdBam), file(mdBai) from mdb
-//	file gf from file(refs["genome_file"])
-//	file gi from file(refs["genome_index"])
-//	file gd from file(refs["genome_dict"])
-//	file ki from file(refs["kgindels"])
-//    file kix from file(refs["kgidx"])
-//	file mi from file(refs["millsindels"])
-//	file mix from file(refs["millsidx"])
-//	file intervals from intervals
-//
-//	output:
-//	//set mergeId, id, file("${id}.real.bam") into realBams
-//	set mergeId, id, file("${mergeId}.real.bam") into realBams
-//
-//	script:
-//	input = mdBam.collect{"-I $it"}.join(' ')
-//
-//	"""
-//	java -Xmx7g -jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
-//	-T IndelRealigner \
-//	$input \
-//	-R $gf \
-//	-targetIntervals $intervals \
-//	-known $ki \
-//	-known $mi \
-//	-nWayOut '.real.bam'
-//	"""
-//
-//}
-//
+/*
+ * realign, use nWayOut to split into tumor/normal again
+ */
+process realign {
+    tag { "$mergeId" }
+
+	input:
+	set mergeId, id, file(mdBam), file(mdBai) from mdb
+	file gf from file(refs["genome_file"])
+	file gi from file(refs["genome_index"])
+	file gd from file(refs["genome_dict"])
+	file ki from file(refs["kgindels"])
+    file kix from file(refs["kgidx"])
+	file mi from file(refs["millsindels"])
+	file mix from file(refs["millsidx"])
+	file intervals from intervals
+
+	output:
+	set mergeId, id, file("*.md.real.bam") into realBams
+
+	script:
+	input = mdBam.collect{"-I $it"}.join(' ')
+
+	"""
+	java -Xmx7g -jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
+	-T IndelRealigner \
+	$input \
+	-R $gf \
+	-targetIntervals $intervals \
+	-known $ki \
+	-known $mi \
+	-nWayOut '.real.bam'
+	"""
+
+}
+
 // ############################### FUNCTIONS
 
- def readPrefix( Path actual, template ) {
+def readPrefix( Path actual, template ) {
 
     final fileName = actual.getFileName().toString()
 
