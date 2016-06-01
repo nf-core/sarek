@@ -184,8 +184,8 @@ bams.groupTuple(by: [1])
         it[3].size() > 1 ? 1 : 0
     }
 
-singleBam = logChannelContent("Single BAMs before merge:",singleBam )
-groupedBam = logChannelContent("Grouped BAMs before merge:",groupedBam)
+singleBam  = logChannelContent("Single BAMs before merge:", singleBam )
+groupedBam = logChannelContent("Grouped BAMs before merge:", groupedBam)
 
 process MergeBam {
     
@@ -331,7 +331,7 @@ intervals = logChannelContent("Intervals passed to realignment: ",intervals)
 /*
  * realign, use nWayOut to split into tumor/normal again
  */
-process realign {
+process Realign {
 
 	input:
 	set mergeId, id, file(mdBam), file(mdBai) from mdb
@@ -361,6 +361,24 @@ process realign {
 	-nWayOut '.real.bam'
 	"""
 }
+
+realBams = logChannelContent("Realigned Bams ready to go to variant calling: ",realBams)
+
+/*
+ * Variant Calling
+ * The idea here is to make variant calls
+ * normal/tumor
+ * or if several tumors available
+ * normal/tumor_1
+ * normal/tumor_2
+ * normal/tumor_3
+ * ...
+ * 
+ * IDEAS : 
+ * Duplicate output from Realign
+ * and filter on name
+ * 
+ */
 
 // ############################### FUNCTIONS
 
