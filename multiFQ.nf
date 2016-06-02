@@ -195,8 +195,8 @@ process MarkDuplicates {
 //  and the other to IndelRealigner
 //
 	output:
-	set mergeId, idRun, file("${id}.md.bam"), file("${id}.md.bai") into markdupBamInts
-	set mergeId, idRun, file("${id}.md.bam"), file("${id}.md.bai") into markdupBam
+	set mergeId, id, file("${id}.md.bam"), file("${id}.md.bai") into markdupBamInts
+	set mergeId, id, file("${id}.md.bam"), file("${id}.md.bai") into markdupBam
 
 	"""
 	echo "${mergeId} : ${id} : ${mBam}" > ble
