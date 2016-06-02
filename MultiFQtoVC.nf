@@ -247,8 +247,8 @@ process MarkDuplicates {
 	module 'picard'
 
 	input:
-	set mergeId, id, idRun, file(mBam) from bamList
-	// set mergeId, id, file(mBam) from bamList
+	// set mergeId, id, idRun, file(mBam) from bamList
+	set mergeId, id, file(mBam) from bamList
 
 //
 //	Channel content should be in the log before
@@ -257,8 +257,8 @@ process MarkDuplicates {
 //
 
 	output:
-	set mergeId, idRun, file("${id}.md.bam"), file("${id}.md.bai") into markdupBamInts
-	set mergeId, idRun, file("${id}.md.bam"), file("${id}.md.bai") into markdupBam
+	set mergeId, id, file("${id}.md.bam"), file("${id}.md.bai") into markdupBamInts
+	set mergeId, id, file("${id}.md.bam"), file("${id}.md.bai") into markdupBam
 
 	"""
 	echo "${mergeId} : ${id} : ${mBam}" > ble
@@ -297,7 +297,7 @@ process CreateIntervals {
 	cpus 6 
 	
 	input:
-	set mergeId, id, idRun, file(mdBam), file(mdBai) from mdbi
+	set mergeId, id, file(mdBam), file(mdBai) from mdbi
 	file gf from file(refs["genome_file"]) 
 	file gi from file(refs["genome_index"])
 	file gd from file(refs["genome_dict"])
@@ -334,7 +334,7 @@ intervals = logChannelContent("Intervals passed to realignment: ",intervals)
 process Realign {
 
 	input:
-	set mergeId, id, idRun, file(mdBam), file(mdBai) from mdb
+	set mergeId, id, file(mdBam), file(mdBai) from mdb
 	file gf from file(refs["genome_file"])
 	file gi from file(refs["genome_index"])
 	file gd from file(refs["genome_dict"])
@@ -345,7 +345,7 @@ process Realign {
 	file intervals from intervals
 
 	output:
-	set mergeId, id, idRun, file("*.md.real.bam") into realBams
+	set mergeId, id, file("*.md.real.bam") into realBams
 
 	script:
 	input = mdBam.collect{"-I $it"}.join(' ')
