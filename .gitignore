@@ -2,3 +2,5 @@ data/chr17_testdata
 work/
 .nextflow*
 trace*
+.*swp
+timeline.html*
