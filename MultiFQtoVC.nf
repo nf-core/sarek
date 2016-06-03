@@ -105,7 +105,7 @@ if (!allParamsDefined) {
     "CANCER ANALYSIS WORKFLOW ~ version $version",
     "Missing file or parameter: please review your config file.",
     "    Usage",
-    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv>",
+    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv>")
   text.subscribe { println "$it" }
   exit 1
 }
@@ -124,7 +124,7 @@ if (!params.sample) {
     "CANCER ANALYSIS WORKFLOW ~ version $version",
     "Missing the sample TSV config file: please specify it.",
     "    Usage",
-    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv>",
+    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv>")
   text.subscribe { println "$it" }
   exit 1
 }
