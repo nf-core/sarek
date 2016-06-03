@@ -16,8 +16,8 @@
 // and exiting only at the very end if some of the parameters failed
 //
 
-String version="0.0.1"
-String dateUpdate = "2016-05-24"
+String version    = "0.0.1"
+String dateUpdate = "2016-06-03"
 
 /*
  * Get some basic informations about the workflow
@@ -73,48 +73,60 @@ allParamsDefined = true
  * We can get an AssertionError exception from the file() method as well.
  */
 
-checkExistence = {
-  paramFile,paramToCheck -> 
+CheckExistence = {
+  referenceFile, fileToCheck ->
   try {
-    paramFile= file(paramToCheck)
-    assert paramFile.exists()
+    referenceFile = file(fileToCheck)
+    assert referenceFile.exists()
   }
   catch (AssertionError ae) {
-    println("Missing file: ${paramFile} ${paramToCheck}")
+    println("Missing file: ${referenceFile} ${fileToCheck}")
     allParamsDefined = false;
   }
 }
 
 refs = [
-  "genome_file":    params.genome,      // genome reference
-  "genome_index" :  params.genomeIndex, // genome reference index
-  "genome_dict":    params.genomeDict,  // genome reference dictionary
-  "kgindels":       params.kgIndels,    // 1000 Genomes SNPs 
-  "kgidx":          params.kgIndex,     // 1000 Genomes SNPs index
+  "genomeFile":     params.genome,      // genome reference
+  "genomeIndex":    params.genomeIndex, // genome reference index
+  "genomeDict":     params.genomeDict,  // genome reference dictionary
+  "kgIndels":       params.kgIndels,    // 1000 Genomes SNPs 
+  "kgIndex":        params.kgIndex,     // 1000 Genomes SNPs index
   "dbsnp":          params.dbsnp,       // dbSNP
-  "dbsnpidx":       params.dbsnpIndex,  // dbSNP index
-  "millsindels":    params.millsIndels, // Mill's Golden set of SNPs
-  "millsidx":       params.millsIndex,  // Mill's Golden set index
+  "dbsnpIndex":     params.dbsnpIndex,  // dbSNP index
+  "millsIndels":    params.millsIndels, // Mill's Golden set of SNPs
+  "millsIndex":     params.millsIndex,  // Mill's Golden set index
   "sample":         params.sample       // the sample sheet (multilane data refrence table, see below)
 ]
 
-refs.each(checkExistence)
+refs.each(CheckExistence)
 
 if (!allParamsDefined) {
-    exit 1, "Missing file or parameter: please review your config file. Use the -c <config> command line option and --sample <sample.tsv> for data."
+  text = Channel.from(
+    "CANCER ANALYSIS WORKFLOW ~ version $version",
+    "Missing file or parameter: please review your config file.",
+    "    Usage",
+    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv>",
+  text.subscribe { println "$it" }
+  exit 1
 }
 
 /*
  * Time to check the sample file. Its format is like: "subject sample lane fastq1 fastq2": 
  * tcga.cl	tcga.cl.normal	tcga.cl.normal_1	data/tcga.cl.normal_L001_R1.fastq.gz	data/tcga.cl.normal_L001_R2.fastq.gz
  * tcga.cl	tcga.cl.tumor	tcga.cl.tumor_1	data/tcga.cl.tumor_L001_R1.fastq.gz	data/tcga.cl.tumor_L001_R2.fastq.gz
- * tcga.cl tcga.cl.tumor	tcga.cl.tumor_2	data/tcga.cl.tumor_L002_R1.fastq.gz	data/tcga.cl.tumor_L002_R2.fastq.gz
+ * tcga.cl	tcga.cl.tumor	tcga.cl.tumor_2	data/tcga.cl.tumor_L002_R1.fastq.gz	data/tcga.cl.tumor_L002_R2.fastq.gz
  */
 
-sconfig = file(params.sample)
+sampleTSVconfig = file(params.sample)
 
 if (!params.sample) {
-  exit 1, "Please specify the sample config file"
+  text = Channel.from(
+    "CANCER ANALYSIS WORKFLOW ~ version $version",
+    "Missing the sample TSV config file: please specify it.",
+    "    Usage",
+    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv>",
+  text.subscribe { println "$it" }
+  exit 1
 }
 
 /*
@@ -122,19 +134,19 @@ if (!params.sample) {
  * for now and channel this out for mapping
  */
 
-fastqs = Channel
-  .from(sconfig.readLines())
+fastqFiles = Channel
+  .from(sampleTSVconfig.readLines())
   .map { line ->
-    list = line.split()
+    list    = line.split()
     mergeId = list[0]
-    id = list[1]
-    idRun = list[2]
+    id      = list[1]
+    idRun   = list[2]
     fq1path = file(list[3])
     fq2path = file(list[4])
     [ mergeId, id, idRun, fq1path, fq2path ]
 }
 
-fastqs = logChannelContent("FASTQ files and IDs to process: ",fastqs)
+fastqFiles = logChannelContent("FASTQ files and IDs to process: ",fastqFiles)
 
 /*
  * Processes
@@ -149,19 +161,21 @@ process Mapping {
 	cpus 1
 
 	input:
-	file refs["genome_file"]
-	set mergeId, id, idRun, file(fq1), file(fq2) from fastqs
+	file refs["genomeFile"]
+	set mergeId, id, idRun, file(fq1), file(fq2) from fastqFiles
 
 	output:
 	set mergeId, id, idRun, file("${idRun}.bam") into bams
 
-// here I use params.genome for bwa ref so I dont have to link to all bwa index files
+  // here I use params.genome for bwa ref so I dont have to link to all bwa index files
 
 	script:
-	rgString="\"@RG\\tID:${idRun}\\tSM:${id}\\tLB:${id}\\tPL:illumina\""
+	readGroupString="\"@RG\\tID:${idRun}\\tSM:${id}\\tLB:${id}\\tPL:illumina\""
 
 	"""
-	bwa mem -R ${rgString} -B 3 -t ${task.cpus} -M ${params.genome} ${fq1} ${fq2} | samtools view -bS -t ${refs["genomeIndex"]} - | samtools sort - > ${idRun}.bam
+	bwa mem -R ${readGroupString} -B 3 -t ${task.cpus} -M ${refs["genomeFile"]} ${fq1} ${fq2} | \
+  samtools view -bS -t ${refs["genomeIndex"]} - | \
+  samtools sort - > ${idRun}.bam
 	"""
 }
 
@@ -176,13 +190,11 @@ process Mapping {
 // Merge or rename bam
 // Renaming is totally useless, but it is more consistent
 
-singleBam = Channel.create()
+singleBam  = Channel.create()
 groupedBam = Channel.create()
 
-bams.groupTuple(by: [1])
-    .choice(singleBam, groupedBam) {
-        it[3].size() > 1 ? 1 : 0
-    }
+bams.groupTuple(by:[1])
+  .choice(singleBam, groupedBam) { it[3].size() > 1 ? 1 : 0 }
 
 singleBam  = logChannelContent("Single BAMs before merge:", singleBam )
 groupedBam = logChannelContent("Grouped BAMs before merge:", groupedBam)
@@ -202,12 +214,12 @@ process MergeBam {
     idRun = idRun.sort().join(':')
 
     """
-    echo ${mergeId} ${id} ${idRun} ${bam} > ble
+    echo -e "mergeId:\t"${mergeId}"\nid:\t"${id}"\nidRun:\t"${idRun}"\nbam:\t"${bam}"\n" > logInfo
     samtools merge ${id}.bam ${bam}
     """
 }
 
-process RenameSingle {
+process RenameSingleBam {
 
     input:
     set mergeId, id, idRun, file(bam) from singleBam 
@@ -223,7 +235,7 @@ process RenameSingle {
     """
 }
 
-singleRenamedBam = logChannelContent("SINGLES :", singleRenamedBam )
+singleRenamedBam = logChannelContent("SINGLES :", singleRenamedBam)
 mergedBam        = logChannelContent("GROUPED :", mergedBam)
 
 /*
@@ -244,11 +256,10 @@ bamList = logChannelContent("BAM list for MarkDuplicates",bamList)
 process MarkDuplicates {
 
 	module 'bioinfo-tools'
-	module 'picard'
+	module 'picard/1.118'
 
 	input:
-	// set mergeId, id, idRun, file(mBam) from bamList
-	set mergeId, id, file(mBam) from bamList
+	set mergeId, id, file(bam) from bamList
 
 //
 //	Channel content should be in the log before
@@ -257,14 +268,14 @@ process MarkDuplicates {
 //
 
 	output:
-	set mergeId, id, file("${id}.md.bam"), file("${id}.md.bai") into markdupBamInts
-	set mergeId, id, file("${id}.md.bam"), file("${id}.md.bai") into markdupBam
+	set mergeId, id, file("${id}.md.bam"), file("${id}.md.bai") into duplicatesForInterval
+	set mergeId, id, file("${id}.md.bam"), file("${id}.md.bai") into duplicatesForRealignement
 
 	"""
-	echo "${mergeId} : ${id} : ${mBam}" > ble
-	java -Xmx7g -jar /sw/apps/bioinfo/picard/1.118/milou/MarkDuplicates.jar \
-	INPUT=${mBam} \
-	METRICS_FILE=${mBam}.metrics \
+  echo -e "mergeId:\t"${mergeId}"\nid:\t"${id}"\nbam:\t"${bam}"\n" > logInfo
+  java -Xmx7g -jar ${params.picardHome}/MarkDuplicates.jar \
+	INPUT=${bam} \
+	METRICS_FILE=${bam}.metrics \
 	TMP_DIR=. \
 	ASSUME_SORTED=true \
 	VALIDATION_STRINGENCY=LENIENT \
@@ -277,15 +288,15 @@ process MarkDuplicates {
  * create realign intervals, use both tumor+normal as input
  */
 
-// group the bam itervals by overall subject/patient id (mergeId)
-mdbi = Channel.create()
-mdbi = markdupBamInts.groupTuple()
-mdbi = logChannelContent("BAMs for RealignerTargetCreator grouped by overall subject/patient ID ",  mdbi)
+// group the marked duplicates Bams intervals by overall subject/patient id (mergeId)
+duplicatesInterval = Channel.create()
+duplicatesInterval = duplicatesForInterval.groupTuple()
+duplicatesInterval = logChannelContent("BAMs for RealignerTargetCreator grouped by overall subject/patient ID ",  duplicatesInterval)
 
-// group the bams by overall subject/patient id (mergeId)
-mdb = Channel.create()
-mdb = markdupBam.groupTuple()
-mdb = logChannelContent("Grouped BAMs by overall subject/patient ID ",  mdb)
+// group the marked duplicates Bams for realign by overall subject/patient id (mergeId)
+duplicatesRealign  = Channel.create()
+duplicatesRealign  = duplicatesForRealignement.groupTuple()
+duplicatesRealign  = logChannelContent("BAMs for IndelRealigner grouped by overall subject/patient ID ",  duplicatesRealign)
 
 /*
  * Creating target intervals for indel realigner.
@@ -297,14 +308,14 @@ process CreateIntervals {
 	cpus 6 
 	
 	input:
-	set mergeId, id, file(mdBam), file(mdBai) from mdbi
-	file gf from file(refs["genome_file"]) 
-	file gi from file(refs["genome_index"])
-	file gd from file(refs["genome_dict"])
-	file ki from file(refs["kgindels"])
-  file kix from file(refs["kgidx"])
-	file mi from file(refs["millsindels"])
-	file mix from file(refs["millsidx"])
+	set mergeId, id, file(mdBam), file(mdBai) from duplicatesInterval
+	file gf from file(refs["genomeFile"]) 
+	file gi from file(refs["genomeIndex"])
+	file gd from file(refs["genomeDict"])
+	file ki from file(refs["kgIndels"])
+  file kix from file(refs["kgIndex"])
+	file mi from file(refs["millsIndels"])
+	file mix from file(refs["millsIndex"])
 
 	output:
 	file("${mergeId}.intervals") into intervals
@@ -313,8 +324,8 @@ process CreateIntervals {
 	input = mdBam.collect{"-I $it"}.join(' ')
 
 	"""
-	echo ${mergeId} ${id} ${mdBam} > ble
-	java -Xmx7g -jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
+  echo -e "mergeId:\t"${mergeId}"\nid:\t"${id}"\nmdBam:\t"${mdBam}"\n" > logInfo
+  java -Xmx7g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
 	-T RealignerTargetCreator \
 	$input \
 	-R $gf \
@@ -322,11 +333,10 @@ process CreateIntervals {
 	-known $mi \
 	-nt ${task.cpus} \
 	-o ${mergeId}.intervals
-
  	"""	
 }
 
-intervals = logChannelContent("Intervals passed to realignment: ",intervals)
+intervals = logChannelContent("Intervals passed to Realign: ",intervals)
 
 /*
  * realign, use nWayOut to split into tumor/normal again
@@ -334,14 +344,14 @@ intervals = logChannelContent("Intervals passed to realignment: ",intervals)
 process Realign {
 
 	input:
-	set mergeId, id, file(mdBam), file(mdBai) from mdb
-	file gf from file(refs["genome_file"])
-	file gi from file(refs["genome_index"])
-	file gd from file(refs["genome_dict"])
-	file ki from file(refs["kgindels"])
-  file kix from file(refs["kgidx"])
-	file mi from file(refs["millsindels"])
-	file mix from file(refs["millsidx"])
+	set mergeId, id, file(mdBam), file(mdBai) from duplicatesRealign
+	file gf from file(refs["genomeFile"])
+	file gi from file(refs["genomeIndex"])
+	file gd from file(refs["genomeDict"])
+	file ki from file(refs["kgIndels"])
+  file kix from file(refs["kgIndex"])
+	file mi from file(refs["millsIndels"])
+	file mix from file(refs["millsIndex"])
 	file intervals from intervals
 
 	output:
@@ -351,7 +361,7 @@ process Realign {
 	input = mdBam.collect{"-I $it"}.join(' ')
 
 	"""
-	java -Xmx7g -jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
+  java -Xmx7g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
 	-T IndelRealigner \
 	$input \
 	-R $gf \
@@ -363,6 +373,90 @@ process Realign {
 }
 
 realBams = logChannelContent("Realigned Bams ready to go to variant calling: ",realBams)
+
+// .real.bam
+// .real.bai
+
+// process create_recal_table_tumor {
+
+//   cpus 2
+
+//   input:
+//   file tumor_real_bam_table
+//   file tumor_real_bai_table
+//   file genomeFile
+//   file genomeDict
+//   file genomeIndex
+//   file dbsnp
+//   file dbsnpIndex
+//   file kgIndels
+//   file kgIndex
+//   file millsIndels
+//   file millsIndex
+
+//   output:
+//   file '*.tumor.recal.table' into tumor_recal_table
+
+//  // java -jar GenomeAnalysisTK.jar \
+//  // -T BaseRecalibrator \
+//  // -R reference.fasta \
+//  // -I my_reads.bam \
+//  // -knownSites latest_dbsnp.vcf \
+//  // -o recal_data.table
+
+//   """
+//   java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
+//   -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+//   -T BaseRecalibrator \
+//   -R $genomeFile \
+//   -I $tumor_real_bam_table \
+//   -knownSites $dbsnp \
+//   -knownSites $kgIndels \
+//   -knownSites $millsIndels \
+//   -nct ${task.cpus} \
+//   -l INFO \
+//   -o ${params.sample}.tumor.recal.table
+//   """
+// }
+
+
+// process recalibrate_bam_tumor {
+  
+//   input:
+//   file tumor_real_bam_recal
+//   file tumor_real_bai_recal
+//   file genomeFile
+//   file genomeDict
+//   file genomeIndex
+//   file dbsnp
+//   file dbsnpIndex
+//   file kgIndels
+//   file kgIndex
+//   file millsIndels
+//   file millsIndex
+//   file tumor_recal_table
+
+//   output:
+//   file '*.tumor.recal.bam' into tumor_recal_bam
+//   file '*.tumor.recal.bai' into tumor_recal_bai
+
+//   // java -jar GenomeAnalysisTK.jar \
+//   // -T PrintReads \
+//   // -R reference.fasta \
+//   // -I input.bam \
+//   // -BQSR recalibration_report.grp \
+//   // -o output.bam
+
+//   """
+//   java -Xmx7g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+//   -T PrintReads \
+//   -R $genomeFile \
+//   -I $tumor_real_bam_recal \
+//   --BQSR $tumor_recal_table \
+//   -o ${params.sample}.tumor.recal.bam
+//   """
+// }
+
 
 /*
  * Variant Calling
@@ -382,35 +476,30 @@ realBams = logChannelContent("Realigned Bams ready to go to variant calling: ",r
 
 // ############################### FUNCTIONS
 
-def readPrefix( Path actual, template ) {
+def readPrefix (Path actual, template) {
+  final fileName = actual.getFileName().toString()
+  def filePattern = template.toString()
+  int p = filePattern.lastIndexOf('/')
+  if( p != -1 ) filePattern = filePattern.substring(p+1)
+  if( !filePattern.contains('*') && !filePattern.contains('?') )
+  filePattern = '*' + filePattern
+  def regex = filePattern
+    .replace('.','\\.')
+    .replace('*','(.*)')
+    .replace('?','(.?)')
+    .replace('{','(?:')
+    .replace('}',')')
+    .replace(',','|')
 
-    final fileName = actual.getFileName().toString()
-
-    def filePattern = template.toString()
-    int p = filePattern.lastIndexOf('/')
-    if( p != -1 ) filePattern = filePattern.substring(p+1)
-    if( !filePattern.contains('*') && !filePattern.contains('?') ) 
-        filePattern = '*' + filePattern 
-  
-    def regex = filePattern
-                    .replace('.','\\.')
-                    .replace('*','(.*)')
-                    .replace('?','(.?)')
-                    .replace('{','(?:')
-                    .replace('}',')')
-                    .replace(',','|')
-
-    def matcher = (fileName =~ /$regex/)
-    if( matcher.matches() ) {  
-        def end = matcher.end(matcher.groupCount() )      
-        def prefix = fileName.substring(0,end)
-        while(prefix.endsWith('-') || prefix.endsWith('_') || prefix.endsWith('.') ) 
-          prefix=prefix[0..-2]
-          
-        return prefix
-    }
-    
-    return fileName
+  def matcher = (fileName =~ /$regex/)
+  if (matcher.matches() ) {
+    def end = matcher.end(matcher.groupCount() )
+    def prefix = fileName.substring(0,end)
+    while( prefix.endsWith('-') || prefix.endsWith('_') || prefix.endsWith('.') )
+      prefix = prefix[0..-2]
+    return prefix
+  }
+  return fileName
 }
 
 /*
@@ -419,13 +508,12 @@ def readPrefix( Path actual, template ) {
  * and returns with the intact copy for further processing.
  */
 
-def logChannelContent(aMessage, aChannel) {
-   
-    resChannel = Channel.create()
-    logChannel = Channel.create()
-    Channel
-        .from aChannel
-        .separate(resChannel,logChannel) {a -> [a,a] }
-    logChannel.subscribe { log.info aMessage + " -- $it" }
-    return resChannel
+def logChannelContent (aMessage, aChannel) {
+  resChannel = Channel.create()
+  logChannel = Channel.create()
+  Channel
+    .from aChannel
+    .separate(resChannel,logChannel) { a -> [a,a] }
+  logChannel.subscribe { log.info aMessage + " -- $it" }
+  return resChannel
 }
