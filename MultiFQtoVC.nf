@@ -235,8 +235,8 @@ process RenameSingleBam {
   """
 }
 
-singleRenamedBam = logChannelContent("SINGLES :", singleRenamedBam)
-mergedBam        = logChannelContent("GROUPED :", mergedBam)
+singleRenamedBam = logChannelContent("SINGLES: ", singleRenamedBam)
+mergedBam        = logChannelContent("GROUPED: ", mergedBam)
 
 /*
  * merge all bams (merged and singles) to a single channel
@@ -244,10 +244,11 @@ mergedBam        = logChannelContent("GROUPED :", mergedBam)
 
 bamList = Channel.create()
 bamList = mergedBam.mix(singleRenamedBam)
-bamList = logChannelContent("Mixed channels ", bamList)
+// bamList = logChannelContent("Mixed channels: ", bamList)
 bamList = bamList.map { idMerge, id, idRun, bam -> [idMerge[0], id, bam].flatten() }
-bamList = logChannelContent("Mapped and flattened ", bamList)
-bamList = logChannelContent("BAM list for MarkDuplicates",bamList)
+// bamList = logChannelContent("Mapped and flattened: ", bamList)
+
+bamList = logChannelContent("BAM list for MarkDuplicates: ",bamList)
 
 /*
  *  mark duplicates all bams
@@ -286,15 +287,19 @@ process MarkDuplicates {
  * create realign intervals, use both tumor+normal as input
  */
 
+duplicatesForInterval = logChannelContent("BAMs for IndelRealigner before groupTuple: ",  duplicatesForInterval)
+
 // group the marked duplicates Bams intervals by overall subject/patient id (idMerge)
 duplicatesInterval = Channel.create()
 duplicatesInterval = duplicatesForInterval.groupTuple()
-duplicatesInterval = logChannelContent("BAMs for RealignerTargetCreator grouped by overall subject/patient ID ",  duplicatesInterval)
+duplicatesInterval = logChannelContent("BAMs for RealignerTargetCreator grouped by overall subject/patient ID: ",  duplicatesInterval)
+
+duplicatesForRealignement = logChannelContent("BAMs for IndelRealigner before groupTuple: ",  duplicatesForRealignement)
 
 // group the marked duplicates Bams for realign by overall subject/patient id (idMerge)
 duplicatesRealign  = Channel.create()
 duplicatesRealign  = duplicatesForRealignement.groupTuple()
-duplicatesRealign  = logChannelContent("BAMs for IndelRealigner grouped by overall subject/patient ID ",  duplicatesRealign)
+duplicatesRealign  = logChannelContent("BAMs for IndelRealigner grouped by overall subject/patient ID: ",  duplicatesRealign)
 
 /*
  * Creating target intervals for indel realigner.
