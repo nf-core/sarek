@@ -195,8 +195,8 @@ process MarkDuplicates {
 //  and the other to IndelRealigner
 //
 	output:
-	set mergeId, idRun, file("${id}.md.bam"), file("${id}.md.bai") into markdupBamInts
-	set mergeId, idRun, file("${id}.md.bam"), file("${id}.md.bai") into markdupBam
+	set mergeId, id, file("${id}.md.bam"), file("${id}.md.bai") into markdupBamInts
+	set mergeId, id, file("${id}.md.bam"), file("${id}.md.bai") into markdupBam
 
 	"""
 	echo "${mergeId} : ${id} : ${mBam}" > ble
@@ -255,7 +255,7 @@ process CreateIntervals {
 
 	"""
 	echo ${mergeId} ${id} ${mdBam} > ble
-	java -Xmx7g -jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
+	java -Xmx7g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
 	-T RealignerTargetCreator \
 	$input \
 	-R $gf \
@@ -292,7 +292,7 @@ process realign {
 	input = mdBam.collect{"-I $it"}.join(' ')
 
 	"""
-	java -Xmx7g -jar /sw/apps/bioinfo/GATK/3.3.0/GenomeAnalysisTK.jar \
+	java -Xmx7g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
 	-T IndelRealigner \
 	$input \
 	-R $gf \
