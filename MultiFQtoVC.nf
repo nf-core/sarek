@@ -138,12 +138,12 @@ fastqFiles = Channel
   .from(sampleTSVconfig.readLines())
   .map { line ->
     list    = line.split()
-    mergeId = list[0]
+    idMerge = list[0]
     id      = list[1]
     idRun   = list[2]
     fq1path = file(list[3])
     fq2path = file(list[4])
-    [ mergeId, id, idRun, fq1path, fq2path ]
+    [ idMerge, id, idRun, fq1path, fq2path ]
 }
 
 fastqFiles = logChannelContent("FASTQ files and IDs to process: ",fastqFiles)
@@ -162,10 +162,10 @@ process Mapping {
 
   input:
   file refs["genomeFile"]
-  set mergeId, id, idRun, file(fq1), file(fq2) from fastqFiles
+  set idMerge, id, idRun, file(fq1), file(fq2) from fastqFiles
 
   output:
-  set mergeId, id, idRun, file("${idRun}.bam") into bams
+  set idMerge, id, idRun, file("${idRun}.bam") into bams
 
   // here I use params.genome for bwa ref so I dont have to link to all bwa index files
 
@@ -205,16 +205,16 @@ process MergeBam {
   module 'samtools/1.3'
 
   input:
-  set mergeId, id, idRun, file(bam) from groupedBam
+  set idMerge, id, idRun, file(bam) from groupedBam
 
   output:
-  set mergeId, id, idRun, file("${id}.bam") into mergedBam
+  set idMerge, id, idRun, file("${id}.bam") into mergedBam
 
   script:
   idRun = idRun.sort().join(':')
 
   """
-  echo -e "mergeId:\t"${mergeId}"\nid:\t"${id}"\nidRun:\t"${idRun}"\nbam:\t"${bam}"\n" > logInfo
+  echo -e "idMerge:\t"${idMerge}"\nid:\t"${id}"\nidRun:\t"${idRun}"\nbam:\t"${bam}"\n" > logInfo
   samtools merge ${id}.bam ${bam}
   """
 }
@@ -222,10 +222,10 @@ process MergeBam {
 process RenameSingleBam {
 
   input:
-  set mergeId, id, idRun, file(bam) from singleBam
+  set idMerge, id, idRun, file(bam) from singleBam
 
   output:
-  set mergeId, id, idRun, file("${id}.bam") into singleRenamedBam
+  set idMerge, id, idRun, file("${id}.bam") into singleRenamedBam
 
   script:
   idRun = idRun.sort().join(':')
@@ -245,7 +245,7 @@ mergedBam        = logChannelContent("GROUPED :", mergedBam)
 bamList = Channel.create()
 bamList = mergedBam.mix(singleRenamedBam)
 bamList = logChannelContent("Mixed channels ", bamList)
-bamList = bamList.map { mergeId, id, idRun, bam -> [mergeId[0], id, bam].flatten() }
+bamList = bamList.map { idMerge, id, idRun, bam -> [idMerge[0], id, bam].flatten() }
 bamList = logChannelContent("Mapped and flattened ", bamList)
 bamList = logChannelContent("BAM list for MarkDuplicates",bamList)
 
@@ -259,18 +259,18 @@ process MarkDuplicates {
   module 'picard/1.118'
 
   input:
-  set mergeId, id, file(bam) from bamList
+  set idMerge, id, file(bam) from bamList
 
   // Channel content should be in the log before
   // The output channels are duplicated nevertheless, one copy goes to RealignerTargetCreator (CreateIntervals)
   // and the other to IndelRealigner
 
   output:
-  set mergeId, id, file("${id}.md.bam"), file("${id}.md.bai") into duplicatesForInterval
-  set mergeId, id, file("${id}.md.bam"), file("${id}.md.bai") into duplicatesForRealignement
+  set idMerge, id, file("${id}.md.bam"), file("${id}.md.bai") into duplicatesForInterval
+  set idMerge, id, file("${id}.md.bam"), file("${id}.md.bai") into duplicatesForRealignement
 
   """
-  echo -e "mergeId:\t"${mergeId}"\nid:\t"${id}"\nbam:\t"${bam}"\n" > logInfo
+  echo -e "idMerge:\t"${idMerge}"\nid:\t"${id}"\nbam:\t"${bam}"\n" > logInfo
   java -Xmx7g -jar ${params.picardHome}/MarkDuplicates.jar \
   INPUT=${bam} \
   METRICS_FILE=${bam}.metrics \
@@ -286,12 +286,12 @@ process MarkDuplicates {
  * create realign intervals, use both tumor+normal as input
  */
 
-// group the marked duplicates Bams intervals by overall subject/patient id (mergeId)
+// group the marked duplicates Bams intervals by overall subject/patient id (idMerge)
 duplicatesInterval = Channel.create()
 duplicatesInterval = duplicatesForInterval.groupTuple()
 duplicatesInterval = logChannelContent("BAMs for RealignerTargetCreator grouped by overall subject/patient ID ",  duplicatesInterval)
 
-// group the marked duplicates Bams for realign by overall subject/patient id (mergeId)
+// group the marked duplicates Bams for realign by overall subject/patient id (idMerge)
 duplicatesRealign  = Channel.create()
 duplicatesRealign  = duplicatesForRealignement.groupTuple()
 duplicatesRealign  = logChannelContent("BAMs for IndelRealigner grouped by overall subject/patient ID ",  duplicatesRealign)
@@ -306,7 +306,7 @@ process CreateIntervals {
   cpus 6
 
   input:
-  set mergeId, id, file(mdBam), file(mdBai) from duplicatesInterval
+  set idMerge, id, file(mdBam), file(mdBai) from duplicatesInterval
   file gf from file(refs["genomeFile"])
   file gi from file(refs["genomeIndex"])
   file gd from file(refs["genomeDict"])
@@ -316,13 +316,13 @@ process CreateIntervals {
   file mix from file(refs["millsIndex"])
 
   output:
-  file("${mergeId}.intervals") into intervals
+  file("${idMerge}.intervals") into intervals
 
   script:
   input = mdBam.collect{"-I $it"}.join(' ')
 
   """
-  echo -e "mergeId:\t"${mergeId}"\nid:\t"${id}"\nmdBam:\t"${mdBam}"\n" > logInfo
+  echo -e "idMerge:\t"${idMerge}"\nid:\t"${id}"\nmdBam:\t"${mdBam}"\n" > logInfo
   java -Xmx7g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T RealignerTargetCreator \
   $input \
@@ -330,7 +330,7 @@ process CreateIntervals {
   -known $ki \
   -known $mi \
   -nt ${task.cpus} \
-  -o ${mergeId}.intervals
+  -o ${idMerge}.intervals
   """
 }
 
@@ -342,7 +342,7 @@ intervals = logChannelContent("Intervals passed to Realign: ",intervals)
 process Realign {
 
   input:
-  set mergeId, id, file(mdBam), file(mdBai) from duplicatesRealign
+  set idMerge, id, file(mdBam), file(mdBai) from duplicatesRealign
   file gf from file(refs["genomeFile"])
   file gi from file(refs["genomeIndex"])
   file gd from file(refs["genomeDict"])
@@ -353,7 +353,7 @@ process Realign {
   file intervals from intervals
 
   output:
-  set mergeId, id, file("*.md.real.bam"), file("*.md.real.bai") into realignedBams
+  set idMerge, id, file("*.md.real.bam"), file("*.md.real.bai") into realignedBam
 
   script:
   input = mdBam.collect{"-I $it"}.join(' ')
@@ -370,21 +370,52 @@ process Realign {
   """
 }
 
-realignedBams = logChannelContent("Realigned Bams going to BaseRecalibrator: ",realignedBams)
+realignedBam = logChannelContent("Realigned Bams going to BaseRecalibrator: ",realignedBam)
+
+// Here we need to split the different files that are in one channel into different instances of the same channel containing one file.
+
+// We have:
+
+// mergeID:   [HCC1954,
+// id:        [HCC1954.tumor_3, HCC1954.tumor_2, HCC1954.tumor_1, HCC1954.normal],
+// file bam:  [path/HCC1954.tumor_3.md.real.bam, path/HCC1954.tumor_2.md.real.bam, path/HCC1954.tumor_1.md.real.bam, path/HCC1954.normal.md.real.bam],
+// file bai:  [path/HCC1954.tumor_3.md.real.bai, path/HCC1954.tumor_2.md.real.bai, path/HCC1954.tumor_1.md.real.bai, path/HCC1954.normal.md.real.bai]]
+
+// We want:
+
+// mergeID:  [HCC1954,
+// id:        HCC1954.tumor_3,
+// file bam:  path/HCC1954.tumor_3.md.real.bam,
+// file bai:  path/HCC1954.tumor_3.md.real.bai]
+
+// mergeID:  [HCC1954,
+// id:        HCC1954.tumor_2,
+// file bam:  path/HCC1954.tumor_2.md.real.bam,
+// file bai:  path/HCC1954.tumor_2.md.real.bai]
+
+// mergeID:  [HCC1954,
+// id:        HCC1954.tumor_1,
+// file bam:  path/HCC1954.tumor_1.md.real.bam,
+// file bai:  path/HCC1954.tumor_1.md.real.bai]
+
+// mergeID:  [HCC1954,
+// id:        HCC1954.normal,
+// file bam:  path/HCC1954.normal.md.real.bam,
+// file bai:  path/HCC1954.normal.md.real.bai]
 
 process CreateRecalibrationTable {
 
   cpus 2
 
   input:
-  set mergeId, id, realignedBamTable, realignedBaiTable from realignedBams
+  set idMerge, id, realignedBamTable, realignedBaiTable from realignedBam
   file refs["genomeFile"]
   file refs["dbsnp"]
   file refs["kgIndels"]
   file refs["millsIndels"]
 
   output:
-  set mergeId, id, file("*.recal.table") into recalibrationTable
+  set idMerge, id, file("*.recal.table") into recalibrationTable
 
   """
   java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
@@ -402,6 +433,8 @@ process CreateRecalibrationTable {
 }
 
 recalibrationTable = logChannelContent("Base recalibrated table for recalibration: ",recalibrationTable)
+
+// It should be easy once the precedent step is done.
 
 // process recalibrate_bam_tumor {
 //   input:
@@ -450,11 +483,14 @@ recalibrationTable = logChannelContent("Base recalibrated table for recalibratio
  * normal/tumor_3
  * ...
  *
-  * IDEAS :
-  * Duplicate output from Realign
+ * IDEAS :
+ * Duplicate output from Realign
  * and filter on name
  *
-  */
+ */
+
+// Here the difficulty will be to get the difference between normal/tumor
+// cf https://groups.google.com/forum/m/#!topic/nextflow/zId8iRE6Z2w
 
 // ############################### FUNCTIONS
 
