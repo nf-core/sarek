@@ -379,34 +379,21 @@ process Realign {
   """
 }
 
-// realignedBam = logChannelContent("Realigned Bams going to BaseRecalibrator: ", realignedBam)
-
-realignedBam = realignedBam
-  .flatMap { idPatient, idSamples, bams, bais ->
-  [
-    [idPatient, idSamples[0], bams[0], bais[0]],
-    [idPatient, idSamples[1], bams[1], bais[1]],
-    [idPatient, idSamples[2], bams[2], bais[2]],
-    [idPatient, idSamples[3], bams[3], bais[3]]
-  ]
-}
-// oldFiles = logChannelContent("LOG: oldFiles: ", oldFiles)
-
 tempSamples  = Channel.create()
 tempBams     = Channel.create()
 tempBais     = Channel.create()
 
 Channel
-    .from realignedBam
-    .separate( tempSamples, tempBams, tempBais ) { a -> [a, a, a] }
+  .from realignedBam
+  .separate( tempSamples, tempBams, tempBais ) { a -> [a, a, a] }
 
-tempSamples  = tempSamples.flatMap { id, samples, bams, bais -> [samples] }.toSortedList().flatten()
-tempBams     = tempBams.flatMap { id, samples, bams, bais -> [bams] }.toSortedList().flatten()
-tempBais     = tempBais.flatMap { id, samples, bams, bais -> [bais] }.toSortedList().flatten()
+tempSamples  = tempSamples.flatMap { id, samples, bams, bais -> [samples] }.flatten().toSortedList().flatten()
+tempBams     = tempBams.flatMap { id, samples, bams, bais -> [bams] }.flatten().toSortedList().flatten()
+tempBais     = tempBais.flatMap { id, samples, bams, bais -> [bais] }.flatten().toSortedList().flatten()
 tempSamples  = tempSamples.merge( tempBams, tempBais ) { s, b, i -> [s, b, i] }
-tempChannel  = idPatient.spread(tempSamples)
+realignedBam  = idPatient.spread(tempSamples)
 
-realignedBam = logChannelContent("LOG: realignedBam: ", realignedBam)
+realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realignedBam)
 
 process CreateRecalibrationTable {
 
