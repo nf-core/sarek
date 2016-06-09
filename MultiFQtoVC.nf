@@ -165,7 +165,7 @@ process Mapping {
   set idPatient, idSample, idRun, file(fq1), file(fq2) from fastqFiles
 
   output:
-  set idPatient:idPatient, idSample:idSample, idRun:idRun, bamFile:file("${idRun}.bam") into bams
+  set idPatient, idSample, idRun, file("${idRun}.bam") into bams
 
   // here I use params.genome for bwa ref so I dont have to link to all bwa index files
 
@@ -216,7 +216,7 @@ process MergeBam {
   idRun = idRun.sort().join(':')
 
   """
-  echo -e "idPatient:\t"${idPatient}"\nid:\t"${idSample}"\nidRun:\t"${idRun}"\nbam:\t"${bam}"\n" > logInfo
+  echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nidRun:\t"${idRun}"\nbam:\t"${bam}"\n" > logInfo
   samtools merge ${idSample}.bam ${bam}
   """
 }
@@ -273,7 +273,7 @@ process MarkDuplicates {
   set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bai") into duplicatesForRealignement
 
   """
-  echo -e "idPatient:\t"${idPatient}"\nid:\t"${idSample}"\nbam:\t"${bam}"\n" > logInfo
+  echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nbam:\t"${bam}"\n" > logInfo
   java -Xmx7g -jar ${params.picardHome}/MarkDuplicates.jar \
   INPUT=${bam} \
   METRICS_FILE=${bam}.metrics \
@@ -329,7 +329,7 @@ process CreateIntervals {
   input = mdBam.collect{"-I $it"}.join(' ')
 
   """
-  echo -e "idPatient:\t"${idPatient}"\nid:\t"${idSample}"\nmdBam:\t"${mdBam}"\n" > logInfo
+  echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nmdBam:\t"${mdBam}"\n" > logInfo
   java -Xmx7g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T RealignerTargetCreator \
   $input \
@@ -361,11 +361,13 @@ process Realign {
 
   output:
   set idPatient, idSample, file("*.md.real.bam"), file("*.md.real.bai") into realignedBam
+  set idPatient, idSample, file("*.md.real.bam"), file("*.md.real.bai") into realignedBam
 
   script:
   input = mdBam.collect{"-I $it"}.join(' ')
 
   """
+  echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nmdBam:\t"${mdBam}"\nmdBai:\t"${mdBai}"\n" > logInfo
   java -Xmx7g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T IndelRealigner \
   $input \
@@ -377,69 +379,38 @@ process Realign {
   """
 }
 
-realignedBam = logChannelContent("Realigned Bams going to BaseRecalibrator: ",realignedBam)
+realignedBam = logChannelContent("Realigned Bams going to BaseRecalibrator: ", realignedBam)
 
-// Here we need to split the different files that are in one channel into different instances of the same channel containing one file.
+// process CreateRecalibrationTable {
 
-// We have:
+//   cpus 2
 
-// mergeID:   [HCC1954,
-// id:        [HCC1954.tumor_3, HCC1954.tumor_2, HCC1954.tumor_1, HCC1954.normal],
-// file bam:  [path/HCC1954.tumor_3.md.real.bam, path/HCC1954.tumor_2.md.real.bam, path/HCC1954.tumor_1.md.real.bam, path/HCC1954.normal.md.real.bam],
-// file bai:  [path/HCC1954.tumor_3.md.real.bai, path/HCC1954.tumor_2.md.real.bai, path/HCC1954.tumor_1.md.real.bai, path/HCC1954.normal.md.real.bai]]
+//   input:
+//   set idPatient, idSamples, realignedBamTables, realignedBaiTable from realignedBam
+//   file refs["genomeFile"]
+//   file refs["dbsnp"]
+//   file refs["kgIndels"]
+//   file refs["millsIndels"]
 
-// We want:
+//   output:
+//   set idPatient, idSample, file("*.recal.table") into recalibrationTable
 
-// mergeID:  [HCC1954,
-// id:        HCC1954.tumor_3,
-// file bam:  path/HCC1954.tumor_3.md.real.bam,
-// file bai:  path/HCC1954.tumor_3.md.real.bai]
+//   """
+//   java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
+//   -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+//   -T BaseRecalibrator \
+//   -R ${refs["genomeFile"]} \
+//   -I $realignedBamTable \
+//   -knownSites ${refs["dbsnp"]} \
+//   -knownSites ${refs["kgIndels"]} \
+//   -knownSites ${refs["millsIndels"]} \
+//   -nct ${task.cpus} \
+//   -l INFO \
+//   -o ${idSample}.recal.table
+//   """
+// }
 
-// mergeID:  [HCC1954,
-// id:        HCC1954.tumor_2,
-// file bam:  path/HCC1954.tumor_2.md.real.bam,
-// file bai:  path/HCC1954.tumor_2.md.real.bai]
-
-// mergeID:  [HCC1954,
-// id:        HCC1954.tumor_1,
-// file bam:  path/HCC1954.tumor_1.md.real.bam,
-// file bai:  path/HCC1954.tumor_1.md.real.bai]
-
-// mergeID:  [HCC1954,
-// id:        HCC1954.normal,
-// file bam:  path/HCC1954.normal.md.real.bam,
-// file bai:  path/HCC1954.normal.md.real.bai]
-
-process CreateRecalibrationTable {
-
-  cpus 2
-
-  input:
-  set idPatient, idSample, realignedBamTable, realignedBaiTable from realignedBam
-  file refs["genomeFile"]
-  file refs["dbsnp"]
-  file refs["kgIndels"]
-  file refs["millsIndels"]
-
-  output:
-  set idPatient, idSample, file("*.recal.table") into recalibrationTable
-
-  """
-  java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
-  -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
-  -T BaseRecalibrator \
-  -R ${refs["genomeFile"]} \
-  -I $realignedBamTable \
-  -knownSites ${refs["dbsnp"]} \
-  -knownSites ${refs["kgIndels"]} \
-  -knownSites ${refs["millsIndels"]} \
-  -nct ${task.cpus} \
-  -l INFO \
-  -o ${idSample}.recal.table
-  """
-}
-
-recalibrationTable = logChannelContent("Base recalibrated table for recalibration: ",recalibrationTable)
+// recalibrationTable = logChannelContent("Base recalibrated table for recalibration: ",recalibrationTable)
 
 // It should be easy once the precedent step is done.
 
@@ -498,6 +469,14 @@ recalibrationTable = logChannelContent("Base recalibrated table for recalibratio
 
 // Here the difficulty will be to get the difference between normal/tumor
 // cf https://groups.google.com/forum/m/#!topic/nextflow/zId8iRE6Z2w
+
+// separate bams and inputs
+// treat = Channel.create()
+// control = Channel.create()
+// bams.choice(treat, control) {
+//   it[3] == 'input' ? 1 : 0
+// }
+
 
 // ################################# FUNCTIONS #################################
 
