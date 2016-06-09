@@ -407,7 +407,7 @@ process CreateRecalibrationTable {
    file refs["millsIndels"]
 
    output:
-   set idPatient, idSample, file("${realignedBamTable}"), file("${idSample}.recal.table") into recalibrationTable
+   set idPatient, idSample, realignedBamTable, file("${idSample}.recal.table") into recalibrationTable
 
    """
    java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
