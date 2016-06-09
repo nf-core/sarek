@@ -361,7 +361,7 @@ process Realign {
 
   output:
   set idPatient, idSample, file("*.md.real.bam"), file("*.md.real.bai") into realignedBam
-  set idPatient, idSample, file("*.md.real.bam"), file("*.md.real.bai") into realignedBam
+  val(idPatient) into idPatient
 
   script:
   input = mdBam.collect{"-I $it"}.join(' ')
@@ -379,38 +379,65 @@ process Realign {
   """
 }
 
-realignedBam = logChannelContent("Realigned Bams going to BaseRecalibrator: ", realignedBam)
+// realignedBam = logChannelContent("Realigned Bams going to BaseRecalibrator: ", realignedBam)
 
-// process CreateRecalibrationTable {
+realignedBam = realignedBam
+  .flatMap { idPatient, idSamples, bams, bais ->
+  [
+    [idPatient, idSamples[0], bams[0], bais[0]],
+    [idPatient, idSamples[1], bams[1], bais[1]],
+    [idPatient, idSamples[2], bams[2], bais[2]],
+    [idPatient, idSamples[3], bams[3], bais[3]]
+  ]
+}
+// oldFiles = logChannelContent("LOG: oldFiles: ", oldFiles)
 
-//   cpus 2
+tempSamples  = Channel.create()
+tempBams     = Channel.create()
+tempBais     = Channel.create()
 
-//   input:
-//   set idPatient, idSamples, realignedBamTables, realignedBaiTable from realignedBam
-//   file refs["genomeFile"]
-//   file refs["dbsnp"]
-//   file refs["kgIndels"]
-//   file refs["millsIndels"]
+Channel
+    .from realignedBam
+    .separate( tempSamples, tempBams, tempBais ) { a -> [a, a, a] }
 
-//   output:
-//   set idPatient, idSample, file("*.recal.table") into recalibrationTable
+tempSamples  = tempSamples.flatMap { id, samples, bams, bais -> [samples] }.toSortedList().flatten()
+tempBams     = tempBams.flatMap { id, samples, bams, bais -> [bams] }.toSortedList().flatten()
+tempBais     = tempBais.flatMap { id, samples, bams, bais -> [bais] }.toSortedList().flatten()
+tempSamples  = tempSamples.merge( tempBams, tempBais ) { s, b, i -> [s, b, i] }
+tempChannel  = idPatient.spread(tempSamples)
 
-//   """
-//   java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
-//   -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
-//   -T BaseRecalibrator \
-//   -R ${refs["genomeFile"]} \
-//   -I $realignedBamTable \
-//   -knownSites ${refs["dbsnp"]} \
-//   -knownSites ${refs["kgIndels"]} \
-//   -knownSites ${refs["millsIndels"]} \
-//   -nct ${task.cpus} \
-//   -l INFO \
-//   -o ${idSample}.recal.table
-//   """
-// }
+realignedBam = logChannelContent("LOG: realignedBam: ", realignedBam)
 
-// recalibrationTable = logChannelContent("Base recalibrated table for recalibration: ",recalibrationTable)
+process CreateRecalibrationTable {
+
+  cpus 2
+
+   input:
+   set idPatient, idSample, realignedBamTable, realignedBaiTable from realignedBam
+   file refs["genomeFile"]
+   file refs["dbsnp"]
+   file refs["kgIndels"]
+   file refs["millsIndels"]
+
+   output:
+   set idPatient, idSample, file("${idSample}.recal.table") into recalibrationTable
+
+   """
+   java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
+   -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+   -T BaseRecalibrator \
+   -R ${refs["genomeFile"]} \
+   -I $realignedBamTable \
+   -knownSites ${refs["dbsnp"]} \
+   -knownSites ${refs["kgIndels"]} \
+   -knownSites ${refs["millsIndels"]} \
+   -nct ${task.cpus} \
+   -l INFO \
+   -o ${idSample}.recal.table
+   """
+}
+
+recalibrationTable = logChannelContent("Base recalibrated table for recalibration: ",recalibrationTable)
 
 // It should be easy once the precedent step is done.
 
@@ -480,6 +507,18 @@ realignedBam = logChannelContent("Realigned Bams going to BaseRecalibrator: ", r
 
 // ################################# FUNCTIONS #################################
 
+/* 
+ * Helper function, given a file Path 
+ * returns the file name region matching a specified glob pattern
+ * starting from the beginning of the name up to last matching group.
+ * 
+ * For example: 
+ *   readPrefix('/some/data/file_alpha_1.fa', 'file*_1.fa' )
+ * 
+ * Returns: 
+ *   'file_alpha'
+ */
+
 def readPrefix (Path actual, template) {
   final fileName = actual.getFileName().toString()
   def filePattern = template.toString()
@@ -517,7 +556,7 @@ def logChannelContent (aMessage, aChannel) {
   logChannel = Channel.create()
   Channel
     .from aChannel
-    .separate(resChannel,logChannel) { a -> [a,a] }
+    .separate(resChannel,logChannel) { a -> [a, a] }
   logChannel.subscribe { log.info aMessage + " -- $it" }
   return resChannel
 }
