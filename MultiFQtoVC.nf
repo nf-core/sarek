@@ -407,7 +407,7 @@ process CreateRecalibrationTable {
    file refs["millsIndels"]
 
    output:
-   set idPatient, idSample, file("${idSample}.recal.table") into recalibrationTable
+   set idPatient, idSample, file("${realignedBamTable}"), file("${idSample}.recal.table") into recalibrationTable
 
    """
    java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
@@ -426,44 +426,38 @@ process CreateRecalibrationTable {
 
 recalibrationTable = logChannelContent("Base recalibrated table for recalibration: ",recalibrationTable)
 
-// It should be easy once the precedent step is done.
+process RecalibrateBam {
 
-// process recalibrate_bam_tumor {
-//   input:
-//   file tumor_real_bam_recal
-//   file tumor_real_bai_recal
-//   file genomeFile
-//   file genomeDict
-//   file genomeIndex
-//   file dbsnp
-//   file dbsnpIndex
-//   file kgIndels
-//   file kgIndex
-//   file millsIndels
-//   file millsIndex
-//   file tumor_recal_table
+  input:
+  set idPatient, idSample, recalibrationReport, recalibratedTable into recalibrationTable
+  file refs["genomeFile"]
+  file refs["dbsnp"]
+  file refs["kgIndels"]
+  file refs["millsIndels"]
 
-//   output:
-//   file '*.tumor.recal.bam' into tumor_recal_bam
-//   file '*.tumor.recal.bai' into tumor_recal_bai
+  output:
+  set idPatient, idSample, file("${idSample}.recal.bam") into recalibratedBam
+  file '*.recal.bam' into recal_bam
+  file '*.recal.bai' into recal_bai
 
-//   // java -jar GenomeAnalysisTK.jar \
-//   // -T PrintReads \
-//   // -R reference.fasta \
-//   // -I input.bam \
-//   // -BQSR recalibration_report.grp \
-//   // -o output.bam
+  // java -jar GenomeAnalysisTK.jar \
+  // -T PrintReads \
+  // -R reference.fasta \
+  // -I input.bam \
+  // -BQSR recalibration_report.grp \
+  // -o output.bam
 
-//   """
-//   java -Xmx7g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
-//   -T PrintReads \
-//   -R $genomeFile \
-//   -I $tumor_real_bam_recal \
-//   --BQSR $tumor_recal_table \
-//   -o ${params.sample}.tumor.recal.bam
-//   """
-// }
+  """
+  java -Xmx7g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+  -T PrintReads \
+  -R ${refs["genomeFile"]} \
+  -I $recalibratedTable \
+  --BQSR $recalibrationReport \
+  -o ${idSample}.recal.bam
+  """
+}
 
+recalibratedBam = logChannelContent("Recalibrated Bam for variant Calling: ",recalibratedBam)
 
 /*
  * Variant Calling
