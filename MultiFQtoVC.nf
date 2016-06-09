@@ -400,14 +400,14 @@ process CreateRecalibrationTable {
   cpus 2
 
    input:
-   set idPatient, idSample, realignedBamTable, realignedBaiTable from realignedBam
+   set idPatient, idSample, realignedBamFile, realignedBaiFile from realignedBam
    file refs["genomeFile"]
    file refs["dbsnp"]
    file refs["kgIndels"]
    file refs["millsIndels"]
 
    output:
-   set idPatient, idSample, realignedBamTable, file("${idSample}.recal.table") into recalibrationTable
+   set idPatient, idSample, realignedBamFile, file("${idSample}.recal.table") into recalibrationTable
 
    """
    java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
@@ -429,7 +429,7 @@ recalibrationTable = logChannelContent("Base recalibrated table for recalibratio
 process RecalibrateBam {
 
   input:
-  set idPatient, idSample, recalibrationReport, recalibratedTable from recalibrationTable
+  set idPatient, idSample, realignedBamFile, recalibrationReport from recalibrationTable
   file refs["genomeFile"]
   file refs["dbsnp"]
   file refs["kgIndels"]
@@ -442,7 +442,7 @@ process RecalibrateBam {
   java -Xmx7g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T PrintReads \
   -R ${refs["genomeFile"]} \
-  -I $recalibratedTable \
+  -I $realignedBamFile \
   --BQSR $recalibrationReport \
   -o ${idSample}.recal.bam
   """
