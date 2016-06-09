@@ -429,23 +429,14 @@ recalibrationTable = logChannelContent("Base recalibrated table for recalibratio
 process RecalibrateBam {
 
   input:
-  set idPatient, idSample, recalibrationReport, recalibratedTable into recalibrationTable
+  set idPatient, idSample, recalibrationReport, recalibratedTable from recalibrationTable
   file refs["genomeFile"]
   file refs["dbsnp"]
   file refs["kgIndels"]
   file refs["millsIndels"]
 
   output:
-  set idPatient, idSample, file("${idSample}.recal.bam") into recalibratedBam
-  file '*.recal.bam' into recal_bam
-  file '*.recal.bai' into recal_bai
-
-  // java -jar GenomeAnalysisTK.jar \
-  // -T PrintReads \
-  // -R reference.fasta \
-  // -I input.bam \
-  // -BQSR recalibration_report.grp \
-  // -o output.bam
+  set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam
 
   """
   java -Xmx7g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
