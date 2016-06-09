@@ -414,7 +414,7 @@ process CreateRecalibrationTable {
    -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
    -T BaseRecalibrator \
    -R ${refs["genomeFile"]} \
-   -I $realignedBamTable \
+   -I $realignedBamFile \
    -knownSites ${refs["dbsnp"]} \
    -knownSites ${refs["kgIndels"]} \
    -knownSites ${refs["millsIndels"]} \
