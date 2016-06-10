@@ -482,8 +482,8 @@ process RunMutect1 {
   --dbsnp ${refs["dbsnp"]} \
   --input_file:normal ${bamNormal} \
   --input_file:tumor ${bamTumor} \
-  --out ${idSampleTumor}.mutect1.out \
-  --vcf ${idSampleTumor}.mutect1.vcf \
+  --out ${idSampleNormal}_${idSampleTumor}.mutect1.out \
+  --vcf ${idSampleNormal}_${idSampleTumor}.mutect1.vcf \
   -L 17:1000000-2000000
   """
 }
