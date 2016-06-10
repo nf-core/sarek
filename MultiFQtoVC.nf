@@ -19,7 +19,7 @@
 // ############################### CONFIGURATION ###############################
 
 String version    = "0.0.1"
-String dateUpdate = "2016-06-08"
+String dateUpdate = "2016-06-10"
 
 /*
  * Get some basic informations about the workflow
@@ -97,7 +97,8 @@ refs = [
   "dbsnpIndex":     params.dbsnpIndex,  // dbSNP index
   "millsIndels":    params.millsIndels, // Mill's Golden set of SNPs
   "millsIndex":     params.millsIndex,  // Mill's Golden set index
-  "sample":         params.sample       // the sample sheet (multilane data refrence table, see below)
+  "sample":         params.sample,      // the sample sheet (multilane data refrence table, see below)
+  "cosmic":         params.cosmic       // cosmic vcf file
 ]
 
 refs.each(CheckExistence)
@@ -141,10 +142,10 @@ fastqFiles = Channel
   .map { line ->
     list        = line.split()
     idPatient   = list[0]
-    idSample    = list[1]
-    idRun       = list[2]
-    fastqFile1  = file(list[3])
-    fastqFile2  = file(list[4])
+    idSample    = "${list[2]}__${list[1]}"
+    idRun       = list[3]
+    fastqFile1  = file(list[4])
+    fastqFile2  = file(list[5])
     [ idPatient, idSample, idRun, fastqFile1, fastqFile2 ]
 }
 
@@ -436,7 +437,7 @@ process RecalibrateBam {
   file refs["millsIndels"]
 
   output:
-  set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam
+  set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBams
 
   """
   java -Xmx7g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
@@ -448,34 +449,48 @@ process RecalibrateBam {
   """
 }
 
-recalibratedBam = logChannelContent("Recalibrated Bam for variant Calling: ",recalibratedBam)
+recalibratedBams = logChannelContent("Recalibrated Bam for variant Calling: ",recalibratedBams)
 
-/*
- * Variant Calling
- * The idea here is to make variant calls
- * normal/tumor
- * or if several tumors available
- * normal/tumor_1
- * normal/tumor_2
- * normal/tumor_3
- * ...
- *
- * IDEAS :
- * Duplicate output from Realign
- * and filter on name
- *
- */
+bamsTumor  = Channel.create()
+bamsNormal = Channel.create()
+recalibratedBams
+  .choice(bamsTumor, bamsNormal) { it[1] ==~ ~/^.+__0$/ ? 1 : 0 }
 
-// Here the difficulty will be to get the difference between normal/tumor
-// cf https://groups.google.com/forum/m/#!topic/nextflow/zId8iRE6Z2w
+bamsTumor  = logChannelContent("Tumor Bam for variant Calling: ", bamsTumor)
+bamsNormal = logChannelContent("Normal Bam for variant Calling: ", bamsNormal)
 
-// separate bams and inputs
-// treat = Channel.create()
-// control = Channel.create()
-// bams.choice(treat, control) {
-//   it[3] == 'input' ? 1 : 0
-// }
+bamsAll = Channel.create()
+bamsAll = bamsNormal.spread(bamsTumor)
 
+process RunMutect1 {
+
+  module 'bioinfo-tools'
+  module 'mutect/1.1.5'
+
+  cpus 2
+
+  input:
+  set idPatientNormal, idSampleNormal, file(bamNormal), file(baiNormal), idPatientTumor, idSampleTumor, file(bamTumor), file(baiTumor) from bamsAll
+
+  output:
+  set idPatientTumor, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect1.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect1.out") into mutectVariantCallingOutput
+
+
+  """
+  java -jar ${params.mutect1Home}/muTect-1.1.5.jar \
+  --analysis_type MuTect \
+  --reference_sequence ${refs["genomeFile"]} \
+  --cosmic ${refs["cosmic"]} \
+  --dbsnp ${refs["dbsnp"]} \
+  --input_file:normal ${bamNormal} \
+  --input_file:tumor ${bamTumor} \
+  --out ${idSampleNormal}_${idSampleTumor}.mutect1.out \
+  --vcf ${idSampleNormal}_${idSampleTumor}.mutect1.vcf \
+  -L 17:1000000-2000000
+  """
+}
+
+mutectVariantCallingOutput = logChannelContent("Mutect1 output: ", mutectVariantCallingOutput)
 
 // ################################# FUNCTIONS #################################
 
