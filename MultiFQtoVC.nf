@@ -401,14 +401,14 @@ process CreateRecalibrationTable {
   cpus 2
 
    input:
-   set idPatient, idSample, realignedBamFile, realignedBaiFile from realignedBam
+   set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile) from realignedBam
    file refs["genomeFile"]
    file refs["dbsnp"]
    file refs["kgIndels"]
    file refs["millsIndels"]
 
    output:
-   set idPatient, idSample, realignedBamFile, file("${idSample}.recal.table") into recalibrationTable
+   set idPatient, idSample, file(realignedBamFile), file("${idSample}.recal.table") into recalibrationTable
 
    """
    java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
@@ -430,7 +430,7 @@ recalibrationTable = logChannelContent("Base recalibrated table for recalibratio
 process RecalibrateBam {
 
   input:
-  set idPatient, idSample, realignedBamFile, recalibrationReport from recalibrationTable
+  set idPatient, idSample, file(realignedBamFile), file(recalibrationReport) from recalibrationTable
   file refs["genomeFile"]
   file refs["dbsnp"]
   file refs["kgIndels"]
@@ -459,6 +459,9 @@ recalibratedBams
 bamsTumor  = logChannelContent("Tumor Bam for variant Calling: ", bamsTumor)
 bamsNormal = logChannelContent("Normal Bam for variant Calling: ", bamsNormal)
 
+bamsAll = Channel.create()
+bamsAll = bamsNormal.spread(bamsTumor)
+
 process RunMutect1 {
 
   module 'bioinfo-tools'
@@ -467,8 +470,7 @@ process RunMutect1 {
   cpus 2
 
   input:
-  set idPatientTumor, idSampleTumor, bamTumor, baiTumor from bamsTumor
-  set idPatientNormal, idSampleNormal, bamNormal, baiNormal from bamsNormal
+  set idPatientNormal, idSampleNormal, file(bamNormal), file(baiNormal), idPatientTumor, idSampleTumor, file(bamTumor), file(baiTumor) from bamsAll
 
   output:
   set idPatientTumor, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect1.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect1.out") into mutectVariantCallingOutput
