@@ -401,14 +401,14 @@ process CreateRecalibrationTable {
   cpus 2
 
    input:
-   set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile) from realignedBam
+   set idPatient, idSample, realignedBamFile, realignedBaiFile from realignedBam
    file refs["genomeFile"]
    file refs["dbsnp"]
    file refs["kgIndels"]
    file refs["millsIndels"]
 
    output:
-   set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), file("${idSample}.recal.table") into recalibrationTable
+   set idPatient, idSample, realignedBamFile, file("${idSample}.recal.table") into recalibrationTable
 
    """
    java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
@@ -430,7 +430,7 @@ recalibrationTable = logChannelContent("Base recalibrated table for recalibratio
 process RecalibrateBam {
 
   input:
-  set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), file(recalibrationReport) from recalibrationTable
+  set idPatient, idSample, realignedBamFile, recalibrationReport from recalibrationTable
   file refs["genomeFile"]
   file refs["dbsnp"]
   file refs["kgIndels"]
