@@ -19,7 +19,7 @@
 // ############################### CONFIGURATION ###############################
 
 String version    = "0.0.1"
-String dateUpdate = "2016-06-08"
+String dateUpdate = "2016-06-10"
 
 /*
  * Get some basic informations about the workflow
@@ -142,7 +142,7 @@ fastqFiles = Channel
   .map { line ->
     list        = line.split()
     idPatient   = list[0]
-    idSample    = "${list[2]}_${list[1]}"
+    idSample    = "${list[2]}__${list[1]}"
     idRun       = list[3]
     fastqFile1  = file(list[4])
     fastqFile2  = file(list[5])
@@ -454,7 +454,7 @@ recalibratedBams = logChannelContent("Recalibrated Bam for variant Calling: ",re
 bamsTumor  = Channel.create()
 bamsNormal = Channel.create()
 recalibratedBams
-  .choice(bamsTumor, bamsNormal) { it[1] ==~ ~/^.+_0$/ ? 1 : 0 }
+  .choice(bamsTumor, bamsNormal) { it[1] ==~ ~/^.+__0$/ ? 1 : 0 }
 
 bamsTumor  = logChannelContent("Tumor Bam for variant Calling: ", bamsTumor)
 bamsNormal = logChannelContent("Normal Bam for variant Calling: ", bamsNormal)
