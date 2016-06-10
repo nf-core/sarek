@@ -142,10 +142,10 @@ fastqFiles = Channel
   .map { line ->
     list        = line.split()
     idPatient   = list[0]
-    idSample    = list[1]
-    idRun       = list[2]
-    fastqFile1  = file(list[3])
-    fastqFile2  = file(list[4])
+    idSample    = "${list[2]}_${list[1]}"
+    idRun       = list[3]
+    fastqFile1  = file(list[4])
+    fastqFile2  = file(list[5])
     [ idPatient, idSample, idRun, fastqFile1, fastqFile2 ]
 }
 
@@ -454,7 +454,7 @@ recalibratedBams = logChannelContent("Recalibrated Bam for variant Calling: ",re
 bamsTumor  = Channel.create()
 bamsNormal = Channel.create()
 recalibratedBams
-  .choice(bamsTumor, bamsNormal) { it[1] =~ /normal/ ? 1 : 0 }
+  .choice(bamsTumor, bamsNormal) { it[1] ==~ ~/^.+_0$/ ? 1 : 0 }
 
 bamsTumor  = logChannelContent("Tumor Bam for variant Calling: ", bamsTumor)
 bamsNormal = logChannelContent("Normal Bam for variant Calling: ", bamsNormal)
@@ -462,16 +462,17 @@ bamsNormal = logChannelContent("Normal Bam for variant Calling: ", bamsNormal)
 process RunMutect1 {
 
   module 'bioinfo-tools'
-  moduule 'mutect/1.1.5'
+  module 'mutect/1.1.5'
+
+  cpus 2
 
   input:
   set idPatientTumor, idSampleTumor, bamTumor, baiTumor from bamsTumor
   set idPatientNormal, idSampleNormal, bamNormal, baiNormal from bamsNormal
 
   output:
-  set idPatientTumor, idSampleTumor, idSampleNormal, file("${idSampleTumor}.mutect1.vcf"), file("${idSampleTumor}.mutect1.out") into mutectVariantCallingOutput
+  set idPatientTumor, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect1.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect1.out") into mutectVariantCallingOutput
 
-  cpus 2
 
   """
   java -jar ${params.mutect1Home}/muTect-1.1.5.jar \
@@ -486,6 +487,8 @@ process RunMutect1 {
   -L 17:1000000-2000000
   """
 }
+
+mutectVariantCallingOutput = logChannelContent("Mutect1 output: ", mutectVariantCallingOutput)
 
 // ################################# FUNCTIONS #################################
 
