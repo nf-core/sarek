@@ -462,6 +462,13 @@ bamsNormal = logChannelContent("Normal Bam for variant Calling: ", bamsNormal)
 bamsAll = Channel.create()
 bamsAll = bamsNormal.spread(bamsTumor)
 
+bamsMutect1 = Channel.create()
+bamsStrelka = Channel.create()
+
+Channel
+  .from bamsAll
+  .separate( bamsMutect1, bamsStrelka ) { a -> [a, a] }
+
 process RunMutect1 {
 
   module 'bioinfo-tools'
@@ -470,7 +477,7 @@ process RunMutect1 {
   cpus 2
 
   input:
-  set idPatientNormal, idSampleNormal, file(bamNormal), file(baiNormal), idPatientTumor, idSampleTumor, file(bamTumor), file(baiTumor) from bamsAll
+  set idPatientNormal, idSampleNormal, file(bamNormal), file(baiNormal), idPatientTumor, idSampleTumor, file(bamTumor), file(baiTumor) from bamsMutect1
 
   output:
   set idPatientTumor, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect1.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect1.out") into mutectVariantCallingOutput
@@ -499,7 +506,7 @@ process RunStrelka {
   cpus 2
 
   input:
-  set idPatientNormal, idSampleNormal, file(bamNormal), file(baiNormal), idPatientTumor, idSampleTumor, file(bamTumor), file(baiTumor) from bamsAll
+  set idPatientNormal, idSampleNormal, file(bamNormal), file(baiNormal), idPatientTumor, idSampleTumor, file(bamTumor), file(baiTumor) from bamsStrelka
   file 'strelka_config.ini'
 
   output:
@@ -516,7 +523,7 @@ process RunStrelka {
   """
 }
 
-strelkaVariantCallingOutput = logChannelContent("Mutect1 output: ", strelkaVariantCallingOutput)
+strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
 
 // ################################# FUNCTIONS #################################
 
