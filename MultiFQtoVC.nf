@@ -500,6 +500,7 @@ process RunStrelka {
 
   input:
   set idPatientNormal, idSampleNormal, file(bamNormal), file(baiNormal), idPatientTumor, idSampleTumor, file(bamTumor), file(baiTumor) from bamsAll
+  file 'strelka_config.ini'
 
   output:
   set idPatientTumor, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect1.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect1.out") into strelkaVariantCallingOutput
