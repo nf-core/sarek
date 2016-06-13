@@ -18,12 +18,11 @@ name='InstallStrelka'
 print "Installing dependancies for CAW"
 print "Installing Strelka"
 
-call(["wget", "https://sites.google.com/site/strelkasomaticvariantcaller/home/download/strelka_workflow-1.0.14.tar.gz"])
+call(["wget", "https://sites.google.com/site/strelkasomaticvariantcaller/home/download/strelka_workflow-1.0.15.tar.gz"])
 
-call(["tar", "-xzf", "strelka_workflow-1.0.14.tar.gz"])
+call(["tar", "-xzf", "strelka_workflow-1.0.15.tar.gz"])
 
-chdir("strelka_workflow-1.0.14")
-
+chdir("strelka_workflow-1.0.15")
 
 prefix = "--prefix="+pathway
 
