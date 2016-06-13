@@ -492,6 +492,31 @@ process RunMutect1 {
 
 mutectVariantCallingOutput = logChannelContent("Mutect1 output: ", mutectVariantCallingOutput)
 
+process RunStrelka {
+
+  module 'bioinfo-tools'
+
+  cpus 2
+
+  input:
+  set idPatientNormal, idSampleNormal, file(bamNormal), file(baiNormal), idPatientTumor, idSampleTumor, file(bamTumor), file(baiTumor) from bamsAll
+
+  output:
+  set idPatientTumor, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect1.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect1.out") into strelkaVariantCallingOutput
+
+  """
+  ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
+  --normal=${bamNormal} \
+  --tumor=${bamTumor} \
+  --ref=${refs["genomeFile"]} \
+  --config=strelka_config.ini \
+  --output-dir=.
+  make -j 8
+  """
+}
+
+strelkaVariantCallingOutput = logChannelContent("Mutect1 output: ", strelkaVariantCallingOutput)
+
 // ################################# FUNCTIONS #################################
 
 /* 
