@@ -115,9 +115,10 @@ if (!parametersDefined) {
 
 /*
  * Time to check the sample file. Its format is like: "subject sample lane fastq1 fastq2":
- * tcga.cl	tcga.cl.normal	tcga.cl.normal_1	data/tcga.cl.normal_L001_R1.fastq.gz	data/tcga.cl.normal_L001_R2.fastq.gz
- * tcga.cl	tcga.cl.tumor	tcga.cl.tumor_1	data/tcga.cl.tumor_L001_R1.fastq.gz	data/tcga.cl.tumor_L001_R2.fastq.gz
- * tcga.cl	tcga.cl.tumor	tcga.cl.tumor_2	data/tcga.cl.tumor_L002_R1.fastq.gz	data/tcga.cl.tumor_L002_R2.fastq.gz
+ * [maxime] Actually the new format is now like: "subject status sample lane fastq1 fastq2":
+ * tcga.cl  0 tcga.cl.normal  tcga.cl.normal_1  data/tcga.cl.normal_L001_R1.fastq.gz  data/tcga.cl.normal_L001_R2.fastq.gz
+ * tcga.cl  1 tcga.cl.tumor tcga.cl.tumor_1 data/tcga.cl.tumor_L001_R1.fastq.gz data/tcga.cl.tumor_L001_R2.fastq.gz
+ * tcga.cl  1 tcga.cl.tumor tcga.cl.tumor_2 data/tcga.cl.tumor_L002_R1.fastq.gz data/tcga.cl.tumor_L002_R2.fastq.gz
  */
 
 sampleTSVconfig = file(params.sample)
@@ -133,9 +134,12 @@ if (!params.sample) {
 }
 
 /*
- * Read config file, lets presume its "subject sample fastq1 fastq2"
- * for now and channel this out for mapping
+ * Read config file, it's "subject status sample lane fastq1 fastq2"
+ * let's channel this out for mapping
  */
+
+// [maxime] I just added __status to the sample ID so that the whole pipeline is still working without having to change anything.
+// [maxime] I know, it is lazy...
 
 fastqFiles = Channel
   .from(sampleTSVconfig.readLines())
@@ -191,7 +195,6 @@ bams  = logChannelContent("BAM files before sorting into group or single:", bams
  */
 
 // Merge or rename bam
-// Renaming is totally useless, but it is more consistent
 
 singleBam  = Channel.create()
 groupedBam = Channel.create()
@@ -222,6 +225,8 @@ process MergeBam {
   """
 }
 
+// Renaming is totally useless, but it is more consistent with the rest of the pipeline
+
 process RenameSingleBam {
 
   input:
@@ -247,9 +252,7 @@ mergedBam        = logChannelContent("GROUPED: ", mergedBam)
 
 bamList = Channel.create()
 bamList = mergedBam.mix(singleRenamedBam)
-// bamList = logChannelContent("Mixed channels: ", bamList)
 bamList = bamList.map { idPatient, idSample, idRun, bam -> [idPatient[0], idSample, bam].flatten() }
-// bamList = logChannelContent("Mapped and flattened: ", bamList)
 
 bamList = logChannelContent("BAM list for MarkDuplicates: ",bamList)
 
@@ -347,6 +350,7 @@ intervals = logChannelContent("Intervals passed to Realign: ",intervals)
 /*
  * realign, use nWayOut to split into tumor/normal again
  */
+
 process Realign {
 
   input:
@@ -361,8 +365,10 @@ process Realign {
   file intervals from intervals
 
   output:
-  set idPatient, idSample, file("*.md.real.bam"), file("*.md.real.bai") into realignedBam
   val(idPatient) into idPatient
+  val(idSample) into tempSamples
+  file("*.md.real.bam") into tempBams
+  file("*.md.real.bai") into tempBais
 
   script:
   input = mdBam.collect{"-I $it"}.join(' ')
@@ -380,17 +386,18 @@ process Realign {
   """
 }
 
-tempSamples  = Channel.create()
-tempBams     = Channel.create()
-tempBais     = Channel.create()
+// [maxime] If I make a set out of this process I got a list of lists, which cannot be iterate via a single process
+// So I need to transform this output into a channel that can be iterated on.
+// I also sometimes had problem with the set that wasn't synchronised, and I got wrongly associated files
+// So what I decided was to separate all the different output
+// We're getting from the Realign process 4 channels (patient, samples bams and bais)
+// So I flatten, sort, and reflatten the samples and the files (bam and bai) channels
+// to get them in the same order (the name of the bam and bai files are based on the sample, so if we sort them they all have the same order ;-))
+// And put them back together, and add the ID patient in the realignedBam channel
 
-Channel
-  .from realignedBam
-  .separate( tempSamples, tempBams, tempBais ) { a -> [a, a, a] }
-
-tempSamples  = tempSamples.flatMap { id, samples, bams, bais -> [samples] }.flatten().toSortedList().flatten()
-tempBams     = tempBams.flatMap { id, samples, bams, bais -> [bams] }.flatten().toSortedList().flatten()
-tempBais     = tempBais.flatMap { id, samples, bams, bais -> [bais] }.flatten().toSortedList().flatten()
+tempSamples  = tempSamples.flatten().toSortedList().flatten()
+tempBams     = tempBams.flatten().toSortedList().flatten()
+tempBais     = tempBais.flatten().toSortedList().flatten()
 tempSamples  = tempSamples.merge( tempBams, tempBais ) { s, b, i -> [s, b, i] }
 realignedBam  = idPatient.spread(tempSamples)
 
@@ -451,6 +458,14 @@ process RecalibrateBam {
 
 recalibratedBams = logChannelContent("Recalibrated Bam for variant Calling: ",recalibratedBams)
 
+// [maxime] Here we have a recalibbrated bam set, but we need to separate the bam files based on patient status.
+// The sample tsv config file which is now formatted like: "subject status sample lane fastq1 fastq2"
+// cf fastqFiles channel, I decided just to add __status to the sample name to have less changes to do.
+// And so I'm sorting the channel if the sample match __0, then it's a normal sample, otherwise tumor.
+// Then spread normal over tumor to get each possibilities
+// ie. normal vs tumor1, normal vs tumor2, normal vs tumor3
+// then copy this channel into channels for each variant calling
+
 bamsTumor  = Channel.create()
 bamsNormal = Channel.create()
 recalibratedBams
@@ -462,6 +477,13 @@ bamsNormal = logChannelContent("Normal Bam for variant Calling: ", bamsNormal)
 bamsAll = Channel.create()
 bamsAll = bamsNormal.spread(bamsTumor)
 
+bamsMutect1 = Channel.create()
+bamsStrelka = Channel.create()
+
+Channel
+  .from bamsAll
+  .separate( bamsMutect1, bamsStrelka ) { a -> [a, a] }
+
 process RunMutect1 {
 
   module 'bioinfo-tools'
@@ -470,7 +492,7 @@ process RunMutect1 {
   cpus 2
 
   input:
-  set idPatientNormal, idSampleNormal, file(bamNormal), file(baiNormal), idPatientTumor, idSampleTumor, file(bamTumor), file(baiTumor) from bamsAll
+  set idPatientNormal, idSampleNormal, file(bamNormal), file(baiNormal), idPatientTumor, idSampleTumor, file(bamTumor), file(baiTumor) from bamsMutect1
 
   output:
   set idPatientTumor, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect1.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect1.out") into mutectVariantCallingOutput
@@ -491,6 +513,32 @@ process RunMutect1 {
 }
 
 mutectVariantCallingOutput = logChannelContent("Mutect1 output: ", mutectVariantCallingOutput)
+
+// process RunStrelka {
+
+//   module 'bioinfo-tools'
+
+//   cpus 2
+
+//   input:
+//   set idPatientNormal, idSampleNormal, file(bamNormal), file(baiNormal), idPatientTumor, idSampleTumor, file(bamTumor), file(baiTumor) from bamsStrelka
+//   file 'strelka_config.ini'
+
+//   output:
+//   set idPatientTumor, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect1.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect1.out") into strelkaVariantCallingOutput
+
+//   """
+//   ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
+//   --normal=${bamNormal} \
+//   --tumor=${bamTumor} \
+//   --ref=${refs["genomeFile"]} \
+//   --config=strelka_config.ini \
+//   --output-dir=.
+//   make -j 8
+//   """
+// }
+
+// strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
 
 // ################################# FUNCTIONS #################################
 

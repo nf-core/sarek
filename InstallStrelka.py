@@ -24,7 +24,6 @@ call(["tar", "-xzf", "strelka_workflow-1.0.14.tar.gz"])
 
 chdir("strelka_workflow-1.0.14")
 
-
 prefix = "--prefix="+pathway
 
 call(["./configure", prefix])
