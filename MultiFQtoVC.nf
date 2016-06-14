@@ -477,6 +477,13 @@ bamsNormal = logChannelContent("Normal Bam for variant Calling: ", bamsNormal)
 bamsAll = Channel.create()
 bamsAll = bamsNormal.spread(bamsTumor)
 
+// [maxime] Since idPatientNormal and idPatientTumor are the same, I'm removing it from BamsAll Channel
+// I don't think a groupTuple can be used to do that, but it could be a good idea to look if there is a nicer way to do that
+
+bamsAll = bamsAll.map {
+  idPatientNormal, idSampleNormal, bamNormal, baiNormal, idPatientTumor, idSampleTumor, bamTumor, baiTumor ->
+  [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] }
+
 bamsMutect1 = Channel.create()
 bamsStrelka = Channel.create()
 
@@ -492,11 +499,10 @@ process RunMutect1 {
   cpus 2
 
   input:
-  set idPatientNormal, idSampleNormal, file(bamNormal), file(baiNormal), idPatientTumor, idSampleTumor, file(bamTumor), file(baiTumor) from bamsMutect1
+  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsMutect1
 
   output:
-  set idPatientTumor, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect1.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect1.out") into mutectVariantCallingOutput
-
+  set idPatient, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect1.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect1.out") into mutectVariantCallingOutput
 
   """
   java -jar ${params.mutect1Home}/muTect-1.1.5.jar \
@@ -521,11 +527,11 @@ mutectVariantCallingOutput = logChannelContent("Mutect1 output: ", mutectVariant
 //   cpus 2
 
 //   input:
-//   set idPatientNormal, idSampleNormal, file(bamNormal), file(baiNormal), idPatientTumor, idSampleTumor, file(bamTumor), file(baiTumor) from bamsStrelka
+//   set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsStrelka
 //   file 'strelka_config.ini'
 
 //   output:
-//   set idPatientTumor, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect1.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect1.out") into strelkaVariantCallingOutput
+//   set idPatient, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect1.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect1.out") into strelkaVariantCallingOutput
 
 //   """
 //   ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
