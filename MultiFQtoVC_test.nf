@@ -19,7 +19,7 @@
 // ############################### CONFIGURATION ###############################
 
 String version    = "0.0.1"
-String dateUpdate = "2016-06-15"
+String dateUpdate = "2016-06-10"
 
 /*
  * Get some basic informations about the workflow
@@ -513,7 +513,8 @@ process RunMutect1 {
   --input_file:normal ${bamNormal} \
   --input_file:tumor ${bamTumor} \
   --out ${idSampleNormal}_${idSampleTumor}.mutect1.out \
-  --vcf ${idSampleNormal}_${idSampleTumor}.mutect1.vcf
+  --vcf ${idSampleNormal}_${idSampleTumor}.mutect1.vcf \
+  -L 17:1000000-2000000
   """
 }
 
