@@ -19,7 +19,7 @@
 // ############################### CONFIGURATION ###############################
 
 String version    = "0.0.1"
-String dateUpdate = "2016-06-15"
+String dateUpdate = "2016-06-16"
 
 /*
  * Get some basic informations about the workflow
