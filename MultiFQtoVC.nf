@@ -163,7 +163,7 @@ process Mapping {
   module 'bwa/0.7.8'
   module 'samtools/1.3'
 
-  memory { 3.GB * task.attempt }
+  memory { 6.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -214,7 +214,7 @@ process MergeBam {
   module 'bioinfo-tools'
   module 'samtools/1.3'
 
-  memory { 3.GB * task.attempt }
+  memory { 6.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -238,12 +238,6 @@ process MergeBam {
 // Renaming is totally useless, but it is more consistent with the rest of the pipeline
 
 process RenameSingleBam {
-
-  memory { 3.GB * task.attempt }
-  time { 16.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
 
   input:
   set idPatient, idSample, idRun, file(bam) from singleBam
@@ -278,7 +272,7 @@ bamList = logChannelContent("BAM list for MarkDuplicates: ",bamList)
 
 process MarkDuplicates {
 
-  memory { 3.GB * task.attempt }
+  memory { 6.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -337,7 +331,7 @@ duplicatesRealign  = logChannelContent("BAMs for IndelRealigner grouped by overa
 process CreateIntervals {
 
   cpus 6
-  memory { 3.GB * task.attempt }
+  memory { 6.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -380,7 +374,7 @@ intervals = logChannelContent("Intervals passed to Realign: ",intervals)
 
 process Realign {
 
-  memory { 3.GB * task.attempt }
+  memory { 6.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -439,7 +433,7 @@ realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realigned
 process CreateRecalibrationTable {
 
   cpus 2
-  memory { 3.GB * task.attempt }
+  memory { 6.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -475,7 +469,7 @@ recalibrationTable = logChannelContent("Base recalibrated table for recalibratio
 
 process RecalibrateBam {
 
-  memory { 3.GB * task.attempt }
+  memory { 6.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -539,7 +533,7 @@ Channel
 process RunMutect1 {
 
   cpus 2
-  memory { 3.GB * task.attempt }
+  memory { 6.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -572,7 +566,7 @@ mutectVariantCallingOutput = logChannelContent("Mutect1 output: ", mutectVariant
 // process RunStrelka {
 
 //   cpus 2
-//   memory { 3.GB * task.attempt }
+//   memory { 6.GB * task.attempt }
 //   time { 16.h * task.attempt }
 //   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
 //   maxRetries 3
