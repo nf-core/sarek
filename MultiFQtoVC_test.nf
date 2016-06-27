@@ -531,7 +531,7 @@ process RunStrelka {
   file 'strelka_config.ini'
 
   output:
-  set idPatient, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect1.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect1.out") into strelkaVariantCallingOutput
+  set idPatient, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.strelka.vcf") into strelkaVariantCallingOutput
 
   """
   ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
