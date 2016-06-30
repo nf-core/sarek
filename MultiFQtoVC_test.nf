@@ -538,7 +538,7 @@ process RunStrelka {
   --normal=${bamNormal} \
   --tumor=${bamTumor} \
   --ref=${params.sGenomeFile} \
-  --config=strelka_config.ini \
+  --config=${params.strelkaConf} \
   --output-dir=strelka
   make -j 8
   """
