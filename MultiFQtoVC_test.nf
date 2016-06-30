@@ -531,7 +531,7 @@ process RunStrelka {
   file 'strelka_config.ini'
 
   output:
-  set idPatient, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.strelka.vcf") into strelkaVariantCallingOutput
+  set idPatient, val("${idSampleNormal}_${idSampleTumor}"), file("strelka/${idSampleNormal}_${idSampleTumor}.strelka.vcf") into strelkaVariantCallingOutput
 
   """
   ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
@@ -539,7 +539,7 @@ process RunStrelka {
   --tumor=${bamTumor} \
   --ref=${params.sGenomeFile} \
   --config=strelka_config.ini \
-  --output-dir=.
+  --output-dir=strelka
   make -j 8
   """
 }
