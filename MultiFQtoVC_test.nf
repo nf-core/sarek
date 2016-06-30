@@ -90,6 +90,8 @@ CheckExistence = {
 refs = [
   "genomeFile":     params.genome,      // genome reference
   "genomeIndex":    params.genomeIndex, // genome reference index
+  "SgenomeFile":    params.gfStrekla,   // genome reference
+  "SgenomeIndex":   params.giStrekla,   // genome reference index
   "genomeDict":     params.genomeDict,  // genome reference dictionary
   "kgIndels":       params.kgIndels,    // 1000 Genomes SNPs
   "kgIndex":        params.kgIndex,     // 1000 Genomes SNPs index
@@ -537,7 +539,7 @@ process RunStrelka {
   ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
   --normal=${bamNormal} \
   --tumor=${bamTumor} \
-  --ref=${refs["genomeFile"]} \
+  --ref=${refs["SgenomeFile"]} \
   --config=strelka_config.ini \
   --output-dir=.
   make -j 8
