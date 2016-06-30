@@ -90,8 +90,6 @@ CheckExistence = {
 refs = [
   "genomeFile":     params.genome,      // genome reference
   "genomeIndex":    params.genomeIndex, // genome reference index
-  // "sGenomeFile":    params.gfStrekla,   // genome reference
-  // "sGenomeIndex":   params.giStrekla,   // genome reference index
   "genomeDict":     params.genomeDict,  // genome reference dictionary
   "kgIndels":       params.kgIndels,    // 1000 Genomes SNPs
   "kgIndex":        params.kgIndex,     // 1000 Genomes SNPs index
@@ -522,33 +520,31 @@ process RunMutect1 {
 
 mutectVariantCallingOutput = logChannelContent("Mutect1 output: ", mutectVariantCallingOutput)
 
-// process RunStrelka {
+process RunStrelka {
 
-//   module 'bioinfo-tools'
+  module 'bioinfo-tools'
 
-//   cpus 2
+  cpus 2
 
-//   input:
-//   file refs["sGenomeFile"]
-//   file refs["sGenomeIndex"]  
-//   set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsStrelka
-//   file 'strelka_config.ini'
+  input:
+  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsStrelka
+  file 'strelka_config.ini'
 
-//   output:
-//   set idPatient, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.strelka.vcf") into strelkaVariantCallingOutput
+  output:
+  set idPatient, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.strelka.vcf") into strelkaVariantCallingOutput
 
-//   """
-//   ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
-//   --normal=${bamNormal} \
-//   --tumor=${bamTumor} \
-//   --ref=${refs["sGenomeFile"]} \
-//   --config=strelka_config.ini \
-//   --output-dir=.
-//   make -j 8
-//   """
-// }
+  """
+  ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
+  --normal=${bamNormal} \
+  --tumor=${bamTumor} \
+  --ref=${params.sGenomeFile} \
+  --config=strelka_config.ini \
+  --output-dir=.
+  make -j 8
+  """
+}
 
-// strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
+strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
 
 // ################################# FUNCTIONS #################################
 
