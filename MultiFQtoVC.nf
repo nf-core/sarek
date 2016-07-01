@@ -374,8 +374,8 @@ intervals = logChannelContent("Intervals passed to Realign: ",intervals)
 
 process Realign {
 
-  memory { 6.GB * task.attempt }
-  time { 16.h * task.attempt }
+  memory { 10.GB * task.attempt }
+  time { 20.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
   maxErrors '-1'
