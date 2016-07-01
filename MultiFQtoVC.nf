@@ -163,8 +163,8 @@ process Mapping {
   module 'bwa/0.7.8'
   module 'samtools/1.3'
 
-  memory { 6.GB * task.attempt }
-  time { 16.h * task.attempt }
+  memory { 8.GB * task.attempt }
+  time { 20.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
   maxErrors '-1'
@@ -272,7 +272,7 @@ bamList = logChannelContent("BAM list for MarkDuplicates: ",bamList)
 
 process MarkDuplicates {
 
-  memory { 6.GB * task.attempt }
+  memory { 8.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -331,8 +331,8 @@ duplicatesRealign  = logChannelContent("BAMs for IndelRealigner grouped by overa
 process CreateIntervals {
 
   cpus 6
-  memory { 6.GB * task.attempt }
-  time { 16.h * task.attempt }
+  memory { 4.GB * task.attempt }
+  time { 8.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
   maxErrors '-1'
