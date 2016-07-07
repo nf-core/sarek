@@ -19,7 +19,7 @@
 // ############################### CONFIGURATION ###############################
 
 String version    = "0.0.1"
-String dateUpdate = "2016-06-16"
+String dateUpdate = "2016-06-10"
 
 /*
  * Get some basic informations about the workflow
@@ -163,11 +163,7 @@ process Mapping {
   module 'bwa/0.7.8'
   module 'samtools/1.3'
 
-  memory { 8.GB * task.attempt }
-  time { 20.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
+  cpus 1
 
   input:
   file refs["genomeFile"]
@@ -213,12 +209,6 @@ process MergeBam {
 
   module 'bioinfo-tools'
   module 'samtools/1.3'
-
-  memory { 6.GB * task.attempt }
-  time { 16.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
 
   input:
   set idPatient, idSample, idRun, file(bam) from groupedBam
@@ -271,12 +261,6 @@ bamList = logChannelContent("BAM list for MarkDuplicates: ",bamList)
  */
 
 process MarkDuplicates {
-
-  memory { 8.GB * task.attempt }
-  time { 16.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
 
   module 'bioinfo-tools'
   module 'picard/1.118'
@@ -331,11 +315,6 @@ duplicatesRealign  = logChannelContent("BAMs for IndelRealigner grouped by overa
 process CreateIntervals {
 
   cpus 6
-  memory { 4.GB * task.attempt }
-  time { 8.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
 
   input:
   set idPatient, idSample, file(mdBam), file(mdBai) from duplicatesInterval
@@ -373,12 +352,6 @@ intervals = logChannelContent("Intervals passed to Realign: ",intervals)
  */
 
 process Realign {
-
-  memory { 10.GB * task.attempt }
-  time { 20.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
 
   input:
   set idPatient, idSample, file(mdBam), file(mdBai) from duplicatesRealign
@@ -433,47 +406,35 @@ realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realigned
 process CreateRecalibrationTable {
 
   cpus 2
-  memory { 6.GB * task.attempt }
-  time { 16.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
 
+   input:
+   set idPatient, idSample, realignedBamFile, realignedBaiFile from realignedBam
+   file refs["genomeFile"]
+   file refs["dbsnp"]
+   file refs["kgIndels"]
+   file refs["millsIndels"]
 
-  input:
-  set idPatient, idSample, realignedBamFile, realignedBaiFile from realignedBam
-  file refs["genomeFile"]
-  file refs["dbsnp"]
-  file refs["kgIndels"]
-  file refs["millsIndels"]
+   output:
+   set idPatient, idSample, realignedBamFile, file("${idSample}.recal.table") into recalibrationTable
 
-  output:
-  set idPatient, idSample, realignedBamFile, file("${idSample}.recal.table") into recalibrationTable
-
-  """
-  java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
-  -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
-  -T BaseRecalibrator \
-  -R ${refs["genomeFile"]} \
-  -I $realignedBamFile \
-  -knownSites ${refs["dbsnp"]} \
-  -knownSites ${refs["kgIndels"]} \
-  -knownSites ${refs["millsIndels"]} \
-  -nct ${task.cpus} \
-  -l INFO \
-  -o ${idSample}.recal.table
-  """
+   """
+   java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
+   -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+   -T BaseRecalibrator \
+   -R ${refs["genomeFile"]} \
+   -I $realignedBamFile \
+   -knownSites ${refs["dbsnp"]} \
+   -knownSites ${refs["kgIndels"]} \
+   -knownSites ${refs["millsIndels"]} \
+   -nct ${task.cpus} \
+   -l INFO \
+   -o ${idSample}.recal.table
+   """
 }
 
 recalibrationTable = logChannelContent("Base recalibrated table for recalibration: ",recalibrationTable)
 
 process RecalibrateBam {
-
-  memory { 6.GB * task.attempt }
-  time { 16.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
 
   input:
   set idPatient, idSample, realignedBamFile, recalibrationReport from recalibrationTable
@@ -532,15 +493,10 @@ Channel
 
 process RunMutect1 {
 
-  cpus 2
-  memory { 6.GB * task.attempt }
-  time { 16.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
-
   module 'bioinfo-tools'
   module 'mutect/1.1.5'
+
+  cpus 2
 
   input:
   set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsMutect1
@@ -557,7 +513,8 @@ process RunMutect1 {
   --input_file:normal ${bamNormal} \
   --input_file:tumor ${bamTumor} \
   --out ${idSampleNormal}_${idSampleTumor}.mutect1.out \
-  --vcf ${idSampleNormal}_${idSampleTumor}.mutect1.vcf
+  --vcf ${idSampleNormal}_${idSampleTumor}.mutect1.vcf \
+  -L 17:1000000-2000000
   """
 }
 
@@ -565,14 +522,9 @@ mutectVariantCallingOutput = logChannelContent("Mutect1 output: ", mutectVariant
 
 // process RunStrelka {
 
-//   cpus 2
-//   memory { 6.GB * task.attempt }
-//   time { 16.h * task.attempt }
-//   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-//   maxRetries 3
-//   maxErrors '-1'
-
 //   module 'bioinfo-tools'
+
+//   cpus 2
 
 //   input:
 //   set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsStrelka
