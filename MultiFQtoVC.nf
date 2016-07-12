@@ -68,13 +68,11 @@ switch (params) {
     exit 1
 }
 
-parametersDefined = true
-
 /*
  * Use this closure to loop through all the parameters.
  * We can get an AssertionError exception from the file() method as well.
  */
-
+parametersDefined = true
 CheckExistence = {
   referenceFile, fileToCheck ->
   try {
@@ -294,7 +292,7 @@ process MarkDuplicates {
 
   """
   echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nbam:\t"${bam}"\n" > logInfo
-  java -Xmx7g -jar ${params.picardHome}/MarkDuplicates.jar \
+  java -Xmx${task.memory.toGiga()}g -jar ${params.picardHome}/MarkDuplicates.jar \
   INPUT=${bam} \
   METRICS_FILE=${bam}.metrics \
   TMP_DIR=. \
@@ -331,7 +329,7 @@ duplicatesRealign  = logChannelContent("BAMs for IndelRealigner grouped by overa
 process CreateIntervals {
 
   cpus 6
-  memory { 4.GB * task.attempt }
+  memory { 8.GB * task.attempt }
   time { 8.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -355,7 +353,7 @@ process CreateIntervals {
 
   """
   echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nmdBam:\t"${mdBam}"\n" > logInfo
-  java -Xmx7g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+  java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T RealignerTargetCreator \
   $input \
   -R $gf \
@@ -402,7 +400,7 @@ process Realign {
 
   """
   echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nmdBam:\t"${mdBam}"\nmdBai:\t"${mdBai}"\n" > logInfo
-  java -Xmx7g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+  java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T IndelRealigner \
   $input \
   -R $gf \
@@ -451,7 +449,7 @@ process CreateRecalibrationTable {
   set idPatient, idSample, realignedBamFile, file("${idSample}.recal.table") into recalibrationTable
 
   """
-  java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
+  java -Xmx${task.memory.toGiga()}g -Djava.io.tmpdir=${params.SNIC_tmp_dir} \
   -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T BaseRecalibrator \
   -R ${refs["genomeFile"]} \
@@ -469,7 +467,7 @@ recalibrationTable = logChannelContent("Base recalibrated table for recalibratio
 
 process RecalibrateBam {
 
-  memory { 6.GB * task.attempt }
+  memory { 8.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -486,7 +484,7 @@ process RecalibrateBam {
   set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBams
 
   """
-  java -Xmx7g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+  java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T PrintReads \
   -R ${refs["genomeFile"]} \
   -I $realignedBamFile \
@@ -533,7 +531,7 @@ Channel
 process RunMutect1 {
 
   cpus 2
-  memory { 6.GB * task.attempt }
+  memory { 16.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -549,7 +547,7 @@ process RunMutect1 {
   set idPatient, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect1.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect1.out") into mutectVariantCallingOutput
 
   """
-  java -jar ${params.mutect1Home}/muTect-1.1.5.jar \
+  java -Xmx${task.memory.toGiga()}g -jar ${params.mutect1Home}/muTect-1.1.5.jar \
   --analysis_type MuTect \
   --reference_sequence ${refs["genomeFile"]} \
   --cosmic ${refs["cosmic"]} \
