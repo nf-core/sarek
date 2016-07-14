@@ -1,9 +1,9 @@
 #!/usr/bin/env nextflow
 
-params.tumor_bam = "tcga.cl.tumor__1.recal.bam"
-params.tumor_bam_idx = "tcga.cl.tumor__1.recal.bai"
-params.normal_bam = "tcga.cl.normal__0.recal.bam"
-params.normal_bam_idx = "tcga.cl.normal__0.recal.bai"
+params.tumor_bam =      "/proj/a2014205/nobackup/szilva/TCGA/S1/downsampling/G15511/recalibrated/G15511.normal__0.recal.bam"
+params.tumor_bam_idx =  "/proj/a2014205/nobackup/szilva/TCGA/S1/downsampling/G15511/recalibrated/G15511.normal__0.recal.bai"
+params.normal_bam =     "/proj/a2014205/nobackup/szilva/TCGA/S1/downsampling/G15511/recalibrated/G15511.tumor__1.recal.bam"
+params.normal_bam_idx = "/proj/a2014205/nobackup/szilva/TCGA/S1/downsampling/G15511/recalibrated/G15511.tumor__1.recal.bai"
 
 tumor_bam = file(params.tumor_bam)
 tumor_bam_idx = file(params.tumor_bam_idx)
@@ -16,6 +16,17 @@ intervals = Channel
     .from(intervalsFile.readLines())
 
 process runIntervals {
+
+    module 'bioinfo-tools'
+    module 'java/sun_jdk1.8.0_92'
+
+    threads 8
+    memory { 32.GB * task.attempt }
+    time { 16.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
+
     input:
     file tumor_bam
     file tumor_bam_idx
@@ -26,9 +37,12 @@ process runIntervals {
     output:
     file '*.vcf' into finalsVCFs
 
+    // we are using MuTect2 shipped in GATK v3.6
+
     """
-    java -Xmx2g -jar /home/szilva/dev/mutect/GenomeAnalysisTK.jar \
+    java -Xmx${task.memory.toGiga()}g -jar /home/szilva/dev/GATK/GenomeAnalysisTK.jar \
     -T MuTect2 \
+    -nct ${task.threads} \
     -R /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta \
     -I:tumor ${tumor_bam}\
     -I:normal ${normal_bam} \
