@@ -430,8 +430,8 @@ realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realigned
 
 process CreateRecalibrationTable {
 
-  cpus 2
-  memory { 6.GB * task.attempt }
+  cpus 4
+  memory { 16.GB * task.attempt }       // 6G is certainly low even for downsampled (30G) data
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -449,7 +449,7 @@ process CreateRecalibrationTable {
   set idPatient, idSample, realignedBamFile, file("${idSample}.recal.table") into recalibrationTable
 
   """
-  java -Xmx${task.memory.toGiga()}g -Djava.io.tmpdir=${params.SNIC_tmp_dir} \
+  java -Xmx${task.memory.toGiga()}g -Djava.io.tmpdir=$SNIC_TMP \
   -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T BaseRecalibrator \
   -R ${refs["genomeFile"]} \
@@ -467,11 +467,12 @@ recalibrationTable = logChannelContent("Base recalibrated table for recalibratio
 
 process RecalibrateBam {
 
-  memory { 8.GB * task.attempt }
+  memory { 16.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
   maxErrors '-1'
+  cpus 4
 
   input:
   set idPatient, idSample, realignedBamFile, recalibrationReport from recalibrationTable
@@ -483,10 +484,12 @@ process RecalibrateBam {
   output:
   set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBams
 
+  // TODO: ditto as at the previous BaseRecalibrator step, consider using -nct 4 
   """
   java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T PrintReads \
   -R ${refs["genomeFile"]} \
+  -nct ${task.cpus} \
   -I $realignedBamFile \
   --BQSR $recalibrationReport \
   -o ${idSample}.recal.bam
@@ -521,46 +524,88 @@ bamsAll = bamsAll.map {
   idPatientNormal, idSampleNormal, bamNormal, baiNormal, idPatientTumor, idSampleTumor, bamTumor, baiTumor ->
   [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] }
 
-bamsMutect1 = Channel.create()
-bamsStrelka = Channel.create()
+bamsForMuTect2 = Channel.create()
+bamsForStrelka = Channel.create()
 
 Channel
   .from bamsAll
-  .separate( bamsMutect1, bamsStrelka ) { a -> [a, a] }
+  .separate( bamsForMuTect2, bamsForStrelka ) { a -> [a, a] }
 
-process RunMutect1 {
+// define intervals file by --intervals
+intervalsFile = file(params.intervals)
+intervals = Channel
+    .from(intervalsFile.readLines())
 
-  cpus 2
-  memory { 16.GB * task.attempt }
+process RunMutect2 {
+
+  module 'bioinfo-tools'
+  module 'java/sun_jdk1.8.0_92'
+
+  threads 8
+  memory { 32.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
   maxErrors '-1'
 
-  module 'bioinfo-tools'
-  module 'mutect/1.1.5'
-
   input:
-  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsMutect1
+  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForMuTect2
+  set genomicInterval from intervals
 
   output:
-  set idPatient, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect1.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect1.out") into mutectVariantCallingOutput
+  set idPatient, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect2.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect2.out") into mutectVariantCallingOutput
 
+  // we are using MuTect2 shipped in GATK v3.6
   """
-  java -Xmx${task.memory.toGiga()}g -jar ${params.mutect1Home}/muTect-1.1.5.jar \
-  --analysis_type MuTect \
-  --reference_sequence ${refs["genomeFile"]} \
+  java -Xmx${task.memory.toGiga()}g -jar ${params.mutect2Home}/GenomeAnalysisTK.jar \
+  -T MuTect2 \
+  -nct ${task.threads}
+  -R ${refs["genomeFile"]} \
   --cosmic ${refs["cosmic"]} \
   --dbsnp ${refs["dbsnp"]} \
-  --input_file:normal ${bamNormal} \
-  --input_file:tumor ${bamTumor} \
-  --out ${idSampleNormal}_${idSampleTumor}.mutect1.out \
-  --vcf ${idSampleNormal}_${idSampleTumor}.mutect1.vcf
+  -I:normal ${bamNormal} \
+  -I:tumor ${bamTumor} \
+  -L \"$genomicInterval\" \
+  -o ${genomicInterval}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf
   """
 }
 
-mutectVariantCallingOutput = logChannelContent("Mutect1 output: ", mutectVariantCallingOutput)
 
+mutectVariantCallingOutput = logChannelContent("Mutect2 output: ", mutectVariantCallingOutput)
+
+//process RunMutect1 {
+//
+//  cpus 2
+//  memory { 16.GB * task.attempt }
+//  time { 16.h * task.attempt }
+//  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+//  maxRetries 3
+//  maxErrors '-1'
+//
+//  module 'bioinfo-tools'
+//  module 'mutect/1.1.5'
+//
+//  input:
+//  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsMutect1
+//
+//  output:
+//  set idPatient, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect1.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect1.out") into mutectVariantCallingOutput
+//
+//  """
+//  java -Xmx${task.memory.toGiga()}g -jar ${params.mutect1Home}/muTect-1.1.5.jar \
+//  --analysis_type MuTect \
+//  --reference_sequence ${refs["genomeFile"]} \
+//  --cosmic ${refs["cosmic"]} \
+//  --dbsnp ${refs["dbsnp"]} \
+//  --input_file:normal ${bamNormal} \
+//  --input_file:tumor ${bamTumor} \
+//  --out ${idSampleNormal}_${idSampleTumor}.mutect1.out \
+//  --vcf ${idSampleNormal}_${idSampleTumor}.mutect1.vcf
+//  """
+//}
+//
+//mutectVariantCallingOutput = logChannelContent("Mutect1 output: ", mutectVariantCallingOutput)
+//
 // process RunStrelka {
 
 //   cpus 2
