@@ -213,7 +213,7 @@ process MergeBam {
   module 'bioinfo-tools'
   module 'samtools/1.3'
 
-  memory { 6.GB * task.attempt }
+  memory { 8.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -329,7 +329,7 @@ duplicatesRealign  = logChannelContent("BAMs for IndelRealigner grouped by overa
 
 process CreateIntervals {
 
-  cpus 6
+  cpus 8
   memory { 8.GB * task.attempt }
   time { 8.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
@@ -373,7 +373,7 @@ intervals = logChannelContent("Intervals passed to Realign: ",intervals)
 
 process Realign {
 
-  memory { 10.GB * task.attempt }
+  memory { 16.GB * task.attempt }
   time { 20.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -431,7 +431,7 @@ realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realigned
 
 process CreateRecalibrationTable {
 
-  cpus 4
+  cpus 8
   memory { 16.GB * task.attempt }       // 6G is certainly low even for downsampled (30G) data
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
@@ -450,7 +450,7 @@ process CreateRecalibrationTable {
   set idPatient, idSample, realignedBamFile, file("${idSample}.recal.table") into recalibrationTable
 
   """
-  java -Xmx${task.memory.toGiga()}g -Djava.io.tmpdir=$SNIC_TMP \
+  java -Xmx${task.memory.toGiga()}g -Djava.io.tmpdir="/tmp" \
   -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T BaseRecalibrator \
   -R ${refs["genomeFile"]} \
@@ -473,7 +473,7 @@ process RecalibrateBam {
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
   maxErrors '-1'
-  cpus 4
+  cpus 8
 
   input:
   set idPatient, idSample, realignedBamFile, recalibrationReport from recalibrationTable
@@ -540,29 +540,43 @@ intervals = Channel
 // in fact we need two channels: one for the actual genomic region, and an other for names
 // without ":", as nextflow is not happy with them
 
-gI = Channel.create()
-g_I = Channel.create() 
-Channel
-    .from intervals
-    .separate(gI, g_I) {a -> [a,a.replaceFirst(/\:/,"_")]}
+gI = intervals
+    .map { a -> [a,a.replaceFirst(/\:/,"_")] }
+
+//g_I = Channel.create() 
+//Channel
+//    .from intervals
+//    .separate(gI, g_I) {a -> [a,a.replaceFirst(/\:/,"_")]}
+
+// now add genomic intervals to the sample information
+
+//bamsForMuTect2 = logChannelContent("HERE BAMSFORMUTECT2 IS: ",bamsForMuTect2 )
+
+bamsFMT2 = bamsForMuTect2.spread(gI)
+
+//bamsFMT2 = asdasd.spread(g_I)
+//                    .subscribe {println " HERE "+it}
+
+//bamsFMT2 = logChannelContent("HERE IT IS: ",bamsFMT2 )
+
 
 process RunMutect2 {
 
   module 'bioinfo-tools'
   module 'java/sun_jdk1.8.0_92'
 
-  threads 8
-  memory { 32.GB * task.attempt }
+  threads 16
+  memory { 16.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
   maxErrors '-1'
 
   input:
-  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForMuTect2
+  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
 
   output:
-  set idPatient, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect2.vcf") into mutectVariantCallingOutput
+  set idPatient, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf") into mutectVariantCallingOutput
   
   // we are using MuTect2 shipped in GATK v3.6
   """
@@ -574,7 +588,8 @@ process RunMutect2 {
   --dbsnp ${refs["dbsnp"]} \
   -I:normal ${bamNormal} \
   -I:tumor ${bamTumor} \
-  -o ${idSampleNormal}_${idSampleTumor}.mutect2.vcf
+  -L \"${genInt}\" \
+  -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf
   """
 }
 
