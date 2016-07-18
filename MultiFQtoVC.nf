@@ -166,6 +166,7 @@ process Mapping {
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
   maxErrors '-1'
+  cpus 8
 
   input:
   file refs["genomeFile"]
@@ -536,6 +537,15 @@ intervalsFile = file(params.intervals)
 intervals = Channel
     .from(intervalsFile.readLines())
 
+// in fact we need two channels: one for the actual genomic region, and an other for names
+// without ":", as nextflow is not happy with them
+
+gI = Channel.create()
+g_I = Channel.create() 
+Channel
+    .from intervals
+    .separate(gI, g_I) {a -> [a,a.replaceFirst(/\:/,"_")]}
+
 process RunMutect2 {
 
   module 'bioinfo-tools'
@@ -550,23 +560,21 @@ process RunMutect2 {
 
   input:
   set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForMuTect2
-  set genomicInterval from intervals
 
   output:
-  set idPatient, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect2.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect2.out") into mutectVariantCallingOutput
-
+  set idPatient, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect2.vcf") into mutectVariantCallingOutput
+  
   // we are using MuTect2 shipped in GATK v3.6
   """
   java -Xmx${task.memory.toGiga()}g -jar ${params.mutect2Home}/GenomeAnalysisTK.jar \
   -T MuTect2 \
-  -nct ${task.threads}
+  -nct ${task.threads} \
   -R ${refs["genomeFile"]} \
   --cosmic ${refs["cosmic"]} \
   --dbsnp ${refs["dbsnp"]} \
   -I:normal ${bamNormal} \
   -I:tumor ${bamTumor} \
-  -L \"$genomicInterval\" \
-  -o ${genomicInterval}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf
+  -o ${idSampleNormal}_${idSampleTumor}.mutect2.vcf
   """
 }
 
