@@ -161,7 +161,7 @@ process Mapping {
   module 'bwa/0.7.8'
   module 'samtools/1.3'
 
-  memory { 8.GB * task.attempt }
+  memory { 16.GB * task.attempt }
   time { 20.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -525,6 +525,11 @@ bamsAll = bamsAll.map {
   idPatientNormal, idSampleNormal, bamNormal, baiNormal, idPatientTumor, idSampleTumor, bamTumor, baiTumor ->
   [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] }
 
+// We know that MuTect2 (and other somatic callers) are notoriously slow. To speed them up we are chopping the reference into 
+// smaller pieces at centromeres (see repeates/centromeres.list), do variant calling by this intervals, and re-merge the VCFs.
+// Since we are on a cluster, this can parallelize the variant call process, and push down the MuTect2 waiting time significanlty (1/10)
+
+// first create channels for each variant caller
 bamsForMuTect2 = Channel.create()
 bamsForStrelka = Channel.create()
 
@@ -533,32 +538,22 @@ Channel
   .separate( bamsForMuTect2, bamsForStrelka ) { a -> [a, a] }
 
 // define intervals file by --intervals
+// TODO: add as a parameter file
 intervalsFile = file(params.intervals)
 intervals = Channel
     .from(intervalsFile.readLines())
 
 // in fact we need two channels: one for the actual genomic region, and an other for names
-// without ":", as nextflow is not happy with them
-
+// without ":", as nextflow is not happy with them (will report as a failed process).
+// For region 1:1-2000 the output file name will be something like 1_1-2000_Sample_name.mutect2.vcf
+// from the "1:1-2000" string make ["1:1-2000","1_1-2000"]
 gI = intervals
     .map { a -> [a,a.replaceFirst(/\:/,"_")] }
 
-//g_I = Channel.create() 
-//Channel
-//    .from intervals
-//    .separate(gI, g_I) {a -> [a,a.replaceFirst(/\:/,"_")]}
-
 // now add genomic intervals to the sample information
-
-//bamsForMuTect2 = logChannelContent("HERE BAMSFORMUTECT2 IS: ",bamsForMuTect2 )
-
+// join [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] and ["1:1-2000","1_1-2000"] 
+// and make a line for each interval
 bamsFMT2 = bamsForMuTect2.spread(gI)
-
-//bamsFMT2 = asdasd.spread(g_I)
-//                    .subscribe {println " HERE "+it}
-
-//bamsFMT2 = logChannelContent("HERE IT IS: ",bamsFMT2 )
-
 
 process RunMutect2 {
 
@@ -593,72 +588,8 @@ process RunMutect2 {
   """
 }
 
-
 mutectVariantCallingOutput = logChannelContent("Mutect2 output: ", mutectVariantCallingOutput)
-
-//process RunMutect1 {
-//
-//  cpus 2
-//  memory { 16.GB * task.attempt }
-//  time { 16.h * task.attempt }
-//  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-//  maxRetries 3
-//  maxErrors '-1'
-//
-//  module 'bioinfo-tools'
-//  module 'mutect/1.1.5'
-//
-//  input:
-//  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsMutect1
-//
-//  output:
-//  set idPatient, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect1.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect1.out") into mutectVariantCallingOutput
-//
-//  """
-//  java -Xmx${task.memory.toGiga()}g -jar ${params.mutect1Home}/muTect-1.1.5.jar \
-//  --analysis_type MuTect \
-//  --reference_sequence ${refs["genomeFile"]} \
-//  --cosmic ${refs["cosmic"]} \
-//  --dbsnp ${refs["dbsnp"]} \
-//  --input_file:normal ${bamNormal} \
-//  --input_file:tumor ${bamTumor} \
-//  --out ${idSampleNormal}_${idSampleTumor}.mutect1.out \
-//  --vcf ${idSampleNormal}_${idSampleTumor}.mutect1.vcf
-//  """
-//}
-//
-//mutectVariantCallingOutput = logChannelContent("Mutect1 output: ", mutectVariantCallingOutput)
-//
-// process RunStrelka {
-
-//   cpus 2
-//   memory { 6.GB * task.attempt }
-//   time { 16.h * task.attempt }
-//   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-//   maxRetries 3
-//   maxErrors '-1'
-
-//   module 'bioinfo-tools'
-
-//   input:
-//   set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsStrelka
-//   file 'strelka_config.ini'
-
-//   output:
-//   set idPatient, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect1.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect1.out") into strelkaVariantCallingOutput
-
-//   """
-//   ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
-//   --normal=${bamNormal} \
-//   --tumor=${bamTumor} \
-//   --ref=${refs["genomeFile"]} \
-//   --config=strelka_config.ini \
-//   --output-dir=.
-//   make -j 8
-//   """
-// }
-
-// strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
+// TODO: merge call output
 
 // ################################# FUNCTIONS #################################
 
