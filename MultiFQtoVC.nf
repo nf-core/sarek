@@ -271,7 +271,7 @@ bamList = logChannelContent("BAM list for MarkDuplicates: ",bamList)
 
 process MarkDuplicates {
 
-  memory { 8.GB * task.attempt }
+  memory { 12.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
