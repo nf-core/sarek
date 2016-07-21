@@ -18,8 +18,8 @@
 
 // ############################### CONFIGURATION ###############################
 
-String version    = "0.0.1"
-String dateUpdate = "2016-06-16"
+String version    = "0.0.2"
+String dateUpdate = "2016-07-21"
 
 /*
  * Get some basic informations about the workflow
@@ -271,7 +271,7 @@ bamList = logChannelContent("BAM list for MarkDuplicates: ",bamList)
 
 process MarkDuplicates {
 
-  memory { 12.GB * task.attempt }
+  memory { 16.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -432,7 +432,7 @@ realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realigned
 process CreateRecalibrationTable {
 
   cpus 8
-  memory { 16.GB * task.attempt }       // 6G is certainly low even for downsampled (30G) data
+  memory { 8.GB * task.attempt }       // 6G is certainly low even for downsampled (30G) data
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -499,7 +499,7 @@ process RecalibrateBam {
 
 recalibratedBams = logChannelContent("Recalibrated Bam for variant Calling: ",recalibratedBams)
 
-// [maxime] Here we have a recalibbrated bam set, but we need to separate the bam files based on patient status.
+// [maxime] Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
 // The sample tsv config file which is now formatted like: "subject status sample lane fastq1 fastq2"
 // cf fastqFiles channel, I decided just to add __status to the sample name to have less changes to do.
 // And so I'm sorting the channel if the sample match __0, then it's a normal sample, otherwise tumor.
@@ -509,8 +509,9 @@ recalibratedBams = logChannelContent("Recalibrated Bam for variant Calling: ",re
 
 bamsTumor  = Channel.create()
 bamsNormal = Channel.create()
+// separate recalibrate files by filename suffix: __0 means normal, __1 means tumor recalibrated BAM
 recalibratedBams
-  .choice(bamsTumor, bamsNormal) { it[1] ==~ ~/^.+__0$/ ? 1 : 0 }
+  .choice(bamsTumor, bamsNormal) { it[1] =~ /__0$/ ? 1 : 0 }
 
 bamsTumor  = logChannelContent("Tumor Bam for variant Calling: ", bamsTumor)
 bamsNormal = logChannelContent("Normal Bam for variant Calling: ", bamsNormal)
@@ -554,6 +555,7 @@ gI = intervals
 // join [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] and ["1:1-2000","1_1-2000"] 
 // and make a line for each interval
 bamsFMT2 = bamsForMuTect2.spread(gI)
+bamsFMT2  = logChannelContent("Fed to MuTect2: ", bamsFMT2)
 
 process RunMutect2 {
 
