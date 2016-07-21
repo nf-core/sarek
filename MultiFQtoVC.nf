@@ -361,6 +361,7 @@ process CreateIntervals {
   -known $ki \
   -known $mi \
   -nt ${task.cpus} \
+  -L "1:131941-141339" \
   -o ${idPatient}.intervals
   """
 }
@@ -460,6 +461,7 @@ process CreateRecalibrationTable {
   -knownSites ${refs["millsIndels"]} \
   -nct ${task.cpus} \
   -l INFO \
+  -L "1:131941-141339" \
   -o ${idSample}.recal.table
   """
 }
@@ -532,11 +534,11 @@ bamsAll = bamsAll.map {
 
 // first create channels for each variant caller
 bamsForMuTect2 = Channel.create()
-bamsForStrelka = Channel.create()
+bamsForVarDict= Channel.create()
 
 Channel
   .from bamsAll
-  .separate( bamsForMuTect2, bamsForStrelka ) { a -> [a, a] }
+  .separate( bamsForMuTect2, bamsForVarDict) { a -> [a, a] }
 
 // define intervals file by --intervals
 // TODO: add as a parameter file
@@ -551,10 +553,16 @@ intervals = Channel
 gI = intervals
     .map { a -> [a,a.replaceFirst(/\:/,"_")] }
 
+MuTect2Intervals = Channel.create()
+VarDictIntervals = Channel.create()
+Channel
+    .from gI
+    .separate (MuTect2Intervals, VarDictIntervals) {a -> [a,a] }
+
 // now add genomic intervals to the sample information
 // join [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] and ["1:1-2000","1_1-2000"] 
 // and make a line for each interval
-bamsFMT2 = bamsForMuTect2.spread(gI)
+bamsFMT2 = bamsForMuTect2.spread(MuTect2Intervals)
 bamsFMT2  = logChannelContent("Fed to MuTect2: ", bamsFMT2)
 
 process RunMutect2 {
@@ -592,6 +600,43 @@ process RunMutect2 {
 
 mutectVariantCallingOutput = logChannelContent("Mutect2 output: ", mutectVariantCallingOutput)
 // TODO: merge call output
+
+
+// we are doing the same trick for VarDictJava: running for the whole reference is a PITA, so we are chopping at repeats
+// (or centromeres) where no useful variant calls are expected
+
+bamsFVD = bamsForVarDict.spread(VarDictIntervals)
+process VarDict {
+
+// ~/dev/VarDictJava/build/install/VarDict/bin/VarDict -G /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta -f 0.1 -N "tiny" -b "tiny.tumor__1.recal.bam|tiny.normal__0.recal.bam" -z 1 -F 0x500 -c 1 -S 2 -E 3 -g 4 -R "1:131941-141339"
+
+  module 'bioinfo-tools'
+  module 'samtools/1.3'
+  module 'java/sun_jdk1.8.0_92'
+  module 'VarDictJava/1.4.5'
+
+  cpus 1
+  memory { 16.GB * task.attempt }
+  time { 16.h * task.attempt }
+  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+  maxRetries 3
+  maxErrors '-1'
+
+  input:
+  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFVD
+
+  output:
+  set idPatient, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into varDictVariantCallingOutput
+
+  """
+  VarDict -G ${refs["genomeFile"]} \
+  -f 0.01 -N ${bamTumor} \
+  -b "${bamTumor}|${bamNormal}" \
+  -z 1 -F 0x500 \
+  -c 1 -S 2 -E 3 -g 4 \
+  -R ${genInt} > ${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out
+  """
+}
 
 // ################################# FUNCTIONS #################################
 
