@@ -563,7 +563,6 @@ Channel
 // join [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] and ["1:1-2000","1_1-2000"] 
 // and make a line for each interval
 bamsFMT2 = bamsForMuTect2.spread(MuTect2Intervals)
-bamsFMT2  = logChannelContent("Fed to MuTect2: ", bamsFMT2)
 
 process RunMutect2 {
 
@@ -609,9 +608,9 @@ bamsFVD = bamsForVarDict.spread(VarDictIntervals)
 process VarDict {
 
 // ~/dev/VarDictJava/build/install/VarDict/bin/VarDict -G /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta -f 0.1 -N "tiny" -b "tiny.tumor__1.recal.bam|tiny.normal__0.recal.bam" -z 1 -F 0x500 -c 1 -S 2 -E 3 -g 4 -R "1:131941-141339"
+// we need further filters, but some of the outputs are empty files, confusing the VCF generator script
 
   module 'bioinfo-tools'
-  module 'samtools/1.3'
   module 'java/sun_jdk1.8.0_92'
   module 'VarDictJava/1.4.5'
 
@@ -626,7 +625,7 @@ process VarDict {
   set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFVD
 
   output:
-  set idPatient, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into varDictVariantCallingOutput
+  set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into varDictVariantCallingOutput
 
   """
   VarDict -G ${refs["genomeFile"]} \
@@ -638,7 +637,48 @@ process VarDict {
   """
 }
 
-// ################################# FUNCTIONS #################################
+// now we want to collate all the pieces of the VarDict outputs and concatenate the output files
+// so we can feed them into the somatic filter and the VCF converter
+
+varDictVariantCallingOutput = logChannelContent("VarDict VCF channel: ",varDictVariantCallingOutput)
+(varDictVariantCallingOutput ,idPatient, idNormal, idTumor) = getPatientAndSample(varDictVariantCallingOutput)
+
+vdFilePrefix = idPatient + "_" + idNormal + "_" + idTumor
+vdFilesOnly = varDictVariantCallingOutput.map { x -> x.last()}
+
+process VarDictCollatedVCF {
+    publishDir "/home/szilva/dev/forkCAW/"
+
+    module 'bioinfo-tools'
+    module 'java/sun_jdk1.8.0_92'
+    module 'VarDictJava/1.4.5'
+    module 'samtools/1.3'
+
+    cpus 1
+    memory { 16.GB * task.attempt }
+    time { 16.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
+
+    input:
+    file vdPart from vdFilesOnly.toList()
+
+    output:
+    file(vdFilePrefix + ".VarDict.vcf") 
+
+    script:
+    """
+    for vdoutput in ${vdPart}
+    do
+        echo 
+        cat \$vdoutput | ${params.vardictHome}/testsomatic.R >> testsomatic.out
+    done
+    ${params.vardictHome}/var2vcf_somatic.pl -f 0.01 -N "${vdFilePrefix}" testsomatic.out > ${vdFilePrefix}.VarDict.vcf
+    """
+}
+
+//################################# FUNCTIONS #################################
 
 /* 
  * Helper function, given a file Path 
@@ -693,3 +733,32 @@ def logChannelContent (aMessage, aChannel) {
   logChannel.subscribe { log.info aMessage + " -- $it" }
   return resChannel
 }
+
+def getPatientAndSample(aCh) {
+    consCh = Channel.create()
+    originalCh = Channel.create()
+
+    // get the patient ID
+    // duplicate channel to get sample name
+    Channel.from aCh.separate(consCh,originalCh) {x -> [x,x]} 
+
+    // use the "consumed" channel to get it
+    // we are assuming the first column is the same for the patient, as hoping 
+    // people do not want to compare samples from differnet patients
+    idPatient = consCh.map { x -> [x.get(0)]}.unique().getVal()[0] 
+	// we have to close to make sure remainding items are not 
+	consCh.close()
+
+    // similar procedure for the normal sample name
+    Channel.from originalCh.separate(consCh,originalCh) {x -> [x,x]} 
+    idNormal = consCh.map { x -> [x.get(1)]}.unique().getVal()[0]  
+	consCh.close()
+
+    // ditto for the tumor
+    Channel.from originalCh.separate(consCh,originalCh) {x -> [x,x]} 
+    idTumor = consCh.map { x -> [x.get(2)]}.unique().getVal()[0]  
+	consCh.close()
+
+    return [ originalCh, idPatient, idNormal, idTumor]
+}
+
