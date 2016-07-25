@@ -18,8 +18,8 @@
 
 // ############################### CONFIGURATION ###############################
 
-String version    = "0.0.1"
-String dateUpdate = "2016-06-16"
+String version    = "0.0.2"
+String dateUpdate = "2016-07-21"
 
 /*
  * Get some basic informations about the workflow
@@ -68,13 +68,11 @@ switch (params) {
     exit 1
 }
 
-parametersDefined = true
-
 /*
  * Use this closure to loop through all the parameters.
  * We can get an AssertionError exception from the file() method as well.
  */
-
+parametersDefined = true
 CheckExistence = {
   referenceFile, fileToCheck ->
   try {
@@ -163,11 +161,12 @@ process Mapping {
   module 'bwa/0.7.8'
   module 'samtools/1.3'
 
-  memory { 3.GB * task.attempt }
-  time { 16.h * task.attempt }
+  memory { 16.GB * task.attempt }
+  time { 20.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
   maxErrors '-1'
+  cpus 8
 
   input:
   file refs["genomeFile"]
@@ -214,7 +213,7 @@ process MergeBam {
   module 'bioinfo-tools'
   module 'samtools/1.3'
 
-  memory { 3.GB * task.attempt }
+  memory { 8.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -238,12 +237,6 @@ process MergeBam {
 // Renaming is totally useless, but it is more consistent with the rest of the pipeline
 
 process RenameSingleBam {
-
-  memory { 3.GB * task.attempt }
-  time { 16.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
 
   input:
   set idPatient, idSample, idRun, file(bam) from singleBam
@@ -278,7 +271,7 @@ bamList = logChannelContent("BAM list for MarkDuplicates: ",bamList)
 
 process MarkDuplicates {
 
-  memory { 3.GB * task.attempt }
+  memory { 16.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -300,7 +293,7 @@ process MarkDuplicates {
 
   """
   echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nbam:\t"${bam}"\n" > logInfo
-  java -Xmx7g -jar ${params.picardHome}/MarkDuplicates.jar \
+  java -Xmx${task.memory.toGiga()}g -jar ${params.picardHome}/MarkDuplicates.jar \
   INPUT=${bam} \
   METRICS_FILE=${bam}.metrics \
   TMP_DIR=. \
@@ -336,9 +329,9 @@ duplicatesRealign  = logChannelContent("BAMs for IndelRealigner grouped by overa
 
 process CreateIntervals {
 
-  cpus 6
-  memory { 3.GB * task.attempt }
-  time { 16.h * task.attempt }
+  cpus 8
+  memory { 8.GB * task.attempt }
+  time { 8.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
   maxErrors '-1'
@@ -361,7 +354,7 @@ process CreateIntervals {
 
   """
   echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nmdBam:\t"${mdBam}"\n" > logInfo
-  java -Xmx7g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+  java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T RealignerTargetCreator \
   $input \
   -R $gf \
@@ -380,8 +373,8 @@ intervals = logChannelContent("Intervals passed to Realign: ",intervals)
 
 process Realign {
 
-  memory { 3.GB * task.attempt }
-  time { 16.h * task.attempt }
+  memory { 16.GB * task.attempt }
+  time { 20.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
   maxErrors '-1'
@@ -408,7 +401,7 @@ process Realign {
 
   """
   echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nmdBam:\t"${mdBam}"\nmdBai:\t"${mdBai}"\n" > logInfo
-  java -Xmx7g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+  java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T IndelRealigner \
   $input \
   -R $gf \
@@ -438,8 +431,8 @@ realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realigned
 
 process CreateRecalibrationTable {
 
-  cpus 2
-  memory { 3.GB * task.attempt }
+  cpus 8
+  memory { 8.GB * task.attempt }       // 6G is certainly low even for downsampled (30G) data
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -457,7 +450,7 @@ process CreateRecalibrationTable {
   set idPatient, idSample, realignedBamFile, file("${idSample}.recal.table") into recalibrationTable
 
   """
-  java -Xmx7g -Djava.io.tmpdir=\$SNIC_TMP \
+  java -Xmx${task.memory.toGiga()}g -Djava.io.tmpdir="/tmp" \
   -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T BaseRecalibrator \
   -R ${refs["genomeFile"]} \
@@ -475,11 +468,12 @@ recalibrationTable = logChannelContent("Base recalibrated table for recalibratio
 
 process RecalibrateBam {
 
-  memory { 3.GB * task.attempt }
+  memory { 16.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
   maxErrors '-1'
+  cpus 8
 
   input:
   set idPatient, idSample, realignedBamFile, recalibrationReport from recalibrationTable
@@ -491,10 +485,12 @@ process RecalibrateBam {
   output:
   set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBams
 
+  // TODO: ditto as at the previous BaseRecalibrator step, consider using -nct 4 
   """
-  java -Xmx7g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+  java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T PrintReads \
   -R ${refs["genomeFile"]} \
+  -nct ${task.cpus} \
   -I $realignedBamFile \
   --BQSR $recalibrationReport \
   -o ${idSample}.recal.bam
@@ -503,7 +499,7 @@ process RecalibrateBam {
 
 recalibratedBams = logChannelContent("Recalibrated Bam for variant Calling: ",recalibratedBams)
 
-// [maxime] Here we have a recalibbrated bam set, but we need to separate the bam files based on patient status.
+// [maxime] Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
 // The sample tsv config file which is now formatted like: "subject status sample lane fastq1 fastq2"
 // cf fastqFiles channel, I decided just to add __status to the sample name to have less changes to do.
 // And so I'm sorting the channel if the sample match __0, then it's a normal sample, otherwise tumor.
@@ -513,8 +509,9 @@ recalibratedBams = logChannelContent("Recalibrated Bam for variant Calling: ",re
 
 bamsTumor  = Channel.create()
 bamsNormal = Channel.create()
+// separate recalibrate files by filename suffix: __0 means normal, __1 means tumor recalibrated BAM
 recalibratedBams
-  .choice(bamsTumor, bamsNormal) { it[1] ==~ ~/^.+__0$/ ? 1 : 0 }
+  .choice(bamsTumor, bamsNormal) { it[1] =~ /__0$/ ? 1 : 0 }
 
 bamsTumor  = logChannelContent("Tumor Bam for variant Calling: ", bamsTumor)
 bamsNormal = logChannelContent("Normal Bam for variant Calling: ", bamsNormal)
@@ -529,78 +526,157 @@ bamsAll = bamsAll.map {
   idPatientNormal, idSampleNormal, bamNormal, baiNormal, idPatientTumor, idSampleTumor, bamTumor, baiTumor ->
   [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] }
 
-bamsMutect1 = Channel.create()
-bamsStrelka = Channel.create()
+// We know that MuTect2 (and other somatic callers) are notoriously slow. To speed them up we are chopping the reference into 
+// smaller pieces at centromeres (see repeates/centromeres.list), do variant calling by this intervals, and re-merge the VCFs.
+// Since we are on a cluster, this can parallelize the variant call process, and push down the MuTect2 waiting time significanlty (1/10)
+
+// first create channels for each variant caller
+bamsForMuTect2 = Channel.create()
+bamsForVarDict= Channel.create()
 
 Channel
   .from bamsAll
-  .separate( bamsMutect1, bamsStrelka ) { a -> [a, a] }
+  .separate( bamsForMuTect2, bamsForVarDict) { a -> [a, a] }
 
-process RunMutect1 {
+// define intervals file by --intervals
+// TODO: add as a parameter file
+intervalsFile = file(params.intervals)
+intervals = Channel
+    .from(intervalsFile.readLines())
 
-  cpus 2
-  memory { 3.GB * task.attempt }
+// in fact we need two channels: one for the actual genomic region, and an other for names
+// without ":", as nextflow is not happy with them (will report as a failed process).
+// For region 1:1-2000 the output file name will be something like 1_1-2000_Sample_name.mutect2.vcf
+// from the "1:1-2000" string make ["1:1-2000","1_1-2000"]
+gI = intervals
+    .map { a -> [a,a.replaceFirst(/\:/,"_")] }
+
+MuTect2Intervals = Channel.create()
+VarDictIntervals = Channel.create()
+Channel
+    .from gI
+    .separate (MuTect2Intervals, VarDictIntervals) {a -> [a,a] }
+
+// now add genomic intervals to the sample information
+// join [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] and ["1:1-2000","1_1-2000"] 
+// and make a line for each interval
+bamsFMT2 = bamsForMuTect2.spread(MuTect2Intervals)
+
+process RunMutect2 {
+
+  module 'bioinfo-tools'
+  module 'java/sun_jdk1.8.0_92'
+
+  threads 16
+  memory { 16.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
   maxErrors '-1'
 
-  module 'bioinfo-tools'
-  module 'mutect/1.1.5'
-
   input:
-  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsMutect1
+  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
 
   output:
-  set idPatient, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect1.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect1.out") into mutectVariantCallingOutput
-
+  set idPatient, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf") into mutectVariantCallingOutput
+  
+  // we are using MuTect2 shipped in GATK v3.6
   """
-  java -jar ${params.mutect1Home}/muTect-1.1.5.jar \
-  --analysis_type MuTect \
-  --reference_sequence ${refs["genomeFile"]} \
+  java -Xmx${task.memory.toGiga()}g -jar ${params.mutect2Home}/GenomeAnalysisTK.jar \
+  -T MuTect2 \
+  -nct ${task.threads} \
+  -R ${refs["genomeFile"]} \
   --cosmic ${refs["cosmic"]} \
   --dbsnp ${refs["dbsnp"]} \
-  --input_file:normal ${bamNormal} \
-  --input_file:tumor ${bamTumor} \
-  --out ${idSampleNormal}_${idSampleTumor}.mutect1.out \
-  --vcf ${idSampleNormal}_${idSampleTumor}.mutect1.vcf
+  -I:normal ${bamNormal} \
+  -I:tumor ${bamTumor} \
+  -L \"${genInt}\" \
+  -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf
   """
 }
 
-mutectVariantCallingOutput = logChannelContent("Mutect1 output: ", mutectVariantCallingOutput)
+mutectVariantCallingOutput = logChannelContent("Mutect2 output: ", mutectVariantCallingOutput)
+// TODO: merge call output
 
-// process RunStrelka {
 
-//   cpus 2
-//   memory { 3.GB * task.attempt }
-//   time { 16.h * task.attempt }
-//   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-//   maxRetries 3
-//   maxErrors '-1'
+// we are doing the same trick for VarDictJava: running for the whole reference is a PITA, so we are chopping at repeats
+// (or centromeres) where no useful variant calls are expected
 
-//   module 'bioinfo-tools'
+bamsFVD = bamsForVarDict.spread(VarDictIntervals)
+process VarDict {
 
-//   input:
-//   set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsStrelka
-//   file 'strelka_config.ini'
+// ~/dev/VarDictJava/build/install/VarDict/bin/VarDict -G /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta -f 0.1 -N "tiny" -b "tiny.tumor__1.recal.bam|tiny.normal__0.recal.bam" -z 1 -F 0x500 -c 1 -S 2 -E 3 -g 4 -R "1:131941-141339"
+// we need further filters, but some of the outputs are empty files, confusing the VCF generator script
 
-//   output:
-//   set idPatient, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.mutect1.vcf"), file("${idSampleNormal}_${idSampleTumor}.mutect1.out") into strelkaVariantCallingOutput
+  module 'bioinfo-tools'
+  module 'java/sun_jdk1.8.0_92'
+  module 'VarDictJava/1.4.5'
 
-//   """
-//   ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
-//   --normal=${bamNormal} \
-//   --tumor=${bamTumor} \
-//   --ref=${refs["genomeFile"]} \
-//   --config=strelka_config.ini \
-//   --output-dir=.
-//   make -j 8
-//   """
-// }
+  cpus 1
+  memory { 16.GB * task.attempt }
+  time { 16.h * task.attempt }
+  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+  maxRetries 3
+  maxErrors '-1'
 
-// strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
+  input:
+  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFVD
 
-// ################################# FUNCTIONS #################################
+  output:
+  set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into varDictVariantCallingOutput
+
+  """
+  VarDict -G ${refs["genomeFile"]} \
+  -f 0.01 -N ${bamTumor} \
+  -b "${bamTumor}|${bamNormal}" \
+  -z 1 -F 0x500 \
+  -c 1 -S 2 -E 3 -g 4 \
+  -R ${genInt} > ${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out
+  """
+}
+
+// now we want to collate all the pieces of the VarDict outputs and concatenate the output files
+// so we can feed them into the somatic filter and the VCF converter
+
+varDictVariantCallingOutput = logChannelContent("VarDict VCF channel: ",varDictVariantCallingOutput)
+(varDictVariantCallingOutput ,idPatient, idNormal, idTumor) = getPatientAndSample(varDictVariantCallingOutput)
+
+vdFilePrefix = idPatient + "_" + idNormal + "_" + idTumor
+vdFilesOnly = varDictVariantCallingOutput.map { x -> x.last()}
+
+process VarDictCollatedVCF {
+    publishDir "/home/szilva/dev/forkCAW/"
+
+    module 'bioinfo-tools'
+    module 'java/sun_jdk1.8.0_92'
+    module 'VarDictJava/1.4.5'
+    module 'samtools/1.3'
+
+    cpus 1
+    memory { 16.GB * task.attempt }
+    time { 16.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
+
+    input:
+    file vdPart from vdFilesOnly.toList()
+
+    output:
+    file(vdFilePrefix + ".VarDict.vcf") 
+
+    script:
+    """
+    for vdoutput in ${vdPart}
+    do
+        echo 
+        cat \$vdoutput | ${params.vardictHome}/testsomatic.R >> testsomatic.out
+    done
+    ${params.vardictHome}/var2vcf_somatic.pl -f 0.01 -N "${vdFilePrefix}" testsomatic.out > ${vdFilePrefix}.VarDict.vcf
+    """
+}
+
+//################################# FUNCTIONS #################################
 
 /* 
  * Helper function, given a file Path 
@@ -655,3 +731,32 @@ def logChannelContent (aMessage, aChannel) {
   logChannel.subscribe { log.info aMessage + " -- $it" }
   return resChannel
 }
+
+def getPatientAndSample(aCh) {
+    consCh = Channel.create()
+    originalCh = Channel.create()
+
+    // get the patient ID
+    // duplicate channel to get sample name
+    Channel.from aCh.separate(consCh,originalCh) {x -> [x,x]} 
+
+    // use the "consumed" channel to get it
+    // we are assuming the first column is the same for the patient, as hoping 
+    // people do not want to compare samples from differnet patients
+    idPatient = consCh.map { x -> [x.get(0)]}.unique().getVal()[0] 
+	// we have to close to make sure remainding items are not 
+	consCh.close()
+
+    // similar procedure for the normal sample name
+    Channel.from originalCh.separate(consCh,originalCh) {x -> [x,x]} 
+    idNormal = consCh.map { x -> [x.get(1)]}.unique().getVal()[0]  
+	consCh.close()
+
+    // ditto for the tumor
+    Channel.from originalCh.separate(consCh,originalCh) {x -> [x,x]} 
+    idTumor = consCh.map { x -> [x.get(2)]}.unique().getVal()[0]  
+	consCh.close()
+
+    return [ originalCh, idPatient, idNormal, idTumor]
+}
+
