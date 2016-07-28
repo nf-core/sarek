@@ -1,25 +1,53 @@
 #!/usr/bin/env nextflow
 
 /*
- * Cancer Analysis Workflow for tumor/normal samples. Usage :
- *
- * $ nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv>
- *
- * Parameters (like location of the genome reference, dbSNP location...) have to be given at the command-line.
- * We are not giving parameters here, but checking the existence of files.
- *
- * You also must give the sample.tsv file that is defining the tumor/normal pairs. See explanation below.
- */
 
-//
-// We want to list all the missing parameters at the beginning, hence checking only this value
-// and exiting only at the very end if some of the parameters failed
-//
+========================================================================================
+=                   C A N C E R    A N A L Y S I S    W O R K F L O W                  =
+========================================================================================
+ New Cancer Analysis Workflow. Started March 2016.
 
-// ############################### CONFIGURATION ###############################
+ @Authors
+ Pelin Akan <pelin.akan@scilifelab.se>
+ Jesper Eisfeldt <jesper.eisfeldt@scilifelab.se>
+ Maxime Garcia <maxime.garcia@scilifelab.se>
+ Szilveszter Juhos <szilveszter.juhos@scilifelab.se>
+ Max Käller <max.kaller@scilifelab.se>
+ Malin Larsson <malin.larsson@scilifelab.se>
+ Björn Nystedt <bjorn.nystedt@scilifelab.se>
+ Pall Olason <pall.olason@scilifelab.se>
+
+----------------------------------------------------------------------------------------
+
+ Basic command:
+ $ nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv>
+ 
+ All variables are configured in the config and sample files. All variables in the config
+ file can be reconfigured on the commande line, like:
+ --option [option]
+
+----------------------------------------------------------------------------------------
+
+ Workflow process overview:
+ - Mapping - Map reads with BWA
+ - MergeBam - Merge BAMs if multilane samples
+ - RenameSingleBam - Rename BAM if non-multilane sample
+ - MarkDuplicates - using Picard
+ - CreateIntervals - using GATK
+ - Realign - using GATK
+ - CreateRecalibrationTable - using GATK
+ - RecalibrateBam - using GATK
+ - RunMutect2 - using MuTect2 shipped in GATK v3.6
+ - VarDict - run VarDict on multiple intervals
+ - VarDictCollatedVCF - merge Vardict result
+
+----------------------------------------------------------------------------------------
+*/
+
+// ################################### CONFIGURATION ###################################
 
 String version    = "0.0.2"
-String dateUpdate = "2016-07-21"
+String dateUpdate = "2016-07-28"
 
 /*
  * Get some basic informations about the workflow
@@ -48,7 +76,7 @@ switch (params) {
   case {params.help} :
     text = Channel.from(
       "CANCER ANALYSIS WORKFLOW ~ version $version",
-      "    Usage",
+      "    Usage:",
       "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv>",
       "    --help",
       "       you're reading it",
@@ -72,6 +100,7 @@ switch (params) {
  * Use this closure to loop through all the parameters.
  * We can get an AssertionError exception from the file() method as well.
  */
+
 parametersDefined = true
 CheckExistence = {
   referenceFile, fileToCheck ->
@@ -112,11 +141,15 @@ if (!parametersDefined) {
 }
 
 /*
- * Time to check the sample file. Its format is like: "subject sample lane fastq1 fastq2":
- * [maxime] Actually the new format is now like: "subject status sample lane fastq1 fastq2":
- * tcga.cl  0 tcga.cl.normal  tcga.cl.normal_1  data/tcga.cl.normal_L001_R1.fastq.gz  data/tcga.cl.normal_L001_R2.fastq.gz
- * tcga.cl  1 tcga.cl.tumor tcga.cl.tumor_1 data/tcga.cl.tumor_L001_R1.fastq.gz data/tcga.cl.tumor_L001_R2.fastq.gz
- * tcga.cl  1 tcga.cl.tumor tcga.cl.tumor_2 data/tcga.cl.tumor_L002_R1.fastq.gz data/tcga.cl.tumor_L002_R2.fastq.gz
+ * Time to check the sample file. Its format is like: "subject status sample lane fastq1 fastq2":
+HCC1954 0 HCC1954.blood HCC1954.blood_1 data/HCC1954.normal_S22_L001_R1_001.fastq.gz data/HCC1954.normal_S22_L001_R2_001.fastq.gz
+HCC1954 0 HCC1954.blood HCC1954.blood_2 data/HCC1954.normal_S22_L002_R1_001.fastq.gz data/HCC1954.normal_S22_L002_R2_001.fastq.gz
+HCC1954 1 HCC1954.tumor HCC1954.tumor_1 data/HCC1954.tumor1_S23_L001_R1_001.fastq.gz data/HCC1954.tumor1_S23_L001_R2_001.fastq.gz
+HCC1954 1 HCC1954.tumor HCC1954.tumor_2 data/HCC1954.tumor1_S23_L002_R1_001.fastq.gz data/HCC1954.tumor1_S23_L002_R2_001.fastq.gz
+HCC1954 1 HCC1954.relapse HCC1954.relapse_1 data/HCC1954.tumor2_S24_L001_R1_001.fastq.gz data/HCC1954.tumor2_S24_L001_R2_001.fastq.gz
+HCC1954 1 HCC1954.relapse HCC1954.relapse_2 data/HCC1954.tumor2_S24_L002_R1_001.fastq.gz data/HCC1954.tumor2_S24_L002_R2_001.fastq.gz
+HCC1954 1 HCC1954.9746123 HCC1954.9746123_1 data/HCC1954.tumor3_S25_L001_R1_001.fastq.gz data/HCC1954.tumor3_S25_L001_R2_001.fastq.gz
+HCC1954 1 HCC1954.9746123 HCC1954.9746123_2 data/HCC1954.tumor3_S25_L002_R1_001.fastq.gz data/HCC1954.tumor3_S25_L002_R2_001.fastq.gz
  */
 
 sampleTSVconfig = file(params.sample)
@@ -175,7 +208,7 @@ process Mapping {
   output:
   set idPatient, idSample, idRun, file("${idRun}.bam") into bams
 
-  // here I use params.genome for bwa ref so I dont have to link to all bwa index files
+  // here I use params.genome for bwa ref so I don't have to link to all bwa index files
 
   script:
   readGroupString="\"@RG\\tID:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina\""
@@ -234,7 +267,7 @@ process MergeBam {
   """
 }
 
-// Renaming is totally useless, but it is more consistent with the rest of the pipeline
+// [maxime] Renaming is totally useless, but it is more consistent with the rest of the pipeline
 
 process RenameSingleBam {
 
@@ -414,7 +447,7 @@ process Realign {
 
 // [maxime] If I make a set out of this process I got a list of lists, which cannot be iterate via a single process
 // So I need to transform this output into a channel that can be iterated on.
-// I also sometimes had problem with the set that wasn't synchronised, and I got wrongly associated files
+// I also had problems with the set that wasn't synchronised, and I got wrongly associated files
 // So what I decided was to separate all the different output
 // We're getting from the Realign process 4 channels (patient, samples bams and bais)
 // So I flatten, sort, and reflatten the samples and the files (bam and bai) channels
@@ -500,15 +533,17 @@ process RecalibrateBam {
 recalibratedBams = logChannelContent("Recalibrated Bam for variant Calling: ",recalibratedBams)
 
 // [maxime] Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
-// The sample tsv config file which is now formatted like: "subject status sample lane fastq1 fastq2"
+// The sample tsv config file which is formatted like: "subject status sample lane fastq1 fastq2"
 // cf fastqFiles channel, I decided just to add __status to the sample name to have less changes to do.
 // And so I'm sorting the channel if the sample match __0, then it's a normal sample, otherwise tumor.
 // Then spread normal over tumor to get each possibilities
 // ie. normal vs tumor1, normal vs tumor2, normal vs tumor3
 // then copy this channel into channels for each variant calling
+// I guess it will still work even if we have multiple normal samples
 
 bamsTumor  = Channel.create()
 bamsNormal = Channel.create()
+
 // separate recalibrate files by filename suffix: __0 means normal, __1 means tumor recalibrated BAM
 recalibratedBams
   .choice(bamsTumor, bamsNormal) { it[1] =~ /__0$/ ? 1 : 0 }
@@ -526,7 +561,7 @@ bamsAll = bamsAll.map {
   idPatientNormal, idSampleNormal, bamNormal, baiNormal, idPatientTumor, idSampleTumor, bamTumor, baiTumor ->
   [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] }
 
-// We know that MuTect2 (and other somatic callers) are notoriously slow. To speed them up we are chopping the reference into 
+// [Szilva] We know that MuTect2 (and other somatic callers) are notoriously slow. To speed them up we are chopping the reference into 
 // smaller pieces at centromeres (see repeates/centromeres.list), do variant calling by this intervals, and re-merge the VCFs.
 // Since we are on a cluster, this can parallelize the variant call process, and push down the MuTect2 waiting time significanlty (1/10)
 
@@ -597,7 +632,6 @@ process RunMutect2 {
 
 mutectVariantCallingOutput = logChannelContent("Mutect2 output: ", mutectVariantCallingOutput)
 // TODO: merge call output
-
 
 // we are doing the same trick for VarDictJava: running for the whole reference is a PITA, so we are chopping at repeats
 // (or centromeres) where no useful variant calls are expected
