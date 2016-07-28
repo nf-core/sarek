@@ -361,6 +361,7 @@ process CreateIntervals {
   -known $ki \
   -known $mi \
   -nt ${task.cpus} \
+  -L "1:131941-141339" \
   -o ${idPatient}.intervals
   """
 }
@@ -460,6 +461,7 @@ process CreateRecalibrationTable {
   -knownSites ${refs["millsIndels"]} \
   -nct ${task.cpus} \
   -l INFO \
+  -L "1:131941-141339" \
   -o ${idSample}.recal.table
   """
 }
@@ -532,7 +534,7 @@ bamsAll = bamsAll.map {
 
 // first create channels for each variant caller
 bamsForMuTect2 = Channel.create()
-bamsForVarDict= Channel.create()
+bamsForVarDict = Channel.create()
 
 Channel
   .from bamsAll
