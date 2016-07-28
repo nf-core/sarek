@@ -8,6 +8,7 @@
  New Cancer Analysis Workflow. Started March 2016.
 
  @Authors
+ Pelin Akan <pelin.akan@scilifelab.se>
  Jesper Eisfeldt <jesper.eisfeldt@scilifelab.se>
  Maxime Garcia <maxime.garcia@scilifelab.se>
  Szilveszter Juhos <szilveszter.juhos@scilifelab.se>

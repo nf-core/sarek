@@ -5,13 +5,14 @@ Nextflow Cancer Analysis Workflow Prototype developed at @SciLifeLab
 0.0.2
 
 ## Authors
+ Pelin Akan (@pelinakan)
  Jesper Eisfeldt (@J35P312)
  Maxime Garcia (@MaxUlysse)
  Szilveszter Juhos (@szilvajuhos)
  Max Käller
- Malin Larsson
- Björn Nystedt
- Pall Olason
+ Malin Larsson (@malinlarsson)
+ Björn Nystedt (@bjornnystedt)
+ Pall Olason (@pallolason)
 
 ## Quick start
 Install [nextflow][nextflow] and then download the project
