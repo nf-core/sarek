@@ -125,7 +125,8 @@ refs = [
   "millsIndels":    params.millsIndels, // Mill's Golden set of SNPs
   "millsIndex":     params.millsIndex,  // Mill's Golden set index
   "sample":         params.sample,      // the sample sheet (multilane data refrence table, see below)
-  "cosmic":         params.cosmic       // cosmic vcf file
+  "cosmic":         params.cosmic,      // cosmic vcf file
+  "intervals":      params.intervals	// intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
 ]
 
 refs.each(CheckExistence)
@@ -199,7 +200,7 @@ process Mapping {
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
   maxErrors '-1'
-  cpus 8
+  cpus 8 
 
   input:
   file refs["genomeFile"]
