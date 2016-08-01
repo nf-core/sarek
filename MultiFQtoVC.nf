@@ -1,7 +1,6 @@
 #!/usr/bin/env nextflow
 
 /*
-
 ========================================================================================
 =                   C A N C E R    A N A L Y S I S    W O R K F L O W                  =
 ========================================================================================
@@ -16,18 +15,35 @@
  Malin Larsson <malin.larsson@scilifelab.se>
  Björn Nystedt <bjorn.nystedt@scilifelab.se>
  Pall Olason <pall.olason@scilifelab.se>
-
 ----------------------------------------------------------------------------------------
+@Licence
+ The MIT License (MIT)
 
+Copyright (c) 2016 SciLifeLab
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this
+software and associated documentation files (the "Software"), to deal in the Software
+without restriction, including without limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of the Software, and to permit
+persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or
+substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+----------------------------------------------------------------------------------------
  Basic command:
  $ nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv>
- 
+
  All variables are configured in the config and sample files. All variables in the config
  file can be reconfigured on the commande line, like:
- --option [option]
-
+ --option <option>
 ----------------------------------------------------------------------------------------
-
  Workflow process overview:
  - Mapping - Map reads with BWA
  - MergeBam - Merge BAMs if multilane samples
@@ -40,14 +56,15 @@
  - RunMutect2 - using MuTect2 shipped in GATK v3.6
  - VarDict - run VarDict on multiple intervals
  - VarDictCollatedVCF - merge Vardict result
-
 ----------------------------------------------------------------------------------------
+
+========================================================================================
+=                               C O N F I G U R A T I O N                              =
+========================================================================================
 */
 
-// ################################### CONFIGURATION ###################################
-
-String version    = "0.0.2"
-String dateUpdate = "2016-07-28"
+String version = "0.0.2"
+String dateUpdate = "2016-08-01"
 
 /*
  * Get some basic informations about the workflow
@@ -115,17 +132,17 @@ CheckExistence = {
 }
 
 refs = [
-  "genomeFile":     params.genome,      // genome reference
-  "genomeIndex":    params.genomeIndex, // genome reference index
-  "genomeDict":     params.genomeDict,  // genome reference dictionary
-  "kgIndels":       params.kgIndels,    // 1000 Genomes SNPs
-  "kgIndex":        params.kgIndex,     // 1000 Genomes SNPs index
-  "dbsnp":          params.dbsnp,       // dbSNP
-  "dbsnpIndex":     params.dbsnpIndex,  // dbSNP index
-  "millsIndels":    params.millsIndels, // Mill's Golden set of SNPs
-  "millsIndex":     params.millsIndex,  // Mill's Golden set index
-  "sample":         params.sample,      // the sample sheet (multilane data refrence table, see below)
-  "cosmic":         params.cosmic       // cosmic vcf file
+  "genomeFile":   params.genome,      // genome reference
+  "genomeIndex":  params.genomeIndex, // genome reference index
+  "genomeDict":   params.genomeDict,  // genome reference dictionary
+  "kgIndels":     params.kgIndels,    // 1000 Genomes SNPs
+  "kgIndex":      params.kgIndex,     // 1000 Genomes SNPs index
+  "dbsnp":        params.dbsnp,       // dbSNP
+  "dbsnpIndex":   params.dbsnpIndex,  // dbSNP index
+  "millsIndels":  params.millsIndels, // Mill's Golden set of SNPs
+  "millsIndex":   params.millsIndex,  // Mill's Golden set index
+  "sample":       params.sample,      // the sample sheet (multilane data refrence table, see below)
+  "cosmic":       params.cosmic       // cosmic vcf file
 ]
 
 refs.each(CheckExistence)
@@ -174,7 +191,7 @@ if (!params.sample) {
 
 fastqFiles = Channel
   .from(sampleTSVconfig.readLines())
-  .map { line ->
+  .map {line ->
     list        = line.split()
     idPatient   = list[0]
     idSample    = "${list[2]}__${list[1]}"
@@ -184,9 +201,13 @@ fastqFiles = Channel
     [ idPatient, idSample, idRun, fastqFile1, fastqFile2 ]
 }
 
-// ################################# PROCESSES #################################
+/*
+========================================================================================
+=                                   P R O C E S S E S                                  =
+========================================================================================
+*/
 
-fastqFiles = logChannelContent("FASTQ files and IDs to process: ",fastqFiles)
+fastqFiles = logChannelContent("FASTQ files and IDs to process: ", fastqFiles)
 
 process Mapping {
 
@@ -223,7 +244,7 @@ process Mapping {
 bams  = logChannelContent("BAM files before sorting into group or single:", bams)
 
 /*
- * Borrowed code from chip.nf
+ * Borrowed code from chip.nf (https://github.com/guigolab/chip-nf)
  *
  * Now, we decide whether bam is standalone or should be merged by sample (id (column 1) from channel bams)
  * http://www.nextflow.io/docs/latest/operator.html?highlight=grouptuple#grouptuple
@@ -286,7 +307,7 @@ process RenameSingleBam {
 }
 
 singleRenamedBam = logChannelContent("SINGLES: ", singleRenamedBam)
-mergedBam        = logChannelContent("GROUPED: ", mergedBam)
+mergedBam = logChannelContent("GROUPED: ", mergedBam)
 
 /*
  * merge all bams (merged and singles) to a single channel
@@ -341,19 +362,19 @@ process MarkDuplicates {
  * create realign intervals, use both tumor+normal as input
  */
 
-duplicatesForInterval = logChannelContent("BAMs for IndelRealigner before groupTuple: ",  duplicatesForInterval)
+duplicatesForInterval = logChannelContent("BAMs for IndelRealigner before groupTuple: ", duplicatesForInterval)
 
 // group the marked duplicates Bams intervals by overall subject/patient id (idPatient)
 duplicatesInterval = Channel.create()
 duplicatesInterval = duplicatesForInterval.groupTuple()
-duplicatesInterval = logChannelContent("BAMs for RealignerTargetCreator grouped by overall subject/patient ID: ",  duplicatesInterval)
+duplicatesInterval = logChannelContent("BAMs for RealignerTargetCreator grouped by overall subject/patient ID: ", duplicatesInterval)
 
 duplicatesForRealignement = logChannelContent("BAMs for IndelRealigner before groupTuple: ",  duplicatesForRealignement)
 
 // group the marked duplicates Bams for realign by overall subject/patient id (idPatient)
 duplicatesRealign  = Channel.create()
 duplicatesRealign  = duplicatesForRealignement.groupTuple()
-duplicatesRealign  = logChannelContent("BAMs for IndelRealigner grouped by overall subject/patient ID: ",  duplicatesRealign)
+duplicatesRealign  = logChannelContent("BAMs for IndelRealigner grouped by overall subject/patient ID: ", duplicatesRealign)
 
 /*
  * Creating target intervals for indel realigner.
@@ -454,11 +475,11 @@ process Realign {
 // to get them in the same order (the name of the bam and bai files are based on the sample, so if we sort them they all have the same order ;-))
 // And put them back together, and add the ID patient in the realignedBam channel
 
-tempSamples  = tempSamples.flatten().toSortedList().flatten()
-tempBams     = tempBams.flatten().toSortedList().flatten()
-tempBais     = tempBais.flatten().toSortedList().flatten()
-tempSamples  = tempSamples.merge( tempBams, tempBais ) { s, b, i -> [s, b, i] }
-realignedBam  = idPatient.spread(tempSamples)
+tempSamples = tempSamples.flatten().toSortedList().flatten()
+tempBams = tempBams.flatten().toSortedList().flatten()
+tempBais = tempBais.flatten().toSortedList().flatten()
+tempSamples = tempSamples.merge( tempBams, tempBais ) { s, b, i -> [s, b, i] }
+realignedBam = idPatient.spread(tempSamples)
 
 realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realignedBam)
 
@@ -497,7 +518,7 @@ process CreateRecalibrationTable {
   """
 }
 
-recalibrationTable = logChannelContent("Base recalibrated table for recalibration: ",recalibrationTable)
+recalibrationTable = logChannelContent("Base recalibrated table for recalibration: ", recalibrationTable)
 
 process RecalibrateBam {
 
@@ -530,7 +551,7 @@ process RecalibrateBam {
   """
 }
 
-recalibratedBams = logChannelContent("Recalibrated Bam for variant Calling: ",recalibratedBams)
+recalibratedBams = logChannelContent("Recalibrated Bam for variant Calling: ", recalibratedBams)
 
 // [maxime] Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
 // The sample tsv config file which is formatted like: "subject status sample lane fastq1 fastq2"
@@ -541,14 +562,14 @@ recalibratedBams = logChannelContent("Recalibrated Bam for variant Calling: ",re
 // then copy this channel into channels for each variant calling
 // I guess it will still work even if we have multiple normal samples
 
-bamsTumor  = Channel.create()
+bamsTumor = Channel.create()
 bamsNormal = Channel.create()
 
 // separate recalibrate files by filename suffix: __0 means normal, __1 means tumor recalibrated BAM
 recalibratedBams
   .choice(bamsTumor, bamsNormal) { it[1] =~ /__0$/ ? 1 : 0 }
 
-bamsTumor  = logChannelContent("Tumor Bam for variant Calling: ", bamsTumor)
+bamsTumor = logChannelContent("Tumor Bam for variant Calling: ", bamsTumor)
 bamsNormal = logChannelContent("Normal Bam for variant Calling: ", bamsNormal)
 
 bamsAll = Channel.create()
@@ -559,7 +580,8 @@ bamsAll = bamsNormal.spread(bamsTumor)
 
 bamsAll = bamsAll.map {
   idPatientNormal, idSampleNormal, bamNormal, baiNormal, idPatientTumor, idSampleTumor, bamTumor, baiTumor ->
-  [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] }
+  [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor]
+}
 
 // [Szilva] We know that MuTect2 (and other somatic callers) are notoriously slow. To speed them up we are chopping the reference into 
 // smaller pieces at centromeres (see repeates/centromeres.list), do variant calling by this intervals, and re-merge the VCFs.
@@ -567,11 +589,11 @@ bamsAll = bamsAll.map {
 
 // first create channels for each variant caller
 bamsForMuTect2 = Channel.create()
-bamsForVarDict= Channel.create()
+bamsForVarDict = Channel.create()
 
 Channel
   .from bamsAll
-  .separate( bamsForMuTect2, bamsForVarDict) { a -> [a, a] }
+  .separate( bamsForMuTect2, bamsForVarDict) {a -> [a, a]}
 
 // define intervals file by --intervals
 // TODO: add as a parameter file
@@ -584,17 +606,18 @@ intervals = Channel
 // For region 1:1-2000 the output file name will be something like 1_1-2000_Sample_name.mutect2.vcf
 // from the "1:1-2000" string make ["1:1-2000","1_1-2000"]
 gI = intervals
-    .map { a -> [a,a.replaceFirst(/\:/,"_")] }
+  .map {a -> [a,a.replaceFirst(/\:/,"_")]}
 
 MuTect2Intervals = Channel.create()
 VarDictIntervals = Channel.create()
 Channel
-    .from gI
-    .separate (MuTect2Intervals, VarDictIntervals) {a -> [a,a] }
+  .from gI
+  .separate (MuTect2Intervals, VarDictIntervals) {a -> [a,a]}
 
 // now add genomic intervals to the sample information
 // join [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] and ["1:1-2000","1_1-2000"] 
 // and make a line for each interval
+
 bamsFMT2 = bamsForMuTect2.spread(MuTect2Intervals)
 
 process RunMutect2 {
@@ -637,10 +660,11 @@ mutectVariantCallingOutput = logChannelContent("Mutect2 output: ", mutectVariant
 // (or centromeres) where no useful variant calls are expected
 
 bamsFVD = bamsForVarDict.spread(VarDictIntervals)
+
 process VarDict {
 
-// ~/dev/VarDictJava/build/install/VarDict/bin/VarDict -G /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta -f 0.1 -N "tiny" -b "tiny.tumor__1.recal.bam|tiny.normal__0.recal.bam" -z 1 -F 0x500 -c 1 -S 2 -E 3 -g 4 -R "1:131941-141339"
-// we need further filters, but some of the outputs are empty files, confusing the VCF generator script
+  // ~/dev/VarDictJava/build/install/VarDict/bin/VarDict -G /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta -f 0.1 -N "tiny" -b "tiny.tumor__1.recal.bam|tiny.normal__0.recal.bam" -z 1 -F 0x500 -c 1 -S 2 -E 3 -g 4 -R "1:131941-141339"
+  // we need further filters, but some of the outputs are empty files, confusing the VCF generator script
 
   module 'bioinfo-tools'
   module 'java/sun_jdk1.8.0_92'
@@ -679,38 +703,42 @@ vdFilePrefix = idPatient + "_" + idNormal + "_" + idTumor
 vdFilesOnly = varDictVariantCallingOutput.map { x -> x.last()}
 
 process VarDictCollatedVCF {
-    publishDir "/home/szilva/dev/forkCAW/"
+  publishDir "/home/szilva/dev/forkCAW/"
 
-    module 'bioinfo-tools'
-    module 'java/sun_jdk1.8.0_92'
-    module 'VarDictJava/1.4.5'
-    module 'samtools/1.3'
+  module 'bioinfo-tools'
+  module 'java/sun_jdk1.8.0_92'
+  module 'VarDictJava/1.4.5'
+  module 'samtools/1.3'
 
-    cpus 1
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-    maxRetries 3
-    maxErrors '-1'
+  cpus 1
+  memory { 16.GB * task.attempt }
+  time { 16.h * task.attempt }
+  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+  maxRetries 3
+  maxErrors '-1'
 
-    input:
-    file vdPart from vdFilesOnly.toList()
+  input:
+  file vdPart from vdFilesOnly.toList()
 
-    output:
-    file(vdFilePrefix + ".VarDict.vcf") 
+  output:
+  file(vdFilePrefix + ".VarDict.vcf")
 
-    script:
-    """
-    for vdoutput in ${vdPart}
-    do
-        echo 
-        cat \$vdoutput | ${params.vardictHome}/testsomatic.R >> testsomatic.out
-    done
-    ${params.vardictHome}/var2vcf_somatic.pl -f 0.01 -N "${vdFilePrefix}" testsomatic.out > ${vdFilePrefix}.VarDict.vcf
-    """
+  script:
+  """
+  for vdoutput in ${vdPart}
+  do
+    echo
+    cat \$vdoutput | ${params.vardictHome}/testsomatic.R >> testsomatic.out
+  done
+  ${params.vardictHome}/var2vcf_somatic.pl -f 0.01 -N "${vdFilePrefix}" testsomatic.out > ${vdFilePrefix}.VarDict.vcf
+  """
 }
 
-//################################# FUNCTIONS #################################
+/*
+========================================================================================
+=                                   F U N C T I O N S                                  =
+========================================================================================
+*/
 
 /* 
  * Helper function, given a file Path 
@@ -761,36 +789,36 @@ def logChannelContent (aMessage, aChannel) {
   logChannel = Channel.create()
   Channel
     .from aChannel
-    .separate(resChannel,logChannel) { a -> [a, a] }
-  logChannel.subscribe { log.info aMessage + " -- $it" }
+    .separate(resChannel,logChannel) {a -> [a, a]}
+  logChannel.subscribe {log.info aMessage + " -- $it"}
   return resChannel
 }
 
 def getPatientAndSample(aCh) {
-    consCh = Channel.create()
-    originalCh = Channel.create()
+  consCh = Channel.create()
+  originalCh = Channel.create()
 
-    // get the patient ID
-    // duplicate channel to get sample name
-    Channel.from aCh.separate(consCh,originalCh) {x -> [x,x]} 
+  // get the patient ID
+  // duplicate channel to get sample name
+  Channel.from aCh.separate(consCh,originalCh) {x -> [x,x]}
 
-    // use the "consumed" channel to get it
-    // we are assuming the first column is the same for the patient, as hoping 
-    // people do not want to compare samples from differnet patients
-    idPatient = consCh.map { x -> [x.get(0)]}.unique().getVal()[0] 
-	// we have to close to make sure remainding items are not 
-	consCh.close()
+  // use the "consumed" channel to get it
+  // we are assuming the first column is the same for the patient, as hoping
+  // people do not want to compare samples from different patients
+  idPatient = consCh.map {x -> [x.get(0)]}.unique().getVal()[0]
+  // we have to close to make sure remainding items are not
+  consCh.close()
 
-    // similar procedure for the normal sample name
-    Channel.from originalCh.separate(consCh,originalCh) {x -> [x,x]} 
-    idNormal = consCh.map { x -> [x.get(1)]}.unique().getVal()[0]  
-	consCh.close()
+  // similar procedure for the normal sample name
+  Channel.from originalCh.separate(consCh,originalCh) {x -> [x,x]}
+  idNormal = consCh.map {x -> [x.get(1)]}.unique().getVal()[0]
+  consCh.close()
 
-    // ditto for the tumor
-    Channel.from originalCh.separate(consCh,originalCh) {x -> [x,x]} 
-    idTumor = consCh.map { x -> [x.get(2)]}.unique().getVal()[0]  
-	consCh.close()
+  // ditto for the tumor
+  Channel.from originalCh.separate(consCh,originalCh) {x -> [x,x]}
+  idTumor = consCh.map {x -> [x.get(2)]}.unique().getVal()[0]
+  consCh.close()
 
-    return [ originalCh, idPatient, idNormal, idTumor]
+  return [originalCh, idPatient, idNormal, idTumor]
 }
 
