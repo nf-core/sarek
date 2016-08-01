@@ -532,9 +532,6 @@ process RecalibrateBam {
   input:
   set idPatient, idSample, realignedBamFile, recalibrationReport from recalibrationTable
   file refs["genomeFile"]
-  file refs["dbsnp"]
-  file refs["kgIndels"]
-  file refs["millsIndels"]
 
   output:
   set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBams
@@ -646,8 +643,8 @@ process RunMutect2 {
   -R ${refs["genomeFile"]} \
   --cosmic ${refs["cosmic"]} \
   --dbsnp ${refs["dbsnp"]} \
-  -I:normal ${bamNormal} \
-  -I:tumor ${bamTumor} \
+  -I:normal $bamNormal \
+  -I:tumor $bamTumor \
   -L \"${genInt}\" \
   -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf
   """
@@ -685,8 +682,8 @@ process VarDict {
 
   """
   VarDict -G ${refs["genomeFile"]} \
-  -f 0.01 -N ${bamTumor} \
-  -b "${bamTumor}|${bamNormal}" \
+  -f 0.01 -N $bamTumor \
+  -b "$bamTumor|$bamNormal" \
   -z 1 -F 0x500 \
   -c 1 -S 2 -E 3 -g 4 \
   -R ${genInt} > ${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out
