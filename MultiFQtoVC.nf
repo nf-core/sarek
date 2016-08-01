@@ -247,7 +247,7 @@ process MergeBam {
   module 'bioinfo-tools'
   module 'samtools/1.3'
 
-  memory { 8.GB * task.attempt }
+  memory { 16.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -364,7 +364,7 @@ duplicatesRealign  = logChannelContent("BAMs for IndelRealigner grouped by overa
 process CreateIntervals {
 
   cpus 8
-  memory { 8.GB * task.attempt }
+  memory { 16.GB * task.attempt }
   time { 8.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -467,7 +467,7 @@ realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realigned
 process CreateRecalibrationTable {
 
   cpus 8
-  memory { 8.GB * task.attempt }       // 6G is certainly low even for downsampled (30G) data
+  memory { 16.GB * task.attempt }       // 6G is certainly low even for downsampled (30G) data
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -650,7 +650,7 @@ process VarDict {
   module 'VarDictJava/1.4.5'
 
   cpus 1
-  memory { 16.GB * task.attempt }
+  memory { 6.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
