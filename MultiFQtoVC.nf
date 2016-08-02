@@ -485,13 +485,14 @@ realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realigned
 
 process CreateRecalibrationTable {
 
+  module 'java/sun_jdk1.8.0_92'
+
   cpus 8
   memory { 8.GB * task.attempt }       // 6G is certainly low even for downsampled (30G) data
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
   maxErrors '-1'
-
 
   input:
   set idPatient, idSample, realignedBamFile, realignedBaiFile from realignedBam
@@ -664,7 +665,6 @@ process VarDict {
   // we need further filters, but some of the outputs are empty files, confusing the VCF generator script
 
   module 'bioinfo-tools'
-  module 'java/sun_jdk1.8.0_92'
   module 'VarDictJava/1.4.5'
 
   cpus 1
@@ -703,7 +703,6 @@ process VarDictCollatedVCF {
   publishDir "/home/szilva/dev/forkCAW/"
 
   module 'bioinfo-tools'
-  module 'java/sun_jdk1.8.0_92'
   module 'VarDictJava/1.4.5'
   module 'samtools/1.3'
 

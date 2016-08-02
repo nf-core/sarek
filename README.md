@@ -35,15 +35,6 @@ All variables and parameters are specified in the config and the sample files.
 Several processes are run within Nextflow
 We divide them for the moment into 2 main steps
 
-## Troubleshooting on milou
-On UPPMAX's milou, there is a small problem with slurm when loading some modules. `VarDictJava/1.4.5` for example `needs java/sun_jdk1.8.0_92`. But when you load `Nextflow/0.17.3`, milou loads automatically `java/sun_jdk1.7.0_25`.
-So my advice when running this script is to do first:
-```bash
-module load bioinfo-tools Nextflow
-module unload java
-module load java/sun_jdk1.8.0_92
-```
-
 ### Preprocessing:
 - Mapping - Mapping reads with BWA
 - MergeBam - Merging BAMs if multilane samples
