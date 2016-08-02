@@ -495,7 +495,7 @@ process CreateRecalibrationTable {
   maxErrors '-1'
 
   input:
-  set idPatient, idSample, realignedBamFile, realignedBaiFile from realignedBam
+  set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile) from realignedBam
   file refs["genomeFile"]
   file refs["dbsnp"]
   file refs["kgIndels"]
