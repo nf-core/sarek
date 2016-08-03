@@ -502,7 +502,7 @@ process CreateRecalibrationTable {
   file refs["millsIndels"]
 
   output:
-  set idPatient, idSample, file(realignedBamFile), file("${idSample}.recal.table") into recalibrationTable
+  set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), file("${idSample}.recal.table") into recalibrationTable
 
   """
   java -Xmx${task.memory.toGiga()}g -Djava.io.tmpdir="/tmp" \
@@ -531,7 +531,7 @@ process RecalibrateBam {
   cpus 8
 
   input:
-  set idPatient, idSample, file(realignedBamFile), recalibrationReport from recalibrationTable
+  set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), recalibrationReport from recalibrationTable
   file refs["genomeFile"]
 
   output:
