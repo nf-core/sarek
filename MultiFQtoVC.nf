@@ -598,6 +598,7 @@ Channel
 // define intervals file by --intervals
 // TODO: add as a parameter file
 intervalsFile = file(params.intervals)
+
 intervals = Channel
     .from(intervalsFile.readLines())
 
@@ -610,6 +611,7 @@ gI = intervals
 
 MuTect2Intervals = Channel.create()
 VarDictIntervals = Channel.create()
+
 Channel
   .from gI
   .separate (MuTect2Intervals, VarDictIntervals) {a -> [a,a]}
@@ -619,6 +621,8 @@ Channel
 // and make a line for each interval
 
 bamsFMT2 = bamsForMuTect2.spread(MuTect2Intervals)
+
+bamsFMT2 = logChannelContent("Bams for Mutect2: ", bamsFMT2)
 
 process RunMutect2 {
 
@@ -660,6 +664,8 @@ mutectVariantCallingOutput = logChannelContent("Mutect2 output: ", mutectVariant
 // (or centromeres) where no useful variant calls are expected
 
 bamsFVD = bamsForVarDict.spread(VarDictIntervals)
+
+bamsFVD = logChannelContent("Bams for VarDict: ", bamsFVD)
 
 process VarDict {
 
