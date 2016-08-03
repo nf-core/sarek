@@ -650,8 +650,8 @@ process RunMutect2 {
   -R ${refs["genomeFile"]} \
   --cosmic ${refs["cosmic"]} \
   --dbsnp ${refs["dbsnp"]} \
-  -I:normal ${bamNormal} \
-  -I:tumor ${bamTumor} \
+  -I:normal $bamNormal \
+  -I:tumor $bamTumor \
   -L \"${genInt}\" \
   -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf
   """
@@ -683,15 +683,15 @@ process VarDict {
   maxErrors '-1'
 
   input:
-  set idPatient, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor, genInt, gen_int from bamsFVD
+  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFVD
 
   output:
   set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into varDictVariantCallingOutput
 
   """
   VarDict -G ${refs["genomeFile"]} \
-  -f 0.01 -N ${bamTumor} \
-  -b "${bamTumor}|${bamNormal}" \
+  -f 0.01 -N $bamTumor \
+  -b "$bamTumor|$bamNormal" \
   -z 1 -F 0x500 \
   -c 1 -S 2 -E 3 -g 4 \
   -R ${genInt} > ${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out
