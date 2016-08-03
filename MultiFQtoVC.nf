@@ -672,6 +672,7 @@ process VarDict {
   // ~/dev/VarDictJava/build/install/VarDict/bin/VarDict -G /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta -f 0.1 -N "tiny" -b "tiny.tumor__1.recal.bam|tiny.normal__0.recal.bam" -z 1 -F 0x500 -c 1 -S 2 -E 3 -g 4 -R "1:131941-141339"
   // we need further filters, but some of the outputs are empty files, confusing the VCF generator script
 
+  module 'java/sun_jdk1.8.0_92'
   module 'bioinfo-tools'
   module 'VarDictJava/1.4.5'
 
