@@ -712,7 +712,7 @@ vdFilePrefix = idPatient + "_" + idNormal + "_" + idTumor
 vdFilesOnly = varDictVariantCallingOutput.map { x -> x.last()}
 
 process VarDictCollatedVCF {
-  publishDir "/home/szilva/dev/forkCAW/"
+  publishDir "${params.out}"
 
   module 'bioinfo-tools'
   module 'VarDictJava/1.4.5'
