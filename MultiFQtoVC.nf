@@ -577,8 +577,8 @@ bamsAll = bamsNormal.spread(bamsTumor)
 // I don't think a groupTuple can be used to do that, but it could be a good idea to look if there is a nicer way to do that
 
 bamsAll = bamsAll.map {
-  idPatientNormal, idSampleNormal, bamNormal, baiNormal, idPatientTumor, idSampleTumor, bamTumor, baiTumor ->
-  [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor]
+  idPatientNormal, idSampleNormal, file(bamNormal), file(baiNormal), idPatientTumor, idSampleTumor, file(bamTumor), file(baiTumor) ->
+  [idPatientNormal, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor)]
 }
 
 // [Szilva] We know that MuTect2 (and other somatic callers) are notoriously slow. To speed them up we are chopping the reference into 
