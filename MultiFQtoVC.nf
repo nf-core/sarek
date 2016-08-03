@@ -644,7 +644,7 @@ process RunMutect2 {
   
   // we are using MuTect2 shipped in GATK v3.6
   """
-  java -Xmx${task.memory.toGiga()}g -jar ${params.mutect2Home}/GenomeAnalysisTK.jar \
+  java -Xmx${task.memory.toGiga()}g -jar ${params.gatk36Home}/GenomeAnalysisTK.jar \
   -T MuTect2 \
   -nct ${task.threads} \
   -R ${refs["genomeFile"]} \
