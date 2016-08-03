@@ -715,8 +715,12 @@ process VarDictCollatedVCF {
   publishDir "${params.out}"
 
   module 'bioinfo-tools'
-  module 'VarDictJava/1.4.5'
   module 'samtools/1.3'
+  module 'java/sun_jdk1.8.0_92'
+  module 'R/3.2.3'
+  module 'gcc/4.9.2'
+  module 'java/sun_jdk1.8.0_40'
+  module 'perl/5.18.4'
 
   cpus 1
   memory { 16.GB * task.attempt }
