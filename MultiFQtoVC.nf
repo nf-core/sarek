@@ -363,6 +363,8 @@ duplicatesRealign  = logChannelContent("BAMs for IndelRealigner grouped by overa
 
 process CreateIntervals {
 
+  module 'java/sun_jdk1.8.0_92'
+
   cpus 8
   memory { 16.GB * task.attempt }
   time { 8.h * task.attempt }
@@ -407,6 +409,7 @@ intervals = logChannelContent("Intervals passed to Realign: ",intervals)
  */
 
 process Realign {
+  module 'java/sun_jdk1.8.0_92'
 
   memory { 16.GB * task.attempt }
   time { 20.h * task.attempt }
@@ -466,6 +469,8 @@ realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realigned
 
 process CreateRecalibrationTable {
 
+  module 'java/sun_jdk1.8.0_92'
+
   cpus 8
   memory { 16.GB * task.attempt }       // 6G is certainly low even for downsampled (30G) data
   time { 16.h * task.attempt }
@@ -503,6 +508,8 @@ process CreateRecalibrationTable {
 recalibrationTable = logChannelContent("Base recalibrated table for recalibration: ",recalibrationTable)
 
 process RecalibrateBam {
+
+  module 'java/sun_jdk1.8.0_92'
 
   memory { 16.GB * task.attempt }
   time { 16.h * task.attempt }
@@ -605,7 +612,7 @@ process RunMutect2 {
   module 'bioinfo-tools'
   module 'java/sun_jdk1.8.0_92'
 
-  threads 16
+  cpus 8
   memory { 16.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
@@ -622,7 +629,7 @@ process RunMutect2 {
   """
   java -Xmx${task.memory.toGiga()}g -jar ${params.mutect2Home}/GenomeAnalysisTK.jar \
   -T MuTect2 \
-  -nct ${task.threads} \
+  -nct ${task.cpus} \
   -R ${refs["genomeFile"]} \
   --cosmic ${refs["cosmic"]} \
   --dbsnp ${refs["dbsnp"]} \
@@ -681,12 +688,13 @@ varDictVariantCallingOutput = logChannelContent("VarDict VCF channel: ",varDictV
 vdFilePrefix = idPatient + "_" + idNormal + "_" + idTumor
 vdFilesOnly = varDictVariantCallingOutput.map { x -> x.last()}
 
+resultsDir = file("${idPatient}.results")
+resultsDir.mkdir() 
+
 process VarDictCollatedVCF {
-    publishDir "/home/szilva/dev/forkCAW/"
+    publishDir = resultsDir
 
     module 'bioinfo-tools'
-    module 'java/sun_jdk1.8.0_92'
-    module 'VarDictJava/1.4.5'
     module 'samtools/1.3'
 
     cpus 1
@@ -785,15 +793,21 @@ def getPatientAndSample(aCh) {
 	consCh.close()
 
     // similar procedure for the normal sample name
-    Channel.from originalCh.separate(consCh,originalCh) {x -> [x,x]} 
-    idNormal = consCh.map { x -> [x.get(1)]}.unique().getVal()[0]  
-	consCh.close()
+    normalCh = Channel.create()
+	normalOrigCh = Channel.create()
+    
+    Channel.from originalCh.separate(normalCh,normalOrigCh) {x -> [x,x]} 
+    idNormal = normalCh.map { x -> [x.get(1)]}.unique().getVal()[0]  
+	normalCh.close()
 
     // ditto for the tumor
-    Channel.from originalCh.separate(consCh,originalCh) {x -> [x,x]} 
-    idTumor = consCh.map { x -> [x.get(2)]}.unique().getVal()[0]  
-	consCh.close()
+	tumorCh = Channel.create()
+	tumorOrigCh = Channel.create()
 
-    return [ originalCh, idPatient, idNormal, idTumor]
+    Channel.from normalOrigCh.separate(tumorCh,tumorOrigCh) {x -> [x,x]} 
+    idTumor = tumorCh.map { x -> [x.get(2)]}.unique().getVal()[0]  
+	tumorCh.close()
+
+    return [ tumorOrigCh, idPatient, idNormal, idTumor]
 }
 
