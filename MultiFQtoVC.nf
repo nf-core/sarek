@@ -210,6 +210,7 @@ fastqFiles = Channel
 fastqFiles = logChannelContent("FASTQ files and IDs to process: ", fastqFiles)
 
 process Mapping {
+  publishDir "Preprocessing/Mapping"
 
   module 'bioinfo-tools'
   module 'bwa/0.7.8'
@@ -263,6 +264,7 @@ singleBam  = logChannelContent("Single BAMs before merge:", singleBam)
 groupedBam = logChannelContent("Grouped BAMs before merge:", groupedBam)
 
 process MergeBam {
+  publishDir "Preprocessing/MergeBam"
 
   module 'bioinfo-tools'
   module 'samtools/1.3'
@@ -291,6 +293,7 @@ process MergeBam {
 // [maxime] Renaming is totally useless, but it is more consistent with the rest of the pipeline
 
 process RenameSingleBam {
+  publishDir "Preprocessing/RenameSingleBam"
 
   input:
   set idPatient, idSample, idRun, file(bam) from singleBam
@@ -324,6 +327,7 @@ bamList = logChannelContent("BAM list for MarkDuplicates: ",bamList)
  */
 
 process MarkDuplicates {
+  publishDir "Preprocessing/MarkDuplicates"
 
   memory { 16.GB * task.attempt }
   time { 16.h * task.attempt }
@@ -382,6 +386,7 @@ duplicatesRealign  = logChannelContent("BAMs for IndelRealigner grouped by overa
  */
 
 process CreateIntervals {
+  publishDir "Preprocessing/CreateIntervals"
 
   cpus 8
   memory { 8.GB * task.attempt }
@@ -426,6 +431,7 @@ intervals = logChannelContent("Intervals passed to Realign: ",intervals)
  */
 
 process Realign {
+  publishDir "Preprocessing/Realign"
 
   memory { 16.GB * task.attempt }
   time { 20.h * task.attempt }
@@ -484,6 +490,7 @@ realignedBam = idPatient.spread(tempSamples)
 realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realignedBam)
 
 process CreateRecalibrationTable {
+  publishDir "Preprocessing/CreateRecalibrationTable"
 
   module 'java/sun_jdk1.8.0_92'
 
@@ -522,6 +529,7 @@ process CreateRecalibrationTable {
 recalibrationTable = logChannelContent("Base recalibrated table for recalibration: ", recalibrationTable)
 
 process RecalibrateBam {
+  publishDir "Preprocessing/RecalibrateBam"
 
   memory { 16.GB * task.attempt }
   time { 16.h * task.attempt }
@@ -625,6 +633,7 @@ bamsFMT2 = bamsForMuTect2.spread(MuTect2Intervals)
 bamsFMT2 = logChannelContent("Bams for Mutect2: ", bamsFMT2)
 
 process RunMutect2 {
+  publishDir "VariantCalling/MuTect2"
 
   module 'bioinfo-tools'
   module 'java/sun_jdk1.8.0_92'
@@ -668,6 +677,7 @@ bamsFVD = bamsForVarDict.spread(VarDictIntervals)
 bamsFVD = logChannelContent("Bams for VarDict: ", bamsFVD)
 
 process VarDict {
+  publishDir "VariantCalling/VarDictJava"
 
   // ~/dev/VarDictJava/build/install/VarDict/bin/VarDict -G /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta -f 0.1 -N "tiny" -b "tiny.tumor__1.recal.bam|tiny.normal__0.recal.bam" -z 1 -F 0x500 -c 1 -S 2 -E 3 -g 4 -R "1:131941-141339"
   // we need further filters, but some of the outputs are empty files, confusing the VCF generator script
@@ -712,7 +722,7 @@ vdFilePrefix = idPatient + "_" + idNormal + "_" + idTumor
 vdFilesOnly = varDictVariantCallingOutput.map { x -> x.last()}
 
 process VarDictCollatedVCF {
-  publishDir "${params.out}"
+  publishDir "VariantCalling/VarDictJava"
 
   module 'bioinfo-tools'
   module 'samtools/1.3'
