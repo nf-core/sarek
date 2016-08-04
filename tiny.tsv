@@ -1,0 +1,11 @@
+tiny    0   tiny.normal tiny.normal_1   data/tiny/tiny_normal_L001_R1.fastq.gz  data/tiny/tiny_normal_L001_R2.fastq.gz
+tiny    0   tiny.normal tiny.normal_2   data/tiny/tiny_normal_L002_R1.fastq.gz  data/tiny/tiny_normal_L002_R2.fastq.gz
+tiny    0   tiny.normal tiny.normal_4   data/tiny/tiny_normal_L004_R1.fastq.gz  data/tiny/tiny_normal_L004_R2.fastq.gz
+tiny    0   tiny.normal tiny.normal_7   data/tiny/tiny_normal_L007_R1.fastq.gz  data/tiny/tiny_normal_L007_R2.fastq.gz
+tiny    0   tiny.normal tiny.normal_8   data/tiny/tiny_normal_L008_R1.fastq.gz  data/tiny/tiny_normal_L008_R2.fastq.gz
+tiny    1   tiny.tumor tiny.tumor_1   data/tiny/tiny_tumor_L001_R1.fastq.gz   data/tiny/tiny_tumor_L001_R2.fastq.gz
+tiny    1   tiny.tumor tiny.tumor_2   data/tiny/tiny_tumor_L002_R1.fastq.gz   data/tiny/tiny_tumor_L002_R2.fastq.gz
+tiny    1   tiny.tumor tiny.tumor_3   data/tiny/tiny_tumor_L003_R1.fastq.gz   data/tiny/tiny_tumor_L003_R2.fastq.gz
+tiny    1   tiny.tumor tiny.tumor_5   data/tiny/tiny_tumor_L005_R1.fastq.gz   data/tiny/tiny_tumor_L005_R2.fastq.gz
+tiny    1   tiny.tumor tiny.tumor_6   data/tiny/tiny_tumor_L006_R1.fastq.gz   data/tiny/tiny_tumor_L006_R2.fastq.gz
+tiny    1   tiny.tumor tiny.tumor_7   data/tiny/tiny_tumor_L007_R1.fastq.gz   data/tiny/tiny_tumor_L007_R2.fastq.gz
