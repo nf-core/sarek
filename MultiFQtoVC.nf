@@ -600,13 +600,14 @@ process manta{
 
 
     """
-    configManta.py --normalBam ${bamNormal} --tumorBam ${bamTumor} --reference ${refs["genomeFile"]} --runDir ${idSampleNormal}_${idSampleTumor}_manta_dir
-    python ${idSampleNormal}_${idSampleTumor}_manta_dir/runWorkflow.py -m local -j 8
-    gunzip -c ${idSampleNormal}_${idSampleTumor}_manta_dir/results/variants/somaticSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.somaticSV.vcf
-    gunzip -c ${idSampleNormal}_${idSampleTumor}_manta_dir/results/variants/candidateSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSV.vcf
-    gunzip -c ${idSampleNormal}_${idSampleTumor}_manta_dir/results/variants/diploidSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.diploidSV.vcf
-    gunzip -c ${idSampleNormal}_${idSampleTumor}_manta_dir/results/variants/candidateSmallIndels.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf
-    rm -rf ${idSampleNormal}_${idSampleTumor}_manta_dir/
+    mv ${bamNormal} NormalBam.bam
+    mv ${bamTumor} TumorBam.bam
+    configManta.py --normalBam NormalBam.bam --tumorBam TumorBam.bam --reference ${refs["genomeFile"]} --runDir MantaDir
+    python MantaDir/runWorkflow.py -m local -j 8
+    gunzip -c MantaDir/results/variants/somaticSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.somaticSV.vcf
+    gunzip -c MantaDir/results/variants/candidateSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSV.vcf
+    gunzip -c MantaDir/results/variants/diploidSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.diploidSV.vcf
+    gunzip -c MantaDir/results/variants/candidateSmallIndels.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf
     """
 }
 
