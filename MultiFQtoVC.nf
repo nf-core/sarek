@@ -568,10 +568,47 @@ bamsAll = bamsAll.map {
 // first create channels for each variant caller
 bamsForMuTect2 = Channel.create()
 bamsForVarDict= Channel.create()
+bamsForManta= Channel.create()
 
 Channel
   .from bamsAll
-  .separate( bamsForMuTect2, bamsForVarDict) { a -> [a, a] }
+  .separate( bamsForMuTect2, bamsForVarDict, bamsForManta) { a -> [a, a, a] }
+
+//In 2009 the genus Manta was re-classified into Manta birostris and Manta alfredi.
+//Manta birostris is the larger of the two, is migratory and roams the oceans
+//Manta alfredi is smaller and lives in shallower, more coastal habitats. Both species live in temperate, subtropical and tropical waters.
+
+//Manta Rays are a cartilaginous fish in the sub-class elasmobranches and as such they are 'relatives' of the shark.
+//They are the largest and least known of all the Rays.
+//Manta Rays seem to be solitary creatures, coming together only to feed and mate.
+//According to scientific studies Manta Rays from different oceans have the same mitochondrial DNA.
+//They also have the largest brain-to-body ratio in the family of the sharks, rays and skates.
+//About mantas - http://www.mantarayshawaii.com/birostris.html
+
+process manta{
+
+    module 'bioinfo-tools'
+    module 'manta'
+
+    cpus 8
+
+    input:
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
+    
+    output:
+       set idPatient, val("${idSampleNormal}_${idSampleTumor}"),file("${idSampleNormal}_${idSampleTumor}.somaticSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.diploidSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf")  into mantaVariantCallingOutput
+
+
+    """
+    configManta.py --normalBam ${bamNormal} --tumorBam ${bamTumor} --reference ${refs["genomeFile"]} --runDir ${idSampleNormal}_${idSampleTumor}_manta_dir
+    python ${idSampleNormal}_${idSampleTumor}_manta_dir/runWorkflow.py -m local -j 8
+    gunzip -c ${idSampleNormal}_${idSampleTumor}_manta_dir/results/variants/somaticSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.somaticSV.vcf
+    gunzip -c ${idSampleNormal}_${idSampleTumor}_manta_dir/results/variants/candidateSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSV.vcf
+    gunzip -c ${idSampleNormal}_${idSampleTumor}_manta_dir/results/variants/diploidSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.diploidSV.vcf
+    gunzip -c ${idSampleNormal}_${idSampleTumor}_manta_dir/results/variants/candidateSmallIndels.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf
+    rm -rf ${idSampleNormal}_${idSampleTumor}_manta_dir/
+    """
+}
 
 // define intervals file by --intervals
 // TODO: add as a parameter file
@@ -602,7 +639,7 @@ process RunMutect2 {
   module 'bioinfo-tools'
   module 'java/sun_jdk1.8.0_92'
 
-  threads 16
+  cpus 16
   memory { 16.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
