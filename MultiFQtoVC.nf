@@ -597,7 +597,6 @@ bamsAll = logChannelContent("Mapped Recalibrated Bam for variant Calling: ", bam
 
 // first create channels for each variant caller
 bamsForMuTect2 = Channel.create()
-<<<<<<< HEAD
 bamsForVarDict= Channel.create()
 bamsForManta= Channel.create()
 
@@ -653,13 +652,6 @@ process Manta{
 
 
 }
-=======
-bamsForVarDict = Channel.create()
-
-Channel
-  .from bamsAll
-  .separate( bamsForMuTect2, bamsForVarDict) {a -> [a, a]}
->>>>>>> upstream/master
 
 // define intervals file by --intervals
 // TODO: add as a parameter file
