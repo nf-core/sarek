@@ -585,10 +585,11 @@ Channel
 //They also have the largest brain-to-body ratio in the family of the sharks, rays and skates.
 //About mantas - http://www.mantarayshawaii.com/birostris.html
 
-process manta{
+process Manta{
 
     module 'bioinfo-tools'
-    module 'manta'
+    module 'manta/0.27.1'
+    module 'samtools/0.1.19'
 
     cpus 8
 
@@ -599,16 +600,27 @@ process manta{
        set idPatient, val("${idSampleNormal}_${idSampleTumor}"),file("${idSampleNormal}_${idSampleTumor}.somaticSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.diploidSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf")  into mantaVariantCallingOutput
 
 
+    //NOTE: Manta is very picky about naming and reference indexes, the input bam should not contain too many _ and the reference index must be generated using a supported samtools version.
+    //Moreover, the bam index must be named .bam.bai, otherwise it will not be recognized
+
     """
-    mv ${bamNormal} NormalBam.bam
-    mv ${bamTumor} TumorBam.bam
-    configManta.py --normalBam NormalBam.bam --tumorBam TumorBam.bam --reference ${refs["genomeFile"]} --runDir MantaDir
+    mv ${bamNormal} Normal.bam
+    mv ${bamTumor} Tumor.bam
+
+    mv ${baiNormal} Normal.bam.bai
+    mv ${baiTumor} Tumor.bam.bai
+
+    ln -s ${refs["genomeFile"]} reference.fasta
+    samtools faidx reference.fasta
+    configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference reference.fasta --runDir MantaDir
     python MantaDir/runWorkflow.py -m local -j 8
     gunzip -c MantaDir/results/variants/somaticSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.somaticSV.vcf
     gunzip -c MantaDir/results/variants/candidateSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSV.vcf
     gunzip -c MantaDir/results/variants/diploidSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.diploidSV.vcf
     gunzip -c MantaDir/results/variants/candidateSmallIndels.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf
     """
+
+
 }
 
 // define intervals file by --intervals
