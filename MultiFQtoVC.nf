@@ -598,10 +598,11 @@ bamsAll = logChannelContent("Mapped Recalibrated Bam for variant Calling: ", bam
 // first create channels for each variant caller
 bamsForMuTect2 = Channel.create()
 bamsForVarDict = Channel.create()
+bamsForStrelka = Channel.create()
 
 Channel
   .from bamsAll
-  .separate( bamsForMuTect2, bamsForVarDict) {a -> [a, a]}
+  .separate(bamsForMuTect2, bamsForVarDict, bamsForStrelka) {a -> [a, a, a]}
 
 // define intervals file by --intervals
 // TODO: add as a parameter file
@@ -619,10 +620,11 @@ gI = intervals
 
 MuTect2Intervals = Channel.create()
 VarDictIntervals = Channel.create()
+StrelkaIntervals = Channel.create()
 
 Channel
   .from gI
-  .separate (MuTect2Intervals, VarDictIntervals) {a -> [a,a]}
+  .separate (MuTect2Intervals, VarDictIntervals, StrelkaIntervals) {a -> [a, a, a]}
 
 // now add genomic intervals to the sample information
 // join [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] and ["1:1-2000","1_1-2000"] 
@@ -753,6 +755,42 @@ process VarDictCollatedVCF {
     cat \$vdoutput | ${params.vardictHome}/testsomatic.R >> testsomatic.out
   done
   ${params.vardictHome}/var2vcf_somatic.pl -f 0.01 -N "${vdFilePrefix}" testsomatic.out > ${vdFilePrefix}.VarDict.vcf
+  """
+}
+
+bamsFSTR = bamsForStrelka.spread(StrelkaIntervals)
+
+bamsFSTR = logChannelContent("Bams for Strelka: ", bamsFSTR)
+
+process RunStrelka {
+  publishDir "VariantCalling/Strelka"
+
+  module 'bioinfo-tools'
+
+  cpus 1
+  memory { 16.GB * task.attempt }
+  time { 16.h * task.attempt }
+  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+  maxRetries 3
+  maxErrors '-1'
+
+  input:
+  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFSTR
+
+  output:
+  set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into StrelkaVariantCallingOutput
+
+  """
+  ${strelkaHome}/bin/configureStrelkaWorkflow.pl \
+  --tumor ${bamTumor} \
+  --normal ${bamNormal} \
+  --ref $refs["genomeFile"] \
+  --config strelka_config.ini \
+  --output-dir strelka_test
+
+  cd strelka_test
+
+  make -j 16
   """
 }
 
