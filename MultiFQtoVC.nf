@@ -781,7 +781,7 @@ process RunStrelka {
   set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into StrelkaVariantCallingOutput
 
   """
-  ${strelkaHome}/bin/configureStrelkaWorkflow.pl \
+  ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
   --tumor ${bamTumor} \
   --normal ${bamNormal} \
   --ref $refs["genomeFile"] \
