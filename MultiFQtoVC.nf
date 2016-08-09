@@ -785,7 +785,7 @@ process RunStrelka {
   ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
   --tumor ${bamTumor} \
   --normal ${bamNormal} \
-  --ref ${refs["genomeFile"]} \
+  --ref ${params.strelkaGENOM} \
   --config ${params.strelkaCFG} \
   --output-dir strelka_test
 
