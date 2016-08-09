@@ -143,6 +143,7 @@ refs = [
   "millsIndex":   params.millsIndex,  // Mill's Golden set index
   "sample":       params.sample,      // the sample sheet (multilane data refrence table, see below)
   "cosmic":       params.cosmic       // cosmic vcf file
+  "intervals":    params.intervals    // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
 ]
 
 refs.each(CheckExistence)
@@ -388,6 +389,8 @@ duplicatesRealign  = logChannelContent("BAMs for IndelRealigner grouped by overa
 process CreateIntervals {
   publishDir "Preprocessing/CreateIntervals"
 
+  module 'java/sun_jdk1.8.0_92'
+
   cpus 8
   memory { 16.GB * task.attempt }
   time { 8.h * task.attempt }
@@ -432,6 +435,7 @@ intervals = logChannelContent("Intervals passed to Realign: ",intervals)
  */
 
 process Realign {
+  module 'java/sun_jdk1.8.0_92'
   publishDir "Preprocessing/Realign"
 
   memory { 16.GB * task.attempt }
@@ -495,6 +499,8 @@ process CreateRecalibrationTable {
 
   module 'java/sun_jdk1.8.0_92'
 
+  module 'java/sun_jdk1.8.0_92'
+
   cpus 8
   memory { 16.GB * task.attempt }       // 6G is certainly low even for downsampled (30G) data
   time { 16.h * task.attempt }
@@ -532,6 +538,8 @@ recalibrationTable = logChannelContent("Base recalibrated table for recalibratio
 
 process RecalibrateBam {
   publishDir "Preprocessing/RecalibrateBam"
+
+  module 'java/sun_jdk1.8.0_92'
 
   memory { 16.GB * task.attempt }
   time { 16.h * task.attempt }
@@ -707,7 +715,7 @@ process RunMutect2 {
   """
   java -Xmx${task.memory.toGiga()}g -jar ${params.mutect2Home}/GenomeAnalysisTK.jar \
   -T MuTect2 \
-  -nct ${task.threads} \
+  -nct ${task.cpus} \
   -R ${refs["genomeFile"]} \
   --cosmic ${refs["cosmic"]} \
   --dbsnp ${refs["dbsnp"]} \
@@ -772,6 +780,9 @@ varDictVariantCallingOutput = logChannelContent("VarDict VCF channel: ",varDictV
 
 vdFilePrefix = idPatient + "_" + idNormal + "_" + idTumor
 vdFilesOnly = varDictVariantCallingOutput.map { x -> x.last()}
+
+resultsDir = file("${idPatient}.results")
+resultsDir.mkdir() 
 
 process VarDictCollatedVCF {
   publishDir "VariantCalling/VarDictJava"
@@ -869,30 +880,36 @@ def logChannelContent (aMessage, aChannel) {
 }
 
 def getPatientAndSample(aCh) {
-  consCh = Channel.create()
-  originalCh = Channel.create()
+    consCh = Channel.create()
+    originalCh = Channel.create()
 
-  // get the patient ID
-  // duplicate channel to get sample name
-  Channel.from aCh.separate(consCh,originalCh) {x -> [x,x]}
+    // get the patient ID
+    // duplicate channel to get sample name
+    Channel.from aCh.separate(consCh,originalCh) {x -> [x,x]} 
 
-  // use the "consumed" channel to get it
-  // we are assuming the first column is the same for the patient, as hoping
-  // people do not want to compare samples from different patients
-  idPatient = consCh.map {x -> [x.get(0)]}.unique().getVal()[0]
-  // we have to close to make sure remainding items are not
-  consCh.close()
+    // use the "consumed" channel to get it
+    // we are assuming the first column is the same for the patient, as hoping 
+    // people do not want to compare samples from differnet patients
+    idPatient = consCh.map { x -> [x.get(0)]}.unique().getVal()[0] 
+	// we have to close to make sure remainding items are not 
+	consCh.close()
 
-  // similar procedure for the normal sample name
-  Channel.from originalCh.separate(consCh,originalCh) {x -> [x,x]}
-  idNormal = consCh.map {x -> [x.get(1)]}.unique().getVal()[0]
-  consCh.close()
+    // similar procedure for the normal sample name
+    normalCh = Channel.create()
+	normalOrigCh = Channel.create()
+    
+    Channel.from originalCh.separate(normalCh,normalOrigCh) {x -> [x,x]} 
+    idNormal = normalCh.map { x -> [x.get(1)]}.unique().getVal()[0]  
+	normalCh.close()
 
-  // ditto for the tumor
-  Channel.from originalCh.separate(consCh,originalCh) {x -> [x,x]}
-  idTumor = consCh.map {x -> [x.get(2)]}.unique().getVal()[0]
-  consCh.close()
+    // ditto for the tumor
+	tumorCh = Channel.create()
+	tumorOrigCh = Channel.create()
 
-  return [originalCh, idPatient, idNormal, idTumor]
+    Channel.from normalOrigCh.separate(tumorCh,tumorOrigCh) {x -> [x,x]} 
+    idTumor = tumorCh.map { x -> [x.get(2)]}.unique().getVal()[0]  
+	tumorCh.close()
+
+    return [ tumorOrigCh, idPatient, idNormal, idTumor]
 }
 
