@@ -705,7 +705,7 @@ process VarDict {
   set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into varDictVariantCallingOutput
 
   """
-  ${params.varDictHome}/vardict.pl -G ${refs["genomeFile"]} \
+  ${params.vardictHome}/vardict.pl -G ${refs["genomeFile"]} \
   -f 0.01 -N $bamTumor \
   -b "$bamTumor|$bamNormal" \
   -z 1 -F 0x500 \
