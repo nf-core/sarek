@@ -1,4 +1,10 @@
-### Cancer Analysis Workflow Of Tumor/Normal Pairs At The National Genomics Infrastructure Of SciLifeLab
+## Cancer Analysis Workflow Of Tumor/Normal Pairs At The National Genomics Infrastructure Of SciLifeLab
+
+### Maxime Garcia
+
+### BarnTumorBanken, SciLifeLab
+
+### Pelin Akan, Jesper Eisfeldt, Szilveszter Juhos, Max Käller, Malin Larsson, Björn Nystedt, Pall Olason
 
 One of the most prominent usage of NGS is whole genome sequencing (WGS). At
 SciLifeLab with the available infrastructure it is possible to produce data for
