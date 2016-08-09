@@ -776,6 +776,8 @@ process RunStrelka {
 
   input:
   set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFSTR
+  file refs["genomeFile"]
+
 
   output:
   set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into StrelkaVariantCallingOutput
@@ -784,7 +786,7 @@ process RunStrelka {
   ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
   --tumor ${bamTumor} \
   --normal ${bamNormal} \
-  --ref $refs["genomeFile"] \
+  --ref ${refs["genomeFile"]} \
   --config strelka_config.ini \
   --output-dir strelka_test
 
