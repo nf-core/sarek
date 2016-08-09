@@ -64,7 +64,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 
 String version = "0.0.2"
-String dateUpdate = "2016-08-01"
+String dateUpdate = "2016-08-09"
 
 /*
  * Get some basic informations about the workflow
@@ -186,8 +186,8 @@ if (!params.sample) {
  * let's channel this out for mapping
  */
 
-// [maxime] I just added __status to the sample ID so that the whole pipeline is still working without having to change anything.
-// [maxime] I know, it is lazy...
+// I just added __status to the idSample so that the whole pipeline is still working without having to change anything.
+// I know, it is lazy...
 
 fastqFiles = Channel
   .from(sampleTSVconfig.readLines())
@@ -705,7 +705,7 @@ process VarDict {
   set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into varDictVariantCallingOutput
 
   """
-  ${params.varDictRoot}/vardict.pl -G ${refs["genomeFile"]} \
+  ${params.varDictHome}/vardict.pl -G ${refs["genomeFile"]} \
   -f 0.01 -N $bamTumor \
   -b "$bamTumor|$bamNormal" \
   -z 1 -F 0x500 \
@@ -752,9 +752,9 @@ process VarDictCollatedVCF {
   for vdoutput in ${vdPart}
   do
     echo
-    cat \$vdoutput | ${params.vardictHome}/testsomatic.R >> testsomatic.out
+    cat \$vdoutput | ${params.vardictHome}/VarDict/testsomatic.R >> testsomatic.out
   done
-  ${params.vardictHome}/var2vcf_somatic.pl -f 0.01 -N "${vdFilePrefix}" testsomatic.out > ${vdFilePrefix}.VarDict.vcf
+  ${params.vardictHome}/VarDict/var2vcf_somatic.pl -f 0.01 -N "${vdFilePrefix}" testsomatic.out > ${vdFilePrefix}.VarDict.vcf
   """
 }
 
@@ -778,7 +778,6 @@ process RunStrelka {
   set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFSTR
   file refs["genomeFile"]
 
-
   output:
   set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into StrelkaVariantCallingOutput
 
@@ -787,7 +786,7 @@ process RunStrelka {
   --tumor ${bamTumor} \
   --normal ${bamNormal} \
   --ref ${refs["genomeFile"]} \
-  --config strelka_config.ini \
+  --config ${params.strelkaCFG} \
   --output-dir strelka_test
 
   cd strelka_test
