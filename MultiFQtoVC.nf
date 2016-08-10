@@ -142,7 +142,7 @@ refs = [
   "millsIndels":  params.millsIndels, // Mill's Golden set of SNPs
   "millsIndex":   params.millsIndex,  // Mill's Golden set index
   "sample":       params.sample,      // the sample sheet (multilane data refrence table, see below)
-  "cosmic":       params.cosmic       // cosmic vcf file
+  "cosmic":       params.cosmic,      // cosmic vcf file
   "intervals":    params.intervals    // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
 ]
 
@@ -614,6 +614,8 @@ Channel
   .from bamsAll
   .separate( bamsForMuTect2, bamsForVarDict, bamsForManta) { a -> [a, a, a] }
 
+
+if( params.sv == "true" ) {
 //In 2009 the genus Manta was re-classified into Manta birostris and Manta alfredi.
 //Manta birostris is the larger of the two, is migratory and roams the oceans
 //Manta alfredi is smaller and lives in shallower, more coastal habitats. Both species live in temperate, subtropical and tropical waters.
@@ -659,7 +661,7 @@ process Manta{
     gunzip -c MantaDir/results/variants/diploidSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.diploidSV.vcf
     gunzip -c MantaDir/results/variants/candidateSmallIndels.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf
     """
-
+}
 
 }
 
