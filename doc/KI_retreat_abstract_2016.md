@@ -2,9 +2,9 @@
 
 ### Maxime Garcia
 
-### BarnTumorBanken, SciLifeLab
+### BarnTumörBanken, Department of Oncology Pathology, Karolinska Institutet, Science for Life Laboratory
 
-### Pelin Akan, Jesper Eisfeldt, Szilveszter Juhos, Max Käller, Malin Larsson, Björn Nystedt, Pall Olason
+### (Pelin Akan, Teresita Diaz de Ståhl, Jesper Eisfeldt, Szilveszter Juhos, Malin Larsson, Björn Nystedt, Pall Olason, Monica Nistér, Max Käller)
 
 One of the most prominent usage of NGS is whole genome sequencing (WGS). At
 SciLifeLab with the available infrastructure it is possible to produce data for
