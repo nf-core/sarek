@@ -772,6 +772,7 @@ process VarDictCollatedVCF {
 //About mantas - http://www.mantarayshawaii.com/birostris.html
 
 process Manta{
+  publishDir "VariantCalling/Manta"
 
     module 'bioinfo-tools'
     module 'manta/0.27.1'
