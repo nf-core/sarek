@@ -499,8 +499,6 @@ process CreateRecalibrationTable {
 
   module 'java/sun_jdk1.8.0_92'
 
-  module 'java/sun_jdk1.8.0_92'
-
   cpus 8
   memory { 16.GB * task.attempt }       // 6G is certainly low even for downsampled (30G) data
   time { 16.h * task.attempt }
@@ -611,24 +609,13 @@ bamsForVarDict= Channel.create()
 bamsForManta= Channel.create()
 
 Channel
-  .from bamsAll
-  .separate( bamsForMuTect2, bamsForVarDict, bamsForManta) { a -> [a, a, a] }
+	.from bamsAll
+	.separate( bamsForMuTect2, bamsForVarDict, bamsForManta) { a -> [a, a, a] }
 
+if( params.sv == true ) {
 
-if( params.sv == "true" ) {
-//In 2009 the genus Manta was re-classified into Manta birostris and Manta alfredi.
-//Manta birostris is the larger of the two, is migratory and roams the oceans
-//Manta alfredi is smaller and lives in shallower, more coastal habitats. Both species live in temperate, subtropical and tropical waters.
-
-//Manta Rays are a cartilaginous fish in the sub-class elasmobranches and as such they are 'relatives' of the shark.
-//They are the largest and least known of all the Rays.
-//Manta Rays seem to be solitary creatures, coming together only to feed and mate.
-//According to scientific studies Manta Rays from different oceans have the same mitochondrial DNA.
-//They also have the largest brain-to-body ratio in the family of the sharks, rays and skates.
-//About mantas - http://www.mantarayshawaii.com/birostris.html
-
-process Manta{
-
+  process Manta {
+    //About mantas - http://www.mantarayshawaii.com/birostris.html
     module 'bioinfo-tools'
     module 'manta/0.27.1'
     module 'samtools/0.1.19'
@@ -661,12 +648,10 @@ process Manta{
     gunzip -c MantaDir/results/variants/diploidSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.diploidSV.vcf
     gunzip -c MantaDir/results/variants/candidateSmallIndels.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf
     """
-}
-
+  }
 }
 
 // define intervals file by --intervals
-// TODO: add as a parameter file
 intervalsFile = file(params.intervals)
 
 intervals = Channel
@@ -691,7 +676,6 @@ Channel
 // and make a line for each interval
 
 bamsFMT2 = bamsForMuTect2.spread(MuTect2Intervals)
-
 bamsFMT2 = logChannelContent("Bams for Mutect2: ", bamsFMT2)
 
 process RunMutect2 {
@@ -700,7 +684,7 @@ process RunMutect2 {
   module 'bioinfo-tools'
   module 'java/sun_jdk1.8.0_92'
 
-  cpus 16
+  cpus 8 
   memory { 16.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
@@ -731,95 +715,99 @@ process RunMutect2 {
 mutectVariantCallingOutput = logChannelContent("Mutect2 output: ", mutectVariantCallingOutput)
 // TODO: merge call output
 
+if (params.withVarDict == true) {
 // we are doing the same trick for VarDictJava: running for the whole reference is a PITA, so we are chopping at repeats
 // (or centromeres) where no useful variant calls are expected
+	bamsFVD = bamsForVarDict.spread(VarDictIntervals)
+	bamsFVD = logChannelContent("Bams for VarDict: ", bamsFVD)
 
-bamsFVD = bamsForVarDict.spread(VarDictIntervals)
+  process VarDict {
+    publishDir "VariantCalling/VarDictJava"
+  
+    // ~/dev/VarDictJava/build/install/VarDict/bin/VarDict -G /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta -f 0.1 -N "tiny" -b "tiny.tumor__1.recal.bam|tiny.normal__0.recal.bam" -z 1 -F 0x500 -c 1 -S 2 -E 3 -g 4 -R "1:131941-141339"
+    // we need further filters, but some of the outputs are empty files, confusing the VCF generator script
+  
+    module 'bioinfo-tools'
+    module 'java/sun_jdk1.8.0_92'
+    module 'R/3.2.3'
+    module 'gcc/4.9.2'
+    module 'java/sun_jdk1.8.0_40'
+    module 'perl/5.18.4'
 
-bamsFVD = logChannelContent("Bams for VarDict: ", bamsFVD)
+    cpus 1
+    memory { 6.GB * task.attempt }
+    time { 16.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
+  
+    input:
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFVD
+  
+    output:
+    set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into varDictVariantCallingOutput
 
-process VarDict {
-  publishDir "VariantCalling/VarDictJava"
+    """
+    ${params.varDictRoot}/vardict.pl -G ${refs["genomeFile"]} \
+    -f 0.01 -N $bamTumor \
+    -b "$bamTumor|$bamNormal" \
+    -z 1 -F 0x500 \
+    -c 1 -S 2 -E 3 -g 4 \
+    -R ${genInt} > ${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out
+    """
+  }
+  
+  // now we want to collate all the pieces of the VarDict outputs and concatenate the output files
+  // so we can feed them into the somatic filter and the VCF converter
 
-  // ~/dev/VarDictJava/build/install/VarDict/bin/VarDict -G /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta -f 0.1 -N "tiny" -b "tiny.tumor__1.recal.bam|tiny.normal__0.recal.bam" -z 1 -F 0x500 -c 1 -S 2 -E 3 -g 4 -R "1:131941-141339"
-  // we need further filters, but some of the outputs are empty files, confusing the VCF generator script
-
-  module 'bioinfo-tools'
-  module 'java/sun_jdk1.8.0_92'
-  module 'R/3.2.3'
-  module 'gcc/4.9.2'
-  module 'java/sun_jdk1.8.0_40'
-  module 'perl/5.18.4'
-
-  cpus 1
-  memory { 6.GB * task.attempt }
-  time { 16.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
-
-  input:
-  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFVD
-
-  output:
-  set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into varDictVariantCallingOutput
-
-  """
-  ${params.varDictRoot}/vardict.pl -G ${refs["genomeFile"]} \
-  -f 0.01 -N $bamTumor \
-  -b "$bamTumor|$bamNormal" \
-  -z 1 -F 0x500 \
-  -c 1 -S 2 -E 3 -g 4 \
-  -R ${genInt} > ${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out
-  """
+  varDictVariantCallingOutput = logChannelContent("VarDict VCF channel: ",varDictVariantCallingOutput)
+  (varDictVariantCallingOutput ,idPatient, idNormal, idTumor) = getPatientAndSample(varDictVariantCallingOutput)
+  
+  vdFilePrefix = idPatient + "_" + idNormal + "_" + idTumor
+  vdFilesOnly = varDictVariantCallingOutput.map { x -> x.last()}
+  
+  resultsDir = file("${idPatient}.results")
+  resultsDir.mkdir() 
+  
+  process VarDictCollatedVCF {
+    publishDir "VariantCalling/VarDictJava"
+  
+    module 'bioinfo-tools'
+    module 'samtools/1.3'
+    module 'java/sun_jdk1.8.0_92'
+    module 'R/3.2.3'
+    module 'gcc/4.9.2'
+    module 'java/sun_jdk1.8.0_40'
+    module 'perl/5.18.4'
+  
+    cpus 1
+    memory { 16.GB * task.attempt }
+    time { 16.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
+  
+    input:
+    file vdPart from vdFilesOnly.toList()
+  
+    output:
+    file(vdFilePrefix + ".VarDict.vcf")
+  
+    script:
+    """
+    for vdoutput in ${vdPart}
+    do
+      echo
+      cat \$vdoutput | ${params.vardictHome}/testsomatic.R >> testsomatic.out
+    done
+    ${params.vardictHome}/var2vcf_somatic.pl -f 0.01 -N "${vdFilePrefix}" testsomatic.out > ${vdFilePrefix}.VarDict.vcf
+    """
+  }
 }
-
-// now we want to collate all the pieces of the VarDict outputs and concatenate the output files
-// so we can feed them into the somatic filter and the VCF converter
-
-varDictVariantCallingOutput = logChannelContent("VarDict VCF channel: ",varDictVariantCallingOutput)
-(varDictVariantCallingOutput ,idPatient, idNormal, idTumor) = getPatientAndSample(varDictVariantCallingOutput)
-
-vdFilePrefix = idPatient + "_" + idNormal + "_" + idTumor
-vdFilesOnly = varDictVariantCallingOutput.map { x -> x.last()}
-
-resultsDir = file("${idPatient}.results")
-resultsDir.mkdir() 
-
-process VarDictCollatedVCF {
-  publishDir "VariantCalling/VarDictJava"
-
-  module 'bioinfo-tools'
-  module 'samtools/1.3'
-  module 'java/sun_jdk1.8.0_92'
-  module 'R/3.2.3'
-  module 'gcc/4.9.2'
-  module 'java/sun_jdk1.8.0_40'
-  module 'perl/5.18.4'
-
-  cpus 1
-  memory { 16.GB * task.attempt }
-  time { 16.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
-
-  input:
-  file vdPart from vdFilesOnly.toList()
-
-  output:
-  file(vdFilePrefix + ".VarDict.vcf")
-
-  script:
-  """
-  for vdoutput in ${vdPart}
-  do
-    echo
-    cat \$vdoutput | ${params.vardictHome}/testsomatic.R >> testsomatic.out
-  done
-  ${params.vardictHome}/var2vcf_somatic.pl -f 0.01 -N "${vdFilePrefix}" testsomatic.out > ${vdFilePrefix}.VarDict.vcf
-  """
-}
+// we are at the very end, should close all the channels
+bamsForVarDict.empty()
+VarDictIntervals.empty()
+bamsForManta.empty()
 
 /*
 ========================================================================================
