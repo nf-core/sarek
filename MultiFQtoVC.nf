@@ -423,7 +423,6 @@ process CreateIntervals {
   -known $ki \
   -known $mi \
   -nt ${task.cpus} \
-  -L "1:131941-141339" \
   -o ${idPatient}.intervals
   """
 }
@@ -527,7 +526,6 @@ process CreateRecalibrationTable {
   -knownSites ${refs["millsIndels"]} \
   -nct ${task.cpus} \
   -l INFO \
-  -L "1:131941-141339" \
   -o ${idSample}.recal.table
   """
 }
