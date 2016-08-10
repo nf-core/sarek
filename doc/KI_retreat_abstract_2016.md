@@ -6,12 +6,12 @@
 
 ### (Pelin Akan, Teresita Diaz de Ståhl, Jesper Eisfeldt, Szilveszter Juhos, Malin Larsson, Björn Nystedt, Pall Olason, Monica Nistér, Max Käller)
 
-One of the most prominent usage of NGS is whole genome sequencing (WGS). At
-SciLifeLab with the available infrastructure it is possible to produce data for
-normal and tumor sample pairs in a couple of days. However, building a robust
-and reliable bioinformatics workflow to find somatic mutations is challenging:
-tumor samples are heterogeneous, likely contain structural variants and
-multiple sub-clones besides the normal tissue.
+One of the most prominent usage of NGS is whole genome sequencing (WGS). The
+National Genomics Infrastructure at SciLifeLab is today providing WGS and germ
+line variant analysis. However, building a robust and reliable bioinformatics
+workflow to find somatic mutations is challenging: tumor samples are
+heterogeneous, likely contain structural variants and multiple sub-clones
+besides the normal tissue.
 
 We are presenting our workflow that is designed to analyze WGS tumor/normal
 data in a high-throughput environment. The framework is based on the Nextflow
