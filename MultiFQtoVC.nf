@@ -710,7 +710,7 @@ if (params.withVarDict == true) {
     set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into varDictVariantCallingOutput
 
     """
-    ${params.varDictHome}/vardict.pl -G ${refs["genomeFile"]} \
+    ${params.vardictHome}/vardict.pl -G ${refs["genomeFile"]} \
     -f 0.01 -N $bamTumor \
     -b "$bamTumor|$bamNormal" \
     -z 1 -F 0x500 \
@@ -760,7 +760,7 @@ if (params.withVarDict == true) {
     for vdoutput in ${vdPart}
     do
       echo
-      cat \$vdoutput | ${params.varDictHome}/vardict/testsomatic.R >> testsomatic.out
+      cat \$vdoutput | ${params.vardictHome}/vardict/testsomatic.R >> testsomatic.out
     done
     ${params.vardictHome}/var2vcf_somatic.pl -f 0.01 -N "${vdFilePrefix}" testsomatic.out > ${vdFilePrefix}.VarDict.vcf
     """
