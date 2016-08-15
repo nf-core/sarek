@@ -771,7 +771,7 @@ if (params.withVarDict == true) {
 }
 
 if (params.withStrelka == true) {
-
+  bamsForStrelka = logChannelContent("Bam for Strelka: ", bamsForStrelka)
   process RunStrelka {
     publishDir "VariantCalling/Strelka"
 
