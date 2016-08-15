@@ -850,12 +850,12 @@ if( params.withManta == true ) {
 }
 
 // we are at the very end, should close all the channels
-bamsForMuTect2.empty()
-muTect2Intervals.empty()
-bamsForVarDict.empty()
-varDictIntervals.empty()
-bamsForManta.empty()
-bamsForStrelka.empty()
+bamsForMuTect2.close()
+muTect2Intervals.close()
+bamsForVarDict.close()
+varDictIntervals.close()
+bamsForManta.close()
+bamsForStrelka.close()
 
 /*
 ========================================================================================
