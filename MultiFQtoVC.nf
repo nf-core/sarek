@@ -787,7 +787,8 @@ if (params.withStrelka == true) {
 
     input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFSTR
-    file refs["genomeFile"]
+    file (${params.strelkaGENOM})
+    file (${params.strelkaINDEX})
 
     output:
     set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into strelkaVariantCallingOutput
