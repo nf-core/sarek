@@ -610,7 +610,7 @@ bamsForStrelka = Channel.create()
 
 Channel
   .from bamsAll
-  .separate(bamsForMuTect2, bamsForVarDict, bamsForManta, bamsForStrelka) {a -> [a, a, a]}
+  .separate(bamsForMuTect2, bamsForVarDict, bamsForManta, bamsForStrelka) {a -> [a, a, a, a]}
 
 // define intervals file by --intervals
 intervalsFile = file(params.intervals)
@@ -790,7 +790,7 @@ if (params.withStrelka == true) {
     file refs["genomeFile"]
 
     output:
-    set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into StrelkaVariantCallingOutput
+    set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into strelkaVariantCallingOutput
 
     """
     ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
@@ -805,7 +805,7 @@ if (params.withStrelka == true) {
     make -j 16
     """
   }
-  StrelkaVariantCallingOutput = logChannelContent("Strelka output: ", StrelkaVariantCallingOutput)
+  strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
 }
 
 if( params.withManta == true ) {
