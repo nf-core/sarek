@@ -627,11 +627,10 @@ gI = intervals
 
 muTect2Intervals = Channel.create()
 varDictIntervals = Channel.create()
-strelkaIntervals = Channel.create()
 
 Channel
   .from gI
-  .separate (muTect2Intervals, varDictIntervals, strelkaIntervals) {a -> [a, a, a]}
+  .separate (muTect2Intervals, varDictIntervals) {a -> [a, a]}
 
 // now add genomic intervals to the sample information
 // join [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] and ["1:1-2000","1_1-2000"] 
@@ -774,9 +773,6 @@ if (params.withVarDict == true) {
 
 if (params.withStrelka == true) {
 
-  bamsFSTR = bamsForStrelka.spread(strelkaIntervals)
-  bamsFSTR = logChannelContent("Bams for Strelka: ", bamsFSTR)
-
   process RunStrelka {
     publishDir "VariantCalling/Strelka"
 
@@ -790,7 +786,7 @@ if (params.withStrelka == true) {
     maxErrors '-1'
 
     input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFSTR
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForStrelka
     file (${params.strelkaGENOM})
     file (${params.strelkaINDEX})
 
