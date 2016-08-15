@@ -637,44 +637,48 @@ Channel
 // join [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] and ["1:1-2000","1_1-2000"] 
 // and make a line for each interval
 
-bamsFMT2 = bamsForMuTect2.spread(muTect2Intervals)
-bamsFMT2 = logChannelContent("Bams for Mutect2: ", bamsFMT2)
+if (params.withMutect2 == true) {
 
-process RunMutect2 {
-  publishDir "VariantCalling/MuTect2"
+  bamsFMT2 = bamsForMuTect2.spread(muTect2Intervals)
+  bamsFMT2 = logChannelContent("Bams for Mutect2: ", bamsFMT2)
 
-  module 'bioinfo-tools'
-  module 'java/sun_jdk1.8.0_92'
+  process RunMutect2 {
+    publishDir "VariantCalling/MuTect2"
 
-  cpus 8 
-  memory { 16.GB * task.attempt }
-  time { 16.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
+    module 'bioinfo-tools'
+    module 'java/sun_jdk1.8.0_92'
 
-  input:
-  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
+    cpus 8 
+    memory { 16.GB * task.attempt }
+    time { 16.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
 
-  output:
-  set idPatient, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf") into mutectVariantCallingOutput
-  
-  // we are using MuTect2 shipped in GATK v3.6
-  """
-  java -Xmx${task.memory.toGiga()}g -jar ${params.mutect2Home}/GenomeAnalysisTK.jar \
-  -T MuTect2 \
-  -nct ${task.cpus} \
-  -R ${refs["genomeFile"]} \
-  --cosmic ${refs["cosmic"]} \
-  --dbsnp ${refs["dbsnp"]} \
-  -I:normal $bamNormal \
-  -I:tumor $bamTumor \
-  -L \"${genInt}\" \
-  -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf
-  """
+    input:
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
+
+    output:
+    set idPatient, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf") into mutectVariantCallingOutput
+    
+    // we are using MuTect2 shipped in GATK v3.6
+    """
+    java -Xmx${task.memory.toGiga()}g -jar ${params.mutect2Home}/GenomeAnalysisTK.jar \
+    -T MuTect2 \
+    -nct ${task.cpus} \
+    -R ${refs["genomeFile"]} \
+    --cosmic ${refs["cosmic"]} \
+    --dbsnp ${refs["dbsnp"]} \
+    -I:normal $bamNormal \
+    -I:tumor $bamTumor \
+    -L \"${genInt}\" \
+    -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf
+    """
+  }
+
+  mutectVariantCallingOutput = logChannelContent("Mutect2 output: ", mutectVariantCallingOutput)
 }
 
-mutectVariantCallingOutput = logChannelContent("Mutect2 output: ", mutectVariantCallingOutput)
 // TODO: merge call output
 
 if (params.withVarDict == true) {
