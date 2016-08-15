@@ -423,6 +423,7 @@ process CreateIntervals {
   -known $ki \
   -known $mi \
   -nt ${task.cpus} \
+	-L 1:130738-143733 \
   -o ${idPatient}.intervals
   """
 }
@@ -587,7 +588,7 @@ bamsNormal = logChannelContent("Normal Bam for variant Calling: ", bamsNormal)
 bamsAll = Channel.create()
 bamsAll = bamsNormal.spread(bamsTumor)
 
-// [maxime] Since idPatientNormal and idPatientTumor are the same, I'm removing it from BamsAll Channel
+// Since idPatientNormal and idPatientTumor are the same, I'm removing it from BamsAll Channel
 // I don't think a groupTuple can be used to do that, but it could be a good idea to look if there is a nicer way to do that
 
 bamsAll = bamsAll.map {
@@ -597,9 +598,9 @@ bamsAll = bamsAll.map {
 
 bamsAll = logChannelContent("Mapped Recalibrated Bam for variant Calling: ", bamsAll)
 
-// [Szilva] We know that MuTect2 (and other somatic callers) are notoriously slow. To speed them up we are chopping the reference into 
+// We know that MuTect2 (and other somatic callers) are notoriously slow. To speed them up we are chopping the reference into 
 // smaller pieces at centromeres (see repeates/centromeres.list), do variant calling by this intervals, and re-merge the VCFs.
-// Since we are on a cluster, this can parallelize the variant call process, and push down the MuTect2 waiting time significanlty (1/10)
+// Since we are on a cluster, this can parallelize the variant call process, and push down the variant call wall clock time significanlty.
 
 // first create channels for each variant caller
 bamsForMuTect2 = Channel.create()
@@ -677,7 +678,7 @@ bamsFMT2 = bamsForMuTect2.spread(MuTect2Intervals)
 bamsFMT2 = logChannelContent("Bams for Mutect2: ", bamsFMT2)
 
 process RunMutect2 {
-  publishDir "VariantCalling/MuTect2"
+  publishDir "VariantCalling/MuTect2/intervals"
 
   module 'bioinfo-tools'
   module 'java/sun_jdk1.8.0_92'
@@ -693,7 +694,7 @@ process RunMutect2 {
   set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
 
   output:
-  set idPatient, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf") into mutectVariantCallingOutput
+  set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf") into mutect2VariantCallingOutput
   
   // we are using MuTect2 shipped in GATK v3.6
   """
@@ -710,8 +711,51 @@ process RunMutect2 {
   """
 }
 
-mutectVariantCallingOutput = logChannelContent("Mutect2 output: ", mutectVariantCallingOutput)
-// TODO: merge call output
+// we are expecting one patient, one normal, and usually one, but occasionally more than one tumor
+// samples (i.e. relapses). The actual calls are always related to the normal, but spread across
+// different intervals. So, we have to collate (merge) intervals for each tumor case if there are
+// more than one. Therefore, what we want to do is to filter the multiple tumor cases into separate 
+// channels and collate them according to their stage.
+mutect2VariantCallingOutput = logChannelContent("Mutect2 output: ", mutect2VariantCallingOutput)
+filesToCollate = mutect2VariantCallingOutput.groupTuple(by: 2).map { 
+																x ->  [
+																	x[0].get(0),	// the patient ID
+																	x[1].get(0),	// ID of the normal sample 
+																	x[2],					// ID of the tumor sample (primary, relapse, whatever)
+																	x[4]					// list of VCF files
+																 ]
+															}
+
+// we have to separate IDs and files
+collatedIDs = Channel.create()
+collatedFiles = Channel.create()
+tumorEntries = Channel.create()
+Channel
+	.from filesToCollate
+	.separate(collatedIDs, collatedFiles, tumorEntries) {x -> [ x, [x[0],x[1],x[2]], x[2] ]}
+
+(idPatient, idNormal) = getPatientAndNormalIDs(collatedIDs)
+println "Patient's ID: " + idPatient
+println "Normal ID: " + idNormal
+pd = "VariantCalling/MuTect2"
+process concatFiles {
+	publishDir = pd
+
+	input:
+	set idT from tumorEntries
+
+	output:
+	file "XX_*MuTect2.vcf"
+
+	script:
+	"""
+	for f in ${workflow.launchDir}/${pd}/intervals/*${idT}*vcf
+	do 
+		cat \$f >> "XX_${idPatient}_${idNormal}_${idT}.MuTect2.vcf"
+	done
+	"""
+}
+
 
 if (params.withVarDict == true) {
 // we are doing the same trick for VarDictJava: running for the whole reference is a PITA, so we are chopping at repeats
@@ -803,9 +847,9 @@ if (params.withVarDict == true) {
   }
 }
 // we are at the very end, should close all the channels
-bamsForVarDict.empty()
-VarDictIntervals.empty()
-bamsForManta.empty()
+bamsForVarDict.close()
+VarDictIntervals.close()
+bamsForManta.close()
 
 /*
 ========================================================================================
@@ -868,36 +912,51 @@ def logChannelContent (aMessage, aChannel) {
 }
 
 def getPatientAndSample(aCh) {
-    consCh = Channel.create()
-    originalCh = Channel.create()
 
-    // get the patient ID
-    // duplicate channel to get sample name
-    Channel.from aCh.separate(consCh,originalCh) {x -> [x,x]} 
+	aCh = logChannelContent("Channel content: ", aCh)
+  patientsCh = Channel.create()
+  normalCh = Channel.create()
+  tumorCh = Channel.create()
+  originalCh = Channel.create()
 
-    // use the "consumed" channel to get it
-    // we are assuming the first column is the same for the patient, as hoping 
-    // people do not want to compare samples from differnet patients
-    idPatient = consCh.map { x -> [x.get(0)]}.unique().getVal()[0] 
-	// we have to close to make sure remainding items are not 
-	consCh.close()
+  // get the patient ID
+  // duplicate channel to get sample name
+  Channel.from aCh.separate(patientsCh, normalCh, tumorCh, originalCh) {x -> [x,x,x,x]} 
 
-    // similar procedure for the normal sample name
-    normalCh = Channel.create()
-	normalOrigCh = Channel.create()
-    
-    Channel.from originalCh.separate(normalCh,normalOrigCh) {x -> [x,x]} 
-    idNormal = normalCh.map { x -> [x.get(1)]}.unique().getVal()[0]  
+  // consume the patiensCh channel to get the patient's ID
+  // we are assuming the first column is the same for the patient, as hoping 
+  // people do not want to compare samples from differnet patients
+  idPatient = patientsCh.map { x -> [x.get(0)]}.unique().getVal()[0]
+	// we have to close to make sure remainding items are not waiting
+	patientsCh.close()
+
+  idNormal = normalCh.map { x -> [x.get(1)]}.unique().getVal()[0]  
 	normalCh.close()
 
-    // ditto for the tumor
-	tumorCh = Channel.create()
-	tumorOrigCh = Channel.create()
-
-    Channel.from normalOrigCh.separate(tumorCh,tumorOrigCh) {x -> [x,x]} 
-    idTumor = tumorCh.map { x -> [x.get(2)]}.unique().getVal()[0]  
+  idTumor = tumorCh.map { x -> [x.get(2)]}.unique().getVal()[0]  
 	tumorCh.close()
 
-    return [ tumorOrigCh, idPatient, idNormal, idTumor]
+  return [ originalCh, idPatient, idNormal, idTumor]
 }
 
+// TODO: merge the VarDict and the MuTect2 part
+def getPatientAndNormalIDs(aCh) {
+  patientsCh = Channel.create()
+  normalCh = Channel.create()
+
+  // get the patient ID
+  // multiple the channel to get sample name
+  Channel.from aCh.separate(patientsCh, normalCh) {x -> [x,x]} 
+
+  // consume the patiensCh channel to get the patient's ID
+  // we are assuming the first column is the same for the patient, as hoping 
+  // people do not want to compare samples from differnet patients
+  idPatient = patientsCh.map { x -> [x.get(0)]}.unique().getVal()[0]
+	// we have to close to make sure remainding items are not waiting
+	patientsCh.close()
+	// something similar for the normal ID
+  idNormal = normalCh.map { x -> [x.get(1)]}.unique().getVal()[0]  
+	normalCh.close()
+
+	return [idPatient, idNormal]
+}
