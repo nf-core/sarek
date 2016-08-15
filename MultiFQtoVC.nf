@@ -918,35 +918,35 @@ def logChannelContent (aMessage, aChannel) {
 }
 
 def getPatientAndSample(aCh) {
-    consCh = Channel.create()
-    originalCh = Channel.create()
+  consCh = Channel.create()
+  originalCh = Channel.create()
 
-    // get the patient ID
-    // duplicate channel to get sample name
-    Channel.from aCh.separate(consCh,originalCh) {x -> [x,x]} 
+  // get the patient ID
+  // duplicate channel to get sample name
+  Channel.from aCh.separate(consCh,originalCh) {x -> [x,x]}
 
-    // use the "consumed" channel to get it
-    // we are assuming the first column is the same for the patient, as hoping 
-    // people do not want to compare samples from differnet patients
-    idPatient = consCh.map { x -> [x.get(0)]}.unique().getVal()[0] 
+  // use the "consumed" channel to get it
+  // we are assuming the first column is the same for the patient, as hoping 
+  // people do not want to compare samples from differnet patients
+  idPatient = consCh.map { x -> [x.get(0)]}.unique().getVal()[0]
   // we have to close to make sure remainding items are not 
   consCh.close()
 
-    // similar procedure for the normal sample name
-    normalCh = Channel.create()
+  // similar procedure for the normal sample name
+  normalCh = Channel.create()
   normalOrigCh = Channel.create()
     
-    Channel.from originalCh.separate(normalCh,normalOrigCh) {x -> [x,x]} 
-    idNormal = normalCh.map { x -> [x.get(1)]}.unique().getVal()[0]  
+  Channel.from originalCh.separate(normalCh,normalOrigCh) {x -> [x,x]}
+  idNormal = normalCh.map { x -> [x.get(1)]}.unique().getVal()[0]
   normalCh.close()
 
-    // ditto for the tumor
+  // ditto for the tumor
   tumorCh = Channel.create()
   tumorOrigCh = Channel.create()
 
-    Channel.from normalOrigCh.separate(tumorCh,tumorOrigCh) {x -> [x,x]} 
-    idTumor = tumorCh.map { x -> [x.get(2)]}.unique().getVal()[0]  
+  Channel.from normalOrigCh.separate(tumorCh,tumorOrigCh) {x -> [x,x]}
+  idTumor = tumorCh.map { x -> [x.get(2)]}.unique().getVal()[0]
   tumorCh.close()
 
-    return [ tumorOrigCh, idPatient, idNormal, idTumor]
+  return [ tumorOrigCh, idPatient, idNormal, idTumor]
 }
