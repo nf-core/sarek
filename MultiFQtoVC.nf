@@ -770,43 +770,41 @@ if (params.withVarDict == true) {
   }
 }
 
-if (params.withStrelka == true) {
-  bamsForStrelka = logChannelContent("Bam for Strelka: ", bamsForStrelka)
-  process RunStrelka {
-    publishDir "VariantCalling/Strelka"
+bamsForStrelka = logChannelContent("Bam for Strelka: ", bamsForStrelka)
+process RunStrelka {
+  publishDir "VariantCalling/Strelka"
 
-    module 'bioinfo-tools'
+  module 'bioinfo-tools'
 
-    cpus 1
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-    maxRetries 3
-    maxErrors '-1'
+  cpus 1
+  memory { 16.GB * task.attempt }
+  time { 16.h * task.attempt }
+  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+  maxRetries 3
+  maxErrors '-1'
 
-    input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForStrelka
-    file (${params.strelkaGENOM})
-    file (${params.strelkaINDEX})
+  input:
+  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForStrelka
+  file (${params.strelkaGENOM})
+  file (${params.strelkaINDEX})
 
-    output:
-    set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into strelkaVariantCallingOutput
+  output:
+  set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into strelkaVariantCallingOutput
 
-    """
-    ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
-    --tumor ${bamTumor} \
-    --normal ${bamNormal} \
-    --ref ${params.strelkaGENOM} \
-    --config ${params.strelkaCFG} \
-    --output-dir strelka_test
+  """
+  ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
+  --tumor ${bamTumor} \
+  --normal ${bamNormal} \
+  --ref ${params.strelkaGENOM} \
+  --config ${params.strelkaCFG} \
+  --output-dir strelka_test
 
-    cd strelka_test
+  cd strelka_test
 
-    make -j 16
-    """
-  }
-  strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
+  make -j 16
+  """
 }
+strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
 
 if( params.withManta == true ) {
   process Manta {
