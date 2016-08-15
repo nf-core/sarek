@@ -616,7 +616,7 @@ Channel
 intervalsFile = file(params.intervals)
 
 intervals = Channel
-    .from(intervalsFile.readLines())
+  .from(intervalsFile.readLines())
 
 // in fact we need two channels: one for the actual genomic region, and an other for names
 // without ":", as nextflow is not happy with them (will report as a failed process).
