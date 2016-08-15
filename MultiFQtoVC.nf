@@ -796,7 +796,7 @@ if (params.withStrelka == true) {
     ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
     --tumor ${bamTumor} \
     --normal ${bamNormal} \
-    --ref ${params.genome} \
+    --ref ${params.strelkaGENOM} \
     --config ${params.strelkaCFG} \
     --output-dir strelka_test
 
