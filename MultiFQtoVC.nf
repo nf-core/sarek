@@ -677,8 +677,8 @@ if (params.withMutect2 == true) {
 
   mutectVariantCallingOutput = logChannelContent("Mutect2 output: ", mutectVariantCallingOutput)
 } else {
-  bamsForMuTect2.empty()
-  muTect2Intervals.empty()
+  bamsForMuTect2.close()
+  muTect2Intervals.close()
 }
 
 // TODO: merge call output
@@ -772,8 +772,8 @@ if (params.withVarDict == true) {
     """
   }
 } else {
-  bamsForVarDict.empty()
-  varDictIntervals.empty()
+  bamsForVarDict.close()
+  varDictIntervals.close()
 }
 
 if (params.withStrelka == true) {
@@ -815,7 +815,7 @@ if (params.withStrelka == true) {
   }
   strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
 } else {
-  bamsForStrelka.empty()
+  bamsForStrelka.close()
 }
 
 if( params.withManta == true ) {
@@ -858,7 +858,7 @@ if( params.withManta == true ) {
   }
   mantaVariantCallingOutput = logChannelContent("Manta output: ", mantaVariantCallingOutput)
 } else {
-  bamsForManta.empty()
+  bamsForManta.close()
 }
 
 /*
