@@ -143,7 +143,9 @@ refs = [
   "millsIndex":   params.millsIndex,  // Mill's Golden set index
   "sample":       params.sample,      // the sample sheet (multilane data refrence table, see below)
   "cosmic":       params.cosmic,      // cosmic vcf file
-  "intervals":    params.intervals    // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
+  "intervals":    params.intervals,    // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
+  "MantaRef":     params.mantaRef,     //copy of the genome reference file 
+  "MantaIndex":   params.mantaIndex   //reference index indexed with samtools/0.1.19
 ]
 
 refs.each(CheckExistence)
@@ -820,9 +822,6 @@ if (params.withStrelka == true) {
 
 if( params.withManta == true ) {
   process Manta {
-    publishDir "VariantCalling/Manta"
-
-    //About mantas - http://www.mantarayshawaii.com/birostris.html
     module 'bioinfo-tools'
     module 'manta/0.27.1'
     module 'samtools/0.1.19'
@@ -830,14 +829,16 @@ if( params.withManta == true ) {
     cpus 8
 
     input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
+        file refs["MantaRef"]
+        file refs["MantaIndex"]
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
     
     output:
-    set idPatient, val("${idSampleNormal}_${idSampleTumor}"), file("${idSampleNormal}_${idSampleTumor}.somaticSV.vcf"), file("${idSampleNormal}_${idSampleTumor}.candidateSV.vcf"), file("${idSampleNormal}_${idSampleTumor}.diploidSV.vcf"), file("${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf")  into mantaVariantCallingOutput
+       set idPatient, val("${idSampleNormal}_${idSampleTumor}"),file("${idSampleNormal}_${idSampleTumor}.somaticSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.diploidSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf")  into mantaVariantCallingOutput
 
-    // NOTE: Manta is very picky about naming and reference indexes, the input bam should not contain too many _
-    // and the reference index must be generated using a supported samtools version.
-    // Moreover, the bam index must be named .bam.bai, otherwise it will not be recognized
+
+    //NOTE: Manta is very picky about naming and reference indexes, the input bam should not contain too many _ and the reference index must be generated using a supported samtools version.
+    //Moreover, the bam index must be named .bam.bai, otherwise it will not be recognized
 
     """
     mv ${bamNormal} Normal.bam
@@ -846,9 +847,7 @@ if( params.withManta == true ) {
     mv ${baiNormal} Normal.bam.bai
     mv ${baiTumor} Tumor.bam.bai
 
-    ln -s ${refs["genomeFile"]} reference.fasta
-    samtools faidx reference.fasta
-    configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference reference.fasta --runDir MantaDir
+    configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference ${refs["MantaRef"]} --runDir MantaDir
     python MantaDir/runWorkflow.py -m local -j 8
     gunzip -c MantaDir/results/variants/somaticSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.somaticSV.vcf
     gunzip -c MantaDir/results/variants/candidateSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSV.vcf
