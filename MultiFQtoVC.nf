@@ -676,6 +676,9 @@ if (params.withMutect2 == true) {
   }
 
   mutectVariantCallingOutput = logChannelContent("Mutect2 output: ", mutectVariantCallingOutput)
+} else {
+  bamsForMuTect2.empty()
+  muTect2Intervals.empty()
 }
 
 // TODO: merge call output
@@ -768,6 +771,9 @@ if (params.withVarDict == true) {
     ${params.vardictHome}/var2vcf_somatic.pl -f 0.01 -N "${vdFilePrefix}" testsomatic.out > ${vdFilePrefix}.VarDict.vcf
     """
   }
+} else {
+  bamsForVarDict.empty()
+  varDictIntervals.empty()
 }
 
 if (params.withStrelka == true) {
@@ -808,6 +814,8 @@ if (params.withStrelka == true) {
     """
   }
   strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
+} else {
+  bamsForStrelka.empty()
 }
 
 if( params.withManta == true ) {
@@ -849,15 +857,9 @@ if( params.withManta == true ) {
     """
   }
   mantaVariantCallingOutput = logChannelContent("Manta output: ", mantaVariantCallingOutput)
+} else {
+  bamsForManta.empty()
 }
-
-// we are at the very end, should close all the channels
-bamsForMuTect2.empty()
-muTect2Intervals.empty()
-bamsForVarDict.empty()
-varDictIntervals.empty()
-bamsForManta.empty()
-bamsForStrelka.empty()
 
 /*
 ========================================================================================
