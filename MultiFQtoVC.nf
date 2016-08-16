@@ -768,7 +768,7 @@ if (params.withVarDict == true) {
       echo
       cat \$vdoutput | ${params.vardictHome}/VarDict/testsomatic.R >> testsomatic.out
     done
-    ${params.vardictHome}/var2vcf_somatic.pl -f 0.01 -N "${vdFilePrefix}" testsomatic.out > ${vdFilePrefix}.VarDict.vcf
+    ${params.vardictHome}/VarDict/var2vcf_somatic.pl -f 0.01 -N "${vdFilePrefix}" testsomatic.out > ${vdFilePrefix}.VarDict.vcf
     """
   }
 } else {
