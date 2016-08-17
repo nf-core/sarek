@@ -635,7 +635,7 @@ strelkaIntervals = Channel.create()
 
 Channel
   .from gI
-  .separate (muTect2Intervals, varDictIntervals) {a -> [a, a, a]}
+  .separate (muTect2Intervals, varDictIntervals, strelkaIntervals) {a -> [a, a, a]}
 
 // now add genomic intervals to the sample information
 // join [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] and ["1:1-2000","1_1-2000"] 
