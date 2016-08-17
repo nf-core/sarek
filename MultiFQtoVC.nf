@@ -813,6 +813,7 @@ if (params.withStrelka == true) {
     --tumor ${bamTumor} \
     --normal ${bamNormal} \
     --ref ${refs["strelkaGENOM"]} \
+    --config ${params.strelkaCFG} \
     --output-dir strelka
 
     cd strelka
