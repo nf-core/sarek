@@ -783,10 +783,8 @@ if (params.withVarDict == true) {
 
 if (params.withStrelka == true) {
 
-  println "In withStrelka if block"
-
   bamsFSTR = bamsForStrelka.spread(strelkaIntervals)
-  bamsFSTR = logChannelContent("Bams for Strelka: ", bamsFSTR)
+  bamsFSTR = logChannelContent("Bams with Intervals for Strelka: ", bamsFSTR)
 
   process RunStrelka {
     publishDir "VariantCalling/Strelka"
@@ -823,7 +821,7 @@ if (params.withStrelka == true) {
   strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
 } else {
 
-  println "In withStrelka else block"
+  bamsForStrelka = logChannelContent("Bams for Strelka: ", bamsForStrelka)
 
   bamsForStrelka.close()
   strelkaIntervals.close()
