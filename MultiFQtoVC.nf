@@ -806,17 +806,16 @@ if (params.withStrelka == true) {
     file refs["strelkaINDEX"]
 
     output:
-    set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into strelkaVariantCallingOutput
+    sed idPatient, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("*.vcf") into strelkaVariantCallingOutput
 
     """
     ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
     --tumor ${bamTumor} \
     --normal ${bamNormal} \
     --ref ${refs["strelkaGENOM"]} \
-    --config ${params.strelkaCFG} \
-    --output-dir strelka_test
+    --output-dir strelka
 
-    cd strelka_test
+    cd strelka
 
     make -j 16
     """
