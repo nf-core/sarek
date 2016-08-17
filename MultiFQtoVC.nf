@@ -783,6 +783,11 @@ if (params.withVarDict == true) {
 
 if (params.withStrelka == true) {
 
+  text = Channel.from(
+    "CANCER ANALYSIS WORKFLOW",
+    "  In withStrelka if block")
+  text.subscribe { println "$it" }
+
   bamsFSTR = bamsForStrelka.spread(strelkaIntervals)
   bamsFSTR = logChannelContent("Bams for Strelka: ", bamsFSTR)
 
@@ -821,6 +826,10 @@ if (params.withStrelka == true) {
   }
   strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
 } else {
+  text = Channel.from(
+    "CANCER ANALYSIS WORKFLOW",
+    "  In withStrelka else block")
+  text.subscribe { println "$it" }
   bamsForStrelka.close()
 }
 
