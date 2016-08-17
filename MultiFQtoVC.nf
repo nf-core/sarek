@@ -830,7 +830,9 @@ if (params.withStrelka == true) {
     "CANCER ANALYSIS WORKFLOW",
     "  In withStrelka else block")
   text.subscribe { println "$it" }
+
   bamsForStrelka.close()
+  strelkaIntervals.close()
 }
 
 if( params.withManta == true ) {
