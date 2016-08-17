@@ -132,20 +132,22 @@ CheckExistence = {
 }
 
 refs = [
-  "genomeFile":   params.genome,      // genome reference
-  "genomeIndex":  params.genomeIndex, // genome reference index
-  "genomeDict":   params.genomeDict,  // genome reference dictionary
-  "kgIndels":     params.kgIndels,    // 1000 Genomes SNPs
-  "kgIndex":      params.kgIndex,     // 1000 Genomes SNPs index
-  "dbsnp":        params.dbsnp,       // dbSNP
-  "dbsnpIndex":   params.dbsnpIndex,  // dbSNP index
-  "millsIndels":  params.millsIndels, // Mill's Golden set of SNPs
-  "millsIndex":   params.millsIndex,  // Mill's Golden set index
-  "sample":       params.sample,      // the sample sheet (multilane data refrence table, see below)
-  "cosmic":       params.cosmic,      // cosmic vcf file
+  "genomeFile":   params.genome,       // genome reference
+  "genomeIndex":  params.genomeIndex,  // genome reference index
+  "genomeDict":   params.genomeDict,   // genome reference dictionary
+  "kgIndels":     params.kgIndels,     // 1000 Genomes SNPs
+  "kgIndex":      params.kgIndex,      // 1000 Genomes SNPs index
+  "dbsnp":        params.dbsnp,        // dbSNP
+  "dbsnpIndex":   params.dbsnpIndex,   // dbSNP index
+  "millsIndels":  params.millsIndels,  // Mill's Golden set of SNPs
+  "millsIndex":   params.millsIndex,   // Mill's Golden set index
+  "sample":       params.sample,       // the sample sheet (multilane data refrence table, see below)
+  "cosmic":       params.cosmic,       // cosmic vcf file
   "intervals":    params.intervals,    // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
-  "MantaRef":     params.mantaRef,     //copy of the genome reference file 
-  "MantaIndex":   params.mantaIndex   //reference index indexed with samtools/0.1.19
+  "MantaRef":     params.mantaRef,     // copy of the genome reference file 
+  "MantaIndex":   params.mantaIndex,   // reference index indexed with samtools/0.1.19
+  "strelkaGENOM": params.strelkaGENOM, // genome reference 
+  "strelkaINDEX": params.strelkaINDEX  // reference index
 ]
 
 refs.each(CheckExistence)
@@ -798,8 +800,8 @@ if (params.withStrelka == true) {
 
     input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFSTR
-    file ${params.strelkaGENOM}
-    file ${params.strelkaINDEX}
+    file refs["strelkaGENOM"]
+    file refs["strelkaINDEX"]
 
     output:
     set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into strelkaVariantCallingOutput
@@ -808,7 +810,7 @@ if (params.withStrelka == true) {
     ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
     --tumor ${bamTumor} \
     --normal ${bamNormal} \
-    --ref ${params.strelkaGENOM} \
+    --ref ${refs["strelkaGENOM"]} \
     --config ${params.strelkaCFG} \
     --output-dir strelka_test
 
