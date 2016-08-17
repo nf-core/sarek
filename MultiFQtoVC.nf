@@ -783,6 +783,8 @@ if (params.withVarDict == true) {
 
 if (params.withStrelka == true) {
 
+  bamsForStrelka = logChannelContent("Bams for Strelka: ", bamsForStrelka)
+  strelkaIntervals = logChannelContent("Intervals for Strelka: ", strelkaIntervals)
   bamsFSTR = bamsForStrelka.spread(strelkaIntervals)
   bamsFSTR = logChannelContent("Bams with Intervals for Strelka: ", bamsFSTR)
 
