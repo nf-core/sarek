@@ -16,7 +16,7 @@
 \begin{itemize}
 	\item Which parts are ready so far?
 	\item Things waiting to be completed
-	\item Abandonned parts
+	\item Abandoned parts
 	\item Yet to come
 \end{itemize}
 \end{frame}
@@ -34,12 +34,12 @@ Sub-sets for each step as pre-processing, variant call, structural variants, ann
 \begin{block}{Now we have}
 	Actual directories containing data, variant calls and alignment files
 
-	But it is still in the benchmarking phase
+	Still in the benchmarking phase
 \end{block}
 \begin{block}{First benchmarking: TCGA DREAM challenge}
 	\begin{itemize}
 		\item Three phases, gradually more difficult to do variant call
-		\item Set of tumor/normal contamination ratios
+		\item Set of tumour/normal contamination ratios
 		\item ''Gold standard'' of somatic variant calls
 		\item It is still a simulated somatic mutation set, not real data
 	\end{itemize}
@@ -60,7 +60,7 @@ There are other real data cases to benchmark against, but first we are have to g
 \begin{block}{Installing}
 	\begin{itemize}
 		\item it took $\sim$2 days to set up everything from scratch
-		\item on UPPMAX the actual config should should work - to be honest you need some tweaking on irma
+		\item on UPPMAX the actual configuration should should work - to be honest you need some tweaking on irma
 		\item Setting up things on a cluster from scratch: tried on a simple emulated case, it is more or less the same as on a single big machine
 		\item \alert{Storage is and will be an issue more than CPU time}
 	\end{itemize}
@@ -72,7 +72,7 @@ There are other real data cases to benchmark against, but first we are have to g
 \begin{block}{Keeping an eye on Broad's workflow}
 	\begin{itemize}
 		\item Preprocessing: GATK best practices - originally only the WGS practices were followed, but our schema is pretty like the recent GATK somatic flow
-		\item Not only tumor/normal, but relapse or additional stages are included
+		\item Not only tumour/normal, but relapse or additional stages are included
 	\end{itemize}
 \end{block}
 \begin{block}{Spread and gather:}
@@ -156,6 +156,16 @@ It will be still resource-hungry
 \end{frame}
 
 \begin{frame}
+\frametitle{Structural Variants - 10X Chromium}
+\includegraphics[width=1.0\linewidth]{multi-megabase-phase-blocks-large.jpg}
+\end{frame}
+
+\begin{frame}
+\frametitle{Structural Variants}
+\includegraphics[width=1.0\linewidth]{10x_chromium_1st_run.png}
+\end{frame}
+
+\begin{frame}
 \frametitle{Purity, ploidy and CNVs}
 \begin{block}{ASCAT}
 	It is working separately, but not integrated into the workflow yet.
@@ -164,7 +174,7 @@ It will be still resource-hungry
 	
 	Adds important numbers about:
 	\begin{itemize}
-		\item tumor purity
+		\item tumour purity
 		\item average ploidy
 		\item ploidy for individual chromosomes
 		\item allele-specific copy numbers
@@ -178,7 +188,7 @@ It will be still resource-hungry
 	\item Which parts are ready so far?
 		\begin{itemize}
 			\item Preprocessing
-			\item Normal / Tumor / Relapse steps
+			\item Normal / Tumour / Relapse steps
 			\item Dealing with read groups
 			\item MuTect2 (and VarDict if you have enough memory)
 		\end{itemize}
@@ -189,7 +199,7 @@ It will be still resource-hungry
 			\item Manta (ready but not tested thoroughly)
 			\item merging results
 		\end{itemize}
-	\item Abandonned parts
+	\item Abandoned parts
 		\begin{itemize}
 			\item Many potential variant callers
 		\end{itemize}
@@ -200,6 +210,46 @@ It will be still resource-hungry
 			\item Data mining / AI / SVM to eliminate false positives
 		\end{itemize}
 \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{The Alphabetical List}
+\begin{itemize}
+	\item Jesper Eisfeldt
+	\item Maxime Garcia 
+	\item Szilveszter Juhos 
+	\item Max Käller
+	\item Malin Larsson
+	\item Björn Nystedt 
+	\item Pall Olason
+	\item Pelin Sahlen
+	\item Teresita Díaz De Ståhl
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Short-term TODO}
+	\begin{itemize}
+		\item Make the GitHub repository public, so everybody can follow what is going on
+		\item Survey storage usage: storage is already an issue, likely we have to implement something that cleans up previous steps
+		\item Germline variants: these are already shipped in the standard NGI pipeline, and it should be "trivial" to add
+		\item MuTect2 in DREAM challenge: have to look up how it performs
+		\item Strelka and MuTect1 as default variant callers
+	\end{itemize} 
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Longer-term TODO}
+	\begin{itemize}
+		\item Benchmark Manta
+		\item Malin is going to give a long presentation about ASCAT and related software on Tue, 13th Sept 13:00 in Alpha 3 Big (room booked)
+		\item Add ASCAT as a module to the workflow
+		\item Merge variant calls from different callers into a singe result file
+		\item Go through all the TCGA DREAM challenge benchmarking steps S1, S2, S3
+		\item We are expecting that for the next review we have benchmark data and some real data processed
+		\item Next meeting in Thu, 13th Oct. 10:00 Alpha 3 Big (room booked)
+	\end{itemize}
 \end{frame}
 
 \end{document}
