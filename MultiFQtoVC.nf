@@ -741,19 +741,32 @@ pd = "VariantCalling/MuTect2"
 process concatFiles {
 	publishDir = pd
 
+	module 'bioinfo-tools'
+	module 'java/sun_jdk1.8.0_92'
+
+	cpus 8 
+	memory { 16.GB * task.attempt }
+	time { 16.h * task.attempt }
+	errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+	maxRetries 3
+	maxErrors '-1'
+
 	input:
 	set idT from tumorEntries
 
 	output:
-	file "XX_*MuTect2.vcf"
+	file "MuTect2*.vcf"
 
 	script:
 	"""
-	for f in ${workflow.launchDir}/${pd}/intervals/*${idT}*vcf
-	do 
-		cat \$f >> "XX_${idPatient}_${idNormal}_${idT}.MuTect2.vcf"
-	done
+	VARIANTS=`ls ${workflow.launchDir}/${pd}/intervals/*${idT}*.mutect2.vcf| awk '{printf(" -V %s\\n",\$1) }'`
+	java -Xmx${task.memory.toGiga()}g -cp ${params.mutect2Home}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out MuTect2_${idPatient}_${idNormal}_${idT}.vcf
 	"""
+
+//	for f in ${workflow.launchDir}/${pd}/intervals/*${idT}*vcf
+//	do 
+//		cat \$f >> "XX_${idPatient}_${idNormal}_${idT}.MuTect2.vcf"
+//	done
 }
 
 
