@@ -647,7 +647,7 @@ if (params.withMuTect2 == true) {
   bamsFMT2 = logChannelContent("Bams for Mutect2: ", bamsFMT2)
 
   process RunMutect2 {
-    publishDir "VariantCalling/MuTect2"
+    publishDir "VariantCalling/MuTect2/intervals"
 
     module 'bioinfo-tools'
     module 'java/sun_jdk1.8.0_92'
