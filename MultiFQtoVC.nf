@@ -63,8 +63,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 ========================================================================================
 */
 
-String version = "0.0.2"
-String dateUpdate = "2016-08-01"
+String version = "0.0.3"
+String dateUpdate = "2016-08-19"
 
 /*
  * Get some basic informations about the workflow
@@ -132,18 +132,22 @@ CheckExistence = {
 }
 
 refs = [
-  "genomeFile":   params.genome,      // genome reference
-  "genomeIndex":  params.genomeIndex, // genome reference index
-  "genomeDict":   params.genomeDict,  // genome reference dictionary
-  "kgIndels":     params.kgIndels,    // 1000 Genomes SNPs
-  "kgIndex":      params.kgIndex,     // 1000 Genomes SNPs index
-  "dbsnp":        params.dbsnp,       // dbSNP
-  "dbsnpIndex":   params.dbsnpIndex,  // dbSNP index
-  "millsIndels":  params.millsIndels, // Mill's Golden set of SNPs
-  "millsIndex":   params.millsIndex,  // Mill's Golden set index
-  "sample":       params.sample,      // the sample sheet (multilane data refrence table, see below)
-  "cosmic":       params.cosmic,      // cosmic vcf file
-  "intervals":    params.intervals    // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
+  "genomeFile":   params.genome,       // genome reference
+  "genomeIndex":  params.genomeIndex,  // genome reference index
+  "genomeDict":   params.genomeDict,   // genome reference dictionary
+  "kgIndels":     params.kgIndels,     // 1000 Genomes SNPs
+  "kgIndex":      params.kgIndex,      // 1000 Genomes SNPs index
+  "dbsnp":        params.dbsnp,        // dbSNP
+  "dbsnpIndex":   params.dbsnpIndex,   // dbSNP index
+  "millsIndels":  params.millsIndels,  // Mill's Golden set of SNPs
+  "millsIndex":   params.millsIndex,   // Mill's Golden set index
+  "sample":       params.sample,       // the sample sheet (multilane data refrence table, see below)
+  "cosmic":       params.cosmic,       // cosmic vcf file
+  "intervals":    params.intervals,    // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
+  "MantaRef":     params.mantaRef,     // copy of the genome reference file 
+  "MantaIndex":   params.mantaIndex,   // reference index indexed with samtools/0.1.19
+  "strelkaGENOM": params.strelkaGENOM, // genome reference 
+  "strelkaINDEX": params.strelkaINDEX  // reference index
 ]
 
 refs.each(CheckExistence)
@@ -187,8 +191,8 @@ if (!params.sample) {
  * let's channel this out for mapping
  */
 
-// [maxime] I just added __status to the sample ID so that the whole pipeline is still working without having to change anything.
-// [maxime] I know, it is lazy...
+// I just added __status to the idSample so that the whole pipeline is still working without having to change anything.
+// I know, it is lazy...
 
 fastqFiles = Channel
   .from(sampleTSVconfig.readLines())
@@ -217,12 +221,12 @@ process Mapping {
   module 'bwa/0.7.8'
   module 'samtools/1.3'
 
+  cpus 8 
   memory { 16.GB * task.attempt }
   time { 20.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
   maxErrors '-1'
-  cpus 8 
 
   input:
   file refs["genomeFile"]
@@ -243,7 +247,7 @@ process Mapping {
   """
 }
 
-bams  = logChannelContent("BAM files before sorting into group or single:", bams)
+bams = logChannelContent("BAM files before sorting into group or single:", bams)
 
 /*
  * Borrowed code from chip.nf (https://github.com/guigolab/chip-nf)
@@ -255,7 +259,7 @@ bams  = logChannelContent("BAM files before sorting into group or single:", bams
 
 // Merge or rename bam
 
-singleBam  = Channel.create()
+singleBam = Channel.create()
 groupedBam = Channel.create()
 
 bams.groupTuple(by:[1])
@@ -291,7 +295,7 @@ process MergeBam {
   """
 }
 
-// [maxime] Renaming is totally useless, but it is more consistent with the rest of the pipeline
+// Renaming is totally useless, but it is more consistent with the rest of the pipeline
 
 process RenameSingleBam {
   publishDir "Preprocessing/RenameSingleBam"
@@ -330,14 +334,14 @@ bamList = logChannelContent("BAM list for MarkDuplicates: ",bamList)
 process MarkDuplicates {
   publishDir "Preprocessing/MarkDuplicates"
 
+  module 'bioinfo-tools'
+  module 'picard/1.118'
+
   memory { 16.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
   maxErrors '-1'
-
-  module 'bioinfo-tools'
-  module 'picard/1.118'
 
   input:
   set idPatient, idSample, file(bam) from bamList
@@ -377,9 +381,9 @@ duplicatesInterval = logChannelContent("BAMs for RealignerTargetCreator grouped 
 duplicatesForRealignement = logChannelContent("BAMs for IndelRealigner before groupTuple: ",  duplicatesForRealignement)
 
 // group the marked duplicates Bams for realign by overall subject/patient id (idPatient)
-duplicatesRealign  = Channel.create()
-duplicatesRealign  = duplicatesForRealignement.groupTuple()
-duplicatesRealign  = logChannelContent("BAMs for IndelRealigner grouped by overall subject/patient ID: ", duplicatesRealign)
+duplicatesRealign = Channel.create()
+duplicatesRealign = duplicatesForRealignement.groupTuple()
+duplicatesRealign = logChannelContent("BAMs for IndelRealigner grouped by overall subject/patient ID: ", duplicatesRealign)
 
 /*
  * Creating target intervals for indel realigner.
@@ -423,7 +427,6 @@ process CreateIntervals {
   -known $ki \
   -known $mi \
   -nt ${task.cpus} \
-	-L 1:130738-143733 \
   -o ${idPatient}.intervals
   """
 }
@@ -435,8 +438,9 @@ intervals = logChannelContent("Intervals passed to Realign: ",intervals)
  */
 
 process Realign {
-  module 'java/sun_jdk1.8.0_92'
   publishDir "Preprocessing/Realign"
+
+  module 'java/sun_jdk1.8.0_92'
 
   memory { 16.GB * task.attempt }
   time { 20.h * task.attempt }
@@ -477,7 +481,7 @@ process Realign {
   """
 }
 
-// [maxime] If I make a set out of this process I got a list of lists, which cannot be iterate via a single process
+// If I make a set out of this process I got a list of lists, which cannot be iterate via a single process
 // So I need to transform this output into a channel that can be iterated on.
 // I also had problems with the set that wasn't synchronised, and I got wrongly associated files
 // So what I decided was to separate all the different output
@@ -500,7 +504,7 @@ process CreateRecalibrationTable {
   module 'java/sun_jdk1.8.0_92'
 
   cpus 8
-  memory { 16.GB * task.attempt }       // 6G is certainly low even for downsampled (30G) data
+  memory { 16.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
@@ -538,12 +542,12 @@ process RecalibrateBam {
 
   module 'java/sun_jdk1.8.0_92'
 
+  cpus 8
   memory { 16.GB * task.attempt }
   time { 16.h * task.attempt }
   errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
   maxRetries 3
   maxErrors '-1'
-  cpus 8
 
   input:
   set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), recalibrationReport from recalibrationTable
@@ -604,57 +608,19 @@ bamsAll = logChannelContent("Mapped Recalibrated Bam for variant Calling: ", bam
 
 // first create channels for each variant caller
 bamsForMuTect2 = Channel.create()
-bamsForVarDict= Channel.create()
-bamsForManta= Channel.create()
+bamsForVarDict = Channel.create()
+bamsForManta = Channel.create()
+bamsForStrelka = Channel.create()
 
 Channel
-	.from bamsAll
-	.separate( bamsForMuTect2, bamsForVarDict, bamsForManta) { a -> [a, a, a] }
-
-if( params.sv == true ) {
-
-  process Manta {
-    //About mantas - http://www.mantarayshawaii.com/birostris.html
-    module 'bioinfo-tools'
-    module 'manta/0.27.1'
-    module 'samtools/0.1.19'
-
-    cpus 8
-
-    input:
-        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
-    
-    output:
-       set idPatient, val("${idSampleNormal}_${idSampleTumor}"),file("${idSampleNormal}_${idSampleTumor}.somaticSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.diploidSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf")  into mantaVariantCallingOutput
-
-
-    //NOTE: Manta is very picky about naming and reference indexes, the input bam should not contain too many _ and the reference index must be generated using a supported samtools version.
-    //Moreover, the bam index must be named .bam.bai, otherwise it will not be recognized
-
-    """
-    mv ${bamNormal} Normal.bam
-    mv ${bamTumor} Tumor.bam
-
-    mv ${baiNormal} Normal.bam.bai
-    mv ${baiTumor} Tumor.bam.bai
-
-    ln -s ${refs["genomeFile"]} reference.fasta
-    samtools faidx reference.fasta
-    configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference reference.fasta --runDir MantaDir
-    python MantaDir/runWorkflow.py -m local -j 8
-    gunzip -c MantaDir/results/variants/somaticSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.somaticSV.vcf
-    gunzip -c MantaDir/results/variants/candidateSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSV.vcf
-    gunzip -c MantaDir/results/variants/diploidSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.diploidSV.vcf
-    gunzip -c MantaDir/results/variants/candidateSmallIndels.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf
-    """
-  }
-}
+  .from bamsAll
+  .separate(bamsForMuTect2, bamsForVarDict, bamsForManta, bamsForStrelka) {a -> [a, a, a, a]}
 
 // define intervals file by --intervals
 intervalsFile = file(params.intervals)
 
 intervals = Channel
-    .from(intervalsFile.readLines())
+  .from(intervalsFile.readLines())
 
 // in fact we need two channels: one for the actual genomic region, and an other for names
 // without ":", as nextflow is not happy with them (will report as a failed process).
@@ -663,118 +629,116 @@ intervals = Channel
 gI = intervals
   .map {a -> [a,a.replaceFirst(/\:/,"_")]}
 
-MuTect2Intervals = Channel.create()
-VarDictIntervals = Channel.create()
+muTect2Intervals = Channel.create()
+varDictIntervals = Channel.create()
+strelkaIntervals = Channel.create()
 
 Channel
   .from gI
-  .separate (MuTect2Intervals, VarDictIntervals) {a -> [a,a]}
+  .separate (muTect2Intervals, varDictIntervals, strelkaIntervals) {a -> [a, a, a]}
 
 // now add genomic intervals to the sample information
 // join [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] and ["1:1-2000","1_1-2000"] 
 // and make a line for each interval
 
-bamsFMT2 = bamsForMuTect2.spread(MuTect2Intervals)
-bamsFMT2 = logChannelContent("Bams for Mutect2: ", bamsFMT2)
+if (params.withMuTect2 == true) {
 
-process RunMutect2 {
-  publishDir "VariantCalling/MuTect2/intervals"
+  bamsFMT2 = bamsForMuTect2.spread(muTect2Intervals)
+  bamsFMT2 = logChannelContent("Bams for Mutect2: ", bamsFMT2)
 
-  module 'bioinfo-tools'
-  module 'java/sun_jdk1.8.0_92'
+  process RunMutect2 {
+    publishDir "VariantCalling/MuTect2"
 
-  cpus 8 
-  memory { 16.GB * task.attempt }
-  time { 16.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
+    module 'bioinfo-tools'
+    module 'java/sun_jdk1.8.0_92'
 
-  input:
-  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
+    cpus 8 
+    memory { 16.GB * task.attempt }
+    time { 16.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
 
-  output:
-  set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf") into mutect2VariantCallingOutput
+		input:
+		set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
+
+		output:
+		set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf") into mutect2VariantCallingOutput
   
-  // we are using MuTect2 shipped in GATK v3.6
-  """
-  java -Xmx${task.memory.toGiga()}g -jar ${params.mutect2Home}/GenomeAnalysisTK.jar \
-  -T MuTect2 \
-  -nct ${task.cpus} \
-  -R ${refs["genomeFile"]} \
-  --cosmic ${refs["cosmic"]} \
-  --dbsnp ${refs["dbsnp"]} \
-  -I:normal $bamNormal \
-  -I:tumor $bamTumor \
-  -L \"${genInt}\" \
-  -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf
-  """
+		// we are using MuTect2 shipped in GATK v3.6
+		"""
+		java -Xmx${task.memory.toGiga()}g -jar ${params.mutect2Home}/GenomeAnalysisTK.jar \
+		-T MuTect2 \
+		-nct ${task.cpus} \
+		-R ${refs["genomeFile"]} \
+		--cosmic ${refs["cosmic"]} \
+		--dbsnp ${refs["dbsnp"]} \
+		-I:normal $bamNormal \
+		-I:tumor $bamTumor \
+		-L \"${genInt}\" \
+		-o ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf
+		"""
+	}
+
+	// we are expecting one patient, one normal, and usually one, but occasionally more than one tumor
+	// samples (i.e. relapses). The actual calls are always related to the normal, but spread across
+	// different intervals. So, we have to collate (merge) intervals for each tumor case if there are
+	// more than one. Therefore, what we want to do is to filter the multiple tumor cases into separate 
+	// channels and collate them according to their stage.
+	mutect2VariantCallingOutput = logChannelContent("Mutect2 output: ", mutect2VariantCallingOutput)
+	filesToCollate = mutect2VariantCallingOutput.groupTuple(by: 2).map { 
+																	x ->  [
+																		x[0].get(0),	// the patient ID
+																		x[1].get(0),	// ID of the normal sample 
+																		x[2],					// ID of the tumor sample (primary, relapse, whatever)
+																		x[4]					// list of VCF files
+																	 ]
+																}
+
+	// we have to separate IDs and files
+	collatedIDs = Channel.create()
+	collatedFiles = Channel.create()
+	tumorEntries = Channel.create()
+	Channel
+		.from filesToCollate
+		.separate(collatedIDs, collatedFiles, tumorEntries) {x -> [ x, [x[0],x[1],x[2]], x[2] ]}
+
+	(idPatient, idNormal) = getPatientAndNormalIDs(collatedIDs)
+	println "Patient's ID: " + idPatient
+	println "Normal ID: " + idNormal
+	pd = "VariantCalling/MuTect2"
+	process concatFiles {
+		publishDir = pd
+
+		module 'bioinfo-tools'
+		module 'java/sun_jdk1.8.0_92'
+
+		cpus 8 
+		memory { 16.GB * task.attempt }
+		time { 16.h * task.attempt }
+		errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+		maxRetries 3
+		maxErrors '-1'
+
+		input:
+		set idT from tumorEntries
+
+		output:
+		file "MuTect2*.vcf"
+
+		script:
+		"""
+		VARIANTS=`ls ${workflow.launchDir}/${pd}/intervals/*${idT}*.mutect2.vcf| awk '{printf(" -V %s\\n",\$1) }'`
+		java -Xmx${task.memory.toGiga()}g -cp ${params.mutect2Home}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out MuTect2_${idPatient}_${idNormal}_${idT}.vcf
+		"""
+	}
 }
-
-// we are expecting one patient, one normal, and usually one, but occasionally more than one tumor
-// samples (i.e. relapses). The actual calls are always related to the normal, but spread across
-// different intervals. So, we have to collate (merge) intervals for each tumor case if there are
-// more than one. Therefore, what we want to do is to filter the multiple tumor cases into separate 
-// channels and collate them according to their stage.
-mutect2VariantCallingOutput = logChannelContent("Mutect2 output: ", mutect2VariantCallingOutput)
-filesToCollate = mutect2VariantCallingOutput.groupTuple(by: 2).map { 
-																x ->  [
-																	x[0].get(0),	// the patient ID
-																	x[1].get(0),	// ID of the normal sample 
-																	x[2],					// ID of the tumor sample (primary, relapse, whatever)
-																	x[4]					// list of VCF files
-																 ]
-															}
-
-// we have to separate IDs and files
-collatedIDs = Channel.create()
-collatedFiles = Channel.create()
-tumorEntries = Channel.create()
-Channel
-	.from filesToCollate
-	.separate(collatedIDs, collatedFiles, tumorEntries) {x -> [ x, [x[0],x[1],x[2]], x[2] ]}
-
-(idPatient, idNormal) = getPatientAndNormalIDs(collatedIDs)
-println "Patient's ID: " + idPatient
-println "Normal ID: " + idNormal
-pd = "VariantCalling/MuTect2"
-process concatFiles {
-	publishDir = pd
-
-	module 'bioinfo-tools'
-	module 'java/sun_jdk1.8.0_92'
-
-	cpus 8 
-	memory { 16.GB * task.attempt }
-	time { 16.h * task.attempt }
-	errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-	maxRetries 3
-	maxErrors '-1'
-
-	input:
-	set idT from tumorEntries
-
-	output:
-	file "MuTect2*.vcf"
-
-	script:
-	"""
-	VARIANTS=`ls ${workflow.launchDir}/${pd}/intervals/*${idT}*.mutect2.vcf| awk '{printf(" -V %s\\n",\$1) }'`
-	java -Xmx${task.memory.toGiga()}g -cp ${params.mutect2Home}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out MuTect2_${idPatient}_${idNormal}_${idT}.vcf
-	"""
-
-//	for f in ${workflow.launchDir}/${pd}/intervals/*${idT}*vcf
-//	do 
-//		cat \$f >> "XX_${idPatient}_${idNormal}_${idT}.MuTect2.vcf"
-//	done
-}
-
 
 if (params.withVarDict == true) {
-// we are doing the same trick for VarDictJava: running for the whole reference is a PITA, so we are chopping at repeats
-// (or centromeres) where no useful variant calls are expected
-	bamsFVD = bamsForVarDict.spread(VarDictIntervals)
-	bamsFVD = logChannelContent("Bams for VarDict: ", bamsFVD)
+  // we are doing the same trick for VarDictJava: running for the whole reference is a PITA, so we are chopping at repeats
+  // (or centromeres) where no useful variant calls are expected
+  bamsFVD = bamsForVarDict.spread(varDictIntervals)
+  bamsFVD = logChannelContent("Bams for VarDict: ", bamsFVD)
 
   process VarDict {
     publishDir "VariantCalling/VarDictJava"
@@ -803,7 +767,7 @@ if (params.withVarDict == true) {
     set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into varDictVariantCallingOutput
 
     """
-    ${params.varDictRoot}/vardict.pl -G ${refs["genomeFile"]} \
+    ${params.vardictHome}/vardict.pl -G ${refs["genomeFile"]} \
     -f 0.01 -N $bamTumor \
     -b "$bamTumor|$bamNormal" \
     -z 1 -F 0x500 \
@@ -858,11 +822,100 @@ if (params.withVarDict == true) {
     ${params.vardictHome}/var2vcf_somatic.pl -f 0.01 -N "${vdFilePrefix}" testsomatic.out > ${vdFilePrefix}.VarDict.vcf
     """
   }
+} else {
+  bamsForVarDict.close()
+  varDictIntervals.close()
 }
-// we are at the very end, should close all the channels
-bamsForVarDict.close()
-VarDictIntervals.close()
-bamsForManta.close()
+
+if (params.withStrelka == true) {
+
+  bamsForStrelka = logChannelContent("Bams for Strelka: ", bamsForStrelka)
+  strelkaIntervals = logChannelContent("Intervals for Strelka: ", strelkaIntervals)
+  bamsFSTR = bamsForStrelka.spread(strelkaIntervals)
+  bamsFSTR = logChannelContent("Bams with Intervals for Strelka: ", bamsFSTR)
+
+  process RunStrelka {
+    publishDir "VariantCalling/Strelka"
+
+    module 'bioinfo-tools'
+
+    cpus 1
+    memory { 16.GB * task.attempt }
+    time { 16.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
+
+    input:
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFSTR
+    file refs["strelkaGENOM"]
+    file refs["strelkaINDEX"]
+
+    output:
+    sed idPatient, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("*.vcf") into strelkaVariantCallingOutput
+
+    """
+    ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
+    --tumor ${bamTumor} \
+    --normal ${bamNormal} \
+    --ref ${refs["strelkaGENOM"]} \
+    --config ${params.strelkaCFG} \
+    --output-dir strelka
+
+    cd strelka
+
+    make -j 16
+    """
+  }
+  strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
+} else {
+
+  bamsForStrelka = logChannelContent("Bams for Strelka: ", bamsForStrelka)
+
+  bamsForStrelka.close()
+  strelkaIntervals.close()
+}
+
+if( params.withManta == true ) {
+  process Manta {
+    module 'bioinfo-tools'
+    module 'manta/0.27.1'
+    module 'samtools/0.1.19'
+
+    cpus 8
+
+    input:
+        file refs["MantaRef"]
+        file refs["MantaIndex"]
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
+    
+    output:
+       set idPatient, val("${idSampleNormal}_${idSampleTumor}"),file("${idSampleNormal}_${idSampleTumor}.somaticSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.diploidSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf")  into mantaVariantCallingOutput
+
+
+    //NOTE: Manta is very picky about naming and reference indexes, the input bam should not contain too many _ and the reference index must be generated using a supported samtools version.
+    //Moreover, the bam index must be named .bam.bai, otherwise it will not be recognized
+
+    """
+    mv ${bamNormal} Normal.bam
+    mv ${bamTumor} Tumor.bam
+
+    mv ${baiNormal} Normal.bam.bai
+    mv ${baiTumor} Tumor.bam.bai
+
+    configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference ${refs["MantaRef"]} --runDir MantaDir
+    python MantaDir/runWorkflow.py -m local -j 8
+    gunzip -c MantaDir/results/variants/somaticSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.somaticSV.vcf
+    gunzip -c MantaDir/results/variants/candidateSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSV.vcf
+    gunzip -c MantaDir/results/variants/diploidSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.diploidSV.vcf
+    gunzip -c MantaDir/results/variants/candidateSmallIndels.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf
+    """
+  }
+  mantaVariantCallingOutput = logChannelContent("Manta output: ", mantaVariantCallingOutput)
+} else {
+  bamsForManta.close()
+}
+
 
 /*
 ========================================================================================

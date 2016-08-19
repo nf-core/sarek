@@ -1,4 +1,6 @@
 data/chr17_testdata
+Preprocessing/
+VariantCalling/
 work/
 .nextflow*
 trace*
