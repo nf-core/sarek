@@ -145,10 +145,8 @@ refs = [
   "cosmic":       params.cosmic,       // cosmic vcf file
   "intervals":    params.intervals,    // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
   "MantaRef":     params.mantaRef,     // copy of the genome reference file 
-  "MantaIndex":   params.mantaIndex,   // reference index indexed with samtools/0.1.19
-  "strelkaGENOM": params.strelkaGENOM, // genome reference 
-  "strelkaINDEX": params.strelkaINDEX  // reference index
-]
+  "MantaIndex":   params.mantaIndex   // reference index indexed with samtools/0.1.19
+  ]
 
 refs.each(CheckExistence)
 
