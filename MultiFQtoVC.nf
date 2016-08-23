@@ -64,7 +64,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 
 String version = "0.0.3"
-String dateUpdate = "2016-08-19"
+String dateUpdate = "2016-08-22"
 
 /*
  * Get some basic informations about the workflow
@@ -163,7 +163,7 @@ if (!parametersDefined) {
 }
 
 /*
- * Time to check the sample file. Its format is like: "subject status sample lane fastq1 fastq2":
+ * Time to check the sample file. The format is: "subject status sample lane fastq1 fastq2":
 HCC1954 0 HCC1954.blood HCC1954.blood_1 data/HCC1954.normal_S22_L001_R1_001.fastq.gz data/HCC1954.normal_S22_L001_R2_001.fastq.gz
 HCC1954 0 HCC1954.blood HCC1954.blood_2 data/HCC1954.normal_S22_L002_R1_001.fastq.gz data/HCC1954.normal_S22_L002_R2_001.fastq.gz
 HCC1954 1 HCC1954.tumor HCC1954.tumor_1 data/HCC1954.tumor1_S23_L001_R1_001.fastq.gz data/HCC1954.tumor1_S23_L001_R2_001.fastq.gz
@@ -187,8 +187,7 @@ if (!params.sample) {
 }
 
 /*
- * Read config file, it's "subject status sample lane fastq1 fastq2"
- * let's channel this out for mapping
+ * Channeling the sample file for mapping
  */
 
 // I just added __status to the idSample so that the whole pipeline is still working without having to change anything.
@@ -251,10 +250,8 @@ bams = logChannelContent("BAM files before sorting into group or single:", bams)
 
 /*
  * Borrowed code from chip.nf (https://github.com/guigolab/chip-nf)
- *
  * Now, we decide whether bam is standalone or should be merged by sample (id (column 1) from channel bams)
  * http://www.nextflow.io/docs/latest/operator.html?highlight=grouptuple#grouptuple
- *
  */
 
 // Merge or rename bam
@@ -295,7 +292,7 @@ process MergeBam {
   """
 }
 
-// Renaming is totally useless, but it is more consistent with the rest of the pipeline
+// Renaming is totally useless, but the file name is consistent with the rest of the pipeline
 
 process RenameSingleBam {
   publishDir "Preprocessing/RenameSingleBam"
@@ -570,7 +567,7 @@ process RecalibrateBam {
 
 recalibratedBams = logChannelContent("Recalibrated Bam for variant Calling: ", recalibratedBams)
 
-// [maxime] Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
+// Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
 // The sample tsv config file which is formatted like: "subject status sample lane fastq1 fastq2"
 // cf fastqFiles channel, I decided just to add __status to the sample name to have less changes to do.
 // And so I'm sorting the channel if the sample match __0, then it's a normal sample, otherwise tumor.
@@ -659,79 +656,81 @@ if (params.withMuTect2 == true) {
     maxRetries 3
     maxErrors '-1'
 
-		input:
-		set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
+    input:
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
 
-		output:
-		set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf") into mutect2VariantCallingOutput
+    output:
+    set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf") into mutect2VariantCallingOutput
   
-		// we are using MuTect2 shipped in GATK v3.6
-		"""
-		java -Xmx${task.memory.toGiga()}g -jar ${params.mutect2Home}/GenomeAnalysisTK.jar \
-		-T MuTect2 \
-		-nct ${task.cpus} \
-		-R ${refs["genomeFile"]} \
-		--cosmic ${refs["cosmic"]} \
-		--dbsnp ${refs["dbsnp"]} \
-		-I:normal $bamNormal \
-		-I:tumor $bamTumor \
-		-L \"${genInt}\" \
-		-o ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf
-		"""
-	}
+    // we are using MuTect2 shipped in GATK v3.6
+    """
+    java -Xmx${task.memory.toGiga()}g -jar ${params.mutect2Home}/GenomeAnalysisTK.jar \
+    -T MuTect2 \
+    -nct ${task.cpus} \
+    -R ${refs["genomeFile"]} \
+    --cosmic ${refs["cosmic"]} \
+    --dbsnp ${refs["dbsnp"]} \
+    -I:normal $bamNormal \
+    -I:tumor $bamTumor \
+    -L \"${genInt}\" \
+    -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf
+    """
+  }
 
-	// we are expecting one patient, one normal, and usually one, but occasionally more than one tumor
-	// samples (i.e. relapses). The actual calls are always related to the normal, but spread across
-	// different intervals. So, we have to collate (merge) intervals for each tumor case if there are
-	// more than one. Therefore, what we want to do is to filter the multiple tumor cases into separate 
-	// channels and collate them according to their stage.
-	mutect2VariantCallingOutput = logChannelContent("Mutect2 output: ", mutect2VariantCallingOutput)
-	filesToCollate = mutect2VariantCallingOutput.groupTuple(by: 2).map { 
-																	x ->  [
-																		x[0].get(0),	// the patient ID
-																		x[1].get(0),	// ID of the normal sample 
-																		x[2],					// ID of the tumor sample (primary, relapse, whatever)
-																		x[4]					// list of VCF files
-																	 ]
-																}
+  // we are expecting one patient, one normal, and usually one, but occasionally more than one tumor
+  // samples (i.e. relapses). The actual calls are always related to the normal, but spread across
+  // different intervals. So, we have to collate (merge) intervals for each tumor case if there are
+  // more than one. Therefore, what we want to do is to filter the multiple tumor cases into separate 
+  // channels and collate them according to their stage.
+  mutect2VariantCallingOutput = logChannelContent("Mutect2 output: ", mutect2VariantCallingOutput)
+  filesToCollate = mutect2VariantCallingOutput
+  .groupTuple(by: 2)
+  .map { 
+    x ->  [
+      x[0].get(0),  // the patient ID
+      x[1].get(0),  // ID of the normal sample 
+      x[2],         // ID of the tumor sample (primary, relapse, whatever)
+      x[4]          // list of VCF files
+      ]
+    }
 
-	// we have to separate IDs and files
-	collatedIDs = Channel.create()
-	collatedFiles = Channel.create()
-	tumorEntries = Channel.create()
-	Channel
-		.from filesToCollate
-		.separate(collatedIDs, collatedFiles, tumorEntries) {x -> [ x, [x[0],x[1],x[2]], x[2] ]}
+  // we have to separate IDs and files
+  collatedIDs = Channel.create()
+  collatedFiles = Channel.create()
+  tumorEntries = Channel.create()
+  Channel
+    .from filesToCollate
+    .separate(collatedIDs, collatedFiles, tumorEntries) {x -> [ x, [x[0],x[1],x[2]], x[2] ]}
 
-	(idPatient, idNormal) = getPatientAndNormalIDs(collatedIDs)
-	println "Patient's ID: " + idPatient
-	println "Normal ID: " + idNormal
-	pd = "VariantCalling/MuTect2"
-	process concatFiles {
-		publishDir = pd
+  (idPatient, idNormal) = getPatientAndNormalIDs(collatedIDs)
+  println "Patient's ID: " + idPatient
+  println "Normal ID: " + idNormal
+  pd = "VariantCalling/MuTect2"
+  process concatFiles {
+    publishDir = pd
 
-		module 'bioinfo-tools'
-		module 'java/sun_jdk1.8.0_92'
+    module 'bioinfo-tools'
+    module 'java/sun_jdk1.8.0_92'
 
-		cpus 8 
-		memory { 16.GB * task.attempt }
-		time { 16.h * task.attempt }
-		errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-		maxRetries 3
-		maxErrors '-1'
+    cpus 8 
+    memory { 16.GB * task.attempt }
+    time { 16.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
 
-		input:
-		set idT from tumorEntries
+    input:
+    set idT from tumorEntries
 
-		output:
-		file "MuTect2*.vcf"
+    output:
+    file "MuTect2*.vcf"
 
-		script:
-		"""
-		VARIANTS=`ls ${workflow.launchDir}/${pd}/intervals/*${idT}*.mutect2.vcf| awk '{printf(" -V %s\\n",\$1) }'`
-		java -Xmx${task.memory.toGiga()}g -cp ${params.mutect2Home}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out MuTect2_${idPatient}_${idNormal}_${idT}.vcf
-		"""
-	}
+    script:
+    """
+    VARIANTS=`ls ${workflow.launchDir}/${pd}/intervals/*${idT}*.mutect2.vcf| awk '{printf(" -V %s\\n",\$1) }'`
+    java -Xmx${task.memory.toGiga()}g -cp ${params.mutect2Home}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out MuTect2_${idPatient}_${idNormal}_${idT}.vcf
+    """
+  }
 }
 
 if (params.withVarDict == true) {
@@ -848,8 +847,8 @@ if (params.withStrelka == true) {
 
     input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFSTR
-    file refs["strelkaGENOM"]
-    file refs["strelkaINDEX"]
+    file refs["genomeFile"]
+    file refs["genomeIndex"]
 
     output:
     sed idPatient, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("*.vcf") into strelkaVariantCallingOutput
@@ -858,7 +857,7 @@ if (params.withStrelka == true) {
     ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
     --tumor ${bamTumor} \
     --normal ${bamNormal} \
-    --ref ${refs["strelkaGENOM"]} \
+    --ref ${refs["genomeFile"]} \
     --config ${params.strelkaCFG} \
     --output-dir strelka
 
@@ -869,9 +868,7 @@ if (params.withStrelka == true) {
   }
   strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
 } else {
-
   bamsForStrelka = logChannelContent("Bams for Strelka: ", bamsForStrelka)
-
   bamsForStrelka.close()
   strelkaIntervals.close()
 }
@@ -979,7 +976,7 @@ def logChannelContent (aMessage, aChannel) {
 
 def getPatientAndSample(aCh) {
 
-	aCh = logChannelContent("Channel content: ", aCh)
+  aCh = logChannelContent("Channel content: ", aCh)
   patientsCh = Channel.create()
   normalCh = Channel.create()
   tumorCh = Channel.create()
@@ -993,14 +990,14 @@ def getPatientAndSample(aCh) {
   // we are assuming the first column is the same for the patient, as hoping 
   // people do not want to compare samples from differnet patients
   idPatient = patientsCh.map { x -> [x.get(0)]}.unique().getVal()[0]
-	// we have to close to make sure remainding items are not waiting
-	patientsCh.close()
+  // we have to close to make sure remainding items are not waiting
+  patientsCh.close()
 
   idNormal = normalCh.map { x -> [x.get(1)]}.unique().getVal()[0]  
-	normalCh.close()
+  normalCh.close()
 
   idTumor = tumorCh.map { x -> [x.get(2)]}.unique().getVal()[0]  
-	tumorCh.close()
+  tumorCh.close()
 
   return [ originalCh, idPatient, idNormal, idTumor]
 }
@@ -1018,11 +1015,11 @@ def getPatientAndNormalIDs(aCh) {
   // we are assuming the first column is the same for the patient, as hoping 
   // people do not want to compare samples from differnet patients
   idPatient = patientsCh.map { x -> [x.get(0)]}.unique().getVal()[0]
-	// we have to close to make sure remainding items are not waiting
-	patientsCh.close()
-	// something similar for the normal ID
+  // we have to close to make sure remainding items are not waiting
+  patientsCh.close()
+  // something similar for the normal ID
   idNormal = normalCh.map { x -> [x.get(1)]}.unique().getVal()[0]  
-	normalCh.close()
+  normalCh.close()
 
-	return [idPatient, idNormal]
+  return [idPatient, idNormal]
 }
