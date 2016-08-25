@@ -172,12 +172,13 @@ if (!parametersDefined) {
   exit 1
 }
 
-
 /*
  * Getting list of steps from comma-separated strings
  */
 
-workflowSteps = params.steps.split(',').collect { it.trim() }
+if (params.steps) {
+  workflowSteps = params.steps.split(',').collect { it.trim() }
+}
 
 if ('preprocessing' in workflowSteps && 'nopreprocessing' in workflowSteps) {
   text = Channel.from(
