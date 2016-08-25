@@ -7,14 +7,15 @@
  New Cancer Analysis Workflow. Started March 2016.
 
  @Authors
- Pelin Akan <pelin.akan@scilifelab.se>
- Jesper Eisfeldt <jesper.eisfeldt@scilifelab.se>
- Maxime Garcia <maxime.garcia@scilifelab.se>
- Szilveszter Juhos <szilveszter.juhos@scilifelab.se>
+ Pelin Akan <pelin.akan@scilifelab.se> [@pelinakan]
+ Jesper Eisfeldt <jesper.eisfeldt@scilifelab.se> [@J35P312]
+ Maxime Garcia <maxime.garcia@scilifelab.se> [@MaxUlysse]
+ Szilveszter Juhos <szilveszter.juhos@scilifelab.se> [@szilvajuhos]
  Max Käller <max.kaller@scilifelab.se>
- Malin Larsson <malin.larsson@scilifelab.se>
- Björn Nystedt <bjorn.nystedt@scilifelab.se>
- Pall Olason <pall.olason@scilifelab.se>
+ Malin Larsson <malin.larsson@scilifelab.se> [@malinlarsson]
+ Björn Nystedt <bjorn.nystedt@scilifelab.se> [@bjornnystedt]
+ Pall Olason <pall.olason@scilifelab.se> [@pallolason]
+
 ----------------------------------------------------------------------------------------
 @Licence
  The MIT License (MIT)
@@ -87,7 +88,7 @@ workflow.onComplete {
 
 /*
  * Basic argument handling
- * Added a steps possibilities to do some process and skip others
+ * Added a steps possibilities to run some processes and skip others
  * borrowed the idea from https://github.com/guigolab/grape-nf
  */
 
@@ -98,15 +99,16 @@ switch (params) {
       "    Usage:",
       "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv>",
       "   [--steps STEP[,STEP]]",
-        "       optional option for now, help you configure",
-      "       which process will be processed by the workflow.",
+      "       optional option for now, to configure which",
+      "         processes will be runned or skipped in the workflow.",
+      "         Different steps to be separated by commas."
       "       Possible values are:",
       "         preprocessing (default, will start workflow with FASTQ files)",
-      "         nopreprocessing (will start workflow with recalibrated BAM files):",
-      "         MuTect2 (use MuTect2 for VC):",
-      "         VarDict (use VarDict for VC):",
-      "         Strelka (use Strelka for VC):",
-      "         Manta (use Manta for SV):",
+      "         nopreprocessing (will start workflow with recalibrated BAM files)",
+      "         MuTect2 (use MuTect2 for VC)",
+      "         VarDict (use VarDict for VC)",
+      "         Strelka (use Strelka for VC)",
+      "         Manta (use Manta for SV)",
       "    --help",
       "       you're reading it",
       "    --version",
