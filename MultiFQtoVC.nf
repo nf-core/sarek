@@ -179,7 +179,7 @@ if (!parametersDefined) {
 if (params.steps) {
   workflowSteps = params.steps.split(',').collect { it.trim() }
 } else {
-  workflowSteps.add('preprocessing')
+  workflowSteps = []
 }
 
 if ('preprocessing' in workflowSteps && 'nopreprocessing' in workflowSteps) {
