@@ -187,7 +187,7 @@ if ('preprocessing' in workflowSteps && 'nopreprocessing' in workflowSteps) {
   exit 1
 }
 
-if ('preprocessing' !in workflowSteps && 'nopreprocessing' !in workflowSteps) {
+if (!('preprocessing' in workflowSteps && 'nopreprocessing' in workflowSteps)) {
   workflowSteps.add('preprocessing')
 }
 
