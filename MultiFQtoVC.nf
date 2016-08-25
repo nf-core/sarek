@@ -64,7 +64,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 
 String version = "0.0.3"
-String dateUpdate = "2016-08-22"
+String dateUpdate = "2016-08-25"
 
 /*
  * Get some basic informations about the workflow
@@ -87,6 +87,8 @@ workflow.onComplete {
 
 /*
  * Basic argument handling
+ * Added a steps possibilities to do some process and skip others
+ * borrowed the idea from https://github.com/guigolab/grape-nf
  */
 
 switch (params) {
@@ -95,6 +97,16 @@ switch (params) {
       "CANCER ANALYSIS WORKFLOW ~ version $version",
       "    Usage:",
       "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv>",
+      "   [--steps STEP[,STEP]]",
+        "       optional option for now, help you configure",
+      "       which process will be processed by the workflow.",
+      "       Possible values are:",
+      "         preprocessing (default, will start workflow with FASTQ files)",
+      "         nopreprocessing (will start workflow with recalibrated BAM files):",
+      "         MuTect2 (use MuTect2 for VC):",
+      "         VarDict (use VarDict for VC):",
+      "         Strelka (use Strelka for VC):",
+      "         Manta (use Manta for SV):",
       "    --help",
       "       you're reading it",
       "    --version",
@@ -160,19 +172,28 @@ if (!parametersDefined) {
   exit 1
 }
 
+
 /*
- * Time to check the sample file. The format is: "subject status sample lane fastq1 fastq2":
-HCC1954 0 HCC1954.blood HCC1954.blood_1 data/HCC1954.normal_S22_L001_R1_001.fastq.gz data/HCC1954.normal_S22_L001_R2_001.fastq.gz
-HCC1954 0 HCC1954.blood HCC1954.blood_2 data/HCC1954.normal_S22_L002_R1_001.fastq.gz data/HCC1954.normal_S22_L002_R2_001.fastq.gz
-HCC1954 1 HCC1954.tumor HCC1954.tumor_1 data/HCC1954.tumor1_S23_L001_R1_001.fastq.gz data/HCC1954.tumor1_S23_L001_R2_001.fastq.gz
-HCC1954 1 HCC1954.tumor HCC1954.tumor_2 data/HCC1954.tumor1_S23_L002_R1_001.fastq.gz data/HCC1954.tumor1_S23_L002_R2_001.fastq.gz
-HCC1954 1 HCC1954.relapse HCC1954.relapse_1 data/HCC1954.tumor2_S24_L001_R1_001.fastq.gz data/HCC1954.tumor2_S24_L001_R2_001.fastq.gz
-HCC1954 1 HCC1954.relapse HCC1954.relapse_2 data/HCC1954.tumor2_S24_L002_R1_001.fastq.gz data/HCC1954.tumor2_S24_L002_R2_001.fastq.gz
-HCC1954 1 HCC1954.9746123 HCC1954.9746123_1 data/HCC1954.tumor3_S25_L001_R1_001.fastq.gz data/HCC1954.tumor3_S25_L001_R2_001.fastq.gz
-HCC1954 1 HCC1954.9746123 HCC1954.9746123_2 data/HCC1954.tumor3_S25_L002_R1_001.fastq.gz data/HCC1954.tumor3_S25_L002_R2_001.fastq.gz
+ * Getting list of steps from comma-separated strings
  */
 
-sampleTSVconfig = file(params.sample)
+workflowSteps = params.steps.split(',').collect { it.trim() }
+
+if ('preprocessing' in workflowSteps && 'nopreprocessing' in workflowSteps) {
+  text = Channel.from(
+    "CANCER ANALYSIS WORKFLOW ~ version $version",
+    "Cannot use preprocessing and nopreprocessing at the same time")
+  text.subscribe { println "$it" }
+  exit 1
+}
+
+if ('preprocessing' !in workflowSteps && 'nopreprocessing' !in workflowSteps) {
+  workflowSteps.add('preprocessing')
+}
+
+/*
+ * Verifying the existence of the sample file.
+ */
 
 if (!params.sample) {
   text = Channel.from(
@@ -184,23 +205,48 @@ if (!params.sample) {
   exit 1
 }
 
-/*
- * Channeling the sample file for mapping
- */
+if ('preprocessing' in workflowSteps) {
+  /*
+   * Channeling the TSV file containing FASTQ for preprocessing
+   * The format is: "subject status sample lane fastq1 fastq2"
+   * ie: HCC1954 0 HCC1954.blood HCC1954.blood_1 data/HCC1954.normal_S22_L001_R1_001.fastq.gz data/HCC1954.normal_S22_L001_R2_001.fastq.gz
+   * I just added __status to the idSample so that the whole pipeline is still working without having to change anything.
+   * I know, it is lazy...
+   */
 
-// I just added __status to the idSample so that the whole pipeline is still working without having to change anything.
-// I know, it is lazy...
 
-fastqFiles = Channel
-  .from(sampleTSVconfig.readLines())
-  .map {line ->
-    list        = line.split()
-    idPatient   = list[0]
-    idSample    = "${list[2]}__${list[1]}"
-    idRun       = list[3]
-    fastqFile1  = file(list[4])
-    fastqFile2  = file(list[5])
-    [ idPatient, idSample, idRun, fastqFile1, fastqFile2 ]
+  fastqFiles = Channel
+    .from(sampleTSVconfig.readLines())
+    .map {line ->
+      list        = line.split()
+      idPatient   = list[0]
+      idSample    = "${list[2]}__${list[1]}"
+      idRun       = list[3]
+      fastqFile1  = file(list[4])
+      fastqFile2  = file(list[5])
+      [ idPatient, idSample, idRun, fastqFile1, fastqFile2 ]
+  }
+  fastqFiles = logChannelContent("FASTQ files and IDs to process: ", fastqFiles)
+} else {
+  /*
+   * Channeling the TSV file containing BAM for Recalibration
+   * The format is: "subject status sample bam bai recal"
+   * ie: HCC1954 0 HCC1954.blood data/HCC1954.normal.bam HCC1954.normal.bai HCC1954.normal.recal.table
+   * Still with the __status added to the idSample
+   */
+
+  bamFiles = Channel
+    .from(sampleTSVconfig.readLines())
+    .map {line ->
+      list        = line.split()
+      idPatient   = list[0]
+      idSample    = "${list[2]}__${list[1]}"
+      bamFile     = file(list[3])
+      baiFile     = file(list[4])
+      recalTable  = file(list[5])
+      [ idPatient, idSample, bamFile, baiFile, recalTable ]
+  }
+  bamFiles = logChannelContent("Bam files and IDs to process: ", bamFiles)
 }
 
 /*
@@ -209,328 +255,332 @@ fastqFiles = Channel
 ========================================================================================
 */
 
-fastqFiles = logChannelContent("FASTQ files and IDs to process: ", fastqFiles)
+if ('preprocessing' in workflowSteps) {
+  process Mapping {
+    publishDir "Preprocessing/Mapping"
 
-process Mapping {
-  publishDir "Preprocessing/Mapping"
+    module 'bioinfo-tools'
+    module 'bwa/0.7.8'
+    module 'samtools/1.3'
 
-  module 'bioinfo-tools'
-  module 'bwa/0.7.8'
-  module 'samtools/1.3'
+    cpus 8
+    memory { 16.GB * task.attempt }
+    time { 20.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
 
-  cpus 8 
-  memory { 16.GB * task.attempt }
-  time { 20.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
+    input:
+    file refs["genomeFile"]
+    set idPatient, idSample, idRun, file(fq1), file(fq2) from fastqFiles
 
-  input:
-  file refs["genomeFile"]
-  set idPatient, idSample, idRun, file(fq1), file(fq2) from fastqFiles
+    output:
+    set idPatient, idSample, idRun, file("${idRun}.bam") into bams
 
-  output:
-  set idPatient, idSample, idRun, file("${idRun}.bam") into bams
+    // here I use params.genome for bwa ref so I don't have to link to all bwa index files
 
-  // here I use params.genome for bwa ref so I don't have to link to all bwa index files
+    script:
+    readGroupString="\"@RG\\tID:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina\""
 
-  script:
-  readGroupString="\"@RG\\tID:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina\""
+    """
+    bwa mem -R ${readGroupString} -B 3 -t ${task.cpus} -M ${refs["genomeFile"]} ${fq1} ${fq2} | \
+    samtools view -bS -t ${refs["genomeIndex"]} - | \
+    samtools sort - > ${idRun}.bam
+    """
+  }
 
-  """
-  bwa mem -R ${readGroupString} -B 3 -t ${task.cpus} -M ${refs["genomeFile"]} ${fq1} ${fq2} | \
-  samtools view -bS -t ${refs["genomeIndex"]} - | \
-  samtools sort - > ${idRun}.bam
-  """
+  bams = logChannelContent("BAM files before sorting into group or single:", bams)
+
+  /*
+   * Borrowed code from https://github.com/guigolab/chip-nf
+   * Now, we decide whether bam is standalone or should be merged by sample (id (column 1) from channel bams)
+   * http://www.nextflow.io/docs/latest/operator.html?highlight=grouptuple#grouptuple
+   */
+
+  /*
+   * Merge or rename bam
+   */
+
+  singleBam = Channel.create()
+  groupedBam = Channel.create()
+
+  bams.groupTuple(by:[1])
+    .choice(singleBam, groupedBam) { it[3].size() > 1 ? 1 : 0 }
+
+  singleBam = logChannelContent("Single BAMs before merge:", singleBam)
+  groupedBam = logChannelContent("Grouped BAMs before merge:", groupedBam)
+
+  process MergeBam {
+    publishDir "Preprocessing/MergeBam"
+
+    module 'bioinfo-tools'
+    module 'samtools/1.3'
+
+    memory { 16.GB * task.attempt }
+    time { 16.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
+
+    input:
+    set idPatient, idSample, idRun, file(bam) from groupedBam
+
+    output:
+    set idPatient, idSample, idRun, file("${idSample}.bam") into mergedBam
+
+    script:
+    idRun = idRun.sort().join(':')
+
+    """
+    echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nidRun:\t"${idRun}"\nbam:\t"${bam}"\n" > logInfo
+    samtools merge ${idSample}.bam ${bam}
+    """
+  }
+
+  // Renaming is totally useless, but the file name is consistent with the rest of the pipeline
+
+  process RenameSingleBam {
+    publishDir "Preprocessing/RenameSingleBam"
+
+    input:
+    set idPatient, idSample, idRun, file(bam) from singleBam
+
+    output:
+    set idPatient, idSample, idRun, file("${idSample}.bam") into singleRenamedBam
+
+    script:
+    idRun = idRun.sort().join(':')
+
+    """
+    mv ${bam} ${idSample}.bam
+    """
+  }
+
+  singleRenamedBam = logChannelContent("SINGLES: ", singleRenamedBam)
+  mergedBam = logChannelContent("GROUPED: ", mergedBam)
+
+  /*
+   * merge all bams (merged and singles) to a single channel
+   */
+
+  bamList = Channel.create()
+  bamList = mergedBam.mix(singleRenamedBam)
+  bamList = bamList.map { idPatient, idSample, idRun, bam -> [idPatient[0], idSample, bam].flatten() }
+
+  bamList = logChannelContent("BAM list for MarkDuplicates: ",bamList)
+
+  /*
+   *  mark duplicates all bams
+   */
+
+  process MarkDuplicates {
+    publishDir "Preprocessing/MarkDuplicates"
+
+    module 'bioinfo-tools'
+    module 'picard/1.118'
+
+    memory { 16.GB * task.attempt }
+    time { 16.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
+
+    input:
+    set idPatient, idSample, file(bam) from bamList
+
+    // Channel content should be in the log before
+    // The output channels are duplicated nevertheless, one copy goes to RealignerTargetCreator (CreateIntervals)
+    // and the other to IndelRealigner
+
+    output:
+    set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bai") into duplicatesForInterval
+    set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bai") into duplicatesForRealignement
+
+    """
+    echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nbam:\t"${bam}"\n" > logInfo
+    java -Xmx${task.memory.toGiga()}g -jar ${params.picardHome}/MarkDuplicates.jar \
+    INPUT=${bam} \
+    METRICS_FILE=${bam}.metrics \
+    TMP_DIR=. \
+    ASSUME_SORTED=true \
+    VALIDATION_STRINGENCY=LENIENT \
+    CREATE_INDEX=TRUE \
+    OUTPUT=${idSample}.md.bam
+    """
+  }
+
+  /*
+   * create realign intervals, use both tumor+normal as input
+   */
+
+  duplicatesForInterval = logChannelContent("BAMs for IndelRealigner before groupTuple: ", duplicatesForInterval)
+
+  // group the marked duplicates Bams intervals by overall subject/patient id (idPatient)
+  duplicatesInterval = Channel.create()
+  duplicatesInterval = duplicatesForInterval.groupTuple()
+  duplicatesInterval = logChannelContent("BAMs for RealignerTargetCreator grouped by overall subject/patient ID: ", duplicatesInterval)
+
+  duplicatesForRealignement = logChannelContent("BAMs for IndelRealigner before groupTuple: ",  duplicatesForRealignement)
+
+  // group the marked duplicates Bams for realign by overall subject/patient id (idPatient)
+  duplicatesRealign = Channel.create()
+  duplicatesRealign = duplicatesForRealignement.groupTuple()
+  duplicatesRealign = logChannelContent("BAMs for IndelRealigner grouped by overall subject/patient ID: ", duplicatesRealign)
+
+  /*
+   * Creating target intervals for indel realigner.
+   * Though VCF indexes are not needed explicitly, we are adding them so they will be linked, and not re-created on the fly.
+   */
+
+  process CreateIntervals {
+    publishDir "Preprocessing/CreateIntervals"
+
+    module 'java/sun_jdk1.8.0_92'
+
+    cpus 8
+    memory { 16.GB * task.attempt }
+    time { 8.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
+
+    input:
+    set idPatient, idSample, file(mdBam), file(mdBai) from duplicatesInterval
+    file gf from file(refs["genomeFile"])
+    file gi from file(refs["genomeIndex"])
+    file gd from file(refs["genomeDict"])
+    file ki from file(refs["kgIndels"])
+    file kix from file(refs["kgIndex"])
+    file mi from file(refs["millsIndels"])
+    file mix from file(refs["millsIndex"])
+
+    output:
+    file("${idPatient}.intervals") into intervals
+
+    script:
+    input = mdBam.collect{"-I $it"}.join(' ')
+
+    """
+    echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nmdBam:\t"${mdBam}"\n" > logInfo
+    java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+    -T RealignerTargetCreator \
+    $input \
+    -R $gf \
+    -known $ki \
+    -known $mi \
+    -nt ${task.cpus} \
+    -o ${idPatient}.intervals
+    """
+  }
+
+  intervals = logChannelContent("Intervals passed to Realign: ",intervals)
+
+  /*
+   * realign, use nWayOut to split into tumor/normal again
+   */
+
+  process Realign {
+    publishDir "Preprocessing/Realign"
+
+    module 'java/sun_jdk1.8.0_92'
+
+    memory { 16.GB * task.attempt }
+    time { 20.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
+
+    input:
+    set idPatient, idSample, file(mdBam), file(mdBai) from duplicatesRealign
+    file gf from file(refs["genomeFile"])
+    file gi from file(refs["genomeIndex"])
+    file gd from file(refs["genomeDict"])
+    file ki from file(refs["kgIndels"])
+    file kix from file(refs["kgIndex"])
+    file mi from file(refs["millsIndels"])
+    file mix from file(refs["millsIndex"])
+    file intervals from intervals
+
+    output:
+    val(idPatient) into idPatient
+    val(idSample) into tempSamples
+    file("*.md.real.bam") into tempBams
+    file("*.md.real.bai") into tempBais
+
+    script:
+    input = mdBam.collect{"-I $it"}.join(' ')
+
+    """
+    echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nmdBam:\t"${mdBam}"\nmdBai:\t"${mdBai}"\n" > logInfo
+    java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+    -T IndelRealigner \
+    $input \
+    -R $gf \
+    -targetIntervals $intervals \
+    -known $ki \
+    -known $mi \
+    -nWayOut '.real.bam'
+    """
+  }
+
+  // If I make a set out of this process I got a list of lists, which cannot be iterate via a single process
+  // So I need to transform this output into a channel that can be iterated on.
+  // I also had problems with the set that wasn't synchronised, and I got wrongly associated files
+  // So what I decided was to separate all the different output
+  // We're getting from the Realign process 4 channels (patient, samples bams and bais)
+  // So I flatten, sort, and reflatten the samples and the files (bam and bai) channels
+  // to get them in the same order (the name of the bam and bai files are based on the sample, so if we sort them they all have the same order ;-))
+  // And put them back together, and add the ID patient in the realignedBam channel
+
+  tempSamples = tempSamples.flatten().toSortedList().flatten()
+  tempBams = tempBams.flatten().toSortedList().flatten()
+  tempBais = tempBais.flatten().toSortedList().flatten()
+  tempSamples = tempSamples.merge( tempBams, tempBais ) { s, b, i -> [s, b, i] }
+  realignedBam = idPatient.spread(tempSamples)
+
+  realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realignedBam)
+
+  process CreateRecalibrationTable {
+    publishDir "Preprocessing/CreateRecalibrationTable"
+
+    module 'java/sun_jdk1.8.0_92'
+
+    cpus 8
+    memory { 16.GB * task.attempt }
+    time { 16.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
+
+    input:
+    set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile) from realignedBam
+    file refs["genomeFile"]
+    file refs["dbsnp"]
+    file refs["kgIndels"]
+    file refs["millsIndels"]
+
+    output:
+    set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), file("${idSample}.recal.table") into recalibrationTable
+
+    """
+    java -Xmx${task.memory.toGiga()}g -Djava.io.tmpdir="/tmp" \
+    -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+    -T BaseRecalibrator \
+    -R ${refs["genomeFile"]} \
+    -I $realignedBamFile \
+    -knownSites ${refs["dbsnp"]} \
+    -knownSites ${refs["kgIndels"]} \
+    -knownSites ${refs["millsIndels"]} \
+    -nct ${task.cpus} \
+    -l INFO \
+    -o ${idSample}.recal.table
+    """
+  }
+
+  recalibrationTable = logChannelContent("Base recalibrated table for recalibration: ", recalibrationTable)
+} else {
+  recalibrationTable = bamFiles
 }
-
-bams = logChannelContent("BAM files before sorting into group or single:", bams)
-
-/*
- * Borrowed code from chip.nf (https://github.com/guigolab/chip-nf)
- * Now, we decide whether bam is standalone or should be merged by sample (id (column 1) from channel bams)
- * http://www.nextflow.io/docs/latest/operator.html?highlight=grouptuple#grouptuple
- */
-
-// Merge or rename bam
-
-singleBam = Channel.create()
-groupedBam = Channel.create()
-
-bams.groupTuple(by:[1])
-  .choice(singleBam, groupedBam) { it[3].size() > 1 ? 1 : 0 }
-
-singleBam  = logChannelContent("Single BAMs before merge:", singleBam)
-groupedBam = logChannelContent("Grouped BAMs before merge:", groupedBam)
-
-process MergeBam {
-  publishDir "Preprocessing/MergeBam"
-
-  module 'bioinfo-tools'
-  module 'samtools/1.3'
-
-  memory { 16.GB * task.attempt }
-  time { 16.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
-
-  input:
-  set idPatient, idSample, idRun, file(bam) from groupedBam
-
-  output:
-  set idPatient, idSample, idRun, file("${idSample}.bam") into mergedBam
-
-  script:
-  idRun = idRun.sort().join(':')
-
-  """
-  echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nidRun:\t"${idRun}"\nbam:\t"${bam}"\n" > logInfo
-  samtools merge ${idSample}.bam ${bam}
-  """
-}
-
-// Renaming is totally useless, but the file name is consistent with the rest of the pipeline
-
-process RenameSingleBam {
-  publishDir "Preprocessing/RenameSingleBam"
-
-  input:
-  set idPatient, idSample, idRun, file(bam) from singleBam
-
-  output:
-  set idPatient, idSample, idRun, file("${idSample}.bam") into singleRenamedBam
-
-  script:
-  idRun = idRun.sort().join(':')
-
-  """
-  mv ${bam} ${idSample}.bam
-  """
-}
-
-singleRenamedBam = logChannelContent("SINGLES: ", singleRenamedBam)
-mergedBam = logChannelContent("GROUPED: ", mergedBam)
-
-/*
- * merge all bams (merged and singles) to a single channel
- */
-
-bamList = Channel.create()
-bamList = mergedBam.mix(singleRenamedBam)
-bamList = bamList.map { idPatient, idSample, idRun, bam -> [idPatient[0], idSample, bam].flatten() }
-
-bamList = logChannelContent("BAM list for MarkDuplicates: ",bamList)
-
-/*
- *  mark duplicates all bams
- */
-
-process MarkDuplicates {
-  publishDir "Preprocessing/MarkDuplicates"
-
-  module 'bioinfo-tools'
-  module 'picard/1.118'
-
-  memory { 16.GB * task.attempt }
-  time { 16.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
-
-  input:
-  set idPatient, idSample, file(bam) from bamList
-
-  // Channel content should be in the log before
-  // The output channels are duplicated nevertheless, one copy goes to RealignerTargetCreator (CreateIntervals)
-  // and the other to IndelRealigner
-
-  output:
-  set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bai") into duplicatesForInterval
-  set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bai") into duplicatesForRealignement
-
-  """
-  echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nbam:\t"${bam}"\n" > logInfo
-  java -Xmx${task.memory.toGiga()}g -jar ${params.picardHome}/MarkDuplicates.jar \
-  INPUT=${bam} \
-  METRICS_FILE=${bam}.metrics \
-  TMP_DIR=. \
-  ASSUME_SORTED=true \
-  VALIDATION_STRINGENCY=LENIENT \
-  CREATE_INDEX=TRUE \
-  OUTPUT=${idSample}.md.bam
-  """
-}
-
-/*
- * create realign intervals, use both tumor+normal as input
- */
-
-duplicatesForInterval = logChannelContent("BAMs for IndelRealigner before groupTuple: ", duplicatesForInterval)
-
-// group the marked duplicates Bams intervals by overall subject/patient id (idPatient)
-duplicatesInterval = Channel.create()
-duplicatesInterval = duplicatesForInterval.groupTuple()
-duplicatesInterval = logChannelContent("BAMs for RealignerTargetCreator grouped by overall subject/patient ID: ", duplicatesInterval)
-
-duplicatesForRealignement = logChannelContent("BAMs for IndelRealigner before groupTuple: ",  duplicatesForRealignement)
-
-// group the marked duplicates Bams for realign by overall subject/patient id (idPatient)
-duplicatesRealign = Channel.create()
-duplicatesRealign = duplicatesForRealignement.groupTuple()
-duplicatesRealign = logChannelContent("BAMs for IndelRealigner grouped by overall subject/patient ID: ", duplicatesRealign)
-
-/*
- * Creating target intervals for indel realigner.
- * Though VCF indexes are not needed explicitly, we are adding them so they will be linked, and not re-created on the fly.
- */
-
-process CreateIntervals {
-  publishDir "Preprocessing/CreateIntervals"
-
-  module 'java/sun_jdk1.8.0_92'
-
-  cpus 8
-  memory { 16.GB * task.attempt }
-  time { 8.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
-
-  input:
-  set idPatient, idSample, file(mdBam), file(mdBai) from duplicatesInterval
-  file gf from file(refs["genomeFile"])
-  file gi from file(refs["genomeIndex"])
-  file gd from file(refs["genomeDict"])
-  file ki from file(refs["kgIndels"])
-  file kix from file(refs["kgIndex"])
-  file mi from file(refs["millsIndels"])
-  file mix from file(refs["millsIndex"])
-
-  output:
-  file("${idPatient}.intervals") into intervals
-
-  script:
-  input = mdBam.collect{"-I $it"}.join(' ')
-
-  """
-  echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nmdBam:\t"${mdBam}"\n" > logInfo
-  java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
-  -T RealignerTargetCreator \
-  $input \
-  -R $gf \
-  -known $ki \
-  -known $mi \
-  -nt ${task.cpus} \
-  -o ${idPatient}.intervals
-  """
-}
-
-intervals = logChannelContent("Intervals passed to Realign: ",intervals)
-
-/*
- * realign, use nWayOut to split into tumor/normal again
- */
-
-process Realign {
-  publishDir "Preprocessing/Realign"
-
-  module 'java/sun_jdk1.8.0_92'
-
-  memory { 16.GB * task.attempt }
-  time { 20.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
-
-  input:
-  set idPatient, idSample, file(mdBam), file(mdBai) from duplicatesRealign
-  file gf from file(refs["genomeFile"])
-  file gi from file(refs["genomeIndex"])
-  file gd from file(refs["genomeDict"])
-  file ki from file(refs["kgIndels"])
-  file kix from file(refs["kgIndex"])
-  file mi from file(refs["millsIndels"])
-  file mix from file(refs["millsIndex"])
-  file intervals from intervals
-
-  output:
-  val(idPatient) into idPatient
-  val(idSample) into tempSamples
-  file("*.md.real.bam") into tempBams
-  file("*.md.real.bai") into tempBais
-
-  script:
-  input = mdBam.collect{"-I $it"}.join(' ')
-
-  """
-  echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nmdBam:\t"${mdBam}"\nmdBai:\t"${mdBai}"\n" > logInfo
-  java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
-  -T IndelRealigner \
-  $input \
-  -R $gf \
-  -targetIntervals $intervals \
-  -known $ki \
-  -known $mi \
-  -nWayOut '.real.bam'
-  """
-}
-
-// If I make a set out of this process I got a list of lists, which cannot be iterate via a single process
-// So I need to transform this output into a channel that can be iterated on.
-// I also had problems with the set that wasn't synchronised, and I got wrongly associated files
-// So what I decided was to separate all the different output
-// We're getting from the Realign process 4 channels (patient, samples bams and bais)
-// So I flatten, sort, and reflatten the samples and the files (bam and bai) channels
-// to get them in the same order (the name of the bam and bai files are based on the sample, so if we sort them they all have the same order ;-))
-// And put them back together, and add the ID patient in the realignedBam channel
-
-tempSamples = tempSamples.flatten().toSortedList().flatten()
-tempBams = tempBams.flatten().toSortedList().flatten()
-tempBais = tempBais.flatten().toSortedList().flatten()
-tempSamples = tempSamples.merge( tempBams, tempBais ) { s, b, i -> [s, b, i] }
-realignedBam = idPatient.spread(tempSamples)
-
-realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realignedBam)
-
-process CreateRecalibrationTable {
-  publishDir "Preprocessing/CreateRecalibrationTable"
-
-  module 'java/sun_jdk1.8.0_92'
-
-  cpus 8
-  memory { 16.GB * task.attempt }
-  time { 16.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
-
-  input:
-  set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile) from realignedBam
-  file refs["genomeFile"]
-  file refs["dbsnp"]
-  file refs["kgIndels"]
-  file refs["millsIndels"]
-
-  output:
-  set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), file("${idSample}.recal.table") into recalibrationTable
-
-  """
-  java -Xmx${task.memory.toGiga()}g -Djava.io.tmpdir="/tmp" \
-  -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
-  -T BaseRecalibrator \
-  -R ${refs["genomeFile"]} \
-  -I $realignedBamFile \
-  -knownSites ${refs["dbsnp"]} \
-  -knownSites ${refs["kgIndels"]} \
-  -knownSites ${refs["millsIndels"]} \
-  -nct ${task.cpus} \
-  -l INFO \
-  -o ${idSample}.recal.table
-  """
-}
-
-recalibrationTable = logChannelContent("Base recalibrated table for recalibration: ", recalibrationTable)
 
 process RecalibrateBam {
   publishDir "Preprocessing/RecalibrateBam"
@@ -553,7 +603,8 @@ process RecalibrateBam {
 
   // TODO: ditto as at the previous BaseRecalibrator step, consider using -nct 4 
   """
-  java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+  java -Xmx${task.memory.toGiga()}g \
+  -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T PrintReads \
   -R ${refs["genomeFile"]} \
   -nct ${task.cpus} \
@@ -636,7 +687,7 @@ Channel
 // join [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] and ["1:1-2000","1_1-2000"] 
 // and make a line for each interval
 
-if (params.withMuTect2 == true) {
+if ('MuTect2' in workflowSteps) {
 
   bamsFMT2 = bamsForMuTect2.spread(muTect2Intervals)
   bamsFMT2 = logChannelContent("Bams for Mutect2: ", bamsFMT2)
@@ -731,7 +782,7 @@ if (params.withMuTect2 == true) {
   }
 }
 
-if (params.withVarDict == true) {
+if ('VarDict' in workflowSteps) {
   // we are doing the same trick for VarDictJava: running for the whole reference is a PITA, so we are chopping at repeats
   // (or centromeres) where no useful variant calls are expected
   bamsFVD = bamsForVarDict.spread(varDictIntervals)
@@ -824,8 +875,7 @@ if (params.withVarDict == true) {
   varDictIntervals.close()
 }
 
-if (params.withStrelka == true) {
-
+if ('Strelka' in workflowSteps) {
   bamsForStrelka = logChannelContent("Bams for Strelka: ", bamsForStrelka)
   strelkaIntervals = logChannelContent("Intervals for Strelka: ", strelkaIntervals)
   bamsFSTR = bamsForStrelka.spread(strelkaIntervals)
@@ -871,7 +921,7 @@ if (params.withStrelka == true) {
   strelkaIntervals.close()
 }
 
-if( params.withManta == true ) {
+if ('Manta' in workflowSteps) {
   process Manta {
     module 'bioinfo-tools'
     module 'manta/0.27.1'
