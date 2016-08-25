@@ -77,18 +77,18 @@ Quite straight-forward:
 - recal is the recalibration table
 
 ## tools and dependencies
-nextflow 0.17.3
-bwa 0.7.8
-samtools 1.3
-picard 1.118
-java sun_jdk 1.8.0_92
-GATK 3.6
-R 3.2.3
-gcc 4.9.2
-java sun_jdk1.8.0_40
-perl 5.18.4
-strelka 1.0.15
-manta 0.27.1
+- nextflow 0.17.3
+- bwa 0.7.8
+- samtools 1.3
+- picard 1.118
+- java sun_jdk 1.8.0_92
+- GATK 3.6
+- R 3.2.3
+- gcc 4.9.2
+- java sun_jdk1.8.0_40
+- perl 5.18.4
+- strelka 1.0.15
+- manta 0.27.1
 
 ## Configuration file
 We're developing this workflow on UPPMAX cluster milou. So our config file is based on the config file from [NGI RNAseq Nextflow pipeline](https://github.com/SciLifeLab/NGI-RNAseq)
