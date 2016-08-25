@@ -1,4 +1,0 @@
-The TCGA benchmark data is mounted on milou at /sw/data/uppnex/ToolBox/TCGAbenchmark/ .
-Short test cases in the chr17_testdata directory.
-
-
