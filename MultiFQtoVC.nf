@@ -205,6 +205,8 @@ if (!params.sample) {
   exit 1
 }
 
+sampleTSVconfig = file(params.sample)
+
 if ('preprocessing' in workflowSteps) {
   /*
    * Channeling the TSV file containing FASTQ for preprocessing
@@ -213,7 +215,6 @@ if ('preprocessing' in workflowSteps) {
    * I just added __status to the idSample so that the whole pipeline is still working without having to change anything.
    * I know, it is lazy...
    */
-
 
   fastqFiles = Channel
     .from(sampleTSVconfig.readLines())
