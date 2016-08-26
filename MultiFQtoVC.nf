@@ -318,7 +318,7 @@ if ('preprocessing' in workflowSteps) {
     publishDir "Preprocessing/MergeBam"
 
     module 'bioinfo-tools'
-    module 'samtools/1.3'
+    module 'picard/1.118'
 
     memory { 16.GB * task.attempt }
     time { 16.h * task.attempt }
@@ -333,11 +333,21 @@ if ('preprocessing' in workflowSteps) {
     set idPatient, idSample, idRun, file("${idSample}.bam") into mergedBam
 
     script:
+		bamInputListStr = idRun.toListString()
+		bamInput = bamInputListStr.replace(', ', '.bam INPUT=').replace(']','.bam').replace('[','')
     idRun = idRun.sort().join(':')
-
     """
     echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nidRun:\t"${idRun}"\nbam:\t"${bam}"\n" > logInfo
-    samtools merge ${idSample}.bam ${bam}
+		echo "bam_input "${bamInput}
+		BAM_INPUT=${bamInput}
+    java -Xmx${task.memory.toGiga()}g -jar ${params.picardHome}/MergeSamFiles.jar \
+    INPUT=${bamInput} \
+    TMP_DIR=. \
+    ASSUME_SORTED=true \
+		USE_THREADING=true \
+    VALIDATION_STRINGENCY=LENIENT \
+    CREATE_INDEX=TRUE \
+    OUTPUT=${idSample}.bam
     """
   }
 
