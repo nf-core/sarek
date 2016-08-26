@@ -333,12 +333,16 @@ if ('preprocessing' in workflowSteps) {
     set idPatient, idSample, idRun, file("${idSample}.bam") into mergedBam
 
     script:
+		// make a string list, replace space and comma as ".bam" and feed the string to shell
+		// so from a run ID string like
+		// "[tiny.normal_4, tiny.normal_2, tiny.normal_7, tiny.normal_1, tiny.normal_8]"
+		// we will have
+		// "tiny.normal_4.bam INPUT=tiny.normal_2.bam INPUT=tiny.normal_7.bam INPUT=tiny.normal_1.bam INPUT=tiny.normal_8.bam"
 		bamInputListStr = idRun.toListString()
 		bamInput = bamInputListStr.replace(', ', '.bam INPUT=').replace(']','.bam').replace('[','')
     idRun = idRun.sort().join(':')
     """
     echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nidRun:\t"${idRun}"\nbam:\t"${bam}"\n" > logInfo
-		echo "bam_input "${bamInput}
 		BAM_INPUT=${bamInput}
     java -Xmx${task.memory.toGiga()}g -jar ${params.picardHome}/MergeSamFiles.jar \
     INPUT=${bamInput} \
@@ -346,7 +350,7 @@ if ('preprocessing' in workflowSteps) {
     ASSUME_SORTED=true \
 		USE_THREADING=true \
     VALIDATION_STRINGENCY=LENIENT \
-    CREATE_INDEX=TRUE \
+    CREATE_INDEX=FALSE \
     OUTPUT=${idSample}.bam
     """
   }
