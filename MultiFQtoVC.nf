@@ -730,6 +730,8 @@ if ('MuTect2' in workflowSteps) {
     set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf") into mutect2VariantCallingOutput
   
     // we are using MuTect2 shipped in GATK v3.6
+		// TODO: the  "-U ALLOW_SEQ_DICT_INCOMPATIBILITY " flag is actually masking a bug in older Picard versions. Using the latest Picard tool 
+		// this bug should go away and we should _not_ use this flag
     """
     java -Xmx${task.memory.toGiga()}g -jar ${params.mutect2Home}/GenomeAnalysisTK.jar \
     -T MuTect2 \
@@ -739,6 +741,7 @@ if ('MuTect2' in workflowSteps) {
     --dbsnp ${refs["dbsnp"]} \
     -I:normal $bamNormal \
     -I:tumor $bamTumor \
+		-U ALLOW_SEQ_DICT_INCOMPATIBILITY \
     -L \"${genInt}\" \
     -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf
     """
