@@ -101,7 +101,7 @@ switch (params) {
       "   [--steps STEP[,STEP]]",
       "       optional option for now, to configure which",
       "         processes will be runned or skipped in the workflow.",
-      "         Different steps to be separated by commas."
+      "         Different steps to be separated by commas.",
       "       Possible values are:",
       "         preprocessing (default, will start workflow with FASTQ files)",
       "         nopreprocessing (will start workflow with recalibrated BAM files)",
