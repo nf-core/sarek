@@ -76,7 +76,7 @@ Quite straight-forward:
 - bai is the index
 - recal is the recalibration table
 
-## tools and dependencies
+## Tools and dependencies
 - nextflow 0.17.3
 - bwa 0.7.8
 - samtools 1.3
@@ -85,7 +85,6 @@ Quite straight-forward:
 - GATK 3.6
 - R 3.2.3
 - gcc 4.9.2
-- java sun_jdk1.8.0_40
 - perl 5.18.4
 - strelka 1.0.15
 - manta 0.27.1
