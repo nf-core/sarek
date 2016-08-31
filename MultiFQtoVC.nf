@@ -803,6 +803,9 @@ if ('MuTect2' in workflowSteps) {
     java -Xmx${task.memory.toGiga()}g -cp ${params.mutect2Home}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out MuTect2_${idPatient}_${idNormal}_${idT}.vcf
     """
   }
+} else {
+  bamsForMuTect2.close()
+  muTect2Intervals.close()
 }
 
 if ('VarDict' in workflowSteps) {
@@ -821,7 +824,6 @@ if ('VarDict' in workflowSteps) {
     module 'java/sun_jdk1.8.0_92'
     module 'R/3.2.3'
     module 'gcc/4.9.2'
-    module 'java/sun_jdk1.8.0_40'
     module 'perl/5.18.4'
 
     cpus 1
@@ -867,7 +869,6 @@ if ('VarDict' in workflowSteps) {
     module 'java/sun_jdk1.8.0_92'
     module 'R/3.2.3'
     module 'gcc/4.9.2'
-    module 'java/sun_jdk1.8.0_40'
     module 'perl/5.18.4'
   
     cpus 1
@@ -939,7 +940,6 @@ if ('Strelka' in workflowSteps) {
   }
   strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
 } else {
-  bamsForStrelka = logChannelContent("Bams for Strelka: ", bamsForStrelka)
   bamsForStrelka.close()
   strelkaIntervals.close()
 }
