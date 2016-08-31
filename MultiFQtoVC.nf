@@ -109,6 +109,7 @@ switch (params) {
       "         VarDict (use VarDict for VC)",
       "         Strelka (use Strelka for VC)",
       "         Manta (use Manta for SV)",
+      "         ascat (use ascat for SV)",
       "    --help",
       "       you're reading it",
       "    --version",
@@ -159,7 +160,8 @@ refs = [
   "cosmic":       params.cosmic,       // cosmic vcf file
   "intervals":    params.intervals,    // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
   "MantaRef":     params.mantaRef,     // copy of the genome reference file 
-  "MantaIndex":   params.mantaIndex   // reference index indexed with samtools/0.1.19
+  "MantaIndex":   params.mantaIndex,   // reference index indexed with samtools/0.1.19
+  "acLoci":       params.acLoci        // loci file for ascat 
   ]
 
 refs.each(CheckExistence)
@@ -320,7 +322,7 @@ if ('preprocessing' in workflowSteps) {
     publishDir "Preprocessing/MergeBam"
 
     module 'bioinfo-tools'
-    module 'picard/1.118'
+    module 'samtools/1.3'
 
     memory { 16.GB * task.attempt }
     time { 16.h * task.attempt }
@@ -335,25 +337,11 @@ if ('preprocessing' in workflowSteps) {
     set idPatient, idSample, idRun, file("${idSample}.bam") into mergedBam
 
     script:
-		// make a string list, replace space and comma as ".bam" and feed the string to shell
-		// so from a run ID string like
-		// "[tiny.normal_4, tiny.normal_2, tiny.normal_7, tiny.normal_1, tiny.normal_8]"
-		// we will have
-		// "tiny.normal_4.bam INPUT=tiny.normal_2.bam INPUT=tiny.normal_7.bam INPUT=tiny.normal_1.bam INPUT=tiny.normal_8.bam"
-		bamInputListStr = idRun.toListString()
-		bamInput = bamInputListStr.replace(', ', '.bam INPUT=').replace(']','.bam').replace('[','')
     idRun = idRun.sort().join(':')
+
     """
     echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nidRun:\t"${idRun}"\nbam:\t"${bam}"\n" > logInfo
-		BAM_INPUT=${bamInput}
-    java -Xmx${task.memory.toGiga()}g -jar ${params.picardHome}/MergeSamFiles.jar \
-    INPUT=${bamInput} \
-    TMP_DIR=. \
-    ASSUME_SORTED=true \
-		USE_THREADING=true \
-    VALIDATION_STRINGENCY=LENIENT \
-    CREATE_INDEX=FALSE \
-    OUTPUT=${idSample}.bam
+    samtools merge ${idSample}.bam ${bam}
     """
   }
 
@@ -677,10 +665,11 @@ bamsForMuTect2 = Channel.create()
 bamsForVarDict = Channel.create()
 bamsForManta = Channel.create()
 bamsForStrelka = Channel.create()
+bamsForAscat = Channel.create()
 
 Channel
   .from bamsAll
-  .separate(bamsForMuTect2, bamsForVarDict, bamsForManta, bamsForStrelka) {a -> [a, a, a, a]}
+  .separate(bamsForMuTect2, bamsForVarDict, bamsForManta, bamsForStrelka, bamsForAscat) {a -> [a, a, a, a, a]}
 
 // define intervals file by --intervals
 intervalsFile = file(params.intervals)
@@ -732,8 +721,6 @@ if ('MuTect2' in workflowSteps) {
     set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf") into mutect2VariantCallingOutput
   
     // we are using MuTect2 shipped in GATK v3.6
-		// TODO: the  "-U ALLOW_SEQ_DICT_INCOMPATIBILITY " flag is actually masking a bug in older Picard versions. Using the latest Picard tool 
-		// this bug should go away and we should _not_ use this flag
     """
     java -Xmx${task.memory.toGiga()}g -jar ${params.mutect2Home}/GenomeAnalysisTK.jar \
     -T MuTect2 \
@@ -743,7 +730,6 @@ if ('MuTect2' in workflowSteps) {
     --dbsnp ${refs["dbsnp"]} \
     -I:normal $bamNormal \
     -I:tumor $bamTumor \
-		-U ALLOW_SEQ_DICT_INCOMPATIBILITY \
     -L \"${genInt}\" \
     -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf
     """
@@ -983,6 +969,96 @@ if ('Manta' in workflowSteps) {
 } else {
   bamsForManta.close()
 }
+
+if ('ascat' in workflowSteps) {
+//  #!/usr/bin/env nextflow
+// This module runs ascat preprocessing and run
+// Commands and code from Malin Larsson
+// Module based on Jesper Eisfeldt's code
+
+
+/* Workflow:
+    First: run alleleCount on both normal and tumor (each its own process
+    Second: Run R script to process allele counts into logR and BAF values  
+    Third: run ascat
+*/
+
+
+// COMMANDS:
+
+// 1)
+// module load bioinfo-tools
+// module load alleleCount
+// alleleCounter -l /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/1000G_phase3_20130502_SNP_maf0.3.loci -r /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta -b sample.bam -o sample.allecount
+
+
+process alleleCount{
+
+    module 'bioinfo-tools'
+    module 'alleleCount'
+
+    cpus 2
+
+    input:
+    file refs["genomeFile"]
+    file refs["genomeIndex"]
+    file refs["acLoci"]
+//    file normal_bam
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForAscat
+
+    output:
+    file "${idSampleNormal}.alleleCount" into ascat_normal_allelecount
+    file "${idSampleTumor}.alleleCount" into ascat_tumor_allelecount
+// lets rather make an output set
+
+    """
+    alleleCounter -l ${refs["acLoci"]} -r ${refs["genomeFile"]} -b ${bamNormal} -o ${idSampleNormal}.alleleCount;
+    alleleCounter -l ${refs["acLoci"]} -r ${refs["genomeFile"]} -b ${bamTumor} -o ${idSampleTumor}.alleleCount;
+
+    """
+
+	
+} // end process alleleCount
+
+
+/*
+process alleleCountTumor{
+
+    module 'bioinfo-tools'
+    module 'alleleCount'
+
+    cpus 1
+
+    input:
+    file refs["genomeFile"]
+    file refs["genomeIndex"]
+    file refs["acLoci"]
+    file tumor_bam
+
+    output:
+    file "${params.sample}.tumor.allelecount" into ascat_tumor_allelecount
+
+    """
+    alleleCounter -l ${refs["acLoci"]} -r ${refs["genomeFile"]} -b ${tumor_bam} -o ${params.sample}.tumor.alleleCount
+    """
+
+	
+} // end process alleleCountTumor
+
+*/
+
+} else {
+  bamsForAscat.close()
+}
+
+
+/*
+
+add process for convert allele counts
+add process for runASCAT.r
+
+*/
+
 
 
 /*
