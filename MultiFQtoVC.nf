@@ -823,7 +823,6 @@ if ('VarDict' in workflowSteps) {
     module 'bioinfo-tools'
     module 'java/sun_jdk1.8.0_92'
     module 'R/3.2.3'
-    module 'gcc/4.9.2'
     module 'perl/5.18.4'
 
     cpus 1
@@ -868,7 +867,6 @@ if ('VarDict' in workflowSteps) {
     module 'samtools/1.3'
     module 'java/sun_jdk1.8.0_92'
     module 'R/3.2.3'
-    module 'gcc/4.9.2'
     module 'perl/5.18.4'
   
     cpus 1
