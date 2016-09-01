@@ -161,7 +161,7 @@ refs = [
   "intervals":    params.intervals,    // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
   "MantaRef":     params.mantaRef,     // copy of the genome reference file 
   "MantaIndex":   params.mantaIndex,   // reference index indexed with samtools/0.1.19
-  "acLoci":       params.acLoci        // loci file for ascat 
+  "acLoci":       params.acLoci        // loci file for ascat
   ]
 
 refs.each(CheckExistence)
@@ -1006,9 +1006,7 @@ process alleleCount{
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForAscat
 
     output:
-    file "${idSampleNormal}.alleleCount" into ascat_normal_allelecount
-    file "${idSampleTumor}.alleleCount" into ascat_tumor_allelecount
-// lets rather make an output set
+    set idPatient, idSampleNormal, idSampleTumor, file("${idSampleNormal}.alleleCount"), file("${idSampleTumor}.alleleCount") into allele_count_output
 
     """
     alleleCounter -l ${refs["acLoci"]} -r ${refs["genomeFile"]} -b ${bamNormal} -o ${idSampleNormal}.alleleCount;
@@ -1034,17 +1032,19 @@ process convertAlleleCounts {
   cpus 1
 
   input:
-  file ascat_normal_allelecount
-  file ascat_tumor_allelecount
-
+  set idPatient, idSampleNormal, idSampleTumor, file(normalAlleleCt), file(tumorAlleleCt) from allele_count_output
+  //file ${refs["scriptDir"]}/convertAlleleCounts.r
 
   output:
 
-  file 
+//  file "ble.txt"
+  set idPatient, idSampleNormal, idSampleTumor, file("${idSampleNormal}.BAF"), file("${idSampleNormal}.LogR"), file("${idSampleTumor}.BAF"), file("${idSampleTumor}.LogR") into convert_ac_output
+
 
   """
-  Rscript scripts/convertAlleleCounts.r ${idSampleTumor} ${ascat_tumor_allelecount} ${idSampleNormal} ${ascat_normal_allelecount} ${refs["gender"]}
+  convertAlleleCounts.r ${idSampleTumor} ${tumorAlleleCt} ${idSampleNormal} ${normalAlleleCt} ${refs["gender"]}
   """
+//  touch ${idSampleNormal}.BAF ${idSampleNormal}.LogR ${idSampleTumor}.BAF ${idSampleTumor}.LogR
 
 
 } // end process convertAlleleCounts
