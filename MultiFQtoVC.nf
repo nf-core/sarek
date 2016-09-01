@@ -1020,44 +1020,20 @@ process alleleCount{
 	
 } // end process alleleCount
 
-
-/*
-process alleleCountTumor{
-
-    module 'bioinfo-tools'
-    module 'alleleCount'
-
-    cpus 1
-
-    input:
-    file refs["genomeFile"]
-    file refs["genomeIndex"]
-    file refs["acLoci"]
-    file tumor_bam
-
-    output:
-    file "${params.sample}.tumor.allelecount" into ascat_tumor_allelecount
-
-    """
-    alleleCounter -l ${refs["acLoci"]} -r ${refs["genomeFile"]} -b ${tumor_bam} -o ${params.sample}.tumor.alleleCount
-    """
-
-	
-} // end process alleleCountTumor
-
-*/
-
-} else {
-  bamsForAscat.close()
-}
-
-
 /*
 
 add process for convert allele counts
 add process for runASCAT.r
 
 */
+
+
+
+} else {
+  bamsForAscat.close()
+}
+
+
 
 
 
