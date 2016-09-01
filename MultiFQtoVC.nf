@@ -984,7 +984,6 @@ if ('ascat' in workflowSteps) {
 */
 
 
-// COMMANDS:
 
 // 1)
 // module load bioinfo-tools
@@ -997,7 +996,7 @@ process alleleCount{
     module 'bioinfo-tools'
     module 'alleleCount'
 
-    cpus 2
+    cpus 1
 
     input:
     file refs["genomeFile"]
@@ -1014,11 +1013,41 @@ process alleleCount{
     """
     alleleCounter -l ${refs["acLoci"]} -r ${refs["genomeFile"]} -b ${bamNormal} -o ${idSampleNormal}.alleleCount;
     alleleCounter -l ${refs["acLoci"]} -r ${refs["genomeFile"]} -b ${bamTumor} -o ${idSampleTumor}.alleleCount;
-
     """
 
 	
 } // end process alleleCount
+
+
+// ascat step 2/3
+// converte allele counts
+// R script from Malin Larssons bitbucket repo:
+// https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
+//
+// copyright?
+
+// prototype: "Rscript convertAlleleCounts.r tumorid tumorac normalid normalac gender"
+
+
+process convertAlleleCounts {
+
+  cpus 1
+
+  input:
+  file ascat_normal_allelecount
+  file ascat_tumor_allelecount
+
+
+  output:
+
+  file 
+
+  """
+  Rscript scripts/convertAlleleCounts.r ${idSampleTumor} ${ascat_tumor_allelecount} ${idSampleNormal} ${ascat_normal_allelecount} ${refs["gender"]}
+  """
+
+
+} // end process convertAlleleCounts
 
 /*
 
