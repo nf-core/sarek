@@ -1037,17 +1037,46 @@ process convertAlleleCounts {
 
   output:
 
-//  file "ble.txt"
   set idPatient, idSampleNormal, idSampleTumor, file("${idSampleNormal}.BAF"), file("${idSampleNormal}.LogR"), file("${idSampleTumor}.BAF"), file("${idSampleTumor}.LogR") into convert_ac_output
 
 
   """
   convertAlleleCounts.r ${idSampleTumor} ${tumorAlleleCt} ${idSampleNormal} ${normalAlleleCt} ${refs["gender"]}
   """
-//  touch ${idSampleNormal}.BAF ${idSampleNormal}.LogR ${idSampleTumor}.BAF ${idSampleTumor}.LogR
 
 
 } // end process convertAlleleCounts
+
+
+
+// ascat step 3/3
+// run ascat
+// R scripts from Malin Larssons bitbucket repo:
+// https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
+//
+// copyright?
+//
+// prototype: "Rscript run_ascat.r tumor_baf tumor_logr normal_baf normal_logr"
+
+process runASCAT {
+
+  cpus 1
+
+  input:
+
+  set idPatient, idSampleNormal, idSampleTumor, file(normalBAF), file(normalLogR), file(tumorBAF), file(tumorLogR) from convert_ac_output
+
+  output:
+  file "ascat.done"
+
+
+  """
+  run_ascat.r ${tumorBAF} ${tumorLogR} ${normalBAF} ${normalLogR}
+  touch ascat.done
+  """
+
+
+} // end process runASCAT
 
 /*
 
