@@ -15,7 +15,7 @@
 # BAF and LogR tables (tab delimited text files)
 #######################################################################################################
 
-source("/proj/b2011185/nobackup/private/wabi/somatic_wgs_pipeline/ascat.R")
+source("./ascat.R")
 #gcfile = "/proj/b2011185/nobackup/wabi/somatic_wgs_pipeline/1000G_maf0.3_gc_id.txt"
 
 args = commandArgs(trailingOnly=TRUE)
