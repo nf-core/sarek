@@ -1071,9 +1071,53 @@ process runASCAT {
 
 
   """
-  run_ascat.r ${tumorBAF} ${tumorLogR} ${normalBAF} ${normalLogR}
-  touch ascat.done
+  #!/bin/env Rscript
+
+  #######################################################################################################
+# Description:
+# R-script for converting output from AlleleCount to BAF and LogR values.
+#
+# Input:
+# AlleleCounter output file for tumor and normal samples
+# The first line should contain a header describing the data
+# The following columns and headers should be present:
+# CHR    POS     Count_A Count_C Count_G Count_T Good_depth
+#
+# Output:
+# BAF and LogR tables (tab delimited text files)
+#######################################################################################################
+
+source("$baseDir/scripts/ascat.R")
+
+tumorbaf = "${tumorBAF}"
+tumorlogr = "${tumorLogR}"
+normalbaf = "${normalBAF}"
+normallogr = "${normalLogR}"
+
+#Load the  data
+ascat.bc <- ascat.loadData(Tumor_LogR_file=tumorlogr, Tumor_BAF_file=tumorbaf, Germline_LogR_file=normallogr, Germline_BAF_file=normalbaf)
+
+#Plot the raw data
+ascat.plotRawData(ascat.bc)
+
+#Segment the data
+ascat.bc <- ascat.aspcf(ascat.bc)
+
+#Plot the segmented data
+ascat.plotSegmentedData(ascat.bc)
+
+#Run ASCAT to fit every tumor to a model, inferring ploidy, normal cell contamination, and discrete copy numbers
+ascat.output <- ascat.runAscat(ascat.bc)
+str(ascat.output)
+plot(sort(ascat.output\$aberrantcellfraction))
+plot(density(ascat.output\$ploidy))
+
+
+  
   """
+// the following works when ascat.R is in the run_ascat.r file and the run_ascat.r file is in bin/
+//  run_ascat.r ${tumorBAF} ${tumorLogR} ${normalBAF} ${normalLogR}
+//  touch ascat.done
 
 
 } // end process runASCAT
