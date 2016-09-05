@@ -946,6 +946,8 @@ if ('Strelka' in workflowSteps) {
 
 if ('Manta' in workflowSteps) {
   process Manta {
+    publishDir "VariantCalling/Manta"
+  
     module 'bioinfo-tools'
     module 'manta/0.27.1'
     module 'samtools/0.1.19'
