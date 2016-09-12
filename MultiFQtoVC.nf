@@ -54,6 +54,7 @@ OTHER DEALINGS IN THE SOFTWARE.
  - Realign - using GATK
  - CreateRecalibrationTable - using GATK
  - RecalibrateBam - using GATK
+ - RunMutect1 - using MuTect1 1.1.5 loaded as a module
  - RunMutect2 - using MuTect2 shipped in GATK v3.6
  - VarDict - run VarDict on multiple intervals
  - VarDictCollatedVCF - merge Vardict result
@@ -105,6 +106,7 @@ switch (params) {
       "       Possible values are:",
       "         preprocessing (default, will start workflow with FASTQ files)",
       "         nopreprocessing (will start workflow with recalibrated BAM files)",
+      "         MuTect1 (use MuTect1 for VC)",
       "         MuTect2 (use MuTect2 for VC)",
       "         VarDict (use VarDict for VC)",
       "         Strelka (use Strelka for VC)",
@@ -661,15 +663,17 @@ bamsAll = logChannelContent("Mapped Recalibrated Bam for variant Calling: ", bam
 // Since we are on a cluster, this can parallelize the variant call process, and push down the variant call wall clock time significanlty.
 
 // first create channels for each variant caller
+bamsForMuTect1 = Channel.create()
 bamsForMuTect2 = Channel.create()
 bamsForVarDict = Channel.create()
 bamsForManta = Channel.create()
 bamsForStrelka = Channel.create()
 bamsForAscat = Channel.create()
 
+// TODO: refactor this part
 Channel
   .from bamsAll
-  .separate(bamsForMuTect2, bamsForVarDict, bamsForManta, bamsForStrelka, bamsForAscat) {a -> [a, a, a, a, a]}
+  .separate(bamsForMuTect1, bamsForMuTect2, bamsForVarDict, bamsForManta, bamsForStrelka, bamsForAscat) {a -> [a, a, a, a, a, a]}
 
 // define intervals file by --intervals
 intervalsFile = file(params.intervals)
@@ -684,17 +688,57 @@ intervals = Channel
 gI = intervals
   .map {a -> [a,a.replaceFirst(/\:/,"_")]}
 
+muTect1Intervals = Channel.create()
 muTect2Intervals = Channel.create()
 varDictIntervals = Channel.create()
 strelkaIntervals = Channel.create()
 
 Channel
   .from gI
-  .separate (muTect2Intervals, varDictIntervals, strelkaIntervals) {a -> [a, a, a]}
+  .separate (muTect1Intervals, muTect2Intervals, varDictIntervals, strelkaIntervals) {a -> [a, a, a, a]}
 
 // now add genomic intervals to the sample information
 // join [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] and ["1:1-2000","1_1-2000"] 
 // and make a line for each interval
+
+if ('MuTect1' in workflowSteps) {
+  bamsFMT1 = bamsForMuTect1.spread(muTect1Intervals)
+  bamsFMT1 = logChannelContent("Bams for MuTect1: ", bamsFMT1)
+
+  process RunMutect1 {
+    publishDir "VariantCalling/MuTect1/intervals"
+
+    module 'bioinfo-tools'
+    module 'java/sun_jdk1.8.0_40'
+
+    cpus 8 
+    memory { 16.GB * task.attempt }
+    time { 16.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
+
+    input:
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT1
+
+    output:
+    set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.vcf") into mutect1VariantCallingOutput
+  
+    """
+    java -Xmx${task.memory.toGiga()}g -jar \${MUTECT_HOME}/muTect.jar \
+    -T MuTect \
+    -nct ${task.cpus} \
+    -R ${refs["genomeFile"]} \
+    --cosmic ${refs["cosmic"]} \
+    --dbsnp ${refs["dbsnp"]} \
+    -I:normal $bamNormal \
+    -I:tumor $bamTumor \
+    -L \"${genInt}\" \
+    -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.txt
+    """
+  }
+
+}
 
 if ('MuTect2' in workflowSteps) {
 
