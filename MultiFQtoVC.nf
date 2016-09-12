@@ -159,6 +159,7 @@ refs = [
   "millsIndels":  params.millsIndels,  // Mill's Golden set of SNPs
   "millsIndex":   params.millsIndex,   // Mill's Golden set index
   "sample":       params.sample,       // the sample sheet (multilane data refrence table, see below)
+  "cosmic41":     params.cosmic41,     // cosmic vcf file with VCF4.1 header
   "cosmic":       params.cosmic,       // cosmic vcf file
   "intervals":    params.intervals,    // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
   "MantaRef":     params.mantaRef,     // copy of the genome reference file 
@@ -479,6 +480,7 @@ if ('preprocessing' in workflowSteps) {
     -known $ki \
     -known $mi \
     -nt ${task.cpus} \
+		-L "1:131941-141339" \
     -o ${idPatient}.intervals
     """
   }
@@ -670,7 +672,7 @@ bamsForManta = Channel.create()
 bamsForStrelka = Channel.create()
 bamsForAscat = Channel.create()
 
-// TODO: refactor this part
+// TODO: refactor this part - this is silly to make a BAM channel for all the subunits below in this way
 Channel
   .from bamsAll
   .separate(bamsForMuTect1, bamsForMuTect2, bamsForVarDict, bamsForManta, bamsForStrelka, bamsForAscat) {a -> [a, a, a, a, a, a]}
@@ -709,7 +711,8 @@ if ('MuTect1' in workflowSteps) {
     publishDir "VariantCalling/MuTect1/intervals"
 
     module 'bioinfo-tools'
-    module 'java/sun_jdk1.8.0_40'
+		module 'java/1.7.0_25'
+    module 'mutect'
 
     cpus 8 
     memory { 16.GB * task.attempt }
@@ -727,14 +730,14 @@ if ('MuTect1' in workflowSteps) {
     """
     java -Xmx${task.memory.toGiga()}g -jar \${MUTECT_HOME}/muTect.jar \
     -T MuTect \
-    -nct ${task.cpus} \
     -R ${refs["genomeFile"]} \
-    --cosmic ${refs["cosmic"]} \
+    --cosmic ${refs["cosmic41"]} \
     --dbsnp ${refs["dbsnp"]} \
     -I:normal $bamNormal \
     -I:tumor $bamTumor \
     -L \"${genInt}\" \
-    -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.txt
+    --out ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.txt \
+    --vcf ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.vcf
     """
   }
 
