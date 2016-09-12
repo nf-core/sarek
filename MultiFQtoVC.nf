@@ -268,7 +268,7 @@ if ('preprocessing' in workflowSteps) {
     publishDir "Preprocessing/Mapping"
 
     module 'bioinfo-tools'
-    module 'bwa/0.7.8'
+    module 'bwa/0.7.13'
     module 'samtools/1.3'
 
     cpus 8
@@ -443,7 +443,7 @@ if ('preprocessing' in workflowSteps) {
   process CreateIntervals {
     publishDir "Preprocessing/CreateIntervals"
 
-    module 'java/sun_jdk1.8.0_92'
+    module 'java/sun_jdk1.8.0_40'
 
     cpus 8
     memory { 16.GB * task.attempt }
@@ -490,7 +490,7 @@ if ('preprocessing' in workflowSteps) {
   process Realign {
     publishDir "Preprocessing/Realign"
 
-    module 'java/sun_jdk1.8.0_92'
+    module 'java/sun_jdk1.8.0_40'
 
     memory { 16.GB * task.attempt }
     time { 20.h * task.attempt }
@@ -551,7 +551,7 @@ if ('preprocessing' in workflowSteps) {
   process CreateRecalibrationTable {
     publishDir "Preprocessing/CreateRecalibrationTable"
 
-    module 'java/sun_jdk1.8.0_92'
+    module 'java/sun_jdk1.8.0_40'
 
     cpus 8
     memory { 16.GB * task.attempt }
@@ -593,7 +593,7 @@ if ('preprocessing' in workflowSteps) {
 process RecalibrateBam {
   publishDir "Preprocessing/RecalibrateBam"
 
-  module 'java/sun_jdk1.8.0_92'
+  module 'java/sun_jdk1.8.0_40'
 
   cpus 8
   memory { 16.GB * task.attempt }
@@ -705,7 +705,7 @@ if ('MuTect2' in workflowSteps) {
     publishDir "VariantCalling/MuTect2/intervals"
 
     module 'bioinfo-tools'
-    module 'java/sun_jdk1.8.0_92'
+    module 'java/sun_jdk1.8.0_40'
 
     cpus 8 
     memory { 16.GB * task.attempt }
@@ -771,7 +771,7 @@ if ('MuTect2' in workflowSteps) {
     publishDir = pd
 
     module 'bioinfo-tools'
-    module 'java/sun_jdk1.8.0_92'
+    module 'java/sun_jdk1.8.0_40'
 
     cpus 8 
     memory { 16.GB * task.attempt }
@@ -807,10 +807,9 @@ if ('VarDict' in workflowSteps) {
     // we need further filters, but some of the outputs are empty files, confusing the VCF generator script
   
     module 'bioinfo-tools'
-    module 'java/sun_jdk1.8.0_92'
+    module 'java/sun_jdk1.8.0_40'
     module 'R/3.2.3'
     module 'gcc/4.9.2'
-    module 'java/sun_jdk1.8.0_40'
     module 'perl/5.18.4'
 
     cpus 1
@@ -853,10 +852,9 @@ if ('VarDict' in workflowSteps) {
   
     module 'bioinfo-tools'
     module 'samtools/1.3'
-    module 'java/sun_jdk1.8.0_92'
+    module 'java/sun_jdk1.8.0_40'
     module 'R/3.2.3'
     module 'gcc/4.9.2'
-    module 'java/sun_jdk1.8.0_40'
     module 'perl/5.18.4'
   
     cpus 1
