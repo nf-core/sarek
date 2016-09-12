@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/SciLifeLab/CAW.png?label=ready&title=Ready)](https://waffle.io/SciLifeLab/CAW)
 # CAW
 Nextflow Cancer Analysis Workflow Prototype developed at @SciLifeLab
 
