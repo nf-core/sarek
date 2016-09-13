@@ -480,7 +480,6 @@ if ('preprocessing' in workflowSteps) {
     -known $ki \
     -known $mi \
     -nt ${task.cpus} \
-		-L "1:131941-141339" \
     -o ${idPatient}.intervals
     """
   }
@@ -711,8 +710,8 @@ if ('MuTect1' in workflowSteps) {
     publishDir "VariantCalling/MuTect1/intervals"
 
     module 'bioinfo-tools'
-		module 'java/1.7.0_25'
-    module 'mutect'
+    module 'java/sun_jdk1.7.0_25'
+    module 'mutect/1.1.5'
 
     cpus 8 
     memory { 16.GB * task.attempt }
@@ -740,7 +739,62 @@ if ('MuTect1' in workflowSteps) {
     --vcf ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.vcf
     """
   }
+    // TODO: this is a duplicate with MuTect2 (maybe other VC as well), should be implemented only at one part
 
+  // we are expecting one patient, one normal, and usually one, but occasionally more than one tumor
+  // samples (i.e. relapses). The actual calls are always related to the normal, but spread across
+  // different intervals. So, we have to collate (merge) intervals for each tumor case if there are
+  // more than one. Therefore, what we want to do is to filter the multiple tumor cases into separate 
+  // channels and collate them according to their stage.
+  mutect1VariantCallingOutput = logChannelContent("Mutect1 output: ", mutect1VariantCallingOutput)
+  filesToCollate = mutect1VariantCallingOutput
+  .groupTuple(by: 2)
+  .map { 
+    x ->  [
+      x[0].get(0),  // the patient ID
+      x[1].get(0),  // ID of the normal sample 
+      x[2],         // ID of the tumor sample (primary, relapse, whatever)
+      x[4]          // list of VCF files
+      ]
+    }
+
+  // we have to separate IDs and files
+  collatedIDs = Channel.create()
+  collatedFiles = Channel.create()
+  tumorEntries = Channel.create()
+  Channel
+    .from filesToCollate
+    .separate(collatedIDs, collatedFiles, tumorEntries) {x -> [ x, [x[0],x[1],x[2]], x[2] ]}
+
+  (idPatient, idNormal) = getPatientAndNormalIDs(collatedIDs)
+  println "Patient's ID: " + idPatient
+  println "Normal ID: " + idNormal
+  pd = "VariantCalling/MuTect1"
+  process concatFiles {
+    publishDir = pd
+
+    module 'bioinfo-tools'
+    module 'java/sun_jdk1.8.0_40'
+
+    cpus 8 
+    memory { 16.GB * task.attempt }
+    time { 16.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
+
+    input:
+    set idT from tumorEntries
+
+    output:
+    file "MuTect1*.vcf"
+
+    script:
+    """
+    VARIANTS=`ls ${workflow.launchDir}/${pd}/intervals/*${idT}*.mutect1.vcf| awk '{printf(" -V %s\\n",\$1) }'`
+    java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out MuTect1_${idPatient}_${idNormal}_${idT}.vcf
+    """
+  }
 }
 
 if ('MuTect2' in workflowSteps) {
@@ -779,7 +833,7 @@ if ('MuTect2' in workflowSteps) {
     --dbsnp ${refs["dbsnp"]} \
     -I:normal $bamNormal \
     -I:tumor $bamTumor \
-		-U ALLOW_SEQ_DICT_INCOMPATIBILITY \
+    -U ALLOW_SEQ_DICT_INCOMPATIBILITY \
     -L \"${genInt}\" \
     -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf
     """
