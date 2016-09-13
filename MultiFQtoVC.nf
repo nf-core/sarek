@@ -775,7 +775,7 @@ if ('MuTect2' in workflowSteps) {
     -T MuTect2 \
     -nct ${task.cpus} \
     -R ${refs["genomeFile"]} \
-    --cosmic ${refs["cosmic"]} \
+    --cosmic ${refs["cosmic41"]} \
     --dbsnp ${refs["dbsnp"]} \
     -I:normal $bamNormal \
     -I:tumor $bamTumor \
