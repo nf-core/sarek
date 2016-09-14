@@ -735,7 +735,7 @@ if ('MuTect1' in workflowSteps) {
     -I:normal $bamNormal \
     -I:tumor $bamTumor \
     -L \"${genInt}\" \
-    --out ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.txt \
+    --out ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.call_stats.out \
     --vcf ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.vcf
     """
   }
