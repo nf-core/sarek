@@ -54,6 +54,7 @@ OTHER DEALINGS IN THE SOFTWARE.
  - Realign - using GATK
  - CreateRecalibrationTable - using GATK
  - RecalibrateBam - using GATK
+ - RunMutect1 - using MuTect1 1.1.5 loaded as a module
  - RunMutect2 - using MuTect2 shipped in GATK v3.6
  - VarDict - run VarDict on multiple intervals
  - VarDictCollatedVCF - merge Vardict result
@@ -105,6 +106,7 @@ switch (params) {
       "       Possible values are:",
       "         preprocessing (default, will start workflow with FASTQ files)",
       "         nopreprocessing (will start workflow with recalibrated BAM files)",
+      "         MuTect1 (use MuTect1 for VC)",
       "         MuTect2 (use MuTect2 for VC)",
       "         VarDict (use VarDict for VC)",
       "         Strelka (use Strelka for VC)",
@@ -157,6 +159,7 @@ refs = [
   "millsIndels":  params.millsIndels,  // Mill's Golden set of SNPs
   "millsIndex":   params.millsIndex,   // Mill's Golden set index
   "sample":       params.sample,       // the sample sheet (multilane data refrence table, see below)
+  "cosmic41":     params.cosmic41,     // cosmic vcf file with VCF4.1 header
   "cosmic":       params.cosmic,       // cosmic vcf file
   "intervals":    params.intervals,    // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
   "MantaRef":     params.mantaRef,     // copy of the genome reference file 
@@ -661,15 +664,17 @@ bamsAll = logChannelContent("Mapped Recalibrated Bam for variant Calling: ", bam
 // Since we are on a cluster, this can parallelize the variant call process, and push down the variant call wall clock time significanlty.
 
 // first create channels for each variant caller
+bamsForMuTect1 = Channel.create()
 bamsForMuTect2 = Channel.create()
 bamsForVarDict = Channel.create()
 bamsForManta = Channel.create()
 bamsForStrelka = Channel.create()
 bamsForAscat = Channel.create()
 
+// TODO: refactor this part - this is silly to make a BAM channel for all the subunits below in this way
 Channel
   .from bamsAll
-  .separate(bamsForMuTect2, bamsForVarDict, bamsForManta, bamsForStrelka, bamsForAscat) {a -> [a, a, a, a, a]}
+  .separate(bamsForMuTect1, bamsForMuTect2, bamsForVarDict, bamsForManta, bamsForStrelka, bamsForAscat) {a -> [a, a, a, a, a, a]}
 
 // define intervals file by --intervals
 intervalsFile = file(params.intervals)
@@ -684,17 +689,113 @@ intervals = Channel
 gI = intervals
   .map {a -> [a,a.replaceFirst(/\:/,"_")]}
 
+muTect1Intervals = Channel.create()
 muTect2Intervals = Channel.create()
 varDictIntervals = Channel.create()
 strelkaIntervals = Channel.create()
 
 Channel
   .from gI
-  .separate (muTect2Intervals, varDictIntervals, strelkaIntervals) {a -> [a, a, a]}
+  .separate (muTect1Intervals, muTect2Intervals, varDictIntervals, strelkaIntervals) {a -> [a, a, a, a]}
 
 // now add genomic intervals to the sample information
 // join [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] and ["1:1-2000","1_1-2000"] 
 // and make a line for each interval
+
+if ('MuTect1' in workflowSteps) {
+  bamsFMT1 = bamsForMuTect1.spread(muTect1Intervals)
+  bamsFMT1 = logChannelContent("Bams for MuTect1: ", bamsFMT1)
+
+  process RunMutect1 {
+    publishDir "VariantCalling/MuTect1/intervals"
+
+    module 'bioinfo-tools'
+    module 'java/sun_jdk1.7.0_25'
+    module 'mutect/1.1.5'
+
+    cpus 8 
+    memory { 16.GB * task.attempt }
+    time { 16.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
+
+    input:
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT1
+
+    output:
+    set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.vcf") into mutect1VariantCallingOutput
+  
+    """
+    java -Xmx${task.memory.toGiga()}g -jar \${MUTECT_HOME}/muTect.jar \
+    -T MuTect \
+    -R ${refs["genomeFile"]} \
+    --cosmic ${refs["cosmic41"]} \
+    --dbsnp ${refs["dbsnp"]} \
+    -I:normal $bamNormal \
+    -I:tumor $bamTumor \
+    -L \"${genInt}\" \
+    --out ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.txt \
+    --vcf ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.vcf
+    """
+  }
+    // TODO: this is a duplicate with MuTect2 (maybe other VC as well), should be implemented only at one part
+
+  // we are expecting one patient, one normal, and usually one, but occasionally more than one tumor
+  // samples (i.e. relapses). The actual calls are always related to the normal, but spread across
+  // different intervals. So, we have to collate (merge) intervals for each tumor case if there are
+  // more than one. Therefore, what we want to do is to filter the multiple tumor cases into separate 
+  // channels and collate them according to their stage.
+  mutect1VariantCallingOutput = logChannelContent("Mutect1 output: ", mutect1VariantCallingOutput)
+  filesToCollate = mutect1VariantCallingOutput
+  .groupTuple(by: 2)
+  .map { 
+    x ->  [
+      x[0].get(0),  // the patient ID
+      x[1].get(0),  // ID of the normal sample 
+      x[2],         // ID of the tumor sample (primary, relapse, whatever)
+      x[4]          // list of VCF files
+      ]
+    }
+
+  // we have to separate IDs and files
+  collatedIDs = Channel.create()
+  collatedFiles = Channel.create()
+  tumorEntries = Channel.create()
+  Channel
+    .from filesToCollate
+    .separate(collatedIDs, collatedFiles, tumorEntries) {x -> [ x, [x[0],x[1],x[2]], x[2] ]}
+
+  (idPatient, idNormal) = getPatientAndNormalIDs(collatedIDs)
+  println "Patient's ID: " + idPatient
+  println "Normal ID: " + idNormal
+  pd = "VariantCalling/MuTect1"
+  process concatFiles {
+    publishDir = pd
+
+    module 'bioinfo-tools'
+    module 'java/sun_jdk1.8.0_40'
+
+    cpus 8 
+    memory { 16.GB * task.attempt }
+    time { 16.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
+
+    input:
+    set idT from tumorEntries
+
+    output:
+    file "MuTect1*.vcf"
+
+    script:
+    """
+    VARIANTS=`ls ${workflow.launchDir}/${pd}/intervals/*${idT}*.mutect1.vcf| awk '{printf(" -V %s\\n",\$1) }'`
+    java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out MuTect1_${idPatient}_${idNormal}_${idT}.vcf
+    """
+  }
+}
 
 if ('MuTect2' in workflowSteps) {
 
@@ -728,11 +829,11 @@ if ('MuTect2' in workflowSteps) {
     -T MuTect2 \
     -nct ${task.cpus} \
     -R ${refs["genomeFile"]} \
-    --cosmic ${refs["cosmic"]} \
+    --cosmic ${refs["cosmic41"]} \
     --dbsnp ${refs["dbsnp"]} \
     -I:normal $bamNormal \
     -I:tumor $bamTumor \
-		-U ALLOW_SEQ_DICT_INCOMPATIBILITY \
+    -U ALLOW_SEQ_DICT_INCOMPATIBILITY \
     -L \"${genInt}\" \
     -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf
     """
