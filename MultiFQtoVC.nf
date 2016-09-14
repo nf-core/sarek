@@ -54,6 +54,7 @@ OTHER DEALINGS IN THE SOFTWARE.
  - Realign - using GATK
  - CreateRecalibrationTable - using GATK
  - RecalibrateBam - using GATK
+ - RunMutect1 - using MuTect1 1.1.5 loaded as a module
  - RunMutect2 - using MuTect2 shipped in GATK v3.6
  - VarDict - run VarDict on multiple intervals
  - VarDictCollatedVCF - merge Vardict result
@@ -105,10 +106,12 @@ switch (params) {
       "       Possible values are:",
       "         preprocessing (default, will start workflow with FASTQ files)",
       "         nopreprocessing (will start workflow with recalibrated BAM files)",
+      "         MuTect1 (use MuTect1 for VC)",
       "         MuTect2 (use MuTect2 for VC)",
       "         VarDict (use VarDict for VC)",
       "         Strelka (use Strelka for VC)",
       "         Manta (use Manta for SV)",
+      "         ascat (use ascat for SV)",
       "    --help",
       "       you're reading it",
       "    --version",
@@ -156,10 +159,12 @@ refs = [
   "millsIndels":  params.millsIndels,  // Mill's Golden set of SNPs
   "millsIndex":   params.millsIndex,   // Mill's Golden set index
   "sample":       params.sample,       // the sample sheet (multilane data refrence table, see below)
+  "cosmic41":     params.cosmic41,     // cosmic vcf file with VCF4.1 header
   "cosmic":       params.cosmic,       // cosmic vcf file
   "intervals":    params.intervals,    // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
   "MantaRef":     params.mantaRef,     // copy of the genome reference file 
-  "MantaIndex":   params.mantaIndex   // reference index indexed with samtools/0.1.19
+  "MantaIndex":   params.mantaIndex,   // reference index indexed with samtools/0.1.19
+  "acLoci":       params.acLoci        // loci file for ascat
   ]
 
 refs.each(CheckExistence)
@@ -266,7 +271,7 @@ if ('preprocessing' in workflowSteps) {
     publishDir "Preprocessing/Mapping"
 
     module 'bioinfo-tools'
-    module 'bwa/0.7.8'
+    module 'bwa/0.7.13'
     module 'samtools/1.3'
 
     cpus 8
@@ -320,7 +325,7 @@ if ('preprocessing' in workflowSteps) {
     publishDir "Preprocessing/MergeBam"
 
     module 'bioinfo-tools'
-    module 'picard/1.118'
+    module 'samtools/1.3'
 
     memory { 16.GB * task.attempt }
     time { 16.h * task.attempt }
@@ -335,25 +340,11 @@ if ('preprocessing' in workflowSteps) {
     set idPatient, idSample, idRun, file("${idSample}.bam") into mergedBam
 
     script:
-		// make a string list, replace space and comma as ".bam" and feed the string to shell
-		// so from a run ID string like
-		// "[tiny.normal_4, tiny.normal_2, tiny.normal_7, tiny.normal_1, tiny.normal_8]"
-		// we will have
-		// "tiny.normal_4.bam INPUT=tiny.normal_2.bam INPUT=tiny.normal_7.bam INPUT=tiny.normal_1.bam INPUT=tiny.normal_8.bam"
-		bamInputListStr = idRun.toListString()
-		bamInput = bamInputListStr.replace(', ', '.bam INPUT=').replace(']','.bam').replace('[','')
     idRun = idRun.sort().join(':')
+
     """
     echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nidRun:\t"${idRun}"\nbam:\t"${bam}"\n" > logInfo
-		BAM_INPUT=${bamInput}
-    java -Xmx${task.memory.toGiga()}g -jar ${params.picardHome}/MergeSamFiles.jar \
-    INPUT=${bamInput} \
-    TMP_DIR=. \
-    ASSUME_SORTED=true \
-		USE_THREADING=true \
-    VALIDATION_STRINGENCY=LENIENT \
-    CREATE_INDEX=FALSE \
-    OUTPUT=${idSample}.bam
+    samtools merge ${idSample}.bam ${bam}
     """
   }
 
@@ -455,7 +446,7 @@ if ('preprocessing' in workflowSteps) {
   process CreateIntervals {
     publishDir "Preprocessing/CreateIntervals"
 
-    module 'java/sun_jdk1.8.0_92'
+    module 'java/sun_jdk1.8.0_40'
 
     cpus 8
     memory { 16.GB * task.attempt }
@@ -502,7 +493,7 @@ if ('preprocessing' in workflowSteps) {
   process Realign {
     publishDir "Preprocessing/Realign"
 
-    module 'java/sun_jdk1.8.0_92'
+    module 'java/sun_jdk1.8.0_40'
 
     memory { 16.GB * task.attempt }
     time { 20.h * task.attempt }
@@ -563,7 +554,7 @@ if ('preprocessing' in workflowSteps) {
   process CreateRecalibrationTable {
     publishDir "Preprocessing/CreateRecalibrationTable"
 
-    module 'java/sun_jdk1.8.0_92'
+    module 'java/sun_jdk1.8.0_40'
 
     cpus 8
     memory { 16.GB * task.attempt }
@@ -605,7 +596,7 @@ if ('preprocessing' in workflowSteps) {
 process RecalibrateBam {
   publishDir "Preprocessing/RecalibrateBam"
 
-  module 'java/sun_jdk1.8.0_92'
+  module 'java/sun_jdk1.8.0_40'
 
   cpus 8
   memory { 16.GB * task.attempt }
@@ -673,14 +664,17 @@ bamsAll = logChannelContent("Mapped Recalibrated Bam for variant Calling: ", bam
 // Since we are on a cluster, this can parallelize the variant call process, and push down the variant call wall clock time significanlty.
 
 // first create channels for each variant caller
+bamsForMuTect1 = Channel.create()
 bamsForMuTect2 = Channel.create()
 bamsForVarDict = Channel.create()
 bamsForManta = Channel.create()
 bamsForStrelka = Channel.create()
+bamsForAscat = Channel.create()
 
+// TODO: refactor this part - this is silly to make a BAM channel for all the subunits below in this way
 Channel
   .from bamsAll
-  .separate(bamsForMuTect2, bamsForVarDict, bamsForManta, bamsForStrelka) {a -> [a, a, a, a]}
+  .separate(bamsForMuTect1, bamsForMuTect2, bamsForVarDict, bamsForManta, bamsForStrelka, bamsForAscat) {a -> [a, a, a, a, a, a]}
 
 // define intervals file by --intervals
 intervalsFile = file(params.intervals)
@@ -695,17 +689,113 @@ intervals = Channel
 gI = intervals
   .map {a -> [a,a.replaceFirst(/\:/,"_")]}
 
+muTect1Intervals = Channel.create()
 muTect2Intervals = Channel.create()
 varDictIntervals = Channel.create()
 strelkaIntervals = Channel.create()
 
 Channel
   .from gI
-  .separate (muTect2Intervals, varDictIntervals, strelkaIntervals) {a -> [a, a, a]}
+  .separate (muTect1Intervals, muTect2Intervals, varDictIntervals, strelkaIntervals) {a -> [a, a, a, a]}
 
 // now add genomic intervals to the sample information
 // join [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] and ["1:1-2000","1_1-2000"] 
 // and make a line for each interval
+
+if ('MuTect1' in workflowSteps) {
+  bamsFMT1 = bamsForMuTect1.spread(muTect1Intervals)
+  bamsFMT1 = logChannelContent("Bams for MuTect1: ", bamsFMT1)
+
+  process RunMutect1 {
+    publishDir "VariantCalling/MuTect1/intervals"
+
+    module 'bioinfo-tools'
+    module 'java/sun_jdk1.7.0_25'
+    module 'mutect/1.1.5'
+
+    cpus 8 
+    memory { 16.GB * task.attempt }
+    time { 16.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
+
+    input:
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT1
+
+    output:
+    set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.vcf") into mutect1VariantCallingOutput
+  
+    """
+    java -Xmx${task.memory.toGiga()}g -jar \${MUTECT_HOME}/muTect.jar \
+    -T MuTect \
+    -R ${refs["genomeFile"]} \
+    --cosmic ${refs["cosmic41"]} \
+    --dbsnp ${refs["dbsnp"]} \
+    -I:normal $bamNormal \
+    -I:tumor $bamTumor \
+    -L \"${genInt}\" \
+    --out ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.txt \
+    --vcf ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.vcf
+    """
+  }
+    // TODO: this is a duplicate with MuTect2 (maybe other VC as well), should be implemented only at one part
+
+  // we are expecting one patient, one normal, and usually one, but occasionally more than one tumor
+  // samples (i.e. relapses). The actual calls are always related to the normal, but spread across
+  // different intervals. So, we have to collate (merge) intervals for each tumor case if there are
+  // more than one. Therefore, what we want to do is to filter the multiple tumor cases into separate 
+  // channels and collate them according to their stage.
+  mutect1VariantCallingOutput = logChannelContent("Mutect1 output: ", mutect1VariantCallingOutput)
+  filesToCollate = mutect1VariantCallingOutput
+  .groupTuple(by: 2)
+  .map { 
+    x ->  [
+      x[0].get(0),  // the patient ID
+      x[1].get(0),  // ID of the normal sample 
+      x[2],         // ID of the tumor sample (primary, relapse, whatever)
+      x[4]          // list of VCF files
+      ]
+    }
+
+  // we have to separate IDs and files
+  collatedIDs = Channel.create()
+  collatedFiles = Channel.create()
+  tumorEntries = Channel.create()
+  Channel
+    .from filesToCollate
+    .separate(collatedIDs, collatedFiles, tumorEntries) {x -> [ x, [x[0],x[1],x[2]], x[2] ]}
+
+  (idPatient, idNormal) = getPatientAndNormalIDs(collatedIDs)
+  println "Patient's ID: " + idPatient
+  println "Normal ID: " + idNormal
+  pd = "VariantCalling/MuTect1"
+  process concatFiles {
+    publishDir = pd
+
+    module 'bioinfo-tools'
+    module 'java/sun_jdk1.8.0_40'
+
+    cpus 8 
+    memory { 16.GB * task.attempt }
+    time { 16.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
+
+    input:
+    set idT from tumorEntries
+
+    output:
+    file "MuTect1*.vcf"
+
+    script:
+    """
+    VARIANTS=`ls ${workflow.launchDir}/${pd}/intervals/*${idT}*.mutect1.vcf| awk '{printf(" -V %s\\n",\$1) }'`
+    java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out MuTect1_${idPatient}_${idNormal}_${idT}.vcf
+    """
+  }
+}
 
 if ('MuTect2' in workflowSteps) {
 
@@ -716,7 +806,7 @@ if ('MuTect2' in workflowSteps) {
     publishDir "VariantCalling/MuTect2/intervals"
 
     module 'bioinfo-tools'
-    module 'java/sun_jdk1.8.0_92'
+    module 'java/sun_jdk1.8.0_40'
 
     cpus 8 
     memory { 16.GB * task.attempt }
@@ -739,11 +829,11 @@ if ('MuTect2' in workflowSteps) {
     -T MuTect2 \
     -nct ${task.cpus} \
     -R ${refs["genomeFile"]} \
-    --cosmic ${refs["cosmic"]} \
+    --cosmic ${refs["cosmic41"]} \
     --dbsnp ${refs["dbsnp"]} \
     -I:normal $bamNormal \
     -I:tumor $bamTumor \
-		-U ALLOW_SEQ_DICT_INCOMPATIBILITY \
+    -U ALLOW_SEQ_DICT_INCOMPATIBILITY \
     -L \"${genInt}\" \
     -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf
     """
@@ -782,7 +872,7 @@ if ('MuTect2' in workflowSteps) {
     publishDir = pd
 
     module 'bioinfo-tools'
-    module 'java/sun_jdk1.8.0_92'
+    module 'java/sun_jdk1.8.0_40'
 
     cpus 8 
     memory { 16.GB * task.attempt }
@@ -818,10 +908,9 @@ if ('VarDict' in workflowSteps) {
     // we need further filters, but some of the outputs are empty files, confusing the VCF generator script
   
     module 'bioinfo-tools'
-    module 'java/sun_jdk1.8.0_92'
+    module 'java/sun_jdk1.8.0_40'
     module 'R/3.2.3'
     module 'gcc/4.9.2'
-    module 'java/sun_jdk1.8.0_40'
     module 'perl/5.18.4'
 
     cpus 1
@@ -864,10 +953,9 @@ if ('VarDict' in workflowSteps) {
   
     module 'bioinfo-tools'
     module 'samtools/1.3'
-    module 'java/sun_jdk1.8.0_92'
+    module 'java/sun_jdk1.8.0_40'
     module 'R/3.2.3'
     module 'gcc/4.9.2'
-    module 'java/sun_jdk1.8.0_40'
     module 'perl/5.18.4'
   
     cpus 1
@@ -985,6 +1073,174 @@ if ('Manta' in workflowSteps) {
 } else {
   bamsForManta.close()
 }
+
+if ('ascat' in workflowSteps) {
+//  #!/usr/bin/env nextflow
+// This module runs ascat preprocessing and run
+// Commands and code from Malin Larsson
+// Module based on Jesper Eisfeldt's code
+
+
+/* Workflow:
+    First: run alleleCount on both normal and tumor (each its own process
+    Second: Run R script to process allele counts into logR and BAF values  
+    Third: run ascat
+*/
+
+
+
+// 1)
+// module load bioinfo-tools
+// module load alleleCount
+// alleleCounter -l /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/1000G_phase3_20130502_SNP_maf0.3.loci -r /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta -b sample.bam -o sample.allecount
+
+
+process alleleCount{
+
+    module 'bioinfo-tools'
+    module 'alleleCount'
+
+    cpus 1
+
+    input:
+    file refs["genomeFile"]
+    file refs["genomeIndex"]
+    file refs["acLoci"]
+//    file normal_bam
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForAscat
+
+    output:
+    set idPatient, idSampleNormal, idSampleTumor, file("${idSampleNormal}.alleleCount"), file("${idSampleTumor}.alleleCount") into allele_count_output
+
+    """
+    alleleCounter -l ${refs["acLoci"]} -r ${refs["genomeFile"]} -b ${bamNormal} -o ${idSampleNormal}.alleleCount;
+    alleleCounter -l ${refs["acLoci"]} -r ${refs["genomeFile"]} -b ${bamTumor} -o ${idSampleTumor}.alleleCount;
+    """
+
+	
+} // end process alleleCount
+
+
+// ascat step 2/3
+// converte allele counts
+// R script from Malin Larssons bitbucket repo:
+// https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
+//
+// copyright?
+
+// prototype: "Rscript convertAlleleCounts.r tumorid tumorac normalid normalac gender"
+
+
+process convertAlleleCounts {
+
+  cpus 1
+
+  input:
+  set idPatient, idSampleNormal, idSampleTumor, file(normalAlleleCt), file(tumorAlleleCt) from allele_count_output
+  //file ${refs["scriptDir"]}/convertAlleleCounts.r
+
+  output:
+
+  set idPatient, idSampleNormal, idSampleTumor, file("${idSampleNormal}.BAF"), file("${idSampleNormal}.LogR"), file("${idSampleTumor}.BAF"), file("${idSampleTumor}.LogR") into convert_ac_output
+
+
+  """
+  convertAlleleCounts.r ${idSampleTumor} ${tumorAlleleCt} ${idSampleNormal} ${normalAlleleCt} ${refs["gender"]}
+  """
+
+
+} // end process convertAlleleCounts
+
+
+
+// ascat step 3/3
+// run ascat
+// R scripts from Malin Larssons bitbucket repo:
+// https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
+//
+// copyright?
+//
+// prototype: "Rscript run_ascat.r tumor_baf tumor_logr normal_baf normal_logr"
+
+process runASCAT {
+
+  cpus 1
+
+  input:
+
+  set idPatient, idSampleNormal, idSampleTumor, file(normalBAF), file(normalLogR), file(tumorBAF), file(tumorLogR) from convert_ac_output
+
+  output:
+  file "ascat.done"
+
+
+  """
+  #!/bin/env Rscript
+
+  #######################################################################################################
+# Description:
+# R-script for converting output from AlleleCount to BAF and LogR values.
+#
+# Input:
+# AlleleCounter output file for tumor and normal samples
+# The first line should contain a header describing the data
+# The following columns and headers should be present:
+# CHR    POS     Count_A Count_C Count_G Count_T Good_depth
+#
+# Output:
+# BAF and LogR tables (tab delimited text files)
+#######################################################################################################
+
+source("$baseDir/scripts/ascat.R")
+
+tumorbaf = "${tumorBAF}"
+tumorlogr = "${tumorLogR}"
+normalbaf = "${normalBAF}"
+normallogr = "${normalLogR}"
+
+#Load the  data
+ascat.bc <- ascat.loadData(Tumor_LogR_file=tumorlogr, Tumor_BAF_file=tumorbaf, Germline_LogR_file=normallogr, Germline_BAF_file=normalbaf)
+
+#Plot the raw data
+ascat.plotRawData(ascat.bc)
+
+#Segment the data
+ascat.bc <- ascat.aspcf(ascat.bc)
+
+#Plot the segmented data
+ascat.plotSegmentedData(ascat.bc)
+
+#Run ASCAT to fit every tumor to a model, inferring ploidy, normal cell contamination, and discrete copy numbers
+ascat.output <- ascat.runAscat(ascat.bc)
+str(ascat.output)
+plot(sort(ascat.output\$aberrantcellfraction))
+plot(density(ascat.output\$ploidy))
+
+
+  
+  """
+// the following works when ascat.R is in the run_ascat.r file and the run_ascat.r file is in bin/
+//  run_ascat.r ${tumorBAF} ${tumorLogR} ${normalBAF} ${normalLogR}
+//  touch ascat.done
+
+
+} // end process runASCAT
+
+/*
+
+add process for convert allele counts
+add process for runASCAT.r
+
+*/
+
+
+
+} else {
+  bamsForAscat.close()
+}
+
+
+
 
 
 /*
