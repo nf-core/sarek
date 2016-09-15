@@ -565,6 +565,8 @@ if ('preprocessing' in workflowSteps) {
     maxRetries 3
     maxErrors '-1'
 
+    def (tempSample, tempStatus) = $idSample.tokenize( '__' )
+
     input:
     set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile) from realignedBam
     file refs["genomeFile"]
@@ -576,7 +578,7 @@ if ('preprocessing' in workflowSteps) {
     set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), file("${idSample}.recal.table") into recalibrationTable
 
     """
-    echo -e '${idPatient}\t${idSample:(-1)}\t${idSample: :-3}\tPreprocessing/CreateRecalibrationTable/${realignedBamFile}\tPreprocessing/CreateRecalibrationTable/${realignedBaiFile}\tPreprocessing/CreateRecalibrationTable/${idSample}.recal.table' >> ${idPatient}.tsv
+    echo -e '${idPatient}\t${tempStatus}\t${tempSample}\tPreprocessing/CreateRecalibrationTable/${realignedBamFile}\tPreprocessing/CreateRecalibrationTable/${realignedBaiFile}\tPreprocessing/CreateRecalibrationTable/${idSample}.recal.table' >> ${idPatient}.tsv
 
     java -Xmx${task.memory.toGiga()}g -Djava.io.tmpdir="/tmp" \
     -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
