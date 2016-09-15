@@ -29,7 +29,6 @@ https://sites.google.com/site/strelkasomaticvariantcaller/home/download
 - Nextflow 0.17.3
 - perl 5.18.4
 - picard 1.118
-- picard 1.118
 - R 3.2.3
 - samtools 0.1.19 [Manta]
 - samtools 1.3

@@ -11,7 +11,7 @@
  Jesper Eisfeldt <jesper.eisfeldt@scilifelab.se> [@J35P312]
  Maxime Garcia <maxime.garcia@scilifelab.se> [@MaxUlysse]
  Szilveszter Juhos <szilveszter.juhos@scilifelab.se> [@szilvajuhos]
- Max Käller <max.kaller@scilifelab.se>
+ Max Käller <max.kaller@scilifelab.se> [@gulfshores]
  Malin Larsson <malin.larsson@scilifelab.se> [@malinlarsson]
  Björn Nystedt <bjorn.nystedt@scilifelab.se> [@bjornnystedt]
  Pall Olason <pall.olason@scilifelab.se> [@pallolason]
@@ -553,7 +553,7 @@ if ('preprocessing' in workflowSteps) {
   realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realignedBam)
 
   process CreateRecalibrationTable {
-    publishDir "Preprocessing/CreateRecalibrationTable"
+    publishDir "Preprocessing/CreateRecalibrationTable", mode: 'move'
 
     module 'java/sun_jdk1.8.0_40'
 
@@ -575,6 +575,8 @@ if ('preprocessing' in workflowSteps) {
     set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), file("${idSample}.recal.table") into recalibrationTable
 
     """
+    echo -e "${idPatient}\t${idSample:(-1)}\t${idSample%_*}\tPreprocessing/CreateRecalibrationTable${realignedBamFile}\tPreprocessing/CreateRecalibrationTable${realignedBaiFile}\tPreprocessing/CreateRecalibrationTable${idSample}.recal.table >> ${idPatient}.tsv
+
     java -Xmx${task.memory.toGiga()}g -Djava.io.tmpdir="/tmp" \
     -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
     -T BaseRecalibrator \
