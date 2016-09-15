@@ -77,12 +77,32 @@ Quite straight-forward:
 - bai is the index
 - recal is the recalibration table
 
+### Example TSV file for a normal/tumor pair
+
+In this sample for the normal case there are 3 read groups, and 2 for the tumor. It is recommended to add the absolute path of the paired 
+FASTQ files, but relative path should work also. Note, the delimiter is the tab (\t) character:
+
+	G15511  0       normal    normal_1  /samples/G15511/BL/C09DFACXX111207.1_1.fastq.gz  /samples/G15511/BL/C09DFACXX111207.1_2.fastq.gz
+	G15511  0       normal    normal_2  /samples/G15511/BL/C09DFACXX111207.2_1.fastq.gz  /samples/G15511/BL/C09DFACXX111207.2_2.fastq.gz
+	G15511  0       normal    normal_3  /samples/G15511/BL/C09DFACXX111207.3_1.fastq.gz  /samples/G15511/BL/C09DFACXX111207.3_2.fastq.gz
+	G15511  1       tumor   tumor_1 /samples/G15511/T/D0ENMACXX111207.1_1.fastq.gz   /samples/G15511/T/D0ENMACXX111207.1_2.fastq.gz
+	G15511  1       tumor   tumor_2 /samples/G15511/T/D0ENMACXX111207.2_1.fastq.gz   /samples/G15511/T/D0ENMACXX111207.2_2.fastq.gz
+
+On the other hand, if you have pre-processed BAMs (that is the de-duplicated and realigned BAMs, their indexes and recalibration tables) you should use a structure like:
+
+	G15511  0       normal	/preprocessed/G15511.normal__1.md.real.bam /preprocessed/G15511.normal__1.md.real.bai /preprocessed/G15511.normal__1.recal.table
+	G15511  1       tumor	/preprocessed/G15511.tumor__1.md.real.bam /preprocessed/G15511.tumor__1.md.real.bai /preprocessed/G15511.tumor__1.recal.table
+
+All the files are the Preprocessing/CreateRecalibrationTable/ directory, and by default a corresponding TSV file is also deposited there. Generally, 
+to get MuTect1 and Strelka calls on the preprocessed files should be done by:
+
+	nextflow -c local.config run MultiFQtoVC.nf --sample Preprocessing/CreateRecalibrationTable/mysample.tsv --steps MuTect1,Strelka
+
 ## tools and dependencies
 - nextflow 0.17.3
 - bwa 0.7.8
 - samtools 1.3
 - picard 1.118
-- java sun_jdk 1.8.0_92
 - GATK 3.6
 - R 3.2.3
 - gcc 4.9.2
