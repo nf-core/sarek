@@ -648,12 +648,13 @@ bamsTumor = logChannelContent("Tumor Bam for variant Calling: ", bamsTumor)
 bamsNormal = logChannelContent("Normal Bam for variant Calling: ", bamsNormal)
 
 bamsForHC = Channel.create()
+bamsNormalForAll = Channel.create()
 Channel
   .from bamsNormal
-  .separate(bamsNormal, bamsForHC) {a -> [a, a]}
+  .separate(bamsNormalForAll, bamsForHC) {a -> [a, a]}
 
 bamsAll = Channel.create()
-bamsAll = bamsNormal.spread(bamsTumor)
+bamsAll = bamsNormalForAll.spread(bamsTumor)
 
 // Since idPatientNormal and idPatientTumor are the same, I'm removing it from BamsAll Channel
 // I don't think a groupTuple can be used to do that, but it could be a good idea to look if there is a nicer way to do that
