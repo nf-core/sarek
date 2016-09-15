@@ -1037,8 +1037,7 @@ if ('Manta' in workflowSteps) {
     publishDir "VariantCalling/Manta"
   
     module 'bioinfo-tools'
-    module 'manta/0.27.1'
-    module 'samtools/0.1.19'
+    module 'manta/1.0.0'
 
     cpus 8
 
