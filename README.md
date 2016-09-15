@@ -103,7 +103,6 @@ to get MuTect1 and Strelka calls on the preprocessed files should be done by:
 - bwa 0.7.8
 - samtools 1.3
 - picard 1.118
-- java sun_jdk 1.8.0_92
 - GATK 3.6
 - R 3.2.3
 - gcc 4.9.2
