@@ -63,7 +63,7 @@ We divide them for the moment into 2 main steps
 - VarDict - run VarDict on multiple intervals
 - VarDictCollatedVCF - merge Vardict results
 - RunStrelka - using Strelka 1.0.15
-- Manta - run Manta 0.27.1
+- Manta - run Manta 1.0.0
 
 ## TSV file for sample
 It's a Tab Separated Value file, based on: "subject status sample lane fastq1 fastq2" or "subject status sample bam bai recal"
@@ -89,7 +89,7 @@ Quite straight-forward:
 - gcc 4.9.2
 - perl 5.18.4
 - strelka 1.0.15
-- manta 0.27.1
+- manta 1.0.0
 
 ## Configuration file
 We're developing this workflow on UPPMAX cluster milou. So our config file is based on the config file from [NGI RNAseq Nextflow pipeline](https://github.com/SciLifeLab/NGI-RNAseq)
