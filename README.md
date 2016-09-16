@@ -96,7 +96,7 @@ On the other hand, if you have pre-processed BAMs (that is the de-duplicated and
 All the files are the Preprocessing/CreateRecalibrationTable/ directory, and by default a corresponding TSV file is also deposited there. Generally, 
 to get MuTect1 and Strelka calls on the preprocessed files should be done by:
 
-	nextflow -c local.config run MultiFQtoVC.nf --sample Preprocessing/CreateRecalibrationTable/mysample.tsv --steps MuTect1,Strelka
+	nextflow -c local.config run MultiFQtoVC.nf --sample Preprocessing/CreateRecalibrationTable/mysample.tsv --steps nopreprocessing,MuTect1,Strelka
 
 ## tools and dependencies
 - nextflow 0.17.3
