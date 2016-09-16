@@ -554,7 +554,7 @@ if ('preprocessing' in workflowSteps) {
   realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realignedBam)
 
   process CreateRecalibrationTable {
-    publishDir "Preprocessing/CreateRecalibrationTable", mode: 'move'
+    publishDir "Preprocessing/CreateRecalibrationTable"
 
     module 'java/sun_jdk1.8.0_40'
 
@@ -564,8 +564,6 @@ if ('preprocessing' in workflowSteps) {
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
-
-    def (tempSample, tempStatus) = $idSample.tokenize( '__' )
 
     input:
     set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile) from realignedBam
@@ -578,7 +576,7 @@ if ('preprocessing' in workflowSteps) {
     set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), file("${idSample}.recal.table") into recalibrationTable
 
     """
-    echo -e '${idPatient}\t${tempStatus}\t${tempSample}\tPreprocessing/CreateRecalibrationTable/${realignedBamFile}\tPreprocessing/CreateRecalibrationTable/${realignedBaiFile}\tPreprocessing/CreateRecalibrationTable/${idSample}.recal.table' >> ${idPatient}.tsv
+    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/CreateRecalibrationTable/${realignedBamFile}\tPreprocessing/CreateRecalibrationTable/${realignedBaiFile}\tPreprocessing/CreateRecalibrationTable/${idSample}.recal.table >> ../../../Preprocessing/CreateRecalibrationTable/${idPatient}.tsv
 
     java -Xmx${task.memory.toGiga()}g -Djava.io.tmpdir="/tmp" \
     -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
