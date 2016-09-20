@@ -7,14 +7,15 @@
  New Cancer Analysis Workflow. Started March 2016.
 
  @Authors
- Pelin Akan <pelin.akan@scilifelab.se> [@pelinakan]
+ Sebastian DiLorenzo <sebastian.dilorenzo@bils.se> [@Sebastian-D]
  Jesper Eisfeldt <jesper.eisfeldt@scilifelab.se> [@J35P312]
  Maxime Garcia <maxime.garcia@scilifelab.se> [@MaxUlysse]
  Szilveszter Juhos <szilveszter.juhos@scilifelab.se> [@szilvajuhos]
- Max Käller <max.kaller@scilifelab.se>
+ Max Käller <max.kaller@scilifelab.se> [@gulfshores]
  Malin Larsson <malin.larsson@scilifelab.se> [@malinlarsson]
  Björn Nystedt <bjorn.nystedt@scilifelab.se> [@bjornnystedt]
  Pall Olason <pall.olason@scilifelab.se> [@pallolason]
+ Pelin Sahlén <pelin.akan@scilifelab.se> [@pelinakan]
 
 ----------------------------------------------------------------------------------------
 @Licence
@@ -575,6 +576,8 @@ if ('preprocessing' in workflowSteps) {
     set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), file("${idSample}.recal.table") into recalibrationTable
 
     """
+    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/CreateRecalibrationTable/${realignedBamFile}\tPreprocessing/CreateRecalibrationTable/${realignedBaiFile}\tPreprocessing/CreateRecalibrationTable/${idSample}.recal.table >> ../../../Preprocessing/CreateRecalibrationTable/${idPatient}.tsv
+
     java -Xmx${task.memory.toGiga()}g -Djava.io.tmpdir="/tmp" \
     -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
     -T BaseRecalibrator \
@@ -901,6 +904,9 @@ if ('MuTect2' in workflowSteps) {
     java -Xmx${task.memory.toGiga()}g -cp ${params.mutect2Home}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out MuTect2_${idPatient}_${idNormal}_${idT}.vcf
     """
   }
+} else {
+  bamsForMuTect2.close()
+  muTect2Intervals.close()
 }
 
 if ('VarDict' in workflowSteps) {
@@ -1035,7 +1041,6 @@ if ('Strelka' in workflowSteps) {
   }
   strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
 } else {
-  bamsForStrelka = logChannelContent("Bams for Strelka: ", bamsForStrelka)
   bamsForStrelka.close()
   strelkaIntervals.close()
 }
@@ -1123,7 +1128,6 @@ process alleleCount{
     alleleCounter -l ${refs["acLoci"]} -r ${refs["genomeFile"]} -b ${bamNormal} -o ${idSampleNormal}.alleleCount;
     alleleCounter -l ${refs["acLoci"]} -r ${refs["genomeFile"]} -b ${bamTumor} -o ${idSampleTumor}.alleleCount;
     """
-
 
 } // end process alleleCount
 
@@ -1298,12 +1302,12 @@ if ('HaplotypeCaller' in workflowSteps) {
       x[4]          // list of VCF files
       ]
     }
-//groupTuple for my case (Example)
-//[tcga.cl, tcga.cl.normal__0, 3_93504854-198022430_tcga.cl.normal__0, /gulo/glob/seba/CAW_testrun/work/93/f103412ac2003254e902fa0d00f72c/3_93504854-198022430_tcga.cl.normal__0.HC.vcf]
-//x[0] <- tcga.cl
-//x[1] <- tcga.cl.normal__0
-//x[4] <- /gulo/glob/seba/CAW_testrun/work/93/f103412ac2003254e902fa0d00f72c/3_93504854-198022430_tcga.cl.normal__0.HC.vcf
-//    I am not sure what .get(0) does as it should reference the mapping in the tuple... like [name: 'Eva'] then .get('name')
+  //groupTuple for my case (Example)
+  //[tcga.cl, tcga.cl.normal__0, 3_93504854-198022430_tcga.cl.normal__0, /gulo/glob/seba/CAW_testrun/work/93/f103412ac2003254e902fa0d00f72c/3_93504854-198022430_tcga.cl.normal__0.HC.vcf]
+  //x[0] <- tcga.cl
+  //x[1] <- tcga.cl.normal__0
+  //x[4] <- /gulo/glob/seba/CAW_testrun/work/93/f103412ac2003254e902fa0d00f72c/3_93504854-198022430_tcga.cl.normal__0.HC.vcf
+  //    I am not sure what .get(0) does as it should reference the mapping in the tuple... like [name: 'Eva'] then .get('name')
 
 
   // we have to separate IDs and files
@@ -1348,8 +1352,6 @@ if ('HaplotypeCaller' in workflowSteps) {
   bamsForHC.close()
   hcIntervals.close()
 }
-
-
 
 /*
 ========================================================================================

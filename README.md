@@ -6,14 +6,15 @@ Nextflow Cancer Analysis Workflow Prototype developed at @SciLifeLab
 0.0.3
 
 ## Authors
-- Pelin Akan (@pelinakan)
+- Sebastian DiLorenzo (@Sebastian-D)
 - Jesper Eisfeldt (@J35P312)
 - Maxime Garcia (@MaxUlysse)
 - Szilveszter Juhos (@szilvajuhos)
-- Max Käller
+- Max Käller (@gulfshores)
 - Malin Larsson (@malinlarsson)
 - Björn Nystedt (@bjornnystedt)
 - Pall Olason (@pallolason)
+- Pelin Sahlén (@pelinakan)
 
 ## Quick start
 Install [nextflow](http://www.nextflow.io/) and then download the project
@@ -98,7 +99,7 @@ to get MuTect1 and Strelka calls on the preprocessed files should be done by:
 
 	nextflow -c local.config run MultiFQtoVC.nf --sample Preprocessing/CreateRecalibrationTable/mysample.tsv --steps MuTect1,Strelka
 
-## tools and dependencies
+## Tools and dependencies
 - nextflow 0.17.3
 - bwa 0.7.8
 - samtools 1.3
@@ -106,7 +107,6 @@ to get MuTect1 and Strelka calls on the preprocessed files should be done by:
 - GATK 3.6
 - R 3.2.3
 - gcc 4.9.2
-- java sun_jdk1.8.0_40
 - perl 5.18.4
 - strelka 1.0.15
 - manta 1.0.0
