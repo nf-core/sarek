@@ -702,12 +702,11 @@ gI = intervals
 muTect1Intervals = Channel.create()
 muTect2Intervals = Channel.create()
 varDictIntervals = Channel.create()
-strelkaIntervals = Channel.create()
 hcIntervals = Channel.create()
 
 Channel
   .from gI
-  .separate (muTect1Intervals, muTect2Intervals, varDictIntervals, strelkaIntervals, hcIntervals) {a -> [a, a, a, a, a]}
+  .separate (muTect1Intervals, muTect2Intervals, varDictIntervals, hcIntervals) {a -> [a, a, a, a]}
 
 // now add genomic intervals to the sample information
 // join [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] and ["1:1-2000","1_1-2000"]
@@ -833,8 +832,8 @@ if ('MuTect2' in workflowSteps) {
     set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf") into mutect2VariantCallingOutput
 
     // we are using MuTect2 shipped in GATK v3.6
-		// TODO: the  "-U ALLOW_SEQ_DICT_INCOMPATIBILITY " flag is actually masking a bug in older Picard versions. Using the latest Picard tool
-		// this bug should go away and we should _not_ use this flag
+    // TODO: the  "-U ALLOW_SEQ_DICT_INCOMPATIBILITY " flag is actually masking a bug in older Picard versions. Using the latest Picard tool
+    // this bug should go away and we should _not_ use this flag
     // removed: -nct ${task.cpus} \
     """
     java -Xmx${task.memory.toGiga()}g -jar ${params.mutect2Home}/GenomeAnalysisTK.jar \
@@ -1001,10 +1000,7 @@ if ('VarDict' in workflowSteps) {
 }
 
 if ('Strelka' in workflowSteps) {
-  bamsForStrelka = logChannelContent("Bams for Strelka: ", bamsForStrelka)
-  strelkaIntervals = logChannelContent("Intervals for Strelka: ", strelkaIntervals)
-  bamsFSTR = bamsForStrelka.spread(strelkaIntervals)
-  bamsFSTR = logChannelContent("Bams with Intervals for Strelka: ", bamsFSTR)
+  bamsForStrelka = logChannelContent("Bams with Intervals for Strelka: ", bamsForStrelka)
 
   process RunStrelka {
     publishDir "VariantCalling/Strelka"
@@ -1019,7 +1015,7 @@ if ('Strelka' in workflowSteps) {
     maxErrors '-1'
 
     input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFSTR
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForStrelka
     file refs["genomeFile"]
     file refs["genomeIndex"]
 
