@@ -1,6 +1,8 @@
 #!/usr/bin/env nextflow
 
 /*
++vim: syntax=groovy
++-*- mode: groovy;-*- 
 ========================================================================================
 =                   C A N C E R    A N A L Y S I S    W O R K F L O W                  =
 ========================================================================================
@@ -40,7 +42,7 @@ OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 OTHER DEALINGS IN THE SOFTWARE.
 ----------------------------------------------------------------------------------------
  Basic command:
- $ nextflow run main.nf -c <file.config> --sample <sample.tsv>
+ $ nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv>
 
  All variables are configured in the config and sample files. All variables in the config
  file can be reconfigured on the commande line, like:
@@ -56,7 +58,7 @@ OTHER DEALINGS IN THE SOFTWARE.
  - CreateRecalibrationTable - using GATK
  - RecalibrateBam - using GATK
  - RunMutect1 - using MuTect1 1.1.5 loaded as a module
- - RunMutect2 - using MuTect2 shipped in GATK v3.6
+ - RunMutect2 - using MuTect2 shipped in GATK
  - VarDict - run VarDict on multiple intervals
  - VarDictCollatedVCF - merge Vardict result
 ----------------------------------------------------------------------------------------
@@ -66,8 +68,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 ========================================================================================
 */
 
-String version = "0.0.3"
-String dateUpdate = "2016-09-23"
+String version = "0.8.2"
+String dateUpdate = "2016-10-19"
 
 /*
  * Get some basic informations about the workflow
@@ -76,8 +78,8 @@ String dateUpdate = "2016-09-23"
 
 workflow.onComplete {
   text = Channel.from(
-    "CANCER ANALYSIS WORKFLOW",
-    "Version     : $version",
+    "CANCER ANALYSIS WORKFLOW ~ v$version",
+    "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]",
     "Command line: ${workflow.commandLine}",
     "Completed at: ${workflow.complete}",
     "Duration    : ${workflow.duration}",
@@ -99,23 +101,25 @@ switch (params) {
     text = Channel.from(
       "CANCER ANALYSIS WORKFLOW ~ version $version",
       "    Usage:",
-      "       nextflow run main.nf -c <file.config> --sample <sample.tsv>",
-      "   [--steps STEP[,STEP]]",
-      "       optional option for now, to configure which",
-      "         processes will be runned or skipped in the workflow.",
+      "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> [--steps STEP[,STEP]]",
+      "    --steps",
+      "       Option to configure which processes to use in the workflow.",
       "         Different steps to be separated by commas.",
       "       Possible values are:",
       "         preprocessing (default, will start workflow with FASTQ files)",
-      "         nopreprocessing (will start workflow with recalibrated BAM files)",
+      "         recalibrate (will start workflow with non-recalibrated BAM files)",
+      "         skipPreprocessing (will start workflow with recalibrated BAM files)",
       "         MuTect1 (use MuTect1 for VC)",
       "         MuTect2 (use MuTect2 for VC)",
       "         VarDict (use VarDict for VC)",
       "         Strelka (use Strelka for VC)",
       "         HaplotypeCaller (use HaplotypeCaller for normal bams VC)",
       "         Manta (use Manta for SV)",
-      "         ascat (use ascat for SV)",
+      "         ascat (use ascat for CNV)",
       "    --help",
       "       you're reading it",
+      "    --verbose",
+      "       Adds more verbosity to workflow",
       "    --version",
       "       displays version number")
     text.subscribe { println "$it" }
@@ -126,6 +130,7 @@ switch (params) {
       "CANCER ANALYSIS WORKFLOW",
       "  Version $version",
       "  Last update on $dateUpdate",
+      "Git info: $workflow.repository - $workflow.revision [$workflow.commitId]",
       "Project : $workflow.projectDir",
       "Cmd line: $workflow.commandLine")
     text.subscribe { println "$it" }
@@ -138,7 +143,7 @@ switch (params) {
  */
 
 parametersDefined = true
-CheckExistence = {
+CheckRefExistence = {
   referenceFile, fileToCheck ->
   try {
     referenceFile = file(fileToCheck)
@@ -167,22 +172,25 @@ refs = [
   "MantaRef":     params.mantaRef,     // copy of the genome reference file
   "MantaIndex":   params.mantaIndex,   // reference index indexed with samtools/0.1.19
   "acLoci":       params.acLoci        // loci file for ascat
-  ]
+]
 
-refs.each(CheckExistence)
+refs.each(CheckRefExistence)
 
 if (!parametersDefined) {
   text = Channel.from(
     "CANCER ANALYSIS WORKFLOW ~ version $version",
     "Missing file or parameter: please review your config file.",
     "    Usage",
-    "       nextflow run main.nf -c <file.config> --sample <sample.tsv>")
+    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
+    "    help",
+    "       nextflow run MultiFQtoVC.nf --help")
   text.subscribe { println "$it" }
   exit 1
 }
 
 /*
  * Getting list of steps from comma-separated strings
+ * If no steps are given, workflowSteps is initialized as an empty list
  */
 
 if (params.steps) {
@@ -191,15 +199,66 @@ if (params.steps) {
   workflowSteps = []
 }
 
-if ('preprocessing' in workflowSteps && 'nopreprocessing' in workflowSteps) {
+/*
+ * Steps verification
+ */
+
+stepsList = [
+  "preprocessing",
+  "recalibrate",
+  "skipPreprocessing",
+  "MuTect1",
+  "MuTect2",
+  "VarDict",
+  "Strelka",
+  "HaplotypeCaller",
+  "Manta",
+  "ascat"
+]
+
+stepCorrect = true
+CheckStepExistence = {
+  step ->
+  try {
+    assert stepsList.contains(step)
+  }
+  catch (AssertionError ae) {
+    println("Unknown parameter: ${step}")
+    stepCorrect = false;
+  }
+}
+
+workflowSteps.each(CheckStepExistence)
+
+if (!stepCorrect) {
   text = Channel.from(
     "CANCER ANALYSIS WORKFLOW ~ version $version",
-    "Cannot use preprocessing and nopreprocessing at the same time")
+    "Incorrect step parameter: please review your parameters.",
+    "    Usage",
+    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
+    "    help",
+    "       nextflow run MultiFQtoVC.nf --help")
   text.subscribe { println "$it" }
   exit 1
 }
 
-if (!('nopreprocessing' in workflowSteps)) {
+if (('preprocessing' in workflowSteps && ('recalibrate' in workflowSteps || 'skipPreprocessing' in workflowSteps)) || ('recalibrate' in workflowSteps && 'skipPreprocessing' in workflowSteps)) {
+  text = Channel.from(
+    "CANCER ANALYSIS WORKFLOW ~ version $version",
+    "Must choose only one step between preprocessing, recalibrate and skipPreprocessing",
+    "    Usage",
+    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
+    "    help",
+    "       nextflow run MultiFQtoVC.nf --help")
+  text.subscribe { println "$it" }
+  exit 1
+}
+
+/*
+ * If no choices made for processing progress, the workflow begins with preprocessing
+ */
+
+if (!('preprocessing' in workflowSteps) && !('recalibrate' in workflowSteps) && !('skipPreprocessing' in workflowSteps) ) {
   workflowSteps.add('preprocessing')
 }
 
@@ -212,7 +271,9 @@ if (!params.sample) {
     "CANCER ANALYSIS WORKFLOW ~ version $version",
     "Missing the sample TSV config file: please specify it.",
     "    Usage",
-    "       nextflow run main.nf -c <file.config> --sample <sample.tsv>")
+    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
+    "    help",
+    "       nextflow run MultiFQtoVC.nf --help")
   text.subscribe { println "$it" }
   exit 1
 }
@@ -230,7 +291,7 @@ if ('preprocessing' in workflowSteps) {
 
   fastqFiles = Channel
     .from(sampleTSVconfig.readLines())
-    .map {line ->
+    .map{ String line ->
       list        = line.split()
       idPatient   = list[0]
       idSample    = "${list[2]}__${list[1]}"
@@ -240,7 +301,7 @@ if ('preprocessing' in workflowSteps) {
       [ idPatient, idSample, idRun, fastqFile1, fastqFile2 ]
   }
   fastqFiles = logChannelContent("FASTQ files and IDs to process: ", fastqFiles)
-} else {
+} else if ('recalibrate' in workflowSteps) {
   /*
    * Channeling the TSV file containing BAM for Recalibration
    * The format is: "subject status sample bam bai recal"
@@ -250,7 +311,7 @@ if ('preprocessing' in workflowSteps) {
 
   bamFiles = Channel
     .from(sampleTSVconfig.readLines())
-    .map {line ->
+    .map{ String line ->
       list        = line.split()
       idPatient   = list[0]
       idSample    = "${list[2]}__${list[1]}"
@@ -258,6 +319,25 @@ if ('preprocessing' in workflowSteps) {
       baiFile     = file(list[4])
       recalTable  = file(list[5])
       [ idPatient, idSample, bamFile, baiFile, recalTable ]
+  }
+  bamFiles = logChannelContent("Bam files and IDs to process: ", bamFiles)
+} else {
+  /*
+   * Channeling the TSV file containing BAM for Variant Calling
+   * The format is: "subject status sample bam bai"
+   * ie: HCC1954 0 HCC1954.blood data/HCC1954.normal.bam HCC1954.normal.bai
+   * Still with the __status added to the idSample
+   */
+
+  bamFiles = Channel
+    .from(sampleTSVconfig.readLines())
+    .map{ String line ->
+      list        = line.split()
+      idPatient   = list[0]
+      idSample    = "${list[2]}__${list[1]}"
+      bamFile     = file(list[3])
+      baiFile     = file(list[4])
+      [ idPatient, idSample, bamFile, baiFile ]
   }
   bamFiles = logChannelContent("Bam files and IDs to process: ", bamFiles)
 }
@@ -269,16 +349,18 @@ if ('preprocessing' in workflowSteps) {
 */
 
 if ('preprocessing' in workflowSteps) {
+  println file('Preprocessing').mkdir() ? "Folder Preprocessing created" : "Cannot create folder Preprocessing"
+  println file('Preprocessing/NonRecalibrated').mkdir() ? "Folder Preprocessing/NonRecalibrated created" : "Cannot create folder Preprocessing/NonRecalibrated"
+  println file('Preprocessing/Recalibrated').mkdir() ? "Folder Preprocessing/Recalibrated created" : "Cannot create folder Preprocessing/Recalibrated"
+
   process Mapping {
-    publishDir "Preprocessing/Mapping"
+    tag { idRun }
 
     module 'bioinfo-tools'
     module 'bwa/0.7.13'
     module 'samtools/1.3'
 
-    cpus 8
-    memory { 16.GB * task.attempt }
-    time { 20.h * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -324,13 +406,15 @@ if ('preprocessing' in workflowSteps) {
   groupedBam = logChannelContent("Grouped BAMs before merge:", groupedBam)
 
   process MergeBam {
-    publishDir "Preprocessing/MergeBam"
+    tag { idSample }
 
     module 'bioinfo-tools'
     module 'samtools/1.3'
 
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    cpus 1 
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -339,7 +423,7 @@ if ('preprocessing' in workflowSteps) {
     set idPatient, idSample, idRun, file(bam) from groupedBam
 
     output:
-    set idPatient, idSample, idRun, file("${idSample}.bam") into mergedBam
+    set idPatient, idSample, file("${idSample}.bam") into mergedBam
 
     script:
     idRun = idRun.sort().join(':')
@@ -353,13 +437,13 @@ if ('preprocessing' in workflowSteps) {
   // Renaming is totally useless, but the file name is consistent with the rest of the pipeline
 
   process RenameSingleBam {
-    publishDir "Preprocessing/RenameSingleBam"
+    tag { idSample }
 
     input:
     set idPatient, idSample, idRun, file(bam) from singleBam
 
     output:
-    set idPatient, idSample, idRun, file("${idSample}.bam") into singleRenamedBam
+    set idPatient, idSample, file("${idSample}.bam") into singleRenamedBam
 
     script:
     idRun = idRun.sort().join(':')
@@ -378,7 +462,7 @@ if ('preprocessing' in workflowSteps) {
 
   bamList = Channel.create()
   bamList = mergedBam.mix(singleRenamedBam)
-  bamList = bamList.map { idPatient, idSample, idRun, bam -> [idPatient[0], idSample, bam].flatten() }
+  bamList = bamList.map { idPatient, idSample, bam -> [idPatient[0], idSample, bam].flatten() }
 
   bamList = logChannelContent("BAM list for MarkDuplicates: ",bamList)
 
@@ -387,13 +471,15 @@ if ('preprocessing' in workflowSteps) {
    */
 
   process MarkDuplicates {
-    publishDir "Preprocessing/MarkDuplicates"
+    tag { idSample }
 
     module 'bioinfo-tools'
     module 'picard/1.118'
 
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    cpus 1 
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -426,8 +512,6 @@ if ('preprocessing' in workflowSteps) {
    * create realign intervals, use both tumor+normal as input
    */
 
-  duplicatesForInterval = logChannelContent("BAMs for IndelRealigner before groupTuple: ", duplicatesForInterval)
-
   // group the marked duplicates Bams intervals by overall subject/patient id (idPatient)
   duplicatesInterval = Channel.create()
   duplicatesInterval = duplicatesForInterval.groupTuple()
@@ -446,13 +530,11 @@ if ('preprocessing' in workflowSteps) {
    */
 
   process CreateIntervals {
-    publishDir "Preprocessing/CreateIntervals"
+    tag { idPatient }
 
     module 'java/sun_jdk1.8.0_40'
 
-    cpus 8
-    memory { 16.GB * task.attempt }
-    time { 8.h * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -482,6 +564,7 @@ if ('preprocessing' in workflowSteps) {
     -known $ki \
     -known $mi \
     -nt ${task.cpus} \
+    -XL hs37d5 \
     -o ${idPatient}.intervals
     """
   }
@@ -493,12 +576,11 @@ if ('preprocessing' in workflowSteps) {
    */
 
   process Realign {
-    publishDir "Preprocessing/Realign"
+    tag { idPatient }
 
     module 'java/sun_jdk1.8.0_40'
 
-    memory { 16.GB * task.attempt }
-    time { 20.h * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -532,6 +614,7 @@ if ('preprocessing' in workflowSteps) {
     -targetIntervals $intervals \
     -known $ki \
     -known $mi \
+    -XL hs37d5 \
     -nWayOut '.real.bam'
     """
   }
@@ -554,13 +637,13 @@ if ('preprocessing' in workflowSteps) {
   realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realignedBam)
 
   process CreateRecalibrationTable {
-    publishDir "Preprocessing/CreateRecalibrationTable"
+    tag { idSample }
+
+    publishDir "Preprocessing/NonRecalibrated", mode: 'copy'
 
     module 'java/sun_jdk1.8.0_40'
 
-    cpus 8
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -576,7 +659,8 @@ if ('preprocessing' in workflowSteps) {
     set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), file("${idSample}.recal.table") into recalibrationTable
 
     """
-    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/CreateRecalibrationTable/${realignedBamFile}\tPreprocessing/CreateRecalibrationTable/${realignedBaiFile}\tPreprocessing/CreateRecalibrationTable/${idSample}.recal.table >> ../../../Preprocessing/CreateRecalibrationTable/${idPatient}.tsv
+    touch ../../../Preprocessing/NonRecalibrated/${idPatient}.tsv
+    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/NonRecalibrated/${realignedBamFile}\tPreprocessing/NonRecalibrated/${realignedBaiFile}\tPreprocessing/NonRecalibrated/${idSample}.recal.table >> ../../../Preprocessing/NonRecalibrated/${idPatient}.tsv
 
     java -Xmx${task.memory.toGiga()}g -Djava.io.tmpdir="/tmp" \
     -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
@@ -593,40 +677,50 @@ if ('preprocessing' in workflowSteps) {
   }
 
   recalibrationTable = logChannelContent("Base recalibrated table for recalibration: ", recalibrationTable)
-} else {
+} else if ('recalibrate' in workflowSteps) {
+  println file('Preprocessing').mkdir() ? "Folder Preprocessing created" : "Cannot create folder Preprocessing"
+  println file('Preprocessing/Recalibrated').mkdir() ? "Folder Preprocessing/Recalibrated created" : "Cannot create folder Preprocessing/Recalibrated"
+
   recalibrationTable = bamFiles
 }
 
-process RecalibrateBam {
-  publishDir "Preprocessing/RecalibrateBam"
+if ('preprocessing' in workflowSteps || 'recalibrate' in workflowSteps) {
+  process RecalibrateBam {
+    tag { idSample }
 
-  module 'java/sun_jdk1.8.0_40'
+    publishDir "Preprocessing/Recalibrated", mode: 'copy'
 
-  cpus 8
-  memory { 16.GB * task.attempt }
-  time { 16.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
+    module 'java/sun_jdk1.8.0_40'
 
-  input:
-  set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), recalibrationReport from recalibrationTable
-  file refs["genomeFile"]
+    time { params.runTime * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
 
-  output:
-  set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBams
+    input:
+    set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), recalibrationReport from recalibrationTable
+    file refs["genomeFile"]
 
-  // TODO: ditto as at the previous BaseRecalibrator step, consider using -nct 4
-  """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
-  -T PrintReads \
-  -R ${refs["genomeFile"]} \
-  -nct ${task.cpus} \
-  -I $realignedBamFile \
-  --BQSR $recalibrationReport \
-  -o ${idSample}.recal.bam
-  """
+    output:
+    set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBams
+
+    // TODO: ditto as at the previous BaseRecalibrator step, consider using -nct 4
+    """
+    touch ../../../Preprocessing/Recalibrated/${idPatient}.tsv
+    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/Recalibrated/${idSample}.recal.bam\tPreprocessing/Recalibrated/${idSample}.recal.bai >> ../../../Preprocessing/Recalibrated/${idPatient}.tsv
+
+    java -Xmx${task.memory.toGiga()}g \
+    -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+    -T PrintReads \
+    -R ${refs["genomeFile"]} \
+    -nct ${task.cpus} \
+    -I $realignedBamFile \
+    --BQSR $recalibrationReport \
+    -o ${idSample}.recal.bam
+    """
+  }
+} else {
+  recalibratedBams = bamFiles
 }
 
 recalibratedBams = logChannelContent("Recalibrated Bam for variant Calling: ", recalibratedBams)
@@ -723,9 +817,10 @@ if ('MuTect1' in workflowSteps) {
     module 'java/sun_jdk1.7.0_25'
     module 'mutect/1.1.5'
 
-    cpus 8
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    cpus 1 
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -786,9 +881,10 @@ if ('MuTect1' in workflowSteps) {
     module 'bioinfo-tools'
     module 'java/sun_jdk1.8.0_40'
 
-    cpus 8
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    cpus 1
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -818,9 +914,10 @@ if ('MuTect2' in workflowSteps) {
     module 'bioinfo-tools'
     module 'java/sun_jdk1.8.0_40'
 
-    cpus 8
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    cpus 1
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -836,7 +933,7 @@ if ('MuTect2' in workflowSteps) {
     // this bug should go away and we should _not_ use this flag
     // removed: -nct ${task.cpus} \
     """
-    java -Xmx${task.memory.toGiga()}g -jar ${params.mutect2Home}/GenomeAnalysisTK.jar \
+    java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
     -T MuTect2 \
     -R ${refs["genomeFile"]} \
     --cosmic ${refs["cosmic41"]} \
@@ -884,9 +981,10 @@ if ('MuTect2' in workflowSteps) {
     module 'bioinfo-tools'
     module 'java/sun_jdk1.8.0_40'
 
-    cpus 8
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    cpus 1
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -900,7 +998,7 @@ if ('MuTect2' in workflowSteps) {
     script:
     """
     VARIANTS=`ls ${workflow.launchDir}/${pd}/intervals/*${idT}*.mutect2.vcf| awk '{printf(" -V %s\\n",\$1) }'`
-    java -Xmx${task.memory.toGiga()}g -cp ${params.mutect2Home}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out MuTect2_${idPatient}_${idNormal}_${idT}.vcf
+    java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out MuTect2_${idPatient}_${idNormal}_${idT}.vcf
     """
   }
 } else {
@@ -927,8 +1025,9 @@ if ('VarDict' in workflowSteps) {
     module 'perl/5.18.4'
 
     cpus 1
-    memory { 6.GB * task.attempt }
-    time { 16.h * task.attempt }
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -972,8 +1071,9 @@ if ('VarDict' in workflowSteps) {
     module 'perl/5.18.4'
 
     cpus 1
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -1007,9 +1107,7 @@ if ('Strelka' in workflowSteps) {
 
     module 'bioinfo-tools'
 
-    cpus 1
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -1020,25 +1118,26 @@ if ('Strelka' in workflowSteps) {
     file refs["genomeIndex"]
 
     output:
-    sed idPatient, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("*.vcf") into strelkaVariantCallingOutput
+    set idPatient, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("*.vcf") into strelkaVariantCallingOutput
 
     """
+    tumorPath=`readlink ${bamTumor}`
+    normalPath=`readlink ${bamNormal}`
     ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
-    --tumor ${bamTumor} \
-    --normal ${bamNormal} \
-    --ref ${refs["genomeFile"]} \
+    --tumor \$tumorPath \
+    --normal \$normalPath \
+    --ref ${refs["MantaRef"]} \
     --config ${params.strelkaCFG} \
     --output-dir strelka
 
     cd strelka
 
-    make -j 16
+    make -j ${task.cpus}
     """
   }
   strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
 } else {
   bamsForStrelka.close()
-  strelkaIntervals.close()
 }
 
 if ('Manta' in workflowSteps) {
@@ -1047,8 +1146,6 @@ if ('Manta' in workflowSteps) {
 
     module 'bioinfo-tools'
     module 'manta/1.0.0'
-
-    cpus 8
 
     input:
         file refs["MantaRef"]
@@ -1070,7 +1167,7 @@ if ('Manta' in workflowSteps) {
     mv ${baiTumor} Tumor.bam.bai
 
     configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference ${refs["MantaRef"]} --runDir MantaDir
-    python MantaDir/runWorkflow.py -m local -j 8
+    python MantaDir/runWorkflow.py -m local -j ${task.cpus}
     gunzip -c MantaDir/results/variants/somaticSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.somaticSV.vcf
     gunzip -c MantaDir/results/variants/candidateSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSV.vcf
     gunzip -c MantaDir/results/variants/diploidSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.diploidSV.vcf
@@ -1109,6 +1206,8 @@ process alleleCount{
     module 'alleleCount'
 
     cpus 1
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
 
     input:
     file refs["genomeFile"]
@@ -1141,6 +1240,8 @@ process alleleCount{
 process convertAlleleCounts {
 
   cpus 1
+  queue 'core'
+  memory { params.singleCPUMem * task.attempt }
 
   input:
   set idPatient, idSampleNormal, idSampleTumor, file(normalAlleleCt), file(tumorAlleleCt) from allele_count_output
@@ -1172,6 +1273,8 @@ process convertAlleleCounts {
 process runASCAT {
 
   cpus 1
+  queue 'core'
+  memory { params.singleCPUMem * task.attempt }
 
   input:
 
@@ -1260,8 +1363,9 @@ if ('HaplotypeCaller' in workflowSteps) {
     module 'java/sun_jdk1.8.0_92'
 
     cpus 1
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -1276,7 +1380,7 @@ if ('HaplotypeCaller' in workflowSteps) {
 
     //parellelization information: "Many users have reported issues running HaplotypeCaller with the -nct argument, so we recommend using Queue to parallelize HaplotypeCaller instead of multithreading." However, it can take the -nct argument.
     """
-    java -Xmx${task.memory.toGiga()}g -jar ${params.mutect2Home}/GenomeAnalysisTK.jar \
+    java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
     -T HaplotypeCaller \
     -R ${refs["genomeFile"]} \
     --dbsnp ${refs["dbsnp"]} \
@@ -1324,9 +1428,10 @@ if ('HaplotypeCaller' in workflowSteps) {
     module 'bioinfo-tools'
     module 'java/sun_jdk1.8.0_92'
 
-    cpus 8
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    cpus 1
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -1340,11 +1445,10 @@ if ('HaplotypeCaller' in workflowSteps) {
     script:
     """
     VARIANTS=`ls ${workflow.launchDir}/${pd}/*${idN}*.HC.vcf| awk '{printf(" -V %s\\n",\$1) }'`
-    java -Xmx${task.memory.toGiga()}g -cp ${params.mutect2Home}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out HaplotypeCaller_${idPatient}_${idN}.vcf
+    java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out HaplotypeCaller_${idPatient}_${idN}.vcf
     """
   }
 } else {
-  bamsForHC = logChannelContent("Bams for HaplotypeCaller: ", bamsForHC)
   bamsForHC.close()
   hcIntervals.close()
 }
@@ -1405,7 +1509,7 @@ def logChannelContent (aMessage, aChannel) {
   Channel
     .from aChannel
     .separate(resChannel,logChannel) {a -> [a, a]}
-  logChannel.subscribe {log.info aMessage + " -- $it"}
+  if (params.verbose) {logChannel.subscribe {log.info aMessage + " -- $it"}}
   return resChannel
 }
 
