@@ -197,7 +197,7 @@ if (params.steps) {
  */
 
 workflowSteps.each { step ->
-  if !(${step} in ['preprocessing', 'nopreprocessing', 'MuTect1', 'MuTect2', 'VarDict', 'Strelka', 'HaplotypeCaller', 'Manta', 'ascat']) {
+  if (!${step} in ['preprocessing', 'nopreprocessing', 'MuTect1', 'MuTect2', 'VarDict', 'Strelka', 'HaplotypeCaller', 'Manta', 'ascat']) {
     text = Channel.from(
       "CANCER ANALYSIS WORKFLOW ~ version $version",
       "Cannot recognized step $step")
