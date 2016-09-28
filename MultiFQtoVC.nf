@@ -196,9 +196,11 @@ if (params.steps) {
  * Steps verification
  */
 
+stepsList = ['preprocessing', 'nopreprocessing', 'MuTect1', 'MuTect2', 'VarDict', 'Strelka', 'HaplotypeCaller', 'Manta', 'ascat']
+
 workflowSteps.each { step ->
   try {
-    assert ['preprocessing', 'nopreprocessing', 'MuTect1', 'MuTect2', 'VarDict', 'Strelka', 'HaplotypeCaller', 'Manta', 'ascat'].contains(${step})
+    assert stepsList.contains(${step})
   }
   catch (AssertionError ae) {
     text = Channel.from(
