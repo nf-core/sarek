@@ -66,8 +66,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 ========================================================================================
 */
 
-String version = "0.0.3"
-String dateUpdate = "2016-08-25"
+String version = "0.0.35"
+String dateUpdate = "2016-09-28"
 
 /*
  * Get some basic informations about the workflow
@@ -113,7 +113,7 @@ switch (params) {
       "         Strelka (use Strelka for VC)",
       "         HaplotypeCaller (use HaplotypeCaller for normal bams VC)",
       "         Manta (use Manta for SV)",
-      "         ascat (use ascat for SV)",
+      "         ascat (use ascat for CNV)",
       "    --help",
       "       you're reading it",
       "    --version",
@@ -183,12 +183,27 @@ if (!parametersDefined) {
 
 /*
  * Getting list of steps from comma-separated strings
+ * If no steps are given, workflowSteps is initialized as an empty list
  */
 
 if (params.steps) {
   workflowSteps = params.steps.split(',').collect { it.trim() }
 } else {
   workflowSteps = []
+}
+
+/*
+ * Steps verification
+ */
+
+workflowSteps.each { step ->
+  if !(${step} in ['preprocessing', 'nopreprocessing', 'MuTect1', 'MuTect2', 'VarDict', 'Strelka', 'HaplotypeCaller', 'Manta', 'ascat']) {
+    text = Channel.from(
+      "CANCER ANALYSIS WORKFLOW ~ version $version",
+      "Cannot recognized step $step")
+    text.subscribe { println "$it" }
+    exit 1
+  }
 }
 
 if ('preprocessing' in workflowSteps && 'nopreprocessing' in workflowSteps) {
@@ -199,7 +214,11 @@ if ('preprocessing' in workflowSteps && 'nopreprocessing' in workflowSteps) {
   exit 1
 }
 
-if (!('nopreprocessing' in workflowSteps)) {
+/*
+ * If no choices made for processing progress, the workflow begins with preprocessing
+ */
+
+if (!('preprocessing' in workflowSteps) && !('nopreprocessing' in workflowSteps)) {
   workflowSteps.add('preprocessing')
 }
 
