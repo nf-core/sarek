@@ -66,8 +66,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 ========================================================================================
 */
 
-String version = "0.0.3"
-String dateUpdate = "2016-09-23"
+String version = "0.0.35"
+String dateUpdate = "2016-09-29"
 
 /*
  * Get some basic informations about the workflow
@@ -76,14 +76,28 @@ String dateUpdate = "2016-09-23"
 
 workflow.onComplete {
   text = Channel.from(
-    "CANCER ANALYSIS WORKFLOW",
-    "Version     : $version",
-    "Command line: ${workflow.commandLine}",
-    "Completed at: ${workflow.complete}",
-    "Duration    : ${workflow.duration}",
-    "Success     : ${workflow.success}",
-    "workDir     : ${workflow.workDir}",
-    "Exit status : ${workflow.exitStatus}",
+    "CANCER ANALYSIS WORKFLOW ~ version $version",
+    "Command line: $workflow.commandLine",
+    "Project     : $workflow.projectDir",
+    // "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]",
+    "Completed at: $workflow.complete",
+    "Duration    : $workflow.duration",
+    "Success     : $workflow.success",
+    "workDir     : $workflow.workDir",
+    "Exit status : $workflow.exitStatus",
+    "Error report: ${workflow.errorReport ?: '-'}")
+  text.subscribe { log.info "$it" }
+}
+
+workflow.onError {
+  text = Channel.from(
+    "CANCER ANALYSIS WORKFLOW ~ version $version",
+    "Command line: $workflow.commandLine",
+    "Project     : $workflow.projectDir",
+    // "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]",
+    "Success     : $workflow.success",
+    "workDir     : $workflow.workDir",
+    "Exit status : $workflow.exitStatus",
     "Error report: ${workflow.errorReport ?: '-'}")
   text.subscribe { log.info "$it" }
 }
@@ -101,8 +115,8 @@ switch (params) {
       "    Usage:",
       "       nextflow run main.nf -c <file.config> --sample <sample.tsv>",
       "   [--steps STEP[,STEP]]",
-      "       optional option for now, to configure which",
-      "         processes will be runned or skipped in the workflow.",
+      "       option to configure which processes will be runned",
+      "         or skipped in the workflow.",
       "         Different steps to be separated by commas.",
       "       Possible values are:",
       "         preprocessing (default, will start workflow with FASTQ files)",
@@ -113,7 +127,7 @@ switch (params) {
       "         Strelka (use Strelka for VC)",
       "         HaplotypeCaller (use HaplotypeCaller for normal bams VC)",
       "         Manta (use Manta for SV)",
-      "         ascat (use ascat for SV)",
+      "         ascat (use ascat for CNV)",
       "    --help",
       "       you're reading it",
       "    --version",
@@ -124,10 +138,10 @@ switch (params) {
   case {params.version} :
     text = Channel.from(
       "CANCER ANALYSIS WORKFLOW",
-      "  Version $version",
-      "  Last update on $dateUpdate",
-      "Project : $workflow.projectDir",
-      "Cmd line: $workflow.commandLine")
+      "  Project  : $workflow.projectDir",
+      "  Version  : $version",
+      "  Revision : ${workflow.revision}",
+      "  Last update on $dateUpdate")
     text.subscribe { println "$it" }
     exit 1
 }
@@ -138,7 +152,7 @@ switch (params) {
  */
 
 parametersDefined = true
-CheckExistence = {
+CheckRefExistence = {
   referenceFile, fileToCheck ->
   try {
     referenceFile = file(fileToCheck)
@@ -167,22 +181,25 @@ refs = [
   "MantaRef":     params.mantaRef,     // copy of the genome reference file
   "MantaIndex":   params.mantaIndex,   // reference index indexed with samtools/0.1.19
   "acLoci":       params.acLoci        // loci file for ascat
-  ]
+]
 
-refs.each(CheckExistence)
+refs.each(CheckRefExistence)
 
 if (!parametersDefined) {
   text = Channel.from(
     "CANCER ANALYSIS WORKFLOW ~ version $version",
     "Missing file or parameter: please review your config file.",
     "    Usage",
-    "       nextflow run main.nf -c <file.config> --sample <sample.tsv>")
+    "       nextflow run main.nf -c <file.config> --sample <sample.tsv>",
+    "    Help",
+    "       nextflow run main.nf --help")
   text.subscribe { println "$it" }
   exit 1
 }
 
 /*
  * Getting list of steps from comma-separated strings
+ * If no steps are given, workflowSteps is initialized as an empty list
  */
 
 if (params.steps) {
@@ -191,15 +208,65 @@ if (params.steps) {
   workflowSteps = []
 }
 
-if ('preprocessing' in workflowSteps && 'nopreprocessing' in workflowSteps) {
+/*
+ * Steps verification
+ */
+
+stepsList = [
+  "preprocessing",
+  "nopreprocessing",
+  "MuTect1",
+  "MuTect2",
+  "VarDict",
+  "Strelka",
+  "HaplotypeCaller",
+  "Manta",
+  "ascat"
+]
+
+stepCorrect = true
+CheckStepExistence = {
+  step ->
+  try {
+    assert stepsList.contains(step)
+  }
+  catch (AssertionError ae) {
+    println("Unknown parameter: ${step}")
+    stepCorrect = false;
+  }
+}
+
+workflowSteps.each(CheckStepExistence)
+
+if (!stepCorrect) {
   text = Channel.from(
     "CANCER ANALYSIS WORKFLOW ~ version $version",
-    "Cannot use preprocessing and nopreprocessing at the same time")
+    "Incorrect step parameter: please review your parameters.",
+    "    Usage",
+    "       nextflow run main.nf -c <file.config> --sample <sample.tsv>",
+    "    Help",
+    "       nextflow run main.nf --help")
   text.subscribe { println "$it" }
   exit 1
 }
 
-if (!('nopreprocessing' in workflowSteps)) {
+if ('preprocessing' in workflowSteps && 'nopreprocessing' in workflowSteps) {
+  text = Channel.from(
+    "CANCER ANALYSIS WORKFLOW ~ version $version",
+    "Cannot use preprocessing and nopreprocessing steps at the same time"
+    "    Usage",
+    "       nextflow run main.nf -c <file.config> --sample <sample.tsv>",
+    "    Help",
+    "       nextflow run main.nf --help")
+  text.subscribe { println "$it" }
+  exit 1
+}
+
+/*
+ * If no choices made for processing progress, the workflow begins with preprocessing
+ */
+
+if (!('preprocessing' in workflowSteps) && !('nopreprocessing' in workflowSteps)) {
   workflowSteps.add('preprocessing')
 }
 
@@ -212,7 +279,9 @@ if (!params.sample) {
     "CANCER ANALYSIS WORKFLOW ~ version $version",
     "Missing the sample TSV config file: please specify it.",
     "    Usage",
-    "       nextflow run main.nf -c <file.config> --sample <sample.tsv>")
+    "       nextflow run main.nf -c <file.config> --sample <sample.tsv>",
+    "    Help",
+    "       nextflow run main.nf --help")
   text.subscribe { println "$it" }
   exit 1
 }
