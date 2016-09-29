@@ -138,7 +138,7 @@ switch (params) {
  */
 
 parametersDefined = true
-CheckExistence = {
+CheckRefExistence = {
   referenceFile, fileToCheck ->
   try {
     referenceFile = file(fileToCheck)
@@ -167,9 +167,9 @@ refs = [
   "MantaRef":     params.mantaRef,     // copy of the genome reference file
   "MantaIndex":   params.mantaIndex,   // reference index indexed with samtools/0.1.19
   "acLoci":       params.acLoci        // loci file for ascat
-  ]
+]
 
-refs.each(CheckExistence)
+refs.each(CheckRefExistence)
 
 if (!parametersDefined) {
   text = Channel.from(
@@ -196,25 +196,46 @@ if (params.steps) {
  * Steps verification
  */
 
-stepsList = ["preprocessing", "nopreprocessing", "MuTect1", "MuTect2", "VarDict", "Strelka", "HaplotypeCaller", "Manta", "ascat"]
+stepsList = [
+  "preprocessing",
+  "nopreprocessing",
+  "MuTect1",
+  "MuTect2",
+  "VarDict",
+  "Strelka",
+  "HaplotypeCaller",
+  "Manta",
+  "ascat"
+]
 
-workflowSteps.each { step ->
+stepCorrect = true
+CheckStepExistence = {
+  step ->
   try {
-    assert stepsList.contains( "${step}" )
+    assert stepsList.contains(step)
   }
   catch (AssertionError ae) {
-    text = Channel.from(
-      "CANCER ANALYSIS WORKFLOW ~ version $version",
-      "Cannot recognized step $step")
-    text.subscribe { println "$it" }
-    exit 1
+    println("Unknown parameter: ${step}")
+    stepCorrect = false;
   }
+}
+
+workflowSteps.each(CheckStepExistence)
+
+if (!stepCorrect) {
+  text = Channel.from(
+    "CANCER ANALYSIS WORKFLOW ~ version $version",
+    "Incorrect step parameter: please review your parameters.",
+    "    Usage",
+    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> --steps <STEP1,STEP2,STEP3>")
+  text.subscribe { println "$it" }
+  exit 1
 }
 
 if ('preprocessing' in workflowSteps && 'nopreprocessing' in workflowSteps) {
   text = Channel.from(
     "CANCER ANALYSIS WORKFLOW ~ version $version",
-    "Cannot use preprocessing and nopreprocessing at the same time")
+    "Cannot use preprocessing and nopreprocessing steps at the same time")
   text.subscribe { println "$it" }
   exit 1
 }
