@@ -1083,7 +1083,6 @@ if ('Strelka' in workflowSteps) {
   strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
 } else {
   bamsForStrelka.close()
-  strelkaIntervals.close()
 }
 
 if ('Manta' in workflowSteps) {
