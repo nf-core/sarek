@@ -66,8 +66,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 ========================================================================================
 */
 
-String version = "0.0.3"
-String dateUpdate = "2016-08-25"
+String version = "0.0.35"
+String dateUpdate = "2016-09-28"
 
 /*
  * Get some basic informations about the workflow
@@ -113,7 +113,7 @@ switch (params) {
       "         Strelka (use Strelka for VC)",
       "         HaplotypeCaller (use HaplotypeCaller for normal bams VC)",
       "         Manta (use Manta for SV)",
-      "         ascat (use ascat for SV)",
+      "         ascat (use ascat for CNV)",
       "    --help",
       "       you're reading it",
       "    --version",
@@ -138,7 +138,7 @@ switch (params) {
  */
 
 parametersDefined = true
-CheckExistence = {
+CheckRefExistence = {
   referenceFile, fileToCheck ->
   try {
     referenceFile = file(fileToCheck)
@@ -167,9 +167,9 @@ refs = [
   "MantaRef":     params.mantaRef,     // copy of the genome reference file
   "MantaIndex":   params.mantaIndex,   // reference index indexed with samtools/0.1.19
   "acLoci":       params.acLoci        // loci file for ascat
-  ]
+]
 
-refs.each(CheckExistence)
+refs.each(CheckRefExistence)
 
 if (!parametersDefined) {
   text = Channel.from(
@@ -183,6 +183,7 @@ if (!parametersDefined) {
 
 /*
  * Getting list of steps from comma-separated strings
+ * If no steps are given, workflowSteps is initialized as an empty list
  */
 
 if (params.steps) {
@@ -191,15 +192,59 @@ if (params.steps) {
   workflowSteps = []
 }
 
-if ('preprocessing' in workflowSteps && 'nopreprocessing' in workflowSteps) {
+/*
+ * Steps verification
+ */
+
+stepsList = [
+  "preprocessing",
+  "nopreprocessing",
+  "MuTect1",
+  "MuTect2",
+  "VarDict",
+  "Strelka",
+  "HaplotypeCaller",
+  "Manta",
+  "ascat"
+]
+
+stepCorrect = true
+CheckStepExistence = {
+  step ->
+  try {
+    assert stepsList.contains(step)
+  }
+  catch (AssertionError ae) {
+    println("Unknown parameter: ${step}")
+    stepCorrect = false;
+  }
+}
+
+workflowSteps.each(CheckStepExistence)
+
+if (!stepCorrect) {
   text = Channel.from(
     "CANCER ANALYSIS WORKFLOW ~ version $version",
-    "Cannot use preprocessing and nopreprocessing at the same time")
+    "Incorrect step parameter: please review your parameters.",
+    "    Usage",
+    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> --steps <STEP1,STEP2,STEP3>")
   text.subscribe { println "$it" }
   exit 1
 }
 
-if (!('nopreprocessing' in workflowSteps)) {
+if ('preprocessing' in workflowSteps && 'nopreprocessing' in workflowSteps) {
+  text = Channel.from(
+    "CANCER ANALYSIS WORKFLOW ~ version $version",
+    "Cannot use preprocessing and nopreprocessing steps at the same time")
+  text.subscribe { println "$it" }
+  exit 1
+}
+
+/*
+ * If no choices made for processing progress, the workflow begins with preprocessing
+ */
+
+if (!('preprocessing' in workflowSteps) && !('nopreprocessing' in workflowSteps)) {
   workflowSteps.add('preprocessing')
 }
 
@@ -702,12 +747,11 @@ gI = intervals
 muTect1Intervals = Channel.create()
 muTect2Intervals = Channel.create()
 varDictIntervals = Channel.create()
-strelkaIntervals = Channel.create()
 hcIntervals = Channel.create()
 
 Channel
   .from gI
-  .separate (muTect1Intervals, muTect2Intervals, varDictIntervals, strelkaIntervals, hcIntervals) {a -> [a, a, a, a, a]}
+  .separate (muTect1Intervals, muTect2Intervals, varDictIntervals, hcIntervals) {a -> [a, a, a, a]}
 
 // now add genomic intervals to the sample information
 // join [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] and ["1:1-2000","1_1-2000"]
@@ -833,8 +877,8 @@ if ('MuTect2' in workflowSteps) {
     set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf") into mutect2VariantCallingOutput
 
     // we are using MuTect2 shipped in GATK v3.6
-		// TODO: the  "-U ALLOW_SEQ_DICT_INCOMPATIBILITY " flag is actually masking a bug in older Picard versions. Using the latest Picard tool
-		// this bug should go away and we should _not_ use this flag
+    // TODO: the  "-U ALLOW_SEQ_DICT_INCOMPATIBILITY " flag is actually masking a bug in older Picard versions. Using the latest Picard tool
+    // this bug should go away and we should _not_ use this flag
     // removed: -nct ${task.cpus} \
     """
     java -Xmx${task.memory.toGiga()}g -jar ${params.mutect2Home}/GenomeAnalysisTK.jar \
@@ -1001,10 +1045,7 @@ if ('VarDict' in workflowSteps) {
 }
 
 if ('Strelka' in workflowSteps) {
-  bamsForStrelka = logChannelContent("Bams for Strelka: ", bamsForStrelka)
-  strelkaIntervals = logChannelContent("Intervals for Strelka: ", strelkaIntervals)
-  bamsFSTR = bamsForStrelka.spread(strelkaIntervals)
-  bamsFSTR = logChannelContent("Bams with Intervals for Strelka: ", bamsFSTR)
+  bamsForStrelka = logChannelContent("Bams with Intervals for Strelka: ", bamsForStrelka)
 
   process RunStrelka {
     publishDir "VariantCalling/Strelka"
@@ -1019,7 +1060,7 @@ if ('Strelka' in workflowSteps) {
     maxErrors '-1'
 
     input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFSTR
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForStrelka
     file refs["genomeFile"]
     file refs["genomeIndex"]
 
