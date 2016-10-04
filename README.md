@@ -37,11 +37,15 @@ All variables and parameters are specified in the config and the sample files.
 To configure which processes will be runned or skipped in the workflow. Different steps to be separated by commas.
 Possible values are:
 - preprocessing (default, will start workflow with FASTQ files)
-- nopreprocessing (will start workflow with recalibrated BAM files)
+- recalibrate (will start workflow with non-recalibrated BAM files)
+- skipPreprocessing (will start workflow with recalibrated BAM files)
+- MuTect1 (use MuTect1 for VC)
 - MuTect2 (use MuTect2 for VC)
 - VarDict (use VarDict for VC)
 - Strelka (use Strelka for VC)
+- HaplotypeCaller (use HaplotypeCaller for normal bams VC)
 - Manta (use Manta for SV)
+- ascat (use ascat for CNV)
 
 ## Nextflow processes
 Several processes are run within Nextflow
@@ -66,7 +70,7 @@ We divide them for the moment into 2 main steps
 - Manta - run Manta 1.0.0
 
 ## TSV file for sample
-It's a Tab Separated Value file, based on: "subject status sample lane fastq1 fastq2" or "subject status sample bam bai recal"
+It's a Tab Separated Value file, based on: "subject status sample lane fastq1 fastq2", "subject status sample bam bai recal" or "subject status sample bam bai"
 Quite straight-forward: 
 - Subject is the ID of the Patient
 - Status is 0 for Normal and 1 for Tumor
@@ -83,21 +87,33 @@ Quite straight-forward:
 In this sample for the normal case there are 3 read groups, and 2 for the tumor. It is recommended to add the absolute path of the paired 
 FASTQ files, but relative path should work also. Note, the delimiter is the tab (\t) character:
 
-	G15511  0       normal    normal_1  /samples/G15511/BL/C09DFACXX111207.1_1.fastq.gz  /samples/G15511/BL/C09DFACXX111207.1_2.fastq.gz
-	G15511  0       normal    normal_2  /samples/G15511/BL/C09DFACXX111207.2_1.fastq.gz  /samples/G15511/BL/C09DFACXX111207.2_2.fastq.gz
-	G15511  0       normal    normal_3  /samples/G15511/BL/C09DFACXX111207.3_1.fastq.gz  /samples/G15511/BL/C09DFACXX111207.3_2.fastq.gz
-	G15511  1       tumor   tumor_1 /samples/G15511/T/D0ENMACXX111207.1_1.fastq.gz   /samples/G15511/T/D0ENMACXX111207.1_2.fastq.gz
-	G15511  1       tumor   tumor_2 /samples/G15511/T/D0ENMACXX111207.2_1.fastq.gz   /samples/G15511/T/D0ENMACXX111207.2_2.fastq.gz
+	G15511	0	normal	normal_1	/samples/G15511/BL/C09DFACXX111207.1_1.fastq.gz	/samples/G15511/BL/C09DFACXX111207.1_2.fastq.gz
+	G15511	0	normal	normal_2	/samples/G15511/BL/C09DFACXX111207.2_1.fastq.gz	/samples/G15511/BL/C09DFACXX111207.2_2.fastq.gz
+	G15511	0	normal	normal_3	/samples/G15511/BL/C09DFACXX111207.3_1.fastq.gz	/samples/G15511/BL/C09DFACXX111207.3_2.fastq.gz
+	G15511	1	tumor	tumor_1	/samples/G15511/T/D0ENMACXX111207.1_1.fastq.gz	/samples/G15511/T/D0ENMACXX111207.1_2.fastq.gz
+	G15511	1	tumor	tumor_2	/samples/G15511/T/D0ENMACXX111207.2_1.fastq.gz	/samples/G15511/T/D0ENMACXX111207.2_2.fastq.gz
 
-On the other hand, if you have pre-processed BAMs (that is the de-duplicated and realigned BAMs, their indexes and recalibration tables) you should use a structure like:
+On the other hand, if you have pre-processed but not-recalibrated BAMs (that is the de-duplicated and realigned BAMs), their indexes and recalibration tables, you should use a structure like:
 
-	G15511  0       normal	/preprocessed/G15511.normal__1.md.real.bam /preprocessed/G15511.normal__1.md.real.bai /preprocessed/G15511.normal__1.recal.table
-	G15511  1       tumor	/preprocessed/G15511.tumor__1.md.real.bam /preprocessed/G15511.tumor__1.md.real.bai /preprocessed/G15511.tumor__1.recal.table
+	G15511	0	normal	/preprocessed/G15511.normal__1.md.real.bam	/preprocessed/G15511.normal__1.md.real.bai	/preprocessed/G15511.normal__1.recal.table
+	G15511	1	tumor	/preprocessed/G15511.tumor__1.md.real.bam	/preprocessed/G15511.tumor__1.md.real.bai	/preprocessed/G15511.tumor__1.recal.table
 
 All the files are the Preprocessing/CreateRecalibrationTable/ directory, and by default a corresponding TSV file is also deposited there. Generally, 
 to get MuTect1 and Strelka calls on the preprocessed files should be done by:
+```bash
+	nextflow -c local.config run MultiFQtoVC.nf --sample Preprocessing/CreateRecalibrationTable/mysample.tsv --steps recalibrate,MuTect1,Strelka
+```
 
-	nextflow -c local.config run MultiFQtoVC.nf --sample Preprocessing/CreateRecalibrationTable/mysample.tsv --steps MuTect1,Strelka
+The same way, if you have recalibrated BAMs (that is the de-duplicated and realigned and recalibrated BAMs) and their indexes, you should use a structure like:
+
+	G15511	0	normal	/preprocessed/G15511.normal__1.md.real.bam /preprocessed/G15511.normal__1.md.real.bai
+	G15511  1	tumor	/preprocessed/G15511.tumor__1.md.real.bam /preprocessed/G15511.tumor__1.md.real.bai
+
+All the files are the Preprocessing/RecalibrateBam/ directory, and by default a corresponding TSV file is also deposited there. Generally, 
+to get MuTect1 and Strelka calls on the recalibrated files should be done by:
+```bash
+	nextflow -c local.config run MultiFQtoVC.nf --sample Preprocessing/CreateRecalibrationTable/mysample.tsv --steps skipPreprocessing,MuTect1,Strelka
+```
 
 ## Tools and dependencies
 - nextflow 0.17.3
