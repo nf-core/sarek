@@ -1,6 +1,8 @@
 #!/usr/bin/env nextflow
 
 /*
++vim: syntax=groovy
++-*- mode: groovy;-*- 
 ========================================================================================
 =                   C A N C E R    A N A L Y S I S    W O R K F L O W                  =
 ========================================================================================
@@ -1083,7 +1085,6 @@ if ('Strelka' in workflowSteps) {
   strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
 } else {
   bamsForStrelka.close()
-  strelkaIntervals.close()
 }
 
 if ('Manta' in workflowSteps) {
