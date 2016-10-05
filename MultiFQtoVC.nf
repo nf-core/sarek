@@ -529,6 +529,7 @@ if ('preprocessing' in workflowSteps) {
     -known $ki \
     -known $mi \
     -nt ${task.cpus} \
+		-XL hs37d5 \
     -o ${idPatient}.intervals
     """
   }
