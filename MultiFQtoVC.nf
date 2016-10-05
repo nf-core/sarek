@@ -653,8 +653,7 @@ if ('preprocessing' in workflowSteps) {
     set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), file("${idSample}.recal.table") into recalibrationTable
 
     """
-    touch ../../../Preprocessing/CreateRecalibrationTable/${idPatient}.tsv
-    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/CreateRecalibrationTable/${realignedBamFile}\tPreprocessing/CreateRecalibrationTable/${realignedBaiFile}\tPreprocessing/CreateRecalibrationTable/${idSample}.recal.table >> ../../../Preprocessing/CreateRecalibrationTable/${idPatient}.tsv
+    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/CreateRecalibrationTable/${realignedBamFile}\tPreprocessing/CreateRecalibrationTable/${realignedBaiFile}\tPreprocessing/CreateRecalibrationTable/${idSample}.recal.table >> ../../../Preprocessing/CreateRecalibrationTable_${idPatient}.tsv
 
     java -Xmx${task.memory.toGiga()}g -Djava.io.tmpdir="/tmp" \
     -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
@@ -697,8 +696,7 @@ if ('preprocessing' in workflowSteps || 'recalibrate' in workflowSteps) {
 
     // TODO: ditto as at the previous BaseRecalibrator step, consider using -nct 4
     """
-    touch ../../../Preprocessing/RecalibrateBam/${idPatient}.tsv
-    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/RecalibrateBam/${idSample}.recal.bam\tPreprocessing/RecalibrateBam/${idSample}.recal.bai >> ../../../Preprocessing/RecalibrateBam/${idPatient}.tsv
+    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/RecalibrateBam/${idSample}.recal.bam\tPreprocessing/RecalibrateBam/${idSample}.recal.bai >> ../../../Preprocessing/RecalibrateBam_${idPatient}.tsv
 
     java -Xmx${task.memory.toGiga()}g \
     -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
