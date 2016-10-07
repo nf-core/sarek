@@ -69,7 +69,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 
 String version = "0.0.35"
-String dateUpdate = "2016-10-04"
+String dateUpdate = "2016-10-07"
 
 /*
  * Get some basic informations about the workflow

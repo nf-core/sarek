@@ -3,7 +3,7 @@
 Nextflow Cancer Analysis Workflow Prototype developed at @SciLifeLab
 
 ## Version
-0.0.3
+0.0.35
 
 ## Authors
 - Sebastian DiLorenzo (@Sebastian-D)
@@ -101,7 +101,7 @@ On the other hand, if you have pre-processed but not-recalibrated BAMs (that is 
 All the files are in the Preprocessing/CreateRecalibrationTable/ directory, and by default a corresponding TSV file is also deposited there. Generally, 
 to get MuTect1 and Strelka calls on the preprocessed files should be done by:
 ```bash
-	nextflow -c local.config run MultiFQtoVC.nf --sample Preprocessing/CreateRecalibrationTable/mysample.tsv --steps recalibrate,MuTect1,Strelka
+	nextflow -c local.config run MultiFQtoVC.nf --sample Preprocessing/CreateRecalibrationTable_mysample.tsv --steps recalibrate,MuTect1,Strelka
 ```
 
 The same way, if you have recalibrated BAMs (that is the de-duplicated and realigned and recalibrated BAMs) and their indexes, you should use a structure like:
@@ -109,10 +109,10 @@ The same way, if you have recalibrated BAMs (that is the de-duplicated and reali
 	G15511	0	normal	/preprocessed/G15511.normal__1.md.real.bam /preprocessed/G15511.normal__1.md.real.bai
 	G15511  1	tumor	/preprocessed/G15511.tumor__1.md.real.bam /preprocessed/G15511.tumor__1.md.real.bai
 
-All the files are tin he Preprocessing/RecalibrateBam/ directory, and by default a corresponding TSV file is also deposited there. Generally, 
+All the files are in he Preprocessing/RecalibrateBam/ directory, and by default a corresponding TSV file is also deposited there. Generally, 
 to get MuTect1 and Strelka calls on the recalibrated files should be done by:
 ```bash
-	nextflow -c local.config run MultiFQtoVC.nf --sample Preprocessing/CreateRecalibrationTable/mysample.tsv --steps skipPreprocessing,MuTect1,Strelka
+	nextflow -c local.config run MultiFQtoVC.nf --sample Preprocessing/RecalibrateBam_mysample.tsv --steps skipPreprocessing,MuTect1,Strelka
 ```
 
 ## Tools and dependencies
