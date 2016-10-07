@@ -133,7 +133,27 @@ We're developing this workflow on UPPMAX cluster milou. So our config file is ba
 
 ## Use cases
 
-### Starting from raw FASTQ - having pair of FASTQ files for normal and tumor samples (one lane for each)
+The workflow has three pre-processing options: ```preprocessing```, ```recalibrate``` and skipPreprocessing```. Using
+the ```preprocessing``` directive one will have a pair of mapped, deduplicated and recalibrated BAM files in the
+```Preprocessing/RecalibrateBam/``` directory. Furthermore, during this process a deduplicated and realigned BAM file is
+created alongside with its recalibration table in the ```Preprocessing/CreateRecalibrationTable/``` directory. This
+latter BAM is usually much smaller and easier to backup together with its recalibration table. Making recalibrated BAMs
+from this input data is only one step. This is the usual option you have to give when you are starting from raw FASTQ
+data:
+
+```
+nextflow run MultiFQtoVC.nf -c milou.config --sample mysample.tsv
+```
+
+Preprocessing will start by default, you do not have to give any additional steps, only the TSV file describing the
+sample (see below). 
+
+In the provided milou.config file we are defining the intervals file as well, this is used to
+define regions for variant call and realignment (in a scatter and gather fashion when possible). The intervals are
+chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs.
+We are ignoring the hs37d5 contig that contains concatenated decoy sequences. 
+
+### Starting from raw FASTQ - having pair of FASTQ files for normal and tumor samples (one lane for each sample)
 
 Ide teszunk valami ertelmes szoveget majd
 
