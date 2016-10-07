@@ -133,7 +133,7 @@ We're developing this workflow on UPPMAX cluster milou. So our config file is ba
 
 ## Use cases
 
-The workflow has three pre-processing options: ```preprocessing```, ```recalibrate``` and skipPreprocessing```. Using
+The workflow has three pre-processing options: ```preprocessing```, ```recalibrate``` and ```skipPreprocessing```. Using
 the ```preprocessing``` directive one will have a pair of mapped, deduplicated and recalibrated BAM files in the
 ```Preprocessing/RecalibrateBam/``` directory. Furthermore, during this process a deduplicated and realigned BAM file is
 created alongside with its recalibration table in the ```Preprocessing/CreateRecalibrationTable/``` directory. This
@@ -153,9 +153,40 @@ define regions for variant call and realignment (in a scatter and gather fashion
 chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs.
 We are ignoring the hs37d5 contig that contains concatenated decoy sequences. 
 
+During processing steps a ```trace.txt``` and a ```timeline.html``` file is generated automatically. These files contain
+statistics about resources used and processes finished. If you start a new flow or restart/resume a sample, the previous
+version will be renamed as ```trace.txt.1``` and ```timeline.html.1``` respectively. Also, older version are renamed
+with incremented numbers.
+
 ### Starting from raw FASTQ - having pair of FASTQ files for normal and tumor samples (one lane for each sample)
 
-Ide teszunk valami ertelmes szoveget majd
+The workflow should be started in this case with the smallest set of options as written above:
+
+	nextflow run MultiFQtoVC.nf -c milou.config --sample mysample.tsv
+
+The TSV file should have at least two tab-separated lines:
+
+	SUBJECT_ID	0	normal	1	/samples/normal_1.fastq.gz	/samples/normal_2.fastq.gz
+	SUBJECT_ID	1	tumor	1	/samples/tumor_1.fastq.gz	/samples/tumor_2.fastq.gz
+
+The columns are:
+1. Subject id
+2. identifier: 0 if normal, 1 if tumor
+3. text id: actual text representation of the type of the sample
+4. read group ID: it is irrelevant in this simple case, should to be 1
+5. first set of reads
+6. second set of reads
+
+### Starting from raw FASTQ - having pair of FASTQ files for normal, tumor and relapse samples (one lane for each sample)
+
+The workflow command line is just the same as before, but the TSV contains an extra line. You can see the second
+column is used to distinguish normal and tumor, there is no extra identifier for relapse. You can add as many relapse
+samples as many you have, providing their name in the third column is different. Each will be compared to the normal
+one-by-one.
+
+	SUBJECT_ID	0	normal	1	/samples/normal_1.fastq.gz	/samples/normal_2.fastq.gz
+	SUBJECT_ID	1	tumor	1	/samples/tumor_1.fastq.gz	/samples/tumor_2.fastq.gz
+	SUBJECT_ID	1	relapse	1	/samples/relapse_1.fastq.gz	/samples/relapse_2.fastq.gz
 
 ### Starting from raw FASTQ - having multiple lanes (reads groups)
 
