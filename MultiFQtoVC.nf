@@ -69,7 +69,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 
 String version = "0.0.35"
-String dateUpdate = "2016-09-28"
+String dateUpdate = "2016-10-07"
 
 /*
  * Get some basic informations about the workflow
@@ -101,14 +101,14 @@ switch (params) {
     text = Channel.from(
       "CANCER ANALYSIS WORKFLOW ~ version $version",
       "    Usage:",
-      "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv>",
-      "   [--steps STEP[,STEP]]",
-      "       optional option for now, to configure which",
-      "         processes will be runned or skipped in the workflow.",
+      "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> [--steps STEP[,STEP]]",
+      "    --steps",
+      "       Option to configure which processes to use in the workflow.",
       "         Different steps to be separated by commas.",
       "       Possible values are:",
       "         preprocessing (default, will start workflow with FASTQ files)",
-      "         nopreprocessing (will start workflow with recalibrated BAM files)",
+      "         recalibrate (will start workflow with non-recalibrated BAM files)",
+      "         skipPreprocessing (will start workflow with recalibrated BAM files)",
       "         MuTect1 (use MuTect1 for VC)",
       "         MuTect2 (use MuTect2 for VC)",
       "         VarDict (use VarDict for VC)",
@@ -117,9 +117,9 @@ switch (params) {
       "         Manta (use Manta for SV)",
       "         ascat (use ascat for CNV)",
       "    --help",
-      "       you're reading it",
+      "       You're reading it",
       "    --version",
-      "       displays version number")
+      "       Displays version number")
     text.subscribe { println "$it" }
     exit 1
 
@@ -178,7 +178,9 @@ if (!parametersDefined) {
     "CANCER ANALYSIS WORKFLOW ~ version $version",
     "Missing file or parameter: please review your config file.",
     "    Usage",
-    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv>")
+    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
+    "    help",
+    "       nextflow run MultiFQtoVC.nf --help")
   text.subscribe { println "$it" }
   exit 1
 }
@@ -200,7 +202,8 @@ if (params.steps) {
 
 stepsList = [
   "preprocessing",
-  "nopreprocessing",
+  "recalibrate",
+  "skipPreprocessing",
   "MuTect1",
   "MuTect2",
   "VarDict",
@@ -229,15 +232,21 @@ if (!stepCorrect) {
     "CANCER ANALYSIS WORKFLOW ~ version $version",
     "Incorrect step parameter: please review your parameters.",
     "    Usage",
-    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> --steps <STEP1,STEP2,STEP3>")
+    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
+    "    help",
+    "       nextflow run MultiFQtoVC.nf --help")
   text.subscribe { println "$it" }
   exit 1
 }
 
-if ('preprocessing' in workflowSteps && 'nopreprocessing' in workflowSteps) {
+if (('preprocessing' in workflowSteps && ('recalibrate' in workflowSteps || 'skipPreprocessing' in workflowSteps)) || ('recalibrate' in workflowSteps && 'skipPreprocessing' in workflowSteps)) {
   text = Channel.from(
     "CANCER ANALYSIS WORKFLOW ~ version $version",
-    "Cannot use preprocessing and nopreprocessing steps at the same time")
+    "Must choose only one step between preprocessing, recalibrate and skipPreprocessing",
+    "    Usage",
+    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
+    "    help",
+    "       nextflow run MultiFQtoVC.nf --help")
   text.subscribe { println "$it" }
   exit 1
 }
@@ -246,7 +255,7 @@ if ('preprocessing' in workflowSteps && 'nopreprocessing' in workflowSteps) {
  * If no choices made for processing progress, the workflow begins with preprocessing
  */
 
-if (!('preprocessing' in workflowSteps) && !('nopreprocessing' in workflowSteps)) {
+if (!('preprocessing' in workflowSteps) && !('recalibrate' in workflowSteps) && !('skipPreprocessing' in workflowSteps) ) {
   workflowSteps.add('preprocessing')
 }
 
@@ -259,7 +268,9 @@ if (!params.sample) {
     "CANCER ANALYSIS WORKFLOW ~ version $version",
     "Missing the sample TSV config file: please specify it.",
     "    Usage",
-    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv>")
+    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
+    "    help",
+    "       nextflow run MultiFQtoVC.nf --help")
   text.subscribe { println "$it" }
   exit 1
 }
@@ -287,7 +298,7 @@ if ('preprocessing' in workflowSteps) {
       [ idPatient, idSample, idRun, fastqFile1, fastqFile2 ]
   }
   fastqFiles = logChannelContent("FASTQ files and IDs to process: ", fastqFiles)
-} else {
+} else if ('recalibrate' in workflowSteps) {
   /*
    * Channeling the TSV file containing BAM for Recalibration
    * The format is: "subject status sample bam bai recal"
@@ -305,6 +316,25 @@ if ('preprocessing' in workflowSteps) {
       baiFile     = file(list[4])
       recalTable  = file(list[5])
       [ idPatient, idSample, bamFile, baiFile, recalTable ]
+  }
+  bamFiles = logChannelContent("Bam files and IDs to process: ", bamFiles)
+} else {
+  /*
+   * Channeling the TSV file containing BAM for Variant Calling
+   * The format is: "subject status sample bam bai"
+   * ie: HCC1954 0 HCC1954.blood data/HCC1954.normal.bam HCC1954.normal.bai
+   * Still with the __status added to the idSample
+   */
+
+  bamFiles = Channel
+    .from(sampleTSVconfig.readLines())
+    .map {line ->
+      list        = line.split()
+      idPatient   = list[0]
+      idSample    = "${list[2]}__${list[1]}"
+      bamFile     = file(list[3])
+      baiFile     = file(list[4])
+      [ idPatient, idSample, bamFile, baiFile ]
   }
   bamFiles = logChannelContent("Bam files and IDs to process: ", bamFiles)
 }
@@ -623,7 +653,7 @@ if ('preprocessing' in workflowSteps) {
     set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), file("${idSample}.recal.table") into recalibrationTable
 
     """
-    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/CreateRecalibrationTable/${realignedBamFile}\tPreprocessing/CreateRecalibrationTable/${realignedBaiFile}\tPreprocessing/CreateRecalibrationTable/${idSample}.recal.table >> ../../../Preprocessing/CreateRecalibrationTable/${idPatient}.tsv
+    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/CreateRecalibrationTable/${realignedBamFile}\tPreprocessing/CreateRecalibrationTable/${realignedBaiFile}\tPreprocessing/CreateRecalibrationTable/${idSample}.recal.table >> ../../../Preprocessing/CreateRecalibrationTable_${idPatient}.tsv
 
     java -Xmx${task.memory.toGiga()}g -Djava.io.tmpdir="/tmp" \
     -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
@@ -640,40 +670,46 @@ if ('preprocessing' in workflowSteps) {
   }
 
   recalibrationTable = logChannelContent("Base recalibrated table for recalibration: ", recalibrationTable)
-} else {
+} else if ('recalibrate' in workflowSteps) {
   recalibrationTable = bamFiles
 }
 
-process RecalibrateBam {
-  publishDir "Preprocessing/RecalibrateBam"
+if ('preprocessing' in workflowSteps || 'recalibrate' in workflowSteps) {
+  process RecalibrateBam {
+    publishDir "Preprocessing/RecalibrateBam"
 
-  module 'java/sun_jdk1.8.0_40'
+    module 'java/sun_jdk1.8.0_40'
 
-  cpus 8
-  memory { 16.GB * task.attempt }
-  time { 16.h * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
+    cpus 8
+    memory { 16.GB * task.attempt }
+    time { 16.h * task.attempt }
+    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
+    maxRetries 3
+    maxErrors '-1'
 
-  input:
-  set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), recalibrationReport from recalibrationTable
-  file refs["genomeFile"]
+    input:
+    set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), recalibrationReport from recalibrationTable
+    file refs["genomeFile"]
 
-  output:
-  set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBams
+    output:
+    set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBams
 
-  // TODO: ditto as at the previous BaseRecalibrator step, consider using -nct 4
-  """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
-  -T PrintReads \
-  -R ${refs["genomeFile"]} \
-  -nct ${task.cpus} \
-  -I $realignedBamFile \
-  --BQSR $recalibrationReport \
-  -o ${idSample}.recal.bam
-  """
+    // TODO: ditto as at the previous BaseRecalibrator step, consider using -nct 4
+    """
+    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/RecalibrateBam/${idSample}.recal.bam\tPreprocessing/RecalibrateBam/${idSample}.recal.bai >> ../../../Preprocessing/RecalibrateBam_${idPatient}.tsv
+
+    java -Xmx${task.memory.toGiga()}g \
+    -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+    -T PrintReads \
+    -R ${refs["genomeFile"]} \
+    -nct ${task.cpus} \
+    -I $realignedBamFile \
+    --BQSR $recalibrationReport \
+    -o ${idSample}.recal.bam
+    """
+  }
+} else {
+  recalibratedBams = bamFiles
 }
 
 recalibratedBams = logChannelContent("Recalibrated Bam for variant Calling: ", recalibratedBams)
