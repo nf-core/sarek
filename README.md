@@ -131,6 +131,25 @@ to get MuTect1 and Strelka calls on the recalibrated files should be done by:
 ## Configuration file
 We're developing this workflow on UPPMAX cluster milou. So our config file is based on the config file from [NGI RNAseq Nextflow pipeline](https://github.com/SciLifeLab/NGI-RNAseq)
 
+## Use cases
+
+### Starting from raw FASTQ - having pair of FASTQ files for normal and tumor samples (one lane for each)
+
+Ide teszunk valami ertelmes szoveget majd
+
+### Starting from raw FASTQ - having multiple lanes (reads groups)
+
+Ide meg a szoveg tobbi resze jon majd
+
+### Starting from a preprocessed BAM file with recalibration table
+
+Ide majd hogy itt mit kell csinalni
+
+### Starting from a recalibrated BAM file
+
+At this step we are assuming that all the required preprocessing steps (alignment, deduplication, ..., recalibration) is over, we only want to run variant callers or other tools using recalibrated BAMs.
+
+
 ## Test data
 For quick, easy testing of the workflow, we need a small, but representative
 data set as input. We went for a full depth coverage, small chunk of the genome. "Seba" suggested using [TCGA benchmarking data][TCGA], which is already downloaded to Uppmax.
