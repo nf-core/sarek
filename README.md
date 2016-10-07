@@ -190,11 +190,33 @@ one-by-one.
 
 ### Starting from raw FASTQ - having multiple lanes (reads groups)
 
-Ide meg a szoveg tobbi resze jon majd
+Usually there are more read groups - sequencing lanes - for a single sequencing run, and in a flowcell different lanes
+have to be recalibrated separately. This is captured in the TSV file only in the following manner, adding read group
+numbers or IDs in the fourth column. Obviously, if you do not have relapse samples, you can leave out those lines.
 
-### Starting from a preprocessed BAM file with recalibration table
+	SUBJECT_ID	0	normal	1	/samples/normal1_1.fastq.gz	/samples/normal1_2.fastq.gz
+	SUBJECT_ID	0	normal	2	/samples/normal2_1.fastq.gz	/samples/normal2_2.fastq.gz
+	SUBJECT_ID	1	tumor	3	/samples/tumor3_1.fastq.gz	/samples/tumor3_2.fastq.gz
+	SUBJECT_ID	1	tumor	4	/samples/tumor4_1.fastq.gz	/samples/tumor4_2.fastq.gz
+	SUBJECT_ID	1	tumor	5	/samples/tumor5_1.fastq.gz	/samples/tumor5_2.fastq.gz
+	SUBJECT_ID	1	relapse	7	/samples/relapse7_1.fastq.gz	/samples/relapse7_2.fastq.gz
+	SUBJECT_ID	1	relapse	9	/samples/relapse9_1.fastq.gz	/samples/relapse9_2.fastq.gz
 
-Ide majd hogy itt mit kell csinalni
+### Starting from recalibration
+
+NGI Production in the previous years delivered many preprocessed samples; these BAM files are not recalibrated, but
+their recalibration table was also delivered together with the alignments. To have recalibrated BAMs (suitable for
+variant calling) is a single additional step:
+
+	nextflow run MultiFQtoVC.nf -c milou.config --sample mysample.tsv --steps recalibrate
+
+And the corresponding TSV file shouls be like:
+
+	SUBJECT_ID	0	normal	1	/samples/normal.bam	/samples/normal.recal.table
+	SUBJECT_ID	1	tumor	1	/samples/tumor.bam	/samples/tumor.recal.table
+
+At the end of this step you should have recalibrated BAM files in the ```Preprocessing/RecalibrateBam/``` directory.
+
 
 ### Starting from a recalibrated BAM file
 
