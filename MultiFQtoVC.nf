@@ -406,8 +406,9 @@ if ('preprocessing' in workflowSteps) {
     module 'bioinfo-tools'
     module 'samtools/1.3'
 
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+		cpus 2
+    memory { $process.memory * task.attempt }
+    time { $process.time * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
