@@ -610,6 +610,7 @@ if ('preprocessing' in workflowSteps) {
     -targetIntervals $intervals \
     -known $ki \
     -known $mi \
+		-XL hs37d5 \
     -nWayOut '.real.bam'
     """
   }
