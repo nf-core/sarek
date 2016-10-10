@@ -559,6 +559,7 @@ if ('preprocessing' in workflowSteps) {
     -known $ki \
     -known $mi \
     -nt ${task.cpus} \
+		-XL hs37d5 \
     -o ${idPatient}.intervals
     """
   }
@@ -609,6 +610,7 @@ if ('preprocessing' in workflowSteps) {
     -targetIntervals $intervals \
     -known $ki \
     -known $mi \
+		-XL hs37d5 \
     -nWayOut '.real.bam'
     """
   }
