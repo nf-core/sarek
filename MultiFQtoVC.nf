@@ -353,9 +353,7 @@ if ('preprocessing' in workflowSteps) {
     module 'bwa/0.7.13'
     module 'samtools/1.3'
 
-    cpus 8
-    memory { 16.GB * task.attempt }
-    time { 20.h * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -406,9 +404,10 @@ if ('preprocessing' in workflowSteps) {
     module 'bioinfo-tools'
     module 'samtools/1.3'
 
-		cpus 2
-    memory { $process.memory * task.attempt }
-    time { $process.time * task.attempt }
+    cpus 1 
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -470,8 +469,10 @@ if ('preprocessing' in workflowSteps) {
     module 'bioinfo-tools'
     module 'picard/1.118'
 
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    cpus 1 
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -528,9 +529,7 @@ if ('preprocessing' in workflowSteps) {
 
     module 'java/sun_jdk1.8.0_40'
 
-    cpus 8
-    memory { 16.GB * task.attempt }
-    time { 8.h * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -560,7 +559,7 @@ if ('preprocessing' in workflowSteps) {
     -known $ki \
     -known $mi \
     -nt ${task.cpus} \
-		-XL hs37d5 \
+    -XL hs37d5 \
     -o ${idPatient}.intervals
     """
   }
@@ -576,8 +575,7 @@ if ('preprocessing' in workflowSteps) {
 
     module 'java/sun_jdk1.8.0_40'
 
-    memory { 16.GB * task.attempt }
-    time { 20.h * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -611,7 +609,7 @@ if ('preprocessing' in workflowSteps) {
     -targetIntervals $intervals \
     -known $ki \
     -known $mi \
-		-XL hs37d5 \
+    -XL hs37d5 \
     -nWayOut '.real.bam'
     """
   }
@@ -638,9 +636,7 @@ if ('preprocessing' in workflowSteps) {
 
     module 'java/sun_jdk1.8.0_40'
 
-    cpus 8
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -683,9 +679,7 @@ if ('preprocessing' in workflowSteps || 'recalibrate' in workflowSteps) {
 
     module 'java/sun_jdk1.8.0_40'
 
-    cpus 8
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -809,9 +803,10 @@ if ('MuTect1' in workflowSteps) {
     module 'java/sun_jdk1.7.0_25'
     module 'mutect/1.1.5'
 
-    cpus 8
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    cpus 1 
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -872,9 +867,10 @@ if ('MuTect1' in workflowSteps) {
     module 'bioinfo-tools'
     module 'java/sun_jdk1.8.0_40'
 
-    cpus 8
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    cpu 1
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -904,9 +900,10 @@ if ('MuTect2' in workflowSteps) {
     module 'bioinfo-tools'
     module 'java/sun_jdk1.8.0_40'
 
-    cpus 8
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    cpu 1
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -970,9 +967,10 @@ if ('MuTect2' in workflowSteps) {
     module 'bioinfo-tools'
     module 'java/sun_jdk1.8.0_40'
 
-    cpus 8
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    cpu 1
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -1013,8 +1011,9 @@ if ('VarDict' in workflowSteps) {
     module 'perl/5.18.4'
 
     cpus 1
-    memory { 6.GB * task.attempt }
-    time { 16.h * task.attempt }
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -1058,8 +1057,9 @@ if ('VarDict' in workflowSteps) {
     module 'perl/5.18.4'
 
     cpus 1
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -1093,9 +1093,7 @@ if ('Strelka' in workflowSteps) {
 
     module 'bioinfo-tools'
 
-    cpus 1
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -1118,7 +1116,7 @@ if ('Strelka' in workflowSteps) {
 
     cd strelka
 
-    make -j 16
+    make -j ${task.cpus}
     """
   }
   strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
@@ -1132,8 +1130,6 @@ if ('Manta' in workflowSteps) {
 
     module 'bioinfo-tools'
     module 'manta/1.0.0'
-
-    cpus 8
 
     input:
         file refs["MantaRef"]
@@ -1155,7 +1151,7 @@ if ('Manta' in workflowSteps) {
     mv ${baiTumor} Tumor.bam.bai
 
     configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference ${refs["MantaRef"]} --runDir MantaDir
-    python MantaDir/runWorkflow.py -m local -j 8
+    python MantaDir/runWorkflow.py -m local -j ${task.cpus}
     gunzip -c MantaDir/results/variants/somaticSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.somaticSV.vcf
     gunzip -c MantaDir/results/variants/candidateSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSV.vcf
     gunzip -c MantaDir/results/variants/diploidSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.diploidSV.vcf
@@ -1194,6 +1190,8 @@ process alleleCount{
     module 'alleleCount'
 
     cpus 1
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
 
     input:
     file refs["genomeFile"]
@@ -1226,6 +1224,8 @@ process alleleCount{
 process convertAlleleCounts {
 
   cpus 1
+  queue 'core'
+  memory { params.singleCPUMem * task.attempt }
 
   input:
   set idPatient, idSampleNormal, idSampleTumor, file(normalAlleleCt), file(tumorAlleleCt) from allele_count_output
@@ -1257,6 +1257,8 @@ process convertAlleleCounts {
 process runASCAT {
 
   cpus 1
+  queue 'core'
+  memory { params.singleCPUMem * task.attempt }
 
   input:
 
@@ -1345,8 +1347,9 @@ if ('HaplotypeCaller' in workflowSteps) {
     module 'java/sun_jdk1.8.0_92'
 
     cpus 1
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
@@ -1409,9 +1412,10 @@ if ('HaplotypeCaller' in workflowSteps) {
     module 'bioinfo-tools'
     module 'java/sun_jdk1.8.0_92'
 
-    cpus 8
-    memory { 16.GB * task.attempt }
-    time { 16.h * task.attempt }
+    cpu 1
+    queue 'core'
+    memory { params.singleCPUMem * task.attempt }
+    time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
     maxErrors '-1'
