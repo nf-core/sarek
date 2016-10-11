@@ -1104,13 +1104,15 @@ if ('Strelka' in workflowSteps) {
     file refs["genomeIndex"]
 
     output:
-    sed idPatient, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("*.vcf") into strelkaVariantCallingOutput
+    set idPatient, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("*.vcf") into strelkaVariantCallingOutput
 
     """
+    tumorPath=`readlink ${bamTumor}`
+    normalPath=`readlink ${bamNormal}`
     ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
-    --tumor ${bamTumor} \
-    --normal ${bamNormal} \
-    --ref ${refs["genomeFile"]} \
+    --tumor \$tumorPath \
+    --normal \$normalPath \
+    --ref ${refs["MantaRef"]} \
     --config ${params.strelkaCFG} \
     --output-dir strelka
 
