@@ -867,7 +867,7 @@ if ('MuTect1' in workflowSteps) {
     module 'bioinfo-tools'
     module 'java/sun_jdk1.8.0_40'
 
-    cpu 1
+    cpus 1
     queue 'core'
     memory { params.singleCPUMem * task.attempt }
     time { params.runTime * task.attempt }
@@ -900,7 +900,7 @@ if ('MuTect2' in workflowSteps) {
     module 'bioinfo-tools'
     module 'java/sun_jdk1.8.0_40'
 
-    cpu 1
+    cpus 1
     queue 'core'
     memory { params.singleCPUMem * task.attempt }
     time { params.runTime * task.attempt }
@@ -967,7 +967,7 @@ if ('MuTect2' in workflowSteps) {
     module 'bioinfo-tools'
     module 'java/sun_jdk1.8.0_40'
 
-    cpu 1
+    cpus 1
     queue 'core'
     memory { params.singleCPUMem * task.attempt }
     time { params.runTime * task.attempt }
@@ -1412,7 +1412,7 @@ if ('HaplotypeCaller' in workflowSteps) {
     module 'bioinfo-tools'
     module 'java/sun_jdk1.8.0_92'
 
-    cpu 1
+    cpus 1
     queue 'core'
     memory { params.singleCPUMem * task.attempt }
     time { params.runTime * task.attempt }
