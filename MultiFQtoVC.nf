@@ -632,7 +632,7 @@ if ('preprocessing' in workflowSteps) {
   realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realignedBam)
 
   process CreateRecalibrationTable {
-    publishDir "Preprocessing/CreateRecalibrationTable"
+    publishDir "Preprocessing/CreateRecalibrationTable", mode: 'move'
 
     module 'java/sun_jdk1.8.0_40'
 
