@@ -58,7 +58,7 @@ OTHER DEALINGS IN THE SOFTWARE.
  - CreateRecalibrationTable - using GATK
  - RecalibrateBam - using GATK
  - RunMutect1 - using MuTect1 1.1.5 loaded as a module
- - RunMutect2 - using MuTect2 shipped in GATK v3.6
+ - RunMutect2 - using MuTect2 shipped in GATK
  - VarDict - run VarDict on multiple intervals
  - VarDictCollatedVCF - merge Vardict result
 ----------------------------------------------------------------------------------------
@@ -68,8 +68,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 ========================================================================================
 */
 
-String version = "0.0.35"
-String dateUpdate = "2016-10-07"
+String version = "0.8"
+String dateUpdate = "2016-10-14"
 
 /*
  * Get some basic informations about the workflow
