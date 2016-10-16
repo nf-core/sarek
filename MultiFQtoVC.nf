@@ -663,6 +663,7 @@ if ('preprocessing' in workflowSteps) {
     -knownSites ${refs["kgIndels"]} \
     -knownSites ${refs["millsIndels"]} \
     -nct ${task.cpus} \
+    -XL hs37d5 \
     -l INFO \
     -o ${idSample}.recal.table
     """
@@ -701,6 +702,7 @@ if ('preprocessing' in workflowSteps || 'recalibrate' in workflowSteps) {
     -R ${refs["genomeFile"]} \
     -nct ${task.cpus} \
     -I $realignedBamFile \
+    -XL hs37d5 \
     --BQSR $recalibrationReport \
     -o ${idSample}.recal.bam
     """
@@ -1104,7 +1106,7 @@ if ('Strelka' in workflowSteps) {
     file refs["genomeIndex"]
 
     output:
-    set idPatient, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("*.vcf") into strelkaVariantCallingOutput
+    set idPatient, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("strelka/results/*.vcf") into strelkaVariantCallingOutput
 
     """
     tumorPath=`readlink ${bamTumor}`
