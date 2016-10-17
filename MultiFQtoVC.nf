@@ -58,7 +58,7 @@ OTHER DEALINGS IN THE SOFTWARE.
  - CreateRecalibrationTable - using GATK
  - RecalibrateBam - using GATK
  - RunMutect1 - using MuTect1 1.1.5 loaded as a module
- - RunMutect2 - using MuTect2 shipped in GATK v3.6
+ - RunMutect2 - using MuTect2 shipped in GATK
  - VarDict - run VarDict on multiple intervals
  - VarDictCollatedVCF - merge Vardict result
 ----------------------------------------------------------------------------------------
@@ -68,8 +68,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 ========================================================================================
 */
 
-String version = "0.0.35"
-String dateUpdate = "2016-10-07"
+String version = "0.8"
+String dateUpdate = "2016-10-14"
 
 /*
  * Get some basic informations about the workflow
@@ -919,7 +919,7 @@ if ('MuTect2' in workflowSteps) {
     // this bug should go away and we should _not_ use this flag
     // removed: -nct ${task.cpus} \
     """
-    java -Xmx${task.memory.toGiga()}g -jar ${params.mutect2Home}/GenomeAnalysisTK.jar \
+    java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
     -T MuTect2 \
     -R ${refs["genomeFile"]} \
     --cosmic ${refs["cosmic41"]} \
@@ -984,7 +984,7 @@ if ('MuTect2' in workflowSteps) {
     script:
     """
     VARIANTS=`ls ${workflow.launchDir}/${pd}/intervals/*${idT}*.mutect2.vcf| awk '{printf(" -V %s\\n",\$1) }'`
-    java -Xmx${task.memory.toGiga()}g -cp ${params.mutect2Home}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out MuTect2_${idPatient}_${idNormal}_${idT}.vcf
+    java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out MuTect2_${idPatient}_${idNormal}_${idT}.vcf
     """
   }
 } else {
@@ -1366,7 +1366,7 @@ if ('HaplotypeCaller' in workflowSteps) {
 
     //parellelization information: "Many users have reported issues running HaplotypeCaller with the -nct argument, so we recommend using Queue to parallelize HaplotypeCaller instead of multithreading." However, it can take the -nct argument.
     """
-    java -Xmx${task.memory.toGiga()}g -jar ${params.mutect2Home}/GenomeAnalysisTK.jar \
+    java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
     -T HaplotypeCaller \
     -R ${refs["genomeFile"]} \
     --dbsnp ${refs["dbsnp"]} \
@@ -1431,7 +1431,7 @@ if ('HaplotypeCaller' in workflowSteps) {
     script:
     """
     VARIANTS=`ls ${workflow.launchDir}/${pd}/*${idN}*.HC.vcf| awk '{printf(" -V %s\\n",\$1) }'`
-    java -Xmx${task.memory.toGiga()}g -cp ${params.mutect2Home}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out HaplotypeCaller_${idPatient}_${idN}.vcf
+    java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out HaplotypeCaller_${idPatient}_${idN}.vcf
     """
   }
 } else {
