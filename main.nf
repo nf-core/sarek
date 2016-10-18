@@ -42,7 +42,7 @@ OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 OTHER DEALINGS IN THE SOFTWARE.
 ----------------------------------------------------------------------------------------
  Basic command:
- $ nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv>
+ $ nextflow run main.nf -c <file.config> --sample <sample.tsv>
 
  All variables are configured in the config and sample files. All variables in the config
  file can be reconfigured on the commande line, like:
@@ -78,14 +78,28 @@ String dateUpdate = "2016-10-17"
 
 workflow.onComplete {
   text = Channel.from(
-    "CANCER ANALYSIS WORKFLOW",
-    "Version     : $version",
-    "Command line: ${workflow.commandLine}",
-    "Completed at: ${workflow.complete}",
-    "Duration    : ${workflow.duration}",
-    "Success     : ${workflow.success}",
-    "workDir     : ${workflow.workDir}",
-    "Exit status : ${workflow.exitStatus}",
+    "CANCER ANALYSIS WORKFLOW ~ version $version",
+    "Command line: $workflow.commandLine",
+    "Project     : $workflow.projectDir",
+    "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]",
+    "Completed at: $workflow.complete",
+    "Duration    : $workflow.duration",
+    "Success     : $workflow.success",
+    "workDir     : $workflow.workDir",
+    "Exit status : $workflow.exitStatus",
+    "Error report: ${workflow.errorReport ?: '-'}")
+  text.subscribe { log.info "$it" }
+}
+
+workflow.onError {
+  text = Channel.from(
+    "CANCER ANALYSIS WORKFLOW ~ version $version",
+    "Command line: $workflow.commandLine",
+    "Project     : $workflow.projectDir",
+    "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]",
+    "Success     : $workflow.success",
+    "workDir     : $workflow.workDir",
+    "Exit status : $workflow.exitStatus",
     "Error report: ${workflow.errorReport ?: '-'}")
   text.subscribe { log.info "$it" }
 }
@@ -126,10 +140,10 @@ switch (params) {
   case {params.version} :
     text = Channel.from(
       "CANCER ANALYSIS WORKFLOW",
-      "  Version $version",
-      "  Last update on $dateUpdate",
-      "Project : $workflow.projectDir",
-      "Cmd line: $workflow.commandLine")
+      "  Project  : $workflow.projectDir",
+      "  Version  : $version",
+      "  Revision : ${workflow.revision}",
+      "  Last update on $dateUpdate")
     text.subscribe { println "$it" }
     exit 1
 }
