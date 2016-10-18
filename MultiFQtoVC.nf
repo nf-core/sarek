@@ -68,8 +68,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 ========================================================================================
 */
 
-String version = "0.8"
-String dateUpdate = "2016-10-14"
+String version = "0.8.1"
+String dateUpdate = "2016-10-17"
 
 /*
  * Get some basic informations about the workflow
@@ -346,9 +346,11 @@ if ('preprocessing' in workflowSteps) {
 */
 
 if ('preprocessing' in workflowSteps) {
-  process Mapping {
-    publishDir "Preprocessing/Mapping"
+  println file('Preprocessing').mkdir() ? "Folder Preprocessing created" : "Cannot create folder Preprocessing"
+  println file('Preprocessing/NonRecalibrated').mkdir() ? "Folder Preprocessing/NonRecalibrated created" : "Cannot create folder Preprocessing/NonRecalibrated"
+  println file('Preprocessing/Recalibrated').mkdir() ? "Folder Preprocessing/Recalibrated created" : "Cannot create folder Preprocessing/Recalibrated"
 
+  process Mapping {
     module 'bioinfo-tools'
     module 'bwa/0.7.13'
     module 'samtools/1.3'
@@ -399,8 +401,6 @@ if ('preprocessing' in workflowSteps) {
   groupedBam = logChannelContent("Grouped BAMs before merge:", groupedBam)
 
   process MergeBam {
-    publishDir "Preprocessing/MergeBam"
-
     module 'bioinfo-tools'
     module 'samtools/1.3'
 
@@ -430,8 +430,6 @@ if ('preprocessing' in workflowSteps) {
   // Renaming is totally useless, but the file name is consistent with the rest of the pipeline
 
   process RenameSingleBam {
-    publishDir "Preprocessing/RenameSingleBam"
-
     input:
     set idPatient, idSample, idRun, file(bam) from singleBam
 
@@ -464,8 +462,6 @@ if ('preprocessing' in workflowSteps) {
    */
 
   process MarkDuplicates {
-    publishDir "Preprocessing/MarkDuplicates"
-
     module 'bioinfo-tools'
     module 'picard/1.118'
 
@@ -525,8 +521,6 @@ if ('preprocessing' in workflowSteps) {
    */
 
   process CreateIntervals {
-    publishDir "Preprocessing/CreateIntervals"
-
     module 'java/sun_jdk1.8.0_40'
 
     time { params.runTime * task.attempt }
@@ -571,8 +565,6 @@ if ('preprocessing' in workflowSteps) {
    */
 
   process Realign {
-    publishDir "Preprocessing/Realign"
-
     module 'java/sun_jdk1.8.0_40'
 
     time { params.runTime * task.attempt }
@@ -632,7 +624,7 @@ if ('preprocessing' in workflowSteps) {
   realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realignedBam)
 
   process CreateRecalibrationTable {
-    publishDir "Preprocessing/CreateRecalibrationTable"
+    publishDir "Preprocessing/NonRecalibrated", mode: 'copy'
 
     module 'java/sun_jdk1.8.0_40'
 
@@ -652,7 +644,8 @@ if ('preprocessing' in workflowSteps) {
     set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), file("${idSample}.recal.table") into recalibrationTable
 
     """
-    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/CreateRecalibrationTable/${realignedBamFile}\tPreprocessing/CreateRecalibrationTable/${realignedBaiFile}\tPreprocessing/CreateRecalibrationTable/${idSample}.recal.table >> ../../../Preprocessing/CreateRecalibrationTable_${idPatient}.tsv
+    touch ../../../Preprocessing/NonRecalibrated/${idPatient}.tsv
+    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/NonRecalibrated/${realignedBamFile}\tPreprocessing/NonRecalibrated/${realignedBaiFile}\tPreprocessing/NonRecalibrated/${idSample}.recal.table >> ../../../Preprocessing/NonRecalibrated/${idPatient}.tsv
 
     java -Xmx${task.memory.toGiga()}g -Djava.io.tmpdir="/tmp" \
     -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
@@ -670,12 +663,15 @@ if ('preprocessing' in workflowSteps) {
 
   recalibrationTable = logChannelContent("Base recalibrated table for recalibration: ", recalibrationTable)
 } else if ('recalibrate' in workflowSteps) {
+  println file('Preprocessing').mkdir ? "Folder Preprocessing created" : "Cannot create folder Preprocessing"
+  println file('Preprocessing/Recalibrated').mkdir() ? "Folder Preprocessing/Recalibrated created" : "Cannot create folder Preprocessing/Recalibrated"
+
   recalibrationTable = bamFiles
 }
 
 if ('preprocessing' in workflowSteps || 'recalibrate' in workflowSteps) {
   process RecalibrateBam {
-    publishDir "Preprocessing/RecalibrateBam"
+    publishDir "Preprocessing/Recalibrated", mode: 'copy'
 
     module 'java/sun_jdk1.8.0_40'
 
@@ -693,7 +689,8 @@ if ('preprocessing' in workflowSteps || 'recalibrate' in workflowSteps) {
 
     // TODO: ditto as at the previous BaseRecalibrator step, consider using -nct 4
     """
-    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/RecalibrateBam/${idSample}.recal.bam\tPreprocessing/RecalibrateBam/${idSample}.recal.bai >> ../../../Preprocessing/RecalibrateBam_${idPatient}.tsv
+    touch ../../../Preprocessing/Recalibrated/${idPatient}.tsv
+    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/Recalibrated/${idSample}.recal.bam\tPreprocessing/Recalibrated/${idSample}.recal.bai >> ../../../Preprocessing/Recalibrated/${idPatient}.tsv
 
     java -Xmx${task.memory.toGiga()}g \
     -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
