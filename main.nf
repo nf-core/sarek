@@ -68,13 +68,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 ========================================================================================
 */
 
-<<<<<<< HEAD
 String version = "0.8.2"
 String dateUpdate = "2016-10-19"
-=======
-String version = "0.8.1"
-String dateUpdate = "2016-10-17"
->>>>>>> renamed MultiFQtoVC.nf
 
 /*
  * Get some basic informations about the workflow
@@ -83,18 +78,14 @@ String dateUpdate = "2016-10-17"
 
 workflow.onComplete {
   text = Channel.from(
-<<<<<<< HEAD
     "CANCER ANALYSIS WORKFLOW ~ v$version",
     "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]",
-=======
-    "CANCER ANALYSIS WORKFLOW",
-    "Version     : $version",
->>>>>>> renamed MultiFQtoVC.nf
+    "Project     : ${workflow.projectDir}",
+    "workDir     : ${workflow.workDir}",
     "Command line: ${workflow.commandLine}",
     "Completed at: ${workflow.complete}",
     "Duration    : ${workflow.duration}",
     "Success     : ${workflow.success}",
-    "workDir     : ${workflow.workDir}",
     "Exit status : ${workflow.exitStatus}",
     "Error report: ${workflow.errorReport ?: '-'}")
   text.subscribe { log.info "$it" }
@@ -111,7 +102,7 @@ switch (params) {
     text = Channel.from(
       "CANCER ANALYSIS WORKFLOW ~ version $version",
       "    Usage:",
-      "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> [--steps STEP[,STEP]]",
+      "       nextflow run SciLifeLab/CAW -c <file.config> --sample <sample.tsv> [--steps STEP[,STEP]]",
       "    --steps",
       "       Option to configure which processes to use in the workflow.",
       "         Different steps to be separated by commas.",
@@ -127,17 +118,11 @@ switch (params) {
       "         Manta (use Manta for SV)",
       "         ascat (use ascat for CNV)",
       "    --help",
-<<<<<<< HEAD
       "       you're reading it",
       "    --verbose",
       "       Adds more verbosity to workflow",
       "    --version",
       "       displays version number")
-=======
-      "       You're reading it",
-      "    --version",
-      "       Displays version number")
->>>>>>> renamed MultiFQtoVC.nf
     text.subscribe { println "$it" }
     exit 1
 
@@ -146,12 +131,9 @@ switch (params) {
       "CANCER ANALYSIS WORKFLOW",
       "  Version $version",
       "  Last update on $dateUpdate",
-<<<<<<< HEAD
       "Git info: $workflow.repository - $workflow.revision [$workflow.commitId]",
-=======
->>>>>>> renamed MultiFQtoVC.nf
-      "Project : $workflow.projectDir",
-      "Cmd line: $workflow.commandLine")
+      "Project : ${workflow.projectDir}",
+      "Cmd line: ${workflow.commandLine}")
     text.subscribe { println "$it" }
     exit 1
 }
@@ -200,9 +182,9 @@ if (!parametersDefined) {
     "CANCER ANALYSIS WORKFLOW ~ version $version",
     "Missing file or parameter: please review your config file.",
     "    Usage",
-    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
+    "       nextflow run SciLifeLab/CAW -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
     "    help",
-    "       nextflow run MultiFQtoVC.nf --help")
+    "       nextflow run SciLifeLab/CAW --help")
   text.subscribe { println "$it" }
   exit 1
 }
@@ -254,9 +236,9 @@ if (!stepCorrect) {
     "CANCER ANALYSIS WORKFLOW ~ version $version",
     "Incorrect step parameter: please review your parameters.",
     "    Usage",
-    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
+    "       nextflow run SciLifeLab/CAW -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
     "    help",
-    "       nextflow run MultiFQtoVC.nf --help")
+    "       nextflow run SciLifeLab/CAW --help")
   text.subscribe { println "$it" }
   exit 1
 }
@@ -266,9 +248,9 @@ if (('preprocessing' in workflowSteps && ('recalibrate' in workflowSteps || 'ski
     "CANCER ANALYSIS WORKFLOW ~ version $version",
     "Must choose only one step between preprocessing, recalibrate and skipPreprocessing",
     "    Usage",
-    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
+    "       nextflow run SciLifeLab/CAW -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
     "    help",
-    "       nextflow run MultiFQtoVC.nf --help")
+    "       nextflow run SciLifeLab/CAW --help")
   text.subscribe { println "$it" }
   exit 1
 }
@@ -290,9 +272,9 @@ if (!params.sample) {
     "CANCER ANALYSIS WORKFLOW ~ version $version",
     "Missing the sample TSV config file: please specify it.",
     "    Usage",
-    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
+    "       nextflow run SciLifeLab/CAW -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
     "    help",
-    "       nextflow run MultiFQtoVC.nf --help")
+    "       nextflow run SciLifeLab/CAW --help")
   text.subscribe { println "$it" }
   exit 1
 }
@@ -310,11 +292,7 @@ if ('preprocessing' in workflowSteps) {
 
   fastqFiles = Channel
     .from(sampleTSVconfig.readLines())
-<<<<<<< HEAD
     .map{ String line ->
-=======
-    .map {line ->
->>>>>>> renamed MultiFQtoVC.nf
       list        = line.split()
       idPatient   = list[0]
       idSample    = "${list[2]}__${list[1]}"
@@ -334,11 +312,7 @@ if ('preprocessing' in workflowSteps) {
 
   bamFiles = Channel
     .from(sampleTSVconfig.readLines())
-<<<<<<< HEAD
     .map{ String line ->
-=======
-    .map {line ->
->>>>>>> renamed MultiFQtoVC.nf
       list        = line.split()
       idPatient   = list[0]
       idSample    = "${list[2]}__${list[1]}"
@@ -358,11 +332,7 @@ if ('preprocessing' in workflowSteps) {
 
   bamFiles = Channel
     .from(sampleTSVconfig.readLines())
-<<<<<<< HEAD
     .map{ String line ->
-=======
-    .map {line ->
->>>>>>> renamed MultiFQtoVC.nf
       list        = line.split()
       idPatient   = list[0]
       idSample    = "${list[2]}__${list[1]}"
@@ -385,11 +355,8 @@ if ('preprocessing' in workflowSteps) {
   println file('Preprocessing/Recalibrated').mkdir() ? "Folder Preprocessing/Recalibrated created" : "Cannot create folder Preprocessing/Recalibrated"
 
   process Mapping {
-<<<<<<< HEAD
     tag { idRun }
 
-=======
->>>>>>> renamed MultiFQtoVC.nf
     module 'bioinfo-tools'
     module 'bwa/0.7.13'
     module 'samtools/1.3'
@@ -440,11 +407,8 @@ if ('preprocessing' in workflowSteps) {
   groupedBam = logChannelContent("Grouped BAMs before merge:", groupedBam)
 
   process MergeBam {
-<<<<<<< HEAD
     tag { idSample }
 
-=======
->>>>>>> renamed MultiFQtoVC.nf
     module 'bioinfo-tools'
     module 'samtools/1.3'
 
@@ -460,11 +424,7 @@ if ('preprocessing' in workflowSteps) {
     set idPatient, idSample, idRun, file(bam) from groupedBam
 
     output:
-<<<<<<< HEAD
     set idPatient, idSample, file("${idSample}.bam") into mergedBam
-=======
-    set idPatient, idSample, idRun, file("${idSample}.bam") into mergedBam
->>>>>>> renamed MultiFQtoVC.nf
 
     script:
     idRun = idRun.sort().join(':')
@@ -478,20 +438,13 @@ if ('preprocessing' in workflowSteps) {
   // Renaming is totally useless, but the file name is consistent with the rest of the pipeline
 
   process RenameSingleBam {
-<<<<<<< HEAD
     tag { idSample }
 
-=======
->>>>>>> renamed MultiFQtoVC.nf
     input:
     set idPatient, idSample, idRun, file(bam) from singleBam
 
     output:
-<<<<<<< HEAD
     set idPatient, idSample, file("${idSample}.bam") into singleRenamedBam
-=======
-    set idPatient, idSample, idRun, file("${idSample}.bam") into singleRenamedBam
->>>>>>> renamed MultiFQtoVC.nf
 
     script:
     idRun = idRun.sort().join(':')
@@ -510,12 +463,7 @@ if ('preprocessing' in workflowSteps) {
 
   bamList = Channel.create()
   bamList = mergedBam.mix(singleRenamedBam)
-<<<<<<< HEAD
   bamList = bamList.map { idPatient, idSample, bam -> [idPatient[0], idSample, bam].flatten() }
-=======
-  bamList = bamList.map { idPatient, idSample, idRun, bam -> [idPatient[0], idSample, bam].flatten() }
->>>>>>> renamed MultiFQtoVC.nf
-
   bamList = logChannelContent("BAM list for MarkDuplicates: ",bamList)
 
   /*
@@ -523,11 +471,8 @@ if ('preprocessing' in workflowSteps) {
    */
 
   process MarkDuplicates {
-<<<<<<< HEAD
     tag { idSample }
 
-=======
->>>>>>> renamed MultiFQtoVC.nf
     module 'bioinfo-tools'
     module 'picard/1.118'
 
@@ -567,11 +512,6 @@ if ('preprocessing' in workflowSteps) {
    * create realign intervals, use both tumor+normal as input
    */
 
-<<<<<<< HEAD
-=======
-  duplicatesForInterval = logChannelContent("BAMs for IndelRealigner before groupTuple: ", duplicatesForInterval)
-
->>>>>>> renamed MultiFQtoVC.nf
   // group the marked duplicates Bams intervals by overall subject/patient id (idPatient)
   duplicatesInterval = Channel.create()
   duplicatesInterval = duplicatesForInterval.groupTuple()
@@ -590,11 +530,8 @@ if ('preprocessing' in workflowSteps) {
    */
 
   process CreateIntervals {
-<<<<<<< HEAD
     tag { idPatient }
 
-=======
->>>>>>> renamed MultiFQtoVC.nf
     module 'java/sun_jdk1.8.0_40'
 
     time { params.runTime * task.attempt }
@@ -639,11 +576,8 @@ if ('preprocessing' in workflowSteps) {
    */
 
   process Realign {
-<<<<<<< HEAD
     tag { idPatient }
 
-=======
->>>>>>> renamed MultiFQtoVC.nf
     module 'java/sun_jdk1.8.0_40'
 
     time { params.runTime * task.attempt }
@@ -703,11 +637,8 @@ if ('preprocessing' in workflowSteps) {
   realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realignedBam)
 
   process CreateRecalibrationTable {
-<<<<<<< HEAD
     tag { idSample }
 
-=======
->>>>>>> renamed MultiFQtoVC.nf
     publishDir "Preprocessing/NonRecalibrated", mode: 'copy'
 
     module 'java/sun_jdk1.8.0_40'
@@ -747,11 +678,7 @@ if ('preprocessing' in workflowSteps) {
 
   recalibrationTable = logChannelContent("Base recalibrated table for recalibration: ", recalibrationTable)
 } else if ('recalibrate' in workflowSteps) {
-<<<<<<< HEAD
   println file('Preprocessing').mkdir() ? "Folder Preprocessing created" : "Cannot create folder Preprocessing"
-=======
-  println file('Preprocessing').mkdir ? "Folder Preprocessing created" : "Cannot create folder Preprocessing"
->>>>>>> renamed MultiFQtoVC.nf
   println file('Preprocessing/Recalibrated').mkdir() ? "Folder Preprocessing/Recalibrated created" : "Cannot create folder Preprocessing/Recalibrated"
 
   recalibrationTable = bamFiles
@@ -759,11 +686,8 @@ if ('preprocessing' in workflowSteps) {
 
 if ('preprocessing' in workflowSteps || 'recalibrate' in workflowSteps) {
   process RecalibrateBam {
-<<<<<<< HEAD
     tag { idSample }
 
-=======
->>>>>>> renamed MultiFQtoVC.nf
     publishDir "Preprocessing/Recalibrated", mode: 'copy'
 
     module 'java/sun_jdk1.8.0_40'
@@ -1525,10 +1449,6 @@ if ('HaplotypeCaller' in workflowSteps) {
     """
   }
 } else {
-<<<<<<< HEAD
-=======
-  bamsForHC = logChannelContent("Bams for HaplotypeCaller: ", bamsForHC)
->>>>>>> renamed MultiFQtoVC.nf
   bamsForHC.close()
   hcIntervals.close()
 }
@@ -1589,11 +1509,7 @@ def logChannelContent (aMessage, aChannel) {
   Channel
     .from aChannel
     .separate(resChannel,logChannel) {a -> [a, a]}
-<<<<<<< HEAD
   if (params.verbose) {logChannel.subscribe {log.info aMessage + " -- $it"}}
-=======
-  logChannel.subscribe {log.info aMessage + " -- $it"}
->>>>>>> renamed MultiFQtoVC.nf
   return resChannel
 }
 
