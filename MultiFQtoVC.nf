@@ -676,7 +676,7 @@ if ('preprocessing' in workflowSteps) {
 
   recalibrationTable = logChannelContent("Base recalibrated table for recalibration: ", recalibrationTable)
 } else if ('recalibrate' in workflowSteps) {
-  println file('Preprocessing').mkdir ? "Folder Preprocessing created" : "Cannot create folder Preprocessing"
+  println file('Preprocessing').mkdir() ? "Folder Preprocessing created" : "Cannot create folder Preprocessing"
   println file('Preprocessing/Recalibrated').mkdir() ? "Folder Preprocessing/Recalibrated created" : "Cannot create folder Preprocessing/Recalibrated"
 
   recalibrationTable = bamFiles
