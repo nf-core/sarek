@@ -79,27 +79,14 @@ String dateUpdate = "2016-10-17"
 workflow.onComplete {
   text = Channel.from(
     "CANCER ANALYSIS WORKFLOW ~ version $version",
-    "Command line: $workflow.commandLine",
-    "Project     : $workflow.projectDir",
-    "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]",
-    "Completed at: $workflow.complete",
-    "Duration    : $workflow.duration",
-    "Success     : $workflow.success",
-    "workDir     : $workflow.workDir",
-    "Exit status : $workflow.exitStatus",
-    "Error report: ${workflow.errorReport ?: '-'}")
-  text.subscribe { log.info "$it" }
-}
-
-workflow.onError {
-  text = Channel.from(
-    "CANCER ANALYSIS WORKFLOW ~ version $version",
-    "Command line: $workflow.commandLine",
-    "Project     : $workflow.projectDir",
-    "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]",
-    "Success     : $workflow.success",
-    "workDir     : $workflow.workDir",
-    "Exit status : $workflow.exitStatus",
+    "Git info    : ${workflow.repository} - ${workflow.revision} [$workflow.commitId]",
+    "Project     : ${workflow.projectDir}",
+    "workDir     : ${workflow.workDir}",
+    "Command line: ${workflow.commandLine}",
+    "Completed at: ${workflow.complete}",
+    "Duration    : ${workflow.duration}",
+    "Success     : ${workflow.success}",
+    "Exit status : ${workflow.exitStatus}",
     "Error report: ${workflow.errorReport ?: '-'}")
   text.subscribe { log.info "$it" }
 }
@@ -115,7 +102,7 @@ switch (params) {
     text = Channel.from(
       "CANCER ANALYSIS WORKFLOW ~ version $version",
       "    Usage:",
-      "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> [--steps STEP[,STEP]]",
+      "       nextflow run SciLifeLab/CAW -c <file.config> --sample <sample.tsv> [--steps STEP[,STEP]]",
       "    --steps",
       "       Option to configure which processes to use in the workflow.",
       "         Different steps to be separated by commas.",
@@ -140,10 +127,11 @@ switch (params) {
   case {params.version} :
     text = Channel.from(
       "CANCER ANALYSIS WORKFLOW",
-      "  Project  : $workflow.projectDir",
-      "  Version  : $version",
-      "  Revision : ${workflow.revision}",
-      "  Last update on $dateUpdate")
+      "  Version $version",
+      "  Last update on $dateUpdate",
+      "Git info: ${workflow.repository} - ${workflow.revision} [$workflow.commitId]",
+      "Project : ${workflow.projectDir}",
+      "Cmd line: ${workflow.commandLine}")
     text.subscribe { println "$it" }
     exit 1
 }
@@ -192,9 +180,9 @@ if (!parametersDefined) {
     "CANCER ANALYSIS WORKFLOW ~ version $version",
     "Missing file or parameter: please review your config file.",
     "    Usage",
-    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
+    "       nextflow run SciLifeLab/CAW -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
     "    help",
-    "       nextflow run MultiFQtoVC.nf --help")
+    "       nextflow run SciLifeLab/CAW --help")
   text.subscribe { println "$it" }
   exit 1
 }
@@ -246,9 +234,9 @@ if (!stepCorrect) {
     "CANCER ANALYSIS WORKFLOW ~ version $version",
     "Incorrect step parameter: please review your parameters.",
     "    Usage",
-    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
+    "       nextflow run SciLifeLab/CAW -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
     "    help",
-    "       nextflow run MultiFQtoVC.nf --help")
+    "       nextflow run SciLifeLab/CAW --help")
   text.subscribe { println "$it" }
   exit 1
 }
@@ -258,9 +246,9 @@ if (('preprocessing' in workflowSteps && ('recalibrate' in workflowSteps || 'ski
     "CANCER ANALYSIS WORKFLOW ~ version $version",
     "Must choose only one step between preprocessing, recalibrate and skipPreprocessing",
     "    Usage",
-    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
+    "       nextflow run SciLifeLab/CAW -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
     "    help",
-    "       nextflow run MultiFQtoVC.nf --help")
+    "       nextflow run SciLifeLab/CAW --help")
   text.subscribe { println "$it" }
   exit 1
 }
@@ -282,9 +270,9 @@ if (!params.sample) {
     "CANCER ANALYSIS WORKFLOW ~ version $version",
     "Missing the sample TSV config file: please specify it.",
     "    Usage",
-    "       nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
+    "       nextflow run SciLifeLab/CAW -c <file.config> --sample <sample.tsv> --steps <STEP1[,STEP2,STEP3]>",
     "    help",
-    "       nextflow run MultiFQtoVC.nf --help")
+    "       nextflow run SciLifeLab/CAW --help")
   text.subscribe { println "$it" }
   exit 1
 }
@@ -365,6 +353,9 @@ if ('preprocessing' in workflowSteps) {
   println file('Preprocessing/Recalibrated').mkdir() ? "Folder Preprocessing/Recalibrated created" : "Cannot create folder Preprocessing/Recalibrated"
 
   process Mapping {
+
+    tag "$idRun"
+
     module 'bioinfo-tools'
     module 'bwa/0.7.13'
     module 'samtools/1.3'
