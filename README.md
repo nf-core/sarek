@@ -3,7 +3,7 @@
 Nextflow Cancer Analysis Workflow Prototype developed at @SciLifeLab
 
 ## Version
-0.8.1
+0.8.2
 
 ## Authors
 - Sebastian DiLorenzo (@Sebastian-D)
