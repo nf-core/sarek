@@ -355,6 +355,8 @@ if ('preprocessing' in workflowSteps) {
     module 'bwa/0.7.13'
     module 'samtools/1.3'
 
+    tag "$idRun"
+
     time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
