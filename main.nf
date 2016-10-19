@@ -42,7 +42,7 @@ OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 OTHER DEALINGS IN THE SOFTWARE.
 ----------------------------------------------------------------------------------------
  Basic command:
- $ nextflow run MultiFQtoVC.nf -c <file.config> --sample <sample.tsv>
+ $ nextflow run SciLifeLab/CAW -c <file.config> --sample <sample.tsv>
 
  All variables are configured in the config and sample files. All variables in the config
  file can be reconfigured on the commande line, like:
@@ -79,7 +79,7 @@ String dateUpdate = "2016-10-19"
 workflow.onComplete {
   text = Channel.from(
     "CANCER ANALYSIS WORKFLOW ~ v$version",
-    "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]",
+    "Git info    : ${workflow.repository} - ${workflow.revision} [$workflow.commitId]",
     "Project     : ${workflow.projectDir}",
     "workDir     : ${workflow.workDir}",
     "Command line: ${workflow.commandLine}",
@@ -131,7 +131,7 @@ switch (params) {
       "CANCER ANALYSIS WORKFLOW",
       "  Version $version",
       "  Last update on $dateUpdate",
-      "Git info: $workflow.repository - $workflow.revision [$workflow.commitId]",
+      "Git info: ${workflow.repository} - ${workflow.revision} [$workflow.commitId]",
       "Project : ${workflow.projectDir}",
       "Cmd line: ${workflow.commandLine}")
     text.subscribe { println "$it" }
