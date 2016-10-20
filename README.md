@@ -31,7 +31,7 @@ mv ./nextflow ~/bin
 #### UPPMAX
 If you're running on a Swedish UPPMAX cluster you can load NextFlow as an environment module instead:
 ```bash
-module load nextflow
+module load Nextflow
 ```
 The first time you load this you will get a warning about setting environment variables. To automatically set these at login, you can add the following lines to your `~/.bashrc` file:
 ```bash
