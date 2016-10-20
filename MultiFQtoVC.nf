@@ -797,9 +797,10 @@ Channel
 if ('MuTect1' in workflowSteps) {
   bamsFMT1 = bamsForMuTect1.spread(muTect1Intervals)
   bamsFMT1 = logChannelContent("Bams for MuTect1: ", bamsFMT1)
+  pd = "VariantCalling/MuTect1/"
 
   process RunMutect1 {
-    publishDir "VariantCalling/MuTect1/intervals"
+    publishDir pd + "intervals_" + idPatient
 
     module 'bioinfo-tools'
     module 'java/sun_jdk1.7.0_25'
@@ -828,6 +829,7 @@ if ('MuTect1' in workflowSteps) {
     -I:normal $bamNormal \
     -I:tumor $bamTumor \
     -L \"${genInt}\" \
+    --disable_auto_index_creation_and_locking_when_reading_rods \
     --out ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.call_stats.out \
     --vcf ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.vcf
     """
@@ -862,7 +864,6 @@ if ('MuTect1' in workflowSteps) {
   (idPatient, idNormal) = getPatientAndNormalIDs(collatedIDs)
   println "Patient's ID: " + idPatient
   println "Normal ID: " + idNormal
-  pd = "VariantCalling/MuTect1"
   process concatFiles {
     publishDir = pd
 
@@ -885,8 +886,8 @@ if ('MuTect1' in workflowSteps) {
 
     script:
     """
-    VARIANTS=`ls ${workflow.launchDir}/${pd}/intervals/*${idT}*.mutect1.vcf| awk '{printf(" -V %s\\n",\$1) }'`
-    java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out MuTect1_${idPatient}_${idNormal}_${idT}.vcf
+    VARIANTS=`ls ${workflow.launchDir}/${pd}/intervals_${idPatient}/*${idT}*.mutect1.vcf| awk '{printf(" -V %s \\\\n",\$1) }'`
+    java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${refs["genomeFile"]}  \$VARIANTS --outputFile MuTect1_${idPatient}_${idNormal}_${idT}.vcf
     """
   }
 }
