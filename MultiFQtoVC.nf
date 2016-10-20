@@ -68,8 +68,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 ========================================================================================
 */
 
-String version = "0.8"
-String dateUpdate = "2016-10-14"
+String version = "0.8.2"
+String dateUpdate = "2016-10-19"
 
 /*
  * Get some basic informations about the workflow
@@ -78,8 +78,7 @@ String dateUpdate = "2016-10-14"
 
 workflow.onComplete {
   text = Channel.from(
-    "CANCER ANALYSIS WORKFLOW",
-    "Version     : $version",
+    "CANCER ANALYSIS WORKFLOW ~ v$version",
     "Command line: ${workflow.commandLine}",
     "Completed at: ${workflow.complete}",
     "Duration    : ${workflow.duration}",
@@ -116,6 +115,8 @@ switch (params) {
       "         HaplotypeCaller (use HaplotypeCaller for normal bams VC)",
       "         Manta (use Manta for SV)",
       "         ascat (use ascat for CNV)",
+      "    --verbose",
+      "       Adds more verbosity to workflow",
       "    --help",
       "       You're reading it",
       "    --version",
@@ -288,7 +289,7 @@ if ('preprocessing' in workflowSteps) {
 
   fastqFiles = Channel
     .from(sampleTSVconfig.readLines())
-    .map {line ->
+    .map{ String line ->
       list        = line.split()
       idPatient   = list[0]
       idSample    = "${list[2]}__${list[1]}"
@@ -308,7 +309,7 @@ if ('preprocessing' in workflowSteps) {
 
   bamFiles = Channel
     .from(sampleTSVconfig.readLines())
-    .map {line ->
+    .map{ String line ->
       list        = line.split()
       idPatient   = list[0]
       idSample    = "${list[2]}__${list[1]}"
@@ -328,7 +329,7 @@ if ('preprocessing' in workflowSteps) {
 
   bamFiles = Channel
     .from(sampleTSVconfig.readLines())
-    .map {line ->
+    .map{ String line ->
       list        = line.split()
       idPatient   = list[0]
       idSample    = "${list[2]}__${list[1]}"
@@ -346,8 +347,12 @@ if ('preprocessing' in workflowSteps) {
 */
 
 if ('preprocessing' in workflowSteps) {
+  println file('Preprocessing').mkdir() ? "Folder Preprocessing created" : "Cannot create folder Preprocessing"
+  println file('Preprocessing/NonRecalibrated').mkdir() ? "Folder Preprocessing/NonRecalibrated created" : "Cannot create folder Preprocessing/NonRecalibrated"
+  println file('Preprocessing/Recalibrated').mkdir() ? "Folder Preprocessing/Recalibrated created" : "Cannot create folder Preprocessing/Recalibrated"
+
   process Mapping {
-    publishDir "Preprocessing/Mapping"
+    tag { idRun }
 
     module 'bioinfo-tools'
     module 'bwa/0.7.13'
@@ -399,7 +404,7 @@ if ('preprocessing' in workflowSteps) {
   groupedBam = logChannelContent("Grouped BAMs before merge:", groupedBam)
 
   process MergeBam {
-    publishDir "Preprocessing/MergeBam"
+    tag { idSample }
 
     module 'bioinfo-tools'
     module 'samtools/1.3'
@@ -416,7 +421,7 @@ if ('preprocessing' in workflowSteps) {
     set idPatient, idSample, idRun, file(bam) from groupedBam
 
     output:
-    set idPatient, idSample, idRun, file("${idSample}.bam") into mergedBam
+    set idPatient, idSample, file("${idSample}.bam") into mergedBam
 
     script:
     idRun = idRun.sort().join(':')
@@ -430,13 +435,13 @@ if ('preprocessing' in workflowSteps) {
   // Renaming is totally useless, but the file name is consistent with the rest of the pipeline
 
   process RenameSingleBam {
-    publishDir "Preprocessing/RenameSingleBam"
+    tag { idSample }
 
     input:
     set idPatient, idSample, idRun, file(bam) from singleBam
 
     output:
-    set idPatient, idSample, idRun, file("${idSample}.bam") into singleRenamedBam
+    set idPatient, idSample, file("${idSample}.bam") into singleRenamedBam
 
     script:
     idRun = idRun.sort().join(':')
@@ -455,7 +460,7 @@ if ('preprocessing' in workflowSteps) {
 
   bamList = Channel.create()
   bamList = mergedBam.mix(singleRenamedBam)
-  bamList = bamList.map { idPatient, idSample, idRun, bam -> [idPatient[0], idSample, bam].flatten() }
+  bamList = bamList.map { idPatient, idSample, bam -> [idPatient[0], idSample, bam].flatten() }
 
   bamList = logChannelContent("BAM list for MarkDuplicates: ",bamList)
 
@@ -464,7 +469,7 @@ if ('preprocessing' in workflowSteps) {
    */
 
   process MarkDuplicates {
-    publishDir "Preprocessing/MarkDuplicates"
+    tag { idSample }
 
     module 'bioinfo-tools'
     module 'picard/1.118'
@@ -505,8 +510,6 @@ if ('preprocessing' in workflowSteps) {
    * create realign intervals, use both tumor+normal as input
    */
 
-  duplicatesForInterval = logChannelContent("BAMs for IndelRealigner before groupTuple: ", duplicatesForInterval)
-
   // group the marked duplicates Bams intervals by overall subject/patient id (idPatient)
   duplicatesInterval = Channel.create()
   duplicatesInterval = duplicatesForInterval.groupTuple()
@@ -525,7 +528,7 @@ if ('preprocessing' in workflowSteps) {
    */
 
   process CreateIntervals {
-    publishDir "Preprocessing/CreateIntervals"
+    tag { idPatient }
 
     module 'java/sun_jdk1.8.0_40'
 
@@ -571,7 +574,7 @@ if ('preprocessing' in workflowSteps) {
    */
 
   process Realign {
-    publishDir "Preprocessing/Realign"
+    tag { idPatient }
 
     module 'java/sun_jdk1.8.0_40'
 
@@ -632,7 +635,9 @@ if ('preprocessing' in workflowSteps) {
   realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realignedBam)
 
   process CreateRecalibrationTable {
-    publishDir "Preprocessing/CreateRecalibrationTable"
+    tag { idSample }
+
+    publishDir "Preprocessing/NonRecalibrated", mode: 'copy'
 
     module 'java/sun_jdk1.8.0_40'
 
@@ -652,7 +657,8 @@ if ('preprocessing' in workflowSteps) {
     set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), file("${idSample}.recal.table") into recalibrationTable
 
     """
-    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/CreateRecalibrationTable/${realignedBamFile}\tPreprocessing/CreateRecalibrationTable/${realignedBaiFile}\tPreprocessing/CreateRecalibrationTable/${idSample}.recal.table >> ../../../Preprocessing/CreateRecalibrationTable_${idPatient}.tsv
+    touch ../../../Preprocessing/NonRecalibrated/${idPatient}.tsv
+    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/NonRecalibrated/${realignedBamFile}\tPreprocessing/NonRecalibrated/${realignedBaiFile}\tPreprocessing/NonRecalibrated/${idSample}.recal.table >> ../../../Preprocessing/NonRecalibrated/${idPatient}.tsv
 
     java -Xmx${task.memory.toGiga()}g -Djava.io.tmpdir="/tmp" \
     -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
@@ -671,12 +677,17 @@ if ('preprocessing' in workflowSteps) {
 
   recalibrationTable = logChannelContent("Base recalibrated table for recalibration: ", recalibrationTable)
 } else if ('recalibrate' in workflowSteps) {
+  println file('Preprocessing').mkdir() ? "Folder Preprocessing created" : "Cannot create folder Preprocessing"
+  println file('Preprocessing/Recalibrated').mkdir() ? "Folder Preprocessing/Recalibrated created" : "Cannot create folder Preprocessing/Recalibrated"
+
   recalibrationTable = bamFiles
 }
 
 if ('preprocessing' in workflowSteps || 'recalibrate' in workflowSteps) {
   process RecalibrateBam {
-    publishDir "Preprocessing/RecalibrateBam"
+    tag { idSample }
+
+    publishDir "Preprocessing/Recalibrated", mode: 'copy'
 
     module 'java/sun_jdk1.8.0_40'
 
@@ -694,7 +705,8 @@ if ('preprocessing' in workflowSteps || 'recalibrate' in workflowSteps) {
 
     // TODO: ditto as at the previous BaseRecalibrator step, consider using -nct 4
     """
-    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/RecalibrateBam/${idSample}.recal.bam\tPreprocessing/RecalibrateBam/${idSample}.recal.bai >> ../../../Preprocessing/RecalibrateBam_${idPatient}.tsv
+    touch ../../../Preprocessing/Recalibrated/${idPatient}.tsv
+    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/Recalibrated/${idSample}.recal.bam\tPreprocessing/Recalibrated/${idSample}.recal.bai >> ../../../Preprocessing/Recalibrated/${idPatient}.tsv
 
     java -Xmx${task.memory.toGiga()}g \
     -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
@@ -1437,7 +1449,6 @@ if ('HaplotypeCaller' in workflowSteps) {
     """
   }
 } else {
-  bamsForHC = logChannelContent("Bams for HaplotypeCaller: ", bamsForHC)
   bamsForHC.close()
   hcIntervals.close()
 }
@@ -1498,7 +1509,7 @@ def logChannelContent (aMessage, aChannel) {
   Channel
     .from aChannel
     .separate(resChannel,logChannel) {a -> [a, a]}
-  logChannel.subscribe {log.info aMessage + " -- $it"}
+  if (params.verbose) {logChannel.subscribe {log.info aMessage + " -- $it"}}
   return resChannel
 }
 
