@@ -1,6 +1,8 @@
 [![Stories in Ready](https://badge.waffle.io/SciLifeLab/CAW.png?label=ready&title=Ready)](https://waffle.io/SciLifeLab/CAW)
+
 # CAW
-Nextflow Cancer Analysis Workflow Prototype developed at @SciLifeLab
+Nextflow Cancer Analysis Workflow Prototype developed at the [National Genomics Infastructure](https://ngisweden.scilifelab.se/)
+at [SciLifeLab Stockholm](https://www.scilifelab.se/platforms/ngi/), Sweden.
 
 ## Version
 0.8.2
@@ -16,20 +18,58 @@ Nextflow Cancer Analysis Workflow Prototype developed at @SciLifeLab
 - Pall Olason (@pallolason)
 - Pelin Sahlén (@pelinakan)
 
-## Quick start
-Install [nextflow](http://www.nextflow.io/) and then download the project
+##Installation
+
+###Install Nextflow
+To use this pipeline, you need to have a working version of NextFlow installed. You can find more information about this pipeline tool at [nextflow.io](http://www.nextflow.io/). The typical installation
+of NextFlow looks like this:
 ```bash
-git clone https://github.com/SciLifeLab/CAW.git
+curl -fsSL get.nextflow.io | bash
+mv ./nextflow ~/bin
 ```
-Then it's possible to run the full workflow on a data set specified in the tsv file. For example:
+
+#### UPPMAX
+If you're running on a Swedish UPPMAX cluster you can load NextFlow as an environment module instead:
 ```bash
-nextflow run MultiFQtoVC.nf -c milou.config --sample sample.tsv
+module load Nextflow
+```
+The first time you load this you will get a warning about setting environment variables. To automatically set these at login, you can add the following lines to your `~/.bashrc` file:
+```bash
+export NXF_LAUNCHBASE=$SNIC_TMP
+export NXF_TEMP=$SNIC_TMP
+export NXF_OPTS='-Xms1g -Xmx4g '
+```
+
+### NextFlow configuration
+Next, you need to set up a config file so that NextFlow knows how to run and where to find reference
+indexes. You can find an example configuration file for UPPMAX (milou) with this repository:
+[`example_uppmax_config`](https://github.com/SciLifeLab/NGI-RNAseq/blob/master/example_uppmax_config).
+
+Copy this file to `~/.nextflow/config` and edit the line `'-A b2013064'` to contain your own UPPMAX project
+identifier instead.
+
+It is entirely possible to run this pipeline on other clusters - just note that you may need to customise
+the `process` environment (eg. if you're using a cluster system other than SLURM) and the paths to reference
+files.
+
+### Workflow installation
+This workflow itself needs no installation - NextFlow will automatically fetch it from GitHub when run if `SciLifeLab/CAW` is specified as the workflow name.
+
+If you prefer, you can download the files yourself from GitHub and run them directly:
+```bash
+git clone https://github.com/SciLifeLab/CAW
+nextflow run CAW/main.nf
+```
+
+It's possible to run the full workflow on a data set specified in the tsv file. For example:
+```bash
+nextflow run SciLifeLab/CAW -c milou.config --sample sample.tsv
 ```
 will run the workflow on a small testing dataset. To try on your own data, you just have to edit your own tsv file.
 
 ## Usage
 ```bash
-nextflow run MultiFQtoVC.nf -c <file.config> --sample <file.tsv> --intervals <file.list> [--steps STEP[,STEP]]
+nextflow run SciLifeLab/CAW -c <file.config> --sample <file.tsv> --intervals <file.list> [--steps STEP[,STEP]]
 ```
 All variables and parameters are specified in the config and the sample files.
 
