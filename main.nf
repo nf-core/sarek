@@ -822,7 +822,7 @@ if ('MuTect1' in workflowSteps) {
 
     cpus 1 
     queue 'core'
-    memory { params.singleCPUMem * task.attempt }
+    memory { params.MuTect1Mem * task.attempt }
     time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
