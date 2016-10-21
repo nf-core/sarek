@@ -68,8 +68,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 ========================================================================================
 */
 
-String version = "0.8.2"
-String dateUpdate = "2016-10-19"
+String version = "0.8.3"
+String dateUpdate = "2016-10-21"
 
 /*
  * Get some basic informations about the workflow
