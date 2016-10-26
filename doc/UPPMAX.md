@@ -20,7 +20,7 @@ export NXF_HOME=$HOME/.nextflow
 export NXF_TEMP=${SNIC_TMP:-$HOME/glob/nxftmp}
 export NXF_LAUNCHBASE=${SNIC_TMP:-$HOME/glob/nxftmp}
 export NXF_WORK=$HOME/glob/work
-export NXF_OPTS=`-Xms1g -Xmx4g`
+export NXF_OPTS='-Xms1g -Xmx4g'
 ```
 
 ## Download the workflow config file
