@@ -11,7 +11,6 @@ mv ./nextflow ~/bin
 ## Create Nextflow specific directories
 ```bash
 mkdir $HOME/glob/nxftmp
-mkdir $HOME/.nextflow
 ```
 
 ## Configure environnement variables
