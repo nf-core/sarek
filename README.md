@@ -19,7 +19,7 @@ at [SciLifeLab Stockholm](https://www.scilifelab.se/platforms/ngi/), Sweden.
 - Pelin Sahlén (@pelinakan)
 
 ## Installation and first execution
-See the [workflow installation documentation](docs/UPPMAX.md)
+See the [workflow installation documentation](doc/UPPMAX.md)
 
 ## Usage
 ```bash
@@ -89,7 +89,7 @@ Quite straight-forward:
 - `recal` is the recalibration table
 
 ## Example of TSV files
-See the [workflow TSV example documentation](docs/EXAMPLE.md)
+See the [workflow TSV example documentation](doc/EXAMPLE.md)
 
 ## Tools and dependencies
 - nextflow 0.17.3
@@ -104,4 +104,4 @@ See the [workflow TSV example documentation](docs/EXAMPLE.md)
 - manta 1.0.0
 
 ## Use cases
-See the [workflow use cases documentation](docs/USE_CASES.md)
+See the [workflow use cases documentation](doc/USE_CASES.md)
