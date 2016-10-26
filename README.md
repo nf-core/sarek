@@ -22,10 +22,11 @@ at [SciLifeLab Stockholm](https://www.scilifelab.se/platforms/ngi/), Sweden.
 See the [workflow installation documentation](doc/UPPMAX.md)
 
 ## Usage
+I would recommand to run Nextflow within a screen session (cf [help on screen](https://www.howtoforge.com/linux_screen)).
 ```bash
-nextflow run SciLifeLab/CAW -c <file.config> --sample <file.tsv> --intervals <file.list> [--steps STEP[,STEP]]
+nextflow run SciLifeLab/CAW --sample <file.tsv> [--steps STEP[,STEP]]
 ```
-All variables and parameters are specified in the config and the sample files.
+All variables and parameters are specified in the config ((cf [config options](#config))) and the sample files.
 
 ### Steps
 To configure which processes will be runned or skipped in the workflow. Different steps to be separated by commas.
@@ -41,16 +42,28 @@ Possible values are:
 - Manta (use Manta for SV)
 - ascat (use ascat for CNV)
 
-### Cleaning
-Use `nextflow clean -f` to remove everything contained in the `work` directory. Do not worry, non-recalibrated bam, indexes and recalibration tables as well as recalibrated bams and index are stored respectively in the `Preprocessing/NonRecalibrated` and `Preprocessing/Recalibrated` directories. And variant calling files are stored in the `VariantCalling` directory.
-```bash
-nextflow clean -f
-```
-
-### Verbose
+## Verbose
 To have more information about files being processed, you can use the verbose option
 ```bash
 nextflow run SciLifeLab/CAW --sample mysample.tsv --steps preprocessing --verbose
+```
+
+## Nextflow parameters
+### config
+More informations on [Nextflow documentation](https://www.nextflow.io/docs/latest/basic.html#configuration-options)
+```bash
+-c <file.config>
+```
+If no config file is specified, Nextflow will look for one in Nextflow intallation `$NXF_HOME/config` of for one in the current directory `nextflow.config`.
+
+The config file provided as an example is a [config file](https://raw.githubusercontent.com/SciLifeLab/CAW/master/config/milou.config) specific to Swedish UPPMAX milou cluster, but can be easily modified to suit any clusters.
+
+You can use this file as an example to make your own config file. And you can even if needed make several config files (for example if you want to have a config file for each UPPMAX project identifier).
+
+### clean
+Use `nextflow clean -f` to remove everything contained in the `work` directory. Do not worry, non-recalibrated bam, indexes and recalibration tables as well as recalibrated bams and index are stored respectively in the `Preprocessing/NonRecalibrated` and `Preprocessing/Recalibrated` directories. And variant calling files are stored in the `VariantCalling` directory.
+```bash
+nextflow clean -f
 ```
 
 ## Nextflow processes
