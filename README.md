@@ -26,7 +26,7 @@ I would recommand to run Nextflow within a screen session (cf [help on screen](h
 ```bash
 nextflow run SciLifeLab/CAW --sample <file.tsv> [--steps STEP[,STEP]]
 ```
-All variables and parameters are specified in the config (cf [config options](#config)) and the sample files.
+All variables and parameters are specified in the config (cf [configuration options](#config)) and the sample files.
 
 ### Steps
 To configure which processes will be runned or skipped in the workflow. Different steps to be separated by commas.
@@ -64,6 +64,12 @@ You can use this file as an example to make your own config file. And you can ev
 Use `nextflow clean -f` to remove everything contained in the `work` directory. Do not worry, non-recalibrated bam, indexes and recalibration tables as well as recalibrated bams and index are stored respectively in the `Preprocessing/NonRecalibrated` and `Preprocessing/Recalibrated` directories. And variant calling files are stored in the `VariantCalling` directory.
 ```bash
 nextflow clean -f
+```
+
+### resume
+Use `-resume` to restart the workflow where it last failed.
+```bash
+nextflow run SciLifeLab/CAW --sample mysample.tsv --steps preprocessing -resume
 ```
 
 ## Nextflow processes
