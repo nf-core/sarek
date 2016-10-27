@@ -35,6 +35,12 @@ wget https://raw.githubusercontent.com/SciLifeLab/CAW/master/config/milou.config
 ```
 If you're using this config file, don't forget to edit the line `'-A b2015110'` to contain your own UPPMAX project identifier instead.
 
+## Make a test directory
+```bash
+mkdir test_CAW
+cd test_CAW
+```
+
 ## Copy the sample test file
 ```bash
 wget https://raw.githubusercontent.com/SciLifeLab/CAW/master/data/tsv/tiny-github.tsv
