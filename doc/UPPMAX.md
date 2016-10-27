@@ -9,6 +9,7 @@ To use this pipeline, you need to have a working version of Nextflow installed. 
 curl -fsSL get.nextflow.io | bash
 mv ./nextflow ~/bin
 ```
+`~/bin` should be in your `$PATH`.
 
 ## Create Nextflow specific directories
 The second one might have already been created when you installed Nextflow.
