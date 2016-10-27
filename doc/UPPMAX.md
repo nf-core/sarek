@@ -1,4 +1,6 @@
 # Install and execute workflow
+This small tutorial will explain to you how to install Nextflow and run CAW on a small sample test data.
+
 Some variables are specific to Swedish UPPMAX cluster, but can be easily modified to suit any clusters.
 
 ## Install Nextflow
@@ -26,10 +28,11 @@ export NXF_OPTS='-Xms1g -Xmx4g'
 ```
 
 ## Download the workflow config file
+The config file is based on a [config file](https://raw.githubusercontent.com/SciLifeLab/CAW/master/config/milou.config) specific to Swedish UPPMAX milou cluster, but can be easily modified to suit any clusters.
 ```bash
-wget https://raw.githubusercontent.com/SciLifeLab/CAW/master/config/milou-github.config -O $NXF_HOME/config
+wget https://raw.githubusercontent.com/SciLifeLab/CAW/master/config/milou.config -O $NXF_HOME/config
 ```
-Don't forget to edit the line `'-A b2015110'` to contain your own UPPMAX project identifier instead.
+If you're using this config file, don't forget to edit the line `'-A b2015110'` to contain your own UPPMAX project identifier instead.
 
 ## Copy the sample test file
 ```bash
