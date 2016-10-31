@@ -50,7 +50,7 @@ tar -xvzf tiny.tar.gz
 ## Run the workflow
 This workflow itself needs no installation - Nextflow will automatically fetch it from GitHub when run if `SciLifeLab/CAW` is specified as the workflow name.
 ```bash
-nextflow run SciLifeLab/CAW --sample tiny-github.tsv --steps preprocessing
+nextflow run SciLifeLab/CAW --sample tiny.tsv --steps preprocessing
 ```
 
 # Other possibility for advance users
