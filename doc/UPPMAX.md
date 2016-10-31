@@ -41,9 +41,10 @@ mkdir test_CAW
 cd test_CAW
 ```
 
-## Copy the sample test file
+## Copy and extract the sample test file and configuration
 ```bash
-wget https://raw.githubusercontent.com/SciLifeLab/CAW/master/data/tsv/tiny-github.tsv
+wget https://github.com/MaxUlysse/CAW/blob/master/data/tiny/tiny.tar.gz?raw=true -O tiny.tar.gz
+tar -xvzf tiny.tar.gz
 ```
 
 ## Run the workflow
