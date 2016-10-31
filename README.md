@@ -72,6 +72,18 @@ Use `-resume` to restart the workflow where it last failed.
 nextflow run SciLifeLab/CAW --sample mysample.tsv --steps preprocessing -resume
 ```
 
+### info
+Use `info` to get information about the workflow.
+```bash
+nextflow info SciLifeLab/CAW
+```
+
+### pull
+Use `pull` to update the workflow.
+```bash
+nextflow pull SciLifeLab/CAW
+```
+
 ## Nextflow processes
 Several processes are run within Nextflow
 We divide them for the moment into 2 main steps
