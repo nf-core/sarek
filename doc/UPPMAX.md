@@ -9,6 +9,7 @@ To use this pipeline, you need to have a working version of Nextflow installed. 
 curl -fsSL get.nextflow.io | bash
 mv ./nextflow ~/bin
 ```
+`~/bin` should be in your `$PATH`.
 
 ## Create Nextflow specific directories
 The second one might have already been created when you installed Nextflow.
@@ -34,15 +35,22 @@ wget https://raw.githubusercontent.com/SciLifeLab/CAW/master/config/milou.config
 ```
 If you're using this config file, don't forget to edit the line `'-A b2015110'` to contain your own UPPMAX project identifier instead.
 
-## Copy the sample test file
+## Make a test directory
 ```bash
-wget https://raw.githubusercontent.com/SciLifeLab/CAW/master/data/tsv/tiny-github.tsv
+mkdir test_CAW
+cd test_CAW
+```
+
+## Copy and extract the sample test file and configuration
+```bash
+wget https://github.com/SciLifeLab/CAW/blob/master/data/tiny/tiny.tar.gz?raw=true -O tiny.tar.gz
+tar -xvzf tiny.tar.gz
 ```
 
 ## Run the workflow
 This workflow itself needs no installation - Nextflow will automatically fetch it from GitHub when run if `SciLifeLab/CAW` is specified as the workflow name.
 ```bash
-nextflow run SciLifeLab/CAW --sample tiny-github.tsv --steps preprocessing
+nextflow run SciLifeLab/CAW --sample tiny.tsv --steps preprocessing
 ```
 
 # Other possibility for advance users
