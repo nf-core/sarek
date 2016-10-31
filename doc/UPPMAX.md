@@ -43,7 +43,7 @@ cd test_CAW
 
 ## Copy and extract the sample test file and configuration
 ```bash
-wget https://github.com/MaxUlysse/CAW/blob/master/data/tiny/tiny.tar.gz?raw=true -O tiny.tar.gz
+wget https://github.com/SciLifeLab/CAW/blob/master/data/tiny/tiny.tar.gz?raw=true -O tiny.tar.gz
 tar -xvzf tiny.tar.gz
 ```
 
