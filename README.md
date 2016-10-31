@@ -20,6 +20,7 @@ at [SciLifeLab Stockholm](https://www.scilifelab.se/platforms/ngi/), Sweden.
 
 ## Installation and first execution
 See the [Nextflow documentation from SciLifeLab](https://github.com/SciLifeLab/NGI-NextflowDocs/README.md)
+
 See the [workflow installation documentation](doc/UPPMAX.md)
 
 ## Usage
