@@ -65,7 +65,8 @@ module load Nextflow
 You can download the repository yourself from GitHub and run them directly:
 ```bash
 git clone https://github.com/SciLifeLab/CAW
-nextflow run CAW/main.nf
+cd CAW
+nextflow run main.nf -c config/milou.config --sample data/tsv/tiny.tsv --steps preprocessing
 ```
 
 It's possible to run the full workflow on a data set specified in the tsv file. For example:
