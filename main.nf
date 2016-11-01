@@ -659,8 +659,8 @@ if ('preprocessing' in workflowSteps) {
     set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), file("${idSample}.recal.table") into recalibrationTable
 
     """
-    touch $baseDir/Preprocessing/NonRecalibrated/${idPatient}.tsv
-    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/NonRecalibrated/${realignedBamFile}\tPreprocessing/NonRecalibrated/${realignedBaiFile}\tPreprocessing/NonRecalibrated/${idSample}.recal.table >> $baseDir/Preprocessing/NonRecalibrated/${idPatient}.tsv
+    touch ${workflow.projectDir}/Preprocessing/NonRecalibrated/${idPatient}.tsv
+    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/NonRecalibrated/${realignedBamFile}\tPreprocessing/NonRecalibrated/${realignedBaiFile}\tPreprocessing/NonRecalibrated/${idSample}.recal.table >> ${workflow.projectDir}/Preprocessing/NonRecalibrated/${idPatient}.tsv
 
     java -Xmx${task.memory.toGiga()}g -Djava.io.tmpdir="/tmp" \
     -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
@@ -707,8 +707,8 @@ if ('preprocessing' in workflowSteps || 'recalibrate' in workflowSteps) {
 
     // TODO: ditto as at the previous BaseRecalibrator step, consider using -nct 4
     """
-    touch $baseDir/Preprocessing/Recalibrated/${idPatient}.tsv
-    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/Recalibrated/${idSample}.recal.bam\tPreprocessing/Recalibrated/${idSample}.recal.bai >> $baseDir/Preprocessing/Recalibrated/${idPatient}.tsv
+    touch ${workflow.projectDir}/Preprocessing/Recalibrated/${idPatient}.tsv
+    echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\tPreprocessing/Recalibrated/${idSample}.recal.bam\tPreprocessing/Recalibrated/${idSample}.recal.bai >> ${workflow.projectDir}/Preprocessing/Recalibrated/${idPatient}.tsv
 
     java -Xmx${task.memory.toGiga()}g \
     -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
