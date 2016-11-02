@@ -343,6 +343,13 @@ if ('preprocessing' in workflowSteps) {
   bamFiles = logChannelContent("Bam files and IDs to process: ", bamFiles)
 }
 
+outDir = [
+  "preprocessing"   : './Preprocessing',
+  "nonRecalibrated" : './Preprocessing/NonRecalibrated',
+  "recalibrated"    : './Preprocessing/Recalibrated',
+  "variantCalling"  : './VariantCalling'
+]
+
 /*
 ========================================================================================
 =                                   P R O C E S S E S                                  =
@@ -350,9 +357,9 @@ if ('preprocessing' in workflowSteps) {
 */
 
 if ('preprocessing' in workflowSteps) {
-  println file('Preprocessing').mkdir() ? "Folder Preprocessing created" : "Cannot create folder Preprocessing"
-  println file('Preprocessing/NonRecalibrated').mkdir() ? "Folder Preprocessing/NonRecalibrated created" : "Cannot create folder Preprocessing/NonRecalibrated"
-  println file('Preprocessing/Recalibrated').mkdir() ? "Folder Preprocessing/Recalibrated created" : "Cannot create folder Preprocessing/Recalibrated"
+  println file(outDir['preprocessing']).mkdir() ? "Folder ${outDir['preprocessing']} created" : "Cannot create folder ${outDir['preprocessing']}"
+  println file(outDir['nonRecalibrated']).mkdir() ? "Folder ${outDir['nonRecalibrated']} created" : "Cannot create folder ${outDir['nonRecalibrated']}"
+  println file(outDir['recalibrated']).mkdir() ? "Folder ${outDir['recalibrated']} created" : "Cannot create folder ${outDir['recalibrated']}"
 
   process Mapping {
     tag { idRun }
@@ -639,7 +646,7 @@ if ('preprocessing' in workflowSteps) {
   process CreateRecalibrationTable {
     tag { idSample }
 
-    publishDir "Preprocessing/NonRecalibrated", mode: 'copy'
+    publishDir outDir["nonRecalibrated"], mode: 'copy'
 
     module 'java/sun_jdk1.8.0_40'
 
@@ -679,8 +686,8 @@ if ('preprocessing' in workflowSteps) {
 
   recalibrationTable = logChannelContent("Base recalibrated table for recalibration: ", recalibrationTable)
 } else if ('recalibrate' in workflowSteps) {
-  println file('Preprocessing').mkdir() ? "Folder Preprocessing created" : "Cannot create folder Preprocessing"
-  println file('Preprocessing/Recalibrated').mkdir() ? "Folder Preprocessing/Recalibrated created" : "Cannot create folder Preprocessing/Recalibrated"
+  println file(outDir['preprocessing']).mkdir() ? "Folder ${outDir['preprocessing']} created" : "Cannot create folder ${outDir['preprocessing']}"
+  println file(outDir['recalibrated']).mkdir() ? "Folder ${outDir['recalibrated']} created" : "Cannot create folder ${outDir['recalibrated']}"
 
   recalibrationTable = bamFiles
 }
@@ -689,7 +696,7 @@ if ('preprocessing' in workflowSteps || 'recalibrate' in workflowSteps) {
   process RecalibrateBam {
     tag { idSample }
 
-    publishDir "Preprocessing/Recalibrated", mode: 'copy'
+    publishDir outDir["recalibrated"], mode: 'copy'
 
     module 'java/sun_jdk1.8.0_40'
 
