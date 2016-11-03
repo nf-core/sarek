@@ -87,7 +87,7 @@ More informations on [Nextflow documentation](https://www.nextflow.io/docs/lates
 ```bash
 nextflow run SciLifeLab/CAW --sample mysample.tsv -profile <profile>
 ```
-In [`nextflow.config`](https://raw.githubusercontent.com/SciLifeLab/CAW/master/nextflow.config) is defined a standard profile. You can use the [`milou.config` file](https://raw.githubusercontent.com/SciLifeLab/CAW/master/config/milou.config) as a base to make a new `config` file and add it as a profile or you can also specify directly the config file to be used:
+In [`nextflow.config`](https://raw.githubusercontent.com/SciLifeLab/CAW/master/nextflow.config) is defined a standard profile. You can use the [`milou.config`](https://raw.githubusercontent.com/SciLifeLab/CAW/master/config/milou.config) file as a base to make a new `config` file and add it as a profile or you can also specify directly the config file to be used:
 ```bash
 nextflow run SciLifeLab/CAW --sample mysample.tsv -c <file.config>
 ```
