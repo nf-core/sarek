@@ -707,6 +707,7 @@ if ('ascat' in workflowSteps) {
 // join [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] and ["1:1-2000","1_1-2000"]
 // and make a line for each interval
 
+if ('MuTect1' in workflowSteps) {
   process RunMutect1 {
     publishDir pd + "intervals_" + idPatient
 
