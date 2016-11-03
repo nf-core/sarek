@@ -5,7 +5,7 @@ Nextflow Cancer Analysis Workflow Prototype developed at the [National Genomics 
 at [SciLifeLab Stockholm](https://www.scilifelab.se/platforms/ngi/), Sweden.
 
 ## Version
-0.8.3
+0.8.5
 
 ## Authors
 - Sebastian DiLorenzo (@Sebastian-D)
@@ -30,12 +30,18 @@ nextflow run SciLifeLab/CAW --sample <file.tsv> [--steps STEP[,STEP]]
 ```
 All variables and parameters are specified in the config (cf [configuration options](#config)) and the sample files.
 
+### Project
+To specify your UPPMAX project number ID. 
+```bash
+nextflow run SciLifeLab/CAW --sample <file.tsv> [--steps STEP[,STEP]] --project <UPPMAX_Project>
+```
+
 ### Steps
 To configure which processes will be runned or skipped in the workflow. Different steps to be separated by commas.
 Possible values are:
 - preprocessing (default, will start workflow with FASTQ files)
-- recalibrate (will start workflow with non-recalibrated BAM files)
-- skipPreprocessing (will start workflow with recalibrated BAM files)
+- realign (will start workflow with non-paired T/N BAM files)
+- skipPreprocessing (will start workflow with paired T/N BAM files)
 - MuTect1 (use MuTect1 for VC)
 - MuTect2 (use MuTect2 for VC)
 - VarDict (use VarDict for VC)
