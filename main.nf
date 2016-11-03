@@ -77,48 +77,6 @@ switch (params) {
 }
 
 /*
- * Define lists of refs, steps and outDir
- */
-
-refs = [
-  "genomeFile":   params.genome,       // genome reference
-  "genomeIndex":  params.genomeIndex,  // genome reference index
-  "genomeDict":   params.genomeDict,   // genome reference dictionary
-  "kgIndels":     params.kgIndels,     // 1000 Genomes SNPs
-  "kgIndex":      params.kgIndex,      // 1000 Genomes SNPs index
-  "dbsnp":        params.dbsnp,        // dbSNP
-  "dbsnpIndex":   params.dbsnpIndex,   // dbSNP index
-  "millsIndels":  params.millsIndels,  // Mill's Golden set of SNPs
-  "millsIndex":   params.millsIndex,   // Mill's Golden set index
-  "cosmic41":     params.cosmic41,     // cosmic vcf file with VCF4.1 header
-  "cosmic":       params.cosmic,       // cosmic vcf file
-  "intervals":    params.intervals,    // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
-  "MantaRef":     params.mantaRef,     // copy of the genome reference file
-  "MantaIndex":   params.mantaIndex,   // reference index indexed with samtools/0.1.19
-  "acLoci":       params.acLoci        // loci file for ascat
-]
-
-stepsList = [
-  "preprocessing",
-  "realign",
-  "skipPreprocessing",
-  "MuTect1",
-  "MuTect2",
-  "VarDict",
-  "Strelka",
-  "HaplotypeCaller",
-  "Manta",
-  "ascat"
-]
-
-outDir = [
-  "preprocessing"  : 'Preprocessing',
-  "nonRealigned"   : 'Preprocessing/NonRealigned',
-  "recalibrated"   : 'Preprocessing/Recalibrated',
-  "variantCalling" : 'VariantCalling'
-]
-
-/*
  * Loop through all the references files (params.* defined in the config file) to verify if they really exist.
  */
 
