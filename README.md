@@ -71,7 +71,7 @@ nextflow run SciLifeLab/CAW --sample mysample.tsv -resume
 ```
 
 ### clean
-Use `nextflow clean -f` to remove everything contained in the `work` directory. Do not worry, non-recalibrated bam, indexes and recalibration tables as well as recalibrated bams and index are stored respectively in the `Preprocessing/NonRecalibrated` and `Preprocessing/Recalibrated` directories. And variant calling files are stored in the `VariantCalling` directory.
+Use `nextflow clean -f` to remove everything contained in the `work` directory. Do not worry, non-recalibrated bam, indexes and recalibration tables as well as recalibrated bams and index are stored respectively in the `Preprocessing/NonRealigned` and `Preprocessing/Recalibrated` directories. And variant calling files are stored in the `VariantCalling` directory.
 ```bash
 nextflow clean -f
 ```
