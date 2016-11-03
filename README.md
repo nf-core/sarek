@@ -40,8 +40,8 @@ nextflow run SciLifeLab/CAW --sample <file.tsv> [--steps STEP[,STEP]] --project 
 To configure which processes will be runned or skipped in the workflow. Different steps to be separated by commas.
 Possible values are:
 - preprocessing (default, will start workflow with FASTQ files)
-- realign (will start workflow with non-paired T/N BAM files)
-- skipPreprocessing (will start workflow with paired T/N BAM files)
+- realign (will start workflow with BAM files (with T/N BAMs that were not realigned together))
+- skipPreprocessing (will skip entire preprocessing (Only with T/N BAMs that were realigned together))
 - MuTect1 (use MuTect1 for VC)
 - MuTect2 (use MuTect2 for VC)
 - VarDict (use VarDict for VC)
@@ -115,7 +115,7 @@ We divide them for the moment into 2 main steps
 - Manta - run Manta 1.0.0
 
 ## TSV file for sample
-It's a Tab Separated Value file, based on: `subject status sample lane fastq1 fastq2`, `subject status sample bam bai recal` or `subject status sample bam bai`
+It's a Tab Separated Value file, based on: `subject status sample lane fastq1 fastq2` or `subject status sample bam bai`
 Quite straight-forward:
 - `subject` is the ID of the Patient
 - `status` is the status of the Patient, (0 for Normal and 1 for Tumor)
@@ -123,9 +123,8 @@ Quite straight-forward:
 - `lane` is used when the sample is multiplexed on several lanes
 - `fastq1` is the path to the first pair of the fastq file
 - `fastq2` is the path to the second pair of the fastq file
-- `bam` is the realigned bam file
+- `bam` is the bam file
 - `bai` is the index
-- `recal` is the recalibration table
 
 ## Example of TSV files
 See the [workflow TSV example documentation](doc/EXAMPLE.md)
