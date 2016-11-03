@@ -191,14 +191,7 @@ if ('preprocessing' in workflowSteps) {
 process Mapping {
   tag { idRun }
 
-  module 'bioinfo-tools'
-  module 'bwa/0.7.13'
-  module 'samtools/1.3'
-
   time { params.runTime * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
 
   input:
   file refs["genomeFile"]
@@ -250,16 +243,10 @@ if ('preprocessing' in workflowSteps) {
 process MergeBam {
   tag { idSample }
 
-  module 'bioinfo-tools'
-  module 'samtools/1.3'
-
   cpus 1 
   queue 'core'
   memory { params.singleCPUMem * task.attempt }
   time { params.runTime * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
 
   input:
   set idPatient, idSample, idRun, file(bam) from groupedBam
@@ -325,16 +312,10 @@ process MarkDuplicates {
    */
   tag { idSample }
 
-  module 'bioinfo-tools'
-  module 'picard/1.118'
-
   cpus 1 
   queue 'core'
   memory { params.singleCPUMem * task.attempt }
   time { params.runTime * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
 
   input:
   set idPatient, idSample, file(bam) from bamList
@@ -399,9 +380,6 @@ process CreateIntervals {
   module 'java/sun_jdk1.8.0_40'
 
   time { params.runTime * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
 
   input:
   set idPatient, idSample, file(mdBam), file(mdBai) from duplicatesInterval
@@ -450,12 +428,7 @@ process Realign {
 
   publishDir outDir["nonRealigned"], mode: 'copy'
 
-  module 'java/sun_jdk1.8.0_40'
-
   time { params.runTime * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
 
   input:
   set idPatient, idSample, file(mdBam), file(mdBai) from duplicatesRealign
@@ -533,9 +506,6 @@ process CreateRecalibrationTable {
   module 'java/sun_jdk1.8.0_40'
 
   time { params.runTime * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
 
   input:
   set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile) from realignedBam
@@ -580,12 +550,7 @@ process RecalibrateBam {
 
   publishDir outDir["recalibrated"], mode: 'copy'
 
-  module 'java/sun_jdk1.8.0_40'
-
   time { params.runTime * task.attempt }
-  errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-  maxRetries 3
-  maxErrors '-1'
 
   input:
   set idPatient, idSample, file(realignedBamFile), file(realignedBaiFile), recalibrationReport from recalibrationTable
@@ -718,7 +683,7 @@ if ('MuTect1' in workflowSteps) {
 
     cpus 1 
     queue 'core'
-    memory { params.MuTect1Mem * task.attempt }
+    memory { params.mutect1Mem * task.attempt }
     time { params.runTime * task.attempt }
     errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
     maxRetries 3
