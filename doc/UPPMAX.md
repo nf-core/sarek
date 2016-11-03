@@ -46,7 +46,7 @@ rm tiny.tar.gz
 ## Run the workflow
 This workflow itself needs no installation - Nextflow will automatically fetch it from GitHub when run if `SciLifeLab/CAW` is specified as the workflow name.
 ```bash
-nextflow run SciLifeLab/CAW --sample tiny.tsv --steps preprocessing --project <UPPMAX_project_ID>
+nextflow run SciLifeLab/CAW --sample tiny.tsv --project <UPPMAX_project_ID>
 ```
 
 # Other possibility for advance users
@@ -57,7 +57,7 @@ If you're running on a Swedish UPPMAX cluster you can load Nextflow as an enviro
 module load Nextflow
 ```
 
-## Workflow installation
+## Clone the repository and run the workflow
 You can download the repository yourself from GitHub and run them directly:
 ```bash
 git clone https://github.com/SciLifeLab/CAW

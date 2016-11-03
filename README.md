@@ -25,20 +25,20 @@ See the [workflow installation documentation](doc/UPPMAX.md)
 
 ## Usage
 I would recommand to run Nextflow within a screen session (cf [help on screen](https://www.howtoforge.com/linux_screen)).
+The minimal typical commande line is:
 ```bash
-nextflow run SciLifeLab/CAW --sample <file.tsv> [--steps STEP[,STEP]]
+nextflow run SciLifeLab/CAW --sample <file.tsv>
 ```
-All variables and parameters are specified in the config (cf [configuration options](#config)) and the sample files.
+All variables and parameters are specified in the config (cf [configuration options](#config)).
 
 ### Project
-To specify your UPPMAX project number ID. 
+To specify your UPPMAX project number ID. It can also be specified in your `config` file.
 ```bash
-nextflow run SciLifeLab/CAW --sample <file.tsv> [--steps STEP[,STEP]] --project <UPPMAX_Project>
+nextflow run SciLifeLab/CAW --sample <file.tsv> --project <UPPMAX_Project>
 ```
 
 ### Steps
-To configure which processes will be runned or skipped in the workflow. Different steps to be separated by commas.
-Possible values are:
+To configure which processes will be runned or skipped in the workflow. Different steps to be separated by commas. Possible values are:
 - preprocessing (default, will start workflow with FASTQ files)
 - realign (will start workflow with BAM files (with T/N BAMs that were not realigned together))
 - skipPreprocessing (will skip entire preprocessing (Only with T/N BAMs that were realigned together))
@@ -50,34 +50,30 @@ Possible values are:
 - Manta (use Manta for SV)
 - ascat (use ascat for CNV)
 
-## Verbose
+### Verbose
 To have more information about files being processed, you can use the verbose option
 ```bash
-nextflow run SciLifeLab/CAW --sample mysample.tsv --steps preprocessing --verbose
+nextflow run SciLifeLab/CAW --sample mysample.tsv --verbose
 ```
 
 ## Nextflow parameters
-### config
-More informations on [Nextflow documentation](https://www.nextflow.io/docs/latest/basic.html#configuration-options)
+
+### pull
+Use `pull` to update the workflow.
 ```bash
--c <file.config>
-```
-If no config file is specified, Nextflow will look for one in Nextflow intallation `$NXF_HOME/config` of for one in the current directory `nextflow.config`.
-
-The config file provided as an example is a [config file](https://raw.githubusercontent.com/SciLifeLab/CAW/master/config/milou.config) specific to Swedish UPPMAX milou cluster, but can be easily modified to suit any clusters.
-
-You can use this file as an example to make your own config file. And you can even if needed make several config files (for example if you want to have a config file for each UPPMAX project identifier).
-
-### clean
-Use `nextflow clean -f` to remove everything contained in the `work` directory. Do not worry, non-recalibrated bam, indexes and recalibration tables as well as recalibrated bams and index are stored respectively in the `Preprocessing/NonRecalibrated` and `Preprocessing/Recalibrated` directories. And variant calling files are stored in the `VariantCalling` directory.
-```bash
-nextflow clean -f
+nextflow pull SciLifeLab/CAW
 ```
 
 ### resume
 Use `-resume` to restart the workflow where it last failed.
 ```bash
-nextflow run SciLifeLab/CAW --sample mysample.tsv --steps preprocessing -resume
+nextflow run SciLifeLab/CAW --sample mysample.tsv -resume
+```
+
+### clean
+Use `nextflow clean -f` to remove everything contained in the `work` directory. Do not worry, non-recalibrated bam, indexes and recalibration tables as well as recalibrated bams and index are stored respectively in the `Preprocessing/NonRecalibrated` and `Preprocessing/Recalibrated` directories. And variant calling files are stored in the `VariantCalling` directory.
+```bash
+nextflow clean -f
 ```
 
 ### info
@@ -86,11 +82,20 @@ Use `info` to get information about the workflow.
 nextflow info SciLifeLab/CAW
 ```
 
-### pull
-Use `pull` to update the workflow.
+### config and profiles
+More informations on [Nextflow documentation](https://www.nextflow.io/docs/latest/basic.html#configuration-options)
 ```bash
-nextflow pull SciLifeLab/CAW
+nextflow run SciLifeLab/CAW --sample mysample.tsv -profile <profile>
 ```
+In [`nextflow.config`](https://raw.githubusercontent.com/SciLifeLab/CAW/master/nextflow.config) is defined a standard profile. You can use the [`milou.config` file](https://raw.githubusercontent.com/SciLifeLab/CAW/master/config/milou.config) as a base to make a new `config` file and add it as a profile or you can also specify directly the config file to be used:
+```bash
+nextflow run SciLifeLab/CAW --sample mysample.tsv -c <file.config>
+```
+If no config file is specified, Nextflow will look for one in Nextflow intallation `$NXF_HOME/config` of for one in the current directory `nextflow.config`.
+
+The config file provided as an example is a [config file](https://raw.githubusercontent.com/SciLifeLab/CAW/master/config/milou.config) specific to Swedish UPPMAX milou cluster, but can be easily modified to suit any clusters.
+
+You can use these files as examples to make your own config files and profiles.
 
 ## Nextflow processes
 Several processes are run within Nextflow
@@ -130,7 +135,7 @@ Quite straight-forward:
 See the [workflow TSV example documentation](doc/EXAMPLE.md)
 
 ## Tools and dependencies
-- nextflow 0.17.3
+- nextflow 0.22.1
 - bwa 0.7.8
 - samtools 1.3
 - picard 1.118
