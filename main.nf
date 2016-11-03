@@ -27,7 +27,7 @@ vim: syntax=groovy
  file can be reconfigured on the commande line, like:
  --option <option>
 ----------------------------------------------------------------------------------------
- Workflow process overview:
+ Workflow processes overview:
  - Mapping - Map reads with BWA
  - MergeBam - Merge BAMs if multilane samples
  - RenameSingleBam - Rename BAM if non-multilane sample
@@ -245,7 +245,7 @@ if ('preprocessing' in workflowSteps) {
 process MergeBam {
   tag { idSample }
 
-  cpus 1 
+  cpus 1
   queue 'core'
   memory { params.singleCPUMem * task.attempt }
   time { params.runTime * task.attempt }
@@ -271,6 +271,9 @@ process MergeBam {
 process RenameSingleBam {
   // Renaming is totally useless, but the file name is consistent with the rest of the pipeline
   tag { idSample }
+
+  cpus 1
+  queue 'core'
 
   input:
   set idPatient, idSample, idRun, file(bam) from singleBam
@@ -314,7 +317,7 @@ process MarkDuplicates {
    */
   tag { idSample }
 
-  cpus 1 
+  cpus 1
   queue 'core'
   memory { params.singleCPUMem * task.attempt }
   time { params.runTime * task.attempt }
@@ -378,8 +381,6 @@ process CreateIntervals {
    * Though VCF indexes are not needed explicitly, we are adding them so they will be linked, and not re-created on the fly.
    */
   tag { idPatient }
-
-  module 'java/sun_jdk1.8.0_40'
 
   time { params.runTime * task.attempt }
 
@@ -457,11 +458,11 @@ process Realign {
   """
   #!/bin/bash
 
-  touch ${workflow.projectDir}/${outDir["nonRealigned"]}/${idPatient}.tsv
+  touch ${workflow.launchDir}/${outDir["nonRealigned"]}/${idPatient}.tsv
 
   for i in $idSample ;do
       sample=\$(echo \$i | tr -d '[],')
-      echo -e ${idPatient}\t\$(echo \$sample | cut -d_ -f 3)\t\$(echo \$sample | cut -d_ -f 1)\t${outDir["nonRealigned"]}/\$sample.md.real.bam\t${outDir["nonRealigned"]}/\$sample.md.real.bai >> ${workflow.projectDir}/${outDir["nonRealigned"]}/${idPatient}.tsv
+      echo -e ${idPatient}\t\$(echo \$sample | cut -d_ -f 3)\t\$(echo \$sample | cut -d_ -f 1)\t${outDir["nonRealigned"]}/\$sample.md.real.bam\t${outDir["nonRealigned"]}/\$sample.md.real.bai >> ${workflow.launchDir}/${outDir["nonRealigned"]}/${idPatient}.tsv
   done
 
   echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nmdBam:\t"${mdBam}"\nmdBai:\t"${mdBai}"\n" > logInfo
@@ -504,8 +505,6 @@ recalibrationTable = Channel.create()
 
 process CreateRecalibrationTable {
   tag { idSample }
-
-  module 'java/sun_jdk1.8.0_40'
 
   time { params.runTime * task.attempt }
 
@@ -568,8 +567,8 @@ process RecalibrateBam {
   """
   #!/bin/bash
 
-  touch ${workflow.projectDir}/${outDir["recalibrated"]}/${idPatient}.tsv
-  echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\t${outDir["recalibrated"]}/${idSample}.recal.bam\t${outDir["recalibrated"]}/${idSample}.recal.bai >> ${workflow.projectDir}/${outDir["recalibrated"]}/${idPatient}.tsv
+  touch ${workflow.launchDir}/${outDir["recalibrated"]}/${idPatient}.tsv
+  echo -e ${idPatient}\t\$(echo $idSample | cut -d_ -f 3)\t\$(echo $idSample | cut -d_ -f 1)\t${outDir["recalibrated"]}/${idSample}.recal.bam\t${outDir["recalibrated"]}/${idSample}.recal.bai >> ${workflow.launchDir}/${outDir["recalibrated"]}/${idPatient}.tsv
 
   java -Xmx${task.memory.toGiga()}g \
   -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
@@ -610,13 +609,42 @@ bamsTumor = logChannelContent("Tumor Bam for variant Calling: ", bamsTumor)
 bamsNormal = logChannelContent("Normal Bam for variant Calling: ", bamsNormal)
 
 bamsForHC = Channel.create()
-bamsNormalForAll = Channel.create()
-Channel
-  .from bamsNormal
-  .separate(bamsNormalForAll, bamsForHC) {a -> [a, a]}
+bamsForMuTect1 = Channel.create()
+bamsForMuTect2 = Channel.create()
+bamsForVarDict = Channel.create()
+bamsForStrelka = Channel.create()
+bamsForManta = Channel.create()
+bamsForAscat = Channel.create()
+
+// We know that MuTect2 (and other somatic callers) are notoriously slow. To speed them up we are chopping the reference into
+// smaller pieces at centromeres (see repeates/centromeres.list), do variant calling by this intervals, and re-merge the VCFs.
+// Since we are on a cluster, this can parallelize the variant call process, and push down the variant call wall clock time significanlty.
+
+// in fact we need two channels: one for the actual genomic region, and an other for names
+// without ":", as nextflow is not happy with them (will report as a failed process).
+// For region 1:1-2000 the output file name will be something like 1_1-2000_Sample_name.mutect2.vcf
+// from the "1:1-2000" string make ["1:1-2000","1_1-2000"]
+
+intervals = Channel // define intervals file by --intervals
+  .from(file(params.intervals).readLines())
+gI = intervals
+  .map {a -> [a,a.replaceFirst(/\:/,"_")]}
+
+hcIntervals = Channel.create()
+muTect1Intervals = Channel.create()
+muTect2Intervals = Channel.create()
+varDictIntervals = Channel.create()
+
+if ('HaplotypeCaller' in workflowSteps) {
+  (bamsAll, bamsForHC) = copyChannel(bamsAll)
+  (gI, hcIntervals) = copyChannel(gI)
+} else {
+  bamsForHC.close()
+  hcIntervals.close()
+}
 
 bamsAll = Channel.create()
-bamsAll = bamsNormalForAll.spread(bamsTumor)
+bamsAll = bamsNormal.spread(bamsTumor)
 
 // Since idPatientNormal and idPatientTumor are the same, I'm removing it from BamsAll Channel
 // I don't think a groupTuple can be used to do that, but it could be a good idea to look if there is a nicer way to do that
@@ -628,68 +656,64 @@ bamsAll = bamsAll.map {
 
 bamsAll = logChannelContent("Mapped Recalibrated Bam for variant Calling: ", bamsAll)
 
-// We know that MuTect2 (and other somatic callers) are notoriously slow. To speed them up we are chopping the reference into
-// smaller pieces at centromeres (see repeates/centromeres.list), do variant calling by this intervals, and re-merge the VCFs.
-// Since we are on a cluster, this can parallelize the variant call process, and push down the variant call wall clock time significanlty.
+if ('MuTect1' in workflowSteps) {
+  (bamsAll, bamsForMuTect1) = copyChannel(bamsAll)
+  (gI, muTect1Intervals) = copyChannel(gI)
+  bamsFMT1 = bamsForMuTect1.spread(muTect1Intervals)
+  bamsFMT1 = logChannelContent("Bams for MuTect1: ", bamsFMT1)
+  pd = "VariantCalling/MuTect1/"
+ } else {
+  bamsForMuTect1.close()
+  muTect1Intervals.close()
+}
 
-// first create channels for each variant caller
-bamsForMuTect1 = Channel.create()
-bamsForMuTect2 = Channel.create()
-bamsForVarDict = Channel.create()
-bamsForManta = Channel.create()
-bamsForStrelka = Channel.create()
-bamsForAscat = Channel.create()
+if ('MuTect2' in workflowSteps) {
+  (bamsAll, bamsForMuTect2) = copyChannel(bamsAll)
+  (gI, muTect2Intervals) = copyChannel(gI)
+  bamsFMT2 = bamsForMuTect2.spread(muTect2Intervals)
+  bamsFMT2 = logChannelContent("Bams for MuTect2: ", bamsFMT2)
+} else {
+  bamsForMuTect2.close()
+  muTect2Intervals.close()
+}
 
-// TODO: refactor this part - this is silly to make a BAM channel for all the subunits below in this way
-Channel
-  .from bamsAll
-  .separate(bamsForMuTect1, bamsForMuTect2, bamsForVarDict, bamsForManta, bamsForStrelka, bamsForAscat) {a -> [a, a, a, a, a, a]}
+if ('VarDict' in workflowSteps) {
+  (bamsAll, bamsForVarDict) = copyChannel(bamsAll)
+  (gI, varDictIntervals) = copyChannel(gI)
+} else {
+  bamsForVarDict.close()
+  varDictIntervals.close()
+}
 
-// define intervals file by --intervals
-intervalsFile = file(params.intervals)
+if ('Strelka' in workflowSteps) {
+  (bamsAll, bamsForStrelka) = copyChannel(bamsAll)
+} else {
+  bamsForStrelka.close()
+}
 
-intervals = Channel
-  .from(intervalsFile.readLines())
+if ('Manta' in workflowSteps) {
+  (bamsAll, bamsForManta) = copyChannel(bamsAll)
+} else {
+  bamsForManta.close()
+}
 
-// in fact we need two channels: one for the actual genomic region, and an other for names
-// without ":", as nextflow is not happy with them (will report as a failed process).
-// For region 1:1-2000 the output file name will be something like 1_1-2000_Sample_name.mutect2.vcf
-// from the "1:1-2000" string make ["1:1-2000","1_1-2000"]
-gI = intervals
-  .map {a -> [a,a.replaceFirst(/\:/,"_")]}
-
-muTect1Intervals = Channel.create()
-muTect2Intervals = Channel.create()
-varDictIntervals = Channel.create()
-hcIntervals = Channel.create()
-
-Channel
-  .from gI
-  .separate (muTect1Intervals, muTect2Intervals, varDictIntervals, hcIntervals) {a -> [a, a, a, a]}
+if ('ascat' in workflowSteps) {
+  (bamsAll, bamsForAscat) = copyChannel(bamsAll)
+} else {
+  bamsForAscat.close()
+}
 
 // now add genomic intervals to the sample information
 // join [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] and ["1:1-2000","1_1-2000"]
 // and make a line for each interval
 
-if ('MuTect1' in workflowSteps) {
-  bamsFMT1 = bamsForMuTect1.spread(muTect1Intervals)
-  bamsFMT1 = logChannelContent("Bams for MuTect1: ", bamsFMT1)
-  pd = "VariantCalling/MuTect1/"
-
   process RunMutect1 {
     publishDir pd + "intervals_" + idPatient
 
-    module 'bioinfo-tools'
-    module 'java/sun_jdk1.7.0_25'
-    module 'mutect/1.1.5'
-
     cpus 1 
     queue 'core'
-    memory { params.mutect1Mem * task.attempt }
+    memory { params.MuTect1Mem * task.attempt }
     time { params.runTime * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-    maxRetries 3
-    maxErrors '-1'
 
     input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT1
@@ -751,9 +775,6 @@ if ('MuTect1' in workflowSteps) {
     queue 'core'
     memory { params.singleCPUMem * task.attempt }
     time { params.runTime * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-    maxRetries 3
-    maxErrors '-1'
 
     input:
     set idT from tumorEntries
@@ -777,16 +798,10 @@ if ('MuTect2' in workflowSteps) {
   process RunMutect2 {
     publishDir "VariantCalling/MuTect2/intervals"
 
-    module 'bioinfo-tools'
-    module 'java/sun_jdk1.8.0_40'
-
     cpus 1
     queue 'core'
     memory { params.singleCPUMem * task.attempt }
     time { params.runTime * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-    maxRetries 3
-    maxErrors '-1'
 
     input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
@@ -851,9 +866,6 @@ if ('MuTect2' in workflowSteps) {
     queue 'core'
     memory { params.singleCPUMem * task.attempt }
     time { params.runTime * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-    maxRetries 3
-    maxErrors '-1'
 
     input:
     set idT from tumorEntries
@@ -884,19 +896,10 @@ if ('VarDict' in workflowSteps) {
     // ~/dev/VarDictJava/build/install/VarDict/bin/VarDict -G /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta -f 0.1 -N "tiny" -b "tiny.tumor__1.recal.bam|tiny.normal__0.recal.bam" -z 1 -F 0x500 -c 1 -S 2 -E 3 -g 4 -R "1:131941-141339"
     // we need further filters, but some of the outputs are empty files, confusing the VCF generator script
 
-    module 'bioinfo-tools'
-    module 'java/sun_jdk1.8.0_40'
-    module 'R/3.2.3'
-    module 'gcc/4.9.2'
-    module 'perl/5.18.4'
-
     cpus 1
     queue 'core'
     memory { params.singleCPUMem * task.attempt }
     time { params.runTime * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-    maxRetries 3
-    maxErrors '-1'
 
     input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFVD
@@ -929,20 +932,10 @@ if ('VarDict' in workflowSteps) {
   process VarDictCollatedVCF {
     publishDir "VariantCalling/VarDictJava"
 
-    module 'bioinfo-tools'
-    module 'samtools/1.3'
-    module 'java/sun_jdk1.8.0_40'
-    module 'R/3.2.3'
-    module 'gcc/4.9.2'
-    module 'perl/5.18.4'
-
     cpus 1
     queue 'core'
     memory { params.singleCPUMem * task.attempt }
     time { params.runTime * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-    maxRetries 3
-    maxErrors '-1'
 
     input:
     file vdPart from vdFilesOnly.toList()
@@ -971,12 +964,7 @@ if ('Strelka' in workflowSteps) {
   process RunStrelka {
     publishDir "VariantCalling/Strelka"
 
-    module 'bioinfo-tools'
-
     time { params.runTime * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-    maxRetries 3
-    maxErrors '-1'
 
     input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForStrelka
@@ -1009,9 +997,6 @@ if ('Strelka' in workflowSteps) {
 if ('Manta' in workflowSteps) {
   process Manta {
     publishDir "VariantCalling/Manta"
-
-    module 'bioinfo-tools'
-    module 'manta/1.0.0'
 
     input:
         file refs["MantaRef"]
@@ -1067,9 +1052,6 @@ if ('ascat' in workflowSteps) {
 
 
 process alleleCount{
-
-    module 'bioinfo-tools'
-    module 'alleleCount'
 
     cpus 1
     queue 'core'
@@ -1225,16 +1207,10 @@ if ('HaplotypeCaller' in workflowSteps) {
   process RunHaplotypeCaller {
     publishDir "VariantCalling/HaplotypeCaller"
 
-    module 'bioinfo-tools'
-    module 'java/sun_jdk1.8.0_92'
-
     cpus 1
     queue 'core'
     memory { params.singleCPUMem * task.attempt }
     time { params.runTime * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-    maxRetries 3
-    maxErrors '-1'
 
     input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), genInt, gen_int from bamsFHC //Are these values mapped to bamNormal already?
@@ -1298,9 +1274,6 @@ if ('HaplotypeCaller' in workflowSteps) {
     queue 'core'
     memory { params.singleCPUMem * task.attempt }
     time { params.runTime * task.attempt }
-    errorStrategy { task.exitStatus == 143 ? 'retry' : 'terminate' }
-    maxRetries 3
-    maxErrors '-1'
 
     input:
     set idN from normalEntries.unique()
@@ -1479,17 +1452,19 @@ def help_message(version, revision) {
 def start_message(version, revision) {
   log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
   log.info "Project     : ${workflow.projectDir}"
+  log.info "Directory   : ${workflow.launchDir}"
   log.info "workDir     : ${workflow.workDir}"
-  log.info "Command line: ${workflow.commandLine}"
   log.info "Steps       : " + workflowSteps.join(", ")
+  log.info "Command line: ${workflow.commandLine}"
 }
 
 def version_message(version, revision) {
   log.info "CANCER ANALYSIS WORKFLOW"
   log.info "  version $version"
   log.info "  revision: $revision"
-  log.info "Git info: repository - $revision [$workflow.commitId]"
-  log.info "Project : ${workflow.projectDir}"
+  log.info "Git info  : repository - $revision [$workflow.commitId]"
+  log.info "Project   : ${workflow.projectDir}"
+  log.info "Directory : ${workflow.launchDir}"
 }
 
 def grab_git_revision() {
