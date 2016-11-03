@@ -53,6 +53,8 @@ refsDefined = true
 stepCorrect = true
 workflowSteps = []
 
+if( workflow.profile == 'standard' && !params.project ) exit 1, "No UPPMAX project ID found! Use --project" 
+
 /*
  * Arguments handling
  * Use steps to run some processes and skip others
