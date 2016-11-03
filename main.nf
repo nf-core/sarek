@@ -1495,7 +1495,7 @@ def version_message(version, revision) {
 
 def grab_git_revision() {
   if ( workflow.commitId ) { // it's run directly from github
-    return workflow.commitId
+    return workflow.commitId.substring(0,10)
   }
 
   // Try to find the revision directly from git
