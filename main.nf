@@ -202,8 +202,6 @@ process Mapping {
   output:
   set idPatient, idSample, idRun, file("${idRun}.bam") into bams
 
-  // here I use params.genome for bwa ref so I don't have to link to all bwa index files
-
   when: 'preprocessing' in workflowSteps
 
   script:
@@ -228,7 +226,7 @@ if ('preprocessing' in workflowSteps) {
    * Merge or rename bam
    *
    * Borrowed code from https://github.com/guigolab/chip-nf
-   * Now, we decide whether bam is standalone or should be merged by sampleId (column 1 from channel bams)
+   * Now, we decide whether bam is standalone or should be merged by idSample (column 1 from channel bams)
    * http://www.nextflow.io/docs/latest/operator.html?highlight=grouptuple#grouptuple
    */
 
@@ -294,12 +292,11 @@ process RenameSingleBam {
 bamList = Channel.create()
 
 if ('preprocessing' in workflowSteps) {
-  singleRenamedBam = logChannelContent("SINGLES: ", singleRenamedBam)
-  mergedBam = logChannelContent("GROUPED: ", mergedBam)
-
   /*
    * merge all bams (merged and singles) to a single channel
    */
+  singleRenamedBam = logChannelContent("SINGLES: ", singleRenamedBam)
+  mergedBam = logChannelContent("GROUPED: ", mergedBam)
 
   bamList = mergedBam.mix(singleRenamedBam)
   bamList = bamList.map { idPatient, idSample, bam -> [idPatient[0], idSample, bam].flatten() }
@@ -330,8 +327,7 @@ process MarkDuplicates {
   // and the other to IndelRealigner
 
   output:
-  set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bai") into duplicatesForInterval
-  set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bai") into duplicatesForRealignement
+  set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bai") into duplicates
 
   when: 'preprocessing' in workflowSteps || 'realign' in workflowSteps
 
@@ -351,24 +347,24 @@ process MarkDuplicates {
   """
 }
 
+duplicatesGrouped  = Channel.create()
 duplicatesInterval = Channel.create()
-duplicatesRealign = Channel.create()
+duplicatesRealign  = Channel.create()
 
 if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
   /*
    * create realign intervals, use both tumor+normal as input
    */
 
-  // group the marked duplicates Bams intervals by overall subject/patient id (idPatient)
-  duplicatesInterval = duplicatesForInterval.groupTuple()
-  duplicatesInterval = logChannelContent("BAMs for RealignerTargetCreator grouped by overall subject/patient ID: ", duplicatesInterval)
-
-  duplicatesForRealignement = logChannelContent("BAMs for IndelRealigner before groupTuple: ",  duplicatesForRealignement)
-
+  // group the marked duplicates Bams for intervals by overall subject/patient id (idPatient)
   // group the marked duplicates Bams for realign by overall subject/patient id (idPatient)
-  duplicatesRealign = duplicatesForRealignement.groupTuple()
-  duplicatesRealign = logChannelContent("BAMs for IndelRealigner grouped by overall subject/patient ID: ", duplicatesRealign)
+  duplicatesGrouped = duplicates.groupTuple()
+  (duplicatesInterval, duplicatesRealign) = copyChannel(duplicatesGrouped)
+
+  duplicatesInterval = logChannelContent("BAMs for RealignerTargetCreator grouped by overall subject/patient ID: ", duplicatesInterval)
+  duplicatesRealign  = logChannelContent("BAMs for IndelRealigner grouped by overall subject/patient ID: ", duplicatesRealign)
 } else {
+  duplicatesGrouped.close()
   duplicatesInterval.close()
   duplicatesRealign.close()
 }
@@ -636,7 +632,7 @@ muTect2Intervals = Channel.create()
 varDictIntervals = Channel.create()
 
 if ('HaplotypeCaller' in workflowSteps) {
-  (bamsAll, bamsForHC) = copyChannel(bamsAll)
+  (bamsNormal, bamsForHC) = copyChannel(bamsNormal)
   (gI, hcIntervals) = copyChannel(gI)
 } else {
   bamsForHC.close()
