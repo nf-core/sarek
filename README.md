@@ -19,17 +19,16 @@ at [SciLifeLab Stockholm](https://www.scilifelab.se/platforms/ngi/), Sweden.
 - Pelin Sahlén (@pelinakan)
 
 ## Installation and first execution
-See the [Nextflow documentation from SciLifeLab](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/README.md)
-
-See the [workflow installation documentation](doc/UPPMAX.md)
+To use this pipeline, you need to have a working version of Nextflow installed.
+- See the [Install Nextflow documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/INSTALL.md)
+- See the [workflow first execution documentation](doc/UPPMAX.md)
 
 ## Usage
-I would recommand to run Nextflow within a screen session (cf [help on screen](https://www.howtoforge.com/linux_screen)).
-The minimal typical commande line is:
+I would recommand to run Nextflow within a screen session (cf [help on screen](https://www.howtoforge.com/linux_screen)). The typical command line is:
 ```bash
 nextflow run SciLifeLab/CAW --sample <file.tsv>
 ```
-All variables and parameters are specified in the config (cf [configuration options](#config)).
+All variables and parameters are specified in the config (cf [configuration documentation](#config)).
 
 ### Project
 To specify your UPPMAX project number ID. It can also be specified in your `config` file.
@@ -56,46 +55,18 @@ To have more information about files being processed, you can use the verbose op
 nextflow run SciLifeLab/CAW --sample mysample.tsv --verbose
 ```
 
-## Nextflow parameters
+## Nextflow options
+- See the [options documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/OPTIONS.md)
 
-### pull
-Use `pull` to update the workflow.
+## config and profiles
+More informations on the [SciLifeLab Nextflow documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/INSTALL.md). The default profile is `standard`
 ```bash
-nextflow pull SciLifeLab/CAW
+nextflow run SciLifeLab/CAW --sample mysample.tsv -profile standard
 ```
-
-### resume
-Use `-resume` to restart the workflow where it last failed.
+A standard profile is defined in [`nextflow.config`](https://raw.githubusercontent.com/SciLifeLab/CAW/master/nextflow.config). You can use the [`config/milou.config`](https://raw.githubusercontent.com/SciLifeLab/CAW/master/config/milou.config) file as a base to make a new `config` file that you can specify directly (or add as a profile):
 ```bash
-nextflow run SciLifeLab/CAW --sample mysample.tsv -resume
+nextflow run SciLifeLab/CAW --sample mysample.tsv -c config/milou.config
 ```
-
-### clean
-Use `nextflow clean -f` to remove everything contained in the `work` directory. Do not worry, non-recalibrated bam, indexes and recalibration tables as well as recalibrated bams and index are stored respectively in the `Preprocessing/NonRealigned` and `Preprocessing/Recalibrated` directories. And variant calling files are stored in the `VariantCalling` directory.
-```bash
-nextflow clean -f
-```
-
-### info
-Use `info` to get information about the workflow.
-```bash
-nextflow info SciLifeLab/CAW
-```
-
-### config and profiles
-More informations on [Nextflow documentation](https://www.nextflow.io/docs/latest/basic.html#configuration-options)
-```bash
-nextflow run SciLifeLab/CAW --sample mysample.tsv -profile <profile>
-```
-In [`nextflow.config`](https://raw.githubusercontent.com/SciLifeLab/CAW/master/nextflow.config) is defined a standard profile. You can use the [`milou.config`](https://raw.githubusercontent.com/SciLifeLab/CAW/master/config/milou.config) file as a base to make a new `config` file and add it as a profile or you can also specify directly the config file to be used:
-```bash
-nextflow run SciLifeLab/CAW --sample mysample.tsv -c <file.config>
-```
-If no config file is specified, Nextflow will look for one in Nextflow intallation `$NXF_HOME/config` of for one in the current directory `nextflow.config`.
-
-The config file provided as an example is a [config file](https://raw.githubusercontent.com/SciLifeLab/CAW/master/config/milou.config) specific to Swedish UPPMAX milou cluster, but can be easily modified to suit any clusters.
-
-You can use these files as examples to make your own config files and profiles.
 
 ## Nextflow processes
 Several processes are run within Nextflow
