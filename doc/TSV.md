@@ -1,3 +1,15 @@
+# TSV file for sample
+It's a Tab Separated Value file, based on: `subject status sample lane fastq1 fastq2` or `subject status sample bam bai`
+Quite straight-forward:
+- `subject` is the ID of the Patient
+- `status` is the status of the Patient, (0 for Normal and 1 for Tumor)
+- `sample` is the Sample ID (It is possible to have more than one tumor sample for each patient)
+- `lane` is used when the sample is multiplexed on several lanes
+- `fastq1` is the path to the first pair of the fastq file
+- `fastq2` is the path to the second pair of the fastq file
+- `bam` is the bam file
+- `bai` is the index
+
 # Example TSV file for a normal/tumor pair with FASTQ files
 
 In this sample for the normal case there are 3 read groups, and 2 for the tumor. It is recommended to add the absolute path of the paired 
