@@ -21,7 +21,7 @@ Steps are used to configure which processes will be runned or skipped in the wor
 - ascat (use ascat for CNV)
 
 ## Project
-To specify your UPPMAX project number ID. It can also be specified in your `config` file (cf [configuration documentation](#Profiles)).
+To specify your UPPMAX project number ID. It can also be specified in your `config` file (cf [configuration documentation](#profiles)).
 ```bash
 nextflow run SciLifeLab/CAW --sample <file.tsv> --project <UPPMAX_Project>
 ```
