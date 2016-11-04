@@ -26,42 +26,14 @@ To use this pipeline, you need to have a working version of Nextflow installed.
 ## Usage
 See the [usage documentation](doc/USAGE.md)
 
-## Nextflow processes
-Several processes are run within Nextflow
-We divide them for the moment into 2 main steps
+## Workflow processes
+See the [processes documentation](doc/PROCESS.md)
 
-### Preprocessing:
-- Mapping - Map reads with BWA
-- MergeBam - Merge BAMs if multilane samples
-- RenameSingleBam - Rename BAM if non-multilane sample
-- MarkDuplicates - using Picard
-- CreateIntervals - using GATK
-- Realign - using GATK
-- CreateRecalibrationTable - using GATK
-- RecalibrateBam - using GATK
+## TSV files
+See the [workflow TSV file documentation](doc/TSV.md)
 
-### Variant Calling:
-- RunMutect2 - using MuTect2 shipped in GATK v3.6
-- concatFiles - merge MuTect2 results
-- VarDict - run VarDict on multiple intervals
-- VarDictCollatedVCF - merge Vardict results
-- RunStrelka - using Strelka 1.0.15
-- Manta - run Manta 1.0.0
-
-## TSV file for sample
-It's a Tab Separated Value file, based on: `subject status sample lane fastq1 fastq2` or `subject status sample bam bai`
-Quite straight-forward:
-- `subject` is the ID of the Patient
-- `status` is the status of the Patient, (0 for Normal and 1 for Tumor)
-- `sample` is the Sample ID (It is possible to have more than one tumor sample for each patient)
-- `lane` is used when the sample is multiplexed on several lanes
-- `fastq1` is the path to the first pair of the fastq file
-- `fastq2` is the path to the second pair of the fastq file
-- `bam` is the bam file
-- `bai` is the index
-
-## Example of TSV files
-See the [workflow TSV example documentation](doc/EXAMPLE.md)
+## Use cases
+See the [workflow use cases documentation](doc/USE_CASES.md)
 
 ## Tools and dependencies
 - nextflow 0.22.1
@@ -75,5 +47,3 @@ See the [workflow TSV example documentation](doc/EXAMPLE.md)
 - strelka 1.0.15
 - manta 1.0.0
 
-## Use cases
-See the [workflow use cases documentation](doc/USE_CASES.md)
