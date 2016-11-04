@@ -4,10 +4,11 @@ I would recommand to run Nextflow within a screen session (cf [help on screen](h
 nextflow run SciLifeLab/CAW --sample <file.tsv>
 ```
 All variables and parameters are specified in the config (cf [configuration documentation](#profiles)).
+
 All samples are specified in the TSV files (cf [TSV documentation](TSV.md)).
 
 ## Steps
-To configure which processes will be runned or skipped in the workflow. Different steps to be separated by commas. Possible values are:
+Steps are used to configure which processes will be runned or skipped in the workflow. Different steps to be separated by commas. Possible values are:
 - preprocessing (default, will start workflow with FASTQ files)
 - realign (will start workflow with BAM files (with T/N BAMs that were not realigned together))
 - skipPreprocessing (will skip entire preprocessing (Only with T/N BAMs that were realigned together))
