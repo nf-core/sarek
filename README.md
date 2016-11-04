@@ -24,7 +24,7 @@ To use this pipeline, you need to have a working version of Nextflow installed.
 - See the [first execution documentation](doc/FIRST_RUN.md)
 
 ## Usage
-See the [usage documentation](doc/USAGE.md] 
+See the [usage documentation](doc/USAGE.md)
 
 ## Nextflow processes
 Several processes are run within Nextflow
