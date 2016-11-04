@@ -40,7 +40,7 @@ More informations on the [SciLifeLab Nextflow documentation](https://github.com/
 ```bash
 nextflow run SciLifeLab/CAW --sample mysample.tsv -profile myprofile
 ```
-A standard profile is defined in [`nextflow.config`](https://raw.githubusercontent.com/SciLifeLab/CAW/master/nextflow.config). You can use the [`config/milou.config`](https://raw.githubusercontent.com/SciLifeLab/CAW/master/config/milou.config) file as a base to make a new `config` file that you can specify directly (or add as a profile):
+A standard profile is defined in [`nextflow.config`](nextflow.config). You can use the [`config/milou.config`](config/milou.config) file as a base to make a new `config` file that you can specify directly (or add as a profile):
 ```bash
 nextflow run SciLifeLab/CAW --sample mysample.tsv -c config/milou.config
 ```
