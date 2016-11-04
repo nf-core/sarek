@@ -4,6 +4,7 @@ I would recommand to run Nextflow within a screen session (cf [help on screen](h
 nextflow run SciLifeLab/CAW --sample <file.tsv>
 ```
 All variables and parameters are specified in the config (cf [configuration documentation](#profiles)).
+All samples are specified in the TSV files (cf [TSV documentation](TSV.md)).
 
 ## Steps
 To configure which processes will be runned or skipped in the workflow. Different steps to be separated by commas. Possible values are:
