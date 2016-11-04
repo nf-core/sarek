@@ -597,24 +597,34 @@ recalibratedBams = logChannelContent("Recalibrated Bam for variant Calling: ", r
 bamsTumor = Channel.create()
 bamsNormal = Channel.create()
 
-// separate recalibrate files by filename suffix: __0 means normal, __1 means tumor recalibrated BAM
+// separate recalibrate files by filename suffix (which is status): __0 means normal, __1 means tumor recalibrated BAM
+
 recalibratedBams
   .choice(bamsTumor, bamsNormal) { it[1] =~ /__0$/ ? 1 : 0 }
 
 bamsTumor = logChannelContent("Tumor Bam for variant Calling: ", bamsTumor)
 bamsNormal = logChannelContent("Normal Bam for variant Calling: ", bamsNormal)
 
+bamsAll = Channel.create()
 bamsForHC = Channel.create()
+hcIntervals = Channel.create()
+bamsFHC = Channel.create()
 bamsForMuTect1 = Channel.create()
+bamsFMT1 = Channel.create()
+muTect1Intervals = Channel.create()
 bamsForMuTect2 = Channel.create()
+bamsFMT2 = Channel.create()
+muTect2Intervals = Channel.create()
 bamsForVarDict = Channel.create()
+varDictIntervals = Channel.create()
+bamsFVD = Channel.create()
 bamsForStrelka = Channel.create()
 bamsForManta = Channel.create()
 bamsForAscat = Channel.create()
 
 // We know that MuTect2 (and other somatic callers) are notoriously slow. To speed them up we are chopping the reference into
-// smaller pieces at centromeres (see repeates/centromeres.list), do variant calling by this intervals, and re-merge the VCFs.
-// Since we are on a cluster, this can parallelize the variant call process, and push down the variant call wall clock time significanlty.
+// smaller pieces at centromeres (see repeats/centromeres.list), do variant calling by this intervals, and re-merge the VCFs.
+// Since we are on a cluster, this can parallelize the variant call processes, and push down the variant call wall clock time significanlty.
 
 // in fact we need two channels: one for the actual genomic region, and an other for names
 // without ":", as nextflow is not happy with them (will report as a failed process).
@@ -626,20 +636,19 @@ intervals = Channel // define intervals file by --intervals
 gI = intervals
   .map {a -> [a,a.replaceFirst(/\:/,"_")]}
 
-hcIntervals = Channel.create()
-muTect1Intervals = Channel.create()
-muTect2Intervals = Channel.create()
-varDictIntervals = Channel.create()
-
 if ('HaplotypeCaller' in workflowSteps) {
   (bamsNormal, bamsForHC) = copyChannel(bamsNormal)
-  (gI, hcIntervals) = copyChannel(gI)
+  (gI, hcIntervals)       = copyChannel(gI)
+  bamsForHC   = logChannelContent("Bams for HaplotypeCaller: ", bamsForHC)
+  hcIntervals = logChannelContent("Intervals for HaplotypeCaller: ", hcIntervals)
+  bamsFHC = bamsForHC.spread(hcIntervals)
+  bamsFHC = logChannelContent("Bams with Intervals for HaplotypeCaller: ", bamsFHC)
 } else {
   bamsForHC.close()
   hcIntervals.close()
+  bamsFHC.close()
 }
 
-bamsAll = Channel.create()
 bamsAll = bamsNormal.spread(bamsTumor)
 
 // Since idPatientNormal and idPatientTumor are the same, I'm removing it from BamsAll Channel
@@ -654,47 +663,61 @@ bamsAll = logChannelContent("Mapped Recalibrated Bam for variant Calling: ", bam
 
 if ('MuTect1' in workflowSteps) {
   (bamsAll, bamsForMuTect1) = copyChannel(bamsAll)
-  (gI, muTect1Intervals) = copyChannel(gI)
+  (gI, muTect1Intervals)    = copyChannel(gI)
+  bamsForMuTect1   = logChannelContent("Bams for MuTect1: ", bamsForMuTect1)
+  muTect1Intervals = logChannelContent("Intervals for MuTect1: ", muTect1Intervals)
   bamsFMT1 = bamsForMuTect1.spread(muTect1Intervals)
-  bamsFMT1 = logChannelContent("Bams for MuTect1: ", bamsFMT1)
-  pd = "VariantCalling/MuTect1/"
- } else {
+  bamsFMT1 = logChannelContent("Bams with Intervals for MuTect1: ", bamsFMT1)
+
+} else {
   bamsForMuTect1.close()
   muTect1Intervals.close()
+  bamsFMT1.close()
 }
 
 if ('MuTect2' in workflowSteps) {
   (bamsAll, bamsForMuTect2) = copyChannel(bamsAll)
-  (gI, muTect2Intervals) = copyChannel(gI)
+  (gI, muTect2Intervals)    = copyChannel(gI)
+  bamsForMuTect2   = logChannelContent("Bams for Mutect2: ", bamsForMuTect2)
+  muTect2Intervals = logChannelContent("Intervals for Mutect2: ", muTect2Intervals)
   bamsFMT2 = bamsForMuTect2.spread(muTect2Intervals)
-  bamsFMT2 = logChannelContent("Bams for MuTect2: ", bamsFMT2)
+  bamsFMT2 = logChannelContent("Bams with Intervals for Mutect2: ", bamsFMT2)
 } else {
   bamsForMuTect2.close()
   muTect2Intervals.close()
+  bamsFMT2.close()
 }
 
 if ('VarDict' in workflowSteps) {
   (bamsAll, bamsForVarDict) = copyChannel(bamsAll)
-  (gI, varDictIntervals) = copyChannel(gI)
+  (gI, varDictIntervals)    = copyChannel(gI)
+  bamsForVarDict   = logChannelContent("Bams for VarDict: ", bamsForVarDict)
+  varDictIntervals = logChannelContent("Intervals for VarDict: ", varDictIntervals)
+  bamsFVD = bamsForVarDict.spread(varDictIntervals)
+  bamsFVD = logChannelContent("Bams with Intervals for VarDict: ", bamsFVD)
 } else {
   bamsForVarDict.close()
   varDictIntervals.close()
+  bamsFVD.close()
 }
 
 if ('Strelka' in workflowSteps) {
   (bamsAll, bamsForStrelka) = copyChannel(bamsAll)
+  bamsForStrelka   = logChannelContent("Bams for Strelka: ", bamsForStrelka)
 } else {
   bamsForStrelka.close()
 }
 
 if ('Manta' in workflowSteps) {
   (bamsAll, bamsForManta) = copyChannel(bamsAll)
+  bamsForManta   = logChannelContent("Bams for Manta: ", bamsForManta)
 } else {
   bamsForManta.close()
 }
 
 if ('ascat' in workflowSteps) {
   (bamsAll, bamsForAscat) = copyChannel(bamsAll)
+  bamsForAscat   = logChannelContent("Bams for ascat: ", bamsForAscat)
 } else {
   bamsForAscat.close()
 }
@@ -704,6 +727,8 @@ if ('ascat' in workflowSteps) {
 // and make a line for each interval
 
 if ('MuTect1' in workflowSteps) {
+  pd = outDir["Mutect1"]
+
   process RunMutect1 {
     publishDir pd + "intervals_" + idPatient
 
@@ -718,7 +743,12 @@ if ('MuTect1' in workflowSteps) {
     output:
     set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.vcf") into mutect1VariantCallingOutput
 
+    when: 'MuTect1' in workflowSteps
+
+    script:
     """
+    #!/bin/bash
+
     java -Xmx${task.memory.toGiga()}g -jar \${MUTECT_HOME}/muTect.jar \
     -T MuTect \
     -R ${refs["genomeFile"]} \
@@ -781,6 +811,8 @@ if ('MuTect1' in workflowSteps) {
 
     script:
     """
+    #!/bin/bash
+
     VARIANTS=`ls ${workflow.launchDir}/${pd}/intervals_${idPatient}/*${idT}*.mutect1.vcf| awk '{printf(" -V %s \\\\n",\$1) }'`
     java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${refs["genomeFile"]}  \$VARIANTS --outputFile MuTect1_${idPatient}_${idNormal}_${idT}.vcf
     """
@@ -788,12 +820,8 @@ if ('MuTect1' in workflowSteps) {
 }
 
 if ('MuTect2' in workflowSteps) {
-
-  bamsFMT2 = bamsForMuTect2.spread(muTect2Intervals)
-  bamsFMT2 = logChannelContent("Bams for Mutect2: ", bamsFMT2)
-
   process RunMutect2 {
-    publishDir "VariantCalling/MuTect2/intervals"
+    publishDir outDir["MuTect2"] + "/intervals"
 
     cpus 1
     queue 'core'
@@ -810,7 +838,11 @@ if ('MuTect2' in workflowSteps) {
     // TODO: the  "-U ALLOW_SEQ_DICT_INCOMPATIBILITY " flag is actually masking a bug in older Picard versions. Using the latest Picard tool
     // this bug should go away and we should _not_ use this flag
     // removed: -nct ${task.cpus} \
+    when: 'MuTect2' in workflowSteps
+
+    script:
     """
+    #!/bin/bash
     java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
     -T MuTect2 \
     -R ${refs["genomeFile"]} \
@@ -852,7 +884,7 @@ if ('MuTect2' in workflowSteps) {
   (idPatient, idNormal) = getPatientAndNormalIDs(collatedIDs)
   println "Patient's ID: " + idPatient
   println "Normal ID: " + idNormal
-  pd = "VariantCalling/MuTect2"
+  pd = outDir["MuTect2"]
   process concatFiles {
     publishDir = pd
 
@@ -870,25 +902,24 @@ if ('MuTect2' in workflowSteps) {
     output:
     file "MuTect2*.vcf"
 
+    when: 'MuTect2' in workflowSteps
+
     script:
     """
+    #!/bin/bash
+
     VARIANTS=`ls ${workflow.launchDir}/${pd}/intervals/*${idT}*.mutect2.vcf| awk '{printf(" -V %s\\n",\$1) }'`
     java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out MuTect2_${idPatient}_${idNormal}_${idT}.vcf
     """
   }
-} else {
-  bamsForMuTect2.close()
-  muTect2Intervals.close()
 }
 
 if ('VarDict' in workflowSteps) {
   // we are doing the same trick for VarDictJava: running for the whole reference is a PITA, so we are chopping at repeats
   // (or centromeres) where no useful variant calls are expected
-  bamsFVD = bamsForVarDict.spread(varDictIntervals)
-  bamsFVD = logChannelContent("Bams for VarDict: ", bamsFVD)
 
   process VarDict {
-    publishDir "VariantCalling/VarDictJava"
+    publishDir outDir["VarDict"]
 
     // ~/dev/VarDictJava/build/install/VarDict/bin/VarDict -G /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta -f 0.1 -N "tiny" -b "tiny.tumor__1.recal.bam|tiny.normal__0.recal.bam" -z 1 -F 0x500 -c 1 -S 2 -E 3 -g 4 -R "1:131941-141339"
     // we need further filters, but some of the outputs are empty files, confusing the VCF generator script
@@ -904,7 +935,12 @@ if ('VarDict' in workflowSteps) {
     output:
     set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into varDictVariantCallingOutput
 
+    when: 'VarDict' in workflowSteps
+
+    script:
     """
+    #!/bin/bash
+
     ${params.vardictHome}/vardict.pl -G ${refs["genomeFile"]} \
     -f 0.01 -N $bamTumor \
     -b "$bamTumor|$bamNormal" \
@@ -940,8 +976,12 @@ if ('VarDict' in workflowSteps) {
     output:
     file(vdFilePrefix + ".VarDict.vcf")
 
+    when: 'VarDict' in workflowSteps
+
     script:
     """
+    #!/bin/bash
+
     for vdoutput in ${vdPart}
     do
       echo
@@ -950,81 +990,82 @@ if ('VarDict' in workflowSteps) {
     ${params.vardictHome}/var2vcf_somatic.pl -f 0.01 -N "${vdFilePrefix}" testsomatic.out > ${vdFilePrefix}.VarDict.vcf
     """
   }
-} else {
-  bamsForVarDict.close()
-  varDictIntervals.close()
+}
+
+process RunStrelka {
+  publishDir outDir["Strelka"]
+
+  time { params.runTime * task.attempt }
+
+  input:
+  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForStrelka
+  file refs["genomeFile"]
+  file refs["genomeIndex"]
+
+  output:
+  set idPatient, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("strelka/results/*.vcf") into strelkaVariantCallingOutput
+
+  when: 'Strelka' in workflowSteps
+
+  script:
+  """
+  #!/bin/bash
+
+  tumorPath=`readlink ${bamTumor}`
+  normalPath=`readlink ${bamNormal}`
+  ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
+  --tumor \$tumorPath \
+  --normal \$normalPath \
+  --ref ${refs["MantaRef"]} \
+  --config ${params.strelkaCFG} \
+  --output-dir strelka
+
+  cd strelka
+
+  make -j ${task.cpus}
+  """
 }
 
 if ('Strelka' in workflowSteps) {
-  bamsForStrelka = logChannelContent("Bams with Intervals for Strelka: ", bamsForStrelka)
-
-  process RunStrelka {
-    publishDir "VariantCalling/Strelka"
-
-    time { params.runTime * task.attempt }
-
-    input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForStrelka
-    file refs["genomeFile"]
-    file refs["genomeIndex"]
-
-    output:
-    set idPatient, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("strelka/results/*.vcf") into strelkaVariantCallingOutput
-
-    """
-    tumorPath=`readlink ${bamTumor}`
-    normalPath=`readlink ${bamNormal}`
-    ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
-    --tumor \$tumorPath \
-    --normal \$normalPath \
-    --ref ${refs["MantaRef"]} \
-    --config ${params.strelkaCFG} \
-    --output-dir strelka
-
-    cd strelka
-
-    make -j ${task.cpus}
-    """
-  }
   strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
-} else {
-  bamsForStrelka.close()
+}
+
+process Manta {
+  publishDir "VariantCalling/Manta"
+
+  input:
+      file refs["MantaRef"]
+      file refs["MantaIndex"]
+      set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
+
+  output:
+     set idPatient, val("${idSampleNormal}_${idSampleTumor}"),file("${idSampleNormal}_${idSampleTumor}.somaticSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.diploidSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf")  into mantaVariantCallingOutput
+
+  when: 'Manta' in workflowSteps
+
+  //NOTE: Manta is very picky about naming and reference indexes, the input bam should not contain too many _ and the reference index must be generated using a supported samtools version.
+  //Moreover, the bam index must be named .bam.bai, otherwise it will not be recognized
+  script:
+  """
+  #!/bin/bash
+
+  mv ${bamNormal} Normal.bam
+  mv ${bamTumor} Tumor.bam
+
+  mv ${baiNormal} Normal.bam.bai
+  mv ${baiTumor} Tumor.bam.bai
+
+  configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference ${refs["MantaRef"]} --runDir MantaDir
+  python MantaDir/runWorkflow.py -m local -j ${task.cpus}
+  gunzip -c MantaDir/results/variants/somaticSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.somaticSV.vcf
+  gunzip -c MantaDir/results/variants/candidateSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSV.vcf
+  gunzip -c MantaDir/results/variants/diploidSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.diploidSV.vcf
+  gunzip -c MantaDir/results/variants/candidateSmallIndels.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf
+  """
 }
 
 if ('Manta' in workflowSteps) {
-  process Manta {
-    publishDir "VariantCalling/Manta"
-
-    input:
-        file refs["MantaRef"]
-        file refs["MantaIndex"]
-        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
-
-    output:
-       set idPatient, val("${idSampleNormal}_${idSampleTumor}"),file("${idSampleNormal}_${idSampleTumor}.somaticSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.diploidSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf")  into mantaVariantCallingOutput
-
-
-    //NOTE: Manta is very picky about naming and reference indexes, the input bam should not contain too many _ and the reference index must be generated using a supported samtools version.
-    //Moreover, the bam index must be named .bam.bai, otherwise it will not be recognized
-
-    """
-    mv ${bamNormal} Normal.bam
-    mv ${bamTumor} Tumor.bam
-
-    mv ${baiNormal} Normal.bam.bai
-    mv ${baiTumor} Tumor.bam.bai
-
-    configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference ${refs["MantaRef"]} --runDir MantaDir
-    python MantaDir/runWorkflow.py -m local -j ${task.cpus}
-    gunzip -c MantaDir/results/variants/somaticSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.somaticSV.vcf
-    gunzip -c MantaDir/results/variants/candidateSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSV.vcf
-    gunzip -c MantaDir/results/variants/diploidSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.diploidSV.vcf
-    gunzip -c MantaDir/results/variants/candidateSmallIndels.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf
-    """
-  }
   mantaVariantCallingOutput = logChannelContent("Manta output: ", mantaVariantCallingOutput)
-} else {
-  bamsForManta.close()
 }
 
 if ('ascat' in workflowSteps) {
@@ -1188,47 +1229,43 @@ add process for runASCAT.r
 
 */
 
-
-
-} else {
-  bamsForAscat.close()
 }
 
 //HaplotypeCaller
+process RunHaplotypeCaller {
+  publishDir outDir["HaplotypeCaller"]
+
+  cpus 1
+  queue 'core'
+  memory { params.singleCPUMem * task.attempt }
+  time { params.runTime * task.attempt }
+
+  input:
+  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), genInt, gen_int from bamsFHC //Are these values mapped to bamNormal already?
+  file refs["genomeFile"]
+  file refs["genomeIndex"]
+
+  output:
+  set idPatient, idSampleNormal, val("${gen_int}_${idSampleNormal}"), file("${gen_int}_${idSampleNormal}.HC.vcf") into haplotypeCallerVariantCallingOutput
+
+  when: 'HaplotypeCaller' in workflowSteps
+
+  //parellelization information: "Many users have reported issues running HaplotypeCaller with the -nct argument, so we recommend using Queue to parallelize HaplotypeCaller instead of multithreading." However, it can take the -nct argument.
+  script:
+  """
+  #!/bin/bash
+
+  java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+  -T HaplotypeCaller \
+  -R ${refs["genomeFile"]} \
+  --dbsnp ${refs["dbsnp"]} \
+  -I $bamNormal \
+  -L \"${genInt}\" \
+  -o ${gen_int}_${idSampleNormal}.HC.vcf
+  """
+
+}
 if ('HaplotypeCaller' in workflowSteps) {
-  bamsForHC = logChannelContent("Bams for HaplotypeCaller: ", bamsForHC)
-  hcIntervals = logChannelContent("Intervals for HaplotypeCaller: ", hcIntervals)
-  bamsFHC = bamsForHC.spread(hcIntervals)
-  bamsFHC = logChannelContent("Bams with Intervals for HaplotypeCaller: ", bamsFHC)
-
-  process RunHaplotypeCaller {
-    publishDir "VariantCalling/HaplotypeCaller"
-
-    cpus 1
-    queue 'core'
-    memory { params.singleCPUMem * task.attempt }
-    time { params.runTime * task.attempt }
-
-    input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), genInt, gen_int from bamsFHC //Are these values mapped to bamNormal already?
-    file refs["genomeFile"]
-    file refs["genomeIndex"]
-
-    output:
-    set idPatient, idSampleNormal, val("${gen_int}_${idSampleNormal}"), file("${gen_int}_${idSampleNormal}.HC.vcf") into haplotypeCallerVariantCallingOutput
-
-    //parellelization information: "Many users have reported issues running HaplotypeCaller with the -nct argument, so we recommend using Queue to parallelize HaplotypeCaller instead of multithreading." However, it can take the -nct argument.
-    """
-    java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
-    -T HaplotypeCaller \
-    -R ${refs["genomeFile"]} \
-    --dbsnp ${refs["dbsnp"]} \
-    -I $bamNormal \
-    -L \"${genInt}\" \
-    -o ${gen_int}_${idSampleNormal}.HC.vcf
-    """
-
-  }
   haplotypeCallerVariantCallingOutput = logChannelContent("HaplotypeCaller output: ", haplotypeCallerVariantCallingOutput)
 
   //Collate the vcf files (repurposed from mutect2 code)
@@ -1260,9 +1297,8 @@ if ('HaplotypeCaller' in workflowSteps) {
   (idPatient, idNormal) = getPatientAndNormalIDs(collatedIDs)
   println "Patient's ID: " + idPatient
   println "Normal ID: " + idNormal
-  pd = "VariantCalling/HaplotypeCaller"
   process concatFiles {
-    publishDir = pd
+    publishDir outDir["HaplotypeCaller"]
 
     module 'bioinfo-tools'
     module 'java/sun_jdk1.8.0_92'
@@ -1284,9 +1320,6 @@ if ('HaplotypeCaller' in workflowSteps) {
     java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out HaplotypeCaller_${idPatient}_${idN}.vcf
     """
   }
-} else {
-  bamsForHC.close()
-  hcIntervals.close()
 }
 
 /*
