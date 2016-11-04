@@ -56,7 +56,7 @@ nextflow run SciLifeLab/CAW --sample mysample.tsv --verbose
 ```
 
 ## Nextflow options
-- See the [options documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/OPTIONS.md)
+See the [options documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/OPTIONS.md)
 
 ## config and profiles
 More informations on the [SciLifeLab Nextflow documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/INSTALL.md). The default profile is `standard`
