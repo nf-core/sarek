@@ -112,10 +112,17 @@ stepsList = [
 ]
 
 outDir = [
-  "preprocessing"  : 'Preprocessing',
-  "nonRealigned"   : 'Preprocessing/NonRealigned',
-  "recalibrated"   : 'Preprocessing/Recalibrated',
-  "variantCalling" : 'VariantCalling'
+  "preprocessing"   : 'Preprocessing',
+  "nonRealigned"    : 'Preprocessing/NonRealigned',
+  "recalibrated"    : 'Preprocessing/Recalibrated',
+  "VariantCalling"  : 'VariantCalling',
+  "MuTect1"         : 'VariantCalling/MuTect1',
+  "MuTect2"         : 'VariantCalling/MuTect2',
+  "VarDict"         : 'VariantCalling/VarDictJava',
+  "Strelka"         : 'VariantCalling/Strelka',
+  "HaplotypeCaller" : 'VariantCalling/Strelka',
+  "Manta"           : 'VariantCalling/Strelka',
+  "ascat"           : 'VariantCalling/ascat'
 ]
 
 /*
@@ -192,7 +199,6 @@ if ('preprocessing' in workflowSteps) {
 
 process Mapping {
   tag { idRun }
-
   time { params.runTime * task.attempt }
 
   input:
