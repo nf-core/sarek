@@ -120,8 +120,8 @@ outDir = [
   "MuTect2"         : 'VariantCalling/MuTect2',
   "VarDict"         : 'VariantCalling/VarDictJava',
   "Strelka"         : 'VariantCalling/Strelka',
-  "HaplotypeCaller" : 'VariantCalling/Strelka',
-  "Manta"           : 'VariantCalling/Strelka',
+  "HaplotypeCaller" : 'VariantCalling/HaplotypeCaller',
+  "Manta"           : 'VariantCalling/Manta',
   "ascat"           : 'VariantCalling/ascat'
 ]
 
@@ -972,7 +972,7 @@ if ('VarDict' in workflowSteps) {
   resultsDir.mkdir()
 
   process VarDictCollatedVCF {
-    publishDir "VariantCalling/VarDictJava"
+    publishDir outDir["VarDict"]
 
     cpus 1
     queue 'core'
