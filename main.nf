@@ -172,11 +172,11 @@ bamFiles = Channel.create()
 
 if ('preprocessing' in workflowSteps) {
   fastqFiles = extractFastqFiles(file(params.sample))
-  fastqFiles = logChannelContent("FASTQ files and IDs to process: ", fastqFiles)
+  fastqFiles = fastqFiles.view { it -> "FASTQ files and IDs to process: $it" }
   bamFiles.close()
 } else if ( 'realign' in workflowSteps || 'skipPreprocessing' in workflowSteps) {
   bamFiles = extractBamFiles(file(params.sample))
-  bamFiles = logChannelContent("Bam files and IDs to process: ", bamFiles)
+  bamFiles = bamFiles.view { it -> "Bam files and IDs to process: $it" }
   fastqFiles.close()
 }
 
@@ -226,7 +226,7 @@ singleBam = Channel.create()
 groupedBam = Channel.create()
 
 if ('preprocessing' in workflowSteps) {
-  bams = logChannelContent("BAM files before sorting into group or single:", bams)
+  bams = bams.view { it -> "BAM files before sorting into group or single: $it" }
 
   /*
    * Merge or rename bam
@@ -239,8 +239,8 @@ if ('preprocessing' in workflowSteps) {
   bams.groupTuple(by:[1])
     .choice(singleBam, groupedBam) { it[3].size() > 1 ? 1 : 0 }
 
-  singleBam = logChannelContent("Single BAMs before merge:", singleBam)
-  groupedBam = logChannelContent("Grouped BAMs before merge:", groupedBam)
+  singleBam  = singleBam.view  { it -> "Single BAMs before merge: $it" }
+  groupedBam = groupedBam.view { it -> "Grouped BAMs before merge: $it" }
 } else {
   singleBam.close()
   groupedBam.close()
@@ -298,21 +298,23 @@ process RenameSingleBam {
 bamList = Channel.create()
 
 if ('preprocessing' in workflowSteps) {
+  singleRenamedBam = singleRenamedBam.view { it -> "SINGLES: $it" }
+  mergedBam = mergedBam.view { it -> "GROUPED: $it" }
+
   /*
    * merge all bams (merged and singles) to a single channel
    */
-  singleRenamedBam = logChannelContent("SINGLES: ", singleRenamedBam)
-  mergedBam = logChannelContent("GROUPED: ", mergedBam)
 
   bamList = mergedBam.mix(singleRenamedBam)
   bamList = bamList.map { idPatient, idSample, bam -> [idPatient[0], idSample, bam].flatten() }
-  bamList = logChannelContent("BAM list for MarkDuplicates: ",bamList)
+  bamList = bamList.view { it -> "GROUPEDBAM list for MarkDuplicates: $it" }
 } else if ('realign' in workflowSteps) {
   bamList = bamFiles.map { idPatient, idSample, bamFile, baiFile -> [idPatient, idSample, bamFile] }
-  bamList = logChannelContent("BAM list for MarkDuplicates: ",bamList)
+  bamList = bamList.view { it -> "BAM list for MarkDuplicates: $it" }
 } else {
   bamList.close()
 }
+
 
 process MarkDuplicates {
   /*
@@ -367,8 +369,8 @@ if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
   duplicatesGrouped = duplicates.groupTuple()
   (duplicatesInterval, duplicatesRealign) = copyChannel(duplicatesGrouped)
 
-  duplicatesInterval = logChannelContent("BAMs for RealignerTargetCreator grouped by overall subject/patient ID: ", duplicatesInterval)
-  duplicatesRealign  = logChannelContent("BAMs for IndelRealigner grouped by overall subject/patient ID: ", duplicatesRealign)
+  duplicatesInterval = duplicatesInterval.view { it -> "BAMs for RealignerTargetCreator grouped by overall subject/patient ID: $it" }
+  duplicatesRealign  = duplicatesRealign.view  { it -> "BAMs for IndelRealigner grouped by overall subject/patient ID: $it" }
 } else {
   duplicatesGrouped.close()
   duplicatesInterval.close()
@@ -420,7 +422,7 @@ process CreateIntervals {
 }
 
 if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
-  intervals = logChannelContent("Intervals passed to Realign: ",intervals)
+  intervals = intervals.view { it -> "Intervals passed to Realign: $it" }
 } else {
   intervals.close()
 }
@@ -497,8 +499,7 @@ if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
   tempBais = tempBais.flatten().toSortedList().flatten()
   tempSamples = tempSamples.merge( tempBams, tempBais ) { s, b, i -> [s, b, i] }
   realignedBam = idPatient.spread(tempSamples)
-
-  realignedBam = logChannelContent("realignedBam to BaseRecalibrator: ", realignedBam)
+  realignedBam = realignedBam.view { it -> "realignedBam to BaseRecalibrator: $it" }
 } else {
   realignedBam.close()
 }
@@ -541,7 +542,7 @@ process CreateRecalibrationTable {
   """
 }
 if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
-  recalibrationTable = logChannelContent("Base recalibrated table for recalibration: ", recalibrationTable)
+  recalibrationTable = recalibrationTable.view { it -> "Base recalibrated table for recalibration: $it" }
 } else {
   recalibrationTable.close()
 }
@@ -589,7 +590,7 @@ if ('skipPreprocessing' in workflowSteps) {
   bamFiles.close()
 }
 
-recalibratedBams = logChannelContent("Recalibrated Bam for variant Calling: ", recalibratedBams)
+recalibratedBams = recalibratedBams.view { it -> "Recalibrated Bam for variant Calling: $it" }
 
 // Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
 // The sample tsv config file which is formatted like: "subject status sample lane fastq1 fastq2"
@@ -629,8 +630,8 @@ bamsForAscat = Channel.create()
 recalibratedBams
   .choice(bamsTumor, bamsNormal) { it[1] =~ /__0$/ ? 1 : 0 }
 
-bamsTumor = logChannelContent("Tumor Bam for variant Calling: ", bamsTumor)
-bamsNormal = logChannelContent("Normal Bam for variant Calling: ", bamsNormal)
+bamsTumor  = bamsTumor.view  { it -> "Tumor Bam for variant Calling: $it" }
+bamsNormal = bamsNormal.view { it -> "Normal Bam for variant Calling: $it" }
 
 // We know that MuTect2 (and other somatic callers) are notoriously slow. To speed them up we are chopping the reference into
 // smaller pieces at centromeres (see repeats/centromeres.list), do variant calling by this intervals, and re-merge the VCFs.
@@ -649,10 +650,10 @@ gI = intervals
 if ('HaplotypeCaller' in workflowSteps) {
   (bamsNormal, bamsForHC) = copyChannel(bamsNormal)
   (gI, hcIntervals)       = copyChannel(gI)
-  bamsForHC   = logChannelContent("Bams for HaplotypeCaller: ", bamsForHC)
-  hcIntervals = logChannelContent("Intervals for HaplotypeCaller: ", hcIntervals)
+  bamsForHC   = bamsForHC.view   { it -> "Bams for HaplotypeCaller: $it" }
+  hcIntervals = hcIntervals.view { it -> "Intervals for HaplotypeCaller: $it" }
   bamsFHC = bamsForHC.spread(hcIntervals)
-  bamsFHC = logChannelContent("Bams with Intervals for HaplotypeCaller: ", bamsFHC)
+  bamsFHC = bamsFHC.view { it -> "Bams with Intervals for HaplotypeCaller: $it" }
 } else {
   bamsForHC.close()
   hcIntervals.close()
@@ -669,15 +670,15 @@ bamsAll = bamsAll.map {
   [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor]
 }
 
-bamsAll = logChannelContent("Mapped Recalibrated Bam for variant Calling: ", bamsAll)
+bamsAll = bamsAll.view { it -> "Mapped Recalibrated Bam for variant Calling: $it" }
 
 if ('MuTect1' in workflowSteps) {
   (bamsAll, bamsForMuTect1) = copyChannel(bamsAll)
   (gI, muTect1Intervals)    = copyChannel(gI)
-  bamsForMuTect1   = logChannelContent("Bams for MuTect1: ", bamsForMuTect1)
-  muTect1Intervals = logChannelContent("Intervals for MuTect1: ", muTect1Intervals)
+  bamsForMuTect1   = bamsForMuTect1.view   { it -> "Bams for MuTect1: $it" }
+  muTect1Intervals = muTect1Intervals.view { it -> "Intervals for MuTect1: $it" }
   bamsFMT1 = bamsForMuTect1.spread(muTect1Intervals)
-  bamsFMT1 = logChannelContent("Bams with Intervals for MuTect1: ", bamsFMT1)
+  bamsFMT1 = bamsFMT1.view { it -> "Bams with Intervals for MuTect1: $it" }
 } else {
   bamsForMuTect1.close()
   muTect1Intervals.close()
@@ -687,10 +688,10 @@ if ('MuTect1' in workflowSteps) {
 if ('MuTect2' in workflowSteps) {
   (bamsAll, bamsForMuTect2) = copyChannel(bamsAll)
   (gI, muTect2Intervals)    = copyChannel(gI)
-  bamsForMuTect2   = logChannelContent("Bams for Mutect2: ", bamsForMuTect2)
-  muTect2Intervals = logChannelContent("Intervals for Mutect2: ", muTect2Intervals)
+  bamsForMuTect2   = bamsForMuTect2.view   { it -> "Bams for MuTect2: $it" }
+  muTect2Intervals = muTect2Intervals.view { it -> "Intervals for MuTect2: $it" }
   bamsFMT2 = bamsForMuTect2.spread(muTect2Intervals)
-  bamsFMT2 = logChannelContent("Bams with Intervals for Mutect2: ", bamsFMT2)
+  bamsFMT2 = bamsFMT2.view { it -> "Bams with Intervals for MuTect2: $it" }
 } else {
   bamsForMuTect2.close()
   muTect2Intervals.close()
@@ -700,10 +701,10 @@ if ('MuTect2' in workflowSteps) {
 if ('VarDict' in workflowSteps) {
   (bamsAll, bamsForVarDict) = copyChannel(bamsAll)
   (gI, varDictIntervals)    = copyChannel(gI)
-  bamsForVarDict   = logChannelContent("Bams for VarDict: ", bamsForVarDict)
-  varDictIntervals = logChannelContent("Intervals for VarDict: ", varDictIntervals)
-  bamsFVD = bamsForVarDict.spread(varDictIntervals)
-  bamsFVD = logChannelContent("Bams with Intervals for VarDict: ", bamsFVD)
+  bamsForVarDict   = bamsForVarDict.view   { it -> "Bams for VarDict: $it" }
+  varDictIntervals = varDictIntervals.view { it -> "Intervals for VarDict: $it" }
+  bamsFVD = bamsFVD.spread(varDictIntervals)
+  bamsFVD = bamsFVD.view { it -> "Bams with Intervals for VarDict: $it" }
 } else {
   bamsForVarDict.close()
   varDictIntervals.close()
@@ -712,21 +713,21 @@ if ('VarDict' in workflowSteps) {
 
 if ('Strelka' in workflowSteps) {
   (bamsAll, bamsForStrelka) = copyChannel(bamsAll)
-  bamsForStrelka   = logChannelContent("Bams for Strelka: ", bamsForStrelka)
+  bamsForStrelka = bamsForStrelka.view { it -> "Bams with Intervals for Strelka: $it" }
 } else {
   bamsForStrelka.close()
 }
 
 if ('Manta' in workflowSteps) {
   (bamsAll, bamsForManta) = copyChannel(bamsAll)
-  bamsForManta   = logChannelContent("Bams for Manta: ", bamsForManta)
+  bamsForManta = bamsForManta.view { it -> "Bams with Intervals for Manta: $it" }
 } else {
   bamsForManta.close()
 }
 
 if ('ascat' in workflowSteps) {
   (bamsAll, bamsForAscat) = copyChannel(bamsAll)
-  bamsForAscat   = logChannelContent("Bams for ascat: ", bamsForAscat)
+  bamsForAscat = bamsForAscat.view { it -> "Bams with Intervals for ascat: $it" }
 } else {
   bamsForAscat.close()
 }
@@ -776,7 +777,7 @@ if ('MuTect1' in workflowSteps) {
   // different intervals. So, we have to collate (merge) intervals for each tumor case if there are
   // more than one. Therefore, what we want to do is to filter the multiple tumor cases into separate
   // channels and collate them according to their stage.
-  mutect1VariantCallingOutput = logChannelContent("Mutect1 output: ", mutect1VariantCallingOutput)
+  mutect1VariantCallingOutput = mutect1VariantCallingOutput.view { it -> "Mutect1 output: $it" }
   filesToCollate = mutect1VariantCallingOutput
   .groupTuple(by: 2)
   .map {
@@ -871,7 +872,7 @@ if ('MuTect2' in workflowSteps) {
   // different intervals. So, we have to collate (merge) intervals for each tumor case if there are
   // more than one. Therefore, what we want to do is to filter the multiple tumor cases into separate
   // channels and collate them according to their stage.
-  mutect2VariantCallingOutput = logChannelContent("Mutect2 output: ", mutect2VariantCallingOutput)
+  mutect2VariantCallingOutput = mutect2VariantCallingOutput.view { it -> "Mutect2 output: $it" }
   filesToCollate = mutect2VariantCallingOutput
   .groupTuple(by: 2)
   .map {
@@ -962,7 +963,7 @@ if ('VarDict' in workflowSteps) {
   // now we want to collate all the pieces of the VarDict outputs and concatenate the output files
   // so we can feed them into the somatic filter and the VCF converter
 
-  varDictVariantCallingOutput = logChannelContent("VarDict VCF channel: ",varDictVariantCallingOutput)
+  varDictVariantCallingOutput = varDictVariantCallingOutput.view { it -> "VarDict output: $it" }
   (varDictVariantCallingOutput ,idPatient, idNormal, idTumor) = getPatientAndSample(varDictVariantCallingOutput)
 
   vdFilePrefix = idPatient + "_" + idNormal + "_" + idTumor
@@ -1036,7 +1037,7 @@ process RunStrelka {
 }
 
 if ('Strelka' in workflowSteps) {
-  strelkaVariantCallingOutput = logChannelContent("Strelka output: ", strelkaVariantCallingOutput)
+  strelkaVariantCallingOutput = strelkaVariantCallingOutput.view { it -> "Strelka output: $it" }
 }
 
 process Manta {
@@ -1074,7 +1075,7 @@ process Manta {
 }
 
 if ('Manta' in workflowSteps) {
-  mantaVariantCallingOutput = logChannelContent("Manta output: ", mantaVariantCallingOutput)
+  mantaVariantCallingOutput = mantaVariantCallingOutput.view { it -> "Manta output: $it" }
 }
 
 process alleleCount{
@@ -1265,7 +1266,7 @@ process RunHaplotypeCaller {
 }
 
 if ('HaplotypeCaller' in workflowSteps) {
-  haplotypeCallerVariantCallingOutput = logChannelContent("HaplotypeCaller output: ", haplotypeCallerVariantCallingOutput)
+  haplotypeCallerVariantCallingOutput = haplotypeCallerVariantCallingOutput.view { it -> "HaplotypeCaller output: $it" }
 
   //Collate the vcf files (repurposed from mutect2 code)
   filesToCollate = haplotypeCallerVariantCallingOutput
@@ -1363,21 +1364,6 @@ def readPrefix (Path actual, template) {
     return prefix
   }
   return fileName
-}
-
-def logChannelContent (aMessage, aChannel) {
-  /*
-   * Paolo Di Tommaso told that it should be solved by the Channel view() method, but frankly that was not working
-   * as expected. This simple function makes two channels from one, and logs the content for one (thus consuming that channel)
-   * and returns with the intact copy for further processing.
-   */
-  resChannel = Channel.create()
-  logChannel = Channel.create()
-  Channel
-    .from aChannel
-    .separate(resChannel,logChannel) {a -> [a, a]}
-  if (params.verbose) {logChannel.subscribe { log.info aMessage + " -- $it" }}
-  return resChannel
 }
 
 def copyChannel (channelToCopy) {
