@@ -678,7 +678,6 @@ if ('MuTect1' in workflowSteps) {
   muTect1Intervals = logChannelContent("Intervals for MuTect1: ", muTect1Intervals)
   bamsFMT1 = bamsForMuTect1.spread(muTect1Intervals)
   bamsFMT1 = logChannelContent("Bams with Intervals for MuTect1: ", bamsFMT1)
-
 } else {
   bamsForMuTect1.close()
   muTect1Intervals.close()
@@ -737,7 +736,7 @@ if ('ascat' in workflowSteps) {
 // and make a line for each interval
 
 process RunMutect1 {
-  publishDir pd + "intervals_" + idPatient
+  publishDir outDir["Mutect1"] + "intervals_" + idPatient
 
   cpus 1 
   queue 'core'
@@ -770,8 +769,6 @@ process RunMutect1 {
   """
 }
 if ('MuTect1' in workflowSteps) {
-  pd = outDir["Mutect1"]
-
   // TODO: this is a duplicate with MuTect2 (maybe other VC as well), should be implemented only at one part
 
   // we are expecting one patient, one normal, and usually one, but occasionally more than one tumor
@@ -803,7 +800,7 @@ if ('MuTect1' in workflowSteps) {
   println "Patient's ID: " + idPatient
   println "Normal ID: " + idNormal
   process concatFiles {
-    publishDir = pd
+    publishDir outDir["Mutect1"]
 
     module 'bioinfo-tools'
     module 'java/sun_jdk1.8.0_40'
@@ -825,8 +822,8 @@ if ('MuTect1' in workflowSteps) {
     """
     #!/bin/bash
 
-    VARIANTS=`ls ${workflow.launchDir}/${pd}/intervals_${idPatient}/*${idT}*.mutect1.vcf| awk '{printf(" -V %s \\\\n",\$1) }'`
-    java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${refs["genomeFile"]}  \$VARIANTS --outputFile MuTect1_${idPatient}_${idNormal}_${idT}.vcf
+    VARIANTS=`ls ${workflow.launchDir}/${outDir["Mutect1"]}/intervals_${idPatient}/*${idT}*.mutect1.vcf| awk '{printf(" -V %s \\\\n",\$1) }'`
+    java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${refs["genomeFile"]} \$VARIANTS --outputFile MuTect1_${idPatient}_${idNormal}_${idT}.vcf
     """
   }
 }
@@ -897,9 +894,8 @@ if ('MuTect2' in workflowSteps) {
   (idPatient, idNormal) = getPatientAndNormalIDs(collatedIDs)
   println "Patient's ID: " + idPatient
   println "Normal ID: " + idNormal
-  pd = outDir["MuTect2"]
   process concatFiles {
-    publishDir = pd
+    publishDir outDir["MuTect2"]
 
     module 'bioinfo-tools'
     module 'java/sun_jdk1.8.0_40'
@@ -921,15 +917,15 @@ if ('MuTect2' in workflowSteps) {
     """
     #!/bin/bash
 
-    VARIANTS=`ls ${workflow.launchDir}/${pd}/intervals/*${idT}*.mutect2.vcf| awk '{printf(" -V %s\\n",\$1) }'`
+    VARIANTS=`ls ${workflow.launchDir}/${outDir["Mutect2"]}/intervals/*${idT}*.mutect2.vcf| awk '{printf(" -V %s\\n",\$1) }'`
     java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out MuTect2_${idPatient}_${idNormal}_${idT}.vcf
     """
   }
 }
 
 process VarDict {
-// we are doing the same trick for VarDictJava: running for the whole reference is a PITA, so we are chopping at repeats
-// (or centromeres) where no useful variant calls are expected
+  // we are doing the same trick for VarDictJava: running for the whole reference is a PITA, so we are chopping at repeats
+  // (or centromeres) where no useful variant calls are expected
   publishDir outDir["VarDict"]
 
   // ~/dev/VarDictJava/build/install/VarDict/bin/VarDict -G /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta -f 0.1 -N "tiny" -b "tiny.tumor__1.recal.bam|tiny.normal__0.recal.bam" -z 1 -F 0x500 -c 1 -S 2 -E 3 -g 4 -R "1:131941-141339"
@@ -1319,7 +1315,7 @@ if ('HaplotypeCaller' in workflowSteps) {
 
     script:
     """
-    VARIANTS=`ls ${workflow.launchDir}/${pd}/*${idN}*.HC.vcf| awk '{printf(" -V %s\\n",\$1) }'`
+    VARIANTS=`ls ${workflow.launchDir}/${outDir["HaplotypeCaller"]}/*${idN}*.HC.vcf| awk '{printf(" -V %s\\n",\$1) }'`
     java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${refs["genomeFile"]}  \$VARIANTS -out HaplotypeCaller_${idPatient}_${idN}.vcf
     """
   }
