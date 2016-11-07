@@ -1380,6 +1380,13 @@ def logChannelContent (aMessage, aChannel) {
   return resChannel
 }
 
+def copyChannel (channelToCopy) {
+  daughterChannel1 = Channel.create()
+  daughterChannel2 = Channel.create()
+  Channel.from channelToCopy.separate(daughterChannel1, daughterChannel2) {a -> [a, a]}
+  return [daughterChannel1, daughterChannel2]
+}
+
 def getPatientAndSample(aCh) {
   aCh = logChannelContent("Channel content: ", aCh)
   patientsCh = Channel.create()
