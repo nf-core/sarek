@@ -602,6 +602,27 @@ recalibratedBams = logChannelContent("Recalibrated Bam for variant Calling: ", r
 
 bamsTumor = Channel.create()
 bamsNormal = Channel.create()
+bamsAll = Channel.create()
+
+bamsForHC = Channel.create()
+hcIntervals = Channel.create()
+bamsFHC = Channel.create()
+
+bamsForMuTect1 = Channel.create()
+bamsFMT1 = Channel.create()
+muTect1Intervals = Channel.create()
+
+bamsForMuTect2 = Channel.create()
+bamsFMT2 = Channel.create()
+muTect2Intervals = Channel.create()
+
+bamsForVarDict = Channel.create()
+varDictIntervals = Channel.create()
+bamsFVD = Channel.create()
+
+bamsForStrelka = Channel.create()
+bamsForManta = Channel.create()
+bamsForAscat = Channel.create()
 
 // separate recalibrate files by filename suffix (which is status): __0 means normal, __1 means tumor recalibrated BAM
 
@@ -610,23 +631,6 @@ recalibratedBams
 
 bamsTumor = logChannelContent("Tumor Bam for variant Calling: ", bamsTumor)
 bamsNormal = logChannelContent("Normal Bam for variant Calling: ", bamsNormal)
-
-bamsAll = Channel.create()
-bamsForHC = Channel.create()
-hcIntervals = Channel.create()
-bamsFHC = Channel.create()
-bamsForMuTect1 = Channel.create()
-bamsFMT1 = Channel.create()
-muTect1Intervals = Channel.create()
-bamsForMuTect2 = Channel.create()
-bamsFMT2 = Channel.create()
-muTect2Intervals = Channel.create()
-bamsForVarDict = Channel.create()
-varDictIntervals = Channel.create()
-bamsFVD = Channel.create()
-bamsForStrelka = Channel.create()
-bamsForManta = Channel.create()
-bamsForAscat = Channel.create()
 
 // We know that MuTect2 (and other somatic callers) are notoriously slow. To speed them up we are chopping the reference into
 // smaller pieces at centromeres (see repeats/centromeres.list), do variant calling by this intervals, and re-merge the VCFs.
@@ -732,43 +736,43 @@ if ('ascat' in workflowSteps) {
 // join [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor] and ["1:1-2000","1_1-2000"]
 // and make a line for each interval
 
+process RunMutect1 {
+  publishDir pd + "intervals_" + idPatient
+
+  cpus 1 
+  queue 'core'
+  memory { params.MuTect1Mem * task.attempt }
+  time { params.runTime * task.attempt }
+
+  input:
+  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT1
+
+  output:
+  set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.vcf") into mutect1VariantCallingOutput
+
+  when: 'MuTect1' in workflowSteps
+
+  script:
+  """
+  #!/bin/bash
+
+  java -Xmx${task.memory.toGiga()}g -jar \${MUTECT_HOME}/muTect.jar \
+  -T MuTect \
+  -R ${refs["genomeFile"]} \
+  --cosmic ${refs["cosmic41"]} \
+  --dbsnp ${refs["dbsnp"]} \
+  -I:normal $bamNormal \
+  -I:tumor $bamTumor \
+  -L \"${genInt}\" \
+  --disable_auto_index_creation_and_locking_when_reading_rods \
+  --out ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.call_stats.out \
+  --vcf ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.vcf
+  """
+}
 if ('MuTect1' in workflowSteps) {
   pd = outDir["Mutect1"]
 
-  process RunMutect1 {
-    publishDir pd + "intervals_" + idPatient
-
-    cpus 1 
-    queue 'core'
-    memory { params.MuTect1Mem * task.attempt }
-    time { params.runTime * task.attempt }
-
-    input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT1
-
-    output:
-    set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.vcf") into mutect1VariantCallingOutput
-
-    when: 'MuTect1' in workflowSteps
-
-    script:
-    """
-    #!/bin/bash
-
-    java -Xmx${task.memory.toGiga()}g -jar \${MUTECT_HOME}/muTect.jar \
-    -T MuTect \
-    -R ${refs["genomeFile"]} \
-    --cosmic ${refs["cosmic41"]} \
-    --dbsnp ${refs["dbsnp"]} \
-    -I:normal $bamNormal \
-    -I:tumor $bamTumor \
-    -L \"${genInt}\" \
-    --disable_auto_index_creation_and_locking_when_reading_rods \
-    --out ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.call_stats.out \
-    --vcf ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.vcf
-    """
-  }
-    // TODO: this is a duplicate with MuTect2 (maybe other VC as well), should be implemented only at one part
+  // TODO: this is a duplicate with MuTect2 (maybe other VC as well), should be implemented only at one part
 
   // we are expecting one patient, one normal, and usually one, but occasionally more than one tumor
   // samples (i.e. relapses). The actual calls are always related to the normal, but spread across
@@ -815,6 +819,8 @@ if ('MuTect1' in workflowSteps) {
     output:
     file "MuTect1*.vcf"
 
+    when: 'MuTect1' in workflowSteps
+
     script:
     """
     #!/bin/bash
@@ -825,42 +831,43 @@ if ('MuTect1' in workflowSteps) {
   }
 }
 
+process RunMutect2 {
+  publishDir outDir["MuTect2"] + "/intervals"
+
+  cpus 1
+  queue 'core'
+  memory { params.singleCPUMem * task.attempt }
+  time { params.runTime * task.attempt }
+
+  input:
+  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
+
+  output:
+  set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf") into mutect2VariantCallingOutput
+
+  // we are using MuTect2 shipped in GATK v3.6
+  // TODO: the  "-U ALLOW_SEQ_DICT_INCOMPATIBILITY " flag is actually masking a bug in older Picard versions. Using the latest Picard tool
+  // this bug should go away and we should _not_ use this flag
+  // removed: -nct ${task.cpus} \
+  when: 'MuTect2' in workflowSteps
+
+  script:
+  """
+  #!/bin/bash
+  java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+  -T MuTect2 \
+  -R ${refs["genomeFile"]} \
+  --cosmic ${refs["cosmic41"]} \
+  --dbsnp ${refs["dbsnp"]} \
+  -I:normal $bamNormal \
+  -I:tumor $bamTumor \
+  -U ALLOW_SEQ_DICT_INCOMPATIBILITY \
+  -L \"${genInt}\" \
+  -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf
+  """
+}
+
 if ('MuTect2' in workflowSteps) {
-  process RunMutect2 {
-    publishDir outDir["MuTect2"] + "/intervals"
-
-    cpus 1
-    queue 'core'
-    memory { params.singleCPUMem * task.attempt }
-    time { params.runTime * task.attempt }
-
-    input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
-
-    output:
-    set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf") into mutect2VariantCallingOutput
-
-    // we are using MuTect2 shipped in GATK v3.6
-    // TODO: the  "-U ALLOW_SEQ_DICT_INCOMPATIBILITY " flag is actually masking a bug in older Picard versions. Using the latest Picard tool
-    // this bug should go away and we should _not_ use this flag
-    // removed: -nct ${task.cpus} \
-    when: 'MuTect2' in workflowSteps
-
-    script:
-    """
-    #!/bin/bash
-    java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
-    -T MuTect2 \
-    -R ${refs["genomeFile"]} \
-    --cosmic ${refs["cosmic41"]} \
-    --dbsnp ${refs["dbsnp"]} \
-    -I:normal $bamNormal \
-    -I:tumor $bamTumor \
-    -U ALLOW_SEQ_DICT_INCOMPATIBILITY \
-    -L \"${genInt}\" \
-    -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf
-    """
-  }
 
   // we are expecting one patient, one normal, and usually one, but occasionally more than one tumor
   // samples (i.e. relapses). The actual calls are always related to the normal, but spread across
@@ -920,41 +927,41 @@ if ('MuTect2' in workflowSteps) {
   }
 }
 
+process VarDict {
+// we are doing the same trick for VarDictJava: running for the whole reference is a PITA, so we are chopping at repeats
+// (or centromeres) where no useful variant calls are expected
+  publishDir outDir["VarDict"]
+
+  // ~/dev/VarDictJava/build/install/VarDict/bin/VarDict -G /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta -f 0.1 -N "tiny" -b "tiny.tumor__1.recal.bam|tiny.normal__0.recal.bam" -z 1 -F 0x500 -c 1 -S 2 -E 3 -g 4 -R "1:131941-141339"
+  // we need further filters, but some of the outputs are empty files, confusing the VCF generator script
+
+  cpus 1
+  queue 'core'
+  memory { params.singleCPUMem * task.attempt }
+  time { params.runTime * task.attempt }
+
+  input:
+  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFVD
+
+  output:
+  set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into varDictVariantCallingOutput
+
+  when: 'VarDict' in workflowSteps
+
+  script:
+  """
+  #!/bin/bash
+
+  ${params.vardictHome}/vardict.pl -G ${refs["genomeFile"]} \
+  -f 0.01 -N $bamTumor \
+  -b "$bamTumor|$bamNormal" \
+  -z 1 -F 0x500 \
+  -c 1 -S 2 -E 3 -g 4 \
+  -R ${genInt} > ${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out
+  """
+}
+
 if ('VarDict' in workflowSteps) {
-  // we are doing the same trick for VarDictJava: running for the whole reference is a PITA, so we are chopping at repeats
-  // (or centromeres) where no useful variant calls are expected
-
-  process VarDict {
-    publishDir outDir["VarDict"]
-
-    // ~/dev/VarDictJava/build/install/VarDict/bin/VarDict -G /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta -f 0.1 -N "tiny" -b "tiny.tumor__1.recal.bam|tiny.normal__0.recal.bam" -z 1 -F 0x500 -c 1 -S 2 -E 3 -g 4 -R "1:131941-141339"
-    // we need further filters, but some of the outputs are empty files, confusing the VCF generator script
-
-    cpus 1
-    queue 'core'
-    memory { params.singleCPUMem * task.attempt }
-    time { params.runTime * task.attempt }
-
-    input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFVD
-
-    output:
-    set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into varDictVariantCallingOutput
-
-    when: 'VarDict' in workflowSteps
-
-    script:
-    """
-    #!/bin/bash
-
-    ${params.vardictHome}/vardict.pl -G ${refs["genomeFile"]} \
-    -f 0.01 -N $bamTumor \
-    -b "$bamTumor|$bamNormal" \
-    -z 1 -F 0x500 \
-    -c 1 -S 2 -E 3 -g 4 \
-    -R ${genInt} > ${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out
-    """
-  }
 
   // now we want to collate all the pieces of the VarDict outputs and concatenate the output files
   // so we can feed them into the somatic filter and the VCF converter
@@ -1037,15 +1044,15 @@ if ('Strelka' in workflowSteps) {
 }
 
 process Manta {
-  publishDir "VariantCalling/Manta"
+  publishDir outDir["Manta"]
 
   input:
-      file refs["MantaRef"]
-      file refs["MantaIndex"]
-      set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
+    file refs["MantaRef"]
+    file refs["MantaIndex"]
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
 
   output:
-     set idPatient, val("${idSampleNormal}_${idSampleTumor}"),file("${idSampleNormal}_${idSampleTumor}.somaticSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.diploidSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf")  into mantaVariantCallingOutput
+   set idPatient, val("${idSampleNormal}_${idSampleTumor}"),file("${idSampleNormal}_${idSampleTumor}.somaticSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.diploidSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf")  into mantaVariantCallingOutput
 
   when: 'Manta' in workflowSteps
 
@@ -1074,62 +1081,57 @@ if ('Manta' in workflowSteps) {
   mantaVariantCallingOutput = logChannelContent("Manta output: ", mantaVariantCallingOutput)
 }
 
-if ('ascat' in workflowSteps) {
-//  #!/usr/bin/env nextflow
-// This module runs ascat preprocessing and run
-// Commands and code from Malin Larsson
-// Module based on Jesper Eisfeldt's code
-
-
-/* Workflow:
-    First: run alleleCount on both normal and tumor (each its own process
-    Second: Run R script to process allele counts into logR and BAF values
-    Third: run ascat
-*/
-
-
-
-// 1)
-// module load bioinfo-tools
-// module load alleleCount
-// alleleCounter -l /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/1000G_phase3_20130502_SNP_maf0.3.loci -r /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta -b sample.bam -o sample.allecount
-
-
 process alleleCount{
+  //  #!/usr/bin/env nextflow
+  // This module runs ascat preprocessing and run
+  // Commands and code from Malin Larsson
+  // Module based on Jesper Eisfeldt's code
 
-    cpus 1
-    queue 'core'
-    memory { params.singleCPUMem * task.attempt }
+  /* Workflow:
+      First: run alleleCount on both normal and tumor (each its own process
+      Second: Run R script to process allele counts into logR and BAF values
+      Third: run ascat
+  */
 
-    input:
-    file refs["genomeFile"]
-    file refs["genomeIndex"]
-    file refs["acLoci"]
-//    file normal_bam
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForAscat
+  // 1)
+  // module load bioinfo-tools
+  // module load alleleCount
+  // alleleCounter -l /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/1000G_phase3_20130502_SNP_maf0.3.loci -r /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta -b sample.bam -o sample.allecount
 
-    output:
-    set idPatient, idSampleNormal, idSampleTumor, file("${idSampleNormal}.alleleCount"), file("${idSampleTumor}.alleleCount") into allele_count_output
+  cpus 1
+  queue 'core'
+  memory { params.singleCPUMem * task.attempt }
 
-    """
-    alleleCounter -l ${refs["acLoci"]} -r ${refs["genomeFile"]} -b ${bamNormal} -o ${idSampleNormal}.alleleCount;
-    alleleCounter -l ${refs["acLoci"]} -r ${refs["genomeFile"]} -b ${bamTumor} -o ${idSampleTumor}.alleleCount;
-    """
+  input:
+  file refs["genomeFile"]
+  file refs["genomeIndex"]
+  file refs["acLoci"]
+  // file normal_bam
+  set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForAscat
 
+  output:
+  set idPatient, idSampleNormal, idSampleTumor, file("${idSampleNormal}.alleleCount"), file("${idSampleTumor}.alleleCount") into allele_count_output
+
+  when: 'ascat' in workflowSteps
+
+  script:
+  """
+  #!/bin/bash
+
+  alleleCounter -l ${refs["acLoci"]} -r ${refs["genomeFile"]} -b ${bamNormal} -o ${idSampleNormal}.alleleCount;
+  alleleCounter -l ${refs["acLoci"]} -r ${refs["genomeFile"]} -b ${bamTumor} -o ${idSampleTumor}.alleleCount;
+  """
 } // end process alleleCount
 
-
-// ascat step 2/3
-// converte allele counts
-// R script from Malin Larssons bitbucket repo:
-// https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
-//
-// copyright?
-
-// prototype: "Rscript convertAlleleCounts.r tumorid tumorac normalid normalac gender"
-
-
 process convertAlleleCounts {
+  // ascat step 2/3
+  // converte allele counts
+  // R script from Malin Larssons bitbucket repo:
+  // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
+  //
+  // copyright?
+
+  // prototype: "Rscript convertAlleleCounts.r tumorid tumorac normalid normalac gender"
 
   cpus 1
   queue 'core'
@@ -1140,105 +1142,99 @@ process convertAlleleCounts {
   //file ${refs["scriptDir"]}/convertAlleleCounts.r
 
   output:
-
   set idPatient, idSampleNormal, idSampleTumor, file("${idSampleNormal}.BAF"), file("${idSampleNormal}.LogR"), file("${idSampleTumor}.BAF"), file("${idSampleTumor}.LogR") into convert_ac_output
 
+  when: 'ascat' in workflowSteps
 
+  script:
   """
+  #!/bin/bash
+
   convertAlleleCounts.r ${idSampleTumor} ${tumorAlleleCt} ${idSampleNormal} ${normalAlleleCt} ${refs["gender"]}
   """
 
 
 } // end process convertAlleleCounts
 
-
-
-// ascat step 3/3
-// run ascat
-// R scripts from Malin Larssons bitbucket repo:
-// https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
-//
-// copyright?
-//
-// prototype: "Rscript run_ascat.r tumor_baf tumor_logr normal_baf normal_logr"
-
 process runASCAT {
+  // ascat step 3/3
+  // run ascat
+  // R scripts from Malin Larssons bitbucket repo:
+  // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
+  //
+  // copyright?
+  //
+  // prototype: "Rscript run_ascat.r tumor_baf tumor_logr normal_baf normal_logr"
 
   cpus 1
   queue 'core'
   memory { params.singleCPUMem * task.attempt }
 
   input:
-
   set idPatient, idSampleNormal, idSampleTumor, file(normalBAF), file(normalLogR), file(tumorBAF), file(tumorLogR) from convert_ac_output
 
   output:
   file "ascat.done"
 
+  when: 'ascat' in workflowSteps
 
+  script:
   """
   #!/bin/env Rscript
 
   #######################################################################################################
-# Description:
-# R-script for converting output from AlleleCount to BAF and LogR values.
-#
-# Input:
-# AlleleCounter output file for tumor and normal samples
-# The first line should contain a header describing the data
-# The following columns and headers should be present:
-# CHR    POS     Count_A Count_C Count_G Count_T Good_depth
-#
-# Output:
-# BAF and LogR tables (tab delimited text files)
-#######################################################################################################
+  # Description:
+  # R-script for converting output from AlleleCount to BAF and LogR values.
+  #
+  # Input:
+  # AlleleCounter output file for tumor and normal samples
+  # The first line should contain a header describing the data
+  # The following columns and headers should be present:
+  # CHR    POS     Count_A Count_C Count_G Count_T Good_depth
+  #
+  # Output:
+  # BAF and LogR tables (tab delimited text files)
+  #######################################################################################################
 
-source("$baseDir/scripts/ascat.R")
+  source("$baseDir/scripts/ascat.R")
 
-tumorbaf = "${tumorBAF}"
-tumorlogr = "${tumorLogR}"
-normalbaf = "${normalBAF}"
-normallogr = "${normalLogR}"
+  tumorbaf = "${tumorBAF}"
+  tumorlogr = "${tumorLogR}"
+  normalbaf = "${normalBAF}"
+  normallogr = "${normalLogR}"
 
-#Load the  data
-ascat.bc <- ascat.loadData(Tumor_LogR_file=tumorlogr, Tumor_BAF_file=tumorbaf, Germline_LogR_file=normallogr, Germline_BAF_file=normalbaf)
+  #Load the  data
+  ascat.bc <- ascat.loadData(Tumor_LogR_file=tumorlogr, Tumor_BAF_file=tumorbaf, Germline_LogR_file=normallogr, Germline_BAF_file=normalbaf)
 
-#Plot the raw data
-ascat.plotRawData(ascat.bc)
+  #Plot the raw data
+  ascat.plotRawData(ascat.bc)
 
-#Segment the data
-ascat.bc <- ascat.aspcf(ascat.bc)
+  #Segment the data
+  ascat.bc <- ascat.aspcf(ascat.bc)
 
-#Plot the segmented data
-ascat.plotSegmentedData(ascat.bc)
+  #Plot the segmented data
+  ascat.plotSegmentedData(ascat.bc)
 
-#Run ASCAT to fit every tumor to a model, inferring ploidy, normal cell contamination, and discrete copy numbers
-ascat.output <- ascat.runAscat(ascat.bc)
-str(ascat.output)
-plot(sort(ascat.output\$aberrantcellfraction))
-plot(density(ascat.output\$ploidy))
-
-
+  #Run ASCAT to fit every tumor to a model, inferring ploidy, normal cell contamination, and discrete copy numbers
+  ascat.output <- ascat.runAscat(ascat.bc)
+  str(ascat.output)
+  plot(sort(ascat.output\$aberrantcellfraction))
+  plot(density(ascat.output\$ploidy))
 
   """
-// the following works when ascat.R is in the run_ascat.r file and the run_ascat.r file is in bin/
-//  run_ascat.r ${tumorBAF} ${tumorLogR} ${normalBAF} ${normalLogR}
-//  touch ascat.done
-
+  // the following works when ascat.R is in the run_ascat.r file and the run_ascat.r file is in bin/
+  //  run_ascat.r ${tumorBAF} ${tumorLogR} ${normalBAF} ${normalLogR}
+  //  touch ascat.done
 
 } // end process runASCAT
 
 /*
-
-add process for convert allele counts
-add process for runASCAT.r
-
+ * add process for convert allele counts
+ * add process for runASCAT.r
 */
 
-}
-
-//HaplotypeCaller
 process RunHaplotypeCaller {
+  //HaplotypeCaller
   publishDir outDir["HaplotypeCaller"]
 
   cpus 1
@@ -1271,6 +1267,7 @@ process RunHaplotypeCaller {
   """
 
 }
+
 if ('HaplotypeCaller' in workflowSteps) {
   haplotypeCallerVariantCallingOutput = logChannelContent("HaplotypeCaller output: ", haplotypeCallerVariantCallingOutput)
 
@@ -1334,19 +1331,19 @@ if ('HaplotypeCaller' in workflowSteps) {
 ========================================================================================
 */
 
-/*
- * Helper function, given a file Path
- * returns the file name region matching a specified glob pattern
- * starting from the beginning of the name up to last matching group.
- *
- * For example:
- *   readPrefix('/some/data/file_alpha_1.fa', 'file*_1.fa' )
- *
- * Returns:
- *   'file_alpha'
- */
-
 def readPrefix (Path actual, template) {
+  /*
+   * Helper function, given a file Path
+   * returns the file name region matching a specified glob pattern
+   * starting from the beginning of the name up to last matching group.
+   *
+   * For example:
+   *   readPrefix('/some/data/file_alpha_1.fa', 'file*_1.fa' )
+   *
+   * Returns:
+   *   'file_alpha'
+   */
+
   final fileName = actual.getFileName().toString()
   def filePattern = template.toString()
   int p = filePattern.lastIndexOf('/')
@@ -1372,13 +1369,12 @@ def readPrefix (Path actual, template) {
   return fileName
 }
 
-/*
- * Paolo Di Tommaso told that it should be solved by the Channel view() method, but frankly that was not working
- * as expected. This simple function makes two channels from one, and logs the content for one (thus consuming that channel)
- * and returns with the intact copy for further processing.
- */
-
 def logChannelContent (aMessage, aChannel) {
+  /*
+   * Paolo Di Tommaso told that it should be solved by the Channel view() method, but frankly that was not working
+   * as expected. This simple function makes two channels from one, and logs the content for one (thus consuming that channel)
+   * and returns with the intact copy for further processing.
+   */
   resChannel = Channel.create()
   logChannel = Channel.create()
   Channel
@@ -1389,7 +1385,6 @@ def logChannelContent (aMessage, aChannel) {
 }
 
 def getPatientAndSample(aCh) {
-
   aCh = logChannelContent("Channel content: ", aCh)
   patientsCh = Channel.create()
   normalCh = Channel.create()
@@ -1416,8 +1411,8 @@ def getPatientAndSample(aCh) {
   return [ originalCh, idPatient, idNormal, idTumor]
 }
 
-// TODO: merge the VarDict and the MuTect2 part
 def getPatientAndNormalIDs(aCh) {
+  // TODO: merge the VarDict and the MuTect2 part
   patientsCh = Channel.create()
   normalCh = Channel.create()
 
@@ -1507,24 +1502,23 @@ def grab_git_revision() {
   if ( workflow.commitId ) { // it's run directly from github
     return workflow.commitId.substring(0,10)
   }
-
   // Try to find the revision directly from git
   head_pointer_file = file("${baseDir}/.git/HEAD")
   if ( ! head_pointer_file.exists() ) {
     return ''
   }
   ref = head_pointer_file.newReader().readLine().tokenize()[1]
-
   ref_file = file("${baseDir}/.git/$ref")
   if ( ! ref_file.exists() ) {
     return ''
   }
   revision = ref_file.newReader().readLine()
-
   return revision.substring(0,10)
 }
 
-// Verify parameters and files existence
+/*
+ * Verify parameters and files existence:
+ */
 
 def checkRefExistence(referenceFile, fileToCheck) {
   try { assert file(fileToCheck).exists() }
