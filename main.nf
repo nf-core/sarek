@@ -769,6 +769,7 @@ process RunMutect1 {
   --vcf ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.vcf
   """
 }
+
 if ('MuTect1' in workflowSteps) {
   // TODO: this is a duplicate with MuTect2 (maybe other VC as well), should be implemented only at one part
 
@@ -1336,7 +1337,7 @@ def copyChannel (channelToCopy) {
 }
 
 def getPatientAndSample(aCh) {
-  aCh = logChannelContent("Channel content: ", aCh)
+  aCh = aCh.view { it -> "Channel content: $it" }
   patientsCh = Channel.create()
   normalCh = Channel.create()
   tumorCh = Channel.create()
