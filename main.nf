@@ -1328,44 +1328,6 @@ if ('HaplotypeCaller' in workflowSteps) {
 ========================================================================================
 */
 
-def readPrefix (Path actual, template) {
-  /*
-   * Helper function, given a file Path
-   * returns the file name region matching a specified glob pattern
-   * starting from the beginning of the name up to last matching group.
-   *
-   * For example:
-   *   readPrefix('/some/data/file_alpha_1.fa', 'file*_1.fa' )
-   *
-   * Returns:
-   *   'file_alpha'
-   */
-
-  final fileName = actual.getFileName().toString()
-  def filePattern = template.toString()
-  int p = filePattern.lastIndexOf('/')
-  if( p != -1 ) filePattern = filePattern.substring( p + 1 )
-  if( !filePattern.contains('*') && !filePattern.contains('?') )
-  filePattern = '*' + filePattern
-  def regex = filePattern
-    .replace('.', '\\.')
-    .replace('*', '(.*)')
-    .replace('?', '(.?)')
-    .replace('{', '(?:')
-    .replace('}', ')')
-    .replace(',', '|')
-
-  def matcher = (fileName =~ /$regex/)
-  if ( matcher.matches() ) {
-    def end = matcher.end( matcher.groupCount() )
-    def prefix = fileName.substring(0,end)
-    while ( prefix.endsWith('-') || prefix.endsWith('_') || prefix.endsWith('.') )
-      prefix = prefix[0..-2]
-    return prefix
-  }
-  return fileName
-}
-
 def copyChannel (channelToCopy) {
   daughterChannel1 = Channel.create()
   daughterChannel2 = Channel.create()
