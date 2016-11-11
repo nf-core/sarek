@@ -783,7 +783,7 @@ process RunMutect1 {
   """
   #!/bin/bash
 
-  java -Xmx${task.memory.toGiga()}g -jar \${mutect1Home}/muTect.jar \
+  java -Xmx${task.memory.toGiga()}g -jar ${params.mutect1Home}/muTect.jar \
   -T MuTect \
   -R ${refs["genomeFile"]} \
   --cosmic ${refs["cosmic41"]} \
