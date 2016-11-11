@@ -733,7 +733,7 @@ process RunHaplotypecaller {
   file refs["genomeIndex"]
 
   output:
-  set idPatient, idSampleNormal, val("${gen_int}_${idSampleNormal}"), file("${gen_int}_${idSampleNormal}.HC.vcf") into haplotypeCallerVariantCallingOutput
+  set idPatient, idSampleNormal, val("${gen_int}_${idSampleNormal}"), file("${gen_int}_${idSampleNormal}.vcf") into haplotypeCallerVariantCallingOutput
 
   when: 'HaplotypeCaller' in workflowSteps
 
@@ -748,7 +748,7 @@ process RunHaplotypecaller {
   --dbsnp ${refs["dbsnp"]} \
   -I $bamNormal \
   -L \"${genInt}\" \
-  -o ${gen_int}_${idSampleNormal}.HC.vcf
+  -o ${gen_int}_${idSampleNormal}.vcf
   """
 }
 
@@ -775,7 +775,7 @@ process RunMutect1 {
   set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT1
 
   output:
-  set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.vcf") into mutect1VariantCallingOutput
+  set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf") into mutect1VariantCallingOutput
 
   when: 'MuTect1' in workflowSteps
 
@@ -792,8 +792,8 @@ process RunMutect1 {
   -I:tumor $bamTumor \
   -L \"${genInt}\" \
   --disable_auto_index_creation_and_locking_when_reading_rods \
-  --out ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.call_stats.out \
-  --vcf ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect1.vcf
+  --out ${gen_int}_${idSampleNormal}_${idSampleTumor}.call_stats.out \
+  --vcf ${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf
   """
 }
 
@@ -820,7 +820,7 @@ process RunMutect2 {
   set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
 
   output:
-  set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf") into mutect2VariantCallingOutput
+  set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf") into mutect2VariantCallingOutput
 
   // we are using MuTect2 shipped in GATK v3.6
   // TODO: the  "-U ALLOW_SEQ_DICT_INCOMPATIBILITY " flag is actually masking a bug in older Picard versions. Using the latest Picard tool
@@ -842,7 +842,7 @@ process RunMutect2 {
   -I:tumor $bamTumor \
   -U ALLOW_SEQ_DICT_INCOMPATIBILITY \
   -L \"${genInt}\" \
-  -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.mutect2.vcf
+  -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf
   """
 }
 
@@ -873,7 +873,7 @@ process RunVardict {
   set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFVD
 
   output:
-  set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out") into vardictVariantCallingOutput
+  set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.out") into vardictVariantCallingOutput
 
   when: 'VarDict' in workflowSteps
 
@@ -886,7 +886,7 @@ process RunVardict {
   -b "$bamTumor|$bamNormal" \
   -z 1 -F 0x500 \
   -c 1 -S 2 -E 3 -g 4 \
-  -R ${genInt} > ${gen_int}_${idSampleNormal}_${idSampleTumor}.VarDict.out
+  -R ${genInt} > ${gen_int}_${idSampleNormal}_${idSampleTumor}.out
   """
 }
 
