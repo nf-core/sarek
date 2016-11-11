@@ -934,10 +934,10 @@ process ConcatVCF {
 
     for i in $vcFiles ;do
       temp=\$(echo \$i | tr -d '[],')
-      cat \$temp | ${params.vardictHome}/testsomatic.R >> testsomatic.out
+      cat \$temp | ${params.vardictHome}/VarDict/testsomatic.R >> testsomatic.out
     done
 
-    ${params.vardictHome}/var2vcf_somatic.pl -f 0.01 -N "${idPatient}_${idSampleNormal}_${idSampleTumor}" testsomatic.out > outputFile
+    ${params.vardictHome}/VarDict/var2vcf_somatic.pl -f 0.01 -N "${idPatient}_${idSampleNormal}_${idSampleTumor}" testsomatic.out > outputFile
     """
 
   else
