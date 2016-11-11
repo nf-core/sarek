@@ -914,7 +914,7 @@ process ConcatVCF {
   publishDir "${outDir["VariantCalling"]}/$variantCaller", mode: 'copy'
 
   input:
-  set variantCaller, idPatient, idSampleNormal, idSampleTumor, outputFiles from vcfsToMerge
+  set variantCaller, idPatient, idSampleNormal, idSampleTumor, vcFiles from vcfsToMerge
 
   output:
   file "*.vcf" into vcfConcatenated
@@ -922,36 +922,33 @@ process ConcatVCF {
   when: 'HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2' in workflowSteps || 'VarDict' in workflowSteps
 
   script:
-  vcfFiles = outputFiles.join(' -V ')
-  output = "${variantCaller}_${idPatient}_${idSampleNormal}_${idSampleTumor}.vcf"
-  if( variantCaller == 'HaplotypeCaller' )
+  vcfFiles = vcFiles.join(' -V ')
+  if (variantCaller == 'HaplotypeCaller')
+    outputFile = "${variantCaller}_${idPatient}_${idSampleNormal}.vcf"
+  else 
+    outputFile = "${variantCaller}_${idPatient}_${idSampleNormal}_${idSampleTumor}.vcf"
+
+  if (variantCaller == 'VarDict')
     """
     #!/bin/bash
 
-    java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${refs["genomeFile"]}  -V $vcfFiles --outputFile ${variantCaller}_${idPatient}_${idSampleNormal}.vcf
-    """
-
-  else if( variantCaller == 'VarDict' )
-    """
-    #!/bin/bash
-
-    for i in $outputFiles ;do
+    for i in $vcFiles ;do
       temp=\$(echo \$i | tr -d '[],')
       cat \$temp | ${params.vardictHome}/testsomatic.R >> testsomatic.out
     done
 
-    ${params.vardictHome}/var2vcf_somatic.pl -f 0.01 -N "${idPatient}_${idSampleNormal}_${idSampleTumor}" testsomatic.out > output
+    ${params.vardictHome}/var2vcf_somatic.pl -f 0.01 -N "${idPatient}_${idSampleNormal}_${idSampleTumor}" testsomatic.out > outputFile
     """
 
   else
     """
     #!/bin/bash
 
-    java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${refs["genomeFile"]}  -V $vcfFiles --outputFile $output
+    java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${refs["genomeFile"]}  -V $vcfFiles --outputFile $outputFile
     """
 }
 
-if ('MuTect1' in workflowSteps || 'MuTect2' in workflowSteps || 'HaplotypeCaller' in workflowSteps || 'VarDict' in workflowSteps) {
+if ('HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2' in workflowSteps || 'VarDict' in workflowSteps) {
   if (verbose) {  vcfConcatenated = vcfConcatenated.view { it -> "vcfConcatenated: $it" } }
 }
 
