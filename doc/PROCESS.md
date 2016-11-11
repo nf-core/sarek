@@ -2,26 +2,23 @@
 Several processes are run within the workflow. We divide them for the moment into 2 main steps:
 
 ## Preprocessing:
-- Mapping - Map reads with BWA
-- MergeBam - Merge BAMs if multilane samples
-- RenameSingleBam - Rename BAM if non-multilane sample
-- MarkDuplicates - using Picard
-- CreateIntervals - using GATK
-- Realign - using GATK
-- CreateRecalibrationTable - using GATK
-- RecalibrateBam - using GATK
+ - MapReads - Map reads
+ - MergeBams - Merge BAMs if multilane samples
+-- RenameSingleBam - Rename BAM if non-multilane sample
+ - MarkDuplicates - Mark Duplicates
+ - CreateIntervals - Create Intervals
+ - RealignBams - Realign Bams as T/N pair
+ - CreateRecalibrationTable - Create Recalibration Table
+ - RecalibrateBam - Recalibreate Bam
 
 ## Variant Calling:
-- RunMutect1 - run MuTect1 on multiple intervals
-- concatFiles - merge MuTect1 results
-- RunMutect2 - run MuTect1 on multiple intervals
-- concatFiles - merge MuTect2 results
-- VarDict - run VarDict on multiple intervals
-- VarDictCollatedVCF - merge Vardict results
-- RunStrelka - run Strelka
-- Manta - run Manta
-- alleleCount - preprocess runASCAT
-- convertAlleleCounts - preprocess runASCAT
-- runASCAT - run Ascat
-- RunHaplotypeCaller - run VarDict on multiple intervals
-- concatFiles - merge HaplotypeCaller results
+ - RunHaplotypecaller - Run HaplotypeCaller for GermLine Variant Calling (Parrallelized processes)
+ - RunMutect1 - Run MuTect1 for Variant Calling (Parrallelized processes)
+ - RunMutect2 - Run MuTect2 for Variant Calling (Parrallelized processes)
+ - RunVardict - Run VarDict for Variant Calling (Parrallelized processes)
+ - ConcatVCF - Merge results from HaplotypeCaller, MuTect1, MuTect2 and VarDict parrallelized processes
+ - RunStrelka - Run Strelka for Variant Calling
+ - RunManta - Run Manta for Structural Variant Calling
+ - alleleCount - Run Ascat for CNV
+ - convertAlleleCounts - Run Ascat for CNV
+ - runASCAT - Run Ascat for CNV
