@@ -768,7 +768,7 @@ process RunMutect1 {
 
   cpus 1 
   queue 'core'
-  memory { params.MuTect1Mem * task.attempt }
+  memory { params.mutect1Mem * task.attempt }
   time { params.runTime * task.attempt }
 
   input:
