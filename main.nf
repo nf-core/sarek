@@ -54,11 +54,11 @@ vim: syntax=groovy
 */
 
 revision = grab_git_revision() ?: ''
-version  = "v0.8.5"
+version  = "v0.9"
 refsDefined = true
 stepCorrect = true
-workflowSteps = []
 verbose = false
+workflowSteps = []
 
 if( workflow.profile == 'standard' && !params.project ) exit 1, "No UPPMAX project ID found! Use --project" 
 
@@ -199,11 +199,11 @@ process MapReads {
   time { params.runTime * task.attempt }
 
   input:
-  file refs["genomeFile"]
-  set idPatient, idSample, idRun, file(fq1), file(fq2) from fastqFiles
+    file refs["genomeFile"]
+    set idPatient, idSample, idRun, file(fq1), file(fq2) from fastqFiles
 
   output:
-  set idPatient, idSample, idRun, file("${idRun}.bam") into bams
+    set idPatient, idSample, idRun, file("${idRun}.bam") into bams
 
   when: 'preprocessing' in workflowSteps
 
@@ -234,8 +234,11 @@ if ('preprocessing' in workflowSteps) {
 
   bams.groupTuple(by:[1])
     .choice(singleBam, groupedBam) { it[3].size() > 1 ? 1 : 0 }
+  singleBam = singleBam.map {
+    idPatient, idSample, idRun, bam ->
+    [idPatient, idSample, bam]
+  }
   if (verbose) {
-    singleBam  = singleBam.view  { it -> "Single BAMs before merge: $it" }
     groupedBam = groupedBam.view { it -> "Grouped BAMs before merge: $it" }
   }
 } else {
@@ -269,29 +272,6 @@ process MergeBams {
   """
 }
 
-process RenameSingleBam {
-  // Renaming is totally useless, just to keep file names consistent
-  tag { idSample }
-
-  cpus 1
-  queue 'core'
-
-  input:
-  set idPatient, idSample, idRun, file(bam) from singleBam
-
-  output:
-  set idPatient, idSample, file("${idSample}.bam") into singleRenamedBam
-
-  when: 'preprocessing' in workflowSteps
-
-  script:
-  """
-  #!/bin/bash
-
-  mv ${bam} ${idSample}.bam
-  """
-}
-
 bamList = Channel.create()
 
 if ('preprocessing' in workflowSteps) {
@@ -300,11 +280,11 @@ if ('preprocessing' in workflowSteps) {
    */
 
   if (verbose) {
-    singleRenamedBam = singleRenamedBam.view { it -> "Single BAM: $it" }
+    singleBam = singleBam.view { it -> "Single BAM: $it" }
     mergedBam = mergedBam.view { it -> "Merged BAM: $it" }
   }
 
-  bamList = mergedBam.mix(singleRenamedBam)
+  bamList = mergedBam.mix(singleBam)
   bamList = bamList.map { idPatient, idSample, bam -> [idPatient[0], idSample, bam].flatten() }
   if (verbose) { bamList = bamList.view { it -> "BAM list for MarkDuplicates: $it" } }
 } else if ('realign' in workflowSteps) {
@@ -733,7 +713,7 @@ process RunHaplotypecaller {
   file refs["genomeIndex"]
 
   output:
-  set idPatient, idSampleNormal, val("${gen_int}_${idSampleNormal}"), file("${gen_int}_${idSampleNormal}.vcf") into haplotypeCallerVariantCallingOutput
+  set val("HaplotypeCaller"), idPatient, idSampleNormal, val("${gen_int}_${idSampleNormal}"), file("${gen_int}_${idSampleNormal}.vcf") into haplotypeCallerVariantCallingOutput
 
   when: 'HaplotypeCaller' in workflowSteps
 
@@ -754,12 +734,10 @@ process RunHaplotypecaller {
 
 if ('HaplotypeCaller' in workflowSteps) {
   if (verbose) { haplotypeCallerVariantCallingOutput = haplotypeCallerVariantCallingOutput.view { it -> "HaplotypeCaller output: $it" } }
-  haplotypeCallerVariantCallingOutput = haplotypeCallerVariantCallingOutput.map {
-    idPatient, idSampleNormal, tag, vcfFile ->
-    [idPatient, idSampleNormal, idSampleNormal, vcfFile]
-  }
-  hcVCF = Channel.from('HaplotypeCaller').spread(haplotypeCallerVariantCallingOutput)
-  hcVCF = hcVCF.groupTuple(by:[0,1,2,3])
+  hcVCF = haplotypeCallerVariantCallingOutput.map {
+    variantCaller, idPatient, idSampleNormal, tag, vcfFile ->
+    [variantCaller, idPatient, idSampleNormal, idSampleNormal, vcfFile]
+  }.groupTuple(by:[0,1,2,3])
   if (verbose) { hcVCF = hcVCF.view { it -> "hcVCF: $it" } }
 }
 
@@ -775,7 +753,7 @@ process RunMutect1 {
   set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT1
 
   output:
-  set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf") into mutect1VariantCallingOutput
+  set val("MuTect1"), idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf") into mutect1VariantCallingOutput
 
   when: 'MuTect1' in workflowSteps
 
@@ -799,12 +777,10 @@ process RunMutect1 {
 
 if ('MuTect1' in workflowSteps) {
   if (verbose) { mutect1VariantCallingOutput = mutect1VariantCallingOutput.view { it -> "MuTect1 output: $it" } }
-  mutect1VariantCallingOutput = mutect1VariantCallingOutput.map {
-    idPatient, idSampleNormal, idSampleTumor, tag, vcfFile ->
-    [idPatient, idSampleNormal, idSampleTumor, vcfFile]
-  }
-  mutect1VCF = Channel.from('MuTect1').spread(mutect1VariantCallingOutput)
-  mutect1VCF = mutect1VCF.groupTuple(by:[0,1,2,3])
+  mutect1VCF = mutect1VariantCallingOutput.map {
+    variantCaller, idPatient, idSampleNormal, idSampleTumor, tag, vcfFile ->
+    [variantCaller, idPatient, idSampleNormal, idSampleTumor, vcfFile]
+  }.groupTuple(by:[0,1,2,3])
   if (verbose) { mutect1VCF = mutect1VCF.view { it -> "mutect1VCF: $it" } }
 }
 
@@ -820,7 +796,7 @@ process RunMutect2 {
   set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
 
   output:
-  set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf") into mutect2VariantCallingOutput
+  set val("MuTect2"), idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf") into mutect2VariantCallingOutput
 
   // we are using MuTect2 shipped in GATK v3.6
   // TODO: the  "-U ALLOW_SEQ_DICT_INCOMPATIBILITY " flag is actually masking a bug in older Picard versions. Using the latest Picard tool
@@ -848,12 +824,10 @@ process RunMutect2 {
 
 if ('MuTect2' in workflowSteps) {
   if (verbose) { mutect2VariantCallingOutput = mutect2VariantCallingOutput.view { it -> "MuTect2 output: $it" } }
-  mutect2VariantCallingOutput = mutect2VariantCallingOutput.map {
-    idPatient, idSampleNormal, idSampleTumor, tag, vcfFile ->
-    [idPatient, idSampleNormal, idSampleTumor, vcfFile]
-  }
-  mutect2VCF = Channel.from('MuTect2').spread(mutect2VariantCallingOutput)
-  mutect2VCF = mutect2VCF.groupTuple(by:[0,1,2,3])
+  mutect2VCF = mutect2VariantCallingOutput.map {
+    variantCaller, idPatient, idSampleNormal, idSampleTumor, tag, vcfFile ->
+    [variantCaller, idPatient, idSampleNormal, idSampleTumor, vcfFile]
+  }.groupTuple(by:[0,1,2,3])
   if (verbose) { mutect2VCF = mutect2VCF.view { it -> "mutect2VCF: $it" } }
 }
 
@@ -873,7 +847,7 @@ process RunVardict {
   set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFVD
 
   output:
-  set idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.out") into vardictVariantCallingOutput
+  set val("VarDict"), idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.out") into vardictVariantCallingOutput
 
   when: 'VarDict' in workflowSteps
 
@@ -892,12 +866,10 @@ process RunVardict {
 
 if ('VarDict' in workflowSteps) {
   if (verbose) { vardictVariantCallingOutput = vardictVariantCallingOutput.view { it -> "VarDict output: $it" } }
-  vardictVariantCallingOutput = vardictVariantCallingOutput.map {
-    idPatient, idSampleNormal, idSampleTumor, tag, vcfFile ->
-    [idPatient, idSampleNormal, idSampleTumor, vcfFile]
-  }
-  vardictVCF = Channel.from('VarDict').spread(vardictVariantCallingOutput)
-  vardictVCF = vardictVCF.groupTuple(by:[0,1,2,3])
+  vardictVCF = vardictVariantCallingOutput.map {
+    variantCaller, idPatient, idSampleNormal, idSampleTumor, tag, vcFile ->
+    [variantCaller, idPatient, idSampleNormal, idSampleTumor, vcFile]
+  }.groupTuple(by:[0,1,2,3])
   if (verbose) { vardictVCF = vardictVCF.view { it -> "vardictVCF: $it" } }
 }
 
@@ -917,7 +889,7 @@ process ConcatVCF {
   set variantCaller, idPatient, idSampleNormal, idSampleTumor, vcFiles from vcfsToMerge
 
   output:
-  file "*.vcf" into vcfConcatenated
+  set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*.vcf") into vcfConcatenated
 
   when: 'HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2' in workflowSteps || 'VarDict' in workflowSteps
 
@@ -965,7 +937,7 @@ process RunStrelka {
   file refs["genomeIndex"]
 
   output:
-  set idPatient, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("strelka/results/*.vcf") into strelkaVariantCallingOutput
+  set val("Strelka"), idPatient, idSampleNormal, idSampleTumor, file("strelka/results/*.vcf") into strelkaVariantCallingOutput
 
   when: 'Strelka' in workflowSteps
 
@@ -992,7 +964,7 @@ if ('Strelka' in workflowSteps) {
   if (verbose) { strelkaVariantCallingOutput = strelkaVariantCallingOutput.view { it -> "Strelka output: $it" } }
 }
 
-process Manta {
+process RunManta {
   tag { idSampleTumor }
 
   publishDir outDir["Manta"]
@@ -1003,7 +975,7 @@ process Manta {
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
 
   output:
-   set idPatient, val("${idSampleNormal}_${idSampleTumor}"),file("${idSampleNormal}_${idSampleTumor}.somaticSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.diploidSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf")  into mantaVariantCallingOutput
+    set val("Manta"), idPatient, idSampleNormal, idSampleTumor, file("${idSampleNormal}_${idSampleTumor}.somaticSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.diploidSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf") into mantaVariantCallingOutput
 
   when: 'Manta' in workflowSteps
 
