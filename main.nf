@@ -389,7 +389,7 @@ process CreateIntervals {
   when: 'preprocessing' in workflowSteps || 'realign' in workflowSteps
 
   script:
-  input = mdBam.collect{"-I $it"}.join(' ')
+  input = bam.collect{"-I $it"}.join(' ')
   """
   #!/bin/bash
 
@@ -421,7 +421,7 @@ process RealignBams {
   time { params.runTime * task.attempt }
 
   input:
-  set idPatient, idSample, file(mdBam), file(mdBai) from duplicatesRealign
+  set idPatient, idSample, file(bam), file(bai) from duplicatesRealign
   file gf from file(refs["genomeFile"])
   file gi from file(refs["genomeIndex"])
   file gd from file(refs["genomeDict"])
@@ -440,7 +440,7 @@ process RealignBams {
   when: 'preprocessing' in workflowSteps || 'realign' in workflowSteps
 
   script:
-  input = mdBam.collect{"-I $it"}.join(' ')
+  input = bam.collect{"-I $it"}.join(' ')
 
   """
   #!/bin/bash
@@ -454,7 +454,6 @@ process RealignBams {
       echo -e ${idPatient}\t\$(echo \$sample | cut -d_ -f 3)\t\$(echo \$sample | cut -d_ -f 1)\t${outDir["nonRealigned"]}/\$sample.md.real.bam\t${outDir["nonRealigned"]}/\$sample.md.real.bai >> ${workflow.launchDir}/${outDir["nonRealigned"]}/${idPatient}.tsv
   done
 
-  echo -e "idPatient:\t"${idPatient}"\nidSample:\t"${idSample}"\nmdBam:\t"${mdBam}"\nmdBai:\t"${mdBai}"\n" > logInfo
   java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T IndelRealigner \
   $input \
