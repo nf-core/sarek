@@ -79,6 +79,7 @@ switch (params) {
 
   case {params.steps} : //Getting list of steps from comma-separated strings
     workflowSteps = params.steps.split(',').collect { it.trim() }
+    break
 }
 
 if (params.verbose) { verbose = true}
@@ -513,7 +514,7 @@ process CreateRecalibrationTable {
   -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T BaseRecalibrator \
   -R ${refs["genomeFile"]} \
-  -I $realignedBamFile \
+  -I $bam \
   -knownSites ${refs["dbsnp"]} \
   -knownSites ${refs["kgIndels"]} \
   -knownSites ${refs["millsIndels"]} \
@@ -557,7 +558,7 @@ process RecalibrateBam {
   -T PrintReads \
   -R ${refs["genomeFile"]} \
   -nct ${task.cpus} \
-  -I $realignedBamFile \
+  -I $bam \
   -XL hs37d5 \
   --BQSR $recalibrationReport \
   -o ${idSample}.recal.bam
