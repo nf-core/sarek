@@ -936,14 +936,14 @@ process ConcatVCF {
       cat \$temp | ${params.vardictHome}/VarDict/testsomatic.R >> testsomatic.out
     done
 
-    ${params.vardictHome}/VarDict/var2vcf_somatic.pl -f 0.01 -N "${idPatient}_${idSampleNormal}_${idSampleTumor}" testsomatic.out > outputFile
+    ${params.vardictHome}/VarDict/var2vcf_somatic.pl -f 0.01 -N "${idPatient}_${idSampleNormal}_${idSampleTumor}" testsomatic.out > $outputFile
     """
 
   else
     """
     #!/bin/bash
 
-    java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${refs["genomeFile"]}  -V $vcfFiles --outputFile $outputFile
+    java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${refs["genomeFile"]} -V $vcfFiles --outputFile $outputFile
     """
 }
 
