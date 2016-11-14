@@ -21,7 +21,7 @@ vim: syntax=groovy
 
 ----------------------------------------------------------------------------------------
  Basic command:
- $ nextflow run SciLifeLab/CAW -c <file.config> --sample <sample.tsv>
+ $ nextflow run SciLifeLab/CAW --sample <sample.tsv>
 
  All variables are configured in the config and sample files. All variables in the config
  file can be reconfigured on the commande line, like:
@@ -30,7 +30,6 @@ vim: syntax=groovy
  Workflow processes overview:
  - MapReads - Map reads
  - MergeBams - Merge BAMs if multilane samples
- - RenameSingleBam - Rename BAM if non-multilane sample
  - MarkDuplicates - Mark Duplicates
  - CreateIntervals - Create Intervals
  - RealignBams - Realign Bams as T/N pair
@@ -1158,7 +1157,6 @@ process runASCAT {
  * add process for runASCAT.r
 */
 
-
 /*
 ========================================================================================
 =                                   F U N C T I O N S                                  =
@@ -1269,7 +1267,7 @@ def extractBamFiles(tsvFile) {
 def help_message(version, revision) {
   log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
   log.info "    Usage:"
-  log.info "       nextflow run SciLifeLab/CAW -c <file.config> --sample <sample.tsv> [--steps STEP[,STEP]]"
+  log.info "       nextflow run SciLifeLab/CAW --sample <sample.tsv> [--steps STEP[,STEP]]"
   log.info "    --steps"
   log.info "       Option to configure which processes to use in the workflow."
   log.info "         Different steps to be separated by commas."
