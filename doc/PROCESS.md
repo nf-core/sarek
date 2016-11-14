@@ -4,7 +4,6 @@ Several processes are run within the workflow. We divide them for the moment int
 ## Preprocessing:
  - MapReads - Map reads
  - MergeBams - Merge BAMs if multilane samples
--- RenameSingleBam - Rename BAM if non-multilane sample
  - MarkDuplicates - Mark Duplicates
  - CreateIntervals - Create Intervals
  - RealignBams - Realign Bams as T/N pair
