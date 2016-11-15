@@ -1282,6 +1282,8 @@ process convertAlleleCounts {
 
 process runASCAT {
 
+  module 'R/3.2.3'
+
   cpus 1
   queue 'core'
   memory { params.singleCPUMem * task.attempt }
@@ -1291,13 +1293,19 @@ process runASCAT {
   set idPatient, idSampleNormal, idSampleTumor, file(normalBAF), file(normalLogR), file(tumorBAF), file(tumorLogR) from convert_ac_output
 
   output:
-  file "ascat.done"
+  file("${idSampleTumor}.tumour.png")
+  file("${idSampleTumor}.germline.png")
+  file("${idSampleTumor}.LogR.PCFed.txt")
+  file("${idSampleTumor}.BAF.PCFed.txt")
+  file("${idSampleTumor}.ASPCF.png")
+  file("${idSampleTumor}.sunrise.png")
+
 
 
   """
   #!/bin/env Rscript
 
-  #######################################################################################################
+#######################################################################################################
 # Description:
 # R-script for converting output from AlleleCount to BAF and LogR values.
 #
@@ -1312,6 +1320,17 @@ process runASCAT {
 #######################################################################################################
 
 source("$baseDir/scripts/ascat.R")
+
+.libPaths( c( "$baseDir/scripts", .libPaths() ) )
+
+if(!require(RColorBrewer)){
+    source("http://bioconductor.org/biocLite.R")
+    biocLite("RColorBrewer", suppressUpdates=TRUE, lib="$baseDir/scripts")
+    library(RColorBrewer)
+}
+ 
+options(bitmapType='cairo')
+
 
 tumorbaf = "${tumorBAF}"
 tumorlogr = "${tumorLogR}"
@@ -1332,9 +1351,9 @@ ascat.plotSegmentedData(ascat.bc)
 
 #Run ASCAT to fit every tumor to a model, inferring ploidy, normal cell contamination, and discrete copy numbers
 ascat.output <- ascat.runAscat(ascat.bc)
-str(ascat.output)
-plot(sort(ascat.output\$aberrantcellfraction))
-plot(density(ascat.output\$ploidy))
+#str(ascat.output)
+#plot(sort(ascat.output\$aberrantcellfraction))
+#plot(density(ascat.output\$ploidy))
 
 
 
