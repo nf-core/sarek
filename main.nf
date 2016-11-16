@@ -254,10 +254,10 @@ process MergeBams {
   time { params.runTime * task.attempt }
 
   input:
-  set idPatient, idSample, idRun, file(bam) from groupedBam
+  set idPatient, gender, idSample, idRun, file(bam) from groupedBam
 
   output:
-  set idPatient, idSample, file("${idSample}.bam") into mergedBam
+  set idPatient, gender, idSample, file("${idSample}.bam") into mergedBam
 
   when: 'preprocessing' in workflowSteps
 
