@@ -1,13 +1,13 @@
 ## Use cases
-The workflow has three pre-processing options: `preprocessing`, `recalibrate` and `skipPreprocessing`. Using the `preprocessing` directive one will have a pair of mapped, deduplicated and recalibrated BAM files in the `Preprocessing/Recalibrated/` directory. Furthermore, during this process a deduplicated and realigned BAM file is created alongside with its recalibration table in the `Preprocessing/NonRecalibrated/` directory. This latter BAM is usually much smaller and easier to backup together with its recalibration table. Making recalibrated BAMs from this input data is only one step. This is the usual option you have to give when you are starting from raw FASTQ data:
+The workflow has three pre-processing options: `preprocessing`, `realign` and `skipPreprocessing`. Using the `preprocessing` directive one will have a pair of mapped, deduplicated and recalibrated BAM files in the `Preprocessing/Recalibrated/` directory. Furthermore, during this process a deduplicated BAM file is created in the `Preprocessing/NonRealigned/` directory. This is the usual option you have to give when you are starting from raw FASTQ data:
 
 ```bash
-nextflow run SciLifeLab/CAW -c milou.config --sample mysample.tsv
+nextflow run SciLifeLab/CAW --sample mysample.tsv
 ```
 
-Preprocessing will start by default, you do not have to give any additional steps, only the TSV file describing the sample (see below). 
+Preprocessing will start by default, you do not have to give any additional steps, only the TSV file describing the sample (see below).
 
-In the provided milou.config file we are defining the intervals file as well, this is used to define regions for variant call and realignment (in a scatter and gather fashion when possible). The intervals are chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs. We are ignoring the hs37d5 contig that contains concatenated decoy sequences. 
+In the [default config file](config/milou.config) we are defining the intervals file as well, this is used to define regions for variant call and realignment (in a scatter and gather fashion when possible). The intervals are chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs. We are ignoring the hs37d5 contig that contains concatenated decoy sequences. 
 
 During processing steps a `trace.txt` and a `timeline.html` file is generated automatically. These files contain statistics about resources used and processes finished. If you start a new flow or restart/resume a sample, the previous version will be renamed as `trace.txt.1` and `timeline.html.1` respectively. Also, older version are renamed with incremented numbers.
 
@@ -15,7 +15,7 @@ During processing steps a `trace.txt` and a `timeline.html` file is generated au
 
 The workflow should be started in this case with the smallest set of options as written above:
 ```bash
-nextflow run SciLifeLab/CAW -c milou.config --sample mysample.tsv
+nextflow run SciLifeLab/CAW --sample mysample.tsv
 ```
 The TSV file should have at least two tab-separated lines:
 ```
@@ -24,8 +24,8 @@ SUBJECT_ID	1	tumor	1	/samples/tumor_1.fastq.gz	/samples/tumor_2.fastq.gz
 ```
 The columns are:
 1. Subject id
-2. identifier: 0 if normal, 1 if tumor
-3. text id: actual text representation of the type of the sample
+2. status: 0 if normal, 1 if tumor
+3. sample id: actual text representation of the type of the sample
 4. read group ID: it is irrelevant in this simple case, should to be 1
 5. first set of reads
 6. second set of reads
@@ -52,20 +52,29 @@ SUBJECT_ID	1	relapse	7	/samples/relapse7_1.fastq.gz	/samples/relapse7_2.fastq.gz
 SUBJECT_ID	1	relapse	9	/samples/relapse9_1.fastq.gz	/samples/relapse9_2.fastq.gz
 ```
 
-### Starting from recalibration
+### Starting from realignement
 
-NGI Production in the previous years delivered many preprocessed samples; these BAM files are not recalibrated, but their recalibration table was also delivered together with the alignments. To have recalibrated BAMs (suitable for
-variant calling) is a single additional step:
+NGI Production in the previous years delivered many preprocessed samples; these BAM files are not recalibrated. To have BAMs suitable for
+variant calling, realignement of pairs is necessary:
 ```bash
-nextflow run SciLifeLab/CAW -c milou.config --sample mysample.tsv --steps recalibrate
+nextflow run SciLifeLab/CAW --sample mysample.tsv --steps realign
 ```
 And the corresponding TSV file should be like:
 ```
-SUBJECT_ID	0	normal	1	/samples/normal.bam	/samples/normal.recal.table
-SUBJECT_ID	1	tumor	1	/samples/tumor.bam	/samples/tumor.recal.table
+SUBJECT_ID	0	normal	/samples/normal.bam	/samples/normal.bai
+SUBJECT_ID	1	tumor	/samples/tumor.bam	/samples/tumor.bai
 ```
 At the end of this step you should have recalibrated BAM files in the `Preprocessing/Recalibrated/` directory.
 
 ### Starting from a recalibrated BAM file
 
 At this step we are assuming that all the required preprocessing steps (alignment, deduplication, ..., recalibration) is over, we only want to run variant callers or other tools using recalibrated BAMs.
+
+```bash
+nextflow run SciLifeLab/CAW --sample mysample.tsv --steps skipPreprocessing
+```
+And the corresponding TSV file should be like:
+```
+SUBJECT_ID	0	normal	/samples/normal.bam	/samples/normal.bai
+SUBJECT_ID	1	tumor	/samples/tumor.bam	/samples/tumor.bai
+```
