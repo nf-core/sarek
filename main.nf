@@ -914,8 +914,6 @@ process RunConvertAlleleCounts {
   """
 }
 
-}
-
 // R scripts from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
 process RunAscat {
