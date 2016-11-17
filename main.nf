@@ -393,6 +393,7 @@ process CreateIntervals {
   -known $mi \
   -nt ${task.cpus} \
   -XL hs37d5 \
+  -XL NC_007605 \
   -o ${idPatient}.intervals
   """
 }
@@ -422,8 +423,8 @@ process RealignBams {
   val(idPatient) into tempIdPatient
   val(gender) into tempGender
   val(idSample) into tempSamples
-  file("*.md.real.bam") into tempBams
-  file("*.md.real.bai") into tempBais
+  file("*.real.bam") into tempBams
+  file("*.real.bai") into tempBais
 
   when: 'preprocessing' in workflowSteps || 'realign' in workflowSteps
 
@@ -440,6 +441,7 @@ process RealignBams {
   -known $ki \
   -known $mi \
   -XL hs37d5 \
+  -XL NC_007605 \
   -nWayOut '.real.bam'
   """
 }
@@ -499,6 +501,7 @@ process CreateRecalibrationTable {
   -knownSites ${refs["millsIndels"]} \
   -nct ${task.cpus} \
   -XL hs37d5 \
+  -XL NC_007605 \
   -l INFO \
   -o ${idSample}.recal.table
   """
@@ -539,6 +542,7 @@ process RecalibrateBam {
   -nct ${task.cpus} \
   -I $bam \
   -XL hs37d5 \
+  -XL NC_007605 \
   --BQSR $recalibrationReport \
   -o ${idSample}.recal.bam
   """
