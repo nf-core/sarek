@@ -364,19 +364,11 @@ process RealignBams {
     file intervals from intervals
 
   output:
-<<<<<<< HEAD
-  val(idPatient) into tempIdPatient
-  val(gender) into tempGender
-  val(idSample) into tempSamples
-  file("*.real.bam") into tempBams
-  file("*.real.bai") into tempBais
-=======
     val(idPatient) into tempIdPatient
     val(gender) into tempGender
     val(idSample) into tempSamples
     file("*.md.real.bam") into tempBams
     file("*.md.real.bai") into tempBais
->>>>>>> Refactoring
 
   when: 'preprocessing' in workflowSteps || 'realign' in workflowSteps
 
