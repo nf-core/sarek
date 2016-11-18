@@ -18,7 +18,7 @@ Steps are used to configure which processes will be runned or skipped in the wor
 - Strelka (use Strelka for VC)
 - HaplotypeCaller (use HaplotypeCaller for normal bams VC)
 - Manta (use Manta for SV)
-- ascat (use ascat for CNV)
+- Ascat (use ascat for CNV)
 
 ## Project
 To specify your UPPMAX project number ID. It can also be specified in your `config` file (cf [configuration documentation](#profiles)).
@@ -45,13 +45,15 @@ A standard profile is defined in [`nextflow.config`](../nextflow.config). You ca
 nextflow run SciLifeLab/CAW --sample mysample.tsv -c config/milou.config
 ```
 
-## Get the latest version
-
-If there is a feature or bugfix you want to use in a resumed or re-analyzed run, you have to update the flow to the latest version. By default 
-it is not updated automatically, so use something like:
+## Update to latest version
+To update workflow to the latest version use:
 ```bash
-nextflow run -latest SciLifeLab/CAW --sample mysample.tsv -c config/milou.config -resume
+nextflow pull SciLifeLab/CAW
 ```
 
-
-
+## Run the latest version
+If there is a feature or bugfix you want to use in a resumed or re-analyzed run, you have to update the workflow to the latest version. By default 
+it is not updated automatically, so use something like:
+```bash
+nextflow run -latest SciLifeLab/CAW --sample mysample.tsv -resume
+```
