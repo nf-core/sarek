@@ -44,3 +44,14 @@ A standard profile is defined in [`nextflow.config`](../nextflow.config). You ca
 ```bash
 nextflow run SciLifeLab/CAW --sample mysample.tsv -c config/milou.config
 ```
+
+## Get the latest version
+
+If there is a feature or bugfix you want to use in a resumed or re-analyzed run, you have to update the flow to the latest version. By default 
+it is not updated automatically, so use something like:
+```bash
+nextflow run -latest SciLifeLab/CAW --sample mysample.tsv -c config/milou.config -resume
+```
+
+
+
