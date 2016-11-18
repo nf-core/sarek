@@ -272,7 +272,7 @@ process MarkDuplicates {
   ASSUME_SORTED=true \
   VALIDATION_STRINGENCY=LENIENT \
   CREATE_INDEX=TRUE \
-  OUTPUT=${idSample}.md.bam
+  OUTPUT=${idSample}_${status}.md.bam
   """
 }
 
