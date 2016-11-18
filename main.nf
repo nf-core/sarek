@@ -314,7 +314,7 @@ process CreateIntervals {
   tag {idPatient}
 
   input:
-    set idPatient, gender, status, idSample, file(bam), file(bai) from duplicatesInterval
+    set idPatient, gender, idSample, file(bam), file(bai) from duplicatesInterval
     file gf from file(referenceMap["genomeFile"])
     file gi from file(referenceMap["genomeIndex"])
     file gd from file(referenceMap["genomeDict"])
