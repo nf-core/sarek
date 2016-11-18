@@ -1,5 +1,4 @@
 [![Stories in Ready](https://badge.waffle.io/SciLifeLab/CAW.png?label=ready&title=Ready)](https://waffle.io/SciLifeLab/CAW)
-[![nextflow](https://img.shields.io/badge/nextflow-%E2%89%A50.22.0-brightgreen.svg)](http://nextflow.io)
 
 # CAW
 Nextflow Cancer Analysis Workflow Prototype developed at the [National Genomics Infastructure](https://ngisweden.scilifelab.se/)
