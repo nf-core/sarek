@@ -1020,7 +1020,7 @@ def checkStepExistence(step, list) { // Check step existence
 def checkFileExistence(it) { // Check file existence
   try {assert file(it).exists()}
   catch (AssertionError ae) {
-    exit 1, "Missing file in TSV file: ${fileToCheck}, see --help for more information"
+    exit 1, "Missing file in TSV file: ${it}, see --help for more information"
   }
 }
 
