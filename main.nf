@@ -641,7 +641,7 @@ if ('HaplotypeCaller' in workflowSteps) {
   if (verbose) {haplotypecallerOutput = haplotypecallerOutput.view {"HaplotypeCaller output: $it"}}
   hcVCF = haplotypecallerOutput.map {
     variantCaller, idPatient, gender, idSampleNormal, tag, vcfFile ->
-    [variantCaller, idPatient, gender, idSampleNormal, idSampleNormal, vcfFile]
+    [variantCaller, idPatient, gender, idSampleNormal, idSampleNormal, tag, vcfFile]
   }.groupTuple(by:[0,1,2,3,4])
   if (verbose) {hcVCF = hcVCF.view {"hcVCF: $it" } }
 }
@@ -675,10 +675,7 @@ process RunMutect1 {
 
 if ('MuTect1' in workflowSteps) {
   if (verbose) {mutect1Output = mutect1Output.view {"MuTect1 output: $it"}}
-  mutect1VCF = mutect1Output.map {
-    variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, tag, vcfFile ->
-    [variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, vcfFile]
-  }.groupTuple(by:[0,1,2,3,4])
+  mutect1VCF = mutect1Output.groupTuple(by:[0,1,2,3,4])
   if (verbose) {mutect1VCF = mutect1VCF.view {"mutect1VCF: $it"}}
 }
 
@@ -715,10 +712,7 @@ process RunMutect2 {
 
 if ('MuTect2' in workflowSteps) {
   if (verbose) {mutect2Output = mutect2Output.view {"MuTect2 output: $it"}}
-  mutect2VCF = mutect2Output.map {
-    variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, tag, vcfFile ->
-    [variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, vcfFile]
-  }.groupTuple(by:[0,1,2,3,4])
+  mutect2VCF = mutect2Output.groupTuple(by:[0,1,2,3,4])
   if (verbose) {mutect2VCF = mutect2VCF.view {"mutect2VCF: $it"}}
 }
 
@@ -746,10 +740,7 @@ process RunVardict {
 
 if ('VarDict' in workflowSteps) {
   if (verbose) {vardictOutput = vardictOutput.view {"VarDict output: $it"}}
-  vardictVCF = vardictOutput.map {
-    variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, tag, vcFile ->
-    [variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, vcFile]
-  }.groupTuple(by:[0,1,2,3,4])
+  vardictVCF = vardictOutput.groupTuple(by:[0,1,2,3,4])
   if (verbose) {vardictVCF = vardictVCF.view {"vardictVCF: $it"}}
 }
 
@@ -766,7 +757,7 @@ process ConcatVCF {
   publishDir "${directoryMap["VariantCalling"]}/$variantCaller", mode: 'copy'
 
   input:
-    set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, vcFiles from vcfsToMerge
+    set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, tag, vcFiles from vcfsToMerge
 
   output:
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file("*.vcf") into vcfConcatenated
