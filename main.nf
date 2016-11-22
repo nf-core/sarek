@@ -55,7 +55,7 @@ stepCorrect = true
 verbose = false
 workflowSteps = []
 
-if (workflow.profile == 'standard' && !params.project) {exit 1, "No UPPMAX project ID found! Use --project"}
+if ((workflow.profile == 'standard' || workflow.profile == 'interactive') && !params.project) {exit 1, "No UPPMAX project ID found! Use --project"}
 
 switch (params) {
   case {params.help} :
