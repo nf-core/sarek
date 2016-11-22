@@ -184,6 +184,7 @@ process MapReads {
   script:
   readGroup="\"@RG\\tID:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina\""
   """
+  set -eo pipefail
   bwa mem -R ${readGroup} -B 3 -t ${task.cpus} -M ${referenceMap["genomeFile"]} ${fq1} ${fq2} | \
   samtools view -bS -t ${referenceMap["genomeIndex"]} - | \
   samtools sort - > ${idRun}.bam
