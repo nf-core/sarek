@@ -765,7 +765,7 @@ process ConcatVCF {
   when: 'HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2' in workflowSteps || 'VarDict' in workflowSteps
 
   script:
-  vcfFiles = vcFiles.join(' -V ')
+  vcfFiles = vcFiles.collect{"-V $it"}.join(' ')
   if (variantCaller == 'HaplotypeCaller')
     outputFile = "${variantCaller}_${idPatient}_${idSampleNormal}.vcf"
   else
