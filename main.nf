@@ -315,7 +315,7 @@ process CreateIntervals {
   tag {idPatient}
 
   input:
-    set idPatient, gender, idSample, file(bam), file(bai) from duplicatesInterval
+    set idPatient, gender, status, idSample, file(bam), file(bai) from duplicatesInterval
     file gf from file(referenceMap["genomeFile"])
     file gi from file(referenceMap["genomeIndex"])
     file gd from file(referenceMap["genomeDict"])
@@ -757,7 +757,7 @@ process ConcatVCF {
   publishDir "${directoryMap["VariantCalling"]}/$variantCaller", mode: 'copy'
 
   input:
-    set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, tag, vcFiles from vcfsToMerge
+    set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, tag, file(vcFiles) from vcfsToMerge
 
   output:
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file("*.vcf") into vcfConcatenated
@@ -774,12 +774,11 @@ process ConcatVCF {
   if (variantCaller == 'VarDict')
     """
     for i in $vcFiles ;do
-      temp=\$(echo \$i | tr -d '[],')
-      cat \$temp | ${params.vardictHome}/VarDict/testsomatic.R >> testsomatic.out
+      cat \$i | ${params.vardictHome}/VarDict/testsomatic.R >> testsomatic.out
     done
-
     ${params.vardictHome}/VarDict/var2vcf_somatic.pl -f 0.01 -N "${idPatient}_${idSampleNormal}_${idSampleTumor}" testsomatic.out > $outputFile
     """
+
   else
     """
     java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${referenceMap["genomeFile"]} -V $vcfFiles --outputFile $outputFile
