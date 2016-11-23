@@ -315,7 +315,7 @@ process CreateIntervals {
   tag {idPatient}
 
   input:
-    set idPatient, gender, idSample, file(bam), file(bai) from duplicatesInterval
+    set idPatient, gender, status, idSample, file(bam), file(bai) from duplicatesInterval
     file gf from file(referenceMap["genomeFile"])
     file gi from file(referenceMap["genomeIndex"])
     file gd from file(referenceMap["genomeDict"])
@@ -641,7 +641,7 @@ if ('HaplotypeCaller' in workflowSteps) {
   if (verbose) {haplotypecallerOutput = haplotypecallerOutput.view {"HaplotypeCaller output: $it"}}
   hcVCF = haplotypecallerOutput.map {
     variantCaller, idPatient, gender, idSampleNormal, tag, vcfFile ->
-    [variantCaller, idPatient, gender, idSampleNormal, idSampleNormal, vcfFile]
+    [variantCaller, idPatient, gender, idSampleNormal, idSampleNormal, tag, vcfFile]
   }.groupTuple(by:[0,1,2,3,4])
   if (verbose) {hcVCF = hcVCF.view {"hcVCF: $it" } }
 }
@@ -675,10 +675,7 @@ process RunMutect1 {
 
 if ('MuTect1' in workflowSteps) {
   if (verbose) {mutect1Output = mutect1Output.view {"MuTect1 output: $it"}}
-  mutect1VCF = mutect1Output.map {
-    variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, tag, vcfFile ->
-    [variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, vcfFile]
-  }.groupTuple(by:[0,1,2,3,4])
+  mutect1VCF = mutect1Output.groupTuple(by:[0,1,2,3,4])
   if (verbose) {mutect1VCF = mutect1VCF.view {"mutect1VCF: $it"}}
 }
 
@@ -715,10 +712,7 @@ process RunMutect2 {
 
 if ('MuTect2' in workflowSteps) {
   if (verbose) {mutect2Output = mutect2Output.view {"MuTect2 output: $it"}}
-  mutect2VCF = mutect2Output.map {
-    variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, tag, vcfFile ->
-    [variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, vcfFile]
-  }.groupTuple(by:[0,1,2,3,4])
+  mutect2VCF = mutect2Output.groupTuple(by:[0,1,2,3,4])
   if (verbose) {mutect2VCF = mutect2VCF.view {"mutect2VCF: $it"}}
 }
 
@@ -746,10 +740,7 @@ process RunVardict {
 
 if ('VarDict' in workflowSteps) {
   if (verbose) {vardictOutput = vardictOutput.view {"VarDict output: $it"}}
-  vardictVCF = vardictOutput.map {
-    variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, tag, vcFile ->
-    [variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, vcFile]
-  }.groupTuple(by:[0,1,2,3,4])
+  vardictVCF = vardictOutput.groupTuple(by:[0,1,2,3,4])
   if (verbose) {vardictVCF = vardictVCF.view {"vardictVCF: $it"}}
 }
 
@@ -766,7 +757,7 @@ process ConcatVCF {
   publishDir "${directoryMap["VariantCalling"]}/$variantCaller", mode: 'copy'
 
   input:
-    set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, vcFiles from vcfsToMerge
+    set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, tag, file(vcFiles) from vcfsToMerge
 
   output:
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file("*.vcf") into vcfConcatenated
@@ -774,7 +765,7 @@ process ConcatVCF {
   when: 'HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2' in workflowSteps || 'VarDict' in workflowSteps
 
   script:
-  vcfFiles = vcFiles.join(' -V ')
+  vcfFiles = vcFiles.collect{"-V $it"}.join(' ')
   if (variantCaller == 'HaplotypeCaller')
     outputFile = "${variantCaller}_${idPatient}_${idSampleNormal}.vcf"
   else
@@ -783,12 +774,11 @@ process ConcatVCF {
   if (variantCaller == 'VarDict')
     """
     for i in $vcFiles ;do
-      temp=\$(echo \$i | tr -d '[],')
-      cat \$temp | ${params.vardictHome}/VarDict/testsomatic.R >> testsomatic.out
+      cat \$i | ${params.vardictHome}/VarDict/testsomatic.R >> testsomatic.out
     done
-
     ${params.vardictHome}/VarDict/var2vcf_somatic.pl -f 0.01 -N "${idPatient}_${idSampleNormal}_${idSampleTumor}" testsomatic.out > $outputFile
     """
+
   else
     """
     java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${referenceMap["genomeFile"]} -V $vcfFiles --outputFile $outputFile
@@ -1020,7 +1010,7 @@ def checkStepExistence(step, list) { // Check step existence
 def checkFileExistence(it) { // Check file existence
   try {assert file(it).exists()}
   catch (AssertionError ae) {
-    exit 1, "Missing file in TSV file: ${fileToCheck}, see --help for more information"
+    exit 1, "Missing file in TSV file: ${it}, see --help for more information"
   }
 }
 
