@@ -142,6 +142,10 @@ if (('preprocessing' in workflowSteps && ('realign' in workflowSteps || 'skipPre
   exit 1, 'Please choose only one step between preprocessing, realign and skipPreprocessing, see --help for more information'
 }
 
+if (!('preprocessing' in workflowSteps || 'realign' in workflowSteps || 'skipPreprocessing' in workflowSteps)) {
+  exit 1, 'Please choose one step between preprocessing, realign and skipPreprocessing, see --help for more information'
+}
+
 if (!params.sample) {
   exit 1, 'Missing TSV file, see --help for more information'
 }
