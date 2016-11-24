@@ -142,6 +142,10 @@ if (('preprocessing' in workflowSteps && ('realign' in workflowSteps || 'skipPre
   exit 1, 'Please choose only one step between preprocessing, realign and skipPreprocessing, see --help for more information'
 }
 
+if (!('preprocessing' in workflowSteps || 'realign' in workflowSteps || 'skipPreprocessing' in workflowSteps)) {
+  exit 1, 'Please choose one step between preprocessing, realign and skipPreprocessing, see --help for more information'
+}
+
 if (!params.sample) {
   exit 1, 'Missing TSV file, see --help for more information'
 }
@@ -315,7 +319,7 @@ process CreateIntervals {
   tag {idPatient}
 
   input:
-    set idPatient, gender, status, idSample, file(bam), file(bai) from duplicatesInterval
+    set idPatient, gender, idSample_status, file(bam), file(bai) from duplicatesInterval
     file gf from file(referenceMap["genomeFile"])
     file gi from file(referenceMap["genomeIndex"])
     file gd from file(referenceMap["genomeDict"])
@@ -354,7 +358,7 @@ process RealignBams {
   tag {idPatient}
 
   input:
-    set idPatient, gender, idSample, file(bam), file(bai) from duplicatesRealign
+    set idPatient, gender, idSample_status, file(bam), file(bai) from duplicatesRealign
     file gf from file(referenceMap["genomeFile"])
     file gi from file(referenceMap["genomeIndex"])
     file gd from file(referenceMap["genomeDict"])
@@ -367,7 +371,7 @@ process RealignBams {
   output:
     val(idPatient) into tempIdPatient
     val(gender) into tempGender
-    val(idSample) into tempSamples
+    val(idSample_status) into tempSamples_status
     file("*.md.real.bam") into tempBams
     file("*.md.real.bai") into tempBais
 
@@ -402,7 +406,7 @@ if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
   // And put them back together, and add the ID patient and the gender in the realignedBam channel
   realignedBam = tempIdPatient.spread(
     tempGender.spread(
-      tempSamples.flatten().toSortedList().flatten().merge(
+      tempSamples_status.flatten().toSortedList().flatten().merge(
         tempBams.flatten().toSortedList().flatten(),
         tempBais.flatten().toSortedList().flatten()
       ) {sample, bam, bai -> [sample, bam, bai]}
@@ -844,11 +848,12 @@ process RunManta {
   //Moreover, the bam index must be named .bam.bai, otherwise it will not be recognized
   script:
   """
-  mv ${bamNormal} Normal.bam
-  mv ${bamTumor} Tumor.bam
+  set -eo pipefail
+  samtools view -H ${bamNormal} | grep -v hs37d5 | samtools reheader  - ${bamNormal} > Normal.bam
+  samtools index Normal.bam
 
-  mv ${baiNormal} Normal.bam.bai
-  mv ${baiTumor} Tumor.bam.bai
+  samtools view -H ${bamTumor} | grep -v hs37d5 | samtools reheader - ${bamTumor} > Tumor.bam
+  samtools index Tumor.bam
 
   configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference ${referenceMap["MantaRef"]} --runDir MantaDir
   python MantaDir/runWorkflow.py -m local -j ${task.cpus}
