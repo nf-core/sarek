@@ -849,10 +849,14 @@ process RunManta {
   script:
   """
   mv ${bamNormal} Normal.bam
-  mv ${bamTumor} Tumor.bam
-
   mv ${baiNormal} Normal.bam.bai
+
+  samtools view -H Normal.bam | grep -v hs37d5 | samtools reheader - Normal.bam > Normal.bam
+
+  mv ${bamTumor} Tumor.bam
   mv ${baiTumor} Tumor.bam.bai
+
+  samtools view -H Tumor.bam | grep -v hs37d5 | samtools reheader - Tumor.bam > Tumor.bam
 
   configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference ${referenceMap["MantaRef"]} --runDir MantaDir
   python MantaDir/runWorkflow.py -m local -j ${task.cpus}
