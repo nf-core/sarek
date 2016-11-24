@@ -848,15 +848,11 @@ process RunManta {
   //Moreover, the bam index must be named .bam.bai, otherwise it will not be recognized
   script:
   """
-  mv ${bamNormal} Normal.bam
-  mv ${baiNormal} Normal.bam.bai
+  samtools view -H ${bamNormal} | grep -v hs37d5 | samtools reheader  - ${bamNormal} > Normal.bam
+  samtools index Normal.bam
 
-  samtools view -H Normal.bam | grep -v hs37d5 | samtools reheader - Normal.bam > Normal.bam
-
-  mv ${bamTumor} Tumor.bam
-  mv ${baiTumor} Tumor.bam.bai
-
-  samtools view -H Tumor.bam | grep -v hs37d5 | samtools reheader - Tumor.bam > Tumor.bam
+  samtools view -H ${bamTumor} | grep -v hs37d5 | samtools reheader - ${bamTumor} > Tumor.bam
+  samtools index Tumor.bam
 
   configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference ${referenceMap["MantaRef"]} --runDir MantaDir
   python MantaDir/runWorkflow.py -m local -j ${task.cpus}
