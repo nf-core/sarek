@@ -848,6 +848,7 @@ process RunManta {
   //Moreover, the bam index must be named .bam.bai, otherwise it will not be recognized
   script:
   """
+  set -eo pipefail
   samtools view -H ${bamNormal} | grep -v hs37d5 | samtools reheader  - ${bamNormal} > Normal.bam
   samtools index Normal.bam
 
