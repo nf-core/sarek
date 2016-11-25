@@ -40,3 +40,11 @@ If you're running on a Swedish UPPMAX cluster you can load Nextflow as an enviro
 module load Nextflow
 ```
 Environnement variables are set up each time the module is loaded, so you might want to set them up after loading the module.
+
+## Running tests in interactive mode on milou
+You can try the test data by changing to the interactive mode on milou and run the test tiny set like:
+```
+$ interactive -A b2015110 -p node
+[ ... login messages ... ]
+$ nextflow run main.nf -profile interactive --sample data/tsv/tiny.tsv --project b2015110 --projectID J.Doe --sampleID Dummy --verbose
+```
