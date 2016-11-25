@@ -1,5 +1,5 @@
 //params.reads = "data/tiny/tiny_normal_L001_R{1,2}.fastq.gz"
-params.reads = "data/tiny/tiny_normal_L00[127]_R{1,2}.fastq.gz"
+params.reads = "data/tiny/tiny_normal_L00?_R{1,2}.fastq.gz"
 params.genome = "/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta"
 genome_file = file(params.genome)
 Channel
