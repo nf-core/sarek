@@ -49,13 +49,13 @@ vim: syntax=groovy
 */
 
 revision = grabGitRevision() ?: ''
-version  = "v0.9"
-referenceDefined = true
-stepCorrect = true
+version = 'v0.9'
 verbose = false
+testFile = ''
+testSteps = []
 workflowSteps = []
 
-if ((workflow.profile == 'standard' || workflow.profile == 'interactive') && !params.project) {exit 1, "No UPPMAX project ID found! Use --project"}
+if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project number>'}
 
 switch (params) {
   case {params.help} :
@@ -75,92 +75,56 @@ switch (params) {
 
 if (params.verbose) {verbose = true}
 
-referenceMap = [
-  "genomeFile"  : params.genome,      // genome reference
-  "genomeIndex" : params.genomeIndex, // genome reference index
-  "genomeDict"  : params.genomeDict,  // genome reference dictionary
-  "kgIndels"    : params.kgIndels,    // 1000 Genomes SNPs
-  "kgIndex"     : params.kgIndex,     // 1000 Genomes SNPs index
-  "dbsnp"       : params.dbsnp,       // dbSNP
-  "dbsnpIndex"  : params.dbsnpIndex,  // dbSNP index
-  "millsIndels" : params.millsIndels, // Mill's Golden set of SNPs
-  "millsIndex"  : params.millsIndex,  // Mill's Golden set index
-  "cosmic41"    : params.cosmic41,    // cosmic vcf file with VCF4.1 header
-  "cosmic"      : params.cosmic,      // cosmic vcf file
-  "intervals"   : params.intervals,   // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
-  "MantaRef"    : params.mantaRef,    // copy of the genome reference file
-  "MantaIndex"  : params.mantaIndex,  // reference index indexed with samtools/0.1.19
-  "acLoci"      : params.acLoci       // loci file for ascat
-]
+referenceMap = defineReferenceMap()
+directoryMap = defineDirectoryMap()
+stepList = defineStepList()
 
-stepList = [
-  "preprocessing",
-  "realign",
-  "skipPreprocessing",
-  "MuTect1",
-  "MuTect2",
-  "VarDict",
-  "Strelka",
-  "HaplotypeCaller",
-  "Manta",
-  "Ascat"
-]
+if (!checkReferenceMap(referenceMap)) {exit 1, 'Missing Reference file(s), see --help for more information'}
+if (!checkStepList(workflowSteps,stepList)) {exit 1, 'Unknown step(s), see --help for more information'}
 
-directoryMap = [
-  "nonRealigned"    : 'Preprocessing/NonRealigned',
-  "recalibrated"    : 'Preprocessing/Recalibrated',
-  "VariantCalling"  : 'VariantCalling',
-  "MuTect1"         : 'VariantCalling/MuTect1',
-  "MuTect2"         : 'VariantCalling/MuTect2',
-  "VarDict"         : 'VariantCalling/VarDictJava',
-  "Strelka"         : 'VariantCalling/Strelka',
-  "HaplotypeCaller" : 'VariantCalling/HaplotypeCaller',
-  "Manta"           : 'VariantCalling/Manta',
-  "Ascat"           : 'VariantCalling/Ascat'
-]
-
-referenceMap.each{ //Loop through all the references files to check their existence
-  referenceFile, fileToCheck -> 
-  test = checkRefExistence(referenceFile, fileToCheck)
-  !(test) ? referenceDefined = false : ""
-}
-
-if (!referenceDefined) {
-  exit 1, 'Missing Reference file(s), see --help for more information'
-}
-
-workflowSteps.each{ // Loop through all the possible steps check their existence and spelling
-  test = checkStepExistence(it, stepList)
-  !(test) ? stepCorrect = false : ""
-}
-
-if (!stepCorrect) {
-  exit 1, 'Unknown step(s), see --help for more information'
-}
+if (params.testPreprocessing) {
+  test = true
+  testFile = file("${workflow.projectDir}/data/tsv/tiny.tsv")
+  workflowSteps = ['preprocessing']
+  referenceMap.put("intervals", "${workflow.projectDir}/repeats/tiny.list")
+} else if (params.testRealign) {
+  test = true
+  testFile = file("${workflow.launchDir}/Preprocessing/NonRealigned/nonRealigned.tsv")
+  workflowSteps = ['realign']
+  referenceMap.put("intervals", "${workflow.projectDir}/repeats/tiny.list")
+} else if (params.testCoreVC) {
+  test = true
+  testFile = file("${workflow.launchDir}/Preprocessing/Recalibrated/recalibrated.tsv")
+  workflowSteps = ['preprocessing', 'MuTect1', 'Strelka', 'HaplotypeCaller']
+  referenceMap.put("intervals", "${workflow.projectDir}/repeats/tiny.list")
+} else if (params.testSideVC) {
+  test = true
+  testFile = file("${workflow.projectDir}/data/tsv/DownsampledG15511-bam.tsv")
+  workflowSteps = ['skipPreprocessing', 'Ascat', 'Manta', 'HaplotypeCaller']
+} else {test = false}
 
 if (('preprocessing' in workflowSteps && ('realign' in workflowSteps || 'skipPreprocessing' in workflowSteps)) || ('realign' in workflowSteps && 'skipPreprocessing' in workflowSteps)) {
   exit 1, 'Please choose only one step between preprocessing, realign and skipPreprocessing, see --help for more information'
 }
-
 if (!('preprocessing' in workflowSteps || 'realign' in workflowSteps || 'skipPreprocessing' in workflowSteps)) {
   exit 1, 'Please choose one step between preprocessing, realign and skipPreprocessing, see --help for more information'
 }
 
-if (!params.sample) {
-  exit 1, 'Missing TSV file, see --help for more information'
-}
+if ((!params.sample) && !(test)) {exit 1, 'Missing TSV file, see --help for more information'}
 
 /*
  * Extract and verify content of TSV file
  */
 
+tsvFile = (!(test) ? file(params.sample) : testFile)
+
 fastqFiles = Channel.create()
 
 if ('preprocessing' in workflowSteps) {
-  fastqFiles = extractFastqFiles(file(params.sample))
+  fastqFiles = extractFastqFiles(tsvFile)
   if (verbose) {fastqFiles = fastqFiles.view {"FASTQ files and IDs to process: $it"}}
 } else if ('realign' in workflowSteps || 'skipPreprocessing' in workflowSteps) {
-  bamFiles = extractBamFiles(file(params.sample))
+  bamFiles = extractBamFiles(tsvFile)
   if (verbose) {bamFiles = bamFiles.view {"Bam files and IDs to process: $it"}}
   fastqFiles.close()
 }
@@ -994,6 +958,83 @@ def grabGitRevision() { // Borrowed from https://github.com/NBISweden/wgs-struct
   return revision.substring(0,10)
 }
 
+def checkUppmaxProject() {
+  if ((workflow.profile == 'standard' || workflow.profile == 'interactive') && !params.project) {
+    return false
+  } else {
+    return true
+  }
+}
+
+def defineReferenceMap() {
+  return [
+    "genomeFile"  : params.genome,      // genome reference
+    "genomeIndex" : params.genomeIndex, // genome reference index
+    "genomeDict"  : params.genomeDict,  // genome reference dictionary
+    "kgIndels"    : params.kgIndels,    // 1000 Genomes SNPs
+    "kgIndex"     : params.kgIndex,     // 1000 Genomes SNPs index
+    "dbsnp"       : params.dbsnp,       // dbSNP
+    "dbsnpIndex"  : params.dbsnpIndex,  // dbSNP index
+    "millsIndels" : params.millsIndels, // Mill's Golden set of SNPs
+    "millsIndex"  : params.millsIndex,  // Mill's Golden set index
+    "cosmic41"    : params.cosmic41,    // cosmic vcf file with VCF4.1 header
+    "cosmic"      : params.cosmic,      // cosmic vcf file
+    "intervals"   : params.intervals,   // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
+    "MantaRef"    : params.mantaRef,    // copy of the genome reference file
+    "MantaIndex"  : params.mantaIndex,  // reference index indexed with samtools/0.1.19
+    "acLoci"      : params.acLoci       // loci file for ascat
+  ]
+}
+
+def defineDirectoryMap() {
+  return [
+    "nonRealigned"    : 'Preprocessing/NonRealigned',
+    "recalibrated"    : 'Preprocessing/Recalibrated',
+    "VariantCalling"  : 'VariantCalling',
+    "MuTect1"         : 'VariantCalling/MuTect1',
+    "MuTect2"         : 'VariantCalling/MuTect2',
+    "VarDict"         : 'VariantCalling/VarDictJava',
+    "Strelka"         : 'VariantCalling/Strelka',
+    "HaplotypeCaller" : 'VariantCalling/HaplotypeCaller',
+    "Manta"           : 'VariantCalling/Manta',
+    "Ascat"           : 'VariantCalling/Ascat'
+  ]
+}
+
+def defineStepList() {
+  return [
+    "preprocessing",
+    "realign",
+    "skipPreprocessing",
+    "MuTect1",
+    "MuTect2",
+    "VarDict",
+    "Strelka",
+    "HaplotypeCaller",
+    "Manta",
+    "Ascat"
+  ]
+}
+
+def checkReferenceMap(referenceMap) {
+  referenceDefined = true
+  referenceMap.each{ //Loop through all the references files to check their existence
+    referenceFile, fileToCheck ->
+    test = checkRefExistence(referenceFile, fileToCheck)
+    !(test) ? referenceDefined = false : ""
+  }
+  return (referenceDefined ? true : false)
+}
+
+def checkStepList(stepsList, realStepsList) {
+  stepCorrect = true
+  stepsList.each{ // Loop through all the possible steps check their existence and spelling
+    test = checkStepExistence(it, realStepsList)
+    !(test) ? stepCorrect = false : ""
+  }
+  return (stepCorrect ? true : false)
+}
+
 def checkRefExistence(referenceFile, fileToCheck) { // Check file existence
   try {assert file(fileToCheck).exists()}
   catch (AssertionError ae) {
@@ -1104,31 +1145,42 @@ def help_message(version, revision) { // Display help message
   log.info "       Adds more verbosity to workflow"
   log.info "    --version"
   log.info "       displays version number"
+  log.info "    Test:"
+  log.info "      to test CAW on smaller dataset, enter one of the following option"
+  log.info "    --testPreprocessing"
+  log.info "       Test `preprocessing` on tiny test data"
+  log.info "    --testRealign"
+  log.info "       Test `realign` on tiny test data"
+  log.info "       Need to run --testPreprocessing before"
+  log.info "    --testCoreVC"
+  log.info "       Test `preprocessing`, `MuTect1`, `Strelka` and `HaplotypeCaller` on tiny test data"
+  log.info "       Need to run --testPreprocessing before"
+  log.info "    --testSideVC"
+  log.info "       Test `skipPreprocessing`, `Ascat`, `Manta` and `HaplotypeCaller` on downSampled test data"
 }
 
 def start_message(version, revision) { // Display start message
   log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
-  log.info "Project     : ${workflow.projectDir}"
-  log.info "Directory   : ${workflow.launchDir}"
-  log.info "workDir     : ${workflow.workDir}"
+  log.info "Command Line: ${workflow.commandLine}"
+  log.info "Project Dir : ${workflow.projectDir}"
+  log.info "Launch Dir  : ${workflow.launchDir}"
+  log.info "Work Dir    : ${workflow.workDir}"
   log.info "Steps       : " + workflowSteps.join(", ")
-  log.info "Command line: ${workflow.commandLine}"
 }
 
 def version_message(version, revision) { // Display version message
   log.info "CANCER ANALYSIS WORKFLOW"
-  log.info "  version $version"
-  log.info "  revision: $revision"
-  log.info "Git info  : repository - $revision [$workflow.commitId]"
-  log.info "Project   : ${workflow.projectDir}"
-  log.info "Directory : ${workflow.launchDir}"
+  log.info "  version   : $version"
+  log.info "  revision  : $revision"
+  log.info "Git info    : repository - $revision [$workflow.commitId]"
 }
 
 workflow.onComplete { // Display complete message
   log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
-  log.info "Project     : ${workflow.projectDir}"
-  log.info "workDir     : ${workflow.workDir}"
-  log.info "Command line: ${workflow.commandLine}"
+  log.info "Command Line: ${workflow.commandLine}"
+  log.info "Project Dir : ${workflow.projectDir}"
+  log.info "Launch Dir  : ${workflow.launchDir}"
+  log.info "Work Dir    : ${workflow.workDir}"
   log.info "Steps       : " + workflowSteps.join(", ")
   log.info "Completed at: ${workflow.complete}"
   log.info "Duration    : ${workflow.duration}"
