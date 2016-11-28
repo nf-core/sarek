@@ -1070,8 +1070,8 @@ def extractFastqFiles(tsvFile) { // Channeling the TSV file containing FASTQ. Fo
       status     = list[2]
       idSample   = list[3]
       idRun      = list[4]
-      fastqFile1 = file(list[5])
-      fastqFile2 = file(list[6])
+      fastqFile1 = file("$list[5]")
+      fastqFile2 = file("$list[6]")
 
       checkFileExistence(fastqFile1)
       checkFileExistence(fastqFile2)
