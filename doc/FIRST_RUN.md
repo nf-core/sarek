@@ -7,31 +7,24 @@ mkdir test_CAW
 cd test_CAW
 ```
 
-## Copy and extract the sample test file
-```bash
-wget https://github.com/SciLifeLab/CAW/blob/master/data/tiny/tiny.tar.gz?raw=true -O tiny.tar.gz
-tar -xvzf tiny.tar.gz
-rm tiny.tar.gz
-```
-
-## Run the workflow
+## Test the workflow on a small dataset
 This workflow itself needs no installation. Nextflow will automatically fetch it from GitHub when launched if `SciLifeLab/CAW` is specified as the workflow name.
 ```bash
-nextflow run SciLifeLab/CAW --sample tiny.tsv
+nextflow run SciLifeLab/CAW --testPreprocessing
 ```
 If you're using a Swedish UPPMAX cluster, don't forget to provide your project ID.
 ```bash
-nextflow run SciLifeLab/CAW --sample tiny.tsv --project <UPPMAX_project_ID>
+nextflow run SciLifeLab/CAW --testPreprocessing --project <UPPMAX_project_ID>
 ```
 
 # Other possibility for advanced users
 
-## Clone the repository and run the workflow
+## Clone the repository and test the workflow on a small dataset
 You can download the repository yourself from GitHub and run them directly:
 ```bash
 git clone https://github.com/SciLifeLab/CAW
-cd CAW
-nextflow run main.nf --sample data/tsv/tiny.tsv --steps preprocessing
+cd test_CAW
+nextflow run main.nf --testPreprocessing
 ```
 
 ## Load Nextflow
