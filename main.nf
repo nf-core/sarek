@@ -84,7 +84,7 @@ if (!checkStepList(workflowSteps,stepList)) {exit 1, 'Unknown step(s), see --hel
 
 if (params.testPreprocessing) {
   test = true
-  testFile = file("${workflow.projectDir}/data/tsv/tiny-github.tsv")
+  testFile = file("${workflow.projectDir}/data/tsv/tiny.tsv")
   workflowSteps = ['preprocessing']
   referenceMap.put("intervals", "${workflow.projectDir}/repeats/tiny.list")
 } else if (params.testRealign) {
@@ -1070,13 +1070,21 @@ def extractFastqFiles(tsvFile) { // Channeling the TSV file containing FASTQ. Fo
       status     = list[2]
       idSample   = list[3]
       idRun      = list[4]
-      fastqFile1 = file(list[5])
-      fastqFile2 = file(list[6])
+      temp1 = list[5]
+      temp2 = list[6]
+
+      if ((workflow.commitId) && (params.testPreprocessing)) {
+        fastqFile1 = file("${workflow.projectDir}/$temp1")
+        fastqFile2 = file("${workflow.projectDir}/$temp2")
+      } else {
+        fastqFile1 = file("$temp1")
+        fastqFile2 = file("$temp2")
+      }
 
       checkFileExistence(fastqFile1)
       checkFileExistence(fastqFile2)
 
-      [ idPatient, gender, status, idSample, idRun, fastqFile1, fastqFile2 ]
+      [idPatient, gender, status, idSample, idRun, fastqFile1, fastqFile2]
     }
   return fastqFiles
 }
