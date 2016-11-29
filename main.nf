@@ -99,7 +99,7 @@ if (params.test) {
   referenceMap.put("intervals", "${workflow.projectDir}/repeats/tiny.list")
 } else if (params.testSideVC) {
   test = true
-  testFile = file("${workflow.projectDir}/data/tsv/DownsampledG15511-bam.tsv")
+  testFile = file("${workflow.projectDir}/data/tsv/G15511-recalibrated.tsv")
   workflowSteps = ['skipPreprocessing', 'Ascat', 'Manta', 'HaplotypeCaller']
 } else {test = false}
 
