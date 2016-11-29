@@ -40,7 +40,7 @@ To test CAW and run it on smaller dataset, use one of the following option:
 - `--test` will test step `preprocessing` on tiny test data.
 - `--testRealign` will test step `realign` on tiny test data. Need to run `nextflow run SciLifeLab/CAW --test` before.
 - `--testCoreVC` will test steps `preprocessing`, `MuTect1`, `Strelka` and `HaplotypeCaller` on tiny test data. Need to run `nextflow run SciLifeLab/CAW --test` before.
-- `--testSideVC` will test steps `skipPreprocessing`, `Ascat`, `Manta` and `HaplotypeCaller` on downSampled test data.
+- `--testSideVC` will test steps `skipPreprocessing`, `Ascat`, `Manta` and `HaplotypeCaller` on test downsampled set.
 
 # Nextflow options
 See the [options documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/OPTIONS.md)

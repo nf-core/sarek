@@ -1156,15 +1156,15 @@ def help_message(version, revision) { // Display help message
   log.info "    Test:"
   log.info "      to test CAW on smaller dataset, enter one of the following command"
   log.info "    nextflow run SciLifeLab/CAW --test"
-  log.info "       Test `preprocessing` on tiny test data"
+  log.info "       Test `preprocessing` on test tiny set"
   log.info "    nextflow run SciLifeLab/CAW --testRealign"
-  log.info "       Test `realign` on tiny test data"
+  log.info "       Test `realign` on test tiny set"
   log.info "       Need to do `nextflow run SciLifeLab/CAW --test` before"
   log.info "    nextflow run SciLifeLab/CAW --testCoreVC"
-  log.info "       Test `preprocessing`, `MuTect1`, `Strelka` and `HaplotypeCaller` on tiny test data"
+  log.info "       Test `preprocessing`, `MuTect1`, `Strelka` and `HaplotypeCaller` on test tiny set"
   log.info "       Need to do `nextflow run SciLifeLab/CAW --test` before"
   log.info "    nextflow run SciLifeLab/CAW --testSideVC"
-  log.info "       Test `skipPreprocessing`, `Ascat`, `Manta` and `HaplotypeCaller` on downSampled test data"
+  log.info "       Test `skipPreprocessing`, `Ascat`, `Manta` and `HaplotypeCaller` on test downSampled set"
 }
 
 def start_message(version, revision) { // Display start message
