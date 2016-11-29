@@ -37,9 +37,9 @@ nextflow run SciLifeLab/CAW --sample mysample.tsv --verbose
 
 ## Test
 To test CAW and run it on smaller dataset, use one of the following option:
-- `--testPreprocessing` will test step `preprocessing` on tiny test data.
-- `--testRealign` will test step `realign` on tiny test data. Need to run `--testPreprocessing` before.
-- `--testCoreVC` will test steps `preprocessing`, `MuTect1`, `Strelka` and `HaplotypeCaller` on tiny test data. Need to run `--testPreprocessing` before.
+- `--test` will test step `preprocessing` on tiny test data.
+- `--testRealign` will test step `realign` on tiny test data. Need to run `nextflow run SciLifeLab/CAW --test` before.
+- `--testCoreVC` will test steps `preprocessing`, `MuTect1`, `Strelka` and `HaplotypeCaller` on tiny test data. Need to run `nextflow run SciLifeLab/CAW --test` before.
 - `--testSideVC` will test steps `skipPreprocessing`, `Ascat`, `Manta` and `HaplotypeCaller` on downSampled test data.
 
 # Nextflow options
