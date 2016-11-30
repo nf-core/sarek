@@ -430,6 +430,7 @@ process RecalibrateBam {
     set idPatient, gender, status, idSample, file(bam), file(bai), recalibrationReport from recalibrationTable
     file genomeFile from file(referenceMap['genomeFile'])
     file genomeIndex from file(referenceMap['genomeIndex'])
+    file genomeDict from file(referenceMap['genomeDict'])
 
   output:
     set idPatient, gender, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam
