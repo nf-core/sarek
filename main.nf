@@ -385,9 +385,13 @@ process CreateRecalibrationTable {
     set idPatient, gender, status, idSample, file(bam), file(bai) from realignedBam
     file genomeFile from file(referenceMap['genomeFile'])
     file genomeIndex from file(referenceMap['genomeIndex'])
+    file genomeDict from file(referenceMap['genomeDict'])
     file dbsnp from file(referenceMap['dbsnp'])
+    file dbsnpIndex from file(referenceMap['dbsnpIndex'])
     file kgIndels from file(referenceMap['kgIndels'])
+    file kgIndex from file(referenceMap['kgIndex'])
     file millsIndels from file(referenceMap['millsIndels'])
+    file millsIndex from file(referenceMap['millsIndex'])
 
   output:
     set idPatient, gender, status, idSample, file(bam), file(bai), file("${idSample}.recal.table") into recalibrationTable
