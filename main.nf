@@ -140,7 +140,7 @@ process MapReads {
   tag {idRun}
 
   input:
-    set idPatient, gender, status, idSample, idRun, file(fq1), file(fq2) from fastqFiles
+    set idPatient, gender, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFiles
     file referenceMap["genomeFile"]
 
   output:
@@ -149,11 +149,11 @@ process MapReads {
   when: 'preprocessing' in workflowSteps
 
   script:
-  readGroup="\"@RG\\tID:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina\""
+  readGroup="\"@RG\\tID:$idRun\\tSM:$idSample\\tLB:$idSample\\tPL:illumina\""
   """
   set -eo pipefail
-  bwa mem -R ${readGroup} -B 3 -t ${task.cpus} -M ${referenceMap["genomeFile"]} ${fq1} ${fq2} | \
-  samtools view -bS -t ${referenceMap["genomeIndex"]} - | \
+  bwa mem -R $readGroup -B 3 -t $task.cpus -M $referenceMap['genomeFile'] $fastqFile1 $fastqFile2 | \
+  samtools view -bS -t $referenceMap['genomeIndex'] - | \
   samtools sort - > ${idRun}.bam
   """
 }
