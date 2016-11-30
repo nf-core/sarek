@@ -778,7 +778,7 @@ process RunStrelka {
   ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
   --tumor \$tumorPath \
   --normal \$normalPath \
-  --ref ${referenceMap["MantaRef"]} \
+  --ref ${referenceMap["genomeFile"]} \
   --config ${params.strelkaCFG} \
   --output-dir strelka
 
