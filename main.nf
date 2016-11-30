@@ -84,22 +84,22 @@ if (!checkStepList(workflowSteps,stepList)) {exit 1, 'Unknown step(s), see --hel
 
 if (params.test) {
   test = true
-  testFile = file("${workflow.projectDir}/data/tsv/tiny.tsv")
+  testFile = file("$workflow.projectDir/data/tsv/tiny.tsv")
   workflowSteps = ['preprocessing']
-  referenceMap.put("intervals", "${workflow.projectDir}/repeats/tiny.list")
+  referenceMap.put("intervals", "$workflow.projectDir/repeats/tiny.list")
 } else if (params.testRealign) {
   test = true
   testFile = file("$workflow.launchDir/${directoryMap['nonRealigned']}/nonRealigned.tsv")
   workflowSteps = ['realign']
-  referenceMap.put("intervals", "${workflow.projectDir}/repeats/tiny.list")
+  referenceMap.put("intervals", "$workflow.projectDir/repeats/tiny.list")
 } else if (params.testCoreVC) {
   test = true
-  testFile = file("${workflow.launchDir}/${directoryMap['recalibrated']}/recalibrated.tsv")
+  testFile = file("$workflow.launchDir/${directoryMap['recalibrated']}/recalibrated.tsv")
   workflowSteps = ['skipPreprocessing', 'MuTect1', 'Strelka', 'HaplotypeCaller']
-  referenceMap.put("intervals", "${workflow.projectDir}/repeats/tiny.list")
+  referenceMap.put("intervals", "$workflow.projectDir/repeats/tiny.list")
 } else if (params.testSideVC) {
   test = true
-  testFile = file("${workflow.projectDir}/data/tsv/G15511-recalibrated.tsv")
+  testFile = file("$workflow.projectDir/data/tsv/G15511-recalibrated.tsv")
   workflowSteps = ['skipPreprocessing', 'Ascat', 'Manta', 'HaplotypeCaller']
 } else {test = false}
 
@@ -767,7 +767,7 @@ process RunStrelka {
     file referenceMap["genomeIndex"]
 
   output:
-    set val("Strelka"), idPatient, gender, idSampleNormal, idSampleTumor, file("strelka/results/*.vcf") into strelkaOutput
+    set val("Strelka"), idPatient, gender, idSampleNormal, idSampleTumor, file("*.vcf") into strelkaOutput
 
   when: 'Strelka' in workflowSteps
 
@@ -785,6 +785,8 @@ process RunStrelka {
   cd strelka
 
   make -j ${task.cpus}
+
+  mv strelka/results/*.vcf .
   """
 }
 
