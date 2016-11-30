@@ -428,7 +428,7 @@ process RecalibrateBam {
 
   input:
     set idPatient, gender, status, idSample, file(bam), file(bai), recalibrationReport from recalibrationTable
-    file referenceMap['genomeFile']
+    file genomeFile from file(referenceMap['genomeFile'])
 
   output:
     set idPatient, gender, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam
@@ -440,9 +440,9 @@ process RecalibrateBam {
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+  -jar ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
   -T PrintReads \
-  -R ${referenceMap['genomeFile']} \
+  -R $genomeFile \
   -nct $task.cpus \
   -I $bam \
   -XL hs37d5 \
