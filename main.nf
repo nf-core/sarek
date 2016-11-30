@@ -141,7 +141,6 @@ process MapReads {
 
   input:
     set idPatient, gender, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFiles
-    file referenceMap["genomeFile"]
 
   output:
     set idPatient, gender, status, idSample, idRun, file("${idRun}.bam") into bam
@@ -149,10 +148,10 @@ process MapReads {
   when: 'preprocessing' in workflowSteps
 
   script:
-  readGroup="\"@RG\\tID:$idRun\\tSM:$idSample\\tLB:$idSample\\tPL:illumina\""
+  readGroup="@RG\\tID:$idRun\\tSM:$idSample\\tLB:$idSample\\tPL:illumina"
   """
   set -eo pipefail
-  bwa mem -R $readGroup -B 3 -t $task.cpus -M $referenceMap['genomeFile'] $fastqFile1 $fastqFile2 | \
+  bwa mem -R \"$readGroup\" -B 3 -t $task.cpus -M $referenceMap['genomeFile'] $fastqFile1 $fastqFile2 | \
   samtools view -bS -t $referenceMap['genomeIndex'] - | \
   samtools sort - > ${idRun}.bam
   """
@@ -233,7 +232,8 @@ process MarkDuplicates {
 
   script:
   """
-  java -Xmx${task.memory.toGiga()}g -jar ${params.picardHome}/MarkDuplicates.jar \
+  java -Xmx${task.memory.toGiga()}g \
+  -jar ${referenceMap['picardHome']}/MarkDuplicates.jar \
   INPUT=${bam} \
   METRICS_FILE=${bam}.metrics \
   TMP_DIR=. \
@@ -283,13 +283,13 @@ process CreateIntervals {
 
   input:
     set idPatient, gender, idSample_status, file(bam), file(bai) from duplicatesInterval
-    file gf from file(referenceMap["genomeFile"])
-    file gi from file(referenceMap["genomeIndex"])
-    file gd from file(referenceMap["genomeDict"])
-    file ki from file(referenceMap["kgIndels"])
-    file kix from file(referenceMap["kgIndex"])
-    file mi from file(referenceMap["millsIndels"])
-    file mix from file(referenceMap["millsIndex"])
+    file gf from file(referenceMap['genomeFile'])
+    file gi from file(referenceMap['genomeIndex'])
+    file gd from file(referenceMap['genomeDict'])
+    file ki from file(referenceMap['kgIndels'])
+    file kix from file(referenceMap['kgIndex'])
+    file mi from file(referenceMap['millsIndels'])
+    file mix from file(referenceMap['millsIndex'])
 
   output:
     file("${idPatient}.intervals") into intervals
@@ -299,7 +299,8 @@ process CreateIntervals {
   script:
   bams = bam.collect{"-I $it"}.join(' ')
   """
-  java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+  java -Xmx${task.memory.toGiga()}g \
+  -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T RealignerTargetCreator \
   $bams \
   -R $gf \
@@ -322,13 +323,13 @@ process RealignBams {
 
   input:
     set idPatient, gender, idSample_status, file(bam), file(bai) from duplicatesRealign
-    file gf from file(referenceMap["genomeFile"])
-    file gi from file(referenceMap["genomeIndex"])
-    file gd from file(referenceMap["genomeDict"])
-    file ki from file(referenceMap["kgIndels"])
-    file kix from file(referenceMap["kgIndex"])
-    file mi from file(referenceMap["millsIndels"])
-    file mix from file(referenceMap["millsIndex"])
+    file gf from file(referenceMap['genomeFile'])
+    file gi from file(referenceMap['genomeIndex'])
+    file gd from file(referenceMap['genomeDict'])
+    file ki from file(referenceMap['kgIndels'])
+    file kix from file(referenceMap['kgIndex'])
+    file mi from file(referenceMap['millsIndels'])
+    file mix from file(referenceMap['millsIndex'])
     file intervals from intervals
 
   output:
@@ -343,7 +344,8 @@ process RealignBams {
   script:
   bams = bam.collect{"-I $it"}.join(' ')
   """
-  java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+  java -Xmx${task.memory.toGiga()}g \
+  -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T IndelRealigner \
   $bams \
   -R $gf \
@@ -387,10 +389,10 @@ process CreateRecalibrationTable {
 
   input:
     set idPatient, gender, status, idSample, file(bam), file(bai) from realignedBam
-    file referenceMap["genomeFile"]
-    file referenceMap["dbsnp"]
-    file referenceMap["kgIndels"]
-    file referenceMap["millsIndels"]
+    file referenceMap['genomeFile']
+    file referenceMap['dbsnp']
+    file referenceMap['kgIndels']
+    file referenceMap['millsIndels']
 
   output:
     set idPatient, gender, status, idSample, file(bam), file(bai), file("${idSample}.recal.table") into recalibrationTable
@@ -399,14 +401,15 @@ process CreateRecalibrationTable {
 
   script:
   """
-  java -Xmx${task.memory.toGiga()}g -Djava.io.tmpdir="/tmp" \
+  java -Xmx${task.memory.toGiga()}g \
+  -Djava.io.tmpdir="/tmp" \
   -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T BaseRecalibrator \
-  -R ${referenceMap["genomeFile"]} \
+  -R ${referenceMap['genomeFile']} \
   -I $bam \
-  -knownSites ${referenceMap["dbsnp"]} \
-  -knownSites ${referenceMap["kgIndels"]} \
-  -knownSites ${referenceMap["millsIndels"]} \
+  -knownSites ${referenceMap['dbsnp']} \
+  -knownSites ${referenceMap['kgIndels']} \
+  -knownSites ${referenceMap['millsIndels']} \
   -nct ${task.cpus} \
   -XL hs37d5 \
   -XL NC_007605 \
@@ -426,7 +429,7 @@ process RecalibrateBam {
 
   input:
     set idPatient, gender, status, idSample, file(bam), file(bai), recalibrationReport from recalibrationTable
-    file referenceMap["genomeFile"]
+    file referenceMap['genomeFile']
 
   output:
     set idPatient, gender, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam
@@ -440,7 +443,7 @@ process RecalibrateBam {
   java -Xmx${task.memory.toGiga()}g \
   -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T PrintReads \
-  -R ${referenceMap["genomeFile"]} \
+  -R ${referenceMap['genomeFile']} \
   -nct ${task.cpus} \
   -I $bam \
   -XL hs37d5 \
@@ -583,8 +586,8 @@ process RunHaplotypecaller {
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), genInt, gen_int from bamsFHC //Are these values `ped to bamNormal already?
-    file referenceMap["genomeFile"]
-    file referenceMap["genomeIndex"]
+    file referenceMap['genomeFile']
+    file referenceMap['genomeIndex']
 
   output:
     set val("HaplotypeCaller"), idPatient, gender, idSampleNormal, val("${gen_int}_${idSampleNormal}"), file("${gen_int}_${idSampleNormal}.vcf") into haplotypecallerOutput
@@ -594,10 +597,11 @@ process RunHaplotypecaller {
   //parellelization information: "Many users have reported issues running HaplotypeCaller with the -nct argument, so we recommend using Queue to parallelize HaplotypeCaller instead of multithreading." However, it can take the -nct argument.
   script:
   """
-  java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+  java -Xmx${task.memory.toGiga()}g \
+  -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T HaplotypeCaller \
-  -R ${referenceMap["genomeFile"]} \
-  --dbsnp ${referenceMap["dbsnp"]} \
+  -R ${referenceMap['genomeFile']} \
+  --dbsnp ${referenceMap['dbsnp']} \
   -I $bamNormal \
   -L \"${genInt}\" \
   -o ${gen_int}_${idSampleNormal}.vcf
@@ -626,11 +630,12 @@ process RunMutect1 {
 
   script:
   """
-  java -Xmx${task.memory.toGiga()}g -jar ${params.mutect1Home}/muTect.jar \
+  java -Xmx${task.memory.toGiga()}g \
+  -jar ${params.mutect1Home}/muTect.jar \
   -T MuTect \
-  -R ${referenceMap["genomeFile"]} \
-  --cosmic ${referenceMap["cosmic41"]} \
-  --dbsnp ${referenceMap["dbsnp"]} \
+  -R ${referenceMap['genomeFile']} \
+  --cosmic ${referenceMap['cosmic']} \
+  --dbsnp ${referenceMap['dbsnp']} \
   -I:normal $bamNormal \
   -I:tumor $bamTumor \
   -L \"${genInt}\" \
@@ -664,11 +669,12 @@ process RunMutect2 {
 
   script:
   """
-  java -Xmx${task.memory.toGiga()}g -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+  java -Xmx${task.memory.toGiga()}g \
+  -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T MuTect2 \
-  -R ${referenceMap["genomeFile"]} \
-  --cosmic ${referenceMap["cosmic41"]} \
-  --dbsnp ${referenceMap["dbsnp"]} \
+  -R ${referenceMap['genomeFile']} \
+  --cosmic ${referenceMap['cosmic']} \
+  --dbsnp ${referenceMap['dbsnp']} \
   -I:normal $bamNormal \
   -I:tumor $bamTumor \
   -U ALLOW_SEQ_DICT_INCOMPATIBILITY \
@@ -696,7 +702,7 @@ process RunVardict {
 
   script:
   """
-  ${params.vardictHome}/vardict.pl -G ${referenceMap["genomeFile"]} \
+  ${params.vardictHome}/vardict.pl -G ${referenceMap['genomeFile']} \
   -f 0.01 -N $bamTumor \
   -b "$bamTumor|$bamNormal" \
   -z 1 -F 0x500 \
@@ -748,7 +754,8 @@ process ConcatVCF {
 
   else
     """
-    java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${referenceMap["genomeFile"]} $vcfFiles --outputFile $outputFile
+    java -Xmx${task.memory.toGiga()}g \
+    -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${referenceMap['genomeFile']} $vcfFiles --outputFile $outputFile
     """
 }
 
@@ -763,8 +770,8 @@ process RunStrelka {
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForStrelka
-    file referenceMap["genomeFile"]
-    file referenceMap["genomeIndex"]
+    file referenceMap['genomeFile']
+    file referenceMap['genomeIndex']
 
   output:
     set val("Strelka"), idPatient, gender, idSampleNormal, idSampleTumor, file("strelka/results/*.vcf") into strelkaOutput
@@ -778,7 +785,7 @@ process RunStrelka {
   ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
   --tumor \$tumorPath \
   --normal \$normalPath \
-  --ref ${referenceMap["genomeFile"]} \
+  --ref ${referenceMap['genomeFile']} \
   --config ${params.strelkaCFG} \
   --output-dir strelka
 
@@ -799,8 +806,8 @@ process RunManta {
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
-    file referenceMap["MantaRef"]
-    file referenceMap["MantaIndex"]
+    file referenceMap['MantaRef']
+    file referenceMap['MantaIndex']
 
   output:
     set val("Manta"), idPatient, gender, idSampleNormal, idSampleTumor, file("${idSampleNormal}_${idSampleTumor}.somaticSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.diploidSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf") into mantaOutput
@@ -818,7 +825,7 @@ process RunManta {
   samtools view -H ${bamTumor} | grep -v hs37d5 | samtools reheader - ${bamTumor} > Tumor.bam
   samtools index Tumor.bam
 
-  configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference ${referenceMap["MantaRef"]} --runDir MantaDir
+  configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference ${referenceMap['MantaRef']} --runDir MantaDir
   python MantaDir/runWorkflow.py -m local -j ${task.cpus}
   gunzip -c MantaDir/results/variants/somaticSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.somaticSV.vcf
   gunzip -c MantaDir/results/variants/candidateSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSV.vcf
@@ -838,9 +845,9 @@ process RunAlleleCount {
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForAscat
-    file referenceMap["genomeFile"]
-    file referenceMap["genomeIndex"]
-    file referenceMap["acLoci"]
+    file referenceMap['genomeFile']
+    file referenceMap['genomeIndex']
+    file referenceMap['acLoci']
 
   output:
     set idPatient, gender, idSampleNormal, idSampleTumor, file("${idSampleNormal}.alleleCount"), file("${idSampleTumor}.alleleCount") into alleleCountOutput
@@ -849,8 +856,8 @@ process RunAlleleCount {
 
   script:
   """
-  alleleCounter -l ${referenceMap["acLoci"]} -r ${referenceMap["genomeFile"]} -b ${bamNormal} -o ${idSampleNormal}.alleleCount;
-  alleleCounter -l ${referenceMap["acLoci"]} -r ${referenceMap["genomeFile"]} -b ${bamTumor} -o ${idSampleTumor}.alleleCount;
+  alleleCounter -l ${referenceMap['acLoci']} -r ${referenceMap['genomeFile']} -b ${bamNormal} -o ${idSampleNormal}.alleleCount;
+  alleleCounter -l ${referenceMap['acLoci']} -r ${referenceMap['genomeFile']} -b ${bamTumor} -o ${idSampleTumor}.alleleCount;
   """
 }
 
@@ -967,51 +974,50 @@ def checkUppmaxProject() {
 
 def defineReferenceMap() {
   return [
-    "genomeFile"  : params.genome,      // genome reference
-    "genomeIndex" : params.genomeIndex, // genome reference index
-    "genomeDict"  : params.genomeDict,  // genome reference dictionary
-    "kgIndels"    : params.kgIndels,    // 1000 Genomes SNPs
-    "kgIndex"     : params.kgIndex,     // 1000 Genomes SNPs index
-    "dbsnp"       : params.dbsnp,       // dbSNP
-    "dbsnpIndex"  : params.dbsnpIndex,  // dbSNP index
-    "millsIndels" : params.millsIndels, // Mill's Golden set of SNPs
-    "millsIndex"  : params.millsIndex,  // Mill's Golden set index
-    "cosmic41"    : params.cosmic41,    // cosmic vcf file with VCF4.1 header
-    "cosmic"      : params.cosmic,      // cosmic vcf file
-    "intervals"   : params.intervals,   // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
-    "MantaRef"    : params.mantaRef,    // copy of the genome reference file
-    "MantaIndex"  : params.mantaIndex,  // reference index indexed with samtools/0.1.19
-    "acLoci"      : params.acLoci       // loci file for ascat
+    'genomeFile'  : params.genome,      // genome reference
+    'genomeIndex' : params.genomeIndex, // genome reference index
+    'genomeDict'  : params.genomeDict,  // genome reference dictionary
+    'kgIndels'    : params.kgIndels,    // 1000 Genomes SNPs
+    'kgIndex'     : params.kgIndex,     // 1000 Genomes SNPs index
+    'dbsnp'       : params.dbsnp,       // dbSNP
+    'dbsnpIndex'  : params.dbsnpIndex,  // dbSNP index
+    'millsIndels' : params.millsIndels, // Mill's Golden set of SNPs
+    'millsIndex'  : params.millsIndex,  // Mill's Golden set index
+    'cosmic'      : params.cosmic,      // cosmic vcf file with VCF4.1 header
+    'intervals'   : params.intervals,   // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
+    'MantaRef'    : params.mantaRef,    // copy of the genome reference file
+    'MantaIndex'  : params.mantaIndex,  // reference index indexed with samtools/0.1.19
+    'acLoci'      : params.acLoci,      // loci file for ascat
+    'picardHome'  : params.picardHome   // path to Picard
   ]
 }
 
 def defineDirectoryMap() {
   return [
-    "nonRealigned"    : 'Preprocessing/NonRealigned',
-    "recalibrated"    : 'Preprocessing/Recalibrated',
-    "VariantCalling"  : 'VariantCalling',
-    "MuTect1"         : 'VariantCalling/MuTect1',
-    "MuTect2"         : 'VariantCalling/MuTect2',
-    "VarDict"         : 'VariantCalling/VarDictJava',
-    "Strelka"         : 'VariantCalling/Strelka',
-    "HaplotypeCaller" : 'VariantCalling/HaplotypeCaller',
-    "Manta"           : 'VariantCalling/Manta',
-    "Ascat"           : 'VariantCalling/Ascat'
+    'nonRealigned'    : 'Preprocessing/NonRealigned',
+    'recalibrated'    : 'Preprocessing/Recalibrated',
+    'MuTect1'         : 'VariantCalling/MuTect1',
+    'MuTect2'         : 'VariantCalling/MuTect2',
+    'VarDict'         : 'VariantCalling/VarDict',
+    'Strelka'         : 'VariantCalling/Strelka',
+    'HaplotypeCaller' : 'VariantCalling/HaplotypeCaller',
+    'Manta'           : 'VariantCalling/Manta',
+    'Ascat'           : 'VariantCalling/Ascat'
   ]
 }
 
 def defineStepList() {
   return [
-    "preprocessing",
-    "realign",
-    "skipPreprocessing",
-    "MuTect1",
-    "MuTect2",
-    "VarDict",
-    "Strelka",
-    "HaplotypeCaller",
-    "Manta",
-    "Ascat"
+    'preprocessing',
+    'realign',
+    'skipPreprocessing',
+    'MuTect1',
+    'MuTect2',
+    'VarDict',
+    'Strelka',
+    'HaplotypeCaller',
+    'Manta',
+    'Ascat'
   ]
 }
 
