@@ -84,22 +84,22 @@ if (!checkStepList(workflowSteps,stepList)) {exit 1, 'Unknown step(s), see --hel
 
 if (params.test) {
   test = true
-  testFile = file("${workflow.projectDir}/data/tsv/tiny.tsv")
+  testFile = file("$workflow.projectDir/data/tsv/tiny.tsv")
   workflowSteps = ['preprocessing']
-  referenceMap.put("intervals", "${workflow.projectDir}/repeats/tiny.list")
+  referenceMap.put("intervals", "$workflow.projectDir/repeats/tiny.list")
 } else if (params.testRealign) {
   test = true
   testFile = file("$workflow.launchDir/${directoryMap['nonRealigned']}/nonRealigned.tsv")
   workflowSteps = ['realign']
-  referenceMap.put("intervals", "${workflow.projectDir}/repeats/tiny.list")
+  referenceMap.put("intervals", "$workflow.projectDir/repeats/tiny.list")
 } else if (params.testCoreVC) {
   test = true
-  testFile = file("${workflow.launchDir}/${directoryMap['recalibrated']}/recalibrated.tsv")
+  testFile = file("$workflow.launchDir/${directoryMap['recalibrated']}/recalibrated.tsv")
   workflowSteps = ['skipPreprocessing', 'MuTect1', 'Strelka', 'HaplotypeCaller']
-  referenceMap.put("intervals", "${workflow.projectDir}/repeats/tiny.list")
+  referenceMap.put("intervals", "$workflow.projectDir/repeats/tiny.list")
 } else if (params.testSideVC) {
   test = true
-  testFile = file("${workflow.projectDir}/data/tsv/G15511-recalibrated.tsv")
+  testFile = file("$workflow.projectDir/data/tsv/G15511-recalibrated.tsv")
   workflowSteps = ['skipPreprocessing', 'Ascat', 'Manta', 'HaplotypeCaller']
 } else {test = false}
 
@@ -512,7 +512,7 @@ if (verbose) {
 // from the "1:1-2000" string make ["1:1-2000","1_1-2000"]
 
 // define intervals file by --intervals
-intervals = Channel.from(file(params.intervals).readLines())
+intervals = Channel.from(file(referenceMap['intervals']).readLines())
 gI = intervals.map{[it,it.replaceFirst(/\:/,"_")]}
 
 if ('HaplotypeCaller' in workflowSteps) {
@@ -748,7 +748,7 @@ process ConcatVCF {
 
   else
     """
-    java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${referenceMap["genomeFile"]} -V $vcfFiles --outputFile $outputFile
+    java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${referenceMap["genomeFile"]} $vcfFiles --outputFile $outputFile
     """
 }
 
@@ -773,18 +773,18 @@ process RunStrelka {
 
   script:
   """
-  tumorPath=`readlink ${bamTumor}`
-  normalPath=`readlink ${bamNormal}`
+  tumorPath=`readlink $bamTumor`
+  normalPath=`readlink $bamNormal`
   ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
   --tumor \$tumorPath \
   --normal \$normalPath \
-  --ref ${referenceMap["MantaRef"]} \
+  --ref ${referenceMap["genomeFile"]} \
   --config ${params.strelkaCFG} \
   --output-dir strelka
 
   cd strelka
 
-  make -j ${task.cpus}
+  make -j $task.cpus
   """
 }
 
