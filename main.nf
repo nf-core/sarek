@@ -455,7 +455,7 @@ process RecalibrateBam {
 }
 
 recalibratedBamTSV.map { idPatient, gender, status, idSample, bam, bai ->
-  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap['recalibrated']}/${bam}\t${directoryMap['recalibrated']}/${bai}\n"
+  "$idPatient\t$gender\t$status\t$idSample\t${directoryMap['recalibrated']}/$bam\t${directoryMap['recalibrated']}/$bai\n"
 }.collectFile( name: 'recalibrated.tsv', sort: true, storeDir: directoryMap['recalibrated'])
 
 if ('skipPreprocessing' in workflowSteps) {
@@ -517,7 +517,7 @@ if (verbose) {
 
 // define intervals file by --intervals
 intervals = Channel.from(file(referenceMap['intervals']).readLines())
-gI = intervals.map{[it,it.replaceFirst(/\:/,"_")]}
+gI = intervals.map{[it,it.replaceFirst(/\:/,'_')]}
 
 if ('HaplotypeCaller' in workflowSteps) {
   (bamsFHC, bamsNormal, gI) = generateIntervalsForVC(bamsNormal, gI)
@@ -604,7 +604,7 @@ process RunHaplotypecaller {
   -R ${referenceMap['genomeFile']} \
   --dbsnp ${referenceMap['dbsnp']} \
   -I $bamNormal \
-  -L \"${genInt}\" \
+  -L \"$genInt\" \
   -o ${gen_int}_${idSampleNormal}.vcf
   """
 }
@@ -939,6 +939,10 @@ process RunAscat {
   #plot(sort(ascat.output\$aberrantcellfraction))
   #plot(density(ascat.output\$ploidy))
   """ //To restore syntaxic coloration: "
+}
+
+if ('Ascat' in workflowSteps) {
+  if (verbose) {ascatOutput = ascatOutput.view {"Ascat output: $it"}}
 }
 
 /*
