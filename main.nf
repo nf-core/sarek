@@ -512,7 +512,7 @@ if (verbose) {
 // from the "1:1-2000" string make ["1:1-2000","1_1-2000"]
 
 // define intervals file by --intervals
-intervals = Channel.from(file(params.intervals).readLines())
+intervals = Channel.from(file(referenceMap['intervals']).readLines())
 gI = intervals.map{[it,it.replaceFirst(/\:/,"_")]}
 
 if ('HaplotypeCaller' in workflowSteps) {
