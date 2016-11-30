@@ -740,10 +740,7 @@ process ConcatVCF {
 
   script:
   vcfFiles = vcFiles.collect{"-V $it"}.join(' ')
-  if (variantCaller == 'HaplotypeCaller')
-    outputFile = "${variantCaller}_${idPatient}_${idSampleNormal}.vcf"
-  else
-    outputFile = "${variantCaller}_${idPatient}_${idSampleNormal}_${idSampleTumor}.vcf"
+  outputFile = (variantCaller == 'HaplotypeCaller' ? "${variantCaller}_${idPatient}_${idSampleNormal}.vcf" : "${variantCaller}_${idPatient}_${idSampleNormal}_${idSampleTumor}.vcf")
 
   if (variantCaller == 'VarDict')
     """
@@ -756,7 +753,10 @@ process ConcatVCF {
   else
     """
     java -Xmx${task.memory.toGiga()}g \
-    -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${referenceMap['genomeFile']} $vcfFiles --outputFile $outputFile
+    -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants \
+    --reference ${referenceMap['genomeFile']} \
+    $vcfFiles \
+    --outputFile $outputFile
     """
 }
 
@@ -820,10 +820,10 @@ process RunManta {
   script:
   """
   set -eo pipefail
-  samtools view -H ${bamNormal} | grep -v hs37d5 | samtools reheader  - ${bamNormal} > Normal.bam
+  samtools view -H $bamNormal | grep -v hs37d5 | samtools reheader - $bamNormal > Normal.bam
   samtools index Normal.bam
 
-  samtools view -H ${bamTumor} | grep -v hs37d5 | samtools reheader - ${bamTumor} > Tumor.bam
+  samtools view -H $bamTumor | grep -v hs37d5 | samtools reheader - $bamTumor > Tumor.bam
   samtools index Tumor.bam
 
   configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference ${referenceMap['MantaRef']} --runDir MantaDir
@@ -857,8 +857,8 @@ process RunAlleleCount {
 
   script:
   """
-  alleleCounter -l ${referenceMap['acLoci']} -r ${referenceMap['genomeFile']} -b ${bamNormal} -o ${idSampleNormal}.alleleCount;
-  alleleCounter -l ${referenceMap['acLoci']} -r ${referenceMap['genomeFile']} -b ${bamTumor} -o ${idSampleTumor}.alleleCount;
+  alleleCounter -l ${referenceMap['acLoci']} -r ${referenceMap['genomeFile']} -b $bamNormal -o ${idSampleNormal}.alleleCount;
+  alleleCounter -l ${referenceMap['acLoci']} -r ${referenceMap['genomeFile']} -b $bamTumor -o ${idSampleTumor}.alleleCount;
   """
 }
 
@@ -877,7 +877,7 @@ process RunConvertAlleleCounts {
 
   script:
   """
-  convertAlleleCounts.r ${idSampleTumor} ${alleleCountTumor} ${idSampleNormal} ${alleleCountNormal} ${gender}
+  convertAlleleCounts.r $idSampleTumor $alleleCountTumor $idSampleNormal $alleleCountNormal $gender
   """
 }
 
@@ -921,10 +921,10 @@ process RunAscat {
   }
    
   options(bitmapType='cairo')
-  tumorbaf = "${bafTumor}"
-  tumorlogr = "${logrTumor}"
-  normalbaf = "${bafNormal}"
-  normallogr = "${logrNormal}"
+  tumorbaf = "$bafTumor"
+  tumorlogr = "$logrTumor"
+  normalbaf = "$bafNormal"
+  normallogr = "$logrNormal"
   #Load the  data
   ascat.bc <- ascat.loadData(Tumor_LogR_file=tumorlogr, Tumor_BAF_file=tumorbaf, Germline_LogR_file=normallogr, Germline_BAF_file=normalbaf)
   #Plot the raw data
