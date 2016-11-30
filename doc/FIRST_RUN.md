@@ -7,31 +7,24 @@ mkdir test_CAW
 cd test_CAW
 ```
 
-## Copy and extract the sample test file
-```bash
-wget https://github.com/SciLifeLab/CAW/blob/master/data/tiny/tiny.tar.gz?raw=true -O tiny.tar.gz
-tar -xvzf tiny.tar.gz
-rm tiny.tar.gz
-```
-
-## Run the workflow
+## Test the workflow on a test tiny set
 This workflow itself needs no installation. Nextflow will automatically fetch it from GitHub when launched if `SciLifeLab/CAW` is specified as the workflow name.
 ```bash
-nextflow run SciLifeLab/CAW --sample tiny.tsv
+nextflow run SciLifeLab/CAW --test
 ```
 If you're using a Swedish UPPMAX cluster, don't forget to provide your project ID.
 ```bash
-nextflow run SciLifeLab/CAW --sample tiny.tsv --project <UPPMAX_project_ID>
+nextflow run SciLifeLab/CAW --test --project <UPPMAX Project ID>
 ```
 
 # Other possibility for advanced users
 
-## Clone the repository and run the workflow
+## Clone the repository and test the workflow on a test tiny set
 You can download the repository yourself from GitHub and run them directly:
 ```bash
-git clone https://github.com/SciLifeLab/CAW
-cd CAW
-nextflow run main.nf --sample data/tsv/tiny.tsv --steps preprocessing
+git clone https://github.com/SciLifeLab/CAW test_CAW
+cd test_CAW
+nextflow run main.nf --test
 ```
 
 ## Load Nextflow
@@ -44,7 +37,8 @@ Environnement variables are set up each time the module is loaded, so you might 
 ## Running tests in interactive mode on milou
 You can try the test data by changing to the interactive mode on milou and run the test tiny set like:
 ```
-$ interactive -A b2015110 -p node
+$ interactive -A <UPPMAX Project ID> -p node
 [ ... login messages ... ]
-$ nextflow run main.nf -profile interactive --sample data/tsv/tiny.tsv --project b2015110 --projectID J.Doe --sampleID Dummy --verbose
+$ nextflow run main.nf -profile interactive --test --project <UPPMAX Project ID>
 ```
+For more tests, see [Usage documentation](USAGE.md#test)

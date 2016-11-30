@@ -1,5 +1,8 @@
 # Usage
-I would recommand to run Nextflow within a screen session (cf [help on screen](https://www.howtoforge.com/linux_screen)). The typical command line is:
+I would recommand to run Nextflow within a screen session (cf [help on screen](https://www.howtoforge.com/linux_screen)).
+It is recommanded to run only one instance of CAW for one patient in the same directory.
+Meaning there should be only one patient analysed in one directory.
+The typical command line is:
 ```bash
 nextflow run SciLifeLab/CAW --sample <file.tsv>
 ```
@@ -31,6 +34,13 @@ To have more information about files being processed, you can use the verbose op
 ```bash
 nextflow run SciLifeLab/CAW --sample mysample.tsv --verbose
 ```
+
+## Test
+To test CAW and run it on smaller dataset, use one of the following option:
+- `--test` will test step `preprocessing` on tiny test data.
+- `--testRealign` will test step `realign` on tiny test data. Need to run `nextflow run SciLifeLab/CAW --test` before.
+- `--testCoreVC` will test steps `skipPreprocessing`, `MuTect1`, `Strelka` and `HaplotypeCaller` on tiny test data. Need to run `nextflow run SciLifeLab/CAW --test` before.
+- `--testSideVC` will test steps `skipPreprocessing`, `Ascat`, `Manta` and `HaplotypeCaller` on test downsampled set.
 
 # Nextflow options
 See the [options documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/OPTIONS.md)

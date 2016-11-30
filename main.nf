@@ -49,13 +49,13 @@ vim: syntax=groovy
 */
 
 revision = grabGitRevision() ?: ''
-version  = "v0.9"
-referenceDefined = true
-stepCorrect = true
+version = 'v0.9'
 verbose = false
+testFile = ''
+testSteps = []
 workflowSteps = []
 
-if ((workflow.profile == 'standard' || workflow.profile == 'interactive') && !params.project) {exit 1, "No UPPMAX project ID found! Use --project"}
+if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
 
 switch (params) {
   case {params.help} :
@@ -75,92 +75,55 @@ switch (params) {
 
 if (params.verbose) {verbose = true}
 
-referenceMap = [
-  "genomeFile"  : params.genome,      // genome reference
-  "genomeIndex" : params.genomeIndex, // genome reference index
-  "genomeDict"  : params.genomeDict,  // genome reference dictionary
-  "kgIndels"    : params.kgIndels,    // 1000 Genomes SNPs
-  "kgIndex"     : params.kgIndex,     // 1000 Genomes SNPs index
-  "dbsnp"       : params.dbsnp,       // dbSNP
-  "dbsnpIndex"  : params.dbsnpIndex,  // dbSNP index
-  "millsIndels" : params.millsIndels, // Mill's Golden set of SNPs
-  "millsIndex"  : params.millsIndex,  // Mill's Golden set index
-  "cosmic41"    : params.cosmic41,    // cosmic vcf file with VCF4.1 header
-  "cosmic"      : params.cosmic,      // cosmic vcf file
-  "intervals"   : params.intervals,   // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
-  "MantaRef"    : params.mantaRef,    // copy of the genome reference file
-  "MantaIndex"  : params.mantaIndex,  // reference index indexed with samtools/0.1.19
-  "acLoci"      : params.acLoci       // loci file for ascat
-]
+referenceMap = defineReferenceMap()
+directoryMap = defineDirectoryMap()
+stepList = defineStepList()
 
-stepList = [
-  "preprocessing",
-  "realign",
-  "skipPreprocessing",
-  "MuTect1",
-  "MuTect2",
-  "VarDict",
-  "Strelka",
-  "HaplotypeCaller",
-  "Manta",
-  "Ascat"
-]
+if (!checkReferenceMap(referenceMap)) {exit 1, 'Missing Reference file(s), see --help for more information'}
+if (!checkStepList(workflowSteps,stepList)) {exit 1, 'Unknown step(s), see --help for more information'}
 
-directoryMap = [
-  "nonRealigned"    : 'Preprocessing/NonRealigned',
-  "recalibrated"    : 'Preprocessing/Recalibrated',
-  "VariantCalling"  : 'VariantCalling',
-  "MuTect1"         : 'VariantCalling/MuTect1',
-  "MuTect2"         : 'VariantCalling/MuTect2',
-  "VarDict"         : 'VariantCalling/VarDictJava',
-  "Strelka"         : 'VariantCalling/Strelka',
-  "HaplotypeCaller" : 'VariantCalling/HaplotypeCaller',
-  "Manta"           : 'VariantCalling/Manta',
-  "Ascat"           : 'VariantCalling/Ascat'
-]
-
-referenceMap.each{ //Loop through all the references files to check their existence
-  referenceFile, fileToCheck -> 
-  test = checkRefExistence(referenceFile, fileToCheck)
-  !(test) ? referenceDefined = false : ""
-}
-
-if (!referenceDefined) {
-  exit 1, 'Missing Reference file(s), see --help for more information'
-}
-
-workflowSteps.each{ // Loop through all the possible steps check their existence and spelling
-  test = checkStepExistence(it, stepList)
-  !(test) ? stepCorrect = false : ""
-}
-
-if (!stepCorrect) {
-  exit 1, 'Unknown step(s), see --help for more information'
-}
+if (params.test) {
+  test = true
+  testFile = file("${workflow.projectDir}/data/tsv/tiny.tsv")
+  workflowSteps = ['preprocessing']
+  referenceMap.put("intervals", "${workflow.projectDir}/repeats/tiny.list")
+} else if (params.testRealign) {
+  test = true
+  testFile = file("$workflow.launchDir/${directoryMap['nonRealigned']}/nonRealigned.tsv")
+  workflowSteps = ['realign']
+  referenceMap.put("intervals", "${workflow.projectDir}/repeats/tiny.list")
+} else if (params.testCoreVC) {
+  test = true
+  testFile = file("${workflow.launchDir}/${directoryMap['recalibrated']}/recalibrated.tsv")
+  workflowSteps = ['skipPreprocessing', 'MuTect1', 'Strelka', 'HaplotypeCaller']
+  referenceMap.put("intervals", "${workflow.projectDir}/repeats/tiny.list")
+} else if (params.testSideVC) {
+  test = true
+  testFile = file("${workflow.projectDir}/data/tsv/G15511-recalibrated.tsv")
+  workflowSteps = ['skipPreprocessing', 'Ascat', 'Manta', 'HaplotypeCaller']
+} else {test = false}
 
 if (('preprocessing' in workflowSteps && ('realign' in workflowSteps || 'skipPreprocessing' in workflowSteps)) || ('realign' in workflowSteps && 'skipPreprocessing' in workflowSteps)) {
   exit 1, 'Please choose only one step between preprocessing, realign and skipPreprocessing, see --help for more information'
 }
-
 if (!('preprocessing' in workflowSteps || 'realign' in workflowSteps || 'skipPreprocessing' in workflowSteps)) {
   exit 1, 'Please choose one step between preprocessing, realign and skipPreprocessing, see --help for more information'
-}
-
-if (!params.sample) {
-  exit 1, 'Missing TSV file, see --help for more information'
 }
 
 /*
  * Extract and verify content of TSV file
  */
 
+if ((!params.sample) && !(test)) {exit 1, 'Missing TSV file, see --help for more information'}
+tsvFile = (!(test) ? file(params.sample) : testFile)
+
 fastqFiles = Channel.create()
 
 if ('preprocessing' in workflowSteps) {
-  fastqFiles = extractFastqFiles(file(params.sample))
+  fastqFiles = extractFastqFiles(tsvFile)
   if (verbose) {fastqFiles = fastqFiles.view {"FASTQ files and IDs to process: $it"}}
 } else if ('realign' in workflowSteps || 'skipPreprocessing' in workflowSteps) {
-  bamFiles = extractBamFiles(file(params.sample))
+  bamFiles = extractBamFiles(tsvFile)
   if (verbose) {bamFiles = bamFiles.view {"Bam files and IDs to process: $it"}}
   fastqFiles.close()
 }
@@ -257,7 +220,7 @@ if ('preprocessing' in workflowSteps) {
 process MarkDuplicates {
   tag {idSample}
 
-  publishDir directoryMap["nonRealigned"], mode: 'copy'
+  publishDir directoryMap['nonRealigned'], mode: 'copy'
 
   input:
     set idPatient, gender, status, idSample, file(bam) from bamList
@@ -282,8 +245,8 @@ process MarkDuplicates {
 }
 
 markDuplicatesTSV.map { idPatient, gender, status, idSample, bam, bai ->
-  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap["nonRealigned"]}/${bam}\t${directoryMap["nonRealigned"]}/${bai}\n"
-}.collectFile( name: 'nonRealigned.tsv', sort: true, storeDir: directoryMap["nonRealigned"])
+  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap['nonRealigned']}/${bam}\t${directoryMap['nonRealigned']}/${bai}\n"
+}.collectFile( name: 'nonRealigned.tsv', sort: true, storeDir: directoryMap['nonRealigned'])
 
 duplicatesInterval = Channel.create()
 duplicatesRealign  = Channel.create()
@@ -459,7 +422,7 @@ if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
 process RecalibrateBam {
   tag {idSample}
 
-  publishDir directoryMap["recalibrated"], mode: 'copy'
+  publishDir directoryMap['recalibrated'], mode: 'copy'
 
   input:
     set idPatient, gender, status, idSample, file(bam), file(bai), recalibrationReport from recalibrationTable
@@ -488,8 +451,8 @@ process RecalibrateBam {
 }
 
 recalibratedBamTSV.map { idPatient, gender, status, idSample, bam, bai ->
-  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap["recalibrated"]}/${bam}\t${directoryMap["recalibrated"]}/${bai}\n"
-}.collectFile( name: 'recalibrated.tsv', sort: true, storeDir: directoryMap["recalibrated"])
+  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap['recalibrated']}/${bam}\t${directoryMap['recalibrated']}/${bai}\n"
+}.collectFile( name: 'recalibrated.tsv', sort: true, storeDir: directoryMap['recalibrated'])
 
 if ('skipPreprocessing' in workflowSteps) {
   recalibratedBam = bamFiles
@@ -758,7 +721,7 @@ if ('HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2
 process ConcatVCF {
   tag {variantCaller == 'HaplotypeCaller' ? variantCaller + "-" + idSampleNormal : variantCaller + "-" + idSampleNormal + "-" + idSampleTumor}
 
-  publishDir "${directoryMap["VariantCalling"]}/$variantCaller", mode: 'copy'
+  publishDir "${directoryMap["$variantCaller"]}", mode: 'copy'
 
   input:
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, tag, file(vcFiles) from vcfsToMerge
@@ -796,7 +759,7 @@ if ('HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2
 process RunStrelka {
   tag {idSampleTumor}
 
-  publishDir directoryMap["Strelka"]
+  publishDir directoryMap['Strelka']
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForStrelka
@@ -832,7 +795,7 @@ if ('Strelka' in workflowSteps) {
 process RunManta {
   tag {idSampleTumor}
 
-  publishDir directoryMap["Manta"]
+  publishDir directoryMap['Manta']
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
@@ -915,7 +878,7 @@ process RunConvertAlleleCounts {
 process RunAscat {
   tag {idSampleTumor}
 
-  publishDir directoryMap["Ascat"]
+  publishDir directoryMap['Ascat']
 
   input:
     set idPatient, gender, idSampleNormal, idSampleTumor, file(bafNormal), file(logrNormal), file(bafTumor), file(logrTumor) from convertAlleleCountsOutput
@@ -981,12 +944,12 @@ def grabGitRevision() { // Borrowed from https://github.com/NBISweden/wgs-struct
     return workflow.commitId.substring(0,10)
   }
   // Try to find the revision directly from git
-  head_pointer_file = file("${baseDir}/.git/HEAD")
+  head_pointer_file = file("$baseDir/.git/HEAD")
   if (!head_pointer_file.exists()) {
     return ''
   }
   ref = head_pointer_file.newReader().readLine().tokenize()[1]
-  ref_file = file("${baseDir}/.git/$ref")
+  ref_file = file("$baseDir/.git/$ref")
   if (!ref_file.exists()) {
     return ''
   }
@@ -994,10 +957,87 @@ def grabGitRevision() { // Borrowed from https://github.com/NBISweden/wgs-struct
   return revision.substring(0,10)
 }
 
+def checkUppmaxProject() {
+  if ((workflow.profile == 'standard' || workflow.profile == 'interactive') && !params.project) {
+    return false
+  } else {
+    return true
+  }
+}
+
+def defineReferenceMap() {
+  return [
+    "genomeFile"  : params.genome,      // genome reference
+    "genomeIndex" : params.genomeIndex, // genome reference index
+    "genomeDict"  : params.genomeDict,  // genome reference dictionary
+    "kgIndels"    : params.kgIndels,    // 1000 Genomes SNPs
+    "kgIndex"     : params.kgIndex,     // 1000 Genomes SNPs index
+    "dbsnp"       : params.dbsnp,       // dbSNP
+    "dbsnpIndex"  : params.dbsnpIndex,  // dbSNP index
+    "millsIndels" : params.millsIndels, // Mill's Golden set of SNPs
+    "millsIndex"  : params.millsIndex,  // Mill's Golden set index
+    "cosmic41"    : params.cosmic41,    // cosmic vcf file with VCF4.1 header
+    "cosmic"      : params.cosmic,      // cosmic vcf file
+    "intervals"   : params.intervals,   // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
+    "MantaRef"    : params.mantaRef,    // copy of the genome reference file
+    "MantaIndex"  : params.mantaIndex,  // reference index indexed with samtools/0.1.19
+    "acLoci"      : params.acLoci       // loci file for ascat
+  ]
+}
+
+def defineDirectoryMap() {
+  return [
+    "nonRealigned"    : 'Preprocessing/NonRealigned',
+    "recalibrated"    : 'Preprocessing/Recalibrated',
+    "VariantCalling"  : 'VariantCalling',
+    "MuTect1"         : 'VariantCalling/MuTect1',
+    "MuTect2"         : 'VariantCalling/MuTect2',
+    "VarDict"         : 'VariantCalling/VarDictJava',
+    "Strelka"         : 'VariantCalling/Strelka',
+    "HaplotypeCaller" : 'VariantCalling/HaplotypeCaller',
+    "Manta"           : 'VariantCalling/Manta',
+    "Ascat"           : 'VariantCalling/Ascat'
+  ]
+}
+
+def defineStepList() {
+  return [
+    "preprocessing",
+    "realign",
+    "skipPreprocessing",
+    "MuTect1",
+    "MuTect2",
+    "VarDict",
+    "Strelka",
+    "HaplotypeCaller",
+    "Manta",
+    "Ascat"
+  ]
+}
+
+def checkReferenceMap(referenceMap) {
+  referenceDefined = true
+  referenceMap.each{ //Loop through all the references files to check their existence
+    referenceFile, fileToCheck ->
+    test = checkRefExistence(referenceFile, fileToCheck)
+    !(test) ? referenceDefined = false : ""
+  }
+  return (referenceDefined ? true : false)
+}
+
+def checkStepList(stepsList, realStepsList) {
+  stepCorrect = true
+  stepsList.each{ // Loop through all the possible steps check their existence and spelling
+    test = checkStepExistence(it, realStepsList)
+    !(test) ? stepCorrect = false : ""
+  }
+  return (stepCorrect ? true : false)
+}
+
 def checkRefExistence(referenceFile, fileToCheck) { // Check file existence
   try {assert file(fileToCheck).exists()}
   catch (AssertionError ae) {
-    log.info  "Missing references: ${referenceFile} ${fileToCheck}"
+    log.info  "Missing references: $referenceFile $fileToCheck"
     return false
   }
   return true
@@ -1006,7 +1046,7 @@ def checkRefExistence(referenceFile, fileToCheck) { // Check file existence
 def checkStepExistence(step, list) { // Check step existence
   try {assert list.contains(step)}
   catch (AssertionError ae) {
-    println("Unknown parameter: ${step}")
+    println("Unknown parameter: $step")
     return false
   }
   return true
@@ -1015,7 +1055,7 @@ def checkStepExistence(step, list) { // Check step existence
 def checkFileExistence(it) { // Check file existence
   try {assert file(it).exists()}
   catch (AssertionError ae) {
-    exit 1, "Missing file in TSV file: ${it}, see --help for more information"
+    exit 1, "Missing file in TSV file: $it, see --help for more information"
   }
 }
 
@@ -1029,13 +1069,22 @@ def extractFastqFiles(tsvFile) { // Channeling the TSV file containing FASTQ. Fo
       status     = list[2]
       idSample   = list[3]
       idRun      = list[4]
-      fastqFile1 = file(list[5])
-      fastqFile2 = file(list[6])
+      temp1 = list[5]
+      temp2 = list[6]
+
+      // When testing workflow from github, paths to FASTQ files start from workflow.projectDir and not workflow.launchDir
+      if ((workflow.commitId) && (params.test)) {
+        fastqFile1 = file("$workflow.projectDir/$temp1")
+        fastqFile2 = file("$workflow.projectDir/$temp2")
+      } else {
+        fastqFile1 = file("$temp1")
+        fastqFile2 = file("$temp2")
+      }
 
       checkFileExistence(fastqFile1)
       checkFileExistence(fastqFile2)
 
-      [ idPatient, gender, status, idSample, idRun, fastqFile1, fastqFile2 ]
+      [idPatient, gender, status, idSample, idRun, fastqFile1, fastqFile2]
     }
   return fastqFiles
 }
@@ -1104,39 +1153,60 @@ def help_message(version, revision) { // Display help message
   log.info "       Adds more verbosity to workflow"
   log.info "    --version"
   log.info "       displays version number"
+  log.info "    Test:"
+  log.info "      to test CAW on smaller dataset, enter one of the following command"
+  log.info "    nextflow run SciLifeLab/CAW --test"
+  log.info "       Test `preprocessing` on test tiny set"
+  log.info "    nextflow run SciLifeLab/CAW --testRealign"
+  log.info "       Test `realign` on test tiny set"
+  log.info "       Need to do `nextflow run SciLifeLab/CAW --test` before"
+  log.info "    nextflow run SciLifeLab/CAW --testCoreVC"
+  log.info "       Test `preprocessing`, `MuTect1`, `Strelka` and `HaplotypeCaller` on test tiny set"
+  log.info "       Need to do `nextflow run SciLifeLab/CAW --test` before"
+  log.info "    nextflow run SciLifeLab/CAW --testSideVC"
+  log.info "       Test `skipPreprocessing`, `Ascat`, `Manta` and `HaplotypeCaller` on test downSampled set"
 }
 
 def start_message(version, revision) { // Display start message
   log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
-  log.info "Project     : ${workflow.projectDir}"
-  log.info "Directory   : ${workflow.launchDir}"
-  log.info "workDir     : ${workflow.workDir}"
-  log.info "Steps       : " + workflowSteps.join(", ")
-  log.info "Command line: ${workflow.commandLine}"
+  log.info "Command Line: $workflow.commandLine"
+  log.info "Project Dir : $workflow.projectDir"
+  log.info "Launch Dir  : $workflow.launchDir"
+  log.info "Work Dir    : $workflow.workDir"
+  log.info "Steps       : " + workflowSteps.join(', ')
 }
 
 def version_message(version, revision) { // Display version message
   log.info "CANCER ANALYSIS WORKFLOW"
-  log.info "  version $version"
-  log.info "  revision: $revision"
-  log.info "Git info  : repository - $revision [$workflow.commitId]"
-  log.info "Project   : ${workflow.projectDir}"
-  log.info "Directory : ${workflow.launchDir}"
+  log.info "  version   : $version"
+  if (workflow.commitId) {
+    log.info "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]"
+  } else {
+    log.info "  revision  : $revision"
+  }
 }
 
 workflow.onComplete { // Display complete message
+  log.info "N E X T F L O W ~ $workflow.nextflow.version - $workflow.nextflow.build"
   log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
-  log.info "Project     : ${workflow.projectDir}"
-  log.info "workDir     : ${workflow.workDir}"
-  log.info "Command line: ${workflow.commandLine}"
+  log.info "Command Line: $workflow.commandLine"
+  log.info "Project Dir : $workflow.projectDir"
+  log.info "Launch Dir  : $workflow.launchDir"
+  log.info "Work Dir    : $workflow.workDir"
   log.info "Steps       : " + workflowSteps.join(", ")
-  log.info "Completed at: ${workflow.complete}"
-  log.info "Duration    : ${workflow.duration}"
-  log.info "Success     : ${workflow.success}"
-  log.info "Exit status : ${workflow.exitStatus}"
-  log.info "Error report: ${workflow.errorReport ?: '-'}"
+  log.info "Completed at: $workflow.complete"
+  log.info "Duration    : $workflow.duration"
+  log.info "Success     : $workflow.success"
+  log.info "Exit status : $workflow.exitStatus"
+  log.info "Error report: " + (workflow.errorReport ?: '-')
 }
 
 workflow.onError { // Display error message
-  log.info "Workflow execution stopped with the following message: ${workflow.errorMessage}"
+  log.info "N E X T F L O W ~ version $workflow.nextflow.version [$workflow.nextflow.build]"
+  if (workflow.commitId) {
+    log.info "CANCER ANALYSIS WORKFLOW ~ $version - $workflow.revision [$workflow.commitId]"
+  } else {
+    log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
+  }
+  log.info "Workflow execution stopped with the following message: " + workflow.errorMessage
 }
