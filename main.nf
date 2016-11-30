@@ -767,14 +767,14 @@ process RunStrelka {
     file referenceMap["genomeIndex"]
 
   output:
-    set val("Strelka"), idPatient, gender, idSampleNormal, idSampleTumor, file("*.vcf") into strelkaOutput
+    set val("Strelka"), idPatient, gender, idSampleNormal, idSampleTumor, file("strelka/results/*.vcf") into strelkaOutput
 
   when: 'Strelka' in workflowSteps
 
   script:
   """
-  tumorPath=`readlink ${bamTumor}`
-  normalPath=`readlink ${bamNormal}`
+  tumorPath=`readlink $bamTumor`
+  normalPath=`readlink $bamNormal`
   ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
   --tumor \$tumorPath \
   --normal \$normalPath \
@@ -784,9 +784,7 @@ process RunStrelka {
 
   cd strelka
 
-  make -j ${task.cpus}
-
-  mv strelka/results/*.vcf .
+  make -j $task.cpus
   """
 }
 
