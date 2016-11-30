@@ -174,9 +174,7 @@ if ('preprocessing' in workflowSteps) {
     idPatient, gender, status, idSample, idRun, bam ->
     [idPatient, gender, status, idSample, bam]
   }
-  if (verbose) {
-    groupedBam = groupedBam.view {"Grouped BAMs before merge: $it"}
-  }
+  if (verbose) {groupedBam = groupedBam.view {"Grouped BAMs before merge: $it"}}
 } else {
   singleBam.close()
   groupedBam.close()
@@ -199,8 +197,6 @@ process MergeBams {
   """
 }
 
-bamList = Channel.create()
-
 if ('preprocessing' in workflowSteps) {
   /*
    * Gather all bams into a single channel
@@ -210,19 +206,16 @@ if ('preprocessing' in workflowSteps) {
     singleBam = singleBam.view {"Single BAM: $it"}
     mergedBam = mergedBam.view {"Merged BAM: $it"}
   }
-  bamList = mergedBam.mix(singleBam)
-  if (verbose) {bamList = bamList.view {"BAM for MarkDuplicates: $it"}}
-} else {
-  bamList.close()
+  mergedBam = mergedBam.mix(singleBam)
+  if (verbose) {mergedBam = mergedBam.view {"BAM for MarkDuplicates: $it"}}
 }
-
 process MarkDuplicates {
   tag {idSample}
 
   publishDir directoryMap['nonRealigned'], mode: 'copy'
 
   input:
-    set idPatient, gender, status, idSample, file(bam) from bamList
+    set idPatient, gender, status, idSample, file(bam) from mergedBam
 
   output:
     set idPatient, gender, val("${idSample}_${status}"), file("${idSample}_${status}.md.bam"), file("${idSample}_${status}.md.bai") into duplicates
@@ -277,7 +270,7 @@ if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
   duplicatesRealign.close()
 }
 
-// Though VCF indexes are not needed explicitly, they are added so they will be linked, and not re-created on the fly.
+// VCF indexes are added so they will be linked, and not re-created on the fly
 process CreateIntervals {
   tag {idPatient}
 
@@ -318,18 +311,19 @@ if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
 }
 
 // use nWayOut to split into T/N pair again
+// VCF indexes are added so they will be linked, and not re-created on the fly
 process RealignBams {
   tag {idPatient}
 
   input:
     set idPatient, gender, idSample_status, file(bam), file(bai) from duplicatesRealign
-    file gf from file(referenceMap['genomeFile'])
-    file gi from file(referenceMap['genomeIndex'])
-    file gd from file(referenceMap['genomeDict'])
-    file ki from file(referenceMap['kgIndels'])
-    file kix from file(referenceMap['kgIndex'])
-    file mi from file(referenceMap['millsIndels'])
-    file mix from file(referenceMap['millsIndex'])
+    file genomeFile from file(referenceMap['genomeFile'])
+    file genomeIndex from file(referenceMap['genomeIndex'])
+    file genomeDict from file(referenceMap['genomeDict'])
+    file kgIndels from file(referenceMap['kgIndels'])
+    file kgIndex from file(referenceMap['kgIndex'])
+    file millsIndels from file(referenceMap['millsIndels'])
+    file millsIndex from file(referenceMap['millsIndex'])
     file intervals from intervals
 
   output:
@@ -345,13 +339,13 @@ process RealignBams {
   bams = bam.collect{"-I $it"}.join(' ')
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+  -jar ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
   -T IndelRealigner \
   $bams \
-  -R $gf \
+  -R $genomeFile \
   -targetIntervals $intervals \
-  -known $ki \
-  -known $mi \
+  -known $kgIndels \
+  -known $millsIndels \
   -XL hs37d5 \
   -XL NC_007605 \
   -nWayOut '.real.bam'
@@ -389,10 +383,10 @@ process CreateRecalibrationTable {
 
   input:
     set idPatient, gender, status, idSample, file(bam), file(bai) from realignedBam
-    file referenceMap['genomeFile']
-    file referenceMap['dbsnp']
-    file referenceMap['kgIndels']
-    file referenceMap['millsIndels']
+    file genomeFile from file(referenceMap['genomeFile'])
+    file dbsnp from file(referenceMap['dbsnp'])
+    file kgIndels from file(referenceMap['kgIndels'])
+    file millsIndels from file(referenceMap['millsIndels'])
 
   output:
     set idPatient, gender, status, idSample, file(bam), file(bai), file("${idSample}.recal.table") into recalibrationTable
@@ -403,13 +397,13 @@ process CreateRecalibrationTable {
   """
   java -Xmx${task.memory.toGiga()}g \
   -Djava.io.tmpdir="/tmp" \
-  -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+  -jar ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
   -T BaseRecalibrator \
-  -R ${referenceMap['genomeFile']} \
+  -R $genomeFile \
   -I $bam \
-  -knownSites ${referenceMap['dbsnp']} \
-  -knownSites ${referenceMap['kgIndels']} \
-  -knownSites ${referenceMap['millsIndels']} \
+  -knownSites $dbsnp \
+  -knownSites $kgIndels \
+  -knownSites $millsIndels \
   -nct $task.cpus \
   -XL hs37d5 \
   -XL NC_007605 \
