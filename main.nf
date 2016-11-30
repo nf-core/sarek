@@ -748,7 +748,7 @@ process ConcatVCF {
 
   else
     """
-    java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${referenceMap["genomeFile"]} -V $vcfFiles --outputFile $outputFile
+    java -Xmx${task.memory.toGiga()}g -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${referenceMap["genomeFile"]} $vcfFiles --outputFile $outputFile
     """
 }
 
