@@ -195,7 +195,7 @@ process MergeBams {
 
   script:
   """
-  samtools merge ${idSample}.bam ${bam}
+  samtools merge ${idSample}.bam $bam
   """
 }
 
@@ -245,7 +245,7 @@ process MarkDuplicates {
 }
 
 markDuplicatesTSV.map { idPatient, gender, status, idSample, bam, bai ->
-  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap['nonRealigned']}/${bam}\t${directoryMap['nonRealigned']}/${bai}\n"
+  "$idPatient\t$gender\t$status\t$idSample\t${directoryMap['nonRealigned']}/$bam\t${directoryMap['nonRealigned']}/$bai\n"
 }.collectFile( name: 'nonRealigned.tsv', sort: true, storeDir: directoryMap['nonRealigned'])
 
 duplicatesInterval = Channel.create()
@@ -283,13 +283,13 @@ process CreateIntervals {
 
   input:
     set idPatient, gender, idSample_status, file(bam), file(bai) from duplicatesInterval
-    file gf from file(referenceMap['genomeFile'])
-    file gi from file(referenceMap['genomeIndex'])
-    file gd from file(referenceMap['genomeDict'])
-    file ki from file(referenceMap['kgIndels'])
-    file kix from file(referenceMap['kgIndex'])
-    file mi from file(referenceMap['millsIndels'])
-    file mix from file(referenceMap['millsIndex'])
+    file genomeFile from file(referenceMap['genomeFile'])
+    file genomeIndex from file(referenceMap['genomeIndex'])
+    file genomeDict from file(referenceMap['genomeDict'])
+    file kgIndels from file(referenceMap['kgIndels'])
+    file kgIndex from file(referenceMap['kgIndex'])
+    file millsIndels from file(referenceMap['millsIndels'])
+    file millsIndex from file(referenceMap['millsIndex'])
 
   output:
     file("${idPatient}.intervals") into intervals
@@ -300,13 +300,13 @@ process CreateIntervals {
   bams = bam.collect{"-I $it"}.join(' ')
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+  -jar ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
   -T RealignerTargetCreator \
   $bams \
-  -R $gf \
-  -known $ki \
-  -known $mi \
-  -nt ${task.cpus} \
+  -R $genomeFile \
+  -known $kgIndels \
+  -known $millsIndels \
+  -nt $task.cpus \
   -XL hs37d5 \
   -XL NC_007605 \
   -o ${idPatient}.intervals
@@ -410,7 +410,7 @@ process CreateRecalibrationTable {
   -knownSites ${referenceMap['dbsnp']} \
   -knownSites ${referenceMap['kgIndels']} \
   -knownSites ${referenceMap['millsIndels']} \
-  -nct ${task.cpus} \
+  -nct $task.cpus \
   -XL hs37d5 \
   -XL NC_007605 \
   -l INFO \
@@ -444,7 +444,7 @@ process RecalibrateBam {
   -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
   -T PrintReads \
   -R ${referenceMap['genomeFile']} \
-  -nct ${task.cpus} \
+  -nct $task.cpus \
   -I $bam \
   -XL hs37d5 \
   -XL NC_007605 \
@@ -663,7 +663,7 @@ process RunMutect2 {
   // we are using MuTect2 shipped in GATK v3.6
   // TODO: the  "-U ALLOW_SEQ_DICT_INCOMPATIBILITY " flag is actually masking a bug in older Picard versions. Using the latest Picard tool
   // this bug should go away and we should _not_ use this flag
-  // removed: -nct ${task.cpus} \
+  // removed: -nct $task.cpus \
 
   when: 'MuTect2' in workflowSteps
 
@@ -826,7 +826,7 @@ process RunManta {
   samtools index Tumor.bam
 
   configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference ${referenceMap['MantaRef']} --runDir MantaDir
-  python MantaDir/runWorkflow.py -m local -j ${task.cpus}
+  python MantaDir/runWorkflow.py -m local -j $task.cpus
   gunzip -c MantaDir/results/variants/somaticSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.somaticSV.vcf
   gunzip -c MantaDir/results/variants/candidateSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSV.vcf
   gunzip -c MantaDir/results/variants/diploidSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.diploidSV.vcf
@@ -988,7 +988,8 @@ def defineReferenceMap() {
     'MantaRef'    : params.mantaRef,    // copy of the genome reference file
     'MantaIndex'  : params.mantaIndex,  // reference index indexed with samtools/0.1.19
     'acLoci'      : params.acLoci,      // loci file for ascat
-    'picardHome'  : params.picardHome   // path to Picard
+    'picardHome'  : params.picardHome,  // path to Picard
+    'gatkHome'    : params.gatkHome     // path to Gatk
   ]
 }
 
@@ -1075,8 +1076,8 @@ def extractFastqFiles(tsvFile) { // Channeling the TSV file containing FASTQ. Fo
       status     = list[2]
       idSample   = list[3]
       idRun      = list[4]
-      temp1 = list[5]
-      temp2 = list[6]
+      temp1      = list[5]
+      temp2      = list[6]
 
       // When testing workflow from github, paths to FASTQ files start from workflow.projectDir and not workflow.launchDir
       if ((workflow.commitId) && (params.test)) {
