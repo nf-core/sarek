@@ -587,8 +587,11 @@ process RunHaplotypecaller {
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), genInt, gen_int from bamsFHC //Are these values `ped to bamNormal already?
-    file referenceMap['genomeFile']
-    file referenceMap['genomeIndex']
+    file genomeFile from file(referenceMap['genomeFile'])
+    file genomeIndex from file(referenceMap['genomeIndex'])
+    file genomeDict from file(referenceMap['genomeDict'])
+    file dbsnp from file(referenceMap['dbsnp'])
+    file dbsnpIndex from file(referenceMap['dbsnpIndex'])
 
   output:
     set val("HaplotypeCaller"), idPatient, gender, idSampleNormal, val("${gen_int}_${idSampleNormal}"), file("${gen_int}_${idSampleNormal}.vcf") into haplotypecallerOutput
@@ -599,10 +602,10 @@ process RunHaplotypecaller {
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+  -jar ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
   -T HaplotypeCaller \
-  -R ${referenceMap['genomeFile']} \
-  --dbsnp ${referenceMap['dbsnp']} \
+  -R $genomeFile \
+  --dbsnp $dbsnp \
   -I $bamNormal \
   -L \"$genInt\" \
   -o ${gen_int}_${idSampleNormal}.vcf
@@ -623,6 +626,13 @@ process RunMutect1 {
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT1
+    file genomeFile from file(referenceMap['genomeFile'])
+    file genomeIndex from file(referenceMap['genomeIndex'])
+    file genomeDict from file(referenceMap['genomeDict'])
+    file dbsnp from file(referenceMap['dbsnp'])
+    file dbsnpIndex from file(referenceMap['dbsnpIndex'])
+    file cosmic from file(referenceMap['cosmic'])
+    file cosmicIndex from file(referenceMap['cosmicIndex'])
 
   output:
     set val("MuTect1"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf") into mutect1Output
@@ -632,14 +642,14 @@ process RunMutect1 {
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${params.mutect1Home}/muTect.jar \
+  -jar $${referenceMap['mutect1Home']}/muTect.jar \
   -T MuTect \
-  -R ${referenceMap['genomeFile']} \
-  --cosmic ${referenceMap['cosmic']} \
-  --dbsnp ${referenceMap['dbsnp']} \
+  -R $genomeFile \
+  --cosmic $cosmic \
+  --dbsnp $dbsnp \
   -I:normal $bamNormal \
   -I:tumor $bamTumor \
-  -L \"${genInt}\" \
+  -L \"$genInt\" \
   --disable_auto_index_creation_and_locking_when_reading_rods \
   --out ${gen_int}_${idSampleNormal}_${idSampleTumor}.call_stats.out \
   --vcf ${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf
@@ -657,6 +667,13 @@ process RunMutect2 {
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
+    file genomeFile from file(referenceMap['genomeFile'])
+    file genomeIndex from file(referenceMap['genomeIndex'])
+    file genomeDict from file(referenceMap['genomeDict'])
+    file dbsnp from file(referenceMap['dbsnp'])
+    file dbsnpIndex from file(referenceMap['dbsnpIndex'])
+    file cosmic from file(referenceMap['cosmic'])
+    file cosmicIndex from file(referenceMap['cosmicIndex'])
 
   output:
     set val("MuTect2"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf") into mutect2Output
@@ -671,15 +688,15 @@ process RunMutect2 {
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${params.gatkHome}/GenomeAnalysisTK.jar \
+  -jar ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
   -T MuTect2 \
-  -R ${referenceMap['genomeFile']} \
-  --cosmic ${referenceMap['cosmic']} \
-  --dbsnp ${referenceMap['dbsnp']} \
+  -R $genomeFile \
+  --cosmic $cosmic \
+  --dbsnp $dbsnp \
   -I:normal $bamNormal \
   -I:tumor $bamTumor \
   -U ALLOW_SEQ_DICT_INCOMPATIBILITY \
-  -L \"${genInt}\" \
+  -L \"$genInt\" \
   -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf
   """
 }
@@ -695,6 +712,9 @@ process RunVardict {
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFVD
+    file genomeFile from file(referenceMap['genomeFile'])
+    file genomeIndex from file(referenceMap['genomeIndex'])
+    file genomeDict from file(referenceMap['genomeDict'])
 
   output:
     set val("VarDict"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.out") into vardictOutput
@@ -703,12 +723,13 @@ process RunVardict {
 
   script:
   """
-  ${params.vardictHome}/vardict.pl -G ${referenceMap['genomeFile']} \
+  ${referenceMap['vardictHome']}/vardict.pl \
+  -G $genomeFile \
   -f 0.01 -N $bamTumor \
   -b "$bamTumor|$bamNormal" \
   -z 1 -F 0x500 \
   -c 1 -S 2 -E 3 -g 4 \
-  -R ${genInt} > ${gen_int}_${idSampleNormal}_${idSampleTumor}.out
+  -R $genInt > ${gen_int}_${idSampleNormal}_${idSampleTumor}.out
   """
 }
 
@@ -745,15 +766,18 @@ process ConcatVCF {
   if (variantCaller == 'VarDict')
     """
     for i in $vcFiles ;do
-      cat \$i | ${params.vardictHome}/VarDict/testsomatic.R >> testsomatic.out
+      cat \$i | ${referenceMap['vardictHome']}/VarDict/testsomatic.R >> testsomatic.out
     done
-    ${params.vardictHome}/VarDict/var2vcf_somatic.pl -f 0.01 -N "${idPatient}_${idSampleNormal}_${idSampleTumor}" testsomatic.out > $outputFile
+    ${referenceMap['vardictHome']}/VarDict/var2vcf_somatic.pl \
+    -f 0.01 \
+    -N "${idPatient}_${idSampleNormal}_${idSampleTumor}" testsomatic.out > $outputFile
     """
 
   else
     """
     java -Xmx${task.memory.toGiga()}g \
-    -cp ${params.gatkHome}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants \
+    -cp ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
+    org.broadinstitute.gatk.tools.CatVariants \
     --reference ${referenceMap['genomeFile']} \
     $vcfFiles \
     --outputFile $outputFile
@@ -771,8 +795,10 @@ process RunStrelka {
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForStrelka
-    file referenceMap['genomeFile']
-    file referenceMap['genomeIndex']
+    file genomeFile from file(referenceMap['genomeFile'])
+    file genomeIndex from file(referenceMap['genomeIndex'])
+    file genomeDict from file(referenceMap['genomeDict'])
+    file strelkaCFG from file(referenceMap['strelkaCFG'])
 
   output:
     set val("Strelka"), idPatient, gender, idSampleNormal, idSampleTumor, file("strelka/results/*.vcf") into strelkaOutput
@@ -783,11 +809,11 @@ process RunStrelka {
   """
   tumorPath=`readlink $bamTumor`
   normalPath=`readlink $bamNormal`
-  ${params.strelkaHome}/bin/configureStrelkaWorkflow.pl \
+  ${referenceMap['strelkaHome']}/bin/configureStrelkaWorkflow.pl \
   --tumor \$tumorPath \
   --normal \$normalPath \
-  --ref ${referenceMap['genomeFile']} \
-  --config ${params.strelkaCFG} \
+  --ref $genomeFile \
+  --config $strelkaCFG \
   --output-dir strelka
 
   cd strelka
@@ -807,8 +833,8 @@ process RunManta {
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
-    file referenceMap['MantaRef']
-    file referenceMap['MantaIndex']
+    file mantaRef referenceMap['MantaRef']
+    file mantaIndex referenceMap['MantaIndex']
 
   output:
     set val("Manta"), idPatient, gender, idSampleNormal, idSampleTumor, file("${idSampleNormal}_${idSampleTumor}.somaticSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.diploidSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf") into mantaOutput
@@ -826,7 +852,7 @@ process RunManta {
   samtools view -H $bamTumor | grep -v hs37d5 | samtools reheader - $bamTumor > Tumor.bam
   samtools index Tumor.bam
 
-  configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference ${referenceMap['MantaRef']} --runDir MantaDir
+  configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference $mantaRef --runDir MantaDir
   python MantaDir/runWorkflow.py -m local -j $task.cpus
   gunzip -c MantaDir/results/variants/somaticSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.somaticSV.vcf
   gunzip -c MantaDir/results/variants/candidateSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSV.vcf
@@ -846,9 +872,10 @@ process RunAlleleCount {
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForAscat
-    file referenceMap['genomeFile']
-    file referenceMap['genomeIndex']
-    file referenceMap['acLoci']
+    file genomeFile from file(referenceMap['genomeFile'])
+    file genomeIndex from file(referenceMap['genomeIndex'])
+    file genomeDict from file(referenceMap['genomeDict'])
+    file acLoci from file(referenceMap['acLoci'])
 
   output:
     set idPatient, gender, idSampleNormal, idSampleTumor, file("${idSampleNormal}.alleleCount"), file("${idSampleTumor}.alleleCount") into alleleCountOutput
@@ -857,8 +884,8 @@ process RunAlleleCount {
 
   script:
   """
-  alleleCounter -l ${referenceMap['acLoci']} -r ${referenceMap['genomeFile']} -b $bamNormal -o ${idSampleNormal}.alleleCount;
-  alleleCounter -l ${referenceMap['acLoci']} -r ${referenceMap['genomeFile']} -b $bamTumor -o ${idSampleTumor}.alleleCount;
+  alleleCounter -l $acLoci -r $genomeFile -b $bamNormal -o ${idSampleNormal}.alleleCount;
+  alleleCounter -l $acLoci -r $genomeFile -b $bamTumor -o ${idSampleTumor}.alleleCount;
   """
 }
 
@@ -989,12 +1016,17 @@ def defineReferenceMap() {
     'millsIndels' : params.millsIndels, // Mill's Golden set of SNPs
     'millsIndex'  : params.millsIndex,  // Mill's Golden set index
     'cosmic'      : params.cosmic,      // cosmic vcf file with VCF4.1 header
+    'cosmicIndex' : params.cosmicIndex, // cosmic vcf file index
     'intervals'   : params.intervals,   // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
     'MantaRef'    : params.mantaRef,    // copy of the genome reference file
     'MantaIndex'  : params.mantaIndex,  // reference index indexed with samtools/0.1.19
     'acLoci'      : params.acLoci,      // loci file for ascat
     'picardHome'  : params.picardHome,  // path to Picard
-    'gatkHome'    : params.gatkHome     // path to Gatk
+    'gatkHome'    : params.gatkHome,    // path to Gatk
+    'mutect1Home' : params.mutect1Home, // path to MuTect1
+    'vardictHome' : params.vardictHome, // path to VarDict
+    'strelkaHome' : params.strelkaHome, // path to Strelka
+    'strelkaCFG'  : params.strelkaCFG   // Strelka Config file
   ]
 }
 
