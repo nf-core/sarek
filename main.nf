@@ -141,6 +141,8 @@ process MapReads {
 
   input:
     set idPatient, gender, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFiles
+    file genomeFile from file(referenceMap['genomeFile'])
+    file genomeIndex from file(referenceMap['genomeIndex'])
 
   output:
     set idPatient, gender, status, idSample, idRun, file("${idRun}.bam") into bam
@@ -151,8 +153,8 @@ process MapReads {
   readGroup="@RG\\tID:$idRun\\tSM:$idSample\\tLB:$idSample\\tPL:illumina"
   """
   set -eo pipefail
-  bwa mem -R \"$readGroup\" -B 3 -t $task.cpus -M ${referenceMap['genomeFile']} $fastqFile1 $fastqFile2 | \
-  samtools view -bS -t ${referenceMap['genomeIndex']} - | \
+  bwa mem -R \"$readGroup\" -B 3 -t $task.cpus -M $genomeFile $fastqFile1 $fastqFile2 | \
+  samtools view -bS -t $genomeIndex - | \
   samtools sort - > ${idRun}.bam
   """
 }
