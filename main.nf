@@ -143,6 +143,7 @@ process MapReads {
     set idPatient, gender, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFiles
     file genomeFile from file(referenceMap['genomeFile'])
     file genomeIndex from file(referenceMap['genomeIndex'])
+    file genomeDict from file(referenceMap['genomeDict'])
 
   output:
     set idPatient, gender, status, idSample, idRun, file("${idRun}.bam") into bam
