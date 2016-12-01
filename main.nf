@@ -833,8 +833,8 @@ process RunManta {
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
-    file mantaRef referenceMap['MantaRef']
-    file mantaIndex referenceMap['MantaIndex']
+    file mantaRef from file(referenceMap['mantaRef'])
+    file mantaIndex from file(referenceMap['mantaIndex'])
 
   output:
     set val("Manta"), idPatient, gender, idSampleNormal, idSampleTumor, file("${idSampleNormal}_${idSampleTumor}.somaticSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.diploidSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf") into mantaOutput
@@ -1018,8 +1018,8 @@ def defineReferenceMap() {
     'cosmic'      : params.cosmic,      // cosmic vcf file with VCF4.1 header
     'cosmicIndex' : params.cosmicIndex, // cosmic vcf file index
     'intervals'   : params.intervals,   // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
-    'MantaRef'    : params.mantaRef,    // copy of the genome reference file
-    'MantaIndex'  : params.mantaIndex,  // reference index indexed with samtools/0.1.19
+    'mantaRef'    : params.mantaRef,    // copy of the genome reference file
+    'mantaIndex'  : params.mantaIndex,  // reference index indexed with samtools/0.1.19
     'acLoci'      : params.acLoci,      // loci file for ascat
     'picardHome'  : params.picardHome,  // path to Picard
     'gatkHome'    : params.gatkHome,    // path to Gatk
