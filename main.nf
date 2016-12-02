@@ -330,8 +330,8 @@ process RealignBams {
     val(idPatient) into tempIdPatient
     val(gender) into tempGender
     val(idSample_status) into tempSamples_status
-    file("*.md.real.bam") into tempBams
-    file("*.md.real.bai") into tempBais
+    file("*.real.bam") into tempBams
+    file("*.real.bai") into tempBais
 
   when: 'preprocessing' in workflowSteps || 'realign' in workflowSteps
 
