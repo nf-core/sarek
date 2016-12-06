@@ -653,6 +653,8 @@ process RunMutect1 {
   -I:tumor $bamTumor \
   -L \"$genInt\" \
   --disable_auto_index_creation_and_locking_when_reading_rods \
+  -XL hs37d5 \
+  -XL NC_007605 \
   --out ${gen_int}_${idSampleNormal}_${idSampleTumor}.call_stats.out \
   --vcf ${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf
   """
