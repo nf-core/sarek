@@ -608,6 +608,8 @@ process RunHaplotypecaller {
   --dbsnp $dbsnp \
   -I $bamNormal \
   -L \"$genInt\" \
+  -XL hs37d5 \
+  -XL NC_007605 \
   -o ${gen_int}_${idSampleNormal}.vcf
   """
 }
