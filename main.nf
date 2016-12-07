@@ -701,6 +701,8 @@ process RunMutect2 {
   -I:tumor $bamTumor \
   -U ALLOW_SEQ_DICT_INCOMPATIBILITY \
   -L \"$genInt\" \
+  -XL hs37d5 \
+  -XL NC_007605 \
   -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf
   """
 }
