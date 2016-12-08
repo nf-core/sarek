@@ -222,7 +222,7 @@ process MarkDuplicates {
   output:
     set idPatient, gender, val("${idSample}_${status}"), file("${idSample}_${status}.md.bam"), file("${idSample}_${status}.md.bai") into duplicates
     set idPatient, gender, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai") into markDuplicatesTSV
-    file("${idSample}_${status}.md.bam") optional(true) into markDuplicatesQC
+    file("${idSample}_${status}.bam.metrics") optional(true) into markDuplicatesQC
 
   when: 'preprocessing' in workflowSteps
 
@@ -289,6 +289,7 @@ process CreateIntervals {
 
   output:
     file("${idPatient}.intervals") into intervals
+    file("${idPatient}.intervals") into createIntervalsQC
 
   when: 'preprocessing' in workflowSteps || 'realign' in workflowSteps
 
@@ -644,6 +645,7 @@ process RunMutect1 {
 
   output:
     set val("MuTect1"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf") into mutect1Output
+    file ("${gen_int}_${idSampleNormal}_${idSampleTumor}.call_stats.out") into runMutect1QC
 
   when: 'MuTect1' in workflowSteps
 
@@ -987,27 +989,29 @@ if ('Ascat' in workflowSteps) {
 }
 
 process RunMultiqc {
-    publishDir "MultiQC", mode: 'copy'
+  tag {"MultiQC"}
 
-    input:
-      mapReadsQC
-      mergeBamsQC
-      markDuplicatesQC
-      realignBamsQC
-      realignBamsQC
-      recalibrateBamQC
-      runStrelkaQC
-      runMantaQC
-      runAscatQC
+  publishDir "MultiQC", mode: 'copy'
 
-    output:
-      file "*multiqc_report.html"
-      file "*multiqc_data"
+  input:
+    file ('alignment/*') from mapReadsQC.flatten().toList()
+    file ('mergeBamsQC/*') from mergeBamsQC.flatten().toList()
+    file ('markDuplicatesQC/*') from markDuplicatesQC.flatten().toList()
+    file ('createIntervalsQC/*') from createIntervalsQC.flatten().toList()
+    file ('realignBamsQC/*') from realignBamsQC.flatten().toList()
+    file ('recalibrateBamQC/*') from recalibrateBamQC.flatten().toList()
+    file ('runStrelkaQC/*') from runStrelkaQC.flatten().toList()
+    file ('runMantaQC/*') from runMantaQC.flatten().toList()
+    file ('runAscatQC/*') from runAscatQC.flatten().toList()
 
-    script:
-    """
-    multiqc -f .
-    """
+  output:
+    file "*multiqc_report.html"
+    file "*multiqc_data"
+
+  script:
+  """
+  multiqc -f .
+  """
 }
 
 
