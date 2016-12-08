@@ -852,10 +852,10 @@ process RunManta {
   script:
   """
   set -eo pipefail
-  samtools view -H $bamNormal | grep -v hs37d5 | samtools reheader - $bamNormal > Normal.bam
+  samtools view -H $bamNormal | grep -v hs37d5 | grep -v NC_007605 | samtools reheader - $bamNormal > Normal.bam
   samtools index Normal.bam
 
-  samtools view -H $bamTumor | grep -v hs37d5 | samtools reheader - $bamTumor > Tumor.bam
+  samtools view -H $bamTumor | grep -v hs37d5 | grep -v NC_007605 | samtools reheader - $bamTumor > Tumor.bam
   samtools index Tumor.bam
 
   configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference $mantaRef --runDir MantaDir
