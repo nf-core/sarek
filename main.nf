@@ -807,7 +807,7 @@ process RunStrelka {
     file strelkaCFG from file(referenceMap['strelkaCFG'])
 
   output:
-    set val("Strelka"), idPatient, gender, idSampleNormal, idSampleTumor, file("strelka/results/*.vcf") into strelkaOutput
+    set val("Strelka"), idPatient, gender, idSampleNormal, idSampleTumor, file("results/*.vcf") into strelkaOutput
 
   when: 'Strelka' in workflowSteps
 
@@ -820,9 +820,7 @@ process RunStrelka {
   --normal \$normalPath \
   --ref $genomeFile \
   --config $strelkaCFG \
-  --output-dir strelka
-
-  cd strelka
+  --output-dir .
 
   make -j $task.cpus
   """
