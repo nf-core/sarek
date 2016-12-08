@@ -791,7 +791,7 @@ if ('HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2
 process RunStrelka {
   tag {idSampleTumor}
 
-  publishDir directoryMap['Strelka']
+  publishDir directoryMap['Strelka'], mode: 'copy'
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForStrelka
@@ -829,7 +829,7 @@ if ('Strelka' in workflowSteps) {
 process RunManta {
   tag {idSampleTumor}
 
-  publishDir directoryMap['Manta']
+  publishDir directoryMap['Manta'], mode: 'copy'
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
@@ -913,7 +913,7 @@ process RunConvertAlleleCounts {
 process RunAscat {
   tag {idSampleTumor}
 
-  publishDir directoryMap['Ascat']
+  publishDir directoryMap['Ascat'], mode: 'copy'
 
   input:
     set idPatient, gender, idSampleNormal, idSampleTumor, file(bafNormal), file(logrNormal), file(bafTumor), file(logrTumor) from convertAlleleCountsOutput
