@@ -330,8 +330,8 @@ process RealignBams {
     val(idPatient) into tempIdPatient
     val(gender) into tempGender
     val(idSample_status) into tempSamples_status
-    file("*.md.real.bam") into tempBams
-    file("*.md.real.bai") into tempBais
+    file("*.real.bam") into tempBams
+    file("*.real.bai") into tempBais
 
   when: 'preprocessing' in workflowSteps || 'realign' in workflowSteps
 
@@ -608,6 +608,8 @@ process RunHaplotypecaller {
   --dbsnp $dbsnp \
   -I $bamNormal \
   -L \"$genInt\" \
+  -XL hs37d5 \
+  -XL NC_007605 \
   -o ${gen_int}_${idSampleNormal}.vcf
   """
 }
@@ -651,6 +653,8 @@ process RunMutect1 {
   -I:tumor $bamTumor \
   -L \"$genInt\" \
   --disable_auto_index_creation_and_locking_when_reading_rods \
+  -XL hs37d5 \
+  -XL NC_007605 \
   --out ${gen_int}_${idSampleNormal}_${idSampleTumor}.call_stats.out \
   --vcf ${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf
   """
@@ -697,6 +701,8 @@ process RunMutect2 {
   -I:tumor $bamTumor \
   -U ALLOW_SEQ_DICT_INCOMPATIBILITY \
   -L \"$genInt\" \
+  -XL hs37d5 \
+  -XL NC_007605 \
   -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf
   """
 }
@@ -846,10 +852,10 @@ process RunManta {
   script:
   """
   set -eo pipefail
-  samtools view -H $bamNormal | grep -v hs37d5 | samtools reheader - $bamNormal > Normal.bam
+  samtools view -H $bamNormal | grep -v hs37d5 | grep -v NC_007605 | samtools reheader - $bamNormal > Normal.bam
   samtools index Normal.bam
 
-  samtools view -H $bamTumor | grep -v hs37d5 | samtools reheader - $bamTumor > Tumor.bam
+  samtools view -H $bamTumor | grep -v hs37d5 | grep -v NC_007605 | samtools reheader - $bamTumor > Tumor.bam
   samtools index Tumor.bam
 
   configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference $mantaRef --runDir MantaDir
