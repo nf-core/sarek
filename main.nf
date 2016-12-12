@@ -1027,6 +1027,7 @@ process RunMultiQC {
   publishDir "MultiQC", mode: 'copy'
 
   input:
+    file ('FastQC/*') from fastQC.flatten().toList()
     file ('alignment/*') from mapReadsQC.flatten().toList()
     file ('mergeBams/*') from mergeBamsQC.flatten().toList()
     file ('markDuplicates/*') from markDuplicatesQC.flatten().toList()
