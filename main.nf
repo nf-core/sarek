@@ -768,6 +768,7 @@ process ConcatVCF {
 
   output:
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file("*.vcf") into vcfConcatenated
+    set variantCaller, file("*.vcf") into concatVCFQC
 
   when: 'HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2' in workflowSteps || 'VarDict' in workflowSteps
 
@@ -796,9 +797,21 @@ process ConcatVCF {
     """
 }
 
-if ('HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2' in workflowSteps || 'VarDict' in workflowSteps) {
-  if (verbose) {vcfConcatenated = vcfConcatenated.view {"vcfConcatenated: $it"}}
-  // ADD QC
+if ('HaplotypeCaller' in workflowSteps) {
+  concatVCFQC.choice(runHaplotypecallerQC, concatVCFQC) {it[0] == 'HaplotypeCaller' ? 1 : 0}
+  if (verbose) {runHaplotypecallerQC = runHaplotypecallerQC.view {"runHaplotypecallerQC: $it"}}
+}
+if ('MuTect1' in workflowSteps) {
+  concatVCFQC.choice(runMutect1QC, concatVCFQC) {it[0] == 'MuTect1' ? 1 : 0}
+  if (verbose) {runMutect1QC = runMutect1QC.view {"runMutect1QC: $it"}}
+}
+if ('MuTect2' in workflowSteps) {
+  concatVCFQC.choice(runMutect2QC, concatVCFQC) {it[0] == 'MuTect2' ? 1 : 0}
+  if (verbose) {runMutect2QC = runMutect2QC.view {"runMutect2QC: $it"}}
+}
+if ('VarDict' in workflowSteps) {
+  concatVCFQC.choice(runVardictQC, concatVCFQC) {it[0] == 'VarDict' ? 1 : 0}
+  if (verbose) {runVardictQC = runVardictQC.view {"runVardictQC: $it"}}
 }
 
 process RunStrelka {
@@ -995,14 +1008,14 @@ process RunMultiqc {
 
   input:
     file ('alignment/*') from mapReadsQC.flatten().toList()
-    file ('mergeBamsQC/*') from mergeBamsQC.flatten().toList()
-    file ('markDuplicatesQC/*') from markDuplicatesQC.flatten().toList()
-    file ('createIntervalsQC/*') from createIntervalsQC.flatten().toList()
-    file ('realignBamsQC/*') from realignBamsQC.flatten().toList()
-    file ('recalibrateBamQC/*') from recalibrateBamQC.flatten().toList()
-    file ('runStrelkaQC/*') from runStrelkaQC.flatten().toList()
-    file ('runMantaQC/*') from runMantaQC.flatten().toList()
-    file ('runAscatQC/*') from runAscatQC.flatten().toList()
+    file ('mergeBams/*') from mergeBamsQC.flatten().toList()
+    file ('markDuplicates/*') from markDuplicatesQC.flatten().toList()
+    file ('createIntervals/*') from createIntervalsQC.flatten().toList()
+    file ('realignBams/*') from realignBamsQC.flatten().toList()
+    file ('recalibrateBam/*') from recalibrateBamQC.flatten().toList()
+    file ('Strelka/*') from runStrelkaQC.flatten().toList()
+    file ('Manta/*') from runMantaQC.flatten().toList()
+    file ('Ascat/*') from runAscatQC.flatten().toList()
 
   output:
     file "*multiqc_report.html"
