@@ -1,5 +1,5 @@
 # Workflow processes
-Several processes are run within the workflow. We divide them for the moment into 2 main steps:
+Several processes are run within the workflow. We divide them for the moment into 3 main steps:
 
 ## Preprocessing:
  - MapReads - Map reads
@@ -21,3 +21,6 @@ Several processes are run within the workflow. We divide them for the moment int
  - RunAlleleCount - Run AlleleCount to prepare for Ascat
  - RunConvertAlleleCounts - Run convertAlleleCounts to prepare for Ascat
  - RunAscat - Run Ascat for CNV
+
+## Report and QC:
+- RunMultiQC - Run MultiQC for report and QC
