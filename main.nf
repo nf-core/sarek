@@ -137,6 +137,23 @@ start_message(version, revision)
 ========================================================================================
 */
 
+(fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
+
+process RunFastQC {
+  tag {idRun}
+
+  input:
+    set idPatient, gender, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFilesforFastQC
+
+  output:
+    file "*_fastqc.{zip,html}" into fastQC
+
+  script:
+  """
+  fastqc -q $fastqFile1 $fastqFile2
+  """
+}
+
 process MapReads {
   tag {idRun}
 
