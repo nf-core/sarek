@@ -43,6 +43,7 @@ vim: syntax=groovy
  - RunAlleleCount - Run AlleleCount to prepare for Ascat
  - RunConvertAlleleCounts - Run convertAlleleCounts to prepare for Ascat
  - RunAscat - Run Ascat for CNV
+ - RunMultiQC - Run MultiQC for report and QC
 ========================================================================================
 =                               C O N F I G U R A T I O N                              =
 ========================================================================================
@@ -400,7 +401,7 @@ process CreateRecalibrationTable {
 
   output:
     set idPatient, gender, status, idSample, file(bam), file(bai), file("${idSample}.recal.table") into recalibrationTable
-    file("${idSample}.recal.table") optional(true) into realignBamsQC
+    file("${idSample}.recal.table") optional(true) into createRecalibrationTableQC
 
   when: 'preprocessing' in workflowSteps || 'realign' in workflowSteps
 
@@ -1003,7 +1004,7 @@ if ('Ascat' in workflowSteps) {
   if (verbose) {ascatOutput = ascatOutput.view {"Ascat output: $it"}}
 }
 
-process RunMultiqc {
+process RunMultiQC {
   tag {"MultiQC"}
 
   publishDir "MultiQC", mode: 'copy'
@@ -1014,6 +1015,7 @@ process RunMultiqc {
     file ('markDuplicates/*') from markDuplicatesQC.flatten().toList()
     file ('createIntervals/*') from createIntervalsQC.flatten().toList()
     file ('realignBams/*') from realignBamsQC.flatten().toList()
+    file ('realignBamscreateRecalibrationTable/*') from createRecalibrationTableQC.flatten().toList()
     file ('recalibrateBam/*') from recalibrateBamQC.flatten().toList()
     file ('Strelka/*') from runStrelkaQC.flatten().toList()
     file ('Manta/*') from runMantaQC.flatten().toList()
@@ -1028,9 +1030,6 @@ process RunMultiqc {
   multiqc -f .
   """
 }
-
-
-
 
 /*
 ========================================================================================
