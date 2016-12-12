@@ -709,6 +709,8 @@ process RunMutect2 {
   -I:tumor $bamTumor \
   -U ALLOW_SEQ_DICT_INCOMPATIBILITY \
   -L \"$genInt\" \
+  -XL hs37d5 \
+  -XL NC_007605 \
   -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf
   """
 }
@@ -817,7 +819,7 @@ if ('VarDict' in workflowSteps) {
 process RunStrelka {
   tag {idSampleTumor}
 
-  publishDir directoryMap['Strelka']
+  publishDir directoryMap['Strelka'], mode: 'copy'
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForStrelka
@@ -856,7 +858,7 @@ if ('Strelka' in workflowSteps) {
 process RunManta {
   tag {idSampleTumor}
 
-  publishDir directoryMap['Manta']
+  publishDir directoryMap['Manta'], mode: 'copy'
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
@@ -874,10 +876,10 @@ process RunManta {
   script:
   """
   set -eo pipefail
-  samtools view -H $bamNormal | grep -v hs37d5 | samtools reheader - $bamNormal > Normal.bam
+  samtools view -H $bamNormal | grep -v hs37d5 | grep -v NC_007605 | samtools reheader - $bamNormal > Normal.bam
   samtools index Normal.bam
 
-  samtools view -H $bamTumor | grep -v hs37d5 | samtools reheader - $bamTumor > Tumor.bam
+  samtools view -H $bamTumor | grep -v hs37d5 | grep -v NC_007605 | samtools reheader - $bamTumor > Tumor.bam
   samtools index Tumor.bam
 
   configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference $mantaRef --runDir MantaDir
@@ -941,7 +943,7 @@ process RunConvertAlleleCounts {
 process RunAscat {
   tag {idSampleTumor}
 
-  publishDir directoryMap['Ascat']
+  publishDir directoryMap['Ascat'], mode: 'copy'
 
   input:
     set idPatient, gender, idSampleNormal, idSampleTumor, file(bafNormal), file(logrNormal), file(bafTumor), file(logrTumor) from convertAlleleCountsOutput
