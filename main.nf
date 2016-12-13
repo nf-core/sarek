@@ -1035,7 +1035,7 @@ process RunMultiQC {
 
   script:
   """
-  multiqc -f .
+  multiqc -f -v .
   """
 }
 
