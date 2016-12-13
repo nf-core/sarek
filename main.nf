@@ -149,6 +149,8 @@ process RunFastQC {
   output:
     file "*_fastqc.{zip,html}" into fastQCreport
 
+  when: 'preprocessing' in workflowSteps
+
   script:
   """
   fastqc -q $fastqFile1 $fastqFile2
@@ -1011,7 +1013,7 @@ if ('Ascat' in workflowSteps) {
 }
 
 reportForMultiQC = Channel.create()
-reportForMultiQC = reportForMultiQC.mix(fastQCreport).flatten().toList()
+reportForMultiQC = fastQCreport.flatten().toList() //mix()
 
 if (verbose) {reportForMultiQC = reportForMultiQC.view {"Reports for MultiQC: $it"}}
 
