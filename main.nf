@@ -51,7 +51,7 @@ vim: syntax=groovy
 */
 
 revision = grabGitRevision() ?: ''
-version = 'v0.9'
+version = 'v0.9.9'
 verbose = false
 testFile = ''
 testSteps = []
@@ -1040,6 +1040,8 @@ process RunMultiQC {
 }
 
 if (verbose) {multiQCReport = multiQCReport.view {"MultiQC report: $it"}}
+
+multiQCReport.close()
 
 /*
 ========================================================================================
