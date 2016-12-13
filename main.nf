@@ -163,7 +163,6 @@ process MapReads {
 
   output:
     set idPatient, gender, status, idSample, idRun, file("${idRun}.bam") into bam
-    file("${idRun}.bam") optional(true) into mapReadsQC
 
   when: 'preprocessing' in workflowSteps
 
@@ -208,7 +207,6 @@ process MergeBams {
 
   output:
     set idPatient, gender, status, idSample, file("${idSample}.bam") into mergedBam
-    file("${idSample}.bam") optional(true) into mergeBamsQC
 
   when: 'preprocessing' in workflowSteps
 
@@ -241,7 +239,6 @@ process MarkDuplicates {
   output:
     set idPatient, gender, val("${idSample}_${status}"), file("${idSample}_${status}.md.bam"), file("${idSample}_${status}.md.bai") into duplicates
     set idPatient, gender, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai") into markDuplicatesTSV
-    file("${idSample}_${status}.bam.metrics") optional(true) into markDuplicatesQC
 
   when: 'preprocessing' in workflowSteps
 
@@ -308,7 +305,6 @@ process CreateIntervals {
 
   output:
     file("${idPatient}.intervals") into intervals
-    file("${idPatient}.intervals") into createIntervalsQC
 
   when: 'preprocessing' in workflowSteps || 'realign' in workflowSteps
 
@@ -355,7 +351,6 @@ process RealignBams {
     val(idSample_status) into tempSamples_status
     file("*.real.bam") into tempBams
     file("*.real.bai") into tempBais
-    file("*.real.bam") optional(true) into realignBamsQC
 
   when: 'preprocessing' in workflowSteps || 'realign' in workflowSteps
 
@@ -419,7 +414,6 @@ process CreateRecalibrationTable {
 
   output:
     set idPatient, gender, status, idSample, file(bam), file(bai), file("${idSample}.recal.table") into recalibrationTable
-    file("${idSample}.recal.table") optional(true) into createRecalibrationTableQC
 
   when: 'preprocessing' in workflowSteps || 'realign' in workflowSteps
 
@@ -460,7 +454,6 @@ process RecalibrateBam {
   output:
     set idPatient, gender, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam
     set idPatient, gender, status, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into recalibratedBamTSV
-    file("${idSample}.recal.bam") optional(true) into recalibrateBamQC
 
   when: 'preprocessing' in workflowSteps || 'realign' in workflowSteps
 
@@ -664,7 +657,6 @@ process RunMutect1 {
 
   output:
     set val("MuTect1"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf") into mutect1Output
-    file ("${gen_int}_${idSampleNormal}_${idSampleTumor}.call_stats.out") into runMutect1QC
 
   when: 'MuTect1' in workflowSteps
 
@@ -789,7 +781,6 @@ process ConcatVCF {
 
   output:
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file("*.vcf") into vcfConcatenated
-    set variantCaller, file("*.vcf") into concatVCFQC
 
   when: 'HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2' in workflowSteps || 'VarDict' in workflowSteps
 
@@ -819,20 +810,20 @@ process ConcatVCF {
 }
 
 if ('HaplotypeCaller' in workflowSteps) {
-  concatVCFQC.choice(runHaplotypecallerQC, concatVCFQC) {it[0] == 'HaplotypeCaller' ? 1 : 0}
-  if (verbose) {runHaplotypecallerQC = runHaplotypecallerQC.view {"runHaplotypecallerQC: $it"}}
+  vcfConcatenated.choice(haplotypecallerFinalOutput, vcfConcatenated) {it[0] == 'HaplotypeCaller' ? 1 : 0}
+  if (verbose) {haplotypecallerFinalOutput = haplotypecallerFinalOutput.view {"haplotypecallerFinalOutput: $it"}}
 }
 if ('MuTect1' in workflowSteps) {
-  concatVCFQC.choice(runMutect1QC, concatVCFQC) {it[0] == 'MuTect1' ? 1 : 0}
-  if (verbose) {runMutect1QC = runMutect1QC.view {"runMutect1QC: $it"}}
+  vcfConcatenated.choice(mutect1FinalOutput, vcfConcatenated) {it[0] == 'MuTect1' ? 1 : 0}
+  if (verbose) {mutect1FinalOutput = mutect1FinalOutput.view {"mutect1FinalOutput: $it"}}
 }
 if ('MuTect2' in workflowSteps) {
-  concatVCFQC.choice(runMutect2QC, concatVCFQC) {it[0] == 'MuTect2' ? 1 : 0}
-  if (verbose) {runMutect2QC = runMutect2QC.view {"runMutect2QC: $it"}}
+  concatVCFQC.choice(mutect2FinalOutput, vcfConcatenated) {it[0] == 'MuTect2' ? 1 : 0}
+  if (verbose) {mutect2FinalOutput = mutect2FinalOutput.view {"mutect2FinalOutput: $it"}}
 }
 if ('VarDict' in workflowSteps) {
-  concatVCFQC.choice(runVardictQC, concatVCFQC) {it[0] == 'VarDict' ? 1 : 0}
-  if (verbose) {runVardictQC = runVardictQC.view {"runVardictQC: $it"}}
+  vcfConcatenated.choice(vardictFinalOutput, vcfConcatenated) {it[0] == 'VarDict' ? 1 : 0}
+  if (verbose) {vardictFinalOutput = vardictFinalOutput.view {"vardictFinalOutput: $it"}}
 }
 
 process RunStrelka {
@@ -849,7 +840,6 @@ process RunStrelka {
 
   output:
     set val("Strelka"), idPatient, gender, idSampleNormal, idSampleTumor, file("strelka/results/*.vcf") into strelkaOutput
-    file("strelka/results/*.vcf") optional(true) into runStrelkaQC
 
   when: 'Strelka' in workflowSteps
 
@@ -886,7 +876,6 @@ process RunManta {
 
   output:
     set val("Manta"), idPatient, gender, idSampleNormal, idSampleTumor, file("${idSampleNormal}_${idSampleTumor}.somaticSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.diploidSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf") into mantaOutput
-    file("${idSampleNormal}_${idSampleTumor}.*.vcf") optional(true) into runMantaQC
 
   when: 'Manta' in workflowSteps
 
@@ -969,7 +958,6 @@ process RunAscat {
 
   output:
     set val("Ascat"), idPatient, gender, idSampleNormal, idSampleTumor, file("${idSampleTumor}.tumour.png"), file("${idSampleTumor}.germline.png"), file("${idSampleTumor}.LogR.PCFed.txt"), file("${idSampleTumor}.BAF.PCFed.txt"), file("${idSampleTumor}.ASPCF.png"), file("${idSampleTumor}.ASCATprofile.png"), file("${idSampleTumor}.aberrationreliability.png"), file("${idSampleTumor}.rawprofile.png"), file("${idSampleTumor}.sunrise.png") into ascatOutput
-    file("${idSampleTumor}.*.png") optional(true) into runAscatQC
 
   when: 'Ascat' in workflowSteps
 
@@ -1022,7 +1010,10 @@ if ('Ascat' in workflowSteps) {
   if (verbose) {ascatOutput = ascatOutput.view {"Ascat output: $it"}}
 }
 
+reportForMultiQC = Channel.create()
 reportForMultiQC = reportForMultiQC.mix(fastQCreport).flatten().toList()
+
+if (verbose) {reportForMultiQC = reportForMultiQC.view {"Reports for MultiQC: $it"}}
 
 process RunMultiQC {
   tag {"MultiQC"}
