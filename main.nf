@@ -811,22 +811,22 @@ process ConcatVCF {
     """
 }
 
-if ('HaplotypeCaller' in workflowSteps) {
-  vcfConcatenated.choice(haplotypecallerFinalOutput, vcfConcatenated) {it[0] == 'HaplotypeCaller' ? 1 : 0}
-  if (verbose) {haplotypecallerFinalOutput = haplotypecallerFinalOutput.view {"haplotypecallerFinalOutput: $it"}}
-}
-if ('MuTect1' in workflowSteps) {
-  vcfConcatenated.choice(mutect1FinalOutput, vcfConcatenated) {it[0] == 'MuTect1' ? 1 : 0}
-  if (verbose) {mutect1FinalOutput = mutect1FinalOutput.view {"mutect1FinalOutput: $it"}}
-}
-if ('MuTect2' in workflowSteps) {
-  concatVCFQC.choice(mutect2FinalOutput, vcfConcatenated) {it[0] == 'MuTect2' ? 1 : 0}
-  if (verbose) {mutect2FinalOutput = mutect2FinalOutput.view {"mutect2FinalOutput: $it"}}
-}
-if ('VarDict' in workflowSteps) {
-  vcfConcatenated.choice(vardictFinalOutput, vcfConcatenated) {it[0] == 'VarDict' ? 1 : 0}
-  if (verbose) {vardictFinalOutput = vardictFinalOutput.view {"vardictFinalOutput: $it"}}
-}
+// if ('HaplotypeCaller' in workflowSteps) {
+//   vcfConcatenated.choice(haplotypecallerFinalOutput, vcfConcatenated) {it[0] == 'HaplotypeCaller' ? 1 : 0}
+//   if (verbose) {haplotypecallerFinalOutput = haplotypecallerFinalOutput.view {"haplotypecallerFinalOutput: $it"}}
+// }
+// if ('MuTect1' in workflowSteps) {
+//   vcfConcatenated.choice(mutect1FinalOutput, vcfConcatenated) {it[0] == 'MuTect1' ? 1 : 0}
+//   if (verbose) {mutect1FinalOutput = mutect1FinalOutput.view {"mutect1FinalOutput: $it"}}
+// }
+// if ('MuTect2' in workflowSteps) {
+//   concatVCFQC.choice(mutect2FinalOutput, vcfConcatenated) {it[0] == 'MuTect2' ? 1 : 0}
+//   if (verbose) {mutect2FinalOutput = mutect2FinalOutput.view {"mutect2FinalOutput: $it"}}
+// }
+// if ('VarDict' in workflowSteps) {
+//   vcfConcatenated.choice(vardictFinalOutput, vcfConcatenated) {it[0] == 'VarDict' ? 1 : 0}
+//   if (verbose) {vardictFinalOutput = vardictFinalOutput.view {"vardictFinalOutput: $it"}}
+// }
 
 process RunStrelka {
   tag {idSampleTumor}
@@ -1013,6 +1013,7 @@ if ('Ascat' in workflowSteps) {
 }
 
 reportForMultiQC = Channel.create()
+
 reportForMultiQC = fastQCreport.flatten().toList() //mix()
 
 if (verbose) {reportForMultiQC = reportForMultiQC.view {"Reports for MultiQC: $it"}}
