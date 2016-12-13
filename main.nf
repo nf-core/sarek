@@ -26,6 +26,7 @@ vim: syntax=groovy
  https://github.com/SciLifeLab/CAW/README.md
 ----------------------------------------------------------------------------------------
  Processes overview
+ - RunFastQC - Run FastQC for QC on fastq files
  - MapReads - Map reads
  - MergeBams - Merge BAMs if multilane samples
  - MarkDuplicates - Mark Duplicates
@@ -146,7 +147,7 @@ process RunFastQC {
     set idPatient, gender, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFilesforFastQC
 
   output:
-    file "*_fastqc.{zip,html}" into fastQC
+    file "*_fastqc.{zip,html}" into fastQCreport
 
   script:
   """
@@ -1021,23 +1022,15 @@ if ('Ascat' in workflowSteps) {
   if (verbose) {ascatOutput = ascatOutput.view {"Ascat output: $it"}}
 }
 
+reportForMultiQC = reportForMultiQC.mix(fastQCreport).flatten().toList()
+
 process RunMultiQC {
   tag {"MultiQC"}
 
   publishDir "MultiQC", mode: 'copy'
 
   input:
-    file ('FastQC/*') from fastQC.flatten().toList()
-    file ('alignment/*') from mapReadsQC.flatten().toList()
-    file ('mergeBams/*') from mergeBamsQC.flatten().toList()
-    file ('markDuplicates/*') from markDuplicatesQC.flatten().toList()
-    file ('createIntervals/*') from createIntervalsQC.flatten().toList()
-    file ('realignBams/*') from realignBamsQC.flatten().toList()
-    file ('realignBamscreateRecalibrationTable/*') from createRecalibrationTableQC.flatten().toList()
-    file ('recalibrateBam/*') from recalibrateBamQC.flatten().toList()
-    file ('Strelka/*') from runStrelkaQC.flatten().toList()
-    file ('Manta/*') from runMantaQC.flatten().toList()
-    file ('Ascat/*') from runAscatQC.flatten().toList()
+    file ('*') from reportForMultiQC
 
   output:
     file "*multiqc_report.html"
