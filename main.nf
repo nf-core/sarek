@@ -157,6 +157,10 @@ process RunFastQC {
   """
 }
 
+if ('preprocessing' in workflowSteps) {
+  if (verbose) {fastQCreport = fastQCreport.view {"fastQC report: $it"}}
+}
+
 process MapReads {
   tag {idRun}
 
@@ -1012,11 +1016,11 @@ if ('Ascat' in workflowSteps) {
   if (verbose) {ascatOutput = ascatOutput.view {"Ascat output: $it"}}
 }
 
-reportForMultiQC = Channel.create()
+reportsForMultiQC = Channel.create()
 
-reportForMultiQC = fastQCreport.flatten().toList() //mix()
+reportsForMultiQC = fastQCreport.flatten().toList() //mix()
 
-if (verbose) {reportForMultiQC = reportForMultiQC.view {"Reports for MultiQC: $it"}}
+if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
 
 process RunMultiQC {
   tag {"MultiQC"}
@@ -1024,17 +1028,18 @@ process RunMultiQC {
   publishDir "MultiQC", mode: 'copy'
 
   input:
-    file ('*') from reportForMultiQC
+    file ('*') from reportsForMultiQC
 
   output:
-    file "*multiqc_report.html"
-    file "*multiqc_data"
+    set file("*multiqc_report.html"), file("*multiqc_data") into multiQCReport
 
   script:
   """
   multiqc -f .
   """
 }
+
+if (verbose) {multiQCReport = multiQCReport.view {"MultiQC report: $it"}}
 
 /*
 ========================================================================================
