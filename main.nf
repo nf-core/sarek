@@ -1025,7 +1025,7 @@ if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: 
 process RunMultiQC {
   tag {"MultiQC"}
 
-  publishDir "MultiQC", mode: 'copy'
+  publishDir directoryMap['MultiQC'], mode: 'copy'
 
   input:
     file ('*') from reportsForMultiQC.flatten().toList()
@@ -1040,8 +1040,6 @@ process RunMultiQC {
 }
 
 if (verbose) {multiQCReport = multiQCReport.view {"MultiQC report: $it"}}
-
-multiQCReport.close()
 
 /*
 ========================================================================================
@@ -1111,7 +1109,8 @@ def defineDirectoryMap() {
     'Strelka'         : 'VariantCalling/Strelka',
     'HaplotypeCaller' : 'VariantCalling/HaplotypeCaller',
     'Manta'           : 'VariantCalling/Manta',
-    'Ascat'           : 'VariantCalling/Ascat'
+    'Ascat'           : 'VariantCalling/Ascat',
+    'MultiQC'         : 'reports/MultiQC'
   ]
 }
 
