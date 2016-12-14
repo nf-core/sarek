@@ -1018,7 +1018,7 @@ if ('Ascat' in workflowSteps) {
 
 reportsForMultiQC = Channel.create()
 
-reportsForMultiQC = fastQCreport.flatten().toList() //mix()
+reportsForMultiQC = reportsForMultiQC.mix(fastQCreport)
 
 if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
 
@@ -1028,7 +1028,7 @@ process RunMultiQC {
   publishDir "MultiQC", mode: 'copy'
 
   input:
-    file ('*') from reportsForMultiQC
+    file ('*') from reportsForMultiQC.flatten().toList()
 
   output:
     set file("*multiqc_report.html"), file("*multiqc_data") into multiQCReport
