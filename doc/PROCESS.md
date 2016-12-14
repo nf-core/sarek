@@ -1,26 +1,27 @@
 # Workflow processes
 Several processes are run within the workflow. We divide them for the moment into 3 main steps:
 
-## Preprocessing:
- - MapReads - Map reads
- - MergeBams - Merge BAMs if multilane samples
- - MarkDuplicates - Mark Duplicates
- - CreateIntervals - Create Intervals
- - RealignBams - Realign Bams as T/N pair
- - CreateRecalibrationTable - Create Recalibration Table
- - RecalibrateBam - Recalibreate Bam
+## Preprocessing [Stable]:
+ - MapReads - Map reads [Stable]
+ - MergeBams - Merge BAMs if multilane samples [Stable]
+ - MarkDuplicates - Mark Duplicates [Stable]
+ - CreateIntervals - Create Intervals [Stable]
+ - RealignBams - Realign Bams as T/N pair [Stable]
+ - CreateRecalibrationTable - Create Recalibration Table [Stable]
+ - RecalibrateBam - Recalibreate Bam [Stable]
  
 ## Variant Calling:
- - RunHaplotypecaller - Run HaplotypeCaller for GermLine Variant Calling (Parrallelized processes)
- - RunMutect1 - Run MuTect1 for Variant Calling (Parrallelized processes)
- - RunMutect2 - Run MuTect2 for Variant Calling (Parrallelized processes)
- - RunVardict - Run VarDict for Variant Calling (Parrallelized processes)
- - ConcatVCF - Merge results from HaplotypeCaller, MuTect1, MuTect2 and VarDict parrallelized processes
- - RunStrelka - Run Strelka for Variant Calling
- - RunManta - Run Manta for Structural Variant Calling
- - RunAlleleCount - Run AlleleCount to prepare for Ascat
- - RunConvertAlleleCounts - Run convertAlleleCounts to prepare for Ascat
- - RunAscat - Run Ascat for CNV
+ - RunHaplotypecaller - Run HaplotypeCaller for GermLine Variant Calling (Parrallelized processes) [Stable]
+ - RunMutect1 - Run MuTect1 for Variant Calling (Parrallelized processes) [Stable]
+ - RunMutect2 - Run MuTect2 for Variant Calling (Parrallelized processes) [Working]
+ - RunVardict - Run VarDict for Variant Calling (Parrallelized processes) [Working]
+ - ConcatVCF - Merge results from HaplotypeCaller, MuTect1, MuTect2 and VarDict parrallelized processes [Stable]
+ - RunStrelka - Run Strelka for Variant Calling [Stable]
+ - RunManta - Run Manta for Structural Variant Calling [Need more tests]
+ - RunAlleleCount - Run AlleleCount to prepare for Ascat [Stable]
+ - RunConvertAlleleCounts - Run convertAlleleCounts to prepare for Ascat [Stable]
+ - RunAscat - Run Ascat for CNV [Stable]
 
 ## Report and QC:
-- RunMultiQC - Run MultiQC for report and QC
+ - RunFastQC - Run FastQC for QC on fastq files [Stable]
+ - RunMultiQC - Run MultiQC for report and QC [In progress]
