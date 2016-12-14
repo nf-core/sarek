@@ -679,7 +679,7 @@ if ('MuTect1' in workflowSteps) {
 
 process RunMutect2 {
   tag {idSampleTumor + "-" + gen_int}
-
+ 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
     file genomeFile from file(referenceMap['genomeFile'])
@@ -696,7 +696,6 @@ process RunMutect2 {
   // we are using MuTect2 shipped in GATK v3.6
   // TODO: the  "-U ALLOW_SEQ_DICT_INCOMPATIBILITY " flag is actually masking a bug in older Picard versions. Using the latest Picard tool
   // this bug should go away and we should _not_ use this flag
-  // removed: -nct $task.cpus \
 
   when: 'MuTect2' in workflowSteps
 
@@ -788,8 +787,10 @@ if ('VarDict' in workflowSteps) {
   if (verbose) {vardictVCF = vardictVCF.view {"vardictVCF: $it"}}
 }
 
-if ('HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2' in workflowSteps || 'VarDict' in workflowSteps) {
-  vcfsToMerge = hcVCF.mix(mutect1VCF, mutect2VCF, vardictVCF)
+// we are merging the VCFs that are called separatelly for different intervals
+// so we can have a single sorted VCF containing all the calls for a given caller
+if ('HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2' in workflowSteps || 'VarDict' in workflowSteps || 'FreeBayes' in workflowSteps) {
+  vcfsToMerge = hcVCF.mix(mutect1VCF, mutect2VCF, vardictVCF, freebayesVCF)
   if (verbose) {vcfsToMerge = vcfsToMerge.view {"VCFs To be merged: $it"}}
 } else {
   vcfsToMerge.close()
@@ -806,7 +807,7 @@ process ConcatVCF {
   output:
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file("*.vcf") into vcfConcatenated
 
-  when: 'HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2' in workflowSteps || 'VarDict' in workflowSteps
+  when: 'HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2' in workflowSteps || 'VarDict' in workflowSteps || 'FreeBayes' in workflowSteps
 
   script:
   vcfFiles = vcFiles.collect{"-V $it"}.join(' ')
