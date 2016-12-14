@@ -900,6 +900,8 @@ process RunAlleleCount {
 process RunConvertAlleleCounts {
   tag {idSampleTumor}
 
+  publishDir directoryMap['Ascat'], mode: 'copy'
+
   input:
     set idPatient, gender, idSampleNormal, idSampleTumor, file(alleleCountNormal), file(alleleCountTumor) from alleleCountOutput
 
