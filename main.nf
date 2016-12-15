@@ -1022,7 +1022,7 @@ fastQCreport = fastQCreport.flatten().toList()
 // reportsForMultiQC = Channel.create()
 // reportsForMultiQC = reportsForMultiQC.mix(fastQCreport).flatten().toList()
 
-if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
+if (verbose) {fastQCreport = fastQCreport.view {"Reports for MultiQC: $it"}}
 
 process RunMultiQC {
   tag {"MultiQC"}
