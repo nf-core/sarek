@@ -1008,8 +1008,9 @@ if ('Ascat' in workflowSteps) {
   if (verbose) {ascatOutput = ascatOutput.view {"Ascat output: $it"}}
 }
 
+reportsForMultiQC = Channel.create()
+
 if ('MultiQC' in workflowSteps) {
-  reportsForMultiQC = Channel.create()
   reportsForMultiQC = reportsForMultiQC.mix(fastQCreport).flatten().toList()
 
   if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
