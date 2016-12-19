@@ -120,6 +120,7 @@ if ((!params.sample) && !(test)) {exit 1, 'Missing TSV file, see --help for more
 tsvFile = (!(test) ? file(params.sample) : testFile)
 
 fastqFiles = Channel.create()
+fastqFilesforFastQC = Channel.create()
 
 if ('preprocessing' in workflowSteps) {
   fastqFiles = extractFastqFiles(tsvFile)
@@ -138,7 +139,10 @@ start_message(version, revision)
 ================================================================================
 */
 
-(fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
+if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
+  (fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
+  if (verbose) {fastQCreport = fastQCreport.view {"FastQC report: $it"}}
+}
 
 process RunFastQC {
   tag {idRun}
@@ -157,7 +161,7 @@ process RunFastQC {
   """
 }
 
-if ('preprocessing' in workflowSteps) {
+if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
   if (verbose) {fastQCreport = fastQCreport.view {"FastQC report: $it"}}
 }
 
