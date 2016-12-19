@@ -9,7 +9,7 @@ Several processes are run within the workflow. We divide them for the moment int
  - RealignBams - Realign Bams as T/N pair [Stable]
  - CreateRecalibrationTable - Create Recalibration Table [Stable]
  - RecalibrateBam - Recalibreate Bam [Stable]
- 
+
 ## Variant Calling:
  - RunHaplotypecaller - Run HaplotypeCaller for GermLine Variant Calling (Parrallelized processes) [Stable]
  - RunMutect1 - Run MuTect1 for Variant Calling (Parrallelized processes) [Stable]
@@ -24,4 +24,4 @@ Several processes are run within the workflow. We divide them for the moment int
 
 ## Report and QC:
  - RunFastQC - Run FastQC for QC on fastq files [Stable]
- - RunMultiQC - Run MultiQC for report and QC [In progress]
+ - RunMultiQC - Run MultiQC for report and QC [Need specific install]
