@@ -990,7 +990,7 @@ process RunAscat {
       biocLite("RColorBrewer", suppressUpdates=TRUE, lib="$baseDir/scripts")
       library(RColorBrewer)
   }
-   
+
   options(bitmapType='cairo')
   tumorbaf = "$bafTumor"
   tumorlogr = "$logrTumor"
@@ -1016,13 +1016,11 @@ if ('Ascat' in workflowSteps) {
   if (verbose) {ascatOutput = ascatOutput.view {"Ascat output: $it"}}
 }
 
+reportsForMultiQC = Channel.create()
 
-fastQCreport = fastQCreport.flatten().toList()
+reportsForMultiQC = reportsForMultiQC.mix(fastQCreport).flatten().toList()
 
-// reportsForMultiQC = Channel.create()
-// reportsForMultiQC = reportsForMultiQC.mix(fastQCreport).flatten().toList()
-
-if (verbose) {fastQCreport = fastQCreport.view {"Reports for MultiQC: $it"}}
+if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
 
 process RunMultiQC {
   tag {"MultiQC"}
