@@ -1008,11 +1008,12 @@ if ('Ascat' in workflowSteps) {
   if (verbose) {ascatOutput = ascatOutput.view {"Ascat output: $it"}}
 }
 
-reportsForMultiQC = Channel.create()
+if ('MultiQC' in workflowSteps) {
+  reportsForMultiQC = Channel.create()
+  reportsForMultiQC = reportsForMultiQC.mix(fastQCreport).flatten().toList()
 
-reportsForMultiQC = reportsForMultiQC.mix(fastQCreport).flatten().toList()
-
-if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
+  if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
+}
 
 process RunMultiQC {
   tag {"MultiQC"}
@@ -1032,9 +1033,9 @@ process RunMultiQC {
   multiqc -f -v .
   """
 }
-
-if (verbose) {multiQCReport = multiQCReport.view {"MultiQC report: $it"}}
-
+if ('MultiQC' in workflowSteps) {
+  if (verbose) {multiQCReport = multiQCReport.view {"MultiQC report: $it"}}
+}
 /*
 ================================================================================
 =                               F U N C T I O N S                              =
