@@ -625,7 +625,7 @@ if ('Ascat' in workflowSteps) {
 }
 
 process RunHaplotypecaller {
-  tag {idSampleNormal + "-" + gen_int}
+  tag {idSample + "-" + gen_int}
 
   input:
     set idPatient, gender, idSample, file(bam), file(bai), genInt, gen_int from bamsFHC //Are these values `ped to bamNormal already?
