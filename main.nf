@@ -554,8 +554,8 @@ gI = intervals.map{[it,it.replaceFirst(/\:/,'_')]}
 if ('HaplotypeCaller' in workflowSteps) {
   bamsFHCTemp = Channel.create()
   (bamsFHC, bamsNormal, gI) = generateIntervalsForVC(bamsNormal, gI)
-  (bamsFHCTemp, bamsTumor, gI) = generateIntervalsForVC(bamsNormal, gI)
-  bamsFHC = bamsFHCTemp.mix(bamsFHC)
+  (bamsFHCTemp, bamsTumor, gI) = generateIntervalsForVC(bamsTumor, gI)
+  bamsFHC = bamsFHC.mix(bamsFHCTemp)
   if (verbose) {bamsFHC = bamsFHC.view {"Bams with Intervals for HaplotypeCaller: $it"}}
 } else {
   bamsFHC.close()
@@ -563,7 +563,6 @@ if ('HaplotypeCaller' in workflowSteps) {
 }
 
 bamsAll = bamsNormal.spread(bamsTumor)
-
 bamsAll = bamsAll.map { // Since idPatientNormal and idPatientTumor are the same, it's removed from bamsAll Channel (same for genderNormal)
   // /!\ It is assumed that every sample are from the same patient
   idPatientNormal, genderNormal, idSampleNormal, bamNormal, baiNormal, idPatientTumor, genderTumor, idSampleTumor, bamTumor, baiTumor ->
