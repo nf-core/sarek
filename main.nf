@@ -508,17 +508,17 @@ bamsNormal = Channel.create()
 bamsAll = Channel.create()
 vcfsToMerge = Channel.create()
 
-bamsFHC = Channel.create()	// HaplotypeCaller
-bamsFMT1 = Channel.create()	// MuTect1
-bamsFMT2 = Channel.create()	// MuTect2
-bamsFFB = Channel.create()	// FreeBayes
-bamsFVD = Channel.create()	// VarDict
+bamsFHC = Channel.create()  // HaplotypeCaller
+bamsFMT1 = Channel.create() // MuTect1
+bamsFMT2 = Channel.create() // MuTect2
+bamsFFB = Channel.create()  // FreeBayes
+bamsFVD = Channel.create() // VarDict
 
-hcVCF = Channel.create()	// HaplotypeCaller
-mutect1VCF = Channel.create()
-mutect2VCF = Channel.create()
-freebayesVCF = Channel.create()
-vardictVCF = Channel.create()
+hcVCF = Channel.create()        // HaplotypeCaller
+mutect1VCF = Channel.create()   // MuTect1
+mutect2VCF = Channel.create()   // MuTect2
+freebayesVCF = Channel.create() // FreeBayes
+vardictVCF = Channel.create()   // VarDict
 
 bamsForStrelka = Channel.create()
 bamsForManta = Channel.create()
@@ -555,7 +555,7 @@ if ('HaplotypeCaller' in workflowSteps) {
   bamsFHCTemp = Channel.create()
   (bamsFHC, bamsNormal, gI) = generateIntervalsForVC(bamsNormal, gI)
   (bamsFHCTemp, bamsTumor, gI) = generateIntervalsForVC(bamsNormal, gI)
-  bamsFHC = bamsFHC.mix(bamsFHCTemp)
+  bamsFHC = bamsFHCTemp.mix(bamsFHC)
   if (verbose) {bamsFHC = bamsFHC.view {"Bams with Intervals for HaplotypeCaller: $it"}}
 } else {
   bamsFHC.close()
