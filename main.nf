@@ -1020,7 +1020,7 @@ process RunMultiQC {
   publishDir directoryMap['MultiQC'], mode: 'copy'
 
   input:
-    file ('*') from fastQCreport
+    file ('*') from reportsForMultiQC
 
   output:
     set file("*multiqc_report.html"), file("*multiqc_data") into multiQCReport
