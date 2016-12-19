@@ -3,11 +3,11 @@
 /*
 vim: syntax=groovy
 -*- mode: groovy;-*-
-========================================================================================
-=                   C A N C E R    A N A L Y S I S    W O R K F L O W                  =
-========================================================================================
+================================================================================
+=               C A N C E R    A N A L Y S I S    W O R K F L O W              =
+================================================================================
  New Cancer Analysis Workflow. Started March 2016.
-----------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
  @Authors
  Sebastian DiLorenzo <sebastian.dilorenzo@bils.se> [@Sebastian-D]
  Jesper Eisfeldt <jesper.eisfeldt@scilifelab.se> [@J35P312]
@@ -18,13 +18,13 @@ vim: syntax=groovy
  Björn Nystedt <bjorn.nystedt@scilifelab.se> [@bjornnystedt]
  Pall Olason <pall.olason@scilifelab.se> [@pallolason]
  Pelin Sahlén <pelin.akan@scilifelab.se> [@pelinakan]
-----------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
  @Homepage
  https://github.com/SciLifeLab/CAW
-----------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
  @Documentation
  https://github.com/SciLifeLab/CAW/README.md
-----------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
  Processes overview
  - RunFastQC - Run FastQC for QC on fastq files
  - MapReads - Map reads
@@ -45,9 +45,9 @@ vim: syntax=groovy
  - RunConvertAlleleCounts - Run convertAlleleCounts to prepare for Ascat
  - RunAscat - Run Ascat for CNV
  - RunMultiQC - Run MultiQC for report and QC
-========================================================================================
-=                               C O N F I G U R A T I O N                              =
-========================================================================================
+================================================================================
+=                           C O N F I G U R A T I O N                          =
+================================================================================
 */
 
 revision = grabGitRevision() ?: ''
@@ -133,9 +133,9 @@ if ('preprocessing' in workflowSteps) {
 start_message(version, revision)
 
 /*
-========================================================================================
-=                                   P R O C E S S E S                                  =
-========================================================================================
+================================================================================
+=                               P R O C E S S E S                              =
+================================================================================
 */
 
 (fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
@@ -149,7 +149,7 @@ process RunFastQC {
   output:
     file "*_fastqc.{zip,html}" into fastQCreport
 
-  when: 'preprocessing' in workflowSteps
+  when: 'preprocessing' in workflowSteps && 'MultiQC' in workflowStepsworkflowSteps
 
   script:
   """
@@ -545,7 +545,10 @@ intervals = Channel.from(file(referenceMap['intervals']).readLines())
 gI = intervals.map{[it,it.replaceFirst(/\:/,'_')]}
 
 if ('HaplotypeCaller' in workflowSteps) {
+  bamsFHCTemp = Channel.create()
   (bamsFHC, bamsNormal, gI) = generateIntervalsForVC(bamsNormal, gI)
+  (bamsFHCTemp, bamsTumor, gI) = generateIntervalsForVC(bamsNormal, gI)
+  bamsFHC = bamsFHC.mix(bamsFHCTemp)
   if (verbose) {bamsFHC = bamsFHC.view {"Bams with Intervals for HaplotypeCaller: $it"}}
 } else {
   bamsFHC.close()
@@ -611,7 +614,7 @@ process RunHaplotypecaller {
   tag {idSampleNormal + "-" + gen_int}
 
   input:
-    set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), genInt, gen_int from bamsFHC //Are these values `ped to bamNormal already?
+    set idPatient, gender, idSample, file(bam), file(bai), genInt, gen_int from bamsFHC //Are these values `ped to bamNormal already?
     file genomeFile from file(referenceMap['genomeFile'])
     file genomeIndex from file(referenceMap['genomeIndex'])
     file genomeDict from file(referenceMap['genomeDict'])
@@ -619,7 +622,7 @@ process RunHaplotypecaller {
     file dbsnpIndex from file(referenceMap['dbsnpIndex'])
 
   output:
-    set val("HaplotypeCaller"), idPatient, gender, idSampleNormal, val("${gen_int}_${idSampleNormal}"), file("${gen_int}_${idSampleNormal}.vcf") into haplotypecallerOutput
+    set val("HaplotypeCaller"), idPatient, gender, idSample, val("${gen_int}_${idSample}"), file("${gen_int}_${idSample}.vcf") into haplotypecallerOutput
 
   when: 'HaplotypeCaller' in workflowSteps
 
@@ -631,19 +634,19 @@ process RunHaplotypecaller {
   -T HaplotypeCaller \
   -R $genomeFile \
   --dbsnp $dbsnp \
-  -I $bamNormal \
+  -I $bam \
   -L \"$genInt\" \
   -XL hs37d5 \
   -XL NC_007605 \
-  -o ${gen_int}_${idSampleNormal}.vcf
+  -o ${gen_int}_${idSample}.vcf
   """
 }
 
 if ('HaplotypeCaller' in workflowSteps) {
   if (verbose) {haplotypecallerOutput = haplotypecallerOutput.view {"HaplotypeCaller output: $it"}}
   hcVCF = haplotypecallerOutput.map {
-    variantCaller, idPatient, gender, idSampleNormal, tag, vcfFile ->
-    [variantCaller, idPatient, gender, idSampleNormal, idSampleNormal, tag, vcfFile]
+    variantCaller, idPatient, gender, idSample, tag, vcfFile ->
+    [variantCaller, idPatient, gender, idSample, idSample, tag, vcfFile]
   }.groupTuple(by:[0,1,2,3,4])
   if (verbose) {hcVCF = hcVCF.view {"hcVCF: $it" } }
 }
@@ -815,22 +818,7 @@ process ConcatVCF {
     """
 }
 
-// if ('HaplotypeCaller' in workflowSteps) {
-//   vcfConcatenated.choice(haplotypecallerFinalOutput, vcfConcatenated) {it[0] == 'HaplotypeCaller' ? 1 : 0}
-//   if (verbose) {haplotypecallerFinalOutput = haplotypecallerFinalOutput.view {"haplotypecallerFinalOutput: $it"}}
-// }
-// if ('MuTect1' in workflowSteps) {
-//   vcfConcatenated.choice(mutect1FinalOutput, vcfConcatenated) {it[0] == 'MuTect1' ? 1 : 0}
-//   if (verbose) {mutect1FinalOutput = mutect1FinalOutput.view {"mutect1FinalOutput: $it"}}
-// }
-// if ('MuTect2' in workflowSteps) {
-//   concatVCFQC.choice(mutect2FinalOutput, vcfConcatenated) {it[0] == 'MuTect2' ? 1 : 0}
-//   if (verbose) {mutect2FinalOutput = mutect2FinalOutput.view {"mutect2FinalOutput: $it"}}
-// }
-// if ('VarDict' in workflowSteps) {
-//   vcfConcatenated.choice(vardictFinalOutput, vcfConcatenated) {it[0] == 'VarDict' ? 1 : 0}
-//   if (verbose) {vardictFinalOutput = vardictFinalOutput.view {"vardictFinalOutput: $it"}}
-// }
+if (verbose) {vcfConcatenated = vcfConcatenated.view {"VCF concatenated: $it"}}
 
 process RunStrelka {
   tag {idSampleTumor}
@@ -970,19 +958,19 @@ process RunAscat {
   script:
   """
   #!/bin/env Rscript
-  #######################################################################################################
-  # Description:
-  # R-script for converting output from AlleleCount to BAF and LogR values.
-  #
-  # Input:
-  # AlleleCounter output file for tumor and normal samples
-  # The first line should contain a header describing the data
-  # The following columns and headers should be present:
-  # CHR    POS     Count_A Count_C Count_G Count_T Good_depth
-  #
-  # Output:
-  # BAF and LogR tables (tab delimited text files)
-  #######################################################################################################
+  ##############################################################################
+  # Description:                                                               #
+  # R-script for converting output from AlleleCount to BAF and LogR values.    #
+  #                                                                            #
+  # Input:                                                                     #
+  # AlleleCounter output file for tumor and normal samples                     #
+  # The first line should contain a header describing the data                 #
+  # The following columns and headers should be present:                       #
+  # CHR    POS     Count_A Count_C Count_G Count_T Good_depth                  #
+  #                                                                            #
+  # Output:                                                                    #
+  # BAF and LogR tables (tab delimited text files)                             #
+  ##############################################################################
   source("$baseDir/scripts/ascat.R")
   .libPaths( c( "$baseDir/scripts", .libPaths() ) )
   if(!require(RColorBrewer)){
@@ -1009,7 +997,7 @@ process RunAscat {
   #str(ascat.output)
   #plot(sort(ascat.output\$aberrantcellfraction))
   #plot(density(ascat.output\$ploidy))
-  """ //To restore syntaxic coloration: "
+  """
 }
 
 if ('Ascat' in workflowSteps) {
@@ -1033,6 +1021,8 @@ process RunMultiQC {
   output:
     set file("*multiqc_report.html"), file("*multiqc_data") into multiQCReport
 
+    when: 'MultiQC' in workflowStepsworkflowSteps
+
   script:
   """
   multiqc -f -v .
@@ -1042,9 +1032,9 @@ process RunMultiQC {
 if (verbose) {multiQCReport = multiQCReport.view {"MultiQC report: $it"}}
 
 /*
-========================================================================================
-=                                   F U N C T I O N S                                  =
-========================================================================================
+================================================================================
+=                               F U N C T I O N S                              =
+================================================================================
 */
 
 def grabGitRevision() { // Borrowed from https://github.com/NBISweden/wgs-structvar
@@ -1125,7 +1115,8 @@ def defineStepList() {
     'Strelka',
     'HaplotypeCaller',
     'Manta',
-    'Ascat'
+    'Ascat',
+    'MultiQC'
   ]
 }
 
