@@ -36,6 +36,7 @@ vim: syntax=groovy
  - RunHaplotypecaller - Run HaplotypeCaller for GermLine Variant Calling (Parrallelized processes)
  - RunMutect1 - Run MuTect1 for Variant Calling (Parrallelized processes)
  - RunMutect2 - Run MuTect2 for Variant Calling (Parrallelized processes)
+ - RunFreeBayes - Run FreeBayes for Variant Calling (Parrallelized processes)
  - RunVardict - Run VarDict for Variant Calling (Parrallelized processes)
  - ConcatVCF - Merge results from HaplotypeCaller, MuTect1, MuTect2 and VarDict
  - RunStrelka - Run Strelka for Variant Calling
@@ -478,15 +479,17 @@ bamsNormal = Channel.create()
 bamsAll = Channel.create()
 vcfsToMerge = Channel.create()
 
-bamsFHC = Channel.create()
-bamsFMT1 = Channel.create()
-bamsFMT2 = Channel.create()
-bamsFVD = Channel.create()
+bamsFHC = Channel.create()	// HaplotypeCaller
+bamsFMT1 = Channel.create()	// MuTect1
+bamsFMT2 = Channel.create()	// MuTect2
+bamsFVD = Channel.create()	// VarDict
+bamsFFB = Channel.create()	// FreeBayes 
 
-hcVCF = Channel.create()
-mutect1VCF = Channel.create()
-mutect2VCF = Channel.create()
-vardictVCF = Channel.create()
+hcVCF = Channel.create()	// HaplotypeCaller
+mutect1VCF = Channel.create()   
+mutect2VCF = Channel.create()   
+vardictVCF = Channel.create()   
+freebayesVCF = Channel.create() 
 
 bamsForStrelka = Channel.create()
 bamsForManta = Channel.create()
@@ -551,6 +554,14 @@ if ('MuTect2' in workflowSteps) {
 } else {
   bamsFMT2.close()
   mutect2VCF.close()
+}
+
+if ('FreeBayes' in workflowSteps) {
+  (bamsFFB, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
+  if (verbose) {bamsFFB = bamsFFB.view {"Bams with Intervals for FreeBayes: $it"}}
+} else {
+  bamsFFB.close()
+  freebayesVCF.close()
 }
 
 if ('VarDict' in workflowSteps) {
@@ -668,7 +679,7 @@ if ('MuTect1' in workflowSteps) {
 
 process RunMutect2 {
   tag {idSampleTumor + "-" + gen_int}
-
+ 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
     file genomeFile from file(referenceMap['genomeFile'])
@@ -685,7 +696,6 @@ process RunMutect2 {
   // we are using MuTect2 shipped in GATK v3.6
   // TODO: the  "-U ALLOW_SEQ_DICT_INCOMPATIBILITY " flag is actually masking a bug in older Picard versions. Using the latest Picard tool
   // this bug should go away and we should _not_ use this flag
-  // removed: -nct $task.cpus \
 
   when: 'MuTect2' in workflowSteps
 
@@ -711,6 +721,38 @@ if ('MuTect2' in workflowSteps) {
   if (verbose) {mutect2Output = mutect2Output.view {"MuTect2 output: $it"}}
   mutect2VCF = mutect2Output.groupTuple(by:[0,1,2,3,4])
   if (verbose) {mutect2VCF = mutect2VCF.view {"mutect2VCF: $it"}}
+}
+
+process RunFreeBayes {
+  tag {idSampleTumor + "-" + gen_int}
+
+  input:
+    set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFFB
+    file genomeFile from file(referenceMap['genomeFile'])
+
+  output:
+    set val("FreeBayes"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf") into freebayesOutput
+
+  when: 'FreeBayes' in workflowSteps
+
+  script:
+  """
+  freebayes \
+    -f $genomeFile \
+    --pooled-continuous \
+    --pooled-discrete \
+    -F 0.03 \
+    -C 2 \
+    -r \"$genInt" \
+    $bamTumor \
+    $bamNormal > ${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf
+  """
+}
+
+if ('FreeBayes' in workflowSteps) {
+  if (verbose) {freebayesOutput = freebayesOutput.view {"FreeBayes output: $it"}}
+  freebayesVCF = freebayesOutput.groupTuple(by:[0,1,2,3,4])
+  if (verbose) {freebayesVCF = freebayesVCF.view {"freebayesVCF: $it"}}
 }
 
 process RunVardict {
@@ -745,8 +787,10 @@ if ('VarDict' in workflowSteps) {
   if (verbose) {vardictVCF = vardictVCF.view {"vardictVCF: $it"}}
 }
 
-if ('HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2' in workflowSteps || 'VarDict' in workflowSteps) {
-  vcfsToMerge = hcVCF.mix(mutect1VCF, mutect2VCF, vardictVCF)
+// we are merging the VCFs that are called separatelly for different intervals
+// so we can have a single sorted VCF containing all the calls for a given caller
+if ('HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2' in workflowSteps || 'VarDict' in workflowSteps || 'FreeBayes' in workflowSteps) {
+  vcfsToMerge = hcVCF.mix(mutect1VCF, mutect2VCF, vardictVCF, freebayesVCF)
   if (verbose) {vcfsToMerge = vcfsToMerge.view {"VCFs To be merged: $it"}}
 } else {
   vcfsToMerge.close()
@@ -763,7 +807,7 @@ process ConcatVCF {
   output:
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file("*.vcf") into vcfConcatenated
 
-  when: 'HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2' in workflowSteps || 'VarDict' in workflowSteps
+  when: 'HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2' in workflowSteps || 'VarDict' in workflowSteps || 'FreeBayes' in workflowSteps
 
   script:
   vcfFiles = vcFiles.collect{"-V $it"}.join(' ')
@@ -1044,6 +1088,7 @@ def defineDirectoryMap() {
     'recalibrated'    : 'Preprocessing/Recalibrated',
     'MuTect1'         : 'VariantCalling/MuTect1',
     'MuTect2'         : 'VariantCalling/MuTect2',
+    'FreeBayes'       : 'VariantCalling/FreeBayes',
     'VarDict'         : 'VariantCalling/VarDict',
     'Strelka'         : 'VariantCalling/Strelka',
     'HaplotypeCaller' : 'VariantCalling/HaplotypeCaller',
@@ -1059,6 +1104,7 @@ def defineStepList() {
     'skipPreprocessing',
     'MuTect1',
     'MuTect2',
+    'FreeBayes',
     'VarDict',
     'Strelka',
     'HaplotypeCaller',
@@ -1194,6 +1240,7 @@ def help_message(version, revision) { // Display help message
   log.info "         skipPreprocessing (will start workflow with recalibrated BAM files)"
   log.info "         MuTect1 (use MuTect1 for VC)"
   log.info "         MuTect2 (use MuTect2 for VC)"
+  log.info "         FreeBayes (use FreeBayes for VC)"
   log.info "         VarDict (use VarDict for VC)"
   log.info "         Strelka (use Strelka for VC)"
   log.info "         HaplotypeCaller (use HaplotypeCaller for normal bams VC)"
