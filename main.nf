@@ -142,7 +142,6 @@ start_message(version, revision)
 
 if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
   (fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
-  if (verbose) {fastQCreport = fastQCreport.view {"FastQC report: $it"}}
 }
 
 process RunFastQC {
@@ -563,6 +562,7 @@ if ('HaplotypeCaller' in workflowSteps) {
 }
 
 bamsAll = bamsNormal.spread(bamsTumor)
+
 bamsAll = bamsAll.map { // Since idPatientNormal and idPatientTumor are the same, it's removed from bamsAll Channel (same for genderNormal)
   // /!\ It is assumed that every sample are from the same patient
   idPatientNormal, genderNormal, idSampleNormal, bamNormal, baiNormal, idPatientTumor, genderTumor, idSampleTumor, bamTumor, baiTumor ->
@@ -774,7 +774,7 @@ process RunFreeBayes {
     --pooled-discrete \
     -F 0.03 \
     -C 2 \
-    -r \"$genInt" \
+    -r \"$genInt\" \
     $bamTumor \
     $bamNormal > ${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf
   """
