@@ -47,4 +47,3 @@ See the [workflow use cases documentation](doc/USE_CASES.md)
 - perl 5.18.4
 - strelka 1.0.15
 - manta 1.0.0
-
