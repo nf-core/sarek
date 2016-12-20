@@ -6,7 +6,7 @@ Nextflow Cancer Analysis Workflow Prototype developed at the [National Genomics 
 at [SciLifeLab Stockholm](https://www.scilifelab.se/platforms/ngi/), Sweden.
 
 ## Version
-0.9
+0.9.9
 
 ## Authors
 - Sebastian DiLorenzo (@Sebastian-D)
@@ -47,4 +47,3 @@ See the [workflow use cases documentation](doc/USE_CASES.md)
 - perl 5.18.4
 - strelka 1.0.15
 - manta 1.0.0
-
