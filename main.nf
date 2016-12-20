@@ -142,7 +142,6 @@ start_message(version, revision)
 
 if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
   (fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
-  log.info "In if populating fastqFilesforFastQC"
 }
 
 process RunFastQC {
@@ -164,7 +163,8 @@ process RunFastQC {
 
 if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
   if (verbose) {fastQCreport = fastQCreport.view {"FastQC report: $it"}}
-  log.info "In if showing results"
+} else {
+  fastQCreport.close()
 }
 
 process MapReads {
