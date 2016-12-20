@@ -1055,35 +1055,35 @@ if ('Ascat' in workflowSteps) {
   if (verbose) {ascatOutput = ascatOutput.view {"Ascat output: $it"}}
 }
 
-reportsForMultiQC = Channel.create()
+// reportsForMultiQC = Channel.create()
+//
+// if ('MultiQC' in workflowSteps) {
+//   reportsForMultiQC = reportsForMultiQC.mix(fastQCreport).flatten().toList()
+//   if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
+// }
+//
+// process RunMultiQC {
+//   tag {"MultiQC"}
+//
+//   publishDir directoryMap['MultiQC'], mode: 'copy'
+//
+//   input:
+//     file ('*') from reportsForMultiQC
+//
+//   output:
+//     set file("*multiqc_report.html"), file("*multiqc_data") into multiQCReport
+//
+//     when: 'MultiQC' in workflowStepsworkflowSteps
+//
+//   script:
+//   """
+//   multiqc -f -v .
+//   """
+// }
+// if ('MultiQC' in workflowSteps) {
+//   if (verbose) {multiQCReport = multiQCReport.view {"MultiQC report: $it"}}
+// }
 
-if ('MultiQC' in workflowSteps) {
-  reportsForMultiQC = reportsForMultiQC.mix(fastQCreport).flatten().toList()
-
-  if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
-}
-
-process RunMultiQC {
-  tag {"MultiQC"}
-
-  publishDir directoryMap['MultiQC'], mode: 'copy'
-
-  input:
-    file ('*') from reportsForMultiQC
-
-  output:
-    set file("*multiqc_report.html"), file("*multiqc_data") into multiQCReport
-
-    when: 'MultiQC' in workflowStepsworkflowSteps
-
-  script:
-  """
-  multiqc -f -v .
-  """
-}
-if ('MultiQC' in workflowSteps) {
-  if (verbose) {multiQCReport = multiQCReport.view {"MultiQC report: $it"}}
-}
 /*
 ================================================================================
 =                               F U N C T I O N S                              =
