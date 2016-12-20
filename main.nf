@@ -140,30 +140,32 @@ start_message(version, revision)
 ================================================================================
 */
 
-// if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
-//   (fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
-// }
-//
-// process RunFastQC {
-//   tag {idRun}
-//
-//   input:
-//     set idPatient, gender, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFilesforFastQC
-//
-//   output:
-//     file "*_fastqc.{zip,html}" into fastQCreport
-//
-//   when: 'preprocessing' in workflowSteps && 'MultiQC' in workflowStepsworkflowSteps
-//
-//   script:
-//   """
-//   fastqc -q $fastqFile1 $fastqFile2
-//   """
-// }
-//
-// if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
-//   if (verbose) {fastQCreport = fastQCreport.view {"FastQC report: $it"}}
-// }
+if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
+  (fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
+  log.info "In if populating fastqFilesforFastQC"
+}
+
+process RunFastQC {
+  tag {idRun}
+
+  input:
+    set idPatient, gender, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFilesforFastQC
+
+  output:
+    file "*_fastqc.{zip,html}" into fastQCreport
+
+  when: 'preprocessing' in workflowSteps && 'MultiQC' in workflowStepsworkflowSteps
+
+  script:
+  """
+  fastqc -q $fastqFile1 $fastqFile2
+  """
+}
+
+if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
+  if (verbose) {fastQCreport = fastQCreport.view {"FastQC report: $it"}}
+  log.info "In if showing results"
+}
 
 process MapReads {
   tag {idRun}
