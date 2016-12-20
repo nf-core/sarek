@@ -165,8 +165,6 @@ process RunFastQC {
 
 if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
   if (verbose) {fastQCreport = fastQCreport.view {"FastQC report: $it"}}
-} else {
-  fastQCreport.close()
 }
 
 process MapReads {
@@ -1059,34 +1057,36 @@ if ('Ascat' in workflowSteps) {
   if (verbose) {ascatOutput = ascatOutput.view {"Ascat output: $it"}}
 }
 
-// reportsForMultiQC = Channel.create()
-//
-// if ('MultiQC' in workflowSteps) {
-//   reportsForMultiQC = reportsForMultiQC.mix(fastQCreport).flatten().toList()
-//   if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
-// }
-//
-// process RunMultiQC {
-//   tag {"MultiQC"}
-//
-//   publishDir directoryMap['MultiQC'], mode: 'copy'
-//
-//   input:
-//     file ('*') from reportsForMultiQC
-//
-//   output:
-//     set file("*multiqc_report.html"), file("*multiqc_data") into multiQCReport
-//
-//     when: 'MultiQC' in workflowStepsworkflowSteps
-//
-//   script:
-//   """
-//   multiqc -f -v .
-//   """
-// }
-// if ('MultiQC' in workflowSteps) {
-//   if (verbose) {multiQCReport = multiQCReport.view {"MultiQC report: $it"}}
-// }
+reportsForMultiQC = Channel.create()
+
+if ('MultiQC' in workflowSteps) {
+  reportsForMultiQC = reportsForMultiQC.mix(fastQCreport).flatten().toList()
+  if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
+} else {
+  reportsForMultiQC.close()
+}
+
+process RunMultiQC {
+  tag {"MultiQC"}
+
+  publishDir directoryMap['MultiQC'], mode: 'copy'
+
+  input:
+    file ('*') from reportsForMultiQC
+
+  output:
+    set file("*multiqc_report.html"), file("*multiqc_data") into multiQCReport
+
+    when: 'MultiQC' in workflowStepsworkflowSteps
+
+  script:
+  """
+  multiqc -f -v .
+  """
+}
+if ('MultiQC' in workflowSteps) {
+  if (verbose) {multiQCReport = multiQCReport.view {"MultiQC report: $it"}}
+}
 
 /*
 ================================================================================
