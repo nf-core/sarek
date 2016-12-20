@@ -865,7 +865,9 @@ process ConcatVCF {
     """
 }
 
-if (verbose) {vcfConcatenated = vcfConcatenated.view {"VCF concatenated: $it"}}
+if ('HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2' in workflowSteps || 'FreeBayes' in workflowSteps || 'VarDict' in workflowSteps) {
+   if (verbose) {vcfConcatenated = vcfConcatenated.view {"VCF concatenated: $it"}}
+}
 
 process RunStrelka {
   tag {idSampleTumor}
