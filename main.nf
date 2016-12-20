@@ -142,6 +142,8 @@ start_message(version, revision)
 
 if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
   (fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
+} else {
+  fastqFilesforFastQC.close()
 }
 
 process RunFastQC {
