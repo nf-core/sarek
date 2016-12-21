@@ -570,8 +570,8 @@ if ('Ascat' in workflowSteps) {
   bamsTumorTemp = Channel.create()
   (bamsNormalTemp, bamsNormal) = bamsNormal.into(2)
   (bamsTumorTemp, bamsTumor) = bamsTumor.into(2)
-  bamsNormalTemp = bamsNormalTemp.map { idPatient, gender, idSample, bam, bai -> [idPatient, gender, val(0), idSample, bam, bai] }
-  bamsTumorTemp = bamsTumorTemp.map { idPatient, gender, idSample, bam, bai -> [idPatient, gender, val(1), idSample, bam, bai] }
+  bamsNormalTemp = bamsNormalTemp.map { idPatient, gender, idSample, bam, bai -> [idPatient, gender, 0, idSample, bam, bai] }
+  bamsTumorTemp = bamsTumorTemp.map { idPatient, gender, idSample, bam, bai -> [idPatient, gender, 1, idSample, bam, bai] }
   bamsForAscat = bamsNormalTemp.mix(bamsTumorTemp)
   if (verbose) {bamsForAscat = bamsForAscat.view {"Bams for Ascat: $it"}}
 } else {
