@@ -992,9 +992,9 @@ if ('Ascat' in workflowSteps) {
 
   alleleCountOutputAll = alleleCountOutputNormalTemp.spread(alleleCountOutputTumorTemp)
 
-  alleleCountOutputAll.map {
-  idPatientNormal, genderNormal, statusNormal, idSampleNormal, alleleCountNormal, idPatientTumor, genderTumor, statusTumor, idSampleTumor, alleleCountTumor >
-  [idPatientNormal, genderNormal, idSampleNormal, idSampleTumor, alleleCountNormal, alleleCountTumor]
+  alleleCountOutputAll = alleleCountOutputAll.map {
+    idPatientNormal, genderNormal, statusNormal, idSampleNormal, alleleCountNormal, idPatientTumor, genderTumor, statusTumor, idSampleTumor, alleleCountTumor ->
+    [idPatientNormal, genderNormal, idSampleNormal, idSampleTumor, alleleCountNormal, alleleCountTumor]
   }
 
   if (verbose) {alleleCountOutputAll = alleleCountOutputAll.view {"alleleCountAll output: $it"}}
