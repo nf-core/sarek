@@ -510,6 +510,9 @@ bamsAll = Channel.create()
 vcfsToMerge = Channel.create()
 
 bamsFHC = Channel.create()  // HaplotypeCaller
+
+bamsForAscat = Channel.create()
+
 bamsFMT1 = Channel.create() // MuTect1
 bamsFMT2 = Channel.create() // MuTect2
 bamsFFB = Channel.create()  // FreeBayes
@@ -523,7 +526,6 @@ vardictVCF = Channel.create()   // VarDict
 
 bamsForStrelka = Channel.create()
 bamsForManta = Channel.create()
-bamsForAscat = Channel.create()
 
 // separate recalibrateBams by status
 
@@ -553,14 +555,27 @@ intervals = Channel.from(file(referenceMap['intervals']).readLines())
 gI = intervals.map{[it,it.replaceFirst(/\:/,'_')]}
 
 if ('HaplotypeCaller' in workflowSteps) {
-  bamsFHCTemp = Channel.create()
-  (bamsFHC, bamsNormal, gI) = generateIntervalsForVC(bamsNormal, gI)
-  (bamsFHCTemp, bamsTumor, gI) = generateIntervalsForVC(bamsTumor, gI)
-  bamsFHC = bamsFHC.mix(bamsFHCTemp)
+  bamsNormalTemp = Channel.create()
+  bamsTumorTemp = Channel.create()
+  (bamsNormalTemp, bamsNormal, gI) = generateIntervalsForVC(bamsNormal, gI)
+  (bamsTumorTemp, bamsTumor, gI) = generateIntervalsForVC(bamsTumor, gI)
+  bamsFHC = bamsNormalTemp.mix(bamsTumorTemp)
   if (verbose) {bamsFHC = bamsFHC.view {"Bams with Intervals for HaplotypeCaller: $it"}}
 } else {
   bamsFHC.close()
   hcVCF.close()
+}
+if ('Ascat' in workflowSteps) {
+  bamsNormalTemp = Channel.create()
+  bamsTumorTemp = Channel.create()
+  (bamsNormalTemp, bamsNormal) = bamsNormal.into(2)
+  (bamsTumorTemp, bamsTumor) = bamsTumor.into(2)
+  bamsNormalTemp = bamsNormalTemp.map { idPatient, gender, idSample, bam, bai -> [idPatient, gender, val(0), idSample, bam, bai] }
+  bamsTumorTemp = bamsTumorTemp.map { idPatient, gender, idSample, bam, bai -> [idPatient, gender, val(1), idSample, bam, bai] }
+  bamsForAscat = bamsNormalTemp.mix(bamsTumorTemp)
+  if (verbose) {bamsForAscat = bamsForAscat.view {"Bams for Ascat: $it"}}
+} else {
+  bamsForAscat.close()
 }
 
 bamsAll = bamsNormal.spread(bamsTumor)
@@ -617,13 +632,6 @@ if ('Manta' in workflowSteps) {
   if (verbose) {bamsForManta = bamsForManta.view {"Bams for Manta: $it"}}
 } else {
   bamsForManta.close()
-}
-
-if ('Ascat' in workflowSteps) {
-  (bamsAll, bamsForAscat) = bamsAll.into(2)
-  if (verbose) {bamsForAscat = bamsForAscat.view {"Bams for Ascat: $it"}}
-} else {
-  bamsForAscat.close()
 }
 
 process RunHaplotypecaller {
@@ -954,23 +962,46 @@ process RunAlleleCount {
   tag {idSampleTumor}
 
   input:
-    set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForAscat
+    set idPatient, gender, status, idSample, file(bam), file(bai) from bamsForAscat
     file genomeFile from file(referenceMap['genomeFile'])
     file genomeIndex from file(referenceMap['genomeIndex'])
     file genomeDict from file(referenceMap['genomeDict'])
     file acLoci from file(referenceMap['acLoci'])
 
   output:
-    set idPatient, gender, idSampleNormal, idSampleTumor, file("${idSampleNormal}.alleleCount"), file("${idSampleTumor}.alleleCount") into alleleCountOutput
+    set idPatient, gender, status, idSample, file("${idSample}.alleleCount"), into alleleCountOutput
 
   when: 'Ascat' in workflowSteps
 
   script:
   """
-  alleleCounter -l $acLoci -r $genomeFile -b $bamNormal -o ${idSampleNormal}.alleleCount;
-  alleleCounter -l $acLoci -r $genomeFile -b $bamTumor -o ${idSampleTumor}.alleleCount;
+  alleleCounter -l $acLoci -r $genomeFile -b $bam -o ${idSample}.alleleCount;
   """
 }
+
+alleleCountOutputAll = Channel.create()
+
+if ('Ascat' in workflowSteps) {
+  if (verbose) {alleleCountOutput = alleleCountOutput.view {"alleleCount output: $it"}}
+
+  alleleCountOutputNormalTemp = Channel.create()
+  alleleCountOutputTumorTemp = Channel.create()
+
+  alleleCountOutput
+    .choice(alleleCountOutputTumorTemp, alleleCountOutputNormalTemp) {it[2] =~ /^0$/ ? 1 : 0}
+
+  alleleCountOutputAll = alleleCountOutputNormalTemp.spread(alleleCountOutputTumorTemp)
+
+  alleleCountOutputAll.map {
+  idPatientNormal, genderNormal, statusNormal, idSampleNormal, alleleCountNormal, idPatientTumor, genderTumor, statusTumor, idSampleTumor, alleleCountTumor >
+  [idPatientNormal, genderNormal, idSampleNormal, idSampleTumor, alleleCountNormal, alleleCountTumor]
+  }
+
+  if (verbose) {alleleCountOutputAll = alleleCountOutputAll.view {"alleleCountAll output: $it"}}
+} else {
+  alleleCountOutputAll.close()
+}
+
 
 // R script from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
@@ -980,7 +1011,7 @@ process RunConvertAlleleCounts {
   publishDir directoryMap['Ascat'], mode: 'copy'
 
   input:
-    set idPatient, gender, idSampleNormal, idSampleTumor, file(alleleCountNormal), file(alleleCountTumor) from alleleCountOutput
+    set idPatient, gender, idSampleNormal, idSampleTumor, file(alleleCountNormal), file(alleleCountTumor) from alleleCountOutputAll
 
   output:
     set idPatient, gender, idSampleNormal, idSampleTumor, file("${idSampleNormal}.BAF"), file("${idSampleNormal}.LogR"), file("${idSampleTumor}.BAF"), file("${idSampleTumor}.LogR") into convertAlleleCountsOutput
