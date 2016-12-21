@@ -959,7 +959,7 @@ if ('Manta' in workflowSteps) {
 // Run commands and code from Malin Larsson
 // Based on Jesper Eisfeldt's code
 process RunAlleleCount {
-  tag {idSampleTumor}
+  tag {idSample}
 
   input:
     set idPatient, gender, status, idSample, file(bam), file(bai) from bamsForAscat
