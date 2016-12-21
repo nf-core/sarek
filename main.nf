@@ -969,7 +969,7 @@ process RunAlleleCount {
     file acLoci from file(referenceMap['acLoci'])
 
   output:
-    set idPatient, gender, status, idSample, file("${idSample}.alleleCount"), into alleleCountOutput
+    set idPatient, gender, status, idSample, file("${idSample}.alleleCount") into alleleCountOutput
 
   when: 'Ascat' in workflowSteps
 
