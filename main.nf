@@ -122,7 +122,6 @@ tsvFile = (!(test) ? file(params.sample) : testFile)
 
 fastqFiles = Channel.create()
 fastqFilesforFastQC = Channel.create()
-reportsForMultiQC = Channel.create()
 
 if ('preprocessing' in workflowSteps) {
   fastqFiles = extractFastqFiles(tsvFile)
@@ -1004,7 +1003,6 @@ if ('Ascat' in workflowSteps) {
   alleleCountOutputAll.close()
 }
 
-
 // R script from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
 process RunConvertAlleleCounts {
@@ -1090,8 +1088,10 @@ if ('Ascat' in workflowSteps) {
   if (verbose) {ascatOutput = ascatOutput.view {"Ascat output: $it"}}
 }
 
+reportsForMultiQC = Channel.create()
+
 if ('MultiQC' in workflowSteps) {
-  reportsForMultiQC = reportsForMultiQC.mix(fastQCreport).flatten().toList()
+  reportsForMultiQC = fastQCreport.flatten().toList()
   if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
 } else {
   reportsForMultiQC.close()
