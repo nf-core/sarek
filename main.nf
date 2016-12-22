@@ -125,7 +125,7 @@ fastqFilesforFastQC = Channel.create()
 
 if ('preprocessing' in workflowSteps) {
   fastqFiles = extractFastqFiles(tsvFile)
-  if (verbose) {fastqFiles = fastqFiles.view {"FASTQ files and IDs to process: $it"}}
+  if (verbose) {fastqFiles = fastqFiles.view {"FASTQ files and IDs to preprocess: $it"}}
 } else if ('realign' in workflowSteps || 'skipPreprocessing' in workflowSteps) {
   bamFiles = extractBamFiles(tsvFile)
   if (verbose) {bamFiles = bamFiles.view {"Bam files and IDs to process: $it"}}
@@ -145,6 +145,7 @@ if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
   if (verbose) {fastqFilesforFastQC = fastqFilesforFastQC.view {"FASTQ files and IDs for FastQC: $it"}}
 } else {
   fastqFilesforFastQC.close()
+  if (verbose) {log.info "closing Channel fastqFilesforFastQC"}
 }
 
 process RunFastQC {
