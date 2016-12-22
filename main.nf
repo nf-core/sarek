@@ -122,6 +122,7 @@ tsvFile = (!(test) ? file(params.sample) : testFile)
 
 fastqFiles = Channel.create()
 fastqFilesforFastQC = Channel.create()
+reportsForMultiQC = Channel.create()
 
 if ('preprocessing' in workflowSteps) {
   fastqFiles = extractFastqFiles(tsvFile)
@@ -1088,8 +1089,6 @@ process RunAscat {
 if ('Ascat' in workflowSteps) {
   if (verbose) {ascatOutput = ascatOutput.view {"Ascat output: $it"}}
 }
-
-reportsForMultiQC = Channel.create()
 
 if ('MultiQC' in workflowSteps) {
   reportsForMultiQC = reportsForMultiQC.mix(fastQCreport).flatten().toList()
