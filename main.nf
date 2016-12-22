@@ -145,7 +145,6 @@ if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
   if (verbose) {fastqFilesforFastQC = fastqFilesforFastQC.view {"FASTQ files and IDs for FastQC: $it"}}
 } else {
   fastqFilesforFastQC.close()
-  if (verbose) {log.info "closing Channel fastqFilesforFastQC"}
 }
 
 process RunFastQC {
@@ -156,8 +155,6 @@ process RunFastQC {
 
   output:
     file "*_fastqc.{zip,html}" into fastQCreport
-
-  when: 'preprocessing' in workflowSteps && 'MultiQC' in workflowStepsworkflowSteps
 
   script:
   """
