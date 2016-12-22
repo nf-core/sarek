@@ -88,7 +88,7 @@ if (!checkStepList(workflowSteps,stepList)) {exit 1, 'Unknown step(s), see --hel
 if (params.test) {
   test = true
   testFile = file("$workflow.projectDir/data/tsv/tiny.tsv")
-  workflowSteps = ['preprocessing']
+  workflowSteps = ['preprocessing', 'MultiQC']
   referenceMap.put("intervals", "$workflow.projectDir/repeats/tiny.list")
 } else if (params.testRealign) {
   test = true
