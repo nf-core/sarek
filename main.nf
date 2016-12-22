@@ -1109,7 +1109,7 @@ process RunMultiQC {
   output:
     set file("*multiqc_report.html"), file("*multiqc_data") into multiQCReport
 
-    when: 'MultiQC' in workflowStepsworkflowSteps
+    when: 'MultiQC' in workflowSteps
 
   script:
   """
