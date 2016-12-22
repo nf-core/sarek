@@ -142,6 +142,7 @@ start_message(version, revision)
 
 if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
   (fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
+  if (verbose) {fastqFilesforFastQC = fastqFilesforFastQC.view {"FASTQ files and IDs for FastQC: $it"}}
 } else {
   fastqFilesforFastQC.close()
 }
