@@ -156,6 +156,8 @@ process RunFastQC {
   output:
     file "*_fastqc.{zip,html}" into fastQCreport
 
+  when: ('preprocessing' in workflowSteps && 'MultiQC' in workflowStepsworkflowSteps)
+
   script:
   """
   fastqc -q $fastqFile1 $fastqFile2
