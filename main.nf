@@ -156,7 +156,7 @@ process RunFastQC {
   output:
     file "*_fastqc.{zip,html}" into fastQCreport
 
-  when: (('preprocessing' in workflowSteps) && ('MultiQC' in workflowStepsworkflowSteps))
+  when: 'preprocessing' in workflowSteps && 'MultiQC' in workflowSteps
 
   script:
   """
