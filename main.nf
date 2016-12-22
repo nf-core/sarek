@@ -1090,7 +1090,7 @@ if ('Ascat' in workflowSteps) {
 
 reportsForMultiQC = Channel.create()
 
-if ('MultiQC' in workflowSteps) {
+if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
   reportsForMultiQC = fastQCreport.flatten().toList()
   if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
 } else {
