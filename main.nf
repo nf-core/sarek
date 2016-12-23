@@ -1389,6 +1389,7 @@ workflow.onComplete { // Display complete message
   log.info "Project Dir : $workflow.projectDir"
   log.info "Launch Dir  : $workflow.launchDir"
   log.info "Work Dir    : $workflow.workDir"
+  log.info "TSV file    : $tsvFile"
   log.info "Steps       : " + workflowSteps.join(", ")
   log.info "Completed at: $workflow.complete"
   log.info "Duration    : $workflow.duration"
