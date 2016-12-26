@@ -37,7 +37,7 @@ See the [workflow TSV file documentation](doc/TSV.md)
 See the [workflow use cases documentation](doc/USE_CASES.md)
 
 ## Tools and dependencies
-- nextflow 0.22.1
+- nextflow >= 0.22.1
 - bwa 0.7.8
 - samtools 1.3
 - picard 1.118
@@ -47,3 +47,5 @@ See the [workflow use cases documentation](doc/USE_CASES.md)
 - perl 5.18.4
 - strelka 1.0.15
 - manta 1.0.0
+- MultiQC 0.9
+- FastQC 0.11.5

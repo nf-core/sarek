@@ -88,7 +88,7 @@ if (!checkStepList(workflowSteps,stepList)) {exit 1, 'Unknown step(s), see --hel
 if (params.test) {
   test = true
   testFile = file("$workflow.projectDir/data/tsv/tiny.tsv")
-  workflowSteps = ['preprocessing']
+  workflowSteps = ['preprocessing', 'MultiQC']
   referenceMap.put("intervals", "$workflow.projectDir/repeats/tiny.list")
 } else if (params.testRealign) {
   test = true
@@ -125,7 +125,7 @@ fastqFilesforFastQC = Channel.create()
 
 if ('preprocessing' in workflowSteps) {
   fastqFiles = extractFastqFiles(tsvFile)
-  if (verbose) {fastqFiles = fastqFiles.view {"FASTQ files and IDs to process: $it"}}
+  if (verbose) {fastqFiles = fastqFiles.view {"FASTQ files and IDs to preprocess: $it"}}
 } else if ('realign' in workflowSteps || 'skipPreprocessing' in workflowSteps) {
   bamFiles = extractBamFiles(tsvFile)
   if (verbose) {bamFiles = bamFiles.view {"Bam files and IDs to process: $it"}}
@@ -142,6 +142,7 @@ start_message(version, revision)
 
 if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
   (fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
+  if (verbose) {fastqFilesforFastQC = fastqFilesforFastQC.view {"FASTQ files and IDs for FastQC: $it"}}
 } else {
   fastqFilesforFastQC.close()
 }
@@ -155,7 +156,7 @@ process RunFastQC {
   output:
     file "*_fastqc.{zip,html}" into fastQCreport
 
-  when: 'preprocessing' in workflowSteps && 'MultiQC' in workflowStepsworkflowSteps
+  when: 'preprocessing' in workflowSteps && 'MultiQC' in workflowSteps
 
   script:
   """
@@ -510,6 +511,9 @@ bamsAll = Channel.create()
 vcfsToMerge = Channel.create()
 
 bamsFHC = Channel.create()  // HaplotypeCaller
+
+bamsForAscat = Channel.create()
+
 bamsFMT1 = Channel.create() // MuTect1
 bamsFMT2 = Channel.create() // MuTect2
 bamsFFB = Channel.create()  // FreeBayes
@@ -523,7 +527,6 @@ vardictVCF = Channel.create()   // VarDict
 
 bamsForStrelka = Channel.create()
 bamsForManta = Channel.create()
-bamsForAscat = Channel.create()
 
 // separate recalibrateBams by status
 
@@ -553,14 +556,27 @@ intervals = Channel.from(file(referenceMap['intervals']).readLines())
 gI = intervals.map{[it,it.replaceFirst(/\:/,'_')]}
 
 if ('HaplotypeCaller' in workflowSteps) {
-  bamsFHCTemp = Channel.create()
-  (bamsFHC, bamsNormal, gI) = generateIntervalsForVC(bamsNormal, gI)
-  (bamsFHCTemp, bamsTumor, gI) = generateIntervalsForVC(bamsTumor, gI)
-  bamsFHC = bamsFHC.mix(bamsFHCTemp)
+  bamsNormalTemp = Channel.create()
+  bamsTumorTemp = Channel.create()
+  (bamsNormalTemp, bamsNormal, gI) = generateIntervalsForVC(bamsNormal, gI)
+  (bamsTumorTemp, bamsTumor, gI) = generateIntervalsForVC(bamsTumor, gI)
+  bamsFHC = bamsNormalTemp.mix(bamsTumorTemp)
   if (verbose) {bamsFHC = bamsFHC.view {"Bams with Intervals for HaplotypeCaller: $it"}}
 } else {
   bamsFHC.close()
   hcVCF.close()
+}
+if ('Ascat' in workflowSteps) {
+  bamsNormalTemp = Channel.create()
+  bamsTumorTemp = Channel.create()
+  (bamsNormalTemp, bamsNormal) = bamsNormal.into(2)
+  (bamsTumorTemp, bamsTumor) = bamsTumor.into(2)
+  bamsNormalTemp = bamsNormalTemp.map { idPatient, gender, idSample, bam, bai -> [idPatient, gender, 0, idSample, bam, bai] }
+  bamsTumorTemp = bamsTumorTemp.map { idPatient, gender, idSample, bam, bai -> [idPatient, gender, 1, idSample, bam, bai] }
+  bamsForAscat = bamsNormalTemp.mix(bamsTumorTemp)
+  if (verbose) {bamsForAscat = bamsForAscat.view {"Bams for Ascat: $it"}}
+} else {
+  bamsForAscat.close()
 }
 
 bamsAll = bamsNormal.spread(bamsTumor)
@@ -617,13 +633,6 @@ if ('Manta' in workflowSteps) {
   if (verbose) {bamsForManta = bamsForManta.view {"Bams for Manta: $it"}}
 } else {
   bamsForManta.close()
-}
-
-if ('Ascat' in workflowSteps) {
-  (bamsAll, bamsForAscat) = bamsAll.into(2)
-  if (verbose) {bamsForAscat = bamsForAscat.view {"Bams for Ascat: $it"}}
-} else {
-  bamsForAscat.close()
 }
 
 process RunHaplotypecaller {
@@ -951,25 +960,47 @@ if ('Manta' in workflowSteps) {
 // Run commands and code from Malin Larsson
 // Based on Jesper Eisfeldt's code
 process RunAlleleCount {
-  tag {idSampleTumor}
+  tag {idSample}
 
   input:
-    set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForAscat
+    set idPatient, gender, status, idSample, file(bam), file(bai) from bamsForAscat
     file genomeFile from file(referenceMap['genomeFile'])
     file genomeIndex from file(referenceMap['genomeIndex'])
     file genomeDict from file(referenceMap['genomeDict'])
     file acLoci from file(referenceMap['acLoci'])
 
   output:
-    set idPatient, gender, idSampleNormal, idSampleTumor, file("${idSampleNormal}.alleleCount"), file("${idSampleTumor}.alleleCount") into alleleCountOutput
+    set idPatient, gender, status, idSample, file("${idSample}.alleleCount") into alleleCountOutput
 
   when: 'Ascat' in workflowSteps
 
   script:
   """
-  alleleCounter -l $acLoci -r $genomeFile -b $bamNormal -o ${idSampleNormal}.alleleCount;
-  alleleCounter -l $acLoci -r $genomeFile -b $bamTumor -o ${idSampleTumor}.alleleCount;
+  alleleCounter -l $acLoci -r $genomeFile -b $bam -o ${idSample}.alleleCount;
   """
+}
+
+alleleCountOutputAll = Channel.create()
+
+if ('Ascat' in workflowSteps) {
+  if (verbose) {alleleCountOutput = alleleCountOutput.view {"alleleCount output: $it"}}
+
+  alleleCountOutputNormalTemp = Channel.create()
+  alleleCountOutputTumorTemp = Channel.create()
+
+  alleleCountOutput
+    .choice(alleleCountOutputTumorTemp, alleleCountOutputNormalTemp) {it[2] =~ /^0$/ ? 1 : 0}
+
+  alleleCountOutputAll = alleleCountOutputNormalTemp.spread(alleleCountOutputTumorTemp)
+
+  alleleCountOutputAll = alleleCountOutputAll.map {
+    idPatientNormal, genderNormal, statusNormal, idSampleNormal, alleleCountNormal, idPatientTumor, genderTumor, statusTumor, idSampleTumor, alleleCountTumor ->
+    [idPatientNormal, genderNormal, idSampleNormal, idSampleTumor, alleleCountNormal, alleleCountTumor]
+  }
+
+  if (verbose) {alleleCountOutputAll = alleleCountOutputAll.view {"alleleCountAll output: $it"}}
+} else {
+  alleleCountOutputAll.close()
 }
 
 // R script from Malin Larssons bitbucket repo:
@@ -980,7 +1011,7 @@ process RunConvertAlleleCounts {
   publishDir directoryMap['Ascat'], mode: 'copy'
 
   input:
-    set idPatient, gender, idSampleNormal, idSampleTumor, file(alleleCountNormal), file(alleleCountTumor) from alleleCountOutput
+    set idPatient, gender, idSampleNormal, idSampleTumor, file(alleleCountNormal), file(alleleCountTumor) from alleleCountOutputAll
 
   output:
     set idPatient, gender, idSampleNormal, idSampleTumor, file("${idSampleNormal}.BAF"), file("${idSampleNormal}.LogR"), file("${idSampleTumor}.BAF"), file("${idSampleTumor}.LogR") into convertAlleleCountsOutput
@@ -1059,8 +1090,8 @@ if ('Ascat' in workflowSteps) {
 
 reportsForMultiQC = Channel.create()
 
-if ('MultiQC' in workflowSteps) {
-  reportsForMultiQC = reportsForMultiQC.mix(fastQCreport).flatten().toList()
+if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
+  reportsForMultiQC = fastQCreport.flatten().toList()
   if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
 } else {
   reportsForMultiQC.close()
@@ -1077,7 +1108,7 @@ process RunMultiQC {
   output:
     set file("*multiqc_report.html"), file("*multiqc_data") into multiQCReport
 
-    when: 'MultiQC' in workflowStepsworkflowSteps
+    when: 'MultiQC' in workflowSteps
 
   script:
   """
@@ -1358,6 +1389,7 @@ workflow.onComplete { // Display complete message
   log.info "Project Dir : $workflow.projectDir"
   log.info "Launch Dir  : $workflow.launchDir"
   log.info "Work Dir    : $workflow.workDir"
+  log.info "TSV file    : $tsvFile"
   log.info "Steps       : " + workflowSteps.join(", ")
   log.info "Completed at: $workflow.complete"
   log.info "Duration    : $workflow.duration"

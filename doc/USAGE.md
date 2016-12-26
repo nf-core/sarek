@@ -22,6 +22,7 @@ Steps are used to configure which processes will be runned or skipped in the wor
 - HaplotypeCaller (use HaplotypeCaller for normal bams VC)
 - Manta (use Manta for SV)
 - Ascat (use ascat for CNV)
+- MultiQC (Make a QC report)
 
 ## Project
 To specify your UPPMAX project number ID. It can also be specified in your `config` file (cf [configuration documentation](#profiles)).
@@ -62,7 +63,7 @@ nextflow pull SciLifeLab/CAW
 ```
 
 ## Run the latest version
-If there is a feature or bugfix you want to use in a resumed or re-analyzed run, you have to update the workflow to the latest version. By default 
+If there is a feature or bugfix you want to use in a resumed or re-analyzed run, you have to update the workflow to the latest version. By default
 it is not updated automatically, so use something like:
 ```bash
 nextflow run -latest SciLifeLab/CAW --sample mysample.tsv -resume

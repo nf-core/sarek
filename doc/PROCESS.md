@@ -25,4 +25,4 @@ Several processes are run within the workflow. We divide them for the moment int
 
 ## Report and QC:
  - RunFastQC - Run FastQC for QC on fastq files [Stable]
- - RunMultiQC - Run MultiQC for report and QC [Need specific install]
+ - RunMultiQC - Run MultiQC for report and QC [Stable]
