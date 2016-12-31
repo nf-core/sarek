@@ -371,7 +371,7 @@ process RealignBams {
   bams = bam.collect{"-I $it"}.join(' ')
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
+  -jar ${referenceMap['gatk36Home']}/GenomeAnalysisTK.jar \
   -T IndelRealigner \
   $bams \
   -R $genomeFile \
@@ -1170,6 +1170,7 @@ def defineReferenceMap() {
     'acLoci'      : params.acLoci,      // loci file for ascat
     'picardHome'  : params.picardHome,  // path to Picard
     'gatkHome'    : params.gatkHome,    // path to Gatk
+    'gatk36Home'  : params.gatk36Home,  // path to Gatk 3.6 as there are other isues with 3.7 in Realignment
     'mutect1Home' : params.mutect1Home, // path to MuTect1
     'vardictHome' : params.vardictHome, // path to VarDict
     'strelkaHome' : params.strelkaHome, // path to Strelka
