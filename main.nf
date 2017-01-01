@@ -303,6 +303,7 @@ if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
 }
 
 // VCF indexes are added so they will be linked, and not re-created on the fly
+/  -L "1:131941-141339" \
 process CreateIntervals {
   tag {idPatient}
 
@@ -347,6 +348,8 @@ if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
 process RealignBams {
   tag {idPatient}
 
+  module = ['java/sun_jdk1.8.0_92']
+
   input:
     set idPatient, gender, idSample_status, file(bam), file(bai) from duplicatesRealign
     file genomeFile from file(referenceMap['genomeFile'])
@@ -371,7 +374,7 @@ process RealignBams {
   bams = bam.collect{"-I $it"}.join(' ')
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${referenceMap['gatk36Home']}/GenomeAnalysisTK.jar \
+  -jar ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
   -T IndelRealigner \
   $bams \
   -R $genomeFile \
@@ -1170,7 +1173,6 @@ def defineReferenceMap() {
     'acLoci'      : params.acLoci,      // loci file for ascat
     'picardHome'  : params.picardHome,  // path to Picard
     'gatkHome'    : params.gatkHome,    // path to Gatk
-    'gatk36Home'  : params.gatk36Home,  // path to Gatk 3.6 as there are other isues with 3.7 in Realignment
     'mutect1Home' : params.mutect1Home, // path to MuTect1
     'vardictHome' : params.vardictHome, // path to VarDict
     'strelkaHome' : params.strelkaHome, // path to Strelka
