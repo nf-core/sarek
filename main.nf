@@ -303,7 +303,7 @@ if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
 }
 
 // VCF indexes are added so they will be linked, and not re-created on the fly
-/  -L "1:131941-141339" \
+//  -L "1:131941-141339" \
 process CreateIntervals {
   tag {idPatient}
 
