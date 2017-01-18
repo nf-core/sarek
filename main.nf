@@ -148,7 +148,7 @@ if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
 }
 
 process RunFastQC {
-  tag {idRun}
+  tag {idPatient + "-" + idRun}
 
   input:
     set idPatient, gender, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFilesforFastQC
@@ -169,7 +169,7 @@ if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
 }
 
 process MapReads {
-  tag {idRun}
+  tag {idPatient + "-" + idRun}
 
   input:
     set idPatient, gender, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFiles
@@ -213,7 +213,7 @@ if ('preprocessing' in workflowSteps) {
 }
 
 process MergeBams {
-  tag {idSample}
+  tag {idPatient + "-" + idSample}
 
   input:
     set idPatient, gender, status, idSample, idRun, file(bam) from groupedBam
@@ -242,7 +242,7 @@ if ('preprocessing' in workflowSteps) {
   if (verbose) {mergedBam = mergedBam.view {"BAM for MarkDuplicates: $it"}}
 }
 process MarkDuplicates {
-  tag {idSample}
+  tag {idPatient + "-" + idSample}
 
   publishDir directoryMap['nonRealigned'], mode: 'copy'
 
@@ -258,7 +258,7 @@ process MarkDuplicates {
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${referenceMap['picardHome']}/MarkDuplicates.jar \
+  -jar \$PICARD_HOME/MarkDuplicates.jar \
   INPUT=${bam} \
   METRICS_FILE=${bam}.metrics \
   TMP_DIR=. \
@@ -325,7 +325,7 @@ process CreateIntervals {
   bams = bam.collect{"-I $it"}.join(' ')
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
+  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T RealignerTargetCreator \
   $bams \
   -R $genomeFile \
@@ -371,7 +371,7 @@ process RealignBams {
   bams = bam.collect{"-I $it"}.join(' ')
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
+  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T IndelRealigner \
   $bams \
   -R $genomeFile \
@@ -411,7 +411,7 @@ if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
 }
 
 process CreateRecalibrationTable {
-  tag {idSample}
+  tag {idPatient + "-" + idSample}
 
   input:
     set idPatient, gender, status, idSample, file(bam), file(bai) from realignedBam
@@ -434,7 +434,7 @@ process CreateRecalibrationTable {
   """
   java -Xmx${task.memory.toGiga()}g \
   -Djava.io.tmpdir="/tmp" \
-  -jar ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
+  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T BaseRecalibrator \
   -R $genomeFile \
   -I $bam \
@@ -454,7 +454,7 @@ if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
 }
 
 process RecalibrateBam {
-  tag {idSample}
+  tag {idPatient + "-" + idSample}
 
   publishDir directoryMap['recalibrated'], mode: 'copy'
 
@@ -474,7 +474,7 @@ process RecalibrateBam {
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
+  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T PrintReads \
   -R $genomeFile \
   -nct $task.cpus \
@@ -636,7 +636,7 @@ if ('Manta' in workflowSteps) {
 }
 
 process RunHaplotypecaller {
-  tag {idSample + "-" + gen_int}
+  tag {idPatient + "-" + idSample + "-" + gen_int}
 
   input:
     set idPatient, gender, idSample, file(bam), file(bai), genInt, gen_int from bamsFHC //Are these values `ped to bamNormal already?
@@ -655,7 +655,7 @@ process RunHaplotypecaller {
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
+  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T HaplotypeCaller \
   -R $genomeFile \
   --dbsnp $dbsnp \
@@ -677,7 +677,7 @@ if ('HaplotypeCaller' in workflowSteps) {
 }
 
 process RunMutect1 {
-  tag {idSampleTumor + "-" + gen_int}
+  tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT1
@@ -697,7 +697,7 @@ process RunMutect1 {
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${referenceMap['mutect1Home']}/muTect.jar \
+  -jar \$MUTECT_HOME/muTect.jar \
   -T MuTect \
   -R $genomeFile \
   --cosmic $cosmic \
@@ -720,7 +720,7 @@ if ('MuTect1' in workflowSteps) {
 }
 
 process RunMutect2 {
-  tag {idSampleTumor + "-" + gen_int}
+  tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
@@ -744,7 +744,7 @@ process RunMutect2 {
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
+  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T MuTect2 \
   -R $genomeFile \
   --cosmic $cosmic \
@@ -766,7 +766,7 @@ if ('MuTect2' in workflowSteps) {
 }
 
 process RunFreeBayes {
-  tag {idSampleTumor + "-" + gen_int}
+  tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFFB
@@ -798,7 +798,7 @@ if ('FreeBayes' in workflowSteps) {
 }
 
 process RunVardict {
-  tag {idSampleTumor + "-" + gen_int}
+  tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFVD
@@ -813,7 +813,7 @@ process RunVardict {
 
   script:
   """
-  ${referenceMap['vardictHome']}/vardict.pl \
+  vardict.pl \
   -G $genomeFile \
   -f 0.01 -N $bamTumor \
   -b "$bamTumor|$bamNormal" \
@@ -839,7 +839,7 @@ if ('HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2
 }
 
 process ConcatVCF {
-  tag {variantCaller == 'HaplotypeCaller' ? variantCaller + "-" + idSampleNormal : variantCaller + "-" + idSampleNormal + "-" + idSampleTumor}
+  tag {variantCaller == 'HaplotypeCaller' ? idPatient + "-" + variantCaller + "-" + idSampleNormal : idPatient + "-" + variantCaller + "-" + idSampleNormal + "-" + idSampleTumor}
 
   publishDir "${directoryMap["$variantCaller"]}", mode: 'copy'
 
@@ -858,9 +858,9 @@ process ConcatVCF {
   if (variantCaller == 'VarDict')
     """
     for i in $vcFiles ;do
-      cat \$i | ${referenceMap['vardictHome']}/VarDict/testsomatic.R >> testsomatic.out
+      cat \$i | VarDict/testsomatic.R >> testsomatic.out
     done
-    ${referenceMap['vardictHome']}/VarDict/var2vcf_somatic.pl \
+    VarDict/var2vcf_somatic.pl \
     -f 0.01 \
     -N "${idPatient}_${idSampleNormal}_${idSampleTumor}" testsomatic.out > $outputFile
     """
@@ -868,7 +868,7 @@ process ConcatVCF {
   else
     """
     java -Xmx${task.memory.toGiga()}g \
-    -cp ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
+    -cp \$GATK_HOME/GenomeAnalysisTK.jar \
     org.broadinstitute.gatk.tools.CatVariants \
     --reference ${referenceMap['genomeFile']} \
     $vcfFiles \
@@ -881,7 +881,7 @@ if ('HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2
 }
 
 process RunStrelka {
-  tag {idSampleTumor}
+  tag {idPatient + "-" + idSampleTumor}
 
   publishDir directoryMap['Strelka'], mode: 'copy'
 
@@ -890,7 +890,6 @@ process RunStrelka {
     file genomeFile from file(referenceMap['genomeFile'])
     file genomeIndex from file(referenceMap['genomeIndex'])
     file genomeDict from file(referenceMap['genomeDict'])
-    file strelkaCFG from file(referenceMap['strelkaCFG'])
 
   output:
     set val("Strelka"), idPatient, gender, idSampleNormal, idSampleTumor, file("strelka/results/*.vcf") into strelkaOutput
@@ -901,11 +900,11 @@ process RunStrelka {
   """
   tumorPath=`readlink $bamTumor`
   normalPath=`readlink $bamNormal`
-  ${referenceMap['strelkaHome']}/bin/configureStrelkaWorkflow.pl \
+  \$STRELKA_INSTALL_DIR/bin/configureStrelkaWorkflow.pl \
   --tumor \$tumorPath \
   --normal \$normalPath \
   --ref $genomeFile \
-  --config $strelkaCFG \
+  --config \$STRELKA_INSTALL_DIR/etc/strelka_config_bwa_default.ini \
   --output-dir strelka
 
   cd strelka
@@ -919,7 +918,7 @@ if ('Strelka' in workflowSteps) {
 }
 
 process RunManta {
-  tag {idSampleTumor}
+  tag {idPatient + "-" + idSampleTumor}
 
   publishDir directoryMap['Manta'], mode: 'copy'
 
@@ -960,7 +959,7 @@ if ('Manta' in workflowSteps) {
 // Run commands and code from Malin Larsson
 // Based on Jesper Eisfeldt's code
 process RunAlleleCount {
-  tag {idSample}
+  tag {idPatient + "-" + idSample}
 
   input:
     set idPatient, gender, status, idSample, file(bam), file(bai) from bamsForAscat
@@ -1006,7 +1005,7 @@ if ('Ascat' in workflowSteps) {
 // R script from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
 process RunConvertAlleleCounts {
-  tag {idSampleTumor}
+  tag {idPatient + "-" + idSampleTumor}
 
   publishDir directoryMap['Ascat'], mode: 'copy'
 
@@ -1027,7 +1026,7 @@ process RunConvertAlleleCounts {
 // R scripts from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
 process RunAscat {
-  tag {idSampleTumor}
+  tag {idPatient + "-" + idSampleTumor}
 
   publishDir directoryMap['Ascat'], mode: 'copy'
 
@@ -1167,13 +1166,7 @@ def defineReferenceMap() {
     'intervals'   : params.intervals,   // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
     'mantaRef'    : params.mantaRef,    // copy of the genome reference file
     'mantaIndex'  : params.mantaIndex,  // reference index indexed with samtools/0.1.19
-    'acLoci'      : params.acLoci,      // loci file for ascat
-    'picardHome'  : params.picardHome,  // path to Picard
-    'gatkHome'    : params.gatkHome,    // path to Gatk
-    'mutect1Home' : params.mutect1Home, // path to MuTect1
-    'vardictHome' : params.vardictHome, // path to VarDict
-    'strelkaHome' : params.strelkaHome, // path to Strelka
-    'strelkaCFG'  : params.strelkaCFG   // Strelka Config file
+    'acLoci'      : params.acLoci       // loci file for ascat
   ]
 }
 
