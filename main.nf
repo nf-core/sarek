@@ -184,8 +184,8 @@ process MapReads {
   """
   set -eo pipefail
   bwa mem -R \"$readGroup\" -B 3 -t $task.cpus -M ${referenceMap['genomeFile']} $fastqFile1 $fastqFile2 | \
-  samtools view -bS -t ${referenceMap['genomeIndex']} - | \
-  samtools sort - > ${idRun}.bam
+  samtools view --threads $task.cpus -bS -t ${referenceMap['genomeIndex']} - | \
+  samtools sort --threads $task.cpus - > ${idRun}.bam
   """
 }
 
@@ -303,6 +303,7 @@ if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
 }
 
 // VCF indexes are added so they will be linked, and not re-created on the fly
+//  -L "1:131941-141339" \
 process CreateIntervals {
   tag {idPatient}
 
@@ -346,6 +347,8 @@ if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
 // VCF indexes are added so they will be linked, and not re-created on the fly
 process RealignBams {
   tag {idPatient}
+
+  module = ['java/sun_jdk1.8.0_92']
 
   input:
     set idPatient, gender, idSample_status, file(bam), file(bai) from duplicatesRealign
