@@ -98,7 +98,7 @@ if (params.test) {
 } else if (params.testCoreVC) {
   test = true
   testFile = file("$workflow.launchDir/${directoryMap['recalibrated']}/recalibrated.tsv")
-  workflowSteps = ['skipPreprocessing', 'MuTect1', 'Strelka', 'HaplotypeCaller']
+  workflowSteps = ['skipPreprocessing', 'MuTect1', 'Strelka', 'HaplotypeCaller', 'MultiQC']
   referenceMap.put("intervals", "$workflow.projectDir/repeats/tiny.list")
 } else if (params.testSideVC) {
   test = true
@@ -173,6 +173,13 @@ process MapReads {
 
   input:
     set idPatient, gender, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFiles
+    file genomeFile from file(referenceMap['genomeFile'])
+    file genomeIndex from file(referenceMap['genomeIndex'])
+    file genomePac from file(referenceMap['genomeFile']+".pac")
+    file genomeAmb from file(referenceMap['genomeFile']+".amb")
+    file genomeAnn from file(referenceMap['genomeFile']+".ann")
+    file genomeBwt from file(referenceMap['genomeFile']+".bwt")
+    file genomeSa from file(referenceMap['genomeFile']+".sa")
 
   output:
     set idPatient, gender, status, idSample, idRun, file("${idRun}.bam") into bam
@@ -183,8 +190,9 @@ process MapReads {
   readGroup="@RG\\tID:$idRun\\tSM:$idSample\\tLB:$idSample\\tPL:illumina"
   """
   set -eo pipefail
-  bwa mem -R \"$readGroup\" -B 3 -t $task.cpus -M ${referenceMap['genomeFile']} $fastqFile1 $fastqFile2 | \
-  samtools view --threads $task.cpus -bS -t ${referenceMap['genomeIndex']} - | \
+  bwa mem -R \"$readGroup\" -B 3 -t $task.cpus -M \
+  $genomeFile $fastqFile1 $fastqFile2 | \
+  samtools view --threads $task.cpus -bS -t $genomeIndex - | \
   samtools sort --threads $task.cpus - > ${idRun}.bam
   """
 }
@@ -258,7 +266,7 @@ process MarkDuplicates {
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar \$PICARD_HOME/MarkDuplicates.jar \
+  -jar \$PICARD_HOME/picard.jar MarkDuplicates \
   INPUT=${bam} \
   METRICS_FILE=${bam}.metrics \
   TMP_DIR=. \
@@ -694,6 +702,7 @@ process RunMutect1 {
 
   output:
     set val("MuTect1"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf") into mutect1Output
+    file "${gen_int}_${idSampleNormal}_${idSampleTumor}.call_stats.out" into mutect1report
 
   when: 'MuTect1' in workflowSteps
 
@@ -717,10 +726,15 @@ process RunMutect1 {
 }
 
 if ('MuTect1' in workflowSteps) {
+  if ('MultiQC' in workflowSteps) {
+    if (verbose) {mutect1report = mutect1report.view {"MuTect1 report: $it"}}
+  }
   if (verbose) {mutect1Output = mutect1Output.view {"MuTect1 output: $it"}}
   mutect1VCF = mutect1Output.groupTuple(by:[0,1,2,3,4])
   if (verbose) {mutect1VCF = mutect1VCF.view {"mutect1VCF: $it"}}
 }
+
+
 
 process RunMutect2 {
   tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
@@ -848,6 +862,8 @@ process ConcatVCF {
 
   input:
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, tag, file(vcFiles) from vcfsToMerge
+    file genomeFile from file(referenceMap['genomeFile'])
+    file genomeIndex from file(referenceMap['genomeIndex'])
 
   output:
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file("*.vcf") into vcfConcatenated
@@ -873,7 +889,7 @@ process ConcatVCF {
     java -Xmx${task.memory.toGiga()}g \
     -cp \$GATK_HOME/GenomeAnalysisTK.jar \
     org.broadinstitute.gatk.tools.CatVariants \
-    --reference ${referenceMap['genomeFile']} \
+    --reference $genomeFile \
     $vcfFiles \
     --outputFile $outputFile
     """
@@ -903,10 +919,11 @@ process RunStrelka {
   """
   tumorPath=`readlink $bamTumor`
   normalPath=`readlink $bamNormal`
+  genomeFile=`readlink $genomeFile`
   \$STRELKA_INSTALL_DIR/bin/configureStrelkaWorkflow.pl \
   --tumor \$tumorPath \
   --normal \$normalPath \
-  --ref $genomeFile \
+  --ref \$genomeFile \
   --config \$STRELKA_INSTALL_DIR/etc/strelka_config_bwa_default.ini \
   --output-dir strelka
 
@@ -1092,15 +1109,15 @@ if ('Ascat' in workflowSteps) {
 
 reportsForMultiQC = Channel.create()
 
-if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
-  reportsForMultiQC = fastQCreport.flatten().toList()
+if ('MultiQC' in workflowSteps) {
+  reportsForMultiQC = fastQCreport.mix(mutect1report).flatten().toList()
   if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
 } else {
   reportsForMultiQC.close()
 }
 
 process RunMultiQC {
-  tag {"MultiQC"}
+  tag {idPatient + "-MultiQC"}
 
   publishDir directoryMap['MultiQC'], mode: 'copy'
 
