@@ -441,6 +441,7 @@ process CreateRecalibrationTable {
   -T BaseRecalibrator \
   -R $genomeFile \
   -I $bam \
+  --disable_auto_index_creation_and_locking_when_reading_rods \
   -knownSites $dbsnp \
   -knownSites $kgIndels \
   -knownSites $millsIndels \
@@ -904,11 +905,13 @@ process RunStrelka {
   """
   tumorPath=`readlink $bamTumor`
   normalPath=`readlink $bamNormal`
+  strelkaRef=`readlink $genomeFile`
+  strelkaConfig=`readlink $strelkaCFG`
   ${referenceMap['strelkaHome']}/bin/configureStrelkaWorkflow.pl \
   --tumor \$tumorPath \
   --normal \$normalPath \
-  --ref $genomeFile \
-  --config $strelkaCFG \
+  --ref \$strelkaRef \
+  --config \$strelkaConfig \
   --output-dir strelka
 
   cd strelka
