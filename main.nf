@@ -516,6 +516,8 @@ if ('MultiQC' in workflowSteps) {
 }
 
 process RunSamtoolsStats {
+  tag {idPatient + "-" + idSample}
+
   input:
     set idPatient, gender, status, idSample, file(bam), file(bai) from recalibratedBamForStats
 
