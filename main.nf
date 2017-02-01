@@ -184,7 +184,6 @@ process MapReads {
   """
   set -eo pipefail
   bwa mem -R \"$readGroup\" -B 3 -t $task.cpus -M ${referenceMap['genomeFile']} $fastqFile1 $fastqFile2 | \
-  samtools view --threads $task.cpus -bS -t ${referenceMap['genomeIndex']} - | \
   samtools sort --threads $task.cpus - > ${idRun}.bam
   """
 }
