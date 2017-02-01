@@ -261,7 +261,7 @@ process MarkDuplicates {
   output:
     set idPatient, gender, val("${idSample}_${status}"), file("${idSample}_${status}.md.bam"), file("${idSample}_${status}.md.bai") into duplicates
     set idPatient, gender, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai") into markDuplicatesTSV
-
+    file ("${bam}.metrics") into markDuplicatesReport
   when: 'preprocessing' in workflowSteps
 
   script:
@@ -508,6 +508,34 @@ if ('skipPreprocessing' in workflowSteps) {
 }
 
 if (verbose) {recalibratedBam = recalibratedBam.view {"Recalibrated Bam for variant Calling: $it"}}
+
+recalibratedBamForStats = Channel.create()
+
+if ('MultiQC' in workflowSteps) {
+  (recalibratedBam, recalibratedBamForStats) = recalibratedBam.into(2)
+}
+
+process RunSamtoolsStats {
+  input:
+    set idPatient, gender, status, idSample, file(bam), file(bai) from recalibratedBamForStats
+
+  output:
+    file ("${bam}.samtools.stats.out") into recalibratedBamReports
+
+
+    when: 'MultiQC' in workflowSteps
+
+    script:
+    """
+    samtools stats $bam > ${bam}.samtools.stats.out
+    """
+}
+
+if ('MultiQC' in workflowSteps) {
+  if (verbose) {recalibratedBam = recalibratedBam.view {"BAM Stats: $it"}}
+} else {
+  recalibratedBamForStats.close()
+}
 
 // Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
 // The sample tsv config file which is formatted like: "subject status sample lane fastq1 fastq2"
@@ -1114,10 +1142,8 @@ if ('Ascat' in workflowSteps) {
 reportsForMultiQC = Channel.create()
 
 if ('MultiQC' in workflowSteps) {
-  reportsForMultiQC = fastQCreport.mix(mutect1report).flatten().toList()
+  reportsForMultiQC = fastQCreport.mix(markDuplicatesReport,mutect1report,recalibratedBamReports).flatten().toList()
   if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
-} else {
-  reportsForMultiQC.close()
 }
 
 process RunMultiQC {
@@ -1140,6 +1166,11 @@ process RunMultiQC {
 }
 if ('MultiQC' in workflowSteps) {
   if (verbose) {multiQCReport = multiQCReport.view {"MultiQC report: $it"}}
+} else {
+  fastQCreport.close()
+  markDuplicatesReport.close()
+  mutect1report.close()
+  reportsForMultiQC.close()
 }
 
 /*
