@@ -1149,7 +1149,7 @@ if ('MultiQC' in workflowSteps) {
 }
 
 process RunMultiQC {
-  tag {idPatient + "-MultiQC"}
+  tag {idPatient}
 
   publishDir directoryMap['MultiQC'], mode: 'copy'
 
