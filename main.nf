@@ -150,6 +150,8 @@ if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
 process RunFastQC {
   tag {idPatient + "-" + idRun}
 
+  publishDir directoryMap['FastQC'], mode: 'copy'
+
   input:
     set idPatient, gender, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFilesforFastQC
 
@@ -1205,6 +1207,7 @@ def defineDirectoryMap() {
     'HaplotypeCaller' : 'VariantCalling/HaplotypeCaller',
     'Manta'           : 'VariantCalling/Manta',
     'Ascat'           : 'VariantCalling/Ascat',
+    'FastQC'          : 'Reports/FastQC',
     'MultiQC'         : 'Reports/MultiQC'
   ]
 }
