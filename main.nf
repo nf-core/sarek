@@ -654,7 +654,6 @@ process RunHaplotypecaller {
 
   when: 'HaplotypeCaller' in workflowSteps
 
-  //parellelization information: "Many users have reported issues running HaplotypeCaller with the -nct argument, so we recommend using Queue to parallelize HaplotypeCaller instead of multithreading." However, it can take the -nct argument.
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
@@ -664,6 +663,7 @@ process RunHaplotypecaller {
   --dbsnp $dbsnp \
   -I $bam \
   -L \"$genInt\" \
+  --disable_auto_index_creation_and_locking_when_reading_rods \
   -XL hs37d5 \
   -XL NC_007605 \
   -o ${gen_int}_${idSample}.vcf
@@ -754,7 +754,7 @@ process RunMutect2 {
   --dbsnp $dbsnp \
   -I:normal $bamNormal \
   -I:tumor $bamTumor \
-  -U ALLOW_SEQ_DICT_INCOMPATIBILITY \
+  --disable_auto_index_creation_and_locking_when_reading_rods \
   -L \"$genInt\" \
   -XL hs37d5 \
   -XL NC_007605 \
