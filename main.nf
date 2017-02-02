@@ -1080,7 +1080,10 @@ process RunAscat {
   #Plot the segmented data
   ascat.plotSegmentedData(ascat.bc)
   #Run ASCAT to fit every tumor to a model, inferring ploidy, normal cell contamination, and discrete copy numbers
-  ascat.output <- ascat.runAscat(ascat.bc)
+  #Default gamma=0.5
+  #ascat.output <- ascat.runAscat(ascat.bc)
+  #Suggestion from Johan Staaf, use gamma=0.8 for NGS data:
+  ascat.output <- ascat.runAscat(ascat.bc, gamma=0.8)
   #str(ascat.output)
   #plot(sort(ascat.output\$aberrantcellfraction))
   #plot(density(ascat.output\$ploidy))
