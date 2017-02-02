@@ -184,7 +184,6 @@ process MapReads {
   """
   set -eo pipefail
   bwa mem -R \"$readGroup\" -B 3 -t $task.cpus -M ${referenceMap['genomeFile']} $fastqFile1 $fastqFile2 | \
-  samtools view --threads $task.cpus -bS -t ${referenceMap['genomeIndex']} - | \
   samtools sort --threads $task.cpus - > ${idRun}.bam
   """
 }
@@ -441,6 +440,7 @@ process CreateRecalibrationTable {
   -T BaseRecalibrator \
   -R $genomeFile \
   -I $bam \
+  --disable_auto_index_creation_and_locking_when_reading_rods \
   -knownSites $dbsnp \
   -knownSites $kgIndels \
   -knownSites $millsIndels \
@@ -654,7 +654,6 @@ process RunHaplotypecaller {
 
   when: 'HaplotypeCaller' in workflowSteps
 
-  //parellelization information: "Many users have reported issues running HaplotypeCaller with the -nct argument, so we recommend using Queue to parallelize HaplotypeCaller instead of multithreading." However, it can take the -nct argument.
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
@@ -664,6 +663,7 @@ process RunHaplotypecaller {
   --dbsnp $dbsnp \
   -I $bam \
   -L \"$genInt\" \
+  --disable_auto_index_creation_and_locking_when_reading_rods \
   -XL hs37d5 \
   -XL NC_007605 \
   -o ${gen_int}_${idSample}.vcf
@@ -754,7 +754,7 @@ process RunMutect2 {
   --dbsnp $dbsnp \
   -I:normal $bamNormal \
   -I:tumor $bamTumor \
-  -U ALLOW_SEQ_DICT_INCOMPATIBILITY \
+  --disable_auto_index_creation_and_locking_when_reading_rods \
   -L \"$genInt\" \
   -XL hs37d5 \
   -XL NC_007605 \
@@ -904,11 +904,13 @@ process RunStrelka {
   """
   tumorPath=`readlink $bamTumor`
   normalPath=`readlink $bamNormal`
+  strelkaRef=`readlink $genomeFile`
+  strelkaConfig=`readlink $strelkaCFG`
   ${referenceMap['strelkaHome']}/bin/configureStrelkaWorkflow.pl \
   --tumor \$tumorPath \
   --normal \$normalPath \
-  --ref $genomeFile \
-  --config $strelkaCFG \
+  --ref \$strelkaRef \
+  --config \$strelkaConfig \
   --output-dir strelka
 
   cd strelka
