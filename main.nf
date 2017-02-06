@@ -895,6 +895,7 @@ process ConcatVCF {
   input:
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, tag, file(vcFiles) from vcfsToMerge
     file genomeFile from file(referenceMap['genomeFile'])
+    file genomeDict from file(referenceMap['genomeDict'])
     file genomeIndex from file(referenceMap['genomeIndex'])
 
   output:
@@ -919,11 +920,12 @@ process ConcatVCF {
   else
     """
     java -Xmx${task.memory.toGiga()}g \
-    -cp \$GATK_HOME/GenomeAnalysisTK.jar \
-    org.broadinstitute.gatk.tools.CatVariants \
-    --reference $genomeFile \
+    -jar \$GATK_HOME/GenomeAnalysisTK.jar \
+    -T CombineVariants \
+    -R $genomeFile \
     $vcfFiles \
-    --outputFile $outputFile
+    -o $outputFile \
+    -genotypeMergeOptions UNIQUIFY
     """
 }
 
@@ -952,13 +954,11 @@ process RunStrelka {
   tumorPath=`readlink $bamTumor`
   normalPath=`readlink $bamNormal`
   genomeFile=`readlink $genomeFile`
-  strelkaConfig=`readlink \$STRELKA_INSTALL_DIR/etc/strelka_config_bwa_default.ini`
   \$STRELKA_INSTALL_DIR/bin/configureStrelkaWorkflow.pl \
   --tumor \$tumorPath \
   --normal \$normalPath \
   --ref \$genomeFile \
-  --config \$strelkaConfig \
-
+  --config \$STRELKA_INSTALL_DIR/etc/strelka_config_bwa_default.ini \
   --output-dir strelka
 
   cd strelka
@@ -997,12 +997,13 @@ process RunManta {
   samtools view -H $bamTumor | grep -v hs37d5 | grep -v NC_007605 | samtools reheader - $bamTumor > Tumor.bam
   samtools index Tumor.bam
 
-  configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference $mantaRef --runDir MantaDir
-  python MantaDir/runWorkflow.py -m local -j $task.cpus
-  gunzip -c MantaDir/results/variants/somaticSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.somaticSV.vcf
-  gunzip -c MantaDir/results/variants/candidateSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSV.vcf
-  gunzip -c MantaDir/results/variants/diploidSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.diploidSV.vcf
-  gunzip -c MantaDir/results/variants/candidateSmallIndels.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf
+  python \$MANTA_INSTALL_PATH/bin/configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference $mantaRef --runDir Manta
+
+  python Manta/runWorkflow.py -m local -j $task.cpus
+  gunzip -c Manta/results/variants/somaticSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.somaticSV.vcf
+  gunzip -c Manta/results/variants/candidateSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSV.vcf
+  gunzip -c Manta/results/variants/diploidSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.diploidSV.vcf
+  gunzip -c Manta/results/variants/candidateSmallIndels.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf
   """
 }
 
