@@ -1,8 +1,11 @@
-# header lines
+#  This awk script includes a variant caller flag into the INFO fields
+#  you should call it like
+# awk -f addCallerINFO.awk -v caller=VCCALLER variants.vcf > new_file.vcf
 BEGIN {
     VCSincluded = 0;
     OFS="\t"
 }
+# metainfo lines
 /^##/ {
     if(/^##INFO/) {
         if(0 == VCSincluded) {
@@ -17,6 +20,7 @@ BEGIN {
         print
     }
 }
+# header line
 /^#CHR/{ print }
 # remainders are the call lines 
 !/^#/ {
