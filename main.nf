@@ -33,7 +33,8 @@ vim: syntax=groovy
  - CreateIntervals - Create Intervals
  - RealignBams - Realign Bams as T/N pair
  - CreateRecalibrationTable - Create Recalibration Table
- - RecalibrateBam - Recalibreate Bam
+ - RecalibrateBam - Recalibrate Bam
+ - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files
  - RunHaplotypecaller - Run HaplotypeCaller for GermLine Variant Calling (Parrallelized processes)
  - RunMutect1 - Run MuTect1 for Variant Calling (Parrallelized processes)
  - RunMutect2 - Run MuTect2 for Variant Calling (Parrallelized processes)
