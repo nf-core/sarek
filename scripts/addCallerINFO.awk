@@ -22,8 +22,8 @@ BEGIN {
 }
 # header line
 /^#CHR/{ print }
-# remainders are the call lines 
-!/^#/ {
+# remainders are the call lines - we are allowing only PASS-ed entries
+!/^#/ && $7 ~/PASS/{
     # we are adding the caller info to the INFO field that is the 8th field
     $8 = caller";"$8
     print
