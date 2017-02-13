@@ -9,3 +9,9 @@ tiny	XX	1	tumor tumor_3	data/tiny/tiny_tumor_L003_R1.fastq.gz	data/tiny/tiny_tum
 tiny	XX	1	tumor tumor_5	data/tiny/tiny_tumor_L005_R1.fastq.gz	data/tiny/tiny_tumor_L005_R2.fastq.gz
 tiny	XX	1	tumor tumor_6	data/tiny/tiny_tumor_L006_R1.fastq.gz	data/tiny/tiny_tumor_L006_R2.fastq.gz
 tiny	XX	1	tumor tumor_7	data/tiny/tiny_tumor_L007_R1.fastq.gz	data/tiny/tiny_tumor_L007_R2.fastq.gz
+tiny	XX	1	relapse relapse_1	data/tiny/tiny_tumor_L001_R1.fastq.gz	data/tiny/tiny_tumor_L001_R2.fastq.gz
+tiny	XX	1	relapse relapse_2	data/tiny/tiny_tumor_L002_R1.fastq.gz	data/tiny/tiny_tumor_L002_R2.fastq.gz
+tiny	XX	1	relapse relapse_3	data/tiny/tiny_tumor_L003_R1.fastq.gz	data/tiny/tiny_tumor_L003_R2.fastq.gz
+tiny	XX	1	relapse relapse_5	data/tiny/tiny_tumor_L005_R1.fastq.gz	data/tiny/tiny_tumor_L005_R2.fastq.gz
+tiny	XX	1	relapse relapse_6	data/tiny/tiny_tumor_L006_R1.fastq.gz	data/tiny/tiny_tumor_L006_R2.fastq.gz
+tiny	XX	1	relapse relapse_7	data/tiny/tiny_tumor_L007_R1.fastq.gz	data/tiny/tiny_tumor_L007_R2.fastq.gz
