@@ -31,9 +31,8 @@ process addCallerInfo {
 
 // we will need tabix, bcftools and vcftools to do the job
 process compessAndIndexFilteredVCFs {
-    publishDir "mergedStuff",mode: 'copy'
 
-    module 'tabix/0.2.6'
+    module 'htslib/1.3'
     module 'bcftools/1.2'
 
     input:
@@ -50,9 +49,25 @@ process compessAndIndexFilteredVCFs {
     """
     
 }
+// we will need the names of the compressed VCFs in two channels: one to make links, and the other to the command line
 
+allVCFs = compressedVCF.reduce {a,b -> return a + " " + b}
+allVCFs = allVCFs.view{"$it"}
 process mergeVCFs {
+    publishDir "mergedVariants",mode: 'copy'
     module 'vcftools/0.1.14'
+
+    input:
+    set cVCFs from allVCFs
+
+    output:
+    file "merged.vcf" into mergedVCF
+
+    script:
+    """
+    echo $cVCFs
+    vcf-merge ${cVCFs} > merged.vcf
+    """
 }
 
 /*
