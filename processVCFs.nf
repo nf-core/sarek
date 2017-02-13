@@ -8,10 +8,15 @@ vim: syntax=groovy
 ================================================================================
 */
 
-if(!params.vcflist) {
+if( !params.vcflist) {
     help_message()
-    exit 1, 'Missing list of VCFs to merge '
+    exit 1, 'Missing list of VCFs to merge'
 }
+if( !params.callName) {
+    help_message()
+    exit 1, 'Missing call name'
+}
+
 // make a channel from command-line entries
 vcfMappingChannel = makeVCFList(params.vcflist)
 
@@ -52,21 +57,21 @@ process compessAndIndexFilteredVCFs {
 // we will need the names of the compressed VCFs in two channels: one to make links, and the other to the command line
 
 allVCFs = compressedVCF.reduce {a,b -> return a + " " + b}
-allVCFs = allVCFs.view{"$it"}
 process mergeVCFs {
     publishDir "mergedVariants",mode: 'copy'
+
+    module 'htslib/1.3'
     module 'vcftools/0.1.14'
 
     input:
     set cVCFs from allVCFs
 
     output:
-    file "merged.vcf" into mergedVCF
+    file "${params.callName}_merged.vcf" into mergedVCF
 
     script:
     """
-    echo $cVCFs
-    vcf-merge ${cVCFs} > merged.vcf
+    vcf-merge ${cVCFs} > ${params.callName}_merged.vcf
     """
 }
 
@@ -97,7 +102,7 @@ def makeVCFList(vcflist) {
 def help_message() { // Display help message
     log.info "CANCER ANALYSIS WORKFLOW ~ processing VCFs "
     log.info "  Usage:"
-    log.info "          nextflow run processVCF.nf --vcflist CALLER1=caller1.vcf,CALLER2=caller2.vcf[,...]"
+    log.info "          nextflow run processVCF.nf -profile localhost --vcflist CALLER1=caller1.vcf,CALLER2=caller2.vcf[,...] --callName P12345 "
     log.info "  Example:"
-    log.info "          nextflow run processVCF.nf --vcflist STRELKA=VariantCalling/Strelka/strelka/results/passed.somatic.snvs.vcf,MUTECT1=VariantCalling/MuTect1/results.vcf"
+    log.info "          nextflow run processVCF.nf -profile localhost --vcflist STRELKA=VariantCalling/Strelka/strelka/results/passed.somatic.snvs.vcf,MUTECT1=VariantCalling/MuTect1/results.vcf --callName P1234"
 }
