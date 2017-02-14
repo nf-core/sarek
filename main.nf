@@ -944,10 +944,10 @@ process RunManta {
   script:
   """
   set -eo pipefail
-  samtools view -h $bamNormal| awk -f ${workflow.launchDir}/scripts/fixMantaContigs.awk | samtools view -bS - > Normal.bam
+  samtools view -h $bamNormal| awk -f ${baseDir}/scripts/fixMantaContigs.awk | samtools view -bS - > Normal.bam
   samtools index Normal.bam
 
-  samtools view -h $bamTumor| awk -f ${workflow.launchDir}/scripts/fixMantaContigs.awk | samtools view -bS - > Tumor.bam
+  samtools view -h $bamTumor| awk -f ${baseDir}/scripts/fixMantaContigs.awk | samtools view -bS - > Tumor.bam
   samtools index Tumor.bam
 
   configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference $mantaRef --runDir MantaDir
