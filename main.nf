@@ -922,13 +922,8 @@ process RunStrelka {
   mv strelka/results/all.somatic.snvs.vcf ${idSampleNormal}_${idSampleTumor}_all_somatic_snvs.vcf
   mv strelka/results/passed.somatic.indels.vcf ${idSampleNormal}_${idSampleTumor}_passed_somatic_indels.vcf
   mv strelka/results/passed.somatic.snvs.vcf ${idSampleNormal}_${idSampleTumor}_passed_somatic_snvs.vcf
-"""
-
-
-
-
-
   """
+
 }
 
 if ('Strelka' in workflowSteps) {
