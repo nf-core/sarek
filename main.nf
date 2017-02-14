@@ -896,7 +896,7 @@ process RunStrelka {
     file strelkaCFG from file(referenceMap['strelkaCFG'])
 
   output:
-    set val("Strelka"), idPatient, gender, idSampleNormal, idSampleTumor, file("strelka/results/*.vcf") into strelkaOutput
+    set val("Strelka"), idPatient, gender, idSampleNormal, idSampleTumor, file("*.vcf") into strelkaOutput
 
   when: 'Strelka' in workflowSteps
 
@@ -916,6 +916,18 @@ process RunStrelka {
   cd strelka
 
   make -j $task.cpus
+
+  cd ..
+  mv strelka/results/all.somatic.indels.vcf ${idSampleNormal}_${idSampleTumor}_all_somatic_indels.vcf
+  mv strelka/results/all.somatic.snvs.vcf ${idSampleNormal}_${idSampleTumor}_all_somatic_snvs.vcf
+  mv strelka/results/passed.somatic.indels.vcf ${idSampleNormal}_${idSampleTumor}_passed_somatic_indels.vcf
+  mv strelka/results/passed.somatic.snvs.vcf ${idSampleNormal}_${idSampleTumor}_passed_somatic_snvs.vcf
+"""
+
+
+
+
+
   """
 }
 
