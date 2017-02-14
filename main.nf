@@ -940,13 +940,14 @@ process RunManta {
 
   //NOTE: Manta is very picky about naming and reference indexes, the input bam should not contain too many _ and the reference index must be generated using a supported samtools version.
   //Moreover, the bam index must be named .bam.bai, otherwise it will not be recognized
+  //Also, when removing decoy sequences ( hs37d5 and NC_007605), have to remove reads also where the pair is mapped to a decoy 
   script:
   """
   set -eo pipefail
-  samtools view -H $bamNormal | grep -v hs37d5 | grep -v NC_007605 | samtools reheader - $bamNormal > Normal.bam
+  samtools view -h $bamNormal| awk -f ${workflow.launchDir}/scripts/fixMantaContigs.awk | samtools view -bS - > Normal.bam
   samtools index Normal.bam
 
-  samtools view -H $bamTumor | grep -v hs37d5 | grep -v NC_007605 | samtools reheader - $bamTumor > Tumor.bam
+  samtools view -h $bamTumor| awk -f ${workflow.launchDir}/scripts/fixMantaContigs.awk | samtools view -bS - > Tumor.bam
   samtools index Tumor.bam
 
   configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference $mantaRef --runDir MantaDir
