@@ -53,7 +53,7 @@ vim: syntax=groovy
 */
 
 revision = grabGitRevision() ?: ''
-version = 'v0.9.9'
+version = 'v0.9.99'
 verbose = false
 testFile = ''
 testSteps = []

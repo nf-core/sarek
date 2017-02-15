@@ -5,7 +5,7 @@ at [SciLifeLab Stockholm](https://www.scilifelab.se/platforms/ngi/), Sweden.
 [![nextflow](https://img.shields.io/badge/nextflow-%E2%89%A50.22.2-brightgreen.svg)](https://www.nextflow.io/)
 
 ## Version
-0.9.9
+0.9.99
 
 ## Authors
 - Sebastian DiLorenzo (@Sebastian-D)
