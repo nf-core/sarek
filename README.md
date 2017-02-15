@@ -1,11 +1,8 @@
 # CAW
-Nextflow Cancer Analysis Workflow Prototype developed at the [National Genomics Infastructure](https://ngisweden.scilifelab.se/)
+[![caw version][version-badge]][version-link] [![mit license][license-badge]][license-link] [![nextflow version][nextflow-badge]][nextflow-link]
+
+Nextflow Cancer Analysis Workflow developed at the [National Genomics Infastructure](https://ngisweden.scilifelab.se/)
 at [SciLifeLab Stockholm](https://www.scilifelab.se/platforms/ngi/), Sweden.
-
-[![nextflow](https://img.shields.io/badge/nextflow-%E2%89%A50.22.2-brightgreen.svg)](https://www.nextflow.io/)
-
-## Version
-0.9.99
 
 ## Authors
 - Sebastian DiLorenzo (@Sebastian-D)
@@ -49,3 +46,10 @@ See the [workflow use cases documentation](doc/USE_CASES.md)
 - R 3.2.3
 - samtools 1.3
 - strelka 1.0.15
+
+[license-badge]: https://img.shields.io/badge/license-MIT-blue.svg
+[license-link]: https://github.com/SciLifeLab/CAW/blob/master/LICENSE
+[nextflow-badge]: https://img.shields.io/badge/nextflow-%E2%89%A50.22.2-brightgreen.svg
+[nextflow-link]: https://www.nextflow.io/
+[version-badge]: https://img.shields.io/badge/CAW-1.0-green.svg
+[version-link]: https://github.com/SciLifeLab/CAW/releases/tag/1.0
