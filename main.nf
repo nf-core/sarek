@@ -528,7 +528,6 @@ process RunSamtoolsStats {
   output:
     file ("${bam}.samtools.stats.out") into recalibratedBamReports
 
-
     when: 'MultiQC' in workflowSteps
 
     script:
@@ -698,6 +697,7 @@ process RunHaplotypecaller {
 
   when: 'HaplotypeCaller' in workflowSteps
 
+  //parellelization information: "Many users have reported issues running HaplotypeCaller with the -nct argument, so we recommend using Queue to parallelize HaplotypeCaller instead of multithreading." However, it can take the -nct argument.
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
@@ -805,6 +805,7 @@ process RunMutect2 {
   -I:normal $bamNormal \
   -I:tumor $bamTumor \
   --disable_auto_index_creation_and_locking_when_reading_rods \
+  -U ALLOW_SEQ_DICT_INCOMPATIBILITY \
   -L \"$genInt\" \
   -XL hs37d5 \
   -XL NC_007605 \
@@ -997,10 +998,10 @@ process RunManta {
 
   when: 'Manta' in workflowSteps
 
-  //NOTE: Manta is very picky about naming and reference indexes, the input bam should not contain too many _ and the reference index must be generated using a supported samtools version.
-  //Moreover, the bam index must be named .bam.bai, otherwise it will not be recognized
-  //Also, when removing decoy sequences ( hs37d5 and NC_007605), have to remove reads also where the pair is mapped to a decoy 
-  script:
+  // NOTE: Manta is very picky about naming and reference indexes, the input bam should not contain too many _ and the reference index must be generated using a supported samtools version.
+  // Moreover, the bam index must be named .bam.bai, otherwise it will not be recognized
+  // Also, when removing decoy sequences ( hs37d5 and NC_007605), have to remove reads also where the pair is mapped to a decoy script:
+
   """
   set -eo pipefail
   samtools view -h $bamNormal| awk -f ${workflow.launchDir}/scripts/fixMantaContigs.awk | samtools view -bS - > Normal.bam
