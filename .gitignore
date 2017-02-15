@@ -5,5 +5,5 @@ VariantCalling/
 work/
 .*swp
 .nextflow*
-trace.txt*
 timeline.html*
+trace.txt*
