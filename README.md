@@ -36,16 +36,16 @@ See the [workflow TSV file documentation](doc/TSV.md)
 See the [workflow use cases documentation](doc/USE_CASES.md)
 
 ## Tools and dependencies
-- nextflow >= 0.22.1
+- alleleCount 2.2.0
 - bwa 0.7.8
-- samtools 1.3
-- picard 1.118
+- FastQC 0.11.5
 - GATK 3.7
-- R 3.2.3
 - gcc 4.9.2
-- perl 5.18.4
-- strelka 1.0.15
 - manta 1.0.0
 - MultiQC 0.9
-- FastQC 0.11.5
-- alleleCount 2.2.0
+- nextflow >= 0.22.1
+- perl 5.18.4
+- picard 1.118
+- R 3.2.3
+- samtools 1.3
+- strelka 1.0.15
