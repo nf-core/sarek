@@ -1,9 +1,8 @@
-[![nextflow](https://img.shields.io/badge/nextflow-%E2%89%A50.22.2-brightgreen.svg)](https://www.nextflow.io/)
-[![Stories in Ready](https://badge.waffle.io/SciLifeLab/CAW.png?label=ready&title=Ready)](https://waffle.io/SciLifeLab/CAW)
-
 # CAW
 Nextflow Cancer Analysis Workflow Prototype developed at the [National Genomics Infastructure](https://ngisweden.scilifelab.se/)
 at [SciLifeLab Stockholm](https://www.scilifelab.se/platforms/ngi/), Sweden.
+
+[![nextflow](https://img.shields.io/badge/nextflow-%E2%89%A50.22.2-brightgreen.svg)](https://www.nextflow.io/)
 
 ## Version
 0.9.9
@@ -41,7 +40,7 @@ See the [workflow use cases documentation](doc/USE_CASES.md)
 - bwa 0.7.8
 - samtools 1.3
 - picard 1.118
-- GATK 3.6
+- GATK 3.7
 - R 3.2.3
 - gcc 4.9.2
 - perl 5.18.4
@@ -49,3 +48,4 @@ See the [workflow use cases documentation](doc/USE_CASES.md)
 - manta 1.0.0
 - MultiQC 0.9
 - FastQC 0.11.5
+- alleleCount 2.2.0
