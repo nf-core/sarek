@@ -698,7 +698,6 @@ process RunHaplotypecaller {
 
   when: 'HaplotypeCaller' in workflowSteps
 
-  //parellelization information: "Many users have reported issues running HaplotypeCaller with the -nct argument, so we recommend using Queue to parallelize HaplotypeCaller instead of multithreading." However, it can take the -nct argument.
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
@@ -708,6 +707,7 @@ process RunHaplotypecaller {
   --dbsnp $dbsnp \
   -I $bam \
   -L \"$genInt\" \
+  --disable_auto_index_creation_and_locking_when_reading_rods \
   -XL hs37d5 \
   -XL NC_007605 \
   -o ${gen_int}_${idSample}.vcf
@@ -804,7 +804,7 @@ process RunMutect2 {
   --dbsnp $dbsnp \
   -I:normal $bamNormal \
   -I:tumor $bamTumor \
-  -U ALLOW_SEQ_DICT_INCOMPATIBILITY \
+  --disable_auto_index_creation_and_locking_when_reading_rods \
   -L \"$genInt\" \
   -XL hs37d5 \
   -XL NC_007605 \
@@ -999,13 +999,14 @@ process RunManta {
 
   //NOTE: Manta is very picky about naming and reference indexes, the input bam should not contain too many _ and the reference index must be generated using a supported samtools version.
   //Moreover, the bam index must be named .bam.bai, otherwise it will not be recognized
+  //Also, when removing decoy sequences ( hs37d5 and NC_007605), have to remove reads also where the pair is mapped to a decoy 
   script:
   """
   set -eo pipefail
-  samtools view -H $bamNormal | grep -v hs37d5 | grep -v NC_007605 | samtools reheader - $bamNormal > Normal.bam
+  samtools view -h $bamNormal| awk -f ${workflow.launchDir}/scripts/fixMantaContigs.awk | samtools view -bS - > Normal.bam
   samtools index Normal.bam
 
-  samtools view -H $bamTumor | grep -v hs37d5 | grep -v NC_007605 | samtools reheader - $bamTumor > Tumor.bam
+  samtools view -h $bamTumor| awk -f ${workflow.launchDir}/scripts/fixMantaContigs.awk | samtools view -bS - > Tumor.bam
   samtools index Tumor.bam
 
   python \$MANTA_INSTALL_PATH/bin/configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference $mantaRef --runDir Manta
