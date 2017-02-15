@@ -867,7 +867,7 @@ process RunVardict {
 
   script:
   """
-  vardict.pl \
+  ${referenceMap['vardictHome']}/vardict.pl \
   -G $genomeFile \
   -f 0.01 -N $bamTumor \
   -b "$bamTumor|$bamNormal" \
@@ -915,9 +915,9 @@ process ConcatVCF {
   if (variantCaller == 'VarDict')
     """
     for i in $vcFiles ;do
-      cat \$i | VarDict/testsomatic.R >> testsomatic.out
+      cat \$i | ${referenceMap['vardictHome']}/VarDict/testsomatic.R >> testsomatic.out
     done
-    VarDict/var2vcf_somatic.pl \
+    ${referenceMap['vardictHome']}/VarDict/var2vcf_somatic.pl \
     -f 0.01 \
     -N "${idPatient}_${idSampleNormal}_${idSampleTumor}" testsomatic.out > $outputFile
     """
@@ -1000,8 +1000,9 @@ process RunManta {
 
   // NOTE: Manta is very picky about naming and reference indexes, the input bam should not contain too many _ and the reference index must be generated using a supported samtools version.
   // Moreover, the bam index must be named .bam.bai, otherwise it will not be recognized
-  // Also, when removing decoy sequences ( hs37d5 and NC_007605), have to remove reads also where the pair is mapped to a decoy script:
+  // Also, when removing decoy sequences ( hs37d5 and NC_007605), have to remove reads also where the pair is mapped to a decoy
 
+  script:
   """
   set -eo pipefail
   samtools view -h $bamNormal| awk -f ${workflow.launchDir}/scripts/fixMantaContigs.awk | samtools view -bS - > Normal.bam
@@ -1223,21 +1224,22 @@ def checkUppmaxProject() {
 
 def defineReferenceMap() {
   return [
-    'genomeFile'  : params.genome,      // genome reference
-    'genomeIndex' : params.genomeIndex, // genome reference index
-    'genomeDict'  : params.genomeDict,  // genome reference dictionary
-    'kgIndels'    : params.kgIndels,    // 1000 Genomes SNPs
-    'kgIndex'     : params.kgIndex,     // 1000 Genomes SNPs index
+    'acLoci'      : params.acLoci,      // loci file for ascat
     'dbsnp'       : params.dbsnp,       // dbSNP
-    'dbsnpIndex'  : params.dbsnpIndex,  // dbSNP index
-    'millsIndels' : params.millsIndels, // Mill's Golden set of SNPs
-    'millsIndex'  : params.millsIndex,  // Mill's Golden set index
     'cosmic'      : params.cosmic,      // cosmic vcf file with VCF4.1 header
     'cosmicIndex' : params.cosmicIndex, // cosmic vcf file index
+    'dbsnpIndex'  : params.dbsnpIndex,  // dbSNP index
+    'genomeDict'  : params.genomeDict,  // genome reference dictionary
+    'genomeFile'  : params.genome,      // genome reference
+    'genomeIndex' : params.genomeIndex, // genome reference index
     'intervals'   : params.intervals,   // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
+    'kgIndels'    : params.kgIndels,    // 1000 Genomes SNPs
+    'kgIndex'     : params.kgIndex,     // 1000 Genomes SNPs index
     'mantaRef'    : params.mantaRef,    // copy of the genome reference file
     'mantaIndex'  : params.mantaIndex,  // reference index indexed with samtools/0.1.19
-    'acLoci'      : params.acLoci       // loci file for ascat
+    'millsIndels' : params.millsIndels, // Mill's Golden set of SNPs
+    'millsIndex'  : params.millsIndex,  // Mill's Golden set index
+    'vardictHome' : params.vardictHome  // path to VarDict
   ]
 }
 
@@ -1245,35 +1247,35 @@ def defineDirectoryMap() {
   return [
     'nonRealigned'     : 'Preprocessing/NonRealigned',
     'recalibrated'     : 'Preprocessing/Recalibrated',
-    'MuTect1'          : 'VariantCalling/MuTect1',
-    'MuTect2'          : 'VariantCalling/MuTect2',
-    'FreeBayes'        : 'VariantCalling/FreeBayes',
-    'VarDict'          : 'VariantCalling/VarDict',
-    'Strelka'          : 'VariantCalling/Strelka',
-    'HaplotypeCaller'  : 'VariantCalling/HaplotypeCaller',
-    'Manta'            : 'VariantCalling/Manta',
-    'Ascat'            : 'VariantCalling/Ascat',
     'FastQC'           : 'Reports/FastQC',
     'MarkDuplicatesQC' : 'Reports/MarkDuplicates',
+    'MultiQC'          : 'Reports/MultiQC',
     'SamToolsStats'    : 'Reports/SamToolsStats',
-    'MultiQC'          : 'Reports/MultiQC'
+    'Ascat'            : 'VariantCalling/Ascat',
+    'FreeBayes'        : 'VariantCalling/FreeBayes',
+    'HaplotypeCaller'  : 'VariantCalling/HaplotypeCaller',
+    'Manta'            : 'VariantCalling/Manta',
+    'MuTect1'          : 'VariantCalling/MuTect1',
+    'MuTect2'          : 'VariantCalling/MuTect2',
+    'Strelka'          : 'VariantCalling/Strelka',
+    'VarDict'          : 'VariantCalling/VarDict'
   ]
 }
 
 def defineStepList() {
   return [
+    'Ascat',
+    'FreeBayes',
+    'HaplotypeCaller',
+    'Manta',
+    'MultiQC',
+    'MuTect1',
+    'MuTect2',
     'preprocessing',
     'realign',
     'skipPreprocessing',
-    'MuTect1',
-    'MuTect2',
-    'FreeBayes',
-    'VarDict',
     'Strelka',
-    'HaplotypeCaller',
-    'Manta',
-    'Ascat',
-    'MultiQC'
+    'VarDict'
   ]
 }
 
