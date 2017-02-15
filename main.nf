@@ -33,7 +33,8 @@ vim: syntax=groovy
  - CreateIntervals - Create Intervals
  - RealignBams - Realign Bams as T/N pair
  - CreateRecalibrationTable - Create Recalibration Table
- - RecalibrateBam - Recalibreate Bam
+ - RecalibrateBam - Recalibrate Bam
+ - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files
  - RunHaplotypecaller - Run HaplotypeCaller for GermLine Variant Calling (Parrallelized processes)
  - RunMutect1 - Run MuTect1 for Variant Calling (Parrallelized processes)
  - RunMutect2 - Run MuTect2 for Variant Calling (Parrallelized processes)
@@ -52,7 +53,7 @@ vim: syntax=groovy
 */
 
 revision = grabGitRevision() ?: ''
-version = 'v0.9.9'
+version = '1.0'
 verbose = false
 testFile = ''
 testSteps = []
@@ -98,7 +99,7 @@ if (params.test) {
 } else if (params.testCoreVC) {
   test = true
   testFile = file("$workflow.launchDir/${directoryMap['recalibrated']}/recalibrated.tsv")
-  workflowSteps = ['skipPreprocessing', 'MuTect1', 'Strelka', 'HaplotypeCaller']
+  workflowSteps = ['skipPreprocessing', 'MuTect1', 'Strelka', 'HaplotypeCaller', 'MultiQC']
   referenceMap.put("intervals", "$workflow.projectDir/repeats/tiny.list")
 } else if (params.testSideVC) {
   test = true
@@ -148,7 +149,9 @@ if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
 }
 
 process RunFastQC {
-  tag {idRun}
+  tag {idPatient + "-" + idRun}
+
+  publishDir directoryMap['FastQC'], mode: 'copy'
 
   input:
     set idPatient, gender, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFilesforFastQC
@@ -169,10 +172,17 @@ if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
 }
 
 process MapReads {
-  tag {idRun}
+  tag {idPatient + "-" + idRun}
 
   input:
     set idPatient, gender, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFiles
+    file genomeFile from file(referenceMap['genomeFile'])
+    file genomeIndex from file(referenceMap['genomeIndex'])
+    file genomePac from file(referenceMap['genomeFile']+".pac")
+    file genomeAmb from file(referenceMap['genomeFile']+".amb")
+    file genomeAnn from file(referenceMap['genomeFile']+".ann")
+    file genomeBwt from file(referenceMap['genomeFile']+".bwt")
+    file genomeSa from file(referenceMap['genomeFile']+".sa")
 
   output:
     set idPatient, gender, status, idSample, idRun, file("${idRun}.bam") into bam
@@ -183,7 +193,8 @@ process MapReads {
   readGroup="@RG\\tID:$idRun\\tSM:$idSample\\tLB:$idSample\\tPL:illumina"
   """
   set -eo pipefail
-  bwa mem -R \"$readGroup\" -B 3 -t $task.cpus -M ${referenceMap['genomeFile']} $fastqFile1 $fastqFile2 | \
+  bwa mem -R \"$readGroup\" -B 3 -t $task.cpus -M \
+  $genomeFile $fastqFile1 $fastqFile2 | \
   samtools sort --threads $task.cpus - > ${idRun}.bam
   """
 }
@@ -212,7 +223,7 @@ if ('preprocessing' in workflowSteps) {
 }
 
 process MergeBams {
-  tag {idSample}
+  tag {idPatient + "-" + idSample}
 
   input:
     set idPatient, gender, status, idSample, idRun, file(bam) from groupedBam
@@ -241,9 +252,9 @@ if ('preprocessing' in workflowSteps) {
   if (verbose) {mergedBam = mergedBam.view {"BAM for MarkDuplicates: $it"}}
 }
 process MarkDuplicates {
-  tag {idSample}
+  tag {idPatient + "-" + idSample}
 
-  publishDir directoryMap['nonRealigned'], mode: 'copy'
+  publishDir '.', saveAs: { it == "${bam}.metrics" ? "${directoryMap['MarkDuplicatesQC']}/$it" : "${directoryMap['nonRealigned']}/$it" }, mode: 'copy'
 
   input:
     set idPatient, gender, status, idSample, file(bam) from mergedBam
@@ -251,13 +262,14 @@ process MarkDuplicates {
   output:
     set idPatient, gender, val("${idSample}_${status}"), file("${idSample}_${status}.md.bam"), file("${idSample}_${status}.md.bai") into duplicates
     set idPatient, gender, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai") into markDuplicatesTSV
+    file ("${bam}.metrics") into markDuplicatesReport
 
   when: 'preprocessing' in workflowSteps
 
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${referenceMap['picardHome']}/MarkDuplicates.jar \
+  -jar \$PICARD_HOME/picard.jar MarkDuplicates \
   INPUT=${bam} \
   METRICS_FILE=${bam}.metrics \
   TMP_DIR=. \
@@ -325,7 +337,7 @@ process CreateIntervals {
   bams = bam.collect{"-I $it"}.join(' ')
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
+  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T RealignerTargetCreator \
   $bams \
   -R $genomeFile \
@@ -373,7 +385,7 @@ process RealignBams {
   bams = bam.collect{"-I $it"}.join(' ')
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
+  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T IndelRealigner \
   $bams \
   -R $genomeFile \
@@ -413,7 +425,7 @@ if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
 }
 
 process CreateRecalibrationTable {
-  tag {idSample}
+  tag {idPatient + "-" + idSample}
 
   input:
     set idPatient, gender, status, idSample, file(bam), file(bai) from realignedBam
@@ -436,7 +448,7 @@ process CreateRecalibrationTable {
   """
   java -Xmx${task.memory.toGiga()}g \
   -Djava.io.tmpdir="/tmp" \
-  -jar ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
+  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T BaseRecalibrator \
   -R $genomeFile \
   -I $bam \
@@ -457,7 +469,7 @@ if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
 }
 
 process RecalibrateBam {
-  tag {idSample}
+  tag {idPatient + "-" + idSample}
 
   publishDir directoryMap['recalibrated'], mode: 'copy'
 
@@ -477,7 +489,7 @@ process RecalibrateBam {
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
+  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T PrintReads \
   -R $genomeFile \
   -nct $task.cpus \
@@ -498,6 +510,37 @@ if ('skipPreprocessing' in workflowSteps) {
 }
 
 if (verbose) {recalibratedBam = recalibratedBam.view {"Recalibrated Bam for variant Calling: $it"}}
+
+recalibratedBamForStats = Channel.create()
+
+if ('MultiQC' in workflowSteps) {
+  (recalibratedBam, recalibratedBamForStats) = recalibratedBam.into(2)
+}
+
+process RunSamtoolsStats {
+  tag {idPatient + "-" + idSample}
+
+  publishDir directoryMap['SamToolsStats'], mode: 'copy'
+
+  input:
+    set idPatient, gender, status, idSample, file(bam), file(bai) from recalibratedBamForStats
+
+  output:
+    file ("${bam}.samtools.stats.out") into recalibratedBamReports
+
+    when: 'MultiQC' in workflowSteps
+
+    script:
+    """
+    samtools stats $bam > ${bam}.samtools.stats.out
+    """
+}
+
+if ('MultiQC' in workflowSteps) {
+  if (verbose) {recalibratedBam = recalibratedBam.view {"BAM Stats: $it"}}
+} else {
+  recalibratedBamForStats.close()
+}
 
 // Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
 // The sample tsv config file which is formatted like: "subject status sample lane fastq1 fastq2"
@@ -639,7 +682,7 @@ if ('Manta' in workflowSteps) {
 }
 
 process RunHaplotypecaller {
-  tag {idSample + "-" + gen_int}
+  tag {idPatient + "-" + idSample + "-" + gen_int}
 
   input:
     set idPatient, gender, idSample, file(bam), file(bai), genInt, gen_int from bamsFHC //Are these values `ped to bamNormal already?
@@ -654,10 +697,11 @@ process RunHaplotypecaller {
 
   when: 'HaplotypeCaller' in workflowSteps
 
+  //parellelization information: "Many users have reported issues running HaplotypeCaller with the -nct argument, so we recommend using Queue to parallelize HaplotypeCaller instead of multithreading." However, it can take the -nct argument.
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
+  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T HaplotypeCaller \
   -R $genomeFile \
   --dbsnp $dbsnp \
@@ -680,7 +724,7 @@ if ('HaplotypeCaller' in workflowSteps) {
 }
 
 process RunMutect1 {
-  tag {idSampleTumor + "-" + gen_int}
+  tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT1
@@ -694,13 +738,14 @@ process RunMutect1 {
 
   output:
     set val("MuTect1"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf") into mutect1Output
+    file "${gen_int}_${idSampleNormal}_${idSampleTumor}.call_stats.out" into mutect1report
 
   when: 'MuTect1' in workflowSteps
 
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${referenceMap['mutect1Home']}/muTect.jar \
+  -jar \$MUTECT_HOME/muTect.jar \
   -T MuTect \
   -R $genomeFile \
   --cosmic $cosmic \
@@ -717,13 +762,18 @@ process RunMutect1 {
 }
 
 if ('MuTect1' in workflowSteps) {
+  if ('MultiQC' in workflowSteps) {
+    if (verbose) {mutect1report = mutect1report.view {"MuTect1 report: $it"}}
+  }
   if (verbose) {mutect1Output = mutect1Output.view {"MuTect1 output: $it"}}
   mutect1VCF = mutect1Output.groupTuple(by:[0,1,2,3,4])
   if (verbose) {mutect1VCF = mutect1VCF.view {"mutect1VCF: $it"}}
 }
 
+
+
 process RunMutect2 {
-  tag {idSampleTumor + "-" + gen_int}
+  tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
@@ -747,7 +797,7 @@ process RunMutect2 {
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
+  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T MuTect2 \
   -R $genomeFile \
   --cosmic $cosmic \
@@ -755,6 +805,7 @@ process RunMutect2 {
   -I:normal $bamNormal \
   -I:tumor $bamTumor \
   --disable_auto_index_creation_and_locking_when_reading_rods \
+  -U ALLOW_SEQ_DICT_INCOMPATIBILITY \
   -L \"$genInt\" \
   -XL hs37d5 \
   -XL NC_007605 \
@@ -769,7 +820,7 @@ if ('MuTect2' in workflowSteps) {
 }
 
 process RunFreeBayes {
-  tag {idSampleTumor + "-" + gen_int}
+  tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFFB
@@ -801,7 +852,7 @@ if ('FreeBayes' in workflowSteps) {
 }
 
 process RunVardict {
-  tag {idSampleTumor + "-" + gen_int}
+  tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFVD
@@ -842,12 +893,15 @@ if ('HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2
 }
 
 process ConcatVCF {
-  tag {variantCaller == 'HaplotypeCaller' ? variantCaller + "-" + idSampleNormal : variantCaller + "-" + idSampleNormal + "-" + idSampleTumor}
+  tag {variantCaller == 'HaplotypeCaller' ? idPatient + "-" + variantCaller + "-" + idSampleNormal : idPatient + "-" + variantCaller + "-" + idSampleNormal + "-" + idSampleTumor}
 
   publishDir "${directoryMap["$variantCaller"]}", mode: 'copy'
 
   input:
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, tag, file(vcFiles) from vcfsToMerge
+    file genomeFile from file(referenceMap['genomeFile'])
+    file genomeDict from file(referenceMap['genomeDict'])
+    file genomeIndex from file(referenceMap['genomeIndex'])
 
   output:
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file("*.vcf") into vcfConcatenated
@@ -871,11 +925,12 @@ process ConcatVCF {
   else
     """
     java -Xmx${task.memory.toGiga()}g \
-    -cp ${referenceMap['gatkHome']}/GenomeAnalysisTK.jar \
-    org.broadinstitute.gatk.tools.CatVariants \
-    --reference ${referenceMap['genomeFile']} \
+    -jar \$GATK_HOME/GenomeAnalysisTK.jar \
+    -T CombineVariants \
+    -R $genomeFile \
     $vcfFiles \
-    --outputFile $outputFile
+    -o $outputFile \
+    -genotypeMergeOptions UNIQUIFY
     """
 }
 
@@ -884,7 +939,7 @@ if ('HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2
 }
 
 process RunStrelka {
-  tag {idSampleTumor}
+  tag {idPatient + "-" + idSampleTumor}
 
   publishDir directoryMap['Strelka'], mode: 'copy'
 
@@ -893,10 +948,9 @@ process RunStrelka {
     file genomeFile from file(referenceMap['genomeFile'])
     file genomeIndex from file(referenceMap['genomeIndex'])
     file genomeDict from file(referenceMap['genomeDict'])
-    file strelkaCFG from file(referenceMap['strelkaCFG'])
 
   output:
-    set val("Strelka"), idPatient, gender, idSampleNormal, idSampleTumor, file("strelka/results/*.vcf") into strelkaOutput
+    set val("Strelka"), idPatient, gender, idSampleNormal, idSampleTumor, file("*.vcf") into strelkaOutput
 
   when: 'Strelka' in workflowSteps
 
@@ -904,18 +958,24 @@ process RunStrelka {
   """
   tumorPath=`readlink $bamTumor`
   normalPath=`readlink $bamNormal`
-  strelkaRef=`readlink $genomeFile`
-  strelkaConfig=`readlink $strelkaCFG`
-  ${referenceMap['strelkaHome']}/bin/configureStrelkaWorkflow.pl \
+  genomeFile=`readlink $genomeFile`
+  \$STRELKA_INSTALL_DIR/bin/configureStrelkaWorkflow.pl \
   --tumor \$tumorPath \
   --normal \$normalPath \
-  --ref \$strelkaRef \
-  --config \$strelkaConfig \
+  --ref \$genomeFile \
+  --config \$STRELKA_INSTALL_DIR/etc/strelka_config_bwa_default.ini \
   --output-dir strelka
 
   cd strelka
 
   make -j $task.cpus
+
+  cd ..
+
+  mv strelka/results/all.somatic.indels.vcf ${idSampleNormal}_${idSampleTumor}_all_somatic_indels.vcf
+  mv strelka/results/all.somatic.snvs.vcf ${idSampleNormal}_${idSampleTumor}_all_somatic_snvs.vcf
+  mv strelka/results/passed.somatic.indels.vcf ${idSampleNormal}_${idSampleTumor}_passed_somatic_indels.vcf
+  mv strelka/results/passed.somatic.snvs.vcf ${idSampleNormal}_${idSampleTumor}_passed_somatic_snvs.vcf
   """
 }
 
@@ -924,7 +984,7 @@ if ('Strelka' in workflowSteps) {
 }
 
 process RunManta {
-  tag {idSampleTumor}
+  tag {idPatient + "-" + idSampleTumor}
 
   publishDir directoryMap['Manta'], mode: 'copy'
 
@@ -938,9 +998,10 @@ process RunManta {
 
   when: 'Manta' in workflowSteps
 
-  //NOTE: Manta is very picky about naming and reference indexes, the input bam should not contain too many _ and the reference index must be generated using a supported samtools version.
-  //Moreover, the bam index must be named .bam.bai, otherwise it will not be recognized
-  //Also, when removing decoy sequences ( hs37d5 and NC_007605), have to remove reads also where the pair is mapped to a decoy 
+  // NOTE: Manta is very picky about naming and reference indexes, the input bam should not contain too many _ and the reference index must be generated using a supported samtools version.
+  // Moreover, the bam index must be named .bam.bai, otherwise it will not be recognized
+  // Also, when removing decoy sequences ( hs37d5 and NC_007605), have to remove reads also where the pair is mapped to a decoy
+
   script:
   """
   set -eo pipefail
@@ -950,12 +1011,13 @@ process RunManta {
   samtools view -h $bamTumor| awk -f ${workflow.launchDir}/scripts/fixMantaContigs.awk | samtools view -bS - > Tumor.bam
   samtools index Tumor.bam
 
-  configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference $mantaRef --runDir MantaDir
-  python MantaDir/runWorkflow.py -m local -j $task.cpus
-  gunzip -c MantaDir/results/variants/somaticSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.somaticSV.vcf
-  gunzip -c MantaDir/results/variants/candidateSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSV.vcf
-  gunzip -c MantaDir/results/variants/diploidSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.diploidSV.vcf
-  gunzip -c MantaDir/results/variants/candidateSmallIndels.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf
+  python \$MANTA_INSTALL_PATH/bin/configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference $mantaRef --runDir Manta
+
+  python Manta/runWorkflow.py -m local -j $task.cpus
+  gunzip -c Manta/results/variants/somaticSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.somaticSV.vcf
+  gunzip -c Manta/results/variants/candidateSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSV.vcf
+  gunzip -c Manta/results/variants/diploidSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.diploidSV.vcf
+  gunzip -c Manta/results/variants/candidateSmallIndels.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf
   """
 }
 
@@ -966,7 +1028,7 @@ if ('Manta' in workflowSteps) {
 // Run commands and code from Malin Larsson
 // Based on Jesper Eisfeldt's code
 process RunAlleleCount {
-  tag {idSample}
+  tag {idPatient + "-" + idSample}
 
   input:
     set idPatient, gender, status, idSample, file(bam), file(bai) from bamsForAscat
@@ -1012,7 +1074,7 @@ if ('Ascat' in workflowSteps) {
 // R script from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
 process RunConvertAlleleCounts {
-  tag {idSampleTumor}
+  tag {idPatient + "-" + idSampleTumor}
 
   publishDir directoryMap['Ascat'], mode: 'copy'
 
@@ -1033,7 +1095,7 @@ process RunConvertAlleleCounts {
 // R scripts from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
 process RunAscat {
-  tag {idSampleTumor}
+  tag {idPatient + "-" + idSampleTumor}
 
   publishDir directoryMap['Ascat'], mode: 'copy'
 
@@ -1096,15 +1158,13 @@ if ('Ascat' in workflowSteps) {
 
 reportsForMultiQC = Channel.create()
 
-if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
-  reportsForMultiQC = fastQCreport.flatten().toList()
+if ('MultiQC' in workflowSteps) {
+  reportsForMultiQC = fastQCreport.mix(markDuplicatesReport,mutect1report,recalibratedBamReports).flatten().toList()
   if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
-} else {
-  reportsForMultiQC.close()
 }
 
 process RunMultiQC {
-  tag {"MultiQC"}
+  tag {idPatient}
 
   publishDir directoryMap['MultiQC'], mode: 'copy'
 
@@ -1123,6 +1183,11 @@ process RunMultiQC {
 }
 if ('MultiQC' in workflowSteps) {
   if (verbose) {multiQCReport = multiQCReport.view {"MultiQC report: $it"}}
+} else {
+  fastQCreport.close()
+  markDuplicatesReport.close()
+  mutect1report.close()
+  reportsForMultiQC.close()
 }
 
 /*
@@ -1159,60 +1224,58 @@ def checkUppmaxProject() {
 
 def defineReferenceMap() {
   return [
-    'genomeFile'  : params.genome,      // genome reference
-    'genomeIndex' : params.genomeIndex, // genome reference index
-    'genomeDict'  : params.genomeDict,  // genome reference dictionary
-    'kgIndels'    : params.kgIndels,    // 1000 Genomes SNPs
-    'kgIndex'     : params.kgIndex,     // 1000 Genomes SNPs index
+    'acLoci'      : params.acLoci,      // loci file for ascat
     'dbsnp'       : params.dbsnp,       // dbSNP
-    'dbsnpIndex'  : params.dbsnpIndex,  // dbSNP index
-    'millsIndels' : params.millsIndels, // Mill's Golden set of SNPs
-    'millsIndex'  : params.millsIndex,  // Mill's Golden set index
     'cosmic'      : params.cosmic,      // cosmic vcf file with VCF4.1 header
     'cosmicIndex' : params.cosmicIndex, // cosmic vcf file index
+    'dbsnpIndex'  : params.dbsnpIndex,  // dbSNP index
+    'genomeDict'  : params.genomeDict,  // genome reference dictionary
+    'genomeFile'  : params.genome,      // genome reference
+    'genomeIndex' : params.genomeIndex, // genome reference index
     'intervals'   : params.intervals,   // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
+    'kgIndels'    : params.kgIndels,    // 1000 Genomes SNPs
+    'kgIndex'     : params.kgIndex,     // 1000 Genomes SNPs index
     'mantaRef'    : params.mantaRef,    // copy of the genome reference file
     'mantaIndex'  : params.mantaIndex,  // reference index indexed with samtools/0.1.19
-    'acLoci'      : params.acLoci,      // loci file for ascat
-    'picardHome'  : params.picardHome,  // path to Picard
-    'gatkHome'    : params.gatkHome,    // path to Gatk
-    'mutect1Home' : params.mutect1Home, // path to MuTect1
-    'vardictHome' : params.vardictHome, // path to VarDict
-    'strelkaHome' : params.strelkaHome, // path to Strelka
-    'strelkaCFG'  : params.strelkaCFG   // Strelka Config file
+    'millsIndels' : params.millsIndels, // Mill's Golden set of SNPs
+    'millsIndex'  : params.millsIndex,  // Mill's Golden set index
+    'vardictHome' : params.vardictHome  // path to VarDict
   ]
 }
 
 def defineDirectoryMap() {
   return [
-    'nonRealigned'    : 'Preprocessing/NonRealigned',
-    'recalibrated'    : 'Preprocessing/Recalibrated',
-    'MuTect1'         : 'VariantCalling/MuTect1',
-    'MuTect2'         : 'VariantCalling/MuTect2',
-    'FreeBayes'       : 'VariantCalling/FreeBayes',
-    'VarDict'         : 'VariantCalling/VarDict',
-    'Strelka'         : 'VariantCalling/Strelka',
-    'HaplotypeCaller' : 'VariantCalling/HaplotypeCaller',
-    'Manta'           : 'VariantCalling/Manta',
-    'Ascat'           : 'VariantCalling/Ascat',
-    'MultiQC'         : 'Reports/MultiQC'
+    'nonRealigned'     : 'Preprocessing/NonRealigned',
+    'recalibrated'     : 'Preprocessing/Recalibrated',
+    'FastQC'           : 'Reports/FastQC',
+    'MarkDuplicatesQC' : 'Reports/MarkDuplicates',
+    'MultiQC'          : 'Reports/MultiQC',
+    'SamToolsStats'    : 'Reports/SamToolsStats',
+    'Ascat'            : 'VariantCalling/Ascat',
+    'FreeBayes'        : 'VariantCalling/FreeBayes',
+    'HaplotypeCaller'  : 'VariantCalling/HaplotypeCaller',
+    'Manta'            : 'VariantCalling/Manta',
+    'MuTect1'          : 'VariantCalling/MuTect1',
+    'MuTect2'          : 'VariantCalling/MuTect2',
+    'Strelka'          : 'VariantCalling/Strelka',
+    'VarDict'          : 'VariantCalling/VarDict'
   ]
 }
 
 def defineStepList() {
   return [
+    'Ascat',
+    'FreeBayes',
+    'HaplotypeCaller',
+    'Manta',
+    'MultiQC',
+    'MuTect1',
+    'MuTect2',
     'preprocessing',
     'realign',
     'skipPreprocessing',
-    'MuTect1',
-    'MuTect2',
-    'FreeBayes',
-    'VarDict',
     'Strelka',
-    'HaplotypeCaller',
-    'Manta',
-    'Ascat',
-    'MultiQC'
+    'VarDict'
   ]
 }
 
