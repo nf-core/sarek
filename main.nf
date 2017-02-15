@@ -254,7 +254,7 @@ if ('preprocessing' in workflowSteps) {
 process MarkDuplicates {
   tag {idPatient + "-" + idSample}
 
-  publishDir directoryMap['nonRealigned'], mode: 'copy'
+  publishDir '.', saveAs: { it == "${bam}.metrics" ? "${directoryMap['MarkDuplicatesQC']}/$it" : "${directoryMap['nonRealigned']}/$it" }, mode: 'copy'
 
   input:
     set idPatient, gender, status, idSample, file(bam) from mergedBam
@@ -263,6 +263,7 @@ process MarkDuplicates {
     set idPatient, gender, val("${idSample}_${status}"), file("${idSample}_${status}.md.bam"), file("${idSample}_${status}.md.bai") into duplicates
     set idPatient, gender, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai") into markDuplicatesTSV
     file ("${bam}.metrics") into markDuplicatesReport
+
   when: 'preprocessing' in workflowSteps
 
   script:
@@ -518,6 +519,8 @@ if ('MultiQC' in workflowSteps) {
 
 process RunSamtoolsStats {
   tag {idPatient + "-" + idSample}
+
+  publishDir directoryMap['SamToolsStats'], mode: 'copy'
 
   input:
     set idPatient, gender, status, idSample, file(bam), file(bai) from recalibratedBamForStats
@@ -1238,18 +1241,20 @@ def defineReferenceMap() {
 
 def defineDirectoryMap() {
   return [
-    'nonRealigned'    : 'Preprocessing/NonRealigned',
-    'recalibrated'    : 'Preprocessing/Recalibrated',
-    'MuTect1'         : 'VariantCalling/MuTect1',
-    'MuTect2'         : 'VariantCalling/MuTect2',
-    'FreeBayes'       : 'VariantCalling/FreeBayes',
-    'VarDict'         : 'VariantCalling/VarDict',
-    'Strelka'         : 'VariantCalling/Strelka',
-    'HaplotypeCaller' : 'VariantCalling/HaplotypeCaller',
-    'Manta'           : 'VariantCalling/Manta',
-    'Ascat'           : 'VariantCalling/Ascat',
-    'FastQC'          : 'Reports/FastQC',
-    'MultiQC'         : 'Reports/MultiQC'
+    'nonRealigned'     : 'Preprocessing/NonRealigned',
+    'recalibrated'     : 'Preprocessing/Recalibrated',
+    'MuTect1'          : 'VariantCalling/MuTect1',
+    'MuTect2'          : 'VariantCalling/MuTect2',
+    'FreeBayes'        : 'VariantCalling/FreeBayes',
+    'VarDict'          : 'VariantCalling/VarDict',
+    'Strelka'          : 'VariantCalling/Strelka',
+    'HaplotypeCaller'  : 'VariantCalling/HaplotypeCaller',
+    'Manta'            : 'VariantCalling/Manta',
+    'Ascat'            : 'VariantCalling/Ascat',
+    'FastQC'           : 'Reports/FastQC',
+    'MarkDuplicatesQC' : 'Reports/MarkDuplicates',
+    'SamToolsStats'    : 'Reports/SamToolsStats',
+    'MultiQC'          : 'Reports/MultiQC'
   ]
 }
 
