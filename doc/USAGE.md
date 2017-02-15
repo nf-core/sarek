@@ -1,5 +1,5 @@
 # Usage
-I would recommand to run Nextflow within a screen session (cf [help on screen](https://www.howtoforge.com/linux_screen)).
+I would recommand to run Nextflow within a screen or tmux session (cf [help on screen](https://www.howtoforge.com/linux_screen)).
 It is recommanded to run only one instance of CAW for one patient in the same directory.
 Meaning there should be only one patient analysed in one directory.
 The typical command line is:

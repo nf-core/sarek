@@ -36,13 +36,17 @@ See the [workflow use cases documentation](doc/USE_CASES.md)
 - alleleCount 2.2.0
 - bwa 0.7.8
 - FastQC 0.11.5
+- freebayes
 - GATK 3.7
 - gcc 4.9.2
+- java jdk 7
+- java jdk 8
 - manta 1.0.0
 - MultiQC 0.9
+- MuTecT 1.1.5
 - nextflow >= 0.22.1
 - perl 5.18.4
-- picard 1.118
+- picard 2.0.1
 - R 3.2.3
 - samtools 1.3
 - strelka 1.0.15
@@ -51,5 +55,5 @@ See the [workflow use cases documentation](doc/USE_CASES.md)
 [license-link]: https://github.com/SciLifeLab/CAW/blob/master/LICENSE
 [nextflow-badge]: https://img.shields.io/badge/nextflow-%E2%89%A50.22.2-brightgreen.svg
 [nextflow-link]: https://www.nextflow.io/
-[version-badge]: https://img.shields.io/badge/CAW-1.0-green.svg
+[version-badge]: https://img.shields.io/badge/version-1.0-green.svg
 [version-link]: https://github.com/SciLifeLab/CAW/releases/tag/1.0
