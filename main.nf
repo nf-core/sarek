@@ -94,7 +94,12 @@ if (params.test) {
 } else if (params.testRealign) {
   test = true
   testFile = file("$workflow.launchDir/${directoryMap['nonRealigned']}/nonRealigned.tsv")
-  workflowSteps = ['realign']
+  workflowSteps = ['realign', 'MultiQC']
+  referenceMap.put("intervals", "$workflow.projectDir/repeats/tiny.list")
+} else if (params.testRecalibrate) {
+  test = true
+  testFile = file("$workflow.launchDir/${directoryMap['nonRecalibrated']}/nonRecalibrated.tsv")
+  workflowSteps = ['recalibrate', 'MultiQC']
   referenceMap.put("intervals", "$workflow.projectDir/repeats/tiny.list")
 } else if (params.testCoreVC) {
   test = true
@@ -107,12 +112,7 @@ if (params.test) {
   workflowSteps = ['skipPreprocessing', 'Ascat', 'Manta', 'HaplotypeCaller']
 } else {test = false}
 
-if (('preprocessing' in workflowSteps && ('realign' in workflowSteps || 'skipPreprocessing' in workflowSteps)) || ('realign' in workflowSteps && 'skipPreprocessing' in workflowSteps)) {
-  exit 1, 'Please choose only one step between preprocessing, realign and skipPreprocessing, see --help for more information'
-}
-if (!('preprocessing' in workflowSteps || 'realign' in workflowSteps || 'skipPreprocessing' in workflowSteps)) {
-  exit 1, 'Please choose one step between preprocessing, realign and skipPreprocessing, see --help for more information'
-}
+if ((!checkSteps(workflowSteps))) {exit 1, 'Please choose only one step between preprocessing, realign, recalibrate and skipPreprocessing, see --help for more information'}
 
 /*
  * Extract and verify content of TSV file
@@ -130,6 +130,10 @@ if ('preprocessing' in workflowSteps) {
 } else if ('realign' in workflowSteps || 'skipPreprocessing' in workflowSteps) {
   bamFiles = extractBamFiles(tsvFile)
   if (verbose) {bamFiles = bamFiles.view {"Bam files and IDs to process: $it"}}
+  fastqFiles.close()
+} else if ('recalibrate' in workflowSteps) {
+  bamFiles = extractReclibrationTables(tsvFile)
+  if (verbose) {bamFiles = bamFiles.view {"Bam files, Recalibration Tables and IDs to process: $it"}}
   fastqFiles.close()
 }
 
@@ -427,6 +431,8 @@ if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
 process CreateRecalibrationTable {
   tag {idPatient + "-" + idSample}
 
+  publishDir directoryMap['nonRecalibrated'], mode: 'copy'
+
   input:
     set idPatient, gender, status, idSample, file(bam), file(bai) from realignedBam
     file genomeFile from file(referenceMap['genomeFile'])
@@ -441,6 +447,7 @@ process CreateRecalibrationTable {
 
   output:
     set idPatient, gender, status, idSample, file(bam), file(bai), file("${idSample}.recal.table") into recalibrationTable
+    set idPatient, gender, status, idSample, val("${idSample}_${status}.md.real.bam"), val("${idSample}_${status}.md.real.bai"), val("${idSample}.recal.table") into recalibrationTableTSV
 
   when: 'preprocessing' in workflowSteps || 'realign' in workflowSteps
 
@@ -464,8 +471,14 @@ process CreateRecalibrationTable {
   """
 }
 
+recalibrationTableTSV.map { idPatient, gender, status, idSample, bam, bai, recalTable ->
+  "$idPatient\t$gender\t$status\t$idSample\t${directoryMap['nonRecalibrated']}/$bam\t${directoryMap['nonRecalibrated']}/$bai\t\t${directoryMap['nonRecalibrated']}/$recalTable\n"
+}.collectFile( name: 'nonRecalibrated.tsv', sort: true, storeDir: directoryMap['nonRecalibrated'])
+
 if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
   if (verbose) {recalibrationTable = recalibrationTable.view {"Base recalibrated table for recalibration: $it"}}
+} else if ('recalibrate' in workflowSteps) {
+  recalibrationTable = bamFiles
 }
 
 process RecalibrateBam {
@@ -483,7 +496,7 @@ process RecalibrateBam {
     set idPatient, gender, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam
     set idPatient, gender, status, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into recalibratedBamTSV
 
-  when: 'preprocessing' in workflowSteps || 'realign' in workflowSteps
+  when: 'preprocessing' in workflowSteps || 'realign' in workflowSteps || 'recalibrate' in workflowSteps
 
   // TODO: ditto as at the previous BaseRecalibrator step, consider using -nct 4
   script:
@@ -1246,6 +1259,7 @@ def defineReferenceMap() {
 def defineDirectoryMap() {
   return [
     'nonRealigned'     : 'Preprocessing/NonRealigned',
+    'nonRecalibrated'  : 'Preprocessing/NonRecalibrated',
     'recalibrated'     : 'Preprocessing/Recalibrated',
     'FastQC'           : 'Reports/FastQC',
     'MarkDuplicatesQC' : 'Reports/MarkDuplicates',
@@ -1273,6 +1287,7 @@ def defineStepList() {
     'MuTect2',
     'preprocessing',
     'realign',
+    'recalibrate',
     'skipPreprocessing',
     'Strelka',
     'VarDict'
@@ -1371,6 +1386,42 @@ def extractBamFiles(tsvFile) { // Channeling the TSV file containing BAM. Format
       [ idPatient, gender, status, idSample, bamFile, baiFile ]
     }
   return bamFiles
+}
+
+def extractReclibrationTables(tsvFile) { // Channeling the TSV file containing Recalibration Tables. Format is: "subject gender status sample bam bai recalTables"
+  bamFiles = Channel
+    .from(tsvFile.readLines())
+    .map{line ->
+      list       = line.split()
+      idPatient  = list[0]
+      gender     = list[1]
+      status     = list[2]
+      idSample   = list[3]
+      bamFile    = file(list[4])
+      baiFile    = file(list[5])
+      recalTable = file(list[6])
+
+      checkFileExistence(bamFile)
+      checkFileExistence(baiFile)
+      checkFileExistence(recalTable)
+
+      [ idPatient, gender, status, idSample, bamFile, baiFile, recalTable ]
+    }
+  return bamFiles
+}
+
+def checkSteps(workflowSteps) {
+  result = 0
+
+  if ('preprocessing' in workflowSteps) {result++}
+  if ('recalibrate' in workflowSteps) {result++}
+  if ('realign' in workflowSteps) {result++}
+  if ('skipPreprocessing' in workflowSteps) {result++}
+  if (result == 1 ) {
+    return true
+  } else {
+    return false
+  }
 }
 
 def retreiveStatus(bamChannel) {
