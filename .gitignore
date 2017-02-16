@@ -1,8 +1,9 @@
 data/chr17_testdata
 Preprocessing/
+Reports/
 VariantCalling/
 work/
-.nextflow*
-trace*
 .*swp
+.nextflow*
 timeline.html*
+trace.txt*
