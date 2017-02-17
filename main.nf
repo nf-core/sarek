@@ -751,7 +751,6 @@ process RunMutect1 {
 
   output:
     set val("MuTect1"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf") into mutect1Output
-    file "${gen_int}_${idSampleNormal}_${idSampleTumor}.call_stats.out" into mutect1report
 
   when: 'MuTect1' in workflowSteps
 
@@ -775,15 +774,10 @@ process RunMutect1 {
 }
 
 if ('MuTect1' in workflowSteps) {
-  if ('MultiQC' in workflowSteps) {
-    if (verbose) {mutect1report = mutect1report.view {"MuTect1 report: $it"}}
-  }
   if (verbose) {mutect1Output = mutect1Output.view {"MuTect1 output: $it"}}
   mutect1VCF = mutect1Output.groupTuple(by:[0,1,2,3,4])
   if (verbose) {mutect1VCF = mutect1VCF.view {"mutect1VCF: $it"}}
 }
-
-
 
 process RunMutect2 {
   tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
@@ -1169,10 +1163,48 @@ if ('Ascat' in workflowSteps) {
   if (verbose) {ascatOutput = ascatOutput.view {"Ascat output: $it"}}
 }
 
+// process RunBcftoolsStats {
+//   tag {idPatient + "-" + idSample}
+//
+//   publishDir directoryMap['SamToolsStats'], mode: 'copy'
+//
+//   input:
+//     set idPatient, gender, status, idSample, file(vcf) from ???
+//
+//   output:
+//     file ("${vcf}.samtools.stats.out") into vcfReports
+//
+//     when: 'MultiQC' in workflowSteps
+//
+//     script:
+//     """
+//     bcfools stats $vcf > ${vcf}.bcf.tools.stats.out
+//     """
+// }
+
+// process RunSmpeff {
+//   tag {idPatient + "-" + idSample}
+//
+//   publishDir directoryMap['snpeff'], mode: 'copy'
+//
+//   input:
+//     set idPatient, gender, status, idSample, file(vcf) from ???
+//
+//   output:
+//     file ("???") into vcfReports
+//
+//     script:
+//     """
+//     """
+// }
+
+
+
 reportsForMultiQC = Channel.create()
 
 if ('MultiQC' in workflowSteps) {
-  reportsForMultiQC = fastQCreport.mix(markDuplicatesReport,mutect1report,recalibratedBamReports).flatten().toList()
+  reportsForMultiQC = fastQCreport.mix(markDuplicatesReport,recalibratedBamReports).flatten().toList()
+  // reportsForMultiQC = fastQCreport.mix(markDuplicatesReport,recalibratedBamReports,vcfReports).flatten().toList()
   if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
 }
 
@@ -1199,7 +1231,6 @@ if ('MultiQC' in workflowSteps) {
 } else {
   fastQCreport.close()
   markDuplicatesReport.close()
-  mutect1report.close()
   reportsForMultiQC.close()
 }
 
