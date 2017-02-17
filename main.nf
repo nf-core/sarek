@@ -1018,10 +1018,24 @@ process RunManta {
   script:
   """
   set -eo pipefail
-  samtools view -h $bamNormal| awk -f ${workflow.launchDir}/scripts/fixMantaContigs.awk | samtools view -bS - > Normal.bam
+
+  # Getting rid of the decoy sequences in one go would be nice, but we can not really have multithreading when
+  # filtering with awk. So, what we are doing here is that we are cutting the BAM at the centromeres, filtering
+  # them one-by-one, making a merge without header, outputting uncompressed, re-sorting and adding a header.
+  # Since we have a node for ourselves, it should be faster
+
+  for f in `seq 0 10 110`; do 
+    awk '{if(NR>'\$f' && NR<='\$f'+10)print}' ${baseDir}/repeats/centromeres.list > tmp.list; 
+    for l in `cat tmp.list`; do 
+      samtools view $bamNormal $l | awk -f ${baseDir}/scripts/fixMantaContigs.awk | samtools view -bS - -o tomerge_${l/:/_}.bam & done; 
+      wait
+  done
+  ls tomerge_*bam|xargs samtools merge merged.bam
+  samtools view -H $bamNormal | egrep -v "hs37d5|NC_007605" > new.header.sam
+  samtools reheader new.header.sam merged.bam | samtools sort --threads $task.cpus -l 9 - > Normal.bam
   samtools index Normal.bam
 
-  samtools view -h $bamTumor| awk -f ${workflow.launchDir}/scripts/fixMantaContigs.awk | samtools view -bS - > Tumor.bam
+  samtools view -h $bamTumor| awk -f ${baseDir}/scripts/fixMantaContigs.awk | samtools view -bS - > Tumor.bam
   samtools index Tumor.bam
 
   python \$MANTA_INSTALL_PATH/bin/configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference $mantaRef --runDir Manta
