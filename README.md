@@ -21,6 +21,8 @@ for easier deployment.
 Nextflow Cancer Analysis Workflow developed at the [National Genomics Infastructure](https://ngisweden.scilifelab.se/)
 at [SciLifeLab Stockholm](https://www.scilifelab.se/platforms/ngi/), Sweden.
 
+For further information/help contact: maxime.garcia@scilifelab.se or szilveszter.juhos@scilifelab.se
+
 ## Installation and first execution
 To use this pipeline, you need to have a working version of Nextflow installed.
 - See the [Install Nextflow documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/INSTALL.md)
