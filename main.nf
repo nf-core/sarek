@@ -1018,10 +1018,10 @@ process RunManta {
   # them one-by-one, making a merge without header, outputting uncompressed, re-sorting and adding a header.
   # Since we have a node for ourselves, it should be faster
 
-  for f in `seq 0 10 110`; do 
-    awk '{if(NR>'\$f' && NR<='\$f'+10)print}' ${baseDir}/repeats/centromeres.list > tmp.list; 
-    for l in `cat tmp.list`; do 
-      samtools view $bamNormal $l | awk -f ${baseDir}/scripts/fixMantaContigs.awk | samtools view -bS - -o tomerge_\${l/:/_}.bam & done; 
+  for f in `seq 0 10 110`; do
+    awk '{if(NR>'\$f' && NR<='\$f'+10)print}' ${baseDir}/repeats/centromeres.list > tmp.list;
+    for l in `cat tmp.list`; do
+      samtools view $bamNormal $l | awk -f ${baseDir}/scripts/fixMantaContigs.awk | samtools view -bS - -o tomerge_\${l/:/_}.bam & done;
       wait
   done
   ls tomerge_*bam|xargs samtools merge merged.bam
@@ -1359,10 +1359,18 @@ def checkStepList(stepsList, realStepsList) {
 }
 
 def checkRefExistence(referenceFile, fileToCheck) { // Check file existence
-  try {assert file(fileToCheck).exists()}
-  catch (AssertionError ae) {
-    log.info  "Missing references: $referenceFile $fileToCheck"
-    return false
+  if ((workflow.commitId) && (params.test)) {
+    try {assert file("$workflow.projectDir/$fileToCheck")}
+    catch (AssertionError ae) {
+      log.info  "Missing references: $referenceFile $fileToCheck"
+      return false
+    }
+  } else {
+    try {assert file(fileToCheck).exists()}
+    catch (AssertionError ae) {
+      log.info  "Missing references: $referenceFile $fileToCheck"
+      return false
+    }
   }
   return true
 }
