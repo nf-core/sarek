@@ -1027,7 +1027,7 @@ process RunManta {
   for f in `seq 0 10 110`; do 
     awk '{if(NR>'\$f' && NR<='\$f'+10)print}' ${baseDir}/repeats/centromeres.list > tmp.list; 
     for l in `cat tmp.list`; do 
-      samtools view $bamNormal $l | awk -f ${baseDir}/scripts/fixMantaContigs.awk | samtools view -bS - -o tomerge_${l/:/_}.bam & done; 
+      samtools view $bamNormal $l | awk -f ${baseDir}/scripts/fixMantaContigs.awk | samtools view -bS - -o tomerge_\${l/:/_}.bam & done; 
       wait
   done
   ls tomerge_*bam|xargs samtools merge merged.bam
