@@ -53,7 +53,7 @@ vim: syntax=groovy
 */
 
 revision = grabGitRevision() ?: ''
-version = 'v1.0'
+version = '1.0'
 verbose = false
 testFile = ''
 testSteps = []
@@ -94,7 +94,7 @@ if (params.test) {
 } else if (params.testRealign) {
   test = true
   testFile = file("$workflow.launchDir/${directoryMap['nonRealigned']}/nonRealigned.tsv")
-  workflowSteps = ['realign','MultiQC']
+  workflowSteps = ['realign', 'MultiQC']
   referenceMap.put("intervals", "$workflow.projectDir/repeats/tiny.list")
 } else if (params.testRecalibrate) {
   test = true
@@ -104,7 +104,7 @@ if (params.test) {
 } else if (params.testCoreVC) {
   test = true
   testFile = file("$workflow.launchDir/${directoryMap['recalibrated']}/recalibrated.tsv")
-  workflowSteps = ['skipPreprocessing', 'MuTect1', 'Strelka', 'HaplotypeCaller','MultiQC']
+  workflowSteps = ['skipPreprocessing', 'MuTect1', 'Strelka', 'HaplotypeCaller', 'MultiQC']
   referenceMap.put("intervals", "$workflow.projectDir/repeats/tiny.list")
 } else if (params.testSideVC) {
   test = true
@@ -544,7 +544,7 @@ process RunSamtoolsStats {
     when: 'MultiQC' in workflowSteps
 
     script:
-    """	
+    """
     samtools stats $bam > ${bam}.samtools.stats.out
     """	
 }
@@ -1157,6 +1157,7 @@ if ('Ascat' in workflowSteps) {
   if (verbose) {ascatOutput = ascatOutput.view {"Ascat output: $it"}}
 }
 
+// process RunBcftoolsStats {
 //   tag {idPatient + "-" + idSample}
 //
 //   publishDir directoryMap['SamToolsStats'], mode: 'copy'
@@ -1272,8 +1273,6 @@ def defineReferenceMap() {
     'intervals'   : params.intervals,   // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
     'kgIndels'    : params.kgIndels,    // 1000 Genomes SNPs
     'kgIndex'     : params.kgIndex,     // 1000 Genomes SNPs index
-    'mantaRef'    : params.mantaRef,    // copy of the genome reference file
-    'mantaIndex'  : params.mantaIndex,  // reference index indexed with samtools/0.1.19
     'millsIndels' : params.millsIndels, // Mill's Golden set of SNPs
     'millsIndex'  : params.millsIndex,  // Mill's Golden set index
     'vardictHome' : params.vardictHome  // path to VarDict
@@ -1313,10 +1312,6 @@ def defineStepList() {
     'realign',
     'recalibrate',
     'skipPreprocessing',
-    'MuTect1',
-    'MuTect2',
-    'FreeBayes',
-    'VarDict',
     'Strelka',
     'VarDict'
   ]
