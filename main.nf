@@ -1196,7 +1196,7 @@ if ('Ascat' in workflowSteps) {
 //     """
 // }
 
-// process RunSmpeff {
+// process RunSnpeff {
 //   tag {idPatient + "-" + idSample}
 //
 //   publishDir directoryMap['snpeff'], mode: 'copy'
