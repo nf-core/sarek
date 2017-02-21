@@ -1364,7 +1364,7 @@ def checkRefExistence(referenceFile, fileToCheck) { // Check file existence
     log.info  "Missing references: $referenceFile $fileToCheck"
     return false
   }
-   return true
+  return true
 }
 
 def checkStepExistence(step, list) { // Check step existence
