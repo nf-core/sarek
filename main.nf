@@ -546,7 +546,7 @@ process RunSamtoolsStats {
     script:
     """
     samtools stats $bam > ${bam}.samtools.stats.out
-    """
+    """	
 }
 
 if ('MultiQC' in workflowSteps) {
@@ -710,7 +710,7 @@ process RunHaplotypecaller {
 
   when: 'HaplotypeCaller' in workflowSteps
 
-  //parellelization information: "Many users have reported issues running HaplotypeCaller with the -nct argument, so we recommend using Queue to parallelize HaplotypeCaller instead of multithreading." However, it can take the -nct argument.
+  // both -nt and -nct removed
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
@@ -795,12 +795,12 @@ process RunMutect2 {
   output:
     set val("MuTect2"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf") into mutect2Output
 
-  // we are using MuTect2 shipped in GATK v3.6
-  // TODO: the  "-U ALLOW_SEQ_DICT_INCOMPATIBILITY " flag is actually masking a bug in older Picard versions. Using the latest Picard tool
-  // this bug should go away and we should _not_ use this flag
-
   when: 'MuTect2' in workflowSteps
 
+  // 
+  // -U ALLOW_SEQ_DICT_INCOMPATIBILITY removed as BAMs generated using the new Picard
+  // should be fine
+  //
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
@@ -812,12 +812,12 @@ process RunMutect2 {
   -I:normal $bamNormal \
   -I:tumor $bamTumor \
   --disable_auto_index_creation_and_locking_when_reading_rods \
-  -U ALLOW_SEQ_DICT_INCOMPATIBILITY \
   -L \"$genInt\" \
   -XL hs37d5 \
   -XL NC_007605 \
   -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf
   """
+
 }
 
 if ('MuTect2' in workflowSteps) {
@@ -997,48 +997,28 @@ process RunManta {
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
-    file mantaRef from file(referenceMap['mantaRef'])
-    file mantaIndex from file(referenceMap['mantaIndex'])
+    file genomeFile from file(referenceMap['genomeFile'])
+    file genomeIndex from file(referenceMap['genomeIndex'])
 
   output:
     set val("Manta"), idPatient, gender, idSampleNormal, idSampleTumor, file("${idSampleNormal}_${idSampleTumor}.somaticSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.diploidSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf") into mantaOutput
 
   when: 'Manta' in workflowSteps
 
-  // NOTE: Manta is very picky about naming and reference indexes, the input bam should not contain too many _ and the reference index must be generated using a supported samtools version.
-  // Moreover, the bam index must be named .bam.bai, otherwise it will not be recognized
-  // Also, when removing decoy sequences ( hs37d5 and NC_007605), have to remove reads also where the pair is mapped to a decoy
-
   script:
   """
   set -eo pipefail
+  ln -s $bamNormal Normal.bam
+  ln -s $bamTumor Tumor.bam
+  ln -s $baiNormal Normal.bam.bai
+  ln -s $baiTumor Tumor.bam.bai
 
-  # Getting rid of the decoy sequences in one go would be nice, but we can not really have multithreading when
-  # filtering with awk. So, what we are doing here is that we are cutting the BAM at the centromeres, filtering
-  # them one-by-one, making a merge without header, outputting uncompressed, re-sorting and adding a header.
-  # Since we have a node for ourselves, it should be faster
-
-  for f in `seq 0 10 110`; do
-    awk '{if(NR>'\$f' && NR<='\$f'+10)print}' ${baseDir}/repeats/centromeres.list > tmp.list;
-    for l in `cat tmp.list`; do
-      samtools view $bamNormal $l | awk -f ${baseDir}/scripts/fixMantaContigs.awk | samtools view -bS - -o tomerge_\${l/:/_}.bam & done;
-      wait
-  done
-  ls tomerge_*bam|xargs samtools merge merged.bam
-  samtools view -H $bamNormal | egrep -v "hs37d5|NC_007605" > new.header.sam
-  samtools reheader new.header.sam merged.bam | samtools sort --threads $task.cpus -l 9 - > Normal.bam
-  samtools index Normal.bam
-
-  samtools view -h $bamTumor| awk -f ${baseDir}/scripts/fixMantaContigs.awk | samtools view -bS - > Tumor.bam
-  samtools index Tumor.bam
-
-  python \$MANTA_INSTALL_PATH/bin/configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference $mantaRef --runDir Manta
-
-  python Manta/runWorkflow.py -m local -j $task.cpus
-  gunzip -c Manta/results/variants/somaticSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.somaticSV.vcf
-  gunzip -c Manta/results/variants/candidateSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSV.vcf
-  gunzip -c Manta/results/variants/diploidSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.diploidSV.vcf
-  gunzip -c Manta/results/variants/candidateSmallIndels.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf
+  configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference $genomeFile --runDir MantaDir
+  python MantaDir/runWorkflow.py -m local -j $task.cpus
+  gunzip -c MantaDir/results/variants/somaticSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.somaticSV.vcf
+  gunzip -c MantaDir/results/variants/candidateSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSV.vcf
+  gunzip -c MantaDir/results/variants/diploidSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.diploidSV.vcf
+  gunzip -c MantaDir/results/variants/candidateSmallIndels.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf
   """
 }
 
@@ -1293,8 +1273,6 @@ def defineReferenceMap() {
     'intervals'   : params.intervals,   // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
     'kgIndels'    : params.kgIndels,    // 1000 Genomes SNPs
     'kgIndex'     : params.kgIndex,     // 1000 Genomes SNPs index
-    'mantaRef'    : params.mantaRef,    // copy of the genome reference file
-    'mantaIndex'  : params.mantaIndex,  // reference index indexed with samtools/0.1.19
     'millsIndels' : params.millsIndels, // Mill's Golden set of SNPs
     'millsIndex'  : params.millsIndex,  // Mill's Golden set index
     'vardictHome' : params.vardictHome  // path to VarDict
