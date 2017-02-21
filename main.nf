@@ -1359,20 +1359,12 @@ def checkStepList(stepsList, realStepsList) {
 }
 
 def checkRefExistence(referenceFile, fileToCheck) { // Check file existence
-  if ((workflow.commitId) && (params.test)) {
-    try {assert file("$workflow.projectDir/$fileToCheck")}
-    catch (AssertionError ae) {
-      log.info  "Missing references: $referenceFile $fileToCheck"
-      return false
-    }
-  } else {
-    try {assert file(fileToCheck).exists()}
-    catch (AssertionError ae) {
-      log.info  "Missing references: $referenceFile $fileToCheck"
-      return false
-    }
+  try {assert file(fileToCheck).exists()}
+  catch (AssertionError ae) {
+    log.info  "Missing references: $referenceFile $fileToCheck"
+    return false
   }
-  return true
+   return true
 }
 
 def checkStepExistence(step, list) { // Check step existence
