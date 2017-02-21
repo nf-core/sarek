@@ -83,7 +83,7 @@ This file is on our repo so it will be easy ;-)
 - '[centromeres.list](https://raw.githubusercontent.com/SciLifeLab/CAW/master/repeats/centromeres.list)'
 
 These files are stored using GIT-LFS, on [CAW-References](https://github.com/MaxUlysse/CAW-References), instructions on on how to set up git-lfs are on [git-lfs.github.com](https://git-lfs.github.com/).
-
+You can also find them on: [export.uppmax.uu.se](https://export.uppmax.uu.se/b2015110/caw-references/b37/)
 - '1000G_phase3_20130502_SNP_maf0.3.loci'
 - 'b37_cosmic_v74.noCHR.sort.4.1.vcf'
 - 'b37_cosmic_v74.noCHR.sort.4.1.vcf.idx'
