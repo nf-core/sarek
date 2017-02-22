@@ -1,5 +1,5 @@
 # CAW
-[![caw version][version-badge]][version-link] [![Licence][licence-badge]][licence-link] [![nextflow version][nextflow-badge]][nextflow-link]
+[![caw version][version-badge]][version-link] [![Licence][licence-badge]][licence-link] [![nextflow version][nextflow-badge]][nextflow-link] [![Join the chat at https://gitter.im/SciLifeLab/CAW][gitter-badge]][gitter-link]
 
 CAW (Cancer Analysis Workflow) is a complete open source pipeline to detect somatic variants from WGS data:
 it is written in Nextflow, a domain specific language for workflow building. We utilize GATK best practices
@@ -21,7 +21,7 @@ for easier deployment.
 Nextflow Cancer Analysis Workflow developed at the [National Genomics Infastructure](https://ngisweden.scilifelab.se/)
 at [SciLifeLab Stockholm](https://www.scilifelab.se/platforms/ngi/), Sweden.
 
-For further information/help contact: maxime.garcia@scilifelab.se or szilveszter.juhos@scilifelab.se
+For further information/help contact: maxime.garcia@scilifelab.se or szilveszter.juhos@scilifelab.se, or join the gitter chat: [gitter.im/SciLifeLab/CAW][gitter-link]
 
 ## Installation and first execution
 To use this pipeline, you need to have a working version of Nextflow installed.
@@ -70,6 +70,8 @@ See the [workflow use cases documentation](doc/USE_CASES.md)
 - Pall Olason (@pallolason)
 - Pelin Sahlén (@pelinakan)
 
+[gitter-badge]: https://badges.gitter.im/SciLifeLab/CAW.svg
+[gitter-link]: https://gitter.im/SciLifeLab/CAW
 [licence-badge]: https://img.shields.io/github/license/SciLifeLab/CAW.svg
 [licence-link]: https://github.com/SciLifeLab/CAW/blob/master/LICENSE
 [nextflow-badge]: https://img.shields.io/badge/nextflow-%E2%89%A50.22.2-brightgreen.svg
