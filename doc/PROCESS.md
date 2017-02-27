@@ -13,7 +13,7 @@ Several processes are run within the workflow. We divide them for the moment int
 ## Variant Calling:
  - RunHaplotypecaller - Run HaplotypeCaller for GermLine Variant Calling (Parrallelized processes) [Stable]
  - RunMutect1 - Run MuTect1 for Variant Calling (Parrallelized processes) [Stable]
- - RunMutect2 - Run MuTect2 for Variant Calling (Parrallelized processes) [Working]
+ - RunMutect2 - Run MuTect2 for Variant Calling (Parrallelized processes) [Stable]
  - RunFreeBayes - Run FreeBayes for Variant Calling (Parrallelized processes) [Working]
  - RunVardict - Run VarDict for Variant Calling (Parrallelized processes) [Working]
  - ConcatVCF - Merge results from HaplotypeCaller, MuTect1, MuTect2 and VarDict parrallelized processes [Stable]
@@ -25,4 +25,6 @@ Several processes are run within the workflow. We divide them for the moment int
 
 ## Report and QC:
  - RunFastQC - Run FastQC for QC on fastq files [Stable]
+ - MarkDuplicates - Mark Duplicates [Stable]
+ - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files [Stable]
  - RunMultiQC - Run MultiQC for report and QC [Stable]
