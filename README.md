@@ -56,6 +56,7 @@ See the [workflow use cases documentation](doc/USE_CASES.md)
 - picard 2.0.1
 - R 3.2.3
 - samtools 1.3
+- snpEff 4.2
 - strelka 1.0.15
 
 ## Authors
