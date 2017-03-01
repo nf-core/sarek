@@ -8,6 +8,7 @@ import numpy as np
 import numpy.ma as ma
 from matplotlib.backends.backend_pdf import PdfPages
 from datetime import datetime
+import operator
 
 
 if len(sys.argv)<4:
@@ -178,15 +179,13 @@ def generate_output(mutect1, mutect2, strelka, sample):
     sf.write("%s\n" %("##FORMAT=<ID=ADM1,Number=.,Type=Integer,Description=\"Allelic depths reported by MuTect1 for the ref and alt alleles in the order listed\""))
     sf.write("%s\n" %("##FORMAT=<ID=ADM2,Number=.,Type=Integer,Description=\"Allelic depths reported by MuTect2 for the ref and alt alleles in the order listed\""))
     sf.write("%s\n" %("##FORMAT=<ID=ADS,Number=.,Type=Integer,Description=\"Allelic depths reported by Strelka for the ref and alt alleles in the order listed\""))
-
     sf.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" %('#CHROM', 'POS','ID', 'REF', 'ALT','QUAL', 'FILTER', 'INFO','FORMAT', sample+'_tumor', sample+'_normal'))
-
     #All mutated snvs:
     all_snvs=set(mutect1['snvs'].keys()+mutect2['snvs'].keys()+strelka['snvs'].keys())
-
     antal=0
-    sorted_snvs=sorted(all_snvs, key=lambda x: (x[0], x[1]))
-    for pos in sorted_snvs:
+    sorted_pos=sort_positions(all_snvs)
+    for pos in sorted_pos:
+        #for pos in all_snvs:
         vcfinfo = {}
         #Which caller(s) detected the variant?
         if pos in mutect1['snvs']:
@@ -196,7 +195,6 @@ def generate_output(mutect1, mutect2, strelka, sample):
         if pos in strelka['snvs']:
             vcfinfo['strelka']=strelka['snvs'][pos]['info']
         called_by=vcfinfo.keys()
-
         #Do we have the same basic info from all callers? Should be...
         if all(value == vcfinfo[called_by[0]] for value in vcfinfo.values()):
             format=''
@@ -229,13 +227,27 @@ def generate_output(mutect1, mutect2, strelka, sample):
                 filter="CONCORDANT"
             vcfinfolist=vcfinfo[called_by[0]].split('\t')
             baseinfo=vcfinfolist[0]+'\t'+vcfinfolist[1]+'\tNA\t'+vcfinfolist[2]+'\t'+vcfinfolist[3]+'\t'+'.'
-
             sf.write("%s\t%s\t%s\t%s\t%s\t%s\n" %(baseinfo,filter, callers, format, gf_tumor, gf_normal))
             ai.write("%s\n" %(vcfinfo[called_by[0]]))
         else:
             print "Conflict in ref and alt alleles between callers "+called_by+" at pos "+pos
 
 
+def sort_positions(positions):
+    CHROMOSOMES = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","X","Y"]
+    selected = []
+    sorted = []
+    for chr in CHROMOSOMES:
+        selected.append([])
+    for pos in positions:
+        chr_pos=pos.split("_")
+        if chr_pos[0] in CHROMOSOMES:
+            selected[CHROMOSOMES.index(chr_pos[0])].append(int(chr_pos[1]))
+    for chr in CHROMOSOMES:
+        selected[CHROMOSOMES.index(chr)].sort()
+        for pos in selected[CHROMOSOMES.index(chr)]:
+            sorted.append(chr+'_'+str(pos))
+    return sorted
 
 
 def parse_mutect2(vcf):
@@ -334,7 +346,5 @@ def parse_strelka_snvs(vcf):
             snvs[pos]['ad']['tumor']=str(ad_tumor[ref])+','+str(ad_tumor[alt])
             snvs[pos]['ad']['normal']=str(ad_normal[ref])+','+str(ad_normal[alt])
     return {'snvs':snvs}
-
-
 
 main()
