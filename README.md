@@ -1,3 +1,4 @@
+<img src="doc/Logo.png" width="300" title="CAW">
 # Cancer Analysis Workflow
 [![caw version][version-badge]][version-link] [![Licence][licence-badge]][licence-link] [![nextflow version][nextflow-badge]][nextflow-link] [![Join the chat at https://gitter.im/SciLifeLab/CAW][gitter-badge]][gitter-link]
 
