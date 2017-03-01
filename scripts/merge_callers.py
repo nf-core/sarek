@@ -72,54 +72,47 @@ def plot_allele_freqs(mutect1, mutect2, strelka, sample):
             this_variant[2]=float(vcfinfo['strelka'].split(",")[1])/(float(vcfinfo['strelka'].split(",")[0])+float(vcfinfo['strelka'].split(",")[1]))
             count[2]=count[2]+1
 
-        #Mutect1 all
+        #All calles by callers
         if 'mutect1' in vcfinfo.keys():
             this_variant[3]=float(vcfinfo['mutect1'].split(",")[1])/(float(vcfinfo['mutect1'].split(",")[0])+float(vcfinfo['mutect1'].split(",")[1]))
             count[3]=count[3]+1
-
-        #Mutect2 all
         if 'mutect2' in vcfinfo.keys():
             this_variant[4]=float(vcfinfo['mutect2'].split(",")[1])/(float(vcfinfo['mutect2'].split(",")[0])+float(vcfinfo['mutect2'].split(",")[1]))
             count[4]=count[4]+1
-        #Strelka all
         if 'strelka' in vcfinfo.keys():
             this_variant[5]=float(vcfinfo['strelka'].split(",")[1])/(float(vcfinfo['strelka'].split(",")[0])+float(vcfinfo['strelka'].split(",")[1]))
             count[5]=count[5]+1
-        #Intersection of two callers
-        #AF Mutect1 & Mutect2 intersection, take mean of af
+
+        #Intersection of two callers - allele frequencies calculated as mean of reported for callers
         if 'mutect1' in vcfinfo.keys() and 'mutect2' in vcfinfo.keys():
             #this_variant[3]=float(vcfinfo['mutect1'].split(",")[1])/(float(vcfinfo['mutect1'].split(",")[0])+float(vcfinfo['mutect1'].split(",")[1]))
             #this_variant[4]=float(vcfinfo['mutect2'].split(",")[1])/(float(vcfinfo['mutect2'].split(",")[0])+float(vcfinfo['mutect2'].split(",")[1]))
             this_variant[6]=(float(vcfinfo['mutect1'].split(",")[1])/(float(vcfinfo['mutect1'].split(",")[0])+float(vcfinfo['mutect1'].split(",")[1])) + float(vcfinfo['mutect2'].split(",")[1])/(float(vcfinfo['mutect2'].split(",")[0])+float(vcfinfo['mutect2'].split(",")[1])))/2
             count[6]=count[6]+1
-        #AF Mutect1 & Strelka intersection
         if 'mutect1' in vcfinfo.keys() and 'strelka' in vcfinfo.keys():
             #this_variant[5]=float(vcfinfo['mutect1'].split(",")[1])/(float(vcfinfo['mutect1'].split(",")[0])+float(vcfinfo['mutect1'].split(",")[1]))
             #this_variant[6]=float(vcfinfo['strelka'].split(",")[1])/(float(vcfinfo['strelka'].split(",")[0])+float(vcfinfo['strelka'].split(",")[1]))
             this_variant[7]=(float(vcfinfo['mutect1'].split(",")[1])/(float(vcfinfo['mutect1'].split(",")[0])+float(vcfinfo['mutect1'].split(",")[1])) + float(vcfinfo['strelka'].split(",")[1])/(float(vcfinfo['strelka'].split(",")[0])+float(vcfinfo['strelka'].split(",")[1])))/2
             count[7]=count[7]+1
-        #AF Mutect2 & Strelka intersection
         if 'mutect2' in vcfinfo.keys() and 'strelka' in vcfinfo.keys():
             #this_variant[7]=float(vcfinfo['mutect2'].split(",")[1])/(float(vcfinfo['mutect2'].split(",")[0])+float(vcfinfo['mutect2'].split(",")[1]))
             #this_variant[8]=float(vcfinfo['strelka'].split(",")[1])/(float(vcfinfo['strelka'].split(",")[0])+float(vcfinfo['strelka'].split(",")[1]))
             this_variant[8]=(float(vcfinfo['mutect2'].split(",")[1])/(float(vcfinfo['mutect2'].split(",")[0])+float(vcfinfo['mutect2'].split(",")[1]))+float(vcfinfo['strelka'].split(",")[1])/(float(vcfinfo['strelka'].split(",")[0])+float(vcfinfo['strelka'].split(",")[1])))/2
             count[8]=count[8]+1
-        #Intersection of three callers
+        #Intersection of three callers - allele frequencies calculated as mean of reported for callers
         if 'mutect1' in vcfinfo.keys() and 'mutect2' in vcfinfo.keys() and 'strelka' in vcfinfo.keys():
             #this_variant[9]=float(vcfinfo['mutect1'].split(",")[1])/(float(vcfinfo['mutect1'].split(",")[0])+float(vcfinfo['mutect1'].split(",")[1]))
             #this_variant[10]=float(vcfinfo['mutect2'].split(",")[1])/(float(vcfinfo['mutect2'].split(",")[0])+float(vcfinfo['mutect2'].split(",")[1]))
             #this_variant[11]=float(vcfinfo['strelka'].split(",")[1])/(float(vcfinfo['strelka'].split(",")[0])+float(vcfinfo['strelka'].split(",")[1]))
             this_variant[9]=(float(vcfinfo['mutect1'].split(",")[1])/(float(vcfinfo['mutect1'].split(",")[0])+float(vcfinfo['mutect1'].split(",")[1])) + float(vcfinfo['mutect2'].split(",")[1])/(float(vcfinfo['mutect2'].split(",")[0])+float(vcfinfo['mutect2'].split(",")[1])) + float(vcfinfo['strelka'].split(",")[1])/(float(vcfinfo['strelka'].split(",")[0])+float(vcfinfo['strelka'].split(",")[1])))/3
             count[9]=count[9]+1
-        #Print out formatted allele_freq
-        #print this_variant
+
         allele_freq=np.vstack((allele_freq, this_variant))
 
 
     #Mask NaNs in allele_freq
     masked_allele_freq=np.ma.masked_equal(allele_freq,-999)
     allele_freqs_nonempty = [[y for y in row if y] for row in masked_allele_freq.T]
-
 
     #Create plots and print to PDF file
     numBoxes=10
@@ -133,13 +126,11 @@ def plot_allele_freqs(mutect1, mutect2, strelka, sample):
     plt.setp(bp['fliers'], color='red', marker='+')
     ax1.yaxis.grid(True, linestyle='-', which='major', color='lightgrey',
                alpha=0.5)
-
     # Hide these grid behind plot objects
     ax1.set_axisbelow(True)
     ax1.set_title('SNVs called in '+sample+'\n')
     ax1.set_xlabel('Call set')
     ax1.set_ylabel('Alternative allele frequency')
-
     # Set the axes ranges and axes labels
     ax1.set_xlim(0.5, numBoxes + 0.5)
     top = 1.2
@@ -147,7 +138,6 @@ def plot_allele_freqs(mutect1, mutect2, strelka, sample):
     ax1.set_ylim(bottom, top)
     xtickNames = plt.setp(ax1, xticklabels=columns)
     plt.setp(xtickNames, rotation=45, fontsize=8)
-
     #Print counts and medians above the boxes
     for tick, label in zip(x, count):
         ax1.text(tick, 1.1, 'n = '+str(label),horizontalalignment='center', size='x-small')
@@ -156,7 +146,6 @@ def plot_allele_freqs(mutect1, mutect2, strelka, sample):
         median_values.append(str(round(medline.get_ydata()[0],2)))
     for tick, label in zip(x, median_values):
         ax1.text(tick, 1, 'm = '+str(label),horizontalalignment='center', size='x-small')
-
     plt.savefig(pp, format='pdf')
     pp.close()
     print 'printed results to '+sample+'_allele_freqs.pdf'
