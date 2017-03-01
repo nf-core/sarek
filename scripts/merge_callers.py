@@ -9,10 +9,11 @@ import numpy.ma as ma
 from matplotlib.backends.backend_pdf import PdfPages
 from datetime import datetime
 import operator
+import gzip
 
 
-if len(sys.argv)<4:
-    print "Usage: %s sample_name MuTect1_vcf MuTect2_vcf Strelka_vcf \n" %sys.argv[0]
+if len(sys.argv)<5:
+    print "Usage: %s sample_name MuTect1_vcf MuTect2_vcf Strelka_vcf genomeIndex\n" %sys.argv[0]
     sys.exit(0)
 
 
@@ -21,10 +22,11 @@ def main():
     mutect1_vcf = sys.argv[2]
     mutect2_vcf = sys.argv[3]
     strelka_vcf= sys.argv[4]
+    genomeIndex=sys.argv[5]
     mutect2=parse_mutect2(mutect2_vcf)
     mutect1=parse_mutect1(mutect1_vcf)
     strelka=parse_strelka_snvs(strelka_vcf)
-    generate_output(mutect1, mutect2, strelka, sample)
+    generate_output(mutect1, mutect2, strelka, sample, genomeIndex)
     plot_allele_freqs(mutect1, mutect2, strelka, sample)
 
 
@@ -150,7 +152,7 @@ def plot_allele_freqs(mutect1, mutect2, strelka, sample):
 
 
 
-def generate_output(mutect1, mutect2, strelka, sample):
+def generate_output(mutect1, mutect2, strelka, sample, genomeIndex):
     snv_file=sample+'.snvs.vcf'
     avinput=sample+'.avinput'
     sf = open(snv_file, 'w')
@@ -170,7 +172,7 @@ def generate_output(mutect1, mutect2, strelka, sample):
     #All mutated snvs:
     all_snvs=set(mutect1['snvs'].keys()+mutect2['snvs'].keys()+strelka['snvs'].keys())
     antal=0
-    sorted_pos=sort_positions(all_snvs)
+    sorted_pos=sort_positions(all_snvs, genomeIndex)
     for pos in sorted_pos:
         #for pos in all_snvs:
         vcfinfo = {}
@@ -220,12 +222,16 @@ def generate_output(mutect1, mutect2, strelka, sample):
             print "Conflict in ref and alt alleles between callers "+called_by+" at pos "+pos
 
 
-def sort_positions(positions):
-    CHROMOSOMES = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","X","Y"]
+def sort_positions(positions, genomeIndex):
+    CHROMOSOMES = []
     selected = []
     sorted = []
-    for chr in CHROMOSOMES:
-        selected.append([])
+    with gzip.open(genomeIndex, 'r') as gi:
+        for line in gi:
+            line = line.strip()
+            info = line.split("\t")
+            CHROMOSOMES.append(info[0])
+            selected.append([])
     for pos in positions:
         chr_pos=pos.split("_")
         if chr_pos[0] in CHROMOSOMES:
