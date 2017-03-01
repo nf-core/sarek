@@ -21,8 +21,6 @@ def main():
     mutect1_vcf = sys.argv[2]
     mutect2_vcf = sys.argv[3]
     strelka_vcf= sys.argv[4]
-    #of_snvs=open(s nvs, 'w')
-    #of_indels=open(indels, 'w')
     mutect2=parse_mutect2(mutect2_vcf)
     mutect1=parse_mutect1(mutect1_vcf)
     strelka=parse_strelka_snvs(strelka_vcf)
