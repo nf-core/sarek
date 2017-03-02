@@ -7,7 +7,7 @@ nextflow run SciLifeLab/CAW --sample mysample.tsv
 
 Preprocessing will start by default, you do not have to give any additional steps, only the TSV file describing the sample (see below).
 
-In the [default config file](config/milou.config) we are defining the intervals file as well, this is used to define regions for variant call and realignment (in a scatter and gather fashion when possible). The intervals are chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs. We are ignoring the hs37d5 contig that contains concatenated decoy sequences. 
+In the [default config file](config/milou.config) we are defining the intervals file as well, this is used to define regions for variant call and realignment (in a scatter and gather fashion when possible). The intervals are chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs. We are ignoring the hs37d5 contig that contains concatenated decoy sequences.
 
 During processing steps a `trace.txt` and a `timeline.html` file is generated automatically. These files contain statistics about resources used and processes finished. If you start a new flow or restart/resume a sample, the previous version will be renamed as `trace.txt.1` and `timeline.html.1` respectively. Also, older version are renamed with incremented numbers.
 
@@ -19,8 +19,8 @@ nextflow run SciLifeLab/CAW --sample mysample.tsv
 ```
 The TSV file should have at least two tab-separated lines:
 ```
-SUBJECT_ID  XX	0	normal	1	/samples/normal_1.fastq.gz	/samples/normal_2.fastq.gz
-SUBJECT_ID  XX	1	tumor	1	/samples/tumor_1.fastq.gz	/samples/tumor_2.fastq.gz
+SUBJECT_ID  XX	0	SAMPLEIDN	1	/samples/normal_1.fastq.gz	/samples/normal_2.fastq.gz
+SUBJECT_ID  XX	1	SAMPLEIDT	1	/samples/tumor_1.fastq.gz	/samples/tumor_2.fastq.gz
 ```
 The columns are:
 1. Subject id
@@ -35,21 +35,21 @@ The columns are:
 The workflow command line is just the same as before, but the TSV contains an extra line. You can see the second column is used to distinguish normal and tumor, there is no extra identifier for relapse. You can add as many relapse samples as many you have, providing their name in the third column is different. Each will be compared to the normal
 one-by-one.
 ```
-SUBJECT_ID  XX	0	normal	1	/samples/normal_1.fastq.gz	/samples/normal_2.fastq.gz
-SUBJECT_ID  XX	1	tumor	1	/samples/tumor_1.fastq.gz	/samples/tumor_2.fastq.gz
-SUBJECT_ID  XX	1	relapse	1	/samples/relapse_1.fastq.gz	/samples/relapse_2.fastq.gz
+SUBJECT_ID  XX	0	SAMPLEIDN	1	/samples/normal_1.fastq.gz	/samples/normal_2.fastq.gz
+SUBJECT_ID  XX	1	SAMPLEIDT	1	/samples/tumor_1.fastq.gz	/samples/tumor_2.fastq.gz
+SUBJECT_ID  XX	1	SAMPLEIDR	1	/samples/relapse_1.fastq.gz	/samples/relapse_2.fastq.gz
 ```
 ### Starting from raw FASTQ - having multiple lanes (reads groups)
 
 Usually there are more read groups - sequencing lanes - for a single sequencing run, and in a flowcell different lanes have to be recalibrated separately. This is captured in the TSV file only in the following manner, adding read group numbers or IDs in the fourth column. Obviously, if you do not have relapse samples, you can leave out those lines.
 ```
-SUBJECT_ID  XX	0	normal	1	/samples/normal1_1.fastq.gz	/samples/normal1_2.fastq.gz
-SUBJECT_ID  XX	0	normal	2	/samples/normal2_1.fastq.gz	/samples/normal2_2.fastq.gz
-SUBJECT_ID  XX	1	tumor	3	/samples/tumor3_1.fastq.gz	/samples/tumor3_2.fastq.gz
-SUBJECT_ID  XX	1	tumor	4	/samples/tumor4_1.fastq.gz	/samples/tumor4_2.fastq.gz
-SUBJECT_ID  XX	1	tumor	5	/samples/tumor5_1.fastq.gz	/samples/tumor5_2.fastq.gz
-SUBJECT_ID  XX	1	relapse	7	/samples/relapse7_1.fastq.gz	/samples/relapse7_2.fastq.gz
-SUBJECT_ID  XX	1	relapse	9	/samples/relapse9_1.fastq.gz	/samples/relapse9_2.fastq.gz
+SUBJECT_ID  XX	0	SAMPLEIDN	1	/samples/normal1_1.fastq.gz	/samples/normal1_2.fastq.gz
+SUBJECT_ID  XX	0	SAMPLEIDN	2	/samples/normal2_1.fastq.gz	/samples/normal2_2.fastq.gz
+SUBJECT_ID  XX	1	SAMPLEIDT	3	/samples/tumor3_1.fastq.gz	/samples/tumor3_2.fastq.gz
+SUBJECT_ID  XX	1	SAMPLEIDT	4	/samples/tumor4_1.fastq.gz	/samples/tumor4_2.fastq.gz
+SUBJECT_ID  XX	1	SAMPLEIDT	5	/samples/tumor5_1.fastq.gz	/samples/tumor5_2.fastq.gz
+SUBJECT_ID  XX	1	SAMPLEIDR	7	/samples/relapse7_1.fastq.gz	/samples/relapse7_2.fastq.gz
+SUBJECT_ID  XX	1	SAMPLEIDR	9	/samples/relapse9_1.fastq.gz	/samples/relapse9_2.fastq.gz
 ```
 
 ### Starting from realignement
@@ -61,8 +61,8 @@ nextflow run SciLifeLab/CAW --sample mysample.tsv --steps realign
 ```
 And the corresponding TSV file should be like:
 ```
-SUBJECT_ID  XX	0	normal	/samples/normal.bam	/samples/normal.bai
-SUBJECT_ID  XX	1	tumor	/samples/tumor.bam	/samples/tumor.bai
+SUBJECT_ID  XX	0	SAMPLEIDN	/samples/SAMPLEIDN.bam	/samples/SAMPLEIDN.bai
+SUBJECT_ID  XX	1	SAMPLEIDT	/samples/SAMPLEIDT.bam	/samples/SAMPLEIDT.bai
 ```
 At the end of this step you should have recalibrated BAM files in the `Preprocessing/Recalibrated/` directory.
 
@@ -75,6 +75,6 @@ nextflow run SciLifeLab/CAW --sample mysample.tsv --steps skipPreprocessing
 ```
 And the corresponding TSV file should be like:
 ```
-SUBJECT_ID  XX	0	normal	/samples/normal.bam	/samples/normal.bai
-SUBJECT_ID  XX	1	tumor	/samples/tumor.bam	/samples/tumor.bai
+SUBJECT_ID  XX	0	SAMPLEIDN	/samples/SAMPLEIDN.bam	/samples/SAMPLEIDN.bai
+SUBJECT_ID  XX	1	SAMPLEIDT	/samples/SAMPLEIDT.bam	/samples/SAMPLEIDT.bai
 ```
