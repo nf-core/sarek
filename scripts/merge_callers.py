@@ -269,11 +269,12 @@ def parse_mutect2(vcf):
                 info=line.split("\t")
                 pos=info[0]+'_'+info[1]
                 vcfinfo=info[0]+'\t'+info[1]+'\t'+info[3]+'\t'+info[4]
-                if info[4] in ['A', 'C', 'G', 'T']:
-                    ad_tumor=info[9].split(":")[1]
-                    ad_normal=info[10].split(":")[1]
-                    ref=info[3]
-                    alt=info[4]
+                ad_tumor=info[9].split(":")[1]
+                ad_normal=info[10].split(":")[1]
+                ref=info[3]
+                alt=info[4]
+                alt_alleles = alt.split(",")
+                if len(alt_alleles) == 1:
                     #Indels
                     if len(ref)>1 or len(alt)>1:
                         indels[pos] = {}
@@ -289,7 +290,7 @@ def parse_mutect2(vcf):
                         snvs[pos]['ad']['tumor']=ad_tumor
                         snvs[pos]['ad']['normal']=ad_normal
                 else:
-                    print "WARNING: MuTect2 variant with multiple alternative alleles detected. Skipped and not used in merged callset."
+                    print "WARNING: MuTect2 variant with multiple alternative alleles detected; skipped and not used in merged callset:"
                     print line
     return {'indels':indels,'snvs':snvs}
 
@@ -303,18 +304,20 @@ def parse_mutect1(vcf):
             f1=filter1.search(line)
             if not (f1):
                 info=line.split("\t")
-                pos=info[0]+'_'+info[1]
-                vcfinfo=info[0]+'\t'+info[1]+'\t'+info[3]+'\t'+info[4]
-                if info[4] in ['A', 'C', 'G', 'T']:
-                    ad_tumor=info[9].split(":")[1]
-                    ad_normal=info[10].split(":")[1]
+                pos = info[0] + '_' + info[1]
+                vcfinfo = info[0] + '\t' + info[1] + '\t' + info[3] + '\t' + info[4]
+                ad_tumor = info[9].split(":")[1]
+                ad_normal = info[10].split(":")[1]
+                alt=info[4]
+                alt_alleles=alt.split(",")
+                if len(alt_alleles) == 1:
                     snvs[pos] = {}
                     snvs[pos]['info']=vcfinfo
                     snvs[pos]['ad'] = {}
                     snvs[pos]['ad']['tumor']=ad_tumor
                     snvs[pos]['ad']['normal']=ad_normal
                 else:
-                    print "WARNING: MuTect1 variant with multiple alternative alleles detected. Skipped and not used in merged callset."
+                    print "WARNING: MuTect1 variant with multiple alternative alleles detected; skipped and not used in merged callset."
                     print line
     return {'snvs':snvs}
 
