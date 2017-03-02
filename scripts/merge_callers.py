@@ -325,29 +325,29 @@ def parse_strelka_snvs(vcf):
             ref=info[3]
             alt=info[4]
             #Check if SNP has one alternative allele:
-            if alt in ['A','C','G','T']:
-                ad_normal = {}
-                ad_tumor = {}
-                #Using tiers 2 data
-                ad_tumor['A']=int(info[10].split(":")[4].split(",")[1])
-                ad_tumor['C']=int(info[10].split(":")[5].split(",")[1])
-                ad_tumor['G']=int(info[10].split(":")[6].split(",")[1])
-                ad_tumor['T']=int(info[10].split(":")[7].split(",")[1])
-                ad_normal['A']=int(info[9].split(":")[4].split(",")[1])
-                ad_normal['C']=int(info[9].split(":")[5].split(",")[1])
-                ad_normal['G']=int(info[9].split(":")[6].split(",")[1])
-                ad_normal['T']=int(info[9].split(":")[7].split(",")[1])
-                snvs[pos] = {}
-                snvs[pos]['info']=vcfinfo
-                snvs[pos]['ad'] = {}
-                if len(alt) > 1:
-                    print "WARNING: Strelka variant skipped because it has multiple alternative alleles:"
-                    print line
-                snvs[pos]['ad']['tumor']=str(ad_tumor[ref])+','+str(ad_tumor[alt])
-                snvs[pos]['ad']['normal']=str(ad_normal[ref])+','+str(ad_normal[alt])
-            else:
+            #if alt in ['A','C','G','T']:
+            ad_normal = {}
+            ad_tumor = {}
+            #Using tiers 2 data
+            ad_tumor['A']=int(info[10].split(":")[4].split(",")[1])
+            ad_tumor['C']=int(info[10].split(":")[5].split(",")[1])
+            ad_tumor['G']=int(info[10].split(":")[6].split(",")[1])
+            ad_tumor['T']=int(info[10].split(":")[7].split(",")[1])
+            ad_normal['A']=int(info[9].split(":")[4].split(",")[1])
+            ad_normal['C']=int(info[9].split(":")[5].split(",")[1])
+            ad_normal['G']=int(info[9].split(":")[6].split(",")[1])
+            ad_normal['T']=int(info[9].split(":")[7].split(",")[1])
+            snvs[pos] = {}
+            snvs[pos]['info']=vcfinfo
+            snvs[pos]['ad'] = {}
+            if len(alt) > 1:
                 print "WARNING: Strelka variant skipped because it has multiple alternative alleles:"
                 print line
+            snvs[pos]['ad']['tumor']=str(ad_tumor[ref])+','+str(ad_tumor[alt])
+            snvs[pos]['ad']['normal']=str(ad_normal[ref])+','+str(ad_normal[alt])
+            #else:
+            #    print "WARNING: Strelka variant skipped because it has multiple alternative alleles:"
+            #    print line
 
     return {'snvs':snvs}
 
