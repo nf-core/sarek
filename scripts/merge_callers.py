@@ -342,7 +342,8 @@ def parse_strelka_snvs(vcf):
             snvs[pos]['ad'] = {}
             alt_allele_index={"A":4,"C":5,"G":6,"T":7}
             major_alt_ad = 0
-            for a in range(alt):
+            alt_alleles=alt.split(",")
+            for a in alt_alleles:
                 if ad_tumor[alt_allele_index[a]] > major_alt_ad:
                     major_alt_ad=ad_tumor[alt_allele_index[a]]
             if len(alt) > 1:
