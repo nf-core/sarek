@@ -321,7 +321,10 @@ def parse_strelka_snvs(vcf):
         if not line.startswith("#"):
             info=line.split("\t")
             pos=info[0]+'_'+info[1]
-            vcfinfo=info[0]+'\t'+info[1]+'\t'+info[3]+'\t'+info[4]
+
+
+
+
             ref=info[3]
             alt=info[4]
             #Check if SNP has one alternative allele:
@@ -337,25 +340,32 @@ def parse_strelka_snvs(vcf):
             ad_normal['C']=int(info[9].split(":")[5].split(",")[1])
             ad_normal['G']=int(info[9].split(":")[6].split(",")[1])
             ad_normal['T']=int(info[9].split(":")[7].split(",")[1])
+
+
+
             snvs[pos] = {}
-            snvs[pos]['info']=vcfinfo
+
             snvs[pos]['ad'] = {}
 
-
-            #alt_allele_index={"A":4,"C":5,"G":6,"T":7}
-
-            major_alt_tumor = 0
-            major_alt_normal = 0
+            #Fetch the most highly abundant alternative allele in the tumor and report that one.
+            alt_allele=''
+            alt_depth_tumor = 0
+            alt_alt_normal = 0
             alt_alleles=alt.split(",")
             for allele in alt_alleles:
                 if ad_tumor[allele] > major_alt_tumor:
                     major_alt_tumor=ad_tumor[allele]
                     major_alt_normal=ad_normal[allele]
+                    alt_allele=allele
+
             if len(alt) > 1:
                 print "WARNING: Strelka variant with multiple alternative alleles detected. Using the alternative allele with highest read count:"
                 print line
                 print major_alt_normal
                 print major_alt_tumor
+
+            vcfinfo = info[0] + '\t' + info[1] + '\t' + info[3] + '\t' + alt_allele
+            snvs[pos]['info'] = vcfinfo
             snvs[pos]['ad']['tumor']=str(ad_tumor[ref])+','+str(major_alt_tumor)
             snvs[pos]['ad']['normal']=str(ad_normal[ref])+','+str(major_alt_normal)
 
