@@ -353,9 +353,9 @@ def parse_strelka_snvs(vcf):
             alt_alt_normal = 0
             alt_alleles=alt.split(",")
             for allele in alt_alleles:
-                if ad_tumor[allele] > major_alt_tumor:
-                    major_alt_tumor=ad_tumor[allele]
-                    major_alt_normal=ad_normal[allele]
+                if ad_tumor[allele] > alt_depth_tumor:
+                    alt_depth_tumor=ad_tumor[allele]
+                    alt_depth_normal=ad_normal[allele]
                     alt_allele=allele
 
             if len(alt) > 1:
@@ -366,8 +366,8 @@ def parse_strelka_snvs(vcf):
 
             vcfinfo = info[0] + '\t' + info[1] + '\t' + info[3] + '\t' + alt_allele
             snvs[pos]['info'] = vcfinfo
-            snvs[pos]['ad']['tumor']=str(ad_tumor[ref])+','+str(major_alt_tumor)
-            snvs[pos]['ad']['normal']=str(ad_normal[ref])+','+str(major_alt_normal)
+            snvs[pos]['ad']['tumor']=str(ad_tumor[ref])+','+str(alt_depth_tumor)
+            snvs[pos]['ad']['normal']=str(ad_normal[ref])+','+str(alt_depth_normalormal)
 
             print snvs[pos]['ad']['tumor']
             print snvs[pos]['ad']['normal']
