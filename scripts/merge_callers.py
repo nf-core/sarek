@@ -358,6 +358,9 @@ def parse_strelka_snvs(vcf):
                 print major_alt_tumor
             snvs[pos]['ad']['tumor']=str(ad_tumor[ref])+','+str(major_alt_tumor)
             snvs[pos]['ad']['normal']=str(ad_normal[ref])+','+str(major_alt_normal)
+
+            print snvs[pos]['ad']['tumor']
+            print snvs[pos]['ad']['normal']
             #else:
             #    print "WARNING: Strelka variant skipped because it has multiple alternative alleles:"
             #    print line
