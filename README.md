@@ -2,23 +2,24 @@
 # Cancer Analysis Workflow
 [![caw version][version-badge]][version-link] [![Licence][licence-badge]][licence-link] [![nextflow version][nextflow-badge]][nextflow-link] [![Join the chat at https://gitter.im/SciLifeLab/CAW][gitter-badge]][gitter-link]
 
-CAW is a complete open source pipeline to detect somatic variants from WGS data: it is written in Nextflow, a domain specific language for workflow building.
-We utilize GATK best practices to align, realign and recalibrate short-read data in parallel for both normal and tumor sample.
+CAW is a complete open source pipeline to detect somatic variants from WGS data: it is written in [Nextflow][nextflow-link], a domain specific language for workflow building.
+We utilize [GATK best practices](https://software.broadinstitute.org/gatk/best-practices) to align, realign and recalibrate short-read data in parallel for both normal and tumor sample.
 After these preprocessing steps, several somatic variant callers scan the resulting BAM files;
-MuTect1, MuTect2 and Strelka are used to find somatic SNVs and small indels,
-also GATK HaplotyeCaller for both the normal and the tumor sample.
-For structural variants we use Manta.
-Furthermore, we are applying ASCAT to estimate sample heterogeneity, ploidy and CNVs.
+[MuTect1](https://github.com/broadinstitute/mutect), [MuTect2](https://github.com/broadgsa/gatk-protected) and [Strelka](https://github.com/Illumina/strelka) are used to find somatic SNVs and small indels,
+also [GATK HaplotyeCaller](https://github.com/broadgsa/gatk-protected) for both the normal and the tumor sample.
+For structural variants we use [Manta](https://github.com/Illumina/manta).
+Furthermore, we are applying [ASCAT](https://github.com/Crick-CancerGenomics/ascat) to estimate sample heterogeneity, ploidy and CNVs.
 
-The software can begin the analysis either from raw FASTQ files, only from the realignment step, or directly with any subset of variant callers using recalibrated BAM files.
+The pipeline can begin the analysis either from raw FASTQ files, only from the realignment step, or directly with any subset of variant callers using recalibrated BAM files.
 At the end of the analysis the resulting VCF files are merged to facilitate further downstream processing, though results from each caller are also retained.
 The flow is capable of accommodating additional variant calling software or CNV callers.
 It is also prepared to process normal, tumor and several relapse samples.
 
-Besides variant calls, the workflow provides quality controls presented by MultiQC.
-A docker image also available for easier deployment.
+Besides variant calls, the workflow provides quality controls presented by [MultiQC](https://github.com/ewels/MultiQC/).
 
-Nextflow Cancer Analysis Workflow developed at the [National Genomics Infastructure](https://ngisweden.scilifelab.se/)
+[Docker images](https://github.com/MaxUlysse/CAW-containers) are also available for easier deployment.
+
+Cancer Analysis Workflow developed at the [National Genomics Infastructure](https://ngisweden.scilifelab.se/)
 at [SciLifeLab Stockholm](https://www.scilifelab.se/platforms/ngi/), Sweden.
 
 For further information/help contact: maxime.garcia@scilifelab.se or szilveszter.juhos@scilifelab.se, or join the gitter chat: [gitter.im/SciLifeLab/CAW][gitter-link]
