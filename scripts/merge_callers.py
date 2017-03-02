@@ -367,7 +367,7 @@ def parse_strelka_snvs(vcf):
             vcfinfo = info[0] + '\t' + info[1] + '\t' + info[3] + '\t' + alt_allele
             snvs[pos]['info'] = vcfinfo
             snvs[pos]['ad']['tumor']=str(ad_tumor[ref])+','+str(alt_depth_tumor)
-            snvs[pos]['ad']['normal']=str(ad_normal[ref])+','+str(alt_depth_normalormal)
+            snvs[pos]['ad']['normal']=str(ad_normal[ref])+','+str(alt_depth_normal)
 
             print snvs[pos]['ad']['tumor']
             print snvs[pos]['ad']['normal']
