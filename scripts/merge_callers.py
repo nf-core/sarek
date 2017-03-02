@@ -9,8 +9,6 @@ import numpy.ma as ma
 from matplotlib.backends.backend_pdf import PdfPages
 from datetime import datetime
 import operator
-import gzip
-
 
 if len(sys.argv)<5:
     print "Usage: %s sample_name MuTect1_vcf MuTect2_vcf Strelka_vcf genomeIndex\n" %sys.argv[0]
@@ -226,12 +224,11 @@ def sort_positions(positions, genomeIndex):
     CHROMOSOMES = []
     selected = []
     sorted = []
-    with gzip.open(genomeIndex, 'r') as gi:
-        for line in gi:
-            line = line.strip()
-            info = line.split("\t")
-            CHROMOSOMES.append(info[0])
-            selected.append([])
+    for line in open(genomeIndex, 'r'):
+        line = line.strip()
+        info = line.split("\t")
+        CHROMOSOMES.append(info[0])
+        selected.append([])
     for pos in positions:
         chr_pos=pos.split("_")
         if chr_pos[0] in CHROMOSOMES:
