@@ -354,8 +354,8 @@ def parse_strelka_snvs(vcf):
             if len(alt) > 1:
                 print "WARNING: Strelka variant with multiple alternative alleles detected. Using the alternative allele with highest read count:"
                 print line
-            snvs[pos]['ad']['tumor']=str(ad_tumor[ref])+','+str(major_alt_ad)
-            snvs[pos]['ad']['normal']=str(ad_normal[ref])+','+str(ad_normal[alt])
+            snvs[pos]['ad']['tumor']=str(ad_tumor[ref])+','+str(major_alt_tumor)
+            snvs[pos]['ad']['normal']=str(ad_normal[ref])+','+str(major_alt_normal)
             #else:
             #    print "WARNING: Strelka variant skipped because it has multiple alternative alleles:"
             #    print line
