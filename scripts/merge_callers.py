@@ -301,13 +301,17 @@ def parse_mutect1(vcf):
                 info=line.split("\t")
                 pos=info[0]+'_'+info[1]
                 vcfinfo=info[0]+'\t'+info[1]+'\t'+info[3]+'\t'+info[4]
-                ad_tumor=info[9].split(":")[1]
-                ad_normal=info[10].split(":")[1]
-                snvs[pos] = {}
-                snvs[pos]['info']=vcfinfo
-                snvs[pos]['ad'] = {}
-                snvs[pos]['ad']['tumor']=ad_tumor
-                snvs[pos]['ad']['normal']=ad_normal
+                if info[4] in ['A', 'C', 'G', 'T']:
+                    ad_tumor=info[9].split(":")[1]
+                    ad_normal=info[10].split(":")[1]
+                    snvs[pos] = {}
+                    snvs[pos]['info']=vcfinfo
+                    snvs[pos]['ad'] = {}
+                    snvs[pos]['ad']['tumor']=ad_tumor
+                    snvs[pos]['ad']['normal']=ad_normal
+                else:
+                    print "WARNING: MuTect1 variant skipped because it has multiple alternative alleles:"
+                    print line
     return {'snvs':snvs}
 
 def parse_strelka_snvs(vcf):
@@ -336,6 +340,9 @@ def parse_strelka_snvs(vcf):
                 snvs[pos] = {}
                 snvs[pos]['info']=vcfinfo
                 snvs[pos]['ad'] = {}
+                if len(alt) > 1:
+                    print "WARNING: Strelka variant skipped because it has multiple alternative alleles:"
+                    print line
                 snvs[pos]['ad']['tumor']=str(ad_tumor[ref])+','+str(ad_tumor[alt])
                 snvs[pos]['ad']['normal']=str(ad_normal[ref])+','+str(ad_normal[alt])
             else:
