@@ -17,7 +17,7 @@ It is also prepared to process normal, tumor and several relapse samples.
 
 Besides variant calls, the workflow provides quality controls presented by [MultiQC](https://github.com/ewels/MultiQC/).
 
-[Docker images](https://github.com/MaxUlysse/CAW-containers) are also available for easier deployment.
+[Docker containers](https://github.com/MaxUlysse/CAW-containers) are also available for easier deployment.
 
 Cancer Analysis Workflow developed at the [National Genomics Infastructure](https://ngisweden.scilifelab.se/)
 at [SciLifeLab Stockholm](https://www.scilifelab.se/platforms/ngi/), Sweden.
