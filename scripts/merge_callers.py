@@ -1,14 +1,15 @@
 #! /usr/bin/env python
 
-import sys, re, math, random
+import re
+import sys
+
 import matplotlib
+
 matplotlib.use('pdf')
 import matplotlib.pyplot as plt
 import numpy as np
-import numpy.ma as ma
 from matplotlib.backends.backend_pdf import PdfPages
 from datetime import datetime
-import operator
 
 if len(sys.argv)<5:
     print "Usage: %s sample_name MuTect1_vcf MuTect2_vcf Strelka_vcf genomeIndex\n" %sys.argv[0]
@@ -272,20 +273,25 @@ def parse_mutect2(vcf):
                 ad_normal=info[10].split(":")[1]
                 ref=info[3]
                 alt=info[4]
-                #Indels
-                if len(ref)>1 or len(alt)>1:
-                    indels[pos] = {}
-                    indels[pos]['info']=vcfinfo
-                    indels[pos]['ad'] = {}
-                    indels[pos]['ad']['tumor']=ad_tumor
-                    indels[pos]['ad']['normal']=ad_normal
-                #snvs
+                alt_alleles = alt.split(",")
+                if len(alt_alleles) == 1:
+                    #Indels
+                    if len(ref)>1 or len(alt)>1:
+                        indels[pos] = {}
+                        indels[pos]['info']=vcfinfo
+                        indels[pos]['ad'] = {}
+                        indels[pos]['ad']['tumor']=ad_tumor
+                        indels[pos]['ad']['normal']=ad_normal
+                    #snvs
+                    else:
+                        snvs[pos] = {}
+                        snvs[pos]['info']=vcfinfo
+                        snvs[pos]['ad'] = {}
+                        snvs[pos]['ad']['tumor']=ad_tumor
+                        snvs[pos]['ad']['normal']=ad_normal
                 else:
-                    snvs[pos] = {}
-                    snvs[pos]['info']=vcfinfo
-                    snvs[pos]['ad'] = {}
-                    snvs[pos]['ad']['tumor']=ad_tumor
-                    snvs[pos]['ad']['normal']=ad_normal
+                    print "WARNING: MuTect2 variant with multiple alternative alleles detected; skipped and not used in merged callset:"
+                    print line
     return {'indels':indels,'snvs':snvs}
 
 
@@ -298,15 +304,21 @@ def parse_mutect1(vcf):
             f1=filter1.search(line)
             if not (f1):
                 info=line.split("\t")
-                pos=info[0]+'_'+info[1]
-                vcfinfo=info[0]+'\t'+info[1]+'\t'+info[3]+'\t'+info[4]
-                ad_tumor=info[9].split(":")[1]
-                ad_normal=info[10].split(":")[1]
-                snvs[pos] = {}
-                snvs[pos]['info']=vcfinfo
-                snvs[pos]['ad'] = {}
-                snvs[pos]['ad']['tumor']=ad_tumor
-                snvs[pos]['ad']['normal']=ad_normal
+                pos = info[0] + '_' + info[1]
+                vcfinfo = info[0] + '\t' + info[1] + '\t' + info[3] + '\t' + info[4]
+                ad_tumor = info[9].split(":")[1]
+                ad_normal = info[10].split(":")[1]
+                alt=info[4]
+                alt_alleles=alt.split(",")
+                if len(alt_alleles) == 1:
+                    snvs[pos] = {}
+                    snvs[pos]['info']=vcfinfo
+                    snvs[pos]['ad'] = {}
+                    snvs[pos]['ad']['tumor']=ad_tumor
+                    snvs[pos]['ad']['normal']=ad_normal
+                else:
+                    print "WARNING: MuTect1 variant with multiple alternative alleles detected; skipped and not used in merged callset."
+                    print line
     return {'snvs':snvs}
 
 def parse_strelka_snvs(vcf):
@@ -316,7 +328,6 @@ def parse_strelka_snvs(vcf):
         if not line.startswith("#"):
             info=line.split("\t")
             pos=info[0]+'_'+info[1]
-            vcfinfo=info[0]+'\t'+info[1]+'\t'+info[3]+'\t'+info[4]
             ref=info[3]
             alt=info[4]
             ad_normal = {}
@@ -331,10 +342,26 @@ def parse_strelka_snvs(vcf):
             ad_normal['G']=int(info[9].split(":")[6].split(",")[1])
             ad_normal['T']=int(info[9].split(":")[7].split(",")[1])
             snvs[pos] = {}
-            snvs[pos]['info']=vcfinfo
             snvs[pos]['ad'] = {}
-            snvs[pos]['ad']['tumor']=str(ad_tumor[ref])+','+str(ad_tumor[alt])
-            snvs[pos]['ad']['normal']=str(ad_normal[ref])+','+str(ad_normal[alt])
+            # If several alternative alleles are detected in the tumor, report the most highly abundant one and print a warning message.
+            alt_allele=''
+            alt_depth_tumor = 0
+            alt_alt_normal = 0
+            alt_alleles=alt.split(",")
+            for allele in alt_alleles:
+                if ad_tumor[allele] > alt_depth_tumor:
+                    alt_depth_tumor=ad_tumor[allele]
+                    alt_depth_normal=ad_normal[allele]
+                    alt_allele=allele
+            if len(alt) > 1:
+                print "WARNING: Strelka variant with multiple alternative alleles detected. Reporting the alternative allele with highest read count:"
+                print line
+
+            vcfinfo = info[0] + '\t' + info[1] + '\t' + info[3] + '\t' + alt_allele
+            snvs[pos]['info'] = vcfinfo
+            snvs[pos]['ad']['tumor']=str(ad_tumor[ref])+','+str(alt_depth_tumor)
+            snvs[pos]['ad']['normal']=str(ad_normal[ref])+','+str(alt_depth_normal)
+
     return {'snvs':snvs}
 
 main()
