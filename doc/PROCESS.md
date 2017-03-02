@@ -28,3 +28,6 @@ Several processes are run within the workflow. We divide them for the moment int
  - MarkDuplicates - Mark Duplicates [Stable]
  - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files [Stable]
  - RunMultiQC - Run MultiQC for report and QC [Stable]
+
+ ## Annotation:
+  - snpEff - Run snpEff on vcf files [Working]
