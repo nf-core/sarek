@@ -340,10 +340,11 @@ def parse_strelka_snvs(vcf):
             snvs[pos] = {}
             snvs[pos]['info']=vcfinfo
             snvs[pos]['ad'] = {}
+            alt_allele_index={"A":4,"C":5,"G":6,"T":7}
             major_alt_ad = 0
-            for a in range(0,(len(alt)-1)):
-                if int(info[9].split(":")[a].split(",")[1]) > major_alt_ad:
-                    major_alt_ad=int(info[9].split(":")[a].split(",")[1])
+            for a in range(alt):
+                if ad_tumor[alt_allele_index[a]] > major_alt_ad:
+                    major_alt_ad=ad_tumor[alt_allele_index[a]]
             if len(alt) > 1:
                 print "WARNING: Strelka variant with multiple alternative alleles detected. Using the alternative allele with highest read count:"
                 print line
