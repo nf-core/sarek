@@ -43,9 +43,10 @@ vim: syntax=groovy
  - ConcatVCF - Merge results from HaplotypeCaller, MuTect1, MuTect2 and VarDict
  - RunStrelka - Run Strelka for Variant Calling
  - RunManta - Run Manta for Structural Variant Calling
- - RunAlleleCount - Run AlleleCount to prepare for Ascat
- - RunConvertAlleleCounts - Run convertAlleleCounts to prepare for Ascat
- - RunAscat - Run Ascat for CNV
+ - RunAlleleCount - Run AlleleCount to prepare for ASCAT
+ - RunConvertAlleleCounts - Run convertAlleleCounts to prepare for ASCAT
+ - RunAscat - Run ASCAT for CNV
+ - RunSnpeff - Run snpEff for annotation of vcf files
  - RunMultiQC - Run MultiQC for report and QC
 ================================================================================
 =                           C O N F I G U R A T I O N                          =
@@ -70,8 +71,10 @@ switch (params) {
     version_message(version, revision)
     exit 1
 
-  // Arguments handling: Getting list of steps from comma-separated strings to choose which processes to run or to skip
-  // Borrowed from https://github.com/guigolab/grape-nf and https://github.com/NBISweden/wgs-structvar
+  // Arguments handling: Getting list of steps from comma-separated strings
+  // Then choose which processes to run or to skip
+  // Borrowed from https://github.com/guigolab/grape-nf
+  // and https://github.com/NBISweden/wgs-structvar
   case {params.steps} :
     workflowSteps = params.steps.split(',').collect {it.trim()}
     break
@@ -546,7 +549,7 @@ process RunSamtoolsStats {
     script:
     """
     samtools stats $bam > ${bam}.samtools.stats.out
-    """	
+    """
 }
 
 if ('MultiQC' in workflowSteps) {
@@ -750,7 +753,7 @@ process RunMutect1 {
     file cosmicIndex from file(referenceMap['cosmicIndex'])
 
   output:
-    set val("MuTect1"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf") into mutect1Output
+    set val("MuTect1"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect1Output
 
   when: 'MuTect1' in workflowSteps
 
@@ -768,8 +771,8 @@ process RunMutect1 {
   --disable_auto_index_creation_and_locking_when_reading_rods \
   -XL hs37d5 \
   -XL NC_007605 \
-  --out ${gen_int}_${idSampleNormal}_${idSampleTumor}.call_stats.out \
-  --vcf ${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf
+  --out ${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.call_stats.out \
+  --vcf ${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf
   """
 }
 
@@ -793,11 +796,11 @@ process RunMutect2 {
     file cosmicIndex from file(referenceMap['cosmicIndex'])
 
   output:
-    set val("MuTect2"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf") into mutect2Output
+    set val("MuTect2"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2Output
 
   when: 'MuTect2' in workflowSteps
 
-  // 
+  //
   // -U ALLOW_SEQ_DICT_INCOMPATIBILITY removed as BAMs generated using the new Picard
   // should be fine
   //
@@ -815,7 +818,7 @@ process RunMutect2 {
   -L \"$genInt\" \
   -XL hs37d5 \
   -XL NC_007605 \
-  -o ${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf
+  -o ${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf
   """
 
 }
@@ -834,7 +837,7 @@ process RunFreeBayes {
     file genomeFile from file(referenceMap['genomeFile'])
 
   output:
-    set val("FreeBayes"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf") into freebayesOutput
+    set val("FreeBayes"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into freebayesOutput
 
   when: 'FreeBayes' in workflowSteps
 
@@ -848,7 +851,7 @@ process RunFreeBayes {
     -C 2 \
     -r \"$genInt\" \
     $bamTumor \
-    $bamNormal > ${gen_int}_${idSampleNormal}_${idSampleTumor}.vcf
+    $bamNormal > ${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf
   """
 }
 
@@ -868,7 +871,7 @@ process RunVardict {
     file genomeDict from file(referenceMap['genomeDict'])
 
   output:
-    set val("VarDict"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleNormal}_${idSampleTumor}"), file("${gen_int}_${idSampleNormal}_${idSampleTumor}.out") into vardictOutput
+    set val("VarDict"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.out") into vardictOutput
 
   when: 'VarDict' in workflowSteps
 
@@ -880,7 +883,7 @@ process RunVardict {
   -b "$bamTumor|$bamNormal" \
   -z 1 -F 0x500 \
   -c 1 -S 2 -E 3 -g 4 \
-  -R $genInt > ${gen_int}_${idSampleNormal}_${idSampleTumor}.out
+  -R $genInt > ${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.out
   """
 }
 
@@ -917,7 +920,7 @@ process ConcatVCF {
 
   script:
   vcfFiles = vcFiles.collect{"-V $it"}.join(' ')
-  outputFile = (variantCaller == 'HaplotypeCaller' ? "${variantCaller}_${idPatient}_${idSampleNormal}.vcf" : "${variantCaller}_${idPatient}_${idSampleNormal}_${idSampleTumor}.vcf")
+  outputFile = (variantCaller == 'HaplotypeCaller' ? "${variantCaller}_${idSampleNormal}.vcf" : "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf")
 
   if (variantCaller == 'VarDict')
     """
@@ -926,7 +929,7 @@ process ConcatVCF {
     done
     ${referenceMap['vardictHome']}/VarDict/var2vcf_somatic.pl \
     -f 0.01 \
-    -N "${idPatient}_${idSampleNormal}_${idSampleTumor}" testsomatic.out > $outputFile
+    -N "${idSampleTumor}_vs_${idSampleNormal}" testsomatic.out > $outputFile
     """
 
   else
@@ -979,12 +982,11 @@ process RunStrelka {
 
   cd ..
 
-  mv strelka/results/all.somatic.indels.vcf ${idSampleNormal}_${idSampleTumor}_all_somatic_indels.vcf
-  mv strelka/results/all.somatic.snvs.vcf ${idSampleNormal}_${idSampleTumor}_all_somatic_snvs.vcf
-  mv strelka/results/passed.somatic.indels.vcf ${idSampleNormal}_${idSampleTumor}_passed_somatic_indels.vcf
-  mv strelka/results/passed.somatic.snvs.vcf ${idSampleNormal}_${idSampleTumor}_passed_somatic_snvs.vcf
+  mv strelka/results/all.somatic.indels.vcf Strelka_${idSampleTumor}_vs_${idSampleNormal}_all_somatic_indels.vcf
+  mv strelka/results/all.somatic.snvs.vcf Strelka_${idSampleTumor}_vs_${idSampleNormal}_all_somatic_snvs.vcf
+  mv strelka/results/passed.somatic.indels.vcf Strelka_${idSampleTumor}_vs_${idSampleNormal}_passed_somatic_indels.vcf
+  mv strelka/results/passed.somatic.snvs.vcf Strelka_${idSampleTumor}_vs_${idSampleNormal}_passed_somatic_snvs.vcf
   """
-
 }
 
 if ('Strelka' in workflowSteps) {
@@ -1016,10 +1018,10 @@ process RunManta {
 
   configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference $genomeFile --runDir MantaDir
   python MantaDir/runWorkflow.py -m local -j $task.cpus
-  gunzip -c MantaDir/results/variants/somaticSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.somaticSV.vcf
-  gunzip -c MantaDir/results/variants/candidateSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSV.vcf
-  gunzip -c MantaDir/results/variants/diploidSV.vcf.gz > ${idSampleNormal}_${idSampleTumor}.diploidSV.vcf
-  gunzip -c MantaDir/results/variants/candidateSmallIndels.vcf.gz > ${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf
+  gunzip -c MantaDir/results/variants/somaticSV.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf
+  gunzip -c MantaDir/results/variants/candidateSV.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf
+  gunzip -c MantaDir/results/variants/diploidSV.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf
+  gunzip -c MantaDir/results/variants/candidateSmallIndels.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf
   """
 }
 
@@ -1147,10 +1149,7 @@ process RunAscat {
   #Plot the segmented data
   ascat.plotSegmentedData(ascat.bc)
   #Run ASCAT to fit every tumor to a model, inferring ploidy, normal cell contamination, and discrete copy numbers
-  #Default gamma=0.5
   ascat.output <- ascat.runAscat(ascat.bc)
-  #Suggestion from Johan Staaf, use gamma=0.8 for NGS data:
-  #ascat.output <- ascat.runAscat(ascat.bc, gamma=0.8)
   #str(ascat.output)
   #plot(sort(ascat.output\$aberrantcellfraction))
   #plot(density(ascat.output\$ploidy))
@@ -1180,29 +1179,58 @@ if ('Ascat' in workflowSteps) {
 //     """
 // }
 
-// process RunSnpeff {
+// process MergeVCF {
 //   tag {idPatient + "-" + idSample}
-//
-//   publishDir directoryMap['snpeff'], mode: 'copy'
 //
 //   input:
 //     set idPatient, gender, status, idSample, file(vcf) from ???
 //
 //   output:
-//     file ("???") into vcfReports
+//     set idPatient, gender, status, idSample, file ("???") into vcfMerged
+//
+//     'MuTect1' in workflowSteps || 'MuTect2' in workflowSteps
 //
 //     script:
 //     """
+//
 //     """
 // }
 
+vcfMerged = Channel.create()
+vcfNotMerged = Channel.create()
 
+vcfConcatenated
+  .choice(vcfMerged, vcfNotMerged) {it[0] == 'MuTect1' ? 0 : 1}
+
+process RunSnpeff {
+  tag {variantCaller + "-" + idPatient + "-" + idSampleTumor}
+
+  publishDir directoryMap['snpEff'], mode: 'copy'
+
+  input:
+    set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file(vcf) from vcfMerged
+
+  output:
+    set file("${vcf.baseName}.ann.vcf"), file("snpEff_${vcf.baseName}.html"), file("snpEff_${vcf.baseName}.genes.txt") into vcfReports
+
+    'MuTect1' in workflowSteps
+
+    script:
+    """
+    java -Xmx${task.memory.toGiga()}g \
+    -jar \$SNPEFF_HOME/snpEff.jar \
+    ${params.snpeffDb} \
+    -v -cancer \
+    ${vcf} \
+    -stats snpEff_${vcf.baseName}.html
+    > ${vcf.baseName}.ann.vcf
+    """
+}
 
 reportsForMultiQC = Channel.create()
 
 if ('MultiQC' in workflowSteps) {
-  reportsForMultiQC = fastQCreport.mix(markDuplicatesReport,recalibratedBamReports).flatten().toList()
-  // reportsForMultiQC = fastQCreport.mix(markDuplicatesReport,recalibratedBamReports,vcfReports).flatten().toList()
+  reportsForMultiQC = fastQCreport.mix(markDuplicatesReport,recalibratedBamReports,vcfReports).flatten().toList()
   if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
 }
 
@@ -1299,7 +1327,8 @@ def defineDirectoryMap() {
     'MuTect1'          : 'VariantCalling/MuTect1',
     'MuTect2'          : 'VariantCalling/MuTect2',
     'Strelka'          : 'VariantCalling/Strelka',
-    'VarDict'          : 'VariantCalling/VarDict'
+    'VarDict'          : 'VariantCalling/VarDict',
+    'snpEff'           : 'Annotation/snpEff'
   ]
 }
 
