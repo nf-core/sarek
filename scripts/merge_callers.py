@@ -269,24 +269,28 @@ def parse_mutect2(vcf):
                 info=line.split("\t")
                 pos=info[0]+'_'+info[1]
                 vcfinfo=info[0]+'\t'+info[1]+'\t'+info[3]+'\t'+info[4]
-                ad_tumor=info[9].split(":")[1]
-                ad_normal=info[10].split(":")[1]
-                ref=info[3]
-                alt=info[4]
-                #Indels
-                if len(ref)>1 or len(alt)>1:
-                    indels[pos] = {}
-                    indels[pos]['info']=vcfinfo
-                    indels[pos]['ad'] = {}
-                    indels[pos]['ad']['tumor']=ad_tumor
-                    indels[pos]['ad']['normal']=ad_normal
-                #snvs
+                if info[4] in ['A', 'C', 'G', 'T']:
+                    ad_tumor=info[9].split(":")[1]
+                    ad_normal=info[10].split(":")[1]
+                    ref=info[3]
+                    alt=info[4]
+                    #Indels
+                    if len(ref)>1 or len(alt)>1:
+                        indels[pos] = {}
+                        indels[pos]['info']=vcfinfo
+                        indels[pos]['ad'] = {}
+                        indels[pos]['ad']['tumor']=ad_tumor
+                        indels[pos]['ad']['normal']=ad_normal
+                    #snvs
+                    else:
+                        snvs[pos] = {}
+                        snvs[pos]['info']=vcfinfo
+                        snvs[pos]['ad'] = {}
+                        snvs[pos]['ad']['tumor']=ad_tumor
+                        snvs[pos]['ad']['normal']=ad_normal
                 else:
-                    snvs[pos] = {}
-                    snvs[pos]['info']=vcfinfo
-                    snvs[pos]['ad'] = {}
-                    snvs[pos]['ad']['tumor']=ad_tumor
-                    snvs[pos]['ad']['normal']=ad_normal
+                    print "WARNING: MuTect2 variant with multiple alternative alleles detected. Skipped and not used in merged callset."
+                    print line
     return {'indels':indels,'snvs':snvs}
 
 
@@ -310,7 +314,7 @@ def parse_mutect1(vcf):
                     snvs[pos]['ad']['tumor']=ad_tumor
                     snvs[pos]['ad']['normal']=ad_normal
                 else:
-                    print "WARNING: MuTect1 variant skipped because it has multiple alternative alleles:"
+                    print "WARNING: MuTect1 variant with multiple alternative alleles detected. Skipped and not used in merged callset."
                     print line
     return {'snvs':snvs}
 
@@ -321,14 +325,8 @@ def parse_strelka_snvs(vcf):
         if not line.startswith("#"):
             info=line.split("\t")
             pos=info[0]+'_'+info[1]
-
-
-
-
             ref=info[3]
             alt=info[4]
-            #Check if SNP has one alternative allele:
-            #if alt in ['A','C','G','T']:
             ad_normal = {}
             ad_tumor = {}
             #Using tiers 2 data
@@ -340,14 +338,9 @@ def parse_strelka_snvs(vcf):
             ad_normal['C']=int(info[9].split(":")[5].split(",")[1])
             ad_normal['G']=int(info[9].split(":")[6].split(",")[1])
             ad_normal['T']=int(info[9].split(":")[7].split(",")[1])
-
-
-
             snvs[pos] = {}
-
             snvs[pos]['ad'] = {}
-
-            #Fetch the most highly abundant alternative allele in the tumor and report that one.
+            # If several alternative alleles are detected in the tumor, report the most highly abundant one and print a warning message.
             alt_allele=''
             alt_depth_tumor = 0
             alt_alt_normal = 0
@@ -357,23 +350,14 @@ def parse_strelka_snvs(vcf):
                     alt_depth_tumor=ad_tumor[allele]
                     alt_depth_normal=ad_normal[allele]
                     alt_allele=allele
-
             if len(alt) > 1:
-                print "WARNING: Strelka variant with multiple alternative alleles detected. Using the alternative allele with highest read count:"
+                print "WARNING: Strelka variant with multiple alternative alleles detected. Reporting the alternative allele with highest read count:"
                 print line
-                print alt_depth_tumor
-                print alt_depth_normal
 
             vcfinfo = info[0] + '\t' + info[1] + '\t' + info[3] + '\t' + alt_allele
             snvs[pos]['info'] = vcfinfo
             snvs[pos]['ad']['tumor']=str(ad_tumor[ref])+','+str(alt_depth_tumor)
             snvs[pos]['ad']['normal']=str(ad_normal[ref])+','+str(alt_depth_normal)
-
-            print snvs[pos]['ad']['tumor']
-            print snvs[pos]['ad']['normal']
-            #else:
-            #    print "WARNING: Strelka variant skipped because it has multiple alternative alleles:"
-            #    print line
 
     return {'snvs':snvs}
 
