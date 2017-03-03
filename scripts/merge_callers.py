@@ -243,6 +243,7 @@ def sort_positions(positions, genomeIndex):
 def parse_mutect2(vcf):
     snvs = {}
     indels = {}
+    datacolumn = {}
     for line in open(vcf, 'r'):
         line=line.strip()
         # Extract column in vcf file for "TUMOR" and "NORMAL"
@@ -305,7 +306,6 @@ def parse_mutect2(vcf):
 
 def parse_mutect1(vcf, tumorid, normalid):
     snvs = {}
-
     datacolumn = {}
     for line in open(vcf, 'r'):
         line=line.strip()
@@ -342,6 +342,7 @@ def parse_mutect1(vcf, tumorid, normalid):
 
 def parse_strelka_snvs(vcf):
     snvs = {}
+    datacolumn = {}
     for line in open(vcf, 'r'):
         line=line.strip()
         # Extract column in vcf file for "TUMOR" and "NORMAL"
