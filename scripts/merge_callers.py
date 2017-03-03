@@ -21,7 +21,7 @@ def main():
     mutect2_vcf = sys.argv[4]
     strelka_vcf= sys.argv[5]
     genomeIndex=sys.argv[6]
-    mutect2=parse_mutect2(mutect2_vcf, tumorid, normalid)
+    mutect2=parse_mutect2(mutect2_vcf)
     mutect1=parse_mutect1(mutect1_vcf,tumorid,normalid)
     strelka=parse_strelka_snvs(strelka_vcf)
     generate_output(mutect1, mutect2, strelka, tumorid, normalid,genomeIndex)
@@ -240,11 +240,20 @@ def sort_positions(positions, genomeIndex):
     return sorted
 
 
-def parse_mutect2(vcf, tumorid, normalid):
+def parse_mutect2(vcf):
     snvs = {}
     indels = {}
     for line in open(vcf, 'r'):
         line=line.strip()
+        # Extract column in vcf file for "TUMOR" and "NORMAL"
+        if line.startswith("#CHROM"):
+            info = line.split("\t")
+            for col in range(9, len(info)):
+                if info[col] in ['TUMOR', 'NORMAL']:
+                    datacolumn[info[col]] = col
+                else:
+                    print "ERROR: MuTect2 VCF file does not contain column for TUMOR or NORMAL"
+                    break
         if not line.startswith("#"):
             filter1=re.compile('alt_allele_in_normal')
             filter2=re.compile('clustered_events')
@@ -268,8 +277,8 @@ def parse_mutect2(vcf, tumorid, normalid):
                 info=line.split("\t")
                 pos=info[0]+'_'+info[1]
                 vcfinfo=info[0]+'\t'+info[1]+'\t'+info[3]+'\t'+info[4]
-                ad_tumor=info[9].split(":")[1]
-                ad_normal=info[10].split(":")[1]
+                ad_tumor=info[datacolumn['TUMOR']].split(":")[1]
+                ad_normal=info[datacolumn['NORMAL']].split(":")[1]
                 ref=info[3]
                 alt=info[4]
                 alt_alleles = alt.split(",")
@@ -335,6 +344,15 @@ def parse_strelka_snvs(vcf):
     snvs = {}
     for line in open(vcf, 'r'):
         line=line.strip()
+        # Extract column in vcf file for "TUMOR" and "NORMAL"
+        if line.startswith("#CHROM"):
+            info = line.split("\t")
+            for col in range(9, len(info)):
+                if info[col] in ['TUMOR', 'NORMAL']:
+                    datacolumn[info[col]] = col
+                else:
+                    print "ERROR: Strelka VCF file does not contain column for TUMOR or NORMAL"
+                    break
         if not line.startswith("#"):
             info=line.split("\t")
             pos=info[0]+'_'+info[1]
@@ -343,14 +361,14 @@ def parse_strelka_snvs(vcf):
             ad_normal = {}
             ad_tumor = {}
             #Using tiers 2 data
-            ad_tumor['A']=int(info[10].split(":")[4].split(",")[1])
-            ad_tumor['C']=int(info[10].split(":")[5].split(",")[1])
-            ad_tumor['G']=int(info[10].split(":")[6].split(",")[1])
-            ad_tumor['T']=int(info[10].split(":")[7].split(",")[1])
-            ad_normal['A']=int(info[9].split(":")[4].split(",")[1])
-            ad_normal['C']=int(info[9].split(":")[5].split(",")[1])
-            ad_normal['G']=int(info[9].split(":")[6].split(",")[1])
-            ad_normal['T']=int(info[9].split(":")[7].split(",")[1])
+            ad_normal['A']=int(info[datacolumn['NORMAL']].split(":")[4].split(",")[1])
+            ad_normal['C']=int(info[datacolumn['NORMAL']].split(":")[5].split(",")[1])
+            ad_normal['G']=int(info[datacolumn['NORMAL']].split(":")[6].split(",")[1])
+            ad_normal['T']=int(info[datacolumn['NORMAL']].split(":")[7].split(",")[1])
+            ad_tumor['A'] = int(info[datacolumn['TUMOR']].split(":")[4].split(",")[1])
+            ad_tumor['C'] = int(info[datacolumn['TUMOR']].split(":")[5].split(",")[1])
+            ad_tumor['G'] = int(info[datacolumn['TUMOR']].split(":")[6].split(",")[1])
+            ad_tumor['T'] = int(info[datacolumn['TUMOR']].split(":")[7].split(",")[1])
             snvs[pos] = {}
             snvs[pos]['ad'] = {}
             # If several alternative alleles are detected in the tumor, report the most highly abundant one and print a warning message.
