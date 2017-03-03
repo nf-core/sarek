@@ -2,34 +2,33 @@
 
 import re
 import sys
-
 import matplotlib
-
 matplotlib.use('pdf')
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.backends.backend_pdf import PdfPages
 from datetime import datetime
 
-if len(sys.argv)<5:
-    print "Usage: %s sample_name MuTect1_vcf MuTect2_vcf Strelka_vcf genomeIndex\n" %sys.argv[0]
+if len(sys.argv)<7:
+    print "Usage: %s tumorid, normalid, MuTect1_vcf MuTect2_vcf Strelka_vcf genomeIndex\n" %sys.argv[0]
     sys.exit(0)
 
 
 def main():
-    sample = sys.argv[1]
-    mutect1_vcf = sys.argv[2]
-    mutect2_vcf = sys.argv[3]
-    strelka_vcf= sys.argv[4]
-    genomeIndex=sys.argv[5]
+    tumorid = sys.argv[1]
+    normalid = sys.argv[2]
+    mutect1_vcf = sys.argv[3]
+    mutect2_vcf = sys.argv[4]
+    strelka_vcf= sys.argv[5]
+    genomeIndex=sys.argv[6]
     mutect2=parse_mutect2(mutect2_vcf)
-    mutect1=parse_mutect1(mutect1_vcf)
+    mutect1=parse_mutect1(mutect1_vcf,tumorid,normalid)
     strelka=parse_strelka_snvs(strelka_vcf)
-    generate_output(mutect1, mutect2, strelka, sample, genomeIndex)
-    plot_allele_freqs(mutect1, mutect2, strelka, sample)
+    generate_output(mutect1, mutect2, strelka, tumorid, normalid,genomeIndex)
+    plot_allele_freqs(mutect1, mutect2, strelka, tumorid)
 
 
-def plot_allele_freqs(mutect1, mutect2, strelka, sample):
+def plot_allele_freqs(mutect1, mutect2, strelka, tumorid):
     #columns =  ['MuTect1','MuTect2', 'Strelka', 'M1M2I_M1','M1M2I_M2' 'M1SI_M1', 'M1SI_S','M2SI_M2', 'M2SI_S','M1M2SI_M1','M1M2SI_M2','M1M2SI_S' ]
     #columns =  ['MuTect1_singletons','MuTect2_singletons', 'Strelka_singletons', 'M1M2I', 'M1SI', 'M2SI','M1M2SI']
     columns =  ['MuTect1_singletons','MuTect2_singletons','Strelka_singletons','MuTect1_all','MuTect2_all','Strelka_all','MuTect1_MuTect2','MuTect1_Strelka','MuTect2_Strelka','MuTect1_MuTect2_Strelka']
@@ -115,7 +114,7 @@ def plot_allele_freqs(mutect1, mutect2, strelka, sample):
 
     #Create plots and print to PDF file
     numBoxes=10
-    pp = PdfPages(sample+'_allele_freqs.pdf')
+    pp = PdfPages(tumorid+'_allele_freqs.pdf')
     fig, ax1 = plt.subplots(figsize=(10, 6))
     plt.subplots_adjust(left=0.075, right=0.95, top=0.9, bottom=0.25)
     x=range(1, len(columns)+1)
@@ -127,7 +126,7 @@ def plot_allele_freqs(mutect1, mutect2, strelka, sample):
                alpha=0.5)
     # Hide these grid behind plot objects
     ax1.set_axisbelow(True)
-    ax1.set_title('SNVs called in '+sample+'\n')
+    ax1.set_title('SNVs called in '+tumorid+'\n')
     ax1.set_xlabel('Call set')
     ax1.set_ylabel('Alternative allele frequency')
     # Set the axes ranges and axes labels
@@ -147,13 +146,13 @@ def plot_allele_freqs(mutect1, mutect2, strelka, sample):
         ax1.text(tick, 1, 'm = '+str(label),horizontalalignment='center', size='x-small')
     plt.savefig(pp, format='pdf')
     pp.close()
-    print 'printed results to '+sample+'_allele_freqs.pdf'
+    print 'printed results to '+tumorid+'_allele_freqs.pdf'
 
 
 
-def generate_output(mutect1, mutect2, strelka, sample, genomeIndex):
-    snv_file=sample+'.snvs.vcf'
-    avinput=sample+'.avinput'
+def generate_output(mutect1, mutect2, strelka, tumorid, normalid, genomeIndex):
+    snv_file=tumorid+'.snvs.vcf'
+    avinput=tumorid+'.avinput'
     sf = open(snv_file, 'w')
     ai = open(avinput, 'w')
     sf.write("%s\n" %("##fileformat=VCFv4.2"))
@@ -167,7 +166,7 @@ def generate_output(mutect1, mutect2, strelka, sample, genomeIndex):
     sf.write("%s\n" %("##FORMAT=<ID=ADM1,Number=.,Type=Integer,Description=\"Allelic depths reported by MuTect1 for the ref and alt alleles in the order listed\""))
     sf.write("%s\n" %("##FORMAT=<ID=ADM2,Number=.,Type=Integer,Description=\"Allelic depths reported by MuTect2 for the ref and alt alleles in the order listed\""))
     sf.write("%s\n" %("##FORMAT=<ID=ADS,Number=.,Type=Integer,Description=\"Allelic depths reported by Strelka for the ref and alt alleles in the order listed\""))
-    sf.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" %('#CHROM', 'POS','ID', 'REF', 'ALT','QUAL', 'FILTER', 'INFO','FORMAT', sample+'_tumor', sample+'_normal'))
+    sf.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" %('#CHROM', 'POS','ID', 'REF', 'ALT','QUAL', 'FILTER', 'INFO','FORMAT', tumorid, normalid))
     #All mutated snvs:
     all_snvs=set(mutect1['snvs'].keys()+mutect2['snvs'].keys()+strelka['snvs'].keys())
     antal=0
@@ -244,8 +243,18 @@ def sort_positions(positions, genomeIndex):
 def parse_mutect2(vcf):
     snvs = {}
     indels = {}
+    datacolumn = {}
     for line in open(vcf, 'r'):
         line=line.strip()
+        # Extract column in vcf file for "TUMOR" and "NORMAL"
+        if line.startswith("#CHROM"):
+            info = line.split("\t")
+            for col in range(9, len(info)):
+                if info[col] in ['TUMOR', 'NORMAL']:
+                    datacolumn[info[col]] = col
+                else:
+                    print "ERROR: MuTect2 VCF file does not contain column for TUMOR or NORMAL"
+                    break
         if not line.startswith("#"):
             filter1=re.compile('alt_allele_in_normal')
             filter2=re.compile('clustered_events')
@@ -269,8 +278,8 @@ def parse_mutect2(vcf):
                 info=line.split("\t")
                 pos=info[0]+'_'+info[1]
                 vcfinfo=info[0]+'\t'+info[1]+'\t'+info[3]+'\t'+info[4]
-                ad_tumor=info[9].split(":")[1]
-                ad_normal=info[10].split(":")[1]
+                ad_tumor=info[datacolumn['TUMOR']].split(":")[1]
+                ad_normal=info[datacolumn['NORMAL']].split(":")[1]
                 ref=info[3]
                 alt=info[4]
                 alt_alleles = alt.split(",")
@@ -295,10 +304,20 @@ def parse_mutect2(vcf):
     return {'indels':indels,'snvs':snvs}
 
 
-def parse_mutect1(vcf):
+def parse_mutect1(vcf, tumorid, normalid):
     snvs = {}
+    datacolumn = {}
     for line in open(vcf, 'r'):
         line=line.strip()
+        # Extract column in vcf file for each sample
+        if line.startswith("#CHROM"):
+            info = line.split("\t")
+            for col in range(9, len(info)):
+                if info[col] in [tumorid, normalid]:
+                    datacolumn[info[col]]=col
+                else:
+                    print "ERROR: sample ids other than "+tumorid+" or "+normalid+" detected in MuTect1 vcf"
+                    break
         if not line.startswith("#"):
             filter1=re.compile('REJECT')
             f1=filter1.search(line)
@@ -306,8 +325,8 @@ def parse_mutect1(vcf):
                 info=line.split("\t")
                 pos = info[0] + '_' + info[1]
                 vcfinfo = info[0] + '\t' + info[1] + '\t' + info[3] + '\t' + info[4]
-                ad_tumor = info[9].split(":")[1]
-                ad_normal = info[10].split(":")[1]
+                ad_tumor = info[datacolumn[tumorid]].split(":")[1]
+                ad_normal = info[datacolumn[normalid]].split(":")[1]
                 alt=info[4]
                 alt_alleles=alt.split(",")
                 if len(alt_alleles) == 1:
@@ -323,8 +342,18 @@ def parse_mutect1(vcf):
 
 def parse_strelka_snvs(vcf):
     snvs = {}
+    datacolumn = {}
     for line in open(vcf, 'r'):
         line=line.strip()
+        # Extract column in vcf file for "TUMOR" and "NORMAL"
+        if line.startswith("#CHROM"):
+            info = line.split("\t")
+            for col in range(9, len(info)):
+                if info[col] in ['TUMOR', 'NORMAL']:
+                    datacolumn[info[col]] = col
+                else:
+                    print "ERROR: Strelka VCF file does not contain column for TUMOR or NORMAL"
+                    break
         if not line.startswith("#"):
             info=line.split("\t")
             pos=info[0]+'_'+info[1]
@@ -333,14 +362,14 @@ def parse_strelka_snvs(vcf):
             ad_normal = {}
             ad_tumor = {}
             #Using tiers 2 data
-            ad_tumor['A']=int(info[10].split(":")[4].split(",")[1])
-            ad_tumor['C']=int(info[10].split(":")[5].split(",")[1])
-            ad_tumor['G']=int(info[10].split(":")[6].split(",")[1])
-            ad_tumor['T']=int(info[10].split(":")[7].split(",")[1])
-            ad_normal['A']=int(info[9].split(":")[4].split(",")[1])
-            ad_normal['C']=int(info[9].split(":")[5].split(",")[1])
-            ad_normal['G']=int(info[9].split(":")[6].split(",")[1])
-            ad_normal['T']=int(info[9].split(":")[7].split(",")[1])
+            ad_normal['A']=int(info[datacolumn['NORMAL']].split(":")[4].split(",")[1])
+            ad_normal['C']=int(info[datacolumn['NORMAL']].split(":")[5].split(",")[1])
+            ad_normal['G']=int(info[datacolumn['NORMAL']].split(":")[6].split(",")[1])
+            ad_normal['T']=int(info[datacolumn['NORMAL']].split(":")[7].split(",")[1])
+            ad_tumor['A'] = int(info[datacolumn['TUMOR']].split(":")[4].split(",")[1])
+            ad_tumor['C'] = int(info[datacolumn['TUMOR']].split(":")[5].split(",")[1])
+            ad_tumor['G'] = int(info[datacolumn['TUMOR']].split(":")[6].split(",")[1])
+            ad_tumor['T'] = int(info[datacolumn['TUMOR']].split(":")[7].split(",")[1])
             snvs[pos] = {}
             snvs[pos]['ad'] = {}
             # If several alternative alleles are detected in the tumor, report the most highly abundant one and print a warning message.
