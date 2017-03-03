@@ -46,10 +46,7 @@ For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.j
 - [Pall Olason](https://github.com/pallolason)
 - [Pelin Sahlén](https://github.com/pelinakan)
 
-<p align="center">
-[![](doc/images/SciLifeLab_logo.png "SciLifeLab")](http://www.scilifelab.se/)
- [![](doc/images/NGI-final-small.png "NGI")](https://ngisweden.scilifelab.se/)
-</p>
+[![](doc/images/SciLifeLab_logo.png "SciLifeLab")](http://www.scilifelab.se/) [![](doc/images/NGI-final-small.png "NGI")](https://ngisweden.scilifelab.se/)
 
 [allelecount-link]: https://github.com/cancerit/alleleCount
 [ascat-link]: https://github.com/Crick-CancerGenomics/ascat
