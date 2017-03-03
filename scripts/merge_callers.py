@@ -2,9 +2,7 @@
 
 import re
 import sys
-
 import matplotlib
-
 matplotlib.use('pdf')
 import matplotlib.pyplot as plt
 import numpy as np
@@ -23,14 +21,14 @@ def main():
     mutect2_vcf = sys.argv[4]
     strelka_vcf= sys.argv[5]
     genomeIndex=sys.argv[6]
-    mutect2=parse_mutect2(mutect2_vcf)
-    mutect1=parse_mutect1(mutect1_vcf)
+    mutect2=parse_mutect2(mutect2_vcf, tumorid, normalid)
+    mutect1=parse_mutect1(mutect1_vcf,tumorid,normalid)
     strelka=parse_strelka_snvs(strelka_vcf)
-    generate_output(mutect1, mutect2, strelka, sample, genomeIndex)
-    plot_allele_freqs(mutect1, mutect2, strelka, sample)
+    generate_output(mutect1, mutect2, strelka, tumorid, normalid,genomeIndex)
+    plot_allele_freqs(mutect1, mutect2, strelka, tumorid)
 
 
-def plot_allele_freqs(mutect1, mutect2, strelka, sample):
+def plot_allele_freqs(mutect1, mutect2, strelka, tumorid):
     #columns =  ['MuTect1','MuTect2', 'Strelka', 'M1M2I_M1','M1M2I_M2' 'M1SI_M1', 'M1SI_S','M2SI_M2', 'M2SI_S','M1M2SI_M1','M1M2SI_M2','M1M2SI_S' ]
     #columns =  ['MuTect1_singletons','MuTect2_singletons', 'Strelka_singletons', 'M1M2I', 'M1SI', 'M2SI','M1M2SI']
     columns =  ['MuTect1_singletons','MuTect2_singletons','Strelka_singletons','MuTect1_all','MuTect2_all','Strelka_all','MuTect1_MuTect2','MuTect1_Strelka','MuTect2_Strelka','MuTect1_MuTect2_Strelka']
@@ -116,7 +114,7 @@ def plot_allele_freqs(mutect1, mutect2, strelka, sample):
 
     #Create plots and print to PDF file
     numBoxes=10
-    pp = PdfPages(sample+'_allele_freqs.pdf')
+    pp = PdfPages(tumorid+'_allele_freqs.pdf')
     fig, ax1 = plt.subplots(figsize=(10, 6))
     plt.subplots_adjust(left=0.075, right=0.95, top=0.9, bottom=0.25)
     x=range(1, len(columns)+1)
@@ -128,7 +126,7 @@ def plot_allele_freqs(mutect1, mutect2, strelka, sample):
                alpha=0.5)
     # Hide these grid behind plot objects
     ax1.set_axisbelow(True)
-    ax1.set_title('SNVs called in '+sample+'\n')
+    ax1.set_title('SNVs called in '+tumorid+'\n')
     ax1.set_xlabel('Call set')
     ax1.set_ylabel('Alternative allele frequency')
     # Set the axes ranges and axes labels
@@ -148,13 +146,13 @@ def plot_allele_freqs(mutect1, mutect2, strelka, sample):
         ax1.text(tick, 1, 'm = '+str(label),horizontalalignment='center', size='x-small')
     plt.savefig(pp, format='pdf')
     pp.close()
-    print 'printed results to '+sample+'_allele_freqs.pdf'
+    print 'printed results to '+tumorid+'_allele_freqs.pdf'
 
 
 
-def generate_output(mutect1, mutect2, strelka, sample, genomeIndex):
-    snv_file=sample+'.snvs.vcf'
-    avinput=sample+'.avinput'
+def generate_output(mutect1, mutect2, strelka, tumorid, normalid, genomeIndex):
+    snv_file=tumorid+'.snvs.vcf'
+    avinput=tumorid+'.avinput'
     sf = open(snv_file, 'w')
     ai = open(avinput, 'w')
     sf.write("%s\n" %("##fileformat=VCFv4.2"))
@@ -168,7 +166,7 @@ def generate_output(mutect1, mutect2, strelka, sample, genomeIndex):
     sf.write("%s\n" %("##FORMAT=<ID=ADM1,Number=.,Type=Integer,Description=\"Allelic depths reported by MuTect1 for the ref and alt alleles in the order listed\""))
     sf.write("%s\n" %("##FORMAT=<ID=ADM2,Number=.,Type=Integer,Description=\"Allelic depths reported by MuTect2 for the ref and alt alleles in the order listed\""))
     sf.write("%s\n" %("##FORMAT=<ID=ADS,Number=.,Type=Integer,Description=\"Allelic depths reported by Strelka for the ref and alt alleles in the order listed\""))
-    sf.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" %('#CHROM', 'POS','ID', 'REF', 'ALT','QUAL', 'FILTER', 'INFO','FORMAT', sample+'_tumor', sample+'_normal'))
+    sf.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" %('#CHROM', 'POS','ID', 'REF', 'ALT','QUAL', 'FILTER', 'INFO','FORMAT', tumorid, normalid))
     #All mutated snvs:
     all_snvs=set(mutect1['snvs'].keys()+mutect2['snvs'].keys()+strelka['snvs'].keys())
     antal=0
@@ -242,7 +240,7 @@ def sort_positions(positions, genomeIndex):
     return sorted
 
 
-def parse_mutect2(vcf):
+def parse_mutect2(vcf, tumorid, normalid):
     snvs = {}
     indels = {}
     for line in open(vcf, 'r'):
