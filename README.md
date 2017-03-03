@@ -4,7 +4,7 @@
 
 [![caw version][version-badge]][version-link] [![Licence][licence-badge]][licence-link] [![nextflow version][nextflow-badge]][nextflow-link] [![Join the chat at https://gitter.im/SciLifeLab/CAW][gitter-badge]][gitter-link]
 
-CAW is a complete open source pipeline to detect somatic variants from WGS data developed at the [National Genomics Infastructure](https://ngisweden.scilifelab.se/) at [SciLifeLab Stockholm](https://www.scilifelab.se/platforms/ngi/), Sweden.
+CAW is a complete open source pipeline to detect somatic variants from WGS data developed at the [National Genomics Infastructure][ngi-link] at [SciLifeLab Stockholm][scilifelab-stockholm-link], Sweden.
 
 The pipeline uses [Nextflow][nextflow-link], a bioinformatics domain specific language for workflow building.
 
@@ -62,8 +62,10 @@ For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.j
 [mutect1-link]: https://github.com/broadinstitute/mutect
 [nextflow-badge]: https://img.shields.io/badge/nextflow-%E2%89%A50.22.2-brightgreen.svg
 [nextflow-link]: https://www.nextflow.io/
+[ngi-link]: https://ngisweden.scilifelab.se/
 [picard-link]: https://github.com/broadinstitute/picard
 [samtools-link]: https://github.com/samtools/samtools
+[scilifelab-stockholm-link]: https://www.scilifelab.se/platforms/ngi/
 [snpeff-link]: http://snpeff.sourceforge.net/
 [strelka-link]: https://github.com/Illumina/strelka
 [version-badge]: https://img.shields.io/github/release/SciLifeLab/CAW.svg
