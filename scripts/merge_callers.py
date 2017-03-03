@@ -11,17 +11,18 @@ import numpy as np
 from matplotlib.backends.backend_pdf import PdfPages
 from datetime import datetime
 
-if len(sys.argv)<5:
-    print "Usage: %s sample_name MuTect1_vcf MuTect2_vcf Strelka_vcf genomeIndex\n" %sys.argv[0]
+if len(sys.argv)<7:
+    print "Usage: %s tumorid, normalid, MuTect1_vcf MuTect2_vcf Strelka_vcf genomeIndex\n" %sys.argv[0]
     sys.exit(0)
 
 
 def main():
-    sample = sys.argv[1]
-    mutect1_vcf = sys.argv[2]
-    mutect2_vcf = sys.argv[3]
-    strelka_vcf= sys.argv[4]
-    genomeIndex=sys.argv[5]
+    tumorid = sys.argv[1]
+    normalid = sys.argv[2]
+    mutect1_vcf = sys.argv[3]
+    mutect2_vcf = sys.argv[4]
+    strelka_vcf= sys.argv[5]
+    genomeIndex=sys.argv[6]
     mutect2=parse_mutect2(mutect2_vcf)
     mutect1=parse_mutect1(mutect1_vcf)
     strelka=parse_strelka_snvs(strelka_vcf)
@@ -295,10 +296,21 @@ def parse_mutect2(vcf):
     return {'indels':indels,'snvs':snvs}
 
 
-def parse_mutect1(vcf):
+def parse_mutect1(vcf, tumorid, normalid):
     snvs = {}
+
+    datacolumn = {}
     for line in open(vcf, 'r'):
         line=line.strip()
+        # Extract column in vcf file for each sample
+        if line.startswith("#CHROM"):
+            info = line.split("\t")
+            for col in range(9, len(info)):
+                if info[col] in [tumorid, normalid]:
+                    datacolumn[info[col]]=col
+                else:
+                    print "ERROR: sample ids other than "+tumorid+" or "+normalid+" detected in MuTect1 vcf"
+                    break
         if not line.startswith("#"):
             filter1=re.compile('REJECT')
             f1=filter1.search(line)
@@ -306,8 +318,8 @@ def parse_mutect1(vcf):
                 info=line.split("\t")
                 pos = info[0] + '_' + info[1]
                 vcfinfo = info[0] + '\t' + info[1] + '\t' + info[3] + '\t' + info[4]
-                ad_tumor = info[9].split(":")[1]
-                ad_normal = info[10].split(":")[1]
+                ad_tumor = datacolumn[tumorid].split(":")[1]
+                ad_normal = datacolum[normalid].split(":")[1]
                 alt=info[4]
                 alt_alleles=alt.split(",")
                 if len(alt_alleles) == 1:
