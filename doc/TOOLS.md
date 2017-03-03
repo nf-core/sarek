@@ -1,6 +1,6 @@
 # Tools and dependencies
 
-- **[AlleleCount][AlleleCount-link]** 2.2.0
+- **[AlleleCount][allelecount-link]** 2.2.0
 - **[BWA][bwa-link]** 0.7.8
 - **[FastQC][fastqc-link]** 0.11.5
 - freebayes
@@ -18,7 +18,7 @@
 - **[snpEff][snpeff-link]** 4.2
 - **[Strelka][strelka-link]** 1.0.15
 
-[AlleleCount-link]: https://github.com/cancerit/alleleCount
+[allelecount-link]: https://github.com/cancerit/alleleCount
 [bwa-link]: https://github.com/lh3/bwa
 [fastqc-link]: http://www.bioinformatics.babraham.ac.uk/projects/fastqc/
 [gatk-link]: https://github.com/broadgsa/gatk-protected

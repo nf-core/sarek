@@ -1,5 +1,7 @@
-# Install CAW
+# Installation
+
 To use this pipeline, you need to have a working version of Nextflow installed, and References files.
+
 - See the [Install Nextflow documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/INSTALL.md)
 - See the [Reference files documentation](REFERENCES.md)
 
