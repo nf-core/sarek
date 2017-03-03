@@ -1,4 +1,7 @@
-# Try the workflow on UPPMAX clusters
+# Install CAW
+To use this pipeline, you need to have a working version of Nextflow installed, and References files.
+- See the [Install Nextflow documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/INSTALL.md)
+- See the [Reference files documentation](REFERENCES.md)
 
 This small tutorial will explain to you how to run CAW on a small sample test data on a Swedish UPPMAX cluster. Some variables are specific, but it can be easily modified to suit any clusters.
 
@@ -40,7 +43,7 @@ nextflow run main.nf --test
 If you're running on a Swedish UPPMAX cluster you can load Nextflow as an environment module:
 
 ```bash
-module load Nextflow
+module load bioinfo-tools Nextflow
 ```
 
 Environnement variables are set up each time the module is loaded, so you might want to set them up after loading the module.
