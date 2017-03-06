@@ -16,7 +16,7 @@ The pipeline can begin the analysis either from raw FASTQ files, only from the r
 
 Besides variant calls, the workflow provides quality controls presented by [MultiQC][multiqc-link].
 
-[Docker containers](https://github.com/MaxUlysse/CAW-containers) are also available for easier deployment.
+The [CAW-containers](https://github.com/SciLifeLab/CAW-containers) repository contains Dockerfiles for each process for easier deployment.
 
 ## Documentation
 
