@@ -242,7 +242,7 @@ process MergeBams {
 
   script:
   """
-  samtools merge ${idSample}.bam $bam
+  samtools merge --threads $task.cpus ${idSample}.bam $bam
   """
 }
 
