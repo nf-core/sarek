@@ -10,9 +10,8 @@ import numpy as np
 from matplotlib.backends.backend_pdf import PdfPages
 from datetime import datetime
 
-#if len(sys.argv)<7:
-#    print "Usage: %s tumorid, normalid, MuTect1_vcf MuTect2_vcf Strelka_vcf genomeIndex\n" %sys.argv[0]
-#    sys.exit(0)
+# Usage something like:
+# merge_callers.py -t TUMOR -n NORMAL -m1 MuTect1.vcf -m2 MuTect2.vcf -s strelka.vcf -i human_g1k_v37_decoy.fasta.fai
 
 @click.command(context_settings = dict( help_option_names = ['-h', '--help'] ))
 @click.option('--tumorID',      '-t', type=str, help='Tumor sample ID', required=True)
