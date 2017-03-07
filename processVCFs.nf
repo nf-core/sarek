@@ -4,7 +4,7 @@
 vim: syntax=groovy
 -*- mode: groovy;-*-
 ================================================================================
-=           combining and rough filtering of VCF results from CAW              =
+=           combining and rough filtering VCF results of CAW                   =
 ================================================================================
 */
 
@@ -21,7 +21,7 @@ if( !params.callName) {
 vcfMappingChannel = makeVCFList(params.vcflist)
 
 // In this process we are adding a tag to each VCFs, so after the merge process we can see which caller called what.
-// Also applying a rough filter, leaving only record that contains "PASS" in the 7th field in the VCF
+// Also applying a rough filter, leaving only records containing "PASS" in the 7th field in the VCF
 process addCallerInfo {
     input:
     set callerTag, file(rawVCF) from vcfMappingChannel
@@ -35,7 +35,7 @@ process addCallerInfo {
 }
 
 // we will need tabix, bcftools and vcftools to do the job
-process compessAndIndexFilteredVCFs {
+process compressAndIndexFilteredVCFs {
 
     module 'htslib/1.3'
     module 'bcftools/1.2'
@@ -54,8 +54,8 @@ process compessAndIndexFilteredVCFs {
     """
     
 }
-// we will need the names of the compressed VCFs in two channels: one to make links, and the other to the command line
 
+// we will need the names of the compressed VCFs in two channels: one to make links, and the other to the command line
 allVCFs = compressedVCF.reduce {a,b -> return a + " " + b}
 process mergeVCFs {
     publishDir "mergedVariants",mode: 'copy'
