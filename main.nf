@@ -1229,8 +1229,35 @@ process RunSnpeff {
 
 reportsForMultiQC = Channel.create()
 
+process GenerateMultiQCconfig {
+  tag {idPatient}
+
+  publishDir directoryMap['MultiQC'], mode: 'copy'
+
+  input:
+
+  output:
+  file("multiqc_config.yaml") into multiQCconfig
+
+  when: 'MultiQC' in workflowSteps
+
+  script:
+  """
+  touch multiqc_config.yaml
+  echo "report_header_info:" >> multiqc_config.yaml
+  echo "- CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision" >> multiqc_config.yaml
+  echo "- Contact E-mail: ${params.contactMail}" >> multiqc_config.yaml
+  echo "- Command Line  : ${workflow.commandLine}" >> multiqc_config.yaml
+  echo "- Project Dir   : ${workflow.projectDir}" >> multiqc_config.yaml
+  echo "- Launch Dir    : ${workflow.launchDir}" >> multiqc_config.yaml
+  echo "- Work Dir      : ${workflow.workDir}" >> multiqc_config.yaml
+  echo "- TSV file      : ${tsvFile}" >> multiqc_config.yaml
+  echo "- Steps         : " + ${workflowSteps.join(", ")} >> multiqc_config.yaml
+  """
+}
+
 if ('MultiQC' in workflowSteps) {
-  reportsForMultiQC = fastQCreport.mix(markDuplicatesReport,recalibratedBamReports,vcfReports).flatten().toList()
+  reportsForMultiQC = fastQCreport.mix(markDuplicatesReport,recalibratedBamReports,vcfReports,multiQCconfig).flatten().toList()
   if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
 }
 
