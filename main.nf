@@ -1245,14 +1245,12 @@ process GenerateMultiQCconfig {
   """
   touch multiqc_config.yaml
   echo "report_header_info:" >> multiqc_config.yaml
-  echo "- CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision" >> multiqc_config.yaml
+  echo "- CAW version: $version" >> multiqc_config.yaml
   echo "- Contact E-mail: ${params.contactMail}" >> multiqc_config.yaml
-  echo "- Command Line  : ${workflow.commandLine}" >> multiqc_config.yaml
-  echo "- Project Dir   : ${workflow.projectDir}" >> multiqc_config.yaml
-  echo "- Launch Dir    : ${workflow.launchDir}" >> multiqc_config.yaml
-  echo "- Work Dir      : ${workflow.workDir}" >> multiqc_config.yaml
-  echo "- TSV file      : ${tsvFile}" >> multiqc_config.yaml
-  echo "- Steps         : " + ${workflowSteps.join(", ")} >> multiqc_config.yaml
+  echo "- Command Line: ${workflow.commandLine}" >> multiqc_config.yaml
+  echo "- Directory: ${workflow.launchDir}" >> multiqc_config.yaml
+  echo "- TSV file: ${tsvFile}" >> multiqc_config.yaml
+  echo "- Steps: "${workflowSteps.join(", ")} >> multiqc_config.yaml
   """
 }
 
