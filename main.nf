@@ -366,8 +366,6 @@ if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
 process RealignBams {
   tag {idPatient}
 
-  module = ['java/sun_jdk1.8.0_92']
-
   input:
     set idPatient, gender, idSample_status, file(bam), file(bai) from duplicatesRealign
     file genomeFile from file(referenceMap['genomeFile'])
