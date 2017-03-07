@@ -258,6 +258,7 @@ if ('preprocessing' in workflowSteps) {
   mergedBam = mergedBam.mix(singleBam)
   if (verbose) {mergedBam = mergedBam.view {"BAM for MarkDuplicates: $it"}}
 }
+
 process MarkDuplicates {
   tag {idPatient + "-" + idSample}
 
@@ -365,8 +366,6 @@ if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
 // VCF indexes are added so they will be linked, and not re-created on the fly
 process RealignBams {
   tag {idPatient}
-
-  module = ['java/sun_jdk1.8.0_92']
 
   input:
     set idPatient, gender, idSample_status, file(bam), file(bai) from duplicatesRealign
@@ -1227,8 +1226,6 @@ process RunSnpeff {
     """
 }
 
-reportsForMultiQC = Channel.create()
-
 process GenerateMultiQCconfig {
   tag {idPatient}
 
@@ -1244,6 +1241,9 @@ process GenerateMultiQCconfig {
   script:
   """
   touch multiqc_config.yaml
+  echo "custom_logo: $baseDir/doc/images/CAW-logo.png" >> multiqc_config.yaml
+  echo "custom_logo_url: http://opensource.scilifelab.se/projects/caw" >> multiqc_config.yaml
+  echo "custom_logo_title: 'Cancer Analysis Workflow'" >> multiqc_config.yaml
   echo "report_header_info:" >> multiqc_config.yaml
   echo "- CAW version: $version" >> multiqc_config.yaml
   echo "- Contact E-mail: ${params.contactMail}" >> multiqc_config.yaml
@@ -1251,11 +1251,22 @@ process GenerateMultiQCconfig {
   echo "- Directory: ${workflow.launchDir}" >> multiqc_config.yaml
   echo "- TSV file: ${tsvFile}" >> multiqc_config.yaml
   echo "- Steps: "${workflowSteps.join(", ")} >> multiqc_config.yaml
+  echo "top_modules:" >> multiqc_config.yaml
+  echo "- 'fastqc'" >> multiqc_config.yaml
+  echo "- 'picard'" >> multiqc_config.yaml
+  echo "- 'samtools'" >> multiqc_config.yaml
+  echo "- 'snpeff'" >> multiqc_config.yaml
   """
 }
 
+
+previousReports = Channel.fromPath( 'Reports/{FastQC,MarkDuplicates,SamToolsStats}/*' )
+
+reportsForMultiQC = Channel.create()
+
+reportsForMultiQC = previousReports.mix(fastQCreport,markDuplicatesReport,recalibratedBamReports,vcfReports,multiQCconfig).flatten().toList()
+
 if ('MultiQC' in workflowSteps) {
-  reportsForMultiQC = fastQCreport.mix(markDuplicatesReport,recalibratedBamReports,vcfReports,multiQCconfig).flatten().toList()
   if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
 }
 
