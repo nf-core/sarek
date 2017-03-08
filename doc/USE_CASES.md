@@ -91,3 +91,9 @@ And the corresponding TSV file should be like:
 SUBJECT_ID  XX    0    SAMPLEIDN    /samples/SAMPLEIDN.bam    /samples/SAMPLEIDN.bai
 SUBJECT_ID  XX    1    SAMPLEIDT    /samples/SAMPLEIDT.bam    /samples/SAMPLEIDT.bai
 ```
+
+---
+[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
+
+[ngi-link]: https://ngisweden.scilifelab.se/
+[scilifelab-link]: http://www.scilifelab.se/

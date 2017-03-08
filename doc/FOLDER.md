@@ -6,7 +6,7 @@ ID = Individual Sample = "Normal", "Tumor 1", "Tumor 2" etc corresponding to all
 
 Below is an overview of the intended folder structure for an analyzed project.
 
-![Project folder structure](image/folder_structure.jpg "Folder structure")
+![Project folder structure](images/folder_structure.jpg "Folder structure")
 
 # Input Fastq file name conventions
 
@@ -47,3 +47,9 @@ Read group information will be parsed from fastq file names according to this:
 - `RGPL` = "Illumina"
 - `PU` = sample
 - `RGLB` = lib
+
+---
+[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
+
+[ngi-link]: https://ngisweden.scilifelab.se/
+[scilifelab-link]: http://www.scilifelab.se/

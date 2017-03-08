@@ -18,6 +18,9 @@
 - **[snpEff][snpeff-link]** 4.2
 - **[Strelka][strelka-link]** 1.0.15
 
+---
+[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
+
 [allelecount-link]: https://github.com/cancerit/alleleCount
 [bwa-link]: https://github.com/lh3/bwa
 [fastqc-link]: http://www.bioinformatics.babraham.ac.uk/projects/fastqc/
@@ -26,7 +29,9 @@
 [multiqc-link]: https://github.com/ewels/MultiQC/
 [mutect1-link]: https://github.com/broadinstitute/mutect
 [nextflow-link]: https://www.nextflow.io/
+[ngi-link]: https://ngisweden.scilifelab.se/
 [picard-link]: https://github.com/broadinstitute/picard
 [samtools-link]: https://github.com/samtools/samtools
+[scilifelab-link]: http://www.scilifelab.se/
 [snpeff-link]: http://snpeff.sourceforge.net/
 [strelka-link]: https://github.com/Illumina/strelka

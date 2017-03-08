@@ -85,3 +85,9 @@ If there is a feature or bugfix you want to use in a resumed or re-analyzed run,
 ```bash
 nextflow run -latest SciLifeLab/CAW --sample mysample.tsv -resume
 ```
+
+---
+[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
+
+[ngi-link]: https://ngisweden.scilifelab.se/
+[scilifelab-link]: http://www.scilifelab.se/

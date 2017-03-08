@@ -53,3 +53,9 @@ All the files will be in he Preprocessing/Recalibrated/ directory, and by defaul
 ```bash
 nextflow run SciLifeLab/CAW --sample Preprocessing/Recalibrated/mysample.tsv --steps skipPreprocessing,MuTect1,Strelka
 ```
+
+---
+[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
+
+[ngi-link]: https://ngisweden.scilifelab.se/
+[scilifelab-link]: http://www.scilifelab.se/

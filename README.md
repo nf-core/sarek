@@ -46,12 +46,10 @@ For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.j
 - [Pall Olason](https://github.com/pallolason)
 - [Pelin Sahlén](https://github.com/pelinakan)
 
-[![](doc/images/SciLifeLab_logo.png "SciLifeLab")](http://www.scilifelab.se/) [![](doc/images/NGI-final-small.png "NGI")](https://ngisweden.scilifelab.se/)
+---
+[![](doc/images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](doc/images/NGI-final-small.png "NGI")][ngi-link]
 
-[allelecount-link]: https://github.com/cancerit/alleleCount
 [ascat-link]: https://github.com/Crick-CancerGenomics/ascat
-[bwa-link]: https://github.com/lh3/bwa
-[fastqc-link]: http://www.bioinformatics.babraham.ac.uk/projects/fastqc/
 [gatk-link]: https://github.com/broadgsa/gatk-protected
 [gitter-badge]: https://badges.gitter.im/SciLifeLab/CAW.svg
 [gitter-link]: https://gitter.im/SciLifeLab/CAW
@@ -63,10 +61,8 @@ For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.j
 [nextflow-badge]: https://img.shields.io/badge/nextflow-%E2%89%A50.22.2-brightgreen.svg
 [nextflow-link]: https://www.nextflow.io/
 [ngi-link]: https://ngisweden.scilifelab.se/
-[picard-link]: https://github.com/broadinstitute/picard
-[samtools-link]: https://github.com/samtools/samtools
+[scilifelab-link]: http://www.scilifelab.se/
 [scilifelab-stockholm-link]: https://www.scilifelab.se/platforms/ngi/
-[snpeff-link]: http://snpeff.sourceforge.net/
 [strelka-link]: https://github.com/Illumina/strelka
 [version-badge]: https://img.shields.io/github/release/SciLifeLab/CAW.svg
 [version-link]: https://github.com/SciLifeLab/CAW/releases/latest
