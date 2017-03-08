@@ -72,4 +72,10 @@ sbatch -A PROJID -p core -n 1 -t 240:00:00 -J ascat -e ascat.err -o ascat.out ru
 
 ## Flowchart
 
-![Overview of ASCAT process](image/ascat.jpg "ASCAT")
+![Overview of ASCAT process](images/ascat.jpg "ASCAT")
+
+---
+[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
+
+[ngi-link]: https://ngisweden.scilifelab.se/
+[scilifelab-link]: http://www.scilifelab.se/
