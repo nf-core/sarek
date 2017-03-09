@@ -711,7 +711,7 @@ process RunHaplotypecaller {
 
   when: 'HaplotypeCaller' in workflowSteps
 
-  // both -nt and -nct removed
+  // both -nt and -nct removed : it is still not recommended to use more threads for HC, use scatter-gather instead
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
