@@ -366,8 +366,6 @@ if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
 process RealignBams {
   tag {idPatient}
 
-  module = ['java/sun_jdk1.8.0_92']
-
   input:
     set idPatient, gender, idSample_status, file(bam), file(bai) from duplicatesRealign
     file genomeFile from file(referenceMap['genomeFile'])
@@ -713,7 +711,7 @@ process RunHaplotypecaller {
 
   when: 'HaplotypeCaller' in workflowSteps
 
-  // both -nt and -nct removed
+  // both -nt and -nct removed : it is still not recommended to use more threads for HC, use scatter-gather instead
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
