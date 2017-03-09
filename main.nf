@@ -53,38 +53,30 @@ vim: syntax=groovy
 ================================================================================
 */
 
-revision = grabGitRevision() ?: ''
-version = '1.0'
-verbose = false
+revision = grabGitRevision()
 testFile = ''
 testSteps = []
+version = '1.0'
 workflowSteps = []
 
 if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
 
-switch (params) {
-  case {params.help} :
-    help_message(version, revision)
-    exit 1
-
-  case {params.version} :
-    version_message(version, revision)
-    exit 1
-
-  // Arguments handling: Getting list of steps from comma-separated strings
-  // Then choose which processes to run or to skip
-  // Borrowed from https://github.com/guigolab/grape-nf
-  // and https://github.com/NBISweden/wgs-structvar
-  case {params.steps} :
-    workflowSteps = params.steps.split(',').collect {it.trim()}
-    break
+if (params.help) {
+  help_message(version, revision)
+  exit 1
+}
+if (params.version) {
+  version_message(version, revision)
+  exit 1
+}
+if (params.steps) {
+  workflowSteps = params.steps.split(',').collect {it.trim()}
 }
 
-if (params.verbose) {verbose = true}
-
-referenceMap = defineReferenceMap()
 directoryMap = defineDirectoryMap()
+referenceMap = defineReferenceMap()
 stepList = defineStepList()
+verbose = params.verbose ? true : false
 
 if (!checkReferenceMap(referenceMap)) {exit 1, 'Missing Reference file(s), see --help for more information'}
 if (!checkStepList(workflowSteps,stepList)) {exit 1, 'Unknown step(s), see --help for more information'}
@@ -115,31 +107,21 @@ if (params.test) {
   workflowSteps = ['skipPreprocessing', 'Ascat', 'Manta', 'HaplotypeCaller']
 } else {test = false}
 
-if ((!checkSteps(workflowSteps))) {exit 1, 'Please choose only one step between preprocessing, realign, recalibrate and skipPreprocessing, see --help for more information'}
+if (!checkSteps(workflowSteps)) {exit 1, 'Please choose only one step between preprocessing, realign, recalibrate and skipPreprocessing, see --help for more information'}
 
-/*
- * Extract and verify content of TSV file
- */
+// Extract and verify content of TSV file
 
 if ((!params.sample) && !(test)) {exit 1, 'Missing TSV file, see --help for more information'}
-tsvFile = (!(test) ? file(params.sample) : testFile)
 
-fastqFiles = Channel.create()
-fastqFilesforFastQC = Channel.create()
+tsvFile = test ? testFile : file(params.sample)
 
-if ('preprocessing' in workflowSteps) {
-  fastqFiles = extractFastqFiles(tsvFile)
-  if (verbose) {fastqFiles = fastqFiles.view {"FASTQ files and IDs to preprocess: $it"}}
-} else if ('realign' in workflowSteps || 'skipPreprocessing' in workflowSteps) {
-  bamFiles = extractBamFiles(tsvFile)
-  if (verbose) {bamFiles = bamFiles.view {"Bam files and IDs to process: $it"}}
-  fastqFiles.close()
-} else if ('recalibrate' in workflowSteps) {
-  bamFiles = extractReclibrationTables(tsvFile)
-  if (verbose) {bamFiles = bamFiles.view {"Bam files, Recalibration Tables and IDs to process: $it"}}
-  fastqFiles.close()
-}
+fastqFiles = 'preprocessing' in workflowSteps ? extractFastqFiles(tsvFile) : Channel.empty()
+bamFiles = 'realign' in workflowSteps ? extractBamFiles(tsvFile) : Channel.empty()
+bamFiles = 'recalibrate' in workflowSteps ? extractRecalibrationTables(tsvFile) : bamFiles
+bamFiles = 'skipPreprocessing' in workflowSteps ? extractBamFiles(tsvFile) : bamFiles
 
+verbose ? fastqFiles = fastqFiles.view {"FASTQ files and IDs to preprocess: $it"} : ''
+verbose ? bamFiles = bamFiles.view {"Bam files and IDs to process: $it"} : ''
 start_message(version, revision)
 
 /*
@@ -148,12 +130,9 @@ start_message(version, revision)
 ================================================================================
 */
 
-if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
-  (fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
-  if (verbose) {fastqFilesforFastQC = fastqFilesforFastQC.view {"FASTQ files and IDs for FastQC: $it"}}
-} else {
-  fastqFilesforFastQC.close()
-}
+(fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
+
+verbose ? fastqFilesforFastQC = fastqFilesforFastQC.view {"FASTQ files and IDs for FastQC: $it"} : ''
 
 process RunFastQC {
   tag {idPatient + "-" + idRun}
@@ -174,22 +153,20 @@ process RunFastQC {
   """
 }
 
-if ('preprocessing' in workflowSteps && 'MultiQC' in workflowSteps) {
-  if (verbose) {fastQCreport = fastQCreport.view {"FastQC report: $it"}}
-}
+verbose ? fastQCreport = fastQCreport.view {"FastQC report: $it"} : ''
 
 process MapReads {
   tag {idPatient + "-" + idRun}
 
   input:
     set idPatient, gender, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFiles
+    file genomeAmb from file(referenceMap['genomeAmb'])
+    file genomeAnn from file(referenceMap['genomeAnn'])
+    file genomeBwt from file(referenceMap['genomeBwt'])
     file genomeFile from file(referenceMap['genomeFile'])
     file genomeIndex from file(referenceMap['genomeIndex'])
-    file genomePac from file(referenceMap['genomeFile']+".pac")
-    file genomeAmb from file(referenceMap['genomeFile']+".amb")
-    file genomeAnn from file(referenceMap['genomeFile']+".ann")
-    file genomeBwt from file(referenceMap['genomeFile']+".bwt")
-    file genomeSa from file(referenceMap['genomeFile']+".sa")
+    file genomePac from file(referenceMap['genomePac'])
+    file genomeSa from file(referenceMap['genomeSa'])
 
   output:
     set idPatient, gender, status, idSample, idRun, file("${idRun}.bam") into bam
@@ -206,28 +183,21 @@ process MapReads {
   """
 }
 
+verbose ? bam = bam.view {"BAM file before sorting into group or single: $it"} : ''
+
+// Sort bam whether they are standalone or should be merged
+// Borrowed code from https://github.com/guigolab/chip-nf
+
 singleBam = Channel.create()
 groupedBam = Channel.create()
-
-if ('preprocessing' in workflowSteps) {
-  if (verbose) {bam = bam.view {"BAM file before sorting into group or single: $it"}}
-
-  /*
-   * Sort bam whether they are standalone or should be merged
-   * Borrowed code from https://github.com/guigolab/chip-nf
-   */
-
-  bam.groupTuple(by:[0,1,2,3])
-    .choice(singleBam, groupedBam) {it[4].size() > 1 ? 1 : 0}
-  singleBam = singleBam.map {
-    idPatient, gender, status, idSample, idRun, bam ->
-    [idPatient, gender, status, idSample, bam]
-  }
-  if (verbose) {groupedBam = groupedBam.view {"Grouped BAMs before merge: $it"}}
-} else {
-  singleBam.close()
-  groupedBam.close()
+bam.groupTuple(by:[0,1,2,3])
+  .choice(singleBam, groupedBam) {it[4].size() > 1 ? 1 : 0}
+singleBam = singleBam.map {
+  idPatient, gender, status, idSample, idRun, bam ->
+  [idPatient, gender, status, idSample, bam]
 }
+
+verbose ? groupedBam = groupedBam.view {"Grouped BAMs before merge: $it"} : ''
 
 process MergeBams {
   tag {idPatient + "-" + idSample}
@@ -246,18 +216,11 @@ process MergeBams {
   """
 }
 
-if ('preprocessing' in workflowSteps) {
-  /*
-   * Gather all bams into a single channel
-   */
+verbose ? singleBam = singleBam.view {"Single BAM: $it"} : ''
+verbose ? mergedBam = mergedBam.view {"Merged BAM: $it"} : ''
+mergedBam = mergedBam.mix(singleBam)
+verbose ? mergedBam = mergedBam.view {"BAM for MarkDuplicates: $it"} : ''
 
-  if (verbose) {
-    singleBam = singleBam.view {"Single BAM: $it"}
-    mergedBam = mergedBam.view {"Merged BAM: $it"}
-  }
-  mergedBam = mergedBam.mix(singleBam)
-  if (verbose) {mergedBam = mergedBam.view {"BAM for MarkDuplicates: $it"}}
-}
 process MarkDuplicates {
   tag {idPatient + "-" + idSample}
 
@@ -287,38 +250,27 @@ process MarkDuplicates {
   """
 }
 
+verbose ? markDuplicatesReport = markDuplicatesReport.view {"MarkDuplicates report: $it"} : ''
+
 markDuplicatesTSV.map { idPatient, gender, status, idSample, bam, bai ->
   "$idPatient\t$gender\t$status\t$idSample\t${directoryMap['nonRealigned']}/$bam\t${directoryMap['nonRealigned']}/$bai\n"
 }.collectFile( name: 'nonRealigned.tsv', sort: true, storeDir: directoryMap['nonRealigned'])
 
-duplicatesInterval = Channel.create()
-duplicatesRealign  = Channel.create()
+// create intervals for realignement using both tumor+normal as input
+// group the marked duplicates Bams for intervals and realign by overall subject/patient id (idPatient)
+duplicatesGrouped = 'preprocessing' in workflowSteps ? duplicates.groupTuple(by:[0,1]) : Channel.empty()
 
-if ('preprocessing' in workflowSteps) {
-  duplicatesGrouped  = Channel.create()
-  // create intervals for realignement using both tumor+normal as input
-  // group the marked duplicates Bams for intervals and realign by overall subject/patient id (idPatient)
-  duplicatesGrouped = duplicates.groupTuple(by:[0,1])
-} else if ('realign' in workflowSteps) {
-  duplicatesGrouped = Channel.create()
-  duplicatesGrouped = bamFiles.map{
-    idPatient, gender, status, idSample, bam, bai ->
-    [idPatient, gender, "${idSample}_${status}", bam, bai]
-  }.groupTuple(by:[0,1])
-}
+duplicatesGrouped = 'realign' in workflowSteps ? bamFiles.map{
+  idPatient, gender, status, idSample, bam, bai ->
+  [idPatient, gender, "${idSample}_${status}", bam, bai]
+}.groupTuple(by:[0,1]) : duplicatesGrouped
 
-if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
-  // The duplicatesGrouped channel is duplicated, one copy goes to the CreateIntervals process
-  // and the other to the IndelRealigner process
-  duplicatesGrouped.into(duplicatesInterval, duplicatesRealign)
-  if (verbose) {
-    duplicatesInterval = duplicatesInterval.view {"BAMs for RealignerTargetCreator grouped by patient ID: $it"}
-    duplicatesRealign  = duplicatesRealign.view  {"BAMs for IndelRealigner grouped by patient ID: $it"}
-  }
-} else {
-  duplicatesInterval.close()
-  duplicatesRealign.close()
-}
+// The duplicatesGrouped channel is duplicated, one copy goes to the CreateIntervals process
+// and the other to the IndelRealigner process
+(duplicatesInterval, duplicatesRealign) = duplicatesGrouped.into(2)
+
+verbose ? duplicatesInterval = duplicatesInterval.view {"BAMs for RealignerTargetCreator grouped by patient ID: $it"} : ''
+verbose ? duplicatesRealign = duplicatesRealign.view {"BAMs for IndelRealigner grouped by patient ID: $it"} : ''
 
 // VCF indexes are added so they will be linked, and not re-created on the fly
 //  -L "1:131941-141339" \
@@ -357,9 +309,7 @@ process CreateIntervals {
   """
 }
 
-if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
-  if (verbose) {intervals = intervals.view {"Intervals passed to Realign: $it"}}
-}
+verbose ? intervals = intervals.view {"Intervals passed to Realign: $it"} : ''
 
 // use nWayOut to split into T/N pair again
 // VCF indexes are added so they will be linked, and not re-created on the fly
@@ -403,31 +353,26 @@ process RealignBams {
   """
 }
 
-realignedBam = Channel.create()
-
-if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
-  // If I make a set out of this process I got a list of lists, which cannot be iterate via a single process
-  // So I need to transform this output into a channel that can be iterated on.
-  // I also had problems with the set that wasn't synchronised, and I got wrongly associated files
-  // So what I decided was to separate all the different output
-  // We're getting from the Realign process 5 channels (patient, gender, samples bams and bais)
-  // So I flatten, sort, and reflatten the samples and the files (bam and bai) channels
-  // to get them in the same order (the name of the bam and bai files are based on the sample, so if we sort them they all have the same order ;-))
-  // And put them back together, and add the ID patient and the gender in the realignedBam channel
-  realignedBam = tempIdPatient.spread(
-    tempGender.spread(
-      tempSamples_status.flatten().toSortedList().flatten().merge(
-        tempBams.flatten().toSortedList().flatten(),
-        tempBais.flatten().toSortedList().flatten()
-      ) {sample, bam, bai -> [sample, bam, bai]}
-    )
+// If I make a set out of this process I got a list of lists, which cannot be iterate via a single process
+// So I need to transform this output into a channel that can be iterated on.
+// I also had problems with the set that wasn't synchronised, and I got wrongly associated files
+// So what I decided was to separate all the different output
+// We're getting from the Realign process 5 channels (patient, gender, samples bams and bais)
+// So I flatten, sort, and reflatten the samples and the files (bam and bai) channels
+// to get them in the same order (the name of the bam and bai files are based on the sample, so if we sort them they all have the same order ;-))
+// And put them back together, and add the ID patient and the gender in the realignedBam channel
+realignedBam = tempIdPatient.spread(
+  tempGender.spread(
+    tempSamples_status.flatten().toSortedList().flatten().merge(
+      tempBams.flatten().toSortedList().flatten(),
+      tempBais.flatten().toSortedList().flatten()
+    ) {sample, bam, bai -> [sample, bam, bai]}
   )
-  //Retrieving the status from the idSample
-  realignedBam = retreiveStatus(realignedBam)
-  if (verbose) {realignedBam = realignedBam.view {"realignedBam to BaseRecalibrator: $it"}}
-} else {
-  realignedBam.close()
-}
+)
+//Retrieving the status from the idSample
+realignedBam = retreiveStatus(realignedBam)
+
+verbose ? realignedBam = realignedBam.view {"realignedBam to BaseRecalibrator: $it"} : ''
 
 process CreateRecalibrationTable {
   tag {idPatient + "-" + idSample}
@@ -476,11 +421,9 @@ recalibrationTableTSV.map { idPatient, gender, status, idSample, bam, bai, recal
   "$idPatient\t$gender\t$status\t$idSample\t${directoryMap['nonRecalibrated']}/$bam\t${directoryMap['nonRecalibrated']}/$bai\t\t${directoryMap['nonRecalibrated']}/$recalTable\n"
 }.collectFile( name: 'nonRecalibrated.tsv', sort: true, storeDir: directoryMap['nonRecalibrated'])
 
-if ('preprocessing' in workflowSteps || 'realign' in workflowSteps) {
-  if (verbose) {recalibrationTable = recalibrationTable.view {"Base recalibrated table for recalibration: $it"}}
-} else if ('recalibrate' in workflowSteps) {
-  recalibrationTable = bamFiles
-}
+recalibrationTable = 'recalibrate' in workflowSteps ? bamFiles : recalibrationTable
+
+verbose ? recalibrationTable = recalibrationTable.view {"Base recalibrated table for recalibration: $it"} : ''
 
 process RecalibrateBam {
   tag {idPatient + "-" + idSample}
@@ -519,17 +462,11 @@ recalibratedBamTSV.map { idPatient, gender, status, idSample, bam, bai ->
   "$idPatient\t$gender\t$status\t$idSample\t${directoryMap['recalibrated']}/$bam\t${directoryMap['recalibrated']}/$bai\n"
 }.collectFile( name: 'recalibrated.tsv', sort: true, storeDir: directoryMap['recalibrated'])
 
-if ('skipPreprocessing' in workflowSteps) {
-  recalibratedBam = bamFiles
-}
+recalibratedBam = 'skipPreprocessing' in workflowSteps ? bamFiles : recalibratedBam
 
-if (verbose) {recalibratedBam = recalibratedBam.view {"Recalibrated Bam for variant Calling: $it"}}
+verbose ? recalibratedBam = recalibratedBam.view {"Recalibrated Bam for variant Calling: $it"} : ''
 
-recalibratedBamForStats = Channel.create()
-
-if ('MultiQC' in workflowSteps) {
-  (recalibratedBam, recalibratedBamForStats) = recalibratedBam.into(2)
-}
+(recalibratedBam, recalibratedBamForStats) = recalibratedBam.into(2)
 
 process RunSamtoolsStats {
   tag {idPatient + "-" + idSample}
@@ -550,11 +487,7 @@ process RunSamtoolsStats {
     """
 }
 
-if ('MultiQC' in workflowSteps) {
-  if (verbose) {recalibratedBam = recalibratedBam.view {"BAM Stats: $it"}}
-} else {
-  recalibratedBamForStats.close()
-}
+verbose ? recalibratedBamReports = recalibratedBamReports.view {"BAM Stats: $it"} : ''
 
 // Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
 // The sample tsv config file which is formatted like: "subject status sample lane fastq1 fastq2"
@@ -565,42 +498,18 @@ if ('MultiQC' in workflowSteps) {
 // then copy this channel into channels for each variant calling
 // I guess it will still work even if we have multiple normal samples
 
-bamsTumor = Channel.create()
-bamsNormal = Channel.create()
-bamsAll = Channel.create()
-vcfsToMerge = Channel.create()
-
-bamsFHC = Channel.create()  // HaplotypeCaller
-
-bamsForAscat = Channel.create()
-
-bamsFMT1 = Channel.create() // MuTect1
-bamsFMT2 = Channel.create() // MuTect2
-bamsFFB = Channel.create()  // FreeBayes
-bamsFVD = Channel.create() // VarDict
-
-hcVCF = Channel.create()        // HaplotypeCaller
-mutect1VCF = Channel.create()   // MuTect1
-mutect2VCF = Channel.create()   // MuTect2
-freebayesVCF = Channel.create() // FreeBayes
-vardictVCF = Channel.create()   // VarDict
-
-bamsForStrelka = Channel.create()
-bamsForManta = Channel.create()
-
 // separate recalibrateBams by status
-
+bamsNormal = Channel.create()
+bamsTumor = Channel.create()
 recalibratedBam
   .choice(bamsTumor, bamsNormal) {it[2] =~ /^0$/ ? 1 : 0}
 
 // Removing status because not relevant anymore
-bamsTumor = bamsTumor.map { idPatient, gender, status, idSample, bam, bai -> [idPatient, gender, idSample, bam, bai] }
 bamsNormal = bamsNormal.map { idPatient, gender, status, idSample, bam, bai -> [idPatient, gender, idSample, bam, bai] }
+verbose ? bamsNormal = bamsNormal.view {"Normal Bam for variant Calling: $it"} : ''
 
-if (verbose) {
-  bamsTumor = bamsTumor.view {"Tumor Bam for variant Calling: $it"}
-  bamsNormal = bamsNormal.view {"Normal Bam for variant Calling: $it"}
-}
+bamsTumor = bamsTumor.map { idPatient, gender, status, idSample, bam, bai -> [idPatient, gender, idSample, bam, bai] }
+verbose ? bamsTumor = bamsTumor.view {"Tumor Bam for variant Calling: $it"} : ''
 
 // We know that MuTect2 (and other somatic callers) are notoriously slow. To speed them up we are chopping the reference into
 // smaller pieces at centromeres (see repeats/centromeres.list), do variant calling by this intervals, and re-merge the VCFs.
@@ -615,85 +524,62 @@ if (verbose) {
 intervals = Channel.from(file(referenceMap['intervals']).readLines())
 gI = intervals.map{[it,it.replaceFirst(/\:/,'_')]}
 
-if ('HaplotypeCaller' in workflowSteps) {
-  bamsNormalTemp = Channel.create()
-  bamsTumorTemp = Channel.create()
-  (bamsNormalTemp, bamsNormal, gI) = generateIntervalsForVC(bamsNormal, gI)
-  (bamsTumorTemp, bamsTumor, gI) = generateIntervalsForVC(bamsTumor, gI)
-  bamsFHC = bamsNormalTemp.mix(bamsTumorTemp)
-  if (verbose) {bamsFHC = bamsFHC.view {"Bams with Intervals for HaplotypeCaller: $it"}}
-} else {
-  bamsFHC.close()
-  hcVCF.close()
-}
-if ('Ascat' in workflowSteps) {
-  bamsNormalTemp = Channel.create()
-  bamsTumorTemp = Channel.create()
-  (bamsNormalTemp, bamsNormal) = bamsNormal.into(2)
-  (bamsTumorTemp, bamsTumor) = bamsTumor.into(2)
-  bamsNormalTemp = bamsNormalTemp.map { idPatient, gender, idSample, bam, bai -> [idPatient, gender, 0, idSample, bam, bai] }
-  bamsTumorTemp = bamsTumorTemp.map { idPatient, gender, idSample, bam, bai -> [idPatient, gender, 1, idSample, bam, bai] }
-  bamsForAscat = bamsNormalTemp.mix(bamsTumorTemp)
-  if (verbose) {bamsForAscat = bamsForAscat.view {"Bams for Ascat: $it"}}
-} else {
-  bamsForAscat.close()
-}
+(bamsNormalTemp, bamsNormal, gI) = generateIntervalsForVC(bamsNormal, gI)
+(bamsTumorTemp, bamsTumor, gI) = generateIntervalsForVC(bamsTumor, gI)
+
+// HaplotypeCaller
+bamsFHC = bamsNormalTemp.mix(bamsTumorTemp)
+verbose ? bamsFHC = bamsFHC.view {"Bams with Intervals for HaplotypeCaller: $it"} : ''
+if (!'HaplotypeCaller' in workflowSteps) {bamsFHC.close()}
+
+(bamsNormalTemp, bamsNormal) = bamsNormal.into(2)
+(bamsTumorTemp, bamsTumor) = bamsTumor.into(2)
+
+bamsNormalTemp = bamsNormalTemp.map { idPatient, gender, idSample, bam, bai -> [idPatient, gender, 0, idSample, bam, bai] }
+bamsTumorTemp = bamsTumorTemp.map { idPatient, gender, idSample, bam, bai -> [idPatient, gender, 1, idSample, bam, bai] }
+
+bamsForAscat = Channel.create()
+bamsForAscat = bamsNormalTemp.mix(bamsTumorTemp)
+verbose ? bamsForAscat = bamsForAscat.view {"Bams for Ascat: $it"} : ''
+if (!'Ascat' in workflowSteps) {bamsForAscat.close()}
 
 bamsAll = bamsNormal.spread(bamsTumor)
-
-bamsAll = bamsAll.map { // Since idPatientNormal and idPatientTumor are the same, it's removed from bamsAll Channel (same for genderNormal)
-  // /!\ It is assumed that every sample are from the same patient
+// Since idPatientNormal and idPatientTumor are the same
+// It's removed from bamsAll Channel (same for genderNormal)
+// /!\ It is assumed that every sample are from the same patient
+bamsAll = bamsAll.map {
   idPatientNormal, genderNormal, idSampleNormal, bamNormal, baiNormal, idPatientTumor, genderTumor, idSampleTumor, bamTumor, baiTumor ->
   [idPatientNormal, genderNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor]
 }
+verbose ? bamsAll = bamsAll.view {"Mapped Recalibrated Bam for variant Calling: $it"} : ''
 
-if (verbose) {bamsAll = bamsAll.view {"Mapped Recalibrated Bam for variant Calling: $it"}}
+// MuTect1
+(bamsFMT1, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
+verbose ? bamsFMT1 = bamsFMT1.view {"Bams with Intervals for MuTect1: $it"} : ''
+if (!'MuTect1' in workflowSteps) {bamsFMT1.close()}
 
-if ('MuTect1' in workflowSteps) {
-  (bamsFMT1, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
-  if (verbose) {bamsFMT1 = bamsFMT1.view {"Bams with Intervals for MuTect1: $it"}}
-} else {
-  bamsFMT1.close()
-  mutect1VCF.close()
-}
+// MuTect2
+(bamsFMT2, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
+verbose ? bamsFMT2 = bamsFMT2.view {"Bams with Intervals for MuTect2: $it"} : ''
+if (!'MuTect2' in workflowSteps) {bamsFMT2.close()}
 
-if ('MuTect2' in workflowSteps) {
-  (bamsFMT2, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
-  if (verbose) {bamsFMT2 = bamsFMT2.view {"Bams with Intervals for MuTect2: $it"}}
-} else {
-  bamsFMT2.close()
-  mutect2VCF.close()
-}
+// FreeBayes
+(bamsFFB, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
+verbose ? bamsFFB = bamsFFB.view {"Bams with Intervals for FreeBayes: $it"} : ''
+if (!'FreeBayes' in workflowSteps) {bamsFFB.close()}
 
-if ('FreeBayes' in workflowSteps) {
-  (bamsFFB, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
-  if (verbose) {bamsFFB = bamsFFB.view {"Bams with Intervals for FreeBayes: $it"}}
-} else {
-  bamsFFB.close()
-  freebayesVCF.close()
-}
+// VarDict
+(bamsFVD, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
+verbose ? bamsFVD = bamsFVD.view {"Bams with Intervals for VarDict: $it"} : ''
+if (!'VarDict' in workflowSteps) {bamsFVD.close()}
 
-if ('VarDict' in workflowSteps) {
-  (bamsFVD, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
-  if (verbose) {bamsFVD = bamsFVD.view {"Bams with Intervals for VarDict: $it"}}
-} else {
-  bamsFVD.close()
-  vardictVCF.close()
-}
+(bamsForManta, bamsForStrelka) = bamsAll.into(2)
 
-if ('Strelka' in workflowSteps) {
-  (bamsAll, bamsForStrelka) = bamsAll.into(2)
-  if (verbose) {bamsForStrelka = bamsForStrelka.view {"Bams for Strelka: $it"}}
-} else {
-  bamsForStrelka.close()
-}
+verbose ? bamsForManta = bamsForManta.view {"Bams for Manta: $it"} : ''
+if (!'Manta' in workflowSteps) {bamsForManta.close()}
 
-if ('Manta' in workflowSteps) {
-  (bamsAll, bamsForManta) = bamsAll.into(2)
-  if (verbose) {bamsForManta = bamsForManta.view {"Bams for Manta: $it"}}
-} else {
-  bamsForManta.close()
-}
+verbose ? bamsForStrelka = bamsForStrelka.view {"Bams for Strelka: $it"} : ''
+if (!'Strelka' in workflowSteps) {bamsForStrelka.close()}
 
 process RunHaplotypecaller {
   tag {idPatient + "-" + idSample + "-" + gen_int}
@@ -707,7 +593,7 @@ process RunHaplotypecaller {
     file dbsnpIndex from file(referenceMap['dbsnpIndex'])
 
   output:
-    set val("HaplotypeCaller"), idPatient, gender, idSample, val("${gen_int}_${idSample}"), file("${gen_int}_${idSample}.vcf") into haplotypecallerOutput
+    set val("HaplotypeCaller"), idPatient, gender, idSample, val("${gen_int}_${idSample}"), file("${gen_int}_${idSample}.vcf") into hcVCF
 
   when: 'HaplotypeCaller' in workflowSteps
 
@@ -728,14 +614,12 @@ process RunHaplotypecaller {
   """
 }
 
-if ('HaplotypeCaller' in workflowSteps) {
-  if (verbose) {haplotypecallerOutput = haplotypecallerOutput.view {"HaplotypeCaller output: $it"}}
-  hcVCF = haplotypecallerOutput.map {
-    variantCaller, idPatient, gender, idSample, tag, vcfFile ->
-    [variantCaller, idPatient, gender, idSample, idSample, tag, vcfFile]
-  }.groupTuple(by:[0,1,2,3,4])
-  if (verbose) {hcVCF = hcVCF.view {"hcVCF: $it" } }
-}
+hcVCF = hcVCF.map {
+  variantCaller, idPatient, gender, idSample, tag, vcfFile ->
+  [variantCaller, idPatient, gender, idSample, idSample, tag, vcfFile]
+}.groupTuple(by:[0,1,2,3,4])
+
+verbose ? hcVCF = hcVCF.view {"HaplotypeCaller output: $it"} : ''
 
 process RunMutect1 {
   tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
@@ -774,11 +658,8 @@ process RunMutect1 {
   """
 }
 
-if ('MuTect1' in workflowSteps) {
-  if (verbose) {mutect1Output = mutect1Output.view {"MuTect1 output: $it"}}
-  mutect1VCF = mutect1Output.groupTuple(by:[0,1,2,3,4])
-  if (verbose) {mutect1VCF = mutect1VCF.view {"mutect1VCF: $it"}}
-}
+mutect1Output = mutect1Output.groupTuple(by:[0,1,2,3,4])
+verbose ? mutect1Output = mutect1Output.view {"MuTect1 output: $it"} : ''
 
 process RunMutect2 {
   tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
@@ -821,11 +702,8 @@ process RunMutect2 {
 
 }
 
-if ('MuTect2' in workflowSteps) {
-  if (verbose) {mutect2Output = mutect2Output.view {"MuTect2 output: $it"}}
-  mutect2VCF = mutect2Output.groupTuple(by:[0,1,2,3,4])
-  if (verbose) {mutect2VCF = mutect2VCF.view {"mutect2VCF: $it"}}
-}
+mutect2Output = mutect2Output.groupTuple(by:[0,1,2,3,4])
+verbose ? mutect2Output = mutect2Output.view {"MuTect2 output: $it"} : ''
 
 process RunFreeBayes {
   tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
@@ -853,11 +731,8 @@ process RunFreeBayes {
   """
 }
 
-if ('FreeBayes' in workflowSteps) {
-  if (verbose) {freebayesOutput = freebayesOutput.view {"FreeBayes output: $it"}}
-  freebayesVCF = freebayesOutput.groupTuple(by:[0,1,2,3,4])
-  if (verbose) {freebayesVCF = freebayesVCF.view {"freebayesVCF: $it"}}
-}
+freebayesOutput = freebayesOutput.groupTuple(by:[0,1,2,3,4])
+verbose ? freebayesOutput = freebayesOutput.view {"FreeBayes output: $it"} : ''
 
 process RunVardict {
   tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
@@ -885,20 +760,14 @@ process RunVardict {
   """
 }
 
-if ('VarDict' in workflowSteps) {
-  if (verbose) {vardictOutput = vardictOutput.view {"VarDict output: $it"}}
-  vardictVCF = vardictOutput.groupTuple(by:[0,1,2,3,4])
-  if (verbose) {vardictVCF = vardictVCF.view {"vardictVCF: $it"}}
-}
+vardictOutput = vardictOutput.groupTuple(by:[0,1,2,3,4])
+verbose ? vardictOutput = vardictOutput.view {"vardictOutput output: $it"} : ''
 
 // we are merging the VCFs that are called separatelly for different intervals
 // so we can have a single sorted VCF containing all the calls for a given caller
-if ('HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2' in workflowSteps || 'FreeBayes' in workflowSteps || 'VarDict' in workflowSteps) {
-  vcfsToMerge = hcVCF.mix(mutect1VCF, mutect2VCF, freebayesVCF, vardictVCF)
-  if (verbose) {vcfsToMerge = vcfsToMerge.view {"VCFs To be merged: $it"}}
-} else {
-  vcfsToMerge.close()
-}
+
+vcfsToMerge = hcVCF.mix(mutect1Output, mutect2Output, freebayesOutput, vardictOutput)
+verbose ? vcfsToMerge = vcfsToMerge.view {"VCFs To be merged: $it"} : ''
 
 process ConcatVCF {
   tag {variantCaller == 'HaplotypeCaller' ? idPatient + "-" + variantCaller + "-" + idSampleNormal : idPatient + "-" + variantCaller + "-" + idSampleNormal + "-" + idSampleTumor}
@@ -918,7 +787,7 @@ process ConcatVCF {
 
   script:
   vcfFiles = vcFiles.collect{"-V $it"}.join(' ')
-  outputFile = (variantCaller == 'HaplotypeCaller' ? "${variantCaller}_${idSampleNormal}.vcf" : "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf")
+  outputFile = variantCaller == 'HaplotypeCaller' ? "${variantCaller}_${idSampleNormal}.vcf" : "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
 
   if (variantCaller == 'VarDict')
     """
@@ -942,9 +811,7 @@ process ConcatVCF {
     """
 }
 
-if ('HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2' in workflowSteps || 'FreeBayes' in workflowSteps || 'VarDict' in workflowSteps) {
-   if (verbose) {vcfConcatenated = vcfConcatenated.view {"VCF concatenated: $it"}}
-}
+verbose ? vcfConcatenated = vcfConcatenated.view {"VCF concatenated: $it"} : ''
 
 process RunStrelka {
   tag {idPatient + "-" + idSampleTumor}
@@ -987,9 +854,7 @@ process RunStrelka {
   """
 }
 
-if ('Strelka' in workflowSteps) {
-  if (verbose) {strelkaOutput = strelkaOutput.view {"Strelka output: $it"}}
-}
+verbose ? strelkaOutput = strelkaOutput.view {"Strelka output: $it"} : ''
 
 process RunManta {
   tag {idPatient + "-" + idSampleTumor}
@@ -1023,9 +888,7 @@ process RunManta {
   """
 }
 
-if ('Manta' in workflowSteps) {
-  if (verbose) {mantaOutput = mantaOutput.view {"Manta output: $it"}}
-}
+verbose ? mantaOutput = mantaOutput.view {"Manta output: $it"} : ''
 
 // Run commands and code from Malin Larsson
 // Based on Jesper Eisfeldt's code
@@ -1050,28 +913,22 @@ process RunAlleleCount {
   """
 }
 
-alleleCountOutputAll = Channel.create()
+verbose ? alleleCountOutput = alleleCountOutput.view {"alleleCount output: $it"} : ''
 
-if ('Ascat' in workflowSteps) {
-  if (verbose) {alleleCountOutput = alleleCountOutput.view {"alleleCount output: $it"}}
+alleleCountNormal = Channel.create()
+alleleCountTumor = Channel.create()
 
-  alleleCountOutputNormalTemp = Channel.create()
-  alleleCountOutputTumorTemp = Channel.create()
+alleleCountOutput
+  .choice(alleleCountTumor, alleleCountNormal) {it[2] =~ /^0$/ ? 1 : 0}
 
-  alleleCountOutput
-    .choice(alleleCountOutputTumorTemp, alleleCountOutputNormalTemp) {it[2] =~ /^0$/ ? 1 : 0}
+alleleCountOutput = alleleCountNormal.spread(alleleCountTumor)
 
-  alleleCountOutputAll = alleleCountOutputNormalTemp.spread(alleleCountOutputTumorTemp)
-
-  alleleCountOutputAll = alleleCountOutputAll.map {
-    idPatientNormal, genderNormal, statusNormal, idSampleNormal, alleleCountNormal, idPatientTumor, genderTumor, statusTumor, idSampleTumor, alleleCountTumor ->
-    [idPatientNormal, genderNormal, idSampleNormal, idSampleTumor, alleleCountNormal, alleleCountTumor]
-  }
-
-  if (verbose) {alleleCountOutputAll = alleleCountOutputAll.view {"alleleCountAll output: $it"}}
-} else {
-  alleleCountOutputAll.close()
+alleleCountOutput = alleleCountOutput.map {
+  idPatientNormal, genderNormal, statusNormal, idSampleNormal, alleleCountNormal, idPatientTumor, genderTumor, statusTumor, idSampleTumor, alleleCountTumor ->
+  [idPatientNormal, genderNormal, idSampleNormal, idSampleTumor, alleleCountNormal, alleleCountTumor]
 }
+
+verbose ? alleleCountOutput = alleleCountOutput.view {"alleleCount output: $it"} : ''
 
 // R script from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
@@ -1081,7 +938,7 @@ process RunConvertAlleleCounts {
   publishDir directoryMap['Ascat'], mode: 'copy'
 
   input:
-    set idPatient, gender, idSampleNormal, idSampleTumor, file(alleleCountNormal), file(alleleCountTumor) from alleleCountOutputAll
+    set idPatient, gender, idSampleNormal, idSampleTumor, file(alleleCountNormal), file(alleleCountTumor) from alleleCountOutput
 
   output:
     set idPatient, gender, idSampleNormal, idSampleTumor, file("${idSampleNormal}.BAF"), file("${idSampleNormal}.LogR"), file("${idSampleTumor}.BAF"), file("${idSampleTumor}.LogR") into convertAlleleCountsOutput
@@ -1154,9 +1011,7 @@ process RunAscat {
   """
 }
 
-if ('Ascat' in workflowSteps) {
-  if (verbose) {ascatOutput = ascatOutput.view {"Ascat output: $it"}}
-}
+verbose ? ascatOutput = ascatOutput.view {"Ascat output: $it"} : ''
 
 // process RunBcftoolsStats {
 //   tag {idPatient + "-" + idSample}
@@ -1167,7 +1022,7 @@ if ('Ascat' in workflowSteps) {
 //     set idPatient, gender, status, idSample, file(vcf) from ???
 //
 //   output:
-//     file ("${vcf}.samtools.stats.out") into vcfReports
+//     file ("${vcf}.samtools.stats.out") into snpeffReports
 //
 //     when: 'MultiQC' in workflowSteps
 //
@@ -1201,7 +1056,7 @@ vcfConcatenated
   .choice(vcfMerged, vcfNotMerged) {it[0] == 'MuTect1' ? 0 : 1}
 
 process RunSnpeff {
-  tag {variantCaller + "-" + idPatient + "-" + idSampleTumor}
+  tag {variantCaller + "-" + idSampleTumor + "_vs_" + idSampleNormal}
 
   publishDir directoryMap['snpEff'], mode: 'copy'
 
@@ -1209,7 +1064,7 @@ process RunSnpeff {
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file(vcf) from vcfMerged
 
   output:
-    set file("${vcf.baseName}.ann.vcf"), file("snpEff_${vcf.baseName}.html"), file("snpEff_${vcf.baseName}.genes.txt") into vcfReports
+    set file("${vcf.baseName}.ann.vcf"), file("${vcf.baseName}_snpEff_genes.txt"), file("${vcf.baseName}_snpEff_summary.html") into snpeffReports
 
     'MuTect1' in workflowSteps
 
@@ -1220,17 +1075,59 @@ process RunSnpeff {
     ${params.snpeffDb} \
     -v -cancer \
     ${vcf} \
-    -stats snpEff_${vcf.baseName}.html
     > ${vcf.baseName}.ann.vcf
+
+    mv snpEff_genes.txt ${vcf.baseName}_snpEff_genes.txt
+    mv snpEff_summary.html ${vcf.baseName}_snpEff_summary.html
     """
 }
 
-reportsForMultiQC = Channel.create()
+verbose ? snpeffReports = snpeffReports.view {"snpEff Reports: $it"} : ''
 
-if ('MultiQC' in workflowSteps) {
-  reportsForMultiQC = fastQCreport.mix(markDuplicatesReport,recalibratedBamReports,vcfReports).flatten().toList()
-  if (verbose) {reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}}
+process GenerateMultiQCconfig {
+  tag {idPatient}
+
+  publishDir directoryMap['MultiQC'], mode: 'copy'
+
+  input:
+
+  output:
+  file("multiqc_config.yaml") into multiQCconfig
+
+  when: 'MultiQC' in workflowSteps
+
+  script:
+  """
+  touch multiqc_config.yaml
+  echo "custom_logo: $baseDir/doc/images/CAW-logo.png" >> multiqc_config.yaml
+  echo "custom_logo_url: http://opensource.scilifelab.se/projects/caw" >> multiqc_config.yaml
+  echo "custom_logo_title: 'Cancer Analysis Workflow'" >> multiqc_config.yaml
+  echo "report_header_info:" >> multiqc_config.yaml
+  echo "- CAW version: $version" >> multiqc_config.yaml
+  echo "- Contact E-mail: ${params.contactMail}" >> multiqc_config.yaml
+  echo "- Command Line: ${workflow.commandLine}" >> multiqc_config.yaml
+  echo "- Directory: ${workflow.launchDir}" >> multiqc_config.yaml
+  echo "- TSV file: ${tsvFile}" >> multiqc_config.yaml
+  echo "- Steps: "${workflowSteps.join(", ")} >> multiqc_config.yaml
+  echo "top_modules:" >> multiqc_config.yaml
+  echo "- 'fastqc'" >> multiqc_config.yaml
+  echo "- 'picard'" >> multiqc_config.yaml
+  echo "- 'samtools'" >> multiqc_config.yaml
+  echo "- 'snpeff'" >> multiqc_config.yaml
+  """
 }
+
+verbose ? multiQCconfig = multiQCconfig.view {"MultiQC config file: $it"} : ''
+
+reportsForMultiQC = Channel.fromPath( 'Reports/{FastQC,MarkDuplicates,SamToolsStats}/*' )
+  .mix(fastQCreport,markDuplicatesReport,recalibratedBamReports,snpeffReports,multiQCconfig)
+  .flatten()
+  .unique()
+  .toList()
+
+verbose ? reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"} : ''
+
+if (!'MultiQC' in workflowSteps) {reportsForMultiQC.close()}
 
 process RunMultiQC {
   tag {idPatient}
@@ -1250,13 +1147,11 @@ process RunMultiQC {
   multiqc -f -v .
   """
 }
-if ('MultiQC' in workflowSteps) {
-  if (verbose) {multiQCReport = multiQCReport.view {"MultiQC report: $it"}}
-} else {
-  fastQCreport.close()
-  markDuplicatesReport.close()
-  reportsForMultiQC.close()
-}
+
+verbose ? multiQCReport = multiQCReport.view {"MultiQC Report: $it"} : ''
+
+
+// bamsFVD = bamsFVD.view {"bamsFVD: $it"}
 
 /*
 ================================================================================
@@ -1297,9 +1192,14 @@ def defineReferenceMap() {
     'cosmic'      : params.cosmic,      // cosmic vcf file with VCF4.1 header
     'cosmicIndex' : params.cosmicIndex, // cosmic vcf file index
     'dbsnpIndex'  : params.dbsnpIndex,  // dbSNP index
+    'genomeAmb'   : params.genomeAmb,   // BWA indexes
+    'genomeAnn'   : params.genomeAnn,   // BWA indexes
+    'genomeBwt'   : params.genomeBwt,   // BWA indexes
     'genomeDict'  : params.genomeDict,  // genome reference dictionary
     'genomeFile'  : params.genome,      // genome reference
     'genomeIndex' : params.genomeIndex, // genome reference index
+    'genomePac'   : params.genomePac,   // BWA indexes
+    'genomeSa'    : params.genomeSa,    // BWA indexes
     'intervals'   : params.intervals,   // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
     'kgIndels'    : params.kgIndels,    // 1000 Genomes SNPs
     'kgIndex'     : params.kgIndex,     // 1000 Genomes SNPs index
@@ -1349,25 +1249,28 @@ def defineStepList() {
 }
 
 def checkReferenceMap(referenceMap) {
+  //Loop through all the references files to check their existence
   referenceDefined = true
-  referenceMap.each{ //Loop through all the references files to check their existence
+  referenceMap.each{
     referenceFile, fileToCheck ->
     test = checkRefExistence(referenceFile, fileToCheck)
     !(test) ? referenceDefined = false : ""
   }
-  return (referenceDefined ? true : false)
+  return referenceDefined ? true : false
 }
 
 def checkStepList(stepsList, realStepsList) {
+  // Loop through all the possible steps check their existence and spelling
   stepCorrect = true
-  stepsList.each{ // Loop through all the possible steps check their existence and spelling
+  stepsList.each{
     test = checkStepExistence(it, realStepsList)
     !(test) ? stepCorrect = false : ""
   }
-  return (stepCorrect ? true : false)
+  return stepCorrect ? true : false
 }
 
-def checkRefExistence(referenceFile, fileToCheck) { // Check file existence
+def checkRefExistence(referenceFile, fileToCheck) {
+  // Check file existence
   try {assert file(fileToCheck).exists()}
   catch (AssertionError ae) {
     log.info  "Missing references: $referenceFile $fileToCheck"
@@ -1376,7 +1279,8 @@ def checkRefExistence(referenceFile, fileToCheck) { // Check file existence
   return true
 }
 
-def checkStepExistence(step, list) { // Check step existence
+def checkStepExistence(step, list) {
+  // Check step existence
   try {assert list.contains(step)}
   catch (AssertionError ae) {
     println("Unknown parameter: $step")
@@ -1385,14 +1289,17 @@ def checkStepExistence(step, list) { // Check step existence
   return true
 }
 
-def checkFileExistence(it) { // Check file existence
+def checkFileExistence(it) {
+  // Check file existence
   try {assert file(it).exists()}
   catch (AssertionError ae) {
     exit 1, "Missing file in TSV file: $it, see --help for more information"
   }
 }
 
-def extractFastqFiles(tsvFile) { // Channeling the TSV file containing FASTQ. Format is: "subject gender status sample lane fastq1 fastq2"
+def extractFastqFiles(tsvFile) {
+  // Channeling the TSV file containing FASTQ.
+  // Format is: "subject gender status sample lane fastq1 fastq2"
   fastqFiles = Channel
     .from(tsvFile.readLines())
     .map{line ->
@@ -1422,7 +1329,9 @@ def extractFastqFiles(tsvFile) { // Channeling the TSV file containing FASTQ. Fo
   return fastqFiles
 }
 
-def extractBamFiles(tsvFile) { // Channeling the TSV file containing BAM. Format is: "subject gender status sample bam bai"
+def extractBamFiles(tsvFile) {
+  // Channeling the TSV file containing BAM.
+  // Format is: "subject gender status sample bam bai"
   bamFiles = Channel
     .from(tsvFile.readLines())
     .map{line ->
@@ -1442,7 +1351,9 @@ def extractBamFiles(tsvFile) { // Channeling the TSV file containing BAM. Format
   return bamFiles
 }
 
-def extractReclibrationTables(tsvFile) { // Channeling the TSV file containing Recalibration Tables. Format is: "subject gender status sample bam bai recalTables"
+def extractRecalibrationTables(tsvFile) {
+  // Channeling the TSV file containing Recalibration Tables.
+  // Format is: "subject gender status sample bam bai recalTables"
   bamFiles = Channel
     .from(tsvFile.readLines())
     .map{line ->
@@ -1490,8 +1401,6 @@ def retreiveStatus(bamChannel) {
 }
 
 def generateIntervalsForVC(bams, gI) {
-  bamsForVC = Channel.create()
-  vcIntervals = Channel.create()
   (bams, bamsForVC) = bams.into(2)
   (gI, vcIntervals) = gI.into(2)
   bamsForVC = bamsForVC.spread(vcIntervals)
@@ -1549,11 +1458,7 @@ def start_message(version, revision) { // Display start message
 def version_message(version, revision) { // Display version message
   log.info "CANCER ANALYSIS WORKFLOW"
   log.info "  version   : $version"
-  if (workflow.commitId) {
-    log.info "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]"
-  } else {
-    log.info "  revision  : $revision"
-  }
+  log.info workflow.commitId ? "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]" : "  revision  : $revision"
 }
 
 workflow.onComplete { // Display complete message
@@ -1574,10 +1479,6 @@ workflow.onComplete { // Display complete message
 
 workflow.onError { // Display error message
   log.info "N E X T F L O W ~ version $workflow.nextflow.version [$workflow.nextflow.build]"
-  if (workflow.commitId) {
-    log.info "CANCER ANALYSIS WORKFLOW ~ $version - $workflow.revision [$workflow.commitId]"
-  } else {
-    log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
-  }
+  log.info workflow.commitId ? "CANCER ANALYSIS WORKFLOW ~ $version - $workflow.revision [$workflow.commitId]" : "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
   log.info "Workflow execution stopped with the following message: " + workflow.errorMessage
 }
