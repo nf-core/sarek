@@ -814,6 +814,7 @@ process ConcatVCF {
 	done
 	cat header raw_calls > unsorted.vcf
 	java -jar \${PICARD_HOME}/picard.jar SortVcf I=unsorted.vcf O=$outputFile
+    rm unsorted.vcf
 	"""
 }
 
