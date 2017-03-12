@@ -799,7 +799,7 @@ process ConcatVCF {
     -N "${idSampleTumor}_vs_${idSampleNormal}" testsomatic.out > $outputFile
     """
 
-  else if (variantCaller == 'MuTect2' || variantCaller == 'MuTect1' || variantCaller == 'HaplotypeCaller')
+  else if (variantCaller == 'MuTect2' || variantCaller == 'MuTect1' || variantCaller == 'HaplotypeCaller' || variantCaller == 'FreeBayes')
 	"""
 	# first make a header from one of the VCF intervals
 	# get rid of interval information only from the GATK command-line, but leave the rest
