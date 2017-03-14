@@ -769,8 +769,8 @@ process ConcatVCF {
   when: 'HaplotypeCaller' in workflowSteps || 'MuTect1' in workflowSteps || 'MuTect2' in workflowSteps || 'FreeBayes' in workflowSteps || 'VarDict' in workflowSteps
 
   script:
-  vcfFiles = vcFiles.collect{"-V $it"}.join(' ')
   outputFile = variantCaller == 'HaplotypeCaller' ? "${variantCaller}_${idSampleNormal}.vcf" : "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
+  vcfFiles = vcFiles.collect{" $it"}.join(' ')
 
   if (variantCaller == 'VarDict')
     """
@@ -782,16 +782,23 @@ process ConcatVCF {
     -N "${idSampleTumor}_vs_${idSampleNormal}" testsomatic.out > $outputFile
     """
 
-  else
-    """
-    java -Xmx${task.memory.toGiga()}g \
-    -jar \$GATK_HOME/GenomeAnalysisTK.jar \
-    -T CombineVariants \
-    -R $genomeFile \
-    $vcfFiles \
-    -o $outputFile \
-    -genotypeMergeOptions UNIQUIFY
-    """
+  else if (variantCaller == 'MuTect2' || variantCaller == 'MuTect1' || variantCaller == 'HaplotypeCaller' || variantCaller == 'FreeBayes')
+	"""
+	# first make a header from one of the VCF intervals
+	# get rid of interval information only from the GATK command-line, but leave the rest
+	awk '/^#/{print}' `ls *vcf| head -1` | \
+	awk '!/GATKCommandLine/{print}/GATKCommandLine/{for(i=1;i<=NF;i++){if(\$i!~/intervals=/ && \$i !~ /out=/){printf("%s ",\$i)}}printf("\\n")}' \
+	> header
+
+	## concatenate calls
+	rm -rf raw_calls
+	for f in *vcf; do 
+		awk '!/^#/{print}' \$f >> raw_calls
+	done
+	cat header raw_calls > unsorted.vcf
+	java -jar \${PICARD_HOME}/picard.jar SortVcf I=unsorted.vcf O=$outputFile
+    rm unsorted.vcf
+	"""
 }
 
 verbose ? vcfConcatenated = vcfConcatenated.view {"VCF concatenated: $it"} : ''
