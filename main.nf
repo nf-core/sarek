@@ -83,28 +83,11 @@ if (!checkStepList(workflowSteps,stepList)) {exit 1, 'Unknown step(s), see --hel
 
 if (params.test) {
   test = true
-  testFile = file("$workflow.projectDir/data/tsv/tiny.tsv")
-  workflowSteps = ['preprocessing', 'MultiQC']
   referenceMap.put("intervals", "$workflow.projectDir/repeats/tiny.list")
-} else if (params.testRealign) {
-  test = true
-  testFile = file("$workflow.launchDir/${directoryMap['nonRealigned']}/nonRealigned.tsv")
-  workflowSteps = ['realign', 'MultiQC']
-  referenceMap.put("intervals", "$workflow.projectDir/repeats/tiny.list")
-} else if (params.testRecalibrate) {
-  test = true
-  testFile = file("$workflow.launchDir/${directoryMap['nonRecalibrated']}/nonRecalibrated.tsv")
-  workflowSteps = ['recalibrate', 'MultiQC']
-  referenceMap.put("intervals", "$workflow.projectDir/repeats/tiny.list")
-} else if (params.testCoreVC) {
-  test = true
-  testFile = file("$workflow.launchDir/${directoryMap['recalibrated']}/recalibrated.tsv")
-  workflowSteps = ['skipPreprocessing', 'MuTect1', 'Strelka', 'HaplotypeCaller', 'MultiQC']
-  referenceMap.put("intervals", "$workflow.projectDir/repeats/tiny.list")
-} else if (params.testSideVC) {
-  test = true
-  testFile = file("$workflow.projectDir/data/tsv/G15511-recalibrated.tsv")
-  workflowSteps = ['skipPreprocessing', 'Ascat', 'Manta', 'HaplotypeCaller']
+  testFile = 'preprocessing' in workflowSteps ? file("$workflow.projectDir/data/tsv/tiny.tsv") : Channel.empty()
+  testFile = 'realign' in workflowSteps ? file("$workflow.launchDir/${directoryMap['nonRealigned']}/nonRealigned.tsv") : testFile
+  testFile = 'recalibrate' in workflowSteps ? file("$workflow.launchDir/${directoryMap['nonRecalibrated']}/nonRecalibrated.tsv") : testFile
+  testFile = 'skipPreprocessing' in workflowSteps ? file("$workflow.launchDir/${directoryMap['recalibrated']}/recalibrated.tsv") : testFile
 } else {test = false}
 
 if (!checkSteps(workflowSteps)) {exit 1, 'Please choose only one step between preprocessing, realign, recalibrate and skipPreprocessing, see --help for more information'}
@@ -477,7 +460,7 @@ process RunSamtoolsStats {
     set idPatient, gender, status, idSample, file(bam), file(bai) from recalibratedBamForStats
 
   output:
-    file ("${bam}.samtools.stats.out") into recalibratedBamReports
+    file ("${bam}.samtools.stats.out") into recalibratedBamReport
 
     when: 'MultiQC' in workflowSteps
 
@@ -487,7 +470,7 @@ process RunSamtoolsStats {
     """
 }
 
-verbose ? recalibratedBamReports = recalibratedBamReports.view {"BAM Stats: $it"} : ''
+verbose ? recalibratedBamReport = recalibratedBamReport.view {"BAM Stats: $it"} : ''
 
 // Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
 // The sample tsv config file which is formatted like: "subject status sample lane fastq1 fastq2"
@@ -1022,7 +1005,7 @@ verbose ? ascatOutput = ascatOutput.view {"Ascat output: $it"} : ''
 //     set idPatient, gender, status, idSample, file(vcf) from ???
 //
 //   output:
-//     file ("${vcf}.samtools.stats.out") into snpeffReports
+//     file ("${vcf}.samtools.stats.out") into snpeffReport
 //
 //     when: 'MultiQC' in workflowSteps
 //
@@ -1064,7 +1047,7 @@ process RunSnpeff {
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file(vcf) from vcfMerged
 
   output:
-    set file("${vcf.baseName}.ann.vcf"), file("${vcf.baseName}_snpEff_genes.txt"), file("${vcf.baseName}_snpEff_summary.html") into snpeffReports
+    set file("${vcf.baseName}.ann.vcf"), file("${vcf.baseName}_snpEff_genes.txt"), file("${vcf.baseName}_snpEff_summary.html") into snpeffReport
 
     'MuTect1' in workflowSteps
 
@@ -1082,7 +1065,7 @@ process RunSnpeff {
     """
 }
 
-verbose ? snpeffReports = snpeffReports.view {"snpEff Reports: $it"} : ''
+verbose ? snpeffReport = snpeffReport.view {"snpEff Reports: $it"} : ''
 
 process GenerateMultiQCconfig {
   tag {idPatient}
@@ -1120,7 +1103,7 @@ process GenerateMultiQCconfig {
 verbose ? multiQCconfig = multiQCconfig.view {"MultiQC config file: $it"} : ''
 
 reportsForMultiQC = Channel.fromPath( 'Reports/{FastQC,MarkDuplicates,SamToolsStats}/*' )
-  .mix(fastQCreport,markDuplicatesReport,recalibratedBamReports,snpeffReports,multiQCconfig)
+  .mix(fastQCreport,markDuplicatesReport,recalibratedBamReport,snpeffReport,multiQCconfig)
   .flatten()
   .unique()
   .toList()
