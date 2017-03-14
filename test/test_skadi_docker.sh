@@ -1,6 +1,6 @@
 #!/bin/bash
 
-nextflow run . -profile docker_skadi --test
-nextflow run . -profile docker_skadi --testRealign
-nextflow run . -profile docker_skadi --testRecalibrate
-nextflow run . -profile docker_skadi --testCoreVC
+nextflow run . -profile docker_skadi --test --steps preprocessing,MultiQC
+nextflow run . -profile docker_skadi --test --steps realign,MultiQC
+nextflow run . -profile docker_skadi --test --steps recalibrate,MultiQC
+nextflow run . -profile docker_skadi --test --steps skipPreprocessing,HaplotypeCaller,MuTect1,MuTect2
