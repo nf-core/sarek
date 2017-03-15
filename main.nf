@@ -253,7 +253,7 @@ duplicatesGrouped = 'realign' in workflowSteps ? bamFiles.map{
 (duplicatesInterval, duplicatesRealign) = duplicatesGrouped.into(2)
 
 verbose ? duplicatesInterval = duplicatesInterval.view {"BAMs for RealignerTargetCreator grouped by patient ID: $it"} : ''
-verbose ? duplicatesRealign = duplicatesRealign.view {"BAMs for IndelRealigner grouped by patient ID: $it"} : ''
+verbose ? duplicatesRealign = duplicatesRealign.view {"BAMs to phase: $it"} : ''
 
 // VCF indexes are added so they will be linked, and not re-created on the fly
 //  -L "1:131941-141339" \
@@ -271,7 +271,7 @@ process CreateIntervals {
     file millsIndex from file(referenceMap['millsIndex'])
 
   output:
-    file("${idPatient}.intervals") into intervals
+    set idPatient, gender, file("${idPatient}.intervals") into intervals
 
   when: 'preprocessing' in workflowSteps || 'realign' in workflowSteps
 
@@ -292,7 +292,21 @@ process CreateIntervals {
   """
 }
 
-verbose ? intervals = intervals.view {"Intervals passed to Realign: $it"} : ''
+verbose ? intervals = intervals.view {"Intervals to phase: $it"} : ''
+
+bamsAndIntervals = duplicatesRealign
+  .phase(intervals)
+  .map{duplicatesRealign, intervals ->
+    tuple(
+      duplicatesRealign[0],
+      duplicatesRealign[1],
+      duplicatesRealign[2],
+      duplicatesRealign[3],
+      duplicatesRealign[4],
+      intervals[2]
+    )}
+
+verbose ? bamsAndIntervals = bamsAndIntervals.view {"Bams and Intervals phased for IndelRealigner: $it"} : ''
 
 // use nWayOut to split into T/N pair again
 // VCF indexes are added so they will be linked, and not re-created on the fly
@@ -300,7 +314,7 @@ process RealignBams {
   tag {idPatient}
 
   input:
-    set idPatient, gender, idSample_status, file(bam), file(bai) from duplicatesRealign
+    set idPatient, gender, idSample_status, file(bam), file(bai), file(intervals) from bamsAndIntervals
     file genomeFile from file(referenceMap['genomeFile'])
     file genomeIndex from file(referenceMap['genomeIndex'])
     file genomeDict from file(referenceMap['genomeDict'])
@@ -308,14 +322,9 @@ process RealignBams {
     file kgIndex from file(referenceMap['kgIndex'])
     file millsIndels from file(referenceMap['millsIndels'])
     file millsIndex from file(referenceMap['millsIndex'])
-    file intervals from intervals
 
   output:
-    val(idPatient) into tempIdPatient
-    val(gender) into tempGender
-    val(idSample_status) into tempSamples_status
-    file("*.real.bam") into tempBams
-    file("*.real.bai") into tempBais
+    set idPatient, gender, file("*.real.bam"), file("*.real.bai") into realignedBam mode flatten
 
   when: 'preprocessing' in workflowSteps || 'realign' in workflowSteps
 
@@ -336,23 +345,6 @@ process RealignBams {
   """
 }
 
-// If I make a set out of this process I got a list of lists, which cannot be iterate via a single process
-// So I need to transform this output into a channel that can be iterated on.
-// I also had problems with the set that wasn't synchronised, and I got wrongly associated files
-// So what I decided was to separate all the different output
-// We're getting from the Realign process 5 channels (patient, gender, samples bams and bais)
-// So I flatten, sort, and reflatten the samples and the files (bam and bai) channels
-// to get them in the same order (the name of the bam and bai files are based on the sample, so if we sort them they all have the same order ;-))
-// And put them back together, and add the ID patient and the gender in the realignedBam channel
-realignedBam = tempIdPatient.spread(
-  tempGender.spread(
-    tempSamples_status.flatten().toSortedList().flatten().merge(
-      tempBams.flatten().toSortedList().flatten(),
-      tempBais.flatten().toSortedList().flatten()
-    ) {sample, bam, bai -> [sample, bam, bai]}
-  )
-)
-//Retrieving the status from the idSample
 realignedBam = retreiveStatus(realignedBam)
 
 verbose ? realignedBam = realignedBam.view {"realignedBam to BaseRecalibrator: $it"} : ''
@@ -792,7 +784,7 @@ process ConcatVCF {
 
 	## concatenate calls
 	rm -rf raw_calls
-	for f in *vcf; do 
+	for f in *vcf; do
 		awk '!/^#/{print}' \$f >> raw_calls
 	done
 	cat header raw_calls > unsorted.vcf
@@ -1381,10 +1373,10 @@ def checkSteps(workflowSteps) {
 
 def retreiveStatus(bamChannel) {
   bamChannel = bamChannel.map {
-    idPatient, gender, tag, bam, bai ->
-    array = tag.split("_")
-    status   = array[1]
-    idSample = array[0]
+    idPatient, gender, bam, bai ->
+    tag = bam.baseName.tokenize('.')[0]
+    status   = tag[-1..-1]
+    idSample = tag.take(tag.length()-2)
     [idPatient, gender, status, idSample, bam, bai]
   }
   return bamChannel
