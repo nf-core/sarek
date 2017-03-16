@@ -1342,10 +1342,10 @@ def extractRecal(tsvFile) {
 def checkSteps(workflowSteps) {
   result = 0
 
-  result = 'preprocessing' in workflowSteps ? result++ : result
-  result = 'recalibrate' in workflowSteps ? result++ : result
-  result = 'realign' in workflowSteps ? result++ : result
-  result = 'skipPreprocessing' in workflowSteps ? result++ : result
+  'preprocessing' in workflowSteps ? result++ : ''
+  'recalibrate' in workflowSteps ? result++ : ''
+  'realign' in workflowSteps ? result++ : ''
+  'skipPreprocessing' in workflowSteps ? result++ : ''
 
   return result == 1 ? true : false
 }
