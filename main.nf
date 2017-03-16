@@ -97,10 +97,10 @@ if ((!params.sample) && !(test)) {exit 1, 'Missing TSV file, see --help for more
 
 tsvFile = test ? testFile : file(params.sample)
 
-fastqFiles = 'preprocessing' in workflowSteps ? extractFastqFiles(tsvFile) : Channel.empty()
-bamFiles = 'realign' in workflowSteps ? extractBamFiles(tsvFile) : Channel.empty()
-bamFiles = 'recalibrate' in workflowSteps ? extractRecalibrationTables(tsvFile) : bamFiles
-bamFiles = 'skipPreprocessing' in workflowSteps ? extractBamFiles(tsvFile) : bamFiles
+fastqFiles = 'preprocessing' in workflowSteps ? extractFastq(tsvFile) : Channel.empty()
+bamFiles = 'realign' in workflowSteps ? extractBams(tsvFile) : Channel.empty()
+bamFiles = 'recalibrate' in workflowSteps ? extractRecal(tsvFile) : bamFiles
+bamFiles = 'skipPreprocessing' in workflowSteps ? extractBams(tsvFile) : bamFiles
 
 verbose ? fastqFiles = fastqFiles.view {"FASTQ files to preprocess: $it"} : ''
 verbose ? bamFiles = bamFiles.view {"BAM files to process: $it"} : ''
@@ -151,7 +151,7 @@ process MapReads {
     file genomeSa from file(referenceMap['genomeSa'])
 
   output:
-    set idPatient, gender, status, idSample, idRun, file("${idRun}.bam") into bam
+    set idPatient, gender, status, idSample, idRun, file("${idRun}.bam") into mappedBam
 
   when: 'preprocessing' in workflowSteps
 
@@ -165,14 +165,14 @@ process MapReads {
   """
 }
 
-verbose ? bam = bam.view {"BAM file to sort into group or single: $it"} : ''
+verbose ? mappedBam = mappedBam.view {"BAM file to sort into group or single: $it"} : ''
 
 // Sort bam whether they are standalone or should be merged
 // Borrowed code from https://github.com/guigolab/chip-nf
 
 singleBam = Channel.create()
 groupedBam = Channel.create()
-bam.groupTuple(by:[0,1,2,3])
+mappedBam.groupTuple(by:[0,1,2,3])
   .choice(singleBam, groupedBam) {it[4].size() > 1 ? 1 : 0}
 singleBam = singleBam.map {
   idPatient, gender, status, idSample, idRun, bam ->
@@ -1299,7 +1299,7 @@ def checkStatus(it) {
   return it
 }
 
-def extractFastqFiles(tsvFile) {
+def extractFastq(tsvFile) {
   // Channeling the TSV file containing FASTQ.
   // Format is: "subject gender status sample lane fastq1 fastq2"
   fastqFiles = Channel
@@ -1321,7 +1321,7 @@ def extractFastqFiles(tsvFile) {
   return fastqFiles
 }
 
-def extractBamFiles(tsvFile) {
+def extractBams(tsvFile) {
   // Channeling the TSV file containing BAM.
   // Format is: "subject gender status sample bam bai"
   bamFiles = Channel
@@ -1340,7 +1340,7 @@ def extractBamFiles(tsvFile) {
   return bamFiles
 }
 
-def extractRecalibrationTables(tsvFile) {
+def extractRecal(tsvFile) {
   // Channeling the TSV file containing Recalibration Tables.
   // Format is: "subject gender status sample bam bai recalTables"
   bamFiles = Channel
