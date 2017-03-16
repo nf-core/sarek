@@ -1133,39 +1133,21 @@ process RunMultiQC {
 
 verbose ? multiQCReport = multiQCReport.view {"MultiQC Report: $it"} : ''
 
-
-// bamsFVD = bamsFVD.view {"bamsFVD: $it"}
-
 /*
 ================================================================================
 =                               F U N C T I O N S                              =
 ================================================================================
 */
 
-def grabGitRevision() { // Borrowed from https://github.com/NBISweden/wgs-structvar
-  if (workflow.commitId) { // it's run directly from github
-    return workflow.commitId.substring(0,10)
-  }
-  // Try to find the revision directly from git
-  head_pointer_file = file("$baseDir/.git/HEAD")
-  if (!head_pointer_file.exists()) {
-    return ''
-  }
-  ref = head_pointer_file.newReader().readLine().tokenize()[1]
-  ref_file = file("$baseDir/.git/$ref")
-  if (!ref_file.exists()) {
-    return ''
-  }
-  revision = ref_file.newReader().readLine()
-  return revision.substring(0,10)
+def grabGitRevision() {
+  // Borrowed idea from https://github.com/NBISweden/wgs-structvar
+  ref = file("$baseDir/.git/HEAD") ?  file("$baseDir/.git/"+file("$baseDir/.git/HEAD").newReader().readLine().tokenize()[1]) : ''
+
+  return workflow.commitId ? workflow.commitId.substring(0,10) : ref.exists() ? ref.newReader().readLine().substring(0,10) : ''
 }
 
 def checkUppmaxProject() {
-  if ((workflow.profile == 'standard' || workflow.profile == 'interactive') && !params.project) {
-    return false
-  } else {
-    return true
-  }
+  return (workflow.profile == 'standard' || workflow.profile == 'interactive') && !params.project ? false : true
 }
 
 def defineReferenceMap() {
@@ -1302,7 +1284,7 @@ def checkStatus(it) {
 def extractFastq(tsvFile) {
   // Channeling the TSV file containing FASTQ.
   // Format is: "subject gender status sample lane fastq1 fastq2"
-  fastqFiles = Channel
+  return fastqFiles = Channel
     .from(tsvFile.readLines())
     .map{line ->
       list       = checkTSV(line.split(),7)
@@ -1318,13 +1300,12 @@ def extractFastq(tsvFile) {
 
       [idPatient, gender, status, idSample, idRun, fastqFile1, fastqFile2]
     }
-  return fastqFiles
 }
 
 def extractBams(tsvFile) {
   // Channeling the TSV file containing BAM.
   // Format is: "subject gender status sample bam bai"
-  bamFiles = Channel
+  return bamFiles = Channel
     .from(tsvFile.readLines())
     .map{line ->
       list      = checkTSV(line.split(),6)
@@ -1337,13 +1318,12 @@ def extractBams(tsvFile) {
 
       [ idPatient, gender, status, idSample, bamFile, baiFile ]
     }
-  return bamFiles
 }
 
 def extractRecal(tsvFile) {
   // Channeling the TSV file containing Recalibration Tables.
   // Format is: "subject gender status sample bam bai recalTables"
-  bamFiles = Channel
+  return bamFiles = Channel
     .from(tsvFile.readLines())
     .map{line ->
       list       = checkTSV(line.split(),7)
@@ -1357,32 +1337,27 @@ def extractRecal(tsvFile) {
 
       [ idPatient, gender, status, idSample, bamFile, baiFile, recalTable ]
     }
-  return bamFiles
 }
 
 def checkSteps(workflowSteps) {
   result = 0
 
-  if ('preprocessing' in workflowSteps) {result++}
-  if ('recalibrate' in workflowSteps) {result++}
-  if ('realign' in workflowSteps) {result++}
-  if ('skipPreprocessing' in workflowSteps) {result++}
-  if (result == 1 ) {
-    return true
-  } else {
-    return false
-  }
+  result = 'preprocessing' in workflowSteps ? result++ : result
+  result = 'recalibrate' in workflowSteps ? result++ : result
+  result = 'realign' in workflowSteps ? result++ : result
+  result = 'skipPreprocessing' in workflowSteps ? result++ : result
+
+  return result == 1 ? true : false
 }
 
 def retreiveStatus(bamChannel) {
-  bamChannel = bamChannel.map {
+  return bamChannel = bamChannel.map {
     idPatient, gender, bam, bai ->
     tag = bam.baseName.tokenize('.')[0]
     status   = tag[-1..-1]
     idSample = tag.take(tag.length()-2)
     [idPatient, gender, status, idSample, bam, bai]
   }
-  return bamChannel
 }
 
 def generateIntervalsForVC(bams, gI) {
