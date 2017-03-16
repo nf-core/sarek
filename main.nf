@@ -20,7 +20,7 @@ vim: syntax=groovy
  Pelin Sahlén <pelin.akan@scilifelab.se> [@pelinakan]
 --------------------------------------------------------------------------------
  @Homepage
- https://github.com/SciLifeLab/CAW
+ http://opensource.scilifelab.se/projects/caw/
 --------------------------------------------------------------------------------
  @Documentation
  https://github.com/SciLifeLab/CAW/README.md
@@ -69,9 +69,8 @@ if (params.version) {
   version_message(version, revision)
   exit 1
 }
-if (params.steps) {
-  workflowSteps = params.steps.split(',').collect {it.trim()}
-}
+
+workflowSteps = params.steps ? params.steps.split(',').collect {it.trim()} : ''
 
 directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
@@ -103,8 +102,8 @@ bamFiles = 'realign' in workflowSteps ? extractBamFiles(tsvFile) : Channel.empty
 bamFiles = 'recalibrate' in workflowSteps ? extractRecalibrationTables(tsvFile) : bamFiles
 bamFiles = 'skipPreprocessing' in workflowSteps ? extractBamFiles(tsvFile) : bamFiles
 
-verbose ? fastqFiles = fastqFiles.view {"FASTQ files and IDs to preprocess: $it"} : ''
-verbose ? bamFiles = bamFiles.view {"Bam files and IDs to process: $it"} : ''
+verbose ? fastqFiles = fastqFiles.view {"FASTQ files to preprocess: $it"} : ''
+verbose ? bamFiles = bamFiles.view {"BAM files to process: $it"} : ''
 start_message(version, revision)
 
 /*
@@ -115,7 +114,7 @@ start_message(version, revision)
 
 (fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
 
-verbose ? fastqFilesforFastQC = fastqFilesforFastQC.view {"FASTQ files and IDs for FastQC: $it"} : ''
+verbose ? fastqFilesforFastQC = fastqFilesforFastQC.view {"FASTQ files for FastQC: $it"} : ''
 
 process RunFastQC {
   tag {idPatient + "-" + idRun}
@@ -166,7 +165,7 @@ process MapReads {
   """
 }
 
-verbose ? bam = bam.view {"BAM file before sorting into group or single: $it"} : ''
+verbose ? bam = bam.view {"BAM file to sort into group or single: $it"} : ''
 
 // Sort bam whether they are standalone or should be merged
 // Borrowed code from https://github.com/guigolab/chip-nf
@@ -180,7 +179,7 @@ singleBam = singleBam.map {
   [idPatient, gender, status, idSample, bam]
 }
 
-verbose ? groupedBam = groupedBam.view {"Grouped BAMs before merge: $it"} : ''
+verbose ? groupedBam = groupedBam.view {"Grouped BAMs to merge: $it"} : ''
 
 process MergeBams {
   tag {idPatient + "-" + idSample}
@@ -233,14 +232,14 @@ process MarkDuplicates {
   """
 }
 
-verbose ? markDuplicatesReport = markDuplicatesReport.view {"MarkDuplicates report: $it"} : ''
-
+// Creating a TSV file to restart from this step
 markDuplicatesTSV.map { idPatient, gender, status, idSample, bam, bai ->
   "$idPatient\t$gender\t$status\t$idSample\t${directoryMap['nonRealigned']}/$bam\t${directoryMap['nonRealigned']}/$bai\n"
 }.collectFile( name: 'nonRealigned.tsv', sort: true, storeDir: directoryMap['nonRealigned'])
 
-// create intervals for realignement using both tumor+normal as input
-// group the marked duplicates Bams for intervals and realign by overall subject/patient id (idPatient)
+// Create intervals for realignement using both tumor+normal as input
+// Group the marked duplicates BAMs for intervals and realign by idPatient
+// Grouping also by gender, to make a nicer channel
 duplicatesGrouped = 'preprocessing' in workflowSteps ? duplicates.groupTuple(by:[0,1]) : Channel.empty()
 
 duplicatesGrouped = 'realign' in workflowSteps ? bamFiles.map{
@@ -248,12 +247,14 @@ duplicatesGrouped = 'realign' in workflowSteps ? bamFiles.map{
   [idPatient, gender, "${idSample}_${status}", bam, bai]
 }.groupTuple(by:[0,1]) : duplicatesGrouped
 
-// The duplicatesGrouped channel is duplicated, one copy goes to the CreateIntervals process
-// and the other to the IndelRealigner process
+// The duplicatesGrouped channel is duplicated
+// one copy goes to the CreateIntervals process
+// and the other to the RealignBams process
 (duplicatesInterval, duplicatesRealign) = duplicatesGrouped.into(2)
 
-verbose ? duplicatesInterval = duplicatesInterval.view {"BAMs for RealignerTargetCreator grouped by patient ID: $it"} : ''
+verbose ? duplicatesInterval = duplicatesInterval.view {"BAMs for CreateIntervals: $it"} : ''
 verbose ? duplicatesRealign = duplicatesRealign.view {"BAMs to phase: $it"} : ''
+verbose ? markDuplicatesReport = markDuplicatesReport.view {"MarkDuplicates report: $it"} : ''
 
 // VCF indexes are added so they will be linked, and not re-created on the fly
 //  -L "1:131941-141339" \
@@ -306,10 +307,9 @@ bamsAndIntervals = duplicatesRealign
       intervals[2]
     )}
 
-verbose ? bamsAndIntervals = bamsAndIntervals.view {"Bams and Intervals phased for IndelRealigner: $it"} : ''
+verbose ? bamsAndIntervals = bamsAndIntervals.view {"Bams and Intervals phased for RealignBams: $it"} : ''
 
 // use nWayOut to split into T/N pair again
-// VCF indexes are added so they will be linked, and not re-created on the fly
 process RealignBams {
   tag {idPatient}
 
@@ -347,7 +347,7 @@ process RealignBams {
 
 realignedBam = retreiveStatus(realignedBam)
 
-verbose ? realignedBam = realignedBam.view {"realignedBam to BaseRecalibrator: $it"} : ''
+verbose ? realignedBam = realignedBam.view {"Realigned BAM to CreateRecalibrationTable: $it"} : ''
 
 process CreateRecalibrationTable {
   tag {idPatient + "-" + idSample}
@@ -392,13 +392,14 @@ process CreateRecalibrationTable {
   """
 }
 
+// Creating a TSV file to restart from this step
 recalibrationTableTSV.map { idPatient, gender, status, idSample, bam, bai, recalTable ->
   "$idPatient\t$gender\t$status\t$idSample\t${directoryMap['nonRecalibrated']}/$bam\t${directoryMap['nonRecalibrated']}/$bai\t\t${directoryMap['nonRecalibrated']}/$recalTable\n"
 }.collectFile( name: 'nonRecalibrated.tsv', sort: true, storeDir: directoryMap['nonRecalibrated'])
 
 recalibrationTable = 'recalibrate' in workflowSteps ? bamFiles : recalibrationTable
 
-verbose ? recalibrationTable = recalibrationTable.view {"Base recalibrated table for recalibration: $it"} : ''
+verbose ? recalibrationTable = recalibrationTable.view {"Base recalibrated table for RecalibrateBam: $it"} : ''
 
 process RecalibrateBam {
   tag {idPatient + "-" + idSample}
@@ -433,6 +434,7 @@ process RecalibrateBam {
   """
 }
 
+// Creating a TSV file to restart from this step
 recalibratedBamTSV.map { idPatient, gender, status, idSample, bam, bai ->
   "$idPatient\t$gender\t$status\t$idSample\t${directoryMap['recalibrated']}/$bam\t${directoryMap['recalibrated']}/$bai\n"
 }.collectFile( name: 'recalibrated.tsv', sort: true, storeDir: directoryMap['recalibrated'])
@@ -654,10 +656,9 @@ process RunMutect2 {
 
   when: 'MuTect2' in workflowSteps
 
-  //
   // -U ALLOW_SEQ_DICT_INCOMPATIBILITY removed as BAMs generated using the new Picard
   // should be fine
-  //
+
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
@@ -1231,12 +1232,12 @@ def defineStepList() {
 }
 
 def checkReferenceMap(referenceMap) {
-  //Loop through all the references files to check their existence
+  // Loop through all the references files to check their existence
   referenceDefined = true
   referenceMap.each{
     referenceFile, fileToCheck ->
     test = checkRefExistence(referenceFile, fileToCheck)
-    !(test) ? referenceDefined = false : ""
+    !(test) ? referenceDefined = false : ''
   }
   return referenceDefined ? true : false
 }
@@ -1246,7 +1247,7 @@ def checkStepList(stepsList, realStepsList) {
   stepCorrect = true
   stepsList.each{
     test = checkStepExistence(it, realStepsList)
-    !(test) ? stepCorrect = false : ""
+    !(test) ? stepCorrect = false : ''
   }
   return stepCorrect ? true : false
 }
@@ -1271,12 +1272,31 @@ def checkStepExistence(step, list) {
   return true
 }
 
-def checkFileExistence(it) {
+def checkFile(it) {
   // Check file existence
   try {assert file(it).exists()}
   catch (AssertionError ae) {
     exit 1, "Missing file in TSV file: $it, see --help for more information"
   }
+  return it
+}
+
+def checkTSV(it,number) {
+  // Check if TSV has the correct number of item in row
+  try {assert it.size() == number}
+  catch (AssertionError ae) {
+    exit 1, "Malformed row in TSV file: $it, see --help for more information"
+  }
+  return it
+}
+
+def checkStatus(it) {
+  // Check if Status is correct
+  try {assert it == "0" || it == "1"}
+  catch (AssertionError ae) {
+    exit 1, "Status is not recognized in TSV file: $it, see --help for more information"
+  }
+  return it
 }
 
 def extractFastqFiles(tsvFile) {
@@ -1285,26 +1305,16 @@ def extractFastqFiles(tsvFile) {
   fastqFiles = Channel
     .from(tsvFile.readLines())
     .map{line ->
-      list       = line.split()
+      list       = checkTSV(line.split(),7)
       idPatient  = list[0]
       gender     = list[1]
-      status     = list[2]
+      status     = checkStatus(list[2])
       idSample   = list[3]
       idRun      = list[4]
-      temp1      = list[5]
-      temp2      = list[6]
 
       // When testing workflow from github, paths to FASTQ files start from workflow.projectDir and not workflow.launchDir
-      if ((workflow.commitId) && (params.test)) {
-        fastqFile1 = file("$workflow.projectDir/$temp1")
-        fastqFile2 = file("$workflow.projectDir/$temp2")
-      } else {
-        fastqFile1 = file("$temp1")
-        fastqFile2 = file("$temp2")
-      }
-
-      checkFileExistence(fastqFile1)
-      checkFileExistence(fastqFile2)
+      fastqFile1 = workflow.commitId && params.test ? checkFile("$workflow.projectDir/${list[5]}") : checkFile("${list[5]}")
+      fastqFile2 = workflow.commitId && params.test ? checkFile("$workflow.projectDir/${list[6]}") : checkFile("${list[6]}")
 
       [idPatient, gender, status, idSample, idRun, fastqFile1, fastqFile2]
     }
@@ -1317,16 +1327,13 @@ def extractBamFiles(tsvFile) {
   bamFiles = Channel
     .from(tsvFile.readLines())
     .map{line ->
-      list      = line.split()
+      list      = checkTSV(line.split(),6)
       idPatient = list[0]
       gender    = list[1]
-      status    = list[2]
+      status    = checkStatus(list[2])
       idSample  = list[3]
-      bamFile   = file(list[4])
-      baiFile   = file(list[5])
-
-      checkFileExistence(bamFile)
-      checkFileExistence(baiFile)
+      bamFile   = checkFile(list[4])
+      baiFile   = checkFile(list[5])
 
       [ idPatient, gender, status, idSample, bamFile, baiFile ]
     }
@@ -1339,18 +1346,14 @@ def extractRecalibrationTables(tsvFile) {
   bamFiles = Channel
     .from(tsvFile.readLines())
     .map{line ->
-      list       = line.split()
+      list       = checkTSV(line.split(),7)
       idPatient  = list[0]
       gender     = list[1]
-      status     = list[2]
+      status     = checkStatus(list[2])
       idSample   = list[3]
-      bamFile    = file(list[4])
-      baiFile    = file(list[5])
-      recalTable = file(list[6])
-
-      checkFileExistence(bamFile)
-      checkFileExistence(baiFile)
-      checkFileExistence(recalTable)
+      bamFile    = checkFile(list[4])
+      baiFile    = checkFile(list[5])
+      recalTable = checkFile(list[6])
 
       [ idPatient, gender, status, idSample, bamFile, baiFile, recalTable ]
     }
