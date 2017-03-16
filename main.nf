@@ -1260,7 +1260,7 @@ def checkFile(it) {
   catch (AssertionError ae) {
     exit 1, "Missing file in TSV file: $it, see --help for more information"
   }
-  return it
+  return file(it)
 }
 
 def checkTSV(it,number) {
