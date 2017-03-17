@@ -663,7 +663,7 @@ process RunMutect2 {
 mutect2Output = mutect2Output.groupTuple(by:[0,1,2,3,4])
 verbose ? mutect2Output = mutect2Output.view {"MuTect2 output: $it"} : ''
 
-defineReferenceForProcess("RunFreeBayes")
+referenceForRunFreeBayes = defineReferenceForProcess("RunFreeBayes")
 
 process RunFreeBayes {
   tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
