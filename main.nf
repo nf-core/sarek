@@ -141,7 +141,7 @@ process RunFastQC {
 
 verbose ? fastQCreport = fastQCreport.view {"FastQC report: $it"} : ''
 
-referenceForMapReads = defineReferencesForProcess("MapReads")
+referenceForMapReads = defineReferenceForProcess("MapReads")
 
 process MapReads {
   tag {idPatient + "-" + idRun}
