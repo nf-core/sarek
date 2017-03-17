@@ -406,7 +406,7 @@ process RecalibrateBam {
     set idPatient, gender, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam
     set idPatient, gender, status, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into recalibratedBamTSV
 
-  when: !'skipPreprocessing' in step
+  when: !('skipPreprocessing' in step)
 
   // TODO: ditto as at the previous BaseRecalibrator step, consider using -nct 4
   script:
