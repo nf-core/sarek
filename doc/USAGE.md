@@ -1,56 +1,110 @@
 # Usage
 
-I would recommand to run Nextflow within a [screen](https://www.gnu.org/software/screen/) or [tmux](https://tmux.github.io/) session. It is recommanded to run only one instance of CAW for one patient in the same directory. Meaning there should be only one patient analysed in one directory. The typical command line is:
+I would recommand to run Nextflow within a [screen](https://www.gnu.org/software/screen/) or [tmux](https://tmux.github.io/) session. It is recommanded to run only one instance of CAW for one patient in the same directory. The typical reduced command line is:
 
 ```bash
-nextflow run SciLifeLab/CAW --sample <file.tsv>
+nextflow run SciLifeLab/CAW --sample <file.tsv> --step <step> --tools <tool>
 ```
 
-All variables and parameters are specified in the config (cf [configuration documentation](#profiles)).
+All parameters, options and variables can be specified with configuration files and profile (cf [configuration documentation](#profiles)).
 
-All samples are specified in the TSV files (cf [TSV documentation](TSV.md)).
+## Options
 
-## Steps
+### --callName `Name`
 
-Steps are used to configure which processes will be runned or skipped in the workflow. Different steps to be separated by commas. Possible values are:
+Specify a name for MultiQC report (optionnal)
+
+### --contactMail `email`
+
+Specify an email for MultiQC report (optionnal)
+
+### --help
+
+Display help
+
+### --project `ProjectID`
+
+Specify a project number ID on a UPPMAX cluster. (optionnal if not on such a cluster)
+
+### --sample `file.tsv`
+
+Use the given TSV file as sample (cf [TSV documentation](TSV.md)).
+
+### --step `step`
+
+Choose from wich step the workflow will start. Choose only one step. Possible values are:
 
 - preprocessing (default, will start workflow with FASTQ files)
 - realign (will start workflow with BAM files (with T/N BAMs that were not realigned together))
 - recalibrate (will start workflow with BAM files and Recalibration Tables (Only with T/N BAMs that were realigned together))
 - skipPreprocessing (will skip entire preprocessing (Only with T/N BAMs that were realigned together))
+
+### --test
+
+Test run CAW on a smaller dataset, that way you don't have to specify `--sample data/tsv/tiny.tsv --intervals repeats/tiny.list`
+
+### --tools `tool1[,tool2,tool3...]`
+
+Choose which tools will be used in the workflow. Different tools to be separated by commas. Possible values are:
+
+- Ascat (use ascat for CNV)
+- HaplotypeCaller (use HaplotypeCaller for VC)
+- Manta (use Manta for SV)
+- MultiQC (Make a QC report)
 - MuTect1 (use MuTect1 for VC)
 - MuTect2 (use MuTect2 for VC)
-- VarDict (use VarDict for VC)
 - Strelka (use Strelka for VC)
-- HaplotypeCaller (use HaplotypeCaller for normal bams VC)
-- Manta (use Manta for SV)
-- Ascat (use ascat for CNV)
-- MultiQC (Make a QC report)
+- VarDict (use VarDict for VC)
+- snpEff (use snpEff for Annotation)
 
-## Project
+### --verbose
 
-To specify your UPPMAX project number ID. It can also be specified in your `config` file (cf [configuration documentation](#profiles)).
+Display more information about files being processed.
 
-```bash
-nextflow run SciLifeLab/CAW --sample <file.tsv> --project <UPPMAX_Project>
-```
+### --version
 
-## Verbose
+Display version number and information.
 
-To have more information about files being processed, you can use the verbose option:
+## Parameters
+Simpler to specify in the config file.
 
-```bash
-nextflow run SciLifeLab/CAW --sample mysample.tsv --verbose
-```
+### --runTime `time`
+### --singleCPUMem `memory`
 
-## Test
+## References [(cf [References documentation](REFERENCES.md))]
+Could be usefull if you wish to change one reference for testing.
 
-To test CAW and run it on smaller dataset, use one of the following option:
+### --acLoci `file`
 
-- `--test` will test step `preprocessing` on tiny test data.
-- `--testRealign` will test step `realign` on tiny test data. Need to run `nextflow run SciLifeLab/CAW --test` before.
-- `--testCoreVC` will test steps `skipPreprocessing`, `MuTect1`, `Strelka` and `HaplotypeCaller` on tiny test data. Need to run `nextflow run SciLifeLab/CAW --test` before.
-- `--testSideVC` will test steps `skipPreprocessing`, `Ascat`, `Manta` and `HaplotypeCaller` on test downsampled set.
+## COSMIC files
+- --cosmic `file`
+- --cosmicIndex `file`
+
+### Files from the GATK Bundle
+- --dbsnp `file`
+- --dbsnpIndex `file`
+- --kgIndels `file`
+- --kgIndex `file`
+- --genome `file`
+- --genomeDict `file`
+- --genomeIndex `file`
+- --millsIndels `file`
+- --millsIndex `file`
+
+### BWA indexes
+- --genomeAmb `file`
+- --genomeAnn `file`
+- --genomeBwt `file`
+- --genomePac `file`
+- --genomeSa `file`
+
+## --intervals `file`
+
+## --snpeffDb `db`
+	Which database to use for snpEff
+
+## --vardictHome `path`
+	Path to Vardict
 
 # Nextflow options
 
@@ -86,7 +140,8 @@ If there is a feature or bugfix you want to use in a resumed or re-analyzed run,
 nextflow run -latest SciLifeLab/CAW --sample mysample.tsv -resume
 ```
 
----
+--------------------------------------------------------------------------------
+
 [![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
 
 [ngi-link]: https://ngisweden.scilifelab.se/
