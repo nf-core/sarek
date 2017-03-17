@@ -1,4 +1,4 @@
-[![](doc/images/CAW-logo.png "CAW")][CAW-site-link]
+[![](doc/images/CAW-logo.png "CAW")][caw-site-link]
 
 # Cancer Analysis Workflow
 
@@ -46,11 +46,12 @@ For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.j
 - [Pall Olason](https://github.com/pallolason)
 - [Pelin Sahlén](https://github.com/pelinakan)
 
----
+--------------------------------------------------------------------------------
+
 [![](doc/images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](doc/images/NGI-final-small.png "NGI")][ngi-link]
 
 [ascat-link]: https://github.com/Crick-CancerGenomics/ascat
-[CAW-site-link]: http://opensource.scilifelab.se/projects/caw/
+[caw-site-link]: http://opensource.scilifelab.se/projects/caw/
 [gatk-link]: https://github.com/broadgsa/gatk-protected
 [gitter-badge]: https://badges.gitter.im/SciLifeLab/CAW.svg
 [gitter-link]: https://gitter.im/SciLifeLab/CAW

@@ -18,7 +18,8 @@
 - **[snpEff][snpeff-link]** 4.2
 - **[Strelka][strelka-link]** 1.0.15
 
----
+--------------------------------------------------------------------------------
+
 [![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
 
 [allelecount-link]: https://github.com/cancerit/alleleCount

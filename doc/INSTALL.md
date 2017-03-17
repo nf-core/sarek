@@ -62,7 +62,8 @@ $ nextflow run main.nf -profile interactive --test --project <UPPMAX Project ID>
 
 For more tests, see [Usage documentation](USAGE.md#test)
 
----
+--------------------------------------------------------------------------------
+
 [![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
 
 [ngi-link]: https://ngisweden.scilifelab.se/

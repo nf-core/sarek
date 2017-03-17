@@ -31,13 +31,15 @@ Several processes are run within the workflow. We divide them for the moment int
 - RunFastQC - Run FastQC for QC on fastq files [Stable]
 - MarkDuplicates - Mark Duplicates [Stable]
 - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files [Stable]
+- GenerateMultiQCconfig - Generate a config file for MultiQC [Stable]
 - RunMultiQC - Run MultiQC for report and QC [Stable]
 
-  ## Annotation:
+## Annotation:
 
-  - RunSnpeff - Run snpEff on vcf files [Working]
+- RunSnpeff - Run snpEff on vcf files [Working]
 
----
+--------------------------------------------------------------------------------
+
 [![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
 
 [ngi-link]: https://ngisweden.scilifelab.se/

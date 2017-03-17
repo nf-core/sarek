@@ -66,21 +66,26 @@ Display more information about files being processed.
 Display version number and information.
 
 ## Parameters
+
 Simpler to specify in the config file.
 
 ### --runTime `time`
+
 ### --singleCPUMem `memory`
 
 ## References [(cf [References documentation](REFERENCES.md))]
+
 Could be usefull if you wish to change one reference for testing.
 
 ### --acLoci `file`
 
 ## COSMIC files
+
 - --cosmic `file`
 - --cosmicIndex `file`
 
 ### Files from the GATK Bundle
+
 - --dbsnp `file`
 - --dbsnpIndex `file`
 - --kgIndels `file`
@@ -92,6 +97,7 @@ Could be usefull if you wish to change one reference for testing.
 - --millsIndex `file`
 
 ### BWA indexes
+
 - --genomeAmb `file`
 - --genomeAnn `file`
 - --genomeBwt `file`
@@ -101,10 +107,16 @@ Could be usefull if you wish to change one reference for testing.
 ## --intervals `file`
 
 ## --snpeffDb `db`
-	Which database to use for snpEff
+
+```
+Which database to use for snpEff
+```
 
 ## --vardictHome `path`
-	Path to Vardict
+
+```
+Path to Vardict
+```
 
 # Nextflow options
 
