@@ -56,7 +56,7 @@ vim: syntax=groovy
 
 revision = grabGitRevision()
 testFile = ''
-version = '1.0.5'
+version = '1.1'
 step = []
 tools = []
 
