@@ -35,7 +35,7 @@ Several processes are run within the workflow. We divide them for the moment int
 
   ## Annotation:
 
-  - snpEff - Run snpEff on vcf files [Working]
+  - RunSnpeff - Run snpEff on vcf files [Working]
 
 ---
 [![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
