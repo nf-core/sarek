@@ -442,14 +442,12 @@ process RecalibrateBam {
 
   when: 'preprocessing' in workflowSteps || 'realign' in workflowSteps || 'recalibrate' in workflowSteps
 
-  // TODO: ditto as at the previous BaseRecalibrator step, consider using -nct 4
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
   -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T PrintReads \
   -R $genomeFile \
-  -nct $task.cpus \
   -I $bam \
   -XL hs37d5 \
   -XL NC_007605 \
@@ -597,7 +595,6 @@ process RunHaplotypecaller {
 
   when: 'HaplotypeCaller' in workflowSteps
 
-  // both -nt and -nct removed : it is still not recommended to use more threads for HC, use scatter-gather instead
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
@@ -679,10 +676,6 @@ process RunMutect2 {
 
   when: 'MuTect2' in workflowSteps
 
-  //
-  // -U ALLOW_SEQ_DICT_INCOMPATIBILITY removed as BAMs generated using the new Picard
-  // should be fine
-  //
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
