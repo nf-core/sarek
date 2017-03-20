@@ -44,8 +44,8 @@ The rest of the references files are stored in in [export.uppmax.uu.se](https://
 - 'b37_cosmic_v74.noCHR.sort.4.1.vcf.idx'
 - 'b37_cosmic_v74.noCHR.sort.4.1.vcf'
 
+--------------------------------------------------------------------------------
 
----
 [![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
 
 [ngi-link]: https://ngisweden.scilifelab.se/

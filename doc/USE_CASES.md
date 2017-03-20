@@ -1,16 +1,16 @@
 # Use cases
 
-The workflow has three pre-processing options: `preprocessing`, `realign` and `skipPreprocessing`. Using the `preprocessing` directive one will have a pair of mapped, deduplicated and recalibrated BAM files in the `Preprocessing/Recalibrated/` directory. Furthermore, during this process a deduplicated BAM file is created in the `Preprocessing/NonRealigned/` directory. This is the usual option you have to give when you are starting from raw FASTQ data:
+The workflow has four pre-processing options: `preprocessing`, `realign`, `recalibrate` and `skipPreprocessing`. Using the `preprocessing` directive one will have a pair of mapped, deduplicated and recalibrated BAM files in the `Preprocessing/Recalibrated/` directory. Furthermore, during this process a deduplicated BAM file is created in the `Preprocessing/NonRealigned/` directory. This is the usual option you have to give when you are starting from raw FASTQ data:
 
 ```bash
 nextflow run SciLifeLab/CAW --sample mysample.tsv
 ```
 
-Preprocessing will start by default, you do not have to give any additional steps, only the TSV file describing the sample (see below).
+Preprocessing will start by default, you do not have to give any additional parameters, only the TSV file describing the sample (see below).
 
 In the [default config file](../config/milou.config) we are defining the intervals file as well, this is used to define regions for variant call and realignment (in a scatter and gather fashion when possible). The intervals are chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs. We are ignoring the hs37d5 contig that contains concatenated decoy sequences.
 
-During processing steps a `trace.txt` and a `timeline.html` file is generated automatically. These files contain statistics about resources used and processes finished. If you start a new flow or restart/resume a sample, the previous version will be renamed as `trace.txt.1` and `timeline.html.1` respectively. Also, older version are renamed with incremented numbers.
+During the execution of the workflow a `trace.txt` and a `timeline.html` file is generated automatically. These files contain statistics about resources used and processes finished. If you start a new flow or restart/resume a sample, the previous version will be renamed as `trace.txt.1` and `timeline.html.1` respectively. Also, older version are renamed with incremented numbers.
 
 ## Starting from raw FASTQ - having pair of FASTQ files for normal and tumor samples (one lane for each sample)
 
@@ -65,7 +65,7 @@ SUBJECT_ID  XX    1    SAMPLEIDR    9    /samples/relapse9_1.fastq.gz    /sample
 NGI Production in the previous years delivered many preprocessed samples; these BAM files are not recalibrated. To have BAMs suitable for variant calling, realignement of pairs is necessary:
 
 ```bash
-nextflow run SciLifeLab/CAW --sample mysample.tsv --steps realign
+nextflow run SciLifeLab/CAW --sample mysample.tsv --step realign
 ```
 
 And the corresponding TSV file should be like:
@@ -77,12 +77,27 @@ SUBJECT_ID  XX    1    SAMPLEIDT    /samples/SAMPLEIDT.bam    /samples/SAMPLEIDT
 
 At the end of this step you should have recalibrated BAM files in the `Preprocessing/Recalibrated/` directory.
 
-## Starting from a recalibrated BAM file
+## Starting from recalibration
 
-At this step we are assuming that all the required preprocessing steps (alignment, deduplication, ..., recalibration) is over, we only want to run variant callers or other tools using recalibrated BAMs.
+If the bam files were realigned together, you can start from recalibration:
 
 ```bash
-nextflow run SciLifeLab/CAW --sample mysample.tsv --steps skipPreprocessing
+nextflow run SciLifeLab/CAW --sample mysample.tsv --step recalibrate
+```
+
+And the corresponding TSV file should be like:
+
+```
+SUBJECT_ID  XX    0    SAMPLEIDN    /samples/SAMPLEIDN.bam    /samples/SAMPLEIDN.bai /samples/SAMPLEIDN.recal.table
+SUBJECT_ID  XX    1    SAMPLEIDT    /samples/SAMPLEIDT.bam    /samples/SAMPLEIDT.bai /samples/SAMPLEIDT.recal.table
+```
+
+## Starting from a recalibrated BAM file
+
+At this step we are assuming that all the required preprocessing (alignment, deduplication, ..., recalibration) is over, we only want to run variant callers or other tools using recalibrated BAMs.
+
+```bash
+nextflow run SciLifeLab/CAW --sample mysample.tsv --step skipPreprocessing --tools <tool>
 ```
 
 And the corresponding TSV file should be like:
@@ -92,7 +107,8 @@ SUBJECT_ID  XX    0    SAMPLEIDN    /samples/SAMPLEIDN.bam    /samples/SAMPLEIDN
 SUBJECT_ID  XX    1    SAMPLEIDT    /samples/SAMPLEIDT.bam    /samples/SAMPLEIDT.bai
 ```
 
----
+--------------------------------------------------------------------------------
+
 [![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
 
 [ngi-link]: https://ngisweden.scilifelab.se/

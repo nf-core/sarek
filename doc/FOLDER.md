@@ -48,7 +48,8 @@ Read group information will be parsed from fastq file names according to this:
 - `PU` = sample
 - `RGLB` = lib
 
----
+--------------------------------------------------------------------------------
+
 [![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
 
 [ngi-link]: https://ngisweden.scilifelab.se/
