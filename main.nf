@@ -35,11 +35,11 @@ vim: syntax=groovy
  - CreateRecalibrationTable - Create Recalibration Table
  - RecalibrateBam - Recalibrate Bam
  - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files
- - RunHaplotypecaller - Run HaplotypeCaller for GermLine Variant Calling (Parrallelized processes)
- - RunMutect1 - Run MuTect1 for Variant Calling (Parrallelized processes)
- - RunMutect2 - Run MuTect2 for Variant Calling (Parrallelized processes)
- - RunFreeBayes - Run FreeBayes for Variant Calling (Parrallelized processes)
- - RunVardict - Run VarDict for Variant Calling (Parrallelized processes)
+ - RunHaplotypecaller - Run HaplotypeCaller for GermLine Variant Calling (Parallelized processes)
+ - RunMutect1 - Run MuTect1 for Variant Calling (Parallelized processes)
+ - RunMutect2 - Run MuTect2 for Variant Calling (Parallelized processes)
+ - RunFreeBayes - Run FreeBayes for Variant Calling (Parallelized processes)
+ - RunVardict - Run VarDict for Variant Calling (Parallelized processes)
  - ConcatVCF - Merge results from HaplotypeCaller, MuTect1, MuTect2 and VarDict
  - RunStrelka - Run Strelka for Variant Calling
  - RunManta - Run Manta for Structural Variant Calling
@@ -341,7 +341,7 @@ process RealignBams {
   """
 }
 
-realignedBam = retreiveStatus(realignedBam)
+realignedBam = retrieveStatus(realignedBam)
 
 verbose ? realignedBam = realignedBam.view {"Realigned BAM to CreateRecalibrationTable: $it"} : ''
 
@@ -433,7 +433,7 @@ recalibratedBamTSV.map { idPatient, gender, status, idSample, bam, bai ->
 
 recalibratedBam = 'skipPreprocessing' in step ? bamFiles : recalibratedBam
 
-verbose ? recalibratedBam = recalibratedBam.view {"Recalibrated Bam for variant Calling: $it"} : ''
+verbose ? recalibratedBam = recalibratedBam.view {"Recalibrated BAM for variant Calling: $it"} : ''
 
 (recalibratedBam, recalibratedBamForStats) = recalibratedBam.into(2)
 
@@ -475,10 +475,10 @@ recalibratedBam
 
 // Removing status because not relevant anymore
 bamsNormal = bamsNormal.map { idPatient, gender, status, idSample, bam, bai -> [idPatient, gender, idSample, bam, bai] }
-verbose ? bamsNormal = bamsNormal.view {"Normal Bam for variant Calling: $it"} : ''
+verbose ? bamsNormal = bamsNormal.view {"Normal BAM for variant Calling: $it"} : ''
 
 bamsTumor = bamsTumor.map { idPatient, gender, status, idSample, bam, bai -> [idPatient, gender, idSample, bam, bai] }
-verbose ? bamsTumor = bamsTumor.view {"Tumor Bam for variant Calling: $it"} : ''
+verbose ? bamsTumor = bamsTumor.view {"Tumor BAM for variant Calling: $it"} : ''
 
 // We know that MuTect2 (and other somatic callers) are notoriously slow. To speed them up we are chopping the reference into
 // smaller pieces at centromeres (see repeats/centromeres.list), do variant calling by this intervals, and re-merge the VCFs.
@@ -520,7 +520,7 @@ bamsAll = bamsAll.map {
   idPatientNormal, genderNormal, idSampleNormal, bamNormal, baiNormal, idPatientTumor, genderTumor, idSampleTumor, bamTumor, baiTumor ->
   [idPatientNormal, genderNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor]
 }
-verbose ? bamsAll = bamsAll.view {"Mapped Recalibrated Bam for variant Calling: $it"} : ''
+verbose ? bamsAll = bamsAll.view {"Mapped Recalibrated BAM for variant Calling: $it"} : ''
 
 // MuTect1
 (bamsFMT1, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
@@ -1514,7 +1514,7 @@ def help_message(version, revision) { // Display help message
   log.info "       Test `skipPreprocessing`, `Ascat`, `Manta` and `HaplotypeCaller` on test downSampled set"
 }
 
-def retreiveStatus(bamChannel) {
+def retrieveStatus(bamChannel) {
   return bamChannel = bamChannel.map {
     idPatient, gender, bam, bai ->
     tag = bam.baseName.tokenize('.')[0]
