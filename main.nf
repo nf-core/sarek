@@ -1138,6 +1138,14 @@ def checkFile(it) {
   return file(it)
 }
 
+def checkFileExtension(it,extension) {
+  // Check file extension
+  try {assert it.baseName.toLowerCase().contains( extension.toLowerCase() )}
+  catch (AssertionError ae) {
+    exit 1, "File: $it has the wrong extension: $extension see --help for more information"
+  }
+}
+
 def checkParameterExistence(it, list) {
   // Check parameter existence
   try {assert list.contains(it)}
@@ -1398,6 +1406,9 @@ def extractBams(tsvFile) {
       bamFile   = checkFile(list[4])
       baiFile   = checkFile(list[5])
 
+      checkFileExtension(bamFile,"bam")
+      checkFileExtension(baiFile,"bai")
+
       [ idPatient, gender, status, idSample, bamFile, baiFile ]
     }
 }
@@ -1419,6 +1430,9 @@ def extractFastq(tsvFile) {
       fastqFile1 = workflow.commitId && params.test ? checkFile("$workflow.projectDir/${list[5]}") : checkFile("${list[5]}")
       fastqFile2 = workflow.commitId && params.test ? checkFile("$workflow.projectDir/${list[6]}") : checkFile("${list[6]}")
 
+      checkFileExtension(fastqFile1,"fastq")
+      checkFileExtension(fastqFile2,"fastq")
+
       [idPatient, gender, status, idSample, idRun, fastqFile1, fastqFile2]
     }
 }
@@ -1437,6 +1451,10 @@ def extractRecal(tsvFile) {
       bamFile    = checkFile(list[4])
       baiFile    = checkFile(list[5])
       recalTable = checkFile(list[6])
+
+      checkFileExtension(bamFile,"bam")
+      checkFileExtension(baiFile,"bai")
+      checkFileExtension(recalTable,"recal")
 
       [ idPatient, gender, status, idSample, bamFile, baiFile, recalTable ]
     }
