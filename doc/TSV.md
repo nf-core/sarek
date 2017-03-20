@@ -36,7 +36,7 @@ G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.md.real.bam pathToFiles
 All the files will be created in the Preprocessing/NonRealigned/ directory, and by default a corresponding TSV file will also be deposited there. Generally, getting MuTect1 and Strelka calls on the preprocessed files should be done by:
 
 ```bash
-nextflow run SciLifeLab/CAW --sample Preprocessing/NonRealigned/mysample.tsv --steps realign,MuTect1,Strelka
+nextflow run SciLifeLab/CAW --sample Preprocessing/NonRealigned/mysample.tsv --step realign --tools MuTect1,Strelka
 ```
 
 # Example TSV file for a normal/tumor pair with recalibrated BAM files
@@ -51,10 +51,11 @@ G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.md.real.bam    pathToFi
 All the files will be in he Preprocessing/Recalibrated/ directory, and by default a corresponding TSV file will also be deposited there. Generally, getting MuTect1 and Strelka calls on the recalibrated files should be done by:
 
 ```bash
-nextflow run SciLifeLab/CAW --sample Preprocessing/Recalibrated/mysample.tsv --steps skipPreprocessing,MuTect1,Strelka
+nextflow run SciLifeLab/CAW --sample Preprocessing/Recalibrated/mysample.tsv --step skipPreprocessing --tool MuTect1,Strelka
 ```
 
----
+--------------------------------------------------------------------------------
+
 [![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
 
 [ngi-link]: https://ngisweden.scilifelab.se/
