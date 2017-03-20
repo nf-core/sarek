@@ -35,7 +35,7 @@ Caclculation of LogR and BAF based on AlleleCount output is done as in [runASCAT
 
 ### Loci file
 
-The loci file was created based on the 1000Genomes latest release (phase 3, releasedate 20130502), available [here](ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp//release/20130502/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5b.20130502.sites.vcf.gz). The following filter was applied: Only bi-allelc SNPs with minor allele frequencies > 0.3\. The filtered file can be found on [export.uppmax.uu.se](https://export.uppmax.uu.se/b2015110/caw-references/b37/1000G_phase3_20130502_SNP_maf0.3.loci.tar.bz2) and is stored on Milou in:
+The loci file was created based on the 1000Genomes latest release (phase 3, releasedate 20130502), available [here](ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp//release/20130502/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5b.20130502.sites.vcf.gz). The following filter was applied: Only bi-allelc SNPs with minor allele frequencies > 0.3. The filtered file can be found on [export.uppmax.uu.se](https://export.uppmax.uu.se/b2015110/caw-references/b37/1000G_phase3_20130502_SNP_maf0.3.loci.tar.bz2) and is stored on Milou in:
 
 ```
 /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/1000G_phase3_20130502_SNP_maf0.3.loci
@@ -43,7 +43,7 @@ The loci file was created based on the 1000Genomes latest release (phase 3, rele
 
 ## Running on Milou
 
-- ### 1\. Run AlleleCount
+### Run AlleleCount
 
 AlleleCount is installed as part of the `bioinfo-tools` module on Milou. It runs on single bam files (tumor and normal separately) with the command below:
 
@@ -52,7 +52,7 @@ $ module load bioinfo-tools alleleCount
 $ alleleCounter -l /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/1000G_phase3_20130502_SNP_maf0.3.loci -r /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fasta -b sample.bam -o sample.allecount
 ```
 
-### 2\. Convert allele counts to LogR and BAF values
+### Convert allele counts to LogR and BAF values
 
 The allele counts can then be converted into LogR and BAF values using the script `convertAlleleCounts.r`. Usage for a male sample (`Gender = "XY"`, replace with `Gender = "XX"` for a female sample):
 
@@ -62,7 +62,7 @@ sbatch -A PROJID -p core -n 1 -t 240:00:00 -J convertAllelecounts -e convertAlle
 
 This creates the BAF and LogR data for the tumor and normal samples, to be used as input to ASCAT.
 
-### 3\. Run ASCAT
+### Run ASCAT
 
 The script "run_ascat.r" can be used to run ASCAT in the simplest possible way without compensating for the local CG content across the genome. It calls the main ASCAT R script [ascat.R](https://github.com/Crick-CancerGenomics/ascat/tree/master/ASCAT/R/ascat.R).
 
