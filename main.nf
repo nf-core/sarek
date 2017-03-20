@@ -156,10 +156,12 @@ process MapReads {
   when: 'preprocessing' in step
 
   script:
-  readGroup="@RG\\tID:$idRun\\tSM:$idSample\\tLB:$idSample\\tPL:illumina"
+  readGroup = "@RG\\tID:$idRun\\tSM:$idSample\\tLB:$idSample\\tPL:illumina"
+  // adjust mismatch penalty for tumor samples
+  extra = status == 1 ? "-B 3 " : ""
   """
   set -eo pipefail
-  bwa mem -R \"$readGroup\" -B 3 -t $task.cpus -M \
+  bwa mem -R \"$readGroup\" ${extra}-t $task.cpus -M \
   $genomeFile $fastqFile1 $fastqFile2 | \
   samtools sort --threads $task.cpus - > ${idRun}.bam
   """
