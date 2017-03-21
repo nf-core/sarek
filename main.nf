@@ -831,7 +831,7 @@ process RunManta {
     set file(genomeFile), file(genomeIndex) from referenceForRunManta
 
   output:
-    set val("manta"), idPatient, gender, idSampleNormal, idSampleTumor, file("${idSampleNormal}_${idSampleTumor}.somaticSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.diploidSV.vcf"),file("${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf") into mantaOutput
+    set val("manta"), idPatient, gender, idSampleNormal, idSampleTumor, file("Manta_${idSampleNormal}_${idSampleTumor}.somaticSV.vcf"),file("Manta_${idSampleNormal}_${idSampleTumor}.candidateSV.vcf"),file("Manta_${idSampleNormal}_${idSampleTumor}.diploidSV.vcf"),file("Manta_${idSampleNormal}_${idSampleTumor}.candidateSmallIndels.vcf") into mantaOutput
 
   when: 'Manta' in tools
 
