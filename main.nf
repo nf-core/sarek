@@ -93,15 +93,23 @@ if (params.test) {
 
 // Extract and verify content of TSV file
 
-if ((!params.sample) && !(test)) {exit 1, 'Missing TSV file, see --help for more information'}
+if (!params.sample && !test) {exit 1, 'Missing TSV file, see --help for more information'}
 
 // If --test then the sample file is tiny, else the given sample file
 tsvFile = test ? testFile : file(params.sample)
 
 fastqFiles = 'preprocessing' in step ? extractFastq(tsvFile) : Channel.empty()
-bamFiles = 'realign' in step ? extractBams(tsvFile) : Channel.empty()
-bamFiles = 'recalibrate' in step ? extractRecal(tsvFile) : bamFiles
-bamFiles = 'skipPreprocessing' in step ? extractBams(tsvFile) : bamFiles
+
+bamFiles = Channel.empty()
+if ('realign' in step) {
+  bamFiles = extractBams(tsvFile)
+}
+if ('recalibrate' in step) {
+  bamFiles = extractRecal(tsvFile)
+}
+if ('skipPreprocessing' in step) {
+  bamFiles = extractBams(tsvFile)
+}
 
 verbose ? fastqFiles = fastqFiles.view {"FASTQ files to preprocess: $it"} : ''
 verbose ? bamFiles = bamFiles.view {"BAM files to process: $it"} : ''
@@ -1125,11 +1133,11 @@ verbose ? multiQCReport = multiQCReport.view {"MultiQC Report: $it"} : ''
 
 def checkFile(it) {
   // Check file existence
-  try {assert file(it).exists()}
-  catch (AssertionError ae) {
+  f = file(it)
+  if (!f.exists()) {
     exit 1, "Missing file in TSV file: $it, see --help for more information"
   }
-  return file(it)
+  return f
 }
 
 def checkFileExtension(it, extension) {
@@ -1141,8 +1149,7 @@ def checkFileExtension(it, extension) {
 
 def checkParameterExistence(it, list) {
   // Check parameter existence
-  try {assert list.contains(it)}
-  catch (AssertionError ae) {
+  if (!list.contains(it)) {
     println("Unknown parameter: $it")
     return false
   }
@@ -1151,12 +1158,7 @@ def checkParameterExistence(it, list) {
 
 def checkParameterList(list, realList) {
   // Loop through all the possible parameters to check their existence and spelling
-  parameterCorrect = true
-  list.each{
-    test = checkParameterExistence(it, realList)
-    !(test) ? parameterCorrect = false : ''
-  }
-  return parameterCorrect ? true : false
+  return list.every{ checkParameterExistence(it, realList) }
 }
 
 def checkReferenceMap(referenceMap) {
@@ -1167,13 +1169,12 @@ def checkReferenceMap(referenceMap) {
     test = checkRefExistence(referenceFile, fileToCheck)
     !(test) ? referenceDefined = false : ''
   }
-  return referenceDefined ? true : false
+  return referenceDefined
 }
 
 def checkRefExistence(referenceFile, fileToCheck) {
   // Check file existence
-  try {assert file(fileToCheck).exists()}
-  catch (AssertionError ae) {
+  if (!file(fileToCheck).exists()) {
     log.info  "Missing references: $referenceFile $fileToCheck"
     return false
   }
@@ -1182,24 +1183,22 @@ def checkRefExistence(referenceFile, fileToCheck) {
 
 def checkStatus(it) {
   // Check if Status is correct
-  try {assert it == "0" || it == "1"}
-  catch (AssertionError ae) {
+  if (!(it in ["0", "1"])) {
     exit 1, "Status is not recognized in TSV file: $it, see --help for more information"
   }
   return it
 }
 
-def checkTSV(it,number) {
-  // Check if TSV has the correct number of item in row
-  try {assert it.size() == number}
-  catch (AssertionError ae) {
+def checkTSV(it, number) {
+  // Check if TSV has the correct number of items in row
+  if (it.size() != number) {
     exit 1, "Malformed row in TSV file: $it, see --help for more information"
   }
   return it
 }
 
 def checkUppmaxProject() {
-  return (workflow.profile == 'standard' || workflow.profile == 'interactive') && !params.project ? false : true
+  return !((workflow.profile == 'standard' || workflow.profile == 'interactive') && !params.project)
 }
 
 def defineDirectoryMap() {
