@@ -1072,8 +1072,9 @@ process GenerateMultiQCconfig {
   echo "- Command Line: ${workflow.commandLine}" >> multiqc_config.yaml
   echo "- Directory: ${workflow.launchDir}" >> multiqc_config.yaml
   echo "- TSV file: ${tsvFile}" >> multiqc_config.yaml
-  echo "- Steps: "${step.join(", ")} >> multiqc_config.yaml
-  echo "- Tools: "${tools.join(", ")} >> multiqc_config.yaml
+  echo "- Genome: "${params.genome} >> multiqc_config.yaml
+  echo "- Steps : "${step.join(", ")} >> multiqc_config.yaml
+  echo "- Tools : "${tools.join(", ")} >> multiqc_config.yaml
   echo "top_modules:" >> multiqc_config.yaml
   echo "- 'fastqc'" >> multiqc_config.yaml
   echo "- 'picard'" >> multiqc_config.yaml
@@ -1132,6 +1133,14 @@ def checkFile(it) {
     exit 1, "Missing file in TSV file: $it, see --help for more information"
   }
   return file(it)
+}
+
+def checkFileExtension(it, extension) {
+  // Check file extension
+  try {assert it.toString().toLowerCase().endsWith(extension.toLowerCase())}
+  catch (AssertionError ae) {
+    exit 1, "File: $it has the wrong extension: $extension see --help for more information"
+  }
 }
 
 def checkParameterExistence(it, list) {
@@ -1414,6 +1423,9 @@ def extractBams(tsvFile) {
       bamFile   = checkFile(list[4])
       baiFile   = checkFile(list[5])
 
+      checkFileExtension(bamFile,".bam")
+      checkFileExtension(baiFile,".bai")
+
       [ idPatient, gender, status, idSample, bamFile, baiFile ]
     }
 }
@@ -1435,6 +1447,9 @@ def extractFastq(tsvFile) {
       fastqFile1 = workflow.commitId && params.test ? checkFile("$workflow.projectDir/${list[5]}") : checkFile("${list[5]}")
       fastqFile2 = workflow.commitId && params.test ? checkFile("$workflow.projectDir/${list[6]}") : checkFile("${list[6]}")
 
+      checkFileExtension(fastqFile1,".fastq.gz")
+      checkFileExtension(fastqFile2,".fastq.gz")
+
       [idPatient, gender, status, idSample, idRun, fastqFile1, fastqFile2]
     }
 }
@@ -1453,6 +1468,10 @@ def extractRecal(tsvFile) {
       bamFile    = checkFile(list[4])
       baiFile    = checkFile(list[5])
       recalTable = checkFile(list[6])
+
+      checkFileExtension(bamFile,".bam")
+      checkFileExtension(baiFile,".bai")
+      checkFileExtension(recalTable,".recal.table")
 
       [ idPatient, gender, status, idSample, bamFile, baiFile, recalTable ]
     }
@@ -1530,6 +1549,7 @@ def start_message(version, revision) { // Display start message
   log.info "Project Dir : $workflow.projectDir"
   log.info "Launch Dir  : $workflow.launchDir"
   log.info "Work Dir    : $workflow.workDir"
+  log.info "Genome      : " + params.genome
   log.info "Steps       : " + step.join(', ')
   log.info "Tools       : " + tools.join(', ')
 }
@@ -1548,6 +1568,7 @@ workflow.onComplete { // Display complete message
   log.info "Launch Dir  : $workflow.launchDir"
   log.info "Work Dir    : $workflow.workDir"
   log.info "TSV file    : $tsvFile"
+  log.info "Genome      : " + params.genome
   log.info "Steps       : " + step.join(", ")
   log.info "Tools       : " + tools.join(', ')
   log.info "Completed at: $workflow.complete"
