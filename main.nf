@@ -1137,8 +1137,7 @@ def checkFile(it) {
 
 def checkFileExtension(it, extension) {
   // Check file extension
-  try {assert it.toString().toLowerCase().endsWith(extension.toLowerCase())}
-  catch (AssertionError ae) {
+  if (!it.toString().toLowerCase().endsWith(extension.toLowerCase())) {
     exit 1, "File: $it has the wrong extension: $extension see --help for more information"
   }
 }
