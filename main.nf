@@ -54,7 +54,6 @@ vim: syntax=groovy
 ================================================================================
 */
 
-revision = grabGitRevision()
 testFile = ''
 version = '1.1'
 step = []
@@ -63,11 +62,11 @@ tools = []
 if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
 
 if (params.help) {
-  help_message(version, revision)
+  help_message(version, grabRevision())
   exit 1
 }
 if (params.version) {
-  version_message(version, revision)
+  version_message(version, grabRevision())
   exit 1
 }
 
@@ -108,7 +107,7 @@ bamFiles = 'skipPreprocessing' in step ? extractBams(tsvFile) : bamFiles
 
 verbose ? fastqFiles = fastqFiles.view {"FASTQ files to preprocess: $it"} : ''
 verbose ? bamFiles = bamFiles.view {"BAM files to process: $it"} : ''
-start_message(version, revision)
+start_message(version, grabRevision())
 
 /*
 ================================================================================
@@ -1483,9 +1482,8 @@ def generateIntervalsForVC(bams, gI) {
   return [bamsForVC, bams, gI]
 }
 
-def grabGitRevision() {  // Borrowed idea from https://github.com/NBISweden/wgs-structvar
-  ref = file("$baseDir/.git/HEAD").exists() ?  file("$baseDir/.git/"+file("$baseDir/.git/HEAD").newReader().readLine().tokenize()[1]) : ''
-  return workflow.commitId ? workflow.commitId.substring(0,10) : file("$baseDir/.git/HEAD").exists() ? ref.newReader().readLine().substring(0,10) : ''
+def grabRevision() {
+	return workflow.commitId ? workflow.commitId.substring(0,10) : workflow.scriptId.substring(0,10)
 }
 
 def help_message(version, revision) { // Display help message
