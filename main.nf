@@ -56,8 +56,6 @@ vim: syntax=groovy
 
 testFile = ''
 version = '1.1'
-step = []
-tools = []
 
 if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
 
@@ -70,8 +68,8 @@ if (params.version) {
   exit 1
 }
 
-step = params.step ? params.step.split(',').collect {it.trim()} : ''
-tools = params.tools ? params.tools.split(',').collect {it.trim()} : ''
+step = params.step ? params.step.split(',').collect {it.trim()} : []
+tools = params.tools ? params.tools.split(',').collect {it.trim()} : []
 
 directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
