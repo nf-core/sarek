@@ -1483,7 +1483,7 @@ def generateIntervalsForVC(bams, gI) {
 }
 
 def grabRevision() {
-	return workflow.commitId ? workflow.commitId.substring(0,10) : workflow.scriptId.substring(0,10)
+	return workflow.commitId ? workflow.revision : workflow.scriptId.substring(0,10)
 }
 
 def help_message(version, revision) { // Display help message
