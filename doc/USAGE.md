@@ -124,13 +124,13 @@ See the [options documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/b
 
 ## Profiles
 
-More informations on the [SciLifeLab Nextflow documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/INSTALL.md). The default profile is `standard`. If you want you can use your own profile:
+More informations on the [SciLifeLab Nextflow documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/INSTALL.md). The default profile is `standard`. You can use your own profile:
 
 ```bash
 nextflow run SciLifeLab/CAW --sample mysample.tsv -profile myprofile
 ```
 
-A standard profile is defined in [`nextflow.config`](../nextflow.config). You can use the [`config/milou.config`](../config/milou.config) file as a base to make a new `config` file that you can specify directly (or add as a profile):
+A standard profile is defined in [`nextflow.config`](../nextflow.config). You can use the files in the [`configuration/`](../configuration) directory as a base to make a new `.config` file that you can specify directly (or add as a profile):
 
 ```bash
 nextflow run SciLifeLab/CAW --sample mysample.tsv -c config/milou.config
