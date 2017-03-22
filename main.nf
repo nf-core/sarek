@@ -75,7 +75,7 @@ directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
 stepList = defineStepList()
 toolList = defineToolList()
-verbose = params.verbose ? true : false
+verbose = params.verbose
 
 if (!checkReferenceMap(referenceMap)) {exit 1, 'Missing Reference file(s), see --help for more information'}
 if (!checkParameterExistence(step, stepList)) {exit 1, 'Unknown step, see --help for more information'}
