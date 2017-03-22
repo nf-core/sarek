@@ -1172,7 +1172,10 @@ def checkRefExistence(referenceFile, fileToCheck) {
 }
 
 def checkStatus(it) {
-  // Check if Status is correct
+  // Check if status is correct
+  // Status should be only 0 or 1
+  // 0 being normal
+  // 1 being tumor (or relapse or anything that is not normal...)
   if (!(it in [0, 1])) {
     exit 1, "Status is not recognized in TSV file: $it, see --help for more information"
   }
