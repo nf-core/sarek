@@ -68,7 +68,7 @@ if (params.version) {
   exit 1
 }
 
-step = params.step ? params.step.split(',').collect {it.trim()} : []
+step = params.step
 tools = params.tools ? params.tools.split(',').collect {it.trim()} : []
 
 directoryMap = defineDirectoryMap()
@@ -78,17 +78,17 @@ toolList = defineToolList()
 verbose = params.verbose ? true : false
 
 if (!checkReferenceMap(referenceMap)) {exit 1, 'Missing Reference file(s), see --help for more information'}
-if (!checkParameterList(step,stepList)) {exit 1, 'Unknown step, see --help for more information'}
-if (step.size() != 1) {exit 1, 'Please choose only one step, see --help for more information'}
+if (!checkParameterExistence(step, stepList)) {exit 1, 'Unknown step, see --help for more information'}
+if (step.contains(',')) {exit 1, 'You can choose only one step, see --help for more information'}
 if (!checkParameterList(tools,toolList)) {exit 1, 'Unknown tool(s), see --help for more information'}
 
 if (params.test) {
   test = true
   referenceMap.intervals = "$workflow.projectDir/repeats/tiny.list"
-  testFile = 'preprocessing' in step ? file("$workflow.projectDir/data/tsv/tiny.tsv") : Channel.empty()
-  testFile = 'realign' in step ? file("$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv") : testFile
-  testFile = 'recalibrate' in step ? file("$workflow.launchDir/$directoryMap.nonRecalibrated/nonRecalibrated.tsv") : testFile
-  testFile = 'skipPreprocessing' in step ? file("$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv") : testFile
+  testFile = step == 'preprocessing' ? file("$workflow.projectDir/data/tsv/tiny.tsv") : Channel.empty()
+  testFile = step == 'realign' ? file("$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv") : testFile
+  testFile = step == 'recalibrate' ? file("$workflow.launchDir/$directoryMap.nonRecalibrated/nonRecalibrated.tsv") : testFile
+  testFile = step == 'skipPreprocessing' ? file("$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv") : testFile
 } else {test = false}
 
 // Extract and verify content of TSV file
@@ -98,16 +98,16 @@ if (!params.sample && !test) {exit 1, 'Missing TSV file, see --help for more inf
 // If --test then the sample file is tiny, else the given sample file
 tsvFile = test ? testFile : file(params.sample)
 
-fastqFiles = 'preprocessing' in step ? extractFastq(tsvFile) : Channel.empty()
+fastqFiles = step == 'preprocessing' ? extractFastq(tsvFile) : Channel.empty()
 
 bamFiles = Channel.empty()
-if ('realign' in step) {
+if (step == 'realign') {
   bamFiles = extractBams(tsvFile)
 }
-if ('recalibrate' in step) {
+if (step == 'recalibrate') {
   bamFiles = extractRecal(tsvFile)
 }
-if ('skipPreprocessing' in step) {
+if (step == 'skipPreprocessing') {
   bamFiles = extractBams(tsvFile)
 }
 
@@ -136,7 +136,7 @@ process RunFastQC {
   output:
     file "*_fastqc.{zip,html}" into fastQCreport
 
-  when: 'preprocessing' in step && 'MultiQC' in tools
+  when: step == 'preprocessing' && 'MultiQC' in tools
 
   script:
   """
@@ -158,7 +158,7 @@ process MapReads {
   output:
     set idPatient, gender, status, idSample, idRun, file("${idRun}.bam") into mappedBam
 
-  when: 'preprocessing' in step
+  when: step == 'preprocessing'
 
   script:
   readGroup = "@RG\\tID:$idRun\\tSM:$idSample\\tLB:$idSample\\tPL:illumina"
@@ -197,7 +197,7 @@ process MergeBams {
   output:
     set idPatient, gender, status, idSample, file("${idSample}.bam") into mergedBam
 
-  when: 'preprocessing' in step
+  when: step == 'preprocessing'
 
   script:
   """
@@ -223,7 +223,7 @@ process MarkDuplicates {
     set idPatient, gender, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai") into markDuplicatesTSV
     file ("${bam}.metrics") into markDuplicatesReport
 
-  when: 'preprocessing' in step
+  when: step == 'preprocessing'
 
   script:
   """
@@ -249,9 +249,9 @@ markDuplicatesTSV.map { idPatient, gender, status, idSample, bam, bai ->
 // Create intervals for realignement using both tumor+normal as input
 // Group the marked duplicates BAMs for intervals and realign by idPatient
 // Grouping also by gender, to make a nicer channel
-duplicatesGrouped = 'preprocessing' in step ? duplicates.groupTuple(by:[0,1]) : Channel.empty()
+duplicatesGrouped = step == 'preprocessing' ? duplicates.groupTuple(by:[0,1]) : Channel.empty()
 
-duplicatesGrouped = 'realign' in step ? bamFiles.map{
+duplicatesGrouped = step == 'realign' ? bamFiles.map{
   idPatient, gender, status, idSample, bam, bai ->
   [idPatient, gender, "${idSample}_${status}", bam, bai]
 }.groupTuple(by:[0,1]) : duplicatesGrouped
@@ -280,7 +280,7 @@ process CreateIntervals {
   output:
     set idPatient, gender, file("${idPatient}.intervals") into intervals
 
-  when: 'preprocessing' in step || 'realign' in step
+  when: step == 'preprocessing' || step == 'realign'
 
   script:
   bams = bam.collect{"-I $it"}.join(' ')
@@ -327,7 +327,7 @@ process RealignBams {
   output:
     set idPatient, gender, file("*.real.bam"), file("*.real.bai") into realignedBam mode flatten
 
-  when: 'preprocessing' in step || 'realign' in step
+  when: step == 'preprocessing' || step == 'realign'
 
   script:
   bams = bam.collect{"-I $it"}.join(' ')
@@ -365,7 +365,7 @@ process CreateRecalibrationTable {
     set idPatient, gender, status, idSample, file(bam), file(bai), file("${idSample}.recal.table") into recalibrationTable
     set idPatient, gender, status, idSample, val("${idSample}_${status}.md.real.bam"), val("${idSample}_${status}.md.real.bai"), val("${idSample}.recal.table") into recalibrationTableTSV
 
-  when: 'preprocessing' in step || 'realign' in step
+  when: step == 'preprocessing' || step == 'realign'
 
   script:
   """
@@ -394,7 +394,7 @@ recalibrationTableTSV.map { idPatient, gender, status, idSample, bam, bai, recal
   name: 'nonRecalibrated.tsv', sort: true, storeDir: directoryMap.nonRecalibrated
 )
 
-recalibrationTable = 'recalibrate' in step ? bamFiles : recalibrationTable
+recalibrationTable = step == 'recalibrate' ? bamFiles : recalibrationTable
 
 verbose ? recalibrationTable = recalibrationTable.view {"Base recalibrated table for RecalibrateBam: $it"} : ''
 
@@ -413,7 +413,7 @@ process RecalibrateBam {
     set idPatient, gender, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam
     set idPatient, gender, status, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into recalibratedBamTSV
 
-  when: !('skipPreprocessing' in step)
+  when: step != 'skipPreprocessing'
 
   script:
   """
@@ -436,7 +436,7 @@ recalibratedBamTSV.map { idPatient, gender, status, idSample, bam, bai ->
   name: 'recalibrated.tsv', sort: true, storeDir: directoryMap.recalibrated
 )
 
-recalibratedBam = 'skipPreprocessing' in step ? bamFiles : recalibratedBam
+recalibratedBam = step == 'skipPreprocessing' ? bamFiles : recalibratedBam
 
 verbose ? recalibratedBam = recalibratedBam.view {"Recalibrated BAM for variant Calling: $it"} : ''
 
@@ -1078,8 +1078,8 @@ process GenerateMultiQCconfig {
   echo "- Directory: ${workflow.launchDir}" >> multiqc_config.yaml
   echo "- TSV file: ${tsvFile}" >> multiqc_config.yaml
   echo "- Genome: "${params.genome} >> multiqc_config.yaml
-  echo "- Steps : "${step.join(", ")} >> multiqc_config.yaml
-  echo "- Tools : "${tools.join(", ")} >> multiqc_config.yaml
+  echo "- Step: "${step} >> multiqc_config.yaml
+  echo "- Tools: "${tools.join(", ")} >> multiqc_config.yaml
   echo "top_modules:" >> multiqc_config.yaml
   echo "- 'fastqc'" >> multiqc_config.yaml
   echo "- 'picard'" >> multiqc_config.yaml
@@ -1486,13 +1486,12 @@ def grabRevision() {
 def help_message(version, revision) { // Display help message
   log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
   log.info "    Usage:"
-  log.info "       nextflow run SciLifeLab/CAW --sample <sample.tsv> [--step STEP[,STEP]] [--tools TOOL[,TOOL]]"
+  log.info "       nextflow run SciLifeLab/CAW --sample <sample.tsv> [--step STEP] [--tools TOOL[,TOOL]]"
   log.info "    --step"
   log.info "       Option to configure preprocessing."
-  log.info "         Different step to be separated by commas."
   log.info "       Possible values are:"
   log.info "         preprocessing (default, will start workflow with FASTQ files)"
-  log.info "         realign (will start workflow with non-realign BAM files)"
+  log.info "         realign (will start workflow with non-realigned BAM files)"
   log.info "         recalibrate (will start workflow with non-recalibrated BAM files)"
   log.info "         skipPreprocessing (will start workflow with recalibrated BAM files)"
   log.info "    --tools"
@@ -1544,7 +1543,7 @@ def start_message(version, revision) { // Display start message
   log.info "Launch Dir  : $workflow.launchDir"
   log.info "Work Dir    : $workflow.workDir"
   log.info "Genome      : " + params.genome
-  log.info "Steps       : " + step.join(', ')
+  log.info "Step        : " + step
   log.info "Tools       : " + tools.join(', ')
 }
 
@@ -1563,7 +1562,7 @@ workflow.onComplete { // Display complete message
   log.info "Work Dir    : $workflow.workDir"
   log.info "TSV file    : $tsvFile"
   log.info "Genome      : " + params.genome
-  log.info "Steps       : " + step.join(", ")
+  log.info "Step        : " + step
   log.info "Tools       : " + tools.join(', ')
   log.info "Completed at: $workflow.complete"
   log.info "Duration    : $workflow.duration"
