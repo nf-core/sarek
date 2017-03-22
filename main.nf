@@ -35,11 +35,11 @@ vim: syntax=groovy
  - CreateRecalibrationTable - Create Recalibration Table
  - RecalibrateBam - Recalibrate Bam
  - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files
- - RunHaplotypecaller - Run HaplotypeCaller for GermLine Variant Calling (Parrallelized processes)
- - RunMutect1 - Run MuTect1 for Variant Calling (Parrallelized processes)
- - RunMutect2 - Run MuTect2 for Variant Calling (Parrallelized processes)
- - RunFreeBayes - Run FreeBayes for Variant Calling (Parrallelized processes)
- - RunVardict - Run VarDict for Variant Calling (Parrallelized processes)
+ - RunHaplotypecaller - Run HaplotypeCaller for GermLine Variant Calling (Parallelized processes)
+ - RunMutect1 - Run MuTect1 for Variant Calling (Parallelized processes)
+ - RunMutect2 - Run MuTect2 for Variant Calling (Parallelized processes)
+ - RunFreeBayes - Run FreeBayes for Variant Calling (Parallelized processes)
+ - RunVardict - Run VarDict for Variant Calling (Parallelized processes)
  - ConcatVCF - Merge results from HaplotypeCaller, MuTect1, MuTect2 and VarDict
  - RunStrelka - Run Strelka for Variant Calling
  - RunManta - Run Manta for Structural Variant Calling
@@ -54,25 +54,22 @@ vim: syntax=groovy
 ================================================================================
 */
 
-revision = grabGitRevision()
 testFile = ''
 version = '1.1'
-step = []
-tools = []
 
 if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
 
 if (params.help) {
-  help_message(version, revision)
+  help_message(version, grabRevision())
   exit 1
 }
 if (params.version) {
-  version_message(version, revision)
+  version_message(version, grabRevision())
   exit 1
 }
 
-step = params.step ? params.step.split(',').collect {it.trim()} : ''
-tools = params.tools ? params.tools.split(',').collect {it.trim()} : ''
+step = params.step
+tools = params.tools ? params.tools.split(',').collect {it.trim()} : []
 
 directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
@@ -81,34 +78,42 @@ toolList = defineToolList()
 verbose = params.verbose ? true : false
 
 if (!checkReferenceMap(referenceMap)) {exit 1, 'Missing Reference file(s), see --help for more information'}
-if (!checkParameterList(step,stepList)) {exit 1, 'Unknown step, see --help for more information'}
-if (step.size() != 1) {exit 1, 'Please choose only one step, see --help for more information'}
+if (!checkParameterExistence(step, stepList)) {exit 1, 'Unknown step, see --help for more information'}
+if (step.contains(',')) {exit 1, 'You can choose only one step, see --help for more information'}
 if (!checkParameterList(tools,toolList)) {exit 1, 'Unknown tool(s), see --help for more information'}
 
 if (params.test) {
   test = true
   referenceMap.intervals = "$workflow.projectDir/repeats/tiny.list"
-  testFile = 'preprocessing' in step ? file("$workflow.projectDir/data/tsv/tiny.tsv") : Channel.empty()
-  testFile = 'realign' in step ? file("$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv") : testFile
-  testFile = 'recalibrate' in step ? file("$workflow.launchDir/$directoryMap.nonRecalibrated/nonRecalibrated.tsv") : testFile
-  testFile = 'skipPreprocessing' in step ? file("$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv") : testFile
+  testFile = step == 'preprocessing' ? file("$workflow.projectDir/data/tsv/tiny.tsv") : Channel.empty()
+  testFile = step == 'realign' ? file("$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv") : testFile
+  testFile = step == 'recalibrate' ? file("$workflow.launchDir/$directoryMap.nonRecalibrated/nonRecalibrated.tsv") : testFile
+  testFile = step == 'skipPreprocessing' ? file("$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv") : testFile
 } else {test = false}
 
 // Extract and verify content of TSV file
 
-if ((!params.sample) && !(test)) {exit 1, 'Missing TSV file, see --help for more information'}
+if (!params.sample && !test) {exit 1, 'Missing TSV file, see --help for more information'}
 
 // If --test then the sample file is tiny, else the given sample file
 tsvFile = test ? testFile : file(params.sample)
 
-fastqFiles = 'preprocessing' in step ? extractFastq(tsvFile) : Channel.empty()
-bamFiles = 'realign' in step ? extractBams(tsvFile) : Channel.empty()
-bamFiles = 'recalibrate' in step ? extractRecal(tsvFile) : bamFiles
-bamFiles = 'skipPreprocessing' in step ? extractBams(tsvFile) : bamFiles
+fastqFiles = step == 'preprocessing' ? extractFastq(tsvFile) : Channel.empty()
+
+bamFiles = Channel.empty()
+if (step == 'realign') {
+  bamFiles = extractBams(tsvFile)
+}
+if (step == 'recalibrate') {
+  bamFiles = extractRecal(tsvFile)
+}
+if (step == 'skipPreprocessing') {
+  bamFiles = extractBams(tsvFile)
+}
 
 verbose ? fastqFiles = fastqFiles.view {"FASTQ files to preprocess: $it"} : ''
 verbose ? bamFiles = bamFiles.view {"BAM files to process: $it"} : ''
-start_message(version, revision)
+start_message(version, grabRevision())
 
 /*
 ================================================================================
@@ -131,7 +136,7 @@ process RunFastQC {
   output:
     file "*_fastqc.{zip,html}" into fastQCreport
 
-  when: 'preprocessing' in step && 'MultiQC' in tools
+  when: step == 'preprocessing' && 'MultiQC' in tools
 
   script:
   """
@@ -153,7 +158,7 @@ process MapReads {
   output:
     set idPatient, gender, status, idSample, idRun, file("${idRun}.bam") into mappedBam
 
-  when: 'preprocessing' in step
+  when: step == 'preprocessing'
 
   script:
   readGroup = "@RG\\tID:$idRun\\tSM:$idSample\\tLB:$idSample\\tPL:illumina"
@@ -192,7 +197,7 @@ process MergeBams {
   output:
     set idPatient, gender, status, idSample, file("${idSample}.bam") into mergedBam
 
-  when: 'preprocessing' in step
+  when: step == 'preprocessing'
 
   script:
   """
@@ -218,7 +223,7 @@ process MarkDuplicates {
     set idPatient, gender, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai") into markDuplicatesTSV
     file ("${bam}.metrics") into markDuplicatesReport
 
-  when: 'preprocessing' in step
+  when: step == 'preprocessing'
 
   script:
   """
@@ -244,9 +249,9 @@ markDuplicatesTSV.map { idPatient, gender, status, idSample, bam, bai ->
 // Create intervals for realignement using both tumor+normal as input
 // Group the marked duplicates BAMs for intervals and realign by idPatient
 // Grouping also by gender, to make a nicer channel
-duplicatesGrouped = 'preprocessing' in step ? duplicates.groupTuple(by:[0,1]) : Channel.empty()
+duplicatesGrouped = step == 'preprocessing' ? duplicates.groupTuple(by:[0,1]) : Channel.empty()
 
-duplicatesGrouped = 'realign' in step ? bamFiles.map{
+duplicatesGrouped = step == 'realign' ? bamFiles.map{
   idPatient, gender, status, idSample, bam, bai ->
   [idPatient, gender, "${idSample}_${status}", bam, bai]
 }.groupTuple(by:[0,1]) : duplicatesGrouped
@@ -275,7 +280,7 @@ process CreateIntervals {
   output:
     set idPatient, gender, file("${idPatient}.intervals") into intervals
 
-  when: 'preprocessing' in step || 'realign' in step
+  when: step == 'preprocessing' || step == 'realign'
 
   script:
   bams = bam.collect{"-I $it"}.join(' ')
@@ -322,7 +327,7 @@ process RealignBams {
   output:
     set idPatient, gender, file("*.real.bam"), file("*.real.bai") into realignedBam mode flatten
 
-  when: 'preprocessing' in step || 'realign' in step
+  when: step == 'preprocessing' || step == 'realign'
 
   script:
   bams = bam.collect{"-I $it"}.join(' ')
@@ -341,7 +346,7 @@ process RealignBams {
   """
 }
 
-realignedBam = retreiveStatus(realignedBam)
+realignedBam = retrieveStatus(realignedBam)
 
 verbose ? realignedBam = realignedBam.view {"Realigned BAM to CreateRecalibrationTable: $it"} : ''
 
@@ -360,7 +365,7 @@ process CreateRecalibrationTable {
     set idPatient, gender, status, idSample, file(bam), file(bai), file("${idSample}.recal.table") into recalibrationTable
     set idPatient, gender, status, idSample, val("${idSample}_${status}.md.real.bam"), val("${idSample}_${status}.md.real.bai"), val("${idSample}.recal.table") into recalibrationTableTSV
 
-  when: 'preprocessing' in step || 'realign' in step
+  when: step == 'preprocessing' || step == 'realign'
 
   script:
   """
@@ -389,7 +394,7 @@ recalibrationTableTSV.map { idPatient, gender, status, idSample, bam, bai, recal
   name: 'nonRecalibrated.tsv', sort: true, storeDir: directoryMap.nonRecalibrated
 )
 
-recalibrationTable = 'recalibrate' in step ? bamFiles : recalibrationTable
+recalibrationTable = step == 'recalibrate' ? bamFiles : recalibrationTable
 
 verbose ? recalibrationTable = recalibrationTable.view {"Base recalibrated table for RecalibrateBam: $it"} : ''
 
@@ -408,7 +413,7 @@ process RecalibrateBam {
     set idPatient, gender, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam
     set idPatient, gender, status, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into recalibratedBamTSV
 
-  when: !('skipPreprocessing' in step)
+  when: step != 'skipPreprocessing'
 
   script:
   """
@@ -431,9 +436,9 @@ recalibratedBamTSV.map { idPatient, gender, status, idSample, bam, bai ->
   name: 'recalibrated.tsv', sort: true, storeDir: directoryMap.recalibrated
 )
 
-recalibratedBam = 'skipPreprocessing' in step ? bamFiles : recalibratedBam
+recalibratedBam = step == 'skipPreprocessing' ? bamFiles : recalibratedBam
 
-verbose ? recalibratedBam = recalibratedBam.view {"Recalibrated Bam for variant Calling: $it"} : ''
+verbose ? recalibratedBam = recalibratedBam.view {"Recalibrated BAM for variant Calling: $it"} : ''
 
 (recalibratedBam, recalibratedBamForStats) = recalibratedBam.into(2)
 
@@ -475,10 +480,10 @@ recalibratedBam
 
 // Removing status because not relevant anymore
 bamsNormal = bamsNormal.map { idPatient, gender, status, idSample, bam, bai -> [idPatient, gender, idSample, bam, bai] }
-verbose ? bamsNormal = bamsNormal.view {"Normal Bam for variant Calling: $it"} : ''
+verbose ? bamsNormal = bamsNormal.view {"Normal BAM for variant Calling: $it"} : ''
 
 bamsTumor = bamsTumor.map { idPatient, gender, status, idSample, bam, bai -> [idPatient, gender, idSample, bam, bai] }
-verbose ? bamsTumor = bamsTumor.view {"Tumor Bam for variant Calling: $it"} : ''
+verbose ? bamsTumor = bamsTumor.view {"Tumor BAM for variant Calling: $it"} : ''
 
 // We know that MuTect2 (and other somatic callers) are notoriously slow. To speed them up we are chopping the reference into
 // smaller pieces at centromeres (see repeats/centromeres.list), do variant calling by this intervals, and re-merge the VCFs.
@@ -499,7 +504,7 @@ gI = intervals.map{[it,it.replaceFirst(/\:/,'_')]}
 // HaplotypeCaller
 bamsFHC = bamsNormalTemp.mix(bamsTumorTemp)
 verbose ? bamsFHC = bamsFHC.view {"Bams with Intervals for HaplotypeCaller: $it"} : ''
-if (!'HaplotypeCaller' in tools) {bamsFHC.close()}
+if (!('HaplotypeCaller' in tools)) {bamsFHC.close()}
 
 (bamsNormalTemp, bamsNormal) = bamsNormal.into(2)
 (bamsTumorTemp, bamsTumor) = bamsTumor.into(2)
@@ -510,7 +515,7 @@ bamsTumorTemp = bamsTumorTemp.map { idPatient, gender, idSample, bam, bai -> [id
 bamsForAscat = Channel.create()
 bamsForAscat = bamsNormalTemp.mix(bamsTumorTemp)
 verbose ? bamsForAscat = bamsForAscat.view {"Bams for Ascat: $it"} : ''
-if (!'Ascat' in tools) {bamsForAscat.close()}
+if (!('Ascat' in tools)) {bamsForAscat.close()}
 
 bamsAll = bamsNormal.spread(bamsTumor)
 // Since idPatientNormal and idPatientTumor are the same
@@ -520,35 +525,35 @@ bamsAll = bamsAll.map {
   idPatientNormal, genderNormal, idSampleNormal, bamNormal, baiNormal, idPatientTumor, genderTumor, idSampleTumor, bamTumor, baiTumor ->
   [idPatientNormal, genderNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor]
 }
-verbose ? bamsAll = bamsAll.view {"Mapped Recalibrated Bam for variant Calling: $it"} : ''
+verbose ? bamsAll = bamsAll.view {"Mapped Recalibrated BAM for variant Calling: $it"} : ''
 
 // MuTect1
 (bamsFMT1, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
 verbose ? bamsFMT1 = bamsFMT1.view {"Bams with Intervals for MuTect1: $it"} : ''
-if (!'MuTect1' in tools) {bamsFMT1.close()}
+if (!('MuTect1' in tools)) {bamsFMT1.close()}
 
 // MuTect2
 (bamsFMT2, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
 verbose ? bamsFMT2 = bamsFMT2.view {"Bams with Intervals for MuTect2: $it"} : ''
-if (!'MuTect2' in tools) {bamsFMT2.close()}
+if (!('MuTect2' in tools)) {bamsFMT2.close()}
 
 // FreeBayes
 (bamsFFB, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
 verbose ? bamsFFB = bamsFFB.view {"Bams with Intervals for FreeBayes: $it"} : ''
-if (!'FreeBayes' in tools) {bamsFFB.close()}
+if (!('FreeBayes' in tools)) {bamsFFB.close()}
 
 // VarDict
 (bamsFVD, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
 verbose ? bamsFVD = bamsFVD.view {"Bams with Intervals for VarDict: $it"} : ''
-if (!'VarDict' in tools) {bamsFVD.close()}
+if (!('VarDict' in tools)) {bamsFVD.close()}
 
 (bamsForManta, bamsForStrelka) = bamsAll.into(2)
 
 verbose ? bamsForManta = bamsForManta.view {"Bams for Manta: $it"} : ''
-if (!'Manta' in tools) {bamsForManta.close()}
+if (!('Manta' in tools)) {bamsForManta.close()}
 
 verbose ? bamsForStrelka = bamsForStrelka.view {"Bams for Strelka: $it"} : ''
-if (!'Strelka' in tools) {bamsForStrelka.close()}
+if (!('Strelka' in tools)) {bamsForStrelka.close()}
 
 referenceForRunHaplotypecaller = defineReferenceForProcess("RunHaplotypecaller")
 
@@ -831,7 +836,7 @@ process RunManta {
     set file(genomeFile), file(genomeIndex) from referenceForRunManta
 
   output:
-    set val("Manta"), idPatient, gender, idSampleNormal, idSampleTumor, file("Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf"),file("Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf"),file("Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf"),file("Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf") into mantaOutput
+    set val("manta"), idPatient, gender, idSampleNormal, idSampleTumor, file("Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf"),file("Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf"),file("Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf"),file("Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf") into mantaOutput
 
   when: 'Manta' in tools
 
@@ -1072,7 +1077,8 @@ process GenerateMultiQCconfig {
   echo "- Command Line: ${workflow.commandLine}" >> multiqc_config.yaml
   echo "- Directory: ${workflow.launchDir}" >> multiqc_config.yaml
   echo "- TSV file: ${tsvFile}" >> multiqc_config.yaml
-  echo "- Steps: "${step.join(", ")} >> multiqc_config.yaml
+  echo "- Genome: "${params.genome} >> multiqc_config.yaml
+  echo "- Step: "${step} >> multiqc_config.yaml
   echo "- Tools: "${tools.join(", ")} >> multiqc_config.yaml
   echo "top_modules:" >> multiqc_config.yaml
   echo "- 'fastqc'" >> multiqc_config.yaml
@@ -1096,7 +1102,7 @@ reportsForMultiQC = Channel.fromPath( 'Reports/{FastQC,MarkDuplicates,SamToolsSt
 
 verbose ? reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"} : ''
 
-if (!'MultiQC' in tools) {reportsForMultiQC.close()}
+if (!('MultiQC' in tools)) {reportsForMultiQC.close()}
 
 process RunMultiQC {
   tag {idPatient}
@@ -1127,17 +1133,23 @@ verbose ? multiQCReport = multiQCReport.view {"MultiQC Report: $it"} : ''
 
 def checkFile(it) {
   // Check file existence
-  try {assert file(it).exists()}
-  catch (AssertionError ae) {
+  f = file(it)
+  if (!f.exists()) {
     exit 1, "Missing file in TSV file: $it, see --help for more information"
   }
-  return file(it)
+  return f
+}
+
+def checkFileExtension(it, extension) {
+  // Check file extension
+  if (!it.toString().toLowerCase().endsWith(extension.toLowerCase())) {
+    exit 1, "File: $it has the wrong extension: $extension see --help for more information"
+  }
 }
 
 def checkParameterExistence(it, list) {
   // Check parameter existence
-  try {assert list.contains(it)}
-  catch (AssertionError ae) {
+  if (!list.contains(it)) {
     println("Unknown parameter: $it")
     return false
   }
@@ -1146,12 +1158,7 @@ def checkParameterExistence(it, list) {
 
 def checkParameterList(list, realList) {
   // Loop through all the possible parameters to check their existence and spelling
-  parameterCorrect = true
-  list.each{
-    test = checkParameterExistence(it, realList)
-    !(test) ? parameterCorrect = false : ''
-  }
-  return parameterCorrect ? true : false
+  return list.every{ checkParameterExistence(it, realList) }
 }
 
 def checkReferenceMap(referenceMap) {
@@ -1162,13 +1169,12 @@ def checkReferenceMap(referenceMap) {
     test = checkRefExistence(referenceFile, fileToCheck)
     !(test) ? referenceDefined = false : ''
   }
-  return referenceDefined ? true : false
+  return referenceDefined
 }
 
 def checkRefExistence(referenceFile, fileToCheck) {
   // Check file existence
-  try {assert file(fileToCheck).exists()}
-  catch (AssertionError ae) {
+  if (!file(fileToCheck).exists()) {
     log.info  "Missing references: $referenceFile $fileToCheck"
     return false
   }
@@ -1177,24 +1183,22 @@ def checkRefExistence(referenceFile, fileToCheck) {
 
 def checkStatus(it) {
   // Check if Status is correct
-  try {assert it == "0" || it == "1"}
-  catch (AssertionError ae) {
+  if (!(it in ["0", "1"])) {
     exit 1, "Status is not recognized in TSV file: $it, see --help for more information"
   }
   return it
 }
 
-def checkTSV(it,number) {
-  // Check if TSV has the correct number of item in row
-  try {assert it.size() == number}
-  catch (AssertionError ae) {
+def checkTSV(it, number) {
+  // Check if TSV has the correct number of items in row
+  if (it.size() != number) {
     exit 1, "Malformed row in TSV file: $it, see --help for more information"
   }
   return it
 }
 
 def checkUppmaxProject() {
-  return (workflow.profile == 'standard' || workflow.profile == 'interactive') && !params.project ? false : true
+  return !((workflow.profile == 'standard' || workflow.profile == 'interactive') && !params.project)
 }
 
 def defineDirectoryMap() {
@@ -1414,6 +1418,9 @@ def extractBams(tsvFile) {
       bamFile   = checkFile(list[4])
       baiFile   = checkFile(list[5])
 
+      checkFileExtension(bamFile,".bam")
+      checkFileExtension(baiFile,".bai")
+
       [ idPatient, gender, status, idSample, bamFile, baiFile ]
     }
 }
@@ -1435,6 +1442,9 @@ def extractFastq(tsvFile) {
       fastqFile1 = workflow.commitId && params.test ? checkFile("$workflow.projectDir/${list[5]}") : checkFile("${list[5]}")
       fastqFile2 = workflow.commitId && params.test ? checkFile("$workflow.projectDir/${list[6]}") : checkFile("${list[6]}")
 
+      checkFileExtension(fastqFile1,".fastq.gz")
+      checkFileExtension(fastqFile2,".fastq.gz")
+
       [idPatient, gender, status, idSample, idRun, fastqFile1, fastqFile2]
     }
 }
@@ -1454,6 +1464,10 @@ def extractRecal(tsvFile) {
       baiFile    = checkFile(list[5])
       recalTable = checkFile(list[6])
 
+      checkFileExtension(bamFile,".bam")
+      checkFileExtension(baiFile,".bai")
+      checkFileExtension(recalTable,".recal.table")
+
       [ idPatient, gender, status, idSample, bamFile, baiFile, recalTable ]
     }
 }
@@ -1465,21 +1479,19 @@ def generateIntervalsForVC(bams, gI) {
   return [bamsForVC, bams, gI]
 }
 
-def grabGitRevision() {  // Borrowed idea from https://github.com/NBISweden/wgs-structvar
-  ref = file("$baseDir/.git/HEAD").exists() ?  file("$baseDir/.git/"+file("$baseDir/.git/HEAD").newReader().readLine().tokenize()[1]) : ''
-  return workflow.commitId ? workflow.commitId.substring(0,10) : file("$baseDir/.git/HEAD").exists() ? ref.newReader().readLine().substring(0,10) : ''
+def grabRevision() {
+	return workflow.revision ?: workflow.scriptId.substring(0,10)
 }
 
 def help_message(version, revision) { // Display help message
   log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
   log.info "    Usage:"
-  log.info "       nextflow run SciLifeLab/CAW --sample <sample.tsv> [--step STEP[,STEP]] [--tools TOOL[,TOOL]]"
+  log.info "       nextflow run SciLifeLab/CAW --sample <sample.tsv> [--step STEP] [--tools TOOL[,TOOL]]"
   log.info "    --step"
   log.info "       Option to configure preprocessing."
-  log.info "         Different step to be separated by commas."
   log.info "       Possible values are:"
   log.info "         preprocessing (default, will start workflow with FASTQ files)"
-  log.info "         realign (will start workflow with non-realign BAM files)"
+  log.info "         realign (will start workflow with non-realigned BAM files)"
   log.info "         recalibrate (will start workflow with non-recalibrated BAM files)"
   log.info "         skipPreprocessing (will start workflow with recalibrated BAM files)"
   log.info "    --tools"
@@ -1514,7 +1526,7 @@ def help_message(version, revision) { // Display help message
   log.info "       Test `skipPreprocessing`, `Ascat`, `Manta` and `HaplotypeCaller` on test downSampled set"
 }
 
-def retreiveStatus(bamChannel) {
+def retrieveStatus(bamChannel) {
   return bamChannel = bamChannel.map {
     idPatient, gender, bam, bai ->
     tag = bam.baseName.tokenize('.')[0]
@@ -1530,7 +1542,8 @@ def start_message(version, revision) { // Display start message
   log.info "Project Dir : $workflow.projectDir"
   log.info "Launch Dir  : $workflow.launchDir"
   log.info "Work Dir    : $workflow.workDir"
-  log.info "Steps       : " + step.join(', ')
+  log.info "Genome      : " + params.genome
+  log.info "Step        : " + step
   log.info "Tools       : " + tools.join(', ')
 }
 
@@ -1548,7 +1561,8 @@ workflow.onComplete { // Display complete message
   log.info "Launch Dir  : $workflow.launchDir"
   log.info "Work Dir    : $workflow.workDir"
   log.info "TSV file    : $tsvFile"
-  log.info "Steps       : " + step.join(", ")
+  log.info "Genome      : " + params.genome
+  log.info "Step        : " + step
   log.info "Tools       : " + tools.join(', ')
   log.info "Completed at: $workflow.complete"
   log.info "Duration    : $workflow.duration"
