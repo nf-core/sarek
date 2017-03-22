@@ -504,7 +504,6 @@ gI = intervals.map{[it,it.replaceFirst(/\:/,'_')]}
 // HaplotypeCaller
 bamsFHC = bamsNormalTemp.mix(bamsTumorTemp)
 verbose ? bamsFHC = bamsFHC.view {"Bams with Intervals for HaplotypeCaller: $it"} : ''
-if (!('HaplotypeCaller' in tools)) {bamsFHC.close()}
 
 (bamsNormalTemp, bamsNormal) = bamsNormal.into(2)
 (bamsTumorTemp, bamsTumor) = bamsTumor.into(2)
@@ -515,7 +514,6 @@ bamsTumorTemp = bamsTumorTemp.map { idPatient, gender, idSample, bam, bai -> [id
 bamsForAscat = Channel.create()
 bamsForAscat = bamsNormalTemp.mix(bamsTumorTemp)
 verbose ? bamsForAscat = bamsForAscat.view {"Bams for Ascat: $it"} : ''
-if (!('Ascat' in tools)) {bamsForAscat.close()}
 
 bamsAll = bamsNormal.spread(bamsTumor)
 // Since idPatientNormal and idPatientTumor are the same
@@ -530,30 +528,24 @@ verbose ? bamsAll = bamsAll.view {"Mapped Recalibrated BAM for variant Calling: 
 // MuTect1
 (bamsFMT1, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
 verbose ? bamsFMT1 = bamsFMT1.view {"Bams with Intervals for MuTect1: $it"} : ''
-if (!('MuTect1' in tools)) {bamsFMT1.close()}
 
 // MuTect2
 (bamsFMT2, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
 verbose ? bamsFMT2 = bamsFMT2.view {"Bams with Intervals for MuTect2: $it"} : ''
-if (!('MuTect2' in tools)) {bamsFMT2.close()}
 
 // FreeBayes
 (bamsFFB, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
 verbose ? bamsFFB = bamsFFB.view {"Bams with Intervals for FreeBayes: $it"} : ''
-if (!('FreeBayes' in tools)) {bamsFFB.close()}
 
 // VarDict
 (bamsFVD, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
 verbose ? bamsFVD = bamsFVD.view {"Bams with Intervals for VarDict: $it"} : ''
-if (!('VarDict' in tools)) {bamsFVD.close()}
 
 (bamsForManta, bamsForStrelka) = bamsAll.into(2)
 
 verbose ? bamsForManta = bamsForManta.view {"Bams for Manta: $it"} : ''
-if (!('Manta' in tools)) {bamsForManta.close()}
 
 verbose ? bamsForStrelka = bamsForStrelka.view {"Bams for Strelka: $it"} : ''
-if (!('Strelka' in tools)) {bamsForStrelka.close()}
 
 referenceForRunHaplotypecaller = defineReferenceForProcess("RunHaplotypecaller")
 
@@ -1101,8 +1093,6 @@ reportsForMultiQC = Channel.fromPath( 'Reports/{FastQC,MarkDuplicates,SamToolsSt
   .toList()
 
 verbose ? reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"} : ''
-
-if (!('MultiQC' in tools)) {reportsForMultiQC.close()}
 
 process RunMultiQC {
   tag {idPatient}
