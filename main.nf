@@ -54,7 +54,6 @@ vim: syntax=groovy
 ================================================================================
 */
 
-testFile = ''
 version = '1.1'
 
 if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
@@ -75,40 +74,38 @@ directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
 stepList = defineStepList()
 toolList = defineToolList()
-verbose = params.verbose ? true : false
+verbose = params.verbose
 
+if (!checkExactlyOne([params.test, params.sample]))
+  exit 1, 'Please define which samples to work on by providing either the --test or the --sample option (not both)'
 if (!checkReferenceMap(referenceMap)) {exit 1, 'Missing Reference file(s), see --help for more information'}
 if (!checkParameterExistence(step, stepList)) {exit 1, 'Unknown step, see --help for more information'}
 if (step.contains(',')) {exit 1, 'You can choose only one step, see --help for more information'}
 if (!checkParameterList(tools,toolList)) {exit 1, 'Unknown tool(s), see --help for more information'}
 
 if (params.test) {
-  test = true
   referenceMap.intervals = "$workflow.projectDir/repeats/tiny.list"
-  testFile = step == 'preprocessing' ? file("$workflow.projectDir/data/tsv/tiny.tsv") : Channel.empty()
-  testFile = step == 'realign' ? file("$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv") : testFile
-  testFile = step == 'recalibrate' ? file("$workflow.launchDir/$directoryMap.nonRecalibrated/nonRecalibrated.tsv") : testFile
-  testFile = step == 'skipPreprocessing' ? file("$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv") : testFile
-} else {test = false}
+  testTsvPaths = [
+    'preprocessing': "$workflow.projectDir/data/tsv/tiny.tsv",
+    'realign': "$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv",
+    'recalibrate': "$workflow.launchDir/$directoryMap.nonRecalibrated/nonRecalibrated.tsv",
+    'skipPreprocessing': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv"
+  ]
+  tsvPath = testTsvPaths[params.step]
+} else if (params.sample) {
+  tsvPath = params.sample
+}
 
-// Extract and verify content of TSV file
-
-if (!params.sample && !test) {exit 1, 'Missing TSV file, see --help for more information'}
-
-// If --test then the sample file is tiny, else the given sample file
-tsvFile = test ? testFile : file(params.sample)
-
-fastqFiles = step == 'preprocessing' ? extractFastq(tsvFile) : Channel.empty()
-
+// Set up the fastqFiles and bamFiles channels. One of them remains empty
+fastqFiles = Channel.empty()
 bamFiles = Channel.empty()
-if (step == 'realign') {
-  bamFiles = extractBams(tsvFile)
-}
-if (step == 'recalibrate') {
-  bamFiles = extractRecal(tsvFile)
-}
-if (step == 'skipPreprocessing') {
-  bamFiles = extractBams(tsvFile)
+tsvFile = file(tsvPath)
+switch (step) {
+  case 'preprocessing': fastqFiles = extractFastq(tsvFile); break
+  case 'realign': bamFiles = extractBams(tsvFile); break
+  case 'recalibrate': bamFiles = extractRecal(tsvFile); break
+  case 'skipPreprocessing': bamFiles = extractBams(tsvFile); break
+  default: exit 1, "Unknown step $step"
 }
 
 verbose ? fastqFiles = fastqFiles.view {"FASTQ files to preprocess: $it"} : ''
@@ -1191,6 +1188,12 @@ def checkTSV(it, number) {
 
 def checkUppmaxProject() {
   return !((workflow.profile == 'standard' || workflow.profile == 'interactive') && !params.project)
+}
+
+def checkExactlyOne(list) {
+  n = 0
+  list.each{n += it ? 1 : 0}
+  return n == 1
 }
 
 def defineDirectoryMap() {
