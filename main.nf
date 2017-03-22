@@ -565,7 +565,7 @@ process RunHaplotypecaller {
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from referenceForRunHaplotypecaller
 
   output:
-    set val("haplotypecaller"), idPatient, gender, idSample, val("${gen_int}_${idSample}"), file("${gen_int}_${idSample}.vcf") into hcVCF
+    set val("haplotypecaller"), idPatient, gender, idSample, val("${gen_int}_${idSample}"), file("${gen_int}_${idSample}.g.vcf") into hcVCF
 
   when: 'HaplotypeCaller' in tools
 
@@ -574,6 +574,7 @@ process RunHaplotypecaller {
   java -Xmx${task.memory.toGiga()}g \
   -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T HaplotypeCaller \
+  --emitRefConfidence GVCF -stand_call_conf 30.0  -pairHMM LOGLESS_CACHING  -pcrModel CONSERVATIVE \
   -R $genomeFile \
   --dbsnp $dbsnp \
   -I $bam \
@@ -581,7 +582,7 @@ process RunHaplotypecaller {
   --disable_auto_index_creation_and_locking_when_reading_rods \
   -XL hs37d5 \
   -XL NC_007605 \
-  -o ${gen_int}_${idSample}.vcf
+  -o ${gen_int}_${idSample}.g.vcf
   """
 }
 
@@ -742,7 +743,7 @@ process ConcatVCF {
     set file(genomeFile), file(genomeIndex), file(genomeDict) from referenceForConcatVCF
 
   output:
-    set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file("*.vcf") into vcfConcatenated
+    set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file("*.vcf.gz") into vcfConcatenated
 
   when: 'HaplotypeCaller' in tools || 'MuTect1' in tools || 'MuTect2' in tools || 'FreeBayes' in tools || 'VarDict' in tools
 
@@ -775,7 +776,8 @@ process ConcatVCF {
 	done
 	cat header raw_calls > unsorted.vcf
 	java -jar \${PICARD_HOME}/picard.jar SortVcf I=unsorted.vcf O=$outputFile
-    rm unsorted.vcf
+	rm unsorted.vcf
+	gzip -v $outputFile
 	"""
 }
 
