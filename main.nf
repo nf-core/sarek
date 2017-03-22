@@ -1534,7 +1534,7 @@ def start_message(version, revision) { // Display start message
   log.info "Work Dir    : $workflow.workDir"
   log.info "Genome      : " + params.genome
   log.info "Step        : " + step
-  log.info "Tools       : " + tools.join(', ')
+  if (tools) {log.info "Tools       : " + tools.join(', ')}
 }
 
 def version_message(version, revision) { // Display version message
@@ -1553,7 +1553,7 @@ workflow.onComplete { // Display complete message
   log.info "TSV file    : $tsvFile"
   log.info "Genome      : " + params.genome
   log.info "Step        : " + step
-  log.info "Tools       : " + tools.join(', ')
+  if (tools) {log.info "Tools       : " + tools.join(', ')}
   log.info "Completed at: $workflow.complete"
   log.info "Duration    : $workflow.duration"
   log.info "Success     : $workflow.success"
