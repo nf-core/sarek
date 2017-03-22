@@ -1123,7 +1123,7 @@ verbose ? multiQCReport = multiQCReport.view {"MultiQC Report: $it"} : ''
 def checkFile(it) {
   // Check file existence
   final f = file(it)
-  if (!file(it).exists()) {
+  if (!f.exists()) {
     exit 1, "Missing file in TSV file: $it, see --help for more information"
   }
   return f
