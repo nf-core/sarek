@@ -76,13 +76,14 @@ stepList = defineStepList()
 toolList = defineToolList()
 verbose = params.verbose
 
-if (!checkExactlyOne([params.test, params.sample]))
-  exit 1, 'Please define which samples to work on by providing either the --test or the --sample option (not both)'
+if (!checkExactlyOne([params.test, params.sample, params.sampleDir]))
+  exit 1, 'Please define which samples to work on by providing exactly one of the --test, --sample or --sampleDir options'
 if (!checkReferenceMap(referenceMap)) {exit 1, 'Missing Reference file(s), see --help for more information'}
 if (!checkParameterExistence(step, stepList)) {exit 1, 'Unknown step, see --help for more information'}
 if (step.contains(',')) {exit 1, 'You can choose only one step, see --help for more information'}
 if (!checkParameterList(tools,toolList)) {exit 1, 'Unknown tool(s), see --help for more information'}
 
+tsvPath = ''
 if (params.test) {
   referenceMap.intervals = "$workflow.projectDir/repeats/tiny.list"
   testTsvPaths = [
@@ -99,15 +100,20 @@ if (params.test) {
 // Set up the fastqFiles and bamFiles channels. One of them remains empty
 fastqFiles = Channel.empty()
 bamFiles = Channel.empty()
-tsvFile = file(tsvPath)
-switch (step) {
-  case 'preprocessing': fastqFiles = extractFastq(tsvFile); break
-  case 'realign': bamFiles = extractBams(tsvFile); break
-  case 'recalibrate': bamFiles = extractRecal(tsvFile); break
-  case 'skipPreprocessing': bamFiles = extractBams(tsvFile); break
-  default: exit 1, "Unknown step $step"
+if (tsvPath) {
+  tsvFile = file(tsvPath)
+  switch (step) {
+    case 'preprocessing': fastqFiles = extractFastq(tsvFile); break
+    case 'realign': bamFiles = extractBams(tsvFile); break
+    case 'recalibrate': bamFiles = extractRecal(tsvFile); break
+    case 'skipPreprocessing': bamFiles = extractBams(tsvFile); break
+    default: exit 1, "Unknown step $step"
+  }
+} else if (params.sampleDir) {
+  if (step != 'preprocessing') exit 1, '--sampleDir does not support steps other than "preprocessing"'
+  fastqFiles = extractFastqFromDir(params.sampleDir)
+  tsvFile = params.sampleDir  // used in the reports
 }
-
 verbose ? fastqFiles = fastqFiles.view {"FASTQ files to preprocess: $it"} : ''
 verbose ? bamFiles = bamFiles.view {"BAM files to process: $it"} : ''
 start_message(version, grabRevision())
@@ -1444,6 +1450,44 @@ def extractFastq(tsvFile) {
     }
 }
 
+def extractFastqFromDir(pattern) {
+  // create a channel of FASTQs from a directory pattern such as
+  // "my_samples/*/". All samples are considered 'normal'.
+  // All FASTQ files in subdirectories are collected and emitted;
+  // they must have _R1_ and _R2_ in their names.
+
+  fastq = Channel.create()
+
+  // a temporary channel does all the work
+  Channel
+    .fromPath(pattern, type: 'dir')
+    .ifEmpty { error "No directories found matching pattern '$pattern'" }
+    .subscribe onNext: { sampleDir ->
+      // the last name of the sampleDir is assumed to be a unique sample id
+      sampleId = sampleDir.getFileName().toString()
+
+      i = 1
+      for (path1 in file("${sampleDir}/**_R1_*.fastq.gz")) {
+        println "path1: $path1"
+        assert path1.getName().contains('_R1_')
+        path2 = file(path1.toString().replace('_R1_', '_R2_'))
+        if (!path2.exists()) {
+            error "Path '${path2}' not found"
+        }
+        flowcellId = flowcellIdFromFastq(path1)
+        patient = sampleId
+        gender = 'ZZ'  // unused
+        status = 0  // normal
+        idRun = "${flowcellId}.${i}"  // TODO
+        result = [patient, gender, status, sampleId, idRun, path1, path2]
+        fastq.bind(result)
+        i += 1
+      }
+  }, onComplete: { fastq.close() }
+
+  fastq
+}
+
 def extractRecal(tsvFile) {
   // Channeling the TSV file containing Recalibration Tables.
   // Format is: "subject gender status sample bam bai recalTables"
@@ -1472,6 +1516,28 @@ def generateIntervalsForVC(bams, gI) {
   (gI, vcIntervals) = gI.into(2)
   bamsForVC = bamsForVC.spread(vcIntervals)
   return [bamsForVC, bams, gI]
+}
+
+def flowcellIdFromFastq(path) {
+  // parse first line of a FASTQ file (optionally gzip-compressed)
+  // and return the flowcell id.
+  // expected format:
+  // xx:yy:FLOWCELLID:... (seven fields)
+  // or
+  // FLOWCELLID:xx:... (five fields)
+  InputStream fileStream = new FileInputStream(path.toFile())
+  InputStream gzipStream = new java.util.zip.GZIPInputStream(fileStream)
+  Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
+  BufferedReader buffered = new BufferedReader(decoder)
+  line = buffered.readLine()
+  assert line.startsWith('@')
+  line = line.substring(1)
+  fields = line.split(' ')[0].split(':')
+  String fcid
+  if (fields.size() == 7) fcid = fields[2] // probably new CASAVA 1.8 format
+  else if (fields.size() == 5) fcid = fields[0]
+
+  fcid
 }
 
 def grabRevision() {
