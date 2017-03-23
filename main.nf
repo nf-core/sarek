@@ -1122,7 +1122,7 @@ verbose ? multiQCReport = multiQCReport.view {"MultiQC Report: $it"} : ''
 
 def checkFile(it) {
   // Check file existence
-  f = file(it)
+  final f = file(it)
   if (!f.exists()) {
     exit 1, "Missing file in TSV file: $it, see --help for more information"
   }
@@ -1152,10 +1152,10 @@ def checkParameterList(list, realList) {
 
 def checkReferenceMap(referenceMap) {
   // Loop through all the references files to check their existence
-  referenceDefined = true
+  final referenceDefined = true
   referenceMap.each{
     referenceFile, fileToCheck ->
-    test = checkRefExistence(referenceFile, fileToCheck)
+    final test = checkRefExistence(referenceFile, fileToCheck)
     !(test) ? referenceDefined = false : ''
   }
   return referenceDefined
@@ -1194,7 +1194,7 @@ def checkUppmaxProject() {
 }
 
 def checkExactlyOne(list) {
-  n = 0
+  final n = 0
   list.each{n += it ? 1 : 0}
   return n == 1
 }
@@ -1471,6 +1471,8 @@ def extractRecal(tsvFile) {
 }
 
 def generateIntervalsForVC(bams, gI) {
+  final bamsForVC = Channel.create()
+  final vcIntervals = Channel.create()
   (bams, bamsForVC) = bams.into(2)
   (gI, vcIntervals) = gI.into(2)
   bamsForVC = bamsForVC.spread(vcIntervals)
