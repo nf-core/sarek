@@ -160,7 +160,7 @@ process MapReads {
   script:
   readGroup = "@RG\\tID:$idRun\\tSM:$idSample\\tLB:$idSample\\tPL:illumina"
   // adjust mismatch penalty for tumor samples
-  extra = status == "1" ? "-B 3 " : ""
+  extra = status == 1 ? "-B 3 " : ""
   """
   set -eo pipefail
   bwa mem -R \"$readGroup\" ${extra}-t $task.cpus -M \
@@ -473,7 +473,7 @@ verbose ? recalibratedBamReport = recalibratedBamReport.view {"BAM Stats: $it"} 
 bamsNormal = Channel.create()
 bamsTumor = Channel.create()
 recalibratedBam
-  .choice(bamsTumor, bamsNormal) {it[2] =~ /^0$/ ? 1 : 0}
+  .choice(bamsTumor, bamsNormal) {it[2] == 0 ? 1 : 0}
 
 // Removing status because not relevant anymore
 bamsNormal = bamsNormal.map { idPatient, gender, status, idSample, bam, bai -> [idPatient, gender, idSample, bam, bai] }
@@ -879,7 +879,7 @@ alleleCountNormal = Channel.create()
 alleleCountTumor = Channel.create()
 
 alleleCountOutput
-  .choice(alleleCountTumor, alleleCountNormal) {it[2] =~ /^0$/ ? 1 : 0}
+  .choice(alleleCountTumor, alleleCountNormal) {it[2] == 0 ? 1 : 0}
 
 alleleCountOutput = alleleCountNormal.spread(alleleCountTumor)
 
@@ -1171,8 +1171,11 @@ def checkRefExistence(referenceFile, fileToCheck) {
 }
 
 def checkStatus(it) {
-  // Check if Status is correct
-  if (!(it in ["0", "1"])) {
+  // Check if status is correct
+  // Status should be only 0 or 1
+  // 0 being normal
+  // 1 being tumor (or relapse or anything that is not normal...)
+  if (!(it in [0, 1])) {
     exit 1, "Status is not recognized in TSV file: $it, see --help for more information"
   }
   return it
@@ -1408,7 +1411,7 @@ def extractBams(tsvFile) {
       list      = checkTSV(line.split(),6)
       idPatient = list[0]
       gender    = list[1]
-      status    = checkStatus(list[2])
+      status    = checkStatus(list[2].toInteger())
       idSample  = list[3]
       bamFile   = checkFile(list[4])
       baiFile   = checkFile(list[5])
@@ -1429,7 +1432,7 @@ def extractFastq(tsvFile) {
       list       = checkTSV(line.split(),7)
       idPatient  = list[0]
       gender     = list[1]
-      status     = checkStatus(list[2])
+      status     = checkStatus(list[2].toInteger())
       idSample   = list[3]
       idRun      = list[4]
 
@@ -1453,7 +1456,7 @@ def extractRecal(tsvFile) {
       list       = checkTSV(line.split(),7)
       idPatient  = list[0]
       gender     = list[1]
-      status     = checkStatus(list[2])
+      status     = checkStatus(list[2].toInteger())
       idSample   = list[3]
       bamFile    = checkFile(list[4])
       baiFile    = checkFile(list[5])
@@ -1525,7 +1528,7 @@ def retrieveStatus(bamChannel) {
   return bamChannel = bamChannel.map {
     idPatient, gender, bam, bai ->
     tag = bam.baseName.tokenize('.')[0]
-    status   = tag[-1..-1]
+    status   = tag[-1..-1].toInteger()
     idSample = tag.take(tag.length()-2)
     [idPatient, gender, status, idSample, bam, bai]
   }
