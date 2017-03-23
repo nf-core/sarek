@@ -1158,13 +1158,10 @@ def checkParameterList(list, realList) {
 
 def checkReferenceMap(referenceMap) {
   // Loop through all the references files to check their existence
-  final referenceDefined = true
-  referenceMap.each{
+  referenceMap.every {
     referenceFile, fileToCheck ->
-    final test = checkRefExistence(referenceFile, fileToCheck)
-    !(test) ? referenceDefined = false : ''
+    checkRefExistence(referenceFile, fileToCheck)
   }
-  return referenceDefined
 }
 
 def checkRefExistence(referenceFile, fileToCheck) {
