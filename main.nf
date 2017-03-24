@@ -278,7 +278,7 @@ process CreateIntervals {
 
   input:
     set idPatient, gender, idSample_status, file(bam), file(bai) from duplicatesInterval
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(kgIndels), file(kgIndex), file(millsIndels), file(millsIndex) from referenceForCreateIntervals
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(knownIndels), file(knownIndelsIndex) from referenceForCreateIntervals
 
   output:
     set idPatient, gender, file("${idPatient}.intervals") into intervals
@@ -287,14 +287,14 @@ process CreateIntervals {
 
   script:
   bams = bam.collect{"-I $it"}.join(' ')
+  known = knownIndels.collect{"-known $it"}.join(' ')
   """
   java -Xmx${task.memory.toGiga()}g \
   -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T RealignerTargetCreator \
   $bams \
   -R $genomeFile \
-  -known $kgIndels \
-  -known $millsIndels \
+  $known \
   -nt $task.cpus \
   -XL hs37d5 \
   -XL NC_007605 \
@@ -326,7 +326,7 @@ process RealignBams {
 
   input:
     set idPatient, gender, idSample_status, file(bam), file(bai), file(intervals) from bamsAndIntervals
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(kgIndels), file(kgIndex), file(millsIndels), file(millsIndex) from referenceForRealignBams
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(knownIndels), file(knownIndelsIndex) from referenceForRealignBams
   output:
     set idPatient, gender, file("*.real.bam"), file("*.real.bai") into realignedBam mode flatten
 
@@ -334,6 +334,7 @@ process RealignBams {
 
   script:
   bams = bam.collect{"-I $it"}.join(' ')
+  known = knownIndels.collect{"-known $it"}.join(' ')
   """
   java -Xmx${task.memory.toGiga()}g \
   -jar \$GATK_HOME/GenomeAnalysisTK.jar \
@@ -341,8 +342,7 @@ process RealignBams {
   $bams \
   -R $genomeFile \
   -targetIntervals $intervals \
-  -known $kgIndels \
-  -known $millsIndels \
+  $known \
   -XL hs37d5 \
   -XL NC_007605 \
   -nWayOut '.real.bam'
@@ -362,7 +362,7 @@ process CreateRecalibrationTable {
 
   input:
     set idPatient, gender, status, idSample, file(bam), file(bai) from realignedBam
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(kgIndels), file(kgIndex), file(millsIndels), file(millsIndex) from referenceForCreateRecalibrationTable
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(knownIndels), file(knownIndelsIndex) from referenceForCreateRecalibrationTable
 
   output:
     set idPatient, gender, status, idSample, file(bam), file(bai), file("${idSample}.recal.table") into recalibrationTable
@@ -371,6 +371,7 @@ process CreateRecalibrationTable {
   when: step == 'preprocessing' || step == 'realign'
 
   script:
+  known = knownIndels.collect{ "-knownSites $it" }.join(' ')
   """
   java -Xmx${task.memory.toGiga()}g \
   -Djava.io.tmpdir="/tmp" \
@@ -380,8 +381,7 @@ process CreateRecalibrationTable {
   -I $bam \
   --disable_auto_index_creation_and_locking_when_reading_rods \
   -knownSites $dbsnp \
-  -knownSites $kgIndels \
-  -knownSites $millsIndels \
+  $known \
   -nct $task.cpus \
   -XL hs37d5 \
   -XL NC_007605 \
@@ -1165,6 +1165,9 @@ def checkReferenceMap(referenceMap) {
 }
 
 def checkRefExistence(referenceFile, fileToCheck) {
+  if (fileToCheck instanceof List) {
+    return fileToCheck.every{ checkRefExistence(referenceFile, it) }
+  }
   def f = file(fileToCheck)
   if (f instanceof List && f.size() > 0) {
     // this is an expanded wildcard: we can assume all files exist
@@ -1237,20 +1240,16 @@ def defineReferenceForProcess(process) {
       file(referenceMap.genomeFile),
       file(referenceMap.genomeIndex),
       file(referenceMap.genomeDict),
-      file(referenceMap.kgIndels),
-      file(referenceMap.kgIndex),
-      file(referenceMap.millsIndels),
-      file(referenceMap.millsIndex)
+      referenceMap.knownIndels.collect{file(it)},
+      referenceMap.knownIndelsIndex.collect{file(it)},
     ).toList()
   } else if (process == "RealignBams") {
     return Channel.from (
       file(referenceMap.genomeFile),
       file(referenceMap.genomeIndex),
       file(referenceMap.genomeDict),
-      file(referenceMap.kgIndels),
-      file(referenceMap.kgIndex),
-      file(referenceMap.millsIndels),
-      file(referenceMap.millsIndex)
+      referenceMap.knownIndels.collect{file(it)},
+      referenceMap.knownIndelsIndex.collect{file(it)},
     ).toList()
   } else if (process == "CreateRecalibrationTable") {
     return Channel.from (
@@ -1259,10 +1258,8 @@ def defineReferenceForProcess(process) {
       file(referenceMap.genomeDict),
       file(referenceMap.dbsnp),
       file(referenceMap.dbsnpIndex),
-      file(referenceMap.kgIndels),
-      file(referenceMap.kgIndex),
-      file(referenceMap.millsIndels),
-      file(referenceMap.millsIndex)
+      referenceMap.knownIndels.collect{file(it)},
+      referenceMap.knownIndelsIndex.collect{file(it)},
     ).toList()
   } else if (process == "RecalibrateBam") {
     return Channel.from (
@@ -1346,7 +1343,7 @@ def defineReferenceMap() {
     'acLoci'      : genome.acLoci,  // loci file for ascat
     'dbsnp'       : genome.dbsnp,
     'dbsnpIndex'  : genome.dbsnpIndex,
-    'cosmic'      : genome.cosmic,  // cosmic VCF file with VCF4.1 header
+    'cosmic'      : genome.cosmic,  // cosmic VCF with VCF4.1 header
     'cosmicIndex' : genome.cosmicIndex,
     'genomeDict'  : genome.genomeDict,  // genome reference dictionary
     'genomeFile'  : genome.genome,  // FASTA genome reference
@@ -1355,10 +1352,9 @@ def defineReferenceMap() {
     // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
     'intervals'   : genome.intervals,
     'vardictHome' : genome.vardictHome,  // path to VarDict
-    'kgIndels'    : genome.kgIndels,  // 1000 Genomes
-    'kgIndex'     : genome.kgIndex,
-    'millsIndels' : genome.millsIndels,  // Mill's Golden set of SNPs
-    'millsIndex'  : genome.millsIndex,
+    // VCFs with known indels (such as 1000 Genomes, Mill’s gold standard)
+    'knownIndels' : genome.knownIndels,
+    'knownIndelsIndex': genome.knownIndelsIndex,
   ]
 }
 
