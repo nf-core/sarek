@@ -1337,37 +1337,28 @@ def defineReferenceForProcess(process) {
 }
 
 def defineReferenceMap() {
+  if (!(params.genome in params.genomes)) {
+    exit 1, "Genome $params.genome not found in configuration"
+  }
+  genome = params.genomes[params.genome]
+
   return [
-    // loci file for ascat
-    'acLoci'      : params.genome ? params.genomes[params.genome].acLoci ?: false : false,
-    // dbSNP
-    'dbsnp'       : params.genome ? params.genomes[params.genome].dbsnp ?: false : false,
-    // cosmic vcf file with VCF4.1 header
-    'cosmic'      : params.genome ? params.genomes[params.genome].cosmic ?: false : false,
-    // cosmic vcf file index
-    'cosmicIndex' : params.genome ? params.genomes[params.genome].cosmicIndex ?: false : false,
-    // dbSNP index
-    'dbsnpIndex'  : params.genome ? params.genomes[params.genome].dbsnpIndex ?: false : false,
-    // genome reference dictionary
-    'genomeDict'  : params.genome ? params.genomes[params.genome].genomeDict ?: false : false,
-    // genome reference
-    'genomeFile'  : params.genome ? params.genomes[params.genome].genome ?: false : false,
-    // genome reference index
-    'genomeIndex' : params.genome ? params.genomes[params.genome].genomeIndex ?: false : false,
-    // BWA index
-    'bwaIndex'    : params.genome ? params.genomes[params.genome].bwaIndex ?: false : false,
+    'acLoci'      : genome.acLoci,  // loci file for ascat
+    'dbsnp'       : genome.dbsnp,
+    'dbsnpIndex'  : genome.dbsnpIndex,
+    'cosmic'      : genome.cosmic,  // cosmic VCF file with VCF4.1 header
+    'cosmicIndex' : genome.cosmicIndex,
+    'genomeDict'  : genome.genomeDict,  // genome reference dictionary
+    'genomeFile'  : genome.genome,  // FASTA genome reference
+    'genomeIndex' : genome.genomeIndex,  // genome .fai file
+    'bwaIndex'    : genome.bwaIndex,  // BWA index files
     // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
-    'intervals'   : params.genome ? params.genomes[params.genome].intervals ?: false : false,
-    // 1000 Genomes SNPs
-    'kgIndels'    : params.genome ? params.genomes[params.genome].kgIndels ?: false : false,
-    // 1000 Genomes SNPs index
-    'kgIndex'     : params.genome ? params.genomes[params.genome].kgIndex ?: false : false,
-    // Mill's Golden set of SNPs
-    'millsIndels' : params.genome ? params.genomes[params.genome].millsIndels ?: false : false,
-    // Mill's Golden set index
-    'millsIndex'  : params.genome ? params.genomes[params.genome].millsIndex ?: false : false,
-    // path to VarDict
-    'vardictHome' : params.genome ? params.genomes[params.genome].vardictHome ?: false : false
+    'intervals'   : genome.intervals,
+    'vardictHome' : genome.vardictHome,  // path to VarDict
+    'kgIndels'    : genome.kgIndels,  // 1000 Genomes
+    'kgIndex'     : genome.kgIndex,
+    'millsIndels' : genome.millsIndels,  // Mill's Golden set of SNPs
+    'millsIndex'  : genome.millsIndex,
   ]
 }
 
