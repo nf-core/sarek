@@ -1232,103 +1232,103 @@ def defineDirectoryMap() {
 def defineReferenceForProcess(process) {
   if (process == "MapReads") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.bwaIndex),
+      referenceMap.genomeFile,
+      referenceMap.bwaIndex
     ).toList()
   } else if (process == "CreateIntervals") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict),
-      referenceMap.knownIndels.collect{file(it)},
-      referenceMap.knownIndelsIndex.collect{file(it)},
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.knownIndels,
+      referenceMap.knownIndelsIndex
     ).toList()
   } else if (process == "RealignBams") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict),
-      referenceMap.knownIndels.collect{file(it)},
-      referenceMap.knownIndelsIndex.collect{file(it)},
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.knownIndels,
+      referenceMap.knownIndelsIndex
     ).toList()
   } else if (process == "CreateRecalibrationTable") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict),
-      file(referenceMap.dbsnp),
-      file(referenceMap.dbsnpIndex),
-      referenceMap.knownIndels.collect{file(it)},
-      referenceMap.knownIndelsIndex.collect{file(it)},
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex,
+      referenceMap.knownIndels,
+      referenceMap.knownIndelsIndex
     ).toList()
   } else if (process == "RecalibrateBam") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
     ).toList()
   } else if (process == "RunHaplotypecaller") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict),
-      file(referenceMap.dbsnp),
-      file(referenceMap.dbsnpIndex)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex
     ).toList()
   } else if (process == "RunMutect1") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict),
-      file(referenceMap.dbsnp),
-      file(referenceMap.dbsnpIndex),
-      file(referenceMap.cosmic),
-      file(referenceMap.cosmicIndex)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex,
+      referenceMap.cosmic,
+      referenceMap.cosmicIndex
     ).toList()
   } else if (process == "RunMutect2") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict),
-      file(referenceMap.dbsnp),
-      file(referenceMap.dbsnpIndex),
-      file(referenceMap.cosmic),
-      file(referenceMap.cosmicIndex)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex,
+      referenceMap.cosmic,
+      referenceMap.cosmicIndex
     ).toList()
   } else if (process == "RunFreeBayes") {
     return Channel.from (
-      file(referenceMap.genomeFile)
+      referenceMap.genomeFile
     )
   } else if (process == "RunVardict") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
     ).toList()
   } else if (process == "ConcatVCF") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
     ).toList()
 
   } else if (process == "RunStrelka") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
     ).toList()
   } else if (process == "RunManta") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex
     ).toList()
   } else if (process == "RunAlleleCount") {
     return Channel.from (
-      file(referenceMap.acLoci),
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict)
+      referenceMap.acLoci,
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
     ).toList()
   } else return null
 }
@@ -1340,21 +1340,21 @@ def defineReferenceMap() {
   genome = params.genomes[params.genome]
 
   return [
-    'acLoci'      : genome.acLoci,  // loci file for ascat
-    'dbsnp'       : genome.dbsnp,
-    'dbsnpIndex'  : genome.dbsnpIndex,
-    'cosmic'      : genome.cosmic,  // cosmic VCF with VCF4.1 header
-    'cosmicIndex' : genome.cosmicIndex,
-    'genomeDict'  : genome.genomeDict,  // genome reference dictionary
-    'genomeFile'  : genome.genome,  // FASTA genome reference
-    'genomeIndex' : genome.genomeIndex,  // genome .fai file
-    'bwaIndex'    : genome.bwaIndex,  // BWA index files
+    'acLoci'      : file(genome.acLoci),  // loci file for ascat
+    'dbsnp'       : file(genome.dbsnp),
+    'dbsnpIndex'  : file(genome.dbsnpIndex),
+    'cosmic'      : file(genome.cosmic),  // cosmic VCF with VCF4.1 header
+    'cosmicIndex' : file(genome.cosmicIndex),
+    'genomeDict'  : file(genome.genomeDict),  // genome reference dictionary
+    'genomeFile'  : file(genome.genome),  // FASTA genome reference
+    'genomeIndex' : file(genome.genomeIndex),  // genome .fai file
+    'bwaIndex'    : file(genome.bwaIndex),  // BWA index files
     // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
-    'intervals'   : genome.intervals,
-    'vardictHome' : genome.vardictHome,  // path to VarDict
+    'intervals'   : file(genome.intervals),
+    'vardictHome' : file(genome.vardictHome),  // path to VarDict
     // VCFs with known indels (such as 1000 Genomes, Mill’s gold standard)
-    'knownIndels' : genome.knownIndels,
-    'knownIndelsIndex': genome.knownIndelsIndex,
+    'knownIndels' : genome.knownIndels.collect{file(it)},
+    'knownIndelsIndex': genome.knownIndelsIndex.collect{file(it)},
   ]
 }
 
