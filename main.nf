@@ -156,7 +156,7 @@ process MapReads {
 
   input:
     set idPatient, gender, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFiles
-    set file(genomeAmb), file(genomeAnn), file(genomeBwt), file(genomeFile), file(genomeIndex), file(genomePac), file(genomeSa) from referenceForMapReads
+    set file(genomeFile), file(bwaIndex) from referenceForMapReads
 
   output:
     set idPatient, gender, status, idSample, idRun, file("${idRun}.bam") into mappedBam
@@ -1158,18 +1158,18 @@ def checkParameterList(list, realList) {
 
 def checkReferenceMap(referenceMap) {
   // Loop through all the references files to check their existence
-  final referenceDefined = true
-  referenceMap.each{
+  referenceMap.every {
     referenceFile, fileToCheck ->
-    final test = checkRefExistence(referenceFile, fileToCheck)
-    !(test) ? referenceDefined = false : ''
+    checkRefExistence(referenceFile, fileToCheck)
   }
-  return referenceDefined
 }
 
 def checkRefExistence(referenceFile, fileToCheck) {
-  // Check file existence
-  if (!file(fileToCheck).exists()) {
+  def f = file(fileToCheck)
+  if (f instanceof List && f.size() > 0) {
+    // this is an expanded wildcard: we can assume all files exist
+    return true
+  } else if (!f.exists()) {
     log.info  "Missing references: $referenceFile $fileToCheck"
     return false
   }
@@ -1229,13 +1229,8 @@ def defineDirectoryMap() {
 def defineReferenceForProcess(process) {
   if (process == "MapReads") {
     return Channel.from (
-      file(referenceMap.genomeAmb),
-      file(referenceMap.genomeAnn),
-      file(referenceMap.genomeBwt),
       file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomePac),
-      file(referenceMap.genomeSa)
+      file(referenceMap.bwaIndex),
     ).toList()
   } else if (process == "CreateIntervals") {
     return Channel.from (
@@ -1353,22 +1348,14 @@ def defineReferenceMap() {
     'cosmicIndex' : params.genome ? params.genomes[params.genome].cosmicIndex ?: false : false,
     // dbSNP index
     'dbsnpIndex'  : params.genome ? params.genomes[params.genome].dbsnpIndex ?: false : false,
-    // BWA indexes
-    'genomeAmb'   : params.genome ? params.genomes[params.genome].genomeAmb ?: false : false,
-    // BWA indexes
-    'genomeAnn'   : params.genome ? params.genomes[params.genome].genomeAnn ?: false : false,
-    // BWA indexes
-    'genomeBwt'   : params.genome ? params.genomes[params.genome].genomeBwt ?: false : false,
     // genome reference dictionary
     'genomeDict'  : params.genome ? params.genomes[params.genome].genomeDict ?: false : false,
     // genome reference
     'genomeFile'  : params.genome ? params.genomes[params.genome].genome ?: false : false,
     // genome reference index
     'genomeIndex' : params.genome ? params.genomes[params.genome].genomeIndex ?: false : false,
-    // BWA indexes
-    'genomePac'   : params.genome ? params.genomes[params.genome].genomePac ?: false : false,
-    // BWA indexes
-    'genomeSa'    : params.genome ? params.genomes[params.genome].genomeSa ?: false : false,
+    // BWA index
+    'bwaIndex'    : params.genome ? params.genomes[params.genome].bwaIndex ?: false : false,
     // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
     'intervals'   : params.genome ? params.genomes[params.genome].intervals ?: false : false,
     // 1000 Genomes SNPs
