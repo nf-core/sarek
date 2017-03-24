@@ -164,7 +164,7 @@ process MapReads {
   when: step == 'preprocessing'
 
   script:
-  readGroup = "@RG\\tID:$idRun\\tSM:$idSample\\tLB:$idSample\\tPL:illumina"
+  readGroup = "@RG\\tID:$idRun\\tPU:$idRun\\tSM:$idSample\\tLB:$idSample\\tPL:illumina"
   // adjust mismatch penalty for tumor samples
   extra = status == 1 ? "-B 3 " : ""
   """
@@ -1456,22 +1456,19 @@ def extractFastqFromDir(pattern) {
       // the last name of the sampleDir is assumed to be a unique sample id
       sampleId = sampleDir.getFileName().toString()
 
-      i = 1
       for (path1 in file("${sampleDir}/**_R1_*.fastq.gz")) {
-        println "path1: $path1"
         assert path1.getName().contains('_R1_')
         path2 = file(path1.toString().replace('_R1_', '_R2_'))
         if (!path2.exists()) {
             error "Path '${path2}' not found"
         }
-        flowcellId = flowcellIdFromFastq(path1)
+        (flowcell, lane) = flowcellLaneFromFastq(path1)
         patient = sampleId
         gender = 'ZZ'  // unused
-        status = 0  // normal
-        idRun = "${flowcellId}.${i}"  // TODO
-        result = [patient, gender, status, sampleId, idRun, path1, path2]
+        status = 0  // normal (not tumor)
+        rgId = "${flowcell}.${sampleId}.${lane}"
+        result = [patient, gender, status, sampleId, rgId, path1, path2]
         fastq.bind(result)
-        i += 1
       }
   }, onComplete: { fastq.close() }
 
@@ -1510,13 +1507,13 @@ def generateIntervalsForVC(bams, gI) {
   return [bamsForVC, bams, gI]
 }
 
-def flowcellIdFromFastq(path) {
+def flowcellLaneFromFastq(path) {
   // parse first line of a FASTQ file (optionally gzip-compressed)
-  // and return the flowcell id.
+  // and return the flowcell id and lane number.
   // expected format:
-  // xx:yy:FLOWCELLID:... (seven fields)
+  // xx:yy:FLOWCELLID:LANE:... (seven fields)
   // or
-  // FLOWCELLID:xx:... (five fields)
+  // FLOWCELLID:LANE:xx:... (five fields)
   InputStream fileStream = new FileInputStream(path.toFile())
   InputStream gzipStream = new java.util.zip.GZIPInputStream(fileStream)
   Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
@@ -1526,10 +1523,18 @@ def flowcellIdFromFastq(path) {
   line = line.substring(1)
   fields = line.split(' ')[0].split(':')
   String fcid
-  if (fields.size() == 7) fcid = fields[2] // probably new CASAVA 1.8 format
-  else if (fields.size() == 5) fcid = fields[0]
+  int lane
+  if (fields.size() == 7) {
+    // CASAVA 1.8+ format
+    fcid = fields[2]
+    lane = fields[3].toInteger()
+  }
+  else if (fields.size() == 5) {
+    fcid = fields[0]
+    lane = fields[1].toInteger()
+  }
 
-  fcid
+  [fcid, lane]
 }
 
 def grabRevision() {
