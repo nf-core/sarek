@@ -56,8 +56,6 @@ vim: syntax=groovy
 
 version = '1.1'
 
-if (!checkGenome()) {exit 1, "Genome $params.genome not recognized"}
-
 if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
 
 if (params.help) {
@@ -1142,13 +1140,6 @@ def checkFileExtension(it, extension) {
   if (!it.toString().toLowerCase().endsWith(extension.toLowerCase())) {
     exit 1, "File: $it has the wrong extension: $extension see --help for more information"
   }
-}
-
-def checkGenome() {
-  if (!(params.genome)) {
-    return false
-  }
-  return params.genome in ['GRCh37', 'GRCh38'] ? true : false
 }
 
 def checkParameterExistence(it, list) {
