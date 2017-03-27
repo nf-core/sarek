@@ -278,7 +278,7 @@ process CreateIntervals {
 
   input:
     set idPatient, gender, idSample_status, file(bam), file(bai) from duplicatesInterval
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(kgIndels), file(kgIndex), file(millsIndels), file(millsIndex) from referenceForCreateIntervals
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(knownIndels), file(knownIndelsIndex) from referenceForCreateIntervals
 
   output:
     set idPatient, gender, file("${idPatient}.intervals") into intervals
@@ -287,14 +287,14 @@ process CreateIntervals {
 
   script:
   bams = bam.collect{"-I $it"}.join(' ')
+  known = knownIndels.collect{"-known $it"}.join(' ')
   """
   java -Xmx${task.memory.toGiga()}g \
   -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T RealignerTargetCreator \
   $bams \
   -R $genomeFile \
-  -known $kgIndels \
-  -known $millsIndels \
+  $known \
   -nt $task.cpus \
   -XL hs37d5 \
   -XL NC_007605 \
@@ -326,7 +326,7 @@ process RealignBams {
 
   input:
     set idPatient, gender, idSample_status, file(bam), file(bai), file(intervals) from bamsAndIntervals
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(kgIndels), file(kgIndex), file(millsIndels), file(millsIndex) from referenceForRealignBams
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(knownIndels), file(knownIndelsIndex) from referenceForRealignBams
   output:
     set idPatient, gender, file("*.real.bam"), file("*.real.bai") into realignedBam mode flatten
 
@@ -334,6 +334,7 @@ process RealignBams {
 
   script:
   bams = bam.collect{"-I $it"}.join(' ')
+  known = knownIndels.collect{"-known $it"}.join(' ')
   """
   java -Xmx${task.memory.toGiga()}g \
   -jar \$GATK_HOME/GenomeAnalysisTK.jar \
@@ -341,8 +342,7 @@ process RealignBams {
   $bams \
   -R $genomeFile \
   -targetIntervals $intervals \
-  -known $kgIndels \
-  -known $millsIndels \
+  $known \
   -XL hs37d5 \
   -XL NC_007605 \
   -nWayOut '.real.bam'
@@ -362,7 +362,7 @@ process CreateRecalibrationTable {
 
   input:
     set idPatient, gender, status, idSample, file(bam), file(bai) from realignedBam
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(kgIndels), file(kgIndex), file(millsIndels), file(millsIndex) from referenceForCreateRecalibrationTable
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(knownIndels), file(knownIndelsIndex) from referenceForCreateRecalibrationTable
 
   output:
     set idPatient, gender, status, idSample, file(bam), file(bai), file("${idSample}.recal.table") into recalibrationTable
@@ -371,6 +371,7 @@ process CreateRecalibrationTable {
   when: step == 'preprocessing' || step == 'realign'
 
   script:
+  known = knownIndels.collect{ "-knownSites $it" }.join(' ')
   """
   java -Xmx${task.memory.toGiga()}g \
   -Djava.io.tmpdir="/tmp" \
@@ -380,8 +381,7 @@ process CreateRecalibrationTable {
   -I $bam \
   --disable_auto_index_creation_and_locking_when_reading_rods \
   -knownSites $dbsnp \
-  -knownSites $kgIndels \
-  -knownSites $millsIndels \
+  $known \
   -nct $task.cpus \
   -XL hs37d5 \
   -XL NC_007605 \
@@ -1165,6 +1165,9 @@ def checkReferenceMap(referenceMap) {
 }
 
 def checkRefExistence(referenceFile, fileToCheck) {
+  if (fileToCheck instanceof List) {
+    return fileToCheck.every{ checkRefExistence(referenceFile, it) }
+  }
   def f = file(fileToCheck)
   if (f instanceof List && f.size() > 0) {
     // this is an expanded wildcard: we can assume all files exist
@@ -1229,145 +1232,129 @@ def defineDirectoryMap() {
 def defineReferenceForProcess(process) {
   if (process == "MapReads") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.bwaIndex),
+      referenceMap.genomeFile,
+      referenceMap.bwaIndex
     ).toList()
   } else if (process == "CreateIntervals") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict),
-      file(referenceMap.kgIndels),
-      file(referenceMap.kgIndex),
-      file(referenceMap.millsIndels),
-      file(referenceMap.millsIndex)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.knownIndels,
+      referenceMap.knownIndelsIndex
     ).toList()
   } else if (process == "RealignBams") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict),
-      file(referenceMap.kgIndels),
-      file(referenceMap.kgIndex),
-      file(referenceMap.millsIndels),
-      file(referenceMap.millsIndex)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.knownIndels,
+      referenceMap.knownIndelsIndex
     ).toList()
   } else if (process == "CreateRecalibrationTable") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict),
-      file(referenceMap.dbsnp),
-      file(referenceMap.dbsnpIndex),
-      file(referenceMap.kgIndels),
-      file(referenceMap.kgIndex),
-      file(referenceMap.millsIndels),
-      file(referenceMap.millsIndex)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex,
+      referenceMap.knownIndels,
+      referenceMap.knownIndelsIndex
     ).toList()
   } else if (process == "RecalibrateBam") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
     ).toList()
   } else if (process == "RunHaplotypecaller") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict),
-      file(referenceMap.dbsnp),
-      file(referenceMap.dbsnpIndex)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex
     ).toList()
   } else if (process == "RunMutect1") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict),
-      file(referenceMap.dbsnp),
-      file(referenceMap.dbsnpIndex),
-      file(referenceMap.cosmic),
-      file(referenceMap.cosmicIndex)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex,
+      referenceMap.cosmic,
+      referenceMap.cosmicIndex
     ).toList()
   } else if (process == "RunMutect2") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict),
-      file(referenceMap.dbsnp),
-      file(referenceMap.dbsnpIndex),
-      file(referenceMap.cosmic),
-      file(referenceMap.cosmicIndex)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex,
+      referenceMap.cosmic,
+      referenceMap.cosmicIndex
     ).toList()
   } else if (process == "RunFreeBayes") {
     return Channel.from (
-      file(referenceMap.genomeFile)
+      referenceMap.genomeFile
     )
   } else if (process == "RunVardict") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
     ).toList()
   } else if (process == "ConcatVCF") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
     ).toList()
 
   } else if (process == "RunStrelka") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
     ).toList()
   } else if (process == "RunManta") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex
     ).toList()
   } else if (process == "RunAlleleCount") {
     return Channel.from (
-      file(referenceMap.acLoci),
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict)
+      referenceMap.acLoci,
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
     ).toList()
   } else return null
 }
 
 def defineReferenceMap() {
+  if (!(params.genome in params.genomes)) {
+    exit 1, "Genome $params.genome not found in configuration"
+  }
+  genome = params.genomes[params.genome]
+
   return [
-    // loci file for ascat
-    'acLoci'      : params.genome ? params.genomes[params.genome].acLoci ?: false : false,
-    // dbSNP
-    'dbsnp'       : params.genome ? params.genomes[params.genome].dbsnp ?: false : false,
-    // cosmic vcf file with VCF4.1 header
-    'cosmic'      : params.genome ? params.genomes[params.genome].cosmic ?: false : false,
-    // cosmic vcf file index
-    'cosmicIndex' : params.genome ? params.genomes[params.genome].cosmicIndex ?: false : false,
-    // dbSNP index
-    'dbsnpIndex'  : params.genome ? params.genomes[params.genome].dbsnpIndex ?: false : false,
-    // genome reference dictionary
-    'genomeDict'  : params.genome ? params.genomes[params.genome].genomeDict ?: false : false,
-    // genome reference
-    'genomeFile'  : params.genome ? params.genomes[params.genome].genome ?: false : false,
-    // genome reference index
-    'genomeIndex' : params.genome ? params.genomes[params.genome].genomeIndex ?: false : false,
-    // BWA index
-    'bwaIndex'    : params.genome ? params.genomes[params.genome].bwaIndex ?: false : false,
+    'acLoci'      : file(genome.acLoci),  // loci file for ascat
+    'dbsnp'       : file(genome.dbsnp),
+    'dbsnpIndex'  : file(genome.dbsnpIndex),
+    'cosmic'      : file(genome.cosmic),  // cosmic VCF with VCF4.1 header
+    'cosmicIndex' : file(genome.cosmicIndex),
+    'genomeDict'  : file(genome.genomeDict),  // genome reference dictionary
+    'genomeFile'  : file(genome.genome),  // FASTA genome reference
+    'genomeIndex' : file(genome.genomeIndex),  // genome .fai file
+    'bwaIndex'    : file(genome.bwaIndex),  // BWA index files
     // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
-    'intervals'   : params.genome ? params.genomes[params.genome].intervals ?: false : false,
-    // 1000 Genomes SNPs
-    'kgIndels'    : params.genome ? params.genomes[params.genome].kgIndels ?: false : false,
-    // 1000 Genomes SNPs index
-    'kgIndex'     : params.genome ? params.genomes[params.genome].kgIndex ?: false : false,
-    // Mill's Golden set of SNPs
-    'millsIndels' : params.genome ? params.genomes[params.genome].millsIndels ?: false : false,
-    // Mill's Golden set index
-    'millsIndex'  : params.genome ? params.genomes[params.genome].millsIndex ?: false : false,
-    // path to VarDict
-    'vardictHome' : params.genome ? params.genomes[params.genome].vardictHome ?: false : false
+    'intervals'   : file(genome.intervals),
+    'vardictHome' : file(genome.vardictHome),  // path to VarDict
+    // VCFs with known indels (such as 1000 Genomes, Mill’s gold standard)
+    'knownIndels' : genome.knownIndels.collect{file(it)},
+    'knownIndelsIndex': genome.knownIndelsIndex.collect{file(it)},
   ]
 }
 
