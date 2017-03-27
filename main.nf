@@ -56,9 +56,7 @@ vim: syntax=groovy
 
 version = '1.1'
 
-params.each{
-  if (!checkParams(it.toString().split('=')[0])) {exit 1, "params $it.toString().split('=')[0] is unknown, see --help for more information"}
-}
+if (!isAllowedParams(params)) {exit 1, "params is unknown, see --help for more information"}
 
 if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
 
@@ -1162,29 +1160,29 @@ def checkParameterList(list, realList) {
 }
 
 def checkParams(it) {
- // Check if params is in this given list
+  // Check if params is in this given list
   return it in [
-  'callName',
-  'call-name',
-  'contactMail',
-  'contact-mail',
-  'genome',
-  'genomes',
-  'help',
-  'project',
-  'runTime',
-  'run-time',
-  'sample',
-  'sampleDir',
-  'sample-dir',
-  'singleCPUMem',
-  'single-CPUMem',
-  'step',
-  'test',
-  'tools',
-  'vcflist',
-  'verbose',
-  'version']
+    'callName',
+    'call-name',
+    'contactMail',
+    'contact-mail',
+    'genome',
+    'genomes',
+    'help',
+    'project',
+    'runTime',
+    'run-time',
+    'sample',
+    'sampleDir',
+    'sample-dir',
+    'singleCPUMem',
+    'single-CPUMem',
+    'step',
+    'test',
+    'tools',
+    'vcflist',
+    'verbose',
+    'version']
 }
 
 def checkReferenceMap(referenceMap) {
@@ -1518,15 +1516,6 @@ def extractRecal(tsvFile) {
     }
 }
 
-def generateIntervalsForVC(bams, gI) {
-  final bamsForVC = Channel.create()
-  final vcIntervals = Channel.create()
-  (bams, bamsForVC) = bams.into(2)
-  (gI, vcIntervals) = gI.into(2)
-  bamsForVC = bamsForVC.spread(vcIntervals)
-  return [bamsForVC, bams, gI]
-}
-
 def flowcellLaneFromFastq(path) {
   // parse first line of a FASTQ file (optionally gzip-compressed)
   // and return the flowcell id and lane number.
@@ -1555,6 +1544,15 @@ def flowcellLaneFromFastq(path) {
   }
 
   [fcid, lane]
+}
+
+def generateIntervalsForVC(bams, gI) {
+  final bamsForVC = Channel.create()
+  final vcIntervals = Channel.create()
+  (bams, bamsForVC) = bams.into(2)
+  (gI, vcIntervals) = gI.into(2)
+  bamsForVC = bamsForVC.spread(vcIntervals)
+  return [bamsForVC, bams, gI]
 }
 
 def grabRevision() {
@@ -1602,6 +1600,17 @@ def help_message(version, revision) { // Display help message
   log.info "       Need to do `nextflow run SciLifeLab/CAW --test` before"
   log.info "    nextflow run SciLifeLab/CAW --testSideVC"
   log.info "       Test `skipPreprocessing`, `Ascat`, `Manta` and `HaplotypeCaller` on test downSampled set"
+}
+
+def isAllowedParams(params) {
+  final test = true
+  params.each{
+    if (!checkParams(it.toString().split('=')[0])) {
+      println "params ${it.toString().split('=')[0]} is unknown"
+      test = false
+    }
+  }
+  return test
 }
 
 def retrieveStatus(bamChannel) {
