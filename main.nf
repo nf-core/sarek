@@ -56,6 +56,10 @@ vim: syntax=groovy
 
 version = '1.1'
 
+params.each{
+  if (!checkParams(it.toString().split('=')[0])) {exit 1, "params $it.toString().split('=')[0] is unknown, see --help for more information"}
+}
+
 if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
 
 if (params.help) {
@@ -149,14 +153,12 @@ process RunFastQC {
 
 verbose ? fastQCreport = fastQCreport.view {"FastQC report: $it"} : ''
 
-referenceForMapReads = defineReferenceForProcess("MapReads")
-
 process MapReads {
   tag {idPatient + "-" + idRun}
 
   input:
     set idPatient, gender, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFiles
-    set file(genomeFile), file(bwaIndex) from referenceForMapReads
+    set file(genomeFile), file(bwaIndex) from Channel.value([referenceMap.genomeFile, referenceMap.bwaIndex])
 
   output:
     set idPatient, gender, status, idSample, idRun, file("${idRun}.bam") into mappedBam
@@ -271,14 +273,17 @@ verbose ? markDuplicatesReport = markDuplicatesReport.view {"MarkDuplicates repo
 // VCF indexes are added so they will be linked, and not re-created on the fly
 //  -L "1:131941-141339" \
 
-referenceForCreateIntervals = defineReferenceForProcess("CreateIntervals")
-
 process CreateIntervals {
   tag {idPatient}
 
   input:
     set idPatient, gender, idSample_status, file(bam), file(bai) from duplicatesInterval
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(knownIndels), file(knownIndelsIndex) from referenceForCreateIntervals
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(knownIndels), file(knownIndelsIndex) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.knownIndels,
+      referenceMap.knownIndelsIndex])
 
   output:
     set idPatient, gender, file("${idPatient}.intervals") into intervals
@@ -318,15 +323,19 @@ bamsAndIntervals = duplicatesRealign
 
 verbose ? bamsAndIntervals = bamsAndIntervals.view {"Bams and Intervals phased for RealignBams: $it"} : ''
 
-referenceForRealignBams = defineReferenceForProcess("RealignBams")
-
 // use nWayOut to split into T/N pair again
 process RealignBams {
   tag {idPatient}
 
   input:
     set idPatient, gender, idSample_status, file(bam), file(bai), file(intervals) from bamsAndIntervals
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(knownIndels), file(knownIndelsIndex) from referenceForRealignBams
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(knownIndels), file(knownIndelsIndex) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.knownIndels,
+      referenceMap.knownIndelsIndex])
+
   output:
     set idPatient, gender, file("*.real.bam"), file("*.real.bai") into realignedBam mode flatten
 
@@ -353,8 +362,6 @@ realignedBam = retrieveStatus(realignedBam)
 
 verbose ? realignedBam = realignedBam.view {"Realigned BAM to CreateRecalibrationTable: $it"} : ''
 
-referenceForCreateRecalibrationTable = defineReferenceForProcess("CreateRecalibrationTable")
-
 process CreateRecalibrationTable {
   tag {idPatient + "-" + idSample}
 
@@ -362,7 +369,15 @@ process CreateRecalibrationTable {
 
   input:
     set idPatient, gender, status, idSample, file(bam), file(bai) from realignedBam
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(knownIndels), file(knownIndelsIndex) from referenceForCreateRecalibrationTable
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(knownIndels), file(knownIndelsIndex) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex,
+      referenceMap.knownIndels,
+      referenceMap.knownIndelsIndex
+    ])
 
   output:
     set idPatient, gender, status, idSample, file(bam), file(bai), file("${idSample}.recal.table") into recalibrationTable
@@ -401,8 +416,6 @@ recalibrationTable = step == 'recalibrate' ? bamFiles : recalibrationTable
 
 verbose ? recalibrationTable = recalibrationTable.view {"Base recalibrated table for RecalibrateBam: $it"} : ''
 
-referenceForRecalibrateBam = defineReferenceForProcess("RecalibrateBam")
-
 process RecalibrateBam {
   tag {idPatient + "-" + idSample}
 
@@ -410,7 +423,11 @@ process RecalibrateBam {
 
   input:
     set idPatient, gender, status, idSample, file(bam), file(bai), recalibrationReport from recalibrationTable
-    set file(genomeFile), file(genomeIndex), file(genomeDict) from referenceForRecalibrateBam
+    set file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
+    ])
 
   output:
     set idPatient, gender, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam
@@ -550,14 +567,18 @@ verbose ? bamsForManta = bamsForManta.view {"Bams for Manta: $it"} : ''
 
 verbose ? bamsForStrelka = bamsForStrelka.view {"Bams for Strelka: $it"} : ''
 
-referenceForRunHaplotypecaller = defineReferenceForProcess("RunHaplotypecaller")
-
 process RunHaplotypecaller {
   tag {idPatient + "-" + idSample + "-" + gen_int}
 
   input:
     set idPatient, gender, idSample, file(bam), file(bai), genInt, gen_int from bamsFHC //Are these values `ped to bamNormal already?
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from referenceForRunHaplotypecaller
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex
+    ])
 
   output:
     set val("haplotypecaller"), idPatient, gender, idSample, val("${gen_int}_${idSample}"), file("${gen_int}_${idSample}.g.vcf") into hcVCF
@@ -588,14 +609,20 @@ hcVCF = hcVCF.map {
 
 verbose ? hcVCF = hcVCF.view {"HaplotypeCaller output: $it"} : ''
 
-referenceForRunMutect1 = defineReferenceForProcess("RunMutect1")
-
 process RunMutect1 {
   tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT1
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(cosmic), file(cosmicIndex) from referenceForRunMutect1
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(cosmic), file(cosmicIndex) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex,
+      referenceMap.cosmic,
+      referenceMap.cosmicIndex
+    ])
 
   output:
     set val("mutect1"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect1Output
@@ -624,14 +651,20 @@ process RunMutect1 {
 mutect1Output = mutect1Output.groupTuple(by:[0,1,2,3,4])
 verbose ? mutect1Output = mutect1Output.view {"MuTect1 output: $it"} : ''
 
-referenceForRunMutect2 = defineReferenceForProcess("RunMutect2")
-
 process RunMutect2 {
   tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(cosmic), file(cosmicIndex) from referenceForRunMutect2
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(cosmic), file(cosmicIndex) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex,
+      referenceMap.cosmic,
+      referenceMap.cosmicIndex
+    ])
 
   output:
     set val("mutect2"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2Output
@@ -660,15 +693,12 @@ process RunMutect2 {
 mutect2Output = mutect2Output.groupTuple(by:[0,1,2,3,4])
 verbose ? mutect2Output = mutect2Output.view {"MuTect2 output: $it"} : ''
 
-referenceForRunFreeBayes = defineReferenceForProcess("RunFreeBayes")
-referenceForRunFreeBayes = referenceForRunFreeBayes.view{"FreeBayes ref BAKKER :  $it"}
-
 process RunFreeBayes {
   tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFFB
-    set file(genomeFile) from referenceForRunFreeBayes
+    file(genomeFile) from Channel.value(referenceMap.genomeFile)
 
   output:
     set val("freebayes"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into freebayesOutput
@@ -692,14 +722,16 @@ process RunFreeBayes {
 freebayesOutput = freebayesOutput.groupTuple(by:[0,1,2,3,4])
 verbose ? freebayesOutput = freebayesOutput.view {"FreeBayes output: $it"} : ''
 
-referenceForRunVardict = defineReferenceForProcess("RunVardict")
-
 process RunVardict {
   tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFVD
-    set file(genomeFile), file(genomeIndex), file(genomeDict) from referenceForRunVardict
+    set file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
+    ])
 
   output:
     set val("vardict"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.out") into vardictOutput
@@ -727,8 +759,6 @@ verbose ? vardictOutput = vardictOutput.view {"vardictOutput output: $it"} : ''
 vcfsToMerge = hcVCF.mix(mutect1Output, mutect2Output, freebayesOutput, vardictOutput)
 verbose ? vcfsToMerge = vcfsToMerge.view {"VCFs To be merged: $it"} : ''
 
-referenceForConcatVCF = defineReferenceForProcess("ConcatVCF")
-
 process ConcatVCF {
   tag {variantCaller == 'haplotypecaller' ? idPatient + "-" + variantCaller + "-" + idSampleNormal : idPatient + "-" + variantCaller + "-" + idSampleNormal + "-" + idSampleTumor}
 
@@ -736,7 +766,11 @@ process ConcatVCF {
 
   input:
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, tag, file(vcFiles) from vcfsToMerge
-    set file(genomeFile), file(genomeIndex), file(genomeDict) from referenceForConcatVCF
+    set file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
+    ])
 
   output:
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file("*.vcf.gz") into vcfConcatenated
@@ -779,8 +813,6 @@ process ConcatVCF {
 
 verbose ? vcfConcatenated = vcfConcatenated.view {"VCF concatenated: $it"} : ''
 
-referenceForRunStrelka = defineReferenceForProcess("RunStrelka")
-
 process RunStrelka {
   tag {idPatient + "-" + idSampleTumor}
 
@@ -788,7 +820,11 @@ process RunStrelka {
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForStrelka
-    set file(genomeFile), file(genomeIndex), file(genomeDict) from referenceForRunStrelka
+    set file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
+    ])
 
   output:
     set val("strelka"), idPatient, gender, idSampleNormal, idSampleTumor, file("*.vcf") into strelkaOutput
@@ -822,8 +858,6 @@ process RunStrelka {
 
 verbose ? strelkaOutput = strelkaOutput.view {"Strelka output: $it"} : ''
 
-referenceForRunManta = defineReferenceForProcess("RunManta")
-
 process RunManta {
   tag {idPatient + "-" + idSampleTumor}
 
@@ -831,7 +865,10 @@ process RunManta {
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
-    set file(genomeFile), file(genomeIndex) from referenceForRunManta
+    set file(genomeFile), file(genomeIndex) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex
+    ])
 
   output:
     set val("manta"), idPatient, gender, idSampleNormal, idSampleTumor, file("Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf"),file("Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf"),file("Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf"),file("Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf") into mantaOutput
@@ -857,9 +894,6 @@ process RunManta {
 
 verbose ? mantaOutput = mantaOutput.view {"Manta output: $it"} : ''
 
-
-referenceForRunAlleleCount = defineReferenceForProcess("RunAlleleCount")
-
 // Run commands and code from Malin Larsson
 // Based on Jesper Eisfeldt's code
 process RunAlleleCount {
@@ -867,7 +901,12 @@ process RunAlleleCount {
 
   input:
     set idPatient, gender, status, idSample, file(bam), file(bai) from bamsForAscat
-    set file(acLoci), file(genomeFile), file(genomeIndex), file(genomeDict) from referenceForRunAlleleCount
+    set file(acLoci), file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
+      referenceMap.acLoci,
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
+    ])
 
   output:
     set idPatient, gender, status, idSample, file("${idSample}.alleleCount") into alleleCountOutput
@@ -1029,7 +1068,7 @@ process RunSnpeff {
 
   input:
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file(vcf) from vcfMerged
-    val snpeffDb from defineReferenceForProcess("RunSnpeff")
+    val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
 
   output:
     set file("${vcf.baseName}.ann.vcf"), file("${vcf.baseName}_snpEff_genes.txt"), file("${vcf.baseName}_snpEff_summary.html") into snpeffReport
@@ -1158,6 +1197,32 @@ def checkParameterList(list, realList) {
   return list.every{ checkParameterExistence(it, realList) }
 }
 
+def checkParams(it) {
+ // Check if params is in this given list
+  return it in [
+  'callName',
+  'call-name',
+  'contactMail',
+  'contact-mail',
+  'genome',
+  'genomes',
+  'help',
+  'project',
+  'runTime',
+  'run-time',
+  'sample',
+  'sampleDir',
+  'sample-dir',
+  'singleCPUMem',
+  'single-CPUMem',
+  'step',
+  'test',
+  'tools',
+  'vcflist',
+  'verbose',
+  'version']
+}
+
 def checkReferenceMap(referenceMap) {
   // Loop through all the references files to check their existence
   referenceMap.every {
@@ -1229,112 +1294,6 @@ def defineDirectoryMap() {
     'vardict'          : 'VariantCalling/VarDict',
     'snpeff'           : 'Annotation/snpEff'
   ]
-}
-
-def defineReferenceForProcess(process) {
-  if (process == "MapReads") {
-    return Channel.from (
-      referenceMap.genomeFile,
-      referenceMap.bwaIndex
-    ).toList()
-  } else if (process == "CreateIntervals") {
-    return Channel.from (
-      referenceMap.genomeFile,
-      referenceMap.genomeIndex,
-      referenceMap.genomeDict,
-      referenceMap.knownIndels,
-      referenceMap.knownIndelsIndex
-    ).toList()
-  } else if (process == "RealignBams") {
-    return Channel.from (
-      referenceMap.genomeFile,
-      referenceMap.genomeIndex,
-      referenceMap.genomeDict,
-      referenceMap.knownIndels,
-      referenceMap.knownIndelsIndex
-    ).toList()
-  } else if (process == "CreateRecalibrationTable") {
-    return Channel.from (
-      referenceMap.genomeFile,
-      referenceMap.genomeIndex,
-      referenceMap.genomeDict,
-      referenceMap.dbsnp,
-      referenceMap.dbsnpIndex,
-      referenceMap.knownIndels,
-      referenceMap.knownIndelsIndex
-    ).toList()
-  } else if (process == "RecalibrateBam") {
-    return Channel.from (
-      referenceMap.genomeFile,
-      referenceMap.genomeIndex,
-      referenceMap.genomeDict
-    ).toList()
-  } else if (process == "RunHaplotypecaller") {
-    return Channel.from (
-      referenceMap.genomeFile,
-      referenceMap.genomeIndex,
-      referenceMap.genomeDict,
-      referenceMap.dbsnp,
-      referenceMap.dbsnpIndex
-    ).toList()
-  } else if (process == "RunMutect1") {
-    return Channel.from (
-      referenceMap.genomeFile,
-      referenceMap.genomeIndex,
-      referenceMap.genomeDict,
-      referenceMap.dbsnp,
-      referenceMap.dbsnpIndex,
-      referenceMap.cosmic,
-      referenceMap.cosmicIndex
-    ).toList()
-  } else if (process == "RunMutect2") {
-    return Channel.from (
-      referenceMap.genomeFile,
-      referenceMap.genomeIndex,
-      referenceMap.genomeDict,
-      referenceMap.dbsnp,
-      referenceMap.dbsnpIndex,
-      referenceMap.cosmic,
-      referenceMap.cosmicIndex
-    ).toList()
-  } else if (process == "RunFreeBayes") {
-    return Channel.from (
-      referenceMap.genomeFile
-    )
-  } else if (process == "RunVardict") {
-    return Channel.from (
-      referenceMap.genomeFile,
-      referenceMap.genomeIndex,
-      referenceMap.genomeDict
-    ).toList()
-  } else if (process == "ConcatVCF") {
-    return Channel.from (
-      referenceMap.genomeFile,
-      referenceMap.genomeIndex,
-      referenceMap.genomeDict
-    ).toList()
-
-  } else if (process == "RunStrelka") {
-    return Channel.from (
-      referenceMap.genomeFile,
-      referenceMap.genomeIndex,
-      referenceMap.genomeDict
-    ).toList()
-  } else if (process == "RunManta") {
-    return Channel.from (
-      referenceMap.genomeFile,
-      referenceMap.genomeIndex
-    ).toList()
-  } else if (process == "RunAlleleCount") {
-    return Channel.from (
-      referenceMap.acLoci,
-      referenceMap.genomeFile,
-      referenceMap.genomeIndex,
-      referenceMap.genomeDict
-    ).toList()
-  } else if (process == "RunSnpeff") {
-    return params.genomes[params.genome].snpeffDb
-  } else return null
 }
 
 def defineReferenceMap() {
