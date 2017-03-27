@@ -15,6 +15,7 @@ vim: syntax=groovy
  Szilveszter Juhos <szilveszter.juhos@scilifelab.se> [@szilvajuhos]
  Max Käller <max.kaller@scilifelab.se> [@gulfshores]
  Malin Larsson <malin.larsson@scilifelab.se> [@malinlarsson]
+ Marcel Martin <marcel.martin@scilifelab.se> [@marcelm]
  Björn Nystedt <bjorn.nystedt@scilifelab.se> [@bjornnystedt]
  Pall Olason <pall.olason@scilifelab.se> [@pallolason]
  Pelin Sahlén <pelin.akan@scilifelab.se> [@pelinakan]
@@ -30,8 +31,8 @@ vim: syntax=groovy
  - MapReads - Map reads
  - MergeBams - Merge BAMs if multilane samples
  - MarkDuplicates - Mark Duplicates
- - CreateIntervals - Create Intervals
- - RealignBams - Realign Bams as T/N pair
+ - RealignerTargetCreator - Create realignment target intervals
+ - IndelRealigner - Realign BAMs as T/N pair
  - CreateRecalibrationTable - Create Recalibration Table
  - RecalibrateBam - Recalibrate Bam
  - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files
@@ -56,9 +57,7 @@ vim: syntax=groovy
 
 version = '1.1'
 
-params.each{
-  if (!checkParams(it.toString().split('=')[0])) {exit 1, "params $it.toString().split('=')[0] is unknown, see --help for more information"}
-}
+if (!isAllowedParams(params)) {exit 1, "params is unknown, see --help for more information"}
 
 if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
 
@@ -170,7 +169,7 @@ process MapReads {
   // adjust mismatch penalty for tumor samples
   extra = status == 1 ? "-B 3 " : ""
   """
-  set -eo pipefail
+  set -euo pipefail
   bwa mem -R \"$readGroup\" ${extra}-t $task.cpus -M \
   $genomeFile $fastqFile1 $fastqFile2 | \
   samtools sort --threads $task.cpus - > ${idRun}.bam
@@ -262,18 +261,18 @@ duplicatesGrouped = step == 'realign' ? bamFiles.map{
 }.groupTuple(by:[0,1]) : duplicatesGrouped
 
 // The duplicatesGrouped channel is duplicated
-// one copy goes to the CreateIntervals process
-// and the other to the RealignBams process
+// one copy goes to the RealignerTargetCreator process
+// and the other to the IndelRealigner process
 (duplicatesInterval, duplicatesRealign) = duplicatesGrouped.into(2)
 
-verbose ? duplicatesInterval = duplicatesInterval.view {"BAMs for CreateIntervals: $it"} : ''
+verbose ? duplicatesInterval = duplicatesInterval.view {"BAMs for RealignerTargetCreator: $it"} : ''
 verbose ? duplicatesRealign = duplicatesRealign.view {"BAMs to phase: $it"} : ''
 verbose ? markDuplicatesReport = markDuplicatesReport.view {"MarkDuplicates report: $it"} : ''
 
 // VCF indexes are added so they will be linked, and not re-created on the fly
 //  -L "1:131941-141339" \
 
-process CreateIntervals {
+process RealignerTargetCreator {
   tag {idPatient}
 
   input:
@@ -321,10 +320,10 @@ bamsAndIntervals = duplicatesRealign
       intervals[2]
     )}
 
-verbose ? bamsAndIntervals = bamsAndIntervals.view {"Bams and Intervals phased for RealignBams: $it"} : ''
+verbose ? bamsAndIntervals = bamsAndIntervals.view {"BAMs and Intervals phased for IndelRealigner: $it"} : ''
 
 // use nWayOut to split into T/N pair again
-process RealignBams {
+process IndelRealigner {
   tag {idPatient}
 
   input:
@@ -783,6 +782,7 @@ process ConcatVCF {
 
   if (variantCaller == 'vardict')
     """
+    set -euo pipefail
     for i in $vcFiles ;do
       cat \$i | ${referenceMap.vardictHome}/VarDict/testsomatic.R >> testsomatic.out
     done
@@ -792,23 +792,24 @@ process ConcatVCF {
     """
 
   else if (variantCaller == 'mutect2' || variantCaller == 'mutect1' || variantCaller == 'haplotypecaller' || variantCaller == 'freebayes')
-	"""
-	# first make a header from one of the VCF intervals
-	# get rid of interval information only from the GATK command-line, but leave the rest
-	awk '/^#/{print}' `ls *vcf| head -1` | \
-	awk '!/GATKCommandLine/{print}/GATKCommandLine/{for(i=1;i<=NF;i++){if(\$i!~/intervals=/ && \$i !~ /out=/){printf("%s ",\$i)}}printf("\\n")}' \
-	> header
+    """
+    set -euo pipefail
+    # first make a header from one of the VCF intervals
+    # get rid of interval information only from the GATK command-line, but leave the rest
+    awk '/^#/{print}' `ls *vcf| head -1` | \
+    awk '!/GATKCommandLine/{print}/GATKCommandLine/{for(i=1;i<=NF;i++){if(\$i!~/intervals=/ && \$i !~ /out=/){printf("%s ",\$i)}}printf("\\n")}' \
+    > header
 
-	## concatenate calls
-	rm -rf raw_calls
-	for f in *vcf; do
-		awk '!/^#/{print}' \$f >> raw_calls
-	done
-	cat header raw_calls > unsorted.vcf
-	java -jar \${PICARD_HOME}/picard.jar SortVcf I=unsorted.vcf O=$outputFile
-	rm unsorted.vcf
-	gzip -v $outputFile
-	"""
+    ## concatenate calls
+    rm -rf raw_calls
+    for f in *vcf; do
+      awk '!/^#/{print}' \$f >> raw_calls
+    done
+    cat header raw_calls > unsorted.vcf
+    java -jar \${PICARD_HOME}/picard.jar SortVcf I=unsorted.vcf O=$outputFile
+    rm unsorted.vcf
+    gzip -v $outputFile
+    """
 }
 
 verbose ? vcfConcatenated = vcfConcatenated.view {"VCF concatenated: $it"} : ''
@@ -833,6 +834,7 @@ process RunStrelka {
 
   script:
   """
+  set -euo pipefail
   tumorPath=`readlink $bamTumor`
   normalPath=`readlink $bamNormal`
   genomeFile=`readlink $genomeFile`
@@ -1077,6 +1079,7 @@ process RunSnpeff {
 
   script:
   """
+  set -euo pipefail
   java -Xmx${task.memory.toGiga()}g \
   -jar \$SNPEFF_HOME/snpEff.jar \
   $snpeffDb \
@@ -1198,29 +1201,29 @@ def checkParameterList(list, realList) {
 }
 
 def checkParams(it) {
- // Check if params is in this given list
+  // Check if params is in this given list
   return it in [
-  'callName',
-  'call-name',
-  'contactMail',
-  'contact-mail',
-  'genome',
-  'genomes',
-  'help',
-  'project',
-  'runTime',
-  'run-time',
-  'sample',
-  'sampleDir',
-  'sample-dir',
-  'singleCPUMem',
-  'single-CPUMem',
-  'step',
-  'test',
-  'tools',
-  'vcflist',
-  'verbose',
-  'version']
+    'callName',
+    'call-name',
+    'contactMail',
+    'contact-mail',
+    'genome',
+    'genomes',
+    'help',
+    'project',
+    'runTime',
+    'run-time',
+    'sample',
+    'sampleDir',
+    'sample-dir',
+    'singleCPUMem',
+    'single-CPUMem',
+    'step',
+    'test',
+    'tools',
+    'vcflist',
+    'verbose',
+    'version']
 }
 
 def checkReferenceMap(referenceMap) {
@@ -1448,15 +1451,6 @@ def extractRecal(tsvFile) {
     }
 }
 
-def generateIntervalsForVC(bams, gI) {
-  final bamsForVC = Channel.create()
-  final vcIntervals = Channel.create()
-  (bams, bamsForVC) = bams.into(2)
-  (gI, vcIntervals) = gI.into(2)
-  bamsForVC = bamsForVC.spread(vcIntervals)
-  return [bamsForVC, bams, gI]
-}
-
 def flowcellLaneFromFastq(path) {
   // parse first line of a FASTQ file (optionally gzip-compressed)
   // and return the flowcell id and lane number.
@@ -1487,8 +1481,17 @@ def flowcellLaneFromFastq(path) {
   [fcid, lane]
 }
 
+def generateIntervalsForVC(bams, gI) {
+  final bamsForVC = Channel.create()
+  final vcIntervals = Channel.create()
+  (bams, bamsForVC) = bams.into(2)
+  (gI, vcIntervals) = gI.into(2)
+  bamsForVC = bamsForVC.spread(vcIntervals)
+  return [bamsForVC, bams, gI]
+}
+
 def grabRevision() {
-	return workflow.revision ?: workflow.scriptId.substring(0,10)
+  return workflow.revision ?: workflow.scriptId.substring(0,10)
 }
 
 def help_message(version, revision) { // Display help message
@@ -1523,15 +1526,19 @@ def help_message(version, revision) { // Display help message
   log.info "    Test:"
   log.info "      to test CAW on smaller dataset, enter one of the following command"
   log.info "    nextflow run SciLifeLab/CAW --test"
-  log.info "       Test `preprocessing` on test tiny set"
-  log.info "    nextflow run SciLifeLab/CAW --testRealign"
-  log.info "       Test `realign` on test tiny set"
-  log.info "       Need to do `nextflow run SciLifeLab/CAW --test` before"
-  log.info "    nextflow run SciLifeLab/CAW --testCoreVC"
-  log.info "       Test `preprocessing`, `MuTect1`, `Strelka` and `HaplotypeCaller` on test tiny set"
-  log.info "       Need to do `nextflow run SciLifeLab/CAW --test` before"
-  log.info "    nextflow run SciLifeLab/CAW --testSideVC"
-  log.info "       Test `skipPreprocessing`, `Ascat`, `Manta` and `HaplotypeCaller` on test downSampled set"
+  log.info "       use data/tsv/tiny.tsv and tiny.list for intervals"
+  log.info "       specify wich step and tools as usual"
+}
+
+def isAllowedParams(params) {
+  final test = true
+  params.each{
+    if (!checkParams(it.toString().split('=')[0])) {
+      println "params ${it.toString().split('=')[0]} is unknown"
+      test = false
+    }
+  }
+  return test
 }
 
 def retrieveStatus(bamChannel) {
