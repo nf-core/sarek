@@ -54,7 +54,6 @@ vim: syntax=groovy
 ================================================================================
 */
 
-testFile = ''
 version = '1.1'
 
 if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
@@ -75,42 +74,46 @@ directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
 stepList = defineStepList()
 toolList = defineToolList()
-verbose = params.verbose ? true : false
+verbose = params.verbose
 
+if (!checkExactlyOne([params.test, params.sample, params.sampleDir]))
+  exit 1, 'Please define which samples to work on by providing exactly one of the --test, --sample or --sampleDir options'
 if (!checkReferenceMap(referenceMap)) {exit 1, 'Missing Reference file(s), see --help for more information'}
 if (!checkParameterExistence(step, stepList)) {exit 1, 'Unknown step, see --help for more information'}
 if (step.contains(',')) {exit 1, 'You can choose only one step, see --help for more information'}
 if (!checkParameterList(tools,toolList)) {exit 1, 'Unknown tool(s), see --help for more information'}
 
+tsvPath = ''
 if (params.test) {
-  test = true
   referenceMap.intervals = "$workflow.projectDir/repeats/tiny.list"
-  testFile = step == 'preprocessing' ? file("$workflow.projectDir/data/tsv/tiny.tsv") : Channel.empty()
-  testFile = step == 'realign' ? file("$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv") : testFile
-  testFile = step == 'recalibrate' ? file("$workflow.launchDir/$directoryMap.nonRecalibrated/nonRecalibrated.tsv") : testFile
-  testFile = step == 'skipPreprocessing' ? file("$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv") : testFile
-} else {test = false}
+  testTsvPaths = [
+    'preprocessing': "$workflow.projectDir/data/tsv/tiny.tsv",
+    'realign': "$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv",
+    'recalibrate': "$workflow.launchDir/$directoryMap.nonRecalibrated/nonRecalibrated.tsv",
+    'skipPreprocessing': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv"
+  ]
+  tsvPath = testTsvPaths[params.step]
+} else if (params.sample) {
+  tsvPath = params.sample
+}
 
-// Extract and verify content of TSV file
-
-if (!params.sample && !test) {exit 1, 'Missing TSV file, see --help for more information'}
-
-// If --test then the sample file is tiny, else the given sample file
-tsvFile = test ? testFile : file(params.sample)
-
-fastqFiles = step == 'preprocessing' ? extractFastq(tsvFile) : Channel.empty()
-
+// Set up the fastqFiles and bamFiles channels. One of them remains empty
+fastqFiles = Channel.empty()
 bamFiles = Channel.empty()
-if (step == 'realign') {
-  bamFiles = extractBams(tsvFile)
+if (tsvPath) {
+  tsvFile = file(tsvPath)
+  switch (step) {
+    case 'preprocessing': fastqFiles = extractFastq(tsvFile); break
+    case 'realign': bamFiles = extractBams(tsvFile); break
+    case 'recalibrate': bamFiles = extractRecal(tsvFile); break
+    case 'skipPreprocessing': bamFiles = extractBams(tsvFile); break
+    default: exit 1, "Unknown step $step"
+  }
+} else if (params.sampleDir) {
+  if (step != 'preprocessing') exit 1, '--sampleDir does not support steps other than "preprocessing"'
+  fastqFiles = extractFastqFromDir(params.sampleDir)
+  tsvFile = params.sampleDir  // used in the reports
 }
-if (step == 'recalibrate') {
-  bamFiles = extractRecal(tsvFile)
-}
-if (step == 'skipPreprocessing') {
-  bamFiles = extractBams(tsvFile)
-}
-
 verbose ? fastqFiles = fastqFiles.view {"FASTQ files to preprocess: $it"} : ''
 verbose ? bamFiles = bamFiles.view {"BAM files to process: $it"} : ''
 start_message(version, grabRevision())
@@ -153,7 +156,7 @@ process MapReads {
 
   input:
     set idPatient, gender, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFiles
-    set file(genomeAmb), file(genomeAnn), file(genomeBwt), file(genomeFile), file(genomeIndex), file(genomePac), file(genomeSa) from referenceForMapReads
+    set file(genomeFile), file(bwaIndex) from referenceForMapReads
 
   output:
     set idPatient, gender, status, idSample, idRun, file("${idRun}.bam") into mappedBam
@@ -161,9 +164,9 @@ process MapReads {
   when: step == 'preprocessing'
 
   script:
-  readGroup = "@RG\\tID:$idRun\\tSM:$idSample\\tLB:$idSample\\tPL:illumina"
+  readGroup = "@RG\\tID:$idRun\\tPU:$idRun\\tSM:$idSample\\tLB:$idSample\\tPL:illumina"
   // adjust mismatch penalty for tumor samples
-  extra = status == "1" ? "-B 3 " : ""
+  extra = status == 1 ? "-B 3 " : ""
   """
   set -eo pipefail
   bwa mem -R \"$readGroup\" ${extra}-t $task.cpus -M \
@@ -275,7 +278,7 @@ process CreateIntervals {
 
   input:
     set idPatient, gender, idSample_status, file(bam), file(bai) from duplicatesInterval
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(kgIndels), file(kgIndex), file(millsIndels), file(millsIndex) from referenceForCreateIntervals
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(knownIndels), file(knownIndelsIndex) from referenceForCreateIntervals
 
   output:
     set idPatient, gender, file("${idPatient}.intervals") into intervals
@@ -284,14 +287,14 @@ process CreateIntervals {
 
   script:
   bams = bam.collect{"-I $it"}.join(' ')
+  known = knownIndels.collect{"-known $it"}.join(' ')
   """
   java -Xmx${task.memory.toGiga()}g \
   -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T RealignerTargetCreator \
   $bams \
   -R $genomeFile \
-  -known $kgIndels \
-  -known $millsIndels \
+  $known \
   -nt $task.cpus \
   -XL hs37d5 \
   -XL NC_007605 \
@@ -323,7 +326,7 @@ process RealignBams {
 
   input:
     set idPatient, gender, idSample_status, file(bam), file(bai), file(intervals) from bamsAndIntervals
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(kgIndels), file(kgIndex), file(millsIndels), file(millsIndex) from referenceForRealignBams
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(knownIndels), file(knownIndelsIndex) from referenceForRealignBams
   output:
     set idPatient, gender, file("*.real.bam"), file("*.real.bai") into realignedBam mode flatten
 
@@ -331,6 +334,7 @@ process RealignBams {
 
   script:
   bams = bam.collect{"-I $it"}.join(' ')
+  known = knownIndels.collect{"-known $it"}.join(' ')
   """
   java -Xmx${task.memory.toGiga()}g \
   -jar \$GATK_HOME/GenomeAnalysisTK.jar \
@@ -338,8 +342,7 @@ process RealignBams {
   $bams \
   -R $genomeFile \
   -targetIntervals $intervals \
-  -known $kgIndels \
-  -known $millsIndels \
+  $known \
   -XL hs37d5 \
   -XL NC_007605 \
   -nWayOut '.real.bam'
@@ -359,7 +362,7 @@ process CreateRecalibrationTable {
 
   input:
     set idPatient, gender, status, idSample, file(bam), file(bai) from realignedBam
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(kgIndels), file(kgIndex), file(millsIndels), file(millsIndex) from referenceForCreateRecalibrationTable
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(knownIndels), file(knownIndelsIndex) from referenceForCreateRecalibrationTable
 
   output:
     set idPatient, gender, status, idSample, file(bam), file(bai), file("${idSample}.recal.table") into recalibrationTable
@@ -368,6 +371,7 @@ process CreateRecalibrationTable {
   when: step == 'preprocessing' || step == 'realign'
 
   script:
+  known = knownIndels.collect{ "-knownSites $it" }.join(' ')
   """
   java -Xmx${task.memory.toGiga()}g \
   -Djava.io.tmpdir="/tmp" \
@@ -377,8 +381,7 @@ process CreateRecalibrationTable {
   -I $bam \
   --disable_auto_index_creation_and_locking_when_reading_rods \
   -knownSites $dbsnp \
-  -knownSites $kgIndels \
-  -knownSites $millsIndels \
+  $known \
   -nct $task.cpus \
   -XL hs37d5 \
   -XL NC_007605 \
@@ -476,7 +479,7 @@ verbose ? recalibratedBamReport = recalibratedBamReport.view {"BAM Stats: $it"} 
 bamsNormal = Channel.create()
 bamsTumor = Channel.create()
 recalibratedBam
-  .choice(bamsTumor, bamsNormal) {it[2] =~ /^0$/ ? 1 : 0}
+  .choice(bamsTumor, bamsNormal) {it[2] == 0 ? 1 : 0}
 
 // Removing status because not relevant anymore
 bamsNormal = bamsNormal.map { idPatient, gender, status, idSample, bam, bai -> [idPatient, gender, idSample, bam, bai] }
@@ -504,7 +507,6 @@ gI = intervals.map{[it,it.replaceFirst(/\:/,'_')]}
 // HaplotypeCaller
 bamsFHC = bamsNormalTemp.mix(bamsTumorTemp)
 verbose ? bamsFHC = bamsFHC.view {"Bams with Intervals for HaplotypeCaller: $it"} : ''
-if (!('HaplotypeCaller' in tools)) {bamsFHC.close()}
 
 (bamsNormalTemp, bamsNormal) = bamsNormal.into(2)
 (bamsTumorTemp, bamsTumor) = bamsTumor.into(2)
@@ -515,7 +517,6 @@ bamsTumorTemp = bamsTumorTemp.map { idPatient, gender, idSample, bam, bai -> [id
 bamsForAscat = Channel.create()
 bamsForAscat = bamsNormalTemp.mix(bamsTumorTemp)
 verbose ? bamsForAscat = bamsForAscat.view {"Bams for Ascat: $it"} : ''
-if (!('Ascat' in tools)) {bamsForAscat.close()}
 
 bamsAll = bamsNormal.spread(bamsTumor)
 // Since idPatientNormal and idPatientTumor are the same
@@ -530,30 +531,24 @@ verbose ? bamsAll = bamsAll.view {"Mapped Recalibrated BAM for variant Calling: 
 // MuTect1
 (bamsFMT1, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
 verbose ? bamsFMT1 = bamsFMT1.view {"Bams with Intervals for MuTect1: $it"} : ''
-if (!('MuTect1' in tools)) {bamsFMT1.close()}
 
 // MuTect2
 (bamsFMT2, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
 verbose ? bamsFMT2 = bamsFMT2.view {"Bams with Intervals for MuTect2: $it"} : ''
-if (!('MuTect2' in tools)) {bamsFMT2.close()}
 
 // FreeBayes
 (bamsFFB, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
 verbose ? bamsFFB = bamsFFB.view {"Bams with Intervals for FreeBayes: $it"} : ''
-if (!('FreeBayes' in tools)) {bamsFFB.close()}
 
 // VarDict
 (bamsFVD, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
 verbose ? bamsFVD = bamsFVD.view {"Bams with Intervals for VarDict: $it"} : ''
-if (!('VarDict' in tools)) {bamsFVD.close()}
 
 (bamsForManta, bamsForStrelka) = bamsAll.into(2)
 
 verbose ? bamsForManta = bamsForManta.view {"Bams for Manta: $it"} : ''
-if (!('Manta' in tools)) {bamsForManta.close()}
 
 verbose ? bamsForStrelka = bamsForStrelka.view {"Bams for Strelka: $it"} : ''
-if (!('Strelka' in tools)) {bamsForStrelka.close()}
 
 referenceForRunHaplotypecaller = defineReferenceForProcess("RunHaplotypecaller")
 
@@ -890,7 +885,7 @@ alleleCountNormal = Channel.create()
 alleleCountTumor = Channel.create()
 
 alleleCountOutput
-  .choice(alleleCountTumor, alleleCountNormal) {it[2] =~ /^0$/ ? 1 : 0}
+  .choice(alleleCountTumor, alleleCountNormal) {it[2] == 0 ? 1 : 0}
 
 alleleCountOutput = alleleCountNormal.spread(alleleCountTumor)
 
@@ -1033,6 +1028,7 @@ process RunSnpeff {
 
   input:
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file(vcf) from vcfMerged
+    val snpeffDb from defineReferenceForProcess("RunSnpeff")
 
   output:
     set file("${vcf.baseName}.ann.vcf"), file("${vcf.baseName}_snpEff_genes.txt"), file("${vcf.baseName}_snpEff_summary.html") into snpeffReport
@@ -1043,7 +1039,7 @@ process RunSnpeff {
   """
   java -Xmx${task.memory.toGiga()}g \
   -jar \$SNPEFF_HOME/snpEff.jar \
-  ${params.snpeffDb} \
+  $snpeffDb \
   -v -cancer \
   ${vcf} \
   > ${vcf.baseName}.ann.vcf
@@ -1104,8 +1100,6 @@ reportsForMultiQC = Channel.fromPath( 'Reports/{FastQC,MarkDuplicates,SamToolsSt
 
 verbose ? reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"} : ''
 
-if (!('MultiQC' in tools)) {reportsForMultiQC.close()}
-
 process RunMultiQC {
   tag {idPatient}
 
@@ -1135,7 +1129,7 @@ verbose ? multiQCReport = multiQCReport.view {"MultiQC Report: $it"} : ''
 
 def checkFile(it) {
   // Check file existence
-  f = file(it)
+  final f = file(it)
   if (!f.exists()) {
     exit 1, "Missing file in TSV file: $it, see --help for more information"
   }
@@ -1165,18 +1159,21 @@ def checkParameterList(list, realList) {
 
 def checkReferenceMap(referenceMap) {
   // Loop through all the references files to check their existence
-  referenceDefined = true
-  referenceMap.each{
+  referenceMap.every {
     referenceFile, fileToCheck ->
-    test = checkRefExistence(referenceFile, fileToCheck)
-    !(test) ? referenceDefined = false : ''
+    checkRefExistence(referenceFile, fileToCheck)
   }
-  return referenceDefined
 }
 
 def checkRefExistence(referenceFile, fileToCheck) {
-  // Check file existence
-  if (!file(fileToCheck).exists()) {
+  if (fileToCheck instanceof List) {
+    return fileToCheck.every{ checkRefExistence(referenceFile, it) }
+  }
+  def f = file(fileToCheck)
+  if (f instanceof List && f.size() > 0) {
+    // this is an expanded wildcard: we can assume all files exist
+    return true
+  } else if (!f.exists()) {
     log.info  "Missing references: $referenceFile $fileToCheck"
     return false
   }
@@ -1184,8 +1181,11 @@ def checkRefExistence(referenceFile, fileToCheck) {
 }
 
 def checkStatus(it) {
-  // Check if Status is correct
-  if (!(it in ["0", "1"])) {
+  // Check if status is correct
+  // Status should be only 0 or 1
+  // 0 being normal
+  // 1 being tumor (or relapse or anything that is not normal...)
+  if (!(it in [0, 1])) {
     exit 1, "Status is not recognized in TSV file: $it, see --help for more information"
   }
   return it
@@ -1201,6 +1201,12 @@ def checkTSV(it, number) {
 
 def checkUppmaxProject() {
   return !((workflow.profile == 'standard' || workflow.profile == 'interactive') && !params.project)
+}
+
+def checkExactlyOne(list) {
+  final n = 0
+  list.each{n += it ? 1 : 0}
+  return n == 1
 }
 
 def defineDirectoryMap() {
@@ -1227,158 +1233,131 @@ def defineDirectoryMap() {
 def defineReferenceForProcess(process) {
   if (process == "MapReads") {
     return Channel.from (
-      file(referenceMap.genomeAmb),
-      file(referenceMap.genomeAnn),
-      file(referenceMap.genomeBwt),
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomePac),
-      file(referenceMap.genomeSa)
+      referenceMap.genomeFile,
+      referenceMap.bwaIndex
     ).toList()
   } else if (process == "CreateIntervals") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict),
-      file(referenceMap.kgIndels),
-      file(referenceMap.kgIndex),
-      file(referenceMap.millsIndels),
-      file(referenceMap.millsIndex)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.knownIndels,
+      referenceMap.knownIndelsIndex
     ).toList()
   } else if (process == "RealignBams") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict),
-      file(referenceMap.kgIndels),
-      file(referenceMap.kgIndex),
-      file(referenceMap.millsIndels),
-      file(referenceMap.millsIndex)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.knownIndels,
+      referenceMap.knownIndelsIndex
     ).toList()
   } else if (process == "CreateRecalibrationTable") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict),
-      file(referenceMap.dbsnp),
-      file(referenceMap.dbsnpIndex),
-      file(referenceMap.kgIndels),
-      file(referenceMap.kgIndex),
-      file(referenceMap.millsIndels),
-      file(referenceMap.millsIndex)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex,
+      referenceMap.knownIndels,
+      referenceMap.knownIndelsIndex
     ).toList()
   } else if (process == "RecalibrateBam") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
     ).toList()
   } else if (process == "RunHaplotypecaller") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict),
-      file(referenceMap.dbsnp),
-      file(referenceMap.dbsnpIndex)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex
     ).toList()
   } else if (process == "RunMutect1") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict),
-      file(referenceMap.dbsnp),
-      file(referenceMap.dbsnpIndex),
-      file(referenceMap.cosmic),
-      file(referenceMap.cosmicIndex)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex,
+      referenceMap.cosmic,
+      referenceMap.cosmicIndex
     ).toList()
   } else if (process == "RunMutect2") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict),
-      file(referenceMap.dbsnp),
-      file(referenceMap.dbsnpIndex),
-      file(referenceMap.cosmic),
-      file(referenceMap.cosmicIndex)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex,
+      referenceMap.cosmic,
+      referenceMap.cosmicIndex
     ).toList()
   } else if (process == "RunFreeBayes") {
     return Channel.from (
-      file(referenceMap.genomeFile)
+      referenceMap.genomeFile
     )
   } else if (process == "RunVardict") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
     ).toList()
   } else if (process == "ConcatVCF") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
     ).toList()
 
   } else if (process == "RunStrelka") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
     ).toList()
   } else if (process == "RunManta") {
     return Channel.from (
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex)
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex
     ).toList()
   } else if (process == "RunAlleleCount") {
     return Channel.from (
-      file(referenceMap.acLoci),
-      file(referenceMap.genomeFile),
-      file(referenceMap.genomeIndex),
-      file(referenceMap.genomeDict)
+      referenceMap.acLoci,
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
     ).toList()
+  } else if (process == "RunSnpeff") {
+    return params.genomes[params.genome].snpeffDb
   } else return null
 }
 
 def defineReferenceMap() {
+  if (!(params.genome in params.genomes)) {
+    exit 1, "Genome $params.genome not found in configuration"
+  }
+  genome = params.genomes[params.genome]
+
   return [
-    // loci file for ascat
-    'acLoci'      : params.genome ? params.genomes[params.genome].acLoci ?: false : false,
-    // dbSNP
-    'dbsnp'       : params.genome ? params.genomes[params.genome].dbsnp ?: false : false,
-    // cosmic vcf file with VCF4.1 header
-    'cosmic'      : params.genome ? params.genomes[params.genome].cosmic ?: false : false,
-    // cosmic vcf file index
-    'cosmicIndex' : params.genome ? params.genomes[params.genome].cosmicIndex ?: false : false,
-    // dbSNP index
-    'dbsnpIndex'  : params.genome ? params.genomes[params.genome].dbsnpIndex ?: false : false,
-    // BWA indexes
-    'genomeAmb'   : params.genome ? params.genomes[params.genome].genomeAmb ?: false : false,
-    // BWA indexes
-    'genomeAnn'   : params.genome ? params.genomes[params.genome].genomeAnn ?: false : false,
-    // BWA indexes
-    'genomeBwt'   : params.genome ? params.genomes[params.genome].genomeBwt ?: false : false,
-    // genome reference dictionary
-    'genomeDict'  : params.genome ? params.genomes[params.genome].genomeDict ?: false : false,
-    // genome reference
-    'genomeFile'  : params.genome ? params.genomes[params.genome].genome ?: false : false,
-    // genome reference index
-    'genomeIndex' : params.genome ? params.genomes[params.genome].genomeIndex ?: false : false,
-    // BWA indexes
-    'genomePac'   : params.genome ? params.genomes[params.genome].genomePac ?: false : false,
-    // BWA indexes
-    'genomeSa'    : params.genome ? params.genomes[params.genome].genomeSa ?: false : false,
+    'acLoci'      : file(genome.acLoci),  // loci file for ascat
+    'dbsnp'       : file(genome.dbsnp),
+    'dbsnpIndex'  : file(genome.dbsnpIndex),
+    'cosmic'      : file(genome.cosmic),  // cosmic VCF with VCF4.1 header
+    'cosmicIndex' : file(genome.cosmicIndex),
+    'genomeDict'  : file(genome.genomeDict),  // genome reference dictionary
+    'genomeFile'  : file(genome.genome),  // FASTA genome reference
+    'genomeIndex' : file(genome.genomeIndex),  // genome .fai file
+    'bwaIndex'    : file(genome.bwaIndex),  // BWA index files
     // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
-    'intervals'   : params.genome ? params.genomes[params.genome].intervals ?: false : false,
-    // 1000 Genomes SNPs
-    'kgIndels'    : params.genome ? params.genomes[params.genome].kgIndels ?: false : false,
-    // 1000 Genomes SNPs index
-    'kgIndex'     : params.genome ? params.genomes[params.genome].kgIndex ?: false : false,
-    // Mill's Golden set of SNPs
-    'millsIndels' : params.genome ? params.genomes[params.genome].millsIndels ?: false : false,
-    // Mill's Golden set index
-    'millsIndex'  : params.genome ? params.genomes[params.genome].millsIndex ?: false : false,
-    // path to VarDict
-    'vardictHome' : params.genome ? params.genomes[params.genome].vardictHome ?: false : false
+    'intervals'   : file(genome.intervals),
+    'vardictHome' : file(genome.vardictHome),  // path to VarDict
+    // VCFs with known indels (such as 1000 Genomes, Mill’s gold standard)
+    'knownIndels' : genome.knownIndels.collect{file(it)},
+    'knownIndelsIndex': genome.knownIndelsIndex.collect{file(it)},
   ]
 }
 
@@ -1415,7 +1394,7 @@ def extractBams(tsvFile) {
       list      = checkTSV(line.split(),6)
       idPatient = list[0]
       gender    = list[1]
-      status    = checkStatus(list[2])
+      status    = checkStatus(list[2].toInteger())
       idSample  = list[3]
       bamFile   = checkFile(list[4])
       baiFile   = checkFile(list[5])
@@ -1436,7 +1415,7 @@ def extractFastq(tsvFile) {
       list       = checkTSV(line.split(),7)
       idPatient  = list[0]
       gender     = list[1]
-      status     = checkStatus(list[2])
+      status     = checkStatus(list[2].toInteger())
       idSample   = list[3]
       idRun      = list[4]
 
@@ -1451,6 +1430,41 @@ def extractFastq(tsvFile) {
     }
 }
 
+def extractFastqFromDir(pattern) {
+  // create a channel of FASTQs from a directory pattern such as
+  // "my_samples/*/". All samples are considered 'normal'.
+  // All FASTQ files in subdirectories are collected and emitted;
+  // they must have _R1_ and _R2_ in their names.
+
+  fastq = Channel.create()
+
+  // a temporary channel does all the work
+  Channel
+    .fromPath(pattern, type: 'dir')
+    .ifEmpty { error "No directories found matching pattern '$pattern'" }
+    .subscribe onNext: { sampleDir ->
+      // the last name of the sampleDir is assumed to be a unique sample id
+      sampleId = sampleDir.getFileName().toString()
+
+      for (path1 in file("${sampleDir}/**_R1_*.fastq.gz")) {
+        assert path1.getName().contains('_R1_')
+        path2 = file(path1.toString().replace('_R1_', '_R2_'))
+        if (!path2.exists()) {
+            error "Path '${path2}' not found"
+        }
+        (flowcell, lane) = flowcellLaneFromFastq(path1)
+        patient = sampleId
+        gender = 'ZZ'  // unused
+        status = 0  // normal (not tumor)
+        rgId = "${flowcell}.${sampleId}.${lane}"
+        result = [patient, gender, status, sampleId, rgId, path1, path2]
+        fastq.bind(result)
+      }
+  }, onComplete: { fastq.close() }
+
+  fastq
+}
+
 def extractRecal(tsvFile) {
   // Channeling the TSV file containing Recalibration Tables.
   // Format is: "subject gender status sample bam bai recalTables"
@@ -1460,7 +1474,7 @@ def extractRecal(tsvFile) {
       list       = checkTSV(line.split(),7)
       idPatient  = list[0]
       gender     = list[1]
-      status     = checkStatus(list[2])
+      status     = checkStatus(list[2].toInteger())
       idSample   = list[3]
       bamFile    = checkFile(list[4])
       baiFile    = checkFile(list[5])
@@ -1475,10 +1489,42 @@ def extractRecal(tsvFile) {
 }
 
 def generateIntervalsForVC(bams, gI) {
+  final bamsForVC = Channel.create()
+  final vcIntervals = Channel.create()
   (bams, bamsForVC) = bams.into(2)
   (gI, vcIntervals) = gI.into(2)
   bamsForVC = bamsForVC.spread(vcIntervals)
   return [bamsForVC, bams, gI]
+}
+
+def flowcellLaneFromFastq(path) {
+  // parse first line of a FASTQ file (optionally gzip-compressed)
+  // and return the flowcell id and lane number.
+  // expected format:
+  // xx:yy:FLOWCELLID:LANE:... (seven fields)
+  // or
+  // FLOWCELLID:LANE:xx:... (five fields)
+  InputStream fileStream = new FileInputStream(path.toFile())
+  InputStream gzipStream = new java.util.zip.GZIPInputStream(fileStream)
+  Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
+  BufferedReader buffered = new BufferedReader(decoder)
+  line = buffered.readLine()
+  assert line.startsWith('@')
+  line = line.substring(1)
+  fields = line.split(' ')[0].split(':')
+  String fcid
+  int lane
+  if (fields.size() == 7) {
+    // CASAVA 1.8+ format
+    fcid = fields[2]
+    lane = fields[3].toInteger()
+  }
+  else if (fields.size() == 5) {
+    fcid = fields[0]
+    lane = fields[1].toInteger()
+  }
+
+  [fcid, lane]
 }
 
 def grabRevision() {
@@ -1532,7 +1578,7 @@ def retrieveStatus(bamChannel) {
   return bamChannel = bamChannel.map {
     idPatient, gender, bam, bai ->
     tag = bam.baseName.tokenize('.')[0]
-    status   = tag[-1..-1]
+    status   = tag[-1..-1].toInteger()
     idSample = tag.take(tag.length()-2)
     [idPatient, gender, status, idSample, bam, bai]
   }
@@ -1546,7 +1592,7 @@ def start_message(version, revision) { // Display start message
   log.info "Work Dir    : $workflow.workDir"
   log.info "Genome      : " + params.genome
   log.info "Step        : " + step
-  log.info "Tools       : " + tools.join(', ')
+  if (tools) {log.info "Tools       : " + tools.join(', ')}
 }
 
 def version_message(version, revision) { // Display version message
@@ -1565,7 +1611,7 @@ workflow.onComplete { // Display complete message
   log.info "TSV file    : $tsvFile"
   log.info "Genome      : " + params.genome
   log.info "Step        : " + step
-  log.info "Tools       : " + tools.join(', ')
+  if (tools) {log.info "Tools       : " + tools.join(', ')}
   log.info "Completed at: $workflow.complete"
   log.info "Duration    : $workflow.duration"
   log.info "Success     : $workflow.success"
