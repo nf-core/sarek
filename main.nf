@@ -31,8 +31,8 @@ vim: syntax=groovy
  - MapReads - Map reads
  - MergeBams - Merge BAMs if multilane samples
  - MarkDuplicates - Mark Duplicates
- - CreateIntervals - Create Intervals
- - RealignBams - Realign Bams as T/N pair
+ - RealignerTargetCreator - Create realignment target intervals
+ - IndelRealigner - Realign BAMs as T/N pair
  - CreateRecalibrationTable - Create Recalibration Table
  - RecalibrateBam - Recalibrate Bam
  - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files
@@ -261,18 +261,18 @@ duplicatesGrouped = step == 'realign' ? bamFiles.map{
 }.groupTuple(by:[0,1]) : duplicatesGrouped
 
 // The duplicatesGrouped channel is duplicated
-// one copy goes to the CreateIntervals process
-// and the other to the RealignBams process
+// one copy goes to the RealignerTargetCreator process
+// and the other to the IndelRealigner process
 (duplicatesInterval, duplicatesRealign) = duplicatesGrouped.into(2)
 
-verbose ? duplicatesInterval = duplicatesInterval.view {"BAMs for CreateIntervals: $it"} : ''
+verbose ? duplicatesInterval = duplicatesInterval.view {"BAMs for RealignerTargetCreator: $it"} : ''
 verbose ? duplicatesRealign = duplicatesRealign.view {"BAMs to phase: $it"} : ''
 verbose ? markDuplicatesReport = markDuplicatesReport.view {"MarkDuplicates report: $it"} : ''
 
 // VCF indexes are added so they will be linked, and not re-created on the fly
 //  -L "1:131941-141339" \
 
-process CreateIntervals {
+process RealignerTargetCreator {
   tag {idPatient}
 
   input:
@@ -320,10 +320,10 @@ bamsAndIntervals = duplicatesRealign
       intervals[2]
     )}
 
-verbose ? bamsAndIntervals = bamsAndIntervals.view {"Bams and Intervals phased for RealignBams: $it"} : ''
+verbose ? bamsAndIntervals = bamsAndIntervals.view {"BAMs and Intervals phased for IndelRealigner: $it"} : ''
 
 // use nWayOut to split into T/N pair again
-process RealignBams {
+process IndelRealigner {
   tag {idPatient}
 
   input:
