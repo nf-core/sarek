@@ -1028,6 +1028,7 @@ process RunSnpeff {
 
   input:
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file(vcf) from vcfMerged
+    val snpeffDb from defineReferenceForProcess("RunSnpeff")
 
   output:
     set file("${vcf.baseName}.ann.vcf"), file("${vcf.baseName}_snpEff_genes.txt"), file("${vcf.baseName}_snpEff_summary.html") into snpeffReport
@@ -1038,7 +1039,7 @@ process RunSnpeff {
   """
   java -Xmx${task.memory.toGiga()}g \
   -jar \$SNPEFF_HOME/snpEff.jar \
-  ${params.snpeffDb} \
+  $snpeffDb \
   -v -cancer \
   ${vcf} \
   > ${vcf.baseName}.ann.vcf
@@ -1333,6 +1334,8 @@ def defineReferenceForProcess(process) {
       file(referenceMap.genomeIndex),
       file(referenceMap.genomeDict)
     ).toList()
+  } else if (process == "RunSnpeff") {
+    return params.genomes[params.genome].snpeffDb
   } else return null
 }
 
