@@ -56,6 +56,10 @@ vim: syntax=groovy
 
 version = '1.1'
 
+params.each{
+  if (!checkParams(it.toString().split('=')[0])) {exit 1, "params $it.toString().split('=')[0] is unknown, see --help for more information"}
+}
+
 if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
 
 if (params.help) {
@@ -1191,6 +1195,32 @@ def checkParameterExistence(it, list) {
 def checkParameterList(list, realList) {
   // Loop through all the possible parameters to check their existence and spelling
   return list.every{ checkParameterExistence(it, realList) }
+}
+
+def checkParams(it) {
+ // Check if params is in this given list
+  return it in [
+  'callName',
+  'call-name',
+  'contactMail',
+  'contact-mail',
+  'genome',
+  'genomes',
+  'help',
+  'project',
+  'runTime',
+  'run-time',
+  'sample',
+  'sampleDir',
+  'sample-dir',
+  'singleCPUMem',
+  'single-CPUMem',
+  'step',
+  'test',
+  'tools',
+  'vcflist',
+  'verbose',
+  'version']
 }
 
 def checkReferenceMap(referenceMap) {
