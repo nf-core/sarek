@@ -15,6 +15,7 @@ vim: syntax=groovy
  Szilveszter Juhos <szilveszter.juhos@scilifelab.se> [@szilvajuhos]
  Max Käller <max.kaller@scilifelab.se> [@gulfshores]
  Malin Larsson <malin.larsson@scilifelab.se> [@malinlarsson]
+ Marcel Martin <marcel.martin@scilifelab.se> [@marcelm]
  Björn Nystedt <bjorn.nystedt@scilifelab.se> [@bjornnystedt]
  Pall Olason <pall.olason@scilifelab.se> [@pallolason]
  Pelin Sahlén <pelin.akan@scilifelab.se> [@pelinakan]
@@ -1521,15 +1522,8 @@ def help_message(version, revision) { // Display help message
   log.info "    Test:"
   log.info "      to test CAW on smaller dataset, enter one of the following command"
   log.info "    nextflow run SciLifeLab/CAW --test"
-  log.info "       Test `preprocessing` on test tiny set"
-  log.info "    nextflow run SciLifeLab/CAW --testRealign"
-  log.info "       Test `realign` on test tiny set"
-  log.info "       Need to do `nextflow run SciLifeLab/CAW --test` before"
-  log.info "    nextflow run SciLifeLab/CAW --testCoreVC"
-  log.info "       Test `preprocessing`, `MuTect1`, `Strelka` and `HaplotypeCaller` on test tiny set"
-  log.info "       Need to do `nextflow run SciLifeLab/CAW --test` before"
-  log.info "    nextflow run SciLifeLab/CAW --testSideVC"
-  log.info "       Test `skipPreprocessing`, `Ascat`, `Manta` and `HaplotypeCaller` on test downSampled set"
+  log.info "       use data/tsv/tiny.tsv and tiny.list for intervals"
+  log.info "       specify wich step and tools as usual"
 }
 
 def isAllowedParams(params) {

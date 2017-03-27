@@ -42,6 +42,7 @@ For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.j
 - [Szilveszter Juhos](https://github.com/szilvajuhos)
 - [Max Käller](https://github.com/gulfshores)
 - [Malin Larsson](https://github.com/malinlarsson)
+- [Marcel Martin](https://github.com/marcelm)
 - [Björn Nystedt](https://github.com/bjornnystedt)
 - [Pall Olason](https://github.com/pallolason)
 - [Pelin Sahlén](https://github.com/pelinakan)
