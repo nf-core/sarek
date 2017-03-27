@@ -661,13 +661,14 @@ mutect2Output = mutect2Output.groupTuple(by:[0,1,2,3,4])
 verbose ? mutect2Output = mutect2Output.view {"MuTect2 output: $it"} : ''
 
 referenceForRunFreeBayes = defineReferenceForProcess("RunFreeBayes")
+referenceForRunFreeBayes = referenceForRunFreeBayes.view{"FreeBayes ref BAKKER :  $it"}
 
 process RunFreeBayes {
   tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
 
   input:
     set idPatient, gender, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFFB
-    file(genomeFile) from referenceForRunFreeBayes
+    set file(genomeFile) from referenceForRunFreeBayes
 
   output:
     set val("freebayes"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into freebayesOutput
