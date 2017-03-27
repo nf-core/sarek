@@ -88,7 +88,7 @@ if (!checkParameterList(tools,toolList)) {exit 1, 'Unknown tool(s), see --help f
 
 tsvPath = ''
 if (params.test) {
-  referenceMap.intervals = "$workflow.projectDir/repeats/tiny.list"
+  referenceMap.intervals = file("$workflow.projectDir/repeats/tiny.list")
   testTsvPaths = [
     'preprocessing': "$workflow.projectDir/data/tsv/tiny.tsv",
     'realign': "$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv",
