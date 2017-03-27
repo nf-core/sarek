@@ -791,24 +791,24 @@ process ConcatVCF {
     """
 
   else if (variantCaller == 'mutect2' || variantCaller == 'mutect1' || variantCaller == 'haplotypecaller' || variantCaller == 'freebayes')
-	"""
-	set -euo pipefail
-	# first make a header from one of the VCF intervals
-	# get rid of interval information only from the GATK command-line, but leave the rest
-	awk '/^#/{print}' `ls *vcf| head -1` | \
-	awk '!/GATKCommandLine/{print}/GATKCommandLine/{for(i=1;i<=NF;i++){if(\$i!~/intervals=/ && \$i !~ /out=/){printf("%s ",\$i)}}printf("\\n")}' \
-	> header
+    """
+    set -euo pipefail
+    # first make a header from one of the VCF intervals
+    # get rid of interval information only from the GATK command-line, but leave the rest
+    awk '/^#/{print}' `ls *vcf| head -1` | \
+    awk '!/GATKCommandLine/{print}/GATKCommandLine/{for(i=1;i<=NF;i++){if(\$i!~/intervals=/ && \$i !~ /out=/){printf("%s ",\$i)}}printf("\\n")}' \
+    > header
 
-	## concatenate calls
-	rm -rf raw_calls
-	for f in *vcf; do
-		awk '!/^#/{print}' \$f >> raw_calls
-	done
-	cat header raw_calls > unsorted.vcf
-	java -jar \${PICARD_HOME}/picard.jar SortVcf I=unsorted.vcf O=$outputFile
-	rm unsorted.vcf
-	gzip -v $outputFile
-	"""
+    ## concatenate calls
+    rm -rf raw_calls
+    for f in *vcf; do
+      awk '!/^#/{print}' \$f >> raw_calls
+    done
+    cat header raw_calls > unsorted.vcf
+    java -jar \${PICARD_HOME}/picard.jar SortVcf I=unsorted.vcf O=$outputFile
+    rm unsorted.vcf
+    gzip -v $outputFile
+    """
 }
 
 verbose ? vcfConcatenated = vcfConcatenated.view {"VCF concatenated: $it"} : ''
@@ -1490,7 +1490,7 @@ def generateIntervalsForVC(bams, gI) {
 }
 
 def grabRevision() {
-	return workflow.revision ?: workflow.scriptId.substring(0,10)
+  return workflow.revision ?: workflow.scriptId.substring(0,10)
 }
 
 def help_message(version, revision) { // Display help message
