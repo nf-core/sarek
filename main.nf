@@ -168,7 +168,7 @@ process MapReads {
   // adjust mismatch penalty for tumor samples
   extra = status == 1 ? "-B 3 " : ""
   """
-  set -eo pipefail
+  set -euo pipefail
   bwa mem -R \"$readGroup\" ${extra}-t $task.cpus -M \
   $genomeFile $fastqFile1 $fastqFile2 | \
   samtools sort --threads $task.cpus - > ${idRun}.bam
@@ -781,6 +781,7 @@ process ConcatVCF {
 
   if (variantCaller == 'vardict')
     """
+    set -euo pipefail
     for i in $vcFiles ;do
       cat \$i | ${referenceMap.vardictHome}/VarDict/testsomatic.R >> testsomatic.out
     done
@@ -791,6 +792,7 @@ process ConcatVCF {
 
   else if (variantCaller == 'mutect2' || variantCaller == 'mutect1' || variantCaller == 'haplotypecaller' || variantCaller == 'freebayes')
 	"""
+	set -euo pipefail
 	# first make a header from one of the VCF intervals
 	# get rid of interval information only from the GATK command-line, but leave the rest
 	awk '/^#/{print}' `ls *vcf| head -1` | \
@@ -831,6 +833,7 @@ process RunStrelka {
 
   script:
   """
+  set -euo pipefail
   tumorPath=`readlink $bamTumor`
   normalPath=`readlink $bamNormal`
   genomeFile=`readlink $genomeFile`
@@ -1075,6 +1078,7 @@ process RunSnpeff {
 
   script:
   """
+  set -euo pipefail
   java -Xmx${task.memory.toGiga()}g \
   -jar \$SNPEFF_HOME/snpEff.jar \
   $snpeffDb \
