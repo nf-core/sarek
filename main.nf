@@ -88,7 +88,7 @@ if (!checkParameterList(tools,toolList)) {exit 1, 'Unknown tool(s), see --help f
 
 tsvPath = ''
 if (params.test) {
-  referenceMap.intervals = "$workflow.projectDir/repeats/tiny.list"
+  referenceMap.intervals = file("$workflow.projectDir/repeats/tiny.list")
   testTsvPaths = [
     'preprocessing': "$workflow.projectDir/data/tsv/tiny.tsv",
     'realign': "$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv",
@@ -277,12 +277,14 @@ process RealignerTargetCreator {
 
   input:
     set idPatient, gender, idSample_status, file(bam), file(bai) from duplicatesInterval
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(knownIndels), file(knownIndelsIndex) from Channel.value([
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(knownIndels), file(knownIndelsIndex), file(intervals) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
       referenceMap.genomeDict,
       referenceMap.knownIndels,
-      referenceMap.knownIndelsIndex])
+      referenceMap.knownIndelsIndex,
+      referenceMap.intervals
+    ])
 
   output:
     set idPatient, gender, file("${idPatient}.intervals") into intervals
@@ -300,8 +302,7 @@ process RealignerTargetCreator {
   -R $genomeFile \
   $known \
   -nt $task.cpus \
-  -XL hs37d5 \
-  -XL NC_007605 \
+  -L $intervals \
   -o ${idPatient}.intervals
   """
 }
@@ -351,8 +352,6 @@ process IndelRealigner {
   -R $genomeFile \
   -targetIntervals $intervals \
   $known \
-  -XL hs37d5 \
-  -XL NC_007605 \
   -nWayOut '.real.bam'
   """
 }
@@ -368,14 +367,15 @@ process CreateRecalibrationTable {
 
   input:
     set idPatient, gender, status, idSample, file(bam), file(bai) from realignedBam
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(knownIndels), file(knownIndelsIndex) from Channel.value([
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(knownIndels), file(knownIndelsIndex), file(intervals) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
       referenceMap.genomeDict,
       referenceMap.dbsnp,
       referenceMap.dbsnpIndex,
       referenceMap.knownIndels,
-      referenceMap.knownIndelsIndex
+      referenceMap.knownIndelsIndex,
+      referenceMap.intervals,
     ])
 
   output:
@@ -397,8 +397,7 @@ process CreateRecalibrationTable {
   -knownSites $dbsnp \
   $known \
   -nct $task.cpus \
-  -XL hs37d5 \
-  -XL NC_007605 \
+  -L $intervals \
   -l INFO \
   -o ${idSample}.recal.table
   """
@@ -422,10 +421,11 @@ process RecalibrateBam {
 
   input:
     set idPatient, gender, status, idSample, file(bam), file(bai), recalibrationReport from recalibrationTable
-    set file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(intervals) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
-      referenceMap.genomeDict
+      referenceMap.genomeDict,
+      referenceMap.intervals,
     ])
 
   output:
@@ -441,8 +441,7 @@ process RecalibrateBam {
   -T PrintReads \
   -R $genomeFile \
   -I $bam \
-  -XL hs37d5 \
-  -XL NC_007605 \
+  -L $intervals \
   --BQSR $recalibrationReport \
   -o ${idSample}.recal.bam
   """
@@ -595,8 +594,6 @@ process RunHaplotypecaller {
   -I $bam \
   -L \"$genInt\" \
   --disable_auto_index_creation_and_locking_when_reading_rods \
-  -XL hs37d5 \
-  -XL NC_007605 \
   -o ${gen_int}_${idSample}.g.vcf
   """
 }
@@ -640,8 +637,6 @@ process RunMutect1 {
   -I:tumor $bamTumor \
   -L \"$genInt\" \
   --disable_auto_index_creation_and_locking_when_reading_rods \
-  -XL hs37d5 \
-  -XL NC_007605 \
   --out ${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.call_stats.out \
   --vcf ${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf
   """
@@ -682,8 +677,6 @@ process RunMutect2 {
   -I:tumor $bamTumor \
   --disable_auto_index_creation_and_locking_when_reading_rods \
   -L \"$genInt\" \
-  -XL hs37d5 \
-  -XL NC_007605 \
   -o ${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf
   """
 
