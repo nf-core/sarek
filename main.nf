@@ -799,7 +799,7 @@ process ConcatVCF {
       awk '!/^#/{print}' \$f >> raw_calls
     done
     cat header raw_calls > unsorted.vcf
-    java -jar \${PICARD_HOME}/picard.jar SortVcf I=unsorted.vcf O=$outputFile
+    java -jar \${PICARD_HOME}/picard.jar SortVcf I=unsorted.vcf O=$outputFile SEQUENCE_DICTIONARY=$genomeDict
     rm unsorted.vcf
     gzip -v $outputFile
     """
