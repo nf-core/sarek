@@ -172,7 +172,7 @@ process MapReads {
   set -euo pipefail
   bwa mem -R \"$readGroup\" ${extra}-t $task.cpus -M \
   $genomeFile $fastqFile1 $fastqFile2 | \
-  samtools sort --threads $task.cpus - > ${idRun}.bam
+  samtools sort --threads $task.cpus -m 4G - > ${idRun}.bam
   """
 }
 
