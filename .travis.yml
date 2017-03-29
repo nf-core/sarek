@@ -1,0 +1,17 @@
+sudo: required
+
+language: java
+
+jdk: openjdk8
+
+services:
+  - docker
+
+env:
+  - NXF_VER=0.23.0
+
+install:
+  - curl -fsSL get.nextflow.io | bash
+
+script:
+  - ./test/test_docker.sh
