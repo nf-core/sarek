@@ -54,8 +54,8 @@ For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.j
 
 [ascat-link]: https://github.com/Crick-CancerGenomics/ascat
 [caw-site-link]: http://opensource.scilifelab.se/projects/caw/
-[circleci-badge]: https://circleci.com/gh/MaxUlysse/CAW.svg?style=shield
-[circleci-link]: https://circleci.com/gh/MaxUlysse/CAW
+[circleci-badge]: https://circleci.com/gh/SciLifeLab/CAW.svg?style=shield
+[circleci-link]: https://circleci.com/gh/SciLifeLab/CAW
 [gatk-link]: https://github.com/broadgsa/gatk-protected
 [gitter-badge]: https://badges.gitter.im/SciLifeLab/CAW.svg
 [gitter-link]: https://gitter.im/SciLifeLab/CAW
@@ -70,7 +70,7 @@ For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.j
 [scilifelab-link]: http://www.scilifelab.se/
 [scilifelab-stockholm-link]: https://www.scilifelab.se/platforms/ngi/
 [strelka-link]: https://github.com/Illumina/strelka
-[travis-badge]: https://api.travis-ci.org/MaxUlysse/CAW.svg
-[travis-link]: https://travis-ci.org/MaxUlysse/CAW
+[travis-badge]: https://api.travis-ci.org/SciLifeLab/CAW.svg
+[travis-link]: https://travis-ci.org/SciLifeLab/CAW
 [version-badge]: https://img.shields.io/github/release/SciLifeLab/CAW.svg
 [version-link]: https://github.com/SciLifeLab/CAW/releases/latest
