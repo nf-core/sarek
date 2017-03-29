@@ -703,8 +703,12 @@ process RunFreeBayes {
     -f $genomeFile \
     --pooled-continuous \
     --pooled-discrete \
-    -F 0.03 \
-    -C 2 \
+    --genotype-qualities \
+    --report-genotype-likelihood-max \
+    --allele-balance-priors-off \
+    --min-alternate-fraction 0.03 \
+    --min-repeat-entropy 1 \
+    --min-alternate-count 2 \
     -r \"$genInt\" \
     $bamTumor \
     $bamNormal > ${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf
