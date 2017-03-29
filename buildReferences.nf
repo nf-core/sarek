@@ -66,7 +66,7 @@ notGZfiles = Channel.create()
 downloadedFiles
   .choice(gzFiles, notGZfiles) {it =~".gz" ? 0 : 1}
 
-notGZfiles.collectFile(storeDir: params.storeDirectory)
+notGZfiles.collectFile(storeDir: "References/" + params.storeDirectory)
 
 process DecompressFile {
   tag {reference}
@@ -100,7 +100,7 @@ fastaForSAMTools = Channel.create()
 process BuildBWAindexes {
   tag {reference}
 
-  publishDir params.storeDirectory, mode: 'copy'
+  publishDir "References/" + params.storeDirectory, mode: 'copy'
 
   input:
     file(reference) from fastaForBWA
@@ -119,7 +119,7 @@ process BuildBWAindexes {
 process BuildPicardIndex {
   tag {reference}
 
-  publishDir params.storeDirectory, mode: 'copy'
+  publishDir "References/" + params.storeDirectory, mode: 'copy'
 
   input:
     file(reference) from fastaForPicard
@@ -141,7 +141,7 @@ process BuildPicardIndex {
 process BuildSAMToolsIndex {
   tag {reference}
 
-  publishDir params.storeDirectory, mode: 'copy'
+  publishDir "References/" + params.storeDirectory, mode: 'copy'
 
   input:
     file(reference) from fastaForSAMTools
@@ -159,7 +159,7 @@ process BuildSAMToolsIndex {
 process BuildVCFIndex {
   tag {reference}
 
-  publishDir params.storeDirectory, mode: 'copy'
+  publishDir "References/" + params.storeDirectory, mode: 'copy'
 
   input:
     file(reference) from vcfFiles
