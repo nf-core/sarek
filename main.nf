@@ -88,7 +88,6 @@ if (!checkParameterList(tools,toolList)) {exit 1, 'Unknown tool(s), see --help f
 
 tsvPath = ''
 if (params.test) {
-  referenceMap.intervals = file("$workflow.projectDir/repeats/tiny.list")
   testTsvPaths = [
     'preprocessing': "$workflow.projectDir/data/tsv/tiny.tsv",
     'realign': "$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv",
@@ -402,7 +401,6 @@ process CreateRecalibrationTable {
   -o ${idSample}.recal.table
   """
 }
-
 // Creating a TSV file to restart from this step
 recalibrationTableTSV.map { idPatient, gender, status, idSample, bam, bai, recalTable ->
   "$idPatient\t$gender\t$status\t$idSample\t$directoryMap.nonRecalibrated/$bam\t$directoryMap.nonRecalibrated/$bai\t\t$directoryMap.nonRecalibrated/$recalTable\n"
@@ -446,7 +444,6 @@ process RecalibrateBam {
   -o ${idSample}.recal.bam
   """
 }
-
 // Creating a TSV file to restart from this step
 recalibratedBamTSV.map { idPatient, gender, status, idSample, bam, bai ->
   "$idPatient\t$gender\t$status\t$idSample\t$directoryMap.recalibrated/$bam\t$directoryMap.recalibrated/$bai\n"
@@ -679,7 +676,6 @@ process RunMutect2 {
   -L \"$genInt\" \
   -o ${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf
   """
-
 }
 
 mutect2Output = mutect2Output.groupTuple(by:[0,1,2,3,4])
@@ -882,7 +878,7 @@ process RunManta {
   ln -s $baiNormal Normal.bam.bai
   ln -s $baiTumor Tumor.bam.bai
 
-  configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference $genomeFile --runDir MantaDir
+  \$MANTA_INSTALL_PATH/bin/configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference $genomeFile --runDir MantaDir
   python MantaDir/runWorkflow.py -m local -j $task.cpus
   gunzip -c MantaDir/results/variants/somaticSV.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf
   gunzip -c MantaDir/results/variants/candidateSV.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf
