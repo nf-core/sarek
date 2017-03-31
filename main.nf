@@ -1056,13 +1056,17 @@ vcfNotMerged = Channel.create()
 vcfConcatenated
   .choice(vcfMerged, vcfNotMerged) {it[0] == 'mutect1' ? 0 : 1}
 
+vcfForSnpeff = Channel.create()
+vcfForVep = Channel.create()
+(vcfForSnpeff, vcfForVep) = vcfMerged.into(2)
+
 process RunSnpeff {
   tag {variantCaller + "-" + idSampleTumor + "_vs_" + idSampleNormal}
 
   publishDir directoryMap.snpeff, mode: 'copy'
 
   input:
-    set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file(vcf) from vcfMerged
+    set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file(vcf) from vcfForSnpeff
     val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
 
   output:
@@ -1086,6 +1090,29 @@ process RunSnpeff {
 }
 
 verbose ? snpeffReport = snpeffReport.view {"snpEff Reports: $it"} : ''
+
+process RunVEP {
+  tag {variantCaller + "-" + idSampleTumor + "_vs_" + idSampleNormal}
+
+  publishDir directoryMap.vep, mode: 'copy'
+
+  input:
+    set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file(vcf) from vcfForVep
+
+  output:
+    set file("${vcf.baseName}_VEP.txt"), file("${vcf.baseName}_VEP.txt_summary.html") into vepReport
+
+  when: 'VEP' in tools
+
+  script:
+  """
+  set -euo pipefail
+  vep -i $vcf -o ${vcf.baseName}_VEP.txt -offline
+  """
+}
+
+verbose ? vepReport = vepReport.view {"VEP Reports: $it"} : ''
+
 
 process GenerateMultiQCconfig {
   tag {idPatient}
@@ -1129,7 +1156,8 @@ reportsForMultiQC = Channel.fromPath( 'Reports/{FastQC,MarkDuplicates,SamToolsSt
     markDuplicatesReport,
     multiQCconfig,
     recalibratedBamReport,
-    snpeffReport)
+    snpeffReport,
+    vepReport)
   .flatten()
   .unique()
   .toList()
@@ -1288,7 +1316,8 @@ def defineDirectoryMap() {
     'mutect2'          : 'VariantCalling/MuTect2',
     'strelka'          : 'VariantCalling/Strelka',
     'vardict'          : 'VariantCalling/VarDict',
-    'snpeff'           : 'Annotation/snpEff'
+    'snpeff'           : 'Annotation/snpEff',
+    'vep'              : 'Annotation/VEP'
   ]
 }
 
@@ -1337,7 +1366,8 @@ def defineToolList() {
     'MuTect2',
     'snpEff',
     'Strelka',
-    'VarDict'
+    'VarDict',
+    'VEP'
   ]
 }
 
