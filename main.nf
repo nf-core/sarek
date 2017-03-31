@@ -1055,10 +1055,41 @@ vcfMerged = Channel.create()
 vcfNotMerged = Channel.create()
 
 vcfConcatenated
-  .choice(vcfMerged, vcfNotMerged) {it[0] == 'mutect1' || it[0] == 'strelka' ? 0 : 1}
+  .choice(vcfMerged, vcfNotMerged) {it[0] == 'mutect1' ? 0 : 1}
+
+(strelkaAllIndels, strelkaAllSNVS, strelkaPAssedIndels, strelkaPAssedSNVS) = strelkaOutput.into(4)
+
+strelkaAllIndels = strelkaAllIndels
+  .map {
+    variantcaller, idPatient, gender, idSampleNormal, idSampleTumor, vcf ->
+    [variantcaller, idPatient, gender, idSampleNormal, idSampleTumor, vcf[0]]
+}
+
+strelkaAllSNVS = strelkaAllSNVS
+  .map {
+    variantcaller, idPatient, gender, idSampleNormal, idSampleTumor, vcf ->
+    [variantcaller, idPatient, gender, idSampleNormal, idSampleTumor, vcf[1]]
+}
+
+strelkaPAssedIndels = strelkaPAssedIndels
+  .map {
+    variantcaller, idPatient, gender, idSampleNormal, idSampleTumor, vcf ->
+    [variantcaller, idPatient, gender, idSampleNormal, idSampleTumor, vcf[2]]
+}
+
+strelkaPAssedSNVS = strelkaPAssedSNVS
+  .map {
+    variantcaller, idPatient, gender, idSampleNormal, idSampleTumor, vcf ->
+    [variantcaller, idPatient, gender, idSampleNormal, idSampleTumor, vcf[3]]
+}
+
+vcfMerged = vcfMerged.mix(strelkaAllIndels, strelkaAllSNVS, strelkaPAssedIndels, strelkaPAssedSNVS)
+
+verbose ? vcfMerged = vcfMerged.view {"VCF for Annotation: $it"} : ''
 
 vcfForSnpeff = Channel.create()
 vcfForVep = Channel.create()
+
 (vcfForSnpeff, vcfForVep) = vcfMerged.into(2)
 
 process RunSnpeff {
@@ -1103,7 +1134,7 @@ process RunVEP {
   output:
     set file("${vcf.baseName}_VEP.txt"), file("${vcf.baseName}_VEP.txt_summary.html") into vepReport
 
-  when: 'VEP' in tools
+  when: 'VEP' in tools && variantCaller != 'strelka'
 
   script:
   """
