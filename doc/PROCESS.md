@@ -7,8 +7,8 @@ Several processes are run within the workflow. We divide them for the moment int
 - MapReads - Map reads [Stable]
 - MergeBams - Merge BAMs if multilane samples [Stable]
 - MarkDuplicates - Mark Duplicates [Stable]
-- CreateIntervals - Create Intervals [Stable]
-- RealignBams - Realign Bams as T/N pair [Stable]
+- RealignerTargetCreator - Create realignment target intervals [Stable]
+- IndelRealigner - Realign Bams as T/N pair [Stable]
 - CreateRecalibrationTable - Create Recalibration Table [Stable]
 - RecalibrateBam - Recalibreate Bam [Stable]
 
@@ -37,6 +37,7 @@ Several processes are run within the workflow. We divide them for the moment int
 ## Annotation:
 
 - RunSnpeff - Run snpEff on vcf files [Working]
+- RunVEP - Run VEP on vcf files [Working]
 
 --------------------------------------------------------------------------------
 

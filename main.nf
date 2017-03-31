@@ -48,6 +48,7 @@ vim: syntax=groovy
  - RunConvertAlleleCounts - Run convertAlleleCounts to prepare for ASCAT
  - RunAscat - Run ASCAT for CNV
  - RunSnpeff - Run snpEff for annotation of vcf files
+ - RunVEP - Run VEP for annotation of vcf files
  - GenerateMultiQCconfig - Generate a config file for MultiQC
  - RunMultiQC - Run MultiQC for report and QC
 ================================================================================
@@ -1540,6 +1541,8 @@ def help_message(version, revision) { // Display help message
   log.info "         HaplotypeCaller (use HaplotypeCaller for normal bams VC)"
   log.info "         Manta (use Manta for SV)"
   log.info "         Ascat (use Ascat for CNV)"
+  log.info "         snpEff (use snpEff for Annotation of Variants)"
+  log.info "         VEP (use VEP for Annotation of Variants)"
   log.info "    --help"
   log.info "       you're reading it"
   log.info "    --verbose"
