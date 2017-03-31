@@ -1055,7 +1055,7 @@ vcfMerged = Channel.create()
 vcfNotMerged = Channel.create()
 
 vcfConcatenated
-  .choice(vcfMerged, vcfNotMerged) {it[0] == 'mutect1' or it[0] == 'strelka' ? 0 : 1}
+  .choice(vcfMerged, vcfNotMerged) {it[0] == 'mutect1' || it[0] == 'strelka' ? 0 : 1}
 
 vcfForSnpeff = Channel.create()
 vcfForVep = Channel.create()
