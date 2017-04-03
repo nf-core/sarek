@@ -48,6 +48,7 @@ vim: syntax=groovy
  - RunConvertAlleleCounts - Run convertAlleleCounts to prepare for ASCAT
  - RunAscat - Run ASCAT for CNV
  - RunSnpeff - Run snpEff for annotation of vcf files
+ - RunVEP - Run VEP for annotation of vcf files
  - GenerateMultiQCconfig - Generate a config file for MultiQC
  - RunMultiQC - Run MultiQC for report and QC
 ================================================================================
@@ -1056,13 +1057,48 @@ vcfNotMerged = Channel.create()
 vcfConcatenated
   .choice(vcfMerged, vcfNotMerged) {it[0] == 'mutect1' ? 0 : 1}
 
+(strelkaAllIndels, strelkaAllSNVS, strelkaPAssedIndels, strelkaPAssedSNVS) = strelkaOutput.into(4)
+
+strelkaAllIndels = strelkaAllIndels
+  .map {
+    variantcaller, idPatient, gender, idSampleNormal, idSampleTumor, vcf ->
+    [variantcaller, idPatient, gender, idSampleNormal, idSampleTumor, vcf[0]]
+}
+
+strelkaAllSNVS = strelkaAllSNVS
+  .map {
+    variantcaller, idPatient, gender, idSampleNormal, idSampleTumor, vcf ->
+    [variantcaller, idPatient, gender, idSampleNormal, idSampleTumor, vcf[1]]
+}
+
+strelkaPAssedIndels = strelkaPAssedIndels
+  .map {
+    variantcaller, idPatient, gender, idSampleNormal, idSampleTumor, vcf ->
+    [variantcaller, idPatient, gender, idSampleNormal, idSampleTumor, vcf[2]]
+}
+
+strelkaPAssedSNVS = strelkaPAssedSNVS
+  .map {
+    variantcaller, idPatient, gender, idSampleNormal, idSampleTumor, vcf ->
+    [variantcaller, idPatient, gender, idSampleNormal, idSampleTumor, vcf[3]]
+}
+
+vcfMerged = vcfMerged.mix(strelkaAllIndels, strelkaAllSNVS, strelkaPAssedIndels, strelkaPAssedSNVS)
+
+verbose ? vcfMerged = vcfMerged.view {"VCF for Annotation: $it"} : ''
+
+vcfForSnpeff = Channel.create()
+vcfForVep = Channel.create()
+
+(vcfForSnpeff, vcfForVep) = vcfMerged.into(2)
+
 process RunSnpeff {
   tag {variantCaller + "-" + idSampleTumor + "_vs_" + idSampleNormal}
 
   publishDir directoryMap.snpeff, mode: 'copy'
 
   input:
-    set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file(vcf) from vcfMerged
+    set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file(vcf) from vcfForSnpeff
     val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
 
   output:
@@ -1086,6 +1122,32 @@ process RunSnpeff {
 }
 
 verbose ? snpeffReport = snpeffReport.view {"snpEff Reports: $it"} : ''
+
+process RunVEP {
+  tag {variantCaller + "-" + idSampleTumor + "_vs_" + idSampleNormal}
+
+  publishDir directoryMap.vep, mode: 'copy'
+
+  input:
+    set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file(vcf) from vcfForVep
+
+  output:
+    set file("${vcf.baseName}_VEP.txt"), file("${vcf.baseName}_VEP.txt_summary.html") into vepReport
+
+  when: 'VEP' in tools && variantCaller != 'strelka'
+
+  script:
+  """
+  set -euo pipefail
+  vep -i $vcf -o ${vcf.baseName}_VEP.txt -offline
+
+
+
+  """
+}
+
+verbose ? vepReport = vepReport.view {"VEP Reports: $it"} : ''
+
 
 process GenerateMultiQCconfig {
   tag {idPatient}
@@ -1129,7 +1191,8 @@ reportsForMultiQC = Channel.fromPath( 'Reports/{FastQC,MarkDuplicates,SamToolsSt
     markDuplicatesReport,
     multiQCconfig,
     recalibratedBamReport,
-    snpeffReport)
+    snpeffReport,
+    vepReport)
   .flatten()
   .unique()
   .toList()
@@ -1288,7 +1351,8 @@ def defineDirectoryMap() {
     'mutect2'          : 'VariantCalling/MuTect2',
     'strelka'          : 'VariantCalling/Strelka',
     'vardict'          : 'VariantCalling/VarDict',
-    'snpeff'           : 'Annotation/snpEff'
+    'snpeff'           : 'Annotation/snpEff',
+    'vep'              : 'Annotation/VEP'
   ]
 }
 
@@ -1337,7 +1401,8 @@ def defineToolList() {
     'MuTect2',
     'snpEff',
     'Strelka',
-    'VarDict'
+    'VarDict',
+    'VEP'
   ]
 }
 
@@ -1510,6 +1575,8 @@ def help_message(version, revision) { // Display help message
   log.info "         HaplotypeCaller (use HaplotypeCaller for normal bams VC)"
   log.info "         Manta (use Manta for SV)"
   log.info "         Ascat (use Ascat for CNV)"
+  log.info "         snpEff (use snpEff for Annotation of Variants)"
+  log.info "         VEP (use VEP for Annotation of Variants)"
   log.info "    --help"
   log.info "       you're reading it"
   log.info "    --verbose"

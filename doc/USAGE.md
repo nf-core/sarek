@@ -56,6 +56,7 @@ Choose which tools will be used in the workflow. Different tools to be separated
 - Strelka (use Strelka for VC)
 - VarDict (use VarDict for VC)
 - snpEff (use snpEff for Annotation)
+- VEP (use VEP for Annotation)
 
 ### --verbose
 
