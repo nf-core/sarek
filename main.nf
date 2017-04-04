@@ -586,7 +586,9 @@ process RunHaplotypecaller {
   java -Xmx${task.memory.toGiga()}g \
   -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T HaplotypeCaller \
-  --emitRefConfidence GVCF -stand_call_conf 30.0  -pairHMM LOGLESS_CACHING  -pcrModel CONSERVATIVE \
+  --emitRefConfidence GVCF \
+  -pairHMM LOGLESS_CACHING \
+  -pcrModel CONSERVATIVE \
   -R $genomeFile \
   --dbsnp $dbsnp \
   -I $bam \
