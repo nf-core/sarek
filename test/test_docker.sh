@@ -1,8 +1,8 @@
 #!/bin/bash
 echo "Starting Nextflow... Command:"
-echo "./nextflow run buildReferences.nf -profile testing --storeDirectory smallGRCh37"
+echo "./nextflow run buildReferences.nf -profile testing"
 echo "-----"
-./nextflow run buildReferences.nf -profile testing --storeDirectory smallGRCh37
+./nextflow run buildReferences.nf -profile testing
 echo "Cleaning up docker images:"
 echo "docker rmi -f maxulysse/igvtools:1.1"
 echo "-----"
