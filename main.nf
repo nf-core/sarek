@@ -1106,7 +1106,7 @@ process RunSnpeff {
     val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
 
   output:
-    set file("${vcf.baseName}.ann.vcf"), file("${vcf.baseName}_SnpEff_genes.txt"), file("${vcf.baseName}_SnpEff_summary.html") into snpeffReport
+    set file("${vcf.baseName}.ann.vcf"), file("${vcf.baseName}_snpEff_genes.txt"), file("${vcf.baseName}_snpEff.csv"), file("${vcf.baseName}_snpEff_summary.html") into snpeffReport
 
   when: 'snpEff' in tools
 
@@ -1116,12 +1116,13 @@ process RunSnpeff {
   java -Xmx${task.memory.toGiga()}g \
   -jar \$SNPEFF_HOME/snpEff.jar \
   $snpeffDb \
+  -csvStats ${vcf.baseName}_snpEff.csv \
   -v -cancer \
   ${vcf} \
   > ${vcf.baseName}.ann.vcf
 
-  mv snpEff_genes.txt ${vcf.baseName}_SnpEff_genes.txt
-  mv snpEff_summary.html ${vcf.baseName}_SnpEff_summary.html
+  mv snpEff_summary.html ${vcf.baseName}_snpEff_summary.html
+  mv ${vcf.baseName}_snpEff.genes.txt ${vcf.baseName}_snpEff_genes.txt
   """
 }
 
