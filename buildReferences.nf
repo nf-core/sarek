@@ -95,7 +95,7 @@ fastaForBWA = Channel.create()
 fastaForPicard = Channel.create()
 fastaForSAMTools = Channel.create()
 
-(fastaForBWA,fastaForPicard,fastaForSAMTools) = fastaFile.into(3)
+fastaFile.into(fastaForBWA,fastaForPicard,fastaForSAMTools)
 
 process BuildBWAindexes {
   tag {reference}
