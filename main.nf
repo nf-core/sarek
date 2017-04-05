@@ -89,6 +89,9 @@ if (!checkParameterList(tools,toolList)) {exit 1, 'Unknown tool(s), see --help f
 
 tsvPath = ''
 if (params.test) {
+  if (params.genome == "GRCh37") {
+    referenceMap.intervals = file("$workflow.projectDir/repeats/tiny.list")
+  }
   testTsvPaths = [
     'preprocessing': "$workflow.projectDir/data/tsv/tiny.tsv",
     'realign': "$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv",
@@ -1103,7 +1106,7 @@ process RunSnpeff {
     val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
 
   output:
-    set file("${vcf.baseName}.ann.vcf"), file("${vcf.baseName}_snpEff_genes.txt"), file("${vcf.baseName}_snpEff_summary.html") into snpeffReport
+    set file("${vcf.baseName}.ann.vcf"), file("${vcf.baseName}_SnpEff_genes.txt"), file("${vcf.baseName}_SnpEff_summary.html") into snpeffReport
 
   when: 'snpEff' in tools
 
@@ -1117,8 +1120,8 @@ process RunSnpeff {
   ${vcf} \
   > ${vcf.baseName}.ann.vcf
 
-  mv snpEff_genes.txt ${vcf.baseName}_snpEff_genes.txt
-  mv snpEff_summary.html ${vcf.baseName}_snpEff_summary.html
+  mv snpEff_genes.txt ${vcf.baseName}_SnpEff_genes.txt
+  mv snpEff_summary.html ${vcf.baseName}_SnpEff_summary.html
   """
 }
 
@@ -1352,7 +1355,7 @@ def defineDirectoryMap() {
     'mutect2'          : 'VariantCalling/MuTect2',
     'strelka'          : 'VariantCalling/Strelka',
     'vardict'          : 'VariantCalling/VarDict',
-    'snpeff'           : 'Annotation/snpEff',
+    'snpeff'           : 'Annotation/SnpEff',
     'vep'              : 'Annotation/VEP'
   ]
 }
