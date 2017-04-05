@@ -588,7 +588,6 @@ process RunHaplotypecaller {
   -T HaplotypeCaller \
   --emitRefConfidence GVCF \
   -pairHMM LOGLESS_CACHING \
-  -pcrModel CONSERVATIVE \
   -R $genomeFile \
   --dbsnp $dbsnp \
   -I $bam \
