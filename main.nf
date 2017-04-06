@@ -737,7 +737,7 @@ process RunVardict {
 
   script:
   """
-  ${referenceMap.vardictHome}/vardict.pl \
+  vardict.pl \
   -G $genomeFile \
   -f 0.01 -N $bamTumor \
   -b "$bamTumor|$bamNormal" \
@@ -781,11 +781,12 @@ process ConcatVCF {
   if (variantCaller == 'vardict')
     """
     for i in $vcFiles ;do
-      cat \$i | ${referenceMap.vardictHome}/VarDict/testsomatic.R >> testsomatic.out
+      cat \$i | testsomatic.R >> testsomatic.out
     done
-    ${referenceMap.vardictHome}/VarDict/var2vcf_somatic.pl \
+    var2vcf_paired.pl \
     -f 0.01 \
     -N "${idSampleTumor}_vs_${idSampleNormal}" testsomatic.out > $outputFile
+    gzip -v $outputFile
     """
 
   else if (variantCaller == 'mutect2' || variantCaller == 'mutect1' || variantCaller == 'haplotypecaller' || variantCaller == 'freebayes')
@@ -1376,7 +1377,6 @@ def defineReferenceMap() {
     'bwaIndex'    : file(genome.bwaIndex),  // BWA index files
     // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
     'intervals'   : file(genome.intervals),
-    'vardictHome' : file(genome.vardictHome),  // path to VarDict
     // VCFs with known indels (such as 1000 Genomes, Mill’s gold standard)
     'knownIndels' : genome.knownIndels.collect{file(it)},
     'knownIndelsIndex': genome.knownIndelsIndex.collect{file(it)},
