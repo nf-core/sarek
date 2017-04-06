@@ -31,42 +31,58 @@ vim: syntax=groovy
 ================================================================================
 */
 
-referencesToDownload =
-  Channel.from([
-    '1000G_phase1.indels.b37.small.vcf.gz',
-    '1000G_phase3_20130502_SNP_maf0.3.small.loci',
-    'b37_cosmic_v54_120711.small.vcf.gz',
-    'b37_cosmic_v74.noCHR.sort.4.1.small.vcf.gz',
-    'dbsnp_138.b37.small.vcf.gz',
-    'human_g1k_v37_decoy.small.fasta.gz',
-    'Mills_and_1000G_gold_standard.indels.b37.small.vcf.gz',
-    'small.intervals'
-  ])
+params.download = false
+params.refDir = ""
 
-process DownloadReference {
-  tag {reference}
+download = params.download ? true : false
+if (!download && params.refDir == "" ) { exit 1, "No --refDir specified"}
+if (download && params.refDir != "" ) { exit 1, "No need to specify --refDir"}
+
+if (params.genome == "smallGRCh37") {
+  referencesFiles =
+    Channel.from([
+      '1000G_phase1.indels.b37.small.vcf.gz',
+      '1000G_phase3_20130502_SNP_maf0.3.small.loci',
+      'b37_cosmic_v54_120711.small.vcf.gz',
+      'b37_cosmic_v74.noCHR.sort.4.1.small.vcf.gz',
+      'dbsnp_138.b37.small.vcf.gz',
+      'human_g1k_v37_decoy.small.fasta.gz',
+      'Mills_and_1000G_gold_standard.indels.b37.small.vcf.gz',
+      'small.intervals'
+    ])
+} else {exit 1, "Can't build this reference genome"}
+
+process ProcessReference {
+  tag download ? {"Download: " + reference} : {"Link: " + reference}
 
   input:
-    val(reference) from referencesToDownload
+    val(reference) from referencesFiles
 
   output:
-    file(reference) into downloadedFiles
+    file(reference) into processedFiles
 
   script:
 
+  if (download)
   """
   set -euo pipefail
-  wget https://github.com/MaxUlysse/smallRef/raw/master/$reference
+  wget https://github.com/szilvajuhos/smallRef/raw/master/$reference
+  """
+
+  else
+  """
+  set -euo pipefail
+  ln -s $params.refDir/$reference .
   """
 }
 
 gzFiles = Channel.create()
 notGZfiles = Channel.create()
 
-downloadedFiles
-  .choice(gzFiles, notGZfiles) {it =~".gz" ? 0 : 1}
+processedFiles
+  .choice(gzFiles, notGZfiles) {it =~ ".gz" ? 0 : 1}
 
-notGZfiles.collectFile(storeDir: "References/" + params.storeDirectory)
+notGZfiles.collectFile(storeDir: "References/" + params.genome)
 
 process DecompressFile {
   tag {reference}
@@ -89,18 +105,18 @@ process DecompressFile {
 fastaFile = Channel.create()
 vcfFiles = Channel.create()
 decompressedFiles
-  .choice(fastaFile, vcfFiles) {it =~".fasta" ? 0 : 1}
+  .choice(fastaFile, vcfFiles) {it =~ ".fasta" ? 0 : 1}
 
 fastaForBWA = Channel.create()
 fastaForPicard = Channel.create()
 fastaForSAMTools = Channel.create()
 
-(fastaForBWA,fastaForPicard,fastaForSAMTools) = fastaFile.into(3)
+fastaFile.into(fastaForBWA,fastaForPicard,fastaForSAMTools)
 
 process BuildBWAindexes {
   tag {reference}
 
-  publishDir "References/" + params.storeDirectory, mode: 'copy'
+  publishDir "References/" + params.genome, mode: 'copy'
 
   input:
     file(reference) from fastaForBWA
@@ -119,7 +135,7 @@ process BuildBWAindexes {
 process BuildPicardIndex {
   tag {reference}
 
-  publishDir "References/" + params.storeDirectory, mode: 'copy'
+  publishDir "References/" + params.genome, mode: 'copy'
 
   input:
     file(reference) from fastaForPicard
@@ -141,7 +157,7 @@ process BuildPicardIndex {
 process BuildSAMToolsIndex {
   tag {reference}
 
-  publishDir "References/" + params.storeDirectory, mode: 'copy'
+  publishDir "References/" + params.genome, mode: 'copy'
 
   input:
     file(reference) from fastaForSAMTools
@@ -159,7 +175,7 @@ process BuildSAMToolsIndex {
 process BuildVCFIndex {
   tag {reference}
 
-  publishDir "References/" + params.storeDirectory, mode: 'copy'
+  publishDir "References/" + params.genome, mode: 'copy'
 
   input:
     file(reference) from vcfFiles
