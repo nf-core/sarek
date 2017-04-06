@@ -3,6 +3,7 @@
 /*
 vim: syntax=groovy
 -*- mode: groovy;-*-
+kate: syntax groovy; space-indent on; indent-width 4;
 ================================================================================
 =               C A N C E R    A N A L Y S I S    W O R K F L O W              =
 ================================================================================
@@ -172,7 +173,6 @@ process MapReads {
   // adjust mismatch penalty for tumor samples
   extra = status == 1 ? "-B 3 " : ""
   """
-  set -euo pipefail
   bwa mem -R \"$readGroup\" ${extra}-t $task.cpus -M \
   $genomeFile $fastqFile1 $fastqFile2 | \
   samtools sort --threads $task.cpus -m 4G - > ${idRun}.bam
@@ -780,7 +780,6 @@ process ConcatVCF {
 
   if (variantCaller == 'vardict')
     """
-    set -euo pipefail
     for i in $vcFiles ;do
       cat \$i | ${referenceMap.vardictHome}/VarDict/testsomatic.R >> testsomatic.out
     done
@@ -791,7 +790,6 @@ process ConcatVCF {
 
   else if (variantCaller == 'mutect2' || variantCaller == 'mutect1' || variantCaller == 'haplotypecaller' || variantCaller == 'freebayes')
     """
-    set -euo pipefail
     # first make a header from one of the VCF intervals
     # get rid of interval information only from the GATK command-line, but leave the rest
     awk '/^#/{print}' `ls *vcf| head -1` | \
@@ -832,7 +830,6 @@ process RunStrelka {
 
   script:
   """
-  set -euo pipefail
   tumorPath=`readlink $bamTumor`
   normalPath=`readlink $bamNormal`
   genomeFile=`readlink $genomeFile`
@@ -877,7 +874,6 @@ process RunManta {
 
   script:
   """
-  set -eo pipefail
   ln -s $bamNormal Normal.bam
   ln -s $bamTumor Tumor.bam
   ln -s $baiNormal Normal.bam.bai
@@ -1112,7 +1108,6 @@ process RunSnpeff {
 
   script:
   """
-  set -euo pipefail
   java -Xmx${task.memory.toGiga()}g \
   -jar \$SNPEFF_HOME/snpEff.jar \
   $snpeffDb \
@@ -1144,7 +1139,6 @@ process RunVEP {
   script:
   if (workflow.profile == 'testing' || workflow.profile == 'docker')
   """
-  set -euo pipefail
   vep -i $vcf -o ${vcf.baseName}_VEP.txt -offline
   """
   else if (workflow.profile == 'standard' || workflow.profile == 'interactive' || workflow.profile == 'localhost')
