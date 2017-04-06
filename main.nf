@@ -1142,12 +1142,15 @@ process RunVEP {
   when: 'VEP' in tools && variantCaller != 'strelka'
 
   script:
+  if (workflow.profile == 'testing' || workflow.profile == 'docker')
   """
   set -euo pipefail
   vep -i $vcf -o ${vcf.baseName}_VEP.txt -offline
-
-
-
+  """
+  else if (workflow.profile == 'standard' || workflow.profile == 'interactive' || workflow.profile == 'localhost')
+  """
+  set -euo pipefail
+  variant_effect_predictor.pl --cache --dir_cachevariant_effect_predictor.pl --cache --dir_cache /sw/data/uppnex/vep/87/homo_sapiens/87_${params.genome} -o ${vcf.baseName}_VEP.txt
   """
 }
 
