@@ -2,7 +2,7 @@
 
 We are using the [GATK bundle](https://software.broadinstitute.org/gatk/download/bundle) **b37** for most of our reference files.
 
-Following files need to be downloaded (and unzipped):
+The following files need to be downloaded (and unzipped):
 
 - '1000G_phase1.indels.b37.vcf'
 - '1000G_phase1.indels.b37.vcf.idx'
@@ -20,19 +20,19 @@ This file is on our repo so it will be easy ;-)
 
 The last files are made when indexing human_g1k_v37_decoy.fasta with bwa.
 
+```
+bwa index human_g1k_v37_decoy.fasta
+```
+
+Which produces:
+
 - 'human_g1k_v37_decoy.fasta.pac'
 - 'human_g1k_v37_decoy.fasta.amb'
 - 'human_g1k_v37_decoy.fasta.ann'
 - 'human_g1k_v37_decoy.fasta.bwt'
 - 'human_g1k_v37_decoy.fasta.sa'
 
-You can do that by using your own bwa:
-
-```
-bwa index human_g1k_v37_decoy.fasta
-```
-
-Or using a Docker image containing it:
+Alternatively, using our Docker:
 
 ```
 docker run -v `pwd`:/tmp -w /tmp maxulysse/mapreads:1.0 bwa index human_g1k_v37_decoy.fasta
@@ -43,6 +43,28 @@ The rest of the references files are stored in in [export.uppmax.uu.se](https://
 - '1000G_phase3_20130502_SNP_maf0.3.loci'
 - 'b37_cosmic_v74.noCHR.sort.4.1.vcf.idx'
 - 'b37_cosmic_v74.noCHR.sort.4.1.vcf'
+
+You can create your own cosmic reference for any human reference as specified below.
+
+## COSMIC VCF
+
+To annotate with COSMIC variants during mutect1/2 variant calling you need to create a compatible VCF file.
+Download the coding and non-coding VCF files from [COSMIC](http://cancer.sanger.ac.uk/cosmic/download) and process them with the [Create_Cosmic.sh](https://github.com/SciLifeLab/CAW/tree/master/scripts/Create_Cosmic.sh) script. The script requires a fasta index, .fai, of the reference file you are using.
+
+Example:
+
+```
+samtools faidx human_g1k_v37_decoy.fasta
+sh Create_Cosmic.sh human_g1k_v37_decoy.fasta.fai
+```
+
+Note: CosmicCodingMuts.vcf.gz & CosmicNonCodingVariants.vcf.gz must be in same folder as Create_Cosmic.sh when executed.
+
+To index the resulting VCF file use [igvtools](https://software.broadinstitute.org/software/igv/igvtools).
+
+```
+igvtools index COSMICv##.vcf
+```
 
 --------------------------------------------------------------------------------
 
