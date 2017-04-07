@@ -49,7 +49,9 @@ You can create your own cosmic reference for any human reference as specified be
 ## COSMIC VCF
 
 To annotate with COSMIC variants during mutect1/2 variant calling you need to create a compatible VCF file.
-Download the coding and non-coding VCF files from [COSMIC](http://cancer.sanger.ac.uk/cosmic/download) and process them with the [Create_Cosmic.sh](https://github.com/SciLifeLab/CAW/tree/master/scripts/Create_Cosmic.sh) script. The script requires a fasta index, .fai, of the reference file you are using. Example:
+Download the coding and non-coding VCF files from [COSMIC](http://cancer.sanger.ac.uk/cosmic/download) and process them with the [Create_Cosmic.sh](https://github.com/SciLifeLab/CAW/tree/master/scripts/Create_Cosmic.sh) script. The script requires a fasta index, .fai, of the reference file you are using.
+
+Example:
 
 ```
 samtools faidx human_g1k_v37_decoy.fasta
@@ -57,6 +59,12 @@ sh Create_Cosmic.sh human_g1k_v37_decoy.fasta.fai
 ```
 
 Note: CosmicCodingMuts.vcf.gz & CosmicNonCodingVariants.vcf.gz must be in same folder as Create_Cosmic.sh when executed.
+
+To index the resulting VCF file use [igvtools](https://software.broadinstitute.org/software/igv/igvtools).
+
+```
+igvtools index COSMICv##.vcf
+```
 
 --------------------------------------------------------------------------------
 
