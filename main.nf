@@ -50,6 +50,7 @@ kate: syntax groovy; space-indent on; indent-width 4;
  - RunAscat - Run ASCAT for CNV
  - RunSnpeff - Run snpEff for annotation of vcf files
  - RunVEP - Run VEP for annotation of vcf files
+ - RunBcftoolsStats - Run BCFTools stats on vcf files
  - GenerateMultiQCconfig - Generate a config file for MultiQC
  - RunMultiQC - Run MultiQC for report and QC
 ================================================================================
@@ -1076,7 +1077,7 @@ vcfForVep = Channel.create()
 (vcfForBCF, vcfMerged) = vcfMerged.into(2)
 
 process RunBcftoolsStats {
-  tag {idPatient + "-" + idSample}
+  tag {variantCaller + "-" + idPatient + "-" + idSample}
 
   publishDir directoryMap.bcftoolsStats, mode: 'copy'
 
