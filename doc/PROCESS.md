@@ -33,6 +33,7 @@ Several processes are run within the workflow. We divide them for the moment int
 - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files [Stable]
 - GenerateMultiQCconfig - Generate a config file for MultiQC [Stable]
 - RunMultiQC - Run MultiQC for report and QC [Stable]
+- RunBcftoolsStats - Run BCFTools stats on vcf files [Working]
 
 ## Annotation:
 
