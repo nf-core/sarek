@@ -1011,6 +1011,10 @@ process RunAscat {
   ascat.plotSegmentedData(ascat.bc)
   #Run ASCAT to fit every tumor to a model, inferring ploidy, normal cell contamination, and discrete copy numbers
   ascat.output <- ascat.runAscat(ascat.bc)
+  write.table(ascat.output$segments, file="tumor.segments.txt", sep="\t", quote=F, row.names=F)
+  write.table(ascat.output$aberrantcellfraction, file="tumor.acf.txt", sep="\t", quote=F, row.names=F)
+  write.table(ascat.output$ploidy, file="tumor.ploidy.txt", sep="\t", quote=F, row.names=F)
+
   #str(ascat.output)
   #plot(sort(ascat.output\$aberrantcellfraction))
   #plot(density(ascat.output\$ploidy))
