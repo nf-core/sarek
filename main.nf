@@ -1016,25 +1016,6 @@ process RunAscat {
 
 verbose ? ascatOutput = ascatOutput.view {"Ascat output: $it"} : ''
 
-// process RunBcftoolsStats {
-//   tag {idPatient + "-" + idSample}
-//
-//   publishDir directoryMap.samtoolsStats, mode: 'copy'
-//
-//   input:
-//     set idPatient, gender, status, idSample, file(vcf) from ???
-//
-//   output:
-//     file ("${vcf}.samtools.stats.out") into snpeffReport
-//
-//     when: 'MultiQC' in tools
-//
-//     script:
-//     """
-//     bcfools stats $vcf > ${vcf}.bcf.tools.stats.out
-//     """
-// }
-
 // process MergeVCF {
 //   tag {idPatient + "-" + idSample}
 //
@@ -1089,7 +1070,29 @@ vcfMerged = vcfMerged.mix(strelkaAllIndels, strelkaAllSNVS, strelkaPAssedIndels,
 verbose ? vcfMerged = vcfMerged.view {"VCF for Annotation: $it"} : ''
 
 vcfForSnpeff = Channel.create()
+vcfForBCF = Channel.create()
 vcfForVep = Channel.create()
+
+(vcfForBCF, vcfMerged) = vcfMerged.into(2)
+
+process RunBcftoolsStats {
+  tag {idPatient + "-" + idSample}
+
+  publishDir directoryMap.bcftoolsStats, mode: 'copy'
+
+  input:
+  set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file(vcf) from vcfForBCF
+
+  output:
+    file ("${vcf.baseName}.bcf.tools.stats.out") into bcfReport
+
+    when: 'MultiQC' in tools
+
+    script:
+    """
+    bcftools stats $vcf > ${vcf.baseName}.bcf.tools.stats.out
+    """
+}
 
 (vcfForSnpeff, vcfForVep) = vcfMerged.into(2)
 
@@ -1190,7 +1193,8 @@ process GenerateMultiQCconfig {
 verbose ? multiQCconfig = multiQCconfig.view {"MultiQC config file: $it"} : ''
 
 reportsForMultiQC = Channel.fromPath( 'Reports/{FastQC,MarkDuplicates,SamToolsStats}/*' )
-  .mix(fastQCreport,
+  .mix(bcfReport,
+    fastQCreport,
     markDuplicatesReport,
     multiQCconfig,
     recalibratedBamReport,
@@ -1342,6 +1346,7 @@ def defineDirectoryMap() {
     'nonRealigned'     : 'Preprocessing/NonRealigned',
     'nonRecalibrated'  : 'Preprocessing/NonRecalibrated',
     'recalibrated'     : 'Preprocessing/Recalibrated',
+    'bcftoolsStats'    : 'Reports/BCFToolsStats',
     'fastQC'           : 'Reports/FastQC',
     'markDuplicatesQC' : 'Reports/MarkDuplicates',
     'multiQC'          : 'Reports/MultiQC',
