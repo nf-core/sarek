@@ -1082,17 +1082,17 @@ process RunBcftoolsStats {
   publishDir directoryMap.bcftoolsStats, mode: 'copy'
 
   input:
-  set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file(vcf) from vcfForBCF
+    set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file(vcf) from vcfForBCF
 
   output:
     file ("${vcf.baseName}.bcf.tools.stats.out") into bcfReport
 
-    when: 'MultiQC' in tools
+  when: 'MultiQC' in tools
 
-    script:
-    """
-    bcftools stats $vcf > ${vcf.baseName}.bcf.tools.stats.out
-    """
+  script:
+  """
+  bcftools stats $vcf > ${vcf.baseName}.bcf.tools.stats.out
+  """
 }
 
 (vcfForSnpeff, vcfForVep) = vcfMerged.into(2)
