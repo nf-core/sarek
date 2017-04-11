@@ -968,7 +968,7 @@ process RunAscat {
     set idPatient, gender, idSampleNormal, idSampleTumor, file(bafNormal), file(logrNormal), file(bafTumor), file(logrTumor) from convertAlleleCountsOutput
 
   output:
-    set val("ascat"), idPatient, gender, idSampleNormal, idSampleTumor, file("${idSampleTumor}.tumour.png"), file("${idSampleTumor}.germline.png"), file("${idSampleTumor}.LogR.PCFed.txt"), file("${idSampleTumor}.BAF.PCFed.txt"), file("${idSampleTumor}.ASPCF.png"), file("${idSampleTumor}.ASCATprofile.png"), file("${idSampleTumor}.aberrationreliability.png"), file("${idSampleTumor}.rawprofile.png"), file("${idSampleTumor}.sunrise.png") into ascatOutput
+    set val("ascat"), idPatient, gender, idSampleNormal, idSampleTumor, file("${idSampleTumor}.tumour.png"), file("${idSampleTumor}.germline.png"), file("${idSampleTumor}.LogR.PCFed.txt"), file("${idSampleTumor}.BAF.PCFed.txt"), file("${idSampleTumor}.ASPCF.png"), file("${idSampleTumor}.ASCATprofile.png"), file("${idSampleTumor}.aberrationreliability.png"), file("${idSampleTumor}.rawprofile.png"), file("${idSampleTumor}.sunrise.png, file("${idSampleTumor}.segments.txt") into ascatOutput
 
   when: 'Ascat' in tools
 
@@ -1001,6 +1001,7 @@ process RunAscat {
   tumorlogr = "$logrTumor"
   normalbaf = "$bafNormal"
   normallogr = "$logrNormal"
+  tsf = "${idSampleTumor}.segments.txt"
   #Load the  data
   ascat.bc <- ascat.loadData(Tumor_LogR_file=tumorlogr, Tumor_BAF_file=tumorbaf, Germline_LogR_file=normallogr, Germline_BAF_file=normalbaf)
   #Plot the raw data
@@ -1011,13 +1012,7 @@ process RunAscat {
   ascat.plotSegmentedData(ascat.bc)
   #Run ASCAT to fit every tumor to a model, inferring ploidy, normal cell contamination, and discrete copy numbers
   ascat.output <- ascat.runAscat(ascat.bc)
-  write.table(ascat.output$segments, file="tumor.segments.txt", sep="\t", quote=F, row.names=F)
-  write.table(ascat.output$aberrantcellfraction, file="tumor.acf.txt", sep="\t", quote=F, row.names=F)
-  write.table(ascat.output$ploidy, file="tumor.ploidy.txt", sep="\t", quote=F, row.names=F)
-
-  #str(ascat.output)
-  #plot(sort(ascat.output\$aberrantcellfraction))
-  #plot(density(ascat.output\$ploidy))
+  write.table(ascat.output$segments, file=tsf, sep="\t", quote=F, row.names=F)
   """
 }
 
