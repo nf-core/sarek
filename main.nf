@@ -64,11 +64,11 @@ if (!isAllowedParams(params)) {exit 1, "params is unknown, see --help for more i
 if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
 
 if (params.help) {
-  help_message(version, grabRevision())
+  helpMessage(version, grabRevision())
   exit 1
 }
 if (params.version) {
-  version_message(version, grabRevision())
+  versionMessage(version, grabRevision())
   exit 1
 }
 
@@ -123,7 +123,7 @@ if (tsvPath) {
 }
 verbose ? fastqFiles = fastqFiles.view {"FASTQ files to preprocess: $it"} : ''
 verbose ? bamFiles = bamFiles.view {"BAM files to process: $it"} : ''
-start_message(version, grabRevision())
+startMessage(version, grabRevision())
 
 /*
 ================================================================================
@@ -1554,10 +1554,18 @@ def grabRevision() {
   return workflow.revision ?: workflow.scriptId.substring(0,10)
 }
 
-def help_message(version, revision) { // Display help message
+def helpMessage(version, revision) { // Display help message
   log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
   log.info "    Usage:"
-  log.info "       nextflow run SciLifeLab/CAW --sample <sample.tsv> [--step STEP] [--tools TOOL[,TOOL]]"
+  log.info "       nextflow run SciLifeLab/CAW --sample <file.tsv> [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
+  log.info "       nextflow run SciLifeLab/CAW --sampleDir <Directory> [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
+  log.info "       nextflow run SciLifeLab/CAW --test [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
+  log.info "    --sample <file.tsv>"
+  log.info "       Specify a TSV file containing paths to sample files."
+  log.info "    --sampleDir <Directoy>"
+  log.info "       Specify a directory containing sample files."
+  log.info "    --test"
+  log.info "       Use a test sample."
   log.info "    --step"
   log.info "       Option to configure preprocessing."
   log.info "       Possible values are:"
@@ -1579,17 +1587,18 @@ def help_message(version, revision) { // Display help message
   log.info "         Ascat (use Ascat for CNV)"
   log.info "         snpEff (use snpEff for Annotation of Variants)"
   log.info "         VEP (use VEP for Annotation of Variants)"
+  log.info "    --genome <Genome>"
+  log.info "       Use a specific genome version."
+  log.info "       Possible values are:"
+  log.info "         GRCh37 (Default)"
+  log.info "         GRCh38"
+  log.info "         smallGRCh37 (Use a small reference (Tests only))"
   log.info "    --help"
   log.info "       you're reading it"
   log.info "    --verbose"
   log.info "       Adds more verbosity to workflow"
   log.info "    --version"
   log.info "       displays version number"
-  log.info "    Test:"
-  log.info "      to test CAW on smaller dataset, enter one of the following command"
-  log.info "    nextflow run SciLifeLab/CAW --test"
-  log.info "       use data/tsv/tiny.tsv and tiny.list for intervals"
-  log.info "       specify wich step and tools as usual"
 }
 
 def isAllowedParams(params) {
@@ -1613,7 +1622,7 @@ def retrieveStatus(bamChannel) {
   }
 }
 
-def start_message(version, revision) { // Display start message
+def startMessage(version, revision) { // Display start message
   log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
   log.info "Command Line: $workflow.commandLine"
   log.info "Project Dir : $workflow.projectDir"
@@ -1624,7 +1633,7 @@ def start_message(version, revision) { // Display start message
   if (tools) {log.info "Tools       : " + tools.join(', ')}
 }
 
-def version_message(version, revision) { // Display version message
+def versionMessage(version, revision) { // Display version message
   log.info "CANCER ANALYSIS WORKFLOW"
   log.info "  version   : $version"
   log.info workflow.commitId ? "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]" : "  revision  : $revision"
