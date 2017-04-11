@@ -1001,7 +1001,7 @@ process RunAscat {
   tumorlogr = "$logrTumor"
   normalbaf = "$bafNormal"
   normallogr = "$logrNormal"
-  tsf = "${idSampleTumor}.segments.txt"
+  tumorsample = "$idSampleTumor"
   #Load the  data
   ascat.bc <- ascat.loadData(Tumor_LogR_file=tumorlogr, Tumor_BAF_file=tumorbaf, Germline_LogR_file=normallogr, Germline_BAF_file=normalbaf)
   #Plot the raw data
@@ -1012,7 +1012,7 @@ process RunAscat {
   ascat.plotSegmentedData(ascat.bc)
   #Run ASCAT to fit every tumor to a model, inferring ploidy, normal cell contamination, and discrete copy numbers
   ascat.output <- ascat.runAscat(ascat.bc)
-  write.table(ascat.output$segments, file=tsf, sep="\t", quote=F, row.names=F)
+  write.table(ascat.output$segments, file=paste(tumorsample,".segments.txt",sep=""), sep="\t", quote=F, row.names=F)
   """
 }
 
