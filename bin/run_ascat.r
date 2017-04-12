@@ -39,4 +39,4 @@ ascat.plotSegmentedData(ascat.bc)
 ascat.output <- ascat.runAscat(ascat.bc)
 
 #Write out segmented regions
-write.table(ascat.output$segments, file=paste(tumorname, "tumor.segments.txt", sep=""), sep="\t", quote=F, row.names=F)
+write.table(ascat.output$segments, file=paste(tumorname, ".segments.txt", sep=""), sep="\t", quote=F, row.names=F)
