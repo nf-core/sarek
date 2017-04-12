@@ -12,7 +12,7 @@ if(length(args)<6){
 
 }
 
-.libPaths( ( paste(baseDir,"/scripts", sep=""), .libPaths() ) )
+.libPaths((paste(baseDir,"/scripts", sep="") .libPaths()))
 source(paste(baseDir,"/scripts/ascat.R", sep=""))
 
 if(!require(RColorBrewer)){
