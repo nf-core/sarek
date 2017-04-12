@@ -12,7 +12,6 @@ if(length(args)<6){
 
 }
 
-#.libPaths((paste(baseDir,"/scripts", sep="") .libPaths()))
 source(paste(baseDir,"/scripts/ascat.R", sep=""))
 
 if(!require(RColorBrewer)){
@@ -21,7 +20,6 @@ if(!require(RColorBrewer)){
     library(RColorBrewer)
 }
 options(bitmapType='cairo')
-
 
 #Load the  data
 ascat.bc <- ascat.loadData(Tumor_LogR_file=tumorlogr, Tumor_BAF_file=tumorbaf, Germline_LogR_file=normallogr, Germline_BAF_file=normalbaf)
@@ -40,3 +38,10 @@ ascat.output <- ascat.runAscat(ascat.bc)
 
 #Write out segmented regions
 write.table(ascat.output$segments, file=paste(tumorname, ".segments.txt", sep=""), sep="\t", quote=F, row.names=F)
+
+#Write out purity and ploidy info
+summary <- matrix(c(ascat.output$aberrantcellfraction, ascat.output$ploidy), ncol=2, byrow=TRUE)
+colnames(summary) <- c("AberrantCellFraction","Ploidy")
+write.table(summary, file=paste(tumorname,".PurityPloidy.txt",sep=""), sep="\t", quote=F, row.names=F, col.names=T)
+
+
