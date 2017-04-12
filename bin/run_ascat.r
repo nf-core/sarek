@@ -42,6 +42,6 @@ write.table(ascat.output$segments, file=paste(tumorname, ".segments.txt", sep=""
 #Write out purity and ploidy info
 summary <- matrix(c(ascat.output$aberrantcellfraction, ascat.output$ploidy), ncol=2, byrow=TRUE)
 colnames(summary) <- c("AberrantCellFraction","Ploidy")
-write.table(summary, file=paste(tumorname,".PurityPloidy.txt",sep=""), sep="\t", quote=F, row.names=F, col.names=T)
+write.table(summary, file=paste(tumorname,".purityploidy.txt",sep=""), sep="\t", quote=F, row.names=F, col.names=T)
 
 
