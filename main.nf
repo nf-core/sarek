@@ -974,7 +974,7 @@ process RunAscat {
 
   script:
   """
-  run_ascat.r $bafTumor $logrTumor $bafNormal $logrNormal $idSampleTumor
+  run_ascat.r $bafTumor $logrTumor $bafNormal $logrNormal $idSampleTumor $baseDir
   """
 }
 

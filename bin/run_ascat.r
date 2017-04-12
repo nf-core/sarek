@@ -1,7 +1,20 @@
 #!/bin/env Rscript
-source("$baseDir/scripts/ascat.R")
 args = commandArgs(trailingOnly=TRUE)
-.libPaths( c( "$baseDir/scripts", .libPaths() ) )
+if(length(args)<6){
+    stop("No input files supplied\n\nUsage:\nRscript run_ascat.r tumor_baf tumor_logr normal_baf normal_logr tumor_sample_name baseDir\n\n")
+} else{
+    tumorbaf = args[1]
+    tumorlogr = args[2]
+    normalbaf = args[3]
+    normallogr = args[4]
+    tumorname = args[5]
+    baseDir = args[6]
+
+}
+
+.libPaths( ( paste(baseDir,"/scripts", sep=""), .libPaths() ) )
+source(paste(baseDir,"/scripts/ascat.R", sep=""))
+
 if(!require(RColorBrewer)){
     source("http://bioconductor.org/biocLite.R")
     biocLite("RColorBrewer", suppressUpdates=TRUE, lib="$baseDir/scripts")
@@ -9,18 +22,6 @@ if(!require(RColorBrewer)){
 }
 options(bitmapType='cairo')
 
-
-##args is now a list of character vectors
-## First check to see if arguments are passed.
-if(length(args)<5){
-    stop("No input files supplied\n\nUsage:\nRscript run_ascat.r tumor_baf tumor_logr normal_baf normal_logr tumor_sample_name\n\n")
-} else{
-    tumorbaf = args[1]
-    tumorlogr = args[2]
-    normalbaf = args[3]
-    normallogr = args[4]
-    tumorname = args[5]
-}
 
 #Load the  data
 ascat.bc <- ascat.loadData(Tumor_LogR_file=tumorlogr, Tumor_BAF_file=tumorbaf, Germline_LogR_file=normallogr, Germline_BAF_file=normalbaf)
