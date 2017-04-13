@@ -36,8 +36,12 @@ ascat.plotSegmentedData(ascat.bc)
 #Run ASCAT to fit every tumor to a model, inferring ploidy, normal cell contamination, and discrete copy numbers
 ascat.output <- ascat.runAscat(ascat.bc)
 
-#Write out segmented regions
-write.table(ascat.output$segments, file=paste(tumorname, ".segments.txt", sep=""), sep="\t", quote=F, row.names=F)
+#Write out segmented regions (including regions with one copy of each allele)
+#write.table(ascat.output$segments, file=paste(tumorname, ".segments.txt", sep=""), sep="\t", quote=F, row.names=F)
+
+#Write out CNVs in bed format
+cnvs=ascat.output$segments[ascat.output$segments[,"nMajor"]!=1 | ascat.output$segments[,"nMinor"]!=1,2:6]
+write.table(cnvs, file=paste(samplename,".cnvs.bed",sep=""), sep="\t", quote=F, row.names=F, col.names=F)
 
 #Write out purity and ploidy info
 summary <- matrix(c(ascat.output$aberrantcellfraction, ascat.output$ploidy), ncol=2, byrow=TRUE)
