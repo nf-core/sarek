@@ -41,7 +41,7 @@ ascat.output <- ascat.runAscat(ascat.bc)
 
 #Write out CNVs in bed format
 cnvs=ascat.output$segments[ascat.output$segments[,"nMajor"]!=1 | ascat.output$segments[,"nMinor"]!=1,2:6]
-write.table(cnvs, file=paste(samplename,".cnvs.bed",sep=""), sep="\t", quote=F, row.names=F, col.names=T)
+write.table(cnvs, file=paste(samplename,".cnvs.txt",sep=""), sep="\t", quote=F, row.names=F, col.names=T)
 
 #Write out purity and ploidy info
 summary <- matrix(c(ascat.output$aberrantcellfraction, ascat.output$ploidy), ncol=2, byrow=TRUE)
