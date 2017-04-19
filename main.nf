@@ -62,16 +62,17 @@ version = '1.1'
 
 if (!isAllowedParams(params)) {exit 1, "params is unknown, see --help for more information"}
 
-if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
-
 if (params.help) {
   helpMessage(version, grabRevision())
   exit 1
 }
+
 if (params.version) {
   versionMessage(version, grabRevision())
   exit 1
 }
+
+if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
 
 step = params.step
 tools = params.tools ? params.tools.split(',').collect {it.trim()} : []
