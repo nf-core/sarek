@@ -1212,12 +1212,13 @@ process GenerateMultiQCconfig {
   echo "- 'samtools'" >> multiqc_config.yaml
   echo "- 'qualimap'" >> multiqc_config.yaml
   echo "- 'snpeff'" >> multiqc_config.yaml
+  echo "- 'vep'" >> multiqc_config.yaml
   """
 }
 
 verbose ? multiQCconfig = multiQCconfig.view {"MultiQC config file: $it"} : ''
 
-reportsForMultiQC = Channel.fromPath( 'Reports/{FastQC,MarkDuplicates,SamToolsStats}/*' )
+reportsForMultiQC = Channel.fromPath( 'Reports/{bamQC,BCFToolsStats,FastQC,MarkDuplicates,SamToolsStats}/*' )
   .mix(
     bamQCreport,
     bcfReport,
