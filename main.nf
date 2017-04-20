@@ -1214,17 +1214,6 @@ process GenerateMultiQCconfig {
   echo "- 'snpeff'" >> multiqc_config.yaml
   """
 }
-// echo "qualimap_config:" >> multiqc_config.yaml
-// echo "general_stats_coverage:" >> multiqc_config.yaml
-// echo "- 10" >> multiqc_config.yaml
-// echo "- 20" >> multiqc_config.yaml
-// echo "- 40" >> multiqc_config.yaml
-// echo "- 200" >> multiqc_config.yaml
-// echo "- 30000" >> multiqc_config.yaml
-// echo "general_stats_coverage_hidden:" >> multiqc_config.yaml
-// echo "- 10" >> multiqc_config.yaml
-// echo "- 20" >> multiqc_config.yaml
-// echo "- 200" >> multiqc_config.yaml
 
 verbose ? multiQCconfig = multiQCconfig.view {"MultiQC config file: $it"} : ''
 
