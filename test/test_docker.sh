@@ -23,6 +23,10 @@ echo "Starting Nextflow... Command:"
 echo "./nextflow run . -profile testing --test --step recalibrate"
 echo "-----"
 ./nextflow run . -profile testing --test --step recalibrate
+echo "Cleaning up:"
+echo "rm -rf Reports"
+echo "-----"
+rm -rf Reports
 echo "Starting Nextflow... Command:"
 echo "./nextflow run . -profile testing --test --step skipPreprocessing --tools HaplotypeCaller,MultiQC,MuTect1,MuTect2,Strelka,snpEff,VEP,VarDict"
 echo "-----"
