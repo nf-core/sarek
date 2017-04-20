@@ -139,7 +139,7 @@ verbose ? fastqFilesforFastQC = fastqFilesforFastQC.view {"FASTQ files for FastQ
 process RunFastQC {
   tag {idPatient + "-" + idRun}
 
-  publishDir directoryMap.fastQC, mode: 'copy'
+  publishDir "$directoryMap.fastQC/$idRun", mode: 'copy'
 
   input:
     set idPatient, gender, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFilesforFastQC
@@ -460,7 +460,7 @@ recalibratedBam = step == 'skipPreprocessing' ? bamFiles : recalibratedBam
 
 verbose ? recalibratedBam = recalibratedBam.view {"Recalibrated BAM for variant Calling: $it"} : ''
 
-(recalibratedBam, recalibratedBamForStats) = recalibratedBam.into(2)
+(recalibratedBam, recalibratedBamForSamToolsStats, recalibratedBamForBamQC) = recalibratedBam.into(3)
 
 process RunSamtoolsStats {
   tag {idPatient + "-" + idSample}
@@ -468,10 +468,10 @@ process RunSamtoolsStats {
   publishDir directoryMap.samtoolsStats, mode: 'copy'
 
   input:
-    set idPatient, gender, status, idSample, file(bam), file(bai) from recalibratedBamForStats
+    set idPatient, gender, status, idSample, file(bam), file(bai) from recalibratedBamForSamToolsStats
 
   output:
-    file ("${bam}.samtools.stats.out") into recalibratedBamReport
+    file ("${bam}.samtools.stats.out") into samtoolsStatsReport
 
     when: 'MultiQC' in tools
 
@@ -481,7 +481,30 @@ process RunSamtoolsStats {
     """
 }
 
-verbose ? recalibratedBamReport = recalibratedBamReport.view {"BAM Stats: $it"} : ''
+verbose ? samtoolsStatsReport = samtoolsStatsReport.view {"BAM Stats: $it"} : ''
+
+process RunBamQC {
+  tag {idPatient + "-" + idSample}
+
+  publishDir "$directoryMap.bamQC/$idSample", mode: 'copy'
+
+  input:
+    set idPatient, gender, status, idSample, file(bam), file(bai) from recalibratedBamForBamQC
+
+  output:
+    file("*.txt") into bamQCreport
+
+    when: 'MultiQC' in tools
+
+    script:
+    """
+    qualimap bamqc -bam $bam -outdir bamQC
+    mv bamQC/* .
+    mv raw_data_qualimapReport/* .
+    """
+}
+
+verbose ? bamQCreport = bamQCreport.view {"BAM Stats: $it"} : ''
 
 // Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
 // The sample tsv config file which is formatted like: "subject status sample lane fastq1 fastq2"
@@ -1187,23 +1210,35 @@ process GenerateMultiQCconfig {
   echo "- 'fastqc'" >> multiqc_config.yaml
   echo "- 'picard'" >> multiqc_config.yaml
   echo "- 'samtools'" >> multiqc_config.yaml
+  echo "- 'qualimap'" >> multiqc_config.yaml
   echo "- 'snpeff'" >> multiqc_config.yaml
   """
 }
+// echo "qualimap_config:" >> multiqc_config.yaml
+// echo "general_stats_coverage:" >> multiqc_config.yaml
+// echo "- 10" >> multiqc_config.yaml
+// echo "- 20" >> multiqc_config.yaml
+// echo "- 40" >> multiqc_config.yaml
+// echo "- 200" >> multiqc_config.yaml
+// echo "- 30000" >> multiqc_config.yaml
+// echo "general_stats_coverage_hidden:" >> multiqc_config.yaml
+// echo "- 10" >> multiqc_config.yaml
+// echo "- 20" >> multiqc_config.yaml
+// echo "- 200" >> multiqc_config.yaml
 
 verbose ? multiQCconfig = multiQCconfig.view {"MultiQC config file: $it"} : ''
 
 reportsForMultiQC = Channel.fromPath( 'Reports/{FastQC,MarkDuplicates,SamToolsStats}/*' )
-  .mix(bcfReport,
+  .mix(
+    bamQCreport,
+    bcfReport,
     fastQCreport,
     markDuplicatesReport,
     multiQCconfig,
-    recalibratedBamReport,
+    samtoolsStatsReport,
     snpeffReport,
-    vepReport)
-  .flatten()
-  .unique()
-  .toList()
+    vepReport
+  ).flatten().unique().toList()
 
 verbose ? reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"} : ''
 
@@ -1344,9 +1379,12 @@ def checkExactlyOne(list) {
 
 def defineDirectoryMap() {
   return [
+    'snpeff'           : 'Annotation/SnpEff',
+    'vep'              : 'Annotation/VEP',
     'nonRealigned'     : 'Preprocessing/NonRealigned',
     'nonRecalibrated'  : 'Preprocessing/NonRecalibrated',
     'recalibrated'     : 'Preprocessing/Recalibrated',
+    'bamQC'            : 'Reports/bamQC',
     'bcftoolsStats'    : 'Reports/BCFToolsStats',
     'fastQC'           : 'Reports/FastQC',
     'markDuplicatesQC' : 'Reports/MarkDuplicates',
@@ -1359,9 +1397,7 @@ def defineDirectoryMap() {
     'mutect1'          : 'VariantCalling/MuTect1',
     'mutect2'          : 'VariantCalling/MuTect2',
     'strelka'          : 'VariantCalling/Strelka',
-    'vardict'          : 'VariantCalling/VarDict',
-    'snpeff'           : 'Annotation/SnpEff',
-    'vep'              : 'Annotation/VEP'
+    'vardict'          : 'VariantCalling/VarDict'
   ]
 }
 
