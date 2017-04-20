@@ -494,7 +494,7 @@ process RunBamQC {
   output:
     file("*.txt") into bamQCreport
 
-    when: 'MultiQC' in tools
+    when: 'MultiQC' in tools && 'bamQC' in tools
 
     script:
     """
@@ -1426,6 +1426,7 @@ def defineStepList() {
 def defineToolList() {
   return [
     'Ascat',
+    'bamQC',
     'FreeBayes',
     'HaplotypeCaller',
     'Manta',
