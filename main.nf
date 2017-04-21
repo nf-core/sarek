@@ -75,7 +75,7 @@ if (params.version) {
 if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
 
 step = params.step
-tools = params.tools ? params.tools.split(',').collect {it.trim()} : []
+tools = params.tools ? params.tools.split(',').collect {it.trim().toLowerCase()} : []
 
 directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
@@ -148,7 +148,7 @@ process RunFastQC {
   output:
     file "*_fastqc.{zip,html}" into fastQCreport
 
-  when: step == 'preprocessing' && 'MultiQC' in tools
+  when: step == 'preprocessing' && 'multiqc' in tools
 
   script:
   """
@@ -474,7 +474,7 @@ process RunSamtoolsStats {
   output:
     file ("${bam}.samtools.stats.out") into recalibratedBamReport
 
-    when: 'MultiQC' in tools
+    when: 'multiqc' in tools
 
     script:
     """
@@ -584,7 +584,7 @@ process RunHaplotypecaller {
   output:
     set val("haplotypecaller"), idPatient, gender, idSample, val("${gen_int}_${idSample}"), file("${gen_int}_${idSample}.g.vcf") into hcVCF
 
-  when: 'HaplotypeCaller' in tools
+  when: 'haplotypecaller' in tools
 
   script:
   """
@@ -627,7 +627,7 @@ process RunMutect1 {
   output:
     set val("mutect1"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect1Output
 
-  when: 'MuTect1' in tools
+  when: 'mutect1' in tools
 
   script:
   """
@@ -667,7 +667,7 @@ process RunMutect2 {
   output:
     set val("mutect2"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2Output
 
-  when: 'MuTect2' in tools
+  when: 'mutect2' in tools
 
   script:
   """
@@ -698,7 +698,7 @@ process RunFreeBayes {
   output:
     set val("freebayes"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into freebayesOutput
 
-  when: 'FreeBayes' in tools
+  when: 'freebayes' in tools
 
   script:
   """
@@ -735,7 +735,7 @@ process RunVardict {
   output:
     set val("vardict"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.out") into vardictOutput
 
-  when: 'VarDict' in tools
+  when: 'vardict' in tools
 
   script:
   """
@@ -774,7 +774,7 @@ process ConcatVCF {
   output:
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file("*.vcf.gz") into vcfConcatenated
 
-  when: 'HaplotypeCaller' in tools || 'MuTect1' in tools || 'MuTect2' in tools || 'FreeBayes' in tools || 'VarDict' in tools
+  when: 'haplotypecaller' in tools || 'mutect1' in tools || 'mutect2' in tools || 'freebayes' in tools || 'vardict' in tools
 
   script:
   outputFile = variantCaller == 'haplotypecaller' ? "${variantCaller}_${idSampleNormal}.vcf" : "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
@@ -829,7 +829,7 @@ process RunStrelka {
   output:
     set val("strelka"), idPatient, gender, idSampleNormal, idSampleTumor, file("*.vcf") into strelkaOutput
 
-  when: 'Strelka' in tools
+  when: 'strelka' in tools
 
   script:
   """
@@ -873,7 +873,7 @@ process RunManta {
   output:
     set val("manta"), idPatient, gender, idSampleNormal, idSampleTumor, file("Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf"),file("Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf"),file("Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf"),file("Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf") into mantaOutput
 
-  when: 'Manta' in tools
+  when: 'manta' in tools
 
   script:
   """
@@ -910,7 +910,7 @@ process RunAlleleCount {
   output:
     set idPatient, gender, status, idSample, file("${idSample}.alleleCount") into alleleCountOutput
 
-  when: 'Ascat' in tools
+  when: 'ascat' in tools
 
   script:
   """
@@ -948,7 +948,7 @@ process RunConvertAlleleCounts {
   output:
     set idPatient, gender, idSampleNormal, idSampleTumor, file("${idSampleNormal}.BAF"), file("${idSampleNormal}.LogR"), file("${idSampleTumor}.BAF"), file("${idSampleTumor}.LogR") into convertAlleleCountsOutput
 
-  when: 'Ascat' in tools
+  when: 'ascat' in tools
 
   script:
   """
@@ -969,7 +969,7 @@ process RunAscat {
   output:
     set val("ascat"), idPatient, gender, idSampleNormal, idSampleTumor, file("${idSampleTumor}.tumour.png"), file("${idSampleTumor}.germline.png"), file("${idSampleTumor}.LogR.PCFed.txt"), file("${idSampleTumor}.BAF.PCFed.txt"), file("${idSampleTumor}.ASPCF.png"), file("${idSampleTumor}.ASCATprofile.png"), file("${idSampleTumor}.aberrationreliability.png"), file("${idSampleTumor}.rawprofile.png"), file("${idSampleTumor}.sunrise.png"), file("${idSampleTumor}.cnvs.txt"),file("${idSampleTumor}.purityploidy.txt") into ascatOutput
 
-  when: 'Ascat' in tools
+  when: 'ascat' in tools
 
   script:
   """
@@ -988,7 +988,7 @@ verbose ? ascatOutput = ascatOutput.view {"Ascat output: $it"} : ''
 //   output:
 //     set idPatient, gender, status, idSample, file ("???") into vcfMerged
 //
-//     'MuTect1' in tools || 'MuTect2' in tools
+//     'mutect1' in tools || 'mutect2' in tools
 //
 //     script:
 //     """
@@ -1049,7 +1049,7 @@ process RunBcftoolsStats {
   output:
     file ("${vcf.baseName}.bcf.tools.stats.out") into bcfReport
 
-  when: 'MultiQC' in tools
+  when: 'multiqc' in tools
 
   script:
   """
@@ -1071,7 +1071,7 @@ process RunSnpeff {
   output:
     set file("${vcf.baseName}.ann.vcf"), file("${vcf.baseName}_snpEff_genes.txt"), file("${vcf.baseName}_snpEff.csv"), file("${vcf.baseName}_snpEff_summary.html") into snpeffReport
 
-  when: 'snpEff' in tools
+  when: 'snpeff' in tools
 
   script:
   """
@@ -1101,7 +1101,7 @@ process RunVEP {
   output:
     set file("${vcf.baseName}_VEP.txt"), file("${vcf.baseName}_VEP.txt_summary.html") into vepReport
 
-  when: 'VEP' in tools && variantCaller != 'strelka'
+  when: 'vep' in tools && variantCaller != 'strelka'
 
   script:
   if (workflow.profile == 'testing' || workflow.profile == 'docker')
@@ -1128,7 +1128,7 @@ process GenerateMultiQCconfig {
   output:
   file("multiqc_config.yaml") into multiQCconfig
 
-  when: 'MultiQC' in tools
+  when: 'multiqc' in tools
 
   script:
   """
@@ -1180,7 +1180,7 @@ process RunMultiQC {
   output:
     set file("*multiqc_report.html"), file("*multiqc_data") into multiQCReport
 
-    when: 'MultiQC' in tools
+    when: 'multiqc' in tools
 
   script:
   """
@@ -1362,17 +1362,17 @@ def defineStepList() {
 
 def defineToolList() {
   return [
-    'Ascat',
-    'FreeBayes',
-    'HaplotypeCaller',
-    'Manta',
-    'MultiQC',
-    'MuTect1',
-    'MuTect2',
-    'snpEff',
-    'Strelka',
-    'VarDict',
-    'VEP'
+    'ascat',
+    'freebayes',
+    'haplotypecaller',
+    'manta',
+    'multiqc',
+    'mutect1',
+    'mutect2',
+    'snpeff',
+    'strelka',
+    'vardict',
+    'vep'
   ]
 }
 
