@@ -40,17 +40,31 @@ if (download && params.refDir != "" ) { exit 1, "No need to specify --refDir"}
 
 if (params.genome == "smallGRCh37") {
   referencesFiles =
-    Channel.from([
+    [
       '1000G_phase1.indels.b37.small.vcf.gz',
       '1000G_phase3_20130502_SNP_maf0.3.small.loci',
-      'b37_cosmic_v54_120711.small.vcf.gz',
       'b37_cosmic_v74.noCHR.sort.4.1.small.vcf.gz',
       'dbsnp_138.b37.small.vcf.gz',
       'human_g1k_v37_decoy.small.fasta.gz',
       'Mills_and_1000G_gold_standard.indels.b37.small.vcf.gz',
       'small.intervals'
-    ])
+    ]
+} else if (params.genome == "GRCh37") {
+  referencesFiles =
+    [
+      '1000G_phase1.indels.b37.vcf.gz',
+      '1000G_phase3_20130502_SNP_maf0.3.loci.tar.bz2',
+      'b37_cosmic_v74.noCHR.sort.4.1.vcf.tar.bz2',
+      'dbsnp_138.b37.vcf.gz',
+      'human_g1k_v37_decoy.fasta.gz',
+      'Mills_and_1000G_gold_standard.indels.b37.vcf.gz',
+      'centromeres.list'
+    ]
 } else {exit 1, "Can't build this reference genome"}
+
+if (download && params.genome != "smallGRCh37") {exit 1, "Not possible to download $params.genome references files"}
+
+if (!download) {referencesFiles.each{checkFile(params.refDir + "/" + it)}}
 
 process ProcessReference {
   tag download ? {"Download: " + reference} : {"Link: " + reference}
@@ -76,36 +90,48 @@ process ProcessReference {
   """
 }
 
-gzFiles = Channel.create()
-notGZfiles = Channel.create()
+compressedfiles = Channel.create()
+notCompressedfiles = Channel.create()
 
 processedFiles
-  .choice(gzFiles, notGZfiles) {it =~ ".gz" ? 0 : 1}
-
-notGZfiles.collectFile(storeDir: "References/" + params.genome)
+  .choice(compressedfiles, notCompressedfiles) {it =~ ".(gz|tar.bz2)" ? 0 : 1}
 
 process DecompressFile {
   tag {reference}
 
   input:
-    file(reference) from gzFiles
+    file(reference) from compressedfiles
 
   output:
-    file("*.{vcf,fasta}") into decompressedFiles
+    file("*.{vcf,fasta,loci}") into decompressedFiles
 
   script:
-
-  """
-  set -euo pipefail
-  realReference=`readlink $reference`
-  gzip -d -c \$realReference > $reference.baseName
-  """
+   if (reference =~ ".gz")
+     """
+     set -euo pipefail
+     realReference=`readlink $reference`
+     gzip -d -c \$realReference > $reference.baseName
+     """
+   else if (reference =~ ".tar.bz2")
+     """
+     set -euo pipefail
+     realReference=`readlink $reference`
+     tar xvjf \$realReference
+     """
 }
 
 fastaFile = Channel.create()
+otherFiles = Channel.create()
 vcfFiles = Channel.create()
+
 decompressedFiles
-  .choice(fastaFile, vcfFiles) {it =~ ".fasta" ? 0 : 1}
+  .choice(fastaFile, vcfFiles, otherFiles) {
+    it =~ ".fasta" ? 0 :
+    it =~ ".vcf" ? 1 : 2}
+
+notCompressedfiles
+  .mix(otherFiles)
+  .collectFile(storeDir: "References/" + params.genome)
 
 fastaForBWA = Channel.create()
 fastaForPicard = Channel.create()
@@ -188,4 +214,19 @@ process BuildVCFIndex {
   set -euo pipefail
   \$IGVTOOLS_HOME/igvtools index $reference
   """
+}
+
+/*
+================================================================================
+=                               F U N C T I O N S                              =
+================================================================================
+*/
+
+def checkFile(it) {
+  // Check file existence
+  final f = file(it)
+  if (!f.exists()) {
+    exit 1, "Missing file: $it, see --help for more information"
+  }
+  return true
 }

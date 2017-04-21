@@ -62,19 +62,20 @@ version = '1.1'
 
 if (!isAllowedParams(params)) {exit 1, "params is unknown, see --help for more information"}
 
-if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
-
 if (params.help) {
   helpMessage(version, grabRevision())
   exit 1
 }
+
 if (params.version) {
   versionMessage(version, grabRevision())
   exit 1
 }
 
-step = params.step
-tools = params.tools ? params.tools.split(',').collect {it.trim()} : []
+if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
+
+step = params.step.toLowerCase()
+tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
 
 directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
@@ -98,9 +99,9 @@ if (params.test) {
     'preprocessing': "$workflow.projectDir/data/tsv/tiny.tsv",
     'realign': "$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv",
     'recalibrate': "$workflow.launchDir/$directoryMap.nonRecalibrated/nonRecalibrated.tsv",
-    'skipPreprocessing': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv"
+    'skippreprocessing': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv"
   ]
-  tsvPath = testTsvPaths[params.step]
+  tsvPath = testTsvPaths[step]
 } else if (params.sample) {
   tsvPath = params.sample
 }
@@ -114,7 +115,7 @@ if (tsvPath) {
     case 'preprocessing': fastqFiles = extractFastq(tsvFile); break
     case 'realign': bamFiles = extractBams(tsvFile); break
     case 'recalibrate': bamFiles = extractRecal(tsvFile); break
-    case 'skipPreprocessing': bamFiles = extractBams(tsvFile); break
+    case 'skippreprocessing': bamFiles = extractBams(tsvFile); break
     default: exit 1, "Unknown step $step"
   }
 } else if (params.sampleDir) {
@@ -147,7 +148,7 @@ process RunFastQC {
   output:
     file "*_fastqc.{zip,html}" into fastQCreport
 
-  when: step == 'preprocessing' && 'MultiQC' in tools
+  when: step == 'preprocessing' && 'multiqc' in tools
 
   script:
   """
@@ -435,7 +436,7 @@ process RecalibrateBam {
     set idPatient, gender, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam
     set idPatient, gender, status, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into recalibratedBamTSV
 
-  when: step != 'skipPreprocessing'
+  when: step != 'skippreprocessing'
 
   script:
   """
@@ -456,7 +457,7 @@ recalibratedBamTSV.map { idPatient, gender, status, idSample, bam, bai ->
   name: 'recalibrated.tsv', sort: true, storeDir: directoryMap.recalibrated
 )
 
-recalibratedBam = step == 'skipPreprocessing' ? bamFiles : recalibratedBam
+recalibratedBam = step == 'skippreprocessing' ? bamFiles : recalibratedBam
 
 verbose ? recalibratedBam = recalibratedBam.view {"Recalibrated BAM for variant Calling: $it"} : ''
 
@@ -473,7 +474,7 @@ process RunSamtoolsStats {
   output:
     file ("${bam}.samtools.stats.out") into samtoolsStatsReport
 
-    when: 'MultiQC' in tools
+    when: 'multiqc' in tools
 
     script:
     """
@@ -494,7 +495,7 @@ process RunBamQC {
   output:
     file("*.txt") into bamQCreport
 
-    when: 'MultiQC' in tools && 'bamQC' in tools
+    when: 'multiqc' in tools && 'bamqc' in tools
 
     script:
     """
@@ -606,7 +607,7 @@ process RunHaplotypecaller {
   output:
     set val("haplotypecaller"), idPatient, gender, idSample, val("${gen_int}_${idSample}"), file("${gen_int}_${idSample}.g.vcf") into hcVCF
 
-  when: 'HaplotypeCaller' in tools
+  when: 'haplotypecaller' in tools
 
   script:
   """
@@ -649,7 +650,7 @@ process RunMutect1 {
   output:
     set val("mutect1"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect1Output
 
-  when: 'MuTect1' in tools
+  when: 'mutect1' in tools
 
   script:
   """
@@ -689,7 +690,7 @@ process RunMutect2 {
   output:
     set val("mutect2"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2Output
 
-  when: 'MuTect2' in tools
+  when: 'mutect2' in tools
 
   script:
   """
@@ -720,7 +721,7 @@ process RunFreeBayes {
   output:
     set val("freebayes"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into freebayesOutput
 
-  when: 'FreeBayes' in tools
+  when: 'freebayes' in tools
 
   script:
   """
@@ -757,7 +758,7 @@ process RunVardict {
   output:
     set val("vardict"), idPatient, gender, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.out") into vardictOutput
 
-  when: 'VarDict' in tools
+  when: 'vardict' in tools
 
   script:
   """
@@ -796,7 +797,7 @@ process ConcatVCF {
   output:
     set variantCaller, idPatient, gender, idSampleNormal, idSampleTumor, file("*.vcf.gz") into vcfConcatenated
 
-  when: 'HaplotypeCaller' in tools || 'MuTect1' in tools || 'MuTect2' in tools || 'FreeBayes' in tools || 'VarDict' in tools
+  when: 'haplotypecaller' in tools || 'mutect1' in tools || 'mutect2' in tools || 'freebayes' in tools || 'vardict' in tools
 
   script:
   outputFile = variantCaller == 'haplotypecaller' ? "${variantCaller}_${idSampleNormal}.vcf" : "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
@@ -851,7 +852,7 @@ process RunStrelka {
   output:
     set val("strelka"), idPatient, gender, idSampleNormal, idSampleTumor, file("*.vcf") into strelkaOutput
 
-  when: 'Strelka' in tools
+  when: 'strelka' in tools
 
   script:
   """
@@ -895,7 +896,7 @@ process RunManta {
   output:
     set val("manta"), idPatient, gender, idSampleNormal, idSampleTumor, file("Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf"),file("Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf"),file("Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf"),file("Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf") into mantaOutput
 
-  when: 'Manta' in tools
+  when: 'manta' in tools
 
   script:
   """
@@ -932,7 +933,7 @@ process RunAlleleCount {
   output:
     set idPatient, gender, status, idSample, file("${idSample}.alleleCount") into alleleCountOutput
 
-  when: 'Ascat' in tools
+  when: 'ascat' in tools
 
   script:
   """
@@ -970,7 +971,7 @@ process RunConvertAlleleCounts {
   output:
     set idPatient, gender, idSampleNormal, idSampleTumor, file("${idSampleNormal}.BAF"), file("${idSampleNormal}.LogR"), file("${idSampleTumor}.BAF"), file("${idSampleTumor}.LogR") into convertAlleleCountsOutput
 
-  when: 'Ascat' in tools
+  when: 'ascat' in tools
 
   script:
   """
@@ -989,52 +990,13 @@ process RunAscat {
     set idPatient, gender, idSampleNormal, idSampleTumor, file(bafNormal), file(logrNormal), file(bafTumor), file(logrTumor) from convertAlleleCountsOutput
 
   output:
-    set val("ascat"), idPatient, gender, idSampleNormal, idSampleTumor, file("${idSampleTumor}.tumour.png"), file("${idSampleTumor}.germline.png"), file("${idSampleTumor}.LogR.PCFed.txt"), file("${idSampleTumor}.BAF.PCFed.txt"), file("${idSampleTumor}.ASPCF.png"), file("${idSampleTumor}.ASCATprofile.png"), file("${idSampleTumor}.aberrationreliability.png"), file("${idSampleTumor}.rawprofile.png"), file("${idSampleTumor}.sunrise.png") into ascatOutput
+    set val("ascat"), idPatient, gender, idSampleNormal, idSampleTumor, file("${idSampleTumor}.tumour.png"), file("${idSampleTumor}.germline.png"), file("${idSampleTumor}.LogR.PCFed.txt"), file("${idSampleTumor}.BAF.PCFed.txt"), file("${idSampleTumor}.ASPCF.png"), file("${idSampleTumor}.ASCATprofile.png"), file("${idSampleTumor}.aberrationreliability.png"), file("${idSampleTumor}.rawprofile.png"), file("${idSampleTumor}.sunrise.png"), file("${idSampleTumor}.cnvs.txt"),file("${idSampleTumor}.purityploidy.txt") into ascatOutput
 
-  when: 'Ascat' in tools
+  when: 'ascat' in tools
 
   script:
   """
-  #!/bin/env Rscript
-  ##############################################################################
-  # Description:                                                               #
-  # R-script for converting output from AlleleCount to BAF and LogR values.    #
-  #                                                                            #
-  # Input:                                                                     #
-  # AlleleCounter output file for tumor and normal samples                     #
-  # The first line should contain a header describing the data                 #
-  # The following columns and headers should be present:                       #
-  # CHR    POS     Count_A Count_C Count_G Count_T Good_depth                  #
-  #                                                                            #
-  # Output:                                                                    #
-  # BAF and LogR tables (tab delimited text files)                             #
-  ##############################################################################
-  source("$baseDir/scripts/ascat.R")
-  .libPaths( c( "$baseDir/scripts", .libPaths() ) )
-  if(!require(RColorBrewer)){
-      source("http://bioconductor.org/biocLite.R")
-      biocLite("RColorBrewer", suppressUpdates=TRUE, lib="$baseDir/scripts")
-      library(RColorBrewer)
-  }
-
-  options(bitmapType='cairo')
-  tumorbaf = "$bafTumor"
-  tumorlogr = "$logrTumor"
-  normalbaf = "$bafNormal"
-  normallogr = "$logrNormal"
-  #Load the  data
-  ascat.bc <- ascat.loadData(Tumor_LogR_file=tumorlogr, Tumor_BAF_file=tumorbaf, Germline_LogR_file=normallogr, Germline_BAF_file=normalbaf)
-  #Plot the raw data
-  ascat.plotRawData(ascat.bc)
-  #Segment the data
-  ascat.bc <- ascat.aspcf(ascat.bc)
-  #Plot the segmented data
-  ascat.plotSegmentedData(ascat.bc)
-  #Run ASCAT to fit every tumor to a model, inferring ploidy, normal cell contamination, and discrete copy numbers
-  ascat.output <- ascat.runAscat(ascat.bc)
-  #str(ascat.output)
-  #plot(sort(ascat.output\$aberrantcellfraction))
-  #plot(density(ascat.output\$ploidy))
+  run_ascat.r $bafTumor $logrTumor $bafNormal $logrNormal $idSampleTumor $baseDir
   """
 }
 
@@ -1049,7 +1011,7 @@ verbose ? ascatOutput = ascatOutput.view {"Ascat output: $it"} : ''
 //   output:
 //     set idPatient, gender, status, idSample, file ("???") into vcfMerged
 //
-//     'MuTect1' in tools || 'MuTect2' in tools
+//     'mutect1' in tools || 'mutect2' in tools
 //
 //     script:
 //     """
@@ -1110,7 +1072,7 @@ process RunBcftoolsStats {
   output:
     file ("${vcf.baseName}.bcf.tools.stats.out") into bcfReport
 
-  when: 'MultiQC' in tools
+  when: 'multiqc' in tools
 
   script:
   """
@@ -1132,7 +1094,7 @@ process RunSnpeff {
   output:
     set file("${vcf.baseName}.ann.vcf"), file("${vcf.baseName}_snpEff_genes.txt"), file("${vcf.baseName}_snpEff.csv"), file("${vcf.baseName}_snpEff_summary.html") into snpeffReport
 
-  when: 'snpEff' in tools
+  when: 'snpeff' in tools
 
   script:
   """
@@ -1162,7 +1124,7 @@ process RunVEP {
   output:
     set file("${vcf.baseName}_VEP.txt"), file("${vcf.baseName}_VEP.txt_summary.html") into vepReport
 
-  when: 'VEP' in tools && variantCaller != 'strelka'
+  when: 'vep' in tools && variantCaller != 'strelka'
 
   script:
   if (workflow.profile == 'testing' || workflow.profile == 'docker')
@@ -1189,7 +1151,7 @@ process GenerateMultiQCconfig {
   output:
   file("multiqc_config.yaml") into multiQCconfig
 
-  when: 'MultiQC' in tools
+  when: 'multiqc' in tools
 
   script:
   """
@@ -1243,7 +1205,7 @@ process RunMultiQC {
   output:
     set file("*multiqc_report.html"), file("*multiqc_data") into multiQCReport
 
-    when: 'MultiQC' in tools
+    when: 'multiqc' in tools
 
   script:
   """
@@ -1420,24 +1382,24 @@ def defineStepList() {
     'preprocessing',
     'realign',
     'recalibrate',
-    'skipPreprocessing'
+    'skippreprocessing'
   ]
 }
 
 def defineToolList() {
   return [
-    'Ascat',
-    'bamQC',
-    'FreeBayes',
-    'HaplotypeCaller',
-    'Manta',
-    'MultiQC',
-    'MuTect1',
-    'MuTect2',
-    'snpEff',
-    'Strelka',
-    'VarDict',
-    'VEP'
+    'ascat',
+    'bamqc',
+    'freebayes',
+    'haplotypecaller',
+    'manta',
+    'multiqc',
+    'mutect1',
+    'mutect2',
+    'snpeff',
+    'strelka',
+    'vardict',
+    'vep'
   ]
 }
 
@@ -1605,21 +1567,21 @@ def helpMessage(version, revision) { // Display help message
   log.info "         preprocessing (default, will start workflow with FASTQ files)"
   log.info "         realign (will start workflow with non-realigned BAM files)"
   log.info "         recalibrate (will start workflow with non-recalibrated BAM files)"
-  log.info "         skipPreprocessing (will start workflow with recalibrated BAM files)"
+  log.info "         skippreprocessing (will start workflow with recalibrated BAM files)"
   log.info "    --tools"
   log.info "       Option to configure which tools to use in the workflow."
   log.info "         Different tools to be separated by commas."
   log.info "       Possible values are:"
-  log.info "         MuTect1 (use MuTect1 for VC)"
-  log.info "         MuTect2 (use MuTect2 for VC)"
-  log.info "         FreeBayes (use FreeBayes for VC)"
-  log.info "         VarDict (use VarDict for VC)"
-  log.info "         Strelka (use Strelka for VC)"
-  log.info "         HaplotypeCaller (use HaplotypeCaller for normal bams VC)"
-  log.info "         Manta (use Manta for SV)"
-  log.info "         Ascat (use Ascat for CNV)"
-  log.info "         snpEff (use snpEff for Annotation of Variants)"
-  log.info "         VEP (use VEP for Annotation of Variants)"
+  log.info "         mutect1 (use MuTect1 for VC)"
+  log.info "         mutect2 (use MuTect2 for VC)"
+  log.info "         freebayes (use FreeBayes for VC)"
+  log.info "         vardict (use VarDict for VC)"
+  log.info "         strelka (use Strelka for VC)"
+  log.info "         haplotypecaller (use HaplotypeCaller for normal bams VC)"
+  log.info "         manta (use Manta for SV)"
+  log.info "         ascat (use Ascat for CNV)"
+  log.info "         snpeff (use snpEff for Annotation of Variants)"
+  log.info "         vep (use VEP for Annotation of Variants)"
   log.info "    --genome <Genome>"
   log.info "       Use a specific genome version."
   log.info "       Possible values are:"
