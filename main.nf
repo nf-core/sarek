@@ -74,8 +74,8 @@ if (params.version) {
 
 if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
 
-step = params.step
-tools = params.tools ? params.tools.split(',').collect {it.trim().toLowerCase()} : []
+step = params.step.toLowerCase()
+tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
 
 directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
@@ -99,9 +99,9 @@ if (params.test) {
     'preprocessing': "$workflow.projectDir/data/tsv/tiny.tsv",
     'realign': "$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv",
     'recalibrate': "$workflow.launchDir/$directoryMap.nonRecalibrated/nonRecalibrated.tsv",
-    'skipPreprocessing': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv"
+    'skippreprocessing': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv"
   ]
-  tsvPath = testTsvPaths[params.step]
+  tsvPath = testTsvPaths[step]
 } else if (params.sample) {
   tsvPath = params.sample
 }
@@ -115,7 +115,7 @@ if (tsvPath) {
     case 'preprocessing': fastqFiles = extractFastq(tsvFile); break
     case 'realign': bamFiles = extractBams(tsvFile); break
     case 'recalibrate': bamFiles = extractRecal(tsvFile); break
-    case 'skipPreprocessing': bamFiles = extractBams(tsvFile); break
+    case 'skippreprocessing': bamFiles = extractBams(tsvFile); break
     default: exit 1, "Unknown step $step"
   }
 } else if (params.sampleDir) {
@@ -436,7 +436,7 @@ process RecalibrateBam {
     set idPatient, gender, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam
     set idPatient, gender, status, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into recalibratedBamTSV
 
-  when: step != 'skipPreprocessing'
+  when: step != 'skippreprocessing'
 
   script:
   """
@@ -457,7 +457,7 @@ recalibratedBamTSV.map { idPatient, gender, status, idSample, bam, bai ->
   name: 'recalibrated.tsv', sort: true, storeDir: directoryMap.recalibrated
 )
 
-recalibratedBam = step == 'skipPreprocessing' ? bamFiles : recalibratedBam
+recalibratedBam = step == 'skippreprocessing' ? bamFiles : recalibratedBam
 
 verbose ? recalibratedBam = recalibratedBam.view {"Recalibrated BAM for variant Calling: $it"} : ''
 
@@ -1356,7 +1356,7 @@ def defineStepList() {
     'preprocessing',
     'realign',
     'recalibrate',
-    'skipPreprocessing'
+    'skippreprocessing'
   ]
 }
 
@@ -1540,21 +1540,21 @@ def helpMessage(version, revision) { // Display help message
   log.info "         preprocessing (default, will start workflow with FASTQ files)"
   log.info "         realign (will start workflow with non-realigned BAM files)"
   log.info "         recalibrate (will start workflow with non-recalibrated BAM files)"
-  log.info "         skipPreprocessing (will start workflow with recalibrated BAM files)"
+  log.info "         skippreprocessing (will start workflow with recalibrated BAM files)"
   log.info "    --tools"
   log.info "       Option to configure which tools to use in the workflow."
   log.info "         Different tools to be separated by commas."
   log.info "       Possible values are:"
-  log.info "         MuTect1 (use MuTect1 for VC)"
-  log.info "         MuTect2 (use MuTect2 for VC)"
-  log.info "         FreeBayes (use FreeBayes for VC)"
-  log.info "         VarDict (use VarDict for VC)"
-  log.info "         Strelka (use Strelka for VC)"
-  log.info "         HaplotypeCaller (use HaplotypeCaller for normal bams VC)"
-  log.info "         Manta (use Manta for SV)"
-  log.info "         Ascat (use Ascat for CNV)"
-  log.info "         snpEff (use snpEff for Annotation of Variants)"
-  log.info "         VEP (use VEP for Annotation of Variants)"
+  log.info "         mutect1 (use MuTect1 for VC)"
+  log.info "         mutect2 (use MuTect2 for VC)"
+  log.info "         freebayes (use FreeBayes for VC)"
+  log.info "         vardict (use VarDict for VC)"
+  log.info "         strelka (use Strelka for VC)"
+  log.info "         haplotypecaller (use HaplotypeCaller for normal bams VC)"
+  log.info "         manta (use Manta for SV)"
+  log.info "         ascat (use Ascat for CNV)"
+  log.info "         snpeff (use snpEff for Annotation of Variants)"
+  log.info "         vep (use VEP for Annotation of Variants)"
   log.info "    --genome <Genome>"
   log.info "       Use a specific genome version."
   log.info "       Possible values are:"
