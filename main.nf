@@ -787,7 +787,7 @@ process ConcatVCF {
     gzip -v $outputFile
     """
 
-  else if (variantCaller == 'mutect2' || variantCaller == 'mutect1' || variantCaller == 'gvcf-hc' || variantCaller == 'freebayes')
+  else if (variantCaller in ['mutect1', 'mutect2', 'gvcf-hc', 'freebayes'])
     """
     # first make a header from one of the VCF intervals
     # get rid of interval information only from the GATK command-line, but leave the rest
