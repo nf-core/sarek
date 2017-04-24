@@ -800,14 +800,12 @@ process ConcatVCF {
     > header
 
     ## concatenate calls
-    rm -rf raw_calls
-    for f in *vcf; do
-      awk '!/^#/{print}' \$f >> raw_calls
-    done
-    cat header raw_calls > unsorted.vcf
-    java -jar \${PICARD_HOME}/picard.jar SortVcf I=unsorted.vcf O=$outputFile SEQUENCE_DICTIONARY=$genomeDict
-    rm unsorted.vcf
-    gzip -v $outputFile
+    ( cat header && awk '!/^#/' $vcfFiles ) > unsorted.vcf
+    mkfifo out.vcf
+    gzip < out.vcf > ${outputFile}.gz &
+    gzpid=\$!
+    java -jar \${PICARD_HOME}/picard.jar SortVcf I=unsorted.vcf O=out.vcf SEQUENCE_DICTIONARY=$genomeDict
+    wait \$gzpid
     """
 }
 
