@@ -3,7 +3,7 @@
 /*
 vim: syntax=groovy
 -*- mode: groovy;-*-
-kate: syntax groovy; space-indent on; indent-width 4;
+kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 =               C A N C E R    A N A L Y S I S    W O R K F L O W              =
 ================================================================================
