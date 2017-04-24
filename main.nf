@@ -582,7 +582,7 @@ process RunHaplotypecaller {
     ])
 
   output:
-    set val("haplotypecaller"), idPatient, gender, idSample, val("${gen_int}_${idSample}"), file("${gen_int}_${idSample}.g.vcf") into hcVCF
+    set val("gvcf-hc"), idPatient, gender, idSample, val("${gen_int}_${idSample}"), file("${gen_int}_${idSample}.g.vcf") into hcGenomicVCF
 
   when: 'haplotypecaller' in tools
 
@@ -602,12 +602,12 @@ process RunHaplotypecaller {
   """
 }
 
-hcVCF = hcVCF.map {
+hcGenomicVCF = hcGenomicVCF.map {
   variantCaller, idPatient, gender, idSample, tag, vcfFile ->
   [variantCaller, idPatient, gender, idSample, idSample, tag, vcfFile]
 }.groupTuple(by:[0,1,2,3,4])
 
-verbose ? hcVCF = hcVCF.view {"HaplotypeCaller output: $it"} : ''
+verbose ? hcGenomicVCF = hcGenomicVCF.view {"HaplotypeCaller output: $it"} : ''
 
 process RunMutect1 {
   tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
@@ -755,11 +755,11 @@ verbose ? vardictOutput = vardictOutput.view {"vardictOutput output: $it"} : ''
 // we are merging the VCFs that are called separatelly for different intervals
 // so we can have a single sorted VCF containing all the calls for a given caller
 
-vcfsToMerge = hcVCF.mix(mutect1Output, mutect2Output, freebayesOutput, vardictOutput)
+vcfsToMerge = hcGenomicVCF.mix(mutect1Output, mutect2Output, freebayesOutput, vardictOutput)
 verbose ? vcfsToMerge = vcfsToMerge.view {"VCFs To be merged: $it"} : ''
 
 process ConcatVCF {
-  tag {variantCaller == 'haplotypecaller' ? idPatient + "-" + variantCaller + "-" + idSampleNormal : idPatient + "-" + variantCaller + "-" + idSampleNormal + "-" + idSampleTumor}
+  tag {variantCaller == 'gvcf-hc' ? idPatient + "-" + variantCaller + "-" + idSampleNormal : idPatient + "-" + variantCaller + "-" + idSampleNormal + "-" + idSampleTumor}
 
   publishDir "${directoryMap."$variantCaller"}", mode: 'copy'
 
@@ -777,7 +777,7 @@ process ConcatVCF {
   when: 'haplotypecaller' in tools || 'mutect1' in tools || 'mutect2' in tools || 'freebayes' in tools || 'vardict' in tools
 
   script:
-  outputFile = variantCaller == 'haplotypecaller' ? "${variantCaller}_${idSampleNormal}.vcf" : "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
+  outputFile = variantCaller == 'gvcf-hc' ? "haplotypecaller_${idSampleNormal}.vcf" : "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
   vcfFiles = vcFiles.collect{" $it"}.join(' ')
 
   if (variantCaller == 'vardict')
@@ -791,7 +791,7 @@ process ConcatVCF {
     gzip -v $outputFile
     """
 
-  else if (variantCaller == 'mutect2' || variantCaller == 'mutect1' || variantCaller == 'haplotypecaller' || variantCaller == 'freebayes')
+  else if (variantCaller == 'mutect2' || variantCaller == 'mutect1' || variantCaller == 'gvcf-hc' || variantCaller == 'freebayes')
     """
     # first make a header from one of the VCF intervals
     # get rid of interval information only from the GATK command-line, but leave the rest
@@ -1314,7 +1314,7 @@ def defineDirectoryMap() {
     'samtoolsStats'    : 'Reports/SamToolsStats',
     'ascat'            : 'VariantCalling/Ascat',
     'freebayes'        : 'VariantCalling/FreeBayes',
-    'haplotypecaller'  : 'VariantCalling/HaplotypeCaller',
+    'gvcf-hc'          : 'VariantCalling/HaplotypeCallerGVCF',
     'manta'            : 'VariantCalling/Manta',
     'mutect1'          : 'VariantCalling/MuTect1',
     'mutect2'          : 'VariantCalling/MuTect2',
