@@ -582,7 +582,7 @@ process RunHaplotypecaller {
     ])
 
   output:
-    set val("gvcf-hc"), idPatient, gender, idSample, val("${gen_int}_${idSample}"), file("${gen_int}_${idSample}.g.vcf") into hcGenomicVCF
+    set val("gvcf-hc"), idPatient, gender, idSample, idSample, val("${gen_int}_${idSample}"), file("${gen_int}_${idSample}.g.vcf") into hcGenomicVCF
 
   when: 'haplotypecaller' in tools
 
@@ -602,11 +602,7 @@ process RunHaplotypecaller {
   """
 }
 
-hcGenomicVCF = hcGenomicVCF.map {
-  variantCaller, idPatient, gender, idSample, tag, vcfFile ->
-  [variantCaller, idPatient, gender, idSample, idSample, tag, vcfFile]
-}.groupTuple(by:[0,1,2,3,4])
-
+hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3,4])
 verbose ? hcGenomicVCF = hcGenomicVCF.view {"HaplotypeCaller output: $it"} : ''
 
 process RunMutect1 {
