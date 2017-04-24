@@ -826,7 +826,7 @@ process ConcatVCF {
     var2vcf_paired.pl \
     -f 0.01 \
     -N "${idSampleTumor}_vs_${idSampleNormal}" testsomatic.out > $outputFile
-    gzip -v $outputFile
+    pigz -v $outputFile
     """
 
   else if (variantCaller in ['mutect1', 'mutect2', 'gvcf-hc', 'haplotypecaller', 'freebayes'])
@@ -840,7 +840,7 @@ process ConcatVCF {
     ## concatenate calls
     ( cat header && awk '!/^#/' $vcfFiles ) > unsorted.vcf
     mkfifo out.vcf
-    gzip < out.vcf > ${outputFile}.gz &
+    pigz < out.vcf > ${outputFile}.gz &
     gzpid=\$!
     java -jar \${PICARD_HOME}/picard.jar SortVcf I=unsorted.vcf O=out.vcf SEQUENCE_DICTIONARY=$genomeDict
     wait \$gzpid
