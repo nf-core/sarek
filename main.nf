@@ -361,8 +361,14 @@ process IndelRealigner {
   """
 }
 
-realignedBam = retrieveStatus(realignedBam)
+realignedBam = realignedBam.map {
+    idPatient, gender, bam, bai ->
+    tag = bam.baseName.tokenize('.')[0]
+    status   = tag[-1..-1].toInteger()
+    idSample = tag.take(tag.length()-2)
 
+    [idPatient, gender, status, idSample, bam, bai]
+}
 verbose ? realignedBam = realignedBam.view {"Realigned BAM to CreateRecalibrationTable: $it"} : ''
 
 process CreateRecalibrationTable {
@@ -1615,16 +1621,6 @@ def isAllowedParams(params) {
     }
   }
   return test
-}
-
-def retrieveStatus(bamChannel) {
-  return bamChannel = bamChannel.map {
-    idPatient, gender, bam, bai ->
-    tag = bam.baseName.tokenize('.')[0]
-    status   = tag[-1..-1].toInteger()
-    idSample = tag.take(tag.length()-2)
-    [idPatient, gender, status, idSample, bam, bai]
-  }
 }
 
 def startMessage(version, revision) { // Display start message
