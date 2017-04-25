@@ -833,7 +833,7 @@ process ConcatVCF {
     """
     # first make a header from one of the VCF intervals
     # get rid of interval information only from the GATK command-line, but leave the rest
-    awk '/^#/{print}' `ls *vcf| head -1` | \
+    sed -n '/^[^#]/q;p' `ls *vcf| head -n 1` | \
     awk '!/GATKCommandLine/{print}/GATKCommandLine/{for(i=1;i<=NF;i++){if(\$i!~/intervals=/ && \$i !~ /out=/){printf("%s ",\$i)}}printf("\\n")}' \
     > header
 
