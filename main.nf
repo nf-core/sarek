@@ -1142,13 +1142,21 @@ process RunVEP {
   script:
   if (workflow.profile == 'testing' || workflow.profile == 'docker')
   """
-  vep -i $vcf -o ${vcf.baseName}_VEP.txt -offline
+  vep \
+  -i $vcf \
+  -o ${vcf.baseName}_VEP.txt \
+  -offline
   """
   else if (workflow.profile == 'standard' || workflow.profile == 'interactive' || workflow.profile == 'localhost')
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
   """
   set -euo pipefail
-  variant_effect_predictor.pl --cache --dir_cache /sw/data/uppnex/vep/87 -o ${vcf.baseName}_VEP.txt --assembly $genome -offline
+  variant_effect_predictor.pl \
+  -i $vcf \
+  -o ${vcf.baseName}_VEP.txt \
+  --cache --dir_cache /sw/data/uppnex/vep/87 \
+  --assembly $genome \
+  -offline
   """
 }
 
