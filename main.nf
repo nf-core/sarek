@@ -1140,14 +1140,23 @@ process RunVEP {
   when: 'vep' in tools && variantCaller != 'strelka'
 
   script:
+  genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
   if (workflow.profile == 'testing' || workflow.profile == 'docker')
   """
-  vep -i $vcf -o ${vcf.baseName}_VEP.txt -offline
+  vep \
+  -i $vcf \
+  -o ${vcf.baseName}_VEP.txt \
+  -offline
   """
   else if (workflow.profile == 'standard' || workflow.profile == 'interactive' || workflow.profile == 'localhost')
   """
   set -euo pipefail
-  variant_effect_predictor.pl --cache --dir_cachevariant_effect_predictor.pl --cache --dir_cache /sw/data/uppnex/vep/87/homo_sapiens/87_${params.genome} -o ${vcf.baseName}_VEP.txt
+  variant_effect_predictor.pl \
+  -i $vcf \
+  -o ${vcf.baseName}_VEP.txt \
+  --cache --dir_cache /sw/data/uppnex/vep/87 \
+  --assembly $genome \
+  -offline
   """
 }
 
