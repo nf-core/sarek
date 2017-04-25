@@ -123,8 +123,8 @@ if (tsvPath) {
   fastqFiles = extractFastqFromDir(params.sampleDir)
   tsvFile = params.sampleDir  // used in the reports
 }
-verbose ? fastqFiles = fastqFiles.view {"FASTQ files to preprocess: $it"} : ''
-verbose ? bamFiles = bamFiles.view {"BAM files to process: $it"} : ''
+if (verbose) fastqFiles = fastqFiles.view {"FASTQ files to preprocess: $it"}
+if (verbose) bamFiles = bamFiles.view {"BAM files to process: $it"}
 startMessage(version, grabRevision())
 
 /*
@@ -135,7 +135,7 @@ startMessage(version, grabRevision())
 
 (fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
 
-verbose ? fastqFilesforFastQC = fastqFilesforFastQC.view {"FASTQ files for FastQC: $it"} : ''
+if (verbose) fastqFilesforFastQC = fastqFilesforFastQC.view {"FASTQ files for FastQC: $it"}
 
 process RunFastQC {
   tag {idPatient + "-" + idRun}
@@ -156,7 +156,7 @@ process RunFastQC {
   """
 }
 
-verbose ? fastQCreport = fastQCreport.view {"FastQC report: $it"} : ''
+if (verbose) fastQCreport = fastQCreport.view {"FastQC report: $it"}
 
 process MapReads {
   tag {idPatient + "-" + idRun}
@@ -181,7 +181,7 @@ process MapReads {
   """
 }
 
-verbose ? mappedBam = mappedBam.view {"BAM file to sort into group or single: $it"} : ''
+if (verbose) mappedBam = mappedBam.view {"BAM file to sort into group or single: $it"}
 
 // Sort bam whether they are standalone or should be merged
 // Borrowed code from https://github.com/guigolab/chip-nf
@@ -195,7 +195,7 @@ singleBam = singleBam.map {
   [idPatient, gender, status, idSample, bam]
 }
 
-verbose ? groupedBam = groupedBam.view {"Grouped BAMs to merge: $it"} : ''
+if (verbose) groupedBam = groupedBam.view {"Grouped BAMs to merge: $it"}
 
 process MergeBams {
   tag {idPatient + "-" + idSample}
@@ -214,10 +214,10 @@ process MergeBams {
   """
 }
 
-verbose ? singleBam = singleBam.view {"Single BAM: $it"} : ''
-verbose ? mergedBam = mergedBam.view {"Merged BAM: $it"} : ''
+if (verbose) singleBam = singleBam.view {"Single BAM: $it"}
+if (verbose) mergedBam = mergedBam.view {"Merged BAM: $it"}
 mergedBam = mergedBam.mix(singleBam)
-verbose ? mergedBam = mergedBam.view {"BAM for MarkDuplicates: $it"} : ''
+if (verbose) mergedBam = mergedBam.view {"BAM for MarkDuplicates: $it"}
 
 process MarkDuplicates {
   tag {idPatient + "-" + idSample}
@@ -270,9 +270,9 @@ duplicatesGrouped = step == 'realign' ? bamFiles.map{
 // and the other to the IndelRealigner process
 (duplicatesInterval, duplicatesRealign) = duplicatesGrouped.into(2)
 
-verbose ? duplicatesInterval = duplicatesInterval.view {"BAMs for RealignerTargetCreator: $it"} : ''
-verbose ? duplicatesRealign = duplicatesRealign.view {"BAMs to phase: $it"} : ''
-verbose ? markDuplicatesReport = markDuplicatesReport.view {"MarkDuplicates report: $it"} : ''
+if (verbose) duplicatesInterval = duplicatesInterval.view {"BAMs for RealignerTargetCreator: $it"}
+if (verbose) duplicatesRealign = duplicatesRealign.view {"BAMs to phase: $it"}
+if (verbose) markDuplicatesReport = markDuplicatesReport.view {"MarkDuplicates report: $it"}
 
 // VCF indexes are added so they will be linked, and not re-created on the fly
 //  -L "1:131941-141339" \
@@ -312,7 +312,7 @@ process RealignerTargetCreator {
   """
 }
 
-verbose ? intervals = intervals.view {"Intervals to phase: $it"} : ''
+if (verbose) intervals = intervals.view {"Intervals to phase: $it"}
 
 bamsAndIntervals = duplicatesRealign
   .phase(intervals)
@@ -326,7 +326,7 @@ bamsAndIntervals = duplicatesRealign
       intervals[2]
     )}
 
-verbose ? bamsAndIntervals = bamsAndIntervals.view {"BAMs and Intervals phased for IndelRealigner: $it"} : ''
+if (verbose) bamsAndIntervals = bamsAndIntervals.view {"BAMs and Intervals phased for IndelRealigner: $it"}
 
 // use nWayOut to split into T/N pair again
 process IndelRealigner {
@@ -369,7 +369,7 @@ realignedBam = realignedBam.map {
 
     [idPatient, gender, status, idSample, bam, bai]
 }
-verbose ? realignedBam = realignedBam.view {"Realigned BAM to CreateRecalibrationTable: $it"} : ''
+if (verbose) realignedBam = realignedBam.view {"Realigned BAM to CreateRecalibrationTable: $it"}
 
 process CreateRecalibrationTable {
   tag {idPatient + "-" + idSample}
@@ -420,9 +420,9 @@ recalibrationTableTSV.map { idPatient, gender, status, idSample, bam, bai, recal
   name: 'nonRecalibrated.tsv', sort: true, storeDir: directoryMap.nonRecalibrated
 )
 
-recalibrationTable = step == 'recalibrate' ? bamFiles : recalibrationTable
+if (step == 'recalibrate') recalibrationTable = bamFiles
 
-verbose ? recalibrationTable = recalibrationTable.view {"Base recalibrated table for RecalibrateBam: $it"} : ''
+if (verbose) recalibrationTable = recalibrationTable.view {"Base recalibrated table for RecalibrateBam: $it"}
 
 process RecalibrateBam {
   tag {idPatient + "-" + idSample}
@@ -463,9 +463,9 @@ recalibratedBamTSV.map { idPatient, gender, status, idSample, bam, bai ->
   name: 'recalibrated.tsv', sort: true, storeDir: directoryMap.recalibrated
 )
 
-recalibratedBam = step == 'skippreprocessing' ? bamFiles : recalibratedBam
+if (step == 'skippreprocessing') recalibratedBam = bamFiles
 
-verbose ? recalibratedBam = recalibratedBam.view {"Recalibrated BAM for variant Calling: $it"} : ''
+if (verbose) recalibratedBam = recalibratedBam.view {"Recalibrated BAM for variant Calling: $it"}
 
 (recalibratedBam, recalibratedBamForStats) = recalibratedBam.into(2)
 
@@ -488,7 +488,7 @@ process RunSamtoolsStats {
     """
 }
 
-verbose ? recalibratedBamReport = recalibratedBamReport.view {"BAM Stats: $it"} : ''
+if (verbose) recalibratedBamReport = recalibratedBamReport.view {"BAM Stats: $it"}
 
 // Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
 // The sample tsv config file which is formatted like: "subject status sample lane fastq1 fastq2"
@@ -507,10 +507,10 @@ recalibratedBam
 
 // Removing status because not relevant anymore
 bamsNormal = bamsNormal.map { idPatient, gender, status, idSample, bam, bai -> [idPatient, gender, idSample, bam, bai] }
-verbose ? bamsNormal = bamsNormal.view {"Normal BAM for variant Calling: $it"} : ''
+if (verbose) bamsNormal = bamsNormal.view {"Normal BAM for variant Calling: $it"}
 
 bamsTumor = bamsTumor.map { idPatient, gender, status, idSample, bam, bai -> [idPatient, gender, idSample, bam, bai] }
-verbose ? bamsTumor = bamsTumor.view {"Tumor BAM for variant Calling: $it"} : ''
+if (verbose) bamsTumor = bamsTumor.view {"Tumor BAM for variant Calling: $it"}
 
 // We know that MuTect2 (and other somatic callers) are notoriously slow. To speed them up we are chopping the reference into
 // smaller pieces at centromeres (see repeats/centromeres.list), do variant calling by this intervals, and re-merge the VCFs.
@@ -530,7 +530,7 @@ gI = intervals.map{[it,it.replaceFirst(/\:/,'_')]}
 
 // HaplotypeCaller
 bamsFHC = bamsNormalTemp.mix(bamsTumorTemp)
-verbose ? bamsFHC = bamsFHC.view {"Bams with Intervals for HaplotypeCaller: $it"} : ''
+if (verbose) bamsFHC = bamsFHC.view {"Bams with Intervals for HaplotypeCaller: $it"}
 
 (bamsNormalTemp, bamsNormal) = bamsNormal.into(2)
 (bamsTumorTemp, bamsTumor) = bamsTumor.into(2)
@@ -540,7 +540,7 @@ bamsTumorTemp = bamsTumorTemp.map { idPatient, gender, idSample, bam, bai -> [id
 
 bamsForAscat = Channel.create()
 bamsForAscat = bamsNormalTemp.mix(bamsTumorTemp)
-verbose ? bamsForAscat = bamsForAscat.view {"Bams for Ascat: $it"} : ''
+if (verbose) bamsForAscat = bamsForAscat.view {"Bams for Ascat: $it"}
 
 bamsAll = bamsNormal.spread(bamsTumor)
 // Since idPatientNormal and idPatientTumor are the same
@@ -550,29 +550,29 @@ bamsAll = bamsAll.map {
   idPatientNormal, genderNormal, idSampleNormal, bamNormal, baiNormal, idPatientTumor, genderTumor, idSampleTumor, bamTumor, baiTumor ->
   [idPatientNormal, genderNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor]
 }
-verbose ? bamsAll = bamsAll.view {"Mapped Recalibrated BAM for variant Calling: $it"} : ''
+if (verbose) bamsAll = bamsAll.view {"Mapped Recalibrated BAM for variant Calling: $it"}
 
 // MuTect1
 (bamsFMT1, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
-verbose ? bamsFMT1 = bamsFMT1.view {"Bams with Intervals for MuTect1: $it"} : ''
+if (verbose) bamsFMT1 = bamsFMT1.view {"Bams with Intervals for MuTect1: $it"}
 
 // MuTect2
 (bamsFMT2, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
-verbose ? bamsFMT2 = bamsFMT2.view {"Bams with Intervals for MuTect2: $it"} : ''
+if (verbose) bamsFMT2 = bamsFMT2.view {"Bams with Intervals for MuTect2: $it"}
 
 // FreeBayes
 (bamsFFB, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
-verbose ? bamsFFB = bamsFFB.view {"Bams with Intervals for FreeBayes: $it"} : ''
+if (verbose) bamsFFB = bamsFFB.view {"Bams with Intervals for FreeBayes: $it"}
 
 // VarDict
 (bamsFVD, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
-verbose ? bamsFVD = bamsFVD.view {"Bams with Intervals for VarDict: $it"} : ''
+if (verbose) bamsFVD = bamsFVD.view {"Bams with Intervals for VarDict: $it"}
 
 (bamsForManta, bamsForStrelka) = bamsAll.into(2)
 
-verbose ? bamsForManta = bamsForManta.view {"Bams for Manta: $it"} : ''
+if (verbose) bamsForManta = bamsForManta.view {"Bams for Manta: $it"}
 
-verbose ? bamsForStrelka = bamsForStrelka.view {"Bams for Strelka: $it"} : ''
+if (verbose) bamsForStrelka = bamsForStrelka.view {"Bams for Strelka: $it"}
 
 process RunHaplotypecaller {
   tag {idPatient + "-" + idSample + "-" + gen_int}
@@ -645,7 +645,7 @@ process RunGenotypeGVCFs {
   """
 }
 hcGenotypedVCF = hcGenotypedVCF.groupTuple(by:[0,1,2,3,4])
-verbose ? hcGenotypedVCF = hcGenotypedVCF.view {"GenotypeGVCFs output: $it"} : ''
+if (verbose) hcGenotypedVCF = hcGenotypedVCF.view {"GenotypeGVCFs output: $it"}
 
 process RunMutect1 {
   tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
@@ -685,7 +685,7 @@ process RunMutect1 {
 }
 
 mutect1Output = mutect1Output.groupTuple(by:[0,1,2,3,4])
-verbose ? mutect1Output = mutect1Output.view {"MuTect1 output: $it"} : ''
+if (verbose) mutect1Output = mutect1Output.view {"MuTect1 output: $it"}
 
 process RunMutect2 {
   tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
@@ -724,7 +724,7 @@ process RunMutect2 {
 }
 
 mutect2Output = mutect2Output.groupTuple(by:[0,1,2,3,4])
-verbose ? mutect2Output = mutect2Output.view {"MuTect2 output: $it"} : ''
+if (verbose) mutect2Output = mutect2Output.view {"MuTect2 output: $it"}
 
 process RunFreeBayes {
   tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
@@ -757,7 +757,7 @@ process RunFreeBayes {
 }
 
 freebayesOutput = freebayesOutput.groupTuple(by:[0,1,2,3,4])
-verbose ? freebayesOutput = freebayesOutput.view {"FreeBayes output: $it"} : ''
+if (verbose) freebayesOutput = freebayesOutput.view {"FreeBayes output: $it"}
 
 process RunVardict {
   tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
@@ -788,13 +788,13 @@ process RunVardict {
 }
 
 vardictOutput = vardictOutput.groupTuple(by:[0,1,2,3,4])
-verbose ? vardictOutput = vardictOutput.view {"vardictOutput output: $it"} : ''
+if (verbose) vardictOutput = vardictOutput.view {"vardictOutput output: $it"}
 
 // we are merging the VCFs that are called separatelly for different intervals
 // so we can have a single sorted VCF containing all the calls for a given caller
 
 vcfsToMerge = hcGenomicVCF.mix(hcGenotypedVCF, mutect1Output, mutect2Output, freebayesOutput, vardictOutput)
-verbose ? vcfsToMerge = vcfsToMerge.view {"VCFs To be merged: $it"} : ''
+if (verbose) vcfsToMerge = vcfsToMerge.view {"VCFs To be merged: $it"}
 
 process ConcatVCF {
   tag {variantCaller in ['gvcf-hc', 'haplotypecaller'] ? idPatient + "-" + variantCaller + "-" + idSampleNormal : idPatient + "-" + variantCaller + "-" + idSampleNormal + "-" + idSampleTumor}
@@ -853,7 +853,7 @@ process ConcatVCF {
     """
 }
 
-verbose ? vcfConcatenated = vcfConcatenated.view {"VCF concatenated: $it"} : ''
+if (verbose) vcfConcatenated = vcfConcatenated.view {"VCF concatenated: $it"}
 
 process RunStrelka {
   tag {idPatient + "-" + idSampleTumor}
@@ -898,7 +898,7 @@ process RunStrelka {
   """
 }
 
-verbose ? strelkaOutput = strelkaOutput.view {"Strelka output: $it"} : ''
+if (verbose) strelkaOutput = strelkaOutput.view {"Strelka output: $it"}
 
 process RunManta {
   tag {idPatient + "-" + idSampleTumor}
@@ -933,7 +933,7 @@ process RunManta {
   """
 }
 
-verbose ? mantaOutput = mantaOutput.view {"Manta output: $it"} : ''
+if (verbose) mantaOutput = mantaOutput.view {"Manta output: $it"}
 
 // Run commands and code from Malin Larsson
 // Based on Jesper Eisfeldt's code
@@ -960,7 +960,7 @@ process RunAlleleCount {
   """
 }
 
-verbose ? alleleCountOutput = alleleCountOutput.view {"alleleCount output: $it"} : ''
+if (verbose) alleleCountOutput = alleleCountOutput.view {"alleleCount output: $it"}
 
 alleleCountNormal = Channel.create()
 alleleCountTumor = Channel.create()
@@ -975,7 +975,7 @@ alleleCountOutput = alleleCountOutput.map {
   [idPatientNormal, genderNormal, idSampleNormal, idSampleTumor, alleleCountNormal, alleleCountTumor]
 }
 
-verbose ? alleleCountOutput = alleleCountOutput.view {"alleleCount output: $it"} : ''
+if (verbose) alleleCountOutput = alleleCountOutput.view {"alleleCount output: $it"}
 
 // R script from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
@@ -1019,7 +1019,7 @@ process RunAscat {
   """
 }
 
-verbose ? ascatOutput = ascatOutput.view {"Ascat output: $it"} : ''
+if (verbose) ascatOutput = ascatOutput.view {"Ascat output: $it"}
 
 // process MergeVCF {
 //   tag {idPatient + "-" + idSample}
@@ -1072,7 +1072,7 @@ strelkaPAssedSNVS = strelkaPAssedSNVS
 
 vcfMerged = vcfMerged.mix(strelkaAllIndels, strelkaAllSNVS, strelkaPAssedIndels, strelkaPAssedSNVS)
 
-verbose ? vcfMerged = vcfMerged.view {"VCF for Annotation: $it"} : ''
+if (verbose) vcfMerged = vcfMerged.view {"VCF for Annotation: $it"}
 
 vcfForSnpeff = Channel.create()
 vcfForBCF = Channel.create()
@@ -1130,7 +1130,7 @@ process RunSnpeff {
   """
 }
 
-verbose ? snpeffReport = snpeffReport.view {"snpEff Reports: $it"} : ''
+if (verbose) snpeffReport = snpeffReport.view {"snpEff Reports: $it"}
 
 process RunVEP {
   tag {variantCaller + "-" + idSampleTumor + "_vs_" + idSampleNormal}
@@ -1157,7 +1157,7 @@ process RunVEP {
   """
 }
 
-verbose ? vepReport = vepReport.view {"VEP Reports: $it"} : ''
+if (verbose) vepReport = vepReport.view {"VEP Reports: $it"}
 
 
 process GenerateMultiQCconfig {
@@ -1195,7 +1195,7 @@ process GenerateMultiQCconfig {
   """
 }
 
-verbose ? multiQCconfig = multiQCconfig.view {"MultiQC config file: $it"} : ''
+if (verbose) multiQCconfig = multiQCconfig.view {"MultiQC config file: $it"}
 
 reportsForMultiQC = Channel.fromPath( 'Reports/{FastQC,MarkDuplicates,SamToolsStats}/*' )
   .mix(bcfReport,
@@ -1209,7 +1209,7 @@ reportsForMultiQC = Channel.fromPath( 'Reports/{FastQC,MarkDuplicates,SamToolsSt
   .unique()
   .toList()
 
-verbose ? reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"} : ''
+if (verbose) reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}
 
 process RunMultiQC {
   tag {idPatient}
@@ -1230,7 +1230,7 @@ process RunMultiQC {
   """
 }
 
-verbose ? multiQCReport = multiQCReport.view {"MultiQC Report: $it"} : ''
+if (verbose) multiQCReport = multiQCReport.view {"MultiQC Report: $it"}
 
 /*
 ================================================================================
