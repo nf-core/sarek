@@ -3,7 +3,7 @@
 /*
 vim: syntax=groovy
 -*- mode: groovy;-*-
-kate: syntax groovy; space-indent on; indent-width 4;
+kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 =               C A N C E R    A N A L Y S I S    W O R K F L O W              =
 ================================================================================
@@ -582,7 +582,8 @@ process RunHaplotypecaller {
     ])
 
   output:
-    set val("haplotypecaller"), idPatient, gender, idSample, val("${gen_int}_${idSample}"), file("${gen_int}_${idSample}.g.vcf") into hcVCF
+    set val("gvcf-hc"), idPatient, gender, idSample, idSample, val("${gen_int}_${idSample}"), file("${gen_int}_${idSample}.g.vcf") into hcGenomicVCF
+    set idPatient, gender, idSample, genInt, gen_int, file("${gen_int}_${idSample}.g.vcf") into vcfsToGenotype
 
   when: 'haplotypecaller' in tools
 
@@ -602,12 +603,43 @@ process RunHaplotypecaller {
   """
 }
 
-hcVCF = hcVCF.map {
-  variantCaller, idPatient, gender, idSample, tag, vcfFile ->
-  [variantCaller, idPatient, gender, idSample, idSample, tag, vcfFile]
-}.groupTuple(by:[0,1,2,3,4])
+hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3,4])
+verbose ? hcGenomicVCF = hcGenomicVCF.view {"HaplotypeCaller output: $it"} : ''
 
-verbose ? hcVCF = hcVCF.view {"HaplotypeCaller output: $it"} : ''
+process RunGenotypeGVCFs {
+  tag {idPatient + "-" + idSample + "-" + gen_int}
+
+  input:
+    set idPatient, gender, idSample, genInt, gen_int, file(gvcf) from vcfsToGenotype
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex
+    ])
+
+  output:
+    set val("haplotypecaller"), idPatient, gender, idSample, idSample, val("${gen_int}_${idSample}"), file("${gen_int}_${idSample}.vcf") into hcGenotypedVCF
+
+  when: 'haplotypecaller' in tools
+
+  script:
+  // Using -L is important for speed
+  """
+  java -Xmx${task.memory.toGiga()}g \
+  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
+  -T GenotypeGVCFs \
+  -R $genomeFile \
+  -L \"$genInt\" \
+  --dbsnp $dbsnp \
+  --variant $gvcf \
+  --disable_auto_index_creation_and_locking_when_reading_rods \
+  -o ${gen_int}_${idSample}.vcf
+  """
+}
+hcGenotypedVCF = hcGenotypedVCF.groupTuple(by:[0,1,2,3,4])
+verbose ? hcGenotypedVCF = hcGenotypedVCF.view {"GenotypeGVCFs output: $it"} : ''
 
 process RunMutect1 {
   tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
@@ -755,11 +787,11 @@ verbose ? vardictOutput = vardictOutput.view {"vardictOutput output: $it"} : ''
 // we are merging the VCFs that are called separatelly for different intervals
 // so we can have a single sorted VCF containing all the calls for a given caller
 
-vcfsToMerge = hcVCF.mix(mutect1Output, mutect2Output, freebayesOutput, vardictOutput)
+vcfsToMerge = hcGenomicVCF.mix(hcGenotypedVCF, mutect1Output, mutect2Output, freebayesOutput, vardictOutput)
 verbose ? vcfsToMerge = vcfsToMerge.view {"VCFs To be merged: $it"} : ''
 
 process ConcatVCF {
-  tag {variantCaller == 'haplotypecaller' ? idPatient + "-" + variantCaller + "-" + idSampleNormal : idPatient + "-" + variantCaller + "-" + idSampleNormal + "-" + idSampleTumor}
+  tag {variantCaller in ['gvcf-hc', 'haplotypecaller'] ? idPatient + "-" + variantCaller + "-" + idSampleNormal : idPatient + "-" + variantCaller + "-" + idSampleNormal + "-" + idSampleTumor}
 
   publishDir "${directoryMap."$variantCaller"}", mode: 'copy'
 
@@ -777,7 +809,13 @@ process ConcatVCF {
   when: 'haplotypecaller' in tools || 'mutect1' in tools || 'mutect2' in tools || 'freebayes' in tools || 'vardict' in tools
 
   script:
-  outputFile = variantCaller == 'haplotypecaller' ? "${variantCaller}_${idSampleNormal}.vcf" : "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
+  if (variantCaller == 'haplotypecaller') {
+    outputFile = "${variantCaller}_${idSampleNormal}.vcf"
+  } else if (variantCaller == 'gvcf-hc') {
+    outputFile = "haplotypecaller_${idSampleNormal}.g.vcf"
+  } else {
+    outputFile = "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
+  }
   vcfFiles = vcFiles.collect{" $it"}.join(' ')
 
   if (variantCaller == 'vardict')
@@ -791,7 +829,7 @@ process ConcatVCF {
     gzip -v $outputFile
     """
 
-  else if (variantCaller == 'mutect2' || variantCaller == 'mutect1' || variantCaller == 'haplotypecaller' || variantCaller == 'freebayes')
+  else if (variantCaller in ['mutect1', 'mutect2', 'gvcf-hc', 'haplotypecaller', 'freebayes'])
     """
     # first make a header from one of the VCF intervals
     # get rid of interval information only from the GATK command-line, but leave the rest
@@ -1315,6 +1353,7 @@ def defineDirectoryMap() {
     'ascat'            : 'VariantCalling/Ascat',
     'freebayes'        : 'VariantCalling/FreeBayes',
     'haplotypecaller'  : 'VariantCalling/HaplotypeCaller',
+    'gvcf-hc'          : 'VariantCalling/HaplotypeCallerGVCF',
     'manta'            : 'VariantCalling/Manta',
     'mutect1'          : 'VariantCalling/MuTect1',
     'mutect2'          : 'VariantCalling/MuTect2',
