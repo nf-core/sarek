@@ -1140,6 +1140,7 @@ process RunVEP {
   when: 'vep' in tools && variantCaller != 'strelka'
 
   script:
+  genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
   if (workflow.profile == 'testing' || workflow.profile == 'docker')
   """
   vep \
@@ -1148,7 +1149,6 @@ process RunVEP {
   -offline
   """
   else if (workflow.profile == 'standard' || workflow.profile == 'interactive' || workflow.profile == 'localhost')
-  genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
   """
   set -euo pipefail
   variant_effect_predictor.pl \
