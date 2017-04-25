@@ -1147,7 +1147,7 @@ process RunVEP {
   else if (workflow.profile == 'standard' || workflow.profile == 'interactive' || workflow.profile == 'localhost')
   """
   set -euo pipefail
-  variant_effect_predictor.pl --cache --dir_cachevariant_effect_predictor.pl --cache --dir_cache /sw/data/uppnex/vep/87/homo_sapiens/87_${params.genome} -o ${vcf.baseName}_VEP.txt
+  variant_effect_predictor.pl --cache --dir_cache /sw/data/uppnex/vep/87/homo_sapiens/87_${params.genome} -o ${vcf.baseName}_VEP.txt
   """
 }
 
