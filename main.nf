@@ -258,12 +258,16 @@ markDuplicatesTSV.map { idPatient, gender, status, idSample, bam, bai ->
 // Create intervals for realignement using both tumor+normal as input
 // Group the marked duplicates BAMs for intervals and realign by idPatient
 // Grouping also by gender, to make a nicer channel
-duplicatesGrouped = step == 'preprocessing' ? duplicates.groupTuple(by:[0,1]) : Channel.empty()
-
-duplicatesGrouped = step == 'realign' ? bamFiles.map{
-  idPatient, gender, status, idSample, bam, bai ->
-  [idPatient, gender, "${idSample}_${status}", bam, bai]
-}.groupTuple(by:[0,1]) : duplicatesGrouped
+if (step == 'preprocessing') {
+  duplicatesGrouped = duplicates.groupTuple(by:[0,1])
+} else if (step == 'realign') {
+  duplicatesGrouped = bamFiles.map{
+    idPatient, gender, status, idSample, bam, bai ->
+    [idPatient, gender, "${idSample}_${status}", bam, bai]
+  }.groupTuple(by:[0,1])
+} else {
+  duplicatesGrouped = Channel.empty()
+}
 
 // The duplicatesGrouped channel is duplicated
 // one copy goes to the RealignerTargetCreator process
