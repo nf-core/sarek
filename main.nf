@@ -228,7 +228,7 @@ process MarkDuplicates {
     set idPatient, gender, status, idSample, file(bam) from mergedBam
 
   output:
-    set idPatient, gender, val("${idSample}_${status}"), file("${idSample}_${status}.md.bam"), file("${idSample}_${status}.md.bai") into duplicates
+    set idPatient, gender, file("${idSample}_${status}.md.bam"), file("${idSample}_${status}.md.bai") into duplicates
     set idPatient, gender, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai") into markDuplicatesTSV
     file ("${bam}.metrics") into markDuplicatesReport
 
@@ -263,7 +263,7 @@ if (step == 'preprocessing') {
 } else if (step == 'realign') {
   duplicatesGrouped = bamFiles.map{
     idPatient, gender, status, idSample, bam, bai ->
-    [idPatient, gender, "${idSample}_${status}", bam, bai]
+    [idPatient, gender, bam, bai]
   }.groupTuple(by:[0,1])
 } else {
   duplicatesGrouped = Channel.empty()
@@ -285,7 +285,7 @@ process RealignerTargetCreator {
   tag {idPatient}
 
   input:
-    set idPatient, gender, idSample_status, file(bam), file(bai) from duplicatesInterval
+    set idPatient, gender, file(bam), file(bai) from duplicatesInterval
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(knownIndels), file(knownIndelsIndex), file(intervals) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -326,7 +326,6 @@ bamsAndIntervals = duplicatesRealign
       duplicatesRealign[1],
       duplicatesRealign[2],
       duplicatesRealign[3],
-      duplicatesRealign[4],
       intervals[2]
     )}
 
@@ -337,7 +336,7 @@ process IndelRealigner {
   tag {idPatient}
 
   input:
-    set idPatient, gender, idSample_status, file(bam), file(bai), file(intervals) from bamsAndIntervals
+    set idPatient, gender, file(bam), file(bai), file(intervals) from bamsAndIntervals
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(knownIndels), file(knownIndelsIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
