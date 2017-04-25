@@ -1145,10 +1145,9 @@ process RunVEP {
   vep -i $vcf -o ${vcf.baseName}_VEP.txt -offline
   """
   else if (workflow.profile == 'standard' || workflow.profile == 'interactive' || workflow.profile == 'localhost')
-  genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
   """
   set -euo pipefail
-  variant_effect_predictor.pl --cache --dir_cache /sw/data/uppnex/vep/87/homo_sapiens/87_$genome -o ${vcf.baseName}_VEP.txt -offline
+  variant_effect_predictor.pl --cache --dir_cache /sw/data/uppnex/vep/87 -o ${vcf.baseName}_VEP.txt -offline
   """
 }
 
