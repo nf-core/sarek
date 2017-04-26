@@ -108,7 +108,6 @@ if (!params.sample && !params.sampleDir) {
   if (params.test || step != 'preprocessing') tsvPath = tsvPaths[step]
 }
 
-
 // Set up the fastqFiles and bamFiles channels. One of them remains empty
 fastqFiles = Channel.empty()
 bamFiles = Channel.empty()
