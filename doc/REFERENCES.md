@@ -1,4 +1,4 @@
-# Genomes and specific reference files
+# Genomes and reference files
 
 CAW currently uses GRCh37 by default. Support for GRCh38 is not fully working yet! The settings are in `genomes.config`, they can be tailored to your needs. The [`buildReferences.nf`](#buildReferences.nf) script can be use to build the indexes based on the reference files.
 
@@ -12,14 +12,25 @@ To get the needed files, download the [GATK bundle for GRCh37](ftp://gsapubftp-a
 
 The following files need to be downloaded:
 
-- '1000G_phase1.indels.b37.vcf.gz' - 242c0df2a698a76fc43bdd938ba57c62
-- 'dbsnp_138.b37.vcf.gz' - 00b0e74e4a13536dd6c0728c66db43f3
-- 'human_g1k_v37_decoy.fasta.gz' - dd05833f18c22cc501e3e31406d140b0
-- 'Mills_and_1000G_gold_standard.indels.b37.vcf.gz' - a0764a80311aee369375c5c7dda7e266
+- 242c0df2a698a76fc43bdd938ba57c62 - '1000G_phase1.indels.b37.vcf.gz'
+- 00b0e74e4a13536dd6c0728c66db43f3 - 'dbsnp_138.b37.vcf.gz'
+- dd05833f18c22cc501e3e31406d140b0 - 'human_g1k_v37_decoy.fasta.gz'
+- a0764a80311aee369375c5c7dda7e266 - 'Mills_and_1000G_gold_standard.indels.b37.vcf.gz'
+
+### Other files
+
+From our repo, get the '[centromeres.list](https://raw.githubusercontent.com/SciLifeLab/CAW/master/repeats/centromeres.list)' file.
+
+The rest of the references files are stored in in [export.uppmax.uu.se](https://export.uppmax.uu.se/b2015110/caw-references/b37/) and also on the repository [CAW-References](https://github.com/MaxUlysse/CAW-References) using [GIT-LFS](https://git-lfs.github.com/):
+
+- '1000G_phase3_20130502_SNP_maf0.3.loci'
+- 'b37_cosmic_v74.noCHR.sort.4.1.vcf'
+
+You can create your own cosmic reference for any human reference as specified below.
 
 ### COSMIC files
 
-To annotate with COSMIC variants during mutect1/2 variant calling you need to create a compatible VCF file. Download the coding and non-coding VCF files from [COSMIC](http://cancer.sanger.ac.uk/cosmic/download) and process them with the [Create_Cosmic.sh](https://github.com/SciLifeLab/CAW/tree/master/scripts/Create_Cosmic.sh) script. The script requires a fasta index, .fai, of the reference file you are using.
+To annotate with COSMIC variants during mutect1/2 variant calling you need to create a compatible VCF file. Download the coding and non-coding VCF files from [COSMIC](http://cancer.sanger.ac.uk/cosmic/download) and process them with the [Create_Cosmic.sh](https://github.com/SciLifeLab/CAW/tree/master/scripts/Create_Cosmic.sh) script. The script requires a fasta index `.fai`, of the reference file you are using.
 
 Example:
 
@@ -33,19 +44,8 @@ Note: CosmicCodingMuts.vcf.gz & CosmicNonCodingVariants.vcf.gz must be in same f
 To index the resulting VCF file use [igvtools](https://software.broadinstitute.org/software/igv/igvtools).
 
 ```
-igvtools index COSMICv##.vcf
+igvtools index <cosmicvxx.vcf>
 ```
-
-### Other files
-
-From our repo, get the '[centromeres.list](https://raw.githubusercontent.com/SciLifeLab/CAW/master/repeats/centromeres.list)' file.
-
-The rest of the references files are stored in in [export.uppmax.uu.se](https://export.uppmax.uu.se/b2015110/caw-references/b37/) and also on the repository [CAW-References](https://github.com/MaxUlysse/CAW-References) using [GIT-LFS](https://git-lfs.github.com/):
-
-- '1000G_phase3_20130502_SNP_maf0.3.loci'
-- 'b37_cosmic_v74.noCHR.sort.4.1.vcf'
-
-You can create your own cosmic reference for any human reference as specified below.
 
 ## GRCh38
 
@@ -67,7 +67,7 @@ awk '!/^@/{printf("%s:%d-%d\n", $1, $2, $3)}' wgs_calling_regions.hg38.interval_
 
 ## smallGRCh37
 
-Use `--genome smallGRCh37` to map against a small reference genome based on GRCh37\. `smallGRCh37` is the default genome for the testing profile (`-profile testing`).
+Use `--genome smallGRCh37` to map against a small reference genome based on GRCh37. `smallGRCh37` is the default genome for the testing profile (`-profile testing`).
 
 ## buildReferences.nf
 
@@ -75,7 +75,7 @@ The `buildReferences.nf` script can dowload and build the files needed for small
 
 ### `--download`
 
-Only with `--genome smallGRCh37` If the `--dowload` option is specify, the [`smallRef` repository](https://github.com/szilvajuhos/smallRef). repo will be automatically downloaded from github. Do not use on UPPMAX cluster Bianca or on similar clusters where such things are not allowed.
+Only with `--genome smallGRCh37`. If this option is specify, the [`smallRef` repository](https://github.com/szilvajuhos/smallRef) repo will be automatically downloaded from GitHub. Not to be used on UPPMAX cluster Bianca or on similar clusters where such things are not allowed.
 
 ```
 nextflow run buildReferences.nf --download --genome smallGRCh37
@@ -83,7 +83,7 @@ nextflow run buildReferences.nf --download --genome smallGRCh37
 
 ### `--refDir`
 
-Use `--refDir <path to smallRef>` to process
+Use `--refDir <path to smallRef>` to specify where are the files to process.
 
 ```
 nextflow run buildReferences.nf --refDir <path to smallRef> --genome <genome>
