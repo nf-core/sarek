@@ -109,7 +109,6 @@ if (params.test) {
 // Set up the fastqFiles and bamFiles channels. One of them remains empty
 fastqFiles = Channel.empty()
 bamFiles = Channel.empty()
-patientGenders = [:]  // empty map
 if (tsvPath) {
   tsvFile = file(tsvPath)
   switch (step) {
