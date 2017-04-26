@@ -533,11 +533,12 @@ if (verbose) bamsTumor = bamsTumor.view {"Tumor BAM for variant Calling: $it"}
 // from the "1:1-2000" string make ["1:1-2000","1_1-2000"]
 
 // define intervals file by --intervals
-intervals = Channel.from(file(referenceMap.intervals).readLines())
-gI = intervals.map{[it,it.replaceFirst(/\:/,'_')]}
+intervals = Channel.
+  from(file(referenceMap.intervals).readLines()).
+  map{[it, it.replaceFirst(/\:/, '_')]}
 
-(bamsNormalTemp, bamsNormal, gI) = generateIntervalsForVC(bamsNormal, gI)
-(bamsTumorTemp, bamsTumor, gI) = generateIntervalsForVC(bamsTumor, gI)
+(bamsNormalTemp, bamsNormal, intervals) = generateIntervalsForVC(bamsNormal, intervals)
+(bamsTumorTemp, bamsTumor, intervals) = generateIntervalsForVC(bamsTumor, intervals)
 
 // HaplotypeCaller
 bamsFHC = bamsNormalTemp.mix(bamsTumorTemp)
@@ -564,19 +565,19 @@ bamsAll = bamsAll.map {
 if (verbose) bamsAll = bamsAll.view {"Mapped Recalibrated BAM for variant Calling: $it"}
 
 // MuTect1
-(bamsFMT1, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
+(bamsFMT1, bamsAll, intervals) = generateIntervalsForVC(bamsAll, intervals)
 if (verbose) bamsFMT1 = bamsFMT1.view {"Bams with Intervals for MuTect1: $it"}
 
 // MuTect2
-(bamsFMT2, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
+(bamsFMT2, bamsAll, intervals) = generateIntervalsForVC(bamsAll, intervals)
 if (verbose) bamsFMT2 = bamsFMT2.view {"Bams with Intervals for MuTect2: $it"}
 
 // FreeBayes
-(bamsFFB, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
+(bamsFFB, bamsAll, intervals) = generateIntervalsForVC(bamsAll, intervals)
 if (verbose) bamsFFB = bamsFFB.view {"Bams with Intervals for FreeBayes: $it"}
 
 // VarDict
-(bamsFVD, bamsAll, gI) = generateIntervalsForVC(bamsAll, gI)
+(bamsFVD, bamsAll, intervals) = generateIntervalsForVC(bamsAll, intervals)
 if (verbose) bamsFVD = bamsFVD.view {"Bams with Intervals for VarDict: $it"}
 
 (bamsForManta, bamsForStrelka) = bamsAll.into(2)
@@ -1577,13 +1578,13 @@ def flowcellLaneFromFastq(path) {
   [fcid, lane]
 }
 
-def generateIntervalsForVC(bams, gI) {
+def generateIntervalsForVC(bams, intervals) {
   final bamsForVC = Channel.create()
   final vcIntervals = Channel.create()
   (bams, bamsForVC) = bams.into(2)
-  (gI, vcIntervals) = gI.into(2)
+  (intervals, vcIntervals) = intervals.into(2)
   bamsForVC = bamsForVC.spread(vcIntervals)
-  return [bamsForVC, bams, gI]
+  return [bamsForVC, bams, intervals]
 }
 
 def grabRevision() {
