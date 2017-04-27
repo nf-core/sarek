@@ -77,6 +77,9 @@ if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <
 
 step = params.step.toLowerCase()
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
+annotateAll = params.annotateAll ? true : false
+annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
+annotateVCF = params.annotateVCF ? params.annotateVCF.split(',').collect{it.trim()} : []
 
 directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
@@ -517,7 +520,15 @@ if (verbose) recalibratedBamReport = recalibratedBamReport.view {"BAM Stats: $it
 bamsNormal = Channel.create()
 bamsTumor = Channel.create()
 recalibratedBam
-  .choice(bamsTumor, bamsNormal) {it[2] == 0 ? 1 : 0}
+  .choice(bamsTumor, bamsNormal) {it[1] == 0 ? 1 : 0}
+
+// Ascat
+(bamsNormalTemp, bamsNormal) = bamsNormal.into(2)
+(bamsTumorTemp, bamsTumor) = bamsTumor.into(2)
+
+bamsForAscat = Channel.create()
+bamsForAscat = bamsNormalTemp.mix(bamsTumorTemp)
+if (verbose) bamsForAscat = bamsForAscat.view {"Bams for Ascat: $it"}
 
 // Removing status because not relevant anymore
 bamsNormal = bamsNormal.map { idPatient, status, idSample, bam, bai -> [idPatient, idSample, bam, bai] }
@@ -526,13 +537,17 @@ if (verbose) bamsNormal = bamsNormal.view {"Normal BAM for variant Calling: $it"
 bamsTumor = bamsTumor.map { idPatient, status, idSample, bam, bai -> [idPatient, idSample, bam, bai] }
 if (verbose) bamsTumor = bamsTumor.view {"Tumor BAM for variant Calling: $it"}
 
-// We know that MuTect2 (and other somatic callers) are notoriously slow. To speed them up we are chopping the reference into
-// smaller pieces at centromeres (see repeats/centromeres.list), do variant calling by this intervals, and re-merge the VCFs.
-// Since we are on a cluster, this can parallelize the variant call processes, and push down the variant call wall clock time significanlty.
-
-// in fact we need two channels: one for the actual genomic region, and an other for names
-// without ":", as nextflow is not happy with them (will report as a failed process).
-// For region 1:1-2000 the output file name will be something like 1_1-2000_Sample_name.mutect2.vcf
+// We know that MuTect2 (and other somatic callers) are notoriously slow.
+// To speed them up we are chopping the reference into smaller pieces.
+// (see repeats/centromeres.list).
+// Do variant calling by this intervals, and re-merge the VCFs.
+// Since we are on a cluster, this can parallelize the variant call processes.
+// And push down the variant call wall clock time significanlty.
+// In fact we need two channels: one for the actual genomic region
+// and an other for names without ":"
+// as nextflow is not happy with them (will report as a failed process).
+// For region 1:1-2000 the output file name will be something like:
+// 1_1-2000_Sample_name.xxx.vcf
 // from the "1:1-2000" string make ["1:1-2000","1_1-2000"]
 
 // define intervals file by --intervals
@@ -547,22 +562,12 @@ intervals = Channel.
 bamsFHC = bamsNormalTemp.mix(bamsTumorTemp)
 if (verbose) bamsFHC = bamsFHC.view {"Bams with Intervals for HaplotypeCaller: $it"}
 
-(bamsNormalTemp, bamsNormal) = bamsNormal.into(2)
-(bamsTumorTemp, bamsTumor) = bamsTumor.into(2)
-
-bamsNormalTemp = bamsNormalTemp.map { idPatient, idSample, bam, bai -> [idPatient, 0, idSample, bam, bai] }
-bamsTumorTemp = bamsTumorTemp.map { idPatient, idSample, bam, bai -> [idPatient, 1, idSample, bam, bai] }
-
-bamsForAscat = Channel.create()
-bamsForAscat = bamsNormalTemp.mix(bamsTumorTemp)
-if (verbose) bamsForAscat = bamsForAscat.view {"Bams for Ascat: $it"}
-
 bamsAll = bamsNormal.spread(bamsTumor)
 // Since idPatientNormal and idPatientTumor are the same
 // It's removed from bamsAll Channel (same for genderNormal)
 // /!\ It is assumed that every sample are from the same patient
 bamsAll = bamsAll.map {
-  idPatientNormal, idSampleNormal, bamNormal, baiNormal, idPatientTumor, genderTumor, idSampleTumor, bamTumor, baiTumor ->
+  idPatientNormal, idSampleNormal, bamNormal, baiNormal, idPatientTumor, idSampleTumor, bamTumor, baiTumor ->
   [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor]
 }
 if (verbose) bamsAll = bamsAll.view {"Mapped Recalibrated BAM for variant Calling: $it"}
@@ -1037,28 +1042,11 @@ process RunAscat {
 
 if (verbose) ascatOutput = ascatOutput.view {"Ascat output: $it"}
 
-// process MergeVCF {
-//   tag {idPatient + "-" + idSample}
-//
-//   input:
-//     set idPatient, status, idSample, file(vcf) from ???
-//
-//   output:
-//     set idPatient, status, idSample, file ("???") into vcfMerged
-//
-//     'mutect1' in tools || 'mutect2' in tools
-//
-//     script:
-//     """
-//
-//     """
-// }
-
 vcfMerged = Channel.create()
 vcfNotMerged = Channel.create()
 
 vcfConcatenated
-  .choice(vcfMerged, vcfNotMerged) {it[0] == 'mutect1' ? 0 : 1}
+  .choice(vcfMerged, vcfNotMerged) { it[0] == 'gvcf-hc' || it[0] == 'vardict' ? 1 : 0}
 
 (strelkaAllIndels, strelkaAllSNVS, strelkaPAssedIndels, strelkaPAssedSNVS) = strelkaOutput.into(4)
 
@@ -1159,7 +1147,7 @@ process RunVEP {
   output:
     set file("${vcf.baseName}_VEP.txt"), file("${vcf.baseName}_VEP.txt_summary.html") into vepReport
 
-  when: 'vep' in tools && variantCaller != 'strelka'
+  when: 'vep' in tools && variantCaller != 'freebayes' && variantCaller != 'haplotypecaller' && variantCaller != 'mutect1' && variantCaller != 'mutect2' && variantCaller != 'strelka'
 
   script:
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
@@ -1296,21 +1284,27 @@ def checkParameterList(list, realList) {
 def checkParams(it) {
   // Check if params is in this given list
   return it in [
-    'callName',
+    'annotate-all',
+    'annotate-tools',
+    'annotate-VCF',
+    'annotateAll',
+    'annotateTools',
+    'annotateVCF',
     'call-name',
-    'contactMail',
+    'callName',
     'contact-mail',
+    'contactMail',
     'genome',
     'genomes',
     'help',
     'project',
-    'runTime',
     'run-time',
+    'runTime',
+    'sample-dir',
     'sample',
     'sampleDir',
-    'sample-dir',
-    'singleCPUMem',
     'single-CPUMem',
+    'singleCPUMem',
     'step',
     'test',
     'tools',
