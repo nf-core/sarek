@@ -261,10 +261,17 @@ def checkParams(it) {
     'callName',
     'contact-mail',
     'contactMail',
-    'genome',
-    'genomes',
-    'help',
-    'project',
+'download',
+	     'genome',
+	     'genomes',
+	     'help',
+	     'project',
+	    'ref-dir',
+    'refDir',
+
+
+
+
     'run-time',
     'runTime',
     'sample-dir',
