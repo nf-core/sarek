@@ -24,6 +24,10 @@ echo "./nextflow run . -profile testing --step recalibrate"
 echo "-----"
 ./nextflow run . -profile testing --step recalibrate
 echo "Starting Nextflow... Command:"
-echo "./nextflow run . -profile testing --step skipPreprocessing --tools FreeBayes,HaplotypeCaller,MultiQC,MuTect1,MuTect2,Strelka,snpEff,VarDict"
+echo "./nextflow run . -profile testing --step skipPreprocessing --tools FreeBayes,HaplotypeCaller,MultiQC,MuTect1,MuTect2,Strelka,VarDict"
 echo "-----"
-./nextflow run . -profile testing --step skipPreprocessing --tools FreeBayes,HaplotypeCaller,MultiQC,MuTect1,MuTect2,Strelka,snpEff,VarDict
+./nextflow run . -profile testing --step skipPreprocessing --tools FreeBayes,HaplotypeCaller,MultiQC,MuTect1,MuTect2,Strelka,VarDict
+echo "Starting Nextflow... Command:"
+echo "./nextflow run . -profile testing --step skipPreprocessing --tools snpEff --annotateAll"
+echo "-----"
+./nextflow run . -profile testing --step skipPreprocessing --tools snpEff --annotateAll

@@ -1045,34 +1045,70 @@ if (verbose) ascatOutput = ascatOutput.view {"Ascat output: $it"}
 vcfToAnnotate = Channel.create()
 vcfNotToAnnotate = Channel.create()
 
-vcfConcatenated
+if (annotateAll) {
+
+  vcfHcTEMP = Channel.fromPath(
+    'VariantCalling/HaplotypeCaller/*.vcf.gz' )
+    .flatten().unique()
+    .map{vcf -> ['haplotypecaller',vcf]}
+  vcfMantaTEMP = Channel.fromPath(
+    'VariantCalling/Manta/*.{somaticSV,diploidSV}.vcf.gz' )
+    .flatten().unique()
+    .map{vcf -> ['manta',vcf]}
+  vcfMT1TEMP = Channel.fromPath(
+    'VariantCalling/MuTect1/*.vcf.gz' )
+    .flatten().unique()
+    .map{vcf -> ['mutect1',vcf]}
+  vcfMT2TEMP = Channel.fromPath(
+    'VariantCalling/MuTect2/*.vcf.gz' )
+    .flatten().unique()
+    .map{vcf -> ['mutect2',vcf]}
+  vcfStrelkaTEMP = Channel.fromPath(
+    'VariantCalling/Strelka/*passed_somatic*.vcf.gz' )
+    .flatten().unique()
+    .map{vcf -> ['strelka',vcf]}
+  vcfVardictTEMP = Channel.fromPath(
+    'VariantCalling/VarDict/*.vcf.gz' )
+    .flatten().unique()
+    .map{vcf -> ['vardict',vcf]}
+
+  vcfToAnnotate = vcfHcTEMP.mix(
+    vcfMantaTEMP,
+    vcfMT1TEMP,
+    vcfMT2TEMP,
+    vcfStrelkaTEMP,
+    vcfVardictTEMP)
+
+} else {
+  vcfConcatenated
   .choice(vcfToAnnotate, vcfNotToAnnotate) { it[0] == 'gvcf-hc' || it[0] == 'vardict' ? 1 : 0}
 
-vcfToAnnotate = vcfToAnnotate
+  vcfToAnnotate = vcfToAnnotate
   .map {
     variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
     [variantcaller, vcf]
+  }
+
+  (strelkaAllIndels, strelkaAllSNVS, strelkaPAssedIndels, strelkaPAssedSNVS) = strelkaOutput.into(4)
+
+  strelkaAllIndels.close()
+  strelkaAllSNVS.close()
+  vcfNotToAnnotate.close()
+
+  strelkaPAssedIndels = strelkaPAssedIndels
+    .map {
+      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
+      [variantcaller, vcf[2]]
+    }
+
+  strelkaPAssedSNVS = strelkaPAssedSNVS
+    .map {
+      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
+      [variantcaller, vcf[3]]
+    }
+
+  vcfToAnnotate = vcfToAnnotate.mix(strelkaPAssedIndels, strelkaPAssedSNVS)
 }
-
-(strelkaAllIndels, strelkaAllSNVS, strelkaPAssedIndels, strelkaPAssedSNVS) = strelkaOutput.into(4)
-
-strelkaAllIndels.close()
-strelkaAllSNVS.close()
-vcfNotToAnnotate.close()
-
-strelkaPAssedIndels = strelkaPAssedIndels
-  .map {
-    variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
-    [variantcaller, vcf[2]]
-}
-
-strelkaPAssedSNVS = strelkaPAssedSNVS
-  .map {
-    variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
-    [variantcaller, vcf[3]]
-}
-
-vcfToAnnotate = vcfToAnnotate.mix(strelkaPAssedIndels, strelkaPAssedSNVS)
 
 if (verbose) vcfToAnnotate = vcfToAnnotate.view {"VCF for Annotation: $it"}
 
