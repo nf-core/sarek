@@ -1042,55 +1042,49 @@ process RunAscat {
 
 if (verbose) ascatOutput = ascatOutput.view {"Ascat output: $it"}
 
-vcfMerged = Channel.create()
-vcfNotMerged = Channel.create()
+vcfToAnnotate = Channel.create()
+vcfNotToAnnotate = Channel.create()
 
 vcfConcatenated
-  .choice(vcfMerged, vcfNotMerged) { it[0] == 'gvcf-hc' || it[0] == 'vardict' ? 1 : 0}
+  .choice(vcfToAnnotate, vcfNotToAnnotate) { it[0] == 'gvcf-hc' || it[0] == 'vardict' ? 1 : 0}
+
+vcfToAnnotate = vcfToAnnotate
+  .map {
+    variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
+    [variantcaller, vcf]
+}
 
 (strelkaAllIndels, strelkaAllSNVS, strelkaPAssedIndels, strelkaPAssedSNVS) = strelkaOutput.into(4)
 
-strelkaAllIndels = strelkaAllIndels
-  .map {
-    variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
-    [variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf[0]]
-}
-
-strelkaAllSNVS = strelkaAllSNVS
-  .map {
-    variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
-    [variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf[1]]
-}
+strelkaAllIndels.close()
+strelkaAllSNVS.close()
+vcfNotToAnnotate.close()
 
 strelkaPAssedIndels = strelkaPAssedIndels
   .map {
     variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
-    [variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf[2]]
+    [variantcaller, vcf[2]]
 }
 
 strelkaPAssedSNVS = strelkaPAssedSNVS
   .map {
     variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
-    [variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf[3]]
+    [variantcaller, vcf[3]]
 }
 
-vcfMerged = vcfMerged.mix(strelkaAllIndels, strelkaAllSNVS, strelkaPAssedIndels, strelkaPAssedSNVS)
+vcfToAnnotate = vcfToAnnotate.mix(strelkaPAssedIndels, strelkaPAssedSNVS)
 
-if (verbose) vcfMerged = vcfMerged.view {"VCF for Annotation: $it"}
+if (verbose) vcfToAnnotate = vcfToAnnotate.view {"VCF for Annotation: $it"}
 
-vcfForSnpeff = Channel.create()
-vcfForBCF = Channel.create()
-vcfForVep = Channel.create()
-
-(vcfForBCF, vcfMerged) = vcfMerged.into(2)
+(vcfForBCF, vcfForSnpeff, vcfForVep) = vcfToAnnotate.into(3)
 
 process RunBcftoolsStats {
-  tag {variantCaller + "-" + idPatient + "-" + idSample}
+  tag {vcf}
 
   publishDir directoryMap.bcftoolsStats, mode: 'copy'
 
   input:
-    set variantCaller, idPatient, idSampleNormal, idSampleTumor, file(vcf) from vcfForBCF
+    set variantCaller, file(vcf) from vcfForBCF
 
   output:
     file ("${vcf.baseName}.bcf.tools.stats.out") into bcfReport
@@ -1103,15 +1097,13 @@ process RunBcftoolsStats {
   """
 }
 
-(vcfForSnpeff, vcfForVep) = vcfMerged.into(2)
-
 process RunSnpeff {
-  tag {variantCaller + "-" + idSampleTumor + "_vs_" + idSampleNormal}
+  tag {vcf}
 
   publishDir directoryMap.snpeff, mode: 'copy'
 
   input:
-    set variantCaller, idPatient, idSampleNormal, idSampleTumor, file(vcf) from vcfForSnpeff
+    set variantCaller, file(vcf) from vcfForSnpeff
     val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
 
   output:
@@ -1137,12 +1129,12 @@ process RunSnpeff {
 if (verbose) snpeffReport = snpeffReport.view {"snpEff Reports: $it"}
 
 process RunVEP {
-  tag {variantCaller + "-" + idSampleTumor + "_vs_" + idSampleNormal}
+  tag {vcf}
 
   publishDir directoryMap.vep, mode: 'copy'
 
   input:
-    set variantCaller, idPatient, idSampleNormal, idSampleTumor, file(vcf) from vcfForVep
+    set variantCaller, file(vcf) from vcfForVep
 
   output:
     set file("${vcf.baseName}_VEP.txt"), file("${vcf.baseName}_VEP.txt_summary.html") into vepReport
