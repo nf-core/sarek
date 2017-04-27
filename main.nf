@@ -58,17 +58,18 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 */
 
+revision = grabRevision()
 version = '1.1'
 
 if (!isAllowedParams(params)) {exit 1, "params is unknown, see --help for more information"}
 
 if (params.help) {
-  helpMessage(version, grabRevision())
+  helpMessage(version, revision)
   exit 1
 }
 
 if (params.version) {
-  versionMessage(version, grabRevision())
+  versionMessage(version, revision)
   exit 1
 }
 
@@ -83,27 +84,28 @@ stepList = defineStepList()
 toolList = defineToolList()
 verbose = params.verbose
 
-if (!checkExactlyOne([params.test, params.sample, params.sampleDir]))
-  exit 1, 'Please define which samples to work on by providing exactly one of the --test, --sample or --sampleDir options'
-if (!checkReferenceMap(referenceMap)) {exit 1, 'Missing Reference file(s), see --help for more information'}
 if (!checkParameterExistence(step, stepList)) {exit 1, 'Unknown step, see --help for more information'}
 if (step.contains(',')) {exit 1, 'You can choose only one step, see --help for more information'}
+if (step == 'preprocessing' && !checkExactlyOne([params.test, params.sample, params.sampleDir]))
+  exit 1, 'Please define which samples to work on by providing exactly one of the --test, --sample or --sampleDir options'
+if (!checkReferenceMap(referenceMap)) {exit 1, 'Missing Reference file(s), see --help for more information'}
 if (!checkParameterList(tools,toolList)) {exit 1, 'Unknown tool(s), see --help for more information'}
 
+if (params.test && params.genome == "GRCh37") {
+  referenceMap.intervals = file("$workflow.projectDir/repeats/tiny.list")
+}
+
 tsvPath = ''
-if (params.test) {
-  if (params.genome == "GRCh37") {
-    referenceMap.intervals = file("$workflow.projectDir/repeats/tiny.list")
-  }
-  testTsvPaths = [
-    'preprocessing': "$workflow.projectDir/data/tsv/tiny.tsv",
-    'realign': "$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv",
-    'recalibrate': "$workflow.launchDir/$directoryMap.nonRecalibrated/nonRecalibrated.tsv",
-    'skippreprocessing': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv"
+if (params.sample) tsvPath = params.sample
+
+if (!params.sample && !params.sampleDir) {
+  tsvPaths = [
+  'preprocessing': "$workflow.projectDir/data/tsv/tiny.tsv",
+  'realign': "$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv",
+  'recalibrate': "$workflow.launchDir/$directoryMap.nonRecalibrated/nonRecalibrated.tsv",
+  'skippreprocessing': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv"
   ]
-  tsvPath = testTsvPaths[step]
-} else if (params.sample) {
-  tsvPath = params.sample
+  if (params.test || step != 'preprocessing') tsvPath = tsvPaths[step]
 }
 
 // Set up the fastqFiles and bamFiles channels. One of them remains empty
@@ -122,7 +124,8 @@ if (tsvPath) {
   if (step != 'preprocessing') exit 1, '--sampleDir does not support steps other than "preprocessing"'
   fastqFiles = extractFastqFromDir(params.sampleDir)
   tsvFile = params.sampleDir  // used in the reports
-}
+} else exit 1, 'No sample were defined, see --help'
+
 if (step == 'preprocessing') {
   (patientGenders, fastqFiles) = extractGenders(fastqFiles)
 } else {
@@ -1597,7 +1600,7 @@ def generateIntervalsForVC(bams, intervals) {
 }
 
 def grabRevision() {
-  return workflow.revision ?: workflow.scriptId.substring(0,10)
+  return workflow.revision ?: workflow.commitId ?: workflow.scriptId.substring(0,10)
 }
 
 def helpMessage(version, revision) { // Display help message
@@ -1664,6 +1667,7 @@ def startMessage(version, revision) { // Display start message
   log.info "Project Dir : $workflow.projectDir"
   log.info "Launch Dir  : $workflow.launchDir"
   log.info "Work Dir    : $workflow.workDir"
+  log.info "TSV file    : $tsvFile"
   log.info "Genome      : " + params.genome
   log.info "Step        : " + step
   if (tools) {log.info "Tools       : " + tools.join(', ')}
