@@ -595,7 +595,7 @@ if (verbose) bamsForManta = bamsForManta.view {"Bams for Manta: $it"}
 if (verbose) bamsForStrelka = bamsForStrelka.view {"Bams for Strelka: $it"}
 
 process RunHaplotypecaller {
-  tag {idPatient + "-" + idSample + "-" + gen_int}
+  tag {idSample + "-" + gen_int}
 
   input:
     set idPatient, idSample, file(bam), file(bai), genInt, gen_int from bamsFHC //Are these values `ped to bamNormal already?
@@ -633,7 +633,7 @@ hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3,4])
 verbose ? hcGenomicVCF = hcGenomicVCF.view {"HaplotypeCaller output: $it"} : ''
 
 process RunGenotypeGVCFs {
-  tag {idPatient + "-" + idSample + "-" + gen_int}
+  tag {idSample + "-" + gen_int}
 
   input:
     set idPatient, idSample, genInt, gen_int, file(gvcf) from vcfsToGenotype
@@ -668,7 +668,7 @@ hcGenotypedVCF = hcGenotypedVCF.groupTuple(by:[0,1,2,3,4])
 if (verbose) hcGenotypedVCF = hcGenotypedVCF.view {"GenotypeGVCFs output: $it"}
 
 process RunMutect1 {
-  tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
+  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + gen_int}
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT1
@@ -708,7 +708,7 @@ mutect1Output = mutect1Output.groupTuple(by:[0,1,2,3,4])
 if (verbose) mutect1Output = mutect1Output.view {"MuTect1 output: $it"}
 
 process RunMutect2 {
-  tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
+  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + gen_int}
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
@@ -747,7 +747,7 @@ mutect2Output = mutect2Output.groupTuple(by:[0,1,2,3,4])
 if (verbose) mutect2Output = mutect2Output.view {"MuTect2 output: $it"}
 
 process RunFreeBayes {
-  tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
+  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + gen_int}
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFFB
@@ -780,7 +780,7 @@ freebayesOutput = freebayesOutput.groupTuple(by:[0,1,2,3,4])
 if (verbose) freebayesOutput = freebayesOutput.view {"FreeBayes output: $it"}
 
 process RunVardict {
-  tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
+  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + gen_int}
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFVD
@@ -817,7 +817,7 @@ vcfsToMerge = hcGenomicVCF.mix(hcGenotypedVCF, mutect1Output, mutect2Output, fre
 if (verbose) vcfsToMerge = vcfsToMerge.view {"VCFs To be merged: $it"}
 
 process ConcatVCF {
-  tag {variantCaller in ['gvcf-hc', 'haplotypecaller'] ? idPatient + "-" + variantCaller + "-" + idSampleNormal : idPatient + "-" + variantCaller + "-" + idSampleNormal + "-" + idSampleTumor}
+  tag {variantCaller in ['gvcf-hc', 'haplotypecaller'] ? variantCaller + "-" + idSampleNormal : variantCaller + "_" + idSampleTumor + "_vs_" + idSampleNormal}
 
   publishDir "${directoryMap."$variantCaller"}", mode: 'copy'
 
@@ -876,7 +876,7 @@ process ConcatVCF {
 if (verbose) vcfConcatenated = vcfConcatenated.view {"VCF concatenated: $it"}
 
 process RunStrelka {
-  tag {idPatient + "-" + idSampleTumor}
+  tag {idSampleTumor + "_vs_" + idSampleNormal}
 
   publishDir directoryMap.strelka, mode: 'copy'
 
@@ -921,7 +921,7 @@ process RunStrelka {
 if (verbose) strelkaOutput = strelkaOutput.view {"Strelka output: $it"}
 
 process RunManta {
-  tag {idPatient + "-" + idSampleTumor}
+  tag {idSampleTumor + "_vs_" + idSampleNormal}
 
   publishDir directoryMap.manta, mode: 'copy'
 
@@ -958,7 +958,7 @@ if (verbose) mantaOutput = mantaOutput.view {"Manta output: $it"}
 // Run commands and code from Malin Larsson
 // Based on Jesper Eisfeldt's code
 process RunAlleleCount {
-  tag {idPatient + "-" + idSample}
+  tag {idSample}
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamsForAscat
@@ -1000,7 +1000,7 @@ if (verbose) alleleCountOutput = alleleCountOutput.view {"alleleCount output: $i
 // R script from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
 process RunConvertAlleleCounts {
-  tag {idPatient + "-" + idSampleTumor}
+  tag {idSampleTumor + "_vs_" + idSampleNormal}
 
   publishDir directoryMap.ascat, mode: 'copy'
 
@@ -1022,7 +1022,7 @@ process RunConvertAlleleCounts {
 // R scripts from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
 process RunAscat {
-  tag {idPatient + "-" + idSampleTumor}
+  tag {idSampleTumor + "_vs_" + idSampleNormal}
 
   publishDir directoryMap.ascat, mode: 'copy'
 
