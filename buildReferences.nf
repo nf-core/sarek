@@ -251,17 +251,20 @@ def checkFile(it) {
 def checkParams(it) {
   // Check if params is in this given list
   return it in [
+    'annotate-all',
+    'annotate-tools',
+    'annotate-VCF',
+    'annotateAll',
+    'annotateTools',
+    'annotateVCF',
     'call-name',
     'callName',
     'contact-mail',
     'contactMail',
-    'download',
     'genome',
     'genomes',
     'help',
     'project',
-    'ref-dir',
-    'refDir',
     'run-time',
     'runTime',
     'sample-dir',
