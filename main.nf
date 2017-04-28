@@ -1044,8 +1044,9 @@ process RunAscat {
 if (verbose) ascatOutput = ascatOutput.view {"Ascat output: $it"}
 
 vcfToAnnotate = Channel.create()
+vcfNotToAnnotate = Channel.create()
 
-if (step == 'annotate' && annotateVCF == []) {
+if (step == 'annotate' && annotateVCF == [] && annotateTools == []) {
   vcfToAnnotate =
     Channel.fromPath('VariantCalling/HaplotypeCaller/*.vcf.gz')
       .flatten().unique()
@@ -1067,45 +1068,69 @@ if (step == 'annotate' && annotateVCF == []) {
           .flatten().unique()
           .map{vcf -> ['vardict',vcf]}
   )
-} else if (step == 'annotate' && annotateVCF != []) {
-  annotateVCF.each {
-    vcfToAnnotate = vcfToAnnotate.mix(
-      Channel.fromPath(it)
-        .flatten().unique()
-        .map{vcf -> ['userspecified',vcf]}
-    )
-  }
-} else if (step != 'annotate'){
-  vcfNotToAnnotate = Channel.create()
-  vcfConcatenated
-  .choice(vcfToAnnotate, vcfNotToAnnotate) { it[0] == 'gvcf-hc' || it[0] == 'vardict' ? 1 : 0}
+} else if (step == 'annotate' && annotateVCF != [] && annotateTools == []) {
+
+  annotateVCF.each{vcfToAnnotate = vcfToAnnotate.mix(Channel.fromPath(it))}
 
   vcfToAnnotate = vcfToAnnotate
-  .map {
+    .flatten().unique()
+    .map{vcf -> ['userspecified',vcf]}
+
+} else if (step == 'annotate' && annotateTools != [] && annotateVCF == []) {
+  vcfToFilter =
+    Channel.fromPath('VariantCalling/HaplotypeCaller/*.vcf.gz')
+      .flatten().unique()
+      .map{vcf -> ['haplotypecaller',vcf]}
+      .mix(
+        Channel.fromPath('VariantCalling/Manta/*.{somaticSV,diploidSV}.vcf.gz')
+          .flatten().unique()
+          .map{vcf -> ['manta',vcf]},
+        Channel.fromPath('VariantCalling/MuTect1/*.vcf.gz')
+          .flatten().unique()
+          .map{vcf -> ['mutect1',vcf]},
+        Channel.fromPath('VariantCalling/MuTect2/*.vcf.gz')
+          .flatten().unique()
+          .map{vcf -> ['mutect2',vcf]},
+        Channel.fromPath('VariantCalling/Strelka/*passed_somatic*.vcf.gz')
+          .flatten().unique()
+          .map{vcf -> ['strelka',vcf]},
+        Channel.fromPath('VariantCalling/VarDict/*.vcf.gz')
+          .flatten().unique()
+          .map{vcf -> ['vardict',vcf]})
+
+  vcfToFilter
+    .choice(vcfToAnnotate, vcfNotToAnnotate) {it[0] in annotateTools ? 0 : 1}
+
+} else if (step != 'annotate'){
+  vcfConcatenated
+  .choice(vcfToAnnotate, vcfNotToAnnotate) { it[0] == 'gvcf-hc' || it[0] == 'freebayes' ? 1 : 0}
+
+  (strelkaPAssedIndels, strelkaPAssedSNVS) = strelkaOutput.into(2)
+  (mantaSomaticSV, mantaDiploidSV) = mantaOutput.into(2)
+
+  vcfToAnnotate = vcfToAnnotate.map {
     variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
     [variantcaller, vcf]
-  }
-
-  (strelkaAllIndels, strelkaAllSNVS, strelkaPAssedIndels, strelkaPAssedSNVS) = strelkaOutput.into(4)
-
-  strelkaAllIndels.close()
-  strelkaAllSNVS.close()
-  vcfNotToAnnotate.close()
-
-  strelkaPAssedIndels = strelkaPAssedIndels
-    .map {
+  }.mix(
+    strelkaPAssedIndels.map {
       variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
       [variantcaller, vcf[2]]
-    }
-
-  strelkaPAssedSNVS = strelkaPAssedSNVS
-    .map {
+    },
+    strelkaPAssedSNVS.map {
       variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
       [variantcaller, vcf[3]]
-    }
+    },
+    mantaSomaticSV.map {
+      variantcaller, idPatient, idSampleNormal, idSampleTumor, somaticSV, candidateSV, diploidSV, candidateSmallIndels ->
+      [variantcaller, somaticSV]
+    },
+    mantaDiploidSV.map {
+      variantcaller, idPatient, idSampleNormal, idSampleTumor, somaticSV, candidateSV, diploidSV, candidateSmallIndels ->
+      [variantcaller, diploidSV]
+    })
+} else exit 1, "specify only tools or files to annotate, bot both"
 
-  vcfToAnnotate = vcfToAnnotate.mix(strelkaPAssedIndels, strelkaPAssedSNVS)
-}
+vcfNotToAnnotate.close()
 
 if (verbose) vcfToAnnotate = vcfToAnnotate.view {"VCF for Annotation: $it"}
 

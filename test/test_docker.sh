@@ -26,20 +26,20 @@ echo "-----"
 echo "Starting Nextflow... Command:"
 echo "./nextflow run . -profile testing --step skipPreprocessing --tools FreeBayes,HaplotypeCaller,MultiQC,MuTect1,MuTect2,Strelka,VarDict"
 echo "-----"
-./nextflow run . -profile testing --step skipPreprocessing --tools FreeBayes,HaplotypeCaller,MultiQC,MuTect1,MuTect2,Strelka,VarDict
+./nextflow run . -profile testing --step skipPreprocessing --tools FreeBayes,HaplotypeCaller,MultiQC,MuTect1,MuTect2,Strelka,VarDict,snpEff
 echo "Cleaning up docker images:"
 echo "docker rmi -f $(docker images -q)"
 echo "-----"
 docker rmi -f $(docker images -q)
 echo "Starting Nextflow... Command:"
-echo "./nextflow run . -profile testing --step annotate --tools snpEff --annotateVCF VariantCalling/HaplotypeCaller/haplotypecaller_9876T.vcf.gz"
-echo "-----"
-./nextflow run . -profile testing --step annotate --tools snpEff --annotateVCF VariantCalling/HaplotypeCaller/haplotypecaller_9876T.vcf.gz
-echo "Starting Nextflow... Command:"
-echo "./nextflow run . -profile testing --step annotate --tools snpEff --annotateTools HaplotypeCaller"
-echo "-----"
-./nextflow run . -profile testing --step annotate --tools snpEff --annotateTools HaplotypeCaller
-echo "Starting Nextflow... Command:"
 echo "./nextflow run . -profile testing --step annotate --tools snpEff"
 echo "-----"
 ./nextflow run . -profile testing --step annotate --tools snpEff
+echo "Starting Nextflow... Command:"
+echo "./nextflow run . -profile testing --step annotate --tools snpEff --annotateTools MuTect2"
+echo "-----"
+./nextflow run . -profile testing --step annotate --tools snpEff --annotateTools MuTect2
+# echo "Starting Nextflow... Command:"
+# echo "./nextflow run . -profile testing --step annotate --tools snpEff --annotateVCF VariantCalling/MuTect2/mutect2_9876T_vs_1234N.vcf.gz,VariantCalling/MuTect2/mutect2_9877R_vs_1234N.vcf.gz"
+# echo "-----"
+# ./nextflow run . -profile testing --step annotate --tools snpEff --annotateVCF VariantCalling/MuTect2/mutect2_9876T_vs_1234N.vcf.gz,VariantCalling/MuTect2/mutect2_9877R_vs_1234N.vcf.gz
