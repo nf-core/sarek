@@ -1044,10 +1044,8 @@ process RunAscat {
 if (verbose) ascatOutput = ascatOutput.view {"Ascat output: $it"}
 
 vcfToAnnotate = Channel.create()
-vcfNotToAnnotate = Channel.create()
 
-if (step == 'annotate') {
-
+if (step == 'annotate' && annotateVCF == []) {
   vcfToAnnotate =
     Channel.fromPath('VariantCalling/HaplotypeCaller/*.vcf.gz')
       .flatten().unique()
@@ -1069,8 +1067,17 @@ if (step == 'annotate') {
           .flatten().unique()
           .map{vcf -> ['vardict',vcf]}
   )
-
-} else {
+} else if (step == 'annotate' && annotateVCF != []) {
+  annotateVCF.each {
+    println it
+    vcfToAnnotate = vcfToAnnotate.mix(
+      Channel.fromPath(it)
+        .flatten().unique()
+        .map{vcf -> ['userspecified',vcf]}
+    )
+  }
+} else if (step != 'annotate'){
+  vcfNotToAnnotate = Channel.create()
   vcfConcatenated
   .choice(vcfToAnnotate, vcfNotToAnnotate) { it[0] == 'gvcf-hc' || it[0] == 'vardict' ? 1 : 0}
 
