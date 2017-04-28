@@ -27,6 +27,14 @@ echo "Starting Nextflow... Command:"
 echo "./nextflow run . -profile testing --step skipPreprocessing --tools FreeBayes,HaplotypeCaller,MultiQC,MuTect1,MuTect2,Strelka,VarDict"
 echo "-----"
 ./nextflow run . -profile testing --step skipPreprocessing --tools FreeBayes,HaplotypeCaller,MultiQC,MuTect1,MuTect2,Strelka,VarDict
+echo "Cleaning up docker images:"
+echo "docker rmi -f $(docker images -q)"
+echo "-----"
+docker rmi -f $(docker images -q)
+echo "Starting Nextflow... Command:"
+echo "./nextflow run . -profile testing --step annotate --tools snpEff --annotateVCF VariantCalling/HaplotypeCaller/haplotypecaller_9877R.vcf.gz"
+echo "-----"
+./nextflow run . -profile testing --step annotate --tools snpEff --annotateVCF VariantCalling/HaplotypeCaller/haplotypecaller_9877R.vcf.gz
 echo "Starting Nextflow... Command:"
 echo "./nextflow run . -profile testing --step annotate --tools snpEff"
 echo "-----"
