@@ -1069,7 +1069,6 @@ if (step == 'annotate' && annotateVCF == []) {
   )
 } else if (step == 'annotate' && annotateVCF != []) {
   annotateVCF.each {
-    println it
     vcfToAnnotate = vcfToAnnotate.mix(
       Channel.fromPath(it)
         .flatten().unique()
