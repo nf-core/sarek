@@ -28,6 +28,6 @@ echo "./nextflow run . -profile testing --step skipPreprocessing --tools FreeBay
 echo "-----"
 ./nextflow run . -profile testing --step skipPreprocessing --tools FreeBayes,HaplotypeCaller,MultiQC,MuTect1,MuTect2,Strelka,VarDict
 echo "Starting Nextflow... Command:"
-echo "./nextflow run . -profile testing --step skipPreprocessing --tools snpEff --annotateAll"
+echo "./nextflow run . -profile testing --step annotate --tools snpEff"
 echo "-----"
-./nextflow run . -profile testing --step skipPreprocessing --tools snpEff --annotateAll
+./nextflow run . -profile testing --step annotate --tools snpEff

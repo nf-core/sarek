@@ -77,7 +77,6 @@ if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <
 
 step = params.step.toLowerCase()
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
-annotateAll = params.annotateAll ? true : false
 annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
 annotateVCF = params.annotateVCF ? params.annotateVCF.split(',').collect{it.trim()} : []
 
@@ -106,7 +105,8 @@ if (!params.sample && !params.sampleDir) {
   'preprocessing': "$workflow.projectDir/data/tsv/tiny.tsv",
   'realign': "$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv",
   'recalibrate': "$workflow.launchDir/$directoryMap.nonRecalibrated/nonRecalibrated.tsv",
-  'skippreprocessing': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv"
+  'skippreprocessing': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv",
+  'annotate': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv"
   ]
   if (params.test || step != 'preprocessing') tsvPath = tsvPaths[step]
 }
@@ -117,6 +117,7 @@ bamFiles = Channel.empty()
 if (tsvPath) {
   tsvFile = file(tsvPath)
   switch (step) {
+    case 'annotate': bamFiles = extractBams(tsvFile); break
     case 'preprocessing': fastqFiles = extractFastq(tsvFile); break
     case 'realign': bamFiles = extractBams(tsvFile); break
     case 'recalibrate': bamFiles = extractRecal(tsvFile); break
@@ -1045,39 +1046,29 @@ if (verbose) ascatOutput = ascatOutput.view {"Ascat output: $it"}
 vcfToAnnotate = Channel.create()
 vcfNotToAnnotate = Channel.create()
 
-if (annotateAll) {
+if (step == 'annotate') {
 
-  vcfHcTEMP = Channel.fromPath(
-    'VariantCalling/HaplotypeCaller/*.vcf.gz' )
-    .flatten().unique()
-    .map{vcf -> ['haplotypecaller',vcf]}
-  vcfMantaTEMP = Channel.fromPath(
-    'VariantCalling/Manta/*.{somaticSV,diploidSV}.vcf.gz' )
-    .flatten().unique()
-    .map{vcf -> ['manta',vcf]}
-  vcfMT1TEMP = Channel.fromPath(
-    'VariantCalling/MuTect1/*.vcf.gz' )
-    .flatten().unique()
-    .map{vcf -> ['mutect1',vcf]}
-  vcfMT2TEMP = Channel.fromPath(
-    'VariantCalling/MuTect2/*.vcf.gz' )
-    .flatten().unique()
-    .map{vcf -> ['mutect2',vcf]}
-  vcfStrelkaTEMP = Channel.fromPath(
-    'VariantCalling/Strelka/*passed_somatic*.vcf.gz' )
-    .flatten().unique()
-    .map{vcf -> ['strelka',vcf]}
-  vcfVardictTEMP = Channel.fromPath(
-    'VariantCalling/VarDict/*.vcf.gz' )
-    .flatten().unique()
-    .map{vcf -> ['vardict',vcf]}
-
-  vcfToAnnotate = vcfHcTEMP.mix(
-    vcfMantaTEMP,
-    vcfMT1TEMP,
-    vcfMT2TEMP,
-    vcfStrelkaTEMP,
-    vcfVardictTEMP)
+  vcfToAnnotate =
+    Channel.fromPath('VariantCalling/HaplotypeCaller/*.vcf.gz')
+      .flatten().unique()
+      .map{vcf -> ['haplotypecaller',vcf]}
+      .mix(
+        Channel.fromPath('VariantCalling/Manta/*.{somaticSV,diploidSV}.vcf.gz')
+          .flatten().unique()
+          .map{vcf -> ['manta',vcf]},
+        Channel.fromPath('VariantCalling/MuTect1/*.vcf.gz')
+          .flatten().unique()
+          .map{vcf -> ['mutect1',vcf]},
+        Channel.fromPath('VariantCalling/MuTect2/*.vcf.gz')
+          .flatten().unique()
+          .map{vcf -> ['mutect2',vcf]},
+        Channel.fromPath('VariantCalling/Strelka/*passed_somatic*.vcf.gz')
+          .flatten().unique()
+          .map{vcf -> ['strelka',vcf]},
+        Channel.fromPath('VariantCalling/VarDict/*.vcf.gz')
+          .flatten().unique()
+          .map{vcf -> ['vardict',vcf]}
+  )
 
 } else {
   vcfConcatenated
@@ -1312,10 +1303,8 @@ def checkParameterList(list, realList) {
 def checkParams(it) {
   // Check if params is in this given list
   return it in [
-    'annotate-all',
     'annotate-tools',
     'annotate-VCF',
-    'annotateAll',
     'annotateTools',
     'annotateVCF',
     'call-name',
@@ -1443,6 +1432,7 @@ def defineReferenceMap() {
 
 def defineStepList() {
   return [
+    'annotate',
     'preprocessing',
     'realign',
     'recalibrate',
