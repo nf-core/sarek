@@ -102,11 +102,11 @@ if (params.sample) tsvPath = params.sample
 
 if (!params.sample && !params.sampleDir) {
   tsvPaths = [
+  'annotate': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv",
   'preprocessing': "$workflow.projectDir/data/tsv/tiny.tsv",
   'realign': "$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv",
   'recalibrate': "$workflow.launchDir/$directoryMap.nonRecalibrated/nonRecalibrated.tsv",
-  'skippreprocessing': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv",
-  'annotate': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv"
+  'skippreprocessing': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv"
   ]
   if (params.test || step != 'preprocessing') tsvPath = tsvPaths[step]
 }
