@@ -34,7 +34,11 @@ docker rmi -f $(docker images -q)
 echo "Starting Nextflow... Command:"
 echo "./nextflow run . -profile testing --step annotate --tools snpEff --annotateVCF VariantCalling/HaplotypeCaller/haplotypecaller_9877R.vcf.gz"
 echo "-----"
-./nextflow run . -profile testing --step annotate --tools snpEff --annotateVCF VariantCalling/HaplotypeCaller/haplotypecaller_9877R.vcf.gz
+./nextflow run . -profile testing --step annotate --tools snpEff --annotateVCF VariantCalling/HaplotypeCaller/haplotypecaller_9877R.vcf.gz,VariantCalling/HaplotypeCaller/haplotypecaller_1234N.vcf
+echo "Starting Nextflow... Command:"
+echo "./nextflow run . -profile testing --step annotate --tools snpEff --annotateTools HaplotypeCaller"
+echo "-----"
+./nextflow run . -profile testing --step annotate --tools snpEff --annotateTools HaplotypeCaller
 echo "Starting Nextflow... Command:"
 echo "./nextflow run . -profile testing --step annotate --tools snpEff"
 echo "-----"
