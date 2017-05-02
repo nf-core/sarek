@@ -1070,13 +1070,16 @@ if (step == 'annotate' && annotateVCF == []) {
 
 } else if (step == 'annotate' && annotateTools == [] && annotateVCF != []) {
 
-  annotateVCF.each{vcfToAnnotate = vcfToAnnotate.mix(Channel.fromPath(it))}
+  list = ""
+  annotateVCF.each{ list += ",$it" }
+  list = list.substring(1)
 
-  vcfToAnnotate = vcfToAnnotate
-    .flatten().unique()
+  vcfToAnnotate = Channel.fromPath("{$list}")
     .map{vcf -> ['userspecified',vcf]}
 
-} else if (step != 'annotate'){
+    vcfToAnnotate = vcfToAnnotate.view {"VCF for Annotation: $it"}
+
+} else if (step != 'annotate') {
   vcfConcatenated
     .choice(vcfToAnnotate, vcfNotToAnnotate) { it[0] == 'gvcf-hc' || it[0] == 'freebayes' ? 1 : 0 }
 
