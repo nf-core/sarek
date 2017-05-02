@@ -38,12 +38,13 @@ Choose from wich step the workflow will start. Choose only one step. Possible va
 - realign (will start workflow with BAM files (with T/N BAMs that were not realigned together))
 - recalibrate (will start workflow with BAM files and Recalibration Tables (Only with T/N BAMs that were realigned together))
 - skippreprocessing (will skip entire preprocessing (Only with T/N BAMs that were realigned together))
+- annotate (will annotate Variant Calling output. By default it will try to annotate all available vcfs. Use with ```--annotateTools``` or ```--annotateVCF``` to specify what to annotate)
 
 `--step` option is case insensitive to avoid easy introduction of errors when choosing a step. So you can write `--step skipPreprocessing` or `--step skippreprocessing` without worrying about case sensitivity.
 
 ### --test
 
-Test run CAW on a smaller dataset, that way you don't have to specify `--sample data/tsv/tiny.tsv --intervals repeats/tiny.list`
+Test run CAW on a smaller dataset, that way you don't have to specify `--sample data/tsv/tiny.tsv`
 
 ### --tools `tool1[,tool2,tool3...]`
 
@@ -61,6 +62,20 @@ Choose which tools will be used in the workflow. Different tools to be separated
 - vep (use VEP for Annotation)
 
 `--tools` option is case insensitive to avoid easy introduction of errors when choosing tools. So you can write `--tools mutect2,snpEff` or `--tools MuTect2,snpeff` without worrying about case sensitivity.
+
+### --annotateTools `tool1[,tool2,tool3...]`
+
+Choose which tools to annotate. Different tools to be separated by commas. Possible values are:
+- haplotypecaller (Annotate HaplotypeCaller output)
+- manta (Annotate Manta output)
+- mutect1 (Annotate MuTect1 output)
+- mutect2 (Annotate MuTect2 output)
+- strelka (Annotate Strelka output)
+- vardict (Annotate VarDict output)
+
+### --annotateVCF `file1[,file2,file3...]`
+
+Choose which vcf to annotate. Different vcf to be separated by commas.
 
 ### --verbose
 

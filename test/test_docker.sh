@@ -24,6 +24,22 @@ echo "nextflow run . -profile testing --step recalibrate"
 echo "-----"
 nextflow run . -profile testing --step recalibrate
 echo "Starting Nextflow... Command:"
-echo "nextflow run . -profile testing --step skipPreprocessing --tools HaplotypeCaller,MultiQC,MuTect1,MuTect2,Strelka,snpEff,VEP,VarDict"
+echo "nextflow run . -profile testing --step skipPreprocessing --tools FreeBayes,HaplotypeCaller,MultiQC,MuTect1,MuTect2,Strelka,VarDict"
 echo "-----"
-nextflow run . -profile testing --step skipPreprocessing --tools FreeBayes,HaplotypeCaller,MultiQC,MuTect1,MuTect2,Strelka,snpEff,VarDict
+nextflow run . -profile testing --step skipPreprocessing --tools FreeBayes,HaplotypeCaller,MultiQC,MuTect1,MuTect2,Strelka,VarDict
+echo "Cleaning up docker images:"
+echo "docker rmi -f maxulysse/multiqc:1.1 maxulysse/strelka:1.1 maxulysse/freebayes:1.1 maxulysse/samtools:1.1 maxulysse/bcftools:1.1 maxulysse/mutect1:1.1 maxulysse/vardictjava:1.1"
+echo "-----"
+docker rmi -f maxulysse/multiqc:1.1 maxulysse/strelka:1.1 maxulysse/freebayes:1.1 maxulysse/samtools:1.1 maxulysse/bcftools:1.1 maxulysse/mutect1:1.1 maxulysse/vardictjava:1.1
+echo "Starting Nextflow... Command:"
+echo "nextflow run . -profile testing --step skipPreprocessing --tools MuTect2,snpEff"
+echo "-----"
+nextflow run . -profile testing --step skipPreprocessing --tools MuTect2,snpEff
+echo "Starting Nextflow... Command:"
+echo "nextflow run . -profile testing --step annotate --tools snpEff --annotateTools MuTect2"
+echo "-----"
+nextflow run . -profile testing --step annotate --tools snpEff --annotateTools MuTect2
+echo "Starting Nextflow... Command:"
+echo "nextflow run . -profile testing --step annotate --tools snpEff --annotateVCF VariantCalling/MuTect2/mutect2_9876T_vs_1234N.vcf.gz,VariantCalling/MuTect2/mutect2_9877R_vs_1234N.vcf.gz"
+echo "-----"
+nextflow run . -profile testing --step annotate --tools snpEff --annotateVCF VariantCalling/MuTect2/mutect2_9876T_vs_1234N.vcf.gz,VariantCalling/MuTect2/mutect2_9877R_vs_1234N.vcf.gz
