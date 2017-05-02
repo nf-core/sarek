@@ -1078,7 +1078,7 @@ if (step == 'annotate' && annotateVCF == []) {
 
 } else if (step != 'annotate'){
   vcfConcatenated
-  .choice(vcfToAnnotate, vcfNotToAnnotate) { it[0] == 'gvcf-hc' || it[0] == 'freebayes' ? 1 : 0 }
+    .choice(vcfToAnnotate, vcfNotToAnnotate) { it[0] == 'gvcf-hc' || it[0] == 'freebayes' ? 1 : 0 }
 
   (strelkaPAssedIndels, strelkaPAssedSNVS) = strelkaOutput.into(2)
   (mantaSomaticSV, mantaDiploidSV) = mantaOutput.into(2)
