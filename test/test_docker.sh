@@ -28,9 +28,9 @@ echo "./nextflow run . -profile testing --step skipPreprocessing --tools FreeBay
 echo "-----"
 ./nextflow run . -profile testing --step skipPreprocessing --tools FreeBayes,HaplotypeCaller,MultiQC,MuTect1,MuTect2,Strelka,VarDict
 echo "Cleaning up docker images:"
-echo "docker rmi -f $(docker images -q)"
+echo "docker rmi -f maxulysse/multiqc:1.1 maxulysse/strelka:1.1 maxulysse/freebayes:1.1 maxulysse/samtools:1.1 maxulysse/bcftools:1.1 maxulysse/mutect1:1.1 maxulysse/vardictjava:1.1"
 echo "-----"
-docker rmi -f $(docker images -q)
+docker rmi -f maxulysse/multiqc:1.1 maxulysse/strelka:1.1 maxulysse/freebayes:1.1 maxulysse/samtools:1.1 maxulysse/bcftools:1.1 maxulysse/mutect1:1.1 maxulysse/vardictjava:1.1
 echo "Starting Nextflow... Command:"
 echo "./nextflow run . -profile testing --step skipPreprocessing --tools MuTect2,snpEff"
 echo "-----"
