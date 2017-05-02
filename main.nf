@@ -1068,7 +1068,7 @@ if (step == 'annotate' && annotateVCF == [] && annotateTools == []) {
           .flatten().unique()
           .map{vcf -> ['vardict',vcf]}
   )
-} else if (step == 'annotate' && annotateVCF != [] && annotateTools == []) {
+} else if (step == 'annotate' && annotateTools == [] && annotateVCF != []) {
 
   annotateVCF.each{vcfToAnnotate = vcfToAnnotate.mix(Channel.fromPath(it))}
 
