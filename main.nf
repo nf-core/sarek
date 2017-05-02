@@ -77,6 +77,8 @@ if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <
 
 step = params.step.toLowerCase()
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
+annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
+annotateVCF = params.annotateVCF ? params.annotateVCF.split(',').collect{it.trim()} : []
 
 directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
@@ -100,6 +102,7 @@ if (params.sample) tsvPath = params.sample
 
 if (!params.sample && !params.sampleDir) {
   tsvPaths = [
+  'annotate': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv",
   'preprocessing': "$workflow.projectDir/data/tsv/tiny.tsv",
   'realign': "$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv",
   'recalibrate': "$workflow.launchDir/$directoryMap.nonRecalibrated/nonRecalibrated.tsv",
@@ -114,6 +117,7 @@ bamFiles = Channel.empty()
 if (tsvPath) {
   tsvFile = file(tsvPath)
   switch (step) {
+    case 'annotate': bamFiles = extractBams(tsvFile); break
     case 'preprocessing': fastqFiles = extractFastq(tsvFile); break
     case 'realign': bamFiles = extractBams(tsvFile); break
     case 'recalibrate': bamFiles = extractRecal(tsvFile); break
@@ -592,7 +596,7 @@ if (verbose) bamsForManta = bamsForManta.view {"Bams for Manta: $it"}
 if (verbose) bamsForStrelka = bamsForStrelka.view {"Bams for Strelka: $it"}
 
 process RunHaplotypecaller {
-  tag {idPatient + "-" + idSample + "-" + gen_int}
+  tag {idSample + "-" + gen_int}
 
   input:
     set idPatient, idSample, file(bam), file(bai), genInt, gen_int from bamsFHC //Are these values `ped to bamNormal already?
@@ -630,7 +634,7 @@ hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3,4])
 verbose ? hcGenomicVCF = hcGenomicVCF.view {"HaplotypeCaller output: $it"} : ''
 
 process RunGenotypeGVCFs {
-  tag {idPatient + "-" + idSample + "-" + gen_int}
+  tag {idSample + "-" + gen_int}
 
   input:
     set idPatient, idSample, genInt, gen_int, file(gvcf) from vcfsToGenotype
@@ -665,7 +669,7 @@ hcGenotypedVCF = hcGenotypedVCF.groupTuple(by:[0,1,2,3,4])
 if (verbose) hcGenotypedVCF = hcGenotypedVCF.view {"GenotypeGVCFs output: $it"}
 
 process RunMutect1 {
-  tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
+  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + gen_int}
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT1
@@ -705,7 +709,7 @@ mutect1Output = mutect1Output.groupTuple(by:[0,1,2,3,4])
 if (verbose) mutect1Output = mutect1Output.view {"MuTect1 output: $it"}
 
 process RunMutect2 {
-  tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
+  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + gen_int}
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
@@ -744,7 +748,7 @@ mutect2Output = mutect2Output.groupTuple(by:[0,1,2,3,4])
 if (verbose) mutect2Output = mutect2Output.view {"MuTect2 output: $it"}
 
 process RunFreeBayes {
-  tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
+  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + gen_int}
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFFB
@@ -777,7 +781,7 @@ freebayesOutput = freebayesOutput.groupTuple(by:[0,1,2,3,4])
 if (verbose) freebayesOutput = freebayesOutput.view {"FreeBayes output: $it"}
 
 process RunVardict {
-  tag {idPatient + "-" + idSampleTumor + "-" + gen_int}
+  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + gen_int}
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFVD
@@ -814,7 +818,7 @@ vcfsToMerge = hcGenomicVCF.mix(hcGenotypedVCF, mutect1Output, mutect2Output, fre
 if (verbose) vcfsToMerge = vcfsToMerge.view {"VCFs To be merged: $it"}
 
 process ConcatVCF {
-  tag {variantCaller in ['gvcf-hc', 'haplotypecaller'] ? idPatient + "-" + variantCaller + "-" + idSampleNormal : idPatient + "-" + variantCaller + "-" + idSampleNormal + "-" + idSampleTumor}
+  tag {variantCaller in ['gvcf-hc', 'haplotypecaller'] ? variantCaller + "-" + idSampleNormal : variantCaller + "_" + idSampleTumor + "_vs_" + idSampleNormal}
 
   publishDir "${directoryMap."$variantCaller"}", mode: 'copy'
 
@@ -873,7 +877,7 @@ process ConcatVCF {
 if (verbose) vcfConcatenated = vcfConcatenated.view {"VCF concatenated: $it"}
 
 process RunStrelka {
-  tag {idPatient + "-" + idSampleTumor}
+  tag {idSampleTumor + "_vs_" + idSampleNormal}
 
   publishDir directoryMap.strelka, mode: 'copy'
 
@@ -918,7 +922,7 @@ process RunStrelka {
 if (verbose) strelkaOutput = strelkaOutput.view {"Strelka output: $it"}
 
 process RunManta {
-  tag {idPatient + "-" + idSampleTumor}
+  tag {idSampleTumor + "_vs_" + idSampleNormal}
 
   publishDir directoryMap.manta, mode: 'copy'
 
@@ -955,7 +959,7 @@ if (verbose) mantaOutput = mantaOutput.view {"Manta output: $it"}
 // Run commands and code from Malin Larsson
 // Based on Jesper Eisfeldt's code
 process RunAlleleCount {
-  tag {idPatient + "-" + idSample}
+  tag {idSample}
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamsForAscat
@@ -997,7 +1001,7 @@ if (verbose) alleleCountOutput = alleleCountOutput.view {"alleleCount output: $i
 // R script from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
 process RunConvertAlleleCounts {
-  tag {idPatient + "-" + idSampleTumor}
+  tag {idSampleTumor + "_vs_" + idSampleNormal}
 
   publishDir directoryMap.ascat, mode: 'copy'
 
@@ -1019,7 +1023,7 @@ process RunConvertAlleleCounts {
 // R scripts from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
 process RunAscat {
-  tag {idPatient + "-" + idSampleTumor}
+  tag {idSampleTumor + "_vs_" + idSampleNormal}
 
   publishDir directoryMap.ascat, mode: 'copy'
 
@@ -1039,72 +1043,82 @@ process RunAscat {
 
 if (verbose) ascatOutput = ascatOutput.view {"Ascat output: $it"}
 
-// process MergeVCF {
-//   tag {idPatient + "-" + idSample}
-//
-//   input:
-//     set idPatient, status, idSample, file(vcf) from ???
-//
-//   output:
-//     set idPatient, status, idSample, file ("???") into vcfMerged
-//
-//     'mutect1' in tools || 'mutect2' in tools
-//
-//     script:
-//     """
-//
-//     """
-// }
+vcfToAnnotate = Channel.create()
+vcfNotToAnnotate = Channel.create()
 
-vcfMerged = Channel.create()
-vcfNotMerged = Channel.create()
+if (step == 'annotate' && annotateVCF == []) {
+  Channel.empty().mix(
+    Channel.fromPath('VariantCalling/HaplotypeCaller/*.vcf.gz')
+      .flatten().unique()
+      .map{vcf -> ['haplotypecaller',vcf]},
+    Channel.fromPath('VariantCalling/Manta/*.{somaticSV,diploidSV}.vcf.gz')
+      .flatten().unique()
+      .map{vcf -> ['manta',vcf]},
+    Channel.fromPath('VariantCalling/MuTect1/*.vcf.gz')
+      .flatten().unique()
+      .map{vcf -> ['mutect1',vcf]},
+    Channel.fromPath('VariantCalling/MuTect2/*.vcf.gz')
+      .flatten().unique()
+      .map{vcf -> ['mutect2',vcf]},
+    Channel.fromPath('VariantCalling/Strelka/*passed_somatic*.vcf.gz')
+      .flatten().unique()
+      .map{vcf -> ['strelka',vcf]},
+    Channel.fromPath('VariantCalling/VarDict/*.vcf.gz')
+      .flatten().unique()
+      .map{vcf -> ['vardict',vcf]}
+  ).choice(vcfToAnnotate, vcfNotToAnnotate) { annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1 }
 
-vcfConcatenated
-  .choice(vcfMerged, vcfNotMerged) {it[0] == 'mutect1' ? 0 : 1}
+} else if (step == 'annotate' && annotateTools == [] && annotateVCF != []) {
+  list = ""
+  annotateVCF.each{ list += ",$it" }
+  list = list.substring(1)
 
-(strelkaAllIndels, strelkaAllSNVS, strelkaPAssedIndels, strelkaPAssedSNVS) = strelkaOutput.into(4)
+  vcfToAnnotate = Channel.fromPath("{$list}")
+    .map{vcf -> ['userspecified',vcf]}
 
-strelkaAllIndels = strelkaAllIndels
-  .map {
+  vcfToAnnotate = vcfToAnnotate.view {"VCF for Annotation: $it"}
+} else if (step != 'annotate') {
+  vcfConcatenated
+    .choice(vcfToAnnotate, vcfNotToAnnotate) { it[0] == 'gvcf-hc' || it[0] == 'freebayes' ? 1 : 0 }
+
+  (strelkaPAssedIndels, strelkaPAssedSNVS) = strelkaOutput.into(2)
+  (mantaSomaticSV, mantaDiploidSV) = mantaOutput.into(2)
+
+  vcfToAnnotate = vcfToAnnotate.map {
     variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
-    [variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf[0]]
-}
+    [variantcaller, vcf]
+  }.mix(
+    strelkaPAssedIndels.map {
+      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
+      [variantcaller, vcf[2]]
+    },
+    strelkaPAssedSNVS.map {
+      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
+      [variantcaller, vcf[3]]
+    },
+    mantaSomaticSV.map {
+      variantcaller, idPatient, idSampleNormal, idSampleTumor, somaticSV, candidateSV, diploidSV, candidateSmallIndels ->
+      [variantcaller, somaticSV]
+    },
+    mantaDiploidSV.map {
+      variantcaller, idPatient, idSampleNormal, idSampleTumor, somaticSV, candidateSV, diploidSV, candidateSmallIndels ->
+      [variantcaller, diploidSV]
+    })
+} else exit 1, "specify only tools or files to annotate, bot both"
 
-strelkaAllSNVS = strelkaAllSNVS
-  .map {
-    variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
-    [variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf[1]]
-}
+vcfNotToAnnotate.close()
 
-strelkaPAssedIndels = strelkaPAssedIndels
-  .map {
-    variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
-    [variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf[2]]
-}
+if (verbose) vcfToAnnotate = vcfToAnnotate.view {"VCF for Annotation: $it"}
 
-strelkaPAssedSNVS = strelkaPAssedSNVS
-  .map {
-    variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
-    [variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf[3]]
-}
-
-vcfMerged = vcfMerged.mix(strelkaAllIndels, strelkaAllSNVS, strelkaPAssedIndels, strelkaPAssedSNVS)
-
-if (verbose) vcfMerged = vcfMerged.view {"VCF for Annotation: $it"}
-
-vcfForSnpeff = Channel.create()
-vcfForBCF = Channel.create()
-vcfForVep = Channel.create()
-
-(vcfForBCF, vcfMerged) = vcfMerged.into(2)
+(vcfForBCF, vcfForSnpeff, vcfForVep) = vcfToAnnotate.into(3)
 
 process RunBcftoolsStats {
-  tag {variantCaller + "-" + idPatient + "-" + idSample}
+  tag {vcf}
 
   publishDir directoryMap.bcftoolsStats, mode: 'copy'
 
   input:
-    set variantCaller, idPatient, idSampleNormal, idSampleTumor, file(vcf) from vcfForBCF
+    set variantCaller, file(vcf) from vcfForBCF
 
   output:
     file ("${vcf.baseName}.bcf.tools.stats.out") into bcfReport
@@ -1117,15 +1131,13 @@ process RunBcftoolsStats {
   """
 }
 
-(vcfForSnpeff, vcfForVep) = vcfMerged.into(2)
-
 process RunSnpeff {
-  tag {variantCaller + "-" + idSampleTumor + "_vs_" + idSampleNormal}
+  tag {vcf}
 
   publishDir directoryMap.snpeff, mode: 'copy'
 
   input:
-    set variantCaller, idPatient, idSampleNormal, idSampleTumor, file(vcf) from vcfForSnpeff
+    set variantCaller, file(vcf) from vcfForSnpeff
     val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
 
   output:
@@ -1151,17 +1163,17 @@ process RunSnpeff {
 if (verbose) snpeffReport = snpeffReport.view {"snpEff Reports: $it"}
 
 process RunVEP {
-  tag {variantCaller + "-" + idSampleTumor + "_vs_" + idSampleNormal}
+  tag {vcf}
 
   publishDir directoryMap.vep, mode: 'copy'
 
   input:
-    set variantCaller, idPatient, idSampleNormal, idSampleTumor, file(vcf) from vcfForVep
+    set variantCaller, file(vcf) from vcfForVep
 
   output:
     set file("${vcf.baseName}_VEP.txt"), file("${vcf.baseName}_VEP.txt_summary.html") into vepReport
 
-  when: 'vep' in tools && variantCaller != 'strelka'
+  when: 'vep' in tools && variantCaller != 'freebayes' && variantCaller != 'haplotypecaller' && variantCaller != 'mutect1' && variantCaller != 'mutect2' && variantCaller != 'strelka'
 
   script:
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
@@ -1298,21 +1310,25 @@ def checkParameterList(list, realList) {
 def checkParams(it) {
   // Check if params is in this given list
   return it in [
-    'callName',
+    'annotate-tools',
+    'annotate-VCF',
+    'annotateTools',
+    'annotateVCF',
     'call-name',
-    'contactMail',
+    'callName',
     'contact-mail',
+    'contactMail',
     'genome',
     'genomes',
     'help',
     'project',
-    'runTime',
     'run-time',
+    'runTime',
+    'sample-dir',
     'sample',
     'sampleDir',
-    'sample-dir',
-    'singleCPUMem',
     'single-CPUMem',
+    'singleCPUMem',
     'step',
     'test',
     'tools',
@@ -1423,6 +1439,7 @@ def defineReferenceMap() {
 
 def defineStepList() {
   return [
+    'annotate',
     'preprocessing',
     'realign',
     'recalibrate',
@@ -1624,6 +1641,9 @@ def helpMessage(version, revision) { // Display help message
   log.info "         realign (will start workflow with non-realigned BAM files)"
   log.info "         recalibrate (will start workflow with non-recalibrated BAM files)"
   log.info "         skippreprocessing (will start workflow with recalibrated BAM files)"
+  log.info "         annotate (will annotate Variant Calling output."
+  log.info "         By default it will try to annotate all available vcfs."
+  log.info "         Use with --annotateTools or --annotateVCF to specify what to annotate"
   log.info "    --tools"
   log.info "       Option to configure which tools to use in the workflow."
   log.info "         Different tools to be separated by commas."
@@ -1638,6 +1658,19 @@ def helpMessage(version, revision) { // Display help message
   log.info "         ascat (use Ascat for CNV)"
   log.info "         snpeff (use snpEff for Annotation of Variants)"
   log.info "         vep (use VEP for Annotation of Variants)"
+  log.info "    --annotateTools"
+  log.info "       Option to configure which tools to annotate."
+  log.info "         Different tools to be separated by commas."
+  log.info "       Possible values are:"
+  log.info "         haplotypecaller (Annotate HaplotypeCaller output)"
+  log.info "         manta (Annotate Manta output)"
+  log.info "         mutect1 (Annotate MuTect1 output)"
+  log.info "         mutect2 (Annotate MuTect2 output)"
+  log.info "         strelka (Annotate Strelka output)"
+  log.info "         vardict (Annotate VarDict output)"
+  log.info "    --annotateVCF"
+  log.info "       Option to configure which vcf to annotate."
+  log.info "         Different vcf to be separated by commas."
   log.info "    --genome <Genome>"
   log.info "       Use a specific genome version."
   log.info "       Possible values are:"
