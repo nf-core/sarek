@@ -32,6 +32,10 @@ echo "docker rmi -f $(docker images -q)"
 echo "-----"
 docker rmi -f $(docker images -q)
 echo "Starting Nextflow... Command:"
+echo "./nextflow run . -profile testing --step skipPreprocessing --tools MuTect2,snpEff"
+echo "-----"
+./nextflow run . -profile testing --step skipPreprocessing --tools MuTect2,snpEff
+echo "Starting Nextflow... Command:"
 echo "./nextflow run . -profile testing --step annotate --tools snpEff --annotateTools MuTect2"
 echo "-----"
 ./nextflow run . -profile testing --step annotate --tools snpEff --annotateTools MuTect2
