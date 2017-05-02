@@ -12,6 +12,8 @@ env:
 
 install:
   - curl -fsSL get.nextflow.io | bash
+  - chmod 755 nextflow
+  - sudo ln -s ~/nextflow /usr/local/bin/
 
 script:
   - ./test/test_docker.sh
