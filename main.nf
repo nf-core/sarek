@@ -1076,7 +1076,6 @@ if (step == 'annotate' && annotateVCF == []) {
   vcfToAnnotate = Channel.fromPath("{$list}")
     .map{vcf -> ['userspecified',vcf]}
 
-  vcfToAnnotate = vcfToAnnotate.view {"VCF for Annotation: $it"}
 } else if (step != 'annotate') {
   vcfConcatenated
     .choice(vcfToAnnotate, vcfNotToAnnotate) { it[0] == 'gvcf-hc' || it[0] == 'freebayes' ? 1 : 0 }
