@@ -456,7 +456,7 @@ process RecalibrateBam {
     ])
 
   output:
-    set idPatient, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam
+    set idPatient, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam, recalibratedBamForStats
     set idPatient, status, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into recalibratedBamTSV
 
   when: step != 'skippreprocessing'
@@ -484,8 +484,6 @@ recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
 if (step == 'skippreprocessing') recalibratedBam = bamFiles
 
 if (verbose) recalibratedBam = recalibratedBam.view {"Recalibrated BAM for variant Calling: $it"}
-
-(recalibratedBam, recalibratedBamForStats) = recalibratedBam.into(2)
 
 process RunSamtoolsStats {
   tag {idPatient + "-" + idSample}
