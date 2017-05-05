@@ -6,4 +6,4 @@ module load Nextflow
 export NXF_TEMP=/scratch
 export NXF_LAUNCHBASE=/scratch
 export NXF_WORK=/scratch
-nextflow run /home/szilva/CAW/main.nf -c /home/szilva/CAW/nextflow.config -profile localhost --project sens2016004 --verbose --step preprocessing --sample $1
+nextflow run ${HOME}/CAW/main.nf -c ${HOME}/CAW/nextflow.config -profile localhost --project sens2016004 --verbose --step preprocessing --sample $1
