@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 echo "Starting Nextflow... Command:"
 echo "nextflow run buildReferences.nf -profile testing --download"
 echo "-----"
