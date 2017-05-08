@@ -630,7 +630,7 @@ process RunHaplotypecaller {
   """
 }
 
-hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3,4])
+hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3])
 verbose ? hcGenomicVCF = hcGenomicVCF.view {"HaplotypeCaller output: $it"} : ''
 
 process RunGenotypeGVCFs {
@@ -665,7 +665,7 @@ process RunGenotypeGVCFs {
   -o ${gen_int}_${idSample}.vcf
   """
 }
-hcGenotypedVCF = hcGenotypedVCF.groupTuple(by:[0,1,2,3,4])
+hcGenotypedVCF = hcGenotypedVCF.groupTuple(by:[0,1,2,3])
 if (verbose) hcGenotypedVCF = hcGenotypedVCF.view {"GenotypeGVCFs output: $it"}
 
 process RunMutect1 {
@@ -705,7 +705,7 @@ process RunMutect1 {
   """
 }
 
-mutect1Output = mutect1Output.groupTuple(by:[0,1,2,3,4])
+mutect1Output = mutect1Output.groupTuple(by:[0,1,2,3])
 if (verbose) mutect1Output = mutect1Output.view {"MuTect1 output: $it"}
 
 process RunMutect2 {
@@ -744,7 +744,7 @@ process RunMutect2 {
   """
 }
 
-mutect2Output = mutect2Output.groupTuple(by:[0,1,2,3,4])
+mutect2Output = mutect2Output.groupTuple(by:[0,1,2,3])
 if (verbose) mutect2Output = mutect2Output.view {"MuTect2 output: $it"}
 
 process RunFreeBayes {
@@ -777,7 +777,7 @@ process RunFreeBayes {
   """
 }
 
-freebayesOutput = freebayesOutput.groupTuple(by:[0,1,2,3,4])
+freebayesOutput = freebayesOutput.groupTuple(by:[0,1,2,3])
 if (verbose) freebayesOutput = freebayesOutput.view {"FreeBayes output: $it"}
 
 process RunVardict {
@@ -808,7 +808,7 @@ process RunVardict {
   """
 }
 
-vardictOutput = vardictOutput.groupTuple(by:[0,1,2,3,4])
+vardictOutput = vardictOutput.groupTuple(by:[0,1,2,3])
 if (verbose) vardictOutput = vardictOutput.view {"vardictOutput output: $it"}
 
 // we are merging the VCFs that are called separatelly for different intervals
