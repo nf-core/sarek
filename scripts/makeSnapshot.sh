@@ -1,18 +1,5 @@
-#!/bin/bash -x
-TAGSTR=`git describe --tags`
-echo $TAGSTR
-PWD=`pwd`
-CURRENTDIR=${PWD##*/}
-tar czv \
---exclude=.git* \
---exclude=.nextflow* \
---exclude=*swp \
---exclude=doc/SprintReview* \
---exclude=Preprocessing* \
---exclude=References* \
---exclude=Reports* \
---exclude=timeline* \
---exclude=trace* \
---exclude=VariantCalling* \
---exclude=work* \
--f ../CAW.${TAGSTR}.tgz ../${CURRENTDIR}
+#!/bin/bash
+set -euo pipefail
+NAME=CAW-$(git describe --tags)
+git archive HEAD --prefix=$NAME/ | gzip > $NAME.tar.gz
+echo "Wrote $NAME.tar.gz"
