@@ -429,7 +429,7 @@ process CreateRecalibrationTable {
   -o ${idSample}.recal.table
   """
 }
-// Creating a TSV file to restart from this step
+// Create a TSV file to restart from this step
 recalibrationTableTSV.map { idPatient, status, idSample, bam, bai, recalTable ->
   gender = patientGenders[idPatient]
   "$idPatient\t$gender\t$status\t$idSample\t$directoryMap.nonRecalibrated/$bam\t$directoryMap.nonRecalibrated/$bai\t\t$directoryMap.nonRecalibrated/$recalTable\n"
@@ -440,6 +440,12 @@ recalibrationTableTSV.map { idPatient, status, idSample, bam, bai, recalTable ->
 if (step == 'recalibrate') recalibrationTable = bamFiles
 
 if (verbose) recalibrationTable = recalibrationTable.view {"Base recalibrated table for RecalibrateBam: $it"}
+
+recalTables = Channel.create()
+recalibrationTableForHC = Channel.create()
+(recalTables, recalibrationTableForHC, recalibrationTable) = recalibrationTable.into(3)
+recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
+if (verbose) recalTables = recalTables.view {"Recalibration tables: $it"}
 
 process RecalibrateBam {
   tag {idPatient + "-" + idSample}
@@ -456,10 +462,12 @@ process RecalibrateBam {
     ])
 
   output:
-    set idPatient, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam
+    set idPatient, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam, recalibratedBamForStats
     set idPatient, status, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into recalibratedBamTSV
 
-  when: step != 'skippreprocessing'
+  // HaplotypeCaller can do BQSR on the fly, so do not create a
+  // recalibrated BAM explicitly.
+  when: step != 'skippreprocessing' && tools != ['haplotypecaller']
 
   script:
   """
@@ -484,8 +492,6 @@ recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
 if (step == 'skippreprocessing') recalibratedBam = bamFiles
 
 if (verbose) recalibratedBam = recalibratedBam.view {"Recalibrated BAM for variant Calling: $it"}
-
-(recalibratedBam, recalibratedBamForStats) = recalibratedBam.into(2)
 
 process RunSamtoolsStats {
   tag {idPatient + "-" + idSample}
@@ -520,6 +526,9 @@ if (verbose) recalibratedBamReport = recalibratedBamReport.view {"BAM Stats: $it
 // separate recalibrateBams by status
 bamsNormal = Channel.create()
 bamsTumor = Channel.create()
+if (tools == ['haplotypecaller']) {
+   recalibratedBam = recalibrationTableForHC.map { it[0..-2] }
+}
 recalibratedBam
   .choice(bamsTumor, bamsNormal) {it[1] == 0 ? 1 : 0}
 
@@ -563,6 +572,24 @@ intervals = Channel.
 bamsFHC = bamsNormalTemp.mix(bamsTumorTemp)
 if (verbose) bamsFHC = bamsFHC.view {"Bams with Intervals for HaplotypeCaller: $it"}
 
+if (verbose) recalTables = recalTables.view {"recalTables before spread: $it"}
+
+intervals = intervals.tap { intervalsTemp }
+recalTables = recalTables
+  .spread(intervalsTemp)
+  .map { patient, sample, bam, bai, recalTable, interval, interval2 ->
+    [patient, sample, bam, bai, interval, interval2, recalTable] }
+
+if (verbose) recalTables = recalTables.view {"recalTables with intervals: $it"}
+
+// re-associate the BAMs and samples with the recalibration table
+bamsFHC = bamsFHC
+  .phase(recalTables) { it[0..4] }
+  .map { it1, it2 -> it1 + [it2[6]] }
+
+if (verbose) bamsFHC = bamsFHC.view {"Bams with intervals and recal. table for HaplotypeCaller: $it"}
+
+
 bamsAll = bamsNormal.spread(bamsTumor)
 // Since idPatientNormal and idPatientTumor are the same
 // It's removed from bamsAll Channel (same for genderNormal)
@@ -595,11 +622,12 @@ if (verbose) bamsForManta = bamsForManta.view {"Bams for Manta: $it"}
 
 if (verbose) bamsForStrelka = bamsForStrelka.view {"Bams for Strelka: $it"}
 
+
 process RunHaplotypecaller {
   tag {idSample + "-" + gen_int}
 
   input:
-    set idPatient, idSample, file(bam), file(bai), genInt, gen_int from bamsFHC //Are these values `ped to bamNormal already?
+    set idPatient, idSample, file(bam), file(bai), genInt, gen_int, recalTable from bamsFHC //Are these values `ped to bamNormal already?
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -623,13 +651,13 @@ process RunHaplotypecaller {
   -pairHMM LOGLESS_CACHING \
   -R $genomeFile \
   --dbsnp $dbsnp \
+  --BQSR $recalTable \
   -I $bam \
   -L \"$genInt\" \
   --disable_auto_index_creation_and_locking_when_reading_rods \
   -o ${gen_int}_${idSample}.g.vcf
   """
 }
-
 hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3])
 verbose ? hcGenomicVCF = hcGenomicVCF.view {"HaplotypeCaller output: $it"} : ''
 

@@ -3,7 +3,6 @@ set -xeuo pipefail
 
 function nf_test() {
   nextflow run . -profile testing "$@"
-  echo "---------------------------"
 }
 
 nextflow run buildReferences.nf -profile testing --download
@@ -14,6 +13,7 @@ nf_test --test --step preprocessing --tools MultiQC
 # Clean up docker images
 docker rmi -f maxulysse/fastqc:1.1 maxulysse/mapreads:1.1 maxulysse/picard:1.1
 nf_test --step realign
+nf_test --step realign --tools HaplotypeCaller -resume
 nf_test --step recalibrate
 nf_test --step skipPreprocessing --tools FreeBayes,HaplotypeCaller,MultiQC,MuTect1,MuTect2,Strelka,VarDict
 # Clean up docker images
