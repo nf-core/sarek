@@ -2,7 +2,7 @@
 
 CAW currently uses GRCh37 by default. Support for GRCh38 is not fully working yet! The settings are in `genomes.config`, they can be tailored to your needs. The [`buildReferences.nf`](#buildReferences.nf) script can be use to build the indexes based on the reference files.
 
-## GRCg37
+## GRCh37
 
 Use `--genome GRCh37` to map against GRCh37. Before doing so and if you are not on Uppmax, you need to adjust the settings in `genomes.config` to your needs.
 
@@ -94,7 +94,7 @@ nextflow run buildReferences.nf --refDir <path to smallRef> --genome <genome>
 Same parameter used for `main.nf`
 
 - GRCh37
-- GRch38 (not yet supported)
+- GRCh38 (not yet supported)
 - smallGRCh37
 
 --------------------------------------------------------------------------------
