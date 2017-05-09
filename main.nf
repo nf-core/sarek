@@ -93,8 +93,8 @@ if (step == 'preprocessing' && !checkExactlyOne([params.test, params.sample, par
 if (!checkReferenceMap(referenceMap)) {exit 1, 'Missing Reference file(s), see --help for more information'}
 if (!checkParameterList(tools,toolList)) {exit 1, 'Unknown tool(s), see --help for more information'}
 
-if (params.test && params.genome == "GRCh37") {
-  referenceMap.intervals = file("$workflow.projectDir/repeats/tiny.list")
+if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
+  referenceMap.intervals = file("$workflow.projectDir/repeats/tiny_${params.genome}.list")
 }
 
 tsvPath = ''
