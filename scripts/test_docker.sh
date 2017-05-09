@@ -2,10 +2,10 @@
 set -xeuo pipefail
 
 function nf_test() {
-  nextflow run . -profile testing "$@"
+  nextflow run . -profile travis "$@"
 }
 
-nextflow run buildReferences.nf -profile testing --download
+nextflow run buildReferences.nf -profile travis --download
 
 # Clean up docker images
 docker rmi -f maxulysse/igvtools:1.1

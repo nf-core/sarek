@@ -1225,16 +1225,15 @@ process RunVEP {
 
   script:
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
-  if (workflow.profile == 'testing' || workflow.profile == 'docker')
+  if (!workflow.container.isEmpty())  // test whether running in docker
   """
   vep \
   -i $vcf \
   -o ${vcf.baseName}_VEP.txt \
   -offline
   """
-  else if (workflow.profile == 'standard' || workflow.profile == 'interactive' || workflow.profile == 'localhost')
+  else
   """
-  set -euo pipefail
   variant_effect_predictor.pl \
   -i $vcf \
   -o ${vcf.baseName}_VEP.txt \
@@ -1430,7 +1429,7 @@ def checkTSV(it, number) {
 }
 
 def checkUppmaxProject() {
-  return !((workflow.profile == 'standard' || workflow.profile == 'interactive') && !params.project)
+  return !(workflow.profile == 'slurm' && !params.project)
 }
 
 def checkExactlyOne(list) {
