@@ -873,7 +873,7 @@ process ConcatVCF {
   }
   vcfFiles = vcFiles.collect{" $it"}.join(' ')
 
-  if (variantCaller == 'vardict')
+  if (variantCaller == 'vardict') {
     """
     for i in $vcFiles ;do
       cat \$i | testsomatic.R >> testsomatic.out
@@ -883,8 +883,9 @@ process ConcatVCF {
     -N "${idSampleTumor}_vs_${idSampleNormal}" testsomatic.out > $outputFile
     pigz -v $outputFile
     """
-
-  else if (variantCaller in ['mutect1', 'mutect2', 'gvcf-hc', 'haplotypecaller', 'freebayes'])
+  }
+  else if (variantCaller in ['mutect1', 'mutect2', 'gvcf-hc', 'haplotypecaller', 'freebayes']) {
+    chrPrefix = params.genome.endsWith('GRCh37') ? '' : 'chr'
     """
     # first make a header from one of the VCF intervals
     # get rid of interval information only from the GATK command-line, but leave the rest
@@ -892,14 +893,34 @@ process ConcatVCF {
     awk '!/GATKCommandLine/{print}/GATKCommandLine/{for(i=1;i<=NF;i++){if(\$i!~/intervals=/ && \$i !~ /out=/){printf("%s ",\$i)}}printf("\\n")}' \
     > header
 
-    ## concatenate calls
-    ( cat header && awk '!/^#/' $vcfFiles ) > unsorted.vcf
-    mkfifo out.vcf
-    pigz < out.vcf > ${outputFile}.gz &
-    gzpid=\$!
-    java -jar \${PICARD_HOME}/picard.jar SortVcf I=unsorted.vcf O=out.vcf SEQUENCE_DICTIONARY=$genomeDict
-    wait \$gzpid
+    # concatenate VCFs in the correct order
+    (
+      cat header
+
+      for chr in ${chrPrefix}{1..22} ${chrPrefix}X ${chrPrefix}Y; do
+        # Skip if globbing would not match any file to avoid errors such as
+        # "ls: cannot access chr3_*.vcf: No such file or directory" when chr3
+        # was not processed.
+        pattern="\${chr}_*.vcf"
+        if ! compgen -G "\${pattern}" > /dev/null; then continue; fi
+
+        # ls -v sorts by numeric value ("version"), which means that chr1_100_
+        # is sorted *after* chr1_99_.
+        for vcf in \$(ls -v \${pattern}); do
+          # Determine length of header.
+          # The 'q' command makes sed exit when it sees the first non-header
+          # line, which avoids reading in the entire file.
+          L=\$(sed -n '/^[^#]/q;p' \${vcf} | wc -l)
+
+          # Then print all non-header lines. Since tail is very fast (nearly as
+          # fast as cat), this is way more efficient than using a single sed,
+          # awk or grep command.
+          tail -n +\$((L+1)) \${vcf}
+        done
+      done
+    ) | pigz > ${outputFile}.gz
     """
+  }
 }
 
 if (verbose) vcfConcatenated = vcfConcatenated.view {"VCF concatenated: $it"}
