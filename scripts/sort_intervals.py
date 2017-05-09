@@ -12,20 +12,20 @@ import sys
 from itertools import islice
 
 
-duration_regex = re.compile('((?P<hours>[0-9]*)h )?((?P<minutes>[0-9]*)m )?((?P<seconds>[0-9]*)s)?')
+duration_regex = re.compile('((?P<hours>[0-9]*)h($| ))?((?P<minutes>[0-9]*)m($| ))?((?P<seconds>[0-9]*(.[0-9]*)?)s)?')
 
 
 def parse_duration(s):
     m = duration_regex.match(s)
     if not m:
         return None
-    t = 0
+    t = 0.
     if m.group('hours'):
         t += 3600 * int(m.group('hours'))
     if m.group('minutes'):
         t += 60 * int(m.group('minutes'))
     if m.group('seconds'):
-        t += int(m.group('seconds'))
+        t += float(m.group('seconds'))
     return t
 
 
