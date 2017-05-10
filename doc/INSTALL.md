@@ -1,6 +1,8 @@
 # Installation
 
 To use this pipeline, you need to have a working version of Nextflow installed, and References files.
+You can use a small reference genome as testing.
+Nextflow can also be use conjointly with Docker to facilitate the use of other tools.
 
 - See the [Install Nextflow documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/INSTALL.md)
 - See the [Reference files documentation](REFERENCES.md)
@@ -13,19 +15,29 @@ This small tutorial will explain to you how to run CAW on a small sample test da
 mkdir test_CAW
 cd test_CAW
 ```
+## Build the smallGRCh37 Reference
+
+```bash
+nextflow run SciLifeLab/CAW/buildReferences.nf --download --genome smallGRCh37
+```
+
+```bash
+nextflow run SciLifeLab/CAW/buildReferences.nf --refDir <pathToSmallRefRepo> --genome smallGRCh37
+```
+- See the [genomes files documentation](GENOMES.md)
 
 ## Test the workflow on a test tiny set
 
 This workflow itself needs no installation. Nextflow will automatically fetch it from GitHub when launched if `SciLifeLab/CAW` is specified as the workflow name.
 
 ```bash
-nextflow run SciLifeLab/CAW --test
+nextflow run SciLifeLab/CAW --test --genome smallGRCh37
 ```
 
 If you're using a Swedish UPPMAX cluster, don't forget to provide your project ID.
 
 ```bash
-nextflow run SciLifeLab/CAW --test --project <UPPMAX Project ID>
+nextflow run SciLifeLab/CAW --test --genome smallGRCh37 --project <UPPMAX Project ID>
 ```
 
 # Other possibilities for advanced users
@@ -36,8 +48,10 @@ You can download the repository yourself from GitHub and run them directly:
 
 ```bash
 git clone https://github.com/SciLifeLab/CAW test_CAW
+git clone https://github.com/szilvajuhos/smallRef smallGRCh37
 cd test_CAW
-nextflow run main.nf --test
+nextflow run SciLifeLab/CAW/buildReferences.nf --refDir ../smallGRCh37 --genome smallGRCh37
+nextflow run main.nf --test --genome smallGRCh37
 ```
 
 ## Load Nextflow

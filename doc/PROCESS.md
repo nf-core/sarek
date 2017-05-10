@@ -7,8 +7,8 @@ Several processes are run within the workflow. We divide them for the moment int
 - MapReads - Map reads [Stable]
 - MergeBams - Merge BAMs if multilane samples [Stable]
 - MarkDuplicates - Mark Duplicates [Stable]
-- CreateIntervals - Create Intervals [Stable]
-- RealignBams - Realign Bams as T/N pair [Stable]
+- RealignerTargetCreator - Create realignment target intervals [Stable]
+- IndelRealigner - Realign Bams as T/N pair [Stable]
 - CreateRecalibrationTable - Create Recalibration Table [Stable]
 - RecalibrateBam - Recalibreate Bam [Stable]
 
@@ -33,10 +33,12 @@ Several processes are run within the workflow. We divide them for the moment int
 - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files [Stable]
 - GenerateMultiQCconfig - Generate a config file for MultiQC [Stable]
 - RunMultiQC - Run MultiQC for report and QC [Stable]
+- RunBcftoolsStats - Run BCFTools stats on vcf files [Working]
 
 ## Annotation:
 
 - RunSnpeff - Run snpEff on vcf files [Working]
+- RunVEP - Run VEP on vcf files [Working]
 
 --------------------------------------------------------------------------------
 
