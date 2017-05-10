@@ -1260,6 +1260,7 @@ process GenerateMultiQCconfig {
   when: 'multiqc' in tools
 
   script:
+  annotateString = annotateTools ? "- Annotate on : ${annotateTools.join(", ")}" : ''
   """
   touch multiqc_config.yaml
   echo "custom_logo: $baseDir/doc/images/CAW-logo.png" >> multiqc_config.yaml
@@ -1274,6 +1275,7 @@ process GenerateMultiQCconfig {
   echo "- Genome: "${params.genome} >> multiqc_config.yaml
   echo "- Step: "${step} >> multiqc_config.yaml
   echo "- Tools: "${tools.join(", ")} >> multiqc_config.yaml
+  echo ${annotateString} >> multiqc_config.yaml
   echo "top_modules:" >> multiqc_config.yaml
   echo "- 'fastqc'" >> multiqc_config.yaml
   echo "- 'picard'" >> multiqc_config.yaml
@@ -1754,6 +1756,7 @@ def startMessage(version, revision) { // Display start message
   log.info "Genome      : " + params.genome
   log.info "Step        : " + step
   if (tools) {log.info "Tools       : " + tools.join(', ')}
+  if (annotateTools) {log.info "Annotate on : " + annotateTools.join(', ')}
 }
 
 def versionMessage(version, revision) { // Display version message
@@ -1773,6 +1776,7 @@ workflow.onComplete { // Display complete message
   log.info "Genome      : " + params.genome
   log.info "Step        : " + step
   if (tools) {log.info "Tools       : " + tools.join(', ')}
+  if (annotateTools) {log.info "Annotate on : " + annotateTools.join(', ')}
   log.info "Completed at: $workflow.complete"
   log.info "Duration    : $workflow.duration"
   log.info "Success     : $workflow.success"
