@@ -2,9 +2,9 @@
 
 CAW currently uses GRCh37 by default. Support for GRCh38 is not fully working yet! The settings are in `genomes.config`, they can be tailored to your needs. The [`buildReferences.nf`](#buildReferences.nf) script can be use to build the indexes based on the reference files.
 
-## GRCg37
+## GRCh37
 
-Use `--genome GRCh37` to map against GRCh37\. Before doing so and if you are not on Uppmax, you need to adjust the settings in `genomes.config` to your needs.
+Use `--genome GRCh37` to map against GRCh37. Before doing so and if you are not on Uppmax, you need to adjust the settings in `genomes.config` to your needs.
 
 ### GATK bundle
 
@@ -19,7 +19,7 @@ The following files need to be downloaded:
 
 ### Other files
 
-From our repo, get the '[centromeres.list](https://raw.githubusercontent.com/SciLifeLab/CAW/master/repeats/centromeres.list)' file.
+From our repo, get the '[intervals list file](https://raw.githubusercontent.com/SciLifeLab/CAW/master/repeats/wgs_calling_regions.grch37.list)'. More information about this file in the [intervals documentation](INTERVALS.md)
 
 The rest of the references files are stored in in [export.uppmax.uu.se](https://export.uppmax.uu.se/b2015110/caw-references/b37/) and also on the repository [CAW-References](https://github.com/MaxUlysse/CAW-References) using [GIT-LFS](https://git-lfs.github.com/):
 
@@ -30,7 +30,7 @@ You can create your own cosmic reference for any human reference as specified be
 
 ### COSMIC files
 
-To annotate with COSMIC variants during mutect1/2 variant calling you need to create a compatible VCF file. Download the coding and non-coding VCF files from [COSMIC](http://cancer.sanger.ac.uk/cosmic/download) and process them with the [Create_Cosmic.sh](https://github.com/SciLifeLab/CAW/tree/master/scripts/Create_Cosmic.sh) script. The script requires a fasta index `.fai`, of the reference file you are using.
+To annotate with COSMIC variants during MuTect1/2 Variant Calling you need to create a compatible VCF file. Download the coding and non-coding VCF files from [COSMIC](http://cancer.sanger.ac.uk/cosmic/download) and process them with the [Create_Cosmic.sh](https://github.com/SciLifeLab/CAW/tree/master/scripts/Create_Cosmic.sh) script. The script requires a fasta index `.fai`, of the reference file you are using.
 
 Example:
 
@@ -94,7 +94,7 @@ nextflow run buildReferences.nf --refDir <path to smallRef> --genome <genome>
 Same parameter used for `main.nf`
 
 - GRCh37
-- GRch38 (not yet supported)
+- GRCh38 (not yet supported)
 - smallGRCh37
 
 --------------------------------------------------------------------------------
