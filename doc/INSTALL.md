@@ -71,7 +71,7 @@ You can try the test data by changing to the interactive mode on milou and run t
 ```
 $ interactive -A <UPPMAX Project ID> -p node
 [ ... login messages ... ]
-$ nextflow run main.nf -profile interactive --test --project <UPPMAX Project ID>
+$ nextflow run main.nf -profile localhost --test --project <UPPMAX Project ID>
 ```
 
 For more tests, see [Usage documentation](USAGE.md#test)
