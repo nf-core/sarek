@@ -7,7 +7,7 @@ Nextflow can also be use conjointly with Docker to facilitate the use of other t
 - See the [Install Nextflow documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/INSTALL.md)
 - See the [Reference files documentation](REFERENCES.md)
 
-This small tutorial will explain to you how to run CAW on a small sample test data on a Swedish UPPMAX cluster. Some variables are specific, but it can be easily modified to suit any clusters.
+This small tutorial will explain to you how to run CAW on a small sample test data on a Swedish UPPMAX cluster. Some variables are specific, but it can be easily modified to suit any clusters. If you're using a Swedish UPPMAX cluster, don't forget to provide your project ID.
 
 ## Make a test directory
 
@@ -16,41 +16,35 @@ mkdir test_CAW
 cd test_CAW
 ```
 ## Build the smallGRCh37 Reference
-
-```bash
-nextflow run SciLifeLab/CAW/buildReferences.nf --download --genome smallGRCh37
-```
-
-```bash
-nextflow run SciLifeLab/CAW/buildReferences.nf --refDir <pathToSmallRefRepo> --genome smallGRCh37
-```
-- See the [genomes files documentation](GENOMES.md)
-
-## Test the workflow on a test tiny set
-
 This workflow itself needs no installation. Nextflow will automatically fetch it from GitHub when launched if `SciLifeLab/CAW` is specified as the workflow name.
 
 ```bash
-nextflow run SciLifeLab/CAW --test --genome smallGRCh37
+nextflow run SciLifeLab/CAW/buildReferences.nf --project <UPPMAX Project ID> --genome smallGRCh37 --download
 ```
 
-If you're using a Swedish UPPMAX cluster, don't forget to provide your project ID.
+or
 
 ```bash
-nextflow run SciLifeLab/CAW --test --genome smallGRCh37 --project <UPPMAX Project ID>
+nextflow run SciLifeLab/CAW/buildReferences.nf --project <UPPMAX Project ID> --genome smallGRCh37 --refDir <pathToSmallRefRepo>
+```
+
+## Test the workflow on a test tiny set
+
+```bash
+nextflow run SciLifeLab/CAW --project <UPPMAX Project ID> --genome smallGRCh37 --test
 ```
 
 # Other possibilities for advanced users
 
 ## Clone the repository and test the workflow on a test tiny set
 
-You can download the repository yourself from GitHub and run them directly:
+You can download the repository yourself from GitHub and run directly:
 
 ```bash
 git clone https://github.com/SciLifeLab/CAW test_CAW
-git clone https://github.com/szilvajuhos/smallRef smallGRCh37
+git clone https://github.com/szilvajuhos/smallRef test_CAW/smallGRCh37
 cd test_CAW
-nextflow run SciLifeLab/CAW/buildReferences.nf --refDir ../smallGRCh37 --genome smallGRCh37
+nextflow run SciLifeLab/CAW/buildReferences.nf --refDir $PWD/smallGRCh37 --genome smallGRCh37
 nextflow run main.nf --test --genome smallGRCh37
 ```
 
@@ -71,7 +65,8 @@ You can try the test data by changing to the interactive mode on milou and run t
 ```
 $ interactive -A <UPPMAX Project ID> -p node
 [ ... login messages ... ]
-$ nextflow run main.nf -profile localhost --test --project <UPPMAX Project ID>
+$ nextflow run buildReferences.nf --project <UPPMAX Project ID> -profile localhost --genome smallGRCh37 --download
+$ nextflow run main.nf --project <UPPMAX Project ID> -profile localhost --genome smallGRCh37 --test
 ```
 
 For more tests, see [Usage documentation](USAGE.md#test)
