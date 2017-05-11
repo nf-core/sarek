@@ -611,7 +611,6 @@ if (verbose) bamsFMT2 = bamsFMT2.view {"Bams with Intervals for MuTect2: $it"}
 (bamsFFB, bamsAll, intervals) = generateIntervalsForVC(bamsAll, intervals)
 if (verbose) bamsFFB = bamsFFB.view {"Bams with Intervals for FreeBayes: $it"}
 
-// Manta and Strelka
 (bamsForManta, bamsForStrelka) = bamsAll.into(2)
 
 if (verbose) bamsForManta = bamsForManta.view {"Bams for Manta: $it"}
