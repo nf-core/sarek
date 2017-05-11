@@ -57,7 +57,6 @@ Choose which tools will be used in the workflow. Different tools to be separated
 - mutect1 (use MuTect1 for VC)
 - mutect2 (use MuTect2 for VC)
 - strelka (use Strelka for VC)
-- vardict (use VarDict for VC)
 - snpeff (use snpEff for Annotation)
 - vep (use VEP for Annotation)
 
@@ -71,7 +70,6 @@ Choose which tools to annotate. Different tools to be separated by commas. Possi
 - mutect1 (Annotate MuTect1 output)
 - mutect2 (Annotate MuTect2 output)
 - strelka (Annotate Strelka output)
-- vardict (Annotate VarDict output)
 
 ### --annotateVCF `file1[,file2,file3...]`
 
@@ -130,12 +128,6 @@ Could be usefull if you wish to change one reference for testing.
 
 ```
 Which database to use for snpEff
-```
-
-## --vardictHome `path`
-
-```
-Path to Vardict
 ```
 
 # Nextflow options
