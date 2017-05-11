@@ -41,8 +41,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - RunMutect1 - Run MuTect1 for Variant Calling (Parallelized processes)
  - RunMutect2 - Run MuTect2 for Variant Calling (Parallelized processes)
  - RunFreeBayes - Run FreeBayes for Variant Calling (Parallelized processes)
- - RunVardict - Run VarDict for Variant Calling (Parallelized processes)
- - ConcatVCF - Merge results from HaplotypeCaller, MuTect1, MuTect2 and VarDict
+ - ConcatVCF - Merge results from HaplotypeCaller, MuTect1 and MuTect2
  - RunStrelka - Run Strelka for Variant Calling
  - RunManta - Run Manta for Structural Variant Calling
  - RunAlleleCount - Run AlleleCount to prepare for ASCAT
@@ -612,10 +611,6 @@ if (verbose) bamsFMT2 = bamsFMT2.view {"Bams with Intervals for MuTect2: $it"}
 (bamsFFB, bamsAll, intervals) = generateIntervalsForVC(bamsAll, intervals)
 if (verbose) bamsFFB = bamsFFB.view {"Bams with Intervals for FreeBayes: $it"}
 
-// VarDict
-(bamsFVD, bamsAll, intervals) = generateIntervalsForVC(bamsAll, intervals)
-if (verbose) bamsFVD = bamsFVD.view {"Bams with Intervals for VarDict: $it"}
-
 (bamsForManta, bamsForStrelka) = bamsAll.into(2)
 
 if (verbose) bamsForManta = bamsForManta.view {"Bams for Manta: $it"}
@@ -808,41 +803,10 @@ process RunFreeBayes {
 freebayesOutput = freebayesOutput.groupTuple(by:[0,1,2,3])
 if (verbose) freebayesOutput = freebayesOutput.view {"FreeBayes output: $it"}
 
-process RunVardict {
-  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + gen_int}
-
-  input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFVD
-    set file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
-      referenceMap.genomeFile,
-      referenceMap.genomeIndex,
-      referenceMap.genomeDict
-    ])
-
-  output:
-    set val("vardict"), idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.out") into vardictOutput
-
-  when: 'vardict' in tools
-
-  script:
-  """
-  vardict.pl \
-  -G $genomeFile \
-  -f 0.01 -N $bamTumor \
-  -b "$bamTumor|$bamNormal" \
-  -z 1 -F 0x500 \
-  -c 1 -S 2 -E 3 -g 4 \
-  -R $genInt > ${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.out
-  """
-}
-
-vardictOutput = vardictOutput.groupTuple(by:[0,1,2,3])
-if (verbose) vardictOutput = vardictOutput.view {"vardictOutput output: $it"}
-
 // we are merging the VCFs that are called separatelly for different intervals
 // so we can have a single sorted VCF containing all the calls for a given caller
 
-vcfsToMerge = hcGenomicVCF.mix(hcGenotypedVCF, mutect1Output, mutect2Output, freebayesOutput, vardictOutput)
+vcfsToMerge = hcGenomicVCF.mix(hcGenotypedVCF, mutect1Output, mutect2Output, freebayesOutput)
 if (verbose) vcfsToMerge = vcfsToMerge.view {"VCFs To be merged: $it"}
 
 process ConcatVCF {
@@ -861,7 +825,7 @@ process ConcatVCF {
   output:
     set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz") into vcfConcatenated
 
-  when: 'haplotypecaller' in tools || 'mutect1' in tools || 'mutect2' in tools || 'freebayes' in tools || 'vardict' in tools
+  when: 'haplotypecaller' in tools || 'mutect1' in tools || 'mutect2' in tools || 'freebayes' in tools
 
   script:
   if (variantCaller == 'haplotypecaller') {
@@ -872,55 +836,42 @@ process ConcatVCF {
     outputFile = "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
   }
   vcfFiles = vcFiles.collect{" $it"}.join(' ')
+  chrPrefix = params.genome.endsWith('GRCh37') ? '' : 'chr'
 
-  if (variantCaller == 'vardict') {
-    """
-    for i in $vcFiles ;do
-      cat \$i | testsomatic.R >> testsomatic.out
-    done
-    var2vcf_paired.pl \
-    -f 0.01 \
-    -N "${idSampleTumor}_vs_${idSampleNormal}" testsomatic.out > $outputFile
-    pigz -v $outputFile
-    """
-  }
-  else if (variantCaller in ['mutect1', 'mutect2', 'gvcf-hc', 'haplotypecaller', 'freebayes']) {
-    chrPrefix = params.genome.endsWith('GRCh37') ? '' : 'chr'
-    """
-    # first make a header from one of the VCF intervals
-    # get rid of interval information only from the GATK command-line, but leave the rest
-    sed -n '/^[^#]/q;p' `ls *vcf| head -n 1` | \
-    awk '!/GATKCommandLine/{print}/GATKCommandLine/{for(i=1;i<=NF;i++){if(\$i!~/intervals=/ && \$i !~ /out=/){printf("%s ",\$i)}}printf("\\n")}' \
-    > header
+  """
+  # first make a header from one of the VCF intervals
+  # get rid of interval information only from the GATK command-line, but leave the rest
+  sed -n '/^[^#]/q;p' `ls *vcf| head -n 1` | \
+  awk '!/GATKCommandLine/{print}/GATKCommandLine/{for(i=1;i<=NF;i++){if(\$i!~/intervals=/ && \$i !~ /out=/){printf("%s ",\$i)}}printf("\\n")}' \
+  > header
 
-    # concatenate VCFs in the correct order
-    (
-      cat header
+  # concatenate VCFs in the correct order
+  (
+    cat header
 
-      for chr in ${chrPrefix}{1..22} ${chrPrefix}X ${chrPrefix}Y; do
-        # Skip if globbing would not match any file to avoid errors such as
-        # "ls: cannot access chr3_*.vcf: No such file or directory" when chr3
-        # was not processed.
-        pattern="\${chr}_*.vcf"
-        if ! compgen -G "\${pattern}" > /dev/null; then continue; fi
+    for chr in ${chrPrefix}{1..22} ${chrPrefix}X ${chrPrefix}Y; do
+      # Skip if globbing would not match any file to avoid errors such as
+      # "ls: cannot access chr3_*.vcf: No such file or directory" when chr3
+      # was not processed.
+      pattern="\${chr}_*.vcf"
+      if ! compgen -G "\${pattern}" > /dev/null; then continue; fi
 
-        # ls -v sorts by numeric value ("version"), which means that chr1_100_
-        # is sorted *after* chr1_99_.
-        for vcf in \$(ls -v \${pattern}); do
-          # Determine length of header.
-          # The 'q' command makes sed exit when it sees the first non-header
-          # line, which avoids reading in the entire file.
-          L=\$(sed -n '/^[^#]/q;p' \${vcf} | wc -l)
+      # ls -v sorts by numeric value ("version"), which means that chr1_100_
+      # is sorted *after* chr1_99_.
+      for vcf in \$(ls -v \${pattern}); do
+        # Determine length of header.
+        # The 'q' command makes sed exit when it sees the first non-header
+        # line, which avoids reading in the entire file.
+        L=\$(sed -n '/^[^#]/q;p' \${vcf} | wc -l)
 
-          # Then print all non-header lines. Since tail is very fast (nearly as
-          # fast as cat), this is way more efficient than using a single sed,
-          # awk or grep command.
-          tail -n +\$((L+1)) \${vcf}
-        done
+        # Then print all non-header lines. Since tail is very fast (nearly as
+        # fast as cat), this is way more efficient than using a single sed,
+        # awk or grep command.
+        tail -n +\$((L+1)) \${vcf}
       done
-    ) | pigz > ${outputFile}.gz
-    """
-  }
+    done
+  ) | pigz > ${outputFile}.gz
+  """
 }
 
 if (verbose) vcfConcatenated = vcfConcatenated.view {"VCF concatenated: $it"}
@@ -1111,10 +1062,7 @@ if (step == 'annotate' && annotateVCF == []) {
       .map{vcf -> ['mutect2',vcf]},
     Channel.fromPath('VariantCalling/Strelka/*passed_somatic*.vcf.gz')
       .flatten().unique()
-      .map{vcf -> ['strelka',vcf]},
-    Channel.fromPath('VariantCalling/VarDict/*.vcf.gz')
-      .flatten().unique()
-      .map{vcf -> ['vardict',vcf]}
+      .map{vcf -> ['strelka',vcf]}
   ).choice(vcfToAnnotate, vcfNotToAnnotate) { annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1 }
 
 } else if (step == 'annotate' && annotateTools == [] && annotateVCF != []) {
@@ -1456,7 +1404,6 @@ def defineDirectoryMap() {
     'mutect1'          : 'VariantCalling/MuTect1',
     'mutect2'          : 'VariantCalling/MuTect2',
     'strelka'          : 'VariantCalling/Strelka',
-    'vardict'          : 'VariantCalling/VarDict',
     'snpeff'           : 'Annotation/SnpEff',
     'vep'              : 'Annotation/VEP'
   ]
@@ -1507,7 +1454,6 @@ def defineToolList() {
     'mutect2',
     'snpeff',
     'strelka',
-    'vardict',
     'vep'
   ]
 }
@@ -1700,7 +1646,6 @@ def helpMessage(version, revision) { // Display help message
   log.info "         mutect1 (use MuTect1 for VC)"
   log.info "         mutect2 (use MuTect2 for VC)"
   log.info "         freebayes (use FreeBayes for VC)"
-  log.info "         vardict (use VarDict for VC)"
   log.info "         strelka (use Strelka for VC)"
   log.info "         haplotypecaller (use HaplotypeCaller for normal bams VC)"
   log.info "         manta (use Manta for SV)"
@@ -1716,7 +1661,6 @@ def helpMessage(version, revision) { // Display help message
   log.info "         mutect1 (Annotate MuTect1 output)"
   log.info "         mutect2 (Annotate MuTect2 output)"
   log.info "         strelka (Annotate Strelka output)"
-  log.info "         vardict (Annotate VarDict output)"
   log.info "    --annotateVCF"
   log.info "       Option to configure which vcf to annotate."
   log.info "         Different vcf to be separated by commas."
