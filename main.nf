@@ -1415,8 +1415,6 @@ def checkExactlyOne(list) {
 
 def defineDirectoryMap() {
   return [
-    'snpeff'           : 'Annotation/SnpEff',
-    'vep'              : 'Annotation/VEP',
     'nonRealigned'     : 'Preprocessing/NonRealigned',
     'nonRecalibrated'  : 'Preprocessing/NonRecalibrated',
     'recalibrated'     : 'Preprocessing/Recalibrated',
