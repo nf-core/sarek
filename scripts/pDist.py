@@ -1,10 +1,13 @@
 #!/usr/bin/env python
-import click
+import argparse
 
-@click.command(context_settings = dict( help_option_names = ['-h', '--help'] ))
-@click.option('--vcf','-v', type=str, help='A sorted VCF file to check')
-@click.option('--step','-s', type=int, default=5000000, help='Step size (in million basepairs [5000000])')
-@click.option('--nochrom', flag_value=True, help='Are we expecting chr at the beginning of the chromosome string? [True]')
+def parse_args():
+    parser = argparse.ArgumentParser(description='Checking call density for a sorted VCF')
+    parser.add_argument('-v', help='A sorted VCF file to check',required=True, dest="vcf")
+    parser.add_argument('-s', help='Step size (in million basepairs [5000000])', required=False, dest="step", default=5000000)
+    parser.add_argument('--nochrom', help='Are we expecting chr at the beginning of the chromosome string? [True]', action="store_true")
+    return parser.parse_args()
+
 
 def printVCFdensity(vcf,step,nochrom):
     with open(vcf,"r") as fh:
@@ -45,4 +48,5 @@ def printBar(s,vb):
     print s,bar
 
 if __name__ == "__main__":
-    printVCFdensity()
+    args = parse_args()
+    printVCFdensity(args.vcf,args.step,args.nochrom)
