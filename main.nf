@@ -83,6 +83,7 @@ directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
 stepList = defineStepList()
 toolList = defineToolList()
+reports = params.reports
 verbose = params.verbose
 
 if (!checkParameterExistence(step, stepList)) {exit 1, 'Unknown step, see --help for more information'}
@@ -160,7 +161,7 @@ process RunFastQC {
   output:
     file "*_fastqc.{zip,html}" into fastQCreport
 
-  when: step == 'preprocessing' && 'multiqc' in tools
+  when: step == 'preprocessing' && reports
 
   script:
   """
@@ -490,7 +491,11 @@ recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
 
 if (step == 'skippreprocessing') recalibratedBam = bamFiles
 
-(recalibratedBam, recalibratedBamForSamToolsStats, recalibratedBamForBamQC) = recalibratedBam.into(3)
+if (step != 'skippreprocessing' && tools != ['haplotypecaller']) {
+  (recalibratedBam, bamForSamToolsStats, bamForBamQC) = recalibratedBam.into(3)
+} else {
+  (recalibrationTableForHC, bamForSamToolsStats, bamForBamQC) = recalibrationTableForHC.map { it[0..-2] }.into(3)
+}
 
 if (verbose) recalibratedBam = recalibratedBam.view {"Recalibrated BAM for variant Calling: $it"}
 
@@ -500,12 +505,12 @@ process RunSamtoolsStats {
   publishDir directoryMap.samtoolsStats, mode: 'copy'
 
   input:
-    set idPatient, status, idSample, file(bam), file(bai) from recalibratedBamForSamToolsStats
+    set idPatient, status, idSample, file(bam), file(bai) from bamForSamToolsStats
 
   output:
     file ("${bam}.samtools.stats.out") into samtoolsStatsReport
 
-    when: 'multiqc' in tools
+    when: reports
 
     script:
     """
@@ -513,7 +518,7 @@ process RunSamtoolsStats {
     """
 }
 
-if (verbose)  samtoolsStatsReport = samtoolsStatsReport.view {"BAM Stats: $it"}
+if (verbose) samtoolsStatsReport = samtoolsStatsReport.view {"BAM Stats: $it"}
 
 process RunBamQC {
   tag {idPatient + "-" + idSample}
@@ -521,12 +526,12 @@ process RunBamQC {
   publishDir "$directoryMap.bamQC/$idSample", mode: 'copy'
 
   input:
-    set idPatient, status, idSample, file(bam), file(bai) from recalibratedBamForBamQC
+    set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC
 
   output:
     file("*.txt") into bamQCreport
 
-    when: 'multiqc' in tools
+    when: reports
 
     script:
     """
@@ -551,7 +556,7 @@ if (verbose) bamQCreport = bamQCreport.view {"BAM Stats: $it"}
 bamsNormal = Channel.create()
 bamsTumor = Channel.create()
 if (tools == ['haplotypecaller']) {
-   recalibratedBam = recalibrationTableForHC.map { it[0..-2] }
+   recalibratedBam = recalibrationTableForHC
 }
 recalibratedBam
   .choice(bamsTumor, bamsNormal) {it[1] == 0 ? 1 : 0}
@@ -1144,7 +1149,7 @@ process RunBcftoolsStats {
   output:
     file ("${vcf.baseName}.bcf.tools.stats.out") into bcfReport
 
-  when: 'multiqc' in tools
+  when: reports
 
   script:
   """
@@ -1229,7 +1234,7 @@ process GenerateMultiQCconfig {
   output:
   file("multiqc_config.yaml") into multiQCconfig
 
-  when: 'multiqc' in tools
+  when: reports
 
   script:
   annotateString = annotateTools ? "- Annotate on : ${annotateTools.join(", ")}" : ''
@@ -1285,7 +1290,7 @@ process RunMultiQC {
   output:
     set file("*multiqc_report.html"), file("*multiqc_data") into multiQCReport
 
-    when: 'multiqc' in tools
+    when: reports
 
   script:
   """
@@ -1346,6 +1351,7 @@ def checkParams(it) {
     'genomes',
     'help',
     'project',
+    'reports',
     'run-time',
     'runTime',
     'sample-dir',
@@ -1477,7 +1483,6 @@ def defineToolList() {
     'freebayes',
     'haplotypecaller',
     'manta',
-    'multiqc',
     'mutect1',
     'mutect2',
     'snpeff',
@@ -1667,6 +1672,8 @@ def helpMessage(version, revision) { // Display help message
   log.info "         annotate (will annotate Variant Calling output."
   log.info "         By default it will try to annotate all available vcfs."
   log.info "         Use with --annotateTools or --annotateVCF to specify what to annotate"
+  log.info "    --reports"
+  log.info "       Run QC tools and MultiQC to generate a HTML report"
   log.info "    --tools"
   log.info "       Option to configure which tools to use in the workflow."
   log.info "         Different tools to be separated by commas."
