@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 import click
 
-# we are going to have a dictionary,  where the first keys are chromosome names, the second are 
-# the ranges (max values as we are expecting sorted VCFs)
-# { 'chr1': {10000000: 123, 20000000: 345, ...}, 'chr2': {}
-
 @click.command(context_settings = dict( help_option_names = ['-h', '--help'] ))
 @click.option('--vcf','-v', type=str, help='A sorted VCF file to check')
 @click.option('--step','-s', type=int, default=5000000, help='Step size (in million basepairs [5000000])')
