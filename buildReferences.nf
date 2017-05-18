@@ -3,6 +3,7 @@
 /*
 vim: syntax=groovy
 -*- mode: groovy;-*-
+kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 =               C A N C E R    A N A L Y S I S    W O R K F L O W              =
 ================================================================================
@@ -30,6 +31,22 @@ vim: syntax=groovy
 =                               P R O C E S S E S                              =
 ================================================================================
 */
+
+version = '1.1'
+
+if (!isAllowedParams(params)) {exit 1, "params is unknown, see --help for more information"}
+
+if (params.help) {
+  helpMessage(version, grabRevision())
+  exit 1
+}
+
+if (params.version) {
+  versionMessage(version, grabRevision())
+  exit 1
+}
+
+if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
 
 params.download = false
 params.refDir = ""
@@ -229,4 +246,113 @@ def checkFile(it) {
     exit 1, "Missing file: $it, see --help for more information"
   }
   return true
+}
+
+def checkParams(it) {
+  // Check if params is in this given list
+  return it in [
+    'annotate-tools',
+    'annotate-VCF',
+    'annotateTools',
+    'annotateVCF',
+    'call-name',
+    'callName',
+    'contact-mail',
+    'contactMail',
+    'download',
+    'genome',
+    'genomes',
+    'help',
+    'project',
+    'ref-dir',
+    'refDir',
+    'run-time',
+    'runTime',
+    'sample-dir',
+    'sample',
+    'sampleDir',
+    'single-CPUMem',
+    'singleCPUMem',
+    'step',
+    'test',
+    'tools',
+    'vcflist',
+    'verbose',
+    'version']
+}
+
+def checkUppmaxProject() {
+  return !((workflow.profile == 'standard' || workflow.profile == 'interactive') && !params.project)
+}
+
+def grabRevision() {
+  return workflow.revision ?: workflow.scriptId.substring(0,10)
+}
+
+def helpMessage(version, revision) { // Display help message
+  log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
+  log.info "    Usage:"
+  log.info "       nextflow run buildReferences.nf --refDir <pathToRefDir> --genome <genome>"
+  log.info "       nextflow run buildReferences.nf --download --genome smallGRCh37"
+  log.info "       nextflow run SciLifeLab/CAW --test [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
+  log.info "    --download"
+  log.info "       Download smallGRCh37 reference files."
+  log.info "    --refDir <Directoy>"
+  log.info "       Specify a directory containing reference files."
+  log.info "    --genome <Genome>"
+  log.info "       Use a specific genome version."
+  log.info "       Possible values are:"
+  log.info "         GRCh37"
+  log.info "         smallGRCh37 (Build a small reference (for tests))"
+  log.info "    --help"
+  log.info "       you're reading it"
+  log.info "    --version"
+  log.info "       displays version number"
+}
+
+def isAllowedParams(params) {
+  final test = true
+  params.each{
+    if (!checkParams(it.toString().split('=')[0])) {
+      println "params ${it.toString().split('=')[0]} is unknown"
+      test = false
+    }
+  }
+  return test
+}
+
+def startMessage(version, revision) { // Display start message
+  log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
+  log.info "Command Line: $workflow.commandLine"
+  log.info "Project Dir : $workflow.projectDir"
+  log.info "Launch Dir  : $workflow.launchDir"
+  log.info "Work Dir    : $workflow.workDir"
+  log.info "Genome      : " + params.genome
+}
+
+def versionMessage(version, revision) { // Display version message
+  log.info "CANCER ANALYSIS WORKFLOW"
+  log.info "  version   : $version"
+  log.info workflow.commitId ? "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]" : "  revision  : $revision"
+}
+
+workflow.onComplete { // Display complete message
+  log.info "N E X T F L O W ~ $workflow.nextflow.version - $workflow.nextflow.build"
+  log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
+  log.info "Command Line: $workflow.commandLine"
+  log.info "Project Dir : $workflow.projectDir"
+  log.info "Launch Dir  : $workflow.launchDir"
+  log.info "Work Dir    : $workflow.workDir"
+  log.info "Genome      : " + params.genome
+  log.info "Completed at: $workflow.complete"
+  log.info "Duration    : $workflow.duration"
+  log.info "Success     : $workflow.success"
+  log.info "Exit status : $workflow.exitStatus"
+  log.info "Error report: " + (workflow.errorReport ?: '-')
+}
+
+workflow.onError { // Display error message
+  log.info "N E X T F L O W ~ version $workflow.nextflow.version [$workflow.nextflow.build]"
+  log.info workflow.commitId ? "CANCER ANALYSIS WORKFLOW ~ $version - $workflow.revision [$workflow.commitId]" : "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
+  log.info "Workflow execution stopped with the following message: " + workflow.errorMessage
 }
