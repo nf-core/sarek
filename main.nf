@@ -500,7 +500,7 @@ process RunSamtoolsStats {
   publishDir directoryMap.samtoolsStats, mode: 'copy'
 
   input:
-    set idPatient, gender, status, idSample, file(bam), file(bai) from recalibratedBamForSamToolsStats
+    set idPatient, status, idSample, file(bam), file(bai) from recalibratedBamForSamToolsStats
 
   output:
     file ("${bam}.samtools.stats.out") into samtoolsStatsReport
@@ -521,7 +521,7 @@ process RunBamQC {
   publishDir "$directoryMap.bamQC/$idSample", mode: 'copy'
 
   input:
-    set idPatient, gender, status, idSample, file(bam), file(bai) from recalibratedBamForBamQC
+    set idPatient, status, idSample, file(bam), file(bai) from recalibratedBamForBamQC
 
   output:
     file("*.txt") into bamQCreport
