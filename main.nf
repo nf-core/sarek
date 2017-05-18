@@ -513,7 +513,7 @@ process RunSamtoolsStats {
     """
 }
 
-verbose ? samtoolsStatsReport = samtoolsStatsReport.view {"BAM Stats: $it"} : ''
+if (verbose)  samtoolsStatsReport = samtoolsStatsReport.view {"BAM Stats: $it"}
 
 process RunBamQC {
   tag {idPatient + "-" + idSample}
