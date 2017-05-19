@@ -523,21 +523,19 @@ if (verbose) samtoolsStatsReport = samtoolsStatsReport.view {"BAM Stats: $it"}
 process RunBamQC {
   tag {idPatient + "-" + idSample}
 
-  publishDir "$directoryMap.bamQC/$idSample", mode: 'copy'
+  publishDir directoryMap.bamQC, mode: 'copy'
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC
 
   output:
-    file("*.txt") into bamQCreport
+    file("$idSample") into bamQCreport
 
     when: reports
 
     script:
     """
-    qualimap bamqc -bam $bam -outdir bamQC
-    mv bamQC/* .
-    mv raw_data_qualimapReport/* .
+    qualimap bamqc -bam $bam -outdir $idSample -outformat HTML
     """
 }
 
@@ -1265,8 +1263,10 @@ process GenerateMultiQCconfig {
 
 if (verbose) multiQCconfig = multiQCconfig.view {"MultiQC config file: $it"}
 
-reportsForMultiQC = Channel.fromPath( 'Reports/{bamQC,BCFToolsStats,FastQC,MarkDuplicates,SamToolsStats}/*' )
+reportsForMultiQC = Channel.empty()
   .mix(
+    Channel.fromPath('Reports/{BCFToolsStats,MarkDuplicates,SamToolsStats}/*'),
+    Channel.fromPath('Reports/{bamQC,FastQC}/*/*'),
     bamQCreport,
     bcfReport,
     fastQCreport,
