@@ -1464,13 +1464,13 @@ def extractBams(tsvFile) {
   return bamFiles = Channel
     .from(tsvFile.readLines())
     .map{line ->
-      list      = checkTSV(line.split(),6)
-      idPatient = list[0]
-      gender    = list[1]
-      status    = checkStatus(list[2].toInteger())
-      idSample  = list[3]
-      bamFile   = checkFile(list[4])
-      baiFile   = checkFile(list[5])
+      def list      = checkTSV(line.split(),6)
+      def idPatient = list[0]
+      def gender    = list[1]
+      def status    = checkStatus(list[2].toInteger())
+      def idSample  = list[3]
+      def bamFile   = checkFile(list[4])
+      def baiFile   = checkFile(list[5])
 
       checkFileExtension(bamFile,".bam")
       checkFileExtension(baiFile,".bai")
@@ -1485,16 +1485,16 @@ def extractFastq(tsvFile) {
   return fastqFiles = Channel
     .from(tsvFile.readLines())
     .map{line ->
-      list       = checkTSV(line.split(),7)
-      idPatient  = list[0]
-      gender     = list[1]
-      status     = checkStatus(list[2].toInteger())
-      idSample   = list[3]
-      idRun      = list[4]
+      def list       = checkTSV(line.split(),7)
+      def idPatient  = list[0]
+      def gender     = list[1]
+      def status     = checkStatus(list[2].toInteger())
+      def idSample   = list[3]
+      def idRun      = list[4]
 
       // When testing workflow from github, paths to FASTQ files start from workflow.projectDir and not workflow.launchDir
-      fastqFile1 = workflow.commitId && params.test ? checkFile("$workflow.projectDir/${list[5]}") : checkFile("${list[5]}")
-      fastqFile2 = workflow.commitId && params.test ? checkFile("$workflow.projectDir/${list[6]}") : checkFile("${list[6]}")
+      def fastqFile1 = workflow.commitId && params.test ? checkFile("$workflow.projectDir/${list[5]}") : checkFile("${list[5]}")
+      def fastqFile2 = workflow.commitId && params.test ? checkFile("$workflow.projectDir/${list[6]}") : checkFile("${list[6]}")
 
       checkFileExtension(fastqFile1,".fastq.gz")
       checkFileExtension(fastqFile2,".fastq.gz")
@@ -1509,7 +1509,7 @@ def extractFastqFromDir(pattern) {
   // All FASTQ files in subdirectories are collected and emitted;
   // they must have _R1_ and _R2_ in their names.
 
-  fastq = Channel.create()
+  def fastq = Channel.create()
 
   // a temporary channel does all the work
   Channel
@@ -1544,14 +1544,14 @@ def extractRecal(tsvFile) {
   return bamFiles = Channel
     .from(tsvFile.readLines())
     .map{line ->
-      list       = checkTSV(line.split(),7)
-      idPatient  = list[0]
-      gender     = list[1]
-      status     = checkStatus(list[2].toInteger())
-      idSample   = list[3]
-      bamFile    = checkFile(list[4])
-      baiFile    = checkFile(list[5])
-      recalTable = checkFile(list[6])
+      def list       = checkTSV(line.split(),7)
+      def idPatient  = list[0]
+      def gender     = list[1]
+      def status     = checkStatus(list[2].toInteger())
+      def idSample   = list[3]
+      def bamFile    = checkFile(list[4])
+      def baiFile    = checkFile(list[5])
+      def recalTable = checkFile(list[6])
 
       checkFileExtension(bamFile,".bam")
       checkFileExtension(baiFile,".bai")
@@ -1562,10 +1562,10 @@ def extractRecal(tsvFile) {
 }
 
 def extractGenders(channel) {
-  genders = [:]  // an empty map
+  def genders = [:]  // an empty map
   channel = channel.map{ it ->
-    idPatient = it[0]
-    gender = it[1]
+    def idPatient = it[0]
+    def gender = it[1]
     genders[idPatient] = gender
 
     [idPatient] + it[2..-1]
@@ -1585,10 +1585,10 @@ def flowcellLaneFromFastq(path) {
   InputStream gzipStream = new java.util.zip.GZIPInputStream(fileStream)
   Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
   BufferedReader buffered = new BufferedReader(decoder)
-  line = buffered.readLine()
+  def line = buffered.readLine()
   assert line.startsWith('@')
   line = line.substring(1)
-  fields = line.split(' ')[0].split(':')
+  def fields = line.split(' ')[0].split(':')
   String fcid
   int lane
   if (fields.size() == 7) {
