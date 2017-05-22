@@ -2,6 +2,7 @@
 set -xeuo pipefail
 
 function nf_test() {
+  echo "$(tput setaf 1)nextflow run $@ -profile travis$(tput sgr0)"
   nextflow run "$@" -profile travis
 }
 
