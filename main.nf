@@ -449,8 +449,6 @@ if (step == 'recalibrate') recalibrationTable = bamFiles
 
 if (verbose) recalibrationTable = recalibrationTable.view {"Base recalibrated table for RecalibrateBam: $it"}
 
-recalTables = Channel.create()
-recalibrationTableForHC = Channel.create()
 (recalTables, recalibrationTableForHC, recalibrationTable) = recalibrationTable.into(3)
 recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
 if (verbose) recalTables = recalTables.view {"Recalibration tables: $it"}
@@ -497,7 +495,19 @@ recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
   name: 'recalibrated.tsv', sort: true, storeDir: directoryMap.recalibrated
 )
 
-if (step == 'skippreprocessing') recalibratedBam = bamFiles
+
+if (step == 'skippreprocessing') {
+  // assume input is recalibrated, ignore explicitBqsrNeeded
+  (recalibratedBam, recalTables) = bamFiles.into(2)
+
+  recalTables = recalTables.map{ it + [null] } // null recalibration table means: do not use --BQSR
+
+  (recalTables, recalibrationTableForHC) = recalTables.into(2)
+  recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
+} else if (!explicitBqsrNeeded) {
+  recalibratedBam = recalibrationTableForHC.map { it[0..-2] }
+}
+
 
 if (verbose) recalibratedBam = recalibratedBam.view {"Recalibrated BAM for variant Calling: $it"}
 
@@ -534,9 +544,7 @@ if (verbose) recalibratedBamReport = recalibratedBamReport.view {"BAM Stats: $it
 // separate recalibrateBams by status
 bamsNormal = Channel.create()
 bamsTumor = Channel.create()
-if (!explicitBqsrNeeded) {
-   recalibratedBam = recalibrationTableForHC.map { it[0..-2] }
-}
+
 recalibratedBam
   .choice(bamsTumor, bamsNormal) {it[1] == 0 ? 1 : 0}
 
@@ -647,6 +655,7 @@ process RunHaplotypecaller {
   when: 'haplotypecaller' in tools
 
   script:
+  BQSR = (recalTable != null) ? "--BQSR $recalTable" : ''
   """
   java -Xmx${task.memory.toGiga()}g \
   -jar \$GATK_HOME/GenomeAnalysisTK.jar \
@@ -655,7 +664,7 @@ process RunHaplotypecaller {
   -pairHMM LOGLESS_CACHING \
   -R $genomeFile \
   --dbsnp $dbsnp \
-  --BQSR $recalTable \
+  $BQSR \
   -I $bam \
   -L \"$genInt\" \
   --disable_auto_index_creation_and_locking_when_reading_rods \
