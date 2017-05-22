@@ -96,6 +96,15 @@ if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
   referenceMap.intervals = file("$workflow.projectDir/repeats/tiny_${params.genome}.list")
 }
 
+// TODO
+// MuTect and Mutect2 could be run without a recalibrated BAM (they support
+// the --BQSR option), but this is not implemented, yet.
+// TODO
+// FreeBayes does not need recalibrated BAMs, but we need to test whether
+// the channels are set up correctly when we disable it
+explicitBqsrNeeded = tools.intersect(['manta', 'mutect1', 'mutect2', 'vardict',
+  'freebayes', 'strelka']).asBoolean()
+
 tsvPath = ''
 if (params.sample) tsvPath = params.sample
 
@@ -466,7 +475,7 @@ process RecalibrateBam {
 
   // HaplotypeCaller can do BQSR on the fly, so do not create a
   // recalibrated BAM explicitly.
-  when: step != 'skippreprocessing' && tools != ['haplotypecaller']
+  when: step != 'skippreprocessing' && explicitBqsrNeeded
 
   script:
   """
@@ -525,7 +534,7 @@ if (verbose) recalibratedBamReport = recalibratedBamReport.view {"BAM Stats: $it
 // separate recalibrateBams by status
 bamsNormal = Channel.create()
 bamsTumor = Channel.create()
-if (tools == ['haplotypecaller']) {
+if (!explicitBqsrNeeded) {
    recalibratedBam = recalibrationTableForHC.map { it[0..-2] }
 }
 recalibratedBam
