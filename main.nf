@@ -1605,12 +1605,11 @@ def flowcellLaneFromFastq(path) {
 }
 
 def generateIntervalsForVC(bams, intervals) {
-  final bamsForVC = Channel.create()
-  final vcIntervals = Channel.create()
-  (bams, bamsForVC) = bams.into(2)
-  (intervals, vcIntervals) = intervals.into(2)
-  bamsForVC = bamsForVC.spread(vcIntervals)
-  return [bamsForVC, bams, intervals]
+
+  def (bamsNew, bamsForVC) = bams.into(2)
+  def (intervalsNew, vcIntervals) = intervals.into(2)
+  def bamsForVCNew = bamsForVC.spread(vcIntervals)
+  return [bamsForVCNew, bamsNew, intervalsNew]
 }
 
 def grabRevision() {
