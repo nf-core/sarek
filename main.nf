@@ -1461,7 +1461,7 @@ def defineToolList() {
 def extractBams(tsvFile) {
   // Channeling the TSV file containing BAM.
   // Format is: "subject gender status sample bam bai"
-  return bamFiles = Channel
+  Channel
     .from(tsvFile.readLines())
     .map{line ->
       def list      = checkTSV(line.split(),6)
@@ -1482,7 +1482,7 @@ def extractBams(tsvFile) {
 def extractFastq(tsvFile) {
   // Channeling the TSV file containing FASTQ.
   // Format is: "subject gender status sample lane fastq1 fastq2"
-  return fastqFiles = Channel
+  Channel
     .from(tsvFile.readLines())
     .map{line ->
       def list       = checkTSV(line.split(),7)
@@ -1541,7 +1541,7 @@ def extractFastqFromDir(pattern) {
 def extractRecal(tsvFile) {
   // Channeling the TSV file containing Recalibration Tables.
   // Format is: "subject gender status sample bam bai recalTables"
-  return bamFiles = Channel
+  Channel
     .from(tsvFile.readLines())
     .map{line ->
       def list       = checkTSV(line.split(),7)
