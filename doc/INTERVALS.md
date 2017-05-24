@@ -25,3 +25,10 @@ samtools faidx /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b
 bwa mem /sw/data/uppnex/ToolBox/hg38bundle/Homo_sapiens_assembly38.fasta intervals.fasta > intervals.sam
 grep -v '^@' intervals.sam | awk '{printf("%s:%d-%d\n", $3, $4, $4+$6-1)}' > tiny-GRCh38.list
 ```
+
+--------------------------------------------------------------------------------
+
+[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
+
+[ngi-link]: https://ngisweden.scilifelab.se/
+[scilifelab-link]: http://www.scilifelab.se/
