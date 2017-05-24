@@ -96,6 +96,15 @@ if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
   referenceMap.intervals = file("$workflow.projectDir/repeats/tiny_${params.genome}.list")
 }
 
+// TODO
+// MuTect and Mutect2 could be run without a recalibrated BAM (they support
+// the --BQSR option), but this is not implemented, yet.
+// TODO
+// FreeBayes does not need recalibrated BAMs, but we need to test whether
+// the channels are set up correctly when we disable it
+explicitBqsrNeeded = tools.intersect(['manta', 'mutect1', 'mutect2', 'vardict',
+  'freebayes', 'strelka']).asBoolean()
+
 tsvPath = ''
 if (params.sample) tsvPath = params.sample
 
@@ -440,8 +449,6 @@ if (step == 'recalibrate') recalibrationTable = bamFiles
 
 if (verbose) recalibrationTable = recalibrationTable.view {"Base recalibrated table for RecalibrateBam: $it"}
 
-recalTables = Channel.create()
-recalibrationTableForHC = Channel.create()
 (recalTables, recalibrationTableForHC, recalibrationTable) = recalibrationTable.into(3)
 recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
 if (verbose) recalTables = recalTables.view {"Recalibration tables: $it"}
@@ -466,7 +473,7 @@ process RecalibrateBam {
 
   // HaplotypeCaller can do BQSR on the fly, so do not create a
   // recalibrated BAM explicitly.
-  when: step != 'skippreprocessing' && tools != ['haplotypecaller']
+  when: step != 'skippreprocessing' && explicitBqsrNeeded
 
   script:
   """
@@ -488,7 +495,19 @@ recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
   name: 'recalibrated.tsv', sort: true, storeDir: directoryMap.recalibrated
 )
 
-if (step == 'skippreprocessing') recalibratedBam = bamFiles
+
+if (step == 'skippreprocessing') {
+  // assume input is recalibrated, ignore explicitBqsrNeeded
+  (recalibratedBam, recalTables) = bamFiles.into(2)
+
+  recalTables = recalTables.map{ it + [null] } // null recalibration table means: do not use --BQSR
+
+  (recalTables, recalibrationTableForHC) = recalTables.into(2)
+  recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
+} else if (!explicitBqsrNeeded) {
+  recalibratedBam = recalibrationTableForHC.map { it[0..-2] }
+}
+
 
 if (verbose) recalibratedBam = recalibratedBam.view {"Recalibrated BAM for variant Calling: $it"}
 
@@ -525,9 +544,7 @@ if (verbose) recalibratedBamReport = recalibratedBamReport.view {"BAM Stats: $it
 // separate recalibrateBams by status
 bamsNormal = Channel.create()
 bamsTumor = Channel.create()
-if (tools == ['haplotypecaller']) {
-   recalibratedBam = recalibrationTableForHC.map { it[0..-2] }
-}
+
 recalibratedBam
   .choice(bamsTumor, bamsNormal) {it[1] == 0 ? 1 : 0}
 
@@ -638,6 +655,7 @@ process RunHaplotypecaller {
   when: 'haplotypecaller' in tools
 
   script:
+  BQSR = (recalTable != null) ? "--BQSR $recalTable" : ''
   """
   java -Xmx${task.memory.toGiga()}g \
   -jar \$GATK_HOME/GenomeAnalysisTK.jar \
@@ -646,7 +664,7 @@ process RunHaplotypecaller {
   -pairHMM LOGLESS_CACHING \
   -R $genomeFile \
   --dbsnp $dbsnp \
-  --BQSR $recalTable \
+  $BQSR \
   -I $bam \
   -L \"$genInt\" \
   --disable_auto_index_creation_and_locking_when_reading_rods \
