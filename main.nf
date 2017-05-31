@@ -859,15 +859,19 @@ process ConcatVCF {
   """
   # first make a header from one of the VCF intervals
   # get rid of interval information only from the GATK command-line, but leave the rest
-  sed -n '/^[^#]/q;p' `ls *vcf| head -n 1` | \
+  FIRSTVCF=\$(ls *.vcf | head -n 1)
+  sed -n '/^[^#]/q;p' \$FIRSTVCF | \
   awk '!/GATKCommandLine/{print}/GATKCommandLine/{for(i=1;i<=NF;i++){if(\$i!~/intervals=/ && \$i !~ /out=/){printf("%s ",\$i)}}printf("\\n")}' \
   > header
+
+  # Get list of contigs from VCF header
+  CONTIGS=(\$(sed -rn '/^[^#]/q;/^##contig=/{s/##contig=<ID=(.*),length=[0-9]+>/\\1/;s/\\*/\\\\*/g;p}' \$FIRSTVCF))
 
   # concatenate VCFs in the correct order
   (
     cat header
 
-    for chr in ${chrPrefix}{1..22} ${chrPrefix}X ${chrPrefix}Y; do
+    for chr in "\${CONTIGS[@]}"; do
       # Skip if globbing would not match any file to avoid errors such as
       # "ls: cannot access chr3_*.vcf: No such file or directory" when chr3
       # was not processed.
