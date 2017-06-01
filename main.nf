@@ -1014,7 +1014,8 @@ alleleCountOutput
 alleleCountOutput = alleleCountNormal.spread(alleleCountTumor)
 
 alleleCountOutput = alleleCountOutput.map {
-  idPatientNormal, statusNormal, idSampleNormal, alleleCountNormal, idPatientTumor, genderTumor, statusTumor, idSampleTumor, alleleCountTumor ->
+  idPatientNormal, statusNormal, idSampleNormal, alleleCountNormal, 
+  idPatientTumor,  statusTumor,  idSampleTumor,  alleleCountTumor ->
   [idPatientNormal, idSampleNormal, idSampleTumor, alleleCountNormal, alleleCountTumor]
 }
 
