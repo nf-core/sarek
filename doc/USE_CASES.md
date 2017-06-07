@@ -79,7 +79,7 @@ At the end of this step you should have recalibrated BAM files in the `Preproces
 
 ## Starting from recalibration
 
-If the bam files were realigned together, you can start from recalibration:
+If the BAM files were realigned together, you can start from recalibration:
 
 ```bash
 nextflow run SciLifeLab/CAW --sample mysample.tsv --step recalibrate
@@ -106,6 +106,12 @@ And the corresponding TSV file should be like:
 SUBJECT_ID  XX    0    SAMPLEIDN    /samples/SAMPLEIDN.bam    /samples/SAMPLEIDN.bai
 SUBJECT_ID  XX    1    SAMPLEIDT    /samples/SAMPLEIDT.bam    /samples/SAMPLEIDT.bai
 ```
+
+If you want to restart a previous run of the pipeline, you may not have a recalibrated
+BAM file. This is the case if HaplotypeCaller was the only tool (recalibration is
+done on-the-fly with HaplotypeCaller to improve performance and save space). In
+this case, you need to start with `--step=recalibrate` (see previous section).
+
 
 --------------------------------------------------------------------------------
 

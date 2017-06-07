@@ -7,74 +7,170 @@ Nextflow can also be use conjointly with Docker to facilitate the use of other t
 - See the [Install Nextflow documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/INSTALL.md)
 - See the [Reference files documentation](REFERENCES.md)
 
-This small tutorial will explain to you how to run CAW on a small sample test data on a Swedish UPPMAX cluster. Some variables are specific, but it can be easily modified to suit any clusters.
+This small tutorial will explain to you how to run CAW on a small sample test data on Swedish UPPMAX clusters.
+Some variables are specific, but it can be easily modified to suit any clusters.
 
-## Make a test directory
+## On Milou
+
+For more information about Milou, follow the [Milou user guide](https://www.uppmax.uu.se/support/user-guides/milou-user-guide/).
+This workflow itself needs no installation.
+You just need to load the correct modules: `bioinfo-tools` and `Nextflow`.
+Nextflow will automatically fetch CAW from GitHub when launched if `SciLifeLab/CAW` is specified as the workflow name.
+So you can directly use CAW on Milou.
+
+### Test CAW with small dataset and small reference
+
+For more information, follow the [genomes files documentation](GENOMES.md).
+The following tutorial explain how to run CAW on a small dataset using a small reference.
 
 ```bash
+# Connect to Milou
+ssh -AX [USER]@milou.uppmax.uu.se
+
+# Load modules
+module load bioinfo-tools Nextflow
+
+# Set up this two variables as asked by UPPMAX
+export NXF_LAUNCHBASE=$SNIC_TMP
+export NXF_TEMP=$SNIC_TMP
+
+# make a test directory
 mkdir test_CAW
 cd test_CAW
-```
-## Build the smallGRCh37 Reference
 
-```bash
-nextflow run SciLifeLab/CAW/buildReferences.nf --download --genome smallGRCh37
-```
+# Connect to an interactive session
+$ interactive -A [PROJECT] -p node
 
-```bash
-nextflow run SciLifeLab/CAW/buildReferences.nf --refDir <pathToSmallRefRepo> --genome smallGRCh37
-```
-- See the [genomes files documentation](GENOMES.md)
+# Build the smallGRCh37 reference
+nextflow run SciLifeLab/CAW/buildReferences.nf --download --genome smallGRCh37 --project [PROJECT]
 
-## Test the workflow on a test tiny set
-
-This workflow itself needs no installation. Nextflow will automatically fetch it from GitHub when launched if `SciLifeLab/CAW` is specified as the workflow name.
-
-```bash
-nextflow run SciLifeLab/CAW --test --genome smallGRCh37
+# Test the workflow on a test tiny set
+nextflow run SciLifeLab/CAW --test --genome smallGRCh37 --project [PROJECT]
 ```
 
-If you're using a Swedish UPPMAX cluster, don't forget to provide your project ID.
-
+### Update CAW
 ```bash
-nextflow run SciLifeLab/CAW --test --genome smallGRCh37 --project <UPPMAX Project ID>
-```
+# Connect to Milou
+ssh -AX [USER]@milou.uppmax.uu.se
 
-# Other possibilities for advanced users
-
-## Clone the repository and test the workflow on a test tiny set
-
-You can download the repository yourself from GitHub and run them directly:
-
-```bash
-git clone https://github.com/SciLifeLab/CAW test_CAW
-git clone https://github.com/szilvajuhos/smallRef smallGRCh37
-cd test_CAW
-nextflow run SciLifeLab/CAW/buildReferences.nf --refDir ../smallGRCh37 --genome smallGRCh37
-nextflow run main.nf --test --genome smallGRCh37
-```
-
-## Load Nextflow
-
-If you're running on a Swedish UPPMAX cluster you can load Nextflow as an environment module:
-
-```bash
+# Load modules
 module load bioinfo-tools Nextflow
+
+# Set up this two variables as asked by UPPMAX
+export NXF_LAUNCHBASE=$SNIC_TMP
+export NXF_TEMP=$SNIC_TMP
+
+# Update CAW
+nextflow pull SciLifeLab/CAW
 ```
 
-Environnement variables are set up each time the module is loaded, so you might want to set them up after loading the module.
+### Use CAW with slumr
+To use CAW on Milou you will need to use the `slurm` profile.
+```bash
+# Connect to Milou
+ssh -AX [USER]@milou.uppmax.uu.se
 
-## Running tests in interactive mode on milou
+# Load modules
+module load bioinfo-tools Nextflow
 
-You can try the test data by changing to the interactive mode on milou and run the test tiny set like:
+# Set up this two variables as asked by UPPMAX
+export NXF_LAUNCHBASE=$SNIC_TMP
+export NXF_TEMP=$SNIC_TMP
 
+# Run the workflow directly on the login node
+nextflow run SciLifeLab/CAW --sample [FILE.TSV] --genome [GENOME] --project [PROJECT] -profile slurm
 ```
-$ interactive -A <UPPMAX Project ID> -p node
-[ ... login messages ... ]
-$ nextflow run main.nf -profile localhost --test --project <UPPMAX Project ID>
+
+
+## On Bianca
+
+For more information about Bianca, follow the [Bianca user guide](http://uppmax.uu.se/support/user-guides/bianca-user-guide/).
+Bianca is made for sensitive data, so it's quite more complicated to access outside data.
+So CAW will have to be installed and updated manually.
+
+
+```bash
+# Connect to Milou
+ssh -AX [USER]@milou.uppmax.uu.se
+
+# Clone the repository
+git clone git@github.com:SciLifeLab/CAW.git
+cd CAW
+
+# You can also checkout a specific version using
+git checkout <branch, tag or commit>
+
+# Make a tar to send to Bianca
+./scripts/makeSnapshot.sh
+
+Wrote CAW-[snapID].tar.gz
+
+# Use sftp to send the tar to Bianca
+sftp [USER]-[PROJECT]@bianca-sftp.uppmax.uu.se:[USER]-[PROJECT]
+put CAW-[snapID].tar.gz
+
+# quit sftp
+exit
+
+# Connect to Bianca
+ssh -A [USER]-[PROJECT]@bianca.uppmax.uu.se
+
+# Go to your project
+cd /castor/project/proj_nobackup
+
+# Make and go into a CAW directoy (where you will store all CAW versions)
+mkdir CAW
+cd CAW
+
+# Copy the tar from wharf to the project
+cp /castor/project/proj_nobackup/wharf/[USER]/[USER]-[PROJECT]/CAW-[snapID].tgz /castor/project/proj_nobackup/CAW
+
+# extract CAW
+tar -xvzf CAW-[snapID].tgz
+
+# Make a symbolic link to the extracted repository
+ln -s CAW-[snapID] default
 ```
 
-For more tests, see [Usage documentation](USAGE.md#test)
+The idea is to have every member of your project to be able to use the same CAW version at the same time.
+So every member of the project who wants to use CAW will need to do
+
+```bash
+# Connect to Milou
+ssh -AX [USER]@milou.uppmax.uu.se
+
+# Connect to Bianca
+ssh -A [USER]-[PROJECT]@bianca.uppmax.uu.se
+
+# Go to your user directory
+cd /home/[USER]
+
+# Make a symbolic link to the default CAW
+ln -s /castor/project/proj_nobackup/CAW/default CAW
+```
+
+### Update CAW
+
+Repeat the same steps as for installing CAW, and once the tar has been extracted, you can replace the link.
+
+```bash
+# Connect to Milou
+ssh -AX [USER]@milou.uppmax.uu.se
+
+# Connect to Bianca
+ssh -A [USER]-[PROJECT]@bianca.uppmax.uu.se
+
+# Go to the CAW directory in your project
+cd /castor/project/proj_nobackup/CAW
+
+# Remove link
+rm default
+
+# Link to new CAW version
+ln -s CAW-[NEWsnapID] default
+```
+
+You can for example keep a `default` version that you are sure is working, an make a link for a `testing` or `development`
 
 --------------------------------------------------------------------------------
 

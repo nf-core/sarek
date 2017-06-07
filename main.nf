@@ -97,6 +97,15 @@ if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
   referenceMap.intervals = file("$workflow.projectDir/repeats/tiny_${params.genome}.list")
 }
 
+// TODO
+// MuTect and Mutect2 could be run without a recalibrated BAM (they support
+// the --BQSR option), but this is not implemented, yet.
+// TODO
+// FreeBayes does not need recalibrated BAMs, but we need to test whether
+// the channels are set up correctly when we disable it
+explicitBqsrNeeded = tools.intersect(['manta', 'mutect1', 'mutect2', 'vardict',
+  'freebayes', 'strelka']).asBoolean()
+
 tsvPath = ''
 if (params.sample) tsvPath = params.sample
 
@@ -441,9 +450,8 @@ if (step == 'recalibrate') recalibrationTable = bamFiles
 
 if (verbose) recalibrationTable = recalibrationTable.view {"Base recalibrated table for RecalibrateBam: $it"}
 
-recalTables = Channel.create()
-recalibrationTableForHC = Channel.create()
-(recalTables, recalibrationTableForHC, recalibrationTable) = recalibrationTable.into(3)
+(bamForBamQC, bamForSamToolsStats, recalTables, recalibrationTableForHC, recalibrationTable) = recalibrationTable.into(5)
+
 recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
 if (verbose) recalTables = recalTables.view {"Recalibration tables: $it"}
 
@@ -467,7 +475,7 @@ process RecalibrateBam {
 
   // HaplotypeCaller can do BQSR on the fly, so do not create a
   // recalibrated BAM explicitly.
-  when: step != 'skippreprocessing' && tools != ['haplotypecaller']
+  when: step != 'skippreprocessing' && explicitBqsrNeeded
 
   script:
   """
@@ -489,12 +497,16 @@ recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
   name: 'recalibrated.tsv', sort: true, storeDir: directoryMap.recalibrated
 )
 
-if (step == 'skippreprocessing') recalibratedBam = bamFiles
+if (step == 'skippreprocessing') {
+  // assume input is recalibrated, ignore explicitBqsrNeeded
+  (recalibratedBam, recalTables) = bamFiles.into(2)
 
-if (step != 'skippreprocessing' && tools != ['haplotypecaller']) {
-  (recalibratedBam, bamForSamToolsStats, bamForBamQC) = recalibratedBam.into(3)
-} else {
-  (recalibrationTableForHC, bamForSamToolsStats, bamForBamQC) = recalibrationTableForHC.map { it[0..-2] }.into(3)
+  recalTables = recalTables.map{ it + [null] } // null recalibration table means: do not use --BQSR
+
+  (recalTables, recalibrationTableForHC) = recalTables.into(2)
+  recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
+} else if (!explicitBqsrNeeded) {
+  (bamForBamQC, bamForSamToolsStats, recalibratedBam) = recalibrationTableForHC.map { it[0..-2] }.into(3)
 }
 
 if (verbose) recalibratedBam = recalibratedBam.view {"Recalibrated BAM for variant Calling: $it"}
@@ -553,9 +565,7 @@ if (verbose) bamQCreport = bamQCreport.view {"BAM Stats: $it"}
 // separate recalibrateBams by status
 bamsNormal = Channel.create()
 bamsTumor = Channel.create()
-if (tools == ['haplotypecaller']) {
-   recalibratedBam = recalibrationTableForHC
-}
+
 recalibratedBam
   .choice(bamsTumor, bamsNormal) {it[1] == 0 ? 1 : 0}
 
@@ -666,6 +676,7 @@ process RunHaplotypecaller {
   when: 'haplotypecaller' in tools
 
   script:
+  BQSR = (recalTable != null) ? "--BQSR $recalTable" : ''
   """
   java -Xmx${task.memory.toGiga()}g \
   -jar \$GATK_HOME/GenomeAnalysisTK.jar \
@@ -674,7 +685,7 @@ process RunHaplotypecaller {
   -pairHMM LOGLESS_CACHING \
   -R $genomeFile \
   --dbsnp $dbsnp \
-  --BQSR $recalTable \
+  $BQSR \
   -I $bam \
   -L \"$genInt\" \
   --disable_auto_index_creation_and_locking_when_reading_rods \
@@ -869,15 +880,19 @@ process ConcatVCF {
   """
   # first make a header from one of the VCF intervals
   # get rid of interval information only from the GATK command-line, but leave the rest
-  sed -n '/^[^#]/q;p' `ls *vcf| head -n 1` | \
+  FIRSTVCF=\$(ls *.vcf | head -n 1)
+  sed -n '/^[^#]/q;p' \$FIRSTVCF | \
   awk '!/GATKCommandLine/{print}/GATKCommandLine/{for(i=1;i<=NF;i++){if(\$i!~/intervals=/ && \$i !~ /out=/){printf("%s ",\$i)}}printf("\\n")}' \
   > header
+
+  # Get list of contigs from VCF header
+  CONTIGS=(\$(sed -rn '/^[^#]/q;/^##contig=/{s/##contig=<ID=(.*),length=[0-9]+>/\\1/;s/\\*/\\\\*/g;p}' \$FIRSTVCF))
 
   # concatenate VCFs in the correct order
   (
     cat header
 
-    for chr in ${chrPrefix}{1..22} ${chrPrefix}X ${chrPrefix}Y; do
+    for chr in "\${CONTIGS[@]}"; do
       # Skip if globbing would not match any file to avoid errors such as
       # "ls: cannot access chr3_*.vcf: No such file or directory" when chr3
       # was not processed.
@@ -1020,7 +1035,8 @@ alleleCountOutput
 alleleCountOutput = alleleCountNormal.spread(alleleCountTumor)
 
 alleleCountOutput = alleleCountOutput.map {
-  idPatientNormal, statusNormal, idSampleNormal, alleleCountNormal, idPatientTumor, genderTumor, statusTumor, idSampleTumor, alleleCountTumor ->
+  idPatientNormal, statusNormal, idSampleNormal, alleleCountNormal,
+  idPatientTumor,  statusTumor,  idSampleTumor,  alleleCountTumor ->
   [idPatientNormal, idSampleNormal, idSampleTumor, alleleCountNormal, alleleCountTumor]
 }
 
@@ -1221,10 +1237,7 @@ process RunVEP {
 
 if (verbose) vepReport = vepReport.view {"VEP Reports: $it"}
 
-
 process GenerateMultiQCconfig {
-  tag {idPatient}
-
   publishDir directoryMap.multiQC, mode: 'copy'
 
   input:
@@ -1494,16 +1507,16 @@ def defineToolList() {
 def extractBams(tsvFile) {
   // Channeling the TSV file containing BAM.
   // Format is: "subject gender status sample bam bai"
-  return bamFiles = Channel
+  Channel
     .from(tsvFile.readLines())
     .map{line ->
-      list      = checkTSV(line.split(),6)
-      idPatient = list[0]
-      gender    = list[1]
-      status    = checkStatus(list[2].toInteger())
-      idSample  = list[3]
-      bamFile   = checkFile(list[4])
-      baiFile   = checkFile(list[5])
+      def list      = checkTSV(line.split(),6)
+      def idPatient = list[0]
+      def gender    = list[1]
+      def status    = checkStatus(list[2].toInteger())
+      def idSample  = list[3]
+      def bamFile   = checkFile(list[4])
+      def baiFile   = checkFile(list[5])
 
       checkFileExtension(bamFile,".bam")
       checkFileExtension(baiFile,".bai")
@@ -1515,19 +1528,19 @@ def extractBams(tsvFile) {
 def extractFastq(tsvFile) {
   // Channeling the TSV file containing FASTQ.
   // Format is: "subject gender status sample lane fastq1 fastq2"
-  return fastqFiles = Channel
+  Channel
     .from(tsvFile.readLines())
     .map{line ->
-      list       = checkTSV(line.split(),7)
-      idPatient  = list[0]
-      gender     = list[1]
-      status     = checkStatus(list[2].toInteger())
-      idSample   = list[3]
-      idRun      = list[4]
+      def list       = checkTSV(line.split(),7)
+      def idPatient  = list[0]
+      def gender     = list[1]
+      def status     = checkStatus(list[2].toInteger())
+      def idSample   = list[3]
+      def idRun      = list[4]
 
       // When testing workflow from github, paths to FASTQ files start from workflow.projectDir and not workflow.launchDir
-      fastqFile1 = workflow.commitId && params.test ? checkFile("$workflow.projectDir/${list[5]}") : checkFile("${list[5]}")
-      fastqFile2 = workflow.commitId && params.test ? checkFile("$workflow.projectDir/${list[6]}") : checkFile("${list[6]}")
+      def fastqFile1 = workflow.commitId && params.test ? checkFile("$workflow.projectDir/${list[5]}") : checkFile("${list[5]}")
+      def fastqFile2 = workflow.commitId && params.test ? checkFile("$workflow.projectDir/${list[6]}") : checkFile("${list[6]}")
 
       checkFileExtension(fastqFile1,".fastq.gz")
       checkFileExtension(fastqFile2,".fastq.gz")
@@ -1542,7 +1555,7 @@ def extractFastqFromDir(pattern) {
   // All FASTQ files in subdirectories are collected and emitted;
   // they must have _R1_ and _R2_ in their names.
 
-  fastq = Channel.create()
+  def fastq = Channel.create()
 
   // a temporary channel does all the work
   Channel
@@ -1574,17 +1587,17 @@ def extractFastqFromDir(pattern) {
 def extractRecal(tsvFile) {
   // Channeling the TSV file containing Recalibration Tables.
   // Format is: "subject gender status sample bam bai recalTables"
-  return bamFiles = Channel
+  Channel
     .from(tsvFile.readLines())
     .map{line ->
-      list       = checkTSV(line.split(),7)
-      idPatient  = list[0]
-      gender     = list[1]
-      status     = checkStatus(list[2].toInteger())
-      idSample   = list[3]
-      bamFile    = checkFile(list[4])
-      baiFile    = checkFile(list[5])
-      recalTable = checkFile(list[6])
+      def list       = checkTSV(line.split(),7)
+      def idPatient  = list[0]
+      def gender     = list[1]
+      def status     = checkStatus(list[2].toInteger())
+      def idSample   = list[3]
+      def bamFile    = checkFile(list[4])
+      def baiFile    = checkFile(list[5])
+      def recalTable = checkFile(list[6])
 
       checkFileExtension(bamFile,".bam")
       checkFileExtension(baiFile,".bai")
@@ -1595,10 +1608,10 @@ def extractRecal(tsvFile) {
 }
 
 def extractGenders(channel) {
-  genders = [:]  // an empty map
+  def genders = [:]  // an empty map
   channel = channel.map{ it ->
-    idPatient = it[0]
-    gender = it[1]
+    def idPatient = it[0]
+    def gender = it[1]
     genders[idPatient] = gender
 
     [idPatient] + it[2..-1]
@@ -1618,10 +1631,10 @@ def flowcellLaneFromFastq(path) {
   InputStream gzipStream = new java.util.zip.GZIPInputStream(fileStream)
   Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
   BufferedReader buffered = new BufferedReader(decoder)
-  line = buffered.readLine()
+  def line = buffered.readLine()
   assert line.startsWith('@')
   line = line.substring(1)
-  fields = line.split(' ')[0].split(':')
+  def fields = line.split(' ')[0].split(':')
   String fcid
   int lane
   if (fields.size() == 7) {
@@ -1638,12 +1651,11 @@ def flowcellLaneFromFastq(path) {
 }
 
 def generateIntervalsForVC(bams, intervals) {
-  final bamsForVC = Channel.create()
-  final vcIntervals = Channel.create()
-  (bams, bamsForVC) = bams.into(2)
-  (intervals, vcIntervals) = intervals.into(2)
-  bamsForVC = bamsForVC.spread(vcIntervals)
-  return [bamsForVC, bams, intervals]
+
+  def (bamsNew, bamsForVC) = bams.into(2)
+  def (intervalsNew, vcIntervals) = intervals.into(2)
+  def bamsForVCNew = bamsForVC.spread(vcIntervals)
+  return [bamsForVCNew, bamsNew, intervalsNew]
 }
 
 def grabRevision() {
