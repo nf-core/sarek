@@ -865,7 +865,7 @@ process ConcatVCF {
   > header
 
   # Get list of contigs from VCF header
-  CONTIGS=(\$(sed -rn '/^[^#]/q;/^##contig=/{s/##contig=<ID=(.*),length=[0-9]+>/\\1/;s/\\*/\\\\*/g;p}' \$FIRSTVCF))
+  CONTIGS=(\$(sed -rn '/^[^#]/q;/^##contig=/{s/##contig=<ID=(.*),length=[0-9]+(,[^>]*)?>/\\1/;s/\\*/\\\\*/g;p}' \$FIRSTVCF))
 
   # concatenate VCFs in the correct order
   (
