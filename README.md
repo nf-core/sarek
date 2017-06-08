@@ -19,6 +19,8 @@ Besides variant calls, the workflow provides quality controls presented by [Mult
 
 The [CAW-containers](https://github.com/SciLifeLab/CAW-containers) repository contains Dockerfiles for each process for easier deployment.
 
+This pipeline is listed on [Elixir - Tools and Data Services Registry](https://bio.tools/tool/CAW/version/none).
+
 ## Documentation
 
 The CAW pipeline comes with documentation about the pipeline, found in the `doc/` directory:
