@@ -266,6 +266,7 @@ def checkParams(it) {
     'project',
     'ref-dir',
     'refDir',
+    'reports',
     'run-time',
     'runTime',
     'sample-dir',

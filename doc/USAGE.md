@@ -22,6 +22,10 @@ Specify an email for MultiQC report (optionnal)
 
 Display help
 
+### --reports
+
+Run QC tools and MultiQC to generate a HTML report.
+
 ### --project `ProjectID`
 
 Specify a project number ID on a UPPMAX cluster. (optionnal if not on such a cluster)
@@ -53,7 +57,6 @@ Choose which tools will be used in the workflow. Different tools to be separated
 - ascat (use ascat for CNV)
 - haplotypecaller (use HaplotypeCaller for VC)
 - manta (use Manta for SV)
-- multiqc (Make a QC report)
 - mutect1 (use MuTect1 for VC)
 - mutect2 (use MuTect2 for VC)
 - strelka (use Strelka for VC)

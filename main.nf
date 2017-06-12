@@ -83,6 +83,7 @@ directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
 stepList = defineStepList()
 toolList = defineToolList()
+reports = params.reports
 verbose = params.verbose
 
 if (!checkParameterExistence(step, stepList)) {exit 1, 'Unknown step, see --help for more information'}
@@ -161,7 +162,7 @@ if (verbose) fastqFilesforFastQC = fastqFilesforFastQC.view {"FASTQ files for Fa
 process RunFastQC {
   tag {idPatient + "-" + idRun}
 
-  publishDir directoryMap.fastQC, mode: 'copy'
+  publishDir "$directoryMap.fastQC/$idRun", mode: 'copy'
 
   input:
     set idPatient, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFilesforFastQC
@@ -169,7 +170,7 @@ process RunFastQC {
   output:
     file "*_fastqc.{zip,html}" into fastQCreport
 
-  when: step == 'preprocessing' && 'multiqc' in tools
+  when: step == 'preprocessing' && reports
 
   script:
   """
@@ -449,7 +450,8 @@ if (step == 'recalibrate') recalibrationTable = bamFiles
 
 if (verbose) recalibrationTable = recalibrationTable.view {"Base recalibrated table for RecalibrateBam: $it"}
 
-(recalTables, recalibrationTableForHC, recalibrationTable) = recalibrationTable.into(3)
+(bamForBamQC, bamForSamToolsStats, recalTables, recalibrationTableForHC, recalibrationTable) = recalibrationTable.into(5)
+
 recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
 if (verbose) recalTables = recalTables.view {"Recalibration tables: $it"}
 
@@ -495,7 +497,6 @@ recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
   name: 'recalibrated.tsv', sort: true, storeDir: directoryMap.recalibrated
 )
 
-
 if (step == 'skippreprocessing') {
   // assume input is recalibrated, ignore explicitBqsrNeeded
   (recalibratedBam, recalTables) = bamFiles.into(2)
@@ -505,9 +506,8 @@ if (step == 'skippreprocessing') {
   (recalTables, recalibrationTableForHC) = recalTables.into(2)
   recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
 } else if (!explicitBqsrNeeded) {
-  recalibratedBam = recalibrationTableForHC.map { it[0..-2] }
+  (bamForBamQC, bamForSamToolsStats, recalibratedBam) = recalibrationTableForHC.map { it[0..-2] }.into(3)
 }
-
 
 if (verbose) recalibratedBam = recalibratedBam.view {"Recalibrated BAM for variant Calling: $it"}
 
@@ -517,12 +517,12 @@ process RunSamtoolsStats {
   publishDir directoryMap.samtoolsStats, mode: 'copy'
 
   input:
-    set idPatient, status, idSample, file(bam), file(bai) from recalibratedBamForStats
+    set idPatient, status, idSample, file(bam), file(bai) from bamForSamToolsStats
 
   output:
-    file ("${bam}.samtools.stats.out") into recalibratedBamReport
+    file ("${bam}.samtools.stats.out") into samtoolsStatsReport
 
-    when: 'multiqc' in tools
+    when: reports
 
     script:
     """
@@ -530,7 +530,28 @@ process RunSamtoolsStats {
     """
 }
 
-if (verbose) recalibratedBamReport = recalibratedBamReport.view {"BAM Stats: $it"}
+if (verbose) samtoolsStatsReport = samtoolsStatsReport.view {"BAM Stats: $it"}
+
+process RunBamQC {
+  tag {idPatient + "-" + idSample}
+
+  publishDir directoryMap.bamQC, mode: 'copy'
+
+  input:
+    set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC
+
+  output:
+    file("$idSample") into bamQCreport
+
+    when: reports
+
+    script:
+    """
+    qualimap bamqc -bam $bam -outdir $idSample -outformat HTML
+    """
+}
+
+if (verbose) bamQCreport = bamQCreport.view {"BAM Stats: $it"}
 
 // Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
 // The sample tsv config file which is formatted like: "subject status sample lane fastq1 fastq2"
@@ -1014,7 +1035,7 @@ alleleCountOutput
 alleleCountOutput = alleleCountNormal.spread(alleleCountTumor)
 
 alleleCountOutput = alleleCountOutput.map {
-  idPatientNormal, statusNormal, idSampleNormal, alleleCountNormal, 
+  idPatientNormal, statusNormal, idSampleNormal, alleleCountNormal,
   idPatientTumor,  statusTumor,  idSampleTumor,  alleleCountTumor ->
   [idPatientNormal, idSampleNormal, idSampleTumor, alleleCountNormal, alleleCountTumor]
 }
@@ -1142,7 +1163,7 @@ process RunBcftoolsStats {
   output:
     file ("${vcf.baseName}.bcf.tools.stats.out") into bcfReport
 
-  when: 'multiqc' in tools
+  when: reports
 
   script:
   """
@@ -1216,10 +1237,7 @@ process RunVEP {
 
 if (verbose) vepReport = vepReport.view {"VEP Reports: $it"}
 
-
 process GenerateMultiQCconfig {
-  tag {idPatient}
-
   publishDir directoryMap.multiQC, mode: 'copy'
 
   input:
@@ -1227,7 +1245,7 @@ process GenerateMultiQCconfig {
   output:
   file("multiqc_config.yaml") into multiQCconfig
 
-  when: 'multiqc' in tools
+  when: reports
 
   script:
   annotateString = annotateTools ? "- Annotate on : ${annotateTools.join(", ")}" : ''
@@ -1250,23 +1268,27 @@ process GenerateMultiQCconfig {
   echo "- 'fastqc'" >> multiqc_config.yaml
   echo "- 'picard'" >> multiqc_config.yaml
   echo "- 'samtools'" >> multiqc_config.yaml
+  echo "- 'qualimap'" >> multiqc_config.yaml
   echo "- 'snpeff'" >> multiqc_config.yaml
+  echo "- 'vep'" >> multiqc_config.yaml
   """
 }
 
 if (verbose) multiQCconfig = multiQCconfig.view {"MultiQC config file: $it"}
 
-reportsForMultiQC = Channel.fromPath( 'Reports/{FastQC,MarkDuplicates,SamToolsStats}/*' )
-  .mix(bcfReport,
+reportsForMultiQC = Channel.empty()
+  .mix(
+    Channel.fromPath('Reports/{BCFToolsStats,MarkDuplicates,SamToolsStats}/*'),
+    Channel.fromPath('Reports/{bamQC,FastQC}/*/*'),
+    bamQCreport,
+    bcfReport,
     fastQCreport,
     markDuplicatesReport,
     multiQCconfig,
-    recalibratedBamReport,
+    samtoolsStatsReport,
     snpeffReport,
-    vepReport)
-  .flatten()
-  .unique()
-  .toList()
+    vepReport
+  ).flatten().unique().toList()
 
 if (verbose) reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}
 
@@ -1281,7 +1303,7 @@ process RunMultiQC {
   output:
     set file("*multiqc_report.html"), file("*multiqc_data") into multiQCReport
 
-    when: 'multiqc' in tools
+    when: reports
 
   script:
   """
@@ -1342,6 +1364,7 @@ def checkParams(it) {
     'genomes',
     'help',
     'project',
+    'reports',
     'run-time',
     'runTime',
     'sample-dir',
@@ -1414,6 +1437,7 @@ def defineDirectoryMap() {
     'nonRealigned'     : 'Preprocessing/NonRealigned',
     'nonRecalibrated'  : 'Preprocessing/NonRecalibrated',
     'recalibrated'     : 'Preprocessing/Recalibrated',
+    'bamQC'            : 'Reports/bamQC',
     'bcftoolsStats'    : 'Reports/BCFToolsStats',
     'fastQC'           : 'Reports/FastQC',
     'markDuplicatesQC' : 'Reports/MarkDuplicates',
@@ -1472,7 +1496,6 @@ def defineToolList() {
     'freebayes',
     'haplotypecaller',
     'manta',
-    'multiqc',
     'mutect1',
     'mutect2',
     'snpeff',
@@ -1661,6 +1684,8 @@ def helpMessage(version, revision) { // Display help message
   log.info "         annotate (will annotate Variant Calling output."
   log.info "         By default it will try to annotate all available vcfs."
   log.info "         Use with --annotateTools or --annotateVCF to specify what to annotate"
+  log.info "    --reports"
+  log.info "       Run QC tools and MultiQC to generate a HTML report"
   log.info "    --tools"
   log.info "       Option to configure which tools to use in the workflow."
   log.info "         Different tools to be separated by commas."
