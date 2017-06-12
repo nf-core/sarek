@@ -6,5 +6,5 @@ for chr in `seq 1 22` X Y M
 do
 echo "chr "$chr
 echo $vcf
-echo (grep $chr $vcf | wc)
+grep "^$chr" $vcf | wc
 done
