@@ -247,6 +247,11 @@ process BuildVCFIndex {
 ================================================================================
 */
 
+def cawMessage() {
+  // Display CAW message
+  log.info "CANCER ANALYSIS WORKFLOW ~ $version - " + this.grabRevision() + (workflow.commitId ? " [$workflow.commitId]" : "")
+}
+
 def checkFile(it) {
   // Check file existence
   final f = file(it)
@@ -291,21 +296,24 @@ def checkParams(it) {
 }
 
 def checkUppmaxProject() {
-  return !((workflow.profile == 'standard' || workflow.profile == 'interactive') && !params.project)
+  // check if UPPMAX project number is specified
+  return !(workflow.profile == 'slurm' && !params.project)
 }
 
 def grabRevision() {
-  return workflow.revision ?: workflow.scriptId.substring(0,10)
+  // Return the same string executed from github or not
+  return workflow.revision ?: workflow.commitId ?: workflow.scriptId.substring(0,10)
 }
 
-def helpMessage() { // Display help message
-  log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: " + this.grabRevision()
+def helpMessage() {
+  // Display help message
+  this.cawMessage()
   log.info "    Usage:"
   log.info "       nextflow run buildReferences.nf --refDir <pathToRefDir> --genome <genome>"
   log.info "       nextflow run buildReferences.nf --download --genome smallGRCh37"
   log.info "       nextflow run SciLifeLab/CAW --test [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
   log.info "    --download"
-  log.info "       Download smallGRCh37 reference files."
+  log.info "       Download reference files. (only with --genome smallGRCh37)"
   log.info "    --refDir <Directoy>"
   log.info "       Specify a directory containing reference files."
   log.info "    --genome <Genome>"
@@ -320,6 +328,7 @@ def helpMessage() { // Display help message
 }
 
 def isAllowedParams(params) {
+  // Compare params to list of verified params
   final test = true
   params.each{
     if (!checkParams(it.toString().split('=')[0])) {
@@ -330,8 +339,8 @@ def isAllowedParams(params) {
   return test
 }
 
-def startMessage() { // Display start message
-  log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: " + this.grabRevision()
+def minimalInformationMessage() {
+  // Minimal information message
   log.info "Command Line: $workflow.commandLine"
   log.info "Project Dir : $workflow.projectDir"
   log.info "Launch Dir  : $workflow.launchDir"
@@ -339,20 +348,29 @@ def startMessage() { // Display start message
   log.info "Genome      : " + params.genome
 }
 
-def versionMessage() { // Display version message
+def nextflowMessage() {
+  // Nextflow message (version + build)
+  log.info "N E X T F L O W  ~  version $workflow.nextflow.version $workflow.nextflow.build"
+}
+
+def startMessage() {
+  // Display start message
+  this.cawMessage()
+  this.minimalInformationMessage()
+}
+
+def versionMessage() {
+  // Display version message
   log.info "CANCER ANALYSIS WORKFLOW"
   log.info "  version   : $version"
   log.info workflow.commitId ? "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]" : "  revision  : " + this.grabRevision()
 }
 
-workflow.onComplete { // Display complete message
-  log.info "N E X T F L O W ~ $workflow.nextflow.version - $workflow.nextflow.build"
-  log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: " + this.grabRevision()
-  log.info "Command Line: $workflow.commandLine"
-  log.info "Project Dir : $workflow.projectDir"
-  log.info "Launch Dir  : $workflow.launchDir"
-  log.info "Work Dir    : $workflow.workDir"
-  log.info "Genome      : " + params.genome
+workflow.onComplete {
+  // Display complete message
+  this.nextflowMessage()
+  this.cawMessage()
+  this.minimalInformationMessage()
   log.info "Completed at: $workflow.complete"
   log.info "Duration    : $workflow.duration"
   log.info "Success     : $workflow.success"
@@ -360,8 +378,9 @@ workflow.onComplete { // Display complete message
   log.info "Error report: " + (workflow.errorReport ?: '-')
 }
 
-workflow.onError { // Display error message
-  log.info "N E X T F L O W ~ version $workflow.nextflow.version [$workflow.nextflow.build]"
-  log.info workflow.commitId ? "CANCER ANALYSIS WORKFLOW ~ $version - $workflow.revision [$workflow.commitId]" : "CANCER ANALYSIS WORKFLOW ~ $version - revision: " + this.grabRevision()
+workflow.onError {
+  // Display error message
+  this.nextflowMessage()
+  this.cawMessage()
   log.info "Workflow execution stopped with the following message: " + workflow.errorMessage
 }
