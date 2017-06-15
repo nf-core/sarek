@@ -57,18 +57,17 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 */
 
-revision = grabRevision()
 version = '1.1'
 
 if (!isAllowedParams(params)) {exit 1, "params is unknown, see --help for more information"}
 
 if (params.help) {
-  helpMessage(version, revision)
+  helpMessage(version)
   exit 1
 }
 
 if (params.version) {
-  versionMessage(version, revision)
+  versionMessage(version)
   exit 1
 }
 
@@ -147,7 +146,7 @@ if (step == 'preprocessing') {
 
 if (verbose) fastqFiles = fastqFiles.view {"FASTQ files to preprocess: $it"}
 if (verbose) bamFiles = bamFiles.view {"BAM files to process: $it"}
-startMessage(version, grabRevision())
+startMessage(version)
 
 /*
 ================================================================================
@@ -1662,7 +1661,7 @@ def grabRevision() {
   return workflow.revision ?: workflow.commitId ?: workflow.scriptId.substring(0,10)
 }
 
-def helpMessage(version, revision) { // Display help message
+def helpMessage(version) { // Display help message
   log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
   log.info "    Usage:"
   log.info "       nextflow run SciLifeLab/CAW --sample <file.tsv> [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
@@ -1736,8 +1735,8 @@ def isAllowedParams(params) {
   return test
 }
 
-def startMessage(version, revision) { // Display start message
-  log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
+def startMessage(version) { // Display start message
+  log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: " + this.grabRevision()
   log.info "Command Line: $workflow.commandLine"
   log.info "Project Dir : $workflow.projectDir"
   log.info "Launch Dir  : $workflow.launchDir"
@@ -1749,15 +1748,15 @@ def startMessage(version, revision) { // Display start message
   if (annotateTools) {log.info "Annotate on : " + annotateTools.join(', ')}
 }
 
-def versionMessage(version, revision) { // Display version message
+def versionMessage(version) { // Display version message
   log.info "CANCER ANALYSIS WORKFLOW"
   log.info "  version   : $version"
-  log.info workflow.commitId ? "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]" : "  revision  : $revision"
+  log.info workflow.commitId ? "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]" : "  revision  : " + this.grabRevision()
 }
 
 workflow.onComplete { // Display complete message
   log.info "N E X T F L O W ~ $workflow.nextflow.version - $workflow.nextflow.build"
-  log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
+  log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: " + this.grabRevision()
   log.info "Command Line: $workflow.commandLine"
   log.info "Project Dir : $workflow.projectDir"
   log.info "Launch Dir  : $workflow.launchDir"
@@ -1776,6 +1775,6 @@ workflow.onComplete { // Display complete message
 
 workflow.onError { // Display error message
   log.info "N E X T F L O W ~ version $workflow.nextflow.version [$workflow.nextflow.build]"
-  log.info workflow.commitId ? "CANCER ANALYSIS WORKFLOW ~ $version - $workflow.revision [$workflow.commitId]" : "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
+  log.info workflow.commitId ? "CANCER ANALYSIS WORKFLOW ~ $version - $workflow.revision [$workflow.commitId]" : "CANCER ANALYSIS WORKFLOW ~ $version - revision: " + this.grabRevision()
   log.info "Workflow execution stopped with the following message: " + workflow.errorMessage
 }
