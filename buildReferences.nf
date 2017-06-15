@@ -37,12 +37,12 @@ version = '1.1'
 if (!isAllowedParams(params)) {exit 1, "params is unknown, see --help for more information"}
 
 if (params.help) {
-  helpMessage(version)
+  helpMessage()
   exit 1
 }
 
 if (params.version) {
-  versionMessage(version)
+  versionMessage()
   exit 1
 }
 
@@ -89,7 +89,7 @@ if (!download) {referencesFiles.each{checkFile(params.refDir + "/" + it)}}
 ================================================================================
 */
 
-startMessage(version)
+startMessage()
 
 process ProcessReference {
   tag download ? {"Download: " + reference} : {"Link: " + reference}
@@ -298,7 +298,7 @@ def grabRevision() {
   return workflow.revision ?: workflow.scriptId.substring(0,10)
 }
 
-def helpMessage(version) { // Display help message
+def helpMessage() { // Display help message
   log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: " + this.grabRevision()
   log.info "    Usage:"
   log.info "       nextflow run buildReferences.nf --refDir <pathToRefDir> --genome <genome>"
@@ -330,7 +330,7 @@ def isAllowedParams(params) {
   return test
 }
 
-def startMessage(version) { // Display start message
+def startMessage() { // Display start message
   log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: " + this.grabRevision()
   log.info "Command Line: $workflow.commandLine"
   log.info "Project Dir : $workflow.projectDir"
@@ -339,7 +339,7 @@ def startMessage(version) { // Display start message
   log.info "Genome      : " + params.genome
 }
 
-def versionMessage(version) { // Display version message
+def versionMessage() { // Display version message
   log.info "CANCER ANALYSIS WORKFLOW"
   log.info "  version   : $version"
   log.info workflow.commitId ? "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]" : "  revision  : " + this.grabRevision()

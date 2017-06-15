@@ -62,12 +62,12 @@ version = '1.1'
 if (!isAllowedParams(params)) {exit 1, "params is unknown, see --help for more information"}
 
 if (params.help) {
-  helpMessage(version)
+  helpMessage()
   exit 1
 }
 
 if (params.version) {
-  versionMessage(version)
+  versionMessage()
   exit 1
 }
 
@@ -146,7 +146,7 @@ if (step == 'preprocessing') {
 
 if (verbose) fastqFiles = fastqFiles.view {"FASTQ files to preprocess: $it"}
 if (verbose) bamFiles = bamFiles.view {"BAM files to process: $it"}
-startMessage(version)
+startMessage()
 
 /*
 ================================================================================
@@ -1661,7 +1661,7 @@ def grabRevision() {
   return workflow.revision ?: workflow.commitId ?: workflow.scriptId.substring(0,10)
 }
 
-def helpMessage(version) { // Display help message
+def helpMessage() { // Display help message
   log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
   log.info "    Usage:"
   log.info "       nextflow run SciLifeLab/CAW --sample <file.tsv> [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
@@ -1735,7 +1735,7 @@ def isAllowedParams(params) {
   return test
 }
 
-def startMessage(version) { // Display start message
+def startMessage() { // Display start message
   log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: " + this.grabRevision()
   log.info "Command Line: $workflow.commandLine"
   log.info "Project Dir : $workflow.projectDir"
@@ -1748,7 +1748,7 @@ def startMessage(version) { // Display start message
   if (annotateTools) {log.info "Annotate on : " + annotateTools.join(', ')}
 }
 
-def versionMessage(version) { // Display version message
+def versionMessage() { // Display version message
   log.info "CANCER ANALYSIS WORKFLOW"
   log.info "  version   : $version"
   log.info workflow.commitId ? "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]" : "  revision  : " + this.grabRevision()
