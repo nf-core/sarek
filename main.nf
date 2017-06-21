@@ -146,13 +146,14 @@ if (step == 'preprocessing') {
 
 if (verbose) fastqFiles = fastqFiles.view {"FASTQ files to preprocess: $it"}
 if (verbose) bamFiles = bamFiles.view {"BAM files to process: $it"}
-startMessage()
 
 /*
 ================================================================================
 =                               P R O C E S S E S                              =
 ================================================================================
 */
+
+startMessage()
 
 (fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
 
