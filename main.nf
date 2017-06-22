@@ -57,18 +57,17 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 */
 
-revision = grabRevision()
 version = '1.1'
 
 if (!isAllowedParams(params)) {exit 1, "params is unknown, see --help for more information"}
 
 if (params.help) {
-  helpMessage(version, revision)
+  helpMessage()
   exit 1
 }
 
 if (params.version) {
-  versionMessage(version, revision)
+  versionMessage()
   exit 1
 }
 
@@ -147,13 +146,14 @@ if (step == 'preprocessing') {
 
 if (verbose) fastqFiles = fastqFiles.view {"FASTQ files to preprocess: $it"}
 if (verbose) bamFiles = bamFiles.view {"BAM files to process: $it"}
-startMessage(version, grabRevision())
 
 /*
 ================================================================================
 =                               P R O C E S S E S                              =
 ================================================================================
 */
+
+startMessage()
 
 (fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
 
@@ -1319,13 +1319,9 @@ if (verbose) multiQCReport = multiQCReport.view {"MultiQC Report: $it"}
 ================================================================================
 */
 
-def checkFile(it) {
-  // Check file existence
-  final f = file(it)
-  if (!f.exists()) {
-    exit 1, "Missing file in TSV file: $it, see --help for more information"
-  }
-  return f
+def cawMessage() {
+  // Display CAW message
+  log.info "CANCER ANALYSIS WORKFLOW ~ $version - " + this.grabRevision() + (workflow.commitId ? " [$workflow.commitId]" : "")
 }
 
 def checkFileExtension(it, extension) {
@@ -1345,7 +1341,7 @@ def checkParameterExistence(it, list) {
 }
 
 def checkParameterList(list, realList) {
-  // Loop through all the possible parameters to check their existence and spelling
+  // Loop through all parameters to check their existence and spelling
   return list.every{ checkParameterExistence(it, realList) }
 }
 
@@ -1403,26 +1399,8 @@ def checkRefExistence(referenceFile, fileToCheck) {
   return true
 }
 
-def checkStatus(it) {
-  // Check if status is correct
-  // Status should be only 0 or 1
-  // 0 being normal
-  // 1 being tumor (or relapse or anything that is not normal...)
-  if (!(it in [0, 1])) {
-    exit 1, "Status is not recognized in TSV file: $it, see --help for more information"
-  }
-  return it
-}
-
-def checkTSV(it, number) {
-  // Check if TSV has the correct number of items in row
-  if (it.size() != number) {
-    exit 1, "Malformed row in TSV file: $it, see --help for more information"
-  }
-  return it
-}
-
 def checkUppmaxProject() {
+  // check if UPPMAX project number is specified
   return !(workflow.profile == 'slurm' && !params.project)
 }
 
@@ -1510,13 +1488,13 @@ def extractBams(tsvFile) {
   Channel
     .from(tsvFile.readLines())
     .map{line ->
-      def list      = checkTSV(line.split(),6)
+      def list      = returnTSV(line.split(),6)
       def idPatient = list[0]
       def gender    = list[1]
-      def status    = checkStatus(list[2].toInteger())
+      def status    = returnStatus(list[2].toInteger())
       def idSample  = list[3]
-      def bamFile   = checkFile(list[4])
-      def baiFile   = checkFile(list[5])
+      def bamFile   = returnFile(list[4])
+      def baiFile   = returnFile(list[5])
 
       checkFileExtension(bamFile,".bam")
       checkFileExtension(baiFile,".bai")
@@ -1531,16 +1509,18 @@ def extractFastq(tsvFile) {
   Channel
     .from(tsvFile.readLines())
     .map{line ->
-      def list       = checkTSV(line.split(),7)
+      def list       = returnTSV(line.split(),7)
       def idPatient  = list[0]
       def gender     = list[1]
-      def status     = checkStatus(list[2].toInteger())
+      def status     = returnStatus(list[2].toInteger())
       def idSample   = list[3]
       def idRun      = list[4]
 
-      // When testing workflow from github, paths to FASTQ files start from workflow.projectDir and not workflow.launchDir
-      def fastqFile1 = workflow.commitId && params.test ? checkFile("$workflow.projectDir/${list[5]}") : checkFile("${list[5]}")
-      def fastqFile2 = workflow.commitId && params.test ? checkFile("$workflow.projectDir/${list[6]}") : checkFile("${list[6]}")
+      // Normally path to files starts from workflow.launchDir
+      // But when executing workflow from Github
+      // Path to hosted FASTQ files starts from workflow.projectDir
+      def fastqFile1 = workflow.commitId && params.test ? returnFile("$workflow.projectDir/${list[5]}") : returnFile("${list[5]}")
+      def fastqFile2 = workflow.commitId && params.test ? returnFile("$workflow.projectDir/${list[6]}") : returnFile("${list[6]}")
 
       checkFileExtension(fastqFile1,".fastq.gz")
       checkFileExtension(fastqFile2,".fastq.gz")
@@ -1590,14 +1570,14 @@ def extractRecal(tsvFile) {
   Channel
     .from(tsvFile.readLines())
     .map{line ->
-      def list       = checkTSV(line.split(),7)
+      def list       = returnTSV(line.split(),7)
       def idPatient  = list[0]
       def gender     = list[1]
-      def status     = checkStatus(list[2].toInteger())
+      def status     = returnStatus(list[2].toInteger())
       def idSample   = list[3]
-      def bamFile    = checkFile(list[4])
-      def baiFile    = checkFile(list[5])
-      def recalTable = checkFile(list[6])
+      def bamFile    = returnFile(list[4])
+      def baiFile    = returnFile(list[5])
+      def recalTable = returnFile(list[6])
 
       checkFileExtension(bamFile,".bam")
       checkFileExtension(baiFile,".bai")
@@ -1659,11 +1639,13 @@ def generateIntervalsForVC(bams, intervals) {
 }
 
 def grabRevision() {
+  // Return the same string executed from github or not
   return workflow.revision ?: workflow.commitId ?: workflow.scriptId.substring(0,10)
 }
 
-def helpMessage(version, revision) { // Display help message
-  log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
+def helpMessage() {
+  // Display help message
+  this.cawMessage()
   log.info "    Usage:"
   log.info "       nextflow run SciLifeLab/CAW --sample <file.tsv> [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
   log.info "       nextflow run SciLifeLab/CAW --sampleDir <Directory> [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
@@ -1726,6 +1708,7 @@ def helpMessage(version, revision) { // Display help message
 }
 
 def isAllowedParams(params) {
+  // Compare params to list of verified params
   final test = true
   params.each{
     if (!checkParams(it.toString().split('=')[0])) {
@@ -1736,8 +1719,8 @@ def isAllowedParams(params) {
   return test
 }
 
-def startMessage(version, revision) { // Display start message
-  log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
+def minimalInformationMessage() {
+  // Minimal information message
   log.info "Command Line: $workflow.commandLine"
   log.info "Project Dir : $workflow.projectDir"
   log.info "Launch Dir  : $workflow.launchDir"
@@ -1749,24 +1732,57 @@ def startMessage(version, revision) { // Display start message
   if (annotateTools) {log.info "Annotate on : " + annotateTools.join(', ')}
 }
 
-def versionMessage(version, revision) { // Display version message
+def nextflowMessage() {
+  // Nextflow message (version + build)
+  log.info "N E X T F L O W  ~  version $workflow.nextflow.version $workflow.nextflow.build"
+}
+
+def returnFile(it) {
+  // return file if it exists
+  final f = file(it)
+  if (!f.exists()) {
+    exit 1, "Missing file in TSV file: $it, see --help for more information"
+  }
+  return f
+}
+
+def returnStatus(it) {
+  // Return status if it's correct
+  // Status should be only 0 or 1
+  // 0 being normal
+  // 1 being tumor (or relapse or anything that is not normal...)
+  if (!(it in [0, 1])) {
+    exit 1, "Status is not recognized in TSV file: $it, see --help for more information"
+  }
+  return it
+}
+
+def returnTSV(it, number) {
+  // return TSV if it has the correct number of items in row
+  if (it.size() != number) {
+    exit 1, "Malformed row in TSV file: $it, see --help for more information"
+  }
+  return it
+}
+
+def startMessage() {
+  // Display start message
+  this.cawMessage()
+  this.minimalInformationMessage()
+}
+
+def versionMessage() {
+  // Display version message
   log.info "CANCER ANALYSIS WORKFLOW"
   log.info "  version   : $version"
-  log.info workflow.commitId ? "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]" : "  revision  : $revision"
+  log.info workflow.commitId ? "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]" : "  revision  : " + this.grabRevision()
 }
 
-workflow.onComplete { // Display complete message
-  log.info "N E X T F L O W ~ $workflow.nextflow.version - $workflow.nextflow.build"
-  log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
-  log.info "Command Line: $workflow.commandLine"
-  log.info "Project Dir : $workflow.projectDir"
-  log.info "Launch Dir  : $workflow.launchDir"
-  log.info "Work Dir    : $workflow.workDir"
-  log.info "TSV file    : $tsvFile"
-  log.info "Genome      : " + params.genome
-  log.info "Step        : " + step
-  if (tools) {log.info "Tools       : " + tools.join(', ')}
-  if (annotateTools) {log.info "Annotate on : " + annotateTools.join(', ')}
+workflow.onComplete {
+  // Display complete message
+  this.nextflowMessage()
+  this.cawMessage()
+  this.minimalInformationMessage()
   log.info "Completed at: $workflow.complete"
   log.info "Duration    : $workflow.duration"
   log.info "Success     : $workflow.success"
@@ -1774,8 +1790,9 @@ workflow.onComplete { // Display complete message
   log.info "Error report: " + (workflow.errorReport ?: '-')
 }
 
-workflow.onError { // Display error message
-  log.info "N E X T F L O W ~ version $workflow.nextflow.version [$workflow.nextflow.build]"
-  log.info workflow.commitId ? "CANCER ANALYSIS WORKFLOW ~ $version - $workflow.revision [$workflow.commitId]" : "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
+workflow.onError {
+  // Display error message
+  this.nextflowMessage()
+  this.cawMessage()
   log.info "Workflow execution stopped with the following message: " + workflow.errorMessage
 }
