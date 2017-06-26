@@ -59,6 +59,8 @@ kate: syntax groovy; space-indent on; indent-width 2;
 
 version = '1.1'
 
+if (!nextflow.version.matches('>= 0.25.0')) {exit 1, "Nextflow version 0.25.0 or greater is needed to run this workflow"}
+
 if (!isAllowedParams(params)) {exit 1, "params is unknown, see --help for more information"}
 
 if (params.help) {
@@ -557,7 +559,7 @@ if (verbose) bamQCreport = bamQCreport.view {"BAM Stats: $it"}
 // The sample tsv config file which is formatted like: "subject status sample lane fastq1 fastq2"
 // cf fastqFiles channel, I decided just to add _status to the sample name to have less changes to do.
 // And so I'm sorting the channel if the sample match _0, then it's a normal sample, otherwise tumor.
-// Then spread normal over tumor to get each possibilities
+// Then combine normal and tumor to get each possibilities
 // ie. normal vs tumor1, normal vs tumor2, normal vs tumor3
 // then copy this channel into channels for each variant calling
 // I guess it will still work even if we have multiple normal samples
@@ -609,11 +611,11 @@ intervals = Channel.
 bamsFHC = bamsNormalTemp.mix(bamsTumorTemp)
 if (verbose) bamsFHC = bamsFHC.view {"Bams with Intervals for HaplotypeCaller: $it"}
 
-if (verbose) recalTables = recalTables.view {"recalTables before spread: $it"}
+if (verbose) recalTables = recalTables.view {"recalTables before combine: $it"}
 
 intervals = intervals.tap { intervalsTemp }
 recalTables = recalTables
-  .spread(intervalsTemp)
+  .combine(intervalsTemp)
   .map { patient, sample, bam, bai, recalTable, interval, interval2 ->
     [patient, sample, bam, bai, interval, interval2, recalTable] }
 
@@ -626,8 +628,7 @@ bamsFHC = bamsFHC
 
 if (verbose) bamsFHC = bamsFHC.view {"Bams with intervals and recal. table for HaplotypeCaller: $it"}
 
-
-bamsAll = bamsNormal.spread(bamsTumor)
+bamsAll = bamsNormal.combine(bamsTumor)
 // Since idPatientNormal and idPatientTumor are the same
 // It's removed from bamsAll Channel (same for genderNormal)
 // /!\ It is assumed that every sample are from the same patient
@@ -1032,7 +1033,7 @@ alleleCountTumor = Channel.create()
 alleleCountOutput
   .choice(alleleCountTumor, alleleCountNormal) {it[1] == 0 ? 1 : 0}
 
-alleleCountOutput = alleleCountNormal.spread(alleleCountTumor)
+alleleCountOutput = alleleCountNormal.combine(alleleCountTumor)
 
 alleleCountOutput = alleleCountOutput.map {
   idPatientNormal, statusNormal, idSampleNormal, alleleCountNormal,
@@ -1093,20 +1094,15 @@ vcfNotToAnnotate = Channel.create()
 if (step == 'annotate' && annotateVCF == []) {
   Channel.empty().mix(
     Channel.fromPath('VariantCalling/HaplotypeCaller/*.vcf.gz')
-      .flatten().unique()
-      .map{vcf -> ['haplotypecaller',vcf]},
+      .flatten().map{vcf -> ['haplotypecaller',vcf]},
     Channel.fromPath('VariantCalling/Manta/*.{somaticSV,diploidSV}.vcf.gz')
-      .flatten().unique()
-      .map{vcf -> ['manta',vcf]},
+      .flatten().map{vcf -> ['manta',vcf]},
     Channel.fromPath('VariantCalling/MuTect1/*.vcf.gz')
-      .flatten().unique()
-      .map{vcf -> ['mutect1',vcf]},
+      .flatten().map{vcf -> ['mutect1',vcf]},
     Channel.fromPath('VariantCalling/MuTect2/*.vcf.gz')
-      .flatten().unique()
-      .map{vcf -> ['mutect2',vcf]},
+      .flatten().map{vcf -> ['mutect2',vcf]},
     Channel.fromPath('VariantCalling/Strelka/*passed_somatic*.vcf.gz')
-      .flatten().unique()
-      .map{vcf -> ['strelka',vcf]}
+      .flatten().map{vcf -> ['strelka',vcf]}
   ).choice(vcfToAnnotate, vcfNotToAnnotate) { annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1 }
 
 } else if (step == 'annotate' && annotateTools == [] && annotateVCF != []) {
@@ -1288,13 +1284,11 @@ reportsForMultiQC = Channel.empty()
     samtoolsStatsReport,
     snpeffReport,
     vepReport
-  ).flatten().unique().toList()
+  ).collect()
 
 if (verbose) reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}
 
 process RunMultiQC {
-  tag {idPatient}
-
   publishDir directoryMap.multiQC, mode: 'copy'
 
   input:
@@ -1634,7 +1628,7 @@ def generateIntervalsForVC(bams, intervals) {
 
   def (bamsNew, bamsForVC) = bams.into(2)
   def (intervalsNew, vcIntervals) = intervals.into(2)
-  def bamsForVCNew = bamsForVC.spread(vcIntervals)
+  def bamsForVCNew = bamsForVC.combine(vcIntervals)
   return [bamsForVCNew, bamsNew, intervalsNew]
 }
 
