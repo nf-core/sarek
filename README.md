@@ -19,21 +19,24 @@ Besides variant calls, the workflow provides quality controls presented by [Mult
 
 The [CAW-containers](https://github.com/SciLifeLab/CAW-containers) repository contains Dockerfiles for each process for easier deployment.
 
+This pipeline is listed on [Elixir - Tools and Data Services Registry](https://bio.tools/tool/CAW/version/none).
+
 ## Documentation
 
 The CAW pipeline comes with documentation about the pipeline, found in the `doc/` directory:
 
-1. [Installation documentation](doc/INSTALL.md)
-2. [Reference files documentation](doc/REFERENCES.md)
-3. [Intervals documentation](doc/INTERVALS.md)
-4. [Running the pipeline](doc/USAGE.md)
-5. [Examples](doc/USE_CASES.md)
-6. [TSV file documentation](doc/TSV.md)
-7. [Processes documentation](doc/PROCESS.md)
-8. [Tools and dependencies](doc/TOOLS.md)
-9. [Profiles and configuration files documentation](doc/CONFIG.md)
-10. [More information about ASCAT](doc/ASCAT.md)
-11. [Folder structure](doc/FOLDER.md)
+01. [Installation documentation on Milou](INSTALL_MILOU.md)
+02. [Installation documentation on Bianca](INSTALL_BIANCA.md)
+03. [Installation documentation using Docker](INSTALL_DOCKER.md)
+04. [Reference files documentation](doc/REFERENCES.md)
+05. [Intervals documentation](doc/INTERVALS.md)
+06. [Running the pipeline](doc/USAGE.md)
+07. [Examples](doc/USE_CASES.md)
+08. [TSV file documentation](doc/TSV.md)
+09. [Processes documentation](doc/PROCESS.md)
+10. [Tools and dependencies](doc/TOOLS.md)
+11. [More information about ASCAT](doc/ASCAT.md)
+12. [Folder structure](doc/FOLDER.md)
 
 For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.juhos@scilifelab.se or join the gitter chat: [gitter.im/SciLifeLab/CAW][gitter-link].
 

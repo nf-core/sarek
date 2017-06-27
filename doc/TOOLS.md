@@ -8,7 +8,7 @@
 - gcc 4.9.2
 - java jdk 8 (we do need jdk7 for MuTect1)
 - **[Manta][manta-link]** 1.0.3
-- **[MultiQC][multiqc-link]** 0.9
+- **[MultiQC][multiqc-link]** 1.0
 - **[MuTect1][mutect1-link]** 1.5
 - **[nextflow][nextflow-link]** >= 0.22.1
 - perl 5.18.4
