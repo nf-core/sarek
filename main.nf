@@ -454,6 +454,11 @@ if (verbose) recalibrationTable = recalibrationTable.view {"Base recalibrated ta
 
 (bamForBamQC, bamForSamToolsStats, recalTables, recalibrationTableForHC, recalibrationTable) = recalibrationTable.into(5)
 
+// Remove recalTable from Channels to match inputs for Process to avoid:
+// WARN: Input tuple does not match input set cardinality declared by process...
+bamForBamQC = bamForBamQC.map { it[0..4] }
+bamForSamToolsStats = bamForSamToolsStats.map{ it[0..4] }
+
 recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
 if (verbose) recalTables = recalTables.view {"Recalibration tables: $it"}
 
