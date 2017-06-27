@@ -1,7 +1,6 @@
 # Installation using Docker
 
-To use this pipeline, you need to have a working version of Nextflow installed, References files and Docker to facilitate the use of other tools.
-You can use a small reference genome as testing.
+To use this pipeline, you need to have a working version of Nextflow installed, References files and Docker to facilitate the use of other tools. You can use a small reference genome as testing.
 
 - See the [Install Nextflow documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/INSTALL.md)
 - See the [Reference files documentation](REFERENCES.md)
@@ -23,6 +22,7 @@ nextflow run SciLifeLab/CAW --test --genome smallGRCh37 -profile docker
 ```
 
 To update CAW, it's also very simple:
+
 ```bash
 # Update CAW
 nextflow pull SciLifeLab/CAW

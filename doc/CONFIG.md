@@ -8,32 +8,50 @@ We provides several configuration files and profiles for CAW. The standard ones 
 
 ## Configuration files
 
-Every configuration file can be modified for your own use. If you want you can specify the use of a config file using `-c <config file>``
+Every configuration file can be modified for your own use. If you want you can specify the use of a config file using `-c <config file>`
 
-### docker
+### `docker.config`
+
 Contain Docker images for all process. Use in your own profile if needed.
-### genomes
+
+### `genomes.config`
+
 Contain path to all references. Modify it if you want to change genome version, or the path to your references files.
-### localhost
+
+### `localhost.config`
+
 To be used on a typical localhost on a UPPMAX cluster (16 cpus)
-### travis
+
+### `travis.config`
+
 To be used for Travis (2 cpus)
-### uppmax-modules
+
+### uppmax-`modules.config`
+
 Contains modules for all processes. To be used on a UPPMAX cluster.
-### uppmax-slurm
+
+### uppmax-`slurm.config`
+
 Slurm configuration for a UPPMAX cluster.
-### uppmax
+
+### `uppmax.config`
+
 configuration for a UPPMAX cluster.
 
 ## profiles
 
-Every profile can be modified for your own use. To use a profile, you'll need to specify `-profile <profile>``
+Every profile can be modified for your own use. To use a profile, you'll need to specify `-profile <profile>`
 
-### standard
+### `standard`
+
 This is the default profile for use on a localhost on a UPPMAX cluster
-### slurm
-This is another profile for use on a UPPMAX cluster, but with the job scheduler slurm
-### travis
+
+### `slurm`
+
+This is another profile for use on a UPPMAX cluster using the job scheduler slurm
+
+### `travis`
+
 This is the default profile for Travis CI automated testing
 
 --------------------------------------------------------------------------------

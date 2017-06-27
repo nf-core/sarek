@@ -16,10 +16,9 @@ Nextflow will automatically fetch CAW from GitHub when launched if `SciLifeLab/C
 
 So you can directly use CAW on Milou.
 
-### Test CAW with small dataset and small reference
+## Test CAW with small dataset and small reference
 
-For more information, follow the [genomes files documentation](GENOMES.md).
-The following tutorial explain how to run CAW on a small dataset using a small reference.
+For more information, follow the [genomes files documentation](GENOMES.md). The following tutorial explain how to run CAW on a small dataset using a small reference.
 
 ```bash
 # Connect to Milou
@@ -46,7 +45,8 @@ nextflow run SciLifeLab/CAW/buildReferences.nf --download --genome smallGRCh37 -
 nextflow run SciLifeLab/CAW --test --genome smallGRCh37 --project [PROJECT]
 ```
 
-### Update CAW
+## Update CAW
+
 ```bash
 # Connect to Milou
 ssh -AX [USER]@milou.uppmax.uu.se
@@ -62,8 +62,10 @@ export NXF_TEMP=$SNIC_TMP
 nextflow pull SciLifeLab/CAW
 ```
 
-### Use CAW with slurm
+## Use CAW with slurm
+
 To use CAW on Milou you will need to use the `slurm` profile.
+
 ```bash
 # Connect to Milou
 ssh -AX [USER]@milou.uppmax.uu.se
@@ -78,7 +80,6 @@ export NXF_TEMP=$SNIC_TMP
 # Run the workflow directly on the login node
 nextflow run SciLifeLab/CAW --sample [FILE.TSV] --genome [GENOME] --project [PROJECT] -profile slurm
 ```
-
 
 --------------------------------------------------------------------------------
 
