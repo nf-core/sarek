@@ -29,14 +29,15 @@ The CAW pipeline comes with documentation about the pipeline, found in the `doc/
 02. [Installation documentation on Bianca](INSTALL_BIANCA.md)
 03. [Installation documentation using Docker](INSTALL_DOCKER.md)
 04. [Reference files documentation](doc/REFERENCES.md)
-05. [Intervals documentation](doc/INTERVALS.md)
-06. [Running the pipeline](doc/USAGE.md)
-07. [Examples](doc/USE_CASES.md)
-08. [TSV file documentation](doc/TSV.md)
-09. [Processes documentation](doc/PROCESS.md)
-10. [Tools and dependencies](doc/TOOLS.md)
-11. [More information about ASCAT](doc/ASCAT.md)
-12. [Folder structure](doc/FOLDER.md)
+05. [Configuration and profiles documentation](doc/CONFIG.md)
+06. [Intervals documentation](doc/INTERVALS.md)
+07. [Running the pipeline](doc/USAGE.md)
+08. [Examples](doc/USE_CASES.md)
+09. [TSV file documentation](doc/TSV.md)
+10. [Processes documentation](doc/PROCESS.md)
+11. [Tools and dependencies](doc/TOOLS.md)
+12. [More information about ASCAT](doc/ASCAT.md)
+13. [Folder structure](doc/FOLDER.md)
 
 For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.juhos@scilifelab.se or join the gitter chat: [gitter.im/SciLifeLab/CAW][gitter-link].
 
