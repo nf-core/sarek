@@ -34,7 +34,7 @@ Wrote CAW-[snapID].tar.gz
 
 # The archive will be in the wharf folder in your user home on your Bianca project
 
-# Connect to Bianca (Connect to Milou first if needed)
+# Connect to Bianca
 > ssh -A [USER]-[PROJECT]@bianca.uppmax.uu.se
 
 # Go to your project
@@ -58,7 +58,7 @@ The principle is to have every member of your project to be able to use the same
 So every member of the project who wants to use CAW will need to do:
 
 ```bash
-# Connect to Bianca (Connect to Milou first if needed)
+# Connect to Bianca
 > ssh -A [USER]-[PROJECT]@bianca.uppmax.uu.se
 
 # Go to your user directory
