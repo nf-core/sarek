@@ -94,45 +94,6 @@ Simpler to specify in the config file.
 
 ### --singleCPUMem `memory`
 
-## References [(cf [References documentation](REFERENCES.md))]
-
-Could be usefull if you wish to change one reference for testing.
-
-### --acLoci `file`
-
-## COSMIC files
-
-- --cosmic `file`
-- --cosmicIndex `file`
-
-### Files from the GATK Bundle
-
-- --dbsnp `file`
-- --dbsnpIndex `file`
-- --kgIndels `file`
-- --kgIndex `file`
-- --genome `file`
-- --genomeDict `file`
-- --genomeIndex `file`
-- --millsIndels `file`
-- --millsIndex `file`
-
-### BWA indexes
-
-- --genomeAmb `file`
-- --genomeAnn `file`
-- --genomeBwt `file`
-- --genomePac `file`
-- --genomeSa `file`
-
-## --intervals `file`
-
-## --snpeffDb `db`
-
-```
-Which database to use for snpEff
-```
-
 # Nextflow options
 
 See the [options documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/OPTIONS.md)
