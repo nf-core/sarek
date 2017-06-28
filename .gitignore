@@ -1,5 +1,7 @@
 data/chr17_testdata
 Annotation
+container/*
+!container/.gitkeep
 Preprocessing/
 Reports/
 References/
