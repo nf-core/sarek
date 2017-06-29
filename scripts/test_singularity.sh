@@ -2,8 +2,8 @@
 set -xeuo pipefail
 
 function nf_test() {
-  echo "$(tput setaf 1)nextflow run $@ -profile singularity$(tput sgr0)"
-  nextflow run "$@" -profile singularity
+  echo "$(tput setaf 1)nextflow run $@ -profile singularityTest$(tput sgr0)"
+  nextflow run "$@" -profile singularityTest
 }
 
 nf_test buildReferences.nf --download
