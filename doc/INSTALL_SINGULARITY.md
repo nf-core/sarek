@@ -14,7 +14,7 @@ mkdir test_CAW
 cd test_CAW
 
 # Download the singularity containers
-nextflow run SciLifeLab/CAW-containers --singularity --containers bcftools,concatvcf,fastqc,freebayes,gatk,htslib,igvtools,mapreads,multiqc,mutect1,picard,qualimap,runallelecount,runascat,runconvertallelecounts,runmanta,samtools,snpeffgrch37,strelka --publishSingularityDir containers/
+nextflow run SciLifeLab/CAW-containers --singularity --containers bcftools,concatvcf,fastqc,freebayes,gatk,htslib,igvtools,mapreads,multiqc,mutect1,picard,qualimap,runallelecount,runascat,runconvertallelecounts,runmanta,samtools,snpeffgrch37,snpeffgrch38,strelka,vepgrch37,vepgrch38 --publishSingularityDir containers/
 
 # Build the smallGRCh37 reference
 nextflow run SciLifeLab/CAW/buildReferences.nf --download --genome smallGRCh37
