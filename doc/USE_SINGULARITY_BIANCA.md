@@ -22,7 +22,7 @@ All Reference files are already stored in Bianca.
 > git clone https://github.com/SciLifeLab/CAW-containers.git
 
 # Pull all the containers
-> nextflow run CAW-containers/main.nf --singularity --containers bcftools,concatvcf,fastqc,freebayes,gatk,htslib,igvtools,mapreads,multiqc,picard,qualimap,runallelecount,runascat,runconvertallelecounts,runmanta,samtools,snpeffgrch37,snpeffgrch38,strelka,vepgrch37,vepgrch38 --singularityPublishDir containers/
+> nextflow run CAW-containers/main.nf --singularity --containers bcftools,concatvcf,fastqc,freebayes,gatk,htslib,igvtools,mapreads,multiqc,picard,qualimap,runallelecount,runascat,runconvertallelecounts,runmanta,samtools,snpeffgrch37,snpeffgrch38,strelka,vepgrch37,vepgrch38 --singularityPublishDir CAW/containers/
 
 # Go into the CAW directory to build the archive
 > cd CAW
