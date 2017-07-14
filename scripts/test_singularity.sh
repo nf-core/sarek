@@ -13,7 +13,7 @@ nf_test . --test --step preprocessing --reports
 # Clean up docker images
 nf_test . --step realign
 nf_test . --step realign --tools HaplotypeCaller --reports -resume
-nf_test . --step recalibrate --tools FreeBayes,HaplotypeCaller,MuTect1,MuTect2,Strelka --reports
+nf_test . --step recalibrate --tools FreeBayes,HaplotypeCaller,MuTect2,Strelka --reports
 # Test whether restarting from an already recalibrated BAM works
 nf_test . --step skipPreprocessing --tools Strelka
 # Clean up docker images
