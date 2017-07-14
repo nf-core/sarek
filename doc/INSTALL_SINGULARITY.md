@@ -5,6 +5,8 @@ To use this pipeline, you need to have a working version of Nextflow installed, 
 - See the [Install Nextflow documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/INSTALL.md)
 - See the [Reference files documentation](REFERENCES.md)
 - See the [Install Singularity documentation](http://singularity.lbl.gov/install-linux)
+- See the [Use CAW with Singularity on Bianca documentation](USE_SINGULARITY_BIANCA.md)
+
 
 This workflow itself needs little installation. Clone the CAW repository and download/pull the singularity containers. And then you can directly use CAW on your computer.
 
