@@ -9,7 +9,7 @@ CAW is a complete open source pipeline to detect somatic variants from WGS data 
 
 The pipeline uses [Nextflow][nextflow-link], a bioinformatics domain specific language for workflow building.
 
-This pipeline is primarily used with a SLURM cluster on the Swedish [UPPMAX systems](https://www.uppmax.uu.se/). However, the pipeline should be able to run on any system that Nextflow supports. We have done some limited testing using Docker, and the pipeline comes with some configuration for such system. See the [installation documentation](doc/INSTALL.md) for more information.
+This pipeline is primarily used with a SLURM cluster on the Swedish [UPPMAX systems](https://www.uppmax.uu.se/). However, the pipeline should be able to run on any system that Nextflow supports. We have done some limited testing using Docker, and the pipeline comes with some configuration for such system. See the [documentation](#documentation) for more information.
 
 We utilize [GATK best practices](https://software.broadinstitute.org/gatk/best-practices/) to align, realign and recalibrate short-read data in parallel for both normal and tumor sample. After these preprocessing steps, several somatic variant callers scan the resulting BAM files: [MuTect1][mutect1-link], [MuTect2][gatk-link] and [Strelka][strelka-link] are used to find somatic SNVs and small indels, also [GATK HaplotyeCaller][gatk-link] for both the normal and the tumor sample. For structural variants we use [Manta][manta-link]. Furthermore, we are applying [ASCAT][ascat-link] to estimate sample heterogeneity, ploidy and CNVs.
 
@@ -25,15 +25,15 @@ This pipeline is listed on [Elixir - Tools and Data Services Registry](https://b
 
 The CAW pipeline comes with documentation about the pipeline, found in the `doc/` directory:
 
-01. [Installation documentation on Milou](INSTALL_MILOU.md)
-02. [Installation documentation on Bianca](INSTALL_BIANCA.md)
-03. [Installation documentation using Docker](INSTALL_DOCKER.md)
+01. [Installation documentation on Milou](doc/INSTALL_MILOU.md)
+02. [Installation documentation on Bianca](doc/INSTALL_BIANCA.md)
+03. [Installation documentation using Docker](doc/INSTALL_DOCKER.md)
 04. [Installation documentation using Singularity](INSTALL_SINGULARITY.md)
 05. [Reference files documentation](doc/REFERENCES.md)
 06. [Configuration and profiles documentation](doc/CONFIG.md)
 07. [Intervals documentation](doc/INTERVALS.md)
 08. [Running the pipeline](doc/USAGE.md)
-09. [Running the pipeline with Singularity on Bianca documentation](USE_SINGULARITY_BIANCA.md)
+09. [Running the pipeline with Singularity on Bianca documentation](doc/USE_SINGULARITY_BIANCA.md)
 10. [Examples](doc/USE_CASES.md)
 11. [TSV file documentation](doc/TSV.md)
 12. [Processes documentation](doc/PROCESS.md)
