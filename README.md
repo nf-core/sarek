@@ -25,9 +25,9 @@ This pipeline is listed on [Elixir - Tools and Data Services Registry](https://b
 
 The CAW pipeline comes with documentation about the pipeline, found in the `doc/` directory:
 
-01. [Installation documentation on Milou](INSTALL_MILOU.md)
-02. [Installation documentation on Bianca](INSTALL_BIANCA.md)
-03. [Installation documentation using Docker](INSTALL_DOCKER.md)
+01. [Installation documentation on Milou](doc/INSTALL_MILOU.md)
+02. [Installation documentation on Bianca](doc/INSTALL_BIANCA.md)
+03. [Installation documentation using Docker](doc/INSTALL_DOCKER.md)
 04. [Reference files documentation](doc/REFERENCES.md)
 05. [Configuration and profiles documentation](doc/CONFIG.md)
 06. [Intervals documentation](doc/INTERVALS.md)
