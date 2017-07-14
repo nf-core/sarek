@@ -9,7 +9,7 @@ CAW is a complete open source pipeline to detect somatic variants from WGS data 
 
 The pipeline uses [Nextflow][nextflow-link], a bioinformatics domain specific language for workflow building.
 
-This pipeline is primarily used with a SLURM cluster on the Swedish [UPPMAX systems](https://www.uppmax.uu.se/). However, the pipeline should be able to run on any system that Nextflow supports. We have done some limited testing using Docker, and the pipeline comes with some configuration for such system. See the [installation documentation](doc/INSTALL.md) for more information.
+This pipeline is primarily used with a SLURM cluster on the Swedish [UPPMAX systems](https://www.uppmax.uu.se/). However, the pipeline should be able to run on any system that Nextflow supports. We have done some limited testing using Docker, and the pipeline comes with some configuration for such system. See the [documentation](#Documentation) for more information.
 
 We utilize [GATK best practices](https://software.broadinstitute.org/gatk/best-practices/) to align, realign and recalibrate short-read data in parallel for both normal and tumor sample. After these preprocessing steps, several somatic variant callers scan the resulting BAM files: [MuTect1][mutect1-link], [MuTect2][gatk-link] and [Strelka][strelka-link] are used to find somatic SNVs and small indels, also [GATK HaplotyeCaller][gatk-link] for both the normal and the tumor sample. For structural variants we use [Manta][manta-link]. Furthermore, we are applying [ASCAT][ascat-link] to estimate sample heterogeneity, ploidy and CNVs.
 
