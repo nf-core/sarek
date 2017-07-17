@@ -11,3 +11,4 @@ work/
 .nextflow*
 timeline.html*
 trace.txt*
+*.tar.gz
