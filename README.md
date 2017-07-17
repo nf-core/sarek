@@ -28,7 +28,7 @@ The CAW pipeline comes with documentation about the pipeline, found in the `doc/
 01. [Installation documentation on Milou](doc/INSTALL_MILOU.md)
 02. [Installation documentation on Bianca](doc/INSTALL_BIANCA.md)
 03. [Installation documentation using Docker](doc/INSTALL_DOCKER.md)
-04. [Installation documentation using Singularity](INSTALL_SINGULARITY.md)
+04. [Installation documentation using Singularity](doc/INSTALL_SINGULARITY.md)
 05. [Reference files documentation](doc/REFERENCES.md)
 06. [Configuration and profiles documentation](doc/CONFIG.md)
 07. [Intervals documentation](doc/INTERVALS.md)
