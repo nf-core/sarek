@@ -82,7 +82,7 @@ directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
 stepList = defineStepList()
 toolList = defineToolList()
-reports = params.reports
+reports = params.noReports ? false : true
 verbose = params.verbose
 
 if (!checkParameterExistence(step, stepList)) {exit 1, 'Unknown step, see --help for more information'}
@@ -1359,8 +1359,9 @@ def checkParams(it) {
     'genome',
     'genomes',
     'help',
+    'no-reports',
+    'noReports',
     'project',
-    'reports',
     'run-time',
     'runTime',
     'sample-dir',
@@ -1666,8 +1667,8 @@ def helpMessage() {
   log.info "         annotate (will annotate Variant Calling output."
   log.info "         By default it will try to annotate all available vcfs."
   log.info "         Use with --annotateTools or --annotateVCF to specify what to annotate"
-  log.info "    --reports"
-  log.info "       Run QC tools and MultiQC to generate a HTML report"
+  log.info "    --noReports"
+  log.info "       Disable QC tools and MultiQC to generate a HTML report"
   log.info "    --tools"
   log.info "       Option to configure which tools to use in the workflow."
   log.info "         Different tools to be separated by commas."
