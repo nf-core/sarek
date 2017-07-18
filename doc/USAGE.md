@@ -22,9 +22,9 @@ Specify an email for MultiQC report (optionnal)
 
 Display help
 
-### --reports
+### --noReports
 
-Run QC tools and MultiQC to generate a HTML report.
+Disable QC tools and MultiQC to generate a HTML report.
 
 ### --project `ProjectID`
 
