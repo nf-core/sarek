@@ -82,7 +82,7 @@ directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
 stepList = defineStepList()
 toolList = defineToolList()
-reports = params.noReports ? false : true
+reports = !params.noReports
 verbose = params.verbose
 
 if (!checkParameterExistence(step, stepList)) {exit 1, 'Unknown step, see --help for more information'}
