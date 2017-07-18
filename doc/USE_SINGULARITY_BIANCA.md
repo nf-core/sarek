@@ -1,20 +1,30 @@
-# Installation on Bianca
+# Use Singularity on Bianca
 
-This small tutorial will explain to you how to run CAW on a small sample test data on the Swedish UPPMAX cluster Bianca made for sensitive data.
+This small tutorial will explain to you how to run CAW on a small sample test data on the Swedish UPPMAX cluster Bianca made for sensitive data using Singularity.
 
 Some variables are specific, but it can be easily modified to suit any clusters.
 
 For more information about Bianca, follow the [Bianca user guide](http://uppmax.uu.se/support/user-guides/bianca-user-guide/).
+For more information about using Singularity with UPPMAX, follow the [Singularity UPPMAX guide](https://www.uppmax.uu.se/support-sv/user-guides/singularity-user-guide/).
 
-As Bianca is secure, no direct download is available, so CAW will have to be installed and updated manually.
+As Bianca is secure, no direct download is available, so CAW ad the Singularity images will have to be installed and updated manually.
 
 You can either download CAW on your computer or on Milou, make an archive, and send it to Bianca using FileZilla or sftp given your preferences.
 
 All Reference files are already stored in Bianca.
 
 ```bash
+
 # Clone the repository
 > git clone https://github.com/SciLifeLab/CAW.git
+
+# Clone the container repository
+> git clone https://github.com/SciLifeLab/CAW-containers.git
+
+# Pull all the containers
+> nextflow run CAW-containers/main.nf --singularity --containers bcftools,concatvcf,fastqc,freebayes,gatk,htslib,igvtools,mapreads,multiqc,picard,qualimap,runallelecount,runascat,runconvertallelecounts,runmanta,samtools,snpeffgrch37,snpeffgrch38,strelka,vepgrch37,vepgrch38 --singularityPublishDir CAW/containers/
+
+# Go into the CAW directory to build the archive
 > cd CAW
 
 # It is also possible to checkout a specific version using
