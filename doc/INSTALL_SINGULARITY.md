@@ -18,6 +18,8 @@ cd test_CAW
 # Download the singularity containers
 nextflow run SciLifeLab/CAW-containers --singularity --containers bcftools,concatvcf,fastqc,freebayes,gatk,htslib,igvtools,mapreads,multiqc,picard,qualimap,runallelecount,runascat,runconvertallelecounts,runmanta,samtools,snpeffgrch37,snpeffgrch38,strelka,vepgrch37,vepgrch38 --singularityPublishDir containers/
 
+# You can forget the snpeffgrch38 and vepgrch38 containers, if you only want to try the tiny test, or forget the snpeffgrch37 and vepgrch37 containers if you're only planning on using the workflow on GRCh38
+
 # Build the smallGRCh37 reference
 nextflow run SciLifeLab/CAW/buildReferences.nf --download --genome smallGRCh37
   -profile singularityTest
