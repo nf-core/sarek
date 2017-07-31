@@ -2,8 +2,8 @@
 set -xeuo pipefail
 
 function nf_test() {
-  echo "$(tput setaf 1)nextflow run $@ -profile travis$(tput sgr0)"
-  nextflow run "$@" -profile travis
+  echo "$(tput setaf 1)nextflow run $@ -profile travis --verbose$(tput sgr0)"
+  nextflow run "$@" -profile travis --verbose
 }
 
 nf_test buildReferences.nf --download
@@ -15,6 +15,8 @@ nf_test . --test --step preprocessing
 docker rmi -f maxulysse/fastqc:1.1 maxulysse/mapreads:1.1 maxulysse/picard:1.1
 nf_test . --step realign --noReports
 nf_test . --step realign --tools HaplotypeCaller -resume
+nf_test . --step realign --tools HaplotypeCaller -resume --noReports --noGVCF
+nf_test . --step recalibrate --noReports
 nf_test . --step recalibrate --tools FreeBayes,HaplotypeCaller,MuTect1,MuTect2,Strelka
 # Test whether restarting from an already recalibrated BAM works
 nf_test . --step skipPreprocessing --tools Strelka --noReports
