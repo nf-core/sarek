@@ -49,8 +49,9 @@ if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <
 
 params.download = false
 params.refDir = ""
-
+verbose = params.verbose
 download = params.download ? true : false
+
 if (!download && params.refDir == "" ) { exit 1, "No --refDir specified"}
 if (download && params.refDir != "" ) { exit 1, "No need to specify --refDir"}
 
@@ -103,16 +104,16 @@ process ProcessReference {
 
   if (download)
   """
-  set -euo pipefail
   wget https://github.com/szilvajuhos/smallRef/raw/master/$reference
   """
 
   else
   """
-  set -euo pipefail
   ln -s $params.refDir/$reference .
   """
 }
+
+if (verbose) processedFiles = processedFiles.view {"Files preprocessed  : $it"}
 
 compressedfiles = Channel.create()
 notCompressedfiles = Channel.create()
@@ -130,19 +131,18 @@ process DecompressFile {
     file("*.{vcf,fasta,loci}") into decompressedFiles
 
   script:
-   if (reference =~ ".gz")
-     """
-     set -euo pipefail
-     realReference=`readlink $reference`
-     gzip -d -c \$realReference > $reference.baseName
-     """
-   else if (reference =~ ".tar.bz2")
-     """
-     set -euo pipefail
-     realReference=`readlink $reference`
-     tar xvjf \$realReference
-     """
+  realReference="readlink $reference"
+  if (reference =~ ".gz")
+    """
+    gzip -d -c \$($realReference) > $reference.baseName
+    """
+  else if (reference =~ ".tar.bz2")
+    """
+    tar xvjf \$($realReference)
+    """
 }
+
+if (verbose) decompressedFiles = decompressedFiles.view {"Files decomprecessed: $it"}
 
 fastaFile = Channel.create()
 otherFiles = Channel.create()
@@ -172,15 +172,18 @@ process BuildBWAindexes {
     file(reference) from fastaForBWA
 
   output:
-    set file(reference), file("*.{amb,ann,bwt,pac,sa}") into bwaIndexes
+    file(reference) into fastaFileToKeep
+    file("*.{amb,ann,bwt,pac,sa}") into bwaIndexes
 
   script:
 
   """
-  set -euo pipefail
   bwa index $reference
   """
 }
+
+if (verbose) fastaFileToKeep.view {"Fasta File          : $it"}
+if (verbose) bwaIndexes.flatten().view {"BWA index           : $it"}
 
 process BuildPicardIndex {
   tag {reference}
@@ -195,7 +198,6 @@ process BuildPicardIndex {
 
   script:
   """
-  set -euo pipefail
   java -Xmx${task.memory.toGiga()}g \
   -jar \$PICARD_HOME/picard.jar \
   CreateSequenceDictionary \
@@ -203,6 +205,8 @@ process BuildPicardIndex {
   OUTPUT=${reference.baseName}.dict
   """
 }
+
+if (verbose) picardIndex.view {"Picard index        : $it"}
 
 process BuildSAMToolsIndex {
   tag {reference}
@@ -217,10 +221,11 @@ process BuildSAMToolsIndex {
 
   script:
   """
-  set -euo pipefail
   samtools faidx $reference
   """
 }
+
+if (verbose) samtoolsIndex.view {"SAMTools index      : $it"}
 
 process BuildVCFIndex {
   tag {reference}
@@ -231,14 +236,17 @@ process BuildVCFIndex {
     file(reference) from vcfFiles
 
   output:
-    set file(reference), file("*.idx") into vcfIndexed
+    file(reference) into vcfIndexed
+    file("*.idx") into vcfIndex
 
   script:
   """
-  set -euo pipefail
   \$IGVTOOLS_HOME/igvtools index $reference
   """
 }
+
+if (verbose) vcfIndexed.view {"VCF indexed         : $it"}
+if (verbose) vcfIndex.view {"VCF index           : $it"}
 
 /*
 ================================================================================
@@ -275,7 +283,9 @@ def checkParams(it) {
     'genome',
     'genomes',
     'help',
+    'no-GVCF',
     'no-reports',
+    'noGVCF',
     'noReports',
     'project',
     'ref-dir',

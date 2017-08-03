@@ -82,15 +82,16 @@ directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
 stepList = defineStepList()
 toolList = defineToolList()
+gvcf = !params.noGVCF
 reports = !params.noReports
 verbose = params.verbose
 
-if (!checkParameterExistence(step, stepList)) {exit 1, 'Unknown step, see --help for more information'}
-if (step.contains(',')) {exit 1, 'You can choose only one step, see --help for more information'}
+if (!checkParameterExistence(step, stepList)) exit 1, 'Unknown step, see --help for more information'
+if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
 if (step == 'preprocessing' && !checkExactlyOne([params.test, params.sample, params.sampleDir]))
   exit 1, 'Please define which samples to work on by providing exactly one of the --test, --sample or --sampleDir options'
-if (!checkReferenceMap(referenceMap)) {exit 1, 'Missing Reference file(s), see --help for more information'}
-if (!checkParameterList(tools,toolList)) {exit 1, 'Unknown tool(s), see --help for more information'}
+if (!checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
+if (!checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
 
 if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
   referenceMap.intervals = file("$workflow.projectDir/repeats/tiny_${params.genome}.list")
@@ -144,9 +145,6 @@ if (step == 'preprocessing') {
   (patientGenders, bamFiles) = extractGenders(bamFiles)
 }
 
-if (verbose) fastqFiles = fastqFiles.view {"FASTQ files to preprocess: $it"}
-if (verbose) bamFiles = bamFiles.view {"BAM files to process: $it"}
-
 /*
 ================================================================================
 =                               P R O C E S S E S                              =
@@ -157,7 +155,8 @@ startMessage()
 
 (fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
 
-if (verbose) fastqFilesforFastQC = fastqFilesforFastQC.view {"FASTQ files for FastQC: $it"}
+if (verbose) fastqFiles = fastqFiles.view {"FASTQs to preprocess: $it"}
+if (verbose) bamFiles = bamFiles.view {"BAMs to process: $it"}
 
 process RunFastQC {
   tag {idPatient + "-" + idRun}
@@ -203,7 +202,7 @@ process MapReads {
   """
 }
 
-if (verbose) mappedBam = mappedBam.view {"BAM file to sort into group or single: $it"}
+if (verbose) mappedBam = mappedBam.view {"Mapped BAM to sort into group or single: $it"}
 
 // Sort bam whether they are standalone or should be merged
 // Borrowed code from https://github.com/guigolab/chip-nf
@@ -453,7 +452,6 @@ if (verbose) recalibrationTable = recalibrationTable.view {"Base recalibrated ta
 (bamForBamQC, bamForSamToolsStats, recalTables, recalibrationTableForHC, recalibrationTable) = recalibrationTable.into(5)
 
 recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
-if (verbose) recalTables = recalTables.view {"Recalibration tables: $it"}
 
 process RecalibrateBam {
   tag {idPatient + "-" + idSample}
@@ -693,7 +691,9 @@ process RunHaplotypecaller {
   """
 }
 hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3])
-verbose ? hcGenomicVCF = hcGenomicVCF.view {"HaplotypeCaller output: $it"} : ''
+if (verbose) hcGenomicVCF = hcGenomicVCF.view {"HaplotypeCaller output: $it"}
+
+if (!gvcf) {hcGenomicVCF.close()}
 
 process RunGenotypeGVCFs {
   tag {idSample + "-" + gen_int}
@@ -1359,7 +1359,9 @@ def checkParams(it) {
     'genome',
     'genomes',
     'help',
+    'no-GVCF',
     'no-reports',
+    'noGVCF',
     'noReports',
     'project',
     'run-time',
