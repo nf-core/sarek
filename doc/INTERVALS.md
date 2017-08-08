@@ -2,7 +2,6 @@
 
 To speed up the Variant Calling processes, the reference is chopped into smaller pieces. The Variant Calling is done by this intervals, and the different resulting VCFs are then merged. This can parallelize the Variant Calling processes, and push down the variant calling wall clock time significanlty.
 
-
 ## GRCh37
 
 The file `wgs_calling_regions.grch37.list` contains the intervals which are chopped up at the centromeres.

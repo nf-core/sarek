@@ -57,18 +57,17 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 */
 
-revision = grabRevision()
 version = '1.1'
 
 if (!isAllowedParams(params)) {exit 1, "params is unknown, see --help for more information"}
 
 if (params.help) {
-  helpMessage(version, revision)
+  helpMessage()
   exit 1
 }
 
 if (params.version) {
-  versionMessage(version, revision)
+  versionMessage()
   exit 1
 }
 
@@ -83,14 +82,16 @@ directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
 stepList = defineStepList()
 toolList = defineToolList()
+gvcf = !params.noGVCF
+reports = !params.noReports
 verbose = params.verbose
 
-if (!checkParameterExistence(step, stepList)) {exit 1, 'Unknown step, see --help for more information'}
-if (step.contains(',')) {exit 1, 'You can choose only one step, see --help for more information'}
+if (!checkParameterExistence(step, stepList)) exit 1, 'Unknown step, see --help for more information'
+if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
 if (step == 'preprocessing' && !checkExactlyOne([params.test, params.sample, params.sampleDir]))
   exit 1, 'Please define which samples to work on by providing exactly one of the --test, --sample or --sampleDir options'
-if (!checkReferenceMap(referenceMap)) {exit 1, 'Missing Reference file(s), see --help for more information'}
-if (!checkParameterList(tools,toolList)) {exit 1, 'Unknown tool(s), see --help for more information'}
+if (!checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
+if (!checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
 
 if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
   referenceMap.intervals = file("$workflow.projectDir/repeats/tiny_${params.genome}.list")
@@ -144,24 +145,23 @@ if (step == 'preprocessing') {
   (patientGenders, bamFiles) = extractGenders(bamFiles)
 }
 
-if (verbose) fastqFiles = fastqFiles.view {"FASTQ files to preprocess: $it"}
-if (verbose) bamFiles = bamFiles.view {"BAM files to process: $it"}
-startMessage(version, grabRevision())
-
 /*
 ================================================================================
 =                               P R O C E S S E S                              =
 ================================================================================
 */
 
+startMessage()
+
 (fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
 
-if (verbose) fastqFilesforFastQC = fastqFilesforFastQC.view {"FASTQ files for FastQC: $it"}
+if (verbose) fastqFiles = fastqFiles.view {"FASTQs to preprocess: $it"}
+if (verbose) bamFiles = bamFiles.view {"BAMs to process: $it"}
 
 process RunFastQC {
   tag {idPatient + "-" + idRun}
 
-  publishDir directoryMap.fastQC, mode: 'copy'
+  publishDir "$directoryMap.fastQC/$idRun", mode: 'copy'
 
   input:
     set idPatient, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFilesforFastQC
@@ -169,7 +169,7 @@ process RunFastQC {
   output:
     file "*_fastqc.{zip,html}" into fastQCreport
 
-  when: step == 'preprocessing' && 'multiqc' in tools
+  when: step == 'preprocessing' && reports
 
   script:
   """
@@ -202,7 +202,7 @@ process MapReads {
   """
 }
 
-if (verbose) mappedBam = mappedBam.view {"BAM file to sort into group or single: $it"}
+if (verbose) mappedBam = mappedBam.view {"Mapped BAM to sort into group or single: $it"}
 
 // Sort bam whether they are standalone or should be merged
 // Borrowed code from https://github.com/guigolab/chip-nf
@@ -449,9 +449,9 @@ if (step == 'recalibrate') recalibrationTable = bamFiles
 
 if (verbose) recalibrationTable = recalibrationTable.view {"Base recalibrated table for RecalibrateBam: $it"}
 
-(recalTables, recalibrationTableForHC, recalibrationTable) = recalibrationTable.into(3)
+(bamForBamQC, bamForSamToolsStats, recalTables, recalibrationTableForHC, recalibrationTable) = recalibrationTable.into(5)
+
 recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
-if (verbose) recalTables = recalTables.view {"Recalibration tables: $it"}
 
 process RecalibrateBam {
   tag {idPatient + "-" + idSample}
@@ -495,7 +495,6 @@ recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
   name: 'recalibrated.tsv', sort: true, storeDir: directoryMap.recalibrated
 )
 
-
 if (step == 'skippreprocessing') {
   // assume input is recalibrated, ignore explicitBqsrNeeded
   (recalibratedBam, recalTables) = bamFiles.into(2)
@@ -505,9 +504,8 @@ if (step == 'skippreprocessing') {
   (recalTables, recalibrationTableForHC) = recalTables.into(2)
   recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
 } else if (!explicitBqsrNeeded) {
-  recalibratedBam = recalibrationTableForHC.map { it[0..-2] }
+  (bamForBamQC, bamForSamToolsStats, recalibratedBam) = recalibrationTableForHC.map { it[0..-2] }.into(3)
 }
-
 
 if (verbose) recalibratedBam = recalibratedBam.view {"Recalibrated BAM for variant Calling: $it"}
 
@@ -517,12 +515,12 @@ process RunSamtoolsStats {
   publishDir directoryMap.samtoolsStats, mode: 'copy'
 
   input:
-    set idPatient, status, idSample, file(bam), file(bai) from recalibratedBamForStats
+    set idPatient, status, idSample, file(bam), file(bai) from bamForSamToolsStats
 
   output:
-    file ("${bam}.samtools.stats.out") into recalibratedBamReport
+    file ("${bam}.samtools.stats.out") into samtoolsStatsReport
 
-    when: 'multiqc' in tools
+    when: reports
 
     script:
     """
@@ -530,7 +528,28 @@ process RunSamtoolsStats {
     """
 }
 
-if (verbose) recalibratedBamReport = recalibratedBamReport.view {"BAM Stats: $it"}
+if (verbose) samtoolsStatsReport = samtoolsStatsReport.view {"BAM Stats: $it"}
+
+process RunBamQC {
+  tag {idPatient + "-" + idSample}
+
+  publishDir directoryMap.bamQC, mode: 'copy'
+
+  input:
+    set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC
+
+  output:
+    file("$idSample") into bamQCreport
+
+    when: reports
+
+    script:
+    """
+    qualimap bamqc -bam $bam -outdir $idSample -outformat HTML
+    """
+}
+
+if (verbose) bamQCreport = bamQCreport.view {"BAM Stats: $it"}
 
 // Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
 // The sample tsv config file which is formatted like: "subject status sample lane fastq1 fastq2"
@@ -672,7 +691,9 @@ process RunHaplotypecaller {
   """
 }
 hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3])
-verbose ? hcGenomicVCF = hcGenomicVCF.view {"HaplotypeCaller output: $it"} : ''
+if (verbose) hcGenomicVCF = hcGenomicVCF.view {"HaplotypeCaller output: $it"}
+
+if (!gvcf) {hcGenomicVCF.close()}
 
 process RunGenotypeGVCFs {
   tag {idSample + "-" + gen_int}
@@ -865,7 +886,7 @@ process ConcatVCF {
   > header
 
   # Get list of contigs from VCF header
-  CONTIGS=(\$(sed -rn '/^[^#]/q;/^##contig=/{s/##contig=<ID=(.*),length=[0-9]+>/\\1/;s/\\*/\\\\*/g;p}' \$FIRSTVCF))
+  CONTIGS=(\$(sed -rn '/^[^#]/q;/^##contig=/{s/##contig=<ID=(.*),length=[0-9]+(,[^>]*)?>/\\1/;s/\\*/\\\\*/g;p}' \$FIRSTVCF))
 
   # concatenate VCFs in the correct order
   (
@@ -1014,7 +1035,7 @@ alleleCountOutput
 alleleCountOutput = alleleCountNormal.spread(alleleCountTumor)
 
 alleleCountOutput = alleleCountOutput.map {
-  idPatientNormal, statusNormal, idSampleNormal, alleleCountNormal, 
+  idPatientNormal, statusNormal, idSampleNormal, alleleCountNormal,
   idPatientTumor,  statusTumor,  idSampleTumor,  alleleCountTumor ->
   [idPatientNormal, idSampleNormal, idSampleTumor, alleleCountNormal, alleleCountTumor]
 }
@@ -1142,7 +1163,7 @@ process RunBcftoolsStats {
   output:
     file ("${vcf.baseName}.bcf.tools.stats.out") into bcfReport
 
-  when: 'multiqc' in tools
+  when: reports
 
   script:
   """
@@ -1216,10 +1237,7 @@ process RunVEP {
 
 if (verbose) vepReport = vepReport.view {"VEP Reports: $it"}
 
-
 process GenerateMultiQCconfig {
-  tag {idPatient}
-
   publishDir directoryMap.multiQC, mode: 'copy'
 
   input:
@@ -1227,7 +1245,7 @@ process GenerateMultiQCconfig {
   output:
   file("multiqc_config.yaml") into multiQCconfig
 
-  when: 'multiqc' in tools
+  when: reports
 
   script:
   annotateString = annotateTools ? "- Annotate on : ${annotateTools.join(", ")}" : ''
@@ -1250,23 +1268,27 @@ process GenerateMultiQCconfig {
   echo "- 'fastqc'" >> multiqc_config.yaml
   echo "- 'picard'" >> multiqc_config.yaml
   echo "- 'samtools'" >> multiqc_config.yaml
+  echo "- 'qualimap'" >> multiqc_config.yaml
   echo "- 'snpeff'" >> multiqc_config.yaml
+  echo "- 'vep'" >> multiqc_config.yaml
   """
 }
 
 if (verbose) multiQCconfig = multiQCconfig.view {"MultiQC config file: $it"}
 
-reportsForMultiQC = Channel.fromPath( 'Reports/{FastQC,MarkDuplicates,SamToolsStats}/*' )
-  .mix(bcfReport,
+reportsForMultiQC = Channel.empty()
+  .mix(
+    Channel.fromPath('Reports/{BCFToolsStats,MarkDuplicates,SamToolsStats}/*'),
+    Channel.fromPath('Reports/{bamQC,FastQC}/*/*'),
+    bamQCreport,
+    bcfReport,
     fastQCreport,
     markDuplicatesReport,
     multiQCconfig,
-    recalibratedBamReport,
+    samtoolsStatsReport,
     snpeffReport,
-    vepReport)
-  .flatten()
-  .unique()
-  .toList()
+    vepReport
+  ).flatten().unique().toList()
 
 if (verbose) reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}
 
@@ -1281,7 +1303,7 @@ process RunMultiQC {
   output:
     set file("*multiqc_report.html"), file("*multiqc_data") into multiQCReport
 
-    when: 'multiqc' in tools
+    when: reports
 
   script:
   """
@@ -1297,13 +1319,9 @@ if (verbose) multiQCReport = multiQCReport.view {"MultiQC Report: $it"}
 ================================================================================
 */
 
-def checkFile(it) {
-  // Check file existence
-  final f = file(it)
-  if (!f.exists()) {
-    exit 1, "Missing file in TSV file: $it, see --help for more information"
-  }
-  return f
+def cawMessage() {
+  // Display CAW message
+  log.info "CANCER ANALYSIS WORKFLOW ~ $version - " + this.grabRevision() + (workflow.commitId ? " [$workflow.commitId]" : "")
 }
 
 def checkFileExtension(it, extension) {
@@ -1323,7 +1341,7 @@ def checkParameterExistence(it, list) {
 }
 
 def checkParameterList(list, realList) {
-  // Loop through all the possible parameters to check their existence and spelling
+  // Loop through all parameters to check their existence and spelling
   return list.every{ checkParameterExistence(it, realList) }
 }
 
@@ -1341,6 +1359,10 @@ def checkParams(it) {
     'genome',
     'genomes',
     'help',
+    'no-GVCF',
+    'no-reports',
+    'noGVCF',
+    'noReports',
     'project',
     'run-time',
     'runTime',
@@ -1380,26 +1402,8 @@ def checkRefExistence(referenceFile, fileToCheck) {
   return true
 }
 
-def checkStatus(it) {
-  // Check if status is correct
-  // Status should be only 0 or 1
-  // 0 being normal
-  // 1 being tumor (or relapse or anything that is not normal...)
-  if (!(it in [0, 1])) {
-    exit 1, "Status is not recognized in TSV file: $it, see --help for more information"
-  }
-  return it
-}
-
-def checkTSV(it, number) {
-  // Check if TSV has the correct number of items in row
-  if (it.size() != number) {
-    exit 1, "Malformed row in TSV file: $it, see --help for more information"
-  }
-  return it
-}
-
 def checkUppmaxProject() {
+  // check if UPPMAX project number is specified
   return !(workflow.profile == 'slurm' && !params.project)
 }
 
@@ -1414,6 +1418,7 @@ def defineDirectoryMap() {
     'nonRealigned'     : 'Preprocessing/NonRealigned',
     'nonRecalibrated'  : 'Preprocessing/NonRecalibrated',
     'recalibrated'     : 'Preprocessing/Recalibrated',
+    'bamQC'            : 'Reports/bamQC',
     'bcftoolsStats'    : 'Reports/BCFToolsStats',
     'fastQC'           : 'Reports/FastQC',
     'markDuplicatesQC' : 'Reports/MarkDuplicates',
@@ -1472,7 +1477,6 @@ def defineToolList() {
     'freebayes',
     'haplotypecaller',
     'manta',
-    'multiqc',
     'mutect1',
     'mutect2',
     'snpeff',
@@ -1487,13 +1491,13 @@ def extractBams(tsvFile) {
   Channel
     .from(tsvFile.readLines())
     .map{line ->
-      def list      = checkTSV(line.split(),6)
+      def list      = returnTSV(line.split(),6)
       def idPatient = list[0]
       def gender    = list[1]
-      def status    = checkStatus(list[2].toInteger())
+      def status    = returnStatus(list[2].toInteger())
       def idSample  = list[3]
-      def bamFile   = checkFile(list[4])
-      def baiFile   = checkFile(list[5])
+      def bamFile   = returnFile(list[4])
+      def baiFile   = returnFile(list[5])
 
       checkFileExtension(bamFile,".bam")
       checkFileExtension(baiFile,".bai")
@@ -1508,16 +1512,18 @@ def extractFastq(tsvFile) {
   Channel
     .from(tsvFile.readLines())
     .map{line ->
-      def list       = checkTSV(line.split(),7)
+      def list       = returnTSV(line.split(),7)
       def idPatient  = list[0]
       def gender     = list[1]
-      def status     = checkStatus(list[2].toInteger())
+      def status     = returnStatus(list[2].toInteger())
       def idSample   = list[3]
       def idRun      = list[4]
 
-      // When testing workflow from github, paths to FASTQ files start from workflow.projectDir and not workflow.launchDir
-      def fastqFile1 = workflow.commitId && params.test ? checkFile("$workflow.projectDir/${list[5]}") : checkFile("${list[5]}")
-      def fastqFile2 = workflow.commitId && params.test ? checkFile("$workflow.projectDir/${list[6]}") : checkFile("${list[6]}")
+      // Normally path to files starts from workflow.launchDir
+      // But when executing workflow from Github
+      // Path to hosted FASTQ files starts from workflow.projectDir
+      def fastqFile1 = workflow.commitId && params.test ? returnFile("$workflow.projectDir/${list[5]}") : returnFile("${list[5]}")
+      def fastqFile2 = workflow.commitId && params.test ? returnFile("$workflow.projectDir/${list[6]}") : returnFile("${list[6]}")
 
       checkFileExtension(fastqFile1,".fastq.gz")
       checkFileExtension(fastqFile2,".fastq.gz")
@@ -1567,14 +1573,14 @@ def extractRecal(tsvFile) {
   Channel
     .from(tsvFile.readLines())
     .map{line ->
-      def list       = checkTSV(line.split(),7)
+      def list       = returnTSV(line.split(),7)
       def idPatient  = list[0]
       def gender     = list[1]
-      def status     = checkStatus(list[2].toInteger())
+      def status     = returnStatus(list[2].toInteger())
       def idSample   = list[3]
-      def bamFile    = checkFile(list[4])
-      def baiFile    = checkFile(list[5])
-      def recalTable = checkFile(list[6])
+      def bamFile    = returnFile(list[4])
+      def baiFile    = returnFile(list[5])
+      def recalTable = returnFile(list[6])
 
       checkFileExtension(bamFile,".bam")
       checkFileExtension(baiFile,".bai")
@@ -1636,11 +1642,13 @@ def generateIntervalsForVC(bams, intervals) {
 }
 
 def grabRevision() {
+  // Return the same string executed from github or not
   return workflow.revision ?: workflow.commitId ?: workflow.scriptId.substring(0,10)
 }
 
-def helpMessage(version, revision) { // Display help message
-  log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
+def helpMessage() {
+  // Display help message
+  this.cawMessage()
   log.info "    Usage:"
   log.info "       nextflow run SciLifeLab/CAW --sample <file.tsv> [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
   log.info "       nextflow run SciLifeLab/CAW --sampleDir <Directory> [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
@@ -1661,6 +1669,8 @@ def helpMessage(version, revision) { // Display help message
   log.info "         annotate (will annotate Variant Calling output."
   log.info "         By default it will try to annotate all available vcfs."
   log.info "         Use with --annotateTools or --annotateVCF to specify what to annotate"
+  log.info "    --noReports"
+  log.info "       Disable QC tools and MultiQC to generate a HTML report"
   log.info "    --tools"
   log.info "       Option to configure which tools to use in the workflow."
   log.info "         Different tools to be separated by commas."
@@ -1701,6 +1711,7 @@ def helpMessage(version, revision) { // Display help message
 }
 
 def isAllowedParams(params) {
+  // Compare params to list of verified params
   final test = true
   params.each{
     if (!checkParams(it.toString().split('=')[0])) {
@@ -1711,8 +1722,8 @@ def isAllowedParams(params) {
   return test
 }
 
-def startMessage(version, revision) { // Display start message
-  log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
+def minimalInformationMessage() {
+  // Minimal information message
   log.info "Command Line: $workflow.commandLine"
   log.info "Project Dir : $workflow.projectDir"
   log.info "Launch Dir  : $workflow.launchDir"
@@ -1724,24 +1735,57 @@ def startMessage(version, revision) { // Display start message
   if (annotateTools) {log.info "Annotate on : " + annotateTools.join(', ')}
 }
 
-def versionMessage(version, revision) { // Display version message
+def nextflowMessage() {
+  // Nextflow message (version + build)
+  log.info "N E X T F L O W  ~  version $workflow.nextflow.version $workflow.nextflow.build"
+}
+
+def returnFile(it) {
+  // return file if it exists
+  final f = file(it)
+  if (!f.exists()) {
+    exit 1, "Missing file in TSV file: $it, see --help for more information"
+  }
+  return f
+}
+
+def returnStatus(it) {
+  // Return status if it's correct
+  // Status should be only 0 or 1
+  // 0 being normal
+  // 1 being tumor (or relapse or anything that is not normal...)
+  if (!(it in [0, 1])) {
+    exit 1, "Status is not recognized in TSV file: $it, see --help for more information"
+  }
+  return it
+}
+
+def returnTSV(it, number) {
+  // return TSV if it has the correct number of items in row
+  if (it.size() != number) {
+    exit 1, "Malformed row in TSV file: $it, see --help for more information"
+  }
+  return it
+}
+
+def startMessage() {
+  // Display start message
+  this.cawMessage()
+  this.minimalInformationMessage()
+}
+
+def versionMessage() {
+  // Display version message
   log.info "CANCER ANALYSIS WORKFLOW"
   log.info "  version   : $version"
-  log.info workflow.commitId ? "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]" : "  revision  : $revision"
+  log.info workflow.commitId ? "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]" : "  revision  : " + this.grabRevision()
 }
 
-workflow.onComplete { // Display complete message
-  log.info "N E X T F L O W ~ $workflow.nextflow.version - $workflow.nextflow.build"
-  log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
-  log.info "Command Line: $workflow.commandLine"
-  log.info "Project Dir : $workflow.projectDir"
-  log.info "Launch Dir  : $workflow.launchDir"
-  log.info "Work Dir    : $workflow.workDir"
-  log.info "TSV file    : $tsvFile"
-  log.info "Genome      : " + params.genome
-  log.info "Step        : " + step
-  if (tools) {log.info "Tools       : " + tools.join(', ')}
-  if (annotateTools) {log.info "Annotate on : " + annotateTools.join(', ')}
+workflow.onComplete {
+  // Display complete message
+  this.nextflowMessage()
+  this.cawMessage()
+  this.minimalInformationMessage()
   log.info "Completed at: $workflow.complete"
   log.info "Duration    : $workflow.duration"
   log.info "Success     : $workflow.success"
@@ -1749,8 +1793,9 @@ workflow.onComplete { // Display complete message
   log.info "Error report: " + (workflow.errorReport ?: '-')
 }
 
-workflow.onError { // Display error message
-  log.info "N E X T F L O W ~ version $workflow.nextflow.version [$workflow.nextflow.build]"
-  log.info workflow.commitId ? "CANCER ANALYSIS WORKFLOW ~ $version - $workflow.revision [$workflow.commitId]" : "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
+workflow.onError {
+  // Display error message
+  this.nextflowMessage()
+  this.cawMessage()
   log.info "Workflow execution stopped with the following message: " + workflow.errorMessage
 }

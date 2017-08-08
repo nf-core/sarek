@@ -8,7 +8,7 @@ services:
   - docker
 
 env:
-  - NXF_VER=0.23.0
+  - NXF_VER=0.22.2
 
 install:
   - curl -fsSL get.nextflow.io | bash

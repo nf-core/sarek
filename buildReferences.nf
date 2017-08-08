@@ -21,14 +21,13 @@ kate: syntax groovy; space-indent on; indent-width 2;
  Pall Olason <pall.olason@scilifelab.se> [@pallolason]
  Pelin Sahlén <pelin.akan@scilifelab.se> [@pelinakan]
 --------------------------------------------------------------------------------
- @Homepage
- http://opensource.scilifelab.se/projects/caw/
+  @Homepage
+  http://opensource.scilifelab.se/projects/caw/
 --------------------------------------------------------------------------------
-*/
-
-/*
+  @Documentation
+  https://github.com/SciLifeLab/CAW/README.md
 ================================================================================
-=                               P R O C E S S E S                              =
+=                           C O N F I G U R A T I O N                          =
 ================================================================================
 */
 
@@ -37,12 +36,12 @@ version = '1.1'
 if (!isAllowedParams(params)) {exit 1, "params is unknown, see --help for more information"}
 
 if (params.help) {
-  helpMessage(version, grabRevision())
+  helpMessage()
   exit 1
 }
 
 if (params.version) {
-  versionMessage(version, grabRevision())
+  versionMessage()
   exit 1
 }
 
@@ -50,8 +49,9 @@ if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <
 
 params.download = false
 params.refDir = ""
-
+verbose = params.verbose
 download = params.download ? true : false
+
 if (!download && params.refDir == "" ) { exit 1, "No --refDir specified"}
 if (download && params.refDir != "" ) { exit 1, "No need to specify --refDir"}
 
@@ -83,6 +83,14 @@ if (download && params.genome != "smallGRCh37") {exit 1, "Not possible to downlo
 
 if (!download) {referencesFiles.each{checkFile(params.refDir + "/" + it)}}
 
+/*
+================================================================================
+=                               P R O C E S S E S                              =
+================================================================================
+*/
+
+startMessage()
+
 process ProcessReference {
   tag download ? {"Download: " + reference} : {"Link: " + reference}
 
@@ -96,16 +104,16 @@ process ProcessReference {
 
   if (download)
   """
-  set -euo pipefail
   wget https://github.com/szilvajuhos/smallRef/raw/master/$reference
   """
 
   else
   """
-  set -euo pipefail
   ln -s $params.refDir/$reference .
   """
 }
+
+if (verbose) processedFiles = processedFiles.view {"Files preprocessed  : $it"}
 
 compressedfiles = Channel.create()
 notCompressedfiles = Channel.create()
@@ -123,19 +131,18 @@ process DecompressFile {
     file("*.{vcf,fasta,loci}") into decompressedFiles
 
   script:
-   if (reference =~ ".gz")
-     """
-     set -euo pipefail
-     realReference=`readlink $reference`
-     gzip -d -c \$realReference > $reference.baseName
-     """
-   else if (reference =~ ".tar.bz2")
-     """
-     set -euo pipefail
-     realReference=`readlink $reference`
-     tar xvjf \$realReference
-     """
+  realReference="readlink $reference"
+  if (reference =~ ".gz")
+    """
+    gzip -d -c \$($realReference) > $reference.baseName
+    """
+  else if (reference =~ ".tar.bz2")
+    """
+    tar xvjf \$($realReference)
+    """
 }
+
+if (verbose) decompressedFiles = decompressedFiles.view {"Files decomprecessed: $it"}
 
 fastaFile = Channel.create()
 otherFiles = Channel.create()
@@ -165,15 +172,18 @@ process BuildBWAindexes {
     file(reference) from fastaForBWA
 
   output:
-    set file(reference), file("*.{amb,ann,bwt,pac,sa}") into bwaIndexes
+    file(reference) into fastaFileToKeep
+    file("*.{amb,ann,bwt,pac,sa}") into bwaIndexes
 
   script:
 
   """
-  set -euo pipefail
   bwa index $reference
   """
 }
+
+if (verbose) fastaFileToKeep.view {"Fasta File          : $it"}
+if (verbose) bwaIndexes.flatten().view {"BWA index           : $it"}
 
 process BuildPicardIndex {
   tag {reference}
@@ -188,7 +198,6 @@ process BuildPicardIndex {
 
   script:
   """
-  set -euo pipefail
   java -Xmx${task.memory.toGiga()}g \
   -jar \$PICARD_HOME/picard.jar \
   CreateSequenceDictionary \
@@ -196,6 +205,8 @@ process BuildPicardIndex {
   OUTPUT=${reference.baseName}.dict
   """
 }
+
+if (verbose) picardIndex.view {"Picard index        : $it"}
 
 process BuildSAMToolsIndex {
   tag {reference}
@@ -210,10 +221,11 @@ process BuildSAMToolsIndex {
 
   script:
   """
-  set -euo pipefail
   samtools faidx $reference
   """
 }
+
+if (verbose) samtoolsIndex.view {"SAMTools index      : $it"}
 
 process BuildVCFIndex {
   tag {reference}
@@ -224,20 +236,28 @@ process BuildVCFIndex {
     file(reference) from vcfFiles
 
   output:
-    set file(reference), file("*.idx") into vcfIndexed
+    file(reference) into vcfIndexed
+    file("*.idx") into vcfIndex
 
   script:
   """
-  set -euo pipefail
   \$IGVTOOLS_HOME/igvtools index $reference
   """
 }
+
+if (verbose) vcfIndexed.view {"VCF indexed         : $it"}
+if (verbose) vcfIndex.view {"VCF index           : $it"}
 
 /*
 ================================================================================
 =                               F U N C T I O N S                              =
 ================================================================================
 */
+
+def cawMessage() {
+  // Display CAW message
+  log.info "CANCER ANALYSIS WORKFLOW ~ $version - " + this.grabRevision() + (workflow.commitId ? " [$workflow.commitId]" : "")
+}
 
 def checkFile(it) {
   // Check file existence
@@ -263,6 +283,10 @@ def checkParams(it) {
     'genome',
     'genomes',
     'help',
+    'no-GVCF',
+    'no-reports',
+    'noGVCF',
+    'noReports',
     'project',
     'ref-dir',
     'refDir',
@@ -282,21 +306,24 @@ def checkParams(it) {
 }
 
 def checkUppmaxProject() {
-  return !((workflow.profile == 'standard' || workflow.profile == 'interactive') && !params.project)
+  // check if UPPMAX project number is specified
+  return !(workflow.profile == 'slurm' && !params.project)
 }
 
 def grabRevision() {
-  return workflow.revision ?: workflow.scriptId.substring(0,10)
+  // Return the same string executed from github or not
+  return workflow.revision ?: workflow.commitId ?: workflow.scriptId.substring(0,10)
 }
 
-def helpMessage(version, revision) { // Display help message
-  log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
+def helpMessage() {
+  // Display help message
+  this.cawMessage()
   log.info "    Usage:"
   log.info "       nextflow run buildReferences.nf --refDir <pathToRefDir> --genome <genome>"
   log.info "       nextflow run buildReferences.nf --download --genome smallGRCh37"
   log.info "       nextflow run SciLifeLab/CAW --test [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
   log.info "    --download"
-  log.info "       Download smallGRCh37 reference files."
+  log.info "       Download reference files. (only with --genome smallGRCh37)"
   log.info "    --refDir <Directoy>"
   log.info "       Specify a directory containing reference files."
   log.info "    --genome <Genome>"
@@ -311,6 +338,7 @@ def helpMessage(version, revision) { // Display help message
 }
 
 def isAllowedParams(params) {
+  // Compare params to list of verified params
   final test = true
   params.each{
     if (!checkParams(it.toString().split('=')[0])) {
@@ -321,8 +349,8 @@ def isAllowedParams(params) {
   return test
 }
 
-def startMessage(version, revision) { // Display start message
-  log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
+def minimalInformationMessage() {
+  // Minimal information message
   log.info "Command Line: $workflow.commandLine"
   log.info "Project Dir : $workflow.projectDir"
   log.info "Launch Dir  : $workflow.launchDir"
@@ -330,20 +358,29 @@ def startMessage(version, revision) { // Display start message
   log.info "Genome      : " + params.genome
 }
 
-def versionMessage(version, revision) { // Display version message
+def nextflowMessage() {
+  // Nextflow message (version + build)
+  log.info "N E X T F L O W  ~  version $workflow.nextflow.version $workflow.nextflow.build"
+}
+
+def startMessage() {
+  // Display start message
+  this.cawMessage()
+  this.minimalInformationMessage()
+}
+
+def versionMessage() {
+  // Display version message
   log.info "CANCER ANALYSIS WORKFLOW"
   log.info "  version   : $version"
-  log.info workflow.commitId ? "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]" : "  revision  : $revision"
+  log.info workflow.commitId ? "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]" : "  revision  : " + this.grabRevision()
 }
 
-workflow.onComplete { // Display complete message
-  log.info "N E X T F L O W ~ $workflow.nextflow.version - $workflow.nextflow.build"
-  log.info "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
-  log.info "Command Line: $workflow.commandLine"
-  log.info "Project Dir : $workflow.projectDir"
-  log.info "Launch Dir  : $workflow.launchDir"
-  log.info "Work Dir    : $workflow.workDir"
-  log.info "Genome      : " + params.genome
+workflow.onComplete {
+  // Display complete message
+  this.nextflowMessage()
+  this.cawMessage()
+  this.minimalInformationMessage()
   log.info "Completed at: $workflow.complete"
   log.info "Duration    : $workflow.duration"
   log.info "Success     : $workflow.success"
@@ -351,8 +388,9 @@ workflow.onComplete { // Display complete message
   log.info "Error report: " + (workflow.errorReport ?: '-')
 }
 
-workflow.onError { // Display error message
-  log.info "N E X T F L O W ~ version $workflow.nextflow.version [$workflow.nextflow.build]"
-  log.info workflow.commitId ? "CANCER ANALYSIS WORKFLOW ~ $version - $workflow.revision [$workflow.commitId]" : "CANCER ANALYSIS WORKFLOW ~ $version - revision: $revision"
+workflow.onError {
+  // Display error message
+  this.nextflowMessage()
+  this.cawMessage()
   log.info "Workflow execution stopped with the following message: " + workflow.errorMessage
 }

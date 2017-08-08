@@ -22,6 +22,10 @@ Specify an email for MultiQC report (optionnal)
 
 Display help
 
+### --noReports
+
+Disable QC tools and MultiQC to generate a HTML report.
+
 ### --project `ProjectID`
 
 Specify a project number ID on a UPPMAX cluster. (optionnal if not on such a cluster)
@@ -53,7 +57,6 @@ Choose which tools will be used in the workflow. Different tools to be separated
 - ascat (use ascat for CNV)
 - haplotypecaller (use HaplotypeCaller for VC)
 - manta (use Manta for SV)
-- multiqc (Make a QC report)
 - mutect1 (use MuTect1 for VC)
 - mutect2 (use MuTect2 for VC)
 - strelka (use Strelka for VC)
@@ -90,45 +93,6 @@ Simpler to specify in the config file.
 ### --runTime `time`
 
 ### --singleCPUMem `memory`
-
-## References [(cf [References documentation](REFERENCES.md))]
-
-Could be usefull if you wish to change one reference for testing.
-
-### --acLoci `file`
-
-## COSMIC files
-
-- --cosmic `file`
-- --cosmicIndex `file`
-
-### Files from the GATK Bundle
-
-- --dbsnp `file`
-- --dbsnpIndex `file`
-- --kgIndels `file`
-- --kgIndex `file`
-- --genome `file`
-- --genomeDict `file`
-- --genomeIndex `file`
-- --millsIndels `file`
-- --millsIndex `file`
-
-### BWA indexes
-
-- --genomeAmb `file`
-- --genomeAnn `file`
-- --genomeBwt `file`
-- --genomePac `file`
-- --genomeSa `file`
-
-## --intervals `file`
-
-## --snpeffDb `db`
-
-```
-Which database to use for snpEff
-```
 
 # Nextflow options
 

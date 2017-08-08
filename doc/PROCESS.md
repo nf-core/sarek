@@ -29,7 +29,8 @@ Several processes are run within the workflow. We divide them for the moment int
 
 - RunFastQC - Run FastQC for QC on fastq files [Stable]
 - MarkDuplicates - Mark Duplicates [Stable]
-- RunSamtoolsStats - Run Samtools stats on recalibrated BAM files [Stable]
+- RunSamtoolsStats - Run Samtools stats on BAM files [Stable]
+- RunBamQC - Run Qualimap bamQC on BAM files [Stable]
 - GenerateMultiQCconfig - Generate a config file for MultiQC [Stable]
 - RunMultiQC - Run MultiQC for report and QC [Stable]
 - RunBcftoolsStats - Run BCFTools stats on vcf files [Working]

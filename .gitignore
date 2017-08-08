@@ -1,5 +1,7 @@
 data/chr17_testdata
 Annotation
+containers/*
+!containers/.gitkeep
 Preprocessing/
 Reports/
 References/
@@ -9,3 +11,4 @@ work/
 .nextflow*
 timeline.html*
 trace.txt*
+*.tar.gz
