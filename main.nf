@@ -216,8 +216,6 @@ singleBam = singleBam.map {
   [idPatient, status, idSample, bam]
 }
 
-if (verbose) groupedBam = groupedBam.view {"Grouped BAMs to merge: $it"}
-
 process MergeBams {
   tag {idPatient + "-" + idSample}
 
@@ -280,6 +278,7 @@ markDuplicatesTSV.map { idPatient, status, idSample, bam, bai ->
 // Create intervals for realignement using both tumor+normal as input
 // Group the marked duplicates BAMs for intervals and realign by idPatient
 // Grouping also by gender, to make a nicer channel
+duplicatesGrouped = Channel.empty()
 if (step == 'preprocessing') {
   duplicatesGrouped = duplicates.groupTuple()
 } else if (step == 'realign') {
@@ -287,8 +286,6 @@ if (step == 'preprocessing') {
     idPatient, status, idSample, bam, bai ->
     [idPatient, bam, bai]
   }.groupTuple()
-} else {
-  duplicatesGrouped = Channel.empty()
 }
 
 // The duplicatesGrouped channel is duplicated
@@ -573,14 +570,11 @@ recalibratedBam
 
 bamsForAscat = Channel.create()
 bamsForAscat = bamsNormalTemp.mix(bamsTumorTemp)
-if (verbose) bamsForAscat = bamsForAscat.view {"Bams for Ascat: $it"}
 
 // Removing status because not relevant anymore
 bamsNormal = bamsNormal.map { idPatient, status, idSample, bam, bai -> [idPatient, idSample, bam, bai] }
-if (verbose) bamsNormal = bamsNormal.view {"Normal BAM for variant Calling: $it"}
 
 bamsTumor = bamsTumor.map { idPatient, status, idSample, bam, bai -> [idPatient, idSample, bam, bai] }
-if (verbose) bamsTumor = bamsTumor.view {"Tumor BAM for variant Calling: $it"}
 
 // We know that MuTect2 (and other somatic callers) are notoriously slow.
 // To speed them up we are chopping the reference into smaller pieces.
@@ -605,25 +599,17 @@ intervals = Channel.
 
 // HaplotypeCaller
 bamsFHC = bamsNormalTemp.mix(bamsTumorTemp)
-if (verbose) bamsFHC = bamsFHC.view {"Bams with Intervals for HaplotypeCaller: $it"}
-
-if (verbose) recalTables = recalTables.view {"recalTables before spread: $it"}
-
 intervals = intervals.tap { intervalsTemp }
 recalTables = recalTables
   .spread(intervalsTemp)
   .map { patient, sample, bam, bai, recalTable, interval, interval2 ->
     [patient, sample, bam, bai, interval, interval2, recalTable] }
 
-if (verbose) recalTables = recalTables.view {"recalTables with intervals: $it"}
 
 // re-associate the BAMs and samples with the recalibration table
 bamsFHC = bamsFHC
   .phase(recalTables) { it[0..4] }
   .map { it1, it2 -> it1 + [it2[6]] }
-
-if (verbose) bamsFHC = bamsFHC.view {"Bams with intervals and recal. table for HaplotypeCaller: $it"}
-
 
 bamsAll = bamsNormal.spread(bamsTumor)
 // Since idPatientNormal and idPatientTumor are the same
@@ -633,26 +619,18 @@ bamsAll = bamsAll.map {
   idPatientNormal, idSampleNormal, bamNormal, baiNormal, idPatientTumor, idSampleTumor, bamTumor, baiTumor ->
   [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor]
 }
-if (verbose) bamsAll = bamsAll.view {"Mapped Recalibrated BAM for variant Calling: $it"}
 
 // MuTect1
 (bamsFMT1, bamsAll, intervals) = generateIntervalsForVC(bamsAll, intervals)
-if (verbose) bamsFMT1 = bamsFMT1.view {"Bams with Intervals for MuTect1: $it"}
 
 // MuTect2
 (bamsFMT2, bamsAll, intervals) = generateIntervalsForVC(bamsAll, intervals)
-if (verbose) bamsFMT2 = bamsFMT2.view {"Bams with Intervals for MuTect2: $it"}
 
 // FreeBayes
 (bamsFFB, bamsAll, intervals) = generateIntervalsForVC(bamsAll, intervals)
-if (verbose) bamsFFB = bamsFFB.view {"Bams with Intervals for FreeBayes: $it"}
 
+// Manta and Strelka
 (bamsForManta, bamsForStrelka) = bamsAll.into(2)
-
-if (verbose) bamsForManta = bamsForManta.view {"Bams for Manta: $it"}
-
-if (verbose) bamsForStrelka = bamsForStrelka.view {"Bams for Strelka: $it"}
-
 
 process RunHaplotypecaller {
   tag {idSample + "-" + gen_int}
@@ -1289,8 +1267,6 @@ reportsForMultiQC = Channel.empty()
     snpeffReport,
     vepReport
   ).flatten().unique().toList()
-
-if (verbose) reportsForMultiQC = reportsForMultiQC.view {"Reports for MultiQC: $it"}
 
 process RunMultiQC {
   tag {idPatient}
