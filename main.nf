@@ -443,7 +443,6 @@ realignedBam = realignedBam.map {
     tag = bam.baseName.tokenize('.')[0]
     status   = tag[-1..-1].toInteger()
     idSample = tag.take(tag.length()-2)
-
     [idPatient, status, idSample, bam, bai]
 }
 
@@ -1327,7 +1326,7 @@ process GenerateMultiQCconfig {
   """
 }
 
-if (verbose) multiQCconfig = multiQCconfig.view {
+if (verbose && reports) multiQCconfig = multiQCconfig.view {
   "MultiQC config:\n\
   File  : [${it.fileName}]"
 }
