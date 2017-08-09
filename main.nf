@@ -155,7 +155,12 @@ startMessage()
 
 (fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
 
-if (verbose) fastqFiles = fastqFiles.view {"FASTQs to preprocess: $it"}
+if (verbose) fastqFiles = fastqFiles.view {
+  "FASTQs to preprocess:\n\
+  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\tRun   : ${it[3]}\n\
+  Files : [${it[4].fileName}, ${it[5].fileName}]"
+}
+
 if (verbose) bamFiles = bamFiles.view {"BAMs to process: $it"}
 
 process RunFastQC {
@@ -177,7 +182,10 @@ process RunFastQC {
   """
 }
 
-if (verbose) fastQCreport = fastQCreport.view {"FastQC report: $it"}
+if (verbose) fastQCreport = fastQCreport.view {
+  "FastQC report:\n\
+  Files : [${it[0].fileName}, ${it[1].fileName}]"
+}
 
 process MapReads {
   tag {idPatient + "-" + idRun}
@@ -202,7 +210,11 @@ process MapReads {
   """
 }
 
-if (verbose) mappedBam = mappedBam.view {"Mapped BAM to sort into group or single: $it"}
+if (verbose) mappedBam = mappedBam.view {
+  "Mapped BAM (single or to be merged):\n\
+  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\tRun   : ${it[3]}\n\
+  File  : [${it[4].fileName}]"
+}
 
 // Sort bam whether they are standalone or should be merged
 // Borrowed code from https://github.com/guigolab/chip-nf
@@ -233,10 +245,25 @@ process MergeBams {
   """
 }
 
-if (verbose) singleBam = singleBam.view {"Single BAM: $it"}
-if (verbose) mergedBam = mergedBam.view {"Merged BAM: $it"}
+if (verbose) singleBam = singleBam.view {
+  "Single BAM:\n\
+  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
+  File  : [${it[3].fileName}]"
+}
+
+if (verbose) mergedBam = mergedBam.view {
+  "Merged BAM:\n\
+  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
+  File  : [${it[3].fileName}]"
+}
+
 mergedBam = mergedBam.mix(singleBam)
-if (verbose) mergedBam = mergedBam.view {"BAM for MarkDuplicates: $it"}
+
+if (verbose) mergedBam = mergedBam.view {
+  "BAM for MarkDuplicates:\n\
+  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
+  File  : [${it[3].fileName}]"
+}
 
 process MarkDuplicates {
   tag {idPatient + "-" + idSample}
@@ -293,9 +320,24 @@ if (step == 'preprocessing') {
 // and the other to the IndelRealigner process
 (duplicatesInterval, duplicatesRealign) = duplicatesGrouped.into(2)
 
-if (verbose) duplicatesInterval = duplicatesInterval.view {"BAMs for RealignerTargetCreator: $it"}
-if (verbose) duplicatesRealign = duplicatesRealign.view {"BAMs to phase: $it"}
-if (verbose) markDuplicatesReport = markDuplicatesReport.view {"MarkDuplicates report: $it"}
+if (verbose) duplicatesInterval = duplicatesInterval.view {
+  "BAMs for RealignerTargetCreator:\n\
+  ID    : ${it[0]}\n\
+  Files : ${it[1].fileName}\n\
+  Files : ${it[2].fileName}"
+}
+
+if (verbose) duplicatesRealign = duplicatesRealign.view {
+  "BAMs to phase:\n\
+  ID    : ${it[0]}\n\
+  Files : ${it[1].fileName}\n\
+  Files : ${it[2].fileName}"
+}
+
+if (verbose) markDuplicatesReport = markDuplicatesReport.view {
+  "MarkDuplicates report:\n\
+  File  : [$it.fileName]"
+}
 
 // VCF indexes are added so they will be linked, and not re-created on the fly
 //  -L "1:131941-141339" \
@@ -335,7 +377,11 @@ process RealignerTargetCreator {
   """
 }
 
-if (verbose) intervals = intervals.view {"Intervals to phase: $it"}
+if (verbose) intervals = intervals.view {
+  "Intervals to phase:\n\
+  ID    : ${it[0]}\n\
+  File  : ${it[1].fileName}"
+}
 
 bamsAndIntervals = duplicatesRealign
   .phase(intervals)
@@ -347,7 +393,13 @@ bamsAndIntervals = duplicatesRealign
       intervals[1]
     )}
 
-if (verbose) bamsAndIntervals = bamsAndIntervals.view {"BAMs and Intervals phased for IndelRealigner: $it"}
+if (verbose) bamsAndIntervals = bamsAndIntervals.view {
+  "BAMs and Intervals phased for IndelRealigner:\n\
+  ID    : ${it[0]}\n\
+  File  : ${it[1].fileName}\n\
+  File  : ${it[2].fileName}\n\
+  File  : [${it[3].fileName}]"
+}
 
 // use nWayOut to split into T/N pair again
 process IndelRealigner {
@@ -390,7 +442,12 @@ realignedBam = realignedBam.map {
 
     [idPatient, status, idSample, bam, bai]
 }
-if (verbose) realignedBam = realignedBam.view {"Realigned BAM to CreateRecalibrationTable: $it"}
+
+if (verbose) realignedBam = realignedBam.view {
+  "Realigned BAM to CreateRecalibrationTable:\n\
+  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
+  Files : [${it[3].fileName}, ${it[4].fileName}]"
+}
 
 process CreateRecalibrationTable {
   tag {idPatient + "-" + idSample}
@@ -444,7 +501,11 @@ recalibrationTableTSV.map { idPatient, status, idSample, bam, bai, recalTable ->
 
 if (step == 'recalibrate') recalibrationTable = bamFiles
 
-if (verbose) recalibrationTable = recalibrationTable.view {"Base recalibrated table for RecalibrateBam: $it"}
+if (verbose) recalibrationTable = recalibrationTable.view {
+  "Base recalibrated table for RecalibrateBam:\n\
+  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
+  Files : [${it[3].fileName}, ${it[4].fileName}, ${it[5].fileName}]"
+}
 
 (bamForBamQC, bamForSamToolsStats, recalTables, recalibrationTableForHC, recalibrationTable) = recalibrationTable.into(5)
 
@@ -504,7 +565,11 @@ if (step == 'skippreprocessing') {
   (bamForBamQC, bamForSamToolsStats, recalibratedBam) = recalibrationTableForHC.map { it[0..-2] }.into(3)
 }
 
-if (verbose) recalibratedBam = recalibratedBam.view {"Recalibrated BAM for variant Calling: $it"}
+if (verbose) recalibratedBam = recalibratedBam.view {
+  "Recalibrated BAM for variant Calling:\n\
+  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
+  Files : [${it[3].fileName}, ${it[4].fileName}]"
+}
 
 process RunSamtoolsStats {
   tag {idPatient + "-" + idSample}
@@ -525,7 +590,10 @@ process RunSamtoolsStats {
     """
 }
 
-if (verbose) samtoolsStatsReport = samtoolsStatsReport.view {"BAM Stats: $it"}
+if (verbose) samtoolsStatsReport = samtoolsStatsReport.view {
+  "SAMTools stats report:\n\
+  File  : [${it.fileName}]"
+}
 
 process RunBamQC {
   tag {idPatient + "-" + idSample}
@@ -546,7 +614,10 @@ process RunBamQC {
     """
 }
 
-if (verbose) bamQCreport = bamQCreport.view {"BAM Stats: $it"}
+if (verbose) bamQCreport = bamQCreport.view {
+  "BamQC report:\n\
+  Dir   : [${it.fileName}]"
+}
 
 // Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
 // The sample tsv config file which is formatted like: "subject status sample lane fastq1 fastq2"
@@ -1252,7 +1323,10 @@ process GenerateMultiQCconfig {
   """
 }
 
-if (verbose) multiQCconfig = multiQCconfig.view {"MultiQC config file: $it"}
+if (verbose) multiQCconfig = multiQCconfig.view {
+  "MultiQC config:\n\
+  File  : [${it.fileName}]"
+}
 
 reportsForMultiQC = Channel.empty()
   .mix(
@@ -1287,7 +1361,11 @@ process RunMultiQC {
   """
 }
 
-if (verbose) multiQCReport = multiQCReport.view {"MultiQC Report: $it"}
+if (verbose) multiQCReport = multiQCReport.view {
+  "MultiQC report:\n\
+  Files : [${it[0].fileName}]\n\
+  Dir   : [${it[1].fileName}]"
+}
 
 /*
 ================================================================================
