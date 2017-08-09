@@ -161,7 +161,11 @@ if (verbose) fastqFiles = fastqFiles.view {
   Files : [${it[4].fileName}, ${it[5].fileName}]"
 }
 
-if (verbose) bamFiles = bamFiles.view {"BAMs to process: $it"}
+if (verbose) bamFiles = bamFiles.view {
+  "BAMs to process:\n\
+  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
+  Files : [${it[3].fileName}, ${it[4].fileName}]"
+}
 
 process RunFastQC {
   tag {idPatient + "-" + idRun}
