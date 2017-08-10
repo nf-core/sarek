@@ -1305,8 +1305,8 @@ process RunVEP {
   """
 }
 
-if (verbose) snpeffReport = snpeffReport.view {
-  "snpEff report:\n\
+if (verbose) vepReport = vepReport.view {
+  "VEP report:\n\
   File  : ${it.fileName}"
 }
 
