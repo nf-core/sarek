@@ -384,7 +384,7 @@ process RealignerTargetCreator {
 if (verbose) intervals = intervals.view {
   "Intervals to phase:\n\
   ID    : ${it[0]}\n\
-  File  : ${it[1].fileName}"
+  File  : [${it[1].fileName}]"
 }
 
 bamsAndIntervals = duplicatesRealign
@@ -400,8 +400,8 @@ bamsAndIntervals = duplicatesRealign
 if (verbose) bamsAndIntervals = bamsAndIntervals.view {
   "BAMs and Intervals phased for IndelRealigner:\n\
   ID    : ${it[0]}\n\
-  File  : ${it[1].fileName}\n\
-  File  : ${it[2].fileName}\n\
+  Files : ${it[1].fileName}\n\
+  Files : ${it[2].fileName}\n\
   File  : [${it[3].fileName}]"
 }
 
@@ -743,7 +743,6 @@ process RunHaplotypecaller {
   """
 }
 hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3])
-if (verbose) hcGenomicVCF = hcGenomicVCF.view {"HaplotypeCaller output: $it"}
 
 if (!gvcf) {hcGenomicVCF.close()}
 
@@ -780,7 +779,6 @@ process RunGenotypeGVCFs {
   """
 }
 hcGenotypedVCF = hcGenotypedVCF.groupTuple(by:[0,1,2,3])
-if (verbose) hcGenotypedVCF = hcGenotypedVCF.view {"GenotypeGVCFs output: $it"}
 
 process RunMutect1 {
   tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + gen_int}
@@ -820,7 +818,6 @@ process RunMutect1 {
 }
 
 mutect1Output = mutect1Output.groupTuple(by:[0,1,2,3])
-if (verbose) mutect1Output = mutect1Output.view {"MuTect1 output: $it"}
 
 process RunMutect2 {
   tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + gen_int}
@@ -859,7 +856,6 @@ process RunMutect2 {
 }
 
 mutect2Output = mutect2Output.groupTuple(by:[0,1,2,3])
-if (verbose) mutect2Output = mutect2Output.view {"MuTect2 output: $it"}
 
 process RunFreeBayes {
   tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + gen_int}
@@ -892,13 +888,17 @@ process RunFreeBayes {
 }
 
 freebayesOutput = freebayesOutput.groupTuple(by:[0,1,2,3])
-if (verbose) freebayesOutput = freebayesOutput.view {"FreeBayes output: $it"}
 
 // we are merging the VCFs that are called separatelly for different intervals
 // so we can have a single sorted VCF containing all the calls for a given caller
 
 vcfsToMerge = hcGenomicVCF.mix(hcGenotypedVCF, mutect1Output, mutect2Output, freebayesOutput)
-if (verbose) vcfsToMerge = vcfsToMerge.view {"VCFs To be merged: $it"}
+if (verbose) vcfsToMerge = vcfsToMerge.view {
+  "VCFs To be merged:\n\
+  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
+  Interv: ${it[4]}\n\
+  Files : ${it[5].fileName}"
+}
 
 process ConcatVCF {
   tag {variantCaller in ['gvcf-hc', 'haplotypecaller'] ? variantCaller + "-" + idSampleNormal : variantCaller + "_" + idSampleTumor + "_vs_" + idSampleNormal}
@@ -969,7 +969,11 @@ process ConcatVCF {
   """
 }
 
-if (verbose) vcfConcatenated = vcfConcatenated.view {"VCF concatenated: $it"}
+if (verbose) vcfConcatenated = vcfConcatenated.view {
+  "Variant Calling output:\n\
+  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
+  File  : ${it[4].fileName}"
+}
 
 process RunStrelka {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
@@ -1014,7 +1018,11 @@ process RunStrelka {
   """
 }
 
-if (verbose) strelkaOutput = strelkaOutput.view {"Strelka output: $it"}
+if (verbose) strelkaOutput = strelkaOutput.view {
+  "Variant Calling output:\n\
+  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
+  Files : ${it[4].fileName}"
+}
 
 process RunManta {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
@@ -1029,7 +1037,7 @@ process RunManta {
     ])
 
   output:
-    set val("manta"), idPatient, idSampleNormal, idSampleTumor, file("Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf"),file("Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf"),file("Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf"),file("Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf") into mantaOutput
+    set val("manta"), idPatient, idSampleNormal, idSampleTumor, file("Manta_${idSampleTumor}_vs_${idSampleNormal}.*.vcf") into mantaOutput
 
   when: 'manta' in tools
 
@@ -1049,7 +1057,11 @@ process RunManta {
   """
 }
 
-if (verbose) mantaOutput = mantaOutput.view {"Manta output: $it"}
+if (verbose) mantaOutput = mantaOutput.view {
+  "Variant Calling output:\n\
+  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
+  Files : ${it[4].fileName}"
+}
 
 // Run commands and code from Malin Larsson
 // Based on Jesper Eisfeldt's code
@@ -1076,8 +1088,6 @@ process RunAlleleCount {
   """
 }
 
-if (verbose) alleleCountOutput = alleleCountOutput.view {"alleleCount output: $it"}
-
 alleleCountNormal = Channel.create()
 alleleCountTumor = Channel.create()
 
@@ -1091,8 +1101,6 @@ alleleCountOutput = alleleCountOutput.map {
   idPatientTumor,  statusTumor,  idSampleTumor,  alleleCountTumor ->
   [idPatientNormal, idSampleNormal, idSampleTumor, alleleCountNormal, alleleCountTumor]
 }
-
-if (verbose) alleleCountOutput = alleleCountOutput.view {"alleleCount output: $it"}
 
 // R script from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
@@ -1127,7 +1135,7 @@ process RunAscat {
     set idPatient, idSampleNormal, idSampleTumor, file(bafNormal), file(logrNormal), file(bafTumor), file(logrTumor) from convertAlleleCountsOutput
 
   output:
-    set val("ascat"), idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.tumour.png"), file("${idSampleTumor}.germline.png"), file("${idSampleTumor}.LogR.PCFed.txt"), file("${idSampleTumor}.BAF.PCFed.txt"), file("${idSampleTumor}.ASPCF.png"), file("${idSampleTumor}.ASCATprofile.png"), file("${idSampleTumor}.aberrationreliability.png"), file("${idSampleTumor}.rawprofile.png"), file("${idSampleTumor}.sunrise.png"), file("${idSampleTumor}.cnvs.txt"),file("${idSampleTumor}.purityploidy.txt") into ascatOutput
+    set val("ascat"), idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.*.{png,txt}") into ascatOutput
 
   when: 'ascat' in tools
 
@@ -1137,7 +1145,11 @@ process RunAscat {
   """
 }
 
-if (verbose) ascatOutput = ascatOutput.view {"Ascat output: $it"}
+if (verbose) ascatOutput = ascatOutput.view {
+  "Variant Calling output:\n\
+  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
+  Files : [${it[4].fileName}]"
+}
 
 vcfToAnnotate = Channel.create()
 vcfNotToAnnotate = Channel.create()
@@ -1200,8 +1212,6 @@ if (step == 'annotate' && annotateVCF == []) {
 
 vcfNotToAnnotate.close()
 
-if (verbose) vcfToAnnotate = vcfToAnnotate.view {"VCF for Annotation: $it"}
-
 (vcfForBCF, vcfForSnpeff, vcfForVep) = vcfToAnnotate.into(3)
 
 process RunBcftoolsStats {
@@ -1221,6 +1231,11 @@ process RunBcftoolsStats {
   """
   bcftools stats $vcf > ${vcf.baseName}.bcf.tools.stats.out
   """
+}
+
+if (verbose) bcfReport = bcfReport.view {
+  "BCFTools stats report:\n\
+  File  : [${it.fileName}]"
 }
 
 process RunSnpeff {
@@ -1252,7 +1267,10 @@ process RunSnpeff {
   """
 }
 
-if (verbose) snpeffReport = snpeffReport.view {"snpEff Reports: $it"}
+if (verbose) snpeffReport = snpeffReport.view {
+  "snpEff report:\n\
+  File  : ${it.fileName}"
+}
 
 process RunVEP {
   tag {vcf}
@@ -1287,7 +1305,10 @@ process RunVEP {
   """
 }
 
-if (verbose) vepReport = vepReport.view {"VEP Reports: $it"}
+if (verbose) snpeffReport = snpeffReport.view {
+  "snpEff report:\n\
+  File  : ${it.fileName}"
+}
 
 process GenerateMultiQCconfig {
   publishDir directoryMap.multiQC, mode: 'copy'
@@ -1366,7 +1387,7 @@ process RunMultiQC {
 
 if (verbose) multiQCReport = multiQCReport.view {
   "MultiQC report:\n\
-  Files : [${it[0].fileName}]\n\
+  File  : [${it[0].fileName}]\n\
   Dir   : [${it[1].fileName}]"
 }
 
