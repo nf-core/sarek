@@ -1281,9 +1281,9 @@ process RunVEP {
     set variantCaller, file(vcf) from vcfForVep
 
   output:
-    set file("${vcf.baseName}_VEP.txt"), file("${vcf.baseName}_VEP.txt_summary.html") into vepReport
+    set file("${vcf.baseName}_VEP.txt"), file("${vcf.baseName}_VEP.txt_summary.txt") into vepReport
 
-  when: 'vep' in tools && variantCaller != 'freebayes' && variantCaller != 'haplotypecaller' && variantCaller != 'mutect1' && variantCaller != 'mutect2' && variantCaller != 'strelka'
+  when: 'vep' in tools
 
   script:
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
@@ -1299,7 +1299,7 @@ process RunVEP {
   variant_effect_predictor.pl \
   -i $vcf \
   -o ${vcf.baseName}_VEP.txt \
-  --cache --dir_cache /sw/data/uppnex/vep/87 \
+  --cache --dir_cache /sw/data/uppnex/vep/89 \
   --assembly $genome \
   -offline
   """
