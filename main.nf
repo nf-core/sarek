@@ -432,7 +432,6 @@ process CreateRecalibrationTable {
   -knownSites $dbsnp \
   $known \
   -nct $task.cpus \
-  -L $intervals \
   -l INFO \
   -o ${idSample}.recal.table
   """
