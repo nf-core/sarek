@@ -104,8 +104,7 @@ if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
 // FreeBayes does not need recalibrated BAMs, but we need to test whether
 // the channels are set up correctly when we disable it
 if (step == "recalibrate") explicitBqsrNeeded = true
-else explicitBqsrNeeded = tools.intersect(['manta', 'mutect1', 'mutect2', 'vardict',
-  'freebayes', 'strelka']).asBoolean()
+else explicitBqsrNeeded = tools.intersect(['manta', 'mutect1', 'mutect2', 'vardict', 'freebayes', 'strelka']).asBoolean()
 
 tsvPath = ''
 if (params.sample) tsvPath = params.sample
