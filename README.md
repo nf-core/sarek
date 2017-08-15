@@ -57,7 +57,8 @@ For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.j
 
 --------------------------------------------------------------------------------
 
-[![](doc/images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](doc/images/NGI_logo.png "NGI")][ngi-link]
+[![](doc/images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
+[![](doc/images/NGI_logo.png "NGI")][ngi-link]
 [![](doc/images/NBIS_logo.png "NBIS")][nbis-link]
 
 [ascat-link]: https://github.com/Crick-CancerGenomics/ascat

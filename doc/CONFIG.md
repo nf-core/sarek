@@ -77,7 +77,8 @@ This is another profile for use on a UPPMAX cluster using the job scheduler slur
 
 --------------------------------------------------------------------------------
 
-[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
+[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
+[![](images/NGI_logo.png "NGI")][ngi-link]
 [![](images/NBIS_logo.png "NBIS")][nbis-link]
 
 [nbis-link]: https://www.nbis.se/
