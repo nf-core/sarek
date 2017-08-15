@@ -116,4 +116,4 @@ If you want to restart a previous run of the pipeline, you may not have a recali
 
 [nbis-link]: https://www.nbis.se/
 [ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: http://www.scilifelab.se/
+[scilifelab-link]: https://www.scilifelab.se/

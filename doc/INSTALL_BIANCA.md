@@ -99,4 +99,4 @@ You can for example keep a `default` version that you are sure is working, an ma
 
 [nbis-link]: https://www.nbis.se/
 [ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: http://www.scilifelab.se/
+[scilifelab-link]: https://www.scilifelab.se/

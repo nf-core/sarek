@@ -135,4 +135,4 @@ nextflow run -latest SciLifeLab/CAW --sample mysample.tsv -resume
 
 [nbis-link]: https://www.nbis.se/
 [ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: http://www.scilifelab.se/
+[scilifelab-link]: https://www.scilifelab.se/

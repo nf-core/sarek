@@ -82,4 +82,4 @@ This is another profile for use on a UPPMAX cluster using the job scheduler slur
 
 [nbis-link]: https://www.nbis.se/
 [ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: http://www.scilifelab.se/
+[scilifelab-link]: https://www.scilifelab.se/

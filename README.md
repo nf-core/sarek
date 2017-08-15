@@ -74,7 +74,7 @@ For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.j
 [nextflow-badge]: https://img.shields.io/badge/nextflow-%E2%89%A50.22.2-brightgreen.svg
 [nextflow-link]: https://www.nextflow.io/
 [ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: http://www.scilifelab.se/
+[scilifelab-link]: https://www.scilifelab.se/
 [scilifelab-stockholm-link]: https://www.scilifelab.se/platforms/ngi/
 [strelka-link]: https://github.com/Illumina/strelka
 [travis-badge]: https://api.travis-ci.org/SciLifeLab/CAW.svg

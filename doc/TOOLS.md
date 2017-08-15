@@ -35,6 +35,6 @@
 [ngi-link]: https://ngisweden.scilifelab.se/
 [picard-link]: https://github.com/broadinstitute/picard
 [samtools-link]: https://github.com/samtools/samtools
-[scilifelab-link]: http://www.scilifelab.se/
+[scilifelab-link]: https://www.scilifelab.se/
 [snpeff-link]: http://snpeff.sourceforge.net/
 [strelka-link]: https://github.com/Illumina/strelka
