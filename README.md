@@ -5,7 +5,7 @@
 [![caw version][version-badge]][version-link] [![Licence][licence-badge]][licence-link] [![nextflow version][nextflow-badge]][nextflow-link] [![Join the chat at https://gitter.im/SciLifeLab/CAW][gitter-badge]][gitter-link] [![Travis status][travis-badge]][travis-link]
 
 
-CAW is a complete open source pipeline to detect somatic variants from WGS data developed at the [National Genomics Infastructure][ngi-link] at [SciLifeLab Stockholm][scilifelab-stockholm-link], Sweden.
+CAW is a complete open source pipeline to detect somatic variants from WGS data developed at the [National Genomics Infastructure][ngi-link] at [SciLifeLab Stockholm][scilifelab-stockholm-link], Sweden and [National Bioinformatics Infastructure Sweden][nbis-link] at [SciLifeLab][scilifelab-link].
 
 The pipeline uses [Nextflow][nextflow-link], a bioinformatics domain specific language for workflow building.
 
