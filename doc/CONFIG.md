@@ -12,31 +12,39 @@ Every configuration file can be modified for your own use. If you want you can s
 
 ### `docker.config`
 
-Contain Docker images for all process. Use in your own profile if needed.
+Contain Docker images for all process. Use in your own profile if needed
 
 ### `genomes.config`
 
-Contain path to all references. Modify it if you want to change genome version, or the path to your references files.
+Contain path to all references. Modify it if you want to change genome version, or the path to your references files
 
 ### `localhost.config`
 
 To be used on a typical localhost on a UPPMAX cluster (16 cpus)
 
+### `singularity-download.config`
+
+To be used when downloading singularity containers, like on a UPPMAX cluster
+
+### `singularity.config`
+
+Contain Singularity images for all process. Use in your own profile if needed
+
 ### `travis.config`
 
-To be used for Travis (2 cpus)
+To be used for Travis (2 cpus) or on small computer for testing purpose
 
-### uppmax-`modules.config`
+### `uppmax-modules.config`
 
-Contains modules for all processes. To be used on a UPPMAX cluster.
+Contains modules for all processes. To be used on a UPPMAX cluster
 
-### uppmax-`slurm.config`
+### `uppmax-slurm.config`
 
-Slurm configuration for a UPPMAX cluster.
+Slurm configuration for a UPPMAX cluster
 
 ### `uppmax.config`
 
-configuration for a UPPMAX cluster.
+configuration for a UPPMAX cluster
 
 ## profiles
 
@@ -52,7 +60,20 @@ This is another profile for use on a UPPMAX cluster using the job scheduler slur
 
 ### `travis`
 
-This is the default profile for Travis CI automated testing
+This is the default profile for Travis CI automated testing, or for testing on a small machine
+
+### `singularityTest`
+
+This is the profile for Singularity testing on a small machine
+
+### `singularityLocal`
+
+This is the profile for use on a localhost on a UPPMAX cluster with Singularity
+
+### `singularitySlurm`
+
+This is another profile for use on a UPPMAX cluster using the job scheduler slurm and Singularity
+
 
 --------------------------------------------------------------------------------
 
