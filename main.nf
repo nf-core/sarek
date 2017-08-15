@@ -1323,7 +1323,7 @@ process GenerateMultiQCconfig {
   annotateString = annotateTools ? "- Annotate on : ${annotateTools.join(", ")}" : ''
   """
   touch multiqc_config.yaml
-  echo "custom_logo: $baseDir/doc/images/CAW-logo.png" >> multiqc_config.yaml
+  echo "custom_logo: $baseDir/doc/images/CAW_logo.png" >> multiqc_config.yaml
   echo "custom_logo_url: http://opensource.scilifelab.se/projects/caw" >> multiqc_config.yaml
   echo "custom_logo_title: 'Cancer Analysis Workflow'" >> multiqc_config.yaml
   echo "report_header_info:" >> multiqc_config.yaml

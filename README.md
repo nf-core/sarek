@@ -1,11 +1,11 @@
-[![](doc/images/CAW-logo.png "CAW")][caw-site-link]
+[![](doc/images/CAW_logo.png "CAW")][caw-site-link]
 
 # Cancer Analysis Workflow
 
 [![caw version][version-badge]][version-link] [![Licence][licence-badge]][licence-link] [![nextflow version][nextflow-badge]][nextflow-link] [![Join the chat at https://gitter.im/SciLifeLab/CAW][gitter-badge]][gitter-link] [![Travis status][travis-badge]][travis-link]
 
 
-CAW is a complete open source pipeline to detect somatic variants from WGS data developed at the [National Genomics Infastructure][ngi-link] at [SciLifeLab Stockholm][scilifelab-stockholm-link], Sweden.
+CAW is a complete open source pipeline to detect somatic variants from WGS data developed at the [National Genomics Infastructure][ngi-link] at [SciLifeLab Stockholm][scilifelab-stockholm-link], Sweden and [National Bioinformatics Infastructure Sweden][nbis-link] at [SciLifeLab][scilifelab-link].
 
 The pipeline uses [Nextflow][nextflow-link], a bioinformatics domain specific language for workflow building.
 
@@ -57,7 +57,9 @@ For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.j
 
 --------------------------------------------------------------------------------
 
-[![](doc/images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](doc/images/NGI-final-small.png "NGI")][ngi-link]
+[![](doc/images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
+[![](doc/images/NGI_logo.png "NGI")][ngi-link]
+[![](doc/images/NBIS_logo.png "NBIS")][nbis-link]
 
 [ascat-link]: https://github.com/Crick-CancerGenomics/ascat
 [caw-site-link]: http://opensource.scilifelab.se/projects/caw/
@@ -69,10 +71,11 @@ For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.j
 [manta-link]: https://github.com/Illumina/manta
 [multiqc-link]: https://github.com/ewels/MultiQC/
 [mutect1-link]: https://github.com/broadinstitute/mutect
+[nbis-link]: https://www.nbis.se/
 [nextflow-badge]: https://img.shields.io/badge/nextflow-%E2%89%A50.22.2-brightgreen.svg
 [nextflow-link]: https://www.nextflow.io/
 [ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: http://www.scilifelab.se/
+[scilifelab-link]: https://www.scilifelab.se/
 [scilifelab-stockholm-link]: https://www.scilifelab.se/platforms/ngi/
 [strelka-link]: https://github.com/Illumina/strelka
 [travis-badge]: https://api.travis-ci.org/SciLifeLab/CAW.svg
