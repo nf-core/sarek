@@ -1,11 +1,11 @@
-[![](doc/images/CAW-logo.png "CAW")][caw-site-link]
+[![](doc/images/CAW_logo.png "CAW")][caw-site-link]
 
 # Cancer Analysis Workflow
 
 [![caw version][version-badge]][version-link] [![Licence][licence-badge]][licence-link] [![nextflow version][nextflow-badge]][nextflow-link] [![Join the chat at https://gitter.im/SciLifeLab/CAW][gitter-badge]][gitter-link] [![Travis status][travis-badge]][travis-link]
 
 
-CAW is a complete open source pipeline to detect somatic variants from WGS data developed at the [National Genomics Infastructure][ngi-link] at [SciLifeLab Stockholm][scilifelab-stockholm-link], Sweden.
+CAW is a complete open source pipeline to detect somatic variants from WGS data developed at the [National Genomics Infastructure][ngi-link] at [SciLifeLab Stockholm][scilifelab-stockholm-link], Sweden and [National Bioinformatics Infastructure Sweden][nbis-link] at [SciLifeLab][scilifelab-link].
 
 The pipeline uses [Nextflow][nextflow-link], a bioinformatics domain specific language for workflow building.
 
@@ -17,7 +17,7 @@ The pipeline can begin the analysis either from raw FASTQ files, only from the r
 
 Besides variant calls, the workflow provides quality controls presented by [MultiQC][multiqc-link].
 
-The [CAW-containers](https://github.com/SciLifeLab/CAW-containers) repository contains Dockerfiles for each process for easier deployment.
+The [CAW-containers](https://github.com/SciLifeLab/CAW-containers) repository contains building rules for containers for all CAW processes.
 
 This pipeline is listed on [Elixir - Tools and Data Services Registry](https://bio.tools/tool/CAW/version/none).
 
@@ -27,19 +27,18 @@ The CAW pipeline comes with documentation about the pipeline, found in the `doc/
 
 01. [Installation documentation on Milou](doc/INSTALL_MILOU.md)
 02. [Installation documentation on Bianca](doc/INSTALL_BIANCA.md)
-03. [Installation documentation using Docker](doc/INSTALL_DOCKER.md)
-04. [Installation documentation using Singularity](doc/INSTALL_SINGULARITY.md)
-05. [Reference files documentation](doc/REFERENCES.md)
-06. [Configuration and profiles documentation](doc/CONFIG.md)
-07. [Intervals documentation](doc/INTERVALS.md)
-08. [Running the pipeline](doc/USAGE.md)
-09. [Running the pipeline with Singularity on Bianca documentation](doc/USE_SINGULARITY_BIANCA.md)
-10. [Examples](doc/USE_CASES.md)
-11. [TSV file documentation](doc/TSV.md)
-12. [Processes documentation](doc/PROCESS.md)
-13. [Tools and dependencies](doc/TOOLS.md)
-14. [More information about ASCAT](doc/ASCAT.md)
-15. [Folder structure](doc/FOLDER.md)
+03. [Installation documentation using Containers](doc/INSTALL_CONTAINERS.md)
+04. [Reference files documentation](doc/REFERENCES.md)
+05. [Configuration and profiles documentation](doc/CONFIG.md)
+06. [Intervals documentation](doc/INTERVALS.md)
+07. [Running the pipeline](doc/USAGE.md)
+08. [Running the pipeline with Singularity on Bianca documentation](doc/USE_SINGULARITY_BIANCA.md)
+09. [Examples](doc/USE_CASES.md)
+10. [TSV file documentation](doc/TSV.md)
+11. [Processes documentation](doc/PROCESS.md)
+12. [Tools and dependencies](doc/TOOLS.md)
+13. [More information about ASCAT](doc/ASCAT.md)
+14. [Folder structure](doc/FOLDER.md)
 
 For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.juhos@scilifelab.se or join the gitter chat: [gitter.im/SciLifeLab/CAW][gitter-link].
 
@@ -58,7 +57,9 @@ For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.j
 
 --------------------------------------------------------------------------------
 
-[![](doc/images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](doc/images/NGI-final-small.png "NGI")][ngi-link]
+[![](doc/images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
+[![](doc/images/NGI_logo.png "NGI")][ngi-link]
+[![](doc/images/NBIS_logo.png "NBIS")][nbis-link]
 
 [ascat-link]: https://github.com/Crick-CancerGenomics/ascat
 [caw-site-link]: http://opensource.scilifelab.se/projects/caw/
@@ -70,10 +71,11 @@ For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.j
 [manta-link]: https://github.com/Illumina/manta
 [multiqc-link]: https://github.com/ewels/MultiQC/
 [mutect1-link]: https://github.com/broadinstitute/mutect
+[nbis-link]: https://www.nbis.se/
 [nextflow-badge]: https://img.shields.io/badge/nextflow-%E2%89%A50.22.2-brightgreen.svg
 [nextflow-link]: https://www.nextflow.io/
 [ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: http://www.scilifelab.se/
+[scilifelab-link]: https://www.scilifelab.se/
 [scilifelab-stockholm-link]: https://www.scilifelab.se/platforms/ngi/
 [strelka-link]: https://github.com/Illumina/strelka
 [travis-badge]: https://api.travis-ci.org/SciLifeLab/CAW.svg

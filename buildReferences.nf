@@ -113,7 +113,7 @@ process ProcessReference {
   """
 }
 
-if (verbose) processedFiles = processedFiles.view {"Files preprocessed  : $it"}
+if (verbose) processedFiles = processedFiles.view {"Files preprocessed  : $it.fileName"}
 
 compressedfiles = Channel.create()
 notCompressedfiles = Channel.create()
@@ -142,7 +142,7 @@ process DecompressFile {
     """
 }
 
-if (verbose) decompressedFiles = decompressedFiles.view {"Files decomprecessed: $it"}
+if (verbose) decompressedFiles = decompressedFiles.view {"Files decomprecessed: $it.fileName"}
 
 fastaFile = Channel.create()
 otherFiles = Channel.create()
@@ -182,8 +182,8 @@ process BuildBWAindexes {
   """
 }
 
-if (verbose) fastaFileToKeep.view {"Fasta File          : $it"}
-if (verbose) bwaIndexes.flatten().view {"BWA index           : $it"}
+if (verbose) fastaFileToKeep.view {"Fasta File          : $it.fileName"}
+if (verbose) bwaIndexes.flatten().view {"BWA index           : $it.fileName"}
 
 process BuildPicardIndex {
   tag {reference}
@@ -206,7 +206,7 @@ process BuildPicardIndex {
   """
 }
 
-if (verbose) picardIndex.view {"Picard index        : $it"}
+if (verbose) picardIndex.view {"Picard index        : $it.fileName"}
 
 process BuildSAMToolsIndex {
   tag {reference}
@@ -225,7 +225,7 @@ process BuildSAMToolsIndex {
   """
 }
 
-if (verbose) samtoolsIndex.view {"SAMTools index      : $it"}
+if (verbose) samtoolsIndex.view {"SAMTools index      : $it.fileName"}
 
 process BuildVCFIndex {
   tag {reference}
@@ -245,8 +245,8 @@ process BuildVCFIndex {
   """
 }
 
-if (verbose) vcfIndexed.view {"VCF indexed         : $it"}
-if (verbose) vcfIndex.view {"VCF index           : $it"}
+if (verbose) vcfIndexed.view {"VCF indexed         : $it.fileName"}
+if (verbose) vcfIndex.view {"VCF index           : $it.fileName"}
 
 /*
 ================================================================================
