@@ -612,7 +612,7 @@ process RunBamQC {
 
     script:
     """
-    qualimap bamqc -bam $bam -outdir $idSample -outformat HTML
+    qualimap --java-mem-size=${task.memory.toGiga()}G bamqc -bam $bam -outdir $idSample -outformat HTML
     """
 }
 
