@@ -1280,7 +1280,7 @@ process RunVEP {
     set variantCaller, file(vcf) from vcfForVep
 
   output:
-    set file("${vcf.baseName}_VEP.txt"), file("${vcf.baseName}_VEP.txt_summary.txt") into vepReport
+    set file("${vcf.baseName}"), file("${vcf.baseName}_summary.txt") into vepReport
 
   when: 'vep' in tools
 
@@ -1290,14 +1290,16 @@ process RunVEP {
   """
   vep \
   -i $vcf \
-  -o ${vcf.baseName}_VEP.txt \
+  --vcf \
+  -o ${vcf.baseName} \
   -offline
   """
   else
   """
   variant_effect_predictor.pl \
   -i $vcf \
-  -o ${vcf.baseName}_VEP.txt \
+  --vcf \
+  -o ${vcf.baseName} \
   --cache --dir_cache /sw/data/uppnex/vep/89 \
   --assembly $genome \
   -offline
