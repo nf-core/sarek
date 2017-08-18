@@ -26,3 +26,4 @@ docker rmi -f maxulysse/concatvcf:1.1 maxulysse/freebayes:1.1 maxulysse/gatk:1.1
 nf_test . --step skipPreprocessing --tools MuTect2,snpEff,VEP --noReports
 nf_test . --step annotate --tools snpEff,VEP --annotateTools MuTect2
 nf_test . --step annotate --tools snpEff,VEP --annotateVCF VariantCalling/MuTect2/mutect2_9876T_vs_1234N.vcf.gz,VariantCalling/MuTect2/mutect2_9877R_vs_1234N.vcf.gz --noReports
+nf_test . --step annotate --tools snpEff,VEP --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf --noReports
