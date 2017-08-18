@@ -25,4 +25,4 @@ nf_test . --step skipPreprocessing --tools Strelka --noReports
 docker rmi -f maxulysse/concatvcf:1.1 maxulysse/freebayes:1.1 maxulysse/gatk:1.1 maxulysse/mutect1:1.1 maxulysse/samtools:1.1 maxulysse/strelka:1.1
 nf_test . --step skipPreprocessing --tools MuTect2,snpEff,VEP --noReports
 nf_test . --step annotate --tools snpEff,VEP --annotateTools Strelka
-nf_test . --step annotate --tools snpEff,VEP --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf --noReports
+nf_test . --step annotate --tools snpEff --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf --noReports
