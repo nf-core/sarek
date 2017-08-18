@@ -1036,7 +1036,7 @@ process RunManta {
     ])
 
   output:
-    set val("manta"), idPatient, idSampleNormal, idSampleTumor, file("Manta_${idSampleTumor}_vs_${idSampleNormal}.*.vcf") into mantaOutput
+    set val("manta"), idPatient, idSampleNormal, idSampleTumor, file("Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf"), file("Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf"), file("Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf"), file("Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf") into mantaOutput
 
   when: 'manta' in tools
 
@@ -1059,7 +1059,7 @@ process RunManta {
 if (verbose) mantaOutput = mantaOutput.view {
   "Variant Calling output:\n\
   Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  Files : ${it[4].fileName}"
+  Files : [${it[4].fileName}, ${it[5].fileName}, ${it[6].fileName}, ${it[7].fileName}]"
 }
 
 // Run commands and code from Malin Larsson

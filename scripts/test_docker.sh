@@ -10,9 +10,10 @@ nf_test buildReferences.nf --download
 
 # Clean up docker images
 docker rmi -f maxulysse/igvtools:1.1
+nf_test . --step preprocessing --sample data/tsv/tiny-manta.tsv --tools Manta
 nf_test . --test --step preprocessing
 # Clean up docker images
-docker rmi -f maxulysse/fastqc:1.1 maxulysse/mapreads:1.1 maxulysse/picard:1.1
+docker rmi -f maxulysse/fastqc:1.1 maxulysse/mapreads:1.1 maxulysse/picard:1.1 maxulysse/runmanta:1.1
 nf_test . --step realign --noReports
 nf_test . --step realign --tools HaplotypeCaller
 nf_test . --step realign --tools HaplotypeCaller --noReports --noGVCF
