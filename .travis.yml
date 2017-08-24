@@ -8,8 +8,10 @@ services:
   - docker
 
 env:
-  - NXF_VER=0.25.6 SGT_VER=2.3.1 PROFILE=travis
-  - NXF_VER=0.25.6 SGT_VER=2.3.1 PROFILE=singularityTest
+  - NXF_VER=0.25.6 SGT_VER=2.3.1 PROFILE=travis TEST=MAPPING
+  - NXF_VER=0.25.6 SGT_VER=2.3.1 PROFILE=singularityTest TEST=MAPPING
+  - NXF_VER=0.25.6 SGT_VER=2.3.1 PROFILE=travis TEST=VARIANTCALLING
+  - NXF_VER=0.25.6 SGT_VER=2.3.1 PROFILE=singularityTest TEST=VARIANTCALLING
 
 install:
   - curl -fsSL get.nextflow.io | bash
@@ -25,5 +27,4 @@ install:
   - rm -rf singularity-$SGT_VER*
 
 script:
-  - "./scripts/test_MRR.sh $PROFILE" # Test Mapping + Realign + Recalibrate
-  - "./scripts/test_VA.sh $PROFILE"  # Test Variant Calling + Annotation
+  - "./scripts/test.sh $PROFILE $TEST"
