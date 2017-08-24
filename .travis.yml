@@ -8,8 +8,8 @@ services:
   - docker
 
 env:
-  - NXF_VER=0.25.6 SGT_VER=2.3.1 PROFILE=docker
-  - NXF_VER=0.25.6 SGT_VER=2.3.1 PROFILE=singularity
+  - NXF_VER=0.25.6 SGT_VER=2.3.1 PROFILE=travis
+  - NXF_VER=0.25.6 SGT_VER=2.3.1 PROFILE=singularityTest
 
 install:
   - curl -fsSL get.nextflow.io | bash

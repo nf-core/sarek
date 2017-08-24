@@ -10,7 +10,7 @@ function nf_test() {
 nf_test buildReferences.nf --download
 
 # Clean up images
-if [ $PROFILE = docker ]
+if [ $PROFILE = travis ]
 then
   docker rmi -f maxulysse/igvtools:1.1
 else
@@ -21,7 +21,7 @@ nf_test . --step preprocessing --sample data/tsv/tiny-manta.tsv --tools Manta
 nf_test . --test --step preprocessing
 
 # Clean up images
-if [ $PROFILE = docker ]
+if [ $PROFILE = travis ]
 then
   docker rmi -f maxulysse/fastqc:1.1 maxulysse/mapreads:1.1 maxulysse/picard:1.1 maxulysse/runmanta:1.1
 else
@@ -37,7 +37,7 @@ nf_test . --step recalibrate --tools FreeBayes,HaplotypeCaller,MuTect1,MuTect2,S
 nf_test . --step skipPreprocessing --tools Strelka --noReports
 
 # Clean up images
-if [ $PROFILE = docker ]
+if [ $PROFILE = travis ]
 then
   docker rmi -f maxulysse/concatvcf:1.1 maxulysse/freebayes:1.1 maxulysse/gatk:1.0 maxulysse/gatk:1.1 maxulysse/mutect1:1.1 maxulysse/samtools:1.1 maxulysse/strelka:1.1
 else
