@@ -25,4 +25,5 @@ install:
   - rm -rf singularity-$SGT_VER*
 
 script:
-  - "./scripts/test.sh $PROFILE"
+  - "./scripts/test_MRR.sh $PROFILE" # Test Mapping + Realign + Recalibrate
+  - "./scripts/test_VA.sh $PROFILE"  # Test Variant Calling + Annotation
