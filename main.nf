@@ -1280,7 +1280,7 @@ process RunVEP {
     set variantCaller, file(vcf) from vcfForVep
 
   output:
-    set file("${vcf.baseName}"), file("${vcf.baseName}_summary.txt") into vepReport
+    set file("${vcf.baseName}"), file("${vcf.baseName}_summary*") into vepReport
 
   when: 'vep' in tools
 
@@ -1308,7 +1308,7 @@ process RunVEP {
 
 if (verbose) vepReport = vepReport.view {
   "VEP report:\n\
-  File  : ${it.fileName}"
+  Files : ${it.fileName}"
 }
 
 process GenerateMultiQCconfig {
