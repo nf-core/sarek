@@ -48,9 +48,9 @@ then
   #remove images
   if [ $PROFILE = travis ]
   then
-    docker rmi -f maxulysse/concatvcf:1.1 maxulysse/fastqc:1.1 maxulysse/gatk:1.0 maxulysse/gatk:1.1 maxulysse/mapreads:1.1 maxulysse/mutect1:1.1 maxulysse/picard:1.1 maxulysse/runmanta:1.1 maxulysse/samtools:1.1 maxulysse/strelka:1.1
+    docker rmi -f maxulysse/concatvcf:1.1 maxulysse/fastqc:1.1 maxulysse/gatk:1.0 maxulysse/gatk:1.1 maxulysse/mapreads:1.1 maxulysse/picard:1.1 maxulysse/runmanta:1.1 maxulysse/samtools:1.1 maxulysse/strelka:1.1
   else
-    rm -rf work/singularity/concatvcf-1.1.img work/singularity/fastqc-1.1.img work/singularity/gatk-1.0.img work/singularity/gatk-1.1.img work/singularity/mapreads-1.1.img work/singularity/mutect1-1.1.img work/singularity/picard-1.1.img work/singularity/runmanta-1.1.img work/singularity/samtools-1.1.img work/singularity/strelka-1.1.img
+    rm -rf work/singularity/concatvcf-1.1.img work/singularity/fastqc-1.1.img work/singularity/gatk-1.0.img work/singularity/gatk-1.1.img work/singularity/mapreads-1.1.img work/singularity/picard-1.1.img work/singularity/runmanta-1.1.img work/singularity/samtools-1.1.img work/singularity/strelka-1.1.img
   fi
 
   nf_test . --step annotate --tools snpEff,VEP --annotateTools Strelka
