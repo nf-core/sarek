@@ -1,7 +1,7 @@
 #!/bin/bash
 set -xeuo pipefail
-PROFILE=$1
-TEST=$2
+PROFILE=${1:-singularity}
+TEST=${2:-ALL}
 
 function nf_test() {
   echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE -resume --verbose$(tput sgr0)"
@@ -18,12 +18,12 @@ else
   rm -rf work/singularity/igvtools-1.1.img
 fi
 
-if [ $TEST = MAPPING ]
+if [ $TEST = MAPPING ] || [ $TEST = ALL ]
 then
   nf_test . --test --step preprocessing
 fi
 
-if [ $TEST = REALIGN ]
+if [ $TEST = REALIGN ] || [ $TEST = ALL ]
 then
   nf_test . --test --step preprocessing
   nf_test . --step realign --noReports
@@ -31,7 +31,7 @@ then
   nf_test . --step realign --tools HaplotypeCaller --noReports --noGVCF
 fi
 
-if [ $TEST = RECALIBRATE ]
+if [ $TEST = RECALIBRATE ] || [ $TEST = ALL ]
 then
   nf_test . --test --step preprocessing
   nf_test . --step recalibrate --noReports
@@ -40,7 +40,7 @@ then
   nf_test . --step skipPreprocessing --tools Strelka --noReports
 fi
 
-if [ $TEST = ANNOTATE ]
+if [ $TEST = ANNOTATE ] || [ $TEST = ALL ]
 then
   nf_test . --step preprocessing --sample data/tsv/tiny-manta.tsv --tools Manta
   nf_test . --test --step preprocessing --tools MuTect2,Strelka
