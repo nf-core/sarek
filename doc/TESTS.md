@@ -3,10 +3,11 @@
 One script is available for testing purpose:
 - (`scripts/test.sh`)[../scripts/test.sh]
 
-Two optional positional arguments are supported:
-1. PROFILE - should be `travis` or `singularityTest` (default)
-To respectively test using Docker or Singularity containers.
-2. TEST - to choose between:
+Two optional arguments are supported:
+- `-p` || `--profile`:
+  - `travis` test using Docker containers
+  - `singularityTest` (default) test using Singularity containers
+- `-t` || `--test`::
  - `MAPPING`: will try preprocessing
  - `REALIGN`: will try realignment
  - `RECALIBRATE`: will try recalibration
@@ -16,9 +17,9 @@ To respectively test using Docker or Singularity containers.
 ## Usage
 
 ```bash
-./scripts/test.sh                         # will try all tests using Singularity
-./scripts/test.sh travis                  # will try all tests using Docker
-./scripts/test.sh singularityTest MAPPING # will try MAPPING tests using Singularity
+./scripts/test.sh            # will try all tests using Singularity
+./scripts/test.sh -p travis  # will try all tests using Docker
+./scripts/test.sh -t MAPPING # will try MAPPING tests using Singularity
 ```
 
 --------------------------------------------------------------------------------

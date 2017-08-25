@@ -1,7 +1,26 @@
 #!/bin/bash
 set -xeuo pipefail
-PROFILE=${1:-singularityTest}
-TEST=${2:-ALL}
+
+PROFILE="singularityTest"
+TEST="ALL"
+
+while [[ $# -gt 1 ]]
+do
+    key="$1"
+    case $key in
+        -p|--profile)
+        PROFILE="$2"
+        shift
+        ;;
+        -t|--test)
+        TEST="$2"
+        shift
+        ;;
+        *) # unknown option
+        ;;
+    esac
+    shift
+done
 
 function nf_test() {
   echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE -resume --verbose$(tput sgr0)"
