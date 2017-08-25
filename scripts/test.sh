@@ -43,7 +43,7 @@ fi
 if [ $TEST = ANNOTATE ] || [ $TEST = ALL ]
 then
   nf_test . --step preprocessing --sample data/tsv/tiny-manta.tsv --tools Manta
-  nf_test . --test --step preprocessing --tools MuTect2,Strelka
+  nf_test . --test --step preprocessing --tools FreeBayes,HaplotypeCaller,MuTect1,MuTect2,Strelka
 
   #remove images
   if [ $PROFILE = travis ]
