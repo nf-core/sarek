@@ -1,7 +1,7 @@
 # Tests
 
 One script is available for testing purpose:
-- (`scripts/test.sh`)[../scripts/test.sh]
+- [`scripts/test.sh`](../scripts/test.sh)
 
 Two optional arguments are supported:
 - `-p` || `--profile`:
