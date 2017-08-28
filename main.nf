@@ -936,8 +936,8 @@ process ConcatVCF {
   awk '!/GATKCommandLine/{print}/GATKCommandLine/{for(i=1;i<=NF;i++){if(\$i!~/intervals=/ && \$i !~ /out=/){printf("%s ",\$i)}}printf("\\n")}' \
   > header
 
-  # Get list of contigs from VCF header
-  CONTIGS=(\$(sed -rn '/^[^#]/q;/^##contig=/{s/##contig=<ID=(.*),length=[0-9]+(,[^>]*)?>/\\1/;s/\\*/\\\\*/g;p}' \$FIRSTVCF))
+  # get contigs from the genome FASTA file (some variant callers are not saving contigs :S)
+  CONTIGS=($(awk '/>/{print $1}' ${genomeFile}|sed 's/>//'))
 
   # concatenate VCFs in the correct order
   (
