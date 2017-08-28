@@ -1290,18 +1290,32 @@ process RunVEP {
   """
   vep \
   -i $vcf \
-  --vcf \
+  --sift b \
+  --polyphen b \
+  --symbol \
+  --numbers \
+  --biotype \
+  --total_length \
   -o ${vcf.baseName} \
-  -offline
+  --vcf \
+  -offline \
+  --fields Consequence,Codons,Amino_acids,Gene,SYMBOL,Feature,EXON,PolyPhen,SIFT,Protein_position,BIOTYPE
   """
   else
   """
   variant_effect_predictor.pl \
   -i $vcf \
   --vcf \
+  --sift b \
+  --polyphen b \
+  --symbol \
+  --numbers \
+  --biotype \
+  --total_length \
   -o ${vcf.baseName} \
   --cache --dir_cache /sw/data/uppnex/vep/89 \
   --assembly $genome \
+  --fields Consequence,Codons,Amino_acids,Gene,SYMBOL,Feature,EXON,PolyPhen,SIFT,Protein_position,BIOTYPE \
   -offline
   """
 }
