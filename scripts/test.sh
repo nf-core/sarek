@@ -1,6 +1,4 @@
 #!/bin/bash
-set -xeuo pipefail
-
 INSTALL=false
 PROFILE="singularityTest"
 TEST="ALL"
