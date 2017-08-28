@@ -33,7 +33,7 @@ do
 done
 
 # Install Singularity
-if [[ "$PROFILE" == singularityTest ]] && [[ "$INSTALL" == true ]] && [[ "$TRAVIS" == true ]]
+if [[ "$PROFILE" == singularityTest ]] && [[ "$INSTALL" == true ]]
 then
   ./scripts/install.sh -t singularity
 fi
