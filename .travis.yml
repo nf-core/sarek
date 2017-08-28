@@ -17,18 +17,8 @@ env:
   - NXF_VER=0.25.6 SGT_VER=2.3.1 PROFILE=singularityTest TEST=MAPPING
   - NXF_VER=0.25.6 SGT_VER=2.3.1 PROFILE=travis TEST=MAPPING
 
-install:
-  - curl -fsSL get.nextflow.io | bash
-  - chmod +x nextflow
-  - sudo mv nextflow /usr/local/bin/
-  - wget https://github.com/singularityware/singularity/releases/download/$SGT_VER/singularity-$SGT_VER.tar.gz
-  - tar xvf singularity-$SGT_VER.tar.gz
-  - cd singularity-$SGT_VER
-  - ./configure --prefix=/usr/local
-  - make
-  - sudo make install
-  - cd ..
-  - rm -rf singularity-$SGT_VER*
+install: # Install Nextflow
+  - "./scripts/install.sh -t nextflow"
 
 script:
   - "./scripts/test.sh -p $PROFILE -t $TEST"

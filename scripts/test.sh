@@ -22,6 +22,13 @@ do
     shift
 done
 
+# Install Singularity
+if [ $PROFILE = singularityTest ]
+then
+  ./scripts/install.sh -t singularity
+fi
+
+
 function nf_test() {
   echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE -resume --verbose$(tput sgr0)"
   nextflow run "$@" -profile $PROFILE -resume --verbose
