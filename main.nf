@@ -937,7 +937,7 @@ process ConcatVCF {
   > header
 
   # get contigs from the genome FASTA file (some variant callers are not saving contigs :S)
-  CONTIGS=($(awk '/>/{print $1}' ${genomeFile}|sed 's/>//'))
+  CONTIGS=(\$(awk '/>/{print \$1}' ${genomeFile}|sed 's/>//'))
 
   # concatenate VCFs in the correct order
   (
