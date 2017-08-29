@@ -937,7 +937,11 @@ process ConcatVCF {
   > header
 
   # get contigs from the genome FASTA file (some variant callers are not saving contigs :S)
-  CONTIGS=(\$(awk '/>/{print \$1}' ${genomeFile}|sed 's/>//'))
+  # CONTIGS=(\$(awk '/>/{print \$1}' ${genomeFile}|sed 's/>//'))
+  # for the time being I backout to the original one
+  # Get list of contigs from VCF header
+  # TODO fixit for FreeBayes - sometimes there are no contigs
+  CONTIGS=(\$(sed -rn '/^[^#]/q;/^##contig=/{s/##contig=<ID=(.*),length=[0-9]+(,[^>]*)?>/\\1/;s/\\*/\\\\*/g;p}' \$FIRSTVCF))
 
   # concatenate VCFs in the correct order
   (
