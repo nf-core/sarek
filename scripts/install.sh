@@ -16,7 +16,7 @@ do
 done
 
 # Install Nextflow
-if [ $TOOL = nextflow ] || [ $TOOL = all ]
+if [[ "$TOOL" = nextflow ]] || [[ "$TOOL" = all ]]
 then
   curl -fsSL get.nextflow.io | bash
   chmod +x nextflow
@@ -24,7 +24,7 @@ then
 fi
 
 # Install Singularity
-if [ $TOOL = singularity ] || [ $TOOL = all ]
+if [[ "$TOOL" = singularity ]] || [[ "$TOOL" = all ]]
 then
   wget https://github.com/singularityware/singularity/releases/download/$SGT_VER/singularity-$SGT_VER.tar.gz
   tar xvf singularity-$SGT_VER.tar.gz

@@ -12,11 +12,9 @@ do
   case $key in
     -c|--travisci)
     TRAVIS=true
-    shift
     ;;
     -i|--install)
     INSTALL=true
-    shift
     ;;
     -p|--profile)
     PROFILE="$2"
