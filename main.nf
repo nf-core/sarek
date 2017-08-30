@@ -1280,7 +1280,7 @@ process RunVEP {
     set variantCaller, file(vcf) from vcfForVep
 
   output:
-    set file("${vcf.baseName}.ann.vcf"), file("${vcf.baseName}_summary*") into vepReport
+    set file("${vcf.baseName}.ann.vcf"), file("${vcf.baseName}*summary*") into vepReport
 
   when: 'vep' in tools
 
