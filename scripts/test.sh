@@ -74,7 +74,7 @@ then
   nf_test . --step skipPreprocessing --tools Strelka --noReports
 fi
 
-if [[ "$TEST" = "ANNOTATE" ]] || [[ "$TEST" = "ALL" ]]
+if [[ "$TEST" = "ANNOTATEVEP" ]] || [[ "$TEST" = "ALL" ]]
 then
   nf_test . --step preprocessing --sample data/tsv/tiny-manta.tsv --tools Manta
   nf_test . --test --step preprocessing --tools MuTect2,Strelka
@@ -87,6 +87,23 @@ then
   then
     rm -rf work/singularity/concatvcf-1.1.img work/singularity/fastqc-1.1.img work/singularity/gatk-1.0.img work/singularity/gatk-1.1.img work/singularity/mapreads-1.1.img work/singularity/picard-1.1.img work/singularity/runmanta-1.1.img work/singularity/samtools-1.1.img work/singularity/strelka-1.1.img
   fi
-  nf_test . --step annotate --tools snpEff,VEP --annotateTools Strelka
+  nf_test . --step annotate --tools VEP --annotateTools Strelka
+  nf_test . --step annotate --tools VEP --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf --noReports
+fi
+
+if [[ "$TEST" = "ANNOTATESNPEFF" ]] || [[ "$TEST" = "ALL" ]]
+then
+  nf_test . --step preprocessing --sample data/tsv/tiny-manta.tsv --tools Manta
+  nf_test . --test --step preprocessing --tools MuTect2,Strelka
+
+  #remove images
+  if [[ "$PROFILE" == "travis" ]] && [[ "$TRAVIS" == true ]]
+  then
+    docker rmi -f maxulysse/concatvcf:1.1 maxulysse/fastqc:1.1 maxulysse/gatk:1.0 maxulysse/gatk:1.1 maxulysse/mapreads:1.1 maxulysse/picard:1.1 maxulysse/runmanta:1.1 maxulysse/samtools:1.1 maxulysse/strelka:1.1
+  elif [[ "$PROFILE" == "singularityTest" ]] && [[ "$TRAVIS" == true ]]
+  then
+    rm -rf work/singularity/concatvcf-1.1.img work/singularity/fastqc-1.1.img work/singularity/gatk-1.0.img work/singularity/gatk-1.1.img work/singularity/mapreads-1.1.img work/singularity/picard-1.1.img work/singularity/runmanta-1.1.img work/singularity/samtools-1.1.img work/singularity/strelka-1.1.img
+  fi
+  nf_test . --step annotate --tools snpEff --annotateTools Strelka
   nf_test . --step annotate --tools snpEff --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf --noReports
 fi
