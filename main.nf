@@ -1177,7 +1177,7 @@ if (step == 'annotate' && annotateVCF == []) {
   annotateVCF.each{ list += ",$it" }
   list = list.substring(1)
 
-  vcfToAnnotate = Channel.fromPath("${list}")
+  vcfToAnnotate = Channel.fromPath("{$list}")
     .map{vcf -> ['userspecified',vcf]}
 
 } else if (step != 'annotate') {
