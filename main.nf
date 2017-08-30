@@ -1167,7 +1167,7 @@ if (step == 'annotate' && annotateVCF == []) {
     Channel.fromPath('VariantCalling/MuTect2/*.vcf.gz')
       .flatten().unique()
       .map{vcf -> ['mutect2',vcf]},
-    Channel.fromPath('VariantCalling/Strelka/*passed_somatic*.vcf.gz')
+    Channel.fromPath('VariantCalling/Strelka/*passed_somatic*.vcf')
       .flatten().unique()
       .map{vcf -> ['strelka',vcf]}
   ).choice(vcfToAnnotate, vcfNotToAnnotate) { annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1 }
