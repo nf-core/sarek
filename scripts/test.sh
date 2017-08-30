@@ -79,6 +79,7 @@ then
   fi
   nf_test . --step annotate --tools VEP --annotateTools Strelka
   nf_test . --step annotate --tools VEP --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf --noReports
+  nf_test . --step annotate --tools VEP --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf --noReports
 fi
 
 if [[ "$TEST" = "ANNOTATESNPEFF" ]] || [[ "$TEST" = "ALL" ]]
@@ -96,4 +97,5 @@ then
   fi
   nf_test . --step annotate --tools snpEff --annotateTools Strelka
   nf_test . --step annotate --tools snpEff --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf --noReports
+  nf_test . --step annotate --tools snpEff --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf --noReports
 fi
