@@ -936,7 +936,11 @@ process ConcatVCF {
   awk '!/GATKCommandLine/{print}/GATKCommandLine/{for(i=1;i<=NF;i++){if(\$i!~/intervals=/ && \$i !~ /out=/){printf("%s ",\$i)}}printf("\\n")}' \
   > header
 
+  # get contigs from the genome FASTA file (some variant callers are not saving contigs :S)
+  # CONTIGS=(\$(awk '/>/{print \$1}' ${genomeFile}|sed 's/>//'))
+  # for the time being I backout to the original one
   # Get list of contigs from VCF header
+  # TODO fixit for FreeBayes - sometimes there are no contigs
   CONTIGS=(\$(sed -rn '/^[^#]/q;/^##contig=/{s/##contig=<ID=(.*),length=[0-9]+(,[^>]*)?>/\\1/;s/\\*/\\\\*/g;p}' \$FIRSTVCF))
 
   # concatenate VCFs in the correct order
@@ -1306,16 +1310,16 @@ process RunVEP {
   else
   """
   variant_effect_predictor.pl \
- -i $vcf \
- --vcf \
- --format vcf \
- --sift b \
- --polyphen b \
- --symbol \
- --numbers \
- --biotype \
- --total_length \
- -o ${vcf.baseName}.ann.vcf \
+  -i $vcf \
+  --vcf \
+  --format vcf \
+  --sift b \
+  --polyphen b \
+  --symbol \
+  --numbers \
+  --biotype \
+  --total_length \
+  -o ${vcf.baseName}.ann.vcf \
   --cache --dir_cache /sw/data/uppnex/vep/89 \
   --assembly $genome \
   --fields Consequence,Codons,Amino_acids,Gene,SYMBOL,Feature,EXON,PolyPhen,SIFT,Protein_position,BIOTYPE \
