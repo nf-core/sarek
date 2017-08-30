@@ -1,7 +1,6 @@
 #!/bin/bash
 set -xeuo pipefail
 
-INSTALL=false
 PROFILE="singularityTest"
 TEST="ALL"
 TRAVIS=false
@@ -12,9 +11,6 @@ do
   case $key in
     -c|--travisci)
     TRAVIS=true
-    ;;
-    -i|--install)
-    INSTALL=true
     ;;
     -p|--profile)
     PROFILE="$2"
@@ -29,12 +25,6 @@ do
   esac
   shift
 done
-
-# Install Singularity
-if [[ "$PROFILE" == singularityTest ]] && [[ "$INSTALL" == true ]]
-then
-  ./scripts/install.sh -t singularity
-fi
 
 function nf_test() {
   echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE -resume --verbose$(tput sgr0)"
