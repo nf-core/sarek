@@ -1167,7 +1167,7 @@ if (step == 'annotate' && annotateVCF == []) {
     Channel.fromPath('VariantCalling/MuTect2/*.vcf.gz')
       .flatten().unique()
       .map{vcf -> ['mutect2',vcf]},
-    Channel.fromPath('VariantCalling/Strelka/*passed_somatic*.vcf.gz')
+    Channel.fromPath('VariantCalling/Strelka/*passed_somatic*.vcf')
       .flatten().unique()
       .map{vcf -> ['strelka',vcf]}
   ).choice(vcfToAnnotate, vcfNotToAnnotate) { annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1 }
@@ -1176,8 +1176,9 @@ if (step == 'annotate' && annotateVCF == []) {
   list = ""
   annotateVCF.each{ list += ",$it" }
   list = list.substring(1)
-
-  vcfToAnnotate = Channel.fromPath("{$list}")
+  if (StringUtils.countMatches("$list", ",") == 0) vcfToAnnotate = Channel.fromPath("$list")
+    .map{vcf -> ['userspecified',vcf]}
+  else vcfToAnnotate = Channel.fromPath("{$list}")
     .map{vcf -> ['userspecified',vcf]}
 
 } else if (step != 'annotate') {
@@ -1280,7 +1281,7 @@ process RunVEP {
     set variantCaller, file(vcf) from vcfForVep
 
   output:
-    set file("${vcf.baseName}"), file("${vcf.baseName}_summary*") into vepReport
+    set file("${vcf.baseName}.ann.vcf"), file("${vcf.baseName}*summary*") into vepReport
 
   when: 'vep' in tools
 
@@ -1290,18 +1291,34 @@ process RunVEP {
   """
   vep \
   -i $vcf \
+  --format vcf \
+  --sift b \
+  --polyphen b \
+  --symbol \
+  --numbers \
+  --biotype \
+  --total_length \
+  -o ${vcf.baseName}.ann.vcf \
   --vcf \
-  -o ${vcf.baseName} \
-  -offline
+  -offline \
+  --fields Consequence,Codons,Amino_acids,Gene,SYMBOL,Feature,EXON,PolyPhen,SIFT,Protein_position,BIOTYPE
   """
   else
   """
   variant_effect_predictor.pl \
-  -i $vcf \
-  --vcf \
-  -o ${vcf.baseName} \
+ -i $vcf \
+ --vcf \
+ --format vcf \
+ --sift b \
+ --polyphen b \
+ --symbol \
+ --numbers \
+ --biotype \
+ --total_length \
+ -o ${vcf.baseName}.ann.vcf \
   --cache --dir_cache /sw/data/uppnex/vep/89 \
   --assembly $genome \
+  --fields Consequence,Codons,Amino_acids,Gene,SYMBOL,Feature,EXON,PolyPhen,SIFT,Protein_position,BIOTYPE \
   -offline
   """
 }
