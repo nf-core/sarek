@@ -8,7 +8,7 @@ nextflow run SciLifeLab/CAW --sample mysample.tsv
 
 Preprocessing will start by default, you do not have to give any additional parameters, only the TSV file describing the sample (see below).
 
-In the [default config file](../config/milou.config) we are defining the intervals file as well, this is used to define regions for variant call and realignment (in a scatter and gather fashion when possible). The intervals are chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs. We are ignoring the hs37d5 contig that contains concatenated decoy sequences.
+In the [genomes.config](../configuration/genomes.config) configuration file we are defining the intervals file as well, this is used to define regions for variant call and realignment (in a scatter and gather fashion when possible). The intervals are chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs. We are ignoring the hs37d5 contig that contains concatenated decoy sequences.
 
 During the execution of the workflow a `trace.txt` and a `timeline.html` file is generated automatically. These files contain statistics about resources used and processes finished. If you start a new flow or restart/resume a sample, the previous version will be renamed as `trace.txt.1` and `timeline.html.1` respectively. Also, older version are renamed with incremented numbers.
 
