@@ -14,35 +14,35 @@ Every configuration file can be modified for your own use. If you want you can s
 
 Contain Docker images for all process. Use in your own profile if needed
 
-### [`genomes.config`[(../configuration/genomes.config)
+### [`genomes.config`](../configuration/genomes.config)
 
 Contain path to all references. Modify it if you want to change genome version, or the path to your references files
 
-### [`localhost.config`[(../configuration/localhost.config)
+### [`localhost.config`](../configuration/localhost.config)
 
 To be used on a typical localhost on a UPPMAX cluster (16 cpus)
 
-### [`singularity-download.config`[(../configuration/singularity-download.config)
+### [`singularity-download.config`](../configuration/singularity-download.config)
 
 To be used when downloading singularity containers, like on a UPPMAX cluster
 
-### [`singularity.config`[(../configuration/singularity.config)
+### [`singularity.config`](../configuration/singularity.config)
 
 Contain Singularity images for all process. Use in your own profile if needed
 
-### [`travis.config`[(../configuration/travis.config)
+### [`travis.config`](../configuration/travis.config)
 
 To be used for Travis (2 cpus) or on small computer for testing purpose
 
-### [`uppmax-modules.config`[(../configuration/uppmax-modules.config)
+### [`uppmax-modules.config`](../configuration/uppmax-modules.config)
 
 Contains modules for all processes. To be used on a UPPMAX cluster
 
-### [`uppmax-slurm.config`[(../configuration/uppmax-slurm.config)
+### [`uppmax-slurm.config`](../configuration/uppmax-slurm.config)
 
 Slurm configuration for a UPPMAX cluster
 
-### [`uppmax.config`[(../configuration/uppmax.config)
+### [`uppmax.config`](../configuration/uppmax.config)
 
 configuration for a UPPMAX cluster
 
