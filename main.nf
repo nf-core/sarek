@@ -914,6 +914,7 @@ process ConcatVCF {
 
   output:
     set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz") into vcfConcatenated
+    file("*.vcf.gz.tbi") into vcfConcatenatedTbi
 
   when: 'haplotypecaller' in tools || 'mutect1' in tools || 'mutect2' in tools || 'freebayes' in tools
 
@@ -968,7 +969,8 @@ process ConcatVCF {
         tail -n +\$((L+1)) \${vcf}
       done
     done
-  ) | pigz > ${outputFile}.gz
+  ) | bgzip -@ $task.cpus > ${outputFile}.gz
+  tabix ${outputFile}.gz
   """
 }
 
