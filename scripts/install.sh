@@ -1,5 +1,5 @@
 #!/bin/bash
-TOOL="nextflow"
+TOOL="all"
 
 while [[ $# -gt 1 ]]
 do
