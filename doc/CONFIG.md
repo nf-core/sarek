@@ -50,6 +50,10 @@ configuration for a UPPMAX cluster
 
 Every profile can be modified for your own use. To use a profile, you'll need to specify `-profile <profile>`
 
+### `dockerTest`
+
+This is the profile for docker testing on a small machine, or on Travis CI
+
 ### `standard`
 
 This is the default profile for use on a localhost on a UPPMAX cluster
@@ -58,13 +62,9 @@ This is the default profile for use on a localhost on a UPPMAX cluster
 
 This is another profile for use on a UPPMAX cluster using the job scheduler slurm
 
-### `travis`
-
-This is the default profile for Travis CI automated testing, or for testing on a small machine
-
 ### `singularityTest`
 
-This is the profile for Singularity testing on a small machine
+This is the profile for Singularity testing on a small machine, or on Travis CI
 
 ### `singularityLocal`
 

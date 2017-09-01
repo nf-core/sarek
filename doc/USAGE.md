@@ -94,6 +94,8 @@ Simpler to specify in the config file.
 
 ### --singleCPUMem `memory`
 
+### --totalMemory `memory`
+
 # Nextflow options
 
 See the [options documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/OPTIONS.md)

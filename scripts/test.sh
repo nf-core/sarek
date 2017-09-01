@@ -34,7 +34,7 @@ function nf_test() {
 nf_test buildReferences.nf --download
 
 #remove images
-if [[ "$PROFILE" == "travis" ]] && [[ "$TRAVIS" == true ]]
+if [[ "$PROFILE" == "dockerTest" ]] && [[ "$TRAVIS" == true ]]
 then
   docker rmi -f maxulysse/igvtools:1.1
 elif [[ "$PROFILE" == singularityTest ]] && [[ "$TRAVIS" == true ]]
@@ -70,7 +70,7 @@ then
   nf_test . --test --step preprocessing --tools MuTect2,Strelka
 
   #remove images
-  if [[ "$PROFILE" == "travis" ]] && [[ "$TRAVIS" == true ]]
+  if [[ "$PROFILE" == "dockerTest" ]] && [[ "$TRAVIS" == true ]]
   then
     docker rmi -f maxulysse/concatvcf:1.1 maxulysse/fastqc:1.1 maxulysse/gatk:1.0 maxulysse/gatk:1.1 maxulysse/mapreads:1.1 maxulysse/picard:1.1 maxulysse/runmanta:1.1 maxulysse/samtools:1.1 maxulysse/strelka:1.1
   elif [[ "$PROFILE" == "singularityTest" ]] && [[ "$TRAVIS" == true ]]
@@ -88,7 +88,7 @@ then
   nf_test . --test --step preprocessing --tools MuTect2,Strelka
 
   #remove images
-  if [[ "$PROFILE" == "travis" ]] && [[ "$TRAVIS" == true ]]
+  if [[ "$PROFILE" == "dockerTest" ]] && [[ "$TRAVIS" == true ]]
   then
     docker rmi -f maxulysse/concatvcf:1.1 maxulysse/fastqc:1.1 maxulysse/gatk:1.0 maxulysse/gatk:1.1 maxulysse/mapreads:1.1 maxulysse/picard:1.1 maxulysse/runmanta:1.1 maxulysse/samtools:1.1 maxulysse/strelka:1.1
   elif [[ "$PROFILE" == "singularityTest" ]] && [[ "$TRAVIS" == true ]]

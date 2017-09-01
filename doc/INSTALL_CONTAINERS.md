@@ -15,10 +15,10 @@ mkdir test_CAW
 cd test_CAW
 
 # Build the smallGRCh37 reference using Docker
-nextflow run SciLifeLab/CAW/buildReferences.nf --download --genome smallGRCh37 -profile travis
+nextflow run SciLifeLab/CAW/buildReferences.nf --download --genome smallGRCh37 -profile dockerTest
 
 # Test the workflow on a test tiny set using Docker
-nextflow run SciLifeLab/CAW --test --genome smallGRCh37 -profile travis
+nextflow run SciLifeLab/CAW --test --genome smallGRCh37 -profile dockerTest
 
 # Build the smallGRCh37 reference using Singularity
 nextflow run SciLifeLab/CAW/buildReferences.nf --download --genome smallGRCh37 -profile singularityTest
@@ -34,11 +34,12 @@ To update CAW, it's also very simple:
 nextflow pull SciLifeLab/CAW
 ```
 
-If needed (for example, if no direct internet access on a secure machine), you can specify a pathway to Singularity containers that you have downloaded before hand and transfered on the right machine.
+If needed (for example, if no direct internet access on a secure machine), you can specify a pathway to Singularity containers that you have downloaded before hand and transfered on the right machine. You can specify the directory to download the containers with `--singularityPublishDir`.
 
 ```
 # Download the singularity containers
 nextflow run SciLifeLab/CAW-containers --singularity --containers bcftools,concatvcf,fastqc,freebayes,gatk,htslib,igvtools,mapreads,multiqc,mutect1,picard,qualimap,runallelecount,runascat,runconvertallelecounts,runmanta,samtools,snpeffgrch37,snpeffgrch38,strelka,vepgrch37,vepgrch38 --singularityPublishDir containers/
+nextflow run SciLifeLab/CAW-containers --singularity --containers gatk --tag 1.0 --singularityPublishDir containers/
 ```
 
 And then you can use the `singularity-download.config` configuration file.
