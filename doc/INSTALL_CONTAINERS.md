@@ -7,6 +7,8 @@ To use this pipeline, you need to have a working version of Nextflow installed, 
 - See the [Install Docker documentation](https://docs.docker.com/engine/installation/linux/ubuntu/#install-docker)
 - See the [Install Singularity documentation](http://singularity.lbl.gov/install-linux)
 
+## Installation
+
 This workflow itself needs no installation. Nextflow will automatically fetch CAW from GitHub when launched if SciLifeLab/CAW is specified as the workflow name. So you can directly use CAW on your own machine.
 
 ```bash
@@ -27,12 +29,16 @@ nextflow run SciLifeLab/CAW/buildReferences.nf --download --genome smallGRCh37 -
 nextflow run SciLifeLab/CAW --test --genome smallGRCh37 -profile singularityTest
 ```
 
+## Update
+
 To update CAW, it's also very simple:
 
 ```bash
 # Update CAW
 nextflow pull SciLifeLab/CAW
 ```
+
+## Use Singularity
 
 If you plan to use the automatic pull of Singularity images, you can use the [`singularity.config`](../configuration/singularity.config) configuration file. You can also set up the Nextflow environnement variable `NXF_SINGULARITY_CACHEDIR` to choose where to store them.
 
@@ -50,6 +56,7 @@ nextflow run SciLifeLab/CAW-containers --singularity --containers gatk --tag 1.0
 ```
 
 And then you can use the [`singularity-download.config`](../configuration/singularity-download.config) configuration file.
+
 --------------------------------------------------------------------------------
 
 [![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
