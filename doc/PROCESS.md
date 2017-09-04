@@ -42,7 +42,10 @@ Several processes are run within the workflow. We divide them for the moment int
 
 --------------------------------------------------------------------------------
 
-[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
+[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
+[![](images/NGI_logo.png "NGI")][ngi-link]
+[![](images/NBIS_logo.png "NBIS")][nbis-link]
 
+[nbis-link]: https://www.nbis.se/
 [ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: http://www.scilifelab.se/
+[scilifelab-link]: https://www.scilifelab.se/
