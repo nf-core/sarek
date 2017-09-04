@@ -1734,9 +1734,18 @@ def flowcellLaneFromFastq(path) {
 }
 
 def readIntervals(path) {
-  Channel.
-  from(file(referenceMap.intervals).readLines()).
-  map{[it, it.replaceFirst(/\:/, '_')]}
+  if (path.getName().endsWith('.bed')) {
+    Channel.
+      from(file(referenceMap.intervals).readLines()).
+      map{line ->
+        def fields = line.split('[ \t]')
+        ["${fields[0]}:${fields[1]+1}-${fields[2]}", "${fields[0]}_${fields[1]+1}-${fields[2]}"]
+      }
+  } else {
+    Channel.
+      from(file(referenceMap.intervals).readLines()).
+      map{[it, it.replaceFirst(/\:/, '_')]}
+  }
 }
 
 def generateIntervalsForVC(bams, intervals) {
