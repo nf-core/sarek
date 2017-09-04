@@ -662,19 +662,51 @@ bamsTumor = bamsTumor.map { idPatient, status, idSample, bam, bai -> [idPatient,
 // 1_1-2000_Sample_name.xxx.vcf
 // from the "1:1-2000" string make ["1:1-2000","1_1-2000"]
 
-// define intervals file by --intervals
-intervals = readIntervals(referenceMap.intervals)
+process CreateIntervalBeds {
+  input:
+    file(intervals) from Channel.value(referenceMap.intervals)
 
-(bamsNormalTemp, bamsNormal, intervals) = generateIntervalsForVC(bamsNormal, intervals)
-(bamsTumorTemp, bamsTumor, intervals) = generateIntervalsForVC(bamsTumor, intervals)
+  output:
+    file '*.bed' into bedIntervals mode flatten
+
+  script:
+  if (intervals.getName().endsWith('.bed'))
+    """
+    awk -vFS="\t" '{
+      name = sprintf("%s_%d-%d", \$1, \$2+1, \$3)
+      printf("%s\\n", \$0) > name ".bed"
+    }' $intervals
+    """
+  else
+    """
+    awk -vFS="[:-]" '{
+      name = sprintf("%s_%d-%d", \$1, \$2, \$3);
+      printf("%s\\t%d\\t%d\\n", \$1, \$2-1, \$3) > name ".bed"
+    }' $intervals
+    """
+}
+
+bedIntervals = bedIntervals
+  .map { path ->
+    name = path.getName()[0..-5] /* without .bed */
+    [name, path]
+  }
+
+if (verbose) bedIntervals = bedIntervals.view { name, path ->
+  "Intervals name: $name, path: $path"
+}
+
+
+(bamsNormalTemp, bamsNormal, bedIntervals) = generateIntervalsForVC(bamsNormal, bedIntervals)
+(bamsTumorTemp, bamsTumor, bedIntervals) = generateIntervalsForVC(bamsTumor, bedIntervals)
 
 // HaplotypeCaller
 bamsFHC = bamsNormalTemp.mix(bamsTumorTemp)
-intervals = intervals.tap { intervalsTemp }
+bedIntervals = bedIntervals.tap { intervalsTemp }
 recalTables = recalTables
   .spread(intervalsTemp)
-  .map { patient, sample, bam, bai, recalTable, interval, interval2 ->
-    [patient, sample, bam, bai, interval, interval2, recalTable] }
+  .map { patient, sample, bam, bai, recalTable, intervalName, intervalBed ->
+    [patient, sample, bam, bai, intervalName, intervalBed, recalTable] }
 
 
 // re-associate the BAMs and samples with the recalibration table
@@ -694,17 +726,17 @@ bamsAll = bamsAll.map {
 // Manta and Strelka
 (bamsForManta, bamsForStrelka, bamsAll) = bamsAll.into(3)
 
-bamsTumorNormalIntervals = bamsAll.spread(intervals)
+bamsTumorNormalIntervals = bamsAll.spread(bedIntervals)
 
 // MuTect1, MuTect2, FreeBayes
 (bamsFMT1, bamsFMT2, bamsFFB) = bamsTumorNormalIntervals.into(3)
 
 
 process RunHaplotypecaller {
-  tag {idSample + "-" + gen_int}
+  tag {idSample + "-" + intervalName}
 
   input:
-    set idPatient, idSample, file(bam), file(bai), genInt, gen_int, recalTable from bamsFHC //Are these values `ped to bamNormal already?
+    set idPatient, idSample, file(bam), file(bai), intervalName, file(intervalBed), recalTable from bamsFHC //Are these values `ped to bamNormal already?
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -714,8 +746,8 @@ process RunHaplotypecaller {
     ])
 
   output:
-    set val("gvcf-hc"), idPatient, idSample, idSample, val("${gen_int}_${idSample}"), file("${gen_int}_${idSample}.g.vcf") into hcGenomicVCF
-    set idPatient, idSample, genInt, gen_int, file("${gen_int}_${idSample}.g.vcf") into vcfsToGenotype
+    set val("gvcf-hc"), idPatient, idSample, idSample, val("${intervalName}_${idSample}"), file("${intervalName}_${idSample}.g.vcf") into hcGenomicVCF
+    set idPatient, idSample, intervalName, file(intervalBed), file("${intervalName}_${idSample}.g.vcf") into vcfsToGenotype
 
   when: 'haplotypecaller' in tools
 
@@ -731,9 +763,9 @@ process RunHaplotypecaller {
   --dbsnp $dbsnp \
   $BQSR \
   -I $bam \
-  -L \"$genInt\" \
+  -L $intervalBed \
   --disable_auto_index_creation_and_locking_when_reading_rods \
-  -o ${gen_int}_${idSample}.g.vcf
+  -o ${intervalName}_${idSample}.g.vcf
   """
 }
 hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3])
@@ -741,10 +773,10 @@ hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3])
 if (!gvcf) {hcGenomicVCF.close()}
 
 process RunGenotypeGVCFs {
-  tag {idSample + "-" + gen_int}
+  tag {idSample + "-" + intervalName}
 
   input:
-    set idPatient, idSample, genInt, gen_int, file(gvcf) from vcfsToGenotype
+    set idPatient, idSample, intervalName, file(intervalBed), file(gvcf) from vcfsToGenotype
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -754,7 +786,7 @@ process RunGenotypeGVCFs {
     ])
 
   output:
-    set val("haplotypecaller"), idPatient, idSample, idSample, val("${gen_int}_${idSample}"), file("${gen_int}_${idSample}.vcf") into hcGenotypedVCF
+    set val("haplotypecaller"), idPatient, idSample, idSample, val("${intervalName}_${idSample}"), file("${intervalName}_${idSample}.vcf") into hcGenotypedVCF
 
   when: 'haplotypecaller' in tools
 
@@ -765,20 +797,20 @@ process RunGenotypeGVCFs {
   -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T GenotypeGVCFs \
   -R $genomeFile \
-  -L \"$genInt\" \
+  -L $intervalBed \
   --dbsnp $dbsnp \
   --variant $gvcf \
   --disable_auto_index_creation_and_locking_when_reading_rods \
-  -o ${gen_int}_${idSample}.vcf
+  -o ${intervalName}_${idSample}.vcf
   """
 }
 hcGenotypedVCF = hcGenotypedVCF.groupTuple(by:[0,1,2,3])
 
 process RunMutect1 {
-  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + gen_int}
+  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalName}
 
   input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT1
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), intervalName, file(intervalBed) from bamsFMT1
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(cosmic), file(cosmicIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -790,7 +822,7 @@ process RunMutect1 {
     ])
 
   output:
-    set val("mutect1"), idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect1Output
+    set val("mutect1"), idPatient, idSampleNormal, idSampleTumor, val("${intervalName}_${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect1Output
 
   when: 'mutect1' in tools
 
@@ -804,20 +836,20 @@ process RunMutect1 {
   --dbsnp $dbsnp \
   -I:normal $bamNormal \
   -I:tumor $bamTumor \
-  -L \"$genInt\" \
+  -L $intervalBed \
   --disable_auto_index_creation_and_locking_when_reading_rods \
-  --out ${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.call_stats.out \
-  --vcf ${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf
+  --out ${intervalName}_${idSampleTumor}_vs_${idSampleNormal}.call_stats.out \
+  --vcf ${intervalName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
   """
 }
 
 mutect1Output = mutect1Output.groupTuple(by:[0,1,2,3])
 
 process RunMutect2 {
-  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + gen_int}
+  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalName}
 
   input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), intervalName, file(intervalBed) from bamsFMT2
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(cosmic), file(cosmicIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -829,7 +861,7 @@ process RunMutect2 {
     ])
 
   output:
-    set val("mutect2"), idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2Output
+    set val("mutect2"), idPatient, idSampleNormal, idSampleTumor, val("${intervalName}_${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2Output
 
   when: 'mutect2' in tools
 
@@ -844,22 +876,22 @@ process RunMutect2 {
   -I:normal $bamNormal \
   -I:tumor $bamTumor \
   --disable_auto_index_creation_and_locking_when_reading_rods \
-  -L \"$genInt\" \
-  -o ${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf
+  -L $intervalBed \
+  -o ${intervalName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
   """
 }
 
 mutect2Output = mutect2Output.groupTuple(by:[0,1,2,3])
 
 process RunFreeBayes {
-  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + gen_int}
+  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalName}
 
   input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFFB
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), intervalName, file(intervalBed) from bamsFFB
     file(genomeFile) from Channel.value(referenceMap.genomeFile)
 
   output:
-    set val("freebayes"), idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into freebayesOutput
+    set val("freebayes"), idPatient, idSampleNormal, idSampleTumor, val("${intervalName}_${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into freebayesOutput
 
   when: 'freebayes' in tools
 
@@ -875,9 +907,9 @@ process RunFreeBayes {
     --min-alternate-fraction 0.03 \
     --min-repeat-entropy 1 \
     --min-alternate-count 2 \
-    -r \"$genInt\" \
+    -t $intervalBed \
     $bamTumor \
-    $bamNormal > ${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf
+    $bamNormal > ${intervalName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
   """
 }
 
@@ -1728,21 +1760,6 @@ def flowcellLaneFromFastq(path) {
   }
 
   [fcid, lane]
-}
-
-def readIntervals(path) {
-  if (path.getName().endsWith('.bed')) {
-    Channel.
-      from(file(referenceMap.intervals).readLines()).
-      map{line ->
-        def fields = line.split('[ \t]')
-        ["${fields[0]}:${fields[1]+1}-${fields[2]}", "${fields[0]}_${fields[1]+1}-${fields[2]}"]
-      }
-  } else {
-    Channel.
-      from(file(referenceMap.intervals).readLines()).
-      map{[it, it.replaceFirst(/\:/, '_')]}
-  }
 }
 
 def generateIntervalsForVC(bams, intervals) {
