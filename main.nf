@@ -1474,6 +1474,8 @@ def checkParams(it) {
     'step',
     'test',
     'tools',
+    'total-memory',
+    'totalMemory',
     'vcflist',
     'verbose',
     'version']
