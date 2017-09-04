@@ -691,17 +691,14 @@ bamsAll = bamsAll.map {
   [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor]
 }
 
-// MuTect1
-(bamsFMT1, bamsAll, intervals) = generateIntervalsForVC(bamsAll, intervals)
-
-// MuTect2
-(bamsFMT2, bamsAll, intervals) = generateIntervalsForVC(bamsAll, intervals)
-
-// FreeBayes
-(bamsFFB, bamsAll, intervals) = generateIntervalsForVC(bamsAll, intervals)
-
 // Manta and Strelka
-(bamsForManta, bamsForStrelka) = bamsAll.into(2)
+(bamsForManta, bamsForStrelka, bamsAll) = bamsAll.into(3)
+
+bamsTumorNormalIntervals = bamsAll.spread(intervals)
+
+// MuTect1, MuTect2, FreeBayes
+(bamsFMT1, bamsFMT2, bamsFFB) = bamsTumorNormalIntervals.into(3)
+
 
 process RunHaplotypecaller {
   tag {idSample + "-" + gen_int}
