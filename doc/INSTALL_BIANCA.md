@@ -12,7 +12,6 @@ You can either download CAW on your computer or on Milou, make an archive, and s
 
 All Reference files are already stored in Bianca.
 
-
 ```bash
 # Clone the repository
 > git clone https://github.com/SciLifeLab/CAW.git
@@ -34,7 +33,7 @@ Wrote CAW-[snapID].tar.gz
 
 # The archive will be in the wharf folder in your user home on your Bianca project
 
-# Connect to Bianca (Connect to Milou first if needed)
+# Connect to Bianca
 > ssh -A [USER]-[PROJECT]@bianca.uppmax.uu.se
 
 # Go to your project
@@ -54,11 +53,10 @@ Wrote CAW-[snapID].tar.gz
 > ln -s CAW-[snapID] default
 ```
 
-The principle is to have every member of your project to be able to use the same CAW version at the same time.
-So every member of the project who wants to use CAW will need to do:
+The principle is to have every member of your project to be able to use the same CAW version at the same time. So every member of the project who wants to use CAW will need to do:
 
 ```bash
-# Connect to Bianca (Connect to Milou first if needed)
+# Connect to Bianca
 > ssh -A [USER]-[PROJECT]@bianca.uppmax.uu.se
 
 # Go to your user directory
@@ -69,11 +67,12 @@ So every member of the project who wants to use CAW will need to do:
 ```
 
 And then CAW can be used with:
+
 ```bash
 nextflow run ~/CAW/main.nf ...
 ```
 
-### Update CAW
+## Update CAW
 
 Repeat the same steps as for installing CAW, and once the tar has been extracted, you can replace the link.
 
@@ -93,11 +92,12 @@ Repeat the same steps as for installing CAW, and once the tar has been extracted
 
 You can for example keep a `default` version that you are sure is working, an make a link for a `testing` or `development`
 
-
-
 --------------------------------------------------------------------------------
 
-[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
+[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
+[![](images/NGI_logo.png "NGI")][ngi-link]
+[![](images/NBIS_logo.png "NBIS")][nbis-link]
 
+[nbis-link]: https://www.nbis.se/
 [ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: http://www.scilifelab.se/
+[scilifelab-link]: https://www.scilifelab.se/

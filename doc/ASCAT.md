@@ -40,16 +40,21 @@ The loci file was created based on the 1000Genomes latest release (phase 3, rele
 ```
 /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/1000G_phase3_20130502_SNP_maf0.3.loci
 ```
+
 The loci file was originally generated for GRCh37. It was translated into GRCh38 using the tool liftOver available at the UCSC Genome Browser. To run liftOver the loci file was first written in bed format:
+
 ```
 awk '{print "chr"$1":"$2"-"$2}' 1000G_phase3_20130502_SNP_maf0.3.loci > 1000G_phase3_20130502_SNP_maf0.3.bed
 ```
-Using the web interface to liftOver at https://genome.ucsc.edu/cgi-bin/hgLiftOver the file was translated into GRCh38 coordinates. LiftOver was possible for 3261270 out of 3268043 SNPs. 
-The converted SNP positions were printed in the format required by AlleleCounter by:
+
+Using the web interface to liftOver at [genome.ucsc.edu](https://genome.ucsc.edu/cgi-bin/hgLiftOver) the file was translated into GRCh38 coordinates. LiftOver was possible for 3261270 out of 3268043 SNPs. The converted SNP positions were printed in the format required by AlleleCounter by:
+
 ```
 more hglft_genome_5834_13aba0.bed | awk 'BEGIN{FS="chr"} {print $2}' | awk 'BEGIN{FS="-"} {print $1}' | awk 'BEGIN{FS=":";OFS="\t"} {print $1,$2}' > 1000G_phase3_GRCh38_maf0.3.loci
 ```
+
 The loci file in GRCh38 coordinates is stored on Milou in:
+
 ```
 /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/1000G_phase3_GRCh38_maf0.3.loci
 ```
@@ -89,7 +94,10 @@ sbatch -A PROJID -p core -n 1 -t 240:00:00 -J ascat -e ascat.err -o ascat.out ru
 
 --------------------------------------------------------------------------------
 
-[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
+[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
+[![](images/NGI_logo.png "NGI")][ngi-link]
+[![](images/NBIS_logo.png "NBIS")][nbis-link]
 
+[nbis-link]: https://www.nbis.se/
 [ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: http://www.scilifelab.se/
+[scilifelab-link]: https://www.scilifelab.se/

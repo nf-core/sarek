@@ -20,7 +20,9 @@
 
 --------------------------------------------------------------------------------
 
-[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
+[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
+[![](images/NGI_logo.png "NGI")][ngi-link]
+[![](images/NBIS_logo.png "NBIS")][nbis-link]
 
 [allelecount-link]: https://github.com/cancerit/alleleCount
 [bwa-link]: https://github.com/lh3/bwa
@@ -29,10 +31,11 @@
 [manta-link]: https://github.com/Illumina/manta
 [multiqc-link]: https://github.com/ewels/MultiQC/
 [mutect1-link]: https://github.com/broadinstitute/mutect
+[nbis-link]: https://www.nbis.se/
 [nextflow-link]: https://www.nextflow.io/
 [ngi-link]: https://ngisweden.scilifelab.se/
 [picard-link]: https://github.com/broadinstitute/picard
 [samtools-link]: https://github.com/samtools/samtools
-[scilifelab-link]: http://www.scilifelab.se/
+[scilifelab-link]: https://www.scilifelab.se/
 [snpeff-link]: http://snpeff.sourceforge.net/
 [strelka-link]: https://github.com/Illumina/strelka

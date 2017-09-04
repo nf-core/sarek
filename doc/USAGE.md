@@ -22,9 +22,9 @@ Specify an email for MultiQC report (optionnal)
 
 Display help
 
-### --reports
+### --noReports
 
-Run QC tools and MultiQC to generate a HTML report.
+Disable QC tools and MultiQC to generate a HTML report.
 
 ### --project `ProjectID`
 
@@ -94,45 +94,6 @@ Simpler to specify in the config file.
 
 ### --singleCPUMem `memory`
 
-## References [(cf [References documentation](REFERENCES.md))]
-
-Could be usefull if you wish to change one reference for testing.
-
-### --acLoci `file`
-
-## COSMIC files
-
-- --cosmic `file`
-- --cosmicIndex `file`
-
-### Files from the GATK Bundle
-
-- --dbsnp `file`
-- --dbsnpIndex `file`
-- --kgIndels `file`
-- --kgIndex `file`
-- --genome `file`
-- --genomeDict `file`
-- --genomeIndex `file`
-- --millsIndels `file`
-- --millsIndex `file`
-
-### BWA indexes
-
-- --genomeAmb `file`
-- --genomeAnn `file`
-- --genomeBwt `file`
-- --genomePac `file`
-- --genomeSa `file`
-
-## --intervals `file`
-
-## --snpeffDb `db`
-
-```
-Which database to use for snpEff
-```
-
 # Nextflow options
 
 See the [options documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/OPTIONS.md)
@@ -169,7 +130,10 @@ nextflow run -latest SciLifeLab/CAW --sample mysample.tsv -resume
 
 --------------------------------------------------------------------------------
 
-[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
+[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
+[![](images/NGI_logo.png "NGI")][ngi-link]
+[![](images/NBIS_logo.png "NBIS")][nbis-link]
 
+[nbis-link]: https://www.nbis.se/
 [ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: http://www.scilifelab.se/
+[scilifelab-link]: https://www.scilifelab.se/

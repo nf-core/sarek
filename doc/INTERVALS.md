@@ -2,7 +2,6 @@
 
 To speed up the Variant Calling processes, the reference is chopped into smaller pieces. The Variant Calling is done by this intervals, and the different resulting VCFs are then merged. This can parallelize the Variant Calling processes, and push down the variant calling wall clock time significanlty.
 
-
 ## GRCh37
 
 The file `wgs_calling_regions.grch37.list` contains the intervals which are chopped up at the centromeres.
@@ -28,7 +27,10 @@ grep -v '^@' intervals.sam | awk '{printf("%s:%d-%d\n", $3, $4, $4+$6-1)}' > tin
 
 --------------------------------------------------------------------------------
 
-[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
+[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
+[![](images/NGI_logo.png "NGI")][ngi-link]
+[![](images/NBIS_logo.png "NBIS")][nbis-link]
 
+[nbis-link]: https://www.nbis.se/
 [ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: http://www.scilifelab.se/
+[scilifelab-link]: https://www.scilifelab.se/
