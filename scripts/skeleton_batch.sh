@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -A sens2017102
+#SBATCH -A sens2016004
 #SBATCH -p node
 #SBATCH -t 168:00:00
 set -xeuo pipefail
@@ -17,11 +17,16 @@ DATE=`date +%Y-%b-%d-%H%M`
 PREFIX=${1%.tsv}_${DATE}
 TRACE=${PREFIX}.trace
 TIMELINE=${PREFIX}.timeline.html
+ln -fs /castor/project/proj_nobackup/CAW/containers containers
 
 # nextflow specific stuff to save everything on /scratch
 
 export NXF_TEMP=/scratch
 export NXF_LAUNCHBASE=/scratch
 export NXF_WORK=/scratch
+export NXF_HOME=/castor/project/proj_nobackup/nextflow
+export PATH=${NXF_HOME}/bin:${PATH}
+nextflow run ${CAW}/main.nf -c ${CAW}/nextflow.config --step skipPreprocessing -with-singularity --profile singularityLocal --tools $2 --sample $1
 
-nextflow run ${CAW}/main.nf -c ${CAW}/nextflow.config --step skipPreprocessing -with-singularity --profile singularityLocal --tools $2 $1
+# for annotation run 
+# nextflow run ${CAW}/main.nf -c ${CAW}/nextflow.config --step annotate -with-singularity --profile singularityLocal --tools $2 --annotateVCF $1 --noReports --sample Preprocessing/Recalibrated/recalibrated.tsv
