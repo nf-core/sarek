@@ -663,9 +663,7 @@ bamsTumor = bamsTumor.map { idPatient, status, idSample, bam, bai -> [idPatient,
 // from the "1:1-2000" string make ["1:1-2000","1_1-2000"]
 
 // define intervals file by --intervals
-intervals = Channel.
-  from(file(referenceMap.intervals).readLines()).
-  map{[it, it.replaceFirst(/\:/, '_')]}
+intervals = readIntervals(referenceMap.intervals)
 
 (bamsNormalTemp, bamsNormal, intervals) = generateIntervalsForVC(bamsNormal, intervals)
 (bamsTumorTemp, bamsTumor, intervals) = generateIntervalsForVC(bamsTumor, intervals)
@@ -1733,6 +1731,12 @@ def flowcellLaneFromFastq(path) {
   }
 
   [fcid, lane]
+}
+
+def readIntervals(path) {
+  Channel.
+  from(file(referenceMap.intervals).readLines()).
+  map{[it, it.replaceFirst(/\:/, '_')]}
 }
 
 def generateIntervalsForVC(bams, intervals) {
