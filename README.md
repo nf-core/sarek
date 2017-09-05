@@ -19,7 +19,7 @@ Besides variant calls, the workflow provides quality controls presented by [Mult
 
 The [CAW-containers](https://github.com/SciLifeLab/CAW-containers) repository contains building rules for containers for all CAW processes.
 
-This pipeline is listed on [Elixir - Tools and Data Services Registry](https://bio.tools/tool/CAW/version/none).
+This pipeline is listed on [Elixir - Tools and Data Services Registry](https://bio.tools/CAW).
 
 ## Documentation
 

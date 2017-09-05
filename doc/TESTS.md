@@ -5,7 +5,7 @@ One script is available for testing purpose:
 
 Two optional arguments are supported:
 - `-p` || `--profile`:
-  - `travis` test using Docker containers
+  - `dockerTest` test using Docker containers
   - `singularityTest` (default) test using Singularity containers
 - `-t` || `--test`::
  - `MAPPING`: will try preprocessing
@@ -17,9 +17,9 @@ Two optional arguments are supported:
 ## Usage
 
 ```bash
-./scripts/test.sh            # will try all tests using Singularity
-./scripts/test.sh -p travis  # will try all tests using Docker
-./scripts/test.sh -t MAPPING # will try MAPPING tests using Singularity
+./scripts/test.sh                # will try all tests using Singularity
+./scripts/test.sh -p dockerTest  # will try all tests using Docker
+./scripts/test.sh -t MAPPING     # will try MAPPING tests using Singularity
 ```
 
 --------------------------------------------------------------------------------
