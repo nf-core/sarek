@@ -82,6 +82,7 @@ directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
 stepList = defineStepList()
 toolList = defineToolList()
+nucleotidesPerSecond = 1000.0 // used to estimate variant calling runtime
 gvcf = !params.noGVCF
 reports = !params.noReports
 verbose = params.verbose
@@ -677,8 +678,8 @@ process CreateIntervalBeds {
     awk -vFS="\t" '{
       t = \$5  # runtime estimate
       if (t == "") {
-        # no runtime estimate in this row, assume 1000 nt/s
-        t = (\$3 - \$2) / 1000.0
+        # no runtime estimate in this row, assume default value
+        t = (\$3 - \$2) / ${nucleotidesPerSecond}
       }
       if (name == "" || (chunk > 600 && (chunk + t) > longest * 1.05)) {
         # start a new chunk
@@ -704,11 +705,24 @@ process CreateIntervalBeds {
 bedIntervals = bedIntervals
   .map { path ->
     name = path.getName()[0..-5] /* without .bed */
-    [name, path]
-  }
+    duration = 0.0
+    for (line in path.readLines()) {
+      fields = line.split('\t')
+      if (fields.size() >= 5) {
+        duration += fields[4].toFloat()
+      } else {
+        start = fields[1].toInteger()
+        end = fields[2].toInteger()
+        duration += (end - start) / nucleotidesPerSecond
+      }
+    }
+    [duration, name, path]
+  }.toSortedList({ a, b -> b[0] <=> a[0] })
+  .flatten().collate(3)
+  .map{duration, name, path -> [name, path]}
 
 if (verbose) bedIntervals = bedIntervals.view { name, path ->
-  "Intervals name: $name, path: $path"
+  "Interval. name: $name, path: $path"
 }
 
 
