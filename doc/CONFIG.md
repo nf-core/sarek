@@ -42,10 +42,6 @@ Contains modules for all processes. To be used on a UPPMAX cluster
 
 Slurm configuration for a UPPMAX cluster
 
-### [`uppmax.config`](../configuration/uppmax.config)
-
-configuration for a UPPMAX cluster
-
 ## profiles
 
 Every profile can be modified for your own use. To use a profile, you'll need to specify `-profile <profile>`
