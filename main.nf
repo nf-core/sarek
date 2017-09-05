@@ -670,11 +670,26 @@ process CreateIntervalBeds {
     file '*.bed' into bedIntervals mode flatten
 
   script:
+  // If the interval file is BED format, the fifth column is interpreted to
+  // contain runtime estimates, which is then used to combine short-running jobs
   if (intervals.getName().endsWith('.bed'))
     """
     awk -vFS="\t" '{
-      name = sprintf("%s_%d-%d", \$1, \$2+1, \$3)
-      printf("%s\\n", \$0) > name ".bed"
+      t = \$5  # runtime estimate
+      if (t == "") {
+        # no runtime estimate in this row, assume 1000 nt/s
+        t = (\$3 - \$2) / 1000.0
+      }
+      if (name == "" || (chunk > 600 && (chunk + t) > longest * 1.05)) {
+        # start a new chunk
+        name = sprintf("%s_%d-%d.bed", \$1, \$2+1, \$3)
+        chunk = 0
+        longest = 0
+      }
+      if (t > longest)
+        longest = t
+      chunk += t
+      print \$0 > name
     }' $intervals
     """
   else
