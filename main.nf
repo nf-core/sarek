@@ -487,6 +487,7 @@ process CreateRecalibrationTable {
   -T BaseRecalibrator \
   -R $genomeFile \
   -I $bam \
+  -L $intervals \
   --disable_auto_index_creation_and_locking_when_reading_rods \
   -knownSites $dbsnp \
   $known \
