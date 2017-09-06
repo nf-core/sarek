@@ -74,6 +74,8 @@ if (params.version) {
 if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
 
 step = params.step.toLowerCase()
+if (step == 'preprocessing') step = 'mapping'
+if (step == 'skippreprocessing') step = 'variantcalling'
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
 annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
 annotateVCF = params.annotateVCF ? params.annotateVCF.split(',').collect{it.trim()} : []
@@ -88,7 +90,7 @@ verbose = params.verbose
 
 if (!checkParameterExistence(step, stepList)) exit 1, 'Unknown step, see --help for more information'
 if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
-if (step == 'preprocessing' && !checkExactlyOne([params.test, params.sample, params.sampleDir]))
+if (step == 'mapping' && !checkExactlyOne([params.test, params.sample, params.sampleDir]))
   exit 1, 'Please define which samples to work on by providing exactly one of the --test, --sample or --sampleDir options'
 if (!checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
 if (!checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
@@ -112,12 +114,12 @@ if (params.sample) tsvPath = params.sample
 if (!params.sample && !params.sampleDir) {
   tsvPaths = [
   'annotate': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv",
-  'preprocessing': "$workflow.projectDir/data/tsv/tiny.tsv",
+  'mapping': "$workflow.projectDir/data/tsv/tiny.tsv",
   'realign': "$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv",
   'recalibrate': "$workflow.launchDir/$directoryMap.nonRecalibrated/nonRecalibrated.tsv",
-  'skippreprocessing': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv"
+  'variantcalling': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv"
   ]
-  if (params.test || step != 'preprocessing') tsvPath = tsvPaths[step]
+  if (params.test || step != 'mapping') tsvPath = tsvPaths[step]
 }
 
 // Set up the fastqFiles and bamFiles channels. One of them remains empty
@@ -127,19 +129,19 @@ if (tsvPath) {
   tsvFile = file(tsvPath)
   switch (step) {
     case 'annotate': bamFiles = extractBams(tsvFile); break
-    case 'preprocessing': fastqFiles = extractFastq(tsvFile); break
+    case 'mapping': fastqFiles = extractFastq(tsvFile); break
     case 'realign': bamFiles = extractBams(tsvFile); break
     case 'recalibrate': bamFiles = extractRecal(tsvFile); break
-    case 'skippreprocessing': bamFiles = extractBams(tsvFile); break
+    case 'variantcalling': bamFiles = extractBams(tsvFile); break
     default: exit 1, "Unknown step $step"
   }
 } else if (params.sampleDir) {
-  if (step != 'preprocessing') exit 1, '--sampleDir does not support steps other than "preprocessing"'
+  if (step != 'mapping') exit 1, '--sampleDir does not support steps other than "mapping"'
   fastqFiles = extractFastqFromDir(params.sampleDir)
   tsvFile = params.sampleDir  // used in the reports
 } else exit 1, 'No sample were defined, see --help'
 
-if (step == 'preprocessing') {
+if (step == 'mapping') {
   (patientGenders, fastqFiles) = extractGenders(fastqFiles)
 } else {
   (patientGenders, bamFiles) = extractGenders(bamFiles)
@@ -178,7 +180,7 @@ process RunFastQC {
   output:
     file "*_fastqc.{zip,html}" into fastQCreport
 
-  when: step == 'preprocessing' && reports
+  when: step == 'mapping' && reports
 
   script:
   """
@@ -201,7 +203,7 @@ process MapReads {
   output:
     set idPatient, status, idSample, idRun, file("${idRun}.bam") into mappedBam
 
-  when: step == 'preprocessing'
+  when: step == 'mapping'
 
   script:
   readGroup = "@RG\\tID:$idRun\\tPU:$idRun\\tSM:$idSample\\tLB:$idSample\\tPL:illumina"
@@ -241,7 +243,7 @@ process MergeBams {
   output:
     set idPatient, status, idSample, file("${idSample}.bam") into mergedBam
 
-  when: step == 'preprocessing'
+  when: step == 'mapping'
 
   script:
   """
@@ -282,7 +284,7 @@ process MarkDuplicates {
     set idPatient, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai") into markDuplicatesTSV
     file ("${bam}.metrics") into markDuplicatesReport
 
-  when: step == 'preprocessing'
+  when: step == 'mapping'
 
   script:
   """
@@ -310,7 +312,7 @@ markDuplicatesTSV.map { idPatient, status, idSample, bam, bai ->
 // Group the marked duplicates BAMs for intervals and realign by idPatient
 // Grouping also by gender, to make a nicer channel
 duplicatesGrouped = Channel.empty()
-if (step == 'preprocessing') {
+if (step == 'mapping') {
   duplicatesGrouped = duplicates.groupTuple()
 } else if (step == 'realign') {
   duplicatesGrouped = bamFiles.map{
@@ -363,7 +365,7 @@ process RealignerTargetCreator {
   output:
     set idPatient, file("${idPatient}.intervals") into intervals
 
-  when: step == 'preprocessing' || step == 'realign'
+  when: step == 'mapping' || step == 'realign'
 
   script:
   bams = bam.collect{"-I $it"}.join(' ')
@@ -421,7 +423,7 @@ process IndelRealigner {
   output:
     set idPatient, file("*.real.bam"), file("*.real.bai") into realignedBam mode flatten
 
-  when: step == 'preprocessing' || step == 'realign'
+  when: step == 'mapping' || step == 'realign'
 
   script:
   bams = bam.collect{"-I $it"}.join(' ')
@@ -474,7 +476,7 @@ process CreateRecalibrationTable {
     set idPatient, status, idSample, file(bam), file(bai), file("${idSample}.recal.table") into recalibrationTable
     set idPatient, status, idSample, val("${idSample}_${status}.md.real.bam"), val("${idSample}_${status}.md.real.bai"), val("${idSample}.recal.table") into recalibrationTableTSV
 
-  when: step == 'preprocessing' || step == 'realign'
+  when: step == 'mapping' || step == 'realign'
 
   script:
   known = knownIndels.collect{ "-knownSites $it" }.join(' ')
@@ -533,7 +535,7 @@ process RecalibrateBam {
 
   // HaplotypeCaller can do BQSR on the fly, so do not create a
   // recalibrated BAM explicitly.
-  when: step != 'skippreprocessing' && explicitBqsrNeeded
+  when: step != 'variantcalling' && explicitBqsrNeeded
 
   script:
   """
@@ -555,7 +557,7 @@ recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
   name: 'recalibrated.tsv', sort: true, storeDir: directoryMap.recalibrated
 )
 
-if (step == 'skippreprocessing') {
+if (step == 'variantcalling') {
   // assume input is recalibrated, ignore explicitBqsrNeeded
   (recalibratedBam, recalTables) = bamFiles.into(2)
 
@@ -1566,10 +1568,10 @@ def defineReferenceMap() {
 def defineStepList() {
   return [
     'annotate',
-    'preprocessing',
+    'mapping',
     'realign',
     'recalibrate',
-    'skippreprocessing'
+    'variantcalling'
   ]
 }
 
@@ -1762,12 +1764,12 @@ def helpMessage() {
   log.info "    --test"
   log.info "       Use a test sample."
   log.info "    --step"
-  log.info "       Option to configure preprocessing."
+  log.info "       Option to start workflow"
   log.info "       Possible values are:"
-  log.info "         preprocessing (default, will start workflow with FASTQ files)"
+  log.info "         mapping (default, will start workflow with FASTQ files)"
   log.info "         realign (will start workflow with non-realigned BAM files)"
   log.info "         recalibrate (will start workflow with non-recalibrated BAM files)"
-  log.info "         skippreprocessing (will start workflow with recalibrated BAM files)"
+  log.info "         variantcalling (will start workflow with recalibrated BAM files)"
   log.info "         annotate (will annotate Variant Calling output."
   log.info "         By default it will try to annotate all available vcfs."
   log.info "         Use with --annotateTools or --annotateVCF to specify what to annotate"
@@ -1801,8 +1803,8 @@ def helpMessage() {
   log.info "    --genome <Genome>"
   log.info "       Use a specific genome version."
   log.info "       Possible values are:"
-  log.info "         GRCh37 (Default)"
-  log.info "         GRCh38"
+  log.info "         GRCh37"
+  log.info "         GRCh38 (Default)"
   log.info "         smallGRCh37 (Use a small reference (Tests only))"
   log.info "    --help"
   log.info "       you're reading it"
