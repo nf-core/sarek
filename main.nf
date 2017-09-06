@@ -928,7 +928,6 @@ process ConcatVCF {
     outputFile = "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
   }
   vcfFiles = vcFiles.collect{" $it"}.join(' ')
-  chrPrefix = params.genome.endsWith('GRCh37') ? '' : 'chr'
 
   """
   # first make a header from one of the VCF intervals
