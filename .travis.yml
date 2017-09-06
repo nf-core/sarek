@@ -22,4 +22,4 @@ install: # Install Nextflow
   - "./scripts/install.sh --tool $TOOL_INSTALL"
 
 script:
-  - "./scripts/test.sh --profile $PROFILE --test $TEST --travisci"
+  - "./scripts/test.sh --profile $PROFILE --test $TEST"
