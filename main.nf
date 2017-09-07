@@ -964,11 +964,7 @@ process ConcatVCF {
 
   input:
     set variantCaller, idPatient, idSampleNormal, idSampleTumor, tag, file(vcFiles) from vcfsToMerge
-    set file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
-      referenceMap.genomeFile,
-      referenceMap.genomeIndex,
-      referenceMap.genomeDict
-    ])
+    file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
 
   output:
     set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz") into vcfConcatenated
@@ -994,12 +990,9 @@ process ConcatVCF {
   awk '!/GATKCommandLine/{print}/GATKCommandLine/{for(i=1;i<=NF;i++){if(\$i!~/intervals=/ && \$i !~ /out=/){printf("%s ",\$i)}}printf("\\n")}' \
   > header
 
-  # get contigs from the genome FASTA file (some variant callers are not saving contigs :S)
-  # CONTIGS=(\$(awk '/>/{print \$1}' ${genomeFile}|sed 's/>//'))
-  # for the time being I backout to the original one
-  # Get list of contigs from VCF header
-  # TODO fixit for FreeBayes - sometimes there are no contigs
-  CONTIGS=(\$(sed -rn '/^[^#]/q;/^##contig=/{s/##contig=<ID=(.*),length=[0-9]+(,[^>]*)?>/\\1/;s/\\*/\\\\*/g;p}' \$FIRSTVCF))
+  # Get list of contigs from the FASTA index (.fai). We cannot use the ##contig
+  # header in the VCF as it is optional (FreeBayes does not save it, for example)
+  CONTIGS=(\$(cut -f1 ${genomeIndex}))
 
   # concatenate VCFs in the correct order
   (
