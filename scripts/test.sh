@@ -5,6 +5,7 @@ GENOME="smallGRCh37"
 PROFILE="singularityTest"
 TEST="ALL"
 TRAVIS=${TRAVIS:-false}
+SAMPLE="data/tsv/tiny.tsv"
 
 while [[ $# -gt 0 ]]
 do
@@ -16,6 +17,10 @@ do
     ;;
     -p|--profile)
     PROFILE="$2"
+    shift
+    ;;
+    -s|--sample)
+    SAMPLE="$2"
     shift
     ;;
     -t|--test)
@@ -50,12 +55,12 @@ fi
 
 if [[ "$TEST" = "MAPPING" ]] || [[ "$TEST" = "ALL" ]]
 then
-  nf_test . --test --step preprocessing
+  nf_test . --step preprocessing --sample $SAMPLE
 fi
 
 if [[ "$TEST" = "REALIGN" ]] || [[ "$TEST" = "ALL" ]]
 then
-  nf_test . --test --step preprocessing
+  nf_test . --step preprocessing --sample $SAMPLE
   nf_test . --step realign --noReports
   nf_test . --step realign --tools HaplotypeCaller
   nf_test . --step realign --tools HaplotypeCaller --noReports --noGVCF
@@ -63,7 +68,7 @@ fi
 
 if [[ "$TEST" = "RECALIBRATE" ]] || [[ "$TEST" = "ALL" ]]
 then
-  nf_test . --test --step preprocessing
+  nf_test . --step preprocessing --sample $SAMPLE
   nf_test . --step recalibrate --noReports
   nf_test . --step recalibrate --tools FreeBayes,HaplotypeCaller,MuTect1,MuTect2,Strelka
   # Test whether restarting from an already recalibrated BAM works
@@ -73,7 +78,7 @@ fi
 if [[ "$TEST" = "ANNOTATEVEP" ]] || [[ "$TEST" = "ALL" ]]
 then
   nf_test . --step preprocessing --sample data/tsv/tiny-manta.tsv --tools Manta
-  nf_test . --test --step preprocessing --tools MuTect2,Strelka
+  nf_test . --step preprocessing --sample $SAMPLE --tools MuTect2,Strelka
 
   # Remove images only on TRAVIS
   if [[ "$PROFILE" == "dockerTest" ]] && [[ "$TRAVIS" == true ]]
@@ -91,7 +96,7 @@ fi
 if [[ "$TEST" = "ANNOTATESNPEFF" ]] || [[ "$TEST" = "ALL" ]]
 then
   nf_test . --step preprocessing --sample data/tsv/tiny-manta.tsv --tools Manta
-  nf_test . --test --step preprocessing --tools MuTect2,Strelka
+  nf_test . --step preprocessing --sample $SAMPLE --tools MuTect2,Strelka
 
   # Remove images only on TRAVIS
   if [[ "$PROFILE" == "dockerTest" ]] && [[ "$TRAVIS" == true ]]
