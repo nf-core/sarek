@@ -1,6 +1,7 @@
 #!/bin/bash
 set -xeuo pipefail
 
+GENOME="smallGRCh37"
 PROFILE="singularityTest"
 TEST="ALL"
 TRAVIS=${TRAVIS:-false}
@@ -9,6 +10,10 @@ while [[ $# -gt 0 ]]
 do
   key="$1"
   case $key in
+    -g|--genome)
+    GENOME="$2"
+    shift
+    ;;
     -p|--profile)
     PROFILE="$2"
     shift
@@ -24,13 +29,17 @@ do
 done
 
 function nf_test() {
-  echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE -resume --verbose$(tput sgr0)"
-  nextflow run "$@" -profile "$PROFILE" --genome smallGRCh37 -resume --verbose
+  echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE --genome $GENOME -resume --verbose$(tput sgr0)"
+  nextflow run "$@" -profile "$PROFILE" --genome $GENOME -resume --verbose
 }
 
-nf_test buildReferences.nf --download
+# Build references only for smallGRCh37
+if [[ "$GENOME" == "smallGRCh37" ]]
+then
+  nf_test buildReferences.nf --download
+fi
 
-#remove images
+# Remove images only on TRAVIS
 if [[ "$PROFILE" == "dockerTest" ]] && [[ "$TRAVIS" == true ]]
 then
   docker rmi -f maxulysse/igvtools:1.1
@@ -66,7 +75,7 @@ then
   nf_test . --step preprocessing --sample data/tsv/tiny-manta.tsv --tools Manta
   nf_test . --test --step preprocessing --tools MuTect2,Strelka
 
-  #remove images
+  # Remove images only on TRAVIS
   if [[ "$PROFILE" == "dockerTest" ]] && [[ "$TRAVIS" == true ]]
   then
     docker rmi -f maxulysse/fastqc:1.1 maxulysse/gatk:1.0 maxulysse/gatk:1.1 maxulysse/mapreads:1.1 maxulysse/picard:1.1 maxulysse/runmanta:1.1 maxulysse/samtools:1.1 maxulysse/strelka:1.1
@@ -84,7 +93,7 @@ then
   nf_test . --step preprocessing --sample data/tsv/tiny-manta.tsv --tools Manta
   nf_test . --test --step preprocessing --tools MuTect2,Strelka
 
-  #remove images
+  # Remove images only on TRAVIS
   if [[ "$PROFILE" == "dockerTest" ]] && [[ "$TRAVIS" == true ]]
   then
     docker rmi -f maxulysse/fastqc:1.1 maxulysse/gatk:1.0 maxulysse/gatk:1.1 maxulysse/mapreads:1.1 maxulysse/picard:1.1 maxulysse/runmanta:1.1 maxulysse/samtools:1.1 maxulysse/strelka:1.1
