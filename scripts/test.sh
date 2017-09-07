@@ -3,6 +3,7 @@ set -xeuo pipefail
 
 PROFILE="singularityTest"
 TEST="ALL"
+TRAVIS=${TRAVIS:-false}
 
 while [[ $# -gt 0 ]]
 do
