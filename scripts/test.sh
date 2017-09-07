@@ -24,7 +24,7 @@ done
 
 function nf_test() {
   echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE -resume --verbose$(tput sgr0)"
-  nextflow run "$@" -profile "$PROFILE" --genome smallGRCh37-resume --verbose
+  nextflow run "$@" -profile "$PROFILE" --genome smallGRCh37 -resume --verbose
 }
 
 nf_test buildReferences.nf --download
