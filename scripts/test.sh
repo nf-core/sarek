@@ -3,15 +3,11 @@ set -xeuo pipefail
 
 PROFILE="singularityTest"
 TEST="ALL"
-TRAVIS=false
 
 while [[ $# -gt 0 ]]
 do
   key="$1"
   case $key in
-    -c|--travisci)
-    TRAVIS=true
-    ;;
     -p|--profile)
     PROFILE="$2"
     shift
