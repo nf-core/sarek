@@ -725,9 +725,9 @@ bedIntervals = bedIntervals
   .map{duration, name, path -> [name, path]}
 
 if (verbose) bedIntervals = bedIntervals.view { name, path ->
-  "Interval. name: $name, path: $path"
+  "Interval:\n\
+  Name  : $name\tFile  : ${path.fileName}"
 }
-
 
 (bamsNormalTemp, bamsNormal, bedIntervals) = generateIntervalsForVC(bamsNormal, bedIntervals)
 (bamsTumorTemp, bamsTumor, bedIntervals) = generateIntervalsForVC(bamsTumor, bedIntervals)
