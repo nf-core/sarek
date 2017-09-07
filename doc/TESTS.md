@@ -16,7 +16,8 @@ Four optional arguments are supported:
  - `MAPPING`: will try preprocessing
  - `REALIGN`: will try realignment
  - `RECALIBRATE`: will try recalibration
- - `ANNOTATE`: will try variant calling and annotation
+ - `ANNOTATESNPEFF`: will try variant calling and annotation using snpEff
+ - `ANNOTATEVEP`: will try variant calling and annotation using VEP
  - `ALL`: will try all the previous tests (default)
 
 ## Usage
