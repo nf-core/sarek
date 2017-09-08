@@ -22,6 +22,8 @@ The file `wgs_calling_regions.grch37.list` contains the intervals which are chop
 
 The file `wgs_calling_regions_sorted.hg38.list` contains the intervals which are a list of non-N regions, sorted by their size, to enhance wall clock time.
 
+The file `wgs_calling_regions.hg38.bed` contains the intervals which are a list of non-N regions in a BED format, with the fifth column containing runtime estimate used to enhance wall clock time.
+
 ## smallGRCh37
 
 The file `tiny_GRCh37.list` is based on the `GRCh37` intervals list file but tailored for the `smallReferences`.

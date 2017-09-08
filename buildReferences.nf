@@ -75,7 +75,7 @@ if (params.genome == "smallGRCh37") {
       'dbsnp_138.b37.vcf.gz',
       'human_g1k_v37_decoy.fasta.gz',
       'Mills_and_1000G_gold_standard.indels.b37.vcf.gz',
-      'centromeres.list'
+      'wgs_calling_regions.grch37.list'
     ]
 } else {exit 1, "Can't build this reference genome"}
 
