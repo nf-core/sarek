@@ -724,8 +724,7 @@ bedIntervals = bedIntervals
   .map{duration, intervalFile -> intervalFile}
 
 if (verbose) bedIntervals = bedIntervals.view {
-  "Interval:\n\
-  File  : ${it.fileName}"
+  "Interv: ${it.fileName}"
 }
 
 (bamsNormalTemp, bamsNormal, bedIntervals) = generateIntervalsForVC(bamsNormal, bedIntervals)
