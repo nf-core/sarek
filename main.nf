@@ -667,6 +667,8 @@ bamsTumor = bamsTumor.map { idPatient, status, idSample, bam, bai -> [idPatient,
 // from the "1:1-2000" string make ["1:1-2000","1_1-2000"]
 
 process CreateIntervalBeds {
+  tag {intervals.fileName}
+
   input:
     file(intervals) from Channel.value(referenceMap.intervals)
 
