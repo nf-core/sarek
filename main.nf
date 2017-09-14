@@ -709,9 +709,9 @@ process CreateIntervalBeds {
 
 bedIntervals = bedIntervals
   .map { intervalFile ->
-    duration = 0.0
+    final duration = 0.0
     for (line in intervalFile.readLines()) {
-      fields = line.split('\t')
+      final fields = line.split('\t')
       if (fields.size() >= 5) {
         duration += fields[4].toFloat()
       } else {
