@@ -1412,6 +1412,19 @@ process GenerateMultiQCconfig {
   echo "- Step: "${step} >> multiqc_config.yaml
   echo "- Tools: "${tools.join(", ")} >> multiqc_config.yaml
   echo ${annotateString} >> multiqc_config.yaml
+  echo "  acLoci      : $referenceMap.acLoci" >> multiqc_config.yaml
+  echo "  bwaIndex    : "${referenceMap.bwaIndex.join(", ")} >> multiqc_config.yaml
+  echo "  cosmic      : $referenceMap.cosmic" >> multiqc_config.yaml
+  echo "  cosmicIndex : $referenceMap.cosmicIndex" >> multiqc_config.yaml
+  echo "  dbsnp       : $referenceMap.dbsnp" >> multiqc_config.yaml
+  echo "  dbsnpIndex  : $referenceMap.dbsnpIndex" >> multiqc_config.yaml
+  echo "  genomeDict  : $referenceMap.genomeDict" >> multiqc_config.yaml
+  echo "  genomeFile  : $referenceMap.genomeFile" >> multiqc_config.yaml
+  echo "  genomeIndex : $referenceMap.genomeIndex" >> multiqc_config.yaml
+  echo "  intervals   : $referenceMap.intervals" >> multiqc_config.yaml
+  echo "  knownIndels : "${referenceMap.knownIndels.join(", ")} >> multiqc_config.yaml
+  echo "  knownIndelsIndex: "${referenceMap.knownIndelsIndex.join(", ")} >> multiqc_config.yaml
+  echo "  snpeffDb    : ${params.genomes[params.genome].snpeffDb}" >> multiqc_config.yaml
   echo "top_modules:" >> multiqc_config.yaml
   echo "- 'fastqc'" >> multiqc_config.yaml
   echo "- 'picard'" >> multiqc_config.yaml
