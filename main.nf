@@ -1888,6 +1888,20 @@ def minimalInformationMessage() {
   log.info "Step        : " + step
   if (tools) {log.info "Tools       : " + tools.join(', ')}
   if (annotateTools) {log.info "Annotate on : " + annotateTools.join(', ')}
+  log.info "Reference files used:"
+  log.info "  acLoci      : $referenceMap.acLoci"
+  log.info "  bwaIndex    : " + referenceMap.bwaIndex.join(',\n    ')
+  log.info "  cosmic      : $referenceMap.cosmic"
+  log.info "  cosmicIndex : $referenceMap.cosmicIndex"
+  log.info "  dbsnp       : $referenceMap.dbsnp"
+  log.info "  dbsnpIndex  : $referenceMap.dbsnpIndex"
+  log.info "  genomeDict  : $referenceMap.genomeDict"
+  log.info "  genomeFile  : $referenceMap.genomeFile"
+  log.info "  genomeIndex : $referenceMap.genomeIndex"
+  log.info "  intervals   : $referenceMap.intervals"
+  log.info "  knownIndels : " + referenceMap.knownIndels.join(',\n    ')
+  log.info "  knownIndelsIndex: " + referenceMap.knownIndelsIndex.join(',\n    ')
+  log.info "  snpeffDb    : ${params.genomes[params.genome].snpeffDb}"
 }
 
 def nextflowMessage() {
