@@ -707,7 +707,7 @@ process CreateIntervalBeds {
 
 bedIntervals = bedIntervals
   .map { path ->
-    name = path.getName()[0..-5] /* without .bed */
+    name = path.baseName
     duration = 0.0
     for (line in path.readLines()) {
       fields = line.split('\t')
