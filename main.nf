@@ -74,11 +74,11 @@ if (params.version) {
 if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
 
 step = params.step.toLowerCase()
+if (step == 'preprocessing') step = 'mapping'
+if (step == 'skippreprocessing') step = 'variantcalling'
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
 annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
 annotateVCF = params.annotateVCF ? params.annotateVCF.split(',').collect{it.trim()} : []
-
-directoryMap = defineDirectoryMap()
 
 directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
@@ -1800,6 +1800,68 @@ def grabRevision() {
   // Return the same string executed from github or not
   return workflow.revision ?: workflow.commitId ?: workflow.scriptId.substring(0,10)
 }
+
+def helpMessage() {
+  // Display help message
+  this.cawMessage()
+  log.info "    Usage:"
+  log.info "       nextflow run SciLifeLab/CAW --sample <file.tsv> [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
+  log.info "       nextflow run SciLifeLab/CAW --sampleDir <Directory> [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
+  log.info "       nextflow run SciLifeLab/CAW --test [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
+  log.info "    --sample <file.tsv>"
+  log.info "       Specify a TSV file containing paths to sample files."
+  log.info "    --sampleDir <Directoy>"
+  log.info "       Specify a directory containing sample files."
+  log.info "    --test"
+  log.info "       Use a test sample."
+  log.info "    --step"
+  log.info "       Option to start workflow"
+  log.info "       Possible values are:"
+  log.info "         mapping (default, will start workflow with FASTQ files)"
+  log.info "         realign (will start workflow with non-realigned BAM files)"
+  log.info "         recalibrate (will start workflow with non-recalibrated BAM files)"
+  log.info "         variantcalling (will start workflow with recalibrated BAM files)"
+  log.info "         annotate (will annotate Variant Calling output."
+  log.info "         By default it will try to annotate all available vcfs."
+  log.info "         Use with --annotateTools or --annotateVCF to specify what to annotate"
+  log.info "    --noReports"
+  log.info "       Disable QC tools and MultiQC to generate a HTML report"
+  log.info "    --tools"
+  log.info "       Option to configure which tools to use in the workflow."
+  log.info "         Different tools to be separated by commas."
+  log.info "       Possible values are:"
+  log.info "         mutect1 (use MuTect1 for VC)"
+  log.info "         mutect2 (use MuTect2 for VC)"
+  log.info "         freebayes (use FreeBayes for VC)"
+  log.info "         strelka (use Strelka for VC)"
+  log.info "         haplotypecaller (use HaplotypeCaller for normal bams VC)"
+  log.info "         manta (use Manta for SV)"
+  log.info "         ascat (use Ascat for CNV)"
+  log.info "         snpeff (use snpEff for Annotation of Variants)"
+  log.info "         vep (use VEP for Annotation of Variants)"
+  log.info "    --annotateTools"
+  log.info "       Option to configure which tools to annotate."
+  log.info "         Different tools to be separated by commas."
+  log.info "       Possible values are:"
+  log.info "         haplotypecaller (Annotate HaplotypeCaller output)"
+  log.info "         manta (Annotate Manta output)"
+  log.info "         mutect1 (Annotate MuTect1 output)"
+  log.info "         mutect2 (Annotate MuTect2 output)"
+  log.info "         strelka (Annotate Strelka output)"
+  log.info "    --annotateVCF"
+  log.info "       Option to configure which vcf to annotate."
+  log.info "         Different vcf to be separated by commas."
+  log.info "    --genome <Genome>"
+  log.info "       Use a specific genome version."
+  log.info "       Possible values are:"
+  log.info "         GRCh37"
+  log.info "         GRCh38 (Default)"
+  log.info "         smallGRCh37 (Use a small reference (Tests only))"
+  log.info "    --help"
+  log.info "       you're reading it"
+  log.info "    --verbose"
+  log.info "       Adds more verbosity to workflow"
+  log.info "    --version"
   log.info "       displays version number"
 }
 
