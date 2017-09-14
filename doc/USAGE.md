@@ -38,13 +38,13 @@ Use the given TSV file as sample (cf [TSV documentation](TSV.md)).
 
 Choose from wich step the workflow will start. Choose only one step. Possible values are:
 
-- preprocessing (default, will start workflow with FASTQ files)
+- mapping (default, will start workflow with FASTQ files)
 - realign (will start workflow with BAM files (with T/N BAMs that were not realigned together))
 - recalibrate (will start workflow with BAM files and Recalibration Tables (Only with T/N BAMs that were realigned together))
-- skippreprocessing (will skip entire preprocessing (Only with T/N BAMs that were realigned together))
+- variantcalling (will skip entire preprocessing (Only with T/N BAMs that were realigned together))
 - annotate (will annotate Variant Calling output. By default it will try to annotate all available vcfs. Use with ```--annotateTools``` or ```--annotateVCF``` to specify what to annotate)
 
-`--step` option is case insensitive to avoid easy introduction of errors when choosing a step. So you can write `--step skipPreprocessing` or `--step skippreprocessing` without worrying about case sensitivity.
+`--step` option is case insensitive to avoid easy introduction of errors when choosing a step. So you can write `--step variantCalling` or `--step variantcalling` without worrying about case sensitivity.
 
 ### --test
 
@@ -93,6 +93,8 @@ Simpler to specify in the config file.
 ### --runTime `time`
 
 ### --singleCPUMem `memory`
+
+### --totalMemory `memory`
 
 # Nextflow options
 

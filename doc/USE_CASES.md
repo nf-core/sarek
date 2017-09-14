@@ -1,14 +1,14 @@
 # Use cases
 
-The workflow has four pre-processing options: `preprocessing`, `realign`, `recalibrate` and `skipPreprocessing`. Using the `preprocessing` directive one will have a pair of mapped, deduplicated and recalibrated BAM files in the `Preprocessing/Recalibrated/` directory. Furthermore, during this process a deduplicated BAM file is created in the `Preprocessing/NonRealigned/` directory. This is the usual option you have to give when you are starting from raw FASTQ data:
+The workflow has four pre-processing options: `mapping`, `realign`, `recalibrate` and `variantcalling`. Using the `mapping` directive one will have a pair of mapped, deduplicated and recalibrated BAM files in the `Preprocessing/Recalibrated/` directory. Furthermore, during this process a deduplicated BAM file is created in the `Preprocessing/NonRealigned/` directory. This is the usual option you have to give when you are starting from raw FASTQ data:
 
 ```bash
 nextflow run SciLifeLab/CAW --sample mysample.tsv
 ```
 
-Preprocessing will start by default, you do not have to give any additional parameters, only the TSV file describing the sample (see below).
+`mapping` will start by default, you do not have to give any additional parameters, only the TSV file describing the sample (see below).
 
-In the [default config file](../config/milou.config) we are defining the intervals file as well, this is used to define regions for variant call and realignment (in a scatter and gather fashion when possible). The intervals are chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs. We are ignoring the hs37d5 contig that contains concatenated decoy sequences.
+In the [genomes.config](../configuration/genomes.config) configuration file we are defining the intervals file as well, this is used to define regions for variant call and realignment (in a scatter and gather fashion when possible). The intervals are chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs. We are ignoring the hs37d5 contig that contains concatenated decoy sequences.
 
 During the execution of the workflow a `trace.txt` and a `timeline.html` file is generated automatically. These files contain statistics about resources used and processes finished. If you start a new flow or restart/resume a sample, the previous version will be renamed as `trace.txt.1` and `timeline.html.1` respectively. Also, older version are renamed with incremented numbers.
 
@@ -97,7 +97,7 @@ SUBJECT_ID  XX    1    SAMPLEIDT    /samples/SAMPLEIDT.bam    /samples/SAMPLEIDT
 At this step we are assuming that all the required preprocessing (alignment, deduplication, ..., recalibration) is over, we only want to run variant callers or other tools using recalibrated BAMs.
 
 ```bash
-nextflow run SciLifeLab/CAW --sample mysample.tsv --step skipPreprocessing --tools <tool>
+nextflow run SciLifeLab/CAW --sample mysample.tsv --step variantcalling --tools <tool>
 ```
 
 And the corresponding TSV file should be like:
