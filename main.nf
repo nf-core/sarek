@@ -726,7 +726,7 @@ bedIntervals = bedIntervals
   .map{duration, intervalFile -> intervalFile}
 
 if (verbose) bedIntervals = bedIntervals.view {
-  "Interv: ${it.fileName}"
+  "  Interv: ${it.baseName}"
 }
 
 (bamsNormalTemp, bamsNormal, bedIntervals) = generateIntervalsForVC(bamsNormal, bedIntervals)
@@ -778,7 +778,7 @@ process RunHaplotypecaller {
     ])
 
   output:
-    set val("gvcf-hc"), idPatient, idSample, idSample, val("${intervalBed.baseName}_${idSample}"), file("${intervalBed.baseName}_${idSample}.g.vcf") into hcGenomicVCF
+    set val("gvcf-hc"), idPatient, idSample, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf") into hcGenomicVCF
     set idPatient, idSample, file(intervalBed), file("${intervalBed.baseName}_${idSample}.g.vcf") into vcfsToGenotype
 
   when: 'haplotypecaller' in tools
@@ -818,7 +818,7 @@ process RunGenotypeGVCFs {
     ])
 
   output:
-    set val("haplotypecaller"), idPatient, idSample, idSample, val("${intervalBed.baseName}_${idSample}"), file("${intervalBed.baseName}_${idSample}.vcf") into hcGenotypedVCF
+    set val("haplotypecaller"), idPatient, idSample, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into hcGenotypedVCF
 
   when: 'haplotypecaller' in tools
 
@@ -854,7 +854,7 @@ process RunMutect1 {
     ])
 
   output:
-    set val("mutect1"), idPatient, idSampleNormal, idSampleTumor, val("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect1Output
+    set val("mutect1"), idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect1Output
 
   when: 'mutect1' in tools
 
@@ -893,7 +893,7 @@ process RunMutect2 {
     ])
 
   output:
-    set val("mutect2"), idPatient, idSampleNormal, idSampleTumor, val("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2Output
+    set val("mutect2"), idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2Output
 
   when: 'mutect2' in tools
 
@@ -923,7 +923,7 @@ process RunFreeBayes {
     file(genomeFile) from Channel.value(referenceMap.genomeFile)
 
   output:
-    set val("freebayes"), idPatient, idSampleNormal, idSampleTumor, val("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into freebayesOutput
+    set val("freebayes"), idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into freebayesOutput
 
   when: 'freebayes' in tools
 
@@ -954,8 +954,7 @@ vcfsToMerge = hcGenomicVCF.mix(hcGenotypedVCF, mutect1Output, mutect2Output, fre
 if (verbose) vcfsToMerge = vcfsToMerge.view {
   "VCFs To be merged:\n\
   Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  Interv: ${it[4]}\n\
-  Files : ${it[5].fileName}"
+  Files : ${it[4].fileName}"
 }
 
 process ConcatVCF {
@@ -964,7 +963,7 @@ process ConcatVCF {
   publishDir "${directoryMap."$variantCaller"}", mode: 'copy'
 
   input:
-    set variantCaller, idPatient, idSampleNormal, idSampleTumor, tag, file(vcFiles) from vcfsToMerge
+    set variantCaller, idPatient, idSampleNormal, idSampleTumor, file(vcFiles) from vcfsToMerge
     file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
 
   output:
