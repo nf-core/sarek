@@ -659,12 +659,6 @@ bamsTumor = bamsTumor.map { idPatient, status, idSample, bam, bai -> [idPatient,
 // Do variant calling by this intervals, and re-merge the VCFs.
 // Since we are on a cluster, this can parallelize the variant call processes.
 // And push down the variant call wall clock time significanlty.
-// In fact we need two channels: one for the actual genomic region
-// and an other for names without ":"
-// as nextflow is not happy with them (will report as a failed process).
-// For region 1:1-2000 the output file name will be something like:
-// 1_1-2000_Sample_name.xxx.vcf
-// from the "1:1-2000" string make ["1:1-2000","1_1-2000"]
 
 process CreateIntervalBeds {
   tag {intervals.fileName}
