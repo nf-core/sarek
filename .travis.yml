@@ -8,18 +8,18 @@ services:
   - docker
 
 env:
-  - NXF_VER=0.25.6 PROFILE=travis TEST=ANNOTATEVEP TOOL_INSTALL=nextflow
+  - NXF_VER=0.25.6 PROFILE=dockerTest TEST=ANNOTATEVEP TOOL_INSTALL=nextflow
   - NXF_VER=0.25.6 SGT_VER=2.3.1 PROFILE=singularityTest TEST=ANNOTATESNPEFF TOOL_INSTALL=all
-  - NXF_VER=0.25.6 PROFILE=travis TEST=ANNOTATESNPEFF TOOL_INSTALL=nextflow
+  - NXF_VER=0.25.6 PROFILE=dockerTest TEST=ANNOTATESNPEFF TOOL_INSTALL=nextflow
   - NXF_VER=0.25.6 SGT_VER=2.3.1 PROFILE=singularityTest TEST=RECALIBRATE TOOL_INSTALL=all
-  - NXF_VER=0.25.6 PROFILE=travis TEST=RECALIBRATE TOOL_INSTALL=nextflow
+  - NXF_VER=0.25.6 PROFILE=dockerTest TEST=RECALIBRATE TOOL_INSTALL=nextflow
   - NXF_VER=0.25.6 SGT_VER=2.3.1 PROFILE=singularityTest TEST=REALIGN TOOL_INSTALL=all
-  - NXF_VER=0.25.6 PROFILE=travis TEST=REALIGN TOOL_INSTALL=nextflow
+  - NXF_VER=0.25.6 PROFILE=dockerTest TEST=REALIGN TOOL_INSTALL=nextflow
   - NXF_VER=0.25.6 SGT_VER=2.3.1 PROFILE=singularityTest TEST=MAPPING TOOL_INSTALL=all
-  - NXF_VER=0.25.6 PROFILE=travis TEST=MAPPING TOOL_INSTALL=nextflow
+  - NXF_VER=0.25.6 PROFILE=dockerTest TEST=MAPPING TOOL_INSTALL=nextflow
 
 install: # Install Nextflow
   - "./scripts/install.sh --tool $TOOL_INSTALL"
 
 script:
-  - "./scripts/test.sh --profile $PROFILE --test $TEST --travisci"
+  - "./scripts/test.sh --profile $PROFILE --test $TEST"

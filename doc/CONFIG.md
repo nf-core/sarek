@@ -10,45 +10,45 @@ We provides several configuration files and profiles for CAW. The standard ones 
 
 Every configuration file can be modified for your own use. If you want you can specify the use of a config file using `-c <config file>`
 
-### `docker.config`
+### [`docker.config`](../configuration/docker.config)
 
 Contain Docker images for all process. Use in your own profile if needed
 
-### `genomes.config`
+### [`genomes.config`](../configuration/genomes.config)
 
 Contain path to all references. Modify it if you want to change genome version, or the path to your references files
 
-### `localhost.config`
-
-To be used on a typical localhost on a UPPMAX cluster (16 cpus)
-
-### `singularity-download.config`
+### [`singularity-download.config`](../configuration/singularity-download.config)
 
 To be used when downloading singularity containers, like on a UPPMAX cluster
 
-### `singularity.config`
+### [`singularity.config`](../configuration/singularity.config)
 
 Contain Singularity images for all process. Use in your own profile if needed
 
-### `travis.config`
+### [`travis.config`](../configuration/travis.config)
 
 To be used for Travis (2 cpus) or on small computer for testing purpose
 
-### `uppmax-modules.config`
+### [`uppmax-localhost.config`](../configuration/uppmax-localhost.config)
+
+To be used on a typical localhost on a UPPMAX cluster (16 cpus)
+
+### [`uppmax-modules.config`](../configuration/uppmax-modules.config)
 
 Contains modules for all processes. To be used on a UPPMAX cluster
 
-### `uppmax-slurm.config`
+### [`uppmax-slurm.config`](../configuration/uppmax-slurm.config)
 
 Slurm configuration for a UPPMAX cluster
-
-### `uppmax.config`
-
-configuration for a UPPMAX cluster
 
 ## profiles
 
 Every profile can be modified for your own use. To use a profile, you'll need to specify `-profile <profile>`
+
+### `dockerTest`
+
+This is the profile for docker testing on a small machine, or on Travis CI
 
 ### `standard`
 
@@ -58,13 +58,9 @@ This is the default profile for use on a localhost on a UPPMAX cluster
 
 This is another profile for use on a UPPMAX cluster using the job scheduler slurm
 
-### `travis`
-
-This is the default profile for Travis CI automated testing, or for testing on a small machine
-
 ### `singularityTest`
 
-This is the profile for Singularity testing on a small machine
+This is the profile for Singularity testing on a small machine, or on Travis CI
 
 ### `singularityLocal`
 

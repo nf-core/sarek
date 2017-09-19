@@ -29,15 +29,19 @@ kate: syntax groovy; space-indent on; indent-width 2;
 --------------------------------------------------------------------------------
  Processes overview
  - RunFastQC - Run FastQC for QC on fastq files
- - MapReads - Map reads
+ - MapReads - Map reads with BWA
  - MergeBams - Merge BAMs if multilane samples
- - MarkDuplicates - Mark Duplicates
+ - MarkDuplicates - Mark Duplicates with Picard
  - RealignerTargetCreator - Create realignment target intervals
  - IndelRealigner - Realign BAMs as T/N pair
- - CreateRecalibrationTable - Create Recalibration Table
- - RecalibrateBam - Recalibrate Bam
+ - CreateRecalibrationTable - Create Recalibration Table with BaseRecalibrator
+ - RecalibrateBam - Recalibrate Bam with PrintReads
  - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files
+ - RunBamQC - Run qualimap BamQC on recalibrated BAM files
+ - CreateIntervalBeds - Create and sort intervals into bed files
  - RunHaplotypecaller - Run HaplotypeCaller for GermLine Variant Calling (Parallelized processes)
+ - RunGenotypeGVCFs - Run HaplotypeCaller for GermLine Variant Calling (Parallelized processes)
+ - RunBcftoolsStats - Run BCFTools stats on vcf before annotation
  - RunMutect1 - Run MuTect1 for Variant Calling (Parallelized processes)
  - RunMutect2 - Run MuTect2 for Variant Calling (Parallelized processes)
  - RunFreeBayes - Run FreeBayes for Variant Calling (Parallelized processes)
@@ -59,23 +63,16 @@ kate: syntax groovy; space-indent on; indent-width 2;
 
 version = '1.1'
 
-if (!nextflow.version.matches('>= 0.25.0')) {exit 1, "Nextflow version 0.25.0 or greater is needed to run this workflow"}
+if (!nextflow.version.matches('>= 0.25.0')) exit 1, "Nextflow version 0.25.0 or greater is needed to run this workflow"
+if (params.help) exit 0, helpMessage()
+if (params.version) exit 0, versionMessage()
+if (!isAllowedParams(params)) exit 1, "params is unknown, see --help for more information"
 
-if (!isAllowedParams(params)) {exit 1, "params is unknown, see --help for more information"}
-
-if (params.help) {
-  helpMessage()
-  exit 1
-}
-
-if (params.version) {
-  versionMessage()
-  exit 1
-}
-
-if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
+if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
 step = params.step.toLowerCase()
+if (step == 'preprocessing') step = 'mapping'
+if (step == 'skippreprocessing') step = 'variantcalling'
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
 annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
 annotateVCF = params.annotateVCF ? params.annotateVCF.split(',').collect{it.trim()} : []
@@ -84,13 +81,14 @@ directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
 stepList = defineStepList()
 toolList = defineToolList()
+nucleotidesPerSecond = 1000.0 // used to estimate variant calling runtime
 gvcf = !params.noGVCF
 reports = !params.noReports
 verbose = params.verbose
 
 if (!checkParameterExistence(step, stepList)) exit 1, 'Unknown step, see --help for more information'
 if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
-if (step == 'preprocessing' && !checkExactlyOne([params.test, params.sample, params.sampleDir]))
+if (step == 'mapping' && !checkExactlyOne([params.test, params.sample, params.sampleDir]))
   exit 1, 'Please define which samples to work on by providing exactly one of the --test, --sample or --sampleDir options'
 if (!checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
 if (!checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
@@ -114,12 +112,12 @@ if (params.sample) tsvPath = params.sample
 if (!params.sample && !params.sampleDir) {
   tsvPaths = [
   'annotate': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv",
-  'preprocessing': "$workflow.projectDir/data/tsv/tiny.tsv",
+  'mapping': "$workflow.projectDir/data/tsv/tiny.tsv",
   'realign': "$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv",
   'recalibrate': "$workflow.launchDir/$directoryMap.nonRecalibrated/nonRecalibrated.tsv",
-  'skippreprocessing': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv"
+  'variantcalling': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv"
   ]
-  if (params.test || step != 'preprocessing') tsvPath = tsvPaths[step]
+  if (params.test || step != 'mapping') tsvPath = tsvPaths[step]
 }
 
 // Set up the fastqFiles and bamFiles channels. One of them remains empty
@@ -129,19 +127,19 @@ if (tsvPath) {
   tsvFile = file(tsvPath)
   switch (step) {
     case 'annotate': bamFiles = extractBams(tsvFile); break
-    case 'preprocessing': fastqFiles = extractFastq(tsvFile); break
+    case 'mapping': fastqFiles = extractFastq(tsvFile); break
     case 'realign': bamFiles = extractBams(tsvFile); break
     case 'recalibrate': bamFiles = extractRecal(tsvFile); break
-    case 'skippreprocessing': bamFiles = extractBams(tsvFile); break
+    case 'variantcalling': bamFiles = extractBams(tsvFile); break
     default: exit 1, "Unknown step $step"
   }
 } else if (params.sampleDir) {
-  if (step != 'preprocessing') exit 1, '--sampleDir does not support steps other than "preprocessing"'
+  if (step != 'mapping') exit 1, '--sampleDir does not support steps other than "mapping"'
   fastqFiles = extractFastqFromDir(params.sampleDir)
   tsvFile = params.sampleDir  // used in the reports
 } else exit 1, 'No sample were defined, see --help'
 
-if (step == 'preprocessing') {
+if (step == 'mapping') {
   (patientGenders, fastqFiles) = extractGenders(fastqFiles)
 } else {
   (patientGenders, bamFiles) = extractGenders(bamFiles)
@@ -180,7 +178,7 @@ process RunFastQC {
   output:
     file "*_fastqc.{zip,html}" into fastQCreport
 
-  when: step == 'preprocessing' && reports
+  when: step == 'mapping' && reports
 
   script:
   """
@@ -203,7 +201,7 @@ process MapReads {
   output:
     set idPatient, status, idSample, idRun, file("${idRun}.bam") into mappedBam
 
-  when: step == 'preprocessing'
+  when: step == 'mapping'
 
   script:
   readGroup = "@RG\\tID:$idRun\\tPU:$idRun\\tSM:$idSample\\tLB:$idSample\\tPL:illumina"
@@ -243,7 +241,7 @@ process MergeBams {
   output:
     set idPatient, status, idSample, file("${idSample}.bam") into mergedBam
 
-  when: step == 'preprocessing'
+  when: step == 'mapping'
 
   script:
   """
@@ -284,7 +282,7 @@ process MarkDuplicates {
     set idPatient, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai") into markDuplicatesTSV
     file ("${bam}.metrics") into markDuplicatesReport
 
-  when: step == 'preprocessing'
+  when: step == 'mapping'
 
   script:
   """
@@ -312,7 +310,7 @@ markDuplicatesTSV.map { idPatient, status, idSample, bam, bai ->
 // Group the marked duplicates BAMs for intervals and realign by idPatient
 // Grouping also by gender, to make a nicer channel
 duplicatesGrouped = Channel.empty()
-if (step == 'preprocessing') {
+if (step == 'mapping') {
   duplicatesGrouped = duplicates.groupTuple()
 } else if (step == 'realign') {
   duplicatesGrouped = bamFiles.map{
@@ -365,7 +363,7 @@ process RealignerTargetCreator {
   output:
     set idPatient, file("${idPatient}.intervals") into intervals
 
-  when: step == 'preprocessing' || step == 'realign'
+  when: step == 'mapping' || step == 'realign'
 
   script:
   bams = bam.collect{"-I $it"}.join(' ')
@@ -423,7 +421,7 @@ process IndelRealigner {
   output:
     set idPatient, file("*.real.bam"), file("*.real.bai") into realignedBam mode flatten
 
-  when: step == 'preprocessing' || step == 'realign'
+  when: step == 'mapping' || step == 'realign'
 
   script:
   bams = bam.collect{"-I $it"}.join(' ')
@@ -476,7 +474,7 @@ process CreateRecalibrationTable {
     set idPatient, status, idSample, file(bam), file(bai), file("${idSample}.recal.table") into recalibrationTable
     set idPatient, status, idSample, val("${idSample}_${status}.md.real.bam"), val("${idSample}_${status}.md.real.bai"), val("${idSample}.recal.table") into recalibrationTableTSV
 
-  when: step == 'preprocessing' || step == 'realign'
+  when: step == 'mapping' || step == 'realign'
 
   script:
   known = knownIndels.collect{ "-knownSites $it" }.join(' ')
@@ -487,6 +485,7 @@ process CreateRecalibrationTable {
   -T BaseRecalibrator \
   -R $genomeFile \
   -I $bam \
+  -L $intervals \
   --disable_auto_index_creation_and_locking_when_reading_rods \
   -knownSites $dbsnp \
   $known \
@@ -540,7 +539,7 @@ process RecalibrateBam {
 
   // HaplotypeCaller can do BQSR on the fly, so do not create a
   // recalibrated BAM explicitly.
-  when: step != 'skippreprocessing' && explicitBqsrNeeded
+  when: step != 'variantcalling' && explicitBqsrNeeded
 
   script:
   """
@@ -562,7 +561,7 @@ recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
   name: 'recalibrated.tsv', sort: true, storeDir: directoryMap.recalibrated
 )
 
-if (step == 'skippreprocessing') {
+if (step == 'variantcalling') {
   // assume input is recalibrated, ignore explicitBqsrNeeded
   (recalibratedBam, recalTables) = bamFiles.into(2)
 
@@ -662,30 +661,80 @@ bamsTumor = bamsTumor.map { idPatient, status, idSample, bam, bai -> [idPatient,
 // Do variant calling by this intervals, and re-merge the VCFs.
 // Since we are on a cluster, this can parallelize the variant call processes.
 // And push down the variant call wall clock time significanlty.
-// In fact we need two channels: one for the actual genomic region
-// and an other for names without ":"
-// as nextflow is not happy with them (will report as a failed process).
-// For region 1:1-2000 the output file name will be something like:
-// 1_1-2000_Sample_name.xxx.vcf
-// from the "1:1-2000" string make ["1:1-2000","1_1-2000"]
 
-// define intervals file by --intervals
-intervals = Channel.
-  from(file(referenceMap.intervals).readLines()).
-  map{[it, it.replaceFirst(/\:/, '_')]}
+process CreateIntervalBeds {
+  tag {intervals.fileName}
 
-(bamsNormalTemp, bamsNormal, intervals) = generateIntervalsForVC(bamsNormal, intervals)
-(bamsTumorTemp, bamsTumor, intervals) = generateIntervalsForVC(bamsTumor, intervals)
+  input:
+    file(intervals) from Channel.value(referenceMap.intervals)
+
+  output:
+    file '*.bed' into bedIntervals mode flatten
+
+  script:
+  // If the interval file is BED format, the fifth column is interpreted to
+  // contain runtime estimates, which is then used to combine short-running jobs
+  if (intervals.getName().endsWith('.bed'))
+    """
+    awk -vFS="\t" '{
+      t = \$5  # runtime estimate
+      if (t == "") {
+        # no runtime estimate in this row, assume default value
+        t = (\$3 - \$2) / ${nucleotidesPerSecond}
+      }
+      if (name == "" || (chunk > 600 && (chunk + t) > longest * 1.05)) {
+        # start a new chunk
+        name = sprintf("%s_%d-%d.bed", \$1, \$2+1, \$3)
+        chunk = 0
+        longest = 0
+      }
+      if (t > longest)
+        longest = t
+      chunk += t
+      print \$0 > name
+    }' $intervals
+    """
+  else
+    """
+    awk -vFS="[:-]" '{
+      name = sprintf("%s_%d-%d", \$1, \$2, \$3);
+      printf("%s\\t%d\\t%d\\n", \$1, \$2-1, \$3) > name ".bed"
+    }' $intervals
+    """
+}
+
+bedIntervals = bedIntervals
+  .map { intervalFile ->
+    final duration = 0.0
+    for (line in intervalFile.readLines()) {
+      final fields = line.split('\t')
+      if (fields.size() >= 5) {
+        duration += fields[4].toFloat()
+      } else {
+        start = fields[1].toInteger()
+        end = fields[2].toInteger()
+        duration += (end - start) / nucleotidesPerSecond
+      }
+    }
+    [duration, intervalFile]
+  }.toSortedList({ a, b -> b[0] <=> a[0] })
+  .flatten().collate(2)
+  .map{duration, intervalFile -> intervalFile}
+
+if (verbose) bedIntervals = bedIntervals.view {
+  "  Interv: ${it.baseName}"
+}
+
+(bamsNormalTemp, bamsNormal, bedIntervals) = generateIntervalsForVC(bamsNormal, bedIntervals)
+(bamsTumorTemp, bamsTumor, bedIntervals) = generateIntervalsForVC(bamsTumor, bedIntervals)
 
 // HaplotypeCaller
 bamsFHC = bamsNormalTemp.mix(bamsTumorTemp)
-
-intervals = intervals.tap { intervalsTemp }
+bedIntervals = bedIntervals.tap { intervalsTemp }
 recalTables = recalTables
-  .combine(intervalsTemp)
-  .map { patient, sample, bam, bai, recalTable, interval, interval2 ->
-    [patient, sample, bam, bai, interval, interval2, recalTable] }
-
+  .spread(intervalsTemp)
+  .map { patient, sample, bam, bai, recalTable, intervalBed ->
+    [patient, sample, bam, bai, intervalBed, recalTable] }
 
 // re-associate the BAMs and samples with the recalibration table
 bamsFHC = bamsFHC
@@ -702,23 +751,20 @@ bamsAll = bamsAll.map {
   [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor]
 }
 
-// MuTect1
-(bamsFMT1, bamsAll, intervals) = generateIntervalsForVC(bamsAll, intervals)
-
-// MuTect2
-(bamsFMT2, bamsAll, intervals) = generateIntervalsForVC(bamsAll, intervals)
-
-// FreeBayes
-(bamsFFB, bamsAll, intervals) = generateIntervalsForVC(bamsAll, intervals)
-
 // Manta and Strelka
-(bamsForManta, bamsForStrelka) = bamsAll.into(2)
+(bamsForManta, bamsForStrelka, bamsAll) = bamsAll.into(3)
+
+bamsTumorNormalIntervals = bamsAll.spread(bedIntervals)
+
+// MuTect1, MuTect2, FreeBayes
+(bamsFMT1, bamsFMT2, bamsFFB) = bamsTumorNormalIntervals.into(3)
+
 
 process RunHaplotypecaller {
-  tag {idSample + "-" + gen_int}
+  tag {idSample + "-" + intervalBed.baseName}
 
   input:
-    set idPatient, idSample, file(bam), file(bai), genInt, gen_int, recalTable from bamsFHC //Are these values `ped to bamNormal already?
+    set idPatient, idSample, file(bam), file(bai), file(intervalBed), recalTable from bamsFHC //Are these values `ped to bamNormal already?
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -728,8 +774,8 @@ process RunHaplotypecaller {
     ])
 
   output:
-    set val("gvcf-hc"), idPatient, idSample, idSample, val("${gen_int}_${idSample}"), file("${gen_int}_${idSample}.g.vcf") into hcGenomicVCF
-    set idPatient, idSample, genInt, gen_int, file("${gen_int}_${idSample}.g.vcf") into vcfsToGenotype
+    set val("gvcf-hc"), idPatient, idSample, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf") into hcGenomicVCF
+    set idPatient, idSample, file(intervalBed), file("${intervalBed.baseName}_${idSample}.g.vcf") into vcfsToGenotype
 
   when: 'haplotypecaller' in tools
 
@@ -745,9 +791,9 @@ process RunHaplotypecaller {
   --dbsnp $dbsnp \
   $BQSR \
   -I $bam \
-  -L \"$genInt\" \
+  -L $intervalBed \
   --disable_auto_index_creation_and_locking_when_reading_rods \
-  -o ${gen_int}_${idSample}.g.vcf
+  -o ${intervalBed.baseName}_${idSample}.g.vcf
   """
 }
 hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3])
@@ -755,10 +801,10 @@ hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3])
 if (!gvcf) {hcGenomicVCF.close()}
 
 process RunGenotypeGVCFs {
-  tag {idSample + "-" + gen_int}
+  tag {idSample + "-" + intervalBed.baseName}
 
   input:
-    set idPatient, idSample, genInt, gen_int, file(gvcf) from vcfsToGenotype
+    set idPatient, idSample, file(intervalBed), file(gvcf) from vcfsToGenotype
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -768,7 +814,7 @@ process RunGenotypeGVCFs {
     ])
 
   output:
-    set val("haplotypecaller"), idPatient, idSample, idSample, val("${gen_int}_${idSample}"), file("${gen_int}_${idSample}.vcf") into hcGenotypedVCF
+    set val("haplotypecaller"), idPatient, idSample, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into hcGenotypedVCF
 
   when: 'haplotypecaller' in tools
 
@@ -779,20 +825,20 @@ process RunGenotypeGVCFs {
   -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T GenotypeGVCFs \
   -R $genomeFile \
-  -L \"$genInt\" \
+  -L $intervalBed \
   --dbsnp $dbsnp \
   --variant $gvcf \
   --disable_auto_index_creation_and_locking_when_reading_rods \
-  -o ${gen_int}_${idSample}.vcf
+  -o ${intervalBed.baseName}_${idSample}.vcf
   """
 }
 hcGenotypedVCF = hcGenotypedVCF.groupTuple(by:[0,1,2,3])
 
 process RunMutect1 {
-  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + gen_int}
+  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
 
   input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT1
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from bamsFMT1
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(cosmic), file(cosmicIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -804,7 +850,7 @@ process RunMutect1 {
     ])
 
   output:
-    set val("mutect1"), idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect1Output
+    set val("mutect1"), idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect1Output
 
   when: 'mutect1' in tools
 
@@ -818,20 +864,20 @@ process RunMutect1 {
   --dbsnp $dbsnp \
   -I:normal $bamNormal \
   -I:tumor $bamTumor \
-  -L \"$genInt\" \
+  -L $intervalBed \
   --disable_auto_index_creation_and_locking_when_reading_rods \
-  --out ${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.call_stats.out \
-  --vcf ${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf
+  --out ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.call_stats.out \
+  --vcf ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
   """
 }
 
 mutect1Output = mutect1Output.groupTuple(by:[0,1,2,3])
 
 process RunMutect2 {
-  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + gen_int}
+  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
 
   input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFMT2
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from bamsFMT2
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(cosmic), file(cosmicIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -843,7 +889,7 @@ process RunMutect2 {
     ])
 
   output:
-    set val("mutect2"), idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2Output
+    set val("mutect2"), idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2Output
 
   when: 'mutect2' in tools
 
@@ -858,22 +904,22 @@ process RunMutect2 {
   -I:normal $bamNormal \
   -I:tumor $bamTumor \
   --disable_auto_index_creation_and_locking_when_reading_rods \
-  -L \"$genInt\" \
-  -o ${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf
+  -L $intervalBed \
+  -o ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
   """
 }
 
 mutect2Output = mutect2Output.groupTuple(by:[0,1,2,3])
 
 process RunFreeBayes {
-  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + gen_int}
+  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
 
   input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), genInt, gen_int from bamsFFB
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from bamsFFB
     file(genomeFile) from Channel.value(referenceMap.genomeFile)
 
   output:
-    set val("freebayes"), idPatient, idSampleNormal, idSampleTumor, val("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}"), file("${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into freebayesOutput
+    set val("freebayes"), idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into freebayesOutput
 
   when: 'freebayes' in tools
 
@@ -889,9 +935,9 @@ process RunFreeBayes {
     --min-alternate-fraction 0.03 \
     --min-repeat-entropy 1 \
     --min-alternate-count 2 \
-    -r \"$genInt\" \
+    -t $intervalBed \
     $bamTumor \
-    $bamNormal > ${gen_int}_${idSampleTumor}_vs_${idSampleNormal}.vcf
+    $bamNormal > ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
   """
 }
 
@@ -904,8 +950,7 @@ vcfsToMerge = hcGenomicVCF.mix(hcGenotypedVCF, mutect1Output, mutect2Output, fre
 if (verbose) vcfsToMerge = vcfsToMerge.view {
   "VCFs To be merged:\n\
   Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  Interv: ${it[4]}\n\
-  Files : ${it[5].fileName}"
+  Files : ${it[4].fileName}"
 }
 
 process ConcatVCF {
@@ -914,15 +959,12 @@ process ConcatVCF {
   publishDir "${directoryMap."$variantCaller"}", mode: 'copy'
 
   input:
-    set variantCaller, idPatient, idSampleNormal, idSampleTumor, tag, file(vcFiles) from vcfsToMerge
-    set file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
-      referenceMap.genomeFile,
-      referenceMap.genomeIndex,
-      referenceMap.genomeDict
-    ])
+    set variantCaller, idPatient, idSampleNormal, idSampleTumor, file(vcFiles) from vcfsToMerge
+    file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
 
   output:
     set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz") into vcfConcatenated
+    file("*.vcf.gz.tbi") into vcfConcatenatedTbi
 
   when: 'haplotypecaller' in tools || 'mutect1' in tools || 'mutect2' in tools || 'freebayes' in tools
 
@@ -935,7 +977,6 @@ process ConcatVCF {
     outputFile = "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
   }
   vcfFiles = vcFiles.collect{" $it"}.join(' ')
-  chrPrefix = params.genome.endsWith('GRCh37') ? '' : 'chr'
 
   """
   # first make a header from one of the VCF intervals
@@ -945,12 +986,9 @@ process ConcatVCF {
   awk '!/GATKCommandLine/{print}/GATKCommandLine/{for(i=1;i<=NF;i++){if(\$i!~/intervals=/ && \$i !~ /out=/){printf("%s ",\$i)}}printf("\\n")}' \
   > header
 
-  # get contigs from the genome FASTA file (some variant callers are not saving contigs :S)
-  # CONTIGS=(\$(awk '/>/{print \$1}' ${genomeFile}|sed 's/>//'))
-  # for the time being I backout to the original one
-  # Get list of contigs from VCF header
-  # TODO fixit for FreeBayes - sometimes there are no contigs
-  CONTIGS=(\$(sed -rn '/^[^#]/q;/^##contig=/{s/##contig=<ID=(.*),length=[0-9]+(,[^>]*)?>/\\1/;s/\\*/\\\\*/g;p}' \$FIRSTVCF))
+  # Get list of contigs from the FASTA index (.fai). We cannot use the ##contig
+  # header in the VCF as it is optional (FreeBayes does not save it, for example)
+  CONTIGS=(\$(cut -f1 ${genomeIndex}))
 
   # concatenate VCFs in the correct order
   (
@@ -977,7 +1015,8 @@ process ConcatVCF {
         tail -n +\$((L+1)) \${vcf}
       done
     done
-  ) | pigz > ${outputFile}.gz
+  ) | bgzip -@ $task.cpus > ${outputFile}.gz
+  tabix ${outputFile}.gz
   """
 }
 
@@ -1363,6 +1402,19 @@ process GenerateMultiQCconfig {
   echo "- Step: "${step} >> multiqc_config.yaml
   echo "- Tools: "${tools.join(", ")} >> multiqc_config.yaml
   echo ${annotateString} >> multiqc_config.yaml
+  echo "  acLoci      : $referenceMap.acLoci" >> multiqc_config.yaml
+  echo "  bwaIndex    : "${referenceMap.bwaIndex.join(", ")} >> multiqc_config.yaml
+  echo "  cosmic      : $referenceMap.cosmic" >> multiqc_config.yaml
+  echo "  cosmicIndex : $referenceMap.cosmicIndex" >> multiqc_config.yaml
+  echo "  dbsnp       : $referenceMap.dbsnp" >> multiqc_config.yaml
+  echo "  dbsnpIndex  : $referenceMap.dbsnpIndex" >> multiqc_config.yaml
+  echo "  genomeDict  : $referenceMap.genomeDict" >> multiqc_config.yaml
+  echo "  genomeFile  : $referenceMap.genomeFile" >> multiqc_config.yaml
+  echo "  genomeIndex : $referenceMap.genomeIndex" >> multiqc_config.yaml
+  echo "  intervals   : $referenceMap.intervals" >> multiqc_config.yaml
+  echo "  knownIndels : "${referenceMap.knownIndels.join(", ")} >> multiqc_config.yaml
+  echo "  knownIndelsIndex: "${referenceMap.knownIndelsIndex.join(", ")} >> multiqc_config.yaml
+  echo "  snpeffDb    : ${params.genomes[params.genome].snpeffDb}" >> multiqc_config.yaml
   echo "top_modules:" >> multiqc_config.yaml
   echo "- 'fastqc'" >> multiqc_config.yaml
   echo "- 'picard'" >> multiqc_config.yaml
@@ -1447,20 +1499,45 @@ def checkParameterList(list, realList) {
   return list.every{ checkParameterExistence(it, realList) }
 }
 
+def checkParamReturnFile(item) {
+  params."$item" = params.genomes[params.genome]."$item"
+  return file(params."$item")
+}
+
 def checkParams(it) {
   // Check if params is in this given list
   return it in [
+    'acLoci',
+    'ac-loci',
     'annotate-tools',
     'annotate-VCF',
     'annotateTools',
     'annotateVCF',
+    'bwaIndex',
+    'bwa-index',
     'call-name',
     'callName',
     'contact-mail',
     'contactMail',
+    'cosmic',
+    'cosmicIndex',
+    'cosmic-index',
+    'dbsnp',
+    'dbsnp-index',
     'genome',
+    'genomeDict',
+    'genome-dict',
+    'genomeFile',
+    'genome-file',
+    'genomeIndex',
+    'genome-index',
     'genomes',
     'help',
+    'intervals',
+    'knownIndels',
+    'known-indels',
+    'knownIndelsIndex',
+    'known-indels-index',
     'no-GVCF',
     'no-reports',
     'noGVCF',
@@ -1545,33 +1622,37 @@ def defineReferenceMap() {
   if (!(params.genome in params.genomes)) {
     exit 1, "Genome $params.genome not found in configuration"
   }
-  genome = params.genomes[params.genome]
-
   return [
-    'acLoci'      : file(genome.acLoci),  // loci file for ascat
-    'dbsnp'       : file(genome.dbsnp),
-    'dbsnpIndex'  : file(genome.dbsnpIndex),
-    'cosmic'      : file(genome.cosmic),  // cosmic VCF with VCF4.1 header
-    'cosmicIndex' : file(genome.cosmicIndex),
-    'genomeDict'  : file(genome.genomeDict),  // genome reference dictionary
-    'genomeFile'  : file(genome.genome),  // FASTA genome reference
-    'genomeIndex' : file(genome.genomeIndex),  // genome .fai file
-    'bwaIndex'    : file(genome.bwaIndex),  // BWA index files
-    // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
-    'intervals'   : file(genome.intervals),
+    // loci file for ascat
+    'acLoci'           : checkParamReturnFile("acLoci"),
+    'dbsnp'            : checkParamReturnFile("dbsnp"),
+    'dbsnpIndex'       : checkParamReturnFile("dbsnpIndex"),
+    // cosmic VCF with VCF4.1 header
+    'cosmic'           : checkParamReturnFile("cosmic"),
+    'cosmicIndex'      : checkParamReturnFile("cosmicIndex"),
+    // genome reference dictionary
+    'genomeDict'       : checkParamReturnFile("genomeDict"),
+    // FASTA genome reference
+    'genomeFile'       : checkParamReturnFile("genomeFile"),
+    // genome .fai file
+    'genomeIndex'      : checkParamReturnFile("genomeIndex"),
+    // BWA index files
+    'bwaIndex'         : checkParamReturnFile("bwaIndex"),
+    // intervals file for spread-and-gather processes
+    'intervals'        : checkParamReturnFile("intervals"),
     // VCFs with known indels (such as 1000 Genomes, Mill’s gold standard)
-    'knownIndels' : genome.knownIndels.collect{file(it)},
-    'knownIndelsIndex': genome.knownIndelsIndex.collect{file(it)},
+    'knownIndels'      : checkParamReturnFile("knownIndels"),
+    'knownIndelsIndex' : checkParamReturnFile("knownIndelsIndex"),
   ]
 }
 
 def defineStepList() {
   return [
     'annotate',
-    'preprocessing',
+    'mapping',
     'realign',
     'recalibrate',
-    'skippreprocessing'
+    'variantcalling'
   ]
 }
 
@@ -1764,12 +1845,12 @@ def helpMessage() {
   log.info "    --test"
   log.info "       Use a test sample."
   log.info "    --step"
-  log.info "       Option to configure preprocessing."
+  log.info "       Option to start workflow"
   log.info "       Possible values are:"
-  log.info "         preprocessing (default, will start workflow with FASTQ files)"
+  log.info "         mapping (default, will start workflow with FASTQ files)"
   log.info "         realign (will start workflow with non-realigned BAM files)"
   log.info "         recalibrate (will start workflow with non-recalibrated BAM files)"
-  log.info "         skippreprocessing (will start workflow with recalibrated BAM files)"
+  log.info "         variantcalling (will start workflow with recalibrated BAM files)"
   log.info "         annotate (will annotate Variant Calling output."
   log.info "         By default it will try to annotate all available vcfs."
   log.info "         Use with --annotateTools or --annotateVCF to specify what to annotate"
@@ -1803,8 +1884,8 @@ def helpMessage() {
   log.info "    --genome <Genome>"
   log.info "       Use a specific genome version."
   log.info "       Possible values are:"
-  log.info "         GRCh37 (Default)"
-  log.info "         GRCh38"
+  log.info "         GRCh37"
+  log.info "         GRCh38 (Default)"
   log.info "         smallGRCh37 (Use a small reference (Tests only))"
   log.info "    --help"
   log.info "       you're reading it"
@@ -1837,6 +1918,20 @@ def minimalInformationMessage() {
   log.info "Step        : " + step
   if (tools) {log.info "Tools       : " + tools.join(', ')}
   if (annotateTools) {log.info "Annotate on : " + annotateTools.join(', ')}
+  log.info "Reference files used:"
+  log.info "  acLoci      : $referenceMap.acLoci"
+  log.info "  bwaIndex    : " + referenceMap.bwaIndex.join(',\n    ')
+  log.info "  cosmic      : $referenceMap.cosmic"
+  log.info "  cosmicIndex : $referenceMap.cosmicIndex"
+  log.info "  dbsnp       : $referenceMap.dbsnp"
+  log.info "  dbsnpIndex  : $referenceMap.dbsnpIndex"
+  log.info "  genomeDict  : $referenceMap.genomeDict"
+  log.info "  genomeFile  : $referenceMap.genomeFile"
+  log.info "  genomeIndex : $referenceMap.genomeIndex"
+  log.info "  intervals   : $referenceMap.intervals"
+  log.info "  knownIndels : " + referenceMap.knownIndels.join(',\n    ')
+  log.info "  knownIndelsIndex: " + referenceMap.knownIndelsIndex.join(',\n    ')
+  log.info "  snpeffDb    : ${params.genomes[params.genome].snpeffDb}"
 }
 
 def nextflowMessage() {
