@@ -8,7 +8,7 @@ To run Ascat on NGS data we need .bam files for the tumor and normal samples, as
 
 ### BAF and LogR values
 
-Running Ascat on NGS data requires that the .bam files are converted into BAF and LogR values. This can be done using the software AlleleCount (<https://github.com/cancerit/alleleCount>) followed by a simple R script. AlleleCount extracts the number of reads in a bam file supporting each allele at specified SNP positions. Based on this, BAF and logR can be calculated for every SNP position i as:
+Running Ascat on NGS data requires that the .bam files are converted into BAF and LogR values. This can be done using the software [AlleleCount](https://github.com/cancerit/alleleCount) followed by a simple R script. AlleleCount extracts the number of reads in a bam file supporting each allele at specified SNP positions. Based on this, BAF and logR can be calculated for every SNP position i as:
 
 ```
 BAFi(tumor)=countsBi(tumor)/(countsAi(tumor)+countsBi(tumor))

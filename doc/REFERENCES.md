@@ -1,6 +1,6 @@
 # Genomes and reference files
 
-CAW currently uses GRCh37 by default. Support for GRCh38 is not fully working yet! The settings are in `genomes.config`, they can be tailored to your needs. The [`buildReferences.nf`](#buildReferences.nf) script can be use to build the indexes based on the reference files.
+CAW currently uses GRCh37 by default. Support for GRCh38 is not fully working yet! The settings are in `genomes.config`, they can be tailored to your needs. The [`buildReferences.nf`](#buildreferencesnf) script can be use to build the indexes based on the reference files.
 
 ## GRCh37
 
@@ -19,7 +19,7 @@ The following files need to be downloaded:
 
 ### Other files
 
-From our repo, get the '[intervals list file](https://raw.githubusercontent.com/SciLifeLab/CAW/master/repeats/wgs_calling_regions.grch37.list)'. More information about this file in the [intervals documentation](INTERVALS.md)
+From our repo, get the [`intervals` list file](https://raw.githubusercontent.com/SciLifeLab/CAW/master/repeats/wgs_calling_regions.grch37.list). More information about this file in the [intervals documentation](INTERVALS.md)
 
 The rest of the references files are stored in in [export.uppmax.uu.se](https://export.uppmax.uu.se/b2015110/caw-references/b37/) and also on the repository [CAW-References](https://github.com/MaxUlysse/CAW-References) using [GIT-LFS](https://git-lfs.github.com/):
 
@@ -34,7 +34,7 @@ To annotate with COSMIC variants during MuTect1/2 Variant Calling you need to cr
 
 Example:
 
-```
+```bash
 samtools faidx human_g1k_v37_decoy.fasta
 sh Create_Cosmic.sh human_g1k_v37_decoy.fasta.fai
 ```
@@ -43,7 +43,7 @@ Note: CosmicCodingMuts.vcf.gz & CosmicNonCodingVariants.vcf.gz must be in same f
 
 To index the resulting VCF file use [igvtools](https://software.broadinstitute.org/software/igv/igvtools).
 
-```
+```bash
 igvtools index <cosmicvxx.vcf>
 ```
 
@@ -55,7 +55,7 @@ To get the needed files, download the GATK bundle for GRCh38 from [ftp://gsapubf
 
 The MD5SUM of `Homo_sapiens_assembly38.fasta` included in that file is 7ff134953dcca8c8997453bbb80b6b5e.
 
-From the `beta/` directory, which seems to be an older version of the bundle, only Homo_sapiens_assembly38.known_indels.vcf _is needed. Also, you can omit dbsnp_138_ and dbsnp_144 files as we use dbsnp_146. The old ones also use the wrong chromosome naming convention.
+From the `beta/` directory, which seems to be an older version of the bundle, only Homo_sapiens_assembly38.known_indels.vcf is needed. Also, you can omit dbsnp_138_ and dbsnp_144 files as we use dbsnp_146. The old ones also use the wrong chromosome naming convention.
 
 Afterwards, the following needs to be done:
 
@@ -71,11 +71,11 @@ Use `--genome smallGRCh37` to map against a small reference genome based on GRCh
 
 ## buildReferences.nf
 
-The `buildReferences.nf` script can dowload and build the files needed for smallGRCh37, or build the references for GRCh37/smallGRCh37.
+The `buildReferences.nf` script can download and build the files needed for smallGRCh37, or build the references for GRCh37/smallGRCh37.
 
 ### `--download`
 
-Only with `--genome smallGRCh37`. If this option is specify, the [`smallRef` repository](https://github.com/szilvajuhos/smallRef) repo will be automatically downloaded from GitHub. Not to be used on UPPMAX cluster Bianca or on similar clusters where such things are not allowed.
+Only with `--genome smallGRCh37`. If this option is specify, the [`smallRef`](https://github.com/szilvajuhos/smallRef) repository will be automatically downloaded from GitHub. Not to be used on UPPMAX cluster Bianca or on similarly secured clusters where such things are not working/allowed.
 
 ```
 nextflow run buildReferences.nf --download --genome smallGRCh37

@@ -69,6 +69,24 @@ ssh -AX [USER]@milou.uppmax.uu.se
 nextflow run SciLifeLab/CAW --sample [FILE.TSV] --genome [GENOME] --project [PROJECT] -profile slurm
 ```
 
+## Use CAW with slurm and Singularity
+
+- See the [Install with containers documentation](INSTALL_CONTAINERS.md)
+To use CAW on Milou you will need to use the `singularitySlurm` profile.
+
+```bash
+# Connect to Milou
+ssh -AX [USER]@milou.uppmax.uu.se
+
+#
+# Download the singularity containers
+nextflow run SciLifeLab/CAW-containers --singularity --containers bcftools,concatvcf,fastqc,freebayes,gatk,htslib,igvtools,mapreads,multiqc,mutect1,picard,qualimap,runallelecount,runascat,runconvertallelecounts,runmanta,samtools,snpeffgrch37,snpeffgrch38,strelka,vepgrch37,vepgrch38 --singularityPublishDir containers/
+nextflow run SciLifeLab/CAW-containers --singularity --containers gatk --tag 1.0 --singularityPublishDir containers/
+
+# Run the workflow directly on the login node
+nextflow run SciLifeLab/CAW --sample [FILE.TSV] --genome [GENOME] --project [PROJECT] -profile singularitySlurm
+```
+
 --------------------------------------------------------------------------------
 
 [![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
