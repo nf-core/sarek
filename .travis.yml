@@ -8,12 +8,18 @@ services:
   - docker
 
 env:
-  - NXF_VER=0.22.2
+  - NXF_VER=0.25.6 PROFILE=dockerTest TEST=ANNOTATEVEP TOOL_INSTALL=nextflow
+  - NXF_VER=0.25.6 SGT_VER=2.3.1 PROFILE=singularityTest TEST=ANNOTATESNPEFF TOOL_INSTALL=all
+  - NXF_VER=0.25.6 PROFILE=dockerTest TEST=ANNOTATESNPEFF TOOL_INSTALL=nextflow
+  - NXF_VER=0.25.6 SGT_VER=2.3.1 PROFILE=singularityTest TEST=RECALIBRATE TOOL_INSTALL=all
+  - NXF_VER=0.25.6 PROFILE=dockerTest TEST=RECALIBRATE TOOL_INSTALL=nextflow
+  - NXF_VER=0.25.6 SGT_VER=2.3.1 PROFILE=singularityTest TEST=REALIGN TOOL_INSTALL=all
+  - NXF_VER=0.25.6 PROFILE=dockerTest TEST=REALIGN TOOL_INSTALL=nextflow
+  - NXF_VER=0.25.6 SGT_VER=2.3.1 PROFILE=singularityTest TEST=MAPPING TOOL_INSTALL=all
+  - NXF_VER=0.25.6 PROFILE=dockerTest TEST=MAPPING TOOL_INSTALL=nextflow
 
-install:
-  - curl -fsSL get.nextflow.io | bash
-  - chmod +x nextflow
-  - sudo mv nextflow /usr/local/bin/
+install: # Install Nextflow
+  - "./scripts/install.sh --tool $TOOL_INSTALL"
 
 script:
-  - ./scripts/test_docker.sh
+  - "./scripts/test.sh --profile $PROFILE --test $TEST"

@@ -38,13 +38,13 @@ Use the given TSV file as sample (cf [TSV documentation](TSV.md)).
 
 Choose from wich step the workflow will start. Choose only one step. Possible values are:
 
-- preprocessing (default, will start workflow with FASTQ files)
+- mapping (default, will start workflow with FASTQ files)
 - realign (will start workflow with BAM files (with T/N BAMs that were not realigned together))
 - recalibrate (will start workflow with BAM files and Recalibration Tables (Only with T/N BAMs that were realigned together))
-- skippreprocessing (will skip entire preprocessing (Only with T/N BAMs that were realigned together))
+- variantcalling (will skip entire preprocessing (Only with T/N BAMs that were realigned together))
 - annotate (will annotate Variant Calling output. By default it will try to annotate all available vcfs. Use with ```--annotateTools``` or ```--annotateVCF``` to specify what to annotate)
 
-`--step` option is case insensitive to avoid easy introduction of errors when choosing a step. So you can write `--step skipPreprocessing` or `--step skippreprocessing` without worrying about case sensitivity.
+`--step` option is case insensitive to avoid easy introduction of errors when choosing a step. So you can write `--step variantCalling` or `--step variantcalling` without worrying about case sensitivity.
 
 ### --test
 
@@ -94,6 +94,8 @@ Simpler to specify in the config file.
 
 ### --singleCPUMem `memory`
 
+### --totalMemory `memory`
+
 # Nextflow options
 
 See the [options documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/OPTIONS.md)
@@ -130,7 +132,10 @@ nextflow run -latest SciLifeLab/CAW --sample mysample.tsv -resume
 
 --------------------------------------------------------------------------------
 
-[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link] [![](images/NGI-final-small.png "NGI")][ngi-link]
+[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
+[![](images/NGI_logo.png "NGI")][ngi-link]
+[![](images/NBIS_logo.png "NBIS")][nbis-link]
 
+[nbis-link]: https://www.nbis.se/
 [ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: http://www.scilifelab.se/
+[scilifelab-link]: https://www.scilifelab.se/
