@@ -29,15 +29,19 @@ kate: syntax groovy; space-indent on; indent-width 2;
 --------------------------------------------------------------------------------
  Processes overview
  - RunFastQC - Run FastQC for QC on fastq files
- - MapReads - Map reads
+ - MapReads - Map reads with BWA
  - MergeBams - Merge BAMs if multilane samples
- - MarkDuplicates - Mark Duplicates
+ - MarkDuplicates - Mark Duplicates with Picard
  - RealignerTargetCreator - Create realignment target intervals
  - IndelRealigner - Realign BAMs as T/N pair
- - CreateRecalibrationTable - Create Recalibration Table
- - RecalibrateBam - Recalibrate Bam
+ - CreateRecalibrationTable - Create Recalibration Table with BaseRecalibrator
+ - RecalibrateBam - Recalibrate Bam with PrintReads
  - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files
+ - RunBamQC - Run qualimap BamQC on recalibrated BAM files
+ - CreateIntervalBeds - Create and sort intervals into bed files
  - RunHaplotypecaller - Run HaplotypeCaller for GermLine Variant Calling (Parallelized processes)
+ - RunGenotypeGVCFs - Run HaplotypeCaller for GermLine Variant Calling (Parallelized processes)
+ - RunBcftoolsStats - Run BCFTools stats on vcf before annotation
  - RunMutect1 - Run MuTect1 for Variant Calling (Parallelized processes)
  - RunMutect2 - Run MuTect2 for Variant Calling (Parallelized processes)
  - RunFreeBayes - Run FreeBayes for Variant Calling (Parallelized processes)
@@ -59,19 +63,11 @@ kate: syntax groovy; space-indent on; indent-width 2;
 
 version = '1.1'
 
-if (!isAllowedParams(params)) {exit 1, "params is unknown, see --help for more information"}
+if (params.help) exit 0, helpMessage()
+if (params.version) exit 0, versionMessage()
+if (!isAllowedParams(params)) exit 1, "params is unknown, see --help for more information"
 
-if (params.help) {
-  helpMessage()
-  exit 1
-}
-
-if (params.version) {
-  versionMessage()
-  exit 1
-}
-
-if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
+if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
 step = params.step.toLowerCase()
 if (step == 'preprocessing') step = 'mapping'
@@ -659,12 +655,6 @@ bamsTumor = bamsTumor.map { idPatient, status, idSample, bam, bai -> [idPatient,
 // Do variant calling by this intervals, and re-merge the VCFs.
 // Since we are on a cluster, this can parallelize the variant call processes.
 // And push down the variant call wall clock time significanlty.
-// In fact we need two channels: one for the actual genomic region
-// and an other for names without ":"
-// as nextflow is not happy with them (will report as a failed process).
-// For region 1:1-2000 the output file name will be something like:
-// 1_1-2000_Sample_name.xxx.vcf
-// from the "1:1-2000" string make ["1:1-2000","1_1-2000"]
 
 process CreateIntervalBeds {
   tag {intervals.fileName}
@@ -1510,20 +1500,45 @@ def checkParameterList(list, realList) {
   return list.every{ checkParameterExistence(it, realList) }
 }
 
+def checkParamReturnFile(item) {
+  params."$item" = params.genomes[params.genome]."$item"
+  return file(params."$item")
+}
+
 def checkParams(it) {
   // Check if params is in this given list
   return it in [
+    'acLoci',
+    'ac-loci',
     'annotate-tools',
     'annotate-VCF',
     'annotateTools',
     'annotateVCF',
+    'bwaIndex',
+    'bwa-index',
     'call-name',
     'callName',
     'contact-mail',
     'contactMail',
+    'cosmic',
+    'cosmicIndex',
+    'cosmic-index',
+    'dbsnp',
+    'dbsnp-index',
     'genome',
+    'genomeDict',
+    'genome-dict',
+    'genomeFile',
+    'genome-file',
+    'genomeIndex',
+    'genome-index',
     'genomes',
     'help',
+    'intervals',
+    'knownIndels',
+    'known-indels',
+    'knownIndelsIndex',
+    'known-indels-index',
     'no-GVCF',
     'no-reports',
     'noGVCF',
@@ -1608,23 +1623,27 @@ def defineReferenceMap() {
   if (!(params.genome in params.genomes)) {
     exit 1, "Genome $params.genome not found in configuration"
   }
-  genome = params.genomes[params.genome]
-
   return [
-    'acLoci'      : file(genome.acLoci),  // loci file for ascat
-    'dbsnp'       : file(genome.dbsnp),
-    'dbsnpIndex'  : file(genome.dbsnpIndex),
-    'cosmic'      : file(genome.cosmic),  // cosmic VCF with VCF4.1 header
-    'cosmicIndex' : file(genome.cosmicIndex),
-    'genomeDict'  : file(genome.genomeDict),  // genome reference dictionary
-    'genomeFile'  : file(genome.genome),  // FASTA genome reference
-    'genomeIndex' : file(genome.genomeIndex),  // genome .fai file
-    'bwaIndex'    : file(genome.bwaIndex),  // BWA index files
-    // intervals file for spread-and-gather processes (usually chromosome chunks at centromeres)
-    'intervals'   : file(genome.intervals),
+    // loci file for ascat
+    'acLoci'           : checkParamReturnFile("acLoci"),
+    'dbsnp'            : checkParamReturnFile("dbsnp"),
+    'dbsnpIndex'       : checkParamReturnFile("dbsnpIndex"),
+    // cosmic VCF with VCF4.1 header
+    'cosmic'           : checkParamReturnFile("cosmic"),
+    'cosmicIndex'      : checkParamReturnFile("cosmicIndex"),
+    // genome reference dictionary
+    'genomeDict'       : checkParamReturnFile("genomeDict"),
+    // FASTA genome reference
+    'genomeFile'       : checkParamReturnFile("genomeFile"),
+    // genome .fai file
+    'genomeIndex'      : checkParamReturnFile("genomeIndex"),
+    // BWA index files
+    'bwaIndex'         : checkParamReturnFile("bwaIndex"),
+    // intervals file for spread-and-gather processes
+    'intervals'        : checkParamReturnFile("intervals"),
     // VCFs with known indels (such as 1000 Genomes, Mill’s gold standard)
-    'knownIndels' : genome.knownIndels.collect{file(it)},
-    'knownIndelsIndex': genome.knownIndelsIndex.collect{file(it)},
+    'knownIndels'      : checkParamReturnFile("knownIndels"),
+    'knownIndelsIndex' : checkParamReturnFile("knownIndelsIndex"),
   ]
 }
 
