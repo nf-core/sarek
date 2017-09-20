@@ -18,7 +18,7 @@ env:
   - NXF_VER=0.25.6 SGT_VER=2.3.1 PROFILE=singularityTest TEST=MAPPING TOOL_INSTALL=all
   - NXF_VER=0.25.6 PROFILE=dockerTest TEST=MAPPING TOOL_INSTALL=nextflow
 
-install: # Install Nextflow
+install: # Install Nextflow (and Singularity if needed)
   - "./scripts/install.sh --tool $TOOL_INSTALL"
 
 script:

@@ -2,7 +2,7 @@
 
 # Cancer Analysis Workflow
 
-[![caw version][version-badge]][version-link] [![Licence][licence-badge]][licence-link] [![nextflow version][nextflow-badge]][nextflow-link] [![Join the chat at https://gitter.im/SciLifeLab/CAW][gitter-badge]][gitter-link] [![Travis status][travis-badge]][travis-link]
+[![caw version][version-badge]][version-link] [![License][license-badge]][license-link] [![nextflow version][nextflow-badge]][nextflow-link] [![Join the chat at https://gitter.im/SciLifeLab/CAW][gitter-badge]][gitter-link] [![Travis status][travis-badge]][travis-link]
 
 
 CAW is a complete open source pipeline to detect somatic variants from WGS data developed at the [National Genomics Infastructure][ngi-link] at [SciLifeLab Stockholm][scilifelab-stockholm-link], Sweden and [National Bioinformatics Infastructure Sweden][nbis-link] at [SciLifeLab][scilifelab-link].
@@ -67,8 +67,8 @@ For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.j
 [gatk-link]: https://github.com/broadgsa/gatk-protected
 [gitter-badge]: https://badges.gitter.im/SciLifeLab/CAW.svg
 [gitter-link]: https://gitter.im/SciLifeLab/CAW
-[licence-badge]: https://img.shields.io/github/license/SciLifeLab/CAW.svg
-[licence-link]: https://github.com/SciLifeLab/CAW/blob/master/LICENSE
+[license-badge]: https://img.shields.io/github/license/SciLifeLab/CAW.svg
+[license-link]: https://github.com/SciLifeLab/CAW/blob/master/LICENSE
 [manta-link]: https://github.com/Illumina/manta
 [multiqc-link]: https://github.com/ewels/MultiQC/
 [mutect1-link]: https://github.com/broadinstitute/mutect
