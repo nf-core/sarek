@@ -48,6 +48,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - ConcatVCF - Merge results from HaplotypeCaller, MuTect1 and MuTect2
  - RunStrelka - Run Strelka for Variant Calling
  - RunManta - Run Manta for Structural Variant Calling
+ - RunSingleManta - Run Manta for Single Structural Variant Calling
  - RunAlleleCount - Run AlleleCount to prepare for ASCAT
  - RunConvertAlleleCounts - Run convertAlleleCounts to prepare for ASCAT
  - RunAscat - Run ASCAT for CNV
@@ -642,8 +643,8 @@ recalibratedBam
 (bamsTumorTemp, bamsTumor) = bamsTumor.into(2)
 
 bamsForAscat = Channel.create()
-bamsForGermlineSV = Channel.create()
-(bamsForAscat, bamsForGermlineSV) = bamsNormalTemp.mix(bamsTumorTemp).into(2)
+bamsForSingleManta = Channel.create()
+(bamsForAscat, bamsForSingleManta) = bamsNormalTemp.mix(bamsTumorTemp).into(2)
 
 // Removing status because not relevant anymore
 bamsNormal = bamsNormal.map { idPatient, status, idSample, bam, bai -> [idPatient, idSample, bam, bai] }
@@ -1083,30 +1084,95 @@ process RunManta {
     ])
 
   output:
-    set val("manta"), idPatient, idSampleNormal, idSampleTumor, file("Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf"), file("Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf"), file("Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf"), file("Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf") into mantaOutput
+    set val("manta"), idPatient, idSampleNormal, idSampleTumor, file("Manta_${idSampleTumor}_vs_${idSampleNormal}.*.vcf.gz"), file("Manta_${idSampleTumor}_vs_${idSampleNormal}.*.vcf.gz.tbi") into mantaOutput
 
   when: 'manta' in tools
 
   script:
   """
-  python
   \$MANTA_INSTALL_PATH/bin/configManta.py \
   --normalBam $bamNormal \
   --tumorBam $bamTumor \
   --reference $genomeFile \
   --runDir Manta
+
   python Manta/runWorkflow.py -m local -j $task.cpus
-  gunzip -c Manta/results/variants/somaticSV.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf
-  gunzip -c Manta/results/variants/candidateSV.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf
-  gunzip -c Manta/results/variants/diploidSV.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf
-  gunzip -c Manta/results/variants/candidateSmallIndels.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf
+
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf.gz
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz.tbi Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf.gz.tbi
+  mv Manta/results/variants/candidateSV.vcf.gz Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf.gz
+  mv Manta/results/variants/candidateSV.vcf.gz.tbi Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf.gz.tbi
+  mv Manta/results/variants/diploidSV.vcf.gz Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf.gz
+  mv Manta/results/variants/diploidSV.vcf.gz.tbi Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf.gz.tbi
+  mv Manta/results/variants/somaticSV.vcf.gz Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf.gz
+  mv Manta/results/variants/somaticSV.vcf.gz.tbi Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf.gz.tbi
   """
 }
 
 if (verbose) mantaOutput = mantaOutput.view {
   "Variant Calling output:\n\
   Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  Files : [${it[4].fileName}, ${it[5].fileName}, ${it[6].fileName}, ${it[7].fileName}]"
+  Files : ${it[4].fileName}\n\
+  Index : ${it[5].fileName}"
+}
+
+process RunSingleManta {
+  tag {status == 0 ? idSample + " - Single Diploid" : idSample + " - Tumor-Only"}
+
+  publishDir directoryMap.manta, mode: 'copy'
+
+  input:
+    set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleManta
+    set file(genomeFile), file(genomeIndex) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex
+    ])
+
+  output:
+    set val("singlemanta"), idPatient, idSample,  file("Manta_${idSample}.*.vcf.gz"), file("Manta_${idSample}.*.vcf.gz.tbi") into singleMantaOutput
+
+  when: 'manta' in tools
+
+  script:
+  if ( status == 0 ) // If Normal Sample
+  """
+  \$MANTA_INSTALL_PATH/bin/configManta.py \
+  --bam $bam \
+  --reference $genomeFile \
+  --runDir Manta
+
+  python Manta/runWorkflow.py -m local -j $task.cpus
+
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz Manta_${idSample}.candidateSmallIndels.vcf.gz
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz.tbi Manta_${idSample}.candidateSmallIndels.vcf.gz.tbi
+  mv Manta/results/variants/candidateSV.vcf.gz Manta_${idSample}.candidateSV.vcf.gz
+  mv Manta/results/variants/candidateSV.vcf.gz.tbi Manta_${idSample}.candidateSV.vcf.gz.tbi
+  mv Manta/results/variants/diploidSV.vcf.gz Manta_${idSample}.diploidSV.vcf.gz
+  mv Manta/results/variants/diploidSV.vcf.gz.tbi Manta_${idSample}.diploidSV.vcf.gz.tbi
+  """
+  else  // Tumor Sample
+  """
+  \$MANTA_INSTALL_PATH/bin/configManta.py \
+  --tumorBam $bam \
+  --reference $genomeFile \
+  --runDir Manta
+
+  python Manta/runWorkflow.py -m local -j $task.cpus
+
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz Manta_${idSample}.candidateSmallIndels.vcf.gz
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz.tbi Manta_${idSample}.candidateSmallIndels.vcf.gz.tbi
+  mv Manta/results/variants/candidateSV.vcf.gz Manta_${idSample}.candidateSV.vcf.gz
+  mv Manta/results/variants/candidateSV.vcf.gz.tbi Manta_${idSample}.candidateSV.vcf.gz.tbi
+  mv Manta/results/variants/tumorSV.vcf.gz Manta_${idSample}.tumorSV.vcf.gz
+  mv Manta/results/variants/tumorSV.vcf.gz.tbi Manta_${idSample}.tumorSV.vcf.gz.tbi
+  """
+}
+
+if (verbose) singleMantaOutput = singleMantaOutput.view {
+  "Variant Calling output:\n\
+  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: ${it[2]}\n\
+  Files : ${it[3].fileName}\n\
+  Index : ${it[4].fileName}"
 }
 
 // Run commands and code from Malin Larsson
@@ -1205,7 +1271,7 @@ if (step == 'annotate' && annotateVCF == []) {
     Channel.fromPath('VariantCalling/HaplotypeCaller/*.vcf.gz')
       .flatten().unique()
       .map{vcf -> ['haplotypecaller',vcf]},
-    Channel.fromPath('VariantCalling/Manta/*.{somaticSV,diploidSV}.vcf.gz')
+    Channel.fromPath('VariantCalling/Manta/*.{diploidSV,somaticSV,tumorSV}.vcf.gz')
       .flatten().unique()
       .map{vcf -> ['manta',vcf]},
     Channel.fromPath('VariantCalling/MuTect1/*.vcf.gz')
@@ -1234,11 +1300,22 @@ if (step == 'annotate' && annotateVCF == []) {
 
   (strelkaPAssedIndels, strelkaPAssedSNVS) = strelkaOutput.into(2)
   (mantaSomaticSV, mantaDiploidSV) = mantaOutput.into(2)
-
   vcfToAnnotate = vcfToAnnotate.map {
     variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
     [variantcaller, vcf]
   }.mix(
+    mantaDiploidSV.map {
+      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf, tbi ->
+      [variantcaller, vcf[2]]
+    },
+    mantaSomaticSV.map {
+      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf, tbi ->
+      [variantcaller, vcf[3]]
+    },
+    singleMantaOutput.map {
+      variantcaller, idPatient, idSample, vcf, tbi ->
+      [variantcaller, vcf[2]]
+    },
     strelkaPAssedIndels.map {
       variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
       [variantcaller, vcf[2]]
@@ -1246,14 +1323,6 @@ if (step == 'annotate' && annotateVCF == []) {
     strelkaPAssedSNVS.map {
       variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
       [variantcaller, vcf[3]]
-    },
-    mantaSomaticSV.map {
-      variantcaller, idPatient, idSampleNormal, idSampleTumor, somaticSV, candidateSV, diploidSV, candidateSmallIndels ->
-      [variantcaller, somaticSV]
-    },
-    mantaDiploidSV.map {
-      variantcaller, idPatient, idSampleNormal, idSampleTumor, somaticSV, candidateSV, diploidSV, candidateSmallIndels ->
-      [variantcaller, diploidSV]
     })
 } else exit 1, "specify only tools or files to annotate, bot both"
 
