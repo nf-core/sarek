@@ -637,12 +637,13 @@ bamsTumor = Channel.create()
 recalibratedBam
   .choice(bamsTumor, bamsNormal) {it[1] == 0 ? 1 : 0}
 
-// Ascat
+// Ascat & Manta Germline SV
 (bamsNormalTemp, bamsNormal) = bamsNormal.into(2)
 (bamsTumorTemp, bamsTumor) = bamsTumor.into(2)
 
 bamsForAscat = Channel.create()
-bamsForAscat = bamsNormalTemp.mix(bamsTumorTemp)
+bamsForGermlineSV = Channel.create()
+(bamsForAscat, bamsForGermlineSV) = bamsNormalTemp.mix(bamsTumorTemp).into(2)
 
 // Removing status because not relevant anymore
 bamsNormal = bamsNormal.map { idPatient, status, idSample, bam, bai -> [idPatient, idSample, bam, bai] }
@@ -723,7 +724,7 @@ if (verbose) bedIntervals = bedIntervals.view {
 (bamsTumorTemp, bamsTumor, bedIntervals) = generateIntervalsForVC(bamsTumor, bedIntervals)
 
 // HaplotypeCaller
-bamsFHC = bamsNormalTemp.mix(bamsTumorTemp)
+bamsForHC = bamsNormalTemp.mix(bamsTumorTemp)
 bedIntervals = bedIntervals.tap { intervalsTemp }
 recalTables = recalTables
   .spread(intervalsTemp)
@@ -732,7 +733,7 @@ recalTables = recalTables
 
 
 // re-associate the BAMs and samples with the recalibration table
-bamsFHC = bamsFHC
+bamsForHC = bamsForHC
   .phase(recalTables) { it[0..4] }
   .map { it1, it2 -> it1 + [it2[6]] }
 
@@ -758,7 +759,7 @@ process RunHaplotypecaller {
   tag {idSample + "-" + intervalBed.baseName}
 
   input:
-    set idPatient, idSample, file(bam), file(bai), file(intervalBed), recalTable from bamsFHC //Are these values `ped to bamNormal already?
+    set idPatient, idSample, file(bam), file(bai), file(intervalBed), recalTable from bamsForHC //Are these values `ped to bamNormal already?
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -1088,17 +1089,17 @@ process RunManta {
 
   script:
   """
-  ln -s $bamNormal Normal.bam
-  ln -s $bamTumor Tumor.bam
-  ln -s $baiNormal Normal.bam.bai
-  ln -s $baiTumor Tumor.bam.bai
-
-  \$MANTA_INSTALL_PATH/bin/configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference $genomeFile --runDir MantaDir
-  python MantaDir/runWorkflow.py -m local -j $task.cpus
-  gunzip -c MantaDir/results/variants/somaticSV.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf
-  gunzip -c MantaDir/results/variants/candidateSV.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf
-  gunzip -c MantaDir/results/variants/diploidSV.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf
-  gunzip -c MantaDir/results/variants/candidateSmallIndels.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf
+  python
+  \$MANTA_INSTALL_PATH/bin/configManta.py \
+  --normalBam $bamNormal \
+  --tumorBam $bamTumor \
+  --reference $genomeFile \
+  --runDir Manta
+  python Manta/runWorkflow.py -m local -j $task.cpus
+  gunzip -c Manta/results/variants/somaticSV.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf
+  gunzip -c Manta/results/variants/candidateSV.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf
+  gunzip -c Manta/results/variants/diploidSV.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf
+  gunzip -c Manta/results/variants/candidateSmallIndels.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf
   """
 }
 
