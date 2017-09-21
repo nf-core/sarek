@@ -23,6 +23,7 @@ Several processes are run within the workflow. We divide them for the moment int
 - ConcatVCF - Merge results from HaplotypeCaller, MuTect1 and MuTect2
 - RunStrelka - Run Strelka for Variant Calling
 - RunManta - Run Manta for Structural Variant Calling
+- RunSingleManta - Run Manta for Single Structural Variant Calling
 - RunAlleleCount - Run AlleleCount to prepare for ASCAT
 - RunConvertAlleleCounts - Run convertAlleleCounts to prepare for ASCAT
 - RunAscat - Run ASCAT for CNV
