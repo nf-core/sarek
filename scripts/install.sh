@@ -3,16 +3,16 @@ TOOL="all"
 
 while [[ $# -gt 1 ]]
 do
-    key="$1"
-    case $key in
-        -t|--tool)
-        TOOL="$2"
-        shift
-        ;;
-        *) # unknown option
-        ;;
-    esac
+  key="$1"
+  case $key in
+    -t|--tool)
+    TOOL="$2"
     shift
+    ;;
+    *) # unknown option
+    ;;
+  esac
+  shift
 done
 
 # Install Nextflow
