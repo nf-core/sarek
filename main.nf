@@ -1077,7 +1077,7 @@ process RunManta {
     ])
 
   output:
-    set val("manta"), idPatient, idSampleNormal, idSampleTumor, file(".*.vcf.gz"), file(".*.vcf.gz.tbi") into mantaOutput
+    set val("manta"), idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into mantaOutput
 
   when: 'manta' in tools
 
