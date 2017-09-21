@@ -2,7 +2,7 @@
 set -xeuo pipefail
 
 GENOME="smallGRCh37"
-PROFILE="singularityTest"
+PROFILE="singularity"
 TEST="ALL"
 TRAVIS=${TRAVIS:-false}
 SAMPLE="data/tsv/tiny.tsv"
@@ -45,10 +45,10 @@ then
 fi
 
 # Remove images only on TRAVIS
-if [[ "$PROFILE" == "dockerTest" ]] && [[ "$TRAVIS" == true ]]
+if [[ "$PROFILE" == "docker" ]] && [[ "$TRAVIS" == true ]]
 then
   docker rmi -f maxulysse/igvtools:1.1
-elif [[ "$PROFILE" == singularityTest ]] && [[ "$TRAVIS" == true ]]
+elif [[ "$PROFILE" == singularity ]] && [[ "$TRAVIS" == true ]]
 then
   rm -rf work/singularity/igvtools-1.1.img
 fi
@@ -81,10 +81,10 @@ then
   nf_test . --step preprocessing --sample $SAMPLE --tools MuTect2,Strelka
 
   # Remove images only on TRAVIS
-  if [[ "$PROFILE" == "dockerTest" ]] && [[ "$TRAVIS" == true ]]
+  if [[ "$PROFILE" == "docker" ]] && [[ "$TRAVIS" == true ]]
   then
     docker rmi -f maxulysse/fastqc:1.1 maxulysse/gatk:1.0 maxulysse/gatk:1.1 maxulysse/mapreads:1.1 maxulysse/picard:1.1 maxulysse/runmanta:1.1 maxulysse/samtools:1.1 maxulysse/strelka:1.1
-  elif [[ "$PROFILE" == "singularityTest" ]] && [[ "$TRAVIS" == true ]]
+  elif [[ "$PROFILE" == "singularity" ]] && [[ "$TRAVIS" == true ]]
   then
     rm -rf work/singularity/fastqc-1.1.img work/singularity/gatk-1.0.img work/singularity/gatk-1.1.img work/singularity/mapreads-1.1.img work/singularity/picard-1.1.img work/singularity/runmanta-1.1.img work/singularity/samtools-1.1.img work/singularity/strelka-1.1.img
   fi
@@ -99,10 +99,10 @@ then
   nf_test . --step preprocessing --sample $SAMPLE --tools MuTect2,Strelka
 
   # Remove images only on TRAVIS
-  if [[ "$PROFILE" == "dockerTest" ]] && [[ "$TRAVIS" == true ]]
+  if [[ "$PROFILE" == "docker" ]] && [[ "$TRAVIS" == true ]]
   then
     docker rmi -f maxulysse/fastqc:1.1 maxulysse/gatk:1.0 maxulysse/gatk:1.1 maxulysse/mapreads:1.1 maxulysse/picard:1.1 maxulysse/runmanta:1.1 maxulysse/samtools:1.1 maxulysse/strelka:1.1
-  elif [[ "$PROFILE" == "singularityTest" ]] && [[ "$TRAVIS" == true ]]
+  elif [[ "$PROFILE" == "singularity" ]] && [[ "$TRAVIS" == true ]]
   then
     rm -rf work/singularity/fastqc-1.1.img work/singularity/gatk-1.0.img work/singularity/gatk-1.1.img work/singularity/mapreads-1.1.img work/singularity/picard-1.1.img work/singularity/runmanta-1.1.img work/singularity/samtools-1.1.img work/singularity/strelka-1.1.img
   fi

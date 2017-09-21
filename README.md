@@ -7,9 +7,9 @@
 
 CAW is a complete open source pipeline to detect somatic variants from WGS data developed at the [National Genomics Infastructure][ngi-link] at [SciLifeLab Stockholm][scilifelab-stockholm-link], Sweden and [National Bioinformatics Infastructure Sweden][nbis-link] at [SciLifeLab][scilifelab-link].
 
-The pipeline uses [Nextflow][nextflow-link], a bioinformatics domain specific language for workflow building.
+The pipeline uses [Nextflow][nextflow-link], a bioinformatics domain specific language for workflow building and [Singularity](http://singularity.lbl.gov/), a container technology specific for high-performance computing.
 
-This pipeline is primarily used with a SLURM cluster on the Swedish [UPPMAX systems](https://www.uppmax.uu.se/). However, the pipeline should be able to run on any system that Nextflow supports. We have done some limited testing using Docker, and the pipeline comes with some configuration for such system. See the [documentation](#documentation) for more information.
+This pipeline is primarily used with cluster on the Swedish [UPPMAX systems](https://www.uppmax.uu.se/). However, the pipeline should be able to run on any system that supports Nextflow. The pipeline comes with some configuration for different systems. See the [documentation](#documentation) for more information.
 
 We utilize [GATK best practices](https://software.broadinstitute.org/gatk/best-practices/) to align, realign and recalibrate short-read data in parallel for both normal and tumor sample. After these preprocessing steps, several somatic variant callers scan the resulting BAM files: [MuTect1][mutect1-link], [MuTect2][gatk-link] and [Strelka][strelka-link] are used to find somatic SNVs and small indels, also [GATK HaplotyeCaller][gatk-link] for both the normal and the tumor sample. For structural variants we use [Manta][manta-link]. Furthermore, we are applying [ASCAT][ascat-link] to estimate sample heterogeneity, ploidy and CNVs.
 
@@ -17,7 +17,7 @@ The pipeline can begin the analysis either from raw FASTQ files, only from the r
 
 Besides variant calls, the workflow provides quality controls presented by [MultiQC][multiqc-link].
 
-The [CAW-containers](https://github.com/SciLifeLab/CAW-containers) repository contains building rules for containers for all CAW processes.
+The [CAW-containers](https://github.com/SciLifeLab/CAW-containers) repository contains building rules for Docker and/or Singularity containers for all CAW processes.
 
 This pipeline is listed on [Elixir - Tools and Data Services Registry](https://bio.tools/CAW).
 
@@ -25,21 +25,20 @@ This pipeline is listed on [Elixir - Tools and Data Services Registry](https://b
 
 The CAW pipeline comes with documentation about the pipeline, found in the `doc/` directory:
 
-01. [Installation documentation on Milou](doc/INSTALL_MILOU.md)
-02. [Installation documentation on Bianca](doc/INSTALL_BIANCA.md)
-03. [Installation documentation using Containers](doc/INSTALL_CONTAINERS.md)
+01. [Installation documentation](doc/INSTALL.md)
+02. [Installation documentation specific for `milou`](doc/INSTALL_MILOU.md)
+03. [Installation documentation specific for `bianca`](doc/INSTALL_BIANCA.md)
 04. [Tests documentation](doc/TESTS.md)
 05. [Reference files documentation](doc/REFERENCES.md)
 06. [Configuration and profiles documentation](doc/CONFIG.md)
 07. [Intervals documentation](doc/INTERVALS.md)
 08. [Running the pipeline](doc/USAGE.md)
-09. [Running the pipeline with Singularity on Bianca documentation](doc/USE_SINGULARITY_BIANCA.md)
-10. [Examples](doc/USE_CASES.md)
-11. [TSV file documentation](doc/TSV.md)
-12. [Processes documentation](doc/PROCESS.md)
-13. [Tools and dependencies](doc/TOOLS.md)
-14. [More information about ASCAT](doc/ASCAT.md)
-15. [Folder structure](doc/FOLDER.md)
+09. [Examples](doc/USE_CASES.md)
+10. [TSV file documentation](doc/TSV.md)
+11. [Processes documentation](doc/PROCESS.md)
+12. [Tools and dependencies](doc/TOOLS.md)
+13. [More information about ASCAT](doc/ASCAT.md)
+14. [Folder structure](doc/FOLDER.md)
 
 For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.juhos@scilifelab.se or join the gitter chat: [gitter.im/SciLifeLab/CAW][gitter-link].
 
