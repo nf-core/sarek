@@ -1036,39 +1036,32 @@ process RunStrelka {
     ])
 
   output:
-    set val("strelka"), idPatient, idSampleNormal, idSampleTumor, file("*.vcf") into strelkaOutput
+    set val("strelka"), idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into strelkaOutput
 
   when: 'strelka' in tools
 
   script:
   """
-  tumorPath=`readlink $bamTumor`
-  normalPath=`readlink $bamNormal`
-  genomeFile=`readlink $genomeFile`
-  \$STRELKA_INSTALL_DIR/bin/configureStrelkaWorkflow.pl \
-  --tumor \$tumorPath \
-  --normal \$normalPath \
-  --ref \$genomeFile \
-  --config \$STRELKA_INSTALL_DIR/etc/strelka_config_bwa_default.ini \
-  --output-dir strelka
+  \$STRELKA_INSTALL_DIR/bin/configureStrelkaSomaticWorkflow.py \
+  --tumor $bamTumor \
+  --normal $bamNormal \
+  --referenceFasta $genomeFile \
+  --runDir Strelka
 
-  cd strelka
+  python Strelka/runWorkflow.py -m local -j $task.cpus
 
-  make -j $task.cpus
-
-  cd ..
-
-  mv strelka/results/all.somatic.indels.vcf Strelka_${idSampleTumor}_vs_${idSampleNormal}_all_somatic_indels.vcf
-  mv strelka/results/all.somatic.snvs.vcf Strelka_${idSampleTumor}_vs_${idSampleNormal}_all_somatic_snvs.vcf
-  mv strelka/results/passed.somatic.indels.vcf Strelka_${idSampleTumor}_vs_${idSampleNormal}_passed_somatic_indels.vcf
-  mv strelka/results/passed.somatic.snvs.vcf Strelka_${idSampleTumor}_vs_${idSampleNormal}_passed_somatic_snvs.vcf
+  mv Strelka/results/variants/somatic.indels.vcf.gz Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz
+  mv Strelka/results/variants/somatic.snvs.vcf.gz Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
+  mv Strelka/results/variants/somatic.indels.vcf.gz.tbi Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz.tbi
+  mv Strelka/results/variants/somatic.snvs.vcf.gz.tbi Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz.tbi
   """
 }
 
 if (verbose) strelkaOutput = strelkaOutput.view {
   "Variant Calling output:\n\
   Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  Files : ${it[4].fileName}"
+  Files : ${it[4].fileName}\n\
+  Index : ${it[5].fileName}"
 }
 
 process RunManta {
@@ -1084,7 +1077,7 @@ process RunManta {
     ])
 
   output:
-    set val("manta"), idPatient, idSampleNormal, idSampleTumor, file("Manta_${idSampleTumor}_vs_${idSampleNormal}.*.vcf.gz"), file("Manta_${idSampleTumor}_vs_${idSampleNormal}.*.vcf.gz.tbi") into mantaOutput
+    set val("manta"), idPatient, idSampleNormal, idSampleTumor, file(".*.vcf.gz"), file(".*.vcf.gz.tbi") into mantaOutput
 
   when: 'manta' in tools
 
@@ -1129,7 +1122,7 @@ process RunSingleManta {
     ])
 
   output:
-    set val("singlemanta"), idPatient, idSample,  file("Manta_${idSample}.*.vcf.gz"), file("Manta_${idSample}.*.vcf.gz.tbi") into singleMantaOutput
+    set val("singlemanta"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleMantaOutput
 
   when: 'manta' in tools
 
@@ -1280,7 +1273,7 @@ if (step == 'annotate' && annotateVCF == []) {
     Channel.fromPath('VariantCalling/MuTect2/*.vcf.gz')
       .flatten().unique()
       .map{vcf -> ['mutect2',vcf]},
-    Channel.fromPath('VariantCalling/Strelka/*passed_somatic*.vcf')
+    Channel.fromPath('VariantCalling/Strelka/*somatic*.vcf.gz')
       .flatten().unique()
       .map{vcf -> ['strelka',vcf]}
   ).choice(vcfToAnnotate, vcfNotToAnnotate) { annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1 }
@@ -1298,7 +1291,7 @@ if (step == 'annotate' && annotateVCF == []) {
   vcfConcatenated
     .choice(vcfToAnnotate, vcfNotToAnnotate) { it[0] == 'gvcf-hc' || it[0] == 'freebayes' ? 1 : 0 }
 
-  (strelkaPAssedIndels, strelkaPAssedSNVS) = strelkaOutput.into(2)
+  (strelkaIndels, strelkaSNVS) = strelkaOutput.into(2)
   (mantaSomaticSV, mantaDiploidSV) = mantaOutput.into(2)
   vcfToAnnotate = vcfToAnnotate.map {
     variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
@@ -1316,13 +1309,13 @@ if (step == 'annotate' && annotateVCF == []) {
       variantcaller, idPatient, idSample, vcf, tbi ->
       [variantcaller, vcf[2]]
     },
-    strelkaPAssedIndels.map {
-      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
-      [variantcaller, vcf[2]]
+    strelkaIndels.map {
+      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf, tbi ->
+      [variantcaller, vcf[0]]
     },
-    strelkaPAssedSNVS.map {
-      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
-      [variantcaller, vcf[3]]
+    strelkaSNVS.map {
+      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf, tbi ->
+      [variantcaller, vcf[1]]
     })
 } else exit 1, "specify only tools or files to annotate, bot both"
 

@@ -84,10 +84,10 @@ then
   # Remove images only on TRAVIS
   if [[ "$PROFILE" == "dockerTest" ]] && [[ "$TRAVIS" == true ]]
   then
-    docker rmi -f maxulysse/fastqc:1.1 maxulysse/gatk:1.0 maxulysse/gatk:1.1 maxulysse/mapreads:1.1 maxulysse/picard:1.1 maxulysse/runmanta:dev maxulysse/samtools:1.1 maxulysse/strelka:1.1
+    docker rmi -f maxulysse/fastqc:1.1 maxulysse/gatk:1.0 maxulysse/gatk:1.1 maxulysse/mapreads:1.1 maxulysse/picard:1.1 maxulysse/runmanta:dev maxulysse/samtools:1.1 maxulysse/strelka:dev
   elif [[ "$PROFILE" == "singularityTest" ]] && [[ "$TRAVIS" == true ]]
   then
-    rm -rf work/singularity/fastqc-1.1.img work/singularity/gatk-1.0.img work/singularity/gatk-1.1.img work/singularity/mapreads-1.1.img work/singularity/picard-1.1.img work/singularity/runmanta-dev.img work/singularity/samtools-1.1.img work/singularity/strelka-1.1.img
+    rm -rf work/singularity/fastqc-1.1.img work/singularity/gatk-1.0.img work/singularity/gatk-1.1.img work/singularity/mapreads-1.1.img work/singularity/picard-1.1.img work/singularity/runmanta-dev.img work/singularity/samtools-1.1.img work/singularity/strelka-dev.img
   fi
   nf_test . --step annotate --tools VEP --annotateTools Manta,Strelka
   nf_test . --step annotate --tools VEP --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf.gz --noReports
@@ -103,10 +103,10 @@ then
   # Remove images only on TRAVIS
   if [[ "$PROFILE" == "dockerTest" ]] && [[ "$TRAVIS" == true ]]
   then
-    docker rmi -f maxulysse/fastqc:1.1 maxulysse/gatk:1.0 maxulysse/gatk:1.1 maxulysse/mapreads:1.1 maxulysse/picard:1.1 maxulysse/runmanta:dev maxulysse/samtools:1.1 maxulysse/strelka:1.1
+    docker rmi -f maxulysse/fastqc:1.1 maxulysse/gatk:1.0 maxulysse/gatk:1.1 maxulysse/mapreads:1.1 maxulysse/picard:1.1 maxulysse/runmanta:dev maxulysse/samtools:1.1 maxulysse/strelka:dev
   elif [[ "$PROFILE" == "singularityTest" ]] && [[ "$TRAVIS" == true ]]
   then
-    rm -rf work/singularity/fastqc-1.1.img work/singularity/gatk-1.0.img work/singularity/gatk-1.1.img work/singularity/mapreads-1.1.img work/singularity/picard-1.1.img work/singularity/runmanta-dev.img work/singularity/samtools-1.1.img work/singularity/strelka-1.1.img
+    rm -rf work/singularity/fastqc-1.1.img work/singularity/gatk-1.0.img work/singularity/gatk-1.1.img work/singularity/mapreads-1.1.img work/singularity/picard-1.1.img work/singularity/runmanta-dev.img work/singularity/samtools-1.1.img work/singularity/strelka-dev.img
   fi
   nf_test . --step annotate --tools snpEff --annotateTools Manta,Strelka
   nf_test . --step annotate --tools snpEff --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf.gz --noReports
