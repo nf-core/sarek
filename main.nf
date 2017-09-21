@@ -48,6 +48,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - ConcatVCF - Merge results from HaplotypeCaller, MuTect1 and MuTect2
  - RunStrelka - Run Strelka for Variant Calling
  - RunManta - Run Manta for Structural Variant Calling
+ - RunSingleManta - Run Manta for Single Structural Variant Calling
  - RunAlleleCount - Run AlleleCount to prepare for ASCAT
  - RunConvertAlleleCounts - Run convertAlleleCounts to prepare for ASCAT
  - RunAscat - Run ASCAT for CNV
@@ -643,12 +644,13 @@ bamsTumor = Channel.create()
 recalibratedBam
   .choice(bamsTumor, bamsNormal) {it[1] == 0 ? 1 : 0}
 
-// Ascat
+// Ascat & Manta Germline SV
 (bamsNormalTemp, bamsNormal) = bamsNormal.into(2)
 (bamsTumorTemp, bamsTumor) = bamsTumor.into(2)
 
 bamsForAscat = Channel.create()
-bamsForAscat = bamsNormalTemp.mix(bamsTumorTemp)
+bamsForSingleManta = Channel.create()
+(bamsForAscat, bamsForSingleManta) = bamsNormalTemp.mix(bamsTumorTemp).into(2)
 
 // Removing status because not relevant anymore
 bamsNormal = bamsNormal.map { idPatient, status, idSample, bam, bai -> [idPatient, idSample, bam, bai] }
@@ -729,7 +731,7 @@ if (verbose) bedIntervals = bedIntervals.view {
 (bamsTumorTemp, bamsTumor, bedIntervals) = generateIntervalsForVC(bamsTumor, bedIntervals)
 
 // HaplotypeCaller
-bamsFHC = bamsNormalTemp.mix(bamsTumorTemp)
+bamsForHC = bamsNormalTemp.mix(bamsTumorTemp)
 bedIntervals = bedIntervals.tap { intervalsTemp }
 recalTables = recalTables
   .spread(intervalsTemp)
@@ -737,7 +739,7 @@ recalTables = recalTables
     [patient, sample, bam, bai, intervalBed, recalTable] }
 
 // re-associate the BAMs and samples with the recalibration table
-bamsFHC = bamsFHC
+bamsForHC = bamsForHC
   .phase(recalTables) { it[0..4] }
   .map { it1, it2 -> it1 + [it2[6]] }
 
@@ -764,7 +766,7 @@ process RunHaplotypecaller {
   tag {idSample + "-" + intervalBed.baseName}
 
   input:
-    set idPatient, idSample, file(bam), file(bai), file(intervalBed), recalTable from bamsFHC //Are these values `ped to bamNormal already?
+    set idPatient, idSample, file(bam), file(bai), file(intervalBed), recalTable from bamsForHC //Are these values `ped to bamNormal already?
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -1040,39 +1042,32 @@ process RunStrelka {
     ])
 
   output:
-    set val("strelka"), idPatient, idSampleNormal, idSampleTumor, file("*.vcf") into strelkaOutput
+    set val("strelka"), idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into strelkaOutput
 
   when: 'strelka' in tools
 
   script:
   """
-  tumorPath=`readlink $bamTumor`
-  normalPath=`readlink $bamNormal`
-  genomeFile=`readlink $genomeFile`
-  \$STRELKA_INSTALL_DIR/bin/configureStrelkaWorkflow.pl \
-  --tumor \$tumorPath \
-  --normal \$normalPath \
-  --ref \$genomeFile \
-  --config \$STRELKA_INSTALL_DIR/etc/strelka_config_bwa_default.ini \
-  --output-dir strelka
+  \$STRELKA_INSTALL_DIR/bin/configureStrelkaSomaticWorkflow.py \
+  --tumor $bamTumor \
+  --normal $bamNormal \
+  --referenceFasta $genomeFile \
+  --runDir Strelka
 
-  cd strelka
+  python Strelka/runWorkflow.py -m local -j $task.cpus
 
-  make -j $task.cpus
-
-  cd ..
-
-  mv strelka/results/all.somatic.indels.vcf Strelka_${idSampleTumor}_vs_${idSampleNormal}_all_somatic_indels.vcf
-  mv strelka/results/all.somatic.snvs.vcf Strelka_${idSampleTumor}_vs_${idSampleNormal}_all_somatic_snvs.vcf
-  mv strelka/results/passed.somatic.indels.vcf Strelka_${idSampleTumor}_vs_${idSampleNormal}_passed_somatic_indels.vcf
-  mv strelka/results/passed.somatic.snvs.vcf Strelka_${idSampleTumor}_vs_${idSampleNormal}_passed_somatic_snvs.vcf
+  mv Strelka/results/variants/somatic.indels.vcf.gz Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz
+  mv Strelka/results/variants/somatic.snvs.vcf.gz Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
+  mv Strelka/results/variants/somatic.indels.vcf.gz.tbi Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz.tbi
+  mv Strelka/results/variants/somatic.snvs.vcf.gz.tbi Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz.tbi
   """
 }
 
 if (verbose) strelkaOutput = strelkaOutput.view {
   "Variant Calling output:\n\
   Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  Files : ${it[4].fileName}"
+  Files : ${it[4].fileName}\n\
+  Index : ${it[5].fileName}"
 }
 
 process RunManta {
@@ -1088,30 +1083,95 @@ process RunManta {
     ])
 
   output:
-    set val("manta"), idPatient, idSampleNormal, idSampleTumor, file("Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf"), file("Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf"), file("Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf"), file("Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf") into mantaOutput
+    set val("manta"), idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into mantaOutput
 
   when: 'manta' in tools
 
   script:
   """
-  ln -s $bamNormal Normal.bam
-  ln -s $bamTumor Tumor.bam
-  ln -s $baiNormal Normal.bam.bai
-  ln -s $baiTumor Tumor.bam.bai
+  \$MANTA_INSTALL_PATH/bin/configManta.py \
+  --normalBam $bamNormal \
+  --tumorBam $bamTumor \
+  --reference $genomeFile \
+  --runDir Manta
 
-  \$MANTA_INSTALL_PATH/bin/configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference $genomeFile --runDir MantaDir
-  python MantaDir/runWorkflow.py -m local -j $task.cpus
-  gunzip -c MantaDir/results/variants/somaticSV.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf
-  gunzip -c MantaDir/results/variants/candidateSV.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf
-  gunzip -c MantaDir/results/variants/diploidSV.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf
-  gunzip -c MantaDir/results/variants/candidateSmallIndels.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf
+  python Manta/runWorkflow.py -m local -j $task.cpus
+
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf.gz
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz.tbi Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf.gz.tbi
+  mv Manta/results/variants/candidateSV.vcf.gz Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf.gz
+  mv Manta/results/variants/candidateSV.vcf.gz.tbi Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf.gz.tbi
+  mv Manta/results/variants/diploidSV.vcf.gz Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf.gz
+  mv Manta/results/variants/diploidSV.vcf.gz.tbi Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf.gz.tbi
+  mv Manta/results/variants/somaticSV.vcf.gz Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf.gz
+  mv Manta/results/variants/somaticSV.vcf.gz.tbi Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf.gz.tbi
   """
 }
 
 if (verbose) mantaOutput = mantaOutput.view {
   "Variant Calling output:\n\
   Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  Files : [${it[4].fileName}, ${it[5].fileName}, ${it[6].fileName}, ${it[7].fileName}]"
+  Files : ${it[4].fileName}\n\
+  Index : ${it[5].fileName}"
+}
+
+process RunSingleManta {
+  tag {status == 0 ? idSample + " - Single Diploid" : idSample + " - Tumor-Only"}
+
+  publishDir directoryMap.manta, mode: 'copy'
+
+  input:
+    set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleManta
+    set file(genomeFile), file(genomeIndex) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex
+    ])
+
+  output:
+    set val("singlemanta"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleMantaOutput
+
+  when: 'manta' in tools
+
+  script:
+  if ( status == 0 ) // If Normal Sample
+  """
+  \$MANTA_INSTALL_PATH/bin/configManta.py \
+  --bam $bam \
+  --reference $genomeFile \
+  --runDir Manta
+
+  python Manta/runWorkflow.py -m local -j $task.cpus
+
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz Manta_${idSample}.candidateSmallIndels.vcf.gz
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz.tbi Manta_${idSample}.candidateSmallIndels.vcf.gz.tbi
+  mv Manta/results/variants/candidateSV.vcf.gz Manta_${idSample}.candidateSV.vcf.gz
+  mv Manta/results/variants/candidateSV.vcf.gz.tbi Manta_${idSample}.candidateSV.vcf.gz.tbi
+  mv Manta/results/variants/diploidSV.vcf.gz Manta_${idSample}.diploidSV.vcf.gz
+  mv Manta/results/variants/diploidSV.vcf.gz.tbi Manta_${idSample}.diploidSV.vcf.gz.tbi
+  """
+  else  // Tumor Sample
+  """
+  \$MANTA_INSTALL_PATH/bin/configManta.py \
+  --tumorBam $bam \
+  --reference $genomeFile \
+  --runDir Manta
+
+  python Manta/runWorkflow.py -m local -j $task.cpus
+
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz Manta_${idSample}.candidateSmallIndels.vcf.gz
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz.tbi Manta_${idSample}.candidateSmallIndels.vcf.gz.tbi
+  mv Manta/results/variants/candidateSV.vcf.gz Manta_${idSample}.candidateSV.vcf.gz
+  mv Manta/results/variants/candidateSV.vcf.gz.tbi Manta_${idSample}.candidateSV.vcf.gz.tbi
+  mv Manta/results/variants/tumorSV.vcf.gz Manta_${idSample}.tumorSV.vcf.gz
+  mv Manta/results/variants/tumorSV.vcf.gz.tbi Manta_${idSample}.tumorSV.vcf.gz.tbi
+  """
+}
+
+if (verbose) singleMantaOutput = singleMantaOutput.view {
+  "Variant Calling output:\n\
+  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: ${it[2]}\n\
+  Files : ${it[3].fileName}\n\
+  Index : ${it[4].fileName}"
 }
 
 // Run commands and code from Malin Larsson
@@ -1208,14 +1268,15 @@ vcfNotToAnnotate = Channel.create()
 if (step == 'annotate' && annotateVCF == []) {
   Channel.empty().mix(
     Channel.fromPath('VariantCalling/HaplotypeCaller/*.vcf.gz')
-      .flatten().map{vcf -> ['haplotypecaller',vcf]},
-    Channel.fromPath('VariantCalling/Manta/*.{somaticSV,diploidSV}.vcf.gz')
+      .flatten().unique()
+      .map{vcf -> ['haplotypecaller',vcf]},
+    Channel.fromPath('VariantCalling/Manta/*.{diploidSV,somaticSV,tumorSV}.vcf.gz')
       .flatten().map{vcf -> ['manta',vcf]},
     Channel.fromPath('VariantCalling/MuTect1/*.vcf.gz')
       .flatten().map{vcf -> ['mutect1',vcf]},
     Channel.fromPath('VariantCalling/MuTect2/*.vcf.gz')
       .flatten().map{vcf -> ['mutect2',vcf]},
-    Channel.fromPath('VariantCalling/Strelka/*passed_somatic*.vcf.gz')
+    Channel.fromPath('VariantCalling/Strelka/*somatic*.vcf.gz')
       .flatten().map{vcf -> ['strelka',vcf]}
   ).choice(vcfToAnnotate, vcfNotToAnnotate) { annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1 }
 
@@ -1232,28 +1293,31 @@ if (step == 'annotate' && annotateVCF == []) {
   vcfConcatenated
     .choice(vcfToAnnotate, vcfNotToAnnotate) { it[0] == 'gvcf-hc' || it[0] == 'freebayes' ? 1 : 0 }
 
-  (strelkaPAssedIndels, strelkaPAssedSNVS) = strelkaOutput.into(2)
+  (strelkaIndels, strelkaSNVS) = strelkaOutput.into(2)
   (mantaSomaticSV, mantaDiploidSV) = mantaOutput.into(2)
-
   vcfToAnnotate = vcfToAnnotate.map {
     variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
     [variantcaller, vcf]
   }.mix(
-    strelkaPAssedIndels.map {
-      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
+    mantaDiploidSV.map {
+      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf, tbi ->
       [variantcaller, vcf[2]]
     },
-    strelkaPAssedSNVS.map {
-      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
+    mantaSomaticSV.map {
+      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf, tbi ->
       [variantcaller, vcf[3]]
     },
-    mantaSomaticSV.map {
-      variantcaller, idPatient, idSampleNormal, idSampleTumor, somaticSV, candidateSV, diploidSV, candidateSmallIndels ->
-      [variantcaller, somaticSV]
+    singleMantaOutput.map {
+      variantcaller, idPatient, idSample, vcf, tbi ->
+      [variantcaller, vcf[2]]
     },
-    mantaDiploidSV.map {
-      variantcaller, idPatient, idSampleNormal, idSampleTumor, somaticSV, candidateSV, diploidSV, candidateSmallIndels ->
-      [variantcaller, diploidSV]
+    strelkaIndels.map {
+      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf, tbi ->
+      [variantcaller, vcf[0]]
+    },
+    strelkaSNVS.map {
+      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf, tbi ->
+      [variantcaller, vcf[1]]
     })
 } else exit 1, "specify only tools or files to annotate, bot both"
 
