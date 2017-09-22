@@ -42,15 +42,14 @@ function nf_test() {
 if [[ "$GENOME" == "smallGRCh37" ]] && [[ "$TEST" != "BUILDCONTAINERS" ]]
 then
   nf_test buildReferences.nf --download
-fi
-
-# Remove images only on TRAVIS
-if [[ "$PROFILE" == "dockerTest" ]] && [[ "$TRAVIS" == true ]]
-then
-  docker rmi -f maxulysse/igvtools:1.1
-elif [[ "$PROFILE" == singularityTest ]] && [[ "$TRAVIS" == true ]]
-then
-  rm -rf work/singularity/igvtools-1.1.img
+  # Remove images only on TRAVIS
+  if [[ "$PROFILE" == "dockerTest" ]] && [[ "$TRAVIS" == true ]]
+  then
+    docker rmi -f maxulysse/igvtools:1.1
+  elif [[ "$PROFILE" == singularityTest ]] && [[ "$TRAVIS" == true ]]
+  then
+    rm -rf work/singularity/igvtools-1.1.img
+  fi
 fi
 
 if [[ "$TEST" = "MAPPING" ]] || [[ "$TEST" = "ALL" ]]
