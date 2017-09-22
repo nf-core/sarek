@@ -7,11 +7,6 @@ A container named after the process is made for each process. If a container can
 - Based on `debian:8.6`
 - Contain **[BCFTools][bcftools-link]** 1.4
 
-## concatvcf [![concatvcf-docker status][concatvcf-docker-badge]][concatvcf-docker-link]
-
-- Based on `debian:8.6`
-- Contain **[pigz][pigz-link]** 2.3.4
-
 ## fastqc [![fastqc-docker status][fastqc-docker-badge]][fastqc-docker-link]
 
 - Based on `openjdk:8`

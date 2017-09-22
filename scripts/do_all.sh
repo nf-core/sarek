@@ -32,8 +32,8 @@ done
 
 if [ $TOOL = docker ]
 then
-    nextflow run . --docker ${PUSH} ${REPOSITORY} ${TAG} --containers bcftools,concatvcf,fastqc,gatk,htslib,igvtools,multiqc,mutect1,picard,qualimap,runascat,runconvertallelecounts,samtools,strelka,snpeff,vep
-    nextflow run . --docker ${PUSH} ${REPOSITORY} ${TAG} --containers mapreads,runallelecount,runmanta,snpeffgrch37,snpeffgrch38,vepgrch37,vepgrch38
+    nextflow run BuildContainers.nf --docker ${PUSH} ${REPOSITORY} ${TAG} --containers bcftools,concatvcf,fastqc,gatk,htslib,igvtools,multiqc,mutect1,picard,qualimap,runascat,runconvertallelecounts,samtools,strelka,snpeff,vep
+    nextflow run BuildContainers.nf --docker ${PUSH} ${REPOSITORY} ${TAG} --containers mapreads,runallelecount,runmanta,snpeffgrch37,snpeffgrch38,vepgrch37,vepgrch38
 else
-    nextflow run . --singularity ${REPOSITORY} ${TAG} --singularityPublishDir containers/ --containers bcftools,concatvcf,fastqc,gatk,htslib,igvtools,mapreads,multiqc,mutect1,picard,qualimap,runallelecount,runascat,runconvertallelecounts,runmanta,samtools,snpeffgrch37,snpeffgrch38,strelka,vepgrch37,vepgrch38
+    nextflow run BuildContainers.nf --singularity ${REPOSITORY} ${TAG} --singularityPublishDir containers/ --containers bcftools,concatvcf,fastqc,gatk,htslib,igvtools,mapreads,multiqc,mutect1,picard,qualimap,runallelecount,runascat,runconvertallelecounts,runmanta,samtools,snpeffgrch37,snpeffgrch38,strelka,vepgrch37,vepgrch38
 fi

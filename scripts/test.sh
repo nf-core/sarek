@@ -114,3 +114,5 @@ then
 fi
 
 if [[ "$TEST" = "BUILDCONTAINERS" ]] || [[ "$TEST" = "ALL" ]]
+  nf_test BuildContainers.nf --docker --containers bcftools,concatvcf,fastqc,gatk,htslib,igvtools,mapreads,multiqc,mutect1,picard,qualimap,runallelecount,runascat,runconvertallelecounts,runmanta,samtools,strelka,snpeff,vep
+fi

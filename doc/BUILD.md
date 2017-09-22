@@ -14,7 +14,6 @@ nextflow run . [--docker] [--singularity] [--singularityPublishDir <path>] [--pu
 - `--containers`: Choose which containers to build. Default: `all`. Possible values (to separate by commas):
   - `all` -  Build all available containers.
   - `bcftools`
-  - `concatvcf`
   - `fastqc`
   - `freebayes`
   - `gatk`
