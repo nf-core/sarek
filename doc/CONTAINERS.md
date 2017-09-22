@@ -30,7 +30,7 @@ A container named after the process is made for each process. If a container can
 ## igvtools [![igvtools-docker status][igvtools-docker-badge]][igvtools-docker-link]
 
 - Based on `openjdk:8-slim`
-- Contain **[IGVTools][igvtools-link]** 2.3.91
+- Contain **[IGVTools][igvtools-link]** 2.3.98
 
 ## mapreads [![mapreads-docker status][mapreads-docker-badge]][mapreads-docker-link]
 
