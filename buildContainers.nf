@@ -36,6 +36,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 */
 
+verbose = params.verbose
 version = '1.1'
 containersList = defineContainersList()
 containers = params.containers.split(',').collect {it.trim()}
