@@ -30,7 +30,7 @@ if(length(args)<5){
 
 
 tumorcounts = read.table(tumorac, header=F, sep="\t")
-normalcounts = read.table(normalac, header=, sep="\t")
+normalcounts = read.table(normalac, header=F, sep="\t")
 
 
 SNPpos = matrix(nrow = dim(normalcounts)[1],ncol = 2)
