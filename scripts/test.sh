@@ -39,7 +39,7 @@ function nf_test() {
 }
 
 # Build references only for smallGRCh37
-if [[ "$GENOME" == "smallGRCh37" ]]
+if [[ "$GENOME" == "smallGRCh37" ]] && [[ "$TEST" != "BUILDCONTAINERS" ]]
 then
   nf_test buildReferences.nf --download
 fi
@@ -112,3 +112,5 @@ then
   nf_test . --step annotate --tools snpEff --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf.gz --noReports
   nf_test . --step annotate --tools snpEff --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz --noReports
 fi
+
+if [[ "$TEST" = "BUILDCONTAINERS" ]] || [[ "$TEST" = "ALL" ]]
