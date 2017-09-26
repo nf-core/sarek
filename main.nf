@@ -1011,7 +1011,7 @@ process ConcatVCF {
         tail -n +\$((L+1)) \${vcf}
       done
     done
-  ) | bgzip -@ $task.cpus > ${outputFile}.gz
+  ) | bgzip > ${outputFile}.gz
   tabix ${outputFile}.gz
   """
 }
