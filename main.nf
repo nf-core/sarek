@@ -1042,7 +1042,7 @@ process RunStrelka {
 
   script:
   """
-  \$STRELKA_INSTALL_DIR/bin/configureStrelkaSomaticWorkflow.py \
+  \$STRELKA_INSTALL_PATH/bin/configureStrelkaSomaticWorkflow.py \
   --tumor $bamTumor \
   --normal $bamNormal \
   --referenceFasta $genomeFile \
