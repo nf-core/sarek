@@ -212,13 +212,11 @@ def checkUppmaxProject() {
 def defineContainersList(){
   // Return list of authorized containers
   return [
-    'bcftools',
+    'caw',
     'fastqc',
     'freebayes',
     'gatk',
-    'htslib',
     'igvtools',
-    'mapreads',
     'multiqc',
     'mutect1',
     'picard',
@@ -226,12 +224,9 @@ def defineContainersList(){
     'runallelecount',
     'runascat',
     'runconvertallelecounts',
-    'runmanta',
-    'samtools',
     'snpeff',
     'snpeffgrch37',
     'snpeffgrch38',
-    'strelka',
     'vep',
     'vepgrch37',
     'vepgrch38'
@@ -256,11 +251,10 @@ def helpMessage() {
   log.info "    --containers: Choose which containers to build"
   log.info "       Default: all"
   log.info "       Possible values:"
-  log.info "         all, bcftools, fastqc, freebayes, gatk, htslib, igvtools"
-  log.info "         mapreads, multiqc, mutect1, picard, qualimap"
-  log.info "         runallelecount, runascat, runconvertallelecounts,"
-  log.info "         runmanta, samtools, snpeff, snpeffgrch37, snpeffgrch38,"
-  log.info "         strelka, vep, vepgrch37, vepgrch38"
+  log.info "         all, caw, fastqc, freebayes, gatk, igvtools, multiqc"
+  log.info "         mutect1, picard, qualimap, runallelecount, runascat"
+  log.info "         runconvertallelecounts, snpeff, snpeffgrch37, snpeffgrch38"
+  log.info "         vep, vepgrch37, vepgrch38"
   log.info "    --docker: Build containers using Docker"
   log.info "    --help"
   log.info "       you're reading it"
