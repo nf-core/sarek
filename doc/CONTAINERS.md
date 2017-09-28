@@ -34,8 +34,8 @@ A container named after the process is made for each process. If a container can
 
 ## multiqc [![multiqc-docker status][multiqc-docker-badge]][multiqc-docker-link]
 
-- Based on `openjdk:8-slim`
-- Contain **[MultiQC][multiqc-link]** 1.0
+- Based on `python:2.7-slim`
+- Contain **[MultiQC][multiqc-link]** 1.1
 
 ## mutect1 [![mutect1-docker status][mutect1-docker-badge]][mutect1-docker-link]
 
