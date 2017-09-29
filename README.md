@@ -17,7 +17,7 @@ The pipeline can begin the analysis either from raw FASTQ files, only from the r
 
 Besides variant calls, the workflow provides quality controls presented by [MultiQC][multiqc-link].
 
-The [CAW-containers](https://github.com/SciLifeLab/CAW-containers) repository contains building rules for Docker and/or Singularity containers for all CAW processes.
+The [containers](containers) directory contains building rules for containers for all CAW processes.
 
 This pipeline is listed on [Elixir - Tools and Data Services Registry](https://bio.tools/CAW).
 
@@ -39,6 +39,8 @@ The CAW pipeline comes with documentation about the pipeline, found in the `doc/
 12. [Tools and dependencies](doc/TOOLS.md)
 13. [More information about ASCAT](doc/ASCAT.md)
 14. [Folder structure](doc/FOLDER.md)
+16. [Documentation about containers](doc/CONTAINERS.md)
+17. [Documentation about building](doc/BUILD.md)
 
 For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.juhos@scilifelab.se or join the gitter chat: [gitter.im/SciLifeLab/CAW][gitter-link].
 

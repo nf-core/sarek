@@ -39,18 +39,18 @@ function nf_test() {
 }
 
 # Build references only for smallGRCh37
-if [[ "$GENOME" == "smallGRCh37" ]]
+if [[ "$GENOME" == "smallGRCh37" ]] && [[ "$TEST" != "BUILDCONTAINERS" ]]
 then
   nf_test buildReferences.nf --download
-fi
 
-# Remove images only on TRAVIS
-if [[ "$PROFILE" == "docker" ]] && [[ "$TRAVIS" == true ]]
-then
-  docker rmi -f maxulysse/igvtools:1.1
-elif [[ "$PROFILE" == singularity ]] && [[ "$TRAVIS" == true ]]
-then
-  rm -rf work/singularity/igvtools-1.1.img
+  # Remove images only on TRAVIS
+  if [[ "$PROFILE" == "dockerTest" ]] && [[ "$TRAVIS" == true ]]
+  then
+    docker rmi -f maxulysse/igvtools:1.1
+  elif [[ "$PROFILE" == singularityTest ]] && [[ "$TRAVIS" == true ]]
+  then
+    rm -rf work/singularity/igvtools-1.1.img
+  fi
 fi
 
 if [[ "$TEST" = "MAPPING" ]] || [[ "$TEST" = "ALL" ]]
@@ -111,4 +111,9 @@ then
   nf_test . --step annotate --tools snpEff --annotateTools Manta,Strelka
   nf_test . --step annotate --tools snpEff --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf.gz --noReports
   nf_test . --step annotate --tools snpEff --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz --noReports
+fi
+
+if [[ "$TEST" = "BUILDCONTAINERS" ]] || [[ "$TEST" = "ALL" ]]
+then
+  nf_test buildContainers.nf --docker --containers bcftools,fastqc,gatk,htslib,igvtools,mapreads,multiqc,mutect1,picard,qualimap,runallelecount,runascat,runconvertallelecounts,runmanta,samtools,strelka,snpeff,vep
 fi

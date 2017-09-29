@@ -21,11 +21,19 @@ kate: syntax groovy; space-indent on; indent-width 2;
  Pall Olason <pall.olason@scilifelab.se> [@pallolason]
  Pelin Sahlén <pelin.akan@scilifelab.se> [@pelinakan]
 --------------------------------------------------------------------------------
-  @Homepage
-  http://opensource.scilifelab.se/projects/caw/
+ @Homepage
+ http://opensource.scilifelab.se/projects/caw/
 --------------------------------------------------------------------------------
-  @Documentation
-  https://github.com/SciLifeLab/CAW/README.md
+ @Documentation
+ https://github.com/SciLifeLab/CAW/README.md
+--------------------------------------------------------------------------------
+ Processes overview
+ - ProcessReference - Download all references if needed
+ - DecompressFile - Extract files if needed
+ - BuildBWAindexes - Build indexes for BWA
+ - BuildPicardIndex - Build index with Picard
+ - BuildSAMToolsIndex - Build index with SAMTools
+ - BuildVCFIndex - Build index for VCF files
 ================================================================================
 =                           C O N F I G U R A T I O N                          =
 ================================================================================
@@ -33,21 +41,11 @@ kate: syntax groovy; space-indent on; indent-width 2;
 
 version = '1.1'
 
-if (!nextflow.version.matches('>= 0.25.0')) {exit 1, "Nextflow version 0.25.0 or greater is needed to run this workflow"}
-
-if (!isAllowedParams(params)) {exit 1, "params is unknown, see --help for more information"}
-
-if (params.help) {
-  helpMessage()
-  exit 1
-}
-
-if (params.version) {
-  versionMessage()
-  exit 1
-}
-
-if (!checkUppmaxProject()) {exit 1, 'No UPPMAX project ID found! Use --project <UPPMAX Project ID>'}
+if (params.help) exit 1, helpMessage()
+if (params.version) exit 1, versionMessage()
+if (!isAllowedParams(params)) exit 1, "params is unknown, see --help for more information"
+if (!nextflow.version.matches('>= 0.25.0')) exit 1, "Nextflow version 0.25.0 or greater is needed to run this workflow"
+if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
 params.download = false
 params.refDir = ""
@@ -277,10 +275,13 @@ def checkParams(it) {
     'annotate-VCF',
     'annotateTools',
     'annotateVCF',
+    'build',
     'call-name',
     'callName',
     'contact-mail',
     'contactMail',
+    'containers',
+    'docker',
     'download',
     'genome',
     'genomes',
@@ -290,8 +291,10 @@ def checkParams(it) {
     'noGVCF',
     'noReports',
     'project',
+    'push',
     'ref-dir',
     'refDir',
+    'repository',
     'run-time',
     'runTime',
     'sample-dir',
@@ -299,7 +302,11 @@ def checkParams(it) {
     'sampleDir',
     'single-CPUMem',
     'singleCPUMem',
+    'singularity-publish-dir',
+    'singularity',
+    'singularityPublishDir',
     'step',
+    'tag',
     'test',
     'tools',
     'total-memory',
