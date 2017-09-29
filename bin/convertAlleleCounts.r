@@ -1,5 +1,5 @@
 #!/bin/env Rscript
-# Description: 
+# Description:
 # R-script for converting output from AlleleCount to BAF and LogR values.
 #
 # Input:
@@ -10,13 +10,12 @@
 #
 # Output:
 # BAF and LogR tables (tab delimited text files)
-#######################################################################################################
+################################################################################
 
 ##First read in the arguments listed at the command line
 args = commandArgs(trailingOnly=TRUE)
 
-
-##args is now a list of character vectors
+## args is now a list of character vectors
 ## First check to see if arguments are passed.
 if(length(args)<5){
     stop("No input files supplied\n\nUsage:\nRscript convertAlleleCounts.r tumorid tumorac normalid normalac gender\nWhere:\ntumorid - id of tumor sample\ntumorac - output from AlleleCount for the tumor\nnormalid - id of normal sample\nnormalac - output from AlleleCount for the normal\ngender - XX or XY\n\n")
@@ -28,10 +27,8 @@ if(length(args)<5){
     gender = args[5]
 }
 
-
 tumorcounts = read.table(tumorac, header=F, sep="\t")
 normalcounts = read.table(normalac, header=F, sep="\t")
-
 
 SNPpos = matrix(nrow = dim(normalcounts)[1],ncol = 2)
 
@@ -94,6 +91,3 @@ write.table(cbind(SNPpos,Tumor_LogR),paste(tumorid,".LogR",sep=""),sep="\t",row.
 write.table(cbind(SNPpos,Tumor_BAF),paste(tumorid,".BAF",sep=""),sep="\t",row.names=T,col.names=NA,quote=F)
 write.table(cbind(SNPpos,Germline_LogR),paste(normalid,".LogR",sep=""),sep="\t",row.names=T,col.names=NA,quote=F)
 write.table(cbind(SNPpos,Germline_BAF),paste(normalid,".BAF",sep=""),sep="\t",row.names=T,col.names=NA,quote=F)
-
-
-

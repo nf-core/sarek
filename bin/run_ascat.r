@@ -9,7 +9,6 @@ if(length(args)<6){
     normallogr = args[4]
     tumorname = args[5]
     baseDir = args[6]
-
 }
 
 source(paste(baseDir,"/scripts/ascat.R", sep=""))
@@ -47,5 +46,3 @@ write.table(cnvs, file=paste(tumorname,".cnvs.txt",sep=""), sep="\t", quote=F, r
 summary <- matrix(c(ascat.output$aberrantcellfraction, ascat.output$ploidy), ncol=2, byrow=TRUE)
 colnames(summary) <- c("AberrantCellFraction","Ploidy")
 write.table(summary, file=paste(tumorname,".purityploidy.txt",sep=""), sep="\t", quote=F, row.names=F, col.names=T)
-
-

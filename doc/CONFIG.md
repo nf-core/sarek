@@ -12,19 +12,26 @@ Every configuration file can be modified for your own use. If you want you can s
 
 ### [`docker.config`](../configuration/docker.config)
 
-Contain Docker images for all process. Use in your own profile if needed
+Contain Docker images for all process.
+Images will be pulled automatically.
+Use in your own profile if needed.
 
 ### [`genomes.config`](../configuration/genomes.config)
 
-Contain path to all references. Modify it if you want to change genome version, or the path to your references files
+Contain path to all references.
+Modify it if you want to change genome version, or the path to your references files.
 
-### [`singularity-download.config`](../configuration/singularity-download.config)
+### [`singularity-path.config`](../configuration/singularity-path.config)
 
-To be used when downloading singularity containers, like on a UPPMAX cluster
+To be used when downloading singularity containers, like on a secure UPPMAX cluster.
+Images will not be pulled automatically.
+You need to set them up before.
 
 ### [`singularity.config`](../configuration/singularity.config)
 
-Contain Singularity images for all process. Use in your own profile if needed
+Contain Singularity images for all process.
+Images will be pulled automatically.
+Use in your own profile if needed.
 
 ### [`travis.config`](../configuration/travis.config)
 
@@ -34,10 +41,6 @@ To be used for Travis (2 cpus) or on small computer for testing purpose
 
 To be used on a typical localhost on a UPPMAX cluster (16 cpus)
 
-### [`uppmax-modules.config`](../configuration/uppmax-modules.config)
-
-Contains modules for all processes. To be used on a UPPMAX cluster
-
 ### [`uppmax-slurm.config`](../configuration/uppmax-slurm.config)
 
 Slurm configuration for a UPPMAX cluster
@@ -46,30 +49,35 @@ Slurm configuration for a UPPMAX cluster
 
 Every profile can be modified for your own use. To use a profile, you'll need to specify `-profile <profile>`
 
-### `dockerTest`
+### `docker`
 
-This is the profile for docker testing on a small machine, or on Travis CI
+This is the profile for docker testing on a small machine, or on Travis CI.
+Images will be pulled automatically.
 
 ### `standard`
 
-This is the default profile for use on a localhost on a UPPMAX cluster
+This is the default profile for use on a localhost on a UPPMAX cluster with Singularity.
+Singularity images need to be set up.
+
+### `download`
+
+This is the default profile for use on a localhost on a UPPMAX cluster with Singularity.
+Singularity will be pulled automatically.
 
 ### `slurm`
 
-This is another profile for use on a UPPMAX cluster using the job scheduler slurm
+This is another profile for use on a UPPMAX cluster using the job scheduler slurm with Singularity.
+Singularity images need to be set up.
 
-### `singularityTest`
+### `slurm-download`
 
-This is the profile for Singularity testing on a small machine, or on Travis CI
+This is another profile for use on a UPPMAX cluster using the job scheduler slurm with Singularity.
+Singularity will be pulled automatically.
 
-### `singularityLocal`
+### `singularity`
 
-This is the profile for use on a localhost on a UPPMAX cluster with Singularity
-
-### `singularitySlurm`
-
-This is another profile for use on a UPPMAX cluster using the job scheduler slurm and Singularity
-
+This is the profile for Singularity testing on a small machine, or on Travis CI.
+Images will be pulled automatically.
 
 --------------------------------------------------------------------------------
 

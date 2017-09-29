@@ -2,7 +2,7 @@
 set -xeuo pipefail
 
 GENOME="smallGRCh37"
-PROFILE="singularityTest"
+PROFILE="singularity"
 TEST="ALL"
 TRAVIS=${TRAVIS:-false}
 SAMPLE="data/tsv/tiny.tsv"
@@ -82,10 +82,10 @@ then
   nf_test . --step preprocessing --sample $SAMPLE --tools MuTect2,Strelka
 
   # Remove images only on TRAVIS
-  if [[ "$PROFILE" == "dockerTest" ]] && [[ "$TRAVIS" == true ]]
+  if [[ "$PROFILE" == "docker" ]] && [[ "$TRAVIS" == true ]]
   then
     docker rmi -f maxulysse/fastqc:1.1 maxulysse/gatk:1.0 maxulysse/gatk:1.1 maxulysse/mapreads:1.1 maxulysse/picard:1.1 maxulysse/runmanta:dev maxulysse/samtools:1.1 maxulysse/strelka:dev
-  elif [[ "$PROFILE" == "singularityTest" ]] && [[ "$TRAVIS" == true ]]
+  elif [[ "$PROFILE" == "singularity" ]] && [[ "$TRAVIS" == true ]]
   then
     rm -rf work/singularity/fastqc-1.1.img work/singularity/gatk-1.0.img work/singularity/gatk-1.1.img work/singularity/mapreads-1.1.img work/singularity/picard-1.1.img work/singularity/runmanta-dev.img work/singularity/samtools-1.1.img work/singularity/strelka-dev.img
   fi
@@ -101,10 +101,10 @@ then
   nf_test . --step preprocessing --sample $SAMPLE --tools MuTect2,Strelka
 
   # Remove images only on TRAVIS
-  if [[ "$PROFILE" == "dockerTest" ]] && [[ "$TRAVIS" == true ]]
+  if [[ "$PROFILE" == "docker" ]] && [[ "$TRAVIS" == true ]]
   then
     docker rmi -f maxulysse/fastqc:1.1 maxulysse/gatk:1.0 maxulysse/gatk:1.1 maxulysse/mapreads:1.1 maxulysse/picard:1.1 maxulysse/runmanta:dev maxulysse/samtools:1.1 maxulysse/strelka:dev
-  elif [[ "$PROFILE" == "singularityTest" ]] && [[ "$TRAVIS" == true ]]
+  elif [[ "$PROFILE" == "singularity" ]] && [[ "$TRAVIS" == true ]]
   then
     rm -rf work/singularity/fastqc-1.1.img work/singularity/gatk-1.0.img work/singularity/gatk-1.1.img work/singularity/mapreads-1.1.img work/singularity/picard-1.1.img work/singularity/runmanta-dev.img work/singularity/samtools-1.1.img work/singularity/strelka-dev.img
   fi
