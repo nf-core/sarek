@@ -8,8 +8,8 @@ Four optional arguments are supported:
   Choose the genome reference version (overwrite configuration files and profiles)
 - `-p` || `--profile`:
   Choose which profile to test. These options should work on a personnal computer:
-  - `dockerTest` test using Docker containers
-  - `singularityTest` (default) test using Singularity containers
+  - `docker` test using Docker containers
+  - `singularity` (default) test using Singularity containers
 - `-s` || `--sample`:
   Use to change the test sample (default=`data/tsv/tiny.tsv`)
 - `-t` || `--test`:
@@ -26,7 +26,7 @@ Four optional arguments are supported:
 # Will try all tests using Singularity
 ./scripts/test.sh
 # Will try all tests using Docker
-./scripts/test.sh -p dockerTest
+./scripts/test.sh -p docker
 # Will try MAPPING tests using Singularity
 ./scripts/test.sh -t MAPPING
 # Will try MAPPING tests using Singularity with GRCh37 genome

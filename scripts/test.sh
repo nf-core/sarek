@@ -2,7 +2,7 @@
 set -xeuo pipefail
 
 GENOME="smallGRCh37"
-PROFILE="singularityTest"
+PROFILE="singularity"
 TEST="ALL"
 TRAVIS=${TRAVIS:-false}
 SAMPLE="data/tsv/tiny.tsv"
@@ -44,10 +44,10 @@ then
   nf_test buildReferences.nf --download
 
   # Remove images only on TRAVIS
-  if [[ "$PROFILE" == "dockerTest" ]] && [[ "$TRAVIS" == true ]]
+  if [[ "$PROFILE" == "docker" ]] && [[ "$TRAVIS" == true ]]
   then
     docker rmi -f maxulysse/igvtools:1.1
-  elif [[ "$PROFILE" == singularityTest ]] && [[ "$TRAVIS" == true ]]
+  elif [[ "$PROFILE" == singularity ]] && [[ "$TRAVIS" == true ]]
   then
     rm -rf work/singularity/igvtools-1.1.img
   fi
@@ -82,10 +82,10 @@ then
   nf_test . --step preprocessing --sample $SAMPLE --tools MuTect2
 
   # Remove images only on TRAVIS
-  if [[ "$PROFILE" == "dockerTest" ]] && [[ "$TRAVIS" == true ]]
+  if [[ "$PROFILE" == "docker" ]] && [[ "$TRAVIS" == true ]]
   then
     docker rmi -f maxulysse/fastqc:1.1 maxulysse/gatk:dev maxulysse/picard:1.1 maxulysse/caw:dev
-  elif [[ "$PROFILE" == "singularityTest" ]] && [[ "$TRAVIS" == true ]]
+  elif [[ "$PROFILE" == "singularity" ]] && [[ "$TRAVIS" == true ]]
   then
     rm -rf work/singularity/fastqc-1.1.img work/singularity/gatk-dev.img work/singularity/picard-1.1.img work/singularity/caw-dev.img
   fi
@@ -101,10 +101,10 @@ then
   nf_test . --step preprocessing --sample $SAMPLE --tools MuTect2
 
   # Remove images only on TRAVIS
-  if [[ "$PROFILE" == "dockerTest" ]] && [[ "$TRAVIS" == true ]]
+  if [[ "$PROFILE" == "docker" ]] && [[ "$TRAVIS" == true ]]
   then
     docker rmi -f maxulysse/fastqc:1.1 maxulysse/gatk:dev maxulysse/picard:1.1 maxulysse/caw:dev
-  elif [[ "$PROFILE" == "singularityTest" ]] && [[ "$TRAVIS" == true ]]
+  elif [[ "$PROFILE" == "singularity" ]] && [[ "$TRAVIS" == true ]]
   then
     rm -rf work/singularity/fastqc-1.1.img work/singularity/gatk-dev.img work/singularity/picard-1.1.img work/singularity/caw-dev.img
   fi

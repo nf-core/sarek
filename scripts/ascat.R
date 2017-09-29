@@ -24,9 +24,6 @@
 # PCF and ASPCF: Gro Nilsen
 # GC correction: Jiqiu Cheng
 
-
-
-
 # function to read in SNP array data
 # input: filenames of tumor LogR, tumor BAF, germline LogR and germline BAF data
 # germline data files can be NULL - in that case these are not read in
@@ -255,13 +252,13 @@ ascat.GCcorrect = function(ASCATobj, GCcontentfile = NULL) {
         length_tot<-c(length_tot,length(td_chr))
       }
       corr<-apply(corr_tot,1,function(x) sum(abs(x*length_tot))/sum(length_tot))
-      
+
       #old code:
       #index_1M<-c(which(names(corr)=="X1M"),which(names(corr)=="X1Mb"))
       #maxGCcol_short<-which(corr[1:(index_1M-1)]==max(corr[1:(index_1M-1)]))
       #maxGCcol_long<-which(corr[index_1M:length(corr)]==max(corr[index_1M:length(corr)]))
       #maxGCcol_long<-(maxGCcol_long+(index_1M-1))
-      
+
       #Updated by Malin:
       index_1000bp<-which(names(corr)=="X1000bp")
       maxGCcol_short<-which(corr[1:(index_1000bp-1)]==max(corr[1:(index_1000bp-1)]))
@@ -2182,4 +2179,3 @@ ascat.predictGermlineGenotypes = function(ASCATobj, platform = "AffySNP6") {
   return(list(germlinegenotypes = Homozygous, failedarrays = failedarrays))
 
 }
-
