@@ -10,7 +10,7 @@
 - **[HTSlib][htslib-link]** 1.4
 - **[IGVTools][igvtools-link]** 2.3.91
 - **[Manta][manta-link]** 1.1.1
-- **[MultiQC][multiqc-link]** 1.0
+- **[MultiQC][multiqc-link]** 1.1
 - **[MuTect1][mutect1-link]** 1.5
 - **[Nextflow][nextflow-link]** >= 0.25.0
 - **[Picard][picard-link]** 2.0.1

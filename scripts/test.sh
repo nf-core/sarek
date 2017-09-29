@@ -42,7 +42,6 @@ function nf_test() {
 if [[ "$GENOME" == "smallGRCh37" ]] && [[ "$TEST" != "BUILDCONTAINERS" ]]
 then
   nf_test buildReferences.nf --download
-
   # Remove images only on TRAVIS
   if [[ "$PROFILE" == "docker" ]] && [[ "$TRAVIS" == true ]]
   then
