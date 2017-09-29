@@ -1,6 +1,7 @@
 #!/bin/bash
 set -xeuo pipefail
 
+PROFILE="singularity"
 PUSH=""
 REPOSITORY="maxulysse"
 TAG="1.1"
@@ -18,6 +19,10 @@ do
         TAG="--tag $2"
         shift
         ;;
+        -p|--profile)
+        PROFILE="$2"
+        shift
+        ;;
         --push)
         PUSH=--push
         ;;
@@ -32,10 +37,9 @@ done
 
 if [ $TOOL = docker ]
 then
-    nextflow run BuildContainers.nf --docker ${PUSH} ${REPOSITORY} ${TAG} --containers
-    caw,fastqc,gatk,igvtools,multiqc,mutect1,picard,qualimap,runascat,runconvertallelecounts,snpeff,vep
-    nextflow run BuildContainers.nf --docker ${PUSH} ${REPOSITORY} ${TAG} --containers runallelecount,snpeffgrch37,snpeffgrch38,vepgrch37,vepgrch38
+    nextflow run buildContainers.nf -profile ${PROFILE} --verbose --docker ${PUSH} ${REPOSITORY} ${TAG} --containers caw,fastqc,gatk,igvtools,multiqc,mutect1,picard,qualimap,runascat,runconvertallelecounts,snpeff,vep
+    nextflow run buildContainers.nf -profile ${PROFILE} --verbose --docker ${PUSH} ${REPOSITORY} ${TAG} --containers runallelecount,snpeffgrch37,snpeffgrch38,vepgrch37,vepgrch38
 else
-    nextflow run BuildContainers.nf --singularity ${REPOSITORY} ${TAG} --singularityPublishDir containers/ --containers bcftools
+    nextflow run buildContainers.nf -profile ${PROFILE} --verbose --singularity ${REPOSITORY} ${TAG} --singularityPublishDir containers/ --containers bcftools
     caw,fastqc,gatk,igvtools,multiqc,mutect1,picard,qualimap,runallelecount,runascat,runconvertallelecounts,snpeffgrch37,snpeffgrch38,vepgrch37,vepgrch38
 fi
