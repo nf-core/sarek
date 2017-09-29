@@ -2,10 +2,15 @@
 
 A container named after the process is made for each process. If a container can be reused, it will be named after the tool used.
 
-## bcftools [![bcftools-docker status][bcftools-docker-badge]][bcftools-docker-link]
+## caw [![caw-docker status][caw-docker-badge]][caw-docker-link]
 
-- Based on `debian:8.6`
-- Contain **[BCFTools][bcftools-link]** 1.4
+- Based on `debian:8.9`
+- Contain **[BCFTools][bcftools-link]** 1.5
+- Contain **[HTSlib][htslib-link]** 1.5
+- Contain **[BWA][bwa-link]** 0.7.16
+- Contain **[Manta][manta-link]** 1.1.1
+- Contain **[samtools][samtools-link]** 1.5
+- Contain **[Strelka][strelka-link]** 2.8.2
 
 ## fastqc [![fastqc-docker status][fastqc-docker-badge]][fastqc-docker-link]
 
@@ -19,28 +24,18 @@ A container named after the process is made for each process. If a container can
 
 ## gatk [![gatk-docker status][gatk-docker-badge]][gatk-docker-link]
 
-- Based on `openjdk:8-slim`
-- Contain **[GATK][gatk-link]** 3.7
-
-## htslib [![htslib-docker status][htslib-docker-badge]][htslib-docker-link]
-
-- Based on `debian:8.6`
-- Contain **[HTSlib][htslib-link]** 1.4
+- Based on `broadinstitute/gatk3:3.8-0`
+- Contain **[GATK][gatk-link]** 3.8
 
 ## igvtools [![igvtools-docker status][igvtools-docker-badge]][igvtools-docker-link]
 
 - Based on `openjdk:8-slim`
 - Contain **[IGVTools][igvtools-link]** 2.4
 
-## mapreads [![mapreads-docker status][mapreads-docker-badge]][mapreads-docker-link]
-
-- Based on `maxulysse/samtools:1.1`
-- Contain **[BWA][bwa-link]** 0.7.8
-
 ## multiqc [![multiqc-docker status][multiqc-docker-badge]][multiqc-docker-link]
 
-- Based on `openjdk:8-slim`
-- Contain **[MultiQC][multiqc-link]** 1.0
+- Based on `python:2.7-slim`
+- Contain **[MultiQC][multiqc-link]** 1.1
 
 ## mutect1 [![mutect1-docker status][mutect1-docker-badge]][mutect1-docker-link]
 
@@ -64,22 +59,12 @@ A container named after the process is made for each process. If a container can
 
 ## runascat [![runascat-docker status][runascat-docker-badge]][runascat-docker-link]
 
-- Based on `maxulysse/samtools:1.1`
+- Based on `r-base:3.3.`
 - Contain **[RColorBrewer][rcolorbrewer-link]**
 
 ## runconvertallelecounts [![runconvertallelecounts-docker status][runconvertallelecounts-docker-badge]][runconvertallelecounts-docker-link]
 
 - Based on `r-base:3.3.2`
-
-## runmanta [![runmanta-docker status][runmanta-docker-badge]][runmanta-docker-link]
-
-- Based on `maxulysse/samtools:1.1`
-- Contain **[Manta][manta-link]** 1.0.3
-
-## samtools [![samtools-docker status][samtools-docker-badge]][samtools-docker-link]
-
-- Based on `debian:8.6`
-- Contain **[samtools][samtools-link]** 1.4
 
 ## snpeff [![snpeff-docker status][snpeff-docker-badge]][snpeff-docker-link]
 
@@ -97,11 +82,6 @@ A container named after the process is made for each process. If a container can
 - Based on `maxulysse/snpeff`
 - Contain **[snpEff][snpeff-link]** 4.3i
 - Contain GRCh38.86
-
-## strelka [![strelka-docker status][strelka-docker-badge]][strelka-docker-link]
-
-- Based on `debian:8.6`
-- Contain **[Strelka][strelka-link]** 1.0.15
 
 ## vep [![vep-docker status][vep-docker-badge]][vep-docker-link]
 
