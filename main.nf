@@ -1310,30 +1310,15 @@ vcfNotToAnnotate = Channel.create()
 if (step == 'annotate' && annotateVCF == []) {
   Channel.empty().mix(
     Channel.fromPath('VariantCalling/HaplotypeCaller/*.vcf.gz')
-      .flatten().unique()
-      .map{vcf -> ['haplotypecaller',vcf]},
-<<<<<<< HEAD
+      .flatten().map{vcf -> ['haplotypecaller',vcf]},
     Channel.fromPath('VariantCalling/Manta/*SV.vcf.gz')
-      .flatten().unique()
-      .map{vcf -> ['manta',vcf]},
-=======
-    Channel.fromPath('VariantCalling/Manta/*.{diploidSV,somaticSV,tumorSV}.vcf.gz')
       .flatten().map{vcf -> ['manta',vcf]},
->>>>>>> upstream/master
     Channel.fromPath('VariantCalling/MuTect1/*.vcf.gz')
       .flatten().map{vcf -> ['mutect1',vcf]},
     Channel.fromPath('VariantCalling/MuTect2/*.vcf.gz')
-<<<<<<< HEAD
-      .flatten().unique()
-      .map{vcf -> ['mutect2',vcf]},
-    Channel.fromPath('VariantCalling/Strelka/*{somatic,variants}*.vcf.gz')
-      .flatten().unique()
-      .map{vcf -> ['strelka',vcf]}
-=======
       .flatten().map{vcf -> ['mutect2',vcf]},
-    Channel.fromPath('VariantCalling/Strelka/*somatic*.vcf.gz')
+    Channel.fromPath('VariantCalling/Strelka/*{somatic,variants}*.vcf.gz')
       .flatten().map{vcf -> ['strelka',vcf]}
->>>>>>> upstream/master
   ).choice(vcfToAnnotate, vcfNotToAnnotate) { annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1 }
 
 } else if (step == 'annotate' && annotateTools == [] && annotateVCF != []) {
