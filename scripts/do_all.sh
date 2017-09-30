@@ -37,9 +37,9 @@ done
 
 if [ $TOOL = docker ]
 then
-    nextflow run buildContainers.nf -profile ${PROFILE} --verbose --docker ${PUSH} ${REPOSITORY} ${TAG} --containers caw,fastqc,gatk,igvtools,multiqc,mutect1,picard,qualimap,runascat,runconvertallelecounts,snpeff,vep
+    nextflow run buildContainers.nf -profile ${PROFILE} --verbose --docker ${PUSH} ${REPOSITORY} ${TAG} --containers caw,fastqc,freebayes,gatk,igvtools,multiqc,mutect1,picard,qualimap,runascat,runconvertallelecounts,snpeff,vep
     nextflow run buildContainers.nf -profile ${PROFILE} --verbose --docker ${PUSH} ${REPOSITORY} ${TAG} --containers runallelecount,snpeffgrch37,snpeffgrch38,vepgrch37,vepgrch38
 else
     nextflow run buildContainers.nf -profile ${PROFILE} --verbose --singularity ${REPOSITORY} ${TAG} --singularityPublishDir containers/ --containers bcftools
-    caw,fastqc,gatk,igvtools,multiqc,mutect1,picard,qualimap,runallelecount,runascat,runconvertallelecounts,snpeffgrch37,snpeffgrch38,vepgrch37,vepgrch38
+    caw,fastqc,freebayes,gatk,igvtools,multiqc,mutect1,picard,qualimap,runallelecount,runascat,runconvertallelecounts,snpeffgrch37,snpeffgrch38,vepgrch37,vepgrch38
 fi
