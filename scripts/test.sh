@@ -45,10 +45,10 @@ then
   # Remove images only on TRAVIS
   if [[ "$PROFILE" == "docker" ]] && [[ "$TRAVIS" == true ]]
   then
-    docker rmi -f maxulysse/igvtools:1.1
+    docker rmi -f maxulysse/igvtools:1.2
   elif [[ "$PROFILE" == singularity ]] && [[ "$TRAVIS" == true ]]
   then
-    rm -rf work/singularity/igvtools-1.1.img
+    rm -rf work/singularity/igvtools-1.2.img
   fi
 fi
 
@@ -83,10 +83,10 @@ then
   # Remove images only on TRAVIS
   if [[ "$PROFILE" == "docker" ]] && [[ "$TRAVIS" == true ]]
   then
-    docker rmi -f maxulysse/fastqc:1.1 maxulysse/gatk:dev maxulysse/picard:1.1 maxulysse/caw:dev
+    docker rmi -f maxulysse/fastqc:1.2 maxulysse/gatk:1.2 maxulysse/picard:1.2 maxulysse/caw:1.2
   elif [[ "$PROFILE" == "singularity" ]] && [[ "$TRAVIS" == true ]]
   then
-    rm -rf work/singularity/fastqc-1.1.img work/singularity/gatk-dev.img work/singularity/picard-1.1.img work/singularity/caw-dev.img
+    rm -rf work/singularity/fastqc-1.2.img work/singularity/gatk-1.2.img work/singularity/picard-1.2.img work/singularity/caw-1.2.img
   fi
   nf_test . --step annotate --tools VEP --annotateTools Manta,Strelka
   nf_test . --step annotate --tools VEP --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf.gz --noReports
@@ -102,10 +102,10 @@ then
   # Remove images only on TRAVIS
   if [[ "$PROFILE" == "docker" ]] && [[ "$TRAVIS" == true ]]
   then
-    docker rmi -f maxulysse/fastqc:1.1 maxulysse/gatk:dev maxulysse/picard:1.1 maxulysse/caw:dev
+    docker rmi -f maxulysse/fastqc:1.2 maxulysse/gatk:1.2 maxulysse/picard:1.2 maxulysse/caw:1.2
   elif [[ "$PROFILE" == "singularity" ]] && [[ "$TRAVIS" == true ]]
   then
-    rm -rf work/singularity/fastqc-1.1.img work/singularity/gatk-dev.img work/singularity/picard-1.1.img work/singularity/caw-dev.img
+    rm -rf work/singularity/fastqc-1.2.img work/singularity/gatk-1.2.img work/singularity/picard-1.2.img work/singularity/caw-1.2.img
   fi
   nf_test . --step annotate --tools snpEff --annotateTools Manta,Strelka
   nf_test . --step annotate --tools snpEff --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf.gz --noReports
