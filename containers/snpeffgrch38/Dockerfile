@@ -1,4 +1,4 @@
-FROM maxulysse/snpeff:1.1
+FROM maxulysse/snpeff:1.2
 
 LABEL author="Maxime Garcia" \
 description="snpEff 4.3m image with GRCh38.86 genome for use in CAW" \

@@ -39,14 +39,15 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files
  - RunBamQC - Run qualimap BamQC on recalibrated BAM files
  - CreateIntervalBeds - Create and sort intervals into bed files
- - RunHaplotypecaller - Run HaplotypeCaller for GermLine Variant Calling (Parallelized processes)
- - RunGenotypeGVCFs - Run HaplotypeCaller for GermLine Variant Calling (Parallelized processes)
+ - RunHaplotypecaller - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
+ - RunGenotypeGVCFs - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
  - RunBcftoolsStats - Run BCFTools stats on vcf before annotation
  - RunMutect1 - Run MuTect1 for Variant Calling (Parallelized processes)
  - RunMutect2 - Run MuTect2 for Variant Calling (Parallelized processes)
  - RunFreeBayes - Run FreeBayes for Variant Calling (Parallelized processes)
  - ConcatVCF - Merge results from HaplotypeCaller, MuTect1 and MuTect2
  - RunStrelka - Run Strelka for Variant Calling
+ - RunSingleStrelka - Run Strelka for Germline Variant Calling
  - RunManta - Run Manta for Structural Variant Calling
  - RunSingleManta - Run Manta for Single Structural Variant Calling
  - RunAlleleCount - Run AlleleCount to prepare for ASCAT
@@ -644,13 +645,14 @@ bamsTumor = Channel.create()
 recalibratedBam
   .choice(bamsTumor, bamsNormal) {it[1] == 0 ? 1 : 0}
 
-// Ascat & Manta Germline SV
-(bamsNormalTemp, bamsNormal) = bamsNormal.into(2)
-(bamsTumorTemp, bamsTumor) = bamsTumor.into(2)
-
+// Ascat, Strelka Germline & Manta Germline SV
 bamsForAscat = Channel.create()
 bamsForSingleManta = Channel.create()
-(bamsForAscat, bamsForSingleManta) = bamsNormalTemp.mix(bamsTumorTemp).into(2)
+bamsForSingleStrelka = Channel.create()
+
+(bamsTumorTemp, bamsTumor) = bamsTumor.into(2)
+(bamsNormalTemp, bamsNormal) = bamsNormal.into(2)
+(bamsForAscat, bamsForSingleManta, bamsForSingleStrelka) = bamsNormalTemp.mix(bamsTumorTemp).into(3)
 
 // Removing status because not relevant anymore
 bamsNormal = bamsNormal.map { idPatient, status, idSample, bam, bai -> [idPatient, idSample, bam, bai] }
@@ -1057,8 +1059,8 @@ process RunStrelka {
   python Strelka/runWorkflow.py -m local -j $task.cpus
 
   mv Strelka/results/variants/somatic.indels.vcf.gz Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz
-  mv Strelka/results/variants/somatic.snvs.vcf.gz Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
   mv Strelka/results/variants/somatic.indels.vcf.gz.tbi Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz.tbi
+  mv Strelka/results/variants/somatic.snvs.vcf.gz Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
   mv Strelka/results/variants/somatic.snvs.vcf.gz.tbi Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz.tbi
   """
 }
@@ -1068,6 +1070,46 @@ if (verbose) strelkaOutput = strelkaOutput.view {
   Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
   Files : ${it[4].fileName}\n\
   Index : ${it[5].fileName}"
+}
+
+process RunSingleStrelka {
+  tag {idSample}
+
+  publishDir directoryMap.strelka, mode: 'copy'
+
+  input:
+    set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleStrelka
+    set file(genomeFile), file(genomeIndex) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex
+    ])
+
+  output:
+    set val("singlestrelka"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleStrelkaOutput
+
+  when: 'strelka' in tools
+
+  script:
+  """
+  \$STRELKA_INSTALL_PATH/bin/configureStrelkaGermlineWorkflow.py \
+  --bam $bam \
+  --referenceFasta $genomeFile \
+  --runDir Strelka
+
+  python Strelka/runWorkflow.py -m local -j $task.cpus
+
+  mv Strelka/results/variants/genome.*.vcf.gz Strelka_${idSample}_genome.vcf.gz
+  mv Strelka/results/variants/genome.*.vcf.gz.tbi Strelka_${idSample}_genome.vcf.gz.tbi
+  mv Strelka/results/variants/variants.vcf.gz Strelka_${idSample}_variants.vcf.gz
+  mv Strelka/results/variants/variants.vcf.gz.tbi Strelka_${idSample}_variants.vcf.gz.tbi
+  """
+}
+
+if (verbose) singleStrelkaOutput = singleStrelkaOutput.view {
+  "Variant Calling output:\n\
+  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: ${it[2]}\n\
+  Files : ${it[3].fileName}\n\
+  Index : ${it[4].fileName}"
 }
 
 process RunManta {
@@ -1268,15 +1310,14 @@ vcfNotToAnnotate = Channel.create()
 if (step == 'annotate' && annotateVCF == []) {
   Channel.empty().mix(
     Channel.fromPath('VariantCalling/HaplotypeCaller/*.vcf.gz')
-      .flatten().unique()
-      .map{vcf -> ['haplotypecaller',vcf]},
-    Channel.fromPath('VariantCalling/Manta/*.{diploidSV,somaticSV,tumorSV}.vcf.gz')
+      .flatten().map{vcf -> ['haplotypecaller',vcf]},
+    Channel.fromPath('VariantCalling/Manta/*SV.vcf.gz')
       .flatten().map{vcf -> ['manta',vcf]},
     Channel.fromPath('VariantCalling/MuTect1/*.vcf.gz')
       .flatten().map{vcf -> ['mutect1',vcf]},
     Channel.fromPath('VariantCalling/MuTect2/*.vcf.gz')
       .flatten().map{vcf -> ['mutect2',vcf]},
-    Channel.fromPath('VariantCalling/Strelka/*somatic*.vcf.gz')
+    Channel.fromPath('VariantCalling/Strelka/*{somatic,variants}*.vcf.gz')
       .flatten().map{vcf -> ['strelka',vcf]}
   ).choice(vcfToAnnotate, vcfNotToAnnotate) { annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1 }
 
@@ -1306,6 +1347,10 @@ if (step == 'annotate' && annotateVCF == []) {
     mantaSomaticSV.map {
       variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf, tbi ->
       [variantcaller, vcf[3]]
+    },
+    singleStrelkaOutput.map {
+      variantcaller, idPatient, idSample, vcf, tbi ->
+      [variantcaller, vcf[1]]
     },
     singleMantaOutput.map {
       variantcaller, idPatient, idSample, vcf, tbi ->

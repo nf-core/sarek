@@ -22,6 +22,7 @@ Several processes are run within the workflow. We divide them for the moment int
 - RunFreeBayes - Run FreeBayes for Variant Calling (Parallelized processes)
 - ConcatVCF - Merge results from HaplotypeCaller, MuTect1 and MuTect2
 - RunStrelka - Run Strelka for Variant Calling
+- RunSingleStrelka - Run Strelka for Germline Variant Calling
 - RunManta - Run Manta for Structural Variant Calling
 - RunSingleManta - Run Manta for Single Structural Variant Calling
 - RunAlleleCount - Run AlleleCount to prepare for ASCAT
