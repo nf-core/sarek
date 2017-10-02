@@ -43,7 +43,6 @@ if (params.help) exit 0, helpMessage()
 if (params.version) exit 0, versionMessage()
 if (!isAllowedParams(params)) exit 1, "params is unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
-if (!checkContainers(containers,containersList)) exit 1, 'Unknown container(s), see --help for more information'
 
 containers = containers == ['all'] ? containersList : containers
 containers = params.containers.split(',').collect {it.trim()}
@@ -55,6 +54,8 @@ singularity = params.singularity ? true : false
 singularityPublishDir = params.singularity && params.singularityPublishDir ? params.singularityPublishDir : "."
 tag = params.tag ? params.tag : version
 verbose = params.verbose
+
+if (!checkContainers(containers,containersList)) exit 1, 'Unknown container(s), see --help for more information'
 
 /*
 ================================================================================
