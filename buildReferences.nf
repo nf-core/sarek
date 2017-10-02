@@ -39,12 +39,12 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 */
 
-version = '1.1'
+version = '1.2'
 
-if (params.help) exit 1, helpMessage()
-if (params.version) exit 1, versionMessage()
-if (!isAllowedParams(params)) exit 1, "params is unknown, see --help for more information"
 if (!nextflow.version.matches('>= 0.25.0')) exit 1, "Nextflow version 0.25.0 or greater is needed to run this workflow"
+if (params.help) exit 0, helpMessage()
+if (params.version) exit 0, versionMessage()
+if (!isAllowedParams(params)) exit 1, "params is unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
 params.download = false
@@ -52,8 +52,8 @@ params.refDir = ""
 verbose = params.verbose
 download = params.download ? true : false
 
-if (!download && params.refDir == "" ) { exit 1, "No --refDir specified"}
-if (download && params.refDir != "" ) { exit 1, "No need to specify --refDir"}
+if (!download && params.refDir == "" ) exit 1, "No --refDir specified"
+if (download && params.refDir != "" ) exit 1, "No need to specify --refDir"
 
 if (params.genome == "smallGRCh37") {
   referencesFiles =
@@ -77,11 +77,11 @@ if (params.genome == "smallGRCh37") {
       'Mills_and_1000G_gold_standard.indels.b37.vcf.gz',
       'wgs_calling_regions.grch37.list'
     ]
-} else {exit 1, "Can't build this reference genome"}
+} else exit 1, "Can't build this reference genome"
 
-if (download && params.genome != "smallGRCh37") {exit 1, "Not possible to download $params.genome references files"}
+if (download && params.genome != "smallGRCh37") exit 1, "Not possible to download $params.genome references files"
 
-if (!download) {referencesFiles.each{checkFile(params.refDir + "/" + it)}}
+if (!download) referencesFiles.each{checkFile(params.refDir + "/" + it)}
 
 /*
 ================================================================================
@@ -113,7 +113,10 @@ process ProcessReference {
   """
 }
 
-if (verbose) processedFiles = processedFiles.view {"Files preprocessed  : $it.fileName"}
+
+if (verbose) processedFiles = processedFiles.view {
+  "Files preprocessed  : $it.fileName"
+}
 
 compressedfiles = Channel.create()
 notCompressedfiles = Channel.create()
@@ -142,7 +145,9 @@ process DecompressFile {
     """
 }
 
-if (verbose) decompressedFiles = decompressedFiles.view {"Files decomprecessed: $it.fileName"}
+if (verbose) decompressedFiles = decompressedFiles.view {
+  "Files decomprecessed: $it.fileName"
+}
 
 fastaFile = Channel.create()
 otherFiles = Channel.create()
@@ -182,8 +187,12 @@ process BuildBWAindexes {
   """
 }
 
-if (verbose) fastaFileToKeep.view {"Fasta File          : $it.fileName"}
-if (verbose) bwaIndexes.flatten().view {"BWA index           : $it.fileName"}
+if (verbose) fastaFileToKeep.view {
+  "Fasta File          : $it.fileName"
+}
+if (verbose) bwaIndexes.flatten().view {
+  "BWA index           : $it.fileName"
+}
 
 process BuildPicardIndex {
   tag {reference}
@@ -206,7 +215,9 @@ process BuildPicardIndex {
   """
 }
 
-if (verbose) picardIndex.view {"Picard index        : $it.fileName"}
+if (verbose) picardIndex.view {
+  "Picard index        : $it.fileName"
+}
 
 process BuildSAMToolsIndex {
   tag {reference}
@@ -225,7 +236,9 @@ process BuildSAMToolsIndex {
   """
 }
 
-if (verbose) samtoolsIndex.view {"SAMTools index      : $it.fileName"}
+if (verbose) samtoolsIndex.view {
+  "SAMTools index      : $it.fileName"
+}
 
 process BuildVCFIndex {
   tag {reference}
@@ -245,8 +258,12 @@ process BuildVCFIndex {
   """
 }
 
-if (verbose) vcfIndexed.view {"VCF indexed         : $it.fileName"}
-if (verbose) vcfIndex.view {"VCF index           : $it.fileName"}
+if (verbose) vcfIndexed.view {
+  "VCF indexed         : $it.fileName"
+}
+if (verbose) vcfIndex.view {
+  "VCF index           : $it.fileName"
+}
 
 /*
 ================================================================================
@@ -262,9 +279,7 @@ def cawMessage() {
 def checkFile(it) {
   // Check file existence
   final f = file(it)
-  if (!f.exists()) {
-    exit 1, "Missing file: $it, see --help for more information"
-  }
+  if (!f.exists()) exit 1, "Missing file: $it, see --help for more information"
   return true
 }
 

@@ -1,18 +1,32 @@
-FROM maxulysse/samtools:1.1
+FROM debian:8.9
 
-LABEL author="Maxime Garcia" \
-description="alleleCount 2.2.0 and SAMTools 1.4 image for use in CAW" \
-maintainer="maxime.garcia@scilifelab.se"
+LABEL \
+  author="Maxime Garcia" \
+  description="alleleCount 2.2.0 used in CAW" \
+  maintainer="maxime.garcia@scilifelab.se"
 
-# Setup ENV variables
-ENV ALLELECOUNT_BIN="v2.2.0.tar.gz" \
-ALLELECOUNT_VERSION="2.2.0" \
-PATH="$PATH:/opt/bin" \
-PERL5LIB="$PERL5LIB:/opt/lib/perl5"
+# Export PATH
+ENV \
+  ALLELECOUNT_VERSION=2.2.0 \
+  PATH=/opt/bin:$PATH \
+  PERL5LIB=$PERL5LIB:/opt/lib/perl5
+
+# Install libraries
+RUN \
+  apt-get update && apt-get install -y --no-install-recommends \
+  build-essential \
+  ca-certificates \
+  libbz2-dev \
+  liblzma-dev \
+  libncurses5-dev \
+  libncursesw5-dev \
+  wget \
+  zlib1g-dev
 
 # Install alleleCount
-RUN curl -fsSL https://github.com/cancerit/alleleCount/archive/$ALLELECOUNT_BIN -o /opt/$ALLELECOUNT_BIN \
-&& tar xvzf /opt/$ALLELECOUNT_BIN -C /opt/ \
-&& cd /opt/alleleCount-$ALLELECOUNT_VERSION \
-&& ./setup.sh /opt/ \
-&& rm /opt/$ALLELECOUNT_BIN
+RUN \
+  wget --quiet -O /opt/v${ALLELECOUNT_VERSION}.tar.gz https://github.com/cancerit/alleleCount/archive/v${ALLELECOUNT_VERSION}.tar.gz \
+  && tar xvzf /opt/v${ALLELECOUNT_VERSION}.tar.gz -C /opt/ \
+  && cd /opt/alleleCount-${ALLELECOUNT_VERSION} \
+  && ./setup.sh /opt/ \
+  && rm /opt/v${ALLELECOUNT_VERSION}.tar.gz

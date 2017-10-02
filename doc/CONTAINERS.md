@@ -6,8 +6,8 @@ A container named after the process is made for each process. If a container can
 
 - Based on `debian:8.9`
 - Contain **[BCFTools][bcftools-link]** 1.5
-- Contain **[HTSlib][htslib-link]** 1.5
 - Contain **[BWA][bwa-link]** 0.7.16
+- Contain **[HTSlib][htslib-link]** 1.5
 - Contain **[Manta][manta-link]** 1.1.1
 - Contain **[samtools][samtools-link]** 1.5
 - Contain **[Strelka][strelka-link]** 2.8.2
@@ -30,7 +30,7 @@ A container named after the process is made for each process. If a container can
 ## igvtools [![igvtools-docker status][igvtools-docker-badge]][igvtools-docker-link]
 
 - Based on `openjdk:8-slim`
-- Contain **[IGVTools][igvtools-link]** 2.4
+- Contain **[IGVTools][igvtools-link]** 2.3.98
 
 ## multiqc [![multiqc-docker status][multiqc-docker-badge]][multiqc-docker-link]
 
@@ -54,12 +54,12 @@ A container named after the process is made for each process. If a container can
 
 ## runallelecount [![runallelecount-docker status][runallelecount-docker-badge]][runallelecount-docker-link]
 
-- Based on `maxulysse/samtools:1.1`
+- Based on `debian:8.9`
 - Contain **[AlleleCount][allelecount-link]** 2.2.0
 
 ## runascat [![runascat-docker status][runascat-docker-badge]][runascat-docker-link]
 
-- Based on `r-base:3.3.`
+- Based on `r-base:3.3.2`
 - Contain **[RColorBrewer][rcolorbrewer-link]**
 
 ## runconvertallelecounts [![runconvertallelecounts-docker status][runconvertallelecounts-docker-badge]][runconvertallelecounts-docker-link]
@@ -106,12 +106,10 @@ A container named after the process is made for each process. If a container can
 [![](images/NBIS_logo.png "NBIS")][nbis-link]
 
 [allelecount-link]: https://github.com/cancerit/alleleCount
-[bcftools-docker-badge]: https://img.shields.io/docker/automated/maxulysse/bcftools.svg
-[bcftools-docker-link]: https://hub.docker.com/r/maxulysse/bcftools
 [bcftools-link]: https://github.com/samtools/bcftools
 [bwa-link]: https://github.com/lh3/bwa
-[concatvcf-docker-badge]: https://img.shields.io/docker/automated/maxulysse/concatvcf.svg
-[concatvcf-docker-link]: https://hub.docker.com/r/maxulysse/concatvcf
+[caw-docker-badge]: https://img.shields.io/docker/automated/maxulysse/caw.svg
+[caw-docker-link]: https://hub.docker.com/r/maxulysse/caw
 [fastqc-docker-badge]: https://img.shields.io/docker/automated/maxulysse/fastqc.svg
 [fastqc-docker-link]: https://hub.docker.com/r/maxulysse/fastqc
 [fastqc-link]: http://www.bioinformatics.babraham.ac.uk/projects/fastqc/
@@ -121,15 +119,11 @@ A container named after the process is made for each process. If a container can
 [gatk-docker-badge]: https://img.shields.io/docker/automated/maxulysse/gatk.svg
 [gatk-docker-link]: https://hub.docker.com/r/maxulysse/gatk
 [gatk-link]: https://github.com/broadgsa/gatk-protected
-[htslib-docker-badge]: https://img.shields.io/docker/automated/maxulysse/htslib.svg
-[htslib-docker-link]: https://hub.docker.com/r/maxulysse/htslib
 [htslib-link]: https://github.com/samtools/htslib
 [igvtools-docker-badge]: https://img.shields.io/docker/automated/maxulysse/igvtools.svg
 [igvtools-docker-link]: https://hub.docker.com/r/maxulysse/igvtools
 [igvtools-link]: http://software.broadinstitute.org/software/igv/
 [manta-link]: https://github.com/Illumina/manta
-[mapreads-docker-badge]: https://img.shields.io/docker/automated/maxulysse/mapreads.svg
-[mapreads-docker-link]: https://hub.docker.com/r/maxulysse/mapreads
 [multiqc-docker-badge]: https://img.shields.io/docker/automated/maxulysse/multiqc.svg
 [multiqc-docker-link]: https://hub.docker.com/r/maxulysse/multiqc
 [multiqc-link]: https://github.com/ewels/MultiQC/
@@ -137,13 +131,10 @@ A container named after the process is made for each process. If a container can
 [mutect1-docker-link]: https://hub.docker.com/r/maxulysse/mutect1
 [mutect1-link]: https://github.com/broadinstitute/mutect
 [nbis-link]: https://www.nbis.se/
-[nextflow-badge]: https://img.shields.io/badge/nextflow-%E2%89%A50.22.2-brightgreen.svg
-[nextflow-link]: https://www.nextflow.io/
 [ngi-link]: https://ngisweden.scilifelab.se/
 [picard-docker-badge]: https://img.shields.io/docker/automated/maxulysse/picard.svg
 [picard-docker-link]: https://hub.docker.com/r/maxulysse/picard
 [picard-link]: https://github.com/broadinstitute/picard
-[pigz-link]: https://zlib.net/pigz/
 [qualimap-docker-badge]: https://img.shields.io/docker/automated/maxulysse/qualimap.svg
 [qualimap-docker-link]: https://hub.docker.com/r/maxulysse/qualimap
 [qualimap-link]: http://qualimap.bioinfo.cipf.es
@@ -154,13 +145,8 @@ A container named after the process is made for each process. If a container can
 [runascat-docker-link]: https://hub.docker.com/r/maxulysse/runascat
 [runconvertallelecounts-docker-badge]: https://img.shields.io/docker/automated/maxulysse/runconvertallelecounts.svg
 [runconvertallelecounts-docker-link]: https://hub.docker.com/r/maxulysse/runconvertallelecounts
-[runmanta-docker-badge]: https://img.shields.io/docker/automated/maxulysse/runmanta.svg
-[runmanta-docker-link]: https://hub.docker.com/r/maxulysse/runmanta
-[samtools-docker-badge]: https://img.shields.io/docker/automated/maxulysse/samtools.svg
-[samtools-docker-link]: https://hub.docker.com/r/maxulysse/samtools
 [samtools-link]: https://github.com/samtools/samtools
 [scilifelab-link]: https://www.scilifelab.se/
-[scilifelab-stockholm-link]: https://www.scilifelab.se/platforms/ngi/
 [snpeff-docker-badge]: https://img.shields.io/docker/automated/maxulysse/snpeff.svg
 [snpeff-docker-link]: https://hub.docker.com/r/maxulysse/snpeff
 [snpeff-link]: http://snpeff.sourceforge.net/
@@ -168,8 +154,6 @@ A container named after the process is made for each process. If a container can
 [snpeffgrch37-docker-link]: https://hub.docker.com/r/maxulysse/snpeffgrch37
 [snpeffgrch38-docker-badge]: https://img.shields.io/docker/automated/maxulysse/snpeffgrch38.svg
 [snpeffgrch38-docker-link]: https://hub.docker.com/r/maxulysse/snpeffgrch38
-[strelka-docker-badge]: https://img.shields.io/docker/automated/maxulysse/strelka.svg
-[strelka-docker-link]: https://hub.docker.com/r/maxulysse/strelka
 [strelka-link]: https://github.com/Illumina/strelka
 [vep-docker-badge]: https://img.shields.io/docker/automated/maxulysse/vep.svg
 [vep-docker-link]: https://hub.docker.com/r/maxulysse/vep
@@ -178,5 +162,3 @@ A container named after the process is made for each process. If a container can
 [vepgrch37-docker-link]: https://hub.docker.com/r/maxulysse/vepgrch37
 [vepgrch38-docker-badge]: https://img.shields.io/docker/automated/maxulysse/vepgrch38.svg
 [vepgrch38-docker-link]: https://hub.docker.com/r/maxulysse/vepgrch38
-[version-badge]: https://img.shields.io/github/release/MaxUlysse/CAW-containers.svg
-[version-link]: https://github.com/MaxUlysse/CAW-containers/releases/latest
