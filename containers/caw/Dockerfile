@@ -1,8 +1,4 @@
 FROM debian:8.9
-# FROM debian:8.6
-# FROM debian:jessie-slim
-# FROM openjdk:8-slim
-# FROM openjdk:8-alpine
 
 LABEL \
   author="Maxime Garcia" \

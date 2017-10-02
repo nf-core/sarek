@@ -36,6 +36,12 @@ Wrote CAW-[snapID].tar.gz
 > sftp [USER]-[PROJECT]@bianca-sftp.uppmax.uu.se:[USER]-[PROJECT]
 > put CAW-[snapID].tar.gz
 
+# To get the containers
+> ./scripts/do_all --pull
+
+# Send the containers to bianca using the same method
+# They will be in the containers/ directory as .img files
+
 # The archive will be in the wharf folder in your user home on your bianca project
 
 # Connect to bianca
