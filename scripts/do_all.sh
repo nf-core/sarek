@@ -3,7 +3,7 @@ set -xeuo pipefail
 
 PROFILE="singularity"
 PUSH=""
-REPOSITORY="maxulysse"
+REPOSITORY="--repository maxulysse"
 TAG="1.1"
 TOOL="docker"
 

@@ -36,11 +36,10 @@ The CAW pipeline comes with documentation about the pipeline, found in the `doc/
 09. [Examples](doc/USE_CASES.md)
 10. [TSV file documentation](doc/TSV.md)
 11. [Processes documentation](doc/PROCESS.md)
-12. [Tools and dependencies](doc/TOOLS.md)
-13. [More information about ASCAT](doc/ASCAT.md)
-14. [Folder structure](doc/FOLDER.md)
-15. [Documentation about containers](doc/CONTAINERS.md)
-16. [Documentation about building](doc/BUILD.md)
+12. [Documentation about containers](doc/CONTAINERS.md)
+13. [Documentation about building](doc/BUILD.md)
+14. [More information about ASCAT](doc/ASCAT.md)
+15. [Folder structure](doc/FOLDER.md)
 
 For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.juhos@scilifelab.se or join the gitter chat: [gitter.im/SciLifeLab/CAW][gitter-link].
 
