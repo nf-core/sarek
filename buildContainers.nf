@@ -36,26 +36,25 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 */
 
-verbose = params.verbose
-version = '1.1'
-containersList = defineContainersList()
-containers = params.containers.split(',').collect {it.trim()}
+version = '1.2'
+
+if (!nextflow.version.matches('>= 0.25.0')) exit 1, "Nextflow version 0.25.0 or greater is needed to run this workflow"
+if (params.help) exit 0, helpMessage()
+if (params.version) exit 0, versionMessage()
+if (!isAllowedParams(params)) exit 1, "params is unknown, see --help for more information"
+if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
+if (!checkContainers(containers,containersList)) exit 1, 'Unknown container(s), see --help for more information'
+
 containers = containers == ['all'] ? containersList : containers
+containers = params.containers.split(',').collect {it.trim()}
+containersList = defineContainersList()
 docker = params.docker ? true : false
 push = params.docker && params.push ? true : false
 repository = params.repository
-tag = params.tag ? params.tag : version
 singularity = params.singularity ? true : false
 singularityPublishDir = params.singularity && params.singularityPublishDir ? params.singularityPublishDir : "."
-
-if (params.help) exit 1, helpMessage()
-if (params.version) exit 1, versionMessage()
-if (!isAllowedParams(params)) exit 1, "params is unknown, see --help for more information"
-if (!nextflow.version.matches('>= 0.25.0')) exit 1, "Nextflow version 0.25.0 or greater is needed to run this workflow"
-
-if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
-
-if (!checkContainers(containers,containersList)) exit 1, 'Unknown container(s), see --help for more information'
+tag = params.tag ? params.tag : version
+verbose = params.verbose
 
 /*
 ================================================================================
