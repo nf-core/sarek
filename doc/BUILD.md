@@ -13,13 +13,10 @@ nextflow run . [--docker] [--singularity] [--singularityPublishDir <path>] [--pu
 
 - `--containers`: Choose which containers to build. Default: `all`. Possible values (to separate by commas):
   - `all` -  Build all available containers.
-  - `bcftools`
   - `fastqc`
   - `freebayes`
   - `gatk`
-  - `htslib`
   - `igvtools`
-  - `mapreads`
   - `multiqc`
   - `mutect1`
   - `picard`
@@ -27,12 +24,9 @@ nextflow run . [--docker] [--singularity] [--singularityPublishDir <path>] [--pu
   - `runallelecount`
   - `runascat`
   - `runconvertallelecounts`
-  - `runmanta`
-  - `samtools`
   - `snpeff` this container serves as a base for `snpeffgrch37` and `snpeffgrch38`
   - `snpeffgrch37`
   - `snpeffgrch38`
-  - `strelka`
   - `vep` this container serves as a base for `vepgrch37` and `vepgrch38`
   - `vepgrch37`
   - `vepgrch38`
