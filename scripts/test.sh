@@ -13,24 +13,28 @@ do
   case $key in
     -g|--genome)
     GENOME="$2"
-    shift
+    shift # past argument
+    shift # past value
     ;;
     -p|--profile)
     PROFILE="$2"
-    shift
+    shift # past argument
+    shift # past value
     ;;
     -s|--sample)
     SAMPLE="$2"
-    shift
+    shift # past argument
+    shift # past value
     ;;
     -t|--test)
     TEST="$2"
-    shift
+    shift # past argument
+    shift # past value
     ;;
     *) # unknown option
+    shift # past argument
     ;;
   esac
-  shift
 done
 
 function nf_test() {
@@ -114,5 +118,5 @@ fi
 
 if [[ "$TEST" = "BUILDCONTAINERS" ]] || [[ "$TEST" = "ALL" ]]
 then
-  nf_test buildContainers.nf --docker --containers caw,fastqc,gatk,igvtools,multiqc,mutect1,picard,qualimap,runallelecount,runascat,runconvertallelecounts,snpeff,vep
+  nf_test buildContainers.nf --docker --containers caw,fastqc,gatk,igvtools,multiqc,mutect1,picard,qualimap,runallelecount,runascat,runconvertallelecounts,snpeff
 fi
