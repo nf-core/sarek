@@ -8,7 +8,7 @@ LABEL \
 # Install libraries
 RUN \
   apt-get update && apt-get install -y --no-install-recommends \
-  wget \
+    wget \
   && rm -rf /var/lib/apt/lists/*
 
 # Setup ENV variables
@@ -18,9 +18,10 @@ ENV \
 
 # Install PicardTools
 RUN \
-  wget --quiet -O picard.jar https://github.com/broadinstitute/picard/releases/download/${PICARD_VERSION}/picard-tools-${PICARD_VERSION}.zip \
-  && unzip picard-tools-${PICARD_VERSION}.zip
-  && mv picard-tools-${PICARD_VERSION} ${PICARD_HOME}
+  wget --quiet -O picard.jar \
+    https://github.com/broadinstitute/picard/releases/download/${PICARD_VERSION}/picard-tools-${PICARD_VERSION}.zip \
+  && unzip picard-tools-${PICARD_VERSION}.zip \
+  && mv picard-tools-${PICARD_VERSION} ${PICARD_HOME} \
   && rm picard-tools-${PICARD_VERSION}.zip
 
 # Create UPPMAX directories
