@@ -18,7 +18,7 @@ ENV \
 
 # Install PicardTools
 RUN \
-  wget --quiet -O picard.jar \
+  wget --quiet -O picard-tools-${PICARD_VERSION}.zip \
     https://github.com/broadinstitute/picard/releases/download/${PICARD_VERSION}/picard-tools-${PICARD_VERSION}.zip \
   && unzip picard-tools-${PICARD_VERSION}.zip \
   && mv picard-tools-${PICARD_VERSION} ${PICARD_HOME} \
