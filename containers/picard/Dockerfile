@@ -14,7 +14,7 @@ RUN \
 # Setup ENV variables
 ENV \
   PICARD_HOME=/opt/picard \
-  PICARD_VERSION=2.13.2
+  PICARD_VERSION=2.0.1
 
 # Install PicardTools
 RUN \
