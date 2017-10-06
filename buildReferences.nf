@@ -39,7 +39,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 */
 
-version = '1.2'
+version = '1.2.1'
 
 if (!nextflow.version.matches('>= 0.25.0')) exit 1, "Nextflow version 0.25.0 or greater is needed to run this workflow"
 if (params.help) exit 0, helpMessage()
