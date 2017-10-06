@@ -1,18 +1,19 @@
 #!/bin/bash
 TOOL="all"
 
-while [[ $# -gt 1 ]]
+while [[ $# -gt 0 ]]
 do
   key="$1"
   case $key in
     -t|--tool)
     TOOL="$2"
-    shift
+    shift # past argument
+    shift # past value
     ;;
     *) # unknown option
+    shift # past argument
     ;;
   esac
-  shift
 done
 
 # Install Nextflow
