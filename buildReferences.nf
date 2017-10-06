@@ -39,7 +39,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 */
 
-version = '1.2.2'
+version = '1.2.3'
 
 // Check that Nextflow version is up to date enough
 // try / throw / catch works for NF versions < 0.25 when this was implemented
