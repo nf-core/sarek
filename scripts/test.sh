@@ -3,9 +3,10 @@ set -xeuo pipefail
 
 GENOME="smallGRCh37"
 PROFILE="singularity"
+SAMPLE="data/tsv/tiny.tsv"
+TAG="1.2.1"
 TEST="ALL"
 TRAVIS=${TRAVIS:-false}
-SAMPLE="data/tsv/tiny.tsv"
 
 while [[ $# -gt 0 ]]
 do
@@ -31,6 +32,11 @@ do
     shift # past argument
     shift # past value
     ;;
+    --tag)
+    TAG="$2"
+    shift # past argument
+    shift # past value
+    ;;
     *) # unknown option
     shift # past argument
     ;;
@@ -49,21 +55,21 @@ then
   # Remove images only on TRAVIS
   if [[ "$PROFILE" == "docker" ]] && [[ "$TRAVIS" == true ]]
   then
-    docker rmi -f maxulysse/igvtools:1.2
+    docker rmi -f maxulysse/igvtools:${TAG}
   elif [[ "$PROFILE" == singularity ]] && [[ "$TRAVIS" == true ]]
   then
-    rm -rf work/singularity/igvtools-1.2.img
+    rm -rf work/singularity/igvtools-${TAG}.img
   fi
 fi
 
-if [[ "$TEST" = "MAPPING" ]] || [[ "$TEST" = "ALL" ]]
+if [[ "$TEST" = "MAPPING" ]]
 then
-  nf_test . --step preprocessing --sample $SAMPLE
+  nf_test . --step mapping --sample $SAMPLE
 fi
 
 if [[ "$TEST" = "REALIGN" ]] || [[ "$TEST" = "ALL" ]]
 then
-  nf_test . --step preprocessing --sample $SAMPLE
+  nf_test . --step mapping --sample $SAMPLE
   nf_test . --step realign --noReports
   nf_test . --step realign --tools HaplotypeCaller
   nf_test . --step realign --tools HaplotypeCaller --noReports --noGVCF
@@ -71,26 +77,26 @@ fi
 
 if [[ "$TEST" = "RECALIBRATE" ]] || [[ "$TEST" = "ALL" ]]
 then
-  nf_test . --step preprocessing --sample $SAMPLE
+  nf_test . --step mapping --sample $SAMPLE
   nf_test . --step recalibrate --noReports
   nf_test . --step recalibrate --tools FreeBayes,HaplotypeCaller,MuTect1,MuTect2,Strelka
   # Test whether restarting from an already recalibrated BAM works
-  nf_test . --step skipPreprocessing --tools Strelka --noReports
+  nf_test . --step variantCalling --tools Strelka --noReports
 fi
 
 if [[ "$TEST" = "ANNOTATEVEP" ]] || [[ "$TEST" = "ALL" ]]
 then
-  nf_test . --step preprocessing --sample data/tsv/tiny-single-manta.tsv --tools Manta,Strelka
-  nf_test . --step preprocessing --sample data/tsv/tiny-manta.tsv --tools Manta,Strelka
-  nf_test . --step preprocessing --sample $SAMPLE --tools MuTect2
+  nf_test . --step mapping --sample data/tsv/tiny-single-manta.tsv --tools Manta,Strelka
+  nf_test . --step mapping --sample data/tsv/tiny-manta.tsv --tools Manta,Strelka
+  nf_test . --step mapping --sample $SAMPLE --tools MuTect2
 
   # Remove images only on TRAVIS
   if [[ "$PROFILE" == "docker" ]] && [[ "$TRAVIS" == true ]]
   then
-    docker rmi -f maxulysse/fastqc:1.2 maxulysse/gatk:1.2 maxulysse/picard:1.2 maxulysse/caw:1.2
+    docker rmi -f maxulysse/caw:${TAG} maxulysse/fastqc:${TAG} maxulysse/gatk:${TAG} maxulysse/picard:${TAG}
   elif [[ "$PROFILE" == "singularity" ]] && [[ "$TRAVIS" == true ]]
   then
-    rm -rf work/singularity/fastqc-1.2.img work/singularity/gatk-1.2.img work/singularity/picard-1.2.img work/singularity/caw-1.2.img
+    rm -rf work/singularity/caw-${TAG}.img work/singularity/fastqc-${TAG}.img work/singularity/gatk-${TAG}.img work/singularity/picard-${TAG}.img
   fi
   nf_test . --step annotate --tools VEP --annotateTools Manta,Strelka
   nf_test . --step annotate --tools VEP --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf.gz --noReports
@@ -99,17 +105,17 @@ fi
 
 if [[ "$TEST" = "ANNOTATESNPEFF" ]] || [[ "$TEST" = "ALL" ]]
 then
-  nf_test . --step preprocessing --sample data/tsv/tiny-single-manta.tsv --tools Manta,Strelka
-  nf_test . --step preprocessing --sample data/tsv/tiny-manta.tsv --tools Manta,Strelka
-  nf_test . --step preprocessing --sample $SAMPLE --tools MuTect2
+  nf_test . --step mapping --sample data/tsv/tiny-single-manta.tsv --tools Manta,Strelka
+  nf_test . --step mapping --sample data/tsv/tiny-manta.tsv --tools Manta,Strelka
+  nf_test . --step mapping --sample $SAMPLE --tools MuTect2
 
   # Remove images only on TRAVIS
   if [[ "$PROFILE" == "docker" ]] && [[ "$TRAVIS" == true ]]
   then
-    docker rmi -f maxulysse/fastqc:1.2 maxulysse/gatk:1.2 maxulysse/picard:1.2 maxulysse/caw:1.2
+    docker rmi -f maxulysse/caw:${TAG} maxulysse/fastqc:${TAG} maxulysse/gatk:${TAG} maxulysse/picard:${TAG}
   elif [[ "$PROFILE" == "singularity" ]] && [[ "$TRAVIS" == true ]]
   then
-    rm -rf work/singularity/fastqc-1.2.img work/singularity/gatk-1.2.img work/singularity/picard-1.2.img work/singularity/caw-1.2.img
+    rm -rf work/singularity/caw-${TAG}.img work/singularity/fastqc-${TAG}.img work/singularity/gatk-${TAG}.img work/singularity/picard-${TAG}.img
   fi
   nf_test . --step annotate --tools snpEff --annotateTools Manta,Strelka
   nf_test . --step annotate --tools snpEff --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf.gz --noReports

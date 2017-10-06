@@ -222,9 +222,8 @@ def defineContainersList(){
     'mutect1',
     'picard',
     'qualimap',
+    'r-base',
     'runallelecount',
-    'runascat',
-    'runconvertallelecounts',
     'snpeff',
     'snpeffgrch37',
     'snpeffgrch38',
@@ -253,9 +252,8 @@ def helpMessage() {
   log.info "       Default: all"
   log.info "       Possible values:"
   log.info "         all, caw, fastqc, freebayes, gatk, igvtools, multiqc"
-  log.info "         mutect1, picard, qualimap, runallelecount, runascat"
-  log.info "         runconvertallelecounts, snpeff, snpeffgrch37, snpeffgrch38"
-  log.info "         vep, vepgrch37, vepgrch38"
+  log.info "         mutect1, picard, qualimap, r-base, runallelecount"
+  log.info "         snpeff, snpeffgrch37, snpeffgrch38, vepgrch37, vepgrch38"
   log.info "    --docker: Build containers using Docker"
   log.info "    --help"
   log.info "       you're reading it"
