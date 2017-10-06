@@ -18,9 +18,10 @@ ENV \
 
 # Install PicardTools
 RUN \
-  wget --quiet -O picard.jar https://github.com/broadinstitute/picard/releases/download/${PICARD_VERSION}/picard.jar \
-  && mkdir ${PICARD_HOME} \
-&& mv picard.jar ${PICARD_HOME}/picard.jar
+  wget --quiet -O picard.jar https://github.com/broadinstitute/picard/releases/download/${PICARD_VERSION}/picard-tools-${PICARD_VERSION}.zip \
+  && unzip picard-tools-${PICARD_VERSION}.zip
+  && mv picard-tools-${PICARD_VERSION} ${PICARD_HOME}
+  && rm picard-tools-${PICARD_VERSION}.zip
 
 # Create UPPMAX directories
 RUN mkdir /pica /proj /scratch /sw
