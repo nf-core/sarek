@@ -1,4 +1,4 @@
-FROM openjdk:8-slim
+FROM openjdk:8
 
 LABEL \
   author="Maxime Garcia" \
@@ -16,12 +16,9 @@ ENV \
   PATH=$PATH:/opt/qualimap \
   QUALIMAP_VERSION=2.2.1
 
-# Install BamQC + fix bugs
-# See https://github.com/docker-library/tomcat/issues/80
+# Install BamQC
 RUN \
-  rm /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/accessibility.properties \
-    /etc/java-8-openjdk/accessibility.properties \
-  && wget --quiet -O qualimap_v${QUALIMAP_VERSION}.zip \
+  wget --quiet -O qualimap_v${QUALIMAP_VERSION}.zip \
     https://bitbucket.org/kokonech/qualimap/downloads/qualimap_v${QUALIMAP_VERSION}.zip \
   && unzip qualimap_v${QUALIMAP_VERSION}.zip -d /opt/ \
   && rm qualimap_v${QUALIMAP_VERSION}.zip \

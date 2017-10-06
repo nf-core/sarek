@@ -1,4 +1,4 @@
-FROM openjdk:8-slim
+FROM openjdk:8
 
 LABEL \
   author="Maxime Garcia" \
@@ -16,12 +16,9 @@ RUN \
 # Setup ENV variables
 ENV FASTQC_VERSION=0.11.5
 
-# Install FastQC + fix bugs
-# See https://github.com/docker-library/tomcat/issues/80
+# Install FastQC
 RUN \
-  rm /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/accessibility.properties \
-    /etc/java-8-openjdk/accessibility.properties \
-  && wget --quiet -O fastqc_v${FASTQC_VERSION}.zip \
+  wget --quiet -O fastqc_v${FASTQC_VERSION}.zip \
     http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v${FASTQC_VERSION}.zip \
   && unzip fastqc_v${FASTQC_VERSION}.zip -d /opt/ \
   && chmod 755 /opt/FastQC/fastqc \
