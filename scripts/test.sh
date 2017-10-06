@@ -84,7 +84,7 @@ then
   nf_test . --step variantCalling --tools Strelka --noReports
 fi
 
-if [[ "$TEST" = "ANNOTATEVEP" ]] || [[ "$TEST" = "ALL" ]]
+if [[ "$TEST" = "ANNOTATEVEP" ]] || [[ "$TEST" = "ANNOTATESNPEFF" ]] || [[ "$TEST" = "ALL" ]]
 then
   nf_test . --step mapping --sample data/tsv/tiny-single-manta.tsv --tools Manta,Strelka
   nf_test . --step mapping --sample data/tsv/tiny-manta.tsv --tools Manta,Strelka
@@ -98,28 +98,18 @@ then
   then
     rm -rf work/singularity/caw-${TAG}.img work/singularity/fastqc-${TAG}.img work/singularity/gatk-${TAG}.img work/singularity/picard-${TAG}.img
   fi
-  nf_test . --step annotate --tools VEP --annotateTools Manta,Strelka
-  nf_test . --step annotate --tools VEP --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf.gz --noReports
-  nf_test . --step annotate --tools VEP --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz --noReports
-fi
-
-if [[ "$TEST" = "ANNOTATESNPEFF" ]] || [[ "$TEST" = "ALL" ]]
-then
-  nf_test . --step mapping --sample data/tsv/tiny-single-manta.tsv --tools Manta,Strelka
-  nf_test . --step mapping --sample data/tsv/tiny-manta.tsv --tools Manta,Strelka
-  nf_test . --step mapping --sample $SAMPLE --tools MuTect2
-
-  # Remove images only on TRAVIS
-  if [[ "$PROFILE" == "docker" ]] && [[ "$TRAVIS" == true ]]
+  if [[ "$TEST" != "ANNOTATESNPEFF" ]]
   then
-    docker rmi -f maxulysse/caw:${TAG} maxulysse/fastqc:${TAG} maxulysse/gatk:${TAG} maxulysse/picard:${TAG}
-  elif [[ "$PROFILE" == "singularity" ]] && [[ "$TRAVIS" == true ]]
-  then
-    rm -rf work/singularity/caw-${TAG}.img work/singularity/fastqc-${TAG}.img work/singularity/gatk-${TAG}.img work/singularity/picard-${TAG}.img
+    nf_test . --step annotate --tools VEP --annotateTools Manta,Strelka
+    nf_test . --step annotate --tools VEP --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf.gz --noReports
+    nf_test . --step annotate --tools VEP --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz --noReports
   fi
-  nf_test . --step annotate --tools snpEff --annotateTools Manta,Strelka
-  nf_test . --step annotate --tools snpEff --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf.gz --noReports
-  nf_test . --step annotate --tools snpEff --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz --noReports
+  if [[ "$TEST" != "ANNOTATEVEP" ]]
+  then
+    nf_test . --step annotate --tools snpEff --annotateTools Manta,Strelka
+    nf_test . --step annotate --tools snpEff --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf.gz --noReports
+    nf_test . --step annotate --tools snpEff --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz --noReports
+  fi
 fi
 
 if [[ "$TEST" = "BUILDCONTAINERS" ]] || [[ "$TEST" = "ALL" ]]
