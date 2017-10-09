@@ -1456,7 +1456,6 @@ process RunVEP {
 
   script:
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
-  if (!workflow.container.isEmpty())  // test whether running in docker
   """
   vep \
   -i $vcf \
@@ -1471,24 +1470,6 @@ process RunVEP {
   --vcf \
   -offline \
   --fields Consequence,Codons,Amino_acids,Gene,SYMBOL,Feature,EXON,PolyPhen,SIFT,Protein_position,BIOTYPE
-  """
-  else
-  """
-  variant_effect_predictor.pl \
-  -i $vcf \
-  --vcf \
-  --format vcf \
-  --sift b \
-  --polyphen b \
-  --symbol \
-  --numbers \
-  --biotype \
-  --total_length \
-  -o ${vcf.baseName}.ann.vcf \
-  --cache --dir_cache /sw/data/uppnex/vep/89 \
-  --assembly $genome \
-  --fields Consequence,Codons,Amino_acids,Gene,SYMBOL,Feature,EXON,PolyPhen,SIFT,Protein_position,BIOTYPE \
-  -offline
   """
 }
 
