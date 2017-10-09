@@ -64,7 +64,7 @@ fi
 
 if [[ ALL,MAPPING,REALIGN,RECALIBRATE =~ $TEST ]]
 then
-  nf_test . --step mapping --sampleDir data/tiny/normal
+  nf_test . --step mapping --sampleDir data/tiny/tiny/normal
   nf_test . --step mapping --sample $SAMPLE
 fi
 
@@ -110,7 +110,6 @@ then
   nf_test . --step annotate --tools ${ANNOTATOR} --annotateTools Manta,Strelka
   nf_test . --step annotate --tools ${ANNOTATOR} --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf.gz --noReports
   nf_test . --step annotate --tools ${ANNOTATOR} --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz --noReports
-  fi
 fi
 
 if [[ ALL,BUILDCONTAINERS =~ $TEST ]]
