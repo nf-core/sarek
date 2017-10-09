@@ -85,13 +85,13 @@ A container named after the process is made for each process. If a container can
 
 ## vepgrch37 [![vepgrch37-docker status][vepgrch37-docker-badge]][vepgrch37-docker-link]
 
-- Based on `willmclaren/ensembl-vep:release_90.5`
+- Based on `willmclaren/ensembl-vep:release_90.6`
 - Contain **[VEP][vep-link]** 90.5
 - Contain GRCh37
 
 ## vepgrch38 [![vepgrch38-docker status][vepgrch38-docker-badge]][vepgrch38-docker-link]
 
-- Based on `willmclaren/ensembl-vep:release_90.5`
+- Based on `willmclaren/ensembl-vep:release_90.6`
 - Contain **[VEP][vep-link]** 90.5
 - Contain GRCh38
 
