@@ -21,5 +21,4 @@ RUN \
 
 # Create UPPMAX directories
 USER root
-RUN mkdir \
-  /pica /proj /scratch /sw
+RUN mkdir /pica /proj /scratch /sw
