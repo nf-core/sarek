@@ -62,29 +62,27 @@ then
   fi
 fi
 
-if [[ $TEST = MAPPING ]]
+if [[ ALL,MAPPING,REALIGN,RECALIBRATE =~ $TEST ]]
 then
   nf_test . --step mapping --sample $SAMPLE
 fi
 
-if [[ $TEST = REALIGN ]] || [[ $TEST = ALL ]]
+if [[ ALL,REALIGN =~ $TEST ]]
 then
-  nf_test . --step mapping --sample $SAMPLE
   nf_test . --step realign --noReports
   nf_test . --step realign --tools HaplotypeCaller
   nf_test . --step realign --tools HaplotypeCaller --noReports --noGVCF
 fi
 
-if [[ $TEST = RECALIBRATE ]] || [[ $TEST = ALL ]]
+if [[ ALL,RECALIBRATE =~ $TEST ]]
 then
-  nf_test . --step mapping --sample $SAMPLE
   nf_test . --step recalibrate --noReports
   nf_test . --step recalibrate --tools FreeBayes,HaplotypeCaller,MuTect1,MuTect2,Strelka
   # Test whether restarting from an already recalibrated BAM works
   nf_test . --step variantCalling --tools Strelka --noReports
 fi
 
-if [[ $TEST = ANNOTATEVEP ]] || [[ $TEST = ANNOTATESNPEFF ]] || [[ $TEST = ALL ]]
+if [[ ALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
 then
   nf_test . --step mapping --sample data/tsv/tiny-single-manta.tsv --tools Manta,Strelka
   nf_test . --step mapping --sample data/tsv/tiny-manta.tsv --tools Manta,Strelka
@@ -112,7 +110,7 @@ then
   fi
 fi
 
-if [[ $TEST = BUILDCONTAINERS ]] || [[ $TEST = ALL ]]
+if [[ ALL,BUILDCONTAINERS =~ $TEST ]]
 then
   nf_test buildContainers.nf --docker --containers caw,fastqc,gatk,igvtools,multiqc,mutect1,picard,qualimap,runallelecount,r-base,snpeff
 fi
