@@ -9,4 +9,4 @@ RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; 
 && Rscript -e "install.packages('RColorBrewer')"
 
 # Create UPPMAX directories
-RUN mkdir /pica /proj /sw
+RUN mkdir /pica /proj /scratch /sw

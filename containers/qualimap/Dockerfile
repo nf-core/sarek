@@ -1,18 +1,28 @@
 FROM openjdk:8
 
-LABEL author="Maxime Garcia" \
-description="Qualimap 2.2.1 image for use in CAW" \
-maintainer="maxime.garcia@scilifelab.se"
+LABEL \
+  author="Maxime Garcia" \
+  description="Qualimap image for use in CAW" \
+  maintainer="maxime.garcia@scilifelab.se"
+
+# Install libraries
+RUN \
+  apt-get update && apt-get install -y --no-install-recommends \
+  wget \
+  && rm -rf /var/lib/apt/lists/*
 
 # Setup ENV variables
-ENV QUALIMAP_BIN="qualimap_v2.2.1.zip" \
-QUALIMAP_VERSION="v2.2.1" \
-PATH="$PATH:/opt/qualimap"
+ENV \
+  PATH=$PATH:/opt/qualimap \
+  QUALIMAP_VERSION=2.2.1
 
 # Install BamQC
-RUN curl -fsSL https://bitbucket.org/kokonech/qualimap/downloads/$QUALIMAP_BIN -o /opt/$QUALIMAP_BIN \
-&& unzip /opt/$QUALIMAP_BIN -d /opt/ \
-&& mv /opt/qualimap_$QUALIMAP_VERSION /opt/qualimap
+RUN \
+  wget --quiet -O qualimap_v${QUALIMAP_VERSION}.zip \
+    https://bitbucket.org/kokonech/qualimap/downloads/qualimap_v${QUALIMAP_VERSION}.zip \
+  && unzip qualimap_v${QUALIMAP_VERSION}.zip -d /opt/ \
+  && rm qualimap_v${QUALIMAP_VERSION}.zip \
+  && mv /opt/qualimap_v${QUALIMAP_VERSION} /opt/qualimap
 
 # Create UPPMAX directories
-RUN mkdir /pica /proj /sw
+RUN mkdir /pica /proj /scratch /sw

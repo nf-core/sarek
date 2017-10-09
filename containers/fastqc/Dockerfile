@@ -1,18 +1,29 @@
 FROM openjdk:8
 
-LABEL author="Maxime Garcia" \
-description="FastQC 0.11.5 image for use in CAW" \
-maintainer="maxime.garcia@scilifelab.se"
+LABEL \
+  author="Maxime Garcia" \
+  description="FastQC image for use in CAW" \
+  maintainer="maxime.garcia@scilifelab.se"
+
+# Install libraries
+RUN \
+  apt-get update && apt-get install -y --no-install-recommends \
+    cpanminus \
+    wget \
+  && rm -rf /var/lib/apt/lists/* \
+  && cpanm FindBin
 
 # Setup ENV variables
-ENV FASTQC_BIN="fastqc_v0.11.5.zip"
+ENV FASTQC_VERSION=0.11.5
 
 # Install FastQC
-RUN curl -fsSL http://www.bioinformatics.babraham.ac.uk/projects/fastqc/$FASTQC_BIN -o /opt/$FASTQC_BIN \
-&& unzip /opt/$FASTQC_BIN -d /opt/ \
-&& chmod 755 /opt/FastQC/fastqc \
-&& ln -s /opt/FastQC/fastqc /usr/local/bin/fastqc \
-&& rm /opt/$FASTQC_BIN
+RUN \
+  wget --quiet -O fastqc_v${FASTQC_VERSION}.zip \
+    http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v${FASTQC_VERSION}.zip \
+  && unzip fastqc_v${FASTQC_VERSION}.zip -d /opt/ \
+  && chmod 755 /opt/FastQC/fastqc \
+  && ln -s /opt/FastQC/fastqc /usr/local/bin/fastqc \
+  && rm fastqc_v${FASTQC_VERSION}.zip
 
 # Create UPPMAX directories
-RUN mkdir /pica /proj /sw
+RUN mkdir /pica /proj /scratch /sw

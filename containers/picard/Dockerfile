@@ -1,23 +1,28 @@
 FROM openjdk:8-slim
 
-LABEL author="Maxime Garcia" \
-description="Picard 2.0.1 image for use in CAW" \
-maintainer="maxime.garcia@scilifelab.se"
+LABEL \
+  author="Maxime Garcia" \
+  description="Picard image for use in CAW" \
+  maintainer="maxime.garcia@scilifelab.se"
 
 # Install libraries
-RUN apt-get update && apt-get install -y --no-install-recommends \
-curl \
-&& rm -rf /var/lib/apt/lists/*
+RUN \
+  apt-get update && apt-get install -y --no-install-recommends \
+    wget \
+  && rm -rf /var/lib/apt/lists/*
 
 # Setup ENV variables
-ENV PICARD_BIN="picard-tools-2.0.1.zip" \
-PICARD_HOME="/opt/picard-tools-2.0.1" \
-PICARD_VERSION="2.0.1"
+ENV \
+  PICARD_HOME=/opt/picard \
+  PICARD_VERSION=2.0.1
 
-# Install PicardTools 2.0.1
-RUN curl -fsSL https://github.com/broadinstitute/picard/releases/download/$PICARD_VERSION/$PICARD_BIN -o /opt/$PICARD_BIN \
-&& unzip /opt/$PICARD_BIN -d /opt/ \
-&& rm /opt/$PICARD_BIN
+# Install PicardTools
+RUN \
+  wget --quiet -O picard-tools-${PICARD_VERSION}.zip \
+    https://github.com/broadinstitute/picard/releases/download/${PICARD_VERSION}/picard-tools-${PICARD_VERSION}.zip \
+  && unzip picard-tools-${PICARD_VERSION}.zip \
+  && mv picard-tools-${PICARD_VERSION} ${PICARD_HOME} \
+  && rm picard-tools-${PICARD_VERSION}.zip
 
 # Create UPPMAX directories
-RUN mkdir /pica /proj /sw
+RUN mkdir /pica /proj /scratch /sw

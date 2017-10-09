@@ -83,21 +83,16 @@ A container named after the process is made for each process. If a container can
 - Contain **[snpEff][snpeff-link]** 4.3i
 - Contain GRCh38.86
 
-## vep [![vep-docker status][vep-docker-badge]][vep-docker-link]
-
-- Based on `ubuntu:16.04`
-- Contain **[VEP][vep-link]** 90.1
-
 ## vepgrch37 [![vepgrch37-docker status][vepgrch37-docker-badge]][vepgrch37-docker-link]
 
-- Based on `maxulysse/vep`
-- Contain **[VEP][vep-link]** 90.1
+- Based on `willmclaren/ensembl-vep:release_90.5`
+- Contain **[VEP][vep-link]** 90.5
 - Contain GRCh37
 
 ## vepgrch38 [![vepgrch38-docker status][vepgrch38-docker-badge]][vepgrch38-docker-link]
 
-- Based on `maxulysse/vep`
-- Contain **[VEP][vep-link]** 90.1
+- Based on `willmclaren/ensembl-vep:release_90.5`
+- Contain **[VEP][vep-link]** 90.5
 - Contain GRCh38
 
 ---
