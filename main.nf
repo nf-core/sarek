@@ -1469,7 +1469,7 @@ process RunVEP {
   -o ${vcf.baseName}.ann.vcf \
   --vcf \
   -offline \
-  --fields Consequence,Codons,Amino_acids,Gene,SYMBOL,Feature,EXON,PolyPhen,SIFT,Protein_position,BIOTYPE
+  --fields Consequence,Codons,Amino_acids,Gene,SYMBOL,Feature,EXON,PolyPhen,SIFT,Protein_position,BIOTYPE,IMPACT
   """
 }
 
