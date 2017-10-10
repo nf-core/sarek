@@ -168,8 +168,6 @@ if (step == 'mapping') {
 
 startMessage()
 
-(fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
-
 if (verbose) fastqFiles = fastqFiles.view {
   "FASTQs to preprocess:\n\
   ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\tRun   : ${it[3]}\n\
@@ -180,6 +178,36 @@ if (verbose) bamFiles = bamFiles.view {
   "BAMs to process:\n\
   ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
   Files : [${it[3].fileName}, ${it[4].fileName}]"
+}
+
+process MapReads {
+  tag {idPatient + "-" + idRun}
+
+  input:
+    set idPatient, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFiles
+    set file(genomeFile), file(bwaIndex) from Channel.value([referenceMap.genomeFile, referenceMap.bwaIndex])
+
+  output:
+    set idPatient, status, idSample, idRun, file("${idRun}.bam") into mappedBam
+    set idPatient, status, idSample, idRun, file(fastqFile1), file(fastqFile2) into fastqFilesforFastQC
+
+  when: step == 'mapping'
+
+  script:
+  readGroup = "@RG\\tID:$idRun\\tPU:$idRun\\tSM:$idSample\\tLB:$idSample\\tPL:illumina"
+  // adjust mismatch penalty for tumor samples
+  extra = status == 1 ? "-B 3 " : ""
+  """
+  bwa mem -R \"$readGroup\" ${extra}-t $task.cpus -M \
+  $genomeFile $fastqFile1 $fastqFile2 | \
+  samtools sort --threads $task.cpus -m 4G - > ${idRun}.bam
+  """
+}
+
+if (verbose) mappedBam = mappedBam.view {
+  "Mapped BAM (single or to be merged):\n\
+  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\tRun   : ${it[3]}\n\
+  File  : [${it[4].fileName}]"
 }
 
 process RunFastQC {
@@ -204,35 +232,6 @@ process RunFastQC {
 if (verbose) fastQCreport = fastQCreport.view {
   "FastQC report:\n\
   Files : [${it[0].fileName}, ${it[1].fileName}]"
-}
-
-process MapReads {
-  tag {idPatient + "-" + idRun}
-
-  input:
-    set idPatient, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFiles
-    set file(genomeFile), file(bwaIndex) from Channel.value([referenceMap.genomeFile, referenceMap.bwaIndex])
-
-  output:
-    set idPatient, status, idSample, idRun, file("${idRun}.bam") into mappedBam
-
-  when: step == 'mapping'
-
-  script:
-  readGroup = "@RG\\tID:$idRun\\tPU:$idRun\\tSM:$idSample\\tLB:$idSample\\tPL:illumina"
-  // adjust mismatch penalty for tumor samples
-  extra = status == 1 ? "-B 3 " : ""
-  """
-  bwa mem -R \"$readGroup\" ${extra}-t $task.cpus -M \
-  $genomeFile $fastqFile1 $fastqFile2 | \
-  samtools sort --threads $task.cpus -m 4G - > ${idRun}.bam
-  """
-}
-
-if (verbose) mappedBam = mappedBam.view {
-  "Mapped BAM (single or to be merged):\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\tRun   : ${it[3]}\n\
-  File  : [${it[4].fileName}]"
 }
 
 // Sort bam whether they are standalone or should be merged
