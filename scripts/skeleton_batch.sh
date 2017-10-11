@@ -95,5 +95,5 @@ fi
 
 if [[ $STEP == ANNOTATE ]]
 then
-  run_caw() --step annotate --tools ${TOOLS} --annotateVCF ${VCF_FILES}
+  run_caw() --step annotate --tools ${TOOLS} --annotateVCF ${SAMPLE}
 fi
