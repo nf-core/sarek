@@ -2025,11 +2025,12 @@ def minimalInformationMessage() {
   log.info "Project Dir : $workflow.projectDir"
   log.info "Launch Dir  : $workflow.launchDir"
   log.info "Work Dir    : $workflow.workDir"
-  log.info "TSV file    : $tsvFile"
+  if (step != 'annotate') log.info "TSV file    : $tsvFile"
   log.info "Genome      : " + params.genome
   log.info "Step        : " + step
-  if (tools) {log.info "Tools       : " + tools.join(', ')}
-  if (annotateTools) {log.info "Annotate on : " + annotateTools.join(', ')}
+  if (tools) log.info "Tools       : " + tools.join(', ')
+  if (annotateTools) log.info "Annotate on : " + annotateTools.join(', ')
+  if (annotateVCF) log.info "VCF files   : " +annotateVCF.join(',\n    ')
   log.info "Reference files used:"
   log.info "  acLoci      : $referenceMap.acLoci"
   log.info "  bwaIndex    : " + referenceMap.bwaIndex.join(',\n    ')
