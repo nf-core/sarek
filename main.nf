@@ -126,7 +126,6 @@ if (params.sample) tsvPath = params.sample
 
 if (!params.sample && !params.sampleDir) {
   tsvPaths = [
-  'annotate': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv",
   'mapping': "$workflow.projectDir/data/tsv/tiny.tsv",
   'realign': "$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv",
   'recalibrate': "$workflow.launchDir/$directoryMap.nonRecalibrated/nonRecalibrated.tsv",
@@ -141,7 +140,6 @@ bamFiles = Channel.empty()
 if (tsvPath) {
   tsvFile = file(tsvPath)
   switch (step) {
-    case 'annotate': bamFiles = extractBams(tsvFile); break
     case 'mapping': fastqFiles = extractFastq(tsvFile); break
     case 'realign': bamFiles = extractBams(tsvFile); break
     case 'recalibrate': bamFiles = extractRecal(tsvFile); break
@@ -152,6 +150,8 @@ if (tsvPath) {
   if (step != 'mapping') exit 1, '--sampleDir does not support steps other than "mapping"'
   fastqFiles = extractFastqFromDir(params.sampleDir)
   tsvFile = params.sampleDir  // used in the reports
+} else if (step == 'annotate') {
+  // No need for a tsv file
 } else exit 1, 'No sample were defined, see --help'
 
 if (step == 'mapping') {
