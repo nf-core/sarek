@@ -22,6 +22,6 @@ RUN \
     https://github.com/broadinstitute/mutect/releases/download/${MUTECT_VERSION}/muTect-${MUTECT_VERSION}-bin.zip \
   && unzip muTect-${MUTECT_VERSION}-bin.zip -d ${MUTECT_HOME} \
   && rm muTect-${MUTECT_VERSION}-bin.zip \
-&& mv ${MUTECT_HOME}/muTect-$MUTECT_VERSION.jar ${MUTECT_HOME}/muTect.jar
+&& mv ${MUTECT_HOME}/muTect-${MUTECT_VERSION}.jar ${MUTECT_HOME}/muTect.jar
 # Create UPPMAX directories
 RUN mkdir /pica /proj /scratch /sw
