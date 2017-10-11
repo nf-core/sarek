@@ -1489,7 +1489,9 @@ process GenerateMultiQCconfig {
   when: reports
 
   script:
-  annotateString = annotateTools ? "- Annotate on : ${annotateTools.join(", ")}" : ''
+  annotateToolString = annotateTools ? "- Annotate on : ${annotateTools.join(", ")}" : ''
+  annotateVCFstring = annotateVCF ? "- Annotate on : ${annotateVCF.join(", ")}" : ''
+  tsvString = step != 'annotate' ? "- TSV file: ${tsvFile}" : ''
   """
   touch multiqc_config.yaml
   echo "custom_logo: $baseDir/doc/images/CAW_logo.png" >> multiqc_config.yaml
@@ -1500,11 +1502,12 @@ process GenerateMultiQCconfig {
   echo "- Contact E-mail: ${params.contactMail}" >> multiqc_config.yaml
   echo "- Command Line: ${workflow.commandLine}" >> multiqc_config.yaml
   echo "- Directory: ${workflow.launchDir}" >> multiqc_config.yaml
-  echo "- TSV file: ${tsvFile}" >> multiqc_config.yaml
-  echo "- Genome: "${params.genome} >> multiqc_config.yaml
+  echo ${tsvString} >> multiqc_config.yaml
+    echo "- Genome: "${params.genome} >> multiqc_config.yaml
   echo "- Step: "${step} >> multiqc_config.yaml
   echo "- Tools: "${tools.join(", ")} >> multiqc_config.yaml
-  echo ${annotateString} >> multiqc_config.yaml
+  echo ${annotateToolString} >> multiqc_config.yaml
+  echo ${annotateVCFstring} >> multiqc_config.yaml
   echo "  acLoci      : $referenceMap.acLoci" >> multiqc_config.yaml
   echo "  bwaIndex    : "${referenceMap.bwaIndex.join(", ")} >> multiqc_config.yaml
   echo "  cosmic      : $referenceMap.cosmic" >> multiqc_config.yaml
