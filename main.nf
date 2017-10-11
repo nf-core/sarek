@@ -124,6 +124,7 @@ else explicitBqsrNeeded = tools.intersect(['manta', 'mutect1', 'mutect2', 'vardi
 tsvPath = ''
 if (params.sample) tsvPath = params.sample
 
+// No need for tsv file for step annotate
 if (!params.sample && !params.sampleDir) {
   tsvPaths = [
   'mapping': "$workflow.projectDir/data/tsv/tiny.tsv",
@@ -135,6 +136,7 @@ if (!params.sample && !params.sampleDir) {
 }
 
 // Set up the fastqFiles and bamFiles channels. One of them remains empty
+// Except for step annotate, in which both stay empty
 fastqFiles = Channel.empty()
 bamFiles = Channel.empty()
 if (tsvPath) {
@@ -150,9 +152,7 @@ if (tsvPath) {
   if (step != 'mapping') exit 1, '--sampleDir does not support steps other than "mapping"'
   fastqFiles = extractFastqFromDir(params.sampleDir)
   tsvFile = params.sampleDir  // used in the reports
-} else if (step == 'annotate') {
-  // No need for a tsv file
-} else exit 1, 'No sample were defined, see --help'
+} else if (step != 'annotate') exit 1, 'No sample were defined, see --help'
 
 if (step == 'mapping') {
   (patientGenders, fastqFiles) = extractGenders(fastqFiles)

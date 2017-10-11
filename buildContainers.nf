@@ -58,6 +58,9 @@ if (params.version) exit 0, versionMessage()
 if (!isAllowedParams(params)) exit 1, "params is unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
+params.docker = false
+params.push = false
+params.singularity = false
 verbose = params.verbose
 containersList = defineContainersList()
 containers = params.containers.split(',').collect {it.trim()}
@@ -67,7 +70,7 @@ push = params.docker && params.push ? true : false
 repository = params.repository
 tag = params.tag ? params.tag : version
 singularity = params.singularity ? true : false
-singularityPublishDir = params.singularity && params.singularityPublishDir ? params.singularityPublishDir : "."
+containerPath = params.singularity && params.containerPath ? params.containerPath : "."
 
 if (!checkContainers(containers,containersList)) exit 1, 'Unknown container(s), see --help for more information'
 
@@ -106,7 +109,7 @@ if (verbose) dockerContainersBuilt = dockerContainersBuilt.view {
 process PullSingularityContainers {
   tag {repository + "/" + container + ":" + tag}
 
-  publishDir singularityPublishDir, mode: 'move'
+  publishDir containerPath, mode: 'move'
 
   input:
     val container from singularityContainers
@@ -258,7 +261,7 @@ def helpMessage() {
   log.info "    Usage:"
   log.info "       nextflow run SciLifeLab/buildContainers.nf [--docker] [--push]"
   log.info "          [--containers <container1...>] [--singularity]"
-  log.info "          [--singularityPublishDir <path>]"
+  log.info "          [--containerPath <path>]"
   log.info "          [--tag <tag>] [--repository <repository>]"
   log.info "    Example:"
   log.info "      nextflow run . --docker --containers multiqc,fastqc"
@@ -275,7 +278,7 @@ def helpMessage() {
   log.info "    --repository: Build containers under given repository"
   log.info "       Default: maxulysse"
   log.info "    --singularity: Build containers using Singularity"
-  log.info "    --singularityPublishDir: Select where to download containers"
+  log.info "    --containerPath: Select where to download containers"
   log.info "       Default: $PWD"
   log.info "    --tag`: Build containers using given tag"
   log.info "       Default (version number): " + version
