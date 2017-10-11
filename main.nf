@@ -1626,6 +1626,8 @@ def checkParams(it) {
     'callName',
     'contact-mail',
     'contactMail',
+    'container-path',
+    'containerPath',
     'containers',
     'cosmic-index',
     'cosmic',

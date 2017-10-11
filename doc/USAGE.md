@@ -86,9 +86,47 @@ Display more information about files being processed.
 
 Display version number and information.
 
+## Containers
+
+### --containerPath `Path to the singularity containers (default=containers/)`
+
+### --repository `Docker-hub repository (default=maxulysse)`
+
+### --tag `tag of the containers to use (default=current version)`
+
+## References
+
+If needed, you can specify each reference file by command line.
+
+### --acLoci `acLoci file`
+
+### --bwaIndex `bwaIndex file`
+
+### --cosmic `cosmic file`
+
+### --cosmicIndex `cosmicIndex file`
+
+### --dbsnp `dbsnp file`
+
+### --dbsnpIndex `dbsnpIndex file`
+
+### --genomeDict `genomeDict file`
+
+### --genomeFile `genomeFile file`
+
+### --genomeIndex `genomeIndex file`
+
+### --intervals `intervals file`
+
+### --knownIndels `knownIndels file`
+
+### --knownIndelsIndex `knownIndelsIndex file`
+
+### --snpeffDb `snpeffDb file`
+
 ## Parameters
 
-Simpler to specify in the config file.
+Simpler to specify in the configuration files, but it's still possible to specify every thing in the command line.
 
 ### --runTime `time`
 
