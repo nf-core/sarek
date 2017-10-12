@@ -11,6 +11,19 @@ while [[ $# -gt 0 ]]
 do
     key=$1
     case $key in
+        -p|--profile)
+        PROFILE=$2
+        shift # past argument
+        shift # past value
+        ;;
+        --pull)
+        TOOL=singularity
+        shift # past argument
+        ;;
+        --push)
+        PUSH=--push
+        shift # past argument
+        ;;
         -r|--repository)
         REPOSITORY=$2
         shift # past argument
@@ -20,19 +33,6 @@ do
         TAG=$2
         shift # past argument
         shift # past value
-        ;;
-        -p|--profile)
-        PROFILE=$2
-        shift # past argument
-        shift # past value
-        ;;
-        --push)
-        PUSH=--push
-        shift # past argument
-        ;;
-        --pull)
-        TOOL=singularity
-        shift # past argument
         ;;
         *) # unknown option
         shift # past argument
