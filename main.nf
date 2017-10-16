@@ -80,6 +80,18 @@ try {
               "============================================================"
 }
 
+// Default params
+params.annotateTools = ''
+params.annotateVCF = ''
+params.noGVCF = false
+params.noReports = false
+params.sample = ''
+params.sampleDir = ''
+params.step = 'mapping'
+params.test = ''
+params.tools = ''
+params.vcflist =''
+
 if (params.help) exit 0, helpMessage()
 if (params.version) exit 0, versionMessage()
 if (!isAllowedParams(params)) exit 1, "params is unknown, see --help for more information"
@@ -1434,7 +1446,6 @@ process RunSnpeff {
   > ${vcf.baseName}.snpEff.ann.vcf
 
   mv snpEff_summary.html ${vcf.baseName}.snpEff.summary.html
-  mv ${vcf.baseName}_snpEff.genes.txt ${vcf.baseName}.snpEff.genes.txt
   """
 }
 
