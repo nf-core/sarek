@@ -64,8 +64,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
 */
 
 version = '1.2.3'
-// Default tag for containers is version number
-params.tag = version
 
 // Check that Nextflow version is up to date enough
 // try / throw / catch works for NF versions < 0.25 when this was implemented
@@ -1419,7 +1417,7 @@ process RunSnpeff {
     val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
 
   output:
-    set file("${vcf.baseName}.ann.vcf"), file("${vcf.baseName}_snpEff_genes.txt"), file("${vcf.baseName}_snpEff.csv"), file("${vcf.baseName}_snpEff_summary.html") into snpeffReport
+    set file("${vcf.baseName}.snpEff.ann.vcf"), file("${vcf.baseName}.snpEff.genes.txt"), file("${vcf.baseName}.snpEff.csv"), file("${vcf.baseName}.snpEff.summary.html") into snpeffReport
 
   when: 'snpeff' in tools
 
@@ -1428,13 +1426,15 @@ process RunSnpeff {
   java -Xmx${task.memory.toGiga()}g \
   -jar \$SNPEFF_HOME/snpEff.jar \
   $snpeffDb \
-  -csvStats ${vcf.baseName}_snpEff.csv \
-  -v -cancer \
+  -csvStats ${vcf.baseName}.snpEff.csv \
+  -nodownload \
+  -cancer \
+  -v \
   ${vcf} \
-  > ${vcf.baseName}.ann.vcf
+  > ${vcf.baseName}.snpEff.ann.vcf
 
-  mv snpEff_summary.html ${vcf.baseName}_snpEff_summary.html
-  mv ${vcf.baseName}_snpEff.genes.txt ${vcf.baseName}_snpEff_genes.txt
+  mv snpEff_summary.html ${vcf.baseName}.snpEff.summary.html
+  mv ${vcf.baseName}_snpEff.genes.txt ${vcf.baseName}.snpEff.genes.txt
   """
 }
 
@@ -1452,7 +1452,7 @@ process RunVEP {
     set variantCaller, file(vcf) from vcfForVep
 
   output:
-    set file("${vcf.baseName}.ann.vcf"), file("${vcf.baseName}*summary*") into vepReport
+    set file("${vcf.baseName}.vep.ann.vcf"), file("${vcf.baseName}.vep.summary.html") into vepReport
 
   when: 'vep' in tools
 
@@ -1461,17 +1461,16 @@ process RunVEP {
   """
   vep \
   -i $vcf \
+  -o ${vcf.baseName}.vep.ann.vcf \
+  --stats_file ${vcf.baseName}.vep.summary.html \
+  --cache \
+  --everything \
+  --filter_common \
   --format vcf \
-  --sift b \
-  --polyphen b \
-  --symbol \
-  --numbers \
-  --biotype \
+  --offline \
+  --pick \
   --total_length \
-  -o ${vcf.baseName}.ann.vcf \
-  --vcf \
-  -offline \
-  --fields Consequence,Codons,Amino_acids,Gene,SYMBOL,Feature,EXON,PolyPhen,SIFT,Protein_position,BIOTYPE,IMPACT
+  --vcf
   """
 }
 
