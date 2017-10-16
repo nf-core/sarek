@@ -73,24 +73,38 @@ try {
         throw GroovyException('Nextflow version too old')
     }
 } catch (all) {
-    log.error "====================================================\n" +
+    log.error "============================================================\n" +
               "  Nextflow version $nf_required_version required! You are running v$workflow.nextflow.version.\n" +
               "  Pipeline execution will continue, but things may break.\n" +
               "  Please update Nextflow.\n" +
               "============================================================"
 }
 
-// Default params
+// Default params:
+// Such params are overridden by command line or configuration definitions
+
+// No tools to annotate
 params.annotateTools = ''
+// No vcf to annotare
 params.annotateVCF = ''
+// For MultiQC reports
+params.callName = ''
+// For MultiQC reports
+params.contactMail = ''
+// GVCF are generated
 params.noGVCF = false
+// Reports are generated
 params.noReports = false
+// No sample is defined
 params.sample = ''
+// No sampleDir is defined
 params.sampleDir = ''
+// Step is mapping
 params.step = 'mapping'
+// Not testing
 params.test = ''
+// No tools to be used
 params.tools = ''
-params.vcflist =''
 
 if (params.help) exit 0, helpMessage()
 if (params.version) exit 0, versionMessage()
@@ -1511,6 +1525,7 @@ process GenerateMultiQCconfig {
   echo "custom_logo_title: 'Cancer Analysis Workflow'" >> multiqc_config.yaml
   echo "report_header_info:" >> multiqc_config.yaml
   echo "- CAW version: $version" >> multiqc_config.yaml
+  echo "- Contact Name: ${params.callName}" >> multiqc_config.yaml
   echo "- Contact E-mail: ${params.contactMail}" >> multiqc_config.yaml
   echo "- Command Line: ${workflow.commandLine}" >> multiqc_config.yaml
   echo "- Directory: ${workflow.launchDir}" >> multiqc_config.yaml

@@ -61,8 +61,14 @@ if (params.version) exit 0, versionMessage()
 if (!isAllowedParams(params)) exit 1, "params is unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
+// Default params:
+// Such params are overridden by command line or configuration definitions
+
+// No download
 params.download = false
-params.refDir = ""
+// refDir is empty
+params.refDir = ''
+
 verbose = params.verbose
 download = params.download ? true : false
 

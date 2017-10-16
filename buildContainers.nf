@@ -58,9 +58,22 @@ if (params.version) exit 0, versionMessage()
 if (!isAllowedParams(params)) exit 1, "params is unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
+// Default params:
+// Such params are overridden by command line or configuration definitions
+
+// containerPath is empty
+params.containerPath = ''
+// all containers to be build
+params.containers = 'all'
+// Docker will not be used
 params.docker = false
+// Containers will not be pushed on DockerHub
 params.push = false
+// DockerHub repository is maxulysse
+params.repository = 'maxulysse'
+// Singularity will not be used
 params.singularity = false
+
 verbose = params.verbose
 containersList = defineContainersList()
 containers = params.containers.split(',').collect {it.trim()}
