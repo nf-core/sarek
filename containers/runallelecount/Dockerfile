@@ -25,8 +25,12 @@ RUN \
 
 # Install alleleCount
 RUN \
-  wget --quiet -O /opt/v${ALLELECOUNT_VERSION}.tar.gz https://github.com/cancerit/alleleCount/archive/v${ALLELECOUNT_VERSION}.tar.gz \
+  wget --quiet -O /opt/v${ALLELECOUNT_VERSION}.tar.gz \
+    https://github.com/cancerit/alleleCount/archive/v${ALLELECOUNT_VERSION}.tar.gz \
   && tar xvzf /opt/v${ALLELECOUNT_VERSION}.tar.gz -C /opt/ \
   && cd /opt/alleleCount-${ALLELECOUNT_VERSION} \
   && ./setup.sh /opt/ \
   && rm /opt/v${ALLELECOUNT_VERSION}.tar.gz
+
+# Create UPPMAX directories
+RUN mkdir /pica /proj /scratch /sw

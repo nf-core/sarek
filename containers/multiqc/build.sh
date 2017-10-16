@@ -6,9 +6,9 @@ MULTIQC_VERSION=1.1
 
 # Install libraries
 apt-get update && apt-get install -y --no-install-recommends \
-g++ \
-git \
-wget
+  g++ \
+  git \
+  wget
 
 # Install pip
 wget --quiet -O /opt/get-pip.py https://bootstrap.pypa.io/get-pip.py
@@ -21,10 +21,10 @@ pip install git+git://github.com/ewels/MultiQC.git@v${MULTIQC_VERSION}
 # Clean up install
 cd /
 apt-get remove -y \
-g++ \
-git \
-wget
+  g++ \
+  git \
+  wget
 rm -rf /build /var/lib/apt/lists/* /opt/get-pip.py
 
 # Create UPPMAX directories
-mkdir /pica /proj /sw
+mkdir /pica /proj /scratch /sw

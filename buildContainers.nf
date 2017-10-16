@@ -36,9 +36,23 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 */
 
-version = '1.2'
+version = '1.2.2'
 
-if (!nextflow.version.matches('>= 0.25.0')) exit 1, "Nextflow version 0.25.0 or greater is needed to run this workflow"
+// Check that Nextflow version is up to date enough
+// try / throw / catch works for NF versions < 0.25 when this was implemented
+nf_required_version = '0.25.0'
+try {
+    if( ! nextflow.version.matches(">= $nf_required_version") ){
+        throw GroovyException('Nextflow version too old')
+    }
+} catch (all) {
+    log.error "====================================================\n" +
+              "  Nextflow version $nf_required_version required! You are running v$workflow.nextflow.version.\n" +
+              "  Pipeline execution will continue, but things may break.\n" +
+              "  Please update Nextflow.\n" +
+              "============================================================"
+}
+
 if (params.help) exit 0, helpMessage()
 if (params.version) exit 0, versionMessage()
 if (!isAllowedParams(params)) exit 1, "params is unknown, see --help for more information"
@@ -222,9 +236,8 @@ def defineContainersList(){
     'mutect1',
     'picard',
     'qualimap',
+    'r-base',
     'runallelecount',
-    'runascat',
-    'runconvertallelecounts',
     'snpeff',
     'snpeffgrch37',
     'snpeffgrch38',
@@ -253,9 +266,8 @@ def helpMessage() {
   log.info "       Default: all"
   log.info "       Possible values:"
   log.info "         all, caw, fastqc, freebayes, gatk, igvtools, multiqc"
-  log.info "         mutect1, picard, qualimap, runallelecount, runascat"
-  log.info "         runconvertallelecounts, snpeff, snpeffgrch37, snpeffgrch38"
-  log.info "         vep, vepgrch37, vepgrch38"
+  log.info "         mutect1, picard, qualimap, r-base, runallelecount"
+  log.info "         snpeff, snpeffgrch37, snpeffgrch38, vepgrch37, vepgrch38"
   log.info "    --docker: Build containers using Docker"
   log.info "    --help"
   log.info "       you're reading it"

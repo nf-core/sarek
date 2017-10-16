@@ -1,4 +1,4 @@
-[![](doc/images/CAW_logo.png "CAW")][caw-site-link]
+[![](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/images/CAW_logo.png "CAW")][caw-site-link]
 
 # Cancer Analysis Workflow
 
@@ -58,9 +58,9 @@ For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.j
 
 --------------------------------------------------------------------------------
 
-[![](doc/images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
-[![](doc/images/NGI_logo.png "NGI")][ngi-link]
-[![](doc/images/NBIS_logo.png "NBIS")][nbis-link]
+[![](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
+[![](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/images/NGI_logo.png "NGI")][ngi-link]
+[![](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/images/NBIS_logo.png "NBIS")][nbis-link]
 
 [ascat-link]: https://github.com/Crick-CancerGenomics/ascat
 [caw-site-link]: http://opensource.scilifelab.se/projects/caw/
