@@ -41,7 +41,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - CreateIntervalBeds - Create and sort intervals into bed files
  - RunHaplotypecaller - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
  - RunGenotypeGVCFs - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
- - RunBcftoolsStats - Run BCFTools stats on vcf before annotation
  - RunMutect1 - Run MuTect1 for Variant Calling (Parallelized processes)
  - RunMutect2 - Run MuTect2 for Variant Calling (Parallelized processes)
  - RunFreeBayes - Run FreeBayes for Variant Calling (Parallelized processes)
@@ -53,9 +52,9 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - RunAlleleCount - Run AlleleCount to prepare for ASCAT
  - RunConvertAlleleCounts - Run convertAlleleCounts to prepare for ASCAT
  - RunAscat - Run ASCAT for CNV
+ - RunBcftoolsStats - Run BCFTools stats on vcf before annotation
  - RunSnpeff - Run snpEff for annotation of vcf files
  - RunVEP - Run VEP for annotation of vcf files
- - RunBcftoolsStats - Run BCFTools stats on vcf files
  - GenerateMultiQCconfig - Generate a config file for MultiQC
  - RunMultiQC - Run MultiQC for report and QC
 ================================================================================
@@ -1407,7 +1406,7 @@ if (step == 'annotate' && annotateVCF == []) {
 
 vcfNotToAnnotate.close()
 
-(vcfForBCF, vcfForSnpeff, vcfForVep) = vcfToAnnotate.into(3)
+(vcfForBCFtools, vcfForSnpeff, vcfForVep) = vcfToAnnotate.into(3)
 
 process RunBcftoolsStats {
   tag {vcf}
@@ -1415,7 +1414,7 @@ process RunBcftoolsStats {
   publishDir directoryMap.bcftoolsStats, mode: 'copy'
 
   input:
-    set variantCaller, file(vcf) from vcfForBCF
+    set variantCaller, file(vcf) from vcfForBCFtools
 
   output:
     file ("${vcf.baseName}.bcf.tools.stats.out") into bcfReport

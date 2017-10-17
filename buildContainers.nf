@@ -85,6 +85,8 @@ tag = params.tag ? params.tag : version
 singularity = params.singularity ? true : false
 containerPath = params.singularity && params.containerPath ? params.containerPath : "."
 
+if (!docker && !singularity) exit 1, 'No builder choose, specify --docker or --singularity, see --help for more information'
+
 if (!checkContainers(containers,containersList)) exit 1, 'Unknown container(s), see --help for more information'
 
 /*
@@ -257,7 +259,6 @@ def defineContainersList(){
     'snpeff',
     'snpeffgrch37',
     'snpeffgrch38',
-    'vep',
     'vepgrch37',
     'vepgrch38'
     ]
