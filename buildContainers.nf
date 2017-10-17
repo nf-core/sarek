@@ -28,12 +28,9 @@ kate: syntax groovy; space-indent on; indent-width 2;
  https://github.com/SciLifeLab/CAW/README.md
 --------------------------------------------------------------------------------
  Processes overview
- - ProcessReference - Download all references if needed
- - DecompressFile - Extract files if needed
- - BuildBWAindexes - Build indexes for BWA
- - BuildPicardIndex - Build index with Picard
- - BuildSAMToolsIndex - Build index with SAMTools
- - BuildVCFIndex - Build index for VCF files
+ - BuildDockerContainers - Build containers using Docker
+ - PullSingularityContainers - Pull Singularity containers from Docker Hub
+ - PushDockerContainers - Push containers to Docker Hub
 ================================================================================
 =                           C O N F I G U R A T I O N                          =
 ================================================================================
@@ -61,41 +58,18 @@ if (params.version) exit 0, versionMessage()
 if (!isAllowedParams(params)) exit 1, "params is unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
-params.download = false
-params.refDir = ""
 verbose = params.verbose
-download = params.download ? true : false
+containersList = defineContainersList()
+containers = params.containers.split(',').collect {it.trim()}
+containers = containers == ['all'] ? containersList : containers
+docker = params.docker ? true : false
+push = params.docker && params.push ? true : false
+repository = params.repository
+tag = params.tag ? params.tag : version
+singularity = params.singularity ? true : false
+singularityPublishDir = params.singularity && params.singularityPublishDir ? params.singularityPublishDir : "."
 
-if (!download && params.refDir == "" ) exit 1, "No --refDir specified"
-if (download && params.refDir != "" ) exit 1, "No need to specify --refDir"
-
-if (params.genome == "smallGRCh37") {
-  referencesFiles =
-    [
-      '1000G_phase1.indels.b37.small.vcf.gz',
-      '1000G_phase3_20130502_SNP_maf0.3.small.loci',
-      'b37_cosmic_v74.noCHR.sort.4.1.small.vcf.gz',
-      'dbsnp_138.b37.small.vcf.gz',
-      'human_g1k_v37_decoy.small.fasta.gz',
-      'Mills_and_1000G_gold_standard.indels.b37.small.vcf.gz',
-      'small.intervals'
-    ]
-} else if (params.genome == "GRCh37") {
-  referencesFiles =
-    [
-      '1000G_phase1.indels.b37.vcf.gz',
-      '1000G_phase3_20130502_SNP_maf0.3.loci.tar.bz2',
-      'b37_cosmic_v74.noCHR.sort.4.1.vcf.tar.bz2',
-      'dbsnp_138.b37.vcf.gz',
-      'human_g1k_v37_decoy.fasta.gz',
-      'Mills_and_1000G_gold_standard.indels.b37.vcf.gz',
-      'wgs_calling_regions.grch37.list'
-    ]
-} else exit 1, "Can't build this reference genome"
-
-if (download && params.genome != "smallGRCh37") exit 1, "Not possible to download $params.genome references files"
-
-if (!download) referencesFiles.each{checkFile(params.refDir + "/" + it)}
+if (!checkContainers(containers,containersList)) exit 1, 'Unknown container(s), see --help for more information'
 
 /*
 ================================================================================
@@ -105,178 +79,72 @@ if (!download) referencesFiles.each{checkFile(params.refDir + "/" + it)}
 
 startMessage()
 
-process ProcessReference {
-  tag download ? {"Download: " + reference} : {"Link: " + reference}
+dockerContainers = containers
+singularityContainers = containers
+
+process BuildDockerContainers {
+  tag {repository + "/" + container + ":" + tag}
 
   input:
-    val(reference) from referencesFiles
+    val container from dockerContainers
 
   output:
-    file(reference) into processedFiles
+    val container into dockerContainersBuilt
 
-  script:
-
-  if (download)
-  """
-  wget https://github.com/szilvajuhos/smallRef/raw/master/$reference
-  """
-
-  else
-  """
-  ln -s $params.refDir/$reference .
-  """
-}
-
-
-if (verbose) processedFiles = processedFiles.view {
-  "Files preprocessed  : $it.fileName"
-}
-
-compressedfiles = Channel.create()
-notCompressedfiles = Channel.create()
-
-processedFiles
-  .choice(compressedfiles, notCompressedfiles) {it =~ ".(gz|tar.bz2)" ? 0 : 1}
-
-process DecompressFile {
-  tag {reference}
-
-  input:
-    file(reference) from compressedfiles
-
-  output:
-    file("*.{vcf,fasta,loci}") into decompressedFiles
-
-  script:
-  realReference="readlink $reference"
-  if (reference =~ ".gz")
-    """
-    gzip -d -c \$($realReference) > $reference.baseName
-    """
-  else if (reference =~ ".tar.bz2")
-    """
-    tar xvjf \$($realReference)
-    """
-}
-
-if (verbose) decompressedFiles = decompressedFiles.view {
-  "Files decomprecessed: $it.fileName"
-}
-
-fastaFile = Channel.create()
-otherFiles = Channel.create()
-vcfFiles = Channel.create()
-
-decompressedFiles
-  .choice(fastaFile, vcfFiles, otherFiles) {
-    it =~ ".fasta" ? 0 :
-    it =~ ".vcf" ? 1 : 2}
-
-notCompressedfiles
-  .mix(otherFiles)
-  .collectFile(storeDir: "References/" + params.genome)
-
-fastaForBWA = Channel.create()
-fastaForPicard = Channel.create()
-fastaForSAMTools = Channel.create()
-
-fastaFile.into(fastaForBWA,fastaForPicard,fastaForSAMTools)
-
-process BuildBWAindexes {
-  tag {reference}
-
-  publishDir "References/" + params.genome, mode: 'copy'
-
-  input:
-    file(reference) from fastaForBWA
-
-  output:
-    file(reference) into fastaFileToKeep
-    file("*.{amb,ann,bwt,pac,sa}") into bwaIndexes
-
-  script:
-
-  """
-  bwa index $reference
-  """
-}
-
-if (verbose) fastaFileToKeep.view {
-  "Fasta File          : $it.fileName"
-}
-if (verbose) bwaIndexes.flatten().view {
-  "BWA index           : $it.fileName"
-}
-
-process BuildPicardIndex {
-  tag {reference}
-
-  publishDir "References/" + params.genome, mode: 'copy'
-
-  input:
-    file(reference) from fastaForPicard
-
-  output:
-    file("*.dict") into picardIndex
+  when: docker
 
   script:
   """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar \$PICARD_HOME/picard.jar \
-  CreateSequenceDictionary \
-  REFERENCE=$reference \
-  OUTPUT=${reference.baseName}.dict
+  docker build -t $repository/$container:$tag $baseDir/containers/$container/.
   """
 }
 
-if (verbose) picardIndex.view {
-  "Picard index        : $it.fileName"
+if (verbose) dockerContainersBuilt = dockerContainersBuilt.view {
+  "Docker container: $repository/$it:$tag built."
 }
 
-process BuildSAMToolsIndex {
-  tag {reference}
+process PullSingularityContainers {
+  tag {repository + "/" + container + ":" + tag}
 
-  publishDir "References/" + params.genome, mode: 'copy'
+  publishDir singularityPublishDir, mode: 'move'
 
   input:
-    file(reference) from fastaForSAMTools
+    val container from singularityContainers
 
   output:
-    file("*.fai") into samtoolsIndex
+    file("*.img") into singularityContainersPulled
+
+  when: singularity
 
   script:
   """
-  samtools faidx $reference
+  singularity pull --name $container-${tag}.img docker://$repository/$container:$tag
   """
 }
 
-if (verbose) samtoolsIndex.view {
-  "SAMTools index      : $it.fileName"
+if (verbose) singularityContainersPulled = singularityContainersPulled.view {
+  "Singularity container: $it pulled."
 }
 
-process BuildVCFIndex {
-  tag {reference}
-
-  publishDir "References/" + params.genome, mode: 'copy'
+process PushDockerContainers {
+  tag {repository + "/" + container + ":" + tag}
 
   input:
-    file(reference) from vcfFiles
+    val container from dockerContainersBuilt
 
   output:
-    file(reference) into vcfIndexed
-    file("*.idx") into vcfIndex
+    val container into dockerContainersPushed
+
+  when: docker && push
 
   script:
   """
-  \$IGVTOOLS_HOME/igvtools index $reference
+  docker push $repository/$container:$tag
   """
 }
 
-if (verbose) vcfIndexed.view {
-  "VCF indexed         : $it.fileName"
-}
-if (verbose) vcfIndex.view {
-  "VCF index           : $it.fileName"
+if (verbose) dockerContainersPushed = dockerContainersPushed.view {
+  "Docker container: $repository/$it:$tag pushed."
 }
 
 /*
@@ -290,11 +158,22 @@ def cawMessage() {
   log.info "CANCER ANALYSIS WORKFLOW ~ $version - " + this.grabRevision() + (workflow.commitId ? " [$workflow.commitId]" : "")
 }
 
-def checkFile(it) {
-  // Check file existence
-  final f = file(it)
-  if (!f.exists()) exit 1, "Missing file: $it, see --help for more information"
+def checkContainerExistence(container, list) {
+  try {assert list.contains(container)}
+  catch (AssertionError ae) {
+    println("Unknown container: $container")
+    return false
+  }
   return true
+}
+
+def checkContainers(containers, containersList) {
+  containerExists = true
+  containers.each{
+    test = checkContainerExistence(it, containersList)
+    !(test) ? containerExists = false : ""
+  }
+  return containerExists ? true : false
 }
 
 def checkParams(it) {
@@ -311,7 +190,6 @@ def checkParams(it) {
     'contactMail',
     'containers',
     'docker',
-    'download',
     'genome',
     'genomes',
     'help',
@@ -321,11 +199,7 @@ def checkParams(it) {
     'noReports',
     'project',
     'push',
-    'ref-dir',
-    'refDir',
     'repository',
-    'run-time',
-    'runTime',
     'sample-dir',
     'sample',
     'sampleDir',
@@ -350,6 +224,29 @@ def checkUppmaxProject() {
   return !(workflow.profile == 'slurm' && !params.project)
 }
 
+def defineContainersList(){
+  // Return list of authorized containers
+  return [
+    'caw',
+    'fastqc',
+    'freebayes',
+    'gatk',
+    'igvtools',
+    'multiqc',
+    'mutect1',
+    'picard',
+    'qualimap',
+    'r-base',
+    'runallelecount',
+    'snpeff',
+    'snpeffgrch37',
+    'snpeffgrch38',
+    'vep',
+    'vepgrch37',
+    'vepgrch38'
+    ]
+}
+
 def grabRevision() {
   // Return the same string executed from github or not
   return workflow.revision ?: workflow.commitId ?: workflow.scriptId.substring(0,10)
@@ -359,22 +256,31 @@ def helpMessage() {
   // Display help message
   this.cawMessage()
   log.info "    Usage:"
-  log.info "       nextflow run buildReferences.nf --refDir <pathToRefDir> --genome <genome>"
-  log.info "       nextflow run buildReferences.nf --download --genome smallGRCh37"
-  log.info "       nextflow run SciLifeLab/CAW --test [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
-  log.info "    --download"
-  log.info "       Download reference files. (only with --genome smallGRCh37)"
-  log.info "    --refDir <Directoy>"
-  log.info "       Specify a directory containing reference files."
-  log.info "    --genome <Genome>"
-  log.info "       Use a specific genome version."
-  log.info "       Possible values are:"
-  log.info "         GRCh37"
-  log.info "         smallGRCh37 (Build a small reference (for tests))"
+  log.info "       nextflow run SciLifeLab/buildContainers.nf [--docker] [--push]"
+  log.info "          [--containers <container1...>] [--singularity]"
+  log.info "          [--singularityPublishDir <path>]"
+  log.info "          [--tag <tag>] [--repository <repository>]"
+  log.info "    Example:"
+  log.info "      nextflow run . --docker --containers multiqc,fastqc"
+  log.info "    --containers: Choose which containers to build"
+  log.info "       Default: all"
+  log.info "       Possible values:"
+  log.info "         all, caw, fastqc, freebayes, gatk, igvtools, multiqc"
+  log.info "         mutect1, picard, qualimap, r-base, runallelecount"
+  log.info "         snpeff, snpeffgrch37, snpeffgrch38, vepgrch37, vepgrch38"
+  log.info "    --docker: Build containers using Docker"
   log.info "    --help"
   log.info "       you're reading it"
+  log.info "    --push: Push containers to DockerHub"
+  log.info "    --repository: Build containers under given repository"
+  log.info "       Default: maxulysse"
+  log.info "    --singularity: Build containers using Singularity"
+  log.info "    --singularityPublishDir: Select where to download containers"
+  log.info "       Default: $PWD"
+  log.info "    --tag`: Build containers using given tag"
+  log.info "       Default (version number): " + version
   log.info "    --version"
-  log.info "       displays version number"
+  log.info "       displays version number and more informations"
 }
 
 def isAllowedParams(params) {
@@ -395,7 +301,7 @@ def minimalInformationMessage() {
   log.info "Project Dir : $workflow.projectDir"
   log.info "Launch Dir  : $workflow.launchDir"
   log.info "Work Dir    : $workflow.workDir"
-  log.info "Genome      : " + params.genome
+  log.info "Containers  : " + containers.join(', ')
 }
 
 def nextflowMessage() {

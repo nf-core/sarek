@@ -1,6 +1,6 @@
 # Intervals
 
-To speed up the Variant Calling processes, the reference is chopped into smaller pieces. The Variant Calling is done by this intervals, and the different resulting VCFs are then merged. This can parallelize the Variant Calling processes, and push down the variant calling wall clock time significanlty.
+To speed up the variant calling processes, the reference is chopped into smaller pieces. The variant calling is done by this intervals, and the different resulting VCFs are then merged. This can parallelize the variant calling processes, and push down the variant calling wall clock time significantly.
 
 The calling intervals can be defined using a `.list` or a `.bed` file. A `.list` file contains one interval per line in the format `chromosome:start-end` (1-based coordinates).
 
@@ -8,7 +8,7 @@ When the intervals file is in BED format, the file must be a tab-separated text 
 
 Additionally, the "score" column of the BED file can be used to provide an estimate of how many seconds it will take to call variants on that interval. The fourth column remains unused. Example (the fields would actually be tab-separated, this is not shown here):
 
-    chr1  10000  207666 NA  47.3
+`chr1  10000  207666 NA  47.3`
 
 This indicates that variant calling on the interval chr1:10001-207666 takes approximately 47.3 seconds.
 

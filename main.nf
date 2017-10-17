@@ -39,15 +39,17 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files
  - RunBamQC - Run qualimap BamQC on recalibrated BAM files
  - CreateIntervalBeds - Create and sort intervals into bed files
- - RunHaplotypecaller - Run HaplotypeCaller for GermLine Variant Calling (Parallelized processes)
- - RunGenotypeGVCFs - Run HaplotypeCaller for GermLine Variant Calling (Parallelized processes)
+ - RunHaplotypecaller - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
+ - RunGenotypeGVCFs - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
  - RunBcftoolsStats - Run BCFTools stats on vcf before annotation
  - RunMutect1 - Run MuTect1 for Variant Calling (Parallelized processes)
  - RunMutect2 - Run MuTect2 for Variant Calling (Parallelized processes)
  - RunFreeBayes - Run FreeBayes for Variant Calling (Parallelized processes)
  - ConcatVCF - Merge results from HaplotypeCaller, MuTect1 and MuTect2
  - RunStrelka - Run Strelka for Variant Calling
+ - RunSingleStrelka - Run Strelka for Germline Variant Calling
  - RunManta - Run Manta for Structural Variant Calling
+ - RunSingleManta - Run Manta for Single Structural Variant Calling
  - RunAlleleCount - Run AlleleCount to prepare for ASCAT
  - RunConvertAlleleCounts - Run convertAlleleCounts to prepare for ASCAT
  - RunAscat - Run ASCAT for CNV
@@ -61,12 +63,26 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 */
 
-version = '1.1'
+version = '1.2.2'
+
+// Check that Nextflow version is up to date enough
+// try / throw / catch works for NF versions < 0.25 when this was implemented
+nf_required_version = '0.25.0'
+try {
+    if( ! nextflow.version.matches(">= $nf_required_version") ){
+        throw GroovyException('Nextflow version too old')
+    }
+} catch (all) {
+    log.error "====================================================\n" +
+              "  Nextflow version $nf_required_version required! You are running v$workflow.nextflow.version.\n" +
+              "  Pipeline execution will continue, but things may break.\n" +
+              "  Please update Nextflow.\n" +
+              "============================================================"
+}
 
 if (params.help) exit 0, helpMessage()
 if (params.version) exit 0, versionMessage()
 if (!isAllowedParams(params)) exit 1, "params is unknown, see --help for more information"
-
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
 step = params.step.toLowerCase()
@@ -511,6 +527,11 @@ if (verbose) recalibrationTable = recalibrationTable.view {
 
 (bamForBamQC, bamForSamToolsStats, recalTables, recalibrationTableForHC, recalibrationTable) = recalibrationTable.into(5)
 
+// Remove recalTable from Channels to match inputs for Process to avoid:
+// WARN: Input tuple does not match input set cardinality declared by process...
+bamForBamQC = bamForBamQC.map { it[0..4] }
+bamForSamToolsStats = bamForSamToolsStats.map{ it[0..4] }
+
 recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
 
 process RecalibrateBam {
@@ -625,7 +646,7 @@ if (verbose) bamQCreport = bamQCreport.view {
 // The sample tsv config file which is formatted like: "subject status sample lane fastq1 fastq2"
 // cf fastqFiles channel, I decided just to add _status to the sample name to have less changes to do.
 // And so I'm sorting the channel if the sample match _0, then it's a normal sample, otherwise tumor.
-// Then spread normal over tumor to get each possibilities
+// Then combine normal and tumor to get each possibilities
 // ie. normal vs tumor1, normal vs tumor2, normal vs tumor3
 // then copy this channel into channels for each variant calling
 // I guess it will still work even if we have multiple normal samples
@@ -637,12 +658,14 @@ bamsTumor = Channel.create()
 recalibratedBam
   .choice(bamsTumor, bamsNormal) {it[1] == 0 ? 1 : 0}
 
-// Ascat
-(bamsNormalTemp, bamsNormal) = bamsNormal.into(2)
-(bamsTumorTemp, bamsTumor) = bamsTumor.into(2)
-
+// Ascat, Strelka Germline & Manta Germline SV
 bamsForAscat = Channel.create()
-bamsForAscat = bamsNormalTemp.mix(bamsTumorTemp)
+bamsForSingleManta = Channel.create()
+bamsForSingleStrelka = Channel.create()
+
+(bamsTumorTemp, bamsTumor) = bamsTumor.into(2)
+(bamsNormalTemp, bamsNormal) = bamsNormal.into(2)
+(bamsForAscat, bamsForSingleManta, bamsForSingleStrelka) = bamsNormalTemp.mix(bamsTumorTemp).into(3)
 
 // Removing status because not relevant anymore
 bamsNormal = bamsNormal.map { idPatient, status, idSample, bam, bai -> [idPatient, idSample, bam, bai] }
@@ -723,20 +746,20 @@ if (verbose) bedIntervals = bedIntervals.view {
 (bamsTumorTemp, bamsTumor, bedIntervals) = generateIntervalsForVC(bamsTumor, bedIntervals)
 
 // HaplotypeCaller
-bamsFHC = bamsNormalTemp.mix(bamsTumorTemp)
+bamsForHC = bamsNormalTemp.mix(bamsTumorTemp)
 bedIntervals = bedIntervals.tap { intervalsTemp }
 recalTables = recalTables
   .spread(intervalsTemp)
   .map { patient, sample, bam, bai, recalTable, intervalBed ->
     [patient, sample, bam, bai, intervalBed, recalTable] }
 
-
 // re-associate the BAMs and samples with the recalibration table
-bamsFHC = bamsFHC
+bamsForHC = bamsForHC
   .phase(recalTables) { it[0..4] }
   .map { it1, it2 -> it1 + [it2[6]] }
 
-bamsAll = bamsNormal.spread(bamsTumor)
+bamsAll = bamsNormal.combine(bamsTumor)
+
 // Since idPatientNormal and idPatientTumor are the same
 // It's removed from bamsAll Channel (same for genderNormal)
 // /!\ It is assumed that every sample are from the same patient
@@ -758,7 +781,7 @@ process RunHaplotypecaller {
   tag {idSample + "-" + intervalBed.baseName}
 
   input:
-    set idPatient, idSample, file(bam), file(bai), file(intervalBed), recalTable from bamsFHC //Are these values `ped to bamNormal already?
+    set idPatient, idSample, file(bam), file(bai), file(intervalBed), recalTable from bamsForHC //Are these values `ped to bamNormal already?
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -1009,7 +1032,7 @@ process ConcatVCF {
         tail -n +\$((L+1)) \${vcf}
       done
     done
-  ) | bgzip -@ $task.cpus > ${outputFile}.gz
+  ) | bgzip > ${outputFile}.gz
   tabix ${outputFile}.gz
   """
 }
@@ -1034,39 +1057,72 @@ process RunStrelka {
     ])
 
   output:
-    set val("strelka"), idPatient, idSampleNormal, idSampleTumor, file("*.vcf") into strelkaOutput
+    set val("strelka"), idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into strelkaOutput
 
   when: 'strelka' in tools
 
   script:
   """
-  tumorPath=`readlink $bamTumor`
-  normalPath=`readlink $bamNormal`
-  genomeFile=`readlink $genomeFile`
-  \$STRELKA_INSTALL_DIR/bin/configureStrelkaWorkflow.pl \
-  --tumor \$tumorPath \
-  --normal \$normalPath \
-  --ref \$genomeFile \
-  --config \$STRELKA_INSTALL_DIR/etc/strelka_config_bwa_default.ini \
-  --output-dir strelka
+  \$STRELKA_INSTALL_PATH/bin/configureStrelkaSomaticWorkflow.py \
+  --tumor $bamTumor \
+  --normal $bamNormal \
+  --referenceFasta $genomeFile \
+  --runDir Strelka
 
-  cd strelka
+  python Strelka/runWorkflow.py -m local -j $task.cpus
 
-  make -j $task.cpus
-
-  cd ..
-
-  mv strelka/results/all.somatic.indels.vcf Strelka_${idSampleTumor}_vs_${idSampleNormal}_all_somatic_indels.vcf
-  mv strelka/results/all.somatic.snvs.vcf Strelka_${idSampleTumor}_vs_${idSampleNormal}_all_somatic_snvs.vcf
-  mv strelka/results/passed.somatic.indels.vcf Strelka_${idSampleTumor}_vs_${idSampleNormal}_passed_somatic_indels.vcf
-  mv strelka/results/passed.somatic.snvs.vcf Strelka_${idSampleTumor}_vs_${idSampleNormal}_passed_somatic_snvs.vcf
+  mv Strelka/results/variants/somatic.indels.vcf.gz Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz
+  mv Strelka/results/variants/somatic.indels.vcf.gz.tbi Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz.tbi
+  mv Strelka/results/variants/somatic.snvs.vcf.gz Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
+  mv Strelka/results/variants/somatic.snvs.vcf.gz.tbi Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz.tbi
   """
 }
 
 if (verbose) strelkaOutput = strelkaOutput.view {
   "Variant Calling output:\n\
   Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  Files : ${it[4].fileName}"
+  Files : ${it[4].fileName}\n\
+  Index : ${it[5].fileName}"
+}
+
+process RunSingleStrelka {
+  tag {idSample}
+
+  publishDir directoryMap.strelka, mode: 'copy'
+
+  input:
+    set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleStrelka
+    set file(genomeFile), file(genomeIndex) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex
+    ])
+
+  output:
+    set val("singlestrelka"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleStrelkaOutput
+
+  when: 'strelka' in tools
+
+  script:
+  """
+  \$STRELKA_INSTALL_PATH/bin/configureStrelkaGermlineWorkflow.py \
+  --bam $bam \
+  --referenceFasta $genomeFile \
+  --runDir Strelka
+
+  python Strelka/runWorkflow.py -m local -j $task.cpus
+
+  mv Strelka/results/variants/genome.*.vcf.gz Strelka_${idSample}_genome.vcf.gz
+  mv Strelka/results/variants/genome.*.vcf.gz.tbi Strelka_${idSample}_genome.vcf.gz.tbi
+  mv Strelka/results/variants/variants.vcf.gz Strelka_${idSample}_variants.vcf.gz
+  mv Strelka/results/variants/variants.vcf.gz.tbi Strelka_${idSample}_variants.vcf.gz.tbi
+  """
+}
+
+if (verbose) singleStrelkaOutput = singleStrelkaOutput.view {
+  "Variant Calling output:\n\
+  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: ${it[2]}\n\
+  Files : ${it[3].fileName}\n\
+  Index : ${it[4].fileName}"
 }
 
 process RunManta {
@@ -1082,30 +1138,95 @@ process RunManta {
     ])
 
   output:
-    set val("manta"), idPatient, idSampleNormal, idSampleTumor, file("Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf"), file("Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf"), file("Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf"), file("Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf") into mantaOutput
+    set val("manta"), idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into mantaOutput
 
   when: 'manta' in tools
 
   script:
   """
-  ln -s $bamNormal Normal.bam
-  ln -s $bamTumor Tumor.bam
-  ln -s $baiNormal Normal.bam.bai
-  ln -s $baiTumor Tumor.bam.bai
+  \$MANTA_INSTALL_PATH/bin/configManta.py \
+  --normalBam $bamNormal \
+  --tumorBam $bamTumor \
+  --reference $genomeFile \
+  --runDir Manta
 
-  \$MANTA_INSTALL_PATH/bin/configManta.py --normalBam Normal.bam --tumorBam Tumor.bam --reference $genomeFile --runDir MantaDir
-  python MantaDir/runWorkflow.py -m local -j $task.cpus
-  gunzip -c MantaDir/results/variants/somaticSV.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf
-  gunzip -c MantaDir/results/variants/candidateSV.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf
-  gunzip -c MantaDir/results/variants/diploidSV.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf
-  gunzip -c MantaDir/results/variants/candidateSmallIndels.vcf.gz > Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf
+  python Manta/runWorkflow.py -m local -j $task.cpus
+
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf.gz
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz.tbi Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf.gz.tbi
+  mv Manta/results/variants/candidateSV.vcf.gz Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf.gz
+  mv Manta/results/variants/candidateSV.vcf.gz.tbi Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf.gz.tbi
+  mv Manta/results/variants/diploidSV.vcf.gz Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf.gz
+  mv Manta/results/variants/diploidSV.vcf.gz.tbi Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf.gz.tbi
+  mv Manta/results/variants/somaticSV.vcf.gz Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf.gz
+  mv Manta/results/variants/somaticSV.vcf.gz.tbi Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf.gz.tbi
   """
 }
 
 if (verbose) mantaOutput = mantaOutput.view {
   "Variant Calling output:\n\
   Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  Files : [${it[4].fileName}, ${it[5].fileName}, ${it[6].fileName}, ${it[7].fileName}]"
+  Files : ${it[4].fileName}\n\
+  Index : ${it[5].fileName}"
+}
+
+process RunSingleManta {
+  tag {status == 0 ? idSample + " - Single Diploid" : idSample + " - Tumor-Only"}
+
+  publishDir directoryMap.manta, mode: 'copy'
+
+  input:
+    set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleManta
+    set file(genomeFile), file(genomeIndex) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex
+    ])
+
+  output:
+    set val("singlemanta"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleMantaOutput
+
+  when: 'manta' in tools
+
+  script:
+  if ( status == 0 ) // If Normal Sample
+  """
+  \$MANTA_INSTALL_PATH/bin/configManta.py \
+  --bam $bam \
+  --reference $genomeFile \
+  --runDir Manta
+
+  python Manta/runWorkflow.py -m local -j $task.cpus
+
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz Manta_${idSample}.candidateSmallIndels.vcf.gz
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz.tbi Manta_${idSample}.candidateSmallIndels.vcf.gz.tbi
+  mv Manta/results/variants/candidateSV.vcf.gz Manta_${idSample}.candidateSV.vcf.gz
+  mv Manta/results/variants/candidateSV.vcf.gz.tbi Manta_${idSample}.candidateSV.vcf.gz.tbi
+  mv Manta/results/variants/diploidSV.vcf.gz Manta_${idSample}.diploidSV.vcf.gz
+  mv Manta/results/variants/diploidSV.vcf.gz.tbi Manta_${idSample}.diploidSV.vcf.gz.tbi
+  """
+  else  // Tumor Sample
+  """
+  \$MANTA_INSTALL_PATH/bin/configManta.py \
+  --tumorBam $bam \
+  --reference $genomeFile \
+  --runDir Manta
+
+  python Manta/runWorkflow.py -m local -j $task.cpus
+
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz Manta_${idSample}.candidateSmallIndels.vcf.gz
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz.tbi Manta_${idSample}.candidateSmallIndels.vcf.gz.tbi
+  mv Manta/results/variants/candidateSV.vcf.gz Manta_${idSample}.candidateSV.vcf.gz
+  mv Manta/results/variants/candidateSV.vcf.gz.tbi Manta_${idSample}.candidateSV.vcf.gz.tbi
+  mv Manta/results/variants/tumorSV.vcf.gz Manta_${idSample}.tumorSV.vcf.gz
+  mv Manta/results/variants/tumorSV.vcf.gz.tbi Manta_${idSample}.tumorSV.vcf.gz.tbi
+  """
+}
+
+if (verbose) singleMantaOutput = singleMantaOutput.view {
+  "Variant Calling output:\n\
+  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: ${it[2]}\n\
+  Files : ${it[3].fileName}\n\
+  Index : ${it[4].fileName}"
 }
 
 // Run commands and code from Malin Larsson
@@ -1139,7 +1260,7 @@ alleleCountTumor = Channel.create()
 alleleCountOutput
   .choice(alleleCountTumor, alleleCountNormal) {it[1] == 0 ? 1 : 0}
 
-alleleCountOutput = alleleCountNormal.spread(alleleCountTumor)
+alleleCountOutput = alleleCountNormal.combine(alleleCountTumor)
 
 alleleCountOutput = alleleCountOutput.map {
   idPatientNormal, statusNormal, idSampleNormal, alleleCountNormal,
@@ -1186,6 +1307,8 @@ process RunAscat {
 
   script:
   """
+  # get rid of "chr" string if there is any
+  for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
   run_ascat.r $bafTumor $logrTumor $bafNormal $logrNormal $idSampleTumor $baseDir
   """
 }
@@ -1202,20 +1325,15 @@ vcfNotToAnnotate = Channel.create()
 if (step == 'annotate' && annotateVCF == []) {
   Channel.empty().mix(
     Channel.fromPath('VariantCalling/HaplotypeCaller/*.vcf.gz')
-      .flatten().unique()
-      .map{vcf -> ['haplotypecaller',vcf]},
-    Channel.fromPath('VariantCalling/Manta/*.{somaticSV,diploidSV}.vcf.gz')
-      .flatten().unique()
-      .map{vcf -> ['manta',vcf]},
+      .flatten().map{vcf -> ['haplotypecaller',vcf]},
+    Channel.fromPath('VariantCalling/Manta/*SV.vcf.gz')
+      .flatten().map{vcf -> ['manta',vcf]},
     Channel.fromPath('VariantCalling/MuTect1/*.vcf.gz')
-      .flatten().unique()
-      .map{vcf -> ['mutect1',vcf]},
+      .flatten().map{vcf -> ['mutect1',vcf]},
     Channel.fromPath('VariantCalling/MuTect2/*.vcf.gz')
-      .flatten().unique()
-      .map{vcf -> ['mutect2',vcf]},
-    Channel.fromPath('VariantCalling/Strelka/*passed_somatic*.vcf')
-      .flatten().unique()
-      .map{vcf -> ['strelka',vcf]}
+      .flatten().map{vcf -> ['mutect2',vcf]},
+    Channel.fromPath('VariantCalling/Strelka/*{somatic,variants}*.vcf.gz')
+      .flatten().map{vcf -> ['strelka',vcf]}
   ).choice(vcfToAnnotate, vcfNotToAnnotate) { annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1 }
 
 } else if (step == 'annotate' && annotateTools == [] && annotateVCF != []) {
@@ -1231,28 +1349,35 @@ if (step == 'annotate' && annotateVCF == []) {
   vcfConcatenated
     .choice(vcfToAnnotate, vcfNotToAnnotate) { it[0] == 'gvcf-hc' || it[0] == 'freebayes' ? 1 : 0 }
 
-  (strelkaPAssedIndels, strelkaPAssedSNVS) = strelkaOutput.into(2)
+  (strelkaIndels, strelkaSNVS) = strelkaOutput.into(2)
   (mantaSomaticSV, mantaDiploidSV) = mantaOutput.into(2)
-
   vcfToAnnotate = vcfToAnnotate.map {
     variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
     [variantcaller, vcf]
   }.mix(
-    strelkaPAssedIndels.map {
-      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
+    mantaDiploidSV.map {
+      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf, tbi ->
       [variantcaller, vcf[2]]
     },
-    strelkaPAssedSNVS.map {
-      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf ->
+    mantaSomaticSV.map {
+      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf, tbi ->
       [variantcaller, vcf[3]]
     },
-    mantaSomaticSV.map {
-      variantcaller, idPatient, idSampleNormal, idSampleTumor, somaticSV, candidateSV, diploidSV, candidateSmallIndels ->
-      [variantcaller, somaticSV]
+    singleStrelkaOutput.map {
+      variantcaller, idPatient, idSample, vcf, tbi ->
+      [variantcaller, vcf[1]]
     },
-    mantaDiploidSV.map {
-      variantcaller, idPatient, idSampleNormal, idSampleTumor, somaticSV, candidateSV, diploidSV, candidateSmallIndels ->
-      [variantcaller, diploidSV]
+    singleMantaOutput.map {
+      variantcaller, idPatient, idSample, vcf, tbi ->
+      [variantcaller, vcf[2]]
+    },
+    strelkaIndels.map {
+      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf, tbi ->
+      [variantcaller, vcf[0]]
+    },
+    strelkaSNVS.map {
+      variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf, tbi ->
+      [variantcaller, vcf[1]]
     })
 } else exit 1, "specify only tools or files to annotate, bot both"
 
@@ -1441,11 +1566,9 @@ reportsForMultiQC = Channel.empty()
     samtoolsStatsReport,
     snpeffReport,
     vepReport
-  ).flatten().unique().toList()
+  ).collect()
 
 process RunMultiQC {
-  tag {idPatient}
-
   publishDir directoryMap.multiQC, mode: 'copy'
 
   input:
@@ -1508,42 +1631,47 @@ def checkParamReturnFile(item) {
 def checkParams(it) {
   // Check if params is in this given list
   return it in [
-    'acLoci',
     'ac-loci',
+    'acLoci',
     'annotate-tools',
     'annotate-VCF',
     'annotateTools',
     'annotateVCF',
-    'bwaIndex',
+    'build',
     'bwa-index',
+    'bwaIndex',
     'call-name',
     'callName',
     'contact-mail',
     'contactMail',
+    'containers',
+    'cosmic-index',
     'cosmic',
     'cosmicIndex',
-    'cosmic-index',
-    'dbsnp',
     'dbsnp-index',
+    'dbsnp',
+    'docker',
+    'genome-dict',
+    'genome-file',
+    'genome-index',
     'genome',
     'genomeDict',
-    'genome-dict',
     'genomeFile',
-    'genome-file',
     'genomeIndex',
-    'genome-index',
     'genomes',
     'help',
     'intervals',
-    'knownIndels',
-    'known-indels',
-    'knownIndelsIndex',
     'known-indels-index',
+    'known-indels',
+    'knownIndels',
+    'knownIndelsIndex',
     'no-GVCF',
     'no-reports',
     'noGVCF',
     'noReports',
     'project',
+    'push',
+    'repository',
     'run-time',
     'runTime',
     'sample-dir',
@@ -1551,7 +1679,11 @@ def checkParams(it) {
     'sampleDir',
     'single-CPUMem',
     'singleCPUMem',
+    'singularity-publish-dir',
+    'singularity',
+    'singularityPublishDir',
     'step',
+    'tag',
     'test',
     'tools',
     'total-memory',
@@ -1823,7 +1955,7 @@ def generateIntervalsForVC(bams, intervals) {
 
   def (bamsNew, bamsForVC) = bams.into(2)
   def (intervalsNew, vcIntervals) = intervals.into(2)
-  def bamsForVCNew = bamsForVC.spread(vcIntervals)
+  def bamsForVCNew = bamsForVC.combine(vcIntervals)
   return [bamsForVCNew, bamsNew, intervalsNew]
 }
 
