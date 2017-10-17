@@ -21,11 +21,11 @@ ln -fs /castor/project/proj_nobackup/CAW/containers containers
 
 export NXF_TEMP=/scratch
 export NXF_LAUNCHBASE=/scratch
-export NXF_WORK=`pwd`/work
+export NXF_WORK=/scratch
 export NXF_HOME=/castor/project/proj_nobackup/nextflow
 export PATH=${NXF_HOME}/bin:${PATH}
 nextflow run ${CAW}/main.nf --step skipPreprocessing --tools $2 --sample $1 -with-timeline ${PREFIX}.timeline.html -with-trace ${PREFIX}.trace.txt
 
 # for annotation run
 # sbatch -J sample-Ann ./whatever.sh result.vcf[.gz] snpEff
-# nextflow run ${CAW}/main.nf --step annotate --tools $2 --annotateVCF $1 --sample Preprocessing/Recalibrated/recalibrated.tsv -with-timeline ${PREFIX}.timeline.html -with-trace -with-trace ${PREFIX}.trace.txt
+# nextflow run ${CAW}/main.nf --step annotate --tools $2 --annotateVCF $1 --sample Preprocessing/Recalibrated/recalibrated.tsv -with-timeline ${PREFIX}.timeline.html -with-trace ${PREFIX}.trace.txt
