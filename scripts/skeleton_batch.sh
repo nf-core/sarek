@@ -60,7 +60,7 @@ ln -fs /castor/project/proj_nobackup/CAW/containers containers
 # Configure Nextflow to save everything on /scratch
 export NXF_TEMP=/scratch
 export NXF_LAUNCHBASE=/scratch
-export NXF_WORK=/scratch/work
+export NXF_WORK=/scratch
 export NXF_HOME=/castor/project/proj_nobackup/nextflow
 export PATH=${NXF_HOME}/bin:${PATH}
 

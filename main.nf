@@ -1336,6 +1336,8 @@ process RunAscat {
 
   script:
   """
+  # get rid of "chr" string if there is any
+  for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
   run_ascat.r $bafTumor $logrTumor $bafNormal $logrNormal $idSampleTumor $baseDir
   """
 }
