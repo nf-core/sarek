@@ -14,14 +14,15 @@ ENV \
 # Install libraries
 RUN \
   apt-get update && apt-get install -y --no-install-recommends \
-  build-essential \
-  ca-certificates \
-  libbz2-dev \
-  liblzma-dev \
-  libncurses5-dev \
-  libncursesw5-dev \
-  wget \
-  zlib1g-dev
+    build-essential \
+    ca-certificates \
+    libbz2-dev \
+    liblzma-dev \
+    libncurses5-dev \
+    libncursesw5-dev \
+    wget \
+    zlib1g-dev \
+  && rm -rf /var/lib/apt/lists/*
 
 # Install alleleCount
 RUN \

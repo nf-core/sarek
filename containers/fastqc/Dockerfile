@@ -8,10 +8,8 @@ LABEL \
 # Install libraries
 RUN \
   apt-get update && apt-get install -y --no-install-recommends \
-    cpanminus \
     wget \
-  && rm -rf /var/lib/apt/lists/* \
-  && cpanm FindBin
+  && rm -rf /var/lib/apt/lists/*
 
 # Setup ENV variables
 ENV FASTQC_VERSION=0.11.5

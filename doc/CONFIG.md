@@ -10,6 +10,12 @@ We provides several configuration files and profiles for CAW. The standard ones 
 
 Every configuration file can be modified for your own use. If you want you can specify the use of a config file using `-c <config file>`
 
+### [`containers.config`](../configuration/containers.config)
+
+Contain images for all process.
+Images will be pulled automatically.
+Use in your own profile if needed.
+
 ### [`docker.config`](../configuration/docker.config)
 
 Contain Docker images for all process.

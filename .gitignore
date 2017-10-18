@@ -1,12 +1,13 @@
-data/chr17_testdata
-Annotation
+Annotation/
+data/chr17_testdata/
 Preprocessing/
-Reports/
 References/
+Reports/
 VariantCalling/
 work/
 .*swp
 .nextflow*
+*.img
+*.tar.gz
 timeline.html*
 trace.txt*
-*.tar.gz
