@@ -8,11 +8,12 @@ All the containers have built in UPPMAX directories, so there is no need to add 
 ## Usage
 
 ```bash
-nextflow run . [--docker] [--singularity] [--singularityPublishDir <path>] [--push] [--containers <container1[,container2..]>] [--repository <repository>] [--tag tag]
+nextflow run . [--docker] [--singularity] [--containerPath <path>] [--push] [--containers <container1[,container2..]>] [--repository <repository>] [--tag tag]
 ```
 
 - `--containers`: Choose which containers to build. Default: `all`. Possible values (to separate by commas):
   - `all` -  Build all available containers.
+  - `caw`
   - `fastqc`
   - `freebayes`
   - `gatk`
@@ -21,13 +22,11 @@ nextflow run . [--docker] [--singularity] [--singularityPublishDir <path>] [--pu
   - `mutect1`
   - `picard`
   - `qualimap`
+  - `r-base`
   - `runallelecount`
-  - `runascat`
-  - `runconvertallelecounts`
   - `snpeff` this container serves as a base for `snpeffgrch37` and `snpeffgrch38`
   - `snpeffgrch37`
   - `snpeffgrch38`
-  - `vep` this container serves as a base for `vepgrch37` and `vepgrch38`
   - `vepgrch37`
   - `vepgrch38`
 
@@ -35,7 +34,7 @@ nextflow run . [--docker] [--singularity] [--singularityPublishDir <path>] [--pu
 - `--push`: Push containers to `DockerHub`
 - `--repository`: Build containers under given repository. Default: `maxulysse`
 - `--singularity`: Build containers using `Singularity`.
-- `--singularityPublishDir`: Select where to download containers. Default: `$PWD`
+- `--containerPath`: Select where to download containers. Default: `$PWD`
 - `--tag`: Build containers using given tag. Default is version number.
 
 ## Example

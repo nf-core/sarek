@@ -1,5 +1,29 @@
 # Containers
 
+Subsets of all containers can be dowloaded:
+
+For normal-only processing + Reports + HaploTypeCaller, Manta and Strelka:
+ - [caw](#caw-)
+ - [fastqc](#fastqc-)
+ - [gatk](#gatk-)
+ - [multiqc](#multiqc-)
+ - [picard](#picard-)
+ - [qualimap](#qualimap-)
+
+For the rest of the variant callers, you will need also:
+ - [freebayes](#freebayes-)
+ - [mutect1](#mutect1-)
+ - [r-base](#r-base-)
+ - [runallelecount](#runallelecount-)
+
+For annotation for GRCh37, you will need:
+ - [snpeffgrch37](#snpeffgrch37-)
+ - [vepgrch37](#vepgrch37-)
+
+For annotation for GRCh38, you will need:
+ - [snpeffgrch38](#snpeffgrch38-)
+ - [vepgrch38](#vepgrch38-)
+
 A container named after the process is made for each process. If a container can be reused, it will be named after the tool used.
 
 ## caw [![caw-docker status][caw-docker-badge]][caw-docker-link]
@@ -85,13 +109,13 @@ A container named after the process is made for each process. If a container can
 
 ## vepgrch37 [![vepgrch37-docker status][vepgrch37-docker-badge]][vepgrch37-docker-link]
 
-- Based on `willmclaren/ensembl-vep:release_90.5`
+- Based on `willmclaren/ensembl-vep:release_90.6`
 - Contain **[VEP][vep-link]** 90.5
 - Contain GRCh37
 
 ## vepgrch38 [![vepgrch38-docker status][vepgrch38-docker-badge]][vepgrch38-docker-link]
 
-- Based on `willmclaren/ensembl-vep:release_90.5`
+- Based on `willmclaren/ensembl-vep:release_90.6`
 - Contain **[VEP][vep-link]** 90.5
 - Contain GRCh38
 
