@@ -104,6 +104,10 @@ params.step = 'mapping'
 params.test = ''
 // No tools to be used
 params.tools = ''
+// Params are defined in config files
+params.containerPath = ''
+params.repository = ''
+params.tag = ''
 
 if (params.help) exit 0, helpMessage()
 if (params.version) exit 0, versionMessage()
@@ -2057,6 +2061,7 @@ def isAllowedParams(params) {
 def minimalInformationMessage() {
   // Minimal information message
   log.info "Command Line: $workflow.commandLine"
+  log.info "Profile     : $workflow.profile"
   log.info "Project Dir : $workflow.projectDir"
   log.info "Launch Dir  : $workflow.launchDir"
   log.info "Work Dir    : $workflow.workDir"
@@ -2066,20 +2071,25 @@ def minimalInformationMessage() {
   if (tools) log.info "Tools       : " + tools.join(', ')
   if (annotateTools) log.info "Annotate on : " + annotateTools.join(', ')
   if (annotateVCF) log.info "VCF files   : " +annotateVCF.join(',\n    ')
+  log.info "Containers  :"
+  if (params.repository) log.info "  Repository   : $params.repository"
+  else log.info "  ContainerPath: $params.containerPath"
+  log.info "  Tag          : $params.tag"
+  // workflow.container.each{ process, container -> log.info "\t${process}\t${container}"}
   log.info "Reference files used:"
-  log.info "  acLoci      : $referenceMap.acLoci"
-  log.info "  bwaIndex    : " + referenceMap.bwaIndex.join(',\n    ')
-  log.info "  cosmic      : $referenceMap.cosmic"
-  log.info "  cosmicIndex : $referenceMap.cosmicIndex"
-  log.info "  dbsnp       : $referenceMap.dbsnp"
-  log.info "  dbsnpIndex  : $referenceMap.dbsnpIndex"
-  log.info "  genomeDict  : $referenceMap.genomeDict"
-  log.info "  genomeFile  : $referenceMap.genomeFile"
-  log.info "  genomeIndex : $referenceMap.genomeIndex"
-  log.info "  intervals   : $referenceMap.intervals"
-  log.info "  knownIndels : " + referenceMap.knownIndels.join(',\n    ')
-  log.info "  knownIndelsIndex: " + referenceMap.knownIndelsIndex.join(',\n    ')
-  log.info "  snpeffDb    : ${params.genomes[params.genome].snpeffDb}"
+  log.info "  acLoci      :\n\t$referenceMap.acLoci"
+  log.info "  cosmic      :\n\t$referenceMap.cosmic"
+  log.info "\t$referenceMap.cosmicIndex"
+  log.info "  dbsnp       :\n\t$referenceMap.dbsnp"
+  log.info "\t$referenceMap.dbsnpIndex"
+  log.info "  genome      :\n\t$referenceMap.genomeFile"
+  log.info "\t$referenceMap.genomeDict"
+  log.info "\t$referenceMap.genomeIndex"
+  log.info "  bwa indexes :\n\t" + referenceMap.bwaIndex.join(',\n\t')
+  log.info "  intervals   :\n\t$referenceMap.intervals"
+  log.info "  knownIndels :\n\t" + referenceMap.knownIndels.join(',\n\t')
+  log.info "\t" + referenceMap.knownIndelsIndex.join(',\n\t')
+  log.info "  snpeffDb    :\n\t${params.genomes[params.genome].snpeffDb}"
 }
 
 def nextflowMessage() {
