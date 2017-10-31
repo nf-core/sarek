@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-
+import vcf
+import click
+from vcf import utils
+from sets import Set
 """
 By providing N distinct VCF files this utility generates N new VCFs containing calls by N, N-1, N-2... majority votes.
 For example, if you have a set of calls like mutect.vcf strelka.vcf freebayes.vcf , it will give you three files like:
@@ -11,71 +14,27 @@ Usage:
 """
 
 
-import vcf
-import click
-
-from sets import Set
-
 @click.command(context_settings = dict( help_option_names = ['-h', '--help'] ))
-@click.option('--vcf',  '-v', type=str, help='List of VCF files to merge', required=True)
-def mergeVCFs(vcf):
-    vcfFiles = vcf.split(",")
-    vcfSets = []
-    print "Processing VCF files: "
-    for vcfCalls in vcfFiles:
-        print "\t" + vcfCalls
-        vcfSets.append( getVCFRecords(vcfCalls) )
-    # OK, now print out the results
-    # one day I will write a proper VCF exporter, but not today
-    print "#callers ##calls"
-    votes = calculateVotes(vcfSets)
-    n = 1
-    for v in votes:
-        print n,len(v)
-        n = n+1
+@click.option('--vcfRecords',  '-v', type=str, help='List of VCF files to merge', required=True)
+@click.option('--template',  '-t', type=str, help='Template VCF with metadata (records ignored)', required=True)
+def mergeVCFs(vcfrecords,template):
+    vcfFiles = vcfrecords.split(",")
+    # having N input VCF files we will need N writers as well
+    writers = []
+    for voteN in range(1,len(vcfFiles)+1):
+        writers.append( vcf.Writer( open("calls_"+str(voteN)+".vcf","w"),vcf.Reader(open(template, 'r'))))
+    # get readers for VCF files
+    readers = []
+    for r in vcfFiles:
+        readers.append( vcf.Reader(open(r, 'r')))
 
-def getVCFRecords(calls):
-    """
-    Store VCF record CROM,POS,ALT in a set
-    """
-    c = Set()
-    reader = vcf.Reader(open(calls, 'r'))
-    for record in reader:
-        c.add( (record.CHROM, record.POS, record.REF, str(record.ALT[0])) )
-    return c
+    for records in utils.walk_together( *readers ):
+        # count the number of non-empty records
+        count = len(filter(None, records))
+        toWrite = next(item for item in records if item is not None)
+        for i in range(0,count):
+            writers[i].write_record(toWrite)
 
-def calculateVotes(sets):
-    """
-    Generates intersections and votes from call sets. 
-    The list member votes[N-1] will contain the set of calls supported by at least N callers
-    """
-    votes = []
-    for i in range(0,len(sets)):
-        votes.append( atLeastN(i+1,sets) )
-#    votes.reverse()
-    return votes
-
-def atLeastN(n,sets):
-    # I know we are generating a union every time, but right now I do not want to optimize yet
-    union = getUnion(sets)
-    #print "Votes for " + str(n)
-    callsInAtN = Set()          # this will contain calls that are in called at least N callers
-    for record in union:        # for every record in the union set
-        count = 0               # count of votes
-        for s in sets:          # pick a set
-            if record in s:     # if the record (that is in the union) is also in the set
-                count = count+1 # increment count
-        # now we have the vote count for all call sets
-        if count >= n:
-            callsInAtN.add(record)
-    #print callsInAtN
-    return callsInAtN
-
-def getUnion(sets):
-    union = Set()
-    for s in sets:
-        union |= s
-    return union
 
 if __name__ == "__main__":
         mergeVCFs()
