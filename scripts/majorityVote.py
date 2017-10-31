@@ -9,8 +9,9 @@ For example, if you have a set of calls like mutect.vcf strelka.vcf freebayes.vc
     callsN.vcf      - records where all the callers agree
     callsN-1.vcf    - records where all but one callers agree
     callsN-2.vcf    - at least one caller gives a call (union of records)
+The template VCF files is for a header
 Usage:
-    majorityVote.py -v set1.vcf,set2.vcf,set3.vcf,...
+    majorityVote.py -v set1.vcf,set2.vcf,set3.vcf,... -t template
 """
 
 
