@@ -1,5 +1,5 @@
-<!--- Thanks a lot for reporting an issue on CAW -->
-<!--- Can you please give us more details about the bug you experienced -->
+<!--- Thanks a lot for reporting an issue regarding CAW -->
+<!--- Can you please give us more details about the bug you encountered -->
 <!--- or about the change/improvement you suggest  -->
 
 ## Expected Behavior
@@ -7,7 +7,7 @@
 <!--- If you're suggesting a change/improvement, tell us how you think it should work -->
 
 ## Current Behavior
-<!--- If describing a bug, tell us what happened -->
+<!--- If describing a bug, tell us what actually happened -->
 <!--- If suggesting a change/improvement, explain the difference from current behavior -->
 
 ## Possible Solution
@@ -19,7 +19,7 @@
 
 ## Context
 <!--- Providing context helps us coming up with a solution -->
-<!--- Re-execute said command line with --verbose and -resume -->
+<!--- Re-execute the command line that resulted in a bug with --verbose and -resume -->
 <!--- and join the .nextflow.log and the trace.txt files -->
 <!--- Please, also join your tsv file -->
 
