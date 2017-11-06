@@ -40,7 +40,10 @@ The CAW pipeline comes with documentation about the pipeline, found in the `doc/
 14. [More information about ASCAT](doc/ASCAT.md)
 15. [Folder structure](doc/FOLDER.md)
 
-For further information/help contact: maxime.garcia@scilifelab.se, szilveszter.juhos@scilifelab.se or join the gitter chat: [gitter.im/SciLifeLab/CAW][gitter-link].
+## Contributions & Support
+
+- [Contributions guidelines](.github/CONTRIBUTING.md)
+For further information/help, don't hesitate to get in touch on [Gitter][gitter-link] or contact us: maxime.garcia@scilifelab.se, szilveszter.juhos@scilifelab.se
 
 ## Authors
 
