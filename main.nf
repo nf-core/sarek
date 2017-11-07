@@ -62,6 +62,8 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 */
 
+println params.params
+
 version = '1.2.5'
 
 // Check that Nextflow version is up to date enough
@@ -1713,6 +1715,7 @@ def checkParams(it) {
     'no-reports',
     'noGVCF',
     'noReports',
+    'params',
     'project',
     'push',
     'repository',

@@ -218,6 +218,7 @@ def checkParams(it) {
     'no-reports',
     'noGVCF',
     'noReports',
+    'params',
     'project',
     'push',
     'repository',
