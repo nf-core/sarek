@@ -1,12 +1,9 @@
-FROM python:2.7-slim
+FROM ewels/multiqc:v1.3
 
 LABEL \
   author="Maxime Garcia" \
   description="MultiQC image used in CAW" \
   maintainer="maxime.garcia@scilifelab.se"
 
-# Build container
-ADD \
-  build.sh /usr/bin/
-RUN \
-  build.sh
+# Create UPPMAX directories
+RUN mkdir /pica /proj /scratch /sw

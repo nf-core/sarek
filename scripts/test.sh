@@ -4,7 +4,7 @@ set -xeuo pipefail
 GENOME=smallGRCh37
 PROFILE=singularity
 SAMPLE=data/tsv/tiny.tsv
-TAG=1.2.3
+TAG=1.2.5
 TEST=ALL
 TRAVIS=${TRAVIS:-false}
 
