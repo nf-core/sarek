@@ -2091,6 +2091,7 @@ def minimalInformationMessage() {
   log.info "Work Dir    : $workflow.workDir"
   if (step != 'annotate') log.info "TSV file    : $tsvFile"
   log.info "Genome      : " + params.genome
+  log.info "Genome_base : " + params.genome_base
   log.info "Step        : " + step
   if (tools) log.info "Tools       : " + tools.join(', ')
   if (annotateTools) log.info "Annotate on : " + annotateTools.join(', ')
