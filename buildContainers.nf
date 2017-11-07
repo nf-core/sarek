@@ -210,6 +210,7 @@ def checkParams(it) {
     'containerPath',
     'containers',
     'docker',
+    'genome_base',
     'genome',
     'genomes',
     'help',

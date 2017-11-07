@@ -320,6 +320,7 @@ def checkParams(it) {
     'containers',
     'docker',
     'download',
+    'genome_base',
     'genome',
     'genomes',
     'help',

@@ -1019,14 +1019,9 @@ process ConcatVCF {
   when: 'haplotypecaller' in tools || 'mutect1' in tools || 'mutect2' in tools || 'freebayes' in tools
 
   script:
-  if (variantCaller == 'haplotypecaller') {
-    outputFile = "${variantCaller}_${idSampleNormal}.vcf"
-  } else if (variantCaller == 'gvcf-hc') {
-    outputFile = "haplotypecaller_${idSampleNormal}.g.vcf"
-  } else {
-    outputFile = "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
-  }
-  vcfFiles = vcFiles.collect{" $it"}.join(' ')
+  if (variantCaller == 'haplotypecaller') outputFile = "${variantCaller}_${idSampleNormal}.vcf"
+  else if (variantCaller == 'gvcf-hc') outputFile = "haplotypecaller_${idSampleNormal}.g.vcf"
+  else outputFile = "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
 
   """
   # first make a header from one of the VCF intervals
@@ -1104,10 +1099,14 @@ process RunStrelka {
 
   python Strelka/runWorkflow.py -m local -j $task.cpus
 
-  mv Strelka/results/variants/somatic.indels.vcf.gz Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz
-  mv Strelka/results/variants/somatic.indels.vcf.gz.tbi Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz.tbi
-  mv Strelka/results/variants/somatic.snvs.vcf.gz Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
-  mv Strelka/results/variants/somatic.snvs.vcf.gz.tbi Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz.tbi
+  mv Strelka/results/variants/somatic.indels.vcf.gz \
+    Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz
+  mv Strelka/results/variants/somatic.indels.vcf.gz.tbi \
+    Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz.tbi
+  mv Strelka/results/variants/somatic.snvs.vcf.gz \
+    Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
+  mv Strelka/results/variants/somatic.snvs.vcf.gz.tbi \
+    Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz.tbi
   """
 }
 
@@ -1144,10 +1143,14 @@ process RunSingleStrelka {
 
   python Strelka/runWorkflow.py -m local -j $task.cpus
 
-  mv Strelka/results/variants/genome.*.vcf.gz Strelka_${idSample}_genome.vcf.gz
-  mv Strelka/results/variants/genome.*.vcf.gz.tbi Strelka_${idSample}_genome.vcf.gz.tbi
-  mv Strelka/results/variants/variants.vcf.gz Strelka_${idSample}_variants.vcf.gz
-  mv Strelka/results/variants/variants.vcf.gz.tbi Strelka_${idSample}_variants.vcf.gz.tbi
+  mv Strelka/results/variants/genome.*.vcf.gz \
+    Strelka_${idSample}_genome.vcf.gz
+  mv Strelka/results/variants/genome.*.vcf.gz.tbi \
+    Strelka_${idSample}_genome.vcf.gz.tbi
+  mv Strelka/results/variants/variants.vcf.gz \
+    Strelka_${idSample}_variants.vcf.gz
+  mv Strelka/results/variants/variants.vcf.gz.tbi \
+    Strelka_${idSample}_variants.vcf.gz.tbi
   """
 }
 
@@ -1185,14 +1188,22 @@ process RunManta {
 
   python Manta/runWorkflow.py -m local -j $task.cpus
 
-  mv Manta/results/variants/candidateSmallIndels.vcf.gz Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf.gz
-  mv Manta/results/variants/candidateSmallIndels.vcf.gz.tbi Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf.gz.tbi
-  mv Manta/results/variants/candidateSV.vcf.gz Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf.gz
-  mv Manta/results/variants/candidateSV.vcf.gz.tbi Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf.gz.tbi
-  mv Manta/results/variants/diploidSV.vcf.gz Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf.gz
-  mv Manta/results/variants/diploidSV.vcf.gz.tbi Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf.gz.tbi
-  mv Manta/results/variants/somaticSV.vcf.gz Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf.gz
-  mv Manta/results/variants/somaticSV.vcf.gz.tbi Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf.gz.tbi
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz \
+    Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf.gz
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz.tbi \
+    Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf.gz.tbi
+  mv Manta/results/variants/candidateSV.vcf.gz \
+    Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf.gz
+  mv Manta/results/variants/candidateSV.vcf.gz.tbi \
+    Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf.gz.tbi
+  mv Manta/results/variants/diploidSV.vcf.gz \
+    Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf.gz
+  mv Manta/results/variants/diploidSV.vcf.gz.tbi \
+    Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf.gz.tbi
+  mv Manta/results/variants/somaticSV.vcf.gz \
+    Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf.gz
+  mv Manta/results/variants/somaticSV.vcf.gz.tbi \
+    Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf.gz.tbi
   """
 }
 
@@ -1230,12 +1241,18 @@ process RunSingleManta {
 
   python Manta/runWorkflow.py -m local -j $task.cpus
 
-  mv Manta/results/variants/candidateSmallIndels.vcf.gz Manta_${idSample}.candidateSmallIndels.vcf.gz
-  mv Manta/results/variants/candidateSmallIndels.vcf.gz.tbi Manta_${idSample}.candidateSmallIndels.vcf.gz.tbi
-  mv Manta/results/variants/candidateSV.vcf.gz Manta_${idSample}.candidateSV.vcf.gz
-  mv Manta/results/variants/candidateSV.vcf.gz.tbi Manta_${idSample}.candidateSV.vcf.gz.tbi
-  mv Manta/results/variants/diploidSV.vcf.gz Manta_${idSample}.diploidSV.vcf.gz
-  mv Manta/results/variants/diploidSV.vcf.gz.tbi Manta_${idSample}.diploidSV.vcf.gz.tbi
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz \
+    Manta_${idSample}.candidateSmallIndels.vcf.gz
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz.tbi \
+    Manta_${idSample}.candidateSmallIndels.vcf.gz.tbi
+  mv Manta/results/variants/candidateSV.vcf.gz \
+    Manta_${idSample}.candidateSV.vcf.gz
+  mv Manta/results/variants/candidateSV.vcf.gz.tbi \
+    Manta_${idSample}.candidateSV.vcf.gz.tbi
+  mv Manta/results/variants/diploidSV.vcf.gz \
+    Manta_${idSample}.diploidSV.vcf.gz
+  mv Manta/results/variants/diploidSV.vcf.gz.tbi \
+    Manta_${idSample}.diploidSV.vcf.gz.tbi
   """
   else  // Tumor Sample
   """
@@ -1246,12 +1263,18 @@ process RunSingleManta {
 
   python Manta/runWorkflow.py -m local -j $task.cpus
 
-  mv Manta/results/variants/candidateSmallIndels.vcf.gz Manta_${idSample}.candidateSmallIndels.vcf.gz
-  mv Manta/results/variants/candidateSmallIndels.vcf.gz.tbi Manta_${idSample}.candidateSmallIndels.vcf.gz.tbi
-  mv Manta/results/variants/candidateSV.vcf.gz Manta_${idSample}.candidateSV.vcf.gz
-  mv Manta/results/variants/candidateSV.vcf.gz.tbi Manta_${idSample}.candidateSV.vcf.gz.tbi
-  mv Manta/results/variants/tumorSV.vcf.gz Manta_${idSample}.tumorSV.vcf.gz
-  mv Manta/results/variants/tumorSV.vcf.gz.tbi Manta_${idSample}.tumorSV.vcf.gz.tbi
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz \
+    Manta_${idSample}.candidateSmallIndels.vcf.gz
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz.tbi \
+    Manta_${idSample}.candidateSmallIndels.vcf.gz.tbi
+  mv Manta/results/variants/candidateSV.vcf.gz \
+    Manta_${idSample}.candidateSV.vcf.gz
+  mv Manta/results/variants/candidateSV.vcf.gz.tbi \
+    Manta_${idSample}.candidateSV.vcf.gz.tbi
+  mv Manta/results/variants/tumorSV.vcf.gz \
+    Manta_${idSample}.tumorSV.vcf.gz
+  mv Manta/results/variants/tumorSV.vcf.gz.tbi \
+    Manta_${idSample}.tumorSV.vcf.gz.tbi
   """
 }
 
@@ -1671,6 +1694,7 @@ def checkParams(it) {
     'dbsnp-index',
     'dbsnp',
     'docker',
+    'genome_base',
     'genome-dict',
     'genome-file',
     'genome-index',
