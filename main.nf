@@ -62,8 +62,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 */
 
-println params.params
-
 version = '1.2.5'
 
 // Check that Nextflow version is up to date enough
@@ -1599,8 +1597,6 @@ if (verbose && reports) multiQCconfig = multiQCconfig.view {
 
 reportsForMultiQC = Channel.empty()
   .mix(
-    Channel.fromPath('Reports/{BCFToolsStats,MarkDuplicates,SamToolsStats}/*'),
-    Channel.fromPath('Reports/{bamQC,FastQC}/*/*'),
     bamQCreport,
     bcfReport,
     fastQCreport,
