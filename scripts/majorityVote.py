@@ -7,10 +7,11 @@ For example, if you have a set of calls like mutect.vcf strelka.vcf freebayes.vc
     callsN-1.vcf    - records where all but one callers agree
     callsN-2.vcf    - at least one caller gives a call (union of records)
 Usage:
-    majorityVote.py -v set1.vcf,set2.vcf,set3.vcf,...
+    majorityVote.py -v set1.vcf,set2.vcf,set3.vcf,... -e etalon.vcf
+    etalon.vcf contains the expected calls
 """
 
-
+import sys
 import vcf
 import click
 
@@ -18,7 +19,8 @@ from sets import Set
 
 @click.command(context_settings = dict( help_option_names = ['-h', '--help'] ))
 @click.option('--vcf',  '-v', type=str, help='List of VCF files to merge', required=True)
-def mergeVCFs(vcf):
+@click.option('--etalon',  '-e', type=str, help='Etalon VCF to compare to ', required=False)
+def mergeVCFs(vcf,etalon):
     vcfFiles = vcf.split(",")
     vcfSets = []
     print "Processing VCF files: "
@@ -33,6 +35,54 @@ def mergeVCFs(vcf):
     for v in votes:
         print n,len(v)
         n = n+1
+    # now time to print out the calls
+    printCalls(votes,vcfSets,vcfFiles)
+    # if there is an etalon, calculate concordance
+    if etalon is not None:
+        print "Comparing to etalon"
+        etalonCalls = getVCFRecords(etalon)
+        compareToEtalon(etalonCalls,votes)
+    
+def compareToEtalon(eCalls,votes):
+    # go through each set, and compare to etalon calls
+    for vSet in votes:
+        concordanceCount = 0
+        for r in vSet:
+            if r in eCalls:
+                concordanceCount = concordanceCount +1
+        print "Concordance with votes " + str(votes.index(vSet)+1)+ " " + str(concordanceCount)
+
+
+def printCalls(votes,vcfSets,vcfFiles):
+    templateReader = vcf.Reader(open(vcfFiles[0], 'r'))
+
+    # create writers, use the first input vcf as a template
+    # number of output files:
+    numberOfMajorityFiles = len(votes)
+    mWriters = []
+    for m in range(1,numberOfMajorityFiles+1):
+        outFile = vcf.Writer(open("calls_" + str(m) +".vcf","w"), templateReader, lineterminator='\n')
+        mWriters.append(outFile)
+    
+    # store all the records in a dictionary: of course there will be clashes,
+    # but we want to go through the files only once
+    allRecords = {}
+    for f in vcfFiles:
+        reader = vcf.Reader(open(f, 'r'))
+        for record in reader:
+            theKey = str(record.CHROM) + str(record.POS)
+            allRecords[theKey] = record
+
+    # now go through votes
+    for sets in votes:
+        idx = votes.index(sets)
+        print "Writing sets with " + str(idx+1) + " votes to " + mWriters[idx].stream.name
+        for v in sets:
+            vl = list(v)
+            voteKey = str(vl[0]) + str(vl[1])
+            r = allRecords[voteKey]
+            mWriters[idx].write_record(r)
+
 
 def getVCFRecords(calls):
     """
@@ -41,7 +91,8 @@ def getVCFRecords(calls):
     c = Set()
     reader = vcf.Reader(open(calls, 'r'))
     for record in reader:
-        c.add( (record.CHROM, record.POS, record.REF, str(record.ALT[0])) )
+        #c.add( (record.CHROM, record.POS, record.REF, str(record.ALT[0])) )
+        c.add( (record.CHROM, record.POS) )
     return c
 
 def calculateVotes(sets):
