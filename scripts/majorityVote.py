@@ -1,11 +1,15 @@
 #!/usr/bin/env python
-
+import vcf
+import click
+from vcf import utils
+from sets import Set
 """
 By providing N distinct VCF files this utility generates N new VCFs containing calls by N, N-1, N-2... majority votes.
 For example, if you have a set of calls like mutect.vcf strelka.vcf freebayes.vcf , it will give you three files like:
     callsN.vcf      - records where all the callers agree
     callsN-1.vcf    - records where all but one callers agree
     callsN-2.vcf    - at least one caller gives a call (union of records)
+The template VCF files is for a header
 Usage:
     majorityVote.py -v set1.vcf,set2.vcf,set3.vcf,... -e etalon.vcf
     etalon.vcf contains the expected calls
@@ -121,12 +125,6 @@ def atLeastN(n,sets):
             callsInAtN.add(record)
     #print callsInAtN
     return callsInAtN
-
-def getUnion(sets):
-    union = Set()
-    for s in sets:
-        union |= s
-    return union
 
 if __name__ == "__main__":
         mergeVCFs()
