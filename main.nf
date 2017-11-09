@@ -214,19 +214,20 @@ if (verbose) bamFiles = bamFiles.view {
 process RunFastQC {
   tag {idPatient + "-" + idRun}
 
-  publishDir "$directoryMap.fastQC/$idRun", mode: 'copy'
+  publishDir "$directoryMap.fastQC", mode: 'copy'
 
   input:
     set idPatient, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFilesforFastQC
 
   output:
-    file "*_fastqc.{zip,html}" into fastQCreport
+    file "${idRun}/*_fastqc.{zip,html}" into fastQCreport
 
   when: step == 'mapping' && reports
 
   script:
   """
-  fastqc -q $fastqFile1 $fastqFile2
+  mkdir ${idRun}
+  fastqc -q ${fastqFile1} ${fastqFile2} --outdir ${idRun}
   """
 }
 
