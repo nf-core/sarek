@@ -13,7 +13,7 @@ This checklist is for our own reference
   - Check version numbers are printed correctly
   - `./scripts/test.sh -p docker`
   - `./scripts/test.sh -p singularity`
-  - `./scripts/test.sh -p singularity-path`
+  - `./scripts/test.sh -p singularityPath`
 7. Commit and push version updates
 8. Make a [release](https://github.com/SciLifeLab/CAW/releases) on GitHub - list PRs as changelog.
 9. Tweet that new version is released
