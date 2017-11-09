@@ -85,7 +85,7 @@ fi
 
 if [[ ALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
 then
-  nf_test . --step mapping --sample data/tsv/tiny-single-manta.tsv --tools Manta,Strelka
+  nf_test . --step mapping --sampleDir data/tiny/manta/normal --tools Manta,Strelka
   nf_test . --step mapping --sample data/tsv/tiny-manta.tsv --tools Manta,Strelka
   nf_test . --step mapping --sample $SAMPLE --tools MuTect2
 
