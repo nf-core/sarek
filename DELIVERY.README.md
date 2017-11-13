@@ -75,19 +75,28 @@ whether the sequencing and the workflow was successful, or further steps are nee
 directory: the HTML index file aggregates and visualizes all the software use for QC.
  
 ### MultiQC  
-### bamQC  
-### BCFToolsStats  
-### FastQC  
-### MarkDuplicates  
-### SamToolsStats
+To assess the quality of the sequencing and workflow the best start is to view at the Reports\/MultiQC\/multiqc\_report.html file of the MultiQC directory, where the 
+statistics and graphics of all the software below should be presented. The actual graphs and the tables are configurable, and generally much easier to view than the 
+raw output of the individual software. The subsequent QC compartments are:
+
+* bamQC: [Qualimap][qualimap-link] examines sequencing alignment data in SAM/BAM files according to the features of the mapped reads and provides an overall view 
+	of the data provides quality control statistics about aligned BAM files
+* BCFToolsStats: [bcftools][bcftools] measuring non-reference allele frequency, depth distribution, stats by quality and per-sample counts, singleton stats, etc. of VCF files.
+* FastQC: provides statistics about the raw FASTQ files only. 
+* MarkDuplicates: a [Picard][picard-md] tool to tag PCR/optical duplicates from aligned BAM data
+* SamToolsStats: [samtools][samtools] collection of statistics from BAM files
 
 ## VariantCallings:
 
+[bcftools]: http://www.htslib.org/doc/bcftools.html
 [BQSR-link]: https://gatkforums.broadinstitute.org/gatk/discussion/44/base-quality-score-recalibration-bqsr
 [GATK-BP]: https://software.broadinstitute.org/gatk/best-practices/bp_3step.php?case=GermShortWGS
 [multiqc-link]: http://multiqc.info/
 [ngi-link]: https://ngisweden.scilifelab.se/
+[picard-md]: http://broadinstitute.github.io/picard/command-line-overview.html#MarkDuplicates
 [polypen-link]: http://genetics.bwh.harvard.edu/pph2/
+[qualimap-link]: http://qualimap.bioinfo.cipf.es
+[samtools]: http://www.htslib.org/
 [sift-link]: http://sift.bii.a-star.edu.sg/
 [snpeff-link]: http://snpeff.sourceforge.net/
 [snpeff-cancer-mode]: http://snpeff.sourceforge.net/SnpEff_manual.html#cancer
