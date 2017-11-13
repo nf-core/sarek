@@ -2,7 +2,7 @@
 # Cancer Analysis Workflow Results Delivery 
 This README describes the delivery directory structure for files passed to users at [NGI][ngi-link]
 
-There are four sections dedicated for different results: [Annotation], Preprocessing, Reports and 
+There are four sections dedicated for different results: Annotation, Preprocessing, Reports and 
 VariantCalling. All the four sections can have sub-directories containing results from different software.
 
 ## Annotation: 
@@ -82,9 +82,10 @@ raw output of the individual software. The subsequent QC compartments are:
 * bamQC: [Qualimap][qualimap-link] examines sequencing alignment data in SAM/BAM files according to the features of the mapped reads and provides an overall view 
 	of the data provides quality control statistics about aligned BAM files
 * BCFToolsStats: [bcftools][bcftools] measuring non-reference allele frequency, depth distribution, stats by quality and per-sample counts, singleton stats, etc. of VCF files.
-* FastQC: provides statistics about the raw FASTQ files only. 
+* [FastQC][fastqc]: provides statistics about the raw FASTQ files only. 
 * MarkDuplicates: a [Picard][picard-md] tool to tag PCR/optical duplicates from aligned BAM data
 * SamToolsStats: [samtools][samtools] collection of statistics from BAM files
+---
 
 ## VariantCallings:
 
@@ -97,7 +98,7 @@ graphical output of the software, CNV, ploidy and sample purity estimations.
 is huge, it is recommended to flatten and filter this VCF, i.e. using the provided [SpeedSeq][speedseq] filter
 * [HaplotypeCaller][haplotypecaller] is the in-house germline caller of the Broad Institute, the non-recalibrated variant files are there to check the
 germline variations and compare the two samples (tumour and normal) for possible mixup
-* HaplotypeCallerGVCF: germline calls in [gVCF format][genmicvcf] even for the tumour sample: this format makes possible the joint analysis of a cohort
+* HaplotypeCallerGVCF: germline calls in [gVCF format][genomicvcf] even for the tumour sample: this format makes possible the joint analysis of a cohort
 * [Manta][manta]: is a structural variant caller supported by Illumina. There are several output files, corresponding to germline (diploid) calls, candidate calls 
 and somatic files. Manta provides a candidate list for small indels also that can be fed to Strelka, but this feature is not incorporated yet.
 * [MuTect1][mutect1] is a now-defunct GATK-based somatic SNP-only caller - going to be left out for analysis in the future. It is sensitive, recommended to keep only 
@@ -108,6 +109,7 @@ lines with "PASS" filter.
 [ascat]:https://www.crick.ac.uk/research/a-z-researchers/researchers-v-y/peter-van-loo/software/
 [bcftools]: http://www.htslib.org/doc/bcftools.html
 [BQSR-link]: https://gatkforums.broadinstitute.org/gatk/discussion/44/base-quality-score-recalibration-bqsr
+[fastqc]: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
 [freebayes]: https://github.com/ekg/freebayes
 [GATK-BP]: https://software.broadinstitute.org/gatk/best-practices/bp_3step.php?case=GermShortWGS
 [haplotypecaller]: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_gatk_tools_walkers_haplotypecaller_HaplotypeCaller.php
@@ -118,7 +120,7 @@ lines with "PASS" filter.
 [mutect2]: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_gatk_tools_walkers_cancer_m2_MuTect2.php
 [ngi-link]: https://ngisweden.scilifelab.se/
 [picard-md]: http://broadinstitute.github.io/picard/command-line-overview.html#MarkDuplicates
-[polypen-link]: http://genetics.bwh.harvard.edu/pph2/
+[polyphen-link]: http://genetics.bwh.harvard.edu/pph2/
 [qualimap-link]: http://qualimap.bioinfo.cipf.es
 [samtools]: http://www.htslib.org/
 [sift-link]: http://sift.bii.a-star.edu.sg/
@@ -126,6 +128,7 @@ lines with "PASS" filter.
 [snpeff-cancer-mode]: http://snpeff.sourceforge.net/SnpEff_manual.html#cancer
 [snpeff-regular-mode]: http://snpeff.sourceforge.net/SnpEff_manual.html#input
 [speedseq]: https://github.com/SciLifeLab/CAW/blob/master/scripts/speedseq.filter.awk
+[strelka]: https://github.com/Illumina/strelka
 [vep-link]: http://www.ensembl.org/Tools/VEP
 [VEP-predictions]: https://www.ensembl.org/info/genome/variation/predicted_data.html
 [logo]: ttps://img.shields.io/github/release/SciLifeLab/CAW.svg
