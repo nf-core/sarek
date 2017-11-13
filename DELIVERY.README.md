@@ -11,7 +11,37 @@ This directory contains results from the final annotation steps: two software ar
 Only a subset of the VCF files are annotated, and only variants that have a PASS filter. FreeBayes results are not annotated in the moment yet as
 we are lacking a decent somatic filter. For HaplotypeCaller the germline variations are annotated for both the tumour and the normal sample.
 
-All the VCFs annotated have an `ann.vcf` extension,  and a summary HTML file associated. 
+All the VCFs annotated have an `ann.vcf` extension, and a summary HTML file associated. 
+
+### SnpEff
+
+[SnpEff][snpeff-link] can add annotations for many sort of variants not only SNPs, and is using multiple databases for annotations. SnpEff prints out 
+not only the annotated VCF files, but a summary HTML and CSV, also a list of affected genes with the actual changes and impact is included in a text file. 
+The generated VCF header contains the software version and the used command line. 
+
+Annotations added are in [cancer mode][snpeff-cancer-mode] are very rich, CAW is using the software in a single-sample mode. VCF files containing germline
+calls are annotated in [regular mode][snpeff-regular-mode] of SnpEff.
+
+### VEP
+
+The [Variant Effect Predictor][vep-link] is based on Ensembl, and can determine the effects of all sorts of variants, including SNPs, indels, structural variants, 
+CNVs. Some of the Manta VCF files are not always succeed in going through the VEP filtering though: there can be missing annotations for these variant calls. 
+
+The HTML summary files show general statistics and quality-related measures. In the header of the annotated VCF files one can find the VEP/Ensembl version used 
+for annotation, also the version numbers for additional databases like Clinvar or dbSNP used in the "VEP" line. The format of the [consequence annotations][VEP-predictions] is also 
+in the VCF header describing the INFO field. In the moment it contains 
+
+* Consequence: impact of the variation, if there is any
+* Codons: the codon change, i.e. cGt/cAt
+* Amino\_acids: change in amino acids, i.e. R/H if there is any
+* Gene: ENSEMBL gene name 
+* SYMBOL: gene symbol
+* Feature: actual transcript name
+* EXON: affected exon
+* PolyPhen: prediction based on [PolyPhen][polyphen-link]
+* SIFT: prediction by [SIFT][sift-link]
+* Protein\_position: Relative position of amino acid in protein
+* BIOTYPE: Biotype of transcript or regulatory feature
 
 ---
 ## Preprocessing:
@@ -39,20 +69,30 @@ recalibration table delivered to the `NonRecalibrated` directory either by calli
 
 ---
 ## Reports:
+
+The `Reports` directory is the place for collecting outputs for different quality control (QC) software; going through these files can help us to decide 
+whether the sequencing and the workflow was successful, or further steps are needed to get meaningful results. The main entry point it the [MultiQC][multiqc-link] 
+directory: the HTML index file aggregates and visualizes all the software use for QC.
+ 
+### MultiQC  
 ### bamQC  
 ### BCFToolsStats  
 ### FastQC  
 ### MarkDuplicates  
-### MultiQC  
 ### SamToolsStats
-
 
 ## VariantCallings:
 
 [BQSR-link]: https://gatkforums.broadinstitute.org/gatk/discussion/44/base-quality-score-recalibration-bqsr
 [GATK-BP]: https://software.broadinstitute.org/gatk/best-practices/bp_3step.php?case=GermShortWGS
+[multiqc-link]: http://multiqc.info/
 [ngi-link]: https://ngisweden.scilifelab.se/
+[polypen-link]: http://genetics.bwh.harvard.edu/pph2/
+[sift-link]: http://sift.bii.a-star.edu.sg/
 [snpeff-link]: http://snpeff.sourceforge.net/
+[snpeff-cancer-mode]: http://snpeff.sourceforge.net/SnpEff_manual.html#cancer
+[snpeff-regular-mode]: http://snpeff.sourceforge.net/SnpEff_manual.html#input
 [vep-link]: http://www.ensembl.org/Tools/VEP
+[VEP-predictions]: https://www.ensembl.org/info/genome/variation/predicted_data.html
 [logo]: ttps://img.shields.io/github/release/SciLifeLab/CAW.svg
 
