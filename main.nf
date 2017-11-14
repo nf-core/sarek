@@ -1527,6 +1527,7 @@ process RunVEP {
   --format vcf \
   --offline \
   --pick \
+  --fork ${task.cpus} \
   --total_length \
   --vcf
   """
