@@ -8,11 +8,19 @@ CAW is a complete open source pipeline to detect somatic variants from WGS data 
 
 The pipeline uses [Nextflow][nextflow-link], a bioinformatics domain specific language for workflow building and [Singularity](http://singularity.lbl.gov/), a container technology specific for high-performance computing.
 
-This pipeline is primarily used with cluster on the Swedish [UPPMAX systems](https://www.uppmax.uu.se/). However, the pipeline should be able to run on any system that supports Nextflow. The pipeline comes with some configuration for different systems. See the [documentation](#documentation) for more information.
+This pipeline is primarily used with cluster on the Swedish [UPPMAX systems](https://www.uppmax.uu.se/).
+However, the pipeline should be able to run on any system that supports Nextflow.
+The pipeline comes with some configuration for different systems.
+See the [documentation](#documentation) for more information.
 
-We utilize [GATK best practices](https://software.broadinstitute.org/gatk/best-practices/) to align, realign and recalibrate short-read data in parallel for both normal and tumor sample. After these preprocessing steps, several somatic variant callers scan the resulting BAM files: [MuTect1][mutect1-link], [MuTect2][gatk-link] and [Strelka][strelka-link] are used to find somatic SNVs and small indels, also [GATK HaplotyeCaller][gatk-link] for both the normal and the tumor sample. For structural variants we use [Manta][manta-link]. Furthermore, we are applying [ASCAT][ascat-link] to estimate sample heterogeneity, ploidy and CNVs.
+We utilize [GATK best practices](https://software.broadinstitute.org/gatk/best-practices/) to align, realign and recalibrate short-read data in parallel for both normal and tumor sample.
+After these preprocessing steps, several somatic variant callers scan the resulting BAM files: [MuTect1][mutect1-link], [MuTect2][gatk-link], [Freebayes](freebayes-link) and [Strelka][strelka-link] are used to find somatic SNVs and small indels, also [GATK HaplotyeCaller][gatk-link] for both the normal and the tumor sample.
+For structural variants we use [Manta][manta-link].
+Furthermore, we are applying [ASCAT][ascat-link] to estimate sample heterogeneity, ploidy and CNVs.
 
-The pipeline can begin the analysis either from raw FASTQ files, only from the realignment step, or directly with any subset of variant callers using recalibrated BAM files. At the end of the analysis the resulting VCF files are merged to facilitate further downstream processing, though results from each caller are also retained. The flow is capable of accommodating additional variant calling software or CNV callers. It is also prepared to process normal, tumor and several relapse samples.
+The pipeline can begin the analysis either from raw FASTQ files, only from the realignment step, or directly with any subset of variant callers using recalibrated BAM files.
+At the end of the analysis the resulting VCF files are merged to facilitate further downstream processing, though results from each caller are also retained.
+The flow is capable of accommodating additional variant calling software or CNV callers. It is also prepared to process normal, tumor and several relapse samples.
 
 Besides variant calls, the workflow provides quality controls presented by [MultiQC][multiqc-link].
 
@@ -66,6 +74,7 @@ For further information/help, don't hesitate to get in touch on [Gitter][gitter-
 
 [ascat-link]: https://github.com/Crick-CancerGenomics/ascat
 [caw-site-link]: http://opensource.scilifelab.se/projects/caw/
+[freebayes-link]: https://github.com/ekg/freebayes
 [gatk-link]: https://github.com/broadgsa/gatk-protected
 [gitter-badge]: https://badges.gitter.im/SciLifeLab/CAW.svg
 [gitter-link]: https://gitter.im/SciLifeLab/CAW
