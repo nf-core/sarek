@@ -67,7 +67,7 @@ if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <U
 // No download
 params.download = false
 // outDir is References
-params.outDir = 'References'
+params.outDir = "${baseDir}/References"
 // refDir is empty
 params.refDir = ''
 
