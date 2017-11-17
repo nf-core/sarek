@@ -26,6 +26,10 @@ Display help
 
 Disable QC tools and MultiQC to generate a HTML report.
 
+### --outDir
+
+Choose an output directory
+
 ### --project `ProjectID`
 
 Specify a project number ID on a UPPMAX cluster. (optionnal if not on such a cluster)
