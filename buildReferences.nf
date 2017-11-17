@@ -410,6 +410,7 @@ def minimalInformationMessage() {
   log.info "Project Dir : ${workflow.projectDir}"
   log.info "Launch Dir  : ${workflow.launchDir}"
   log.info "Work Dir    : ${workflow.workDir}"
+  log.info "Out Dir     : ${params.outDir}"
   log.info "Genome      : ${params.genome}"
 }
 
