@@ -137,7 +137,7 @@ process PullSingularityContainers {
 }
 
 if (verbose) imagePulled = imagePulled.view {
-  "Singularity image: ${it} pulled."
+  "Singularity image: ${it.fileName} pulled."
 }
 
 process PushDockerContainers {
@@ -318,6 +318,7 @@ def minimalInformationMessage() {
   log.info "Project Dir : ${workflow.projectDir}"
   log.info "Launch Dir  : ${workflow.launchDir}"
   log.info "Work Dir    : ${workflow.workDir}"
+  log.info "Cont. Path  : ${params.containerPath}"
   log.info "Containers  : " + containers.join(', ')
 }
 
