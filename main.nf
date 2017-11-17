@@ -94,6 +94,8 @@ params.contactMail = ''
 params.noGVCF = false
 // Reports are generated
 params.noReports = false
+// outDir is current directory
+params.outDir = '$PWD'
 // No sample is defined
 params.sample = ''
 // No sampleDir is defined
@@ -1713,6 +1715,8 @@ def checkParams(it) {
     'no-reports',
     'noGVCF',
     'noReports',
+    'out-dir',
+    'outDir',
     'params',
     'project',
     'push',

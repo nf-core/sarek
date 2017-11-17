@@ -66,6 +66,8 @@ if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <U
 
 // No download
 params.download = false
+// outDir is References
+params.outDir = 'References'
 // refDir is empty
 params.refDir = ''
 
@@ -124,12 +126,12 @@ process ProcessReference {
 
   if (download)
   """
-  wget https://github.com/szilvajuhos/smallRef/raw/master/$reference
+  wget https://github.com/szilvajuhos/smallRef/raw/master/${reference}
   """
 
   else
   """
-  ln -s $params.refDir/$reference .
+  ln -s ${params.refDir}/${reference} .
   """
 }
 
@@ -180,7 +182,7 @@ decompressedFiles
 
 notCompressedfiles
   .mix(otherFiles)
-  .collectFile(storeDir: "References/" + params.genome)
+  .collectFile(storeDir: "${params.outDir}/${params.genome}")
 
 fastaForBWA = Channel.create()
 fastaForPicard = Channel.create()
@@ -191,7 +193,7 @@ fastaFile.into(fastaForBWA,fastaForPicard,fastaForSAMTools)
 process BuildBWAindexes {
   tag {reference}
 
-  publishDir "References/" + params.genome, mode: 'copy'
+  publishDir "${params.outDir}/${params.genome}", mode: 'copy'
 
   input:
     file(reference) from fastaForBWA
@@ -203,7 +205,7 @@ process BuildBWAindexes {
   script:
 
   """
-  bwa index $reference
+  bwa index ${reference}
   """
 }
 
@@ -217,7 +219,7 @@ if (verbose) bwaIndexes.flatten().view {
 process BuildPicardIndex {
   tag {reference}
 
-  publishDir "References/" + params.genome, mode: 'copy'
+  publishDir "${params.outDir}/${params.genome}", mode: 'copy'
 
   input:
     file(reference) from fastaForPicard
@@ -242,7 +244,7 @@ if (verbose) picardIndex.view {
 process BuildSAMToolsIndex {
   tag {reference}
 
-  publishDir "References/" + params.genome, mode: 'copy'
+  publishDir "${params.outDir}/${params.genome}", mode: 'copy'
 
   input:
     file(reference) from fastaForSAMTools
@@ -252,7 +254,7 @@ process BuildSAMToolsIndex {
 
   script:
   """
-  samtools faidx $reference
+  samtools faidx ${reference}
   """
 }
 
@@ -263,7 +265,7 @@ if (verbose) samtoolsIndex.view {
 process BuildVCFIndex {
   tag {reference}
 
-  publishDir "References/" + params.genome, mode: 'copy'
+  publishDir "${params.outDir}/${params.genome}", mode: 'copy'
 
   input:
     file(reference) from vcfFiles
@@ -328,6 +330,8 @@ def checkParams(it) {
     'no-reports',
     'noGVCF',
     'noReports',
+    'out-dir',
+    'outDir',
     'params',
     'project',
     'push',

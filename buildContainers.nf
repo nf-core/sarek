@@ -218,6 +218,8 @@ def checkParams(it) {
     'no-reports',
     'noGVCF',
     'noReports',
+    'out-dir',
+    'outDir',
     'params',
     'project',
     'push',
