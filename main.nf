@@ -159,9 +159,9 @@ if (params.sample) tsvPath = params.sample
 if (!params.sample && !params.sampleDir) {
   tsvPaths = [
   'mapping': "${workflow.projectDir}/data/tsv/tiny.tsv",
-  'realign': "${workflow.launchDir}/${directoryMap.nonRealigned}/nonRealigned.tsv",
-  'recalibrate': "${workflow.launchDir}/${directoryMap.nonRecalibrated}/nonRecalibrated.tsv",
-  'variantcalling': "${workflow.launchDir}/${directoryMap.recalibrated}/recalibrated.tsv"
+  'realign': "${params.outDir}/${directoryMap.nonRealigned}/nonRealigned.tsv",
+  'recalibrate': "${params.outDir}/${directoryMap.nonRecalibrated}/nonRecalibrated.tsv",
+  'variantcalling': "${params.outDir}/${directoryMap.recalibrated}/recalibrated.tsv"
   ]
   if (params.test || step != 'mapping') tsvPath = tsvPaths[step]
 }
@@ -348,7 +348,7 @@ process MarkDuplicates {
 // Creating a TSV file to restart from this step
 markDuplicatesTSV.map { idPatient, status, idSample, bam, bai ->
   gender = patientGenders[idPatient]
-  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap.nonRealigned}/${bam}\t${directoryMap.nonRealigned}/${bai}\n"
+  "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outDir}/${directoryMap.nonRealigned}/${bam}\t${params.outDir}/${directoryMap.nonRealigned}/${bai}\n"
 }.collectFile(
   name: 'nonRealigned.tsv', sort: true, storeDir: "${params.outDir}/${directoryMap.nonRealigned}"
 )
@@ -544,7 +544,7 @@ process CreateRecalibrationTable {
 // Create a TSV file to restart from this step
 recalibrationTableTSV.map { idPatient, status, idSample, bam, bai, recalTable ->
   gender = patientGenders[idPatient]
-  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap.nonRecalibrated}/${bam}\t${directoryMap.nonRecalibrated}/${bai}\t${directoryMap.nonRecalibrated}/${recalTable}\n"
+  "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outDir}/${directoryMap.nonRecalibrated}/${bam}\t${params.outDir}/${directoryMap.nonRecalibrated}/${bai}\t${params.outDir}/${directoryMap.nonRecalibrated}/${recalTable}\n"
 }.collectFile(
   name: 'nonRecalibrated.tsv', sort: true, storeDir: "${params.outDir}/${directoryMap.nonRecalibrated}"
 )
@@ -603,7 +603,7 @@ process RecalibrateBam {
 // Creating a TSV file to restart from this step
 recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
   gender = patientGenders[idPatient]
-  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap.recalibrated}/${bam}\t${directoryMap.recalibrated}/${bai}\n"
+  "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outDir}/${directoryMap.recalibrated}/${bam}\t${params.outDir}/${directoryMap.recalibrated}/${bai}\n"
 }.collectFile(
   name: 'recalibrated.tsv', sort: true, storeDir: "${params.outDir}/${directoryMap.recalibrated}"
 )
