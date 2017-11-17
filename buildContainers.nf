@@ -61,8 +61,8 @@ if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <U
 // Default params:
 // Such params are overridden by command line or configuration definitions
 
-// containerPath is empty
-params.containerPath = ''
+// containerPath is current Directory
+params.containerPath = "${baseDir}"
 // all containers to be build
 params.containers = 'all'
 // Docker will not be used
@@ -78,14 +78,10 @@ verbose = params.verbose
 containersList = defineContainersList()
 containers = params.containers.split(',').collect {it.trim()}
 containers = containers == ['all'] ? containersList : containers
-docker = params.docker ? true : false
 push = params.docker && params.push ? true : false
-repository = params.repository
 tag = params.tag ? params.tag : version
-singularity = params.singularity ? true : false
-containerPath = params.singularity && params.containerPath ? params.containerPath : "."
 
-if (!docker && !singularity) exit 1, 'No builder choose, specify --docker or --singularity, see --help for more information'
+if (!params.docker && !params.singularity) exit 1, 'No container technology choosed, specify --docker or --singularity, see --help for more information'
 
 if (!checkContainers(containers,containersList)) exit 1, 'Unknown container(s), see --help for more information'
 
@@ -101,68 +97,68 @@ dockerContainers = containers
 singularityContainers = containers
 
 process BuildDockerContainers {
-  tag {repository + "/" + container + ":" + tag}
+  tag {"${params.repository}/${container}:${tag}"}
 
   input:
     val container from dockerContainers
 
   output:
-    val container into dockerContainersBuilt
+    val container into containersBuilt
 
-  when: docker
+  when: params.docker
 
   script:
   """
-  docker build -t ${repository}/${container}:${tag} ${baseDir}/containers/${container}/.
+  docker build -t ${params.repository}/${container}:${tag} ${baseDir}/containers/${container}/.
   """
 }
 
-if (verbose) dockerContainersBuilt = dockerContainersBuilt.view {
-  "Docker container: ${repository}/${it}:${tag} built."
+if (verbose) containersBuilt = containersBuilt.view {
+  "Docker container: ${params.repository}/${it}:${tag} built."
 }
 
 process PullSingularityContainers {
-  tag {repository + "/" + container + ":" + tag}
+  tag {"${params.repository}/${container}:${tag}"}
 
-  publishDir containerPath, mode: 'move'
+  publishDir "${params.containerPath}", mode: 'move'
 
   input:
     val container from singularityContainers
 
   output:
-    file("*.img") into singularityContainersPulled
+    file("${container}-${tag}.img") into imagePulled
 
-  when: singularity
+  when: params.singularity
 
   script:
   """
-  singularity pull --name ${container}-${tag}.img docker://${repository}/${container}:${tag}
+  singularity pull --name ${container}-${tag}.img docker://${params.repository}/${container}:${tag}
   """
 }
 
-if (verbose) singularityContainersPulled = singularityContainersPulled.view {
-  "Singularity container: $it pulled."
+if (verbose) imagePulled = imagePulled.view {
+  "Singularity image: ${it} pulled."
 }
 
 process PushDockerContainers {
-  tag {repository + "/" + container + ":" + tag}
+  tag {params.repository + "/" + container + ":" + tag}
 
   input:
-    val container from dockerContainersBuilt
+    val container from containersBuilt
 
   output:
-    val container into dockerContainersPushed
+    val container into containersPushed
 
-  when: docker && push
+  when: params.docker && push
 
   script:
   """
-  docker push ${repository}/${container}:${tag}
+  docker push ${params.repository}/${container}:${tag}
   """
 }
 
-if (verbose) dockerContainersPushed = dockerContainersPushed.view {
-  "Docker container: ${repository}/${it}:${tag} pushed."
+if (verbose) containersPushed = containersPushed.view {
+  "Docker container: ${params.repository}/${it}:${tag} pushed."
 }
 
 /*
