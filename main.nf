@@ -68,12 +68,12 @@ version = '1.2.5'
 // try / throw / catch works for NF versions < 0.25 when this was implemented
 nf_required_version = '0.25.0'
 try {
-    if( ! nextflow.version.matches(">= $nf_required_version") ){
+    if( ! nextflow.version.matches(">= ${nf_required_version}") ){
         throw GroovyException('Nextflow version too old')
     }
 } catch (all) {
     log.error "============================================================\n" +
-              "  Nextflow version $nf_required_version required! You are running v$workflow.nextflow.version.\n" +
+              "  Nextflow version ${nf_required_version} required! You are running v${workflow.nextflow.version}.\n" +
               "  Pipeline execution will continue, but things may break.\n" +
               "  Please update Nextflow.\n" +
               "============================================================"
@@ -95,7 +95,7 @@ params.noGVCF = false
 // Reports are generated
 params.noReports = false
 // outDir is current directory
-params.outDir = '$PWD'
+params.outDir = '${baseDir}'
 // No sample is defined
 params.sample = ''
 // No sampleDir is defined
@@ -158,10 +158,10 @@ if (params.sample) tsvPath = params.sample
 // No need for tsv file for step annotate
 if (!params.sample && !params.sampleDir) {
   tsvPaths = [
-  'mapping': "$workflow.projectDir/data/tsv/tiny.tsv",
-  'realign': "$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv",
-  'recalibrate': "$workflow.launchDir/$directoryMap.nonRecalibrated/nonRecalibrated.tsv",
-  'variantcalling': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv"
+  'mapping': "${workflow.projectDir}/data/tsv/tiny.tsv",
+  'realign': "${workflow.launchDir}/${directoryMap.nonRealigned}/nonRealigned.tsv",
+  'recalibrate': "${workflow.launchDir}/${directoryMap.nonRecalibrated}/nonRecalibrated.tsv",
+  'variantcalling': "${workflow.launchDir}/${directoryMap.recalibrated}/recalibrated.tsv"
   ]
   if (params.test || step != 'mapping') tsvPath = tsvPaths[step]
 }
@@ -216,7 +216,7 @@ if (verbose) bamFiles = bamFiles.view {
 process RunFastQC {
   tag {idPatient + "-" + idRun}
 
-  publishDir "$directoryMap.fastQC", mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.fastQC}", mode: 'copy'
 
   input:
     set idPatient, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFilesforFastQC
@@ -319,7 +319,7 @@ if (verbose) mergedBam = mergedBam.view {
 process MarkDuplicates {
   tag {idPatient + "-" + idSample}
 
-  publishDir '.', saveAs: { it == "${bam}.metrics" ? "$directoryMap.markDuplicatesQC/$it" : "$directoryMap.nonRealigned/$it" }, mode: 'copy'
+  publishDir '.', saveAs: { it == "${bam}.metrics" ? "${params.outDir}/${directoryMap.markDuplicatesQC}/${it}" : "${params.outDir}/${directoryMap.nonRealigned}/${it}" }, mode: 'copy'
 
   input:
     set idPatient, status, idSample, file(bam) from mergedBam
@@ -348,9 +348,9 @@ process MarkDuplicates {
 // Creating a TSV file to restart from this step
 markDuplicatesTSV.map { idPatient, status, idSample, bam, bai ->
   gender = patientGenders[idPatient]
-  "$idPatient\t$gender\t$status\t$idSample\t$directoryMap.nonRealigned/$bam\t$directoryMap.nonRealigned/$bai\n"
+  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap.nonRealigned}/${bam}\t${directoryMap.nonRealigned}/${bai}\n"
 }.collectFile(
-  name: 'nonRealigned.tsv', sort: true, storeDir: directoryMap.nonRealigned
+  name: 'nonRealigned.tsv', sort: true, storeDir: "${params.outDir}/${directoryMap.nonRealigned}"
 )
 
 // Create intervals for realignement using both tumor+normal as input
@@ -502,7 +502,7 @@ if (verbose) realignedBam = realignedBam.view {
 process CreateRecalibrationTable {
   tag {idPatient + "-" + idSample}
 
-  publishDir directoryMap.nonRecalibrated, mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.nonRecalibrated}", mode: 'copy'
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from realignedBam
@@ -544,9 +544,9 @@ process CreateRecalibrationTable {
 // Create a TSV file to restart from this step
 recalibrationTableTSV.map { idPatient, status, idSample, bam, bai, recalTable ->
   gender = patientGenders[idPatient]
-  "$idPatient\t$gender\t$status\t$idSample\t$directoryMap.nonRecalibrated/$bam\t$directoryMap.nonRecalibrated/$bai\t\t$directoryMap.nonRecalibrated/$recalTable\n"
+  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap.nonRecalibrated}/${bam}\t${directoryMap.nonRecalibrated}/${bai}\t${directoryMap.nonRecalibrated}/${recalTable}\n"
 }.collectFile(
-  name: 'nonRecalibrated.tsv', sort: true, storeDir: directoryMap.nonRecalibrated
+  name: 'nonRecalibrated.tsv', sort: true, storeDir: "${params.outDir}/${directoryMap.nonRecalibrated}"
 )
 
 if (step == 'recalibrate') recalibrationTable = bamFiles
@@ -569,7 +569,7 @@ recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
 process RecalibrateBam {
   tag {idPatient + "-" + idSample}
 
-  publishDir directoryMap.recalibrated, mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.recalibrated}", mode: 'copy'
 
   input:
     set idPatient, status, idSample, file(bam), file(bai), recalibrationReport from recalibrationTable
@@ -603,9 +603,9 @@ process RecalibrateBam {
 // Creating a TSV file to restart from this step
 recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
   gender = patientGenders[idPatient]
-  "$idPatient\t$gender\t$status\t$idSample\t$directoryMap.recalibrated/$bam\t$directoryMap.recalibrated/$bai\n"
+  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap.recalibrated}/${bam}\t${directoryMap.recalibrated}/${bai}\n"
 }.collectFile(
-  name: 'recalibrated.tsv', sort: true, storeDir: directoryMap.recalibrated
+  name: 'recalibrated.tsv', sort: true, storeDir: "${params.outDir}/${directoryMap.recalibrated}"
 )
 
 if (step == 'variantcalling') {
@@ -629,7 +629,7 @@ if (verbose) recalibratedBam = recalibratedBam.view {
 process RunSamtoolsStats {
   tag {idPatient + "-" + idSample}
 
-  publishDir directoryMap.samtoolsStats, mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.samtoolsStats}", mode: 'copy'
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamForSamToolsStats
@@ -653,7 +653,7 @@ if (verbose) samtoolsStatsReport = samtoolsStatsReport.view {
 process RunBamQC {
   tag {idPatient + "-" + idSample}
 
-  publishDir directoryMap.bamQC, mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.bamQC}", mode: 'copy'
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC
@@ -1009,7 +1009,7 @@ if (verbose) vcfsToMerge = vcfsToMerge.view {
 process ConcatVCF {
   tag {variantCaller in ['gvcf-hc', 'haplotypecaller'] ? variantCaller + "-" + idSampleNormal : variantCaller + "_" + idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir "${directoryMap."$variantCaller"}", mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap."$variantCaller"}", mode: 'copy'
 
   input:
     set variantCaller, idPatient, idSampleNormal, idSampleTumor, file(vcFiles) from vcfsToMerge
@@ -1077,7 +1077,7 @@ if (verbose) vcfConcatenated = vcfConcatenated.view {
 process RunStrelka {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir directoryMap.strelka, mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.strelka}", mode: 'copy'
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForStrelka
@@ -1123,7 +1123,7 @@ if (verbose) strelkaOutput = strelkaOutput.view {
 process RunSingleStrelka {
   tag {idSample}
 
-  publishDir directoryMap.strelka, mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.strelka}", mode: 'copy'
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleStrelka
@@ -1167,7 +1167,7 @@ if (verbose) singleStrelkaOutput = singleStrelkaOutput.view {
 process RunManta {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir directoryMap.manta, mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.manta}", mode: 'copy'
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
@@ -1220,7 +1220,7 @@ if (verbose) mantaOutput = mantaOutput.view {
 process RunSingleManta {
   tag {status == 0 ? idSample + " - Single Diploid" : idSample + " - Tumor-Only"}
 
-  publishDir directoryMap.manta, mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.manta}", mode: 'copy'
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleManta
@@ -1332,7 +1332,7 @@ alleleCountOutput = alleleCountOutput.map {
 process RunConvertAlleleCounts {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir directoryMap.ascat, mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.ascat}", mode: 'copy'
 
   input:
     set idPatient, idSampleNormal, idSampleTumor, file(alleleCountNormal), file(alleleCountTumor) from alleleCountOutput
@@ -1354,7 +1354,7 @@ process RunConvertAlleleCounts {
 process RunAscat {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir directoryMap.ascat, mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.ascat}", mode: 'copy'
 
   input:
     set idPatient, idSampleNormal, idSampleTumor, file(bafNormal), file(logrNormal), file(bafTumor), file(logrTumor) from convertAlleleCountsOutput
@@ -1447,7 +1447,7 @@ vcfNotToAnnotate.close()
 process RunBcftoolsStats {
   tag {vcf}
 
-  publishDir directoryMap.bcftoolsStats, mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.bcftoolsStats}", mode: 'copy'
 
   input:
     set variantCaller, file(vcf) from vcfForBCFtools
@@ -1471,7 +1471,7 @@ if (verbose) bcfReport = bcfReport.view {
 process RunSnpeff {
   tag {vcf}
 
-  publishDir directoryMap.snpeff, mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.snpeff}", mode: 'copy'
 
   input:
     set variantCaller, file(vcf) from vcfForSnpeff
@@ -1506,7 +1506,7 @@ if (verbose) snpeffReport = snpeffReport.view {
 process RunVEP {
   tag {vcf}
 
-  publishDir directoryMap.vep, mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.vep}", mode: 'copy'
 
   input:
     set variantCaller, file(vcf) from vcfForVep
@@ -1541,7 +1541,7 @@ if (verbose) vepReport = vepReport.view {
 }
 
 process GenerateMultiQCconfig {
-  publishDir directoryMap.multiQC, mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.multiQC}", mode: 'copy'
 
   input:
 
@@ -1556,11 +1556,11 @@ process GenerateMultiQCconfig {
   tsvString = step != 'annotate' ? "- TSV file: ${tsvFile}" : ''
   """
   touch multiqc_config.yaml
-  echo "custom_logo: $baseDir/doc/images/CAW_logo.png" >> multiqc_config.yaml
+  echo "custom_logo: ${baseDir}/doc/images/CAW_logo.png" >> multiqc_config.yaml
   echo "custom_logo_url: http://opensource.scilifelab.se/projects/caw" >> multiqc_config.yaml
   echo "custom_logo_title: 'Cancer Analysis Workflow'" >> multiqc_config.yaml
   echo "report_header_info:" >> multiqc_config.yaml
-  echo "- CAW version: $version" >> multiqc_config.yaml
+  echo "- CAW version: ${version}" >> multiqc_config.yaml
   echo "- Contact Name: ${params.callName}" >> multiqc_config.yaml
   echo "- Contact E-mail: ${params.contactMail}" >> multiqc_config.yaml
   echo "- Command Line: ${workflow.commandLine}" >> multiqc_config.yaml
@@ -1571,16 +1571,16 @@ process GenerateMultiQCconfig {
   echo "- Tools: "${tools.join(", ")} >> multiqc_config.yaml
   echo ${annotateToolString} >> multiqc_config.yaml
   echo ${annotateVCFstring} >> multiqc_config.yaml
-  echo "  acLoci      : $referenceMap.acLoci" >> multiqc_config.yaml
+  echo "  acLoci      : ${referenceMap.acLoci}" >> multiqc_config.yaml
   echo "  bwaIndex    : "${referenceMap.bwaIndex.join(", ")} >> multiqc_config.yaml
-  echo "  cosmic      : $referenceMap.cosmic" >> multiqc_config.yaml
-  echo "  cosmicIndex : $referenceMap.cosmicIndex" >> multiqc_config.yaml
-  echo "  dbsnp       : $referenceMap.dbsnp" >> multiqc_config.yaml
-  echo "  dbsnpIndex  : $referenceMap.dbsnpIndex" >> multiqc_config.yaml
-  echo "  genomeDict  : $referenceMap.genomeDict" >> multiqc_config.yaml
-  echo "  genomeFile  : $referenceMap.genomeFile" >> multiqc_config.yaml
-  echo "  genomeIndex : $referenceMap.genomeIndex" >> multiqc_config.yaml
-  echo "  intervals   : $referenceMap.intervals" >> multiqc_config.yaml
+  echo "  cosmic      : ${referenceMap.cosmic}" >> multiqc_config.yaml
+  echo "  cosmicIndex : ${referenceMap.cosmicIndex}" >> multiqc_config.yaml
+  echo "  dbsnp       : ${referenceMap.dbsnp}" >> multiqc_config.yaml
+  echo "  dbsnpIndex  : ${referenceMap.dbsnpIndex}" >> multiqc_config.yaml
+  echo "  genomeDict  : ${referenceMap.genomeDict}" >> multiqc_config.yaml
+  echo "  genomeFile  : ${referenceMap.genomeFile}" >> multiqc_config.yaml
+  echo "  genomeIndex : ${referenceMap.genomeIndex}" >> multiqc_config.yaml
+  echo "  intervals   : ${referenceMap.intervals}" >> multiqc_config.yaml
   echo "  knownIndels : "${referenceMap.knownIndels.join(", ")} >> multiqc_config.yaml
   echo "  knownIndelsIndex: "${referenceMap.knownIndelsIndex.join(", ")} >> multiqc_config.yaml
   echo "  snpeffDb    : ${params.genomes[params.genome].snpeffDb}" >> multiqc_config.yaml
@@ -1612,7 +1612,7 @@ reportsForMultiQC = Channel.empty()
   ).collect()
 
 process RunMultiQC {
-  publishDir directoryMap.multiQC, mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.multiQC}", mode: 'copy'
 
   input:
     file ('*') from reportsForMultiQC
