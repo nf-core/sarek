@@ -4,7 +4,6 @@ set -xeuo pipefail
 GENOME=smallGRCh37
 PROFILE=singularity
 SAMPLE=data/tsv/tiny.tsv
-OUTDIR=Results
 TAG=1.2.5
 TEST=ALL
 TRAVIS=${TRAVIS:-false}
@@ -38,11 +37,6 @@ do
     shift # past argument
     shift # past value
     ;;
-    --outDir)
-    OUTDIR=$2
-    shift # past argument
-    shift # past value
-    ;;
     *) # unknown option
     shift # past argument
     ;;
@@ -57,7 +51,7 @@ function nf_test() {
 # Build references only for smallGRCh37
 if [[ $GENOME == smallGRCh37 ]] && [[ $TEST != BUILDCONTAINERS ]]
 then
-  nf_test buildReferences.nf --download --outDir References
+  nf_test buildReferences.nf --download --outDir References/$GENOME
   # Remove images only on TRAVIS
   if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
   then
@@ -70,30 +64,30 @@ fi
 
 if [[ ALL,MAPPING,REALIGN,RECALIBRATE =~ $TEST ]]
 then
-  nf_test . --outDir $OUTDIR --step mapping --sampleDir data/tiny/tiny/normal
-  nf_test . --outDir $OUTDIR --step mapping --sample $SAMPLE
+  nf_test . --step mapping --sampleDir data/tiny/tiny/normal
+  nf_test . --step mapping --sample $SAMPLE
 fi
 
 if [[ ALL,REALIGN =~ $TEST ]]
 then
-  nf_test . --outDir $OUTDIR --step realign --noReports
-  nf_test . --outDir $OUTDIR --step realign --tools HaplotypeCaller
-  nf_test . --outDir $OUTDIR --step realign --tools HaplotypeCaller --noReports --noGVCF
+  nf_test . --step realign --noReports
+  nf_test . --step realign --tools HaplotypeCaller
+  nf_test . --step realign --tools HaplotypeCaller --noReports --noGVCF
 fi
 
 if [[ ALL,RECALIBRATE =~ $TEST ]]
 then
-  nf_test . --outDir $OUTDIR --step recalibrate --noReports
-  nf_test . --outDir $OUTDIR --step recalibrate --tools FreeBayes,HaplotypeCaller,MuTect1,MuTect2,Strelka
+  nf_test . --step recalibrate --noReports
+  nf_test . --step recalibrate --tools FreeBayes,HaplotypeCaller,MuTect1,MuTect2,Strelka
   # Test whether restarting from an already recalibrated BAM works
-  nf_test . --outDir $OUTDIR --step variantCalling --tools Strelka --noReports
+  nf_test . --step variantCalling --tools Strelka --noReports
 fi
 
 if [[ ALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
 then
-  nf_test . --outDir $OUTDIR --step mapping --sampleDir data/tiny/manta/normal --tools Manta,Strelka
-  nf_test . --outDir $OUTDIR --step mapping --sample data/tsv/tiny-manta.tsv --tools Manta,Strelka
-  nf_test . --outDir $OUTDIR --step mapping --sample $SAMPLE --tools MuTect2
+  nf_test . --step mapping --sampleDir data/tiny/manta/normal --tools Manta,Strelka
+  nf_test . --step mapping --sample data/tsv/tiny-manta.tsv --tools Manta,Strelka
+  nf_test . --step mapping --sample $SAMPLE --tools MuTect2
 
   # Remove images only on TRAVIS
   if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
@@ -113,9 +107,9 @@ then
   then
     ANNOTATOR=snpEFF,VEP
   fi
-  nf_test . --outDir $OUTDIR --step annotate --tools ${ANNOTATOR} --annotateTools Manta,Strelka
-  nf_test . --outDir $OUTDIR --step annotate --tools ${ANNOTATOR} --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf.gz --noReports
-  nf_test . --outDir $OUTDIR --step annotate --tools ${ANNOTATOR} --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz --noReports
+  nf_test . --step annotate --tools ${ANNOTATOR} --annotateTools Manta,Strelka
+  nf_test . --step annotate --tools ${ANNOTATOR} --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf.gz --noReports
+  nf_test . --step annotate --tools ${ANNOTATOR} --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz --noReports
 fi
 
 if [[ ALL,BUILDCONTAINERS =~ $TEST ]] && [[ $PROFILE == docker ]]
