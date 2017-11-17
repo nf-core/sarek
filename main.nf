@@ -95,7 +95,7 @@ params.noGVCF = false
 // Reports are generated
 params.noReports = false
 // outDir is current directory
-params.outDir = '${baseDir}'
+params.outDir = baseDir
 // No sample is defined
 params.sample = ''
 // No sampleDir is defined
@@ -177,7 +177,7 @@ if (tsvPath) {
     case 'realign': bamFiles = extractBams(tsvFile); break
     case 'recalibrate': bamFiles = extractRecal(tsvFile); break
     case 'variantcalling': bamFiles = extractBams(tsvFile); break
-    default: exit 1, "Unknown step $step"
+    default: exit 1, "Unknown step ${step}"
   }
 } else if (params.sampleDir) {
   if (step != 'mapping') exit 1, '--sampleDir does not support steps other than "mapping"'
@@ -251,13 +251,13 @@ process MapReads {
   when: step == 'mapping'
 
   script:
-  readGroup = "@RG\\tID:$idRun\\tPU:$idRun\\tSM:$idSample\\tLB:$idSample\\tPL:illumina"
+  readGroup = "@RG\\tID:${idRun}\\tPU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
   // adjust mismatch penalty for tumor samples
   extra = status == 1 ? "-B 3 " : ""
   """
-  bwa mem -R \"$readGroup\" ${extra}-t $task.cpus -M \
-  $genomeFile $fastqFile1 $fastqFile2 | \
-  samtools sort --threads $task.cpus -m 4G - > ${idRun}.bam
+  bwa mem -R \"${readGroup}\" ${extra}-t ${task.cpus} -M \
+  ${genomeFile} ${fastqFile1} ${fastqFile2} | \
+  samtools sort --threads ${task.cpus} -m 4G - > ${idRun}.bam
   """
 }
 
@@ -292,7 +292,7 @@ process MergeBams {
 
   script:
   """
-  samtools merge --threads $task.cpus ${idSample}.bam $bam
+  samtools merge --threads ${task.cpus} ${idSample}.bam ${bam}
   """
 }
 
@@ -387,7 +387,7 @@ if (verbose) duplicatesRealign = duplicatesRealign.view {
 
 if (verbose) markDuplicatesReport = markDuplicatesReport.view {
   "MarkDuplicates report:\n\
-  File  : [$it.fileName]"
+  File  : [${it.fileName}]"
 }
 
 // VCF indexes are added so they will be linked, and not re-created on the fly
@@ -413,17 +413,17 @@ process RealignerTargetCreator {
   when: step == 'mapping' || step == 'realign'
 
   script:
-  bams = bam.collect{"-I $it"}.join(' ')
-  known = knownIndels.collect{"-known $it"}.join(' ')
+  bams = bam.collect{"-I ${it}"}.join(' ')
+  known = knownIndels.collect{"-known ${it}"}.join(' ')
   """
   java -Xmx${task.memory.toGiga()}g \
   -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T RealignerTargetCreator \
-  $bams \
-  -R $genomeFile \
-  $known \
-  -nt $task.cpus \
-  -L $intervals \
+  ${bams} \
+  -R ${genomeFile} \
+  ${known} \
+  -nt ${task.cpus} \
+  -L ${intervals} \
   -o ${idPatient}.intervals
   """
 }
@@ -471,16 +471,16 @@ process IndelRealigner {
   when: step == 'mapping' || step == 'realign'
 
   script:
-  bams = bam.collect{"-I $it"}.join(' ')
-  known = knownIndels.collect{"-known $it"}.join(' ')
+  bams = bam.collect{"-I ${it}"}.join(' ')
+  known = knownIndels.collect{"-known ${it}"}.join(' ')
   """
   java -Xmx${task.memory.toGiga()}g \
   -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T IndelRealigner \
-  $bams \
-  -R $genomeFile \
-  -targetIntervals $intervals \
-  $known \
+  ${bams} \
+  -R ${genomeFile} \
+  -targetIntervals ${intervals} \
+  ${known} \
   -nWayOut '.real.bam'
   """
 }
@@ -524,19 +524,19 @@ process CreateRecalibrationTable {
   when: step == 'mapping' || step == 'realign'
 
   script:
-  known = knownIndels.collect{ "-knownSites $it" }.join(' ')
+  known = knownIndels.collect{ "-knownSites ${it}" }.join(' ')
   """
   java -Xmx${task.memory.toGiga()}g \
   -Djava.io.tmpdir="/tmp" \
   -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T BaseRecalibrator \
-  -R $genomeFile \
-  -I $bam \
-  -L $intervals \
+  -R ${genomeFile} \
+  -I ${bam} \
+  -L ${intervals} \
   --disable_auto_index_creation_and_locking_when_reading_rods \
-  -knownSites $dbsnp \
-  $known \
-  -nct $task.cpus \
+  -knownSites ${dbsnp} \
+  ${known} \
+  -nct ${task.cpus} \
   -l INFO \
   -o ${idSample}.recal.table
   """
@@ -593,10 +593,10 @@ process RecalibrateBam {
   java -Xmx${task.memory.toGiga()}g \
   -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T PrintReads \
-  -R $genomeFile \
-  -I $bam \
-  -L $intervals \
-  --BQSR $recalibrationReport \
+  -R ${genomeFile} \
+  -I ${bam} \
+  -L ${intervals} \
+  --BQSR ${recalibrationReport} \
   -o ${idSample}.recal.bam
   """
 }
@@ -641,7 +641,7 @@ process RunSamtoolsStats {
 
     script:
     """
-    samtools stats $bam > ${bam}.samtools.stats.out
+    samtools stats ${bam} > ${bam}.samtools.stats.out
     """
 }
 
@@ -659,7 +659,7 @@ process RunBamQC {
     set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC
 
   output:
-    file("$idSample") into bamQCreport
+    file("${idSample}") into bamQCreport
 
     when: reports
 
@@ -667,8 +667,8 @@ process RunBamQC {
     """
     qualimap --java-mem-size=${task.memory.toGiga()}G \
     bamqc \
-    -bam $bam \
-    -outdir $idSample \
+    -bam ${bam} \
+    -outdir ${idSample} \
     -outformat HTML
     """
 }
@@ -745,14 +745,14 @@ process CreateIntervalBeds {
         longest = t
       chunk += t
       print \$0 > name
-    }' $intervals
+    }' ${intervals}
     """
   else
     """
     awk -vFS="[:-]" '{
       name = sprintf("%s_%d-%d", \$1, \$2, \$3);
       printf("%s\\t%d\\t%d\\n", \$1, \$2-1, \$3) > name ".bed"
-    }' $intervals
+    }' ${intervals}
     """
 }
 
@@ -840,11 +840,11 @@ process RunHaplotypecaller {
   -T HaplotypeCaller \
   --emitRefConfidence GVCF \
   -pairHMM LOGLESS_CACHING \
-  -R $genomeFile \
-  --dbsnp $dbsnp \
-  $BQSR \
-  -I $bam \
-  -L $intervalBed \
+  -R ${genomeFile} \
+  --dbsnp ${dbsnp} \
+  ${BQSR} \
+  -I ${bam} \
+  -L ${intervalBed} \
   --disable_auto_index_creation_and_locking_when_reading_rods \
   -o ${intervalBed.baseName}_${idSample}.g.vcf
   """
@@ -877,10 +877,10 @@ process RunGenotypeGVCFs {
   java -Xmx${task.memory.toGiga()}g \
   -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T GenotypeGVCFs \
-  -R $genomeFile \
-  -L $intervalBed \
-  --dbsnp $dbsnp \
-  --variant $gvcf \
+  -R ${genomeFile} \
+  -L ${intervalBed} \
+  --dbsnp ${dbsnp} \
+  --variant ${gvcf} \
   --disable_auto_index_creation_and_locking_when_reading_rods \
   -o ${intervalBed.baseName}_${idSample}.vcf
   """
@@ -912,12 +912,12 @@ process RunMutect1 {
   java -Xmx${task.memory.toGiga()}g \
   -jar \$MUTECT_HOME/muTect.jar \
   -T MuTect \
-  -R $genomeFile \
-  --cosmic $cosmic \
-  --dbsnp $dbsnp \
-  -I:normal $bamNormal \
-  -I:tumor $bamTumor \
-  -L $intervalBed \
+  -R ${genomeFile} \
+  --cosmic ${cosmic} \
+  --dbsnp ${dbsnp} \
+  -I:normal ${bamNormal} \
+  -I:tumor ${bamTumor} \
+  -L ${intervalBed} \
   --disable_auto_index_creation_and_locking_when_reading_rods \
   --out ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.call_stats.out \
   --vcf ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
@@ -951,13 +951,13 @@ process RunMutect2 {
   java -Xmx${task.memory.toGiga()}g \
   -jar \$GATK_HOME/GenomeAnalysisTK.jar \
   -T MuTect2 \
-  -R $genomeFile \
-  --cosmic $cosmic \
-  --dbsnp $dbsnp \
-  -I:normal $bamNormal \
-  -I:tumor $bamTumor \
+  -R ${genomeFile} \
+  --cosmic ${cosmic} \
+  --dbsnp ${dbsnp} \
+  -I:normal ${bamNormal} \
+  -I:tumor ${bamTumor} \
   --disable_auto_index_creation_and_locking_when_reading_rods \
-  -L $intervalBed \
+  -L ${intervalBed} \
   -o ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
   """
 }
@@ -979,7 +979,7 @@ process RunFreeBayes {
   script:
   """
   freebayes \
-    -f $genomeFile \
+    -f ${genomeFile} \
     --pooled-continuous \
     --pooled-discrete \
     --genotype-qualities \
@@ -988,9 +988,9 @@ process RunFreeBayes {
     --min-alternate-fraction 0.03 \
     --min-repeat-entropy 1 \
     --min-alternate-count 2 \
-    -t $intervalBed \
-    $bamTumor \
-    $bamNormal > ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
+    -t ${intervalBed} \
+    ${bamTumor} \
+    ${bamNormal} > ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
   """
 }
 
@@ -1095,12 +1095,12 @@ process RunStrelka {
   script:
   """
   \$STRELKA_INSTALL_PATH/bin/configureStrelkaSomaticWorkflow.py \
-  --tumor $bamTumor \
-  --normal $bamNormal \
-  --referenceFasta $genomeFile \
+  --tumor ${bamTumor} \
+  --normal ${bamNormal} \
+  --referenceFasta ${genomeFile} \
   --runDir Strelka
 
-  python Strelka/runWorkflow.py -m local -j $task.cpus
+  python Strelka/runWorkflow.py -m local -j ${task.cpus}
 
   mv Strelka/results/variants/somatic.indels.vcf.gz \
     Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz
@@ -1140,11 +1140,11 @@ process RunSingleStrelka {
   script:
   """
   \$STRELKA_INSTALL_PATH/bin/configureStrelkaGermlineWorkflow.py \
-  --bam $bam \
-  --referenceFasta $genomeFile \
+  --bam ${bam} \
+  --referenceFasta ${genomeFile} \
   --runDir Strelka
 
-  python Strelka/runWorkflow.py -m local -j $task.cpus
+  python Strelka/runWorkflow.py -m local -j ${task.cpus}
 
   mv Strelka/results/variants/genome.*.vcf.gz \
     Strelka_${idSample}_genome.vcf.gz
@@ -1184,12 +1184,12 @@ process RunManta {
   script:
   """
   \$MANTA_INSTALL_PATH/bin/configManta.py \
-  --normalBam $bamNormal \
-  --tumorBam $bamTumor \
-  --reference $genomeFile \
+  --normalBam ${bamNormal} \
+  --tumorBam ${bamTumor} \
+  --reference ${genomeFile} \
   --runDir Manta
 
-  python Manta/runWorkflow.py -m local -j $task.cpus
+  python Manta/runWorkflow.py -m local -j ${task.cpus}
 
   mv Manta/results/variants/candidateSmallIndels.vcf.gz \
     Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf.gz
@@ -1238,11 +1238,11 @@ process RunSingleManta {
   if ( status == 0 ) // If Normal Sample
   """
   \$MANTA_INSTALL_PATH/bin/configManta.py \
-  --bam $bam \
-  --reference $genomeFile \
+  --bam ${bam} \
+  --reference ${genomeFile} \
   --runDir Manta
 
-  python Manta/runWorkflow.py -m local -j $task.cpus
+  python Manta/runWorkflow.py -m local -j ${task.cpus}
 
   mv Manta/results/variants/candidateSmallIndels.vcf.gz \
     Manta_${idSample}.candidateSmallIndels.vcf.gz
@@ -1260,11 +1260,11 @@ process RunSingleManta {
   else  // Tumor Sample
   """
   \$MANTA_INSTALL_PATH/bin/configManta.py \
-  --tumorBam $bam \
-  --reference $genomeFile \
+  --tumorBam ${bam} \
+  --reference ${genomeFile} \
   --runDir Manta
 
-  python Manta/runWorkflow.py -m local -j $task.cpus
+  python Manta/runWorkflow.py -m local -j ${task.cpus}
 
   mv Manta/results/variants/candidateSmallIndels.vcf.gz \
     Manta_${idSample}.candidateSmallIndels.vcf.gz
@@ -1309,7 +1309,11 @@ process RunAlleleCount {
 
   script:
   """
-  alleleCounter -l $acLoci -r $genomeFile -b $bam -o ${idSample}.alleleCount;
+  alleleCounter \
+  -l ${acLoci} \
+  -r ${genomeFile} \
+  -b ${bam} \
+  -o ${idSample}.alleleCount;
   """
 }
 
@@ -1345,7 +1349,7 @@ process RunConvertAlleleCounts {
   script:
   gender = patientGenders[idPatient]
   """
-  convertAlleleCounts.r $idSampleTumor $alleleCountTumor $idSampleNormal $alleleCountNormal $gender
+  convertAlleleCounts.r ${idSampleTumor} ${alleleCountTumor} ${idSampleNormal} ${alleleCountNormal} ${gender}
   """
 }
 
@@ -1368,7 +1372,7 @@ process RunAscat {
   """
   # get rid of "chr" string if there is any
   for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
-  run_ascat.r $bafTumor $logrTumor $bafNormal $logrNormal $idSampleTumor $baseDir
+  run_ascat.r ${bafTumor} ${logrTumor} ${bafNormal} ${logrNormal} ${idSampleTumor} ${baseDir}
   """
 }
 
@@ -1397,9 +1401,9 @@ if (step == 'annotate' && annotateVCF == []) {
 
 } else if (step == 'annotate' && annotateTools == [] && annotateVCF != []) {
   list = ""
-  annotateVCF.each{ list += ",$it" }
+  annotateVCF.each{ list += ",${it}" }
   list = list.substring(1)
-  if (StringUtils.countMatches("$list", ",") == 0) vcfToAnnotate = Channel.fromPath("$list")
+  if (StringUtils.countMatches("${list}", ",") == 0) vcfToAnnotate = Channel.fromPath("${list}")
     .map{vcf -> ['userspecified',vcf]}
   else vcfToAnnotate = Channel.fromPath("{$list}")
     .map{vcf -> ['userspecified',vcf]}
@@ -1459,7 +1463,7 @@ process RunBcftoolsStats {
 
   script:
   """
-  bcftools stats $vcf > ${vcf.baseName}.bcf.tools.stats.out
+  bcftools stats ${vcf} > ${vcf.baseName}.bcf.tools.stats.out
   """
 }
 
@@ -1486,7 +1490,7 @@ process RunSnpeff {
   """
   java -Xmx${task.memory.toGiga()}g \
   -jar \$SNPEFF_HOME/snpEff.jar \
-  $snpeffDb \
+  ${snpeffDb} \
   -csvStats ${vcf.baseName}.snpEff.csv \
   -nodownload \
   -cancer \
@@ -1520,7 +1524,7 @@ process RunVEP {
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
   """
   vep \
-  -i $vcf \
+  -i ${vcf} \
   -o ${vcf.baseName}.vep.ann.vcf \
   --stats_file ${vcf.baseName}.vep.summary.html \
   --cache \
@@ -1581,7 +1585,7 @@ process GenerateMultiQCconfig {
   echo "  genomeFile  : ${referenceMap.genomeFile}" >> multiqc_config.yaml
   echo "  genomeIndex : ${referenceMap.genomeIndex}" >> multiqc_config.yaml
   echo "  intervals   : ${referenceMap.intervals}" >> multiqc_config.yaml
-  echo "  knownIndels : "${referenceMap.knownIndels.join(", ")} >> multiqc_config.yaml
+  echo "  knownIndels : " ${referenceMap.knownIndels.join(", ")} >> multiqc_config.yaml
   echo "  knownIndelsIndex: "${referenceMap.knownIndelsIndex.join(", ")} >> multiqc_config.yaml
   echo "  snpeffDb    : ${params.genomes[params.genome].snpeffDb}" >> multiqc_config.yaml
   echo "top_modules:" >> multiqc_config.yaml
@@ -1642,20 +1646,20 @@ if (verbose) multiQCReport = multiQCReport.view {
 
 def cawMessage() {
   // Display CAW message
-  log.info "CANCER ANALYSIS WORKFLOW ~ $version - " + this.grabRevision() + (workflow.commitId ? " [$workflow.commitId]" : "")
+  log.info "CANCER ANALYSIS WORKFLOW ~ ${version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
 }
 
 def checkFileExtension(it, extension) {
   // Check file extension
   if (!it.toString().toLowerCase().endsWith(extension.toLowerCase())) {
-    exit 1, "File: $it has the wrong extension: $extension see --help for more information"
+    exit 1, "File: ${it} has the wrong extension: ${extension} see --help for more information"
   }
 }
 
 def checkParameterExistence(it, list) {
   // Check parameter existence
   if (!list.contains(it)) {
-    println("Unknown parameter: $it")
+    println("Unknown parameter: ${it}")
     return false
   }
   return true
@@ -1667,8 +1671,8 @@ def checkParameterList(list, realList) {
 }
 
 def checkParamReturnFile(item) {
-  params."$item" = params.genomes[params.genome]."$item"
-  return file(params."$item")
+  params."${item}" = params.genomes[params.genome]."${item}"
+  return file(params."${item}")
 }
 
 def checkParams(it) {
@@ -1757,7 +1761,7 @@ def checkRefExistence(referenceFile, fileToCheck) {
     // this is an expanded wildcard: we can assume all files exist
     return true
   } else if (!f.exists()) {
-    log.info  "Missing references: $referenceFile $fileToCheck"
+    log.info  "Missing references: ${referenceFile} ${fileToCheck}"
     return false
   }
   return true
@@ -1800,7 +1804,7 @@ def defineDirectoryMap() {
 
 def defineReferenceMap() {
   if (!(params.genome in params.genomes)) {
-    exit 1, "Genome $params.genome not found in configuration"
+    exit 1, "Genome ${params.genome} not found in configuration"
   }
   return [
     // loci file for ascat
@@ -1887,8 +1891,8 @@ def extractFastq(tsvFile) {
       // Normally path to files starts from workflow.launchDir
       // But when executing workflow from Github
       // Path to hosted FASTQ files starts from workflow.projectDir
-      def fastqFile1 = workflow.commitId && params.test ? returnFile("$workflow.projectDir/${list[5]}") : returnFile("${list[5]}")
-      def fastqFile2 = workflow.commitId && params.test ? returnFile("$workflow.projectDir/${list[6]}") : returnFile("${list[6]}")
+      def fastqFile1 = workflow.commitId && params.test ? returnFile("${workflow.projectDir}/${list[5]}") : returnFile("${list[5]}")
+      def fastqFile2 = workflow.commitId && params.test ? returnFile("${workflow.projectDir}/${list[6]}") : returnFile("${list[6]}")
 
       checkFileExtension(fastqFile1,".fastq.gz")
       checkFileExtension(fastqFile2,".fastq.gz")
@@ -1908,7 +1912,7 @@ def extractFastqFromDir(pattern) {
   // a temporary channel does all the work
   Channel
     .fromPath(pattern, type: 'dir')
-    .ifEmpty { error "No directories found matching pattern '$pattern'" }
+    .ifEmpty { error "No directories found matching pattern '${pattern}'" }
     .subscribe onNext: { sampleDir ->
       // the last name of the sampleDir is assumed to be a unique sample id
       sampleId = sampleDir.getFileName().toString()
@@ -2089,12 +2093,13 @@ def isAllowedParams(params) {
 
 def minimalInformationMessage() {
   // Minimal information message
-  log.info "Command Line: $workflow.commandLine"
-  log.info "Profile     : $workflow.profile"
-  log.info "Project Dir : $workflow.projectDir"
-  log.info "Launch Dir  : $workflow.launchDir"
-  log.info "Work Dir    : $workflow.workDir"
-  if (step != 'annotate') log.info "TSV file    : $tsvFile"
+  log.info "Command Line: " + workflow.commandLine
+  log.info "Profile     : " + workflow.profile
+  log.info "Project Dir : " + workflow.projectDir
+  log.info "Launch Dir  : " + workflow.launchDir
+  log.info "Work Dir    : " + workflow.workDir
+  log.info "Out Dir     : " + params.outDir
+  if (step != 'annotate') log.info "TSV file    : ${tsvFile}"
   log.info "Genome      : " + params.genome
   log.info "Genome_base : " + params.genome_base
   log.info "Step        : " + step
@@ -2102,36 +2107,35 @@ def minimalInformationMessage() {
   if (annotateTools) log.info "Annotate on : " + annotateTools.join(', ')
   if (annotateVCF) log.info "VCF files   : " +annotateVCF.join(',\n    ')
   log.info "Containers  :"
-  if (params.repository) log.info "  Repository   : $params.repository"
-  else log.info "  ContainerPath: $params.containerPath"
-  log.info "  Tag          : $params.tag"
-  // workflow.container.each{ process, container -> log.info "\t${process}\t${container}"}
+  if (params.repository) log.info "  Repository   : ${params.repository}"
+  else log.info "  ContainerPath: " + params.containerPath
+  log.info "  Tag          : " + params.tag
   log.info "Reference files used:"
-  log.info "  acLoci      :\n\t$referenceMap.acLoci"
-  log.info "  cosmic      :\n\t$referenceMap.cosmic"
-  log.info "\t$referenceMap.cosmicIndex"
-  log.info "  dbsnp       :\n\t$referenceMap.dbsnp"
-  log.info "\t$referenceMap.dbsnpIndex"
-  log.info "  genome      :\n\t$referenceMap.genomeFile"
-  log.info "\t$referenceMap.genomeDict"
-  log.info "\t$referenceMap.genomeIndex"
+  log.info "  acLoci      :\n\t" + referenceMap.acLoci
+  log.info "  cosmic      :\n\t" + referenceMap.cosmic
+  log.info "\t" + referenceMap.cosmicIndex
+  log.info "  dbsnp       :\n\t" + referenceMap.dbsnp
+  log.info "\t" + referenceMap.dbsnpIndex
+  log.info "  genome      :\n\t" + referenceMap.genomeFile
+  log.info "\t" + referenceMap.genomeDict
+  log.info "\t" + referenceMap.genomeIndex
   log.info "  bwa indexes :\n\t" + referenceMap.bwaIndex.join(',\n\t')
-  log.info "  intervals   :\n\t$referenceMap.intervals"
+  log.info "  intervals   :\n\t" + referenceMap.intervals
   log.info "  knownIndels :\n\t" + referenceMap.knownIndels.join(',\n\t')
   log.info "\t" + referenceMap.knownIndelsIndex.join(',\n\t')
-  log.info "  snpeffDb    :\n\t${params.genomes[params.genome].snpeffDb}"
+  log.info "  snpeffDb    :\n\t" + params.genomes[params.genome].snpeffDb
 }
 
 def nextflowMessage() {
   // Nextflow message (version + build)
-  log.info "N E X T F L O W  ~  version $workflow.nextflow.version $workflow.nextflow.build"
+  log.info "N E X T F L O W  ~  version ${workflow.nextflow.version} ${workflow.nextflow.build}"
 }
 
 def returnFile(it) {
   // return file if it exists
   final f = file(it)
   if (!f.exists()) {
-    exit 1, "Missing file in TSV file: $it, see --help for more information"
+    exit 1, "Missing file in TSV file: ${it}, see --help for more information"
   }
   return f
 }
@@ -2142,7 +2146,7 @@ def returnStatus(it) {
   // 0 being normal
   // 1 being tumor (or relapse or anything that is not normal...)
   if (!(it in [0, 1])) {
-    exit 1, "Status is not recognized in TSV file: $it, see --help for more information"
+    exit 1, "Status is not recognized in TSV file: ${it}, see --help for more information"
   }
   return it
 }
@@ -2150,7 +2154,7 @@ def returnStatus(it) {
 def returnTSV(it, number) {
   // return TSV if it has the correct number of items in row
   if (it.size() != number) {
-    exit 1, "Malformed row in TSV file: $it, see --help for more information"
+    exit 1, "Malformed row in TSV file: ${it}, see --help for more information"
   }
   return it
 }
@@ -2164,8 +2168,8 @@ def startMessage() {
 def versionMessage() {
   // Display version message
   log.info "CANCER ANALYSIS WORKFLOW"
-  log.info "  version   : $version"
-  log.info workflow.commitId ? "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]" : "  revision  : " + this.grabRevision()
+  log.info "  version   : " + version
+  log.info workflow.commitId ? "Git info    : ${workflow.repository} - ${workflow.revision} [${workflow.commitId}]" : "  revision  : " + this.grabRevision()
 }
 
 workflow.onComplete {
@@ -2173,10 +2177,10 @@ workflow.onComplete {
   this.nextflowMessage()
   this.cawMessage()
   this.minimalInformationMessage()
-  log.info "Completed at: $workflow.complete"
-  log.info "Duration    : $workflow.duration"
-  log.info "Success     : $workflow.success"
-  log.info "Exit status : $workflow.exitStatus"
+  log.info "Completed at: " + workflow.complete
+  log.info "Duration    : " + workflow.duration
+  log.info "Success     : " + workflow.success
+  log.info "Exit status : " + workflow.exitStatus
   log.info "Error report: " + (workflow.errorReport ?: '-')
 }
 
