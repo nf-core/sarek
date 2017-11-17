@@ -66,8 +66,8 @@ if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <U
 
 // No download
 params.download = false
-// outDir is References
-params.outDir = "${baseDir}/References"
+// outDir is References/${params.genome}
+params.outDir = "${baseDir}/References/${params.genome}"
 // refDir is empty
 params.refDir = ''
 
@@ -182,7 +182,7 @@ decompressedFiles
 
 notCompressedfiles
   .mix(otherFiles)
-  .collectFile(storeDir: "${params.outDir}/${params.genome}")
+  .collectFile(storeDir: params.outDir)
 
 fastaForBWA = Channel.create()
 fastaForPicard = Channel.create()
@@ -193,7 +193,7 @@ fastaFile.into(fastaForBWA,fastaForPicard,fastaForSAMTools)
 process BuildBWAindexes {
   tag {reference}
 
-  publishDir "${params.outDir}/${params.genome}", mode: 'copy'
+  publishDir params.outDir, mode: 'copy'
 
   input:
     file(reference) from fastaForBWA
@@ -219,7 +219,7 @@ if (verbose) bwaIndexes.flatten().view {
 process BuildPicardIndex {
   tag {reference}
 
-  publishDir "${params.outDir}/${params.genome}", mode: 'copy'
+  publishDir params.outDir, mode: 'copy'
 
   input:
     file(reference) from fastaForPicard
@@ -244,7 +244,7 @@ if (verbose) picardIndex.view {
 process BuildSAMToolsIndex {
   tag {reference}
 
-  publishDir "${params.outDir}/${params.genome}", mode: 'copy'
+  publishDir params.outDir, mode: 'copy'
 
   input:
     file(reference) from fastaForSAMTools
@@ -265,7 +265,7 @@ if (verbose) samtoolsIndex.view {
 process BuildVCFIndex {
   tag {reference}
 
-  publishDir "${params.outDir}/${params.genome}", mode: 'copy'
+  publishDir params.outDir, mode: 'copy'
 
   input:
     file(reference) from vcfFiles
