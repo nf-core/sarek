@@ -1387,15 +1387,15 @@ vcfNotToAnnotate = Channel.create()
 
 if (step == 'annotate' && annotateVCF == []) {
   Channel.empty().mix(
-    Channel.fromPath('VariantCalling/HaplotypeCaller/*.vcf.gz')
+    Channel.fromPath("${params.outDir}/VariantCalling/HaplotypeCaller/*.vcf.gz")
       .flatten().map{vcf -> ['haplotypecaller',vcf]},
-    Channel.fromPath('VariantCalling/Manta/*SV.vcf.gz')
+    Channel.fromPath("${params.outDir}/VariantCalling/Manta/*SV.vcf.gz")
       .flatten().map{vcf -> ['manta',vcf]},
-    Channel.fromPath('VariantCalling/MuTect1/*.vcf.gz')
+    Channel.fromPath("${params.outDir}/VariantCalling/MuTect1/*.vcf.gz")
       .flatten().map{vcf -> ['mutect1',vcf]},
-    Channel.fromPath('VariantCalling/MuTect2/*.vcf.gz')
+    Channel.fromPath("${params.outDir}/VariantCalling/MuTect2/*.vcf.gz")
       .flatten().map{vcf -> ['mutect2',vcf]},
-    Channel.fromPath('VariantCalling/Strelka/*{somatic,variants}*.vcf.gz')
+    Channel.fromPath("${params.outDir}/VariantCalling/Strelka/*{somatic,variants}*.vcf.gz")
       .flatten().map{vcf -> ['strelka',vcf]}
   ).choice(vcfToAnnotate, vcfNotToAnnotate) { annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1 }
 
