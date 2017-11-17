@@ -42,12 +42,12 @@ version = '1.2.5'
 // try / throw / catch works for NF versions < 0.25 when this was implemented
 nf_required_version = '0.25.0'
 try {
-    if( ! nextflow.version.matches(">= $nf_required_version") ){
+    if( ! nextflow.version.matches(">= ${nf_required_version}") ){
         throw GroovyException('Nextflow version too old')
     }
 } catch (all) {
     log.error "====================================================\n" +
-              "  Nextflow version $nf_required_version required! You are running v$workflow.nextflow.version.\n" +
+              "  Nextflow version ${nf_required_version} required! You are running v${workflow.nextflow.version}.\n" +
               "  Pipeline execution will continue, but things may break.\n" +
               "  Please update Nextflow.\n" +
               "============================================================"
@@ -113,12 +113,12 @@ process BuildDockerContainers {
 
   script:
   """
-  docker build -t $repository/$container:$tag $baseDir/containers/$container/.
+  docker build -t ${repository}/${container}:${tag} ${baseDir}/containers/${container}/.
   """
 }
 
 if (verbose) dockerContainersBuilt = dockerContainersBuilt.view {
-  "Docker container: $repository/$it:$tag built."
+  "Docker container: ${repository}/${it}:${tag} built."
 }
 
 process PullSingularityContainers {
@@ -136,7 +136,7 @@ process PullSingularityContainers {
 
   script:
   """
-  singularity pull --name $container-${tag}.img docker://$repository/$container:$tag
+  singularity pull --name ${container}-${tag}.img docker://${repository}/${container}:${tag}
   """
 }
 
@@ -157,12 +157,12 @@ process PushDockerContainers {
 
   script:
   """
-  docker push $repository/$container:$tag
+  docker push ${repository}/${container}:${tag}
   """
 }
 
 if (verbose) dockerContainersPushed = dockerContainersPushed.view {
-  "Docker container: $repository/$it:$tag pushed."
+  "Docker container: ${repository}/${it}:${tag} pushed."
 }
 
 /*
@@ -173,13 +173,13 @@ if (verbose) dockerContainersPushed = dockerContainersPushed.view {
 
 def cawMessage() {
   // Display CAW message
-  log.info "CANCER ANALYSIS WORKFLOW ~ $version - " + this.grabRevision() + (workflow.commitId ? " [$workflow.commitId]" : "")
+  log.info "CANCER ANALYSIS WORKFLOW ~ ${version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
 }
 
 def checkContainerExistence(container, list) {
   try {assert list.contains(container)}
   catch (AssertionError ae) {
-    println("Unknown container: $container")
+    println("Unknown container: ${container}")
     return false
   }
   return true
@@ -297,7 +297,7 @@ def helpMessage() {
   log.info "       Default: maxulysse"
   log.info "    --singularity: Build containers using Singularity"
   log.info "    --containerPath: Select where to download containers"
-  log.info "       Default: $PWD"
+  log.info "       Default: \$PWD"
   log.info "    --tag`: Build containers using given tag"
   log.info "       Default (version number): " + version
   log.info "    --version"
@@ -318,16 +318,16 @@ def isAllowedParams(params) {
 
 def minimalInformationMessage() {
   // Minimal information message
-  log.info "Command Line: $workflow.commandLine"
-  log.info "Project Dir : $workflow.projectDir"
-  log.info "Launch Dir  : $workflow.launchDir"
-  log.info "Work Dir    : $workflow.workDir"
+  log.info "Command Line: ${workflow.commandLine}"
+  log.info "Project Dir : ${workflow.projectDir}"
+  log.info "Launch Dir  : ${workflow.launchDir}"
+  log.info "Work Dir    : ${workflow.workDir}"
   log.info "Containers  : " + containers.join(', ')
 }
 
 def nextflowMessage() {
   // Nextflow message (version + build)
-  log.info "N E X T F L O W  ~  version $workflow.nextflow.version $workflow.nextflow.build"
+  log.info "N E X T F L O W  ~  version ${workflow.nextflow.version} ${workflow.nextflow.build}"
 }
 
 def startMessage() {
@@ -339,8 +339,8 @@ def startMessage() {
 def versionMessage() {
   // Display version message
   log.info "CANCER ANALYSIS WORKFLOW"
-  log.info "  version   : $version"
-  log.info workflow.commitId ? "Git info    : $workflow.repository - $workflow.revision [$workflow.commitId]" : "  revision  : " + this.grabRevision()
+  log.info "  version   : ${version}"
+  log.info workflow.commitId ? "Git info    : ${workflow.repository} - ${workflow.revision} [${workflow.commitId}]" : "  revision  : " + this.grabRevision()
 }
 
 workflow.onComplete {
@@ -348,10 +348,10 @@ workflow.onComplete {
   this.nextflowMessage()
   this.cawMessage()
   this.minimalInformationMessage()
-  log.info "Completed at: $workflow.complete"
-  log.info "Duration    : $workflow.duration"
-  log.info "Success     : $workflow.success"
-  log.info "Exit status : $workflow.exitStatus"
+  log.info "Completed at: ${workflow.complete}"
+  log.info "Duration    : ${workflow.duration}"
+  log.info "Success     : ${workflow.success}"
+  log.info "Exit status : ${workflow.exitStatus}"
   log.info "Error report: " + (workflow.errorReport ?: '-')
 }
 
