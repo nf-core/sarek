@@ -185,11 +185,8 @@ if (tsvPath) {
   tsvFile = params.sampleDir  // used in the reports
 } else if (step != 'annotate') exit 1, 'No sample were defined, see --help'
 
-if (step == 'mapping') {
-  (patientGenders, fastqFiles) = extractGenders(fastqFiles)
-} else {
-  (patientGenders, bamFiles) = extractGenders(bamFiles)
-}
+if (step == 'mapping') (patientGenders, fastqFiles) = extractGenders(fastqFiles)
+else (patientGenders, bamFiles) = extractGenders(bamFiles)
 
 /*
 ================================================================================
@@ -222,14 +219,13 @@ process RunFastQC {
     set idPatient, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFilesforFastQC
 
   output:
-    file "${idRun}/*_fastqc.{zip,html}" into fastQCreport
+    file "*_fastqc.{zip,html}" into fastQCreport
 
   when: step == 'mapping' && reports
 
   script:
   """
-  mkdir ${idRun}
-  fastqc -q ${fastqFile1} ${fastqFile2} --outdir ${idRun}
+  fastqc -q ${fastqFile1} ${fastqFile2}
   """
 }
 
@@ -357,14 +353,11 @@ markDuplicatesTSV.map { idPatient, status, idSample, bam, bai ->
 // Group the marked duplicates BAMs for intervals and realign by idPatient
 // Grouping also by gender, to make a nicer channel
 duplicatesGrouped = Channel.empty()
-if (step == 'mapping') {
-  duplicatesGrouped = duplicates.groupTuple()
-} else if (step == 'realign') {
-  duplicatesGrouped = bamFiles.map{
-    idPatient, status, idSample, bam, bai ->
-    [idPatient, bam, bai]
-  }.groupTuple()
-}
+if (step == 'mapping') duplicatesGrouped = duplicates.groupTuple()
+else if (step == 'realign') duplicatesGrouped = bamFiles.map{
+  idPatient, status, idSample, bam, bai ->
+  [idPatient, bam, bai]
+}.groupTuple()
 
 // The duplicatesGrouped channel is duplicated
 // one copy goes to the RealignerTargetCreator process
@@ -616,9 +609,7 @@ if (step == 'variantcalling') {
 
   (recalTables, recalibrationTableForHC) = recalTables.into(2)
   recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
-} else if (!explicitBqsrNeeded) {
-  (bamForBamQC, bamForSamToolsStats, recalibratedBam) = recalibrationTableForHC.map { it[0..-2] }.into(3)
-}
+} else if (!explicitBqsrNeeded) (bamForBamQC, bamForSamToolsStats, recalibratedBam) = recalibrationTableForHC.map { it[0..-2] }.into(3)
 
 if (verbose) recalibratedBam = recalibratedBam.view {
   "Recalibrated BAM for variant Calling:\n\
@@ -761,9 +752,8 @@ bedIntervals = bedIntervals
     final duration = 0.0
     for (line in intervalFile.readLines()) {
       final fields = line.split('\t')
-      if (fields.size() >= 5) {
-        duration += fields[4].toFloat()
-      } else {
+      if (fields.size() >= 5) duration += fields[4].toFloat()
+      else {
         start = fields[1].toInteger()
         end = fields[2].toInteger()
         duration += (end - start) / nucleotidesPerSecond
@@ -851,7 +841,7 @@ process RunHaplotypecaller {
 }
 hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3])
 
-if (!gvcf) {hcGenomicVCF.close()}
+if (!gvcf) hcGenomicVCF.close()
 
 process RunGenotypeGVCFs {
   tag {idSample + "-" + intervalBed.baseName}
@@ -1651,9 +1641,7 @@ def cawMessage() {
 
 def checkFileExtension(it, extension) {
   // Check file extension
-  if (!it.toString().toLowerCase().endsWith(extension.toLowerCase())) {
-    exit 1, "File: ${it} has the wrong extension: ${extension} see --help for more information"
-  }
+  if (!it.toString().toLowerCase().endsWith(extension.toLowerCase())) exit 1, "File: ${it} has the wrong extension: ${extension} see --help for more information"
 }
 
 def checkParameterExistence(it, list) {
@@ -1753,14 +1741,11 @@ def checkReferenceMap(referenceMap) {
 }
 
 def checkRefExistence(referenceFile, fileToCheck) {
-  if (fileToCheck instanceof List) {
-    return fileToCheck.every{ checkRefExistence(referenceFile, it) }
-  }
+  if (fileToCheck instanceof List) return fileToCheck.every{ checkRefExistence(referenceFile, it) }
   def f = file(fileToCheck)
-  if (f instanceof List && f.size() > 0) {
-    // this is an expanded wildcard: we can assume all files exist
-    return true
-  } else if (!f.exists()) {
+  // this is an expanded wildcard: we can assume all files exist
+  if (f instanceof List && f.size() > 0) return true
+  else if (!f.exists()) {
     log.info  "Missing references: ${referenceFile} ${fileToCheck}"
     return false
   }
@@ -1803,9 +1788,7 @@ def defineDirectoryMap() {
 }
 
 def defineReferenceMap() {
-  if (!(params.genome in params.genomes)) {
-    exit 1, "Genome ${params.genome} not found in configuration"
-  }
+  if (!(params.genome in params.genomes)) exit 1, "Genome ${params.genome} not found in configuration"
   return [
     // loci file for ascat
     'acLoci'           : checkParamReturnFile("acLoci"),
@@ -1891,8 +1874,8 @@ def extractFastq(tsvFile) {
       // Normally path to files starts from workflow.launchDir
       // But when executing workflow from Github
       // Path to hosted FASTQ files starts from workflow.projectDir
-      def fastqFile1 = workflow.commitId && params.test ? returnFile("${workflow.projectDir}/${list[5]}") : returnFile("${list[5]}")
-      def fastqFile2 = workflow.commitId && params.test ? returnFile("${workflow.projectDir}/${list[6]}") : returnFile("${list[6]}")
+      def fastqFile1 = workflow.commitId && params.test ? returnFile("${workflow.projectDir}/${list[5]}") : returnFile(list[5])
+      def fastqFile2 = workflow.commitId && params.test ? returnFile("${workflow.projectDir}/${list[6]}") : returnFile(list[6])
 
       checkFileExtension(fastqFile1,".fastq.gz")
       checkFileExtension(fastqFile2,".fastq.gz")
@@ -1920,9 +1903,7 @@ def extractFastqFromDir(pattern) {
       for (path1 in file("${sampleDir}/**_R1_*.fastq.gz")) {
         assert path1.getName().contains('_R1_')
         path2 = file(path1.toString().replace('_R1_', '_R2_'))
-        if (!path2.exists()) {
-            error "Path '${path2}' not found"
-        }
+        if (!path2.exists()) error "Path '${path2}' not found"
         (flowcell, lane) = flowcellLaneFromFastq(path1)
         patient = sampleId
         gender = 'ZZ'  // unused
@@ -2133,11 +2114,8 @@ def nextflowMessage() {
 
 def returnFile(it) {
   // return file if it exists
-  final f = file(it)
-  if (!f.exists()) {
-    exit 1, "Missing file in TSV file: ${it}, see --help for more information"
-  }
-  return f
+  if (!file(it).exists()) exit 1, "Missing file in TSV file: ${it}, see --help for more information"
+  return file(it)
 }
 
 def returnStatus(it) {
@@ -2145,17 +2123,13 @@ def returnStatus(it) {
   // Status should be only 0 or 1
   // 0 being normal
   // 1 being tumor (or relapse or anything that is not normal...)
-  if (!(it in [0, 1])) {
-    exit 1, "Status is not recognized in TSV file: ${it}, see --help for more information"
-  }
+  if (!(it in [0, 1])) exit 1, "Status is not recognized in TSV file: ${it}, see --help for more information"
   return it
 }
 
 def returnTSV(it, number) {
   // return TSV if it has the correct number of items in row
-  if (it.size() != number) {
-    exit 1, "Malformed row in TSV file: ${it}, see --help for more information"
-  }
+  if (it.size() != number) exit 1, "Malformed row in TSV file: ${it}, see --help for more information"
   return it
 }
 
