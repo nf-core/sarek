@@ -13,7 +13,7 @@ However, the pipeline should be able to run on any system that supports Nextflow
 The pipeline comes with some configuration for different systems.
 See the [documentation](#documentation) for more information.
 
-We utilize [GATK best practices](https://software.broadinstitute.org/gatk/best-practices/) to align, realign and recalibrate short-read data in parallel for both normal and tumor sample.
+Caw is based on [GATK best practices](https://software.broadinstitute.org/gatk/best-practices/) to align, realign and recalibrate short-read data in parallel for both normal and tumor sample.
 After these preprocessing steps, several somatic variant callers scan the resulting BAM files: [MuTect1][mutect1-link], [MuTect2][gatk-link], [Freebayes](freebayes-link) and [Strelka][strelka-link] are used to find somatic SNVs and small indels, also [GATK HaplotyeCaller][gatk-link] for both the normal and the tumor sample.
 For structural variants we use [Manta][manta-link].
 Furthermore, we are applying [ASCAT][ascat-link] to estimate sample heterogeneity, ploidy and CNVs.
