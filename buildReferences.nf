@@ -39,7 +39,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 */
 
-version = '1.2.2'
+version = '1.2.3'
 
 // Check that Nextflow version is up to date enough
 // try / throw / catch works for NF versions < 0.25 when this was implemented
@@ -61,8 +61,14 @@ if (params.version) exit 0, versionMessage()
 if (!isAllowedParams(params)) exit 1, "params is unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
+// Default params:
+// Such params are overridden by command line or configuration definitions
+
+// No download
 params.download = false
-params.refDir = ""
+// refDir is empty
+params.refDir = ''
+
 verbose = params.verbose
 download = params.download ? true : false
 
@@ -309,6 +315,8 @@ def checkParams(it) {
     'callName',
     'contact-mail',
     'contactMail',
+    'container-path',
+    'containerPath',
     'containers',
     'docker',
     'download',
@@ -331,9 +339,7 @@ def checkParams(it) {
     'sampleDir',
     'single-CPUMem',
     'singleCPUMem',
-    'singularity-publish-dir',
     'singularity',
-    'singularityPublishDir',
     'step',
     'tag',
     'test',

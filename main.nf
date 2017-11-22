@@ -41,7 +41,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - CreateIntervalBeds - Create and sort intervals into bed files
  - RunHaplotypecaller - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
  - RunGenotypeGVCFs - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
- - RunBcftoolsStats - Run BCFTools stats on vcf before annotation
  - RunMutect1 - Run MuTect1 for Variant Calling (Parallelized processes)
  - RunMutect2 - Run MuTect2 for Variant Calling (Parallelized processes)
  - RunFreeBayes - Run FreeBayes for Variant Calling (Parallelized processes)
@@ -53,9 +52,9 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - RunAlleleCount - Run AlleleCount to prepare for ASCAT
  - RunConvertAlleleCounts - Run convertAlleleCounts to prepare for ASCAT
  - RunAscat - Run ASCAT for CNV
+ - RunBcftoolsStats - Run BCFTools stats on vcf before annotation
  - RunSnpeff - Run snpEff for annotation of vcf files
  - RunVEP - Run VEP for annotation of vcf files
- - RunBcftoolsStats - Run BCFTools stats on vcf files
  - GenerateMultiQCconfig - Generate a config file for MultiQC
  - RunMultiQC - Run MultiQC for report and QC
 ================================================================================
@@ -63,7 +62,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 */
 
-version = '1.2.2'
+version = '1.2.3'
 
 // Check that Nextflow version is up to date enough
 // try / throw / catch works for NF versions < 0.25 when this was implemented
@@ -73,12 +72,38 @@ try {
         throw GroovyException('Nextflow version too old')
     }
 } catch (all) {
-    log.error "====================================================\n" +
+    log.error "============================================================\n" +
               "  Nextflow version $nf_required_version required! You are running v$workflow.nextflow.version.\n" +
               "  Pipeline execution will continue, but things may break.\n" +
               "  Please update Nextflow.\n" +
               "============================================================"
 }
+
+// Default params:
+// Such params are overridden by command line or configuration definitions
+
+// No tools to annotate
+params.annotateTools = ''
+// No vcf to annotare
+params.annotateVCF = ''
+// For MultiQC reports
+params.callName = ''
+// For MultiQC reports
+params.contactMail = ''
+// GVCF are generated
+params.noGVCF = false
+// Reports are generated
+params.noReports = false
+// No sample is defined
+params.sample = ''
+// No sampleDir is defined
+params.sampleDir = ''
+// Step is mapping
+params.step = 'mapping'
+// Not testing
+params.test = ''
+// No tools to be used
+params.tools = ''
 
 if (params.help) exit 0, helpMessage()
 if (params.version) exit 0, versionMessage()
@@ -124,9 +149,9 @@ else explicitBqsrNeeded = tools.intersect(['manta', 'mutect1', 'mutect2', 'vardi
 tsvPath = ''
 if (params.sample) tsvPath = params.sample
 
+// No need for tsv file for step annotate
 if (!params.sample && !params.sampleDir) {
   tsvPaths = [
-  'annotate': "$workflow.launchDir/$directoryMap.recalibrated/recalibrated.tsv",
   'mapping': "$workflow.projectDir/data/tsv/tiny.tsv",
   'realign': "$workflow.launchDir/$directoryMap.nonRealigned/nonRealigned.tsv",
   'recalibrate': "$workflow.launchDir/$directoryMap.nonRecalibrated/nonRecalibrated.tsv",
@@ -136,12 +161,12 @@ if (!params.sample && !params.sampleDir) {
 }
 
 // Set up the fastqFiles and bamFiles channels. One of them remains empty
+// Except for step annotate, in which both stay empty
 fastqFiles = Channel.empty()
 bamFiles = Channel.empty()
 if (tsvPath) {
   tsvFile = file(tsvPath)
   switch (step) {
-    case 'annotate': bamFiles = extractBams(tsvFile); break
     case 'mapping': fastqFiles = extractFastq(tsvFile); break
     case 'realign': bamFiles = extractBams(tsvFile); break
     case 'recalibrate': bamFiles = extractRecal(tsvFile); break
@@ -152,7 +177,7 @@ if (tsvPath) {
   if (step != 'mapping') exit 1, '--sampleDir does not support steps other than "mapping"'
   fastqFiles = extractFastqFromDir(params.sampleDir)
   tsvFile = params.sampleDir  // used in the reports
-} else exit 1, 'No sample were defined, see --help'
+} else if (step != 'annotate') exit 1, 'No sample were defined, see --help'
 
 if (step == 'mapping') {
   (patientGenders, fastqFiles) = extractGenders(fastqFiles)
@@ -633,7 +658,11 @@ process RunBamQC {
 
     script:
     """
-    qualimap --java-mem-size=${task.memory.toGiga()}G bamqc -bam $bam -outdir $idSample -outformat HTML
+    qualimap --java-mem-size=${task.memory.toGiga()}G \
+    bamqc \
+    -bam $bam \
+    -outdir $idSample \
+    -outformat HTML
     """
 }
 
@@ -1383,7 +1412,7 @@ if (step == 'annotate' && annotateVCF == []) {
 
 vcfNotToAnnotate.close()
 
-(vcfForBCF, vcfForSnpeff, vcfForVep) = vcfToAnnotate.into(3)
+(vcfForBCFtools, vcfForSnpeff, vcfForVep) = vcfToAnnotate.into(3)
 
 process RunBcftoolsStats {
   tag {vcf}
@@ -1391,7 +1420,7 @@ process RunBcftoolsStats {
   publishDir directoryMap.bcftoolsStats, mode: 'copy'
 
   input:
-    set variantCaller, file(vcf) from vcfForBCF
+    set variantCaller, file(vcf) from vcfForBCFtools
 
   output:
     file ("${vcf.baseName}.bcf.tools.stats.out") into bcfReport
@@ -1419,7 +1448,7 @@ process RunSnpeff {
     val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
 
   output:
-    set file("${vcf.baseName}.ann.vcf"), file("${vcf.baseName}_snpEff_genes.txt"), file("${vcf.baseName}_snpEff.csv"), file("${vcf.baseName}_snpEff_summary.html") into snpeffReport
+    set file("${vcf.baseName}.snpEff.ann.vcf"), file("${vcf.baseName}.snpEff.genes.txt"), file("${vcf.baseName}.snpEff.csv"), file("${vcf.baseName}.snpEff.summary.html") into snpeffReport
 
   when: 'snpeff' in tools
 
@@ -1428,13 +1457,14 @@ process RunSnpeff {
   java -Xmx${task.memory.toGiga()}g \
   -jar \$SNPEFF_HOME/snpEff.jar \
   $snpeffDb \
-  -csvStats ${vcf.baseName}_snpEff.csv \
-  -v -cancer \
+  -csvStats ${vcf.baseName}.snpEff.csv \
+  -nodownload \
+  -cancer \
+  -v \
   ${vcf} \
-  > ${vcf.baseName}.ann.vcf
+  > ${vcf.baseName}.snpEff.ann.vcf
 
-  mv snpEff_summary.html ${vcf.baseName}_snpEff_summary.html
-  mv ${vcf.baseName}_snpEff.genes.txt ${vcf.baseName}_snpEff_genes.txt
+  mv snpEff_summary.html ${vcf.baseName}.snpEff.summary.html
   """
 }
 
@@ -1452,45 +1482,25 @@ process RunVEP {
     set variantCaller, file(vcf) from vcfForVep
 
   output:
-    set file("${vcf.baseName}.ann.vcf"), file("${vcf.baseName}*summary*") into vepReport
+    set file("${vcf.baseName}.vep.ann.vcf"), file("${vcf.baseName}.vep.summary.html") into vepReport
 
   when: 'vep' in tools
 
   script:
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
-  if (!workflow.container.isEmpty())  // test whether running in docker
   """
   vep \
   -i $vcf \
+  -o ${vcf.baseName}.vep.ann.vcf \
+  --stats_file ${vcf.baseName}.vep.summary.html \
+  --cache \
+  --everything \
+  --filter_common \
   --format vcf \
-  --sift b \
-  --polyphen b \
-  --symbol \
-  --numbers \
-  --biotype \
+  --offline \
+  --pick \
   --total_length \
-  -o ${vcf.baseName}.ann.vcf \
-  --vcf \
-  -offline \
-  --fields Consequence,Codons,Amino_acids,Gene,SYMBOL,Feature,EXON,PolyPhen,SIFT,Protein_position,BIOTYPE
-  """
-  else
-  """
-  variant_effect_predictor.pl \
-  -i $vcf \
-  --vcf \
-  --format vcf \
-  --sift b \
-  --polyphen b \
-  --symbol \
-  --numbers \
-  --biotype \
-  --total_length \
-  -o ${vcf.baseName}.ann.vcf \
-  --cache --dir_cache /sw/data/uppnex/vep/89 \
-  --assembly $genome \
-  --fields Consequence,Codons,Amino_acids,Gene,SYMBOL,Feature,EXON,PolyPhen,SIFT,Protein_position,BIOTYPE \
-  -offline
+  --vcf
   """
 }
 
@@ -1510,7 +1520,9 @@ process GenerateMultiQCconfig {
   when: reports
 
   script:
-  annotateString = annotateTools ? "- Annotate on : ${annotateTools.join(", ")}" : ''
+  annotateToolString = annotateTools ? "- Annotate on : ${annotateTools.join(", ")}" : ''
+  annotateVCFstring = annotateVCF ? "- Annotate on : ${annotateVCF.join(", ")}" : ''
+  tsvString = step != 'annotate' ? "- TSV file: ${tsvFile}" : ''
   """
   touch multiqc_config.yaml
   echo "custom_logo: $baseDir/doc/images/CAW_logo.png" >> multiqc_config.yaml
@@ -1518,14 +1530,16 @@ process GenerateMultiQCconfig {
   echo "custom_logo_title: 'Cancer Analysis Workflow'" >> multiqc_config.yaml
   echo "report_header_info:" >> multiqc_config.yaml
   echo "- CAW version: $version" >> multiqc_config.yaml
+  echo "- Contact Name: ${params.callName}" >> multiqc_config.yaml
   echo "- Contact E-mail: ${params.contactMail}" >> multiqc_config.yaml
   echo "- Command Line: ${workflow.commandLine}" >> multiqc_config.yaml
   echo "- Directory: ${workflow.launchDir}" >> multiqc_config.yaml
-  echo "- TSV file: ${tsvFile}" >> multiqc_config.yaml
-  echo "- Genome: "${params.genome} >> multiqc_config.yaml
+  echo ${tsvString} >> multiqc_config.yaml
+    echo "- Genome: "${params.genome} >> multiqc_config.yaml
   echo "- Step: "${step} >> multiqc_config.yaml
   echo "- Tools: "${tools.join(", ")} >> multiqc_config.yaml
-  echo ${annotateString} >> multiqc_config.yaml
+  echo ${annotateToolString} >> multiqc_config.yaml
+  echo ${annotateVCFstring} >> multiqc_config.yaml
   echo "  acLoci      : $referenceMap.acLoci" >> multiqc_config.yaml
   echo "  bwaIndex    : "${referenceMap.bwaIndex.join(", ")} >> multiqc_config.yaml
   echo "  cosmic      : $referenceMap.cosmic" >> multiqc_config.yaml
@@ -1644,6 +1658,8 @@ def checkParams(it) {
     'callName',
     'contact-mail',
     'contactMail',
+    'container-path',
+    'containerPath',
     'containers',
     'cosmic-index',
     'cosmic',
@@ -1679,9 +1695,7 @@ def checkParams(it) {
     'sampleDir',
     'single-CPUMem',
     'singleCPUMem',
-    'singularity-publish-dir',
     'singularity',
-    'singularityPublishDir',
     'step',
     'tag',
     'test',
@@ -2046,11 +2060,12 @@ def minimalInformationMessage() {
   log.info "Project Dir : $workflow.projectDir"
   log.info "Launch Dir  : $workflow.launchDir"
   log.info "Work Dir    : $workflow.workDir"
-  log.info "TSV file    : $tsvFile"
+  if (step != 'annotate') log.info "TSV file    : $tsvFile"
   log.info "Genome      : " + params.genome
   log.info "Step        : " + step
-  if (tools) {log.info "Tools       : " + tools.join(', ')}
-  if (annotateTools) {log.info "Annotate on : " + annotateTools.join(', ')}
+  if (tools) log.info "Tools       : " + tools.join(', ')
+  if (annotateTools) log.info "Annotate on : " + annotateTools.join(', ')
+  if (annotateVCF) log.info "VCF files   : " +annotateVCF.join(',\n    ')
   log.info "Reference files used:"
   log.info "  acLoci      : $referenceMap.acLoci"
   log.info "  bwaIndex    : " + referenceMap.bwaIndex.join(',\n    ')

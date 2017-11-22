@@ -1,4 +1,4 @@
-FROM willmclaren/ensembl-vep:release_90.5
+FROM willmclaren/ensembl-vep:release_90.6
 
 LABEL \
   author="Maxime Garcia" \
@@ -22,4 +22,3 @@ RUN \
 # Create UPPMAX directories
 USER root
 RUN mkdir /pica /proj /scratch /sw
-USER vep

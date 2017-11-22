@@ -43,6 +43,12 @@ cnvs=ascat.output$segments[ascat.output$segments[,"nMajor"]!=1 | ascat.output$se
 write.table(cnvs, file=paste(tumorname,".cnvs.txt",sep=""), sep="\t", quote=F, row.names=F, col.names=T)
 
 #Write out purity and ploidy info
-summary <- matrix(c(ascat.output$aberrantcellfraction, ascat.output$ploidy), ncol=2, byrow=TRUE)
+summary <- tryCatch({
+		matrix(c(ascat.output$aberrantcellfraction, ascat.output$ploidy), ncol=2, byrow=TRUE)}, error = function(err) {
+			# error handler picks up where error was generated
+			print(paste("Could not find optimal solution:  ",err))
+			return(matrix(c(0,0),nrow=1,ncol=2,byrow = TRUE))
+		}
+)
 colnames(summary) <- c("AberrantCellFraction","Ploidy")
 write.table(summary, file=paste(tumorname,".purityploidy.txt",sep=""), sep="\t", quote=F, row.names=F, col.names=T)

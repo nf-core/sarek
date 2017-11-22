@@ -1,3 +1,8 @@
+# somatic filter for FreeBayes VCF files, based on SpeedSeq: https://github.com/hall-lab/speedseq
+# recommended to filter the large VCF files like: 
+# vcfsamplediff -s VT normal tumour freebayesresult.vcf |egrep "#|somatic|loh" | vcffilter -f "QUAL > 20" | vcfflatten| awk -f ~/CAW/scripts/speedseq.filter.awk > filtered.vcf
+# where "normal" and "tumour" are the sample names in the VCF respectively
+# also check the index for these sample names also
 BEGIN{
 	MINQUAL=1;
 	SSC_THRES=-100;	# somatic score threshold ssc = LOD_T + LOD_N, log of odds (LOD) is the genotype quality ratio (http://www.nature.com/nmeth/journal/v12/n10/pdf/nmeth.3505.pdf)

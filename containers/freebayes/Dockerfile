@@ -17,7 +17,7 @@ RUN \
   && rm -rf /var/lib/apt/lists/*
 
 # Setup ENV variables
-ENV FREEBAYES_VERSION="1.1.0"
+ENV FREEBAYES_VERSION=1.1.0
 
 # Install BCFTools
 RUN \
