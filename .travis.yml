@@ -10,6 +10,7 @@ services:
 env:
   - NXF_VER=0.26.0 SGT_VER=2.3.1 PROFILE=singularity TEST=ANNOTATESNPEFF TOOL_INSTALL=all
   - NXF_VER=0.26.0 PROFILE=docker TEST=ANNOTATESNPEFF TOOL_INSTALL=nextflow
+  - NXF_VER=0.26.0 PROFILE=docker TEST=ANNOTATEVEP TOOL_INSTALL=nextflow
   - NXF_VER=0.26.0 SGT_VER=2.3.1 PROFILE=singularity TEST=RECALIBRATE TOOL_INSTALL=all
   - NXF_VER=0.26.0 PROFILE=docker TEST=RECALIBRATE TOOL_INSTALL=nextflow
   - NXF_VER=0.26.0 SGT_VER=2.3.1 PROFILE=singularity TEST=REALIGN TOOL_INSTALL=all
@@ -22,4 +23,4 @@ install: # Install Nextflow (and Singularity if needed)
   - "./scripts/install.sh --tool $TOOL_INSTALL"
 
 script:
-  - "./scripts/test.sh --profile $PROFILE --test $TEST"
+  - "travis_wait ./scripts/test.sh --profile $PROFILE --test $TEST"
