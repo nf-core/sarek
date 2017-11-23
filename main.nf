@@ -176,6 +176,12 @@ if (tsvPath) {
 } else if (params.sampleDir) {
   if (step != 'mapping') exit 1, '--sampleDir does not support steps other than "mapping"'
   fastqFiles = extractFastqFromDir(params.sampleDir)
+  (fastqFiles, fastqTmp) = fastqFiles.into(2)
+  fastqTmp.toList().subscribe onNext: {
+    if (it.size() == 0) {
+      exit 1, "No FASTQ files found in --sampleDir directory '${params.sampleDir}'"
+    }
+  }
   tsvFile = params.sampleDir  // used in the reports
 } else if (step != 'annotate') exit 1, 'No sample were defined, see --help'
 
