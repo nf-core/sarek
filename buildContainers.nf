@@ -55,7 +55,7 @@ try {
 
 if (params.help) exit 0, helpMessage()
 if (params.version) exit 0, versionMessage()
-if (!isAllowedParams(params)) exit 1, "params is unknown, see --help for more information"
+if (!isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
 // Default params:
@@ -70,16 +70,24 @@ params.docker = false
 // Containers will not be pushed on DockerHub
 params.push = false
 // DockerHub repository is maxulysse
+// TODO Change to a SciLifeLab repository
 params.repository = 'maxulysse'
 // Singularity will not be used
 params.singularity = false
 
-verbose = params.verbose
+// Define containers to handle (build/push or pull)
 containersList = defineContainersList()
 containers = params.containers.split(',').collect {it.trim()}
 containers = containers == ['all'] ? containersList : containers
+
+// push only to DockerHub, so only when using Docker
 push = params.docker && params.push ? true : false
+
+// by default the tag will be the current version
 tag = params.tag ? params.tag : version
+
+// to simplify verbose mode
+verbose = params.verbose
 
 if (!params.docker && !params.singularity) exit 1, 'No container technology choosed, specify --docker or --singularity, see --help for more information'
 
@@ -273,12 +281,12 @@ def helpMessage() {
   // Display help message
   this.cawMessage()
   log.info "    Usage:"
-  log.info "       nextflow run SciLifeLab/buildContainers.nf [--docker] [--push]"
+  log.info "       nextflow run SciLifeLab/CAW/buildContainers.nf [--docker] [--push]"
   log.info "          [--containers <container1...>] [--singularity]"
   log.info "          [--containerPath <path>]"
   log.info "          [--tag <tag>] [--repository <repository>]"
   log.info "    Example:"
-  log.info "      nextflow run . --docker --containers multiqc,fastqc"
+  log.info "      nextflow run SciLifeLab/CAW/buildContainers.nf --docker --containers caw"
   log.info "    --containers: Choose which containers to build"
   log.info "       Default: all"
   log.info "       Possible values:"
@@ -291,10 +299,10 @@ def helpMessage() {
   log.info "    --push: Push containers to DockerHub"
   log.info "    --repository: Build containers under given repository"
   log.info "       Default: maxulysse"
-  log.info "    --singularity: Build containers using Singularity"
-  log.info "    --containerPath: Select where to download containers"
+  log.info "    --singularity: Download Singularity images"
+  log.info "    --containerPath: Select where to download images"
   log.info "       Default: \$PWD"
-  log.info "    --tag`: Build containers using given tag"
+  log.info "    --tag`: Choose the tag for the containers"
   log.info "       Default (version number): " + version
   log.info "    --version"
   log.info "       displays version number and more informations"
@@ -314,11 +322,11 @@ def isAllowedParams(params) {
 
 def minimalInformationMessage() {
   // Minimal information message
-  log.info "Command Line: ${workflow.commandLine}"
-  log.info "Project Dir : ${workflow.projectDir}"
-  log.info "Launch Dir  : ${workflow.launchDir}"
-  log.info "Work Dir    : ${workflow.workDir}"
-  log.info "Cont. Path  : ${params.containerPath}"
+  log.info "Command Line: " + workflow.commandLine
+  log.info "Project Dir : " + workflow.projectDir
+  log.info "Launch Dir  : " + workflow.launchDir
+  log.info "Work Dir    : " + workflow.workDir
+  log.info "Cont. Path  : " + params.containerPath
   log.info "Containers  : " + containers.join(', ')
 }
 
@@ -336,7 +344,7 @@ def startMessage() {
 def versionMessage() {
   // Display version message
   log.info "CANCER ANALYSIS WORKFLOW"
-  log.info "  version   : ${version}"
+  log.info "  version   : " + version
   log.info workflow.commitId ? "Git info    : ${workflow.repository} - ${workflow.revision} [${workflow.commitId}]" : "  revision  : " + this.grabRevision()
 }
 
@@ -345,10 +353,10 @@ workflow.onComplete {
   this.nextflowMessage()
   this.cawMessage()
   this.minimalInformationMessage()
-  log.info "Completed at: ${workflow.complete}"
-  log.info "Duration    : ${workflow.duration}"
-  log.info "Success     : ${workflow.success}"
-  log.info "Exit status : ${workflow.exitStatus}"
+  log.info "Completed at: " + workflow.complete
+  log.info "Duration    : " + workflow.duration
+  log.info "Success     : " + workflow.success
+  log.info "Exit status : " + workflow.exitStatus
   log.info "Error report: " + (workflow.errorReport ?: '-')
 }
 
@@ -356,5 +364,6 @@ workflow.onError {
   // Display error message
   this.nextflowMessage()
   this.cawMessage()
-  log.info "Workflow execution stopped with the following message: " + workflow.errorMessage
+  log.info "Workflow execution stopped with the following message:"
+  log.info "  " + workflow.errorMessage
 }

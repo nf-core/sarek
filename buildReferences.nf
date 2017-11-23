@@ -58,13 +58,13 @@ try {
 
 if (params.help) exit 0, helpMessage()
 if (params.version) exit 0, versionMessage()
-if (!isAllowedParams(params)) exit 1, "params is unknown, see --help for more information"
+if (!isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
 // Default params:
 // Such params are overridden by command line or configuration definitions
 
-// No download
+// No download of reference source files
 params.download = false
 // outDir is References/${params.genome}
 params.outDir = "${baseDir}/References/${params.genome}"
@@ -93,7 +93,7 @@ if (params.genome == "smallGRCh37") {
     [
       '1000G_phase1.indels.b37.vcf.gz',
       '1000G_phase3_20130502_SNP_maf0.3.loci.tar.bz2',
-      'b37_cosmic_v74.noCHR.sort.4.1.vcf.tar.bz2',
+      'GRCh37_Cosmic_v83.vcf.tar.bz2',
       'dbsnp_138.b37.vcf.gz',
       'human_g1k_v37_decoy.fasta.gz',
       'Mills_and_1000G_gold_standard.indels.b37.vcf.gz',
@@ -406,12 +406,12 @@ def isAllowedParams(params) {
 
 def minimalInformationMessage() {
   // Minimal information message
-  log.info "Command Line: ${workflow.commandLine}"
-  log.info "Project Dir : ${workflow.projectDir}"
-  log.info "Launch Dir  : ${workflow.launchDir}"
-  log.info "Work Dir    : ${workflow.workDir}"
-  log.info "Out Dir     : ${params.outDir}"
-  log.info "Genome      : ${params.genome}"
+  log.info "Command Line: " + workflow.commandLine
+  log.info "Project Dir : " + workflow.projectDir
+  log.info "Launch Dir  : " + workflow.launchDir
+  log.info "Work Dir    : " + workflow.workDir
+  log.info "Out Dir     : " + params.outDir
+  log.info "Genome      : " + params.genome
 }
 
 def nextflowMessage() {
@@ -428,7 +428,7 @@ def startMessage() {
 def versionMessage() {
   // Display version message
   log.info "CANCER ANALYSIS WORKFLOW"
-  log.info "  version   : $version"
+  log.info "  version   : " + version
   log.info workflow.commitId ? "Git info    : ${workflow.repository} - ${workflow.revision} [${workflow.commitId}]" : "  revision  : " + this.grabRevision()
 }
 
@@ -437,10 +437,10 @@ workflow.onComplete {
   this.nextflowMessage()
   this.cawMessage()
   this.minimalInformationMessage()
-  log.info "Completed at: ${workflow.complete}"
-  log.info "Duration    : ${workflow.duration}"
-  log.info "Success     : ${workflow.success}"
-  log.info "Exit status : ${workflow.exitStatus}"
+  log.info "Completed at: " + workflow.complete
+  log.info "Duration    : " + workflow.duration
+  log.info "Success     : " + workflow.success
+  log.info "Exit status : " + workflow.exitStatus
   log.info "Error report: " + (workflow.errorReport ?: '-')
 }
 
@@ -449,5 +449,5 @@ workflow.onError {
   this.nextflowMessage()
   this.cawMessage()
   log.info "Workflow execution stopped with the following message:"
-  log.info "  ${workflow.errorMessage}"
+  log.info "  " + workflow.errorMessage
 }

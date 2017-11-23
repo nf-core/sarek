@@ -72,12 +72,17 @@ try {
         throw GroovyException('Nextflow version too old')
     }
 } catch (all) {
-    log.error "============================================================\n" +
+    log.error "====================================================\n" +
               "  Nextflow version ${nf_required_version} required! You are running v${workflow.nextflow.version}.\n" +
               "  Pipeline execution will continue, but things may break.\n" +
               "  Please update Nextflow.\n" +
               "============================================================"
 }
+
+if (params.help) exit 0, helpMessage()
+if (params.version) exit 0, versionMessage()
+if (!isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
+if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
 // Default params:
 // Such params are overridden by command line or configuration definitions
@@ -110,11 +115,6 @@ params.tools = ''
 params.containerPath = ''
 params.repository = ''
 params.tag = ''
-
-if (params.help) exit 0, helpMessage()
-if (params.version) exit 0, versionMessage()
-if (!isAllowedParams(params)) exit 1, "params is unknown, see --help for more information"
-if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
 step = params.step.toLowerCase()
 if (step == 'preprocessing') step = 'mapping'
@@ -2168,5 +2168,6 @@ workflow.onError {
   // Display error message
   this.nextflowMessage()
   this.cawMessage()
-  log.info "Workflow execution stopped with the following message: " + workflow.errorMessage
+  log.info "Workflow execution stopped with the following message:"
+  log.info "  " + workflow.errorMessage
 }
