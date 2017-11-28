@@ -99,6 +99,8 @@ params.contactMail = ''
 params.noGVCF = false
 // Reports are generated
 params.noReports = false
+// BAMQC is used
+params.noBAMQC = false
 // outDir is current directory
 params.outDir = baseDir
 // No sample is defined
@@ -658,7 +660,7 @@ process RunBamQC {
   output:
     file("${idSample}") into bamQCreport
 
-    when: reports
+    when: reports && !params.noBAMQC
 
     script:
     """
@@ -1709,8 +1711,10 @@ def checkParams(it) {
     'known-indels',
     'knownIndels',
     'knownIndelsIndex',
+    'no-BAMQC',
     'no-GVCF',
     'no-reports',
+    'noBAMQC',
     'noGVCF',
     'noReports',
     'out-dir',
