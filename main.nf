@@ -573,7 +573,7 @@ process RecalibrateBam {
   publishDir "${params.outDir}/${directoryMap.recalibrated}", mode: 'copy'
 
   input:
-    set idPatient, status, idSample, file(bam), file(bai), recalibrationReport from recalibrationTable
+    set idPatient, status, idSample, file(bam), file(bai), file(recalibrationReport) from recalibrationTable
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(intervals) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
