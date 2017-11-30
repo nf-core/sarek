@@ -323,7 +323,7 @@ if (verbose) mergedBam = mergedBam.view {
 process MarkDuplicates {
   tag {idPatient + "-" + idSample}
 
-  publishDir '.', saveAs: { it == "${bam}.metrics" ? "${params.outDir}/${directoryMap.markDuplicatesQC}/${it}" : "${params.outDir}/${directoryMap.nonRealigned}/${it}" }, mode: 'copy'
+  publishDir params.outDir, saveAs: { it == "${bam}.metrics" ? "${directoryMap.markDuplicatesQC}/${it}" : "${directoryMap.nonRealigned}/${it}" }, mode: 'copy'
 
   input:
     set idPatient, status, idSample, file(bam) from mergedBam
