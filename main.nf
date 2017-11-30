@@ -221,7 +221,7 @@ if (verbose) bamFiles = bamFiles.view {
 process RunFastQC {
   tag {idPatient + "-" + idRun}
 
-  publishDir "${params.outDir}/${directoryMap.fastQC}", mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.fastQC}/${idRun}", mode: 'copy'
 
   input:
     set idPatient, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFilesforFastQC
