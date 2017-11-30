@@ -9,5 +9,6 @@ work/
 .nextflow*
 *.img
 *.tar.gz
+report.html*
 timeline.html*
 trace.txt*

@@ -1,0 +1,11 @@
+1234	XX	0	1234N	1234N_M1	s3://caw-test-data/manta/normal/C097F_N_111207.1.AGTTGCTT_R1_xxx.fastq.gz	s3://caw-test-data/manta/normal/C097F_N_111207.1.AGTTGCTT_R2_xxx.fastq.gz
+1234	XX	0	1234N	1234N_M2	s3://caw-test-data/manta/normal/C097F_N_111207.2.AGTTGCTT_R1_xxx.fastq.gz	s3://caw-test-data/manta/normal/C097F_N_111207.2.AGTTGCTT_R2_xxx.fastq.gz
+1234	XX	0	1234N	1234N_M4	s3://caw-test-data/manta/normal/C09DF_N_111207.4.AGTTGCTT_R1_xxx.fastq.gz	s3://caw-test-data/manta/normal/C09DF_N_111207.4.AGTTGCTT_R2_xxx.fastq.gz
+1234	XX	0	1234N	1234N_M5	s3://caw-test-data/manta/normal/D0F23_N_111212.1.AGTTGCTT_R1_xxx.fastq.gz	s3://caw-test-data/manta/normal/D0F23_N_111212.1.AGTTGCTT_R2_xxx.fastq.gz
+1234	XX	0	1234N	1234N_M6	s3://caw-test-data/manta/normal/D0F23_N_111212.2.AGTTGCTT_R1_xxx.fastq.gz	s3://caw-test-data/manta/normal/D0F23_N_111212.2.AGTTGCTT_R2_xxx.fastq.gz
+1234	XX	0	1234N	1234N_M7	s3://caw-test-data/manta/normal/D0F23_N_111212.3.AGTTGCTT_R1_xxx.fastq.gz	s3://caw-test-data/manta/normal/D0F23_N_111212.3.AGTTGCTT_R2_xxx.fastq.gz
+1234	XX	1	9876T	9876T_M1	s3://caw-test-data/manta/tumor/C09D_T_111207.3.ACCAACTG_R1_xxx.fastq.gz	s3://caw-test-data/manta/tumor/C09D_T_111207.3.ACCAACTG_R2_xxx.fastq.gz
+1234	XX	1	9876T	9876T_M2	s3://caw-test-data/manta/tumor/C09D_T_111207.5.ACCAACTG_R1_xxx.fastq.gz	s3://caw-test-data/manta/tumor/C09D_T_111207.5.ACCAACTG_R2_xxx.fastq.gz
+1234	XX	1	9876T	9876T_M3	s3://caw-test-data/manta/tumor/C09D_T_111207.6.ACCAACTG_R1_xxx.fastq.gz	s3://caw-test-data/manta/tumor/C09D_T_111207.6.ACCAACTG_R2_xxx.fastq.gz
+1234	XX	1	9876T	9876T_M4	s3://caw-test-data/manta/tumor/C09D_T_111207.7.ACCAACTG_R1_xxx.fastq.gz	s3://caw-test-data/manta/tumor/C09D_T_111207.7.ACCAACTG_R2_xxx.fastq.gz
+1234	XX	1	9876T	9876T_M5	s3://caw-test-data/manta/tumor/C09D_T_111207.8.ACCAACTG_R1_xxx.fastq.gz	s3://caw-test-data/manta/tumor/C09D_T_111207.8.ACCAACTG_R2_xxx.fastq.gz

@@ -4,7 +4,7 @@ set -xeuo pipefail
 GENOME=smallGRCh37
 PROFILE=singularity
 SAMPLE=data/tsv/tiny.tsv
-TAG=1.2.3
+TAG=1.2.5
 TEST=ALL
 TRAVIS=${TRAVIS:-false}
 
@@ -45,13 +45,13 @@ done
 
 function nf_test() {
   echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE --genome $GENOME -resume --verbose$(tput sgr0)"
-  nextflow run $@ -profile $PROFILE --genome $GENOME -resume --verbose
+  nextflow run $@ -profile $PROFILE --genome $GENOME -resume --genome_base $PWD/References/$GENOME --verbose
 }
 
 # Build references only for smallGRCh37
 if [[ $GENOME == smallGRCh37 ]] && [[ $TEST != BUILDCONTAINERS ]]
 then
-  nf_test buildReferences.nf --download
+  nf_test buildReferences.nf --download --outDir References/$GENOME
   # Remove images only on TRAVIS
   if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
   then
@@ -85,7 +85,7 @@ fi
 
 if [[ ALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
 then
-  nf_test . --step mapping --sample data/tsv/tiny-single-manta.tsv --tools Manta,Strelka
+  nf_test . --step mapping --sampleDir data/tiny/manta/normal --tools Manta,Strelka
   nf_test . --step mapping --sample data/tsv/tiny-manta.tsv --tools Manta,Strelka
   nf_test . --step mapping --sample $SAMPLE --tools MuTect2
 
@@ -112,7 +112,7 @@ then
   nf_test . --step annotate --tools ${ANNOTATOR} --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz --noReports
 fi
 
-if [[ ALL,BUILDCONTAINERS =~ $TEST ]]
+if [[ ALL,BUILDCONTAINERS =~ $TEST ]] && [[ $PROFILE == docker ]]
 then
   nf_test buildContainers.nf --docker --containers caw,fastqc,gatk,igvtools,multiqc,mutect1,picard,qualimap,runallelecount,r-base,snpeff
 fi
