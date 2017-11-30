@@ -636,12 +636,12 @@ process RunSamtoolsStats {
   output:
     file ("${bam}.samtools.stats.out") into samtoolsStatsReport
 
-    when: reports
+  when: reports
 
-    script:
-    """
-    samtools stats ${bam} > ${bam}.samtools.stats.out
-    """
+  script:
+  """
+  samtools stats ${bam} > ${bam}.samtools.stats.out
+  """
 }
 
 if (verbose) samtoolsStatsReport = samtoolsStatsReport.view {
@@ -660,16 +660,16 @@ process RunBamQC {
   output:
     file("${idSample}") into bamQCreport
 
-    when: reports && !params.noBAMQC
+  when: reports && !params.noBAMQC
 
-    script:
-    """
-    qualimap --java-mem-size=${task.memory.toGiga()}G \
-    bamqc \
-    -bam ${bam} \
-    -outdir ${idSample} \
-    -outformat HTML
-    """
+  script:
+  """
+  qualimap --java-mem-size=${task.memory.toGiga()}G \
+  bamqc \
+  -bam ${bam} \
+  -outdir ${idSample} \
+  -outformat HTML
+  """
 }
 
 if (verbose) bamQCreport = bamQCreport.view {
@@ -1622,7 +1622,7 @@ process RunMultiQC {
   output:
     set file("*multiqc_report.html"), file("*multiqc_data") into multiQCReport
 
-    when: reports
+  when: reports
 
   script:
   """
