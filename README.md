@@ -88,7 +88,7 @@ For further information/help, don't hesitate to get in touch on [Gitter][gitter-
 [nextflow-link]: https://www.nextflow.io/
 [ngi-link]: https://ngisweden.scilifelab.se/
 [scilifelab-link]: https://www.scilifelab.se/
-[scilifelab-stockholm-link]: https://www.scilifelab.se/platforms/ngi/
+[scilifelab-stockholm-link]: https://www.scilifelab.se/facilities/ngi-stockholm/
 [strelka-link]: https://github.com/Illumina/strelka
 [travis-badge]: https://api.travis-ci.org/SciLifeLab/CAW.svg
 [travis-link]: https://travis-ci.org/SciLifeLab/CAW
