@@ -40,7 +40,7 @@ BEGIN{
         $8="DQUAL="DQUAL";"$8
         print
     }
-    else if (!ONLY_SOMATIC && $6>=MINQUAL && $10~"^0/0" && ! match($11,"^0/0")) {
+    else if (!ONLY_SOMATIC && $6>=MINQUAL && $NORMAL_IDX~"^0/0" && ! match($TUMOUR_IDX,"^0/0")) {
         $8="DQUAL="DQUAL";"$8
         print
     }
