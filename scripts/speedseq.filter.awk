@@ -1,6 +1,9 @@
 # somatic filter for FreeBayes VCF files, based on SpeedSeq: https://github.com/hall-lab/speedseq
 # recommended to filter the large VCF files like: 
-# vcfsamplediff -s VT normal tumour freebayesresult.vcf | awk '/^#/{print}!/^#/&&!/germline/' | vcffilter -f "QUAL > 20" | vcfflatten| awk -f speedseq.filter.awk -v NORMAL_IDX=10 -v TUMOUR_IDX=11 > filtered.vcf
+#   vcfsamplediff -s VT normal tumour freebayesresult.vcf | \
+#   awk '/^#/{print}!/^#/&&!/germline/' |\
+#   vcffilter -f "QUAL > 20" | vcfflatten |\
+#   awk -f speedseq.filter.awk -v NORMAL_IDX=10 -v TUMOUR_IDX=11 > filtered.vcf
 # where "normal" and "tumour" are the sample names in the VCF respectively, and the IDX variables are their 1-based column numbers in the #CHROM line of the VCF
 # also check the index for these sample names also
 BEGIN{
