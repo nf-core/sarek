@@ -1,16 +1,17 @@
-#!/bin/bash
+#!/bin/bash -x
 
 TUMOR_SAMPLE=$1
 NORMAL_SAMPLE=$2
 SOURCE_DIR=$3
 
-module load GATK
-module load tabix
+module load picard
+module load htslib
 
 # first make a list of files to merge 
-find ${SOURCE_DIR}/ -name "*_vs_*.vcf" -or -name "*_vs_*.vcf.gz" |\
-		egrep -v "candidate|diploid" > filestomerge.list
-
+mkdir MERGING
+for f in `find ${SOURCE_DIR}/ -name "*_vs_*.vcf" -or -name "*_vs_*.vcf.gz" | egrep -v "candidate|diploid|freebayes"` ; do cp -v $f MERGING ; done
+find ${SOURCE_DIR} -name "free*filtered.vcf" | xargs -I {} cp -v {} MERGING/
+find MERGING -type f > filestomerge.list
 # this is only to check which are those where we have to fix the NORMAL/TUMOR string
 #for f in `cat filestomerge.list`; do echo $f;zgrep -m1 CHROM $f; done
 
@@ -39,7 +40,7 @@ tabix ${FB_FILE}.gz
 perl -p -i -e 's/filtered.vcf/filtered.vcf.gz/' filestomerge.list
 
 # This is the actual merging step
-java -Xmx7g -jar $GATK_HOME/GenomeAnalysisTK.jar MergeVcfs -I filestomerge.list -O all_somatic_calls.vcf 
-awk '/^#/||$7~/PASS/{print}' all_somatic_calls.vcf > filtered_somatic_calls.vcf
+java -Xmx7g -jar $PICARD_HOME/picard.jar MergeVcfs I=filestomerge.list O=${TUMOR_SAMPLE}_${NORMAL_SAMPLE}_all_somatic_calls.vcf 
+awk '/^#/||$7~/PASS/{print}' ${TUMOR_SAMPLE}_${NORMAL_SAMPLE}_all_somatic_calls.vcf > ${TUMOR_SAMPLE}_${NORMAL_SAMPLE}_filtered_somatic_calls.vcf
 
-echo "Results written to all_somatic_calls.vcf (all the calls) filtered_somatic_calls.vcf (only the PASS-ed ones) files"
+echo "Results written to ${TUMOR_SAMPLE}_${NORMAL_SAMPLE}_all_somatic_calls.vcf (all the calls) ${TUMOR_SAMPLE}_${NORMAL_SAMPLE}_filtered_somatic_calls.vcf (only the PASS-ed ones) files"
