@@ -329,8 +329,10 @@ def minimalInformationMessage() {
   log.info "Project Dir : " + workflow.projectDir
   log.info "Launch Dir  : " + workflow.launchDir
   log.info "Work Dir    : " + workflow.workDir
-  log.info "Cont. Path  : " + params.containerPath
-  log.info "Containers  : " + containers.join(', ')
+  log.info "Containers  :"
+  if (params.repository) log.info "  Repository   : ${params.repository}"
+  else log.info "  ContainerPath: " + params.containerPath
+  log.info "  Tag          : " + params.tag
 }
 
 def nextflowMessage() {
