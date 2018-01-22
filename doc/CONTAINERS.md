@@ -58,8 +58,8 @@ A container named after the process is made for each process. If a container can
 
 ## multiqc [![multiqc-docker status][multiqc-docker-badge]][multiqc-docker-link]
 
-- Based on `ewels/multiqc:v1.3`
-- Contain **[MultiQC][multiqc-link]** 1.3
+- Based on `ewels/multiqc:v1.4`
+- Contain **[MultiQC][multiqc-link]** 143
 
 ## mutect1 [![mutect1-docker status][mutect1-docker-badge]][mutect1-docker-link]
 
