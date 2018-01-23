@@ -1,4 +1,4 @@
-FROM ewels/multiqc:v1.3
+FROM ewels/multiqc:v1.4
 
 LABEL \
   author="Maxime Garcia" \
