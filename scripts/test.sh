@@ -56,10 +56,16 @@ then
   fi
 fi
 
-if [[ ALL,MAPPING,REALIGN,RECALIBRATE =~ $TEST ]]
+if [[ ALL,MAPPING,ONLYQC,REALIGN,RECALIBRATE =~ $TEST ]]
 then
   nf_test . --step mapping --sampleDir data/tiny/tiny/normal
   nf_test . --step mapping --sample $SAMPLE
+fi
+
+if [[ ALL,ONLYQC =~ $TEST ]]
+then
+  nf_test . --step mapping --sample $SAMPLE --tools Strelka --noReports
+  nf_test . --step variantCalling --tools Strelka --onlyQC
 fi
 
 if [[ ALL,REALIGN =~ $TEST ]]

@@ -134,6 +134,7 @@ toolList = defineToolList()
 nucleotidesPerSecond = 1000.0 // used to estimate variant calling runtime
 gvcf = !params.noGVCF
 reports = !params.noReports
+onlyQC = params.onlyQC
 verbose = params.verbose
 
 if (!checkParameterExistence(step, stepList)) exit 1, 'Unknown step, see --help for more information'
@@ -254,7 +255,7 @@ process MapReads {
   output:
     set idPatient, status, idSample, idRun, file("${idRun}.bam") into mappedBam
 
-  when: step == 'mapping'
+  when: step == 'mapping' && !onlyQC
 
   script:
   readGroup = "@RG\\tID:${idRun}\\tPU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
@@ -294,7 +295,7 @@ process MergeBams {
   output:
     set idPatient, status, idSample, file("${idSample}.bam") into mergedBam
 
-  when: step == 'mapping'
+  when: step == 'mapping' && !onlyQC
 
   script:
   """
@@ -335,7 +336,7 @@ process MarkDuplicates {
     set idPatient, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai") into markDuplicatesTSV
     file ("${bam}.metrics") into markDuplicatesReport
 
-  when: step == 'mapping'
+  when: step == 'mapping' && !onlyQC
 
   script:
   """
@@ -413,7 +414,7 @@ process RealignerTargetCreator {
   output:
     set idPatient, file("${idPatient}.intervals") into intervals
 
-  when: step == 'mapping' || step == 'realign'
+  when: ( step == 'mapping' || step == 'realign' ) && !onlyQC
 
   script:
   bams = bam.collect{"-I ${it}"}.join(' ')
@@ -471,7 +472,7 @@ process IndelRealigner {
   output:
     set idPatient, file("*.real.bam"), file("*.real.bai") into realignedBam mode flatten
 
-  when: step == 'mapping' || step == 'realign'
+  when: ( step == 'mapping' || step == 'realign' ) && !onlyQC
 
   script:
   bams = bam.collect{"-I ${it}"}.join(' ')
@@ -524,7 +525,7 @@ process CreateRecalibrationTable {
     set idPatient, status, idSample, file(bam), file(bai), file("${idSample}.recal.table") into recalibrationTable
     set idPatient, status, idSample, val("${idSample}_${status}.md.real.bam"), val("${idSample}_${status}.md.real.bai"), val("${idSample}.recal.table") into recalibrationTableTSV
 
-  when: step == 'mapping' || step == 'realign'
+  when: ( step == 'mapping' || step == 'realign' ) && !onlyQC
 
   script:
   known = knownIndels.collect{ "-knownSites ${it}" }.join(' ')
@@ -589,7 +590,7 @@ process RecalibrateBam {
 
   // HaplotypeCaller can do BQSR on the fly, so do not create a
   // recalibrated BAM explicitly.
-  when: step != 'variantcalling' && explicitBqsrNeeded
+  when: ( step != 'variantcalling' && explicitBqsrNeeded ) && !onlyQC
 
   script:
   """
@@ -613,7 +614,7 @@ recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
 
 if (step == 'variantcalling') {
   // assume input is recalibrated, ignore explicitBqsrNeeded
-  (recalibratedBam, recalTables) = bamFiles.into(2)
+  (bamForBamQC, bamForSamToolsStats, recalibratedBam, recalTables) = bamFiles.into(4)
 
   recalTables = recalTables.map{ it + [null] } // null recalibration table means: do not use --BQSR
 
@@ -830,7 +831,7 @@ process RunHaplotypecaller {
     set val("gvcf-hc"), idPatient, idSample, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf") into hcGenomicVCF
     set idPatient, idSample, file(intervalBed), file("${intervalBed.baseName}_${idSample}.g.vcf") into vcfsToGenotype
 
-  when: 'haplotypecaller' in tools
+  when: 'haplotypecaller' in tools && !onlyQC
 
   script:
   BQSR = (recalTable != null) ? "--BQSR $recalTable" : ''
@@ -869,7 +870,7 @@ process RunGenotypeGVCFs {
   output:
     set val("haplotypecaller"), idPatient, idSample, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into hcGenotypedVCF
 
-  when: 'haplotypecaller' in tools
+  when: 'haplotypecaller' in tools && !onlyQC
 
   script:
   // Using -L is important for speed
@@ -905,7 +906,7 @@ process RunMutect1 {
   output:
     set val("mutect1"), idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect1Output
 
-  when: 'mutect1' in tools
+  when: 'mutect1' in tools && !onlyQC
 
   script:
   """
@@ -944,7 +945,7 @@ process RunMutect2 {
   output:
     set val("mutect2"), idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2Output
 
-  when: 'mutect2' in tools
+  when: 'mutect2' in tools && !onlyQC
 
   script:
   """
@@ -974,7 +975,7 @@ process RunFreeBayes {
   output:
     set val("freebayes"), idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into freebayesOutput
 
-  when: 'freebayes' in tools
+  when: 'freebayes' in tools && !onlyQC
 
   script:
   """
@@ -1019,7 +1020,7 @@ process ConcatVCF {
     set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz") into vcfConcatenated
     file("*.vcf.gz.tbi") into vcfConcatenatedTbi
 
-  when: 'haplotypecaller' in tools || 'mutect1' in tools || 'mutect2' in tools || 'freebayes' in tools
+  when: ( 'haplotypecaller' in tools || 'mutect1' in tools || 'mutect2' in tools || 'freebayes' in tools ) && !onlyQC
 
   script:
   if (variantCaller == 'haplotypecaller') outputFile = "${variantCaller}_${idSampleNormal}.vcf"
@@ -1090,7 +1091,7 @@ process RunStrelka {
   output:
     set val("strelka"), idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into strelkaOutput
 
-  when: 'strelka' in tools
+  when: 'strelka' in tools && !onlyQC
 
   script:
   """
@@ -1135,7 +1136,7 @@ process RunSingleStrelka {
   output:
     set val("singlestrelka"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleStrelkaOutput
 
-  when: 'strelka' in tools
+  when: 'strelka' in tools && !onlyQC
 
   script:
   """
@@ -1179,7 +1180,7 @@ process RunManta {
   output:
     set val("manta"), idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into mantaOutput
 
-  when: 'manta' in tools
+  when: 'manta' in tools && !onlyQC
 
   script:
   """
@@ -1232,7 +1233,7 @@ process RunSingleManta {
   output:
     set val("singlemanta"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleMantaOutput
 
-  when: 'manta' in tools
+  when: 'manta' in tools && !onlyQC
 
   script:
   if ( status == 0 ) // If Normal Sample
@@ -1305,7 +1306,7 @@ process RunAlleleCount {
   output:
     set idPatient, status, idSample, file("${idSample}.alleleCount") into alleleCountOutput
 
-  when: 'ascat' in tools
+  when: 'ascat' in tools && !onlyQC
 
   script:
   """
@@ -1344,7 +1345,7 @@ process RunConvertAlleleCounts {
   output:
     set idPatient, idSampleNormal, idSampleTumor, file("${idSampleNormal}.BAF"), file("${idSampleNormal}.LogR"), file("${idSampleTumor}.BAF"), file("${idSampleTumor}.LogR") into convertAlleleCountsOutput
 
-  when: 'ascat' in tools
+  when: 'ascat' in tools && !onlyQC
 
   script:
   gender = patientGenders[idPatient]
@@ -1366,7 +1367,7 @@ process RunAscat {
   output:
     set val("ascat"), idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.*.{png,txt}") into ascatOutput
 
-  when: 'ascat' in tools
+  when: 'ascat' in tools && !onlyQC
 
   script:
   """
