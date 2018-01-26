@@ -1,0 +1,5 @@
+DREAM	XX	0	DREAM	DREAM	s3://dream-test-data/S1/normal/C09DF.1_1.fastq.gz	s3://dream-test-data/S1/normal/C09DF.1_2.fastq.gz
+DREAM	XX	0	DREAM	DREAM	s3://dream-test-data/S1/normal/C09DF.2_1.fastq.gz	s3://dream-test-data/S1/normal/C09DF.2_2.fastq.gz
+DREAM	XX	0	DREAM	DREAM	s3://dream-test-data/S1/normal/D0EN0.4_1.fastq.gz	s3://dream-test-data/S1/normal/D0EN0.4_2.fastq.gz
+DREAM	XX	0	DREAM	DREAM	s3://dream-test-data/S1/normal/D0EN0.7_1.fastq.gz	s3://dream-test-data/S1/normal/D0EN0.7_2.fastq.gz
+DREAM	XX	0	DREAM	DREAM	s3://dream-test-data/S1/normal/D0EN0.8_1.fastq.gz	s3://dream-test-data/S1/normal/D0EN0.8_2.fastq.gz
