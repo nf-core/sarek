@@ -101,6 +101,8 @@ params.noGVCF = false
 params.noReports = false
 // BAMQC is used
 params.noBAMQC = false
+// Run CAW in onlyQC mode
+params.onlyQC = false
 // outDir is current directory
 params.outDir = baseDir
 // No sample is defined
@@ -1720,6 +1722,8 @@ def checkParams(it) {
     'noBAMQC',
     'noGVCF',
     'noReports',
+    'only-QC',
+    'onlyQC',
     'out-dir',
     'outDir',
     'params',
@@ -2065,6 +2069,8 @@ def helpMessage() {
   log.info "         GRCh37"
   log.info "         GRCh38 (Default)"
   log.info "         smallGRCh37 (Use a small reference (Tests only))"
+  log.info "    --onlyQC"
+  log.info "       Run only QC tools and gather reports"
   log.info "    --help"
   log.info "       you're reading it"
   log.info "    --verbose"
