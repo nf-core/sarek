@@ -25,8 +25,8 @@ env:
 install: # Install Nextflow (and Singularity if needed)
   - "./scripts/install.sh --tool $TOOL_INSTALL"
 
-before_script:
-  - "travis_retry ./scripts/test.sh --profile $PROFILE --test BUILDREFERENCES"
+before_script: # Build references when needed
+  - "travis_retry ./scripts/test.sh --profile $PROFILE --test $TEST --build"
 
 script:
   - "travis_retry travis_wait 50 ./scripts/test.sh --profile $PROFILE --test $TEST"

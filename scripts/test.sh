@@ -6,6 +6,7 @@ PROFILE=singularity
 SAMPLE=data/tsv/tiny.tsv
 TEST=ALL
 TRAVIS=${TRAVIS:-false}
+BUILD=false
 
 while [[ $# -gt 0 ]]
 do
@@ -31,6 +32,10 @@ do
     shift # past argument
     shift # past value
     ;;
+    -b|--build)
+    BUILD=true
+    shift # past value
+    ;;
     *) # unknown option
     shift # past argument
     ;;
@@ -43,7 +48,7 @@ function nf_test() {
 }
 
 # Build references only for smallGRCh37
-if [[ $GENOME == smallGRCh37 ]] && [[ ALL,BUILDREFERENCES =~ $TEST ]]
+if [[ $GENOME == smallGRCh37 ]] && [[ $TEST != BUILDCONTAINERS ]] && [[ BUILD ]]
 then
   nf_test buildReferences.nf --download --outDir References/$GENOME
   # Remove images only on TRAVIS
