@@ -85,18 +85,6 @@ fi
 
 if [[ ALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
 then
-  nf_test . --step mapping --sampleDir data/tiny/manta/normal --tools Manta,Strelka
-  nf_test . --step mapping --sample data/tsv/tiny-manta.tsv --tools Manta,Strelka
-  nf_test . --step mapping --sample $SAMPLE --tools MuTect2
-
-  # Remove images only on TRAVIS
-  if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
-  then
-    docker rmi -f maxulysse/caw:latest maxulysse/fastqc:latest maxulysse/gatk:latest maxulysse/picard:latest
-  elif [[ $PROFILE == singularity ]] && [[ $TRAVIS == true ]]
-  then
-    rm -rf work/singularity/caw-latest.img work/singularity/fastqc-latest.img work/singularity/gatk-latest.img work/singularity/picard-latest.img
-  fi
   if [[ $TEST = ANNOTATESNPEFF ]]
   then
     ANNOTATOR=snpEFF
@@ -107,9 +95,8 @@ then
   then
     ANNOTATOR=snpEFF,VEP
   fi
-  nf_test . --step annotate --tools ${ANNOTATOR} --annotateTools Manta,Strelka
-  nf_test . --step annotate --tools ${ANNOTATOR} --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf.gz --noReports
-  nf_test . --step annotate --tools ${ANNOTATOR} --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz --noReports
+  nf_test . --step annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz --noReports
+  nf_test . --step annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz,data/tiny/vcf/Strelka_9876T_variants.vcf.gz --noReports
 fi
 
 if [[ ALL,BUILDCONTAINERS =~ $TEST ]] && [[ $PROFILE == docker ]]
