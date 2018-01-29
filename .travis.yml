@@ -25,4 +25,4 @@ install: # Install Nextflow (and Singularity if needed)
   - "./scripts/install.sh --tool $TOOL_INSTALL"
 
 script:
-  - "travis_wait 50 ./scripts/test.sh --profile $PROFILE --test $TEST"
+  - "travis_retry travis_wait 50 ./scripts/test.sh --profile $PROFILE --test $TEST"
