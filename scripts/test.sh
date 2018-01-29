@@ -43,7 +43,7 @@ function nf_test() {
 }
 
 # Build references only for smallGRCh37
-if [[ $GENOME == smallGRCh37 ]] && [[ $TEST != BUILDCONTAINERS ]]
+if [[ $GENOME == smallGRCh37 ]] && [[ ALL,BUILDREFERENCES =~ $TEST ]]
 then
   nf_test buildReferences.nf --download --outDir References/$GENOME
   # Remove images only on TRAVIS
