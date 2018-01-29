@@ -95,6 +95,15 @@ then
   then
     ANNOTATOR=snpEFF,VEP
   fi
+  if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
+  then
+    docker rmi -f maxulysse/caw:latest
+    docker rmi -f maxulysse/picard:latest
+  elif [[ $PROFILE == singularity ]] && [[ $TRAVIS == true ]]
+  then
+    rm -rf work/singularity/caw-latest.img
+    rm -rf work/singularity/picard-latest.img
+  fi
   nf_test . --step annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz --noReports
   nf_test . --step annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz,data/tiny/vcf/Strelka_9876T_variants.vcf.gz --noReports
 fi
