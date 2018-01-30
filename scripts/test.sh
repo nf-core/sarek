@@ -4,7 +4,6 @@ set -xeuo pipefail
 GENOME=smallGRCh37
 PROFILE=singularity
 SAMPLE=data/tsv/tiny.tsv
-TAG=1.2.3
 TEST=ALL
 TRAVIS=${TRAVIS:-false}
 
@@ -32,11 +31,6 @@ do
     shift # past argument
     shift # past value
     ;;
-    --tag)
-    TAG=$2
-    shift # past argument
-    shift # past value
-    ;;
     *) # unknown option
     shift # past argument
     ;;
@@ -45,20 +39,20 @@ done
 
 function nf_test() {
   echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE --genome $GENOME -resume --verbose$(tput sgr0)"
-  nextflow run $@ -profile $PROFILE --genome $GENOME -resume --verbose
+  nextflow run $@ -profile $PROFILE --genome $GENOME -resume --genome_base $PWD/References/$GENOME --verbose
 }
 
 # Build references only for smallGRCh37
 if [[ $GENOME == smallGRCh37 ]] && [[ $TEST != BUILDCONTAINERS ]]
 then
-  nf_test buildReferences.nf --download
+  nf_test buildReferences.nf --download --outDir References/$GENOME
   # Remove images only on TRAVIS
   if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
   then
-    docker rmi -f maxulysse/igvtools:${TAG}
+    docker rmi -f maxulysse/igvtools:latest
   elif [[ $PROFILE == singularity ]] && [[ $TRAVIS == true ]]
   then
-    rm -rf work/singularity/igvtools-${TAG}.img
+    rm -rf work/singularity/igvtools-latest.img
   fi
 fi
 
@@ -85,17 +79,17 @@ fi
 
 if [[ ALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
 then
-  nf_test . --step mapping --sample data/tsv/tiny-single-manta.tsv --tools Manta,Strelka
+  nf_test . --step mapping --sampleDir data/tiny/manta/normal --tools Manta,Strelka
   nf_test . --step mapping --sample data/tsv/tiny-manta.tsv --tools Manta,Strelka
   nf_test . --step mapping --sample $SAMPLE --tools MuTect2
 
   # Remove images only on TRAVIS
   if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
   then
-    docker rmi -f maxulysse/caw:${TAG} maxulysse/fastqc:${TAG} maxulysse/gatk:${TAG} maxulysse/picard:${TAG}
+    docker rmi -f maxulysse/caw:latest maxulysse/fastqc:latest maxulysse/gatk:latest maxulysse/picard:latest
   elif [[ $PROFILE == singularity ]] && [[ $TRAVIS == true ]]
   then
-    rm -rf work/singularity/caw-${TAG}.img work/singularity/fastqc-${TAG}.img work/singularity/gatk-${TAG}.img work/singularity/picard-${TAG}.img
+    rm -rf work/singularity/caw-latest.img work/singularity/fastqc-latest.img work/singularity/gatk-latest.img work/singularity/picard-latest.img
   fi
   if [[ $TEST = ANNOTATESNPEFF ]]
   then
@@ -112,7 +106,7 @@ then
   nf_test . --step annotate --tools ${ANNOTATOR} --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz --noReports
 fi
 
-if [[ ALL,BUILDCONTAINERS =~ $TEST ]]
+if [[ ALL,BUILDCONTAINERS =~ $TEST ]] && [[ $PROFILE == docker ]]
 then
   nf_test buildContainers.nf --docker --containers caw,fastqc,gatk,igvtools,multiqc,mutect1,picard,qualimap,runallelecount,r-base,snpeff
 fi

@@ -109,6 +109,25 @@ SUBJECT_ID  XX    1    SAMPLEIDT    /samples/SAMPLEIDT.bam    /samples/SAMPLEIDT
 
 If you want to restart a previous run of the pipeline, you may not have a recalibrated BAM file. This is the case if HaplotypeCaller was the only tool (recalibration is done on-the-fly with HaplotypeCaller to improve performance and save space). In this case, you need to start with `--step=recalibrate` (see previous section).
 
+
+## Running the pipeline on a normal sample only (with `--sampleDir`)
+
+CAW can also be used to process a single normal sample. The tools that require tumor/normal pairs should not be run in this case.
+
+When running a normal-only sample, it is not necessary to create a TSV file describing the input. Instead, the `--sampleDir` option can be used to point CAW to a directory with FASTQ files:
+```bash
+nextflow run SciLifeLab/CAW --tools=HaplotypeCaller --sampleDir path/to/FASTQ/files
+```
+The given directory is searched recursively for FASTQ files that are named `*_R1_*.fastq.gz`, and a matching pair with the same name except `_R2_` instead of `_R1_` is expected to exist alongside. All of the found FASTQ files are considered to belong to the sample. Each FASTQ file pair gets its own read group (`@RG`) in the resulting BAM file.
+
+### Metadata when using `--sampleDir`
+
+When using `--sampleDir`, the metadata about the sample that are written to the BAM header in the `@RG` tag are determined in the following way.
+
+- The sample name (`SM`) is derived from the the last component of the path given to `--sampleDir`. That is, you should make sure that that directory has a meaningful name! For example, with `--sampleDir=/my/fastqs/sample123`, the sample name will be `sample123`.
+- The read group id is set to *flowcell.samplename.lane*. The flowcell id and lane number are auto-detected from the name of the first read in the FASTQ file.
+
+
 --------------------------------------------------------------------------------
 
 [![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]

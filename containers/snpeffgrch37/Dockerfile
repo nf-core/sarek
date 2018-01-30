@@ -1,4 +1,4 @@
-FROM maxulysse/snpeff:1.2
+FROM maxulysse/snpeff:latest
 
 LABEL \
   author="Maxime Garcia" \

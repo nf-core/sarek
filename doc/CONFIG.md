@@ -58,7 +58,7 @@ Every profile can be modified for your own use. To use a profile, you'll need to
 ### `docker`
 
 This is the profile for docker testing on a small machine, or on Travis CI.
-Images will be pulled automatically.
+Docker images will be pulled automatically.
 
 ### `standard`
 
@@ -68,22 +68,22 @@ Singularity images need to be set up.
 ### `download`
 
 This is the default profile for use on a localhost on a UPPMAX cluster with Singularity.
-Singularity will be pulled automatically.
+Singularity images will be pulled automatically.
 
 ### `slurm`
 
 This is another profile for use on a UPPMAX cluster using the job scheduler slurm with Singularity.
 Singularity images need to be set up.
 
-### `slurm-download`
+### `slurmDownload`
 
 This is another profile for use on a UPPMAX cluster using the job scheduler slurm with Singularity.
-Singularity will be pulled automatically.
+Singularity images will be pulled automatically.
 
 ### `singularity`
 
 This is the profile for Singularity testing on a small machine, or on Travis CI.
-Images will be pulled automatically.
+Singularity images will be pulled automatically.
 
 --------------------------------------------------------------------------------
 

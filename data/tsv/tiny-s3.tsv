@@ -1,0 +1,13 @@
+1234	XX	0	1234N	1234N_1	s3://caw-test-data/tiny/normal/tiny_n_L001_R1_xxx.fastq.gz	s3://caw-test-data/tiny/normal/tiny_n_L001_R2_xxx.fastq.gz
+1234	XX	0	1234N	1234N_2	s3://caw-test-data/tiny/normal/tiny_n_L002_R1_xxx.fastq.gz	s3://caw-test-data/tiny/normal/tiny_n_L002_R2_xxx.fastq.gz
+1234	XX	0	1234N	1234N_4	s3://caw-test-data/tiny/normal/tiny_n_L004_R1_xxx.fastq.gz	s3://caw-test-data/tiny/normal/tiny_n_L004_R2_xxx.fastq.gz
+1234	XX	0	1234N	1234N_7	s3://caw-test-data/tiny/normal/tiny_n_L007_R1_xxx.fastq.gz	s3://caw-test-data/tiny/normal/tiny_n_L007_R2_xxx.fastq.gz
+1234	XX	0	1234N	1234N_8	s3://caw-test-data/tiny/normal/tiny_n_L008_R1_xxx.fastq.gz	s3://caw-test-data/tiny/normal/tiny_n_L008_R2_xxx.fastq.gz
+1234	XX	0	1234N	DUMMY_N	s3://caw-test-data/dummy/normal/dummy_n_R1_xxx.fastq.gz	s3://caw-test-data/dummy/normal/dummy_n_R2_xxx.fastq.gz
+1234	XX	1	9876T	9876T_1	s3://caw-test-data/tiny/tumor/tiny_t_L001_R1_xxx.fastq.gz	s3://caw-test-data/tiny/tumor/tiny_t_L001_R2_xxx.fastq.gz
+1234	XX	1	9876T	9876T_2	s3://caw-test-data/tiny/tumor/tiny_t_L002_R1_xxx.fastq.gz	s3://caw-test-data/tiny/tumor/tiny_t_L002_R2_xxx.fastq.gz
+1234	XX	1	9876T	9876T_3	s3://caw-test-data/tiny/tumor/tiny_t_L003_R1_xxx.fastq.gz	s3://caw-test-data/tiny/tumor/tiny_t_L003_R2_xxx.fastq.gz
+1234	XX	1	9876T	DUMMY_T	s3://caw-test-data/dummy/tumor/dummy_t_R1_xxx.fastq.gz	s3://caw-test-data/dummy/tumor/dummy_t_R2_xxx.fastq.gz
+1234	XX	1	9877R	9877R_5	s3://caw-test-data/tiny/tumor/tiny_t_L005_R1_xxx.fastq.gz	s3://caw-test-data/tiny/tumor/tiny_t_L005_R2_xxx.fastq.gz
+1234	XX	1	9877R	9877R_6	s3://caw-test-data/tiny/tumor/tiny_t_L006_R1_xxx.fastq.gz	s3://caw-test-data/tiny/tumor/tiny_t_L006_R2_xxx.fastq.gz
+1234	XX	1	9877R	9877R_7	s3://caw-test-data/tiny/tumor/tiny_t_L007_R1_xxx.fastq.gz	s3://caw-test-data/tiny/tumor/tiny_t_L007_R2_xxx.fastq.gz
