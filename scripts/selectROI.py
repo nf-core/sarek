@@ -1,15 +1,19 @@
 #!/usr/bin/env python
-import sys
 import os
-import click
+import argparse
 import pysam
 
-@click.command(context_settings = dict( help_option_names = ['-h', '--help'] ))
-@click.option('--vcf',  '-v', type=str, help='List of VCF files to process like -v tumour.vcf,normal.vcf', required=False)
-@click.option('--bam',  '-b', type=str, help='The BAM files (indexed) to read from like -b tumour.bam,normal.bam', required=True)
-@click.option('--bed',  '-e', type=str, help='The BED file with gene coordinates', required=False)
-@click.option('--out',  '-o', type=str, help='The target BAM file to write to', required=True)
-def selectROI(vcf,bam,bed,out):
+def parse_args():
+    parser = argparse.ArgumentParser(description='Selecting Region Of Interest from BAM files')
+    parser.add_argument('-v', help='List of VCF files to process like -v tumour.vcf,normal.vcf',required=False, dest="vcf")
+    parser.add_argument('-b', help='The BAM files (indexed) to read from like -b tumour.bam,normal.bam', required=True, dest="bam")
+    parser.add_argument('-e', help='The BED file with gene coordinates', required=False, dest="bed")
+    parser.add_argument('-p', help='The prefix of the target BAM file to write to (postfix is the input filename)', required=False, dest="prefix", default="ROI.")
+
+    return parser.parse_args()
+
+
+def selectROI(vcf,bam,bed,prefix):
     vcfFiles = vcf.split(",")
     bamFiles = bam.split(",")
     callSet = set()
@@ -54,5 +58,6 @@ def addRecords(callsInFile,callSet):
         callSet.add( (record.chrom, record.pos) )
 
 if __name__ == "__main__":
-    selectROI()
+    args = parse_args()
+    selectROI(args.vcf, args.bam, args.bed, args.prefix)
 
