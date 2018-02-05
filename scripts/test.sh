@@ -70,19 +70,26 @@ fi
 if [[ ALL,ONLYQC =~ $TEST ]]
 then
   nf_test main.nf --step mapping -- --sample $SAMPLE --noReports
+  nf_test somatic.nf --step variantCalling --tools Strelka --noReports
+  nf_test somatic.nf --step variantCalling --tools Strelka --onlyQC
 fi
 
 if [[ ALL,REALIGN =~ $TEST ]]
 then
   nf_test main.nf --step realign --noReports
+  nf_test somatic.nf --step variantCalling --tools HaplotypeCaller
+  nf_test somatic.nf --step variantCalling --tools HaplotypeCaller --noReports --noGVCF
 fi
 
 if [[ ALL,RECALIBRATE =~ $TEST ]]
 then
   nf_test main.nf --step recalibrate --noReports
+  nf_test somatic.nf --step variantCalling --tools FreeBayes,HaplotypeCaller,MuTect1,MuTect2,Strelka
+  # Test whether restarting from an already recalibrated BAM works
+  nf_test somatic.nf --step variantCalling --tools Strelka --noReports
 fi
 
 if [[ ALL,BUILDCONTAINERS =~ $TEST ]] && [[ $PROFILE == docker ]]
 then
-  nf_test buildContainers.nf --docker --containers caw,fastqc,gatk,igvtools,picard,qualimap
+  nf_test buildContainers.nf --docker --containers caw,fastqc,gatk,igvtools,multiqc,mutect1,picard,qualimap,runallelecount,r-base,snpeff
 fi
