@@ -8,19 +8,24 @@ services:
   - docker
 
 env:
-  - NXF_VER=0.27.0 SGT_VER=2.4.2 PROFILE=singularity TEST=ANNOTATESNPEFF TOOL_INSTALL=all
-  - NXF_VER=0.27.0 PROFILE=docker TEST=ANNOTATESNPEFF TOOL_INSTALL=nextflow
-  - NXF_VER=0.27.0 PROFILE=docker TEST=ANNOTATEVEP TOOL_INSTALL=nextflow
   - NXF_VER=0.27.0 SGT_VER=2.4.2 PROFILE=singularity TEST=RECALIBRATE TOOL_INSTALL=all
   - NXF_VER=0.27.0 PROFILE=docker TEST=RECALIBRATE TOOL_INSTALL=nextflow
   - NXF_VER=0.27.0 SGT_VER=2.4.2 PROFILE=singularity TEST=REALIGN TOOL_INSTALL=all
   - NXF_VER=0.27.0 PROFILE=docker TEST=REALIGN TOOL_INSTALL=nextflow
+  - NXF_VER=0.27.0 SGT_VER=2.4.2 PROFILE=singularity TEST=ANNOTATESNPEFF TOOL_INSTALL=all
+  - NXF_VER=0.27.0 PROFILE=docker TEST=ANNOTATESNPEFF TOOL_INSTALL=nextflow
+  - NXF_VER=0.27.0 PROFILE=docker TEST=ANNOTATEVEP TOOL_INSTALL=nextflow
   - NXF_VER=0.27.0 PROFILE=docker TEST=BUILDCONTAINERS TOOL_INSTALL=nextflow
+  - NXF_VER=0.27.0 SGT_VER=2.4.2 PROFILE=singularity TEST=ONLYQC TOOL_INSTALL=all
+  - NXF_VER=0.27.0 PROFILE=docker TEST=ONLYQC TOOL_INSTALL=nextflow
   - NXF_VER=0.27.0 SGT_VER=2.4.2 PROFILE=singularity TEST=MAPPING TOOL_INSTALL=all
   - NXF_VER=0.27.0 PROFILE=docker TEST=MAPPING TOOL_INSTALL=nextflow
 
 install: # Install Nextflow (and Singularity if needed)
   - "./scripts/install.sh --tool $TOOL_INSTALL"
 
+before_script: # Build references when needed
+  - "travis_retry ./scripts/test.sh --profile $PROFILE --test $TEST --build"
+
 script:
-  - "travis_wait 50 ./scripts/test.sh --profile $PROFILE --test $TEST"
+  - "travis_retry travis_wait 50 ./scripts/test.sh --profile $PROFILE --test $TEST"

@@ -24,7 +24,11 @@ Display help
 
 ### --noReports
 
-Disable QC tools and MultiQC to generate a HTML report.
+Disable all QC tools and MultiQC to generate a HTML report.
+
+### --onlyQC
+
+Run only QC tools and MultiQC to generate a HTML report.
 
 ### --outDir
 

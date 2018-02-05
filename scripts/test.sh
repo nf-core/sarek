@@ -6,6 +6,7 @@ PROFILE=singularity
 SAMPLE=data/tsv/tiny.tsv
 TEST=ALL
 TRAVIS=${TRAVIS:-false}
+BUILD=false
 
 while [[ $# -gt 0 ]]
 do
@@ -31,6 +32,10 @@ do
     shift # past argument
     shift # past value
     ;;
+    -b|--build)
+    BUILD=true
+    shift # past value
+    ;;
     *) # unknown option
     shift # past argument
     ;;
@@ -43,7 +48,7 @@ function nf_test() {
 }
 
 # Build references only for smallGRCh37
-if [[ $GENOME == smallGRCh37 ]] && [[ $TEST != BUILDCONTAINERS ]]
+if [[ $GENOME == smallGRCh37 ]] && [[ $TEST != BUILDCONTAINERS ]] && [[ BUILD ]]
 then
   nf_test buildReferences.nf --download --outDir References/$GENOME
   # Remove images only on TRAVIS
@@ -56,10 +61,16 @@ then
   fi
 fi
 
-if [[ ALL,MAPPING,REALIGN,RECALIBRATE =~ $TEST ]]
+if [[ ALL,MAPPING,ONLYQC,REALIGN,RECALIBRATE =~ $TEST ]]
 then
   nf_test . --step mapping --sampleDir data/tiny/tiny/normal
   nf_test . --step mapping --sample $SAMPLE
+fi
+
+if [[ ALL,ONLYQC =~ $TEST ]]
+then
+  nf_test . --step mapping --sample $SAMPLE --tools Strelka --noReports
+  nf_test . --step variantCalling --tools Strelka --onlyQC
 fi
 
 if [[ ALL,REALIGN =~ $TEST ]]
@@ -79,18 +90,6 @@ fi
 
 if [[ ALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
 then
-  nf_test . --step mapping --sampleDir data/tiny/manta/normal --tools Manta,Strelka
-  nf_test . --step mapping --sample data/tsv/tiny-manta.tsv --tools Manta,Strelka
-  nf_test . --step mapping --sample $SAMPLE --tools MuTect2
-
-  # Remove images only on TRAVIS
-  if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
-  then
-    docker rmi -f maxulysse/caw:latest maxulysse/fastqc:latest maxulysse/gatk:latest maxulysse/picard:latest
-  elif [[ $PROFILE == singularity ]] && [[ $TRAVIS == true ]]
-  then
-    rm -rf work/singularity/caw-latest.img work/singularity/fastqc-latest.img work/singularity/gatk-latest.img work/singularity/picard-latest.img
-  fi
   if [[ $TEST = ANNOTATESNPEFF ]]
   then
     ANNOTATOR=snpEFF
@@ -101,9 +100,17 @@ then
   then
     ANNOTATOR=snpEFF,VEP
   fi
-  nf_test . --step annotate --tools ${ANNOTATOR} --annotateTools Manta,Strelka
-  nf_test . --step annotate --tools ${ANNOTATOR} --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz,VariantCalling/Manta/Manta_9876T_vs_1234N.somaticSV.vcf.gz --noReports
-  nf_test . --step annotate --tools ${ANNOTATOR} --annotateVCF VariantCalling/Manta/Manta_9876T_vs_1234N.diploidSV.vcf.gz --noReports
+  if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
+  then
+    docker rmi -f maxulysse/caw:latest
+    docker rmi -f maxulysse/picard:latest
+  elif [[ $PROFILE == singularity ]] && [[ $TRAVIS == true ]]
+  then
+    rm -rf work/singularity/caw-latest.img
+    rm -rf work/singularity/picard-latest.img
+  fi
+  nf_test . --step annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz --noReports
+  nf_test . --step annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz,data/tiny/vcf/Strelka_9876T_variants.vcf.gz --noReports
 fi
 
 if [[ ALL,BUILDCONTAINERS =~ $TEST ]] && [[ $PROFILE == docker ]]

@@ -225,6 +225,8 @@ def checkParams(it) {
     'no-reports',
     'noGVCF',
     'noReports',
+    'only-QC',
+    'onlyQC',
     'out-dir',
     'outDir',
     'params',
