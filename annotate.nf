@@ -72,7 +72,7 @@ params.onlyQC = false
 // outDir is current directory
 params.outDir = baseDir
 // Step is annotate
-params.step = 'annotate'
+step = 'annotate'
 // Not testing
 params.test = ''
 // No tools to be used
@@ -82,20 +82,16 @@ params.containerPath = ''
 params.repository = ''
 params.tag = ''
 
-step = params.step.toLowerCase()
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
 annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
 annotateVCF = params.annotateVCF ? params.annotateVCF.split(',').collect{it.trim()} : []
 
 directoryMap = defineDirectoryMap()
-stepList = defineStepList()
 toolList = defineToolList()
 reports = !params.noReports
 onlyQC = params.onlyQC
 verbose = params.verbose
 
-if (!checkParameterExistence(step, stepList)) exit 1, 'Unknown step, see --help for more information'
-if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
 if (!checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
 
 /*
