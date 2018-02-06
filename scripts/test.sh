@@ -87,8 +87,6 @@ if [[ ALL,RECALIBRATE =~ $TEST ]]
 then
   nf_test main.nf --step recalibrate --noReports
   nf_test somaticVC.nf --step variantCalling --tools FreeBayes,HaplotypeCaller,MuTect1,MuTect2,Strelka
-  # Test whether restarting from an already recalibrated BAM works
-  nf_test somaticVC.nf --step variantCalling --tools Strelka --noReports
 fi
 
 if [[ ALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
