@@ -89,7 +89,32 @@ then
   nf_test somatic.nf --step variantCalling --tools Strelka --noReports
 fi
 
+if [[ ALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
+then
+  if [[ $TEST = ANNOTATESNPEFF ]]
+  then
+    ANNOTATOR=snpEFF
+  elif [[ $TEST = ANNOTATEVEP ]]
+  then
+    ANNOTATOR=VEP
+  elif  [[ $TEST = ALL ]]
+  then
+    ANNOTATOR=snpEFF,VEP
+  fi
+  if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
+  then
+    docker rmi -f maxulysse/caw:latest
+    docker rmi -f maxulysse/picard:latest
+  elif [[ $PROFILE == singularity ]] && [[ $TRAVIS == true ]]
+  then
+    rm -rf work/singularity/caw-latest.img
+    rm -rf work/singularity/picard-latest.img
+  fi
+  nf_test annotate.nf --step annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz --noReports
+  nf_test annotate.nf --step annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz,data/tiny/vcf/Strelka_9876T_variants.vcf.gz --noReports
+fi
+
 if [[ ALL,BUILDCONTAINERS =~ $TEST ]] && [[ $PROFILE == docker ]]
 then
-  nf_test buildContainers.nf --docker --containers caw,fastqc,gatk,igvtools,multiqc,mutect1,picard,qualimap,runallelecount,r-base
+  nf_test buildContainers.nf --docker --containers caw,fastqc,gatk,igvtools,multiqc,mutect1,picard,qualimap,runallelecount,r-base,snpeff
 fi
