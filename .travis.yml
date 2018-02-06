@@ -28,4 +28,4 @@ before_script: # Build references when needed
   - "travis_retry ./scripts/test.sh --profile $PROFILE --test $TEST --build"
 
 script:
-  - "travis_retry travis_wait 50 ./scripts/test.sh --profile $PROFILE --test $TEST"
+  - "travis_retry ./scripts/test.sh --profile $PROFILE --test $TEST"
