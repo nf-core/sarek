@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os
 import argparse
-import pysam
+import subprocess
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Selecting Region Of Interest from BAM files')
@@ -17,77 +17,77 @@ def selectROI(vcf,bam,bed,prefix):
     # this is the set where loci are stored
     # VCF records are (chromosome,location) tuples
     # BEDs are (chromosome,start,end) tuples
-    callSet = set()
+    callDict = dict()
 
     print("Processing VCF files: ")
     vcfFiles = vcf.split(",")
     for vcfCalls in vcfFiles:
         print("\t" + vcfCalls)
-        addVCFRecords(vcfCalls,callSet)
-    print("Collected " + str(len(callSet)) + " records from VCFs")
+        addVCFRecords(vcfCalls,callDict)
+    print("Collected " + str(len(callDict)) + " chromosomes from VCFs")
 
-    print("Processing BED files: ")
-    bedFiles = bed.split(",")
-    for bedLoci in bedFiles:
-        print("\t" + bedLoci)
-        addBEDRecords(bedLoci,callSet)
-    print("Collected " + str(len(callSet)) + " records from BEDs")
-
+    if bed:
+        print("Processing BED files: ")
+        bedFiles = bed.split(",")
+        for bedLoci in bedFiles:
+            print("\t" + bedLoci)
+            addBEDRecords(bedLoci,callDict)
+        print("Collected " + str(len(callDict)) + " records from BEDs")
 
     bamFiles = bam.split(",")
     print("Saving reads from BAMs:")
-    saveCallsToBAM(callSet,bamFiles)
+    saveCallsToBAM(callDict,bamFiles,prefix)
 
-def saveCallsToBAM(callSet,bamFiles):
+def saveCallsToBAM(callDict, bamFiles, prefix):
     for bam in bamFiles:
         print("\t" + bam)
-        bamfile = pysam.AlignmentFile(bam, "rb")                # the input file
-        readSet = set()                                         # this set is to store read IDs: when processing overlapping regions, reads will be written only once
-        outBAM = pysam.AlignmentFile("tmpROI.bam","wb",template=bamfile)  # the output file
-        for call in sorted(callSet):
-            chromosome = call[0]
-            if len(call) == 2:
-                # this is a VCF call
-                start = call[1]-500
-                end = call[1]+500
-            else:
-                # BED locus
-                start = call[1]
-                end = call[2]
-            # store reads:
-            for read in bamfile.fetch(chromosome, start, end):
-                read_id = (read.reference_name, read.reference_start, read.query_name)
-                if read_id not in readSet:                      # write out read only if not written already
-                    readSet.add(read_id)
-                    outBAM.write(read)
-        outBAM.close()
+        # getting reads one-by-one takes aages. We are going to try to use htslib/samtools
+        # by making a command line to get ROI for each chromosome, and 
+        # merge/sort the BAMs later
+        filesToMerge = ""
+        for chrom in callDict:
+            cmdline = ""
+            for gcoord in callDict[chrom]:
+                if type(gcoord) is tuple:       # BED record in tuple
+                    start = gcoord[0]
+                    end = gcoord[1]
+                else:                   # VCF record
+                    start = gcoord - 500
+                    end = gcoord - 500
+                cmdline = cmdline + chrom + ":" + str(start) + "-" + str(end) + " "
+            # let's write the file for the chromosome
+            cmdline = cmdline.rstrip()
+            chunkBAM = chrom + "_tmpROI.bam "
+            filesToMerge = filesToMerge + chunkBAM
+            subprocess.call("samtools view " + bam + " -bo " + chunkBAM + cmdline, shell=True)
+            print("Wrote chunk for " + chrom + " to " + chunkBAM)
+        subprocess.call("samtools merge -f merged.roi.bam " + filesToMerge, shell=True)
+        target = os.path.dirname(bam) + "/" + prefix + "." + os.path.basename(bam)
+        subprocess.call("samtools sort -@6 -o "+ target + " merged.roi.bam ", shell=True)
+        print("Sorted file written to " + target)
 
-        # once the filtered reads are written, we have to sort the files
-        bn = os.path.basename(bam)                              # we are creating the output file here
-        dn = os.path.dirname(bam)
-        fn = dn + "/ROI."+bn
-        print("Writing intervals to " + fn)
-        pysam.sort("-o", fn, "tmpROI.bam") 
-
-def addVCFRecords(VCFFile,callSet):
+def addVCFRecords(VCFFile,callDict):
     """
-    Store VCF record CHROM,POS in a set
+    Store VCF record CHROM,POS in a dict 
     """
+    VCFlines = [line.rstrip() for line in open(VCFFile,'rt')]
+    for variant in VCFlines:
+        if not variant.startswith("#"):      # ignore header
+            vcfCols = variant.split()
+            if vcfCols[0] not in callDict:   # if chromosome not in dictionary yet
+                callDict[vcfCols[0]] = []
+            callDict[vcfCols[0]].append(int(vcfCols[1]))
 
-    vcf_in = pysam.VariantFile(VCFFile)
-    for record in vcf_in.fetch():
-        callSet.add( (record.chrom, record.pos) )
-
-def addBEDRecords(BEDFile,callSet):
+def addBEDRecords(BEDFile,callDict):
     """
     Store BED record CHROM,START,END in a set
     """
-
     BEDlines = [line.rstrip() for line in open(BEDFile,'rt')]
     for locus in BEDlines:
         BEDrecord = locus.split()
-        callSet.add( (BEDrecord[0],int(BEDrecord[1]),int(BEDrecord[2])) )
-
+        if BEDrecord[0] not in callDict:
+            callDict[BEDrecord[0]] = []
+        callDict[BEDrecord[0]].append( (int(BEDrecord[1]),int(BEDrecord[2])) )
 
 if __name__ == "__main__":
     args = parse_args()
