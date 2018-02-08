@@ -107,11 +107,11 @@ then
   fi
   if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
   then
-    docker rmi -f maxulysse/caw:latest
+    docker rmi -f maxulysse/sarek:latest
     docker rmi -f maxulysse/picard:latest
   elif [[ $PROFILE == singularity ]] && [[ $TRAVIS == true ]]
   then
-    rm -rf work/singularity/caw-latest.img
+    rm -rf work/singularity/sarek-latest.img
     rm -rf work/singularity/picard-latest.img
   fi
   run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz --noReports
@@ -120,5 +120,5 @@ fi
 
 if [[ ALL,BUILDCONTAINERS =~ $TEST ]] && [[ $PROFILE == docker ]]
 then
-  nf_test buildContainers.nf --docker --containers caw,fastqc,gatk,igvtools,multiqc,mutect1,picard,qualimap,runallelecount,r-base,snpeff
+  nf_test buildContainers.nf --docker --containers fastqc,gatk,igvtools,multiqc,mutect1,picard,qualimap,runallelecount,r-base,snpeff,sarek
 fi
