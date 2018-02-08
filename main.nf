@@ -25,7 +25,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
  http://opensource.scilifelab.se/projects/sarek/
 --------------------------------------------------------------------------------
  @Documentation
- https://github.com/SciLifeLab/SAREK/README.md
+ https://github.com/SciLifeLab/Sarek/README.md
 --------------------------------------------------------------------------------
  Processes overview
  - RunFastQC - Run FastQC for QC on fastq files
@@ -74,7 +74,7 @@ params.noReports = false
 params.explicitBqsrNeeded = true
 // BAMQC is used
 params.noBAMQC = false
-// Run SAREK in onlyQC mode
+// Run Sarek in onlyQC mode
 params.onlyQC = false
 // outDir is current directory
 params.outDir = baseDir
@@ -629,8 +629,8 @@ if (verbose) bamQCreport = bamQCreport.view {
 */
 
 def sarekMessage() {
-  // Display SAREK message
-  log.info "SAREK ~ ${version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
+  // Display Sarek message
+  log.info "Sarek ~ ${version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
 }
 
 def checkFileExtension(it, extension) {
@@ -959,9 +959,9 @@ def helpMessage() {
   // Display help message
   this.sarekMessage()
   log.info "    Usage:"
-  log.info "       nextflow run SciLifeLab/SAREK --sample <file.tsv> [--step STEP] --genome <Genome>"
-  log.info "       nextflow run SciLifeLab/SAREK --sampleDir <Directory> [--step STEP] --genome <Genome>"
-  log.info "       nextflow run SciLifeLab/SAREK --test [--step STEP] --genome <Genome>"
+  log.info "       nextflow run SciLifeLab/Sarek --sample <file.tsv> [--step STEP] --genome <Genome>"
+  log.info "       nextflow run SciLifeLab/Sarek --sampleDir <Directory> [--step STEP] --genome <Genome>"
+  log.info "       nextflow run SciLifeLab/Sarek --test [--step STEP] --genome <Genome>"
   log.info "    --sample <file.tsv>"
   log.info "       Specify a TSV file containing paths to sample files."
   log.info "    --sampleDir <Directoy>"
@@ -1066,7 +1066,7 @@ def startMessage() {
 
 def versionMessage() {
   // Display version message
-  log.info "SAREK"
+  log.info "Sarek"
   log.info "  version   : " + version
   log.info workflow.commitId ? "Git info    : ${workflow.repository} - ${workflow.revision} [${workflow.commitId}]" : "  revision  : " + this.grabRevision()
 }
