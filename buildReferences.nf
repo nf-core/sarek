@@ -12,6 +12,7 @@ New Germline (+ Somatic) Analysis Workflow. Started March 2016.
  @Authors
  Sebastian DiLorenzo <sebastian.dilorenzo@bils.se> [@Sebastian-D]
  Jesper Eisfeldt <jesper.eisfeldt@scilifelab.se> [@J35P312]
+ Phil Ewels <phil.ewels@scilifelab.se> [@ewels]
  Maxime Garcia <maxime.garcia@scilifelab.se> [@MaxUlysse]
  Szilveszter Juhos <szilveszter.juhos@scilifelab.se> [@szilvajuhos]
  Max Käller <max.kaller@scilifelab.se> [@gulfshores]
