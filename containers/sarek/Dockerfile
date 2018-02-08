@@ -2,7 +2,7 @@ FROM debian:8.9
 
 LABEL \
   author="Maxime Garcia" \
-  description="Image with tools used in CAW" \
+  description="Image with tools used in Sarek" \
   maintainer="maxime.garcia@scilifelab.se"
 
 # Export PATH

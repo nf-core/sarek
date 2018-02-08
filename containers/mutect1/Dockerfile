@@ -2,7 +2,7 @@ FROM openjdk:7-slim
 
 LABEL \
   author="Maxime Garcia" \
-  description="MuTect 1.1.5 image for use in CAW" \
+  description="MuTect 1.1.5 image for use in Sarek" \
   maintainer="maxime.garcia@scilifelab.se"
 
 # Install libraries
