@@ -1,4 +1,30 @@
 #!/usr/bin/env python
+#
+# The MIT License (MIT)
+#
+# Copyright (c) 2018 Szilveszter Juhos
+# the reduce() code shamelessly copied from
+# https://github.com/brentp/interlap
+# Copyright (c) 2014 Brent S. Pedersen
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
 import os
 import sys
 import copy
@@ -13,20 +39,38 @@ def parse_args():
     parser.add_argument('-p', help='The prefix of the target BAM file to write to (postfix is the input filename)', required=False, dest="prefix", default="ROI.")
     parser.add_argument('-t', help='Number of threads used by samtools [8]', required=False, dest="threads", default=8)
     parser.add_argument('-w', help='Region width for VCF loci [200]', required=False, dest="width", default=200)
+    parser.add_argument('-r', help='Readlength for region paddding [151]', required=False, dest="pad", default=151)
     parser.add_argument('-c', help='Number of variants in a chunk [150]', required=False, dest="maxRegions", default=150)
 
     return parser.parse_args()
 
+def reduce(args):
+    """
+    >>> reduce([(2, 4), (4, 9)])
+    [(2, 4), (4, 9)]
 
-class bedChunk:
-    """Small class to define a genomic locus with chromosome and start and end"""
-    def __init__(self):
-        self.loci = dict()
+    >>> reduce([(2, 6), (4, 10)])
+    [(2, 10)]
+    """
+    if len(args) < 2: return args
+    args.sort()
+    ret = [args[0]]
+    for next_i, (s, e) in enumerate(args, start=1):
+        if next_i == len(args):
+            ret[-1] = ret[-1][0], max(ret[-1][1], e)
+            break
+
+        ns, ne = args[next_i]
+        if e > ns or ret[-1][1] > ns:
+            ret[-1] = ret[-1][0], max(e, ne, ret[-1][1])
+        else:
+            ret.append((ns, ne))
+    return ret
 
 class ROISelector:
     """Class to selet region of interest (ROI) from a set of BAM files. ROI is defined by input VCFs and BEDs""" 
 
-    def __init__(self, threads, maxRegions, prefix, width):
+    def __init__(self, threads, maxRegions, prefix, width, pad):
         # this is the set where loci are stored
         # for every chromosome there is a list in the dict
         # VCF records are int-s in the list,
@@ -39,10 +83,8 @@ class ROISelector:
         # prefix of the ROI BAM file
         self.prefix = prefix
         # width of region for VCF records
-        self.width = int(width)
-        # we will make a deep copy of the callDict
-        # to save the BED intervals into a separate entry
-        self.callDictCopy = None
+        # add readlength padding
+        self.width = int(width + pad)
 
     def selectROI(self,vcfs,bams,beds):
         if not vcfs and not beds:
@@ -61,8 +103,7 @@ class ROISelector:
             for chrom in self.callDict:
                 bedRecordCount = bedRecordCount + len(self.callDict[chrom])
             print("Collected " + str(bedRecordCount) + " entries from BEDs")
-        # we make this copy to process intervals faster
-        self.callDictCopy = copy.deepcopy(self.callDict)
+
         if vcfs:                # if there are any VCFs given
             print("Processing VCF files: ")
             vcfFiles = vcfs.split(",")
@@ -74,6 +115,9 @@ class ROISelector:
             for chrom in self.callDict:
                 vcfRecordCount = vcfRecordCount + len(self.callDict[chrom])
             print("Collected " + str(vcfRecordCount-bedRecordCount) + " entries from VCFs")
+        # now collapse overlapping intervals
+        for chrom in self.callDict:
+            self.callDict[chrom] = reduce( self.callDict[chrom] )
         # save intervals to a BAM
         print("Saving reads from BAMs:")
         self.saveCallsToBAM(bams)
@@ -147,8 +191,7 @@ class ROISelector:
                 locus = int(vcfCols[1]) 
                 if chrom not in self.callDict:   # if chromosome not in dictionary yet
                     self.callDict[chrom] = []
-                if not self.isInBEDIntervals(chrom,locus):
-                    self.callDict[chrom].append(locus)
+                self.callDict[chrom].append( (locus-self.width, locus+self.width) )
 
     def addBEDRecords(self,BEDFile):
         """
@@ -157,15 +200,16 @@ class ROISelector:
         BEDlines = [line.rstrip() for line in open(BEDFile,'rt')]
         for locus in BEDlines:
             BEDrecord = locus.split()
-            if BEDrecord[0] not in self.callDict:
-                self.callDict[BEDrecord[0]] = []
-            self.callDict[BEDrecord[0]].append( (int(BEDrecord[1]),int(BEDrecord[2])) )
+            chrom = BEDrecord[0] 
+            if chrom not in self.callDict:
+                self.callDict[chrom] = []
+            self.callDict[chrom].append( (int(BEDrecord[1]),int(BEDrecord[2])) )
 
 ######################## end of class ROISelector ######################################
 
 
 if __name__ == "__main__":
     args = parse_args()
-    rois = ROISelector(args.threads, args.maxRegions, args.prefix, args.width)
+    rois = ROISelector(args.threads, args.maxRegions, args.prefix, int(args.width), int(args.pad))
     rois.selectROI(args.vcfs,args.bams,args.beds)
 
