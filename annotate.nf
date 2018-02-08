@@ -25,7 +25,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
  http://opensource.scilifelab.se/projects/sarek/
 --------------------------------------------------------------------------------
  @Documentation
- https://github.com/SciLifeLab/SAREK/README.md
+ https://github.com/SciLifeLab/Sarek/README.md
 --------------------------------------------------------------------------------
  Processes overview
  - RunBcftoolsStats - Run BCFTools stats on vcf before annotation
@@ -67,7 +67,7 @@ params.annotateTools = ''
 params.annotateVCF = ''
 // Reports are generated
 params.noReports = false
-// Run SAREK in onlyQC mode
+// Run Sarek in onlyQC mode
 params.onlyQC = false
 // outDir is current directory
 params.outDir = baseDir
@@ -237,8 +237,8 @@ if (verbose) vepReport = vepReport.view {
 */
 
 def sarekMessage() {
-  // Display SAREK message
-  log.info "SAREK ~ ${version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
+  // Display Sarek message
+  log.info "Sarek ~ ${version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
 }
 
 def checkParameterExistence(it, list) {
@@ -363,6 +363,7 @@ def checkUppmaxProject() {
 
 def defineDirectoryMap() {
   return [
+    'bcftoolsStats'    : 'Reports/BCFToolsStats',
     'snpeff'           : 'Annotation/SnpEff',
     'vep'              : 'Annotation/VEP'
   ]
@@ -390,9 +391,9 @@ def helpMessage() {
   // Display help message
   this.sarekMessage()
   log.info "    Usage:"
-  log.info "       nextflow run SciLifeLab/SAREK --sample <file.tsv> [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
-  log.info "       nextflow run SciLifeLab/SAREK --sampleDir <Directory> [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
-  log.info "       nextflow run SciLifeLab/SAREK --test [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
+  log.info "       nextflow run SciLifeLab/Sarek --sample <file.tsv> [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
+  log.info "       nextflow run SciLifeLab/Sarek --sampleDir <Directory> [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
+  log.info "       nextflow run SciLifeLab/Sarek --test [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
   log.info "    --step"
   log.info "       Option to start workflow"
   log.info "       Possible values are:"
@@ -483,7 +484,7 @@ def startMessage() {
 
 def versionMessage() {
   // Display version message
-  log.info "SAREK"
+  log.info "Sarek"
   log.info "  version   : " + version
   log.info workflow.commitId ? "Git info    : ${workflow.repository} - ${workflow.revision} [${workflow.commitId}]" : "  revision  : " + this.grabRevision()
 }
