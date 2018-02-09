@@ -9,13 +9,13 @@ Sarek use Singularity containers to package all the different tools.
 
 As `bianca` is secure, no direct download is available, so Sarek and the Singularity containers will have to be installed and updated manually.
 
-You can either download Sarek and the containers on your computer or on `milou`, make an archive, and send it to `bianca` using `FileZilla` or `sftp` given your preferences.
+You can either download Sarek and the containers on your computer or on `rackham`, make an archive, and send it to `bianca` using `FileZilla` or `sftp` given your preferences.
 
 All Reference files are already stored in `bianca`.
 
 ```bash
-# Connect to milou
-> ssh -AX [USER]@milou.uppmax.uu.se
+# Connect to rackham
+> ssh -AX [USER]@rackham.uppmax.uu.se
 # Or just open a terminal
 
 # Clone the repository
@@ -37,7 +37,8 @@ Wrote Sarek-[snapID].tar.gz
 > put Sarek-[snapID].tar.gz
 
 # To get the containers
-> ./scripts/do_all --pull
+# This script will need Singularity and Nextflow installed
+> ./scripts/do_all.sh --pull
 
 # Send the containers to bianca using the same method
 # They will be in the containers/ directory as .img files
@@ -88,7 +89,7 @@ And then Sarek can be used with:
 Repeat the same steps as for installing Sarek, and once the tar has been extracted, you can replace the link.
 
 ```bash
-# Connect to bianca (Connect to milou first if needed)
+# Connect to bianca (Connect to rackham first if needed)
 > ssh -A [USER]-[PROJECT]@bianca.uppmax.uu.se
 
 # Go to the Sarek directory in your project
