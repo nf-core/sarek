@@ -4,7 +4,7 @@ set -xeuo pipefail
 PROFILE=singularity
 PUSH=''
 REPOSITORY=maxulysse
-TAG=1.2.5
+TAG=1.3
 TOOL=docker
 
 while [[ $# -gt 0 ]]
