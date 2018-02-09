@@ -1,8 +1,8 @@
 # Workflow processes
 
-Several processes are run within the workflow. We divide them for the moment into 3 main steps:
+Several processes are run within the workflow. We divide them for the moment into 5 main steps:
 
-## Preprocessing [Stable]:
+## Preprocessing:
 
 - MapReads - Map reads with BWA
 - MergeBams - Merge BAMs if multilane samples
@@ -12,17 +12,23 @@ Several processes are run within the workflow. We divide them for the moment int
 - CreateRecalibrationTable - Create Recalibration Table with BaseRecalibrator
 - RecalibrateBam - Recalibrate Bam with PrintReads
 
-## Variant Calling:
+## Germline Variant Calling:
 
 - CreateIntervalBeds - Create and sort intervals into bed files
 - RunHaplotypecaller - Run HaplotypeCaller for GermLine Variant Calling (Parallelized processes)
 - RunGenotypeGVCFs - Run HaplotypeCaller for GermLine Variant Calling (Parallelized processes)
+- ConcatVCF - Merge results from HaplotypeCaller
+- RunSingleStrelka - Run Strelka for Germline Variant Calling
+- RunSingleManta - Run Manta for Single Structural Variant Calling
+
+## Somatic Variant Calling:
+
+- CreateIntervalBeds - Create and sort intervals into bed files
 - RunMutect1 - Run MuTect1 for Variant Calling (Parallelized processes)
 - RunMutect2 - Run MuTect2 for Variant Calling (Parallelized processes)
 - RunFreeBayes - Run FreeBayes for Variant Calling (Parallelized processes)
-- ConcatVCF - Merge results from HaplotypeCaller, MuTect1 and MuTect2
+- ConcatVCF - Merge results from Freebayes, MuTect1 and MuTect2
 - RunStrelka - Run Strelka for Variant Calling
-- RunSingleStrelka - Run Strelka for Germline Variant Calling
 - RunManta - Run Manta for Structural Variant Calling
 - RunSingleManta - Run Manta for Single Structural Variant Calling
 - RunAlleleCount - Run AlleleCount to prepare for ASCAT
@@ -36,8 +42,6 @@ Several processes are run within the workflow. We divide them for the moment int
 - RunBamQC - Run qualimap BamQC on recalibrated BAM files
 - RunBcftoolsStats - Run BCFTools stats on vcf before annotation
 - RunBcftoolsStats - Run BCFTools stats on vcf files
-- GenerateMultiQCconfig - Generate a config file for MultiQC
-- RunMultiQC - Run MultiQC for report and QC
 
 ## Annotation:
 

@@ -1,8 +1,8 @@
 # Project folder structure
 
-The workflow is started for a set of samples taken from the same person (i.e. a cancer patient), identified by "ID".
-
-ID = Individual Sample = "Normal", "Tumor 1", "Tumor 2" etc corresponding to all physical samples
+The workflow is started for a sample, or a set of samples from the same person.
+Each different physical samples is identified by its own ID.
+For example in a Tumor/Normal settings, this ID could correspond to "Normal", "Tumor 1", "Tumor 2" etc corresponding to all physical samples from the same cancer patient.
 
 Below is an overview of the intended folder structure for an analyzed project.
 
