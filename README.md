@@ -1,50 +1,61 @@
-[![](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/images/Sarek_logo.png "Sarek")][sarek-site-link]
+# [![Sarek](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/images/Sarek_logo.png "Sarek")](http://opensource.scilifelab.se/projects/sarek/)
 
-# Sarek
+#### An open-source analysis pipeline to detect germline or somatic variants from whole genome sequencing.
 
 [![sarek version][version-badge]][version-link]
-[![License][license-badge]][license-link]
-[![nextflow version][nextflow-badge]][nextflow-link]
-[![Join the chat at https://gitter.im/SciLifeLab/Sarek][gitter-badge]][gitter-link]
 [![Travis status][travis-badge]][travis-link]
+[![nextflow version][nextflow-badge]][nextflow-link]
+[![License][license-badge]][license-link]
 [![DOI][zenodo-badge]][zenodo-link]
+[![Join the chat at https://gitter.im/SciLifeLab/Sarek][gitter-badge]][gitter-link]
 
-Sarek is a complete open source pipeline to detect germline, or somatic variants from WGS data developed at the [National Genomics Infastructure][ngi-link] at [SciLifeLab Stockholm][scilifelab-stockholm-link] and [National Bioinformatics Infastructure Sweden][nbis-link] at [SciLifeLab][scilifelab-link].
+## Introduction
+Sarek is a workflow tool designed to run analyses on WGS data from regular samples or tumour / normal pairs, including relapse samples if required.
 
-The pipeline uses [Nextflow][nextflow-link], a bioinformatics domain specific language for workflow building and [Singularity](http://singularity.lbl.gov/), a container technology specific for high-performance computing.
+It's built using [Nextflow][nextflow-link], a bioinformatics domain specific language for workflow building. Software dependencies are handled using [Docker](https://www.docker.com) or [Singularity](http://singularity.lbl.gov) - container technologies that provide excellent reproducibility and ease of use. Singularity has been designed specifically for high-performance computing environments. This means that although Sarek has been primarily designed for use with the Swedish [UPPMAX HPC systems](https://www.uppmax.uu.se), it should be able to run on any system that supports these two tools.
 
-This pipeline is primarily used with cluster on the Swedish [UPPMAX systems](https://www.uppmax.uu.se/).
-However, the pipeline should be able to run on any system that supports Nextflow.
-The pipeline comes with some configuration for different systems.
-See the [documentation](#documentation) for more information.
+Sarek was developed at the [National Genomics Infastructure][ngi-link] and [National Bioinformatics Infastructure Sweden][nbis-link] which are both platforms at [SciLifeLab][scilifelab-link]. It is listed on the [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek).
 
-Sarek is based on [GATK best practices](https://software.broadinstitute.org/gatk/best-practices/) to align, realign and recalibrate short-read data (which is done in parallel for tumor/normal pair samples).
-After these preprocessing steps, several variant callers scan the resulting BAM files:
-[GATK HaplotyeCaller][gatk-link] and [Strelka][strelka-link] are used to find germline SNVs and small indels (also used on tumor samples).
-[MuTect1][mutect1-link], [MuTect2][gatk-link], [Freebayes][freebayes-link] and [Strelka][strelka-link] are used to find somatic SNVs and small indels.
-For structural variants (germline and somatic) we use [Manta][manta-link].
-Furthermore, we are applying [ASCAT][ascat-link] to estimate sample heterogeneity, ploidy and CNVs.
+## Workflow steps
+Sarek is built with several workflow scripts:
 
-The pipeline is prepared to process normal or tumor/normal pairs (and several relapse samples).
-It can begin the analysis either from raw FASTQ files, only from the realignment step, or directly with any subset of variant callers using recalibrated BAM files.
-At the end of the analysis the resulting VCF files and results from each caller are also retained.
-And snpEff and/or VEP can be used to annotate them.
+1. Preprocessing (`main.nf`) - based on [GATK best practices](https://software.broadinstitute.org/gatk/best-practices/)
+    * Read alignment
+        * [BWA](http://bio-bwa.sourceforge.net/)
+    * Read realignment and recalibration of short-read data
+        * [GATK](https://github.com/broadgsa/gatk-protected)
+2. Germline variant calling (`germlineVC.nf`)
+    * SNVs and small indels
+        * [GATK HaplotyeCaller](https://github.com/broadgsa/gatk-protected)
+        * [Strelka](https://github.com/Illumina/strelka)
+3. Somatic variant calling (`somaticVC.nf`) - _optional_
+    * SNVs and small indels
+        * [MuTect1](https://github.com/broadinstitute/mutect)
+        * [MuTect2](https://github.com/broadgsa/gatk-protected)
+        * [Freebayes](https://github.com/ekg/freebayes)
+        * [Strelka](https://github.com/Illumina/strelka)
+    * Structural variants (germline and somatic)
+        * [Manta](https://github.com/Illumina/manta)
+    * Sample heterogeneity, ploidy and CNVs
+        * [ASCAT](https://github.com/Crick-CancerGenomics/ascat)
+4. Annotation and reporting (`annotate.nf`)
+    * Variant annotation
+        * [SnpEff](http://snpeff.sourceforge.net/)
+        * [VEP](https://www.ensembl.org/info/docs/tools/vep/index.html) (Variant Effect Predictor)
+    * Reporting
+        * [MultiQC](http://multiqc.info)
 
-The flow is capable of accommodating additional variant calling software or CNV callers.
+A wrapper script contained within the repository makes it easy to run the different workflow scripts as a single job. See the documentation below for instructions on how to run the pipeline.
 
-Besides variant calls, the workflow provides quality controls presented by [MultiQC][multiqc-link].
-
-The [containers](containers) directory contains building rules for containers for all Sarek processes.
-
-This pipeline is listed on [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek).
+Sarek can be launched with raw FastQ files or with aligned BAM files (with or without realignment & recalibration). All variants callers or a subset can be used. The pipeline is capable of accommodating additional variant calling software or CNV callers if required.
 
 ## Documentation
 
 The Sarek pipeline comes with documentation about the pipeline, found in the `doc/` directory:
 
 01. [Installation documentation](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/INSTALL.md)
-02. [Installation documentation specific for `rackham`](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/INSTALL_RACKHAM.md)
-03. [Installation documentation specific for `bianca`](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/INSTALL_BIANCA.md)
+02. [Installation documentation specific for UPPMAX `rackham`](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/INSTALL_RACKHAM.md)
+03. [Installation documentation specific for UPPMAX `bianca`](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/INSTALL_BIANCA.md)
 04. [Tests documentation](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/TESTS.md)
 05. [Reference files documentation](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/REFERENCES.md)
 06. [Configuration and profiles documentation](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/CONFIG.md)
@@ -60,50 +71,43 @@ The Sarek pipeline comes with documentation about the pipeline, found in the `do
 
 ## Contributions & Support
 
-- [Contributions guidelines](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/.github/CONTRIBUTING.md)
-For further information/help, don't hesitate to get in touch on [Gitter][gitter-link] or contact us: maxime.garcia@scilifelab.se, szilveszter.juhos@scilifelab.se
+If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
+
+For further information or help, don't hesitate to get in touch on [Gitter][gitter-link] or contact us: maxime.garcia@scilifelab.se, szilveszter.juhos@scilifelab.se
 
 ## Authors
 
-- [Sebastian DiLorenzo](https://github.com/Sebastian-D)
-- [Jesper Eisfeldt](https://github.com/J35P312)
-- [Phil Ewels](https://github.com/ewels)
-- [Maxime Garcia](https://github.com/MaxUlysse)
-- [Szilveszter Juhos](https://github.com/szilvajuhos)
-- [Max Käller](https://github.com/gulfshores)
-- [Malin Larsson](https://github.com/malinlarsson)
-- [Marcel Martin](https://github.com/marcelm)
-- [Björn Nystedt](https://github.com/bjornnystedt)
-- [Pall Olason](https://github.com/pallolason)
-- [Pelin Sahlén](https://github.com/pelinakan)
+* [Sebastian DiLorenzo](https://github.com/Sebastian-D)
+* [Jesper Eisfeldt](https://github.com/J35P312)
+* [Phil Ewels](https://github.com/ewels)
+* [Maxime Garcia](https://github.com/MaxUlysse)
+* [Szilveszter Juhos](https://github.com/szilvajuhos)
+* [Max Käller](https://github.com/gulfshores)
+* [Malin Larsson](https://github.com/malinlarsson)
+* [Marcel Martin](https://github.com/marcelm)
+* [Björn Nystedt](https://github.com/bjornnystedt)
+* [Pall Olason](https://github.com/pallolason)
+* [Pelin Sahlén](https://github.com/pelinakan)
 
 --------------------------------------------------------------------------------
 
-[![](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
-[![](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/images/NGI_logo.png "NGI")][ngi-link]
-[![](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/images/NBIS_logo.png "NBIS")][nbis-link]
+[![SciLifeLab](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
+[![NGI](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/images/NGI_logo.png "NGI")][ngi-link]
+[![NBIS](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/images/NBIS_logo.png "NBIS")][nbis-link]
 
-[ascat-link]: https://github.com/Crick-CancerGenomics/ascat
-[freebayes-link]: https://github.com/ekg/freebayes
-[gatk-link]: https://github.com/broadgsa/gatk-protected
 [gitter-badge]: https://badges.gitter.im/SciLifeLab/Sarek.svg
 [gitter-link]: https://gitter.im/SciLifeLab/Sarek
 [license-badge]: https://img.shields.io/github/license/SciLifeLab/Sarek.svg
 [license-link]: https://github.com/SciLifeLab/Sarek/blob/master/LICENSE
-[manta-link]: https://github.com/Illumina/manta
-[multiqc-link]: https://github.com/ewels/MultiQC/
-[mutect1-link]: https://github.com/broadinstitute/mutect
-[nbis-link]: https://www.nbis.se/
 [nextflow-badge]: https://img.shields.io/badge/nextflow-%E2%89%A50.25.0-brightgreen.svg
 [nextflow-link]: https://www.nextflow.io/
-[ngi-link]: https://ngisweden.scilifelab.se/
-[sarek-site-link]: http://opensource.scilifelab.se/projects/sarek/
-[scilifelab-link]: https://www.scilifelab.se/
-[scilifelab-stockholm-link]: https://www.scilifelab.se/facilities/ngi-stockholm/
-[strelka-link]: https://github.com/Illumina/strelka
 [travis-badge]: https://api.travis-ci.org/SciLifeLab/Sarek.svg
 [travis-link]: https://travis-ci.org/SciLifeLab/Sarek
 [version-badge]: https://img.shields.io/github/release/SciLifeLab/Sarek.svg
 [version-link]: https://github.com/SciLifeLab/Sarek/releases/latest
 [zenodo-badge]: https://zenodo.org/badge/54024046.svg
 [zenodo-link]: https://zenodo.org/badge/latestdoi/54024046
+
+[nbis-link]: https://www.nbis.se/
+[ngi-link]: https://ngisweden.scilifelab.se/
+[scilifelab-link]: https://www.scilifelab.se/
