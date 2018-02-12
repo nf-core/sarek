@@ -1,11 +1,11 @@
-[![](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/images/Sarek_logo.png "SAREK")][sarek-site-link]
+[![](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/images/Sarek_logo.png "Sarek")][sarek-site-link]
 
 # Sarek
 
 [![sarek version][version-badge]][version-link]
 [![License][license-badge]][license-link]
 [![nextflow version][nextflow-badge]][nextflow-link]
-[![Join the chat at https://gitter.im/SciLifeLab/CAW][gitter-badge]][gitter-link]
+[![Join the chat at https://gitter.im/SciLifeLab/Sarek][gitter-badge]][gitter-link]
 [![Travis status][travis-badge]][travis-link]
 [![DOI][zenodo-badge]][zenodo-link]
 
@@ -36,31 +36,31 @@ Besides variant calls, the workflow provides quality controls presented by [Mult
 
 The [containers](containers) directory contains building rules for containers for all Sarek processes.
 
-This pipeline is listed on [Elixir - Tools and Data Services Registry](https://bio.tools/CAW).
+This pipeline is listed on [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek).
 
 ## Documentation
 
 The Sarek pipeline comes with documentation about the pipeline, found in the `doc/` directory:
 
-01. [Installation documentation](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/INSTALL.md)
-02. [Installation documentation specific for `rackham`](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/INSTALL_RACKHAM.md)
-03. [Installation documentation specific for `bianca`](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/INSTALL_BIANCA.md)
-04. [Tests documentation](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/TESTS.md)
-05. [Reference files documentation](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/REFERENCES.md)
-06. [Configuration and profiles documentation](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/CONFIG.md)
-07. [Intervals documentation](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/INTERVALS.md)
-08. [Running the pipeline](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/USAGE.md)
-09. [Examples](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/USE_CASES.md)
-10. [TSV file documentation](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/TSV.md)
-11. [Processes documentation](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/PROCESS.md)
-12. [Documentation about containers](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/CONTAINERS.md)
-13. [Documentation about building](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/BUILD.md)
-14. [More information about ASCAT](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/ASCAT.md)
-15. [Folder structure](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/FOLDER.md)
+01. [Installation documentation](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/INSTALL.md)
+02. [Installation documentation specific for `rackham`](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/INSTALL_RACKHAM.md)
+03. [Installation documentation specific for `bianca`](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/INSTALL_BIANCA.md)
+04. [Tests documentation](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/TESTS.md)
+05. [Reference files documentation](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/REFERENCES.md)
+06. [Configuration and profiles documentation](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/CONFIG.md)
+07. [Intervals documentation](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/INTERVALS.md)
+08. [Running the pipeline](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/USAGE.md)
+09. [Examples](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/USE_CASES.md)
+10. [TSV file documentation](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/TSV.md)
+11. [Processes documentation](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/PROCESS.md)
+12. [Documentation about containers](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/CONTAINERS.md)
+13. [Documentation about building](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/BUILD.md)
+14. [More information about ASCAT](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/ASCAT.md)
+15. [Folder structure](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/FOLDER.md)
 
 ## Contributions & Support
 
-- [Contributions guidelines](https://raw.githubusercontent.com/SciLifeLab/CAW/master/.github/CONTRIBUTING.md)
+- [Contributions guidelines](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/.github/CONTRIBUTING.md)
 For further information/help, don't hesitate to get in touch on [Gitter][gitter-link] or contact us: maxime.garcia@scilifelab.se, szilveszter.juhos@scilifelab.se
 
 ## Authors
@@ -79,17 +79,17 @@ For further information/help, don't hesitate to get in touch on [Gitter][gitter-
 
 --------------------------------------------------------------------------------
 
-[![](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
-[![](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/images/NGI_logo.png "NGI")][ngi-link]
-[![](https://raw.githubusercontent.com/SciLifeLab/CAW/master/doc/images/NBIS_logo.png "NBIS")][nbis-link]
+[![](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
+[![](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/images/NGI_logo.png "NGI")][ngi-link]
+[![](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/images/NBIS_logo.png "NBIS")][nbis-link]
 
 [ascat-link]: https://github.com/Crick-CancerGenomics/ascat
 [freebayes-link]: https://github.com/ekg/freebayes
 [gatk-link]: https://github.com/broadgsa/gatk-protected
-[gitter-badge]: https://badges.gitter.im/SciLifeLab/CAW.svg
-[gitter-link]: https://gitter.im/SciLifeLab/CAW
-[license-badge]: https://img.shields.io/github/license/SciLifeLab/CAW.svg
-[license-link]: https://github.com/SciLifeLab/CAW/blob/master/LICENSE
+[gitter-badge]: https://badges.gitter.im/SciLifeLab/Sarek.svg
+[gitter-link]: https://gitter.im/SciLifeLab/Sarek
+[license-badge]: https://img.shields.io/github/license/SciLifeLab/Sarek.svg
+[license-link]: https://github.com/SciLifeLab/Sarek/blob/master/LICENSE
 [manta-link]: https://github.com/Illumina/manta
 [multiqc-link]: https://github.com/ewels/MultiQC/
 [mutect1-link]: https://github.com/broadinstitute/mutect
@@ -97,13 +97,13 @@ For further information/help, don't hesitate to get in touch on [Gitter][gitter-
 [nextflow-badge]: https://img.shields.io/badge/nextflow-%E2%89%A50.25.0-brightgreen.svg
 [nextflow-link]: https://www.nextflow.io/
 [ngi-link]: https://ngisweden.scilifelab.se/
-[sarek-site-link]: http://opensource.scilifelab.se/projects/caw/
+[sarek-site-link]: http://opensource.scilifelab.se/projects/sarek/
 [scilifelab-link]: https://www.scilifelab.se/
 [scilifelab-stockholm-link]: https://www.scilifelab.se/facilities/ngi-stockholm/
 [strelka-link]: https://github.com/Illumina/strelka
-[travis-badge]: https://api.travis-ci.org/SciLifeLab/CAW.svg
-[travis-link]: https://travis-ci.org/SciLifeLab/CAW
-[version-badge]: https://img.shields.io/github/release/SciLifeLab/CAW.svg
-[version-link]: https://github.com/SciLifeLab/CAW/releases/latest
+[travis-badge]: https://api.travis-ci.org/SciLifeLab/Sarek.svg
+[travis-link]: https://travis-ci.org/SciLifeLab/Sarek
+[version-badge]: https://img.shields.io/github/release/SciLifeLab/Sarek.svg
+[version-link]: https://github.com/SciLifeLab/Sarek/releases/latest
 [zenodo-badge]: https://zenodo.org/badge/54024046.svg
 [zenodo-link]: https://zenodo.org/badge/latestdoi/54024046
