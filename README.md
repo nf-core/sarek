@@ -17,18 +17,23 @@ It's built using [Nextflow][nextflow-link], a bioinformatics domain specific lan
 Sarek was developed at the [National Genomics Infastructure][ngi-link] and [National Bioinformatics Infastructure Sweden][nbis-link] which are both platforms at [SciLifeLab][scilifelab-link]. It is listed on the [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek).
 
 ## Workflow steps
-Sarek is built with several workflow scripts:
 
-1. Preprocessing (`main.nf`) - based on [GATK best practices](https://software.broadinstitute.org/gatk/best-practices/)
+Sarek is built with several workflow scripts. A wrapper script contained within the repository makes it easy to run the different workflow scripts as a single job.
+
+Raw FastQ files or aligned BAM files (with or without realignment & recalibration) can be used as inputs. You can choose which variant callers to use, plus the pipeline is capable of accommodating additional variant calling software or CNV callers if required.
+
+The worflow steps and tools used are as follows:
+
+1. **Preprocessing** - `main.nf` _(based on [GATK best practices](https://software.broadinstitute.org/gatk/best-practices/))_
     * Read alignment
         * [BWA](http://bio-bwa.sourceforge.net/)
     * Read realignment and recalibration of short-read data
         * [GATK](https://github.com/broadgsa/gatk-protected)
-2. Germline variant calling (`germlineVC.nf`)
+2. **Germline variant calling** - `germlineVC.nf`
     * SNVs and small indels
         * [GATK HaplotyeCaller](https://github.com/broadgsa/gatk-protected)
         * [Strelka](https://github.com/Illumina/strelka)
-3. Somatic variant calling (`somaticVC.nf`) - _optional_
+3. **Somatic variant calling** - `somaticVC.nf` _(optional)_
     * SNVs and small indels
         * [MuTect1](https://github.com/broadinstitute/mutect)
         * [MuTect2](https://github.com/broadgsa/gatk-protected)
@@ -38,20 +43,16 @@ Sarek is built with several workflow scripts:
         * [Manta](https://github.com/Illumina/manta)
     * Sample heterogeneity, ploidy and CNVs
         * [ASCAT](https://github.com/Crick-CancerGenomics/ascat)
-4. Annotation and reporting (`annotate.nf`)
+4. **Annotation and reporting** - `annotate.nf`
     * Variant annotation
         * [SnpEff](http://snpeff.sourceforge.net/)
         * [VEP](https://www.ensembl.org/info/docs/tools/vep/index.html) (Variant Effect Predictor)
     * Reporting
         * [MultiQC](http://multiqc.info)
 
-A wrapper script contained within the repository makes it easy to run the different workflow scripts as a single job. See the documentation below for instructions on how to run the pipeline.
-
-Sarek can be launched with raw FastQ files or with aligned BAM files (with or without realignment & recalibration). All variants callers or a subset can be used. The pipeline is capable of accommodating additional variant calling software or CNV callers if required.
-
 ## Documentation
 
-The Sarek pipeline comes with documentation about the pipeline, found in the `doc/` directory:
+The Sarek pipeline comes with documentation in the `doc/` directory:
 
 01. [Installation documentation](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/INSTALL.md)
 02. [Installation documentation specific for UPPMAX `rackham`](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/INSTALL_RACKHAM.md)
