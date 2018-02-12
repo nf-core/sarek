@@ -9,7 +9,9 @@
 [![Travis status][travis-badge]][travis-link]
 [![DOI][zenodo-badge]][zenodo-link]
 
-Sarek is a complete open source pipeline to detect germline, or somatic variants from WGS data developed at the [National Genomics Infastructure][ngi-link] at [SciLifeLab Stockholm][scilifelab-stockholm-link] and [National Bioinformatics Infastructure Sweden][nbis-link] at [SciLifeLab][scilifelab-link].
+[![](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/images/CAW_logo.png "CAW")][sarek-site-link]
+
+Previously known as the Cancer Analysis Workflow (CAW), Sarek is a complete open source pipeline to detect germline, or somatic variants from WGS data developed at the [National Genomics Infastructure][ngi-link] at [SciLifeLab Stockholm][scilifelab-stockholm-link] and [National Bioinformatics Infastructure Sweden][nbis-link] at [SciLifeLab][scilifelab-link].
 
 The pipeline uses [Nextflow][nextflow-link], a bioinformatics domain specific language for workflow building and [Singularity](http://singularity.lbl.gov/), a container technology specific for high-performance computing.
 
