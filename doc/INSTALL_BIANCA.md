@@ -1,26 +1,26 @@
 # Installation on `bianca`
 
-This small tutorial will explain to you how to install and run CAW on a small sample test data on the Swedish UPPMAX cluster `bianca` made for sensitive data.
+This small tutorial will explain to you how to install and run Sarek on a small sample test data on the Swedish UPPMAX cluster `bianca` made for sensitive data.
 
 For more information about `bianca`, follow the [`bianca` user guide](http://uppmax.uu.se/support/user-guides/bianca-user-guide/).
 For more information about using Singularity with UPPMAX, follow the [Singularity UPPMAX guide](https://www.uppmax.uu.se/support-sv/user-guides/singularity-user-guide/).
 
-CAW use Singularity containers to package all the different tools.
+Sarek use Singularity containers to package all the different tools.
 
-As `bianca` is secure, no direct download is available, so CAW and the Singularity containers will have to be installed and updated manually.
+As `bianca` is secure, no direct download is available, so Sarek and the Singularity containers will have to be installed and updated manually.
 
-You can either download CAW and the containers on your computer or on `milou`, make an archive, and send it to `bianca` using `FileZilla` or `sftp` given your preferences.
+You can either download Sarek and the containers on your computer or on `rackham`, make an archive, and send it to `bianca` using `FileZilla` or `sftp` given your preferences.
 
 All Reference files are already stored in `bianca`.
 
 ```bash
-# Connect to milou
-> ssh -AX [USER]@milou.uppmax.uu.se
+# Connect to rackham
+> ssh -AX [USER]@rackham.uppmax.uu.se
 # Or just open a terminal
 
 # Clone the repository
-> git clone https://github.com/SciLifeLab/CAW.git
-> cd CAW
+> git clone https://github.com/SciLifeLab/Sarek.git
+> cd Sarek
 
 # It is also possible to checkout a specific version using
 > git checkout <branch, tag or commit>
@@ -29,15 +29,16 @@ All Reference files are already stored in `bianca`.
 > ./scripts/makeSnapshot.sh
 
 # You will get this message in your terminal
-Wrote CAW-[snapID].tar.gz
+Wrote Sarek-[snapID].tar.gz
 
 # Send the tar to bianca (here using sftp)
 # For FileZilla follow the bianca user guide
 > sftp [USER]-[PROJECT]@bianca-sftp.uppmax.uu.se:[USER]-[PROJECT]
-> put CAW-[snapID].tar.gz
+> put Sarek-[snapID].tar.gz
 
 # To get the containers
-> ./scripts/do_all --pull
+# This script will need Singularity and Nextflow installed
+> ./scripts/do_all.sh --pull
 
 # Send the containers to bianca using the same method
 # They will be in the containers/ directory as .img files
@@ -50,21 +51,21 @@ Wrote CAW-[snapID].tar.gz
 # Go to your project
 > cd /castor/project/proj_nobackup
 
-# Make and go into a CAW directoy (where you will store all CAW versions)
-> mkdir CAW
-> cd CAW
+# Make and go into a Sarek directoy (where you will store all Sarek versions)
+> mkdir Sarek
+> cd Sarek
 
 # Copy the tar from wharf to the project
-> cp /castor/project/proj_nobackup/wharf/[USER]/[USER]-[PROJECT]/CAW-[snapID].tgz /castor/project/proj_nobackup/CAW
+> cp /castor/project/proj_nobackup/wharf/[USER]/[USER]-[PROJECT]/Sarek-[snapID].tgz /castor/project/proj_nobackup/Sarek
 
-# extract CAW
-> tar -xvzf CAW-[snapID].tgz
+# extract Sarek
+> tar -xvzf Sarek-[snapID].tgz
 
 # Make a symbolic link to the extracted repository
-> ln -s CAW-[snapID] default
+> ln -s Sarek-[snapID] default
 ```
 
-The principle is to have every member of your project to be able to use the same CAW version at the same time. So every member of the project who wants to use CAW will need to do:
+The principle is to have every member of your project to be able to use the same Sarek version at the same time. So every member of the project who wants to use Sarek will need to do:
 
 ```bash
 # Connect to bianca
@@ -73,32 +74,32 @@ The principle is to have every member of your project to be able to use the same
 # Go to your user directory
 > cd /home/[USER]
 
-# Make a symbolic link to the default CAW
-> ln -s /castor/project/proj_nobackup/CAW/default CAW
+# Make a symbolic link to the default Sarek
+> ln -s /castor/project/proj_nobackup/Sarek/default Sarek
 ```
 
-And then CAW can be used with:
+And then Sarek can be used with:
 
 ```bash
-> nextflow run ~/CAW/main.nf ...
+> nextflow run ~/Sarek/main.nf ...
 ```
 
-## Update CAW
+## Update Sarek
 
-Repeat the same steps as for installing CAW, and once the tar has been extracted, you can replace the link.
+Repeat the same steps as for installing Sarek, and once the tar has been extracted, you can replace the link.
 
 ```bash
-# Connect to bianca (Connect to milou first if needed)
+# Connect to bianca (Connect to rackham first if needed)
 > ssh -A [USER]-[PROJECT]@bianca.uppmax.uu.se
 
-# Go to the CAW directory in your project
-> cd /castor/project/proj_nobackup/CAW
+# Go to the Sarek directory in your project
+> cd /castor/project/proj_nobackup/Sarek
 
 # Remove link
 > rm default
 
-# Link to new CAW version
-> ln -s CAW-[NEWsnapID] default
+# Link to new Sarek version
+> ln -s Sarek-[NEWsnapID] default
 ```
 
 You can for example keep a `default` version that you are sure is working, an make a link for a `testing` or `development`

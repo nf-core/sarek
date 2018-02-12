@@ -1,12 +1,12 @@
 #!/bin/bash
 set -xeuo pipefail
 
+BUILD=false
 GENOME=smallGRCh37
 PROFILE=singularity
 SAMPLE=data/tsv/tiny.tsv
 TEST=ALL
 TRAVIS=${TRAVIS:-false}
-BUILD=false
 
 while [[ $# -gt 0 ]]
 do
@@ -47,6 +47,10 @@ function nf_test() {
   nextflow run $@ -profile $PROFILE --genome $GENOME -resume --genome_base $PWD/References/$GENOME --verbose
 }
 
+function run_wrapper() {
+  ./scripts/wrapper.sh $@ --profile $PROFILE --genome $GENOME --genomeBase $PWD/References/$GENOME --verbose
+}
+
 # Build references only for smallGRCh37
 if [[ $GENOME == smallGRCh37 ]] && [[ $TEST != BUILDCONTAINERS ]] && [[ BUILD ]]
 then
@@ -63,29 +67,30 @@ fi
 
 if [[ ALL,MAPPING,ONLYQC,REALIGN,RECALIBRATE =~ $TEST ]]
 then
-  nf_test . --step mapping --sampleDir data/tiny/tiny/normal
-  nf_test . --step mapping --sample $SAMPLE
+  run_wrapper --germline --sampleDir data/tiny/tiny/normal
+  run_wrapper --germline --sample $SAMPLE
 fi
 
 if [[ ALL,ONLYQC =~ $TEST ]]
 then
-  nf_test . --step mapping --sample $SAMPLE --tools Strelka --noReports
-  nf_test . --step variantCalling --tools Strelka --onlyQC
+  run_wrapper --germline --sample data/tsv/tiny-manta.tsv --noReports
+  run_wrapper --germline --variantCalling --tools Manta,Strelka --noReports
+  run_wrapper --germline --variantCalling --tools Manta,Strelka --onlyQC
+  run_wrapper --somatic --variantCalling --tools Manta,Strelka --noReports
+  run_wrapper --somatic --variantCalling --tools Manta,Strelka --onlyQC
 fi
 
 if [[ ALL,REALIGN =~ $TEST ]]
 then
-  nf_test . --step realign --noReports
-  nf_test . --step realign --tools HaplotypeCaller
-  nf_test . --step realign --tools HaplotypeCaller --noReports --noGVCF
+  run_wrapper --germline --step realign --noReports
+  run_wrapper --germline --variantCalling  --tools HaplotypeCaller
+  run_wrapper --germline --variantCalling  --tools HaplotypeCaller --noReports --noGVCF
 fi
 
 if [[ ALL,RECALIBRATE =~ $TEST ]]
 then
-  nf_test . --step recalibrate --noReports
-  nf_test . --step recalibrate --tools FreeBayes,HaplotypeCaller,MuTect1,MuTect2,Strelka
-  # Test whether restarting from an already recalibrated BAM works
-  nf_test . --step variantCalling --tools Strelka --noReports
+  run_wrapper --somatic --step recalibrate --noReports
+  run_wrapper --somatic --variantCalling  --tools FreeBayes,HaplotypeCaller,MuTect1,MuTect2,Strelka
 fi
 
 if [[ ALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
@@ -102,18 +107,18 @@ then
   fi
   if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
   then
-    docker rmi -f maxulysse/caw:latest
+    docker rmi -f maxulysse/sarek:latest
     docker rmi -f maxulysse/picard:latest
   elif [[ $PROFILE == singularity ]] && [[ $TRAVIS == true ]]
   then
-    rm -rf work/singularity/caw-latest.img
+    rm -rf work/singularity/sarek-latest.img
     rm -rf work/singularity/picard-latest.img
   fi
-  nf_test . --step annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz --noReports
-  nf_test . --step annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz,data/tiny/vcf/Strelka_9876T_variants.vcf.gz --noReports
+  run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz --noReports
+  run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz,data/tiny/vcf/Strelka_9876T_variants.vcf.gz --noReports
 fi
 
 if [[ ALL,BUILDCONTAINERS =~ $TEST ]] && [[ $PROFILE == docker ]]
 then
-  nf_test buildContainers.nf --docker --containers caw,fastqc,gatk,igvtools,multiqc,mutect1,picard,qualimap,runallelecount,r-base,snpeff
+  nf_test buildContainers.nf --docker --containers fastqc,gatk,igvtools,multiqc,mutect1,picard,qualimap,runallelecount,r-base,snpeff,sarek
 fi

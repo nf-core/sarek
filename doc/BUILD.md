@@ -13,7 +13,6 @@ nextflow run . [--docker] [--singularity] [--containerPath <path>] [--push] [--c
 
 - `--containers`: Choose which containers to build. Default: `all`. Possible values (to separate by commas):
   - `all` -  Build all available containers.
-  - `caw`
   - `fastqc`
   - `freebayes`
   - `gatk`
@@ -24,6 +23,7 @@ nextflow run . [--docker] [--singularity] [--containerPath <path>] [--push] [--c
   - `qualimap`
   - `r-base`
   - `runallelecount`
+  - `sarek`
   - `snpeff` this container serves as a base for `snpeffgrch37` and `snpeffgrch38`
   - `snpeffgrch37`
   - `snpeffgrch38`

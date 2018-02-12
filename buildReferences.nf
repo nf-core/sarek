@@ -5,13 +5,14 @@ vim: syntax=groovy
 -*- mode: groovy;-*-
 kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
-=               C A N C E R    A N A L Y S I S    W O R K F L O W              =
+=                                 S  A  R  E  K                                =
 ================================================================================
- New Cancer Analysis Workflow. Started March 2016.
+New Germline (+ Somatic) Analysis Workflow. Started March 2016.
 --------------------------------------------------------------------------------
  @Authors
  Sebastian DiLorenzo <sebastian.dilorenzo@bils.se> [@Sebastian-D]
  Jesper Eisfeldt <jesper.eisfeldt@scilifelab.se> [@J35P312]
+ Phil Ewels <phil.ewels@scilifelab.se> [@ewels]
  Maxime Garcia <maxime.garcia@scilifelab.se> [@MaxUlysse]
  Szilveszter Juhos <szilveszter.juhos@scilifelab.se> [@szilvajuhos]
  Max Käller <max.kaller@scilifelab.se> [@gulfshores]
@@ -22,10 +23,10 @@ kate: syntax groovy; space-indent on; indent-width 2;
  Pelin Sahlén <pelin.akan@scilifelab.se> [@pelinakan]
 --------------------------------------------------------------------------------
  @Homepage
- http://opensource.scilifelab.se/projects/caw/
+ http://opensource.scilifelab.se/projects/sarek/
 --------------------------------------------------------------------------------
  @Documentation
- https://github.com/SciLifeLab/CAW/README.md
+ https://github.com/SciLifeLab/Sarek/README.md
 --------------------------------------------------------------------------------
  Processes overview
  - ProcessReference - Download all references if needed

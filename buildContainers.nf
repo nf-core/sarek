@@ -5,13 +5,14 @@ vim: syntax=groovy
 -*- mode: groovy;-*-
 kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
-=               C A N C E R    A N A L Y S I S    W O R K F L O W              =
+=                                 S  A  R  E  K                                =
 ================================================================================
- New Cancer Analysis Workflow. Started March 2016.
+New Germline (+ Somatic) Analysis Workflow. Started March 2016.
 --------------------------------------------------------------------------------
  @Authors
  Sebastian DiLorenzo <sebastian.dilorenzo@bils.se> [@Sebastian-D]
  Jesper Eisfeldt <jesper.eisfeldt@scilifelab.se> [@J35P312]
+ Phil Ewels <phil.ewels@scilifelab.se> [@ewels]
  Maxime Garcia <maxime.garcia@scilifelab.se> [@MaxUlysse]
  Szilveszter Juhos <szilveszter.juhos@scilifelab.se> [@szilvajuhos]
  Max Käller <max.kaller@scilifelab.se> [@gulfshores]
@@ -22,10 +23,10 @@ kate: syntax groovy; space-indent on; indent-width 2;
  Pelin Sahlén <pelin.akan@scilifelab.se> [@pelinakan]
 --------------------------------------------------------------------------------
  @Homepage
- http://opensource.scilifelab.se/projects/caw/
+ http://opensource.scilifelab.se/projects/sarek/
 --------------------------------------------------------------------------------
  @Documentation
- https://github.com/SciLifeLab/CAW/README.md
+ https://github.com/SciLifeLab/Sarek/README.md
 --------------------------------------------------------------------------------
  Processes overview
  - BuildDockerContainers - Build containers using Docker
@@ -175,9 +176,9 @@ if (verbose) containersPushed = containersPushed.view {
 ================================================================================
 */
 
-def cawMessage() {
-  // Display CAW message
-  log.info "CANCER ANALYSIS WORKFLOW ~ ${version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
+def sarekMessage() {
+  // Display Sarek message
+  log.info "Sarek ~ ${version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
 }
 
 def checkContainerExistence(container, list) {
@@ -258,7 +259,6 @@ def checkUppmaxProject() {
 def defineContainersList(){
   // Return list of authorized containers
   return [
-    'caw',
     'fastqc',
     'freebayes',
     'gatk',
@@ -269,6 +269,7 @@ def defineContainersList(){
     'qualimap',
     'r-base',
     'runallelecount',
+    'sarek',
     'snpeff',
     'snpeffgrch37',
     'snpeffgrch38',
@@ -284,19 +285,19 @@ def grabRevision() {
 
 def helpMessage() {
   // Display help message
-  this.cawMessage()
+  this.sarekMessage()
   log.info "    Usage:"
-  log.info "       nextflow run SciLifeLab/CAW/buildContainers.nf [--docker] [--push]"
+  log.info "       nextflow run SciLifeLab/Sarek/buildContainers.nf [--docker] [--push]"
   log.info "          [--containers <container1...>] [--singularity]"
   log.info "          [--containerPath <path>]"
   log.info "          [--tag <tag>] [--repository <repository>]"
   log.info "    Example:"
-  log.info "      nextflow run SciLifeLab/CAW/buildContainers.nf --docker --containers caw"
+  log.info "      nextflow run SciLifeLab/Sarek/buildContainers.nf --docker --containers sarek"
   log.info "    --containers: Choose which containers to build"
   log.info "       Default: all"
   log.info "       Possible values:"
-  log.info "         all, caw, fastqc, freebayes, gatk, igvtools, multiqc"
-  log.info "         mutect1, picard, qualimap, r-base, runallelecount"
+  log.info "         all, fastqc, freebayes, gatk, igvtools, multiqc, mutect1"
+  log.info "         picard, qualimap, r-base, runallelecount, sarek"
   log.info "         snpeff, snpeffgrch37, snpeffgrch38, vepgrch37, vepgrch38"
   log.info "    --docker: Build containers using Docker"
   log.info "    --help"
@@ -344,7 +345,7 @@ def nextflowMessage() {
 
 def startMessage() {
   // Display start message
-  this.cawMessage()
+  this.sarekMessage()
   this.minimalInformationMessage()
 }
 
@@ -358,7 +359,7 @@ def versionMessage() {
 workflow.onComplete {
   // Display complete message
   this.nextflowMessage()
-  this.cawMessage()
+  this.sarekMessage()
   this.minimalInformationMessage()
   log.info "Completed at: " + workflow.complete
   log.info "Duration    : " + workflow.duration
@@ -370,7 +371,7 @@ workflow.onComplete {
 workflow.onError {
   // Display error message
   this.nextflowMessage()
-  this.cawMessage()
+  this.sarekMessage()
   log.info "Workflow execution stopped with the following message:"
   log.info "  " + workflow.errorMessage
 }
