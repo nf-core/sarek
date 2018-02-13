@@ -1,9 +1,9 @@
 # Usage
 
-I would recommand to run Nextflow within a [screen](https://www.gnu.org/software/screen/) or [tmux](https://tmux.github.io/) session. It is recommanded to run only one instance of CAW for one patient in the same directory. The typical reduced command line is:
+I would recommand to run Nextflow within a [screen](https://www.gnu.org/software/screen/) or [tmux](https://tmux.github.io/) session. It is recommanded to run only one instance of Sarek for one patient in the same directory. The typical reduced command line is:
 
 ```bash
-nextflow run SciLifeLab/CAW --sample <file.tsv> --step <step> --tools <tool>
+nextflow run SciLifeLab/Sarek --sample <file.tsv> --step <step> --tools <tool>
 ```
 
 All parameters, options and variables can be specified with configuration files and profile (cf [configuration documentation](#profiles)).
@@ -24,7 +24,11 @@ Display help
 
 ### --noReports
 
-Disable QC tools and MultiQC to generate a HTML report.
+Disable all QC tools and MultiQC to generate a HTML report.
+
+### --onlyQC
+
+Run only QC tools and MultiQC to generate a HTML report.
 
 ### --outDir
 
@@ -45,14 +49,11 @@ Choose from wich step the workflow will start. Choose only one step. Possible va
 - mapping (default, will start workflow with FASTQ files)
 - realign (will start workflow with BAM files (with T/N BAMs that were not realigned together))
 - recalibrate (will start workflow with BAM files and Recalibration Tables (Only with T/N BAMs that were realigned together))
-- variantcalling (will skip entire preprocessing (Only with T/N BAMs that were realigned together))
-- annotate (will annotate Variant Calling output. By default it will try to annotate all available vcfs. Use with ```--annotateTools``` or ```--annotateVCF``` to specify what to annotate)
 
-`--step` option is case insensitive to avoid easy introduction of errors when choosing a step. So you can write `--step variantCalling` or `--step variantcalling` without worrying about case sensitivity.
-
+`--step` option is case insensitive to avoid easy introduction of errors when choosing a step.
 ### --test
 
-Test run CAW on a smaller dataset, that way you don't have to specify `--sample data/tsv/tiny.tsv`
+Test run Sarek on a smaller dataset, that way you don't have to specify `--sample data/tsv/tiny.tsv`
 
 ### --tools `tool1[,tool2,tool3...]`
 
@@ -147,13 +148,13 @@ See the [options documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/b
 More informations on the [SciLifeLab Nextflow documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/INSTALL.md). The default profile is `standard`. You can use your own profile:
 
 ```bash
-nextflow run SciLifeLab/CAW --sample mysample.tsv -profile myprofile
+nextflow run SciLifeLab/Sarek --sample mysample.tsv -profile myprofile
 ```
 
 A standard profile is defined in [`nextflow.config`](../nextflow.config). You can use the files in the [`configuration/`](../configuration) directory as a base to make a new `.config` file that you can specify directly (or add as a profile):
 
 ```bash
-nextflow run SciLifeLab/CAW --sample mysample.tsv -c config/milou.config
+nextflow run SciLifeLab/Sarek --sample mysample.tsv -c config/milou.config
 ```
 
 ## Update to latest version
@@ -161,7 +162,7 @@ nextflow run SciLifeLab/CAW --sample mysample.tsv -c config/milou.config
 To update workflow to the latest version use:
 
 ```bash
-nextflow pull SciLifeLab/CAW
+nextflow pull SciLifeLab/Sarek
 ```
 
 ## Run the latest version
@@ -169,7 +170,7 @@ nextflow pull SciLifeLab/CAW
 If there is a feature or bugfix you want to use in a resumed or re-analyzed run, you have to update the workflow to the latest version. By default it is not updated automatically, so use something like:
 
 ```bash
-nextflow run -latest SciLifeLab/CAW --sample mysample.tsv -resume
+nextflow run -latest SciLifeLab/Sarek --sample mysample.tsv -resume
 ```
 
 --------------------------------------------------------------------------------

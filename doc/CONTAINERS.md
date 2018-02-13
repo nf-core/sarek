@@ -2,19 +2,25 @@
 
 Subsets of all containers can be dowloaded:
 
-For normal-only processing + Reports + HaploTypeCaller, Manta and Strelka:
- - [caw](#caw-)
+For processing + germline variant calling + Reports:
  - [fastqc](#fastqc-)
  - [gatk](#gatk-)
  - [multiqc](#multiqc-)
  - [picard](#picard-)
  - [qualimap](#qualimap-)
+ - [sarek](#sarek-)
 
-For the rest of the variant callers, you will need also:
+For processing + somatic variant calling + Reports:
+ - [fastqc](#fastqc-)
  - [freebayes](#freebayes-)
+ - [gatk](#gatk-)
+ - [multiqc](#multiqc-)
  - [mutect1](#mutect1-)
+ - [picard](#picard-)
+ - [qualimap](#qualimap-)
  - [r-base](#r-base-)
  - [runallelecount](#runallelecount-)
+ - [sarek](#sarek-)
 
 For annotation for GRCh37, you will need:
  - [snpeffgrch37](#snpeffgrch37-)
@@ -25,16 +31,6 @@ For annotation for GRCh38, you will need:
  - [vepgrch38](#vepgrch38-)
 
 A container named after the process is made for each process. If a container can be reused, it will be named after the tool used.
-
-## caw [![caw-docker status][caw-docker-badge]][caw-docker-link]
-
-- Based on `debian:8.9`
-- Contain **[BCFTools][bcftools-link]** 1.5
-- Contain **[BWA][bwa-link]** 0.7.16
-- Contain **[HTSlib][htslib-link]** 1.5
-- Contain **[Manta][manta-link]** 1.1.1
-- Contain **[samtools][samtools-link]** 1.5
-- Contain **[Strelka][strelka-link]** 2.8.2
 
 ## fastqc [![fastqc-docker status][fastqc-docker-badge]][fastqc-docker-link]
 
@@ -81,14 +77,15 @@ A container named after the process is made for each process. If a container can
 - Based on `debian:8.9`
 - Contain **[AlleleCount][allelecount-link]** 2.2.0
 
-## runascat [![runascat-docker status][runascat-docker-badge]][runascat-docker-link]
+## sarek [![sarek-docker status][sarek-docker-badge]][sarek-docker-link]
 
-- Based on `r-base:3.3.2`
-- Contain **[RColorBrewer][rcolorbrewer-link]**
-
-## runconvertallelecounts [![runconvertallelecounts-docker status][runconvertallelecounts-docker-badge]][runconvertallelecounts-docker-link]
-
-- Based on `r-base:3.3.2`
+- Based on `debian:8.9`
+- Contain **[BCFTools][bcftools-link]** 1.5
+- Contain **[BWA][bwa-link]** 0.7.16
+- Contain **[HTSlib][htslib-link]** 1.5
+- Contain **[Manta][manta-link]** 1.1.1
+- Contain **[samtools][samtools-link]** 1.5
+- Contain **[Strelka][strelka-link]** 2.8.2
 
 ## snpeff [![snpeff-docker status][snpeff-docker-badge]][snpeff-docker-link]
 
@@ -127,8 +124,6 @@ A container named after the process is made for each process. If a container can
 [allelecount-link]: https://github.com/cancerit/alleleCount
 [bcftools-link]: https://github.com/samtools/bcftools
 [bwa-link]: https://github.com/lh3/bwa
-[caw-docker-badge]: https://img.shields.io/docker/automated/maxulysse/caw.svg
-[caw-docker-link]: https://hub.docker.com/r/maxulysse/caw
 [fastqc-docker-badge]: https://img.shields.io/docker/automated/maxulysse/fastqc.svg
 [fastqc-docker-link]: https://hub.docker.com/r/maxulysse/fastqc
 [fastqc-link]: http://www.bioinformatics.babraham.ac.uk/projects/fastqc/
@@ -162,9 +157,9 @@ A container named after the process is made for each process. If a container can
 [runallelecount-docker-link]: https://hub.docker.com/r/maxulysse/runallelecount
 [runascat-docker-badge]: https://img.shields.io/docker/automated/maxulysse/runascat.svg
 [runascat-docker-link]: https://hub.docker.com/r/maxulysse/runascat
-[runconvertallelecounts-docker-badge]: https://img.shields.io/docker/automated/maxulysse/runconvertallelecounts.svg
-[runconvertallelecounts-docker-link]: https://hub.docker.com/r/maxulysse/runconvertallelecounts
 [samtools-link]: https://github.com/samtools/samtools
+[sarek-docker-badge]: https://img.shields.io/docker/automated/maxulysse/sarek.svg
+[sarek-docker-link]: https://hub.docker.com/r/maxulysse/sarek
 [scilifelab-link]: https://www.scilifelab.se/
 [snpeff-docker-badge]: https://img.shields.io/docker/automated/maxulysse/snpeff.svg
 [snpeff-docker-link]: https://hub.docker.com/r/maxulysse/snpeff

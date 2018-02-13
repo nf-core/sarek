@@ -2,7 +2,7 @@ FROM openjdk:8
 
 LABEL \
   author="Maxime Garcia" \
-  description="FastQC image for use in CAW" \
+  description="FastQC image for use in Sarek" \
   maintainer="maxime.garcia@scilifelab.se"
 
 # Install libraries

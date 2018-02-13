@@ -2,7 +2,7 @@ FROM debian:8.9
 
 LABEL \
   author="Maxime Garcia" \
-  description="alleleCount 2.2.0 used in CAW" \
+  description="alleleCount 2.2.0 used in Sarek" \
   maintainer="maxime.garcia@scilifelab.se"
 
 # Export PATH

@@ -2,7 +2,7 @@ FROM openjdk:8-slim
 
 LABEL \
   author="Maxime Garcia" \
-  description="snpEff image for use in CAW" \
+  description="snpEff image for use in Sarek" \
   maintainer="maxime.garcia@scilifelab.se"
 
 # Install libraries

@@ -2,7 +2,7 @@ FROM willmclaren/ensembl-vep:release_90.6
 
 LABEL \
   author="Maxime Garcia" \
-  description="VEP image with GRCh37 genome for use in CAW" \
+  description="VEP image with GRCh37 genome for use in Sarek" \
   maintainer="maxime.garcia@scilifelab.se"
 
 # Setup ENV variables
