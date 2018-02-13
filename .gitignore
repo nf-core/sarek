@@ -12,3 +12,4 @@ work/
 report.html*
 timeline.html*
 trace.txt*
+.DS_Store
