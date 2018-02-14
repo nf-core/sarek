@@ -11,9 +11,9 @@
 
 ## Introduction
 
-Previously known as the Cancer Analysis Workflow (CAW), Sarek is a workflow tool designed to run analyses on WGS data from regular samples or tumour / normal pairs, including relapse samples if required.
+<img align="right" title="CAW" src="https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/images/CAW_logo.png">
 
-[![](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/images/CAW_logo.png "CAW")](http://opensource.scilifelab.se/projects/sarek)
+Previously known as the Cancer Analysis Workflow (CAW), Sarek is a workflow tool designed to run analyses on WGS data from regular samples or tumour / normal pairs, including relapse samples if required.
 
 It's built using [Nextflow][nextflow-link], a bioinformatics domain specific language for workflow building. Software dependencies are handled using [Docker](https://www.docker.com) or [Singularity](http://singularity.lbl.gov) - container technologies that provide excellent reproducibility and ease of use. Singularity has been designed specifically for high-performance computing environments. This means that although Sarek has been primarily designed for use with the Swedish [UPPMAX HPC systems](https://www.uppmax.uu.se), it should be able to run on any system that supports these two tools.
 
