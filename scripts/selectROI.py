@@ -33,14 +33,14 @@ import subprocess
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Selecting Region Of Interest from BAM files')
-    parser.add_argument('-v', help='List of VCF files to process like -v tumour.vcf,normal.vcf',required=False, dest="vcfs")
+    parser.add_argument('-v', help='List of VCF files to process like -v tumour.vcf,normal.vcf', dest="vcfs")
     parser.add_argument('-a', help='The BAM files (indexed) to read from like -b tumour.bam,normal.bam', required=True, dest="bams")
-    parser.add_argument('-b', help='The BED file with gene coordinates', required=False, dest="beds")
-    parser.add_argument('-p', help='The prefix of the target BAM file to write to (postfix is the input filename)', required=False, dest="prefix", default="ROI.")
-    parser.add_argument('-t', help='Number of threads used by samtools [8]', required=False, dest="threads", default=8)
-    parser.add_argument('-w', help='Region width for VCF loci [200]', required=False, dest="width", default=200)
-    parser.add_argument('-r', help='Readlength for region paddding [151]', required=False, dest="pad", default=151)
-    parser.add_argument('-c', help='Number of variants in a chunk [150]', required=False, dest="maxRegions", default=150)
+    parser.add_argument('-b', help='The BED file with gene coordinates', dest="beds")
+    parser.add_argument('-p', help='The prefix of the target BAM file to write to (postfix is the input filename)', dest="prefix", default="ROI.")
+    parser.add_argument('-t', help='Number of threads used by samtools [8]', dest="threads", default=8, type=int)
+    parser.add_argument('-w', help='Region width for VCF loci [200]', dest="width", default=200, type=int)
+    parser.add_argument('-r', help='Readlength for region padding [151]', dest="pad", default=151, type=int)
+    parser.add_argument('-c', help='Number of variants in a chunk [150]', dest="maxRegions", default=150, type=int)
 
     return parser.parse_args()
 
@@ -77,14 +77,14 @@ class ROISelector:
         # BED entries are (start,end) tuples
         self.callDict = dict()
         # number of samtools threads
-        self.threads = int(threads)
+        self.threads = threads
         # number of variants in a chunk
-        self.maxRegions = int(maxRegions)
+        self.maxRegions = maxRegions
         # prefix of the ROI BAM file
         self.prefix = prefix
         # width of region for VCF records
         # add readlength padding
-        self.width = int(width + pad)
+        self.width = width + pad
 
     def selectROI(self,vcfs,bams,beds):
         if not vcfs and not beds:
@@ -161,7 +161,10 @@ class ROISelector:
                 filesToMerge = filesToMerge + self.writeChunk(bam,chrom,regions)
             print("Merging ...")
             subprocess.call("samtools merge -@"+str(self.threads)+" -f merged.roi.bam " + filesToMerge, shell=True)
-            target = os.path.dirname(bam) + "/" + self.prefix + os.path.basename(bam)
+            target = os.path.dirname(bam) 
+            if len(target) > 0:
+                target = target + "/"
+            target = target + self.prefix + os.path.basename(bam)
             print("Sorting ...")
             subprocess.call("samtools sort -@" + str(self.threads) + " -o " + target + " merged.roi.bam", shell=True)
             print("Sorted file written to " + target)
@@ -210,6 +213,6 @@ class ROISelector:
 
 if __name__ == "__main__":
     args = parse_args()
-    rois = ROISelector(args.threads, args.maxRegions, args.prefix, int(args.width), int(args.pad))
+    rois = ROISelector(args.threads, args.maxRegions, args.prefix, args.width, args.pad)
     rois.selectROI(args.vcfs,args.bams,args.beds)
 
