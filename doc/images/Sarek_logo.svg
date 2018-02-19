@@ -16,7 +16,7 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    sodipodi:docname="Sarek_logo.svg"
-   inkscape:export-filename="/home/max/workspace/github/Sarek/doc/images/Sarek_germline_logo.png"
+   inkscape:export-filename="Sarek_germline_logo.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -28,11 +28,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.8"
-     inkscape:cx="179.39406"
-     inkscape:cy="36.064565"
+     inkscape:zoom="1.4"
+     inkscape:cx="139.71294"
+     inkscape:cy="116.63593"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer4"
      showgrid="false"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -43,7 +43,7 @@
      inkscape:window-width="1920"
      inkscape:window-height="1015"
      inkscape:window-x="1920"
-     inkscape:window-y="0"
+     inkscape:window-y="724"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata4929">
@@ -53,7 +53,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -62,25 +62,12 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(-221.17594,-598.32411)"
-     style="display:inline">
+     style="display:none">
     <g
-       id="g4548">
-      <flowRoot
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:51.51773453px;line-height:125%;font-family:Chandas;-inkscape-font-specification:Chandas;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         id="flowRoot4666"
-         xml:space="preserve"
-         transform="translate(221.17597,658.32407)"><flowRegion
-           id="flowRegion4668"><rect
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:51.51773453px;font-family:Chandas;-inkscape-font-specification:Chandas;text-align:center;text-anchor:middle"
-             y="-60.48571"
-             x="126.00925"
-             height="376.16125"
-             width="605.12885"
-             id="rect4670" /></flowRegion><flowPara
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Eurostile Extended';-inkscape-font-specification:'Eurostile Extended';text-align:start;text-anchor:start"
-           id="flowPara4672">Sarek</flowPara><flowPara
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Eurostile Extended';-inkscape-font-specification:'Eurostile Extended';text-align:start;text-anchor:start"
-           id="flowPara4674">Germline</flowPara></flowRoot>      <g
+       transform="translate(-3.1831135e-6,4.3371042e-6)"
+       style="display:inline"
+       id="g4351">
+      <g
          id="g4505"
          style="display:inline"
          transform="translate(221.17597,658.32407)">
@@ -102,7 +89,22 @@
            id="path4248"
            inkscape:connector-curvature="0" />
       </g>
-    </g>
+      <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:51.51773453px;line-height:125%;font-family:Chandas;-inkscape-font-specification:Chandas;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         id="flowRoot4666"
+         xml:space="preserve"
+         transform="translate(223.52556,658.65235)"><flowRegion
+           id="flowRegion4668"><rect
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:51.51773453px;font-family:Chandas;-inkscape-font-specification:Chandas;text-align:center;text-anchor:middle"
+             y="-60.48571"
+             x="126.00925"
+             height="376.16125"
+             width="605.12885"
+             id="rect4670" /></flowRegion><flowPara
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:47.50000381px;font-family:Michroma;-inkscape-font-specification:Michroma;text-align:start;text-anchor:start"
+           id="flowPara4672">Sarek</flowPara><flowPara
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:47.50000381px;font-family:Michroma;-inkscape-font-specification:Michroma;text-align:start;text-anchor:start"
+           id="flowPara4674">Germline</flowPara></flowRoot>    </g>
   </g>
   <g
      inkscape:groupmode="layer"
@@ -111,8 +113,9 @@
      style="display:none"
      transform="translate(2.7783959e-5,59.99996)">
     <g
-       id="g4537">
+       id="g4372">
       <flowRoot
+         transform="translate(2.3495823,0.25064959)"
          xml:space="preserve"
          id="flowRoot4633"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:51.51773453px;line-height:125%;font-family:Chandas;-inkscape-font-specification:Chandas;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"><flowRegion
@@ -124,9 +127,9 @@
              y="-60.455818"
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:51.51773453px;font-family:Chandas;-inkscape-font-specification:Chandas" /></flowRegion><flowPara
            id="flowPara4639"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Eurostile Extended';-inkscape-font-specification:'Eurostile Extended';text-align:start;text-anchor:start">Sarek</flowPara><flowPara
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:47.50000381px;font-family:Michroma;-inkscape-font-specification:Michroma;text-align:start;text-anchor:start">Sarek</flowPara><flowPara
            id="flowPara4641"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Eurostile Extended';-inkscape-font-specification:'Eurostile Extended';text-align:start;text-anchor:start">Somatic</flowPara></flowRoot>      <g
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:47.50000381px;font-family:Michroma;-inkscape-font-specification:Michroma;text-align:start;text-anchor:start">Somatic</flowPara></flowRoot>      <g
          id="g4484"
          style="display:inline">
         <path
@@ -156,8 +159,9 @@
      style="display:none"
      transform="translate(2.7783959e-5,59.99996)">
     <g
-       id="g4526">
+       id="g4331">
       <flowRoot
+         transform="translate(2.3495823,0.4129996)"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:51.51773453px;line-height:125%;font-family:Chandas;-inkscape-font-specification:Chandas;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          id="flowRoot4654"
          xml:space="preserve"><flowRegion
@@ -168,9 +172,9 @@
              height="376.16125"
              width="605.12885"
              id="rect4658" /></flowRegion><flowPara
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Eurostile Extended';-inkscape-font-specification:'Eurostile Extended';text-align:start;text-anchor:start"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:47.50000381px;font-family:Michroma;-inkscape-font-specification:Michroma;text-align:start;text-anchor:start"
            id="flowPara4660">Sarek</flowPara><flowPara
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Eurostile Extended';-inkscape-font-specification:'Eurostile Extended';text-align:start;text-anchor:start"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:47.50000381px;font-family:Michroma;-inkscape-font-specification:Michroma;text-align:start;text-anchor:start"
            id="flowPara4662">Exome</flowPara></flowRoot>      <g
          id="g4475"
          style="display:inline">
@@ -198,23 +202,11 @@
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="Sarek"
-     style="display:none"
+     style="display:inline"
      transform="translate(2.7783959e-5,59.99996)">
     <g
-       id="g4516">
-      <flowRoot
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:51.51773453px;line-height:125%;font-family:Chandas;-inkscape-font-specification:Chandas;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         id="flowRoot4695"
-         xml:space="preserve"><flowRegion
-           id="flowRegion4697"><rect
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:51.51773453px;font-family:Chandas;-inkscape-font-specification:Chandas"
-             y="-28.259876"
-             x="125.7997"
-             height="376.16129"
-             width="605.12891"
-             id="rect4699" /></flowRegion><flowPara
-           id="flowPara4701"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Eurostile Extended';-inkscape-font-specification:'Eurostile Extended'">Sarek</flowPara></flowRoot>      <g
+       id="g4312">
+      <g
          id="g4470">
         <path
            style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -234,6 +226,19 @@
            id="path4980-48"
            inkscape:connector-curvature="0" />
       </g>
-    </g>
+      <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:51.51773453px;line-height:125%;font-family:Chandas;-inkscape-font-specification:Chandas;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         id="flowRoot4226"
+         xml:space="preserve"
+         transform="translate(2.3495823,-2.2571596)"><flowRegion
+           id="flowRegion4228"><rect
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:51.51773453px;font-family:Chandas;-inkscape-font-specification:Chandas"
+             y="-28.259876"
+             x="125.7997"
+             height="376.16129"
+             width="605.12891"
+             id="rect4230" /></flowRegion><flowPara
+           id="flowPara4232"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:47.50000381px;font-family:Michroma;-inkscape-font-specification:Michroma">Sarek</flowPara></flowRoot>    </g>
   </g>
 </svg>
