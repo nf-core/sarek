@@ -233,6 +233,9 @@ bamsTumor = Channel.create()
 recalibratedBam
   .choice(bamsTumor, bamsNormal) {it[1] == 0 ? 1 : 0}
 
+bamsNormal = bamsNormal.ifEmpty{exit 1, "No normal sample defined, check TSV file: ${tsvFile}"}
+bamsTumor = bamsTumor.ifEmpty{exit 1, "No tumor sample defined, check TSV file: ${tsvFile}"}
+
 // Ascat, Strelka Germline & Manta Germline SV
 bamsForAscat = Channel.create()
 bamsForSingleManta = Channel.create()
