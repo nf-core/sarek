@@ -126,19 +126,14 @@ if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
 
 tsvPath = ''
 if (params.sample) tsvPath = params.sample
-else {
-  tsvPath = "${params.outDir}/${directoryMap.recalibrated}/recalibrated.tsv"
-}
+else tsvPath = "${params.outDir}/${directoryMap.recalibrated}/recalibrated.tsv"
 
 // Set up the bamFiles channel
 
 bamFiles = Channel.empty()
 if (tsvPath) {
   tsvFile = file(tsvPath)
-  switch (step) {
-    case 'variantcalling': bamFiles = extractBams(tsvFile); break
-    default: exit 1, "Unknown step ${step}"
-  }
+  bamFiles = extractBams(tsvFile)
 } else exit 1, 'No sample were defined, see --help'
 
 (patientGenders, bamFiles) = extractGenders(bamFiles)
@@ -237,6 +232,9 @@ bamsTumor = Channel.create()
 
 recalibratedBam
   .choice(bamsTumor, bamsNormal) {it[1] == 0 ? 1 : 0}
+
+bamsNormal = bamsNormal.ifEmpty{exit 1, "No normal sample defined, check TSV file: ${tsvFile}"}
+bamsTumor = bamsTumor.ifEmpty{exit 1, "No tumor sample defined, check TSV file: ${tsvFile}"}
 
 // Ascat, Strelka Germline & Manta Germline SV
 bamsForAscat = Channel.create()
