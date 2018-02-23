@@ -46,7 +46,7 @@ Some parts of the code were stolen/reused from the [interlap](https://github.com
  are exported only once. This is an optional argument, but at least a VCF or a BED file have to be specified in the command line by either `-v` or `-b`.
 
  * **-w width** Region width/breadth for VCF records. Optional, default is 200. For each VCF record reads starting/ending this number of bases before 
- and after the coordinate of the record respectively are exported. Actually this values is expanded with the **pad** parameter (see the `-p` option). 
+ and after the coordinate of the record respectively are exported. Actually this values is expanded with the **pad** parameter (see the `-r` option). 
 
 
 ## Examples
