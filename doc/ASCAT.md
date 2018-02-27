@@ -31,7 +31,7 @@ where:
 - `B` = the minor allele
 - Minor and major alleles are defined in the loci file (it actually doesn't matter which one is defied as A and B in this application).
 
-Caclculation of LogR and BAF based on AlleleCount output is done as in [runASCAT.R](https://github.com/cancerit/ascatNgs/tree/dev/perl/share/ascat/runASCAT.R)
+Calculation of LogR and BAF based on AlleleCount output is done as in [runASCAT.R](https://github.com/cancerit/ascatNgs/tree/dev/perl/share/ascat/runASCAT.R)
 
 ### Loci file
 
