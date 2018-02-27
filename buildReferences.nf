@@ -294,9 +294,9 @@ if (verbose) vcfIndex.view {
 ================================================================================
 */
 
-def cawMessage() {
-  // Display CAW message
-  log.info "CANCER ANALYSIS WORKFLOW ~ ${version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
+def sarekMessage() {
+  // Display Sarek message
+  log.info "Sarek - Workflow To Find Somatic And Germline Variations ~ ${version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
 }
 
 def checkFile(it) {
@@ -375,11 +375,11 @@ def grabRevision() {
 
 def helpMessage() {
   // Display help message
-  this.cawMessage()
+  this.sarekMessage()
   log.info "    Usage:"
   log.info "       nextflow run buildReferences.nf --refDir <pathToRefDir> --genome <genome>"
   log.info "       nextflow run buildReferences.nf --download --genome smallGRCh37"
-  log.info "       nextflow run SciLifeLab/CAW --test [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
+  log.info "       nextflow run SciLifeLab/Sarek --test [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
   log.info "    --download"
   log.info "       Download reference files. (only with --genome smallGRCh37)"
   log.info "    --refDir <Directoy>"
@@ -431,7 +431,7 @@ def nextflowMessage() {
 
 def startMessage() {
   // Display start message
-  this.cawMessage()
+  this.sarekMessage()
   this.minimalInformationMessage()
 }
 
@@ -445,7 +445,7 @@ def versionMessage() {
 workflow.onComplete {
   // Display complete message
   this.nextflowMessage()
-  this.cawMessage()
+  this.sarekMessage()
   this.minimalInformationMessage()
   log.info "Completed at: " + workflow.complete
   log.info "Duration    : " + workflow.duration
@@ -457,7 +457,7 @@ workflow.onComplete {
 workflow.onError {
   // Display error message
   this.nextflowMessage()
-  this.cawMessage()
+  this.sarekMessage()
   log.info "Workflow execution stopped with the following message:"
   log.info "  " + workflow.errorMessage
 }
