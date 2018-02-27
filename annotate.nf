@@ -219,7 +219,7 @@ process RunVEP {
   --filter_common \
   --format vcf \
   --offline \
-  --pick \
+  --per_gene \
   --fork ${task.cpus} \
   --total_length \
   --vcf
