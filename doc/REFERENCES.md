@@ -12,25 +12,28 @@ To get the needed files, download the [GATK bundle for GRCh37](ftp://gsapubftp-a
 
 The following files need to be downloaded:
 
-- 242c0df2a698a76fc43bdd938ba57c62 - '1000G_phase1.indels.b37.vcf.gz'
-- 00b0e74e4a13536dd6c0728c66db43f3 - 'dbsnp_138.b37.vcf.gz'
-- dd05833f18c22cc501e3e31406d140b0 - 'human_g1k_v37_decoy.fasta.gz'
-- a0764a80311aee369375c5c7dda7e266 - 'Mills_and_1000G_gold_standard.indels.b37.vcf.gz'
+- 242c0df2a698a76fc43bdd938ba57c62 - '1000G\_phase1.indels.b37.vcf.gz'
+- 00b0e74e4a13536dd6c0728c66db43f3 - 'dbsnp\_138.b37.vcf.gz'
+- dd05833f18c22cc501e3e31406d140b0 - 'human\_g1k\_v37\_decoy.fasta.gz'
+- a0764a80311aee369375c5c7dda7e266 - 'Mills\_and\_1000G\_gold\_standard.indels.b37.vcf.gz'
 
 ### Other files
 
-From our repo, get the [`intervals` list file](https://raw.githubusercontent.com/SciLifeLab/CAW/master/repeats/wgs_calling_regions.grch37.list). More information about this file in the [intervals documentation](INTERVALS.md)
+From our repo, get the [`intervals` list file](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/repeats/wgs_calling_regions.grch37.list). More information about this file in the [intervals documentation](INTERVALS.md)
 
 The rest of the references files are stored in in [export.uppmax.uu.se](https://export.uppmax.uu.se/b2015110/caw-references/b37/) and also on the repository [CAW-References](https://github.com/MaxUlysse/CAW-References) using [GIT-LFS](https://git-lfs.github.com/):
 
-- '1000G_phase3_20130502_SNP_maf0.3.loci'
-- 'b37_cosmic_v74.noCHR.sort.4.1.vcf'
+- '1000G\_phase3\_20130502\_SNP\_maf0.3.loci'
+- 'b37\_cosmic\_v74.noCHR.sort.4.1.vcf'
 
 You can create your own cosmic reference for any human reference as specified below.
 
 ### COSMIC files
 
-To annotate with COSMIC variants during MuTect1/2 Variant Calling you need to create a compatible VCF file. Download the coding and non-coding VCF files from [COSMIC](http://cancer.sanger.ac.uk/cosmic/download) and process them with the [Create_Cosmic.sh](https://github.com/SciLifeLab/CAW/tree/master/scripts/Create_Cosmic.sh) script. The script requires a fasta index `.fai`, of the reference file you are using.
+To annotate with COSMIC variants during MuTect1/2 Variant Calling you need to create a compatible VCF file. 
+Download the coding and non-coding VCF files from [COSMIC](http://cancer.sanger.ac.uk/cosmic/download) and 
+process them with the [Create\_Cosmic.sh](https://github.com/SciLifeLab/Sarek/tree/master/scripts/Create_Cosmic.sh) 
+script. The script requires a fasta index `.fai`, of the reference file you are using.
 
 Example:
 
@@ -39,7 +42,7 @@ samtools faidx human_g1k_v37_decoy.fasta
 sh Create_Cosmic.sh human_g1k_v37_decoy.fasta.fai
 ```
 
-Note: CosmicCodingMuts.vcf.gz & CosmicNonCodingVariants.vcf.gz must be in same folder as Create_Cosmic.sh when executed.
+Note: CosmicCodingMuts.vcf.gz & CosmicNonCodingVariants.vcf.gz must be in same folder as Create\_Cosmic.sh when executed.
 
 To index the resulting VCF file use [igvtools](https://software.broadinstitute.org/software/igv/igvtools).
 
@@ -93,7 +96,7 @@ nextflow run buildReferences.nf --refDir <path to smallRef> --genome <genome>
 Same parameter used for `main.nf`
 
 - GRCh37
-- GRCh38 (not yet supported)
+- GRCh38 
 - smallGRCh37
 
 --------------------------------------------------------------------------------

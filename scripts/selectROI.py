@@ -171,18 +171,7 @@ class ROISelector:
             print("Indexing ...")
             subprocess.call("samtools index -@" + str(self.threads) + " " + target, shell=True)
 
-    def isInBEDIntervals(self,chrom,locus):
-        """"We are checking whether the locus is already covered by a BED interval"""
-        # the copy contains only the BED intervals
-        # and we are hoping there are only few intervals, since for many intervals this search is not fast enough
-        BEDloci = self.callDictCopy[chrom]
-        for region in BEDloci:      # these are tuples
-            if  region[0] <= locus and locus <= region[1]:
-                #print("Locus "+chrom +":"+str(locus) + " is in region " + chrom + ":"+ str(region[0]) + "-" + str(region[1]))
-                return True
-        return False
-
-    def addVCFRecords(self,VCFFile):
+   def addVCFRecords(self,VCFFile):
         """
         Store VCF record CHROM,POS in a dict 
         """

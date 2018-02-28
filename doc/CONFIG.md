@@ -4,7 +4,7 @@ For more informations on how to use configuration files, have a look at the [Nex
 
 For more informations about profiles, have a look at the [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html#config-profiles)
 
-We provides several configuration files and profiles for CAW. The standard ones are designed to work on a Swedish UPPMAX clusters, and can be modified and tailored to your own need.
+We provides several configuration files and profiles for Sarek. The standard ones are designed to work on a Swedish UPPMAX clusters, and can be modified and tailored to your own need.
 
 ## Configuration files
 

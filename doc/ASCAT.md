@@ -31,7 +31,7 @@ where:
 - `B` = the minor allele
 - Minor and major alleles are defined in the loci file (it actually doesn't matter which one is defied as A and B in this application).
 
-Caclculation of LogR and BAF based on AlleleCount output is done as in [runASCAT.R](https://github.com/cancerit/ascatNgs/tree/dev/perl/share/ascat/runASCAT.R)
+Calculation of LogR and BAF based on AlleleCount output is done as in [runASCAT.R](https://github.com/cancerit/ascatNgs/tree/dev/perl/share/ascat/runASCAT.R)
 
 ### Loci file
 
@@ -75,7 +75,7 @@ $ alleleCounter -l /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2
 The allele counts can then be converted into LogR and BAF values using the script `convertAlleleCounts.r`. Usage for a male sample (`Gender = "XY"`, replace with `Gender = "XX"` for a female sample):
 
 ```bash
-sbatch -A PROJID -p core -n 1 -t 240:00:00 -J convertAllelecounts -e convertAllelecounts.err -o convertAllelecounts.out /path/to/your/CAW-fork/convertAlleleCounts.r tumor_sample tumor.allelecount normal_sample normal.allelecount XY
+sbatch -A PROJID -p core -n 1 -t 240:00:00 -J convertAllelecounts -e convertAllelecounts.err -o convertAllelecounts.out /path/to/your/Sarek-fork/convertAlleleCounts.r tumor_sample tumor.allelecount normal_sample normal.allelecount XY
 ```
 
 This creates the BAF and LogR data for the tumor and normal samples, to be used as input to ASCAT.
