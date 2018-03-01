@@ -10,7 +10,10 @@
 [![Join the chat at https://gitter.im/SciLifeLab/Sarek][gitter-badge]][gitter-link]
 
 ## Introduction
-Sarek is a workflow tool designed to run analyses on WGS data from regular samples or tumour / normal pairs, including relapse samples if required.
+
+<img align="right" title="CAW" src="https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/images/CAW_logo.png">
+
+Previously known as the Cancer Analysis Workflow (CAW), Sarek is a workflow tool designed to run analyses on WGS data from regular samples or tumour / normal pairs, including relapse samples if required.
 
 It's built using [Nextflow][nextflow-link], a bioinformatics domain specific language for workflow building. Software dependencies are handled using [Docker](https://www.docker.com) or [Singularity](http://singularity.lbl.gov) - container technologies that provide excellent reproducibility and ease of use. Singularity has been designed specifically for high-performance computing environments. This means that although Sarek has been primarily designed for use with the Swedish [UPPMAX HPC systems](https://www.uppmax.uu.se), it should be able to run on any system that supports these two tools.
 
@@ -33,20 +36,23 @@ The worflow steps and tools used are as follows:
     * SNVs and small indels
         * [GATK HaplotyeCaller](https://github.com/broadgsa/gatk-protected)
         * [Strelka](https://github.com/Illumina/strelka)
+        * Structural variants
+            * [Manta](https://github.com/Illumina/manta)
 3. **Somatic variant calling** - `somaticVC.nf` _(optional)_
     * SNVs and small indels
         * [MuTect1](https://github.com/broadinstitute/mutect)
         * [MuTect2](https://github.com/broadgsa/gatk-protected)
         * [Freebayes](https://github.com/ekg/freebayes)
         * [Strelka](https://github.com/Illumina/strelka)
-    * Structural variants (germline and somatic)
+    * Structural variants
         * [Manta](https://github.com/Illumina/manta)
     * Sample heterogeneity, ploidy and CNVs
         * [ASCAT](https://github.com/Crick-CancerGenomics/ascat)
-4. **Annotation and reporting** - `annotate.nf`
+4. **Annotation** - `annotate.nf` _(optional)_
     * Variant annotation
         * [SnpEff](http://snpeff.sourceforge.net/)
         * [VEP](https://www.ensembl.org/info/docs/tools/vep/index.html) (Variant Effect Predictor)
+5. **Reporting**
     * Reporting
         * [MultiQC](http://multiqc.info)
 
@@ -100,15 +106,14 @@ For further information or help, don't hesitate to get in touch on [Gitter][gitt
 [gitter-link]: https://gitter.im/SciLifeLab/Sarek
 [license-badge]: https://img.shields.io/github/license/SciLifeLab/Sarek.svg
 [license-link]: https://github.com/SciLifeLab/Sarek/blob/master/LICENSE
+[nbis-link]: https://www.nbis.se/
 [nextflow-badge]: https://img.shields.io/badge/nextflow-%E2%89%A50.25.0-brightgreen.svg
 [nextflow-link]: https://www.nextflow.io/
+[ngi-link]: https://ngisweden.scilifelab.se/
+[scilifelab-link]: https://www.scilifelab.se/
 [travis-badge]: https://api.travis-ci.org/SciLifeLab/Sarek.svg
 [travis-link]: https://travis-ci.org/SciLifeLab/Sarek
 [version-badge]: https://img.shields.io/github/release/SciLifeLab/Sarek.svg
 [version-link]: https://github.com/SciLifeLab/Sarek/releases/latest
 [zenodo-badge]: https://zenodo.org/badge/54024046.svg
 [zenodo-link]: https://zenodo.org/badge/latestdoi/54024046
-
-[nbis-link]: https://www.nbis.se/
-[ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: https://www.scilifelab.se/

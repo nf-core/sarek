@@ -351,7 +351,7 @@ def startMessage() {
 
 def versionMessage() {
   // Display version message
-  log.info "CANCER ANALYSIS WORKFLOW"
+  log.info "Sarek - Workflow For Somatic And Germline Variations"
   log.info "  version   : " + version
   log.info workflow.commitId ? "Git info    : ${workflow.repository} - ${workflow.revision} [${workflow.commitId}]" : "  revision  : " + this.grabRevision()
 }
