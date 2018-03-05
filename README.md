@@ -60,21 +60,21 @@ The worflow steps and tools used are as follows:
 
 The Sarek pipeline comes with documentation in the `doc/` directory:
 
-01. [Installation documentation](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/INSTALL.md)
-02. [Installation documentation specific for UPPMAX `rackham`](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/INSTALL_RACKHAM.md)
-03. [Installation documentation specific for UPPMAX `bianca`](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/INSTALL_BIANCA.md)
-04. [Tests documentation](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/TESTS.md)
-05. [Reference files documentation](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/REFERENCES.md)
-06. [Configuration and profiles documentation](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/CONFIG.md)
-07. [Intervals documentation](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/INTERVALS.md)
-08. [Running the pipeline](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/USAGE.md)
-09. [Examples](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/USE_CASES.md)
-10. [TSV file documentation](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/TSV.md)
-11. [Processes documentation](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/PROCESS.md)
-12. [Documentation about containers](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/CONTAINERS.md)
-13. [Documentation about building](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/BUILD.md)
-14. [More information about ASCAT](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/ASCAT.md)
-15. [Folder structure](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/doc/FOLDER.md)
+01. [Installation documentation](https://github.com/SciLifeLab/Sarek/blob/master/doc/INSTALL.md)
+02. [Installation documentation specific for UPPMAX `rackham`](https://github.com/SciLifeLab/Sarek/blob/master/doc/INSTALL_RACKHAM.md)
+03. [Installation documentation specific for UPPMAX `bianca`](https://github.com/SciLifeLab/Sarek/blob/master/doc/INSTALL_BIANCA.md)
+04. [Tests documentation](https://github.com/SciLifeLab/Sarek/blob/master/doc/TESTS.md)
+05. [Reference files documentation](https://github.com/SciLifeLab/Sarek/blob/master/doc/REFERENCES.md)
+06. [Configuration and profiles documentation](https://github.com/SciLifeLab/Sarek/blob/master/doc/CONFIG.md)
+07. [Intervals documentation](https://github.com/SciLifeLab/Sarek/blob/master/doc/INTERVALS.md)
+08. [Running the pipeline](https://github.com/SciLifeLab/Sarek/blob/master/doc/USAGE.md)
+09. [Examples](https://github.com/SciLifeLab/Sarek/blob/master/doc/USE_CASES.md)
+10. [TSV file documentation](https://github.com/SciLifeLab/Sarek/blob/master/doc/TSV.md)
+11. [Processes documentation](https://github.com/SciLifeLab/Sarek/blob/master/doc/PROCESS.md)
+12. [Documentation about containers](https://github.com/SciLifeLab/Sarek/blob/master/doc/CONTAINERS.md)
+13. [Documentation about building](https://github.com/SciLifeLab/Sarek/blob/master/doc/BUILD.md)
+14. [More information about ASCAT](https://github.com/SciLifeLab/Sarek/blob/master/doc/ASCAT.md)
+15. [Folder structure](https://github.com/SciLifeLab/Sarek/blob/master/doc/FOLDER.md)
 
 ## Contributions & Support
 
