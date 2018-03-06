@@ -1,8 +1,0 @@
-HCC1954	XX	0	blood	blood_1	/sw/data/uppnex/ToolBox/TCGAbenchmark/chr17_multilane/HCC1954.normal_S22_L001_R1_001.fastq.gz	/sw/data/uppnex/ToolBox/TCGAbenchmark/chr17_multilane/HCC1954.normal_S22_L001_R2_001.fastq.gz
-HCC1954	XX	0	blood	blood_2	/sw/data/uppnex/ToolBox/TCGAbenchmark/chr17_multilane/HCC1954.normal_S22_L002_R1_001.fastq.gz	/sw/data/uppnex/ToolBox/TCGAbenchmark/chr17_multilane/HCC1954.normal_S22_L002_R2_001.fastq.gz
-HCC1954	XX	1	tumor	tumor_1	/sw/data/uppnex/ToolBox/TCGAbenchmark/chr17_multilane/HCC1954.tumor1_S23_L001_R1_001.fastq.gz	/sw/data/uppnex/ToolBox/TCGAbenchmark/chr17_multilane/HCC1954.tumor1_S23_L001_R2_001.fastq.gz
-HCC1954	XX	1	tumor	tumor_2	/sw/data/uppnex/ToolBox/TCGAbenchmark/chr17_multilane/HCC1954.tumor1_S23_L002_R1_001.fastq.gz	/sw/data/uppnex/ToolBox/TCGAbenchmark/chr17_multilane/HCC1954.tumor1_S23_L002_R2_001.fastq.gz
-HCC1954	XX	1	relapse	relapse_1	/sw/data/uppnex/ToolBox/TCGAbenchmark/chr17_multilane/HCC1954.tumor2_S24_L001_R1_001.fastq.gz	/sw/data/uppnex/ToolBox/TCGAbenchmark/chr17_multilane/HCC1954.tumor2_S24_L001_R2_001.fastq.gz
-HCC1954	XX	1	relapse	relapse_2	/sw/data/uppnex/ToolBox/TCGAbenchmark/chr17_multilane/HCC1954.tumor2_S24_L002_R1_001.fastq.gz	/sw/data/uppnex/ToolBox/TCGAbenchmark/chr17_multilane/HCC1954.tumor2_S24_L002_R2_001.fastq.gz
-HCC1954	XX	1	9746123	9746123_1	/sw/data/uppnex/ToolBox/TCGAbenchmark/chr17_multilane/HCC1954.tumor3_S25_L001_R1_001.fastq.gz	/sw/data/uppnex/ToolBox/TCGAbenchmark/chr17_multilane/HCC1954.tumor3_S25_L001_R2_001.fastq.gz
-HCC1954	XX	1	9746123	9746123_2	/sw/data/uppnex/ToolBox/TCGAbenchmark/chr17_multilane/HCC1954.tumor3_S25_L002_R1_001.fastq.gz	/sw/data/uppnex/ToolBox/TCGAbenchmark/chr17_multilane/HCC1954.tumor3_S25_L002_R2_001.fastq.gz
