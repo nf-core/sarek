@@ -7,6 +7,7 @@ GENOME=GRCh38
 GENOMEBASE=''
 GERMLINE=false
 PROFILE=singularity
+REPORTS=true
 SAMPLEDIR=''
 SAMPLETSV=''
 SOMATIC=false
@@ -54,6 +55,10 @@ do
     ;;
     -l|--germline)
     GERMLINE=true
+    shift # past argument
+    ;;
+    -n|--noReports)
+    REPORTS=false
     shift # past argument
     ;;
     -p|--profile)
@@ -140,9 +145,14 @@ then
   run_sarek somaticVC.nf --tools $TOOLS
 fi
 
-
 if [[ $ANNOTATE == true ]]
 then
   echo "Annotate"
   run_sarek annotate.nf --tools $TOOLS --annotateVCF $ANNOTATEVCF
+fi
+
+if [[ $REPORTS == true ]]
+then
+  echo "Reports"
+  run_sarek runMultiQC.nf
 fi
