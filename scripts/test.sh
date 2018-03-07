@@ -51,6 +51,13 @@ function run_wrapper() {
   ./scripts/wrapper.sh $@ --profile $PROFILE --genome $GENOME --genomeBase $PWD/References/$GENOME --verbose
 }
 
+function clean_repo() {
+  if [[ $TRAVIS == false ]]
+  then
+    rm -rf work .nextflow* Preprocessing Reports Annotation VariantCalling Results
+  fi
+}
+
 # Build references only for smallGRCh37
 if [[ $GENOME == smallGRCh37 ]] && [[ $TEST != BUILDCONTAINERS ]] && [[ BUILD ]]
 then
@@ -65,33 +72,37 @@ then
   fi
 fi
 
-if [[ ALL,MAPPING,ONLYQC,REALIGN,RECALIBRATE =~ $TEST ]]
+if [[ ALL,DIR =~ $TEST ]]
 then
   run_wrapper --germline --sampleDir data/tiny/tiny/normal
+  clean_repo
+fi
+
+if [[ ALL,STEP =~ $TEST ]]
+then
   run_wrapper --germline --sample $SAMPLE
-fi
-
-if [[ ALL,ONLYQC =~ $TEST ]]
-then
-  run_wrapper --germline --sample data/tsv/tiny-manta.tsv --noReports
-  run_wrapper --germline --variantCalling --tools Manta,Strelka --noReports
-  run_wrapper --germline --variantCalling --tools Manta,Strelka --onlyQC
-  run_wrapper --somatic --variantCalling --tools Manta,Strelka --noReports
-  run_wrapper --somatic --variantCalling --tools Manta,Strelka --onlyQC
-fi
-
-if [[ ALL,REALIGN =~ $TEST ]]
-then
   run_wrapper --germline --step realign --noReports
-  run_wrapper --germline --variantCalling  --tools HaplotypeCaller
-  run_wrapper --germline --variantCalling  --tools HaplotypeCaller --noReports --noGVCF
+  run_wrapper --germline --step recalibrate --noReports
+  clean_repo
 fi
 
-if [[ ALL,RECALIBRATE =~ $TEST ]]
+if [[ ALL,GERMLINE =~ $TEST ]]
 then
-  run_wrapper --somatic --step recalibrate --noReports
-  run_wrapper --somatic --variantCalling  --tools FreeBayes,HaplotypeCaller,MuTect1,MuTect2,Strelka
+  run_wrapper --germline --sampleDir data/tiny/tiny/normal --variantCalling --tools HaplotypeCaller
+  clean_repo
 fi
+
+if [[ ALL,TOOLS =~ $TEST ]]
+then
+  run_wrapper --somatic --sample $SAMPLE --variantCalling  --tools FreeBayes,HaplotypeCaller,MuTect1,MuTect2,Strelka
+fi
+
+if [[ ALL,MANTA =~ $TEST ]]
+then
+  run_wrapper --somatic --sample data/tsv/tiny-manta.tsv --variantCalling --tools Manta --noReports
+  clean_repo
+fi
+
 
 if [[ ALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
 then
@@ -116,9 +127,11 @@ then
   fi
   run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz --noReports
   run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz,data/tiny/vcf/Strelka_9876T_variants.vcf.gz --noReports
+  clean_repo
 fi
 
 if [[ ALL,BUILDCONTAINERS =~ $TEST ]] && [[ $PROFILE == docker ]]
 then
   nf_test buildContainers.nf --docker --containers fastqc,gatk,igvtools,multiqc,mutect1,picard,qualimap,runallelecount,r-base,snpeff,sarek
+  clean_repo
 fi
