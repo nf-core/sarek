@@ -11,6 +11,7 @@ SAMPLEDIR=''
 SAMPLETSV=''
 SOMATIC=false
 STEP='mapping'
+TAG='latest'
 TOOLS='haplotypecaller,strelka,manta'
 VARIANTCALLING=false
 
@@ -65,6 +66,11 @@ do
     shift # past argument
     shift # past value
     ;;
+    --tag)
+    tag=$2
+    shift # past argument
+    shift # past value
+    ;;
     -t|--tools)
     TOOLS=$2
     shift # past argument
@@ -81,8 +87,8 @@ do
 done
 
 function run_sarek() {
-  echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --verbose$(tput sgr0)"
-  nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --verbose
+  echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --tag $TAG --verbose$(tput sgr0)"
+  nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --tag $TAG --verbose
 }
 
 if [[ $GERMLINE == true ]] && [[ $SOMATIC == true ]]
