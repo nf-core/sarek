@@ -111,7 +111,6 @@ process GenerateMultiQCconfig {
   echo "- Sarek version: ${version}" >> multiqc_config.yaml
   echo "- Contact Name: ${params.callName}" >> multiqc_config.yaml
   echo "- Contact E-mail: ${params.contactMail}" >> multiqc_config.yaml
-  echo "- Command Line: ${workflow.commandLine}" >> multiqc_config.yaml
   echo "- Directory: ${workflow.launchDir}" >> multiqc_config.yaml
   echo "- Genome: "${params.genome} >> multiqc_config.yaml
   echo "top_modules:" >> multiqc_config.yaml
