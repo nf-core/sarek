@@ -7,10 +7,12 @@ GENOME=GRCh38
 GENOMEBASE=''
 GERMLINE=false
 PROFILE=singularity
+REPORTS=true
 SAMPLEDIR=''
 SAMPLETSV=''
 SOMATIC=false
 STEP='mapping'
+TAG='latest'
 TOOLS='haplotypecaller,strelka,manta'
 VARIANTCALLING=false
 
@@ -55,6 +57,10 @@ do
     GERMLINE=true
     shift # past argument
     ;;
+    -n|--noReports)
+    REPORTS=false
+    shift # past argument
+    ;;
     -p|--profile)
     PROFILE=$2
     shift # past argument
@@ -62,6 +68,11 @@ do
     ;;
     -s|--step)
     STEP=$2
+    shift # past argument
+    shift # past value
+    ;;
+    --tag)
+    tag=$2
     shift # past argument
     shift # past value
     ;;
@@ -81,8 +92,8 @@ do
 done
 
 function run_sarek() {
-  echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --verbose$(tput sgr0)"
-  nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --verbose
+  echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --tag $TAG --verbose$(tput sgr0)"
+  nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --tag $TAG --verbose
 }
 
 if [[ $GERMLINE == true ]] && [[ $SOMATIC == true ]]
@@ -134,9 +145,14 @@ then
   run_sarek somaticVC.nf --tools $TOOLS
 fi
 
-
 if [[ $ANNOTATE == true ]]
 then
   echo "Annotate"
   run_sarek annotate.nf --tools $TOOLS --annotateVCF $ANNOTATEVCF
+fi
+
+if [[ $REPORTS == true ]]
+then
+  echo "Reports"
+  run_sarek runMultiQC.nf
 fi

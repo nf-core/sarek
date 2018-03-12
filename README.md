@@ -36,8 +36,8 @@ The worflow steps and tools used are as follows:
     * SNVs and small indels
         * [GATK HaplotyeCaller](https://github.com/broadgsa/gatk-protected)
         * [Strelka](https://github.com/Illumina/strelka)
-        * Structural variants
-            * [Manta](https://github.com/Illumina/manta)
+    * Structural variants
+        * [Manta](https://github.com/Illumina/manta)
 3. **Somatic variant calling** - `somaticVC.nf` _(optional)_
     * SNVs and small indels
         * [MuTect1](https://github.com/broadinstitute/mutect)
