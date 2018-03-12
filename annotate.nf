@@ -129,7 +129,7 @@ if (step == 'annotate' && annotateVCF == []) {
   else vcfToAnnotate = Channel.fromPath("{$list}")
     .map{vcf -> ['userspecified',vcf]}
 
-}else exit 1, "specify only tools or files to annotate, bot both"
+} else exit 1, "specify only tools or files to annotate, not both"
 
 vcfNotToAnnotate.close()
 
@@ -170,8 +170,9 @@ process RunSnpeff {
 
   output:
     set file("${vcf.baseName}.snpEff.ann.vcf"), file("${vcf.baseName}.snpEff.genes.txt"), file("${vcf.baseName}.snpEff.csv"), file("${vcf.baseName}.snpEff.summary.html") into snpeffReport
+		set variantCaller,file("${vcf.baseName}.snpEff.ann.vcf") into snpEffOutputVCFs
 
-  when: 'snpeff' in tools
+  when: 'snpeff' in tools || 'merge' in tools
 
   script:
   """
@@ -194,6 +195,13 @@ if (verbose) snpeffReport = snpeffReport.view {
   File  : ${it.fileName}"
 }
 
+// When we are running in the 'merge' mode (first snpEff, then VEP)
+// we have to exchange the channels
+
+if('merge' in tools) {
+	vcfForVep = snpEffOutputVCFs
+}
+
 process RunVEP {
   tag {vcf}
 
@@ -205,7 +213,7 @@ process RunVEP {
   output:
     set file("${vcf.baseName}.vep.ann.vcf"), file("${vcf.baseName}.vep.summary.html") into vepReport
 
-  when: 'vep' in tools
+  when: 'vep' in tools || 'merge' in tools
 
   script:
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
@@ -220,6 +228,7 @@ process RunVEP {
   --format vcf \
   --offline \
   --per_gene \
+  --nearest \
   --fork ${task.cpus} \
   --total_length \
   --vcf
@@ -366,7 +375,8 @@ def defineDirectoryMap() {
   return [
     'bcftoolsStats'    : 'Reports/BCFToolsStats',
     'snpeff'           : 'Annotation/SnpEff',
-    'vep'              : 'Annotation/VEP'
+    'vep'              : 'Annotation/VEP',
+    'merge'            : 'Annotation/merged'
   ]
 }
 
@@ -379,7 +389,8 @@ def defineStepList() {
 def defineToolList() {
   return [
     'snpeff',
-    'vep'
+    'vep',
+		'merge'
   ]
 }
 
@@ -409,6 +420,7 @@ def helpMessage() {
   log.info "       Possible values are:"
   log.info "         snpeff (use snpEff for Annotation of Variants)"
   log.info "         vep (use VEP for Annotation of Variants)"
+  log.info "         merge (first snpEff, then feed its output VCFs to VEP)"
   log.info "    --annotateTools"
   log.info "       Option to configure which tools to annotate."
   log.info "         Different tools to be separated by commas."
