@@ -29,22 +29,14 @@ kate: syntax groovy; space-indent on; indent-width 2;
  https://github.com/SciLifeLab/Sarek/README.md
 --------------------------------------------------------------------------------
  Processes overview
+ - GenerateMultiQCconfig - Generate MultiQC configuration file
  - RunMultiQC - Run MultiQC on reports
- - MapReads - Map reads with BWA
- - MergeBams - Merge BAMs if multilane samples
- - MarkDuplicates - Mark Duplicates with Picard
- - RealignerTargetCreator - Create realignment target intervals
- - IndelRealigner - Realign BAMs as T/N pair
- - CreateRecalibrationTable - Create Recalibration Table with BaseRecalibrator
- - RecalibrateBam - Recalibrate Bam with PrintReads
- - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files
- - RunBamQC - Run qualimap BamQC on recalibrated BAM files
 ================================================================================
 =                           C O N F I G U R A T I O N                          =
 ================================================================================
 */
 
-version = '1.3'
+version = '2.0.0'
 
 // Check that Nextflow version is up to date enough
 // try / throw / catch works for NF versions < 0.25 when this was implemented

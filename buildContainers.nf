@@ -37,7 +37,7 @@ New Germline (+ Somatic) Analysis Workflow. Started March 2016.
 ================================================================================
 */
 
-version = '1.2.5'
+version = '2.0.0'
 
 // Check that Nextflow version is up to date enough
 // try / throw / catch works for NF versions < 0.25 when this was implemented
