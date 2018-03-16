@@ -71,7 +71,7 @@ params.noReports = false
 // Run Sarek in onlyQC mode
 params.onlyQC = false
 // outDir is current directory
-params.outDir = baseDir
+params.outDir = '.'
 // Step is annotate
 step = 'annotate'
 // Not testing

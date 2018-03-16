@@ -64,7 +64,7 @@ if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <U
 // Reports are generated
 params.noReports = false
 // outDir is current directory
-params.outDir = baseDir
+params.outDir = '.'
 // Params are defined in config files
 params.containerPath = ''
 params.repository = ''

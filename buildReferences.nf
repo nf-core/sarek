@@ -68,7 +68,7 @@ if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <U
 // No download of reference source files
 params.download = false
 // outDir is References/${params.genome}
-params.outDir = "${baseDir}/References/${params.genome}"
+params.outDir = "./References/${params.genome}"
 // refDir is empty
 params.refDir = ''
 

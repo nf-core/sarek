@@ -77,7 +77,7 @@ params.noBAMQC = false
 // Run Sarek in onlyQC mode
 params.onlyQC = false
 // outDir is current directory
-params.outDir = baseDir
+params.outDir = '.'
 // No sample is defined
 params.sample = ''
 // Step is variantcalling
