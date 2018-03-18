@@ -19,7 +19,7 @@ From: ubuntu:latest
   mkdir -p /opt/sarek
   apt-get update
   apt-get install -y git bash vim
-  echo "echo \"Eljen II Rakoczi Feco!\" "  > /opr/sarek/test.sh
+  echo "echo \"Eljen II Rakoczi Feco!\" "  > /opt/sarek/test.sh
   chmod 755 /opt/sarek/test.sh
 
 
