@@ -27,6 +27,3 @@ RUN \
     http://downloads.sourceforge.net/project/snpeff/snpEff_v${SNPEFF_VERSION}_core.zip \
   && unzip snpEff_v${SNPEFF_VERSION}_core.zip -d /opt/ \
   && rm snpEff_v${SNPEFF_VERSION}_core.zip
-
-# Create UPPMAX directories
-RUN mkdir /pica /proj /scratch /sw

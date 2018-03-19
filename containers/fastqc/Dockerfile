@@ -22,6 +22,3 @@ RUN \
   && chmod 755 /opt/FastQC/fastqc \
   && ln -s /opt/FastQC/fastqc /usr/local/bin/fastqc \
   && rm fastqc_v${FASTQC_VERSION}.zip
-
-# Create UPPMAX directories
-RUN mkdir /pica /proj /scratch /sw
