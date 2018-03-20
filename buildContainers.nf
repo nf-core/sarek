@@ -80,7 +80,7 @@ dockerContainers = containers
 singularityContainers = containers
 
 process BuildDockerContainers {
-  tag {"${params.repository}/${container}:${tag}"}
+  tag {"${params.repository}/${container}:${params.tag}"}
 
   input:
     val container from dockerContainers
@@ -92,16 +92,16 @@ process BuildDockerContainers {
 
   script:
   """
-  docker build -t ${params.repository}/${container}:${tag} ${baseDir}/containers/${container}/.
+  docker build -t ${params.repository}/${container}:${params.tag} ${baseDir}/containers/${container}/.
   """
 }
 
 if (params.verbose) containersBuilt = containersBuilt.view {
-  "Docker container: ${params.repository}/${it}:${tag} built."
+  "Docker container: ${params.repository}/${it}:${params.tag} built."
 }
 
 process PullSingularityContainers {
-  tag {"${params.repository}/${container}:${tag}"}
+  tag {"${params.repository}/${container}:${params.tag}"}
 
   publishDir "${params.containerPath}", mode: 'move'
 
@@ -109,13 +109,13 @@ process PullSingularityContainers {
     val container from singularityContainers
 
   output:
-    file("${container}-${tag}.img") into imagePulled
+    file("${container}-${params.tag}.img") into imagePulled
 
   when: params.singularity
 
   script:
   """
-  singularity pull --name ${container}-${tag}.img docker://${params.repository}/${container}:${tag}
+  singularity pull --name ${container}-${params.tag}.img docker://${params.repository}/${container}:${params.tag}
   """
 }
 
@@ -136,12 +136,12 @@ process PushDockerContainers {
 
   script:
   """
-  docker push ${params.repository}/${container}:${tag}
+  docker push ${params.repository}/${container}:${params.tag}
   """
 }
 
 if (params.verbose) containersPushed = containersPushed.view {
-  "Docker container: ${params.repository}/${it}:${tag} pushed."
+  "Docker container: ${params.repository}/${it}:${params.tag} pushed."
 }
 
 /*
@@ -152,7 +152,7 @@ if (params.verbose) containersPushed = containersPushed.view {
 
 def sarekMessage() {
   // Display Sarek message
-  log.info "Sarek ~ ${params.version} - " + MyUtils.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
+  log.info "Sarek ~ ${params.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
 }
 
 def checkContainerExistence(container, list) {
@@ -176,6 +176,11 @@ def checkContainers(containers, containersList) {
 def checkUppmaxProject() {
   // check if UPPMAX project number is specified
   return !(workflow.profile == 'slurm' && !params.project)
+}
+
+def grabRevision() {
+  // Return the same string executed from github or not
+  return workflow.revision ?: workflow.commitId ?: workflow.scriptId.substring(0,10)
 }
 
 def defineContainersList(){
@@ -258,7 +263,7 @@ def moreMessage() {
   // Display version message
   log.info "Sarek - Workflow For Somatic And Germline Variations"
   log.info "  version   : " + params.version
-  log.info workflow.commitId ? "Git info    : ${workflow.repository} - ${workflow.revision} [${workflow.commitId}]" : "  revision  : " + MyUtils.grabRevision()
+  log.info workflow.commitId ? "Git info    : ${workflow.repository} - ${workflow.revision} [${workflow.commitId}]" : "  revision  : " + this.grabRevision()
 }
 
 workflow.onComplete {
