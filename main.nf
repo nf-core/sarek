@@ -44,53 +44,24 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 */
 
-version = '2.0.0'
-
 // Check that Nextflow version is up to date enough
 // try / throw / catch works for NF versions < 0.25 when this was implemented
-nf_required_version = '0.25.0'
 try {
-    if( ! nextflow.version.matches(">= ${nf_required_version}") ){
+    if( ! nextflow.version.matches(">= ${params.nfRequiredVersion}") ){
         throw GroovyException('Nextflow version too old')
     }
 } catch (all) {
     log.error "====================================================\n" +
-              "  Nextflow version ${nf_required_version} required! You are running v${workflow.nextflow.version}.\n" +
+              "  Nextflow version ${params.nfRequiredVersion} required! You are running v${workflow.nextflow.version}.\n" +
               "  Pipeline execution will continue, but things may break.\n" +
               "  Please update Nextflow.\n" +
               "============================================================"
 }
 
 if (params.help) exit 0, helpMessage()
-if (params.version) exit 0, versionMessage()
-if (!isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
+if (params.more) exit 0, moreMessage()
+if (!MyUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
-
-// Default params:
-// Such params are overridden by command line or configuration definitions
-
-// Reports are generated
-params.noReports = false
-// BQSR are explicitly asked
-params.explicitBqsrNeeded = true
-// BAMQC is used
-params.noBAMQC = false
-// Run Sarek in onlyQC mode
-params.onlyQC = false
-// outDir is current directory
-params.outDir = '.'
-// No sample is defined
-params.sample = ''
-// No sampleDir is defined
-params.sampleDir = ''
-// Step is mapping
-params.step = 'mapping'
-// No testing
-params.test = ''
-// Params are defined in config files
-params.containerPath = ''
-params.repository = ''
-params.tag = ''
 
 step = params.step.toLowerCase()
 if (step == 'preprocessing') step = 'mapping'
@@ -100,7 +71,6 @@ referenceMap = defineReferenceMap()
 stepList = defineStepList()
 reports = !params.noReports
 onlyQC = params.onlyQC
-verbose = params.verbose
 
 if (!checkParameterExistence(step, stepList)) exit 1, 'Unknown step, see --help for more information'
 if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
@@ -162,13 +132,13 @@ startMessage()
 
 (fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
 
-if (verbose) fastqFiles = fastqFiles.view {
+if (params.verbose) fastqFiles = fastqFiles.view {
   "FASTQs to preprocess:\n\
   ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\tRun   : ${it[3]}\n\
   Files : [${it[4].fileName}, ${it[5].fileName}]"
 }
 
-if (verbose) bamFiles = bamFiles.view {
+if (params.verbose) bamFiles = bamFiles.view {
   "BAMs to process:\n\
   ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
   Files : [${it[3].fileName}, ${it[4].fileName}]"
@@ -193,7 +163,7 @@ process RunFastQC {
   """
 }
 
-if (verbose) fastQCreport = fastQCreport.view {
+if (params.verbose) fastQCreport = fastQCreport.view {
   "FastQC report:\n\
   Files : [${it[0].fileName}, ${it[1].fileName}]"
 }
@@ -221,7 +191,7 @@ process MapReads {
   """
 }
 
-if (verbose) mappedBam = mappedBam.view {
+if (params.verbose) mappedBam = mappedBam.view {
   "Mapped BAM (single or to be merged):\n\
   ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\tRun   : ${it[3]}\n\
   File  : [${it[4].fileName}]"
@@ -256,13 +226,13 @@ process MergeBams {
   """
 }
 
-if (verbose) singleBam = singleBam.view {
+if (params.verbose) singleBam = singleBam.view {
   "Single BAM:\n\
   ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
   File  : [${it[3].fileName}]"
 }
 
-if (verbose) mergedBam = mergedBam.view {
+if (params.verbose) mergedBam = mergedBam.view {
   "Merged BAM:\n\
   ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
   File  : [${it[3].fileName}]"
@@ -270,7 +240,7 @@ if (verbose) mergedBam = mergedBam.view {
 
 mergedBam = mergedBam.mix(singleBam)
 
-if (verbose) mergedBam = mergedBam.view {
+if (params.verbose) mergedBam = mergedBam.view {
   "BAM for MarkDuplicates:\n\
   ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
   File  : [${it[3].fileName}]"
@@ -328,21 +298,21 @@ else if (step == 'realign') duplicatesGrouped = bamFiles.map{
 // and the other to the IndelRealigner process
 (duplicatesInterval, duplicatesRealign) = duplicatesGrouped.into(2)
 
-if (verbose) duplicatesInterval = duplicatesInterval.view {
+if (params.verbose) duplicatesInterval = duplicatesInterval.view {
   "BAMs for RealignerTargetCreator:\n\
   ID    : ${it[0]}\n\
   Files : ${it[1].fileName}\n\
   Files : ${it[2].fileName}"
 }
 
-if (verbose) duplicatesRealign = duplicatesRealign.view {
+if (params.verbose) duplicatesRealign = duplicatesRealign.view {
   "BAMs to phase:\n\
   ID    : ${it[0]}\n\
   Files : ${it[1].fileName}\n\
   Files : ${it[2].fileName}"
 }
 
-if (verbose) markDuplicatesReport = markDuplicatesReport.view {
+if (params.verbose) markDuplicatesReport = markDuplicatesReport.view {
   "MarkDuplicates report:\n\
   File  : [${it.fileName}]"
 }
@@ -385,7 +355,7 @@ process RealignerTargetCreator {
   """
 }
 
-if (verbose) intervals = intervals.view {
+if (params.verbose) intervals = intervals.view {
   "Intervals to phase:\n\
   ID    : ${it[0]}\n\
   File  : [${it[1].fileName}]"
@@ -401,7 +371,7 @@ bamsAndIntervals = duplicatesRealign
       intervals[1]
     )}
 
-if (verbose) bamsAndIntervals = bamsAndIntervals.view {
+if (params.verbose) bamsAndIntervals = bamsAndIntervals.view {
   "BAMs and Intervals phased for IndelRealigner:\n\
   ID    : ${it[0]}\n\
   Files : ${it[1].fileName}\n\
@@ -450,7 +420,7 @@ realignedBam = realignedBam.map {
     [idPatient, status, idSample, bam, bai]
 }
 
-if (verbose) realignedBam = realignedBam.view {
+if (params.verbose) realignedBam = realignedBam.view {
   "Realigned BAM to CreateRecalibrationTable:\n\
   ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
   Files : [${it[3].fileName}, ${it[4].fileName}]"
@@ -508,7 +478,7 @@ recalibrationTableTSV.map { idPatient, status, idSample, bam, bai, recalTable ->
 
 if (step == 'recalibrate') recalibrationTable = bamFiles
 
-if (verbose) recalibrationTable = recalibrationTable.view {
+if (params.verbose) recalibrationTable = recalibrationTable.view {
   "Base recalibrated table for RecalibrateBam:\n\
   ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
   Files : [${it[3].fileName}, ${it[4].fileName}, ${it[5].fileName}]"
@@ -565,7 +535,7 @@ recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
   name: 'recalibrated.tsv', sort: true, storeDir: "${params.outDir}/${directoryMap.recalibrated}"
 )
 
-if (verbose) recalibratedBam = recalibratedBam.view {
+if (params.verbose) recalibratedBam = recalibratedBam.view {
   "Recalibrated BAM for variant Calling:\n\
   ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
   Files : [${it[3].fileName}, ${it[4].fileName}]"
@@ -590,7 +560,7 @@ process RunSamtoolsStats {
   """
 }
 
-if (verbose) samtoolsStatsReport = samtoolsStatsReport.view {
+if (params.verbose) samtoolsStatsReport = samtoolsStatsReport.view {
   "SAMTools stats report:\n\
   File  : [${it.fileName}]"
 }
@@ -618,7 +588,7 @@ process RunBamQC {
   """
 }
 
-if (verbose) bamQCreport = bamQCreport.view {
+if (params.verbose) bamQCreport = bamQCreport.view {
   "BamQC report:\n\
   Dir   : [${it.fileName}]"
 }
@@ -631,7 +601,7 @@ if (verbose) bamQCreport = bamQCreport.view {
 
 def sarekMessage() {
   // Display Sarek message
-  log.info "Sarek ~ ${version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
+  log.info "Sarek ~ ${params.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
 }
 
 def checkFileExtension(it, extension) {
@@ -656,83 +626,6 @@ def checkParameterList(list, realList) {
 def checkParamReturnFile(item) {
   params."${item}" = params.genomes[params.genome]."${item}"
   return file(params."${item}")
-}
-
-def checkParams(it) {
-  // Check if params is in this given list
-  return it in [
-    'ac-loci',
-    'acLoci',
-    'annotate-tools',
-    'annotate-VCF',
-    'annotateTools',
-    'annotateVCF',
-    'build',
-    'bwa-index',
-    'bwaIndex',
-    'call-name',
-    'callName',
-    'contact-mail',
-    'contactMail',
-    'container-path',
-    'containerPath',
-    'containers',
-    'cosmic-index',
-    'cosmic',
-    'cosmicIndex',
-    'dbsnp-index',
-    'dbsnp',
-    'docker',
-    'explicitBqsrNeeded',
-    'genome_base',
-    'genome-dict',
-    'genome-file',
-    'genome-index',
-    'genome',
-    'genomeDict',
-    'genomeFile',
-    'genomeIndex',
-    'genomes',
-    'help',
-    'intervals',
-    'known-indels-index',
-    'known-indels',
-    'knownIndels',
-    'knownIndelsIndex',
-    'max_cpus',
-    'max_memory',
-    'max_time',
-    'no-BAMQC',
-    'no-GVCF',
-    'no-reports',
-    'noBAMQC',
-    'noGVCF',
-    'noReports',
-    'only-QC',
-    'onlyQC',
-    'out-dir',
-    'outDir',
-    'params',
-    'project',
-    'push',
-    'repository',
-    'run-time',
-    'runTime',
-    'sample-dir',
-    'sample',
-    'sampleDir',
-    'single-CPUMem',
-    'singleCPUMem',
-    'singularity',
-    'step',
-    'tag',
-    'test',
-    'tools',
-    'total-memory',
-    'totalMemory',
-    'vcflist',
-    'verbose',
-    'version']
 }
 
 def checkReferenceMap(referenceMap) {
@@ -989,20 +882,8 @@ def helpMessage() {
   log.info "       you're reading it"
   log.info "    --verbose"
   log.info "       Adds more verbosity to workflow"
-  log.info "    --version"
+  log.info "    --more"
   log.info "       displays version number"
-}
-
-def isAllowedParams(params) {
-  // Compare params to list of verified params
-  final test = true
-  params.each{
-    if (!checkParams(it.toString().split('=')[0])) {
-      println "params ${it.toString().split('=')[0]} is unknown"
-      test = false
-    }
-  }
-  return test
 }
 
 def minimalInformationMessage() {
@@ -1065,10 +946,10 @@ def startMessage() {
   this.minimalInformationMessage()
 }
 
-def versionMessage() {
+def moreMessage() {
   // Display version message
   log.info "Sarek"
-  log.info "  version   : " + version
+  log.info "  version   : " + params.version
   log.info workflow.commitId ? "Git info    : ${workflow.repository} - ${workflow.revision} [${workflow.commitId}]" : "  revision  : " + this.grabRevision()
 }
 

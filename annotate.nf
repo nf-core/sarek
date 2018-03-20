@@ -37,51 +37,24 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 */
 
-version = '2.0.0'
-
 // Check that Nextflow version is up to date enough
 // try / throw / catch works for NF versions < 0.25 when this was implemented
-nf_required_version = '0.25.0'
 try {
-    if( ! nextflow.version.matches(">= ${nf_required_version}") ){
+    if( ! nextflow.version.matches(">= ${params.nfRequiredVersion}") ){
         throw GroovyException('Nextflow version too old')
     }
 } catch (all) {
     log.error "====================================================\n" +
-              "  Nextflow version ${nf_required_version} required! You are running v${workflow.nextflow.version}.\n" +
+              "  Nextflow version ${params.nfRequiredVersion} required! You are running v${workflow.nextflow.version}.\n" +
               "  Pipeline execution will continue, but things may break.\n" +
               "  Please update Nextflow.\n" +
               "============================================================"
 }
 
 if (params.help) exit 0, helpMessage()
-if (params.version) exit 0, versionMessage()
-if (!isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
+if (params.more) exit 0, moreMessage()
+if (!MyUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
-
-// Default params:
-// Such params are overridden by command line or configuration definitions
-
-// No tools to annotate
-params.annotateTools = ''
-// No vcf to annotare
-params.annotateVCF = ''
-// Reports are generated
-params.noReports = false
-// Run Sarek in onlyQC mode
-params.onlyQC = false
-// outDir is current directory
-params.outDir = '.'
-// Step is annotate
-step = 'annotate'
-// Not testing
-params.test = ''
-// No tools to be used
-params.tools = ''
-// Params are defined in config files
-params.containerPath = ''
-params.repository = ''
-params.tag = ''
 
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
 annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
@@ -89,11 +62,8 @@ annotateVCF = params.annotateVCF ? params.annotateVCF.split(',').collect{it.trim
 
 directoryMap = defineDirectoryMap()
 toolList = defineToolList()
-reports = !params.noReports
-onlyQC = params.onlyQC
-verbose = params.verbose
 
-if (!checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
+if (!MyUtils.checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
 
 /*
 ================================================================================
@@ -106,7 +76,7 @@ startMessage()
 vcfToAnnotate = Channel.create()
 vcfNotToAnnotate = Channel.create()
 
-if (step == 'annotate' && annotateVCF == []) {
+if (annotateVCF == []) {
   Channel.empty().mix(
     Channel.fromPath("${params.outDir}/VariantCalling/HaplotypeCaller/*.vcf.gz")
       .flatten().map{vcf -> ['haplotypecaller',vcf]},
@@ -118,9 +88,10 @@ if (step == 'annotate' && annotateVCF == []) {
       .flatten().map{vcf -> ['mutect2',vcf]},
     Channel.fromPath("${params.outDir}/VariantCalling/Strelka/*{somatic,variants}*.vcf.gz")
       .flatten().map{vcf -> ['strelka',vcf]}
-  ).choice(vcfToAnnotate, vcfNotToAnnotate) { annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1 }
-
-} else if (step == 'annotate' && annotateTools == [] && annotateVCF != []) {
+  ).choice(vcfToAnnotate, vcfNotToAnnotate) {
+    annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1
+  }
+} else if (annotateTools == []) {
   list = ""
   annotateVCF.each{ list += ",${it}" }
   list = list.substring(1)
@@ -128,8 +99,7 @@ if (step == 'annotate' && annotateVCF == []) {
     .map{vcf -> ['userspecified',vcf]}
   else vcfToAnnotate = Channel.fromPath("{$list}")
     .map{vcf -> ['userspecified',vcf]}
-
-}else exit 1, "specify only tools or files to annotate, bot both"
+} else exit 1, "specify only tools or files to annotate, not both"
 
 vcfNotToAnnotate.close()
 
@@ -146,7 +116,7 @@ process RunBcftoolsStats {
   output:
     file ("${vcf.baseName}.bcf.tools.stats.out") into bcfReport
 
-  when: reports
+  when: !params.noReports
 
   script:
   """
@@ -154,7 +124,7 @@ process RunBcftoolsStats {
   """
 }
 
-if (verbose) bcfReport = bcfReport.view {
+if (params.verbose) bcfReport = bcfReport.view {
   "BCFTools stats report:\n\
   File  : [${it.fileName}]"
 }
@@ -189,7 +159,7 @@ process RunSnpeff {
   """
 }
 
-if (verbose) snpeffReport = snpeffReport.view {
+if (params.verbose) snpeffReport = snpeffReport.view {
   "snpEff report:\n\
   File  : ${it.fileName}"
 }
@@ -226,7 +196,7 @@ process RunVEP {
   """
 }
 
-if (verbose) vepReport = vepReport.view {
+if (params.verbose) vepReport = vepReport.view {
   "VEP report:\n\
   Files : ${it.fileName}"
 }
@@ -239,122 +209,7 @@ if (verbose) vepReport = vepReport.view {
 
 def sarekMessage() {
   // Display Sarek message
-  log.info "Sarek ~ ${version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
-}
-
-def checkParameterExistence(it, list) {
-  // Check parameter existence
-  if (!list.contains(it)) {
-    println("Unknown parameter: ${it}")
-    return false
-  }
-  return true
-}
-
-def checkParameterList(list, realList) {
-  // Loop through all parameters to check their existence and spelling
-  return list.every{ checkParameterExistence(it, realList) }
-}
-
-def checkParamReturnFile(item) {
-  params."${item}" = params.genomes[params.genome]."${item}"
-  return file(params."${item}")
-}
-
-def checkParams(it) {
-  // Check if params is in this given list
-  return it in [
-    'ac-loci',
-    'acLoci',
-    'annotate-tools',
-    'annotate-VCF',
-    'annotateTools',
-    'annotateVCF',
-    'build',
-    'bwa-index',
-    'bwaIndex',
-    'call-name',
-    'callName',
-    'contact-mail',
-    'contactMail',
-    'container-path',
-    'containerPath',
-    'containers',
-    'cosmic-index',
-    'cosmic',
-    'cosmicIndex',
-    'dbsnp-index',
-    'dbsnp',
-    'docker',
-    'genome_base',
-    'genome-dict',
-    'genome-file',
-    'genome-index',
-    'genome',
-    'genomeDict',
-    'genomeFile',
-    'genomeIndex',
-    'genomes',
-    'help',
-    'intervals',
-    'known-indels-index',
-    'known-indels',
-    'knownIndels',
-    'knownIndelsIndex',
-    'max_cpus',
-    'max_memory',
-    'max_time',
-    'no-BAMQC',
-    'no-GVCF',
-    'no-reports',
-    'noBAMQC',
-    'noGVCF',
-    'noReports',
-    'only-QC',
-    'onlyQC',
-    'out-dir',
-    'outDir',
-    'params',
-    'project',
-    'push',
-    'repository',
-    'run-time',
-    'runTime',
-    'sample-dir',
-    'sample',
-    'sampleDir',
-    'single-CPUMem',
-    'singleCPUMem',
-    'singularity',
-    'step',
-    'tag',
-    'test',
-    'tools',
-    'total-memory',
-    'totalMemory',
-    'vcflist',
-    'verbose',
-    'version']
-}
-
-def checkReferenceMap(referenceMap) {
-  // Loop through all the references files to check their existence
-  referenceMap.every {
-    referenceFile, fileToCheck ->
-    checkRefExistence(referenceFile, fileToCheck)
-  }
-}
-
-def checkRefExistence(referenceFile, fileToCheck) {
-  if (fileToCheck instanceof List) return fileToCheck.every{ checkRefExistence(referenceFile, it) }
-  def f = file(fileToCheck)
-  // this is an expanded wildcard: we can assume all files exist
-  if (f instanceof List && f.size() > 0) return true
-  else if (!f.exists()) {
-    log.info  "Missing references: ${referenceFile} ${fileToCheck}"
-    return false
-  }
-  return true
+  log.info "Sarek ~ ${params.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
 }
 
 def checkUppmaxProject() {
@@ -367,12 +222,6 @@ def defineDirectoryMap() {
     'bcftoolsStats'    : 'Reports/BCFToolsStats',
     'snpeff'           : 'Annotation/SnpEff',
     'vep'              : 'Annotation/VEP'
-  ]
-}
-
-def defineStepList() {
-  return [
-    'annotate'
   ]
 }
 
@@ -433,20 +282,8 @@ def helpMessage() {
   log.info "       you're reading it"
   log.info "    --verbose"
   log.info "       Adds more verbosity to workflow"
-  log.info "    --version"
+  log.info "    --more"
   log.info "       displays version number"
-}
-
-def isAllowedParams(params) {
-  // Compare params to list of verified params
-  final test = true
-  params.each{
-    if (!checkParams(it.toString().split('=')[0])) {
-      println "params ${it.toString().split('=')[0]} is unknown"
-      test = false
-    }
-  }
-  return test
 }
 
 def minimalInformationMessage() {
@@ -457,10 +294,8 @@ def minimalInformationMessage() {
   log.info "Launch Dir  : " + workflow.launchDir
   log.info "Work Dir    : " + workflow.workDir
   log.info "Out Dir     : " + params.outDir
-  if (step != 'annotate') log.info "TSV file    : ${tsvFile}"
   log.info "Genome      : " + params.genome
   log.info "Genome_base : " + params.genome_base
-  log.info "Step        : " + step
   if (tools) log.info "Tools       : " + tools.join(', ')
   if (annotateTools) log.info "Annotate on : " + annotateTools.join(', ')
   if (annotateVCF) log.info "VCF files   : " +annotateVCF.join(',\n    ')
@@ -483,10 +318,10 @@ def startMessage() {
   this.minimalInformationMessage()
 }
 
-def versionMessage() {
+def moreMessage() {
   // Display version message
   log.info "Sarek"
-  log.info "  version   : " + version
+  log.info "  version   : " + params.version
   log.info workflow.commitId ? "Git info    : ${workflow.repository} - ${workflow.revision} [${workflow.commitId}]" : "  revision  : " + this.grabRevision()
 }
 

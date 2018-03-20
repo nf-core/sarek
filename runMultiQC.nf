@@ -36,44 +36,28 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 */
 
-version = '2.0.0'
-
 // Check that Nextflow version is up to date enough
 // try / throw / catch works for NF versions < 0.25 when this was implemented
-nf_required_version = '0.25.0'
 try {
-    if( ! nextflow.version.matches(">= ${nf_required_version}") ){
+    if( ! nextflow.version.matches(">= ${params.nfRequiredVersion}") ){
         throw GroovyException('Nextflow version too old')
     }
 } catch (all) {
     log.error "====================================================\n" +
-              "  Nextflow version ${nf_required_version} required! You are running v${workflow.nextflow.version}.\n" +
+              "  Nextflow version ${params.nfRequiredVersion} required! You are running v${workflow.nextflow.version}.\n" +
               "  Pipeline execution will continue, but things may break.\n" +
               "  Please update Nextflow.\n" +
               "============================================================"
 }
 
 if (params.help) exit 0, helpMessage()
-if (params.version) exit 0, versionMessage()
-if (!isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
+if (params.more) exit 0, moreMessage()
+if (!MyUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
-
-// Default params:
-// Such params are overridden by command line or configuration definitions
-
-// Reports are generated
-params.noReports = false
-// outDir is current directory
-params.outDir = '.'
-// Params are defined in config files
-params.containerPath = ''
-params.repository = ''
-params.tag = ''
 
 directoryMap = defineDirectoryMap()
 
 reports = !params.noReports
-verbose = params.verbose
 
 /*
 ================================================================================
@@ -100,7 +84,7 @@ process GenerateMultiQCconfig {
   echo "custom_logo_url: http://opensource.scilifelab.se/projects/sarek" >> multiqc_config.yaml
   echo "custom_logo_title: 'Sarek'" >> multiqc_config.yaml
   echo "report_header_info:" >> multiqc_config.yaml
-  echo "- Sarek version: ${version}" >> multiqc_config.yaml
+  echo "- Sarek version: ${params.version}" >> multiqc_config.yaml
   echo "- Contact Name: ${params.callName}" >> multiqc_config.yaml
   echo "- Contact E-mail: ${params.contactMail}" >> multiqc_config.yaml
   echo "- Directory: ${workflow.launchDir}" >> multiqc_config.yaml
@@ -115,7 +99,7 @@ process GenerateMultiQCconfig {
   """
 }
 
-if (verbose && reports) multiQCconfig = multiQCconfig.view {
+if (params.verbose && reports) multiQCconfig = multiQCconfig.view {
   "MultiQC config:\n\
   File  : [${it.fileName}]"
 }
@@ -147,7 +131,7 @@ process RunMultiQC {
   """
 }
 
-if (verbose) multiQCReport = multiQCReport.view {
+if (params.verbose) multiQCReport = multiQCReport.view {
   "MultiQC report:\n\
   File  : [${it[0].fileName}]\n\
   Dir   : [${it[1].fileName}]"
@@ -161,7 +145,7 @@ if (verbose) multiQCReport = multiQCReport.view {
 
 def sarekMessage() {
   // Display Sarek message
-  log.info "Sarek ~ ${version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
+  log.info "Sarek ~ ${params.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
 }
 
 def checkParameterExistence(it, list) {
@@ -171,83 +155,6 @@ def checkParameterExistence(it, list) {
     return false
   }
   return true
-}
-
-def checkParams(it) {
-  // Check if params is in this given list
-  return it in [
-    'ac-loci',
-    'acLoci',
-    'annotate-tools',
-    'annotate-VCF',
-    'annotateTools',
-    'annotateVCF',
-    'build',
-    'bwa-index',
-    'bwaIndex',
-    'call-name',
-    'callName',
-    'contact-mail',
-    'contactMail',
-    'container-path',
-    'containerPath',
-    'containers',
-    'cosmic-index',
-    'cosmic',
-    'cosmicIndex',
-    'dbsnp-index',
-    'dbsnp',
-    'docker',
-    'explicitBqsrNeeded',
-    'genome_base',
-    'genome-dict',
-    'genome-file',
-    'genome-index',
-    'genome',
-    'genomeDict',
-    'genomeFile',
-    'genomeIndex',
-    'genomes',
-    'help',
-    'intervals',
-    'known-indels-index',
-    'known-indels',
-    'knownIndels',
-    'knownIndelsIndex',
-    'max_cpus',
-    'max_memory',
-    'max_time',
-    'no-BAMQC',
-    'no-GVCF',
-    'no-reports',
-    'noBAMQC',
-    'noGVCF',
-    'noReports',
-    'only-QC',
-    'onlyQC',
-    'out-dir',
-    'outDir',
-    'params',
-    'project',
-    'push',
-    'repository',
-    'run-time',
-    'runTime',
-    'sample-dir',
-    'sample',
-    'sampleDir',
-    'single-CPUMem',
-    'singleCPUMem',
-    'singularity',
-    'step',
-    'tag',
-    'test',
-    'tools',
-    'total-memory',
-    'totalMemory',
-    'vcflist',
-    'verbose',
-    'version']
 }
 
 def checkUppmaxProject() {
@@ -303,18 +210,6 @@ def helpMessage() {
   log.info "       displays version number"
 }
 
-def isAllowedParams(params) {
-  // Compare params to list of verified params
-  final test = true
-  params.each{
-    if (!checkParams(it.toString().split('=')[0])) {
-      println "params ${it.toString().split('=')[0]} is unknown"
-      test = false
-    }
-  }
-  return test
-}
-
 def minimalInformationMessage() {
   // Minimal information message
   log.info "Command Line: " + workflow.commandLine
@@ -342,10 +237,10 @@ def startMessage() {
   this.minimalInformationMessage()
 }
 
-def versionMessage() {
+def moreMessage() {
   // Display version message
   log.info "Sarek"
-  log.info "  version   : " + version
+  log.info "  version   : " + params.version
   log.info workflow.commitId ? "Git info    : ${workflow.repository} - ${workflow.revision} [${workflow.commitId}]" : "  revision  : " + this.grabRevision()
 }
 
