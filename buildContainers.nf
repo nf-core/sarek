@@ -124,7 +124,7 @@ if (params.verbose) imagePulled = imagePulled.view {
 }
 
 process PushDockerContainers {
-  tag {params.repository + "/" + container + ":" + tag}
+  tag {params.repository + "/" + container + ":" + params.tag}
 
   input:
     val container from containersBuilt
