@@ -40,46 +40,30 @@ New Germline (+ Somatic) Analysis Workflow. Started March 2016.
 ================================================================================
 */
 
-version = '2.0.0'
-
 // Check that Nextflow version is up to date enough
 // try / throw / catch works for NF versions < 0.25 when this was implemented
-nf_required_version = '0.25.0'
 try {
-    if( ! nextflow.version.matches(">= ${nf_required_version}") ){
+    if( ! nextflow.version.matches(">= ${params.nfRequiredVersion}") ){
         throw GroovyException('Nextflow version too old')
     }
 } catch (all) {
     log.error "====================================================\n" +
-              "  Nextflow version ${nf_required_version} required! You are running v${workflow.nextflow.version}.\n" +
+              "  Nextflow version ${params.nfRequiredVersion} required! You are running v${workflow.nextflow.version}.\n" +
               "  Pipeline execution will continue, but things may break.\n" +
               "  Please update Nextflow.\n" +
               "============================================================"
 }
 
 if (params.help) exit 0, helpMessage()
-if (params.version) exit 0, versionMessage()
-if (!isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
+if (params.more) exit 0, moreMessage()
+if (!MyUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
-// Default params:
-// Such params are overridden by command line or configuration definitions
-
-// No download of reference source files
-params.download = false
-// outDir is References/${params.genome}
-params.outDir = "./References/${params.genome}"
-// refDir is empty
-params.refDir = ''
-
-verbose = params.verbose
-download = params.download ? true : false
-
-if (!download && params.refDir == "" ) exit 1, "No --refDir specified"
-if (download && params.refDir != "" ) exit 1, "No need to specify --refDir"
+if (!params.download && params.refDir == "" ) exit 1, "No --refDir specified"
+if (params.download && params.refDir != "" ) exit 1, "No need to specify --refDir"
 
 if (params.genome == "smallGRCh37") {
-  referencesFiles =
+  ch_referencesFiles =
     [
       '1000G_phase1.indels.b37.small.vcf.gz',
       '1000G_phase3_20130502_SNP_maf0.3.small.loci',
@@ -90,7 +74,7 @@ if (params.genome == "smallGRCh37") {
       'small.intervals'
     ]
 } else if (params.genome == "GRCh37") {
-  referencesFiles =
+  ch_referencesFiles =
     [
       '1000G_phase1.indels.b37.vcf.gz',
       '1000G_phase3_20130502_SNP_maf0.3.loci.tar.bz2',
@@ -102,9 +86,9 @@ if (params.genome == "smallGRCh37") {
     ]
 } else exit 1, "Can't build this reference genome"
 
-if (download && params.genome != "smallGRCh37") exit 1, "Not possible to download ${params.genome} references files"
+if (params.download && params.genome != "smallGRCh37") exit 1, "Not possible to download ${params.genome} references files"
 
-if (!download) referencesFiles.each{checkFile(params.refDir + "/" + it)}
+if (!params.download) ch_referencesFiles.each{checkFile(params.refDir + "/" + it)}
 
 /*
 ================================================================================
@@ -115,177 +99,175 @@ if (!download) referencesFiles.each{checkFile(params.refDir + "/" + it)}
 startMessage()
 
 process ProcessReference {
-  tag download ? {"Download: " + reference} : {"Link: " + reference}
+  tag params.download ? {"Download: " + f_reference} : {"Link: " + f_reference}
 
   input:
-    val(reference) from referencesFiles
+    val(f_reference) from ch_referencesFiles
 
   output:
-    file(reference) into processedFiles
+    file(f_reference) into ch_processedFiles
 
   script:
 
-  if (download)
+  if (params.download)
   """
-  wget https://github.com/szilvajuhos/smallRef/raw/master/${reference}
+  wget https://github.com/szilvajuhos/smallRef/raw/master/${f_reference}
   """
 
   else
   """
-  ln -s ${params.refDir}/${reference} .
+  ln -s ${params.refDir}/${f_reference} .
   """
 }
 
 
-if (verbose) processedFiles = processedFiles.view {
+if (params.verbose) ch_processedFiles = ch_processedFiles.view {
   "Files preprocessed  : ${it.fileName}"
 }
 
-compressedfiles = Channel.create()
-notCompressedfiles = Channel.create()
+ch_compressedfiles = Channel.create()
+ch_notCompressedfiles = Channel.create()
 
-processedFiles
-  .choice(compressedfiles, notCompressedfiles) {it =~ ".(gz|tar.bz2)" ? 0 : 1}
+ch_processedFiles
+  .choice(ch_compressedfiles, ch_notCompressedfiles) {it =~ ".(gz|tar.bz2)" ? 0 : 1}
 
 process DecompressFile {
-  tag {reference}
+  tag {f_reference}
 
   input:
-    file(reference) from compressedfiles
+    file(f_reference) from ch_compressedfiles
 
   output:
-    file("*.{vcf,fasta,loci}") into decompressedFiles
+    file("*.{vcf,fasta,loci}") into ch_decompressedFiles
 
   script:
-  realReference="readlink ${reference}"
-  if (reference =~ ".gz")
+  realReferenceFile="readlink ${f_reference}"
+  if (f_reference =~ ".gz")
     """
-    gzip -d -c \$(${realReference}) > ${reference.baseName}
+    gzip -d -c \$(${realReferenceFile}) > ${f_reference.baseName}
     """
-  else if (reference =~ ".tar.bz2")
+  else if (f_reference =~ ".tar.bz2")
     """
-    tar xvjf \$(${realReference})
+    tar xvjf \$(${realReferenceFile})
     """
 }
 
-if (verbose) decompressedFiles = decompressedFiles.view {
+if (params.verbose) ch_decompressedFiles = ch_decompressedFiles.view {
   "Files decomprecessed: ${it.fileName}"
 }
 
-fastaFile = Channel.create()
-otherFiles = Channel.create()
-vcfFiles = Channel.create()
+ch_fastaFile = Channel.create()
+ch_otherFiles = Channel.create()
+ch_vcfFiles = Channel.create()
 
-decompressedFiles
-  .choice(fastaFile, vcfFiles, otherFiles) {
+ch_decompressedFiles
+  .choice(ch_fastaFile, ch_vcfFiles, ch_otherFiles) {
     it =~ ".fasta" ? 0 :
     it =~ ".vcf" ? 1 : 2}
 
-notCompressedfiles
-  .mix(otherFiles)
+ch_notCompressedfiles
+  .mix(ch_otherFiles)
   .collectFile(storeDir: params.outDir)
 
-fastaForBWA = Channel.create()
-fastaForPicard = Channel.create()
-fastaForSAMTools = Channel.create()
+ch_fastaForBWA = Channel.create()
+ch_fastaForPicard = Channel.create()
+ch_fastaForSAMTools = Channel.create()
 
-fastaFile.into(fastaForBWA,fastaForPicard,fastaForSAMTools)
+ch_fastaFile.into(ch_fastaForBWA,ch_fastaForPicard,ch_fastaForSAMTools)
 
 process BuildBWAindexes {
-  tag {reference}
+  tag {f_reference}
 
   publishDir params.outDir, mode: 'copy'
 
   input:
-    file(reference) from fastaForBWA
+    file(f_reference) from ch_fastaForBWA
 
   output:
-    file(reference) into fastaFileToKeep
+    file(f_reference) into ch_fastaFileToKeep
     file("*.{amb,ann,bwt,pac,sa}") into bwaIndexes
 
   script:
 
   """
-  bwa index ${reference}
+  bwa index ${f_reference}
   """
 }
 
-if (verbose) fastaFileToKeep.view {
+if (params.verbose) ch_fastaFileToKeep.view {
   "Fasta File          : ${it.fileName}"
 }
-if (verbose) bwaIndexes.flatten().view {
+if (params.verbose) bwaIndexes.flatten().view {
   "BWA index           : ${it.fileName}"
 }
 
 process BuildPicardIndex {
-  tag {reference}
+  tag {f_reference}
 
   publishDir params.outDir, mode: 'copy'
 
   input:
-    file(reference) from fastaForPicard
+    file(f_reference) from ch_fastaForPicard
 
   output:
-    file("*.dict") into picardIndex
+    file("*.dict") into ch_picardIndex
 
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
   -jar \$PICARD_HOME/picard.jar \
   CreateSequenceDictionary \
-  REFERENCE=${reference} \
-  OUTPUT=${reference.baseName}.dict
+  REFERENCE=${f_reference} \
+  OUTPUT=${f_reference.baseName}.dict
   """
 }
 
-if (verbose) picardIndex.view {
+if (params.verbose) ch_picardIndex.view {
   "Picard index        : ${it.fileName}"
 }
 
 process BuildSAMToolsIndex {
-  tag {reference}
+  tag {f_reference}
 
   publishDir params.outDir, mode: 'copy'
 
   input:
-    file(reference) from fastaForSAMTools
+    file(f_reference) from ch_fastaForSAMTools
 
   output:
-    file("*.fai") into samtoolsIndex
+    file("*.fai") into ch_samtoolsIndex
 
   script:
   """
-  samtools faidx ${reference}
+  samtools faidx ${f_reference}
   """
 }
 
-if (verbose) samtoolsIndex.view {
+if (params.verbose) ch_samtoolsIndex.view {
   "SAMTools index      : ${it.fileName}"
 }
 
 process BuildVCFIndex {
-  tag {reference}
+  tag {f_reference}
 
   publishDir params.outDir, mode: 'copy'
 
   input:
-    file(reference) from vcfFiles
+    file(f_reference) from ch_vcfFiles
 
   output:
-    file(reference) into vcfIndexed
-    file("*.idx") into vcfIndex
+    set file(f_reference), file("${f_reference}.idx") into ch_vcfIndex
 
   script:
   """
-  \$IGVTOOLS_HOME/igvtools index ${reference}
+  \$IGVTOOLS_HOME/igvtools index ${f_reference}
   """
 }
 
-if (verbose) vcfIndexed.view {
-  "VCF indexed         : ${it.fileName}"
-}
-if (verbose) vcfIndex.view {
-  "VCF index           : ${it.fileName}"
+if (params.verbose) ch_vcfIndex.view {
+  "VCF indexed:\n\
+  VCF File          : ${it[0].fileName}\n\
+  VCF index         : ${it[1].fileName}"
 }
 
 /*
@@ -296,7 +278,7 @@ if (verbose) vcfIndex.view {
 
 def sarekMessage() {
   // Display Sarek message
-  log.info "Sarek - Workflow To Find Somatic And Germline Variations ~ ${version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
+  log.info "Sarek - Workflow To Find Somatic And Germline Variations ~ ${params.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
 }
 
 def checkFile(it) {
@@ -304,63 +286,6 @@ def checkFile(it) {
   final f = file(it)
   if (!f.exists()) exit 1, "Missing file: ${it}, see --help for more information"
   return true
-}
-
-def checkParams(it) {
-  // Check if params is in this given list
-  return it in [
-    'annotate-tools',
-    'annotate-VCF',
-    'annotateTools',
-    'annotateVCF',
-    'build',
-    'call-name',
-    'callName',
-    'contact-mail',
-    'contactMail',
-    'container-path',
-    'containerPath',
-    'containers',
-    'docker',
-    'download',
-    'genome_base',
-    'genome',
-    'genomes',
-    'help',
-    'max_cpus',
-    'max_memory',
-    'max_time',
-    'no-GVCF',
-    'no-reports',
-    'noGVCF',
-    'noReports',
-    'only-QC',
-    'onlyQC',
-    'out-dir',
-    'outDir',
-    'params',
-    'project',
-    'push',
-    'ref-dir',
-    'refDir',
-    'repository',
-    'run-time',
-    'runTime',
-    'sample-dir',
-    'sample',
-    'sampleDir',
-    'single-CPUMem',
-    'singleCPUMem',
-    'singularity',
-    'step',
-    'tag',
-    'test',
-    'tools',
-    'total-memory',
-    'totalMemory',
-    'vcflist',
-    'verbose',
-    'version']
 }
 
 def checkUppmaxProject() {
@@ -394,20 +319,8 @@ def helpMessage() {
   log.info "         smallGRCh37"
   log.info "    --help"
   log.info "       you're reading it"
-  log.info "    --version"
+  log.info "    --more"
   log.info "       displays version number"
-}
-
-def isAllowedParams(params) {
-  // Compare params to list of verified params
-  final test = true
-  params.each{
-    if (!checkParams(it.toString().split('=')[0])) {
-      println "params ${it.toString().split('=')[0]} is unknown"
-      test = false
-    }
-  }
-  return test
 }
 
 def minimalInformationMessage() {
@@ -418,8 +331,8 @@ def minimalInformationMessage() {
   log.info "Work Dir    : " + workflow.workDir
   log.info "Out Dir     : " + params.outDir
   log.info "Genome      : " + params.genome
-  log.info "Containers  :"
-  if (params.repository) log.info "  Repository   : ${params.repository}"
+  log.info "Containers"
+  if (params.repository) log.info "  Repository   :" + params.repository
   else log.info "  ContainerPath: " + params.containerPath
   log.info "  Tag          : " + params.tag
 }
@@ -435,10 +348,10 @@ def startMessage() {
   this.minimalInformationMessage()
 }
 
-def versionMessage() {
+def moreMessage() {
   // Display version message
   log.info "Sarek - Workflow For Somatic And Germline Variations"
-  log.info "  version   : " + version
+  log.info "  version   : " + params.version
   log.info workflow.commitId ? "Git info    : ${workflow.repository} - ${workflow.revision} [${workflow.commitId}]" : "  revision  : " + this.grabRevision()
 }
 
