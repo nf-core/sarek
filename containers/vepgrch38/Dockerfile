@@ -1,4 +1,4 @@
-FROM willmclaren/ensembl-vep:release_90.6
+FROM willmclaren/ensembl-vep:release_92
 
 LABEL \
   author="Maxime Garcia" \
@@ -8,7 +8,7 @@ LABEL \
 # Setup ENV variables
 ENV \
   GENOME=GRCh38 \
-  VEP_VERSION=90
+  VEP_VERSION=91
 
 # Download Genome
 RUN \
