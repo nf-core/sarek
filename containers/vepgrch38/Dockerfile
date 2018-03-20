@@ -18,5 +18,3 @@ RUN \
     ftp://ftp.ensembl.org/pub/release-${VEP_VERSION}/variation/VEP/homo_sapiens_vep_${VEP_VERSION}_${GENOME}.tar.gz \
   && tar xzf homo_sapiens_vep_${VEP_VERSION}_${GENOME}.tar.gz \
   && rm homo_sapiens_vep_${VEP_VERSION}_${GENOME}.tar.gz
-
-USER root
