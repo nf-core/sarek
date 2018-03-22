@@ -7,7 +7,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 =                                 S  A  R  E  K                                =
 ================================================================================
-New Germline (+ Somatic) Analysis Workflow. Started March 2016.
+ New Germline (+ Somatic) Analysis Workflow. Started March 2016.
 --------------------------------------------------------------------------------
  @Authors
  Sebastian DiLorenzo <sebastian.dilorenzo@bils.se> [@Sebastian-D]
@@ -62,29 +62,7 @@ if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <U
 if (!params.download && params.refDir == "" ) exit 1, "No --refDir specified"
 if (params.download && params.refDir != "" ) exit 1, "No need to specify --refDir"
 
-if (params.genome == "smallGRCh37") {
-  ch_referencesFiles =
-    [
-      '1000G_phase1.indels.b37.small.vcf.gz',
-      '1000G_phase3_20130502_SNP_maf0.3.small.loci',
-      'b37_cosmic_v74.noCHR.sort.4.1.small.vcf.gz',
-      'dbsnp_138.b37.small.vcf.gz',
-      'human_g1k_v37_decoy.small.fasta.gz',
-      'Mills_and_1000G_gold_standard.indels.b37.small.vcf.gz',
-      'small.intervals'
-    ]
-} else if (params.genome == "GRCh37") {
-  ch_referencesFiles =
-    [
-      '1000G_phase1.indels.b37.vcf.gz',
-      '1000G_phase3_20130502_SNP_maf0.3.loci.tar.bz2',
-      'GRCh37_Cosmic_v83.vcf.tar.bz2',
-      'dbsnp_138.b37.vcf.gz',
-      'human_g1k_v37_decoy.fasta.gz',
-      'Mills_and_1000G_gold_standard.indels.b37.vcf.gz',
-      'wgs_calling_regions.grch37.list'
-    ]
-} else exit 1, "Can't build this reference genome"
+ch_referencesFiles = defReferencesFiles(params.genome)
 
 if (params.download && params.genome != "smallGRCh37") exit 1, "Not possible to download ${params.genome} references files"
 
@@ -288,6 +266,30 @@ def checkFile(it) {
 def checkUppmaxProject() {
   // check if UPPMAX project number is specified
   return !(workflow.profile == 'slurm' && !params.project)
+}
+
+def defReferencesFiles(genome) {
+  if (genome == "smallGRCh37") {
+    return [
+    '1000G_phase1.indels.b37.small.vcf.gz',
+    '1000G_phase3_20130502_SNP_maf0.3.small.loci',
+    'b37_cosmic_v74.noCHR.sort.4.1.small.vcf.gz',
+    'dbsnp_138.b37.small.vcf.gz',
+    'human_g1k_v37_decoy.small.fasta.gz',
+    'Mills_and_1000G_gold_standard.indels.b37.small.vcf.gz',
+    'small.intervals'
+    ]
+  } else if (genome == "GRCh37") {
+    return   [
+    '1000G_phase1.indels.b37.vcf.gz',
+    '1000G_phase3_20130502_SNP_maf0.3.loci.tar.bz2',
+    'GRCh37_Cosmic_v83.vcf.tar.bz2',
+    'dbsnp_138.b37.vcf.gz',
+    'human_g1k_v37_decoy.fasta.gz',
+    'Mills_and_1000G_gold_standard.indels.b37.vcf.gz',
+    'wgs_calling_regions.grch37.list'
+    ]
+  } else exit 1, "Can't build this reference genome"
 }
 
 def grabRevision() {
