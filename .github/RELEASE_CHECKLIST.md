@@ -2,6 +2,8 @@
 This checklist is for our own reference
 
 1. Check that everything is up to date and ready to go
+  - Travis test is passing
+  - Manual testing on Bianca is passing
 2. Increase version numbers.
 3. Update version numbers in code: `configuration/base.config`
 4. Build, and get the containers.
