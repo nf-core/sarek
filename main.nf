@@ -69,8 +69,6 @@ if (step == 'preprocessing') step = 'mapping'
 directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
 stepList = defineStepList()
-reports = !params.noReports
-onlyQC = params.onlyQC
 
 if (!checkParameterExistence(step, stepList)) exit 1, 'Unknown step, see --help for more information'
 if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
@@ -89,8 +87,8 @@ if (params.sample) tsvPath = params.sample
 if (!params.sample && !params.sampleDir) {
   tsvPaths = [
       'mapping': "${workflow.projectDir}/data/tsv/tiny.tsv",
-      'realign': "${params.outDir}/${directoryMap.nonRealigned}/nonRealigned.tsv",
-      'recalibrate': "${params.outDir}/${directoryMap.nonRecalibrated}/nonRecalibrated.tsv"
+      'realign': "${directoryMap.nonRealigned}/nonRealigned.tsv",
+      'recalibrate': "${directoryMap.nonRecalibrated}/nonRecalibrated.tsv"
   ]
   if (params.test || step != 'mapping') tsvPath = tsvPaths[step]
 }
@@ -147,7 +145,7 @@ if (params.verbose) bamFiles = bamFiles.view {
 process RunFastQC {
   tag {idPatient + "-" + idRun}
 
-  publishDir "${params.outDir}/${directoryMap.fastQC}/${idRun}", mode: 'link'
+  publishDir "${directoryMap.fastQC}/${idRun}", mode: 'link'
 
   input:
     set idPatient, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFilesforFastQC
@@ -155,7 +153,7 @@ process RunFastQC {
   output:
     file "*_fastqc.{zip,html}" into fastQCreport
 
-  when: step == 'mapping' && reports
+  when: step == 'mapping' && !params.noReports
 
   script:
   """
@@ -178,7 +176,7 @@ process MapReads {
   output:
     set idPatient, status, idSample, idRun, file("${idRun}.bam") into mappedBam
 
-  when: step == 'mapping' && !onlyQC
+  when: step == 'mapping' && !params.onlyQC
 
   script:
   readGroup = "@RG\\tID:${idRun}\\tPU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
@@ -218,7 +216,7 @@ process MergeBams {
   output:
     set idPatient, status, idSample, file("${idSample}.bam") into mergedBam
 
-  when: step == 'mapping' && !onlyQC
+  when: step == 'mapping' && !params.onlyQC
 
   script:
   """
@@ -259,7 +257,7 @@ process MarkDuplicates {
     set idPatient, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai") into markDuplicatesTSV
     file ("${bam}.metrics") into markDuplicatesReport
 
-  when: step == 'mapping' && !onlyQC
+  when: step == 'mapping' && !params.onlyQC
 
   script:
   """
@@ -278,9 +276,9 @@ process MarkDuplicates {
 // Creating a TSV file to restart from this step
 markDuplicatesTSV.map { idPatient, status, idSample, bam, bai ->
   gender = patientGenders[idPatient]
-  "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outDir}/${directoryMap.nonRealigned}/${bam}\t${params.outDir}/${directoryMap.nonRealigned}/${bai}\n"
+  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap.nonRealigned}/${bam}\t${directoryMap.nonRealigned}/${bai}\n"
 }.collectFile(
-  name: 'nonRealigned.tsv', sort: true, storeDir: "${params.outDir}/${directoryMap.nonRealigned}"
+  name: 'nonRealigned.tsv', sort: true, storeDir: "${directoryMap.nonRealigned}"
 )
 
 // Create intervals for realignement using both tumor+normal as input
@@ -337,7 +335,7 @@ process RealignerTargetCreator {
   output:
     set idPatient, file("${idPatient}.intervals") into intervals
 
-  when: ( step == 'mapping' || step == 'realign' ) && !onlyQC
+  when: ( step == 'mapping' || step == 'realign' ) && !params.onlyQC
 
   script:
   bams = bam.collect{"-I ${it}"}.join(' ')
@@ -383,6 +381,8 @@ if (params.verbose) bamsAndIntervals = bamsAndIntervals.view {
 process IndelRealigner {
   tag {idPatient}
 
+  publishDir directoryMap.nonRecalibrated, mode: 'link'
+
   input:
     set idPatient, file(bam), file(bai), file(intervals) from bamsAndIntervals
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(knownIndels), file(knownIndelsIndex) from Channel.value([
@@ -395,7 +395,7 @@ process IndelRealigner {
   output:
     set idPatient, file("*.real.bam"), file("*.real.bai") into realignedBam mode flatten
 
-  when: ( step == 'mapping' || step == 'realign' ) && !onlyQC
+  when: ( step == 'mapping' || step == 'realign' ) && !params.onlyQC
 
   script:
   bams = bam.collect{"-I ${it}"}.join(' ')
@@ -429,7 +429,7 @@ if (params.verbose) realignedBam = realignedBam.view {
 process CreateRecalibrationTable {
   tag {idPatient + "-" + idSample}
 
-  publishDir "${params.outDir}/${directoryMap.nonRecalibrated}", mode: 'link'
+  publishDir directoryMap.nonRecalibrated, mode: 'link', overwrite: false
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from realignedBam
@@ -448,7 +448,7 @@ process CreateRecalibrationTable {
     set idPatient, status, idSample, file(bam), file(bai), file("${idSample}.recal.table") into recalibrationTable
     set idPatient, status, idSample, val("${idSample}_${status}.md.real.bam"), val("${idSample}_${status}.md.real.bai"), val("${idSample}.recal.table") into recalibrationTableTSV
 
-  when: ( step == 'mapping' || step == 'realign' ) && !onlyQC
+  when: ( step == 'mapping' || step == 'realign' ) && !params.onlyQC
 
   script:
   known = knownIndels.collect{ "-knownSites ${it}" }.join(' ')
@@ -471,9 +471,9 @@ process CreateRecalibrationTable {
 // Create a TSV file to restart from this step
 recalibrationTableTSV.map { idPatient, status, idSample, bam, bai, recalTable ->
   gender = patientGenders[idPatient]
-  "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outDir}/${directoryMap.nonRecalibrated}/${bam}\t${params.outDir}/${directoryMap.nonRecalibrated}/${bai}\t${params.outDir}/${directoryMap.nonRecalibrated}/${recalTable}\n"
+  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap.nonRecalibrated}/${bam}\t${directoryMap.nonRecalibrated}/${bai}\t${directoryMap.nonRecalibrated}/${recalTable}\n"
 }.collectFile(
-  name: 'nonRecalibrated.tsv', sort: true, storeDir: "${params.outDir}/${directoryMap.nonRecalibrated}"
+  name: 'nonRecalibrated.tsv', sort: true, storeDir: directoryMap.nonRecalibrated
 )
 
 if (step == 'recalibrate') recalibrationTable = bamFiles
@@ -496,7 +496,7 @@ recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
 process RecalibrateBam {
   tag {idPatient + "-" + idSample}
 
-  publishDir "${params.outDir}/${directoryMap.recalibrated}", mode: 'link'
+  publishDir directoryMap.recalibrated, mode: 'link'
 
   input:
     set idPatient, status, idSample, file(bam), file(bai), file(recalibrationReport) from recalibrationTable
@@ -513,7 +513,7 @@ process RecalibrateBam {
 
   // HaplotypeCaller can do BQSR on the fly, so do not create a
   // recalibrated BAM explicitly.
-  when: params.explicitBqsrNeeded && !onlyQC
+  when: params.explicitBqsrNeeded && !params.onlyQC
 
   script:
   """
@@ -530,9 +530,9 @@ process RecalibrateBam {
 // Creating a TSV file to restart from this step
 recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
   gender = patientGenders[idPatient]
-  "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outDir}/${directoryMap.recalibrated}/${bam}\t${params.outDir}/${directoryMap.recalibrated}/${bai}\n"
+  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap.recalibrated}/${bam}\t${directoryMap.recalibrated}/${bai}\n"
 }.collectFile(
-  name: 'recalibrated.tsv', sort: true, storeDir: "${params.outDir}/${directoryMap.recalibrated}"
+  name: 'recalibrated.tsv', sort: true, storeDir: directoryMap.recalibrated
 )
 
 if (params.verbose) recalibratedBam = recalibratedBam.view {
@@ -544,7 +544,7 @@ if (params.verbose) recalibratedBam = recalibratedBam.view {
 process RunSamtoolsStats {
   tag {idPatient + "-" + idSample}
 
-  publishDir "${params.outDir}/${directoryMap.samtoolsStats}", mode: 'link'
+  publishDir directoryMap.samtoolsStats, mode: 'link'
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamForSamToolsStats
@@ -552,7 +552,7 @@ process RunSamtoolsStats {
   output:
     file ("${bam}.samtools.stats.out") into samtoolsStatsReport
 
-  when: reports
+  when: !params.noReports
 
   script:
   """
@@ -568,7 +568,7 @@ if (params.verbose) samtoolsStatsReport = samtoolsStatsReport.view {
 process RunBamQC {
   tag {idPatient + "-" + idSample}
 
-  publishDir "${params.outDir}/${directoryMap.bamQC}", mode: 'link'
+  publishDir directoryMap.bamQC, mode: 'link'
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC
@@ -576,7 +576,7 @@ process RunBamQC {
   output:
     file("${idSample}") into bamQCreport
 
-  when: reports && !params.noBAMQC
+  when: !params.noReports && !params.noBAMQC
 
   script:
   """
@@ -661,14 +661,14 @@ def checkExactlyOne(list) {
 
 def defineDirectoryMap() {
   return [
-    'nonRealigned'     : 'Preprocessing/NonRealigned',
-    'nonRecalibrated'  : 'Preprocessing/NonRecalibrated',
-    'recalibrated'     : 'Preprocessing/Recalibrated',
-    'bamQC'            : 'Reports/bamQC',
-    'bcftoolsStats'    : 'Reports/BCFToolsStats',
-    'fastQC'           : 'Reports/FastQC',
-    'markDuplicatesQC' : 'Reports/MarkDuplicates',
-    'samtoolsStats'    : 'Reports/SamToolsStats'
+    'nonRealigned'     : "${params.outDir}/Preprocessing/NonRealigned",
+    'nonRecalibrated'  : "${params.outDir}/Preprocessing/NonRecalibrated",
+    'recalibrated'     : "${params.outDir}/Preprocessing/Recalibrated",
+    'bamQC'            : "${params.outDir}/Reports/bamQC",
+    'bcftoolsStats'    : "${params.outDir}/Reports/BCFToolsStats",
+    'fastQC'           : "${params.outDir}/Reports/FastQC",
+    'markDuplicatesQC' : "${params.outDir}/Reports/MarkDuplicates",
+    'samtoolsStats'    : "${params.outDir}/Reports/SamToolsStats"
   ]
 }
 
