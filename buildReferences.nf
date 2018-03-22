@@ -255,7 +255,7 @@ process BuildVCFIndex {
     file(f_reference) from ch_vcfFiles
 
   output:
-    set file("${f_reference}.idx") into ch_vcfIndex
+    file("${f_reference}.idx") into ch_vcfIndex
 
   script:
   """
@@ -264,8 +264,7 @@ process BuildVCFIndex {
 }
 
 if (params.verbose) ch_vcfIndex.view {
-  "VCF indexed:\n\
-  VCF index         : ${it[1].fileName}"
+  "VCF index           : ${it.fileName}"
 }
 
 /*
