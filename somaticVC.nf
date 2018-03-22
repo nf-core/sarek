@@ -135,7 +135,7 @@ if (params.verbose) recalibratedBam = recalibratedBam.view {
 process RunSamtoolsStats {
   tag {idPatient + "-" + idSample}
 
-  publishDir "${params.outDir}/${directoryMap.samtoolsStats}", mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.samtoolsStats}", mode: 'link'
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamForSamToolsStats
@@ -159,7 +159,7 @@ if (params.verbose) samtoolsStatsReport = samtoolsStatsReport.view {
 process RunBamQC {
   tag {idPatient + "-" + idSample}
 
-  publishDir "${params.outDir}/${directoryMap.bamQC}", mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.bamQC}", mode: 'link'
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC
@@ -428,7 +428,7 @@ if (params.verbose) vcfsToMerge = vcfsToMerge.view {
 process ConcatVCF {
   tag {variantCaller + "_" + idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir "${params.outDir}/${directoryMap."$variantCaller"}", mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap."$variantCaller"}", mode: 'link'
 
   input:
     set variantCaller, idPatient, idSampleNormal, idSampleTumor, file(vcFiles) from vcfsToMerge
@@ -494,7 +494,7 @@ if (params.verbose) vcfConcatenated = vcfConcatenated.view {
 process RunStrelka {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir "${params.outDir}/${directoryMap.strelka}", mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.strelka}", mode: 'link'
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForStrelka
@@ -540,7 +540,7 @@ if (params.verbose) strelkaOutput = strelkaOutput.view {
 process RunManta {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir "${params.outDir}/${directoryMap.manta}", mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.manta}", mode: 'link'
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
@@ -593,7 +593,7 @@ if (params.verbose) mantaOutput = mantaOutput.view {
 process RunSingleManta {
   tag {idSample + " - Tumor-Only"}
 
-  publishDir "${params.outDir}/${directoryMap.manta}", mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.manta}", mode: 'link'
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleManta
@@ -686,7 +686,7 @@ alleleCountOutput = alleleCountOutput.map {
 process RunConvertAlleleCounts {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir "${params.outDir}/${directoryMap.ascat}", mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.ascat}", mode: 'link'
 
   input:
     set idPatient, idSampleNormal, idSampleTumor, file(alleleCountNormal), file(alleleCountTumor) from alleleCountOutput
@@ -708,7 +708,7 @@ process RunConvertAlleleCounts {
 process RunAscat {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir "${params.outDir}/${directoryMap.ascat}", mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.ascat}", mode: 'link'
 
   input:
     set idPatient, idSampleNormal, idSampleTumor, file(bafNormal), file(logrNormal), file(bafTumor), file(logrTumor) from convertAlleleCountsOutput
@@ -760,7 +760,7 @@ vcfForBCFtools = Channel.empty().mix(
 process RunBcftoolsStats {
   tag {vcf}
 
-  publishDir "${params.outDir}/${directoryMap.bcftoolsStats}", mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.bcftoolsStats}", mode: 'link'
 
   input:
     set variantCaller, file(vcf) from vcfForBCFtools

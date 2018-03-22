@@ -147,7 +147,7 @@ if (params.verbose) bamFiles = bamFiles.view {
 process RunFastQC {
   tag {idPatient + "-" + idRun}
 
-  publishDir "${params.outDir}/${directoryMap.fastQC}/${idRun}", mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.fastQC}/${idRun}", mode: 'link'
 
   input:
     set idPatient, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFilesforFastQC
@@ -249,7 +249,7 @@ if (params.verbose) mergedBam = mergedBam.view {
 process MarkDuplicates {
   tag {idPatient + "-" + idSample}
 
-  publishDir params.outDir, saveAs: { it == "${bam}.metrics" ? "${directoryMap.markDuplicatesQC}/${it}" : "${directoryMap.nonRealigned}/${it}" }, mode: 'copy'
+  publishDir params.outDir, saveAs: { it == "${bam}.metrics" ? "${directoryMap.markDuplicatesQC}/${it}" : "${directoryMap.nonRealigned}/${it}" }, mode: 'link'
 
   input:
     set idPatient, status, idSample, file(bam) from mergedBam
@@ -429,7 +429,7 @@ if (params.verbose) realignedBam = realignedBam.view {
 process CreateRecalibrationTable {
   tag {idPatient + "-" + idSample}
 
-  publishDir "${params.outDir}/${directoryMap.nonRecalibrated}", mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.nonRecalibrated}", mode: 'link'
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from realignedBam
@@ -496,7 +496,7 @@ recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
 process RecalibrateBam {
   tag {idPatient + "-" + idSample}
 
-  publishDir "${params.outDir}/${directoryMap.recalibrated}", mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.recalibrated}", mode: 'link'
 
   input:
     set idPatient, status, idSample, file(bam), file(bai), file(recalibrationReport) from recalibrationTable
@@ -544,7 +544,7 @@ if (params.verbose) recalibratedBam = recalibratedBam.view {
 process RunSamtoolsStats {
   tag {idPatient + "-" + idSample}
 
-  publishDir "${params.outDir}/${directoryMap.samtoolsStats}", mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.samtoolsStats}", mode: 'link'
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamForSamToolsStats
@@ -568,7 +568,7 @@ if (params.verbose) samtoolsStatsReport = samtoolsStatsReport.view {
 process RunBamQC {
   tag {idPatient + "-" + idSample}
 
-  publishDir "${params.outDir}/${directoryMap.bamQC}", mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.bamQC}", mode: 'link'
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC

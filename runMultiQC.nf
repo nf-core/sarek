@@ -68,7 +68,7 @@ reports = !params.noReports
 startMessage()
 
 process GenerateMultiQCconfig {
-  publishDir "${params.outDir}/${directoryMap.multiQC}", mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.multiQC}", mode: 'link'
 
   input:
 
@@ -115,7 +115,7 @@ reportsForMultiQC = Channel.empty()
   ).collect()
 
 process RunMultiQC {
-  publishDir "${params.outDir}/${directoryMap.multiQC}", mode: 'copy'
+  publishDir "${params.outDir}/${directoryMap.multiQC}", mode: 'link'
 
   input:
     file ('*') from reportsForMultiQC

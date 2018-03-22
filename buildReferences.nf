@@ -165,8 +165,11 @@ ch_decompressedFiles
     it =~ ".fasta" ? 0 :
     it =~ ".vcf" ? 1 : 2}
 
+(ch_fastaFile, ch_fastaFileToKeep) = ch_fastaFile.into(2)
+(ch_vcfFiles, ch_vcfFilesToKeep) = ch_vcfFiles.into(2)
+
 ch_notCompressedfiles
-  .mix(ch_otherFiles)
+  .mix(ch_otherFiles, ch_fastaFileToKeep, ch_vcfFilesToKeep)
   .collectFile(storeDir: params.outDir)
 
 ch_fastaForBWA = Channel.create()
@@ -178,13 +181,12 @@ ch_fastaFile.into(ch_fastaForBWA,ch_fastaForPicard,ch_fastaForSAMTools)
 process BuildBWAindexes {
   tag {f_reference}
 
-  publishDir params.outDir, mode: 'copy'
+  publishDir params.outDir, mode: 'link'
 
   input:
     file(f_reference) from ch_fastaForBWA
 
   output:
-    file(f_reference) into ch_fastaFileToKeep
     file("*.{amb,ann,bwt,pac,sa}") into bwaIndexes
 
   script:
@@ -194,9 +196,6 @@ process BuildBWAindexes {
   """
 }
 
-if (params.verbose) ch_fastaFileToKeep.view {
-  "Fasta File          : ${it.fileName}"
-}
 if (params.verbose) bwaIndexes.flatten().view {
   "BWA index           : ${it.fileName}"
 }
@@ -204,7 +203,7 @@ if (params.verbose) bwaIndexes.flatten().view {
 process BuildPicardIndex {
   tag {f_reference}
 
-  publishDir params.outDir, mode: 'copy'
+  publishDir params.outDir, mode: 'link'
 
   input:
     file(f_reference) from ch_fastaForPicard
@@ -229,7 +228,7 @@ if (params.verbose) ch_picardIndex.view {
 process BuildSAMToolsIndex {
   tag {f_reference}
 
-  publishDir params.outDir, mode: 'copy'
+  publishDir params.outDir, mode: 'link'
 
   input:
     file(f_reference) from ch_fastaForSAMTools
@@ -250,13 +249,13 @@ if (params.verbose) ch_samtoolsIndex.view {
 process BuildVCFIndex {
   tag {f_reference}
 
-  publishDir params.outDir, mode: 'copy'
+  publishDir params.outDir, mode: 'link'
 
   input:
     file(f_reference) from ch_vcfFiles
 
   output:
-    set file(f_reference), file("${f_reference}.idx") into ch_vcfIndex
+    set file("${f_reference}.idx") into ch_vcfIndex
 
   script:
   """
@@ -266,7 +265,6 @@ process BuildVCFIndex {
 
 if (params.verbose) ch_vcfIndex.view {
   "VCF indexed:\n\
-  VCF File          : ${it[0].fileName}\n\
   VCF index         : ${it[1].fileName}"
 }
 
