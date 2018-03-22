@@ -7,7 +7,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 =                                 S  A  R  E  K                                =
 ================================================================================
-New Germline (+ Somatic) Analysis Workflow. Started March 2016.
+ New Germline (+ Somatic) Analysis Workflow. Started March 2016.
 --------------------------------------------------------------------------------
  @Authors
  Sebastian DiLorenzo <sebastian.dilorenzo@bils.se> [@Sebastian-D]
