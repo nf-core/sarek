@@ -108,7 +108,7 @@ vcfNotToAnnotate.close()
 process RunBcftoolsStats {
   tag {vcf}
 
-  publishDir "${params.outDir}/${directoryMap.bcftoolsStats}", mode: 'link'
+  publishDir directoryMap.bcftoolsStats, mode: 'link'
 
   input:
     set variantCaller, file(vcf) from vcfForBCFtools
@@ -132,7 +132,7 @@ if (params.verbose) bcfReport = bcfReport.view {
 process RunSnpeff {
   tag {vcf}
 
-  publishDir "${params.outDir}/${directoryMap.snpeff}", mode: 'link'
+  publishDir directoryMap.snpeff, mode: 'link'
 
   input:
     set variantCaller, file(vcf) from vcfForSnpeff
@@ -167,7 +167,7 @@ if (params.verbose) snpeffReport = snpeffReport.view {
 process RunVEP {
   tag {vcf}
 
-  publishDir "${params.outDir}/${directoryMap.vep}", mode: 'link'
+  publishDir directoryMap.vep, mode: 'link'
 
   input:
     set variantCaller, file(vcf) from vcfForVep
@@ -219,9 +219,9 @@ def checkUppmaxProject() {
 
 def defineDirectoryMap() {
   return [
-    'bcftoolsStats'    : 'Reports/BCFToolsStats',
-    'snpeff'           : 'Annotation/SnpEff',
-    'vep'              : 'Annotation/VEP'
+    'bcftoolsStats'    : "${params.outDir}/Reports/BCFToolsStats",
+    'snpeff'           : "${params.outDir}/Annotation/SnpEff",
+    'vep'              : "${params.outDir}/Annotation/VEP"
   ]
 }
 
