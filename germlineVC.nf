@@ -67,10 +67,6 @@ tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} 
 directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
 toolList = defineToolList()
-nucleotidesPerSecond = 1000.0 // used to estimate variant calling runtime
-gvcf = !params.noGVCF
-reports = !params.noReports
-onlyQC = params.onlyQC
 
 if (!checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
 if (!checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
@@ -88,7 +84,7 @@ if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
 
 tsvPath = ''
 if (params.sample) tsvPath = params.sample
-else tsvPath = "${params.outDir}/${directoryMap.recalibrated}/recalibrated.tsv"
+else tsvPath = "${directoryMap.recalibrated}/recalibrated.tsv"
 
 // Set up the bamFiles channel
 
@@ -130,7 +126,7 @@ if (params.verbose) recalibratedBam = recalibratedBam.view {
 process RunSamtoolsStats {
   tag {idPatient + "-" + idSample}
 
-  publishDir "${params.outDir}/${directoryMap.samtoolsStats}", mode: 'link'
+  publishDir directoryMap.samtoolsStats, mode: 'link'
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamForSamToolsStats
@@ -138,7 +134,7 @@ process RunSamtoolsStats {
   output:
     file ("${bam}.samtools.stats.out") into samtoolsStatsReport
 
-  when: reports
+  when: !params.noReports
 
   script:
   """
@@ -154,7 +150,7 @@ if (params.verbose) samtoolsStatsReport = samtoolsStatsReport.view {
 process RunBamQC {
   tag {idPatient + "-" + idSample}
 
-  publishDir "${params.outDir}/${directoryMap.bamQC}", mode: 'link'
+  publishDir directoryMap.bamQC, mode: 'link'
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC
@@ -162,7 +158,7 @@ process RunBamQC {
   output:
     file("${idSample}") into bamQCreport
 
-  when: reports && !params.noBAMQC
+  when: !params.noReports && !params.noBAMQC
 
   script:
   """
@@ -234,7 +230,7 @@ process CreateIntervalBeds {
       t = \$5  # runtime estimate
       if (t == "") {
         # no runtime estimate in this row, assume default value
-        t = (\$3 - \$2) / ${nucleotidesPerSecond}
+        t = (\$3 - \$2) / ${params.nucleotidesPerSecond}
       }
       if (name == "" || (chunk > 600 && (chunk + t) > longest * 1.05)) {
         # start a new chunk
@@ -266,7 +262,7 @@ bedIntervals = bedIntervals
       else {
         start = fields[1].toInteger()
         end = fields[2].toInteger()
-        duration += (end - start) / nucleotidesPerSecond
+        duration += (end - start) / params.nucleotidesPerSecond
       }
     }
     [duration, intervalFile]
@@ -329,7 +325,7 @@ process RunHaplotypecaller {
     set val("gvcf-hc"), idPatient, idSample, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf") into hcGenomicVCF
     set idPatient, idSample, file(intervalBed), file("${intervalBed.baseName}_${idSample}.g.vcf") into vcfsToGenotype
 
-  when: 'haplotypecaller' in tools && !onlyQC
+  when: 'haplotypecaller' in tools && !params.onlyQC
 
   script:
   BQSR = (recalTable != null) ? "--BQSR $recalTable" : ''
@@ -350,7 +346,7 @@ process RunHaplotypecaller {
 }
 hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3])
 
-if (!gvcf) hcGenomicVCF.close()
+if (params.noGVCF) hcGenomicVCF.close()
 
 process RunGenotypeGVCFs {
   tag {idSample + "-" + intervalBed.baseName}
@@ -368,7 +364,7 @@ process RunGenotypeGVCFs {
   output:
     set val("haplotypecaller"), idPatient, idSample, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into hcGenotypedVCF
 
-  when: 'haplotypecaller' in tools && !onlyQC
+  when: 'haplotypecaller' in tools && !params.onlyQC
 
   script:
   // Using -L is important for speed
@@ -399,7 +395,7 @@ if (params.verbose) vcfsToMerge = vcfsToMerge.view {
 process ConcatVCF {
   tag {variantCaller + "-" + idSampleNormal}
 
-  publishDir "${params.outDir}/${directoryMap."$variantCaller"}", mode: 'link'
+  publishDir "${directoryMap."$variantCaller"}", mode: 'link'
 
   input:
     set variantCaller, idPatient, idSampleNormal, idSampleTumor, file(vcFiles) from vcfsToMerge
@@ -409,7 +405,7 @@ process ConcatVCF {
     set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz") into vcfConcatenated
     file("*.vcf.gz.tbi") into vcfConcatenatedTbi
 
-  when: ( 'haplotypecaller' in tools || 'mutect1' in tools || 'mutect2' in tools || 'freebayes' in tools ) && !onlyQC
+  when: ( 'haplotypecaller' in tools || 'mutect1' in tools || 'mutect2' in tools || 'freebayes' in tools ) && !params.onlyQC
 
   script:
   if (variantCaller == 'haplotypecaller') outputFile = "${variantCaller}_${idSampleNormal}.vcf"
@@ -467,7 +463,7 @@ if (params.verbose) vcfConcatenated = vcfConcatenated.view {
 process RunSingleStrelka {
   tag {idSample}
 
-  publishDir "${params.outDir}/${directoryMap.strelka}", mode: 'link'
+  publishDir directoryMap.strelka, mode: 'link'
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleStrelka
@@ -479,7 +475,7 @@ process RunSingleStrelka {
   output:
     set val("singlestrelka"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleStrelkaOutput
 
-  when: 'strelka' in tools && !onlyQC
+  when: 'strelka' in tools && !params.onlyQC
 
   script:
   """
@@ -511,7 +507,7 @@ if (params.verbose) singleStrelkaOutput = singleStrelkaOutput.view {
 process RunSingleManta {
   tag {idSample + " - Single Diploid"}
 
-  publishDir "${params.outDir}/${directoryMap.manta}", mode: 'link'
+  publishDir directoryMap.manta, mode: 'link'
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleManta
@@ -523,7 +519,7 @@ process RunSingleManta {
   output:
     set val("singlemanta"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleMantaOutput
 
-  when: 'manta' in tools && status == 0 && !onlyQC
+  when: 'manta' in tools && status == 0 && !params.onlyQC
 
   script:
   """
@@ -569,7 +565,7 @@ vcfForBCFtools = Channel.empty().mix(
 process RunBcftoolsStats {
   tag {vcf}
 
-  publishDir "${params.outDir}/${directoryMap.bcftoolsStats}", mode: 'link'
+  publishDir directoryMap.bcftoolsStats, mode: 'link'
 
   input:
     set variantCaller, file(vcf) from vcfForBCFtools
@@ -577,7 +573,7 @@ process RunBcftoolsStats {
   output:
     file ("${vcf.baseName}.bcf.tools.stats.out") into bcfReport
 
-  when: reports
+  when: !params.noReports
 
   script:
   """
@@ -660,18 +656,18 @@ def checkExactlyOne(list) {
 
 def defineDirectoryMap() {
   return [
-    'recalibrated'     : 'Preprocessing/Recalibrated',
-    'bamQC'            : 'Reports/bamQC',
-    'bcftoolsStats'    : 'Reports/BCFToolsStats',
-    'samtoolsStats'    : 'Reports/SamToolsStats',
-    'ascat'            : 'VariantCalling/Ascat',
-    'freebayes'        : 'VariantCalling/FreeBayes',
-    'haplotypecaller'  : 'VariantCalling/HaplotypeCaller',
-    'gvcf-hc'          : 'VariantCalling/HaplotypeCallerGVCF',
-    'manta'            : 'VariantCalling/Manta',
-    'mutect1'          : 'VariantCalling/MuTect1',
-    'mutect2'          : 'VariantCalling/MuTect2',
-    'strelka'          : 'VariantCalling/Strelka'
+    'recalibrated'     : "${params.outDir}/Preprocessing/Recalibrated",
+    'bamQC'            : "${params.outDir}/Reports/bamQC",
+    'bcftoolsStats'    : "${params.outDir}/Reports/BCFToolsStats",
+    'samtoolsStats'    : "${params.outDir}/Reports/SamToolsStats",
+    'ascat'            : "${params.outDir}/VariantCalling/Ascat",
+    'freebayes'        : "${params.outDir}/VariantCalling/FreeBayes",
+    'haplotypecaller'  : "${params.outDir}/VariantCalling/HaplotypeCaller",
+    'gvcf-hc'          : "${params.outDir}/VariantCalling/HaplotypeCallerGVCF",
+    'manta'            : "${params.outDir}/VariantCalling/Manta",
+    'mutect1'          : "${params.outDir}/VariantCalling/MuTect1",
+    'mutect2'          : "${params.outDir}/VariantCalling/MuTect2",
+    'strelka'          : "${params.outDir}/VariantCalling/Strelka"
   ]
 }
 
