@@ -56,9 +56,6 @@ if (!MyUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for mo
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
 directoryMap = defineDirectoryMap()
-
-reports = !params.noReports
-
 /*
 ================================================================================
 =                               P R O C E S S E S                              =
@@ -68,14 +65,14 @@ reports = !params.noReports
 startMessage()
 
 process GenerateMultiQCconfig {
-  publishDir "${params.outDir}/${directoryMap.multiQC}", mode: 'link'
+  publishDir directoryMap.multiQC, mode: 'link'
 
   input:
 
   output:
   file("multiqc_config.yaml") into multiQCconfig
 
-  when: reports
+  when: !params.noReports
 
   script:
   """
@@ -99,23 +96,23 @@ process GenerateMultiQCconfig {
   """
 }
 
-if (params.verbose && reports) multiQCconfig = multiQCconfig.view {
+if (params.verbose && !params.noReports) multiQCconfig = multiQCconfig.view {
   "MultiQC config:\n\
   File  : [${it.fileName}]"
 }
 
 reportsForMultiQC = Channel.empty()
   .mix(
-    Channel.fromPath("${params.outDir}/Reports/bamQC/*", type: 'dir'),
-    Channel.fromPath("${params.outDir}/Reports/BCFToolsStats/*"),
-    Channel.fromPath("${params.outDir}/Reports/FastQC/*/*"),
-    Channel.fromPath("${params.outDir}/Reports/MarkDuplicates/*"),
-    Channel.fromPath("${params.outDir}/Reports/SamToolsStats/*"),
+    Channel.fromPath("${directoryMap.bamQC}/*", type: 'dir'),
+    Channel.fromPath("${directoryMap.bcftoolsStats}/*"),
+    Channel.fromPath("${directoryMap.fastQC}/*/*"),
+    Channel.fromPath("${directoryMap.markDuplicatesQC}/*"),
+    Channel.fromPath("${directoryMap.samtoolsStats}/*"),
     multiQCconfig
   ).collect()
 
 process RunMultiQC {
-  publishDir "${params.outDir}/${directoryMap.multiQC}", mode: 'link'
+  publishDir directoryMap.multiQC, mode: 'link'
 
   input:
     file ('*') from reportsForMultiQC
@@ -123,7 +120,7 @@ process RunMultiQC {
   output:
     set file("*multiqc_report.html"), file("*multiqc_data") into multiQCReport
 
-  when: reports
+  when: !params.noReports
 
   script:
   """
@@ -164,7 +161,12 @@ def checkUppmaxProject() {
 
 def defineDirectoryMap() {
   return [
-    'multiQC'          : 'Reports/MultiQC'
+    'bamQC'            : "${params.outDir}/Reports/bamQC",
+    'bcftoolsStats'    : "${params.outDir}/Reports/BCFToolsStats",
+    'fastQC'           : "${params.outDir}/Reports/FastQC",
+    'markDuplicatesQC' : "${params.outDir}/Reports/MarkDuplicates",
+    'multiQC'          : "${params.outDir}/Reports/MultiQC",
+    'samtoolsStats'    : "${params.outDir}/Reports/SamToolsStats"
   ]
 }
 
