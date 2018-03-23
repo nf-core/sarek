@@ -145,15 +145,6 @@ def sarekMessage() {
   log.info "Sarek ~ ${params.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
 }
 
-def checkParameterExistence(it, list) {
-  // Check parameter existence
-  if (!list.contains(it)) {
-    println("Unknown parameter: ${it}")
-    return false
-  }
-  return true
-}
-
 def checkUppmaxProject() {
   // check if UPPMAX project number is specified
   return !(workflow.profile == 'slurm' && !params.project)

@@ -618,11 +618,6 @@ def checkParameterExistence(it, list) {
   return true
 }
 
-def checkParameterList(list, realList) {
-  // Loop through all parameters to check their existence and spelling
-  return list.every{ checkParameterExistence(it, realList) }
-}
-
 def checkParamReturnFile(item) {
   params."${item}" = params.genomes[params.genome]."${item}"
   return file(params."${item}")

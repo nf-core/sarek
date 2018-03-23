@@ -648,12 +648,6 @@ def checkUppmaxProject() {
   return !(workflow.profile == 'slurm' && !params.project)
 }
 
-def checkExactlyOne(list) {
-  final n = 0
-  list.each{n += it ? 1 : 0}
-  return n == 1
-}
-
 def defineDirectoryMap() {
   return [
     'recalibrated'     : "${params.outDir}/Preprocessing/Recalibrated",
@@ -738,7 +732,6 @@ def extractGenders(channel) {
 }
 
 def generateIntervalsForVC(bams, intervals) {
-
   def (bamsNew, bamsForVC) = bams.into(2)
   def (intervalsNew, vcIntervals) = intervals.into(2)
   def bamsForVCNew = bamsForVC.combine(vcIntervals)

@@ -834,12 +834,6 @@ def checkRefExistence(referenceFile, fileToCheck) {
   return true
 }
 
-def checkExactlyOne(list) {
-  final n = 0
-  list.each{n += it ? 1 : 0}
-  return n == 1
-}
-
 def checkUppmaxProject() {
   // check if UPPMAX project number is specified
   return !(workflow.profile == 'slurm' && !params.project)
