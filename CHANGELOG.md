@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - New logo and icon for the project
 - check for existing tumor/normal channel
 - `--more` to get the current version of the workflow
-- `lib/MyUtils.groovy` with `checkParams`, `checkParameterList`, `checkParameterExistence` and `isAllowedParams` functions
+- `lib/SarekUtils.groovy` with `checkParams`, `checkParameterList`, `checkParameterExistence` and `isAllowedParams` functions
 - some `runOptions` for `docker` (prevent some user right problem)
 - This `CHANGELOG`
 
@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `--version` is now used to define the workflow version
 - most params are now defined in the base.config file instead of in the scripts
 - update RELEASE_CHECKLIST.md
-- `checkParams`, `checkParameterList`, `checkParameterExistence` and `isAllowedParams` in script functions are now called within `MyUtils`
+- `checkParams`, `checkParameterList`, `checkParameterExistence` and `isAllowedParams` in script functions are now called within `SarekUtils`
 - `nf_required_version` is now `params.nfRequiredVersion`
 - in `buildReferences.nf` script, channels now begin by `ch_`, and files by `f_`
 - use `PublishDir mode: 'link'`` instead of `copy`

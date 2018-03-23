@@ -56,7 +56,7 @@ try {
 
 if (params.help) exit 0, helpMessage()
 if (params.more) exit 0, moreMessage()
-if (!MyUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
+if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
 if (!params.download && params.refDir == "" ) exit 1, "No --refDir specified"
