@@ -55,10 +55,10 @@ The following tutorial explain how to run Sarek on a small dataset using a small
 > nextflow run SciLifeLab/Sarek/buildReferences.nf --download --genome smallGRCh37 -profile docker
 
 # Test Sarek on a test tiny set using Singularity
-> nextflow run SciLifeLab/Sarek --test --genome smallGRCh37 --noReports -profile singularity
+> nextflow run SciLifeLab/Sarek/main.nf --test --genome smallGRCh37 --noReports -profile singularity
 
 # Or test Sarek on a test tiny set using Docker
-> nextflow run SciLifeLab/Sarek --test --genome smallGRCh37 --noReports -profile docker
+> nextflow run SciLifeLab/Sarek/main.nf --test --genome smallGRCh37 --noReports -profile docker
 ```
 
 ## Update

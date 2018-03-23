@@ -1,6 +1,6 @@
 # Genomes and reference files
 
-CAW currently uses GRCh38 by default. The settings are in `genomes.config`, they can be tailored to your needs. The [`buildReferences.nf`](#buildreferencesnf) script can be use to build the indexes based on the reference files.
+Sarek currently uses GRCh38 by default. The settings are in `genomes.config`, they can be tailored to your needs. The [`buildReferences.nf`](#buildreferencesnf) script can be use to build the indexes based on the reference files.
 
 ## GRCh37
 
@@ -21,18 +21,13 @@ The following files need to be downloaded:
 
 From our repo, get the [`intervals` list file](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/repeats/wgs_calling_regions.grch37.list). More information about this file in the [intervals documentation](INTERVALS.md)
 
-The rest of the references files are stored in in [export.uppmax.uu.se](https://export.uppmax.uu.se/b2015110/caw-references/b37/) and also on the repository [CAW-References](https://github.com/MaxUlysse/CAW-References) using [GIT-LFS](https://git-lfs.github.com/):
-
-- '1000G\_phase3\_20130502\_SNP\_maf0.3.loci'
-- 'b37\_cosmic\_v74.noCHR.sort.4.1.vcf'
-
 You can create your own cosmic reference for any human reference as specified below.
 
 ### COSMIC files
 
-To annotate with COSMIC variants during MuTect1/2 Variant Calling you need to create a compatible VCF file. 
-Download the coding and non-coding VCF files from [COSMIC](http://cancer.sanger.ac.uk/cosmic/download) and 
-process them with the [Create\_Cosmic.sh](https://github.com/SciLifeLab/Sarek/tree/master/scripts/Create_Cosmic.sh) 
+To annotate with COSMIC variants during MuTect1/2 Variant Calling you need to create a compatible VCF file.
+Download the coding and non-coding VCF files from [COSMIC](http://cancer.sanger.ac.uk/cosmic/download) and
+process them with the [Create\_Cosmic.sh](https://github.com/SciLifeLab/Sarek/tree/master/scripts/Create_Cosmic.sh)
 script. The script requires a fasta index `.fai`, of the reference file you are using.
 
 Example:
@@ -54,7 +49,7 @@ igvtools index <cosmicvxx.vcf>
 
 Use `--genome GRCh38` to map against GRCh38. Before doing so and if you are not on UPPMAX, you need to adjust the settings in `genomes.config` to your needs.
 
-To get the needed files, download the GATK bundle for GRCh38 from [ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/hg38/](mailto:ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/hg38/).
+To get the needed files, download the GATK bundle for GRCh38 from [ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/hg38/](ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/hg38/).
 
 The MD5SUM of `Homo_sapiens_assembly38.fasta` included in that file is 7ff134953dcca8c8997453bbb80b6b5e.
 
@@ -93,10 +88,10 @@ nextflow run buildReferences.nf --refDir <path to smallRef> --genome <genome>
 
 ### `--genome`
 
-Same parameter used for `main.nf`
+Same parameter used for other scripts.
 
 - GRCh37
-- GRCh38 
+- GRCh38 (not yet available)
 - smallGRCh37
 
 --------------------------------------------------------------------------------

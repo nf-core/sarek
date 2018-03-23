@@ -1,6 +1,7 @@
 # Workflow processes
 
-Several processes are run within the workflow. We divide them for the moment into 5 main steps:
+Several processes are run within the workflow.
+We divide them for the moment into 5 main steps:
 
 ## Preprocessing:
 
@@ -40,7 +41,6 @@ Several processes are run within the workflow. We divide them for the moment int
 - RunFastQC - Run FastQC for QC on fastq files
 - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files
 - RunBamQC - Run qualimap BamQC on recalibrated BAM files
-- RunBcftoolsStats - Run BCFTools stats on vcf before annotation
 - RunBcftoolsStats - Run BCFTools stats on vcf files
 
 ## Annotation:

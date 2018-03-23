@@ -12,6 +12,8 @@ It's a Tab Separated Value file, based on: `subject gender status sample lane fa
 - `bam` is the bam file
 - `bai` is the index
 
+All examples are given for a normal/tumor pair. If no tumors are listed in the TSV file, then the workflow will proceed as if it was a single normal sample instead of a normal/tumor pair.
+
 # Example TSV file for a normal/tumor pair with FASTQ files
 
 In this sample for the normal case there are 3 read groups, and 2 for the tumor. It is recommended to add the absolute path of the paired FASTQ files, but relative path should work also. Note, the delimiter is the tab (\t) character:
@@ -36,7 +38,8 @@ G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.md.real.bam pathToFiles
 All the files will be created in the Preprocessing/NonRealigned/ directory, and by default a corresponding TSV file will also be deposited there. Generally, getting MuTect1 and Strelka calls on the preprocessed files should be done by:
 
 ```bash
-nextflow run SciLifeLab/Sarek --sample Preprocessing/NonRealigned/mysample.tsv --step realign --tools Mutect2,Strelka
+nextflow run SciLifeLab/Sarek/main.nf --sample Preprocessing/NonRealigned/mysample.tsv --step realign
+nextflow run SciLifeLab/Sarek/somaticVC.nf --sample Preprocessing/Recalibrated/mysample.tsv --tools Mutect2,Strelka
 ```
 
 # Example TSV file for a normal/tumor pair with recalibrated BAM files
@@ -51,7 +54,7 @@ G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.md.real.bam    pathToFi
 All the files will be in he Preprocessing/Recalibrated/ directory, and by default a corresponding TSV file will also be deposited there. Generally, getting MuTect1 and Strelka calls on the recalibrated files should be done by:
 
 ```bash
-nextflow run SciLifeLab/Sarek --sample Preprocessing/Recalibrated/mysample.tsv --step variantcalling --tool Mutect2,Strelka
+nextflow run SciLifeLab/Sarek/somaticVC.nf --sample Preprocessing/Recalibrated/mysample.tsv --tools Mutect2,Strelka
 ```
 
 --------------------------------------------------------------------------------

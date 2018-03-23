@@ -9,7 +9,7 @@ Sarek use Singularity containers to package all the different tools.
 
 As `bianca` is secure, no direct download is available, so Sarek and the Singularity containers will have to be installed and updated manually.
 
-You can either download Sarek and the containers on your computer or on `rackham`, make an archive, and send it to `bianca` using `FileZilla` or `sftp` given your preferences.
+You can either download Sarek and the containers on your computer (you will need Nextflow and Singularity for that) or on `rackham`, make an archive, and send it to `bianca` using `FileZilla` or `sftp` given your preferences.
 
 All Reference files are already stored in `bianca`.
 
@@ -38,7 +38,7 @@ Wrote Sarek-[snapID].tar.gz
 
 # To get the containers
 # This script will need Singularity and Nextflow installed
-> ./scripts/do_all.sh --pull
+> ./scripts/do_all.sh --pull --tag <VERSION>
 
 # Send the containers to bianca using the same method
 # They will be in the containers/ directory as .img files
@@ -81,7 +81,7 @@ The principle is to have every member of your project to be able to use the same
 And then Sarek can be used with:
 
 ```bash
-> nextflow run ~/Sarek/main.nf ...
+> nextflow run ~/Sarek/main.nf -profile slurm --project [PROJECT] ...
 ```
 
 ## Update Sarek
