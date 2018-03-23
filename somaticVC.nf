@@ -63,7 +63,6 @@ try {
 }
 
 if (params.help) exit 0, helpMessage()
-if (params.more) exit 0, moreMessage()
 if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
@@ -785,11 +784,6 @@ bcfReport.close()
 ================================================================================
 */
 
-def sarekMessage() {
-  // Display Sarek message
-  log.info "Sarek ~ ${params.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
-}
-
 def checkFileExtension(it, extension) {
   // Check file extension
   if (!it.toString().toLowerCase().endsWith(extension.toLowerCase())) exit 1, "File: ${it} has the wrong extension: ${extension} see --help for more information"
@@ -995,8 +989,6 @@ def helpMessage() {
   log.info "       you're reading it"
   log.info "    --verbose"
   log.info "       Adds more verbosity to workflow"
-  log.info "    --more"
-  log.info "       displays version number"
 }
 
 def minimalInformationMessage() {
@@ -1053,17 +1045,15 @@ def returnTSV(it, number) {
   return it
 }
 
+def sarekMessage() {
+  // Display Sarek message
+  log.info "Sarek - Workflow For Somatic And Germline Variations ~ ${params.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
+}
+
 def startMessage() {
   // Display start message
   this.sarekMessage()
   this.minimalInformationMessage()
-}
-
-def moreMessage() {
-  // Display version message
-  log.info "Sarek"
-  log.info "  version   : " + params.version
-  log.info workflow.commitId ? "Git info    : ${workflow.repository} - ${workflow.revision} [${workflow.commitId}]" : "  revision  : " + this.grabRevision()
 }
 
 workflow.onComplete {

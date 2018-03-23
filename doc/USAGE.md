@@ -94,10 +94,6 @@ Choose vcf to annotate. Different vcfs to be separated by commas.
 
 Display more information about files being processed.
 
-### --more
-
-Display version number and information.
-
 ## Containers
 
 ### --containerPath `Path to the singularity containers (default=containers/)`

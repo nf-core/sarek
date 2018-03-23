@@ -14,7 +14,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - ROI selector and FreeBayes sanitizer scripts
 - New logo and icon for the project
 - check for existing tumor/normal channel
-- `--more` to get the current version of the workflow
 - `lib/SarekUtils.groovy` with `checkParams`, `checkParameterList`, `checkParameterExistence` and `isAllowedParams` functions
 - some `runOptions` for `docker` (prevent some user right problem)
 - This `CHANGELOG`

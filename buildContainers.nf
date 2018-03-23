@@ -52,7 +52,6 @@ try {
 }
 
 if (params.help) exit 0, helpMessage()
-if (params.more) exit 0, moreMessage()
 if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
@@ -150,11 +149,6 @@ if (params.verbose) containersPushed = containersPushed.view {
 ================================================================================
 */
 
-def sarekMessage() {
-  // Display Sarek message
-  log.info "Sarek ~ ${params.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
-}
-
 def checkContainerExistence(container, list) {
   try {assert list.contains(container)}
   catch (AssertionError ae) {
@@ -232,8 +226,6 @@ def helpMessage() {
   log.info "       Default: \$PWD"
   log.info "    --tag`: Choose the tag for the containers"
   log.info "       Default (version number): " + params.version
-  log.info "    --more"
-  log.info "       displays version number and more informations"
 }
 
 def minimalInformationMessage() {
@@ -253,17 +245,15 @@ def nextflowMessage() {
   log.info "N E X T F L O W  ~  version ${workflow.nextflow.version} ${workflow.nextflow.build}"
 }
 
+def sarekMessage() {
+  // Display Sarek message
+  log.info "Sarek ~ ${params.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
+}
+
 def startMessage() {
   // Display start message
   this.sarekMessage()
   this.minimalInformationMessage()
-}
-
-def moreMessage() {
-  // Display version message
-  log.info "Sarek - Workflow For Somatic And Germline Variations"
-  log.info "  version   : " + params.version
-  log.info workflow.commitId ? "Git info    : ${workflow.repository} - ${workflow.revision} [${workflow.commitId}]" : "  revision  : " + this.grabRevision()
 }
 
 workflow.onComplete {
