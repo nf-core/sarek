@@ -16,7 +16,7 @@ This checklist is for our own reference
   - `./scripts/test.sh -p singularity --tag <VERSION>`
   - `./scripts/test.sh -p singularityPath --tag <VERSION>`
 6. Commit and push version updates
-7. Make a [release](https://github.com/SciLifeLab/Sarek/releases) on GitHub - list PRs as changelog.
+7. Make a [release](https://github.com/SciLifeLab/Sarek/releases) on GitHub
 8. Tweet that new version is released
 9. Commit and push. Continue making more awesome :metal:
 10. Have fika :cake:
