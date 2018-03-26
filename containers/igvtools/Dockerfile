@@ -23,6 +23,3 @@ RUN \
   && unzip igvtools_${IGVTOOLS_VERSION}.zip \
   && rm igvtools_${IGVTOOLS_VERSION}.zip \
   && mv IGVTools $IGVTOOLS_HOME
-
-# Create UPPMAX directories
-RUN mkdir /pica /proj /scratch /sw

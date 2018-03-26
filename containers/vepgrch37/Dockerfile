@@ -1,4 +1,4 @@
-FROM willmclaren/ensembl-vep:release_90.6
+FROM willmclaren/ensembl-vep:release_92
 
 LABEL \
   author="Maxime Garcia" \
@@ -8,7 +8,7 @@ LABEL \
 # Setup ENV variables
 ENV \
   GENOME=GRCh37 \
-  VEP_VERSION=90
+  VEP_VERSION=91
 
 # Download Genome
 RUN \
@@ -18,7 +18,3 @@ RUN \
     ftp://ftp.ensembl.org/pub/release-${VEP_VERSION}/variation/VEP/homo_sapiens_vep_${VEP_VERSION}_${GENOME}.tar.gz \
   && tar xzf homo_sapiens_vep_${VEP_VERSION}_${GENOME}.tar.gz \
   && rm homo_sapiens_vep_${VEP_VERSION}_${GENOME}.tar.gz
-
-# Create UPPMAX directories
-USER root
-RUN mkdir /pica /proj /scratch /sw

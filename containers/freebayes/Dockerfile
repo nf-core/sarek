@@ -28,6 +28,3 @@ RUN \
   && make install \
   && cd .. \
 && rm -rf freebayes
-
-# Create UPPMAX directories
-RUN mkdir /pica /proj /scratch /sw

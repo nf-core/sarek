@@ -66,14 +66,14 @@ For more information, follow the [reference files documentation](REFERENCES.md).
 
 ## Use Sarek with slurm
 
-To use Sarek on rackham you will need to use the `slurm` profile.
+To use Sarek on rackham you will need to use the `slurmDownload` profile.
 
 ```bash
 # Connect to rackham
 > ssh -AX [USER]@rackham.uppmax.uu.se
 
 # Run the workflow directly on the login node
-> nextflow run SciLifeLab/Sarek --sample [FILE.TSV] --genome [GENOME] --project [PROJECT] -profile slurm-download
+> nextflow run SciLifeLab/Sarek/main.nf --project [PROJECT] -profile slurmDownload
 ```
 
 --------------------------------------------------------------------------------
