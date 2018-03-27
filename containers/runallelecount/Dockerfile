@@ -32,6 +32,3 @@ RUN \
   && cd /opt/alleleCount-${ALLELECOUNT_VERSION} \
   && ./setup.sh /opt/ \
   && rm /opt/v${ALLELECOUNT_VERSION}.tar.gz
-
-# Create UPPMAX directories
-RUN mkdir /pica /proj /scratch /sw

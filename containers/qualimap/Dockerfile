@@ -23,6 +23,3 @@ RUN \
   && unzip qualimap_v${QUALIMAP_VERSION}.zip -d /opt/ \
   && rm qualimap_v${QUALIMAP_VERSION}.zip \
   && mv /opt/qualimap_v${QUALIMAP_VERSION} /opt/qualimap
-
-# Create UPPMAX directories
-RUN mkdir /pica /proj /scratch /sw

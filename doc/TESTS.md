@@ -13,12 +13,15 @@ Four optional arguments are supported:
 - `-s` || `--sample`:
   Use to change the test sample (default=`data/tsv/tiny.tsv`)
 - `-t` || `--test`:
- - `MAPPING`: will try preprocessing
- - `REALIGN`: will try realignment
- - `RECALIBRATE`: will try recalibration
- - `ANNOTATESNPEFF`: will try variant calling and annotation using snpEff
- - `ANNOTATEVEP`: will try variant calling and annotation using VEP
- - `ALL`: will try all the previous tests (default)
+ - `DIR`: test `mapping` with an input directory, all other tests use a TSV file
+ - `STEP`: test `mapping`, `realign` and `recalibrate`
+ - `GERMLINE`: test `mapping` and Variant Calling with `HaplotypeCaller`
+ - `TOOLS`: test `mapping` and Variant Calling with `FreeBayes`, `HaplotypeCaller`, `MuTect1`, `MuTect2`, `Strelka`
+ - `MANTA`: test `mapping` and Variant Calling with `Manta`
+ - `ANNOTATESNPEFF`: test annotation using `snpEFF`
+ - `ANNOTATEVEP`: test annotation using `VEP`
+ - `BUILDCONTAINERS`: test building all containers except `snpeffgrch37`, `snpeffgrch38`, `vepgrch37` and `vepgrch38`
+ - `ALL`: test all the previous tests (default)
 
 ## Usage
 
@@ -27,10 +30,10 @@ Four optional arguments are supported:
 ./scripts/test.sh
 # Will try all tests using Docker
 ./scripts/test.sh -p docker
-# Will try MAPPING tests using Singularity
-./scripts/test.sh -t MAPPING
-# Will try MAPPING tests using Singularity with GRCh37 genome
-./scripts/test.sh -t MAPPING -g GRCh37
+# Will try `STEP` tests using Singularity
+./scripts/test.sh -t `STEP`
+# Will try `STEP` tests using Singularity with GRCh37 genome
+./scripts/test.sh -t `STEP` -g GRCh37
 # Will try all tests using Singularity on manta test data
 ./scripts/test.sh -s data/tsv/tiny-manta.tsv
 ```

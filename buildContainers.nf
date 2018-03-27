@@ -7,7 +7,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 =                                 S  A  R  E  K                                =
 ================================================================================
-New Germline (+ Somatic) Analysis Workflow. Started March 2016.
+ New Germline (+ Somatic) Analysis Workflow. Started March 2016.
 --------------------------------------------------------------------------------
  @Authors
  Sebastian DiLorenzo <sebastian.dilorenzo@bils.se> [@Sebastian-D]
@@ -37,44 +37,23 @@ New Germline (+ Somatic) Analysis Workflow. Started March 2016.
 ================================================================================
 */
 
-version = '1.2.5'
-
 // Check that Nextflow version is up to date enough
 // try / throw / catch works for NF versions < 0.25 when this was implemented
-nf_required_version = '0.25.0'
 try {
-    if( ! nextflow.version.matches(">= ${nf_required_version}") ){
+    if( ! nextflow.version.matches(">= ${params.nfRequiredVersion}") ){
         throw GroovyException('Nextflow version too old')
     }
 } catch (all) {
     log.error "====================================================\n" +
-              "  Nextflow version ${nf_required_version} required! You are running v${workflow.nextflow.version}.\n" +
+              "  Nextflow version ${params.nfRequiredVersion} required! You are running v${workflow.nextflow.version}.\n" +
               "  Pipeline execution will continue, but things may break.\n" +
               "  Please update Nextflow.\n" +
               "============================================================"
 }
 
 if (params.help) exit 0, helpMessage()
-if (params.version) exit 0, versionMessage()
-if (!isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
+if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
-
-// Default params:
-// Such params are overridden by command line or configuration definitions
-
-// containerPath is current Directory
-params.containerPath = "${baseDir}"
-// all containers to be build
-params.containers = 'all'
-// Docker will not be used
-params.docker = false
-// Containers will not be pushed on DockerHub
-params.push = false
-// DockerHub repository is maxulysse
-// TODO Change to a SciLifeLab repository
-params.repository = 'maxulysse'
-// Singularity will not be used
-params.singularity = false
 
 // Define containers to handle (build/push or pull)
 containersList = defineContainersList()
@@ -83,12 +62,6 @@ containers = containers == ['all'] ? containersList : containers
 
 // push only to DockerHub, so only when using Docker
 push = params.docker && params.push ? true : false
-
-// by default the tag will be the current version
-tag = params.tag ? params.tag : version
-
-// to simplify verbose mode
-verbose = params.verbose
 
 if (!params.docker && !params.singularity) exit 1, 'No container technology choosed, specify --docker or --singularity, see --help for more information'
 
@@ -106,7 +79,7 @@ dockerContainers = containers
 singularityContainers = containers
 
 process BuildDockerContainers {
-  tag {"${params.repository}/${container}:${tag}"}
+  tag {"${params.repository}/${container}:${params.tag}"}
 
   input:
     val container from dockerContainers
@@ -118,16 +91,16 @@ process BuildDockerContainers {
 
   script:
   """
-  docker build -t ${params.repository}/${container}:${tag} ${baseDir}/containers/${container}/.
+  docker build -t ${params.repository}/${container}:${params.tag} ${baseDir}/containers/${container}/.
   """
 }
 
-if (verbose) containersBuilt = containersBuilt.view {
-  "Docker container: ${params.repository}/${it}:${tag} built."
+if (params.verbose) containersBuilt = containersBuilt.view {
+  "Docker container: ${params.repository}/${it}:${params.tag} built."
 }
 
 process PullSingularityContainers {
-  tag {"${params.repository}/${container}:${tag}"}
+  tag {"${params.repository}/${container}:${params.tag}"}
 
   publishDir "${params.containerPath}", mode: 'move'
 
@@ -135,22 +108,22 @@ process PullSingularityContainers {
     val container from singularityContainers
 
   output:
-    file("${container}-${tag}.img") into imagePulled
+    file("${container}-${params.tag}.img") into imagePulled
 
   when: params.singularity
 
   script:
   """
-  singularity pull --name ${container}-${tag}.img docker://${params.repository}/${container}:${tag}
+  singularity pull --name ${container}-${params.tag}.img docker://${params.repository}/${container}:${params.tag}
   """
 }
 
-if (verbose) imagePulled = imagePulled.view {
+if (params.verbose) imagePulled = imagePulled.view {
   "Singularity image: ${it.fileName} pulled."
 }
 
 process PushDockerContainers {
-  tag {params.repository + "/" + container + ":" + tag}
+  tag {params.repository + "/" + container + ":" + params.tag}
 
   input:
     val container from containersBuilt
@@ -162,12 +135,12 @@ process PushDockerContainers {
 
   script:
   """
-  docker push ${params.repository}/${container}:${tag}
+  docker push ${params.repository}/${container}:${params.tag}
   """
 }
 
-if (verbose) containersPushed = containersPushed.view {
-  "Docker container: ${params.repository}/${it}:${tag} pushed."
+if (params.verbose) containersPushed = containersPushed.view {
+  "Docker container: ${params.repository}/${it}:${params.tag} pushed."
 }
 
 /*
@@ -175,11 +148,6 @@ if (verbose) containersPushed = containersPushed.view {
 =                               F U N C T I O N S                              =
 ================================================================================
 */
-
-def sarekMessage() {
-  // Display Sarek message
-  log.info "Sarek ~ ${version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
-}
 
 def checkContainerExistence(container, list) {
   try {assert list.contains(container)}
@@ -199,61 +167,14 @@ def checkContainers(containers, containersList) {
   return containerExists ? true : false
 }
 
-def checkParams(it) {
-  // Check if params is in this given list
-  return it in [
-    'annotate-tools',
-    'annotate-VCF',
-    'annotateTools',
-    'annotateVCF',
-    'build',
-    'call-name',
-    'callName',
-    'contact-mail',
-    'contactMail',
-    'container-path',
-    'containerPath',
-    'containers',
-    'docker',
-    'genome_base',
-    'genome',
-    'genomes',
-    'help',
-    'max_cpus',
-    'max_memory',
-    'max_time',
-    'no-GVCF',
-    'no-reports',
-    'noGVCF',
-    'noReports',
-    'only-QC',
-    'onlyQC',
-    'out-dir',
-    'outDir',
-    'params',
-    'project',
-    'push',
-    'repository',
-    'sample-dir',
-    'sample',
-    'sampleDir',
-    'single-CPUMem',
-    'singleCPUMem',
-    'singularity',
-    'step',
-    'tag',
-    'test',
-    'tools',
-    'total-memory',
-    'totalMemory',
-    'vcflist',
-    'verbose',
-    'version']
-}
-
 def checkUppmaxProject() {
   // check if UPPMAX project number is specified
   return !(workflow.profile == 'slurm' && !params.project)
+}
+
+def grabRevision() {
+  // Return the same string executed from github or not
+  return workflow.revision ?: workflow.commitId ?: workflow.scriptId.substring(0,10)
 }
 
 def defineContainersList(){
@@ -276,11 +197,6 @@ def defineContainersList(){
     'vepgrch37',
     'vepgrch38'
     ]
-}
-
-def grabRevision() {
-  // Return the same string executed from github or not
-  return workflow.revision ?: workflow.commitId ?: workflow.scriptId.substring(0,10)
 }
 
 def helpMessage() {
@@ -309,21 +225,7 @@ def helpMessage() {
   log.info "    --containerPath: Select where to download images"
   log.info "       Default: \$PWD"
   log.info "    --tag`: Choose the tag for the containers"
-  log.info "       Default (version number): " + version
-  log.info "    --version"
-  log.info "       displays version number and more informations"
-}
-
-def isAllowedParams(params) {
-  // Compare params to list of verified params
-  final test = true
-  params.each{
-    if (!checkParams(it.toString().split('=')[0])) {
-      println "params ${it.toString().split('=')[0]} is unknown"
-      test = false
-    }
-  }
-  return test
+  log.info "       Default (version number): " + params.version
 }
 
 def minimalInformationMessage() {
@@ -343,17 +245,15 @@ def nextflowMessage() {
   log.info "N E X T F L O W  ~  version ${workflow.nextflow.version} ${workflow.nextflow.build}"
 }
 
+def sarekMessage() {
+  // Display Sarek message
+  log.info "Sarek ~ ${params.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
+}
+
 def startMessage() {
   // Display start message
   this.sarekMessage()
   this.minimalInformationMessage()
-}
-
-def versionMessage() {
-  // Display version message
-  log.info "Sarek - Workflow For Somatic And Germline Variations"
-  log.info "  version   : " + version
-  log.info workflow.commitId ? "Git info    : ${workflow.repository} - ${workflow.revision} [${workflow.commitId}]" : "  revision  : " + this.grabRevision()
 }
 
 workflow.onComplete {

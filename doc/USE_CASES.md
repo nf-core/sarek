@@ -3,21 +3,27 @@
 The workflow has three pre-processing options: `mapping`, `realign` and `recalibrate`. Using the `mapping` directive one will have a pair of mapped, deduplicated and recalibrated BAM files in the `Preprocessing/Recalibrated/` directory. Furthermore, during this process a deduplicated BAM file is created in the `Preprocessing/NonRealigned/` directory. This is the usual option you have to give when you are starting from raw FASTQ data:
 
 ```bash
-nextflow run SciLifeLab/Sarek --sample mysample.tsv
+nextflow run SciLifeLab/Sarek/main.nf --sample mysample.tsv
+nextflow run SciLifeLab/Sarek/germlineVC.nf --tools <tool>
+nextflow run SciLifeLab/Sarek/somaticVC.nf --tools <tool> # For somatic only
+nextflow run SciLifeLab/Sarek/annotate.nf --tool <tool> --annotateVCF myfile.vcf # For somatic only
+nextflow run SciLifeLab/Sarek/runMultiQC.nf
 ```
 
 `mapping` will start by default, you do not have to give any additional parameters, only the TSV file describing the sample (see below).
 
 In the [genomes.config](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/configuration/genomes.config) configuration file we are defining the intervals file as well, this is used to define regions for variant call and realignment (in a scatter and gather fashion when possible). The intervals are chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs. We are ignoring the hs37d5 contig that contains concatenated decoy sequences.
 
-During the execution of the workflow a `trace.txt`, a `timeline.html` and a `report.html` files are generated automatically. These files contain statistics about resources used and processes finished. If you start a new flow or restart/resume a sample, the previous version will be renamed as `trace.txt.1`, `timeline.html.1` and `report.html.1` respectively. Also, older version are renamed with incremented numbers.
+During the execution of the workflow a `Sarek-trace.txt`, a `Sarek-timeline.html` and a `Sarek-report.html` files are generated automatically. These files contain statistics about resources used and processes finished. If you start a new workflow or restart/resume a sample, the previous version will be renamed as `Sarek-trace.txt.1`, `Sarek-timeline.html.1` and `Sarek-report.html.1` respectively. Also, older version are renamed with incremented numbers.
 
 ## Starting from raw FASTQ - pair of FASTQ files
 
 The workflow should be started in this case with the smallest set of options as written above:
 
 ```bash
-nextflow run SciLifeLab/Sarek --sample mysample.tsv
+nextflow run SciLifeLab/Sarek/main.nf --sample mysample.tsv
+nextflow run SciLifeLab/Sarek/germlineVC.nf --tools <tool>
+nextflow run SciLifeLab/Sarek/runMultiQC.nf
 ```
 
 The TSV file should have at least one tab-separated lines:
@@ -34,6 +40,23 @@ The columns are:
 4. read group ID: it is irrelevant in this simple case, should to be 1
 5. first set of reads
 6. second set of reads
+
+## Starting from raw FASTQ on a normal sample only (with `--sampleDir`)
+
+The `--sampleDir` option can be used to point Sarek to a directory with FASTQ files:
+```bash
+nextflow run SciLifeLab/Sarek/main.nf --sampleDir path/to/FASTQ/files
+nextflow run SciLifeLab/Sarek/germlineVC.nf --tools <tool>
+nextflow run SciLifeLab/Sarek/runMultiQC.nf
+```
+The given directory is searched recursively for FASTQ files that are named `*_R1_*.fastq.gz`, and a matching pair with the same name except `_R2_` instead of `_R1_` is expected to exist alongside. All of the found FASTQ files are considered to belong to the sample. Each FASTQ file pair gets its own read group (`@RG`) in the resulting BAM file.
+
+### Metadata when using `--sampleDir`
+
+When using `--sampleDir`, the metadata about the sample that are written to the BAM header in the `@RG` tag are determined in the following way.
+
+- The sample name (`SM`) is derived from the the last component of the path given to `--sampleDir`. That is, you should make sure that that directory has a meaningful name! For example, with `--sampleDir=/my/fastqs/sample123`, the sample name will be `sample123`.
+- The read group id is set to *flowcell.samplename.lane*. The flowcell id and lane number are auto-detected from the name of the first read in the FASTQ file.
 
 ## Starting from raw FASTQ - having pair of FASTQ files for tumor/normal samples (one lane for each sample)
 
@@ -73,7 +96,9 @@ SUBJECT_ID  XX    1    SAMPLEIDR    9    /samples/relapse9_1.fastq.gz    /sample
 NGI Production in the previous years delivered many preprocessed samples; these BAM files are not recalibrated. To have BAMs suitable for variant calling, realignement of pairs is necessary:
 
 ```bash
-nextflow run SciLifeLab/Sarek --sample mysample.tsv --step realign
+nextflow run SciLifeLab/Sarek/main.nf --sample mysample.tsv --step realign
+nextflow run SciLifeLab/Sarek/germlineVC.nf --tools <tool>
+nextflow run SciLifeLab/Sarek/runMultiQC.nf
 ```
 
 And the corresponding TSV file should be like:
@@ -89,7 +114,12 @@ At the end of this step you should have recalibrated BAM files in the `Preproces
 NGI Production in the previous years delivered many preprocessed samples; these BAM files are not recalibrated. To have BAMs suitable for variant calling, realignement of pairs is necessary:
 
 ```bash
-nextflow run SciLifeLab/Sarek --sample mysample.tsv --step realign
+nextflow run SciLifeLab/Sarek/main.nf --sample mysample.tsv --step realign
+nextflow run SciLifeLab/Sarek/germlineVC.nf --tools <tool>
+nextflow run SciLifeLab/Sarek/somaticVC.nf --tools <tool>
+nextflow run SciLifeLab/Sarek/annotate.nf --tool <tool> --annotateVCF myfile.vcf
+nextflow run SciLifeLab/Sarek/runMultiQC.nf
+
 ```
 
 And the corresponding TSV file should be like (obviously, if you do not have relapse samples, you can leave out this last line):
@@ -107,7 +137,11 @@ At the end of this step you should have recalibrated BAM files in the `Preproces
 If the BAM files were realigned together, you can start from recalibration:
 
 ```bash
-nextflow run SciLifeLab/Sarek --sample mysample.tsv --step recalibrate
+nextflow run SciLifeLab/Sarek/main.nf --sample mysample.tsv --step recalibrate
+nextflow run SciLifeLab/Sarek/germlineVC.nf --tools <tool>
+nextflow run SciLifeLab/Sarek/somaticVC.nf --tools <tool>
+nextflow run SciLifeLab/Sarek/annotate.nf --tool <tool> --annotateVCF myfile.vcf
+nextflow run SciLifeLab/Sarek/runMultiQC.nf
 ```
 
 And the corresponding TSV file should be like (obviously, if you do not have relapse samples, you can leave out this last line):
@@ -123,7 +157,8 @@ SUBJECT_ID  XX    1    SAMPLEIDR    /samples/SAMPLEIDR.bam    /samples/SAMPLEIDR
 At this step we are assuming that all the required preprocessing is over, we only want to run variant callers or other tools using recalibrated BAMs.
 
 ```bash
-nextflow run SciLifeLab/Sarek/ --sample mysample.tsv --step variantcalling --tools <tool>
+nextflow run SciLifeLab/Sarek/germlineVC.nf --tools <tool>
+nextflow run SciLifeLab/Sarek/runMultiQC.nf
 ```
 
 And the corresponding TSV file should be like:
@@ -139,7 +174,10 @@ If you want to restart a previous run of the pipeline, you may not have a recali
 At this step we are assuming that all the required preprocessing is over, we only want to run variant callers or other tools using recalibrated BAMs.
 
 ```bash
-nextflow run SciLifeLab/Sarek --sample mysample.tsv --step variantcalling --tools <tool>
+nextflow run SciLifeLab/Sarek/germlineVC.nf --tools <tool>
+nextflow run SciLifeLab/Sarek/somaticVC.nf --tools <tool>
+nextflow run SciLifeLab/Sarek/annotate.nf --tool <tool> --annotateVCF myfile.vcf
+nextflow run SciLifeLab/Sarek/runMultiQC.nf
 ```
 
 And the corresponding TSV file should be like (obviously, if you do not have relapse samples, you can leave out this last line):
@@ -151,25 +189,6 @@ SUBJECT_ID  XX    1    SAMPLEIDR    /samples/SAMPLEIDR.bam    /samples/SAMPLEIDR
 ```
 
 If you want to restart a previous run of the pipeline, you may not have a recalibrated BAM file. This is the case if HaplotypeCaller was the only tool (recalibration is done on-the-fly with HaplotypeCaller to improve performance and save space). In this case, you need to start with `--step=recalibrate` (see previous section).
-
-
-## Running the pipeline on a normal sample only (with `--sampleDir`)
-
-Sarek can also be used to process a single normal sample. The tools that require tumor/normal pairs should not be run in this case.
-
-When running a normal-only sample, it is not necessary to create a TSV file describing the input. Instead, the `--sampleDir` option can be used to point Sarek to a directory with FASTQ files:
-```bash
-nextflow run SciLifeLab/Sarek --tools=HaplotypeCaller --sampleDir path/to/FASTQ/files
-```
-The given directory is searched recursively for FASTQ files that are named `*_R1_*.fastq.gz`, and a matching pair with the same name except `_R2_` instead of `_R1_` is expected to exist alongside. All of the found FASTQ files are considered to belong to the sample. Each FASTQ file pair gets its own read group (`@RG`) in the resulting BAM file.
-
-### Metadata when using `--sampleDir`
-
-When using `--sampleDir`, the metadata about the sample that are written to the BAM header in the `@RG` tag are determined in the following way.
-
-- The sample name (`SM`) is derived from the the last component of the path given to `--sampleDir`. That is, you should make sure that that directory has a meaningful name! For example, with `--sampleDir=/my/fastqs/sample123`, the sample name will be `sample123`.
-- The read group id is set to *flowcell.samplename.lane*. The flowcell id and lane number are auto-detected from the name of the first read in the FASTQ file.
-
 
 --------------------------------------------------------------------------------
 

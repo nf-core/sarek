@@ -10,46 +10,44 @@ We provides several configuration files and profiles for Sarek. The standard one
 
 Every configuration file can be modified for your own use. If you want you can specify the use of a config file using `-c <config file>`
 
-### [`containers.config`](../configuration/containers.config)
+### [`containers.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/containers.config)
 
-Contain images for all process.
+Define Containers for all process.
 Images will be pulled automatically.
 Use in your own profile if needed.
 
-### [`docker.config`](../configuration/docker.config)
+### [`docker.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/docker.config)
 
-Contain Docker images for all process.
+Define Docker Containers for all process.
 Images will be pulled automatically.
 Use in your own profile if needed.
 
-### [`genomes.config`](../configuration/genomes.config)
+### [`genomes.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/genomes.config)
 
 Contain path to all references.
 Modify it if you want to change genome version, or the path to your references files.
 
-### [`singularity-path.config`](../configuration/singularity-path.config)
+### [`singularity-path.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/singularity-path.config)
 
-To be used when downloading singularity containers, like on a secure UPPMAX cluster.
+Define path to Singularity Containers for all process.
+To be used when downloading Singularity Containers, like on a secure UPPMAX cluster.
 Images will not be pulled automatically.
 You need to set them up before.
 
-### [`singularity.config`](../configuration/singularity.config)
+### [`singularity.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/singularity.config)
 
-Contain Singularity images for all process.
+Define Singularity Containers for all process.
 Images will be pulled automatically.
 Use in your own profile if needed.
 
-### [`travis.config`](../configuration/travis.config)
+### [`travis.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/travis.config)
 
 To be used for Travis (2 cpus) or on small computer for testing purpose
 
-### [`uppmax-localhost.config`](../configuration/uppmax-localhost.config)
-
-To be used on a typical localhost on a UPPMAX cluster (16 cpus)
-
-### [`uppmax-slurm.config`](../configuration/uppmax-slurm.config)
+### [`uppmax-slurm.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/uppmax-slurm.config)
 
 Slurm configuration for a UPPMAX cluster
+Will run the workflow on `/scratch` using the Nextflow [`scratch`](https://www.nextflow.io/docs/latest/process.html#scratch) directive
 
 ## profiles
 
@@ -65,19 +63,16 @@ Docker images will be pulled automatically.
 This is the default profile for use on a localhost on a UPPMAX cluster with Singularity.
 Singularity images need to be set up.
 
-### `download`
-
-This is the default profile for use on a localhost on a UPPMAX cluster with Singularity.
-Singularity images will be pulled automatically.
-
 ### `slurm`
 
 This is another profile for use on a UPPMAX cluster using the job scheduler slurm with Singularity.
+Will run the workflow on `/scratch`.
 Singularity images need to be set up.
 
 ### `slurmDownload`
 
 This is another profile for use on a UPPMAX cluster using the job scheduler slurm with Singularity.
+Will run the workflow on `/scratch`.
 Singularity images will be pulled automatically.
 
 ### `singularity`

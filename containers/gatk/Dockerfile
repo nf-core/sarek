@@ -6,6 +6,3 @@ LABEL \
   maintainer="maxime.garcia@scilifelab.se"
 
 ENV GATK_HOME=/usr
-
-# Create UPPMAX directories
-RUN mkdir /pica /proj /scratch /sw

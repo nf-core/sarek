@@ -101,6 +101,3 @@ apt-get remove -y \
   zlib1g-dev
 apt-get clean
 rm -rf /build /var/lib/apt/lists/* /opt/get-pip.py
-
-# Create UPPMAX directories
-mkdir /pica /proj /scratch /sw

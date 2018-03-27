@@ -78,9 +78,13 @@ The Sarek pipeline comes with documentation in the `doc/` directory:
 
 ## Contributions & Support
 
-If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
+If you would like to contribute to this pipeline, please see the [contributing guidelines](https://github.com/SciLifeLab/Sarek/blob/master/.github/CONTRIBUTING.md).
 
 For further information or help, don't hesitate to get in touch on [Gitter][gitter-link] or contact us: maxime.garcia@scilifelab.se, szilveszter.juhos@scilifelab.se
+
+## CHANGELOG
+
+- [CHANGELOG](https://github.com/SciLifeLab/Sarek/blob/master/CHANGELOG.md)
 
 ## Authors
 
