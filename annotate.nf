@@ -181,9 +181,9 @@ process RunSnpeff {
   ${snpeffDb} \
   -csvStats ${vcf.baseName}.snpEff.csv \
   -nodownload \
-  -cancer \
+	-canon \
   -v \
-  ${vcf} \
+	${vcf} \
   > ${vcf.baseName}.snpEff.ann.vcf
 
   mv snpEff_summary.html ${vcf.baseName}.snpEff.summary.html
@@ -228,7 +228,7 @@ process RunVEP {
   --format vcf \
   --offline \
   --per_gene \
-  --nearest \
+  --nearest symbol \
   --fork ${task.cpus} \
   --total_length \
   --vcf
