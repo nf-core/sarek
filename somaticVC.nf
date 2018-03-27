@@ -546,6 +546,7 @@ process RunManta {
 
   output:
     set val("manta"), idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into mantaOutput
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file("*.candidateSmallIndels.vcf.gz"), file("*.candidateSmallIndels.vcf.gz.tbi") into mantaToStrelka
 
   when: 'manta' in tools && !params.onlyQC
 
@@ -577,6 +578,8 @@ process RunManta {
     Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf.gz.tbi
   """
 }
+
+if (!params.strelkaBP) mantaToStrelka.close()
 
 if (params.verbose) mantaOutput = mantaOutput.view {
   "Variant Calling output:\n\
@@ -631,6 +634,54 @@ if (params.verbose) singleMantaOutput = singleMantaOutput.view {
   Tool  : ${it[0]}\tID    : ${it[1]}\tSample: ${it[2]}\n\
   Files : ${it[3].fileName}\n\
   Index : ${it[4].fileName}"
+}
+
+
+process RunStrelkaBP {
+  tag {idSampleTumor + "_vs_" + idSampleNormal}
+
+  publishDir directoryMap.strelkabp, mode: 'link'
+
+  input:
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(mantaCSI), file(mantaCSIi) from mantaToStrelka
+    set file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
+    ])
+
+  output:
+    set val("strelkaBP"), idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into strelkaBPOutput
+
+  when: 'strelka' in tools && 'manta' in tools && params.strelkaBP && !params.onlyQC
+
+  script:
+  """
+  \$STRELKA_INSTALL_PATH/bin/configureStrelkaSomaticWorkflow.py \
+  --tumor ${bamTumor} \
+  --normal ${bamNormal} \
+  --referenceFasta ${genomeFile} \
+  --indelCandidates ${mantaCSI} \
+  --runDir Strelka
+
+  python Strelka/runWorkflow.py -m local -j ${task.cpus}
+
+  mv Strelka/results/variants/somatic.indels.vcf.gz \
+    Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz
+  mv Strelka/results/variants/somatic.indels.vcf.gz.tbi \
+    Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz.tbi
+  mv Strelka/results/variants/somatic.snvs.vcf.gz \
+    Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
+  mv Strelka/results/variants/somatic.snvs.vcf.gz.tbi \
+    Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz.tbi
+  """
+}
+
+if (params.verbose) strelkaBPOutput = strelkaBPOutput.view {
+  "Variant Calling output:\n\
+  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
+  Files : ${it[4].fileName}\n\
+  Index : ${it[5].fileName}"
 }
 
 // Run commands and code from Malin Larsson
@@ -844,7 +895,8 @@ def defineDirectoryMap() {
     'manta'            : "${params.outDir}/VariantCalling/Manta",
     'mutect1'          : "${params.outDir}/VariantCalling/MuTect1",
     'mutect2'          : "${params.outDir}/VariantCalling/MuTect2",
-    'strelka'          : "${params.outDir}/VariantCalling/Strelka"
+    'strelka'          : "${params.outDir}/VariantCalling/Strelka",
+    'strelkabp'        : "${params.outDir}/VariantCalling/StrelkaBP"
   ]
 }
 
