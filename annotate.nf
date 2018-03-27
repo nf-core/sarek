@@ -77,7 +77,7 @@ vcfNotToAnnotate = Channel.create()
 
 if (annotateVCF == []) {
   Channel.empty().mix(
-    Channel.fromPath("${params.outDir}/VariantCalling/HaplotypeCaller/*.vcf.gz")
+    Channel.fromPath("${directoryMap.haplotypecaller}/*.vcf.gz")
       .flatten().map{vcf -> ['haplotypecaller',vcf]},
     Channel.fromPath("${directoryMap.manta}/*SV.vcf.gz")
       .flatten().map{vcf -> ['manta',vcf]},
