@@ -79,14 +79,16 @@ if (annotateVCF == []) {
   Channel.empty().mix(
     Channel.fromPath("${params.outDir}/VariantCalling/HaplotypeCaller/*.vcf.gz")
       .flatten().map{vcf -> ['haplotypecaller',vcf]},
-    Channel.fromPath("${params.outDir}/VariantCalling/Manta/*SV.vcf.gz")
+    Channel.fromPath("${directoryMap.manta}/*SV.vcf.gz")
       .flatten().map{vcf -> ['manta',vcf]},
-    Channel.fromPath("${params.outDir}/VariantCalling/MuTect1/*.vcf.gz")
+    Channel.fromPath("${directoryMap.mutect1}/*.vcf.gz")
       .flatten().map{vcf -> ['mutect1',vcf]},
-    Channel.fromPath("${params.outDir}/VariantCalling/MuTect2/*.vcf.gz")
+    Channel.fromPath("${directoryMap.mutect2}/*.vcf.gz")
       .flatten().map{vcf -> ['mutect2',vcf]},
-    Channel.fromPath("${params.outDir}/VariantCalling/Strelka/*{somatic,variants}*.vcf.gz")
-      .flatten().map{vcf -> ['strelka',vcf]}
+    Channel.fromPath("${directoryMap.strelka}/*{somatic,variants}*.vcf.gz")
+      .flatten().map{vcf -> ['strelka',vcf]},
+    Channel.fromPath("${directoryMap.strelkabp}/*{somatic,variants}*.vcf.gz")
+      .flatten().map{vcf -> ['strelkabp',vcf]}
   ).choice(vcfToAnnotate, vcfNotToAnnotate) {
     annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1
   }
@@ -213,6 +215,12 @@ def checkUppmaxProject() {
 
 def defineDirectoryMap() {
   return [
+    'haplotypecaller'  : "${params.outDir}/VariantCalling/HaplotypeCaller",
+    'manta'            : "${params.outDir}/VariantCalling/Manta",
+    'mutect1'          : "${params.outDir}/VariantCalling/MuTect1",
+    'mutect2'          : "${params.outDir}/VariantCalling/MuTect2",
+    'strelka'          : "${params.outDir}/VariantCalling/Strelka",
+    'strelkabp'        : "${params.outDir}/VariantCalling/StrelkaBP",
     'bcftoolsStats'    : "${params.outDir}/Reports/BCFToolsStats",
     'snpeff'           : "${params.outDir}/Annotation/SnpEff",
     'vep'              : "${params.outDir}/Annotation/VEP"
