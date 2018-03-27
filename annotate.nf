@@ -177,14 +177,14 @@ process RunSnpeff {
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar \$SNPEFF_HOME/snpEff.jar \
-  ${snpeffDb} \
-  -csvStats ${vcf.baseName}.snpEff.csv \
-  -nodownload \
+	-jar \$SNPEFF_HOME/snpEff.jar \
+	${snpeffDb} \
+	-csvStats ${vcf.baseName}.snpEff.csv \
+	-nodownload \
 	-canon \
-  -v \
+	-v \
 	${vcf} \
-  > ${vcf.baseName}.snpEff.ann.vcf
+	> ${vcf.baseName}.snpEff.ann.vcf
 
   mv snpEff_summary.html ${vcf.baseName}.snpEff.summary.html
   """
