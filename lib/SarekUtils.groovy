@@ -55,6 +55,8 @@ class MyUtils {
       'singleCPUMem',
       'singularity',
       'step',
+      'strelka-BP',
+      'strelkaBP',
       'tag',
       'test',
       'tools',
