@@ -579,8 +579,6 @@ process RunManta {
   """
 }
 
-if (!params.strelkaBP) mantaToStrelka.close()
-
 if (params.verbose) mantaOutput = mantaOutput.view {
   "Variant Calling output:\n\
   Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
