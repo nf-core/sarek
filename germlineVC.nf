@@ -662,13 +662,8 @@ def defineDirectoryMap() {
 def defineReferenceMap() {
   if (!(params.genome in params.genomes)) exit 1, "Genome ${params.genome} not found in configuration"
   return [
-    // loci file for ascat
-    'acLoci'           : checkParamReturnFile("acLoci"),
     'dbsnp'            : checkParamReturnFile("dbsnp"),
     'dbsnpIndex'       : checkParamReturnFile("dbsnpIndex"),
-    // cosmic VCF with VCF4.1 header
-    'cosmic'           : checkParamReturnFile("cosmic"),
-    'cosmicIndex'      : checkParamReturnFile("cosmicIndex"),
     // genome reference dictionary
     'genomeDict'       : checkParamReturnFile("genomeDict"),
     // FASTA genome reference
@@ -818,9 +813,6 @@ def minimalInformationMessage() {
   else log.info "  ContainerPath: " + params.containerPath
   log.info "  Tag          : " + params.tag
   log.info "Reference files used:"
-  log.info "  acLoci      :\n\t" + referenceMap.acLoci
-  log.info "  cosmic      :\n\t" + referenceMap.cosmic
-  log.info "\t" + referenceMap.cosmicIndex
   log.info "  dbsnp       :\n\t" + referenceMap.dbsnp
   log.info "\t" + referenceMap.dbsnpIndex
   log.info "  genome      :\n\t" + referenceMap.genomeFile
