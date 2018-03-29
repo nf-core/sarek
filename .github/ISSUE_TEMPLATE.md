@@ -1,9 +1,9 @@
 <!--
 Hi there!
 
-Many thanks for creating a CAW issue.
+Many thanks for creating a Sarek issue.
 
-Most issues fall into two categories: either you're reporting a problem with CAW or you'd like a change/improvement.
+Most issues fall into two categories: either you're reporting a problem with Sarek or you'd like a change/improvement.
 
 To make sure that you include all of the information needed, please use the template below, you can delete what is not needed.
 
@@ -35,9 +35,9 @@ or ideas how to implement the addition or change
 Providing context helps us coming up with a solution
 Include as many relevant details about the environment you experienced the bug in
 -->
-- **CAW `nextflow.log`:**
+- **Sarek `nextflow.log`:**
   <!-- Re-execute the command line that resulted in a bug with --verbose and -resume and join the .nextflow.log -->
   - [please drag and drop the `.nextflow.log` file that will help understand the error here]
-- **CAW `input.TSV`:**
+- **Sarek `input.TSV`:**
   <!-- Anonymize your TSV file if necessary and join it too  -->
   - [please drag and drop the `TSV` file that will help reproduce or understand the error here]
