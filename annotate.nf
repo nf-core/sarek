@@ -77,16 +77,18 @@ vcfNotToAnnotate = Channel.create()
 
 if (annotateVCF == []) {
   Channel.empty().mix(
-    Channel.fromPath("${params.outDir}/VariantCalling/HaplotypeCaller/*.vcf.gz")
+    Channel.fromPath("${directoryMap.haplotypecaller}/*.vcf.gz")
       .flatten().map{vcf -> ['haplotypecaller',vcf]},
-    Channel.fromPath("${params.outDir}/VariantCalling/Manta/*SV.vcf.gz")
+    Channel.fromPath("${directoryMap.manta}/*SV.vcf.gz")
       .flatten().map{vcf -> ['manta',vcf]},
-    Channel.fromPath("${params.outDir}/VariantCalling/MuTect1/*.vcf.gz")
+    Channel.fromPath("${directoryMap.mutect1}/*.vcf.gz")
       .flatten().map{vcf -> ['mutect1',vcf]},
-    Channel.fromPath("${params.outDir}/VariantCalling/MuTect2/*.vcf.gz")
+    Channel.fromPath("${directoryMap.mutect2}/*.vcf.gz")
       .flatten().map{vcf -> ['mutect2',vcf]},
-    Channel.fromPath("${params.outDir}/VariantCalling/Strelka/*{somatic,variants}*.vcf.gz")
-      .flatten().map{vcf -> ['strelka',vcf]}
+    Channel.fromPath("${directoryMap.strelka}/*{somatic,variants}*.vcf.gz")
+      .flatten().map{vcf -> ['strelka',vcf]},
+    Channel.fromPath("${directoryMap.strelkabp}/*{somatic,variants}*.vcf.gz")
+      .flatten().map{vcf -> ['strelkabp',vcf]}
   ).choice(vcfToAnnotate, vcfNotToAnnotate) {
     annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1
   }
@@ -197,7 +199,6 @@ process RunVEP {
   --format vcf \
   --offline \
   --per_gene \
-  --nearest symbol \
   --fork ${task.cpus} \
   --total_length \
   --vcf
@@ -222,16 +223,12 @@ def checkUppmaxProject() {
 
 def defineDirectoryMap() {
   return [
-    'bcftoolsStats'    : 'Reports/BCFToolsStats',
-    'snpeff'           : 'Annotation/SnpEff',
-    'vep'              : 'Annotation/VEP',
-    'merge'            : 'Annotation/merged'
-  ]
-}
-
-def defineStepList() {
-  return [
-    'annotate'
+    'haplotypecaller'  : "${params.outDir}/VariantCalling/HaplotypeCaller",
+    'manta'            : "${params.outDir}/VariantCalling/Manta",
+    'mutect1'          : "${params.outDir}/VariantCalling/MuTect1",
+    'mutect2'          : "${params.outDir}/VariantCalling/MuTect2",
+    'strelka'          : "${params.outDir}/VariantCalling/Strelka",
+    'strelkabp'        : "${params.outDir}/VariantCalling/StrelkaBP",
     'bcftoolsStats'    : "${params.outDir}/Reports/BCFToolsStats",
     'snpeff'           : "${params.outDir}/Annotation/SnpEff",
     'vep'              : "${params.outDir}/Annotation/VEP"
@@ -255,15 +252,7 @@ def helpMessage() {
   // Display help message
   this.sarekMessage()
   log.info "    Usage:"
-  log.info "       nextflow run SciLifeLab/Sarek --sample <file.tsv> [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
-  log.info "       nextflow run SciLifeLab/Sarek --sampleDir <Directory> [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
-  log.info "       nextflow run SciLifeLab/Sarek --test [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
-  log.info "    --step"
-  log.info "       Option to start workflow"
-  log.info "       Possible values are:"
-  log.info "         annotate (will annotate Variant Calling output."
-  log.info "         By default it will try to annotate all available vcfs."
-  log.info "         Use with --annotateTools or --annotateVCF to specify what to annotate"
+  log.info "       nextflow run annotate.nf --test [--step STEP] [--tools TOOL[,TOOL]] --genome <Genome>"
   log.info "    --noReports"
   log.info "       Disable QC tools and MultiQC to generate a HTML report"
   log.info "    --tools"

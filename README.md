@@ -52,7 +52,7 @@ The worflow steps and tools used are as follows:
     * Variant annotation
         * [SnpEff](http://snpeff.sourceforge.net/)
         * [VEP](https://www.ensembl.org/info/docs/tools/vep/index.html) (Variant Effect Predictor)
-5. **Reporting**
+5. **Reporting** - `runMultiQC.nf`
     * Reporting
         * [MultiQC](http://multiqc.info)
 

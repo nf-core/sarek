@@ -203,12 +203,12 @@ def helpMessage() {
   // Display help message
   this.sarekMessage()
   log.info "    Usage:"
-  log.info "       nextflow run SciLifeLab/Sarek/buildContainers.nf [--docker] [--push]"
+  log.info "       nextflow run buildContainers.nf [--docker] [--push]"
   log.info "          [--containers <container1...>] [--singularity]"
   log.info "          [--containerPath <path>]"
   log.info "          [--tag <tag>] [--repository <repository>]"
   log.info "    Example:"
-  log.info "      nextflow run SciLifeLab/Sarek/buildContainers.nf --docker --containers sarek"
+  log.info "      nextflow run buildContainers.nf --docker --containers sarek"
   log.info "    --containers: Choose which containers to build"
   log.info "       Default: all"
   log.info "       Possible values:"

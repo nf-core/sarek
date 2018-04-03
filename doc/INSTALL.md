@@ -4,7 +4,7 @@ This small tutorial will explain to you how to install and run Sarek on a small 
 
 To use this pipeline, you need to have a working version of Nextflow installed, Reference files and Docker or Singularity to facilitate the use of other tools. You can use a small reference genome as testing
 
-- See the [Install Nextflow documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/INSTALL.md)
+- See the [Install Nextflow documentation](https://www.nextflow.io/docs/latest/getstarted.html#installation)
 - See the [Reference files documentation](REFERENCES.md)
 - See the [Install Docker documentation](https://docs.docker.com/engine/installation/linux/ubuntu/#install-docker)
 - See the [Install Singularity documentation](http://singularity.lbl.gov/install-linux)
