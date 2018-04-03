@@ -94,12 +94,13 @@ fi
 
 if [[ ALL,TOOLS =~ $TEST ]]
 then
-  run_wrapper --somatic --sample $SAMPLE --variantCalling  --tools FreeBayes,HaplotypeCaller,MuTect1,MuTect2,Strelka
+  run_wrapper --somatic --sample $SAMPLE --variantCalling  --tools FreeBayes,HaplotypeCaller,MuTect1,MuTect2
 fi
 
 if [[ ALL,MANTA =~ $TEST ]]
 then
   run_wrapper --somatic --sample data/tsv/tiny-manta.tsv --variantCalling --tools Manta --noReports
+  run_wrapper --somatic --sample data/tsv/tiny-manta.tsv --variantCalling --tools Manta,Strelka --noReports --strelkaBP
   clean_repo
 fi
 
