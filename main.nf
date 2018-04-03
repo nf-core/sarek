@@ -844,7 +844,6 @@ def helpMessage() {
   log.info "    Usage:"
   log.info "       nextflow run SciLifeLab/Sarek --sample <file.tsv> [--step STEP] --genome <Genome>"
   log.info "       nextflow run SciLifeLab/Sarek --sampleDir <Directory> [--step STEP] --genome <Genome>"
-  log.info "       nextflow run SciLifeLab/Sarek --test [--step STEP] --genome <Genome>"
   log.info "    --sample <file.tsv>"
   log.info "       Specify a TSV file containing paths to sample files."
   log.info "    --sampleDir <Directoy>"
