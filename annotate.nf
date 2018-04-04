@@ -141,20 +141,21 @@ process RunSnpeff {
 
   output:
     set file("${vcf.baseName}.snpEff.ann.vcf"), file("${vcf.baseName}.snpEff.genes.txt"), file("${vcf.baseName}.snpEff.csv"), file("${vcf.baseName}.snpEff.summary.html") into snpeffReport
+		set variantCaller,file("${vcf.baseName}.snpEff.ann.vcf") into snpEffOutputVCFs
 
-  when: 'snpeff' in tools
+  when: 'snpeff' in tools || 'merge' in tools
 
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
-  -jar \$SNPEFF_HOME/snpEff.jar \
-  ${snpeffDb} \
-  -csvStats ${vcf.baseName}.snpEff.csv \
-  -nodownload \
-  -cancer \
-  -v \
-  ${vcf} \
-  > ${vcf.baseName}.snpEff.ann.vcf
+	-jar \$SNPEFF_HOME/snpEff.jar \
+	${snpeffDb} \
+	-csvStats ${vcf.baseName}.snpEff.csv \
+	-nodownload \
+	-canon \
+	-v \
+	${vcf} \
+	> ${vcf.baseName}.snpEff.ann.vcf
 
   mv snpEff_summary.html ${vcf.baseName}.snpEff.summary.html
   """
@@ -163,6 +164,13 @@ process RunSnpeff {
 if (params.verbose) snpeffReport = snpeffReport.view {
   "snpEff report:\n\
   File  : ${it.fileName}"
+}
+
+// When we are running in the 'merge' mode (first snpEff, then VEP)
+// we have to exchange the channels
+
+if('merge' in tools) {
+	vcfForVep = snpEffOutputVCFs
 }
 
 process RunVEP {
@@ -176,7 +184,7 @@ process RunVEP {
   output:
     set file("${vcf.baseName}.vep.ann.vcf"), file("${vcf.baseName}.vep.summary.html") into vepReport
 
-  when: 'vep' in tools
+  when: 'vep' in tools || 'merge' in tools
 
   script:
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
@@ -230,7 +238,8 @@ def defineDirectoryMap() {
 def defineToolList() {
   return [
     'snpeff',
-    'vep'
+    'vep',
+    'merge'
   ]
 }
 
@@ -252,6 +261,7 @@ def helpMessage() {
   log.info "       Possible values are:"
   log.info "         snpeff (use snpEff for Annotation of Variants)"
   log.info "         vep (use VEP for Annotation of Variants)"
+  log.info "         merge (first snpEff, then feed its output VCFs to VEP)"
   log.info "    --annotateTools"
   log.info "       Option to configure which tools to annotate."
   log.info "         Different tools to be separated by commas."
