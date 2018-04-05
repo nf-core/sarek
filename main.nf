@@ -275,7 +275,7 @@ markDuplicatesTSV.map { idPatient, status, idSample, bam, bai ->
   gender = patientGenders[idPatient]
   "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap.nonRealigned}/${bam}\t${directoryMap.nonRealigned}/${bai}\n"
 }.collectFile(
-  name: 'nonRealigned.tsv', sort: true, storeDir: "${directoryMap.nonRealigned}"
+  name: 'nonRealigned.tsv', sort: true, storeDir: directoryMap.nonRealigned
 )
 
 // Create intervals for realignement using both tumor+normal as input
@@ -571,7 +571,7 @@ process RunBamQC {
     set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC
 
   output:
-    file("${idSample}") into bamQCreport
+    file(idSample) into bamQCreport
 
   when: !params.noReports && !params.noBAMQC
 

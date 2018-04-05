@@ -153,7 +153,7 @@ process RunBamQC {
     set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC
 
   output:
-    file("${idSample}") into bamQCreport
+    file(idSample) into bamQCreport
 
   when: !params.noReports && !params.noBAMQC
 
@@ -770,7 +770,7 @@ def minimalInformationMessage() {
   log.info "Launch Dir  : " + workflow.launchDir
   log.info "Work Dir    : " + workflow.workDir
   log.info "Out Dir     : " + params.outDir
-  log.info "TSV file    : ${tsvFile}"
+  log.info "TSV file    : " + tsvFile
   log.info "Genome      : " + params.genome
   log.info "Genome_base : " + params.genome_base
   log.info "Tools       : " + tools.join(', ')
