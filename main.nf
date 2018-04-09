@@ -1,8 +1,6 @@
 #!/usr/bin/env nextflow
 
 /*
-vim: syntax=groovy
--*- mode: groovy;-*-
 kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 =                                 S  A  R  E  K                                =
@@ -277,7 +275,7 @@ markDuplicatesTSV.map { idPatient, status, idSample, bam, bai ->
   gender = patientGenders[idPatient]
   "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap.nonRealigned}/${bam}\t${directoryMap.nonRealigned}/${bai}\n"
 }.collectFile(
-  name: 'nonRealigned.tsv', sort: true, storeDir: "${directoryMap.nonRealigned}"
+  name: 'nonRealigned.tsv', sort: true, storeDir: directoryMap.nonRealigned
 )
 
 // Create intervals for realignement using both tumor+normal as input
@@ -573,7 +571,7 @@ process RunBamQC {
     set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC
 
   output:
-    file("${idSample}") into bamQCreport
+    file(idSample) into bamQCreport
 
   when: !params.noReports && !params.noBAMQC
 
@@ -884,9 +882,9 @@ def minimalInformationMessage() {
   log.info "Genome      : " + params.genome
   log.info "Genome_base : " + params.genome_base
   log.info "Step        : " + step
-  log.info "Containers  :"
-  if (params.repository) log.info "  Repository   : ${params.repository}"
-  else log.info "  ContainerPath: " + params.containerPath
+  log.info "Containers"
+  if (params.repository != "") log.info "  Repository   : " + params.repository
+  if (params.containerPath != "") log.info "  ContainerPath: " + params.containerPath
   log.info "  Tag          : " + params.tag
   log.info "Reference files used:"
   log.info "  dbsnp       :\n\t" + referenceMap.dbsnp

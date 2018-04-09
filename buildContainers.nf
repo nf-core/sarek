@@ -1,8 +1,6 @@
 #!/usr/bin/env nextflow
 
 /*
-vim: syntax=groovy
--*- mode: groovy;-*-
 kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 =                                 S  A  R  E  K                                =
@@ -234,9 +232,9 @@ def minimalInformationMessage() {
   log.info "Project Dir : " + workflow.projectDir
   log.info "Launch Dir  : " + workflow.launchDir
   log.info "Work Dir    : " + workflow.workDir
-  log.info "Containers  :"
-  if (params.repository) log.info "  Repository   : ${params.repository}"
-  else log.info "  ContainerPath: " + params.containerPath
+  log.info "Containers"
+  if (params.repository != "") log.info "  Repository   : " + params.repository
+  if (params.containerPath != "") log.info "  ContainerPath: " + params.containerPath
   log.info "  Tag          : " + params.tag
 }
 

@@ -1,8 +1,6 @@
 #!/usr/bin/env nextflow
 
 /*
-vim: syntax=groovy
--*- mode: groovy;-*-
 kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 =                                 S  A  R  E  K                                =
@@ -155,7 +153,7 @@ process RunBamQC {
     set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC
 
   output:
-    file("${idSample}") into bamQCreport
+    file(idSample) into bamQCreport
 
   when: !params.noReports && !params.noBAMQC
 
@@ -772,14 +770,13 @@ def minimalInformationMessage() {
   log.info "Launch Dir  : " + workflow.launchDir
   log.info "Work Dir    : " + workflow.workDir
   log.info "Out Dir     : " + params.outDir
-  log.info "TSV file    : ${tsvFile}"
+  log.info "TSV file    : " + tsvFile
   log.info "Genome      : " + params.genome
   log.info "Genome_base : " + params.genome_base
   log.info "Tools       : " + tools.join(', ')
-  log.info "Containers  :"
-  if (params.repository) log.info "  Repository   : ${params.repository}"
-  else log.info "  ContainerPath: " + params.containerPath
-  log.info "  Tag          : " + params.tag
+  log.info "Containers"
+  if (params.repository != "") log.info "  Repository   : " + params.repository
+  if (params.containerPath != "") log.info "  ContainerPath: " + params.containerPath
   log.info "Reference files used:"
   log.info "  dbsnp       :\n\t" + referenceMap.dbsnp
   log.info "\t" + referenceMap.dbsnpIndex
