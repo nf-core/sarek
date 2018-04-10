@@ -1,8 +1,6 @@
 #!/usr/bin/env nextflow
 
 /*
-vim: syntax=groovy
--*- mode: groovy;-*-
 kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 =                                 S  A  R  E  K                                =
@@ -301,9 +299,9 @@ def minimalInformationMessage() {
   if (tools) log.info "Tools       : " + tools.join(', ')
   if (annotateTools) log.info "Annotate on : " + annotateTools.join(', ')
   if (annotateVCF) log.info "VCF files   : " +annotateVCF.join(',\n    ')
-  log.info "Containers  :"
-  if (params.repository) log.info "  Repository   : ${params.repository}"
-  else log.info "  ContainerPath: " + params.containerPath
+  log.info "Containers"
+  if (params.repository != "") log.info "  Repository   : " + params.repository
+  if (params.containerPath != "") log.info "  ContainerPath: " + params.containerPath
   log.info "  Tag          : " + params.tag
   log.info "Reference files used:"
   log.info "  snpeffDb    :\n\t" + params.genomes[params.genome].snpeffDb
