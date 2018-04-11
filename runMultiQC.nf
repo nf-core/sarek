@@ -88,8 +88,8 @@ process GenerateMultiQCconfig {
   echo "- 'picard'" >> multiqc_config.yaml
   echo "- 'samtools'" >> multiqc_config.yaml
   echo "- 'qualimap'" >> multiqc_config.yaml
+  echo "- 'bcftools'" >> multiqc_config.yaml
   echo "- 'snpeff'" >> multiqc_config.yaml
-  echo "- 'vep'" >> multiqc_config.yaml
   """
 }
 
@@ -105,6 +105,7 @@ reportsForMultiQC = Channel.empty()
     Channel.fromPath("${directoryMap.fastQC}/*/*"),
     Channel.fromPath("${directoryMap.markDuplicatesQC}/*"),
     Channel.fromPath("${directoryMap.samtoolsStats}/*"),
+    Channel.fromPath("${directoryMap.snpeffReports}/*"),
     multiQCconfig
   ).collect()
 
@@ -147,6 +148,7 @@ def defineDirectoryMap() {
     'bamQC'            : "${params.outDir}/Reports/bamQC",
     'bcftoolsStats'    : "${params.outDir}/Reports/BCFToolsStats",
     'fastQC'           : "${params.outDir}/Reports/FastQC",
+    'snpeffReports'    : "${params.outDir}/Reports/SnpEff",
     'markDuplicatesQC' : "${params.outDir}/Reports/MarkDuplicates",
     'multiQC'          : "${params.outDir}/Reports/MultiQC",
     'samtoolsStats'    : "${params.outDir}/Reports/SamToolsStats"
