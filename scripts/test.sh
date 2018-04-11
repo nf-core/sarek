@@ -2,6 +2,7 @@
 set -xeuo pipefail
 
 BUILD=false
+KEEP=false
 GENOME=smallGRCh37
 PROFILE=singularity
 SAMPLE=data/tsv/tiny.tsv
@@ -32,6 +33,10 @@ do
     shift # past argument
     shift # past value
     ;;
+    -k|--keep)
+    KEEP=true
+    shift # past value
+    ;;
     -b|--build)
     BUILD=true
     shift # past value
@@ -52,7 +57,7 @@ function run_wrapper() {
 }
 
 function clean_repo() {
-  if [[ $TRAVIS == false ]]
+  if [[ $TRAVIS == false ]] && [[ $KEEP == true ]]
   then
     rm -rf work .nextflow* Preprocessing Reports Annotation VariantCalling Results
   fi
@@ -128,7 +133,7 @@ then
   fi
   run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz --noReports
   run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz,data/tiny/vcf/Strelka_9876T_variants.vcf.gz
-  # clean_repo
+  clean_repo
 fi
 
 if [[ ALL,BUILDCONTAINERS =~ $TEST ]] && [[ $PROFILE == docker ]]
