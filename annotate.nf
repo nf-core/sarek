@@ -131,7 +131,7 @@ if (params.verbose) bcfReport = bcfReport.view {
 process RunSnpeff {
   tag {vcf}
 
-  publishDir directoryMap.snpeff, mode: 'link'
+  publishDir params.outDir , saveAs: { it == "${vcf.baseName}.snpEff.csv" ? "${directoryMap.snpeffReports}/${it}" : "${directoryMap.snpeff}/${it}" }, mode: 'link'
 
   input:
     set variantCaller, file(vcf) from vcfForSnpeff
@@ -228,6 +228,7 @@ def defineDirectoryMap() {
     'strelka'          : "${params.outDir}/VariantCalling/Strelka",
     'strelkabp'        : "${params.outDir}/VariantCalling/StrelkaBP",
     'bcftoolsStats'    : "${params.outDir}/Reports/BCFToolsStats",
+    'snpeffReports'    : "${params.outDir}/Reports/SnpEff",
     'snpeff'           : "${params.outDir}/Annotation/SnpEff",
     'vep'              : "${params.outDir}/Annotation/VEP"
   ]
