@@ -178,9 +178,9 @@ process MapReads {
   script:
   readGroup = "@RG\\tID:${idRun}\\tPU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
   // adjust mismatch penalty for tumor samples
-  extra = status == 1 ? "-B 3 " : ""
+  extra = status == 1 ? "-B 3" : ""
   """
-  bwa mem -R \"${readGroup}\" ${extra}-t ${task.cpus} -M \
+  bwa mem -R \"${readGroup}\" ${extra} -t ${task.cpus} -M \
   ${genomeFile} ${fastqFile1} ${fastqFile2} | \
   samtools sort --threads ${task.cpus} -m 4G - > ${idRun}.bam
   """
