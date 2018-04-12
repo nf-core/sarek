@@ -33,7 +33,7 @@ ascat.bc <- ascat.aspcf(ascat.bc)
 ascat.plotSegmentedData(ascat.bc)
 
 #Run ASCAT to fit every tumor to a model, inferring ploidy, normal cell contamination, and discrete copy numbers
-ascat.output <- ascat.runAscat(ascat.bc)
+ascat.output <- ascat.runAscat(ascat.bc, gamma=1)
 
 #Write out segmented regions (including regions with one copy of each allele)
 #write.table(ascat.output$segments, file=paste(tumorname, ".segments.txt", sep=""), sep="\t", quote=F, row.names=F)
