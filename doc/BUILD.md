@@ -27,6 +27,7 @@ nextflow run . [--docker] [--singularity] [--containerPath <path>] [--push] [--c
   - `snpeff` this container serves as a base for `snpeffgrch37` and `snpeffgrch38`
   - `snpeffgrch37`
   - `snpeffgrch38`
+  - `vcftools`
   - `vepgrch37`
   - `vepgrch38`
 

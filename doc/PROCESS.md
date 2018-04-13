@@ -42,6 +42,7 @@ We divide them for the moment into 5 main steps:
 - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files
 - RunBamQC - Run qualimap BamQC on recalibrated BAM files
 - RunBcftoolsStats - Run BCFTools stats on vcf files
+- RunVcftools - Run VCFTools on vcf files
 
 ## Annotation:
 
