@@ -428,8 +428,7 @@ process ConcatVCF {
     file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
 
   output:
-    set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz") into vcfConcatenated
-    file("*.vcf.gz.tbi") into vcfConcatenatedTbi
+    set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfConcatenated
 
   when: ('mutect1' in tools || 'mutect2' in tools || 'freebayes' in tools ) && !params.onlyQC
 
