@@ -192,6 +192,7 @@ def defineContainersList(){
     'snpeff',
     'snpeffgrch37',
     'snpeffgrch38',
+    'vcftools',
     'vepgrch37',
     'vepgrch38'
     ]
@@ -211,8 +212,8 @@ def helpMessage() {
   log.info "       Default: all"
   log.info "       Possible values:"
   log.info "         all, fastqc, freebayes, gatk, igvtools, multiqc, mutect1"
-  log.info "         picard, qualimap, r-base, runallelecount, sarek"
-  log.info "         snpeff, snpeffgrch37, snpeffgrch38, vepgrch37, vepgrch38"
+  log.info "         picard, qualimap, r-base, runallelecount, sarek, snpeff"
+  log.info "         snpeffgrch37, snpeffgrch38, vcftools, vepgrch37, vepgrch38"
   log.info "    --docker: Build containers using Docker"
   log.info "    --help"
   log.info "       you're reading it"
