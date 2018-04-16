@@ -85,7 +85,7 @@ fi
 
 if [[ ALL,STEP =~ $TEST ]]
 then
-  run_wrapper --germline --sample $SAMPLE
+  run_wrapper --germline --sampleDir data/tiny/tiny/normal
   run_wrapper --germline --step realign --noReports
   run_wrapper --germline --step recalibrate --noReports
   clean_repo

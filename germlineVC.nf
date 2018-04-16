@@ -399,8 +399,8 @@ process ConcatVCF {
     file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
 
   output:
-    set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz") into vcfConcatenated
-    file("*.vcf.gz.tbi") into vcfConcatenatedTbi
+    set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfConcatenated
+
 
   when: ( 'haplotypecaller' in tools || 'mutect1' in tools || 'mutect2' in tools || 'freebayes' in tools ) && !params.onlyQC
 
@@ -453,8 +453,9 @@ process ConcatVCF {
 
 if (params.verbose) vcfConcatenated = vcfConcatenated.view {
   "Variant Calling output:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  File  : ${it[4].fileName}"
+  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: ${it[2]}\n\
+  Files : ${it[4].fileName}\n\
+  Index : ${it[5].fileName}"
 }
 
 process RunSingleStrelka {
@@ -549,7 +550,11 @@ if (params.verbose) singleMantaOutput = singleMantaOutput.view {
   Index : ${it[4].fileName}"
 }
 
-vcfForBCFtools = Channel.empty().mix(
+vcfForQC = Channel.empty().mix(
+  vcfConcatenated.map {
+    variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf, tbi ->
+    [variantcaller, vcf]
+  },
   singleStrelkaOutput.map {
     variantcaller, idPatient, idSample, vcf, tbi ->
     [variantcaller, vcf[1]]
@@ -558,6 +563,8 @@ vcfForBCFtools = Channel.empty().mix(
     variantcaller, idPatient, idSample, vcf, tbi ->
     [variantcaller, vcf[2]]
   })
+
+(vcfForBCFtools, vcfForVCFtools) = vcfForQC.into(2)
 
 process RunBcftoolsStats {
   tag {vcf}
@@ -585,6 +592,49 @@ if (params.verbose) bcfReport = bcfReport.view {
 
 bcfReport.close()
 
+process RunVcftools {
+  tag {vcf}
+
+  publishDir directoryMap.vcftools, mode: 'link'
+
+  input:
+    set variantCaller, file(vcf) from vcfForVCFtools
+
+  output:
+    file ("${vcf.baseName}.*") into vcfReport
+
+  when: !params.noReports
+
+  script:
+  """
+  vcftools \
+  --gzvcf ${vcf} \
+  --relatedness2 \
+  --out ${vcf.baseName}
+
+  vcftools \
+  --gzvcf ${vcf} \
+  --TsTv-by-count \
+  --out ${vcf.baseName}
+
+  vcftools \
+  --gzvcf ${vcf} \
+  --TsTv-by-qual \
+  --out ${vcf.baseName}
+
+  vcftools \
+  --gzvcf ${vcf} \
+  --FILTER-summary \
+  --out ${vcf.baseName}
+  """
+}
+
+if (params.verbose) vcfReport = vcfReport.view {
+  "VCFTools stats report:\n\
+  File  : [${it.fileName}]"
+}
+
+vcfReport.close()
 /*
 ================================================================================
 =                               F U N C T I O N S                              =
@@ -646,10 +696,11 @@ def defineDirectoryMap() {
     'bamQC'            : "${params.outDir}/Reports/bamQC",
     'bcftoolsStats'    : "${params.outDir}/Reports/BCFToolsStats",
     'samtoolsStats'    : "${params.outDir}/Reports/SamToolsStats",
+    'vcftools'         : "${params.outDir}/Reports/VCFTools",
     'ascat'            : "${params.outDir}/VariantCalling/Ascat",
     'freebayes'        : "${params.outDir}/VariantCalling/FreeBayes",
-    'haplotypecaller'  : "${params.outDir}/VariantCalling/HaplotypeCaller",
     'gvcf-hc'          : "${params.outDir}/VariantCalling/HaplotypeCallerGVCF",
+    'haplotypecaller'  : "${params.outDir}/VariantCalling/HaplotypeCaller",
     'manta'            : "${params.outDir}/VariantCalling/Manta",
     'mutect1'          : "${params.outDir}/VariantCalling/MuTect1",
     'mutect2'          : "${params.outDir}/VariantCalling/MuTect2",

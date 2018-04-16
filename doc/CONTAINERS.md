@@ -9,6 +9,7 @@ For processing + germline variant calling + Reports:
  - [picard](#picard-)
  - [qualimap](#qualimap-)
  - [sarek](#sarek-)
+ - [vcftools](#vcftools-)
 
 For processing + somatic variant calling + Reports:
  - [fastqc](#fastqc-)
@@ -21,6 +22,7 @@ For processing + somatic variant calling + Reports:
  - [r-base](#r-base-)
  - [runallelecount](#runallelecount-)
  - [sarek](#sarek-)
+ - [vcftools](#vcftools-)
 
 For annotation for GRCh37, you will need:
  - [snpeffgrch37](#snpeffgrch37-)
@@ -104,6 +106,12 @@ A container named after the process is made for each process. If a container can
 - Contain **[snpEff][snpeff-link]** 4.3i
 - Contain GRCh38.86
 
+## vcftools [![vcftools-docker status][vcftools-docker-badge]][vcftools-docker-link]
+
+- Based on `nfcore/base:latest`
+- Contain **[vcftools][vcftools-link]** 0.1.15
+
+
 ## vepgrch37 [![vepgrch37-docker status][vepgrch37-docker-badge]][vepgrch37-docker-link]
 
 - Based on `willmclaren/ensembl-vep:release_90.6`
@@ -169,6 +177,9 @@ A container named after the process is made for each process. If a container can
 [snpeffgrch38-docker-badge]: https://img.shields.io/docker/automated/maxulysse/snpeffgrch38.svg
 [snpeffgrch38-docker-link]: https://hub.docker.com/r/maxulysse/snpeffgrch38
 [strelka-link]: https://github.com/Illumina/strelka
+[vcftools-docker-badge]: https://img.shields.io/docker/automated/maxulysse/vcftools.svg
+[vcftools-docker-link]: https://hub.docker.com/r/maxulysse/vcftools
+[vcftools-link]: https://vcftools.github.io/index.html
 [vep-docker-badge]: https://img.shields.io/docker/automated/maxulysse/vep.svg
 [vep-docker-link]: https://hub.docker.com/r/maxulysse/vep
 [vep-link]: https://github.com/Ensembl/ensembl-vep
