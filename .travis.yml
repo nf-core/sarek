@@ -32,7 +32,7 @@ install: # Install Nextflow (and Singularity if needed)
   - "travis_retry ./scripts/containers.sh --profile $PROFILE --test $TEST"
 
 before_script: # Build references when needed
-  - "./scripts/test.sh --profile $PROFILE --test $TEST --build
+  - "./scripts/test.sh --profile $PROFILE --test $TEST --build"
 
 script:
-  - "./scripts/test.sh --profile $PROFILE --test $TEST
+  - "./scripts/test.sh --profile $PROFILE --test $TEST"
