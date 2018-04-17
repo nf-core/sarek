@@ -3,26 +3,18 @@
 Subsets of all containers can be dowloaded:
 
 For processing + germline variant calling + Reports:
- - [fastqc](#fastqc-)
  - [gatk](#gatk-)
- - [multiqc](#multiqc-)
  - [picard](#picard-)
- - [qualimap](#qualimap-)
  - [sarek](#sarek-)
- - [vcftools](#vcftools-)
 
 For processing + somatic variant calling + Reports:
- - [fastqc](#fastqc-)
  - [freebayes](#freebayes-)
  - [gatk](#gatk-)
- - [multiqc](#multiqc-)
  - [mutect1](#mutect1-)
  - [picard](#picard-)
- - [qualimap](#qualimap-)
  - [r-base](#r-base-)
  - [runallelecount](#runallelecount-)
  - [sarek](#sarek-)
- - [vcftools](#vcftools-)
 
 For annotation for GRCh37, you will need:
  - [snpeffgrch37](#snpeffgrch37-)
@@ -33,11 +25,6 @@ For annotation for GRCh38, you will need:
  - [vepgrch38](#vepgrch38-)
 
 A container named after the process is made for each process. If a container can be reused, it will be named after the tool used.
-
-## fastqc [![fastqc-docker status][fastqc-docker-badge]][fastqc-docker-link]
-
-- Based on `openjdk:8`
-- Contain **[FastQC][fastqc-link]** 0.11.5
 
 ## freebayes [![freebayes-docker status][freebayes-docker-badge]][freebayes-docker-link]
 
@@ -54,11 +41,6 @@ A container named after the process is made for each process. If a container can
 - Based on `openjdk:8-slim`
 - Contain **[IGVTools][igvtools-link]** 2.3.98
 
-## multiqc [![multiqc-docker status][multiqc-docker-badge]][multiqc-docker-link]
-
-- Based on `ewels/multiqc:v1.4`
-- Contain **[MultiQC][multiqc-link]** 143
-
 ## mutect1 [![mutect1-docker status][mutect1-docker-badge]][mutect1-docker-link]
 
 - Based on `openjdk:7-slim`
@@ -69,10 +51,13 @@ A container named after the process is made for each process. If a container can
 - Based on `openjdk:8-slim`
 - Contain **[Picard][picard-link]** 2.0.1
 
-## qualimap [![qualimap-docker status][qualimap-docker-badge]][qualimap-docker-link]
+## qctools [![qctools-docker status][qctools-docker-badge]][qctools-docker-link]
 
-- Based on `openjdk:8`
+- Based on `nfcore/base:latest`
+- Contain **[FastQC][fastqc-link]** 0.11.7
+- Contain **[MultiQC][multiqc-link]** 1.5
 - Contain **[qualimap][qualimap-link]** 2.2.1
+- Contain **[vcftools][vcftools-link]** 0.1.15
 
 ## runallelecount [![runallelecount-docker status][runallelecount-docker-badge]][runallelecount-docker-link]
 
@@ -105,12 +90,6 @@ A container named after the process is made for each process. If a container can
 - Based on `maxulysse/snpeff`
 - Contain **[snpEff][snpeff-link]** 4.3i
 - Contain GRCh38.86
-
-## vcftools [![vcftools-docker status][vcftools-docker-badge]][vcftools-docker-link]
-
-- Based on `nfcore/base:latest`
-- Contain **[vcftools][vcftools-link]** 0.1.15
-
 
 ## vepgrch37 [![vepgrch37-docker status][vepgrch37-docker-badge]][vepgrch37-docker-link]
 
@@ -157,8 +136,8 @@ A container named after the process is made for each process. If a container can
 [picard-docker-badge]: https://img.shields.io/docker/automated/maxulysse/picard.svg
 [picard-docker-link]: https://hub.docker.com/r/maxulysse/picard
 [picard-link]: https://github.com/broadinstitute/picard
-[qualimap-docker-badge]: https://img.shields.io/docker/automated/maxulysse/qualimap.svg
-[qualimap-docker-link]: https://hub.docker.com/r/maxulysse/qualimap
+[qctools-docker-badge]: https://img.shields.io/docker/automated/maxulysse/qctools.svg
+[qctools-docker-link]: https://hub.docker.com/r/maxulysse/qctools
 [qualimap-link]: http://qualimap.bioinfo.cipf.es
 [rcolorbrewer-link]: https://CRAN.R-project.org/package=RColorBrewer
 [runallelecount-docker-badge]: https://img.shields.io/docker/automated/maxulysse/runallelecount.svg
