@@ -1,9 +1,12 @@
 # You can use this file to create a conda environment:
 #   conda env create -f environment.yml
-name: sarek-vcftools-2.0
+name: sarek-qctools-2.0
 channels:
-  - defaults
-  - conda-forge
   - bioconda
+  - conda-forge
+  - defaults
 dependencies:
-- vcftools=0.1.15
+  - fastqc=0.11.7
+  - multiqc=1.5
+  - qualimap=2.2.2a
+  - vcftools=0.1.15
