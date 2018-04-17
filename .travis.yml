@@ -30,10 +30,9 @@ env:
 install: # Install Nextflow (and Singularity if needed)
   - "./scripts/install.sh --tool $TOOL_INSTALL"
   - "travis_retry ./scripts/containers.sh --profile $PROFILE --test $TEST"
-  - "npm install -g gnomon"
 
 before_script: # Build references when needed
-  - "./scripts/test.sh --profile $PROFILE --test $TEST --build | gnomon --medium 120.0 --high 600.0 --real-time=false"
+  - "./scripts/test.sh --profile $PROFILE --test $TEST --build
 
 script:
-  - "./scripts/test.sh --profile $PROFILE --test $TEST | gnomon --medium 120.0 --high 600.0 --real-time=false"
+  - "./scripts/test.sh --profile $PROFILE --test $TEST
