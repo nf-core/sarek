@@ -57,8 +57,8 @@ function toLower() {
 
 if [[ $TOOL = docker ]] && [[ GRCh37,GRCh38 =~ $GENOME ]]
 then
-    nextflow run buildContainers.nf -profile ${PROFILE} --verbose --docker ${PUSH} --repository ${REPOSITORY} --tag ${TAG} --containers fastqc,freebayes,gatk,igvtools,multiqc,mutect1,picard,qualimap,r-base,runallelecount,sarek,snpeff,vcftools
+    nextflow run buildContainers.nf -profile ${PROFILE} --verbose --docker ${PUSH} --repository ${REPOSITORY} --tag ${TAG} --containers freebayes,gatk,igvtools,mutect1,picard,qctools,r-base,runallelecount,sarek,snpeff
     nextflow run buildContainers.nf -profile ${PROFILE} --verbose --docker ${PUSH} --repository ${REPOSITORY} --tag ${TAG} --containers snpeff$(toLower ${GENOME}),vep$(toLower ${GENOME})
 else
-    nextflow run buildContainers.nf -profile ${PROFILE} --verbose --singularity --repository ${REPOSITORY} --tag ${TAG} --containerPath containers/ --containers fastqc,freebayes,gatk,igvtools,multiqc,mutect1,picard,qualimap,r-base,runallelecount,sarek,snpeff$(toLower ${GENOME}),vcftools,vep$(toLower ${GENOME})
+    nextflow run buildContainers.nf -profile ${PROFILE} --verbose --singularity --repository ${REPOSITORY} --tag ${TAG} --containerPath containers/ --containers freebayes,gatk,igvtools,mutect1,picard,qctools,r-base,runallelecount,sarek,snpeff$(toLower ${GENOME}),vep$(toLower ${GENOME})
 fi

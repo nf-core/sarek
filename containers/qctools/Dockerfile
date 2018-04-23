@@ -2,7 +2,7 @@ FROM nfcore/base:latest
 
 LABEL \
   author="Maxime Garcia" \
-  description="vcftools image used in Sarek 2.0" \
+  description="Image with QC tools used in Sarek" \
   maintainer="maxime.garcia@scilifelab.se"
 
 COPY environment.yml /
@@ -12,4 +12,4 @@ RUN \
   conda clean -a
 
   # Export PATH
-ENV PATH /opt/conda/envs/sarek-vcftools-2.0/bin:$PATH
+ENV PATH /opt/conda/envs/sarek-qctools-2.0/bin:$PATH
