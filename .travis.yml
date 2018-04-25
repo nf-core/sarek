@@ -4,8 +4,6 @@ language: java
 
 jdk: openjdk8
 
-node_js: "node"
-
 services:
   - docker
 
