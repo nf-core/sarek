@@ -5,7 +5,7 @@ BUILD=false
 KEEP=false
 GENOME=smallGRCh37
 PROFILE=singularity
-SAMPLE=data/tsv/tiny.tsv
+SAMPLE=data/testdata/tsv/tiny.tsv
 TEST=ALL
 TRAVIS=${TRAVIS:-false}
 
@@ -111,8 +111,8 @@ fi
 
 if [[ ALL,MANTA =~ $TEST ]]
 then
-  run_wrapper --somatic --sample data/tsv/tiny-manta.tsv --variantCalling --tools Manta --noReports
-  run_wrapper --somatic --sample data/tsv/tiny-manta.tsv --variantCalling --tools Manta,Strelka --noReports --strelkaBP
+  run_wrapper --somatic --sample data/testdata/tsv/tiny-manta.tsv --variantCalling --tools Manta --noReports
+  run_wrapper --somatic --sample data/testdata/tsv/tiny-manta.tsv --variantCalling --tools Manta,Strelka --noReports --strelkaBP
   clean_repo
 fi
 
