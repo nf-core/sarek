@@ -1,4 +1,5 @@
 Annotation/
+data/
 Preprocessing/
 References/
 Reports/
@@ -8,7 +9,4 @@ work/
 .nextflow*
 *.img
 *.tar.gz
-report.html*
-timeline.html*
-trace.txt*
 .DS_Store
