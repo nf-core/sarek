@@ -5,7 +5,7 @@ BUILD=false
 KEEP=false
 GENOME=smallGRCh37
 PROFILE=singularity
-SAMPLE=data/testdata/tsv/tiny.tsv
+SAMPLE=Sarek-data/testdata/tsv/tiny.tsv
 TEST=ALL
 TRAVIS=${TRAVIS:-false}
 
