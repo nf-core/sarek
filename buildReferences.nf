@@ -86,7 +86,7 @@ process ProcessReference {
 
   if (params.download)
   """
-  wget https://github.com/szilvajuhos/smallRef/raw/master/${f_reference}
+  wget https://github.com/SciLifeLab/Sarek-data/raw/master/reference/${f_reference}
   """
 
   else
