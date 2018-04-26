@@ -66,7 +66,14 @@ function clean_repo() {
 # Build references only for smallGRCh37
 if [[ $GENOME == smallGRCh37 ]] && [[ $TEST != BUILDCONTAINERS ]] && [[ BUILD ]]
 then
-  nf_test buildReferences.nf --download --outDir References/$GENOME
+  if [[ ! -d data ]]
+  then
+    git clone https://github.com/SciLifeLab/Sarek-data.git data
+  fi
+  if [[ ! -d References ]]
+  then
+    nf_test buildReferences.nf --refDir data/reference --outDir References/$GENOME
+  fi
   # Remove images only on TRAVIS
   if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
   then
@@ -79,13 +86,13 @@ fi
 
 if [[ ALL,DIR =~ $TEST ]]
 then
-  run_wrapper --germline --sampleDir data/tiny/tiny/normal
+  run_wrapper --germline --sampleDir data/testdata/tiny/normal
   clean_repo
 fi
 
 if [[ ALL,STEP =~ $TEST ]]
 then
-  run_wrapper --germline --sampleDir data/tiny/tiny/normal
+  run_wrapper --germline --sampleDir data/testdata/tiny/normal
   run_wrapper --germline --step realign --noReports
   run_wrapper --germline --step recalibrate --noReports
   clean_repo
@@ -93,7 +100,7 @@ fi
 
 if [[ ALL,GERMLINE =~ $TEST ]]
 then
-  run_wrapper --germline --sampleDir data/tiny/tiny/normal --variantCalling --tools HaplotypeCaller
+  run_wrapper --germline --sampleDir data/testdata/tiny/normal --variantCalling --tools HaplotypeCaller
   clean_repo
 fi
 
@@ -131,8 +138,8 @@ then
     rm -rf work/singularity/sarek-latest.img
     rm -rf work/singularity/picard-latest.img
   fi
-  run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz --noReports
-  run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz,data/tiny/vcf/Strelka_9876T_variants.vcf.gz
+  run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF data/testdata/vcf/Strelka_1234N_variants.vcf.gz --noReports
+  run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF data/testdata/vcf/Strelka_1234N_variants.vcf.gz,data/testdata/vcf/Strelka_9876T_variants.vcf.gz
   clean_repo
 fi
 
