@@ -98,61 +98,61 @@ function run_sarek() {
 
 if [[ $GERMLINE == true ]] && [[ $SOMATIC == true ]]
 then
-  echo "Germline and Somatic"
+  echo "$(tput setaf 1)Germline and Somatic$(tput sgr0)"
   exit
 fi
 
 if [[ $GERMLINE == true ]] && [[ $ANNOTATE == true ]]
 then
-  echo "Germline and Annotate"
+  echo "$(tput setaf 1)Germline and Annotate$(tput sgr0)"
   exit
 fi
 
 if [[ $SOMATIC == true ]] && [[ $SAMPLEDIR != '' ]]
 then
-  echo "Directory defined for Somatic"
+  echo "$(tput setaf 1)Directory defined for Somatic$(tput sgr0)"
   exit
 fi
 
 if [[ $GERMLINE == true ]] && [[ $SAMPLEDIR != '' ]]
 then
-  echo "Germline with SampleDir"
+  echo "$(tput setaf 1)Germline with SampleDir$(tput sgr0)"
   run_sarek main.nf --step $STEP --sampleDir $SAMPLEDIR
 fi
 
 if [[ $GERMLINE == true ]] && [[ $SAMPLETSV != '' ]]
 then
-  echo "Germline with TSV"
+  echo "$(tput setaf 1)Germline with TSV$(tput sgr0)"
   run_sarek main.nf --step $STEP --sample $SAMPLETSV
 fi
 
 if [[ $GERMLINE == true ]] && [[ $VARIANTCALLING == true ]]
 then
-  echo "GermlineVC"
+  echo "$(tput setaf 1)GermlineVC$(tput sgr0)"
   run_sarek germlineVC.nf --tools $TOOLS
 fi
 
 if [[ $SOMATIC == true ]] && [[ $SAMPLETSV != '' ]]
 then
-  echo "Somatic with TSV"
+  echo "$(tput setaf 1)Somatic with TSV$(tput sgr0)"
   run_sarek main.nf --step $STEP --sample $SAMPLETSV
 fi
 
 if [[ $SOMATIC == true ]] && [[ $VARIANTCALLING == true ]]
 then
-  echo "SomaticVC"
+  echo "$(tput setaf 1)SomaticVC$(tput sgr0)"
   run_sarek germlineVC.nf --tools $TOOLS
   run_sarek somaticVC.nf --tools $TOOLS
 fi
 
 if [[ $ANNOTATE == true ]]
 then
-  echo "Annotate"
+  echo "$(tput setaf 1)Annotate$(tput sgr0)"
   run_sarek annotate.nf --tools $TOOLS --annotateVCF $ANNOTATEVCF
 fi
 
 if [[ $REPORTS == true ]]
 then
-  echo "Reports"
+  echo "$(tput setaf 1)Reports$(tput sgr0)"
   run_sarek runMultiQC.nf
 fi

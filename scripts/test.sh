@@ -57,8 +57,9 @@ function run_wrapper() {
 }
 
 function clean_repo() {
-  if [[ $TRAVIS == false ]] && [[ $KEEP == true ]]
+  if [[ $TRAVIS == false ]] && [[ $KEEP == false ]]
   then
+    echo "$(tput setaf 1)Cleaning directory$(tput sgr0)"
     rm -rf work .nextflow* Preprocessing Reports Annotation VariantCalling Results
   fi
 }
@@ -68,10 +69,12 @@ if [[ $GENOME == smallGRCh37 ]] && [[ $TEST != BUILDCONTAINERS ]] && [[ BUILD ]]
 then
   if [[ ! -d Sarek-data ]]
   then
+    echo "$(tput setaf 1)Cloning Sarek-data repository$(tput sgr0)"
     git clone https://github.com/SciLifeLab/Sarek-data.git
   fi
   if [[ ! -d References ]]
   then
+    echo "$(tput setaf 1)Building references$(tput sgr0)"
     nf_test buildReferences.nf --refDir Sarek-data/reference --outDir References/$GENOME
   fi
   # Remove images only on TRAVIS
