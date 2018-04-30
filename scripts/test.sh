@@ -47,11 +47,6 @@ do
   esac
 done
 
-function nf_test() {
-  echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE --genome $GENOME -resume --verbose$(tput sgr0)"
-  nextflow run $@ -profile $PROFILE --genome $GENOME -resume --genome_base $PWD/References/$GENOME --verbose
-}
-
 function run_wrapper() {
   ./scripts/wrapper.sh $@ --profile $PROFILE --genome $GENOME --genomeBase $PWD/References/$GENOME --verbose
 }
@@ -75,7 +70,7 @@ then
   if [[ ! -d References ]]
   then
     echo "$(tput setaf 1)Building references$(tput sgr0)"
-    nf_test buildReferences.nf --refDir Sarek-data/reference --outDir References/$GENOME
+    nextflow run buildReferences.nf --refDir Sarek-data/reference --outDir References/$GENOME -profile $PROFILE --genome $GENOME --verbose
   fi
   # Remove images only on TRAVIS
   if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
@@ -148,6 +143,5 @@ fi
 
 if [[ ALL,BUILDCONTAINERS =~ $TEST ]] && [[ $PROFILE == docker ]]
 then
-  nf_test buildContainers.nf --docker --containers gatk,igvtools,mutect1,picard,qctools,runallelecount,r-base,snpeff,sarek
-  clean_repo
+  ./scripts/do_all.sh --genome $GENOME
 fi
