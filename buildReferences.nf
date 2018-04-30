@@ -56,14 +56,7 @@ if (params.help) exit 0, helpMessage()
 if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
-if (!params.download && params.refDir == "" ) exit 1, "No --refDir specified"
-if (params.download && params.refDir != "" ) exit 1, "No need to specify --refDir"
-
-ch_referencesFiles = defReferencesFiles(params.genome)
-
-if (params.download && params.genome != "smallGRCh37") exit 1, "Not possible to download ${params.genome} references files"
-
-if (!params.download) ch_referencesFiles.each{checkFile(params.refDir + "/" + it)}
+ch_referencesFiles = Channel.fromPath("${params.refDir}/*")
 
 /*
 ================================================================================
@@ -73,37 +66,10 @@ if (!params.download) ch_referencesFiles.each{checkFile(params.refDir + "/" + it
 
 startMessage()
 
-process ProcessReference {
-  tag params.download ? {"Download: " + f_reference} : {"Link: " + f_reference}
-
-  input:
-    val(f_reference) from ch_referencesFiles
-
-  output:
-    file(f_reference) into ch_processedFiles
-
-  script:
-
-  if (params.download)
-  """
-  wget https://github.com/szilvajuhos/smallRef/raw/master/${f_reference}
-  """
-
-  else
-  """
-  ln -s ${params.refDir}/${f_reference} .
-  """
-}
-
-
-if (params.verbose) ch_processedFiles = ch_processedFiles.view {
-  "Files preprocessed  : ${it.fileName}"
-}
-
 ch_compressedfiles = Channel.create()
 ch_notCompressedfiles = Channel.create()
 
-ch_processedFiles
+ch_referencesFiles
   .choice(ch_compressedfiles, ch_notCompressedfiles) {it =~ ".(gz|tar.bz2)" ? 0 : 1}
 
 process DecompressFile {
@@ -294,9 +260,6 @@ def helpMessage() {
   this.sarekMessage()
   log.info "    Usage:"
   log.info "       nextflow run buildReferences.nf --refDir <pathToRefDir> --genome <genome>"
-  log.info "       nextflow run buildReferences.nf --download --genome smallGRCh37"
-  log.info "    --download"
-  log.info "       Download reference files. (only with --genome smallGRCh37)"
   log.info "    --refDir <Directoy>"
   log.info "       Specify a directory containing reference files."
   log.info "    --outDir <Directoy>"

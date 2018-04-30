@@ -5,7 +5,7 @@ BUILD=false
 KEEP=false
 GENOME=smallGRCh37
 PROFILE=singularity
-SAMPLE=data/tsv/tiny.tsv
+SAMPLE=Sarek-data/testdata/tsv/tiny.tsv
 TEST=ALL
 TRAVIS=${TRAVIS:-false}
 
@@ -47,18 +47,14 @@ do
   esac
 done
 
-function nf_test() {
-  echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE --genome $GENOME -resume --verbose$(tput sgr0)"
-  nextflow run $@ -profile $PROFILE --genome $GENOME -resume --genome_base $PWD/References/$GENOME --verbose
-}
-
 function run_wrapper() {
   ./scripts/wrapper.sh $@ --profile $PROFILE --genome $GENOME --genomeBase $PWD/References/$GENOME --verbose
 }
 
 function clean_repo() {
-  if [[ $TRAVIS == false ]] && [[ $KEEP == true ]]
+  if [[ $TRAVIS == false ]] && [[ $KEEP == false ]]
   then
+    echo "$(tput setaf 1)Cleaning directory$(tput sgr0)"
     rm -rf work .nextflow* Preprocessing Reports Annotation VariantCalling Results
   fi
 }
@@ -66,7 +62,16 @@ function clean_repo() {
 # Build references only for smallGRCh37
 if [[ $GENOME == smallGRCh37 ]] && [[ $TEST != BUILDCONTAINERS ]] && [[ BUILD ]]
 then
-  nf_test buildReferences.nf --download --outDir References/$GENOME
+  if [[ ! -d Sarek-data ]]
+  then
+    echo "$(tput setaf 1)Cloning Sarek-data repository$(tput sgr0)"
+    git clone https://github.com/SciLifeLab/Sarek-data.git
+  fi
+  if [[ ! -d References ]]
+  then
+    echo "$(tput setaf 1)Building references$(tput sgr0)"
+    nextflow run buildReferences.nf --refDir Sarek-data/reference --outDir References/$GENOME -profile $PROFILE --genome $GENOME --verbose
+  fi
   # Remove images only on TRAVIS
   if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
   then
@@ -79,13 +84,13 @@ fi
 
 if [[ ALL,DIR =~ $TEST ]]
 then
-  run_wrapper --germline --sampleDir data/tiny/tiny/normal
+  run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal
   clean_repo
 fi
 
 if [[ ALL,STEP =~ $TEST ]]
 then
-  run_wrapper --germline --sampleDir data/tiny/tiny/normal
+  run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal
   run_wrapper --germline --step realign --noReports
   run_wrapper --germline --step recalibrate --noReports
   clean_repo
@@ -93,7 +98,7 @@ fi
 
 if [[ ALL,GERMLINE =~ $TEST ]]
 then
-  run_wrapper --germline --sampleDir data/tiny/tiny/normal --variantCalling --tools HaplotypeCaller
+  run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal --variantCalling --tools HaplotypeCaller
   clean_repo
 fi
 
@@ -104,8 +109,8 @@ fi
 
 if [[ ALL,MANTA =~ $TEST ]]
 then
-  run_wrapper --somatic --sample data/tsv/tiny-manta.tsv --variantCalling --tools Manta --noReports
-  run_wrapper --somatic --sample data/tsv/tiny-manta.tsv --variantCalling --tools Manta,Strelka --noReports --strelkaBP
+  run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-manta.tsv --variantCalling --tools Manta --noReports
+  run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-manta.tsv --variantCalling --tools Manta,Strelka --noReports --strelkaBP
   clean_repo
 fi
 
@@ -131,13 +136,12 @@ then
     rm -rf work/singularity/sarek-latest.img
     rm -rf work/singularity/picard-latest.img
   fi
-  run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz --noReports
-  run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz,data/tiny/vcf/Strelka_9876T_variants.vcf.gz
+  run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF Sarek-data/testdata/vcf/Strelka_1234N_variants.vcf.gz --noReports
+  run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF Sarek-data/testdata/vcf/Strelka_1234N_variants.vcf.gz,Sarek-data/testdata/vcf/Strelka_9876T_variants.vcf.gz
   clean_repo
 fi
 
 if [[ ALL,BUILDCONTAINERS =~ $TEST ]] && [[ $PROFILE == docker ]]
 then
-  nf_test buildContainers.nf --docker --containers gatk,igvtools,mutect1,picard,qctools,runallelecount,r-base,snpeff,sarek
-  clean_repo
+  ./scripts/do_all.sh --genome $GENOME
 fi

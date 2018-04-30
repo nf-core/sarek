@@ -83,7 +83,7 @@ if (params.sample) tsvPath = params.sample
 // No need for tsv file for step annotate
 if (!params.sample && !params.sampleDir) {
   tsvPaths = [
-      'mapping': "${workflow.projectDir}/data/tsv/tiny.tsv",
+      'mapping': "${workflow.projectDir}/Sarek-data/testdata/tsv/tiny.tsv",
       'realign': "${directoryMap.nonRealigned}/nonRealigned.tsv",
       'recalibrate': "${directoryMap.nonRecalibrated}/nonRecalibrated.tsv"
   ]
@@ -721,12 +721,8 @@ def extractFastq(tsvFile) {
       def status     = returnStatus(list[2].toInteger())
       def idSample   = list[3]
       def idRun      = list[4]
-
-      // Normally path to files starts from workflow.launchDir
-      // But when executing workflow from Github
-      // Path to hosted FASTQ files starts from workflow.projectDir
-      def fastqFile1 = workflow.commitId && params.test ? returnFile("${workflow.projectDir}/${list[5]}") : returnFile(list[5])
-      def fastqFile2 = workflow.commitId && params.test ? returnFile("${workflow.projectDir}/${list[6]}") : returnFile(list[6])
+      def fastqFile1 = returnFile(list[5])
+      def fastqFile2 = returnFile(list[6])
 
       checkFileExtension(fastqFile1,".fastq.gz")
       checkFileExtension(fastqFile2,".fastq.gz")

@@ -2,13 +2,11 @@ Annotation/
 Preprocessing/
 References/
 Reports/
+Sarek-data/
 VariantCalling/
 work/
 .*swp
+.DS_Store
 .nextflow*
 *.img
 *.tar.gz
-report.html*
-timeline.html*
-trace.txt*
-.DS_Store
