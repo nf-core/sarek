@@ -48,7 +48,7 @@ done
 
 if [[ $GENOME = smallGRCh37 ]]
 then
-    $GENOME = GRCh37
+    GENOME=GRCh37
 fi
 
 function toLower() {
