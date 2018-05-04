@@ -1,19 +1,95 @@
-# Tests
+# Testing Sarek
 
-One script is available for testing purpose:
+For testing purpose we provide [Sarek-data](https://github.com/SciLifeLab/Sarek-data), a repository with test data and corresponding reference files.
+
+One simple bash script is available, which will pull the Sarek-data repository and perform all the tests:
 - [`scripts/test.sh`](../scripts/test.sh)
+
+Such tests are used in our Continuous Integration with Travis. You can perform the same tests to familiarize yourself with the workflow.
+
+### Testing with Singularity
+For testing with Docker, just replace `singularity` with `docker` in every occurence.
+```bash
+# Dowload Sarek
+git clone https://github.com/SciLifeLab/Sarek Sarek-test
+cd Sarek-test
+
+# Dowload Sarek test data
+git clone https://github.com/SciLifeLab/Sarek-data
+
+# Build the references for the test data
+nextflow run buildReferences.nf --outDir References/smallGRCh37 \
+  --refDir Sarek-data/reference --genome smallGRCh37 --tag latest \
+  --verbose -profile singularity
+
+# Testing --sampleDir as input for Germline
+nextflow run main.nf --sampleDir Sarek-data/testdata/manta/normal \
+  --step mapping --genome smallGRCh37 --genome_base References/smallGRCh37 \
+  --tag latest -profile singularity
+
+# Testing to restart from `realign`
+nextflow run main.nf --step realign \
+  --genome smallGRCh37 --genome_base References/smallGRCh37 \
+  --tag latest -profile singularity
+
+# Testing to restart from `recalibrate`
+nextflow run main.nf --step recalibrate \
+  --genome smallGRCh37 --genome_base References/smallGRCh37 \
+  --tag latest -profile singularity
+
+# Testing germline variant calling
+nextflow run germlineVC.nf --genome smallGRCh37 \
+  --genome_base References/smallGRCh37 --tools HaplotypeCaller,Manta,Strelka \
+  --tag latest -profile singularity
+
+# Testing generating report
+nextflow run runMultiQC.nf -profile singularity
+
+# Removing test data before new tests
+rm -rf Preprocessing Reports VariantCalling
+
+# Testing --sample as input for Somatic
+nextflow run main.nf --sample Sarek-data/testdata/tsv/tiny-manta.tsv \
+  --step mapping --genome smallGRCh37 --genome_base References/smallGRCh37 \
+  --tag latest -profile singularity
+
+# Testing germline variant calling
+nextflow run germlineVC.nf --genome smallGRCh37 \
+  --genome_base References/smallGRCh37 --tools HaplotypeCaller,Manta,Strelka \
+  --tag latest -profile singularity
+
+# Testing somatic variant calling
+nextflow run somaticVC.nf --genome smallGRCh37 \
+  --genome_base References/smallGRCh37 --tools Manta,Strelka,FreeBayes,MuTect2 \
+  --tag latest -profile singularity
+
+# Testing somatic variant calling following Strelka2 Best Practices
+nextflow run somaticVC.nf --genome smallGRCh37 \
+  --genome_base References/smallGRCh37 --tools Manta,Strelka,FreeBayes,MuTect2 \
+  --strelkaBP --tag latest -profile singularity
+
+# Testing annotation
+nextflow run somaticVC.nf --tools snpEFF,VEP \
+  --annotateVCF VariantCalling/StrelkaBP/Strelka_9876T_vs_1234N_somatic_indels.vcf.gz \
+  -profile singularity
+
+# Testing generating report
+nextflow run runMultiQC.nf -profile singularity
+```
+
+## Usage
 
 Four optional arguments are supported:
 - `-g` || `--genome`:
   Choose the genome reference version (overwrite configuration files and profiles)
 - `-p` || `--profile`:
-  Choose which profile to test. These options should work on a personnal computer:
+  Choose which profile to test. These options should work on a personal computer:
   - `docker` test using Docker containers
   - `singularity` (default) test using Singularity containers
 - `-s` || `--sample`:
-  Use to change the test sample (default=`data/tsv/tiny.tsv`)
+  Use to change the test sample (default=`Sarek-data/testdata/tsv/tiny.tsv`)
 - `-t` || `--test`:
- - `DIR`: test `mapping` with an input directory, all other tests use a TSV file
+ - `DIR`: test `mapping` with an input directory
  - `STEP`: test `mapping`, `realign` and `recalibrate`
  - `GERMLINE`: test `mapping` and Variant Calling with `HaplotypeCaller`
  - `TOOLS`: test `mapping` and Variant Calling with `FreeBayes`, `HaplotypeCaller`, `MuTect1`, `MuTect2`, `Strelka`
@@ -23,19 +99,17 @@ Four optional arguments are supported:
  - `BUILDCONTAINERS`: test building all containers except `snpeffgrch37`, `snpeffgrch38`, `vepgrch37` and `vepgrch38`
  - `ALL`: test all the previous tests (default)
 
-## Usage
-
 ```bash
-# Will try all tests using Singularity
+# Will perform all tests using Singularity
 ./scripts/test.sh
-# Will try all tests using Docker
+# Will perform all tests using Docker
 ./scripts/test.sh -p docker
-# Will try `STEP` tests using Singularity
+# Will perform `STEP` tests using Singularity
 ./scripts/test.sh -t `STEP`
-# Will try `STEP` tests using Singularity with GRCh37 genome
+# Will perform `STEP` tests using Singularity with GRCh37 genome
 ./scripts/test.sh -t `STEP` -g GRCh37
-# Will try all tests using Singularity on manta test data
-./scripts/test.sh -s data/tsv/tiny-manta.tsv
+# Will perform all tests using Singularity on manta test data
+./scripts/test.sh -s Sarek-data/testdata/tsv/tiny-manta.tsv
 ```
 
 --------------------------------------------------------------------------------
