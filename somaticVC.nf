@@ -533,10 +533,10 @@ process RunManta {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
 
   publishDir directoryMap.manta, mode: 'link',
-      saveAs: {filename ->
-                  if (filename.endsWith(".bam") || filename.endsWith(".bai")) null
-                  else $filename
-                  }
+      saveAs: {
+        if (it.endsWith(".bam") || it.endsWith(".bai")) null
+        else it
+      }
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
     set file(genomeFile), file(genomeIndex) from Channel.value([
