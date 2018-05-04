@@ -15,7 +15,10 @@
    id="svg6913"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="CPU_usage.svg">
+   sodipodi:docname="CPU_usage.svg"
+   inkscape:export-filename="CPU_usage.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
      id="defs6915" />
   <sodipodi:namedview
@@ -25,9 +28,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.7"
-     inkscape:cx="349.50068"
-     inkscape:cy="434.81383"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="376.05932"
+     inkscape:cy="510.94343"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -35,9 +38,9 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="1920"
-     inkscape:window-height="1015"
-     inkscape:window-x="1920"
+     inkscape:window-width="1280"
+     inkscape:window-height="995"
+     inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1" />
   <metadata
@@ -108,7 +111,7 @@
              height="206.81944"
              width="602.58551"
              id="rect5990" /></flowRegion><flowPara
-           id="flowPara5992">Strelka - 1%</flowPara></flowRoot>      <flowRoot
+           id="flowPara5992">Strelka2 - 1%</flowPara></flowRoot>      <flowRoot
          transform="matrix(0.8,0,0,-0.8,-828.00816,3385.8037)"
          xml:space="preserve"
          id="flowRoot5994"
@@ -156,7 +159,7 @@
              height="206.81944"
              width="602.58551"
              id="rect6022" /></flowRegion><flowPara
-           id="flowPara6024">MuTect1 - 3%</flowPara></flowRoot>      <flowRoot
+           id="flowPara6024">MuTect - 3%</flowPara></flowRoot>      <flowRoot
          transform="matrix(0.8,0,0,-0.8,-826.96816,3049.9789)"
          xml:space="preserve"
          id="flowRoot6026"
