@@ -1,4 +1,4 @@
-# Installation
+# 
 
 This small tutorial will explain to you how to install and run Sarek on a small sample test data on any POSIX compatible system (Linux, Solaris, OS X, etc).
 
@@ -26,45 +26,7 @@ export NXF_SINGULARITY_CACHEDIR=$HOME/.singularity
 
 Docker can also be used as a container technology.
 
-## Test Sarek with small dataset and small reference
-
-The following tutorial explain how to run Sarek on a small dataset using a small reference.
-
-```bash
-# Connect to your system
-> ssh -AX [USER]@[system]
-# Or just open a terminal
-
-# Install Nextflow
-> curl -s https://get.nextflow.io | bash
-
-# Move Nextflow into your $PATH
-> mv nextflow $HOME/bin
-
-# Set up the cache directory for Singularity Images if needed
-> export NXF_SINGULARITY_CACHEDIR=$HOME/.singularity
-
-# make a test directory
-> mkdir test_Sarek
-> cd test_Sarek
-
-# Download and build the smallGRCh37 reference using Singularity
-> nextflow run SciLifeLab/Sarek/buildReferences.nf --download --genome smallGRCh37 -profile singularity
-
-# Or download and build the smallGRCh37 reference using Docker
-> nextflow run SciLifeLab/Sarek/buildReferences.nf --download --genome smallGRCh37 -profile docker
-
-# Test Sarek on a test tiny set using Singularity
-> nextflow run SciLifeLab/Sarek/main.nf --test --genome smallGRCh37 --noReports -profile singularity
-
-# Or test Sarek on a test tiny set using Docker
-> nextflow run SciLifeLab/Sarek/main.nf --test --genome smallGRCh37 --noReports -profile docker
-```
-
-## Update
-
-To update Sarek, it's also very simple:
-
+You can [Test Sarek with small dataset and small reference](https://github.com/SciLifeLab/Sarek/blob/master/doc/TESTS.md)
 
 ```bash
 # Connect to your system

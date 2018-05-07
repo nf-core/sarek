@@ -63,7 +63,7 @@ The Sarek pipeline comes with documentation in the `doc/` directory:
 01. [Installation documentation](https://github.com/SciLifeLab/Sarek/blob/master/doc/INSTALL.md)
 02. [Installation documentation specific for UPPMAX `rackham`](https://github.com/SciLifeLab/Sarek/blob/master/doc/INSTALL_RACKHAM.md)
 03. [Installation documentation specific for UPPMAX `bianca`](https://github.com/SciLifeLab/Sarek/blob/master/doc/INSTALL_BIANCA.md)
-04. [Tests documentation](https://github.com/SciLifeLab/Sarek/blob/master/doc/TESTS.md)
+04. [Tests documentation](ttps://github.com/SciLifeLab/Sarek/blob/master/doc/TESTS.md)
 05. [Reference files documentation](https://github.com/SciLifeLab/Sarek/blob/master/doc/REFERENCES.md)
 06. [Configuration and profiles documentation](https://github.com/SciLifeLab/Sarek/blob/master/doc/CONFIG.md)
 07. [Intervals documentation](https://github.com/SciLifeLab/Sarek/blob/master/doc/INTERVALS.md)
@@ -98,7 +98,6 @@ For further information or help, don't hesitate to get in touch on [Gitter][gitt
 * [Marcel Martin](https://github.com/marcelm)
 * [Björn Nystedt](https://github.com/bjornnystedt)
 * [Pall Olason](https://github.com/pallolason)
-* [Pelin Sahlén](https://github.com/pelinakan)
 
 --------------------------------------------------------------------------------
 
