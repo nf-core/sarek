@@ -31,7 +31,8 @@ You can [Test Sarek with small dataset and small reference](https://github.com/S
 ## Update		
 
 To update Sarek, it's also very simple:
-- 
+
+ 
 ```bash
 # Connect to your system
 > ssh -AX [USER]@[system]REFERENCES
@@ -41,7 +42,7 @@ To update Sarek, it's also very simple:
 > nextflow pull SciLifeLab/Sarek
 ```
 
-## Run Sarek on real data
+## Running Sarek with real data
 
 Follow the [references documentation](REFERENCES.md) on how to download/build the references files.
 
