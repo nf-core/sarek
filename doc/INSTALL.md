@@ -1,4 +1,4 @@
-# 
+# Installation
 
 This small tutorial will explain to you how to install and run Sarek on a small sample test data on any POSIX compatible system (Linux, Solaris, OS X, etc).
 
@@ -31,7 +31,7 @@ You can [Test Sarek with small dataset and small reference](https://github.com/S
 ## Update		
 
 To update Sarek, it's also very simple:
-
+- 
 ```bash
 # Connect to your system
 > ssh -AX [USER]@[system]REFERENCES
