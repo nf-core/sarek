@@ -350,14 +350,14 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="479.17903"
+     inkscape:cx="327.15107"
      inkscape:cy="326.12867"
      inkscape:document-units="px"
-     inkscape:current-layer="layer4"
+     inkscape:current-layer="g6864"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1015"
-     inkscape:window-x="1920"
+     inkscape:window-width="1280"
+     inkscape:window-height="995"
+     inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      fit-margin-top="0"
@@ -787,7 +787,7 @@
                y="2056.7422"
                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.5px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro'" /></flowRegion><flowPara
              id="flowPara10112-0"
-             style="font-size:25px">- HaplotypeCaller, Strelka</flowPara><flowPara
+             style="font-size:25px">- HaplotypeCaller, Strelka2</flowPara><flowPara
              id="flowPara5971"
              style="font-size:25px">- Manta</flowPara></flowRoot>      </g>
       <g
@@ -1503,7 +1503,7 @@
              id="flowPara5967"
              style="font-size:25px">- HaplotypeCaller, Freebayes</flowPara><flowPara
              id="flowPara5987"
-             style="font-size:25px">    MuTect1, MuTect2, Strelka</flowPara><flowPara
+             style="font-size:25px">    MuTect, MuTect2, Strelka2</flowPara><flowPara
              id="flowPara5979"
              style="font-size:25px">- ASCAT</flowPara><flowPara
              id="flowPara5991"
