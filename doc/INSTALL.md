@@ -28,6 +28,10 @@ Docker can also be used as a container technology.
 
 You can [Test Sarek with small dataset and small reference](https://github.com/SciLifeLab/Sarek/blob/master/doc/TESTS.md)
 
+## Update		
+
+To update Sarek, it's also very simple:
+
 ```bash
 # Connect to your system
 > ssh -AX [USER]@[system]REFERENCES
