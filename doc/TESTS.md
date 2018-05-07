@@ -69,7 +69,7 @@ nextflow run somaticVC.nf --genome smallGRCh37 \
   --strelkaBP --tag latest -profile singularity
 
 # Testing annotation
-nextflow run somaticVC.nf --tools snpEFF,VEP \
+nextflow run annotate.nf --tools snpEFF,VEP \
   --annotateVCF VariantCalling/StrelkaBP/Strelka_9876T_vs_1234N_somatic_indels.vcf.gz \
   -profile singularity
 
