@@ -98,7 +98,6 @@ For further information or help, don't hesitate to get in touch on [Gitter][gitt
 * [Marcel Martin](https://github.com/marcelm)
 * [Björn Nystedt](https://github.com/bjornnystedt)
 * [Pall Olason](https://github.com/pallolason)
-* [Pelin Sahlén](https://github.com/pelinakan)
 
 --------------------------------------------------------------------------------
 
