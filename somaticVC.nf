@@ -286,7 +286,6 @@ bamsAll = bamsNormal.combine(bamsTumor)
 // Since idPatientNormal and idPatientTumor are the same
 // It's removed from bamsAll Channel (same for genderNormal)
 // /!\ It is assumed that every sample are from the same patient
-// For easier joining, reorder to idPatient, idSampleNormal, idSampleTumor...
 bamsAll = bamsAll.map {
   idPatientNormal, idSampleNormal, bamNormal, baiNormal, idPatientTumor, idSampleTumor, bamTumor, baiTumor ->
   [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor]
@@ -632,14 +631,12 @@ if (params.verbose) singleMantaOutput = singleMantaOutput.view {
   Index : ${it[4].fileName}"
 }
 
+// For easier joining, remaping channels to idPatient, idSampleNormal, idSampleTumor...
+
 bamsForStrelkaBP = bamsForStrelkaBP.map {
   idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor ->
   [idPatientNormal, idSampleNormal, idSampleTumor, bamNormal, baiNormal, bamTumor, baiTumor]
-}
-
-bamsForStrelkaBP = bamsForStrelkaBP.join(mantaToStrelka, by:[0,1,2])
-
-bamsForStrelkaBP = bamsForStrelkaBP.map {
+}.join(mantaToStrelka, by:[0,1,2]).map {
   idPatientNormal, idSampleNormal, idSampleTumor, bamNormal, baiNormal, bamTumor, baiTumor, mantaCSI, mantaCSIi ->
   [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor, mantaCSI, mantaCSIi]
 }
