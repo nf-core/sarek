@@ -171,7 +171,7 @@ class ROISelector:
             print("Indexing ...")
             subprocess.call("samtools index -@" + str(self.threads) + " " + target, shell=True)
 
-   def addVCFRecords(self,VCFFile):
+    def addVCFRecords(self,VCFFile):
         """
         Store VCF record CHROM,POS in a dict 
         """
