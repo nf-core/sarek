@@ -29,6 +29,7 @@ fi
 if [[ "$TOOL" = singularity ]] || [[ "$TOOL" = all ]]
 then
   sudo apt-get install squashfs-tools
+  sudo apt-get update
   cd $HOME
   wget https://github.com/singularityware/singularity/releases/download/$SGT_VER/singularity-$SGT_VER.tar.gz
   tar xvf singularity-$SGT_VER.tar.gz
