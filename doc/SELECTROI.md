@@ -73,5 +73,5 @@ python selectROI.py -a alignment.bam -b genes.bed -v germline.vcf,somatic.vcf
  - Getting reads for a normal/tumour pair from a list of VCFs and genes:
 
 ```bash
-python selectROI.py -a normal.bam,tumour.bam -b genes.bed -v callset1.vcf,callset2.vcf,callset3.vcfq
+python selectROI.py -a normal.bam,tumour.bam -b genes.bed -v callset1.vcf,callset2.vcf,callset3.vcf
 ```
