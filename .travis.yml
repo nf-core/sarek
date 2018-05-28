@@ -9,7 +9,7 @@ services:
 
 addons:
   apt:
-  sudo apt-get update
+    update: true
 
 env:
   global:
