@@ -176,7 +176,8 @@ process MapReads {
   when: step == 'mapping' && !params.onlyQC
 
   script:
-  readGroup = "@RG\\tID:${idRun}\\tPU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
+  CN = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
+  readGroup = "@RG\\tID:${idRun}\\t${CN}PU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
   // adjust mismatch penalty for tumor samples
   extra = status == 1 ? "-B 3" : ""
   """
