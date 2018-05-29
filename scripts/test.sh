@@ -115,7 +115,7 @@ then
 fi
 
 
-if [[ ALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
+if [[ ALL,ANNOTATEALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
 then
   if [[ $TEST = ANNOTATESNPEFF ]]
   then
@@ -123,7 +123,7 @@ then
   elif [[ $TEST = ANNOTATEVEP ]]
   then
     ANNOTATOR=VEP
-  elif  [[ $TEST = ALL ]]
+  elif [[ ALL,ANNOTATEALL =~ $TEST ]]
   then
     ANNOTATOR=snpEFF,VEP
   fi

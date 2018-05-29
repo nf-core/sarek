@@ -291,7 +291,7 @@ bamsAll = bamsAll.map {
 }
 
 // Manta and Strelka
-(bamsForManta, bamsForStrelka, bamsAll) = bamsAll.into(3)
+(bamsForManta, bamsForStrelka, bamsForStrelkaBP, bamsAll) = bamsAll.into(4)
 
 bamsTumorNormalIntervals = bamsAll.spread(bedIntervals)
 
@@ -531,11 +531,8 @@ if (params.verbose) strelkaOutput = strelkaOutput.view {
 process RunManta {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir directoryMap.manta, mode: 'link',
-      saveAs: {filename ->
-                  if (filename.endsWith(".bam") || filename.endsWith(".bai")) null
-                  else $filename
-                  }
+  publishDir directoryMap.manta, mode: 'link'
+
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
     set file(genomeFile), file(genomeIndex) from Channel.value([
@@ -545,7 +542,7 @@ process RunManta {
 
   output:
     set val("manta"), idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into mantaOutput
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file("*.candidateSmallIndels.vcf.gz"), file("*.candidateSmallIndels.vcf.gz.tbi") into mantaToStrelka
+    set idPatient, idSampleNormal, idSampleTumor, file("*.candidateSmallIndels.vcf.gz"), file("*.candidateSmallIndels.vcf.gz.tbi") into mantaToStrelka
 
   when: 'manta' in tools && !params.onlyQC
 
@@ -633,6 +630,15 @@ if (params.verbose) singleMantaOutput = singleMantaOutput.view {
   Index : ${it[4].fileName}"
 }
 
+// For easier joining, remaping channels to idPatient, idSampleNormal, idSampleTumor...
+
+bamsForStrelkaBP = bamsForStrelkaBP.map {
+  idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor ->
+  [idPatientNormal, idSampleNormal, idSampleTumor, bamNormal, baiNormal, bamTumor, baiTumor]
+}.join(mantaToStrelka, by:[0,1,2]).map {
+  idPatientNormal, idSampleNormal, idSampleTumor, bamNormal, baiNormal, bamTumor, baiTumor, mantaCSI, mantaCSIi ->
+  [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor, mantaCSI, mantaCSIi]
+}
 
 process RunStrelkaBP {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
@@ -640,7 +646,7 @@ process RunStrelkaBP {
   publishDir directoryMap.strelkabp, mode: 'link'
 
   input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(mantaCSI), file(mantaCSIi) from mantaToStrelka
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(mantaCSI), file(mantaCSIi) from bamsForStrelkaBP
     set file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
