@@ -21,7 +21,7 @@ Sarek was developed at the [National Genomics Infastructure][ngi-link] and [Nati
 
 ## Workflow steps
 
-Sarek is built with several workflow scripts. A wrapper script contained within the repository makes it easy to run the different workflow scripts as a single job.
+Sarek is built with several workflow scripts. A wrapper script contained within the repository makes it easy to run the different workflow scripts as a single job. To test your installation, follow the [tests documentation.](https://github.com/SciLifeLab/Sarek/blob/master/doc/TESTS.md)
 
 Raw FastQ files or aligned BAM files (with or without realignment & recalibration) can be used as inputs. You can choose which variant callers to use, plus the pipeline is capable of accommodating additional variant calling software or CNV callers if required.
 
