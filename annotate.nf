@@ -57,7 +57,7 @@ tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} 
 annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
 annotateVCF = params.annotateVCF ? params.annotateVCF.split(',').collect{it.trim()} : []
 
-directoryMap = defineDirectoryMap()
+directoryMap = SarekUtils.defineDirectoryMap(params.outDir)
 toolList = defineToolList()
 
 if (!SarekUtils.checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
@@ -102,7 +102,7 @@ if (annotateVCF == []) {
 
 vcfNotToAnnotate.close()
 
-(vcfForBCFtools, vcfForSnpeff, vcfForVep) = vcfToAnnotate.into(3)
+(vcfForBCFtools, vcfForVCFtools, vcfForSnpeff, vcfForVep) = vcfToAnnotate.into(4)
 
 process RunBcftoolsStats {
   tag {vcf}
@@ -117,14 +117,32 @@ process RunBcftoolsStats {
 
   when: !params.noReports
 
-  script:
-  """
-  bcftools stats ${vcf} > ${vcf.baseName}.bcf.tools.stats.out
-  """
+  script: QC.bcftools(vcf)
 }
 
 if (params.verbose) bcfReport = bcfReport.view {
   "BCFTools stats report:\n\
+  File  : [${it.fileName}]"
+}
+
+process RunVcftools {
+  tag {vcf}
+
+  publishDir directoryMap.vcftools, mode: 'link'
+
+  input:
+    set variantCaller, file(vcf) from vcfForVCFtools
+
+  output:
+    file ("${vcf.baseName}.*") into vcfReport
+
+  when: !params.noReports
+
+  script: QC.vcftools(vcf)
+}
+
+if (params.verbose) vcfReport = vcfReport.view {
+  "VCFTools stats report:\n\
   File  : [${it.fileName}]"
 }
 
@@ -208,6 +226,34 @@ if (params.verbose) vepReport = vepReport.view {
   Files : ${it.fileName}"
 }
 
+process GetVersionBCFtools {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: !params.noReports
+  script: QC.getVersionBCFtools()
+}
+
+process GetVersionSnpEFF {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: 'snpeff' in tools || 'merge' in tools
+  script: QC.getVersionSnpEFF()
+}
+
+process GetVersionVCFtools {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: !params.noReports
+  script: QC.getVersionVCFtools()
+}
+
+process GetVersionVEP {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: 'vep' in tools || 'merge' in tools
+  script: QC.getVersionVEP()
+}
+
 /*
 ================================================================================
 =                               F U N C T I O N S                              =
@@ -219,26 +265,11 @@ def checkUppmaxProject() {
   return !(workflow.profile == 'slurm' && !params.project)
 }
 
-def defineDirectoryMap() {
-  return [
-    'haplotypecaller'  : "${params.outDir}/VariantCalling/HaplotypeCaller",
-    'manta'            : "${params.outDir}/VariantCalling/Manta",
-    'mutect1'          : "${params.outDir}/VariantCalling/MuTect1",
-    'mutect2'          : "${params.outDir}/VariantCalling/MuTect2",
-    'strelka'          : "${params.outDir}/VariantCalling/Strelka",
-    'strelkabp'        : "${params.outDir}/VariantCalling/StrelkaBP",
-    'bcftoolsStats'    : "${params.outDir}/Reports/BCFToolsStats",
-    'snpeffReports'    : "${params.outDir}/Reports/SnpEff",
-    'snpeff'           : "${params.outDir}/Annotation/SnpEff",
-    'vep'              : "${params.outDir}/Annotation/VEP"
-  ]
-}
-
 def defineToolList() {
   return [
+    'merge',
     'snpeff',
-    'vep',
-    'merge'
+    'vep'
   ]
 }
 
