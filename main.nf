@@ -63,7 +63,7 @@ if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <U
 step = params.step.toLowerCase()
 if (step == 'preprocessing') step = 'mapping'
 
-directoryMap = defineDirectoryMap()
+directoryMap = SarekUtils.defineDirectoryMap(params.outDir)
 referenceMap = defineReferenceMap()
 stepList = defineStepList()
 
@@ -176,7 +176,8 @@ process MapReads {
   when: step == 'mapping' && !params.onlyQC
 
   script:
-  readGroup = "@RG\\tID:${idRun}\\tPU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
+  CN = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
+  readGroup = "@RG\\tID:${idRun}\\t${CN}PU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
   // adjust mismatch penalty for tumor samples
   extra = status == 1 ? "-B 3" : ""
   """
@@ -244,7 +245,11 @@ if (params.verbose) mergedBam = mergedBam.view {
 process MarkDuplicates {
   tag {idPatient + "-" + idSample}
 
-  publishDir params.outDir, saveAs: { it == "${bam}.metrics" ? "${directoryMap.markDuplicatesQC}/${it}" : "${directoryMap.nonRealigned}/${it}" }, mode: 'link'
+  publishDir params.outDir, mode: 'link',
+    saveAs: {
+      if (it == "${bam}.metrics") "${directoryMap.markDuplicatesQC}/${it}"
+      else "${directoryMap.nonRealigned}/${it}"
+    }
 
   input:
     set idPatient, status, idSample, file(bam) from mergedBam
@@ -551,10 +556,7 @@ process RunSamtoolsStats {
 
   when: !params.noReports
 
-  script:
-  """
-  samtools stats ${bam} > ${bam}.samtools.stats.out
-  """
+  script: QC.samtoolsStats(bam)
 }
 
 if (params.verbose) samtoolsStatsReport = samtoolsStatsReport.view {
@@ -575,19 +577,65 @@ process RunBamQC {
 
   when: !params.noReports && !params.noBAMQC
 
-  script:
-  """
-  qualimap --java-mem-size=${task.memory.toGiga()}G \
-  bamqc \
-  -bam ${bam} \
-  -outdir ${idSample} \
-  -outformat HTML
-  """
+  script: QC.bamQC(bam,idSample,task.memory)
 }
 
 if (params.verbose) bamQCreport = bamQCreport.view {
   "BamQC report:\n\
   Dir   : [${it.fileName}]"
+}
+
+process GetVersionBamQC {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: !params.noReports && !params.noBAMQC
+
+  script:
+  """
+  qualimap --version &> v_qualimap.txt
+  """
+}
+
+process GetVersionBWAsamtools {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: step == 'mapping' && !params.onlyQC
+
+  script:
+  """
+  bwa &> v_bwa.txt 2>&1 || true
+  samtools --version &> v_samtools.txt
+  """
+}
+
+process GetVersionFastQC {
+  publishDir directoryMap.version, mode: 'link'
+  output:
+  file("v_fastqc.txt")
+  when: step == 'mapping' && !params.noReports
+
+  script:
+  """
+  fastqc -v > v_fastqc.txt
+  """
+}
+
+process GetVersionGATK {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: !params.onlyQC
+  script: QC.getVersionGATK()
+}
+
+process GetVersionPicard {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: step == 'mapping' && !params.onlyQC
+
+  script:
+  """
+  echo "Picard version:"\$(java -jar \$PICARD_HOME/picard.jar MarkDuplicates --version 2>&1) > v_picard.txt
+  """
 }
 
 /*
@@ -644,19 +692,6 @@ def checkExactlyOne(list) {
   final n = 0
   list.each{n += it ? 1 : 0}
   return n == 1
-}
-
-def defineDirectoryMap() {
-  return [
-    'nonRealigned'     : "${params.outDir}/Preprocessing/NonRealigned",
-    'nonRecalibrated'  : "${params.outDir}/Preprocessing/NonRecalibrated",
-    'recalibrated'     : "${params.outDir}/Preprocessing/Recalibrated",
-    'bamQC'            : "${params.outDir}/Reports/bamQC",
-    'bcftoolsStats'    : "${params.outDir}/Reports/BCFToolsStats",
-    'fastQC'           : "${params.outDir}/Reports/FastQC",
-    'markDuplicatesQC' : "${params.outDir}/Reports/MarkDuplicates",
-    'samtoolsStats'    : "${params.outDir}/Reports/SamToolsStats"
-  ]
 }
 
 def defineReferenceMap() {
