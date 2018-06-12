@@ -65,7 +65,7 @@ if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <U
 
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
 
-directoryMap = defineDirectoryMap()
+directoryMap = SarekUtils.defineDirectoryMap(params.outDir)
 referenceMap = defineReferenceMap()
 toolList = defineToolList()
 
@@ -137,10 +137,7 @@ process RunSamtoolsStats {
 
   when: !params.noReports
 
-  script:
-  """
-  samtools stats ${bam} > ${bam}.samtools.stats.out
-  """
+  script: QC.samtoolsStats(bam)
 }
 
 if (params.verbose) samtoolsStatsReport = samtoolsStatsReport.view {
@@ -161,14 +158,7 @@ process RunBamQC {
 
   when: !params.noReports && !params.noBAMQC
 
-  script:
-  """
-  qualimap --java-mem-size=${task.memory.toGiga()}G \
-  bamqc \
-  -bam ${bam} \
-  -outdir ${idSample} \
-  -outformat HTML
-  """
+  script: QC.bamQC(bam,idSample,task.memory)
 }
 
 if (params.verbose) bamQCreport = bamQCreport.view {
@@ -825,10 +815,7 @@ process RunBcftoolsStats {
 
   when: !params.noReports
 
-  script:
-  """
-  bcftools stats ${vcf} > ${vcf.baseName}.bcf.tools.stats.out
-  """
+  script: QC.bcftools(vcf)
 }
 
 if (params.verbose) bcfReport = bcfReport.view {
@@ -851,28 +838,7 @@ process RunVcftools {
 
   when: !params.noReports
 
-  script:
-  """
-  vcftools \
-  --gzvcf ${vcf} \
-  --relatedness2 \
-  --out ${vcf.baseName}
-
-  vcftools \
-  --gzvcf ${vcf} \
-  --TsTv-by-count \
-  --out ${vcf.baseName}
-
-  vcftools \
-  --gzvcf ${vcf} \
-  --TsTv-by-qual \
-  --out ${vcf.baseName}
-
-  vcftools \
-  --gzvcf ${vcf} \
-  --FILTER-summary \
-  --out ${vcf.baseName}
-  """
+  script: QC.vcftools(vcf)
 }
 
 if (params.verbose) vcfReport = vcfReport.view {
@@ -881,6 +847,76 @@ if (params.verbose) vcfReport = vcfReport.view {
 }
 
 vcfReport.close()
+
+process GetVersionGATK {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: !params.onlyQC
+  script: QC.getVersionGATK()
+}
+
+process GetVersionFreeBayes {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: 'freebayes' in tools && !params.onlyQC
+
+  script:
+  """
+  freebayes --version > v_freebayes.txt
+  """
+}
+
+process GetVersionAlleleCount {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: 'ascat' in tools && !params.onlyQC
+
+  script:
+  """
+  alleleCounter --version > v_allelecount.txt
+  """
+}
+
+process GetVersionASCAT {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: 'ascat' in tools && !params.onlyQC
+
+  script:
+  """
+  R --version > v_r.txt
+  cat ${baseDir}/scripts/ascat.R | grep "ASCAT version" > v_ascat.txt
+  """
+}
+
+process GetVersionStrelka {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: 'strelka' in tools && !params.onlyQC
+  script: QC.getVersionStrelka()
+}
+
+process GetVersionManta {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: 'manta' in tools && !params.onlyQC
+  script: QC.getVersionManta()
+}
+
+process GetVersionBCFtools {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: !params.noReports
+  script: QC.getVersionBCFtools()
+}
+
+process GetVersionVCFtools {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: !params.noReports
+  script: QC.getVersionVCFtools()
+}
+
 /*
 ================================================================================
 =                               F U N C T I O N S                              =
@@ -934,23 +970,6 @@ def checkRefExistence(referenceFile, fileToCheck) {
 def checkUppmaxProject() {
   // check if UPPMAX project number is specified
   return !(workflow.profile == 'slurm' && !params.project)
-}
-
-def defineDirectoryMap() {
-  return [
-    'recalibrated'     : "${params.outDir}/Preprocessing/Recalibrated",
-    'bamQC'            : "${params.outDir}/Reports/bamQC",
-    'bcftoolsStats'    : "${params.outDir}/Reports/BCFToolsStats",
-    'samtoolsStats'    : "${params.outDir}/Reports/SamToolsStats",
-    'vcftools'         : "${params.outDir}/Reports/VCFTools",
-    'ascat'            : "${params.outDir}/VariantCalling/Ascat",
-    'freebayes'        : "${params.outDir}/VariantCalling/FreeBayes",
-    'manta'            : "${params.outDir}/VariantCalling/Manta",
-    'mutect1'          : "${params.outDir}/VariantCalling/MuTect1",
-    'mutect2'          : "${params.outDir}/VariantCalling/MuTect2",
-    'strelka'          : "${params.outDir}/VariantCalling/Strelka",
-    'strelkabp'        : "${params.outDir}/VariantCalling/StrelkaBP"
-  ]
 }
 
 def defineReferenceMap() {

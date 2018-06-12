@@ -1,6 +1,6 @@
 class MyUtils {
+  // Check if params is in this given list
   static def checkParams(it) {
-    // Check if params is in this given list
     return it in [
       'annotate-tools',
       'annotate-VCF',
@@ -51,6 +51,7 @@ class MyUtils {
       'sample-dir',
       'sample',
       'sampleDir',
+      'sequencing_center',
       'single-CPUMem',
       'singleCPUMem',
       'singularity',
@@ -67,13 +68,13 @@ class MyUtils {
       'version']
   }
 
+  // Loop through all parameters to check their existence and spelling
   static def checkParameterList(list, realList) {
-    // Loop through all parameters to check their existence and spelling
     return list.every{ checkParameterExistence(it, realList) }
   }
 
+  // Check parameter existence
   static def checkParameterExistence(it, list) {
-    // Check parameter existence
     if (!list.contains(it)) {
       println("Unknown parameter: ${it}")
       return false
@@ -81,8 +82,37 @@ class MyUtils {
     return true
   }
 
+  // Define map of directories
+  static def defineDirectoryMap(outDir) {
+    return [
+      'nonRealigned'     : "${outDir}/Preprocessing/NonRealigned",
+      'nonRecalibrated'  : "${outDir}/Preprocessing/NonRecalibrated",
+      'recalibrated'     : "${outDir}/Preprocessing/Recalibrated",
+      'ascat'            : "${outDir}/VariantCalling/Ascat",
+      'freebayes'        : "${outDir}/VariantCalling/FreeBayes",
+      'gvcf-hc'          : "${outDir}/VariantCalling/HaplotypeCallerGVCF",
+      'haplotypecaller'  : "${outDir}/VariantCalling/HaplotypeCaller",
+      'manta'            : "${outDir}/VariantCalling/Manta",
+      'mutect1'          : "${outDir}/VariantCalling/MuTect1",
+      'mutect2'          : "${outDir}/VariantCalling/MuTect2",
+      'strelka'          : "${outDir}/VariantCalling/Strelka",
+      'strelkabp'        : "${outDir}/VariantCalling/StrelkaBP",
+      'snpeff'           : "${outDir}/Annotation/SnpEff",
+      'vep'              : "${outDir}/Annotation/VEP",
+      'bamQC'            : "${outDir}/Reports/bamQC",
+      'bcftoolsStats'    : "${outDir}/Reports/BCFToolsStats",
+      'fastQC'           : "${outDir}/Reports/FastQC",
+      'markDuplicatesQC' : "${outDir}/Reports/MarkDuplicates",
+      'multiQC'          : "${outDir}/Reports/MultiQC",
+      'samtoolsStats'    : "${outDir}/Reports/SamToolsStats",
+      'snpeffReports'    : "${outDir}/Reports/SnpEff",
+      'vcftools'         : "${outDir}/Reports/VCFTools",
+      'version'          : "${outDir}/Reports/ToolsVersion"
+    ]
+  }
+
+  // Compare params to list of verified params
   static def isAllowedParams(params) {
-    // Compare params to list of verified params
     final test = true
     params.each{
       if (!checkParams(it.toString().split('=')[0])) {
