@@ -98,26 +98,23 @@ if (params.verbose) ch_decompressedFiles = ch_decompressedFiles.view {
 }
 
 ch_fastaFile = Channel.create()
-ch_otherFiles = Channel.create()
-ch_vcfFiles = Channel.create()
-
-ch_decompressedFiles
-  .choice(ch_fastaFile, ch_vcfFiles, ch_otherFiles) {
-    it =~ ".fasta" ? 0 :
-    it =~ ".vcf" ? 1 : 2}
-
-(ch_fastaFile, ch_fastaFileToKeep) = ch_fastaFile.into(2)
-(ch_vcfFiles, ch_vcfFilesToKeep) = ch_vcfFiles.into(2)
-
-ch_notCompressedfiles
-  .mix(ch_otherFiles, ch_fastaFileToKeep, ch_vcfFilesToKeep)
-  .collectFile(storeDir: params.outDir)
-
 ch_fastaForBWA = Channel.create()
 ch_fastaForPicard = Channel.create()
 ch_fastaForSAMTools = Channel.create()
+ch_otherFile = Channel.create()
+ch_vcfFile = Channel.create()
 
-ch_fastaFile.into(ch_fastaForBWA,ch_fastaForPicard,ch_fastaForSAMTools)
+ch_decompressedFiles
+  .choice(ch_fastaFile, ch_vcfFile, ch_otherFile) {
+    it =~ ".fasta" ? 0 :
+    it =~ ".vcf" ? 1 : 2}
+
+(ch_fastaForBWA, ch_fastaForPicard, ch_fastaForSAMTools, ch_fastaFileToKeep) = ch_fastaFile.into(4)
+(ch_vcfFile, ch_vcfFileToKeep) = ch_vcfFile.into(2)
+
+ch_notCompressedfiles
+  .mix(ch_fastaFileToKeep, ch_vcfFileToKeep, ch_otherFile)
+  .collectFile(storeDir: params.outDir)
 
 process BuildBWAindexes {
   tag {f_reference}
@@ -193,7 +190,7 @@ process BuildVCFIndex {
   publishDir params.outDir, mode: 'link'
 
   input:
-    file(f_reference) from ch_vcfFiles
+    file(f_reference) from ch_vcfFile
 
   output:
     file("${f_reference}.idx") into ch_vcfIndex

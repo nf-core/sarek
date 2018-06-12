@@ -2,13 +2,27 @@ import static nextflow.Nextflow.file
 import nextflow.Channel
 
 class SarekUtils {
+
   // Check file extension
   static def checkFileExtension(it, extension) {
     if (!it.toString().toLowerCase().endsWith(extension.toLowerCase())) exit 1, "File: ${it} has the wrong extension: ${extension} see --help for more information"
   }
 
+  // Check parameter existence
+  static def checkParameterExistence(it, list) {
+    if (!list.contains(it)) {
+      println("Unknown parameter: ${it}")
+      return false
+    }
+    return true
+  }
+
+  static def checkParameterList(list, realList) {
+    return list.every{ checkParameterExistence(it, realList) }
+  }
+
+  // Check against list of allowed params
   static def checkParams(it) {
-    // Check if params is in this given list
     return it in [
       'annotate-tools',
       'annotate-VCF',
@@ -59,6 +73,7 @@ class SarekUtils {
       'sample-dir',
       'sample',
       'sampleDir',
+      'sequencing_center',
       'single-CPUMem',
       'singleCPUMem',
       'singularity',
@@ -73,20 +88,6 @@ class SarekUtils {
       'vcflist',
       'verbose',
       'version']
-  }
-
-  static def checkParameterExistence(it, list) {
-    // Check parameter existence
-    if (!list.contains(it)) {
-      println("Unknown parameter: ${it}")
-      return false
-    }
-    return true
-  }
-
-  static def checkParameterList(list, realList) {
-    // Loop through all parameters to check their existence and spelling
-    return list.every{ checkParameterExistence(it, realList) }
   }
 
   // Loop through all the references files to check their existence
@@ -107,6 +108,35 @@ class SarekUtils {
       return false
     }
     return true
+  }
+
+  // Define map of directories
+  static def defineDirectoryMap(outDir) {
+    return [
+    'nonRealigned'     : "${outDir}/Preprocessing/NonRealigned",
+    'nonRecalibrated'  : "${outDir}/Preprocessing/NonRecalibrated",
+    'recalibrated'     : "${outDir}/Preprocessing/Recalibrated",
+    'ascat'            : "${outDir}/VariantCalling/Ascat",
+    'freebayes'        : "${outDir}/VariantCalling/FreeBayes",
+    'gvcf-hc'          : "${outDir}/VariantCalling/HaplotypeCallerGVCF",
+    'haplotypecaller'  : "${outDir}/VariantCalling/HaplotypeCaller",
+    'manta'            : "${outDir}/VariantCalling/Manta",
+    'mutect1'          : "${outDir}/VariantCalling/MuTect1",
+    'mutect2'          : "${outDir}/VariantCalling/MuTect2",
+    'strelka'          : "${outDir}/VariantCalling/Strelka",
+    'strelkabp'        : "${outDir}/VariantCalling/StrelkaBP",
+    'snpeff'           : "${outDir}/Annotation/SnpEff",
+    'vep'              : "${outDir}/Annotation/VEP",
+    'bamQC'            : "${outDir}/Reports/bamQC",
+    'bcftoolsStats'    : "${outDir}/Reports/BCFToolsStats",
+    'fastQC'           : "${outDir}/Reports/FastQC",
+    'markDuplicatesQC' : "${outDir}/Reports/MarkDuplicates",
+    'multiQC'          : "${outDir}/Reports/MultiQC",
+    'samtoolsStats'    : "${outDir}/Reports/SamToolsStats",
+    'snpeffReports'    : "${outDir}/Reports/SnpEff",
+    'vcftools'         : "${outDir}/Reports/VCFTools",
+    'version'          : "${outDir}/Reports/ToolsVersion"
+    ]
   }
 
   // Channeling the TSV file containing BAM.
@@ -142,8 +172,8 @@ class SarekUtils {
     [genders, channel]
   }
 
+  // Compare params to list of verified params
   static def isAllowedParams(params) {
-    // Compare params to list of verified params
     final test = true
     params.each{
       if (!checkParams(it.toString().split('=')[0])) {
@@ -167,6 +197,12 @@ class SarekUtils {
     return it
   }
 
+  // return TSV if it has the correct number of items in row
+  static def returnTSV(it, number) {
+    if (it.size() != number) exit 1, "Malformed row in TSV file: ${it}, see --help for more information"
+    return it
+  }
+
   // Sarek ascii art
   static def sarek_ascii() {
     println "    ____        _____                _     "
@@ -175,12 +211,6 @@ class SarekUtils {
     println "|   | \\  `-|   \\___ \\ / _` | '__/ __| |/ / "
     println " \\ |   \\  /    ____) | (_| | | |  __|   <  "
     println "  `|____\\'    |_____/ \\__,_|_|  \\___|_|\\_\\ "
-  }
-
-  // return TSV if it has the correct number of items in row
-  static def returnTSV(it, number) {
-    if (it.size() != number) exit 1, "Malformed row in TSV file: ${it}, see --help for more information"
-    return it
   }
 
 }

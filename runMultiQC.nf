@@ -52,7 +52,7 @@ if (params.help) exit 0, helpMessage()
 if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
-directoryMap = defineDirectoryMap()
+directoryMap = SarekUtils.defineDirectoryMap(params.outDir)
 /*
 ================================================================================
 =                               P R O C E S S E S                              =
@@ -61,41 +61,28 @@ directoryMap = defineDirectoryMap()
 
 startMessage()
 
-process GenerateMultiQCconfig {
+process GetVersionAll {
   publishDir directoryMap.multiQC, mode: 'link'
 
   input:
+    file(versions) from Channel.fromPath("${directoryMap.version}/*").collect()
 
   output:
-  file("multiqc_config.yaml") into multiQCconfig
+  file ("tool_versions_mqc.yaml") into versionsForMultiQC
 
   when: !params.noReports
 
   script:
   """
-  touch multiqc_config.yaml
-  echo "custom_logo: ${baseDir}/doc/images/Sarek_no_Border.png" >> multiqc_config.yaml
-  echo "custom_logo_url: http://opensource.scilifelab.se/projects/sarek" >> multiqc_config.yaml
-  echo "custom_logo_title: 'Sarek'" >> multiqc_config.yaml
-  echo "report_header_info:" >> multiqc_config.yaml
-  echo "- Sarek version: ${params.version}" >> multiqc_config.yaml
-  echo "- Contact Name: ${params.callName}" >> multiqc_config.yaml
-  echo "- Contact E-mail: ${params.contactMail}" >> multiqc_config.yaml
-  echo "- Directory: ${workflow.launchDir}" >> multiqc_config.yaml
-  echo "- Genome: "${params.genome} >> multiqc_config.yaml
-  echo "top_modules:" >> multiqc_config.yaml
-  echo "- 'fastqc'" >> multiqc_config.yaml
-  echo "- 'picard'" >> multiqc_config.yaml
-  echo "- 'samtools'" >> multiqc_config.yaml
-  echo "- 'qualimap'" >> multiqc_config.yaml
-  echo "- 'bcftools'" >> multiqc_config.yaml
-  echo "- 'vcftools'" >> multiqc_config.yaml
-  echo "- 'snpeff'" >> multiqc_config.yaml
+  echo "${params.version}" &> v_sarek.txt
+  echo "${workflow.nextflow.version}" &> v_nextflow.txt
+  multiqc --version &> v_multiqc.txt
+  scrape_tool_versions.py &> tool_versions_mqc.yaml
   """
 }
 
-if (params.verbose && !params.noReports) multiQCconfig = multiQCconfig.view {
-  "MultiQC config:\n\
+if (params.verbose && !params.noReports) versionsForMultiQC = versionsForMultiQC.view {
+  "MultiQC tools version:\n\
   File  : [${it.fileName}]"
 }
 
@@ -108,14 +95,15 @@ reportsForMultiQC = Channel.empty()
     Channel.fromPath("${directoryMap.samtoolsStats}/*"),
     Channel.fromPath("${directoryMap.snpeffReports}/*"),
     Channel.fromPath("${directoryMap.vcftools}/*"),
-    multiQCconfig
   ).collect()
 
 process RunMultiQC {
   publishDir directoryMap.multiQC, mode: 'link'
 
   input:
-    file ('*') from reportsForMultiQC
+    file (multiqcConfig) from createMultiQCconfig()
+    file (reports) from reportsForMultiQC
+    file (versions) from versionsForMultiQC
 
   output:
     set file("*multiqc_report.html"), file("*multiqc_data") into multiQCReport
@@ -145,17 +133,27 @@ def checkUppmaxProject() {
   return !(workflow.profile == 'slurm' && !params.project)
 }
 
-def defineDirectoryMap() {
-  return [
-    'bamQC'            : "${params.outDir}/Reports/bamQC",
-    'bcftoolsStats'    : "${params.outDir}/Reports/BCFToolsStats",
-    'fastQC'           : "${params.outDir}/Reports/FastQC",
-    'markDuplicatesQC' : "${params.outDir}/Reports/MarkDuplicates",
-    'multiQC'          : "${params.outDir}/Reports/MultiQC",
-    'samtoolsStats'    : "${params.outDir}/Reports/SamToolsStats",
-    'snpeffReports'    : "${params.outDir}/Reports/SnpEff",
-    'vcftools'         : "${params.outDir}/Reports/VCFTools"
-  ]
+def createMultiQCconfig() {
+  def file = workDir.resolve('multiqc_config.yaml')
+  file.text  = """
+  custom_logo: ${baseDir}/doc/images/Sarek_no_Border.png
+  custom_logo_url: http://opensource.scilifelab.se/projects/sarek
+  custom_logo_title: 'Sarek'
+  report_header_info:
+  - Contact Name: ${params.callName}
+  - Contact E-mail: ${params.contactMail}
+  - Genome: ${params.genome}
+  top_modules:
+  - 'fastqc'
+  - 'picard'
+  - 'samtools'
+  - 'qualimap'
+  - 'bcftools'
+  - 'vcftools'
+  - 'snpeff'
+  """.stripIndent()
+
+  return file
 }
 
 def grabRevision() {

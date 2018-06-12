@@ -55,7 +55,7 @@ function clean_repo() {
   if [[ $TRAVIS == false ]] && [[ $KEEP == false ]]
   then
     echo "$(tput setaf 1)Cleaning directory$(tput sgr0)"
-    rm -rf work .nextflow* Preprocessing Reports Annotation VariantCalling Results
+    rm -rf work .nextflow* Annotation Preprocessing Reports Results VariantCalling
   fi
 }
 
