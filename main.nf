@@ -67,11 +67,11 @@ directoryMap = defineDirectoryMap()
 referenceMap = defineReferenceMap()
 stepList = defineStepList()
 
-if (!checkParameterExistence(step, stepList)) exit 1, 'Unknown step, see --help for more information'
+if (!SarekUtils.checkParameterExistence(step, stepList)) exit 1, 'Unknown step, see --help for more information'
 if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
 if (step == 'mapping' && !checkExactlyOne([params.test, params.sample, params.sampleDir]))
   exit 1, 'Please define which samples to work on by providing exactly one of the --test, --sample or --sampleDir options'
-if (!checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
+if (!SarekUtils.checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
 
 if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
   referenceMap.intervals = file("$workflow.projectDir/repeats/tiny_${params.genome}.list")
@@ -98,7 +98,7 @@ if (tsvPath) {
   tsvFile = file(tsvPath)
   switch (step) {
     case 'mapping': fastqFiles = extractFastq(tsvFile); break
-    case 'realign': bamFiles = extractBams(tsvFile); break
+    case 'realign': bamFiles = SarekUtils.extractBams(tsvFile, "somatic"); break
     case 'recalibrate': bamFiles = extractRecal(tsvFile); break
     default: exit 1, "Unknown step ${step}"
   }
@@ -114,8 +114,8 @@ if (tsvPath) {
   tsvFile = params.sampleDir  // used in the reports
 } else exit 1, 'No sample were defined, see --help'
 
-if (step == 'mapping') (patientGenders, fastqFiles) = extractGenders(fastqFiles)
-else (patientGenders, bamFiles) = extractGenders(bamFiles)
+if (step == 'mapping') (patientGenders, fastqFiles) = SarekUtils.extractGenders(fastqFiles)
+else (patientGenders, bamFiles) = SarekUtils.extractGenders(bamFiles)
 
 /*
 ================================================================================
@@ -596,43 +596,9 @@ if (params.verbose) bamQCreport = bamQCreport.view {
 ================================================================================
 */
 
-def checkFileExtension(it, extension) {
-  // Check file extension
-  if (!it.toString().toLowerCase().endsWith(extension.toLowerCase())) exit 1, "File: ${it} has the wrong extension: ${extension} see --help for more information"
-}
-
-def checkParameterExistence(it, list) {
-  // Check parameter existence
-  if (!list.contains(it)) {
-    println("Unknown parameter: ${it}")
-    return false
-  }
-  return true
-}
-
 def checkParamReturnFile(item) {
   params."${item}" = params.genomes[params.genome]."${item}"
   return file(params."${item}")
-}
-
-def checkReferenceMap(referenceMap) {
-  // Loop through all the references files to check their existence
-  referenceMap.every {
-    referenceFile, fileToCheck ->
-    checkRefExistence(referenceFile, fileToCheck)
-  }
-}
-
-def checkRefExistence(referenceFile, fileToCheck) {
-  if (fileToCheck instanceof List) return fileToCheck.every{ checkRefExistence(referenceFile, it) }
-  def f = file(fileToCheck)
-  // this is an expanded wildcard: we can assume all files exist
-  if (f instanceof List && f.size() > 0) return true
-  else if (!f.exists()) {
-    log.info  "Missing references: ${referenceFile} ${fileToCheck}"
-    return false
-  }
-  return true
 }
 
 def checkUppmaxProject() {
@@ -688,44 +654,23 @@ def defineStepList() {
   ]
 }
 
-def extractBams(tsvFile) {
-  // Channeling the TSV file containing BAM.
-  // Format is: "subject gender status sample bam bai"
-  Channel
-    .from(tsvFile.readLines())
-    .map{line ->
-      def list      = returnTSV(line.split(),6)
-      def idPatient = list[0]
-      def gender    = list[1]
-      def status    = returnStatus(list[2].toInteger())
-      def idSample  = list[3]
-      def bamFile   = returnFile(list[4])
-      def baiFile   = returnFile(list[5])
-
-      checkFileExtension(bamFile,".bam")
-      checkFileExtension(baiFile,".bai")
-
-      [ idPatient, gender, status, idSample, bamFile, baiFile ]
-    }
-}
-
 def extractFastq(tsvFile) {
   // Channeling the TSV file containing FASTQ.
   // Format is: "subject gender status sample lane fastq1 fastq2"
   Channel
     .from(tsvFile.readLines())
     .map{line ->
-      def list       = returnTSV(line.split(),7)
+      def list       = SarekUtils.returnTSV(line.split(),7)
       def idPatient  = list[0]
       def gender     = list[1]
-      def status     = returnStatus(list[2].toInteger())
+      def status     = SarekUtils.returnStatus(list[2].toInteger())
       def idSample   = list[3]
       def idRun      = list[4]
-      def fastqFile1 = returnFile(list[5])
-      def fastqFile2 = returnFile(list[6])
+      def fastqFile1 = SarekUtils.returnFile(list[5])
+      def fastqFile2 = SarekUtils.returnFile(list[6])
 
-      checkFileExtension(fastqFile1,".fastq.gz")
-      checkFileExtension(fastqFile2,".fastq.gz")
+      SarekUtils.checkFileExtension(fastqFile1,".fastq.gz")
+      SarekUtils.checkFileExtension(fastqFile2,".fastq.gz")
 
       [idPatient, gender, status, idSample, idRun, fastqFile1, fastqFile2]
     }
@@ -770,32 +715,21 @@ def extractRecal(tsvFile) {
   Channel
     .from(tsvFile.readLines())
     .map{line ->
-      def list       = returnTSV(line.split(),7)
+      def list       = SarekUtils.returnTSV(line.split(),7)
       def idPatient  = list[0]
       def gender     = list[1]
-      def status     = returnStatus(list[2].toInteger())
+      def status     = SarekUtils.returnStatus(list[2].toInteger())
       def idSample   = list[3]
-      def bamFile    = returnFile(list[4])
-      def baiFile    = returnFile(list[5])
-      def recalTable = returnFile(list[6])
+      def bamFile    = SarekUtils.returnFile(list[4])
+      def baiFile    = SarekUtils.returnFile(list[5])
+      def recalTable = SarekUtils.returnFile(list[6])
 
-      checkFileExtension(bamFile,".bam")
-      checkFileExtension(baiFile,".bai")
-      checkFileExtension(recalTable,".recal.table")
+      SarekUtils.checkFileExtension(bamFile,".bam")
+      SarekUtils.checkFileExtension(baiFile,".bai")
+      SarekUtils.checkFileExtension(recalTable,".recal.table")
 
       [ idPatient, gender, status, idSample, bamFile, baiFile, recalTable ]
     }
-}
-
-def extractGenders(channel) {
-  def genders = [:]  // an empty map
-  channel = channel.map{ it ->
-    def idPatient = it[0]
-    def gender = it[1]
-    genders[idPatient] = gender
-    [idPatient] + it[2..-1]
-  }
-  [genders, channel]
 }
 
 def flowcellLaneFromFastq(path) {
@@ -873,6 +807,7 @@ def minimalInformationMessage() {
   log.info "Project Dir : " + workflow.projectDir
   log.info "Launch Dir  : " + workflow.launchDir
   log.info "Work Dir    : " + workflow.workDir
+  log.info "Cont Engine : " + workflow.containerEngine
   log.info "Out Dir     : " + params.outDir
   log.info "TSV file    : ${tsvFile}"
   log.info "Genome      : " + params.genome
@@ -899,27 +834,6 @@ def nextflowMessage() {
   log.info "N E X T F L O W  ~  version ${workflow.nextflow.version} ${workflow.nextflow.build}"
 }
 
-def returnFile(it) {
-  // return file if it exists
-  if (!file(it).exists()) exit 1, "Missing file in TSV file: ${it}, see --help for more information"
-  return file(it)
-}
-
-def returnStatus(it) {
-  // Return status if it's correct
-  // Status should be only 0 or 1
-  // 0 being normal
-  // 1 being tumor (or relapse or anything that is not normal...)
-  if (!(it in [0, 1])) exit 1, "Status is not recognized in TSV file: ${it}, see --help for more information"
-  return it
-}
-
-def returnTSV(it, number) {
-  // return TSV if it has the correct number of items in row
-  if (it.size() != number) exit 1, "Malformed row in TSV file: ${it}, see --help for more information"
-  return it
-}
-
 def sarekMessage() {
   // Display Sarek message
   log.info "Sarek - Workflow For Somatic And Germline Variations ~ ${params.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
@@ -927,6 +841,7 @@ def sarekMessage() {
 
 def startMessage() {
   // Display start message
+  SarekUtils.sarek_ascii()
   this.sarekMessage()
   this.minimalInformationMessage()
 }
