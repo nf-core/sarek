@@ -51,6 +51,7 @@ class MyUtils {
       'sample-dir',
       'sample',
       'sampleDir',
+      'sequencing_center',
       'single-CPUMem',
       'singleCPUMem',
       'singularity',
