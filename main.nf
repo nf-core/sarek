@@ -306,7 +306,7 @@ if (params.verbose) duplicatesInterval = duplicatesInterval.view {
 }
 
 if (params.verbose) duplicatesRealign = duplicatesRealign.view {
-  "BAMs to phase:\n\
+  "BAMs to join:\n\
   ID    : ${it[0]}\n\
   Files : ${it[1].fileName}\n\
   Files : ${it[2].fileName}"
@@ -356,23 +356,15 @@ process RealignerTargetCreator {
 }
 
 if (params.verbose) intervals = intervals.view {
-  "Intervals to phase:\n\
+  "Intervals to join:\n\
   ID    : ${it[0]}\n\
   File  : [${it[1].fileName}]"
 }
 
-bamsAndIntervals = duplicatesRealign
-  .phase(intervals)
-  .map{duplicatesRealign, intervals ->
-    tuple(
-      duplicatesRealign[0],
-      duplicatesRealign[1],
-      duplicatesRealign[2],
-      intervals[1]
-    )}
+bamsAndIntervals = duplicatesRealign.join(intervals)
 
 if (params.verbose) bamsAndIntervals = bamsAndIntervals.view {
-  "BAMs and Intervals phased for IndelRealigner:\n\
+  "BAMs and Intervals joined for IndelRealigner:\n\
   ID    : ${it[0]}\n\
   Files : ${it[1].fileName}\n\
   Files : ${it[2].fileName}\n\
@@ -428,6 +420,8 @@ if (params.verbose) realignedBam = realignedBam.view {
   Files : [${it[3].fileName}, ${it[4].fileName}]"
 }
 
+(realignedBam, realignedBamToJoin) = realignedBam.into(2)
+
 process CreateRecalibrationTable {
   tag {idPatient + "-" + idSample}
 
@@ -447,7 +441,7 @@ process CreateRecalibrationTable {
     ])
 
   output:
-    set idPatient, status, idSample, file(bam), file(bai), file("${idSample}.recal.table") into recalibrationTable
+    set idPatient, status, idSample, file("${idSample}.recal.table") into recalibrationTable
     set idPatient, status, idSample, val("${idSample}_${status}.md.real.bam"), val("${idSample}_${status}.md.real.bai"), val("${idSample}.recal.table") into recalibrationTableTSV
 
   when: ( step == 'mapping' || step == 'realign' ) && !params.onlyQC
@@ -477,6 +471,8 @@ recalibrationTableTSV.map { idPatient, status, idSample, bam, bai, recalTable ->
 }.collectFile(
   name: 'nonRecalibrated.tsv', sort: true, storeDir: directoryMap.nonRecalibrated
 )
+
+recalibrationTable = realignedBamToJoin.join(recalibrationTable, by:[0,1,2])
 
 if (step == 'recalibrate') recalibrationTable = bamFiles
 
