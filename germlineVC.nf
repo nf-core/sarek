@@ -271,9 +271,7 @@ recalTables = recalTables
     [patient, sample, bam, bai, intervalBed, recalTable] }
 
 // re-associate the BAMs and samples with the recalibration table
-bamsForHC = bamsForHC
-  .phase(recalTables) { it[0..4] }
-  .map { it1, it2 -> it1 + [it2[6]] }
+bamsForHC = bamsForHC.join(recalTables, by:[0,1,2,3,4])
 
 bamsAll = bamsNormal.combine(bamsTumor)
 
