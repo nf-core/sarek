@@ -17,11 +17,12 @@ class SarekUtils {
     return true
   }
 
+  // Compare each parameter with a list of parameters
   static def checkParameterList(list, realList) {
     return list.every{ checkParameterExistence(it, realList) }
   }
 
-  // Check against list of allowed params
+  // Return element in list of allowed params
   static def checkParams(it) {
     return it in [
       'annotate-tools',
@@ -98,6 +99,7 @@ class SarekUtils {
     }
   }
 
+  // Loop through all the references files to check their existence
   static def checkRefExistence(referenceFile, fileToCheck) {
     if (fileToCheck instanceof List) return fileToCheck.every{ SarekUtils.checkRefExistence(referenceFile, it) }
     def f = file(fileToCheck)
@@ -161,8 +163,9 @@ class SarekUtils {
       }
   }
 
+  // Extract gender from Channel as it's only used for CNVs
   static def extractGenders(channel) {
-    def genders = [:]  // an empty map
+    def genders = [:]
     channel = channel.map{ it ->
       def idPatient = it[0]
       def gender = it[1]
@@ -184,7 +187,7 @@ class SarekUtils {
     return test
   }
 
-  // return file if it exists
+  // Return file if it exists
   static def returnFile(it) {
     if (!file(it).exists()) exit 1, "Missing file in TSV file: ${it}, see --help for more information"
     return file(it)
@@ -197,7 +200,7 @@ class SarekUtils {
     return it
   }
 
-  // return TSV if it has the correct number of items in row
+  // Return TSV if it has the correct number of items in row
   static def returnTSV(it, number) {
     if (it.size() != number) exit 1, "Malformed row in TSV file: ${it}, see --help for more information"
     return it
