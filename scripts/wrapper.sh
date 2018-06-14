@@ -126,6 +126,12 @@ then
   run_sarek main.nf --step $STEP --sample $SAMPLETSV
 fi
 
+if [[ $GERMLINE == true ]] && [[ $SAMPLETSV == '' ]] && [[ $SAMPLEDIR == '' ]] && [[ $STEP != 'mapping' ]]
+then
+  echo "$(tput setaf 1)Germline continue$(tput sgr0)"
+  run_sarek main.nf --step $STEP
+fi
+
 if [[ $GERMLINE == true ]] && [[ $VARIANTCALLING == true ]]
 then
   echo "$(tput setaf 1)GermlineVC$(tput sgr0)"
