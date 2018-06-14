@@ -70,7 +70,7 @@ directoryMap = SarekUtils.defineDirectoryMap(params.outDir)
 referenceMap = defineReferenceMap()
 toolList = defineToolList()
 
-if (!checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
+if (!SarekUtils.checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
 if (!checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
 
 if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
@@ -93,10 +93,10 @@ else tsvPath = "${directoryMap.recalibrated}/recalibrated.tsv"
 bamFiles = Channel.empty()
 if (tsvPath) {
   tsvFile = file(tsvPath)
-  bamFiles = extractBams(tsvFile)
+  bamFiles = SarekUtils.extractBams(tsvFile, "somatic")
 } else exit 1, 'No sample were defined, see --help'
 
-(patientGenders, bamFiles) = extractGenders(bamFiles)
+(patientGenders, bamFiles) = SarekUtils.extractGenders(bamFiles)
 
 /*
 ================================================================================
@@ -924,11 +924,6 @@ process GetVersionVCFtools {
 ================================================================================
 */
 
-def checkFileExtension(it, extension) {
-  // Check file extension
-  if (!it.toString().toLowerCase().endsWith(extension.toLowerCase())) exit 1, "File: ${it} has the wrong extension: ${extension} see --help for more information"
-}
-
 def checkParameterExistence(it, list) {
   // Check parameter existence
   if (!list.contains(it)) {
@@ -1006,41 +1001,7 @@ def defineToolList() {
   ]
 }
 
-def extractBams(tsvFile) {
-  // Channeling the TSV file containing BAM.
-  // Format is: "subject gender status sample bam bai"
-  Channel
-    .from(tsvFile.readLines())
-    .map{line ->
-      def list      = returnTSV(line.split(),6)
-      def idPatient = list[0]
-      def gender    = list[1]
-      def status    = returnStatus(list[2].toInteger())
-      def idSample  = list[3]
-      def bamFile   = returnFile(list[4])
-      def baiFile   = returnFile(list[5])
-
-      checkFileExtension(bamFile,".bam")
-      checkFileExtension(baiFile,".bai")
-
-      [ idPatient, gender, status, idSample, bamFile, baiFile ]
-    }
-}
-
-def extractGenders(channel) {
-  def genders = [:]  // an empty map
-  channel = channel.map{ it ->
-    def idPatient = it[0]
-    def gender = it[1]
-    genders[idPatient] = gender
-
-    [idPatient] + it[2..-1]
-  }
-  [genders, channel]
-}
-
 def generateIntervalsForVC(bams, intervals) {
-
   def (bamsNew, bamsForVC) = bams.into(2)
   def (intervalsNew, vcIntervals) = intervals.into(2)
   def bamsForVCNew = bamsForVC.combine(vcIntervals)
@@ -1136,12 +1097,6 @@ def returnStatus(it) {
   return it
 }
 
-def returnTSV(it, number) {
-  // return TSV if it has the correct number of items in row
-  if (it.size() != number) exit 1, "Malformed row in TSV file: ${it}, see --help for more information"
-  return it
-}
-
 def sarekMessage() {
   // Display Sarek message
   log.info "Sarek - Workflow For Somatic And Germline Variations ~ ${params.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
@@ -1149,6 +1104,7 @@ def sarekMessage() {
 
 def startMessage() {
   // Display start message
+  SarekUtils.sarek_ascii()
   this.sarekMessage()
   this.minimalInformationMessage()
 }
