@@ -149,15 +149,19 @@ if (params.verbose) vcfReport = vcfReport.view {
 process RunSnpeff {
   tag {vcf}
 
-  publishDir params.outDir , saveAs: { it == "${vcf.baseName}.snpEff.csv" ? "${directoryMap.snpeffReports}/${it}" : "${directoryMap.snpeff}/${it}" }, mode: 'link'
+  publishDir params.outDir, mode: 'link', saveAs: {
+    if (it == "${vcf.baseName}.snpEff.csv") "${directoryMap.snpeffReports}/${it}"
+    else if (it == "${vcf.baseName}.snpEff.ann.vcf") null
+    else "${directoryMap.snpeff}/${it}"
+  }
 
   input:
     set variantCaller, file(vcf) from vcfForSnpeff
     val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
 
   output:
-    set file("${vcf.baseName}.snpEff.ann.vcf"), file("${vcf.baseName}.snpEff.genes.txt"), file("${vcf.baseName}.snpEff.csv"), file("${vcf.baseName}.snpEff.summary.html") into snpeffReport
-		set variantCaller,file("${vcf.baseName}.snpEff.ann.vcf") into snpEffOutputVCFs
+    set file("${vcf.baseName}.snpEff.genes.txt"), file("${vcf.baseName}.snpEff.csv"), file("${vcf.baseName}.snpEff.summary.html") into snpeffOutput
+		set variantCaller,file("${vcf.baseName}.snpEff.ann.vcf") into snpeffVCF
 
   when: 'snpeff' in tools || 'merge' in tools
 
@@ -177,7 +181,7 @@ process RunSnpeff {
   """
 }
 
-if (params.verbose) snpeffReport = snpeffReport.view {
+if (params.verbose) snpeffOutput = snpeffOutput.view {
   "snpEff report:\n\
   File  : ${it.fileName}"
 }
@@ -185,20 +189,48 @@ if (params.verbose) snpeffReport = snpeffReport.view {
 // When we are running in the 'merge' mode (first snpEff, then VEP)
 // we have to exchange the channels
 
+process CompressSnpeffVCF {
+  tag {vcf}
+
+  publishDir directoryMap.snpeff, mode: 'link'
+
+  input:
+    set variantCaller, file(vcf) from snpeffVCF
+
+  output:
+    set variantCaller, file("*.vcf.gz") into snpeffVCFcompressed
+    file("*.vcf.gz.tbi")
+
+  script:
+  """
+  cat ${vcf} | bgzip > ${vcf}.gz
+  tabix ${vcf}.gz
+  """
+}
+
+if (params.verbose) snpeffVCFcompressed = snpeffVCFcompressed.view {
+  "snpEff VCF:\n\
+  File  : ${it[1].fileName}"
+}
+
 if('merge' in tools) {
-	vcfForVep = snpEffOutputVCFs
+	vcfForVep = snpeffVCFcompressed
 }
 
 process RunVEP {
   tag {vcf}
 
-  publishDir directoryMap.vep, mode: 'link'
+  publishDir params.outDir, mode: 'link', saveAs: {
+    if (it == "${vcf.baseName}.vep.summary.html") "${directoryMap.vep}/${it}"
+    else null
+  }
 
   input:
     set variantCaller, file(vcf) from vcfForVep
 
   output:
-    set file("${vcf.baseName}.vep.ann.vcf"), file("${vcf.baseName}.vep.summary.html") into vepReport
+    file("${vcf.baseName}.vep.ann.vcf") into vepVCF
+    file("${vcf.baseName}.vep.summary.html") into vepReport
 
   when: 'vep' in tools || 'merge' in tools
 
@@ -224,6 +256,30 @@ process RunVEP {
 if (params.verbose) vepReport = vepReport.view {
   "VEP report:\n\
   Files : ${it.fileName}"
+}
+
+process CompressVEPvcf {
+  tag {vcf}
+
+  publishDir directoryMap.vep, mode: 'link'
+
+  input:
+    file(vcf) from vepVCF
+
+  output:
+    file("*.vcf.gz") into vepVCFcompressed
+    file("*.vcf.gz.tbi")
+
+  script:
+  """
+  cat ${vcf} | bgzip > ${vcf}.gz
+  tabix ${vcf}.gz
+  """
+}
+
+if (params.verbose) vepVCFcompressed = vepVCFcompressed.view {
+  "VEP VCF:\n\
+  File  : ${it.fileName}"
 }
 
 process GetVersionBCFtools {
