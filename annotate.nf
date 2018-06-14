@@ -203,7 +203,7 @@ process CompressSnpeffVCF {
 
   script:
   """
-  cat ${vcf} | bgzip > ${vcf}.gz
+  bgzip < ${vcf} > ${vcf}.gz
   tabix ${vcf}.gz
   """
 }
@@ -272,7 +272,7 @@ process CompressVEPvcf {
 
   script:
   """
-  cat ${vcf} | bgzip > ${vcf}.gz
+  bgzip < ${vcf} > ${vcf}.gz
   tabix ${vcf}.gz
   """
 }
