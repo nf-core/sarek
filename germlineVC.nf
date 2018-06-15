@@ -65,8 +65,8 @@ directoryMap = SarekUtils.defineDirectoryMap(params.outDir)
 referenceMap = defineReferenceMap()
 toolList = defineToolList()
 
-if (!checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
-if (!checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
+if (!SarekUtils.checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
+if (!SarekUtils.checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
 
 if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
   referenceMap.intervals = file("$workflow.projectDir/repeats/tiny_${params.genome}.list")
@@ -88,10 +88,8 @@ else tsvPath = "${directoryMap.recalibrated}/recalibrated.tsv"
 bamFiles = Channel.empty()
 if (tsvPath) {
   tsvFile = file(tsvPath)
-  bamFiles = extractBams(tsvFile)
+  bamFiles = SarekUtils.extractBams(tsvFile, "germline")
 } else exit 1, 'No sample were defined, see --help'
-
-(patientGenders, bamFiles) = extractGenders(bamFiles)
 
 /*
 ================================================================================
@@ -273,9 +271,7 @@ recalTables = recalTables
     [patient, sample, bam, bai, intervalBed, recalTable] }
 
 // re-associate the BAMs and samples with the recalibration table
-bamsForHC = bamsForHC
-  .phase(recalTables) { it[0..4] }
-  .map { it1, it2 -> it1 + [it2[6]] }
+bamsForHC = bamsForHC.join(recalTables, by:[0,1,2,3,4])
 
 bamsAll = bamsNormal.combine(bamsTumor)
 
@@ -643,48 +639,9 @@ process GetVersionVCFtools {
 ================================================================================
 */
 
-def checkFileExtension(it, extension) {
-  // Check file extension
-  if (!it.toString().toLowerCase().endsWith(extension.toLowerCase())) exit 1, "File: ${it} has the wrong extension: ${extension} see --help for more information"
-}
-
-def checkParameterExistence(it, list) {
-  // Check parameter existence
-  if (!list.contains(it)) {
-    println("Unknown parameter: ${it}")
-    return false
-  }
-  return true
-}
-
-def checkParameterList(list, realList) {
-  // Loop through all parameters to check their existence and spelling
-  return list.every{ checkParameterExistence(it, realList) }
-}
-
 def checkParamReturnFile(item) {
   params."${item}" = params.genomes[params.genome]."${item}"
   return file(params."${item}")
-}
-
-def checkReferenceMap(referenceMap) {
-  // Loop through all the references files to check their existence
-  referenceMap.every {
-    referenceFile, fileToCheck ->
-    checkRefExistence(referenceFile, fileToCheck)
-  }
-}
-
-def checkRefExistence(referenceFile, fileToCheck) {
-  if (fileToCheck instanceof List) return fileToCheck.every{ checkRefExistence(referenceFile, it) }
-  def f = file(fileToCheck)
-  // this is an expanded wildcard: we can assume all files exist
-  if (f instanceof List && f.size() > 0) return true
-  else if (!f.exists()) {
-    log.info  "Missing references: ${referenceFile} ${fileToCheck}"
-    return false
-  }
-  return true
 }
 
 def checkUppmaxProject() {
@@ -718,39 +675,6 @@ def defineToolList() {
     'mutect2',
     'strelka'
   ]
-}
-
-def extractBams(tsvFile) {
-  // Channeling the TSV file containing BAM.
-  // Format is: "subject gender status sample bam bai"
-  Channel
-    .from(tsvFile.readLines())
-    .map{line ->
-      def list      = returnTSV(line.split(),6)
-      def idPatient = list[0]
-      def gender    = list[1]
-      def status    = returnStatus(list[2].toInteger())
-      def idSample  = list[3]
-      def bamFile   = returnFile(list[4])
-      def baiFile   = returnFile(list[5])
-
-      checkFileExtension(bamFile,".bam")
-      checkFileExtension(baiFile,".bai")
-
-      [ idPatient, gender, status, idSample, bamFile, baiFile ]
-    }
-}
-
-def extractGenders(channel) {
-  def genders = [:]  // an empty map
-  channel = channel.map{ it ->
-    def idPatient = it[0]
-    def gender = it[1]
-    genders[idPatient] = gender
-
-    [idPatient] + it[2..-1]
-  }
-  [genders, channel]
 }
 
 def generateIntervalsForVC(bams, intervals) {
@@ -826,27 +750,6 @@ def nextflowMessage() {
   log.info "N E X T F L O W  ~  version ${workflow.nextflow.version} ${workflow.nextflow.build}"
 }
 
-def returnFile(it) {
-  // return file if it exists
-  if (!file(it).exists()) exit 1, "Missing file in TSV file: ${it}, see --help for more information"
-  return file(it)
-}
-
-def returnStatus(it) {
-  // Return status if it's correct
-  // Status should be only 0 or 1
-  // 0 being normal
-  // 1 being tumor (or relapse or anything that is not normal...)
-  if (!(it in [0, 1])) exit 1, "Status is not recognized in TSV file: ${it}, see --help for more information"
-  return it
-}
-
-def returnTSV(it, number) {
-  // return TSV if it has the correct number of items in row
-  if (it.size() != number) exit 1, "Malformed row in TSV file: ${it}, see --help for more information"
-  return it
-}
-
 def sarekMessage() {
   // Display Sarek message
   log.info "Sarek - Workflow For Somatic And Germline Variations ~ ${params.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
@@ -854,6 +757,7 @@ def sarekMessage() {
 
 def startMessage() {
   // Display start message
+  SarekUtils.sarek_ascii()
   this.sarekMessage()
   this.minimalInformationMessage()
 }
