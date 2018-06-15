@@ -189,7 +189,8 @@ if (params.verbose) snpeffOutput = snpeffOutput.view {
 if('merge' in tools) {
   // When running in the 'merge' mode
   // snpEff output is used as VEP input
-  // vcfCompressed is in the mix, only if it came out of snpEff
+  // Used a feedback loop from vcfCompressed
+  // https://github.com/nextflow-io/patterns/tree/master/feedback-loop
 
   vcfCompressed = Channel.create()
 
