@@ -189,7 +189,7 @@ if (params.verbose) snpeffOutput = snpeffOutput.view {
 if('merge' in tools) {
   // When running in the 'merge' mode
   // snpEff output is used as VEP input
-  // vcfCompressed is in the mix as well, only if it came out of snpEff
+  // vcfCompressed is in the mix, only if it came out of snpEff
 
   vcfCompressed = Channel.create()
 
