@@ -125,7 +125,7 @@ then
     ANNOTATOR=VEP
   elif [[ ALL,ANNOTATEALL =~ $TEST ]]
   then
-    ANNOTATOR=snpEFF,VEP
+    ANNOTATOR=merge,snpEFF,VEP
   fi
   if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
   then
