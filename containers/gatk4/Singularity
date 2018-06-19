@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%post
+    apt-get -y update
+    apt-get -y install openjdk-8-jre-headless
+
+%help
+	Custom container for GATK4 to contain only single jar as the result of "./gradlew localJar" in /opt ; you have to change the filename for the created jar below
+
+%files
+   /home/szilva/dev/gatk/build/libs/gatk-package-4.0.4.0-15-g61c6891-SNAPSHOT-local.jar	/opt/gatk4.jar
+
+%environment
+    GATK_HOME=/opt
+    export GATK_HOME
+
+%labels
+   AUTHOR szilveszter.juhos@scilifelab.se

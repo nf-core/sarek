@@ -18,7 +18,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
  Marcel Martin <marcel.martin@scilifelab.se> [@marcelm]
  Björn Nystedt <bjorn.nystedt@scilifelab.se> [@bjornnystedt]
  Pall Olason <pall.olason@scilifelab.se> [@pallolason]
- Pelin Sahlén <pelin.akan@scilifelab.se> [@pelinakan]
 --------------------------------------------------------------------------------
  @Homepage
  http://opensource.scilifelab.se/projects/sarek/
@@ -76,17 +75,17 @@ vcfNotToAnnotate = Channel.create()
 if (annotateVCF == []) {
   Channel.empty().mix(
     Channel.fromPath("${directoryMap.haplotypecaller}/*.vcf.gz")
-      .flatten().map{vcf -> ['haplotypecaller',vcf]},
+      .flatten().map{vcf -> ['none', 'haplotypecaller', vcf, null]},
     Channel.fromPath("${directoryMap.manta}/*SV.vcf.gz")
-      .flatten().map{vcf -> ['manta',vcf]},
+      .flatten().map{vcf -> ['none', 'manta', vcf, null]},
     Channel.fromPath("${directoryMap.mutect1}/*.vcf.gz")
-      .flatten().map{vcf -> ['mutect1',vcf]},
+      .flatten().map{vcf -> ['none', 'mutect1', vcf, null]},
     Channel.fromPath("${directoryMap.mutect2}/*.vcf.gz")
-      .flatten().map{vcf -> ['mutect2',vcf]},
+      .flatten().map{vcf -> ['none', 'mutect2', vcf, null]},
     Channel.fromPath("${directoryMap.strelka}/*{somatic,variants}*.vcf.gz")
-      .flatten().map{vcf -> ['strelka',vcf]},
+      .flatten().map{vcf -> ['none', 'strelka', vcf, null]},
     Channel.fromPath("${directoryMap.strelkabp}/*{somatic,variants}*.vcf.gz")
-      .flatten().map{vcf -> ['strelkabp',vcf]}
+      .flatten().map{vcf -> ['none', 'strelkabp', vcf, null]}
   ).choice(vcfToAnnotate, vcfNotToAnnotate) {
     annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1
   }
@@ -95,9 +94,9 @@ if (annotateVCF == []) {
   annotateVCF.each{ list += ",${it}" }
   list = list.substring(1)
   if (StringUtils.countMatches("${list}", ",") == 0) vcfToAnnotate = Channel.fromPath("${list}")
-    .map{vcf -> ['userspecified',vcf]}
+    .map{vcf -> ['none', 'userspecified', vcf, null]}
   else vcfToAnnotate = Channel.fromPath("{$list}")
-    .map{vcf -> ['userspecified',vcf]}
+    .map{vcf -> ['none', 'userspecified', vcf, null]}
 } else exit 1, "specify only tools or files to annotate, not both"
 
 vcfNotToAnnotate.close()
@@ -110,7 +109,7 @@ process RunBcftoolsStats {
   publishDir directoryMap.bcftoolsStats, mode: 'link'
 
   input:
-    set variantCaller, file(vcf) from vcfForBCFtools
+    set annotator, variantCaller, file(vcf), file(idx) from vcfForBCFtools
 
   output:
     file ("${vcf.baseName}.bcf.tools.stats.out") into bcfReport
@@ -121,8 +120,8 @@ process RunBcftoolsStats {
 }
 
 if (params.verbose) bcfReport = bcfReport.view {
-  "BCFTools stats report:\n\
-  File  : [${it.fileName}]"
+  "BCFTools stats report:\n" +
+  "File  : [${it.fileName}]"
 }
 
 process RunVcftools {
@@ -131,7 +130,7 @@ process RunVcftools {
   publishDir directoryMap.vcftools, mode: 'link'
 
   input:
-    set variantCaller, file(vcf) from vcfForVCFtools
+    set annotator, variantCaller, file(vcf), file(idx) from vcfForVCFtools
 
   output:
     file ("${vcf.baseName}.*") into vcfReport
@@ -142,63 +141,77 @@ process RunVcftools {
 }
 
 if (params.verbose) vcfReport = vcfReport.view {
-  "VCFTools stats report:\n\
-  File  : [${it.fileName}]"
+  "VCFTools stats report:\n" +
+  "Files : [${it.fileName}]"
 }
 
 process RunSnpeff {
   tag {vcf}
 
-  publishDir params.outDir , saveAs: { it == "${vcf.baseName}.snpEff.csv" ? "${directoryMap.snpeffReports}/${it}" : "${directoryMap.snpeff}/${it}" }, mode: 'link'
+  publishDir params.outDir, mode: 'link', saveAs: {
+    if (it == "${vcf.baseName}.snpEff.csv") "${directoryMap.snpeffReports}/${it}"
+    else if (it == "${vcf.baseName}.snpEff.ann.vcf") null
+    else "${directoryMap.snpeff}/${it}"
+  }
 
   input:
-    set variantCaller, file(vcf) from vcfForSnpeff
+    set annotator, variantCaller, file(vcf), file(idx) from vcfForSnpeff
     val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
 
   output:
-    set file("${vcf.baseName}.snpEff.ann.vcf"), file("${vcf.baseName}.snpEff.genes.txt"), file("${vcf.baseName}.snpEff.csv"), file("${vcf.baseName}.snpEff.summary.html") into snpeffReport
-		set variantCaller,file("${vcf.baseName}.snpEff.ann.vcf") into snpEffOutputVCFs
+    set file("${vcf.baseName}.snpEff.genes.txt"), file("${vcf.baseName}.snpEff.csv"), file("${vcf.baseName}.snpEff.summary.html") into snpeffOutput
+    set val("snpeff"), variantCaller, file("${vcf.baseName}.snpEff.ann.vcf") into snpeffVCF
 
   when: 'snpeff' in tools || 'merge' in tools
 
   script:
   """
   java -Xmx${task.memory.toGiga()}g \
-	-jar \$SNPEFF_HOME/snpEff.jar \
-	${snpeffDb} \
-	-csvStats ${vcf.baseName}.snpEff.csv \
-	-nodownload \
-	-canon \
-	-v \
-	${vcf} \
-	> ${vcf.baseName}.snpEff.ann.vcf
+  -jar \$SNPEFF_HOME/snpEff.jar \
+  ${snpeffDb} \
+  -csvStats ${vcf.baseName}.snpEff.csv \
+  -nodownload \
+  -canon \
+  -v \
+  ${vcf} \
+  > ${vcf.baseName}.snpEff.ann.vcf
 
   mv snpEff_summary.html ${vcf.baseName}.snpEff.summary.html
   """
 }
 
-if (params.verbose) snpeffReport = snpeffReport.view {
-  "snpEff report:\n\
-  File  : ${it.fileName}"
+if (params.verbose) snpeffOutput = snpeffOutput.view {
+  "snpEff report:\n" +
+  "File  : ${it.fileName}"
 }
 
-// When we are running in the 'merge' mode (first snpEff, then VEP)
-// we have to exchange the channels
-
 if('merge' in tools) {
-	vcfForVep = snpEffOutputVCFs
+  // When running in the 'merge' mode
+  // snpEff output is used as VEP input
+  // Used a feedback loop from vcfCompressed
+  // https://github.com/nextflow-io/patterns/tree/master/feedback-loop
+
+  vcfCompressed = Channel.create()
+
+  vcfForVep = Channel.empty().mix(
+    vcfCompressed.until({it[0]!="snpeff"})
+  )
 }
 
 process RunVEP {
   tag {vcf}
 
-  publishDir directoryMap.vep, mode: 'link'
+  publishDir params.outDir, mode: 'link', saveAs: {
+    if (it == "${vcf.baseName}.vep.summary.html") "${directoryMap.vep}/${it}"
+    else null
+  }
 
   input:
-    set variantCaller, file(vcf) from vcfForVep
+    set annotator, variantCaller, file(vcf), file(idx) from vcfForVep
 
   output:
-    set file("${vcf.baseName}.vep.ann.vcf"), file("${vcf.baseName}.vep.summary.html") into vepReport
+    set val("vep"), variantCaller, file("${vcf.baseName}.vep.ann.vcf") into vepVCF
+    file("${vcf.baseName}.vep.summary.html") into vepReport
 
   when: 'vep' in tools || 'merge' in tools
 
@@ -222,8 +235,34 @@ process RunVEP {
 }
 
 if (params.verbose) vepReport = vepReport.view {
-  "VEP report:\n\
-  Files : ${it.fileName}"
+  "VEP report:\n" +
+  "Files : ${it.fileName}"
+}
+
+vcfToCompress = snpeffVCF.mix(vepVCF)
+
+process CompressVCF {
+  tag {"${annotator} - ${vcf}"}
+
+  publishDir "${directoryMap."$annotator"}", mode: 'link'
+
+  input:
+    set annotator, variantCaller, file(vcf) from vcfToCompress
+
+  output:
+    set annotator, variantCaller, file("*.vcf.gz"), file("*.vcf.gz.tbi") into (vcfCompressed, vcfCompressedoutput)
+
+  script:
+  """
+  bgzip < ${vcf} > ${vcf}.gz
+  tabix ${vcf}.gz
+  """
+}
+
+if (params.verbose) vcfCompressedoutput = vcfCompressedoutput.view {
+  "${it[0]} VCF:\n" +
+  "File  : ${it[2].fileName}\n" +
+  "Index : ${it[3].fileName}"
 }
 
 process GetVersionBCFtools {
