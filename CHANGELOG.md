@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#595](https://github.com/SciLifeLab/Sarek/pull/595) - New QC Process `RunVcftools`
 - [#596](https://github.com/SciLifeLab/Sarek/pull/596) - New profile for BinAC cluster
 - [#597](https://github.com/SciLifeLab/Sarek/pull/597) - New function `sarek_ascii()` in `SarekUtils`
+- [#599](https://github.com/SciLifeLab/Sarek/pull/599) - New Process `CompressVCF`
+- [#601](https://github.com/SciLifeLab/Sarek/pull/601) - Singularity container for GATK4
 
 ### `Changed`
 - [#557](https://github.com/SciLifeLab/Sarek/pull/557), [#583](https://github.com/SciLifeLab/Sarek/pull/583), [#585](https://github.com/SciLifeLab/Sarek/pull/585), [#588](https://github.com/SciLifeLab/Sarek/pull/588) - Update help
@@ -31,6 +33,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#597](https://github.com/SciLifeLab/Sarek/pull/597) - `extractBams()` now takes an extra parameter.
 - [#597](https://github.com/SciLifeLab/Sarek/pull/597) - Replace depreciated operator `phase` by `join`.
 - [#597](https://github.com/SciLifeLab/Sarek/pull/597) - Reduce data footprint for Process `CreateRecalibrationTable`
+- [#599](https://github.com/SciLifeLab/Sarek/pull/599) - Merge is tested with `ANNOTATEALL`
 
 ### `Fixed`
 - [#560](https://github.com/SciLifeLab/Sarek/pull/560) - Display message for `repository` and `containerPath`
@@ -38,7 +41,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#579](https://github.com/SciLifeLab/Sarek/pull/579), [#584](https://github.com/SciLifeLab/Sarek/pull/584) - `Manta` output reorganized after modification for `Strelka Best Practices` process
 - [#585](https://github.com/SciLifeLab/Sarek/pull/583) - Trace file is plain txt
 - [#590](https://github.com/SciLifeLab/Sarek/pull/590), [#593](https://github.com/SciLifeLab/Sarek/pull/593) - Fix Singularity installation in Travis CI testing
-- [#598](https://github.com/SciLifeLab/Sarek/pull/598) - Space typo in Python script `selectROI.py`
+- [#598](https://github.com/SciLifeLab/Sarek/pull/598), [#601](https://github.com/SciLifeLab/Sarek/pull/601) - Fixesfor  Python script `selectROI.py` to work with CLC viewer
 
 ## [2.0.0] - 2018-03-23
 ### `Added`
