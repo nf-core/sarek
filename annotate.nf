@@ -75,17 +75,17 @@ vcfNotToAnnotate = Channel.create()
 if (annotateVCF == []) {
   Channel.empty().mix(
     Channel.fromPath("${directoryMap.haplotypecaller}/*.vcf.gz")
-      .flatten().map{vcf -> ['none', 'haplotypecaller', vcf, null]},
+      .flatten().map{vcf -> ['haplotypecaller', vcf]},
     Channel.fromPath("${directoryMap.manta}/*SV.vcf.gz")
-      .flatten().map{vcf -> ['none', 'manta', vcf, null]},
+      .flatten().map{vcf -> ['manta', vcf]},
     Channel.fromPath("${directoryMap.mutect1}/*.vcf.gz")
-      .flatten().map{vcf -> ['none', 'mutect1', vcf, null]},
+      .flatten().map{vcf -> ['mutect1', vcf]},
     Channel.fromPath("${directoryMap.mutect2}/*.vcf.gz")
-      .flatten().map{vcf -> ['none', 'mutect2', vcf, null]},
+      .flatten().map{vcf -> ['mutect2', vcf]},
     Channel.fromPath("${directoryMap.strelka}/*{somatic,variants}*.vcf.gz")
-      .flatten().map{vcf -> ['none', 'strelka', vcf, null]},
+      .flatten().map{vcf -> ['strelka', vcf]},
     Channel.fromPath("${directoryMap.strelkabp}/*{somatic,variants}*.vcf.gz")
-      .flatten().map{vcf -> ['none', 'strelkabp', vcf, null]}
+      .flatten().map{vcf -> ['strelkabp', vcf]}
   ).choice(vcfToAnnotate, vcfNotToAnnotate) {
     annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1
   }
@@ -94,14 +94,19 @@ if (annotateVCF == []) {
   annotateVCF.each{ list += ",${it}" }
   list = list.substring(1)
   if (StringUtils.countMatches("${list}", ",") == 0) vcfToAnnotate = Channel.fromPath("${list}")
-    .map{vcf -> ['none', 'userspecified', vcf, null]}
+    .map{vcf -> ['userspecified', vcf]}
   else vcfToAnnotate = Channel.fromPath("{$list}")
-    .map{vcf -> ['none', 'userspecified', vcf, null]}
+    .map{vcf -> ['userspecified', vcf]}
 } else exit 1, "specify only tools or files to annotate, not both"
 
 vcfNotToAnnotate.close()
 
 (vcfForBCFtools, vcfForVCFtools, vcfForSnpeff, vcfForVep) = vcfToAnnotate.into(4)
+
+vcfForVep = vcfForVep.map {
+  variantCaller, vcf ->
+  ["vep", variantCaller, vcf, null]
+}
 
 process RunBcftoolsStats {
   tag {vcf}
@@ -109,10 +114,10 @@ process RunBcftoolsStats {
   publishDir directoryMap.bcftoolsStats, mode: 'link'
 
   input:
-    set annotator, variantCaller, file(vcf), file(idx) from vcfForBCFtools
+    set variantCaller, file(vcf) from vcfForBCFtools
 
   output:
-    file ("${vcf.baseName}.bcf.tools.stats.out") into bcfReport
+    file ("*.bcf.tools.stats.out") into bcfReport
 
   when: !params.noReports
 
@@ -130,10 +135,10 @@ process RunVcftools {
   publishDir directoryMap.vcftools, mode: 'link'
 
   input:
-    set annotator, variantCaller, file(vcf), file(idx) from vcfForVCFtools
+    set variantCaller, file(vcf) from vcfForVCFtools
 
   output:
-    file ("${vcf.baseName}.*") into vcfReport
+    file ("${vcf.simpleName}.*") into vcfReport
 
   when: !params.noReports
 
@@ -146,21 +151,21 @@ if (params.verbose) vcfReport = vcfReport.view {
 }
 
 process RunSnpeff {
-  tag {vcf}
+  tag {"${variantCaller} - ${vcf}"}
 
   publishDir params.outDir, mode: 'link', saveAs: {
-    if (it == "${vcf.baseName}.snpEff.csv") "${directoryMap.snpeffReports}/${it}"
-    else if (it == "${vcf.baseName}.snpEff.ann.vcf") null
+    if (it == "${vcf.simpleName}_snpEff.csv") "${directoryMap.snpeffReports}/${it}"
+    else if (it == "${vcf.simpleName}_snpEff.ann.vcf") null
     else "${directoryMap.snpeff}/${it}"
   }
 
   input:
-    set annotator, variantCaller, file(vcf), file(idx) from vcfForSnpeff
+    set variantCaller, file(vcf) from vcfForSnpeff
     val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
 
   output:
-    set file("${vcf.baseName}.snpEff.genes.txt"), file("${vcf.baseName}.snpEff.csv"), file("${vcf.baseName}.snpEff.summary.html") into snpeffOutput
-    set val("snpeff"), variantCaller, file("${vcf.baseName}.snpEff.ann.vcf") into snpeffVCF
+    set file("${vcf.simpleName}_snpEff.genes.txt"), file("${vcf.simpleName}_snpEff.csv"), file("${vcf.simpleName}_snpEff.summary.html") into snpeffOutput
+    set val("snpeff"), variantCaller, file("${vcf.simpleName}_snpEff.ann.vcf") into snpeffVCF
 
   when: 'snpeff' in tools || 'merge' in tools
 
@@ -169,14 +174,14 @@ process RunSnpeff {
   java -Xmx${task.memory.toGiga()}g \
   -jar \$SNPEFF_HOME/snpEff.jar \
   ${snpeffDb} \
-  -csvStats ${vcf.baseName}.snpEff.csv \
+  -csvStats ${vcf.simpleName}_snpEff.csv \
   -nodownload \
   -canon \
   -v \
   ${vcf} \
-  > ${vcf.baseName}.snpEff.ann.vcf
+  > ${vcf.simpleName}_snpEff.ann.vcf
 
-  mv snpEff_summary.html ${vcf.baseName}.snpEff.summary.html
+  mv snpEff_summary.html ${vcf.simpleName}_snpEff.summary.html
   """
 }
 
@@ -194,15 +199,15 @@ if('merge' in tools) {
   vcfCompressed = Channel.create()
 
   vcfForVep = Channel.empty().mix(
-    vcfCompressed.until({it[0]!="snpeff"})
+    vcfCompressed.until({ it[0]=="merge" })
   )
 }
 
 process RunVEP {
-  tag {vcf}
+  tag {"${variantCaller} - ${vcf}"}
 
   publishDir params.outDir, mode: 'link', saveAs: {
-    if (it == "${vcf.baseName}.vep.summary.html") "${directoryMap.vep}/${it}"
+    if (it == "${vcf.simpleName}_VEP.summary.html") "${directoryMap.vep}/${it}"
     else null
   }
 
@@ -210,25 +215,28 @@ process RunVEP {
     set annotator, variantCaller, file(vcf), file(idx) from vcfForVep
 
   output:
-    set val("vep"), variantCaller, file("${vcf.baseName}.vep.ann.vcf") into vepVCF
-    file("${vcf.baseName}.vep.summary.html") into vepReport
+    set finalannotator, variantCaller, file("${vcf.simpleName}_VEP.ann.vcf") into vepVCF
+    file("${vcf.simpleName}_VEP.summary.html") into vepReport
 
   when: 'vep' in tools || 'merge' in tools
 
   script:
+  finalannotator = annotator == "snpeff" ? 'merge' : 'vep'
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
   """
   vep \
   -i ${vcf} \
-  -o ${vcf.baseName}.vep.ann.vcf \
-  --stats_file ${vcf.baseName}.vep.summary.html \
+  -o ${vcf.simpleName}_VEP.ann.vcf \
+  --assembly ${genome} \
   --cache \
+  --database \
   --everything \
   --filter_common \
+  --fork ${task.cpus} \
   --format vcf \
   --offline \
   --per_gene \
-  --fork ${task.cpus} \
+  --stats_file ${vcf.simpleName}_VEP.summary.html \
   --total_length \
   --vcf
   """
@@ -244,7 +252,7 @@ vcfToCompress = snpeffVCF.mix(vepVCF)
 process CompressVCF {
   tag {"${annotator} - ${vcf}"}
 
-  publishDir "${directoryMap."$annotator"}", mode: 'link'
+  publishDir "${directoryMap."$finalannotator"}", mode: 'link'
 
   input:
     set annotator, variantCaller, file(vcf) from vcfToCompress
@@ -253,6 +261,7 @@ process CompressVCF {
     set annotator, variantCaller, file("*.vcf.gz"), file("*.vcf.gz.tbi") into (vcfCompressed, vcfCompressedoutput)
 
   script:
+  finalannotator = annotator == "merge" ? "vep" : annotator
   """
   bgzip < ${vcf} > ${vcf}.gz
   tabix ${vcf}.gz
