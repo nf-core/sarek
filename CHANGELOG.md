@@ -18,8 +18,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#595](https://github.com/SciLifeLab/Sarek/pull/595) - New QC Process `RunVcftools`
 - [#596](https://github.com/SciLifeLab/Sarek/pull/596) - New profile for BinAC cluster
 - [#597](https://github.com/SciLifeLab/Sarek/pull/597) - New function `sarek_ascii()` in `SarekUtils`
-- [#599](https://github.com/SciLifeLab/Sarek/pull/599) - New Process `CompressVCF`
-- [#601](https://github.com/SciLifeLab/Sarek/pull/601) - Singularity container for GATK4
+- [#599](https://github.com/SciLifeLab/Sarek/pull/599), [#602](https://github.com/SciLifeLab/Sarek/pull/602) - New Process `CompressVCF`
+- [#601](https://github.com/SciLifeLab/Sarek/pull/601), [#603](https://github.com/SciLifeLab/Sarek/pull/603) - Container for GATK4
 
 ### `Changed`
 - [#557](https://github.com/SciLifeLab/Sarek/pull/557), [#583](https://github.com/SciLifeLab/Sarek/pull/583), [#585](https://github.com/SciLifeLab/Sarek/pull/585), [#588](https://github.com/SciLifeLab/Sarek/pull/588) - Update help
