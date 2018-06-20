@@ -13,7 +13,7 @@ class QC {
 // Run bcftools on vcf file
   static def bcftools(vcf) {
     """
-    bcftools stats ${vcf} > ${vcf.baseName}.bcf.tools.stats.out
+    bcftools stats ${vcf} > ${vcf.simpleName}.bcf.tools.stats.out
     """
   }
 
@@ -30,22 +30,22 @@ class QC {
     vcftools \
     --gzvcf ${vcf} \
     --relatedness2 \
-    --out ${vcf.baseName}
+    --out ${vcf.simpleName}
 
     vcftools \
     --gzvcf ${vcf} \
     --TsTv-by-count \
-    --out ${vcf.baseName}
+    --out ${vcf.simpleName}
 
     vcftools \
     --gzvcf ${vcf} \
     --TsTv-by-qual \
-    --out ${vcf.baseName}
+    --out ${vcf.simpleName}
 
     vcftools \
     --gzvcf ${vcf} \
     --FILTER-summary \
-    --out ${vcf.baseName}
+    --out ${vcf.simpleName}
     """
   }
 
