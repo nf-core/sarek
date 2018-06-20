@@ -18,7 +18,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
  Marcel Martin <marcel.martin@scilifelab.se> [@marcelm]
  Björn Nystedt <bjorn.nystedt@scilifelab.se> [@bjornnystedt]
  Pall Olason <pall.olason@scilifelab.se> [@pallolason]
- Pelin Sahlén <pelin.akan@scilifelab.se> [@pelinakan]
 --------------------------------------------------------------------------------
  @Homepage
  http://opensource.scilifelab.se/projects/sarek/
@@ -561,7 +560,7 @@ process RunBcftoolsStats {
     set variantCaller, file(vcf) from vcfForBCFtools
 
   output:
-    file ("${vcf.baseName}.bcf.tools.stats.out") into bcfReport
+    file ("${vcf.simpleName}.bcf.tools.stats.out") into bcfReport
 
   when: !params.noReports
 
@@ -584,7 +583,7 @@ process RunVcftools {
     set variantCaller, file(vcf) from vcfForVCFtools
 
   output:
-    file ("${vcf.baseName}.*") into vcfReport
+    file ("${vcf.simpleName}.*") into vcfReport
 
   when: !params.noReports
 
