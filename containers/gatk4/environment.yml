@@ -1,0 +1,9 @@
+# You can use this file to create a conda environment:
+#   conda env create -f environment.yml
+name: sarek-gatk4-2.0
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - gatk4=4.0.4.0
