@@ -1,0 +1,5 @@
+docker login szilvajuhos
+docker build -t szilvajuhos/sarek-vcfanno:latest .
+docker images
+docker push szilvajuhos/sarek-vcfanno:latest
+singularity pull docker://szilvajuhos/sarek-vcfanno:latest
