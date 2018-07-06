@@ -70,7 +70,7 @@ referenceMap = defineReferenceMap()
 toolList = defineToolList()
 
 if (!SarekUtils.checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
-if (!checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
+if (!SarekUtils.checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
 
 if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
   referenceMap.intervals = file("$workflow.projectDir/repeats/tiny_${params.genome}.list")
@@ -620,6 +620,7 @@ if (params.verbose) singleMantaOutput = singleMantaOutput.view {
   Index : ${it[4].fileName}"
 }
 
+// Running Strelka Best Practice with Manta indel candidates
 // For easier joining, remaping channels to idPatient, idSampleNormal, idSampleTumor...
 
 bamsForStrelkaBP = bamsForStrelkaBP.map {
@@ -932,34 +933,9 @@ def checkParameterExistence(it, list) {
   return true
 }
 
-def checkParameterList(list, realList) {
-  // Loop through all parameters to check their existence and spelling
-  return list.every{ checkParameterExistence(it, realList) }
-}
-
 def checkParamReturnFile(item) {
   params."${item}" = params.genomes[params.genome]."${item}"
   return file(params."${item}")
-}
-
-def checkReferenceMap(referenceMap) {
-  // Loop through all the references files to check their existence
-  referenceMap.every {
-    referenceFile, fileToCheck ->
-    checkRefExistence(referenceFile, fileToCheck)
-  }
-}
-
-def checkRefExistence(referenceFile, fileToCheck) {
-  if (fileToCheck instanceof List) return fileToCheck.every{ checkRefExistence(referenceFile, it) }
-  def f = file(fileToCheck)
-  // this is an expanded wildcard: we can assume all files exist
-  if (f instanceof List && f.size() > 0) return true
-  else if (!f.exists()) {
-    log.info  "Missing references: ${referenceFile} ${fileToCheck}"
-    return false
-  }
-  return true
 }
 
 def checkUppmaxProject() {
