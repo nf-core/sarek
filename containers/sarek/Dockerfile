@@ -1,18 +1,15 @@
-FROM debian:8.9
+FROM nfcore/base:latest
 
 LABEL \
-  author="Maxime Garcia" \
+  author="Szilveszter Juhos" \
   description="Image with tools used in Sarek" \
-  maintainer="maxime.garcia@scilifelab.se"
+  maintainer="szilveszter.juhos@scilifelab.se"
 
-# Export PATH
-ENV \
-  MANTA_INSTALL_PATH=/opt/manta \
-  PATH=/opt/bcftools/bin:/opt/htslib/bin:/opt/samtools/bin:$PATH \
-  STRELKA_INSTALL_PATH=/opt/strelka
+COPY environment.yml /
 
-# Build container
-ADD \
-  build.sh /usr/bin/
 RUN \
-  build.sh
+  conda env create -f /environment.yml && \
+  conda clean -a
+
+  # Export PATH
+ENV PATH /opt/conda/envs/sarek-core/bin:$PATH

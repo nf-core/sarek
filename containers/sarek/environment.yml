@@ -1,0 +1,22 @@
+# You can use this file to create a conda environment for this pipeline:
+# conda env create -f environment.yml
+name: sarek-core
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+
+dependencies:
+  - conda-forge::openjdk=8.0.144 # Needed for FastQC docker - see bioconda/bioconda-recipes#5026
+  - bwa=0.7.17
+  - fastqc=0.11.7
+  - samtools=1.8
+  - gatk4=4.0.3.0
+  - qualimap=2.2.2a
+  - multiqc=1.5
+  - manta=1.3.0
+  - strelka=2.9.3
+  - bcftools=1.8
+  - htslib=1.5
+  - vcftools=0.1.15
+  - vcfanno=0.2.8
