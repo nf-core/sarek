@@ -59,7 +59,7 @@ class QC {
 // Get GATK version
   static def getVersionGATK() {
     """
-    echo "GATK version"\$(java -jar \$GATK_HOME/GenomeAnalysisTK.jar --version 2>&1) > v_gatk.txt
+		gatk-launch WhyCantWeHaveVersionEasily 2>&1| awk -F/ '/java/{for(i=1;i<=NF;i++){if(\$i~/gatk4/){sub("gatk4-","",\$i);print \$i>"v_gatk.txt"}}}'
     """
   }
 

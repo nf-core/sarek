@@ -29,7 +29,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - RunFastQC - Run FastQC for QC on fastq files
  - MapReads - Map reads with BWA
  - MergeBams - Merge BAMs if multilane samples
- - MarkDuplicates - Mark Duplicates with Picard
+ - MarkDuplicates - Mark Duplicates with GATK4
  - RealignerTargetCreator - Create realignment target intervals
  - IndelRealigner - Realign BAMs as T/N pair
  - CreateRecalibrationTable - Create Recalibration Table with BaseRecalibrator
@@ -262,15 +262,14 @@ process MarkDuplicates {
 
   script:
   """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar \$PICARD_HOME/picard.jar MarkDuplicates \
-  INPUT=${bam} \
-  METRICS_FILE=${bam}.metrics \
-  TMP_DIR=. \
-  ASSUME_SORTED=true \
-  VALIDATION_STRINGENCY=LENIENT \
-  CREATE_INDEX=TRUE \
-  OUTPUT=${idSample}_${status}.md.bam
+  gatk-launch --java-options -Xmx${task.memory.toGiga()}g \
+  MarkDuplicates \
+  --INPUT ${bam} \
+  --METRICS_FILE ${bam}.metrics \
+  --TMP_DIR . \
+  --ASSUME_SORT_ORDER coordinate \
+  --CREATE_INDEX true \
+  --OUTPUT ${idSample}_${status}.md.bam
   """
 }
 
@@ -617,20 +616,10 @@ process GetVersionFastQC {
 
 process GetVersionGATK {
   publishDir directoryMap.version, mode: 'link'
+	errorStrategy 'ignore'	// there is no error-free way to get version from GATK4
   output: file("v_*.txt")
   when: !params.onlyQC
   script: QC.getVersionGATK()
-}
-
-process GetVersionPicard {
-  publishDir directoryMap.version, mode: 'link'
-  output: file("v_*.txt")
-  when: step == 'mapping' && !params.onlyQC
-
-  script:
-  """
-  echo "Picard version:"\$(java -jar \$PICARD_HOME/picard.jar MarkDuplicates --version 2>&1) > v_picard.txt
-  """
 }
 
 /*
