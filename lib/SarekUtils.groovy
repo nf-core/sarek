@@ -119,8 +119,7 @@ class SarekUtils {
   // Define map of directories
   static def defineDirectoryMap(outDir) {
     return [
-    'nonRealigned'     : "${outDir}/Preprocessing/NonRealigned",
-    'nonRecalibrated'  : "${outDir}/Preprocessing/NonRecalibrated",
+    'duplicateMarked'  : "${outDir}/Preprocessing/DuplicateMarked",
     'recalibrated'     : "${outDir}/Preprocessing/Recalibrated",
     'ascat'            : "${outDir}/VariantCalling/Ascat",
     'freebayes'        : "${outDir}/VariantCalling/FreeBayes",
