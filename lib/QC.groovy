@@ -66,7 +66,7 @@ class QC {
 // Get Manta version
   static def getVersionManta() {
     """
-    cat \$MANTA_INSTALL_PATH/lib/python/configBuildTimeInfo.py | grep workflowVersion > v_manta.txt
+		configManta.py --version > v_manta.txt
     """
   }
 
@@ -80,7 +80,7 @@ class QC {
 // Get Strelka version
   static def getVersionStrelka() {
     """
-    cat \$STRELKA_INSTALL_PATH/lib/python/configBuildTimeInfo.py | grep workflowVersion > v_strelka.txt
+		configureStrelkaGermlineWorkflow.py --version > v_strelka.txt
     """
   }
 

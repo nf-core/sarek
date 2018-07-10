@@ -457,7 +457,7 @@ process RunSingleStrelka {
 
   script:
   """
-  \$STRELKA_INSTALL_PATH/bin/configureStrelkaGermlineWorkflow.py \
+  configureStrelkaGermlineWorkflow.py \
   --bam ${bam} \
   --referenceFasta ${genomeFile} \
   --runDir Strelka
@@ -501,7 +501,7 @@ process RunSingleManta {
 
   script:
   """
-  \$MANTA_INSTALL_PATH/bin/configManta.py \
+  configManta.py \
   --bam ${bam} \
   --reference ${genomeFile} \
   --runDir Manta
