@@ -310,20 +310,15 @@ process RunHaplotypecaller {
   when: 'haplotypecaller' in tools && !params.onlyQC
 
   script:
-  BQSR = (recalTable != null) ? "--BQSR $recalTable" : ''
   """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
-  -T HaplotypeCaller \
-  --emitRefConfidence GVCF \
-  -pairHMM LOGLESS_CACHING \
-  -R ${genomeFile} \
-  --dbsnp ${dbsnp} \
-  ${BQSR} \
-  -I ${bam} \
-  -L ${intervalBed} \
-  --disable_auto_index_creation_and_locking_when_reading_rods \
-  -o ${intervalBed.baseName}_${idSample}.g.vcf
+  gatk-launch --java-options "-Xmx${task.memory.toGiga()}g -Xms6000m -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10" \
+      HaplotypeCaller \
+      -R ${genomeFile} \
+      -I ${bam} \
+      -L ${intervalBed} \
+  		--dbsnp ${dbsnp} \
+  		-O ${intervalBed.baseName}_${idSample}.g.vcf 	\
+			--emit-ref-confidence GVCF
   """
 }
 hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3])
@@ -349,17 +344,17 @@ process RunGenotypeGVCFs {
   when: 'haplotypecaller' in tools && !params.onlyQC
 
   script:
-  // Using -L is important for speed
+  // Using -L is important for speed and we have to index the interval files also
   """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
-  -T GenotypeGVCFs \
+  gatk-launch IndexFeatureFile -F ${gvcf}
+
+  gatk-launch --java-options -Xmx${task.memory.toGiga()}g \
+  GenotypeGVCFs \
   -R ${genomeFile} \
   -L ${intervalBed} \
   --dbsnp ${dbsnp} \
-  --variant ${gvcf} \
-  --disable_auto_index_creation_and_locking_when_reading_rods \
-  -o ${intervalBed.baseName}_${idSample}.vcf
+  -V ${gvcf} \
+  -O ${intervalBed.baseName}_${idSample}.vcf
   """
 }
 hcGenotypedVCF = hcGenotypedVCF.groupTuple(by:[0,1,2,3])

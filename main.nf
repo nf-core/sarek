@@ -381,9 +381,9 @@ process RecalibrateBam {
     set idPatient, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam, recalibratedBamForStats
     set idPatient, status, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into recalibratedBamTSV
 
-  // HaplotypeCaller can do BQSR on the fly, so do not create a
+  // GATK4 HaplotypeCaller can not do BQSR on the fly, so we have to create a
   // recalibrated BAM explicitly.
-  when: params.explicitBqsrNeeded && !params.onlyQC
+  when: !params.onlyQC
 
   script:
   """
