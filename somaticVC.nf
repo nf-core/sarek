@@ -29,10 +29,9 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files
  - RunBamQC - Run qualimap BamQC on recalibrated BAM files
  - CreateIntervalBeds - Create and sort intervals into bed files
- - RunMutect1 - Run MuTect1 for Variant Calling (Parallelized processes)
  - RunMutect2 - Run MuTect2 for Variant Calling (Parallelized processes)
  - RunFreeBayes - Run FreeBayes for Variant Calling (Parallelized processes)
- - ConcatVCF - Merge results from MuTect1 and MuTect2
+ - ConcatVCF - Merge results from paralellized variant callers
  - RunStrelka - Run Strelka for Variant Calling
  - RunManta - Run Manta for Structural Variant Calling
  - RunSingleManta - Run Manta for Single Structural Variant Calling
@@ -76,9 +75,6 @@ if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
   referenceMap.intervals = file("$workflow.projectDir/repeats/tiny_${params.genome}.list")
 }
 
-// TODO
-// MuTect and Mutect2 could be run without a recalibrated BAM (they support
-// the --BQSR option), but this is not implemented, yet.
 // TODO
 // FreeBayes does not need recalibrated BAMs, but we need to test whether
 // the channels are set up correctly when we disable it
@@ -200,10 +196,9 @@ bamsTumor = bamsTumor.map { idPatient, status, idSample, bam, bai -> [idPatient,
 
 // We know that MuTect2 (and other somatic callers) are notoriously slow.
 // To speed them up we are chopping the reference into smaller pieces.
-// (see repeats/centromeres.list).
 // Do variant calling by this intervals, and re-merge the VCFs.
-// Since we are on a cluster, this can parallelize the variant call processes.
-// And push down the variant call wall clock time significanlty.
+// Since we are on a cluster or a multi-CPU machine, this can parallelize the 
+// variant call processes and push down the variant call wall clock time significanlty.
 
 process CreateIntervalBeds {
   tag {intervals.fileName}
@@ -285,48 +280,10 @@ bamsAll = bamsAll.map {
 
 bamsTumorNormalIntervals = bamsAll.spread(bedIntervals)
 
-// MuTect1, MuTect2, FreeBayes
-(bamsFMT1, bamsFMT2, bamsFFB) = bamsTumorNormalIntervals.into(3)
+// MuTect2, FreeBayes
+( bamsFMT2, bamsFFB) = bamsTumorNormalIntervals.into(3)
 
-process RunMutect1 {
-  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
-
-  input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from bamsFMT1
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(cosmic), file(cosmicIndex) from Channel.value([
-      referenceMap.genomeFile,
-      referenceMap.genomeIndex,
-      referenceMap.genomeDict,
-      referenceMap.dbsnp,
-      referenceMap.dbsnpIndex,
-      referenceMap.cosmic,
-      referenceMap.cosmicIndex
-    ])
-
-  output:
-    set val("mutect1"), idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect1Output
-
-  when: 'mutect1' in tools && !params.onlyQC
-
-  script:
-  """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar \$MUTECT_HOME/muTect.jar \
-  -T MuTect \
-  -R ${genomeFile} \
-  --cosmic ${cosmic} \
-  --dbsnp ${dbsnp} \
-  -I:normal ${bamNormal} \
-  -I:tumor ${bamTumor} \
-  -L ${intervalBed} \
-  --disable_auto_index_creation_and_locking_when_reading_rods \
-  --out ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.call_stats.out \
-  --vcf ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
-  """
-}
-
-mutect1Output = mutect1Output.groupTuple(by:[0,1,2,3])
-
+// This will give as a list of unfiltered calls for MuTect2. 
 process RunMutect2 {
   tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
 
@@ -349,19 +306,18 @@ process RunMutect2 {
 
   script:
   """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
-  -T MuTect2 \
-  -R ${genomeFile} \
-  --cosmic ${cosmic} \
-  --dbsnp ${dbsnp} \
-  -I:normal ${bamNormal} \
-  -I:tumor ${bamTumor} \
-  --disable_auto_index_creation_and_locking_when_reading_rods \
-  -L ${intervalBed} \
-  -o ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
+	gatk-launch --java-options "-Xmx${task.memory.toGiga()}g" \
+		Mutect2 \
+		-R ${genomeFile}\
+		-I ${bamTumor}  -tumor ${idSampleTumor} \
+		-I ${bamNormal} -normal ${idSampleNormal} \
+		-L ${intervalBed} \
+		-O ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
   """
 }
+//		--germline_resource af-only-gnomad.vcf.gz \
+//		--normal_panel pon.vcf.gz \
+//		--dbsnp ${dbsnp} \
 
 mutect2Output = mutect2Output.groupTuple(by:[0,1,2,3])
 
@@ -400,7 +356,7 @@ freebayesOutput = freebayesOutput.groupTuple(by:[0,1,2,3])
 // we are merging the VCFs that are called separatelly for different intervals
 // so we can have a single sorted VCF containing all the calls for a given caller
 
-vcfsToMerge = mutect1Output.mix(mutect2Output, freebayesOutput)
+vcfsToMerge = mutect2Output.mix(freebayesOutput)
 if (params.verbose) vcfsToMerge = vcfsToMerge.view {
   "VCFs To be merged:\n\
   Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
@@ -492,7 +448,7 @@ process RunStrelka {
 
   script:
   """
-  \$STRELKA_INSTALL_PATH/bin/configureStrelkaSomaticWorkflow.py \
+  configureStrelkaSomaticWorkflow.py \
   --tumor ${bamTumor} \
   --normal ${bamNormal} \
   --referenceFasta ${genomeFile} \
@@ -538,7 +494,7 @@ process RunManta {
 
   script:
   """
-  \$MANTA_INSTALL_PATH/bin/configManta.py \
+  configManta.py \
   --normalBam ${bamNormal} \
   --tumorBam ${bamTumor} \
   --reference ${genomeFile} \
@@ -591,7 +547,7 @@ process RunSingleManta {
 
   script:
   """
-  \$MANTA_INSTALL_PATH/bin/configManta.py \
+  configManta.py \
   --tumorBam ${bam} \
   --reference ${genomeFile} \
   --runDir Manta
@@ -651,7 +607,7 @@ process RunStrelkaBP {
 
   script:
   """
-  \$STRELKA_INSTALL_PATH/bin/configureStrelkaSomaticWorkflow.py \
+  configureStrelkaSomaticWorkflow.py \
   --tumor ${bamTumor} \
   --normal ${bamNormal} \
   --referenceFasta ${genomeFile} \
@@ -1003,7 +959,6 @@ def helpMessage() {
   log.info "       Option to configure which tools to use in the workflow."
   log.info "         Different tools to be separated by commas."
   log.info "       Possible values are:"
-  log.info "         mutect1 (use MuTect1 for VC)"
   log.info "         mutect2 (use MuTect2 for VC)"
   log.info "         freebayes (use FreeBayes for VC)"
   log.info "         strelka (use Strelka for VC)"
