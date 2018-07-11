@@ -327,6 +327,7 @@ process RunFreeBayes {
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from bamsFFB
     file(genomeFile) from Channel.value(referenceMap.genomeFile)
+    file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
 
   output:
     set val("freebayes"), idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into freebayesOutput
