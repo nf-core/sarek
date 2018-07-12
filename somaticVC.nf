@@ -376,12 +376,13 @@ process ConcatVCF {
   output:
     set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfConcatenated
 
-  when: ('mutect1' in tools || 'mutect2' in tools || 'freebayes' in tools ) && !params.onlyQC
+  when: ( 'mutect2' in tools || 'freebayes' in tools ) && !params.onlyQC
 
   script:
   outputFile = "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
 
   """
+	set -euo pipefail
   # first make a header from one of the VCF intervals
   # get rid of interval information only from the GATK command-line, but leave the rest
   FIRSTVCF=\$(ls *.vcf | head -n 1)
@@ -927,7 +928,6 @@ def defineToolList() {
     'freebayes',
     'haplotypecaller',
     'manta',
-    'mutect1',
     'mutect2',
     'strelka'
   ]

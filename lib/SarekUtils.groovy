@@ -126,7 +126,6 @@ class SarekUtils {
     'gvcf-hc'          : "${outDir}/VariantCalling/HaplotypeCallerGVCF",
     'haplotypecaller'  : "${outDir}/VariantCalling/HaplotypeCaller",
     'manta'            : "${outDir}/VariantCalling/Manta",
-    'mutect1'          : "${outDir}/VariantCalling/MuTect1",
     'mutect2'          : "${outDir}/VariantCalling/MuTect2",
     'strelka'          : "${outDir}/VariantCalling/Strelka",
     'strelkabp'        : "${outDir}/VariantCalling/StrelkaBP",

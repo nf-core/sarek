@@ -350,7 +350,6 @@ def helpMessage() {
   log.info "       Possible values are:"
   log.info "         haplotypecaller (Annotate HaplotypeCaller output)"
   log.info "         manta (Annotate Manta output)"
-  log.info "         mutect1 (Annotate MuTect1 output)"
   log.info "         mutect2 (Annotate MuTect2 output)"
   log.info "         strelka (Annotate Strelka output)"
   log.info "    --annotateVCF"
