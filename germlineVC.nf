@@ -31,7 +31,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - CreateIntervalBeds - Create and sort intervals into bed files
  - RunHaplotypecaller - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
  - RunGenotypeGVCFs - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
- - ConcatVCF - Merge results from HaplotypeCaller, MuTect1 and MuTect2
+ - ConcatVCF - Merge results from HaplotypeCaller, MuTect2 and other paralellized callers
  - RunSingleStrelka - Run Strelka for Germline Variant Calling
  - RunSingleManta - Run Manta for Single Structural Variant Calling
  - RunBcftoolsStats - Run BCFTools stats on vcf files
@@ -71,9 +71,6 @@ if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
   referenceMap.intervals = file("$workflow.projectDir/repeats/tiny_${params.genome}.list")
 }
 
-// TODO
-// MuTect and Mutect2 could be run without a recalibrated BAM (they support
-// the --BQSR option), but this is not implemented, yet.
 // TODO
 // FreeBayes does not need recalibrated BAMs, but we need to test whether
 // the channels are set up correctly when we disable it
@@ -287,8 +284,8 @@ bamsAll = bamsAll.map {
 
 bamsTumorNormalIntervals = bamsAll.spread(bedIntervals)
 
-// MuTect1, MuTect2, FreeBayes
-(bamsFMT1, bamsFMT2, bamsFFB) = bamsTumorNormalIntervals.into(3)
+// MuTect2, FreeBayes
+(bamsFMT2, bamsFFB) = bamsTumorNormalIntervals.into(2)
 
 process RunHaplotypecaller {
   tag {idSample + "-" + intervalBed.baseName}
@@ -382,7 +379,7 @@ process ConcatVCF {
     set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfConcatenated
 
 
-  when: ( 'haplotypecaller' in tools || 'mutect1' in tools || 'mutect2' in tools || 'freebayes' in tools ) && !params.onlyQC
+  when: ( 'haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools ) && !params.onlyQC
 
   script:
   if (variantCaller == 'haplotypecaller') outputFile = "${variantCaller}_${idSampleNormal}.vcf"
@@ -390,6 +387,7 @@ process ConcatVCF {
   else outputFile = "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
 
   """
+	set -euo pipefail
   # first make a header from one of the VCF intervals
   # get rid of interval information only from the GATK command-line, but leave the rest
   FIRSTVCF=\$(ls *.vcf | head -n 1)
@@ -665,7 +663,6 @@ def defineToolList() {
     'freebayes',
     'haplotypecaller',
     'manta',
-    'mutect1',
     'mutect2',
     'strelka'
   ]
