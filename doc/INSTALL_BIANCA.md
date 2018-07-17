@@ -19,7 +19,7 @@ All Reference files are already stored in `bianca`.
 # Or just open a terminal
 
 # Clone the repository
-> git clone https://github.com/SciLifeLab/Sarek.git
+> git clone --recursive https://github.com/SciLifeLab/Sarek.git
 > cd Sarek
 
 # It is also possible to checkout a specific version using
@@ -27,6 +27,11 @@ All Reference files are already stored in `bianca`.
 
 # Use our script to make an archive to send to bianca
 > ./scripts/makeSnapshot.sh
+
+# Or you can also include the test data in this archive using git-archive-all
+# Install git-archive-all using pip
+> pip install git-archive-all
+> ./scripts/makeSnapshot.sh --include-test-data
 
 # You will get this message in your terminal
 Wrote Sarek-[snapID].tar.gz
