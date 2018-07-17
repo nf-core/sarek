@@ -196,7 +196,7 @@ process BuildVCFIndex {
 
   script:
   """
-  \$IGVTOOLS_HOME/igvtools index ${f_reference}
+  igvtools index ${f_reference}
   """
 }
 

@@ -177,12 +177,6 @@ def grabRevision() {
 def defineContainersList(){
   // Return list of authorized containers
   return [
-    'freebayes',
-    'gatk',
-    'gatk4',
-    'igvtools',
-    'picard',
-    'qctools',
     'r-base',
     'runallelecount',
     'sarek',
