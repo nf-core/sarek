@@ -7,15 +7,12 @@ One simple bash script is available, which will pull the Sarek-data repository a
 
 Such tests are used in our Continuous Integration with Travis. You can perform the same tests to familiarize yourself with the workflow.
 
-### Testing with Singularity
+## Testing with Singularity
 For testing with Docker, just replace `singularity` with `docker` in every occurence.
 ```bash
-# Dowload Sarek
-git clone https://github.com/SciLifeLab/Sarek Sarek-test
+# Dowload Sarek and the test data
+git clone --recursive https://github.com/SciLifeLab/Sarek Sarek-test
 cd Sarek-test
-
-# Dowload Sarek test data
-git clone https://github.com/SciLifeLab/Sarek-data
 
 # Build the references for the test data
 nextflow run buildReferences.nf --outDir References/smallGRCh37 \
@@ -76,6 +73,13 @@ nextflow run annotate.nf --tools snpEFF,VEP \
 # Testing generating report
 nextflow run runMultiQC.nf -profile singularity
 ```
+
+## Testing on a secure cluster
+On a secure cluster as bianca, with no internet access, you will need to download and transfer Sarek and the test data first.
+
+Follow the [installation guide for `bianca`](https://github.com/SciLifeLab/Sarek/blob/master/doc/INSTALL_BIANCA.md).
+
+And then start the test at the `Build the references for the test data` step.
 
 ## Usage
 

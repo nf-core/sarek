@@ -20,6 +20,11 @@ All Reference files are already stored in `bianca`.
 
 # Clone the repository
 > git clone https://github.com/SciLifeLab/Sarek.git
+
+# If you want to include the test data, you should use --recursive
+> git clone --recursive https://github.com/SciLifeLab/Sarek.git
+
+# Go to the newly created directory
 > cd Sarek
 
 # It is also possible to checkout a specific version using
@@ -27,6 +32,20 @@ All Reference files are already stored in `bianca`.
 
 # Use our script to make an archive to send to bianca
 > ./scripts/makeSnapshot.sh
+
+# Or you can also include the test data in this archive using git-archive-all
+# Install pip
+> curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+> python get-pip.py
+
+# If it fails due to permission, you could consider using
+> python get-pip.py --user
+
+# Install git-archive-all using pip
+> pip install git-archive-all
+# If you used --user before, you might want to do that here too
+> pip install git-archive-all --user
+> ./scripts/makeSnapshot.sh --include-test-data
 
 # You will get this message in your terminal
 Wrote Sarek-[snapID].tar.gz

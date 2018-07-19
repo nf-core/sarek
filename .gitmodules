@@ -1,0 +1,3 @@
+[submodule "Sarek-data"]
+	path = Sarek-data
+	url = https://github.com/SciLifeLab/Sarek-data.git

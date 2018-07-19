@@ -62,10 +62,10 @@ function clean_repo() {
 # Build references only for smallGRCh37
 if [[ $GENOME == smallGRCh37 ]] && [[ $TEST != BUILDCONTAINERS ]] && [[ BUILD ]]
 then
-  if [[ ! -d Sarek-data ]]
+  if [[ -z "$(ls -A Sarek-data)" ]]
   then
-    echo "$(tput setaf 1)Cloning Sarek-data repository$(tput sgr0)"
-    git clone https://github.com/SciLifeLab/Sarek-data.git
+    git submodule init
+    git submodule update
   fi
   if [[ ! -d References ]]
   then
