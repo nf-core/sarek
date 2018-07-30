@@ -13,7 +13,7 @@ addons:
 
 env:
   global:
-    - NXF_VER=0.27.0 SGT_VER=2.4.2
+    - NXF_VER=0.31.0 SGT_VER=2.4.2
   matrix:
     - PROFILE=singularity TEST=TOOLS          TOOL_INSTALL=all
     - PROFILE=singularity TEST=MANTA          TOOL_INSTALL=all
