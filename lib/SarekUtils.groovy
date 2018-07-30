@@ -1,9 +1,6 @@
 import static nextflow.Nextflow.file
 import nextflow.Channel
-import groovy.util.logging.Slf4j
-@Grab('ch.qos.logback:logback-classic:1.2.1') 
 
-@Slf4j
 class SarekUtils {
 
   // Check file extension
@@ -109,8 +106,8 @@ class SarekUtils {
     def f = file(fileToCheck)
     // this is an expanded wildcard: we can assume all files exist
     if (f instanceof List && f.size() > 0) return true
-    else if (!f.exists()) {
-      log.info  "Missing references: ${referenceFile} ${fileToCheck}"
+    else if (!f.exists()) { 
+			println  "Missing references: ${referenceFile} ${fileToCheck}"
       return false
     }
     return true
