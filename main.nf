@@ -261,7 +261,7 @@ process MarkDuplicates {
 
   script:
   """
-  gatk-launch --java-options -Xmx${task.memory.toGiga()}g \
+  gatk --java-options -Xmx${task.memory.toGiga()}g \
   MarkDuplicates \
   --INPUT ${bam} \
   --METRICS_FILE ${bam}.metrics \
@@ -323,7 +323,7 @@ process CreateRecalibrationTable {
   script:
   known = knownIndels.collect{ "--known-sites ${it}" }.join(' ')
   """
-  gatk-launch --java-options -Xmx${task.memory.toGiga()}g \
+  gatk --java-options -Xmx${task.memory.toGiga()}g \
   BaseRecalibrator \
   --input ${bam} \
   --output ${idSample}.recal.table \
@@ -387,7 +387,7 @@ process RecalibrateBam {
 
   script:
   """
-  gatk-launch --java-options -Xmx${task.memory.toGiga()}g \
+  gatk --java-options -Xmx${task.memory.toGiga()}g \
   ApplyBQSR \
   -R ${genomeFile} \
   --input ${bam} \

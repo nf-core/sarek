@@ -308,7 +308,7 @@ process RunHaplotypecaller {
 
   script:
   """
-  gatk-launch --java-options "-Xmx${task.memory.toGiga()}g -Xms6000m -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10" \
+  gatk --java-options "-Xmx${task.memory.toGiga()}g -Xms6000m -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10" \
       HaplotypeCaller \
       -R ${genomeFile} \
       -I ${bam} \
@@ -343,9 +343,9 @@ process RunGenotypeGVCFs {
   script:
   // Using -L is important for speed and we have to index the interval files also
   """
-  gatk-launch IndexFeatureFile -F ${gvcf}
+  gatk IndexFeatureFile -F ${gvcf}
 
-  gatk-launch --java-options -Xmx${task.memory.toGiga()}g \
+  gatk --java-options -Xmx${task.memory.toGiga()}g \
   GenotypeGVCFs \
   -R ${genomeFile} \
   -L ${intervalBed} \
