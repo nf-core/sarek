@@ -5,6 +5,63 @@ This small tutorial will explain to you how to install and run Sarek on a small 
 For more information about `bianca`, follow the [`bianca` user guide](http://uppmax.uu.se/support/user-guides/bianca-user-guide/).
 For more information about using Singularity with UPPMAX, follow the [Singularity UPPMAX guide](https://www.uppmax.uu.se/support-sv/user-guides/singularity-user-guide/).
 
+## Install Nextflow
+
+```bash
+# Connect to rackham
+> ssh -AX [USER]@rackham.uppmax.uu.se
+# Or just open a terminal
+
+# create directories
+> mkdir install
+> mkdir install/bin
+> cd install/bin
+
+# Install Nextflow
+> curl -s https://get.nextflow.io | bash
+> cd ..
+
+# Archive Nextflow
+> tar czvf nextflow_v[xx.yy.zz].tgz .nextflow bin/nextflow
+
+# Send the tar to bianca (here using sftp)
+# For FileZilla follow the bianca user guide
+> sftp [USER]-[PROJECT]@bianca-sftp.uppmax.uu.se:[USER]-[PROJECT]
+> put nextflow_v[xx.yy.zz].tgz
+
+# Connect to bianca
+> ssh -A [USER]-[PROJECT]@bianca.uppmax.uu.se
+
+# Go to your project
+> cd /castor/project/proj_nobackup
+
+# Make and go into a Nextflow directoy
+> mkdir tools
+> mkdir tools/nextflow
+> cd tools/nextflow
+
+# Copy the tar from wharf to the project
+> cp /castor/project/proj_nobackup/wharf/[USER]/[USER]-[PROJECT]/nextflow_v[xx.yy.zz].tgz /castor/project/proj_nobackup/tools/nextflow
+
+# extract Nextflow
+> tar xzvf nextflow_v[xx.yy.zz].tgz
+
+# Move files
+> mv .nextflow nextflow_v[xx.yy.zz]
+> mv bin nextflow_v[xx.yy.zz]/bin
+
+# Clean directory
+> rm nextflow_v[xx.yy.zz].tgz
+
+# And everytime you're launching Nextflow, don't forget to export the following ENV variables
+> export NXF_HOME=/castor/project/proj/nobackup/tools/nextflow/nextflow_v[xx.yy.zz]
+> export PATH=${NXF_HOME}/bin:${PATH}
+> export NXF_TEMP=$SNIC_TMP
+> export NXF_LAUNCHER=$SNIC_TMP
+```
+
+## Install Sarek
+
 Sarek use Singularity containers to package all the different tools.
 
 As `bianca` is secure, no direct download is available, so Sarek and the Singularity containers will have to be installed and updated manually.
@@ -78,7 +135,7 @@ Wrote Sarek-[snapID].tar.gz
 > cp /castor/project/proj_nobackup/wharf/[USER]/[USER]-[PROJECT]/Sarek-[snapID].tgz /castor/project/proj_nobackup/Sarek
 
 # extract Sarek
-> tar -xvzf Sarek-[snapID].tgz
+> tar xvzf Sarek-[snapID].tgz
 
 # Make a symbolic link to the extracted repository
 > ln -s Sarek-[snapID] default
