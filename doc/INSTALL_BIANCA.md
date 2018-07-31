@@ -15,14 +15,14 @@ For more information about using Singularity with UPPMAX, follow the [Singularit
 # create directories
 > mkdir install
 > mkdir install/bin
->cd install/bin
+> cd install/bin
 
 # Install Nextflow
 > curl -s https://get.nextflow.io | bash
 > cd ..
 
 # Archive Nextflow
->tar czvf nextflow_v[xx.yy.zz].tgz .nextflow bin/nextflow
+> tar czvf nextflow_v[xx.yy.zz].tgz .nextflow bin/nextflow
 
 # Send the tar to bianca (here using sftp)
 # For FileZilla follow the bianca user guide
