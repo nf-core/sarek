@@ -313,9 +313,9 @@ process RunHaplotypecaller {
       -R ${genomeFile} \
       -I ${bam} \
       -L ${intervalBed} \
-  		--dbsnp ${dbsnp} \
-  		-O ${intervalBed.baseName}_${idSample}.g.vcf 	\
-			--emit-ref-confidence GVCF
+      --dbsnp ${dbsnp} \
+      -O ${intervalBed.baseName}_${idSample}.g.vcf \
+      --emit-ref-confidence GVCF
   """
 }
 hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3])
