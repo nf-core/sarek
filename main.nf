@@ -263,6 +263,7 @@ process MarkDuplicates {
   """
   gatk --java-options -Xmx${task.memory.toGiga()}g \
   MarkDuplicates \
+  --MAX_RECORDS_IN_RAM 50000 \
   --INPUT ${bam} \
   --METRICS_FILE ${bam}.metrics \
   --TMP_DIR . \
