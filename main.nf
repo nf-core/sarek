@@ -687,23 +687,23 @@ def defineStepList() {
 def extractFastq(tsvFile) {
   // Channeling the TSV file containing FASTQ.
   // Format is: "subject gender status sample lane fastq1 fastq2"
-  Channel
-    .from(tsvFile.readLines())
-    .map{line ->
-      def list       = SarekUtils.returnTSV(line.split(),7)
-      def idPatient  = list[0]
-      def gender     = list[1]
-      def status     = SarekUtils.returnStatus(list[2].toInteger())
-      def idSample   = list[3]
-      def idRun      = list[4]
-      def fastqFile1 = SarekUtils.returnFile(list[5])
-      def fastqFile2 = SarekUtils.returnFile(list[6])
+  Channel.from(tsvFile)
+  .splitCsv(sep: '\t')
+  .map { row ->
+    SarekUtils.checkNumberOfItem(row, 7)
+    def idPatient  = row[0]
+    def gender     = row[1]
+    def status     = SarekUtils.returnStatus(row[2].toInteger())
+    def idSample   = row[3]
+    def idRun      = row[4]
+    def fastqFile1 = SarekUtils.returnFile(row[5])
+    def fastqFile2 = SarekUtils.returnFile(row[6])
 
-      SarekUtils.checkFileExtension(fastqFile1,".fastq.gz")
-      SarekUtils.checkFileExtension(fastqFile2,".fastq.gz")
+    SarekUtils.checkFileExtension(fastqFile1,".fastq.gz")
+    SarekUtils.checkFileExtension(fastqFile2,".fastq.gz")
 
-      [idPatient, gender, status, idSample, idRun, fastqFile1, fastqFile2]
-    }
+    [idPatient, gender, status, idSample, idRun, fastqFile1, fastqFile2]
+  }
 }
 
 def extractFastqFromDir(pattern) {
@@ -742,24 +742,24 @@ def extractFastqFromDir(pattern) {
 def extractRecal(tsvFile) {
   // Channeling the TSV file containing Recalibration Tables.
   // Format is: "subject gender status sample bam bai recalTables"
-  Channel
-    .from(tsvFile.readLines())
-    .map{line ->
-      def list       = SarekUtils.returnTSV(line.split(),7)
-      def idPatient  = list[0]
-      def gender     = list[1]
-      def status     = SarekUtils.returnStatus(list[2].toInteger())
-      def idSample   = list[3]
-      def bamFile    = SarekUtils.returnFile(list[4])
-      def baiFile    = SarekUtils.returnFile(list[5])
-      def recalTable = SarekUtils.returnFile(list[6])
+  Channel.from(tsvFile)
+    .splitCsv(sep: '\t')
+    .map { row ->
+    SarekUtils.checkNumberOfItem(row, 7)
+    def idPatient  = row[0]
+    def gender     = row[1]
+    def status     = SarekUtils.returnStatus(row[2].toInteger())
+    def idSample   = row[3]
+    def bamFile    = SarekUtils.returnFile(row[4])
+    def baiFile    = SarekUtils.returnFile(row[5])
+    def recalTable = SarekUtils.returnFile(row[6])
 
-      SarekUtils.checkFileExtension(bamFile,".bam")
-      SarekUtils.checkFileExtension(baiFile,".bai")
-      SarekUtils.checkFileExtension(recalTable,".recal.table")
+    SarekUtils.checkFileExtension(bamFile,".bam")
+    SarekUtils.checkFileExtension(baiFile,".bai")
+    SarekUtils.checkFileExtension(recalTable,".recal.table")
 
-      [ idPatient, gender, status, idSample, bamFile, baiFile, recalTable ]
-    }
+    [ idPatient, gender, status, idSample, bamFile, baiFile, recalTable ]
+  }
 }
 
 def flowcellLaneFromFastq(path) {
