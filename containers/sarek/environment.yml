@@ -12,10 +12,10 @@ dependencies:
   - conda-forge::openjdk=8.0.144 # Needed for FastQC docker - see bioconda/bioconda-recipes#5026
   - fastqc=0.11.7
   - freebayes=1.2.0
-  - gatk4=4.0.3.0
-  - htslib=1.7
+  - gatk4=4.0.6.0
+  - htslib=1.9
   - igvtools=2.3.93
-  - manta=1.3.0
+  - manta=1.4.0
   - multiqc=1.5
   - qualimap=2.2.2a
   - samtools=1.8
