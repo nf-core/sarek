@@ -73,7 +73,7 @@ vcfToAnnotate = Channel.create()
 vcfNotToAnnotate = Channel.create()
 
 if (annotateVCF == []) {
-// by default we annotate both germline and somatic results that we can find in the VariantCalling directory
+// we annote all available vcfs by default that we can find in the VariantCalling directory
   Channel.empty().mix(
     Channel.fromPath("${directoryMap.haplotypecaller}/*.vcf.gz")
       .flatten().map{vcf -> ['haplotypecaller', vcf]},

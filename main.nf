@@ -30,7 +30,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - MapReads - Map reads with BWA
  - MergeBams - Merge BAMs if multilane samples
  - MarkDuplicates - Mark Duplicates with GATK4
- - RealignerTargetCreator - Create realignment target intervals
  - IndelRealigner - Realign BAMs as T/N pair
  - CreateRecalibrationTable - Create Recalibration Table with BaseRecalibrator
  - RecalibrateBam - Recalibrate Bam with PrintReads
@@ -96,7 +95,6 @@ if (tsvPath) {
   tsvFile = file(tsvPath)
   switch (step) {
     case 'mapping': fastqFiles = extractFastq(tsvFile); break
-    case 'realign': bamFiles = SarekUtils.extractBams(tsvFile, "somatic"); break
     case 'recalibrate': bamFiles = extractRecal(tsvFile); break
     default: exit 1, "Unknown step ${step}"
   }
@@ -317,9 +315,9 @@ process CreateRecalibrationTable {
 
   output:
     set idPatient, status, idSample, file("${idSample}.recal.table") into recalibrationTable
-    set idPatient, status, idSample, val("${idSample}_${status}.md.real.bam"), val("${idSample}_${status}.md.real.bai"), val("${idSample}.recal.table") into recalibrationTableTSV
+    set idPatient, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai"), val("${idSample}.recal.table") into recalibrationTableTSV
 
-  when: ( step == 'mapping' || step == 'realign' ) && !params.onlyQC
+  when: ( step == 'mapping' ) && !params.onlyQC
 
   script:
   known = knownIndels.collect{ "--known-sites ${it}" }.join(' ')
@@ -542,7 +540,6 @@ def defineReferenceMap() {
 def defineStepList() {
   return [
     'mapping',
-    'realign',
     'recalibrate'
   ]
 }
@@ -675,7 +672,6 @@ def helpMessage() {
   log.info "       Option to start workflow"
   log.info "       Possible values are:"
   log.info "         mapping (default, will start workflow with FASTQ files)"
-  log.info "         realign (will start workflow with non-realigned BAM files)"
   log.info "         recalibrate (will start workflow with non-recalibrated BAM files)"
   log.info "    --noReports"
   log.info "       Disable QC tools and MultiQC to generate a HTML report"
