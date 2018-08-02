@@ -91,7 +91,6 @@ fi
 if [[ ALL,STEP =~ $TEST ]]
 then
   run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal
-  run_wrapper --germline --step realign --noReports
   run_wrapper --germline --step recalibrate --noReports
   clean_repo
 fi
@@ -104,7 +103,7 @@ fi
 
 if [[ ALL,TOOLS =~ $TEST ]]
 then
-  run_wrapper --somatic --sample $SAMPLE --variantCalling  --tools FreeBayes,HaplotypeCaller,MuTect2
+  run_wrapper --somatic --sample $SAMPLE --variantCalling  --tools FreeBayes,HaplotypeCaller,Mutect2
 fi
 
 if [[ ALL,MANTA =~ $TEST ]]
