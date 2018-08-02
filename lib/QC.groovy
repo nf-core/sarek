@@ -59,7 +59,7 @@ class QC {
 // Get GATK version
   static def getVersionGATK() {
     """
-		gatk-launch ApplyBQSR --help 2>&1| awk -F/ '/java/{for(i=1;i<=NF;i++){if(\$i~/gatk4/){sub("gatk4-","",\$i);print \$i>"v_gatk.txt"}}}'
+		gatk ApplyBQSR --help 2>&1| awk -F/ '/java/{for(i=1;i<=NF;i++){if(\$i~/gatk4/){sub("gatk4-","",\$i);print \$i>"v_gatk.txt"}}}'
     """
   }
 
