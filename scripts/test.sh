@@ -9,6 +9,18 @@ SAMPLE=Sarek-data/testdata/tsv/tiny.tsv
 TEST=ALL
 TRAVIS=${TRAVIS:-false}
 
+TMPDIR=`pwd`/tmp
+mkdir -p $TMPDIR
+export NXF_SINGULARITY_CACHEDIR=$TMPDIR
+export NXF_TEMP=$TMPDIR
+
+export SINGULARITY_TMPDIR=$TMPDIR
+export SINGULARITY_CACHEDIR=$TMPDIR
+
+
+# remove Reference directory
+rm -rf References
+
 while [[ $# -gt 0 ]]
 do
   key=$1
