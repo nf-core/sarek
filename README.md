@@ -110,7 +110,7 @@ For further information or help, don't hesitate to get in touch on [Gitter][gitt
 [license-badge]: https://img.shields.io/github/license/SciLifeLab/Sarek.svg
 [license-link]: https://github.com/SciLifeLab/Sarek/blob/master/LICENSE
 [nbis-link]: https://www.nbis.se/
-[nextflow-badge]: https://img.shields.io/badge/nextflow-%E2%89%A50.25.0-brightgreen.svg
+[nextflow-badge]: https://img.shields.io/badge/nextflow-%E2%89%A50.31.0-brightgreen.svg
 [nextflow-link]: https://www.nextflow.io/
 [ngi-link]: https://ngisweden.scilifelab.se/
 [scilifelab-link]: https://www.scilifelab.se/
