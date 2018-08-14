@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.1.0] - Ruotes - 2018-08-14
+
 ### `Added`
 - [#555](https://github.com/SciLifeLab/Sarek/pull/555) - `snpEff` output into `VEP`
 - [#556](https://github.com/SciLifeLab/Sarek/pull/556) - `Strelka` Best Practices
@@ -20,6 +23,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#597](https://github.com/SciLifeLab/Sarek/pull/597) - New function `sarek_ascii()` in `SarekUtils`
 - [#599](https://github.com/SciLifeLab/Sarek/pull/599), [#602](https://github.com/SciLifeLab/Sarek/pull/602) - New Process `CompressVCF`
 - [#601](https://github.com/SciLifeLab/Sarek/pull/601), [#603](https://github.com/SciLifeLab/Sarek/pull/603) - Container for GATK4
+- [#606](https://github.com/SciLifeLab/Sarek/pull/606) - Add test data as a submodule from [`Sarek-data`](https://github.com/SciLifeLab/Sarek-data)
+- [#608](https://github.com/SciLifeLab/Sarek/pull/608) - Add documentation on how to install Nextflow on `bianca`
+- [#613](https://github.com/SciLifeLab/Sarek/pull/613) - Add Issue Templates (bug report and feature request)
+- [#614](https://github.com/SciLifeLab/Sarek/pull/614) - Add PR Template
 
 ### `Changed`
 - [#557](https://github.com/SciLifeLab/Sarek/pull/557), [#583](https://github.com/SciLifeLab/Sarek/pull/583), [#585](https://github.com/SciLifeLab/Sarek/pull/585), [#588](https://github.com/SciLifeLab/Sarek/pull/588) - Update help
@@ -34,6 +41,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#597](https://github.com/SciLifeLab/Sarek/pull/597) - Replace depreciated operator `phase` by `join`.
 - [#597](https://github.com/SciLifeLab/Sarek/pull/597) - Reduce data footprint for Process `CreateRecalibrationTable`
 - [#599](https://github.com/SciLifeLab/Sarek/pull/599) - Merge is tested with `ANNOTATEALL`
+- [#604](https://github.com/SciLifeLab/Sarek/pull/604) - Synching `GRCh38` `wgs_calling_regions` bedfiles
+- [#607](https://github.com/SciLifeLab/Sarek/pull/607) - Update to GATK4
+- [#607](https://github.com/SciLifeLab/Sarek/pull/607) - One container approach
+- [#608](https://github.com/SciLifeLab/Sarek/pull/608) - Update Nextflow required version
+- [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Update CHANGELOG
 
 ### `Fixed`
 - [#560](https://github.com/SciLifeLab/Sarek/pull/560) - Display message for `repository` and `containerPath`
@@ -41,7 +53,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#579](https://github.com/SciLifeLab/Sarek/pull/579), [#584](https://github.com/SciLifeLab/Sarek/pull/584) - `Manta` output reorganized after modification for `Strelka Best Practices` process
 - [#585](https://github.com/SciLifeLab/Sarek/pull/583) - Trace file is plain txt
 - [#590](https://github.com/SciLifeLab/Sarek/pull/590), [#593](https://github.com/SciLifeLab/Sarek/pull/593) - Fix Singularity installation in Travis CI testing
-- [#598](https://github.com/SciLifeLab/Sarek/pull/598), [#601](https://github.com/SciLifeLab/Sarek/pull/601) - Fixesfor  Python script `selectROI.py` to work with CLC viewer
+- [#598](https://github.com/SciLifeLab/Sarek/pull/598), [#601](https://github.com/SciLifeLab/Sarek/pull/601) - Fixes for  Python script `selectROI.py` to work with CLC viewer
+
+### `Removed`
+- [#607](https://github.com/SciLifeLab/Sarek/pull/607) - Remove Mutect1
+- [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Remove old Issue Template
 
 ## [2.0.0] - 2018-03-23
 ### `Added`
