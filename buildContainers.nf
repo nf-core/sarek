@@ -177,13 +177,6 @@ def grabRevision() {
 def defineContainersList(){
   // Return list of authorized containers
   return [
-    'freebayes',
-    'gatk',
-    'gatk4',
-    'igvtools',
-    'mutect1',
-    'picard',
-    'qctools',
     'r-base',
     'runallelecount',
     'sarek',
@@ -208,8 +201,7 @@ def helpMessage() {
   log.info "    --containers: Choose which containers to build"
   log.info "       Default: all"
   log.info "       Possible values:"
-  log.info "         all, freebayes, gatk, gatk4, igvtools, mutect1, picard"
-  log.info "         qctools, r-base, runallelecount, sarek, snpeff"
+  log.info "         all, r-base, runallelecount, sarek, snpeff"
   log.info "         snpeffgrch37, snpeffgrch38, vepgrch37, vepgrch38"
   log.info "    --docker: Build containers using Docker"
   log.info "    --help"

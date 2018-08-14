@@ -31,7 +31,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - CreateIntervalBeds - Create and sort intervals into bed files
  - RunHaplotypecaller - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
  - RunGenotypeGVCFs - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
- - ConcatVCF - Merge results from HaplotypeCaller, MuTect1 and MuTect2
+ - ConcatVCF - Merge results from HaplotypeCaller, MuTect2 and other paralellized callers
  - RunSingleStrelka - Run Strelka for Germline Variant Calling
  - RunSingleManta - Run Manta for Single Structural Variant Calling
  - RunBcftoolsStats - Run BCFTools stats on vcf files
@@ -71,9 +71,6 @@ if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
   referenceMap.intervals = file("$workflow.projectDir/repeats/tiny_${params.genome}.list")
 }
 
-// TODO
-// MuTect and Mutect2 could be run without a recalibrated BAM (they support
-// the --BQSR option), but this is not implemented, yet.
 // TODO
 // FreeBayes does not need recalibrated BAMs, but we need to test whether
 // the channels are set up correctly when we disable it
@@ -287,8 +284,8 @@ bamsAll = bamsAll.map {
 
 bamsTumorNormalIntervals = bamsAll.spread(bedIntervals)
 
-// MuTect1, MuTect2, FreeBayes
-(bamsFMT1, bamsFMT2, bamsFFB) = bamsTumorNormalIntervals.into(3)
+// MuTect2, FreeBayes
+(bamsFMT2, bamsFFB) = bamsTumorNormalIntervals.into(2)
 
 process RunHaplotypecaller {
   tag {idSample + "-" + intervalBed.baseName}
@@ -310,20 +307,15 @@ process RunHaplotypecaller {
   when: 'haplotypecaller' in tools && !params.onlyQC
 
   script:
-  BQSR = (recalTable != null) ? "--BQSR $recalTable" : ''
   """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
-  -T HaplotypeCaller \
-  --emitRefConfidence GVCF \
-  -pairHMM LOGLESS_CACHING \
-  -R ${genomeFile} \
-  --dbsnp ${dbsnp} \
-  ${BQSR} \
-  -I ${bam} \
-  -L ${intervalBed} \
-  --disable_auto_index_creation_and_locking_when_reading_rods \
-  -o ${intervalBed.baseName}_${idSample}.g.vcf
+  gatk --java-options "-Xmx${task.memory.toGiga()}g -Xms6000m -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10" \
+      HaplotypeCaller \
+      -R ${genomeFile} \
+      -I ${bam} \
+      -L ${intervalBed} \
+      --dbsnp ${dbsnp} \
+      -O ${intervalBed.baseName}_${idSample}.g.vcf \
+      --emit-ref-confidence GVCF
   """
 }
 hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3])
@@ -349,17 +341,17 @@ process RunGenotypeGVCFs {
   when: 'haplotypecaller' in tools && !params.onlyQC
 
   script:
-  // Using -L is important for speed
+  // Using -L is important for speed and we have to index the interval files also
   """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
-  -T GenotypeGVCFs \
+  gatk IndexFeatureFile -F ${gvcf}
+
+  gatk --java-options -Xmx${task.memory.toGiga()}g \
+  GenotypeGVCFs \
   -R ${genomeFile} \
   -L ${intervalBed} \
   --dbsnp ${dbsnp} \
-  --variant ${gvcf} \
-  --disable_auto_index_creation_and_locking_when_reading_rods \
-  -o ${intervalBed.baseName}_${idSample}.vcf
+  -V ${gvcf} \
+  -O ${intervalBed.baseName}_${idSample}.vcf
   """
 }
 hcGenotypedVCF = hcGenotypedVCF.groupTuple(by:[0,1,2,3])
@@ -387,7 +379,7 @@ process ConcatVCF {
     set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfConcatenated
 
 
-  when: ( 'haplotypecaller' in tools || 'mutect1' in tools || 'mutect2' in tools || 'freebayes' in tools ) && !params.onlyQC
+  when: ( 'haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools ) && !params.onlyQC
 
   script:
   if (variantCaller == 'haplotypecaller') outputFile = "${variantCaller}_${idSampleNormal}.vcf"
@@ -395,6 +387,7 @@ process ConcatVCF {
   else outputFile = "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
 
   """
+	set -euo pipefail
   # first make a header from one of the VCF intervals
   # get rid of interval information only from the GATK command-line, but leave the rest
   FIRSTVCF=\$(ls *.vcf | head -n 1)
@@ -462,7 +455,7 @@ process RunSingleStrelka {
 
   script:
   """
-  \$STRELKA_INSTALL_PATH/bin/configureStrelkaGermlineWorkflow.py \
+  configureStrelkaGermlineWorkflow.py \
   --bam ${bam} \
   --referenceFasta ${genomeFile} \
   --runDir Strelka
@@ -506,7 +499,7 @@ process RunSingleManta {
 
   script:
   """
-  \$MANTA_INSTALL_PATH/bin/configManta.py \
+  configManta.py \
   --bam ${bam} \
   --reference ${genomeFile} \
   --runDir Manta
@@ -670,7 +663,6 @@ def defineToolList() {
     'freebayes',
     'haplotypecaller',
     'manta',
-    'mutect1',
     'mutect2',
     'strelka'
   ]
