@@ -29,8 +29,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - RunFastQC - Run FastQC for QC on fastq files
  - MapReads - Map reads with BWA
  - MergeBams - Merge BAMs if multilane samples
- - MarkDuplicates - Mark Duplicates with Picard
- - RealignerTargetCreator - Create realignment target intervals
+ - MarkDuplicates - Mark Duplicates with GATK4
  - IndelRealigner - Realign BAMs as T/N pair
  - CreateRecalibrationTable - Create Recalibration Table with BaseRecalibrator
  - RecalibrateBam - Recalibrate Bam with PrintReads
@@ -83,8 +82,7 @@ if (params.sample) tsvPath = params.sample
 if (!params.sample && !params.sampleDir) {
   tsvPaths = [
       'mapping': "${workflow.projectDir}/Sarek-data/testdata/tsv/tiny.tsv",
-      'realign': "${directoryMap.nonRealigned}/nonRealigned.tsv",
-      'recalibrate': "${directoryMap.nonRecalibrated}/nonRecalibrated.tsv"
+      'recalibrate': "${directoryMap.duplicateMarked}/duplicateMarked.tsv"
   ]
   if (params.test || step != 'mapping') tsvPath = tsvPaths[step]
 }
@@ -97,7 +95,6 @@ if (tsvPath) {
   tsvFile = file(tsvPath)
   switch (step) {
     case 'mapping': fastqFiles = extractFastq(tsvFile); break
-    case 'realign': bamFiles = SarekUtils.extractBams(tsvFile, "somatic"); break
     case 'recalibrate': bamFiles = extractRecal(tsvFile); break
     default: exit 1, "Unknown step ${step}"
   }
@@ -182,7 +179,7 @@ process MapReads {
   """
   bwa mem -R \"${readGroup}\" ${extra} -t ${task.cpus} -M \
   ${genomeFile} ${fastqFile1} ${fastqFile2} | \
-  samtools sort --threads ${task.cpus} -m 4G - > ${idRun}.bam
+  samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
   """
 }
 
@@ -247,14 +244,14 @@ process MarkDuplicates {
   publishDir params.outDir, mode: 'link',
     saveAs: {
       if (it == "${bam}.metrics") "${directoryMap.markDuplicatesQC}/${it}"
-      else "${directoryMap.nonRealigned}/${it}"
+      else "${directoryMap.duplicateMarked}/${it}"
     }
 
   input:
     set idPatient, status, idSample, file(bam) from mergedBam
 
   output:
-    set idPatient, file("${idSample}_${status}.md.bam"), file("${idSample}_${status}.md.bai") into duplicates
+    set idPatient, file("${idSample}_${status}.md.bam"), file("${idSample}_${status}.md.bai") into duplicateMarkedBams
     set idPatient, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai") into markDuplicatesTSV
     file ("${bam}.metrics") into markDuplicatesReport
 
@@ -262,150 +259,27 @@ process MarkDuplicates {
 
   script:
   """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar \$PICARD_HOME/picard.jar MarkDuplicates \
-  INPUT=${bam} \
-  METRICS_FILE=${bam}.metrics \
-  TMP_DIR=. \
-  ASSUME_SORTED=true \
-  VALIDATION_STRINGENCY=LENIENT \
-  CREATE_INDEX=TRUE \
-  OUTPUT=${idSample}_${status}.md.bam
+  gatk --java-options -Xmx${task.memory.toGiga()}g \
+  MarkDuplicates \
+  --MAX_RECORDS_IN_RAM 50000 \
+  --INPUT ${bam} \
+  --METRICS_FILE ${bam}.metrics \
+  --TMP_DIR . \
+  --ASSUME_SORT_ORDER coordinate \
+  --CREATE_INDEX true \
+  --OUTPUT ${idSample}_${status}.md.bam
   """
 }
 
 // Creating a TSV file to restart from this step
 markDuplicatesTSV.map { idPatient, status, idSample, bam, bai ->
   gender = patientGenders[idPatient]
-  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap.nonRealigned}/${bam}\t${directoryMap.nonRealigned}/${bai}\n"
+  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap.duplicateMarked}/${bam}\t${directoryMap.duplicateMarked}/${bai}\n"
 }.collectFile(
-  name: 'nonRealigned.tsv', sort: true, storeDir: directoryMap.nonRealigned
+  name: 'duplicateMarked.tsv', sort: true, storeDir: directoryMap.duplicateMarked
 )
 
-// Create intervals for realignement using both tumor+normal as input
-// Group the marked duplicates BAMs for intervals and realign by idPatient
-// Grouping also by gender, to make a nicer channel
-duplicatesGrouped = Channel.empty()
-if (step == 'mapping') duplicatesGrouped = duplicates.groupTuple()
-else if (step == 'realign') duplicatesGrouped = bamFiles.map{
-  idPatient, status, idSample, bam, bai ->
-  [idPatient, bam, bai]
-}.groupTuple()
-
-// The duplicatesGrouped channel is duplicated
-// one copy goes to the RealignerTargetCreator process
-// and the other to the IndelRealigner process
-(duplicatesInterval, duplicatesRealign) = duplicatesGrouped.into(2)
-
-if (params.verbose) duplicatesInterval = duplicatesInterval.view {
-  "BAMs for RealignerTargetCreator:\n\
-  ID    : ${it[0]}\n\
-  Files : ${it[1].fileName}\n\
-  Files : ${it[2].fileName}"
-}
-
-if (params.verbose) duplicatesRealign = duplicatesRealign.view {
-  "BAMs to join:\n\
-  ID    : ${it[0]}\n\
-  Files : ${it[1].fileName}\n\
-  Files : ${it[2].fileName}"
-}
-
-if (params.verbose) markDuplicatesReport = markDuplicatesReport.view {
-  "MarkDuplicates report:\n\
-  File  : [${it.fileName}]"
-}
-
-// VCF indexes are added so they will be linked, and not re-created on the fly
-//  -L "1:131941-141339" \
-
-process RealignerTargetCreator {
-  tag {idPatient}
-
-  input:
-    set idPatient, file(bam), file(bai) from duplicatesInterval
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(knownIndels), file(knownIndelsIndex), file(intervals) from Channel.value([
-      referenceMap.genomeFile,
-      referenceMap.genomeIndex,
-      referenceMap.genomeDict,
-      referenceMap.knownIndels,
-      referenceMap.knownIndelsIndex,
-      referenceMap.intervals
-    ])
-
-  output:
-    set idPatient, file("${idPatient}.intervals") into intervals
-
-  when: ( step == 'mapping' || step == 'realign' ) && !params.onlyQC
-
-  script:
-  bams = bam.collect{"-I ${it}"}.join(' ')
-  known = knownIndels.collect{"-known ${it}"}.join(' ')
-  """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
-  -T RealignerTargetCreator \
-  ${bams} \
-  -R ${genomeFile} \
-  ${known} \
-  -nt ${task.cpus} \
-  -L ${intervals} \
-  -o ${idPatient}.intervals
-  """
-}
-
-if (params.verbose) intervals = intervals.view {
-  "Intervals to join:\n\
-  ID    : ${it[0]}\n\
-  File  : [${it[1].fileName}]"
-}
-
-bamsAndIntervals = duplicatesRealign.join(intervals)
-
-if (params.verbose) bamsAndIntervals = bamsAndIntervals.view {
-  "BAMs and Intervals joined for IndelRealigner:\n\
-  ID    : ${it[0]}\n\
-  Files : ${it[1].fileName}\n\
-  Files : ${it[2].fileName}\n\
-  File  : [${it[3].fileName}]"
-}
-
-// use nWayOut to split into T/N pair again
-process IndelRealigner {
-  tag {idPatient}
-
-  publishDir directoryMap.nonRecalibrated, mode: 'link'
-
-  input:
-    set idPatient, file(bam), file(bai), file(intervals) from bamsAndIntervals
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(knownIndels), file(knownIndelsIndex) from Channel.value([
-      referenceMap.genomeFile,
-      referenceMap.genomeIndex,
-      referenceMap.genomeDict,
-      referenceMap.knownIndels,
-      referenceMap.knownIndelsIndex])
-
-  output:
-    set idPatient, file("*.real.bam"), file("*.real.bai") into realignedBam mode flatten
-
-  when: ( step == 'mapping' || step == 'realign' ) && !params.onlyQC
-
-  script:
-  bams = bam.collect{"-I ${it}"}.join(' ')
-  known = knownIndels.collect{"-known ${it}"}.join(' ')
-  """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
-  -T IndelRealigner \
-  ${bams} \
-  -R ${genomeFile} \
-  -targetIntervals ${intervals} \
-  ${known} \
-  -nWayOut '.real.bam'
-  """
-}
-
-realignedBam = realignedBam.map {
+duplicateMarkedBams = duplicateMarkedBams.map {
     idPatient, bam, bai ->
     tag = bam.baseName.tokenize('.')[0]
     status   = tag[-1..-1].toInteger()
@@ -413,21 +287,21 @@ realignedBam = realignedBam.map {
     [idPatient, status, idSample, bam, bai]
 }
 
-if (params.verbose) realignedBam = realignedBam.view {
+if (params.verbose) duplicateMarkedBams = duplicateMarkedBams.view {
   "Realigned BAM to CreateRecalibrationTable:\n\
   ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
   Files : [${it[3].fileName}, ${it[4].fileName}]"
 }
 
-(realignedBam, realignedBamToJoin) = realignedBam.into(2)
+(mdBam, mdBamToJoin) = duplicateMarkedBams.into(2)
 
 process CreateRecalibrationTable {
   tag {idPatient + "-" + idSample}
 
-  publishDir directoryMap.nonRecalibrated, mode: 'link', overwrite: false
+  publishDir directoryMap.duplicateMarked, mode: 'link', overwrite: false
 
   input:
-    set idPatient, status, idSample, file(bam), file(bai) from realignedBam
+    set idPatient, status, idSample, file(bam), file(bai) from mdBam // realignedBam
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(knownIndels), file(knownIndelsIndex), file(intervals) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -441,37 +315,35 @@ process CreateRecalibrationTable {
 
   output:
     set idPatient, status, idSample, file("${idSample}.recal.table") into recalibrationTable
-    set idPatient, status, idSample, val("${idSample}_${status}.md.real.bam"), val("${idSample}_${status}.md.real.bai"), val("${idSample}.recal.table") into recalibrationTableTSV
+    set idPatient, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai"), val("${idSample}.recal.table") into recalibrationTableTSV
 
-  when: ( step == 'mapping' || step == 'realign' ) && !params.onlyQC
+  when: ( step == 'mapping' ) && !params.onlyQC
 
   script:
-  known = knownIndels.collect{ "-knownSites ${it}" }.join(' ')
+  known = knownIndels.collect{ "--known-sites ${it}" }.join(' ')
   """
-  java -Xmx${task.memory.toGiga()}g \
-  -Djava.io.tmpdir="/tmp" \
-  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
-  -T BaseRecalibrator \
+  gatk --java-options -Xmx${task.memory.toGiga()}g \
+  BaseRecalibrator \
+  --input ${bam} \
+  --output ${idSample}.recal.table \
+	--TMP_DIR /tmp \
   -R ${genomeFile} \
-  -I ${bam} \
   -L ${intervals} \
-  --disable_auto_index_creation_and_locking_when_reading_rods \
-  -knownSites ${dbsnp} \
+  --known-sites ${dbsnp} \
   ${known} \
-  -nct ${task.cpus} \
-  -l INFO \
-  -o ${idSample}.recal.table
+  --verbosity INFO
   """
 }
+
 // Create a TSV file to restart from this step
 recalibrationTableTSV.map { idPatient, status, idSample, bam, bai, recalTable ->
   gender = patientGenders[idPatient]
-  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap.nonRecalibrated}/${bam}\t${directoryMap.nonRecalibrated}/${bai}\t${directoryMap.nonRecalibrated}/${recalTable}\n"
+  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap.duplicateMarked}/${bam}\t${directoryMap.duplicateMarked}/${bai}\t${directoryMap.duplicateMarked}/${recalTable}\n"
 }.collectFile(
-  name: 'nonRecalibrated.tsv', sort: true, storeDir: directoryMap.nonRecalibrated
+  name: 'duplicateMarked.tsv', sort: true, storeDir: directoryMap.duplicateMarked
 )
 
-recalibrationTable = realignedBamToJoin.join(recalibrationTable, by:[0,1,2])
+recalibrationTable = mdBamToJoin.join(recalibrationTable, by:[0,1,2])
 
 if (step == 'recalibrate') recalibrationTable = bamFiles
 
@@ -508,20 +380,20 @@ process RecalibrateBam {
     set idPatient, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam, recalibratedBamForStats
     set idPatient, status, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into recalibratedBamTSV
 
-  // HaplotypeCaller can do BQSR on the fly, so do not create a
+  // GATK4 HaplotypeCaller can not do BQSR on the fly, so we have to create a
   // recalibrated BAM explicitly.
-  when: params.explicitBqsrNeeded && !params.onlyQC
+  when: !params.onlyQC
 
   script:
   """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
-  -T PrintReads \
+  gatk --java-options -Xmx${task.memory.toGiga()}g \
+  ApplyBQSR \
   -R ${genomeFile} \
-  -I ${bam} \
+  --input ${bam} \
+  --output ${idSample}.recal.bam \
   -L ${intervals} \
-  --BQSR ${recalibrationReport} \
-  -o ${idSample}.recal.bam
+	--create-output-bam-index true \
+	--bqsr-recal-file ${recalibrationReport} 
   """
 }
 // Creating a TSV file to restart from this step
@@ -622,17 +494,6 @@ process GetVersionGATK {
   script: QC.getVersionGATK()
 }
 
-process GetVersionPicard {
-  publishDir directoryMap.version, mode: 'link'
-  output: file("v_*.txt")
-  when: step == 'mapping' && !params.onlyQC
-
-  script:
-  """
-  echo "Picard version:"\$(java -jar \$PICARD_HOME/picard.jar MarkDuplicates --version 2>&1) > v_picard.txt
-  """
-}
-
 /*
 ================================================================================
 =                               F U N C T I O N S                              =
@@ -679,7 +540,6 @@ def defineReferenceMap() {
 def defineStepList() {
   return [
     'mapping',
-    'realign',
     'recalibrate'
   ]
 }
@@ -812,7 +672,6 @@ def helpMessage() {
   log.info "       Option to start workflow"
   log.info "       Possible values are:"
   log.info "         mapping (default, will start workflow with FASTQ files)"
-  log.info "         realign (will start workflow with non-realigned BAM files)"
   log.info "         recalibrate (will start workflow with non-recalibrated BAM files)"
   log.info "    --noReports"
   log.info "       Disable QC tools and MultiQC to generate a HTML report"

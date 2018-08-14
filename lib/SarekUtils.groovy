@@ -100,13 +100,14 @@ class SarekUtils {
   }
 
   // Loop through all the references files to check their existence
+
   static def checkRefExistence(referenceFile, fileToCheck) {
     if (fileToCheck instanceof List) return fileToCheck.every{ SarekUtils.checkRefExistence(referenceFile, it) }
     def f = file(fileToCheck)
     // this is an expanded wildcard: we can assume all files exist
     if (f instanceof List && f.size() > 0) return true
-    else if (!f.exists()) {
-      this.log.info  "Missing references: ${referenceFile} ${fileToCheck}"
+    else if (!f.exists()) { 
+			println  "Missing references: ${referenceFile} ${fileToCheck}"
       return false
     }
     return true
@@ -115,15 +116,13 @@ class SarekUtils {
   // Define map of directories
   static def defineDirectoryMap(outDir) {
     return [
-    'nonRealigned'     : "${outDir}/Preprocessing/NonRealigned",
-    'nonRecalibrated'  : "${outDir}/Preprocessing/NonRecalibrated",
+    'duplicateMarked'  : "${outDir}/Preprocessing/DuplicateMarked",
     'recalibrated'     : "${outDir}/Preprocessing/Recalibrated",
     'ascat'            : "${outDir}/VariantCalling/Ascat",
     'freebayes'        : "${outDir}/VariantCalling/FreeBayes",
     'gvcf-hc'          : "${outDir}/VariantCalling/HaplotypeCallerGVCF",
     'haplotypecaller'  : "${outDir}/VariantCalling/HaplotypeCaller",
     'manta'            : "${outDir}/VariantCalling/Manta",
-    'mutect1'          : "${outDir}/VariantCalling/MuTect1",
     'mutect2'          : "${outDir}/VariantCalling/MuTect2",
     'strelka'          : "${outDir}/VariantCalling/Strelka",
     'strelkabp'        : "${outDir}/VariantCalling/StrelkaBP",

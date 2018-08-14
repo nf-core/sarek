@@ -73,23 +73,23 @@ vcfToAnnotate = Channel.create()
 vcfNotToAnnotate = Channel.create()
 
 if (annotateVCF == []) {
+// we annote all available vcfs by default that we can find in the VariantCalling directory
   Channel.empty().mix(
     Channel.fromPath("${directoryMap.haplotypecaller}/*.vcf.gz")
       .flatten().map{vcf -> ['haplotypecaller', vcf]},
     Channel.fromPath("${directoryMap.manta}/*SV.vcf.gz")
       .flatten().map{vcf -> ['manta', vcf]},
-    Channel.fromPath("${directoryMap.mutect1}/*.vcf.gz")
-      .flatten().map{vcf -> ['mutect1', vcf]},
     Channel.fromPath("${directoryMap.mutect2}/*.vcf.gz")
       .flatten().map{vcf -> ['mutect2', vcf]},
-    Channel.fromPath("${directoryMap.strelka}/*{somatic,variants}*.vcf.gz")
+    Channel.fromPath("${directoryMap.strelka}/*{somatic,variants}*.vcf.gz")		// Strelka only
       .flatten().map{vcf -> ['strelka', vcf]},
-    Channel.fromPath("${directoryMap.strelkabp}/*{somatic,variants}*.vcf.gz")
+    Channel.fromPath("${directoryMap.strelkabp}/*{somatic,variants}*.vcf.gz")	// Strelka with Manta indel candidates
       .flatten().map{vcf -> ['strelkabp', vcf]}
   ).choice(vcfToAnnotate, vcfNotToAnnotate) {
     annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1
   }
 } else if (annotateTools == []) {
+// alternatively, annotate user-submitted VCFs
   list = ""
   annotateVCF.each{ list += ",${it}" }
   list = list.substring(1)
@@ -100,6 +100,10 @@ if (annotateVCF == []) {
 } else exit 1, "specify only tools or files to annotate, not both"
 
 vcfNotToAnnotate.close()
+
+// as now have the list of VCFs to annotate, the first step is to annotate with allele frequencies, if there are any
+
+
 
 (vcfForBCFtools, vcfForVCFtools, vcfForSnpeff, vcfForVep) = vcfToAnnotate.into(4)
 
@@ -224,11 +228,12 @@ process RunVEP {
   finalannotator = annotator == "snpeff" ? 'merge' : 'vep'
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
   """
-  vep \
+  vep --dir /opt/vep/.vep/ \
   -i ${vcf} \
   -o ${vcf.simpleName}_VEP.ann.vcf \
   --assembly ${genome} \
   --cache \
+	--cache_version 91 \
   --database \
   --everything \
   --filter_common \
@@ -346,7 +351,6 @@ def helpMessage() {
   log.info "       Possible values are:"
   log.info "         haplotypecaller (Annotate HaplotypeCaller output)"
   log.info "         manta (Annotate Manta output)"
-  log.info "         mutect1 (Annotate MuTect1 output)"
   log.info "         mutect2 (Annotate MuTect2 output)"
   log.info "         strelka (Annotate Strelka output)"
   log.info "    --annotateVCF"
