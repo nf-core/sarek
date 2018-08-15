@@ -59,14 +59,14 @@ class QC {
 // Get GATK version
   static def getVersionGATK() {
     """
-    echo "GATK version"\$(java -jar \$GATK_HOME/GenomeAnalysisTK.jar --version 2>&1) > v_gatk.txt
+		gatk ApplyBQSR --help 2>&1| awk -F/ '/java/{for(i=1;i<=NF;i++){if(\$i~/gatk4/){sub("gatk4-","",\$i);print \$i>"v_gatk.txt"}}}'
     """
   }
 
 // Get Manta version
   static def getVersionManta() {
     """
-    cat \$MANTA_INSTALL_PATH/lib/python/configBuildTimeInfo.py | grep workflowVersion > v_manta.txt
+		configManta.py --version > v_manta.txt
     """
   }
 
@@ -80,7 +80,7 @@ class QC {
 // Get Strelka version
   static def getVersionStrelka() {
     """
-    cat \$STRELKA_INSTALL_PATH/lib/python/configBuildTimeInfo.py | grep workflowVersion > v_strelka.txt
+		configureStrelkaGermlineWorkflow.py --version > v_strelka.txt
     """
   }
 

@@ -29,7 +29,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - ProcessReference - Download all references if needed
  - DecompressFile - Extract files if needed
  - BuildBWAindexes - Build indexes for BWA
- - BuildPicardIndex - Build index with Picard
+ - BuildReferenceIndex - Build index for FASTA refs
  - BuildSAMToolsIndex - Build index with SAMTools
  - BuildVCFIndex - Build index for VCF files
 ================================================================================
@@ -98,7 +98,7 @@ if (params.verbose) ch_decompressedFiles = ch_decompressedFiles.view {
 
 ch_fastaFile = Channel.create()
 ch_fastaForBWA = Channel.create()
-ch_fastaForPicard = Channel.create()
+ch_fastaReference = Channel.create()
 ch_fastaForSAMTools = Channel.create()
 ch_otherFile = Channel.create()
 ch_vcfFile = Channel.create()
@@ -108,7 +108,7 @@ ch_decompressedFiles
     it =~ ".fasta" ? 0 :
     it =~ ".vcf" ? 1 : 2}
 
-(ch_fastaForBWA, ch_fastaForPicard, ch_fastaForSAMTools, ch_fastaFileToKeep) = ch_fastaFile.into(4)
+(ch_fastaForBWA, ch_fastaReference, ch_fastaForSAMTools, ch_fastaFileToKeep) = ch_fastaFile.into(4)
 (ch_vcfFile, ch_vcfFileToKeep) = ch_vcfFile.into(2)
 
 ch_notCompressedfiles
@@ -137,29 +137,28 @@ if (params.verbose) bwaIndexes.flatten().view {
   "BWA index           : ${it.fileName}"
 }
 
-process BuildPicardIndex {
+process BuildReferenceIndex {
   tag {f_reference}
 
   publishDir params.outDir, mode: 'link'
 
   input:
-    file(f_reference) from ch_fastaForPicard
+    file(f_reference) from ch_fastaReference
 
   output:
-    file("*.dict") into ch_picardIndex
+    file("*.dict") into ch_referenceIndex
 
   script:
   """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar \$PICARD_HOME/picard.jar \
+  gatk --java-options "-Xmx${task.memory.toGiga()}g" \
   CreateSequenceDictionary \
-  REFERENCE=${f_reference} \
-  OUTPUT=${f_reference.baseName}.dict
+  --REFERENCE ${f_reference} \
+  --OUTPUT ${f_reference.baseName}.dict
   """
 }
 
-if (params.verbose) ch_picardIndex.view {
-  "Picard index        : ${it.fileName}"
+if (params.verbose) ch_referenceIndex.view {
+  "Reference index        : ${it.fileName}"
 }
 
 process BuildSAMToolsIndex {
@@ -196,7 +195,7 @@ process BuildVCFIndex {
 
   script:
   """
-  \$IGVTOOLS_HOME/igvtools index ${f_reference}
+  igvtools index ${f_reference}
   """
 }
 

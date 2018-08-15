@@ -9,6 +9,18 @@ SAMPLE=Sarek-data/testdata/tsv/tiny.tsv
 TEST=ALL
 TRAVIS=${TRAVIS:-false}
 
+TMPDIR=`pwd`/tmp
+mkdir -p $TMPDIR
+export NXF_SINGULARITY_CACHEDIR=$TMPDIR
+export NXF_TEMP=$TMPDIR
+
+export SINGULARITY_TMPDIR=$TMPDIR
+export SINGULARITY_CACHEDIR=$TMPDIR
+
+
+# remove Reference directory
+rm -rf References
+
 while [[ $# -gt 0 ]]
 do
   key=$1
@@ -91,7 +103,6 @@ fi
 if [[ ALL,STEP =~ $TEST ]]
 then
   run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal
-  run_wrapper --germline --step realign --noReports
   run_wrapper --germline --step recalibrate --noReports
   clean_repo
 fi
@@ -104,7 +115,7 @@ fi
 
 if [[ ALL,TOOLS =~ $TEST ]]
 then
-  run_wrapper --somatic --sample $SAMPLE --variantCalling  --tools FreeBayes,HaplotypeCaller,MuTect1,MuTect2
+  run_wrapper --somatic --sample $SAMPLE --variantCalling  --tools FreeBayes,HaplotypeCaller,Mutect2
 fi
 
 if [[ ALL,MANTA =~ $TEST ]]
