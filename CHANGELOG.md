@@ -46,6 +46,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#607](https://github.com/SciLifeLab/Sarek/pull/607) - One container approach
 - [#608](https://github.com/SciLifeLab/Sarek/pull/608) - Update Nextflow required version
 - [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Update CHANGELOG
+- [#617](https://github.com/SciLifeLab/Sarek/pull/617) - Replace depreciated $name syntax with withName
 
 ### `Fixed`
 - [#560](https://github.com/SciLifeLab/Sarek/pull/560) - Display message for `repository` and `containerPath`
