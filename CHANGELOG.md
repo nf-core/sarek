@@ -5,7 +5,59 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- Python wrapper script
+
+## [2.1.0] - Ruotes - 2018-08-14
+
+### `Added`
+- [#555](https://github.com/SciLifeLab/Sarek/pull/555) - `snpEff` output into `VEP`
+- [#556](https://github.com/SciLifeLab/Sarek/pull/556) - `Strelka` Best Practices
+- [#563](https://github.com/SciLifeLab/Sarek/pull/563) - Use `SnpEFF` reports in `MultiQC`
+- [#568](https://github.com/SciLifeLab/Sarek/pull/568) - `VCFTools` process `RunVcftools` for QC
+- [#574](https://github.com/SciLifeLab/Sarek/pull/574), [#580](https://github.com/SciLifeLab/Sarek/pull/580) - Abstracts for NPMI, JOBIM and  EACR25
+- [#577](https://github.com/SciLifeLab/Sarek/pull/577) - New repository for testing: [Sarek-data](https://github.com/SciLifeLab/Sarek-data)
+- [#595](https://github.com/SciLifeLab/Sarek/pull/595) - New library `QC` for functions `bamQC`, `bcftools`, `samtoolsStats`, `vcftools`, `getVersionBCFtools`, `getVersionGATK`, `getVersionManta`, `getVersionSnpEFF`, `getVersionStrelka`, `getVersionVCFtools`, `getVersionVEP`
+- [#595](https://github.com/SciLifeLab/Sarek/pull/595) - New Processes `GetVersionBCFtools`, `GetVersionGATK`, `GetVersionManta`, `GetVersionSnpEFF`, `GetVersionStrelka`, `GetVersionVCFtools`, `GetVersionVEP`
+- [#595](https://github.com/SciLifeLab/Sarek/pull/595) - new Python script `bin/scrape_tool_versions.py` inspired by @ewels and @apeltzer
+- [#595](https://github.com/SciLifeLab/Sarek/pull/595) - New QC Process `RunVcftools`
+- [#596](https://github.com/SciLifeLab/Sarek/pull/596) - New profile for BinAC cluster
+- [#597](https://github.com/SciLifeLab/Sarek/pull/597) - New function `sarek_ascii()` in `SarekUtils`
+- [#599](https://github.com/SciLifeLab/Sarek/pull/599), [#602](https://github.com/SciLifeLab/Sarek/pull/602) - New Process `CompressVCF`
+- [#601](https://github.com/SciLifeLab/Sarek/pull/601), [#603](https://github.com/SciLifeLab/Sarek/pull/603) - Container for GATK4
+- [#606](https://github.com/SciLifeLab/Sarek/pull/606) - Add test data as a submodule from [`Sarek-data`](https://github.com/SciLifeLab/Sarek-data)
+- [#608](https://github.com/SciLifeLab/Sarek/pull/608) - Add documentation on how to install Nextflow on `bianca`
+- [#613](https://github.com/SciLifeLab/Sarek/pull/613) - Add Issue Templates (bug report and feature request)
+- [#614](https://github.com/SciLifeLab/Sarek/pull/614) - Add PR Template
+
+### `Changed`
+- [#557](https://github.com/SciLifeLab/Sarek/pull/557), [#583](https://github.com/SciLifeLab/Sarek/pull/583), [#585](https://github.com/SciLifeLab/Sarek/pull/585), [#588](https://github.com/SciLifeLab/Sarek/pull/588) - Update help
+- [#560](https://github.com/SciLifeLab/Sarek/pull/560) - GitHub langage for the repository is now `Nextflow`
+- [#561](https://github.com/SciLifeLab/Sarek/pull/561) - `do_all.sh` build only containers for one genome reference (default `GRCh38`) only
+- [#571](https://github.com/SciLifeLab/Sarek/pull/571) - Only one container for all QC tools
+- [#582](https://github.com/SciLifeLab/Sarek/pull/582), [#587](https://github.com/SciLifeLab/Sarek/pull/587) - Update figures
+- [#595](https://github.com/SciLifeLab/Sarek/pull/595) - Function `defineDirectoryMap()` is now part of `SarekUtils`
+- [#595](https://github.com/SciLifeLab/Sarek/pull/595) - Process `GenerateMultiQCconfig` replace by function `createMultiQCconfig()`
+- [#597](https://github.com/SciLifeLab/Sarek/pull/597) - Move `checkFileExtension()`, `checkParameterExistence()`, `checkParameterList()`, `checkReferenceMap()`, `checkRefExistence()`, `extractBams()`, `extractGenders()`, `returnFile()`, `returnStatus()` and `returnTSV()` functions to `SarekUtils`
+- [#597](https://github.com/SciLifeLab/Sarek/pull/597) - `extractBams()` now takes an extra parameter.
+- [#597](https://github.com/SciLifeLab/Sarek/pull/597) - Replace depreciated operator `phase` by `join`.
+- [#597](https://github.com/SciLifeLab/Sarek/pull/597) - Reduce data footprint for Process `CreateRecalibrationTable`
+- [#599](https://github.com/SciLifeLab/Sarek/pull/599) - Merge is tested with `ANNOTATEALL`
+- [#604](https://github.com/SciLifeLab/Sarek/pull/604) - Synching `GRCh38` `wgs_calling_regions` bedfiles
+- [#607](https://github.com/SciLifeLab/Sarek/pull/607) - Update to GATK4
+- [#607](https://github.com/SciLifeLab/Sarek/pull/607) - One container approach
+- [#608](https://github.com/SciLifeLab/Sarek/pull/608) - Update Nextflow required version
+- [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Update CHANGELOG
+
+### `Fixed`
+- [#560](https://github.com/SciLifeLab/Sarek/pull/560) - Display message for `repository` and `containerPath`
+- [#566](https://github.com/SciLifeLab/Sarek/pull/566) - `slurmDownload` profile
+- [#579](https://github.com/SciLifeLab/Sarek/pull/579), [#584](https://github.com/SciLifeLab/Sarek/pull/584) - `Manta` output reorganized after modification for `Strelka Best Practices` process
+- [#585](https://github.com/SciLifeLab/Sarek/pull/583) - Trace file is plain txt
+- [#590](https://github.com/SciLifeLab/Sarek/pull/590), [#593](https://github.com/SciLifeLab/Sarek/pull/593) - Fix Singularity installation in Travis CI testing
+- [#598](https://github.com/SciLifeLab/Sarek/pull/598), [#601](https://github.com/SciLifeLab/Sarek/pull/601) - Fixes for  Python script `selectROI.py` to work with CLC viewer
+
+### `Removed`
+- [#607](https://github.com/SciLifeLab/Sarek/pull/607) - Remove Mutect1
+- [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Remove old Issue Template
 
 ## [2.0.0] - 2018-03-23
 ### `Added`
@@ -14,7 +66,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - ROI selector and FreeBayes sanitizer scripts
 - New logo and icon for the project
 - check for existing tumor/normal channel
-- `lib/SarekUtils.groovy` with `checkParams`, `checkParameterList`, `checkParameterExistence` and `isAllowedParams` functions
+- `SarekUtils` with `checkParams()`, `checkParameterList()`, `checkParameterExistence()` and `isAllowedParams()` functions
 - some `runOptions` for `docker` (prevent some user right problem)
 - This `CHANGELOG`
 
@@ -25,12 +77,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `--version` is now used to define the workflow version
 - most params are now defined in the base.config file instead of in the scripts
 - update RELEASE_CHECKLIST.md
-- `checkParams`, `checkParameterList`, `checkParameterExistence` and `isAllowedParams` in script functions are now called within `SarekUtils`
+- `checkParams()`, `checkParameterList()`, `checkParameterExistence()` and `isAllowedParams()` in script functions are now called within `SarekUtils`
 - `nf_required_version` is now `params.nfRequiredVersion`
 - in `buildReferences.nf` script, channels now begin by `ch_`, and files by `f_`
-- use `PublishDir mode: 'link'`` instead of `copy`
+- use `PublishDir mode: 'link'` instead of `copy`
 - `directoryMap` now contains `params.outDir`
-- use Nextflow support of scratch (close #539)
+- [#539](https://github.com/SciLifeLab/Sarek/issues/539) - use Nextflow support of scratch
 - reordered Travis CI tests
 - update documentation
 - `MultiQC` version in container from v`1.4` to v`1.5`
@@ -53,8 +105,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `download` profile
 
 ### `Fixed`
-- Replace `VEP` `--pick` option by `--per_gene` (fix #533)
-- use `$PWD` for default `outDir` (fix #530)
+- [#533](https://github.com/SciLifeLab/Sarek/issues/533) - Replace `VEP` `--pick` option by `--per_gene`
+- [#530](https://github.com/SciLifeLab/Sarek/issues/530) - use `$PWD` for default `outDir`
 
 ## [1.2.5] - 2018-01-18
 
@@ -86,22 +138,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [1.2.4] - 2017-10-27
 
 ### `Fixed`
-- Better CPU requirements for `ConcatVCF` (fix #488)
-- Exception handling for `ASCAT` (close #489)
-- CPU requirements for `runSingleStrelka` and `runSingleManta` (fix #490)
+- [#488](https://github.com/SciLifeLab/Sarek/issues/488) - Better CPU requirements for `ConcatVCF`
+- [#489](https://github.com/SciLifeLab/Sarek/issues/489) - Exception handling for `ASCAT`
+- [#490](https://github.com/SciLifeLab/Sarek/issues/490) - CPU requirements for `runSingleStrelka` and `runSingleManta`
 
 ## [1.2.3] - 2017-10-18
 
 ### `Fixed`
-- 16 cpus for local executor (fix #475)
-- `ASCAT` works for GRCh38 (fix #357)
-- Running `Singularity` on /scratch (fix #471)
-- No tsv for step `annotate` (fix #480)
+- [#475](https://github.com/SciLifeLab/Sarek/issues/475) - 16 cpus for local executor
+- [#357](https://github.com/SciLifeLab/Sarek/issues/357) - `ASCAT` works for GRCh38
+- [#471](https://github.com/SciLifeLab/Sarek/issues/471) - Running `Singularity` on `/scratch`
+- [#480](https://github.com/SciLifeLab/Sarek/issues/480) - No `tsv` file needed for step `annotate`
 
 ## [1.2.2] - 2017-10-06
 
 ### `Fixed`
- - Typo in `uppmax-localhost.config` (fix #479)
+- [#479](https://github.com/SciLifeLab/Sarek/issues/479) - Typo in `uppmax-localhost.config`
 
 ## [1.2.1] - 2017-10-06
 
@@ -114,9 +166,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `strelka_config.ini` file
 
 ### `Fixed`
-- Running `Singularity` on /scratch (fix #471)
-- Update function to check Nextflow version (fix #472)
-- Remove `returnMin()` function (fix #473)
+- [#471](https://github.com/SciLifeLab/Sarek/issues/471) - Running `Singularity` on /scratch
+- [#472](https://github.com/SciLifeLab/Sarek/issues/472) - Update function to check Nextflow version
+- [#473](https://github.com/SciLifeLab/Sarek/issues/473) - Remove `returnMin()` function
 
 ## [1.2.0] - 2017-10-02
 
