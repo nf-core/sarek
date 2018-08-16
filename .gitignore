@@ -3,6 +3,7 @@ Preprocessing/
 References/
 Reports/
 VariantCalling/
+tmp/
 work/
 .*swp
 .DS_Store
