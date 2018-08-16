@@ -72,7 +72,7 @@ do
     shift # past value
     ;;
     --tag)
-    tag=$2
+    TAG=$2
     shift # past argument
     shift # past value
     ;;

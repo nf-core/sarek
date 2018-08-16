@@ -50,10 +50,20 @@ For more information about using Singularity with UPPMAX, follow the [Singularit
 > mv .nextflow nextflow_v[xx.yy.zz]
 > mv bin nextflow_v[xx.yy.zz]/bin
 
+# Establish permission for some files
+> chmod 755 nextflow_v[xx.yy.zz]/bin/nextflow
+> chmod 660 nextflow_v[xx.yy.zz]/framework/[xx.yy.zz]/nextflow-[xx.yy.zz]-one.jar
+
+# If you want other people to use it
+# Be sure that your group has rights to the directory as well
+
+> chown -R .[PROJECT] nextflow_v[xx.yy.zz]
+
 # Clean directory
 > rm nextflow_v[xx.yy.zz].tgz
 
 # And everytime you're launching Nextflow, don't forget to export the following ENV variables
+# Or add them to your .bashrc file
 > export NXF_HOME=/castor/project/proj/nobackup/tools/nextflow/nextflow_v[xx.yy.zz]
 > export PATH=${NXF_HOME}/bin:${PATH}
 > export NXF_TEMP=$SNIC_TMP
@@ -136,6 +146,10 @@ Wrote Sarek-[snapID].tar.gz
 
 # extract Sarek
 > tar xvzf Sarek-[snapID].tgz
+
+# If you want other people to use it
+# Be sure that your group has rights to the directory as well
+> chown -R .[PROJECT] Sarek-[snapID]
 
 # Make a symbolic link to the extracted repository
 > ln -s Sarek-[snapID] default

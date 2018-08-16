@@ -8,6 +8,12 @@ class SarekUtils {
     if (!it.toString().toLowerCase().endsWith(extension.toLowerCase())) exit 1, "File: ${it} has the wrong extension: ${extension} see --help for more information"
   }
 
+  // Check if a row has the expected number of item
+  static def checkNumberOfItem(row, number) {
+    if (row.size() != number) exit 1, "Malformed row in TSV file: ${row}, see --help for more information"
+    return true
+  }
+
   // Check parameter existence
   static def checkParameterExistence(it, list) {
     if (!list.contains(it)) {
@@ -143,16 +149,16 @@ class SarekUtils {
   // Channeling the TSV file containing BAM.
   // Format is: "subject gender status sample bam bai"
   static def extractBams(tsvFile, mode) {
-    Channel
-      .from(tsvFile.readLines())
-      .map{line ->
-        def list      = SarekUtils.returnTSV(line.split(),6)
-        def idPatient = list[0]
-        def gender    = list[1]
-        def status    = SarekUtils.returnStatus(list[2].toInteger())
-        def idSample  = list[3]
-        def bamFile   = SarekUtils.returnFile(list[4])
-        def baiFile   = SarekUtils.returnFile(list[5])
+    Channel.from(tsvFile)
+      .splitCsv(sep: '\t')
+      .map { row ->
+        SarekUtils.checkNumberOfItem(row, 6)
+        def idPatient = row[0]
+        def gender    = row[1]
+        def status    = SarekUtils.returnStatus(row[2].toInteger())
+        def idSample  = row[3]
+        def bamFile   = SarekUtils.returnFile(row[4])
+        def baiFile   = SarekUtils.returnFile(row[5])
 
         SarekUtils.checkFileExtension(bamFile,".bam")
         SarekUtils.checkFileExtension(baiFile,".bai")
@@ -196,12 +202,6 @@ class SarekUtils {
   // 0 == Normal, 1 == Tumor
   static def returnStatus(it) {
     if (!(it in [0, 1])) exit 1, "Status is not recognized in TSV file: ${it}, see --help for more information"
-    return it
-  }
-
-  // Return TSV if it has the correct number of items in row
-  static def returnTSV(it, number) {
-    if (it.size() != number) exit 1, "Malformed row in TSV file: ${it}, see --help for more information"
     return it
   }
 

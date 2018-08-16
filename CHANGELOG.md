@@ -5,6 +5,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### `Added`
+- [#613](https://github.com/SciLifeLab/Sarek/pull/613) - Add Issue Templates (bug report and feature request)
+- [#614](https://github.com/SciLifeLab/Sarek/pull/614) - Add PR Template
+- [#615](https://github.com/SciLifeLab/Sarek/pull/615) - Add presentation
+- [#615](https://github.com/SciLifeLab/Sarek/pull/615) - Update documentation
+
+### `Changed`
+- [#608](https://github.com/SciLifeLab/Sarek/pull/608) - Update Nextflow required version
+- [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Update CHANGELOG
+- [#615](https://github.com/SciLifeLab/Sarek/pull/615) - Use `splitCsv` instead of `readlines`
+
+### `Removed`
+- [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Remove old Issue Template
 
 ## [2.1.0] - Ruotes - 2018-08-14
 
@@ -25,8 +38,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#601](https://github.com/SciLifeLab/Sarek/pull/601), [#603](https://github.com/SciLifeLab/Sarek/pull/603) - Container for GATK4
 - [#606](https://github.com/SciLifeLab/Sarek/pull/606) - Add test data as a submodule from [`Sarek-data`](https://github.com/SciLifeLab/Sarek-data)
 - [#608](https://github.com/SciLifeLab/Sarek/pull/608) - Add documentation on how to install Nextflow on `bianca`
-- [#613](https://github.com/SciLifeLab/Sarek/pull/613) - Add Issue Templates (bug report and feature request)
-- [#614](https://github.com/SciLifeLab/Sarek/pull/614) - Add PR Template
 
 ### `Changed`
 - [#557](https://github.com/SciLifeLab/Sarek/pull/557), [#583](https://github.com/SciLifeLab/Sarek/pull/583), [#585](https://github.com/SciLifeLab/Sarek/pull/585), [#588](https://github.com/SciLifeLab/Sarek/pull/588) - Update help
@@ -58,7 +69,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Removed`
 - [#607](https://github.com/SciLifeLab/Sarek/pull/607) - Remove Mutect1
-- [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Remove old Issue Template
 
 ## [2.0.0] - 2018-03-23
 ### `Added`
