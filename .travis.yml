@@ -1,11 +1,7 @@
 sudo: required
-
 language: java
-
 jdk: openjdk8
-
-services:
-  - docker
+services: docker
 
 addons:
   apt:
@@ -13,28 +9,30 @@ addons:
 
 env:
   global:
-    - NXF_VER=0.31.0 SGT_VER=2.4.2
+    - NXF_VER=0.31.0 SGT_VER=2.5.1
   matrix:
-    - PROFILE=singularity TEST=TOOLS          TOOL_INSTALL=all
-    - PROFILE=singularity TEST=MANTA          TOOL_INSTALL=all
-    - PROFILE=docker      TEST=MANTA          TOOL_INSTALL=nextflow
-    - PROFILE=docker      TEST=TOOLS          TOOL_INSTALL=nextflow
-    - PROFILE=docker      TEST=ANNOTATEVEP    TOOL_INSTALL=nextflow
-    - PROFILE=singularity TEST=ANNOTATESNPEFF TOOL_INSTALL=all
-    - PROFILE=singularity TEST=STEP           TOOL_INSTALL=all
-    - PROFILE=singularity TEST=GERMLINE       TOOL_INSTALL=all
-    - PROFILE=singularity TEST=DIR            TOOL_INSTALL=all
-    - PROFILE=docker      TEST=ANNOTATESNPEFF TOOL_INSTALL=nextflow
-    - PROFILE=docker      TEST=STEP           TOOL_INSTALL=nextflow
-    - PROFILE=docker      TEST=GERMLINE       TOOL_INSTALL=nextflow
-    - PROFILE=docker      TEST=DIR            TOOL_INSTALL=nextflow
+    - CE=singularity TEST=TOOLS
+    - CE=singularity TEST=MANTA
+    - CE=docker      TEST=MANTA
+    - CE=docker      TEST=TOOLS
+    - CE=docker      TEST=ANNOTATEVEP
+    - CE=singularity TEST=ANNOTATESNPEFF
+    - CE=singularity TEST=STEP
+    - CE=singularity TEST=GERMLINE
+    - CE=singularity TEST=DIR
+    - CE=docker      TEST=ANNOTATESNPEFF
+    - CE=docker      TEST=STEP
+    - CE=docker      TEST=GERMLINE
+    - CE=docker      TEST=DIR
 
-install: # Install Nextflow (and Singularity if needed)
-  - "./scripts/install.sh --tool $TOOL_INSTALL"
-  - "travis_retry ./scripts/containers.sh --profile $PROFILE --test $TEST"
+install:
+  # Install Nextflow (and Singularity if needed)
+  - "./scripts/install.sh --engine $CE"
+  # Donwload big containers for ANNOTATEVEP and ANNOTATESNPEF tests)
+  - "travis_retry ./scripts/containers.sh --profile $CE --test $TEST"
 
-before_script: # Build references when needed
-  - "./scripts/test.sh --profile $PROFILE --test $TEST --build"
+# Build references when needed
+before_script: "./scripts/test.sh --profile $CE --test $TEST --build"
 
-script:
-  - "./scripts/test.sh --profile $PROFILE --test $TEST"
+# Actual tests
+script: "./scripts/test.sh --profile $CE --test $TEST"
