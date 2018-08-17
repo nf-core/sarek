@@ -16,9 +16,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#608](https://github.com/SciLifeLab/Sarek/pull/608) - Update Nextflow required version
 - [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Update CHANGELOG
 - [#615](https://github.com/SciLifeLab/Sarek/pull/615) - Use `splitCsv` instead of `readlines`
+- [#621](https://github.com/SciLifeLab/Sarek/pull/621) - Improve install script
+- [#621](https://github.com/SciLifeLab/Sarek/pull/621) - Simplify tests
 
 ### `Removed`
 - [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Remove old Issue Template
+
+### `Fixed`
+- [#621](https://github.com/SciLifeLab/Sarek/pull/621) - Fix VEP tests
 
 ## [2.1.0] - Ruotes - 2018-08-14
 
