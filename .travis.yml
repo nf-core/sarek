@@ -1,36 +1,38 @@
 sudo: required
-
 language: java
-
 jdk: openjdk8
+services: docker
 
-node_js: "node"
-
-services:
-  - docker
+addons:
+  apt:
+    update: true
 
 env:
-  - NXF_VER=0.27.0 SGT_VER=2.4.2 PROFILE=singularity TEST=TOOLS TOOL_INSTALL=all
-  - NXF_VER=0.27.0 SGT_VER=2.4.2 PROFILE=singularity TEST=MANTA TOOL_INSTALL=all
-  - NXF_VER=0.27.0 PROFILE=docker TEST=MANTA TOOL_INSTALL=nextflow
-  - NXF_VER=0.27.0 PROFILE=docker TEST=TOOLS TOOL_INSTALL=nextflow
-  - NXF_VER=0.27.0 PROFILE=docker TEST=ANNOTATEVEP TOOL_INSTALL=nextflow
-  - NXF_VER=0.27.0 SGT_VER=2.4.2 PROFILE=singularity TEST=ANNOTATESNPEFF TOOL_INSTALL=all
-  - NXF_VER=0.27.0 SGT_VER=2.4.2 PROFILE=singularity TEST=STEP TOOL_INSTALL=all
-  - NXF_VER=0.27.0 SGT_VER=2.4.2 PROFILE=singularity TEST=GERMLINE TOOL_INSTALL=all
-  - NXF_VER=0.27.0 SGT_VER=2.4.2 PROFILE=singularity TEST=DIR TOOL_INSTALL=all
-  - NXF_VER=0.27.0 PROFILE=docker TEST=ANNOTATESNPEFF TOOL_INSTALL=nextflow
-  - NXF_VER=0.27.0 PROFILE=docker TEST=STEP TOOL_INSTALL=nextflow
-  - NXF_VER=0.27.0 PROFILE=docker TEST=GERMLINE TOOL_INSTALL=nextflow
-  - NXF_VER=0.27.0 PROFILE=docker TEST=DIR TOOL_INSTALL=nextflow
+  global:
+    - NXF_VER=0.31.0 SGT_VER=2.5.1
+  matrix:
+    - CE=singularity TEST=TOOLS
+    - CE=singularity TEST=MANTA
+    - CE=docker      TEST=MANTA
+    - CE=docker      TEST=TOOLS
+    - CE=docker      TEST=ANNOTATEVEP
+    - CE=singularity TEST=ANNOTATESNPEFF
+    - CE=singularity TEST=STEP
+    - CE=singularity TEST=GERMLINE
+    - CE=singularity TEST=DIR
+    - CE=docker      TEST=ANNOTATESNPEFF
+    - CE=docker      TEST=STEP
+    - CE=docker      TEST=GERMLINE
+    - CE=docker      TEST=DIR
 
-install: # Install Nextflow (and Singularity if needed)
-  - "./scripts/install.sh --tool $TOOL_INSTALL"
-  - "travis_retry ./scripts/containers.sh --profile $PROFILE --test $TEST"
-  - "npm install -g gnomon"
+install:
+  # Install Nextflow (and Singularity if needed)
+  - "./scripts/install.sh --engine $CE"
+  # Donwload big containers for ANNOTATEVEP and ANNOTATESNPEF tests)
+  - "travis_retry ./scripts/containers.sh --profile $CE --test $TEST"
 
-before_script: # Build references when needed
-  - "./scripts/test.sh --profile $PROFILE --test $TEST --build | gnomon --medium 120.0 --high 600.0 --real-time=false"
+# Build references when needed
+before_script: "./scripts/test.sh --profile $CE --test $TEST --build"
 
-script:
-  - "./scripts/test.sh --profile $PROFILE --test $TEST | gnomon --medium 120.0 --high 600.0 --real-time=false"
+# Actual tests
+script: "./scripts/test.sh --profile $CE --test $TEST"

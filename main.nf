@@ -18,7 +18,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
  Marcel Martin <marcel.martin@scilifelab.se> [@marcelm]
  Björn Nystedt <bjorn.nystedt@scilifelab.se> [@bjornnystedt]
  Pall Olason <pall.olason@scilifelab.se> [@pallolason]
- Pelin Sahlén <pelin.akan@scilifelab.se> [@pelinakan]
 --------------------------------------------------------------------------------
  @Homepage
  http://opensource.scilifelab.se/projects/sarek/
@@ -30,8 +29,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - RunFastQC - Run FastQC for QC on fastq files
  - MapReads - Map reads with BWA
  - MergeBams - Merge BAMs if multilane samples
- - MarkDuplicates - Mark Duplicates with Picard
- - RealignerTargetCreator - Create realignment target intervals
+ - MarkDuplicates - Mark Duplicates with GATK4
  - IndelRealigner - Realign BAMs as T/N pair
  - CreateRecalibrationTable - Create Recalibration Table with BaseRecalibrator
  - RecalibrateBam - Recalibrate Bam with PrintReads
@@ -63,15 +61,15 @@ if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <U
 step = params.step.toLowerCase()
 if (step == 'preprocessing') step = 'mapping'
 
-directoryMap = defineDirectoryMap()
+directoryMap = SarekUtils.defineDirectoryMap(params.outDir)
 referenceMap = defineReferenceMap()
 stepList = defineStepList()
 
-if (!checkParameterExistence(step, stepList)) exit 1, 'Unknown step, see --help for more information'
+if (!SarekUtils.checkParameterExistence(step, stepList)) exit 1, 'Unknown step, see --help for more information'
 if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
 if (step == 'mapping' && !checkExactlyOne([params.test, params.sample, params.sampleDir]))
   exit 1, 'Please define which samples to work on by providing exactly one of the --test, --sample or --sampleDir options'
-if (!checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
+if (!SarekUtils.checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
 
 if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
   referenceMap.intervals = file("$workflow.projectDir/repeats/tiny_${params.genome}.list")
@@ -83,9 +81,8 @@ if (params.sample) tsvPath = params.sample
 // No need for tsv file for step annotate
 if (!params.sample && !params.sampleDir) {
   tsvPaths = [
-      'mapping': "${workflow.projectDir}/data/tsv/tiny.tsv",
-      'realign': "${directoryMap.nonRealigned}/nonRealigned.tsv",
-      'recalibrate': "${directoryMap.nonRecalibrated}/nonRecalibrated.tsv"
+      'mapping': "${workflow.projectDir}/Sarek-data/testdata/tsv/tiny.tsv",
+      'recalibrate': "${directoryMap.duplicateMarked}/duplicateMarked.tsv"
   ]
   if (params.test || step != 'mapping') tsvPath = tsvPaths[step]
 }
@@ -98,7 +95,6 @@ if (tsvPath) {
   tsvFile = file(tsvPath)
   switch (step) {
     case 'mapping': fastqFiles = extractFastq(tsvFile); break
-    case 'realign': bamFiles = extractBams(tsvFile); break
     case 'recalibrate': bamFiles = extractRecal(tsvFile); break
     default: exit 1, "Unknown step ${step}"
   }
@@ -114,8 +110,8 @@ if (tsvPath) {
   tsvFile = params.sampleDir  // used in the reports
 } else exit 1, 'No sample were defined, see --help'
 
-if (step == 'mapping') (patientGenders, fastqFiles) = extractGenders(fastqFiles)
-else (patientGenders, bamFiles) = extractGenders(bamFiles)
+if (step == 'mapping') (patientGenders, fastqFiles) = SarekUtils.extractGenders(fastqFiles)
+else (patientGenders, bamFiles) = SarekUtils.extractGenders(bamFiles)
 
 /*
 ================================================================================
@@ -176,13 +172,14 @@ process MapReads {
   when: step == 'mapping' && !params.onlyQC
 
   script:
-  readGroup = "@RG\\tID:${idRun}\\tPU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
+  CN = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
+  readGroup = "@RG\\tID:${idRun}\\t${CN}PU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
   // adjust mismatch penalty for tumor samples
-  extra = status == 1 ? "-B 3 " : ""
+  extra = status == 1 ? "-B 3" : ""
   """
-  bwa mem -R \"${readGroup}\" ${extra}-t ${task.cpus} -M \
+  bwa mem -R \"${readGroup}\" ${extra} -t ${task.cpus} -M \
   ${genomeFile} ${fastqFile1} ${fastqFile2} | \
-  samtools sort --threads ${task.cpus} -m 4G - > ${idRun}.bam
+  samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
   """
 }
 
@@ -244,13 +241,17 @@ if (params.verbose) mergedBam = mergedBam.view {
 process MarkDuplicates {
   tag {idPatient + "-" + idSample}
 
-  publishDir params.outDir, saveAs: { it == "${bam}.metrics" ? "${directoryMap.markDuplicatesQC}/${it}" : "${directoryMap.nonRealigned}/${it}" }, mode: 'link'
+  publishDir params.outDir, mode: 'link',
+    saveAs: {
+      if (it == "${bam}.metrics") "${directoryMap.markDuplicatesQC}/${it}"
+      else "${directoryMap.duplicateMarked}/${it}"
+    }
 
   input:
     set idPatient, status, idSample, file(bam) from mergedBam
 
   output:
-    set idPatient, file("${idSample}_${status}.md.bam"), file("${idSample}_${status}.md.bai") into duplicates
+    set idPatient, file("${idSample}_${status}.md.bam"), file("${idSample}_${status}.md.bai") into duplicateMarkedBams
     set idPatient, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai") into markDuplicatesTSV
     file ("${bam}.metrics") into markDuplicatesReport
 
@@ -258,158 +259,27 @@ process MarkDuplicates {
 
   script:
   """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar \$PICARD_HOME/picard.jar MarkDuplicates \
-  INPUT=${bam} \
-  METRICS_FILE=${bam}.metrics \
-  TMP_DIR=. \
-  ASSUME_SORTED=true \
-  VALIDATION_STRINGENCY=LENIENT \
-  CREATE_INDEX=TRUE \
-  OUTPUT=${idSample}_${status}.md.bam
+  gatk --java-options -Xmx${task.memory.toGiga()}g \
+  MarkDuplicates \
+  --MAX_RECORDS_IN_RAM 50000 \
+  --INPUT ${bam} \
+  --METRICS_FILE ${bam}.metrics \
+  --TMP_DIR . \
+  --ASSUME_SORT_ORDER coordinate \
+  --CREATE_INDEX true \
+  --OUTPUT ${idSample}_${status}.md.bam
   """
 }
 
 // Creating a TSV file to restart from this step
 markDuplicatesTSV.map { idPatient, status, idSample, bam, bai ->
   gender = patientGenders[idPatient]
-  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap.nonRealigned}/${bam}\t${directoryMap.nonRealigned}/${bai}\n"
+  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap.duplicateMarked}/${bam}\t${directoryMap.duplicateMarked}/${bai}\n"
 }.collectFile(
-  name: 'nonRealigned.tsv', sort: true, storeDir: directoryMap.nonRealigned
+  name: 'duplicateMarked.tsv', sort: true, storeDir: directoryMap.duplicateMarked
 )
 
-// Create intervals for realignement using both tumor+normal as input
-// Group the marked duplicates BAMs for intervals and realign by idPatient
-// Grouping also by gender, to make a nicer channel
-duplicatesGrouped = Channel.empty()
-if (step == 'mapping') duplicatesGrouped = duplicates.groupTuple()
-else if (step == 'realign') duplicatesGrouped = bamFiles.map{
-  idPatient, status, idSample, bam, bai ->
-  [idPatient, bam, bai]
-}.groupTuple()
-
-// The duplicatesGrouped channel is duplicated
-// one copy goes to the RealignerTargetCreator process
-// and the other to the IndelRealigner process
-(duplicatesInterval, duplicatesRealign) = duplicatesGrouped.into(2)
-
-if (params.verbose) duplicatesInterval = duplicatesInterval.view {
-  "BAMs for RealignerTargetCreator:\n\
-  ID    : ${it[0]}\n\
-  Files : ${it[1].fileName}\n\
-  Files : ${it[2].fileName}"
-}
-
-if (params.verbose) duplicatesRealign = duplicatesRealign.view {
-  "BAMs to phase:\n\
-  ID    : ${it[0]}\n\
-  Files : ${it[1].fileName}\n\
-  Files : ${it[2].fileName}"
-}
-
-if (params.verbose) markDuplicatesReport = markDuplicatesReport.view {
-  "MarkDuplicates report:\n\
-  File  : [${it.fileName}]"
-}
-
-// VCF indexes are added so they will be linked, and not re-created on the fly
-//  -L "1:131941-141339" \
-
-process RealignerTargetCreator {
-  tag {idPatient}
-
-  input:
-    set idPatient, file(bam), file(bai) from duplicatesInterval
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(knownIndels), file(knownIndelsIndex), file(intervals) from Channel.value([
-      referenceMap.genomeFile,
-      referenceMap.genomeIndex,
-      referenceMap.genomeDict,
-      referenceMap.knownIndels,
-      referenceMap.knownIndelsIndex,
-      referenceMap.intervals
-    ])
-
-  output:
-    set idPatient, file("${idPatient}.intervals") into intervals
-
-  when: ( step == 'mapping' || step == 'realign' ) && !params.onlyQC
-
-  script:
-  bams = bam.collect{"-I ${it}"}.join(' ')
-  known = knownIndels.collect{"-known ${it}"}.join(' ')
-  """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
-  -T RealignerTargetCreator \
-  ${bams} \
-  -R ${genomeFile} \
-  ${known} \
-  -nt ${task.cpus} \
-  -L ${intervals} \
-  -o ${idPatient}.intervals
-  """
-}
-
-if (params.verbose) intervals = intervals.view {
-  "Intervals to phase:\n\
-  ID    : ${it[0]}\n\
-  File  : [${it[1].fileName}]"
-}
-
-bamsAndIntervals = duplicatesRealign
-  .phase(intervals)
-  .map{duplicatesRealign, intervals ->
-    tuple(
-      duplicatesRealign[0],
-      duplicatesRealign[1],
-      duplicatesRealign[2],
-      intervals[1]
-    )}
-
-if (params.verbose) bamsAndIntervals = bamsAndIntervals.view {
-  "BAMs and Intervals phased for IndelRealigner:\n\
-  ID    : ${it[0]}\n\
-  Files : ${it[1].fileName}\n\
-  Files : ${it[2].fileName}\n\
-  File  : [${it[3].fileName}]"
-}
-
-// use nWayOut to split into T/N pair again
-process IndelRealigner {
-  tag {idPatient}
-
-  publishDir directoryMap.nonRecalibrated, mode: 'link'
-
-  input:
-    set idPatient, file(bam), file(bai), file(intervals) from bamsAndIntervals
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(knownIndels), file(knownIndelsIndex) from Channel.value([
-      referenceMap.genomeFile,
-      referenceMap.genomeIndex,
-      referenceMap.genomeDict,
-      referenceMap.knownIndels,
-      referenceMap.knownIndelsIndex])
-
-  output:
-    set idPatient, file("*.real.bam"), file("*.real.bai") into realignedBam mode flatten
-
-  when: ( step == 'mapping' || step == 'realign' ) && !params.onlyQC
-
-  script:
-  bams = bam.collect{"-I ${it}"}.join(' ')
-  known = knownIndels.collect{"-known ${it}"}.join(' ')
-  """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
-  -T IndelRealigner \
-  ${bams} \
-  -R ${genomeFile} \
-  -targetIntervals ${intervals} \
-  ${known} \
-  -nWayOut '.real.bam'
-  """
-}
-
-realignedBam = realignedBam.map {
+duplicateMarkedBams = duplicateMarkedBams.map {
     idPatient, bam, bai ->
     tag = bam.baseName.tokenize('.')[0]
     status   = tag[-1..-1].toInteger()
@@ -417,19 +287,21 @@ realignedBam = realignedBam.map {
     [idPatient, status, idSample, bam, bai]
 }
 
-if (params.verbose) realignedBam = realignedBam.view {
+if (params.verbose) duplicateMarkedBams = duplicateMarkedBams.view {
   "Realigned BAM to CreateRecalibrationTable:\n\
   ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
   Files : [${it[3].fileName}, ${it[4].fileName}]"
 }
 
+(mdBam, mdBamToJoin) = duplicateMarkedBams.into(2)
+
 process CreateRecalibrationTable {
   tag {idPatient + "-" + idSample}
 
-  publishDir directoryMap.nonRecalibrated, mode: 'link', overwrite: false
+  publishDir directoryMap.duplicateMarked, mode: 'link', overwrite: false
 
   input:
-    set idPatient, status, idSample, file(bam), file(bai) from realignedBam
+    set idPatient, status, idSample, file(bam), file(bai) from mdBam // realignedBam
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(knownIndels), file(knownIndelsIndex), file(intervals) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -442,36 +314,36 @@ process CreateRecalibrationTable {
     ])
 
   output:
-    set idPatient, status, idSample, file(bam), file(bai), file("${idSample}.recal.table") into recalibrationTable
-    set idPatient, status, idSample, val("${idSample}_${status}.md.real.bam"), val("${idSample}_${status}.md.real.bai"), val("${idSample}.recal.table") into recalibrationTableTSV
+    set idPatient, status, idSample, file("${idSample}.recal.table") into recalibrationTable
+    set idPatient, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai"), val("${idSample}.recal.table") into recalibrationTableTSV
 
-  when: ( step == 'mapping' || step == 'realign' ) && !params.onlyQC
+  when: ( step == 'mapping' ) && !params.onlyQC
 
   script:
-  known = knownIndels.collect{ "-knownSites ${it}" }.join(' ')
+  known = knownIndels.collect{ "--known-sites ${it}" }.join(' ')
   """
-  java -Xmx${task.memory.toGiga()}g \
-  -Djava.io.tmpdir="/tmp" \
-  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
-  -T BaseRecalibrator \
+  gatk --java-options -Xmx${task.memory.toGiga()}g \
+  BaseRecalibrator \
+  --input ${bam} \
+  --output ${idSample}.recal.table \
+	--TMP_DIR /tmp \
   -R ${genomeFile} \
-  -I ${bam} \
   -L ${intervals} \
-  --disable_auto_index_creation_and_locking_when_reading_rods \
-  -knownSites ${dbsnp} \
+  --known-sites ${dbsnp} \
   ${known} \
-  -nct ${task.cpus} \
-  -l INFO \
-  -o ${idSample}.recal.table
+  --verbosity INFO
   """
 }
+
 // Create a TSV file to restart from this step
 recalibrationTableTSV.map { idPatient, status, idSample, bam, bai, recalTable ->
   gender = patientGenders[idPatient]
-  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap.nonRecalibrated}/${bam}\t${directoryMap.nonRecalibrated}/${bai}\t${directoryMap.nonRecalibrated}/${recalTable}\n"
+  "${idPatient}\t${gender}\t${status}\t${idSample}\t${directoryMap.duplicateMarked}/${bam}\t${directoryMap.duplicateMarked}/${bai}\t${directoryMap.duplicateMarked}/${recalTable}\n"
 }.collectFile(
-  name: 'nonRecalibrated.tsv', sort: true, storeDir: directoryMap.nonRecalibrated
+  name: 'duplicateMarked.tsv', sort: true, storeDir: directoryMap.duplicateMarked
 )
+
+recalibrationTable = mdBamToJoin.join(recalibrationTable, by:[0,1,2])
 
 if (step == 'recalibrate') recalibrationTable = bamFiles
 
@@ -508,20 +380,20 @@ process RecalibrateBam {
     set idPatient, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam, recalibratedBamForStats
     set idPatient, status, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into recalibratedBamTSV
 
-  // HaplotypeCaller can do BQSR on the fly, so do not create a
+  // GATK4 HaplotypeCaller can not do BQSR on the fly, so we have to create a
   // recalibrated BAM explicitly.
-  when: params.explicitBqsrNeeded && !params.onlyQC
+  when: !params.onlyQC
 
   script:
   """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
-  -T PrintReads \
+  gatk --java-options -Xmx${task.memory.toGiga()}g \
+  ApplyBQSR \
   -R ${genomeFile} \
-  -I ${bam} \
+  --input ${bam} \
+  --output ${idSample}.recal.bam \
   -L ${intervals} \
-  --BQSR ${recalibrationReport} \
-  -o ${idSample}.recal.bam
+	--create-output-bam-index true \
+	--bqsr-recal-file ${recalibrationReport} 
   """
 }
 // Creating a TSV file to restart from this step
@@ -551,10 +423,7 @@ process RunSamtoolsStats {
 
   when: !params.noReports
 
-  script:
-  """
-  samtools stats ${bam} > ${bam}.samtools.stats.out
-  """
+  script: QC.samtoolsStats(bam)
 }
 
 if (params.verbose) samtoolsStatsReport = samtoolsStatsReport.view {
@@ -575,19 +444,54 @@ process RunBamQC {
 
   when: !params.noReports && !params.noBAMQC
 
-  script:
-  """
-  qualimap --java-mem-size=${task.memory.toGiga()}G \
-  bamqc \
-  -bam ${bam} \
-  -outdir ${idSample} \
-  -outformat HTML
-  """
+  script: QC.bamQC(bam,idSample,task.memory)
 }
 
 if (params.verbose) bamQCreport = bamQCreport.view {
   "BamQC report:\n\
   Dir   : [${it.fileName}]"
+}
+
+process GetVersionBamQC {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: !params.noReports && !params.noBAMQC
+
+  script:
+  """
+  qualimap --version &> v_qualimap.txt
+  """
+}
+
+process GetVersionBWAsamtools {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: step == 'mapping' && !params.onlyQC
+
+  script:
+  """
+  bwa &> v_bwa.txt 2>&1 || true
+  samtools --version &> v_samtools.txt
+  """
+}
+
+process GetVersionFastQC {
+  publishDir directoryMap.version, mode: 'link'
+  output:
+  file("v_fastqc.txt")
+  when: step == 'mapping' && !params.noReports
+
+  script:
+  """
+  fastqc -v > v_fastqc.txt
+  """
+}
+
+process GetVersionGATK {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: !params.onlyQC
+  script: QC.getVersionGATK()
 }
 
 /*
@@ -596,43 +500,9 @@ if (params.verbose) bamQCreport = bamQCreport.view {
 ================================================================================
 */
 
-def checkFileExtension(it, extension) {
-  // Check file extension
-  if (!it.toString().toLowerCase().endsWith(extension.toLowerCase())) exit 1, "File: ${it} has the wrong extension: ${extension} see --help for more information"
-}
-
-def checkParameterExistence(it, list) {
-  // Check parameter existence
-  if (!list.contains(it)) {
-    println("Unknown parameter: ${it}")
-    return false
-  }
-  return true
-}
-
 def checkParamReturnFile(item) {
   params."${item}" = params.genomes[params.genome]."${item}"
   return file(params."${item}")
-}
-
-def checkReferenceMap(referenceMap) {
-  // Loop through all the references files to check their existence
-  referenceMap.every {
-    referenceFile, fileToCheck ->
-    checkRefExistence(referenceFile, fileToCheck)
-  }
-}
-
-def checkRefExistence(referenceFile, fileToCheck) {
-  if (fileToCheck instanceof List) return fileToCheck.every{ checkRefExistence(referenceFile, it) }
-  def f = file(fileToCheck)
-  // this is an expanded wildcard: we can assume all files exist
-  if (f instanceof List && f.size() > 0) return true
-  else if (!f.exists()) {
-    log.info  "Missing references: ${referenceFile} ${fileToCheck}"
-    return false
-  }
-  return true
 }
 
 def checkUppmaxProject() {
@@ -644,19 +514,6 @@ def checkExactlyOne(list) {
   final n = 0
   list.each{n += it ? 1 : 0}
   return n == 1
-}
-
-def defineDirectoryMap() {
-  return [
-    'nonRealigned'     : "${params.outDir}/Preprocessing/NonRealigned",
-    'nonRecalibrated'  : "${params.outDir}/Preprocessing/NonRecalibrated",
-    'recalibrated'     : "${params.outDir}/Preprocessing/Recalibrated",
-    'bamQC'            : "${params.outDir}/Reports/bamQC",
-    'bcftoolsStats'    : "${params.outDir}/Reports/BCFToolsStats",
-    'fastQC'           : "${params.outDir}/Reports/FastQC",
-    'markDuplicatesQC' : "${params.outDir}/Reports/MarkDuplicates",
-    'samtoolsStats'    : "${params.outDir}/Reports/SamToolsStats"
-  ]
 }
 
 def defineReferenceMap() {
@@ -683,56 +540,30 @@ def defineReferenceMap() {
 def defineStepList() {
   return [
     'mapping',
-    'realign',
     'recalibrate'
   ]
-}
-
-def extractBams(tsvFile) {
-  // Channeling the TSV file containing BAM.
-  // Format is: "subject gender status sample bam bai"
-  Channel
-    .from(tsvFile.readLines())
-    .map{line ->
-      def list      = returnTSV(line.split(),6)
-      def idPatient = list[0]
-      def gender    = list[1]
-      def status    = returnStatus(list[2].toInteger())
-      def idSample  = list[3]
-      def bamFile   = returnFile(list[4])
-      def baiFile   = returnFile(list[5])
-
-      checkFileExtension(bamFile,".bam")
-      checkFileExtension(baiFile,".bai")
-
-      [ idPatient, gender, status, idSample, bamFile, baiFile ]
-    }
 }
 
 def extractFastq(tsvFile) {
   // Channeling the TSV file containing FASTQ.
   // Format is: "subject gender status sample lane fastq1 fastq2"
-  Channel
-    .from(tsvFile.readLines())
-    .map{line ->
-      def list       = returnTSV(line.split(),7)
-      def idPatient  = list[0]
-      def gender     = list[1]
-      def status     = returnStatus(list[2].toInteger())
-      def idSample   = list[3]
-      def idRun      = list[4]
+  Channel.from(tsvFile)
+  .splitCsv(sep: '\t')
+  .map { row ->
+    SarekUtils.checkNumberOfItem(row, 7)
+    def idPatient  = row[0]
+    def gender     = row[1]
+    def status     = SarekUtils.returnStatus(row[2].toInteger())
+    def idSample   = row[3]
+    def idRun      = row[4]
+    def fastqFile1 = SarekUtils.returnFile(row[5])
+    def fastqFile2 = SarekUtils.returnFile(row[6])
 
-      // Normally path to files starts from workflow.launchDir
-      // But when executing workflow from Github
-      // Path to hosted FASTQ files starts from workflow.projectDir
-      def fastqFile1 = workflow.commitId && params.test ? returnFile("${workflow.projectDir}/${list[5]}") : returnFile(list[5])
-      def fastqFile2 = workflow.commitId && params.test ? returnFile("${workflow.projectDir}/${list[6]}") : returnFile(list[6])
+    SarekUtils.checkFileExtension(fastqFile1,".fastq.gz")
+    SarekUtils.checkFileExtension(fastqFile2,".fastq.gz")
 
-      checkFileExtension(fastqFile1,".fastq.gz")
-      checkFileExtension(fastqFile2,".fastq.gz")
-
-      [idPatient, gender, status, idSample, idRun, fastqFile1, fastqFile2]
-    }
+    [idPatient, gender, status, idSample, idRun, fastqFile1, fastqFile2]
+  }
 }
 
 def extractFastqFromDir(pattern) {
@@ -771,35 +602,24 @@ def extractFastqFromDir(pattern) {
 def extractRecal(tsvFile) {
   // Channeling the TSV file containing Recalibration Tables.
   // Format is: "subject gender status sample bam bai recalTables"
-  Channel
-    .from(tsvFile.readLines())
-    .map{line ->
-      def list       = returnTSV(line.split(),7)
-      def idPatient  = list[0]
-      def gender     = list[1]
-      def status     = returnStatus(list[2].toInteger())
-      def idSample   = list[3]
-      def bamFile    = returnFile(list[4])
-      def baiFile    = returnFile(list[5])
-      def recalTable = returnFile(list[6])
+  Channel.from(tsvFile)
+    .splitCsv(sep: '\t')
+    .map { row ->
+    SarekUtils.checkNumberOfItem(row, 7)
+    def idPatient  = row[0]
+    def gender     = row[1]
+    def status     = SarekUtils.returnStatus(row[2].toInteger())
+    def idSample   = row[3]
+    def bamFile    = SarekUtils.returnFile(row[4])
+    def baiFile    = SarekUtils.returnFile(row[5])
+    def recalTable = SarekUtils.returnFile(row[6])
 
-      checkFileExtension(bamFile,".bam")
-      checkFileExtension(baiFile,".bai")
-      checkFileExtension(recalTable,".recal.table")
+    SarekUtils.checkFileExtension(bamFile,".bam")
+    SarekUtils.checkFileExtension(baiFile,".bai")
+    SarekUtils.checkFileExtension(recalTable,".recal.table")
 
-      [ idPatient, gender, status, idSample, bamFile, baiFile, recalTable ]
-    }
-}
-
-def extractGenders(channel) {
-  def genders = [:]  // an empty map
-  channel = channel.map{ it ->
-    def idPatient = it[0]
-    def gender = it[1]
-    genders[idPatient] = gender
-    [idPatient] + it[2..-1]
+    [ idPatient, gender, status, idSample, bamFile, baiFile, recalTable ]
   }
-  [genders, channel]
 }
 
 def flowcellLaneFromFastq(path) {
@@ -852,7 +672,6 @@ def helpMessage() {
   log.info "       Option to start workflow"
   log.info "       Possible values are:"
   log.info "         mapping (default, will start workflow with FASTQ files)"
-  log.info "         realign (will start workflow with non-realigned BAM files)"
   log.info "         recalibrate (will start workflow with non-recalibrated BAM files)"
   log.info "    --noReports"
   log.info "       Disable QC tools and MultiQC to generate a HTML report"
@@ -877,6 +696,7 @@ def minimalInformationMessage() {
   log.info "Project Dir : " + workflow.projectDir
   log.info "Launch Dir  : " + workflow.launchDir
   log.info "Work Dir    : " + workflow.workDir
+  log.info "Cont Engine : " + workflow.containerEngine
   log.info "Out Dir     : " + params.outDir
   log.info "TSV file    : ${tsvFile}"
   log.info "Genome      : " + params.genome
@@ -903,27 +723,6 @@ def nextflowMessage() {
   log.info "N E X T F L O W  ~  version ${workflow.nextflow.version} ${workflow.nextflow.build}"
 }
 
-def returnFile(it) {
-  // return file if it exists
-  if (!file(it).exists()) exit 1, "Missing file in TSV file: ${it}, see --help for more information"
-  return file(it)
-}
-
-def returnStatus(it) {
-  // Return status if it's correct
-  // Status should be only 0 or 1
-  // 0 being normal
-  // 1 being tumor (or relapse or anything that is not normal...)
-  if (!(it in [0, 1])) exit 1, "Status is not recognized in TSV file: ${it}, see --help for more information"
-  return it
-}
-
-def returnTSV(it, number) {
-  // return TSV if it has the correct number of items in row
-  if (it.size() != number) exit 1, "Malformed row in TSV file: ${it}, see --help for more information"
-  return it
-}
-
 def sarekMessage() {
   // Display Sarek message
   log.info "Sarek - Workflow For Somatic And Germline Variations ~ ${params.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
@@ -931,6 +730,7 @@ def sarekMessage() {
 
 def startMessage() {
   // Display start message
+  SarekUtils.sarek_ascii()
   this.sarekMessage()
   this.minimalInformationMessage()
 }

@@ -83,6 +83,7 @@ class ROISelector:
         # prefix of the ROI BAM file
         self.prefix = prefix
         # width of region for VCF records
+        self.pad = pad
         # add readlength padding
         self.width = width + pad
 
@@ -118,9 +119,33 @@ class ROISelector:
         # now collapse overlapping intervals
         for chrom in self.callDict:
             self.callDict[chrom] = reduce( self.callDict[chrom] )
+            # we still have to collapse intervals that are too close to each other 
+            # if they are closer than the readlength, there can be cases when a read is picked 
+            # in both interval, so we have to merge them
+            self.mergeCloseIntervals(chrom)
+
         # save intervals to a BAM
         print("Saving reads from BAMs:")
         self.saveCallsToBAM(bams)
+
+    def mergeCloseIntervals(self,chrom):
+        # we are assuming the intervals are ordered (they should to be)
+        mergedChrom = []
+        start = (0,0)
+        for interv in self.callDict[chrom]:
+            # (start[0], start[1])
+            #                          (interv[0], interv[1])
+            # |------------------|     |--------------------|     
+            if interv[0] - start[1] <= self.pad*2:
+                # merge the two intervals
+                start = (start[0],interv[1])
+            elif start[1]!= 0:  # if its not the very first one and have enough space between the intervals
+                # add to the new interval set
+                mergedChrom.append(start)
+                start = interv
+            else: # most of the intervals should fall here
+                start = interv
+        self.callDict[chrom] = mergedChrom
 
     def writeChunk(self,bam,chrom,regions):
         # from the regions list make a list of lists - sublists have 50 entries max
@@ -171,7 +196,7 @@ class ROISelector:
             print("Indexing ...")
             subprocess.call("samtools index -@" + str(self.threads) + " " + target, shell=True)
 
-   def addVCFRecords(self,VCFFile):
+    def addVCFRecords(self,VCFFile):
         """
         Store VCF record CHROM,POS in a dict 
         """

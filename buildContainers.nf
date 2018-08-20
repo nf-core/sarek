@@ -18,7 +18,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
  Marcel Martin <marcel.martin@scilifelab.se> [@marcelm]
  Björn Nystedt <bjorn.nystedt@scilifelab.se> [@bjornnystedt]
  Pall Olason <pall.olason@scilifelab.se> [@pallolason]
- Pelin Sahlén <pelin.akan@scilifelab.se> [@pelinakan]
 --------------------------------------------------------------------------------
  @Homepage
  http://opensource.scilifelab.se/projects/sarek/
@@ -178,14 +177,6 @@ def grabRevision() {
 def defineContainersList(){
   // Return list of authorized containers
   return [
-    'fastqc',
-    'freebayes',
-    'gatk',
-    'igvtools',
-    'multiqc',
-    'mutect1',
-    'picard',
-    'qualimap',
     'r-base',
     'runallelecount',
     'sarek',
@@ -210,9 +201,8 @@ def helpMessage() {
   log.info "    --containers: Choose which containers to build"
   log.info "       Default: all"
   log.info "       Possible values:"
-  log.info "         all, fastqc, freebayes, gatk, igvtools, multiqc, mutect1"
-  log.info "         picard, qualimap, r-base, runallelecount, sarek"
-  log.info "         snpeff, snpeffgrch37, snpeffgrch38, vepgrch37, vepgrch38"
+  log.info "         all, r-base, runallelecount, sarek, snpeff"
+  log.info "         snpeffgrch37, snpeffgrch38, vepgrch37, vepgrch38"
   log.info "    --docker: Build containers using Docker"
   log.info "    --help"
   log.info "       you're reading it"
@@ -250,6 +240,7 @@ def sarekMessage() {
 
 def startMessage() {
   // Display start message
+  SarekUtils.sarek_ascii()
   this.sarekMessage()
   this.minimalInformationMessage()
 }

@@ -21,7 +21,7 @@ Sarek was developed at the [National Genomics Infastructure][ngi-link] and [Nati
 
 ## Workflow steps
 
-Sarek is built with several workflow scripts. A wrapper script contained within the repository makes it easy to run the different workflow scripts as a single job.
+Sarek is built with several workflow scripts. A wrapper script contained within the repository makes it easy to run the different workflow scripts as a single job. To test your installation, follow the [tests documentation.](https://github.com/SciLifeLab/Sarek/blob/master/doc/TESTS.md)
 
 Raw FastQ files or aligned BAM files (with or without realignment & recalibration) can be used as inputs. You can choose which variant callers to use, plus the pipeline is capable of accommodating additional variant calling software or CNV callers if required.
 
@@ -98,7 +98,6 @@ For further information or help, don't hesitate to get in touch on [Gitter][gitt
 * [Marcel Martin](https://github.com/marcelm)
 * [Björn Nystedt](https://github.com/bjornnystedt)
 * [Pall Olason](https://github.com/pallolason)
-* [Pelin Sahlén](https://github.com/pelinakan)
 
 --------------------------------------------------------------------------------
 
@@ -111,7 +110,7 @@ For further information or help, don't hesitate to get in touch on [Gitter][gitt
 [license-badge]: https://img.shields.io/github/license/SciLifeLab/Sarek.svg
 [license-link]: https://github.com/SciLifeLab/Sarek/blob/master/LICENSE
 [nbis-link]: https://www.nbis.se/
-[nextflow-badge]: https://img.shields.io/badge/nextflow-%E2%89%A50.25.0-brightgreen.svg
+[nextflow-badge]: https://img.shields.io/badge/nextflow-%E2%89%A50.31.0-brightgreen.svg
 [nextflow-link]: https://www.nextflow.io/
 [ngi-link]: https://ngisweden.scilifelab.se/
 [scilifelab-link]: https://www.scilifelab.se/

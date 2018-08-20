@@ -5,9 +5,21 @@ BUILD=false
 KEEP=false
 GENOME=smallGRCh37
 PROFILE=singularity
-SAMPLE=data/tsv/tiny.tsv
+SAMPLE=Sarek-data/testdata/tsv/tiny.tsv
 TEST=ALL
 TRAVIS=${TRAVIS:-false}
+
+TMPDIR=`pwd`/tmp
+mkdir -p $TMPDIR
+export NXF_SINGULARITY_CACHEDIR=$TMPDIR
+export NXF_TEMP=$TMPDIR
+
+export SINGULARITY_TMPDIR=$TMPDIR
+export SINGULARITY_CACHEDIR=$TMPDIR
+
+
+# remove Reference directory
+rm -rf References
 
 while [[ $# -gt 0 ]]
 do
@@ -47,26 +59,31 @@ do
   esac
 done
 
-function nf_test() {
-  echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE --genome $GENOME -resume --verbose$(tput sgr0)"
-  nextflow run $@ -profile $PROFILE --genome $GENOME -resume --genome_base $PWD/References/$GENOME --verbose
-}
-
 function run_wrapper() {
   ./scripts/wrapper.sh $@ --profile $PROFILE --genome $GENOME --genomeBase $PWD/References/$GENOME --verbose
 }
 
 function clean_repo() {
-  if [[ $TRAVIS == false ]] && [[ $KEEP == true ]]
+  if [[ $TRAVIS == false ]] && [[ $KEEP == false ]]
   then
-    rm -rf work .nextflow* Preprocessing Reports Annotation VariantCalling Results
+    echo "$(tput setaf 1)Cleaning directory$(tput sgr0)"
+    rm -rf work .nextflow* Annotation Preprocessing Reports Results VariantCalling
   fi
 }
 
 # Build references only for smallGRCh37
 if [[ $GENOME == smallGRCh37 ]] && [[ $TEST != BUILDCONTAINERS ]] && [[ BUILD ]]
 then
-  nf_test buildReferences.nf --download --outDir References/$GENOME
+  if [[ -z "$(ls -A Sarek-data)" ]]
+  then
+    git submodule init
+    git submodule update
+  fi
+  if [[ ! -d References ]]
+  then
+    echo "$(tput setaf 1)Building references$(tput sgr0)"
+    nextflow run buildReferences.nf --refDir Sarek-data/reference --outDir References/$GENOME -profile $PROFILE --genome $GENOME --verbose
+  fi
   # Remove images only on TRAVIS
   if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
   then
@@ -79,38 +96,37 @@ fi
 
 if [[ ALL,DIR =~ $TEST ]]
 then
-  run_wrapper --germline --sampleDir data/tiny/tiny/normal
+  run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal
   clean_repo
 fi
 
 if [[ ALL,STEP =~ $TEST ]]
 then
-  run_wrapper --germline --sample $SAMPLE
-  run_wrapper --germline --step realign --noReports
+  run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal
   run_wrapper --germline --step recalibrate --noReports
   clean_repo
 fi
 
 if [[ ALL,GERMLINE =~ $TEST ]]
 then
-  run_wrapper --germline --sampleDir data/tiny/tiny/normal --variantCalling --tools HaplotypeCaller
+  run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal --variantCalling --tools HaplotypeCaller
   clean_repo
 fi
 
 if [[ ALL,TOOLS =~ $TEST ]]
 then
-  run_wrapper --somatic --sample $SAMPLE --variantCalling  --tools FreeBayes,HaplotypeCaller,MuTect1,MuTect2
+  run_wrapper --somatic --sample $SAMPLE --variantCalling  --tools FreeBayes,HaplotypeCaller,Mutect2
 fi
 
 if [[ ALL,MANTA =~ $TEST ]]
 then
-  run_wrapper --somatic --sample data/tsv/tiny-manta.tsv --variantCalling --tools Manta --noReports
-  run_wrapper --somatic --sample data/tsv/tiny-manta.tsv --variantCalling --tools Manta,Strelka --noReports --strelkaBP
+  run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-manta.tsv --variantCalling --tools Manta --noReports
+  run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-manta.tsv --variantCalling --tools Manta,Strelka --noReports --strelkaBP
   clean_repo
 fi
 
 
-if [[ ALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
+if [[ ALL,ANNOTATEALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
 then
   if [[ $TEST = ANNOTATESNPEFF ]]
   then
@@ -118,9 +134,9 @@ then
   elif [[ $TEST = ANNOTATEVEP ]]
   then
     ANNOTATOR=VEP
-  elif  [[ $TEST = ALL ]]
+  elif [[ ALL,ANNOTATEALL =~ $TEST ]]
   then
-    ANNOTATOR=snpEFF,VEP
+    ANNOTATOR=merge,snpEFF,VEP
   fi
   if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
   then
@@ -131,13 +147,12 @@ then
     rm -rf work/singularity/sarek-latest.img
     rm -rf work/singularity/picard-latest.img
   fi
-  run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz --noReports
-  run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF data/tiny/vcf/Strelka_1234N_variants.vcf.gz,data/tiny/vcf/Strelka_9876T_variants.vcf.gz
+  run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF Sarek-data/testdata/vcf/Strelka_1234N_variants.vcf.gz --noReports
+  run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF Sarek-data/testdata/vcf/Strelka_1234N_variants.vcf.gz,Sarek-data/testdata/vcf/Strelka_9876T_variants.vcf.gz
   clean_repo
 fi
 
 if [[ ALL,BUILDCONTAINERS =~ $TEST ]] && [[ $PROFILE == docker ]]
 then
-  nf_test buildContainers.nf --docker --containers fastqc,gatk,igvtools,multiqc,mutect1,picard,qualimap,runallelecount,r-base,snpeff,sarek
-  clean_repo
+  ./scripts/do_all.sh --genome $GENOME
 fi

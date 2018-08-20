@@ -5,6 +5,73 @@ This small tutorial will explain to you how to install and run Sarek on a small 
 For more information about `bianca`, follow the [`bianca` user guide](http://uppmax.uu.se/support/user-guides/bianca-user-guide/).
 For more information about using Singularity with UPPMAX, follow the [Singularity UPPMAX guide](https://www.uppmax.uu.se/support-sv/user-guides/singularity-user-guide/).
 
+## Install Nextflow
+
+```bash
+# Connect to rackham
+> ssh -AX [USER]@rackham.uppmax.uu.se
+# Or just open a terminal
+
+# create directories
+> mkdir install
+> mkdir install/bin
+> cd install/bin
+
+# Install Nextflow
+> curl -s https://get.nextflow.io | bash
+> cd ..
+
+# Archive Nextflow
+> tar czvf nextflow_v[xx.yy.zz].tgz .nextflow bin/nextflow
+
+# Send the tar to bianca (here using sftp)
+# For FileZilla follow the bianca user guide
+> sftp [USER]-[PROJECT]@bianca-sftp.uppmax.uu.se:[USER]-[PROJECT]
+> put nextflow_v[xx.yy.zz].tgz
+
+# Connect to bianca
+> ssh -A [USER]-[PROJECT]@bianca.uppmax.uu.se
+
+# Go to your project
+> cd /castor/project/proj_nobackup
+
+# Make and go into a Nextflow directoy
+> mkdir tools
+> mkdir tools/nextflow
+> cd tools/nextflow
+
+# Copy the tar from wharf to the project
+> cp /castor/project/proj_nobackup/wharf/[USER]/[USER]-[PROJECT]/nextflow_v[xx.yy.zz].tgz /castor/project/proj_nobackup/tools/nextflow
+
+# extract Nextflow
+> tar xzvf nextflow_v[xx.yy.zz].tgz
+
+# Move files
+> mv .nextflow nextflow_v[xx.yy.zz]
+> mv bin nextflow_v[xx.yy.zz]/bin
+
+# Establish permission for some files
+> chmod 755 nextflow_v[xx.yy.zz]/bin/nextflow
+> chmod 660 nextflow_v[xx.yy.zz]/framework/[xx.yy.zz]/nextflow-[xx.yy.zz]-one.jar
+
+# If you want other people to use it
+# Be sure that your group has rights to the directory as well
+
+> chown -R .[PROJECT] nextflow_v[xx.yy.zz]
+
+# Clean directory
+> rm nextflow_v[xx.yy.zz].tgz
+
+# And everytime you're launching Nextflow, don't forget to export the following ENV variables
+# Or add them to your .bashrc file
+> export NXF_HOME=/castor/project/proj/nobackup/tools/nextflow/nextflow_v[xx.yy.zz]
+> export PATH=${NXF_HOME}/bin:${PATH}
+> export NXF_TEMP=$SNIC_TMP
+> export NXF_LAUNCHER=$SNIC_TMP
+```
+
+## Install Sarek
+
 Sarek use Singularity containers to package all the different tools.
 
 As `bianca` is secure, no direct download is available, so Sarek and the Singularity containers will have to be installed and updated manually.
@@ -20,6 +87,11 @@ All Reference files are already stored in `bianca`.
 
 # Clone the repository
 > git clone https://github.com/SciLifeLab/Sarek.git
+
+# If you want to include the test data, you should use --recursive
+> git clone --recursive https://github.com/SciLifeLab/Sarek.git
+
+# Go to the newly created directory
 > cd Sarek
 
 # It is also possible to checkout a specific version using
@@ -27,6 +99,20 @@ All Reference files are already stored in `bianca`.
 
 # Use our script to make an archive to send to bianca
 > ./scripts/makeSnapshot.sh
+
+# Or you can also include the test data in this archive using git-archive-all
+# Install pip
+> curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+> python get-pip.py
+
+# If it fails due to permission, you could consider using
+> python get-pip.py --user
+
+# Install git-archive-all using pip
+> pip install git-archive-all
+# If you used --user before, you might want to do that here too
+> pip install git-archive-all --user
+> ./scripts/makeSnapshot.sh --include-test-data
 
 # You will get this message in your terminal
 Wrote Sarek-[snapID].tar.gz
@@ -59,7 +145,11 @@ Wrote Sarek-[snapID].tar.gz
 > cp /castor/project/proj_nobackup/wharf/[USER]/[USER]-[PROJECT]/Sarek-[snapID].tgz /castor/project/proj_nobackup/Sarek
 
 # extract Sarek
-> tar -xvzf Sarek-[snapID].tgz
+> tar xvzf Sarek-[snapID].tgz
+
+# If you want other people to use it
+# Be sure that your group has rights to the directory as well
+> chown -R .[PROJECT] Sarek-[snapID]
 
 # Make a symbolic link to the extracted repository
 > ln -s Sarek-[snapID] default

@@ -46,19 +46,19 @@ do
     esac
 done
 
-if [ $GENOME = smallGRCh37 ]
+if [[ $GENOME = smallGRCh37 ]]
 then
-    $GENOME = GRCh37
+    GENOME=GRCh37
 fi
 
 function toLower() {
     echo $1 | tr '[:upper:]' '[:lower:]'
 }
 
-if [ $TOOL = docker ] && [ GRCh37,GRCh38 =~ $GENOME ]
+if [[ $TOOL = docker ]] && [[ GRCh37,GRCh38 =~ $GENOME ]]
 then
-    nextflow run buildContainers.nf -profile ${PROFILE} --verbose --docker ${PUSH} --repository ${REPOSITORY} --tag ${TAG} --containers fastqc,freebayes,gatk,igvtools,multiqc,mutect1,picard,qualimap,r-base,runallelecount,sarek,snpeff
+    nextflow run buildContainers.nf -profile ${PROFILE} --verbose --docker ${PUSH} --repository ${REPOSITORY} --tag ${TAG} --containers r-base,runallelecount,sarek,snpeff
     nextflow run buildContainers.nf -profile ${PROFILE} --verbose --docker ${PUSH} --repository ${REPOSITORY} --tag ${TAG} --containers snpeff$(toLower ${GENOME}),vep$(toLower ${GENOME})
 else
-    nextflow run buildContainers.nf -profile ${PROFILE} --verbose --singularity --repository ${REPOSITORY} --tag ${TAG} --containerPath containers/ --containers fastqc,freebayes,gatk,igvtools,multiqc,mutect1,picard,qualimap,r-base,runallelecount,sarek,snpeff$(toLower ${GENOME}),vep$(toLower ${GENOME})
+    nextflow run buildContainers.nf -profile ${PROFILE} --verbose --singularity --repository ${REPOSITORY} --tag ${TAG} --containerPath containers/ --containers r-base,runallelecount,sarek,snpeff$(toLower ${GENOME}),vep$(toLower ${GENOME})
 fi

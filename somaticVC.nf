@@ -18,7 +18,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
  Marcel Martin <marcel.martin@scilifelab.se> [@marcelm]
  Björn Nystedt <bjorn.nystedt@scilifelab.se> [@bjornnystedt]
  Pall Olason <pall.olason@scilifelab.se> [@pallolason]
- Pelin Sahlén <pelin.akan@scilifelab.se> [@pelinakan]
 --------------------------------------------------------------------------------
  @Homepage
  http://opensource.scilifelab.se/projects/sarek/
@@ -30,10 +29,9 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files
  - RunBamQC - Run qualimap BamQC on recalibrated BAM files
  - CreateIntervalBeds - Create and sort intervals into bed files
- - RunMutect1 - Run MuTect1 for Variant Calling (Parallelized processes)
  - RunMutect2 - Run MuTect2 for Variant Calling (Parallelized processes)
  - RunFreeBayes - Run FreeBayes for Variant Calling (Parallelized processes)
- - ConcatVCF - Merge results from MuTect1 and MuTect2
+ - ConcatVCF - Merge results from paralellized variant callers
  - RunStrelka - Run Strelka for Variant Calling
  - RunManta - Run Manta for Structural Variant Calling
  - RunSingleManta - Run Manta for Single Structural Variant Calling
@@ -66,20 +64,17 @@ if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <U
 
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
 
-directoryMap = defineDirectoryMap()
+directoryMap = SarekUtils.defineDirectoryMap(params.outDir)
 referenceMap = defineReferenceMap()
 toolList = defineToolList()
 
-if (!checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
-if (!checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
+if (!SarekUtils.checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
+if (!SarekUtils.checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
 
 if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
   referenceMap.intervals = file("$workflow.projectDir/repeats/tiny_${params.genome}.list")
 }
 
-// TODO
-// MuTect and Mutect2 could be run without a recalibrated BAM (they support
-// the --BQSR option), but this is not implemented, yet.
 // TODO
 // FreeBayes does not need recalibrated BAMs, but we need to test whether
 // the channels are set up correctly when we disable it
@@ -93,10 +88,10 @@ else tsvPath = "${directoryMap.recalibrated}/recalibrated.tsv"
 bamFiles = Channel.empty()
 if (tsvPath) {
   tsvFile = file(tsvPath)
-  bamFiles = extractBams(tsvFile)
+  bamFiles = SarekUtils.extractBams(tsvFile, "somatic")
 } else exit 1, 'No sample were defined, see --help'
 
-(patientGenders, bamFiles) = extractGenders(bamFiles)
+(patientGenders, bamFiles) = SarekUtils.extractGenders(bamFiles)
 
 /*
 ================================================================================
@@ -138,10 +133,7 @@ process RunSamtoolsStats {
 
   when: !params.noReports
 
-  script:
-  """
-  samtools stats ${bam} > ${bam}.samtools.stats.out
-  """
+  script: QC.samtoolsStats(bam)
 }
 
 if (params.verbose) samtoolsStatsReport = samtoolsStatsReport.view {
@@ -162,14 +154,7 @@ process RunBamQC {
 
   when: !params.noReports && !params.noBAMQC
 
-  script:
-  """
-  qualimap --java-mem-size=${task.memory.toGiga()}G \
-  bamqc \
-  -bam ${bam} \
-  -outdir ${idSample} \
-  -outformat HTML
-  """
+  script: QC.bamQC(bam,idSample,task.memory)
 }
 
 if (params.verbose) bamQCreport = bamQCreport.view {
@@ -211,10 +196,9 @@ bamsTumor = bamsTumor.map { idPatient, status, idSample, bam, bai -> [idPatient,
 
 // We know that MuTect2 (and other somatic callers) are notoriously slow.
 // To speed them up we are chopping the reference into smaller pieces.
-// (see repeats/centromeres.list).
 // Do variant calling by this intervals, and re-merge the VCFs.
-// Since we are on a cluster, this can parallelize the variant call processes.
-// And push down the variant call wall clock time significanlty.
+// Since we are on a cluster or a multi-CPU machine, this can parallelize the 
+// variant call processes and push down the variant call wall clock time significanlty.
 
 process CreateIntervalBeds {
   tag {intervals.fileName}
@@ -292,52 +276,14 @@ bamsAll = bamsAll.map {
 }
 
 // Manta and Strelka
-(bamsForManta, bamsForStrelka, bamsAll) = bamsAll.into(3)
+(bamsForManta, bamsForStrelka, bamsForStrelkaBP, bamsAll) = bamsAll.into(4)
 
 bamsTumorNormalIntervals = bamsAll.spread(bedIntervals)
 
-// MuTect1, MuTect2, FreeBayes
-(bamsFMT1, bamsFMT2, bamsFFB) = bamsTumorNormalIntervals.into(3)
+// MuTect2, FreeBayes
+( bamsFMT2, bamsFFB) = bamsTumorNormalIntervals.into(3)
 
-process RunMutect1 {
-  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
-
-  input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from bamsFMT1
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(cosmic), file(cosmicIndex) from Channel.value([
-      referenceMap.genomeFile,
-      referenceMap.genomeIndex,
-      referenceMap.genomeDict,
-      referenceMap.dbsnp,
-      referenceMap.dbsnpIndex,
-      referenceMap.cosmic,
-      referenceMap.cosmicIndex
-    ])
-
-  output:
-    set val("mutect1"), idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect1Output
-
-  when: 'mutect1' in tools && !params.onlyQC
-
-  script:
-  """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar \$MUTECT_HOME/muTect.jar \
-  -T MuTect \
-  -R ${genomeFile} \
-  --cosmic ${cosmic} \
-  --dbsnp ${dbsnp} \
-  -I:normal ${bamNormal} \
-  -I:tumor ${bamTumor} \
-  -L ${intervalBed} \
-  --disable_auto_index_creation_and_locking_when_reading_rods \
-  --out ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.call_stats.out \
-  --vcf ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
-  """
-}
-
-mutect1Output = mutect1Output.groupTuple(by:[0,1,2,3])
-
+// This will give as a list of unfiltered calls for MuTect2. 
 process RunMutect2 {
   tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
 
@@ -360,19 +306,18 @@ process RunMutect2 {
 
   script:
   """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar \$GATK_HOME/GenomeAnalysisTK.jar \
-  -T MuTect2 \
-  -R ${genomeFile} \
-  --cosmic ${cosmic} \
-  --dbsnp ${dbsnp} \
-  -I:normal ${bamNormal} \
-  -I:tumor ${bamTumor} \
-  --disable_auto_index_creation_and_locking_when_reading_rods \
-  -L ${intervalBed} \
-  -o ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
+	gatk --java-options "-Xmx${task.memory.toGiga()}g" \
+		Mutect2 \
+		-R ${genomeFile}\
+		-I ${bamTumor}  -tumor ${idSampleTumor} \
+		-I ${bamNormal} -normal ${idSampleNormal} \
+		-L ${intervalBed} \
+		-O ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
   """
 }
+//		--germline_resource af-only-gnomad.vcf.gz \
+//		--normal_panel pon.vcf.gz \
+//		--dbsnp ${dbsnp} \
 
 mutect2Output = mutect2Output.groupTuple(by:[0,1,2,3])
 
@@ -382,6 +327,7 @@ process RunFreeBayes {
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from bamsFFB
     file(genomeFile) from Channel.value(referenceMap.genomeFile)
+    file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
 
   output:
     set val("freebayes"), idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into freebayesOutput
@@ -411,7 +357,7 @@ freebayesOutput = freebayesOutput.groupTuple(by:[0,1,2,3])
 // we are merging the VCFs that are called separatelly for different intervals
 // so we can have a single sorted VCF containing all the calls for a given caller
 
-vcfsToMerge = mutect1Output.mix(mutect2Output, freebayesOutput)
+vcfsToMerge = mutect2Output.mix(freebayesOutput)
 if (params.verbose) vcfsToMerge = vcfsToMerge.view {
   "VCFs To be merged:\n\
   Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
@@ -428,15 +374,15 @@ process ConcatVCF {
     file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
 
   output:
-    set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz") into vcfConcatenated
-    file("*.vcf.gz.tbi") into vcfConcatenatedTbi
+    set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfConcatenated
 
-  when: ('mutect1' in tools || 'mutect2' in tools || 'freebayes' in tools ) && !params.onlyQC
+  when: ( 'mutect2' in tools || 'freebayes' in tools ) && !params.onlyQC
 
   script:
   outputFile = "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
 
   """
+	set -euo pipefail
   # first make a header from one of the VCF intervals
   # get rid of interval information only from the GATK command-line, but leave the rest
   FIRSTVCF=\$(ls *.vcf | head -n 1)
@@ -504,7 +450,7 @@ process RunStrelka {
 
   script:
   """
-  \$STRELKA_INSTALL_PATH/bin/configureStrelkaSomaticWorkflow.py \
+  configureStrelkaSomaticWorkflow.py \
   --tumor ${bamTumor} \
   --normal ${bamNormal} \
   --referenceFasta ${genomeFile} \
@@ -544,13 +490,13 @@ process RunManta {
 
   output:
     set val("manta"), idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into mantaOutput
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file("*.candidateSmallIndels.vcf.gz"), file("*.candidateSmallIndels.vcf.gz.tbi") into mantaToStrelka
+    set idPatient, idSampleNormal, idSampleTumor, file("*.candidateSmallIndels.vcf.gz"), file("*.candidateSmallIndels.vcf.gz.tbi") into mantaToStrelka
 
   when: 'manta' in tools && !params.onlyQC
 
   script:
   """
-  \$MANTA_INSTALL_PATH/bin/configManta.py \
+  configManta.py \
   --normalBam ${bamNormal} \
   --tumorBam ${bamTumor} \
   --reference ${genomeFile} \
@@ -603,7 +549,7 @@ process RunSingleManta {
 
   script:
   """
-  \$MANTA_INSTALL_PATH/bin/configManta.py \
+  configManta.py \
   --tumorBam ${bam} \
   --reference ${genomeFile} \
   --runDir Manta
@@ -632,6 +578,16 @@ if (params.verbose) singleMantaOutput = singleMantaOutput.view {
   Index : ${it[4].fileName}"
 }
 
+// Running Strelka Best Practice with Manta indel candidates
+// For easier joining, remaping channels to idPatient, idSampleNormal, idSampleTumor...
+
+bamsForStrelkaBP = bamsForStrelkaBP.map {
+  idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor ->
+  [idPatientNormal, idSampleNormal, idSampleTumor, bamNormal, baiNormal, bamTumor, baiTumor]
+}.join(mantaToStrelka, by:[0,1,2]).map {
+  idPatientNormal, idSampleNormal, idSampleTumor, bamNormal, baiNormal, bamTumor, baiTumor, mantaCSI, mantaCSIi ->
+  [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor, mantaCSI, mantaCSIi]
+}
 
 process RunStrelkaBP {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
@@ -639,7 +595,7 @@ process RunStrelkaBP {
   publishDir directoryMap.strelkabp, mode: 'link'
 
   input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(mantaCSI), file(mantaCSIi) from mantaToStrelka
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(mantaCSI), file(mantaCSIi) from bamsForStrelkaBP
     set file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -653,7 +609,7 @@ process RunStrelkaBP {
 
   script:
   """
-  \$STRELKA_INSTALL_PATH/bin/configureStrelkaSomaticWorkflow.py \
+  configureStrelkaSomaticWorkflow.py \
   --tumor ${bamTumor} \
   --normal ${bamNormal} \
   --referenceFasta ${genomeFile} \
@@ -777,7 +733,11 @@ if (params.verbose) ascatOutput = ascatOutput.view {
 (strelkaIndels, strelkaSNVS) = strelkaOutput.into(2)
 (mantaSomaticSV, mantaDiploidSV) = mantaOutput.into(2)
 
-vcfForBCFtools = Channel.empty().mix(
+vcfForQC = Channel.empty().mix(
+  vcfConcatenated.map {
+    variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf, tbi ->
+    [variantcaller, vcf]
+  },
   mantaDiploidSV.map {
     variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf, tbi ->
     [variantcaller, vcf[2]]
@@ -799,6 +759,8 @@ vcfForBCFtools = Channel.empty().mix(
     [variantcaller, vcf[1]]
   })
 
+(vcfForBCFtools, vcfForVCFtools) = vcfForQC.into(2)
+
 process RunBcftoolsStats {
   tag {vcf}
 
@@ -808,14 +770,11 @@ process RunBcftoolsStats {
     set variantCaller, file(vcf) from vcfForBCFtools
 
   output:
-    file ("${vcf.baseName}.bcf.tools.stats.out") into bcfReport
+    file ("${vcf.simpleName}.bcf.tools.stats.out") into bcfReport
 
   when: !params.noReports
 
-  script:
-  """
-  bcftools stats ${vcf} > ${vcf.baseName}.bcf.tools.stats.out
-  """
+  script: QC.bcftools(vcf)
 }
 
 if (params.verbose) bcfReport = bcfReport.view {
@@ -825,16 +784,103 @@ if (params.verbose) bcfReport = bcfReport.view {
 
 bcfReport.close()
 
+process RunVcftools {
+  tag {vcf}
+
+  publishDir directoryMap.vcftools, mode: 'link'
+
+  input:
+    set variantCaller, file(vcf) from vcfForVCFtools
+
+  output:
+    file ("${vcf.simpleName}.*") into vcfReport
+
+  when: !params.noReports
+
+  script: QC.vcftools(vcf)
+}
+
+if (params.verbose) vcfReport = vcfReport.view {
+  "VCFTools stats report:\n\
+  File  : [${it.fileName}]"
+}
+
+vcfReport.close()
+
+process GetVersionGATK {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: !params.onlyQC
+  script: QC.getVersionGATK()
+}
+
+process GetVersionFreeBayes {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: 'freebayes' in tools && !params.onlyQC
+
+  script:
+  """
+  freebayes --version > v_freebayes.txt
+  """
+}
+
+process GetVersionAlleleCount {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: 'ascat' in tools && !params.onlyQC
+
+  script:
+  """
+  alleleCounter --version > v_allelecount.txt
+  """
+}
+
+process GetVersionASCAT {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: 'ascat' in tools && !params.onlyQC
+
+  script:
+  """
+  R --version > v_r.txt
+  cat ${baseDir}/scripts/ascat.R | grep "ASCAT version" > v_ascat.txt
+  """
+}
+
+process GetVersionStrelka {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: 'strelka' in tools && !params.onlyQC
+  script: QC.getVersionStrelka()
+}
+
+process GetVersionManta {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: 'manta' in tools && !params.onlyQC
+  script: QC.getVersionManta()
+}
+
+process GetVersionBCFtools {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: !params.noReports
+  script: QC.getVersionBCFtools()
+}
+
+process GetVersionVCFtools {
+  publishDir directoryMap.version, mode: 'link'
+  output: file("v_*.txt")
+  when: !params.noReports
+  script: QC.getVersionVCFtools()
+}
+
 /*
 ================================================================================
 =                               F U N C T I O N S                              =
 ================================================================================
 */
-
-def checkFileExtension(it, extension) {
-  // Check file extension
-  if (!it.toString().toLowerCase().endsWith(extension.toLowerCase())) exit 1, "File: ${it} has the wrong extension: ${extension} see --help for more information"
-}
 
 def checkParameterExistence(it, list) {
   // Check parameter existence
@@ -845,55 +891,14 @@ def checkParameterExistence(it, list) {
   return true
 }
 
-def checkParameterList(list, realList) {
-  // Loop through all parameters to check their existence and spelling
-  return list.every{ checkParameterExistence(it, realList) }
-}
-
 def checkParamReturnFile(item) {
   params."${item}" = params.genomes[params.genome]."${item}"
   return file(params."${item}")
 }
 
-def checkReferenceMap(referenceMap) {
-  // Loop through all the references files to check their existence
-  referenceMap.every {
-    referenceFile, fileToCheck ->
-    checkRefExistence(referenceFile, fileToCheck)
-  }
-}
-
-def checkRefExistence(referenceFile, fileToCheck) {
-  if (fileToCheck instanceof List) return fileToCheck.every{ checkRefExistence(referenceFile, it) }
-  def f = file(fileToCheck)
-  // this is an expanded wildcard: we can assume all files exist
-  if (f instanceof List && f.size() > 0) return true
-  else if (!f.exists()) {
-    log.info  "Missing references: ${referenceFile} ${fileToCheck}"
-    return false
-  }
-  return true
-}
-
 def checkUppmaxProject() {
   // check if UPPMAX project number is specified
   return !(workflow.profile == 'slurm' && !params.project)
-}
-
-def defineDirectoryMap() {
-  return [
-    'recalibrated'     : "${params.outDir}/Preprocessing/Recalibrated",
-    'bamQC'            : "${params.outDir}/Reports/bamQC",
-    'bcftoolsStats'    : "${params.outDir}/Reports/BCFToolsStats",
-    'samtoolsStats'    : "${params.outDir}/Reports/SamToolsStats",
-    'ascat'            : "${params.outDir}/VariantCalling/Ascat",
-    'freebayes'        : "${params.outDir}/VariantCalling/FreeBayes",
-    'manta'            : "${params.outDir}/VariantCalling/Manta",
-    'mutect1'          : "${params.outDir}/VariantCalling/MuTect1",
-    'mutect2'          : "${params.outDir}/VariantCalling/MuTect2",
-    'strelka'          : "${params.outDir}/VariantCalling/Strelka",
-    'strelkabp'        : "${params.outDir}/VariantCalling/StrelkaBP"
-  ]
 }
 
 def defineReferenceMap() {
@@ -923,47 +928,12 @@ def defineToolList() {
     'freebayes',
     'haplotypecaller',
     'manta',
-    'mutect1',
     'mutect2',
     'strelka'
   ]
 }
 
-def extractBams(tsvFile) {
-  // Channeling the TSV file containing BAM.
-  // Format is: "subject gender status sample bam bai"
-  Channel
-    .from(tsvFile.readLines())
-    .map{line ->
-      def list      = returnTSV(line.split(),6)
-      def idPatient = list[0]
-      def gender    = list[1]
-      def status    = returnStatus(list[2].toInteger())
-      def idSample  = list[3]
-      def bamFile   = returnFile(list[4])
-      def baiFile   = returnFile(list[5])
-
-      checkFileExtension(bamFile,".bam")
-      checkFileExtension(baiFile,".bai")
-
-      [ idPatient, gender, status, idSample, bamFile, baiFile ]
-    }
-}
-
-def extractGenders(channel) {
-  def genders = [:]  // an empty map
-  channel = channel.map{ it ->
-    def idPatient = it[0]
-    def gender = it[1]
-    genders[idPatient] = gender
-
-    [idPatient] + it[2..-1]
-  }
-  [genders, channel]
-}
-
 def generateIntervalsForVC(bams, intervals) {
-
   def (bamsNew, bamsForVC) = bams.into(2)
   def (intervalsNew, vcIntervals) = intervals.into(2)
   def bamsForVCNew = bamsForVC.combine(vcIntervals)
@@ -990,7 +960,6 @@ def helpMessage() {
   log.info "       Option to configure which tools to use in the workflow."
   log.info "         Different tools to be separated by commas."
   log.info "       Possible values are:"
-  log.info "         mutect1 (use MuTect1 for VC)"
   log.info "         mutect2 (use MuTect2 for VC)"
   log.info "         freebayes (use FreeBayes for VC)"
   log.info "         strelka (use Strelka for VC)"
@@ -1059,12 +1028,6 @@ def returnStatus(it) {
   return it
 }
 
-def returnTSV(it, number) {
-  // return TSV if it has the correct number of items in row
-  if (it.size() != number) exit 1, "Malformed row in TSV file: ${it}, see --help for more information"
-  return it
-}
-
 def sarekMessage() {
   // Display Sarek message
   log.info "Sarek - Workflow For Somatic And Germline Variations ~ ${params.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
@@ -1072,6 +1035,7 @@ def sarekMessage() {
 
 def startMessage() {
   // Display start message
+  SarekUtils.sarek_ascii()
   this.sarekMessage()
   this.minimalInformationMessage()
 }

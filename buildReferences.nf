@@ -18,7 +18,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
  Marcel Martin <marcel.martin@scilifelab.se> [@marcelm]
  Björn Nystedt <bjorn.nystedt@scilifelab.se> [@bjornnystedt]
  Pall Olason <pall.olason@scilifelab.se> [@pallolason]
- Pelin Sahlén <pelin.akan@scilifelab.se> [@pelinakan]
 --------------------------------------------------------------------------------
  @Homepage
  http://opensource.scilifelab.se/projects/sarek/
@@ -30,7 +29,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - ProcessReference - Download all references if needed
  - DecompressFile - Extract files if needed
  - BuildBWAindexes - Build indexes for BWA
- - BuildPicardIndex - Build index with Picard
+ - BuildReferenceIndex - Build index for FASTA refs
  - BuildSAMToolsIndex - Build index with SAMTools
  - BuildVCFIndex - Build index for VCF files
 ================================================================================
@@ -56,14 +55,7 @@ if (params.help) exit 0, helpMessage()
 if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
-if (!params.download && params.refDir == "" ) exit 1, "No --refDir specified"
-if (params.download && params.refDir != "" ) exit 1, "No need to specify --refDir"
-
-ch_referencesFiles = defReferencesFiles(params.genome)
-
-if (params.download && params.genome != "smallGRCh37") exit 1, "Not possible to download ${params.genome} references files"
-
-if (!params.download) ch_referencesFiles.each{checkFile(params.refDir + "/" + it)}
+ch_referencesFiles = Channel.fromPath("${params.refDir}/*")
 
 /*
 ================================================================================
@@ -73,37 +65,10 @@ if (!params.download) ch_referencesFiles.each{checkFile(params.refDir + "/" + it
 
 startMessage()
 
-process ProcessReference {
-  tag params.download ? {"Download: " + f_reference} : {"Link: " + f_reference}
-
-  input:
-    val(f_reference) from ch_referencesFiles
-
-  output:
-    file(f_reference) into ch_processedFiles
-
-  script:
-
-  if (params.download)
-  """
-  wget https://github.com/szilvajuhos/smallRef/raw/master/${f_reference}
-  """
-
-  else
-  """
-  ln -s ${params.refDir}/${f_reference} .
-  """
-}
-
-
-if (params.verbose) ch_processedFiles = ch_processedFiles.view {
-  "Files preprocessed  : ${it.fileName}"
-}
-
 ch_compressedfiles = Channel.create()
 ch_notCompressedfiles = Channel.create()
 
-ch_processedFiles
+ch_referencesFiles
   .choice(ch_compressedfiles, ch_notCompressedfiles) {it =~ ".(gz|tar.bz2)" ? 0 : 1}
 
 process DecompressFile {
@@ -132,26 +97,23 @@ if (params.verbose) ch_decompressedFiles = ch_decompressedFiles.view {
 }
 
 ch_fastaFile = Channel.create()
-ch_otherFiles = Channel.create()
-ch_vcfFiles = Channel.create()
+ch_fastaForBWA = Channel.create()
+ch_fastaReference = Channel.create()
+ch_fastaForSAMTools = Channel.create()
+ch_otherFile = Channel.create()
+ch_vcfFile = Channel.create()
 
 ch_decompressedFiles
-  .choice(ch_fastaFile, ch_vcfFiles, ch_otherFiles) {
+  .choice(ch_fastaFile, ch_vcfFile, ch_otherFile) {
     it =~ ".fasta" ? 0 :
     it =~ ".vcf" ? 1 : 2}
 
-(ch_fastaFile, ch_fastaFileToKeep) = ch_fastaFile.into(2)
-(ch_vcfFiles, ch_vcfFilesToKeep) = ch_vcfFiles.into(2)
+(ch_fastaForBWA, ch_fastaReference, ch_fastaForSAMTools, ch_fastaFileToKeep) = ch_fastaFile.into(4)
+(ch_vcfFile, ch_vcfFileToKeep) = ch_vcfFile.into(2)
 
 ch_notCompressedfiles
-  .mix(ch_otherFiles, ch_fastaFileToKeep, ch_vcfFilesToKeep)
+  .mix(ch_fastaFileToKeep, ch_vcfFileToKeep, ch_otherFile)
   .collectFile(storeDir: params.outDir)
-
-ch_fastaForBWA = Channel.create()
-ch_fastaForPicard = Channel.create()
-ch_fastaForSAMTools = Channel.create()
-
-ch_fastaFile.into(ch_fastaForBWA,ch_fastaForPicard,ch_fastaForSAMTools)
 
 process BuildBWAindexes {
   tag {f_reference}
@@ -175,29 +137,28 @@ if (params.verbose) bwaIndexes.flatten().view {
   "BWA index           : ${it.fileName}"
 }
 
-process BuildPicardIndex {
+process BuildReferenceIndex {
   tag {f_reference}
 
   publishDir params.outDir, mode: 'link'
 
   input:
-    file(f_reference) from ch_fastaForPicard
+    file(f_reference) from ch_fastaReference
 
   output:
-    file("*.dict") into ch_picardIndex
+    file("*.dict") into ch_referenceIndex
 
   script:
   """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar \$PICARD_HOME/picard.jar \
+  gatk --java-options "-Xmx${task.memory.toGiga()}g" \
   CreateSequenceDictionary \
-  REFERENCE=${f_reference} \
-  OUTPUT=${f_reference.baseName}.dict
+  --REFERENCE ${f_reference} \
+  --OUTPUT ${f_reference.baseName}.dict
   """
 }
 
-if (params.verbose) ch_picardIndex.view {
-  "Picard index        : ${it.fileName}"
+if (params.verbose) ch_referenceIndex.view {
+  "Reference index        : ${it.fileName}"
 }
 
 process BuildSAMToolsIndex {
@@ -227,14 +188,14 @@ process BuildVCFIndex {
   publishDir params.outDir, mode: 'link'
 
   input:
-    file(f_reference) from ch_vcfFiles
+    file(f_reference) from ch_vcfFile
 
   output:
     file("${f_reference}.idx") into ch_vcfIndex
 
   script:
   """
-  \$IGVTOOLS_HOME/igvtools index ${f_reference}
+  igvtools index ${f_reference}
   """
 }
 
@@ -294,9 +255,6 @@ def helpMessage() {
   this.sarekMessage()
   log.info "    Usage:"
   log.info "       nextflow run buildReferences.nf --refDir <pathToRefDir> --genome <genome>"
-  log.info "       nextflow run buildReferences.nf --download --genome smallGRCh37"
-  log.info "    --download"
-  log.info "       Download reference files. (only with --genome smallGRCh37)"
   log.info "    --refDir <Directoy>"
   log.info "       Specify a directory containing reference files."
   log.info "    --outDir <Directoy>"
@@ -336,6 +294,7 @@ def sarekMessage() {
 
 def startMessage() {
   // Display start message
+  SarekUtils.sarek_ascii()
   this.sarekMessage()
   this.minimalInformationMessage()
 }
