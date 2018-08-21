@@ -124,6 +124,10 @@ Wrote Sarek-[snapID].tar.gz
 
 # To get the containers
 # This script will need Singularity and Nextflow installed
+# If executed on Rackham: The script needs to be started from an interactive session 
+# with at least two cores. The scripts will write about 12 Gb data to ~/.singularity, 
+# so this amount of disk space needs to be available in the users home directory on Rackham.
+# 
 > ./scripts/do_all.sh --pull --tag <VERSION>
 
 # Send the containers to bianca using the same method
