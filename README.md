@@ -4,7 +4,7 @@
 
 [![Nextflow version][nextflow-badge]][nextflow-link]
 [![Travis build status][travis-badge]][travis-link]
-[![Join the chat at [gitter](gitter-link)][gitter-badge]][gitter-link]
+[![Join the chat on https://gitter.im/SciLifeLab/Sarek][gitter-badge]][gitter-link]
 
 [![MIT License][license-badge]][license-link]
 [![Sarek version][version-badge]][version-link]
