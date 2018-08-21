@@ -43,9 +43,10 @@ The worflow steps and tools used are as follows:
     * Map reads to Reference
         * [BWA](http://bio-bwa.sourceforge.net/)
     * Mark Duplicates
-        * [GATK](https://github.com/broadinstitute/gatk)
+        * [GATK MarkDuplicates](https://github.com/broadinstitute/gatk)
     * Base (Quality Score) Recalibration
-        * [GATK](https://github.com/broadinstitute/gatk)
+        * [GATK BaseRecalibrator](https://github.com/broadinstitute/gatk)
+        * [GATK ApplyBQSR](https://github.com/broadinstitute/gatk)
 2. **Germline variant calling** - `germlineVC.nf`
     * SNVs and small indels
         * [GATK HaplotyeCaller](https://github.com/broadinstitute/gatk)
