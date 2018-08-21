@@ -20,7 +20,8 @@
 Previously known as the Cancer Analysis Workflow (CAW),
 Sarek is a workflow designed to run analyses on WGS data from regular samples or tumour / normal pairs, including relapse samples if required.
 
-It's built using [Nextflow][nextflow-link], a bioinformatics domain specific language for workflow building. Software dependencies are handled using [Docker](https://www.docker.com) or [Singularity](http://singularity.lbl.gov) - container technologies that provide excellent reproducibility and ease of use.
+It's built using [Nextflow][nextflow-link], a domain specific language for workflow building.
+Software dependencies are handled using [Docker](https://www.docker.com) or [Singularity](http://singularity.lbl.gov) - container technologies that provide excellent reproducibility and ease of use.
 Singularity has been designed specifically for high-performance computing environments.
 This means that although Sarek has been primarily designed for use with the Swedish [UPPMAX HPC systems](https://www.uppmax.uu.se), it should be able to run on any system that supports these two tools.
 
@@ -39,21 +40,23 @@ You can choose which variant callers to use, plus the pipeline is capable of acc
 The worflow steps and tools used are as follows:
 
 1. **Preprocessing** - `main.nf` _(based on [GATK best practices](https://software.broadinstitute.org/gatk/best-practices/))_
-    * Read alignment
+    * Map reads to Reference
         * [BWA](http://bio-bwa.sourceforge.net/)
-    * Read realignment and recalibration of short-read data
-        * [GATK](https://github.com/broadgsa/gatk-protected)
+    * Mark Duplicates
+        * [GATK](https://github.com/broadinstitute/gatk)
+    * Base (Quality Score) Recalibration
+        * [GATK](https://github.com/broadinstitute/gatk)
 2. **Germline variant calling** - `germlineVC.nf`
     * SNVs and small indels
-        * [GATK HaplotyeCaller](https://github.com/broadgsa/gatk-protected)
-        * [Strelka](https://github.com/Illumina/strelka)
+        * [GATK HaplotyeCaller](https://github.com/broadinstitute/gatk)
+        * [Strelka2](https://github.com/Illumina/strelka)
     * Structural variants
         * [Manta](https://github.com/Illumina/manta)
 3. **Somatic variant calling** - `somaticVC.nf` _(optional)_
     * SNVs and small indels
-        * [MuTect2](https://github.com/broadgsa/gatk-protected)
+        * [MuTect2](https://github.com/broadinstitute/gatk)
         * [Freebayes](https://github.com/ekg/freebayes)
-        * [Strelka](https://github.com/Illumina/strelka)
+        * [Strelka2](https://github.com/Illumina/strelka)
     * Structural variants
         * [Manta](https://github.com/Illumina/manta)
     * Sample heterogeneity, ploidy and CNVs
@@ -61,7 +64,7 @@ The worflow steps and tools used are as follows:
 4. **Annotation** - `annotate.nf` _(optional)_
     * Variant annotation
         * [SnpEff](http://snpeff.sourceforge.net/)
-        * [VEP](https://www.ensembl.org/info/docs/tools/vep/index.html) (Variant Effect Predictor)
+        * [VEP (Variant Effect Predictor)](https://www.ensembl.org/info/docs/tools/vep/index.html)
 5. **Reporting** - `runMultiQC.nf`
     * Reporting
         * [MultiQC](http://multiqc.info)
