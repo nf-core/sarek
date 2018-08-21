@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#615](https://github.com/SciLifeLab/Sarek/pull/615) - Add presentation
 - [#615](https://github.com/SciLifeLab/Sarek/pull/615) - Update documentation
 - [#620](https://github.com/SciLifeLab/Sarek/pull/620) - Add `tmp/` to `.gitignore`
+- [#625](https://github.com/SciLifeLab/Sarek/pull/625) - Add [`pathfindr`](https://github.com/NBISweden/pathfindr) as a submodule
 
 ### `Changed`
 - [#608](https://github.com/SciLifeLab/Sarek/pull/608) - Update Nextflow required version
