@@ -1,3 +1,6 @@
 [submodule "Sarek-data"]
 	path = Sarek-data
 	url = https://github.com/SciLifeLab/Sarek-data.git
+[submodule "bin/pathfindr"]
+	path = bin/pathfindr
+	url = https://github.com/NBISweden/pathfindr.git
