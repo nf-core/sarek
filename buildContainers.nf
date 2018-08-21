@@ -87,8 +87,9 @@ process BuildDockerContainers {
   when: params.docker
 
   script:
+  path = container == "sarek" ? "${baseDir}" : "${baseDir}/containers/${container}/."
   """
-  docker build -t ${params.repository}/${container}:${params.tag} ${baseDir}/containers/${container}/.
+  docker build -t ${params.repository}/${container}:${params.tag} ${path}
   """
 }
 
