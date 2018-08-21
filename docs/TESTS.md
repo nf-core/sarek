@@ -77,7 +77,7 @@ nextflow run runMultiQC.nf -profile singularity
 ## Testing on a secure cluster
 On a secure cluster as bianca, with no internet access, you will need to download and transfer Sarek and the test data first.
 
-Follow the [installation guide for `bianca`](https://github.com/SciLifeLab/Sarek/blob/master/doc/INSTALL_BIANCA.md).
+Follow the [installation guide for `bianca`](https://github.com/SciLifeLab/Sarek/blob/master/docs/INSTALL_BIANCA.md).
 
 And then start the test at the `Build the references for the test data` step.
 
