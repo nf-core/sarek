@@ -178,6 +178,12 @@ And then Sarek can be used with:
 > nextflow run ~/Sarek/main.nf -profile slurm --project [PROJECT] ...
 ```
 
+This is an example of how to run Sarek Somaic with the tool Ascat and the genome assembly version GRCh37:
+
+```bash
+> nextflow run ~/Sarek/somaticVC.nf -profile slurm --project [PROJECT] --tools ascat --sample [SAMPLE.TSV] --genome GRCh37 --genome_base /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37
+```
+
 ## Update Sarek
 
 Repeat the same steps as for installing Sarek, and once the tar has been extracted, you can replace the link.
