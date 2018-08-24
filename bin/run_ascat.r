@@ -39,7 +39,7 @@ ascat.output <- ascat.runAscat(ascat.bc, gamma=1)
 #write.table(ascat.output$segments, file=paste(tumorname, ".segments.txt", sep=""), sep="\t", quote=F, row.names=F)
 
 #Write out CNVs in bed format
-cnvs=ascat.output$segments[ascat.output$segments[,"nMajor"]!=1 | ascat.output$segments[,"nMinor"]!=1,2:6]
+cnvs=ascat.output$segments[2:6]
 write.table(cnvs, file=paste(tumorname,".cnvs.txt",sep=""), sep="\t", quote=F, row.names=F, col.names=T)
 
 #Write out purity and ploidy info

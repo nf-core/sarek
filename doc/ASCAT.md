@@ -35,7 +35,7 @@ Calculation of LogR and BAF based on AlleleCount output is done as in [runASCAT.
 
 ### Loci file
 
-The loci file was created based on the 1000Genomes latest release (phase 3, releasedate 20130502), available [here](ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp//release/20130502/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5b.20130502.sites.vcf.gz). The following filter was applied: Only bi-allelc SNPs with minor allele frequencies > 0.3. The filtered file can be found on [export.uppmax.uu.se](https://export.uppmax.uu.se/b2015110/caw-references/b37/1000G_phase3_20130502_SNP_maf0.3.loci.tar.bz2) and is stored on Milou in:
+The loci file was created based on the 1000Genomes latest release (phase 3, releasedate 20130502), available [here](ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp//release/20130502/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5b.20130502.sites.vcf.gz). The following filter was applied: Only bi-allelc SNPs with minor allele frequencies > 0.3. The filtered file can be found on [export.uppmax.uu.se](https://export.uppmax.uu.se/b2015110/caw-references/b37/1000G_phase3_20130502_SNP_maf0.3.loci.tar.bz2) and is stored on Uppmax in:
 
 ```
 /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/1000G_phase3_20130502_SNP_maf0.3.loci
@@ -53,7 +53,7 @@ Using the web interface to liftOver at [genome.ucsc.edu](https://genome.ucsc.edu
 more hglft_genome_5834_13aba0.bed | awk 'BEGIN{FS="chr"} {print $2}' | awk 'BEGIN{FS="-"} {print $1}' | awk 'BEGIN{FS=":";OFS="\t"} {print $1,$2}' > 1000G_phase3_GRCh38_maf0.3.loci
 ```
 
-The loci file in GRCh38 coordinates is stored on Milou in:
+The loci file in GRCh38 coordinates is stored on Uppmax in:
 
 ```
 /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/1000G_phase3_GRCh38_maf0.3.loci
@@ -82,11 +82,17 @@ This creates the BAF and LogR data for the tumor and normal samples, to be used 
 
 ### Run ASCAT
 
-The script "run_ascat.r" can be used to run ASCAT in the simplest possible way without compensating for the local CG content across the genome. It calls the main ASCAT R script [ascat.R](https://github.com/Crick-CancerGenomics/ascat/tree/master/ASCAT/R/ascat.R).
+The script "run_ascat.r" can be used to run ASCAT in the simplest possible way without compensating for the local CG content across the genome. It calls the main ASCAT R script [ascat.R](https://github.com/Crick-CancerGenomics/ascat/tree/master/ASCAT/R/ascat.R). Run_ascat.r runs ascat with parameter gamme=1, as recommended for NGS data.
 
 ```bash
 sbatch -A PROJID -p core -n 1 -t 240:00:00 -J ascat -e ascat.err -o ascat.out run_ascat.r tumor_baf tumor_logr normal_baf normal_logr
 ```
+
+### Output
+The Ascat process gives several images as output, described in detail in this [book chapter](http://www.ncbi.nlm.nih.gov/pubmed/22130873).
+The script also gives out a text file with information about predicted copy number regions, called tumor.cnv.txt. The output is a tab delimited text file with the following columns:  chr     startpos        endpos  nMajor  nMinor
+Where chr is the chromosome number, startpos is the start position of the segment, endpos is the end position of the segment, nMajor is number of copies of one of the allels (for example the chromosome inherited from the father) and nMajor is the number of copies of the other allele (for example the chromosome inherited of the mother).   
+
 
 ## Flowchart
 
