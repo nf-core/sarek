@@ -47,14 +47,3 @@ To update Sarek, it's also very simple:
 Follow the [references documentation](REFERENCES.md) on how to download/build the references files.
 
 Follow the [configuration and profile documentation](CONFIG.md) on how to modify and use the configuration files and profiles.
-
---------------------------------------------------------------------------------
-
-[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
-[![](images/NGI_logo.png "NGI")][ngi-link]
-[![](images/NBIS_logo.png "NBIS")][nbis-link]
-
-[nbis-link]: https://www.nbis.se/
-[nextflow-link]: https://www.nextflow.io/
-[ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: https://www.scilifelab.se/

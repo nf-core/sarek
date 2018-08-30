@@ -115,13 +115,3 @@ Four optional arguments are supported:
 # Will perform all tests using Singularity on manta test data
 ./scripts/test.sh -s Sarek-data/testdata/tsv/tiny-manta.tsv
 ```
-
---------------------------------------------------------------------------------
-
-[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
-[![](images/NGI_logo.png "NGI")][ngi-link]
-[![](images/NBIS_logo.png "NBIS")][nbis-link]
-
-[nbis-link]: https://www.nbis.se/
-[ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: https://www.scilifelab.se/

@@ -75,14 +75,3 @@ To use Sarek on rackham you will need to use the `slurmDownload` profile.
 # Run the workflow directly on the login node
 > nextflow run SciLifeLab/Sarek/main.nf --project [PROJECT] -profile slurmDownload
 ```
-
---------------------------------------------------------------------------------
-
-[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
-[![](images/NGI_logo.png "NGI")][ngi-link]
-[![](images/NBIS_logo.png "NBIS")][nbis-link]
-
-[nbis-link]: https://www.nbis.se/
-[nextflow-link]: https://www.nextflow.io/
-[ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: https://www.scilifelab.se/
