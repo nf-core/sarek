@@ -59,11 +59,11 @@ The loci file in GRCh38 coordinates is stored on Uppmax in:
 /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/1000G_phase3_GRCh38_maf0.3.loci
 ```
 
-## Running on Milou
+## Running on Uppmax
 
 ### Run AlleleCount
 
-AlleleCount is installed as part of the `bioinfo-tools` module on Milou. It runs on single bam files (tumor and normal separately) with the command below:
+AlleleCount is installed as part of the `bioinfo-tools` module on Uppmax. It runs on single bam files (tumor and normal separately) with the command below:
 
 ```bash
 $ module load bioinfo-tools alleleCount
@@ -82,7 +82,7 @@ This creates the BAF and LogR data for the tumor and normal samples, to be used 
 
 ### Run ASCAT
 
-The script "run_ascat.r" can be used to run ASCAT in the simplest possible way without compensating for the local CG content across the genome. It calls the main ASCAT R script [ascat.R](https://github.com/Crick-CancerGenomics/ascat/tree/master/ASCAT/R/ascat.R). Run_ascat.r runs ascat with parameter gamme=1, as recommended for NGS data.
+The script "bin/run_ascat.r" can be used to run ASCAT in the simplest possible way without compensating for the local CG content across the genome. It calls the main ASCAT R script [ascat.R](https://github.com/Crick-CancerGenomics/ascat/tree/master/ASCAT/R/ascat.R). Run_ascat.r runs ascat with parameter gamme=1, as recommended for NGS data.
 
 ```bash
 sbatch -A PROJID -p core -n 1 -t 240:00:00 -J ascat -e ascat.err -o ascat.out run_ascat.r tumor_baf tumor_logr normal_baf normal_logr
