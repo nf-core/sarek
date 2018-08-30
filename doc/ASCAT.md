@@ -89,15 +89,15 @@ sbatch -A PROJID -p core -n 1 -t 240:00:00 -J ascat -e ascat.err -o ascat.out ru
 ```
 
 ### Output
-The Ascat process gives several images as output, described in detail in this [book chapter](http://www.ncbi.nlm.nih.gov/pubmed/22130873).
-The script also gives out a text file with information about predicted copy number regions, called tumor.cnv.txt. The output is a tab delimited text file with the following columns:  chr     startpos        endpos  nMajor  nMinor  
+The Ascat process gives several images as output, described in detail in this [book chapter](http://www.ncbi.nlm.nih.gov/pubmed/22130873).  
+The script also gives out a text file (*tumor.cnvs.txt*) with information about copy number state for all the segments predicted by Ascat. The output is a tab delimited text file with the following columns:  chr     startpos        endpos  nMajor  nMinor 
 Where:  
 *chr* is the chromosome number  
 *startpos* is the start position of the segment  
 *endpos* is the end position of the segment  
 *nMajor* is number of copies of one of the allels (for example the chromosome inherited from the father)  
-*nMajor* is the number of copies of the other allele (for example the chromosome inherited of the mother)   
-
+*nMinor* is the number of copies of the other allele (for example the chromosome inherited of the mother)   
+The file *tumor.cnvs.txt* contains all segments predicted by Ascat, both those with normal copy number (nMinor = 1 and nMajor =1) and those corresponding to copy number aberrations. 
 
 ## Flowchart
 
