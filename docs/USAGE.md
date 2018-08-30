@@ -175,13 +175,3 @@ If there is a feature or bugfix you want to use in a resumed or re-analyzed run,
 ```bash
 nextflow run -latest SciLifeLab/Sarek/main.nf ... -resume
 ```
-
---------------------------------------------------------------------------------
-
-[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
-[![](images/NGI_logo.png "NGI")][ngi-link]
-[![](images/NBIS_logo.png "NBIS")][nbis-link]
-
-[nbis-link]: https://www.nbis.se/
-[ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: https://www.scilifelab.se/
