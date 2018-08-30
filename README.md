@@ -86,9 +86,8 @@ The Sarek pipeline comes with documentation in the `docs/` directory:
 10. [TSV file documentation](https://github.com/SciLifeLab/Sarek/blob/master/docs/TSV.md)
 11. [Processes documentation](https://github.com/SciLifeLab/Sarek/blob/master/docs/PROCESS.md)
 12. [Documentation about containers](https://github.com/SciLifeLab/Sarek/blob/master/docs/CONTAINERS.md)
-13. [Documentation about building](https://github.com/SciLifeLab/Sarek/blob/master/docs/BUILD.md)
-14. [More information about ASCAT](https://github.com/SciLifeLab/Sarek/blob/master/docs/ASCAT.md)
-15. [Folder structure](https://github.com/SciLifeLab/Sarek/blob/master/docs/FOLDER.md)
+13. [More information about ASCAT](https://github.com/SciLifeLab/Sarek/blob/master/docs/ASCAT.md)
+14. [Output documentation structure](https://github.com/SciLifeLab/Sarek/blob/master/docs/OUTPUT.md)
 
 ## Contributions & Support
 
