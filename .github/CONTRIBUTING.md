@@ -18,7 +18,7 @@ is as follows:
     * Feel free to add a new issue here for the same reason.
 2. Fork the Sarek repository to your GitHub account
 3. Make the necessary changes / additions within your forked repository
-4. Submit a Pull Request against the master branch and wait for the code to be reviewed and merged.
+4. Submit a Pull Request against the `dev` branch and wait for the code to be reviewed and merged.
 
 If you're not used to this workflow with git, you can start with some [basic docs from GitHub](https://help.github.com/articles/fork-a-repo/) or even their [excellent interactive tutorial](https://try.github.io/).
 
