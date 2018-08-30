@@ -107,6 +107,7 @@ Main authors:
 * [Szilveszter Juhos](https://github.com/szilvajuhos)
 
 Helpful contributors:
+* [Johannes Alneberg](https://github.com/alneberg)
 * [Sebastian DiLorenzo](https://github.com/Sebastian-D)
 * [Jesper Eisfeldt](https://github.com/J35P312)
 * [Phil Ewels](https://github.com/ewels)
@@ -115,6 +116,7 @@ Helpful contributors:
 * [Marcel Martin](https://github.com/marcelm)
 * [Björn Nystedt](https://github.com/bjornnystedt)
 * [Pall Olason](https://github.com/pallolason)
+* [Aron Skaftason](https://github.com/arontommi)
 
 --------------------------------------------------------------------------------
 
