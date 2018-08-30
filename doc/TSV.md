@@ -1,6 +1,7 @@
 # TSV file for sample
 
-It's a Tab Separated Value file, based on: `subject gender status sample lane fastq1 fastq2` or `subject gender status sample bam bai` Quite straight-forward:
+Input files for Sarek can be specified using a tsv file given to the `--sample` parameter. The tsv file is a Tab Separated Value file with columns: `subject gender status sample lane fastq1 fastq2` or `subject gender status sample bam bai`.
+The content of these columns should be quite straight-forward:
 
 - `subject` designate the subject, it should be the ID of the Patient, or if you don't have one, il could be the Normal ID Sample.
 - `gender` is the gender of the Patient, (XX or XY)
