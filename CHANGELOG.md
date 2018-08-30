@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#615](https://github.com/SciLifeLab/Sarek/pull/615) - Use `splitCsv` instead of `readlines`
 - [#621](https://github.com/SciLifeLab/Sarek/pull/621) - Improve install script
 - [#621](https://github.com/SciLifeLab/Sarek/pull/621) - Simplify tests
+- [#627](https://github.com/SciLifeLab/Sarek/pull/627), [#629](https://github.com/SciLifeLab/Sarek/pull/629) - Refactor docs
+- [#629](https://github.com/SciLifeLab/Sarek/pull/629) - Refactor config
 
 ### `Removed`
 - [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Remove old Issue Template
