@@ -13,21 +13,23 @@ For more information about using Singularity with UPPMAX, follow the [Singularit
 # Or just open a terminal
 
 # create directories
-> mkdir install
-> mkdir install/bin
-> cd install/bin
+> mkdir nextflow_install
+> cd nextflow_install
 
 # Install Nextflow
 > curl -s https://get.nextflow.io | bash
 > cd ..
 
 # Archive Nextflow
-> tar czvf nextflow_v[xx.yy.zz].tgz .nextflow bin/nextflow
+> tar czvf nextflow_v[xx.yy.zz].tgz .nextflow nextflow_install/nextflow
 
 # Send the tar to bianca (here using sftp)
 # For FileZilla follow the bianca user guide
 > sftp [USER]-[PROJECT]@bianca-sftp.uppmax.uu.se:[USER]-[PROJECT]
 > put nextflow_v[xx.yy.zz].tgz
+
+# Exit sftp
+> exit
 
 # Connect to bianca
 > ssh -A [USER]-[PROJECT]@bianca.uppmax.uu.se
@@ -48,7 +50,7 @@ For more information about using Singularity with UPPMAX, follow the [Singularit
 
 # Move files
 > mv .nextflow nextflow_v[xx.yy.zz]
-> mv bin nextflow_v[xx.yy.zz]/bin
+> mv nextflow_install nextflow_v[xx.yy.zz]/bin
 
 # Establish permission for some files
 > chmod 755 nextflow_v[xx.yy.zz]/bin/nextflow
@@ -121,9 +123,15 @@ Wrote Sarek-[snapID].tar.gz
 # For FileZilla follow the bianca user guide
 > sftp [USER]-[PROJECT]@bianca-sftp.uppmax.uu.se:[USER]-[PROJECT]
 > put Sarek-[snapID].tar.gz
+> exit
 
 # To get the containers
 # This script will need Singularity and Nextflow installed
+# If executed on Rackham: The script needs to be started from an interactive session
+# with at least two cores and approximately 3 hours. The scripts will write about
+# 12 Gb data to ~/.singularity, so this amount of disk space needs to be available
+# in the users home directory on Rackham.
+#
 > ./scripts/do_all.sh --pull --tag <VERSION>
 
 # Send the containers to bianca using the same method
@@ -144,7 +152,7 @@ Wrote Sarek-[snapID].tar.gz
 # Copy the tar from wharf to the project
 > cp /castor/project/proj_nobackup/wharf/[USER]/[USER]-[PROJECT]/Sarek-[snapID].tgz /castor/project/proj_nobackup/Sarek
 
-# extract Sarek
+# extract Sarek. Also remember to extract the containers you uploaded.
 > tar xvzf Sarek-[snapID].tgz
 
 # If you want other people to use it
