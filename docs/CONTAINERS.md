@@ -4,6 +4,8 @@ Subsets of all containers can be downloaded:
 
 - For processing, germline and somatic variant calling and Reports:
   - [sarek](#sarek-)
+  - [r-base](#r-base-)
+  - [runallelecount](#runallelecount-)
 - For annotation for GRCh37, you will need:
   - [snpeffgrch37](#snpeffgrch37-)
   - [vepgrch37](#vepgrch37-)
@@ -21,10 +23,14 @@ All the containers have built in UPPMAX directories, so there is no need to add 
 ### Usage
 
 ```bash
-nextflow run . [--docker] [--singularity] [--containerPath <path>] [--push] [--containers <container1[,container2..]>] [--repository <repository>] [--tag tag]
+nextflow run buildContainers.nf [--docker] [--singularity] /
+[--containerPath <path>] [--push] [--containers <container1[,container2..]>] /
+[--repository <repository>] [--tag tag]
 ```
 
-- `--containers`: Choose which containers to build. Default: `all`. Possible values (to separate by commas):
+- `--containers`: Choose which containers to build.
+Default: `all`.
+Possible values (to separate by commas):
   - `all` -  all available containers.
   - `r-base` - the [r-base](#r-base-) container.
   - `runallelecount` - the [runallelecount](#runallelecount-) container.
@@ -37,15 +43,18 @@ nextflow run . [--docker] [--singularity] [--containerPath <path>] [--push] [--c
 
 - `--docker`: Build containers using `Docker`
 - `--push`: Push containers to `DockerHub`
-- `--repository`: Build containers under given repository. Default: `maxulysse`
+- `--repository`: Build containers under given repository.
+Default: `maxulysse`
 - `--singularity`: Build containers using `Singularity`.
-- `--containerPath`: Select where to download containers. Default: `$PWD`
-- `--tag`: Build containers using given tag. Default is version number.
+- `--containerPath`: Select where to download containers.
+Default: `$PWD`
+- `--tag`: Build containers using given tag.
+Default is version number.
 
 ### Example
 
 ```bash
-nextflow run . --docker --singularity --push --containers multiqc,fastqc
+nextflow run buildContainers.nf --docker --singularity --push --containers sarek
 ```
 
 ### For lazy users
@@ -53,7 +62,7 @@ We provide script to build/push or pull all containers
 ```bash
 ./scripts/do_all.sh        # Build all docker containers
 ./scripts/do_all.sh --push # Build and push all Docker containers into DockerHub
-./scripts/do_all.sh --pull # Pull all containers from DockerHub into Singularity
+./scripts/do_all.sh --pull # Pull all containers from DockerHub with Singularity
 ```
 
 ## What is actually inside the containers

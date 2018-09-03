@@ -1,5 +1,5 @@
 # Sarek - output delivery
-This README describes the output delivery directory structure.
+This document describes the output delivery directory structure.
 
 There are four sections dedicated for different results: Annotation, Preprocessing, Reports and VariantCalling.
 All the four sections can have sub-directories containing results from different software.

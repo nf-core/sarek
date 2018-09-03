@@ -2,7 +2,8 @@
 
 This small tutorial will explain to you how to install and run Sarek on a small sample test data on any POSIX compatible system (Linux, Solaris, OS X, etc).
 
-To use this pipeline, you need to have a working version of Nextflow installed, Reference files and Docker or Singularity to facilitate the use of other tools. You can use a small reference genome as testing
+To use this pipeline, you need to have a working version of Nextflow installed, Reference files and Docker or Singularity as a container engine.
+You can use a small reference genome as testing.
 
 - See the [Install Nextflow documentation](https://www.nextflow.io/docs/latest/getstarted.html#installation)
 - See the [Reference files documentation](REFERENCES.md)
@@ -28,7 +29,7 @@ Docker can also be used as a container technology.
 
 You can [Test Sarek with small dataset and small reference](https://github.com/SciLifeLab/Sarek/blob/master/docs/TESTS.md)
 
-## Update		
+## Update
 
 To update Sarek, it's also very simple:
 
