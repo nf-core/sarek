@@ -449,24 +449,35 @@ process RunStrelka {
   when: 'strelka' in tools && !params.onlyQC
 
   script:
-  """
-  configureStrelkaSomaticWorkflow.py \
-  --tumor ${bamTumor} \
-  --normal ${bamNormal} \
-  --referenceFasta ${genomeFile} \
-  --runDir Strelka
+	"""
+	if ![ -s "${params.targetBED}" ]; then
+		# do WGS
+		configureStrelkaSomaticWorkflow.py \
+		--tumor ${bamTumor} \
+		--normal ${bamNormal} \
+		--referenceFasta ${genomeFile} \
+		--runDir Strelka
+	else
+		# WES or targeted
+		bgzip --threads ${task.cpus} -c ${params.targetBED} > call_targets.bed.gz
+		tabix call_targets.bed.gz
+		configureStrelkaSomaticWorkflow.py \
+		--tumor ${bamTumor} \
+		--normal ${bamNormal} \
+		--referenceFasta ${genomeFile} \
+		--exome \
+		--callRegions call_targets.bed.gz \
+		--runDir Strelka
+	fi
 
-  python Strelka/runWorkflow.py -m local -j ${task.cpus}
+	python Strelka/runWorkflow.py -m local -j ${task.cpus}
+	# always run this part
 
-  mv Strelka/results/variants/somatic.indels.vcf.gz \
-    Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz
-  mv Strelka/results/variants/somatic.indels.vcf.gz.tbi \
-    Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz.tbi
-  mv Strelka/results/variants/somatic.snvs.vcf.gz \
-    Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
-  mv Strelka/results/variants/somatic.snvs.vcf.gz.tbi \
-    Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz.tbi
-  """
+	mv Strelka/results/variants/somatic.indels.vcf.gz Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz
+	mv Strelka/results/variants/somatic.indels.vcf.gz.tbi Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz.tbi
+	mv Strelka/results/variants/somatic.snvs.vcf.gz Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
+	mv Strelka/results/variants/somatic.snvs.vcf.gz.tbi Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz.tbi
+	"""
 }
 
 if (params.verbose) strelkaOutput = strelkaOutput.view {

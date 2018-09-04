@@ -88,6 +88,8 @@ class SarekUtils {
       'strelka-BP',
       'strelkaBP',
       'tag',
+      'target-BED',
+      'targetBED',
       'test',
       'tools',
       'total-memory',
