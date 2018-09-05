@@ -150,7 +150,7 @@ process RunFastQC {
 
   script:
   """
-  fastqc -q ${fastqFile1} ${fastqFile2}
+  fastqc -t 2 -q ${fastqFile1} ${fastqFile2}
   """
 }
 
