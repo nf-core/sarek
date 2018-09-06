@@ -77,7 +77,7 @@ nextflow run runMultiQC.nf -profile singularity
 ## Testing on a secure cluster
 On a secure cluster as bianca, with no internet access, you will need to download and transfer Sarek and the test data first.
 
-Follow the [installation guide for `bianca`](https://github.com/SciLifeLab/Sarek/blob/master/doc/INSTALL_BIANCA.md).
+Follow the [installation guide for `bianca`](https://github.com/SciLifeLab/Sarek/blob/master/docs/INSTALL_BIANCA.md).
 
 And then start the test at the `Build the references for the test data` step.
 
@@ -115,13 +115,3 @@ Four optional arguments are supported:
 # Will perform all tests using Singularity on manta test data
 ./scripts/test.sh -s Sarek-data/testdata/tsv/tiny-manta.tsv
 ```
-
---------------------------------------------------------------------------------
-
-[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
-[![](images/NGI_logo.png "NGI")][ngi-link]
-[![](images/NBIS_logo.png "NBIS")][nbis-link]
-
-[nbis-link]: https://www.nbis.se/
-[ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: https://www.scilifelab.se/

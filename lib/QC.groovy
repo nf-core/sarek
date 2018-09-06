@@ -49,45 +49,11 @@ class QC {
     """
   }
 
-// Get BCFtools version
-  static def getVersionBCFtools() {
-    """
-    bcftools version > v_bcftools.txt
-    """
-  }
-
-// Get GATK version
-  static def getVersionGATK() {
-    """
-		gatk ApplyBQSR --help 2>&1| awk -F/ '/java/{for(i=1;i<=NF;i++){if(\$i~/gatk4/){sub("gatk4-","",\$i);print \$i>"v_gatk.txt"}}}'
-    """
-  }
-
-// Get Manta version
-  static def getVersionManta() {
-    """
-		configManta.py --version > v_manta.txt
-    """
-  }
 
 // Get SnpEFF version
   static def getVersionSnpEFF() {
     """
     echo "SNPEFF version"\$(java -jar \$SNPEFF_HOME/snpEff.jar -h 2>&1) > v_snpeff.txt
-    """
-  }
-
-// Get Strelka version
-  static def getVersionStrelka() {
-    """
-		configureStrelkaGermlineWorkflow.py --version > v_strelka.txt
-    """
-  }
-
-// Get VCFtools version
-  static def getVersionVCFtools() {
-    """
-    vcftools --version > v_vcftools.txt
     """
   }
 

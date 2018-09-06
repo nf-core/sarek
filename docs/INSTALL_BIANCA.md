@@ -201,13 +201,3 @@ Repeat the same steps as for installing Sarek, and once the tar has been extract
 ```
 
 You can for example keep a `default` version that you are sure is working, an make a link for a `testing` or `development`
-
---------------------------------------------------------------------------------
-
-[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
-[![](images/NGI_logo.png "NGI")][ngi-link]
-[![](images/NBIS_logo.png "NBIS")][nbis-link]
-
-[nbis-link]: https://www.nbis.se/
-[ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: https://www.scilifelab.se/

@@ -44,20 +44,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 */
 
-// Check that Nextflow version is up to date enough
-// try / throw / catch works for NF versions < 0.25 when this was implemented
-try {
-    if( ! nextflow.version.matches(">= ${params.nfRequiredVersion}") ){
-        throw GroovyException('Nextflow version too old')
-    }
-} catch (all) {
-    log.error "====================================================\n" +
-              "  Nextflow version ${params.nfRequiredVersion} required! You are running v${workflow.nextflow.version}.\n" +
-              "  Pipeline execution will continue, but things may break.\n" +
-              "  Please update Nextflow.\n" +
-              "============================================================"
-}
-
 if (params.help) exit 0, helpMessage()
 if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
@@ -197,7 +183,7 @@ bamsTumor = bamsTumor.map { idPatient, status, idSample, bam, bai -> [idPatient,
 // We know that MuTect2 (and other somatic callers) are notoriously slow.
 // To speed them up we are chopping the reference into smaller pieces.
 // Do variant calling by this intervals, and re-merge the VCFs.
-// Since we are on a cluster or a multi-CPU machine, this can parallelize the 
+// Since we are on a cluster or a multi-CPU machine, this can parallelize the
 // variant call processes and push down the variant call wall clock time significanlty.
 
 process CreateIntervalBeds {
@@ -283,7 +269,7 @@ bamsTumorNormalIntervals = bamsAll.spread(bedIntervals)
 // MuTect2, FreeBayes
 ( bamsFMT2, bamsFFB) = bamsTumorNormalIntervals.into(3)
 
-// This will give as a list of unfiltered calls for MuTect2. 
+// This will give as a list of unfiltered calls for MuTect2.
 process RunMutect2 {
   tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
 
@@ -787,24 +773,6 @@ if (params.verbose) vcfReport = vcfReport.view {
 
 vcfReport.close()
 
-process GetVersionGATK {
-  publishDir directoryMap.version, mode: 'link'
-  output: file("v_*.txt")
-  when: !params.onlyQC
-  script: QC.getVersionGATK()
-}
-
-process GetVersionFreeBayes {
-  publishDir directoryMap.version, mode: 'link'
-  output: file("v_*.txt")
-  when: 'freebayes' in tools && !params.onlyQC
-
-  script:
-  """
-  freebayes --version > v_freebayes.txt
-  """
-}
-
 process GetVersionAlleleCount {
   publishDir directoryMap.version, mode: 'link'
   output: file("v_*.txt")
@@ -826,34 +794,6 @@ process GetVersionASCAT {
   R --version > v_r.txt
   cat ${baseDir}/scripts/ascat.R | grep "ASCAT version" > v_ascat.txt
   """
-}
-
-process GetVersionStrelka {
-  publishDir directoryMap.version, mode: 'link'
-  output: file("v_*.txt")
-  when: 'strelka' in tools && !params.onlyQC
-  script: QC.getVersionStrelka()
-}
-
-process GetVersionManta {
-  publishDir directoryMap.version, mode: 'link'
-  output: file("v_*.txt")
-  when: 'manta' in tools && !params.onlyQC
-  script: QC.getVersionManta()
-}
-
-process GetVersionBCFtools {
-  publishDir directoryMap.version, mode: 'link'
-  output: file("v_*.txt")
-  when: !params.noReports
-  script: QC.getVersionBCFtools()
-}
-
-process GetVersionVCFtools {
-  publishDir directoryMap.version, mode: 'link'
-  output: file("v_*.txt")
-  when: !params.noReports
-  script: QC.getVersionVCFtools()
 }
 
 /*
