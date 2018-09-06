@@ -2,12 +2,35 @@
 # this script concatenates all VCFs that are in the local directory: the 
 # purpose is to make a single VCF from all the VCFs that were created from different intervals
 
+usage() { echo "Usage: $0 [-i genome_index_file] [-o output.file.no.gz.extension] <-t target.bed> <-c cpus>" 1>&2; exit 1; }
+
+while getopts "i:c:o:t:" p; do
+	case "${p}" in
+		i)
+			genomeIndex=${OPTARG}
+			;;
+		c)
+			cpus=${OPTARG}
+			;;
+		o)
+			outputFile=${OPTARG}
+			;;
+		t)
+			targetBED=${OPTARG}
+			;;
+		*)
+			usage
+			;;
+	esac
+done
+shift $((OPTIND-1))
+
+if [ -z ${genomeIndex} ]; then echo "Missing index file "; usage; fi
+if [ -z ${cpus} ]; then echo "No CPUs defined: setting to 1"; cpus=1; fi
+if [ -z ${outputFile} ]; then echo "Missing output file name"; usage; fi
+
 set -euo pipefail
 
-genomeIndex=$1
-cpus=$2
-outputFile=$3
-targetBED=$4
 # first make a header from one of the VCF intervals
 # get rid of interval information only from the GATK command-line, but leave the rest
 FIRSTVCF=$(ls *.vcf | head -n 1)
@@ -47,12 +70,16 @@ CONTIGS=($(cut -f1 ${genomeIndex}))
 ) | bgzip -@${cpus} > rawcalls.vcf.gz
 tabix rawcalls.vcf.gz
 
+set +u
+
 # now we have the concatenated VCF file, check for WES/panel targets, and generate a subset if there is a BED provided
-if [ -s "${targetBED}" ]; then
+echo "target is $targetBED"
+if [ ! -z ${targetBED+x} ]; then
+	echo "Selecting subset..."
 	bcftools isec --targets-file ${targetBED} rawcalls.vcf.gz | bgzip -@${cpus} > ${outputFile}.gz
 	tabix ${outputFile}.gz
 else
 	# simply rename the raw calls as WGS results
-	for f in rawcalls*; do mv -v $f ${outputFile}${f#rawcalls}; done
+	for f in rawcalls*; do mv -v $f ${outputFile}${f#rawcalls.vcf}; done
 fi
 
