@@ -1,6 +1,6 @@
 # [![Sarek](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/docs/images/Sarek_logo.png "Sarek")](http://opensource.scilifelab.se/projects/sarek/)
 
-#### An open-source analysis pipeline to detect germline or somatic variants from whole genome sequencing
+#### An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing
 
 [![Nextflow version][nextflow-badge]][nextflow-link]
 [![Travis build status][travis-badge]][travis-link]
