@@ -33,20 +33,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
 ================================================================================
 */
 
-// Check that Nextflow version is up to date enough
-// try / throw / catch works for NF versions < 0.25 when this was implemented
-try {
-    if( ! nextflow.version.matches(">= ${params.nfRequiredVersion}") ){
-        throw GroovyException('Nextflow version too old')
-    }
-} catch (all) {
-    log.error "====================================================\n" +
-              "  Nextflow version ${params.nfRequiredVersion} required! You are running v${workflow.nextflow.version}.\n" +
-              "  Pipeline execution will continue, but things may break.\n" +
-              "  Please update Nextflow.\n" +
-              "============================================================"
-}
-
 if (params.help) exit 0, helpMessage()
 if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
@@ -73,9 +59,20 @@ process GetVersionAll {
 
   script:
   """
+  bcftools version > v_bcftools.txt
+  bwa &> v_bwa.txt 2>&1 || true
+  configManta.py --version > v_manta.txt
+  configureStrelkaGermlineWorkflow.py --version > v_strelka.txt
   echo "${params.version}" &> v_sarek.txt
   echo "${workflow.nextflow.version}" &> v_nextflow.txt
+  fastqc -v > v_fastqc.txt
+  freebayes --version > v_freebayes.txt
+  gatk ApplyBQSR --help 2>&1 | grep Version: > v_gatk.txt
   multiqc --version &> v_multiqc.txt
+  qualimap --version &> v_qualimap.txt
+  samtools --version &> v_samtools.txt
+  vcftools --version > v_vcftools.txt
+
   scrape_tool_versions.py &> tool_versions_mqc.yaml
   """
 }
