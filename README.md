@@ -1,4 +1,4 @@
-# [![Sarek](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/docs/images/Sarek_logo.png "Sarek")](http://opensource.scilifelab.se/projects/sarek/)
+# [![Sarek](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/docs/images/Sarek_logo.png "Sarek")](http://sarek.scilifelab.se/)
 
 #### An open-source analysis pipeline to detect germline or somatic variants from whole genome sequencing
 
