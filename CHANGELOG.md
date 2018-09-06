@@ -21,9 +21,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#621](https://github.com/SciLifeLab/Sarek/pull/621) - Simplify tests
 - [#627](https://github.com/SciLifeLab/Sarek/pull/627), [#629](https://github.com/SciLifeLab/Sarek/pull/629) - Refactor docs
 - [#629](https://github.com/SciLifeLab/Sarek/pull/629) - Refactor config
+- [#632](https://github.com/SciLifeLab/Sarek/pull/632) - Use 2 threads and 2 cpus FastQC processes
 
 ### `Removed`
 - [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Remove old Issue Template
+- [#629](https://github.com/SciLifeLab/Sarek/pull/629) - Remove old Dockerfiles
 
 ### `Fixed`
 - [#621](https://github.com/SciLifeLab/Sarek/pull/621) - Fix VEP tests
