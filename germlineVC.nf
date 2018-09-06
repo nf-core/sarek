@@ -387,9 +387,14 @@ process ConcatVCF {
   else if (variantCaller == 'gvcf-hc') outputFile = "haplotypecaller_${idSampleNormal}.g.vcf"
   else outputFile = "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
 
-  """
-	${workflow.projectDir}/scripts/concatenateVCFs.sh ${genomeIndex} ${task.cpus} ${outputFile} ${params.targetBED}
-  """
+	if(params.targetBED)		// targeted
+		concatOptions = "-i ${genomeIndex} -c ${task.cpus} -o ${outputFile} -t ${params.targetBED}"
+	else										// WGS
+		concatOptions = "-i ${genomeIndex} -c ${task.cpus} -o ${outputFile} "
+
+	"""
+	${workflow.projectDir}/scripts/concatenateVCFs.sh ${concatOptions}
+	"""
 }
 
 if (params.verbose) vcfConcatenated = vcfConcatenated.view {
@@ -418,7 +423,7 @@ process RunSingleStrelka {
 
   script:
 	"""
-	if ![ -s "${params.targetBED}" ]; then
+	if [ ! -s "${params.targetBED}" ]; then
 		# do WGS
 		configureStrelkaGermlineWorkflow.py \
 		--bam ${bam} \
