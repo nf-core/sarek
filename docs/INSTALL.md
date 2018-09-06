@@ -2,7 +2,8 @@
 
 This small tutorial will explain to you how to install and run Sarek on a small sample test data on any POSIX compatible system (Linux, Solaris, OS X, etc).
 
-To use this pipeline, you need to have a working version of Nextflow installed, Reference files and Docker or Singularity to facilitate the use of other tools. You can use a small reference genome as testing
+To use this pipeline, you need to have a working version of Nextflow installed, Reference files and Docker or Singularity as a container engine.
+You can use a small reference genome as testing.
 
 - See the [Install Nextflow documentation](https://www.nextflow.io/docs/latest/getstarted.html#installation)
 - See the [Reference files documentation](REFERENCES.md)
@@ -26,13 +27,13 @@ export NXF_SINGULARITY_CACHEDIR=$HOME/.singularity
 
 Docker can also be used as a container technology.
 
-You can [Test Sarek with small dataset and small reference](https://github.com/SciLifeLab/Sarek/blob/master/doc/TESTS.md)
+You can [Test Sarek with small dataset and small reference](https://github.com/SciLifeLab/Sarek/blob/master/docs/TESTS.md)
 
-## Update		
+## Update
 
 To update Sarek, it's also very simple:
 
- 
+
 ```bash
 # Connect to your system
 > ssh -AX [USER]@[system]REFERENCES
@@ -47,14 +48,3 @@ To update Sarek, it's also very simple:
 Follow the [references documentation](REFERENCES.md) on how to download/build the references files.
 
 Follow the [configuration and profile documentation](CONFIG.md) on how to modify and use the configuration files and profiles.
-
---------------------------------------------------------------------------------
-
-[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
-[![](images/NGI_logo.png "NGI")][ngi-link]
-[![](images/NBIS_logo.png "NBIS")][nbis-link]
-
-[nbis-link]: https://www.nbis.se/
-[nextflow-link]: https://www.nextflow.io/
-[ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: https://www.scilifelab.se/

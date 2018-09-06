@@ -4,11 +4,13 @@ For more informations on how to use configuration files, have a look at the [Nex
 
 For more informations about profiles, have a look at the [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html#config-profiles)
 
-We provides several configuration files and profiles for Sarek. The standard ones are designed to work on a Swedish UPPMAX clusters, and can be modified and tailored to your own need.
+We provides several configuration files and profiles for Sarek.
+The standard ones are designed to work on a Swedish UPPMAX clusters, and can be modified and tailored to your own need.
 
 ## Configuration files
 
-Every configuration file can be modified for your own use. If you want you can specify the use of a config file using `-c <config file>`
+Every configuration file can be modified for your own use.
+If you want you can specify the use of a config file using `-c <config file>`
 
 ### [`containers.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/containers.config)
 
@@ -51,7 +53,8 @@ Will run the workflow on `/scratch` using the Nextflow [`scratch`](https://www.n
 
 ## profiles
 
-Every profile can be modified for your own use. To use a profile, you'll need to specify `-profile <profile>`
+Every profile can be modified for your own use.
+To use a profile, you'll need to specify `-profile <profile>`
 
 ### `docker`
 
@@ -79,13 +82,3 @@ Singularity images will be pulled automatically.
 
 This is the profile for Singularity testing on a small machine, or on Travis CI.
 Singularity images will be pulled automatically.
-
---------------------------------------------------------------------------------
-
-[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
-[![](images/NGI_logo.png "NGI")][ngi-link]
-[![](images/NBIS_logo.png "NBIS")][nbis-link]
-
-[nbis-link]: https://www.nbis.se/
-[ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: https://www.scilifelab.se/
