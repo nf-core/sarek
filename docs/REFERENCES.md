@@ -72,20 +72,12 @@ Use `--genome smallGRCh37` to map against a small reference genome based on GRCh
 
 The `buildReferences.nf` script can download and build the files needed for smallGRCh37, or build the references for GRCh37/smallGRCh37.
 
-### `--download`
-
-Only with `--genome smallGRCh37`. If this option is specify, the [`smallRef`](https://github.com/szilvajuhos/smallRef) repository will be automatically downloaded from GitHub. Not to be used on UPPMAX cluster Bianca or on similarly secured clusters where such things are not working/allowed.
-
-```
-nextflow run buildReferences.nf --download --genome smallGRCh37
-```
-
 ### `--refDir`
 
-Use `--refDir <path to smallRef>` to specify where are the files to process.
+Use `--refDir <path to references>` to specify where are the files to process.
 
 ```
-nextflow run buildReferences.nf --refDir <path to smallRef> --genome <genome>
+nextflow run buildReferences.nf --refDir <path to references> --genome <genome>
 ```
 
 ### `--genome`
