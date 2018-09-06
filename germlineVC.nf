@@ -376,7 +376,8 @@ process ConcatVCF {
     file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
 
   output:
-    set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfConcatenated
+		// we have this funny *_* pattern to avoid copying the raw calls to publishdir
+    set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into vcfConcatenated
 
 
   when: ( 'haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools ) && !params.onlyQC
@@ -424,8 +425,17 @@ process ConcatVCF {
         tail -n +\$((L+1)) \${vcf}
       done
     done
-  ) | bgzip > ${outputFile}.gz
-  tabix ${outputFile}.gz
+  ) | bgzip -@${task.cpus} > rawcalls.vcf.gz
+	tabix rawcalls.vcf.gz
+
+	# now we have the concatenated VCF file, check for WES/panel targets, and generate a subset if there is a BED provided
+	if [ -s "${params.targetBED}" ]; then
+		bcftools isec --targets-file ${params.targetBED} rawcalls.vcf.gz | bgzip -@${task.cpus} > ${outputFile}.gz
+		tabix ${outputFile}.gz
+	else
+		# simply rename the raw calls as WGS results
+		for f in rawcalls*; do mv -v \$f ${outputFile}\${f#rawcalls}; done
+	fi
   """
 }
 
