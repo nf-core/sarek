@@ -43,7 +43,7 @@ We divide them for the moment into 5 main steps:
 - RunVcftools - Run VCFTools on vcf files
 - GetVersionAlleleCount - Get version of tools
 - GetVersionASCAT - Get version of tools
-- GetVersionSnpEFF - Get version of tools
+- GetVersionSnpeff - Get version of tools
 - GetVersionVEP - Get version of tools
 - GetVersionAll - Get version of tools
 - RunMultiQC - Run MultiQC on reports

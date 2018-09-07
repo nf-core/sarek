@@ -31,7 +31,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - RunSnpeff - Run snpEff for annotation of vcf files
  - RunVEP - Run VEP for annotation of vcf files
  - CompressVCF - Compress and index vcf files using tabix
- - GetVersionSnpEFF - Get version of tools
+ - GetVersionSnpeff - Get version of tools
  - GetVersionVEP - Get version of tools
 ================================================================================
 =                           C O N F I G U R A T I O N                          =
@@ -267,7 +267,7 @@ if (params.verbose) vcfCompressedoutput = vcfCompressedoutput.view {
   "Index : ${it[3].fileName}"
 }
 
-process GetVersionSnpEFF {
+process GetVersionSnpeff {
   publishDir directoryMap.version, mode: 'link'
   output: file("v_*.txt")
   when: 'snpeff' in tools || 'merge' in tools
