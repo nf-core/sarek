@@ -21,7 +21,7 @@ The following files need to be downloaded:
 
 From our repo, get the [`intervals` list file](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/repeats/wgs_calling_regions.grch37.list). More information about this file in the [intervals documentation](INTERVALS.md)
 
-Description of how to generate the Loci file used in the ASCAT process is described [here](https://github.com/SciLifeLab/Sarek/blob/master/doc/ASCAT.md). 
+Description of how to generate the Loci file used in the ASCAT process is described [here](https://github.com/SciLifeLab/Sarek/blob/master/docs/ASCAT.md).
 
 You can create your own cosmic reference for any human reference as specified below.
 
@@ -95,13 +95,3 @@ Same parameter used for other scripts.
 - GRCh37
 - GRCh38 (not yet available)
 - smallGRCh37
-
---------------------------------------------------------------------------------
-
-[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
-[![](images/NGI_logo.png "NGI")][ngi-link]
-[![](images/NBIS_logo.png "NBIS")][nbis-link]
-
-[nbis-link]: https://www.nbis.se/
-[ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: https://www.scilifelab.se/

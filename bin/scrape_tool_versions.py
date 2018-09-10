@@ -9,7 +9,7 @@ regexes = {
     'bcftools': ['v_bcftools.txt', r"bcftools (\S+)"],
     'BWA': ['v_bwa.txt', r"Version: (\S+)"],
     'FastQC': ['v_fastqc.txt', r"FastQC v(\S+)"],
-    'GATK': ['v_gatk.txt', r"GATK version(\S+)"],
+    'GATK': ['v_gatk.txt', r"Version:(\S+)"],
     'htslib': ['v_samtools.txt', r"htslib (\S+)"],
     'Manta': ['v_manta.txt', r"([0-9.]+)"],
     'MultiQC': ['v_multiqc.txt', r"multiqc, version (\S+)"],
@@ -28,24 +28,24 @@ regexes = {
 results = OrderedDict()
 results['Sarek'] = '<span style="color:#999999;\">N/A</span>'
 results['Nextflow'] = '<span style="color:#999999;\">N/A</span>'
-results['BWA'] = '<span style="color:#999999;\">N/A</span>'
-results['samtools'] = '<span style="color:#999999;\">N/A</span>'
-results['htslib'] = '<span style="color:#999999;\">N/A</span>'
-results['GATK'] = '<span style="color:#999999;\">N/A</span>'
-results['Picard'] = '<span style="color:#999999;\">N/A</span>'
-results['Manta'] = '<span style="color:#999999;\">N/A</span>'
-results['Strelka'] = '<span style="color:#999999;\">N/A</span>'
-results['FreeBayes'] = '<span style="color:#999999;\">N/A</span>'
 results['AlleleCount'] = '<span style="color:#999999;\">N/A</span>'
-results['R'] = '<span style="color:#999999;\">N/A</span>'
 results['ASCAT'] = '<span style="color:#999999;\">N/A</span>'
-results['SnpEff'] = '<span style="color:#999999;\">N/A</span>'
-results['VEP'] = '<span style="color:#999999;\">N/A</span>'
-results['FastQC'] = '<span style="color:#999999;\">N/A</span>'
-results['Qualimap'] = '<span style="color:#999999;\">N/A</span>'
 results['bcftools'] = '<span style="color:#999999;\">N/A</span>'
-results['vcftools'] = '<span style="color:#999999;\">N/A</span>'
+results['BWA'] = '<span style="color:#999999;\">N/A</span>'
+results['FastQC'] = '<span style="color:#999999;\">N/A</span>'
+results['FreeBayes'] = '<span style="color:#999999;\">N/A</span>'
+results['GATK'] = '<span style="color:#999999;\">N/A</span>'
+results['htslib'] = '<span style="color:#999999;\">N/A</span>'
+results['Manta'] = '<span style="color:#999999;\">N/A</span>'
 results['MultiQC'] = '<span style="color:#999999;\">N/A</span>'
+results['Picard'] = '<span style="color:#999999;\">N/A</span>'
+results['Qualimap'] = '<span style="color:#999999;\">N/A</span>'
+results['R'] = '<span style="color:#999999;\">N/A</span>'
+results['samtools'] = '<span style="color:#999999;\">N/A</span>'
+results['SnpEff'] = '<span style="color:#999999;\">N/A</span>'
+results['Strelka'] = '<span style="color:#999999;\">N/A</span>'
+results['vcftools'] = '<span style="color:#999999;\">N/A</span>'
+results['VEP'] = '<span style="color:#999999;\">N/A</span>'
 
 # Search each file using its regex
 for k, v in regexes.items():

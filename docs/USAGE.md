@@ -1,7 +1,57 @@
 # Usage
 
-I would recommand to run Nextflow within a [screen](https://www.gnu.org/software/screen/) or [tmux](https://tmux.github.io/) session.
-It is recommended to run only one instance of Sarek for one patient in the same directory.
+I would recommend to run Nextflow within a [screen](https://www.gnu.org/software/screen/) or [tmux](https://tmux.github.io/) session.
+
+## Project folder structure
+
+The workflow is started for a sample, or a set of samples from the same Individual.
+
+Each different physical samples is identified by its own ID.
+For example in a Tumour/Normal settings, this ID could correspond to "Normal", "Tumour_1", "Tumour_2" etc. corresponding to all physical samples from the same patient.
+
+## Input FASTQ file name best practices
+
+The input folder, containing the FASTQ files for one individual (ID) should be organized into one subfolder for every sample.
+All fastq files for that sample should be collected here.
+
+```
+ID
++--sample1
++------sample1_lib_flowcell-index_lane_R1_1000.fastq.gz
++------sample1_lib_flowcell-index_lane_R2_1000.fastq.gz
++------sample1_lib_flowcell-index_lane_R1_1000.fastq.gz
++------sample1_lib_flowcell-index_lane_R2_1000.fastq.gz
++--sample2
++------sample2_lib_flowcell-index_lane_R1_1000.fastq.gz
++------sample2_lib_flowcell-index_lane_R2_1000.fastq.gz
++--sample3
++------sample3_lib_flowcell-index_lane_R1_1000.fastq.gz
++------sample3_lib_flowcell-index_lane_R2_1000.fastq.gz
++------sample3_lib_flowcell-index_lane_R1_1000.fastq.gz
++------sample3_lib_flowcell-index_lane_R2_1000.fastq.gz
+```
+
+Fastq filename structure:
+
+- `sample_lib_flowcell-index_lane_R1_1000.fastq.gz` and
+- `sample_lib_flowcell-index_lane_R2_1000.fastq.gz`
+
+Where:
+
+- `sample` = sample id
+- `lib` = indentifier of libaray preparation
+- `flowcell` = identifyer of flow cell for the sequencing run
+- `lane` = identifier of the lane of the sequencing run
+
+Read group information will be parsed from fastq file names according to this:
+
+- `RGID` = "sample_lib_flowcell_index_lane"
+- `RGPL` = "Illumina"
+- `PU` = sample
+- `RGLB` = lib
+
+## Scripts
+
 Sarek uses several scripts, a wrapper is currently being made to simplify the command lines.
 Currently the typical reduced command lines are:
 
@@ -70,7 +120,6 @@ Choose which tools will be used in the workflow. Different tools to be separated
 - manta (use `Manta` for SV) (germlineVC,somaticVC)
 - strelka (use `Strelka` for VC) (germlineVC,somaticVC)
 - ascat (use `ASCAT` for CNV) (somaticVC)
-- mutect1 (use `MuTect1` for VC) (somaticVC)
 - mutect2 (use `MuTect2` for VC) (somaticVC)
 - snpeff (use `snpEff` for Annotation) (annotate)
 - vep (use `VEP` for Annotation) (annotate)
@@ -82,7 +131,6 @@ Choose which tools will be used in the workflow. Different tools to be separated
 Choose which tools to annotate. Different tools to be separated by commas. Possible values are:
 - haplotypecaller (Annotate `HaplotypeCaller` output)
 - manta (Annotate `Manta` output)
-- mutect1 (Annotate `MuTect1` output)
 - mutect2 (Annotate `MuTect2` output)
 - strelka (Annotate `Strelka` output)
 
@@ -175,13 +223,3 @@ If there is a feature or bugfix you want to use in a resumed or re-analyzed run,
 ```bash
 nextflow run -latest SciLifeLab/Sarek/main.nf ... -resume
 ```
-
---------------------------------------------------------------------------------
-
-[![](images/SciLifeLab_logo.png "SciLifeLab")][scilifelab-link]
-[![](images/NGI_logo.png "NGI")][ngi-link]
-[![](images/NBIS_logo.png "NBIS")][nbis-link]
-
-[nbis-link]: https://www.nbis.se/
-[ngi-link]: https://ngisweden.scilifelab.se/
-[scilifelab-link]: https://www.scilifelab.se/
