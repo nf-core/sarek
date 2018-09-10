@@ -1,8 +1,7 @@
 # Use cases
 
-The workflow has three pre-processing options: `mapping`, `realign` and `recalibrate`.
+The workflow has two pre-processing options: `mapping` and `recalibrate`.
 Using the `mapping` directive one will have a pair of mapped, deduplicated and recalibrated BAM files in the `Preprocessing/Recalibrated/` directory.
-Furthermore, during this process a deduplicated BAM file is created in the `Preprocessing/NonRealigned/` directory.
 This is the usual option you have to give when you are starting from raw FASTQ data:
 
 ```bash
@@ -15,7 +14,7 @@ nextflow run SciLifeLab/Sarek/runMultiQC.nf
 
 `mapping` will start by default, you do not have to give any additional parameters, only the TSV file describing the sample (see below).
 
-In the [genomes.config](https://github.com/SciLifeLab/Sarek/blob/master/conf/genomes.config) configuration file we are defining the intervals file as well, this is used to define regions for variant call and realignment (in a scatter and gather fashion when possible).
+In the [genomes.config](https://github.com/SciLifeLab/Sarek/blob/master/conf/genomes.config) configuration file we are defining the intervals file as well, this is used to define regions for variant calling (in a scatter and gather fashion when possible).
 The intervals are chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs.
 We are ignoring the hs37d5 contig that contains concatenated decoy sequences.
 
@@ -110,52 +109,7 @@ SUBJECT_ID  XX    1    SAMPLEIDR    7    /samples/relapse7_1.fastq.gz    /sample
 SUBJECT_ID  XX    1    SAMPLEIDR    9    /samples/relapse9_1.fastq.gz    /samples/relapse9_2.fastq.gz
 ```
 
-## Starting from realignement
-
-NGI Production in the previous years delivered many preprocessed samples; these BAM files are not recalibrated.
-To have BAMs suitable for variant calling, realignement of pairs is necessary:
-
-```bash
-nextflow run SciLifeLab/Sarek/main.nf --sample mysample.tsv --step realign
-nextflow run SciLifeLab/Sarek/germlineVC.nf --tools <tool>
-nextflow run SciLifeLab/Sarek/runMultiQC.nf
-```
-
-And the corresponding TSV file should be like:
-
-```
-SUBJECT_ID  XX    0    SAMPLEID    /samples/SAMPLEIDN.bam    /samples/SAMPLEIDN.bai
-```
-
-At the end of this step you should have recalibrated BAM files in the `Preprocessing/Recalibrated/` directory.
-
-## Starting from realignement for tumor/normal samples
-
-NGI Production in the previous years delivered many preprocessed samples; these BAM files are not recalibrated.
-To have BAMs suitable for variant calling, realignement of pairs is necessary:
-
-```bash
-nextflow run SciLifeLab/Sarek/main.nf --sample mysample.tsv --step realign
-nextflow run SciLifeLab/Sarek/germlineVC.nf --tools <tool>
-nextflow run SciLifeLab/Sarek/somaticVC.nf --tools <tool>
-nextflow run SciLifeLab/Sarek/annotate.nf --tool <tool> --annotateVCF myfile.vcf
-nextflow run SciLifeLab/Sarek/runMultiQC.nf
-
-```
-
-And the corresponding TSV file should be like (obviously, if you do not have relapse samples, you can leave out this last line):
-
-```
-SUBJECT_ID  XX    0    SAMPLEIDN    /samples/SAMPLEIDN.bam    /samples/SAMPLEIDN.bai
-SUBJECT_ID  XX    1    SAMPLEIDT    /samples/SAMPLEIDT.bam    /samples/SAMPLEIDT.bai
-SUBJECT_ID  XX    1    SAMPLEIDR    /samples/SAMPLEIDT.bam    /samples/SAMPLEIDR.bai
-```
-
-At the end of this step you should have recalibrated BAM files in the `Preprocessing/Recalibrated/` directory.
-
 ## Starting from recalibration for tumor/normal samples
-
-If the BAM files were realigned together, you can start from recalibration:
 
 ```bash
 nextflow run SciLifeLab/Sarek/main.nf --sample mysample.tsv --step recalibrate
