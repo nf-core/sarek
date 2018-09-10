@@ -26,9 +26,13 @@ kate: syntax groovy; space-indent on; indent-width 2;
  https://github.com/SciLifeLab/Sarek/README.md
 --------------------------------------------------------------------------------
  Processes overview
- - RunBcftoolsStats - Run BCFTools stats on vcf before annotation
+ - RunBcftoolsStats - Run BCFTools stats on vcf files
+ - RunVcftools - Run VCFTools on vcf files
  - RunSnpeff - Run snpEff for annotation of vcf files
  - RunVEP - Run VEP for annotation of vcf files
+ - CompressVCF - Compress and index vcf files using tabix
+ - GetVersionSnpeff - Get version of tools
+ - GetVersionVEP - Get version of tools
 ================================================================================
 =                           C O N F I G U R A T I O N                          =
 ================================================================================
@@ -88,8 +92,6 @@ if (annotateVCF == []) {
 vcfNotToAnnotate.close()
 
 // as now have the list of VCFs to annotate, the first step is to annotate with allele frequencies, if there are any
-
-
 
 (vcfForBCFtools, vcfForVCFtools, vcfForSnpeff, vcfForVep) = vcfToAnnotate.into(4)
 
@@ -265,7 +267,7 @@ if (params.verbose) vcfCompressedoutput = vcfCompressedoutput.view {
   "Index : ${it[3].fileName}"
 }
 
-process GetVersionSnpEFF {
+process GetVersionSnpeff {
   publishDir directoryMap.version, mode: 'link'
   output: file("v_*.txt")
   when: 'snpeff' in tools || 'merge' in tools

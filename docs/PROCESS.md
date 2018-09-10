@@ -7,29 +7,27 @@ We divide them for the moment into 5 main steps:
 
 - MapReads - Map reads with BWA
 - MergeBams - Merge BAMs if multilane samples
-- MarkDuplicates - Mark Duplicates with Picard
-- RealignerTargetCreator - Create realignment target intervals
-- IndelRealigner - Realign BAMs as T/N pair
+- MarkDuplicates - Mark Duplicates with GATK4
 - CreateRecalibrationTable - Create Recalibration Table with BaseRecalibrator
 - RecalibrateBam - Recalibrate Bam with PrintReads
 
 ## Germline Variant Calling:
 
 - CreateIntervalBeds - Create and sort intervals into bed files
-- RunHaplotypecaller - Run HaplotypeCaller for GermLine Variant Calling (Parallelized processes)
-- RunGenotypeGVCFs - Run HaplotypeCaller for GermLine Variant Calling (Parallelized processes)
-- ConcatVCF - Merge results from HaplotypeCaller
+- RunHaplotypecaller - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
+- RunGenotypeGVCFs - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
+- ConcatVCF - Merge results from paralellized callers
 - RunSingleStrelka - Run Strelka for Germline Variant Calling
 - RunSingleManta - Run Manta for Single Structural Variant Calling
 
 ## Somatic Variant Calling:
 
 - CreateIntervalBeds - Create and sort intervals into bed files
-- RunMutect1 - Run MuTect1 for Variant Calling (Parallelized processes)
 - RunMutect2 - Run MuTect2 for Variant Calling (Parallelized processes)
 - RunFreeBayes - Run FreeBayes for Variant Calling (Parallelized processes)
-- ConcatVCF - Merge results from Freebayes, MuTect1 and MuTect2
+- ConcatVCF - Merge results from paralellized variant callers
 - RunStrelka - Run Strelka for Variant Calling
+- RunStrelkaBP - Run Strelka Best Practices for Variant Calling
 - RunManta - Run Manta for Structural Variant Calling
 - RunSingleManta - Run Manta for Single Structural Variant Calling
 - RunAlleleCount - Run AlleleCount to prepare for ASCAT
@@ -43,8 +41,15 @@ We divide them for the moment into 5 main steps:
 - RunBamQC - Run qualimap BamQC on recalibrated BAM files
 - RunBcftoolsStats - Run BCFTools stats on vcf files
 - RunVcftools - Run VCFTools on vcf files
+- GetVersionAlleleCount - Get version of tools
+- GetVersionASCAT - Get version of tools
+- GetVersionSnpeff - Get version of tools
+- GetVersionVEP - Get version of tools
+- GetVersionAll - Get version of tools
+- RunMultiQC - Run MultiQC on reports
 
 ## Annotation:
 
 - RunSnpeff - Run snpEff for annotation of vcf files
 - RunVEP - Run VEP for annotation of vcf files
+- CompressVCF - Compress and index vcf files using tabix

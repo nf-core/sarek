@@ -31,10 +31,11 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - CreateIntervalBeds - Create and sort intervals into bed files
  - RunHaplotypecaller - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
  - RunGenotypeGVCFs - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
- - ConcatVCF - Merge results from HaplotypeCaller, MuTect2 and other paralellized callers
+ - ConcatVCF - Merge results from paralellized callers
  - RunSingleStrelka - Run Strelka for Germline Variant Calling
  - RunSingleManta - Run Manta for Single Structural Variant Calling
  - RunBcftoolsStats - Run BCFTools stats on vcf files
+ - RunVcftools - Run VCFTools on vcf files
 ================================================================================
 =                           C O N F I G U R A T I O N                          =
 ================================================================================

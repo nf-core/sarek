@@ -33,12 +33,16 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - RunFreeBayes - Run FreeBayes for Variant Calling (Parallelized processes)
  - ConcatVCF - Merge results from paralellized variant callers
  - RunStrelka - Run Strelka for Variant Calling
+ - RunStrelkaBP - Run Strelka Best Practices for Variant Calling
  - RunManta - Run Manta for Structural Variant Calling
  - RunSingleManta - Run Manta for Single Structural Variant Calling
  - RunAlleleCount - Run AlleleCount to prepare for ASCAT
  - RunConvertAlleleCounts - Run convertAlleleCounts to prepare for ASCAT
  - RunAscat - Run ASCAT for CNV
  - RunBcftoolsStats - Run BCFTools stats on vcf files
+ - RunVcftools - Run VCFTools on vcf files
+ - GetVersionAlleleCount - Get version of tools
+ - GetVersionASCAT - Get version of tools
 ================================================================================
 =                           C O N F I G U R A T I O N                          =
 ================================================================================

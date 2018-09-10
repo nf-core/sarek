@@ -8,7 +8,7 @@ You can use a small reference genome as testing.
 - See the [Install Nextflow documentation](https://www.nextflow.io/docs/latest/getstarted.html#installation)
 - See the [Reference files documentation](REFERENCES.md)
 - See the [Install Docker documentation](https://docs.docker.com/engine/installation/linux/ubuntu/#install-docker)
-- See the [Install Singularity documentation](http://singularity.lbl.gov/install-linux)
+- See the [Install Singularity documentation](https://www.sylabs.io/guides/2.6/user-guide/quick_start.html#installation)
 
 ## Installation
 
@@ -18,7 +18,7 @@ Nextflow will automatically fetch Sarek from GitHub when launched if `SciLifeLab
 
 Sarek use Singularity containers to package all the different tools.
 
-If you plan to use the automatic pull of Singularity images, you can use the [`singularity.config`](../configuration/singularity.config) configuration file. You can also set up the Nextflow environnement variable `NXF_SINGULARITY_CACHEDIR` to choose where to store them.
+If you plan to use the automatic pull of Singularity images, you can use the [`singularity.config`](https://github.com/SciLifeLab/Sarek/blob/master/conf/singularity.config) configuration file. You can also set up the Nextflow environnement variable `NXF_SINGULARITY_CACHEDIR` to choose where to store them.
 
 For example
 ```bash

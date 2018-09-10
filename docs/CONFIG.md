@@ -12,41 +12,41 @@ The standard ones are designed to work on a Swedish UPPMAX clusters, and can be 
 Every configuration file can be modified for your own use.
 If you want you can specify the use of a config file using `-c <config file>`
 
-### [`containers.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/containers.config)
+### [`containers.config`](https://github.com/SciLifeLab/Sarek/blob/master/conf/containers.config)
 
 Define Containers for all process.
 Images will be pulled automatically.
 Use in your own profile if needed.
 
-### [`docker.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/docker.config)
+### [`docker.config`](https://github.com/SciLifeLab/Sarek/blob/master/conf/docker.config)
 
 Define Docker Containers for all process.
 Images will be pulled automatically.
 Use in your own profile if needed.
 
-### [`genomes.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/genomes.config)
+### [`genomes.config`](https://github.com/SciLifeLab/Sarek/blob/master/conf/genomes.config)
 
 Contain path to all references.
 Modify it if you want to change genome version, or the path to your references files.
 
-### [`singularity-path.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/singularity-path.config)
+### [`singularity-path.config`](https://github.com/SciLifeLab/Sarek/blob/master/conf/singularity-path.config)
 
 Define path to Singularity Containers for all process.
 To be used when downloading Singularity Containers, like on a secure UPPMAX cluster.
 Images will not be pulled automatically.
 You need to set them up before.
 
-### [`singularity.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/singularity.config)
+### [`singularity.config`](https://github.com/SciLifeLab/Sarek/blob/master/conf/singularity.config)
 
 Define Singularity Containers for all process.
 Images will be pulled automatically.
 Use in your own profile if needed.
 
-### [`travis.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/travis.config)
+### [`travis.config`](https://github.com/SciLifeLab/Sarek/blob/master/conf/travis.config)
 
 To be used for Travis (2 cpus) or on small computer for testing purpose
 
-### [`uppmax-slurm.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/uppmax-slurm.config)
+### [`uppmax-slurm.config`](https://github.com/SciLifeLab/Sarek/blob/master/conf/uppmax-slurm.config)
 
 Slurm configuration for a UPPMAX cluster
 Will run the workflow on `/scratch` using the Nextflow [`scratch`](https://www.nextflow.io/docs/latest/process.html#scratch) directive
