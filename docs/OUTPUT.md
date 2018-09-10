@@ -99,11 +99,11 @@ Manta provides a candidate list for small indels also that can be fed to Strelka
 [fastqc]: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
 [freebayes]: https://github.com/ekg/freebayes
 [GATK-BP]: https://software.broadinstitute.org/gatk/best-practices/bp_3step.php?case=GermShortWGS
-[haplotypecaller]: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_gatk_tools_walkers_haplotypecaller_HaplotypeCaller.php
+[haplotypecaller]: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_haplotypecaller_HaplotypeCaller.php
 [genomicvcf]: https://gatkforums.broadinstitute.org/gatk/discussion/4017/what-is-a-gvcf-and-how-is-it-different-from-a-regular-vcf
 [manta]: https://github.com/Illumina/manta/blob/master/docs/userGuide/README.md#structural-variant-predictions
 [multiqc-link]: http://multiqc.info/
-[mutect2]: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_gatk_tools_walkers_cancer_m2_MuTect2.php
+[mutect2]: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_Mutect2.php
 [ngi-link]: https://ngisweden.scilifelab.se/
 [picard-md]: http://broadinstitute.github.io/picard/command-line-overview.html#MarkDuplicates
 [polyphen-link]: http://genetics.bwh.harvard.edu/pph2/
@@ -116,5 +116,5 @@ Manta provides a candidate list for small indels also that can be fed to Strelka
 [speedseq]: https://github.com/SciLifeLab/Sarek/blob/master/scripts/speedseq.filter.awk
 [strelka2]: https://github.com/Illumina/strelka
 [vep-link]: http://www.ensembl.org/Tools/VEP
-[VEP-predictions]: https://www.ensembl.org/info/genome/variation/predicted_data.html
+[VEP-predictions]: https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html
 [logo]: https://img.shields.io/github/release/SciLifeLab/Sarek.svg

@@ -30,7 +30,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - MapReads - Map reads with BWA
  - MergeBams - Merge BAMs if multilane samples
  - MarkDuplicates - Mark Duplicates with GATK4
- - IndelRealigner - Realign BAMs as T/N pair
  - CreateRecalibrationTable - Create Recalibration Table with BaseRecalibrator
  - RecalibrateBam - Recalibrate Bam with PrintReads
  - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files
