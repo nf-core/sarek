@@ -143,7 +143,7 @@ process BuildReferenceIndex {
 }
 
 if (params.verbose) ch_referenceIndex.view {
-  "Reference index        : ${it.fileName}"
+  "Reference index     : ${it.fileName}"
 }
 
 process BuildSAMToolsIndex {
