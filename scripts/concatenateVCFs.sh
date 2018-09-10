@@ -35,7 +35,7 @@ set -euo pipefail
 # get rid of interval information only from the GATK command-line, but leave the rest
 FIRSTVCF=$(ls *.vcf | head -n 1)
 sed -n '/^[^#]/q;p' $FIRSTVCF | \
-awk '!/GATKCommandLine/{print}/GATKCommandLine/{for(i=1;i<=NF;i++){if($i!~/intervals=/ && $i !~ /out=/){printf("%s ",$i)}}printf("\\n")}' \
+awk '!/GATKCommandLine/{print}/GATKCommandLine/{for(i=1;i<=NF;i++){if($i!~/intervals=/ && $i !~ /out=/){printf("%s ",$i)}}printf("\n")}' \
 > header
 
 # Get list of contigs from the FASTA index (.fai). We cannot use the ##contig
