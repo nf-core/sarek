@@ -69,11 +69,11 @@ All parameters, options and variables can be specified with configuration files 
 
 ### --callName `Name`
 
-Specify a name for MultiQC report (optionnal)
+Specify a name for MultiQC report (optional)
 
 ### --contactMail `email`
 
-Specify an email for MultiQC report (optionnal)
+Specify an email for MultiQC report (optional)
 
 ### --help
 
@@ -93,7 +93,8 @@ Choose an output directory
 
 ### --project `ProjectID`
 
-Specify a project number ID on a UPPMAX cluster. (optionnal if not on such a cluster)
+Specify a project number ID on a UPPMAX cluster.
+(optional if not on such a cluster)
 
 ### --sample `file.tsv`
 
@@ -101,20 +102,24 @@ Use the given TSV file as sample (cf [TSV documentation](TSV.md)).
 
 ### --step `step`
 
-Choose from wich step the workflow will start. Choose only one step. Possible values are:
+Choose from wich step the workflow will start.
+Choose only one step.
+Possible values are:
 
 - mapping (default, will start workflow with FASTQ files)
-- realign (will start workflow with BAM files (with T/N BAMs that were not realigned together))
-- recalibrate (will start workflow with BAM files and Recalibration Tables (Only with T/N BAMs that were realigned together))
+- recalibrate (will start workflow with BAM files and Recalibration Tables
 
 `--step` option is case insensitive to avoid easy introduction of errors when choosing a step.
+
 ### --test
 
 Test run Sarek on a smaller dataset, that way you don't have to specify `--sample data/tsv/tiny.tsv`
 
 ### --tools `tool1[,tool2,tool3...]`
 
-Choose which tools will be used in the workflow. Different tools to be separated by commas. Possible values are:
+Choose which tools will be used in the workflow.
+Different tools to be separated by commas.
+Possible values are:
 
 - haplotypecaller (use `HaplotypeCaller` for VC) (germlineVC)
 - manta (use `Manta` for SV) (germlineVC,somaticVC)
@@ -124,11 +129,14 @@ Choose which tools will be used in the workflow. Different tools to be separated
 - snpeff (use `snpEff` for Annotation) (annotate)
 - vep (use `VEP` for Annotation) (annotate)
 
-`--tools` option is case insensitive to avoid easy introduction of errors when choosing tools. So you can write `--tools mutect2,ascat` or `--tools MuTect2,ASCAT` without worrying about case sensitivity.
+`--tools` option is case insensitive to avoid easy introduction of errors when choosing tools.
+So you can write `--tools mutect2,ascat` or `--tools MuTect2,ASCAT` without worrying about case sensitivity.
 
 ### --annotateTools `tool1[,tool2,tool3...]`
 
-Choose which tools to annotate. Different tools to be separated by commas. Possible values are:
+Choose which tools to annotate.
+Different tools to be separated by commas.
+Possible values are:
 - haplotypecaller (Annotate `HaplotypeCaller` output)
 - manta (Annotate `Manta` output)
 - mutect2 (Annotate `MuTect2` output)
@@ -136,7 +144,8 @@ Choose which tools to annotate. Different tools to be separated by commas. Possi
 
 ### --annotateVCF `file1[,file2,file3...]`
 
-Choose vcf to annotate. Different vcfs to be separated by commas.
+Choose vcf to annotate.
+Different vcfs to be separated by commas.
 
 ### --verbose
 
@@ -190,22 +199,21 @@ Simpler to specify in the configuration files, but it's still possible to specif
 
 ### --totalMemory `memory`
 
-# Nextflow options
+## Configuration and profiles
 
-See the [options documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/OPTIONS.md)
-
-## Profiles
-
-More informations on the [SciLifeLab Nextflow documentation](https://github.com/SciLifeLab/NGI-NextflowDocs/blob/master/docs/INSTALL.md). The default profile is `standard`. You can use your own profile:
+More informations on the [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html).
+The default profile is `standard`.
+You can use your own profile:
 
 ```bash
 nextflow run SciLifeLab/Sarek --sample mysample.tsv -profile myprofile
 ```
 
-A standard profile is defined in [`nextflow.config`](../nextflow.config). You can use the files in the [`configuration/`](../configuration) directory as a base to make a new `.config` file that you can specify directly (or add as a profile):
+A standard profile is defined in [`nextflow.config`](https://github.com/SciLifeLab/Sarek/blob/master/nextflow.config).
+You can use the files in the [`conf/`](https://github.com/SciLifeLab/Sarek/tree/master/conf) directory as a base to make a new `.config` file that you can specify directly (or add as a profile):
 
 ```bash
-nextflow run SciLifeLab/Sarek --sample mysample.tsv -c config/milou.config
+nextflow run SciLifeLab/Sarek --sample mysample.tsv -c conf/personnal.config
 ```
 
 ## Update to latest version
@@ -218,7 +226,8 @@ nextflow pull SciLifeLab/Sarek
 
 ## Run the latest version
 
-If there is a feature or bugfix you want to use in a resumed or re-analyzed run, you have to update the workflow to the latest version. By default it is not updated automatically, so use something like:
+If there is a feature or bugfix you want to use in a resumed or re-analyzed run, you have to update the workflow to the latest version.
+By default it is not updated automatically, so use something like:
 
 ```bash
 nextflow run -latest SciLifeLab/Sarek/main.nf ... -resume

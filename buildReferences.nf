@@ -26,7 +26,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
  https://github.com/SciLifeLab/Sarek/README.md
 --------------------------------------------------------------------------------
  Processes overview
- - ProcessReference - Download all references if needed
  - DecompressFile - Extract files if needed
  - BuildBWAindexes - Build indexes for BWA
  - BuildReferenceIndex - Build index for FASTA refs
@@ -144,7 +143,7 @@ process BuildReferenceIndex {
 }
 
 if (params.verbose) ch_referenceIndex.view {
-  "Reference index        : ${it.fileName}"
+  "Reference index     : ${it.fileName}"
 }
 
 process BuildSAMToolsIndex {

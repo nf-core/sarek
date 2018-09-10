@@ -26,7 +26,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
  https://github.com/SciLifeLab/Sarek/README.md
 --------------------------------------------------------------------------------
  Processes overview
- - GenerateMultiQCconfig - Generate MultiQC configuration file
+ - GetVersionAll - Get version of tools
  - RunMultiQC - Run MultiQC on reports
 ================================================================================
 =                           C O N F I G U R A T I O N                          =
