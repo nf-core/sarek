@@ -405,7 +405,7 @@ process RunStrelka {
 
   script:
 	"""
-	if ![ -s "${params.targetBED}" ]; then
+	if [ ! -s "${params.targetBED}" ]; then
 		# do WGS
 		configureStrelkaSomaticWorkflow.py \
 		--tumor ${bamTumor} \
