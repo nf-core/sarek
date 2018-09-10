@@ -9,46 +9,13 @@ The workflow is started for a sample, or a set of samples from the same Individu
 Each different physical samples is identified by its own ID.
 For example in a Tumour/Normal settings, this ID could correspond to "Normal", "Tumour_1", "Tumour_2" etc. corresponding to all physical samples from the same patient.
 
-## Input FASTQ file name best practices
-
-The input folder, containing the FASTQ files for one individual (ID) should be organized into one subfolder for every sample.
-All fastq files for that sample should be collected here.
+## Preparing to run Sarek
+Sarek will start the analysis by parsing a supplied input file in tsv format.
+This file contains all the necessary information about the data and should have at least one tab-separated line:
 
 ```
-ID
-+--sample1
-+------sample1_lib_flowcell-index_lane_R1_1000.fastq.gz
-+------sample1_lib_flowcell-index_lane_R2_1000.fastq.gz
-+------sample1_lib_flowcell-index_lane_R1_1000.fastq.gz
-+------sample1_lib_flowcell-index_lane_R2_1000.fastq.gz
-+--sample2
-+------sample2_lib_flowcell-index_lane_R1_1000.fastq.gz
-+------sample2_lib_flowcell-index_lane_R2_1000.fastq.gz
-+--sample3
-+------sample3_lib_flowcell-index_lane_R1_1000.fastq.gz
-+------sample3_lib_flowcell-index_lane_R2_1000.fastq.gz
-+------sample3_lib_flowcell-index_lane_R1_1000.fastq.gz
-+------sample3_lib_flowcell-index_lane_R2_1000.fastq.gz
+SUBJECT_ID  XX    0    SAMPLEID    1    /samples/normal_1.fastq.gz    /samples/normal_2.fastq.gz
 ```
-
-Fastq filename structure:
-
-- `sample_lib_flowcell-index_lane_R1_1000.fastq.gz` and
-- `sample_lib_flowcell-index_lane_R2_1000.fastq.gz`
-
-Where:
-
-- `sample` = sample id
-- `lib` = indentifier of libaray preparation
-- `flowcell` = identifyer of flow cell for the sequencing run
-- `lane` = identifier of the lane of the sequencing run
-
-Read group information will be parsed from fastq file names according to this:
-
-- `RGID` = "sample_lib_flowcell_index_lane"
-- `RGPL` = "Illumina"
-- `PU` = sample
-- `RGLB` = lib
 
 ## Scripts
 
