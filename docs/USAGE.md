@@ -69,11 +69,11 @@ All parameters, options and variables can be specified with configuration files 
 
 ### --callName `Name`
 
-Specify a name for MultiQC report (optionnal)
+Specify a name for MultiQC report (optional)
 
 ### --contactMail `email`
 
-Specify an email for MultiQC report (optionnal)
+Specify an email for MultiQC report (optional)
 
 ### --help
 
@@ -94,7 +94,7 @@ Choose an output directory
 ### --project `ProjectID`
 
 Specify a project number ID on a UPPMAX cluster.
-(optionnal if not on such a cluster)
+(optional if not on such a cluster)
 
 ### --sample `file.tsv`
 
