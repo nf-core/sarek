@@ -214,7 +214,7 @@ process RunVEP {
   finalannotator = annotator == "snpeff" ? 'merge' : 'vep'
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
   """
-  vep \
+  vep --dir /opt/vep/.vep/  \
   -i ${vcf} \
   -o ${vcf.simpleName}_VEP.ann.vcf \
   --assembly ${genome} \
