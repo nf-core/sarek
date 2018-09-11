@@ -18,6 +18,7 @@ This checklist is for our own reference
 6. Commit and push version updates
 7. Make a [release](https://github.com/SciLifeLab/Sarek/releases) on GitHub
 8. Choose an appropriate codename for the release
-9. Tweet that new version is released
-10. Commit and push. Continue making more awesome :metal:
-11. Have fika :cake:
+9. Update [bio.tools](https://bio.tools/Sarek) with the new release
+10. Tweet that new version is released
+11. Commit and push. Continue making more awesome :metal:
+12. Have fika :cake:
