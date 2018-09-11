@@ -89,7 +89,7 @@ Four optional arguments are supported:
   Use to change the test sample (default=`Sarek-data/testdata/tsv/tiny.tsv`)
 - `-t` || `--test`:
  - `GERMLINE`: test `mapping`, `recalibrate` and Variant Calling with `HaplotypeCaller`
- - `SOMATIC`: test `mapping` and Variant Calling with `FreeBayes`, `HaplotypeCaller`, `MuTect1`, `MuTect2`, `Strelka` and `Manta`
+ - `SOMATIC`: test `mapping` and Variant Calling with `FreeBayes`, `HaplotypeCaller`, `MuTect2`, `Strelka` and `Manta`
  - `ANNOTATESNPEFF`: test annotation using `snpEFF`
  - `ANNOTATEVEP`: test annotation using `VEP`
  - `BUILDCONTAINERS`: test building all containers except `snpeffgrch37`, `snpeffgrch38`, `vepgrch37` and `vepgrch38`
