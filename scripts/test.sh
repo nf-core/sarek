@@ -94,37 +94,19 @@ then
   fi
 fi
 
-if [[ ALL,DIR =~ $TEST ]]
+if [[ ALL,GERMLINE =~ $TEST ]]
 then
-  run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal
-  clean_repo
-fi
-
-if [[ ALL,STEP =~ $TEST ]]
-then
-  run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal
+  run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal --variantCalling --tools HaplotypeCaller
   run_wrapper --germline --step recalibrate --noReports
   clean_repo
 fi
 
-if [[ ALL,GERMLINE =~ $TEST ]]
+if [[ ALL,SOMATIC =~ $TEST ]]
 then
-  run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal --variantCalling --tools HaplotypeCaller
-  clean_repo
-fi
-
-if [[ ALL,TOOLS =~ $TEST ]]
-then
-  run_wrapper --somatic --sample $SAMPLE --variantCalling  --tools FreeBayes,HaplotypeCaller,Mutect2
-fi
-
-if [[ ALL,MANTA =~ $TEST ]]
-then
-  run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-manta.tsv --variantCalling --tools Manta --noReports
+  run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-manta.tsv --variantCalling --tools FreeBayes,HaplotypeCaller,Manta,Mutect2 --noReports
   run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-manta.tsv --variantCalling --tools Manta,Strelka --noReports --strelkaBP
   clean_repo
 fi
-
 
 if [[ ALL,ANNOTATEALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
 then
