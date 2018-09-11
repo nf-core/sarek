@@ -380,7 +380,7 @@ process ConcatVCF {
 		concatOptions = "-i ${genomeIndex} -c ${task.cpus} -o ${outputFile} "
 
 	"""
-	${workflow.projectDir}/scripts/concatenateVCFs.sh ${concatOptions}
+	concatenateVCFs.sh ${concatOptions}
 	"""
 }
 
