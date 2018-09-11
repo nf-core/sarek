@@ -15,6 +15,7 @@ STEP='mapping'
 TAG='latest'
 TOOLS='haplotypecaller,strelka,manta'
 VARIANTCALLING=false
+CPUS=2
 
 while [[ $# -gt 0 ]]
 do
@@ -85,6 +86,10 @@ do
     VARIANTCALLING=true
     shift # past argument
     ;;
+    -c|--cpus)
+    CPUS=$2
+    shift # past value
+    ;;
     *) # unknown option
     shift # past argument
     ;;
@@ -92,8 +97,8 @@ do
 done
 
 function run_sarek() {
-  echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --tag $TAG --verbose$(tput sgr0)"
-  nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --tag $TAG --verbose
+  echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --tag $TAG --verbose$(tput sgr0) --max_cpus ${CPUS}"
+  nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --tag $TAG --verbose --max_cpus ${CPUS}
 }
 
 if [[ $GERMLINE == true ]] && [[ $SOMATIC == true ]]

@@ -8,6 +8,7 @@ PROFILE=singularity
 SAMPLE=Sarek-data/testdata/tsv/tiny.tsv
 TEST=ALL
 TRAVIS=${TRAVIS:-false}
+CPUS=2
 
 TMPDIR=`pwd`/tmp
 mkdir -p $TMPDIR
@@ -53,6 +54,10 @@ do
     BUILD=true
     shift # past value
     ;;
+    -c|--cpus)
+    CPUS=$2
+    shift # past value
+    ;;
     *) # unknown option
     shift # past argument
     ;;
@@ -60,7 +65,7 @@ do
 done
 
 function run_wrapper() {
-  ./scripts/wrapper.sh $@ --profile $PROFILE --genome $GENOME --genomeBase $PWD/References/$GENOME --verbose
+  ./scripts/wrapper.sh $@ --profile $PROFILE --genome $GENOME --genomeBase $PWD/References/$GENOME --verbose --cpus ${CPUS}
 }
 
 function clean_repo() {
@@ -110,12 +115,15 @@ fi
 if [[ ALL,GERMLINE =~ $TEST ]]
 then
   run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal --variantCalling --tools HaplotypeCaller
+  run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal --variantCalling --tools HaplotypeCaller --targetBED Sarek-data/testdata/target.bed
+
   clean_repo
 fi
 
 if [[ ALL,TOOLS =~ $TEST ]]
 then
   run_wrapper --somatic --sample $SAMPLE --variantCalling  --tools FreeBayes,HaplotypeCaller,Mutect2
+  run_wrapper --somatic --sample $SAMPLE --variantCalling  --tools FreeBayes,HaplotypeCaller,Mutect2,Strelka --targetBED Sarek-data/testdata/target.bed
 fi
 
 if [[ ALL,MANTA =~ $TEST ]]
@@ -126,7 +134,7 @@ then
 fi
 
 
-if [[ ALL,ANNOTATEALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
+if [[ ANNOTATEALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
 then
   if [[ $TEST = ANNOTATESNPEFF ]]
   then
@@ -152,7 +160,7 @@ then
   clean_repo
 fi
 
-if [[ ALL,BUILDCONTAINERS =~ $TEST ]] && [[ $PROFILE == docker ]]
+if [[ BUILDCONTAINERS =~ $TEST ]] && [[ $PROFILE == docker ]]
 then
   ./scripts/do_all.sh --genome $GENOME
 fi
