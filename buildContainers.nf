@@ -98,7 +98,7 @@ process PullSingularityContainers {
 
   script:
   """
-  singularity pull --name ${container}-${params.tag}.img docker://${params.repository}/${container}:${params.tag}
+  singularity build --name ${container}-${params.tag}.img docker://${params.repository}/${container}:${params.tag}
   """
 }
 
