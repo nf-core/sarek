@@ -82,14 +82,6 @@ then
     echo "$(tput setaf 1)Building references$(tput sgr0)"
     nextflow run buildReferences.nf --refDir Sarek-data/reference --outDir References/$GENOME -profile $PROFILE --genome $GENOME --verbose
   fi
-  # Remove images only on TRAVIS
-  if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
-  then
-    docker rmi -f maxulysse/igvtools:latest
-  elif [[ $PROFILE == singularity ]] && [[ $TRAVIS == true ]]
-  then
-    rm -rf work/singularity/igvtools-latest.img
-  fi
 fi
 
 if [[ ALL,GERMLINE =~ $TEST ]]
@@ -117,15 +109,6 @@ then
   elif [[ ALL,ANNOTATEALL =~ $TEST ]]
   then
     ANNOTATOR=merge,snpEFF,VEP
-  fi
-  if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
-  then
-    docker rmi -f maxulysse/sarek:latest
-    docker rmi -f maxulysse/picard:latest
-  elif [[ $PROFILE == singularity ]] && [[ $TRAVIS == true ]]
-  then
-    rm -rf work/singularity/sarek-latest.img
-    rm -rf work/singularity/picard-latest.img
   fi
   run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF Sarek-data/testdata/vcf/Strelka_1234N_variants.vcf.gz --noReports
   run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF Sarek-data/testdata/vcf/Strelka_1234N_variants.vcf.gz,Sarek-data/testdata/vcf/Strelka_9876T_variants.vcf.gz
