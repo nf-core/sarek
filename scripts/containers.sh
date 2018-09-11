@@ -5,6 +5,9 @@ PROFILE=singularity
 TEST=ALL
 TRAVIS=${TRAVIS:-false}
 
+TMPDIR=`pwd`/tmp
+mkdir -p $TMPDIR
+
 while [[ $# -gt 0 ]]
 do
   key=$1
@@ -25,7 +28,17 @@ do
   esac
 done
 
-if [[ $TEST = ANNOTATEVEP ]] && [[ $PROFILE = docker ]] && [[ $TRAVIS == true ]]
+if [[ $PROFILE = docker ]] && [[ $TRAVIS == true ]]
 then
-  docker pull maxulysse/vepgrch37:latest
+  if [[ $TEST = ANNOTATEVEP ]]
+  then
+    docker pull maxulysse/vepgrch37:latest
+  else
+    docker pull maxulysse/snpeffgrch37:latest
+  fi
+fi
+
+if [[ $TEST = ANNOTATESNPEFF ]] && [[ $PROFILE = singularity ]] && [[ $TRAVIS == true ]]
+then
+  singularity build $TMPDIR/maxulysse-snpeffgrch37-latest.simg docker://maxulysse/snpeffgrch37:latest
 fi
