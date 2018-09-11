@@ -15,8 +15,8 @@ env:
     - CE=docker      TEST=SOMATIC
     - CE=docker      TEST=ANNOTATEVEP
     - CE=singularity TEST=ANNOTATESNPEFF
-    - CE=singularity TEST=GERMLINE
     - CE=docker      TEST=ANNOTATESNPEFF
+    - CE=singularity TEST=GERMLINE
     - CE=docker      TEST=GERMLINE
 
 install:
