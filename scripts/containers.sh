@@ -40,7 +40,5 @@ fi
 
 if [[ $TEST = ANNOTATESNPEFF ]] && [[ $PROFILE = singularity ]] && [[ $TRAVIS == true ]]
 then
-  cd $TMPDIR
-  singularity build --name maxulysse-snpeffgrch37-latest.img docker://maxulysse/snpeffgrch37:latest
-  cd ..
+  singularity build $TMPDIR/maxulysse-snpeffgrch37-latest.simg docker://maxulysse/snpeffgrch37:latest
 fi
