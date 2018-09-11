@@ -13,10 +13,8 @@ TMPDIR=`pwd`/tmp
 mkdir -p $TMPDIR
 export NXF_SINGULARITY_CACHEDIR=$TMPDIR
 export NXF_TEMP=$TMPDIR
-
-export SINGULARITY_TMPDIR=$TMPDIR
 export SINGULARITY_CACHEDIR=$TMPDIR
-
+export SINGULARITY_TMPDIR=$TMPDIR
 
 # remove Reference directory
 rm -rf References
