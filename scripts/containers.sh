@@ -5,6 +5,9 @@ PROFILE=singularity
 TEST=ALL
 TRAVIS=${TRAVIS:-false}
 
+TMPDIR=`pwd`/tmp
+mkdir -p $TMPDIR
+
 while [[ $# -gt 0 ]]
 do
   key=$1
@@ -37,7 +40,7 @@ fi
 
 if [[ $TEST = ANNOTATESNPEFF ]] && [[ $PROFILE = singularity ]] && [[ $TRAVIS == true ]]
 then
-  cd tmp
+  cd $TMPDIR
   singularity build --name maxulysse-snpeffgrch37-latest.img docker://maxulysse/snpeffgrch37:latest
   cd ..
 fi
