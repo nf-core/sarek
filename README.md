@@ -82,12 +82,13 @@ The Sarek pipeline comes with documentation in the `docs/` directory:
 06. [Configuration and profiles documentation](https://github.com/SciLifeLab/Sarek/blob/master/docs/CONFIG.md)
 07. [Intervals documentation](https://github.com/SciLifeLab/Sarek/blob/master/docs/INTERVALS.md)
 08. [Running the pipeline](https://github.com/SciLifeLab/Sarek/blob/master/docs/USAGE.md)
-09. [Examples](https://github.com/SciLifeLab/Sarek/blob/master/docs/USE_CASES.md)
-10. [TSV file documentation](https://github.com/SciLifeLab/Sarek/blob/master/docs/TSV.md)
-11. [Processes documentation](https://github.com/SciLifeLab/Sarek/blob/master/docs/PROCESS.md)
-12. [Documentation about containers](https://github.com/SciLifeLab/Sarek/blob/master/docs/CONTAINERS.md)
-13. [More information about ASCAT](https://github.com/SciLifeLab/Sarek/blob/master/docs/ASCAT.md)
-14. [Output documentation structure](https://github.com/SciLifeLab/Sarek/blob/master/docs/OUTPUT.md)
+09. [Command line parameters](https://github.com/SciLifeLab/Sarek/blob/master/docs/PARAMETERS.md)
+10. [Examples](https://github.com/SciLifeLab/Sarek/blob/master/docs/USE_CASES.md)
+11. [Input files documentation](https://github.com/SciLifeLab/Sarek/blob/master/docs/INPUT.md)
+12. [Processes documentation](https://github.com/SciLifeLab/Sarek/blob/master/docs/PROCESS.md)
+13. [Documentation about containers](https://github.com/SciLifeLab/Sarek/blob/master/docs/CONTAINERS.md)
+14. [More information about ASCAT](https://github.com/SciLifeLab/Sarek/blob/master/docs/ASCAT.md)
+15. [Output documentation structure](https://github.com/SciLifeLab/Sarek/blob/master/docs/OUTPUT.md)
 
 ## Contributions & Support
 
