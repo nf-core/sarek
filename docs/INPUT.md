@@ -3,7 +3,7 @@
 Input files for Sarek can be specified using a tsv file given to the `--sample` parameter. The tsv file is a Tab Separated Value file with columns: `subject gender status sample lane fastq1 fastq2` or `subject gender status sample bam bai`.
 The content of these columns should be quite straight-forward:
 
-- `subject` designate the subject, it should be the ID of the Patient, or if you don't have one, il could be the Normal ID Sample.
+- `subject` designate the subject, it should be the ID of the Patient, or if you don't have one, it could be the Normal ID Sample.
 - `gender` is the gender of the Patient, (XX or XY)
 - `status` is the status of the Patient, (0 for Normal or 1 for Tumor)
 - `sample` designate the Sample, it should be the ID of the Sample (it is possible to have more than one tumor sample for each patient)
