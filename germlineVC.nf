@@ -652,6 +652,7 @@ def minimalInformationMessage() {
   log.info "TSV file    : " + tsvFile
   log.info "Genome      : " + params.genome
   log.info "Genome_base : " + params.genome_base
+  log.info "Target BED  : " + params.targetBED
   log.info "Tools       : " + tools.join(', ')
   log.info "Containers"
   if (params.repository != "") log.info "  Repository   : " + params.repository
