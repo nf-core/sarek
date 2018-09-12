@@ -60,7 +60,7 @@ class QC {
 // Get VEP version
   static def getVersionVEP() {
     """
-    vep --help > v_vep.txt
+    /opt/vep/src/ensembl-vep/vep --help > v_vep.txt
     """
   }
 }
