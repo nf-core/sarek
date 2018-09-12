@@ -24,11 +24,6 @@ nextflow run main.nf --sampleDir Sarek-data/testdata/manta/normal \
   --step mapping --genome smallGRCh37 --genome_base References/smallGRCh37 \
   --tag latest -profile singularity
 
-# Testing to restart from `realign`
-nextflow run main.nf --step realign \
-  --genome smallGRCh37 --genome_base References/smallGRCh37 \
-  --tag latest -profile singularity
-
 # Testing to restart from `recalibrate`
 nextflow run main.nf --step recalibrate \
   --genome smallGRCh37 --genome_base References/smallGRCh37 \
@@ -93,11 +88,8 @@ Four optional arguments are supported:
 - `-s` || `--sample`:
   Use to change the test sample (default=`Sarek-data/testdata/tsv/tiny.tsv`)
 - `-t` || `--test`:
- - `DIR`: test `mapping` with an input directory
- - `STEP`: test `mapping`, `realign` and `recalibrate`
- - `GERMLINE`: test `mapping` and Variant Calling with `HaplotypeCaller`
- - `TOOLS`: test `mapping` and Variant Calling with `FreeBayes`, `HaplotypeCaller`, `MuTect1`, `MuTect2`, `Strelka`
- - `MANTA`: test `mapping` and Variant Calling with `Manta`
+ - `GERMLINE`: test `mapping`, `recalibrate` and Variant Calling with `HaplotypeCaller`
+ - `SOMATIC`: test `mapping` and Variant Calling with `FreeBayes`, `HaplotypeCaller`, `MuTect2`, `Strelka` and `Manta`
  - `ANNOTATESNPEFF`: test annotation using `snpEFF`
  - `ANNOTATEVEP`: test annotation using `VEP`
  - `BUILDCONTAINERS`: test building all containers except `snpeffgrch37`, `snpeffgrch38`, `vepgrch37` and `vepgrch38`
