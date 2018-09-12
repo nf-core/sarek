@@ -34,9 +34,17 @@ do
     SOMATIC=true
     shift # past argument
     ;;
+    -c|--cpus)
+    CPUS=$2
+    shift # past value
+    ;;
     -d|--sampleDir)
     SAMPLEDIR=$2
     shift # past argument
+    shift # past value
+    ;;
+    -e|--bed)
+    TARGETBED=$2
     shift # past value
     ;;
     -f|--annotateVCF)
@@ -86,10 +94,6 @@ do
     VARIANTCALLING=true
     shift # past argument
     ;;
-    -c|--cpus)
-    CPUS=$2
-    shift # past value
-    ;;
     *) # unknown option
     shift # past argument
     ;;
@@ -97,8 +101,14 @@ do
 done
 
 function run_sarek() {
-  echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --tag $TAG --verbose$(tput sgr0) --max_cpus ${CPUS}"
-  nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --tag $TAG --verbose --max_cpus ${CPUS}
+	# https://stackoverflow.com/questions/3601515/how-to-check-if-a-variable-is-set-in-bash
+	if [ -z ${TARGETBED+x} ]; then	# variable unset 
+		echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --tag $TAG --verbose$(tput sgr0) --max_cpus ${CPUS}"
+		nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --tag $TAG --verbose --max_cpus ${CPUS}
+	else
+		echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --tag $TAG --verbose$(tput sgr0) --max_cpus ${CPUS}" --targetBED ${TARGETBED}
+		nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --tag $TAG --verbose --max_cpus ${CPUS} --targetBED ${TARGETBED}
+	fi
 }
 
 if [[ $GERMLINE == true ]] && [[ $SOMATIC == true ]]
