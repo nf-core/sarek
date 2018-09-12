@@ -14,10 +14,8 @@ TMPDIR=`pwd`/tmp
 mkdir -p $TMPDIR
 export NXF_SINGULARITY_CACHEDIR=$TMPDIR
 export NXF_TEMP=$TMPDIR
-
-export SINGULARITY_TMPDIR=$TMPDIR
 export SINGULARITY_CACHEDIR=$TMPDIR
-
+export SINGULARITY_TMPDIR=$TMPDIR
 
 # remove Reference directory
 rm -rf References
@@ -89,52 +87,30 @@ then
     echo "$(tput setaf 1)Building references$(tput sgr0)"
     nextflow run buildReferences.nf --refDir Sarek-data/reference --outDir References/$GENOME -profile $PROFILE --genome $GENOME --verbose
   fi
-  # Remove images only on TRAVIS
-  if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
-  then
-    docker rmi -f maxulysse/igvtools:latest
-  elif [[ $PROFILE == singularity ]] && [[ $TRAVIS == true ]]
-  then
-    rm -rf work/singularity/igvtools-latest.img
-  fi
-fi
-
-if [[ ALL,DIR =~ $TEST ]]
-then
-  run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal
-  clean_repo
-fi
-
-if [[ ALL,STEP =~ $TEST ]]
-then
-  run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal
-  run_wrapper --germline --step recalibrate --noReports
-  clean_repo
 fi
 
 if [[ ALL,GERMLINE =~ $TEST ]]
 then
-  run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal --variantCalling --tools HaplotypeCaller
-  run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal --variantCalling --tools HaplotypeCaller --bed `pwd`/Sarek-data/testdata/target.bed
-
+	# Added Strelka to germline test (no Strelka best practices test for this small data) and not asking for reports
+  run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal --variantCalling --tools HaplotypeCaller,Strelka --noReports
+	# testing targeted calls
+  run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal --variantCalling --tools HaplotypeCaller,Strelka --bed `pwd`/Sarek-data/testdata/target.bed --noReports
+  run_wrapper --germline --step recalibrate --noReports
   clean_repo
 fi
 
-if [[ ALL,TOOLS =~ $TEST ]]
+if [[ ALL,SOMATIC =~ $TEST ]]
 then
-  run_wrapper --somatic --sample $SAMPLE --variantCalling  --tools FreeBayes,HaplotypeCaller,Mutect2
-  run_wrapper --somatic --sample $SAMPLE --variantCalling  --tools FreeBayes,HaplotypeCaller,Mutect2,Strelka --bed `pwd`/Sarek-data/testdata/target.bed
-fi
-
-if [[ ALL,MANTA =~ $TEST ]]
-then
-  run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-manta.tsv --variantCalling --tools Manta --noReports
+	# Do we need HaplotypeCaller in the somatic test?
+	run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-manta.tsv --variantCalling --tools FreeBayes,HaplotypeCaller,Manta,Mutect2 --noReports
   run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-manta.tsv --variantCalling --tools Manta,Strelka --noReports --strelkaBP
+	# run targeted tests with tiny set
+  run_wrapper --somatic --sample Preprocessing/Recalibrated/recalibrated.tsv --variantCalling --tools FreeBayes,HaplotypeCaller,Mutect2,Strelka --bed `pwd`/Sarek-data/testdata/target.bed
   clean_repo
 fi
 
 
-if [[ ANNOTATEALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
+if [[ ALL,ANNOTATEALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
 then
   if [[ $TEST = ANNOTATESNPEFF ]]
   then
@@ -145,15 +121,6 @@ then
   elif [[ ALL,ANNOTATEALL =~ $TEST ]]
   then
     ANNOTATOR=merge,snpEFF,VEP
-  fi
-  if [[ $PROFILE == docker ]] && [[ $TRAVIS == true ]]
-  then
-    docker rmi -f maxulysse/sarek:latest
-    docker rmi -f maxulysse/picard:latest
-  elif [[ $PROFILE == singularity ]] && [[ $TRAVIS == true ]]
-  then
-    rm -rf work/singularity/sarek-latest.img
-    rm -rf work/singularity/picard-latest.img
   fi
   run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF Sarek-data/testdata/vcf/Strelka_1234N_variants.vcf.gz --noReports
   run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF Sarek-data/testdata/vcf/Strelka_1234N_variants.vcf.gz,Sarek-data/testdata/vcf/Strelka_9876T_variants.vcf.gz
