@@ -92,9 +92,12 @@ fi
 if [[ ALL,GERMLINE =~ $TEST ]]
 then
 	# Added Strelka to germline test (no Strelka best practices test for this small data) and not asking for reports
+	echo "###########################   TESTING GERMLINE WGS ########################################"
   run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal --variantCalling --tools HaplotypeCaller,Strelka --noReports
 	# testing targeted calls
+	echo "###########################   TESTING GERMLINE TARGETED ########################################"
   run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal --variantCalling --tools HaplotypeCaller,Strelka --bed `pwd`/Sarek-data/testdata/target.bed --noReports
+	echo "###########################   TESTING GERMLINE RECALIBRATION ########################################"
   run_wrapper --germline --step recalibrate --noReports
   clean_repo
 fi
@@ -102,10 +105,13 @@ fi
 if [[ ALL,SOMATIC =~ $TEST ]]
 then
 	# Do we need HaplotypeCaller in the somatic test?
+	echo "###########################   TESTING SOMATIC FROM SCRATCH ########################################"
 	run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-manta.tsv --variantCalling --tools FreeBayes,HaplotypeCaller,Manta,Mutect2 --noReports
+	echo "###########################   TESTING SOMATIC STRELKA BEST PRACTICE FROM SCRATCH ########################################"
   run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-manta.tsv --variantCalling --tools Manta,Strelka --noReports --strelkaBP
 	# run targeted tests with tiny set
-  run_wrapper --somatic --sample Preprocessing/Recalibrated/recalibrated.tsv --variantCalling --tools FreeBayes,HaplotypeCaller,Mutect2,Strelka --bed `pwd`/Sarek-data/testdata/target.bed
+	echo "###########################   TESTING SOMATIC TARGETED  ########################################"
+  run_wrapper --somatic --sample  Sarek-data/testdata/tsv/tiny.tsv --variantCalling --tools FreeBayes,HaplotypeCaller,Mutect2,Strelka --bed `pwd`/Sarek-data/testdata/target.bed
   clean_repo
 fi
 
