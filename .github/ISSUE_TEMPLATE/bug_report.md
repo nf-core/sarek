@@ -31,5 +31,8 @@ A clear and concise description of what you expected to happen.
 **Container (please complete the following information):**
  - tag: [e.g. 1.0.0]
 
+**Sarek (please complete the following information):**
+ - version: [e.g. 2.1.0]
+
 **Additional context**
 Add any other context about the problem here.

@@ -1,24 +1,34 @@
 # Release checklist
-This checklist is for our own reference
 
-1. Check that everything is up to date and ready to go
-    - Travis tests are passing
-    - Manual tests on Bianca are passing
-2. Increase version numbers
-3. Update version numbers in code: `configuration/base.config`
-4. Build, and get the containers.
-    - `./scripts/do_all.sh --push --tag <VERSION>`
-    - `./scripts/do_all.sh --pull --tag <VERSION>`
-5. Test against sample data.
-    - Check for any command line errors
-    - Check version numbers are printed correctly
-    - `./scripts/test.sh -p docker --tag <VERSION>`
-    - `./scripts/test.sh -p singularity --tag <VERSION>`
-    - `./scripts/test.sh -p singularityPath --tag <VERSION>`
-6. Commit and push version updates
-7. Make a [release](https://github.com/SciLifeLab/Sarek/releases) on GitHub
-8. Choose an appropriate codename for the release
-9. Update [bio.tools](https://bio.tools/Sarek) with the new release
-10. Tweet that new version is released
-11. Commit and push. Continue making more awesome :metal:
-12. Have fika :cake:
+> This checklist is for our own reference, to help us prepare a new release
+
+1.  Check that everything is ready to go
+
+    -   [PRs](https://github.com/SciLifeLab/Sarek/pulls) are merged
+    -   [Travis tests](https://travis-ci.org/SciLifeLab/Sarek/branches) are passing on `dev`
+
+2.  Increase version number following [semantic versioning](http://semver.org/spec/v2.0.0.html)
+3.  Choose an appropriate codename for the release
+    -   i.e. Peaks in [Sarek National Park](https://en.wikipedia.org/wiki/Sarek_National_Park#Topography)
+4.  Build docker containers.
+
+    -   `./scripts/do_all.sh --tag <VERSION>`
+
+5.  Test against sample data.
+
+    -   `./scripts/test.sh -p docker --tag <VERSION>`
+    -   Check for any command line errors
+
+6.  Use script to update version in files:
+
+    -   `./scripts/do_release.sh -r "<VERSION>" -c "<CODENAME>"`
+
+7.  Push latest updates
+8.  Make a PR against `dev`
+9.  Merge said PR
+10. Make a [release](https://github.com/SciLifeLab/Sarek/releases) on GitHub
+11. Update [bio.tools](https://bio.tools/Sarek) with the new release details
+12. Tweet that a new version is released
+13. Add a new `Unreleased` section in `CHANGELOG.md` for the `dev` version
+14. Commit and push. Continue making more awesome :metal:
+15. Have fika :cake:
