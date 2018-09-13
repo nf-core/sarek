@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#620](https://github.com/SciLifeLab/Sarek/pull/620) - Add `tmp/` to `.gitignore`
 -   [#625](https://github.com/SciLifeLab/Sarek/pull/625) - Add [`pathfindr`](https://github.com/NBISweden/pathfindr) as a submodule
 -   [#629](https://github.com/SciLifeLab/Sarek/pull/629) - Add a complete example analysis to docs
+-   [#635](https://github.com/SciLifeLab/Sarek/pull/635) - To process targeted sequencing with a target BED
 -   [#640](https://github.com/SciLifeLab/Sarek/pull/640) - Add helper script for changing version number
 
 ### `Changed`
@@ -31,7 +32,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#637](https://github.com/SciLifeLab/Sarek/pull/637) - Update tool version gathering
 -   [#638](https://github.com/SciLifeLab/Sarek/pull/638) - Use correct `.simg` extension for Singularity images
 -   [#639](https://github.com/SciLifeLab/Sarek/pull/639) - Smaller refactoring of the docs
--   [#640](https://github.com/SciLifeLab/Sarek/pull/640) - Update RELEASE_CHECKLIST
+-   [#640](https://github.com/SciLifeLab/Sarek/pull/640) - Update RELEASE\_CHECKLIST
 
 ### `Removed`
 
