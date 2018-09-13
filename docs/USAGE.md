@@ -1,224 +1,22 @@
-# Usage
+# How to run Sarek
 
-I would recommend to run Nextflow within a [screen](https://www.gnu.org/software/screen/) or [tmux](https://tmux.github.io/) session.
+This guide will take you through your first run of Sarek.
+It is divided into two steps corresponding to the two main types of analysis offered by Sarek:
+ - Run a Germline Analysis
+ - Run a Somatic Analysis
 
-## Project folder structure
+This guide assumes you have internet access on the server where the analysis will take place. If you do not have that, please look into the [installation instructions](INSTALL_BIANCA.md) for the restricted access server Bianca at Uppmax, which should give an idea on how to adjust the following examples accordingly.
 
-The workflow is started for a sample, or a set of samples from the same Individual.
 
-Each different physical samples is identified by its own ID.
-For example in a Tumour/Normal settings, this ID could correspond to "Normal", "Tumour_1", "Tumour_2" etc. corresponding to all physical samples from the same patient.
+It is recommended to run Sarek within a [screen](https://www.gnu.org/software/screen/) or [tmux](https://tmux.github.io/) session.
+This helps Sarek run uninterrupted until the analysis has finished.
+Furthermore, Sarek is designed to be run on a single sample for a germline analysis or a set of samples from the same individual for a somatic analysis.
+If more than one individual will be analysed, it is recommended that this is done in separate directories which is analysed separately.
 
-## Input FASTQ file name best practices
-
-The input folder, containing the FASTQ files for one individual (ID) should be organized into one subfolder for every sample.
-All fastq files for that sample should be collected here.
-
-```
-ID
-+--sample1
-+------sample1_lib_flowcell-index_lane_R1_1000.fastq.gz
-+------sample1_lib_flowcell-index_lane_R2_1000.fastq.gz
-+------sample1_lib_flowcell-index_lane_R1_1000.fastq.gz
-+------sample1_lib_flowcell-index_lane_R2_1000.fastq.gz
-+--sample2
-+------sample2_lib_flowcell-index_lane_R1_1000.fastq.gz
-+------sample2_lib_flowcell-index_lane_R2_1000.fastq.gz
-+--sample3
-+------sample3_lib_flowcell-index_lane_R1_1000.fastq.gz
-+------sample3_lib_flowcell-index_lane_R2_1000.fastq.gz
-+------sample3_lib_flowcell-index_lane_R1_1000.fastq.gz
-+------sample3_lib_flowcell-index_lane_R2_1000.fastq.gz
-```
-
-Fastq filename structure:
-
-- `sample_lib_flowcell-index_lane_R1_1000.fastq.gz` and
-- `sample_lib_flowcell-index_lane_R2_1000.fastq.gz`
-
-Where:
-
-- `sample` = sample id
-- `lib` = indentifier of libaray preparation
-- `flowcell` = identifyer of flow cell for the sequencing run
-- `lane` = identifier of the lane of the sequencing run
-
-Read group information will be parsed from fastq file names according to this:
-
-- `RGID` = "sample_lib_flowcell_index_lane"
-- `RGPL` = "Illumina"
-- `PU` = sample
-- `RGLB` = lib
-
-## Scripts
-
-Sarek uses several scripts, a wrapper is currently being made to simplify the command lines.
-Currently the typical reduced command lines are:
-
-```bash
-nextflow run SciLifeLab/Sarek/main.nf --sample <file.tsv> --step <step>
-nextflow run SciLifeLab/Sarek/germlineVC.nf --sample <file.tsv> --tools <tool>
-nextflow run SciLifeLab/Sarek/somaticVC.nf --sample <file.tsv> --tools <tool>
-nextflow run SciLifeLab/Sarek/annotate.nf --tools <tool> (--annotateTools <tools>||--annotateVCF <vcfs>)
-nextflow run SciLifeLab/Sarek/runMultiQC.nf
-```
-
-All parameters, options and variables can be specified with configuration files and profile (cf [configuration documentation](#profiles)).
-
-## Options
-
-### --callName `Name`
-
-Specify a name for MultiQC report (optional)
-
-### --contactMail `email`
-
-Specify an email for MultiQC report (optional)
-
-### --help
-
-Display help
-
-### --noReports
-
-Disable all QC tools and MultiQC to generate a HTML report.
-
-### --onlyQC
-
-Run only QC tools and MultiQC to generate a HTML report.
-
-### --outDir
-
-Choose an output directory
-
-### --project `ProjectID`
-
-Specify a project number ID on a UPPMAX cluster.
-(optional if not on such a cluster)
-
-### --sample `file.tsv`
-
-Use the given TSV file as sample (cf [TSV documentation](TSV.md)).
-
-### --step `step`
-
-Choose from wich step the workflow will start.
-Choose only one step.
-Possible values are:
-
-- mapping (default, will start workflow with FASTQ files)
-- recalibrate (will start workflow with BAM files and Recalibration Tables
-
-`--step` option is case insensitive to avoid easy introduction of errors when choosing a step.
-
-### --test
-
-Test run Sarek on a smaller dataset, that way you don't have to specify `--sample data/tsv/tiny.tsv`
-
-### --tools `tool1[,tool2,tool3...]`
-
-Choose which tools will be used in the workflow.
-Different tools to be separated by commas.
-Possible values are:
-
-- haplotypecaller (use `HaplotypeCaller` for VC) (germlineVC)
-- manta (use `Manta` for SV) (germlineVC,somaticVC)
-- strelka (use `Strelka` for VC) (germlineVC,somaticVC)
-- ascat (use `ASCAT` for CNV) (somaticVC)
-- mutect2 (use `MuTect2` for VC) (somaticVC)
-- snpeff (use `snpEff` for Annotation) (annotate)
-- vep (use `VEP` for Annotation) (annotate)
-
-`--tools` option is case insensitive to avoid easy introduction of errors when choosing tools.
-So you can write `--tools mutect2,ascat` or `--tools MuTect2,ASCAT` without worrying about case sensitivity.
-
-### --annotateTools `tool1[,tool2,tool3...]`
-
-Choose which tools to annotate.
-Different tools to be separated by commas.
-Possible values are:
-- haplotypecaller (Annotate `HaplotypeCaller` output)
-- manta (Annotate `Manta` output)
-- mutect2 (Annotate `MuTect2` output)
-- strelka (Annotate `Strelka` output)
-
-### --annotateVCF `file1[,file2,file3...]`
-
-Choose vcf to annotate.
-Different vcfs to be separated by commas.
-
-### --verbose
-
-Display more information about files being processed.
-
-## Containers
-
-### --containerPath `Path to the singularity containers (default=containers/)`
-
-### --repository `Docker-hub repository (default=maxulysse)`
-
-### --tag `tag of the containers to use (default=current version)`
-
-## References
-
-If needed, you can specify each reference file by command line.
-
-### --acLoci `acLoci file`
-
-### --bwaIndex `bwaIndex file`
-
-### --cosmic `cosmic file`
-
-### --cosmicIndex `cosmicIndex file`
-
-### --dbsnp `dbsnp file`
-
-### --dbsnpIndex `dbsnpIndex file`
-
-### --genomeDict `genomeDict file`
-
-### --genomeFile `genomeFile file`
-
-### --genomeIndex `genomeIndex file`
-
-### --intervals `intervals file`
-
-### --knownIndels `knownIndels file`
-
-### --knownIndelsIndex `knownIndelsIndex file`
-
-### --snpeffDb `snpeffDb file`
-
-## Parameters
-
-Simpler to specify in the configuration files, but it's still possible to specify every thing in the command line.
-
-### --runTime `time`
-
-### --singleCPUMem `memory`
-
-### --totalMemory `memory`
-
-## Configuration and profiles
-
-More informations on the [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html).
-The default profile is `standard`.
-You can use your own profile:
-
-```bash
-nextflow run SciLifeLab/Sarek --sample mysample.tsv -profile myprofile
-```
-
-A standard profile is defined in [`nextflow.config`](https://github.com/SciLifeLab/Sarek/blob/master/nextflow.config).
-You can use the files in the [`conf/`](https://github.com/SciLifeLab/Sarek/tree/master/conf) directory as a base to make a new `.config` file that you can specify directly (or add as a profile):
-
-```bash
-nextflow run SciLifeLab/Sarek --sample mysample.tsv -c conf/personnal.config
-```
 
 ## Update to latest version
 
-To update workflow to the latest version use:
+To make sure that you have the latest version of Sarek, use:
 
 ```bash
 nextflow pull SciLifeLab/Sarek
@@ -231,4 +29,156 @@ By default it is not updated automatically, so use something like:
 
 ```bash
 nextflow run -latest SciLifeLab/Sarek/main.nf ... -resume
+```
+
+## Not on Uppmax
+The commands used in this guide is suitable on how to run on a cluster at Uppmax.
+To run these examples on a different infrastructure, there are a few things that needs to be changed.
+
+ - Most likely, the `slurm` profile is not suitable to use.
+ Find a more suitable one (or design your own) using the [configuration documentation](CONFIG.md)
+ - The path for where reference genomes are located (specified in the `--genome_base` parameter) need to be modified.
+ Use the instructions in the [reference documentation](REFERENCES.md) to make sure all the reference files are available.
+
+
+## Run a Germline Analysis
+This section presents a complete instruction to run a germline analysis using Sarek on a single sample.
+Sarek will start the analysis by parsing a supplied input file in TSV format.
+This file contains all the necessary information about the data and for the germline analysis it should have at least one line.
+For more detailed information about how to construct TSV files for custom data, see [input documentation](INPUT.md).
+
+For example, the file can be called `samples_germline.tsv` with the content (corresponding to columns: `subject gender status sample lane fastq1 fastq2`):
+
+```
+SUBJECT_ID  XX    0    SAMPLEID    1    /samples/normal_1.fastq.gz    /samples/normal_2.fastq.gz
+```
+
+The first workflow that will be run is contained in the `main.nf` file and performs the preprocessing step consisting of mapping, marking of duplicates and base recalibration. Running this command will launch a nextflow process in the terminal which in turn submits jobs (processes) to the SLURM queue.
+```
+nextflow run SciLifeLab/Sarek/main.nf \
+--sample samples_germline.tsv \
+-profile slurm  \
+--project <your uppmax project id> \
+--genome_base /sw/data/uppnex/ToolBox/hg38bundle \
+--genome GRCh38
+```
+
+When the workflow has finished successfully it should print something similar to this:
+```
+Completed at: Fri Aug 31 05:10:07 CEST 2018
+Duration    : 1d 13h 24m 51s
+Success     : true
+Exit status : 0
+```
+Make sure to check that the output states `Success : true` and not `Success : false`.
+The results of the first step is located in the `Preprocessing` directory.
+These files will be used in the next step, where the actual variant calling takes place.
+Among other things, the preprocessing step should have created a new TSV file which is intended to be used as input for the variant calling step:
+```
+nextflow run SciLifeLab/Sarek/germlineVC.nf \
+--sample Preprocessing/Recalibrated/recalibrated.tsv \
+-profile slurm  \
+--project <your uppmax project id> \
+--genome_base /sw/data/uppnex/ToolBox/hg38bundle \
+--genome GRCh38 \
+--tools HaplotypeCaller
+```
+When successful (`Success : true`), this step should produce vcf file(s) within a `VariantCalling` directory.
+The next workflow will annotate the found variants.
+It is possible to specify the tools used for annotation (here VEP) and the variant-calling tools to use as input for annotation (here HaplotypeCaller).
+```
+nextflow run SciLifeLab/Sarek/annotate.nf \
+--annotateTools HaplotypeCaller \
+-profile slurm \
+--project <your uppmax project id> \
+--genome_base ~/Sarek/References/smallGRCh37 \
+--tools VEP
+```
+
+Finally, run MultiQC to get an easily accessible report of all your analysis.
+```
+nextflow run SciLifeLab/Sarek/runMultiQC.nf \
+-profile slurm
+--project <your uppmax project id> \
+```
+## Run a Somatic Analysis
+
+This section presents a complete instruction on how to run a somatic analysis using Sarek on two  samples from the same individual. In this case one normal sample and one tumour sample will be used. However, Sarek can also accept more than one tumour sample (i.e. relapses) for the same individual.
+
+Note: Four out of five of the steps included in this example are identical or very similar to the steps included in the germline analysis example. Therefore, much of the information in this example is redundant compared to the first example.
+
+Sarek will start the analysis by parsing a supplied input file in TSV format.
+This file contains all the necessary information about the data and for the somatic analysis it should have at least two lines.
+These lines have columns corresonding to `subject gender status sample lane fastq1 fastq2`.
+For more detailed information about how to construct TSV files for custom data, see [input documentation](INPUT.md).
+
+For example, the file can be called `samples_somatic.tsv` with the content:
+
+```
+SUBJECT_ID  XX    0    SAMPLEID1    1    /samples/normal_1.fastq.gz    /samples/normal_2.fastq.gz
+SUBJECT_ID  XX    1    SAMPLEID2    1    /samples/tumour_1.fastq.gz    /samples/tumour_2.fastq.gz
+```
+The first workflow that will be run is contained in the `main.nf` file and performs the preprocessing step consisting of mapping, marking of duplicates and base recalibration. Running this command will launch a nextflow process in the terminal which in turn submits jobs (processes) to the SLURM queue.
+```
+nextflow run SciLifeLab/Sarek/main.nf \
+--sample samples_somatic.tsv \
+-profile slurm  \
+--project <your uppmax project id> \
+--genome_base /sw/data/uppnex/ToolBox/hg38bundle \
+--genome GRCh38
+```
+
+When the workflow has finished successfully it should print something similar to this:
+```
+Completed at: Fri Aug 31 05:10:07 CEST 2018
+Duration    : 1d 13h 24m 51s
+Success     : true
+Exit status : 0
+```
+
+Make sure to check that the output states `Success : true` and not `Success : false`.
+The results of the first step is located in the `Preprocessing` directory.
+These files will be used in the next two steps, where the actual variant calling takes place.
+Among other things, the preprocessing step should have created a new TSV file which is intended to be used as input for the variant calling steps:
+
+```
+nextflow run SciLifeLab/Sarek/germlineVC.nf \
+--sample Preprocessing/Recalibrated/recalibrated.tsv \
+-profile slurm  \
+--project <your uppmax project id> \
+--genome_base /sw/data/uppnex/ToolBox/hg38bundle \
+--genome GRCh38 \
+--tools HaplotypeCaller
+```
+When successful (`Success : true`), this step should produce vcf file(s) within a `VariantCalling` directory.
+The first variant calling step is actually the one from the germline analysis.
+This is included here since information regarding germline variants is still useful for analysis of somatic variants.
+The next variant calling step is the somatic specific analysis:
+```
+nextflow run SciLifeLab/Sarek/somaticVC.nf \
+--sample Preprocessing/Recalibrated/recalibrated.tsv \
+-profile slurm \
+--project <your uppmax project id> \
+--genome_base /sw/data/uppnex/ToolBox/hg38bundle \
+--genome GRCh38 \
+--tools Strelka
+```
+When successful (`Success : true`), this step should produce vcf file(s) within the `VariantCalling` directory separate from the germline vcf file.
+The next workflow will annotate the found variants.
+It is possible to specify the tools used for annotation (here VEP) and the variant-calling tools to use as input for annotation (here HaplotypeCaller and Strelka).
+```
+nextflow run SciLifeLab/Sarek/annotate.nf \
+--annotateTools HaplotypeCaller,Strelka \
+-profile slurm \
+--project <your uppmax project id> \
+--genome_base ~/Sarek/References/smallGRCh37 \
+--containerPath \
+--tools VEP
+```
+
+Finally, run MultiQC to get an easily accessible report of all your analysis.
+```
+nextflow run SciLifeLab/Sarek/runMultiQC.nf \
+-profile slurm
+--project <your uppmax project id> \
 ```
