@@ -6,5 +6,5 @@ LABEL \
 	maintainer="Maxime Garcia <maxime.garcia@scilifelab.se>, Szilveszter Juhos <Szilveszter.Juhos@scilifelab.se>"
 
 COPY environment.yml /
-RUN conda env update -n root -f /environment.yml && conda clean -a
-ENV PATH /opt/conda/bin:$PATH
+RUN conda env create -f /environment.yml && conda clean -a
+ENV PATH /opt/conda/envs/sarek-2.1.0/bin:$PATH
