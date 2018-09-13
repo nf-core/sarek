@@ -1,6 +1,6 @@
 # Release checklist
 
-This checklist is for our own reference
+> This checklist is for our own reference, to help us prepare a new release
 
 1.  Check that everything is ready to go
 
