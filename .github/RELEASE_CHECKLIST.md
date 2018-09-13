@@ -4,7 +4,7 @@
 
 1.  Check that everything is ready to go
 
-    -   [PRs](https://github.com/SciLifeLab/Sarek/pull) are merged
+    -   [PRs](https://github.com/SciLifeLab/Sarek/pulls) are merged
     -   [Travis tests](https://travis-ci.org/SciLifeLab/Sarek/branches) are passing on `dev`
 
 2.  Increase version number following [semantic versioning](http://semver.org/spec/v2.0.0.html)
