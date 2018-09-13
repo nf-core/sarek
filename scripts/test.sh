@@ -93,7 +93,7 @@ fi
 if [[ ALL,GERMLINE =~ $TEST ]]
 then
 	# Added Strelka to germline test (no Strelka best practices test for this small data) and not asking for reports
-	run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal --variantCalling --tools HaplotypeCaller,Strelka
+	run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal --variantCalling --tools HaplotypeCaller,Strelka --noReports
 	run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal --variantCalling --tools HaplotypeCaller,Strelka --bed `pwd`/Sarek-data/testdata/target.bed --noReports
 	run_wrapper --germline --step recalibrate --noReports
 	clean_repo
@@ -103,7 +103,8 @@ if [[ ALL,SOMATIC =~ $TEST ]]
 then
 	run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-manta.tsv --variantCalling --tools FreeBayes,HaplotypeCaller,Manta,Mutect2 --noReports
 	run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-manta.tsv --variantCalling --tools Manta,Strelka --noReports --strelkaBP
-	run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny.tsv --variantCalling --tools FreeBayes,HaplotypeCaller,Mutect2,Strelka --bed `pwd`/Sarek-data/testdata/target.bed
+	# Disabling targeted somatic as it is practically the same as the germline, and takes aaaages
+	#run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny.tsv --variantCalling --tools Mutect2,Strelka --bed `pwd`/Sarek-data/testdata/target.bed
 	clean_repo
 fi
 
