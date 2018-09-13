@@ -3,7 +3,7 @@
 Input files for Sarek can be specified using a tsv file given to the `--sample` parameter. The tsv file is a Tab Separated Value file with columns: `subject gender status sample lane fastq1 fastq2` or `subject gender status sample bam bai`.
 The content of these columns should be quite straight-forward:
 
-- `subject` designate the subject, it should be the ID of the Patient, or if you don't have one, il could be the Normal ID Sample.
+- `subject` designate the subject, it should be the ID of the Patient, or if you don't have one, it could be the Normal ID Sample.
 - `gender` is the gender of the Patient, (XX or XY)
 - `status` is the status of the Patient, (0 for Normal or 1 for Tumor)
 - `sample` designate the Sample, it should be the ID of the Sample (it is possible to have more than one tumor sample for each patient)
@@ -57,3 +57,44 @@ All the files will be in he Preprocessing/Recalibrated/ directory, and by defaul
 ```bash
 nextflow run SciLifeLab/Sarek/somaticVC.nf --sample Preprocessing/Recalibrated/mysample.tsv --tools Mutect2,Strelka
 ```
+
+## Input FASTQ file name best practices
+
+The input folder, containing the FASTQ files for one individual (ID) should be organized into one subfolder for every sample.
+All fastq files for that sample should be collected here.
+
+```
+ID
++--sample1
++------sample1_lib_flowcell-index_lane_R1_1000.fastq.gz
++------sample1_lib_flowcell-index_lane_R2_1000.fastq.gz
++------sample1_lib_flowcell-index_lane_R1_1000.fastq.gz
++------sample1_lib_flowcell-index_lane_R2_1000.fastq.gz
++--sample2
++------sample2_lib_flowcell-index_lane_R1_1000.fastq.gz
++------sample2_lib_flowcell-index_lane_R2_1000.fastq.gz
++--sample3
++------sample3_lib_flowcell-index_lane_R1_1000.fastq.gz
++------sample3_lib_flowcell-index_lane_R2_1000.fastq.gz
++------sample3_lib_flowcell-index_lane_R1_1000.fastq.gz
++------sample3_lib_flowcell-index_lane_R2_1000.fastq.gz
+```
+
+Fastq filename structure:
+
+- `sample_lib_flowcell-index_lane_R1_1000.fastq.gz` and
+- `sample_lib_flowcell-index_lane_R2_1000.fastq.gz`
+
+Where:
+
+- `sample` = sample id
+- `lib` = indentifier of libaray preparation
+- `flowcell` = identifyer of flow cell for the sequencing run
+- `lane` = identifier of the lane of the sequencing run
+
+Read group information will be parsed from fastq file names according to this:
+
+- `RGID` = "sample_lib_flowcell_index_lane"
+- `RGPL` = "Illumina"
+- `PU` = sample
+- `RGLB` = lib
