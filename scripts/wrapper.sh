@@ -106,7 +106,7 @@ function run_sarek() {
 		echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --tag $TAG --verbose$(tput sgr0) --max_cpus ${CPUS}"
 		nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --tag $TAG --verbose --max_cpus ${CPUS}
 	else
-		echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --tag $TAG --verbose$(tput sgr0) --max_cpus ${CPUS}" --targetBED ${TARGETBED}
+		echo "$(tput setaf 1)nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --tag $TAG --verbose$(tput sgr0) --max_cpus ${CPUS} --targetBED ${TARGETBED}"
 		nextflow run $@ -profile $PROFILE --genome $GENOME --genome_base $GENOMEBASE --tag $TAG --verbose --max_cpus ${CPUS} --targetBED ${TARGETBED}
 	fi
 }
