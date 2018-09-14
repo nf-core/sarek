@@ -1,0 +1,12 @@
+{
+				"metadata": { 
+								"upload_type": "dataset",
+								"publication_type": "other",
+								"publication_date": "2018-09-14",
+								"title": "Eljen II Rakoczi Feco",
+								"creators": [ { "name": "Szilveszter, Juhos", "affiliation": "SciLifeLab" }],
+								"description": "This is my first upload",
+								"access_right": "open", 
+								"license": { "id":"cc-by" }
+				}
+}
