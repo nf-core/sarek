@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#638](https://github.com/SciLifeLab/Sarek/pull/638) - Use correct `.simg` extension for Singularity images
 -   [#639](https://github.com/SciLifeLab/Sarek/pull/639) - Smaller refactoring of the docs
 -   [#640](https://github.com/SciLifeLab/Sarek/pull/640) - Update RELEASE_CHECKLIST
+-   [#642](https://github.com/SciLifeLab/Sarek/pull/642) - Update conda channel order priorities
 
 ### `Removed`
 
