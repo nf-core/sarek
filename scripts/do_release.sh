@@ -37,7 +37,8 @@ echo "Preparing release $RELEASE - $CODENAME"
 
 sed -i "s/\[Unreleased\]/[$RELEASE] - $CODENAME - $(date +'%Y-%m-%d')/g" CHANGELOG.md
 sed -i "s/sarek-[0-9\.]\+/sarek-$RELEASE/g" Dockerfile
+sed -i "s/sarek-[0-9\.]\+/sarek-$RELEASE/g" environment.yml
 sed -i "s/sarek-[0-9\.]\+/sarek-$RELEASE/g" Singularity
 sed -i "s/version = '[0-9\.]\+'/version = '$RELEASE'/g" conf/base.config
 
-git commit CHANGELOG.md Dockerfile Singularity conf/base.config -m "preparing release $RELEASE [skip ci]"
+git commit CHANGELOG.md Dockerfile environment.yml Singularity conf/base.config -m "preparing release $RELEASE [skip ci]"

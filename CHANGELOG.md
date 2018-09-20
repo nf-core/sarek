@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#620](https://github.com/SciLifeLab/Sarek/pull/620) - Add `tmp/` to `.gitignore`
 -   [#625](https://github.com/SciLifeLab/Sarek/pull/625) - Add [`pathfindr`](https://github.com/NBISweden/pathfindr) as a submodule
 -   [#639](https://github.com/SciLifeLab/Sarek/pull/639) - Add a complete example analysis to docs
--   [#640](https://github.com/SciLifeLab/Sarek/pull/640) - Add helper script for changing version number
+-   [#640](https://github.com/SciLifeLab/Sarek/pull/640), [#642](https://github.com/SciLifeLab/Sarek/pull/642) - Add helper script for changing version number
 
 ### `Changed`
 
@@ -32,6 +32,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#638](https://github.com/SciLifeLab/Sarek/pull/638) - Use correct `.simg` extension for Singularity images
 -   [#639](https://github.com/SciLifeLab/Sarek/pull/639) - Smaller refactoring of the docs
 -   [#640](https://github.com/SciLifeLab/Sarek/pull/640) - Update RELEASE_CHECKLIST
+-   [#642](https://github.com/SciLifeLab/Sarek/pull/642) - Update conda channel order priorities
+-   [#642](https://github.com/SciLifeLab/Sarek/pull/642) - MultiQC 1.5 -> 1.6
+-   [#642](https://github.com/SciLifeLab/Sarek/pull/642) - Qualimap 2.2.2a -> 2.2.2b
+-   [#642](https://github.com/SciLifeLab/Sarek/pull/642) - VCFanno 0.2.8 -> 0.3.0
+-   [#642](https://github.com/SciLifeLab/Sarek/pull/642) - VCFtools 0.1.15 -> 0.1.16
 
 ### `Removed`
 

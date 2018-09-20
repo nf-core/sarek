@@ -79,7 +79,7 @@ We provide script to build/push or pull all containers
 
 ### sarek [![sarek-docker status][sarek-docker-badge]][sarek-docker-link]
 
-- Based on `debian:8.9`
+- Based on `nfcore/base:latest`
 - Contain **[BCFTools][bcftools-link]** 1.8
 - Contain **[BWA][bwa-link]** 0.7.17
 - Contain **[FastQC][fastqc-link]** 0.11.7
@@ -88,12 +88,12 @@ We provide script to build/push or pull all containers
 - Contain **[HTSlib][htslib-link]** 1.9
 - Contain **[IGVtools][igvtools-link]** 2.3.93
 - Contain **[Manta][manta-link]** 1.4.0
-- Contain **[MultiQC][multiqc-link]** 1.5
-- Contain **[Qualimap][qualimap-link]** 2.2.2a
+- Contain **[MultiQC][multiqc-link]** 1.6
+- Contain **[Qualimap][qualimap-link]** 2.2.2b
 - Contain **[samtools][samtools-link]** 1.8
 - Contain **[Strelka2][strelka-link]** 2.9.3
-- Contain **[VCFanno][vcfanno-link]** 0.2.8
-- Contain **[VCFtools][vcftools-link]** 0.1.15
+- Contain **[VCFanno][vcfanno-link]** 0.3.0
+- Contain **[VCFtools][vcftools-link]** 0.1.16
 
 ### snpeff [![snpeff-docker status][snpeff-docker-badge]][snpeff-docker-link]
 
