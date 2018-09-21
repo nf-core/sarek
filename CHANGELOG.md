@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.2.0] - Skårki - 2018-09-21
+
 ### `Added`
 
 -   [#613](https://github.com/SciLifeLab/Sarek/pull/613) - Add Issue Templates (bug report and feature request)
@@ -32,7 +34,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#637](https://github.com/SciLifeLab/Sarek/pull/637) - Update tool version gathering
 -   [#638](https://github.com/SciLifeLab/Sarek/pull/638) - Use correct `.simg` extension for Singularity images
 -   [#639](https://github.com/SciLifeLab/Sarek/pull/639) - Smaller refactoring of the docs
--   [#640](https://github.com/SciLifeLab/Sarek/pull/640) - Update RELEASE\_CHECKLIST
+-   [#640](https://github.com/SciLifeLab/Sarek/pull/640) - Update RELEASE_CHECKLIST
 -   [#642](https://github.com/SciLifeLab/Sarek/pull/642) - Update conda channel order priorities
 -   [#642](https://github.com/SciLifeLab/Sarek/pull/642) - MultiQC 1.5 -> 1.6
 -   [#642](https://github.com/SciLifeLab/Sarek/pull/642) - Qualimap 2.2.2a -> 2.2.2b
