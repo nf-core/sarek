@@ -12,10 +12,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#613](https://github.com/SciLifeLab/Sarek/pull/613) - Add Issue Templates (bug report and feature request)
 -   [#614](https://github.com/SciLifeLab/Sarek/pull/614) - Add PR Template
 -   [#615](https://github.com/SciLifeLab/Sarek/pull/615) - Add presentation
--   [#615](https://github.com/SciLifeLab/Sarek/pull/615) - Update documentation
+-   [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Update documentation
 -   [#620](https://github.com/SciLifeLab/Sarek/pull/620) - Add `tmp/` to `.gitignore`
 -   [#625](https://github.com/SciLifeLab/Sarek/pull/625) - Add [`pathfindr`](https://github.com/NBISweden/pathfindr) as a submodule
 -   [#639](https://github.com/SciLifeLab/Sarek/pull/639) - Add a complete example analysis to docs
+-   [#635](https://github.com/SciLifeLab/Sarek/pull/635) - To process targeted sequencing with a target BED
 -   [#640](https://github.com/SciLifeLab/Sarek/pull/640), [#642](https://github.com/SciLifeLab/Sarek/pull/642) - Add helper script for changing version number
 
 ### `Changed`
@@ -31,7 +32,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#637](https://github.com/SciLifeLab/Sarek/pull/637) - Update tool version gathering
 -   [#638](https://github.com/SciLifeLab/Sarek/pull/638) - Use correct `.simg` extension for Singularity images
 -   [#639](https://github.com/SciLifeLab/Sarek/pull/639) - Smaller refactoring of the docs
--   [#640](https://github.com/SciLifeLab/Sarek/pull/640) - Update RELEASE_CHECKLIST
+-   [#640](https://github.com/SciLifeLab/Sarek/pull/640) - Update RELEASE\_CHECKLIST
 -   [#642](https://github.com/SciLifeLab/Sarek/pull/642) - Update conda channel order priorities
 -   [#642](https://github.com/SciLifeLab/Sarek/pull/642) - MultiQC 1.5 -> 1.6
 -   [#642](https://github.com/SciLifeLab/Sarek/pull/642) - Qualimap 2.2.2a -> 2.2.2b

@@ -164,7 +164,16 @@ SUBJECT_ID  XX    0    SAMPLEIDN    /samples/SAMPLEIDN.bam    /samples/SAMPLEIDN
 SUBJECT_ID  XX    1    SAMPLEIDT    /samples/SAMPLEIDT.bam    /samples/SAMPLEIDT.bai
 SUBJECT_ID  XX    1    SAMPLEIDR    /samples/SAMPLEIDR.bam    /samples/SAMPLEIDR.bai
 ```
-
 If you want to restart a previous run of the pipeline, you may not have a recalibrated BAM file.
 This is the case if HaplotypeCaller was the only tool (recalibration is done on-the-fly with HaplotypeCaller to improve performance and save space).
 In this case, you need to start with `--step=recalibrate` (see previous section).
+
+## Processing targeted (whole exome or panel) sequencing data
+
+The recommended flow for thrgeted sequencing data is to use the whole genome workflow as it is, but also provide a BED file containing targets for variant calling. 
+The Strelka part of the workflow will pick up these intervals, and activate the `--exome` flag to process deeper coverage. It is adviced to pad the variant calling 
+regions (exons or the target) to some extent before submitting to the workflow. To add the target BED file configure the flow like:
+
+```bash
+nextflow run SciLifeLab/Sarek/germlineVC.nf --tools haplotypecaller,strelka,mutect2 --targetBED targets.bed --sample my_panel.tsv
+```
