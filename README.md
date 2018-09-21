@@ -1,6 +1,6 @@
-# [![Sarek](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/docs/images/Sarek_logo.png "Sarek")](http://opensource.scilifelab.se/projects/sarek/)
+# [![Sarek](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/docs/images/Sarek_logo.png "Sarek")](http://sarek.scilifelab.se/)
 
-#### An open-source analysis pipeline to detect germline or somatic variants from whole genome sequencing
+#### An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing
 
 [![Nextflow version][nextflow-badge]][nextflow-link]
 [![Travis build status][travis-badge]][travis-link]
@@ -21,7 +21,7 @@ Previously known as the Cancer Analysis Workflow (CAW),
 Sarek is a workflow designed to run analyses on WGS data from regular samples or tumour / normal pairs, including relapse samples if required.
 
 It's built using [Nextflow][nextflow-link], a domain specific language for workflow building.
-Software dependencies are handled using [Docker](https://www.docker.com) or [Singularity](http://singularity.lbl.gov) - container technologies that provide excellent reproducibility and ease of use.
+Software dependencies are handled using [Docker](https://www.docker.com) or [Singularity](https://www.sylabs.io/singularity/) - container technologies that provide excellent reproducibility and ease of use.
 Singularity has been designed specifically for high-performance computing environments.
 This means that although Sarek has been primarily designed for use with the Swedish [UPPMAX HPC systems](https://www.uppmax.uu.se), it should be able to run on any system that supports these two tools.
 
@@ -82,12 +82,13 @@ The Sarek pipeline comes with documentation in the `docs/` directory:
 06. [Configuration and profiles documentation](https://github.com/SciLifeLab/Sarek/blob/master/docs/CONFIG.md)
 07. [Intervals documentation](https://github.com/SciLifeLab/Sarek/blob/master/docs/INTERVALS.md)
 08. [Running the pipeline](https://github.com/SciLifeLab/Sarek/blob/master/docs/USAGE.md)
-09. [Examples](https://github.com/SciLifeLab/Sarek/blob/master/docs/USE_CASES.md)
-10. [TSV file documentation](https://github.com/SciLifeLab/Sarek/blob/master/docs/TSV.md)
-11. [Processes documentation](https://github.com/SciLifeLab/Sarek/blob/master/docs/PROCESS.md)
-12. [Documentation about containers](https://github.com/SciLifeLab/Sarek/blob/master/docs/CONTAINERS.md)
-13. [More information about ASCAT](https://github.com/SciLifeLab/Sarek/blob/master/docs/ASCAT.md)
-14. [Output documentation structure](https://github.com/SciLifeLab/Sarek/blob/master/docs/OUTPUT.md)
+09. [Command line parameters](https://github.com/SciLifeLab/Sarek/blob/master/docs/PARAMETERS.md)
+10. [Examples](https://github.com/SciLifeLab/Sarek/blob/master/docs/USE_CASES.md)
+11. [Input files documentation](https://github.com/SciLifeLab/Sarek/blob/master/docs/INPUT.md)
+12. [Processes documentation](https://github.com/SciLifeLab/Sarek/blob/master/docs/PROCESS.md)
+13. [Documentation about containers](https://github.com/SciLifeLab/Sarek/blob/master/docs/CONTAINERS.md)
+14. [More information about ASCAT](https://github.com/SciLifeLab/Sarek/blob/master/docs/ASCAT.md)
+15. [Output documentation structure](https://github.com/SciLifeLab/Sarek/blob/master/docs/OUTPUT.md)
 
 ## Contributions & Support
 

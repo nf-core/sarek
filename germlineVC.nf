@@ -31,10 +31,11 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - CreateIntervalBeds - Create and sort intervals into bed files
  - RunHaplotypecaller - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
  - RunGenotypeGVCFs - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
- - ConcatVCF - Merge results from HaplotypeCaller, MuTect2 and other paralellized callers
+ - ConcatVCF - Merge results from paralellized callers
  - RunSingleStrelka - Run Strelka for Germline Variant Calling
  - RunSingleManta - Run Manta for Single Structural Variant Calling
  - RunBcftoolsStats - Run BCFTools stats on vcf files
+ - RunVcftools - Run VCFTools on vcf files
 ================================================================================
 =                           C O N F I G U R A T I O N                          =
 ================================================================================
@@ -362,7 +363,8 @@ process ConcatVCF {
     file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
 
   output:
-    set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfConcatenated
+		// we have this funny *_* pattern to avoid copying the raw calls to publishdir
+    set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into vcfConcatenated
 
 
   when: ( 'haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools ) && !params.onlyQC
@@ -372,47 +374,14 @@ process ConcatVCF {
   else if (variantCaller == 'gvcf-hc') outputFile = "haplotypecaller_${idSampleNormal}.g.vcf"
   else outputFile = "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
 
-  """
-	set -euo pipefail
-  # first make a header from one of the VCF intervals
-  # get rid of interval information only from the GATK command-line, but leave the rest
-  FIRSTVCF=\$(ls *.vcf | head -n 1)
-  sed -n '/^[^#]/q;p' \$FIRSTVCF | \
-  awk '!/GATKCommandLine/{print}/GATKCommandLine/{for(i=1;i<=NF;i++){if(\$i!~/intervals=/ && \$i !~ /out=/){printf("%s ",\$i)}}printf("\\n")}' \
-  > header
+	if(params.targetBED)		// targeted
+		concatOptions = "-i ${genomeIndex} -c ${task.cpus} -o ${outputFile} -t ${params.targetBED}"
+	else										// WGS
+		concatOptions = "-i ${genomeIndex} -c ${task.cpus} -o ${outputFile} "
 
-  # Get list of contigs from the FASTA index (.fai). We cannot use the ##contig
-  # header in the VCF as it is optional (FreeBayes does not save it, for example)
-  CONTIGS=(\$(cut -f1 ${genomeIndex}))
-
-  # concatenate VCFs in the correct order
-  (
-    cat header
-
-    for chr in "\${CONTIGS[@]}"; do
-      # Skip if globbing would not match any file to avoid errors such as
-      # "ls: cannot access chr3_*.vcf: No such file or directory" when chr3
-      # was not processed.
-      pattern="\${chr}_*.vcf"
-      if ! compgen -G "\${pattern}" > /dev/null; then continue; fi
-
-      # ls -v sorts by numeric value ("version"), which means that chr1_100_
-      # is sorted *after* chr1_99_.
-      for vcf in \$(ls -v \${pattern}); do
-        # Determine length of header.
-        # The 'q' command makes sed exit when it sees the first non-header
-        # line, which avoids reading in the entire file.
-        L=\$(sed -n '/^[^#]/q;p' \${vcf} | wc -l)
-
-        # Then print all non-header lines. Since tail is very fast (nearly as
-        # fast as cat), this is way more efficient than using a single sed,
-        # awk or grep command.
-        tail -n +\$((L+1)) \${vcf}
-      done
-    done
-  ) | bgzip > ${outputFile}.gz
-  tabix ${outputFile}.gz
-  """
+	"""
+	concatenateVCFs.sh ${concatOptions}
+	"""
 }
 
 if (params.verbose) vcfConcatenated = vcfConcatenated.view {
@@ -440,23 +409,32 @@ process RunSingleStrelka {
   when: 'strelka' in tools && !params.onlyQC
 
   script:
-  """
-  configureStrelkaGermlineWorkflow.py \
-  --bam ${bam} \
-  --referenceFasta ${genomeFile} \
-  --runDir Strelka
+	"""
+	if [ ! -s "${params.targetBED}" ]; then
+		# do WGS
+		configureStrelkaGermlineWorkflow.py \
+		--bam ${bam} \
+		--referenceFasta ${genomeFile} \
+		--runDir Strelka
+	else
+		# WES or targeted
+		bgzip --threads ${task.cpus} -c ${params.targetBED} > call_targets.bed.gz
+		tabix call_targets.bed.gz
+		configureStrelkaGermlineWorkflow.py \
+		--bam ${bam} \
+		--referenceFasta ${genomeFile} \
+		--exome \
+		--callRegions call_targets.bed.gz \
+		--runDir Strelka
+	fi
 
-  python Strelka/runWorkflow.py -m local -j ${task.cpus}
-
-  mv Strelka/results/variants/genome.*.vcf.gz \
-    Strelka_${idSample}_genome.vcf.gz
-  mv Strelka/results/variants/genome.*.vcf.gz.tbi \
-    Strelka_${idSample}_genome.vcf.gz.tbi
-  mv Strelka/results/variants/variants.vcf.gz \
-    Strelka_${idSample}_variants.vcf.gz
-  mv Strelka/results/variants/variants.vcf.gz.tbi \
-    Strelka_${idSample}_variants.vcf.gz.tbi
-  """
+	# always run this part
+		python Strelka/runWorkflow.py -m local -j ${task.cpus}
+		mv Strelka/results/variants/genome.*.vcf.gz Strelka_${idSample}_genome.vcf.gz
+		mv Strelka/results/variants/genome.*.vcf.gz.tbi Strelka_${idSample}_genome.vcf.gz.tbi
+		mv Strelka/results/variants/variants.vcf.gz Strelka_${idSample}_variants.vcf.gz
+		mv Strelka/results/variants/variants.vcf.gz.tbi Strelka_${idSample}_variants.vcf.gz.tbi
+	"""
 }
 
 if (params.verbose) singleStrelkaOutput = singleStrelkaOutput.view {
@@ -674,6 +652,7 @@ def minimalInformationMessage() {
   log.info "TSV file    : " + tsvFile
   log.info "Genome      : " + params.genome
   log.info "Genome_base : " + params.genome_base
+  log.info "Target BED  : " + params.targetBED
   log.info "Tools       : " + tools.join(', ')
   log.info "Containers"
   if (params.repository != "") log.info "  Repository   : " + params.repository

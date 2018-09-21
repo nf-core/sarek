@@ -5,56 +5,61 @@ For more informations on how to use configuration files, have a look at the [Nex
 For more informations about profiles, have a look at the [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html#config-profiles)
 
 We provides several configuration files and profiles for Sarek.
-The standard ones are designed to work on a Swedish UPPMAX clusters, and can be modified and tailored to your own need.
+The standard ones are designed to work on a Swedish UPPMAX cluster, but can be modified and tailored to your own need.
+
 
 ## Configuration files
 
 Every configuration file can be modified for your own use.
 If you want you can specify the use of a config file using `-c <config file>`
 
-### [`containers.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/containers.config)
+### [`containers.config`](https://github.com/SciLifeLab/Sarek/blob/master/conf/containers.config)
 
 Define Containers for all process.
 Images will be pulled automatically.
 Use in your own profile if needed.
 
-### [`docker.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/docker.config)
+### [`docker.config`](https://github.com/SciLifeLab/Sarek/blob/master/conf/docker.config)
 
 Define Docker Containers for all process.
 Images will be pulled automatically.
 Use in your own profile if needed.
 
-### [`genomes.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/genomes.config)
+### [`genomes.config`](https://github.com/SciLifeLab/Sarek/blob/master/conf/genomes.config)
 
 Contain path to all references.
 Modify it if you want to change genome version, or the path to your references files.
 
-### [`singularity-path.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/singularity-path.config)
+### [`singularity-path.config`](https://github.com/SciLifeLab/Sarek/blob/master/conf/singularity-path.config)
 
 Define path to Singularity Containers for all process.
 To be used when downloading Singularity Containers, like on a secure UPPMAX cluster.
 Images will not be pulled automatically.
 You need to set them up before.
 
-### [`singularity.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/singularity.config)
+### [`singularity.config`](https://github.com/SciLifeLab/Sarek/blob/master/conf/singularity.config)
 
 Define Singularity Containers for all process.
 Images will be pulled automatically.
 Use in your own profile if needed.
 
-### [`travis.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/travis.config)
+### [`travis.config`](https://github.com/SciLifeLab/Sarek/blob/master/conf/travis.config)
 
 To be used for Travis (2 cpus) or on small computer for testing purpose
 
-### [`uppmax-slurm.config`](https://github.com/SciLifeLab/Sarek/blob/master/configuration/uppmax-slurm.config)
+### [`uppmax-slurm.config`](https://github.com/SciLifeLab/Sarek/blob/master/conf/uppmax-slurm.config)
 
 Slurm configuration for a UPPMAX cluster
 Will run the workflow on `/scratch` using the Nextflow [`scratch`](https://www.nextflow.io/docs/latest/process.html#scratch) directive
 
-## profiles
+## Profiles
+A profile is a convenient way of specifying which set of configuration files to use.
+The default profile is `standard`, but Sarek has multiple predefined profiles which are listed below that can be specified by specifying `-profile <profile>`:
 
-Every profile can be modified for your own use.
-To use a profile, you'll need to specify `-profile <profile>`
+```bash
+nextflow run SciLifeLab/Sarek --sample mysample.tsv -profile myprofile
+```
+
 
 ### `docker`
 
@@ -82,3 +87,14 @@ Singularity images will be pulled automatically.
 
 This is the profile for Singularity testing on a small machine, or on Travis CI.
 Singularity images will be pulled automatically.
+
+## Customisation
+The recommended way to use custom settings is to supply Sarek with an additional configuration file. You can use the files in the [`conf/`](https://github.com/SciLifeLab/Sarek/tree/master/conf) directory as an inspiration to make this new `.config` file and specify it using the `-c` flag:
+
+```bash
+nextflow run SciLifeLab/Sarek --sample mysample.tsv -c conf/personal.config
+```
+
+Any configuration field specified in this file has precedence over the predefined configurations but any field left out from the file will be set by the normal configuration files included in the specified (or `standard`) profile.
+
+Furthermore, to find out which configuration files take action for the different profiles, the profiles are defined in the file  [`nextflow.config`](https://github.com/SciLifeLab/Sarek/blob/master/nextflow.config).

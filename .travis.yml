@@ -11,19 +11,11 @@ env:
   global:
     - NXF_VER=0.31.0 SGT_VER=2.5.1
   matrix:
-    - CE=singularity TEST=TOOLS
-    - CE=singularity TEST=MANTA
-    - CE=docker      TEST=MANTA
-    - CE=docker      TEST=TOOLS
+    - CE=docker      TEST=SOMATIC
     - CE=docker      TEST=ANNOTATEVEP
-    - CE=singularity TEST=ANNOTATESNPEFF
-    - CE=singularity TEST=STEP
-    - CE=singularity TEST=GERMLINE
-    - CE=singularity TEST=DIR
     - CE=docker      TEST=ANNOTATESNPEFF
-    - CE=docker      TEST=STEP
     - CE=docker      TEST=GERMLINE
-    - CE=docker      TEST=DIR
+
 
 install:
   # Install Nextflow (and Singularity if needed)

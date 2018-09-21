@@ -1,0 +1,12 @@
+{
+				"metadata": { 
+								"upload_type": "dataset",
+								"publication_type": "other",
+								"publication_date": "2018-09-14",
+								"title": "References and test data for Sarek",
+								"creators": [ { "name": "Maxime Garcia", "affiliation": "SciLifeLab" },{ "name": "Szilveszter, Juhos", "affiliation": "SciLifeLab"}],
+								"description": "Reference files necessary to run somatic/germline variation discovery for https://github.com/SciLifeLab/Sarek",
+								"access_right": "open", 
+								"license": { "id":"cc-by" }
+				}
+}
