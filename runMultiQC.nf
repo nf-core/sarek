@@ -50,28 +50,28 @@ process GetVersionAll {
   publishDir directoryMap.multiQC, mode: 'link'
 
   input:
-    file(versions) from Channel.fromPath("${directoryMap.version}/*").collect()
+    file(versions) from Channel.fromPath("${directoryMap.version}/*").collect().ifEmpty(file ("empty"))
 
   output:
-  file ("tool_versions_mqc.yaml") into versionsForMultiQC
+    file ("tool_versions_mqc.yaml") into versionsForMultiQC
 
   when: !params.noReports
 
   script:
   """
-  bcftools version > v_bcftools.txt
+  bcftools version > v_bcftools.txt 2>&1 || true
   bwa &> v_bwa.txt 2>&1 || true
-  configManta.py --version > v_manta.txt
-  configureStrelkaGermlineWorkflow.py --version > v_strelka.txt
-  echo "${params.version}" &> v_sarek.txt
-  echo "${workflow.nextflow.version}" &> v_nextflow.txt
-  fastqc -v > v_fastqc.txt
-  freebayes --version > v_freebayes.txt
-  gatk ApplyBQSR --help 2>&1 | grep Version: > v_gatk.txt
-  multiqc --version &> v_multiqc.txt
-  qualimap --version &> v_qualimap.txt
-  samtools --version &> v_samtools.txt
-  vcftools --version > v_vcftools.txt
+  configManta.py --version > v_manta.txt 2>&1 || true
+  configureStrelkaGermlineWorkflow.py --version > v_strelka.txt 2>&1 || true
+  echo "${params.version}" &> v_sarek.txt 2>&1 || true
+  echo "${workflow.nextflow.version}" &> v_nextflow.txt 2>&1 || true
+  fastqc -v > v_fastqc.txt 2>&1 || true
+  freebayes --version > v_freebayes.txt 2>&1 || true
+  gatk ApplyBQSR --help 2>&1 | grep Version: > v_gatk.txt 2>&1 || true
+  multiqc --version &> v_multiqc.txt 2>&1 || true
+  qualimap --version &> v_qualimap.txt 2>&1 || true
+  samtools --version &> v_samtools.txt 2>&1 || true
+  vcftools --version &> v_vcftools.txt 2>&1 || true
 
   scrape_tool_versions.py &> tool_versions_mqc.yaml
   """
