@@ -10,10 +10,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### `Changed`
 
 -   [#646](https://github.com/SciLifeLab/Sarek/pull/646) - Update [`pathfindr`](https://github.com/NBISweden/pathfindr) submodule
+-   [#659](https://github.com/SciLifeLab/Sarek/pull/659) - Update Nextflow to `0.32.0`
 
 ### `Fixed`
 
 -   [#657](https://github.com/SciLifeLab/Sarek/pull/657) - Fix `RunMultiQC.nf` bug
+-   [#659](https://github.com/SciLifeLab/Sarek/pull/659) - Fix bugs due to updating Nextflow
 
 ## [2.2.0] - Skårki - 2018-09-21
 
