@@ -9,19 +9,20 @@ addons:
 
 env:
   global:
-    - NXF_VER=0.31.0 SGT_VER=2.5.1
+    - NXF_VER=0.32.0
   matrix:
-    - CE=docker      TEST=SOMATIC
-    - CE=docker      TEST=ANNOTATEVEP
-    - CE=docker      TEST=ANNOTATESNPEFF
-    - CE=docker      TEST=GERMLINE
-
+    - TEST=SOMATIC
+    - TEST=ANNOTATEVEP
+    - TEST=ANNOTATESNPEFF
+    - TEST=GERMLINE
 
 install:
-  # Install Nextflow (and Singularity if needed)
-  - "./scripts/install.sh --engine $CE"
+  # Install Nextflow
+  - curl -fsSL get.nextflow.io | bash
+  - chmod +x nextflow
+  - sudo mv nextflow /usr/local/bin/
   # Donwload big containers for ANNOTATEVEP and ANNOTATESNPEF tests)
-  - "travis_retry ./scripts/containers.sh --profile $CE --test $TEST"
+  - "travis_retry ./scripts/containers.sh --profile docker --test $TEST"
 
 # Build references when needed
 before_script: "./scripts/test.sh --profile $CE --test $TEST --build"

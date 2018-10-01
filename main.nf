@@ -454,7 +454,7 @@ def checkUppmaxProject() {
 }
 
 def checkExactlyOne(list) {
-  final n = 0
+  def n = 0
   list.each{n += it ? 1 : 0}
   return n == 1
 }
@@ -668,7 +668,7 @@ def nextflowMessage() {
 
 def sarekMessage() {
   // Display Sarek message
-  log.info "Sarek - Workflow For Somatic And Germline Variations ~ ${params.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
+  log.info "Sarek - Workflow For Somatic And Germline Variations ~ ${workflow.manifest.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
 }
 
 def startMessage() {
