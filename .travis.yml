@@ -25,7 +25,7 @@ install:
   - "travis_retry ./scripts/containers.sh --profile docker --test $TEST"
 
 # Build references when needed
-before_script: "./scripts/test.sh --profile $CE --test $TEST --build"
+before_script: "./scripts/test.sh --profile docker --test $TEST --build"
 
 # Actual tests
-script: "./scripts/test.sh --profile $CE --test $TEST"
+script: "./scripts/test.sh --profile docker --test $TEST"
