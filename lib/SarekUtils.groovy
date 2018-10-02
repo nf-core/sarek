@@ -114,7 +114,7 @@ class SarekUtils {
     def f = file(fileToCheck)
     // this is an expanded wildcard: we can assume all files exist
     if (f instanceof List && f.size() > 0) return true
-    else if (!f.exists()) { 
+    else if (!f.exists()) {
 			println  "Missing references: ${referenceFile} ${fileToCheck}"
       return false
     }
@@ -184,7 +184,7 @@ class SarekUtils {
 
   // Compare params to list of verified params
   static def isAllowedParams(params) {
-    final test = true
+    def test = true
     params.each{
       if (!checkParams(it.toString().split('=')[0])) {
         println "params ${it.toString().split('=')[0]} is unknown"

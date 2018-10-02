@@ -39,6 +39,6 @@ sed -i "s/\[Unreleased\]/[$RELEASE] - $CODENAME - $(date +'%Y-%m-%d')/g" CHANGEL
 sed -i "s/sarek-[0-9\.]\+/sarek-$RELEASE/g" Dockerfile
 sed -i "s/sarek-[0-9\.]\+/sarek-$RELEASE/g" environment.yml
 sed -i "s/sarek-[0-9\.]\+/sarek-$RELEASE/g" Singularity
-sed -i "s/version = '[0-9\.]\+'/version = '$RELEASE'/g" conf/base.config
+sed -i "s/version = '[0-9\.]\+'/version = '$RELEASE'/g" nextflow.config
 
-git commit CHANGELOG.md Dockerfile environment.yml Singularity conf/base.config -m "preparing release $RELEASE [skip ci]"
+git commit CHANGELOG.md Dockerfile environment.yml Singularity nextflow.config -m "preparing release $RELEASE [skip ci]"
