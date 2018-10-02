@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### `Changed`
 
 -   [#646](https://github.com/SciLifeLab/Sarek/pull/646) - Update [`pathfindr`](https://github.com/NBISweden/pathfindr) submodule
+-   [#660](https://github.com/SciLifeLab/Sarek/pull/660) - Update docs
 
 ### `Fixed`
 
