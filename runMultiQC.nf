@@ -63,7 +63,7 @@ process GetVersionAll {
   bwa &> v_bwa.txt 2>&1 || true
   configManta.py --version > v_manta.txt 2>&1 || true
   configureStrelkaGermlineWorkflow.py --version > v_strelka.txt 2>&1 || true
-  echo "${params.version}" &> v_sarek.txt 2>&1 || true
+  echo "${workflow.manifest.version}" &> v_sarek.txt 2>&1 || true
   echo "${workflow.nextflow.version}" &> v_nextflow.txt 2>&1 || true
   fastqc -v > v_fastqc.txt 2>&1 || true
   freebayes --version > v_freebayes.txt 2>&1 || true
@@ -132,7 +132,7 @@ def checkUppmaxProject() {
 def createMultiQCconfig() {
   def file = workDir.resolve('multiqc_config.yaml')
   file.text  = """
-  custom_logo: ${baseDir}/doc/images/Sarek_no_Border.png
+  custom_logo: ${baseDir}/docs/images/Sarek_no_Border.png
   custom_logo_url: http://opensource.scilifelab.se/projects/sarek
   custom_logo_title: 'Sarek'
   report_header_info:
@@ -191,7 +191,7 @@ def nextflowMessage() {
 
 def sarekMessage() {
   // Display Sarek message
-  log.info "Sarek - Workflow For Somatic And Germline Variations ~ ${params.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
+  log.info "Sarek - Workflow For Somatic And Germline Variations ~ ${workflow.manifest.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
 }
 
 def startMessage() {
