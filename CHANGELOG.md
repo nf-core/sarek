@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### `Changed`
+
+-   [#663](https://github.com/SciLifeLab/Sarek/pull/663) - Update `do_release.sh` script
+
 ## [2.2.1] - 2018-10-04
 
 ### `Changed`
