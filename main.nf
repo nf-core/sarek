@@ -233,12 +233,12 @@ process MarkDuplicates {
     }
 
   input:
-    set idPatient, status, idSample, file(bam) from mergedBam
+    set idPatient, status, idSample, file("${idSample}.bam") from mergedBam
 
   output:
     set idPatient, file("${idSample}_${status}.md.bam"), file("${idSample}_${status}.md.bai") into duplicateMarkedBams
     set idPatient, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai") into markDuplicatesTSV
-    file ("${bam}.metrics") into markDuplicatesReport
+    file ("${idSample}.bam.metrics") into markDuplicatesReport
 
   when: step == 'mapping' && !params.onlyQC
 
@@ -247,8 +247,8 @@ process MarkDuplicates {
   gatk --java-options -Xmx${task.memory.toGiga()}g \
   MarkDuplicates \
   --MAX_RECORDS_IN_RAM 50000 \
-  --INPUT ${bam} \
-  --METRICS_FILE ${bam}.metrics \
+  --INPUT ${idSample}.bam \
+  --METRICS_FILE ${idSample}.bam.metrics \
   --TMP_DIR . \
   --ASSUME_SORT_ORDER coordinate \
   --CREATE_INDEX true \
