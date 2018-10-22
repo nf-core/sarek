@@ -680,6 +680,7 @@ process RunAscat {
 
   input:
     set idPatient, idSampleNormal, idSampleTumor, file(bafNormal), file(logrNormal), file(bafTumor), file(logrTumor) from convertAlleleCountsOutput
+    set file(acLociGC) from Channel.value([referenceMap.acLociGC])
 
   output:
     set val("ascat"), idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.*.{png,txt}") into ascatOutput
@@ -690,7 +691,7 @@ process RunAscat {
   """
   # get rid of "chr" string if there is any
   for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
-  run_ascat.r ${bafTumor} ${logrTumor} ${bafNormal} ${logrNormal} ${idSampleTumor} ${baseDir}
+  run_ascat.r ${bafTumor} ${logrTumor} ${bafNormal} ${logrNormal} ${idSampleTumor} ${baseDir} ${acLociGC}
   """
 }
 
@@ -830,6 +831,7 @@ def defineReferenceMap() {
   return [
     // loci file for ascat
     'acLoci'           : checkParamReturnFile("acLoci"),
+    'acLociGC'           : checkParamReturnFile("acLociGC"),
     'dbsnp'            : checkParamReturnFile("dbsnp"),
     'dbsnpIndex'       : checkParamReturnFile("dbsnpIndex"),
     // cosmic VCF with VCF4.1 header
@@ -923,6 +925,7 @@ def minimalInformationMessage() {
   log.info "  Tag          : " + params.tag
   log.info "Reference files used:"
   log.info "  acLoci      :\n\t" + referenceMap.acLoci
+  log.info "  acLociGC      :\n\t" + referenceMap.acLociGC
   log.info "  cosmic      :\n\t" + referenceMap.cosmic
   log.info "\t" + referenceMap.cosmicIndex
   log.info "  dbsnp       :\n\t" + referenceMap.dbsnp
