@@ -70,12 +70,11 @@ The loci file in GRCh38 coordinates is stored on Uppmax in:
 /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/1000G_phase3_GRCh38_maf0.3.loci
 ```
 
-## Running on Milou
+## Running on Uppmax
 
 ### Run AlleleCount
 
-AlleleCount is installed as part of the `bioinfo-tools` module on Milou.
-It runs on single bam files (tumor and normal separately) with the command below:
+AlleleCount is installed as part of the `bioinfo-tools` module on Uppmax. It runs on single bam files (tumor and normal separately) with the command below:
 
 ```bash
 $ module load bioinfo-tools alleleCount
@@ -95,7 +94,7 @@ This creates the BAF and LogR data for the tumor and normal samples, to be used 
 
 ### Run ASCAT
 
-The script "run_ascat.r" can be used to run ASCAT in the simplest possible way without compensating for the local CG content across the genome. It calls the main ASCAT R script [ascat.R](https://github.com/Crick-CancerGenomics/ascat/tree/master/ASCAT/R/ascat.R). Run_ascat.r runs ascat with parameter gamme=1, as recommended for NGS data.
+The script "bin/run_ascat.r" can be used to run ASCAT in the simplest possible way without compensating for the local CG content across the genome. It calls the main ASCAT R script [ascat.R](https://github.com/Crick-CancerGenomics/ascat/tree/master/ASCAT/R/ascat.R). Run_ascat.r runs ascat with parameter gamme=1, as recommended for NGS data.
 
 
 ```bash
@@ -103,15 +102,15 @@ sbatch -A PROJID -p core -n 1 -t 240:00:00 -J ascat -e ascat.err -o ascat.out ru
 ```
 
 ### Output
-The Ascat process gives several images as output, described in detail in this [book chapter](http://www.ncbi.nlm.nih.gov/pubmed/22130873).
-The script also gives out a text file with information about predicted copy number regions, called tumor.cnv.txt. The output is a tab delimited text file with the following columns:  chr     startpos        endpos  nMajor  nMinor  
+The Ascat process gives several images as output, described in detail in this [book chapter](http://www.ncbi.nlm.nih.gov/pubmed/22130873).  
+The script also gives out a text file (*tumor.cnvs.txt*) with information about copy number state for all the segments predicted by Ascat. The output is a tab delimited text file with the following columns:  chr     startpos        endpos  nMajor  nMinor 
 Where:  
 *chr* is the chromosome number  
 *startpos* is the start position of the segment  
 *endpos* is the end position of the segment  
 *nMajor* is number of copies of one of the allels (for example the chromosome inherited from the father)  
-*nMajor* is the number of copies of the other allele (for example the chromosome inherited of the mother)   
-
+*nMinor* is the number of copies of the other allele (for example the chromosome inherited of the mother)   
+The file *tumor.cnvs.txt* contains all segments predicted by Ascat, both those with normal copy number (nMinor = 1 and nMajor =1) and those corresponding to copy number aberrations. 
 
 ## Flowchart
 
