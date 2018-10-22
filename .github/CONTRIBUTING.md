@@ -15,10 +15,16 @@ is as follows:
 1. Check that there isn't already an issue about your idea in the
    [Sarek issues](https://github.com/SciLifeLab/Sarek/issues) to avoid
    duplicating work.
-    * Feel free to add a new issue here for the same reason.
+    * Feel free to add a [new issue here](https://github.com/SciLifeLab/Sarek/issues/new/choose) for the same reason.
 2. Fork the Sarek repository to your GitHub account
-3. Make the necessary changes / additions within your forked repository
-4. Submit a Pull Request against the master branch and wait for the code to be reviewed and merged.
+3. [Configure a remote for your fork](https://help.github.com/articles/configuring-a-remote-for-a-fork/)
+```
+git remote add upstream https://github.com/SciLifeLab/Sarek.git
+```
+
+4. [Sync your fork](https://help.github.com/articles/syncing-a-fork/)
+5. Make the necessary changes / additions within your forked repository
+6. Submit a [Pull Request](https://github.com/SciLifeLab/Sarek/compare) against the `dev` branch and wait for the code to be reviewed and merged.
 
 If you're not used to this workflow with git, you can start with some [basic docs from GitHub](https://help.github.com/articles/fork-a-repo/) or even their [excellent interactive tutorial](https://try.github.io/).
 

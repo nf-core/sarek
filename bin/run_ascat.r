@@ -9,6 +9,7 @@ if(length(args)<6){
     normallogr = args[4]
     tumorname = args[5]
     baseDir = args[6]
+    gcfile = args[7]
 }
 
 source(paste(baseDir,"/scripts/ascat.R", sep=""))
@@ -22,6 +23,9 @@ options(bitmapType='cairo')
 
 #Load the  data
 ascat.bc <- ascat.loadData(Tumor_LogR_file=tumorlogr, Tumor_BAF_file=tumorbaf, Germline_LogR_file=normallogr, Germline_BAF_file=normalbaf)
+
+#GC wave correction
+ascat.bc = ascat.GCcorrect(ascat.bc, gcfile)
 
 #Plot the raw data
 ascat.plotRawData(ascat.bc)

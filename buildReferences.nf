@@ -26,7 +26,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
  https://github.com/SciLifeLab/Sarek/README.md
 --------------------------------------------------------------------------------
  Processes overview
- - ProcessReference - Download all references if needed
  - DecompressFile - Extract files if needed
  - BuildBWAindexes - Build indexes for BWA
  - BuildReferenceIndex - Build index for FASTA refs
@@ -36,20 +35,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
 =                           C O N F I G U R A T I O N                          =
 ================================================================================
 */
-
-// Check that Nextflow version is up to date enough
-// try / throw / catch works for NF versions < 0.25 when this was implemented
-try {
-    if( ! nextflow.version.matches(">= ${params.nfRequiredVersion}") ){
-        throw GroovyException('Nextflow version too old')
-    }
-} catch (all) {
-    log.error "====================================================\n" +
-              "  Nextflow version ${params.nfRequiredVersion} required! You are running v${workflow.nextflow.version}.\n" +
-              "  Pipeline execution will continue, but things may break.\n" +
-              "  Please update Nextflow.\n" +
-              "============================================================"
-}
 
 if (params.help) exit 0, helpMessage()
 if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
@@ -158,7 +143,7 @@ process BuildReferenceIndex {
 }
 
 if (params.verbose) ch_referenceIndex.view {
-  "Reference index        : ${it.fileName}"
+  "Reference index     : ${it.fileName}"
 }
 
 process BuildSAMToolsIndex {

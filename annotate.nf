@@ -26,27 +26,17 @@ kate: syntax groovy; space-indent on; indent-width 2;
  https://github.com/SciLifeLab/Sarek/README.md
 --------------------------------------------------------------------------------
  Processes overview
- - RunBcftoolsStats - Run BCFTools stats on vcf before annotation
+ - RunBcftoolsStats - Run BCFTools stats on vcf files
+ - RunVcftools - Run VCFTools on vcf files
  - RunSnpeff - Run snpEff for annotation of vcf files
  - RunVEP - Run VEP for annotation of vcf files
+ - CompressVCF - Compress and index vcf files using tabix
+ - GetVersionSnpeff - Get version of tools
+ - GetVersionVEP - Get version of tools
 ================================================================================
 =                           C O N F I G U R A T I O N                          =
 ================================================================================
 */
-
-// Check that Nextflow version is up to date enough
-// try / throw / catch works for NF versions < 0.25 when this was implemented
-try {
-    if( ! nextflow.version.matches(">= ${params.nfRequiredVersion}") ){
-        throw GroovyException('Nextflow version too old')
-    }
-} catch (all) {
-    log.error "====================================================\n" +
-              "  Nextflow version ${params.nfRequiredVersion} required! You are running v${workflow.nextflow.version}.\n" +
-              "  Pipeline execution will continue, but things may break.\n" +
-              "  Please update Nextflow.\n" +
-              "============================================================"
-}
 
 if (params.help) exit 0, helpMessage()
 if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
@@ -102,8 +92,6 @@ if (annotateVCF == []) {
 vcfNotToAnnotate.close()
 
 // as now have the list of VCFs to annotate, the first step is to annotate with allele frequencies, if there are any
-
-
 
 (vcfForBCFtools, vcfForVCFtools, vcfForSnpeff, vcfForVep) = vcfToAnnotate.into(4)
 
@@ -228,7 +216,7 @@ process RunVEP {
   finalannotator = annotator == "snpeff" ? 'merge' : 'vep'
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
   """
-  vep --dir /opt/vep/.vep/ \
+  /opt/vep/src/ensembl-vep/vep --dir /opt/vep/.vep/  \
   -i ${vcf} \
   -o ${vcf.simpleName}_VEP.ann.vcf \
   --assembly ${genome} \
@@ -279,25 +267,11 @@ if (params.verbose) vcfCompressedoutput = vcfCompressedoutput.view {
   "Index : ${it[3].fileName}"
 }
 
-process GetVersionBCFtools {
-  publishDir directoryMap.version, mode: 'link'
-  output: file("v_*.txt")
-  when: !params.noReports
-  script: QC.getVersionBCFtools()
-}
-
-process GetVersionSnpEFF {
+process GetVersionSnpeff {
   publishDir directoryMap.version, mode: 'link'
   output: file("v_*.txt")
   when: 'snpeff' in tools || 'merge' in tools
   script: QC.getVersionSnpEFF()
-}
-
-process GetVersionVCFtools {
-  publishDir directoryMap.version, mode: 'link'
-  output: file("v_*.txt")
-  when: !params.noReports
-  script: QC.getVersionVCFtools()
 }
 
 process GetVersionVEP {
