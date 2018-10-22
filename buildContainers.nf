@@ -200,7 +200,7 @@ def helpMessage() {
   log.info "    --containerPath: Select where to download images"
   log.info "       Default: \$PWD"
   log.info "    --tag`: Choose the tag for the containers"
-  log.info "       Default (version number): " + params.version
+  log.info "       Default (version number): " + workflow.manifest.version
 }
 
 def minimalInformationMessage() {
@@ -222,7 +222,7 @@ def nextflowMessage() {
 
 def sarekMessage() {
   // Display Sarek message
-  log.info "Sarek ~ ${params.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
+  log.info "Sarek ~ ${workflow.manifest.version} - " + this.grabRevision() + (workflow.commitId ? " [${workflow.commitId}]" : "")
 }
 
 def startMessage() {

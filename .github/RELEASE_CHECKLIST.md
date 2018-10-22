@@ -26,9 +26,11 @@
 7.  Push latest updates
 8.  Make a PR against `dev`
 9.  Merge said PR
-10. Make a [release](https://github.com/SciLifeLab/Sarek/releases) on GitHub
-11. Update [bio.tools](https://bio.tools/Sarek) with the new release details
-12. Tweet that a new version is released
-13. Add a new `Unreleased` section in `CHANGELOG.md` for the `dev` version
-14. Commit and push. Continue making more awesome :metal:
-15. Have fika :cake:
+10.  Make a PR from `dev` to `master`
+11.  Merge said PR
+12. Make a [release](https://github.com/SciLifeLab/Sarek/releases) on GitHub
+13. Update [bio.tools](https://bio.tools/Sarek) with the new release details
+14. Tweet that a new version is released
+15. Add a new `Unreleased` section in `CHANGELOG.md` for the `dev` version
+16. Commit and push. Continue making more awesome :metal:
+17. Have fika :cake:

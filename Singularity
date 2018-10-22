@@ -7,7 +7,7 @@ Bootstrap:docker
     VERSION 2.1.0
 
 %environment
-    PATH=/opt/conda/envs/sarek-2.2.0/bin:$PATH
+    PATH=/opt/conda/envs/sarek-2.2.1/bin:$PATH
     export PATH
 
 %files
