@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### `Added`
+
+-   [#671](https://github.com/SciLifeLab/Sarek/pull/671) - New `publishDirMode` param and docs
+
 ### `Changed`
 
 -   [#663](https://github.com/SciLifeLab/Sarek/pull/663) - Update `do_release.sh` script
+-   [#671](https://github.com/SciLifeLab/Sarek/pull/671) - publishDir modes are now params
 
 ### `Fixed`
 
