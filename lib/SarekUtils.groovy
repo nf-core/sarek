@@ -71,6 +71,8 @@ class SarekUtils {
       'outDir',
       'params',
       'project',
+      'publish-dir-mode',
+      'publishDirMode',
       'push',
       'ref-dir',
       'refDir',

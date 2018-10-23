@@ -86,7 +86,7 @@ if (params.verbose) containersBuilt = containersBuilt.view {
 process PullSingularityContainers {
   tag {"${params.repository}/${container}:${params.tag}"}
 
-  publishDir "${params.containerPath}", mode: 'move'
+  publishDir "${params.containerPath}", mode: params.publishDirMode
 
   input:
     val container from singularityContainers
