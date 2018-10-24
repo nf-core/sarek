@@ -92,7 +92,7 @@ process PullSingularityContainers {
     val container from singularityContainers
 
   output:
-    file("${container}-${params.tag}.img") into imagePulled
+    file("${container}-${params.tag}.simg") into imagePulled
 
   when: params.singularity
 
