@@ -47,7 +47,7 @@ directoryMap = SarekUtils.defineDirectoryMap(params.outDir)
 startMessage()
 
 process GetVersionAll {
-  publishDir directoryMap.multiQC, mode: 'link'
+  publishDir directoryMap.multiQC, mode: params.publishDirMode
 
   input:
     file(versions) from Channel.fromPath("${directoryMap.version}/*").collect().ifEmpty(file ("empty"))
@@ -94,7 +94,7 @@ reportsForMultiQC = Channel.empty()
   ).collect()
 
 process RunMultiQC {
-  publishDir directoryMap.multiQC, mode: 'link'
+  publishDir directoryMap.multiQC, mode: params.publishDirMode
 
   input:
     file (multiqcConfig) from createMultiQCconfig()

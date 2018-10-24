@@ -103,7 +103,7 @@ ch_notCompressedfiles
 process BuildBWAindexes {
   tag {f_reference}
 
-  publishDir params.outDir, mode: 'link'
+  publishDir params.outDir, mode: params.publishDirMode
 
   input:
     file(f_reference) from ch_fastaForBWA
@@ -125,7 +125,7 @@ if (params.verbose) bwaIndexes.flatten().view {
 process BuildReferenceIndex {
   tag {f_reference}
 
-  publishDir params.outDir, mode: 'link'
+  publishDir params.outDir, mode: params.publishDirMode
 
   input:
     file(f_reference) from ch_fastaReference
@@ -149,7 +149,7 @@ if (params.verbose) ch_referenceIndex.view {
 process BuildSAMToolsIndex {
   tag {f_reference}
 
-  publishDir params.outDir, mode: 'link'
+  publishDir params.outDir, mode: params.publishDirMode
 
   input:
     file(f_reference) from ch_fastaForSAMTools
@@ -170,7 +170,7 @@ if (params.verbose) ch_samtoolsIndex.view {
 process BuildVCFIndex {
   tag {f_reference}
 
-  publishDir params.outDir, mode: 'link'
+  publishDir params.outDir, mode: params.publishDirMode
 
   input:
     file(f_reference) from ch_vcfFile
