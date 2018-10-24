@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### `Added`
 
 -   [#671](https://github.com/SciLifeLab/Sarek/pull/671) - New `publishDirMode` param and docs
+-   [#673](https://github.com/SciLifeLab/Sarek/pull/673) - Profiles for BinAC and CFC clusters in Tübingen
 
 ### `Changed`
 
