@@ -123,7 +123,7 @@ if (params.verbose) bamFiles = bamFiles.view {
 process RunFastQC {
   tag {idPatient + "-" + idRun}
 
-  publishDir "${directoryMap.fastQC}/${idRun}", mode: 'link'
+  publishDir "${directoryMap.fastQC}/${idRun}", mode: params.publishDirMode
 
   input:
     set idPatient, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFilesforFastQC
@@ -226,7 +226,7 @@ if (params.verbose) mergedBam = mergedBam.view {
 process MarkDuplicates {
   tag {idPatient + "-" + idSample}
 
-  publishDir params.outDir, mode: 'link',
+  publishDir params.outDir, mode: params.publishDirMode,
     saveAs: {
       if (it == "${bam}.metrics") "${directoryMap.markDuplicatesQC}/${it}"
       else "${directoryMap.duplicateMarked}/${it}"
@@ -283,7 +283,7 @@ if (params.verbose) duplicateMarkedBams = duplicateMarkedBams.view {
 process CreateRecalibrationTable {
   tag {idPatient + "-" + idSample}
 
-  publishDir directoryMap.duplicateMarked, mode: 'link', overwrite: false
+  publishDir directoryMap.duplicateMarked, mode: params.publishDirMode, overwrite: false
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from mdBam // realignedBam
@@ -350,7 +350,7 @@ recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
 process RecalibrateBam {
   tag {idPatient + "-" + idSample}
 
-  publishDir directoryMap.recalibrated, mode: 'link'
+  publishDir directoryMap.recalibrated, mode: params.publishDirMode
 
   input:
     set idPatient, status, idSample, file(bam), file(bai), file(recalibrationReport) from recalibrationTable
@@ -398,7 +398,7 @@ if (params.verbose) recalibratedBam = recalibratedBam.view {
 process RunSamtoolsStats {
   tag {idPatient + "-" + idSample}
 
-  publishDir directoryMap.samtoolsStats, mode: 'link'
+  publishDir directoryMap.samtoolsStats, mode: params.publishDirMode
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamForSamToolsStats
@@ -419,7 +419,7 @@ if (params.verbose) samtoolsStatsReport = samtoolsStatsReport.view {
 process RunBamQC {
   tag {idPatient + "-" + idSample}
 
-  publishDir directoryMap.bamQC, mode: 'link'
+  publishDir directoryMap.bamQC, mode: params.publishDirMode
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC

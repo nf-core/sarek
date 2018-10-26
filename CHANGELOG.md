@@ -7,13 +7,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### `Added`
+
+-   [#671](https://github.com/SciLifeLab/Sarek/pull/671) - New `publishDirMode` param and docs
+-   [#673](https://github.com/SciLifeLab/Sarek/pull/673) - Profiles for BinAC and CFC clusters in Tübingen
+
 ### `Changed`
 
 -   [#663](https://github.com/SciLifeLab/Sarek/pull/663) - Update `do_release.sh` script
+-   [#671](https://github.com/SciLifeLab/Sarek/pull/671) - publishDir modes are now params
 
 ### `Fixed`
 
 -   [#665](https://github.com/SciLifeLab/Sarek/pull/665) - Input bam file now has always the same name (whether it is from a single fastq pair or multiple) in the MarkDuplicates process, so metrics too
+-   [#672](https://github.com/SciLifeLab/Sarek/pull/672) - process `PullSingularityContainers` from `buildContainers.nf` now expect a file with the correct `.simg` extension for singularity images, and no longer the `.img` one.
 
 ## [2.2.1] - 2018-10-04
 
