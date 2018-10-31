@@ -221,7 +221,7 @@ process RunVEP {
   -o ${vcf.simpleName}_VEP.ann.vcf \
   --assembly ${genome} \
   --cache \
-	--cache_version 91 \
+	--cache_version 92 \
   --database \
   --everything \
   --filter_common \
