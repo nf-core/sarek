@@ -10,13 +10,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### `Added`
 
 -   [#671](https://github.com/SciLifeLab/Sarek/pull/671) - New `publishDirMode` param and docs
--   [#673](https://github.com/SciLifeLab/Sarek/pull/673) - Profiles for BinAC and CFC clusters in Tübingen
+-   [#673](https://github.com/SciLifeLab/Sarek/pull/673), [#675](https://github.com/SciLifeLab/Sarek/pull/675),  [#676](https://github.com/SciLifeLab/Sarek/pull/676) - Profiles for BinAC and CFC clusters in Tübingen
 -   [#679](https://github.com/SciLifeLab/Sarek/pull/679) - Add container for `CreateIntervalBeds`
 
 ### `Changed`
 
 -   [#663](https://github.com/SciLifeLab/Sarek/pull/663) - Update `do_release.sh` script
 -   [#671](https://github.com/SciLifeLab/Sarek/pull/671) - publishDir modes are now params
+-   [#677](https://github.com/SciLifeLab/Sarek/pull/677) - Update docs
 -   [#679](https://github.com/SciLifeLab/Sarek/pull/679) - Update old awsbatch configuration
 
 ### `Fixed`
