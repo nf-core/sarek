@@ -104,7 +104,7 @@ if (params.verbose) recalibratedBam = recalibratedBam.view {
 process RunSamtoolsStats {
   tag {idPatient + "-" + idSample}
 
-  publishDir directoryMap.samtoolsStats, mode: 'link'
+  publishDir directoryMap.samtoolsStats, mode: params.publishDirMode
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamForSamToolsStats
@@ -125,7 +125,7 @@ if (params.verbose) samtoolsStatsReport = samtoolsStatsReport.view {
 process RunBamQC {
   tag {idPatient + "-" + idSample}
 
-  publishDir directoryMap.bamQC, mode: 'link'
+  publishDir directoryMap.bamQC, mode: params.publishDirMode
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC
@@ -356,7 +356,7 @@ if (params.verbose) vcfsToMerge = vcfsToMerge.view {
 process ConcatVCF {
   tag {variantCaller + "-" + idSampleNormal}
 
-  publishDir "${directoryMap."$variantCaller"}", mode: 'link'
+  publishDir "${directoryMap."$variantCaller"}", mode: params.publishDirMode
 
   input:
     set variantCaller, idPatient, idSampleNormal, idSampleTumor, file(vcFiles) from vcfsToMerge
@@ -394,7 +394,7 @@ if (params.verbose) vcfConcatenated = vcfConcatenated.view {
 process RunSingleStrelka {
   tag {idSample}
 
-  publishDir directoryMap.strelka, mode: 'link'
+  publishDir directoryMap.strelka, mode: params.publishDirMode
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleStrelka
@@ -447,7 +447,7 @@ if (params.verbose) singleStrelkaOutput = singleStrelkaOutput.view {
 process RunSingleManta {
   tag {idSample + " - Single Diploid"}
 
-  publishDir directoryMap.manta, mode: 'link'
+  publishDir directoryMap.manta, mode: params.publishDirMode
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleManta
@@ -511,7 +511,7 @@ vcfForQC = Channel.empty().mix(
 process RunBcftoolsStats {
   tag {vcf}
 
-  publishDir directoryMap.bcftoolsStats, mode: 'link'
+  publishDir directoryMap.bcftoolsStats, mode: params.publishDirMode
 
   input:
     set variantCaller, file(vcf) from vcfForBCFtools
@@ -534,7 +534,7 @@ bcfReport.close()
 process RunVcftools {
   tag {vcf}
 
-  publishDir directoryMap.vcftools, mode: 'link'
+  publishDir directoryMap.vcftools, mode: params.publishDirMode
 
   input:
     set variantCaller, file(vcf) from vcfForVCFtools
