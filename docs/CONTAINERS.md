@@ -120,8 +120,8 @@ We provide script to build/push or pull all containers
 
 ### vepgrch38 [![vepgrch38-docker status][vepgrch38-docker-badge]][vepgrch38-docker-link]
 
-- Based on `willmclaren/ensembl-vep:release_90.6`
-- Contain **[VEP][vep-link]** 90.5
+- Based on `willmclaren/ensembl-vep:release_92`
+- Contain **[VEP][vep-link]** 92
 - Contain GRCh38
 
 [allelecount-link]: https://github.com/cancerit/alleleCount

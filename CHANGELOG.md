@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Changed`
 
+-   [#678](https://github.com/SciLifeLab/Sarek/pull/678) - Changing VEP to v92 and adjusting CPUs for VEP
 -   [#663](https://github.com/SciLifeLab/Sarek/pull/663) - Update `do_release.sh` script
 -   [#671](https://github.com/SciLifeLab/Sarek/pull/671) - publishDir modes are now params
 -   [#677](https://github.com/SciLifeLab/Sarek/pull/677) - Update docs
