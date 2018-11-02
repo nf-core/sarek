@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#671](https://github.com/SciLifeLab/Sarek/pull/671) - publishDir modes are now params
 -   [#677](https://github.com/SciLifeLab/Sarek/pull/677) - Update docs
 -   [#679](https://github.com/SciLifeLab/Sarek/pull/679) - Update old awsbatch configuration
+-   [#682](https://github.com/SciLifeLab/Sarek/pull/682) - Specifications for memory and cpus for awsbatch
 
 ### `Fixed`
 
