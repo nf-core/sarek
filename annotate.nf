@@ -215,7 +215,7 @@ process RunVEP {
   script:
   finalannotator = annotator == "snpeff" ? 'merge' : 'vep'
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
-  cache_version = params.genome == 'GRCh38' ? 92 : 91
+  cache_version = params.genome == 'GRCh38' || params.genome == 'iGRCh38' ? 92 : 91
   """
   /opt/vep/src/ensembl-vep/vep --dir /opt/vep/.vep/  \
   -i ${vcf} \
