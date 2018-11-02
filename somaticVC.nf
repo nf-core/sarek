@@ -279,14 +279,12 @@ process RunMutect2 {
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from bamsFMT2
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(cosmic), file(cosmicIndex) from Channel.value([
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
       referenceMap.genomeDict,
       referenceMap.dbsnp,
-      referenceMap.dbsnpIndex,
-      referenceMap.cosmic,
-      referenceMap.cosmicIndex
+      referenceMap.dbsnpIndex
     ])
 
   output:
@@ -832,9 +830,6 @@ def defineReferenceMap() {
     'acLoci'           : checkParamReturnFile("acLoci"),
     'dbsnp'            : checkParamReturnFile("dbsnp"),
     'dbsnpIndex'       : checkParamReturnFile("dbsnpIndex"),
-    // cosmic VCF with VCF4.1 header
-    'cosmic'           : checkParamReturnFile("cosmic"),
-    'cosmicIndex'      : checkParamReturnFile("cosmicIndex"),
     // genome reference dictionary
     'genomeDict'       : checkParamReturnFile("genomeDict"),
     // FASTA genome reference
@@ -923,8 +918,6 @@ def minimalInformationMessage() {
   log.info "  Tag          : " + params.tag
   log.info "Reference files used:"
   log.info "  acLoci      :\n\t" + referenceMap.acLoci
-  log.info "  cosmic      :\n\t" + referenceMap.cosmic
-  log.info "\t" + referenceMap.cosmicIndex
   log.info "  dbsnp       :\n\t" + referenceMap.dbsnp
   log.info "\t" + referenceMap.dbsnpIndex
   log.info "  genome      :\n\t" + referenceMap.genomeFile
