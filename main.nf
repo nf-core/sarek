@@ -228,8 +228,8 @@ process MarkDuplicates {
 
   publishDir params.outDir, mode: params.publishDirMode,
     saveAs: {
-      if (it == "${bam}.metrics") "${directoryMap.markDuplicatesQC}/${it}"
-      else "${directoryMap.duplicateMarked}/${it}"
+      if (it == "${idSample}.bam.metrics") "${directoryMap.markDuplicatesQC.minus(params.outDir+'/')}/${it}"
+      else "${directoryMap.duplicateMarked.minus(params.outDir+'/')}/${it}"
     }
 
   input:
