@@ -146,9 +146,9 @@ process RunSnpeff {
   tag {"${variantCaller} - ${vcf}"}
 
   publishDir params.outDir, mode: params.publishDirMode, saveAs: {
-    if (it == "${vcf.simpleName}_snpEff.csv") "${directoryMap.snpeffReports}/${it}"
+    if (it == "${vcf.simpleName}_snpEff.csv") "${directoryMap.snpeffReports.minus(params.outDir+'/')}/${it}"
     else if (it == "${vcf.simpleName}_snpEff.ann.vcf") null
-    else "${directoryMap.snpeff}/${it}"
+    else "${directoryMap.snpeff.minus(params.outDir+'/')}/${it}"
   }
 
   input:
@@ -199,7 +199,7 @@ process RunVEP {
   tag {"${variantCaller} - ${vcf}"}
 
   publishDir params.outDir, mode: params.publishDirMode, saveAs: {
-    if (it == "${vcf.simpleName}_VEP.summary.html") "${directoryMap.vep}/${it}"
+    if (it == "${vcf.simpleName}_VEP.summary.html") "${directoryMap.vep.minus(params.outDir+'/')}/${it}"
     else null
   }
 
