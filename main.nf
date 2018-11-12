@@ -244,7 +244,7 @@ process MarkDuplicates {
 
   script:
   """
-  gatk --java-options -Xms4000m -Xmx7g \
+  gatk --java-options "-Xms4000m -Xmx7g" \
   MarkDuplicates \
   --MAX_RECORDS_IN_RAM 50000 \
   --INPUT ${idSample}.bam \
