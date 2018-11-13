@@ -54,7 +54,7 @@ class SarekUtils {
       'max_cpus',
       'max_memory',
       'max_time',
-      'markDup_memory'
+      'markdup_memory'
       'more',
       'nf-required-version',
       'nfRequiredVersion',
