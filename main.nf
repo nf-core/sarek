@@ -244,7 +244,7 @@ process MarkDuplicates {
 
   script:
   """
-  gatk --java-options -Xmx${task.memory.toGiga()}g \
+  gatk --java-options -Xmx${task.memory.toGiga() > 4.GB ? task.memory.toGiga() : 4}g \
   MarkDuplicates \
   --MAX_RECORDS_IN_RAM 50000 \
   --INPUT ${idSample}.bam \
