@@ -74,7 +74,6 @@ if (!params.sample && !params.sampleDir) {
 }
 
 // Set up the fastqFiles and bamFiles channels. One of them remains empty
-// Except for step annotate, in which both stay empty
 fastqFiles = Channel.empty()
 bamFiles = Channel.empty()
 if (tsvPath) {
@@ -195,7 +194,7 @@ process RunBamQCmapped {
   -bam ${bam} \
   --paint-chromosome-limits \
   --genome-gc-distr HUMAN \
-  -nt 16 \
+  -nt ${task.cpus} \
   -skip-duplicated \
   --skip-dup-mode 0 \
   -outdir ${idSample} \
@@ -471,7 +470,7 @@ process RunBamQCrecalibrated {
   -bam ${bam} \
   --paint-chromosome-limits \
   --genome-gc-distr HUMAN \
-  -nt 16 \
+  -nt ${task.cpus} \
   -skip-duplicated \
   --skip-dup-mode 0 \
   -outdir ${idSample} \
