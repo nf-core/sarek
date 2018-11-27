@@ -51,6 +51,7 @@ class SarekUtils {
       'genome',
       'genomes',
       'help',
+      'markdup_java_options',
       'max_cpus',
       'max_memory',
       'max_time',

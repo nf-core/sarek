@@ -1,15 +1,4 @@
 class QC {
-// Run bamQC on vcf file
-  static def bamQC(bam, idSample, mem) {
-    """
-    qualimap --java-mem-size=${mem.toGiga()}G \
-    bamqc \
-    -bam ${bam} \
-    -outdir ${idSample} \
-    -outformat HTML
-    """
-  }
-
 // Run bcftools on vcf file
   static def bcftools(vcf) {
     """
