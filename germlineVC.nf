@@ -26,8 +26,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
  https://github.com/SciLifeLab/Sarek/README.md
 --------------------------------------------------------------------------------
  Processes overview
- - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files
- - RunBamQC - Run qualimap BamQC on recalibrated BAM files
  - CreateIntervalBeds - Create and sort intervals into bed files
  - RunHaplotypecaller - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
  - RunGenotypeGVCFs - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
@@ -89,7 +87,7 @@ if (params.verbose) bamFiles = bamFiles.view {
 }
 
 // assume input is recalibrated, ignore explicitBqsrNeeded
-(bamForBamQC, bamForSamToolsStats, recalibratedBam, recalTables) = bamFiles.into(4)
+(recalibratedBam, recalTables) = bamFiles.into(2)
 
 recalTables = recalTables.map{ it + [null] } // null recalibration table means: do not use --BQSR
 
@@ -99,48 +97,6 @@ if (params.verbose) recalibratedBam = recalibratedBam.view {
   "Recalibrated BAM for variant Calling:\n\
   ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
   Files : [${it[3].fileName}, ${it[4].fileName}]"
-}
-
-process RunSamtoolsStats {
-  tag {idPatient + "-" + idSample}
-
-  publishDir directoryMap.samtoolsStats, mode: params.publishDirMode
-
-  input:
-    set idPatient, status, idSample, file(bam), file(bai) from bamForSamToolsStats
-
-  output:
-    file ("${bam}.samtools.stats.out") into samtoolsStatsReport
-
-  when: !params.noReports
-
-  script: QC.samtoolsStats(bam)
-}
-
-if (params.verbose) samtoolsStatsReport = samtoolsStatsReport.view {
-  "SAMTools stats report:\n\
-  File  : [${it.fileName}]"
-}
-
-process RunBamQC {
-  tag {idPatient + "-" + idSample}
-
-  publishDir directoryMap.bamQC, mode: params.publishDirMode
-
-  input:
-    set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC
-
-  output:
-    file(idSample) into bamQCreport
-
-  when: !params.noReports && !params.noBAMQC
-
-  script: QC.bamQC(bam,idSample,task.memory)
-}
-
-if (params.verbose) bamQCreport = bamQCreport.view {
-  "BamQC report:\n\
-  Dir   : [${it.fileName}]"
 }
 
 // Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.

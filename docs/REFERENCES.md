@@ -1,6 +1,7 @@
 # Genomes and reference files
 
-Sarek currently uses GRCh38 by default. The settings are in `genomes.config`, they can be tailored to your needs. The [`buildReferences.nf`](#buildreferencesnf) script can be use to build the indexes based on the reference files.
+Sarek currently uses GRCh38 by default. The settings are in `genomes.config`, they can be tailored to your needs.
+The [`buildReferences.nf`](#buildreferencesnf) script is used to build the indexes for the reference test.
 
 ## GRCh37
 
@@ -36,7 +37,7 @@ The MD5SUM of `Homo_sapiens_assembly38.fasta` included in that file is 7ff134953
 If you download the data from the FTP servers `beta/` directory, which seems to be an older version of the bundle, only `Homo_sapiens_assembly38.known_indels.vcf` is needed. Also, you can omit `dbsnp_138_` and `dbsnp_144` files as we use `dbsnp_146`. The old ones also use the wrong chromosome naming convention. The Google Cloud mirror has all data in the `v0` directory, but requires you to remove the `resources_broad_hg38_v0_` prefixes from all files.
 
 The following files need to be downloaded:
- 
+
 - 3884c62eb0e53fa92459ed9bff133ae6 - 'Homo_sapiens_assembly38.dict'
 - 7ff134953dcca8c8997453bbb80b6b5e - 'Homo_sapiens_assembly38.fasta'
 - b07e65aa4425bc365141756f5c98328c - 'Homo_sapiens_assembly38.fasta.64.alt'
@@ -64,7 +65,7 @@ You can create your own cosmic reference for any human reference as specified be
 
 ## COSMIC files
 
-To annotate with COSMIC variants during MuTect1/2 Variant Calling you need to create a compatible VCF file. 
+To annotate with COSMIC variants during MuTect1/2 Variant Calling you need to create a compatible VCF file.
 Download the coding and non-coding VCF files from [COSMIC](http://cancer.sanger.ac.uk/cosmic/download) and
 process them with the [Create\_Cosmic.sh](https://github.com/SciLifeLab/Sarek/tree/master/scripts/Create_Cosmic.sh)
 script for either GRCh37 or GRCh38. The script requires a fasta index `.fai`, of the reference file you are using.
@@ -87,6 +88,10 @@ igvtools index <cosmicvxx.vcf>
 ## smallGRCh37
 
 Use `--genome smallGRCh37` to map against a small reference genome based on GRCh37. `smallGRCh37` is the default genome for the testing profile (`-profile testing`).
+
+## AWS iGenomes
+Sarek is using [AWS iGenomes](https://ewels.github.io/AWS-iGenomes/), which facilitate storing and sharing references.
+Both `GRCh37` and `GRCh38` are available with `--genome iGRCh37` or `--genome iGRCh38` respectively, it contains all data previously detailed.
 
 ## buildReferences.nf
 
