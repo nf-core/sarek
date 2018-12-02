@@ -58,6 +58,10 @@ Possible values are:
 `--tools` option is case insensitive to avoid easy introduction of errors when choosing tools.
 So you can write `--tools mutect2,ascat` or `--tools MuTect2,ASCAT` without worrying about case sensitivity.
 
+### --awsqueue `BatchQueueName`
+
+Only required if you use the awsbatch profile. This parameter specifies the queue for which jobs are submitted in AWS Batch.
+
 ### --verbose
 
 Display more information about files being processed.
