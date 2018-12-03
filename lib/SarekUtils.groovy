@@ -35,6 +35,7 @@ class SarekUtils {
       'annotate-VCF',
       'annotateTools',
       'annotateVCF',
+      'awsqueue',
       'build',
       'call-name',
       'callName',
