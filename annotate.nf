@@ -42,6 +42,13 @@ if (params.help) exit 0, helpMessage()
 if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
+// Check for awsbatch profile configuration
+// make sure queue is defined
+if (workflow.profile == 'awsbatch') {
+    if(!params.awsqueue) exit 1, "Provide the job queue for aws batch!"
+}
+
+
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
 annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
 annotateVCF = params.annotateVCF ? params.annotateVCF.split(',').collect{it.trim()} : []
