@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#692](https://github.com/SciLifeLab/Sarek/pull/692), [#697](https://github.com/SciLifeLab/Sarek/pull/697) - Add AWS iGenomes possibilities (within `conf/igenomes.conf`)
 -   [#694](https://github.com/SciLifeLab/Sarek/pull/694) - Add monochrome and grey logos for light or dark background
 -   [#698](https://github.com/SciLifeLab/Sarek/pull/698) - Add btb profile for munin server
+-   [#702](https://github.com/SciLifeLab/Sarek/pull/702) - Add font-ttf-dejavu-sans-mono `2.37` and fontconfig `2.12.6` to container
 
 ### `Changed`
 
@@ -24,12 +25,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#677](https://github.com/SciLifeLab/Sarek/pull/677), [#698](https://github.com/SciLifeLab/Sarek/pull/698) - Update docs
 -   [#679](https://github.com/SciLifeLab/Sarek/pull/679) - Update old awsbatch configuration
 -   [#693](https://github.com/SciLifeLab/Sarek/pull/693) - Qualimap bamQC is now ran after mapping and after recalibration for better QC
+-   [#702](https://github.com/SciLifeLab/Sarek/pull/702) - update FastQC to `0.11.8`
 
 ### `Fixed`
 
 -   [#665](https://github.com/SciLifeLab/Sarek/pull/665) - Input bam file now has always the same name (whether it is from a single fastq pair or multiple) in the MarkDuplicates process, so metrics too
 -   [#672](https://github.com/SciLifeLab/Sarek/pull/672) - process `PullSingularityContainers` from `buildContainers.nf` now expect a file with the correct `.simg` extension for singularity images, and no longer the `.img` one.
 -   [#679](https://github.com/SciLifeLab/Sarek/pull/679) - Add publishDirMode for `germlineVC.nf`
+-   [#702](https://github.com/SciLifeLab/Sarek/pull/702) - Fix [#701](https://github.com/SciLifeLab/Sarek/issues/701)
 
 ## [2.2.1] - 2018-10-04
 
