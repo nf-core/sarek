@@ -21,10 +21,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#678](https://github.com/SciLifeLab/Sarek/pull/678) - Changing VEP to v92 and adjusting CPUs for VEP
 -   [#663](https://github.com/SciLifeLab/Sarek/pull/663) - Update `do_release.sh` script
 -   [#671](https://github.com/SciLifeLab/Sarek/pull/671) - publishDir modes are now params
--   [#677](https://github.com/SciLifeLab/Sarek/pull/677) - Update docs
+-   [#677](https://github.com/SciLifeLab/Sarek/pull/677), [#703](https://github.com/SciLifeLab/Sarek/pull/703) - Update docs
 -   [#679](https://github.com/SciLifeLab/Sarek/pull/679) - Update old awsbatch configuration
 -   [#693](https://github.com/SciLifeLab/Sarek/pull/693) - Qualimap bamQC is now ran after mapping and after recalibration for better QC
--   [#702](https://github.com/SciLifeLab/Sarek/pull/702) - update FastQC to `0.11.8`
+-   [#702](https://github.com/SciLifeLab/Sarek/pull/702) - Update FastQC to `0.11.8`
 
 ### `Fixed`
 
