@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#677](https://github.com/SciLifeLab/Sarek/pull/677) - Update docs
 -   [#679](https://github.com/SciLifeLab/Sarek/pull/679) - Update old awsbatch configuration
 -   [#693](https://github.com/SciLifeLab/Sarek/pull/693) - Qualimap bamQC is now ran after mapping and after recalibration for better QC
+-   [#700](https://github.com/SciLifeLab/Sarek/pull/700) - Update GATK to `4.0.9.0`
 -   [#702](https://github.com/SciLifeLab/Sarek/pull/702) - update FastQC to `0.11.8`
 
 ### `Fixed`
@@ -31,6 +32,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#665](https://github.com/SciLifeLab/Sarek/pull/665) - Input bam file now has always the same name (whether it is from a single fastq pair or multiple) in the MarkDuplicates process, so metrics too
 -   [#672](https://github.com/SciLifeLab/Sarek/pull/672) - process `PullSingularityContainers` from `buildContainers.nf` now expect a file with the correct `.simg` extension for singularity images, and no longer the `.img` one.
 -   [#679](https://github.com/SciLifeLab/Sarek/pull/679) - Add publishDirMode for `germlineVC.nf`
+-   [#700](https://github.com/SciLifeLab/Sarek/pull/700) - Fix [#699](https://github.com/SciLifeLab/Sarek/issues/699) missing DP in the FORMAT column VCFs for MuTect2
 -   [#702](https://github.com/SciLifeLab/Sarek/pull/702) - Fix [#701](https://github.com/SciLifeLab/Sarek/issues/701)
 
 ## [2.2.1] - 2018-10-04

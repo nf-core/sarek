@@ -13,7 +13,7 @@ dependencies:
   - font-ttf-dejavu-sans-mono=2.37 #for FastQC
   - fontconfig=2.12.6 #for FastQC
   - freebayes=1.2.0
-  - gatk4=4.0.6.0
+  - gatk4=4.0.9.0
   - htslib=1.9
   - igvtools=2.3.93
   - manta=1.4.0
