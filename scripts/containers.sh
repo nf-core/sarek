@@ -37,7 +37,5 @@ then
   then
     docker pull maxulysse/snpeffgrch37:latest
   fi
-elif
-then
   docker pull maxulysse/sarek:latest
 fi
