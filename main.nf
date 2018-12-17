@@ -352,7 +352,7 @@ process CreateRecalibrationTable {
   BaseRecalibrator \
   --input ${bam} \
   --output ${idSample}.recal.table \
-	--TMP_DIR /tmp \
+  --tmp-dir /tmp \
   -R ${genomeFile} \
   -L ${intervals} \
   --known-sites ${dbsnp} \
@@ -418,8 +418,8 @@ process RecalibrateBam {
   --input ${bam} \
   --output ${idSample}.recal.bam \
   -L ${intervals} \
-	--create-output-bam-index true \
-	--bqsr-recal-file ${recalibrationReport}
+  --create-output-bam-index true \
+  --bqsr-recal-file ${recalibrationReport}
   """
 }
 // Creating a TSV file to restart from this step
