@@ -101,7 +101,7 @@ Use `--genome smallGRCh37` to map against a small reference genome based on GRCh
 
 ## AWS iGenomes
 Sarek is using [AWS iGenomes](https://ewels.github.io/AWS-iGenomes/), which facilitate storing and sharing references.
-Both `GRCh37` and `GRCh38` are available with `--genome GRCh37` or `--genome GRCh38` respectively with any profile using the `conf/igenomes.config` file (eg.: `awsbatch`), or you can specify it with `-c conf/igenomes.config`, it contains all data previously detailed.
+Both `GRCh37` and `GRCh38` are available with `--genome GRCh37` or `--genome GRCh38` respectively with any profile using the `conf/igenomes.config` file (eg.: `awsbatch`, or `btb`), or you can specify it with `-c conf/igenomes.config`, it contains all data previously detailed.
 
 ## buildReferences.nf
 
