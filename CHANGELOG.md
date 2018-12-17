@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#679](https://github.com/SciLifeLab/Sarek/pull/679) - Add container for `CreateIntervalBeds`
 -   [#692](https://github.com/SciLifeLab/Sarek/pull/692), [#697](https://github.com/SciLifeLab/Sarek/pull/697) - Add AWS iGenomes possibilities (within `conf/igenomes.conf`)
 -   [#694](https://github.com/SciLifeLab/Sarek/pull/694) - Add monochrome and grey logos for light or dark background
+-   [#698](https://github.com/SciLifeLab/Sarek/pull/698) - Add btb profile for munin server
 -   [#702](https://github.com/SciLifeLab/Sarek/pull/702) - Add font-ttf-dejavu-sans-mono `2.37` and fontconfig `2.12.6` to container
 
 ### `Changed`
@@ -21,11 +22,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#678](https://github.com/SciLifeLab/Sarek/pull/678) - Changing VEP to v92 and adjusting CPUs for VEP
 -   [#663](https://github.com/SciLifeLab/Sarek/pull/663) - Update `do_release.sh` script
 -   [#671](https://github.com/SciLifeLab/Sarek/pull/671) - publishDir modes are now params
--   [#677](https://github.com/SciLifeLab/Sarek/pull/677) - Update docs
+-   [#677](https://github.com/SciLifeLab/Sarek/pull/677), [#698](https://github.com/SciLifeLab/Sarek/pull/698), [#703](https://github.com/SciLifeLab/Sarek/pull/703) - Update docs
 -   [#679](https://github.com/SciLifeLab/Sarek/pull/679) - Update old awsbatch configuration
+-   [#682](https://github.com/SciLifeLab/Sarek/pull/682) - Specifications for memory and cpus for awsbatch
 -   [#693](https://github.com/SciLifeLab/Sarek/pull/693) - Qualimap bamQC is now ran after mapping and after recalibration for better QC
 -   [#700](https://github.com/SciLifeLab/Sarek/pull/700) - Update GATK to `4.0.9.0`
 -   [#702](https://github.com/SciLifeLab/Sarek/pull/702) - Update FastQC to `0.11.8`
+-   [#705](https://github.com/SciLifeLab/Sarek/pull/705) - Change `--TMP_DIR` by `--tmp-dir` for GATK `4.0.9.0` BaseRecalibrator
 -   [#706](https://github.com/SciLifeLab/Sarek/pull/706) - Update TravisCI testing
 
 ### `Fixed`
@@ -35,6 +38,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#679](https://github.com/SciLifeLab/Sarek/pull/679) - Add publishDirMode for `germlineVC.nf`
 -   [#700](https://github.com/SciLifeLab/Sarek/pull/700) - Fix [#699](https://github.com/SciLifeLab/Sarek/issues/699) missing DP in the FORMAT column VCFs for MuTect2
 -   [#702](https://github.com/SciLifeLab/Sarek/pull/702) - Fix [#701](https://github.com/SciLifeLab/Sarek/issues/701)
+-   [#705](https://github.com/SciLifeLab/Sarek/pull/705) - Fix [#704](https://github.com/SciLifeLab/Sarek/issues/704)
 
 ## [2.2.1] - 2018-10-04
 
