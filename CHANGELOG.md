@@ -27,8 +27,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#682](https://github.com/SciLifeLab/Sarek/pull/682) - Specifications for memory and cpus for awsbatch
 -   [#693](https://github.com/SciLifeLab/Sarek/pull/693) - Qualimap bamQC is now ran after mapping and after recalibration for better QC
 -   [#700](https://github.com/SciLifeLab/Sarek/pull/700) - Update GATK to `4.0.9.0`
--   [#702](https://github.com/SciLifeLab/Sarek/pull/702) - update FastQC to `0.11.8`
+-   [#702](https://github.com/SciLifeLab/Sarek/pull/702) - Update FastQC to `0.11.8`
 -   [#705](https://github.com/SciLifeLab/Sarek/pull/705) - Change `--TMP_DIR` by `--tmp-dir` for GATK `4.0.9.0` BaseRecalibrator
+-   [#706](https://github.com/SciLifeLab/Sarek/pull/706) - Update TravisCI testing
 
 ### `Fixed`
 
