@@ -26,8 +26,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
  https://github.com/SciLifeLab/Sarek/README.md
 --------------------------------------------------------------------------------
  Processes overview
- - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files
- - RunBamQC - Run qualimap BamQC on recalibrated BAM files
  - CreateIntervalBeds - Create and sort intervals into bed files
  - RunMutect2 - Run MuTect2 for Variant Calling (Parallelized processes)
  - RunFreeBayes - Run FreeBayes for Variant Calling (Parallelized processes)
@@ -51,6 +49,12 @@ kate: syntax groovy; space-indent on; indent-width 2;
 if (params.help) exit 0, helpMessage()
 if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
+
+// Check for awsbatch profile configuration
+// make sure queue is defined
+if (workflow.profile == 'awsbatch') {
+    if(!params.awsqueue) exit 1, "Provide the job queue for aws batch!"
+}
 
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
 
@@ -98,7 +102,7 @@ if (params.verbose) bamFiles = bamFiles.view {
 }
 
 // assume input is recalibrated, ignore explicitBqsrNeeded
-(bamForBamQC, bamForSamToolsStats, recalibratedBam, recalTables) = bamFiles.into(4)
+(recalibratedBam, recalTables) = bamFiles.into(2)
 
 recalTables = recalTables.map{ it + [null] } // null recalibration table means: do not use --BQSR
 
@@ -108,48 +112,6 @@ if (params.verbose) recalibratedBam = recalibratedBam.view {
   "Recalibrated BAM for variant Calling:\n\
   ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
   Files : [${it[3].fileName}, ${it[4].fileName}]"
-}
-
-process RunSamtoolsStats {
-  tag {idPatient + "-" + idSample}
-
-  publishDir directoryMap.samtoolsStats, mode: 'link'
-
-  input:
-    set idPatient, status, idSample, file(bam), file(bai) from bamForSamToolsStats
-
-  output:
-    file ("${bam}.samtools.stats.out") into samtoolsStatsReport
-
-  when: !params.noReports
-
-  script: QC.samtoolsStats(bam)
-}
-
-if (params.verbose) samtoolsStatsReport = samtoolsStatsReport.view {
-  "SAMTools stats report:\n\
-  File  : [${it.fileName}]"
-}
-
-process RunBamQC {
-  tag {idPatient + "-" + idSample}
-
-  publishDir directoryMap.bamQC, mode: 'link'
-
-  input:
-    set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC
-
-  output:
-    file(idSample) into bamQCreport
-
-  when: !params.noReports && !params.noBAMQC
-
-  script: QC.bamQC(bam,idSample,task.memory)
-}
-
-if (params.verbose) bamQCreport = bamQCreport.view {
-  "BamQC report:\n\
-  Dir   : [${it.fileName}]"
 }
 
 // Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
@@ -279,14 +241,12 @@ process RunMutect2 {
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from bamsFMT2
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(cosmic), file(cosmicIndex) from Channel.value([
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
       referenceMap.genomeDict,
       referenceMap.dbsnp,
-      referenceMap.dbsnpIndex,
-      referenceMap.cosmic,
-      referenceMap.cosmicIndex
+      referenceMap.dbsnpIndex
     ])
 
   output:
@@ -357,7 +317,7 @@ if (params.verbose) vcfsToMerge = vcfsToMerge.view {
 process ConcatVCF {
   tag {variantCaller + "_" + idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir "${directoryMap."$variantCaller"}", mode: 'link'
+  publishDir "${directoryMap."$variantCaller"}", mode: params.publishDirMode
 
   input:
     set variantCaller, idPatient, idSampleNormal, idSampleTumor, file(vcFiles) from vcfsToMerge
@@ -392,7 +352,7 @@ if (params.verbose) vcfConcatenated = vcfConcatenated.view {
 process RunStrelka {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir directoryMap.strelka, mode: 'link'
+  publishDir directoryMap.strelka, mode: params.publishDirMode
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForStrelka
@@ -449,7 +409,7 @@ if (params.verbose) strelkaOutput = strelkaOutput.view {
 process RunManta {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir directoryMap.manta, mode: 'link'
+  publishDir directoryMap.manta, mode: params.publishDirMode
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
@@ -503,7 +463,7 @@ if (params.verbose) mantaOutput = mantaOutput.view {
 process RunSingleManta {
   tag {idSample + " - Tumor-Only"}
 
-  publishDir directoryMap.manta, mode: 'link'
+  publishDir directoryMap.manta, mode: params.publishDirMode
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleManta
@@ -562,7 +522,7 @@ bamsForStrelkaBP = bamsForStrelkaBP.map {
 process RunStrelkaBP {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir directoryMap.strelkabp, mode: 'link'
+  publishDir directoryMap.strelkabp, mode: params.publishDirMode
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(mantaCSI), file(mantaCSIi) from bamsForStrelkaBP
@@ -654,7 +614,7 @@ alleleCountOutput = alleleCountOutput.map {
 process RunConvertAlleleCounts {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir directoryMap.ascat, mode: 'link'
+  publishDir directoryMap.ascat, mode: params.publishDirMode
 
   input:
     set idPatient, idSampleNormal, idSampleTumor, file(alleleCountNormal), file(alleleCountTumor) from alleleCountOutput
@@ -676,7 +636,7 @@ process RunConvertAlleleCounts {
 process RunAscat {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir directoryMap.ascat, mode: 'link'
+  publishDir directoryMap.ascat, mode: params.publishDirMode
 
   input:
     set idPatient, idSampleNormal, idSampleTumor, file(bafNormal), file(logrNormal), file(bafTumor), file(logrTumor) from convertAlleleCountsOutput
@@ -734,7 +694,7 @@ vcfForQC = Channel.empty().mix(
 process RunBcftoolsStats {
   tag {vcf}
 
-  publishDir directoryMap.bcftoolsStats, mode: 'link'
+  publishDir directoryMap.bcftoolsStats, mode: params.publishDirMode
 
   input:
     set variantCaller, file(vcf) from vcfForBCFtools
@@ -757,7 +717,7 @@ bcfReport.close()
 process RunVcftools {
   tag {vcf}
 
-  publishDir directoryMap.vcftools, mode: 'link'
+  publishDir directoryMap.vcftools, mode: params.publishDirMode
 
   input:
     set variantCaller, file(vcf) from vcfForVCFtools
@@ -778,7 +738,7 @@ if (params.verbose) vcfReport = vcfReport.view {
 vcfReport.close()
 
 process GetVersionAlleleCount {
-  publishDir directoryMap.version, mode: 'link'
+  publishDir directoryMap.version, mode: params.publishDirMode
   output: file("v_*.txt")
   when: 'ascat' in tools && !params.onlyQC
 
@@ -789,7 +749,7 @@ process GetVersionAlleleCount {
 }
 
 process GetVersionASCAT {
-  publishDir directoryMap.version, mode: 'link'
+  publishDir directoryMap.version, mode: params.publishDirMode
   output: file("v_*.txt")
   when: 'ascat' in tools && !params.onlyQC
 
@@ -832,9 +792,6 @@ def defineReferenceMap() {
     'acLoci'           : checkParamReturnFile("acLoci"),
     'dbsnp'            : checkParamReturnFile("dbsnp"),
     'dbsnpIndex'       : checkParamReturnFile("dbsnpIndex"),
-    // cosmic VCF with VCF4.1 header
-    'cosmic'           : checkParamReturnFile("cosmic"),
-    'cosmicIndex'      : checkParamReturnFile("cosmicIndex"),
     // genome reference dictionary
     'genomeDict'       : checkParamReturnFile("genomeDict"),
     // FASTA genome reference
@@ -923,8 +880,6 @@ def minimalInformationMessage() {
   log.info "  Tag          : " + params.tag
   log.info "Reference files used:"
   log.info "  acLoci      :\n\t" + referenceMap.acLoci
-  log.info "  cosmic      :\n\t" + referenceMap.cosmic
-  log.info "\t" + referenceMap.cosmicIndex
   log.info "  dbsnp       :\n\t" + referenceMap.dbsnp
   log.info "\t" + referenceMap.dbsnpIndex
   log.info "  genome      :\n\t" + referenceMap.genomeFile

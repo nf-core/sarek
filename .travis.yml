@@ -12,19 +12,23 @@ env:
     - NXF_VER=0.32.0
   matrix:
     - TEST=SOMATIC
+    - TEST=GERMLINE
     - TEST=ANNOTATEVEP
     - TEST=ANNOTATESNPEFF
-    - TEST=GERMLINE
+
+before_install:
+# PRs to master are only ok if coming from dev branch
+  - '[ $TRAVIS_PULL_REQUEST = "false" ] || [ $TRAVIS_BRANCH != "master" ] || ([ $TRAVIS_PULL_REQUEST_SLUG = $TRAVIS_REPO_SLUG ] && [ $TRAVIS_PULL_REQUEST_BRANCH = "dev" ])'
+# Donwload containers
+  - "travis_retry ./scripts/containers.sh --profile docker --test $TEST"
 
 install:
   # Install Nextflow
   - curl -fsSL get.nextflow.io | bash
   - chmod +x nextflow
   - sudo mv nextflow /usr/local/bin/
-  # Donwload big containers for ANNOTATEVEP and ANNOTATESNPEF tests)
-  - "travis_retry ./scripts/containers.sh --profile docker --test $TEST"
 
-# Build references when needed
+# Build references if needed
 before_script: "./scripts/test.sh --profile docker --test $TEST --build"
 
 # Actual tests

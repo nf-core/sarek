@@ -26,8 +26,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
  https://github.com/SciLifeLab/Sarek/README.md
 --------------------------------------------------------------------------------
  Processes overview
- - RunSamtoolsStats - Run Samtools stats on recalibrated BAM files
- - RunBamQC - Run qualimap BamQC on recalibrated BAM files
  - CreateIntervalBeds - Create and sort intervals into bed files
  - RunHaplotypecaller - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
  - RunGenotypeGVCFs - Run HaplotypeCaller for Germline Variant Calling (Parallelized processes)
@@ -44,6 +42,12 @@ kate: syntax groovy; space-indent on; indent-width 2;
 if (params.help) exit 0, helpMessage()
 if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
+
+// Check for awsbatch profile configuration
+// make sure queue is defined
+if (workflow.profile == 'awsbatch') {
+    if(!params.awsqueue) exit 1, "Provide the job queue for aws batch!"
+}
 
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
 
@@ -89,7 +93,7 @@ if (params.verbose) bamFiles = bamFiles.view {
 }
 
 // assume input is recalibrated, ignore explicitBqsrNeeded
-(bamForBamQC, bamForSamToolsStats, recalibratedBam, recalTables) = bamFiles.into(4)
+(recalibratedBam, recalTables) = bamFiles.into(2)
 
 recalTables = recalTables.map{ it + [null] } // null recalibration table means: do not use --BQSR
 
@@ -99,48 +103,6 @@ if (params.verbose) recalibratedBam = recalibratedBam.view {
   "Recalibrated BAM for variant Calling:\n\
   ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
   Files : [${it[3].fileName}, ${it[4].fileName}]"
-}
-
-process RunSamtoolsStats {
-  tag {idPatient + "-" + idSample}
-
-  publishDir directoryMap.samtoolsStats, mode: 'link'
-
-  input:
-    set idPatient, status, idSample, file(bam), file(bai) from bamForSamToolsStats
-
-  output:
-    file ("${bam}.samtools.stats.out") into samtoolsStatsReport
-
-  when: !params.noReports
-
-  script: QC.samtoolsStats(bam)
-}
-
-if (params.verbose) samtoolsStatsReport = samtoolsStatsReport.view {
-  "SAMTools stats report:\n\
-  File  : [${it.fileName}]"
-}
-
-process RunBamQC {
-  tag {idPatient + "-" + idSample}
-
-  publishDir directoryMap.bamQC, mode: 'link'
-
-  input:
-    set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC
-
-  output:
-    file(idSample) into bamQCreport
-
-  when: !params.noReports && !params.noBAMQC
-
-  script: QC.bamQC(bam,idSample,task.memory)
-}
-
-if (params.verbose) bamQCreport = bamQCreport.view {
-  "BamQC report:\n\
-  Dir   : [${it.fileName}]"
 }
 
 // Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
@@ -356,7 +318,7 @@ if (params.verbose) vcfsToMerge = vcfsToMerge.view {
 process ConcatVCF {
   tag {variantCaller + "-" + idSampleNormal}
 
-  publishDir "${directoryMap."$variantCaller"}", mode: 'link'
+  publishDir "${directoryMap."$variantCaller"}", mode: params.publishDirMode
 
   input:
     set variantCaller, idPatient, idSampleNormal, idSampleTumor, file(vcFiles) from vcfsToMerge
@@ -394,7 +356,7 @@ if (params.verbose) vcfConcatenated = vcfConcatenated.view {
 process RunSingleStrelka {
   tag {idSample}
 
-  publishDir directoryMap.strelka, mode: 'link'
+  publishDir directoryMap.strelka, mode: params.publishDirMode
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleStrelka
@@ -447,7 +409,7 @@ if (params.verbose) singleStrelkaOutput = singleStrelkaOutput.view {
 process RunSingleManta {
   tag {idSample + " - Single Diploid"}
 
-  publishDir directoryMap.manta, mode: 'link'
+  publishDir directoryMap.manta, mode: params.publishDirMode
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleManta
@@ -511,7 +473,7 @@ vcfForQC = Channel.empty().mix(
 process RunBcftoolsStats {
   tag {vcf}
 
-  publishDir directoryMap.bcftoolsStats, mode: 'link'
+  publishDir directoryMap.bcftoolsStats, mode: params.publishDirMode
 
   input:
     set variantCaller, file(vcf) from vcfForBCFtools
@@ -534,7 +496,7 @@ bcfReport.close()
 process RunVcftools {
   tag {vcf}
 
-  publishDir directoryMap.vcftools, mode: 'link'
+  publishDir directoryMap.vcftools, mode: params.publishDirMode
 
   input:
     set variantCaller, file(vcf) from vcfForVCFtools

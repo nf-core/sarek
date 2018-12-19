@@ -38,6 +38,12 @@ if (params.help) exit 0, helpMessage()
 if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
+// Check for awsbatch profile configuration
+// make sure queue is defined
+if (workflow.profile == 'awsbatch') {
+    if(!params.awsqueue) exit 1, "Provide the job queue for aws batch!"
+}
+
 // Define containers to handle (build/push or pull)
 containersList = defineContainersList()
 containers = params.containers.split(',').collect {it.trim()}
@@ -86,13 +92,13 @@ if (params.verbose) containersBuilt = containersBuilt.view {
 process PullSingularityContainers {
   tag {"${params.repository}/${container}:${params.tag}"}
 
-  publishDir "${params.containerPath}", mode: 'move'
+  publishDir "${params.containerPath}", mode: params.publishDirMode
 
   input:
     val container from singularityContainers
 
   output:
-    file("${container}-${params.tag}.img") into imagePulled
+    file("${container}-${params.tag}.simg") into imagePulled
 
   when: params.singularity
 

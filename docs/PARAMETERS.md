@@ -21,6 +21,21 @@ Choose an output directory
 Specify a project number ID on a UPPMAX cluster.
 (optional if not on such a cluster)
 
+## --publishDirMode
+
+Specify wich mode `publishDir` directive need to follow, in Sarek link is the default mode.
+
+From [Nextflow documentation](https://www.nextflow.io/docs/latest/process.html#publishdir):
+
+| Mode         | Description |
+|--------------|-------------|
+| copy         | Copies the output files into the published directory |
+| copyNoFollow | Copies the output files into the published directory without following symlinks ie. copies the links themselves |
+| link         | Creates a hard link in the published directory for each process output file (default) |
+| move         | Moves the output files into the published directory. Note: this is only supposed to be used for a terminating process i.e. a process whose output is not consumed by any other downstream process |
+| rellink      | Creates a relative symbolic link in the published directory for each process output file |
+| symlink      | Creates an absolute symbolic link in the published directory for each process output file |
+
 ### --sample `file.tsv`
 
 Use the given TSV file as sample (cf [TSV documentation](TSV.md)).
@@ -42,6 +57,18 @@ Possible values are:
 
 `--tools` option is case insensitive to avoid easy introduction of errors when choosing tools.
 So you can write `--tools mutect2,ascat` or `--tools MuTect2,ASCAT` without worrying about case sensitivity.
+
+### --awsqueue `BatchQueueName`
+
+Only required if you use the awsbatch profile. This parameter specifies the queue for which jobs are submitted in AWS Batch.
+
+### --awsqueue_tiny `BatchQueueName`
+
+Only used if you use the awsbatch profile. This parameter specifies a queue used for certain small jobs that might still require a significant amount of disk storage. 
+
+### --localReportDir `Directory`
+
+Only used if you use the awsbatch profile. This parameter specifies an output directory for nextflow reports, such as Sarek_timeline.html, which currently is not fully supported to store on s3. 
 
 ### --verbose
 
