@@ -4,11 +4,11 @@
 
 1.  Check that everything is ready to go
 
-    -   [PRs](https://github.com/SciLifeLab/Sarek/pulls) are merged
+    -   Desired [PRs](https://github.com/SciLifeLab/Sarek/pulls) are merged
     -   [Travis tests](https://travis-ci.org/SciLifeLab/Sarek/branches) are passing on `dev`
 
 2.  Increase version number following [semantic versioning](http://semver.org/spec/v2.0.0.html)
-3.  Choose an appropriate codename for the release
+3.  Choose an appropriate codename for the release (if major or minor)
     -   i.e. Peaks in [Sarek National Park](https://en.wikipedia.org/wiki/Sarek_National_Park#Topography)
 4.  Build docker containers.
 
@@ -32,5 +32,8 @@
 13. Update [bio.tools](https://bio.tools/Sarek) with the new release details
 14. Tweet that a new version is released
 15. Add a new `Unreleased` section in `CHANGELOG.md` for the `dev` version
-16. Commit and push. Continue making more awesome :metal:
-17. Have fika :cake:
+16. Download all new containers to `/sw/data/uppnex/ToolBox/sarek` on `rackham`
+17. Download all new containers to `/btb/containers` on `munin`
+18. Update symbolic links to `latest`
+19. Commit and push. Continue making more awesome :metal:
+20. Have fika :cake:
