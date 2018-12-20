@@ -32,7 +32,8 @@
 13. Update [bio.tools](https://bio.tools/Sarek) with the new release details
 14. Tweet that a new version is released
 15. Add a new `Unreleased` section in `CHANGELOG.md` for the `dev` version
-16. Download all new containers to `/sw/data/uppnex/ToolBox/sarek`
-17. Update symbolic links to `latest`
-18. Commit and push. Continue making more awesome :metal:
-19. Have fika :cake:
+16. Download all new containers to `/sw/data/uppnex/ToolBox/sarek` on `rackham`
+17. Download all new containers to `/btb/containers` on `munin`
+18. Update symbolic links to `latest`
+19. Commit and push. Continue making more awesome :metal:
+20. Have fika :cake:
