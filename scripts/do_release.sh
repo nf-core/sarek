@@ -21,21 +21,21 @@ do
   esac
 done
 
-if [[ $CODENAME == "" ]]
-then
-  echo "No codename specified"
-  exit
-fi
-
 if [[ $RELEASE == "" ]]
 then
   echo "No release specified"
   exit
 fi
 
-echo "Preparing release $RELEASE - $CODENAME"
+if [[ $CODENAME == "" ]]
+then
+  echo "Preparing release $RELEASE"
+  sed -i "s/\[Unreleased\]/[$RELEASE] - $(date +'%Y-%m-%d')/g" CHANGELOG.md
+else
+  echo "Preparing release $RELEASE - $CODENAME"
+  sed -i "s/\[Unreleased\]/[$RELEASE] - $CODENAME - $(date +'%Y-%m-%d')/g" CHANGELOG.md
+fi
 
-sed -i "s/\[Unreleased\]/[$RELEASE] - $CODENAME - $(date +'%Y-%m-%d')/g" CHANGELOG.md
 sed -i "s/sarek-[0-9\.]\+/sarek-$RELEASE/g" Dockerfile
 sed -i "s/sarek-[0-9\.]\+/sarek-$RELEASE/g" environment.yml
 sed -i "s/sarek-[0-9\.]\+/sarek-$RELEASE/g" Singularity
