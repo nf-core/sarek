@@ -58,13 +58,11 @@ For more information about using Singularity with UPPMAX, follow the [Singularit
 ## Install Sarek
 
 Sarek use Singularity containers to package all the different tools.
-All containers are already stored on UPPMAX.
+All containers, and all Reference files are already stored on UPPMAX.
 
 As `bianca` is secure, no direct download is available, so Sarek will have to be installed and updated manually.
 
 You can either download Sarek on your computer or on `rackham`, make an archive, and send it to `bianca` using `FileZilla` or `sftp` given your preferences.
-
-All Reference files are already stored in `bianca`.
 
 ```bash
 # Connect to rackham
