@@ -87,6 +87,7 @@ if (tsvPath) {
   tsvFile = file(tsvPath)
   switch (step) {
     case 'mapping': fastqFiles = extractFastq(tsvFile); break
+    case 'remapping': fastqFiles = extractInputBAM(tsvFile); break
     case 'recalibrate': bamFiles = extractRecal(tsvFile); break
     default: exit 1, "Unknown step ${step}"
   }
@@ -102,7 +103,7 @@ if (tsvPath) {
   tsvFile = params.sampleDir  // used in the reports
 } else exit 1, 'No sample were defined, see --help'
 
-if (step == 'mapping') (patientGenders, fastqFiles) = SarekUtils.extractGenders(fastqFiles)
+if (step == 'mapping' || step == 'remapping') (patientGenders, fastqFiles) = SarekUtils.extractGenders(fastqFiles)
 else (patientGenders, bamFiles) = SarekUtils.extractGenders(bamFiles)
 
 /*
@@ -138,12 +139,17 @@ process RunFastQC {
   output:
     file "*_fastqc.{zip,html}" into fastQCreport
 
-  when: step == 'mapping' && !params.noReports
+  when: (step == 'mapping' || step == 'remapping') && !params.noReports
 
   script:
-  """
-  fastqc -t 2 -q ${fastqFile1} ${fastqFile2}
-  """
+  if (step == 'mapping')
+    """
+    fastqc -t 2 -q ${fastqFile1} ${fastqFile2}
+    """
+  else if (step == 'remapping')
+    """
+    fastqc -t 2 -q ${fastqFile1}
+    """
 }
 
 if (params.verbose) fastQCreport = fastQCreport.view {
@@ -161,18 +167,33 @@ process MapReads {
   output:
     set idPatient, status, idSample, idRun, file("${idRun}.bam") into (mappedBam, mappedBamForQC)
 
-  when: step == 'mapping' && !params.onlyQC
+  when: (step == 'mapping' || step == 'remapping') && !params.onlyQC
 
   script:
   CN = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
   readGroup = "@RG\\tID:${idRun}\\t${CN}PU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
   // adjust mismatch penalty for tumor samples
   extra = status == 1 ? "-B 3" : ""
-  """
-  bwa mem -R \"${readGroup}\" ${extra} -t ${task.cpus} -M \
-  ${genomeFile} ${fastqFile1} ${fastqFile2} | \
-  samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
-  """
+  if (step == 'mapping')
+    """
+    bwa mem -R \"${readGroup}\" ${extra} -t ${task.cpus} -M \
+    ${genomeFile} ${fastqFile1} ${fastqFile2} | \
+    samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
+    """
+  else if (step == 'remapping')
+    """
+    gatk --java-options -Xmx${task.memory.toGiga()}g \
+    SamToFastq \
+    --INPUT=${fastqFile1} \
+    --FASTQ=/dev/stdout \
+    --INTERLEAVE=true \
+    --NON_PF=true \
+    | \
+    bwa mem -K 1000000 -p -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${genomeFile} \
+    /dev/stdin - 2> >(tee ${fastqFile1}.bwa.stderr.log >&2) \
+    | \
+    samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
+    """
 }
 
 if (params.verbose) mappedBam = mappedBam.view {
@@ -236,7 +257,7 @@ process MergeBams {
   output:
     set idPatient, status, idSample, file("${idSample}.bam") into mergedBam
 
-  when: step == 'mapping' && !params.onlyQC
+  when: (step == 'mapping' || step == 'remapping') && !params.onlyQC
 
   script:
   """
@@ -281,7 +302,7 @@ process MarkDuplicates {
     set idPatient, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai") into markDuplicatesTSV
     file ("${idSample}.bam.metrics") into markDuplicatesReport
 
-  when: step == 'mapping' && !params.onlyQC
+  when: (step == 'mapping' || step == 'remapping') && !params.onlyQC
 
   script:
   """
@@ -343,7 +364,7 @@ process CreateRecalibrationTable {
     set idPatient, status, idSample, file("${idSample}.recal.table") into recalibrationTable
     set idPatient, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai"), val("${idSample}.recal.table") into recalibrationTableTSV
 
-  when: ( step == 'mapping' ) && !params.onlyQC
+  when: (step == 'mapping' || step == 'remapping') && !params.onlyQC
 
   script:
   known = knownIndels.collect{ "--known-sites ${it}" }.join(' ')
@@ -536,7 +557,8 @@ def defineReferenceMap() {
 def defineStepList() {
   return [
     'mapping',
-    'recalibrate'
+    'recalibrate',
+    'remapping'
   ]
 }
 
@@ -559,6 +581,28 @@ def extractFastq(tsvFile) {
     SarekUtils.checkFileExtension(fastqFile2,".fastq.gz")
 
     [idPatient, gender, status, idSample, idRun, fastqFile1, fastqFile2]
+  }
+}
+
+def extractInputBAM(tsvFile) {
+  // Channeling the TSV file containing BAM.
+  // Format is: "subject gender status sample lane bam"
+  Channel.from(tsvFile)
+  .splitCsv(sep: '\t')
+  .map { row ->
+    SarekUtils.checkNumberOfItem(row, 7)
+    def idPatient  = row[0]
+    def gender     = row[1]
+    def status     = SarekUtils.returnStatus(row[2].toInteger())
+    def idSample   = row[3]
+    def idRun      = row[4]
+    def bamFile    = SarekUtils.returnFile(row[5])
+    def baiFile    = SarekUtils.returnFile(row[6])
+
+    SarekUtils.checkFileExtension(bamFile,".bam")
+    SarekUtils.checkFileExtension(baiFile,".bai")
+
+    [idPatient, gender, status, idSample, idRun, bamFile, baiFile]
   }
 }
 
