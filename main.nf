@@ -80,21 +80,21 @@ if (!params.sample && !params.sampleDir) {
   if (params.test || step != 'mapping') tsvPath = tsvPaths[step]
 }
 
-// Set up the fastqFiles and bamFiles channels. One of them remains empty
-fastqFiles = Channel.empty()
+// Set up the inputFiles and bamFiles channels. One of them will remain empty
+inputFiles = Channel.empty()
 bamFiles = Channel.empty()
 if (tsvPath) {
   tsvFile = file(tsvPath)
   switch (step) {
-    case 'mapping': fastqFiles = extractFastq(tsvFile); break
-    case 'remapping': fastqFiles = extractInputBAM(tsvFile); break
+    case 'mapping': inputFiles = extractFastq(tsvFile); break
+    case 'remapping': inputFiles = extractInputBAM(tsvFile); break
     case 'recalibrate': bamFiles = extractRecal(tsvFile); break
     default: exit 1, "Unknown step ${step}"
   }
 } else if (params.sampleDir) {
   if (step != 'mapping') exit 1, '--sampleDir does not support steps other than "mapping"'
-  fastqFiles = extractFastqFromDir(params.sampleDir)
-  (fastqFiles, fastqTmp) = fastqFiles.into(2)
+  inputFiles = extractFastqFromDir(params.sampleDir)
+  (inputFiles, fastqTmp) = inputFiles.into(2)
   fastqTmp.toList().subscribe onNext: {
     if (it.size() == 0) {
       exit 1, "No FASTQ files found in --sampleDir directory '${params.sampleDir}'"
@@ -103,8 +103,8 @@ if (tsvPath) {
   tsvFile = params.sampleDir  // used in the reports
 } else exit 1, 'No sample were defined, see --help'
 
-if (step == 'mapping' || step == 'remapping') (patientGenders, fastqFiles) = SarekUtils.extractGenders(fastqFiles)
-else (patientGenders, bamFiles) = SarekUtils.extractGenders(bamFiles)
+if (step == 'recalibrate') (patientGenders, bamFiles) = SarekUtils.extractGenders(bamFiles)
+else (patientGenders, inputFiles) = SarekUtils.extractGenders(inputFiles)
 
 /*
 ================================================================================
@@ -114,9 +114,9 @@ else (patientGenders, bamFiles) = SarekUtils.extractGenders(bamFiles)
 
 startMessage()
 
-(fastqFiles, fastqFilesforFastQC) = fastqFiles.into(2)
+(inputFiles, inputFilesforFastQC) = inputFiles.into(2)
 
-if (params.verbose) fastqFiles = fastqFiles.view {
+if (params.verbose) inputFiles = inputFiles.view {
   "FASTQs to preprocess:\n\
   ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\tRun   : ${it[3]}\n\
   Files : [${it[4].fileName}, ${it[5].fileName}]"
@@ -134,7 +134,7 @@ process RunFastQC {
   publishDir "${directoryMap.fastQC}/${idRun}", mode: params.publishDirMode
 
   input:
-    set idPatient, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFilesforFastQC
+    set idPatient, status, idSample, idRun, file(inputFile1), file(inputFile2) from inputFilesforFastQC
 
   output:
     file "*_fastqc.{zip,html}" into fastQCreport
@@ -144,11 +144,11 @@ process RunFastQC {
   script:
   if (step == 'mapping')
     """
-    fastqc -t 2 -q ${fastqFile1} ${fastqFile2}
+    fastqc -t 2 -q ${inputFile1} ${inputFile2}
     """
   else if (step == 'remapping')
     """
-    fastqc -t 2 -q ${fastqFile1}
+    fastqc -t 2 -q ${inputFile1}
     """
 }
 
@@ -161,7 +161,7 @@ process MapReads {
   tag {idPatient + "-" + idRun}
 
   input:
-    set idPatient, status, idSample, idRun, file(fastqFile1), file(fastqFile2) from fastqFiles
+    set idPatient, status, idSample, idRun, file(inputFile1), file(inputFile2) from inputFiles
     set file(genomeFile), file(bwaIndex) from Channel.value([referenceMap.genomeFile, referenceMap.bwaIndex])
 
   output:
@@ -177,20 +177,20 @@ process MapReads {
   if (step == 'mapping')
     """
     bwa mem -R \"${readGroup}\" ${extra} -t ${task.cpus} -M \
-    ${genomeFile} ${fastqFile1} ${fastqFile2} | \
+    ${genomeFile} ${inputFile1} ${inputFile2} | \
     samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
     """
   else if (step == 'remapping')
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
     SamToFastq \
-    --INPUT=${fastqFile1} \
+    --INPUT=${inputFile1} \
     --FASTQ=/dev/stdout \
     --INTERLEAVE=true \
     --NON_PF=true \
     | \
     bwa mem -K 1000000 -p -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${genomeFile} \
-    /dev/stdin - 2> >(tee ${fastqFile1}.bwa.stderr.log >&2) \
+    /dev/stdin - 2> >(tee ${inputFile1}.bwa.stderr.log >&2) \
     | \
     samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
     """
