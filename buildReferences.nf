@@ -212,30 +212,6 @@ def checkUppmaxProject() {
   return !(workflow.profile == 'slurm' && !params.project)
 }
 
-def defReferencesFiles(genome) {
-  if (genome == "smallGRCh37") {
-    return [
-    '1000G_phase1.indels.b37.small.vcf.gz',
-    '1000G_phase3_20130502_SNP_maf0.3.small.loci',
-    'b37_cosmic_v74.noCHR.sort.4.1.small.vcf.gz',
-    'dbsnp_138.b37.small.vcf.gz',
-    'human_g1k_v37_decoy.small.fasta.gz',
-    'Mills_and_1000G_gold_standard.indels.b37.small.vcf.gz',
-    'small.intervals'
-    ]
-  } else if (genome == "GRCh37") {
-    return   [
-    '1000G_phase1.indels.b37.vcf.gz',
-    '1000G_phase3_20130502_SNP_maf0.3.loci.tar.bz2',
-    'GRCh37_Cosmic_v83.vcf.tar.bz2',
-    'dbsnp_138.b37.vcf.gz',
-    'human_g1k_v37_decoy.fasta.gz',
-    'Mills_and_1000G_gold_standard.indels.b37.vcf.gz',
-    'wgs_calling_regions.grch37.list'
-    ]
-  } else exit 1, "Can't build this reference genome"
-}
-
 def grabRevision() {
   // Return the same string executed from github or not
   return workflow.revision ?: workflow.commitId ?: workflow.scriptId.substring(0,10)
