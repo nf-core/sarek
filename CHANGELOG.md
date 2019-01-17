@@ -7,10 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### `Added`
+
+-   [#717](https://github.com/SciLifeLab/Sarek/pull/717) - New `remapping` step to add the possibility to remap BAM files
+
 ### `Changed`
 
 -   [#710](https://github.com/SciLifeLab/Sarek/pull/710) - Improve release checklist and script
 -   [#711](https://github.com/SciLifeLab/Sarek/pull/711) - Improve configuration priorities
+-   [#717](https://github.com/SciLifeLab/Sarek/pull/717) - `fastqFiles` renamed to `inputFiles`
+-   [#717](https://github.com/SciLifeLab/Sarek/pull/717) - `MapReads` for remapping will now convert BAM to FASTQ and feed it to BWA on the fly
 
 ## [2.2.2] - 2018-12-19
 
