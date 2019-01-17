@@ -8,19 +8,17 @@ This workflow itself needs little installation.
 
 You need to install [Nextflow][nextflow-link] and put it somewhere in your `$PATH`
 
-The Reference files are already stored in `rackham`.
+Sarek use Singularity containers to package all the different tools.
+
+All containers, and all Reference files are already stored on UPPMAX.
 
 Nextflow will automatically fetch Sarek from GitHub when launched if `SciLifeLab/Sarek` is specified as the workflow name.
 
-Sarek use Singularity containers to package all the different tools.
-
-On `rackham` you do have the possibility to use the automatic pull of the containers.
-
-You can choose a specific location to store these, otherwise they will be stored in the directory where you're running Sarek.
 
 ## Test Sarek with small dataset and small reference
 
-For more information, follow the [reference files documentation](REFERENCES.md). The following tutorial explain how to run Sarek on a small dataset using a small reference.
+For more information, follow the [reference files documentation](REFERENCES.md).
+The following tutorial explain how to run Sarek on a small dataset using a small reference.
 
 ```bash
 # Connect to rackham
@@ -48,10 +46,10 @@ For more information, follow the [reference files documentation](REFERENCES.md).
 > cd test_Sarek
 
 # Build the smallGRCh37 reference
-> nextflow run SciLifeLab/Sarek/buildReferences.nf --download --genome smallGRCh37 --project [PROJECT] -profile download
+> nextflow run SciLifeLab/Sarek/buildReferences.nf --download --genome smallGRCh37 --project [PROJECT]
 
 # Test the workflow on a test tiny set
-> nextflow run SciLifeLab/Sarek --test --genome smallGRCh37 --noReports --project [PROJECT] -profile download
+> nextflow run SciLifeLab/Sarek --test --genome smallGRCh37 --noReports --project [PROJECT]
 ```
 
 ## Update Sarek
@@ -66,12 +64,12 @@ For more information, follow the [reference files documentation](REFERENCES.md).
 
 ## Use Sarek with slurm
 
-To use Sarek on rackham you will need to use the `slurmDownload` profile.
+To use Sarek on rackham you will need to use the `slurm` profile.
 
 ```bash
 # Connect to rackham
 > ssh -AX [USER]@rackham.uppmax.uu.se
 
 # Run the workflow directly on the login node
-> nextflow run SciLifeLab/Sarek/main.nf --project [PROJECT] -profile slurmDownload
+> nextflow run SciLifeLab/Sarek/main.nf --project [PROJECT] -profile slurm
 ```

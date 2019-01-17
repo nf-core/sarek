@@ -58,12 +58,11 @@ For more information about using Singularity with UPPMAX, follow the [Singularit
 ## Install Sarek
 
 Sarek use Singularity containers to package all the different tools.
+All containers, and all Reference files are already stored on UPPMAX.
 
-As `bianca` is secure, no direct download is available, so Sarek and the Singularity containers will have to be installed and updated manually.
+As `bianca` is secure, no direct download is available, so Sarek will have to be installed and updated manually.
 
-You can either download Sarek and the containers on your computer (you will need Nextflow and Singularity for that) or on `rackham`, make an archive, and send it to `bianca` using `FileZilla` or `sftp` given your preferences.
-
-All Reference files are already stored in `bianca`.
+You can either download Sarek on your computer or on `rackham`, make an archive, and send it to `bianca` using `FileZilla` or `sftp` given your preferences.
 
 ```bash
 # Connect to rackham
@@ -107,18 +106,6 @@ Wrote Sarek-[snapID].tar.gz
 > sftp [USER]-[PROJECT]@bianca-sftp.uppmax.uu.se:[USER]-[PROJECT]
 > put Sarek-[snapID].tar.gz
 > exit
-
-# To get the containers
-# This script will need Singularity and Nextflow installed
-# If executed on Rackham: The script needs to be started from an interactive session
-# with at least two cores and approximately 3 hours. The scripts will write about
-# 12 Gb data to ~/.singularity, so this amount of disk space needs to be available
-# in the users home directory on Rackham.
-#
-> ./scripts/do_all.sh --pull --tag <VERSION>
-
-# Send the containers to bianca using the same method
-# They will be in the containers/ directory as .img files
 
 # The archive will be in the wharf folder in your user home on your bianca project
 

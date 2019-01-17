@@ -33,12 +33,9 @@ then
   if [[ $TEST = ANNOTATEVEP ]]
   then
     docker pull maxulysse/vepgrch37:latest
-  else
+  elif [[ $TEST = ANNOTATESNPEFF ]]
+  then
     docker pull maxulysse/snpeffgrch37:latest
   fi
-fi
-
-if [[ $TEST = ANNOTATESNPEFF ]] && [[ $PROFILE = singularity ]] && [[ $TRAVIS == true ]]
-then
-  singularity build $TMPDIR/maxulysse-snpeffgrch37-latest.simg docker://maxulysse/snpeffgrch37:latest
+  docker pull maxulysse/sarek:latest
 fi
