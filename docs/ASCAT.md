@@ -117,11 +117,9 @@ where:
 
 This created GC correction files with the following column headers: 
 Chr     Position        25      50      100     200     500     1000    2000    5000    10000   20000   50000   100000  200000  500000  1M      2M      5M      10M  
-
 This file gave an error when running Ascat, and the error message suggested that it had to do with the column headers. The Readme.txt in https://github.com/Crick-CancerGenomics/ascat/tree/master/gcProcessing suggested that the column headers should be:  
 Chr	Position	25bp	50bp	100bp	200bp	500bp	1000bp	2000bp	5000bp	10000bp	20000bp	50000bp	100000bp	200000bp	500000bp	1M	2M	5M	10M   
-
-Therefore I manually edited the column headers of the generated GC correction files.
+The column headers headers of the generated GC correction files were therefore manually edited.
   
 #### Format of GC correction file
 The final files are tab-delimited with the following columns (and some example data):  
