@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### `Added`
+-   [#712](https://github.com/SciLifeLab/Sarek/pull/712), [#718](https://github.com/SciLifeLab/Sarek/pull/718) - Added possibilities to run Sarek with `conda`
+
 ### `Changed`
 
 -   [#710](https://github.com/SciLifeLab/Sarek/pull/710) - Improve release checklist and script
