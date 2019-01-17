@@ -71,6 +71,50 @@ The loci file in GRCh38 coordinates is stored on Uppmax in:
 ## GC correction file
 Input files for Ascat's GC correction were created for the above loci files, using the scripts and instructions on Ascat's github repository: https://github.com/Crick-CancerGenomics/ascat/tree/master/gcProcessing.  
 
+###scripts and data
+The followubg scripts were downloaded from https://github.com/Crick-CancerGenomics/ascat/tree/master/gcProcessing:   *createGCcontentFile.R*  
+*createWindowBed.pl*   
+*GCfileCreation.sh*. 
+To generate the GC correction file additional files are needed:
+*The loci file* described above.  
+*Genome reference* is the genome reference file in fasta format. The files are descibed in [Genomes and reference files documentation](REFERENCES.md).  
+*Chromosome sizes* is a tab delimited text file containing the size of all chromosomes included in the loci file.
+
+###Modification of createWindowBed.pl for 
+The process of creating the GC correction file requires a genomic reference file. The genomc reference file we use in Sarek for GRCh37 is coded without the "chr" in the chromosome names, while the genomid referece file we use in Sarek for GRCh38 includes the "chr" in the chromosome names. The script https://github.com/Crick-CancerGenomics/ascat/tree/master/gcProcessing/createWindowBed.pl assumes that the "chr" is included in the chromosome names of the reference file, so a small modification of this script was done to match our reference file that lacks the "chr"s. 
+
+The https://github.com/Crick-CancerGenomics/ascat/tree/master/gcProcessing/createWindowBed.pl has these two lines that generate output:
+```
+print OUT "chr".$tab[1]."\t".$start."\t".$stop."\t".$tab[0]."\t".$tab[2]."\t".($w*2+1)."\n";
+and
+print OUT $tab[1]."\t".$start."\t".$stop."\t".$tab[0]."\t".$tab[2]."\t".($w*2+1)."\n";
+```
+To create the GC correction file for the above GRCh37 loci file using our genoe reference without "chr" in the chromosome bames, the above lines in createWindowBed.pl were modified to:
+```
+print OUT "chr".$tab[1]."\t".$start."\t".$stop."\t".$tab[0]."\t".$tab[2]."\t".($w*2)."\n";
+and
+print OUT $tab[1]."\t".$start."\t".$stop."\t".$tab[0]."\t".$tab[2]."\t".($w*2)."\n";
+```
+
+###Process
+The files createGCcontentFile.R, createWindowBed.pl and  GCfileCreation.sh were downloaded from https://github.com/Crick-CancerGenomics/ascat/tree/master/gcProcessing
+
+Generation of the GC correction files was run as slurm jobs on the Uppmax cluster Rackham, whith the following code:
+```#!/bin/bash -l
+#SBATCH -A projid
+#SBATCH -p node
+#SBATCH -t 24:00:00
+#SBATCH -J createGCfile
+module load bioinfo-tools
+module load BEDTools
+module load R/3.5.0
+module load R_packages/3.5.0
+./GCfileCreationNCBI.sh sarek.ascat.GRCh37.loci hg19.chrom.sizes 19 /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fast
+a
+
+
+
+
 The final files are tab-delimited with the following columns (and some example data):  
 Chr Position	25bp	50bp	100bp	200bp	500bp	1000bp	2000bp	5000bp	10000bp	20000bp	50000bp	100000bp	200000bp	500000bp	1M	2M	5M	10M  
 snp1	1	14930	0.541667	0.58	0.61	0.585	0.614	0.62	0.6	0.5888	0.588	0.4277	0.395041	0.380702	0.383259	0.341592	0.339747	0.386343	0.500537	0.511514  
