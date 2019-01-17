@@ -114,6 +114,14 @@ where:
 *human_g1k_v37_decoy.fasta* is the genome reference file used for GRCh37  
 *chrom.sizes* is the list of the chromosome lengths in GRCh37. Names of the chromosomes in chrom.sizes file must be the same as in the genome reference, so in case of GRCh37 we used "1", "2" etc and in GRCh38 we used "chr1", "chr2" etc.  
 *19* means that 19 cores are available for the script.  
+
+This created GC correction files with the following column headers: 
+Chr     Position        25      50      100     200     500     1000    2000    5000    10000   20000   50000   100000  200000  500000  1M      2M      5M      10M  
+
+This file gave an error when running Ascat, and the error message suggested that it had to do with the column headers. The Readme.txt in https://github.com/Crick-CancerGenomics/ascat/tree/master/gcProcessing suggested that the column headers should be:  
+Chr	Position	25bp	50bp	100bp	200bp	500bp	1000bp	2000bp	5000bp	10000bp	20000bp	50000bp	100000bp	200000bp	500000bp	1M	2M	5M	10M   
+
+Therefore I manually edited the column headers of the generated GC correction files.
   
 #### Format of GC correction file
 The final files are tab-delimited with the following columns (and some example data):  
