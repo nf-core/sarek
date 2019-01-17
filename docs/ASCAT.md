@@ -72,7 +72,7 @@ The loci file in GRCh38 coordinates is stored on Uppmax in:
 ### GC correction file
 Input files for Ascat's GC correction were created for the above loci files, using the scripts and instructions for this on Ascat's github repository: https://github.com/Crick-CancerGenomics/ascat/tree/master/gcProcessing.  
 
-#### scripts and data
+#### scripts and data for generating the GC correction file
 The followubg scripts were downloaded from https://github.com/Crick-CancerGenomics/ascat/tree/master/gcProcessing:   *createGCcontentFile.R*  
 *createWindowBed.pl*   
 *GCfileCreation.sh*. 
@@ -108,15 +108,14 @@ module load bioinfo-tools
 module load BEDTools
 module load R/3.5.0
 module load R_packages/3.5.0
-./GCfileCreation.sh 1000G_phase3_GRCh38_maf0.3.loci chrom.sizes 19 /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fast
-a
+./GCfileCreation.sh 1000G_phase3_GRCh38_maf0.3.loci chrom.sizes 19 human_g1k_v37_decoy.fasta
 ```  
-where:
-*/sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37/human_g1k_v37_decoy.fast
-a* is the genome reference file used for our GRCh37 loci file 
-*chrom.sizes* is the list of the chromosome lengths in GRCh37. Names of the chromosomes in chrom.sizes file must be the same as in the genome reference, so in case of GRCh37 we used "1", "2" etc and in GRCh38 we used "chr1", "chr2" etc. 
-
-#### Results
+where:  
+*human_g1k_v37_decoy.fasta* is the genome reference file used for GRCh37  
+*chrom.sizes* is the list of the chromosome lengths in GRCh37. Names of the chromosomes in chrom.sizes file must be the same as in the genome reference, so in case of GRCh37 we used "1", "2" etc and in GRCh38 we used "chr1", "chr2" etc.  
+*19* means that 19 cores are available for the script.  
+  
+#### Format of GC correction file
 The final files are tab-delimited with the following columns (and some example data):  
 Chr Position	25bp	50bp	100bp	200bp	500bp	1000bp	2000bp	5000bp	10000bp	20000bp	50000bp	100000bp	200000bp	500000bp	1M	2M	5M	10M  
 snp1	1	14930	0.541667	0.58	0.61	0.585	0.614	0.62	0.6	0.5888	0.588	0.4277	0.395041	0.380702	0.383259	0.341592	0.339747	0.386343	0.500537	0.511514  
