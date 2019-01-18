@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 -   [#710](https://github.com/SciLifeLab/Sarek/pull/710) - Improve release checklist and script
 -   [#711](https://github.com/SciLifeLab/Sarek/pull/711) - Improve configuration priorities
+-   [#716](https://github.com/SciLifeLab/Sarek/pull/716) - Update paths to containers and iGenomes
 
 ### `Removed`
 -   [#715](https://github.com/SciLifeLab/Sarek/pull/715) - Remove `defReferencesFiles` function from `buildReferences.nf`
