@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#711](https://github.com/SciLifeLab/Sarek/pull/711) - Improve configuration priorities
 -   [#717](https://github.com/SciLifeLab/Sarek/pull/717) - `fastqFiles` renamed to `inputFiles`
 -   [#717](https://github.com/SciLifeLab/Sarek/pull/717) - `MapReads` for remapping will now convert BAM to FASTQ and feed it to BWA on the fly
+-   [#716](https://github.com/SciLifeLab/Sarek/pull/716) - Update paths to containers and iGenomes
+
+### `Removed`
+-   [#715](https://github.com/SciLifeLab/Sarek/pull/715) - Remove `defReferencesFiles` function from `buildReferences.nf`
 
 ## [2.2.2] - 2018-12-19
 
