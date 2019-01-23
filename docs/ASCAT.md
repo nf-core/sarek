@@ -108,9 +108,10 @@ module load bioinfo-tools
 module load BEDTools
 module load R/3.5.0
 module load R_packages/3.5.0
-./GCfileCreation.sh 1000G_phase3_GRCh38_maf0.3.loci chrom.sizes 19 human_g1k_v37_decoy.fasta
+./GCfileCreation.sh 1000G_phase3_20130502_SNP_maf0.3.loci chrom.sizes 19 human_g1k_v37_decoy.fasta
 ```  
 where:  
+*1000G_phase3_20130502_SNP_maf0.3.loci* is the loci file for GRCh37 described above  
 *human_g1k_v37_decoy.fasta* is the genome reference file used for GRCh37  
 *chrom.sizes* is the list of the chromosome lengths in GRCh37. Names of the chromosomes in chrom.sizes file must be the same as in the genome reference, so in case of GRCh37 we used "1", "2" etc and in GRCh38 we used "chr1", "chr2" etc.  
 *19* means that 19 cores are available for the script.  
