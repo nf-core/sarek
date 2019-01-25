@@ -172,7 +172,7 @@ process RunSnpeff {
   when: 'snpeff' in tools || 'merge' in tools
 
   script:
-  cache = (params.snpEff_cache) ? "-dataDir \${PWD}/${dataDir}" : ""
+  cache = (params.snpEff_cache && params.annotation_cache) ? "-dataDir \${PWD}/${dataDir}" : ""
   """
   snpEff -Xmx${task.memory.toGiga()}g \
   ${snpeffDb} \
@@ -230,7 +230,7 @@ process RunVEP {
   script:
   finalannotator = annotator == "snpeff" ? 'merge' : 'vep'
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
-  cache = (params.vep_cache) ? "--dir_cache \${PWD}/${dataDir}" : ""
+  cache = (params.vep_cache && params.annotation_cache) ? "--dir_cache \${PWD}/${dataDir}" : ""
   """
   vep  \
   -i ${vcf} \
