@@ -21,8 +21,8 @@ Default settings will run using these containers.
 
 Both `snpEff` and `VEP` enable usage of cache.
 If cache is available on the machine where Sarek is run, it is possible to run annotation using cache.
-You can specify the cache directory using `--snpEff_cache` and `--vep_cache` in the command lines or within configuration files.
-But the cache will only be used when `--annotation_cache` is specified (either in command lines or in a configuration file).
+You need to specify the cache directory using `--snpEff_cache` and `--vep_cache` in the command lines or within configuration files.
+The cache will only be used when `--annotation_cache` and cache directories are specified (either in command lines or in a configuration file).
 
 Example:
 ```
@@ -33,6 +33,7 @@ nextflow run annotate.nf --tools VEP --annotateVCF file.vcf.gz --genome GRCh38 -
 ## Downloading cache
 
 An helper script has been designed to help downloading snpEff and VEP cache.
+Cache is meant to be share between multiple users, so this script is mainly meant for people administrating servers, clusters and advanced users.
 ```
 nextflow run buildReferences.nf --snpEff_cache /Path/To/snpEffCache --vep_cache /Path/To/vepCache --genome <GENOME>
 ```

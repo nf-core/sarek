@@ -114,19 +114,19 @@ Different vcfs to be separated by commas.
 ### --annotate_cache
 
 Use available cache on local machine.
-To be used with `--snpEff_cache` and/or `--vep_cache` to specify the cache directories.
+Works only when used with `--snpEff_cache` and/or `--vep_cache` to specify the cache directories.
 See [annotation documentation](ANNOTATION.md) for more information.
 
 ### --snpEff_cache `/Path/To/snpEffCache`
 
 Specify the location of snpEff cache.
-To be used with `--annotate_cache`.
+Works only when used with `--annotate_cache`.
 See [annotation documentation](ANNOTATION.md) for more information.
 
 ### --vep_cache `/Path/To/VEPcache`
 
 Specify the location of VEP cache.
-To be used with `--annotate_cache`.
+Works only when used with `--annotate_cache`.
 See [annotation documentation](ANNOTATION.md) for more information.
 
 ## MultiQC script (`runMultiQC.nf`)
