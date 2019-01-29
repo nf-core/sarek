@@ -7,4 +7,4 @@ channels:
   - defaults
 
 dependencies:
-  - ensembl-vep=95.0
+  - ensembl-vep=95.1
