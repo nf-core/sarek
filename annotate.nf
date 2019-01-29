@@ -31,8 +31,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - RunSnpeff - Run snpEff for annotation of vcf files
  - RunVEP - Run VEP for annotation of vcf files
  - CompressVCF - Compress and index vcf files using tabix
- - GetVersionSnpeff - Get version of tools
- - GetVersionVEP - Get version of tools
 ================================================================================
 =                           C O N F I G U R A T I O N                          =
 ================================================================================
@@ -230,7 +228,7 @@ process RunVEP {
   script:
   finalannotator = annotator == "snpeff" ? 'merge' : 'vep'
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
-  cache = (params.vep_cache && params.annotation_cache) ? "--dir_cache \${PWD}/${dataDir}" : ""
+  cache = (params.vep_cache && params.annotation_cache) ? "--dir_cache \${PWD}/${dataDir}" : "--dir_cache /.vep"
   """
   vep  \
   -i ${vcf} \
@@ -282,20 +280,6 @@ if (params.verbose) vcfCompressedoutput = vcfCompressedoutput.view {
   "${it[0]} VCF:\n" +
   "File  : ${it[2].fileName}\n" +
   "Index : ${it[3].fileName}"
-}
-
-process GetVersionSnpeff {
-  publishDir directoryMap.version, mode: params.publishDirMode
-  output: file("v_*.txt")
-  when: 'snpeff' in tools || 'merge' in tools
-  script: QC.getVersionSnpEFF()
-}
-
-process GetVersionVEP {
-  publishDir directoryMap.version, mode: params.publishDirMode
-  output: file("v_*.txt")
-  when: 'vep' in tools || 'merge' in tools
-  script: QC.getVersionVEP()
 }
 
 /*
