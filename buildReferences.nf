@@ -46,7 +46,7 @@ if (workflow.profile == 'awsbatch') {
     if(!params.awsqueue) exit 1, "Provide the job queue for aws batch!"
 }
 
-ch_referencesFiles = Channel.fromPath("${params.refDir}/*")
+ch_referencesFiles = Channel.fromPath("${params.refDir}/*").ifEmpty(null)
 
 /*
 ================================================================================
@@ -55,6 +55,50 @@ ch_referencesFiles = Channel.fromPath("${params.refDir}/*")
 */
 
 startMessage()
+
+process BuildCache_snpEff {
+  tag {snpeffDb}
+
+  publishDir params.snpEff_cache, mode: params.publishDirMode
+
+  input:
+    val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
+
+  output:
+    file("*")
+
+  when: params.snpEff_cache
+
+  script:
+  """
+  snpEff download -v ${snpeffDb} -dataDir \${PWD}
+  """
+}
+
+process BuildCache_VEP {
+  tag {"${species}_${cache_version}_${genome}"}
+
+  publishDir "${params.vep_cache}/${species}", mode: params.publishDirMode
+
+  input:
+    val cache_version from Channel.value(params.genomes[params.genome].vepCacheVersion)
+
+  output:
+    file("*")
+
+  when: params.vep_cache
+
+  script:
+  genome = params.genome == "smallGRCh37" ? "GRCh37" : params.genome
+  species = genome =~ "GRCh3*" ? "homo_sapiens" : ""
+  """
+  wget --quiet -O ${species}_vep_${cache_version}_${genome}.tar.gz \
+    ftp://ftp.ensembl.org/pub/release-${cache_version}/variation/VEP/${species}_vep_${cache_version}_${genome}.tar.gz
+  tar xzf ${species}_vep_${cache_version}_${genome}.tar.gz
+  mv ${species}/* .
+  rm -rf ${species} ${species}_vep_${cache_version}_${genome}.tar.gz
+  """
+}
 
 ch_compressedfiles = Channel.create()
 ch_notCompressedfiles = Channel.create()
@@ -118,7 +162,6 @@ process BuildBWAindexes {
     file("*.{amb,ann,bwt,pac,sa}") into bwaIndexes
 
   script:
-
   """
   bwa index ${f_reference}
   """
