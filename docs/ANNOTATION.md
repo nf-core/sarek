@@ -22,7 +22,7 @@ Default settings will run using these containers.
 Both `snpEff` and `VEP` enable usage of cache.
 If cache is available on the machine where Sarek is run, it is possible to run annotation using cache.
 You can specify the cache directory using `--snpEff_cache` and `--vep_cache` in the command lines or within configuration files.
-But the cache will only be used whenn `--annotation_cache` is specified (either in command lines or in a configuration file).
+But the cache will only be used when `--annotation_cache` is specified (either in command lines or in a configuration file).
 
 Example:
 ```
