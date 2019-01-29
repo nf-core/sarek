@@ -174,6 +174,11 @@ process MapReads {
   readGroup = "@RG\\tID:${idRun}\\t${CN}PU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
   // adjust mismatch penalty for tumor samples
   extra = status == 1 ? "-B 3" : ""
+  // -K is an hidden option, used to fix the number of reads processed by bwa mem
+  // Chunk size can affect bwa results, if not specified, the number of threads can change
+  // which can give not deterministic result.
+  // cf https://github.com/CCDG/Pipeline-Standardization/blob/master/PipelineStandard.md
+  // and https://github.com/gatk-workflows/gatk4-data-processing/blob/8ffa26ff4580df4ac3a5aa9e272a4ff6bab44ba2/processing-for-variant-discovery-gatk4.b37.wgs.inputs.json#L29
   if (step == 'mapping')
     """
     bwa mem -R \"${readGroup}\" ${extra} -t ${task.cpus} -M \
@@ -189,7 +194,7 @@ process MapReads {
     --INTERLEAVE=true \
     --NON_PF=true \
     | \
-    bwa mem -K 1000000 -p -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${genomeFile} \
+    bwa mem -K 100000000 -p -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${genomeFile} \
     /dev/stdin - 2> >(tee ${inputFile1}.bwa.stderr.log >&2) \
     | \
     samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
