@@ -29,6 +29,12 @@ Define usage limits and Singularity for BINAC cluster in Tuebingen.
 
 Designed for usage with Singularity on CFC at QBic.
 
+### [`conda.config`](https://github.com/SciLifeLab/Sarek/blob/master/conf/conda.config)
+
+> /!\\ Under development.
+
+Define conda environement.
+
 ### [`containers.config`](https://github.com/SciLifeLab/Sarek/blob/master/conf/containers.config)
 
 Define Containers for all process.
@@ -106,6 +112,13 @@ This is the profile for use on the BTB server munin.
 ### `cfc`
 
 This is the profile for use on the CFC cluster in Tuebingen.
+
+### `conda`
+
+> /!\\ Under development.
+
+This is the profile for conda testing on a small machine, or on Travis CI.
+Conda environement will be built automatically.
 
 ### `docker`
 
