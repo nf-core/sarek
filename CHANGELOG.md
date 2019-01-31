@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#694](https://github.com/SciLifeLab/Sarek/pull/694) - Add monochrome and grey logos for light or dark background
 -   [#698](https://github.com/SciLifeLab/Sarek/pull/698) - Add btb profile for munin server
 -   [#702](https://github.com/SciLifeLab/Sarek/pull/702) - Add font-ttf-dejavu-sans-mono `2.37` and fontconfig `2.12.6` to container
+-   [#722](https://github.com/SciLifeLab/Sarek/pull/722) - Update `Sarek-data` submodule
+-   [#722](https://github.com/SciLifeLab/Sarek/pull/722) - Add path to ASCAT `.gc` file in `igenomes.config`
 
 ### `Changed`
 
