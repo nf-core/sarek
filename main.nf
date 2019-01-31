@@ -379,15 +379,6 @@ if (params.verbose) recalibrationTable = recalibrationTable.view {
   Files : [${it[3].fileName}, ${it[4].fileName}, ${it[5].fileName}]"
 }
 
-(bamForBamQC, bamForSamToolsStats, recalTables, recalibrationTableForHC, recalibrationTable) = recalibrationTable.into(5)
-
-// Remove recalTable from Channels to match inputs for Process to avoid:
-// WARN: Input tuple does not match input set cardinality declared by process...
-bamForBamQC = bamForBamQC.map { it[0..4] }
-bamForSamToolsStats = bamForSamToolsStats.map{ it[0..4] }
-
-recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
-
 process RecalibrateBam {
   tag {idPatient + "-" + idSample}
 
@@ -406,8 +397,6 @@ process RecalibrateBam {
     set idPatient, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam, recalibratedBamForStats
     set idPatient, status, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into recalibratedBamTSV
 
-  // GATK4 HaplotypeCaller can not do BQSR on the fly, so we have to create a
-  // recalibrated BAM explicitly.
   when: !params.onlyQC
 
   script:
@@ -435,6 +424,10 @@ if (params.verbose) recalibratedBam = recalibratedBam.view {
   ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
   Files : [${it[3].fileName}, ${it[4].fileName}]"
 }
+
+// Remove recalTable from Channels to match inputs for Process to avoid:
+// WARN: Input tuple does not match input set cardinality declared by process...
+(bamForBamQC, bamForSamToolsStats) = recalibratedBamForStats.map{ it[0..4] }.into(2)
 
 process RunSamtoolsStats {
   tag {idPatient + "-" + idSample}
