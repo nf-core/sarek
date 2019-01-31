@@ -1,6 +1,6 @@
 # You can use this file to create a conda environment for this pipeline:
 # conda env create -f environment.yml
-name: sarek-2.2.1
+name: sarek-2.2.2
 channels:
   - conda-forge
   - bioconda
@@ -9,9 +9,11 @@ channels:
 dependencies:
   - bcftools=1.8
   - bwa=0.7.17
-  - fastqc=0.11.7
+  - fastqc=0.11.8
+  - font-ttf-dejavu-sans-mono=2.37 #for FastQC
+  - fontconfig=2.12.6 #for FastQC
   - freebayes=1.2.0
-  - gatk4=4.0.6.0
+  - gatk4=4.0.9.0
   - htslib=1.9
   - igvtools=2.3.93
   - manta=1.4.0

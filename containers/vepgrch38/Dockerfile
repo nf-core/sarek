@@ -8,7 +8,7 @@ LABEL \
 # Setup ENV variables
 ENV \
   GENOME=GRCh38 \
-  VEP_VERSION=91
+  VEP_VERSION=92
 
 # Download Genome
 RUN \

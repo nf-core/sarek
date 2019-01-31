@@ -13,10 +13,7 @@ The Reference files are already stored in `rackham`.
 Nextflow will automatically fetch Sarek from GitHub when launched if `SciLifeLab/Sarek` is specified as the workflow name.
 
 Sarek use Singularity containers to package all the different tools.
-
-On `rackham` you do have the possibility to use the automatic pull of the containers.
-
-You can choose a specific location to store these, otherwise they will be stored in the directory where you're running Sarek.
+All containers are already stored on UPPMAX.
 
 ## Test Sarek with small dataset and small reference
 

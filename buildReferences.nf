@@ -40,6 +40,12 @@ if (params.help) exit 0, helpMessage()
 if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
 
+// Check for awsbatch profile configuration
+// make sure queue is defined
+if (workflow.profile == 'awsbatch') {
+    if(!params.awsqueue) exit 1, "Provide the job queue for aws batch!"
+}
+
 ch_referencesFiles = Channel.fromPath("${params.refDir}/*")
 
 /*
@@ -103,7 +109,7 @@ ch_notCompressedfiles
 process BuildBWAindexes {
   tag {f_reference}
 
-  publishDir params.outDir, mode: 'link'
+  publishDir params.outDir, mode: params.publishDirMode
 
   input:
     file(f_reference) from ch_fastaForBWA
@@ -125,7 +131,7 @@ if (params.verbose) bwaIndexes.flatten().view {
 process BuildReferenceIndex {
   tag {f_reference}
 
-  publishDir params.outDir, mode: 'link'
+  publishDir params.outDir, mode: params.publishDirMode
 
   input:
     file(f_reference) from ch_fastaReference
@@ -149,7 +155,7 @@ if (params.verbose) ch_referenceIndex.view {
 process BuildSAMToolsIndex {
   tag {f_reference}
 
-  publishDir params.outDir, mode: 'link'
+  publishDir params.outDir, mode: params.publishDirMode
 
   input:
     file(f_reference) from ch_fastaForSAMTools
@@ -170,7 +176,7 @@ if (params.verbose) ch_samtoolsIndex.view {
 process BuildVCFIndex {
   tag {f_reference}
 
-  publishDir params.outDir, mode: 'link'
+  publishDir params.outDir, mode: params.publishDirMode
 
   input:
     file(f_reference) from ch_vcfFile
