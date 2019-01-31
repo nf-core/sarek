@@ -64,11 +64,11 @@ Only required if you use the awsbatch profile. This parameter specifies the queu
 
 ### --awsqueue_tiny `BatchQueueName`
 
-Only used if you use the awsbatch profile. This parameter specifies a queue used for certain small jobs that might still require a significant amount of disk storage. 
+Only used if you use the awsbatch profile. This parameter specifies a queue used for certain small jobs that might still require a significant amount of disk storage.
 
 ### --localReportDir `Directory`
 
-Only used if you use the awsbatch profile. This parameter specifies an output directory for nextflow reports, such as Sarek_timeline.html, which currently is not fully supported to store on s3. 
+Only used if you use the awsbatch profile. This parameter specifies an output directory for nextflow reports, such as Sarek_timeline.html, which currently is not fully supported to store on s3.
 
 ### --verbose
 
@@ -131,10 +131,6 @@ However, if needed, you can specify any reference file at the command line.
 ### --acLoci `acLoci file`
 
 ### --bwaIndex `bwaIndex file`
-
-### --cosmic `cosmic file`
-
-### --cosmicIndex `cosmicIndex file`
 
 ### --dbsnp `dbsnp file`
 
