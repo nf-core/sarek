@@ -882,6 +882,7 @@ def minimalInformationMessage() {
   log.info "  Tag          : " + params.tag
   log.info "Reference files used:"
   log.info "  acLoci      :\n\t" + referenceMap.acLoci
+  log.info "  acLociGC    :\n\t" + referenceMap.acLociGC
   log.info "  dbsnp       :\n\t" + referenceMap.dbsnp
   log.info "\t" + referenceMap.dbsnpIndex
   log.info "  genome      :\n\t" + referenceMap.genomeFile
