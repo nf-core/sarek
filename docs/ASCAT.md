@@ -68,9 +68,61 @@ The loci file in GRCh38 coordinates is stored on Uppmax in:
 ```
 /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/1000G_phase3_GRCh38_maf0.3.loci
 ```
-## GC correction file
-Input files for Ascat's GC correction were created for the above loci files, using the scripts and instructions on Ascat's github repository: https://github.com/Crick-CancerGenomics/ascat/tree/master/gcProcessing.  
+  
+### GC correction file
+Input files for Ascat's GC correction were created for the above loci files, using the scripts and instructions for this on Ascat's github repository: https://github.com/Crick-CancerGenomics/ascat/tree/master/gcProcessing.  
 
+#### scripts and data for generating the GC correction file
+The followubg scripts were downloaded from https://github.com/Crick-CancerGenomics/ascat/tree/master/gcProcessing:   *createGCcontentFile.R*  
+*createWindowBed.pl*   
+*GCfileCreation.sh*. 
+To generate the GC correction file additional files are needed:
+*locifile* described above.  
+*reference.fasta* is the genome reference file in fasta format. The files are descibed in [Genomes and reference files documentation](REFERENCES.md).  
+*chromosomesizes.txt* is a tab delimited text file containing the size of all chromosomes included in the loci file. An example file is available in https://github.com/Crick-CancerGenomics/ascat/tree/master/gcProcessing/hg19.chrom.sizes  
+  
+#### Modification of createWindowBed.pl for our GRCh37 loci file
+The genomc reference file we use in Sarek for GRCh37 is coded without "chr" in the chromosome names, while the genomcd referece file we use in Sarek for GRCh38 includes "chr" in the chromosome names. The script https://github.com/Crick-CancerGenomics/ascat/tree/master/gcProcessing/createWindowBed.pl assumes that "chr" is included in the chromosome names of the reference file, so a small modification of this script was done for the process to work on our GRCh37 loci file. 
+
+These two lines in createWindowBed.pl generate output (lines 61 and 64):
+```
+(61)  print OUT "chr".$tab[1]."\t".$start."\t".$stop."\t".$tab[0]."\t".$tab[2]."\t".($w*2+1)."\n";
+(64)  print OUT $tab[1]."\t".$start."\t".$stop."\t".$tab[0]."\t".$tab[2]."\t".($w*2+1)."\n";
+```
+and were changed to:
+```
+(61)  print OUT "chr".$tab[1]."\t".$start."\t".$stop."\t".$tab[0]."\t".$tab[2]."\t".($w*2)."\n";
+(64)  print OUT $tab[1]."\t".$start."\t".$stop."\t".$tab[0]."\t".$tab[2]."\t".($w*2)."\n";
+```
+After this modification the script works for our GRCh37 loci file.
+
+#### Process 
+The following sbatch script was run on the Uppmax cluster Rackham, to generate the CG correction files:
+```
+#!/bin/bash -l
+#SBATCH -A projid
+#SBATCH -p node
+#SBATCH -t 24:00:00
+#SBATCH -J createGCfile
+module load bioinfo-tools
+module load BEDTools
+module load R/3.5.0
+module load R_packages/3.5.0
+./GCfileCreation.sh 1000G_phase3_20130502_SNP_maf0.3.loci chrom.sizes 19 human_g1k_v37_decoy.fasta
+```  
+where:  
+*1000G_phase3_20130502_SNP_maf0.3.loci* is the loci file for GRCh37 described above  
+*human_g1k_v37_decoy.fasta* is the genome reference file used for GRCh37  
+*chrom.sizes* is the list of the chromosome lengths in GRCh37. Names of the chromosomes in chrom.sizes file must be the same as in the genome reference, so in case of GRCh37 we used "1", "2" etc and in GRCh38 we used "chr1", "chr2" etc.  
+*19* means that 19 cores are available for the script.  
+
+This created GC correction files with the following column headers: 
+Chr     Position        25      50      100     200     500     1000    2000    5000    10000   20000   50000   100000  200000  500000  1M      2M      5M      10M  
+This file gave an error when running Ascat, and the error message suggested that it had to do with the column headers. The Readme.txt in https://github.com/Crick-CancerGenomics/ascat/tree/master/gcProcessing suggested that the column headers should be:  
+Chr	Position	25bp	50bp	100bp	200bp	500bp	1000bp	2000bp	5000bp	10000bp	20000bp	50000bp	100000bp	200000bp	500000bp	1M	2M	5M	10M   
+The column headers headers of the generated GC correction files were therefore manually edited.
+  
+#### Format of GC correction file
 The final files are tab-delimited with the following columns (and some example data):  
 Chr Position	25bp	50bp	100bp	200bp	500bp	1000bp	2000bp	5000bp	10000bp	20000bp	50000bp	100000bp	200000bp	500000bp	1M	2M	5M	10M  
 snp1	1	14930	0.541667	0.58	0.61	0.585	0.614	0.62	0.6	0.5888	0.588	0.4277	0.395041	0.380702	0.383259	0.341592	0.339747	0.386343	0.500537	0.511514  
