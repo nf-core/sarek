@@ -113,7 +113,7 @@ This is the profile for use on the BTB server munin.
 
 This is the profile for use on the CFC cluster in Tuebingen.
 
-### `cfc`
+### `conda`
 
 > /!\\ Under development.
 
