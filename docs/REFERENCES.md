@@ -27,8 +27,6 @@ More information about this file in the [intervals documentation](INTERVALS.md)
 
 Description of how to generate the Loci file used in the ASCAT process is described [here](https://github.com/SciLifeLab/Sarek/blob/master/docs/ASCAT.md).
 
-You can create your own cosmic reference for any human reference as specified below in the Cosmic section.
-
 ## GRCh38
 
 Use `--genome GRCh38` to map against GRCh38.
@@ -68,31 +66,6 @@ bwa index -6 Homo_sapiens_assembly38.fasta
 ```
 
 Description of how to generate the Loci file used in the ASCAT process is described [here](https://github.com/SciLifeLab/Sarek/blob/master/docs/ASCAT.md).
-
-You can create your own cosmic reference for any human reference as specified below in the Cosmic section.
-
-## COSMIC files
-
-To annotate with COSMIC variants during MuTect1/2 Variant Calling you need to create a compatible VCF file.
-Download the coding and non-coding VCF files from [COSMIC](http://cancer.sanger.ac.uk/cosmic/download) and
-process them with the [Create\_Cosmic.sh](https://github.com/SciLifeLab/Sarek/tree/master/scripts/Create_Cosmic.sh)
-script for either GRCh37 or GRCh38.
-The script requires a fasta index `.fai`, of the reference file you are using.
-
-Example:
-
-```bash
-samtools faidx human_g1k_v37_decoy.fasta
-sh Create_Cosmic.sh human_g1k_v37_decoy.fasta.fai
-```
-
-Note: CosmicCodingMuts.vcf.gz & CosmicNonCodingVariants.vcf.gz must be in same folder as Create\_Cosmic.sh when executed.
-
-To index the resulting VCF file use [igvtools](https://software.broadinstitute.org/software/igv/igvtools).
-
-```bash
-igvtools index <cosmicvxx.vcf>
-```
 
 ## smallGRCh37
 

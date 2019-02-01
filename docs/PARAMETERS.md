@@ -148,10 +148,6 @@ However, if needed, you can specify any reference file at the command line.
 
 ### --bwaIndex `bwaIndex file`
 
-### --cosmic `cosmic file`
-
-### --cosmicIndex `cosmicIndex file`
-
 ### --dbsnp `dbsnp file`
 
 ### --dbsnpIndex `dbsnpIndex file`
