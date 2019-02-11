@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - `vepCacheVersion` is now defined in `conf/genomes.config` or `conf/igenomes.config`
 -   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - `snpeff` and `vep` containers are now built with conda
 -   [#716](https://github.com/SciLifeLab/Sarek/pull/716) - Update paths to containers and iGenomes
+-   [#724](https://github.com/SciLifeLab/Sarek/pull/724) - Improved AwsBatch configuration
 
 ### `Added`
 -   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - Possibility to use cache wen annotating with `snpEff` and `VEP`
