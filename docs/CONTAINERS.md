@@ -17,9 +17,6 @@ Subsets of all containers can be downloaded:
 
 Use the Nextflow script to build and/or push containers from Docker and/or Singularity.
 
-All the containers have built in UPPMAX directories, so there is no need to add them for use on UPPMAX clusters.
-- See the [Singularity UPPMAX guide](https://www.uppmax.uu.se/support-sv/user-guides/singularity-user-guide/)
-
 ### Usage
 
 ```bash
