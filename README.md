@@ -88,8 +88,9 @@ The Sarek pipeline comes with documentation in the `docs/` directory:
 12. [Input files documentation](https://github.com/SciLifeLab/Sarek/blob/master/docs/INPUT.md)
 13. [Processes documentation](https://github.com/SciLifeLab/Sarek/blob/master/docs/PROCESS.md)
 14. [Documentation about containers](https://github.com/SciLifeLab/Sarek/blob/master/docs/CONTAINERS.md)
-15. [More information about ASCAT](https://github.com/SciLifeLab/Sarek/blob/master/docs/ASCAT.md)
-16. [Output documentation structure](https://github.com/SciLifeLab/Sarek/blob/master/docs/OUTPUT.md)
+15. [Complementary information about ASCAT](https://github.com/SciLifeLab/Sarek/blob/master/docs/ASCAT.md)
+16. [Complementary information about annotations](https://github.com/SciLifeLab/Sarek/blob/master/docs/ANNOTATION.md)
+17. [Output documentation structure](https://github.com/SciLifeLab/Sarek/blob/master/docs/OUTPUT.md)
 
 ## Contributions & Support
 
