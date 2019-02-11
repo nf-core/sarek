@@ -57,8 +57,7 @@ function toLower() {
 
 if [[ $TOOL = docker ]] && [[ GRCh37,GRCh38 =~ $GENOME ]]
 then
-    nextflow run buildContainers.nf -profile ${PROFILE} --verbose --docker ${PUSH} --repository ${REPOSITORY} --tag ${TAG} --containers r-base,runallelecount,sarek,snpeff
-    nextflow run buildContainers.nf -profile ${PROFILE} --verbose --docker ${PUSH} --repository ${REPOSITORY} --tag ${TAG} --containers snpeff$(toLower ${GENOME}),vep$(toLower ${GENOME})
+    nextflow run buildContainers.nf -profile ${PROFILE} --verbose --docker ${PUSH} --repository ${REPOSITORY} --tag ${TAG} --containers r-base,runallelecount,sarek,snpeff$(toLower ${GENOME}),vep$(toLower ${GENOME})
 else
     nextflow run buildContainers.nf -profile ${PROFILE} --verbose --singularity --repository ${REPOSITORY} --tag ${TAG} --containerPath containers/ --containers r-base,runallelecount,sarek,snpeff$(toLower ${GENOME}),vep$(toLower ${GENOME})
 fi
