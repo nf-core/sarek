@@ -31,8 +31,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - RunSnpeff - Run snpEff for annotation of vcf files
  - RunVEP - Run VEP for annotation of vcf files
  - CompressVCF - Compress and index vcf files using tabix
- - GetVersionSnpeff - Get version of tools
- - GetVersionVEP - Get version of tools
 ================================================================================
 =                           C O N F I G U R A T I O N                          =
 ================================================================================
@@ -149,6 +147,8 @@ if (params.verbose) vcfReport = vcfReport.view {
   "Files : [${it.fileName}]"
 }
 
+snpEff_cache = params.snpEff_cache ? params.snpEff_cache : "null"
+
 process RunSnpeff {
   tag {"${variantCaller} - ${vcf}"}
 
@@ -160,6 +160,7 @@ process RunSnpeff {
 
   input:
     set variantCaller, file(vcf) from vcfForSnpeff
+    file dataDir from Channel.fromPath(snpEff_cache, type: 'dir')
     val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
 
   output:
@@ -169,12 +170,13 @@ process RunSnpeff {
   when: 'snpeff' in tools || 'merge' in tools
 
   script:
+  cache = (params.snpEff_cache && params.annotation_cache) ? "-dataDir \${PWD}/${dataDir}" : ""
   """
-  java -Xmx${task.memory.toGiga()}g \
-  -jar \$SNPEFF_HOME/snpEff.jar \
+  snpEff -Xmx${task.memory.toGiga()}g \
   ${snpeffDb} \
   -csvStats ${vcf.simpleName}_snpEff.csv \
   -nodownload \
+  ${cache} \
   -canon \
   -v \
   ${vcf} \
@@ -202,6 +204,8 @@ if('merge' in tools) {
   )
 }
 
+vep_cache = params.vep_cache ? params.vep_cache : "null"
+
 process RunVEP {
   tag {"${variantCaller} - ${vcf}"}
 
@@ -212,6 +216,8 @@ process RunVEP {
 
   input:
     set annotator, variantCaller, file(vcf), file(idx) from vcfForVep
+    file dataDir from Channel.fromPath(vep_cache, type: 'dir')
+    val cache_version from Channel.value(params.genomes[params.genome].vepCacheVersion)
 
   output:
     set finalannotator, variantCaller, file("${vcf.simpleName}_VEP.ann.vcf") into vepVCF
@@ -222,14 +228,15 @@ process RunVEP {
   script:
   finalannotator = annotator == "snpeff" ? 'merge' : 'vep'
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
-  cache_version = params.genome == 'GRCh38' || params.genome == 'iGRCh38' ? 92 : 91
+  cache = (params.vep_cache && params.annotation_cache) ? "--dir_cache \${PWD}/${dataDir}" : "--dir_cache /.vep"
   """
-  /opt/vep/src/ensembl-vep/vep --dir /opt/vep/.vep/  \
+  vep  \
   -i ${vcf} \
   -o ${vcf.simpleName}_VEP.ann.vcf \
   --assembly ${genome} \
   --cache \
 	--cache_version ${cache_version} \
+  ${cache} \
   --database \
   --everything \
   --filter_common \
@@ -273,20 +280,6 @@ if (params.verbose) vcfCompressedoutput = vcfCompressedoutput.view {
   "${it[0]} VCF:\n" +
   "File  : ${it[2].fileName}\n" +
   "Index : ${it[3].fileName}"
-}
-
-process GetVersionSnpeff {
-  publishDir directoryMap.version, mode: params.publishDirMode
-  output: file("v_*.txt")
-  when: 'snpeff' in tools || 'merge' in tools
-  script: QC.getVersionSnpEFF()
-}
-
-process GetVersionVEP {
-  publishDir directoryMap.version, mode: params.publishDirMode
-  output: file("v_*.txt")
-  when: 'vep' in tools || 'merge' in tools
-  script: QC.getVersionVEP()
 }
 
 /*

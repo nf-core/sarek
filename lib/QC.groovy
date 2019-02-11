@@ -37,19 +37,4 @@ class QC {
     --out ${vcf.simpleName}
     """
   }
-
-
-// Get SnpEFF version
-  static def getVersionSnpEFF() {
-    """
-    echo "SNPEFF version"\$(java -jar \$SNPEFF_HOME/snpEff.jar -h 2>&1) > v_snpeff.txt
-    """
-  }
-
-// Get VEP version
-  static def getVersionVEP() {
-    """
-    /opt/vep/src/ensembl-vep/vep --help > v_vep.txt
-    """
-  }
 }

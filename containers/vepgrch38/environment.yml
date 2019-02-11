@@ -1,0 +1,10 @@
+# You can use this file to create a conda environment for this pipeline:
+# conda env create -f environment.yml
+name: sarek-vep-2.2.2
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - ensembl-vep=95.1

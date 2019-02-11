@@ -38,6 +38,14 @@ fi
 
 sed -i "s/sarek-[0-9\.]\+/sarek-$RELEASE/g" Dockerfile
 sed -i "s/sarek-[0-9\.]\+/sarek-$RELEASE/g" environment.yml
+sed -i "s/sarek-snpeff-[0-9\.]\+/sarek-snpeff-$RELEASE/g" containers/snpeffgrch37/Dockerfile
+sed -i "s/sarek-snpeff-[0-9\.]\+/sarek-snpeff-$RELEASE/g" containers/snpeffgrch37/environment.yml
+sed -i "s/sarek-snpeff-[0-9\.]\+/sarek-snpeff-$RELEASE/g" containers/snpeffgrch38/Dockerfile
+sed -i "s/sarek-snpeff-[0-9\.]\+/sarek-snpeff-$RELEASE/g" containers/snpeffgrch38/environment.yml
+sed -i "s/sarek-vep-[0-9\.]\+/sarek-vep-$RELEASE/g" containers/vepgrch37/Dockerfile
+sed -i "s/sarek-vep-[0-9\.]\+/sarek-vep-$RELEASE/g" containers/vepgrch37/environment.yml
+sed -i "s/sarek-vep-[0-9\.]\+/sarek-vep-$RELEASE/g" containers/vepgrch38/Dockerfile
+sed -i "s/sarek-vep-[0-9\.]\+/sarek-vep-$RELEASE/g" containers/vepgrch38/environment.yml
 sed -i "s/sarek-[0-9\.]\+/sarek-$RELEASE/g" Singularity
 sed -i "s/VERSION [0-9\.]\+/VERSION $RELEASE/g" Singularity
 sed -i "s/version = '[0-9\.]\+'/version = '$RELEASE'/g" nextflow.config

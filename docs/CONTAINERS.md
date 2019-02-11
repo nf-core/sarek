@@ -2,8 +2,9 @@
 
 Subsets of all containers can be downloaded:
 
-- For processing, germline and somatic variant calling and Reports:
+- For processing, germline variant calling and Reports:
   - [sarek](#sarek-)
+- For somatic variant calling, add:
   - [r-base](#r-base-)
   - [runallelecount](#runallelecount-)
 - For annotation for GRCh37, you will need:
@@ -12,6 +13,8 @@ Subsets of all containers can be downloaded:
 - For annotation for GRCh38, you will need:
   - [snpeffgrch38](#snpeffgrch38-)
   - [vepgrch38](#vepgrch38-)
+- For annotation with cache use:
+  - [sarek](#sarek-)
 
 ## Building
 
@@ -35,7 +38,6 @@ Possible values (to separate by commas):
   - `r-base` - the [r-base](#r-base-) container.
   - `runallelecount` - the [runallelecount](#runallelecount-) container.
   - `sarek` - the [sarek](#sarek-) container.
-  - `snpeff` - the [snpeff](#snpeff-) container, that serves as a base for `snpeffgrch37` and `snpeffgrch38`.
   - `snpeffgrch37` - the [snpeffgrch37](#snpeffgrch37-) container.
   - `snpeffgrch38` - the [snpeffgrch38](#snpeffgrch38-) container.
   - `vepgrch37` - the [vepgrch37](#vepgrch37-) container.
@@ -82,46 +84,43 @@ We provide script to build/push or pull all containers
 - Based on `nfcore/base:latest`
 - Contain **[BCFTools][bcftools-link]** 1.8
 - Contain **[BWA][bwa-link]** 0.7.17
-- Contain **[FastQC][fastqc-link]** 0.11.7
+- Contain **[FastQC][fastqc-link]** 0.11.8
 - Contain **[FreeBayes][freebayes-link]** 1.2.0
-- Contain **[GATK4][gatk4-link]** 4.0.6.0
+- Contain **[GATK4][gatk4-link]** 4.0.9.0
 - Contain **[HTSlib][htslib-link]** 1.9
 - Contain **[IGVtools][igvtools-link]** 2.3.93
 - Contain **[Manta][manta-link]** 1.4.0
 - Contain **[MultiQC][multiqc-link]** 1.6
 - Contain **[Qualimap][qualimap-link]** 2.2.2b
 - Contain **[samtools][samtools-link]** 1.8
+- Contain **[snpEff][snpeff-link]** 4.3.1t
 - Contain **[Strelka2][strelka-link]** 2.9.3
 - Contain **[VCFanno][vcfanno-link]** 0.3.0
 - Contain **[VCFtools][vcftools-link]** 0.1.16
-
-### snpeff [![snpeff-docker status][snpeff-docker-badge]][snpeff-docker-link]
-
-- Based on `openjdk:8-slim`
-- Contain **[snpEff][snpeff-link]** 4.3i
+- Contain **[VEP][vep-link]** 95.1
 
 ### snpeffgrch37 [![snpeffgrch37-docker status][snpeffgrch37-docker-badge]][snpeffgrch37-docker-link]
 
-- Based on `maxulysse/snpeff`
-- Contain **[snpEff][snpeff-link]** 4.3i
+- Based on `nfcore/base:latest`
+- Contain **[snpEff][snpeff-link]** 4.3.1t
 - Contain GRCh37.75
 
 ### snpeffgrch38 [![snpeffgrch38-docker status][snpeffgrch38-docker-badge]][snpeffgrch38-docker-link]
 
-- Based on `maxulysse/snpeff`
-- Contain **[snpEff][snpeff-link]** 4.3i
+- Based on `nfcore/base:latest`
+- Contain **[snpEff][snpeff-link]** 4.3.1t
 - Contain GRCh38.86
 
 ### vepgrch37 [![vepgrch37-docker status][vepgrch37-docker-badge]][vepgrch37-docker-link]
 
-- Based on `willmclaren/ensembl-vep:release_90.6`
-- Contain **[VEP][vep-link]** 90.5
+- Based on `nfcore/base:latest`
+- Contain **[VEP][vep-link]** 95.1
 - Contain GRCh37
 
 ### vepgrch38 [![vepgrch38-docker status][vepgrch38-docker-badge]][vepgrch38-docker-link]
 
-- Based on `willmclaren/ensembl-vep:release_92`
-- Contain **[VEP][vep-link]** 92
+- Based on `nfcore/base:latest`
+- Contain **[VEP][vep-link]** 95.1
 - Contain GRCh38
 
 [allelecount-link]: https://github.com/cancerit/alleleCount
@@ -143,8 +142,6 @@ We provide script to build/push or pull all containers
 [samtools-link]: https://github.com/samtools/samtools
 [sarek-docker-badge]: https://img.shields.io/docker/automated/maxulysse/sarek.svg
 [sarek-docker-link]: https://hub.docker.com/r/maxulysse/sarek
-[snpeff-docker-badge]: https://img.shields.io/docker/automated/maxulysse/snpeff.svg
-[snpeff-docker-link]: https://hub.docker.com/r/maxulysse/snpeff
 [snpeff-link]: http://snpeff.sourceforge.net/
 [snpeffgrch37-docker-badge]: https://img.shields.io/docker/automated/maxulysse/snpeffgrch37.svg
 [snpeffgrch37-docker-link]: https://hub.docker.com/r/maxulysse/snpeffgrch37
