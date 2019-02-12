@@ -19,9 +19,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#716](https://github.com/SciLifeLab/Sarek/pull/716) - Update paths to containers and iGenomes
 -   [#717](https://github.com/SciLifeLab/Sarek/pull/717) - `fastqFiles` renamed to `inputFiles`
 -   [#717](https://github.com/SciLifeLab/Sarek/pull/717) - `MapReads` for remapping will now convert BAM to FASTQ and feed it to BWA on the fly
+-   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - `snpeff` and `vep` containers are now built with conda
+-   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - `vepCacheVersion` is now defined in `conf/genomes.config` or `conf/igenomes.config`
+-   [#724](https://github.com/SciLifeLab/Sarek/pull/724) - Improved AwsBatch configuration
+
+### `Added`
+-   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - Possibility to use cache wen annotating with `snpEff` and `VEP`
+-   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - New `--annotation_cache`, `--snpEff_cache`, `--vep_cache` parameters
+-   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - Helper script to download `snpeff` and `VEP` cache files
+-   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - Annotation documentation
 
 ### `Removed`
 -   [#715](https://github.com/SciLifeLab/Sarek/pull/715) - Remove `defReferencesFiles` function from `buildReferences.nf`
+-   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - `snpEff` base container is no longer used
 -   [#721](https://github.com/SciLifeLab/Sarek/pull/721) - Remove COSMIC docs
 
 ### `Fixed`

@@ -11,7 +11,7 @@ The Sarek pipeline comes with the following documentation:
 07. [Intervals documentation](https://github.com/SciLifeLab/Sarek/blob/master/docs/INTERVALS.md)
 08. [Running the pipeline](https://github.com/SciLifeLab/Sarek/blob/master/docs/USAGE.md)
 09. [Examples](https://github.com/SciLifeLab/Sarek/blob/master/docs/USE_CASES.md)
-10. [TSV file documentation](https://github.com/SciLifeLab/Sarek/blob/master/docs/TSV.md)
+10. [TSV file documentation](https://github.com/SciLifeLab/Sarek/blob/master/docs/INPUT.md)
 11. [Processes documentation](https://github.com/SciLifeLab/Sarek/blob/master/docs/PROCESS.md)
 12. [Documentation about containers](https://github.com/SciLifeLab/Sarek/blob/master/docs/CONTAINERS.md)
 13. [More information about ASCAT](https://github.com/SciLifeLab/Sarek/blob/master/docs/ASCAT.md)

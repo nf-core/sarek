@@ -94,7 +94,6 @@ Test run Sarek on a smaller dataset, that way you don't have to specify `--sampl
 
 Run only QC tools and MultiQC to generate a HTML report.
 
-
 ## Annotate script (`annotate.nf`)
 
 ### --annotateTools `tool1[,tool2,tool3...]`
@@ -112,6 +111,23 @@ Possible values are:
 Choose vcf to annotate.
 Different vcfs to be separated by commas.
 
+### --annotate_cache
+
+Use available cache on local machine.
+Works only when used with `--snpEff_cache` and/or `--vep_cache` to specify the cache directories.
+See [annotation documentation](ANNOTATION.md) for more information.
+
+### --snpEff_cache `/Path/To/snpEffCache`
+
+Specify the location of snpEff cache.
+Works only when used with `--annotate_cache`.
+See [annotation documentation](ANNOTATION.md) for more information.
+
+### --vep_cache `/Path/To/VEPcache`
+
+Specify the location of VEP cache.
+Works only when used with `--annotate_cache`.
+See [annotation documentation](ANNOTATION.md) for more information.
 
 ## MultiQC script (`runMultiQC.nf`)
 ### --callName `Name`

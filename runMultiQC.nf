@@ -71,6 +71,7 @@ process GetVersionAll {
   configureStrelkaGermlineWorkflow.py --version > v_strelka.txt 2>&1 || true
   echo "${workflow.manifest.version}" &> v_sarek.txt 2>&1 || true
   echo "${workflow.nextflow.version}" &> v_nextflow.txt 2>&1 || true
+  echo "SNPEFF version"\$(snpEff -h 2>&1) > v_snpeff.txt
   fastqc -v > v_fastqc.txt 2>&1 || true
   freebayes --version > v_freebayes.txt 2>&1 || true
   gatk ApplyBQSR --help 2>&1 | grep Version: > v_gatk.txt 2>&1 || true
@@ -78,6 +79,7 @@ process GetVersionAll {
   qualimap --version &> v_qualimap.txt 2>&1 || true
   samtools --version &> v_samtools.txt 2>&1 || true
   vcftools --version &> v_vcftools.txt 2>&1 || true
+  vep --help > v_vep.txt
 
   scrape_tool_versions.py &> tool_versions_mqc.yaml
   """
