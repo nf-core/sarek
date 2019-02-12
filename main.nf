@@ -571,14 +571,13 @@ def extractSample(tsvFile) {
     if (file1.toString().toLowerCase().endsWith(".fastq.gz")) {
       SarekUtils.checkNumberOfItem(row, 7)
       file2 = SarekUtils.returnFile(row[6])
-      if (!SarekUtils.hasExtension(file1,"fastq.gz")) exit 1, "File: ${file1} has the wrong extension. See --help for more information"
       if (!SarekUtils.hasExtension(file2,"fastq.gz")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
     }
     else if (file1.toString().toLowerCase().endsWith(".bam")) {
       SarekUtils.checkNumberOfItem(row, 6)
       if (!SarekUtils.hasExtension(file1,"bam")) exit 1, "File: ${file1} has the wrong extension. See --help for more information"
     }
-    else "No recognisable extention for input files: ${file1} and ${file2}"
+    else "No recognisable extention for input files: ${file1}"
 
     [idPatient, gender, status, idSample, idRun, file1, file2]
   }
