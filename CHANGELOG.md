@@ -10,15 +10,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### `Added`
 
 -   [#712](https://github.com/SciLifeLab/Sarek/pull/712), [#718](https://github.com/SciLifeLab/Sarek/pull/718) - Added possibilities to run Sarek with `conda`
--   [#717](https://github.com/SciLifeLab/Sarek/pull/717) - New `remapping` step to add the possibility to remap BAM files
 
 ### `Changed`
 
 -   [#710](https://github.com/SciLifeLab/Sarek/pull/710) - Improve release checklist and script
 -   [#711](https://github.com/SciLifeLab/Sarek/pull/711) - Improve configuration priorities
 -   [#716](https://github.com/SciLifeLab/Sarek/pull/716) - Update paths to containers and iGenomes
--   [#717](https://github.com/SciLifeLab/Sarek/pull/717) - `fastqFiles` renamed to `inputFiles`
--   [#717](https://github.com/SciLifeLab/Sarek/pull/717) - `MapReads` for remapping will now convert BAM to FASTQ and feed it to BWA on the fly
+-   [#717](https://github.com/SciLifeLab/Sarek/pull/717) - `mapping` step can now map BAM files too
+-   [#717](https://github.com/SciLifeLab/Sarek/pull/717) - Update documentation
 -   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - `snpeff` and `vep` containers are now built with conda
 -   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - `vepCacheVersion` is now defined in `conf/genomes.config` or `conf/igenomes.config`
 -   [#724](https://github.com/SciLifeLab/Sarek/pull/724) - Improved AwsBatch configuration
