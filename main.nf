@@ -86,8 +86,7 @@ bamFiles = Channel.empty()
 if (tsvPath) {
   tsvFile = file(tsvPath)
   switch (step) {
-    case 'mapping': inputFiles = extractFastq(tsvFile); break
-    case 'remapping': inputFiles = extractInputBAM(tsvFile); break
+    case 'mapping': inputFiles = extractSample(tsvFile); break
     case 'recalibrate': bamFiles = extractRecal(tsvFile); break
     default: exit 1, "Unknown step ${step}"
   }
@@ -139,17 +138,13 @@ process RunFastQC {
   output:
     file "*_fastqc.{zip,html}" into fastQCreport
 
-  when: (step == 'mapping' || step == 'remapping') && !params.noReports
+  when: step == 'mapping' && !params.noReports
 
   script:
-  if (step == 'mapping')
-    """
-    fastqc -t 2 -q ${inputFile1} ${inputFile2}
-    """
-  else if (step == 'remapping')
-    """
-    fastqc -t 2 -q ${inputFile1}
-    """
+  inputFiles = inputFile1.toString().toLowerCase().endsWith(".fastq.gz") ? "${inputFile1} ${inputFile2}" : "${inputFile1}"
+  """
+  fastqc -t 2 -q ${inputFiles}
+  """
 }
 
 if (params.verbose) fastQCreport = fastQCreport.view {
@@ -167,25 +162,25 @@ process MapReads {
   output:
     set idPatient, status, idSample, idRun, file("${idRun}.bam") into (mappedBam, mappedBamForQC)
 
-  when: (step == 'mapping' || step == 'remapping') && !params.onlyQC
+  when: step == 'mapping' && !params.onlyQC
 
   script:
   CN = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
   readGroup = "@RG\\tID:${idRun}\\t${CN}PU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
   // adjust mismatch penalty for tumor samples
   extra = status == 1 ? "-B 3" : ""
-  // -K is an hidden option, used to fix the number of reads processed by bwa mem
-  // Chunk size can affect bwa results, if not specified, the number of threads can change
-  // which can give not deterministic result.
-  // cf https://github.com/CCDG/Pipeline-Standardization/blob/master/PipelineStandard.md
-  // and https://github.com/gatk-workflows/gatk4-data-processing/blob/8ffa26ff4580df4ac3a5aa9e272a4ff6bab44ba2/processing-for-variant-discovery-gatk4.b37.wgs.inputs.json#L29
-  if (step == 'mapping')
+  if (inputFile1.toString().toLowerCase().endsWith(".fastq.gz"))
     """
     bwa mem -R \"${readGroup}\" ${extra} -t ${task.cpus} -M \
     ${genomeFile} ${inputFile1} ${inputFile2} | \
     samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
     """
-  else if (step == 'remapping')
+  else if (inputFile1.toString().toLowerCase().endsWith(".bam"))
+  // -K is an hidden option, used to fix the number of reads processed by bwa mem
+  // Chunk size can affect bwa results, if not specified, the number of threads can change
+  // which can give not deterministic result.
+  // cf https://github.com/CCDG/Pipeline-Standardization/blob/master/PipelineStandard.md
+  // and https://github.com/gatk-workflows/gatk4-data-processing/blob/8ffa26ff4580df4ac3a5aa9e272a4ff6bab44ba2/processing-for-variant-discovery-gatk4.b37.wgs.inputs.json#L29
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
     SamToFastq \
@@ -262,7 +257,7 @@ process MergeBams {
   output:
     set idPatient, status, idSample, file("${idSample}.bam") into mergedBam
 
-  when: (step == 'mapping' || step == 'remapping') && !params.onlyQC
+  when: step == 'mapping' && !params.onlyQC
 
   script:
   """
@@ -307,7 +302,7 @@ process MarkDuplicates {
     set idPatient, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai") into markDuplicatesTSV
     file ("${idSample}.bam.metrics") into markDuplicatesReport
 
-  when: (step == 'mapping' || step == 'remapping') && !params.onlyQC
+  when: step == 'mapping' && !params.onlyQC
 
   script:
   """
@@ -369,7 +364,7 @@ process CreateRecalibrationTable {
     set idPatient, status, idSample, file("${idSample}.recal.table") into recalibrationTable
     set idPatient, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai"), val("${idSample}.recal.table") into recalibrationTableTSV
 
-  when: (step == 'mapping' || step == 'remapping') && !params.onlyQC
+  when: step == 'mapping' && !params.onlyQC
 
   script:
   known = knownIndels.collect{ "--known-sites ${it}" }.join(' ')
@@ -555,14 +550,14 @@ def defineReferenceMap() {
 def defineStepList() {
   return [
     'mapping',
-    'recalibrate',
-    'remapping'
+    'recalibrate'
   ]
 }
 
-def extractFastq(tsvFile) {
-  // Channeling the TSV file containing FASTQ.
+def extractSample(tsvFile) {
+  // Channeling the TSV file containing FASTQ or BAM
   // Format is: "subject gender status sample lane fastq1 fastq2"
+  // or: "subject gender status sample lane bam bai"
   Channel.from(tsvFile)
   .splitCsv(sep: '\t')
   .map { row ->
@@ -572,35 +567,20 @@ def extractFastq(tsvFile) {
     def status     = SarekUtils.returnStatus(row[2].toInteger())
     def idSample   = row[3]
     def idRun      = row[4]
-    def fastqFile1 = SarekUtils.returnFile(row[5])
-    def fastqFile2 = SarekUtils.returnFile(row[6])
+    def file1      = SarekUtils.returnFile(row[5])
+    def file2      = SarekUtils.returnFile(row[6])
 
-    SarekUtils.checkFileExtension(fastqFile1,".fastq.gz")
-    SarekUtils.checkFileExtension(fastqFile2,".fastq.gz")
+    if (file1.toString().toLowerCase().endsWith(".fastq.gz")) {
+      SarekUtils.checkFileExtension(file1,".fastq.gz")
+      SarekUtils.checkFileExtension(file2,".fastq.gz")
+    }
+    else if (file1.toString().toLowerCase().endsWith(".bam")) {
+      SarekUtils.checkFileExtension(file1,".bam")
+      SarekUtils.checkFileExtension(file2,".bai")
+    }
+    else "No recognisable extention for input files: ${file1} and ${file2}"
 
-    [idPatient, gender, status, idSample, idRun, fastqFile1, fastqFile2]
-  }
-}
-
-def extractInputBAM(tsvFile) {
-  // Channeling the TSV file containing BAM.
-  // Format is: "subject gender status sample lane bam"
-  Channel.from(tsvFile)
-  .splitCsv(sep: '\t')
-  .map { row ->
-    SarekUtils.checkNumberOfItem(row, 7)
-    def idPatient  = row[0]
-    def gender     = row[1]
-    def status     = SarekUtils.returnStatus(row[2].toInteger())
-    def idSample   = row[3]
-    def idRun      = row[4]
-    def bamFile    = SarekUtils.returnFile(row[5])
-    def baiFile    = SarekUtils.returnFile(row[6])
-
-    SarekUtils.checkFileExtension(bamFile,".bam")
-    SarekUtils.checkFileExtension(baiFile,".bai")
-
-    [idPatient, gender, status, idSample, idRun, bamFile, baiFile]
+    [idPatient, gender, status, idSample, idRun, file1, file2]
   }
 }
 
