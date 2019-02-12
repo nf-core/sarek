@@ -141,7 +141,7 @@ process RunFastQC {
   when: step == 'mapping' && !params.noReports
 
   script:
-  inputFiles = inputFile1.toString().toLowerCase().endsWith(".fastq.gz") ? "${inputFile1} ${inputFile2}" : "${inputFile1}"
+  inputFiles = SarekUtils.hasExtension(inputFile1,"fastq.gz") ? "${inputFile1} ${inputFile2}" : "${inputFile1}"
   """
   fastqc -t 2 -q ${inputFiles}
   """
@@ -169,13 +169,13 @@ process MapReads {
   readGroup = "@RG\\tID:${idRun}\\t${CN}PU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
   // adjust mismatch penalty for tumor samples
   extra = status == 1 ? "-B 3" : ""
-  if (inputFile1.toString().toLowerCase().endsWith(".fastq.gz"))
+  if (SarekUtils.hasExtension(inputFile1,"fastq.gz"))
     """
     bwa mem -R \"${readGroup}\" ${extra} -t ${task.cpus} -M \
     ${genomeFile} ${inputFile1} ${inputFile2} | \
     samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
     """
-  else if (inputFile1.toString().toLowerCase().endsWith(".bam"))
+  else if (SarekUtils.hasExtension(inputFile1,"bam"))
   // -K is an hidden option, used to fix the number of reads processed by bwa mem
   // Chunk size can affect bwa results, if not specified, the number of threads can change
   // which can give not deterministic result.
@@ -557,26 +557,26 @@ def defineStepList() {
 def extractSample(tsvFile) {
   // Channeling the TSV file containing FASTQ or BAM
   // Format is: "subject gender status sample lane fastq1 fastq2"
-  // or: "subject gender status sample lane bam bai"
+  // or: "subject gender status sample lane bam"
   Channel.from(tsvFile)
   .splitCsv(sep: '\t')
   .map { row ->
-    SarekUtils.checkNumberOfItem(row, 7)
     def idPatient  = row[0]
     def gender     = row[1]
     def status     = SarekUtils.returnStatus(row[2].toInteger())
     def idSample   = row[3]
     def idRun      = row[4]
     def file1      = SarekUtils.returnFile(row[5])
-    def file2      = SarekUtils.returnFile(row[6])
-
+    def file2      = file("null")
     if (file1.toString().toLowerCase().endsWith(".fastq.gz")) {
-      SarekUtils.checkFileExtension(file1,".fastq.gz")
-      SarekUtils.checkFileExtension(file2,".fastq.gz")
+      SarekUtils.checkNumberOfItem(row, 7)
+      file2 = SarekUtils.returnFile(row[6])
+      if (!SarekUtils.hasExtension(file1,"fastq.gz")) exit 1, "File: ${file1} has the wrong extension. See --help for more information"
+      if (!SarekUtils.hasExtension(file2,"fastq.gz")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
     }
     else if (file1.toString().toLowerCase().endsWith(".bam")) {
-      SarekUtils.checkFileExtension(file1,".bam")
-      SarekUtils.checkFileExtension(file2,".bai")
+      SarekUtils.checkNumberOfItem(row, 6)
+      if (!SarekUtils.hasExtension(file1,"bam")) exit 1, "File: ${file1} has the wrong extension. See --help for more information"
     }
     else "No recognisable extention for input files: ${file1} and ${file2}"
 
@@ -632,9 +632,9 @@ def extractRecal(tsvFile) {
     def baiFile    = SarekUtils.returnFile(row[5])
     def recalTable = SarekUtils.returnFile(row[6])
 
-    SarekUtils.checkFileExtension(bamFile,".bam")
-    SarekUtils.checkFileExtension(baiFile,".bai")
-    SarekUtils.checkFileExtension(recalTable,".recal.table")
+    if (!SarekUtils.hasExtension(bamFile,"bam")) exit 1, "File: ${bamFile} has the wrong extension. See --help for more information"
+    if (!SarekUtils.hasExtension(baiFile,"bai")) exit 1, "File: ${baiFile} has the wrong extension. See --help for more information"
+    if (!SarekUtils.hasExtension(recalTable,"recal.table")) exit 1, "File: ${recalTable} has the wrong extension. See --help for more information"
 
     [ idPatient, gender, status, idSample, bamFile, baiFile, recalTable ]
   }
