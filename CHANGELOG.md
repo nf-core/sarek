@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#716](https://github.com/SciLifeLab/Sarek/pull/716) - Update paths to containers and iGenomes
 -   [#722](https://github.com/SciLifeLab/Sarek/pull/722) - Update `Sarek-data` submodule
 -   [#723](https://github.com/SciLifeLab/Sarek/pull/723), [#725](https://github.com/SciLifeLab/Sarek/pull/725) - Update docs
+-   [#724](https://github.com/SciLifeLab/Sarek/pull/724) - Improved AwsBatch configuration
 
 ### `Added`
 -   [#628](https://github.com/SciLifeLab/Sarek/pull/628), [#722](https://github.com/SciLifeLab/Sarek/pull/722) - `ASCAT` now use `.gc` file
