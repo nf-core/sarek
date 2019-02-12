@@ -577,7 +577,7 @@ def extractSample(tsvFile) {
       SarekUtils.checkNumberOfItem(row, 6)
       if (!SarekUtils.hasExtension(file1,"bam")) exit 1, "File: ${file1} has the wrong extension. See --help for more information"
     }
-    else "No recognisable extention for input files: ${file1}"
+    else "No recognisable extention for input file: ${file1}"
 
     [idPatient, gender, status, idSample, idRun, file1, file2]
   }
