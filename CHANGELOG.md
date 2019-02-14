@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Fixed`
 -   [#720](https://github.com/SciLifeLab/Sarek/pull/720) - bamQC is now run on the recalibrated bams, and not after MarkDuplicates
+-   [#727](https://github.com/SciLifeLab/Sarek/pull/727) - bamQC outputs are no longer overwritten (name of dir is now the file instead of sample)
 
 ## [2.2.2] - 2018-12-19
 
