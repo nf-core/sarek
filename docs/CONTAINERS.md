@@ -11,7 +11,7 @@ For annotation, the main container can be used, but the cache has to be download
   - [snpeffgrch38](#snpeffgrch38-)
   - [vepgrch38](#vepgrch38-)
 
-Additional containers need to be downloaded somatic variant calling with ASCAT:
+Additional containers need to be downloaded for somatic variant calling with ASCAT:
   - [r-base](#r-base-)
   - [runallelecount](#runallelecount-)
 
