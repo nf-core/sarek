@@ -211,7 +211,7 @@ process RunBamQCmapped {
     set idPatient, status, idSample, idRun, file(bam) from mappedBamForQC
 
   output:
-    file(idSample) into bamQCmappedReport
+    file("${bam.baseName}") into bamQCmappedReport
 
   when: !params.noReports && !params.noBAMQC
 
@@ -225,7 +225,7 @@ process RunBamQCmapped {
   -nt ${task.cpus} \
   -skip-duplicated \
   --skip-dup-mode 0 \
-  -outdir ${idSample} \
+  -outdir ${bam.baseName} \
   -outformat HTML
   """
 }
@@ -480,7 +480,7 @@ process RunBamQCrecalibrated {
     set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC
 
   output:
-    file(idSample) into bamQCrecalibratedReport
+    file("${bam.baseName}") into bamQCrecalibratedReport
 
   when: !params.noReports && !params.noBAMQC
 
@@ -494,7 +494,7 @@ process RunBamQCrecalibrated {
   -nt ${task.cpus} \
   -skip-duplicated \
   --skip-dup-mode 0 \
-  -outdir ${idSample} \
+  -outdir ${bam.baseName} \
   -outformat HTML
   """
 }

@@ -640,7 +640,7 @@ process RunAscat {
 
   input:
     set idPatient, idSampleNormal, idSampleTumor, file(bafNormal), file(logrNormal), file(bafTumor), file(logrTumor) from convertAlleleCountsOutput
-    set file(acLociGC) from Channel.value([referenceMap.acLociGC])
+    file(acLociGC) from Channel.value([referenceMap.acLociGC])
 
   output:
     set val("ascat"), idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.*.{png,txt}") into ascatOutput
