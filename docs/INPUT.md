@@ -1,6 +1,7 @@
 # TSV file for sample
 
-Input files for Sarek can be specified using a tsv file given to the `--sample` parameter. The tsv file is a Tab Separated Value file with columns: `subject gender status sample lane fastq1 fastq2` or `subject gender status sample bam bai`.
+Input files for Sarek can be specified using a TSV file given to the `--sample` parameter.
+The TSV file is a Tab Separated Value file with columns: `subject gender status sample lane fastq1 fastq2`, `subject gender status sample lane bam` or `subject gender status sample bam bai`.
 The content of these columns should be quite straight-forward:
 
 - `subject` designate the subject, it should be the ID of the Patient, or if you don't have one, it could be the Normal ID Sample.
@@ -13,11 +14,14 @@ The content of these columns should be quite straight-forward:
 - `bam` is the bam file
 - `bai` is the index
 
-All examples are given for a normal/tumor pair. If no tumors are listed in the TSV file, then the workflow will proceed as if it was a single normal sample instead of a normal/tumor pair.
+All examples are given for a normal/tumor pair.
+If no tumors are listed in the TSV file, then the workflow will proceed as if it is a single normal sample instead of a normal/tumor pair.
 
 # Example TSV file for a normal/tumor pair with FASTQ files
 
-In this sample for the normal case there are 3 read groups, and 2 for the tumor. It is recommended to add the absolute path of the paired FASTQ files, but relative path should work also. Note, the delimiter is the tab (\t) character:
+In this sample for the normal case there are 3 read groups, and 2 for the tumor.
+It is recommended to add the absolute path of the paired FASTQ files, but relative path should work also.
+Note, the delimiter is the tab (\t) character:
 
 ```
 G15511    XX    0    C09DFN    C09DF_1    pathToFiles/C09DFACXX111207.1_1.fastq.gz    pathToFiles/C09DFACXX111207.1_2.fastq.gz
@@ -29,23 +33,21 @@ G15511    XX    1    D0ENMT    D0ENM_2    pathToFiles/D0ENMACXX111207.2_1.fastq.
 
 # Example TSV file for a normal/tumor pair with BAM files
 
-On the other hand, if you have BAMs (T/N pairs that were not realigned together) and their indexes, you should use a structure like:
+In this sample for the normal case there are 3 read groups, and 2 for the tumor.
+It is recommended to add the absolute path of BAM files, but relative path should work also.
+Note, the delimiter is the tab (\t) character:
 
 ```
-G15511    XX    0    C09DFN    pathToFiles/G15511.C09DFN.md.real.bam    pathToFiles/G15511.C09DFN.md.real.bai
-G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.md.real.bam pathToFiles/G15511.D0ENMT.md.real.bai
-```
-
-All the files will be created in the Preprocessing/NonRealigned/ directory, and by default a corresponding TSV file will also be deposited there. Generally, getting MuTect1 and Strelka calls on the preprocessed files should be done by:
-
-```bash
-nextflow run SciLifeLab/Sarek/main.nf --sample Preprocessing/NonRealigned/mysample.tsv --step realign
-nextflow run SciLifeLab/Sarek/somaticVC.nf --sample Preprocessing/Recalibrated/mysample.tsv --tools Mutect2,Strelka
+G15511    XX    0    C09DFN    C09DF_1    pathToFiles/C09DFAC_1.bam
+G15511    XX    0    C09DFN    C09DF_2    pathToFiles/C09DFAC_2.bam
+G15511    XX    0    C09DFN    C09DF_3    pathToFiles/C09DFAC_3.bam
+G15511    XX    1    D0ENMT    D0ENM_1    pathToFiles/D0ENMAC_1.bam
+G15511    XX    1    D0ENMT    D0ENM_2    pathToFiles/D0ENMAC_2.bam
 ```
 
 # Example TSV file for a normal/tumor pair with recalibrated BAM files
 
-The same way, if you have recalibrated BAMs (T/N pairs that were realigned together) and their indexes, you should use a structure like:
+The same way, if you have recalibrated BAMs and their indexes, you should use a structure like:
 
 ```
 G15511    XX    0    C09DFN    pathToFiles/G15511.C09DFN.md.real.bam    pathToFiles/G15511.C09DFN.md.real.bai
