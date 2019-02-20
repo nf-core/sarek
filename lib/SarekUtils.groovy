@@ -127,33 +127,6 @@ class SarekUtils {
     return true
   }
 
-  // Define map of directories
-  static def defineDirectoryMap(outDir) {
-    return [
-    'duplicateMarked'  : "${outDir}/Preprocessing/DuplicateMarked",
-    'recalibrated'     : "${outDir}/Preprocessing/Recalibrated",
-    'ascat'            : "${outDir}/VariantCalling/Ascat",
-    'freebayes'        : "${outDir}/VariantCalling/FreeBayes",
-    'gvcf-hc'          : "${outDir}/VariantCalling/HaplotypeCallerGVCF",
-    'haplotypecaller'  : "${outDir}/VariantCalling/HaplotypeCaller",
-    'manta'            : "${outDir}/VariantCalling/Manta",
-    'mutect2'          : "${outDir}/VariantCalling/MuTect2",
-    'strelka'          : "${outDir}/VariantCalling/Strelka",
-    'strelkabp'        : "${outDir}/VariantCalling/StrelkaBP",
-    'snpeff'           : "${outDir}/Annotation/SnpEff",
-    'vep'              : "${outDir}/Annotation/VEP",
-    'bamQC'            : "${outDir}/Reports/bamQC",
-    'bcftoolsStats'    : "${outDir}/Reports/BCFToolsStats",
-    'fastQC'           : "${outDir}/Reports/FastQC",
-    'markDuplicatesQC' : "${outDir}/Reports/MarkDuplicates",
-    'multiQC'          : "${outDir}/Reports/MultiQC",
-    'samtoolsStats'    : "${outDir}/Reports/SamToolsStats",
-    'snpeffReports'    : "${outDir}/Reports/SnpEff",
-    'vcftools'         : "${outDir}/Reports/VCFTools",
-    'version'          : "${outDir}/Reports/ToolsVersion"
-    ]
-  }
-
   // Channeling the TSV file containing BAM.
   // Format is: "subject gender status sample bam bai"
   static def extractBams(tsvFile, mode) {

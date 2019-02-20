@@ -53,12 +53,11 @@ if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <U
 // Check for awsbatch profile configuration
 // make sure queue is defined
 if (workflow.profile == 'awsbatch') {
-    if(!params.awsqueue) exit 1, "Provide the job queue for aws batch!"
+    if (!params.awsqueue) exit 1, "Provide the job queue for aws batch!"
 }
 
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
 
-directoryMap = SarekUtils.defineDirectoryMap(params.outDir)
 referenceMap = defineReferenceMap()
 toolList = defineToolList()
 
@@ -69,13 +68,9 @@ if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
   referenceMap.intervals = file("$workflow.projectDir/repeats/tiny_${params.genome}.list")
 }
 
-// TODO
-// FreeBayes does not need recalibrated BAMs, but we need to test whether
-// the channels are set up correctly when we disable it
-
 tsvPath = ''
 if (params.sample) tsvPath = params.sample
-else tsvPath = "${directoryMap.recalibrated}/recalibrated.tsv"
+else tsvPath = "${params.outDir}/Preprocessing/Recalibrated/recalibrated.tsv"
 
 // Set up the bamFiles channel
 
@@ -96,38 +91,16 @@ if (tsvPath) {
 startMessage()
 
 if (params.verbose) bamFiles = bamFiles.view {
-  "BAMs to process:\n\
+  "BAMs for variant Calling:\n\
   ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
   Files : [${it[3].fileName}, ${it[4].fileName}]"
 }
-
-// assume input is recalibrated, ignore explicitBqsrNeeded
-(recalibratedBam, recalTables) = bamFiles.into(2)
-
-recalTables = recalTables.map{ it + [null] } // null recalibration table means: do not use --BQSR
-
-recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
-
-if (params.verbose) recalibratedBam = recalibratedBam.view {
-  "Recalibrated BAM for variant Calling:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
-  Files : [${it[3].fileName}, ${it[4].fileName}]"
-}
-
-// Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
-// The sample tsv config file which is formatted like: "subject status sample lane fastq1 fastq2"
-// cf fastqFiles channel, I decided just to add _status to the sample name to have less changes to do.
-// And so I'm sorting the channel if the sample match _0, then it's a normal sample, otherwise tumor.
-// Then combine normal and tumor to get each possibilities
-// ie. normal vs tumor1, normal vs tumor2, normal vs tumor3
-// then copy this channel into channels for each variant calling
-// I guess it will still work even if we have multiple normal samples
 
 // separate recalibrateBams by status
 bamsNormal = Channel.create()
 bamsTumor = Channel.create()
 
-recalibratedBam
+bamFiles
   .choice(bamsTumor, bamsNormal) {it[1] == 0 ? 1 : 0}
 
 bamsNormal = bamsNormal.ifEmpty{exit 1, "No normal sample defined, check TSV file: ${tsvFile}"}
@@ -214,18 +187,7 @@ if (params.verbose) bedIntervals = bedIntervals.view {
   "  Interv: ${it.baseName}"
 }
 
-(bamsNormalTemp, bamsNormal, bedIntervals) = generateIntervalsForVC(bamsNormal, bedIntervals)
-(bamsTumorTemp, bamsTumor, bedIntervals) = generateIntervalsForVC(bamsTumor, bedIntervals)
-
-bamsAll = bamsNormal.combine(bamsTumor)
-
-// Since idPatientNormal and idPatientTumor are the same
-// It's removed from bamsAll Channel (same for genderNormal)
-// /!\ It is assumed that every sample are from the same patient
-bamsAll = bamsAll.map {
-  idPatientNormal, idSampleNormal, bamNormal, baiNormal, idPatientTumor, idSampleTumor, bamTumor, baiTumor ->
-  [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor]
-}
+bamsAll = bamsNormal.join(bamsTumor)
 
 // Manta and Strelka
 (bamsForManta, bamsForStrelka, bamsForStrelkaBP, bamsAll) = bamsAll.into(4)
@@ -256,18 +218,18 @@ process RunMutect2 {
 
   script:
   """
-	gatk --java-options "-Xmx${task.memory.toGiga()}g" \
-		Mutect2 \
-		-R ${genomeFile}\
-		-I ${bamTumor}  -tumor ${idSampleTumor} \
-		-I ${bamNormal} -normal ${idSampleNormal} \
-		-L ${intervalBed} \
-		-O ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
+  gatk --java-options "-Xmx${task.memory.toGiga()}g" \
+    Mutect2 \
+    -R ${genomeFile}\
+    -I ${bamTumor}  -tumor ${idSampleTumor} \
+    -I ${bamNormal} -normal ${idSampleNormal} \
+    -L ${intervalBed} \
+    -O ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
   """
 }
-//		--germline_resource af-only-gnomad.vcf.gz \
-//		--normal_panel pon.vcf.gz \
-//		--dbsnp ${dbsnp} \
+//    --germline_resource af-only-gnomad.vcf.gz \
+//    --normal_panel pon.vcf.gz \
+//    --dbsnp ${dbsnp} \
 
 mutect2Output = mutect2Output.groupTuple(by:[0,1,2,3])
 
@@ -317,29 +279,25 @@ if (params.verbose) vcfsToMerge = vcfsToMerge.view {
 process ConcatVCF {
   tag {variantCaller + "_" + idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir "${directoryMap."$variantCaller"}", mode: params.publishDirMode
+  publishDir "${params.outDir}/VariantCalling/${idPatient}/${"$variantCaller"}", mode: params.publishDirMode
 
   input:
     set variantCaller, idPatient, idSampleNormal, idSampleTumor, file(vcFiles) from vcfsToMerge
     file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
+    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
 
   output:
-		// we have this funny *_* pattern to avoid copying the raw calls to publishdir
+    // we have this funny *_* pattern to avoid copying the raw calls to publishdir
     set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into vcfConcatenated
-		// TODO DRY with ConcatVCF
+    // TODO DRY with ConcatVCF
 
   when: ( 'mutect2' in tools || 'freebayes' in tools ) && !params.onlyQC
 
   script:
   outputFile = "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
-
-  if(params.targetBED)		// targeted
-		concatOptions = "-i ${genomeIndex} -c ${task.cpus} -o ${outputFile} -t ${params.targetBED}"
-	else										// WGS
-		concatOptions = "-i ${genomeIndex} -c ${task.cpus} -o ${outputFile} "
-
-	"""
-	concatenateVCFs.sh ${concatOptions}
+  options = params.targetBED ? "-t ${targetBED}" : ""
+  """
+  concatenateVCFs.sh -i ${genomeIndex} -c ${task.cpus} -o ${outputFile} ${options}
   """
 }
 
@@ -352,10 +310,11 @@ if (params.verbose) vcfConcatenated = vcfConcatenated.view {
 process RunStrelka {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir directoryMap.strelka, mode: params.publishDirMode
+  publishDir "${params.outDir}/VariantCalling/${idPatient}/Strelka", mode: params.publishDirMode
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForStrelka
+    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
     set file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -368,35 +327,23 @@ process RunStrelka {
   when: 'strelka' in tools && !params.onlyQC
 
   script:
-	"""
-	if [ ! -s "${params.targetBED}" ]; then
-		# do WGS
-		configureStrelkaSomaticWorkflow.py \
-		--tumor ${bamTumor} \
-		--normal ${bamNormal} \
-		--referenceFasta ${genomeFile} \
-		--runDir Strelka
-	else
-		# WES or targeted
-		bgzip --threads ${task.cpus} -c ${params.targetBED} > call_targets.bed.gz
-		tabix call_targets.bed.gz
-		configureStrelkaSomaticWorkflow.py \
-		--tumor ${bamTumor} \
-		--normal ${bamNormal} \
-		--referenceFasta ${genomeFile} \
-		--exome \
-		--callRegions call_targets.bed.gz \
-		--runDir Strelka
-	fi
+  beforeScript = params.targetBED ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
+  options = params.targetBED ? "--exome --callRegions call_targets.bed.gz" : ""
+  """
+  ${beforeScript}
+  configureStrelkaSomaticWorkflow.py \
+  --tumor ${bamTumor} \
+  --normal ${bamNormal} \
+  --referenceFasta ${genomeFile} \
+  ${options} \
+  --runDir Strelka
 
-	python Strelka/runWorkflow.py -m local -j ${task.cpus}
-	# always run this part
-
-	mv Strelka/results/variants/somatic.indels.vcf.gz Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz
-	mv Strelka/results/variants/somatic.indels.vcf.gz.tbi Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz.tbi
-	mv Strelka/results/variants/somatic.snvs.vcf.gz Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
-	mv Strelka/results/variants/somatic.snvs.vcf.gz.tbi Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz.tbi
-	"""
+  python Strelka/runWorkflow.py -m local -j ${task.cpus}
+  mv Strelka/results/variants/somatic.indels.vcf.gz Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz
+  mv Strelka/results/variants/somatic.indels.vcf.gz.tbi Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz.tbi
+  mv Strelka/results/variants/somatic.snvs.vcf.gz Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
+  mv Strelka/results/variants/somatic.snvs.vcf.gz.tbi Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz.tbi
+  """
 }
 
 if (params.verbose) strelkaOutput = strelkaOutput.view {
@@ -409,7 +356,7 @@ if (params.verbose) strelkaOutput = strelkaOutput.view {
 process RunManta {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir directoryMap.manta, mode: params.publishDirMode
+  publishDir "${params.outDir}/VariantCalling/${idPatient}/Manta", mode: params.publishDirMode
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
@@ -463,7 +410,7 @@ if (params.verbose) mantaOutput = mantaOutput.view {
 process RunSingleManta {
   tag {idSample + " - Tumor-Only"}
 
-  publishDir directoryMap.manta, mode: params.publishDirMode
+  publishDir "${params.outDir}/VariantCalling/${idPatient}/Manta", mode: params.publishDirMode
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleManta
@@ -522,7 +469,7 @@ bamsForStrelkaBP = bamsForStrelkaBP.map {
 process RunStrelkaBP {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir directoryMap.strelkabp, mode: params.publishDirMode
+  publishDir "${params.outDir}/VariantCalling/${idPatient}/Strelka", mode: params.publishDirMode
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(mantaCSI), file(mantaCSIi) from bamsForStrelkaBP
@@ -549,13 +496,13 @@ process RunStrelkaBP {
   python Strelka/runWorkflow.py -m local -j ${task.cpus}
 
   mv Strelka/results/variants/somatic.indels.vcf.gz \
-    Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz
+    StrelkaBP_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz
   mv Strelka/results/variants/somatic.indels.vcf.gz.tbi \
-    Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz.tbi
+    StrelkaBP_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz.tbi
   mv Strelka/results/variants/somatic.snvs.vcf.gz \
-    Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
+    StrelkaBP_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
   mv Strelka/results/variants/somatic.snvs.vcf.gz.tbi \
-    Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz.tbi
+    StrelkaBP_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz.tbi
   """
 }
 
@@ -614,7 +561,7 @@ alleleCountOutput = alleleCountOutput.map {
 process RunConvertAlleleCounts {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir directoryMap.ascat, mode: params.publishDirMode
+  publishDir "${params.outDir}/VariantCalling/${idPatient}/ASCAT", mode: params.publishDirMode
 
   input:
     set idPatient, idSampleNormal, idSampleTumor, file(alleleCountNormal), file(alleleCountTumor) from alleleCountOutput
@@ -636,7 +583,7 @@ process RunConvertAlleleCounts {
 process RunAscat {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-  publishDir directoryMap.ascat, mode: params.publishDirMode
+  publishDir "${params.outDir}/VariantCalling/${idPatient}/ASCAT", mode: params.publishDirMode
 
   input:
     set idPatient, idSampleNormal, idSampleTumor, file(bafNormal), file(logrNormal), file(bafTumor), file(logrTumor) from convertAlleleCountsOutput
@@ -695,7 +642,7 @@ vcfForQC = Channel.empty().mix(
 process RunBcftoolsStats {
   tag {vcf}
 
-  publishDir directoryMap.bcftoolsStats, mode: params.publishDirMode
+  publishDir "${params.outDir}/Reports/BCFToolsStats", mode: params.publishDirMode
 
   input:
     set variantCaller, file(vcf) from vcfForBCFtools
@@ -718,7 +665,7 @@ bcfReport.close()
 process RunVcftools {
   tag {vcf}
 
-  publishDir directoryMap.vcftools, mode: params.publishDirMode
+  publishDir "${params.outDir}/Reports/VCFTools", mode: params.publishDirMode
 
   input:
     set variantCaller, file(vcf) from vcfForVCFtools
@@ -739,7 +686,7 @@ if (params.verbose) vcfReport = vcfReport.view {
 vcfReport.close()
 
 process GetVersionAlleleCount {
-  publishDir directoryMap.version, mode: params.publishDirMode
+  publishDir "${params.outDir}/Reports/ToolsVersion", mode: params.publishDirMode
   output: file("v_*.txt")
   when: 'ascat' in tools && !params.onlyQC
 
@@ -750,7 +697,7 @@ process GetVersionAlleleCount {
 }
 
 process GetVersionASCAT {
-  publishDir directoryMap.version, mode: params.publishDirMode
+  publishDir "${params.outDir}/Reports/ToolsVersion", mode: params.publishDirMode
   output: file("v_*.txt")
   when: 'ascat' in tools && !params.onlyQC
 
@@ -814,13 +761,6 @@ def defineToolList() {
     'mutect2',
     'strelka'
   ]
-}
-
-def generateIntervalsForVC(bams, intervals) {
-  def (bamsNew, bamsForVC) = bams.into(2)
-  def (intervalsNew, vcIntervals) = intervals.into(2)
-  def bamsForVCNew = bamsForVC.combine(vcIntervals)
-  return [bamsForVCNew, bamsNew, intervalsNew]
 }
 
 def grabRevision() {

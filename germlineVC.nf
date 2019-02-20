@@ -46,12 +46,11 @@ if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <U
 // Check for awsbatch profile configuration
 // make sure queue is defined
 if (workflow.profile == 'awsbatch') {
-    if(!params.awsqueue) exit 1, "Provide the job queue for aws batch!"
+    if (!params.awsqueue) exit 1, "Provide the job queue for aws batch!"
 }
 
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
 
-directoryMap = SarekUtils.defineDirectoryMap(params.outDir)
 referenceMap = defineReferenceMap()
 toolList = defineToolList()
 
@@ -68,7 +67,7 @@ if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
 
 tsvPath = ''
 if (params.sample) tsvPath = params.sample
-else tsvPath = "${directoryMap.recalibrated}/recalibrated.tsv"
+else tsvPath = "${params.outDir}/Preprocessing/Recalibrated/recalibrated.tsv"
 
 // Set up the bamFiles channel
 
@@ -318,16 +317,16 @@ if (params.verbose) vcfsToMerge = vcfsToMerge.view {
 process ConcatVCF {
   tag {variantCaller + "-" + idSampleNormal}
 
-  publishDir "${directoryMap."$variantCaller"}", mode: params.publishDirMode
+  publishDir "${params.outDir}/VariantCalling/${idPatient}/${"$variantCaller"}", mode: params.publishDirMode
 
   input:
     set variantCaller, idPatient, idSampleNormal, idSampleTumor, file(vcFiles) from vcfsToMerge
     file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
+    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
 
   output:
-		// we have this funny *_* pattern to avoid copying the raw calls to publishdir
+    // we have this funny *_* pattern to avoid copying the raw calls to publishdir
     set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into vcfConcatenated
-
 
   when: ( 'haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools ) && !params.onlyQC
 
@@ -335,15 +334,10 @@ process ConcatVCF {
   if (variantCaller == 'haplotypecaller') outputFile = "${variantCaller}_${idSampleNormal}.vcf"
   else if (variantCaller == 'gvcf-hc') outputFile = "haplotypecaller_${idSampleNormal}.g.vcf"
   else outputFile = "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
-
-	if(params.targetBED)		// targeted
-		concatOptions = "-i ${genomeIndex} -c ${task.cpus} -o ${outputFile} -t ${params.targetBED}"
-	else										// WGS
-		concatOptions = "-i ${genomeIndex} -c ${task.cpus} -o ${outputFile} "
-
-	"""
-	concatenateVCFs.sh ${concatOptions}
-	"""
+  options = params.targetBED ? "-t ${targetBED}" : ""
+  """
+  concatenateVCFs.sh -i ${genomeIndex} -c ${task.cpus} -o ${outputFile} ${options}
+  """
 }
 
 if (params.verbose) vcfConcatenated = vcfConcatenated.view {
@@ -356,10 +350,11 @@ if (params.verbose) vcfConcatenated = vcfConcatenated.view {
 process RunSingleStrelka {
   tag {idSample}
 
-  publishDir directoryMap.strelka, mode: params.publishDirMode
+  publishDir "${params.outDir}/VariantCalling/${idPatient}/Strelka", mode: params.publishDirMode
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleStrelka
+    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
     set file(genomeFile), file(genomeIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex
@@ -371,32 +366,22 @@ process RunSingleStrelka {
   when: 'strelka' in tools && !params.onlyQC
 
   script:
-	"""
-	if [ ! -s "${params.targetBED}" ]; then
-		# do WGS
-		configureStrelkaGermlineWorkflow.py \
-		--bam ${bam} \
-		--referenceFasta ${genomeFile} \
-		--runDir Strelka
-	else
-		# WES or targeted
-		bgzip --threads ${task.cpus} -c ${params.targetBED} > call_targets.bed.gz
-		tabix call_targets.bed.gz
-		configureStrelkaGermlineWorkflow.py \
-		--bam ${bam} \
-		--referenceFasta ${genomeFile} \
-		--exome \
-		--callRegions call_targets.bed.gz \
-		--runDir Strelka
-	fi
+  beforeScript = params.targetBED ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
+  options = params.targetBED ? "--exome --callRegions call_targets.bed.gz" : ""
+  """
+  ${beforeScript}
+  configureStrelkaGermlineWorkflow.py \
+  --bam ${bam} \
+  --referenceFasta ${genomeFile} \
+  ${options} \
+  --runDir Strelka
 
-	# always run this part
-		python Strelka/runWorkflow.py -m local -j ${task.cpus}
-		mv Strelka/results/variants/genome.*.vcf.gz Strelka_${idSample}_genome.vcf.gz
-		mv Strelka/results/variants/genome.*.vcf.gz.tbi Strelka_${idSample}_genome.vcf.gz.tbi
-		mv Strelka/results/variants/variants.vcf.gz Strelka_${idSample}_variants.vcf.gz
-		mv Strelka/results/variants/variants.vcf.gz.tbi Strelka_${idSample}_variants.vcf.gz.tbi
-	"""
+  python Strelka/runWorkflow.py -m local -j ${task.cpus}
+  mv Strelka/results/variants/genome.*.vcf.gz Strelka_${idSample}_genome.vcf.gz
+  mv Strelka/results/variants/genome.*.vcf.gz.tbi Strelka_${idSample}_genome.vcf.gz.tbi
+  mv Strelka/results/variants/variants.vcf.gz Strelka_${idSample}_variants.vcf.gz
+  mv Strelka/results/variants/variants.vcf.gz.tbi Strelka_${idSample}_variants.vcf.gz.tbi
+  """
 }
 
 if (params.verbose) singleStrelkaOutput = singleStrelkaOutput.view {
@@ -409,7 +394,7 @@ if (params.verbose) singleStrelkaOutput = singleStrelkaOutput.view {
 process RunSingleManta {
   tag {idSample + " - Single Diploid"}
 
-  publishDir directoryMap.manta, mode: params.publishDirMode
+  publishDir "${params.outDir}/VariantCalling/${idPatient}/Manta", mode: params.publishDirMode
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleManta
@@ -473,7 +458,7 @@ vcfForQC = Channel.empty().mix(
 process RunBcftoolsStats {
   tag {vcf}
 
-  publishDir directoryMap.bcftoolsStats, mode: params.publishDirMode
+  publishDir "${params.outDir}/Reports/BCFToolsStats", mode: params.publishDirMode
 
   input:
     set variantCaller, file(vcf) from vcfForBCFtools
@@ -496,7 +481,7 @@ bcfReport.close()
 process RunVcftools {
   tag {vcf}
 
-  publishDir directoryMap.vcftools, mode: params.publishDirMode
+  publishDir "${params.outDir}/Reports/VCFTools", mode: params.publishDirMode
 
   input:
     set variantCaller, file(vcf) from vcfForVCFtools
