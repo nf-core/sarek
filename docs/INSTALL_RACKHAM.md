@@ -46,7 +46,7 @@ The following tutorial explain how to run Sarek on a small dataset using a small
 > cd test_Sarek
 
 # Build the smallGRCh37 reference
-> nextflow run SciLifeLab/Sarek/buildReferences.nf --download --genome smallGRCh37 --project [PROJECT]
+> nextflow run SciLifeLab/Sarek/build.nf --download --genome smallGRCh37 --project [PROJECT]
 
 # Test the workflow on a test tiny set
 > nextflow run SciLifeLab/Sarek --test --genome smallGRCh37 --noReports --project [PROJECT]

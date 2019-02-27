@@ -210,6 +210,12 @@ process RunVEP {
     set annotator, variantCaller,  idPatient, file(vcf), file(idx) from vcfForVep
     file dataDir from Channel.value(params.vep_cache ? file(params.vep_cache) : "null")
     val cache_version from Channel.value(params.genomes[params.genome].vepCacheVersion)
+    set file(cadd_WG_SNVs), file(cadd_WG_SNVs_tbi), file(cadd_InDels), file(cadd_InDels_tbi) from Channel.value([
+      params.cadd_WG_SNVs ? file(params.cadd_WG_SNVs) : "null",
+      params.cadd_WG_SNVs_tbi ? file(params.cadd_WG_SNVs_tbi) : "null",
+      params.cadd_InDels ? file(params.cadd_InDels) : "null",
+      params.cadd_InDels_tbi ? file(params.cadd_InDels_tbi) : "null"
+    ])
 
   output:
     set finalAnnotator, variantCaller, idPatient, file("${vcf.simpleName}_VEP.ann.vcf") into vepVCF
@@ -220,16 +226,17 @@ process RunVEP {
   script:
   finalAnnotator = annotator == "snpEff" ? 'merge' : 'VEP'
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
-  cache = (params.vep_cache && params.annotation_cache) ? "--dir_cache \${PWD}/${dataDir}" : "--dir_cache /.vep"
+  dir_cache = (params.vep_cache && params.annotation_cache) ? " \${PWD}/${dataDir}" : "/.vep"
+  cadd = (params.cadd_cache && params.cadd_WG_SNVs && params.cadd_InDels) ? "--plugin CADD,whole_genome_SNVs.tsv.gz,InDels.tsv.gz" : ""
   """
-  vep  \
+  vep \
   -i ${vcf} \
   -o ${vcf.simpleName}_VEP.ann.vcf \
   --assembly ${genome} \
+  ${cadd} \
   --cache \
-	--cache_version ${cache_version} \
-  ${cache} \
-  --database \
+  --cache_version ${cache_version} \
+  --dir_cache ${dir_cache} \
   --everything \
   --filter_common \
   --fork ${task.cpus} \
@@ -355,7 +362,8 @@ def minimalInformationMessage() {
   if (params.containerPath != "") log.info "  ContainerPath: " + params.containerPath
   log.info "  Tag          : " + params.tag
   log.info "Reference files used:"
-  log.info "  snpeffDb    :\n\t" + params.genomes[params.genome].snpeffDb
+  log.info "  snpEff DB    :\n\t" + params.genomes[params.genome].snpeffDb
+  log.info "  VEP Cache    :\n\t" + params.genomes[params.genome].vepCacheVersion
 }
 
 def nextflowMessage() {

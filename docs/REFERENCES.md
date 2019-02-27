@@ -2,7 +2,7 @@
 
 Sarek currently uses GRCh38 by default.
 The settings are in `genomes.config`, they can be tailored to your needs.
-The [`buildReferences.nf`](#buildreferencesnf) script is used to build the indexes for the reference test.
+The [`build.nf`](#buildnf) script is used to build the indexes for the reference test.
 
 ## GRCh37
 
@@ -76,22 +76,14 @@ Use `--genome smallGRCh37` to map against a small reference genome based on GRCh
 Sarek is using [AWS iGenomes](https://ewels.github.io/AWS-iGenomes/), which facilitate storing and sharing references.
 Both `GRCh37` and `GRCh38` are available with `--genome GRCh37` or `--genome GRCh38` respectively with any profile using the `conf/igenomes.config` file (eg.: `awsbatch`, or `btb`), or you can specify it with `-c conf/igenomes.config`, it contains all data previously detailed.
 
-## buildReferences.nf
+## build.nf
 
-The `buildReferences.nf` script can download and build the files needed for smallGRCh37, or build the references for GRCh37/smallGRCh37.
+The `build.nf` script can build the files needed for smallGRCh37.
 
 ### `--refDir`
 
 Use `--refDir <path to references>` to specify where are the files to process.
 
 ```
-nextflow run buildReferences.nf --refDir <path to references> --genome <genome>
+nextflow run build.nf --refDir <path to references>
 ```
-
-### `--genome`
-
-Same parameter used for other scripts.
-
-- GRCh37
-- GRCh38 (not yet available)
-- smallGRCh37

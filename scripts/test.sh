@@ -85,7 +85,7 @@ then
   if [[ ! -d References ]]
   then
     echo "$(tput setaf 1)Building references$(tput sgr0)"
-    nextflow run buildReferences.nf --refDir Sarek-data/reference --outDir References/$GENOME -profile $PROFILE --genome $GENOME --verbose
+    nextflow run build.nf --refDir Sarek-data/reference --outDir References/$GENOME -profile $PROFILE --genome $GENOME --verbose
   fi
 fi
 

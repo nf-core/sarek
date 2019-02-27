@@ -18,19 +18,25 @@ kate: syntax groovy; space-indent on; indent-width 2;
  Marcel Martin <marcel.martin@scilifelab.se> [@marcelm]
  Björn Nystedt <bjorn.nystedt@scilifelab.se> [@bjornnystedt]
  Pall Olason <pall.olason@scilifelab.se> [@pallolason]
+ Johannes Alneberg <johannes.alneberg@scilifelab.se> [@alneberg]
 --------------------------------------------------------------------------------
  @Homepage
- http://opensource.scilifelab.se/projects/sarek/
+ https://sarek.scilifelab.se/
 --------------------------------------------------------------------------------
  @Documentation
  https://github.com/SciLifeLab/Sarek/README.md
 --------------------------------------------------------------------------------
  Processes overview
+ - BuildWithDocker - Build containers using Docker
+ - PullToSingularity - Pull Singularity containers from Docker Hub
+ - PushToDocker - Push containers to Docker Hub
  - DecompressFile - Extract files if needed
  - BuildBWAindexes - Build indexes for BWA
  - BuildReferenceIndex - Build index for FASTA refs
  - BuildSAMToolsIndex - Build index with SAMTools
  - BuildVCFIndex - Build index for VCF files
+ - BuildCache_snpEff - Download Cache for snpEff
+ - BuildCache_VEP - Download taqbix index Cache for VEP
 ================================================================================
 =                           C O N F I G U R A T I O N                          =
 ================================================================================
@@ -46,7 +52,21 @@ if (workflow.profile == 'awsbatch') {
     if (!params.awsqueue) exit 1, "Provide the job queue for aws batch!"
 }
 
-ch_referencesFiles = Channel.fromPath("${params.refDir}/*").ifEmpty(null)
+// Define containers to handle (build/push or pull)
+containersList = defineContainersList()
+if (params.containers) {
+  containers = params.containers.split(',').collect {it.trim()}
+  containers = containers == ['all'] ? containersList : containers
+} else containers = []
+
+// push only to DockerHub, so only when using Docker
+push = params.docker && params.push ? true : false
+
+if (params.containers && !params.docker && !params.singularity) exit 1, 'No container technology choosed, specify --docker or --singularity, see --help for more information'
+
+if (params.containers && !checkContainers(containers,containersList)) exit 1, 'Unknown container(s), see --help for more information'
+
+ch_referencesFiles = Channel.fromPath("${params.refDir}/*")
 
 /*
 ================================================================================
@@ -56,49 +76,86 @@ ch_referencesFiles = Channel.fromPath("${params.refDir}/*").ifEmpty(null)
 
 startMessage()
 
-process BuildCache_snpEff {
-  tag {snpeffDb}
+/*
+================================================================================
+=                B  U  I  L  D      C  O  N  T  A  I  N  E  R  S               =
+================================================================================
+*/
 
-  publishDir params.snpEff_cache, mode: params.publishDirMode
+dockerContainers = containers
+singularityContainers = containers
+
+process BuildWithDocker {
+  tag {"${params.repository}/${container}:${params.tag}"}
 
   input:
-    val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
+    val container from dockerContainers
 
   output:
-    file("*")
+    val container into containersBuilt
 
-  when: params.snpEff_cache
+  when: params.docker
 
   script:
+  path = container == "sarek" ? "${baseDir}" : "${baseDir}/containers/${container}/."
   """
-  snpEff download -v ${snpeffDb} -dataDir \${PWD}
+  docker build -t ${params.repository}/${container}:${params.tag} ${path}
   """
 }
 
-process BuildCache_VEP {
-  tag {"${species}_${cache_version}_${genome}"}
+if (params.verbose) containersBuilt = containersBuilt.view {
+  "Docker container: ${params.repository}/${it}:${params.tag} built."
+}
 
-  publishDir "${params.vep_cache}/${species}", mode: params.publishDirMode
+process PullToSingularity {
+  tag {"${params.repository}/${container}:${params.tag}"}
+
+  publishDir "${params.containerPath}", mode: params.publishDirMode
 
   input:
-    val cache_version from Channel.value(params.genomes[params.genome].vepCacheVersion)
+    val container from singularityContainers
 
   output:
-    file("*")
+    file("${container}-${params.tag}.simg") into imagePulled
 
-  when: params.vep_cache
+  when: params.singularity
 
   script:
-  genome = params.genome == "smallGRCh37" ? "GRCh37" : params.genome
-  species = genome =~ "GRCh3*" ? "homo_sapiens" : ""
   """
-  wget --quiet -O ${species}_vep_${cache_version}_${genome}.tar.gz \
-    ftp://ftp.ensembl.org/pub/release-${cache_version}/variation/VEP/${species}_vep_${cache_version}_${genome}.tar.gz
-  tar xzf ${species}_vep_${cache_version}_${genome}.tar.gz
-  mv ${species}/* .
-  rm -rf ${species} ${species}_vep_${cache_version}_${genome}.tar.gz
+  singularity build ${container}-${params.tag}.simg docker://${params.repository}/${container}:${params.tag}
   """
 }
+
+if (params.verbose) imagePulled = imagePulled.view {
+  "Singularity image: ${it.fileName} pulled."
+}
+
+process PushToDocker {
+  tag {params.repository + "/" + container + ":" + params.tag}
+
+  input:
+    val container from containersBuilt
+
+  output:
+    val container into containersPushed
+
+  when: params.docker && push
+
+  script:
+  """
+  docker push ${params.repository}/${container}:${params.tag}
+  """
+}
+
+if (params.verbose) containersPushed = containersPushed.view {
+  "Docker container: ${params.repository}/${it}:${params.tag} pushed."
+}
+
+/*
+================================================================================
+=                B  U  I  L  D      R  E  F  E  R  E  N  C  E  S               =
+================================================================================
+*/
 
 ch_compressedfiles = Channel.create()
 ch_notCompressedfiles = Channel.create()
@@ -239,9 +296,109 @@ if (params.verbose) ch_vcfIndex.view {
 
 /*
 ================================================================================
+=                   D  O  W  N  L  O  A  D      C  A  C  H  E                  =
+================================================================================
+*/
+
+process BuildCache_snpEff {
+  tag {snpeffDb}
+
+  publishDir params.snpEff_cache, mode: params.publishDirMode
+
+  input:
+    val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
+
+  output:
+    file("*")
+
+  when: params.snpEff_cache
+
+  script:
+  """
+  snpEff download -v ${snpeffDb} -dataDir \${PWD}
+  """
+}
+
+process BuildCache_VEP {
+  tag {"${species}_${cache_version}_${genome}"}
+
+  publishDir "${params.vep_cache}/${species}", mode: params.publishDirMode
+
+  input:
+    val cache_version from Channel.value(params.genomes[params.genome].vepCacheVersion)
+
+  output:
+    file("*")
+
+  when: params.vep_cache
+
+  script:
+  genome = params.genome == "smallGRCh37" ? "GRCh37" : params.genome
+  species = genome =~ "GRCh3*" ? "homo_sapiens" : ""
+  """
+  vep_install \
+    -a cf \
+    -c . \
+    -s ${species} \
+    -v ${cache_version} \
+    -y ${genome} \
+    --CACHE_VERSION ${cache_version} \
+    --CONVERT \
+    --NO_HTSLIB --NO_TEST --NO_BIOPERL --NO_UPDATE
+
+  mv ${species}/* .
+  rm -rf ${species}
+  """
+}
+
+caddFileToDownload = (params.cadd_version) && (params.genome == "GRCh37" || params.genome == "GRCh38") ?
+  Channel.from("https://krishna.gs.washington.edu/download/CADD/${params.cadd_version}/${params.genome}/InDels.tsv.gz",
+    "https://krishna.gs.washington.edu/download/CADD/${params.cadd_version}/${params.genome}/whole_genome_SNVs.tsv.gz")
+  : Channel.empty()
+
+process DownloadCADD {
+  tag {caddFile}
+
+  publishDir "${params.cadd_cache}/${params.genome}", mode: params.publishDirMode
+
+  input:
+    val(caddFile) from caddFileToDownload
+
+  output:
+    set file("*.tsv.gz"), file("*.tsv.gz.tbi")
+
+  when: params.cadd_cache
+
+  script:
+  """
+  wget --quiet ${caddFile}
+  tabix *.tsv.gz
+  """
+}
+
+/*
+================================================================================
 =                               F U N C T I O N S                              =
 ================================================================================
 */
+
+def checkContainerExistence(container, list) {
+  try {assert list.contains(container)}
+  catch (AssertionError ae) {
+    println("Unknown container: ${container}")
+    return false
+  }
+  return true
+}
+
+def checkContainers(containers, containersList) {
+  containerExists = true
+  containers.each{
+    test = checkContainerExistence(it, containersList)
+    !(test) ? containerExists = false : ""
+  }
+  return containerExists ? true : false
+}
 
 def checkFile(it) {
   // Check file existence
@@ -255,6 +412,19 @@ def checkUppmaxProject() {
   return !(workflow.profile == 'slurm' && !params.project)
 }
 
+def defineContainersList(){
+  // Return list of authorized containers
+  return [
+    'r-base',
+    'runallelecount',
+    'sarek',
+    'snpeffgrch37',
+    'snpeffgrch38',
+    'vepgrch37',
+    'vepgrch38'
+    ]
+}
+
 def grabRevision() {
   // Return the same string executed from github or not
   return workflow.revision ?: workflow.commitId ?: workflow.scriptId.substring(0,10)
@@ -264,18 +434,46 @@ def helpMessage() {
   // Display help message
   this.sarekMessage()
   log.info "    Usage:"
-  log.info "       nextflow run buildReferences.nf --refDir <pathToRefDir> --genome <genome>"
-  log.info "    --refDir <Directoy>"
-  log.info "       Specify a directory containing reference files."
-  log.info "    --outDir <Directoy>"
-  log.info "       Specify an output directory"
-  log.info "    --genome <Genome>"
-  log.info "       Choose which genome to build references from"
-  log.info "       Possible values are:"
-  log.info "         GRCh37"
-  log.info "         smallGRCh37"
   log.info "    --help"
   log.info "       you're reading it"
+  log.info "         BUILD CONTAINERS:"
+  log.info "           nextflow run build.nf [--docker] [--push]"
+  log.info "              [--containers <container1...>] [--singularity]"
+  log.info "              [--containerPath <path>]"
+  log.info "              [--tag <tag>] [--repository <repository>]"
+  log.info "        --containers: Choose which containers to build"
+  log.info "           Default: all"
+  log.info "           Possible values:"
+  log.info "             all, r-base, runallelecount, sarek"
+  log.info "             snpeffgrch37, snpeffgrch38, vepgrch37, vepgrch38"
+  log.info "        --docker: Build containers using Docker"
+  log.info "        --push: Push containers to DockerHub"
+  log.info "        --repository: Build containers under given repository"
+  log.info "           Default: maxulysse"
+  log.info "        --singularity: Download Singularity images"
+  log.info "        --containerPath: Select where to download images"
+  log.info "           Default: \$PWD"
+  log.info "        --tag`: Choose the tag for the containers"
+  log.info "           Default (version number): " + workflow.manifest.version
+  log.info "         BUILD REFERENCES:"
+  log.info "           nextflow run build.nf [--refDir <pathToRefDir> --outDir <pathToOutDir>]"
+  log.info "        --refDir <Directoy>"
+  log.info "           Specify a directory containing reference files"
+  log.info "        --outDir <Directoy>"
+  log.info "           Specify an output directory"
+  log.info "         DOWNLOAD CACHE:"
+  log.info "           nextflow run build.nf [--snpEff_cache <pathToSNPEFFcache>] [--vep_cache <pathToVEPcache>]"
+  log.info "        --snpEff_cache <Directoy>"
+  log.info "           Specify path to snpEff cache"
+  log.info "           Will use snpEff version specified in configuration"
+  log.info "        --vep_cache <Directoy>"
+  log.info "           Specify path to VEP cache"
+  log.info "           Will use VEP version specified in configuration"
+  log.info "        --cadd_cache <Directoy>"
+  log.info "           Specify path to CADD cache"
+  log.info "           Will use CADD version specified"
+  log.info "        --cadd_version <version>"
+  log.info "           Will specify which CADD version to download"
 }
 
 def minimalInformationMessage() {

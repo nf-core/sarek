@@ -78,7 +78,7 @@ A Nextflow script is provided to build and/or push containers from Docker, or bu
 ### Usage
 
 ```bash
-nextflow run buildContainers.nf [--docker] [--singularity] /
+nextflow run build.nf [--docker] [--singularity] /
 [--containerPath <path>] [--push] [--containers <container1[,container2..]>] /
 [--repository <repository>] [--tag tag]
 ```
@@ -108,7 +108,7 @@ Default is version number.
 ### Example
 
 ```bash
-nextflow run buildContainers.nf --docker --singularity --push --containers sarek
+nextflow run build.nf --docker --singularity --push --containers sarek
 ```
 
 ### For lazy users
