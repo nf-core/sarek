@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - Possibility to use cache wen annotating with `snpEff` and `VEP`
 -   [#722](https://github.com/SciLifeLab/Sarek/pull/722) - Add path to ASCAT `.gc` file in `igenomes.config`
 -   [#728](https://github.com/SciLifeLab/Sarek/pull/728) - Update `Sarek-data` submodule with multiple patients TSV file
+-   [#735](https://github.com/SciLifeLab/Sarek/pull/735) - Added `--exome` for Manta, and for StrelkaBP
+-   [#735](https://github.com/SciLifeLab/Sarek/pull/735) - Added Travis CI test for targeted
 
 ### `Changed`
 

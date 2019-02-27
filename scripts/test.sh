@@ -103,8 +103,12 @@ if [[ ALL,SOMATIC =~ $TEST ]]
 then
 	run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-manta.tsv --variantCalling --tools FreeBayes,HaplotypeCaller,Manta,Mutect2 --noReports
 	run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-manta.tsv --variantCalling --tools Manta,Strelka --noReports --strelkaBP
-	# Disabling targeted somatic as it is practically the same as the germline, and takes aaaages
-	#run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny.tsv --variantCalling --tools Mutect2,Strelka --bed `pwd`/Sarek-data/testdata/target.bed
+	clean_repo
+fi
+
+if [[ ALL,TARGETED =~ $TEST ]]
+then
+	run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-manta.tsv --variantCalling --tools Manta,Strelka --noReports --bed Sarek-data/testdata/target.bed
 	clean_repo
 fi
 

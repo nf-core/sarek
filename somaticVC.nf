@@ -360,6 +360,7 @@ process RunManta {
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
+    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
     set file(genomeFile), file(genomeIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex
@@ -372,11 +373,15 @@ process RunManta {
   when: 'manta' in tools && !params.onlyQC
 
   script:
+  beforeScript = params.targetBED ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
+  options = params.targetBED ? "--exome --callRegions call_targets.bed.gz" : ""
   """
+  ${beforeScript}
   configManta.py \
   --normalBam ${bamNormal} \
   --tumorBam ${bamTumor} \
   --reference ${genomeFile} \
+  ${options} \
   --runDir Manta
 
   python Manta/runWorkflow.py -m local -j ${task.cpus}
@@ -414,6 +419,7 @@ process RunSingleManta {
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleManta
+    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
     set file(genomeFile), file(genomeIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex
@@ -425,10 +431,14 @@ process RunSingleManta {
   when: 'manta' in tools && status == 1 && !params.onlyQC
 
   script:
+  beforeScript = params.targetBED ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
+  options = params.targetBED ? "--exome --callRegions call_targets.bed.gz" : ""
   """
+  ${beforeScript}
   configManta.py \
   --tumorBam ${bam} \
   --reference ${genomeFile} \
+  ${options} \
   --runDir Manta
 
   python Manta/runWorkflow.py -m local -j ${task.cpus}
@@ -473,6 +483,7 @@ process RunStrelkaBP {
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(mantaCSI), file(mantaCSIi) from bamsForStrelkaBP
+    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
     set file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -485,12 +496,16 @@ process RunStrelkaBP {
   when: 'strelka' in tools && 'manta' in tools && params.strelkaBP && !params.onlyQC
 
   script:
+  beforeScript = params.targetBED ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
+  options = params.targetBED ? "--exome --callRegions call_targets.bed.gz" : ""
   """
+  ${beforeScript}
   configureStrelkaSomaticWorkflow.py \
   --tumor ${bamTumor} \
   --normal ${bamNormal} \
   --referenceFasta ${genomeFile} \
   --indelCandidates ${mantaCSI} \
+  ${options} \
   --runDir Strelka
 
   python Strelka/runWorkflow.py -m local -j ${task.cpus}

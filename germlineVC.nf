@@ -398,6 +398,7 @@ process RunSingleManta {
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleManta
+    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
     set file(genomeFile), file(genomeIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex
@@ -409,10 +410,14 @@ process RunSingleManta {
   when: 'manta' in tools && status == 0 && !params.onlyQC
 
   script:
+  beforeScript = params.targetBED ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
+  options = params.targetBED ? "--exome --callRegions call_targets.bed.gz" : ""
   """
+  ${beforeScript}
   configManta.py \
   --bam ${bam} \
   --reference ${genomeFile} \
+  ${options} \
   --runDir Manta
 
   python Manta/runWorkflow.py -m local -j ${task.cpus}
