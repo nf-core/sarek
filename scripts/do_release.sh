@@ -50,4 +50,4 @@ sed -i "s/sarek-[0-9\.]\+/sarek-$RELEASE/g" Singularity
 sed -i "s/VERSION [0-9\.]\+/VERSION $RELEASE/g" Singularity
 sed -i "s/version = '[0-9\.]\+'/version = '$RELEASE'/g" nextflow.config
 
-git commit CHANGELOG.md Dockerfile environment.yml Singularity nextflow.config -m "preparing release $RELEASE [skip ci]"
+git commit CHANGELOG.md Dockerfile environment.yml Singularity nextflow.config containers/snpeffgrch3*/* containers/vepgrch3*/* -m "preparing release $RELEASE [skip ci]"
