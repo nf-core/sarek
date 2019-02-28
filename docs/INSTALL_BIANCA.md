@@ -58,13 +58,11 @@ For more information about using Singularity with UPPMAX, follow the [Singularit
 ## Install Sarek
 
 Sarek use Singularity containers to package all the different tools.
-All containers are already stored on UPPMAX.
+All containers, and all Reference files are already stored on UPPMAX.
 
 As `bianca` is secure, no direct download is available, so Sarek will have to be installed and updated manually.
 
 You can either download Sarek on your computer or on `rackham`, make an archive, and send it to `bianca` using `FileZilla` or `sftp` given your preferences.
-
-All Reference files are already stored in `bianca`.
 
 ```bash
 # Connect to rackham
@@ -151,7 +149,13 @@ The principle is to have every member of your project to be able to use the same
 And then Sarek can be used with:
 
 ```bash
-> nextflow run ~/Sarek/main.nf -profile slurm --project [PROJECT] ...
+> nextflow run ~/Sarek/main.nf -profile slurm --project [PROJECT] --genome [GENOME ASSEMBLY] --genome_base [PATH TO REFERENCE FILES] --containerPath [PATH TO CONTAINERS] ...
+```
+
+This is an example of how to run Sarek Somaic with the tool Ascat and the genome assembly version GRCh37:
+
+```bash
+> nextflow run ~/Sarek/somaticVC.nf -profile slurm --project [PROJECT] --tools ascat --sample [SAMPLE.TSV] --genome GRCh37 --genome_base /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37 --containerPath ~/Sarek/containers
 ```
 
 ## Update Sarek

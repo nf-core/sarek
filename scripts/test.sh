@@ -85,7 +85,7 @@ then
   if [[ ! -d References ]]
   then
     echo "$(tput setaf 1)Building references$(tput sgr0)"
-    nextflow run buildReferences.nf --refDir Sarek-data/reference --outDir References/$GENOME -profile $PROFILE --genome $GENOME --verbose
+    nextflow run build.nf --refDir Sarek-data/reference --outDir References/$GENOME -profile $PROFILE --genome $GENOME --verbose
   fi
 fi
 
@@ -94,7 +94,7 @@ if [[ ALL,GERMLINE =~ $TEST ]]
 then
 	# Added Strelka to germline test (no Strelka best practices test for this small data) and not asking for reports
 	run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal --variantCalling --tools HaplotypeCaller,Strelka --noReports
-	run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal --variantCalling --tools HaplotypeCaller,Strelka --bed `pwd`/Sarek-data/testdata/target.bed --noReports
+	run_wrapper --germline --sampleDir Sarek-data/testdata/tiny/normal --variantCalling --tools HaplotypeCaller,Strelka --bed Sarek-data/testdata/target.bed --noReports
 	run_wrapper --germline --step recalibrate --noReports
 	clean_repo
 fi
@@ -103,8 +103,12 @@ if [[ ALL,SOMATIC =~ $TEST ]]
 then
 	run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-manta.tsv --variantCalling --tools FreeBayes,HaplotypeCaller,Manta,Mutect2 --noReports
 	run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-manta.tsv --variantCalling --tools Manta,Strelka --noReports --strelkaBP
-	# Disabling targeted somatic as it is practically the same as the germline, and takes aaaages
-	#run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny.tsv --variantCalling --tools Mutect2,Strelka --bed `pwd`/Sarek-data/testdata/target.bed
+	clean_repo
+fi
+
+if [[ ALL,TARGETED =~ $TEST ]]
+then
+	run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-manta.tsv --variantCalling --tools Manta,Strelka --noReports --bed Sarek-data/testdata/target.bed
 	clean_repo
 fi
 
@@ -120,9 +124,14 @@ then
   then
     ANNOTATOR=merge,snpEFF,VEP
   fi
-  run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF Sarek-data/testdata/vcf/Strelka_1234N_variants.vcf.gz --noReports
-  run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF Sarek-data/testdata/vcf/Strelka_1234N_variants.vcf.gz,Sarek-data/testdata/vcf/Strelka_9876T_variants.vcf.gz
+  run_wrapper --annotate --tools ${ANNOTATOR} --annotateVCF Sarek-data/testdata/vcf/Strelka_1234N_variants.vcf.gz
   clean_repo
+fi
+
+if [[ MULTIPLE =~ $TEST ]]
+then
+  run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-multiple.tsv --variantCalling --tools FreeBayes,HaplotypeCaller,Manta,Mutect2 --noReports
+	run_wrapper --somatic --sample Sarek-data/testdata/tsv/tiny-multiple.tsv --variantCalling --tools Manta,Strelka --noReports --strelkaBP
 fi
 
 if [[ BUILDCONTAINERS =~ $TEST ]] && [[ $PROFILE == docker ]]

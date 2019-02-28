@@ -29,6 +29,12 @@ Define usage limits and Singularity for BINAC cluster in Tuebingen.
 
 Designed for usage with Singularity on CFC at QBic.
 
+### [`conda.config`](https://github.com/SciLifeLab/Sarek/blob/master/conf/conda.config)
+
+> /!\\ Under development.
+
+Define conda environement.
+
 ### [`containers.config`](https://github.com/SciLifeLab/Sarek/blob/master/conf/containers.config)
 
 Define Containers for all process.
@@ -90,16 +96,6 @@ The default profile is `standard`, but Sarek has multiple predefined profiles wh
 ```bash
 nextflow run SciLifeLab/Sarek --sample mysample.tsv -profile myprofile
 ```
-awsbatch {
-binac {
-btb {
-cfc {
-docker {
-singularity {
-singularityPath {
-slurm {
-slurmDownload {
-standard {
 
 ### `awsbatch`
 
@@ -116,6 +112,13 @@ This is the profile for use on the BTB server munin.
 ### `cfc`
 
 This is the profile for use on the CFC cluster in Tuebingen.
+
+### `conda`
+
+> /!\\ Under development.
+
+This is the profile for conda testing on a small machine, or on Travis CI.
+Conda environement will be built automatically.
 
 ### `docker`
 
@@ -136,18 +139,12 @@ Singularity images needs to be set up.
 
 This is another profile for use on a UPPMAX cluster using the job scheduler slurm with Singularity.
 Will run the workflow on `/scratch`.
-Singularity images need to be set up.
-
-### `slurmDownload`
-
-This is another profile for use on a UPPMAX cluster using the job scheduler slurm with Singularity.
-Will run the workflow on `/scratch`.
-Singularity images will be pulled automatically.
+Singularity images are already set up.
 
 ### `standard`
 
 This is the default profile for use on a localhost on a UPPMAX cluster with Singularity.
-Singularity images need to be set up.
+Singularity images are already set up.
 
 ## Customisation
 The recommended way to use custom settings is to supply Sarek with an additional configuration file. You can use the files in the [`conf/`](https://github.com/SciLifeLab/Sarek/tree/master/conf) directory as an inspiration to make this new `.config` file and specify it using the `-c` flag:
