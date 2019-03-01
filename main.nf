@@ -647,8 +647,6 @@ def helpMessage() {
   log.info "       Run only QC tools and gather reports"
   log.info "    --help"
   log.info "       you're reading it"
-  log.info "    --verbose"
-  log.info "       Adds more verbosity to workflow"
 }
 
 def minimalInformationMessage() {
