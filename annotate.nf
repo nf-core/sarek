@@ -118,7 +118,7 @@ process RunBcftoolsStats {
   script: QC.bcftools(vcf)
 }
 
-bcfReport.dump(tag:'BCFTools')
+bcfReport = bcfReport.dump(tag:'BCFTools')
 
 process RunVcftools {
   tag {"${idPatient} - ${variantCaller} - ${vcf}"}
@@ -136,7 +136,7 @@ process RunVcftools {
   script: QC.vcftools(vcf)
 }
 
-vcfReport.dump(tag:'VCFTools')
+vcfReport = vcfReport.dump(tag:'VCFTools')
 
 process RunSnpeff {
   tag {"${idPatient} - ${variantCaller} - ${vcf}"}
@@ -174,7 +174,7 @@ process RunSnpeff {
   """
 }
 
-snpeffOutput.dump(tag:'snpEff')
+snpeffOutput = snpeffOutput.dump(tag:'snpEff')
 
 if ('merge' in tools) {
   // When running in the 'merge' mode
@@ -240,7 +240,7 @@ process RunVEP {
   """
 }
 
-vepReport.dump(tag:'VEP')
+vepReport = vepReport.dump(tag:'VEP')
 
 vcfToCompress = snpeffVCF.mix(vepVCF)
 
@@ -263,7 +263,7 @@ process CompressVCF {
   """
 }
 
-vcfCompressedoutput.dump(tag:'VCF')
+vcfCompressedoutput = vcfCompressedoutput.dump(tag:'VCF')
 
 /*
 ================================================================================

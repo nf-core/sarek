@@ -84,7 +84,7 @@ process GetVersionAll {
   """
 }
 
-versionsForMultiQC.dump(tag:'Versions')
+versionsForMultiQC = versionsForMultiQC.dump(tag:'Versions')
 
 reportsForMultiQC = Channel.empty()
   .mix(

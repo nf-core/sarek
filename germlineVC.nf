@@ -85,7 +85,7 @@ if (tsvPath) {
 
 startMessage()
 
-bamFiles.dump(tag:'BAM')
+bamFiles = bamFiles.dump(tag:'BAM')
 
 // assume input is recalibrated, ignore explicitBqsrNeeded
 (recalibratedBam, recalTables) = bamFiles.into(2)
@@ -189,7 +189,7 @@ bedIntervals = bedIntervals
   .flatten().collate(2)
   .map{duration, intervalFile -> intervalFile}
 
-bedIntervals.dump(tag:'Intervals')
+bedIntervals = bedIntervals.dump(tag:'Intervals')
 
 (bamsNormalTemp, bamsNormal, bedIntervals) = generateIntervalsForVC(bamsNormal, bedIntervals)
 (bamsTumorTemp, bamsTumor, bedIntervals) = generateIntervalsForVC(bamsTumor, bedIntervals)
@@ -297,7 +297,7 @@ hcGenotypedVCF = hcGenotypedVCF.groupTuple(by:[0,1,2,3])
 
 vcfsToMerge = hcGenomicVCF.mix(hcGenotypedVCF)
 
-vcfsToMerge.dump(tag:'VCFsToMerge')
+vcfsToMerge = vcfsToMerge.dump(tag:'VCFsToMerge')
 
 process ConcatVCF {
   tag {variantCaller + "-" + idSampleNormal}
@@ -325,7 +325,7 @@ process ConcatVCF {
   """
 }
 
-vcfConcatenated.dump(tag:'VCFs')
+vcfConcatenated = vcfConcatenated.dump(tag:'VCFs')
 
 process RunSingleStrelka {
   tag {idSample}
@@ -364,7 +364,7 @@ process RunSingleStrelka {
   """
 }
 
-singleStrelkaOutput.dump(tag:'Single Strelka')
+singleStrelkaOutput = singleStrelkaOutput.dump(tag:'Single Strelka')
 
 process RunSingleManta {
   tag {idSample + " - Single Diploid"}
@@ -412,7 +412,7 @@ process RunSingleManta {
   """
 }
 
-singleMantaOutput.dump(tag:'Single Manta')
+singleMantaOutput = singleMantaOutput.dump(tag:'Single Manta')
 
 vcfForQC = Channel.empty().mix(
   vcfConcatenated.map {

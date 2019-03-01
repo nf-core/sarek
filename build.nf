@@ -93,14 +93,12 @@ process BuildWithDocker {
 
   script:
   path = container == "sarek" ? "${baseDir}" : "${baseDir}/containers/${container}/."
-  push = params.push ? "docker push ${params.repository}/${container}:${params.tag}" : ""
   """
   docker build -t ${params.repository}/${container}:${params.tag} ${path}
-  ${push}
   """
 }
 
-containersBuilt.dump(tag:'BuildWithDocker')
+containersBuilt = containersBuilt.dump(tag:'Built')
 
 process PullToSingularity {
   tag {"${params.repository}/${container}:${params.tag}"}
@@ -121,7 +119,26 @@ process PullToSingularity {
   """
 }
 
-imagePulled.dump(tag:'PullToSingularity')
+imagePulled.dump(tag:'Pulled')
+
+process PushToDocker {
+  tag {params.repository + "/" + container + ":" + params.tag}
+
+  input:
+    val container from containersBuilt
+
+  output:
+    val container into containersPushed
+
+  when: params.push
+
+  script:
+  """
+  docker push ${params.repository}/${container}:${params.tag}
+  """
+}
+
+containersPushed.dump(tag:'Pushed')
 
 /*
 ================================================================================
@@ -156,7 +173,7 @@ process DecompressFile {
     """
 }
 
-ch_decompressedFiles.dump(tag:'DecompressedFile')
+ch_decompressedFiles = ch_decompressedFiles.dump(tag:'DecompressedFile')
 
 ch_fastaFile = Channel.create()
 ch_fastaForBWA = Channel.create()

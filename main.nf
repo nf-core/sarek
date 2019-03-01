@@ -113,8 +113,7 @@ startMessage()
 
 (inputFiles, inputFilesforFastQC) = inputFiles.into(2)
 
-inputFiles.dump(tag:'INPUT')
-bamFiles.dump(tag:'BAM')
+inputFiles = inputFiles.dump(tag:'INPUT')
 
 process RunFastQC {
   tag {idPatient + "-" + idRun}
@@ -182,7 +181,7 @@ process MapReads {
     """
 }
 
-mappedBam.dump(tag:'Mapped BAM')
+mappedBam = mappedBam.dump(tag:'Mapped BAM')
 
 process RunBamQCmapped {
   tag {idPatient + "-" + idSample}
@@ -243,10 +242,10 @@ process MergeBams {
   """
 }
 
-singleBam.dump(tag:'Single BAM')
-mergedBam.dump(tag:'Merged BAM')
+singleBam = singleBam.dump(tag:'Single BAM')
+mergedBam = mergedBam.dump(tag:'Merged BAM')
 mergedBam = mergedBam.mix(singleBam)
-mergedBam.dump(tag:'BAM for MD')
+mergedBam = mergedBam.dump(tag:'BAM for MD')
 
 process MarkDuplicates {
   tag {idPatient + "-" + idSample}
@@ -297,7 +296,7 @@ duplicateMarkedBams = duplicateMarkedBams.map {
     [idPatient, status, idSample, bam, bai]
 }
 
-duplicateMarkedBams.dump(tag:'MD BAM')
+duplicateMarkedBams = duplicateMarkedBams.dump(tag:'MD BAM')
 
 (mdBam, mdBamToJoin) = duplicateMarkedBams.into(2)
 
@@ -353,7 +352,7 @@ recalibrationTable = mdBamToJoin.join(recalibrationTable, by:[0,1,2])
 
 if (step == 'recalibrate') recalibrationTable = bamFiles
 
-recalibrationTable.dump(tag:'recal.table')
+recalibrationTable = recalibrationTable.dump(tag:'recal.table')
 
 process RecalibrateBam {
   tag {idPatient + "-" + idSample}

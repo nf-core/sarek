@@ -90,7 +90,7 @@ if (tsvPath) {
 
 startMessage()
 
-bamFiles.dump(tag:'BAM')
+bamFiles = bamFiles.dump(tag:'BAM')
 
 // separate recalibrateBams by status
 bamsNormal = Channel.create()
@@ -179,7 +179,7 @@ bedIntervals = bedIntervals
   .flatten().collate(2)
   .map{duration, intervalFile -> intervalFile}
 
-bedIntervals.dump(tag:'Intervals')
+bedIntervals = bedIntervals.dump(tag:'Intervals')
 
 bamsAll = bamsNormal.join(bamsTumor)
 
@@ -265,7 +265,7 @@ freebayesOutput = freebayesOutput.groupTuple(by:[0,1,2,3])
 
 vcfsToMerge = mutect2Output.mix(freebayesOutput)
 
-vcfsToMerge.dump(tag:'VCF to merge')
+vcfsToMerge = vcfsToMerge.dump(tag:'VCF to merge')
 
 process ConcatVCF {
   tag {variantCaller + "_" + idSampleTumor + "_vs_" + idSampleNormal}
@@ -292,7 +292,7 @@ process ConcatVCF {
   """
 }
 
-vcfConcatenated.dump(tag:'VCF')
+vcfConcatenated = vcfConcatenated.dump(tag:'VCF')
 
 process RunStrelka {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
@@ -333,7 +333,7 @@ process RunStrelka {
   """
 }
 
-strelkaOutput.dump(tag:'Strelka')
+strelkaOutput = strelkaOutput.dump(tag:'Strelka')
 
 process RunManta {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
@@ -387,7 +387,7 @@ process RunManta {
   """
 }
 
-mantaOutput.dump(tag:'Manta')
+mantaOutput = mantaOutput.dump(tag:'Manta')
 
 process RunSingleManta {
   tag {idSample + " - Tumor-Only"}
@@ -435,7 +435,7 @@ process RunSingleManta {
   """
 }
 
-singleMantaOutput.dump(tag:'single Manta')
+singleMantaOutput = singleMantaOutput.dump(tag:'single Manta')
 
 // Running Strelka Best Practice with Manta indel candidates
 // For easier joining, remaping channels to idPatient, idSampleNormal, idSampleTumor...
@@ -493,7 +493,7 @@ process RunStrelkaBP {
   """
 }
 
-strelkaBPOutput.dump(tag:'Strelka BP')
+strelkaBPOutput = strelkaBPOutput.dump(tag:'Strelka BP')
 
 // Run commands and code from Malin Larsson
 // Based on Jesper Eisfeldt's code
