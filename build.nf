@@ -56,15 +56,11 @@ if (workflow.profile == 'awsbatch') {
 containersList = defineContainersList()
 if (params.containers) {
   containers = params.containers.split(',').collect {it.trim()}
-  containers = containers == ['all'] ? containersList : containers
-} else containers = []
-
-// push only to DockerHub, so only when using Docker
-push = params.docker && params.push ? true : false
+  if (params.containers != ['all'] && !checkContainers(containers,containersList)) exit 1, 'Unknown container(s), see --help for more information'
+  containers = containers == ['all'] ? Channel.from(containersList) : Channel.from(containers)
+} else containers = Channel.empty()
 
 if (params.containers && !params.docker && !params.singularity) exit 1, 'No container technology choosed, specify --docker or --singularity, see --help for more information'
-
-if (params.containers && !checkContainers(containers,containersList)) exit 1, 'Unknown container(s), see --help for more information'
 
 ch_referencesFiles = Channel.fromPath("${params.refDir}/*")
 
@@ -82,8 +78,7 @@ startMessage()
 ================================================================================
 */
 
-dockerContainers = containers
-singularityContainers = containers
+(dockerContainers, singularityContainers) = containers.into(2)
 
 process BuildWithDocker {
   tag {"${params.repository}/${container}:${params.tag}"}
@@ -98,14 +93,14 @@ process BuildWithDocker {
 
   script:
   path = container == "sarek" ? "${baseDir}" : "${baseDir}/containers/${container}/."
+  push = params.push ? "docker push ${params.repository}/${container}:${params.tag}" : ""
   """
   docker build -t ${params.repository}/${container}:${params.tag} ${path}
+  ${push}
   """
 }
 
-if (params.verbose) containersBuilt = containersBuilt.view {
-  "Docker container: ${params.repository}/${it}:${params.tag} built."
-}
+containersBuilt.dump(tag:'BuildWithDocker')
 
 process PullToSingularity {
   tag {"${params.repository}/${container}:${params.tag}"}
@@ -126,30 +121,7 @@ process PullToSingularity {
   """
 }
 
-if (params.verbose) imagePulled = imagePulled.view {
-  "Singularity image: ${it.fileName} pulled."
-}
-
-process PushToDocker {
-  tag {params.repository + "/" + container + ":" + params.tag}
-
-  input:
-    val container from containersBuilt
-
-  output:
-    val container into containersPushed
-
-  when: params.docker && push
-
-  script:
-  """
-  docker push ${params.repository}/${container}:${params.tag}
-  """
-}
-
-if (params.verbose) containersPushed = containersPushed.view {
-  "Docker container: ${params.repository}/${it}:${params.tag} pushed."
-}
+imagePulled.dump(tag:'PullToSingularity')
 
 /*
 ================================================================================
@@ -184,9 +156,7 @@ process DecompressFile {
     """
 }
 
-if (params.verbose) ch_decompressedFiles = ch_decompressedFiles.view {
-  "Files decomprecessed: ${it.fileName}"
-}
+ch_decompressedFiles.dump(tag:'DecompressedFile')
 
 ch_fastaFile = Channel.create()
 ch_fastaForBWA = Channel.create()
@@ -224,9 +194,7 @@ process BuildBWAindexes {
   """
 }
 
-if (params.verbose) bwaIndexes.flatten().view {
-  "BWA index           : ${it.fileName}"
-}
+bwaIndexes.dump(tag:'bwaIndexes')
 
 process BuildReferenceIndex {
   tag {f_reference}
@@ -248,9 +216,7 @@ process BuildReferenceIndex {
   """
 }
 
-if (params.verbose) ch_referenceIndex.view {
-  "Reference index     : ${it.fileName}"
-}
+ch_referenceIndex.dump(tag:'dict')
 
 process BuildSAMToolsIndex {
   tag {f_reference}
@@ -269,9 +235,7 @@ process BuildSAMToolsIndex {
   """
 }
 
-if (params.verbose) ch_samtoolsIndex.view {
-  "SAMTools index      : ${it.fileName}"
-}
+ch_samtoolsIndex.dump(tag:'fai')
 
 process BuildVCFIndex {
   tag {f_reference}
@@ -290,9 +254,7 @@ process BuildVCFIndex {
   """
 }
 
-if (params.verbose) ch_vcfIndex.view {
-  "VCF index           : ${it.fileName}"
-}
+ch_vcfIndex.dump(tag:'idx')
 
 /*
 ================================================================================
