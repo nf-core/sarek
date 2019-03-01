@@ -118,10 +118,7 @@ process RunBcftoolsStats {
   script: QC.bcftools(vcf)
 }
 
-if (params.verbose) bcfReport = bcfReport.view {
-  "BCFTools stats report:\n" +
-  "File  : [${it.fileName}]"
-}
+bcfReport.dump(tag:'BCFTools')
 
 process RunVcftools {
   tag {"${idPatient} - ${variantCaller} - ${vcf}"}
@@ -139,10 +136,7 @@ process RunVcftools {
   script: QC.vcftools(vcf)
 }
 
-if (params.verbose) vcfReport = vcfReport.view {
-  "VCFTools stats report:\n" +
-  "Files : [${it.fileName}]"
-}
+vcfReport.dump(tag:'VCFTools')
 
 process RunSnpeff {
   tag {"${idPatient} - ${variantCaller} - ${vcf}"}
@@ -180,10 +174,7 @@ process RunSnpeff {
   """
 }
 
-if (params.verbose) snpeffOutput = snpeffOutput.view {
-  "snpEff report:\n" +
-  "File  : ${it.fileName}"
-}
+snpeffOutput.dump(tag:'snpEff')
 
 if ('merge' in tools) {
   // When running in the 'merge' mode
@@ -249,10 +240,7 @@ process RunVEP {
   """
 }
 
-if (params.verbose) vepReport = vepReport.view {
-  "VEP report:\n" +
-  "Files : ${it.fileName}"
-}
+vepReport.dump(tag:'VEP')
 
 vcfToCompress = snpeffVCF.mix(vepVCF)
 
@@ -275,11 +263,7 @@ process CompressVCF {
   """
 }
 
-if (params.verbose) vcfCompressedoutput = vcfCompressedoutput.view {
-  "${it[2]} - ${it[0]} VCF:\n" +
-  "File  : ${it[3].fileName}\n" +
-  "Index : ${it[4].fileName}"
-}
+vcfCompressedoutput.dump(tag:'VCF')
 
 /*
 ================================================================================
@@ -340,8 +324,6 @@ def helpMessage() {
   log.info "       Run only QC tools and gather reports"
   log.info "    --help"
   log.info "       you're reading it"
-  log.info "    --verbose"
-  log.info "       Adds more verbosity to workflow"
 }
 
 def minimalInformationMessage() {

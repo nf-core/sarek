@@ -90,11 +90,7 @@ if (tsvPath) {
 
 startMessage()
 
-if (params.verbose) bamFiles = bamFiles.view {
-  "BAMs for variant Calling:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
-  Files : [${it[3].fileName}, ${it[4].fileName}]"
-}
+bamFiles.dump(tag:'BAM')
 
 // separate recalibrateBams by status
 bamsNormal = Channel.create()
@@ -183,9 +179,7 @@ bedIntervals = bedIntervals
   .flatten().collate(2)
   .map{duration, intervalFile -> intervalFile}
 
-if (params.verbose) bedIntervals = bedIntervals.view {
-  "  Interv: ${it.baseName}"
-}
+bedIntervals.dump(tag:'Intervals')
 
 bamsAll = bamsNormal.join(bamsTumor)
 
@@ -270,11 +264,8 @@ freebayesOutput = freebayesOutput.groupTuple(by:[0,1,2,3])
 // so we can have a single sorted VCF containing all the calls for a given caller
 
 vcfsToMerge = mutect2Output.mix(freebayesOutput)
-if (params.verbose) vcfsToMerge = vcfsToMerge.view {
-  "VCFs To be merged:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  Files : ${it[4].fileName}"
-}
+
+vcfsToMerge.dump(tag:'VCF to merge')
 
 process ConcatVCF {
   tag {variantCaller + "_" + idSampleTumor + "_vs_" + idSampleNormal}
@@ -301,11 +292,7 @@ process ConcatVCF {
   """
 }
 
-if (params.verbose) vcfConcatenated = vcfConcatenated.view {
-  "Variant Calling output:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  File  : ${it[4].fileName}"
-}
+vcfConcatenated.dump(tag:'VCF')
 
 process RunStrelka {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
@@ -346,12 +333,7 @@ process RunStrelka {
   """
 }
 
-if (params.verbose) strelkaOutput = strelkaOutput.view {
-  "Variant Calling output:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  Files : ${it[4].fileName}\n\
-  Index : ${it[5].fileName}"
-}
+strelkaOutput.dump(tag:'Strelka')
 
 process RunManta {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
@@ -405,12 +387,7 @@ process RunManta {
   """
 }
 
-if (params.verbose) mantaOutput = mantaOutput.view {
-  "Variant Calling output:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  Files : ${it[4].fileName}\n\
-  Index : ${it[5].fileName}"
-}
+mantaOutput.dump(tag:'Manta')
 
 process RunSingleManta {
   tag {idSample + " - Tumor-Only"}
@@ -458,12 +435,7 @@ process RunSingleManta {
   """
 }
 
-if (params.verbose) singleMantaOutput = singleMantaOutput.view {
-  "Variant Calling output:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: ${it[2]}\n\
-  Files : ${it[3].fileName}\n\
-  Index : ${it[4].fileName}"
-}
+singleMantaOutput.dump(tag:'single Manta')
 
 // Running Strelka Best Practice with Manta indel candidates
 // For easier joining, remaping channels to idPatient, idSampleNormal, idSampleTumor...
@@ -521,12 +493,7 @@ process RunStrelkaBP {
   """
 }
 
-if (params.verbose) strelkaBPOutput = strelkaBPOutput.view {
-  "Variant Calling output:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  Files : ${it[4].fileName}\n\
-  Index : ${it[5].fileName}"
-}
+strelkaBPOutput.dump(tag:'Strelka BP')
 
 // Run commands and code from Malin Larsson
 // Based on Jesper Eisfeldt's code
@@ -617,11 +584,7 @@ process RunAscat {
   """
 }
 
-if (params.verbose) ascatOutput = ascatOutput.view {
-  "Variant Calling output:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  Files : [${it[4].fileName}]"
-}
+ascatOutput.dump(tag:'ASCAT')
 
 (strelkaIndels, strelkaSNVS) = strelkaOutput.into(2)
 (mantaSomaticSV, mantaDiploidSV) = mantaOutput.into(2)
@@ -670,12 +633,7 @@ process RunBcftoolsStats {
   script: QC.bcftools(vcf)
 }
 
-if (params.verbose) bcfReport = bcfReport.view {
-  "BCFTools stats report:\n\
-  File  : [${it.fileName}]"
-}
-
-bcfReport.close()
+bcfReport.dump(tag:'BCFTools')
 
 process RunVcftools {
   tag {vcf}
@@ -693,12 +651,7 @@ process RunVcftools {
   script: QC.vcftools(vcf)
 }
 
-if (params.verbose) vcfReport = vcfReport.view {
-  "VCFTools stats report:\n\
-  File  : [${it.fileName}]"
-}
-
-vcfReport.close()
+vcfReport.dump(tag:'VCFTools')
 
 process GetVersionAlleleCount {
   publishDir "${params.outDir}/Reports/ToolsVersion", mode: params.publishDirMode
@@ -814,8 +767,6 @@ def helpMessage() {
   log.info "       Run only QC tools and gather reports"
   log.info "    --help"
   log.info "       you're reading it"
-  log.info "    --verbose"
-  log.info "       Adds more verbosity to workflow"
 }
 
 def minimalInformationMessage() {

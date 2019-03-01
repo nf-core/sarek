@@ -84,10 +84,7 @@ process GetVersionAll {
   """
 }
 
-if (params.verbose && !params.noReports) versionsForMultiQC = versionsForMultiQC.view {
-  "MultiQC tools version:\n\
-  File  : [${it.fileName}]"
-}
+versionsForMultiQC.dump(tag:'Versions')
 
 reportsForMultiQC = Channel.empty()
   .mix(
@@ -119,11 +116,7 @@ process RunMultiQC {
   """
 }
 
-if (params.verbose) multiQCReport = multiQCReport.view {
-  "MultiQC report:\n\
-  File  : [${it[0].fileName}]\n\
-  Dir   : [${it[1].fileName}]"
-}
+multiQCReport.dump(tag:'MultiQC')
 
 /*
 ================================================================================

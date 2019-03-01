@@ -133,7 +133,6 @@ class SarekUtils {
       'vep_cache',
       'vep-cache-version',
       'vepCacheVersion',
-      'verbose',
       'version']
   }
 

@@ -113,17 +113,8 @@ startMessage()
 
 (inputFiles, inputFilesforFastQC) = inputFiles.into(2)
 
-if (params.verbose) inputFiles = inputFiles.view {
-  "FASTQs to preprocess:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\tRun   : ${it[3]}\n\
-  Files : [${it[4].fileName}, ${it[5].fileName}]"
-}
-
-if (params.verbose) bamFiles = bamFiles.view {
-  "BAMs to process:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
-  Files : [${it[3].fileName}, ${it[4].fileName}]"
-}
+inputFiles.dump(tag:'INPUT')
+bamFiles.dump(tag:'BAM')
 
 process RunFastQC {
   tag {idPatient + "-" + idRun}
@@ -145,10 +136,7 @@ process RunFastQC {
   """
 }
 
-if (params.verbose) fastQCreport = fastQCreport.view {
-  "FastQC report:\n\
-  Files : [${it[0].fileName}, ${it[1].fileName}]"
-}
+fastQCreport.dump(tag:'FastQC')
 
 process MapReads {
   tag {idPatient + "-" + idRun}
@@ -194,11 +182,7 @@ process MapReads {
     """
 }
 
-if (params.verbose) mappedBam = mappedBam.view {
-  "Mapped BAM (single or to be merged):\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\tRun   : ${it[3]}\n\
-  File  : [${it[4].fileName}]"
-}
+mappedBam.dump(tag:'Mapped BAM')
 
 process RunBamQCmapped {
   tag {idPatient + "-" + idSample}
@@ -228,10 +212,7 @@ process RunBamQCmapped {
   """
 }
 
-if (params.verbose) bamQCmappedReport = bamQCmappedReport.view {
-  "BamQC report:\n\
-  Dir   : [${it.fileName}]"
-}
+bamQCmappedReport.dump(tag:'BamQC BAM')
 
 // Sort bam whether they are standalone or should be merged
 // Borrowed code from https://github.com/guigolab/chip-nf
@@ -262,25 +243,10 @@ process MergeBams {
   """
 }
 
-if (params.verbose) singleBam = singleBam.view {
-  "Single BAM:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
-  File  : [${it[3].fileName}]"
-}
-
-if (params.verbose) mergedBam = mergedBam.view {
-  "Merged BAM:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
-  File  : [${it[3].fileName}]"
-}
-
+singleBam.dump(tag:'Single BAM')
+mergedBam.dump(tag:'Merged BAM')
 mergedBam = mergedBam.mix(singleBam)
-
-if (params.verbose) mergedBam = mergedBam.view {
-  "BAM for MarkDuplicates:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
-  File  : [${it[3].fileName}]"
-}
+mergedBam.dump(tag:'BAM for MD')
 
 process MarkDuplicates {
   tag {idPatient + "-" + idSample}
@@ -331,11 +297,7 @@ duplicateMarkedBams = duplicateMarkedBams.map {
     [idPatient, status, idSample, bam, bai]
 }
 
-if (params.verbose) duplicateMarkedBams = duplicateMarkedBams.view {
-  "Realigned BAM to CreateRecalibrationTable:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
-  Files : [${it[3].fileName}, ${it[4].fileName}]"
-}
+duplicateMarkedBams.dump(tag:'MD BAM')
 
 (mdBam, mdBamToJoin) = duplicateMarkedBams.into(2)
 
@@ -391,11 +353,7 @@ recalibrationTable = mdBamToJoin.join(recalibrationTable, by:[0,1,2])
 
 if (step == 'recalibrate') recalibrationTable = bamFiles
 
-if (params.verbose) recalibrationTable = recalibrationTable.view {
-  "Base recalibrated table for RecalibrateBam:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
-  Files : [${it[3].fileName}, ${it[4].fileName}, ${it[5].fileName}]"
-}
+recalibrationTable.dump(tag:'recal.table')
 
 process RecalibrateBam {
   tag {idPatient + "-" + idSample}
@@ -437,11 +395,7 @@ recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
   name: 'recalibrated.tsv', sort: true, storeDir: "${params.outDir}/Preprocessing/Recalibrated"
 )
 
-if (params.verbose) recalibratedBam = recalibratedBam.view {
-  "Recalibrated BAM for variant Calling:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
-  Files : [${it[3].fileName}, ${it[4].fileName}]"
-}
+recalibratedBam.dump(tag:'recal.bam')
 
 // Remove recalTable from Channels to match inputs for Process to avoid:
 // WARN: Input tuple does not match input set cardinality declared by process...
@@ -463,10 +417,7 @@ process RunSamtoolsStats {
   script: QC.samtoolsStats(bam)
 }
 
-if (params.verbose) samtoolsStatsReport = samtoolsStatsReport.view {
-  "SAMTools stats report:\n\
-  File  : [${it.fileName}]"
-}
+samtoolsStatsReport.dump(tag:'SAMTools')
 
 process RunBamQCrecalibrated {
   tag {idPatient + "-" + idSample}
@@ -496,10 +447,7 @@ process RunBamQCrecalibrated {
   """
 }
 
-if (params.verbose) bamQCrecalibratedReport = bamQCrecalibratedReport.view {
-  "BamQC report:\n\
-  Dir   : [${it.fileName}]"
-}
+bamQCrecalibratedReport.dump(tag:'BamQC')
 
 /*
 ================================================================================

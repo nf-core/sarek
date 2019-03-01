@@ -85,11 +85,7 @@ if (tsvPath) {
 
 startMessage()
 
-if (params.verbose) bamFiles = bamFiles.view {
-  "BAMs to process:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
-  Files : [${it[3].fileName}, ${it[4].fileName}]"
-}
+bamFiles.dump(tag:'BAM')
 
 // assume input is recalibrated, ignore explicitBqsrNeeded
 (recalibratedBam, recalTables) = bamFiles.into(2)
@@ -97,12 +93,6 @@ if (params.verbose) bamFiles = bamFiles.view {
 recalTables = recalTables.map{ it + [null] } // null recalibration table means: do not use --BQSR
 
 recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
-
-if (params.verbose) recalibratedBam = recalibratedBam.view {
-  "Recalibrated BAM for variant Calling:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
-  Files : [${it[3].fileName}, ${it[4].fileName}]"
-}
 
 // Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
 // The sample tsv config file which is formatted like: "subject status sample lane fastq1 fastq2"
@@ -199,9 +189,7 @@ bedIntervals = bedIntervals
   .flatten().collate(2)
   .map{duration, intervalFile -> intervalFile}
 
-if (params.verbose) bedIntervals = bedIntervals.view {
-  "  Interv: ${it.baseName}"
-}
+bedIntervals.dump(tag:'Intervals')
 
 (bamsNormalTemp, bamsNormal, bedIntervals) = generateIntervalsForVC(bamsNormal, bedIntervals)
 (bamsTumorTemp, bamsTumor, bedIntervals) = generateIntervalsForVC(bamsTumor, bedIntervals)
@@ -308,11 +296,8 @@ hcGenotypedVCF = hcGenotypedVCF.groupTuple(by:[0,1,2,3])
 // so we can have a single sorted VCF containing all the calls for a given caller
 
 vcfsToMerge = hcGenomicVCF.mix(hcGenotypedVCF)
-if (params.verbose) vcfsToMerge = vcfsToMerge.view {
-  "VCFs To be merged:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  Files : ${it[4].fileName}"
-}
+
+vcfsToMerge.dump(tag:'VCFsToMerge')
 
 process ConcatVCF {
   tag {variantCaller + "-" + idSampleNormal}
@@ -340,12 +325,7 @@ process ConcatVCF {
   """
 }
 
-if (params.verbose) vcfConcatenated = vcfConcatenated.view {
-  "Variant Calling output:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: ${it[2]}\n\
-  Files : ${it[4].fileName}\n\
-  Index : ${it[5].fileName}"
-}
+vcfConcatenated.dump(tag:'VCFs')
 
 process RunSingleStrelka {
   tag {idSample}
@@ -384,12 +364,7 @@ process RunSingleStrelka {
   """
 }
 
-if (params.verbose) singleStrelkaOutput = singleStrelkaOutput.view {
-  "Variant Calling output:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: ${it[2]}\n\
-  Files : ${it[3].fileName}\n\
-  Index : ${it[4].fileName}"
-}
+singleStrelkaOutput.dump(tag:'Single Strelka')
 
 process RunSingleManta {
   tag {idSample + " - Single Diploid"}
@@ -437,12 +412,7 @@ process RunSingleManta {
   """
 }
 
-if (params.verbose) singleMantaOutput = singleMantaOutput.view {
-  "Variant Calling output:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: ${it[2]}\n\
-  Files : ${it[3].fileName}\n\
-  Index : ${it[4].fileName}"
-}
+singleMantaOutput.dump(tag:'Single Manta')
 
 vcfForQC = Channel.empty().mix(
   vcfConcatenated.map {
@@ -476,12 +446,7 @@ process RunBcftoolsStats {
   script: QC.bcftools(vcf)
 }
 
-if (params.verbose) bcfReport = bcfReport.view {
-  "BCFTools stats report:\n\
-  File  : [${it.fileName}]"
-}
-
-bcfReport.close()
+bcfReport.dump(tag:'BCFTools')
 
 process RunVcftools {
   tag {vcf}
@@ -499,12 +464,7 @@ process RunVcftools {
   script: QC.vcftools(vcf)
 }
 
-if (params.verbose) vcfReport = vcfReport.view {
-  "VCFTools stats report:\n\
-  File  : [${it.fileName}]"
-}
-
-vcfReport.close()
+vcfReport.dump(tag:'VCFTools')
 
 /*
 ================================================================================
@@ -589,8 +549,6 @@ def helpMessage() {
   log.info "       Run only QC tools and gather reports"
   log.info "    --help"
   log.info "       you're reading it"
-  log.info "    --verbose"
-  log.info "       Adds more verbosity to workflow"
 }
 
 def minimalInformationMessage() {
