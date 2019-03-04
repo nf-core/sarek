@@ -91,52 +91,26 @@ if (params.verbose) bamFiles = bamFiles.view {
   Files : [${it[3].fileName}, ${it[4].fileName}]"
 }
 
-// assume input is recalibrated, ignore explicitBqsrNeeded
-(recalibratedBam, recalTables) = bamFiles.into(2)
-
-recalTables = recalTables.map{ it + [null] } // null recalibration table means: do not use --BQSR
-
-recalTables = recalTables.map { [it[0]] + it[2..-1] } // remove status
-
-if (params.verbose) recalibratedBam = recalibratedBam.view {
-  "Recalibrated BAM for variant Calling:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
-  Files : [${it[3].fileName}, ${it[4].fileName}]"
-}
-
 // Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
-// The sample tsv config file which is formatted like: "subject status sample lane fastq1 fastq2"
-// cf fastqFiles channel, I decided just to add _status to the sample name to have less changes to do.
-// And so I'm sorting the channel if the sample match _0, then it's a normal sample, otherwise tumor.
-// Then combine normal and tumor to get each possibilities
-// ie. normal vs tumor1, normal vs tumor2, normal vs tumor3
-// then copy this channel into channels for each variant calling
-// I guess it will still work even if we have multiple normal samples
+// The sample tsv config file which is formatted like: "idPatient status idSample bamFile baiFile"
 
 // separate recalibrateBams by status
-bamsNormal = Channel.create()
-bamsTumor = Channel.create()
+bamsToKeep = Channel.create()
+bamsOthers = Channel.create()
 
-recalibratedBam
-  .choice(bamsTumor, bamsNormal) {it[1] == 0 ? 1 : 0}
+bamFiles
+  .choice(bamsOthers, bamsToKeep) {it[1] == 0 ? 1 : 0}
 
-// Ascat, Strelka Germline & Manta Germline SV
-bamsForAscat = Channel.create()
-bamsForSingleManta = Channel.create()
-bamsForSingleStrelka = Channel.create()
-
-(bamsTumorTemp, bamsTumor) = bamsTumor.into(2)
-(bamsNormalTemp, bamsNormal) = bamsNormal.into(2)
-(bamsForAscat, bamsForSingleManta, bamsForSingleStrelka) = bamsNormalTemp.mix(bamsTumorTemp).into(3)
+// Keeping only Normal samples
+bamsOthers.close()
 
 // Removing status because not relevant anymore
-bamsNormal = bamsNormal.map { idPatient, status, idSample, bam, bai -> [idPatient, idSample, bam, bai] }
+bamsToKeep = bamsToKeep.map { idPatient, status, idSample, bam, bai -> [idPatient, idSample, bam, bai] }
 
-bamsTumor = bamsTumor.map { idPatient, status, idSample, bam, bai -> [idPatient, idSample, bam, bai] }
+// Germline Manta and Germline Strelka
+(bamsForGermlineManta, bamsForGermlineStrelka, bamsToKeep) = bamsToKeep.into(3)
 
-// We know that MuTect2 (and other somatic callers) are notoriously slow.
-// To speed them up we are chopping the reference into smaller pieces.
-// (see repeats/centromeres.list).
+// To speed Variant Callers up we are chopping the reference into smaller pieces.
 // Do variant calling by this intervals, and re-merge the VCFs.
 // Since we are on a cluster, this can parallelize the variant call processes.
 // And push down the variant call wall clock time significanlty.
@@ -203,43 +177,13 @@ if (params.verbose) bedIntervals = bedIntervals.view {
   "  Interv: ${it.baseName}"
 }
 
-(bamsNormalTemp, bamsNormal, bedIntervals) = generateIntervalsForVC(bamsNormal, bedIntervals)
-(bamsTumorTemp, bamsTumor, bedIntervals) = generateIntervalsForVC(bamsTumor, bedIntervals)
-
-// HaplotypeCaller
-bamsForHC = bamsNormalTemp.mix(bamsTumorTemp)
-bedIntervals = bedIntervals.tap { intervalsTemp }
-recalTables = recalTables
-  .spread(intervalsTemp)
-  .map { patient, sample, bam, bai, recalTable, intervalBed ->
-    [patient, sample, bam, bai, intervalBed, recalTable] }
-
-// re-associate the BAMs and samples with the recalibration table
-bamsForHC = bamsForHC.join(recalTables, by:[0,1,2,3,4])
-
-bamsAll = bamsNormal.combine(bamsTumor)
-
-// Since idPatientNormal and idPatientTumor are the same
-// It's removed from bamsAll Channel (same for genderNormal)
-// /!\ It is assumed that every sample are from the same patient
-bamsAll = bamsAll.map {
-  idPatientNormal, idSampleNormal, bamNormal, baiNormal, idPatientTumor, idSampleTumor, bamTumor, baiTumor ->
-  [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor]
-}
-
-// Manta and Strelka
-(bamsForManta, bamsForStrelka, bamsAll) = bamsAll.into(3)
-
-bamsTumorNormalIntervals = bamsAll.spread(bedIntervals)
-
-// MuTect2, FreeBayes
-(bamsFMT2, bamsFFB) = bamsTumorNormalIntervals.into(2)
+(bamsForHC, bamsNormal, bedIntervals) = generateIntervalsForVC(bamsNormal, bedIntervals)
 
 process RunHaplotypecaller {
   tag {idSample + "-" + intervalBed.baseName}
 
   input:
-    set idPatient, idSample, file(bam), file(bai), file(intervalBed), recalTable from bamsForHC //Are these values `ped to bamNormal already?
+    set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamsForHC
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -353,7 +297,7 @@ process RunSingleStrelka {
   publishDir "${params.outDir}/VariantCalling/${idPatient}/Strelka", mode: params.publishDirMode
 
   input:
-    set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleStrelka
+    set idPatient, idSample, file(bam), file(bai) from bamsForGermlineStrelka
     file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
     set file(genomeFile), file(genomeIndex) from Channel.value([
       referenceMap.genomeFile,
@@ -397,7 +341,7 @@ process RunSingleManta {
   publishDir "${params.outDir}/VariantCalling/${idPatient}/Manta", mode: params.publishDirMode
 
   input:
-    set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleManta
+    set idPatient, idSample, file(bam), file(bai) from bamsForGermlineManta
     file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
     set file(genomeFile), file(genomeIndex) from Channel.value([
       referenceMap.genomeFile,
@@ -407,7 +351,7 @@ process RunSingleManta {
   output:
     set val("singlemanta"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleMantaOutput
 
-  when: 'manta' in tools && status == 0 && !params.onlyQC
+  when: 'manta' in tools && !params.onlyQC
 
   script:
   beforeScript = params.targetBED ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
