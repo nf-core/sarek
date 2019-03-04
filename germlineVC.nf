@@ -249,7 +249,7 @@ process RunHaplotypecaller {
     ])
 
   output:
-    set val("gvcf-hc"), idPatient, idSample, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf") into hcGenomicVCF
+    set val("HaplotypeCallerGVCF"), idPatient, idSample, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf") into hcGenomicVCF
     set idPatient, idSample, file(intervalBed), file("${intervalBed.baseName}_${idSample}.g.vcf") into vcfsToGenotype
 
   when: 'haplotypecaller' in tools && !params.onlyQC
@@ -257,13 +257,13 @@ process RunHaplotypecaller {
   script:
   """
   gatk --java-options "-Xmx${task.memory.toGiga()}g -Xms6000m -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10" \
-      HaplotypeCaller \
-      -R ${genomeFile} \
-      -I ${bam} \
-      -L ${intervalBed} \
-      --dbsnp ${dbsnp} \
-      -O ${intervalBed.baseName}_${idSample}.g.vcf \
-      --emit-ref-confidence GVCF
+    HaplotypeCaller \
+    -R ${genomeFile} \
+    -I ${bam} \
+    -L ${intervalBed} \
+    -D ${dbsnp} \
+    -O ${intervalBed.baseName}_${idSample}.g.vcf \
+    -ERC GVCF
   """
 }
 hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3])
@@ -284,22 +284,23 @@ process RunGenotypeGVCFs {
     ])
 
   output:
-    set val("haplotypecaller"), idPatient, idSample, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into hcGenotypedVCF
+    set val("HaplotypeCaller"), idPatient, idSample, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into hcGenotypedVCF
 
   when: 'haplotypecaller' in tools && !params.onlyQC
 
   script:
   // Using -L is important for speed and we have to index the interval files also
   """
-  gatk IndexFeatureFile -F ${gvcf}
+  gatk --java-options -Xmx${task.memory.toGiga()}g \
+    IndexFeatureFile -F ${gvcf}
 
   gatk --java-options -Xmx${task.memory.toGiga()}g \
-  GenotypeGVCFs \
-  -R ${genomeFile} \
-  -L ${intervalBed} \
-  --dbsnp ${dbsnp} \
-  -V ${gvcf} \
-  -O ${intervalBed.baseName}_${idSample}.vcf
+    GenotypeGVCFs \
+    -R ${genomeFile} \
+    -L ${intervalBed} \
+    -D ${dbsnp} \
+    -V ${gvcf} \
+    -O ${intervalBed.baseName}_${idSample}.vcf
   """
 }
 hcGenotypedVCF = hcGenotypedVCF.groupTuple(by:[0,1,2,3])
@@ -331,8 +332,8 @@ process ConcatVCF {
   when: ( 'haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools ) && !params.onlyQC
 
   script:
-  if (variantCaller == 'haplotypecaller') outputFile = "${variantCaller}_${idSampleNormal}.vcf"
-  else if (variantCaller == 'gvcf-hc') outputFile = "haplotypecaller_${idSampleNormal}.g.vcf"
+  if (variantCaller == 'HaplotypeCaller') outputFile = "${variantCaller}_${idSampleNormal}.vcf"
+  else if (variantCaller == 'HaplotypeCallerGVCF') outputFile = "haplotypecaller_${idSampleNormal}.g.vcf"
   else outputFile = "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
   options = params.targetBED ? "-t ${targetBED}" : ""
   """
@@ -361,7 +362,7 @@ process RunSingleStrelka {
     ])
 
   output:
-    set val("singlestrelka"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleStrelkaOutput
+    set val("Strelka"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleStrelkaOutput
 
   when: 'strelka' in tools && !params.onlyQC
 
@@ -405,7 +406,7 @@ process RunSingleManta {
     ])
 
   output:
-    set val("singlemanta"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleMantaOutput
+    set val("Manta"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleMantaOutput
 
   when: 'manta' in tools && status == 0 && !params.onlyQC
 
