@@ -91,8 +91,6 @@ if (params.verbose) bamFiles = bamFiles.view {
   Files : [${it[3].fileName}, ${it[4].fileName}]"
 }
 
-if (mode == "germline") return [ idPatient, status, idSample, bamFile, baiFile ]
-
 // assume input is recalibrated, ignore explicitBqsrNeeded
 (recalibratedBam, recalTables) = bamFiles.into(2)
 
