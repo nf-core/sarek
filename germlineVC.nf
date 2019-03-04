@@ -177,7 +177,7 @@ if (params.verbose) bedIntervals = bedIntervals.view {
   "  Interv: ${it.baseName}"
 }
 
-(bamsForHC, bamsNormal, bedIntervals) = generateIntervalsForVC(bamsNormal, bedIntervals)
+(bamsForHC, bamsToKeep, bedIntervals) = generateIntervalsForVC(bamsToKeep, bedIntervals)
 
 process RunHaplotypecaller {
   tag {idSample + "-" + intervalBed.baseName}
