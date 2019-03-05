@@ -275,8 +275,8 @@ process ConcatVCF {
 if (params.verbose) vcfConcatenated = vcfConcatenated.view {
   "Variant Calling output:\n\
   Tool  : ${it[0]}\tID    : ${it[1]}\tSample: ${it[2]}\n\
-  Files : ${it[4].fileName}\n\
-  Index : ${it[5].fileName}"
+  Files : ${it[3].fileName}\n\
+  Index : ${it[4].fileName}"
 }
 
 process RunSingleStrelka {
