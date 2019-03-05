@@ -264,8 +264,8 @@ process ConcatVCF {
   when: 'haplotypecaller' in tools && !params.onlyQC
 
   script:
-  if (variantCaller == 'HaplotypeCaller') outputFile = "${variantCaller}_${idSampleNormal}.vcf"
-  else if (variantCaller == 'HaplotypeCallerGVCF') outputFile = "haplotypecaller_${idSampleNormal}.g.vcf"
+  if (variantCaller == 'HaplotypeCaller') outputFile = "${variantCaller}_${idSample}.vcf"
+  else if (variantCaller == 'HaplotypeCallerGVCF') outputFile = "haplotypecaller_${idSample}.g.vcf"
   options = params.targetBED ? "-t ${targetBED}" : ""
   """
   concatenateVCFs.sh -i ${genomeIndex} -c ${task.cpus} -o ${outputFile} ${options}
@@ -378,7 +378,7 @@ if (params.verbose) singleMantaOutput = singleMantaOutput.view {
 
 vcfForQC = Channel.empty().mix(
   vcfConcatenated.map {
-    variantcaller, idPatient, idSampleNormal, idSampleTumor, vcf, tbi ->
+    variantcaller, idPatient, idSample, vcf, tbi ->
     [variantcaller, vcf]
   },
   singleStrelkaOutput.map {
