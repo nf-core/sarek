@@ -243,8 +243,8 @@ hcGenotypedVCF = hcGenotypedVCF.groupTuple(by:[0,1,2,3])
 vcfsToMerge = hcGenomicVCF.mix(hcGenotypedVCF)
 if (params.verbose) vcfsToMerge = vcfsToMerge.view {
   "VCFs To be merged:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  Files : ${it[4].fileName}"
+  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[2]}]\n\
+  Files : ${it[3].fileName}"
 }
 
 process ConcatVCF {
