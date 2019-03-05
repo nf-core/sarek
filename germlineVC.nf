@@ -94,7 +94,7 @@ if (params.verbose) bamFiles = bamFiles.view {
 // Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
 // The sample tsv config file which is formatted like: "idPatient status idSample bamFile baiFile"
 
-// separate recalibrateBams by status
+// separate recalibrateBams by status which is it[1]
 bamsToKeep = Channel.create()
 bamsOthers = Channel.create()
 
