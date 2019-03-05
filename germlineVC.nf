@@ -91,24 +91,12 @@ if (params.verbose) bamFiles = bamFiles.view {
   Files : [${it[3].fileName}, ${it[4].fileName}]"
 }
 
-// Here we have a recalibrated bam set, but we need to separate the bam files based on patient status.
+// Here we have a recalibrated bam set
 // The sample tsv config file which is formatted like: "idPatient status idSample bamFile baiFile"
+// Manta will be run in Germline mode, the Tumor mode is run in somaticVC.nf
+// HaplotypeCaller and Strelka will be run for Normal and Tumor samples
 
-// separate recalibrateBams by status which is it[1]
-bamsToKeep = Channel.create()
-bamsOthers = Channel.create()
-
-bamFiles
-  .choice(bamsOthers, bamsToKeep) {it[1] == 0 ? 1 : 0}
-
-// Keeping only Normal samples
-bamsOthers.close()
-
-// Removing status because not relevant anymore
-bamsToKeep = bamsToKeep.map { idPatient, status, idSample, bam, bai -> [idPatient, idSample, bam, bai] }
-
-// Germline Manta and Germline Strelka
-(bamsForGermlineManta, bamsForGermlineStrelka, bamsToKeep) = bamsToKeep.into(3)
+(bamsForGermlineManta, bamsForGermlineStrelka, bamFiles) = bamFiles.into(3)
 
 // To speed Variant Callers up we are chopping the reference into smaller pieces.
 // Do variant calling by this intervals, and re-merge the VCFs.
@@ -177,13 +165,13 @@ if (params.verbose) bedIntervals = bedIntervals.view {
   "  Interv: ${it.baseName}"
 }
 
-(bamsForHC, bamsToKeep, bedIntervals) = generateIntervalsForVC(bamsToKeep, bedIntervals)
+bamsForHC = bamFiles.combine(bedIntervals)
 
 process RunHaplotypecaller {
   tag {idSample + "-" + intervalBed.baseName}
 
   input:
-    set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamsForHC
+    set idPatient, status, idSample, file(bam), file(bai), file(intervalBed) from bamsForHC
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -193,7 +181,7 @@ process RunHaplotypecaller {
     ])
 
   output:
-    set val("HaplotypeCallerGVCF"), idPatient, idSample, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf") into hcGenomicVCF
+    set val("HaplotypeCallerGVCF"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf") into hcGenomicVCF
     set idPatient, idSample, file(intervalBed), file("${intervalBed.baseName}_${idSample}.g.vcf") into vcfsToGenotype
 
   when: 'haplotypecaller' in tools && !params.onlyQC
@@ -210,7 +198,7 @@ process RunHaplotypecaller {
     -ERC GVCF
   """
 }
-hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3])
+hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2])
 
 if (params.noGVCF) hcGenomicVCF.close()
 
@@ -218,7 +206,7 @@ process RunGenotypeGVCFs {
   tag {idSample + "-" + intervalBed.baseName}
 
   input:
-    set idPatient, idSample, file(intervalBed), file(gvcf) from vcfsToGenotype
+    set idPatient, status, idSample, file(intervalBed), file(gvcf) from vcfsToGenotype
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -228,7 +216,7 @@ process RunGenotypeGVCFs {
     ])
 
   output:
-    set val("HaplotypeCaller"), idPatient, idSample, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into hcGenotypedVCF
+    set val("HaplotypeCaller"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into hcGenotypedVCF
 
   when: 'haplotypecaller' in tools && !params.onlyQC
 
@@ -260,25 +248,24 @@ if (params.verbose) vcfsToMerge = vcfsToMerge.view {
 }
 
 process ConcatVCF {
-  tag {variantCaller + "-" + idSampleNormal}
+  tag {variantCaller + "-" + idSample}
 
   publishDir "${params.outDir}/VariantCalling/${idPatient}/${"$variantCaller"}", mode: params.publishDirMode
 
   input:
-    set variantCaller, idPatient, idSampleNormal, idSampleTumor, file(vcFiles) from vcfsToMerge
+    set variantCaller, idPatient, idSample, file(vcFiles) from vcfsToMerge
     file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
     file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
 
   output:
     // we have this funny *_* pattern to avoid copying the raw calls to publishdir
-    set variantCaller, idPatient, idSampleNormal, idSampleTumor, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into vcfConcatenated
+    set variantCaller, idPatient, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into vcfConcatenated
 
-  when: ( 'haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools ) && !params.onlyQC
+  when: 'haplotypecaller' in tools && !params.onlyQC
 
   script:
   if (variantCaller == 'HaplotypeCaller') outputFile = "${variantCaller}_${idSampleNormal}.vcf"
   else if (variantCaller == 'HaplotypeCallerGVCF') outputFile = "haplotypecaller_${idSampleNormal}.g.vcf"
-  else outputFile = "${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf"
   options = params.targetBED ? "-t ${targetBED}" : ""
   """
   concatenateVCFs.sh -i ${genomeIndex} -c ${task.cpus} -o ${outputFile} ${options}
@@ -298,7 +285,7 @@ process RunSingleStrelka {
   publishDir "${params.outDir}/VariantCalling/${idPatient}/Strelka", mode: params.publishDirMode
 
   input:
-    set idPatient, idSample, file(bam), file(bai) from bamsForGermlineStrelka
+    set idPatient, status, idSample, file(bam), file(bai) from bamsForGermlineStrelka
     file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
     set file(genomeFile), file(genomeIndex) from Channel.value([
       referenceMap.genomeFile,
@@ -306,7 +293,7 @@ process RunSingleStrelka {
     ])
 
   output:
-    set val("Strelka"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleStrelkaOutput
+    set val("Strelka"), idPatient, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleStrelkaOutput
 
   when: 'strelka' in tools && !params.onlyQC
 
@@ -342,7 +329,7 @@ process RunSingleManta {
   publishDir "${params.outDir}/VariantCalling/${idPatient}/Manta", mode: params.publishDirMode
 
   input:
-    set idPatient, idSample, file(bam), file(bai) from bamsForGermlineManta
+    set idPatient, status, idSample, file(bam), file(bai) from bamsForGermlineManta
     file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
     set file(genomeFile), file(genomeIndex) from Channel.value([
       referenceMap.genomeFile,
@@ -352,7 +339,7 @@ process RunSingleManta {
   output:
     set val("Manta"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleMantaOutput
 
-  when: 'manta' in tools && !params.onlyQC
+  when: 'manta' in tools  && status == 0 && !params.onlyQC
 
   script:
   beforeScript = params.targetBED ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
@@ -492,13 +479,6 @@ def defineToolList() {
     'mutect2',
     'strelka'
   ]
-}
-
-def generateIntervalsForVC(bams, intervals) {
-  def (bamsNew, bamsForVC) = bams.into(2)
-  def (intervalsNew, vcIntervals) = intervals.into(2)
-  def bamsForVCNew = bamsForVC.combine(vcIntervals)
-  return [bamsForVCNew, bamsNew, intervalsNew]
 }
 
 def grabRevision() {
