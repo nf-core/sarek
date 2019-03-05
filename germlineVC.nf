@@ -182,7 +182,7 @@ process RunHaplotypecaller {
 
   output:
     set val("HaplotypeCallerGVCF"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf") into hcGenomicVCF
-    set idPatient, idSample, file(intervalBed), file("${intervalBed.baseName}_${idSample}.g.vcf") into vcfsToGenotype
+    set idPatient, status, idSample, file(intervalBed), file("${intervalBed.baseName}_${idSample}.g.vcf") into vcfsToGenotype
 
   when: 'haplotypecaller' in tools && !params.onlyQC
 
