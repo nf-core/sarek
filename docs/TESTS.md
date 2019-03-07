@@ -15,8 +15,8 @@ git clone --recursive https://github.com/SciLifeLab/Sarek Sarek-test
 cd Sarek-test
 
 # Build the references for the test data
-nextflow run buildReferences.nf --outDir References/smallGRCh37 \
-  --refDir Sarek-data/reference --genome smallGRCh37 --tag latest \
+nextflow run build.nf --outDir References/smallGRCh37 \
+  --refDir Sarek-data/reference --tag latest \
   --verbose -profile singularity
 
 # Testing --sampleDir as input for Germline

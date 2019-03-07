@@ -4,10 +4,10 @@ Bootstrap:docker
 %labels
     MAINTAINER Maxime Garcia <maxime.garcia@scilifelab.se>
     DESCRIPTION Singularity image containing all requirements for the Sarek pipeline
-    VERSION 2.2.2
+    VERSION 2.3
 
 %environment
-    PATH=/opt/conda/envs/sarek-2.2.2/bin:$PATH
+    PATH=/opt/conda/envs/sarek-2.3/bin:$PATH
     export PATH
 
 %files

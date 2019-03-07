@@ -212,7 +212,7 @@ process RunMutect2 {
     ])
 
   output:
-    set val("mutect2"), idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2Output
+    set val("MuTect2"), idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2Output
 
   when: 'mutect2' in tools && !params.onlyQC
 
@@ -242,7 +242,7 @@ process RunFreeBayes {
     file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
 
   output:
-    set val("freebayes"), idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into freebayesOutput
+    set val("FreeBayes"), idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into freebayesOutput
 
   when: 'freebayes' in tools && !params.onlyQC
 
@@ -322,7 +322,7 @@ process RunStrelka {
     ])
 
   output:
-    set val("strelka"), idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into strelkaOutput
+    set val("Strelka"), idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into strelkaOutput
 
   when: 'strelka' in tools && !params.onlyQC
 
@@ -360,23 +360,28 @@ process RunManta {
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
+    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
     set file(genomeFile), file(genomeIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex
     ])
 
   output:
-    set val("manta"), idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into mantaOutput
+    set val("Manta"), idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into mantaOutput
     set idPatient, idSampleNormal, idSampleTumor, file("*.candidateSmallIndels.vcf.gz"), file("*.candidateSmallIndels.vcf.gz.tbi") into mantaToStrelka
 
   when: 'manta' in tools && !params.onlyQC
 
   script:
+  beforeScript = params.targetBED ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
+  options = params.targetBED ? "--exome --callRegions call_targets.bed.gz" : ""
   """
+  ${beforeScript}
   configManta.py \
   --normalBam ${bamNormal} \
   --tumorBam ${bamTumor} \
   --reference ${genomeFile} \
+  ${options} \
   --runDir Manta
 
   python Manta/runWorkflow.py -m local -j ${task.cpus}
@@ -414,21 +419,26 @@ process RunSingleManta {
 
   input:
     set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleManta
+    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
     set file(genomeFile), file(genomeIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex
     ])
 
   output:
-    set val("singlemanta"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleMantaOutput
+    set val("Manta"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleMantaOutput
 
   when: 'manta' in tools && status == 1 && !params.onlyQC
 
   script:
+  beforeScript = params.targetBED ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
+  options = params.targetBED ? "--exome --callRegions call_targets.bed.gz" : ""
   """
+  ${beforeScript}
   configManta.py \
   --tumorBam ${bam} \
   --reference ${genomeFile} \
+  ${options} \
   --runDir Manta
 
   python Manta/runWorkflow.py -m local -j ${task.cpus}
@@ -473,6 +483,7 @@ process RunStrelkaBP {
 
   input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(mantaCSI), file(mantaCSIi) from bamsForStrelkaBP
+    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
     set file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -480,17 +491,21 @@ process RunStrelkaBP {
     ])
 
   output:
-    set val("strelkaBP"), idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into strelkaBPOutput
+    set val("Strelka"), idPatient, idSampleNormal, idSampleTumor, file("*.vcf.gz"), file("*.vcf.gz.tbi") into strelkaBPOutput
 
   when: 'strelka' in tools && 'manta' in tools && params.strelkaBP && !params.onlyQC
 
   script:
+  beforeScript = params.targetBED ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
+  options = params.targetBED ? "--exome --callRegions call_targets.bed.gz" : ""
   """
+  ${beforeScript}
   configureStrelkaSomaticWorkflow.py \
   --tumor ${bamTumor} \
   --normal ${bamNormal} \
   --referenceFasta ${genomeFile} \
   --indelCandidates ${mantaCSI} \
+  ${options} \
   --runDir Strelka
 
   python Strelka/runWorkflow.py -m local -j ${task.cpus}
@@ -590,7 +605,7 @@ process RunAscat {
     file(acLociGC) from Channel.value([referenceMap.acLociGC])
 
   output:
-    set val("ascat"), idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.*.{png,txt}") into ascatOutput
+    set val("ASCAT"), idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.*.{png,txt}") into ascatOutput
 
   when: 'ascat' in tools && !params.onlyQC
 

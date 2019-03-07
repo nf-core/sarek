@@ -13,6 +13,7 @@ env:
   matrix:
     - TEST=SOMATIC
     - TEST=GERMLINE
+    - TEST=TARGETED
     - TEST=ANNOTATEVEP
     - TEST=ANNOTATESNPEFF
 

@@ -5,7 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.3.FIX1] - 2019-03-04
+
+### `Fixed`
+-   [#742](https://github.com/SciLifeLab/Sarek/pull/742) - Fix output dirs (HaplotypeCaller that was not recognized by annotate.nf introduced by [#728](https://github.com/SciLifeLab/Sarek/pull/728))
+
+## [2.3] - Äpar - 2019-02-27
 
 ### `Added`
 -   [#628](https://github.com/SciLifeLab/Sarek/pull/628), [#722](https://github.com/SciLifeLab/Sarek/pull/722) - `ASCAT` now use `.gc` file
@@ -16,39 +21,52 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - Possibility to use cache wen annotating with `snpEff` and `VEP`
 -   [#722](https://github.com/SciLifeLab/Sarek/pull/722) - Add path to ASCAT `.gc` file in `igenomes.config`
 -   [#728](https://github.com/SciLifeLab/Sarek/pull/728) - Update `Sarek-data` submodule with multiple patients TSV file
+-   [#732](https://github.com/SciLifeLab/Sarek/pull/732) - Add `cadd_WG_SNVs`, `cadd_WG_SNVs_tbi`, `cadd_InDels`, `cadd_InDels_tbi` and `cadd_cache` params
+-   [#732](https://github.com/SciLifeLab/Sarek/pull/732) - Add tabix indexed cache for VEP
+-   [#732](https://github.com/SciLifeLab/Sarek/pull/732) - New `DownloadCADD` process to download CADD files
+-   [#732](https://github.com/SciLifeLab/Sarek/pull/732) - Specify values for `cadd_WG_SNVs`, `cadd_WG_SNVs_tbi`, `cadd_InDels`, `cadd_InDels_tbi` and `cadd_cache` params in `munin.conf` file
+-   [#732](https://github.com/SciLifeLab/Sarek/pull/732) - Use `cadd_cache` param for optional use of CADD VEP plugin in `annotate.nf`
+-   [#732](https://github.com/SciLifeLab/Sarek/pull/732) - VEP cache has now fasta files for `--HGVS`
+-   [#735](https://github.com/SciLifeLab/Sarek/pull/735) - Added `--exome` for Manta, and for StrelkaBP
+-   [#735](https://github.com/SciLifeLab/Sarek/pull/735) - Added Travis CI test for targeted
 
 ### `Changed`
 
 -   [#710](https://github.com/SciLifeLab/Sarek/pull/710) - Improve release checklist and script
 -   [#711](https://github.com/SciLifeLab/Sarek/pull/711) - Improve configuration priorities
 -   [#716](https://github.com/SciLifeLab/Sarek/pull/716) - Update paths to containers and iGenomes
--   [#717](https://github.com/SciLifeLab/Sarek/pull/717) - `mapping` step can now map BAM files too
--   [#717](https://github.com/SciLifeLab/Sarek/pull/717) - `fastqFiles` renamed to `inputFiles`
--   [#717](https://github.com/SciLifeLab/Sarek/pull/717) - `MapReads` can now convert BAM to FASTQ and feed it to BWA on the fly
 -   [#717](https://github.com/SciLifeLab/Sarek/pull/717) - `checkFileExtension` has changed to `hasExtension`, and now only verify if file has extension
--   [#717](https://github.com/SciLifeLab/Sarek/pull/717) - Update documentation
+-   [#717](https://github.com/SciLifeLab/Sarek/pull/717) - `fastqFiles` renamed to `inputFiles`
+-   [#717](https://github.com/SciLifeLab/Sarek/pull/717) - `mapping` step can now map BAM files too
+-   [#717](https://github.com/SciLifeLab/Sarek/pull/717) - `MapReads` can now convert BAM to FASTQ and feed it to BWA on the fly
+-   [#717](https://github.com/SciLifeLab/Sarek/pull/717), [#732](https://github.com/SciLifeLab/Sarek/pull/732) - Update documentation
 -   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - `snpeff` and `vep` containers are now built with conda
 -   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - `vepCacheVersion` is now defined in `conf/genomes.config` or `conf/igenomes.config`
 -   [#722](https://github.com/SciLifeLab/Sarek/pull/722) - Add path to ASCAT `.gc` file in `igenomes.config`
 -   [#722](https://github.com/SciLifeLab/Sarek/pull/722) - Update `Sarek-data` submodule
 -   [#723](https://github.com/SciLifeLab/Sarek/pull/723), [#725](https://github.com/SciLifeLab/Sarek/pull/725) - Update docs
 -   [#724](https://github.com/SciLifeLab/Sarek/pull/724) - Improved AwsBatch configuration
--   [#728](https://github.com/SciLifeLab/Sarek/pull/728) - VCFs and Annotated VCFs are now ordered by Patient, then tools
--   [#728](https://github.com/SciLifeLab/Sarek/pull/728) - Strelka Best Practices output is now prefixed with `StrelkaBP_`
 -   [#728](https://github.com/SciLifeLab/Sarek/pull/728) - Improved usage of `targetBED` params
+-   [#728](https://github.com/SciLifeLab/Sarek/pull/728) - Strelka Best Practices output is now prefixed with `StrelkaBP_`
+-   [#728](https://github.com/SciLifeLab/Sarek/pull/728) - VCFs and Annotated VCFs are now ordered by Patient, then tools
+-   [#732](https://github.com/SciLifeLab/Sarek/pull/732) - Merge `buildContainers.nf` and `buildReferences.nf` in `build.nf`
+-   [#732](https://github.com/SciLifeLab/Sarek/pull/732) - Reduce number of CPUs for `RunVEP` to `4` cf: [VEP docs](https://www.ensembl.org/info/docs/tools/vep/script/vep_other.html)
+-   [#732](https://github.com/SciLifeLab/Sarek/pull/732) - Update VEP from `95.1` to `95.2`
 
 ### `Removed`
 -   [#715](https://github.com/SciLifeLab/Sarek/pull/715) - Remove `defReferencesFiles` function from `buildReferences.nf`
 -   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - `snpEff` base container is no longer used
 -   [#721](https://github.com/SciLifeLab/Sarek/pull/721) - Remove COSMIC docs
 -   [#728](https://github.com/SciLifeLab/Sarek/pull/728) - Remove `defineDirectoryMap()`
+-   [#732](https://github.com/SciLifeLab/Sarek/pull/732) - Removed `--database` option for VEP cf: [VEP docs](https://www.ensembl.org/info/docs/tools/vep/script/vep_other.html)
 
 ### `Fixed`
 -   [#720](https://github.com/SciLifeLab/Sarek/pull/720) - bamQC is now run on the recalibrated bams, and not after MarkDuplicates
 -   [#726](https://github.com/SciLifeLab/Sarek/pull/726) - Fix Ascat ref file input (one file can't be a set)
 -   [#727](https://github.com/SciLifeLab/Sarek/pull/727) - bamQC outputs are no longer overwritten (name of dir is now the file instead of sample)
--   [#728](https://github.com/SciLifeLab/Sarek/pull/728) - Fix multi sample TSV file [#691](https://github.com/SciLifeLab/Sarek/issues/691)
 -   [#728](https://github.com/SciLifeLab/Sarek/pull/728) - Fix issue with annotation that was consuming `cache` channels
+-   [#728](https://github.com/SciLifeLab/Sarek/pull/728) - Fix multi sample TSV file [#691](https://github.com/SciLifeLab/Sarek/issues/691)
+-   [#733](https://github.com/SciLifeLab/Sarek/pull/733) - Fix the possibility to specify reference files on the command line
 
 ## [2.2.2] - 2018-12-19
 
@@ -64,10 +82,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Changed`
 
--   [#678](https://github.com/SciLifeLab/Sarek/pull/678) - Changing VEP to v92 and adjusting CPUs for VEP
 -   [#663](https://github.com/SciLifeLab/Sarek/pull/663) - Update `do_release.sh` script
 -   [#671](https://github.com/SciLifeLab/Sarek/pull/671) - publishDir modes are now params
 -   [#677](https://github.com/SciLifeLab/Sarek/pull/677), [#698](https://github.com/SciLifeLab/Sarek/pull/698), [#703](https://github.com/SciLifeLab/Sarek/pull/703) - Update docs
+-   [#678](https://github.com/SciLifeLab/Sarek/pull/678) - Changing VEP to v92 and adjusting CPUs for VEP
 -   [#679](https://github.com/SciLifeLab/Sarek/pull/679) - Update old awsbatch configuration
 -   [#682](https://github.com/SciLifeLab/Sarek/pull/682) - Specifications for memory and cpus for awsbatch
 -   [#693](https://github.com/SciLifeLab/Sarek/pull/693) - Qualimap bamQC is now ran after mapping and after recalibration for better QC
@@ -108,15 +126,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Update documentation
 -   [#620](https://github.com/SciLifeLab/Sarek/pull/620) - Add `tmp/` to `.gitignore`
 -   [#625](https://github.com/SciLifeLab/Sarek/pull/625) - Add [`pathfindr`](https://github.com/NBISweden/pathfindr) as a submodule
--   [#639](https://github.com/SciLifeLab/Sarek/pull/639) - Add a complete example analysis to docs
 -   [#635](https://github.com/SciLifeLab/Sarek/pull/635) - To process targeted sequencing with a target BED
+-   [#639](https://github.com/SciLifeLab/Sarek/pull/639) - Add a complete example analysis to docs
 -   [#640](https://github.com/SciLifeLab/Sarek/pull/640), [#642](https://github.com/SciLifeLab/Sarek/pull/642) - Add helper script for changing version number
 
 ### `Changed`
 
 -   [#608](https://github.com/SciLifeLab/Sarek/pull/608) - Update Nextflow required version
--   [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Update CHANGELOG
 -   [#615](https://github.com/SciLifeLab/Sarek/pull/615) - Use `splitCsv` instead of `readlines`
+-   [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Update CHANGELOG
 -   [#621](https://github.com/SciLifeLab/Sarek/pull/621), [#638](https://github.com/SciLifeLab/Sarek/pull/638) - Improve install script
 -   [#621](https://github.com/SciLifeLab/Sarek/pull/621), [#638](https://github.com/SciLifeLab/Sarek/pull/638) - Simplify tests
 -   [#627](https://github.com/SciLifeLab/Sarek/pull/627), [#629](https://github.com/SciLifeLab/Sarek/pull/629), [#637](https://github.com/SciLifeLab/Sarek/pull/637) - Refactor docs
@@ -126,9 +144,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#638](https://github.com/SciLifeLab/Sarek/pull/638) - Use correct `.simg` extension for Singularity images
 -   [#639](https://github.com/SciLifeLab/Sarek/pull/639) - Smaller refactoring of the docs
 -   [#640](https://github.com/SciLifeLab/Sarek/pull/640) - Update RELEASE_CHECKLIST
--   [#642](https://github.com/SciLifeLab/Sarek/pull/642) - Update conda channel order priorities
 -   [#642](https://github.com/SciLifeLab/Sarek/pull/642) - MultiQC 1.5 -> 1.6
 -   [#642](https://github.com/SciLifeLab/Sarek/pull/642) - Qualimap 2.2.2a -> 2.2.2b
+-   [#642](https://github.com/SciLifeLab/Sarek/pull/642) - Update conda channel order priorities
 -   [#642](https://github.com/SciLifeLab/Sarek/pull/642) - VCFanno 0.2.8 -> 0.3.0
 -   [#642](https://github.com/SciLifeLab/Sarek/pull/642) - VCFtools 0.1.15 -> 0.1.16
 
@@ -173,14 +191,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#582](https://github.com/SciLifeLab/Sarek/pull/582), [#587](https://github.com/SciLifeLab/Sarek/pull/587) - Update figures
 -   [#595](https://github.com/SciLifeLab/Sarek/pull/595) - Function `defineDirectoryMap()` is now part of `SarekUtils`
 -   [#595](https://github.com/SciLifeLab/Sarek/pull/595) - Process `GenerateMultiQCconfig` replace by function `createMultiQCconfig()`
--   [#597](https://github.com/SciLifeLab/Sarek/pull/597) - Move `checkFileExtension()`, `checkParameterExistence()`, `checkParameterList()`, `checkReferenceMap()`, `checkRefExistence()`, `extractBams()`, `extractGenders()`, `returnFile()`, `returnStatus()` and `returnTSV()` functions to `SarekUtils`
 -   [#597](https://github.com/SciLifeLab/Sarek/pull/597) - `extractBams()` now takes an extra parameter.
--   [#597](https://github.com/SciLifeLab/Sarek/pull/597) - Replace depreciated operator `phase` by `join`.
+-   [#597](https://github.com/SciLifeLab/Sarek/pull/597) - Move `checkFileExtension()`, `checkParameterExistence()`, `checkParameterList()`, `checkReferenceMap()`, `checkRefExistence()`, `extractBams()`, `extractGenders()`, `returnFile()`, `returnStatus()` and `returnTSV()` functions to `SarekUtils`
 -   [#597](https://github.com/SciLifeLab/Sarek/pull/597) - Reduce data footprint for Process `CreateRecalibrationTable`
+-   [#597](https://github.com/SciLifeLab/Sarek/pull/597) - Replace depreciated operator `phase` by `join`.
 -   [#599](https://github.com/SciLifeLab/Sarek/pull/599) - Merge is tested with `ANNOTATEALL`
 -   [#604](https://github.com/SciLifeLab/Sarek/pull/604) - Synching `GRCh38` `wgs_calling_regions` bedfiles
--   [#607](https://github.com/SciLifeLab/Sarek/pull/607) - Update to GATK4
 -   [#607](https://github.com/SciLifeLab/Sarek/pull/607) - One container approach
+-   [#607](https://github.com/SciLifeLab/Sarek/pull/607) - Update to GATK4
 -   [#608](https://github.com/SciLifeLab/Sarek/pull/608) - Update Nextflow required version
 -   [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Update CHANGELOG
 -   [#617](https://github.com/SciLifeLab/Sarek/pull/617) - Replace depreciated $name syntax with withName
@@ -250,8 +268,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Fixed`
 
--   [#533](https://github.com/SciLifeLab/Sarek/issues/533) - Replace `VEP` `--pick` option by `--per_gene`
 -   [#530](https://github.com/SciLifeLab/Sarek/issues/530) - use `$PWD` for default `outDir`
+-   [#533](https://github.com/SciLifeLab/Sarek/issues/533) - Replace `VEP` `--pick` option by `--per_gene`
 
 ## [1.2.5] - 2018-01-18
 
@@ -295,9 +313,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Fixed`
 
--   [#475](https://github.com/SciLifeLab/Sarek/issues/475) - 16 cpus for local executor
 -   [#357](https://github.com/SciLifeLab/Sarek/issues/357) - `ASCAT` works for GRCh38
 -   [#471](https://github.com/SciLifeLab/Sarek/issues/471) - Running `Singularity` on `/scratch`
+-   [#475](https://github.com/SciLifeLab/Sarek/issues/475) - 16 cpus for local executor
 -   [#480](https://github.com/SciLifeLab/Sarek/issues/480) - No `tsv` file needed for step `annotate`
 
 ## [1.2.2] - 2017-10-06

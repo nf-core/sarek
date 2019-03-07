@@ -7,7 +7,7 @@ LABEL \
 
 COPY environment.yml /
 RUN conda env create -f /environment.yml && conda clean -a
-ENV PATH /opt/conda/envs/sarek-vep-2.2.2/bin:$PATH
+ENV PATH /opt/conda/envs/sarek-vep-2.3/bin:$PATH
 
 # Setup ENV variables
 ENV \
@@ -15,8 +15,12 @@ ENV \
   VEP_VERSION=95
 
 # Download Genome
-RUN mkdir -p .vep && cd .vep \
-  && wget --quiet -O homo_sapiens_vep_${VEP_VERSION}_${GENOME}.tar.gz \
-    ftp://ftp.ensembl.org/pub/release-${VEP_VERSION}/variation/VEP/homo_sapiens_vep_${VEP_VERSION}_${GENOME}.tar.gz \
-  && tar xzf homo_sapiens_vep_${VEP_VERSION}_${GENOME}.tar.gz \
-  && rm -rf homo_sapiens_vep_${VEP_VERSION}_${GENOME}.tar.gz
+RUN vep_install \
+  -a c \
+  -c .vep \
+  -s homo_sapiens \
+  -v ${VEP_VERSION} \
+  -y ${GENOME} \
+  --CACHE_VERSION ${VEP_VERSION} \
+  --CONVERT \
+  --NO_HTSLIB --NO_TEST --NO_BIOPERL --NO_UPDATE
