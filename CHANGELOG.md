@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Fixed`
 -   [#749](https://github.com/SciLifeLab/Sarek/pull/749) - Fix config problematic use of queue `core` for uppmax-slurm
+-   [#760](https://github.com/SciLifeLab/Sarek/pull/749) - Fix undefined `task.mem`
 
 ## [2.3.FIX1] - 2019-03-04
 
