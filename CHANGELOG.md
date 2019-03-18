@@ -7,13 +7,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### `Added`
+
+-   [#753](https://github.com/SciLifeLab/Sarek/pull/753) - Update `binac`, `cfc` configuration
+
 ### `Changed`
 
 -   [#741](https://github.com/SciLifeLab/Sarek/pull/741) - Use [dump](https://www.nextflow.io/docs/latest/operator.html#dump) operator
 
+### `Fixed`
+
+-   [#749](https://github.com/SciLifeLab/Sarek/pull/749) - Fix config problematic use of queue `core` for uppmax-slurm
+-   [#751](https://github.com/SciLifeLab/Sarek/pull/751), [#756](https://github.com/SciLifeLab/Sarek/pull/756) - Typos in `igenomes.config`
+-   [#757](https://github.com/SciLifeLab/Sarek/pull/757) - Typos in `binac`, `cfc` configuration
+
 ### `Removed`
 
 -   [#741](https://github.com/SciLifeLab/Sarek/pull/741) - Removed `verbose` params
+
 
 ## [2.3.FIX1] - 2019-03-04
 
