@@ -17,13 +17,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#744](https://github.com/SciLifeLab/Sarek/pull/744) - Refactor `germlineVC.nf`
 
 ### `Fixed`
+
 -   [#749](https://github.com/SciLifeLab/Sarek/pull/749) - Fix config problematic use of queue `core` for uppmax-slurm
 -   [#751](https://github.com/SciLifeLab/Sarek/pull/751), [#756](https://github.com/SciLifeLab/Sarek/pull/756) - Typos in `igenomes.config`
 -   [#757](https://github.com/SciLifeLab/Sarek/pull/757) - Typos in `binac`, `cfc` configuration
 
-### `Removed`
+### `Deprecated`
 
--   [#741](https://github.com/SciLifeLab/Sarek/pull/741) - Removed `verbose` params
+-   [#741](https://github.com/SciLifeLab/Sarek/pull/741) - Deprecated `verbose` params
 
 ## [2.3.FIX1] - 2019-03-04
 
@@ -218,14 +219,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#597](https://github.com/SciLifeLab/Sarek/pull/597) - `extractBams()` now takes an extra parameter.
 -   [#597](https://github.com/SciLifeLab/Sarek/pull/597) - Move `checkFileExtension()`, `checkParameterExistence()`, `checkParameterList()`, `checkReferenceMap()`, `checkRefExistence()`, `extractBams()`, `extractGenders()`, `returnFile()`, `returnStatus()` and `returnTSV()` functions to `SarekUtils`
 -   [#597](https://github.com/SciLifeLab/Sarek/pull/597) - Reduce data footprint for Process `CreateRecalibrationTable`
--   [#597](https://github.com/SciLifeLab/Sarek/pull/597) - Replace depreciated operator `phase` by `join`.
+-   [#597](https://github.com/SciLifeLab/Sarek/pull/597) - Replace deprecated operator `phase` by `join`.
 -   [#599](https://github.com/SciLifeLab/Sarek/pull/599) - Merge is tested with `ANNOTATEALL`
 -   [#604](https://github.com/SciLifeLab/Sarek/pull/604) - Synching `GRCh38` `wgs_calling_regions` bedfiles
 -   [#607](https://github.com/SciLifeLab/Sarek/pull/607) - One container approach
 -   [#607](https://github.com/SciLifeLab/Sarek/pull/607) - Update to GATK4
 -   [#608](https://github.com/SciLifeLab/Sarek/pull/608) - Update Nextflow required version
 -   [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Update CHANGELOG
--   [#617](https://github.com/SciLifeLab/Sarek/pull/617) - Replace depreciated $name syntax with withName
+-   [#617](https://github.com/SciLifeLab/Sarek/pull/617) - Replace deprecated $name syntax with withName
 
 ### `Fixed`
 
