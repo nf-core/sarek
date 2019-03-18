@@ -5,20 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [Unreleased]
+
+### `Changed`
+
+-   [#744](https://github.com/SciLifeLab/Sarek/pull/744) - Refactor `germlineVC.nf`
+
+### `Added`
+-   [#753](https://github.com/SciLifeLab/Sarek/pull/753) - Update `binac`, `cfc` configuration
 
 ### `Fixed`
 -   [#749](https://github.com/SciLifeLab/Sarek/pull/749) - Fix config problematic use of queue `core` for uppmax-slurm
 -   [#760](https://github.com/SciLifeLab/Sarek/pull/749) - Fix undefined `task.mem`
+-   [#751](https://github.com/SciLifeLab/Sarek/pull/751), [#756](https://github.com/SciLifeLab/Sarek/pull/756) - Typos in `igenomes.config`
+-   [#757](https://github.com/SciLifeLab/Sarek/pull/757) - Typos in `binac`, `cfc` configuration
 
 ## [2.3.FIX1] - 2019-03-04
 
 ### `Fixed`
+
 -   [#742](https://github.com/SciLifeLab/Sarek/pull/742) - Fix output dirs (HaplotypeCaller that was not recognized by annotate.nf introduced by [#728](https://github.com/SciLifeLab/Sarek/pull/728))
 
 ## [2.3] - Äpar - 2019-02-27
 
 ### `Added`
+
 -   [#628](https://github.com/SciLifeLab/Sarek/pull/628), [#722](https://github.com/SciLifeLab/Sarek/pull/722) - `ASCAT` now use `.gc` file
 -   [#712](https://github.com/SciLifeLab/Sarek/pull/712), [#718](https://github.com/SciLifeLab/Sarek/pull/718) - Added possibilities to run Sarek with `conda`
 -   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - Annotation documentation
@@ -60,6 +71,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#732](https://github.com/SciLifeLab/Sarek/pull/732) - Update VEP from `95.1` to `95.2`
 
 ### `Removed`
+
 -   [#715](https://github.com/SciLifeLab/Sarek/pull/715) - Remove `defReferencesFiles` function from `buildReferences.nf`
 -   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - `snpEff` base container is no longer used
 -   [#721](https://github.com/SciLifeLab/Sarek/pull/721) - Remove COSMIC docs
@@ -67,6 +79,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#732](https://github.com/SciLifeLab/Sarek/pull/732) - Removed `--database` option for VEP cf: [VEP docs](https://www.ensembl.org/info/docs/tools/vep/script/vep_other.html)
 
 ### `Fixed`
+
 -   [#720](https://github.com/SciLifeLab/Sarek/pull/720) - bamQC is now run on the recalibrated bams, and not after MarkDuplicates
 -   [#726](https://github.com/SciLifeLab/Sarek/pull/726) - Fix Ascat ref file input (one file can't be a set)
 -   [#727](https://github.com/SciLifeLab/Sarek/pull/727) - bamQC outputs are no longer overwritten (name of dir is now the file instead of sample)
