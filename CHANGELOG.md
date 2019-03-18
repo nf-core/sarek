@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 -   [#744](https://github.com/SciLifeLab/Sarek/pull/744) - Refactor `germlineVC.nf`
 
+### `Fixed`
+-   [#749](https://github.com/SciLifeLab/Sarek/pull/749) - Fix config problematic use of queue `core` for uppmax-slurm
+
 ## [2.3.FIX1] - 2019-03-04
 
 ### `Fixed`
