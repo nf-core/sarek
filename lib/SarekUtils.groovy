@@ -133,6 +133,7 @@ class SarekUtils {
       'vep_cache',
       'vep-cache-version',
       'vepCacheVersion',
+      'verbose',
       'version']
   }
 
@@ -230,6 +231,12 @@ class SarekUtils {
     println "|   | \\  `-|   \\___ \\/__ \\| ´__/ _\\| |/ /"
     println " \\ |   \\  /    ____) | __ | | |  __|   < "
     println "  `|____\\'    |_____/\\____|_|  \\__/|_|\\_\\"
+  }
+
+  // Deprecation message for verbose command
+  static def verbose() {
+    println "--verbose is deprecated"
+    println "please use -dump-channels instead"
   }
 
 }
