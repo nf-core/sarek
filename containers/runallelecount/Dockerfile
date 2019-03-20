@@ -20,6 +20,7 @@ RUN \
     liblzma-dev \
     libncurses5-dev \
     libncursesw5-dev \
+    procps \
     wget \
     zlib1g-dev \
   && rm -rf /var/lib/apt/lists/*
