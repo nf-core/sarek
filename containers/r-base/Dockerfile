@@ -6,5 +6,6 @@ LABEL \
   maintainer="maxime.garcia@scilifelab.se"
 
 # Install libraries
-RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; options(repos = r);" > ~/.Rprofile \
+RUN apt-get update && apt-get install -y procps \
+&& echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; options(repos = r);" > ~/.Rprofile \
 && Rscript -e "install.packages('RColorBrewer')"
