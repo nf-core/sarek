@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### `Added`
 
 -   [#753](https://github.com/SciLifeLab/Sarek/pull/753) - Update `binac`, `cfc` configuration
+-   [#766](https://github.com/SciLifeLab/Sarek/pull/766) - Added `ps` in `r-base` and `runallelecount` containers
 
 ### `Fixed`
 
