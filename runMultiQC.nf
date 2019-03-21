@@ -78,7 +78,7 @@ process GetVersionAll {
   qualimap --version &> v_qualimap.txt 2>&1 || true
   samtools --version &> v_samtools.txt 2>&1 || true
   vcftools --version &> v_vcftools.txt 2>&1 || true
-  vep --help > v_vep.txt
+  vep --help &> v_vep.txt 2>&1 || true
 
   scrape_tool_versions.py &> tool_versions_mqc.yaml
   """
