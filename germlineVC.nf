@@ -52,11 +52,11 @@ if (workflow.profile == 'awsbatch') {
 
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
 
-referenceMap = defineReferenceMap()
 toolList = defineToolList()
-
-if (!SarekUtils.checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
 if (!SarekUtils.checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
+
+referenceMap = defineReferenceMap(tools)
+if (!SarekUtils.checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
 
 if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
   referenceMap.intervals = file("$workflow.projectDir/repeats/tiny_${params.genome}.list")
@@ -421,20 +421,22 @@ def checkUppmaxProject() {
   return !(workflow.profile == 'slurm' && !params.project)
 }
 
-def defineReferenceMap() {
+def defineReferenceMap(tools) {
   if (!(params.genome in params.genomes)) exit 1, "Genome ${params.genome} not found in configuration"
-  return [
-    'dbsnp'            : checkParamReturnFile("dbsnp"),
-    'dbsnpIndex'       : checkParamReturnFile("dbsnpIndex"),
-    // genome reference dictionary
-    'genomeDict'       : checkParamReturnFile("genomeDict"),
-    // FASTA genome reference
+  def referenceMap =
+  [
     'genomeFile'       : checkParamReturnFile("genomeFile"),
-    // genome .fai file
     'genomeIndex'      : checkParamReturnFile("genomeIndex"),
-    // intervals file for spread-and-gather processes
     'intervals'        : checkParamReturnFile("intervals")
   ]
+  if ('haplotypecaller' in tools) {
+    referenceMap.putAll(
+      'dbsnp'            : checkParamReturnFile("dbsnp"),
+      'dbsnpIndex'       : checkParamReturnFile("dbsnpIndex"),
+      'genomeDict'       : checkParamReturnFile("genomeDict")
+    )
+  }
+  return referenceMap
 }
 
 def defineToolList() {
