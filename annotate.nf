@@ -75,7 +75,7 @@ if (annotateVCF == []) {
   Channel.empty().mix(
     Channel.fromPath("${params.outDir}/VariantCalling/*/HaplotypeCaller/*.vcf.gz")
       .flatten().map{vcf -> ['HaplotypeCaller', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
-    Channel.fromPath("${params.outDir}/VariantCalling/*/Manta/*SV.vcf.gz")
+    Channel.fromPath("${params.outDir}/VariantCalling/*/Manta/*[!candidate]SV.vcf.gz")
       .flatten().map{vcf -> ['Manta', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
     Channel.fromPath("${params.outDir}/VariantCalling/*/MuTect2/*.vcf.gz")
       .flatten().map{vcf -> ['MuTect2', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
@@ -161,7 +161,7 @@ process RunSnpeff {
     set file("${vcf.simpleName}_snpEff.genes.txt"), file("${vcf.simpleName}_snpEff.csv"), file("${vcf.simpleName}_snpEff.summary.html") into snpeffOutput
     set val("snpEff"), variantCaller, idPatient, file("${vcf.simpleName}_snpEff.ann.vcf") into snpeffVCF
 
-  when: variantCaller != "Manta" && ('snpeff' in tools || 'merge' in tools)
+  when: 'snpeff' in tools || 'merge' in tools
 
   script:
   cache = (params.snpEff_cache && params.annotation_cache) ? "-dataDir \${PWD}/${dataDir}" : ""
