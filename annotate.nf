@@ -74,13 +74,13 @@ if (annotateVCF == []) {
 // This field is used to output final annotated VCFs in the correct directory
   Channel.empty().mix(
     Channel.fromPath("${params.outDir}/VariantCalling/*/HaplotypeCaller/*.vcf.gz")
-      .flatten().map{vcf -> ['HaplotypeCaller', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
+      .flatten().map{vcf -> ['haplotypecaller', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
     Channel.fromPath("${params.outDir}/VariantCalling/*/Manta/*[!candidate]SV.vcf.gz")
-      .flatten().map{vcf -> ['Manta', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
+      .flatten().map{vcf -> ['manta', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
     Channel.fromPath("${params.outDir}/VariantCalling/*/MuTect2/*.vcf.gz")
-      .flatten().map{vcf -> ['MuTect2', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
+      .flatten().map{vcf -> ['mutect2', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
     Channel.fromPath("${params.outDir}/VariantCalling/*/Strelka/*{somatic,variant}*.vcf.gz")
-      .flatten().map{vcf -> ['Strelka', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
+      .flatten().map{vcf -> ['strelka', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
   ).choice(vcfToAnnotate, vcfNotToAnnotate) {
     annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1
   }
