@@ -15,7 +15,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 -   [#753](https://github.com/SciLifeLab/Sarek/pull/753) - Update `binac`, `cfc` configuration
 -   [#766](https://github.com/SciLifeLab/Sarek/pull/766) - Added `ps` in `r-base` and `runallelecount` containers
--   [#XXX](https://github.com/SciLifeLab/Sarek/pull/XXX) - Autogenerates memory requirements from MarkDuplicates when less that 8G is available. cf [nf-core/rnaseq#179](https://github.com/nf-core/rnaseq/pull/179)
+-   [#774](https://github.com/SciLifeLab/Sarek/pull/774) - Autogenerates memory requirements from MarkDuplicates when less that 8G is available. cf [nf-core/rnaseq#179](https://github.com/nf-core/rnaseq/pull/179)
+-   [#775](https://github.com/SciLifeLab/Sarek/pull/775) - Update paths for munin configuration
 
 ### `Fixed`
 
