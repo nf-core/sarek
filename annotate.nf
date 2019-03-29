@@ -75,7 +75,7 @@ if (annotateVCF == []) {
   Channel.empty().mix(
     Channel.fromPath("${params.outDir}/VariantCalling/*/HaplotypeCaller/*.vcf.gz")
       .flatten().map{vcf -> ['haplotypecaller', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
-    Channel.fromPath("${params.outDir}/VariantCalling/*/Manta/*SV.vcf.gz")
+    Channel.fromPath("${params.outDir}/VariantCalling/*/Manta/*[!candidate]SV.vcf.gz")
       .flatten().map{vcf -> ['manta', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
     Channel.fromPath("${params.outDir}/VariantCalling/*/MuTect2/*.vcf.gz")
       .flatten().map{vcf -> ['mutect2', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
