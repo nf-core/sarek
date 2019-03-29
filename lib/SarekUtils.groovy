@@ -62,6 +62,7 @@ class SarekUtils {
       'download',
       'explicit-bqsr-needed',
       'explicitBqsrNeeded',
+      'genesplicer',
       'genome_base',
       'genome-dict',
       'genome-file',
