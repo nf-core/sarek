@@ -103,7 +103,7 @@ vcfForVep = vcfForVep.map {
 }
 
 process RunBcftoolsStats {
-  tag {"${idPatient} - ${vcf}"}
+  tag {"${idPatient} - ${variantCaller} - ${vcf}"}
 
   publishDir "${params.outDir}/Reports/BCFToolsStats", mode: params.publishDirMode
 

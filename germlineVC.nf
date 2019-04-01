@@ -393,7 +393,7 @@ vcfForQC = Channel.empty().mix(
 (vcfForBCFtools, vcfForVCFtools) = vcfForQC.into(2)
 
 process RunBcftoolsStats {
-  tag {vcf}
+  tag {"${variantCaller} - ${vcf}"}
 
   publishDir "${params.outDir}/Reports/BCFToolsStats", mode: params.publishDirMode
 
@@ -416,7 +416,7 @@ if (params.verbose) bcfReport = bcfReport.view {
 bcfReport.close()
 
 process RunVcftools {
-  tag {vcf}
+  tag {"${variantCaller} - ${vcf}"}
 
   publishDir "${params.outDir}/Reports/VCFTools", mode: params.publishDirMode
 
@@ -424,12 +424,13 @@ process RunVcftools {
     set variantCaller, file(vcf) from vcfForVCFtools
 
   output:
-    reducedVCF = SarekUtils.reduceVCF(vcf)
     file ("${reducedVCF}.*") into vcfReport
 
   when: !params.noReports
 
-  script: QC.vcftools(vcf)
+  script:
+    reducedVCF = SarekUtils.reduceVCF(vcf)
+    QC.vcftools(vcf)
 }
 
 if (params.verbose) vcfReport = vcfReport.view {
