@@ -401,7 +401,7 @@ process RunBcftoolsStats {
     set variantCaller, file(vcf) from vcfForBCFtools
 
   output:
-    file ("${vcf.simpleName}.bcf.tools.stats.out") into bcfReport
+    file ("*.bcf.tools.stats.out") into bcfReport
 
   when: !params.noReports
 
@@ -424,7 +424,8 @@ process RunVcftools {
     set variantCaller, file(vcf) from vcfForVCFtools
 
   output:
-    file ("${vcf.simpleName}.*") into vcfReport
+    reducedVCF = SarekUtils.reduceVCF(vcf)
+    file ("${reducedVCF}.*") into vcfReport
 
   when: !params.noReports
 

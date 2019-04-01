@@ -115,8 +115,7 @@ process RunBcftoolsStats {
 
   when: !params.noReports
 
-  script:
-    QC.bcftools(vcf)
+  script: QC.bcftools(vcf)
 }
 
 if (params.verbose) bcfReport = bcfReport.view {
@@ -133,12 +132,12 @@ process RunVcftools {
     set variantCaller, idPatient, file(vcf) from vcfForVCFtools
 
   output:
-    file ("${reduced_vcf}.*") into vcfReport
+    file ("${reducedVCF}.*") into vcfReport
 
   when: !params.noReports
 
   script:
-    reduced_vcf = vcf.fileName.toString().minus(".ann").minus(".vcf").minus(".gz")
+    reducedVCF = SarekUtils.reduceVCF(vcf)
     QC.vcftools(vcf)
 }
 
@@ -151,7 +150,7 @@ process RunSnpeff {
   tag {"${idPatient} - ${variantCaller} - ${vcf}"}
 
   publishDir params.outDir, mode: params.publishDirMode, saveAs: {
-    if (it == "${reduced_vcf}_snpEff.ann.vcf") null
+    if (it == "${reducedVCF}_snpEff.ann.vcf") null
     else "Annotation/${idPatient}/snpEff/${it}"
   }
 
@@ -161,26 +160,26 @@ process RunSnpeff {
     val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
 
   output:
-    set file("${reduced_vcf}_snpEff.genes.txt"), file("${reduced_vcf}_snpEff.csv"), file("${reduced_vcf}_snpEff.summary.html") into snpeffOutput
-    set val("snpEff"), variantCaller, idPatient, file("${reduced_vcf}_snpEff.ann.vcf") into snpeffVCF
+    set file("${reducedVCF}_snpEff.genes.txt"), file("${reducedVCF}_snpEff.csv"), file("${reducedVCF}_snpEff.summary.html") into snpeffOutput
+    set val("snpEff"), variantCaller, idPatient, file("${reducedVCF}_snpEff.ann.vcf") into snpeffVCF
 
   when: 'snpeff' in tools || 'merge' in tools
 
   script:
-  reduced_vcf = vcf.fileName.toString().minus(".ann").minus(".vcf").minus(".gz")
+  reducedVCF = SarekUtils.reduceVCF(vcf)
   cache = (params.snpEff_cache && params.annotation_cache) ? "-dataDir \${PWD}/${dataDir}" : ""
   """
   snpEff -Xmx${task.memory.toGiga()}g \
   ${snpeffDb} \
-  -csvStats ${reduced_vcf}_snpEff.csv \
+  -csvStats ${reducedVCF}_snpEff.csv \
   -nodownload \
   ${cache} \
   -canon \
   -v \
   ${vcf} \
-  > ${reduced_vcf}_snpEff.ann.vcf
+  > ${reducedVCF}_snpEff.ann.vcf
 
-  mv snpEff_summary.html ${reduced_vcf}_snpEff.summary.html
+  mv snpEff_summary.html ${reducedVCF}_snpEff.summary.html
   """
 }
 
@@ -206,7 +205,7 @@ process RunVEP {
   tag {"${idPatient} - ${variantCaller} - ${vcf}"}
 
   publishDir params.outDir, mode: params.publishDirMode, saveAs: {
-    if (it == "${reduced_vcf}_VEP.summary.html") "Annotation/${idPatient}/VEP/${it}"
+    if (it == "${reducedVCF}_VEP.summary.html") "Annotation/${idPatient}/VEP/${it}"
     else null
   }
 
@@ -222,24 +221,24 @@ process RunVEP {
     ])
 
   output:
-    set finalAnnotator, variantCaller, idPatient, file("${reduced_vcf}_VEP.ann.vcf") into vepVCF
-    file("${reduced_vcf}_VEP.summary.html") into vepReport
+    set finalAnnotator, variantCaller, idPatient, file("${reducedVCF}_VEP.ann.vcf") into vepVCF
+    file("${reducedVCF}_VEP.summary.html") into vepReport
 
   when: 'vep' in tools || 'merge' in tools
 
   script:
-  reduced_vcf = vcf.fileName.toString().minus(".ann").minus(".vcf").minus(".gz")
+  reducedVCF = SarekUtils.reduceVCF(vcf)
   finalAnnotator = annotator == "snpEff" ? 'merge' : 'VEP'
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
   dir_cache = (params.vep_cache && params.annotation_cache) ? " \${PWD}/${dataDir}" : "/.vep"
   cadd = (params.cadd_cache && params.cadd_WG_SNVs && params.cadd_InDels) ? "--plugin CADD,whole_genome_SNVs.tsv.gz,InDels.tsv.gz" : ""
-  genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/sarek-2.3/bin/genesplicer,/opt/conda/envs/sarek-2.3/share/genesplicer-1.0-1/human,context=200,tmpdir=\$PWD/${reduced_vcf}" : "--offline"
+  genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/sarek-2.3/bin/genesplicer,/opt/conda/envs/sarek-2.3/share/genesplicer-1.0-1/human,context=200,tmpdir=\$PWD/${reducedVCF}" : "--offline"
   """
-  mkdir ${reduced_vcf}
+  mkdir ${reducedVCF}
 
   vep \
   -i ${vcf} \
-  -o ${reduced_vcf}_VEP.ann.vcf \
+  -o ${reducedVCF}_VEP.ann.vcf \
   --assembly ${genome} \
   ${cadd} \
   ${genesplicer} \
@@ -251,11 +250,11 @@ process RunVEP {
   --fork ${task.cpus} \
   --format vcf \
   --per_gene \
-  --stats_file ${reduced_vcf}_VEP.summary.html \
+  --stats_file ${reducedVCF}_VEP.summary.html \
   --total_length \
   --vcf
 
-  rm -rf ${reduced_vcf}
+  rm -rf ${reducedVCF}
   """
 }
 
@@ -278,7 +277,7 @@ process CompressVCF {
     set annotator, variantCaller, idPatient, file("*.vcf.gz"), file("*.vcf.gz.tbi") into (vcfCompressed, vcfCompressedoutput)
 
   script:
-  reduced_vcf = vcf.fileName.toString().minus(".ann").minus(".vcf").minus(".gz")
+  reducedVCF = SarekUtils.reduceVCF(vcf)
   finalAnnotator = annotator == "merge" ? "VEP" : annotator
   """
   bgzip < ${vcf} > ${vcf}.gz

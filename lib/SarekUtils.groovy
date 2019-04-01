@@ -211,6 +211,12 @@ class SarekUtils {
     return test
   }
 
+  // Remove .ann .gz and .vcf extension from a VCF file
+  static def reduceVCF(file) {
+    return file.fileName.toString().minus(".ann").minus(".vcf").minus(".gz")
+  }
+
+
   // Return file if it exists
   static def returnFile(it) {
     if (!file(it).exists()) exit 1, "Missing file in TSV file: ${it}, see --help for more information"
