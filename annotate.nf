@@ -138,7 +138,7 @@ process RunVcftools {
   when: !params.noReports
 
   script:
-    reduced_vcf = vcf.minus(".ann").minus(".vcf").minus(".gz")[0]
+    reduced_vcf = vcf.fileName.toString().minus(".ann").minus(".vcf").minus(".gz")
     QC.vcftools(vcf)
 }
 
@@ -167,7 +167,7 @@ process RunSnpeff {
   when: 'snpeff' in tools || 'merge' in tools
 
   script:
-  reduced_vcf = vcf.minus(".ann").minus(".vcf").minus(".gz")[0]
+  reduced_vcf = vcf.fileName.toString().minus(".ann").minus(".vcf").minus(".gz")
   cache = (params.snpEff_cache && params.annotation_cache) ? "-dataDir \${PWD}/${dataDir}" : ""
   """
   snpEff -Xmx${task.memory.toGiga()}g \
@@ -228,7 +228,7 @@ process RunVEP {
   when: 'vep' in tools || 'merge' in tools
 
   script:
-  reduced_vcf = vcf.minus(".ann").minus(".vcf").minus(".gz")[0]
+  reduced_vcf = vcf.fileName.toString().minus(".ann").minus(".vcf").minus(".gz")
   finalAnnotator = annotator == "snpEff" ? 'merge' : 'VEP'
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
   dir_cache = (params.vep_cache && params.annotation_cache) ? " \${PWD}/${dataDir}" : "/.vep"
@@ -274,7 +274,7 @@ process CompressVCF {
     set annotator, variantCaller, idPatient, file("*.vcf.gz"), file("*.vcf.gz.tbi") into (vcfCompressed, vcfCompressedoutput)
 
   script:
-  reduced_vcf = vcf.minus(".ann").minus(".vcf").minus(".gz")[0]
+  reduced_vcf = vcf.fileName.toString().minus(".ann").minus(".vcf").minus(".gz")
   finalAnnotator = annotator == "merge" ? "VEP" : annotator
   """
   bgzip < ${vcf} > ${vcf}.gz
