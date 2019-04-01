@@ -677,20 +677,22 @@ if (params.verbose) bcfReport = bcfReport.view {
 
 bcfReport.close()
 
-process RunBcftoolsStats {
+process RunVcftools {
   tag {"${variantCaller} - ${vcf}"}
 
-  publishDir "${params.outDir}/Reports/BCFToolsStats", mode: params.publishDirMode
+  publishDir "${params.outDir}/Reports/VCFTools", mode: params.publishDirMode
 
   input:
-    set variantCaller, file(vcf) from vcfForBCFtools
+    set variantCaller, file(vcf) from vcfForVCFtools
 
   output:
-    file ("*.bcf.tools.stats.out") into bcfReport
+    file ("${reducedVCF}.*") into vcfReport
 
   when: !params.noReports
 
-  script: QC.bcftools(vcf)
+  script:
+    reducedVCF = SarekUtils.reduceVCF(vcf)
+    QC.vcftools(vcf)
 }
 
 if (params.verbose) vcfReport = vcfReport.view {
