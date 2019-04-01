@@ -8,3 +8,4 @@ channels:
 
 dependencies:
   - ensembl-vep=95.2
+  - genesplicer=1.0

@@ -16,9 +16,15 @@ This workflow itself needs little installation.
 
 Nextflow will automatically fetch Sarek from GitHub when launched if `SciLifeLab/Sarek` is specified as the workflow name.
 
+You can also specify Nextflow to pull Sarek using:
+```bash
+nextflow pull SciLifeLab/Sarek
+```
+
 Sarek use Singularity containers to package all the different tools.
 
-If you plan to use the automatic pull of Singularity images, you can use the [`singularity.config`](https://github.com/SciLifeLab/Sarek/blob/master/conf/singularity.config) configuration file. You can also set up the Nextflow environnement variable `NXF_SINGULARITY_CACHEDIR` to choose where to store them.
+If you plan to use the automatic pull of Singularity images, you can use the [`singularity.config`](https://github.com/SciLifeLab/Sarek/blob/master/conf/singularity.config) configuration file.
+You can also set up the Nextflow environnement variable `NXF_SINGULARITY_CACHEDIR` to choose where to store them.
 
 For example
 ```bash

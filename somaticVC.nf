@@ -627,7 +627,7 @@ process RunBcftoolsStats {
     set variantCaller, file(vcf) from vcfForBCFtools
 
   output:
-    file ("${vcf.simpleName}.bcf.tools.stats.out") into bcfReport
+    file ("*.bcf.tools.stats.out") into bcfReport
 
   when: !params.noReports
 
@@ -637,7 +637,7 @@ process RunBcftoolsStats {
 bcfReport.dump(tag:'BCFTools')
 
 process RunVcftools {
-  tag {vcf}
+  tag {"${variantCaller} - ${vcf}"}
 
   publishDir "${params.outDir}/Reports/VCFTools", mode: params.publishDirMode
 
@@ -645,11 +645,13 @@ process RunVcftools {
     set variantCaller, file(vcf) from vcfForVCFtools
 
   output:
-    file ("${vcf.simpleName}.*") into vcfReport
+    file ("${reducedVCF}.*") into vcfReport
 
   when: !params.noReports
 
-  script: QC.vcftools(vcf)
+  script:
+    reducedVCF = SarekUtils.reduceVCF(vcf)
+    QC.vcftools(vcf)
 }
 
 vcfReport.dump(tag:'VCFTools')
