@@ -116,7 +116,6 @@ process RunBcftoolsStats {
   when: !params.noReports
 
   script:
-    reduced_vcf = vcf.minus(".vcf").minus(".gz")[0]
     QC.bcftools(vcf)
 }
 
@@ -139,7 +138,7 @@ process RunVcftools {
   when: !params.noReports
 
   script:
-    reduced_vcf = vcf.minus(".vcf").minus(".gz")[0]
+    reduced_vcf = vcf.minus(".ann").minus(".vcf").minus(".gz")[0]
     QC.vcftools(vcf)
 }
 
@@ -168,7 +167,7 @@ process RunSnpeff {
   when: 'snpeff' in tools || 'merge' in tools
 
   script:
-  reduced_vcf = vcf.minus(".vcf").minus(".gz")[0]
+  reduced_vcf = vcf.minus(".ann").minus(".vcf").minus(".gz")[0]
   cache = (params.snpEff_cache && params.annotation_cache) ? "-dataDir \${PWD}/${dataDir}" : ""
   """
   snpEff -Xmx${task.memory.toGiga()}g \
@@ -229,12 +228,12 @@ process RunVEP {
   when: 'vep' in tools || 'merge' in tools
 
   script:
-  reduced_vcf = vcf.minus(".vcf").minus(".gz")[0]
+  reduced_vcf = vcf.minus(".ann").minus(".vcf").minus(".gz")[0]
   finalAnnotator = annotator == "snpEff" ? 'merge' : 'VEP'
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
   dir_cache = (params.vep_cache && params.annotation_cache) ? " \${PWD}/${dataDir}" : "/.vep"
   cadd = (params.cadd_cache && params.cadd_WG_SNVs && params.cadd_InDels) ? "--plugin CADD,whole_genome_SNVs.tsv.gz,InDels.tsv.gz" : ""
-  genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/sarek-2.3/bin/genesplicer,/opt/conda/envs/sarek-2.3/share/genesplicer-1.0-1/human,context=200,tmpdir=/mytmp/${reduced_vcf}" : ""
+  genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/sarek-2.3/bin/genesplicer,/opt/conda/envs/sarek-2.3/share/genesplicer-1.0-1/human,context=200,tmpdir=/mytmp/${reduced_vcf}" : "--offline"
   """
   vep \
   -i ${vcf} \
@@ -249,7 +248,6 @@ process RunVEP {
   --filter_common \
   --fork ${task.cpus} \
   --format vcf \
-  --offline \
   --per_gene \
   --stats_file ${reduced_vcf}_VEP.summary.html \
   --total_length \
@@ -276,7 +274,7 @@ process CompressVCF {
     set annotator, variantCaller, idPatient, file("*.vcf.gz"), file("*.vcf.gz.tbi") into (vcfCompressed, vcfCompressedoutput)
 
   script:
-  reduced_vcf = vcf.minus(".vcf").minus(".gz")[0]
+  reduced_vcf = vcf.minus(".ann").minus(".vcf").minus(".gz")[0]
   finalAnnotator = annotator == "merge" ? "VEP" : annotator
   """
   bgzip < ${vcf} > ${vcf}.gz
