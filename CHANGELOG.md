@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#775](https://github.com/SciLifeLab/Sarek/pull/775) - Update paths for munin configuration
 -   [#777](https://github.com/SciLifeLab/Sarek/pull/777) - Add GeneSplicer `1.0` to container
 -   [#777](https://github.com/SciLifeLab/Sarek/pull/777) - Add possibility to use VEP GeneSplicer plugin
--   [#777](https://github.com/SciLifeLab/Sarek/pull/777) - Add `removeVCF` to remove `.ann`, `.gz` and `.vcf` from a VCF filename
+-   [#777](https://github.com/SciLifeLab/Sarek/pull/777) - Add `removeVCF()` function to remove `.ann`, `.gz` and `.vcf` from a VCF filename
 
 ### `Fixed`
 
