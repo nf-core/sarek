@@ -233,8 +233,10 @@ process RunVEP {
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
   dir_cache = (params.vep_cache && params.annotation_cache) ? " \${PWD}/${dataDir}" : "/.vep"
   cadd = (params.cadd_cache && params.cadd_WG_SNVs && params.cadd_InDels) ? "--plugin CADD,whole_genome_SNVs.tsv.gz,InDels.tsv.gz" : ""
-  genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/sarek-2.3/bin/genesplicer,/opt/conda/envs/sarek-2.3/share/genesplicer-1.0-1/human,context=200,tmpdir=/mytmp/${reduced_vcf}" : "--offline"
+  genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/sarek-2.3/bin/genesplicer,/opt/conda/envs/sarek-2.3/share/genesplicer-1.0-1/human,context=200,tmpdir=\$PWD/${reduced_vcf}" : "--offline"
   """
+  mkdir ${reduced_vcf}
+
   vep \
   -i ${vcf} \
   -o ${reduced_vcf}_VEP.ann.vcf \
@@ -252,6 +254,8 @@ process RunVEP {
   --stats_file ${reduced_vcf}_VEP.summary.html \
   --total_length \
   --vcf
+
+  rm -rf ${reduced_vcf}
   """
 }
 
