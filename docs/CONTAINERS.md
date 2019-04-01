@@ -35,6 +35,7 @@ Additional containers need to be downloaded for somatic variant calling with ASC
 - Contain **[FastQC][fastqc-link]** 0.11.8
 - Contain **[FreeBayes][freebayes-link]** 1.2.0
 - Contain **[GATK4][gatk4-link]** 4.0.9.0
+- Contain **[GeneSplicer][genesplicer-link]** 1.0
 - Contain **[HTSlib][htslib-link]** 1.9
 - Contain **[IGVtools][igvtools-link]** 2.3.93
 - Contain **[Manta][manta-link]** 1.4.0
@@ -62,12 +63,14 @@ Additional containers need to be downloaded for somatic variant calling with ASC
 ### vepgrch37 [![vepgrch37-docker status][vepgrch37-docker-badge]][vepgrch37-docker-link]
 
 - Based on `nfcore/base:latest`
+- Contain **[GeneSplicer][genesplicer-link]** 1.0
 - Contain **[VEP][vep-link]** 95.1
 - Contain cache for GRCh37 version 95
 
 ### vepgrch38 [![vepgrch38-docker status][vepgrch38-docker-badge]][vepgrch38-docker-link]
 
 - Based on `nfcore/base:latest`
+- Contain **[GeneSplicer][genesplicer-link]** 1.0
 - Contain **[VEP][vep-link]** 95.1
 - Contain cache for GRCh38 version 95
 
@@ -131,6 +134,7 @@ You'll just need to specify the correct repository either in command line or in 
 [fastqc-link]: http://www.bioinformatics.babraham.ac.uk/projects/fastqc/
 [freebayes-link]: https://github.com/ekg/freebayes
 [gatk4-link]: https://github.com/broadinstitute/gatk
+[genesplicer-link]: https://ccb.jhu.edu/software/genesplicer/
 [htslib-link]: https://github.com/samtools/htslib
 [igvtools-link]: http://software.broadinstitute.org/software/igv/
 [manta-link]: https://github.com/Illumina/manta

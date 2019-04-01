@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#766](https://github.com/SciLifeLab/Sarek/pull/766) - Added `ps` in `r-base` and `runallelecount` containers
 -   [#774](https://github.com/SciLifeLab/Sarek/pull/774) - Autogenerates memory requirements from MarkDuplicates when less that 8G is available. cf [nf-core/rnaseq#179](https://github.com/nf-core/rnaseq/pull/179)
 -   [#775](https://github.com/SciLifeLab/Sarek/pull/775) - Update paths for munin configuration
+-   [#777](https://github.com/SciLifeLab/Sarek/pull/777) - Add GeneSplicer `1.0` to container
+-   [#777](https://github.com/SciLifeLab/Sarek/pull/777) - Add possibility to use VEP GeneSplicer plugin
+-   [#777](https://github.com/SciLifeLab/Sarek/pull/777) - Add `removeVCF()` function to remove `.ann`, `.gz` and `.vcf` from a VCF filename
 
 ### `Fixed`
 
@@ -28,6 +31,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#757](https://github.com/SciLifeLab/Sarek/pull/757) - Typos in `binac`, `cfc` configuration
 -   [#758](https://github.com/SciLifeLab/Sarek/pull/758) - Typos in `ASCAT` documentation
 -   [#765](https://github.com/SciLifeLab/Sarek/pull/765) - Check only for references that are needed to fix [#754](https://github.com/SciLifeLab/Sarek/issues/754)
+-   [#777](https://github.com/SciLifeLab/Sarek/pull/777) - Fix name collision in `annotate.nf`
 
 ## [2.3.FIX1] - 2019-03-04
 

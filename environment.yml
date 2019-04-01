@@ -15,6 +15,7 @@ dependencies:
   - fontconfig=2.12.6 #for FastQC
   - freebayes=1.2.0
   - gatk4=4.0.9.0
+  - genesplicer=1.0
   - htslib=1.9
   - igvtools=2.3.93
   - manta=1.4.0

@@ -62,6 +62,7 @@ class SarekUtils {
       'download',
       'explicit-bqsr-needed',
       'explicitBqsrNeeded',
+      'genesplicer',
       'genome_base',
       'genome-dict',
       'genome-file',
@@ -209,6 +210,12 @@ class SarekUtils {
     }
     return test
   }
+
+  // Remove .ann .gz and .vcf extension from a VCF file
+  static def reduceVCF(file) {
+    return file.fileName.toString().minus(".ann").minus(".vcf").minus(".gz")
+  }
+
 
   // Return file if it exists
   static def returnFile(it) {
