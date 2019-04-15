@@ -33,6 +33,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#758](https://github.com/SciLifeLab/Sarek/pull/758) - Typos in `ASCAT` documentation
 -   [#765](https://github.com/SciLifeLab/Sarek/pull/765) - Check only for references that are needed to fix [#754](https://github.com/SciLifeLab/Sarek/issues/754)
 -   [#777](https://github.com/SciLifeLab/Sarek/pull/777) - Fix name collision in `annotate.nf`
+-   [#788](https://github.com/SciLifeLab/Sarek/pull/788) - Fix `genome_base` path in `munin.config`
+-   [#788](https://github.com/SciLifeLab/Sarek/pull/788) - Fix `markdup_java_options` definition
+-   [#788](https://github.com/SciLifeLab/Sarek/pull/788) - Include `conf/resources.config` in `btb` profile
 
 ## [2.3.FIX1] - 2019-03-04
 
