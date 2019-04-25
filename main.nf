@@ -215,7 +215,7 @@ process RunBamQCmapped {
   when: !params.noReports && !params.noBAMQC
 
   script:
-  use_bed = params.targetBED ?: "-gff ${targetBED}" : ''
+  use_bed = params.targetBED ? "-gff ${targetBED}" : ''
   """
   qualimap --java-mem-size=${task.memory.toGiga()}G \
   bamqc \
