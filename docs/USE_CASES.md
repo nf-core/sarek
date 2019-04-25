@@ -170,8 +170,8 @@ In this case, you need to start with `--step=recalibrate` (see previous section)
 
 ## Processing targeted (whole exome or panel) sequencing data
 
-The recommended flow for thrgeted sequencing data is to use the whole genome workflow as it is, but also provide a BED file containing targets for variant calling.
-The Strelka part of the workflow will pick up these intervals, and activate the `--exome` flag to process deeper coverage. It is adviced to pad the variant calling
+The recommended flow for targeted sequencing data is to use the whole genome workflow as it is, but also provide a BED file containing targets for all steps using the `--targetBED` option. 
+The workflow will pick up these intervals, and activate the `--exome` flag to process deeper coverage. It is adviced to pad the variant calling
 regions (exons or the target) to some extent before submitting to the workflow. To add the target BED file configure the flow like:
 
 ```bash
