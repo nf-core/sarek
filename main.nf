@@ -207,6 +207,7 @@ process RunBamQCmapped {
 
   input:
     set idPatient, status, idSample, idRun, file(bam) from mappedBamForQC
+    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
 
   output:
     file("${bam.baseName}") into bamQCmappedReport
@@ -214,12 +215,14 @@ process RunBamQCmapped {
   when: !params.noReports && !params.noBAMQC
 
   script:
+  use_bed = params.targetBED ? "-gff ${targetBED}" : ''
   """
   qualimap --java-mem-size=${task.memory.toGiga()}G \
   bamqc \
   -bam ${bam} \
   --paint-chromosome-limits \
   --genome-gc-distr HUMAN \
+  $use_bed \
   -nt ${task.cpus} \
   -skip-duplicated \
   --skip-dup-mode 0 \

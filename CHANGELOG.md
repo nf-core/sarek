@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#788](https://github.com/SciLifeLab/Sarek/pull/788) - Fix `genome_base` path in `munin.config`
 -   [#788](https://github.com/SciLifeLab/Sarek/pull/788) - Fix `markdup_java_options` definition
 -   [#788](https://github.com/SciLifeLab/Sarek/pull/788) - Include `conf/resources.config` in `btb` profile
+-   [#795](https://github.com/SciLifeLab/Sarek/pull/795) - Use BED file for [QualiMap coverage calculation](https://github.com/SciLifeLab/Sarek/issues/794) on Targeted Data
 
 ## [2.3.FIX1] - 2019-03-04
 
