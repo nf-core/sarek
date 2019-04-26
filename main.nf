@@ -139,7 +139,7 @@ process RunFastQC {
   when: step == 'mapping' && !params.noReports
 
   script:
-  inputFiles = SarekUtils.hasExtension(inputFile1,"fastq.gz") ? "${inputFile1} ${inputFile2}" : "${inputFile1}"
+  inputFiles = (SarekUtils.hasExtension(inputFile1,"fastq.gz") || SarekUtils.hasExtension(inputFile1,"fq.gz")) ? "${inputFile1} ${inputFile2}" : "${inputFile1}"
   """
   fastqc -t 2 -q ${inputFiles}
   """
@@ -167,7 +167,7 @@ process MapReads {
   readGroup = "@RG\\tID:${idRun}\\t${CN}PU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
   // adjust mismatch penalty for tumor samples
   extra = status == 1 ? "-B 3" : ""
-  if (SarekUtils.hasExtension(inputFile1,"fastq.gz"))
+  if (SarekUtils.hasExtension(inputFile1,"fastq.gz") || SarekUtils.hasExtension(inputFile1,"fq.gz"))
     """
     bwa mem -R \"${readGroup}\" ${extra} -t ${task.cpus} -M \
     ${genomeFile} ${inputFile1} ${inputFile2} | \
@@ -566,15 +566,12 @@ def extractSample(tsvFile) {
     def idRun      = row[4]
     def file1      = SarekUtils.returnFile(row[5])
     def file2      = file("null")
-    if (file1.toString().toLowerCase().endsWith(".fastq.gz")) {
+    if (SarekUtils.hasExtension(file1,"fastq.gz") || SarekUtils.hasExtension(file1,"fq.gz")) {
       SarekUtils.checkNumberOfItem(row, 7)
       file2 = SarekUtils.returnFile(row[6])
-      if (!SarekUtils.hasExtension(file2,"fastq.gz")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
+      if (!SarekUtils.hasExtension(file2,"fastq.gz") && !SarekUtils.hasExtension(file2,"fq.gz")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
     }
-    else if (file1.toString().toLowerCase().endsWith(".bam")) {
-      SarekUtils.checkNumberOfItem(row, 6)
-      if (!SarekUtils.hasExtension(file1,"bam")) exit 1, "File: ${file1} has the wrong extension. See --help for more information"
-    }
+    else if (SarekUtils.hasExtension(file1,"bam")) SarekUtils.checkNumberOfItem(row, 6)
     else "No recognisable extention for input file: ${file1}"
 
     [idPatient, gender, status, idSample, idRun, file1, file2]
