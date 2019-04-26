@@ -174,8 +174,8 @@ class SarekUtils {
         def bamFile   = SarekUtils.returnFile(row[4])
         def baiFile   = SarekUtils.returnFile(row[5])
 
-        if (!SarekUtils.hasExtension(bamFile,".bam")) exit 1, "File: ${bamFile} has the wrong extension. See --help for more information"
-        if (!SarekUtils.hasExtension(baiFile,".bai")) exit 1, "File: ${baiFile} has the wrong extension. See --help for more information"
+        if (!SarekUtils.hasExtension(bamFile,"bam")) exit 1, "File: ${bamFile} has the wrong extension. See --help for more information"
+        if (!SarekUtils.hasExtension(baiFile,"bai")) exit 1, "File: ${baiFile} has the wrong extension. See --help for more information"
 
         if (mode == "germline") return [ idPatient, status, idSample, bamFile, baiFile ]
         else return [ idPatient, gender, status, idSample, bamFile, baiFile ]
