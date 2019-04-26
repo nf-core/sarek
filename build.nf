@@ -45,6 +45,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
 if (params.help) exit 0, helpMessage()
 if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
+if (params.verbose) SarekUtils.verbose()
 
 // Check for awsbatch profile configuration
 // make sure queue is defined
@@ -56,15 +57,11 @@ if (workflow.profile == 'awsbatch') {
 containersList = defineContainersList()
 if (params.containers) {
   containers = params.containers.split(',').collect {it.trim()}
-  containers = containers == ['all'] ? containersList : containers
-} else containers = []
-
-// push only to DockerHub, so only when using Docker
-push = params.docker && params.push ? true : false
+  if (params.containers != ['all'] && !checkContainers(containers,containersList)) exit 1, 'Unknown container(s), see --help for more information'
+  containers = containers == ['all'] ? Channel.from(containersList) : Channel.from(containers)
+} else containers = Channel.empty()
 
 if (params.containers && !params.docker && !params.singularity) exit 1, 'No container technology choosed, specify --docker or --singularity, see --help for more information'
-
-if (params.containers && !checkContainers(containers,containersList)) exit 1, 'Unknown container(s), see --help for more information'
 
 ch_referencesFiles = Channel.fromPath("${params.refDir}/*")
 
@@ -82,8 +79,7 @@ startMessage()
 ================================================================================
 */
 
-dockerContainers = containers
-singularityContainers = containers
+(dockerContainers, singularityContainers) = containers.into(2)
 
 process BuildWithDocker {
   tag {"${params.repository}/${container}:${params.tag}"}
@@ -103,9 +99,7 @@ process BuildWithDocker {
   """
 }
 
-if (params.verbose) containersBuilt = containersBuilt.view {
-  "Docker container: ${params.repository}/${it}:${params.tag} built."
-}
+containersBuilt = containersBuilt.dump(tag:'Built')
 
 process PullToSingularity {
   tag {"${params.repository}/${container}:${params.tag}"}
@@ -126,9 +120,7 @@ process PullToSingularity {
   """
 }
 
-if (params.verbose) imagePulled = imagePulled.view {
-  "Singularity image: ${it.fileName} pulled."
-}
+imagePulled.dump(tag:'Pulled')
 
 process PushToDocker {
   tag {params.repository + "/" + container + ":" + params.tag}
@@ -139,7 +131,7 @@ process PushToDocker {
   output:
     val container into containersPushed
 
-  when: params.docker && push
+  when: params.push
 
   script:
   """
@@ -147,9 +139,7 @@ process PushToDocker {
   """
 }
 
-if (params.verbose) containersPushed = containersPushed.view {
-  "Docker container: ${params.repository}/${it}:${params.tag} pushed."
-}
+containersPushed.dump(tag:'Pushed')
 
 /*
 ================================================================================
@@ -184,9 +174,7 @@ process DecompressFile {
     """
 }
 
-if (params.verbose) ch_decompressedFiles = ch_decompressedFiles.view {
-  "Files decomprecessed: ${it.fileName}"
-}
+ch_decompressedFiles = ch_decompressedFiles.dump(tag:'DecompressedFile')
 
 ch_fastaFile = Channel.create()
 ch_fastaForBWA = Channel.create()
@@ -224,9 +212,7 @@ process BuildBWAindexes {
   """
 }
 
-if (params.verbose) bwaIndexes.flatten().view {
-  "BWA index           : ${it.fileName}"
-}
+bwaIndexes.dump(tag:'bwaIndexes')
 
 process BuildReferenceIndex {
   tag {f_reference}
@@ -248,9 +234,7 @@ process BuildReferenceIndex {
   """
 }
 
-if (params.verbose) ch_referenceIndex.view {
-  "Reference index     : ${it.fileName}"
-}
+ch_referenceIndex.dump(tag:'dict')
 
 process BuildSAMToolsIndex {
   tag {f_reference}
@@ -269,9 +253,7 @@ process BuildSAMToolsIndex {
   """
 }
 
-if (params.verbose) ch_samtoolsIndex.view {
-  "SAMTools index      : ${it.fileName}"
-}
+ch_samtoolsIndex.dump(tag:'fai')
 
 process BuildVCFIndex {
   tag {f_reference}
@@ -290,9 +272,7 @@ process BuildVCFIndex {
   """
 }
 
-if (params.verbose) ch_vcfIndex.view {
-  "VCF index           : ${it.fileName}"
-}
+ch_vcfIndex.dump(tag:'idx')
 
 /*
 ================================================================================

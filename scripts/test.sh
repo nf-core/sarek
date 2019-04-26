@@ -63,7 +63,7 @@ do
 done
 
 function run_wrapper() {
-  ./scripts/wrapper.sh $@ --profile $PROFILE --genome $GENOME --genomeBase $PWD/References/$GENOME --verbose --cpus ${CPUS}
+  ./scripts/wrapper.sh $@ --profile $PROFILE --genome $GENOME --genomeBase $PWD/References/$GENOME -dump-channels --cpus ${CPUS}
 }
 
 function clean_repo() {
@@ -85,7 +85,7 @@ then
   if [[ ! -d References ]]
   then
     echo "$(tput setaf 1)Building references$(tput sgr0)"
-    nextflow run build.nf --refDir Sarek-data/reference --outDir References/$GENOME -profile $PROFILE --genome $GENOME --verbose
+    nextflow run build.nf --refDir Sarek-data/reference --outDir References/$GENOME -profile $PROFILE --genome $GENOME -dump-channels
   fi
 fi
 

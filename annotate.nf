@@ -39,6 +39,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
 if (params.help) exit 0, helpMessage()
 if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
+if (params.verbose) SarekUtils.verbose()
 
 // Check for awsbatch profile configuration
 // make sure queue is defined
@@ -118,10 +119,7 @@ process RunBcftoolsStats {
   script: QC.bcftools(vcf)
 }
 
-if (params.verbose) bcfReport = bcfReport.view {
-  "BCFTools stats report:\n" +
-  "File  : [${it.fileName}]"
-}
+bcfReport = bcfReport.dump(tag:'BCFTools')
 
 process RunVcftools {
   tag {"${idPatient} - ${variantCaller} - ${vcf}"}
@@ -141,10 +139,7 @@ process RunVcftools {
     QC.vcftools(vcf)
 }
 
-if (params.verbose) vcfReport = vcfReport.view {
-  "VCFTools stats report:\n" +
-  "Files : [${it.fileName}]"
-}
+vcfReport = vcfReport.dump(tag:'VCFTools')
 
 process RunSnpeff {
   tag {"${idPatient} - ${variantCaller} - ${vcf}"}
@@ -183,10 +178,7 @@ process RunSnpeff {
   """
 }
 
-if (params.verbose) snpeffOutput = snpeffOutput.view {
-  "snpEff report:\n" +
-  "File  : ${it.fileName}"
-}
+snpeffOutput = snpeffOutput.dump(tag:'snpEff')
 
 if ('merge' in tools) {
   // When running in the 'merge' mode
@@ -258,10 +250,7 @@ process RunVEP {
   """
 }
 
-if (params.verbose) vepReport = vepReport.view {
-  "VEP report:\n" +
-  "Files : ${it.fileName}"
-}
+vepReport = vepReport.dump(tag:'VEP')
 
 vcfToCompress = snpeffVCF.mix(vepVCF)
 
@@ -285,11 +274,7 @@ process CompressVCF {
   """
 }
 
-if (params.verbose) vcfCompressedoutput = vcfCompressedoutput.view {
-  "${it[2]} - ${it[0]} VCF:\n" +
-  "File  : ${it[3].fileName}\n" +
-  "Index : ${it[4].fileName}"
-}
+vcfCompressedoutput = vcfCompressedoutput.dump(tag:'VCF')
 
 /*
 ================================================================================
@@ -350,8 +335,6 @@ def helpMessage() {
   log.info "       Run only QC tools and gather reports"
   log.info "    --help"
   log.info "       you're reading it"
-  log.info "    --verbose"
-  log.info "       Adds more verbosity to workflow"
 }
 
 def minimalInformationMessage() {

@@ -70,10 +70,6 @@ Only used if you use the awsbatch profile. This parameter specifies a queue used
 
 Only used if you use the awsbatch profile. This parameter specifies an output directory for nextflow reports, such as Sarek_timeline.html, which currently is not fully supported to store on s3.
 
-### --verbose
-
-Display more information about files being processed.
-
 ## Preprocessing script (`main.nf`)
 ### --step `step`
 

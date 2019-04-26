@@ -42,6 +42,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
 if (params.help) exit 0, helpMessage()
 if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
+if (params.verbose) SarekUtils.verbose()
 
 // Check for awsbatch profile configuration
 // make sure queue is defined
@@ -85,11 +86,7 @@ if (tsvPath) {
 
 startMessage()
 
-if (params.verbose) bamFiles = bamFiles.view {
-  "BAMs to process:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
-  Files : [${it[3].fileName}, ${it[4].fileName}]"
-}
+bamFiles = bamFiles.dump(tag:'BAM')
 
 // Here we have a recalibrated bam set
 // The sample tsv config file which is formatted like: "idPatient status idSample bamFile baiFile"
@@ -161,9 +158,7 @@ bedIntervals = bedIntervals
   .flatten().collate(2)
   .map{duration, intervalFile -> intervalFile}
 
-if (params.verbose) bedIntervals = bedIntervals.view {
-  "  Interv: ${it.baseName}"
-}
+bedIntervals = bedIntervals.dump(tag:'Intervals')
 
 bamsForHC = bamFiles.combine(bedIntervals)
 
@@ -241,11 +236,8 @@ hcGenotypedVCF = hcGenotypedVCF.groupTuple(by:[0,1,2,3])
 // so we can have a single sorted VCF containing all the calls for a given caller
 
 vcfsToMerge = hcGenomicVCF.mix(hcGenotypedVCF)
-if (params.verbose) vcfsToMerge = vcfsToMerge.view {
-  "VCFs To be merged:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[2]}]\n\
-  Files : ${it[3].fileName}"
-}
+
+vcfsToMerge = vcfsToMerge.dump(tag:'VCFsToMerge')
 
 process ConcatVCF {
   tag {variantCaller + "-" + idSample}
@@ -272,12 +264,7 @@ process ConcatVCF {
   """
 }
 
-if (params.verbose) vcfConcatenated = vcfConcatenated.view {
-  "Variant Calling output:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: ${it[2]}\n\
-  Files : ${it[3].fileName}\n\
-  Index : ${it[4].fileName}"
-}
+vcfConcatenated = vcfConcatenated.dump(tag:'VCFs')
 
 process RunSingleStrelka {
   tag {idSample}
@@ -316,12 +303,7 @@ process RunSingleStrelka {
   """
 }
 
-if (params.verbose) singleStrelkaOutput = singleStrelkaOutput.view {
-  "Variant Calling output:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: ${it[2]}\n\
-  Files : ${it[3].fileName}\n\
-  Index : ${it[4].fileName}"
-}
+singleStrelkaOutput = singleStrelkaOutput.dump(tag:'Single Strelka')
 
 process RunSingleManta {
   tag {idSample + " - Single Diploid"}
@@ -369,12 +351,7 @@ process RunSingleManta {
   """
 }
 
-if (params.verbose) singleMantaOutput = singleMantaOutput.view {
-  "Variant Calling output:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: ${it[2]}\n\
-  Files : ${it[3].fileName}\n\
-  Index : ${it[4].fileName}"
-}
+singleMantaOutput = singleMantaOutput.dump(tag:'Single Manta')
 
 vcfForQC = Channel.empty().mix(
   vcfConcatenated.map {
@@ -408,12 +385,7 @@ process RunBcftoolsStats {
   script: QC.bcftools(vcf)
 }
 
-if (params.verbose) bcfReport = bcfReport.view {
-  "BCFTools stats report:\n\
-  File  : [${it.fileName}]"
-}
-
-bcfReport.close()
+bcfReport.dump(tag:'BCFTools')
 
 process RunVcftools {
   tag {"${variantCaller} - ${vcf}"}
@@ -433,12 +405,7 @@ process RunVcftools {
     QC.vcftools(vcf)
 }
 
-if (params.verbose) vcfReport = vcfReport.view {
-  "VCFTools stats report:\n\
-  File  : [${it.fileName}]"
-}
-
-vcfReport.close()
+vcfReport.dump(tag:'VCFTools')
 
 /*
 ================================================================================
@@ -518,8 +485,6 @@ def helpMessage() {
   log.info "       Run only QC tools and gather reports"
   log.info "    --help"
   log.info "       you're reading it"
-  log.info "    --verbose"
-  log.info "       Adds more verbosity to workflow"
 }
 
 def minimalInformationMessage() {

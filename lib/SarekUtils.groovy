@@ -240,4 +240,10 @@ class SarekUtils {
     println "  `|____\\'    |_____/\\____|_|  \\__/|_|\\_\\"
   }
 
+  // Deprecation message for verbose command
+  static def verbose() {
+    println "--verbose is deprecated"
+    println "please use -dump-channels instead"
+  }
+
 }
