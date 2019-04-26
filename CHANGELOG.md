@@ -11,13 +11,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 -   [#744](https://github.com/SciLifeLab/Sarek/pull/744) - Refactor `germlineVC.nf`
 -   [#776](https://github.com/SciLifeLab/Sarek/pull/776) - Helper script now download annotations for VEP CADD plugin
+-   [#778](https://github.com/SciLifeLab/Sarek/pull/778) - add `|| true` for all tools when gathering versions
+-   [#753](https://github.com/SciLifeLab/Sarek/pull/753) - Update `binac`, `cfc` configuration
+-   [#775](https://github.com/SciLifeLab/Sarek/pull/775) - Update paths for munin configuration
+-   [#791](https://github.com/SciLifeLab/Sarek/pull/791) - Update munin configuration
 
 ### `Added`
 
--   [#753](https://github.com/SciLifeLab/Sarek/pull/753) - Update `binac`, `cfc` configuration
 -   [#766](https://github.com/SciLifeLab/Sarek/pull/766) - Added `ps` in `r-base` and `runallelecount` containers
 -   [#774](https://github.com/SciLifeLab/Sarek/pull/774) - Autogenerates memory requirements from MarkDuplicates when less that 8G is available. cf [nf-core/rnaseq#179](https://github.com/nf-core/rnaseq/pull/179)
--   [#775](https://github.com/SciLifeLab/Sarek/pull/775) - Update paths for munin configuration
 -   [#777](https://github.com/SciLifeLab/Sarek/pull/777) - Add GeneSplicer `1.0` to container
 -   [#777](https://github.com/SciLifeLab/Sarek/pull/777) - Add possibility to use VEP GeneSplicer plugin
 -   [#777](https://github.com/SciLifeLab/Sarek/pull/777) - Add `removeVCF()` function to remove `.ann`, `.gz` and `.vcf` from a VCF filename
@@ -38,6 +40,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#758](https://github.com/SciLifeLab/Sarek/pull/758) - Typos in `ASCAT` documentation
 -   [#765](https://github.com/SciLifeLab/Sarek/pull/765) - Check only for references that are needed to fix [#754](https://github.com/SciLifeLab/Sarek/issues/754)
 -   [#777](https://github.com/SciLifeLab/Sarek/pull/777) - Fix name collision in `annotate.nf`
+-   [#788](https://github.com/SciLifeLab/Sarek/pull/788) - Fix `genome_base` path in `munin.config`
+-   [#788](https://github.com/SciLifeLab/Sarek/pull/788) - Fix `markdup_java_options` definition
+-   [#788](https://github.com/SciLifeLab/Sarek/pull/788) - Include `conf/resources.config` in `btb` profile
+-   [#795](https://github.com/SciLifeLab/Sarek/pull/795) - Use BED file for [QualiMap coverage calculation](https://github.com/SciLifeLab/Sarek/issues/794) on Targeted Data
 
 ### `Deprecated`
 
