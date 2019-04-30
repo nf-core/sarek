@@ -11,10 +11,10 @@ before_install:
   # PRs to master are only ok if coming from dev branch
   - '[ $TRAVIS_PULL_REQUEST = "false" ] || [ $TRAVIS_BRANCH != "master" ] || ([ $TRAVIS_PULL_REQUEST_SLUG = $TRAVIS_REPO_SLUG ] && [ $TRAVIS_PULL_REQUEST_BRANCH = "dev" ])'
   # Pull the docker image first so the test doesn't wait for this
-  - docker pull nfcore/sarek:dev
+  - docker pull maxulysse/sarek:dev
   # Fake the tag locally so that the pipeline runs properly
   # Looks weird when this is :dev to :dev, but makes sense when testing code for a release (:dev to :1.0.1)
-  - docker tag nfcore/sarek:dev nfcore/sarek:dev
+  - docker tag maxulysse/sarek:dev maxulysse/sarek:dev
 
 install:
   # Install Nextflow
@@ -26,17 +26,17 @@ install:
   - pip install nf-core
   # Reset
   - mkdir ${TRAVIS_BUILD_DIR}/tests && cd ${TRAVIS_BUILD_DIR}/tests
-  # Install markdownlint-cli
-  - sudo apt-get install npm && npm install -g markdownlint-cli
 
 env:
-  - NXF_VER='0.32.0' # Specify a minimum NF version that should be tested and work
-  - NXF_VER='' # Plus: get the latest NF version and check that it works
+  - NXF_VER=19.04.0
 
-script:
-  # Lint the pipeline code
-  - nf-core lint ${TRAVIS_BUILD_DIR}
-  # Lint the documentation
-  - markdownlint ${TRAVIS_BUILD_DIR} -c ${TRAVIS_BUILD_DIR}/.github/markdownlint.yml
-  # Run the pipeline with the test profile
-  - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker
+jobs:
+  include:
+    - stage: lint
+      script: nf-core lint ${TRAVIS_BUILD_DIR}
+    - stage: built
+      script: skip
+      script: git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git test-data
+      script: nextflow run ${TRAVIS_BUILD_DIR}/build.nf -profile docker --genome smallGRCh37 --refdir test-data/reference --outdir References
+    - stage: test
+      script: nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile docker --help

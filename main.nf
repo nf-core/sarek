@@ -4,11 +4,12 @@
                          nf-core/sarek
 ========================================================================================
  nf-core/sarek Analysis Pipeline.
- #### Homepage / Documentation
- https://github.com/nf-core/sarek
+ @Homepage
+ https://sarek.scilifelab.se/
+ @Documentation
+ https://github.com/nf-core/sarek/README.md
 ----------------------------------------------------------------------------------------
 */
-
 
 def helpMessage() {
     // TODO nf-core: Add to this help message with new command line parameters
@@ -49,7 +50,7 @@ def helpMessage() {
  * SET UP CONFIGURATION VARIABLES
  */
 
-// Show help emssage
+// Show help message
 if (params.help){
     helpMessage()
     exit 0
@@ -60,30 +61,29 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
 }
 
-// TODO nf-core: Add any reference files that are needed
-// Configurable reference genomes
-fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
-if ( params.fasta ){
-    fasta = file(params.fasta)
-    if( !fasta.exists() ) exit 1, "Fasta file not found: ${params.fasta}"
-}
-//
-// NOTE - THIS IS NOT USED IN THIS PIPELINE, EXAMPLE ONLY
-// If you want to use the above in a process, define the following:
-//   input:
-//   file fasta from fasta
-//
+stepList = defineStepList()
+step = params.step ? params.step.toLowerCase() : ''
+if (step == 'preprocessing' || step == '') step = 'mapping'
+if (!SarekUtils.checkParameterExistence(step, stepList)) exit 1, 'Unknown step, see --help for more information'
+if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
+if (step == 'mapping' && !checkExactlyOne([params.test, params.sample, params.sampleDir]))
+  exit 1, 'Please define which samples to work on by providing exactly one of the --test, --sample or --sampleDir options'
 
+tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
+toolList = defineToolList()
+if (!SarekUtils.checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
+
+referenceMap = defineReferenceMap(step, tools)
+if (!SarekUtils.checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
 
 // Has the run name been specified by the user?
 //  this has the bonus effect of catching both -name and --name
 custom_runName = params.name
-if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
+if ( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
   custom_runName = workflow.runName
 }
 
-
-if( workflow.profile == 'awsbatch') {
+if ( workflow.profile == 'awsbatch') {
   // AWSBatch sanity checking
   if (!params.awsqueue || !params.awsregion) exit 1, "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
   // Check outdir paths to be S3 buckets if running on AWSBatch
@@ -100,53 +100,41 @@ ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
 /*
  * Create a channel for input read files
  */
-if(params.readPaths){
-    if(params.singleEnd){
-        Channel
-            .from(params.readPaths)
-            .map { row -> [ row[0], [file(row[1][0])]] }
-            .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-            .into { read_files_fastqc; read_files_trimming }
-    } else {
-        Channel
-            .from(params.readPaths)
-            .map { row -> [ row[0], [file(row[1][0]), file(row[1][1])]] }
-            .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-            .into { read_files_fastqc; read_files_trimming }
-    }
-} else {
-    Channel
-        .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
-        .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --singleEnd on the command line." }
-        .into { read_files_fastqc; read_files_trimming }
-}
+ tsvPath = ''
+ if (params.sample) tsvPath = params.sample
 
+ // No need for tsv file for step annotate
+ if (!params.sample && !params.sampleDir) {
+   tsvPaths = [
+       'mapping':        "${workflow.projectDir}/Sarek-data/testdata/tsv/tiny.tsv",
+       'recalibrate':    "${params.outDir}/Preprocessing/DuplicateMarked/duplicateMarked.tsv",
+       'variantcalling': "${params.outDir}/Preprocessing/Recalibrated/recalibrated.tsv"
+   ]
+   if (params.test || step != 'mapping') tsvPath = tsvPaths[step]
+ }
 
 // Header log info
 log.info nfcoreHeader()
 def summary = [:]
-if(workflow.revision) summary['Pipeline Release'] = workflow.revision
+if (workflow.revision) summary['Pipeline Release'] = workflow.revision
 summary['Run Name']         = custom_runName ?: workflow.runName
 // TODO nf-core: Report custom parameters here
-summary['Reads']            = params.reads
-summary['Fasta Ref']        = params.fasta
-summary['Data Type']        = params.singleEnd ? 'Single-End' : 'Paired-End'
 summary['Max Resources']    = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
-if(workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
+if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
 summary['Output dir']       = params.outdir
 summary['Launch dir']       = workflow.launchDir
 summary['Working dir']      = workflow.workDir
 summary['Script dir']       = workflow.projectDir
 summary['User']             = workflow.userName
-if(workflow.profile == 'awsbatch'){
+if (workflow.profile == 'awsbatch'){
    summary['AWS Region']    = params.awsregion
    summary['AWS Queue']     = params.awsqueue
 }
 summary['Config Profile'] = workflow.profile
-if(params.config_profile_description) summary['Config Description'] = params.config_profile_description
-if(params.config_profile_contact)     summary['Config Contact']     = params.config_profile_contact
-if(params.config_profile_url)         summary['Config URL']         = params.config_profile_url
-if(params.email) {
+if (params.config_profile_description) summary['Config Description'] = params.config_profile_description
+if (params.config_profile_contact)     summary['Config Contact']     = params.config_profile_contact
+if (params.config_profile_url)         summary['Config URL']         = params.config_profile_url
+if (params.email) {
   summary['E-mail Address']  = params.email
   summary['MultiQC maxsize'] = params.maxMultiqcEmailFileSize
 }
@@ -173,7 +161,6 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
    return yaml_file
 }
 
-
 /*
  * Parse software version numbers
  */
@@ -199,79 +186,6 @@ process get_software_versions {
     """
 }
 
-
-
-/*
- * STEP 1 - FastQC
- */
-process fastqc {
-    tag "$name"
-    publishDir "${params.outdir}/fastqc", mode: 'copy',
-        saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
-
-    input:
-    set val(name), file(reads) from read_files_fastqc
-
-    output:
-    file "*_fastqc.{zip,html}" into fastqc_results
-
-    script:
-    """
-    fastqc -q $reads
-    """
-}
-
-
-
-/*
- * STEP 2 - MultiQC
- */
-process multiqc {
-    publishDir "${params.outdir}/MultiQC", mode: 'copy'
-
-    input:
-    file multiqc_config from ch_multiqc_config
-    // TODO nf-core: Add in log files from your new processes for MultiQC to find!
-    file ('fastqc/*') from fastqc_results.collect().ifEmpty([])
-    file ('software_versions/*') from software_versions_yaml.collect()
-    file workflow_summary from create_workflow_summary(summary)
-
-    output:
-    file "*multiqc_report.html" into multiqc_report
-    file "*_data"
-    file "multiqc_plots"
-
-    script:
-    rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
-    rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
-    // TODO nf-core: Specify which MultiQC modules to use with -m for a faster run time
-    """
-    multiqc -f $rtitle $rfilename --config $multiqc_config .
-    """
-}
-
-
-
-/*
- * STEP 3 - Output Description HTML
- */
-process output_documentation {
-    publishDir "${params.outdir}/pipeline_info", mode: 'copy'
-
-    input:
-    file output_docs from ch_output_docs
-
-    output:
-    file "results_description.html"
-
-    script:
-    """
-    markdown_to_html.r $output_docs results_description.html
-    """
-}
-
-
-
 /*
  * Completion e-mail notification
  */
@@ -279,7 +193,7 @@ workflow.onComplete {
 
     // Set up the e-mail variables
     def subject = "[nf-core/sarek] Successful: $workflow.runName"
-    if(!workflow.success){
+    if (!workflow.success){
       subject = "[nf-core/sarek] FAILED: $workflow.runName"
     }
     def email_fields = [:]
@@ -298,10 +212,10 @@ workflow.onComplete {
     email_fields['summary']['Date Completed'] = workflow.complete
     email_fields['summary']['Pipeline script file path'] = workflow.scriptFile
     email_fields['summary']['Pipeline script hash ID'] = workflow.scriptId
-    if(workflow.repository) email_fields['summary']['Pipeline repository Git URL'] = workflow.repository
-    if(workflow.commitId) email_fields['summary']['Pipeline repository Git Commit'] = workflow.commitId
-    if(workflow.revision) email_fields['summary']['Pipeline Git branch/tag'] = workflow.revision
-    if(workflow.container) email_fields['summary']['Docker image'] = workflow.container
+    if (workflow.repository) email_fields['summary']['Pipeline repository Git URL'] = workflow.repository
+    if (workflow.commitId) email_fields['summary']['Pipeline repository Git Commit'] = workflow.commitId
+    if (workflow.revision) email_fields['summary']['Pipeline Git branch/tag'] = workflow.revision
+    if (workflow.container) email_fields['summary']['Docker image'] = workflow.container
     email_fields['summary']['Nextflow Version'] = workflow.nextflow.version
     email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
     email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
@@ -341,7 +255,7 @@ workflow.onComplete {
     // Send the HTML e-mail
     if (params.email) {
         try {
-          if( params.plaintext_email ){ throw GroovyException('Send plaintext e-mail, not HTML') }
+          if ( params.plaintext_email ){ throw GroovyException('Send plaintext e-mail, not HTML') }
           // Try to send HTML e-mail using sendmail
           [ 'sendmail', '-t' ].execute() << sendmail_html
           log.info "[nf-core/sarek] Sent summary e-mail to $params.email (sendmail)"
@@ -354,7 +268,7 @@ workflow.onComplete {
 
     // Write summary e-mail HTML to a file
     def output_d = new File( "${params.outdir}/pipeline_info/" )
-    if( !output_d.exists() ) {
+    if ( !output_d.exists() ) {
       output_d.mkdirs()
     }
     def output_hf = new File( output_d, "pipeline_report.html" )
@@ -373,7 +287,7 @@ workflow.onComplete {
       log.info "${c_green}Number of successfully ran process(es) : ${workflow.stats.succeedCountFmt} ${c_reset}"
     }
 
-    if(workflow.success){
+    if (workflow.success){
         log.info "${c_purple}[nf-core/sarek]${c_green} Pipeline completed successfully${c_reset}"
     } else {
         checkHostname()
@@ -382,18 +296,17 @@ workflow.onComplete {
 
 }
 
-
 def nfcoreHeader(){
     // Log colors ANSI codes
-    c_reset = params.monochrome_logs ? '' : "\033[0m";
-    c_dim = params.monochrome_logs ? '' : "\033[2m";
-    c_black = params.monochrome_logs ? '' : "\033[0;30m";
-    c_green = params.monochrome_logs ? '' : "\033[0;32m";
-    c_yellow = params.monochrome_logs ? '' : "\033[0;33m";
-    c_blue = params.monochrome_logs ? '' : "\033[0;34m";
+    c_black  = params.monochrome_logs ? '' : "\033[0;30m";
+    c_blue   = params.monochrome_logs ? '' : "\033[0;34m";
+    c_cyan   = params.monochrome_logs ? '' : "\033[0;36m";
+    c_dim    = params.monochrome_logs ? '' : "\033[2m";
+    c_green  = params.monochrome_logs ? '' : "\033[0;32m";
     c_purple = params.monochrome_logs ? '' : "\033[0;35m";
-    c_cyan = params.monochrome_logs ? '' : "\033[0;36m";
-    c_white = params.monochrome_logs ? '' : "\033[0;37m";
+    c_reset  = params.monochrome_logs ? '' : "\033[0m";
+    c_white  = params.monochrome_logs ? '' : "\033[0;37m";
+    c_yellow = params.monochrome_logs ? '' : "\033[0;33m";
 
     return """    ${c_dim}----------------------------------------------------${c_reset}
                                             ${c_green},--.${c_black}/${c_green},-.${c_reset}
@@ -401,6 +314,13 @@ def nfcoreHeader(){
     ${c_blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${c_yellow}}  {${c_reset}
     ${c_blue}  | \\| |       \\__, \\__/ |  \\ |___     ${c_green}\\`-._,-`-,${c_reset}
                                             ${c_green}`._,._,\'${c_reset}
+           ____        _____               _
+         .' _  `.     / ____|             | |
+        /  |\\`-_ \\   | (___  ___  _ __ __ | | __
+       |   | \\  `-|   \\___ \\/__ \\| ´__/ _\\| |/ /
+        \\ |   \\  /    ____) | __ | | |  __|   <
+         `|____\\'    |_____/\\____|_|  \\__/|_|\\_\\
+
     ${c_purple}  nf-core/sarek v${workflow.manifest.version}${c_reset}
     ${c_dim}----------------------------------------------------${c_reset}
     """.stripIndent()
@@ -411,11 +331,11 @@ def checkHostname(){
     def c_white = params.monochrome_logs ? '' : "\033[0;37m"
     def c_red = params.monochrome_logs ? '' : "\033[1;91m"
     def c_yellow_bold = params.monochrome_logs ? '' : "\033[1;93m"
-    if(params.hostnames){
+    if (params.hostnames){
         def hostname = "hostname".execute().text.trim()
         params.hostnames.each { prof, hnames ->
             hnames.each { hname ->
-                if(hostname.contains(hname) && !workflow.profile.contains(prof)){
+                if (hostname.contains(hname) && !workflow.profile.contains(prof)){
                     log.error "====================================================\n" +
                             "  ${c_red}WARNING!${c_reset} You are running with `-profile $workflow.profile`\n" +
                             "  but your machine hostname is ${c_white}'$hostname'${c_reset}\n" +
@@ -425,4 +345,71 @@ def checkHostname(){
             }
         }
     }
+}
+
+/*
+========================================================================================
+                         sarek functions
+========================================================================================
+*/
+
+def checkParamReturnFile(item) {
+  params."${item}" = params.genomes[params.genome]."${item}"
+  return file(params."${item}")
+}
+
+def checkExactlyOne(list) {
+  def n = 0
+  list.each{n += it ? 1 : 0}
+  return n == 1
+}
+
+def defineReferenceMap(step, tools) {
+  def referenceMap =
+  [
+    'genomeDict'       : checkParamReturnFile("genomeDict"),
+    'genomeFile'       : checkParamReturnFile("genomeFile"),
+    'genomeIndex'      : checkParamReturnFile("genomeIndex"),
+    'intervals'        : checkParamReturnFile("intervals")
+  ]
+  if ('mapping' in step) {
+    referenceMap.putAll(
+      'bwaIndex'         : checkParamReturnFile("bwaIndex"),
+      'knownIndels'      : checkParamReturnFile("knownIndels"),
+      'knownIndelsIndex' : checkParamReturnFile("knownIndelsIndex")
+    )
+  }
+  if ('ascat' in tools) {
+    referenceMap.putAll(
+      'acLoci'           : checkParamReturnFile("acLoci"),
+      'acLociGC'         : checkParamReturnFile("acLociGC")
+    )
+  }
+  if ('mapping' in step || 'mutect2' in tools) {
+    referenceMap.putAll(
+      'dbsnp'            : checkParamReturnFile("dbsnp"),
+      'dbsnpIndex'       : checkParamReturnFile("dbsnpIndex")
+    )
+  }
+  return referenceMap
+}
+
+def defineStepList() {
+  return [
+    'mapping',
+    'recalibrate',
+    'variantcalling',
+    'annotate'
+  ]
+}
+
+def defineToolList() {
+  return [
+    'ascat',
+    'freebayes',
+    'haplotypecaller',
+    'manta',
+    'mutect2',
+    'strelka'
+  ]
 }
