@@ -15,7 +15,6 @@ matrix:
 
 env:
   - NXF_VER=19.04.0
-  - NXF_VER=''
 
 before_install:
   # PRs to master are only ok if coming from dev branch
