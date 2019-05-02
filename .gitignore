@@ -1,7 +1,7 @@
 .nextflow*
 work/
 data/
-References/
+references/
 results/
 .DS_Store
 tests/test_data
