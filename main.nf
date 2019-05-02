@@ -62,9 +62,12 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
 }
 
-params.step = 'mapping'
-params.test = false
+params.noReports = false
 params.sampleDir = false
+params.sequencing_center = null
+params.step = 'mapping'
+params.targetBED = null
+params.test = false
 params.tools = false
 
 stepList = defineStepList()
@@ -113,8 +116,8 @@ ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
  if (!params.sample && !params.sampleDir) {
    tsvPaths = [
        'mapping':        "${workflow.projectDir}/Sarek-data/testdata/tsv/tiny.tsv",
-       'recalibrate':    "${params.outDir}/Preprocessing/DuplicateMarked/duplicateMarked.tsv",
-       'variantcalling': "${params.outDir}/Preprocessing/Recalibrated/recalibrated.tsv"
+       'recalibrate':    "${params.outdir}/Preprocessing/DuplicateMarked/duplicateMarked.tsv",
+       'variantcalling': "${params.outdir}/Preprocessing/Recalibrated/recalibrated.tsv"
    ]
    if (params.test || step != 'mapping') tsvPath = tsvPaths[step]
  }
@@ -143,8 +146,6 @@ ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
 
  if (step == 'recalibrate') (patientGenders, bamFiles) = extractGenders(bamFiles)
  else (patientGenders, inputFiles) = extractGenders(inputFiles)
-
-
 
 // Header log info
 log.info nfcoreHeader()
@@ -198,7 +199,7 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
  * Parse software version numbers
  */
 process get_software_versions {
-   publishDir path:"${params.outdir}/pipeline_info", mode: params.publishDirMode
+    publishDir path:"${params.outdir}/pipeline_info", mode: params.publishDirMode
 
     output:
     file 'software_versions_mqc.yaml' into software_versions_yaml
@@ -228,8 +229,354 @@ process get_software_versions {
     """
 }
 
+/*
+========================================================================================
+                         PREPROCESSING
+========================================================================================
+*/
 
+// STEP ONE: MAPPING
 
+(inputFiles, inputFilesforFastQC) = inputFiles.into(2)
+
+inputFiles = inputFiles.dump(tag:'INPUT')
+
+process RunFastQC {
+  tag {idPatient + "-" + idRun}
+
+  publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idRun}", mode: params.publishDirMode
+
+  input:
+    set idPatient, status, idSample, idRun, file(inputFile1), file(inputFile2) from inputFilesforFastQC
+
+  output:
+    file "*_fastqc.{zip,html}" into fastQCreport
+
+  when: step == 'mapping' && !params.noReports
+
+  script:
+  inputFiles = (hasExtension(inputFile1,"fastq.gz") || hasExtension(inputFile1,"fq.gz")) ? "${inputFile1} ${inputFile2}" : "${inputFile1}"
+  """
+  fastqc -t 2 -q ${inputFiles}
+  """
+}
+
+fastQCreport.dump(tag:'FastQC')
+
+process MapReads {
+  tag {idPatient + "-" + idRun}
+
+  input:
+    set idPatient, status, idSample, idRun, file(inputFile1), file(inputFile2) from inputFiles
+    set file(genomeFile), file(bwaIndex) from Channel.value([referenceMap.genomeFile, referenceMap.bwaIndex])
+
+  output:
+    set idPatient, status, idSample, idRun, file("${idRun}.bam") into (mappedBam, mappedBamForQC)
+
+  when: step == 'mapping'
+
+  script:
+  CN = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
+  readGroup = "@RG\\tID:${idRun}\\t${CN}PU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
+  // adjust mismatch penalty for tumor samples
+  extra = status == 1 ? "-B 3" : ""
+  if (hasExtension(inputFile1,"fastq.gz") || hasExtension(inputFile1,"fq.gz"))
+    """
+    bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M \
+    ${genomeFile} ${inputFile1} ${inputFile2} | \
+    samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
+    """
+  else if (hasExtension(inputFile1,"bam"))
+  // -K is an hidden option, used to fix the number of reads processed by bwa mem
+  // Chunk size can affect bwa results, if not specified, the number of threads can change
+  // which can give not deterministic result.
+  // cf https://github.com/CCDG/Pipeline-Standardization/blob/master/PipelineStandard.md
+  // and https://github.com/gatk-workflows/gatk4-data-processing/blob/8ffa26ff4580df4ac3a5aa9e272a4ff6bab44ba2/processing-for-variant-discovery-gatk4.b37.wgs.inputs.json#L29
+    """
+    gatk --java-options -Xmx${task.memory.toGiga()}g \
+    SamToFastq \
+    --INPUT=${inputFile1} \
+    --FASTQ=/dev/stdout \
+    --INTERLEAVE=true \
+    --NON_PF=true \
+    | \
+    bwa mem -K 100000000 -p -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${genomeFile} \
+    /dev/stdin - 2> >(tee ${inputFile1}.bwa.stderr.log >&2) \
+    | \
+    samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
+    """
+}
+
+mappedBam = mappedBam.dump(tag:'Mapped BAM')
+
+process RunBamQCmapped {
+  tag {idPatient + "-" + idSample}
+
+  publishDir "${params.outdir}/Reports/${idSample}/bamQC", mode: params.publishDirMode
+
+  input:
+    set idPatient, status, idSample, idRun, file(bam) from mappedBamForQC
+    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
+
+  output:
+    file("${bam.baseName}") into bamQCmappedReport
+
+  when: !params.noReports
+
+  script:
+  use_bed = params.targetBED ? "-gff ${targetBED}" : ''
+  """
+  qualimap --java-mem-size=${task.memory.toGiga()}G \
+  bamqc \
+  -bam ${bam} \
+  --paint-chromosome-limits \
+  --genome-gc-distr HUMAN \
+  $use_bed \
+  -nt ${task.cpus} \
+  -skip-duplicated \
+  --skip-dup-mode 0 \
+  -outdir ${bam.baseName} \
+  -outformat HTML
+  """
+}
+
+bamQCmappedReport.dump(tag:'BamQC BAM')
+
+// Sort bam whether they are standalone or should be merged
+
+singleBam = Channel.create()
+groupedBam = Channel.create()
+mappedBam.groupTuple(by:[0,1,2])
+  .choice(singleBam, groupedBam) {it[3].size() > 1 ? 1 : 0}
+singleBam = singleBam.map {
+  idPatient, status, idSample, idRun, bam ->
+  [idPatient, status, idSample, bam]
+}
+
+process MergeBams {
+  tag {idPatient + "-" + idSample}
+
+  input:
+    set idPatient, status, idSample, idRun, file(bam) from groupedBam
+
+  output:
+    set idPatient, status, idSample, file("${idSample}.bam") into mergedBam
+
+  when: step == 'mapping'
+
+  script:
+  """
+  samtools merge --threads ${task.cpus} ${idSample}.bam ${bam}
+  """
+}
+
+singleBam = singleBam.dump(tag:'Single BAM')
+mergedBam = mergedBam.dump(tag:'Merged BAM')
+mergedBam = mergedBam.mix(singleBam)
+mergedBam = mergedBam.dump(tag:'BAM for MD')
+
+process MarkDuplicates {
+  tag {idPatient + "-" + idSample}
+
+  publishDir params.outdir, mode: params.publishDirMode,
+    saveAs: {
+      if (it == "${idSample}.bam.metrics") "Reports/${idSample}/MarkDuplicates/${it}"
+      else "Preprocessing/${idSample}/DuplicateMarked/${it}"
+    }
+
+  input:
+    set idPatient, status, idSample, file("${idSample}.bam") from mergedBam
+
+  output:
+    set idPatient, file("${idSample}_${status}.md.bam"), file("${idSample}_${status}.md.bai") into duplicateMarkedBams
+    set idPatient, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai") into markDuplicatesTSV
+    file ("${idSample}.bam.metrics") into markDuplicatesReport
+
+  when: step == 'mapping'
+
+  script:
+  markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2 ).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
+  """
+  gatk --java-options ${markdup_java_options} \
+  MarkDuplicates \
+  --MAX_RECORDS_IN_RAM 50000 \
+  --INPUT ${idSample}.bam \
+  --METRICS_FILE ${idSample}.bam.metrics \
+  --TMP_DIR . \
+  --ASSUME_SORT_ORDER coordinate \
+  --CREATE_INDEX true \
+  --OUTPUT ${idSample}_${status}.md.bam
+  """
+}
+
+// Creating a TSV file to restart from this step
+markDuplicatesTSV.map { idPatient, status, idSample, bam, bai ->
+  gender = patientGenders[idPatient]
+  "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bam}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bai}\n"
+}.collectFile(
+  name: 'duplicateMarked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/DuplicateMarked"
+)
+
+duplicateMarkedBams = duplicateMarkedBams.map {
+    idPatient, bam, bai ->
+    tag = bam.baseName.tokenize('.')[0]
+    status   = tag[-1..-1].toInteger()
+    idSample = tag.take(tag.length()-2)
+    [idPatient, status, idSample, bam, bai]
+}
+
+duplicateMarkedBams = duplicateMarkedBams.dump(tag:'MD BAM')
+
+(mdBam, mdBamToJoin) = duplicateMarkedBams.into(2)
+
+process CreateRecalibrationTable {
+  tag {idPatient + "-" + idSample}
+
+  publishDir "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked", mode: params.publishDirMode, overwrite: false
+
+  input:
+    set idPatient, status, idSample, file(bam), file(bai) from mdBam // realignedBam
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(knownIndels), file(knownIndelsIndex), file(intervals) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex,
+      referenceMap.knownIndels,
+      referenceMap.knownIndelsIndex,
+      referenceMap.intervals,
+    ])
+
+  output:
+    set idPatient, status, idSample, file("${idSample}.recal.table") into recalibrationTable
+    set idPatient, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai"), val("${idSample}.recal.table") into recalibrationTableTSV
+
+  when: step == 'mapping'
+
+  script:
+  known = knownIndels.collect{ "--known-sites ${it}" }.join(' ')
+  """
+  gatk --java-options -Xmx${task.memory.toGiga()}g \
+  BaseRecalibrator \
+  --input ${bam} \
+  --output ${idSample}.recal.table \
+  --tmp-dir /tmp \
+  -R ${genomeFile} \
+  -L ${intervals} \
+  --known-sites ${dbsnp} \
+  ${known} \
+  --verbosity INFO
+  """
+}
+
+// Create a TSV file to restart from this step
+recalibrationTableTSV.map { idPatient, status, idSample, bam, bai, recalTable ->
+  gender = patientGenders[idPatient]
+  "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bam}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bai}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${recalTable}\n"
+}.collectFile(
+  name: 'duplicateMarked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/DuplicateMarked"
+)
+
+recalibrationTable = mdBamToJoin.join(recalibrationTable, by:[0,1,2])
+
+if (step == 'recalibrate') recalibrationTable = bamFiles
+
+recalibrationTable = recalibrationTable.dump(tag:'recal.table')
+
+process RecalibrateBam {
+  tag {idPatient + "-" + idSample}
+
+  publishDir "${params.outdir}/Preprocessing/${idSample}/Recalibrated", mode: params.publishDirMode
+
+  input:
+    set idPatient, status, idSample, file(bam), file(bai), file(recalibrationReport) from recalibrationTable
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(intervals) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.intervals,
+    ])
+
+  output:
+    set idPatient, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam, recalibratedBamForStats
+    set idPatient, status, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into recalibratedBamTSV
+
+  script:
+  """
+  gatk --java-options -Xmx${task.memory.toGiga()}g \
+  ApplyBQSR \
+  -R ${genomeFile} \
+  --input ${bam} \
+  --output ${idSample}.recal.bam \
+  -L ${intervals} \
+  --create-output-bam-index true \
+  --bqsr-recal-file ${recalibrationReport}
+  """
+}
+// Creating a TSV file to restart from this step
+recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
+  gender = patientGenders[idPatient]
+  "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bam}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bai}\n"
+}.collectFile(
+  name: 'recalibrated.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/Recalibrated"
+)
+
+recalibratedBam.dump(tag:'recal.bam')
+
+// Remove recalTable from Channels to match inputs for Process to avoid:
+// WARN: Input tuple does not match input set cardinality declared by process...
+(bamForBamQC, bamForSamToolsStats) = recalibratedBamForStats.map{ it[0..4] }.into(2)
+
+process RunSamtoolsStats {
+  tag {idPatient + "-" + idSample}
+
+  publishDir "${params.outdir}/Reports/${idSample}/SamToolsStats", mode: params.publishDirMode
+
+  input:
+    set idPatient, status, idSample, file(bam), file(bai) from bamForSamToolsStats
+
+  output:
+    file ("${bam}.samtools.stats.out") into samtoolsStatsReport
+
+  when: !params.noReports
+
+  script:
+  """
+  samtools stats ${bam} > ${bam}.samtools.stats.out
+  """
+}
+
+samtoolsStatsReport.dump(tag:'SAMTools')
+
+process RunBamQCrecalibrated {
+  tag {idPatient + "-" + idSample}
+
+  publishDir "${params.outdir}/Reports/${idSample}/bamQC", mode: params.publishDirMode
+
+  input:
+    set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC
+
+  output:
+    file("${bam.baseName}") into bamQCrecalibratedReport
+
+  when: !params.noReports
+
+  script:
+  """
+  qualimap --java-mem-size=${task.memory.toGiga()}G \
+  bamqc \
+  -bam ${bam} \
+  --paint-chromosome-limits \
+  --genome-gc-distr HUMAN \
+  -nt ${task.cpus} \
+  -skip-duplicated \
+  --skip-dup-mode 0 \
+  -outdir ${bam.baseName} \
+  -outformat HTML
+  """
+}
+
+bamQCrecalibratedReport.dump(tag:'BamQC')
 
 /*
  * Completion e-mail notification
