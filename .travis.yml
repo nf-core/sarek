@@ -35,7 +35,7 @@ install:
 jobs:
   include:
     - stage: built
-      script: git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git test-data
-      script: nextflow run ${TRAVIS_BUILD_DIR}/build.nf -profile docker --genome smallGRCh37 --refdir test-data/reference --outdir References
+      script: git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data
+      script: nextflow run ${TRAVIS_BUILD_DIR}/build.nf -profile docker --genome smallGRCh37 --refdir data/reference --outdir references --publishDirMode link
     - stage: test
-      script: nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile docker --help
+      script: nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile docker --genome smallGRCh37 --igenomes_base references --sample data/testdata/tsv/tiny-multiple.tsv --publishDirMode link
