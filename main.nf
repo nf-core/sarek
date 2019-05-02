@@ -63,17 +63,17 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
 stepList = defineStepList()
 step = params.step ? params.step.toLowerCase() : ''
 if (step == 'preprocessing' || step == '') step = 'mapping'
-if (!SarekUtils.checkParameterExistence(step, stepList)) exit 1, 'Unknown step, see --help for more information'
+if (!checkParameterExistence(step, stepList)) exit 1, 'Unknown step, see --help for more information'
 if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
 if (step == 'mapping' && !checkExactlyOne([params.test, params.sample, params.sampleDir]))
   exit 1, 'Please define which samples to work on by providing exactly one of the --test, --sample or --sampleDir options'
 
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
 toolList = defineToolList()
-if (!SarekUtils.checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
+if (!checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
 
 referenceMap = defineReferenceMap(step, tools)
-if (!SarekUtils.checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
+if (!checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
 
 // Has the run name been specified by the user?
 //  this has the bonus effect of catching both -name and --name
@@ -363,15 +363,50 @@ def checkHostname(){
 ========================================================================================
 */
 
+def checkExactlyOne(list) {
+  def n = 0
+  list.each{n += it ? 1 : 0}
+  return n == 1
+}
+
+// Check parameter existence
+def checkParameterExistence(it, list) {
+  if (!list.contains(it)) {
+    println("Unknown parameter: ${it}")
+    return false
+  }
+  return true
+}
+
+// Compare each parameter with a list of parameters
+def checkParameterList(list, realList) {
+  return list.every{ checkParameterExistence(it, realList) }
+}
+
 def checkParamReturnFile(item) {
   params."${item}" = params.genomes[params.genome]."${item}"
   return file(params."${item}")
 }
 
-def checkExactlyOne(list) {
-  def n = 0
-  list.each{n += it ? 1 : 0}
-  return n == 1
+// Loop through all the references files to check their existence
+def checkRefExistence(referenceFile, fileToCheck) {
+  if (fileToCheck instanceof List) return fileToCheck.every{ checkRefExistence(referenceFile, it) }
+  def f = file(fileToCheck)
+  // this is an expanded wildcard: we can assume all files exist
+  if (f instanceof List && f.size() > 0) return true
+  else if (!f.exists()) {
+    println  "Missing references: ${referenceFile} ${fileToCheck}"
+    return false
+  }
+  return true
+}
+
+// Loop through all the references files to check their existence
+def checkReferenceMap(referenceMap) {
+  referenceMap.every {
+    referenceFile, fileToCheck ->
+    checkRefExistence(referenceFile, fileToCheck)
+  }
 }
 
 def defineReferenceMap(step, tools) {
