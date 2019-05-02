@@ -389,7 +389,6 @@ process MarkDuplicates {
 
   output:
     set idPatient, file("${idSample}_${status}.md.bam"), file("${idSample}_${status}.md.bai") into duplicateMarkedBams
-    set idPatient, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai") into markDuplicatesTSV
     file ("${idSample}.bam.metrics") into markDuplicatesReport
 
   when: step == 'mapping'
@@ -408,14 +407,6 @@ process MarkDuplicates {
   --OUTPUT ${idSample}_${status}.md.bam
   """
 }
-
-// Creating a TSV file to restart from this step
-markDuplicatesTSV.map { idPatient, status, idSample, bam, bai ->
-  gender = patientGenders[idPatient]
-  "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bam}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bai}\n"
-}.collectFile(
-  name: 'duplicateMarked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
-)
 
 duplicateMarkedBams = duplicateMarkedBams.map {
     idPatient, bam, bai ->
@@ -469,13 +460,21 @@ process CreateRecalibrationTable {
   """
 }
 
-// Create a TSV file to restart from this step
+(recalibrationTableTSV, recalibrationTableSampleTSV) = recalibrationTableTSV.into(2)
+// Create TSV files to restart from this step
 recalibrationTableTSV.map { idPatient, status, idSample, bam, bai, recalTable ->
   gender = patientGenders[idPatient]
   "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bam}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bai}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${recalTable}\n"
 }.collectFile(
   name: 'duplicateMarked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
 )
+
+recalibrationTableSampleTSV
+  .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") {
+    idPatient, status, idSample, bam, bai, recalTable ->
+    gender = patientGenders[idPatient]
+    ["duplicateMarked_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bam}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bai}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${recalTable}\n"]
+}
 
 recalibrationTable = mdBamToJoin.join(recalibrationTable, by:[0,1,2])
 
@@ -513,6 +512,9 @@ process RecalibrateBam {
   --bqsr-recal-file ${recalibrationReport}
   """
 }
+
+
+(recalibratedBamTSV, recalibratedBamSampleTSV) = recalibratedBamTSV.into(2)
 // Creating a TSV file to restart from this step
 recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
   gender = patientGenders[idPatient]
@@ -520,6 +522,13 @@ recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
 }.collectFile(
   name: 'recalibrated.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
 )
+
+recalibratedBamSampleTSV
+  .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") {
+    idPatient, status, idSample, bam, bai ->
+    gender = patientGenders[idPatient]
+    ["recalibrated_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bam}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bai}\n"]
+}
 
 recalibratedBam.dump(tag:'recal.bam')
 
