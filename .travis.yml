@@ -2,10 +2,19 @@ sudo: required
 language: python
 jdk: openjdk8
 services: docker
+
+addons:
+  apt:
+    update: true
+
 python: '3.6'
 cache: pip
+
 matrix:
   fast_finish: true
+
+env:
+  - NXF_VER=19.04.0
 
 before_install:
   # PRs to master are only ok if coming from dev branch
@@ -13,7 +22,6 @@ before_install:
   # Pull the docker image first so the test doesn't wait for this
   - docker pull nfcore/sarek:dev
   # Fake the tag locally so that the pipeline runs properly
-  # Looks weird when this is :dev to :dev, but makes sense when testing code for a release (:dev to :1.0.1)
   - docker tag nfcore/sarek:dev nfcore/sarek:dev
 
 install:
@@ -21,22 +29,10 @@ install:
   - mkdir /tmp/nextflow && cd /tmp/nextflow
   - wget -qO- get.nextflow.io | bash
   - sudo ln -s /tmp/nextflow/nextflow /usr/local/bin/nextflow
-  # Install nf-core/tools
-  - pip install --upgrade pip
-  - pip install nf-core
   # Reset
   - mkdir ${TRAVIS_BUILD_DIR}/tests && cd ${TRAVIS_BUILD_DIR}/tests
 
-env:
-  - NXF_VER=19.04.0
-
-jobs:
-  include:
-    - stage: lint
-      script: nf-core lint ${TRAVIS_BUILD_DIR}
-    - stage: built
-      script: skip
-      script: git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git test-data
-      script: nextflow run ${TRAVIS_BUILD_DIR}/build.nf -profile docker --genome smallGRCh37 --refdir test-data/reference --outdir References
-    - stage: test
-      script: nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile docker --help
+script:
+  - git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data
+  - nextflow run ${TRAVIS_BUILD_DIR}/build.nf -profile docker --genome smallGRCh37 --refdir data/reference --outdir references --publishDirMode link --max_memory 7.GB --max_cpus 2
+  - nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile docker --genome smallGRCh37 --igenomes_base references --sampleDir data/testdata/tiny/normal --publishDirMode link --max_memory 7.GB --max_cpus 2
