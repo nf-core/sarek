@@ -62,10 +62,11 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
 }
 
+params.noGVCF = false
 params.noReports = false
 params.nucleotidesPerSecond = 1000.0
-params.sampleDir = false
 params.sample = false
+params.sampleDir = false
 params.sequencing_center = null
 params.step = 'mapping'
 params.targetBED = null
@@ -132,6 +133,7 @@ ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
    switch (step) {
      case 'mapping': inputFiles = extractSample(tsvFile); break
      case 'recalibrate': bamFiles = extractRecal(tsvFile); break
+     case 'variantcalling': bamFiles = extractBams(tsvFile); break
      default: exit 1, "Unknown step ${step}"
    }
  } else if (params.sampleDir) {
@@ -482,7 +484,9 @@ bedIntervals = bedIntervals
 
 bedIntervals = bedIntervals.dump(tag:'bedintervals')
 
-bamForBaseRecalibrator = mdBam.combine(bedIntervals)
+(bedIntervalsBR, bedIntervalsHC) = bedIntervals.into(2)
+
+bamForBaseRecalibrator = mdBam.combine(bedIntervalsBR)
 
 process CreateRecalibrationTable {
   tag {idPatient + "-" + idSample + "-" + intervalBed}
@@ -601,7 +605,6 @@ process RecalibrateBam {
   """
 }
 
-
 // Creating a TSV file to restart from this step
 recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
   gender = patientGenders[idPatient]
@@ -617,7 +620,7 @@ recalibratedBamSampleTSV
     ["recalibrated_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bam}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bai}\n"]
 }
 
-recalibratedBam.dump(tag:'recal.bam')
+recalibratedBam = recalibratedBam.dump(tag:'recal.bam')
 
 // Remove recalTable from Channels to match inputs for Process to avoid:
 // WARN: Input tuple does not match input set cardinality declared by process...
@@ -673,6 +676,134 @@ process RunBamQCrecalibrated {
 }
 
 bamQCrecalibratedReport.dump(tag:'BamQC')
+
+/*
+========================================================================================
+                         GERMLINE VARIANT CALLING
+========================================================================================
+*/
+
+if (step == 'variantcalling') recalibratedBam = bamFiles
+
+recalibratedBam = recalibratedBam.dump(tag:'BAM')
+
+// Here we have a recalibrated bam set
+// The sample tsv config file which is formatted like: "idPatient status idSample bamFile baiFile"
+// Manta will be run in Germline mode, the Tumor mode is run in somaticVC.nf
+// HaplotypeCaller and Strelka will be run for Normal and Tumor samples
+
+(bamsForGermlineManta, bamsForGermlineStrelka, recalibratedBam) = recalibratedBam.into(3)
+
+// To speed Variant Callers up we are chopping the reference into smaller pieces.
+// Do variant calling by this intervals, and re-merge the VCFs.
+// Since we are on a cluster, this can parallelize the variant call processes.
+// And push down the variant call wall clock time significanlty.
+
+bamsForHC = recalibratedBam.combine(bedIntervalsHC)
+
+process RunHaplotypecaller {
+  tag {idSample + "-" + intervalBed.baseName}
+
+  input:
+    set idPatient, status, idSample, file(bam), file(bai), file(intervalBed) from bamsForHC
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex
+    ])
+
+  output:
+    set val("HaplotypeCallerGVCF"), idPatient, status, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf") into hcGenomicVCF
+    set idPatient, status, idSample, file(intervalBed), file("${intervalBed.baseName}_${idSample}.g.vcf") into vcfsToGenotype
+
+  when: 'haplotypecaller' in tools
+
+  script:
+  """
+  gatk --java-options "-Xmx${task.memory.toGiga()}g -Xms6000m -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10" \
+    HaplotypeCaller \
+    -R ${genomeFile} \
+    -I ${bam} \
+    -L ${intervalBed} \
+    -D ${dbsnp} \
+    -O ${intervalBed.baseName}_${idSample}.g.vcf \
+    -ERC GVCF
+  """
+}
+
+hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3])
+
+if (params.noGVCF) hcGenomicVCF.close()
+
+process RunGenotypeGVCFs {
+  tag {idSample + "-" + intervalBed.baseName}
+
+  input:
+    set idPatient, status, idSample, file(intervalBed), file(gvcf) from vcfsToGenotype
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex
+    ])
+
+  output:
+    set val("HaplotypeCaller"), idPatient, status, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into hcGenotypedVCF
+
+  when: 'haplotypecaller' in tools
+
+  script:
+  // Using -L is important for speed and we have to index the interval files also
+  """
+  gatk --java-options -Xmx${task.memory.toGiga()}g \
+    IndexFeatureFile -F ${gvcf}
+
+  gatk --java-options -Xmx${task.memory.toGiga()}g \
+    GenotypeGVCFs \
+    -R ${genomeFile} \
+    -L ${intervalBed} \
+    -D ${dbsnp} \
+    -V ${gvcf} \
+    -O ${intervalBed.baseName}_${idSample}.vcf
+  """
+}
+
+hcGenotypedVCF = hcGenotypedVCF.groupTuple(by:[0,1,2,3])
+
+// we are merging the VCFs that are called separatelly for different intervals
+// so we can have a single sorted VCF containing all the calls for a given caller
+
+vcfsToMerge = hcGenomicVCF.mix(hcGenotypedVCF)
+
+vcfsToMerge = vcfsToMerge.dump(tag:'VCFsToMerge')
+
+process ConcatVCF {
+  tag {variantCaller + "-" + idSample}
+
+  publishDir "${params.outdir}/VariantCalling/${idPatient}/${"$variantCaller"}", mode: params.publishDirMode
+
+  input:
+    set variantCaller, idPatient, status, idSample, file(vcFiles) from vcfsToMerge
+    file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
+    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
+
+  output:
+    // we have this funny *_* pattern to avoid copying the raw calls to publishdir
+    set variantCaller, idPatient, status, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into vcfConcatenated
+
+  when: 'haplotypecaller' in tools && !params.onlyQC
+
+  script:
+  if (variantCaller == 'HaplotypeCaller') outputFile = "${variantCaller}_${idSample}.vcf"
+  else if (variantCaller == 'HaplotypeCallerGVCF') outputFile = "haplotypecaller_${idSample}.g.vcf"
+  options = params.targetBED ? "-t ${targetBED}" : ""
+  """
+  concatenateVCFs.sh -i ${genomeIndex} -c ${task.cpus} -o ${outputFile} ${options}
+  """
+}
 
 /*
  * Completion e-mail notification
@@ -910,7 +1041,7 @@ def defineReferenceMap(step, tools) {
       'acLociGC'         : checkParamReturnFile("acLociGC")
     )
   }
-  if ('mapping' in step || 'mutect2' in tools) {
+  if ('mapping' in step || 'haplotypecaller' in tools || 'mutect2' in tools) {
     referenceMap.putAll(
       'dbsnp'            : checkParamReturnFile("dbsnp"),
       'dbsnpIndex'       : checkParamReturnFile("dbsnpIndex")
@@ -939,6 +1070,27 @@ def defineToolList() {
     'mutect2',
     'strelka'
   ]
+}
+
+// Channeling the TSV file containing BAM.
+// Format is: "subject gender status sample bam bai"
+def extractBams(tsvFile) {
+  Channel.from(tsvFile)
+    .splitCsv(sep: '\t')
+    .map { row ->
+      checkNumberOfItem(row, 6)
+      def idPatient = row[0]
+      def gender    = row[1]
+      def status    = returnStatus(row[2].toInteger())
+      def idSample  = row[3]
+      def bamFile   = returnFile(row[4])
+      def baiFile   = returnFile(row[5])
+
+      if (!hasExtension(bamFile,"bam")) exit 1, "File: ${bamFile} has the wrong extension. See --help for more information"
+      if (!hasExtension(baiFile,"bai")) exit 1, "File: ${baiFile} has the wrong extension. See --help for more information"
+
+      return [ idPatient, gender, status, idSample, bamFile, baiFile ]
+    }
 }
 
  // Create a channel of germline FASTQs from a directory pattern: "my_samples/*/"
