@@ -2,10 +2,20 @@ sudo: required
 language: python
 jdk: openjdk8
 services: docker
+
+addons:
+  apt:
+    update: true
+
 python: '3.6'
 cache: pip
+
 matrix:
   fast_finish: true
+
+env:
+  - NXF_VER=19.04.0
+  - NXF_VER=''
 
 before_install:
   # PRs to master are only ok if coming from dev branch
@@ -13,7 +23,6 @@ before_install:
   # Pull the docker image first so the test doesn't wait for this
   - docker pull nfcore/sarek:dev
   # Fake the tag locally so that the pipeline runs properly
-  # Looks weird when this is :dev to :dev, but makes sense when testing code for a release (:dev to :1.0.1)
   - docker tag nfcore/sarek:dev nfcore/sarek:dev
 
 install:
@@ -24,11 +33,12 @@ install:
   # Install nf-core/tools
   - pip install --upgrade pip
   - pip install nf-core
+  # Install Conda
+  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+  - bash Miniconda3-latest-Linux-x86_64.sh -b -f -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
   # Reset
   - mkdir ${TRAVIS_BUILD_DIR}/tests && cd ${TRAVIS_BUILD_DIR}/tests
-
-env:
-  - NXF_VER=19.04.0
 
 jobs:
   include:
