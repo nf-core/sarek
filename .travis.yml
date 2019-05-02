@@ -29,21 +29,12 @@ install:
   - mkdir /tmp/nextflow && cd /tmp/nextflow
   - wget -qO- get.nextflow.io | bash
   - sudo ln -s /tmp/nextflow/nextflow /usr/local/bin/nextflow
-  # Install nf-core/tools
-  - pip install nf-core
-  # Install Conda
-  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-  - bash Miniconda3-latest-Linux-x86_64.sh -b -f -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
   # Reset
   - mkdir ${TRAVIS_BUILD_DIR}/tests && cd ${TRAVIS_BUILD_DIR}/tests
 
 jobs:
   include:
-    - stage: lint
-      script: nf-core lint ${TRAVIS_BUILD_DIR}
     - stage: built
-      script: skip
       script: git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git test-data
       script: nextflow run ${TRAVIS_BUILD_DIR}/build.nf -profile docker --genome smallGRCh37 --refdir test-data/reference --outdir References
     - stage: test
