@@ -65,6 +65,7 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
 params.noReports = false
 params.nucleotidesPerSecond = 1000.0
 params.sampleDir = false
+params.sample = false
 params.sequencing_center = null
 params.step = 'mapping'
 params.targetBED = null
@@ -1028,6 +1029,34 @@ def extractRecal(tsvFile) {
 
     [ idPatient, gender, status, idSample, bamFile, baiFile, recalTable ]
   }
+}
+
+// Parse first line of a FASTQ file, return the flowcell id and lane number.
+def flowcellLaneFromFastq(path) {
+  // expected format:
+  // xx:yy:FLOWCELLID:LANE:... (seven fields)
+  // or
+  // FLOWCELLID:LANE:xx:... (five fields)
+  InputStream fileStream = new FileInputStream(path.toFile())
+  InputStream gzipStream = new java.util.zip.GZIPInputStream(fileStream)
+  Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
+  BufferedReader buffered = new BufferedReader(decoder)
+  def line = buffered.readLine()
+  assert line.startsWith('@')
+  line = line.substring(1)
+  def fields = line.split(' ')[0].split(':')
+  String fcid
+  int lane
+  if (fields.size() == 7) {
+    // CASAVA 1.8+ format
+    fcid = fields[2]
+    lane = fields[3].toInteger()
+  }
+  else if (fields.size() == 5) {
+    fcid = fields[0]
+    lane = fields[1].toInteger()
+  }
+  [fcid, lane]
 }
 
 // Check file extension
