@@ -11,7 +11,7 @@ dependencies:
   - bcftools=1.9
   - bioconductor-rtracklayer=1.42.1
   - bwa=0.7.17
-  - cancerit-allelecount=2.1.2
+  - cancerit-allelecount=4.0.2
   - control-freec=11.4
   - ensembl-vep=96.0
   - fastqc=0.11.8
