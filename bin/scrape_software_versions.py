@@ -17,7 +17,6 @@ regexes = {
     'MultiQC': ['v_multiqc.txt', r"multiqc, version (\S+)"],
     'Nextflow': ['v_nextflow.txt', r"(\S+)"],
     'nf-core/sarek': ['v_pipeline.txt', r"(\S+)"],
-    'Picard': ['v_picard.txt', r"Picard version:(\d\.\d\.\d+)"],
     'Qualimap': ['v_qualimap.txt', r"QualiMap v.(\S+)"],
     'R': ['v_r.txt', r"R version (\S+)"],
     'samtools': ['v_samtools.txt', r"samtools (\S+)"],
@@ -39,7 +38,6 @@ results['GATK'] = '<span style="color:#999999;\">N/A</span>'
 results['htslib'] = '<span style="color:#999999;\">N/A</span>'
 results['Manta'] = '<span style="color:#999999;\">N/A</span>'
 results['MultiQC'] = '<span style="color:#999999;\">N/A</span>'
-results['Picard'] = '<span style="color:#999999;\">N/A</span>'
 results['Qualimap'] = '<span style="color:#999999;\">N/A</span>'
 results['R'] = '<span style="color:#999999;\">N/A</span>'
 results['samtools'] = '<span style="color:#999999;\">N/A</span>'
