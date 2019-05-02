@@ -3,6 +3,8 @@
 ========================================================================================
                          nf-core/sarek
 ========================================================================================
+New Germline (+ Somatic) Analysis Workflow. Started March 2016.
+----------------------------------------------------------------------------------------
  nf-core/sarek Analysis Pipeline.
  @Homepage
  https://sarek.scilifelab.se/
@@ -60,12 +62,17 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
 }
 
+params.step = 'mapping'
+params.test = false
+params.sampleDir = false
+params.tools = false
+
 stepList = defineStepList()
 step = params.step ? params.step.toLowerCase() : ''
 if (step == 'preprocessing' || step == '') step = 'mapping'
 if (!checkParameterExistence(step, stepList)) exit 1, 'Unknown step, see --help for more information'
 if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
-if (step == 'mapping' && !checkExactlyOne([params.test, params.sample, params.sampleDir]))
+if (step == 'mapping' && ([params.test, params.sample, params.sampleDir].size == 1))
   exit 1, 'Please define which samples to work on by providing exactly one of the --test, --sample or --sampleDir options'
 
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
@@ -111,6 +118,33 @@ ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
    ]
    if (params.test || step != 'mapping') tsvPath = tsvPaths[step]
  }
+
+ // Set up the inputFiles and bamFiles channels. One of them will remain empty
+ inputFiles = Channel.empty()
+ bamFiles = Channel.empty()
+ if (tsvPath) {
+   tsvFile = file(tsvPath)
+   switch (step) {
+     case 'mapping': inputFiles = extractSample(tsvFile); break
+     case 'recalibrate': bamFiles = extractRecal(tsvFile); break
+     default: exit 1, "Unknown step ${step}"
+   }
+ } else if (params.sampleDir) {
+   if (step != 'mapping') exit 1, '--sampleDir does not support steps other than "mapping"'
+   inputFiles = extractFastqFromDir(params.sampleDir)
+   (inputFiles, fastqTmp) = inputFiles.into(2)
+   fastqTmp.toList().subscribe onNext: {
+     if (it.size() == 0) {
+       exit 1, "No FASTQ files found in --sampleDir directory '${params.sampleDir}'"
+     }
+   }
+   tsvFile = params.sampleDir  // used in the reports
+ } else exit 1, 'No sample were defined, see --help'
+
+ if (step == 'recalibrate') (patientGenders, bamFiles) = extractGenders(bamFiles)
+ else (patientGenders, inputFiles) = extractGenders(inputFiles)
+
+
 
 // Header log info
 log.info nfcoreHeader()
@@ -164,20 +198,17 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
  * Parse software version numbers
  */
 process get_software_versions {
-    publishDir "${params.outdir}/pipeline_info", mode: 'copy',
-    saveAs: {filename ->
-        if (filename.indexOf(".csv") > 0) filename
-        else null
-    }
+   publishDir path:"${params.outdir}/pipeline_info", mode: params.publishDirMode
 
     output:
     file 'software_versions_mqc.yaml' into software_versions_yaml
-    file "software_versions.csv"
 
     script:
     """
+    alleleCounter --version &> v_allelecount.txt  || true
     bcftools version > v_bcftools.txt 2>&1 || true
     bwa &> v_bwa.txt 2>&1 || true
+    cat ${baseDir}/scripts/ascat.R | grep "ASCAT version" &> v_ascat.txt  || true
     configManta.py --version > v_manta.txt 2>&1 || true
     configureStrelkaGermlineWorkflow.py --version > v_strelka.txt 2>&1 || true
     echo "${workflow.manifest.version}" &> v_pipeline.txt 2>&1 || true
@@ -188,6 +219,7 @@ process get_software_versions {
     gatk ApplyBQSR --help 2>&1 | grep Version: > v_gatk.txt 2>&1 || true
     multiqc --version &> v_multiqc.txt 2>&1 || true
     qualimap --version &> v_qualimap.txt 2>&1 || true
+    R --version &> v_r.txt  || true
     samtools --version &> v_samtools.txt 2>&1 || true
     vcftools --version &> v_vcftools.txt 2>&1 || true
     vep --help &> v_vep.txt 2>&1 || true
@@ -195,6 +227,9 @@ process get_software_versions {
     scrape_software_versions.py &> software_versions_mqc.yaml
     """
 }
+
+
+
 
 /*
  * Completion e-mail notification
@@ -324,12 +359,12 @@ def nfcoreHeader(){
     ${c_blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${c_yellow}}  {${c_reset}
     ${c_blue}  | \\| |       \\__, \\__/ |  \\ |___     ${c_green}\\`-._,-`-,${c_reset}
                                             ${c_green}`._,._,\'${c_reset}
-           ____        _____               _
-         .' _  `.     / ____|             | |
-        /  |\\`-_ \\   | (___  ___  _ __ __ | | __
-       |   | \\  `-|   \\___ \\/__ \\| ´__/ _\\| |/ /
-        \\ |   \\  /    ____) | __ | | |  __|   <
-         `|____\\'    |_____/\\____|_|  \\__/|_|\\_\\
+    ${c_black}       ____      ${c_blue}  _____               _ ${c_reset}
+    ${c_black}     .' ${c_green}_${c_black}  `.    ${c_blue} / ____|             | | ${c_reset}
+    ${c_black}    /  ${c_green}|\\${c_white}`-_${c_black} \\ ${c_blue}  | (___  ___  _ __ __ | | __ ${c_reset}
+    ${c_black}   |   ${c_green}| \\  ${c_white}`-${c_black}| ${c_blue}  \\___ \\/__ \\| ´__/ _\\| |/ / ${c_reset}
+    ${c_black}    \\ ${c_green}|   \\  ${c_black}/ ${c_blue}   ____) | __ | | |  __|   < ${c_reset}
+    ${c_black}     `${c_green}|${c_black}____${c_green}\\${c_black}'   ${c_blue} |_____/\\____|_|  \\__/|_|\\_\\ ${c_reset}
 
     ${c_purple}  nf-core/sarek v${workflow.manifest.version}${c_reset}
     ${c_dim}----------------------------------------------------${c_reset}
@@ -363,10 +398,10 @@ def checkHostname(){
 ========================================================================================
 */
 
-def checkExactlyOne(list) {
-  def n = 0
-  list.each{n += it ? 1 : 0}
-  return n == 1
+// Check if a row has the expected number of item
+def checkNumberOfItem(row, number) {
+  if (row.size() != number) exit 1, "Malformed row in TSV file: ${row}, see --help for more information"
+  return true
 }
 
 // Check parameter existence
@@ -383,6 +418,7 @@ def checkParameterList(list, realList) {
   return list.every{ checkParameterExistence(it, realList) }
 }
 
+// Check if params.item exists and return params.genomes[params.genome].item otherwise
 def checkParamReturnFile(item) {
   params."${item}" = params.genomes[params.genome]."${item}"
   return file(params."${item}")
@@ -409,6 +445,7 @@ def checkReferenceMap(referenceMap) {
   }
 }
 
+// Define map of reference depending of tools and step
 def defineReferenceMap(step, tools) {
   def referenceMap =
   [
@@ -439,6 +476,7 @@ def defineReferenceMap(step, tools) {
   return referenceMap
 }
 
+// Define list of available step
 def defineStepList() {
   return [
     'mapping',
@@ -448,6 +486,7 @@ def defineStepList() {
   ]
 }
 
+// Define list of available tools
 def defineToolList() {
   return [
     'ascat',
@@ -457,4 +496,112 @@ def defineToolList() {
     'mutect2',
     'strelka'
   ]
+}
+
+ // Create a channel of germline FASTQs from a directory pattern: "my_samples/*/"
+ // All FASTQ files in subdirectories are collected and emitted;
+ // they must have _R1_ and _R2_ in their names.
+def extractFastqFromDir(pattern) {
+  def fastq = Channel.create()
+  // a temporary channel does all the work
+  Channel
+    .fromPath(pattern, type: 'dir')
+    .ifEmpty { error "No directories found matching pattern '${pattern}'" }
+    .subscribe onNext: { sampleDir ->
+      // the last name of the sampleDir is assumed to be a unique sample id
+      sampleId = sampleDir.getFileName().toString()
+
+      for (path1 in file("${sampleDir}/**_R1_*.fastq.gz")) {
+        assert path1.getName().contains('_R1_')
+        path2 = file(path1.toString().replace('_R1_', '_R2_'))
+        if (!path2.exists()) error "Path '${path2}' not found"
+        (flowcell, lane) = flowcellLaneFromFastq(path1)
+        patient = sampleId
+        gender = 'ZZ'  // unused
+        status = 0  // normal (not tumor)
+        rgId = "${flowcell}.${sampleId}.${lane}"
+        result = [patient, gender, status, sampleId, rgId, path1, path2]
+        fastq.bind(result)
+      }
+  }, onComplete: { fastq.close() }
+  fastq
+}
+
+// Extract gender from Channel as it's only used for CNVs
+def extractGenders(channel) {
+  def genders = [:]
+  channel = channel.map{ it ->
+    def idPatient = it[0]
+    def gender = it[1]
+    genders[idPatient] = gender
+    [idPatient] + it[2..-1]
+  }
+  [genders, channel]
+}
+
+// Channeling the TSV file containing FASTQ or BAM
+// Format is: "subject gender status sample lane fastq1 fastq2"
+// or: "subject gender status sample lane bam"
+def extractSample(tsvFile) {
+  Channel.from(tsvFile)
+  .splitCsv(sep: '\t')
+  .map { row ->
+    def idPatient  = row[0]
+    def gender     = row[1]
+    def status     = returnStatus(row[2].toInteger())
+    def idSample   = row[3]
+    def idRun      = row[4]
+    def file1      = returnFile(row[5])
+    def file2      = file("null")
+    if (hasExtension(file1,"fastq.gz") || hasExtension(file1,"fq.gz")) {
+      checkNumberOfItem(row, 7)
+      file2 = returnFile(row[6])
+      if (!hasExtension(file2,"fastq.gz") && !hasExtension(file2,"fq.gz")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
+    }
+    else if (hasExtension(file1,"bam")) checkNumberOfItem(row, 6)
+    else "No recognisable extention for input file: ${file1}"
+
+    [idPatient, gender, status, idSample, idRun, file1, file2]
+  }
+}
+
+// Channeling the TSV file containing Recalibration Tables.
+// Format is: "subject gender status sample bam bai recalTables"
+def extractRecal(tsvFile) {
+  Channel.from(tsvFile)
+    .splitCsv(sep: '\t')
+    .map { row ->
+    checkNumberOfItem(row, 7)
+    def idPatient  = row[0]
+    def gender     = row[1]
+    def status     = returnStatus(row[2].toInteger())
+    def idSample   = row[3]
+    def bamFile    = returnFile(row[4])
+    def baiFile    = returnFile(row[5])
+    def recalTable = returnFile(row[6])
+
+    if (!hasExtension(bamFile,"bam")) exit 1, "File: ${bamFile} has the wrong extension. See --help for more information"
+    if (!hasExtension(baiFile,"bai")) exit 1, "File: ${baiFile} has the wrong extension. See --help for more information"
+    if (!hasExtension(recalTable,"recal.table")) exit 1, "File: ${recalTable} has the wrong extension. See --help for more information"
+
+    [ idPatient, gender, status, idSample, bamFile, baiFile, recalTable ]
+  }
+}
+
+// Check file extension
+def hasExtension(it, extension) {
+  it.toString().toLowerCase().endsWith(extension.toLowerCase())
+}
+
+// Return file if it exists
+def returnFile(it) {
+  if (!file(it).exists()) exit 1, "Missing file in TSV file: ${it}, see --help for more information"
+  return file(it)
+}
+
+// Return status [0,1]
+// 0 == Normal, 1 == Tumor
+def returnStatus(it) {
+  if (!(it in [0, 1])) exit 1, "Status is not recognized in TSV file: ${it}, see --help for more information"
+  return it
 }
