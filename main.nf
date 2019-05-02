@@ -63,6 +63,7 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
 }
 
 params.noReports = false
+params.nucleotidesPerSecond = 1000.0
 params.sampleDir = false
 params.sequencing_center = null
 params.step = 'mapping'
@@ -420,14 +421,76 @@ duplicateMarkedBams = duplicateMarkedBams.dump(tag:'MD BAM')
 
 (mdBam, mdBamToJoin) = duplicateMarkedBams.into(2)
 
+process CreateIntervalBeds {
+  tag {intervals.fileName}
+
+  input:
+    file(intervals) from Channel.value(referenceMap.intervals)
+
+  output:
+    file '*.bed' into bedIntervals mode flatten
+
+  script:
+  // If the interval file is BED format, the fifth column is interpreted to
+  // contain runtime estimates, which is then used to combine short-running jobs
+  if (hasExtension(intervals,"bed"))
+    """
+    awk -vFS="\t" '{
+      t = \$5  # runtime estimate
+      if (t == "") {
+        # no runtime estimate in this row, assume default value
+        t = (\$3 - \$2) / ${params.nucleotidesPerSecond}
+      }
+      if (name == "" || (chunk > 600 && (chunk + t) > longest * 1.05)) {
+        # start a new chunk
+        name = sprintf("%s_%d-%d.bed", \$1, \$2+1, \$3)
+        chunk = 0
+        longest = 0
+      }
+      if (t > longest)
+        longest = t
+      chunk += t
+      print \$0 > name
+    }' ${intervals}
+    """
+  else
+    """
+    awk -vFS="[:-]" '{
+      name = sprintf("%s_%d-%d", \$1, \$2, \$3);
+      printf("%s\\t%d\\t%d\\n", \$1, \$2-1, \$3) > name ".bed"
+    }' ${intervals}
+    """
+}
+
+bedIntervals = bedIntervals
+  .map { intervalFile ->
+    def duration = 0.0
+    for (line in intervalFile.readLines()) {
+      final fields = line.split('\t')
+      if (fields.size() >= 5) duration += fields[4].toFloat()
+      else {
+        start = fields[1].toInteger()
+        end = fields[2].toInteger()
+        duration += (end - start) / params.nucleotidesPerSecond
+      }
+    }
+    [duration, intervalFile]
+  }.toSortedList({ a, b -> b[0] <=> a[0] })
+  .flatten().collate(2)
+  .map{duration, intervalFile -> intervalFile}
+
+bedIntervals = bedIntervals.dump(tag:'bedintervals')
+
+bamForBaseRecalibrator = mdBam.combine(bedIntervals)
+
 process CreateRecalibrationTable {
-  tag {idPatient + "-" + idSample}
+  tag {idPatient + "-" + idSample + "-" + intervalBed}
 
   publishDir "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked", mode: params.publishDirMode, overwrite: false
 
   input:
-    set idPatient, status, idSample, file(bam), file(bai) from mdBam // realignedBam
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(knownIndels), file(knownIndelsIndex), file(intervals) from Channel.value([
+    set idPatient, status, idSample, file(bam), file(bai), file(intervalBed) from bamForBaseRecalibrator
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(knownIndels), file(knownIndelsIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
       referenceMap.genomeDict,
@@ -435,32 +498,56 @@ process CreateRecalibrationTable {
       referenceMap.dbsnpIndex,
       referenceMap.knownIndels,
       referenceMap.knownIndelsIndex,
-      referenceMap.intervals,
     ])
 
   output:
-    set idPatient, status, idSample, file("${idSample}.recal.table") into recalibrationTable
-    set idPatient, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai"), val("${idSample}.recal.table") into recalibrationTableTSV
+    set idPatient, status, idSample, file("${intervalBed.baseName}_${idSample}.recal.table") into recalIntervals
 
   when: step == 'mapping'
 
   script:
   known = knownIndels.collect{ "--known-sites ${it}" }.join(' ')
+  // --use-original-qualities ???
   """
   gatk --java-options -Xmx${task.memory.toGiga()}g \
   BaseRecalibrator \
-  --input ${bam} \
-  --output ${idSample}.recal.table \
+  -I ${bam} \
+  -O ${intervalBed.baseName}_${idSample}.recal.table \
   --tmp-dir /tmp \
   -R ${genomeFile} \
-  -L ${intervals} \
+  -L ${intervalBed} \
   --known-sites ${dbsnp} \
   ${known} \
   --verbosity INFO
   """
 }
 
-(recalibrationTableTSV, recalibrationTableSampleTSV) = recalibrationTableTSV.into(2)
+recalIntervals = recalIntervals.groupTuple(by:[0,1,2])
+
+process GatherBQSRReports {
+  tag {idPatient + "-" + idSample}
+
+  publishDir "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked", mode: params.publishDirMode, overwrite: false
+
+  input:
+    set idPatient, status, idSample, file(recalTable) from recalIntervals
+
+  output:
+    set idPatient, status, idSample, file("${idSample}.recal.table") into recalibrationTable
+    set idPatient, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai"), val("${idSample}.recal.table") into (recalibrationTableTSV, recalibrationTableSampleTSV)
+
+  when: step == 'mapping'
+
+  script:
+  recal = recalTable.collect{ "-I ${it}" }.join(' ')
+  """
+  gatk --java-options -Xmx${task.memory.toGiga()}g \
+  GatherBQSRReports \
+  ${recal} \
+  -O ${idSample}.recal.table \
+  """
+}
+
 // Create TSV files to restart from this step
 recalibrationTableTSV.map { idPatient, status, idSample, bam, bai, recalTable ->
   gender = patientGenders[idPatient]
@@ -498,7 +585,7 @@ process RecalibrateBam {
 
   output:
     set idPatient, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam, recalibratedBamForStats
-    set idPatient, status, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into recalibratedBamTSV
+    set idPatient, status, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into (recalibratedBamTSV, recalibratedBamSampleTSV)
 
   script:
   """
@@ -514,7 +601,6 @@ process RecalibrateBam {
 }
 
 
-(recalibratedBamTSV, recalibratedBamSampleTSV) = recalibratedBamTSV.into(2)
 // Creating a TSV file to restart from this step
 recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
   gender = patientGenders[idPatient]
