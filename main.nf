@@ -20,16 +20,15 @@ def helpMessage() {
 
     The typical command for running the pipeline is as follows:
 
-    nextflow run nf-core/sarek --reads '*_R{1,2}.fastq.gz' -profile docker
+    nextflow run nf-core/sarek --sample sample.tsv -profile docker
 
     Mandatory arguments:
-      --reads                       Path to input data (must be surrounded with quotes)
+      --sample                      Path to TSV input file
       -profile                      Configuration profile to use. Can use multiple (comma separated)
                                     Available: conda, docker, singularity, awsbatch, test and more.
 
     Options:
       --genome                      Name of iGenomes reference
-      --singleEnd                   Specifies that the input is single end reads
 
     References                      If not specified in the configuration file or you wish to overwrite any of the references.
       --fasta                       Path to Fasta reference
@@ -176,12 +175,23 @@ process get_software_versions {
     file "software_versions.csv"
 
     script:
-    // TODO nf-core: Get all tools to print their version number here
     """
-    echo $workflow.manifest.version > v_pipeline.txt
-    echo $workflow.nextflow.version > v_nextflow.txt
-    fastqc --version > v_fastqc.txt
-    multiqc --version > v_multiqc.txt
+    bcftools version > v_bcftools.txt 2>&1 || true
+    bwa &> v_bwa.txt 2>&1 || true
+    configManta.py --version > v_manta.txt 2>&1 || true
+    configureStrelkaGermlineWorkflow.py --version > v_strelka.txt 2>&1 || true
+    echo "${workflow.manifest.version}" &> v_pipeline.txt 2>&1 || true
+    echo "${workflow.nextflow.version}" &> v_nextflow.txt 2>&1 || true
+    echo "SNPEFF version"\$(snpEff -h 2>&1) > v_snpeff.txt
+    fastqc --version > v_fastqc.txt 2>&1 || true
+    freebayes --version > v_freebayes.txt 2>&1 || true
+    gatk ApplyBQSR --help 2>&1 | grep Version: > v_gatk.txt 2>&1 || true
+    multiqc --version &> v_multiqc.txt 2>&1 || true
+    qualimap --version &> v_qualimap.txt 2>&1 || true
+    samtools --version &> v_samtools.txt 2>&1 || true
+    vcftools --version &> v_vcftools.txt 2>&1 || true
+    vep --help &> v_vep.txt 2>&1 || true
+
     scrape_software_versions.py &> software_versions_mqc.yaml
     """
 }
