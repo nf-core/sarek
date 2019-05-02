@@ -116,8 +116,8 @@ ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
  if (!params.sample && !params.sampleDir) {
    tsvPaths = [
        'mapping':        "${workflow.projectDir}/Sarek-data/testdata/tsv/tiny.tsv",
-       'recalibrate':    "${params.outdir}/Preprocessing/DuplicateMarked/duplicateMarked.tsv",
-       'variantcalling': "${params.outdir}/Preprocessing/Recalibrated/recalibrated.tsv"
+       'recalibrate':    "${params.outdir}/Preprocessing/TSV/duplicateMarked.tsv",
+       'variantcalling': "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"
    ]
    if (params.test || step != 'mapping') tsvPath = tsvPaths[step]
  }
@@ -414,7 +414,7 @@ markDuplicatesTSV.map { idPatient, status, idSample, bam, bai ->
   gender = patientGenders[idPatient]
   "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bam}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bai}\n"
 }.collectFile(
-  name: 'duplicateMarked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/DuplicateMarked"
+  name: 'duplicateMarked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
 )
 
 duplicateMarkedBams = duplicateMarkedBams.map {
@@ -474,7 +474,7 @@ recalibrationTableTSV.map { idPatient, status, idSample, bam, bai, recalTable ->
   gender = patientGenders[idPatient]
   "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bam}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bai}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${recalTable}\n"
 }.collectFile(
-  name: 'duplicateMarked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/DuplicateMarked"
+  name: 'duplicateMarked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
 )
 
 recalibrationTable = mdBamToJoin.join(recalibrationTable, by:[0,1,2])
@@ -518,7 +518,7 @@ recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
   gender = patientGenders[idPatient]
   "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bam}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bai}\n"
 }.collectFile(
-  name: 'recalibrated.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/Recalibrated"
+  name: 'recalibrated.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
 )
 
 recalibratedBam.dump(tag:'recal.bam')
