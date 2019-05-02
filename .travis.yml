@@ -34,5 +34,5 @@ install:
 
 script:
   - git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data
-  - nextflow run ${TRAVIS_BUILD_DIR}/build.nf -profile docker --genome smallGRCh37 --refdir data/reference --outdir references --publishDirMode link
-  - nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile docker --genome smallGRCh37 --igenomes_base references --sampleDir data/testdata/tiny/normal --publishDirMode link
+  - nextflow run ${TRAVIS_BUILD_DIR}/build.nf -profile docker --genome smallGRCh37 --refdir data/reference --outdir references --publishDirMode link --max_memory 7.GB --max_cpus 2
+  - nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile docker --genome smallGRCh37 --igenomes_base references --sampleDir data/testdata/tiny/normal --publishDirMode link --max_memory 7.GB --max_cpus 2
