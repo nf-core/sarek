@@ -32,9 +32,7 @@ install:
   # Reset
   - mkdir ${TRAVIS_BUILD_DIR}/tests && cd ${TRAVIS_BUILD_DIR}/tests
 
-jobs:
-  include:
-    - stage: germline
-      script: git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data
-      script: nextflow run ${TRAVIS_BUILD_DIR}/build.nf -profile docker --genome smallGRCh37 --refdir data/reference --outdir references --publishDirMode link
-      script: nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile docker --genome smallGRCh37 --igenomes_base references --sampleDir data/testdata/tiny/normal --publishDirMode link
+script:
+  - git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data
+  - nextflow run ${TRAVIS_BUILD_DIR}/build.nf -profile docker --genome smallGRCh37 --refdir data/reference --outdir references --publishDirMode link
+  - nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile docker --genome smallGRCh37 --igenomes_base references --sampleDir data/testdata/tiny/normal --publishDirMode link
