@@ -14,19 +14,19 @@ pipeline {
         stage('Build') {
             steps {
               sh "git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data"
-              sh "nextflow run build.nf -profile docker --genome smallGRCh37 --refdir data/reference --outdir references --publishDirMode link"
+              sh "nextflow run build.nf -profile docker --genome smallGRCh37 --refdir data/reference --outdir references --publishDirMode link -ansi-log false"
               sh "rm -rf work/ references/pipeline_info .nextflow*"
             }
         }
         stage('SampleDir') {
             steps {
-                sh "nextflow run main.nf -profile docker --sampleDir data/testdata/tiny/normal --tools HaplotypeCaller,Manta,Strelka --genome smallGRCh37 --igenomes_base references --publishDirMode link"
+                sh "nextflow run main.nf -profile docker --sampleDir data/testdata/tiny/normal --tools HaplotypeCaller,Manta,Strelka --genome smallGRCh37 --igenomes_base references --publishDirMode link -ansi-log false"
                 sh "rm -rf work/ .nextflow* results/"
             }
         }
         stage('Multiple') {
             steps {
-                sh "nextflow run main.nf -profile docker --sample data/testdata/tsv/tiny-multiple.tsv --tools HaplotypeCaller,Manta,Strelka --genome smallGRCh37 --igenomes_base references --publishDirMode link"
+                sh "nextflow run main.nf -profile docker --sample data/testdata/tsv/tiny-multiple.tsv --tools HaplotypeCaller,Manta,Strelka --genome smallGRCh37 --igenomes_base references --publishDirMode link -ansi-log false"
                 sh "rm -rf work/ .nextflow* results/"
             }
         }
