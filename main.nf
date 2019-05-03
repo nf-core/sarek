@@ -82,25 +82,23 @@ def helpMessage() {
  */
 
 // Show help message
-if (params.help){
-    helpMessage()
-    exit 0
-}
+if (params.help) exit 0, helpMessage()
 
 // Check if genome exists in the config file
 if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
 }
 
-params.noGVCF = false
-params.noReports = false
+// Default value for params
+params.noGVCF = null
+params.noReports = null
 params.nucleotidesPerSecond = 1000.0
-params.sample = false
-params.sampleDir = false
+params.sample = null
+params.sampleDir = null
 params.sequencing_center = null
 params.step = 'mapping'
 params.targetBED = null
-params.tools = false
+params.tools = null
 
 stepList = defineStepList()
 step = params.step ? params.step.toLowerCase() : ''
@@ -108,7 +106,7 @@ if (step == 'preprocessing' || step == '') step = 'mapping'
 if (!checkParameterExistence(step, stepList)) exit 1, 'Unknown step, see --help for more information'
 if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
 if (step == 'mapping' && ([params.sample, params.sampleDir].size == 1))
-  exit 1, 'Please define which samples to work on by providing exactly one of the --test, --sample or --sampleDir options'
+  exit 1, 'Please define which samples to work on by providing exactly one of the --sample or --sampleDir options'
 
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
 toolList = defineToolList()
@@ -120,9 +118,7 @@ if (!checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --
 // Has the run name been specified by the user?
 //  this has the bonus effect of catching both -name and --name
 custom_runName = params.name
-if ( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
-  custom_runName = workflow.runName
-}
+if ( !(workflow.runName ==~ /[a-z]+_[a-z]+/) )custom_runName = workflow.runName
 
 if ( workflow.profile == 'awsbatch') {
   // AWSBatch sanity checking
@@ -136,7 +132,7 @@ if ( workflow.profile == 'awsbatch') {
 
 // Stage config files
 ch_multiqc_config = Channel.fromPath(params.multiqc_config)
-ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
+ch_output_docs = Channel.fromPath("${baseDir}/docs/output.md")
 
 /*
  * Create a channel for input read files
@@ -182,27 +178,35 @@ ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
 // Header log info
 log.info nfcoreHeader()
 def summary = [:]
-if (workflow.revision) summary['Pipeline Release'] = workflow.revision
-summary['Run Name']         = custom_runName ?: workflow.runName
-// TODO nf-core: Report custom parameters here
-summary['Max Resources']    = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
-if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
-summary['Output dir']       = params.outdir
-summary['Launch dir']       = workflow.launchDir
-summary['Working dir']      = workflow.workDir
-summary['Script dir']       = workflow.projectDir
-summary['User']             = workflow.userName
+if (workflow.revision) summary['Pipeline Release']         = workflow.revision
+summary['Run Name']      = custom_runName ?: workflow.runName
+summary['Max Resources'] = "${params.max_memory} memory, ${params.max_cpus} cpus, ${params.max_time} time per job"
+if (workflow.containerEngine) summary['Container']         = "${workflow.containerEngine} - ${workflow.container}"
+if (params.sample)            summary['Sample']            = params.sample
+if (params.sampleDir)         summary['Sample']            = params.sampleDir
+if (params.targetBED)         summary['Target BED']        = params.targetBED
+if (params.step)              summary['Step']              = params.step
+if (params.tools)             summary['Tools']             = tools.join(', ')
+if (params.noReports)         summary['Reports']           = params.noReports
+if (params.noGVCF)            summary['GVCF']              = params.noGVCF
+if (params.sequencing_center) summary['Sequencing Center'] = params.sequencing_center
+summary['Nucleotides/s'] = params.nucleotidesPerSecond
+summary['Output dir']    = params.outdir
+summary['Launch dir']    = workflow.launchDir
+summary['Working dir']   = workflow.workDir
+summary['Script dir']    = workflow.projectDir
+summary['User']          = workflow.userName
 if (workflow.profile == 'awsbatch'){
-   summary['AWS Region']    = params.awsregion
-   summary['AWS Queue']     = params.awsqueue
+   summary['AWS Region'] = params.awsregion
+   summary['AWS Queue']  = params.awsqueue
 }
 summary['Config Profile'] = workflow.profile
 if (params.config_profile_description) summary['Config Description'] = params.config_profile_description
 if (params.config_profile_contact)     summary['Config Contact']     = params.config_profile_contact
 if (params.config_profile_url)         summary['Config URL']         = params.config_profile_url
 if (params.email) {
-  summary['E-mail Address']  = params.email
-  summary['MultiQC maxsize'] = params.maxMultiqcEmailFileSize
+  summary['E-mail Address']     = params.email
+  summary['MultiQC maxsize']    = params.maxMultiqcEmailFileSize
 }
 log.info summary.collect { k,v -> "${k.padRight(18)}: $v" }.join("\n")
 log.info "\033[2m----------------------------------------------------\033[0m"
@@ -716,16 +720,14 @@ if (step == 'variantcalling') recalibratedBam = bamFiles
 recalibratedBam = recalibratedBam.dump(tag:'BAM')
 
 // Here we have a recalibrated bam set
-// The sample tsv config file which is formatted like: "idPatient status idSample bamFile baiFile"
-// Manta will be run in Germline mode, the Tumor mode is run in somaticVC.nf
+// The TSV file is formatted like: "idPatient status idSample bamFile baiFile"
+// Manta will be run in Germline mode, or in Tumor mode depending on status
 // HaplotypeCaller and Strelka will be run for Normal and Tumor samples
 
-(bamsForGermlineManta, bamsForGermlineStrelka, recalibratedBam) = recalibratedBam.into(3)
+(bamsForSingleManta, bamsForSingleStrelka, recalibratedBam) = recalibratedBam.into(3)
 
-// To speed Variant Callers up we are chopping the reference into smaller pieces.
-// Do variant calling by this intervals, and re-merge the VCFs.
-// Since we are on a cluster, this can parallelize the variant call processes.
-// And push down the variant call wall clock time significanlty.
+// To speed Variant Callers up we are chopping the reference into smaller pieces
+// Do variant calling by this intervals, and re-merge the VCFs
 
 bamsForHC = recalibratedBam.combine(bedIntervalsHC)
 
@@ -811,7 +813,7 @@ vcfsToMerge = vcfsToMerge.dump(tag:'VCFsToMerge')
 process ConcatVCF {
   tag {variantCaller + "-" + idSample}
 
-  publishDir "${params.outdir}/VariantCalling/${idPatient}/${"$variantCaller"}", mode: params.publishDirMode
+  publishDir "${params.outdir}/VariantCalling/${idSample}/${"$variantCaller"}", mode: params.publishDirMode
 
   input:
     set variantCaller, idPatient, status, idSample, file(vcFiles) from vcfsToMerge
@@ -822,7 +824,7 @@ process ConcatVCF {
     // we have this funny *_* pattern to avoid copying the raw calls to publishdir
     set variantCaller, idPatient, status, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into vcfConcatenated
 
-  when: 'haplotypecaller' in tools && !params.onlyQC
+  when: 'haplotypecaller' in tools
 
   script:
   if (variantCaller == 'HaplotypeCaller') outputFile = "${variantCaller}_${idSample}.vcf"
@@ -832,6 +834,174 @@ process ConcatVCF {
   concatenateVCFs.sh -i ${genomeIndex} -c ${task.cpus} -o ${outputFile} ${options}
   """
 }
+
+process RunSingleStrelka {
+  tag {idSample}
+
+  publishDir "${params.outdir}/VariantCalling/${idSample}/Strelka", mode: params.publishDirMode
+
+  input:
+    set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleStrelka
+    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
+    set file(genomeFile), file(genomeIndex) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex
+    ])
+
+  output:
+    set val("Strelka"), idPatient, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleStrelkaOutput
+
+  when: 'strelka' in tools
+
+  script:
+  beforeScript = params.targetBED ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
+  options = params.targetBED ? "--exome --callRegions call_targets.bed.gz" : ""
+  """
+  ${beforeScript}
+  configureStrelkaGermlineWorkflow.py \
+  --bam ${bam} \
+  --referenceFasta ${genomeFile} \
+  ${options} \
+  --runDir Strelka
+
+  python Strelka/runWorkflow.py -m local -j ${task.cpus}
+  mv Strelka/results/variants/genome.*.vcf.gz Strelka_${idSample}_genome.vcf.gz
+  mv Strelka/results/variants/genome.*.vcf.gz.tbi Strelka_${idSample}_genome.vcf.gz.tbi
+  mv Strelka/results/variants/variants.vcf.gz Strelka_${idSample}_variants.vcf.gz
+  mv Strelka/results/variants/variants.vcf.gz.tbi Strelka_${idSample}_variants.vcf.gz.tbi
+  """
+}
+
+singleStrelkaOutput = singleStrelkaOutput.dump(tag:'Single Strelka')
+
+process RunSingleManta {
+  tag {idSample}
+
+  publishDir "${params.outdir}/VariantCalling/${idSample}/Manta", mode: params.publishDirMode
+
+  input:
+    set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleManta
+    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
+    set file(genomeFile), file(genomeIndex) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex
+    ])
+
+  output:
+    set val("Manta"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleMantaOutput
+
+  when: 'manta' in tools
+
+  script:
+  beforeScript = params.targetBED ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
+  options = params.targetBED ? "--exome --callRegions call_targets.bed.gz" : ""
+  inputbam = status == 0 ? "--bam" : "--tumorBam"
+  vcftype = status == 0 ? "diploid" : "tumor"
+  """
+  ${beforeScript}
+  configManta.py \
+  ${inputbam} ${bam} \
+  --reference ${genomeFile} \
+  ${options} \
+  --runDir Manta
+
+  python Manta/runWorkflow.py -m local -j ${task.cpus}
+
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz \
+    Manta_${idSample}.candidateSmallIndels.vcf.gz
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz.tbi \
+    Manta_${idSample}.candidateSmallIndels.vcf.gz.tbi
+  mv Manta/results/variants/candidateSV.vcf.gz \
+    Manta_${idSample}.candidateSV.vcf.gz
+  mv Manta/results/variants/candidateSV.vcf.gz.tbi \
+    Manta_${idSample}.candidateSV.vcf.gz.tbi
+  mv Manta/results/variants/${vcftype}SV.vcf.gz \
+    Manta_${idSample}.${vcftype}SV.vcf.gz
+  mv Manta/results/variants/${vcftype}SV.vcf.gz.tbi \
+    Manta_${idSample}.${vcftype}SV.vcf.gz.tbi
+  """
+}
+
+singleMantaOutput = singleMantaOutput.dump(tag:'Single Manta')
+
+vcfForQC = Channel.empty().mix(
+  vcfConcatenated.map {
+    variantcaller, idPatient, status, idSample, vcf, tbi ->
+    [variantcaller, idPatient, idSample, vcf]
+  },
+  singleStrelkaOutput.map {
+    variantcaller, idPatient, idSample, vcf, tbi ->
+    [variantcaller, idPatient, idSample, vcf[1]]
+  },
+  singleMantaOutput.map {
+    variantcaller, idPatient, idSample, vcf, tbi ->
+    [variantcaller, idPatient, idSample, vcf[2]]
+  })
+
+(vcfForBCFtools, vcfForVCFtools) = vcfForQC.into(2)
+
+process RunBcftoolsStats {
+  tag {"${variantCaller} - ${vcf}"}
+
+  publishDir "${params.outdir}/Reports/${idSample}/BCFToolsStats", mode: params.publishDirMode
+
+  input:
+    set variantCaller, idPatient, idSample, file(vcf) from vcfForBCFtools
+
+  output:
+    file ("*.bcf.tools.stats.out") into bcfReport
+
+  when: !params.noReports
+
+  script:
+  """
+  bcftools stats ${vcf} > ${reduceVCF(vcf)}.bcf.tools.stats.out
+  """
+
+}
+
+bcfReport.dump(tag:'BCFTools')
+
+process RunVcftools {
+  tag {"${variantCaller} - ${vcf}"}
+
+  publishDir "${params.outdir}/Reports/${idSample}/VCFTools", mode: params.publishDirMode
+
+  input:
+    set variantCaller, idPatient, idSample, file(vcf) from vcfForVCFtools
+
+  output:
+    file ("${reduceVCF(vcf)}.*") into vcfReport
+
+  when: !params.noReports
+
+  script:
+  """
+  vcftools \
+  --gzvcf ${vcf} \
+  --relatedness2 \
+  --out ${reduceVCF(vcf)}
+
+  vcftools \
+  --gzvcf ${vcf} \
+  --TsTv-by-count \
+  --out ${reduceVCF(vcf)}
+
+  vcftools \
+  --gzvcf ${vcf} \
+  --TsTv-by-qual \
+  --out ${reduceVCF(vcf)}
+
+  vcftools \
+  --gzvcf ${vcf} \
+  --FILTER-summary \
+  --out ${reduceVCF(vcf)}
+
+  """
+}
+
+vcfReport.dump(tag:'VCFTools')
+
 
 /*
  * Completion e-mail notification
@@ -1248,6 +1418,11 @@ def hasExtension(it, extension) {
 def returnFile(it) {
   if (!file(it).exists()) exit 1, "Missing file in TSV file: ${it}, see --help for more information"
   return file(it)
+}
+
+// Remove .ann .gz and .vcf extension from a VCF file
+def reduceVCF(file) {
+  return file.fileName.toString().minus(".ann").minus(".vcf").minus(".gz")
 }
 
 // Return status [0,1]
