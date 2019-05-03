@@ -1,0 +1,21 @@
+version: 2
+jobs:
+ build:
+   machine: true
+   steps:
+     - checkout
+
+     - run: docker build --build-arg GENOME=GRCh37 --build-arg CACHE_VERSION=75 -t containers/snpeff/.
+     - run: docker push nfcore/sareksnpeff:$GENOME$SAREK_VERSION
+
+     - run: docker build --build-arg GENOME=GRCh38 --build-arg CACHE_VERSION=86 -t containers/snpeff/.
+     - run: docker push nfcore/sareksnpeff:$GENOME$SAREK_VERSION
+
+     - run: docker build --build-arg GENOME=GRCh37 --build-arg SPECIES=homo_sapiens --build-arg VEP_VERSION=95 -t containers/vep/.
+     - run: docker push nfcore/sarekvep:$GENOME$SAREK_VERSION
+
+     - run: docker build --build-arg GENOME=GRCh38 --build-arg SPECIES=homo_sapiens --build-arg VEP_VERSION=95 -t containers/vep/.
+     - run: docker push nfcore/sarekvep:$GENOME$SAREK_VERSION
+
+     - run: docker build --build-arg GENOME=GRCm38 --build-arg SPECIES=mus_musculus --build-arg VEP_VERSION=95 -t containers/vep/.
+     - run: docker push nfcore/sarekvep:$GENOME$SAREK_VERSION
