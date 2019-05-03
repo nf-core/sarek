@@ -15,16 +15,19 @@ pipeline {
             steps {
               sh "git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data"
               sh "nextflow run build.nf -profile docker --genome smallGRCh37 --refdir data/reference --outdir references --publishDirMode link"
+              sh "rm -rf work/ references/pipeline_info .nextflow*"
             }
         }
         stage('SampleDir') {
             steps {
                 sh "nextflow run main.nf -profile docker --genome smallGRCh37 --igenomes_base references --sampleDir data/testdata/tiny/normal --publishDirMode link"
+                sh "rm -rf work/ .nextflow* results/"
             }
         }
         stage('Multiple') {
             steps {
                 sh "nextflow run main.nf -profile docker --genome smallGRCh37 --igenomes_base references --sample data/testdata/tsv/tiny-multiple.tsv --publishDirMode link"
+                sh "rm -rf work/ .nextflow* results/"
             }
         }
     }
