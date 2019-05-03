@@ -20,13 +20,13 @@ pipeline {
         }
         stage('SampleDir') {
             steps {
-                sh "nextflow run main.nf -profile docker --genome smallGRCh37 --igenomes_base references --sampleDir data/testdata/tiny/normal --publishDirMode link"
+                sh "nextflow run main.nf -profile docker --sampleDir data/testdata/tiny/normal --tools HaplotypeCaller,Manta,Strelka --genome smallGRCh37 --igenomes_base references --publishDirMode link"
                 sh "rm -rf work/ .nextflow* results/"
             }
         }
         stage('Multiple') {
             steps {
-                sh "nextflow run main.nf -profile docker --genome smallGRCh37 --igenomes_base references --sample data/testdata/tsv/tiny-multiple.tsv --publishDirMode link"
+                sh "nextflow run main.nf -profile docker --sample data/testdata/tsv/tiny-multiple.tsv --tools HaplotypeCaller,Manta,Strelka --genome smallGRCh37 --igenomes_base references --publishDirMode link"
                 sh "rm -rf work/ .nextflow* results/"
             }
         }
