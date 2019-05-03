@@ -46,6 +46,7 @@ def helpMessage() {
       --step                        Specify starting step
                                     Available: Mapping, Recalibrate, VariantCalling
                                     Default: Mapping
+      --strelkaBP                   Use Manta candidateSmallIndels for Strelka as Best Practice
       --targetBED                   target BED file for targeted sequencing
       --tools                       Specify tools to use for variant calling
                                     Available: HaplotypeCaller,
@@ -97,6 +98,7 @@ params.sample = null
 params.sampleDir = null
 params.sequencing_center = null
 params.step = 'mapping'
+params.strelkaBP = true
 params.targetBED = null
 params.tools = null
 
@@ -189,6 +191,7 @@ if (params.step)              summary['Step']              = params.step
 if (params.tools)             summary['Tools']             = tools.join(', ')
 if (params.noReports)         summary['Reports']           = params.noReports
 if (params.noGVCF)            summary['GVCF']              = params.noGVCF
+if (params.strelkaBP)         summary['Strelka BP']        = params.strelkaBP
 if (params.sequencing_center) summary['Sequencing Center'] = params.sequencing_center
 summary['Nucleotides/s'] = params.nucleotidesPerSecond
 summary['Output dir']    = params.outdir
@@ -516,7 +519,7 @@ bedIntervals = bedIntervals
 
 bedIntervals = bedIntervals.dump(tag:'bedintervals')
 
-(bedIntervalsBR, bedIntervalsHC) = bedIntervals.into(2)
+(bedIntervalsBR, bedIntervalsHC, bedIntervalsForMpileup, bedIntervals) = bedIntervals.into(4)
 
 bamForBaseRecalibrator = mdBam.combine(bedIntervalsBR)
 
@@ -724,12 +727,12 @@ recalibratedBam = recalibratedBam.dump(tag:'BAM')
 // Manta will be run in Germline mode, or in Tumor mode depending on status
 // HaplotypeCaller and Strelka will be run for Normal and Tumor samples
 
-(bamsForSingleManta, bamsForSingleStrelka, recalibratedBam) = recalibratedBam.into(3)
+(bamsForSingleManta, bamsForSingleStrelka, recalibratedBamTemp, recalibratedBam) = recalibratedBam.into(4)
 
 // To speed Variant Callers up we are chopping the reference into smaller pieces
 // Do variant calling by this intervals, and re-merge the VCFs
 
-bamsForHC = recalibratedBam.combine(bedIntervalsHC)
+bamsForHC = recalibratedBamTemp.combine(bedIntervalsHC)
 
 process RunHaplotypecaller {
   tag {idSample + "-" + intervalBed.baseName}
@@ -745,8 +748,8 @@ process RunHaplotypecaller {
     ])
 
   output:
-    set val("HaplotypeCallerGVCF"), idPatient, status, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf") into hcGenomicVCF
-    set idPatient, status, idSample, file(intervalBed), file("${intervalBed.baseName}_${idSample}.g.vcf") into vcfsToGenotype
+    set val("HaplotypeCallerGVCF"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf") into hcGenomicVCF
+    set idPatient, idSample, file(intervalBed), file("${intervalBed.baseName}_${idSample}.g.vcf") into vcfsToGenotype
 
   when: 'haplotypecaller' in tools
 
@@ -763,7 +766,7 @@ process RunHaplotypecaller {
   """
 }
 
-hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2,3])
+hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2])
 
 if (params.noGVCF) hcGenomicVCF.close()
 
@@ -771,7 +774,7 @@ process RunGenotypeGVCFs {
   tag {idSample + "-" + intervalBed.baseName}
 
   input:
-    set idPatient, status, idSample, file(intervalBed), file(gvcf) from vcfsToGenotype
+    set idPatient, idSample, file(intervalBed), file(gvcf) from vcfsToGenotype
     set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
       referenceMap.genomeFile,
       referenceMap.genomeIndex,
@@ -781,7 +784,7 @@ process RunGenotypeGVCFs {
     ])
 
   output:
-    set val("HaplotypeCaller"), idPatient, status, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into hcGenotypedVCF
+    set val("HaplotypeCaller"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into hcGenotypedVCF
 
   when: 'haplotypecaller' in tools
 
@@ -801,39 +804,10 @@ process RunGenotypeGVCFs {
   """
 }
 
-hcGenotypedVCF = hcGenotypedVCF.groupTuple(by:[0,1,2,3])
+hcGenotypedVCF = hcGenotypedVCF.groupTuple(by:[0,1,2])
 
 // we are merging the VCFs that are called separatelly for different intervals
 // so we can have a single sorted VCF containing all the calls for a given caller
-
-vcfsToMerge = hcGenomicVCF.mix(hcGenotypedVCF)
-
-vcfsToMerge = vcfsToMerge.dump(tag:'VCFsToMerge')
-
-process ConcatVCF {
-  tag {variantCaller + "-" + idSample}
-
-  publishDir "${params.outdir}/VariantCalling/${idSample}/${"$variantCaller"}", mode: params.publishDirMode
-
-  input:
-    set variantCaller, idPatient, status, idSample, file(vcFiles) from vcfsToMerge
-    file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
-    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
-
-  output:
-    // we have this funny *_* pattern to avoid copying the raw calls to publishdir
-    set variantCaller, idPatient, status, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into vcfConcatenated
-
-  when: 'haplotypecaller' in tools
-
-  script:
-  if (variantCaller == 'HaplotypeCaller') outputFile = "${variantCaller}_${idSample}.vcf"
-  else if (variantCaller == 'HaplotypeCallerGVCF') outputFile = "haplotypecaller_${idSample}.g.vcf"
-  options = params.targetBED ? "-t ${targetBED}" : ""
-  """
-  concatenateVCFs.sh -i ${genomeIndex} -c ${task.cpus} -o ${outputFile} ${options}
-  """
-}
 
 process RunSingleStrelka {
   tag {idSample}
@@ -924,9 +898,537 @@ process RunSingleManta {
 
 singleMantaOutput = singleMantaOutput.dump(tag:'Single Manta')
 
+/*
+========================================================================================
+                         SOMATIC VARIANT CALLING
+========================================================================================
+*/
+
+// separate recalibrateBams by status
+bamsNormal = Channel.create()
+bamsTumor = Channel.create()
+
+recalibratedBam
+  .choice(bamsTumor, bamsNormal) {it[1] == 0 ? 1 : 0}
+
+// Ascat, Control-FREEC, Manta Tumor-only SV
+bamsForAscat = Channel.create()
+bamsForMpileup = Channel.create()
+bamsForSingleManta = Channel.create()
+
+(bamsTumorTemp, bamsTumor) = bamsTumor.into(2)
+(bamsNormalTemp, bamsNormal) = bamsNormal.into(2)
+(bamsForAscat, bamsForMpileup, bamsForSingleManta) = bamsNormalTemp.mix(bamsTumorTemp).into(3)
+
+// Removing status because not relevant anymore
+bamsNormal = bamsNormal.map { idPatient, status, idSample, bam, bai -> [idPatient, idSample, bam, bai] }
+bamsTumor = bamsTumor.map { idPatient, status, idSample, bam, bai -> [idPatient, idSample, bam, bai] }
+
+bamsAll = bamsNormal.join(bamsTumor)
+
+// Manta and Strelka
+(bamsForManta, bamsForStrelka, bamsForStrelkaBP, bamsAll) = bamsAll.into(4)
+
+bamsTumorNormalIntervals = bamsAll.spread(bedIntervals)
+bamsForMpileup = bamsForMpileup.spread(bedIntervalsForMpileup)
+
+// MuTect2, FreeBayes
+( bamsFMT2, bamsFFB) = bamsTumorNormalIntervals.into(3)
+
+// This will give as a list of unfiltered calls for MuTect2.
+process RunMutect2 {
+  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
+
+  input:
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from bamsFMT2
+    set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex
+    ])
+
+  output:
+    set val("MuTect2"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2Output
+
+  when: 'mutect2' in tools
+
+  script:
+  """
+  gatk --java-options "-Xmx${task.memory.toGiga()}g" \
+    Mutect2 \
+    -R ${genomeFile}\
+    -I ${bamTumor}  -tumor ${idSampleTumor} \
+    -I ${bamNormal} -normal ${idSampleNormal} \
+    -L ${intervalBed} \
+    -O ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
+  """
+}
+
+mutect2Output = mutect2Output.groupTuple(by:[0,1,2,3])
+
+process RunFreeBayes {
+  tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
+
+  input:
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from bamsFFB
+    file(genomeFile) from Channel.value(referenceMap.genomeFile)
+    file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
+
+  output:
+    set val("FreeBayes"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into freebayesOutput
+
+  when: 'freebayes' in tools
+
+  script:
+  """
+  freebayes \
+    -f ${genomeFile} \
+    --pooled-continuous \
+    --pooled-discrete \
+    --genotype-qualities \
+    --report-genotype-likelihood-max \
+    --allele-balance-priors-off \
+    --min-alternate-fraction 0.03 \
+    --min-repeat-entropy 1 \
+    --min-alternate-count 2 \
+    -t ${intervalBed} \
+    ${bamTumor} \
+    ${bamNormal} > ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
+  """
+}
+
+freebayesOutput = freebayesOutput.groupTuple(by:[0,1,2,3])
+
+vcfsToMerge = mutect2Output.mix(freebayesOutput, hcGenotypedVCF)
+
+vcfsToMerge = vcfsToMerge.dump(tag:'VCF to merge')
+
+process ConcatVCF {
+  tag {variantCaller + "-" + idSample}
+
+  publishDir "${params.outdir}/VariantCalling/${idSample}/${"$variantCaller"}", mode: params.publishDirMode
+
+  input:
+    set variantCaller, idPatient, idSample, file(vcFiles) from vcfsToMerge
+    file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
+    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
+
+  output:
+    // we have this funny *_* pattern to avoid copying the raw calls to publishdir
+    set variantCaller, idPatient, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into vcfConcatenated
+
+  when: ('haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools)
+
+  script:
+  if (variantCaller == 'HaplotypeCallerGVCF') outputFile = "haplotypecaller_${idSample}.g.vcf"
+  else outputFile = "${variantCaller}_${idSample}.vcf"
+
+  options = params.targetBED ? "-t ${targetBED}" : ""
+  """
+  concatenateVCFs.sh -i ${genomeIndex} -c ${task.cpus} -o ${outputFile} ${options}
+  """
+}
+
+vcfConcatenated = vcfConcatenated.dump(tag:'VCF')
+
+process RunStrelka {
+  tag {idSampleTumor + "_vs_" + idSampleNormal}
+
+  publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Strelka", mode: params.publishDirMode
+
+  input:
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForStrelka
+    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
+    set file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
+    ])
+
+  output:
+    set val("Strelka"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into strelkaOutput
+
+  when: 'strelka' in tools
+
+  script:
+  beforeScript = params.targetBED ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
+  options = params.targetBED ? "--exome --callRegions call_targets.bed.gz" : ""
+  """
+  ${beforeScript}
+  configureStrelkaSomaticWorkflow.py \
+  --tumor ${bamTumor} \
+  --normal ${bamNormal} \
+  --referenceFasta ${genomeFile} \
+  ${options} \
+  --runDir Strelka
+
+  python Strelka/runWorkflow.py -m local -j ${task.cpus}
+  mv Strelka/results/variants/somatic.indels.vcf.gz Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz
+  mv Strelka/results/variants/somatic.indels.vcf.gz.tbi Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz.tbi
+  mv Strelka/results/variants/somatic.snvs.vcf.gz Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
+  mv Strelka/results/variants/somatic.snvs.vcf.gz.tbi Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz.tbi
+  """
+}
+
+strelkaOutput = strelkaOutput.dump(tag:'Strelka')
+
+process RunManta {
+  tag {idSampleTumor + "_vs_" + idSampleNormal}
+
+  publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Manta", mode: params.publishDirMode
+
+  input:
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
+    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
+    set file(genomeFile), file(genomeIndex) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex
+    ])
+
+  output:
+    set val("Manta"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into mantaOutput
+    set idPatient, idSampleNormal, idSampleTumor, file("*.candidateSmallIndels.vcf.gz"), file("*.candidateSmallIndels.vcf.gz.tbi") into mantaToStrelka
+
+  when: 'manta' in tools
+
+  script:
+  beforeScript = params.targetBED ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
+  options = params.targetBED ? "--exome --callRegions call_targets.bed.gz" : ""
+  """
+  ${beforeScript}
+  configManta.py \
+  --normalBam ${bamNormal} \
+  --tumorBam ${bamTumor} \
+  --reference ${genomeFile} \
+  ${options} \
+  --runDir Manta
+
+  python Manta/runWorkflow.py -m local -j ${task.cpus}
+
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz \
+    Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf.gz
+  mv Manta/results/variants/candidateSmallIndels.vcf.gz.tbi \
+    Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf.gz.tbi
+  mv Manta/results/variants/candidateSV.vcf.gz \
+    Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf.gz
+  mv Manta/results/variants/candidateSV.vcf.gz.tbi \
+    Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf.gz.tbi
+  mv Manta/results/variants/diploidSV.vcf.gz \
+    Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf.gz
+  mv Manta/results/variants/diploidSV.vcf.gz.tbi \
+    Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf.gz.tbi
+  mv Manta/results/variants/somaticSV.vcf.gz \
+    Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf.gz
+  mv Manta/results/variants/somaticSV.vcf.gz.tbi \
+    Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf.gz.tbi
+  """
+}
+
+mantaOutput = mantaOutput.dump(tag:'Manta')
+
+bamsForStrelkaBP = bamsForStrelkaBP.map {
+  idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor ->
+  [idPatientNormal, idSampleNormal, idSampleTumor, bamNormal, baiNormal, bamTumor, baiTumor]
+}.join(mantaToStrelka, by:[0,1,2]).map {
+  idPatientNormal, idSampleNormal, idSampleTumor, bamNormal, baiNormal, bamTumor, baiTumor, mantaCSI, mantaCSIi ->
+  [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor, mantaCSI, mantaCSIi]
+}
+
+process RunStrelkaBP {
+  tag {idSampleTumor + "_vs_" + idSampleNormal}
+
+  publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Strelka", mode: params.publishDirMode
+
+  input:
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(mantaCSI), file(mantaCSIi) from bamsForStrelkaBP
+    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
+    set file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
+    ])
+
+  output:
+    set val("Strelka"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into strelkaBPOutput
+
+  when: 'strelka' in tools && 'manta' in tools && params.strelkaBP
+
+  script:
+  beforeScript = params.targetBED ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
+  options = params.targetBED ? "--exome --callRegions call_targets.bed.gz" : ""
+  """
+  ${beforeScript}
+  configureStrelkaSomaticWorkflow.py \
+  --tumor ${bamTumor} \
+  --normal ${bamNormal} \
+  --referenceFasta ${genomeFile} \
+  --indelCandidates ${mantaCSI} \
+  ${options} \
+  --runDir Strelka
+
+  python Strelka/runWorkflow.py -m local -j ${task.cpus}
+
+  mv Strelka/results/variants/somatic.indels.vcf.gz \
+    StrelkaBP_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz
+  mv Strelka/results/variants/somatic.indels.vcf.gz.tbi \
+    StrelkaBP_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz.tbi
+  mv Strelka/results/variants/somatic.snvs.vcf.gz \
+    StrelkaBP_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
+  mv Strelka/results/variants/somatic.snvs.vcf.gz.tbi \
+    StrelkaBP_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz.tbi
+  """
+}
+
+strelkaBPOutput = strelkaBPOutput.dump(tag:'Strelka BP')
+
+// Run commands and code from Malin Larsson
+// Based on Jesper Eisfeldt's code
+process RunAlleleCount {
+  tag {idSample}
+
+  input:
+    set idPatient, status, idSample, file(bam), file(bai) from bamsForAscat
+    set file(acLoci), file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
+      referenceMap.acLoci,
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.genomeDict
+    ])
+
+  output:
+    set idPatient, status, idSample, file("${idSample}.alleleCount") into alleleCountOutput
+
+  when: 'ascat' in tools
+
+  script:
+  """
+  alleleCounter \
+  -l ${acLoci} \
+  -r ${genomeFile} \
+  -b ${bam} \
+  -o ${idSample}.alleleCount;
+  """
+}
+
+alleleCountNormal = Channel.create()
+alleleCountTumor = Channel.create()
+
+alleleCountOutput
+  .choice(alleleCountTumor, alleleCountNormal) {it[1] == 0 ? 1 : 0}
+
+alleleCountOutput = alleleCountNormal.combine(alleleCountTumor)
+
+alleleCountOutput = alleleCountOutput.map {
+  idPatientNormal, statusNormal, idSampleNormal, alleleCountNormal,
+  idPatientTumor,  statusTumor,  idSampleTumor,  alleleCountTumor ->
+  [idPatientNormal, idSampleNormal, idSampleTumor, alleleCountNormal, alleleCountTumor]
+}
+
+// R script from Malin Larssons bitbucket repo:
+// https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
+process RunConvertAlleleCounts {
+  tag {idSampleTumor + "_vs_" + idSampleNormal}
+
+  publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/ASCAT", mode: params.publishDirMode
+
+  input:
+    set idPatient, idSampleNormal, idSampleTumor, file(alleleCountNormal), file(alleleCountTumor) from alleleCountOutput
+
+  output:
+    set idPatient, idSampleNormal, idSampleTumor, file("${idSampleNormal}.BAF"), file("${idSampleNormal}.LogR"), file("${idSampleTumor}.BAF"), file("${idSampleTumor}.LogR") into convertAlleleCountsOutput
+
+  when: 'ascat' in tools
+
+  script:
+  gender = patientGenders[idPatient]
+  """
+  convertAlleleCounts.r ${idSampleTumor} ${alleleCountTumor} ${idSampleNormal} ${alleleCountNormal} ${gender}
+  """
+}
+
+// R scripts from Malin Larssons bitbucket repo:
+// https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
+process RunAscat {
+  tag {idSampleTumor + "_vs_" + idSampleNormal}
+
+  publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/ASCAT", mode: params.publishDirMode
+
+  input:
+    set idPatient, idSampleNormal, idSampleTumor, file(bafNormal), file(logrNormal), file(bafTumor), file(logrTumor) from convertAlleleCountsOutput
+    file(acLociGC) from Channel.value([referenceMap.acLociGC])
+
+  output:
+    set val("ASCAT"), idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.*.{png,txt}") into ascatOutput
+
+  when: 'ascat' in tools
+
+  script:
+  """
+  # get rid of "chr" string if there is any
+  for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
+  run_ascat.r ${bafTumor} ${logrTumor} ${bafNormal} ${logrNormal} ${idSampleTumor} ${baseDir} ${acLociGC}
+  """
+}
+
+ascatOutput.dump(tag:'ASCAT')
+
+process RunMpileup {
+  tag {idSample + "-" + intervalBed.baseName}
+
+  input:
+    set idPatient, status, idSample, file(bam), file(bai), file(intervalBed) from bamsForMpileup
+    set file(genomeFile), file(genomeIndex) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex
+    ])
+
+  output:
+    set idPatient, status, idSample, file("${idSample}_${intervalBed.baseName}.pileup.gz") into mpileupToMerge
+
+  when: ('controlfreec' in tools || 'mpileup' in tools)
+
+  script:
+  """
+  samtools mpileup \
+  -f ${genomeFile} ${bam} \
+  -l ${intervalBed} \
+  | bgzip --threads ${task.cpus} -c > ${idSample}_${intervalBed.baseName}.pileup.gz
+  """
+}
+
+mpileupToMerge = mpileupToMerge.groupTuple(by:[0,1,2])
+
+process MergeMpileup {
+  tag {idSample}
+
+  publishDir params.outdir, mode: params.publishDirMode, saveAs: { it == "${idSample}.pileup.gz" ? "VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/mpileup/${it}" : '' }
+
+  input:
+    set idPatient, status, idSample, file(mpileup) from mpileupToMerge
+
+  output:
+    set idPatient, status, idSample, file("${idSample}.pileup.gz") into mpileupOutput
+
+    when: ('controlfreec' in tools || 'mpileup' in tools)
+
+  script:
+  """
+  for i in `ls -1v *.pileup.gz`;
+    do zcat \$i >> ${idSample}.pileup
+  done
+  bgzip --threads ${task.cpus} -c ${idSample}.pileup > ${idSample}.pileup.gz
+  rm ${idSample}.pileup
+  """
+}
+
+mpileupOutput = mpileupOutput.dump(tag:'mpileup')
+
+mpileupNormal = Channel.create()
+mpileupTumor = Channel.create()
+
+mpileupOutput
+  .choice(mpileupTumor, mpileupNormal) {it[1] == 0 ? 1 : 0}
+
+mpileupOutput = mpileupNormal.combine(mpileupTumor)
+
+mpileupOutput = mpileupOutput.map {
+  idPatientNormal, statusNormal, idSampleNormal, mpileupNormal,
+  idPatientTumor,  statusTumor,  idSampleTumor,  mpileupTumor ->
+  [idPatientNormal, idSampleNormal, idSampleTumor, mpileupNormal, mpileupTumor]
+}
+
+process RunControlFreec {
+  tag {idSampleTumor + "_vs_" + idSampleNormal}
+
+  publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/controlFREEC", mode: params.publishDirMode
+
+  input:
+    set idPatient, idSampleNormal, idSampleTumor, file(mpileupNormal), file(mpileupTumor) from mpileupOutput
+    set file(genomeFile), file(genomeIndex), file(dbsnp), file(dbsnpIndex), file(chrDir), file(chrLength) from Channel.value([
+      referenceMap.genomeFile,
+      referenceMap.genomeIndex,
+      referenceMap.dbsnp,
+      referenceMap.dbsnpIndex,
+      referenceMap.chrDir,
+      referenceMap.chrLength
+    ])
+
+  output:
+    set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.pileup.gz_CNVs"), file("${idSampleTumor}.pileup.gz_ratio.txt"), file("${idSampleTumor}.pileup.gz_normal_CNVs"), file("${idSampleTumor}.pileup.gz_normal_ratio.txt"), file("${idSampleTumor}.pileup.gz_BAF.txt"), file("${idSampleNormal}.pileup.gz_BAF.txt") into controlFreecOutputVisualization
+    set file("*.pileup.gz*"), file("${idSampleTumor}_vs_${idSampleNormal}.config.txt") into controlFreecOutput
+
+  when: 'controlfreec' in tools
+
+  script:
+  config = "${idSampleTumor}_vs_${idSampleNormal}.config.txt"
+  gender = patientGenders[idPatient]
+  """
+  touch ${config}
+  echo "[general]" >> ${config}
+  echo "BedGraphOutput = TRUE" >> ${config}
+  echo "chrFiles = \${PWD}/${referenceMap.chrDir.fileName}" >> ${config}
+  echo "chrLenFile = \${PWD}/${referenceMap.chrLength.fileName}" >> ${config}
+  echo "coefficientOfVariation = 0.05" >> ${config}
+  echo "contaminationAdjustment = TRUE" >> ${config}
+  echo "forceGCcontentNormalization = 0" >> ${config}
+  echo "maxThreads = ${task.cpus}" >> ${config}
+  echo "minimalSubclonePresence = 20" >> ${config}
+  echo "ploidy = 2,3,4" >> ${config}
+  echo "sex = ${gender}" >> ${config}
+  echo "window = 50000" >> ${config}
+  echo "" >> ${config}
+
+  echo "[control]" >> ${config}
+  echo "inputFormat = pileup" >> ${config}
+  echo "mateFile = \${PWD}/${mpileupNormal}" >> ${config}
+  echo "mateOrientation = FR" >> ${config}
+  echo "" >> ${config}
+
+  echo "[sample]" >> ${config}
+  echo "inputFormat = pileup" >> ${config}
+  echo "mateFile = \${PWD}/${mpileupTumor}" >> ${config}
+  echo "mateOrientation = FR" >> ${config}
+  echo "" >> ${config}
+
+  echo "[BAF]" >> ${config}
+  echo "SNPfile = ${referenceMap.dbsnp.fileName}" >> ${config}
+
+  freec -conf ${config}
+  """
+}
+
+process RunControlFreecVisualization {
+
+  tag {idSampleTumor + "_vs_" + idSampleNormal}
+
+  publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/controlFREEC", mode: params.publishDirMode
+
+  input:
+    set idPatient, idSampleNormal, idSampleTumor, file(cnvTumor), file(ratioTumor), file(cnvNormal), file(ratioNormal), file(bafTumor), file(bafNormal) from controlFreecOutputVisualization
+
+  output:
+    set file("*.txt"), file("*.png"), file("*.bed") into controlFreecOutputFinal
+
+  when: 'controlfreec' in tools
+
+  """
+  cat /opt/conda/envs/sarek-2.3/bin/assess_significance.R | R --slave --args ${cnvTumor} ${ratioTumor}
+  cat /opt/conda/envs/sarek-2.3/bin/assess_significance.R | R --slave --args ${cnvNormal} ${ratioNormal}
+  cat /opt/conda/envs/sarek-2.3/bin/makeGraph.R | R --slave --args 2 ${ratioTumor} ${bafTumor}
+  cat /opt/conda/envs/sarek-2.3/bin/makeGraph.R | R --slave --args 2 ${ratioNormal} ${bafNormal}
+  perl /opt/conda/envs/sarek-2.3/bin/freec2bed.pl -f ${ratioTumor} > ${idSampleTumor}.bed
+  perl /opt/conda/envs/sarek-2.3/bin/freec2bed.pl -f ${ratioNormal} > ${idSampleNormal}.bed
+  """
+}
+
+(strelkaIndels, strelkaSNVS) = strelkaOutput.into(2)
+(mantaSomaticSV, mantaDiploidSV) = mantaOutput.into(2)
+
 vcfForQC = Channel.empty().mix(
   vcfConcatenated.map {
-    variantcaller, idPatient, status, idSample, vcf, tbi ->
+    variantcaller, idPatient, idSample, vcf, tbi ->
     [variantcaller, idPatient, idSample, vcf]
   },
   singleStrelkaOutput.map {
@@ -936,6 +1438,22 @@ vcfForQC = Channel.empty().mix(
   singleMantaOutput.map {
     variantcaller, idPatient, idSample, vcf, tbi ->
     [variantcaller, idPatient, idSample, vcf[2]]
+  },
+  mantaDiploidSV.map {
+    variantcaller, idPatient, idSample, vcf, tbi ->
+    [variantcaller, idPatient, idSample, vcf[2]]
+  },
+  mantaSomaticSV.map {
+    variantcaller, idPatient, idSample, vcf, tbi ->
+    [variantcaller, idPatient, idSample, vcf[3]]
+  },
+  strelkaIndels.map {
+    variantcaller, idPatient, idSample, vcf, tbi ->
+    [variantcaller, idPatient, idSample, vcf[0]]
+  },
+  strelkaSNVS.map {
+    variantcaller, idPatient, idSample, vcf, tbi ->
+    [variantcaller, idPatient, idSample, vcf[1]]
   })
 
 (vcfForBCFtools, vcfForVCFtools) = vcfForQC.into(2)
@@ -1234,13 +1752,19 @@ def defineReferenceMap(step, tools) {
       'knownIndelsIndex' : checkParamReturnFile("knownIndelsIndex")
     )
   }
+  if ('controlfreec' in tools) {
+    referenceMap.putAll(
+      'chrDir'           : checkParamReturnFile("chrDir"),
+      'chrLength'        : checkParamReturnFile("chrLength")
+    )
+  }
   if ('ascat' in tools) {
     referenceMap.putAll(
       'acLoci'           : checkParamReturnFile("acLoci"),
       'acLociGC'         : checkParamReturnFile("acLociGC")
     )
   }
-  if ('mapping' in step || 'haplotypecaller' in tools || 'mutect2' in tools) {
+  if ('mapping' in step || 'haplotypecaller' in tools || 'mutect2' in tools || 'controlfreec' in tools) {
     referenceMap.putAll(
       'dbsnp'            : checkParamReturnFile("dbsnp"),
       'dbsnpIndex'       : checkParamReturnFile("dbsnpIndex")
@@ -1263,9 +1787,11 @@ def defineStepList() {
 def defineToolList() {
   return [
     'ascat',
+    'controlfreec',
     'freebayes',
     'haplotypecaller',
     'manta',
+    'mpileup',
     'mutect2',
     'strelka'
   ]
