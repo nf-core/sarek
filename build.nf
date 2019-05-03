@@ -349,15 +349,16 @@ process DownloadCADD {
 
 def nfcoreHeader(){
     // Log colors ANSI codes
-    c_black  = params.monochrome_logs ? '' : "\033[0;30m";
-    c_blue   = params.monochrome_logs ? '' : "\033[0;34m";
-    c_cyan   = params.monochrome_logs ? '' : "\033[0;36m";
-    c_dim    = params.monochrome_logs ? '' : "\033[2m";
-    c_green  = params.monochrome_logs ? '' : "\033[0;32m";
-    c_purple = params.monochrome_logs ? '' : "\033[0;35m";
     c_reset  = params.monochrome_logs ? '' : "\033[0m";
-    c_white  = params.monochrome_logs ? '' : "\033[0;37m";
+    c_dim    = params.monochrome_logs ? '' : "\033[2m";
+    c_black  = params.monochrome_logs ? '' : "\033[0;30m";
+    c_red    = params.monochrome_logs ? '' : "\033[0;31m";
+    c_green  = params.monochrome_logs ? '' : "\033[0;32m";
     c_yellow = params.monochrome_logs ? '' : "\033[0;33m";
+    c_blue   = params.monochrome_logs ? '' : "\033[0;34m";
+    c_purple = params.monochrome_logs ? '' : "\033[0;35m";
+    c_cyan   = params.monochrome_logs ? '' : "\033[0;36m";
+    c_white  = params.monochrome_logs ? '' : "\033[0;37m";
 
     return """    ${c_dim}----------------------------------------------------${c_reset}
                                             ${c_green},--.${c_black}/${c_green},-.${c_reset}
@@ -365,12 +366,12 @@ def nfcoreHeader(){
     ${c_blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${c_yellow}}  {${c_reset}
     ${c_blue}  | \\| |       \\__, \\__/ |  \\ |___     ${c_green}\\`-._,-`-,${c_reset}
                                             ${c_green}`._,._,\'${c_reset}
-           ____        _____               _    
-         .' _  `.     / ____|             | |   
-        /  |\\`-_ \\   | (___  ___  _ __ __ | | __
-       |   | \\  `-|   \\___ \\/__ \\| ´__/ _\\| |/ /
-        \\ |   \\  /    ____) | __ | | |  __|   < 
-         `|____\\'    |_____/\\____|_|  \\__/|_|\\_\\
+    ${c_black}       ____      ${c_blue}  _____               _ ${c_reset}
+    ${c_black}     .' ${c_green}_${c_black}  `.    ${c_blue} / ____|             | | ${c_reset}
+    ${c_black}    /  ${c_green}|\\${c_white}`-_${c_black} \\ ${c_blue}  | (___  ___  _ __ __ | | __ ${c_reset}
+    ${c_black}   |   ${c_green}| \\  ${c_white}`-${c_black}| ${c_blue}  \\___ \\/__ \\| ´__/ _\\| |/ / ${c_reset}
+    ${c_black}    \\ ${c_green}|   \\  ${c_black}/ ${c_blue}   ____) | __ | | |  __|   < ${c_reset}
+    ${c_black}     `${c_green}|${c_black}____${c_green}\\${c_black}'   ${c_blue} |_____/\\____|_|  \\__/|_|\\_\\ ${c_reset}
 
     ${c_purple}  nf-core/sarek v${workflow.manifest.version}${c_reset}
     ${c_dim}----------------------------------------------------${c_reset}
