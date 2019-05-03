@@ -49,7 +49,8 @@ def helpMessage() {
       --strelkaBP                   Use Manta candidateSmallIndels for Strelka as Best Practice
       --targetBED                   target BED file for targeted sequencing
       --tools                       Specify tools to use for variant calling
-                                    Available: HaplotypeCaller,
+                                    Available: ASCAT, ControlFREEC, FreeBayes, HaplotypeCaller
+                                    Manta, mpileup, MuTect2, Strelka
 
     References                      If not specified in the configuration file or you wish to overwrite any of the references.
       --acLoci                      acLoci file
