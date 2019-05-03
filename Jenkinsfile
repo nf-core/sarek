@@ -27,7 +27,7 @@ pipeline {
         }
         stage('Multiple') {
             steps {
-                sh "nextflow run main.nf -profile docker --sample data/testdata/tsv/tiny-multiple.tsv --tools HaplotypeCaller,Manta,Strelka --genome smallGRCh37 --igenomes_base references --publishDirMode link -ansi-log false"
+                sh "nextflow run main.nf -profile docker --sample data/testdata/tsv/tiny-multiple.tsv --tools HaploTypeCaller,Manta,Strelka,MuTecT2,FreeBayes --genome smallGRCh37 --igenomes_base references --publishDirMode link -ansi-log false"
                 sh "rm -rf work/ .nextflow* results/"
             }
         }
