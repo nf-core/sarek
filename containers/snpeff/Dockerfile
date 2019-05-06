@@ -14,4 +14,4 @@ ARG CACHE_VERSION=86
 ARG GENOME=GRCh38
 
 # Download Genome
-RUN snpEff download -v ${GENOME}.{CACHE_VERSION}
+RUN snpEff download -v ${GENOME}.${CACHE_VERSION}
