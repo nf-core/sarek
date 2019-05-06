@@ -979,7 +979,7 @@ process RunMutect2 {
     """
 }
 
-mutect2Output = mutect2Output.groupTuple(by:[0,1,2,3])
+mutect2Output = mutect2Output.groupTuple(by:[0,1,2])
 
 process RunFreeBayes {
     tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
@@ -1012,7 +1012,7 @@ process RunFreeBayes {
     """
 }
 
-freebayesOutput = freebayesOutput.groupTuple(by:[0,1,2,3])
+freebayesOutput = freebayesOutput.groupTuple(by:[0,1,2])
 
 vcfsToMerge = mutect2Output.mix(freebayesOutput, hcGenotypedVCF)
 
@@ -1090,6 +1090,7 @@ process RunStrelka {
 }
 
 strelkaOutput = strelkaOutput.dump(tag:'Strelka')
+(strelkaIndels, strelkaSNVS) = strelkaOutput.into(2)
 
 process RunManta {
     tag {idSampleTumor + "_vs_" + idSampleNormal}
@@ -1144,6 +1145,7 @@ process RunManta {
 }
 
 mantaOutput = mantaOutput.dump(tag:'Manta')
+(mantaSomaticSV, mantaDiploidSV) = mantaOutput.into(2)
 
 bamsForStrelkaBP = bamsForStrelkaBP.map {
     idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor ->
@@ -1442,10 +1444,7 @@ process RunControlFreecVisualization {
     """
 }
 
-(strelkaIndels, strelkaSNVS) = strelkaOutput.into(2)
-(mantaSomaticSV, mantaDiploidSV) = mantaOutput.into(2)
-
-vcfForAnnotation = Channel.empty().mix(
+vcfToKeep = Channel.empty().mix(
     vcfConcatenated.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
         [variantcaller, idSample, vcf]
@@ -1475,7 +1474,7 @@ vcfForAnnotation = Channel.empty().mix(
         [variantcaller, idSample, vcf[1]]
     })
 
-(vcfForBCFtools, vcfForVCFtools, vcfForAnnotation) = vcfForAnnotation.into(3)
+(vcfForBCFtools, vcfForVCFtools, vcfForAnnotation) = vcfToKeep.into(3)
 
 process RunBcftoolsStats {
     tag {"${variantCaller} - ${vcf}"}
@@ -1543,38 +1542,40 @@ vcfReport = vcfReport.dump(tag:'VCFTools')
 ================================================================================
 */
 
-vcfToKeep = Channel.create()
-vcfNotToAnnotate = Channel.create()
+vcfToAnnotate = Channel.create()
 
-if (annotateVCF == []) {
-// Sarek, by default, annotates all available vcfs that it can find in the VariantCalling directory
-// Excluding vcfs from FreeBayes, and g.vcf from HaplotypeCaller
-// Basically it's: VariantCalling/*/{HaplotypeCaller,Manta,MuTect2,Strelka}/*.vcf.gz
-// Without *SmallIndels.vcf.gz from Manta, and *.genome.vcf.gz from Strelka
-// The small snippet `vcf.minus(vcf.fileName)[-2]` catches idSample
-// This field is used to output final annotated VCFs in the correct directory
-  Channel.empty().mix(
-    Channel.fromPath("${params.outdir}/VariantCalling/*/HaplotypeCaller/*.vcf.gz")
-      .flatten().map{vcf -> ['haplotypecaller', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
-    Channel.fromPath("${params.outdir}/VariantCalling/*/Manta/*[!candidate]SV.vcf.gz")
-      .flatten().map{vcf -> ['manta', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
-    Channel.fromPath("${params.outdir}/VariantCalling/*/MuTect2/*.vcf.gz")
-      .flatten().map{vcf -> ['mutect2', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
-    Channel.fromPath("${params.outdir}/VariantCalling/*/Strelka/*{somatic,variant}*.vcf.gz")
-      .flatten().map{vcf -> ['strelka', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
-  ).choice(vcfToKeep, vcfNotToAnnotate) {
-    annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1
-  }
-} else if (annotateTools == []) {
-// Annotate user-submitted VCFs
-// If user-submitted, Sarek assume that the idSample should be assumed automatically
-  vcfToKeep = Channel.fromPath(annotateVCF)
-    .map{vcf -> ['userspecified', vcf.minus(vcf.fileName)[-2].toString(), vcf]}
-} else exit 1, "specify only tools or files to annotate, not both"
+if (step == 'annotate') {
+    vcfNotToAnnotate = Channel.create()
 
-vcfNotToAnnotate.close()
+    if (annotateVCF == []) {
+    // Sarek, by default, annotates all available vcfs that it can find in the VariantCalling directory
+    // Excluding vcfs from FreeBayes, and g.vcf from HaplotypeCaller
+    // Basically it's: VariantCalling/*/{HaplotypeCaller,Manta,MuTect2,Strelka}/*.vcf.gz
+    // Without *SmallIndels.vcf.gz from Manta, and *.genome.vcf.gz from Strelka
+    // The small snippet `vcf.minus(vcf.fileName)[-2]` catches idSample
+    // This field is used to output final annotated VCFs in the correct directory
+      Channel.empty().mix(
+        Channel.fromPath("${params.outdir}/VariantCalling/*/HaplotypeCaller/*.vcf.gz")
+          .flatten().map{vcf -> ['haplotypecaller', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
+        Channel.fromPath("${params.outdir}/VariantCalling/*/Manta/*[!candidate]SV.vcf.gz")
+          .flatten().map{vcf -> ['manta', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
+        Channel.fromPath("${params.outdir}/VariantCalling/*/MuTect2/*.vcf.gz")
+          .flatten().map{vcf -> ['mutect2', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
+        Channel.fromPath("${params.outdir}/VariantCalling/*/Strelka/*{somatic,variant}*.vcf.gz")
+          .flatten().map{vcf -> ['strelka', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
+      ).choice(vcfToAnnotate, vcfNotToAnnotate) {
+        annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1
+      }
+    } else if (annotateTools == []) {
+    // Annotate user-submitted VCFs
+    // If user-submitted, Sarek assume that the idSample should be assumed automatically
+      vcfToAnnotate = Channel.fromPath(annotateVCF)
+        .map{vcf -> ['userspecified', vcf.minus(vcf.fileName)[-2].toString(), vcf]}
+    } else exit 1, "specify only tools or files to annotate, not both"
 
-vcfForAnnotation = vcfForAnnotation.mix(vcfToKeep)
+    vcfNotToAnnotate.close()
+    vcfForAnnotation = vcfForAnnotation.mix(vcfToAnnotate)
+}
 
 // as now have the list of VCFs to annotate, the first step is to annotate with allele frequencies, if there are any
 
