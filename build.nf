@@ -52,13 +52,16 @@ DOWNLOAD CACHE:
  */
 
 // Show help message
-if (params.help){
-    helpMessage()
-    exit 0
-}
+if (params.help) exit 0, helpMessage()
 
 ch_referencesFiles = Channel.fromPath("${params.refdir}/*")
+
+// Default value for params
+params.cadd_cache = null
+params.cadd_version = 'v1.5'
 params.genome = 'smallGRCh37'
+params.snpEff_cache = null
+params.vep_cache = null
 
 // Check if genome exists in the config file
 if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
@@ -303,7 +306,7 @@ process BuildCache_VEP {
 
   script:
   genome = params.genome == "smallGRCh37" ? "GRCh37" : params.genome
-  species = genome =~ "GRCh3*" ? "homo_sapiens" : ""
+  species = genome =~ "GRCh3*" ? "homo_sapiens" : genome =~ "GRCm3*" ? "mus_musculus" : ""
   """
   vep_install \
     -a cf \
@@ -345,7 +348,6 @@ process DownloadCADD {
   wget --quiet ${caddFile}.tbi
   """
 }
-
 
 def nfcoreHeader(){
     // Log colors ANSI codes
