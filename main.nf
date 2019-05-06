@@ -1,22 +1,22 @@
 #!/usr/bin/env nextflow
 
 /*
-========================================================================================
-                         nf-core/sarek
-========================================================================================
+================================================================================
+                                  nf-core/sarek
+================================================================================
 Started March 2016.
 Ported to nf-core May 2019.
-----------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 nf-core/sarek:
   An open-source analysis pipeline to detect germline or somatic variants
   from whole genome or targeted sequencing
-----------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
  @Homepage
  https://sarek.scilifelab.se/
-----------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
  @Documentation
  https://github.com/nf-core/sarek/README.md
-----------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 */
 
 def helpMessage() {
@@ -272,10 +272,12 @@ process get_software_versions {
     """
 }
 
+software_versions_yaml = software_versions_yaml.dump(tag: 'SOFTWARE VERSIONS')
+
 /*
-========================================================================================
-                         PREPROCESSING
-========================================================================================
+================================================================================
+                                  PREPROCESSING
+================================================================================
 */
 
 // STEP ONE: MAPPING
@@ -304,7 +306,7 @@ process RunFastQC {
     """
 }
 
-fastQCreport.dump(tag:'FastQC')
+fastQCreport = fastQCreport.dump(tag:'FastQC')
 
 process MapReads {
     tag {idPatient + "-" + idRun}
@@ -383,7 +385,7 @@ process RunBamQCmapped {
     """
 }
 
-bamQCmappedReport.dump(tag:'BamQC BAM')
+bamQCmappedReport = bamQCmappedReport.dump(tag:'BamQC BAM')
 
 // Sort bam whether they are standalone or should be merged
 
@@ -686,7 +688,7 @@ process RunSamtoolsStats {
     """
 }
 
-samtoolsStatsReport.dump(tag:'SAMTools')
+samtoolsStatsReport = samtoolsStatsReport.dump(tag:'SAMTools')
 
 process RunBamQCrecalibrated {
     tag {idPatient + "-" + idSample}
@@ -716,12 +718,12 @@ process RunBamQCrecalibrated {
     """
 }
 
-bamQCrecalibratedReport.dump(tag:'BamQC')
+bamQCrecalibratedReport = bamQCrecalibratedReport.dump(tag:'BamQC')
 
 /*
-========================================================================================
-                         GERMLINE VARIANT CALLING
-========================================================================================
+================================================================================
+                            GERMLINE VARIANT CALLING
+================================================================================
 */
 
 if (step == 'variantcalling') recalibratedBam = bamFiles
@@ -910,9 +912,9 @@ process RunSingleManta {
 singleMantaOutput = singleMantaOutput.dump(tag:'Single Manta')
 
 /*
-========================================================================================
-                         SOMATIC VARIANT CALLING
-========================================================================================
+================================================================================
+                             SOMATIC VARIANT CALLING
+================================================================================
 */
 
 // separate recalibrateBams by status
@@ -1443,34 +1445,37 @@ process RunControlFreecVisualization {
 (strelkaIndels, strelkaSNVS) = strelkaOutput.into(2)
 (mantaSomaticSV, mantaDiploidSV) = mantaOutput.into(2)
 
-vcfForQC = Channel.empty().mix(
-    vcfConcatenated,
+vcfForAnnotation = Channel.empty().mix(
+    vcfConcatenated.map {
+        variantcaller, idPatient, idSample, vcf, tbi ->
+        [variantcaller, idSample, vcf]
+    },
     singleStrelkaOutput.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
-        [variantcaller, idPatient, idSample, vcf[1], tbi]
+        [variantcaller, idSample, vcf[1]]
     },
     singleMantaOutput.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
-        [variantcaller, idPatient, idSample, vcf[2], tbi]
+        [variantcaller, idSample, vcf[2]]
     },
     mantaDiploidSV.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
-        [variantcaller, idPatient, idSample, vcf[2], tbi]
+        [variantcaller, idSample, vcf[2]]
     },
     mantaSomaticSV.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
-        [variantcaller, idPatient, idSample, vcf[3], tbi]
+        [variantcaller, idSample, vcf[3]]
     },
     strelkaIndels.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
-        [variantcaller, idPatient, idSample, vcf[0], tbi]
+        [variantcaller, idSample, vcf[0]]
     },
     strelkaSNVS.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
-        [variantcaller, idPatient, idSample, vcf[1], tbi]
+        [variantcaller, idSample, vcf[1]]
     })
 
-(vcfForBCFtools, vcfForVCFtools) = vcfForQC.into(2)
+(vcfForBCFtools, vcfForVCFtools, vcfForAnnotation) = vcfForAnnotation.into(3)
 
 process RunBcftoolsStats {
     tag {"${variantCaller} - ${vcf}"}
@@ -1478,7 +1483,7 @@ process RunBcftoolsStats {
     publishDir "${params.outdir}/Reports/${idSample}/BCFToolsStats", mode: params.publishDirMode
 
     input:
-        set variantCaller, idPatient, idSample, file(vcf), file(tbi) from vcfForBCFtools
+        set variantCaller, idSample, file(vcf) from vcfForBCFtools
 
     output:
         file ("*.bcf.tools.stats.out") into bcfReport
@@ -1491,7 +1496,7 @@ process RunBcftoolsStats {
     """
 }
 
-bcfReport.dump(tag:'BCFTools')
+bcfReport = bcfReport.dump(tag:'BCFTools')
 
 process RunVcftools {
     tag {"${variantCaller} - ${vcf}"}
@@ -1499,7 +1504,7 @@ process RunVcftools {
     publishDir "${params.outdir}/Reports/${idSample}/VCFTools", mode: params.publishDirMode
 
     input:
-        set variantCaller, idPatient, idSample, file(vcf), file(tbi) from vcfForVCFtools
+        set variantCaller, idSample, file(vcf) from vcfForVCFtools
 
     output:
         file ("${reduceVCF(vcf)}.*") into vcfReport
@@ -1530,15 +1535,15 @@ process RunVcftools {
     """
 }
 
-vcfReport.dump(tag:'VCFTools')
+vcfReport = vcfReport.dump(tag:'VCFTools')
 
 /*
-========================================================================================
-                         ANNOTATION
-========================================================================================
+================================================================================
+                                   ANNOTATION
+================================================================================
 */
 
-vcfToAnnotate = Channel.create()
+vcfToKeep = Channel.create()
 vcfNotToAnnotate = Channel.create()
 
 if (annotateVCF == []) {
@@ -1557,21 +1562,23 @@ if (annotateVCF == []) {
       .flatten().map{vcf -> ['mutect2', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
     Channel.fromPath("${params.outdir}/VariantCalling/*/Strelka/*{somatic,variant}*.vcf.gz")
       .flatten().map{vcf -> ['strelka', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
-  ).choice(vcfToAnnotate, vcfNotToAnnotate) {
+  ).choice(vcfToKeep, vcfNotToAnnotate) {
     annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1
   }
 } else if (annotateTools == []) {
 // Annotate user-submitted VCFs
 // If user-submitted, Sarek assume that the idSample should be assumed automatically
-  vcfToAnnotate = Channel.fromPath(annotateVCF)
+  vcfToKeep = Channel.fromPath(annotateVCF)
     .map{vcf -> ['userspecified', vcf.minus(vcf.fileName)[-2].toString(), vcf]}
 } else exit 1, "specify only tools or files to annotate, not both"
 
 vcfNotToAnnotate.close()
 
+vcfForAnnotation = vcfForAnnotation.mix(vcfToKeep)
+
 // as now have the list of VCFs to annotate, the first step is to annotate with allele frequencies, if there are any
 
-(vcfForSnpeff, vcfForVep) = vcfToAnnotate.into(2)
+(vcfForSnpeff, vcfForVep) = vcfForAnnotation.into(2)
 
 vcfForVep = vcfForVep.map {
   variantCaller, idSample, vcf ->
@@ -1714,6 +1721,45 @@ process CompressVCF {
 }
 
 vcfCompressedoutput = vcfCompressedoutput.dump(tag:'VCF')
+
+/*
+================================================================================
+                                     MultiQC
+================================================================================
+*/
+
+reportsForMultiQC = Channel.empty()
+    .mix(
+        bamQCmappedReport,
+        bamQCrecalibratedReport,
+        bcfReport,
+        fastQCreport,
+        markDuplicatesReport,
+        samtoolsStatsReport,
+        snpeffOutput,
+        vcfReport
+    ).collect()
+
+process RunMultiQC {
+    publishDir "${params.outdir}/Reports/MultiQC", mode: params.publishDirMode
+
+    input:
+        file (multiqcConfig) from createMultiQCconfig()
+        file (reports) from reportsForMultiQC
+        file (versions) from software_versions_yaml
+
+    output:
+        set file("*multiqc_report.html"), file("*multiqc_data") into multiQCReport
+
+    when: !params.noReports
+
+    script:
+    """
+    multiqc -f -v .
+    """
+}
+
+multiQCReport.dump(tag:'MultiQC')
 
 /*
  * Completion e-mail notification
@@ -1874,9 +1920,9 @@ def checkHostname(){
 }
 
 /*
-========================================================================================
-                         sarek functions
-========================================================================================
+================================================================================
+                                 sarek functions
+================================================================================
 */
 
 // Check if a row has the expected number of item
@@ -1926,17 +1972,36 @@ def checkReferenceMap(referenceMap) {
     }
 }
 
+// Personnalise the MultiQC report
+def createMultiQCconfig() {
+  def file = workDir.resolve('multiqc_config.yaml')
+  file.text  = """
+  custom_logo: ${baseDir}/docs/images/Sarek_no_Border.png
+  custom_logo_url: https://sarek.scilifelab.se/
+  custom_logo_title: 'nf-core/sarek'
+  report_header_info:
+
+  top_modules:
+  - 'fastqc'
+  - 'picard'
+  - 'samtools'
+  - 'qualimap'
+  - 'bcftools'
+  - 'vcftools'
+  - 'snpeff'
+  """.stripIndent()
+
+  return file
+}
+
 // Define map of reference depending of tools and step
 def defineReferenceMap(step, tools) {
-    def referenceMap = []
-    if (!'annotate' in step) {
-        referenceMap.putAll(
-            'genomeDict'       : checkParamReturnFile("genomeDict"),
-            'genomeFile'       : checkParamReturnFile("genomeFile"),
-            'genomeIndex'      : checkParamReturnFile("genomeIndex"),
-            'intervals'        : checkParamReturnFile("intervals")
-        )
-    }
+    def referenceMap = [
+        'genomeDict'       : checkParamReturnFile("genomeDict"),
+        'genomeFile'       : checkParamReturnFile("genomeFile"),
+        'genomeIndex'      : checkParamReturnFile("genomeIndex"),
+        'intervals'        : checkParamReturnFile("intervals")
+    ]
     if ('mapping' in step) {
         referenceMap.putAll(
             'bwaIndex'         : checkParamReturnFile("bwaIndex"),
@@ -1962,6 +2027,7 @@ def defineReferenceMap(step, tools) {
             'dbsnpIndex'       : checkParamReturnFile("dbsnpIndex")
         )
     }
+    if ('annotate' in step) referenceMap = []
     return referenceMap
 }
 
