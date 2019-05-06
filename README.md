@@ -77,7 +77,7 @@ The worflow steps and tools used are as follows:
         * [GATK ApplyBQSR](https://github.com/broadinstitute/gatk)
 2. **Germline variant calling** - `germlineVC.nf`
     * SNVs and small indels
-        * [GATK HaplotyeCaller](https://github.com/broadinstitute/gatk)
+        * [GATK HaplotypeCaller](https://github.com/broadinstitute/gatk)
         * [Strelka2](https://github.com/Illumina/strelka)
     * Structural variants
         * [Manta](https://github.com/Illumina/manta)
