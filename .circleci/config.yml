@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  buildsnpeff:
+  build:
     machine: true
     steps:
       - checkout
@@ -10,8 +10,7 @@ jobs:
         - run:
           name: Push Docker Image to DockerHub
           command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sareksnpeff:dev.${GENOME}
-
-  buildvep:
+  test:
     machine: true
     steps:
       - checkout
@@ -24,31 +23,31 @@ jobs:
           command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.${GENOME}
 workflows:
   version: 2
-  build_and_push:
+  build_and_test:
     jobs:
-      - buildsnpeff
+      - build
           environment:
             GENOME: GRCh37
             SNPEFF_CACHE_VERSION: 75
-      - buildsnpeff
+      - build
           environment:
             GENOME: GRCh38
             SNPEFF_CACHE_VERSION: 86
-      - buildsnpeff
+      - build
           environment:
             GENOME: GRCm38
             SNPEFF_CACHE_VERSION: 86
-      - buildvep
+      - test
           environment:
             GENOME: GRCh37
             SPECIES: homo_sapiens
             VEP_VERSION: 95
-      - buildvep
+      - test
           environment:
             GENOME: GRCh38
             SPECIES: homo_sapiens
             VEP_VERSION: 95
-      - buildvep
+      - test
           environment:
             GENOME: GRCm38
             SPECIES: mus_musculus
