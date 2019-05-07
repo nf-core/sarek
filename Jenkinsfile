@@ -9,10 +9,11 @@ pipeline {
         stage('Setup environment') {
             steps {
                 sh "docker pull nfcore/sarek:dev"
-                sh "docker pull maxulysse/snpeffgrch37"
-                sh "docker pull maxulysse/vepgrch37"
-                sh "docker tag maxulysse/snpeffgrch37 nfcore/sareksnpeff:dev.smallGRCh37"
-                sh "docker tag maxulysse/vepgrch37 nfcore/sarekvep:dev.smallGRCh37"
+                sh "docker tag nfcore/sarek:dev"
+                sh "docker pull nfcore/sareksnpeff:dev.grch37"
+                sh "docker tag nfcore/sareksnpeff:dev.grch37 nfcore/sareksnpeff:dev.smallGRCh37"
+                sh "docker pull nfcore/sarekvep:dev.grch37"
+                sh "docker tag nfcore/sarekvep:dev.grch37 nfcore/sarekvep:dev.smallGRCh37"
             }
         }
         stage('Build') {
