@@ -97,6 +97,9 @@ workflows:
       - buildsnpeffgrch37
       - buildsnpeffgrch38
       - buildsnpeffgrcm38
-      - buildvepgrch37
-      - buildvepgrch38
-      - buildvepgrcm38
+      - buildvepgrch37:
+          no_output_timeout: 1h
+      - buildvepgrch38:
+          no_output_timeout: 1h
+      - buildvepgrcm38:
+          no_output_timeout: 15m
