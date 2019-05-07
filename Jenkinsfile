@@ -9,6 +9,10 @@ pipeline {
         stage('Setup environment') {
             steps {
                 sh "docker pull nfcore/sarek:dev"
+                sh "docker pull maxulysse/snpeffgrch37"
+                sh "docker pull maxulysse/vepgrch37"
+                sh "docker tag maxulysse/snpeffgrch37 nfcore/sareksnpeff:dev.smallGRCh37"
+                sh "docker tag maxulysse/vepgrch37 nfcore/sarekvep:dev.smallGRCh37"
             }
         }
         stage('Build') {
@@ -19,15 +23,15 @@ pipeline {
                 sh "rm -rf work/ references/pipeline_info .nextflow*"
             }
         }
-        stage('SampleDir') {
+        stage('Germline from directory') {
             steps {
-                sh "nextflow run main.nf -profile docker --sampleDir data/testdata/tiny/normal --tools HaplotypeCaller,Manta,Strelka --genome smallGRCh37 --igenomes_base references --publishDirMode link -ansi-log false"
+                sh "nextflow run main.nf -profile docker --sample data/testdata/tiny/normal --tools HaplotypeCaller,Manta,Strelka,snpEff,VEP,merge --genome smallGRCh37 --igenomes_base references --publishDirMode link -ansi-log false"
                 sh "rm -rf work/ .nextflow* results/"
             }
         }
-        stage('Multiple') {
+        stage('Somatic multiple') {
             steps {
-                sh "nextflow run main.nf -profile docker --sample data/testdata/tsv/tiny-multiple.tsv --tools HaploTypeCaller,Manta,Strelka,MuTecT2,FreeBayes --genome smallGRCh37 --igenomes_base references --publishDirMode link -ansi-log false"
+                sh "nextflow run main.nf -profile docker --sample data/testdata/tsv/tiny-multiple.tsv --tools HaploTypeCaller,Manta,Strelka,MuTecT2,FreeBayes,snpEff,VEP,merge --genome smallGRCh37 --igenomes_base references --publishDirMode link -ansi-log false"
                 sh "rm -rf work/ .nextflow* results/"
             }
         }
