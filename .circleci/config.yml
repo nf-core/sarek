@@ -69,10 +69,10 @@ jobs:
           command: docker build -t nfcore/sarekvep:dev.${GENOME} containers/vep/. --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
       - run:
           name: Push Docker Image to DockerHub
+          no_output_timeout: 1h
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push nfcore/sarekvep:dev.${GENOME}
-          no_output_timeout: 1h
 
   buildvepgrch38:
     docker:
@@ -89,10 +89,10 @@ jobs:
           command: docker build -t nfcore/sarekvep:dev.${GENOME} containers/vep/. --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
       - run:
           name: Push Docker Image to DockerHub
+          no_output_timeout: 1h
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push nfcore/sarekvep:dev.${GENOME}
-          no_output_timeout: 1h
 
   buildvepgrcm38:
     docker:
@@ -109,10 +109,10 @@ jobs:
           command: docker build -t nfcore/sarekvep:dev.${GENOME} containers/vep/. --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
       - run:
           name: Push Docker Image to DockerHub
+          no_output_timeout: 15m
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push nfcore/sarekvep:dev.${GENOME}
-          no_output_timeout: 15m
 
 workflows:
   version: 2
