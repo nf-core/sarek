@@ -1,7 +1,7 @@
 version: 2.0
 
 jobs:
-  build:
+  buildsnpeff:
     machine: true
     steps:
       - checkout
@@ -24,15 +24,15 @@ workflows:
   version: 2
   build_and_deploy:
     jobs:
-      - build
+      - buildsnpeff
           environment:
             GENOME: GRCh37
             SNPEFF_CACHE_VERSION: 75
-      - build
+      - buildsnpeff
           environment:
             GENOME: GRCh38
             SNPEFF_CACHE_VERSION: 86
-      - build
+      - buildsnpeff
           environment:
             GENOME: GRCm38
             SNPEFF_CACHE_VERSION: 86
