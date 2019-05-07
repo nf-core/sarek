@@ -7,12 +7,17 @@ jobs:
       SNPEFF_CACHE_VERSION: 75
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: Build Docker Image
-          command: docker build -t nfcore/sareksnpeff:dev.${GENOME} containers/snpeff/. --build-arg GENOME=${GENOME} --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION}
+          command: |
+            docker build -t nfcore/sareksnpeff:dev.${GENOME} containers/snpeff/. &&
+            --build-arg GENOME=${GENOME} --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION}
       - run:
           name: Push Docker Image to DockerHub
-          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sareksnpeff:dev.${GENOME}
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push nfcore/sareksnpeff:dev.${GENOME}
 
   buildsnpeffgrch38:
     machine: true
@@ -21,12 +26,17 @@ jobs:
       SNPEFF_CACHE_VERSION: 86
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: Build Docker Image
-          command: docker build -t nfcore/sareksnpeff:dev.${GENOME} containers/snpeff/. --build-arg GENOME=${GENOME} --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION}
+          command: |
+            docker build -t nfcore/sareksnpeff:dev.${GENOME} containers/snpeff/. &&
+            --build-arg GENOME=${GENOME} --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION}
       - run:
           name: Push Docker Image to DockerHub
-          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sareksnpeff:dev.${GENOME}
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push nfcore/sareksnpeff:dev.${GENOME}
 
   buildsnpeffgrcm38:
     machine: true
@@ -35,12 +45,17 @@ jobs:
       SNPEFF_CACHE_VERSION: 86
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: Build Docker Image
-          command: docker build -t nfcore/sareksnpeff:dev.${GENOME} containers/snpeff/. --build-arg GENOME=${GENOME} --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION}
+          command: |
+            docker build -t nfcore/sareksnpeff:dev.${GENOME} containers/snpeff/. &&
+            --build-arg GENOME=${GENOME} --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION}
       - run:
           name: Push Docker Image to DockerHub
-          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sareksnpeff:dev.${GENOME}
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push nfcore/sareksnpeff:dev.${GENOME}
 
   buildvepgrch37:
     machine: true
@@ -50,12 +65,17 @@ jobs:
       VEP_VERSION: 95
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: Build Docker Image
-          command: docker build -t nfcore/sarekvep:dev.${GENOME} containers/vep/. --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
+          command: |
+            docker build -t nfcore/sarekvep:dev.${GENOME} containers/vep/. &&
+            --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
       - run:
           name: Push Docker Image to DockerHub
-          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.${GENOME}
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push nfcore/sarekvep:dev.${GENOME}
           no_output_timeout: 1h
 
   buildvepgrch38:
@@ -66,12 +86,17 @@ jobs:
       VEP_VERSION: 95
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: Build Docker Image
-          command: docker build -t nfcore/sarekvep:dev.${GENOME} containers/vep/. --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
+          command: |
+            docker build -t nfcore/sarekvep:dev.${GENOME} containers/vep/. &&
+            --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
       - run:
           name: Push Docker Image to DockerHub
-          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.${GENOME}
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push nfcore/sarekvep:dev.${GENOME}
           no_output_timeout: 1h
 
   buildvepgrcm38:
@@ -82,12 +107,17 @@ jobs:
       VEP_VERSION: 95
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: Build Docker Image
-          command: docker build -t nfcore/sarekvep:dev.${GENOME} containers/vep/. --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
+          command: |
+            docker build -t nfcore/sarekvep:dev.${GENOME} containers/vep/. &&
+            --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
       - run:
           name: Push Docker Image to DockerHub
-          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.${GENOME}
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push nfcore/sarekvep:dev.${GENOME}
           no_output_timeout: 15m
 
 workflows:
@@ -97,9 +127,6 @@ workflows:
       - buildsnpeffgrch37
       - buildsnpeffgrch38
       - buildsnpeffgrcm38
-      - buildvepgrch37:
-          no_output_timeout: 1h
-      - buildvepgrch38:
-          no_output_timeout: 1h
-      - buildvepgrcm38:
-          no_output_timeout: 15m
+      - buildvepgrch37
+      - buildvepgrch38
+      - buildvepgrcm38
