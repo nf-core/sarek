@@ -55,8 +55,8 @@ jobs:
           command: docker build -t nfcore/sarekvep:dev.${GENOME} containers/vep/. --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
       - run:
           name: Push Docker Image to DockerHub
-          no_output_timeout: 2h
           command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.${GENOME}
+          no_output_timeout: 2h
 
   buildvepgrch38:
     machine: true
@@ -71,13 +71,13 @@ jobs:
           command: docker build -t nfcore/sarekvep:dev.${GENOME} containers/vep/. --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
       - run:
           name: Push Docker Image to DockerHub
-          no_output_timeout: 2h
           command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.${GENOME}
+          no_output_timeout: 2h
 
   buildvepgrcm38:
     machine: true
     environment:
-      GENOME: GRCh38
+      GENOME: GRCm38
       SPECIES: mus_musculus
       VEP_VERSION: 95
     steps:
@@ -87,8 +87,8 @@ jobs:
           command: docker build -t nfcore/sarekvep:dev.${GENOME} containers/vep/. --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
       - run:
           name: Push Docker Image to DockerHub
-          no_output_timeout: 2h
           command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.${GENOME}
+          no_output_timeout: 2h
 
 workflows:
   version: 2
