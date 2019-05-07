@@ -2,7 +2,7 @@ version: 2.0
 jobs:
   buildsnpeffgrch37:
     docker:
-      - image: buildpack-deps:trusty
+      - image: circleci/buildpack-deps:stretch
     environment:
       GENOME: GRCh37
       SNPEFF_CACHE_VERSION: 75
@@ -22,7 +22,7 @@ jobs:
 
   buildsnpeffgrch38:
     docker:
-      - image: buildpack-deps:trusty
+      - image: circleci/buildpack-deps:stretch
     environment:
       GENOME: GRCh38
       SNPEFF_CACHE_VERSION: 86
@@ -42,7 +42,7 @@ jobs:
 
   buildsnpeffgrcm38:
     docker:
-      - image: buildpack-deps:trusty
+      - image: circleci/buildpack-deps:stretch
     environment:
       GENOME: GRCm38
       SNPEFF_CACHE_VERSION: 86
@@ -62,7 +62,7 @@ jobs:
 
   buildvepgrch37:
     docker:
-      - image: buildpack-deps:trusty
+      - image: circleci/buildpack-deps:stretch
     environment:
       GENOME: GRCh37
       SPECIES: homo_sapiens
@@ -84,7 +84,7 @@ jobs:
 
   buildvepgrch38:
     docker:
-      - image: buildpack-deps:trusty
+      - image: circleci/buildpack-deps:stretch
     environment:
       GENOME: GRCh38
       SPECIES: homo_sapiens
@@ -106,7 +106,7 @@ jobs:
 
   buildvepgrcm38:
     docker:
-      - image: buildpack-deps:trusty
+      - image: circleci/buildpack-deps:stretch
     environment:
       GENOME: GRCm38
       SPECIES: mus_musculus
