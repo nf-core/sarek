@@ -1,7 +1,6 @@
 version: 2.0
 jobs:
   buildsnpeffgrch37:
-    machine: true
     environment:
       GENOME: GRCh37
       SNPEFF_CACHE_VERSION: 75
@@ -20,7 +19,6 @@ jobs:
             docker push nfcore/sareksnpeff:dev.${GENOME}
 
   buildsnpeffgrch38:
-    machine: true
     environment:
       GENOME: GRCh38
       SNPEFF_CACHE_VERSION: 86
@@ -39,7 +37,6 @@ jobs:
             docker push nfcore/sareksnpeff:dev.${GENOME}
 
   buildsnpeffgrcm38:
-    machine: true
     environment:
       GENOME: GRCm38
       SNPEFF_CACHE_VERSION: 86
@@ -58,7 +55,6 @@ jobs:
             docker push nfcore/sareksnpeff:dev.${GENOME}
 
   buildvepgrch37:
-    machine: true
     environment:
       GENOME: GRCh37
       SPECIES: homo_sapiens
@@ -79,7 +75,6 @@ jobs:
           no_output_timeout: 1h
 
   buildvepgrch38:
-    machine: true
     environment:
       GENOME: GRCh38
       SPECIES: homo_sapiens
@@ -100,7 +95,6 @@ jobs:
           no_output_timeout: 1h
 
   buildvepgrcm38:
-    machine: true
     environment:
       GENOME: GRCm38
       SPECIES: mus_musculus
