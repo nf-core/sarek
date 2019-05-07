@@ -1201,6 +1201,7 @@ process RunStrelkaBP {
 }
 
 strelkaBPOutput = strelkaBPOutput.dump(tag:'Strelka BP')
+(strelkaBPIndels, strelkaBPSNVS) = strelkaBPOutput.into(2)
 
 // Run commands and code from Malin Larsson
 // Based on Jesper Eisfeldt's code
@@ -1470,6 +1471,14 @@ vcfToKeep = Channel.empty().mix(
         [variantcaller, idSample, vcf[0]]
     },
     strelkaSNVS.map {
+        variantcaller, idPatient, idSample, vcf, tbi ->
+        [variantcaller, idSample, vcf[1]]
+    },
+    strelkaBPIndels.map {
+        variantcaller, idPatient, idSample, vcf, tbi ->
+        [variantcaller, idSample, vcf[0]]
+    },
+    strelkaBPSNVS.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
         [variantcaller, idSample, vcf[1]]
     })

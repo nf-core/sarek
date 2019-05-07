@@ -1,5 +1,4 @@
 version: 2.1
-
 jobs:
   buildsnpeffgrch37:
     machine: true
