@@ -1,4 +1,4 @@
-version: 2.0
+version: 2.1
 jobs:
   buildsnpeffgrch37:
     docker:
@@ -109,7 +109,7 @@ jobs:
           command: docker build -t nfcore/sarekvep:dev.${GENOME} containers/vep/. --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
       - run:
           name: Push Docker Image to DockerHub
-          no_output_timeout: 15m
+          no_output_timeout: 20m
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push nfcore/sarekvep:dev.${GENOME}
