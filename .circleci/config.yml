@@ -22,7 +22,6 @@ jobs:
           name: Push Docker Image to DockerHub
           no_output_timeout: 2h
           command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.${GENOME}
-
 workflows:
   version: 2
   build_and_push:
