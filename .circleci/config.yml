@@ -6,16 +6,19 @@ jobs:
       - checkout
 
       - run: docker build -t nfcore/sareksnpeff:dev.GRCh37 containers/snpeff/. --build-arg GENOME=GRCh37 --build-arg CACHE_VERSION=75
-      - run: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sareksnpeff:dev.GRCh37
+      - run: echo "$DOCKERHUB_PASS" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sareksnpeff:dev.GRCh37
 
       - run: docker build -t nfcore/sareksnpeff:dev.GRCh38 containers/snpeff/. --build-arg GENOME=GRCh38 --build-arg CACHE_VERSION=86
-      - run: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sareksnpeff:dev.GRCh38
+      - run: echo "$DOCKERHUB_PASS" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sareksnpeff:dev.GRCh38
+
+      - run: docker build -t nfcore/sareksnpeff:dev.GRCh38 containers/snpeff/. --build-arg GENOME=GRCh38 --build-arg CACHE_VERSION=86
+      - run: echo "$DOCKERHUB_PASS" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sareksnpeff:dev.GRCh38
 
       - run: docker build -t nfcore/sarekvep:dev.GRCh37 containers/vep/. --build-arg GENOME=GRCh37 --build-arg SPECIES=homo_sapiens --build-arg VEP_VERSION=95
-      - run: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.GRCh37
+      - run: echo "$DOCKERHUB_PASS" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.GRCh37
 
       - run: docker build -t nfcore/sarekvep:dev.GRCh38 containers/vep/. --build-arg GENOME=GRCh38 --build-arg SPECIES=homo_sapiens --build-arg VEP_VERSION=95
-      - run: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.GRCh38
+      - run: echo "$DOCKERHUB_PASS" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.GRCh38
 
       - run: docker build -t nfcore/sarekvep:dev.GRCm38 containers/vep/. --build-arg GENOME=GRCm38 --build-arg SPECIES=mus_musculus --build-arg VEP_VERSION=95
-      - run: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.GRCm38
+      - run: echo "$DOCKERHUB_PASS" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.GRCm38
