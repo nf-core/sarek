@@ -16,16 +16,16 @@ jobs:
 
       - run: docker build -t nfcore/sarekvep:dev.GRCh37 containers/vep/. --build-arg GENOME=GRCh37 --build-arg SPECIES=homo_sapiens --build-arg VEP_VERSION=95
       - run:
-        command: echo "$DOCKERHUB_PASS" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.GRCh37
-        no_output_timeout: 2h
+          command: echo "$DOCKERHUB_PASS" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.GRCh37
+          no_output_timeout: 2h
 
       - run: docker build -t nfcore/sarekvep:dev.GRCh38 containers/vep/. --build-arg GENOME=GRCh38 --build-arg SPECIES=homo_sapiens --build-arg VEP_VERSION=95
       - run:
-        command: echo "$DOCKERHUB_PASS" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.GRCh38
-        no_output_timeout: 2h
+          command: echo "$DOCKERHUB_PASS" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.GRCh38
+          no_output_timeout: 2h
 
 
       - run: docker build -t nfcore/sarekvep:dev.GRCm38 containers/vep/. --build-arg GENOME=GRCm38 --build-arg SPECIES=mus_musculus --build-arg VEP_VERSION=95
       - run:
-        command: echo "$DOCKERHUB_PASS" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.GRCm38
-        no_output_timeout: 2h
+          command: echo "$DOCKERHUB_PASS" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.GRCm38
+          no_output_timeout: 2h
