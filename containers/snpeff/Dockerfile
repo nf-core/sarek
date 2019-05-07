@@ -10,8 +10,8 @@ RUN conda env create -f /environment.yml && conda clean -a
 ENV PATH /opt/conda/envs/sarek-snpeff-2.5dev/bin:$PATH
 
 # Setup default ARG variables
-ARG CACHE_VERSION=86
+ARG SNPEFF_CACHE_VERSION=86
 ARG GENOME=GRCh38
 
 # Download Genome
-RUN snpEff download -v ${GENOME}.${CACHE_VERSION}
+RUN snpEff download -v ${GENOME}.${SNPEFF_CACHE_VERSION}
