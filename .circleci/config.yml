@@ -5,8 +5,12 @@ jobs:
     machine: true
     steps:
       - checkout
-      - run: docker build -t nfcore/sareksnpeff:dev.${GENOME} containers/snpeff/. --build-arg GENOME=${GENOME} --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION}
-      - run: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sareksnpeff:dev.${GENOME}
+      - run:
+          name: Build Docker Image
+          command: docker build -t nfcore/sareksnpeff:dev.${GENOME} containers/snpeff/. --build-arg GENOME=${GENOME} --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION}
+      - run:
+          name: Push Docker Image to DockerHub
+          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sareksnpeff:dev.${GENOME}
 
   deploy:
     machine: true
