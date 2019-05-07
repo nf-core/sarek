@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 jobs:
   buildsnpeff:
     machine: true
@@ -6,57 +6,51 @@ jobs:
       - checkout
       - run:
         name: Build Docker Image
-        command: docker build -t nfcore/sareksnpeff:dev.GRCh37 containers/snpeff/. --build-arg GENOME=GRCh37 --build-arg CACHE_VERSION=75
+        command: docker build -t nfcore/sareksnpeff:dev.${GENOME} containers/snpeff/. --build-arg GENOME=${GENOME} --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION}
         - run:
           name: Push Docker Image to DockerHub
-          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sareksnpeff:dev.GRCh37
+          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sareksnpeff:dev.${GENOME}
 
-      - run:
-          name: Build Docker Image
-          command: docker build -t nfcore/sareksnpeff:dev.GRCh38 containers/snpeff/. --build-arg GENOME=GRCh38 --build-arg CACHE_VERSION=86
-      - run:
-          name: Push Docker Image to DockerHub
-          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sareksnpeff:dev.GRCh38
-
-      - run:
-          name: Build Docker Image
-          command: docker build -t nfcore/sareksnpeff:dev.GRCh38 containers/snpeff/. --build-arg GENOME=GRCm38 --build-arg CACHE_VERSION=86
-      - run:
-          name: Push Docker Image to DockerHub
-          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sareksnpeff:dev.GRCh38
-
-  buildvepgrch37:
+  buildvep:
     machine: true
     steps:
       - checkout
       - run:
           name: Build Docker Image
-          command: docker build -t nfcore/sarekvep:dev.GRCh37 containers/vep/. --build-arg GENOME=GRCh37 --build-arg SPECIES=homo_sapiens --build-arg VEP_VERSION=95
+          command: docker build -t nfcore/sarekvep:dev.${GENOME} containers/vep/. --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
       - run:
           name: Push Docker Image to DockerHub
           no_output_timeout: 2h
-          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.GRCh37
+          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.${GENOME}
 
-  buildvepgrch38:
-    machine: true
-    steps:
-      - checkout
-      - run:
-          name: Build Docker Image
-          command: docker build -t nfcore/sarekvep:dev.GRCh38 containers/vep/. --build-arg GENOME=GRCh38 --build-arg SPECIES=homo_sapiens --build-arg VEP_VERSION=95
-      - run:
-          name: Push Docker Image to DockerHub
-          no_output_timeout: 2h
-          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.GRCh38
-
-  buildvepgrcm38:
-    machine: true
-    steps:
-      - checkout
-      - run:
-          name: Build Docker Image
-          command: docker build -t nfcore/sarekvep:dev.GRCm38 containers/vep/. --build-arg GENOME=GRCm38 --build-arg SPECIES=mus_musculus --build-arg VEP_VERSION=95
-      - run:
-          name: Push Docker Image to DockerHub
-          no_output_timeout: 2h
-          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.GRCm38
+workflows:
+  version: 2
+  build_and_push:
+    jobs:
+      - buildsnpeff
+          environment:
+            GENOME: GRCh37
+            SNPEFF_CACHE_VERSION: 75
+      - buildsnpeff
+          environment:
+            GENOME: GRCh38
+            SNPEFF_CACHE_VERSION: 86
+      - buildsnpeff
+          environment:
+            GENOME: GRCm38
+            SNPEFF_CACHE_VERSION: 86
+      - buildvep
+          environment:
+            GENOME: GRCh37
+            SPECIES: homo_sapiens
+            VEP_VERSION: 95
+      - buildvep
+          environment:
+            GENOME: GRCh38
+            SPECIES: homo_sapiens
+            VEP_VERSION: 95
+      - buildvep
+          environment:
+            GENOME: GRCm38
+            SPECIES: mus_musculus
+            VEP_VERSION: 95
