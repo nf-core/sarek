@@ -2,10 +2,6 @@
 set -xeuo pipefail
 
 TEST=ALL
-TRAVIS=${TRAVIS:-false}
-
-TMPDIR=`pwd`/tmp
-mkdir -p $TMPDIR
 
 while [[ $# -gt 0 ]]
 do

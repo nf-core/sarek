@@ -3,6 +3,7 @@ set -xeuo pipefail
 
 BUILD=false
 TEST=ALL
+TRAVIS_BUILD_DIR=${TRAVIS_BUILD_DIR:-.}
 TRAVIS=${TRAVIS:-false}
 
 while [[ $# -gt 0 ]]
