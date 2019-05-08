@@ -247,6 +247,8 @@ process get_software_versions {
     output:
         file 'software_versions_mqc.yaml' into software_versions_yaml
 
+    when: !params.noReports
+
     script:
     """
     alleleCounter --version &> v_allelecount.txt  || true

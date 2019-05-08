@@ -56,7 +56,7 @@ then
   then
     ANNOTATOR=merge,snpEFF,VEP
   fi
-  nextflow run ${TRAVIS_BUILD_DIR}/main.nf --step annotate --tools ${ANNOTATOR} --annotateVCF data/testdata/vcf/Strelka_1234N_variants.vcf.gz
+  nextflow run ${TRAVIS_BUILD_DIR}/main.nf --step annotate --tools ${ANNOTATOR} --annotateVCF data/testdata/vcf/Strelka_1234N_variants.vcf.gz --noReports
   clean_repo
 fi
 
