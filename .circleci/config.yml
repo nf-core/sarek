@@ -51,50 +51,62 @@ jobs:
   vepgrch37:
     docker:
       - image: circleci/buildpack-deps:stretch
-    environment:
-      GENOME: GRCh37
-      SPECIES: homo_sapiens
-      VEP_VERSION: 95
     steps:
       - checkout
       - setup_remote_docker
       - run:
           command: docker build -t nfcore/sarekvep:dev.${GENOME} containers/vep/. --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
+          environment:
+            GENOME: GRCh37
+            SPECIES: homo_sapiens
+            VEP_VERSION: 95
       - run:
           command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.${GENOME}
           no_output_timeout: 45m
+          environment:
+            GENOME: GRCh37
+            SPECIES: homo_sapiens
+            VEP_VERSION: 95
 
   vepgrch38:
     docker:
       - image: circleci/buildpack-deps:stretch
-    environment:
-      GENOME: GRCh38
-      SPECIES: homo_sapiens
-      VEP_VERSION: 95
     steps:
       - checkout
       - setup_remote_docker
       - run:
           command: docker build -t nfcore/sarekvep:dev.${GENOME} containers/vep/. --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
+          environment:
+            GENOME: GRCh38
+            SPECIES: homo_sapiens
+            VEP_VERSION: 95
       - run:
           command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.${GENOME}
           no_output_timeout: 45m
+          environment:
+            GENOME: GRCh38
+            SPECIES: homo_sapiens
+            VEP_VERSION: 95
 
   vepgrcm38:
     docker:
       - image: circleci/buildpack-deps:stretch
-    environment:
-      GENOME: GRCm38
-      SPECIES: mus_musculus
-      VEP_VERSION: 95
     steps:
       - checkout
       - setup_remote_docker
       - run:
           command: docker build -t nfcore/sarekvep:dev.${GENOME} containers/vep/. --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
+          environment:
+            GENOME: GRCm38
+            SPECIES: mus_musculus
+            VEP_VERSION: 95
       - run:
           command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.${GENOME}
           no_output_timeout: 45m
+          environment:
+            GENOME: GRCm38
+            SPECIES: mus_musculus
+            VEP_VERSION: 95
 
 workflows:
   version: 2
