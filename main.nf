@@ -2037,7 +2037,7 @@ def defineReferenceMap(step, tools) {
             'dbsnpIndex'       : checkParamReturnFile("dbsnpIndex")
         )
     }
-    if ('annotate' in step) referenceMap = []
+    if ('annotate' in step) return []
     return referenceMap
 }
 
