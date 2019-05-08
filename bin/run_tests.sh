@@ -33,19 +33,16 @@ if [[ ALL,GERMLINE =~ $TEST ]]
 then
   run_sarek --sample data/testdata/tiny/normal --tools HaplotypeCaller,Strelka --noReports
   run_sarek --step recalibrate --noReports
-	clean_repo
 fi
 
 if [[ ALL,SOMATIC =~ $TEST ]]
 then
 	run_sarek --sample data/testdata/tsv/tiny-manta.tsv --tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2 --noReports
-	clean_repo
 fi
 
 if [[ ALL,TARGETED =~ $TEST ]]
 then
 	run_sarek --sample data/testdata/tsv/tiny-manta.tsv --tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2 --noReports --targetBED data/testdata/target.bed
-	clean_repo
 fi
 
 if [[ ALL,ANNOTATEALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
@@ -61,7 +58,6 @@ then
     ANNOTATOR=merge,snpEFF,VEP
   fi
   run_sarek --step annotate --tools ${ANNOTATOR} --annotateVCF data/testdata/vcf/Strelka_1234N_variants.vcf.gz --noReports
-  clean_repo
 fi
 
 if [[ MULTIPLE =~ $TEST ]]
