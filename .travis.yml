@@ -14,15 +14,20 @@ matrix:
   fast_finish: true
 
 env:
-  - NXF_VER=19.04.0
+  global:
+    - NXF_VER=19.04.0
+  matrix:
+    - TEST=SOMATIC
+    - TEST=GERMLINE
+    - TEST=TARGETED
+    - TEST=ANNOTATEVEP
+    - TEST=ANNOTATESNPEFF
 
 before_install:
   # PRs to master are only ok if coming from dev branch
   - '[ $TRAVIS_PULL_REQUEST = "false" ] || [ $TRAVIS_BRANCH != "master" ] || ([ $TRAVIS_PULL_REQUEST_SLUG = $TRAVIS_REPO_SLUG ] && [ $TRAVIS_PULL_REQUEST_BRANCH = "dev" ])'
   # Pull the docker image first so the test doesn't wait for this
-  - docker pull nfcore/sarek:dev
-  # Fake the tag locally so that the pipeline runs properly
-  - docker tag nfcore/sarek:dev nfcore/sarek:dev
+  - "travis_retry ./bin/download_docker.sh --test $TEST"
 
 install:
   # Install Nextflow
@@ -32,7 +37,10 @@ install:
   # Reset
   - mkdir ${TRAVIS_BUILD_DIR}/tests && cd ${TRAVIS_BUILD_DIR}/tests
 
+# Build references if needed
+before_script:
+  - "${TRAVIS_BUILD_DIR}/bin/build_reference.sh --test $TEST --build"
+
+# Actual tests
 script:
-  - git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data
-  - nextflow run ${TRAVIS_BUILD_DIR}/build.nf -profile docker --genome smallGRCh37 --refdir data/reference --outdir references --publishDirMode link --max_memory 7.GB --max_cpus 2 -ansi-log false
-  - nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile docker --genome smallGRCh37 --sample data/testdata/tsv/tiny-manta.tsv --tools HaploTypeCaller,Manta,Strelka,MuTecT2,FreeBayes --igenomes_base references --publishDirMode link --max_memory 7.GB --max_cpus 2 -ansi-log false
+  - "${TRAVIS_BUILD_DIR}/bin/run_tests.sh --test $TEST"

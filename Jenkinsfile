@@ -8,26 +8,43 @@ pipeline {
     stages {
         stage('Setup environment') {
             steps {
-                sh "docker pull nfcore/sarek:dev"
+                sh "./bin/download_docker.sh -t ALL"
             }
         }
         stage('Build') {
             steps {
                 sh "rm -rf data"
-                sh "git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data"
-                sh "nextflow run build.nf -profile docker --genome smallGRCh37 --refdir data/reference --outdir references --publishDirMode link -ansi-log false"
+                sh "./bin/build_reference.sh --test ALL --build"
                 sh "rm -rf work/ references/pipeline_info .nextflow*"
             }
         }
-        stage('SampleDir') {
+        stage('Somatic') {
             steps {
-                sh "nextflow run main.nf -profile docker --sampleDir data/testdata/tiny/normal --tools HaplotypeCaller,Manta,Strelka --genome smallGRCh37 --igenomes_base references --publishDirMode link -ansi-log false"
+                sh "./bin/run_tests.sh --test SOMATIC"
+                sh "rm -rf work/ .nextflow* results/"
+            }
+        }
+        stage('Germline') {
+            steps {
+                sh "./bin/run_tests.sh --test GERMLINE"
+                sh "rm -rf work/ .nextflow* results/"
+            }
+        }
+        stage('targeted') {
+            steps {
+                sh "./bin/run_tests.sh --test TARGETED"
+                sh "rm -rf work/ .nextflow* results/"
+            }
+        }
+        stage('Annotation') {
+            steps {
+                sh "./bin/run_tests.sh --test ANNOTATEALL"
                 sh "rm -rf work/ .nextflow* results/"
             }
         }
         stage('Multiple') {
             steps {
-                sh "nextflow run main.nf -profile docker --sample data/testdata/tsv/tiny-multiple.tsv --tools HaploTypeCaller,Manta,Strelka,MuTecT2,FreeBayes --genome smallGRCh37 --igenomes_base references --publishDirMode link -ansi-log false"
+                sh "./bin/run_tests.sh --test MULTIPLE"
                 sh "rm -rf work/ .nextflow* results/"
             }
         }
