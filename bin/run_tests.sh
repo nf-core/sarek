@@ -26,7 +26,7 @@ do
 done
 
 function run_sarek() {
-  nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile docker -ansi-log false --publishDirMode link --max_memory 7.GB --max_cpus 2 -dump-channels --genome smallGRCh37 --igenomes_base reference $@
+  nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile docker -ansi-log false --publishDirMode link --max_memory 7.GB --max_cpus 2 -dump-channels --genome smallGRCh37 --igenomes_base references $@
 }
 
 if [[ ALL,GERMLINE =~ $TEST ]]
