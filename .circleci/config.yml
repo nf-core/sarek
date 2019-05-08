@@ -62,7 +62,7 @@ jobs:
             VEP_VERSION: 95
       - run:
           command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.${GENOME}
-          no_output_timeout: 45m
+          no_output_timeout: 45min
           environment:
             GENOME: GRCh37
             SPECIES: homo_sapiens
@@ -82,7 +82,7 @@ jobs:
             VEP_VERSION: 95
       - run:
           command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.${GENOME}
-          no_output_timeout: 45m
+          no_output_timeout: 45min
           environment:
             GENOME: GRCh38
             SPECIES: homo_sapiens
@@ -102,7 +102,7 @@ jobs:
             VEP_VERSION: 95
       - run:
           command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.${GENOME}
-          no_output_timeout: 45m
+          no_output_timeout: 45min
           environment:
             GENOME: GRCm38
             SPECIES: mus_musculus
