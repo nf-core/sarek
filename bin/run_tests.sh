@@ -25,22 +25,26 @@ do
   esac
 done
 
+function run_sarek() {
+  nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile docker -ansi-log false --publishDirMode link --max_memory 7.GB --max_cpus 2 -dump-channels $@
+}
+
 if [[ ALL,GERMLINE =~ $TEST ]]
 then
-  nextflow run ${TRAVIS_BUILD_DIR}/main.nf --sample data/testdata/tiny/normal --tools HaplotypeCaller,Strelka --noReports
-  nextflow run ${TRAVIS_BUILD_DIR}/main.nf --step recalibrate --noReports
+  run_sarek --sample data/testdata/tiny/normal --tools HaplotypeCaller,Strelka --noReports
+  run_sarek --step recalibrate --noReports
 	clean_repo
 fi
 
 if [[ ALL,SOMATIC =~ $TEST ]]
 then
-	nextflow run ${TRAVIS_BUILD_DIR}/main.nf --sample data/testdata/tsv/tiny-manta.tsv --tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2 --noReports
+	run_sarek --sample data/testdata/tsv/tiny-manta.tsv --tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2 --noReports
 	clean_repo
 fi
 
 if [[ ALL,TARGETED =~ $TEST ]]
 then
-	nextflow run ${TRAVIS_BUILD_DIR}/main.nf --sample data/testdata/tsv/tiny-manta.tsv --tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2 --noReports --targetBED data/testdata/target.bed
+	run_sarek --sample data/testdata/tsv/tiny-manta.tsv --tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2 --noReports --targetBED data/testdata/target.bed
 	clean_repo
 fi
 
@@ -56,11 +60,11 @@ then
   then
     ANNOTATOR=merge,snpEFF,VEP
   fi
-  nextflow run ${TRAVIS_BUILD_DIR}/main.nf --step annotate --tools ${ANNOTATOR} --annotateVCF data/testdata/vcf/Strelka_1234N_variants.vcf.gz --noReports
+  run_sarek --step annotate --tools ${ANNOTATOR} --annotateVCF data/testdata/vcf/Strelka_1234N_variants.vcf.gz --noReports
   clean_repo
 fi
 
 if [[ MULTIPLE =~ $TEST ]]
 then
-  nextflow run ${TRAVIS_BUILD_DIR}/main.nf --sample data/testdata/tsv/tiny-multiple.tsv --tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2 --noReports
+  run_sarek --sample data/testdata/tsv/tiny-multiple.tsv --tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2 --noReports
 fi
