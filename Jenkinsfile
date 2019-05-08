@@ -8,31 +8,43 @@ pipeline {
     stages {
         stage('Setup environment') {
             steps {
-                sh "docker pull nfcore/sarek:dev"
-                sh "docker tag nfcore/sarek:dev"
-                sh "docker pull nfcore/sareksnpeff:dev.GRCh37"
-                sh "docker tag nfcore/sareksnpeff:dev.GRCh37 nfcore/sareksnpeff:dev.smallGRCh37"
-                sh "docker pull nfcore/sarekvep:dev.GRCh37"
-                sh "docker tag nfcore/sarekvep:dev.GRCh37 nfcore/sarekvep:dev.smallGRCh37"
+                sh "./bin/download_docker.sh -t ALL"
             }
         }
         stage('Build') {
             steps {
                 sh "rm -rf data"
-                sh "git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data"
-                sh "nextflow run build.nf -profile docker --genome smallGRCh37 --refdir data/reference --outdir references --publishDirMode link -ansi-log false"
+                sh "./bin/build_reference.sh --test ALL --build"
                 sh "rm -rf work/ references/pipeline_info .nextflow*"
             }
         }
-        stage('Germline from directory') {
+        stage('Somatic') {
             steps {
-                sh "nextflow run main.nf -profile docker --sample data/testdata/tiny/normal --tools HaplotypeCaller,Manta,Strelka,snpEff,VEP,merge --genome smallGRCh37 --igenomes_base references --publishDirMode link -ansi-log false"
+                sh "./bin/run_tests.sh --test SOMATIC"
                 sh "rm -rf work/ .nextflow* results/"
             }
         }
-        stage('Somatic multiple') {
+        stage('Germline') {
             steps {
-                sh "nextflow run main.nf -profile docker --sample data/testdata/tsv/tiny-multiple.tsv --tools HaploTypeCaller,Manta,Strelka,MuTecT2,FreeBayes,snpEff,VEP,merge --genome smallGRCh37 --igenomes_base references --publishDirMode link -ansi-log false"
+                sh "./bin/run_tests.sh --test GERMLINE"
+                sh "rm -rf work/ .nextflow* results/"
+            }
+        }
+        stage('targeted') {
+            steps {
+                sh "./bin/run_tests.sh --test TARGETED"
+                sh "rm -rf work/ .nextflow* results/"
+            }
+        }
+        stage('Annotation') {
+            steps {
+                sh "./bin/run_tests.sh --test ANNOTATEALL"
+                sh "rm -rf work/ .nextflow* results/"
+            }
+        }
+        stage('Multiple') {
+            steps {
+                sh "./bin/run_tests.sh --test MULTIPLE"
                 sh "rm -rf work/ .nextflow* results/"
             }
         }
