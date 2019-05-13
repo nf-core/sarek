@@ -9,9 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Changed`
 
+-   [#741](https://github.com/SciLifeLab/Sarek/pull/741) - Use [dump](https://www.nextflow.io/docs/latest/operator.html#dump) operator
+-   [#744](https://github.com/SciLifeLab/Sarek/pull/744) - Refactor `germlineVC.nf`
 -   [#744](https://github.com/SciLifeLab/Sarek/pull/744) - Refactor `germlineVC.nf`
 -   [#753](https://github.com/SciLifeLab/Sarek/pull/753) - Update `binac`, `cfc` configuration
 -   [#775](https://github.com/SciLifeLab/Sarek/pull/775) - Update paths for munin configuration
+-   [#776](https://github.com/SciLifeLab/Sarek/pull/776) - Helper script now download annotations for VEP CADD plugin
 -   [#776](https://github.com/SciLifeLab/Sarek/pull/776) - Helper script now download annotations for VEP CADD plugin
 -   [#778](https://github.com/SciLifeLab/Sarek/pull/778) - add `|| true` for all tools when gathering versions
 -   [#793](https://github.com/SciLifeLab/Sarek/pull/793) - Update munin configuration
@@ -24,12 +27,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#777](https://github.com/SciLifeLab/Sarek/pull/777) - Add `removeVCF()` function to remove `.ann`, `.gz` and `.vcf` from a VCF filename
 -   [#777](https://github.com/SciLifeLab/Sarek/pull/777) - Add GeneSplicer `1.0` to container
 -   [#777](https://github.com/SciLifeLab/Sarek/pull/777) - Add possibility to use VEP GeneSplicer plugin
-
-### `Changed`
-
--   [#741](https://github.com/SciLifeLab/Sarek/pull/741) - Use [dump](https://www.nextflow.io/docs/latest/operator.html#dump) operator
--   [#744](https://github.com/SciLifeLab/Sarek/pull/744) - Refactor `germlineVC.nf`
--   [#776](https://github.com/SciLifeLab/Sarek/pull/776) - Helper script now download annotations for VEP CADD plugin
 
 ### `Fixed`
 

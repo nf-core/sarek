@@ -1,6 +1,6 @@
 # Containers
 
-Our main container is designed using Bioconda to install most of the tools used in Sarek:
+Our main container is designed using Bioconda to install all tools used in Sarek:
 - [sarek](#sarek-)
 
 For annotation, the main container can be used, but the cache has to be downloaded, or additional containers are available with cache (see [annotation guide](ANNOTATION.md)):
@@ -11,42 +11,32 @@ For annotation, the main container can be used, but the cache has to be download
   - [snpeffgrch38](#snpeffgrch38-)
   - [vepgrch38](#vepgrch38-)
 
-Additional containers need to be downloaded for somatic variant calling with ASCAT:
-  - [r-base](#r-base-)
-  - [runallelecount](#runallelecount-)
-
 ## What is actually inside the containers
-
-### r-base [![r-base-docker status][r-base-docker-badge]][r-base-docker-link]
-
- - Based on `r-base:3.3.2`
- - Contain **RColorBrewer**
-
-### runallelecount [![runallelecount-docker status][runallelecount-docker-badge]][runallelecount-docker-link]
-
-- Based on `debian:8.9`
-- Contain **[AlleleCount][allelecount-link]** 2.2.0
 
 ### sarek [![sarek-docker status][sarek-docker-badge]][sarek-docker-link]
 
 - Based on `nfcore/base:latest`
-- Contain **[BCFTools][bcftools-link]** 1.8
+- Contain **[AlleleCount][allelecount-link]** 2.1.2
+- Contain **[BCFTools][bcftools-link]** 1.9
 - Contain **[BWA][bwa-link]** 0.7.17
 - Contain **[FastQC][fastqc-link]** 0.11.8
 - Contain **[FreeBayes][freebayes-link]** 1.2.0
-- Contain **[GATK4][gatk4-link]** 4.0.9.0
+- Contain **[GATK4][gatk4-link]** 4.1.1.0
 - Contain **[GeneSplicer][genesplicer-link]** 1.0
 - Contain **[HTSlib][htslib-link]** 1.9
 - Contain **[IGVtools][igvtools-link]** 2.3.93
-- Contain **[Manta][manta-link]** 1.4.0
-- Contain **[MultiQC][multiqc-link]** 1.6
+- Contain **[Manta][manta-link]** 1.5.0
+- Contain **[MultiQC][multiqc-link]** 1.7
 - Contain **[Qualimap][qualimap-link]** 2.2.2b
-- Contain **[samtools][samtools-link]** 1.8
+- Contain **[R][r-link]** 3.5.1
+- Contain **[RColorBrewer][rcolorbrewer-link]** 1.1
+- Contain **[Rtracklayer][rtracklayer-link]** 1.42.1
+- Contain **[samtools][samtools-link]** 1.9
 - Contain **[snpEff][snpeff-link]** 4.3.1t
 - Contain **[Strelka2][strelka-link]** 2.9.3
-- Contain **[VCFanno][vcfanno-link]** 0.3.0
+- Contain **[VCFanno][vcfanno-link]** 0.3.1
 - Contain **[VCFtools][vcftools-link]** 0.1.16
-- Contain **[VEP][vep-link]** 95.1
+- Contain **[VEP][vep-link]** 96.0
 
 ### snpeffgrch37 [![snpeffgrch37-docker status][snpeffgrch37-docker-badge]][snpeffgrch37-docker-link]
 
@@ -64,15 +54,15 @@ Additional containers need to be downloaded for somatic variant calling with ASC
 
 - Based on `nfcore/base:latest`
 - Contain **[GeneSplicer][genesplicer-link]** 1.0
-- Contain **[VEP][vep-link]** 95.1
-- Contain cache for GRCh37 version 95
+- Contain **[VEP][vep-link]** 96.0
+- Contain cache for GRCh37 version 96
 
 ### vepgrch38 [![vepgrch38-docker status][vepgrch38-docker-badge]][vepgrch38-docker-link]
 
 - Based on `nfcore/base:latest`
 - Contain **[GeneSplicer][genesplicer-link]** 1.0
-- Contain **[VEP][vep-link]** 95.1
-- Contain cache for GRCh38 version 95
+- Contain **[VEP][vep-link]** 96.0
+- Contain cache for GRCh38 version 96
 
 ## Building
 
@@ -90,8 +80,6 @@ nextflow run build.nf [--docker] [--singularity] /
 Default: `all`.
 Possible values (to separate by commas):
   - `all` -  all available containers.
-  - `r-base` - the [r-base](#r-base-) container.
-  - `runallelecount` - the [runallelecount](#runallelecount-) container.
   - `sarek` - the [sarek](#sarek-) container.
   - `snpeffgrch37` - the [snpeffgrch37](#snpeffgrch37-) container.
   - `snpeffgrch38` - the [snpeffgrch38](#snpeffgrch38-) container.
@@ -140,11 +128,9 @@ You'll just need to specify the correct repository either in command line or in 
 [manta-link]: https://github.com/Illumina/manta
 [multiqc-link]: https://github.com/ewels/MultiQC/
 [qualimap-link]: http://qualimap.bioinfo.cipf.es
-[r-base-docker-badge]: https://img.shields.io/docker/automated/maxulysse/r-base.svg
-[r-base-docker-link]: https://hub.docker.com/r/maxulysse/r-base
+[r-link]: https://www.r-project.org/
 [rcolorbrewer-link]: https://CRAN.R-project.org/package=RColorBrewer
-[runallelecount-docker-badge]: https://img.shields.io/docker/automated/maxulysse/runallelecount.svg
-[runallelecount-docker-link]: https://hub.docker.com/r/maxulysse/runallelecount
+[rtracklayer-link]: https://www.bioconductor.org/packages/release/bioc/html/rtracklayer.html
 [samtools-link]: https://github.com/samtools/samtools
 [sarek-docker-badge]: https://img.shields.io/docker/automated/maxulysse/sarek.svg
 [sarek-docker-link]: https://hub.docker.com/r/maxulysse/sarek

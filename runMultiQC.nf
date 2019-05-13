@@ -56,7 +56,6 @@ process GetVersionAll {
   publishDir "${params.outDir}/Reports/MultiQC", mode: params.publishDirMode
 
   input:
-    file(versions) from Channel.fromPath("${params.outDir}/Reports/ToolsVersion/*").collect().ifEmpty(null)
 
   output:
     file ("tool_versions_mqc.yaml") into versionsForMultiQC
@@ -80,6 +79,9 @@ process GetVersionAll {
   samtools --version &> v_samtools.txt 2>&1 || true
   vcftools --version &> v_vcftools.txt 2>&1 || true
   vep --help &> v_vep.txt 2>&1 || true
+  alleleCounter --version &> v_allelecount.txt  || true
+  R --version &> v_r.txt  || true
+  cat ${baseDir}/scripts/ascat.R | grep "ASCAT version" &> v_ascat.txt  || true
 
   scrape_tool_versions.py &> tool_versions_mqc.yaml
   """
@@ -134,7 +136,7 @@ def createMultiQCconfig() {
   def file = workDir.resolve('multiqc_config.yaml')
   file.text  = """
   custom_logo: ${baseDir}/docs/images/Sarek_no_Border.png
-  custom_logo_url: http://opensource.scilifelab.se/projects/sarek
+  custom_logo_url: https://sarek.scilifelab.se/
   custom_logo_title: 'Sarek'
   report_header_info:
   - Contact Name: ${params.callName}

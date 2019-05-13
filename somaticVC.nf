@@ -39,8 +39,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - RunAscat - Run ASCAT for CNV
  - RunBcftoolsStats - Run BCFTools stats on vcf files
  - RunVcftools - Run VCFTools on vcf files
- - GetVersionAlleleCount - Get version of tools
- - GetVersionASCAT - Get version of tools
 ================================================================================
 =                           C O N F I G U R A T I O N                          =
 ================================================================================
@@ -655,29 +653,6 @@ process RunVcftools {
 }
 
 vcfReport.dump(tag:'VCFTools')
-
-process GetVersionAlleleCount {
-  publishDir "${params.outDir}/Reports/ToolsVersion", mode: params.publishDirMode
-  output: file("v_*.txt")
-  when: 'ascat' in tools && !params.onlyQC
-
-  script:
-  """
-  alleleCounter --version > v_allelecount.txt
-  """
-}
-
-process GetVersionASCAT {
-  publishDir "${params.outDir}/Reports/ToolsVersion", mode: params.publishDirMode
-  output: file("v_*.txt")
-  when: 'ascat' in tools && !params.onlyQC
-
-  script:
-  """
-  R --version > v_r.txt
-  cat ${baseDir}/scripts/ascat.R | grep "ASCAT version" > v_ascat.txt
-  """
-}
 
 /*
 ================================================================================
