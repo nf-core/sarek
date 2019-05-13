@@ -93,7 +93,6 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
 
 // Default value for params
 params.annotateTools = null
-params.annotateVCF = null
 params.annotation_cache = null
 params.cadd_InDels = null
 params.cadd_InDels_tbi = null
@@ -104,10 +103,12 @@ params.noReports = null
 params.nucleotidesPerSecond = 1000.0
 params.sample = null
 params.sequencing_center = null
+params.snpEff_cache = null
 params.step = 'mapping'
 params.strelkaBP = true
 params.targetBED = null
 params.tools = null
+params.vep_cache = null
 
 stepList = defineStepList()
 step = params.step ? params.step.toLowerCase() : ''
@@ -117,7 +118,6 @@ if ( step.contains(',') ) exit 1, 'You can choose only one step, see --help for 
 
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
 annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
-annotateVCF = params.annotateVCF ? params.annotateVCF.split(',').collect{it.trim()} : []
 toolList = defineToolList()
 if ( !checkParameterList(tools,toolList) ) exit 1, 'Unknown tool(s), see --help for more information'
 
@@ -148,7 +148,7 @@ ch_output_docs = Channel.fromPath("${baseDir}/docs/output.md")
  */
 
 tsvPath = null
-if (params.sample) if (hasExtension(params.sample,"tsv")) tsvPath = params.sample
+if (params.sample) if (hasExtension(params.sample,"tsv") || hasExtension(params.sample,"vcf") || hasExtension(params.sample,"vcf.gz")) tsvPath = params.sample
 
  // No need for tsv file for step annotate
 if (!params.sample) {
@@ -166,6 +166,7 @@ if (tsvPath) {
         case 'mapping': inputFiles = extractSample(tsvFile); break
         case 'recalibrate': bamFiles = extractRecal(tsvFile); break
         case 'variantcalling': bamFiles = extractBams(tsvFile); break
+        case 'annotate': break
         default: exit 1, "Unknown step ${step}"
     }
 } else if (params.sample) if (!hasExtension(params.sample,"tsv")) {
@@ -174,9 +175,11 @@ if (tsvPath) {
     inputFiles = extractFastqFromDir(params.sample)
     (inputFiles, fastqTmp) = inputFiles.into(2)
     fastqTmp.toList().subscribe onNext: {
-    if (it.size() == 0) exit 1, "No FASTQ files found in --sample directory '${params.sample}'"
-}
-tsvFile = params.sample  // used in the reports
+        if (it.size() == 0) exit 1, "No FASTQ files found in --sample directory '${params.sample}'"
+    }
+    tsvFile = params.sample  // used in the reports
+} else if (step == 'annotate') {
+    println "Annotating ${tsvFile}"
 } else exit 1, 'No sample were defined, see --help'
 
 if (step == 'recalibrate') (patientGenders, bamFiles) = extractGenders(bamFiles)
@@ -1558,7 +1561,7 @@ vcfToAnnotate = Channel.create()
 if (step == 'annotate') {
     vcfNotToAnnotate = Channel.create()
 
-    if (annotateVCF == []) {
+    if (tsvPath == []) {
     // Sarek, by default, annotates all available vcfs that it can find in the VariantCalling directory
     // Excluding vcfs from FreeBayes, and g.vcf from HaplotypeCaller
     // Basically it's: VariantCalling/*/{HaplotypeCaller,Manta,MuTect2,Strelka}/*.vcf.gz
@@ -1580,7 +1583,7 @@ if (step == 'annotate') {
     } else if (annotateTools == []) {
     // Annotate user-submitted VCFs
     // If user-submitted, Sarek assume that the idSample should be assumed automatically
-      vcfToAnnotate = Channel.fromPath(annotateVCF)
+      vcfToAnnotate = Channel.fromPath(tsvPath)
         .map{vcf -> ['userspecified', vcf.minus(vcf.fileName)[-2].toString(), vcf]}
     } else exit 1, "specify only tools or files to annotate, not both"
 
@@ -1620,8 +1623,6 @@ process RunSnpeff {
   reducedVCF = reduceVCF(vcf)
   cache = (params.snpEff_cache && params.annotation_cache) ? "-dataDir \${PWD}/${dataDir}" : ""
   """
-  echo ${task.container}
-
   snpEff -Xmx${task.memory.toGiga()}g \
   ${snpeffDb} \
   -csvStats ${reducedVCF}_snpEff.csv \
