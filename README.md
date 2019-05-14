@@ -26,8 +26,8 @@ Sarek is a workflow designed to run analyses on whole genome or targeted sequenc
 It's built using [Nextflow](https://www.nextflow.io),
 a domain specific language for workflow building,
 across multiple compute infrastructures in a very portable manner.
-Software dependencies are handled using [Docker](https://www.docker.com) or [Singularity](https://www.sylabs.io/singularity/) - container technologies that provide excellent reproducibility and ease of use.
-Thus making installation trivial and results highly reproducible
+Software dependencies are handled using [Conda](https://conda.io/), [Docker](https://www.docker.com) or [Singularity](https://www.sylabs.io/singularity/) - environment/container technologies that provide excellent reproducibility and ease of use.
+Thus making installation trivial and results highly reproducible.
 
 It is listed on the [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek), [Dockstore](https://dockstore.org/workflows/github.com/SciLifeLab/Sarek/) and [omicX - Bioinformatics tools](https://omictools.com/sarek-tool).
 
@@ -39,12 +39,10 @@ The nf-core/sarek pipeline comes with documentation about the pipeline, found in
     * [Local installation](https://nf-co.re/usage/local_installation)
     * [Adding your own system config](https://nf-co.re/usage/adding_own_config)
     * [Reference genomes](https://nf-co.re/usage/reference_genomes)
+    * [More information on reference](docs/reference.md)
 3. [Running the pipeline](docs/usage.md)
-    * [Tests documentation](docs/TESTS.md)
-    * [Configuration and profiles documentation](docs/CONFIG.md)
     * [Intervals documentation](docs/INTERVALS.md)
     * [Running the pipeline](docs/USAGE.md)
-    * [Running the pipeline using Conda](docs/CONDA.md)
     * [Command line parameters](docs/PARAMETERS.md)
     * [Examples](docs/USE_CASES.md)
     * [Input files documentation](docs/INPUT.md)
