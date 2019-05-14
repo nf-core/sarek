@@ -21,14 +21,23 @@ Usage:
       you're reading it
 
 BUILD REFERENCES:
-  nextflow run build.nf [--refdir <pathToDirectory> --outdir <pathToDirectory>]
-    --refdir <Directoy>
-      Specify a directory containing reference files
+  nextflow run build.nf --build --outdir <pathToDirectory> [--offline]
+    --build
+      Will build reference files for smallGRCh37
     --outdir <Directoy>
       Specify an output directory
 
+    --offline
+      Will use data as the source for the reference files
+      Need to do:
+      `git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data`
+      Before transfering the repo to an offline location
+
 DOWNLOAD CACHE:
   nextflow run build.nf --download_cache [--snpEff_cache <pathToSNPEFFcache>] [--vep_cache <pathToVEPcache>]
+                                         [--cadd_cache <pathToCADDcache> --cadd_version <CADD Version>]
+    --download_cache
+      Will download specified cache
     --snpEff_cache <Directoy>
       Specify path to snpEff cache
       If none, will use snpEff version specified in configuration
@@ -54,14 +63,28 @@ DOWNLOAD CACHE:
 // Show help message
 if (params.help) exit 0, helpMessage()
 
-ch_referencesFiles = Channel.fromPath("${params.refdir}/*")
-
 // Default value for params
+params.build = null
+params.offline = null
 params.cadd_cache = null
 params.cadd_version = 'v1.5'
 params.genome = 'smallGRCh37'
 params.snpEff_cache = null
 params.vep_cache = null
+
+ch_referencesFiles = Channel.empty()
+
+if ((params.build) && (params.offline)) ch_referencesFiles = Channel.fromPath("data/reference/*")
+if ((params.build) && (!params.offline)) ch_referencesFiles = ch_referencesFiles.mix(
+  Channel.fromPath("https://github.com/nf-core/test-datasets/raw/sarek/reference/1000G_phase1.indels.b37.small.vcf.gz"),
+  Channel.fromPath("https://github.com/nf-core/test-datasets/raw/sarek/reference/1000G_phase3_20130502_SNP_maf0.3.small.loci"),
+  Channel.fromPath("https://github.com/nf-core/test-datasets/raw/sarek/reference/1000G_phase3_20130502_SNP_maf0.3.small.loci.gc"),
+  Channel.fromPath("https://github.com/nf-core/test-datasets/raw/sarek/reference/Mills_and_1000G_gold_standard.indels.b37.small.vcf.gz"),
+  Channel.fromPath("https://github.com/nf-core/test-datasets/raw/sarek/reference/dbsnp_138.b37.small.vcf.gz"),
+  Channel.fromPath("https://github.com/nf-core/test-datasets/raw/sarek/reference/human_g1k_v37_decoy.small.fasta.gz"),
+  Channel.fromPath("https://github.com/nf-core/test-datasets/raw/sarek/reference/small.intervals"))
+
+ch_referencesFiles = ch_referencesFiles.dump(tag:'Reference Files')
 
 // Check if genome exists in the config file
 if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
