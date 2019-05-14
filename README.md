@@ -11,7 +11,7 @@
 [![Travis build status][travis-badge]](https://travis-ci.com/nf-core/sarek/)
 [![CircleCi build status][circleci-badge]](https://circleci.com/gh/nf-core/sarek/)
 
-[![Install with bioconda][bioconda-badge]](http://bioconda.github.io/)
+[![Install with bioconda][bioconda-badge]](https://bioconda.github.io/)
 [![Docker Container available][docker-sarek-badge]](https://hub.docker.com/r/nfcore/sarek/)
 [![Install with Singularity][singularity-badge]](https://www.sylabs.io/docs/)
 
@@ -97,14 +97,14 @@ The worflow steps and tools used are as follows:
 5. **QC and Reporting**
     * QC
       * [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
-      * [Qualimap bamqc](http://qualimap.bioinfo.cipf.es/doc_html/command_line.html)
+      * [Qualimap bamqc](http://qualimap.bioinfo.cipf.es/)
       * [samtools stats](https://www.htslib.org/doc/samtools.html)
       * [GATK MarkDuplicates](https://github.com/broadinstitute/gatk)
-      * [bcftools stats](http://www.htslib.org/doc/bcftools.html)
-      * [VCFtools](https://vcftools.github.io/index.html)
+      * [bcftools stats](https://samtools.github.io/bcftools/)
+      * [VCFtools](https://vcftools.github.io/)
       * [SnpEff](http://snpeff.sourceforge.net/)
     * Reporting
-        * [MultiQC](http://multiqc.info)
+        * [MultiQC](https://multiqc.info/)
 
 ## Credits
 
