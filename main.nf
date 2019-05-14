@@ -49,6 +49,7 @@ if (workflow.profile == 'awsbatch') {
 if (params.help) exit 0, helpMessage()
 if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
+if (params.verbose) SarekUtils.verbose()
 
 step = params.step.toLowerCase()
 if (step == 'preprocessing') step = 'mapping'
@@ -113,17 +114,7 @@ startMessage()
 
 (inputFiles, inputFilesforFastQC) = inputFiles.into(2)
 
-if (params.verbose) inputFiles = inputFiles.view {
-  "FASTQs to preprocess:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\tRun   : ${it[3]}\n\
-  Files : [${it[4].fileName}, ${it[5].fileName}]"
-}
-
-if (params.verbose) bamFiles = bamFiles.view {
-  "BAMs to process:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
-  Files : [${it[3].fileName}, ${it[4].fileName}]"
-}
+inputFiles = inputFiles.dump(tag:'INPUT')
 
 process RunFastQC {
   tag {idPatient + "-" + idRun}
@@ -139,16 +130,13 @@ process RunFastQC {
   when: step == 'mapping' && !params.noReports
 
   script:
-  inputFiles = SarekUtils.hasExtension(inputFile1,"fastq.gz") ? "${inputFile1} ${inputFile2}" : "${inputFile1}"
+  inputFiles = (SarekUtils.hasExtension(inputFile1,"fastq.gz") || SarekUtils.hasExtension(inputFile1,"fq.gz")) ? "${inputFile1} ${inputFile2}" : "${inputFile1}"
   """
   fastqc -t 2 -q ${inputFiles}
   """
 }
 
-if (params.verbose) fastQCreport = fastQCreport.view {
-  "FastQC report:\n\
-  Files : [${it[0].fileName}, ${it[1].fileName}]"
-}
+fastQCreport.dump(tag:'FastQC')
 
 process MapReads {
   tag {idPatient + "-" + idRun}
@@ -167,7 +155,7 @@ process MapReads {
   readGroup = "@RG\\tID:${idRun}\\t${CN}PU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
   // adjust mismatch penalty for tumor samples
   extra = status == 1 ? "-B 3" : ""
-  if (SarekUtils.hasExtension(inputFile1,"fastq.gz"))
+  if (SarekUtils.hasExtension(inputFile1,"fastq.gz") || SarekUtils.hasExtension(inputFile1,"fq.gz"))
     """
     bwa mem -R \"${readGroup}\" ${extra} -t ${task.cpus} -M \
     ${genomeFile} ${inputFile1} ${inputFile2} | \
@@ -194,11 +182,7 @@ process MapReads {
     """
 }
 
-if (params.verbose) mappedBam = mappedBam.view {
-  "Mapped BAM (single or to be merged):\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\tRun   : ${it[3]}\n\
-  File  : [${it[4].fileName}]"
-}
+mappedBam = mappedBam.dump(tag:'Mapped BAM')
 
 process RunBamQCmapped {
   tag {idPatient + "-" + idSample}
@@ -207,6 +191,7 @@ process RunBamQCmapped {
 
   input:
     set idPatient, status, idSample, idRun, file(bam) from mappedBamForQC
+    file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
 
   output:
     file("${bam.baseName}") into bamQCmappedReport
@@ -214,12 +199,14 @@ process RunBamQCmapped {
   when: !params.noReports && !params.noBAMQC
 
   script:
+  use_bed = params.targetBED ? "-gff ${targetBED}" : ''
   """
   qualimap --java-mem-size=${task.memory.toGiga()}G \
   bamqc \
   -bam ${bam} \
   --paint-chromosome-limits \
   --genome-gc-distr HUMAN \
+  $use_bed \
   -nt ${task.cpus} \
   -skip-duplicated \
   --skip-dup-mode 0 \
@@ -228,10 +215,7 @@ process RunBamQCmapped {
   """
 }
 
-if (params.verbose) bamQCmappedReport = bamQCmappedReport.view {
-  "BamQC report:\n\
-  Dir   : [${it.fileName}]"
-}
+bamQCmappedReport.dump(tag:'BamQC BAM')
 
 // Sort bam whether they are standalone or should be merged
 // Borrowed code from https://github.com/guigolab/chip-nf
@@ -262,25 +246,10 @@ process MergeBams {
   """
 }
 
-if (params.verbose) singleBam = singleBam.view {
-  "Single BAM:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
-  File  : [${it[3].fileName}]"
-}
-
-if (params.verbose) mergedBam = mergedBam.view {
-  "Merged BAM:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
-  File  : [${it[3].fileName}]"
-}
-
+singleBam = singleBam.dump(tag:'Single BAM')
+mergedBam = mergedBam.dump(tag:'Merged BAM')
 mergedBam = mergedBam.mix(singleBam)
-
-if (params.verbose) mergedBam = mergedBam.view {
-  "BAM for MarkDuplicates:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
-  File  : [${it[3].fileName}]"
-}
+mergedBam = mergedBam.dump(tag:'BAM for MD')
 
 process MarkDuplicates {
   tag {idPatient + "-" + idSample}
@@ -302,8 +271,9 @@ process MarkDuplicates {
   when: step == 'mapping' && !params.onlyQC
 
   script:
+  markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2 ).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
   """
-  gatk --java-options ${params.markdup_java_options} \
+  gatk --java-options ${markdup_java_options} \
   MarkDuplicates \
   --MAX_RECORDS_IN_RAM 50000 \
   --INPUT ${idSample}.bam \
@@ -331,11 +301,7 @@ duplicateMarkedBams = duplicateMarkedBams.map {
     [idPatient, status, idSample, bam, bai]
 }
 
-if (params.verbose) duplicateMarkedBams = duplicateMarkedBams.view {
-  "Realigned BAM to CreateRecalibrationTable:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
-  Files : [${it[3].fileName}, ${it[4].fileName}]"
-}
+duplicateMarkedBams = duplicateMarkedBams.dump(tag:'MD BAM')
 
 (mdBam, mdBamToJoin) = duplicateMarkedBams.into(2)
 
@@ -391,11 +357,7 @@ recalibrationTable = mdBamToJoin.join(recalibrationTable, by:[0,1,2])
 
 if (step == 'recalibrate') recalibrationTable = bamFiles
 
-if (params.verbose) recalibrationTable = recalibrationTable.view {
-  "Base recalibrated table for RecalibrateBam:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
-  Files : [${it[3].fileName}, ${it[4].fileName}, ${it[5].fileName}]"
-}
+recalibrationTable = recalibrationTable.dump(tag:'recal.table')
 
 process RecalibrateBam {
   tag {idPatient + "-" + idSample}
@@ -437,11 +399,7 @@ recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
   name: 'recalibrated.tsv', sort: true, storeDir: "${params.outDir}/Preprocessing/Recalibrated"
 )
 
-if (params.verbose) recalibratedBam = recalibratedBam.view {
-  "Recalibrated BAM for variant Calling:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
-  Files : [${it[3].fileName}, ${it[4].fileName}]"
-}
+recalibratedBam.dump(tag:'recal.bam')
 
 // Remove recalTable from Channels to match inputs for Process to avoid:
 // WARN: Input tuple does not match input set cardinality declared by process...
@@ -463,10 +421,7 @@ process RunSamtoolsStats {
   script: QC.samtoolsStats(bam)
 }
 
-if (params.verbose) samtoolsStatsReport = samtoolsStatsReport.view {
-  "SAMTools stats report:\n\
-  File  : [${it.fileName}]"
-}
+samtoolsStatsReport.dump(tag:'SAMTools')
 
 process RunBamQCrecalibrated {
   tag {idPatient + "-" + idSample}
@@ -496,10 +451,7 @@ process RunBamQCrecalibrated {
   """
 }
 
-if (params.verbose) bamQCrecalibratedReport = bamQCrecalibratedReport.view {
-  "BamQC report:\n\
-  Dir   : [${it.fileName}]"
-}
+bamQCrecalibratedReport.dump(tag:'BamQC')
 
 /*
 ================================================================================
@@ -565,15 +517,12 @@ def extractSample(tsvFile) {
     def idRun      = row[4]
     def file1      = SarekUtils.returnFile(row[5])
     def file2      = file("null")
-    if (file1.toString().toLowerCase().endsWith(".fastq.gz")) {
+    if (SarekUtils.hasExtension(file1,"fastq.gz") || SarekUtils.hasExtension(file1,"fq.gz")) {
       SarekUtils.checkNumberOfItem(row, 7)
       file2 = SarekUtils.returnFile(row[6])
-      if (!SarekUtils.hasExtension(file2,"fastq.gz")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
+      if (!SarekUtils.hasExtension(file2,"fastq.gz") && !SarekUtils.hasExtension(file2,"fq.gz")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
     }
-    else if (file1.toString().toLowerCase().endsWith(".bam")) {
-      SarekUtils.checkNumberOfItem(row, 6)
-      if (!SarekUtils.hasExtension(file1,"bam")) exit 1, "File: ${file1} has the wrong extension. See --help for more information"
-    }
+    else if (SarekUtils.hasExtension(file1,"bam")) SarekUtils.checkNumberOfItem(row, 6)
     else "No recognisable extention for input file: ${file1}"
 
     [idPatient, gender, status, idSample, idRun, file1, file2]
@@ -699,8 +648,6 @@ def helpMessage() {
   log.info "       Run only QC tools and gather reports"
   log.info "    --help"
   log.info "       you're reading it"
-  log.info "    --verbose"
-  log.info "       Adds more verbosity to workflow"
 }
 
 def minimalInformationMessage() {

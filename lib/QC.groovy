@@ -2,7 +2,7 @@ class QC {
 // Run bcftools on vcf file
   static def bcftools(vcf) {
     """
-    bcftools stats ${vcf} > ${vcf.simpleName}.bcf.tools.stats.out
+    bcftools stats ${vcf} > ${SarekUtils.reduceVCF(vcf)}.bcf.tools.stats.out
     """
   }
 
@@ -19,22 +19,22 @@ class QC {
     vcftools \
     --gzvcf ${vcf} \
     --relatedness2 \
-    --out ${vcf.simpleName}
+    --out ${SarekUtils.reduceVCF(vcf)}
 
     vcftools \
     --gzvcf ${vcf} \
     --TsTv-by-count \
-    --out ${vcf.simpleName}
+    --out ${SarekUtils.reduceVCF(vcf)}
 
     vcftools \
     --gzvcf ${vcf} \
     --TsTv-by-qual \
-    --out ${vcf.simpleName}
+    --out ${SarekUtils.reduceVCF(vcf)}
 
     vcftools \
     --gzvcf ${vcf} \
     --FILTER-summary \
-    --out ${vcf.simpleName}
+    --out ${SarekUtils.reduceVCF(vcf)}
     """
   }
 }

@@ -36,6 +36,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
 if (params.help) exit 0, helpMessage()
 if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
+if (params.verbose) SarekUtils.verbose()
 
 // Check for awsbatch profile configuration
 // make sure queue is defined
@@ -55,7 +56,6 @@ process GetVersionAll {
   publishDir "${params.outDir}/Reports/MultiQC", mode: params.publishDirMode
 
   input:
-    file(versions) from Channel.fromPath("${params.outDir}/Reports/ToolsVersion/*").collect().ifEmpty(null)
 
   output:
     file ("tool_versions_mqc.yaml") into versionsForMultiQC
@@ -78,16 +78,16 @@ process GetVersionAll {
   qualimap --version &> v_qualimap.txt 2>&1 || true
   samtools --version &> v_samtools.txt 2>&1 || true
   vcftools --version &> v_vcftools.txt 2>&1 || true
-  vep --help > v_vep.txt
+  vep --help &> v_vep.txt 2>&1 || true
+  alleleCounter --version &> v_allelecount.txt  || true
+  R --version &> v_r.txt  || true
+  cat ${baseDir}/scripts/ascat.R | grep "ASCAT version" &> v_ascat.txt  || true
 
   scrape_tool_versions.py &> tool_versions_mqc.yaml
   """
 }
 
-if (params.verbose && !params.noReports) versionsForMultiQC = versionsForMultiQC.view {
-  "MultiQC tools version:\n\
-  File  : [${it.fileName}]"
-}
+versionsForMultiQC = versionsForMultiQC.dump(tag:'Versions')
 
 reportsForMultiQC = Channel.empty()
   .mix(
@@ -119,11 +119,7 @@ process RunMultiQC {
   """
 }
 
-if (params.verbose) multiQCReport = multiQCReport.view {
-  "MultiQC report:\n\
-  File  : [${it[0].fileName}]\n\
-  Dir   : [${it[1].fileName}]"
-}
+multiQCReport.dump(tag:'MultiQC')
 
 /*
 ================================================================================
@@ -140,7 +136,7 @@ def createMultiQCconfig() {
   def file = workDir.resolve('multiqc_config.yaml')
   file.text  = """
   custom_logo: ${baseDir}/docs/images/Sarek_no_Border.png
-  custom_logo_url: http://opensource.scilifelab.se/projects/sarek
+  custom_logo_url: https://sarek.scilifelab.se/
   custom_logo_title: 'Sarek'
   report_header_info:
   - Contact Name: ${params.callName}
@@ -171,8 +167,6 @@ def helpMessage() {
   log.info "       nextflow run runMultiQC.nf"
   log.info "    --help"
   log.info "       you're reading it"
-  log.info "    --verbose"
-  log.info "       Adds more verbosity to workflow"
 }
 
 def minimalInformationMessage() {
