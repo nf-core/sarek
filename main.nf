@@ -31,9 +31,12 @@ def helpMessage() {
     nextflow run nf-core/sarek --sample sample.tsv -profile docker
 
     Mandatory arguments:
-        --sample                    Path to TSV input file
+        --sample                    Path to input TSV file on mapping, recalibrate and variantcalling steps
                                     Multiple TSV files can be specified with quotes
-                                    Works also with a directory on mapping step with germline sample only
+                                    Works also with the path to a directory on mapping step with a single germline sample only
+                                    Alternatively, path to VCF input file on annotate step
+                                    Multiple VCF files can be specified with quotes
+
         -profile                    Configuration profile to use. Can use multiple (comma separated)
                                     Available: conda, docker, singularity, awsbatch, test and more.
 
@@ -46,7 +49,7 @@ def helpMessage() {
         --step                      Specify starting step
                                     Available: Mapping, Recalibrate, VariantCalling
                                     Default: Mapping
-        --targetBED                 Target BED file for targeted sequencing
+        --targetBED                 Target BED file for targeted or whole exome sequencing
         --tools                     Specify tools to use for variant calling
                                     Available: ASCAT, ControlFREEC, FreeBayes, HaplotypeCaller
                                     Manta, mpileup, MuTect2, Strelka

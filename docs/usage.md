@@ -124,37 +124,31 @@ If `-profile` is not specified at all the pipeline will be run locally and expec
 <!-- TODO nf-core: Document required command line parameters -->
 
 ### `--sample`
-Use this to specify the location of your input TSV file.
+Use this to specify the location of your input TSV file, on `mapping`, `recalibrate` and `variantcalling` steps.
 For example:
 
 ```bash
 --sample sample.tsv
 ```
+Multiple TSV files can be specified if the path must be enclosed in quotes
 
-Use this to specify the location of an input directory with germline FASTQ files.
+Use this to specify the location to a directory on `mapping` step with a single germline sample only.
 For example:
 
 ```bash
 --sample PathToDirectory
 ```
 
-Use this to specify the location of your input VCF file.
+Use this to specify the location of your VCF input file on `annotate` step.
 For example:
 
 ```bash
 --sample sample.vcf
 ```
-
-Multiple TSV files can be specified with the following requirements:
-1. The path must be enclosed in quotes
-2. The path must have at least one `*` wildcard character
-
-Multiple VCF files can be specified with the following requirements:
-1. The path must be enclosed in quotes
-2. The path must have at least one `*` wildcard character
+Multiple VCF files can be specified if the path must be enclosed in quotes
 
 ### `--noGVCF`
-Use this to disable g.vcf from HaplotypeCaller.
+Use this to disable g.vcf from `HaplotypeCaller`.
 
 ### `--noReports`
 Use this to disable all QC an Reporting tools.
@@ -172,7 +166,7 @@ Use this to specify the tools to run:
 Available: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `MuTect2`, `Strelka`
 
 ### `--noStrelkaBP`
-Use this not to use Manta candidateSmallIndels for Strelka as Best Practice.
+Use this not to use `Manta` `candidateSmallIndels` for `Strelka` as Best Practice.
 
 ### `--targetBED`
 Use this to specify the target BED file for targeted or whole exome sequencing.
