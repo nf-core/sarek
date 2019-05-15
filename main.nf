@@ -260,7 +260,7 @@ process get_software_versions {
     alleleCounter --version &> v_allelecount.txt  || true
     bcftools version > v_bcftools.txt 2>&1 || true
     bwa &> v_bwa.txt 2>&1 || true
-    cat ${baseDir}/scripts/ascat.R | grep "ASCAT version" &> v_ascat.txt  || true
+    cat ${baseDir}/bin/ascat.R | grep "ASCAT version" &> v_ascat.txt  || true
     configManta.py --version > v_manta.txt 2>&1 || true
     configureStrelkaGermlineWorkflow.py --version > v_strelka.txt 2>&1 || true
     echo "${workflow.manifest.version}" &> v_pipeline.txt 2>&1 || true
@@ -1608,6 +1608,7 @@ process RunSnpeff {
 
   publishDir params.outdir, mode: params.publishDirMode, saveAs: {
     if (it == "${reducedVCF}_snpEff.ann.vcf") null
+    else if (it == "${reducedVCF}_snpEff.csv") "Reports/${idSample}/snpEff/${it}"
     else "Annotation/${idSample}/snpEff/${it}"
   }
 
@@ -1617,7 +1618,8 @@ process RunSnpeff {
     val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
 
   output:
-    set file("${reducedVCF}_snpEff.genes.txt"), file("${reducedVCF}_snpEff.csv"), file("${reducedVCF}_snpEff.summary.html") into snpeffOutput
+    set file("${reducedVCF}_snpEff.genes.txt"), file("${reducedVCF}_snpEff.summary.html")into snpeffOutput
+    file("${reducedVCF}_snpEff.csv") into snpeffReport
     set val("snpEff"), variantCaller, idSample, file("${reducedVCF}_snpEff.ann.vcf") into snpeffVCF
 
   when: 'snpeff' in tools || 'merge' in tools
@@ -1640,7 +1642,8 @@ process RunSnpeff {
   """
 }
 
-snpeffOutput = snpeffOutput.dump(tag:'snpEff')
+snpeffOutput = snpeffOutput.dump(tag:'snpEff output')
+snpeffReport = snpeffReport.dump(tag:'snpEff report')
 
 if ('merge' in tools) {
   // When running in the 'merge' mode
@@ -1752,7 +1755,7 @@ reportsForMultiQC = Channel.empty()
         fastQCreport,
         markDuplicatesReport,
         samtoolsStatsReport,
-        snpeffOutput,
+        snpeffReport,
         vcfReport
     ).collect()
 
