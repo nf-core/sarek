@@ -2,9 +2,11 @@
 set -xeuo pipefail
 
 CPUS=2
+PROFILE=docker
 TEST=ALL
 TRAVIS_BUILD_DIR=${TRAVIS_BUILD_DIR:-.}
 TRAVIS=${TRAVIS:-false}
+VERBOSE=''
 
 while [[ $# -gt 0 ]]
 do
@@ -13,6 +15,15 @@ do
     -t|--test)
     TEST=$2
     shift # past argument
+    shift # past value
+    ;;
+    -p|--profile)
+    PROFILE=$2
+    shift # past argument
+    shift # past value
+    ;;
+    -v|--verbose)
+    VERBOSE="-ansi-log false -dump-channels"
     shift # past value
     ;;
     -c|--cpus)
@@ -26,7 +37,7 @@ do
 done
 
 function run_sarek() {
-  nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile test,docker -ansi-log false -dump-channels $@
+  nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile test,${PROFILE} ${VERBOSE} $@
 }
 
 if [[ ALL,GERMLINE =~ $TEST ]]

@@ -39,8 +39,8 @@ install:
 
 # Build references if needed
 before_script:
-  - "${TRAVIS_BUILD_DIR}/bin/build_reference.sh --test $TEST --build"
+  - "${TRAVIS_BUILD_DIR}/bin/build_reference.sh --test $TEST --build --verbose"
 
 # Actual tests
 script:
-  - "${TRAVIS_BUILD_DIR}/bin/run_tests.sh --test $TEST"
+  - "${TRAVIS_BUILD_DIR}/bin/run_tests.sh --test $TEST --verbose"
