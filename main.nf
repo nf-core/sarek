@@ -47,12 +47,14 @@ def helpMessage() {
         --noReports                 Disable all QC reports
         --nucleotidesPerSecond      To estimate interval size by default 1000.0
         --step                      Specify starting step
-                                    Available: Mapping, Recalibrate, VariantCalling
+                                    Available: Mapping, Recalibrate, VariantCalling, Annotate
                                     Default: Mapping
         --targetBED                 Target BED file for targeted or whole exome sequencing
         --tools                     Specify tools to use for variant calling
                                     Available: ASCAT, ControlFREEC, FreeBayes, HaplotypeCaller
                                     Manta, mpileup, MuTect2, Strelka
+        --annotateTools             Specify from which tools Sarek will annotate VCF, only for step annotate
+                                    Available: HaplotypeCaller, Manta, MuTect2, Strelka
 
     References                      If not specified in the configuration file or you wish to overwrite any of the references.
         --acLoci                    acLoci file
@@ -110,7 +112,7 @@ params.snpEff_cache = null
 params.step = 'mapping'
 params.noStrelkaBP = null
 params.targetBED = null
-params.tools = null
+params.tools = "HaplotypeCaller,Manta,Strelka"
 params.vep_cache = null
 
 stepList = defineStepList()
@@ -294,7 +296,7 @@ software_versions_yaml = software_versions_yaml.dump(tag: 'SOFTWARE VERSIONS')
 
 inputFiles = inputFiles.dump(tag:'INPUT')
 
-process RunFastQC {
+process FastQC {
     tag {idPatient + "-" + idRun}
 
     publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idRun}", mode: params.publishDirMode
@@ -362,7 +364,7 @@ process MapReads {
 
 mappedBam = mappedBam.dump(tag:'Mapped BAM')
 
-process RunBamQCmapped {
+process BamQCmapped {
     tag {idPatient + "-" + idSample}
 
     publishDir "${params.outdir}/Reports/${idSample}/bamQC", mode: params.publishDirMode
@@ -539,7 +541,7 @@ bedIntervals = bedIntervals.dump(tag:'bedintervals')
 
 bamForBaseRecalibrator = mdBam.combine(bedIntervalsBR)
 
-process CreateRecalibrationTable {
+process BaseRecalibrator {
     tag {idPatient + "-" + idSample + "-" + intervalBed}
 
     publishDir "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked", mode: params.publishDirMode, overwrite: false
@@ -625,7 +627,7 @@ if (step == 'recalibrate') recalibrationTable = bamFiles
 
 recalibrationTable = recalibrationTable.dump(tag:'recal.table')
 
-process RecalibrateBam {
+process ApplyBQSR {
     tag {idPatient + "-" + idSample}
 
     publishDir "${params.outdir}/Preprocessing/${idSample}/Recalibrated", mode: params.publishDirMode
@@ -677,7 +679,7 @@ recalibratedBam = recalibratedBam.dump(tag:'recal.bam')
 // WARN: Input tuple does not match input set cardinality declared by process...
 (bamForBamQC, bamForSamToolsStats) = recalibratedBamForStats.map{ it[0..4] }.into(2)
 
-process RunSamtoolsStats {
+process SamtoolsStats {
     tag {idPatient + "-" + idSample}
 
     publishDir "${params.outdir}/Reports/${idSample}/SamToolsStats", mode: params.publishDirMode
@@ -698,7 +700,7 @@ process RunSamtoolsStats {
 
 samtoolsStatsReport = samtoolsStatsReport.dump(tag:'SAMTools')
 
-process RunBamQCrecalibrated {
+process BamQCrecalibrated {
     tag {idPatient + "-" + idSample}
 
     publishDir "${params.outdir}/Reports/${idSample}/bamQC", mode: params.publishDirMode
@@ -750,7 +752,7 @@ recalibratedBam = recalibratedBam.dump(tag:'BAM')
 
 bamsForHC = recalibratedBamTemp.combine(bedIntervalsHC)
 
-process RunHaplotypecaller {
+process HaplotypeCaller {
     tag {idSample + "-" + intervalBed.baseName}
 
     input:
@@ -786,7 +788,7 @@ hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2])
 
 if (params.noGVCF) hcGenomicVCF.close()
 
-process RunGenotypeGVCFs {
+process GenotypeGVCFs {
     tag {idSample + "-" + intervalBed.baseName}
 
     input:
@@ -825,7 +827,7 @@ hcGenotypedVCF = hcGenotypedVCF.groupTuple(by:[0,1,2])
 // we are merging the VCFs that are called separatelly for different intervals
 // so we can have a single sorted VCF containing all the calls for a given caller
 
-process RunSingleStrelka {
+process StrelkaSingle {
     tag {idSample}
 
     publishDir "${params.outdir}/VariantCalling/${idSample}/Strelka", mode: params.publishDirMode
@@ -869,7 +871,7 @@ process RunSingleStrelka {
 
 singleStrelkaOutput = singleStrelkaOutput.dump(tag:'Single Strelka')
 
-process RunSingleManta {
+process MantaSingle {
     tag {idSample}
 
     publishDir "${params.outdir}/VariantCalling/${idSample}/Manta", mode: params.publishDirMode
@@ -957,7 +959,7 @@ bamsForMpileup = bamsForMpileup.spread(bedIntervalsForMpileup)
 ( bamsFMT2, bamsFFB) = bamsTumorNormalIntervals.into(3)
 
 // This will give as a list of unfiltered calls for MuTect2.
-process RunMutect2 {
+process Mutect2 {
     tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
 
     input:
@@ -989,7 +991,7 @@ process RunMutect2 {
 
 mutect2Output = mutect2Output.groupTuple(by:[0,1,2])
 
-process RunFreeBayes {
+process FreeBayes {
     tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
 
     input:
@@ -1053,7 +1055,7 @@ process ConcatVCF {
 
 vcfConcatenated = vcfConcatenated.dump(tag:'VCF')
 
-process RunStrelka {
+process Strelka {
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Strelka", mode: params.publishDirMode
@@ -1100,7 +1102,7 @@ process RunStrelka {
 strelkaOutput = strelkaOutput.dump(tag:'Strelka')
 (strelkaIndels, strelkaSNVS) = strelkaOutput.into(2)
 
-process RunManta {
+process Manta {
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Manta", mode: params.publishDirMode
@@ -1163,7 +1165,7 @@ bamsForStrelkaBP = bamsForStrelkaBP.map {
     [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor, mantaCSI, mantaCSIi]
 }
 
-process RunStrelkaBP {
+process StrelkaBP {
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Strelka", mode: params.publishDirMode
@@ -1213,7 +1215,7 @@ strelkaBPOutput = strelkaBPOutput.dump(tag:'Strelka BP')
 
 // Run commands and code from Malin Larsson
 // Based on Jesper Eisfeldt's code
-process RunAlleleCount {
+process AlleleCounter {
     tag {idSample}
 
     input:
@@ -1256,7 +1258,7 @@ alleleCountOutput = alleleCountOutput.map {
 
 // R script from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
-process RunConvertAlleleCounts {
+process ConvertAlleleCounts {
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/ASCAT", mode: params.publishDirMode
@@ -1278,7 +1280,7 @@ process RunConvertAlleleCounts {
 
 // R scripts from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
-process RunAscat {
+process Ascat {
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/ASCAT", mode: params.publishDirMode
@@ -1302,7 +1304,7 @@ process RunAscat {
 
 ascatOutput.dump(tag:'ASCAT')
 
-process RunMpileup {
+process Mpileup {
     tag {idSample + "-" + intervalBed.baseName}
 
     input:
@@ -1369,7 +1371,7 @@ mpileupOutput = mpileupOutput.map {
     [idPatientNormal, idSampleNormal, idSampleTumor, mpileupNormal, mpileupTumor]
 }
 
-process RunControlFreec {
+process ControlFREEC {
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/controlFREEC", mode: params.publishDirMode
@@ -1429,7 +1431,7 @@ process RunControlFreec {
     """
 }
 
-process RunControlFreecVisualization {
+process ControlFreecVisualization {
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
@@ -1493,7 +1495,7 @@ vcfToKeep = Channel.empty().mix(
 
 (vcfForBCFtools, vcfForVCFtools, vcfForAnnotation) = vcfToKeep.into(3)
 
-process RunBcftoolsStats {
+process BcftoolsStats {
     tag {"${variantCaller} - ${vcf}"}
 
     publishDir "${params.outdir}/Reports/${idSample}/BCFToolsStats", mode: params.publishDirMode
@@ -1514,7 +1516,7 @@ process RunBcftoolsStats {
 
 bcfReport = bcfReport.dump(tag:'BCFTools')
 
-process RunVcftools {
+process Vcftools {
     tag {"${variantCaller} - ${vcf}"}
 
     publishDir "${params.outdir}/Reports/${idSample}/VCFTools", mode: params.publishDirMode
@@ -1603,7 +1605,7 @@ vcfForVep = vcfForVep.map {
   ["VEP", variantCaller, idSample, vcf, null]
 }
 
-process RunSnpeff {
+process Snpeff {
   tag {"${idSample} - ${variantCaller} - ${vcf}"}
 
   publishDir params.outdir, mode: params.publishDirMode, saveAs: {
@@ -1658,7 +1660,7 @@ if ('merge' in tools) {
   )
 }
 
-process RunVEP {
+process VEP {
   tag {"${idSample} - ${variantCaller} - ${vcf}"}
 
   publishDir params.outdir, mode: params.publishDirMode, saveAs: {
