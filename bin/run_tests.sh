@@ -75,5 +75,5 @@ fi
 
 if [[ MULTIPLE =~ $TEST ]]
 then
-  run_sarek --sample https://github.com/nf-core/test-datasets/raw/sarek/testdata/tsv/tiny-multiple.tsv --tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2 --noReports
+  run_sarek --sample https://github.com/nf-core/test-datasets/raw/sarek/testdata/tsv/tiny-multiple-https.tsv --tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2 --noReports
 fi
