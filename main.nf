@@ -53,6 +53,7 @@ def helpMessage() {
         --tools                     Specify tools to use for variant calling
                                     Available: ASCAT, ControlFREEC, FreeBayes, HaplotypeCaller
                                     Manta, mpileup, MuTect2, Strelka
+                                    Default: HaplotypeCaller, Manta, Strelka
         --annotateTools             Specify from which tools Sarek will annotate VCF, only for step annotate
                                     Available: HaplotypeCaller, Manta, MuTect2, Strelka
 
@@ -99,18 +100,20 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
 // Default value for params
 params.annotateTools = null
 params.annotation_cache = null
+params.cadd_cache = null
 params.cadd_InDels = null
 params.cadd_InDels_tbi = null
 params.cadd_WG_SNVs = null
 params.cadd_WG_SNVs_tbi = null
+params.genesplicer = null
 params.noGVCF = null
 params.noReports = null
+params.noStrelkaBP = null
 params.nucleotidesPerSecond = 1000.0
 params.sample = null
 params.sequencing_center = null
 params.snpEff_cache = null
 params.step = 'mapping'
-params.noStrelkaBP = null
 params.targetBED = null
 params.tools = "HaplotypeCaller,Manta,Strelka"
 params.vep_cache = null
@@ -157,9 +160,9 @@ if (params.sample) if (hasExtension(params.sample,"tsv") || hasExtension(params.
 
  // No need for tsv file for step annotate
 if (!params.sample) {
-    tsvPaths = [    'recalibrate':    "${params.outdir}/Preprocessing/TSV/duplicateMarked.tsv",
-                    'variantcalling': "${params.outdir}/Preprocessing/TSV/recalibrated.tsv" ]
-    if (step != 'mapping') tsvPath = tsvPaths[step]
+    tsvMap = [  'recalibrate':    "${params.outdir}/Preprocessing/TSV/duplicateMarked.tsv",
+                'variantcalling': "${params.outdir}/Preprocessing/TSV/recalibrated.tsv" ]
+    if (step != 'mapping') tsvPath = tsvMap[step]
 }
 
 // Set up the inputFiles and bamFiles channels. One of them will remain empty
@@ -178,8 +181,8 @@ if (tsvPath) {
     println "no tsv file"
     if (step != 'mapping') exit 1, 'No other step than "mapping" support a dir as an input'
     inputFiles = extractFastqFromDir(params.sample)
-    (inputFiles, fastqTmp) = inputFiles.into(2)
-    fastqTmp.toList().subscribe onNext: {
+    (inputFiles, fastqTMP) = inputFiles.into(2)
+    fastqTMP.toList().subscribe onNext: {
         if (it.size() == 0) exit 1, "No FASTQ files found in --sample directory '${params.sample}'"
     }
     tsvFile = params.sample  // used in the reports
@@ -249,11 +252,11 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 /*
  * Parse software version numbers
  */
-process get_software_versions {
+process GetSoftwareVersions {
     publishDir path:"${params.outdir}/pipeline_info", mode: params.publishDirMode
 
     output:
-        file 'software_versions_mqc.yaml' into software_versions_yaml
+        file 'software_versions_mqc.yaml' into yamlSoftwareVersion
 
     when: !params.noReports
 
@@ -282,7 +285,7 @@ process get_software_versions {
     """
 }
 
-software_versions_yaml = software_versions_yaml.dump(tag: 'SOFTWARE VERSIONS')
+yamlSoftwareVersion = yamlSoftwareVersion.dump(tag: 'SOFTWARE VERSIONS')
 
 /*
 ================================================================================
@@ -292,7 +295,7 @@ software_versions_yaml = software_versions_yaml.dump(tag: 'SOFTWARE VERSIONS')
 
 // STEP ONE: MAPPING
 
-(inputFiles, inputFilesforFastQC) = inputFiles.into(2)
+(inputFiles, inputFilesFastQC) = inputFiles.into(2)
 
 inputFiles = inputFiles.dump(tag:'INPUT')
 
@@ -302,10 +305,10 @@ process FastQC {
     publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idRun}", mode: params.publishDirMode
 
     input:
-        set idPatient, status, idSample, idRun, file(inputFile1), file(inputFile2) from inputFilesforFastQC
+        set idPatient, status, idSample, idRun, file(inputFile1), file(inputFile2) from inputFilesFastQC
 
     output:
-        file "*_fastqc.{zip,html}" into fastQCreport
+        file "*_fastqc.{zip,html}" into fastQCReport
 
     when: step == 'mapping' && !params.noReports
 
@@ -316,7 +319,7 @@ process FastQC {
     """
 }
 
-fastQCreport = fastQCreport.dump(tag:'FastQC')
+fastQCReport = fastQCReport.dump(tag:'FastQC')
 
 process MapReads {
     tag {idPatient + "-" + idRun}
@@ -326,7 +329,7 @@ process MapReads {
         set file(genomeFile), file(bwaIndex) from Channel.value([referenceMap.genomeFile, referenceMap.bwaIndex])
 
     output:
-        set idPatient, status, idSample, idRun, file("${idRun}.bam") into (mappedBam, mappedBamForQC)
+        set idPatient, status, idSample, idRun, file("${idRun}.bam") into (bamMapped, bamMappedQC)
 
     when: step == 'mapping'
 
@@ -362,7 +365,7 @@ process MapReads {
     """
 }
 
-mappedBam = mappedBam.dump(tag:'Mapped BAM')
+bamMapped = bamMapped.dump(tag:'Mapped BAM')
 
 process BamQCmapped {
     tag {idPatient + "-" + idSample}
@@ -370,7 +373,7 @@ process BamQCmapped {
     publishDir "${params.outdir}/Reports/${idSample}/bamQC", mode: params.publishDirMode
 
     input:
-        set idPatient, status, idSample, idRun, file(bam) from mappedBamForQC
+        set idPatient, status, idSample, idRun, file(bam) from bamMappedQC
         file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
 
     output:
@@ -400,19 +403,20 @@ bamQCmappedReport = bamQCmappedReport.dump(tag:'BamQC BAM')
 // Sort bam whether they are standalone or should be merged
 
 singleBam = Channel.create()
-groupedBam = Channel.create()
-mappedBam.groupTuple(by:[0,1,2])
-    .choice(singleBam, groupedBam) {it[3].size() > 1 ? 1 : 0}
+multipleBam = Channel.create()
+bamMapped.groupTuple(by:[0,1,2])
+    .choice(singleBam, multipleBam) {it[3].size() > 1 ? 1 : 0}
 singleBam = singleBam.map {
     idPatient, status, idSample, idRun, bam ->
     [idPatient, status, idSample, bam]
 }
+singleBam = singleBam.dump(tag:'Single BAM')
 
-process MergeBams {
+process MergeBamMapped {
     tag {idPatient + "-" + idSample}
 
     input:
-        set idPatient, status, idSample, idRun, file(bam) from groupedBam
+        set idPatient, status, idSample, idRun, file(bam) from multipleBam
 
     output:
         set idPatient, status, idSample, file("${idSample}.bam") into mergedBam
@@ -425,10 +429,9 @@ process MergeBams {
     """
 }
 
-singleBam = singleBam.dump(tag:'Single BAM')
 mergedBam = mergedBam.dump(tag:'Merged BAM')
 mergedBam = mergedBam.mix(singleBam)
-mergedBam = mergedBam.dump(tag:'BAM for MD')
+mergedBam = mergedBam.dump(tag:'BAMs for MD')
 
 process MarkDuplicates {
     tag {idPatient + "-" + idSample}
@@ -472,8 +475,7 @@ duplicateMarkedBams = duplicateMarkedBams.map {
 }
 
 duplicateMarkedBams = duplicateMarkedBams.dump(tag:'MD BAM')
-
-(mdBam, mdBamToJoin) = duplicateMarkedBams.into(2)
+markDuplicatesReport = markDuplicatesReport.dump(tag:'MD Report')
 
 process CreateIntervalBeds {
     tag {intervals.fileName}
@@ -537,9 +539,10 @@ bedIntervals = bedIntervals
 
 bedIntervals = bedIntervals.dump(tag:'bedintervals')
 
-(bedIntervalsBR, bedIntervalsHC, bedIntervalsForMpileup, bedIntervals) = bedIntervals.into(4)
+(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intMpileup, bedIntervals) = bedIntervals.into(5)
 
-bamForBaseRecalibrator = mdBam.combine(bedIntervalsBR)
+(bamMD, bamMDToJoin) = duplicateMarkedBams.into(2)
+bamBaseRecalibrator = bamMD.combine(intBaseRecalibrator)
 
 process BaseRecalibrator {
     tag {idPatient + "-" + idSample + "-" + intervalBed}
@@ -547,7 +550,7 @@ process BaseRecalibrator {
     publishDir "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked", mode: params.publishDirMode, overwrite: false
 
     input:
-        set idPatient, status, idSample, file(bam), file(bai), file(intervalBed) from bamForBaseRecalibrator
+        set idPatient, status, idSample, file(bam), file(bai), file(intervalBed) from bamBaseRecalibrator
         set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(knownIndels), file(knownIndelsIndex) from Channel.value([
             referenceMap.genomeFile,
             referenceMap.genomeIndex,
@@ -555,16 +558,16 @@ process BaseRecalibrator {
             referenceMap.dbsnp,
             referenceMap.dbsnpIndex,
             referenceMap.knownIndels,
-            referenceMap.knownIndelsIndex,
+            referenceMap.knownIndelsIndex
         ])
 
     output:
-        set idPatient, status, idSample, file("${intervalBed.baseName}_${idSample}.recal.table") into recalIntervals
+        set idPatient, status, idSample, file("${intervalBed.baseName}_${idSample}.recal.table") into tableGatherBQSRReports
 
     when: step == 'mapping'
 
     script:
-    known = knownIndels.collect{ "--known-sites ${it}" }.join(' ')
+    known = knownIndels.collect{"--known-sites ${it}"}.join(' ')
     // --use-original-qualities ???
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
@@ -580,7 +583,7 @@ process BaseRecalibrator {
     """
 }
 
-recalIntervals = recalIntervals.groupTuple(by:[0,1,2])
+tableGatherBQSRReports = tableGatherBQSRReports.groupTuple(by:[0,1,2])
 
 process GatherBQSRReports {
     tag {idPatient + "-" + idSample}
@@ -588,62 +591,60 @@ process GatherBQSRReports {
     publishDir "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked", mode: params.publishDirMode, overwrite: false
 
     input:
-    set idPatient, status, idSample, file(recalTable) from recalIntervals
+    set idPatient, status, idSample, file(recal) from tableGatherBQSRReports
 
     output:
-    set idPatient, status, idSample, file("${idSample}.recal.table") into recalibrationTable
-    set idPatient, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai"), val("${idSample}.recal.table") into (recalibrationTableTSV, recalibrationTableSampleTSV)
+    set idPatient, status, idSample, file("${idSample}.recal.table") into recalTable
+    set idPatient, status, idSample, val("${idSample}_${status}.md.bam"), val("${idSample}_${status}.md.bai"), val("${idSample}.recal.table") into (recalTableTSV, recalTableSampleTSV)
 
     when: step == 'mapping'
 
     script:
-    recal = recalTable.collect{ "-I ${it}" }.join(' ')
+    input = recal.collect{"-I ${it}"}.join(' ')
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
         GatherBQSRReports \
-        ${recal} \
+        ${input} \
         -O ${idSample}.recal.table \
     """
 }
 
 // Create TSV files to restart from this step
-recalibrationTableTSV.map { idPatient, status, idSample, bam, bai, recalTable ->
+recalTableTSV.map { idPatient, status, idSample, bam, bai, recalTable ->
     gender = patientGenders[idPatient]
     "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bam}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bai}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${recalTable}\n"
 }.collectFile(
     name: 'duplicateMarked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
 )
 
-recalibrationTableSampleTSV
+recalTableSampleTSV
     .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") {
         idPatient, status, idSample, bam, bai, recalTable ->
         gender = patientGenders[idPatient]
         ["duplicateMarked_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bam}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bai}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${recalTable}\n"]
 }
 
-recalibrationTable = mdBamToJoin.join(recalibrationTable, by:[0,1,2])
+bamApplyBQSR = bamMDToJoin.join(recalTable, by:[0,1,2])
 
-if (step == 'recalibrate') recalibrationTable = bamFiles
+if (step == 'recalibrate') bamApplyBQSR = bamFiles
 
-recalibrationTable = recalibrationTable.dump(tag:'recal.table')
+bamApplyBQSR = bamApplyBQSR.dump(tag:'recal.table')
+
+bamApplyBQSR = bamApplyBQSR.combine(intApplyBQSR)
 
 process ApplyBQSR {
-    tag {idPatient + "-" + idSample}
-
-    publishDir "${params.outdir}/Preprocessing/${idSample}/Recalibrated", mode: params.publishDirMode
+    tag {idPatient + "-" + idSample + "-" + intervalBed.baseName}
 
     input:
-        set idPatient, status, idSample, file(bam), file(bai), file(recalibrationReport) from recalibrationTable
-        set file(genomeFile), file(genomeIndex), file(genomeDict), file(intervals) from Channel.value([
+        set idPatient, status, idSample, file(bam), file(bai), file(recalibrationReport), file(intervalBed) from bamApplyBQSR
+        set file(genomeFile), file(genomeIndex), file(genomeDict)from Channel.value([
             referenceMap.genomeFile,
             referenceMap.genomeIndex,
-            referenceMap.genomeDict,
-            referenceMap.intervals,
+            referenceMap.genomeDict
         ])
 
     output:
-        set idPatient, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into recalibratedBam, recalibratedBamForStats
-        set idPatient, status, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into (recalibratedBamTSV, recalibratedBamSampleTSV)
+        set idPatient, status, idSample, file("${intervalBed.baseName}_${idSample}.recal.bam") into bamMergeBamRecal
 
     script:
     """
@@ -651,33 +652,52 @@ process ApplyBQSR {
         ApplyBQSR \
         -R ${genomeFile} \
         --input ${bam} \
-        --output ${idSample}.recal.bam \
-        -L ${intervals} \
-        --create-output-bam-index true \
+        --output ${intervalBed.baseName}_${idSample}.recal.bam \
+        -L ${intervalBed} \
         --bqsr-recal-file ${recalibrationReport}
     """
 }
 
+bamMergeBamRecal = bamMergeBamRecal.groupTuple(by:[0,1,2])
+
+process MergeBamRecal {
+    tag {idPatient + "-" + idSample}
+
+    publishDir "${params.outdir}/Preprocessing/${idSample}/Recalibrated", mode: params.publishDirMode
+
+    input:
+        set idPatient, status, idSample, file(bam) from bamMergeBamRecal
+
+    output:
+        set idPatient, status, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into bamRecal, bamRecalQC
+        set idPatient, status, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into (bamRecalTSV, bamRecalSampleTSV)
+
+    script:
+    """
+    samtools merge --threads ${task.cpus} ${idSample}.recal.bam ${bam}
+    samtools index ${idSample}.recal.bam
+    mv ${idSample}.recal.bam.bai ${idSample}.recal.bai
+    """
+}
+
 // Creating a TSV file to restart from this step
-recalibratedBamTSV.map { idPatient, status, idSample, bam, bai ->
+bamRecalTSV.map { idPatient, status, idSample, bam, bai ->
     gender = patientGenders[idPatient]
     "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bam}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bai}\n"
 }.collectFile(
     name: 'recalibrated.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
 )
 
-recalibratedBamSampleTSV
+bamRecalSampleTSV
     .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") {
         idPatient, status, idSample, bam, bai ->
         gender = patientGenders[idPatient]
         ["recalibrated_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bam}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bai}\n"]
 }
 
-recalibratedBam = recalibratedBam.dump(tag:'recal.bam')
-
 // Remove recalTable from Channels to match inputs for Process to avoid:
 // WARN: Input tuple does not match input set cardinality declared by process...
-(bamForBamQC, bamForSamToolsStats) = recalibratedBamForStats.map{ it[0..4] }.into(2)
+(bamRecalBamQC, bamRecalSamToolsStats) = bamRecalQC.map{ it[0..4] }.into(2)
 
 process SamtoolsStats {
     tag {idPatient + "-" + idSample}
@@ -685,7 +705,7 @@ process SamtoolsStats {
     publishDir "${params.outdir}/Reports/${idSample}/SamToolsStats", mode: params.publishDirMode
 
     input:
-    set idPatient, status, idSample, file(bam), file(bai) from bamForSamToolsStats
+    set idPatient, status, idSample, file(bam), file(bai) from bamRecalSamToolsStats
 
     output:
     file ("${bam}.samtools.stats.out") into samtoolsStatsReport
@@ -706,7 +726,7 @@ process BamQCrecalibrated {
     publishDir "${params.outdir}/Reports/${idSample}/bamQC", mode: params.publishDirMode
 
     input:
-    set idPatient, status, idSample, file(bam), file(bai) from bamForBamQC
+    set idPatient, status, idSample, file(bam), file(bai) from bamRecalBamQC
 
     output:
     file("${bam.baseName}") into bamQCrecalibratedReport
@@ -736,27 +756,27 @@ bamQCrecalibratedReport = bamQCrecalibratedReport.dump(tag:'BamQC')
 ================================================================================
 */
 
-if (step == 'variantcalling') recalibratedBam = bamFiles
+if (step == 'variantcalling') bamRecal = bamFiles
 
-recalibratedBam = recalibratedBam.dump(tag:'BAM')
+bamRecal = bamRecal.dump(tag:'BAM')
 
 // Here we have a recalibrated bam set
 // The TSV file is formatted like: "idPatient status idSample bamFile baiFile"
 // Manta will be run in Germline mode, or in Tumor mode depending on status
 // HaplotypeCaller and Strelka will be run for Normal and Tumor samples
 
-(bamsForSingleManta, bamsForSingleStrelka, recalibratedBamTemp, recalibratedBam) = recalibratedBam.into(4)
+(bamMantaSingle, bamStrelkaSingle, bamRecalAllTemp, bamRecalAll) = bamRecal.into(4)
 
 // To speed Variant Callers up we are chopping the reference into smaller pieces
 // Do variant calling by this intervals, and re-merge the VCFs
 
-bamsForHC = recalibratedBamTemp.combine(bedIntervalsHC)
+bamHaplotypeCaller = bamRecalAllTemp.combine(intHaplotypeCaller)
 
 process HaplotypeCaller {
     tag {idSample + "-" + intervalBed.baseName}
 
     input:
-        set idPatient, status, idSample, file(bam), file(bai), file(intervalBed) from bamsForHC
+        set idPatient, status, idSample, file(bam), file(bai), file(intervalBed) from bamHaplotypeCaller
         set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
             referenceMap.genomeFile,
             referenceMap.genomeIndex,
@@ -766,8 +786,8 @@ process HaplotypeCaller {
         ])
 
     output:
-        set val("HaplotypeCallerGVCF"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf") into hcGenomicVCF
-        set idPatient, idSample, file(intervalBed), file("${intervalBed.baseName}_${idSample}.g.vcf") into vcfsToGenotype
+        set val("HaplotypeCallerGVCF"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf") into gvcfHaplotypeCaller
+        set idPatient, idSample, file(intervalBed), file("${intervalBed.baseName}_${idSample}.g.vcf") into gvcfGenotypeGVCFs
 
     when: 'haplotypecaller' in tools
 
@@ -784,15 +804,16 @@ process HaplotypeCaller {
     """
 }
 
-hcGenomicVCF = hcGenomicVCF.groupTuple(by:[0,1,2])
+gvcfHaplotypeCaller = gvcfHaplotypeCaller.groupTuple(by:[0,1,2])
 
-if (params.noGVCF) hcGenomicVCF.close()
+if (params.noGVCF) gvcfHaplotypeCaller.close()
+else gvcfHaplotypeCaller = gvcfHaplotypeCaller.dump(tag:'GVCF HaplotypeCaller')
 
 process GenotypeGVCFs {
     tag {idSample + "-" + intervalBed.baseName}
 
     input:
-        set idPatient, idSample, file(intervalBed), file(gvcf) from vcfsToGenotype
+        set idPatient, idSample, file(intervalBed), file(gvcf) from gvcfGenotypeGVCFs
         set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
             referenceMap.genomeFile,
             referenceMap.genomeIndex,
@@ -802,7 +823,7 @@ process GenotypeGVCFs {
         ])
 
     output:
-    set val("HaplotypeCaller"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into hcGenotypedVCF
+    set val("HaplotypeCaller"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into vcfGenotypeGVCFs
 
     when: 'haplotypecaller' in tools
 
@@ -822,7 +843,7 @@ process GenotypeGVCFs {
     """
 }
 
-hcGenotypedVCF = hcGenotypedVCF.groupTuple(by:[0,1,2])
+vcfGenotypeGVCFs = vcfGenotypeGVCFs.groupTuple(by:[0,1,2])
 
 // we are merging the VCFs that are called separatelly for different intervals
 // so we can have a single sorted VCF containing all the calls for a given caller
@@ -833,7 +854,7 @@ process StrelkaSingle {
     publishDir "${params.outdir}/VariantCalling/${idSample}/Strelka", mode: params.publishDirMode
 
     input:
-        set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleStrelka
+        set idPatient, status, idSample, file(bam), file(bai) from bamStrelkaSingle
         file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
         set file(genomeFile), file(genomeIndex) from Channel.value([
             referenceMap.genomeFile,
@@ -841,7 +862,7 @@ process StrelkaSingle {
         ])
 
     output:
-        set val("Strelka"), idPatient, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleStrelkaOutput
+        set val("Strelka"), idPatient, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfStrelkaSingle
 
     when: 'strelka' in tools
 
@@ -869,7 +890,7 @@ process StrelkaSingle {
   """
 }
 
-singleStrelkaOutput = singleStrelkaOutput.dump(tag:'Single Strelka')
+vcfStrelkaSingle = vcfStrelkaSingle.dump(tag:'Strelka - Single Mode')
 
 process MantaSingle {
     tag {idSample}
@@ -877,7 +898,7 @@ process MantaSingle {
     publishDir "${params.outdir}/VariantCalling/${idSample}/Manta", mode: params.publishDirMode
 
     input:
-        set idPatient, status, idSample, file(bam), file(bai) from bamsForSingleManta
+        set idPatient, status, idSample, file(bam), file(bai) from bamMantaSingle
         file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
         set file(genomeFile), file(genomeIndex) from Channel.value([
             referenceMap.genomeFile,
@@ -885,7 +906,7 @@ process MantaSingle {
         ])
 
     output:
-        set val("Manta"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into singleMantaOutput
+        set val("Manta"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfMantaSingle
 
     when: 'manta' in tools
 
@@ -919,7 +940,7 @@ process MantaSingle {
     """
 }
 
-singleMantaOutput = singleMantaOutput.dump(tag:'Single Manta')
+vcfMantaSingle = vcfMantaSingle.dump(tag:'Single Manta')
 
 /*
 ================================================================================
@@ -927,43 +948,40 @@ singleMantaOutput = singleMantaOutput.dump(tag:'Single Manta')
 ================================================================================
 */
 
-// separate recalibrateBams by status
-bamsNormal = Channel.create()
-bamsTumor = Channel.create()
+// Ascat, Control-FREEC
+bamAscat = Channel.create()
+bamMpileup = Channel.create()
 
-recalibratedBam
-    .choice(bamsTumor, bamsNormal) {it[1] == 0 ? 1 : 0}
+(bamAscat, bamMpileup, bamRecalAll) = bamRecalAll.into(3)
 
-// Ascat, Control-FREEC, Manta Tumor-only SV
-bamsForAscat = Channel.create()
-bamsForMpileup = Channel.create()
-bamsForSingleManta = Channel.create()
+// separate BAM by status
+bamNormal = Channel.create()
+bamTumor = Channel.create()
 
-(bamsTumorTemp, bamsTumor) = bamsTumor.into(2)
-(bamsNormalTemp, bamsNormal) = bamsNormal.into(2)
-(bamsForAscat, bamsForMpileup, bamsForSingleManta) = bamsNormalTemp.mix(bamsTumorTemp).into(3)
+bamRecalAll
+    .choice(bamTumor, bamNormal) {it[1] == 0 ? 1 : 0}
 
 // Removing status because not relevant anymore
-bamsNormal = bamsNormal.map { idPatient, status, idSample, bam, bai -> [idPatient, idSample, bam, bai] }
-bamsTumor = bamsTumor.map { idPatient, status, idSample, bam, bai -> [idPatient, idSample, bam, bai] }
+bamNormal = bamNormal.map { idPatient, status, idSample, bam, bai -> [idPatient, idSample, bam, bai] }
+bamTumor = bamTumor.map { idPatient, status, idSample, bam, bai -> [idPatient, idSample, bam, bai] }
 
-bamsAll = bamsNormal.join(bamsTumor)
+pairBam = bamNormal.join(bamTumor)
 
 // Manta and Strelka
-(bamsForManta, bamsForStrelka, bamsForStrelkaBP, bamsAll) = bamsAll.into(4)
+(pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBam) = pairBam.into(4)
 
-bamsTumorNormalIntervals = bamsAll.spread(bedIntervals)
-bamsForMpileup = bamsForMpileup.spread(bedIntervalsForMpileup)
+intPairBam = pairBam.spread(bedIntervals)
+bamMpileup = bamMpileup.spread(intMpileup)
 
 // MuTect2, FreeBayes
-( bamsFMT2, bamsFFB) = bamsTumorNormalIntervals.into(3)
+(pairBamMuTect2, pairBamFreeBayes) = intPairBam.into(3)
 
 // This will give as a list of unfiltered calls for MuTect2.
 process Mutect2 {
     tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
 
     input:
-        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from bamsFMT2
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamMuTect2
         set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
             referenceMap.genomeFile,
             referenceMap.genomeIndex,
@@ -973,7 +991,7 @@ process Mutect2 {
         ])
 
     output:
-        set val("MuTect2"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2Output
+        set val("MuTect2"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into vcfMuTect2
 
     when: 'mutect2' in tools
 
@@ -989,18 +1007,18 @@ process Mutect2 {
     """
 }
 
-mutect2Output = mutect2Output.groupTuple(by:[0,1,2])
+vcfMuTect2 = vcfMuTect2.groupTuple(by:[0,1,2])
 
 process FreeBayes {
     tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
 
     input:
-        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from bamsFFB
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamFreeBayes
         file(genomeFile) from Channel.value(referenceMap.genomeFile)
         file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
 
     output:
-        set val("FreeBayes"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into freebayesOutput
+        set val("FreeBayes"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into vcfFreeBayes
 
     when: 'freebayes' in tools
 
@@ -1022,11 +1040,11 @@ process FreeBayes {
     """
 }
 
-freebayesOutput = freebayesOutput.groupTuple(by:[0,1,2])
+vcfFreeBayes = vcfFreeBayes.groupTuple(by:[0,1,2])
 
-vcfsToMerge = mutect2Output.mix(freebayesOutput, hcGenotypedVCF)
+vcfConcatenateVCFs = vcfMuTect2.mix(vcfFreeBayes, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
 
-vcfsToMerge = vcfsToMerge.dump(tag:'VCF to merge')
+vcfConcatenateVCFs = vcfConcatenateVCFs.dump(tag:'VCF to merge')
 
 process ConcatVCF {
     tag {variantCaller + "-" + idSample}
@@ -1034,7 +1052,7 @@ process ConcatVCF {
     publishDir "${params.outdir}/VariantCalling/${idSample}/${"$variantCaller"}", mode: params.publishDirMode
 
     input:
-        set variantCaller, idPatient, idSample, file(vcFiles) from vcfsToMerge
+        set variantCaller, idPatient, idSample, file(vcFiles) from vcfConcatenateVCFs
         file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
         file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
 
@@ -1061,7 +1079,7 @@ process Strelka {
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Strelka", mode: params.publishDirMode
 
     input:
-        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForStrelka
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamStrelka
         file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
         set file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
             referenceMap.genomeFile,
@@ -1070,7 +1088,7 @@ process Strelka {
         ])
 
     output:
-        set val("Strelka"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into strelkaOutput
+        set val("Strelka"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfStrelka
 
     when: 'strelka' in tools
 
@@ -1099,8 +1117,8 @@ process Strelka {
   """
 }
 
-strelkaOutput = strelkaOutput.dump(tag:'Strelka')
-(strelkaIndels, strelkaSNVS) = strelkaOutput.into(2)
+vcfStrelka = vcfStrelka.dump(tag:'Strelka')
+(vcfStrelkaIndels, vcfStrelkaSNVS) = vcfStrelka.into(2)
 
 process Manta {
     tag {idSampleTumor + "_vs_" + idSampleNormal}
@@ -1108,7 +1126,7 @@ process Manta {
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Manta", mode: params.publishDirMode
 
     input:
-        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForManta
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamManta
         file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
         set file(genomeFile), file(genomeIndex) from Channel.value([
             referenceMap.genomeFile,
@@ -1116,7 +1134,7 @@ process Manta {
         ])
 
     output:
-        set val("Manta"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into mantaOutput
+        set val("Manta"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfManta
         set idPatient, idSampleNormal, idSampleTumor, file("*.candidateSmallIndels.vcf.gz"), file("*.candidateSmallIndels.vcf.gz.tbi") into mantaToStrelka
 
     when: 'manta' in tools
@@ -1154,10 +1172,10 @@ process Manta {
     """
 }
 
-mantaOutput = mantaOutput.dump(tag:'Manta')
-(mantaSomaticSV, mantaDiploidSV) = mantaOutput.into(2)
+vcfManta = vcfManta.dump(tag:'Manta')
+(vcfMantaSomaticSV, vcfMantaDiploidSV) = vcfManta.into(2)
 
-bamsForStrelkaBP = bamsForStrelkaBP.map {
+pairBamStrelkaBP = pairBamStrelkaBP.map {
     idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor ->
     [idPatientNormal, idSampleNormal, idSampleTumor, bamNormal, baiNormal, bamTumor, baiTumor]
 }.join(mantaToStrelka, by:[0,1,2]).map {
@@ -1171,7 +1189,7 @@ process StrelkaBP {
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Strelka", mode: params.publishDirMode
 
     input:
-        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(mantaCSI), file(mantaCSIi) from bamsForStrelkaBP
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(mantaCSI), file(mantaCSIi) from pairBamStrelkaBP
         file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
         set file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
             referenceMap.genomeFile,
@@ -1180,7 +1198,7 @@ process StrelkaBP {
         ])
 
     output:
-        set val("Strelka"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into strelkaBPOutput
+        set val("Strelka"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfStrelkaBP
 
     when: 'strelka' in tools && 'manta' in tools && !params.noStrelkaBP
 
@@ -1210,8 +1228,8 @@ process StrelkaBP {
   """
 }
 
-strelkaBPOutput = strelkaBPOutput.dump(tag:'Strelka BP')
-(strelkaBPIndels, strelkaBPSNVS) = strelkaBPOutput.into(2)
+vcfStrelkaBP = vcfStrelkaBP.dump(tag:'Strelka BP')
+(vcfStrelkaBPIndels, vcfStrelkaBPSNVS) = vcfStrelkaBP.into(2)
 
 // Run commands and code from Malin Larsson
 // Based on Jesper Eisfeldt's code
@@ -1219,7 +1237,7 @@ process AlleleCounter {
     tag {idSample}
 
     input:
-        set idPatient, status, idSample, file(bam), file(bai) from bamsForAscat
+        set idPatient, status, idSample, file(bam), file(bai) from bamAscat
         set file(acLoci), file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
             referenceMap.acLoci,
             referenceMap.genomeFile,
@@ -1228,7 +1246,7 @@ process AlleleCounter {
         ])
 
     output:
-        set idPatient, status, idSample, file("${idSample}.alleleCount") into alleleCountOutput
+        set idPatient, status, idSample, file("${idSample}.alleleCount") into alleleCounterOut
 
     when: 'ascat' in tools
 
@@ -1242,18 +1260,18 @@ process AlleleCounter {
     """
 }
 
-alleleCountNormal = Channel.create()
-alleleCountTumor = Channel.create()
+alleleCountOutNormal = Channel.create()
+alleleCountOutTumor = Channel.create()
 
-alleleCountOutput
-    .choice(alleleCountTumor, alleleCountNormal) {it[1] == 0 ? 1 : 0}
+alleleCounterOut
+    .choice(alleleCountOutTumor, alleleCountOutNormal) {it[1] == 0 ? 1 : 0}
 
-alleleCountOutput = alleleCountNormal.combine(alleleCountTumor)
+alleleCounterOut = alleleCountOutNormal.combine(alleleCountOutTumor)
 
-alleleCountOutput = alleleCountOutput.map {
-    idPatientNormal, statusNormal, idSampleNormal, alleleCountNormal,
-    idPatientTumor,  statusTumor,  idSampleTumor,  alleleCountTumor ->
-    [idPatientNormal, idSampleNormal, idSampleTumor, alleleCountNormal, alleleCountTumor]
+alleleCounterOut = alleleCounterOut.map {
+    idPatientNormal, statusNormal, idSampleNormal, alleleCountOutNormal,
+    idPatientTumor,  statusTumor,  idSampleTumor,  alleleCountOutTumor ->
+    [idPatientNormal, idSampleNormal, idSampleTumor, alleleCountOutNormal, alleleCountOutTumor]
 }
 
 // R script from Malin Larssons bitbucket repo:
@@ -1264,10 +1282,10 @@ process ConvertAlleleCounts {
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/ASCAT", mode: params.publishDirMode
 
     input:
-        set idPatient, idSampleNormal, idSampleTumor, file(alleleCountNormal), file(alleleCountTumor) from alleleCountOutput
+        set idPatient, idSampleNormal, idSampleTumor, file(alleleCountNormal), file(alleleCountTumor) from alleleCounterOut
 
     output:
-        set idPatient, idSampleNormal, idSampleTumor, file("${idSampleNormal}.BAF"), file("${idSampleNormal}.LogR"), file("${idSampleTumor}.BAF"), file("${idSampleTumor}.LogR") into convertAlleleCountsOutput
+        set idPatient, idSampleNormal, idSampleTumor, file("${idSampleNormal}.BAF"), file("${idSampleNormal}.LogR"), file("${idSampleTumor}.BAF"), file("${idSampleTumor}.LogR") into convertAlleleCountsOut
 
     when: 'ascat' in tools
 
@@ -1286,11 +1304,11 @@ process Ascat {
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/ASCAT", mode: params.publishDirMode
 
     input:
-        set idPatient, idSampleNormal, idSampleTumor, file(bafNormal), file(logrNormal), file(bafTumor), file(logrTumor) from convertAlleleCountsOutput
+        set idPatient, idSampleNormal, idSampleTumor, file(bafNormal), file(logrNormal), file(bafTumor), file(logrTumor) from convertAlleleCountsOut
         file(acLociGC) from Channel.value([referenceMap.acLociGC])
 
     output:
-        set val("ASCAT"), idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.*.{png,txt}") into ascatOutput
+        set val("ASCAT"), idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.*.{png,txt}") into ascatOut
 
     when: 'ascat' in tools
 
@@ -1302,20 +1320,20 @@ process Ascat {
     """
 }
 
-ascatOutput.dump(tag:'ASCAT')
+ascatOut.dump(tag:'ASCAT')
 
 process Mpileup {
     tag {idSample + "-" + intervalBed.baseName}
 
     input:
-        set idPatient, status, idSample, file(bam), file(bai), file(intervalBed) from bamsForMpileup
+        set idPatient, status, idSample, file(bam), file(bai), file(intervalBed) from bamMpileup
         set file(genomeFile), file(genomeIndex) from Channel.value([
             referenceMap.genomeFile,
             referenceMap.genomeIndex
         ])
 
     output:
-        set idPatient, status, idSample, file("${idSample}_${intervalBed.baseName}.pileup.gz") into mpileupToMerge
+        set idPatient, status, idSample, file("${intervalBed.baseName}_${idSample}.pileup.gz") into mpileupMerge
 
     when: ('controlfreec' in tools || 'mpileup' in tools)
 
@@ -1324,11 +1342,11 @@ process Mpileup {
     samtools mpileup \
         -f ${genomeFile} ${bam} \
         -l ${intervalBed} \
-    | bgzip --threads ${task.cpus} -c > ${idSample}_${intervalBed.baseName}.pileup.gz
+    | bgzip --threads ${task.cpus} -c > ${intervalBed.baseName}_${idSample}.pileup.gz
     """
 }
 
-mpileupToMerge = mpileupToMerge.groupTuple(by:[0,1,2])
+mpileupMerge = mpileupMerge.groupTuple(by:[0,1,2])
 
 process MergeMpileup {
     tag {idSample}
@@ -1336,10 +1354,10 @@ process MergeMpileup {
     publishDir params.outdir, mode: params.publishDirMode, saveAs: { it == "${idSample}.pileup.gz" ? "VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/mpileup/${it}" : '' }
 
     input:
-        set idPatient, status, idSample, file(mpileup) from mpileupToMerge
+        set idPatient, status, idSample, file(mpileup) from mpileupMerge
 
     output:
-        set idPatient, status, idSample, file("${idSample}.pileup.gz") into mpileupOutput
+        set idPatient, status, idSample, file("${idSample}.pileup.gz") into mpileupOut
 
     when: ('controlfreec' in tools || 'mpileup' in tools)
 
@@ -1355,20 +1373,20 @@ process MergeMpileup {
     """
 }
 
-mpileupOutput = mpileupOutput.dump(tag:'mpileup')
+mpileupOut = mpileupOut.dump(tag:'mpileup')
 
-mpileupNormal = Channel.create()
-mpileupTumor = Channel.create()
+mpileupOutNormal = Channel.create()
+mpileupOutTumor = Channel.create()
 
-mpileupOutput
-    .choice(mpileupTumor, mpileupNormal) {it[1] == 0 ? 1 : 0}
+mpileupOut
+    .choice(mpileupOutTumor, mpileupOutNormal) {it[1] == 0 ? 1 : 0}
 
-mpileupOutput = mpileupNormal.combine(mpileupTumor)
+mpileupOut = mpileupOutNormal.combine(mpileupOutTumor)
 
-mpileupOutput = mpileupOutput.map {
-    idPatientNormal, statusNormal, idSampleNormal, mpileupNormal,
-    idPatientTumor,  statusTumor,  idSampleTumor,  mpileupTumor ->
-    [idPatientNormal, idSampleNormal, idSampleTumor, mpileupNormal, mpileupTumor]
+mpileupOut = mpileupOut.map {
+    idPatientNormal, statusNormal, idSampleNormal, mpileupOutNormal,
+    idPatientTumor,  statusTumor,  idSampleTumor,  mpileupOutTumor ->
+    [idPatientNormal, idSampleNormal, idSampleTumor, mpileupOutNormal, mpileupOutTumor]
 }
 
 process ControlFREEC {
@@ -1377,7 +1395,7 @@ process ControlFREEC {
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/controlFREEC", mode: params.publishDirMode
 
     input:
-        set idPatient, idSampleNormal, idSampleTumor, file(mpileupNormal), file(mpileupTumor) from mpileupOutput
+        set idPatient, idSampleNormal, idSampleTumor, file(mpileupNormal), file(mpileupTumor) from mpileupOut
         set file(genomeFile), file(genomeIndex), file(dbsnp), file(dbsnpIndex), file(chrDir), file(chrLength) from Channel.value([
             referenceMap.genomeFile,
             referenceMap.genomeIndex,
@@ -1388,8 +1406,8 @@ process ControlFREEC {
         ])
 
     output:
-        set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.pileup.gz_CNVs"), file("${idSampleTumor}.pileup.gz_ratio.txt"), file("${idSampleTumor}.pileup.gz_normal_CNVs"), file("${idSampleTumor}.pileup.gz_normal_ratio.txt"), file("${idSampleTumor}.pileup.gz_BAF.txt"), file("${idSampleNormal}.pileup.gz_BAF.txt") into controlFreecOutputVisualization
-        set file("*.pileup.gz*"), file("${idSampleTumor}_vs_${idSampleNormal}.config.txt") into controlFreecOutput
+        set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.pileup.gz_CNVs"), file("${idSampleTumor}.pileup.gz_ratio.txt"), file("${idSampleTumor}.pileup.gz_normal_CNVs"), file("${idSampleTumor}.pileup.gz_normal_ratio.txt"), file("${idSampleTumor}.pileup.gz_BAF.txt"), file("${idSampleNormal}.pileup.gz_BAF.txt") into controlFreecViz
+        set file("*.pileup.gz*"), file("${idSampleTumor}_vs_${idSampleNormal}.config.txt") into controlFreecOut
 
     when: 'controlfreec' in tools
 
@@ -1431,17 +1449,19 @@ process ControlFREEC {
     """
 }
 
-process ControlFreecVisualization {
+controlFreecOut.dump(tag:'ControlFREEC')
+
+process ControlFreecViz {
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/controlFREEC", mode: params.publishDirMode
 
     input:
-    set idPatient, idSampleNormal, idSampleTumor, file(cnvTumor), file(ratioTumor), file(cnvNormal), file(ratioNormal), file(bafTumor), file(bafNormal) from controlFreecOutputVisualization
+    set idPatient, idSampleNormal, idSampleTumor, file(cnvTumor), file(ratioTumor), file(cnvNormal), file(ratioNormal), file(bafTumor), file(bafNormal) from controlFreecViz
 
     output:
-    set file("*.txt"), file("*.png"), file("*.bed") into controlFreecOutputFinal
+    set file("*.txt"), file("*.png"), file("*.bed") into controlFreecVizOut
 
     when: 'controlfreec' in tools
 
@@ -1455,45 +1475,47 @@ process ControlFreecVisualization {
     """
 }
 
-vcfToKeep = Channel.empty().mix(
+controlFreecVizOut.dump(tag:'ControlFreecViz')
+
+vcfKeep = Channel.empty().mix(
     vcfConcatenated.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
         [variantcaller, idSample, vcf]
     },
-    singleStrelkaOutput.map {
+    vcfStrelkaSingle.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
         [variantcaller, idSample, vcf[1]]
     },
-    singleMantaOutput.map {
+    vcfMantaSingle.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
         [variantcaller, idSample, vcf[2]]
     },
-    mantaDiploidSV.map {
+    vcfMantaDiploidSV.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
         [variantcaller, idSample, vcf[2]]
     },
-    mantaSomaticSV.map {
+    vcfMantaSomaticSV.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
         [variantcaller, idSample, vcf[3]]
     },
-    strelkaIndels.map {
+    vcfStrelkaIndels.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
         [variantcaller, idSample, vcf[0]]
     },
-    strelkaSNVS.map {
+    vcfStrelkaSNVS.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
         [variantcaller, idSample, vcf[1]]
     },
-    strelkaBPIndels.map {
+    vcfStrelkaBPIndels.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
         [variantcaller, idSample, vcf[0]]
     },
-    strelkaBPSNVS.map {
+    vcfStrelkaBPSNVS.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
         [variantcaller, idSample, vcf[1]]
     })
 
-(vcfForBCFtools, vcfForVCFtools, vcfForAnnotation) = vcfToKeep.into(3)
+(vcfBCFtools, vcfVCFtools, vcfAnnotation) = vcfKeep.into(3)
 
 process BcftoolsStats {
     tag {"${variantCaller} - ${vcf}"}
@@ -1501,10 +1523,10 @@ process BcftoolsStats {
     publishDir "${params.outdir}/Reports/${idSample}/BCFToolsStats", mode: params.publishDirMode
 
     input:
-        set variantCaller, idSample, file(vcf) from vcfForBCFtools
+        set variantCaller, idSample, file(vcf) from vcfBCFtools
 
     output:
-        file ("*.bcf.tools.stats.out") into bcfReport
+        file ("*.bcf.tools.stats.out") into bcftoolsReport
 
     when: !params.noReports
 
@@ -1514,7 +1536,7 @@ process BcftoolsStats {
     """
 }
 
-bcfReport = bcfReport.dump(tag:'BCFTools')
+bcftoolsReport = bcftoolsReport.dump(tag:'BCFTools')
 
 process Vcftools {
     tag {"${variantCaller} - ${vcf}"}
@@ -1522,10 +1544,10 @@ process Vcftools {
     publishDir "${params.outdir}/Reports/${idSample}/VCFTools", mode: params.publishDirMode
 
     input:
-        set variantCaller, idSample, file(vcf) from vcfForVCFtools
+        set variantCaller, idSample, file(vcf) from vcfVCFtools
 
     output:
-        file ("${reduceVCF(vcf)}.*") into vcfReport
+        file ("${reduceVCF(vcf)}.*") into vcftoolsReport
 
     when: !params.noReports
 
@@ -1553,7 +1575,7 @@ process Vcftools {
     """
 }
 
-vcfReport = vcfReport.dump(tag:'VCFTools')
+vcftoolsReport = vcftoolsReport.dump(tag:'VCFTools')
 
 /*
 ================================================================================
@@ -1561,10 +1583,10 @@ vcfReport = vcfReport.dump(tag:'VCFTools')
 ================================================================================
 */
 
-vcfToAnnotate = Channel.create()
 
 if (step == 'annotate') {
-    vcfNotToAnnotate = Channel.create()
+    vcfToAnnotate = Channel.create()
+    vcfNoAnnotate = Channel.create()
 
     if (tsvPath == []) {
     // Sarek, by default, annotates all available vcfs that it can find in the VariantCalling directory
@@ -1582,7 +1604,7 @@ if (step == 'annotate') {
           .flatten().map{vcf -> ['mutect2', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
         Channel.fromPath("${params.outdir}/VariantCalling/*/Strelka/*{somatic,variant}*.vcf.gz")
           .flatten().map{vcf -> ['strelka', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
-      ).choice(vcfToAnnotate, vcfNotToAnnotate) {
+      ).choice(vcfToAnnotate, vcfNoAnnotate) {
         annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1
       }
     } else if (annotateTools == []) {
@@ -1592,15 +1614,15 @@ if (step == 'annotate') {
         .map{vcf -> ['userspecified', vcf.minus(vcf.fileName)[-2].toString(), vcf]}
     } else exit 1, "specify only tools or files to annotate, not both"
 
-    vcfNotToAnnotate.close()
-    vcfForAnnotation = vcfForAnnotation.mix(vcfToAnnotate)
+    vcfNoAnnotate.close()
+    vcfAnnotation = vcfAnnotation.mix(vcfToAnnotate)
 }
 
 // as now have the list of VCFs to annotate, the first step is to annotate with allele frequencies, if there are any
 
-(vcfForSnpeff, vcfForVep) = vcfForAnnotation.into(2)
+(vcfSnpeff, vcfVep) = vcfAnnotation.into(2)
 
-vcfForVep = vcfForVep.map {
+vcfVep = vcfVep.map {
   variantCaller, idSample, vcf ->
   ["VEP", variantCaller, idSample, vcf, null]
 }
@@ -1615,12 +1637,12 @@ process Snpeff {
   }
 
   input:
-    set variantCaller, idSample, file(vcf) from vcfForSnpeff
+    set variantCaller, idSample, file(vcf) from vcfSnpeff
     file dataDir from Channel.value(params.snpEff_cache ? file(params.snpEff_cache) : "null")
     val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
 
   output:
-    set file("${reducedVCF}_snpEff.genes.txt"), file("${reducedVCF}_snpEff.summary.html")into snpeffOutput
+    set file("${reducedVCF}_snpEff.genes.txt"), file("${reducedVCF}_snpEff.summary.html")into snpeffOut
     file("${reducedVCF}_snpEff.csv") into snpeffReport
     set val("snpEff"), variantCaller, idSample, file("${reducedVCF}_snpEff.ann.vcf") into snpeffVCF
 
@@ -1644,7 +1666,7 @@ process Snpeff {
   """
 }
 
-snpeffOutput = snpeffOutput.dump(tag:'snpEff output')
+snpeffOut = snpeffOut.dump(tag:'snpEff output')
 snpeffReport = snpeffReport.dump(tag:'snpEff report')
 
 if ('merge' in tools) {
@@ -1655,7 +1677,7 @@ if ('merge' in tools) {
 
   vcfCompressed = Channel.create()
 
-  vcfForVep = Channel.empty().mix(
+  vcfVep = Channel.empty().mix(
     vcfCompressed.until({ it[0]=="merge" })
   )
 }
@@ -1669,7 +1691,7 @@ process VEP {
   }
 
   input:
-    set annotator, variantCaller,  idSample, file(vcf), file(idx) from vcfForVep
+    set annotator, variantCaller,  idSample, file(vcf), file(idx) from vcfVep
     file dataDir from Channel.value(params.vep_cache ? file(params.vep_cache) : "null")
     val cache_version from Channel.value(params.genomes[params.genome].vepCacheVersion)
     set file(cadd_WG_SNVs), file(cadd_WG_SNVs_tbi), file(cadd_InDels), file(cadd_InDels_tbi) from Channel.value([
@@ -1691,7 +1713,7 @@ process VEP {
   genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
   dir_cache = (params.vep_cache && params.annotation_cache) ? " \${PWD}/${dataDir}" : "/.vep"
   cadd = (params.cadd_cache && params.cadd_WG_SNVs && params.cadd_InDels) ? "--plugin CADD,whole_genome_SNVs.tsv.gz,InDels.tsv.gz" : ""
-  genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/sarek-2.3/bin/genesplicer,/opt/conda/envs/sarek-2.3/share/genesplicer-1.0-1/human,context=200,tmpdir=\$PWD/${reducedVCF}" : "--offline"
+  genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/sarek-2.5dev/bin/genesplicer,/opt/conda/envs/sarek-2.5dev/share/genesplicer-1.0-1/human,context=200,tmpdir=\$PWD/${reducedVCF}" : "--offline"
   """
   mkdir ${reducedVCF}
 
@@ -1719,7 +1741,7 @@ process VEP {
 
 vepReport = vepReport.dump(tag:'VEP')
 
-vcfToCompress = snpeffVCF.mix(vepVCF)
+vcfCompressVCF = snpeffVCF.mix(vepVCF)
 
 process CompressVCF {
   tag {"${idSample} - ${annotator} - ${vcf}"}
@@ -1727,10 +1749,10 @@ process CompressVCF {
   publishDir "${params.outdir}/Annotation/${idSample}/${finalAnnotator}", mode: params.publishDirMode
 
   input:
-    set annotator, variantCaller, idSample, file(vcf) from vcfToCompress
+    set annotator, variantCaller, idSample, file(vcf) from vcfCompressVCF
 
   output:
-    set annotator, variantCaller, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into (vcfCompressed, vcfCompressedoutput)
+    set annotator, variantCaller, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into (vcfCompressed, compressVCFOut)
 
   script:
   reducedVCF = reduceVCF(vcf)
@@ -1741,7 +1763,7 @@ process CompressVCF {
   """
 }
 
-vcfCompressedoutput = vcfCompressedoutput.dump(tag:'VCF')
+compressVCFOut.dump(tag:'VCF')
 
 /*
 ================================================================================
@@ -1749,16 +1771,16 @@ vcfCompressedoutput = vcfCompressedoutput.dump(tag:'VCF')
 ================================================================================
 */
 
-reportsForMultiQC = Channel.empty()
+multiQCReport = Channel.empty()
     .mix(
         bamQCmappedReport,
         bamQCrecalibratedReport,
-        bcfReport,
-        fastQCreport,
+        bcftoolsReport,
+        fastQCReport,
         markDuplicatesReport,
         samtoolsStatsReport,
         snpeffReport,
-        vcfReport
+        vcftoolsReport
     ).collect()
 
 process RunMultiQC {
@@ -1766,11 +1788,11 @@ process RunMultiQC {
 
     input:
         file (multiqcConfig) from createMultiQCconfig()
-        file (reports) from reportsForMultiQC
-        file (versions) from software_versions_yaml
+        file (reports) from multiQCReport
+        file (versions) from yamlSoftwareVersion
 
     output:
-        set file("*multiqc_report.html"), file("*multiqc_data") into multiQCReport
+        set file("*multiqc_report.html"), file("*multiqc_data") into multiQCOut
 
     when: !params.noReports
 
@@ -1780,7 +1802,7 @@ process RunMultiQC {
     """
 }
 
-multiQCReport.dump(tag:'MultiQC')
+multiQCOut.dump(tag:'MultiQC')
 
 /*
  * Completion e-mail notification
