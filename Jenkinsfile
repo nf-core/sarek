@@ -13,39 +13,41 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh "rm -rf data"
+                sh "rm -rf references/"
                 sh "./bin/build_reference.sh --test ALL --build"
-                sh "rm -rf work/ references/pipeline_info .nextflow*"
+                sh "rm -rf .nextflow* references/pipeline_info work/"
+            }
+        }
+        stage('Germline') {
+            steps {
+                sh "rm -rf data/"
+                sh "git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data"
+                sh "./bin/run_tests.sh --test GERMLINE"
+                sh "rm -rf .nextflow* data/ results/ work/"
             }
         }
         stage('Somatic') {
             steps {
                 sh "./bin/run_tests.sh --test SOMATIC"
-                sh "rm -rf work/ .nextflow* results/"
-            }
-        }
-        stage('Germline') {
-            steps {
-                sh "./bin/run_tests.sh --test GERMLINE"
-                sh "rm -rf work/ .nextflow* results/"
+                sh "rm -rf .nextflow* results/ work/"
             }
         }
         stage('targeted') {
             steps {
                 sh "./bin/run_tests.sh --test TARGETED"
-                sh "rm -rf work/ .nextflow* results/"
+                sh "rm -rf .nextflow* results/ work/"
             }
         }
         stage('Annotation') {
             steps {
                 sh "./bin/run_tests.sh --test ANNOTATEALL"
-                sh "rm -rf work/ .nextflow* results/"
+                sh "rm -rf .nextflow* results/ work/"
             }
         }
         stage('Multiple') {
             steps {
                 sh "./bin/run_tests.sh --test MULTIPLE"
-                sh "rm -rf work/ .nextflow* results/"
+                sh "rm -rf .nextflow* results/ work/"
             }
         }
     }
