@@ -12,7 +12,7 @@ ENV PATH /opt/conda/envs/sarek-vep-2.5dev/bin:$PATH
 # Setup default ARG variables
 ARG GENOME=GRCh38
 ARG SPECIES=homo_sapiens
-ARG VEP_VERSION=96
+ARG VEP_VERSION=95
 
 # Download Genome
 RUN vep_install \

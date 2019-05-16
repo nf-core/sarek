@@ -54,7 +54,7 @@ jobs:
     environment:
       GENOME: GRCh37
       SPECIES: homo_sapiens
-      VEP_VERSION: 96
+      VEP_VERSION: 95
     steps:
       - checkout
       - setup_remote_docker
@@ -70,7 +70,7 @@ jobs:
     environment:
       GENOME: GRCh38
       SPECIES: homo_sapiens
-      VEP_VERSION: 96
+      VEP_VERSION: 95
     steps:
       - checkout
       - setup_remote_docker
@@ -86,7 +86,7 @@ jobs:
     environment:
       GENOME: GRCm38
       SPECIES: mus_musculus
-      VEP_VERSION: 96
+      VEP_VERSION: 95
     steps:
       - checkout
       - setup_remote_docker
