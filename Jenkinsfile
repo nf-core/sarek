@@ -8,13 +8,13 @@ pipeline {
     stages {
         stage('Setup environment') {
             steps {
-                sh "./bin/download_docker.sh -t ALL"
+                sh "./bin/download_docker.sh"
             }
         }
         stage('Build') {
             steps {
                 sh "rm -rf references/"
-                sh "./bin/build_reference.sh --test ALL --build"
+                sh "./bin/build_reference.sh"
                 sh "rm -rf .nextflow* references/pipeline_info work/"
             }
         }
