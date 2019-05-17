@@ -15,7 +15,6 @@ pipeline {
             steps {
                 sh "rm -rf references/"
                 sh "./bin/build_reference.sh"
-                sh "rm -rf .nextflow* references/pipeline_info work/"
             }
         }
         stage('Germline') {
