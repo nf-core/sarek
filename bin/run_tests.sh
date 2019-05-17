@@ -37,7 +37,7 @@ do
 done
 
 function run_sarek() {
-  nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile test,${PROFILE} ${VERBOSE} $@
+  nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile test,${PROFILE} ${VERBOSE} --monochrome_logs $@
 }
 
 if [[ ALL,GERMLINE =~ $TEST ]]
