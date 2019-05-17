@@ -62,7 +62,7 @@ for k in results:
 # Dump to YAML
 print ('''
 id: 'software_versions'
-section_name: 'nf-core/sarek Software Versions'
+section_name: 'nf-core/sarek software versions'
 section_href: 'https://github.com/nf-core/sarek'
 plot_type: 'html'
 description: 'are collected at run time from the software output.'
