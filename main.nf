@@ -1635,6 +1635,7 @@ process Snpeff {
   publishDir params.outdir, mode: params.publishDirMode, saveAs: {
     if (it == "${reducedVCF}_snpEff.ann.vcf") null
     else if (it == "${reducedVCF}_snpEff.csv") "Reports/${idSample}/snpEff/${it}"
+    else if (it == "${reducedVCF}_snpEff.html") "Reports/${idSample}/snpEff/${it}"
     else "Annotation/${idSample}/snpEff/${it}"
   }
 
@@ -1644,7 +1645,7 @@ process Snpeff {
     val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
 
   output:
-    set file("${reducedVCF}_snpEff.genes.txt"), file("${reducedVCF}_snpEff.summary.html")into snpeffOut
+    set file("${reducedVCF}_snpEff.genes.txt"), file("${reducedVCF}_snpEff.html")into snpeffOut
     file("${reducedVCF}_snpEff.csv") into snpeffReport
     set val("snpEff"), variantCaller, idSample, file("${reducedVCF}_snpEff.ann.vcf") into snpeffVCF
 
@@ -1664,7 +1665,7 @@ process Snpeff {
   ${vcf} \
   > ${reducedVCF}_snpEff.ann.vcf
 
-  mv snpEff_summary.html ${reducedVCF}_snpEff.summary.html
+  mv snpEff_summary.html ${reducedVCF}_snpEff.html
   """
 }
 
