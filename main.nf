@@ -647,7 +647,7 @@ recalTableSampleTSV
         idPatient, idSample, bam, bai, recalTable ->
         status = statusMap[idPatient, idSample]
         gender = genderMap[idPatient]
-        ["${idPatient}/duplicateMarked_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bam}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bai}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${recalTable}\n"]
+        ["duplicateMarked_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bam}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bai}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${recalTable}\n"]
 }
 
 bamApplyBQSR = bamMDToJoin.join(recalTable, by:[0,1])
@@ -720,7 +720,7 @@ bamRecalSampleTSV
         idPatient, idSample, bam, bai ->
         status = statusMap[idPatient, idSample]
         gender = genderMap[idPatient]
-        ["${idPatient}/recalibrated_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bam}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bai}\n"]
+        ["recalibrated_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bam}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bai}\n"]
 }
 
 process SamtoolsStats {
@@ -1033,7 +1033,7 @@ process Mutect2 {
     """
 }
 
-vcfMuTect2 = vcfMuTect2.groupTuple(by:[0,1,4])
+vcfMuTect2 = vcfMuTect2.groupTuple(by:[0,1,2])
 
 process FreeBayes {
     tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
@@ -1066,7 +1066,7 @@ process FreeBayes {
     """
 }
 
-vcfFreeBayes = vcfFreeBayes.groupTuple(by:[0,1,4])
+vcfFreeBayes = vcfFreeBayes.groupTuple(by:[0,1,2])
 
 vcfConcatenateVCFs = vcfMuTect2.mix(vcfFreeBayes, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
 
