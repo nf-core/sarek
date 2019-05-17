@@ -7,5 +7,5 @@ channels:
   - defaults
 
 dependencies:
-  - ensembl-vep=96.0
+  - ensembl-vep=95.2
   - genesplicer=1.0

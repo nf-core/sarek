@@ -16,7 +16,7 @@ dependencies:
   - bwa=0.7.17
   - cancerit-allelecount=2.1.2
   - control-freec=11.4
-  - ensembl-vep=96.0
+  - ensembl-vep=95.2
   - fastqc=0.11.8
   - freebayes=1.2.0
   - gatk4=4.1.1.0
