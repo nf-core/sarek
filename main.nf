@@ -288,7 +288,7 @@ process GetSoftwareVersions {
     """
 }
 
-yamlSoftwareVersion = yamlSoftwareVersion.dump(tag: 'SOFTWARE VERSIONS')
+yamlSoftwareVersion = yamlSoftwareVersion.dump(tag:'SOFTWARE VERSIONS')
 
 /*
 ================================================================================
@@ -986,10 +986,10 @@ bamTumor = Channel.create()
 bamRecalAll
     .choice(bamTumor, bamNormal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
 
-bamNormal = bamNormal.dump(tag:'BAM Normal')
-bamTumor = bamTumor.dump(tag:'BAM Tumor')
-
-pairBam = bamNormal.join(bamTumor)
+pairBam = bamNormal.cross(bamTumor).map {
+    normal, tumor ->
+    [normal[0], normal[1], normal[2], normal[3], tumor[1], tumor[2], tumor[3]]
+}
 
 pairBam = pairBam.dump(tag:'BAM Somatic Pair')
 
