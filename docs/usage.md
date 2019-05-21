@@ -125,7 +125,6 @@ If `-profile` is not specified at all the pipeline will be run locally and expec
   * A profile with a complete configuration for automated testing
   * Includes links to test data so needs no other parameters
 
-<!-- TODO nf-core: Document required command line parameters -->
 
 ### `--sample`
 Use this to specify the location of your input TSV file, on `mapping`, `recalibrate` and `variantcalling` steps.
