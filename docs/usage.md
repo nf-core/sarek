@@ -214,7 +214,6 @@ params {
 }
 ```
 
-<!-- TODO nf-core: Describe reference path flags -->
 ### `--acLoci`
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
