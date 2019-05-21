@@ -6,12 +6,12 @@ pipeline {
     }
 
     stages {
-        stage('Setup environment') {
+        stage('Docker setup') {
             steps {
                 sh "./bin/download_docker.sh"
             }
         }
-        stage('Build') {
+        stage('Build references') {
             steps {
                 sh "rm -rf references/"
                 sh "./bin/build_reference.sh"
@@ -22,31 +22,27 @@ pipeline {
                 sh "rm -rf data/"
                 sh "git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data"
                 sh "./bin/run_tests.sh --test GERMLINE"
-                sh "rm -rf .nextflow* data/ results/ work/"
+                sh "rm -rf data/"
             }
         }
         stage('Somatic') {
             steps {
                 sh "./bin/run_tests.sh --test SOMATIC"
-                sh "rm -rf .nextflow* results/ work/"
             }
         }
-        stage('targeted') {
+        stage('Targeted') {
             steps {
                 sh "./bin/run_tests.sh --test TARGETED"
-                sh "rm -rf .nextflow* results/ work/"
             }
         }
         stage('Annotation') {
             steps {
                 sh "./bin/run_tests.sh --test ANNOTATEALL"
-                sh "rm -rf .nextflow* results/ work/"
             }
         }
         stage('Multiple') {
             steps {
                 sh "./bin/run_tests.sh --test MULTIPLE"
-                sh "rm -rf .nextflow* results/ work/"
             }
         }
     }

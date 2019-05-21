@@ -44,18 +44,22 @@ if [[ ALL,GERMLINE =~ $TEST ]]
 then
   rm -rf data
   git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data
-  run_sarek --sample data/testdata/tiny/normal --tools HaplotypeCaller,Strelka --noReports
-  run_sarek --step recalibrate --sample results/Preprocessing/TSV/duplicateMarked.tsv --noReports
+  run_sarek --tools=false --sample data/testdata/tiny/normal --noReports
+  run_sarek --tools=false --sample results/Preprocessing/TSV/duplicateMarked.tsv --step recalibrate --noReports
+  run_sarek --tools HaplotypeCaller,Strelka --sample results/Preprocessing/TSV/recalibrated.tsv --step variantCalling --noReports
+  rm -rf .nextflow* results/ work/
 fi
 
 if [[ ALL,SOMATIC =~ $TEST ]]
 then
-	run_sarek --tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2 --noReports
+  run_sarek --tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2 --noReports
+  rm -rf .nextflow* results/ work/
 fi
 
 if [[ ALL,TARGETED =~ $TEST ]]
 then
-	run_sarek --tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2 --noReports --targetBED https://github.com/nf-core/test-datasets/raw/sarek/testdata/target.bed
+  run_sarek --tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2 --noReports --targetBED https://github.com/nf-core/test-datasets/raw/sarek/testdata/target.bed
+  rm -rf .nextflow* results/ work/
 fi
 
 if [[ ALL,ANNOTATEALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
@@ -71,9 +75,11 @@ then
     ANNOTATOR=merge,snpEFF,VEP
   fi
   run_sarek --step annotate --tools ${ANNOTATOR} --sample https://github.com/nf-core/test-datasets/raw/sarek/testdata/vcf/Strelka_1234N_variants.vcf.gz --noReports
+  rm -rf .nextflow* results/ work/
 fi
 
 if [[ MULTIPLE =~ $TEST ]]
 then
   run_sarek --sample https://github.com/nf-core/test-datasets/raw/sarek/testdata/tsv/tiny-multiple-https.tsv --tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2 --noReports
+  rm -rf .nextflow* results/ work/
 fi
