@@ -107,6 +107,8 @@ params.cadd_InDels_tbi = null
 params.cadd_WG_SNVs = null
 params.cadd_WG_SNVs_tbi = null
 params.genesplicer = null
+params.monochrome_logs = null
+params.multiqc_config = null
 params.noGVCF = null
 params.noReports = null
 params.noStrelkaBP = null
@@ -118,73 +120,65 @@ params.step = 'mapping'
 params.targetBED = null
 params.tools = "HaplotypeCaller,Manta,Strelka"
 params.vep_cache = null
-params.monochrome_logs = null
 
 stepList = defineStepList()
 step = params.step ? params.step.toLowerCase() : ''
-if ( step == 'preprocessing' ) step = 'mapping'
-if ( !checkParameterExistence(step, stepList) ) exit 1, 'Unknown step, see --help for more information'
-if ( step.contains(',') ) exit 1, 'You can choose only one step, see --help for more information'
+if (step == 'preprocessing') step = 'mapping'
+if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
+if (!checkParameterExistence(step, stepList)) exit 1, "Unknown step ${step}, see --help for more information"
 
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
 annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
 toolList = defineToolList()
-if ( !checkParameterList(tools,toolList) ) exit 1, 'Unknown tool(s), see --help for more information'
+if (!checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
 
 referenceMap = defineReferenceMap(step, tools)
-if ( !checkReferenceMap(referenceMap) ) exit 1, 'Missing Reference file(s), see --help for more information'
+if (!checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
 
 // Has the run name been specified by the user?
-// this has the bonus effect of catching both -name and --name
+// This has the bonus effect of catching both -name and --name
 custom_runName = params.name
-if ( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ) custom_runName = workflow.runName
+if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) custom_runName = workflow.runName
 
-if ( workflow.profile == 'awsbatch') {
+if (workflow.profile == 'awsbatch') {
     // AWSBatch sanity checking
-    if ( !params.awsqueue || !params.awsregion ) exit 1, "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
+    if (!params.awsqueue || !params.awsregion) exit 1, "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
     // Check outdir paths to be S3 buckets if running on AWSBatch
     // related: https://github.com/nextflow-io/nextflow/issues/813
-    if ( !params.outdir.startsWith('s3:') ) exit 1, "Outdir not on S3 - specify S3 Bucket to run on AWSBatch!"
+    if (!params.outdir.startsWith('s3:')) exit 1, "Outdir not on S3 - specify S3 Bucket to run on AWSBatch!"
     // Prevent trace files to be stored on S3 since S3 does not support rolling files.
-    if ( workflow.tracedir.startsWith('s3:') ) exit 1, "Specify a local tracedir or run without trace! S3 cannot be used for tracefiles."
+    if (workflow.tracedir.startsWith('s3:')) exit 1, "Specify a local tracedir or run without trace! S3 cannot be used for tracefiles."
 }
 
 // Stage config files
-ch_multiqc_config = Channel.fromPath(params.multiqc_config)
 ch_output_docs = Channel.fromPath("${baseDir}/docs/output.md")
-
-/*
- * Create a channel for input read files
- */
 
 tsvPath = null
 if (params.sample) if (hasExtension(params.sample,"tsv") || hasExtension(params.sample,"vcf") || hasExtension(params.sample,"vcf.gz")) tsvPath = params.sample
 if (params.sample) if (hasExtension(params.sample,"vcf") || hasExtension(params.sample,"vcf.gz")) step = "annotate"
 
- // No need for tsv file for step annotate
-if (!params.sample) {
-    tsvMap = [  'recalibrate':    "${params.outdir}/Preprocessing/TSV/duplicateMarked.tsv",
-                'variantcalling': "${params.outdir}/Preprocessing/TSV/recalibrated.tsv" ]
-    if (step != 'mapping') tsvPath = tsvMap[step]
+// If no input file specified, trying to get TSV files corresponding to step in the TSV directory
+// only for steps recalibrate and variantCalling
+if (!params.sample && step != 'mapping' && step != 'annotate') {
+    tsvPath = step == 'recalibrate' ? "${params.outdir}/Preprocessing/TSV/duplicateMarked.tsv": "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"
 }
 
-// Set up the inputFiles and bamFiles channels. One of them will remain empty
-inputFiles = Channel.empty()
-bamFiles = Channel.empty()
+inputSample = Channel.empty()
 if (tsvPath) {
     tsvFile = file(tsvPath)
     switch (step) {
-        case 'mapping': inputFiles = extractSample(tsvFile); break
-        case 'recalibrate': bamFiles = extractRecal(tsvFile); break
-        case 'variantcalling': bamFiles = extractBams(tsvFile); break
+        case 'mapping': inputSample = extractFastq(tsvFile); break
+        case 'recalibrate': inputSample = extractRecal(tsvFile); break
+        case 'variantcalling': inputSample = extractBam(tsvFile); break
         case 'annotate': break
         default: exit 1, "Unknown step ${step}"
     }
 } else if (params.sample) if (!hasExtension(params.sample,"tsv")) {
-    println "no tsv file"
+    println "No TSV file"
     if (step != 'mapping') exit 1, 'No other step than "mapping" support a dir as an input'
-    inputFiles = extractFastqFromDir(params.sample)
-    (inputFiles, fastqTMP) = inputFiles.into(2)
+    println "Reading ${params.sample} directory"
+    inputSample = extractFastqFromDir(params.sample)
+    (inputSample, fastqTMP) = inputSample.into(2)
     fastqTMP.toList().subscribe onNext: {
         if (it.size() == 0) exit 1, "No FASTQ files found in --sample directory '${params.sample}'"
     }
@@ -193,13 +187,12 @@ if (tsvPath) {
     println "Annotating ${tsvFile}"
 } else exit 1, 'No sample were defined, see --help'
 
-if (step == 'recalibrate') (genderMap, statusMap, bamFiles) = extractInfos(bamFiles)
-else (genderMap, statusMap, inputFiles) = extractInfos(inputFiles)
+(genderMap, statusMap, inputSample) = extractInfos(inputSample)
 
 // Header log info
 log.info nfcoreHeader()
 def summary = [:]
-if (workflow.revision)  summary['Pipeline Release'] = workflow.revision
+if (workflow.revision)          summary['Pipeline Release'] = workflow.revision
 summary['Run Name']         = custom_runName ?: workflow.runName
 summary['Max Resources']    = "${params.max_memory} memory, ${params.max_cpus} cpus, ${params.max_time} time per job"
 if (workflow.containerEngine)   summary['Container']        = "${workflow.containerEngine} - ${workflow.container}"
@@ -217,7 +210,7 @@ summary['Launch dir']       = workflow.launchDir
 summary['Working dir']      = workflow.workDir
 summary['Script dir']       = workflow.projectDir
 summary['User']             = workflow.userName
-if (workflow.profile == 'awsbatch'){
+if (workflow.profile == 'awsbatch') {
     summary['AWS Region']       = params.awsregion
     summary['AWS Queue']        = params.awsqueue
 }
@@ -234,23 +227,6 @@ log.info "\033[2m----------------------------------------------------\033[0m"
 
 // Check the hostnames against configured profiles
 checkHostname()
-
-def create_workflow_summary(summary) {
-    def yaml_file = workDir.resolve('workflow_summary_mqc.yaml')
-    yaml_file.text  = """
-    id: 'nf-core-sarek-summary'
-    description: " - this information is collected when the pipeline is started."
-    section_name: 'nf-core/sarek Workflow Summary'
-    section_href: 'https://github.com/nf-core/sarek'
-    plot_type: 'html'
-    data: |
-        <dl class=\"dl-horizontal\">
-${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
-        </dl>
-    """.stripIndent()
-
-   return yaml_file
-}
 
 /*
  * Parse software version numbers
@@ -296,212 +272,7 @@ yamlSoftwareVersion = yamlSoftwareVersion.dump(tag:'SOFTWARE VERSIONS')
 ================================================================================
 */
 
-// STEP ONE: MAPPING
-
-(inputFiles, inputFilesFastQC) = inputFiles.into(2)
-
-inputFilesFastQCFQ = Channel.create()
-inputFilesFastQCBAM = Channel.create()
-
-inputFilesFastQC.choice(inputFilesFastQCFQ, inputFilesFastQCBAM) {hasExtension(it[4],"bam")? 1 : 0}
-
-inputFilesFastQCBAM = inputFilesFastQCBAM.map {
-    idPatient, idSample, idRun, inputFile1, inputFile2 ->
-    [idPatient, idSample, idRun, inputFile1]
-}
-
-inputFiles = inputFiles.dump(tag:'INPUT')
-
-process FastQCFQ {
-    tag {idPatient + "-" + idRun}
-
-    publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idRun}", mode: params.publishDirMode
-
-    input:
-        set idPatient, idSample, idRun, file("${idRun}_R1.fastq.gz"), file("${idRun}_R2.fastq.gz") from inputFilesFastQCFQ
-
-    output:
-        file "*_fastqc.{zip,html}" into fastQCFQReport
-
-    when: step == 'mapping' && !params.noReports
-
-    script:
-    """
-    fastqc -t 2 -q ${idRun}_R1.fastq.gz ${idRun}_R2.fastq.gz
-    """
-}
-
-process FastQCBAM {
-    tag {idPatient + "-" + idRun}
-
-    publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idRun}", mode: params.publishDirMode
-
-    input:
-        set idPatient, idSample, idRun, file("${idRun}.bam") from inputFilesFastQCBAM
-
-    output:
-        file "*_fastqc.{zip,html}" into fastQCBAMReport
-
-    when: step == 'mapping' && !params.noReports
-
-    script:
-    """
-    fastqc -t 2 -q "${idRun}.bam"
-    """
-}
-
-fastQCReport = fastQCFQReport.mix(fastQCBAMReport)
-
-fastQCReport = fastQCReport.dump(tag:'FastQC')
-
-process MapReads {
-    tag {idPatient + "-" + idRun}
-
-    input:
-        set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from inputFiles
-        set file(genomeFile), file(bwaIndex) from Channel.value([referenceMap.genomeFile, referenceMap.bwaIndex])
-
-    output:
-        set idPatient, idSample, idRun, file("${idRun}.bam") into (bamMapped, bamMappedQC)
-
-    when: step == 'mapping'
-
-    script:
-    // -K is an hidden option, used to fix the number of reads processed by bwa mem
-    // Chunk size can affect bwa results, if not specified, the number of threads can change
-    // which can give not deterministic result.
-    // cf https://github.com/CCDG/Pipeline-Standardization/blob/master/PipelineStandard.md
-    // and https://github.com/gatk-workflows/gatk4-data-processing/blob/8ffa26ff4580df4ac3a5aa9e272a4ff6bab44ba2/processing-for-variant-discovery-gatk4.b37.wgs.inputs.json#L29
-    CN = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
-    readGroup = "@RG\\tID:${idRun}\\t${CN}PU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
-    // adjust mismatch penalty for tumor samples
-    status = statusMap[idPatient, idSample]
-    extra = status == 1 ? "-B 3" : ""
-    if (hasExtension(inputFile1,"fastq.gz") || hasExtension(inputFile1,"fq.gz"))
-    """
-        bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M \
-            ${genomeFile} ${inputFile1} ${inputFile2} | \
-        samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
-    """
-    else if (hasExtension(inputFile1,"bam"))
-    """
-        gatk --java-options -Xmx${task.memory.toGiga()}g \
-            SamToFastq \
-            --INPUT=${inputFile1} \
-            --FASTQ=/dev/stdout \
-            --INTERLEAVE=true \
-            --NON_PF=true \
-            | \
-        bwa mem -K 100000000 -p -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${genomeFile} \
-            /dev/stdin - 2> >(tee ${inputFile1}.bwa.stderr.log >&2) \
-            | \
-        samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
-    """
-}
-
-bamMapped = bamMapped.dump(tag:'Mapped BAM')
-
-process BamQCmapped {
-    tag {idPatient + "-" + idSample}
-
-    publishDir "${params.outdir}/Reports/${idSample}/bamQC", mode: params.publishDirMode
-
-    input:
-        set idPatient, idSample, idRun, file(bam) from bamMappedQC
-        file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
-
-    output:
-        file("${bam.baseName}") into bamQCmappedReport
-
-    when: !params.noReports
-
-    script:
-    use_bed = params.targetBED ? "-gff ${targetBED}" : ''
-    """
-    qualimap --java-mem-size=${task.memory.toGiga()}G \
-        bamqc \
-        -bam ${bam} \
-        --paint-chromosome-limits \
-        --genome-gc-distr HUMAN \
-        $use_bed \
-        -nt ${task.cpus} \
-        -skip-duplicated \
-        --skip-dup-mode 0 \
-        -outdir ${bam.baseName} \
-        -outformat HTML
-    """
-}
-
-bamQCmappedReport = bamQCmappedReport.dump(tag:'BamQC BAM')
-
-// Sort bam whether they are standalone or should be merged
-
-singleBam = Channel.create()
-multipleBam = Channel.create()
-bamMapped.groupTuple(by:[0,1])
-    .choice(singleBam, multipleBam) {it[2].size() > 1 ? 1 : 0}
-singleBam = singleBam.map {
-    idPatient, idSample, idRun, bam ->
-    [idPatient, idSample, bam]
-}
-singleBam = singleBam.dump(tag:'Single BAM')
-
-process MergeBamMapped {
-    tag {idPatient + "-" + idSample}
-
-    input:
-        set idPatient, idSample, idRun, file(bam) from multipleBam
-
-    output:
-        set idPatient, idSample, file("${idSample}.bam") into mergedBam
-
-    when: step == 'mapping'
-
-    script:
-    """
-    samtools merge --threads ${task.cpus} ${idSample}.bam ${bam}
-    """
-}
-
-mergedBam = mergedBam.dump(tag:'Merged BAM')
-mergedBam = mergedBam.mix(singleBam)
-mergedBam = mergedBam.dump(tag:'BAMs for MD')
-
-process MarkDuplicates {
-    tag {idPatient + "-" + idSample}
-
-    publishDir params.outdir, mode: params.publishDirMode,
-        saveAs: {
-            if (it == "${idSample}.bam.metrics") "Reports/${idSample}/MarkDuplicates/${it}"
-            else "Preprocessing/${idSample}/DuplicateMarked/${it}"
-        }
-
-    input:
-        set idPatient, idSample, file("${idSample}.bam") from mergedBam
-
-    output:
-        set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bai") into duplicateMarkedBams
-        file ("${idSample}.bam.metrics") into markDuplicatesReport
-
-    when: step == 'mapping'
-
-    script:
-    markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2 ).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
-    """
-    gatk --java-options ${markdup_java_options} \
-        MarkDuplicates \
-        --MAX_RECORDS_IN_RAM 50000 \
-        --INPUT ${idSample}.bam \
-        --METRICS_FILE ${idSample}.bam.metrics \
-        --TMP_DIR . \
-        --ASSUME_SORT_ORDER coordinate \
-        --CREATE_INDEX true \
-        --OUTPUT ${idSample}.md.bam
-    """
-}
-
-duplicateMarkedBams = duplicateMarkedBams.dump(tag:'MD BAM')
-markDuplicatesReport = markDuplicatesReport.dump(tag:'MD Report')
+// STEP 0: CREATING INTERVALS FOR PARALLELIZATION (PREPROCESSING AND VARIANT CALLING)
 
 process CreateIntervalBeds {
     tag {intervals.fileName}
@@ -567,8 +338,232 @@ bedIntervals = bedIntervals.dump(tag:'bedintervals')
 
 (intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intMpileup, bedIntervals) = bedIntervals.into(5)
 
+// PREPARING CHANNELS FOR PREPROCESSING AND QC
+
+if (step == 'mapping') (inputReads, inputReadsFastQC) = inputSample.into(2)
+else (inputReads, inputReadsFastQC) = Channel.empty().into(2)
+
+inputPairReadsFastQC = Channel.create()
+inputBAMFastQC = Channel.create()
+
+inputReadsFastQC.choice(inputPairReadsFastQC, inputBAMFastQC) {hasExtension(it[4],"bam")? 1 : 0}
+
+// Removing inputFile2 wich is null in case of uBAM
+inputBAMFastQC = inputBAMFastQC.map {
+    idPatient, idSample, idRun, inputFile1, inputFile2 ->
+    [idPatient, idSample, idRun, inputFile1]
+}
+
+inputReads = inputReads.dump(tag:'INPUT')
+
+// STEP 0.5: QC ON READS
+
+// TODO: Use only one process for FastQC for FASTQ files and uBAM files
+// FASTQ and uBAM files are renamed based on the sample name
+
+process FastQCFQ {
+    tag {idPatient + "-" + idRun}
+
+    publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idRun}", mode: params.publishDirMode
+
+    input:
+        set idPatient, idSample, idRun, file("${idRun}_R1.fastq.gz"), file("${idRun}_R2.fastq.gz") from inputPairReadsFastQC
+
+    output:
+        file "*_fastqc.{zip,html}" into fastQCFQReport
+
+    when: step == 'mapping' && !params.noReports
+
+    script:
+    """
+    fastqc -t 2 -q ${idRun}_R1.fastq.gz ${idRun}_R2.fastq.gz
+    """
+}
+
+process FastQCBAM {
+    tag {idPatient + "-" + idRun}
+
+    publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idRun}", mode: params.publishDirMode
+
+    input:
+        set idPatient, idSample, idRun, file("${idRun}.bam") from inputBAMFastQC
+
+    output:
+        file "*_fastqc.{zip,html}" into fastQCBAMReport
+
+    when: step == 'mapping' && !params.noReports
+
+    script:
+    """
+    fastqc -t 2 -q "${idRun}.bam"
+    """
+}
+
+fastQCReport = fastQCFQReport.mix(fastQCBAMReport)
+
+fastQCReport = fastQCReport.dump(tag:'FastQC')
+
+// STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
+
+process MapReads {
+    tag {idPatient + "-" + idRun}
+
+    input:
+        set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from inputReads
+        set file(genomeFile), file(bwaIndex) from Channel.value([referenceMap.genomeFile, referenceMap.bwaIndex])
+
+    output:
+        set idPatient, idSample, idRun, file("${idRun}.bam") into (bamMapped, bamMappedQC)
+
+    when: step == 'mapping'
+
+    script:
+    // -K is an hidden option, used to fix the number of reads processed by bwa mem
+    // Chunk size can affect bwa results, if not specified,
+    // the number of threads can change which can give not deterministic result.
+    // cf https://github.com/CCDG/Pipeline-Standardization/blob/master/PipelineStandard.md
+    // and https://github.com/gatk-workflows/gatk4-data-processing/blob/8ffa26ff4580df4ac3a5aa9e272a4ff6bab44ba2/processing-for-variant-discovery-gatk4.b37.wgs.inputs.json#L29
+    CN = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
+    readGroup = "@RG\\tID:${idRun}\\t${CN}PU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
+    // adjust mismatch penalty for tumor samples
+    status = statusMap[idPatient, idSample]
+    extra = status == 1 ? "-B 3" : ""
+    if (hasExtension(inputFile1,"fastq.gz") || hasExtension(inputFile1,"fq.gz"))
+    """
+        bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M \
+            ${genomeFile} ${inputFile1} ${inputFile2} | \
+        samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
+    """
+    else if (hasExtension(inputFile1,"bam"))
+    """
+        gatk --java-options -Xmx${task.memory.toGiga()}g \
+            SamToFastq \
+            --INPUT=${inputFile1} \
+            --FASTQ=/dev/stdout \
+            --INTERLEAVE=true \
+            --NON_PF=true \
+            | \
+        bwa mem -K 100000000 -p -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${genomeFile} \
+            /dev/stdin - 2> >(tee ${inputFile1}.bwa.stderr.log >&2) \
+            | \
+        samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
+    """
+}
+
+bamMapped = bamMapped.dump(tag:'Mapped BAM')
+
+// QC
+
+process BamQCmapped {
+    tag {idPatient + "-" + idSample}
+
+    publishDir "${params.outdir}/Reports/${idSample}/bamQC", mode: params.publishDirMode
+
+    input:
+        set idPatient, idSample, idRun, file(bam) from bamMappedQC
+        file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
+
+    output:
+        file("${bam.baseName}") into bamQCmappedReport
+
+    when: !params.noReports
+
+    script:
+    use_bed = params.targetBED ? "-gff ${targetBED}" : ''
+    """
+    qualimap --java-mem-size=${task.memory.toGiga()}G \
+        bamqc \
+        -bam ${bam} \
+        --paint-chromosome-limits \
+        --genome-gc-distr HUMAN \
+        $use_bed \
+        -nt ${task.cpus} \
+        -skip-duplicated \
+        --skip-dup-mode 0 \
+        -outdir ${bam.baseName} \
+        -outformat HTML
+    """
+}
+
+bamQCmappedReport = bamQCmappedReport.dump(tag:'BamQC BAM')
+
+// Sort BAM whether they are standalone or should be merged
+
+singleBam = Channel.create()
+multipleBam = Channel.create()
+bamMapped.groupTuple(by:[0,1])
+    .choice(singleBam, multipleBam) {it[2].size() > 1 ? 1 : 0}
+singleBam = singleBam.map {
+    idPatient, idSample, idRun, bam ->
+    [idPatient, idSample, bam]
+}
+singleBam = singleBam.dump(tag:'Single BAM')
+
+// STEP 1.5: MERGING BAM FROM MULTIPLE LANES
+
+process MergeBamMapped {
+    tag {idPatient + "-" + idSample}
+
+    input:
+        set idPatient, idSample, idRun, file(bam) from multipleBam
+
+    output:
+        set idPatient, idSample, file("${idSample}.bam") into mergedBam
+
+    when: step == 'mapping'
+
+    script:
+    """
+    samtools merge --threads ${task.cpus} ${idSample}.bam ${bam}
+    """
+}
+
+mergedBam = mergedBam.dump(tag:'Merged BAM')
+mergedBam = mergedBam.mix(singleBam)
+mergedBam = mergedBam.dump(tag:'BAMs for MD')
+
+// STEP 2: MARKING DUPLICATES
+
+process MarkDuplicates {
+    tag {idPatient + "-" + idSample}
+
+    publishDir params.outdir, mode: params.publishDirMode,
+        saveAs: {
+            if (it == "${idSample}.bam.metrics") "Reports/${idSample}/MarkDuplicates/${it}"
+            else "Preprocessing/${idSample}/DuplicateMarked/${it}"
+        }
+
+    input:
+        set idPatient, idSample, file("${idSample}.bam") from mergedBam
+
+    output:
+        set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bai") into duplicateMarkedBams
+        file ("${idSample}.bam.metrics") into markDuplicatesReport
+
+    when: step == 'mapping'
+
+    script:
+    markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
+    """
+    gatk --java-options ${markdup_java_options} \
+        MarkDuplicates \
+        --MAX_RECORDS_IN_RAM 50000 \
+        --INPUT ${idSample}.bam \
+        --METRICS_FILE ${idSample}.bam.metrics \
+        --TMP_DIR . \
+        --ASSUME_SORT_ORDER coordinate \
+        --CREATE_INDEX true \
+        --OUTPUT ${idSample}.md.bam
+    """
+}
+
+duplicateMarkedBams = duplicateMarkedBams.dump(tag:'MD BAM')
+markDuplicatesReport = markDuplicatesReport.dump(tag:'MD Report')
+
 (bamMD, bamMDToJoin) = duplicateMarkedBams.into(2)
 bamBaseRecalibrator = bamMD.combine(intBaseRecalibrator)
+
+// STEP 3: CREATING RECALIBRATION TABLES
 
 process BaseRecalibrator {
     tag {idPatient + "-" + idSample + "-" + intervalBed}
@@ -608,6 +603,8 @@ process BaseRecalibrator {
 }
 
 tableGatherBQSRReports = tableGatherBQSRReports.groupTuple(by:[0,1])
+
+// STEP 3.5: MERGING RECALIBRATION TABLES
 
 process GatherBQSRReports {
     tag {idPatient + "-" + idSample}
@@ -652,11 +649,13 @@ recalTableSampleTSV
 
 bamApplyBQSR = bamMDToJoin.join(recalTable, by:[0,1])
 
-if (step == 'recalibrate') bamApplyBQSR = bamFiles
+if (step == 'recalibrate') bamApplyBQSR = inputSample
 
 bamApplyBQSR = bamApplyBQSR.dump(tag:'recal.table')
 
 bamApplyBQSR = bamApplyBQSR.combine(intApplyBQSR)
+
+// STEP 4: RECALIBRATING
 
 process ApplyBQSR {
     tag {idPatient + "-" + idSample + "-" + intervalBed.baseName}
@@ -685,6 +684,8 @@ process ApplyBQSR {
 }
 
 bamMergeBamRecal = bamMergeBamRecal.groupTuple(by:[0,1])
+
+// STEP 4.5: MERGING THE RECALIBRATED BAM FILES
 
 process MergeBamRecal {
     tag {idPatient + "-" + idSample}
@@ -722,6 +723,8 @@ bamRecalSampleTSV
         gender = genderMap[idPatient]
         ["recalibrated_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bam}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bai}\n"]
 }
+
+// STEP 5: QC
 
 process SamtoolsStats {
     tag {idPatient + "-" + idSample}
@@ -780,7 +783,7 @@ bamQCrecalibratedReport = bamQCrecalibratedReport.dump(tag:'BamQC')
 ================================================================================
 */
 
-if (step == 'variantcalling') bamRecal = bamFiles
+if (step == 'variantcalling') bamRecal = inputSample
 
 bamRecal = bamRecal.dump(tag:'BAM')
 
@@ -795,6 +798,8 @@ bamRecal = bamRecal.dump(tag:'BAM')
 // Do variant calling by this intervals, and re-merge the VCFs
 
 bamHaplotypeCaller = bamRecalAllTemp.combine(intHaplotypeCaller)
+
+// STEP GATK HAPLOTYPECALLER.1
 
 process HaplotypeCaller {
     tag {idSample + "-" + intervalBed.baseName}
@@ -833,6 +838,8 @@ gvcfHaplotypeCaller = gvcfHaplotypeCaller.groupTuple(by:[0,1,2])
 if (params.noGVCF) gvcfHaplotypeCaller.close()
 else gvcfHaplotypeCaller = gvcfHaplotypeCaller.dump(tag:'GVCF HaplotypeCaller')
 
+// STEP GATK HAPLOTYPECALLER.2
+
 process GenotypeGVCFs {
     tag {idSample + "-" + intervalBed.baseName}
 
@@ -869,8 +876,7 @@ process GenotypeGVCFs {
 
 vcfGenotypeGVCFs = vcfGenotypeGVCFs.groupTuple(by:[0,1,2])
 
-// we are merging the VCFs that are called separatelly for different intervals
-// so we can have a single sorted VCF containing all the calls for a given caller
+// STEP STRELKA.1 - SINGLE MODE
 
 process StrelkaSingle {
     tag {idSample}
@@ -915,6 +921,8 @@ process StrelkaSingle {
 }
 
 vcfStrelkaSingle = vcfStrelkaSingle.dump(tag:'Strelka - Single Mode')
+
+// STEP MANTA.1 - SINGLE MODE
 
 process MantaSingle {
     tag {idSample}
@@ -986,6 +994,8 @@ bamTumor = Channel.create()
 bamRecalAll
     .choice(bamTumor, bamNormal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
 
+// Crossing Normal and Tumor to get a T/N pair for Somatic Variant Calling
+// Remapping channel to remove common key idPatient
 pairBam = bamNormal.cross(bamTumor).map {
     normal, tumor ->
     [normal[0], normal[1], normal[2], normal[3], tumor[1], tumor[2], tumor[3]]
@@ -1002,7 +1012,8 @@ bamMpileup = bamMpileup.spread(intMpileup)
 // MuTect2, FreeBayes
 (pairBamMuTect2, pairBamFreeBayes) = intPairBam.into(3)
 
-// This will give as a list of unfiltered calls for MuTect2.
+// STEP GATK MUTECT2
+
 process Mutect2 {
     tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
 
@@ -1035,6 +1046,8 @@ process Mutect2 {
 
 vcfMuTect2 = vcfMuTect2.groupTuple(by:[0,1,2])
 
+// STEP FREEBAYES
+
 process FreeBayes {
     tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
 
@@ -1066,7 +1079,12 @@ process FreeBayes {
     """
 }
 
+// we are merging the VCFs that are called separatelly for different intervals
+// so we can have a single sorted VCF containing all the calls for a given caller
+
 vcfFreeBayes = vcfFreeBayes.groupTuple(by:[0,1,2])
+
+// STEP MERGING VCF - FREEBAYES, GATK HAPLOTYPECALLER & GATK MUTECT2
 
 vcfConcatenateVCFs = vcfMuTect2.mix(vcfFreeBayes, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
 
@@ -1098,6 +1116,8 @@ process ConcatVCF {
 }
 
 vcfConcatenated = vcfConcatenated.dump(tag:'VCF')
+
+// STEP STRELKA.2 - SOMATIC PAIR
 
 process Strelka {
     tag {idSampleTumor + "_vs_" + idSampleNormal}
@@ -1144,7 +1164,8 @@ process Strelka {
 }
 
 vcfStrelka = vcfStrelka.dump(tag:'Strelka')
-(vcfStrelkaIndels, vcfStrelkaSNVS) = vcfStrelka.into(2)
+
+// STEP MANTA.2 - SOMATIC PAIR
 
 process Manta {
     tag {idSampleTumor + "_vs_" + idSampleNormal}
@@ -1199,8 +1220,8 @@ process Manta {
 }
 
 vcfManta = vcfManta.dump(tag:'Manta')
-(vcfMantaSomaticSV, vcfMantaDiploidSV) = vcfManta.into(2)
 
+// Remmaping channels to match input for StrelkaBP
 pairBamStrelkaBP = pairBamStrelkaBP.map {
     idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor ->
     [idPatientNormal, idSampleNormal, idSampleTumor, bamNormal, baiNormal, bamTumor, baiTumor]
@@ -1208,6 +1229,8 @@ pairBamStrelkaBP = pairBamStrelkaBP.map {
     idPatientNormal, idSampleNormal, idSampleTumor, bamNormal, baiNormal, bamTumor, baiTumor, mantaCSI, mantaCSIi ->
     [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor, mantaCSI, mantaCSIi]
 }
+
+// STEP STRELKA.3 - SOMATIC PAIR - BEST PRACTICES
 
 process StrelkaBP {
     tag {idSampleTumor + "_vs_" + idSampleNormal}
@@ -1255,7 +1278,8 @@ process StrelkaBP {
 }
 
 vcfStrelkaBP = vcfStrelkaBP.dump(tag:'Strelka BP')
-(vcfStrelkaBPIndels, vcfStrelkaBPSNVS) = vcfStrelkaBP.into(2)
+
+// STEP ASCAT.1 - ALLELECOUNTER
 
 // Run commands and code from Malin Larsson
 // Based on Jesper Eisfeldt's code
@@ -1300,6 +1324,8 @@ alleleCounterOut = alleleCounterOut.map {
     [idPatientNormal, idSampleNormal, idSampleTumor, alleleCountOutNormal, alleleCountOutTumor]
 }
 
+// STEP ASCAT.2 - CONVERTALLELECOUNTS
+
 // R script from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
 process ConvertAlleleCounts {
@@ -1321,6 +1347,8 @@ process ConvertAlleleCounts {
     convertAlleleCounts.r ${idSampleTumor} ${alleleCountTumor} ${idSampleNormal} ${alleleCountNormal} ${gender}
     """
 }
+
+// STEP ASCAT.3 - ASCAT
 
 // R scripts from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
@@ -1348,6 +1376,8 @@ process Ascat {
 
 ascatOut.dump(tag:'ASCAT')
 
+// STEP CONTROLFREEC.1 - MPILEUP
+
 process Mpileup {
     tag {idSample + "-" + intervalBed.baseName}
 
@@ -1373,6 +1403,8 @@ process Mpileup {
 }
 
 mpileupMerge = mpileupMerge.groupTuple(by:[0,1])
+
+// STEP CONTROLFREEC.2 - MERGE MPILEUP
 
 process MergeMpileup {
     tag {idSample}
@@ -1414,6 +1446,8 @@ mpileupOut = mpileupOut.map {
     idPatientTumor,  idSampleTumor,  mpileupOutTumor ->
     [idPatientNormal, idSampleNormal, idSampleTumor, mpileupOutNormal, mpileupOutTumor]
 }
+
+// STEP CONTROLFREEC.3 - CONTROLFREEC
 
 process ControlFREEC {
     tag {idSampleTumor + "_vs_" + idSampleNormal}
@@ -1477,6 +1511,8 @@ process ControlFREEC {
 
 controlFreecOut.dump(tag:'ControlFREEC')
 
+// STEP CONTROLFREEC.3 - VISUALIZATION
+
 process ControlFreecViz {
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
@@ -1502,6 +1538,12 @@ process ControlFreecViz {
 }
 
 controlFreecVizOut.dump(tag:'ControlFreecViz')
+
+// Remapping channels for QC and annotation
+
+(vcfStrelkaIndels, vcfStrelkaSNVS) = vcfStrelka.into(2)
+(vcfStrelkaBPIndels, vcfStrelkaBPSNVS) = vcfStrelkaBP.into(2)
+(vcfMantaSomaticSV, vcfMantaDiploidSV) = vcfManta.into(2)
 
 vcfKeep = Channel.empty().mix(
     vcfConcatenated.map {
@@ -1542,6 +1584,8 @@ vcfKeep = Channel.empty().mix(
     })
 
 (vcfBCFtools, vcfVCFtools, vcfAnnotation) = vcfKeep.into(3)
+
+// STEP VCF.QC
 
 process BcftoolsStats {
     tag {"${variantCaller} - ${vcf}"}
@@ -1604,7 +1648,6 @@ vcftoolsReport = vcftoolsReport.dump(tag:'VCFTools')
 ================================================================================
 */
 
-
 if (step == 'annotate') {
     vcfToAnnotate = Channel.create()
     vcfNoAnnotate = Channel.create()
@@ -1647,6 +1690,8 @@ vcfVep = vcfVep.map {
   variantCaller, idSample, vcf ->
   ["VEP", variantCaller, idSample, vcf, null]
 }
+
+// STEP SNPEFF
 
 process Snpeff {
   tag {"${idSample} - ${variantCaller} - ${vcf}"}
@@ -1702,6 +1747,8 @@ if ('merge' in tools) {
     vcfCompressed.until({ it[0]=="merge" })
   )
 }
+
+// STEP VEP
 
 process VEP {
   tag {"${idSample} - ${variantCaller} - ${vcf}"}
@@ -1764,6 +1811,8 @@ vepReport = vepReport.dump(tag:'VEP')
 
 vcfCompressVCF = snpeffVCF.mix(vepVCF)
 
+// STEP COMPRESS AND INDEX VCF
+
 process CompressVCF {
   tag {"${idSample} - ${annotator} - ${vcf}"}
 
@@ -1792,6 +1841,8 @@ compressVCFOut.dump(tag:'VCF')
 ================================================================================
 */
 
+// STEP MULTIQC
+
 multiQCReport = Channel.empty()
     .mix(
         bamQCmappedReport,
@@ -1804,11 +1855,13 @@ multiQCReport = Channel.empty()
         vcftoolsReport
     ).collect()
 
+Channel.fromPath(params.multiqc_config)
+
 process RunMultiQC {
     publishDir "${params.outdir}/Reports/MultiQC", mode: params.publishDirMode
 
     input:
-        file (multiqcConfig) from createMultiQCconfig()
+        file (multiqcConfig) from Channel.value(params.multiqc_config ? file(params.multiqc_config) : createMultiQCconfig())
         file (reports) from multiQCReport
         file (versions) from yamlSoftwareVersion
 
@@ -1831,10 +1884,8 @@ multiQCOut.dump(tag:'MultiQC')
 workflow.onComplete {
 
     // Set up the e-mail variables
-    def subject = "[nf-core/sarek] Successful: $workflow.runName"
-    if (!workflow.success){
-        subject = "[nf-core/sarek] FAILED: $workflow.runName"
-    }
+    def subject = "[nf-core/sarek] Successful: ${workflow.runName}"
+    if (!workflow.success) subject = "[nf-core/sarek] FAILED: ${workflow.runName}"
     def email_fields = [:]
     email_fields['version'] = workflow.manifest.version
     email_fields['runName'] = custom_runName ?: workflow.runName
@@ -1865,7 +1916,7 @@ workflow.onComplete {
     try {
         if (workflow.success) {
             mqc_report = multiqc_report.getVal()
-            if (mqc_report.getClass() == ArrayList){
+            if (mqc_report.getClass() == ArrayList) {
                 log.warn "[nf-core/sarek] Found multiple reports from process 'multiqc', will use only one"
                 mqc_report = mqc_report[0]
             }
@@ -1894,7 +1945,7 @@ workflow.onComplete {
     // Send the HTML e-mail
     if (params.email) {
         try {
-            if ( params.plaintext_email ){ throw GroovyException('Send plaintext e-mail, not HTML') }
+            if (params.plaintext_email) { throw GroovyException('Send plaintext e-mail, not HTML') }
             // Try to send HTML e-mail using sendmail
             [ 'sendmail', '-t' ].execute() << sendmail_html
             log.info "[nf-core/sarek] Sent summary e-mail to $params.email (sendmail)"
@@ -1906,17 +1957,17 @@ workflow.onComplete {
     }
 
     // Write summary e-mail HTML to a file
-    def output_d = new File( "${params.outdir}/pipeline_info/" )
-    if ( !output_d.exists() ) output_d.mkdirs()
-    def output_hf = new File( output_d, "pipeline_report.html" )
+    def output_d = new File("${params.outdir}/pipeline_info/")
+    if (!output_d.exists()) output_d.mkdirs()
+    def output_hf = new File(output_d, "pipeline_report.html")
     output_hf.withWriter { w -> w << email_html }
-    def output_tf = new File( output_d, "pipeline_report.txt" )
+    def output_tf = new File(output_d, "pipeline_report.txt")
     output_tf.withWriter { w -> w << email_txt }
 
-    c_reset = params.monochrome_logs ? '' : "\033[0m";
+    c_reset  = params.monochrome_logs ? '' : "\033[0m";
+    c_red    = params.monochrome_logs ? '' : "\033[0;31m";
+    c_green  = params.monochrome_logs ? '' : "\033[0;32m";
     c_purple = params.monochrome_logs ? '' : "\033[0;35m";
-    c_green = params.monochrome_logs ? '' : "\033[0;32m";
-    c_red = params.monochrome_logs ? '' : "\033[0;31m";
 
     if (workflow.stats.ignoredCountFmt > 0 && workflow.success) {
         log.info "${c_purple}Warning, pipeline completed, but with errored process(es) ${c_reset}"
@@ -1931,7 +1982,30 @@ workflow.onComplete {
     }
 }
 
-def nfcoreHeader(){
+/*
+================================================================================
+                                nf-core functions
+================================================================================
+*/
+
+def create_workflow_summary(summary) {
+    def yaml_file = workDir.resolve('workflow_summary_mqc.yaml')
+    yaml_file.text  = """
+    id: 'nf-core-sarek-summary'
+    description: " - this information is collected when the pipeline is started."
+    section_name: 'nf-core/sarek Workflow Summary'
+    section_href: 'https://github.com/nf-core/sarek'
+    plot_type: 'html'
+    data: |
+        <dl class=\"dl-horizontal\">
+${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
+        </dl>
+    """.stripIndent()
+
+   return yaml_file
+}
+
+def nfcoreHeader() {
     // Log colors ANSI codes
     c_reset  = params.monochrome_logs ? '' : "\033[0m";
     c_dim    = params.monochrome_logs ? '' : "\033[2m";
@@ -1962,16 +2036,16 @@ def nfcoreHeader(){
     """.stripIndent()
 }
 
-def checkHostname(){
+def checkHostname() {
     def c_reset = params.monochrome_logs ? '' : "\033[0m"
     def c_white = params.monochrome_logs ? '' : "\033[0;37m"
     def c_red = params.monochrome_logs ? '' : "\033[1;91m"
     def c_yellow_bold = params.monochrome_logs ? '' : "\033[1;93m"
-    if (params.hostnames){
+    if (params.hostnames) {
         def hostname = "hostname".execute().text.trim()
         params.hostnames.each { prof, hnames ->
             hnames.each { hname ->
-                if (hostname.contains(hname) && !workflow.profile.contains(prof)){
+                if (hostname.contains(hname) && !workflow.profile.contains(prof)) {
                     log.error "====================================================\n" +
                             "  ${c_red}WARNING!${c_reset} You are running with `-profile $workflow.profile`\n" +
                             "  but your machine hostname is ${c_white}'$hostname'${c_reset}\n" +
@@ -2124,7 +2198,7 @@ def defineToolList() {
 
 // Channeling the TSV file containing BAM.
 // Format is: "subject gender status sample bam bai"
-def extractBams(tsvFile) {
+def extractBam(tsvFile) {
     Channel.from(tsvFile)
         .splitCsv(sep: '\t')
         .map { row ->
@@ -2191,7 +2265,7 @@ def extractInfos(channel) {
 // Channeling the TSV file containing FASTQ or BAM
 // Format is: "subject gender status sample lane fastq1 fastq2"
 // or: "subject gender status sample lane bam"
-def extractSample(tsvFile) {
+def extractFastq(tsvFile) {
     Channel.from(tsvFile)
         .splitCsv(sep: '\t')
         .map { row ->
