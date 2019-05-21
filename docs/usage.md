@@ -11,11 +11,29 @@
   * [Reproducibility](#reproducibility)
 * [Main arguments](#main-arguments)
   * [`-profile`](#-profile)
-  * [`--reads`](#--reads)
-  * [`--singleEnd`](#--singleend)
+  * [`--sample`](#--sample)
+  * [`--noGVCF`](#--nogvcf)
+  * [`--noReports`](#--noreports)
+  * [`--nucleotidesPerSecond`](#--nucleotidespersecond)
+  * [`--step`](#--step)
+  * [`--tools`](#--tools)
+  * [`--noStrelkaBP`](#--nostrelkabp)
+  * [`--targetBED`](#--targetbed)
 * [Reference genomes](#reference-genomes)
   * [`--genome` (using iGenomes)](#--genome-using-igenomes)
-  * [`--fasta`](#--fasta)
+  * [`--acLoci`](#--acloci)
+  * [`--acLociGC`](#--aclocigc)
+  * [`--bwaIndex`](#--bwaindex)
+  * [`--dbsnp`](#--dbsnp)
+  * [`--dbsnpIndex`](#--dbsnpindex)
+  * [`--genomeDict`](#--genomedict)
+  * [`--genomeFile`](#--genomefile)
+  * [`--genomeIndex`](#--genomeindex)
+  * [`--intervals`](#--intervals)
+  * [`--knownIndels`](#--knownindels)
+  * [`--knownIndelsIndex`](#--knownindelsindex)
+  * [`--snpeffDb`](#--snpeffdb)
+  * [`--vepCacheVersion`](#--vepcacheversion)
   * [`--igenomesIgnore`](#--igenomesignore)
 * [Job resources](#job-resources)
   * [Automatic resubmission](#automatic-resubmission)
@@ -25,6 +43,7 @@
   * [`--awsregion`](#--awsregion)
 * [Other command line parameters](#other-command-line-parameters)
   * [`--outdir`](#--outdir)
+  * [`--sequencing_center`](#--sequencing_center)
   * [`--email`](#--email)
   * [`-name`](#-name)
   * [`-resume`](#-resume)
@@ -39,7 +58,6 @@
   * [`--multiqc_config`](#--multiqc_config)
 <!-- TOC END -->
 
-
 ## Introduction
 Nextflow handles job submissions on SLURM or other environments, and supervises running the jobs. Thus the Nextflow process must run until the pipeline is finished. We recommend that you put the process running in the background through `screen` / `tmux` or similar tool. Alternatively you can run nextflow within a cluster job submitted your job scheduler.
 
@@ -49,13 +67,11 @@ It is recommended to limit the Nextflow Java virtual machines memory. We recomme
 NXF_OPTS='-Xms1g -Xmx4g'
 ```
 
-<!-- TODO nf-core: Document required command line parameters to run the pipeline-->
-
 ## Running the pipeline
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/sarek --reads '*_R{1,2}.fastq.gz' -profile docker
+nextflow run nf-core/sarek --sample sample.tsv -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
@@ -69,6 +85,10 @@ results         # Finished results (configurable, see below)
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
 
+The nf-core/sarek pipeline comes with more documentation about running the pipeline, found in the `docs/` directory:
+    * [Extra Documentation on variant calling](docs/variantcalling.md)
+    * [Extra Documentation on annotation](docs/annotation.md)
+
 ### Updating the pipeline
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
@@ -79,10 +99,9 @@ nextflow pull nf-core/sarek
 ### Reproducibility
 It's a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`.
+First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `2.5.0`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 2.5.0`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
-
 
 ## Main arguments
 
@@ -106,76 +125,184 @@ If `-profile` is not specified at all the pipeline will be run locally and expec
   * A profile with a complete configuration for automated testing
   * Includes links to test data so needs no other parameters
 
-<!-- TODO nf-core: Document required command line parameters -->
 
-### `--reads`
-Use this to specify the location of your input FastQ files. For example:
-
-```bash
---reads 'path/to/data/sample_*_{1,2}.fastq'
-```
-
-Please note the following requirements:
-
-1. The path must be enclosed in quotes
-2. The path must have at least one `*` wildcard character
-3. When using the pipeline with paired end data, the path must use `{1,2}` notation to specify read pairs.
-
-If left unspecified, a default pattern is used: `data/*{1,2}.fastq.gz`
-
-### `--singleEnd`
-By default, the pipeline expects paired-end data. If you have single-end data, you need to specify `--singleEnd` on the command line when you launch the pipeline. A normal glob pattern, enclosed in quotation marks, can then be used for `--reads`. For example:
+### `--sample`
+Use this to specify the location of your input TSV file, on `mapping`, `recalibrate` and `variantcalling` steps.
+For example:
 
 ```bash
---singleEnd --reads '*.fastq'
+--sample sample.tsv
+```
+Multiple TSV files can be specified if the path must be enclosed in quotes
+
+Use this to specify the location to a directory on `mapping` step with a single germline sample only.
+For example:
+
+```bash
+--sample PathToDirectory
 ```
 
-It is not possible to run a mixture of single-end and paired-end files in one run.
+Use this to specify the location of your VCF input file on `annotate` step.
+For example:
 
+```bash
+--sample sample.vcf
+```
+Multiple VCF files can be specified if the path must be enclosed in quotes
+
+### `--noGVCF`
+Use this to disable g.vcf from `HaplotypeCaller`.
+
+### `--noReports`
+Use this to disable all QC an Reporting tools.
+
+### `--nucleotidesPerSecond`
+Use this to estimate of how many seconds it will take to call variants on any interval, the default value is `1000` is it's not specified in the `<intervals>.bed` file.
+
+### `--step`
+Use this to specify the starting step:
+Default `mapping`
+Available: `mapping`, `recalibrate`, `variantcalling` and `annotate`
+
+### `--tools`
+Use this to specify the tools to run:
+Available: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `MuTect2`, `Strelka`
+
+### `--noStrelkaBP`
+Use this not to use `Manta` `candidateSmallIndels` for `Strelka` as Best Practice.
+
+### `--targetBED`
+Use this to specify the target BED file for targeted or whole exome sequencing.
 
 ## Reference genomes
 
 The pipeline config files come bundled with paths to the illumina iGenomes reference index files. If running with docker or AWS, the configuration is set up to use the [AWS-iGenomes](https://ewels.github.io/AWS-iGenomes/) resource.
 
 ### `--genome` (using iGenomes)
-There are 31 different species supported in the iGenomes references. To run the pipeline, you must specify which to use with the `--genome` flag.
+There are 2 different species supported by Sarek in the iGenomes references. To run the pipeline, you must specify which to use with the `--genome` flag.
 
-You can find the keys to specify the genomes in the [iGenomes config file](../conf/igenomes.config). Common genomes that are supported are:
+You can find the keys to specify the genomes in the [iGenomes config file](../conf/igenomes.config). Genomes that are supported are:
 
 * Human
   * `--genome GRCh37`
-* Mouse
-  * `--genome GRCm38`
-* _Drosophila_
-  * `--genome BDGP6`
-* _S. cerevisiae_
-  * `--genome 'R64-1-1'`
-
-> There are numerous others - check the config file for more.
+  * `--genome GRCh38`
 
 Note that you can use the same configuration setup to save sets of reference files for your own use, even if they are not part of the iGenomes resource. See the [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for instructions on where to save such a file.
 
 The syntax for this reference configuration is as follows:
 
-<!-- TODO nf-core: Update reference genome example according to what is needed -->
-
 ```nextflow
 params {
   genomes {
     'GRCh37' {
-      fasta   = '<path to the genome fasta file>' // Used if no star index given
+      acLoci           = '<path to the acLoci file>'
+      acLociGC         = '<path to the acLociGC file>'
+      bwaIndex         = '<path to the bwa indexes>'
+      dbsnp            = '<path to the dbsnp file>'
+      dbsnpIndex       = '<path to the dbsnp index>'
+      genomeDict       = '<path to the genomeDict file>'
+      genomeFile       = '<path to the genome file>'
+      genomeIndex      = '<path to the genome Index>'
+      intervals        = '<path to the intervals file>'
+      knownIndels      = '<path to the knownIndels file>'
+      knownIndelsIndex = '<path to the knownIndels index>'
+      snpeffDb         = '<version of the snpEff DB>'
+      vepCacheVersion  = '<version of the VEP cache>'
     }
     // Any number of additional genomes, key is used with --genome
   }
 }
 ```
 
-<!-- TODO nf-core: Describe reference path flags -->
-### `--fasta`
+### `--acLoci`
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---fasta '[path to Fasta reference]'
+--acLoci '[path to the acLoci file]'
+```
+
+### `--acLociGC`
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--acLociGC '[path to the acLociGC file]'
+```
+
+### `--bwaIndex`
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--bwaIndex '[path to the bwa indexes]'
+```
+
+### `--dbsnp`
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--dbsnp '[path to the dbsnp file]'
+```
+
+### `--dbsnpIndex`
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--dbsnpIndex '[path to the dbsnp index]'
+```
+
+### `--genomeDict`
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--genomeDict '[path to the genomeDict file]'
+```
+
+### `--genomeFile`
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--genomeFile '[path to the genome file]'
+```
+
+### `--genomeIndex`
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--genomeIndex '[path to the genome Index]'
+```
+
+### `--intervals`
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--intervals '[path to the intervals file]'
+```
+
+### `--knownIndels`
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--knownIndels '[path to the knownIndels file]'
+```
+
+### `--knownIndelsIndex`
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--knownIndelsIndex '[path to the knownIndels index]'
+```
+
+### `--snpeffDb`
+If you prefer, you can specify the DB version when you run the pipeline:
+
+```bash
+--snpeffDb '[version of the snpEff DB]'
+```
+
+### `--vepCacheVersion`
+If you prefer, you can specify the cache version when you run the pipeline:
+
+```bash
+--vepCacheVersion '[version of the VEP cache]'
 ```
 
 ### `--igenomesIgnore`
@@ -203,10 +330,11 @@ Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a 
 
 ## Other command line parameters
 
-<!-- TODO nf-core: Describe any other command line flags here -->
-
 ### `--outdir`
 The output directory where the results will be saved.
+
+### `--sequencing_center`
+The sequencing center that will be used in the BAM CN field
 
 ### `--email`
 Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.

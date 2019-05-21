@@ -11,7 +11,7 @@
 [![Travis build status][travis-badge]](https://travis-ci.com/nf-core/sarek/)
 [![CircleCi build status][circleci-badge]](https://circleci.com/gh/nf-core/sarek/)
 
-[![Install with bioconda][bioconda-badge]](http://bioconda.github.io/)
+[![Install with bioconda][bioconda-badge]](https://bioconda.github.io/)
 [![Docker Container available][docker-sarek-badge]](https://hub.docker.com/r/nfcore/sarek/)
 [![Install with Singularity][singularity-badge]](https://www.sylabs.io/docs/)
 
@@ -26,8 +26,8 @@ Sarek is a workflow designed to run analyses on whole genome or targeted sequenc
 It's built using [Nextflow](https://www.nextflow.io),
 a domain specific language for workflow building,
 across multiple compute infrastructures in a very portable manner.
-Software dependencies are handled using [Docker](https://www.docker.com) or [Singularity](https://www.sylabs.io/singularity/) - container technologies that provide excellent reproducibility and ease of use.
-Thus making installation trivial and results highly reproducible
+Software dependencies are handled using [Conda](https://conda.io/), [Docker](https://www.docker.com) or [Singularity](https://www.sylabs.io/singularity/) - environment/container technologies that provide excellent reproducibility and ease of use.
+Thus making installation trivial and results highly reproducible.
 
 It is listed on the [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek), [Dockstore](https://dockstore.org/workflows/github.com/SciLifeLab/Sarek/) and [omicX - Bioinformatics tools](https://omictools.com/sarek-tool).
 
@@ -39,72 +39,21 @@ The nf-core/sarek pipeline comes with documentation about the pipeline, found in
     * [Local installation](https://nf-co.re/usage/local_installation)
     * [Adding your own system config](https://nf-co.re/usage/adding_own_config)
     * [Reference genomes](https://nf-co.re/usage/reference_genomes)
+    * [Extra documentation on reference](docs/reference.md)
 3. [Running the pipeline](docs/usage.md)
-    * [Tests documentation](docs/TESTS.md)
-    * [Configuration and profiles documentation](docs/CONFIG.md)
+    * [Input files documentation](docs/input.md)
+    * [Extra documentation on variant calling](docs/variantcalling.md)
+    * [Documentation about containers](docs/containers.md)
+    * [Extra documentation for targeted sequencing](docs/targetseq.md)
+
     * [Intervals documentation](docs/INTERVALS.md)
-    * [Running the pipeline](docs/USAGE.md)
-    * [Running the pipeline using Conda](docs/CONDA.md)
     * [Command line parameters](docs/PARAMETERS.md)
     * [Examples](docs/USE_CASES.md)
-    * [Input files documentation](docs/INPUT.md)
     * [Processes documentation](docs/PROCESS.md)
-    * [Documentation about containers](docs/CONTAINERS.md)
 4. [Output and how to interpret the results](docs/output.md)
     * [Complementary information about ASCAT](docs/ASCAT.md)
-    * [Complementary information about annotations](docs/ANNOTATION.md)
-    * [Output documentation structure](docs/OUTPUT.md)
+    * [Extra documentation on annotation](docs/annotation.md)
 5. [Troubleshooting](https://nf-co.re/usage/troubleshooting)
-
-## Workflow steps
-
-Sarek is built with several workflow scripts.
-A wrapper script contained within the repository makes it easy to run the different workflow scripts as a single job.
-To test your installation, follow the [tests documentation.](docs/TESTS.md)
-
-Raw FastQ files or BAM files (unmapped, aligned or recalibrated) can be used as inputs.
-You can choose which variant callers to use, plus the pipeline is capable of accommodating additional variant calling software or CNV callers if required.
-
-The worflow steps and tools used are as follows:
-
-1. **Preprocessing** _(based on [GATK best practices](https://software.broadinstitute.org/gatk/best-practices/))_
-    * Map reads to Reference
-        * [BWA](http://bio-bwa.sourceforge.net/)
-    * Mark Duplicates
-        * [GATK MarkDuplicates](https://github.com/broadinstitute/gatk)
-    * Base (Quality Score) Recalibration
-        * [GATK BaseRecalibrator](https://github.com/broadinstitute/gatk)
-        * [GATK ApplyBQSR](https://github.com/broadinstitute/gatk)
-2. **Germline variant calling**
-    * SNVs and small indels
-        * [GATK HaplotypeCaller](https://github.com/broadinstitute/gatk)
-        * [Strelka2](https://github.com/Illumina/strelka)
-    * Structural variants
-        * [Manta](https://github.com/Illumina/manta)
-3. **Somatic variant calling**
-    * SNVs and small indels
-        * [MuTect2](https://github.com/broadinstitute/gatk)
-        * [Freebayes](https://github.com/ekg/freebayes)
-        * [Strelka2](https://github.com/Illumina/strelka)
-    * Structural variants
-        * [Manta](https://github.com/Illumina/manta)
-    * Sample heterogeneity, ploidy and CNVs
-        * [ASCAT](https://github.com/Crick-CancerGenomics/ascat)
-4. **Annotation**
-    * Variant annotation
-        * [SnpEff](http://snpeff.sourceforge.net/)
-        * [VEP (Variant Effect Predictor)](https://www.ensembl.org/info/docs/tools/vep/index.html)
-5. **QC and Reporting**
-    * QC
-      * [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
-      * [Qualimap bamqc](http://qualimap.bioinfo.cipf.es/doc_html/command_line.html)
-      * [samtools stats](https://www.htslib.org/doc/samtools.html)
-      * [GATK MarkDuplicates](https://github.com/broadinstitute/gatk)
-      * [bcftools stats](http://www.htslib.org/doc/bcftools.html)
-      * [VCFtools](https://vcftools.github.io/index.html)
-      * [SnpEff](http://snpeff.sourceforge.net/)
-    * Reporting
-        * [MultiQC](http://multiqc.info)
 
 ## Credits
 

@@ -1,4 +1,4 @@
-FROM nfcore/base:latest
+FROM nfcore/base:1.6
 
 LABEL \
   author="Maxime Garcia" \

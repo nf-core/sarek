@@ -18,15 +18,20 @@ do
   esac
 done
 
+if [[ ALL,ANNOTATEALL,ANNOTATESNPEFF =~ $TEST ]]
+then
+  docker pull nfcore/sareksnpeff:dev.GRCh37
+  docker tag nfcore/sareksnpeff:dev.GRCh37 nfcore/sareksnpeff:dev.smallGRCh37
+fi
+
 if [[ ALL,ANNOTATEALL,ANNOTATEVEP =~ $TEST ]]
 then
   docker pull nfcore/sarekvep:dev.GRCh37
   docker tag nfcore/sarekvep:dev.GRCh37 nfcore/sarekvep:dev.smallGRCh37
-elif [[ ALL,ANNOTATEALL,ANNOTATESNPEFF =~ $TEST ]]
+fi
+
+if [[ ANNOTATEALL,ANNOTATEVEP,ANNOTATESNPEFF != $TEST ]]
 then
-  docker pull nfcore/sareksnpeff:dev.GRCh37
-  docker tag nfcore/sareksnpeff:dev.GRCh37 nfcore/sareksnpeff:dev.smallGRCh37
-else
   docker pull nfcore/sarek:dev
   docker tag nfcore/sarek:dev nfcore/sarek:dev
 fi
