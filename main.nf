@@ -50,12 +50,14 @@ def helpMessage() {
                                     Available: Mapping, Recalibrate, VariantCalling, Annotate
                                     Default: Mapping
         --targetBED                 Target BED file for targeted or whole exome sequencing
-        --tools                     Specify tools to use for variant calling
+        --tools                     Specify tools to use for variant calling:
                                     Available: ASCAT, ControlFREEC, FreeBayes, HaplotypeCaller
-                                    Manta, mpileup, MuTect2, Strelka
+                                    Manta, mpileup, MuTect2, Strelka, TIDDIT
+                                    or for annotation:
+                                    snpEff, VEP
                                     Default: HaplotypeCaller, Manta, Strelka
         --annotateTools             Specify from which tools Sarek will annotate VCF, only for step annotate
-                                    Available: HaplotypeCaller, Manta, MuTect2, Strelka
+                                    Available: HaplotypeCaller, Manta, MuTect2, Strelka, TIDDIT
 
     References                      If not specified in the configuration file or you wish to overwrite any of the references.
         --acLoci                    acLoci file
@@ -792,7 +794,7 @@ bamRecal = bamRecal.dump(tag:'BAM')
 // Manta will be run in Germline mode, or in Tumor mode depending on status
 // HaplotypeCaller and Strelka will be run for Normal and Tumor samples
 
-(bamMantaSingle, bamStrelkaSingle, bamRecalAllTemp, bamRecalAll) = bamRecal.into(4)
+(bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamRecalAll, bamRecalAllTemp) = bamRecal.into(5)
 
 // To speed Variant Callers up we are chopping the reference into smaller pieces
 // Do variant calling by this intervals, and re-merge the VCFs
@@ -975,6 +977,40 @@ process MantaSingle {
 
 vcfMantaSingle = vcfMantaSingle.dump(tag:'Single Manta')
 
+// STEP TIDDIT
+
+process TIDDIT {
+    tag {idSample}
+
+    publishDir "${params.outdir}/VariantCalling/${idSample}/TIDDIT", mode: params.publishDirMode
+
+    publishDir params.outdir, mode: params.publishDirMode,
+        saveAs: {
+            if (it == "TIDDIT_${idSample}.vcf") "VariantCalling/${idSample}/TIDDIT/${it}"
+            else "Reports/${idSample}/TIDDIT/${it}"
+        }
+
+    input:
+        set idPatient, idSample, file(bam), file(bai) from bamTIDDIT
+        set file(genomeFile), file(genomeIndex) from Channel.value([
+            referenceMap.genomeFile,
+            referenceMap.genomeIndex
+        ])
+
+    output:
+        set val("TIDDIT"), idPatient, idSample, file("*.vcf") into vcfTIDDIT
+        set file("*."), file("*.") into tidditOut
+
+    when: 'tiddit' in tools
+
+    script:
+    """
+    tiddit --sv -o TIDDIT_${idSample}.vcf --bam ${bam} --ref ${genomeFile}
+    """
+}
+
+vcfTIDDIT = vcfTIDDIT.dump(tag:'TIDDIT')
+
 /*
 ================================================================================
                              SOMATIC VARIANT CALLING
@@ -1104,7 +1140,7 @@ process ConcatVCF {
     // we have this funny *_* pattern to avoid copying the raw calls to publishdir
         set variantCaller, idPatient, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into vcfConcatenated
 
-    when: ('haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools)
+    when: 'haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools
 
     script:
     if (variantCaller == 'HaplotypeCallerGVCF') outputFile = "HaplotypeCaller_${idSample}.g.vcf"
@@ -1191,7 +1227,7 @@ process Manta {
     options = params.targetBED ? "--exome --callRegions call_targets.bed.gz" : ""
     """
     ${beforeScript}
-        configManta.py \
+    configManta.py \
         --normalBam ${bamNormal} \
         --tumorBam ${bamTumor} \
         --reference ${genomeFile} \
@@ -1391,7 +1427,7 @@ process Mpileup {
     output:
         set idPatient, idSample, file("${intervalBed.baseName}_${idSample}.pileup.gz") into mpileupMerge
 
-    when: ('controlfreec' in tools || 'mpileup' in tools)
+    when: 'controlfreec' in tools || 'mpileup' in tools
 
     script:
     """
@@ -1417,7 +1453,7 @@ process MergeMpileup {
     output:
         set idPatient, idSample, file("${idSample}.pileup.gz") into mpileupOut
 
-    when: ('controlfreec' in tools || 'mpileup' in tools)
+    when: 'controlfreec' in tools || 'mpileup' in tools
 
     script:
     """
@@ -1581,6 +1617,10 @@ vcfKeep = Channel.empty().mix(
     vcfStrelkaBPSNVS.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
         [variantcaller, idSample, vcf[1]]
+    },
+    vcfTIDDIT.map {
+        variantcaller, idPatient, idSample, vcf, tbi ->
+        [variantcaller, idSample, vcf]
     })
 
 (vcfBCFtools, vcfVCFtools, vcfAnnotation) = vcfKeep.into(3)
@@ -2192,6 +2232,7 @@ def defineToolList() {
         'mutect2',
         'snpeff',
         'strelka',
+        'tiddit',
         'vep'
     ]
 }
