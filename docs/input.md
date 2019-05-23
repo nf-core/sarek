@@ -31,37 +31,12 @@ Multiple TSV files can be specified if the path is enclosed in quotes.
 
 Somatic variant calling output will be in a specific directory for each normal/tumor pair.
 
-# Example TSV file for a normal/tumor pair with FASTQ files
+# Path to a FASTQ directory for a single normal sample (step mapping)
 
-In this sample for the normal case there are 3 read groups, and 2 for the tumor.
+Input files for Sarek can be specified using the path to a FASTQ directory given to the `--sample` command only with the `mapping` step.
 
-```
-G15511    XX    0    C09DFN    C09DF_1    pathToFiles/C09DFACXX111207.1_1.fastq.gz    pathToFiles/C09DFACXX111207.1_2.fastq.gz
-G15511    XX    0    C09DFN    C09DF_2    pathToFiles/C09DFACXX111207.2_1.fastq.gz    pathToFiles/C09DFACXX111207.2_2.fastq.gz
-G15511    XX    0    C09DFN    C09DF_3    pathToFiles/C09DFACXX111207.3_1.fastq.gz    pathToFiles/C09DFACXX111207.3_2.fastq.gz
-G15511    XX    1    D0ENMT    D0ENM_1    pathToFiles/D0ENMACXX111207.1_1.fastq.gz    pathToFiles/D0ENMACXX111207.1_2.fastq.gz
-G15511    XX    1    D0ENMT    D0ENM_2    pathToFiles/D0ENMACXX111207.2_1.fastq.gz    pathToFiles/D0ENMACXX111207.2_2.fastq.gz
-```
-
-# Example TSV file for a normal/tumor pair with BAM files
-
-In this sample for the normal case there are 3 read groups, and 2 for the tumor.
-
-```
-G15511    XX    0    C09DFN    C09DF_1    pathToFiles/C09DFAC_1.bam
-G15511    XX    0    C09DFN    C09DF_2    pathToFiles/C09DFAC_2.bam
-G15511    XX    0    C09DFN    C09DF_3    pathToFiles/C09DFAC_3.bam
-G15511    XX    1    D0ENMT    D0ENM_1    pathToFiles/D0ENMAC_1.bam
-G15511    XX    1    D0ENMT    D0ENM_2    pathToFiles/D0ENMAC_2.bam
-```
-
-# Example TSV file for a normal/tumor pair with recalibrated BAM files
-
-The same way, if you have recalibrated BAMs and their indexes, you should use a structure like:
-
-```
-G15511    XX    0    C09DFN    pathToFiles/G15511.C09DFN.md.real.bam    pathToFiles/G15511.C09DFN.md.real.bai
-G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.md.real.bam    pathToFiles/G15511.D0ENMT.md.real.bai
+```bash
+nextflow run nf-core/sarek --sample pathToDirectory ...
 ```
 
 ## Input FASTQ file name best practices
@@ -105,11 +80,53 @@ Read group information will be parsed from fastq file names according to this:
 - `PU` = sample
 - `RGLB` = lib
 
-# Path to a FASTQ directory for a single normal sample
+# Example TSV file for a normal/tumor pair with FASTQ files (step mapping)
 
-Input files for Sarek can be specified using the path to a FASTQ directory given to the `--sample` command only with the `mapping` step.
+In this sample for the normal case there are 3 read groups, and 2 for the tumor.
+
+```
+G15511    XX    0    C09DFN    C09DF_1    pathToFiles/C09DFACXX111207.1_1.fastq.gz    pathToFiles/C09DFACXX111207.1_2.fastq.gz
+G15511    XX    0    C09DFN    C09DF_2    pathToFiles/C09DFACXX111207.2_1.fastq.gz    pathToFiles/C09DFACXX111207.2_2.fastq.gz
+G15511    XX    0    C09DFN    C09DF_3    pathToFiles/C09DFACXX111207.3_1.fastq.gz    pathToFiles/C09DFACXX111207.3_2.fastq.gz
+G15511    XX    1    D0ENMT    D0ENM_1    pathToFiles/D0ENMACXX111207.1_1.fastq.gz    pathToFiles/D0ENMACXX111207.1_2.fastq.gz
+G15511    XX    1    D0ENMT    D0ENM_2    pathToFiles/D0ENMACXX111207.2_1.fastq.gz    pathToFiles/D0ENMACXX111207.2_2.fastq.gz
+```
+
+# Example TSV file for a normal/tumor pair with uBAM files (step mapping)
+
+In this sample for the normal case there are 3 read groups, and 2 for the tumor.
+
+```
+G15511    XX    0    C09DFN    C09DF_1    pathToFiles/C09DFAC_1.bam
+G15511    XX    0    C09DFN    C09DF_2    pathToFiles/C09DFAC_2.bam
+G15511    XX    0    C09DFN    C09DF_3    pathToFiles/C09DFAC_3.bam
+G15511    XX    1    D0ENMT    D0ENM_1    pathToFiles/D0ENMAC_1.bam
+G15511    XX    1    D0ENMT    D0ENM_2    pathToFiles/D0ENMAC_2.bam
+```
+
+# Example TSV file for a normal/tumor pair with non recalibrated BAM files (step recalibrate)
+
+The same way, if you have non recalibrated BAMs, their indexes and their recalibration tables, you should use a structure like:
+
+```
+G15511    XX    0    C09DFN    pathToFiles/G15511.C09DFN.md.bam    pathToFiles/G15511.C09DFN.md.bai pathToFiles/G15511.C09DFN.md.recal.table
+G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.md.bam    pathToFiles/G15511.D0ENMT.md.bai pathToFiles/G15511.D0ENMT.md.recal.table
+```
+
+# Example TSV file for a normal/tumor pair with recalibrated BAM files (step variantcalling)
+
+The same way, if you have recalibrated BAMs and their indexes, you should use a structure like:
+
+```
+G15511    XX    0    C09DFN    pathToFiles/G15511.C09DFN.md.recal.bam    pathToFiles/G15511.C09DFN.md.recal.bai
+G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.md.recal.bam    pathToFiles/G15511.D0ENMT.md.recal.bai
+```
 
 # VCF files for annotation
 
 Input files for Sarek can be specified using the path to a VCF directory given to the `--sample` command only with the `annotate` step.
 Multiple VCF files can be specified if the path is enclosed in quotes.
+
+```bash
+nextflow run nf-core/sarek --step annotate --sample "results/VariantCalling/*/.vcf.gz" ...
+```
