@@ -1707,8 +1707,7 @@ process Snpeff {
     val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
 
   output:
-    set file("${reducedVCF}_snpEff.txt"), file("${reducedVCF}_snpEff.html") into snpeffOut
-    file("${reducedVCF}_snpEff.csv") into snpeffReport
+    set file("${reducedVCF}_snpEff.txt"), file("${reducedVCF}_snpEff.html"), file("${reducedVCF}_snpEff.csv") into snpeffReport
     set val("snpEff"), variantCaller, idSample, file("${reducedVCF}_snpEff.ann.vcf") into snpeffVCF
 
   when: 'snpeff' in tools || 'merge' in tools
@@ -1732,7 +1731,6 @@ process Snpeff {
   """
 }
 
-snpeffOut = snpeffOut.dump(tag:'snpEff output')
 snpeffReport = snpeffReport.dump(tag:'snpEff report')
 
 if ('merge' in tools) {
@@ -1754,7 +1752,7 @@ process VEP {
   tag {"${idSample} - ${variantCaller} - ${vcf}"}
 
   publishDir params.outdir, mode: params.publishDirMode, saveAs: {
-    if (it == "${reducedVCF}_VEP.summary.html") "Annotation/${idSample}/VEP/${it}"
+    if (it == "${reducedVCF}_VEP.summary.html") "Reports/${idSample}/VEP/${it}"
     else null
   }
 
