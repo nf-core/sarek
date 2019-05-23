@@ -98,11 +98,42 @@ BAM files with Recalibration tables can also be used as an input to start with t
 
 ## Annotation
 
+This directory contains results from the final annotation steps: two software are used for annotation, [VEP][vep-link] and [snpEff][snpeff-link].
+Only a subset of the VCF files are annotated, and only variants that have a PASS filter.
+FreeBayes results are not annotated in the moment yet as we are lacking a decent somatic filter.
+For HaplotypeCaller the germline variations are annotated for both the tumour and the normal sample.
+
 ### snpEff
-[snpeff](http://snpeff.sourceforge.net/)
+[snpeff](http://snpeff.sourceforge.net/) is a genetic variant annotation and effect prediction toolbox.
+It annotates and predicts the effects of variants on genes (such as amino acid changes) using multiple databases for annotations.
+The generated VCF header contains the software version and the used command line.
+
+**Output directory: `results/Annotation/[SAMPLE]/snpEff`**
+
+* `VariantCaller_Sample_snpEff.ann.vcf.gz` and `VariantCaller_Sample_snpEff.ann.vcf.gz.tbi`
+  * VCF with Tabix index
 
 ### VEP
-[VEP (Variant Effect Predictor)](https://www.ensembl.org/info/docs/tools/vep/index.html)
+[VEP (Variant Effect Predictor)](https://www.ensembl.org/info/docs/tools/vep/index.html), based on Ensembl, is a tools to determine the effects of all sorts of variants, including SNPs, indels, structural variants, CNVs.
+The generated VCF header contains the software version, also the version numbers for additional databases like Clinvar or dbSNP used in the "VEP" line.
+The format of the [consequence annotations](https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html) is also in the VCF header describing the INFO field.
+In the moment it contains:
+* Consequence: impact of the variation, if there is any
+* Codons: the codon change, i.e. cGt/cAt
+* Amino_acids: change in amino acids, i.e. R/H if there is any
+* Gene: ENSEMBL gene name
+* SYMBOL: gene symbol
+* Feature: actual transcript name
+* EXON: affected exon
+* PolyPhen: prediction based on [PolyPhen](http://genetics.bwh.harvard.edu/pph2/)
+* SIFT: prediction by [SIFT](http://sift.bii.a-star.edu.sg/)
+* Protein_position: Relative position of amino acid in protein
+* BIOTYPE: Biotype of transcript or regulatory feature
+
+**Output directory: `results/Annotation/[SAMPLE]/VEP`**
+
+* `VariantCaller_Sample_VEP.ann.vcf.gz` and `VariantCaller_Sample_VEP.ann.vcf.gz.tbi`
+  * VCF with Tabix index
 
 ## QC and reports
 
@@ -189,7 +220,8 @@ For more information about how to use VCFtools reports, see [VCFtools manual](ht
 
 ### snpEff reports
 [snpeff](http://snpeff.sourceforge.net/) is a genetic variant annotation and effect prediction toolbox.
-It annotates and predicts the effects of variants on genes (such as amino acid changes).
+It annotates and predicts the effects of variants on genes (such as amino acid changes) using multiple databases for annotations.
+
 Plots will shows :
 * locations of detected variants in the genome and the number of variants for each location.
 * the putative impact of detected variants and the number of variants for each impact.
@@ -205,6 +237,15 @@ Plots will shows :
   * TXT (tab separated) summary counts for variants affecting each transcript and gene
 
 For more information about how to use snpEff reports, see [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary)
+
+### VEP reports
+[VEP (Variant Effect Predictor)](https://www.ensembl.org/info/docs/tools/vep/index.html), based on Ensembl, is a tools to determine the effects of all sorts of variants, including SNPs, indels, structural variants, CNVs.
+
+**Output directory: `results/Reports/[SAMPLE]/VEP`**
+* `VariantCaller_Sample_VEP.summary.html`
+  * Summary of the VEP run to be visualised with a web browser
+
+For more information about how to use VEP reports, see [VEP manual](https://www.ensembl.org/info/docs/tools/vep/index.html)
 
 ### MultiQC
 [MultiQC](http://multiqc.info) is a visualisation tool that generates a single HTML report summarising all samples in your project.
