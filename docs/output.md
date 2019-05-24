@@ -222,7 +222,7 @@ For a Tumor/Normal pair only:
 [ASCAT](https://github.com/Crick-CancerGenomics/ascat) is a method to derive copy number profiles of tumor cells, accounting for normal cell admixture and tumor aneuploidy.
 ASCAT infers tumor purity and ploidy and calculates whole-genome allele-specific copy number profiles.
 
-For further reading and documentation see the [ASCAT manual](https://www.crick.ac.uk/research/labs/peter-van-loo/software).
+For further reading and documentation see [the Sarek documentation about ASCAT](https://github.com/nf-core/sarek/blob/master/docs/ascat.md) or the [ASCAT manual](https://www.crick.ac.uk/research/labs/peter-van-loo/software).
 
 For a Tumor/Normal pair only:
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/ASCAT`**
