@@ -39,7 +39,7 @@ The pipeline processes data using the following steps:
         * [Qualimap bamqc](#bamQC)
         * [GATK MarkDuplicates](#MarkDuplicates-reports)
         * [samtools stats](#Samtools-stats)
-        * [bcftools stats](#BCFtools)
+        * [bcftools stats](#bcftools-stats)
         * [VCFtools](#VCFtools)
         * [snpeff](#snpEff-reports)
     * Reporting
