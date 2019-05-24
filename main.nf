@@ -1409,7 +1409,7 @@ mpileupMerge = mpileupMerge.groupTuple(by:[0,1])
 process MergeMpileup {
     tag {idSample}
 
-    publishDir params.outdir, mode: params.publishDirMode, saveAs: { it == "${idSample}.pileup.gz" ? "VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/mpileup/${it}" : '' }
+    publishDir params.outdir, mode: params.publishDirMode, saveAs: { it == "${idSample}.pileup.gz" ? "VariantCalling/${idSample}/mpileup/${it}" : '' }
 
     input:
         set idPatient, idSample, file(mpileup) from mpileupMerge
