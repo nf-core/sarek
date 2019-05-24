@@ -192,7 +192,7 @@ For Normal sample only:
   * VCF with Tabix index
 
 For a Tumor sample only:
-* `Manta_Tumor[SAMPLE].tumorSV.vcf.gz` and `Manta_Tumor[SAMPLE].tumorSV.vcf.gz.tbi`
+* `Manta_[TUMORSAMPLE].tumorSV.vcf.gz` and `Manta_[TUMORSAMPLE].tumorSV.vcf.gz.tbi`
   * VCF with Tabix index
 
 For a Tumor/Normal pair only:
@@ -213,19 +213,38 @@ For a Tumor/Normal pair only:
 For a Tumor/Normal pair only:
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/ASCAT`**
 
-* `Tumor[SAMPLE].BAF` and `[NORMALSAMPLE].BAF`
+* `[TUMORSAMPLE].BAF` and `[NORMALSAMPLE].BAF`
   * file with beta allele frequencies
-* `Tumor[SAMPLE].LogR` and `[NORMALSAMPLE].LogR`
+* `[TUMORSAMPLE].LogR` and `[NORMALSAMPLE].LogR`
   * file with total copy number on a logarithmic scale
 
 ### ASCAT
-[ASCAT](https://github.com/Crick-CancerGenomics/ascat) is a method to derive copy number profiles of tumour cells, accounting for normal cell admixture and tumour aneuploidy.
-ASCAT infers tumour purity and ploidy and calculates whole-genome allele-specific copy number profiles.
+[ASCAT](https://github.com/Crick-CancerGenomics/ascat) is a method to derive copy number profiles of tumor cells, accounting for normal cell admixture and tumor aneuploidy.
+ASCAT infers tumor purity and ploidy and calculates whole-genome allele-specific copy number profiles.
 
 For further reading and documentation see the [ASCAT manual](https://www.crick.ac.uk/research/labs/peter-van-loo/software).
 
 For a Tumor/Normal pair only:
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/ASCAT`**
+
+* `[TUMORSAMPLE].aberrationreliability.png`
+  * Image with information about aberration reliability
+* `[TUMORSAMPLE].ASCATprofile.png`
+  * Image with information about ASCAT profile
+* `[TUMORSAMPLE].ASPCF.png`
+  * Image with information about ASPCF
+* `[TUMORSAMPLE].rawprofile.png`
+  * Image with information about raw profile
+* `[TUMORSAMPLE].sunrise.png`
+  * Image with information about sunrise
+* `[TUMORSAMPLE].tumour.png`
+  * Image with information about tumor
+* `[TUMORSAMPLE].cnvs.txt`
+  * file with information about CNVS
+* `[TUMORSAMPLE].LogR.PCFed.txt`
+  * file with information about LogR
+* `[TUMORSAMPLE].purityploidy.txt`
+  * file with information about purity ploidy
 
 ### mpileup
 [samtools mpileup](https://www.htslib.org/doc/samtools.html) generate pileup for a BAM file.
@@ -248,11 +267,11 @@ For a Tumor/Normal pair only:
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/ControlFREEC`**
 * `[TUMORSAMPLE]_vs_[NORMALSAMPLE].config.txt`
   * Configuration file used to run Control-FREEC
-* `Tumor[SAMPLE].pileup.gz_CNVs` and `Tumor[SAMPLE].pileup.gz_normal_CNVs`
+* `[TUMORSAMPLE].pileup.gz_CNVs` and `[TUMORSAMPLE].pileup.gz_normal_CNVs`
   * file with coordinates of predicted copy number alterations
-* `Tumor[SAMPLE].pileup.gz_ratio.txt` and `Tumor[SAMPLE].pileup.gz_normal_ratio.txt`
+* `[TUMORSAMPLE].pileup.gz_ratio.txt` and `[TUMORSAMPLE].pileup.gz_normal_ratio.txt`
   * file with ratios and predicted copy number alterations for each window
-* `Tumor[SAMPLE].pileup.gz_BAF.txt` and `[NORMALSAMPLE].pileup.gz_BAF.txt`
+* `[TUMORSAMPLE].pileup.gz_BAF.txt` and `[NORMALSAMPLE].pileup.gz_BAF.txt`
   * file with beta allele frequencies for each possibly heterozygous SNP position
 
 ## Annotation
@@ -260,7 +279,7 @@ For a Tumor/Normal pair only:
 This directory contains results from the final annotation steps: two software are used for annotation, [snpEff](http://snpeff.sourceforge.net/) and [VEP](https://www.ensembl.org/info/docs/tools/vep/index.html).
 Only a subset of the VCF files are annotated, and only variants that have a PASS filter.
 FreeBayes results are not annotated in the moment yet as we are lacking a decent somatic filter.
-For HaplotypeCaller the germline variations are annotated for both the tumour and the normal sample.
+For HaplotypeCaller the germline variations are annotated for both the tumor and the normal sample.
 
 ### snpEff
 [snpeff](http://snpeff.sourceforge.net/) is a genetic variant annotation and effect prediction toolbox.
