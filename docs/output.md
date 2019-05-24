@@ -42,6 +42,7 @@ The pipeline processes data using the following steps:
         * [bcftools stats](#bcftools-stats)
         * [VCFtools](#VCFtools)
         * [snpeff](#snpEff-reports)
+        * [VEP](#snpEff-reports)
     * Reporting
         * [MultiQC](#MultiQC)
 
