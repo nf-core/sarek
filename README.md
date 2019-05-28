@@ -1,7 +1,7 @@
 # [![Sarek](docs/images/Sarek_logo.png "Sarek")](https://sarek.scilifelab.se/)
 [![nf-core](docs/images/nf-core_logo.png "Sarek")](https://nf-co.re/)
 
-**An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing**.
+**An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing**
 
 > :warning: This pipeline is a work in progress being ported to nf-core from [SciLifeLab/Sarek](https://github/SciLifeLab/Sarek/)
 
@@ -21,7 +21,7 @@
 <img align="right" title="CAW" src="/docs/images/CAW_logo.png">
 
 Previously known as the Cancer Analysis Workflow (CAW),
-Sarek is a workflow designed to run analyses on whole genome or targeted sequencing data from regular samples or tumour / normal pairs and could including additional relapses.
+Sarek is a workflow designed to run analyses on whole genome or targeted sequencing data from regular samples or tumour / normal pairs and could include additional relapses.
 
 It's built using [Nextflow](https://www.nextflow.io),
 a domain specific language for workflow building,
@@ -29,7 +29,7 @@ across multiple compute infrastructures in a very portable manner.
 Software dependencies are handled using [Conda](https://conda.io/), [Docker](https://www.docker.com) or [Singularity](https://www.sylabs.io/singularity/) - environment/container technologies that provide excellent reproducibility and ease of use.
 Thus making installation trivial and results highly reproducible.
 
-It is listed on the [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek), [Dockstore](https://dockstore.org/workflows/github.com/SciLifeLab/Sarek/) and [omicX - Bioinformatics tools](https://omictools.com/sarek-tool).
+It's listed on the [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek), [Dockstore](https://dockstore.org/workflows/github.com/SciLifeLab/Sarek/) and [omicX - Bioinformatics tools](https://omictools.com/sarek-tool).
 
 ## Documentation
 The nf-core/sarek pipeline comes with documentation about the pipeline, found in the `docs/` directory:
@@ -41,17 +41,13 @@ The nf-core/sarek pipeline comes with documentation about the pipeline, found in
     * [Reference genomes](https://nf-co.re/usage/reference_genomes)
     * [Extra documentation on reference](docs/reference.md)
 3. [Running the pipeline](docs/usage.md)
+    * [Examples](docs/use_cases.md)
     * [Input files documentation](docs/input.md)
     * [Extra documentation on variant calling](docs/variantcalling.md)
     * [Documentation about containers](docs/containers.md)
     * [Extra documentation for targeted sequencing](docs/targetseq.md)
-
-    * [Intervals documentation](docs/INTERVALS.md)
-    * [Command line parameters](docs/PARAMETERS.md)
-    * [Examples](docs/USE_CASES.md)
-    * [Processes documentation](docs/PROCESS.md)
 4. [Output and how to interpret the results](docs/output.md)
-    * [Complementary information about ASCAT](docs/ASCAT.md)
+    * [Complementary information about ASCAT](docs/ascat.md)
     * [Extra documentation on annotation](docs/annotation.md)
 5. [Troubleshooting](https://nf-co.re/usage/troubleshooting)
 
