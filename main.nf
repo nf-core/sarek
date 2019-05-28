@@ -53,7 +53,6 @@ def helpMessage() {
         --tools                     Specify tools to use for variant calling
                                     Available: ASCAT, ControlFREEC, FreeBayes, HaplotypeCaller
                                     Manta, mpileup, MuTect2, Strelka
-                                    Default: HaplotypeCaller, Manta, Strelka
         --annotateTools             Specify from which tools Sarek will annotate VCF, only for step annotate
                                     Available: HaplotypeCaller, Manta, MuTect2, Strelka
 
@@ -118,7 +117,7 @@ params.sequencing_center = null
 params.snpEff_cache = null
 params.step = 'mapping'
 params.targetBED = null
-params.tools = "HaplotypeCaller,Manta,Strelka"
+params.tools = null
 params.vep_cache = null
 
 stepList = defineStepList()
@@ -1855,7 +1854,7 @@ multiQCReport = Channel.empty()
 
 Channel.fromPath(params.multiqc_config)
 
-process RunMultiQC {
+process MultiQC {
     publishDir "${params.outdir}/Reports/MultiQC", mode: params.publishDirMode
 
     input:
