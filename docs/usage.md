@@ -194,7 +194,7 @@ The syntax for this reference configuration is as follows:
 ```nextflow
 params {
   genomes {
-    'GRCh37' {
+    'GRCh38' {
       acLoci           = '<path to the acLoci file>'
       acLociGC         = '<path to the acLociGC file>'
       bwaIndex         = '<path to the bwa indexes>'

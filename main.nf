@@ -53,7 +53,6 @@ def helpMessage() {
         --tools                     Specify tools to use for variant calling
                                     Available: ASCAT, ControlFREEC, FreeBayes, HaplotypeCaller
                                     Manta, mpileup, MuTect2, Strelka
-                                    Default: HaplotypeCaller, Manta, Strelka
         --annotateTools             Specify from which tools Sarek will annotate VCF, only for step annotate
                                     Available: HaplotypeCaller, Manta, MuTect2, Strelka
 
@@ -118,7 +117,7 @@ params.sequencing_center = null
 params.snpEff_cache = null
 params.step = 'mapping'
 params.targetBED = null
-params.tools = "HaplotypeCaller,Manta,Strelka"
+params.tools = null
 params.vep_cache = null
 
 stepList = defineStepList()
@@ -1409,7 +1408,7 @@ mpileupMerge = mpileupMerge.groupTuple(by:[0,1])
 process MergeMpileup {
     tag {idSample}
 
-    publishDir params.outdir, mode: params.publishDirMode, saveAs: { it == "${idSample}.pileup.gz" ? "VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/mpileup/${it}" : '' }
+    publishDir params.outdir, mode: params.publishDirMode, saveAs: { it == "${idSample}.pileup.gz" ? "VariantCalling/${idSample}/mpileup/${it}" : '' }
 
     input:
         set idPatient, idSample, file(mpileup) from mpileupMerge
@@ -1707,8 +1706,7 @@ process Snpeff {
     val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
 
   output:
-    set file("${reducedVCF}_snpEff.txt"), file("${reducedVCF}_snpEff.html") into snpeffOut
-    file("${reducedVCF}_snpEff.csv") into snpeffReport
+    set file("${reducedVCF}_snpEff.txt"), file("${reducedVCF}_snpEff.html"), file("${reducedVCF}_snpEff.csv") into snpeffReport
     set val("snpEff"), variantCaller, idSample, file("${reducedVCF}_snpEff.ann.vcf") into snpeffVCF
 
   when: 'snpeff' in tools || 'merge' in tools
@@ -1732,7 +1730,6 @@ process Snpeff {
   """
 }
 
-snpeffOut = snpeffOut.dump(tag:'snpEff output')
 snpeffReport = snpeffReport.dump(tag:'snpEff report')
 
 if ('merge' in tools) {
@@ -1754,7 +1751,7 @@ process VEP {
   tag {"${idSample} - ${variantCaller} - ${vcf}"}
 
   publishDir params.outdir, mode: params.publishDirMode, saveAs: {
-    if (it == "${reducedVCF}_VEP.summary.html") "Annotation/${idSample}/VEP/${it}"
+    if (it == "${reducedVCF}_VEP.summary.html") "Reports/${idSample}/VEP/${it}"
     else null
   }
 
@@ -1857,7 +1854,7 @@ multiQCReport = Channel.empty()
 
 Channel.fromPath(params.multiqc_config)
 
-process RunMultiQC {
+process MultiQC {
     publishDir "${params.outdir}/Reports/MultiQC", mode: params.publishDirMode
 
     input:
