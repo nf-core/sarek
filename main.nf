@@ -222,7 +222,8 @@ if (params.email) {
     summary['MultiQC maxsize']      = params.maxMultiqcEmailFileSize
 }
 log.info summary.collect { k,v -> "${k.padRight(18)}: $v" }.join("\n")
-log.info "\033[2m----------------------------------------------------\033[0m"
+if (params.monochrome_logs) log.info "----------------------------------------------------"
+else log.info "\033[2m----------------------------------------------------\033[0m"
 
 // Check the hostnames against configured profiles
 checkHostname()
@@ -2021,12 +2022,12 @@ def nfcoreHeader() {
     ${c_blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${c_yellow}}  {${c_reset}
     ${c_blue}  | \\| |       \\__, \\__/ |  \\ |___     ${c_green}\\`-._,-`-,${c_reset}
                                             ${c_green}`._,._,\'${c_reset}
-    ${c_black}       ____      ${c_blue}  _____               _ ${c_reset}
-    ${c_black}     .' ${c_green}_${c_black}  `.    ${c_blue} / ____|             | | ${c_reset}
-    ${c_black}    /  ${c_green}|\\${c_white}`-_${c_black} \\ ${c_blue}  | (___  ___  _ __ __ | | __ ${c_reset}
-    ${c_black}   |   ${c_green}| \\  ${c_white}`-${c_black}| ${c_blue}  \\___ \\/__ \\| ´__/ _\\| |/ / ${c_reset}
-    ${c_black}    \\ ${c_green}|   \\  ${c_black}/ ${c_blue}   ____) | __ | | |  __|   < ${c_reset}
-    ${c_black}     `${c_green}|${c_black}____${c_green}\\${c_black}'   ${c_blue} |_____/\\____|_|  \\__/|_|\\_\\ ${c_reset}
+    ${c_white}       ____      ${c_blue}  _____               _ ${c_reset}
+    ${c_white}     .' _  `.    ${c_blue} / ____|             | | ${c_reset}
+    ${c_white}    /  ${c_green}|\\${c_white}`-_${c_white} \\ ${c_blue}  | (___  ___  _ __ __ | | __ ${c_reset}
+    ${c_white}   |   ${c_green}| \\  ${c_white}`-${c_white}| ${c_blue}  \\___ \\/__ \\| ´__/ _\\| |/ / ${c_reset}
+    ${c_white}    \\ ${c_green}|   \\  ${c_white}/ ${c_blue}   ____) | __ | | |  __|   < ${c_reset}
+    ${c_white}     `${c_green}|${c_white}____${c_green}\\${c_white}'   ${c_blue} |_____/\\____|_|  \\__/|_|\\_\\ ${c_reset}
 
     ${c_purple}  nf-core/sarek v${workflow.manifest.version}${c_reset}
     ${c_dim}----------------------------------------------------${c_reset}
