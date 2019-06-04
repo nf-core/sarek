@@ -27,7 +27,7 @@ before_install:
   # PRs to master are only ok if coming from dev branch
   - '[ $TRAVIS_PULL_REQUEST = "false" ] || [ $TRAVIS_BRANCH != "master" ] || ([ $TRAVIS_PULL_REQUEST_SLUG = $TRAVIS_REPO_SLUG ] && [ $TRAVIS_PULL_REQUEST_BRANCH = "dev" ])'
   # Pull the docker image first so the test doesn't wait for this
-  - "travis_retry ./scripts/download_docker.sh --test $TEST"
+  - "travis_retry ./scripts/download_image.sh -n docker --test $TEST"
 
 install:
   # Install Nextflow

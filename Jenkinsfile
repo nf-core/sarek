@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Docker setup') {
             steps {
-                sh "./scripts/download_docker.sh"
+                sh "./scripts/download_image.sh -n docker -t ALL"
             }
         }
         stage('Build references') {
