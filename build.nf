@@ -168,7 +168,7 @@ ch_compressedfiles = Channel.create()
 ch_notCompressedfiles = Channel.create()
 
 ch_referencesFiles
-  .choice(ch_compressedfiles, ch_notCompressedfiles) {it =~ ".(gz|tar.bz2)" ? 0 : 1}
+  .choice(ch_compressedfiles, ch_notCompressedfiles) {it =~ ".gz" ? 0 : 1}
 
 process DecompressFile {
   tag {f_reference}
@@ -180,15 +180,9 @@ process DecompressFile {
     file("*.{vcf,fasta,loci}") into ch_decompressedFiles
 
   script:
-  realReferenceFile="readlink ${f_reference}"
-  if (f_reference =~ ".gz")
-    """
-    gzip -d -c \$(${realReferenceFile}) > ${f_reference.baseName}
-    """
-  else if (f_reference =~ ".tar.bz2")
-    """
-    tar xvjf \$(${realReferenceFile})
-    """
+  """
+  gzip -d -c -f ${f_reference} > ${f_reference.baseName}
+  """
 }
 
 ch_decompressedFiles = ch_decompressedFiles.dump(tag:'DecompressedFile')
