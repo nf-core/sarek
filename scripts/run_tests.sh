@@ -73,7 +73,7 @@ then
   fi
   run_sarek --tools=false --sample data/testdata/tiny/normal --noReports
   run_sarek --tools=false --sample results/Preprocessing/TSV/duplicateMarked.tsv --step recalibrate --noReports
-  run_sarek --tools HaplotypeCaller,Strelka --sample results/Preprocessing/TSV/recalibrated.tsv --step variantCalling --noReports
+  run_sarek --tools HaplotypeCaller --sample results/Preprocessing/TSV/recalibrated.tsv --step variantCalling --noReports
   if [[ $OFFLINE == false ]]
   then
     rm -rf data
