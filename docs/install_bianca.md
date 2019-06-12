@@ -1,6 +1,7 @@
-# Installation on `bianca`
+# Installation on a secure cluster
 
-This small tutorial will explain to you how to install and run Sarek on a small sample test data on the Swedish UPPMAX cluster `bianca` made for sensitive data.
+This small tutorial will explain to you how to install and run nf-core/sarek on a small sample test data on the Swedish UPPMAX cluster `bianca` made for sensitive data.
+It can be followed to install on any similar secure cluster.
 
 For more information about `bianca`, follow the [`bianca` user guide](http://uppmax.uu.se/support/user-guides/bianca-user-guide/).
 For more information about using Singularity with UPPMAX, follow the [Singularity UPPMAX guide](https://www.uppmax.uu.se/support-sv/user-guides/singularity-user-guide/).
@@ -53,16 +54,17 @@ For more information about using Singularity with UPPMAX, follow the [Singularit
 > export PATH=${NXF_HOME}:${PATH}
 > export NXF_TEMP=$SNIC_TMP
 > export NXF_LAUNCHER=$SNIC_TMP
+> export NXF_SINGULARITY_CACHEDIR=/sw/data/uppnex/ToolBox/sarek
 ```
 
-## Install Sarek
+## Install nf-core/sarek
 
-Sarek use Singularity containers to package all the different tools.
+nf-core/sarek use Singularity containers to package all the different tools.
 All containers, and all Reference files are already stored on UPPMAX.
 
-As `bianca` is secure, no direct download is available, so Sarek will have to be installed and updated manually.
+As `bianca` is secure, no direct download is available, so nf-core/sarek will have to be installed and updated manually.
 
-You can either download Sarek on your computer or on `rackham`, make an archive, and send it to `bianca` using `FileZilla` or `sftp` given your preferences.
+You can either download nf-core/sarek on your computer or on `rackham`, make an archive, and send it to `bianca` using `FileZilla` or `sftp` given your preferences.
 
 ```bash
 # Connect to rackham
@@ -70,21 +72,15 @@ You can either download Sarek on your computer or on `rackham`, make an archive,
 # Or just open a terminal
 
 # Clone the repository
-> git clone https://github.com/SciLifeLab/Sarek.git
-
-# If you want to include the test data, you should use --recursive
-> git clone --recursive https://github.com/SciLifeLab/Sarek.git
+> git clone https://github.com/nf-core/sarek.git
 
 # Go to the newly created directory
-> cd Sarek
+> cd sarek
 
 # It is also possible to checkout a specific version using
 > git checkout <branch, tag or commit>
 
-# Use our script to make an archive to send to bianca
-> ./scripts/makeSnapshot.sh
-
-# Or you can also include the test data in this archive using git-archive-all
+# You also include the nf-core/test-datasets and nf-core/configs using git-archive-all
 # Install pip
 > curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 > python get-pip.py
@@ -96,15 +92,18 @@ You can either download Sarek on your computer or on `rackham`, make an archive,
 > pip install git-archive-all
 # If you used --user before, you might want to do that here too
 > pip install git-archive-all --user
-> ./scripts/makeSnapshot.sh --include-test-data
+> ./scripts/makeSnapshot.sh --include-test-data --include-configs
+
+# Or you can just include nf-core/sarek:
+> ./scripts/makeSnapshot.sh
 
 # You will get this message in your terminal
-Wrote Sarek-[snapID].tar.gz
+Wrote sarek-[snapID].tar.gz
 
-# Send the tar to bianca (here using sftp)
+# Send the archive to bianca (here using sftp)
 # For FileZilla follow the bianca user guide
 > sftp [USER]-[PROJECT]@bianca-sftp.uppmax.uu.se:[USER]-[PROJECT]
-> put Sarek-[snapID].tar.gz
+> put sarek-[snapID].tar.gz
 > exit
 
 # The archive will be in the wharf folder in your user home on your bianca project
@@ -115,25 +114,26 @@ Wrote Sarek-[snapID].tar.gz
 # Go to your project
 > cd /castor/project/proj_nobackup
 
-# Make and go into a Sarek directoy (where you will store all Sarek versions)
-> mkdir Sarek
-> cd Sarek
+# Make and go into a nf-core/sarek directoy (where you will store all nf-core/sarek versions)
+> mkdir sarek
+> cd sarek
 
 # Copy the tar from wharf to the project
-> cp /castor/project/proj_nobackup/wharf/[USER]/[USER]-[PROJECT]/Sarek-[snapID].tgz /castor/project/proj_nobackup/Sarek
+> cp /castor/project/proj_nobackup/wharf/[USER]/[USER]-[PROJECT]/sarek-[snapID].tgz /castor/project/proj_nobackup/sarek
 
-# extract Sarek. Also remember to extract the containers you uploaded.
-> tar xvzf Sarek-[snapID].tgz
+# extract the archive. Also remember to extract the containers you uploaded.
+> tar xvzf sarek-[snapID].tgz
 
-# If you want other people to use it
+# If you want other people to use it,
 # Be sure that your group has rights to the directory as well
-> chown -R .[PROJECT] Sarek-[snapID]
+> chown -R .[PROJECT] sarek-[snapID]
 
 # Make a symbolic link to the extracted repository
-> ln -s Sarek-[snapID] default
+> ln -s sarek-[snapID] default
 ```
 
-The principle is to have every member of your project to be able to use the same Sarek version at the same time. So every member of the project who wants to use Sarek will need to do:
+The principle is to have every member of your project to be able to use the same nf-core/sarek version at the same time.
+So every member of the project who wants to use nf-core/sarek will need to do:
 
 ```bash
 # Connect to bianca
@@ -142,38 +142,38 @@ The principle is to have every member of your project to be able to use the same
 # Go to your user directory
 > cd /home/[USER]
 
-# Make a symbolic link to the default Sarek
-> ln -s /castor/project/proj_nobackup/Sarek/default Sarek
+# Make a symbolic link to the default nf-core/sarek
+> ln -s /castor/project/proj_nobackup/sarek/default sarek
 ```
 
-And then Sarek can be used with:
+And then nf-core/sarek can be used with:
 
 ```bash
-> nextflow run ~/Sarek/main.nf -profile slurm --project [PROJECT] --genome [GENOME ASSEMBLY] --genome_base [PATH TO REFERENCE FILES] --containerPath [PATH TO CONTAINERS] ...
+> nextflow run ~/sarek/main.nf -c ~/sarek/configs/conf/uppmax.config --project [PROJECT] --genome [GENOME ASSEMBLY] ...
 ```
 
-This is an example of how to run Sarek Somaic with the tool Ascat and the genome assembly version GRCh37:
+This is an example of how to run sarek with the tool Manta and the genome assembly version GRCh38:
 
 ```bash
-> nextflow run ~/Sarek/somaticVC.nf -profile slurm --project [PROJECT] --tools ascat --sample [SAMPLE.TSV] --genome GRCh37 --genome_base /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37 --containerPath ~/Sarek/containers
+> nextflow run ~/sarek/main.nf -c ~/sarek/configs/conf/uppmax.config --project [PROJECT] --tools Manta --sample [SAMPLE.TSV] --genome GRCh38
 ```
 
-## Update Sarek
+## Update nf-core/sarek
 
-Repeat the same steps as for installing Sarek, and once the tar has been extracted, you can replace the link.
+Repeat the same steps as for installing nf-core/sarek, and once the tar has been extracted, you can replace the link.
 
 ```bash
 # Connect to bianca (Connect to rackham first if needed)
 > ssh -A [USER]-[PROJECT]@bianca.uppmax.uu.se
 
-# Go to the Sarek directory in your project
-> cd /castor/project/proj_nobackup/Sarek
+# Go to the sarek directory in your project
+> cd /castor/project/proj_nobackup/sarek
 
 # Remove link
 > rm default
 
-# Link to new Sarek version
-> ln -s Sarek-[NEWsnapID] default
+# Link to new nf-core/sarek version
+> ln -s sarek-[NEWsnapID] default
 ```
 
 You can for example keep a `default` version that you are sure is working, an make a link for a `testing` or `development`
