@@ -9,7 +9,7 @@ Settings in `igenomes.config` can be tailored to your needs.
 
 ### Intervals
 
-To speed up the variant calling processes, the reference is chopped into smaller pieces.
+To speed up some preprocessing and variant calling processes, the reference is chopped into smaller pieces.
 The intervals are chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs.
 We are ignoring the hs37d5 contig that contains concatenated decoy sequences.
 Parts of preprocessing and variant calling are done by this intervals, and the different resulting files are then merged.

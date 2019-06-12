@@ -222,7 +222,8 @@ if (params.email) {
     summary['MultiQC maxsize']      = params.maxMultiqcEmailFileSize
 }
 log.info summary.collect { k,v -> "${k.padRight(18)}: $v" }.join("\n")
-log.info "\033[2m----------------------------------------------------\033[0m"
+if (params.monochrome_logs) log.info "----------------------------------------------------"
+else log.info "\033[2m----------------------------------------------------\033[0m"
 
 // Check the hostnames against configured profiles
 checkHostname()
@@ -405,6 +406,8 @@ fastQCReport = fastQCReport.dump(tag:'FastQC')
 // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
 
 process MapReads {
+    label 'max_cpus'
+
     tag {idPatient + "-" + idRun}
 
     input:
@@ -454,6 +457,8 @@ bamMapped = bamMapped.dump(tag:'Mapped BAM')
 // QC
 
 process BamQCmapped {
+    label 'max_memory'
+
     tag {idPatient + "-" + idSample}
 
     publishDir "${params.outdir}/Reports/${idSample}/bamQC", mode: params.publishDirMode
@@ -501,6 +506,8 @@ singleBam = singleBam.dump(tag:'Single BAM')
 // STEP 1.5: MERGING BAM FROM MULTIPLE LANES
 
 process MergeBamMapped {
+    label 'singleCPUmem_x_task'
+
     tag {idPatient + "-" + idSample}
 
     input:
@@ -524,6 +531,8 @@ mergedBam = mergedBam.dump(tag:'BAMs for MD')
 // STEP 2: MARKING DUPLICATES
 
 process MarkDuplicates {
+    label 'singleCPUmem_x_task'
+
     tag {idPatient + "-" + idSample}
 
     publishDir params.outdir, mode: params.publishDirMode,
@@ -565,6 +574,8 @@ bamBaseRecalibrator = bamMD.combine(intBaseRecalibrator)
 // STEP 3: CREATING RECALIBRATION TABLES
 
 process BaseRecalibrator {
+    label 'max_memory'
+
     tag {idPatient + "-" + idSample + "-" + intervalBed}
 
     input:
@@ -606,6 +617,8 @@ tableGatherBQSRReports = tableGatherBQSRReports.groupTuple(by:[0,1])
 // STEP 3.5: MERGING RECALIBRATION TABLES
 
 process GatherBQSRReports {
+    label 'singleCPUmem_2x_task'
+
     tag {idPatient + "-" + idSample}
 
     publishDir "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked", mode: params.publishDirMode, overwrite: false
@@ -657,6 +670,8 @@ bamApplyBQSR = bamApplyBQSR.combine(intApplyBQSR)
 // STEP 4: RECALIBRATING
 
 process ApplyBQSR {
+    label 'singleCPUmem_2x_task'
+
     tag {idPatient + "-" + idSample + "-" + intervalBed.baseName}
 
     input:
@@ -687,6 +702,8 @@ bamMergeBamRecal = bamMergeBamRecal.groupTuple(by:[0,1])
 // STEP 4.5: MERGING THE RECALIBRATED BAM FILES
 
 process MergeBamRecal {
+    label 'singleCPUmem_x_task'
+
     tag {idPatient + "-" + idSample}
 
     publishDir "${params.outdir}/Preprocessing/${idSample}/Recalibrated", mode: params.publishDirMode
@@ -747,6 +764,8 @@ process SamtoolsStats {
 samtoolsStatsReport = samtoolsStatsReport.dump(tag:'SAMTools')
 
 process BamQCrecalibrated {
+    label 'max_memory'
+
     tag {idPatient + "-" + idSample}
 
     publishDir "${params.outdir}/Reports/${idSample}/bamQC", mode: params.publishDirMode
@@ -801,6 +820,8 @@ bamHaplotypeCaller = bamRecalAllTemp.combine(intHaplotypeCaller)
 // STEP GATK HAPLOTYPECALLER.1
 
 process HaplotypeCaller {
+    label 'singleCPUmem_x2_task'
+
     tag {idSample + "-" + intervalBed.baseName}
 
     input:
@@ -878,6 +899,9 @@ vcfGenotypeGVCFs = vcfGenotypeGVCFs.groupTuple(by:[0,1,2])
 // STEP STRELKA.1 - SINGLE MODE
 
 process StrelkaSingle {
+    label 'max_cpus'
+    label 'max_memory'
+
     tag {idSample}
 
     publishDir "${params.outdir}/VariantCalling/${idSample}/Strelka", mode: params.publishDirMode
@@ -924,6 +948,9 @@ vcfStrelkaSingle = vcfStrelkaSingle.dump(tag:'Strelka - Single Mode')
 // STEP MANTA.1 - SINGLE MODE
 
 process MantaSingle {
+    label 'max_cpus'
+    label 'max_memory'
+
     tag {idSample}
 
     publishDir "${params.outdir}/VariantCalling/${idSample}/Manta", mode: params.publishDirMode
@@ -1014,6 +1041,8 @@ bamMpileup = bamMpileup.spread(intMpileup)
 // STEP GATK MUTECT2
 
 process Mutect2 {
+    label 'singleCPUmem_x_task'
+
     tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
 
     input:
@@ -1048,6 +1077,8 @@ vcfMuTect2 = vcfMuTect2.groupTuple(by:[0,1,2])
 // STEP FREEBAYES
 
 process FreeBayes {
+    label 'singleCPUmem_x_task'
+
     tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
 
     input:
@@ -1119,6 +1150,9 @@ vcfConcatenated = vcfConcatenated.dump(tag:'VCF')
 // STEP STRELKA.2 - SOMATIC PAIR
 
 process Strelka {
+    label 'max_cpus'
+    label 'max_memory'
+
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Strelka", mode: params.publishDirMode
@@ -1167,6 +1201,9 @@ vcfStrelka = vcfStrelka.dump(tag:'Strelka')
 // STEP MANTA.2 - SOMATIC PAIR
 
 process Manta {
+    label 'max_cpus'
+    label 'max_memory'
+
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Manta", mode: params.publishDirMode
@@ -1232,6 +1269,9 @@ pairBamStrelkaBP = pairBamStrelkaBP.map {
 // STEP STRELKA.3 - SOMATIC PAIR - BEST PRACTICES
 
 process StrelkaBP {
+    label 'max_cpus'
+    label 'max_memory'
+
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Strelka", mode: params.publishDirMode
@@ -1283,6 +1323,8 @@ vcfStrelkaBP = vcfStrelkaBP.dump(tag:'Strelka BP')
 // Run commands and code from Malin Larsson
 // Based on Jesper Eisfeldt's code
 process AlleleCounter {
+    label 'singleCPUmem_2x_task'
+
     tag {idSample}
 
     input:
@@ -1328,6 +1370,8 @@ alleleCounterOut = alleleCounterOut.map {
 // R script from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
 process ConvertAlleleCounts {
+    label 'singleCPUmem_2x_task'
+
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/ASCAT", mode: params.publishDirMode
@@ -1352,6 +1396,8 @@ process ConvertAlleleCounts {
 // R scripts from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
 process Ascat {
+    label 'singleCPUmem_2x_task'
+
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/ASCAT", mode: params.publishDirMode
@@ -1378,6 +1424,8 @@ ascatOut.dump(tag:'ASCAT')
 // STEP CONTROLFREEC.1 - MPILEUP
 
 process Mpileup {
+    label 'singleCPUmem_2x_task'
+
     tag {idSample + "-" + intervalBed.baseName}
 
     input:
@@ -1406,6 +1454,8 @@ mpileupMerge = mpileupMerge.groupTuple(by:[0,1])
 // STEP CONTROLFREEC.2 - MERGE MPILEUP
 
 process MergeMpileup {
+    label 'singleCPUmem_x_task'
+
     tag {idSample}
 
     publishDir params.outdir, mode: params.publishDirMode, saveAs: { it == "${idSample}.pileup.gz" ? "VariantCalling/${idSample}/mpileup/${it}" : '' }
@@ -1449,6 +1499,8 @@ mpileupOut = mpileupOut.map {
 // STEP CONTROLFREEC.3 - CONTROLFREEC
 
 process ControlFREEC {
+    label 'singleCPUmem_2x_task'
+
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/controlFREEC", mode: params.publishDirMode
@@ -1513,6 +1565,7 @@ controlFreecOut.dump(tag:'ControlFREEC')
 // STEP CONTROLFREEC.3 - VISUALIZATION
 
 process ControlFreecViz {
+    label 'singleCPUmem_2x_task'
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
@@ -1693,41 +1746,43 @@ vcfVep = vcfVep.map {
 // STEP SNPEFF
 
 process Snpeff {
-  tag {"${idSample} - ${variantCaller} - ${vcf}"}
+    label 'singleCPUmem_x_task'
 
-  publishDir params.outdir, mode: params.publishDirMode, saveAs: {
-    if (it == "${reducedVCF}_snpEff.ann.vcf") null
-    else "Reports/${idSample}/snpEff/${it}"
-  }
+    tag {"${idSample} - ${variantCaller} - ${vcf}"}
 
-  input:
-    set variantCaller, idSample, file(vcf) from vcfSnpeff
-    file dataDir from Channel.value(params.snpEff_cache ? file(params.snpEff_cache) : "null")
-    val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
+    publishDir params.outdir, mode: params.publishDirMode, saveAs: {
+        if (it == "${reducedVCF}_snpEff.ann.vcf") null
+        else "Reports/${idSample}/snpEff/${it}"
+    }
 
-  output:
-    set file("${reducedVCF}_snpEff.txt"), file("${reducedVCF}_snpEff.html"), file("${reducedVCF}_snpEff.csv") into snpeffReport
-    set val("snpEff"), variantCaller, idSample, file("${reducedVCF}_snpEff.ann.vcf") into snpeffVCF
+    input:
+        set variantCaller, idSample, file(vcf) from vcfSnpeff
+        file dataDir from Channel.value(params.snpEff_cache ? file(params.snpEff_cache) : "null")
+        val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
 
-  when: 'snpeff' in tools || 'merge' in tools
+    output:
+        set file("${reducedVCF}_snpEff.txt"), file("${reducedVCF}_snpEff.html"), file("${reducedVCF}_snpEff.csv") into snpeffReport
+        set val("snpEff"), variantCaller, idSample, file("${reducedVCF}_snpEff.ann.vcf") into snpeffVCF
 
-  script:
-  reducedVCF = reduceVCF(vcf)
-  cache = (params.snpEff_cache && params.annotation_cache) ? "-dataDir \${PWD}/${dataDir}" : ""
-  """
-  snpEff -Xmx${task.memory.toGiga()}g \
-  ${snpeffDb} \
-  -csvStats ${reducedVCF}_snpEff.csv \
-  -nodownload \
-  ${cache} \
-  -canon \
-  -v \
-  ${vcf} \
-  > ${reducedVCF}_snpEff.ann.vcf
+    when: 'snpeff' in tools || 'merge' in tools
 
-  mv snpEff_summary.html ${reducedVCF}_snpEff.html
-  mv ${reducedVCF}_snpEff.genes.txt ${reducedVCF}_snpEff.txt
-  """
+    script:
+    reducedVCF = reduceVCF(vcf)
+    cache = (params.snpEff_cache && params.annotation_cache) ? "-dataDir \${PWD}/${dataDir}" : ""
+    """
+    snpEff -Xmx${task.memory.toGiga()}g \
+    ${snpeffDb} \
+    -csvStats ${reducedVCF}_snpEff.csv \
+    -nodownload \
+    ${cache} \
+    -canon \
+    -v \
+    ${vcf} \
+    > ${reducedVCF}_snpEff.ann.vcf
+
+    mv snpEff_summary.html ${reducedVCF}_snpEff.html
+    mv ${reducedVCF}_snpEff.genes.txt ${reducedVCF}_snpEff.txt
+    """
 }
 
 snpeffReport = snpeffReport.dump(tag:'snpEff report')
@@ -1748,60 +1803,60 @@ if ('merge' in tools) {
 // STEP VEP
 
 process VEP {
-  tag {"${idSample} - ${variantCaller} - ${vcf}"}
+    tag {"${idSample} - ${variantCaller} - ${vcf}"}
 
-  publishDir params.outdir, mode: params.publishDirMode, saveAs: {
-    if (it == "${reducedVCF}_VEP.summary.html") "Reports/${idSample}/VEP/${it}"
-    else null
-  }
+    publishDir params.outdir, mode: params.publishDirMode, saveAs: {
+        if (it == "${reducedVCF}_VEP.summary.html") "Reports/${idSample}/VEP/${it}"
+        else null
+    }
 
-  input:
-    set annotator, variantCaller,  idSample, file(vcf), file(idx) from vcfVep
-    file dataDir from Channel.value(params.vep_cache ? file(params.vep_cache) : "null")
-    val cache_version from Channel.value(params.genomes[params.genome].vepCacheVersion)
-    set file(cadd_WG_SNVs), file(cadd_WG_SNVs_tbi), file(cadd_InDels), file(cadd_InDels_tbi) from Channel.value([
-      params.cadd_WG_SNVs ? file(params.cadd_WG_SNVs) : "null",
-      params.cadd_WG_SNVs_tbi ? file(params.cadd_WG_SNVs_tbi) : "null",
-      params.cadd_InDels ? file(params.cadd_InDels) : "null",
-      params.cadd_InDels_tbi ? file(params.cadd_InDels_tbi) : "null"
-    ])
+    input:
+        set annotator, variantCaller,  idSample, file(vcf), file(idx) from vcfVep
+        file dataDir from Channel.value(params.vep_cache ? file(params.vep_cache) : "null")
+        val cache_version from Channel.value(params.genomes[params.genome].vepCacheVersion)
+        set file(cadd_WG_SNVs), file(cadd_WG_SNVs_tbi), file(cadd_InDels), file(cadd_InDels_tbi) from Channel.value([
+            params.cadd_WG_SNVs ? file(params.cadd_WG_SNVs) : "null",
+            params.cadd_WG_SNVs_tbi ? file(params.cadd_WG_SNVs_tbi) : "null",
+            params.cadd_InDels ? file(params.cadd_InDels) : "null",
+            params.cadd_InDels_tbi ? file(params.cadd_InDels_tbi) : "null"
+        ])
 
-  output:
-    set finalAnnotator, variantCaller, idSample, file("${reducedVCF}_VEP.ann.vcf") into vepVCF
-    file("${reducedVCF}_VEP.summary.html") into vepReport
+    output:
+        set finalAnnotator, variantCaller, idSample, file("${reducedVCF}_VEP.ann.vcf") into vepVCF
+        file("${reducedVCF}_VEP.summary.html") into vepReport
 
-  when: 'vep' in tools || 'merge' in tools
+    when: 'vep' in tools || 'merge' in tools
 
-  script:
-  reducedVCF = reduceVCF(vcf)
-  finalAnnotator = annotator == "snpEff" ? 'merge' : 'VEP'
-  genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
-  dir_cache = (params.vep_cache && params.annotation_cache) ? " \${PWD}/${dataDir}" : "/.vep"
-  cadd = (params.cadd_cache && params.cadd_WG_SNVs && params.cadd_InDels) ? "--plugin CADD,whole_genome_SNVs.tsv.gz,InDels.tsv.gz" : ""
-  genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/sarek-2.5dev/bin/genesplicer,/opt/conda/envs/sarek-2.5dev/share/genesplicer-1.0-1/human,context=200,tmpdir=\$PWD/${reducedVCF}" : "--offline"
-  """
-  mkdir ${reducedVCF}
+    script:
+    reducedVCF = reduceVCF(vcf)
+    finalAnnotator = annotator == "snpEff" ? 'merge' : 'VEP'
+    genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
+    dir_cache = (params.vep_cache && params.annotation_cache) ? " \${PWD}/${dataDir}" : "/.vep"
+    cadd = (params.cadd_cache && params.cadd_WG_SNVs && params.cadd_InDels) ? "--plugin CADD,whole_genome_SNVs.tsv.gz,InDels.tsv.gz" : ""
+    genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/sarek-2.5dev/bin/genesplicer,/opt/conda/envs/sarek-2.5dev/share/genesplicer-1.0-1/human,context=200,tmpdir=\$PWD/${reducedVCF}" : "--offline"
+    """
+    mkdir ${reducedVCF}
 
-  vep \
-  -i ${vcf} \
-  -o ${reducedVCF}_VEP.ann.vcf \
-  --assembly ${genome} \
-  ${cadd} \
-  ${genesplicer} \
-  --cache \
-  --cache_version ${cache_version} \
-  --dir_cache ${dir_cache} \
-  --everything \
-  --filter_common \
-  --fork ${task.cpus} \
-  --format vcf \
-  --per_gene \
-  --stats_file ${reducedVCF}_VEP.summary.html \
-  --total_length \
-  --vcf
+    vep \
+    -i ${vcf} \
+    -o ${reducedVCF}_VEP.ann.vcf \
+    --assembly ${genome} \
+    ${cadd} \
+    ${genesplicer} \
+    --cache \
+    --cache_version ${cache_version} \
+    --dir_cache ${dir_cache} \
+    --everything \
+    --filter_common \
+    --fork ${task.cpus} \
+    --format vcf \
+    --per_gene \
+    --stats_file ${reducedVCF}_VEP.summary.html \
+    --total_length \
+    --vcf
 
-  rm -rf ${reducedVCF}
-  """
+    rm -rf ${reducedVCF}
+    """
 }
 
 vepReport = vepReport.dump(tag:'VEP')
@@ -1811,23 +1866,23 @@ vcfCompressVCF = snpeffVCF.mix(vepVCF)
 // STEP COMPRESS AND INDEX VCF
 
 process CompressVCF {
-  tag {"${idSample} - ${annotator} - ${vcf}"}
+    tag {"${idSample} - ${annotator} - ${vcf}"}
 
-  publishDir "${params.outdir}/Annotation/${idSample}/${finalAnnotator}", mode: params.publishDirMode
+    publishDir "${params.outdir}/Annotation/${idSample}/${finalAnnotator}", mode: params.publishDirMode
 
-  input:
-    set annotator, variantCaller, idSample, file(vcf) from vcfCompressVCF
+    input:
+        set annotator, variantCaller, idSample, file(vcf) from vcfCompressVCF
 
-  output:
-    set annotator, variantCaller, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into (vcfCompressed, compressVCFOut)
+    output:
+        set annotator, variantCaller, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into (vcfCompressed, compressVCFOut)
 
-  script:
-  reducedVCF = reduceVCF(vcf)
-  finalAnnotator = annotator == "merge" ? "VEP" : annotator
-  """
-  bgzip < ${vcf} > ${vcf}.gz
-  tabix ${vcf}.gz
-  """
+    script:
+    reducedVCF = reduceVCF(vcf)
+    finalAnnotator = annotator == "merge" ? "VEP" : annotator
+    """
+    bgzip < ${vcf} > ${vcf}.gz
+    tabix ${vcf}.gz
+    """
 }
 
 compressVCFOut.dump(tag:'VCF')
@@ -2021,12 +2076,12 @@ def nfcoreHeader() {
     ${c_blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${c_yellow}}  {${c_reset}
     ${c_blue}  | \\| |       \\__, \\__/ |  \\ |___     ${c_green}\\`-._,-`-,${c_reset}
                                             ${c_green}`._,._,\'${c_reset}
-    ${c_black}       ____      ${c_blue}  _____               _ ${c_reset}
-    ${c_black}     .' ${c_green}_${c_black}  `.    ${c_blue} / ____|             | | ${c_reset}
-    ${c_black}    /  ${c_green}|\\${c_white}`-_${c_black} \\ ${c_blue}  | (___  ___  _ __ __ | | __ ${c_reset}
-    ${c_black}   |   ${c_green}| \\  ${c_white}`-${c_black}| ${c_blue}  \\___ \\/__ \\| ´__/ _\\| |/ / ${c_reset}
-    ${c_black}    \\ ${c_green}|   \\  ${c_black}/ ${c_blue}   ____) | __ | | |  __|   < ${c_reset}
-    ${c_black}     `${c_green}|${c_black}____${c_green}\\${c_black}'   ${c_blue} |_____/\\____|_|  \\__/|_|\\_\\ ${c_reset}
+    ${c_white}       ____      ${c_blue}  _____               _ ${c_reset}
+    ${c_white}     .' _  `.    ${c_blue} / ____|             | | ${c_reset}
+    ${c_white}    /  ${c_green}|\\${c_white}`-_${c_white} \\ ${c_blue}  | (___  ___  _ __ __ | | __ ${c_reset}
+    ${c_white}   |   ${c_green}| \\  ${c_white}`-${c_white}| ${c_blue}  \\___ \\/__ \\| ´__/ _\\| |/ / ${c_reset}
+    ${c_white}    \\ ${c_green}|   \\  ${c_white}/ ${c_blue}   ____) | __ | | |  __|   < ${c_reset}
+    ${c_white}     `${c_green}|${c_white}____${c_green}\\${c_white}'   ${c_blue} |_____/\\____|_|  \\__/|_|\\_\\ ${c_reset}
 
     ${c_purple}  nf-core/sarek v${workflow.manifest.version}${c_reset}
     ${c_dim}----------------------------------------------------${c_reset}

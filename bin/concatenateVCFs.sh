@@ -1,48 +1,59 @@
 #!/usr/bin/env bash
-# this script concatenates all VCFs that are in the local directory: the 
-# purpose is to make a single VCF from all the VCFs that were created from different intervals
+set -euo pipefail
+
+# This script concatenates all VCF files that are in the local directory,
+# that were created from different intervals to make a single final VCF
 
 usage() { echo "Usage: $0 [-i genome_index_file] [-o output.file.no.gz.extension] <-t target.bed> <-c cpus>" 1>&2; exit 1; }
 
-while getopts "i:c:o:t:" p; do
-	case "${p}" in
-		i)
-			genomeIndex=${OPTARG}
+while [[ $# -gt 0 ]]
+do
+  key=$1
+  case $key in
+		-i)
+			genomeIndex=$2
+			shift # past argument
+	    shift # past value
 			;;
-		c)
-			cpus=${OPTARG}
+		-c)
+			cpus=$2
+			shift # past argument
+	    shift # past value
 			;;
-		o)
-			outputFile=${OPTARG}
+		-o)
+			outputFile=$2
+			shift # past argument
+	    shift # past value
 			;;
-		t)
-			targetBED=${OPTARG}
+		-t)
+			targetBED=$2
+			shift # past argument
+	    shift # past value
 			;;
 		*)
 			usage
+			shift # past argument
 			;;
 	esac
 done
-shift $((OPTIND-1))
 
 if [ -z ${genomeIndex} ]; then echo "Missing index file "; usage; fi
 if [ -z ${cpus} ]; then echo "No CPUs defined: setting to 1"; cpus=1; fi
 if [ -z ${outputFile} ]; then echo "Missing output file name"; usage; fi
 
-set -euo pipefail
-
-# first make a header from one of the VCF intervals
-# get rid of interval information only from the GATK command-line, but leave the rest
+# First make a header from one of the VCF
+# Remove interval information from the GATK command-line, but leave the rest
 FIRSTVCF=$(ls *.vcf | head -n 1)
 sed -n '/^[^#]/q;p' $FIRSTVCF | \
 awk '!/GATKCommandLine/{print}/GATKCommandLine/{for(i=1;i<=NF;i++){if($i!~/intervals=/ && $i !~ /out=/){printf("%s ",$i)}}printf("\n")}' \
 > header
 
-# Get list of contigs from the FASTA index (.fai). We cannot use the ##contig
-# header in the VCF as it is optional (FreeBayes does not save it, for example)
+# Get list of contigs from the FASTA index (.fai)
+# ##contig header in the VCF cannot be used as it is optional (FreeBayes does not save it, for example)
+
 CONTIGS=($(cut -f1 ${genomeIndex}))
 
-# concatenate VCFs in the correct order
+# Concatenate VCFs in the correct order
 (
   cat header
 
@@ -72,14 +83,12 @@ tabix rawcalls.vcf.gz
 
 set +u
 
-# now we have the concatenated VCF file, check for WES/panel targets, and generate a subset if there is a BED provided
-echo "target is $targetBED"
+# Now we have the concatenated VCF file, check for WES/panel targets, and generate a subset if there is a BED provided
 if [ ! -z ${targetBED+x} ]; then
-	echo "Selecting subset..."
+	echo "Target is $targetBED - Selecting subset..."
 	bcftools isec --targets-file ${targetBED} rawcalls.vcf.gz | bgzip -@${cpus} > ${outputFile}.gz
 	tabix ${outputFile}.gz
 else
-	# simply rename the raw calls as WGS results
+	# Rename the raw calls as WGS results
 	for f in rawcalls*; do mv -v $f ${outputFile}${f#rawcalls.vcf}; done
 fi
-
