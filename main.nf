@@ -1791,12 +1791,14 @@ if ('merge' in tools) {
   // When running in the 'merge' mode
   // snpEff output is used as VEP input
   // Used a feedback loop from vcfCompressed
-  // https://github.com/nextflow-io/patterns/tree/master/feedback-loop
+  // https://github.com/nextflow-io/patterns/blob/master/docs/feedback-loop.adoc
 
   vcfCompressed = Channel.create()
 
-  vcfVep = Channel.empty().mix(
-    vcfCompressed.until({ it[0]=="merge" })
+  vcfVep = vcfVep.mix(
+    vcfCompressed
+      .filter{it[0] != "VEP"}
+      .until({it[0] == "merge" })
   )
 }
 
