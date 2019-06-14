@@ -29,6 +29,9 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 -   [#12](https://github.com/nf-core/sarek/pull/12) - Use `label` for processes configation
 -   [#12](https://github.com/nf-core/sarek/pull/12) - Add helper scripts `filter_locifile.py` and `selectROI.py`
 -   [#12](https://github.com/nf-core/sarek/pull/12) - Add helper script `make_snapshot.sh` to make an archive for usage on a secure cluster
+-   [#13](https://github.com/nf-core/sarek/pull/13) - Add Citation documentation
+-   [#13](https://github.com/nf-core/sarek/pull/13) - Add `BamQC` process
+-   [#13](https://github.com/nf-core/sarek/pull/13) - Add `CompressVCFsnpEff` and `CompressVCFvep` processes
 
 ### `Changed`
 -   [#1](https://github.com/nf-core/sarek/pull/1), [#2](https://github.com/nf-core/sarek/pull/2), [#3](https://github.com/nf-core/sarek/pull/3), [#4](https://github.com/nf-core/sarek/pull/4), [#5](https://github.com/nf-core/sarek/pull/5), [#6](https://github.com/nf-core/sarek/pull/6), [#7](https://github.com/nf-core/sarek/pull/7), [#8](https://github.com/nf-core/sarek/pull/8), [#9](https://github.com/nf-core/sarek/pull/9), [#11](https://github.com/nf-core/sarek/pull/11), [#12](https://github.com/nf-core/sarek/pull/12) - Update docs
@@ -47,14 +50,19 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 -   [#12](https://github.com/nf-core/sarek/pull/12) - Disable `Singularity` in `docker` profile
 -   [#12](https://github.com/nf-core/sarek/pull/12) - Disable `Docker` and `Singularity` in `conda` profile
 -   [#12](https://github.com/nf-core/sarek/pull/12) - Simplify `check_max()` function
+-   [#13](https://github.com/nf-core/sarek/pull/13) - Merge `BamQCmapped` and `BamQCrecalibrated` processes into `BamQC` process
+-   [#13](https://github.com/nf-core/sarek/pull/13) - Split `CompressVCF` process into `CompressVCFsnpEff` and `CompressVCFvep` processes
 
 ### `Removed`
 
 -   [#9](https://github.com/nf-core/sarek/pull/9) - Removed `relatedness2` graph from `vcftools stats`
+-   [#13](https://github.com/nf-core/sarek/pull/13) - Removed `BamQCmapped` and `BamQCrecalibrated` processes
+-   [#13](https://github.com/nf-core/sarek/pull/13) - Removed `CompressVCF`
 
 ### `Fixed`
 -   [#3](https://github.com/nf-core/sarek/pull/3) - Fix Docker ownership
 -   [#11](https://github.com/nf-core/sarek/pull/11) - Fix MergeMpileup PublishDir
+-   [#13](https://github.com/nf-core/sarek/pull/13) - Fix merge in annotation
 
 ## [2.3.FIX1] - 2019-03-04
 
