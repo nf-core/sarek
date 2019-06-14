@@ -415,7 +415,8 @@ process MapReads {
         set file(genomeFile), file(bwaIndex) from Channel.value([referenceMap.genomeFile, referenceMap.bwaIndex])
 
     output:
-        set idPatient, idSample, idRun, file("${idRun}.bam") into (bamMapped, bamMappedQC)
+        set idPatient, idSample, idRun, file("${idRun}.bam") into bamMapped
+        set idPatient, idSample, file("${idRun}.bam") into bamMappedBamQC
 
     when: step == 'mapping'
 
@@ -453,43 +454,6 @@ process MapReads {
 }
 
 bamMapped = bamMapped.dump(tag:'Mapped BAM')
-
-// QC
-
-process BamQCmapped {
-    label 'max_memory'
-
-    tag {idPatient + "-" + idSample}
-
-    publishDir "${params.outdir}/Reports/${idSample}/bamQC", mode: params.publishDirMode
-
-    input:
-        set idPatient, idSample, idRun, file(bam) from bamMappedQC
-        file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
-
-    output:
-        file("${bam.baseName}") into bamQCmappedReport
-
-    when: !params.noReports
-
-    script:
-    use_bed = params.targetBED ? "-gff ${targetBED}" : ''
-    """
-    qualimap --java-mem-size=${task.memory.toGiga()}G \
-        bamqc \
-        -bam ${bam} \
-        --paint-chromosome-limits \
-        --genome-gc-distr HUMAN \
-        $use_bed \
-        -nt ${task.cpus} \
-        -skip-duplicated \
-        --skip-dup-mode 0 \
-        -outdir ${bam.baseName} \
-        -outformat HTML
-    """
-}
-
-bamQCmappedReport = bamQCmappedReport.dump(tag:'BamQC BAM')
 
 // Sort BAM whether they are standalone or should be merged
 
@@ -712,7 +676,8 @@ process MergeBamRecal {
         set idPatient, idSample, file(bam) from bamMergeBamRecal
 
     output:
-        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into (bamRecal, bamRecalBamQC, bamRecalSamToolsStats)
+        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into (bamRecal, bamRecalSamToolsStats)
+        set idPatient, idSample, file("${idSample}.recal.bam") into bamRecalBamQC
         set idPatient, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into (bamRecalTSV, bamRecalSampleTSV)
 
     script:
@@ -763,7 +728,11 @@ process SamtoolsStats {
 
 samtoolsStatsReport = samtoolsStatsReport.dump(tag:'SAMTools')
 
-process BamQCrecalibrated {
+// QC
+
+bamBamQC = bamMappedBamQC.mix(bamRecalBamQC)
+
+process BamQC {
     label 'max_memory'
 
     tag {idPatient + "-" + idSample}
@@ -771,20 +740,23 @@ process BamQCrecalibrated {
     publishDir "${params.outdir}/Reports/${idSample}/bamQC", mode: params.publishDirMode
 
     input:
-    set idPatient, idSample, file(bam), file(bai) from bamRecalBamQC
+        set idPatient, idSample, file(bam) from bamBamQC
+        file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
 
     output:
-    file("${bam.baseName}") into bamQCrecalibratedReport
+        file("${bam.baseName}") into bamQCReport
 
     when: !params.noReports
 
     script:
+    use_bed = params.targetBED ? "-gff ${targetBED}" : ''
     """
     qualimap --java-mem-size=${task.memory.toGiga()}G \
         bamqc \
         -bam ${bam} \
         --paint-chromosome-limits \
         --genome-gc-distr HUMAN \
+        $use_bed \
         -nt ${task.cpus} \
         -skip-duplicated \
         --skip-dup-mode 0 \
@@ -793,7 +765,7 @@ process BamQCrecalibrated {
     """
 }
 
-bamQCrecalibratedReport = bamQCrecalibratedReport.dump(tag:'BamQC')
+bamQCReport = bamQCReport.dump(tag:'BamQC')
 
 /*
 ================================================================================
@@ -1740,7 +1712,7 @@ if (step == 'annotate') {
 
 vcfVep = vcfVep.map {
   variantCaller, idSample, vcf ->
-  ["VEP", variantCaller, idSample, vcf, null]
+  [variantCaller, idSample, vcf, null]
 }
 
 // STEP SNPEFF
@@ -1762,7 +1734,7 @@ process Snpeff {
 
     output:
         set file("${reducedVCF}_snpEff.txt"), file("${reducedVCF}_snpEff.html"), file("${reducedVCF}_snpEff.csv") into snpeffReport
-        set val("snpEff"), variantCaller, idSample, file("${reducedVCF}_snpEff.ann.vcf") into snpeffVCF
+        set variantCaller, idSample, file("${reducedVCF}_snpEff.ann.vcf") into snpeffVCF
 
     when: 'snpeff' in tools || 'merge' in tools
 
@@ -1787,22 +1759,34 @@ process Snpeff {
 
 snpeffReport = snpeffReport.dump(tag:'snpEff report')
 
-if ('merge' in tools) {
-  // When running in the 'merge' mode
-  // snpEff output is used as VEP input
-  // Used a feedback loop from vcfCompressed
-  // https://github.com/nextflow-io/patterns/tree/master/feedback-loop
+// STEP COMPRESS AND INDEX VCF.1 - snpEff
 
-  vcfCompressed = Channel.create()
+process CompressVCFsnpEff {
+    tag {"${idSample} - ${vcf}"}
 
-  vcfVep = Channel.empty().mix(
-    vcfCompressed.until({ it[0]=="merge" })
-  )
+    publishDir "${params.outdir}/Annotation/${idSample}/snpEff", mode: params.publishDirMode
+
+    input:
+        set variantCaller, idSample, file(vcf) from snpeffVCF
+
+    output:
+        set variantCaller, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into (compressVCFsnpEffOut)
+
+    script:
+    reducedVCF = reduceVCF(vcf)
+    """
+    bgzip < ${vcf} > ${vcf}.gz
+    tabix ${vcf}.gz
+    """
 }
 
-// STEP VEP
+compressVCFsnpEffOut = compressVCFsnpEffOut.dump(tag:'VCF')
+
+// STEP VEP.1
 
 process VEP {
+    label 'VEP'
+
     tag {"${idSample} - ${variantCaller} - ${vcf}"}
 
     publishDir params.outdir, mode: params.publishDirMode, saveAs: {
@@ -1811,7 +1795,7 @@ process VEP {
     }
 
     input:
-        set annotator, variantCaller,  idSample, file(vcf), file(idx) from vcfVep
+        set variantCaller,  idSample, file(vcf), file(idx) from vcfVep
         file dataDir from Channel.value(params.vep_cache ? file(params.vep_cache) : "null")
         val cache_version from Channel.value(params.genomes[params.genome].vepCacheVersion)
         set file(cadd_WG_SNVs), file(cadd_WG_SNVs_tbi), file(cadd_InDels), file(cadd_InDels_tbi) from Channel.value([
@@ -1822,14 +1806,13 @@ process VEP {
         ])
 
     output:
-        set finalAnnotator, variantCaller, idSample, file("${reducedVCF}_VEP.ann.vcf") into vepVCF
+        set variantCaller, idSample, file("${reducedVCF}_VEP.ann.vcf") into vepVCF
         file("${reducedVCF}_VEP.summary.html") into vepReport
 
-    when: 'vep' in tools || 'merge' in tools
+    when: 'vep' in tools
 
     script:
     reducedVCF = reduceVCF(vcf)
-    finalAnnotator = annotator == "snpEff" ? 'merge' : 'VEP'
     genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
     dir_cache = (params.vep_cache && params.annotation_cache) ? " \${PWD}/${dataDir}" : "/.vep"
     cadd = (params.cadd_cache && params.cadd_WG_SNVs && params.cadd_InDels) ? "--plugin CADD,whole_genome_SNVs.tsv.gz,InDels.tsv.gz" : ""
@@ -1861,31 +1844,92 @@ process VEP {
 
 vepReport = vepReport.dump(tag:'VEP')
 
-vcfCompressVCF = snpeffVCF.mix(vepVCF)
+// STEP VEP.2 - VEP after snpEff
 
-// STEP COMPRESS AND INDEX VCF
+process VEPmerge {
+    label 'VEP'
 
-process CompressVCF {
-    tag {"${idSample} - ${annotator} - ${vcf}"}
+    tag {"${idSample} - ${variantCaller} - ${vcf}"}
 
-    publishDir "${params.outdir}/Annotation/${idSample}/${finalAnnotator}", mode: params.publishDirMode
+    publishDir params.outdir, mode: params.publishDirMode, saveAs: {
+        if (it == "${reducedVCF}_VEP.summary.html") "Reports/${idSample}/VEP/${it}"
+        else null
+    }
 
     input:
-        set annotator, variantCaller, idSample, file(vcf) from vcfCompressVCF
+        set variantCaller,  idSample, file(vcf), file(idx) from compressVCFsnpEffOut
+        file dataDir from Channel.value(params.vep_cache ? file(params.vep_cache) : "null")
+        val cache_version from Channel.value(params.genomes[params.genome].vepCacheVersion)
+        set file(cadd_WG_SNVs), file(cadd_WG_SNVs_tbi), file(cadd_InDels), file(cadd_InDels_tbi) from Channel.value([
+            params.cadd_WG_SNVs ? file(params.cadd_WG_SNVs) : "null",
+            params.cadd_WG_SNVs_tbi ? file(params.cadd_WG_SNVs_tbi) : "null",
+            params.cadd_InDels ? file(params.cadd_InDels) : "null",
+            params.cadd_InDels_tbi ? file(params.cadd_InDels_tbi) : "null"
+        ])
 
     output:
-        set annotator, variantCaller, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into (vcfCompressed, compressVCFOut)
+        set variantCaller, idSample, file("${reducedVCF}_VEP.ann.vcf") into vepVCFmerge
+        file("${reducedVCF}_VEP.summary.html") into vepReportMerge
+
+    when: 'merge' in tools
 
     script:
     reducedVCF = reduceVCF(vcf)
-    finalAnnotator = annotator == "merge" ? "VEP" : annotator
+    genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
+    dir_cache = (params.vep_cache && params.annotation_cache) ? " \${PWD}/${dataDir}" : "/.vep"
+    cadd = (params.cadd_cache && params.cadd_WG_SNVs && params.cadd_InDels) ? "--plugin CADD,whole_genome_SNVs.tsv.gz,InDels.tsv.gz" : ""
+    genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/sarek-2.5dev/bin/genesplicer,/opt/conda/envs/sarek-2.5dev/share/genesplicer-1.0-1/human,context=200,tmpdir=\$PWD/${reducedVCF}" : "--offline"
+    """
+    mkdir ${reducedVCF}
+
+    vep \
+    -i ${vcf} \
+    -o ${reducedVCF}_VEP.ann.vcf \
+    --assembly ${genome} \
+    ${cadd} \
+    ${genesplicer} \
+    --cache \
+    --cache_version ${cache_version} \
+    --dir_cache ${dir_cache} \
+    --everything \
+    --filter_common \
+    --fork ${task.cpus} \
+    --format vcf \
+    --per_gene \
+    --stats_file ${reducedVCF}_VEP.summary.html \
+    --total_length \
+    --vcf
+
+    rm -rf ${reducedVCF}
+    """
+}
+
+vepReportMerge = vepReportMerge.dump(tag:'VEP')
+
+vcfCompressVCFvep = vepVCF.mix(vepVCFmerge)
+
+// STEP COMPRESS AND INDEX VCF.2 - VEP
+
+process CompressVCFvep {
+    tag {"${idSample} - ${vcf}"}
+
+    publishDir "${params.outdir}/Annotation/${idSample}/VEP", mode: params.publishDirMode
+
+    input:
+        set variantCaller, idSample, file(vcf) from vcfCompressVCFvep
+
+    output:
+        set variantCaller, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into compressVCFOutVEP
+
+    script:
+    reducedVCF = reduceVCF(vcf)
     """
     bgzip < ${vcf} > ${vcf}.gz
     tabix ${vcf}.gz
     """
 }
 
-compressVCFOut.dump(tag:'VCF')
+compressVCFOutVEP = compressVCFOutVEP.dump(tag:'VCF')
 
 /*
 ================================================================================
@@ -1897,8 +1941,7 @@ compressVCFOut.dump(tag:'VCF')
 
 multiQCReport = Channel.empty()
     .mix(
-        bamQCmappedReport,
-        bamQCrecalibratedReport,
+        bamQCReport,
         bcftoolsReport,
         fastQCReport,
         markDuplicatesReport,
