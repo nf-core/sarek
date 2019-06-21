@@ -1626,7 +1626,7 @@ process BcftoolsStats {
 
     script:
     """
-    bcftools stats ${vcf} > ${reduceVCF(vcf)}.bcf.tools.stats.out
+    bcftools stats ${vcf} > ${reduceVCF(vcf.fileName)}.bcf.tools.stats.out
     """
 }
 
@@ -1641,7 +1641,7 @@ process Vcftools {
         set variantCaller, idSample, file(vcf) from vcfVCFtools
 
     output:
-        file ("${reduceVCF(vcf)}.*") into vcftoolsReport
+        file ("${reduceVCF(vcf.fileName)}.*") into vcftoolsReport
 
     when: !params.noReports
 
@@ -1650,17 +1650,17 @@ process Vcftools {
     vcftools \
     --gzvcf ${vcf} \
     --TsTv-by-count \
-    --out ${reduceVCF(vcf)}
+    --out ${reduceVCF(vcf.fileName)}
 
     vcftools \
     --gzvcf ${vcf} \
     --TsTv-by-qual \
-    --out ${reduceVCF(vcf)}
+    --out ${reduceVCF(vcf.fileName)}
 
     vcftools \
     --gzvcf ${vcf} \
     --FILTER-summary \
-    --out ${reduceVCF(vcf)}
+    --out ${reduceVCF(vcf.fileName)}
     """
 }
 
@@ -1739,7 +1739,7 @@ process Snpeff {
     when: 'snpeff' in tools || 'merge' in tools
 
     script:
-    reducedVCF = reduceVCF(vcf)
+    reducedVCF = reduceVCF(vcf.fileName)
     cache = (params.snpEff_cache && params.annotation_cache) ? "-dataDir \${PWD}/${dataDir}" : ""
     """
     snpEff -Xmx${task.memory.toGiga()}g \
@@ -1773,7 +1773,6 @@ process CompressVCFsnpEff {
         set variantCaller, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into (compressVCFsnpEffOut)
 
     script:
-    reducedVCF = reduceVCF(vcf)
     """
     bgzip < ${vcf} > ${vcf}.gz
     tabix ${vcf}.gz
@@ -1812,7 +1811,7 @@ process VEP {
     when: 'vep' in tools
 
     script:
-    reducedVCF = reduceVCF(vcf)
+    reducedVCF = reduceVCF(vcf.fileName)
     genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
     dir_cache = (params.vep_cache && params.annotation_cache) ? " \${PWD}/${dataDir}" : "/.vep"
     cadd = (params.cadd_cache && params.cadd_WG_SNVs && params.cadd_InDels) ? "--plugin CADD,whole_genome_SNVs.tsv.gz,InDels.tsv.gz" : ""
@@ -1874,7 +1873,7 @@ process VEPmerge {
     when: 'merge' in tools
 
     script:
-    reducedVCF = reduceVCF(vcf)
+    reducedVCF = reduceVCF(vcf.fileName)
     genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
     dir_cache = (params.vep_cache && params.annotation_cache) ? " \${PWD}/${dataDir}" : "/.vep"
     cadd = (params.cadd_cache && params.cadd_WG_SNVs && params.cadd_InDels) ? "--plugin CADD,whole_genome_SNVs.tsv.gz,InDels.tsv.gz" : ""
@@ -1922,7 +1921,6 @@ process CompressVCFvep {
         set variantCaller, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into compressVCFOutVEP
 
     script:
-    reducedVCF = reduceVCF(vcf)
     """
     bgzip < ${vcf} > ${vcf}.gz
     tabix ${vcf}.gz
