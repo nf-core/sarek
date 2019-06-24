@@ -52,6 +52,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 -   [#12](https://github.com/nf-core/sarek/pull/12) - Simplify `check_max()` function
 -   [#13](https://github.com/nf-core/sarek/pull/13) - Merge `BamQCmapped` and `BamQCrecalibrated` processes into `BamQC` process
 -   [#13](https://github.com/nf-core/sarek/pull/13) - Split `CompressVCF` process into `CompressVCFsnpEff` and `CompressVCFvep` processes
+-   [#16](https://github.com/nf-core/sarek/pull/16) - Make scripts in `bin/` and `scripts/` executable
 
 ### `Removed`
 
@@ -63,6 +64,8 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 -   [#3](https://github.com/nf-core/sarek/pull/3) - Fix Docker ownership
 -   [#11](https://github.com/nf-core/sarek/pull/11) - Fix MergeMpileup PublishDir
 -   [#13](https://github.com/nf-core/sarek/pull/13) - Fix merge in annotation
+-   [#14](https://github.com/nf-core/sarek/pull/14) - Fix output name for vcf files
+-   [#16](https://github.com/nf-core/sarek/pull/16) - Fix path to Rscript
 
 ## [2.3.FIX1] - 2019-03-04
 
