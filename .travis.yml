@@ -43,4 +43,4 @@ before_script:
 
 # Actual tests
 script:
-  - "${TRAVIS_BUILD_DIR}/scripts/run_tests.sh --test $TEST --verbose"
+  - "${TRAVIS_BUILD_DIR}/scripts/run_tests.sh --test $TEST --verbose --no-reports"
