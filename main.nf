@@ -362,6 +362,8 @@ inputReads = inputReads.dump(tag:'INPUT')
 // FASTQ and uBAM files are renamed based on the sample name
 
 process FastQCFQ {
+    label 'core2'
+
     tag {idPatient + "-" + idRun}
 
     publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idRun}", mode: params.publishDirMode
@@ -381,6 +383,8 @@ process FastQCFQ {
 }
 
 process FastQCBAM {
+    label 'core2'
+
     tag {idPatient + "-" + idRun}
 
     publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idRun}", mode: params.publishDirMode
@@ -471,6 +475,7 @@ singleBam = singleBam.dump(tag:'Single BAM')
 
 process MergeBamMapped {
     label 'singleCPUmem_x_task'
+    label 'core8'
 
     tag {idPatient + "-" + idSample}
 
@@ -496,6 +501,7 @@ mergedBam = mergedBam.dump(tag:'BAMs for MD')
 
 process MarkDuplicates {
     label 'singleCPUmem_x_task'
+    label 'core16'
 
     tag {idPatient + "-" + idSample}
 
@@ -539,6 +545,7 @@ bamBaseRecalibrator = bamMD.combine(intBaseRecalibrator)
 
 process BaseRecalibrator {
     label 'max_memory'
+    label 'core1'
 
     tag {idPatient + "-" + idSample + "-" + intervalBed}
 
@@ -582,6 +589,7 @@ tableGatherBQSRReports = tableGatherBQSRReports.groupTuple(by:[0,1])
 
 process GatherBQSRReports {
     label 'singleCPUmem_2x_task'
+    label 'core2'
 
     tag {idPatient + "-" + idSample}
 
@@ -635,6 +643,7 @@ bamApplyBQSR = bamApplyBQSR.combine(intApplyBQSR)
 
 process ApplyBQSR {
     label 'singleCPUmem_2x_task'
+    label 'core2'
 
     tag {idPatient + "-" + idSample + "-" + intervalBed.baseName}
 
@@ -667,6 +676,7 @@ bamMergeBamRecal = bamMergeBamRecal.groupTuple(by:[0,1])
 
 process MergeBamRecal {
     label 'singleCPUmem_x_task'
+    label 'core8'
 
     tag {idPatient + "-" + idSample}
 
@@ -708,6 +718,8 @@ bamRecalSampleTSV
 // STEP 5: QC
 
 process SamtoolsStats {
+    label 'core2'
+
     tag {idPatient + "-" + idSample}
 
     publishDir "${params.outdir}/Reports/${idSample}/SamToolsStats", mode: params.publishDirMode
@@ -734,6 +746,7 @@ bamBamQC = bamMappedBamQC.mix(bamRecalBamQC)
 
 process BamQC {
     label 'max_memory'
+    label 'core16'
 
     tag {idPatient + "-" + idSample}
 
@@ -793,6 +806,7 @@ bamHaplotypeCaller = bamRecalAllTemp.combine(intHaplotypeCaller)
 
 process HaplotypeCaller {
     label 'singleCPUmem_x2_task'
+    label 'core2'
 
     tag {idSample + "-" + intervalBed.baseName}
 
@@ -1093,6 +1107,8 @@ vcfConcatenateVCFs = vcfMuTect2.mix(vcfFreeBayes, vcfGenotypeGVCFs, gvcfHaplotyp
 vcfConcatenateVCFs = vcfConcatenateVCFs.dump(tag:'VCF to merge')
 
 process ConcatVCF {
+    label 'core8'
+
     tag {variantCaller + "-" + idSample}
 
     publishDir "${params.outdir}/VariantCalling/${idSample}/${"$variantCaller"}", mode: params.publishDirMode
@@ -1612,6 +1628,8 @@ vcfKeep = Channel.empty().mix(
 // STEP VCF.QC
 
 process BcftoolsStats {
+    label 'core1'
+
     tag {"${variantCaller} - ${vcf}"}
 
     publishDir "${params.outdir}/Reports/${idSample}/BCFToolsStats", mode: params.publishDirMode
@@ -1633,6 +1651,8 @@ process BcftoolsStats {
 bcftoolsReport = bcftoolsReport.dump(tag:'BCFTools')
 
 process Vcftools {
+    label 'core1'
+
     tag {"${variantCaller} - ${vcf}"}
 
     publishDir "${params.outdir}/Reports/${idSample}/VCFTools", mode: params.publishDirMode
@@ -1785,6 +1805,7 @@ compressVCFsnpEffOut = compressVCFsnpEffOut.dump(tag:'VCF')
 
 process VEP {
     label 'VEP'
+    label 'core4'
 
     tag {"${idSample} - ${variantCaller} - ${vcf}"}
 
@@ -1847,6 +1868,7 @@ vepReport = vepReport.dump(tag:'VEP')
 
 process VEPmerge {
     label 'VEP'
+    label 'core4'
 
     tag {"${idSample} - ${variantCaller} - ${vcf}"}
 
@@ -2117,12 +2139,12 @@ def nfcoreHeader() {
     ${c_blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${c_yellow}}  {${c_reset}
     ${c_blue}  | \\| |       \\__, \\__/ |  \\ |___     ${c_green}\\`-._,-`-,${c_reset}
                                             ${c_green}`._,._,\'${c_reset}
-    ${c_white}       ____      ${c_blue}  _____               _ ${c_reset}
-    ${c_white}     .' _  `.    ${c_blue} / ____|             | | ${c_reset}
-    ${c_white}    /  ${c_green}|\\${c_white}`-_${c_white} \\ ${c_blue}  | (___  ___  _ __ __ | | __ ${c_reset}
-    ${c_white}   |   ${c_green}| \\  ${c_white}`-${c_white}| ${c_blue}  \\___ \\/__ \\| ´__/ _\\| |/ / ${c_reset}
-    ${c_white}    \\ ${c_green}|   \\  ${c_white}/ ${c_blue}   ____) | __ | | |  __|   < ${c_reset}
-    ${c_white}     `${c_green}|${c_white}____${c_green}\\${c_white}'   ${c_blue} |_____/\\____|_|  \\__/|_|\\_\\ ${c_reset}
+        ${c_white}____${c_reset}
+      ${c_white}.´ _  `.${c_reset}
+     ${c_white}/  ${c_green}|\\${c_reset}`-_ \\${c_reset}     ${c_blue} __        __   ___     ${c_reset}
+    ${c_white}|   ${c_green}| \\${c_reset}  `-|${c_reset}    ${c_blue}|__`  /\\  |__) |__  |__/${c_reset}
+     ${c_white}\\ ${c_green}|   \\${c_reset}  /${c_reset}     ${c_blue}.__| /¯¯\\ |  \\ |___ |  \\${c_reset}
+      ${c_white}`${c_green}|${c_reset}____${c_green}\\${c_reset}´${c_reset}
 
     ${c_purple}  nf-core/sarek v${workflow.manifest.version}${c_reset}
     ${c_dim}----------------------------------------------------${c_reset}
