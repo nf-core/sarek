@@ -44,7 +44,6 @@ def helpMessage() {
         --genome                    Name of iGenomes reference
         --noGVCF                    No g.vcf output from HaplotypeCaller
         --noStrelkaBP               Will not use Manta candidateSmallIndels for Strelka as Best Practice
-        --noReports                 Disable all QC reports
         --nucleotidesPerSecond      To estimate interval size by default 1000.0
         --step                      Specify starting step
                                     Available: Mapping, Recalibrate, VariantCalling, Annotate
@@ -55,6 +54,8 @@ def helpMessage() {
                                     Manta, mpileup, MuTect2, Strelka
         --annotateTools             Specify from which tools Sarek will annotate VCF, only for step annotate
                                     Available: HaplotypeCaller, Manta, MuTect2, Strelka
+        --skip                      Specify which QC tools to skip when running Sarek
+                                    Available: bamQC, BCFtools, FastQC, MultiQC, samtools, vcftools, versions
 
     References                      If not specified in the configuration file or you wish to overwrite any of the references.
         --acLoci                    acLoci file
@@ -109,7 +110,7 @@ params.genesplicer = null
 params.monochrome_logs = null
 params.multiqc_config = null
 params.noGVCF = null
-params.noReports = null
+params.skip = null
 params.noStrelkaBP = null
 params.nucleotidesPerSecond = 1000.0
 params.sample = null
@@ -127,9 +128,13 @@ if (step.contains(',')) exit 1, 'You can choose only one step, see --help for mo
 if (!checkParameterExistence(step, stepList)) exit 1, "Unknown step ${step}, see --help for more information"
 
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
+skip = params.skip ? params.skip.split(',').collect{it.trim().toLowerCase()} : []
 annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
 toolList = defineToolList()
+skipList = defineSkipList()
+skip = skip == 'all' ? skip : skipList
 if (!checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
+if (!checkParameterList(skip,skipList)) exit 1, 'Unknown QC tool(s), see --help for more information'
 
 referenceMap = defineReferenceMap(step, tools)
 if (!checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
@@ -199,7 +204,7 @@ if (params.sample)              summary['Sample']           = params.sample
 if (params.targetBED)           summary['Target BED']       = params.targetBED
 if (params.step)                summary['Step']             = params.step
 if (params.tools)               summary['Tools']            = tools.join(', ')
-if (params.noReports)           summary['No Reports']       = params.noReports
+if (params.skip)                summary['QC tools skip']    = skip.join(', ')
 if (params.noGVCF)              summary['No GVCF']          = params.noGVCF
 if (params.noStrelkaBP)         summary['No Strelka BP']    = params.noStrelkaBP
 if (params.sequencing_center)   summary['Sequenced by ']    = params.sequencing_center
@@ -237,7 +242,7 @@ process GetSoftwareVersions {
     output:
         file 'software_versions_mqc.yaml' into yamlSoftwareVersion
 
-    when: !params.noReports
+    when: !'versions' in skip
 
     script:
     """
@@ -362,7 +367,7 @@ inputReads = inputReads.dump(tag:'INPUT')
 // FASTQ and uBAM files are renamed based on the sample name
 
 process FastQCFQ {
-    label 'core2'
+    label 'cpus_2'
 
     tag {idPatient + "-" + idRun}
 
@@ -374,7 +379,8 @@ process FastQCFQ {
     output:
         file "*_fastqc.{zip,html}" into fastQCFQReport
 
-    when: step == 'mapping' && !params.noReports
+    when: step == 'mapping' && !'fastqc' in skip
+
 
     script:
     """
@@ -383,7 +389,7 @@ process FastQCFQ {
 }
 
 process FastQCBAM {
-    label 'core2'
+    label 'cpus_2'
 
     tag {idPatient + "-" + idRun}
 
@@ -395,7 +401,7 @@ process FastQCBAM {
     output:
         file "*_fastqc.{zip,html}" into fastQCBAMReport
 
-    when: step == 'mapping' && !params.noReports
+    when: step == 'mapping' && !'fastqc' in skip
 
     script:
     """
@@ -410,7 +416,7 @@ fastQCReport = fastQCReport.dump(tag:'FastQC')
 // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
 
 process MapReads {
-    label 'max_cpus'
+    label 'cpus_max'
 
     tag {idPatient + "-" + idRun}
 
@@ -474,8 +480,7 @@ singleBam = singleBam.dump(tag:'Single BAM')
 // STEP 1.5: MERGING BAM FROM MULTIPLE LANES
 
 process MergeBamMapped {
-    label 'singleCPUmem_x_task'
-    label 'core8'
+    label 'cpus_8'
 
     tag {idPatient + "-" + idSample}
 
@@ -500,8 +505,7 @@ mergedBam = mergedBam.dump(tag:'BAMs for MD')
 // STEP 2: MARKING DUPLICATES
 
 process MarkDuplicates {
-    label 'singleCPUmem_x_task'
-    label 'core16'
+    label 'cpus_16'
 
     tag {idPatient + "-" + idSample}
 
@@ -544,8 +548,8 @@ bamBaseRecalibrator = bamMD.combine(intBaseRecalibrator)
 // STEP 3: CREATING RECALIBRATION TABLES
 
 process BaseRecalibrator {
-    label 'max_memory'
-    label 'core1'
+    label 'memory_max'
+    label 'cpus_1'
 
     tag {idPatient + "-" + idSample + "-" + intervalBed}
 
@@ -588,8 +592,8 @@ tableGatherBQSRReports = tableGatherBQSRReports.groupTuple(by:[0,1])
 // STEP 3.5: MERGING RECALIBRATION TABLES
 
 process GatherBQSRReports {
-    label 'singleCPUmem_2x_task'
-    label 'core2'
+    label 'memory_singleCPU_2_task'
+    label 'cpus_2'
 
     tag {idPatient + "-" + idSample}
 
@@ -642,8 +646,8 @@ bamApplyBQSR = bamApplyBQSR.combine(intApplyBQSR)
 // STEP 4: RECALIBRATING
 
 process ApplyBQSR {
-    label 'singleCPUmem_2x_task'
-    label 'core2'
+    label 'memory_singleCPU_2_task'
+    label 'cpus_2'
 
     tag {idPatient + "-" + idSample + "-" + intervalBed.baseName}
 
@@ -675,8 +679,7 @@ bamMergeBamRecal = bamMergeBamRecal.groupTuple(by:[0,1])
 // STEP 4.5: MERGING THE RECALIBRATED BAM FILES
 
 process MergeBamRecal {
-    label 'singleCPUmem_x_task'
-    label 'core8'
+    label 'cpus_8'
 
     tag {idPatient + "-" + idSample}
 
@@ -718,7 +721,7 @@ bamRecalSampleTSV
 // STEP 5: QC
 
 process SamtoolsStats {
-    label 'core2'
+    label 'cpus_2'
 
     tag {idPatient + "-" + idSample}
 
@@ -730,7 +733,7 @@ process SamtoolsStats {
     output:
     file ("${bam}.samtools.stats.out") into samtoolsStatsReport
 
-    when: !params.noReports
+    when: !'samtools' in skip
 
     script:
     """
@@ -745,8 +748,8 @@ samtoolsStatsReport = samtoolsStatsReport.dump(tag:'SAMTools')
 bamBamQC = bamMappedBamQC.mix(bamRecalBamQC)
 
 process BamQC {
-    label 'max_memory'
-    label 'core16'
+    label 'memory_max'
+    label 'cpus_16'
 
     tag {idPatient + "-" + idSample}
 
@@ -759,7 +762,7 @@ process BamQC {
     output:
         file("${bam.baseName}") into bamQCReport
 
-    when: !params.noReports
+    when: !'bamqc' in skip
 
     script:
     use_bed = params.targetBED ? "-gff ${targetBED}" : ''
@@ -805,8 +808,8 @@ bamHaplotypeCaller = bamRecalAllTemp.combine(intHaplotypeCaller)
 // STEP GATK HAPLOTYPECALLER.1
 
 process HaplotypeCaller {
-    label 'singleCPUmem_x2_task'
-    label 'core2'
+    label 'memory_singleCPU_task_sq'
+    label 'cpus_2'
 
     tag {idSample + "-" + intervalBed.baseName}
 
@@ -885,8 +888,8 @@ vcfGenotypeGVCFs = vcfGenotypeGVCFs.groupTuple(by:[0,1,2])
 // STEP STRELKA.1 - SINGLE MODE
 
 process StrelkaSingle {
-    label 'max_cpus'
-    label 'max_memory'
+    label 'cpus_max'
+    label 'memory_max'
 
     tag {idSample}
 
@@ -934,8 +937,8 @@ vcfStrelkaSingle = vcfStrelkaSingle.dump(tag:'Strelka - Single Mode')
 // STEP MANTA.1 - SINGLE MODE
 
 process MantaSingle {
-    label 'max_cpus'
-    label 'max_memory'
+    label 'cpus_max'
+    label 'memory_max'
 
     tag {idSample}
 
@@ -1027,8 +1030,6 @@ bamMpileup = bamMpileup.spread(intMpileup)
 // STEP GATK MUTECT2
 
 process Mutect2 {
-    label 'singleCPUmem_x_task'
-
     tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
 
     input:
@@ -1063,8 +1064,6 @@ vcfMuTect2 = vcfMuTect2.groupTuple(by:[0,1,2])
 // STEP FREEBAYES
 
 process FreeBayes {
-    label 'singleCPUmem_x_task'
-
     tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
 
     input:
@@ -1107,7 +1106,7 @@ vcfConcatenateVCFs = vcfMuTect2.mix(vcfFreeBayes, vcfGenotypeGVCFs, gvcfHaplotyp
 vcfConcatenateVCFs = vcfConcatenateVCFs.dump(tag:'VCF to merge')
 
 process ConcatVCF {
-    label 'core8'
+    label 'cpus_8'
 
     tag {variantCaller + "-" + idSample}
 
@@ -1138,8 +1137,8 @@ vcfConcatenated = vcfConcatenated.dump(tag:'VCF')
 // STEP STRELKA.2 - SOMATIC PAIR
 
 process Strelka {
-    label 'max_cpus'
-    label 'max_memory'
+    label 'cpus_max'
+    label 'memory_max'
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
@@ -1189,8 +1188,8 @@ vcfStrelka = vcfStrelka.dump(tag:'Strelka')
 // STEP MANTA.2 - SOMATIC PAIR
 
 process Manta {
-    label 'max_cpus'
-    label 'max_memory'
+    label 'cpus_max'
+    label 'memory_max'
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
@@ -1257,8 +1256,8 @@ pairBamStrelkaBP = pairBamStrelkaBP.map {
 // STEP STRELKA.3 - SOMATIC PAIR - BEST PRACTICES
 
 process StrelkaBP {
-    label 'max_cpus'
-    label 'max_memory'
+    label 'cpus_max'
+    label 'memory_max'
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
@@ -1311,7 +1310,7 @@ vcfStrelkaBP = vcfStrelkaBP.dump(tag:'Strelka BP')
 // Run commands and code from Malin Larsson
 // Based on Jesper Eisfeldt's code
 process AlleleCounter {
-    label 'singleCPUmem_2x_task'
+    label 'memory_singleCPU_2_task'
 
     tag {idSample}
 
@@ -1358,7 +1357,7 @@ alleleCounterOut = alleleCounterOut.map {
 // R script from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
 process ConvertAlleleCounts {
-    label 'singleCPUmem_2x_task'
+    label 'memory_singleCPU_2_task'
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
@@ -1384,7 +1383,7 @@ process ConvertAlleleCounts {
 // R scripts from Malin Larssons bitbucket repo:
 // https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
 process Ascat {
-    label 'singleCPUmem_2x_task'
+    label 'memory_singleCPU_2_task'
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
@@ -1412,7 +1411,7 @@ ascatOut.dump(tag:'ASCAT')
 // STEP CONTROLFREEC.1 - MPILEUP
 
 process Mpileup {
-    label 'singleCPUmem_2x_task'
+    label 'memory_singleCPU_2_task'
 
     tag {idSample + "-" + intervalBed.baseName}
 
@@ -1442,8 +1441,6 @@ mpileupMerge = mpileupMerge.groupTuple(by:[0,1])
 // STEP CONTROLFREEC.2 - MERGE MPILEUP
 
 process MergeMpileup {
-    label 'singleCPUmem_x_task'
-
     tag {idSample}
 
     publishDir params.outdir, mode: params.publishDirMode, saveAs: { it == "${idSample}.pileup.gz" ? "VariantCalling/${idSample}/mpileup/${it}" : '' }
@@ -1487,7 +1484,7 @@ mpileupOut = mpileupOut.map {
 // STEP CONTROLFREEC.3 - CONTROLFREEC
 
 process ControlFREEC {
-    label 'singleCPUmem_2x_task'
+    label 'memory_singleCPU_2_task'
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
@@ -1553,7 +1550,7 @@ controlFreecOut.dump(tag:'ControlFREEC')
 // STEP CONTROLFREEC.3 - VISUALIZATION
 
 process ControlFreecViz {
-    label 'singleCPUmem_2x_task'
+    label 'memory_singleCPU_2_task'
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
@@ -1628,7 +1625,7 @@ vcfKeep = Channel.empty().mix(
 // STEP VCF.QC
 
 process BcftoolsStats {
-    label 'core1'
+    label 'cpus_1'
 
     tag {"${variantCaller} - ${vcf}"}
 
@@ -1640,7 +1637,7 @@ process BcftoolsStats {
     output:
         file ("*.bcf.tools.stats.out") into bcftoolsReport
 
-    when: !params.noReports
+    when: !'bcftools' in skip
 
     script:
     """
@@ -1651,7 +1648,7 @@ process BcftoolsStats {
 bcftoolsReport = bcftoolsReport.dump(tag:'BCFTools')
 
 process Vcftools {
-    label 'core1'
+    label 'cpus_1'
 
     tag {"${variantCaller} - ${vcf}"}
 
@@ -1663,7 +1660,7 @@ process Vcftools {
     output:
         file ("${reduceVCF(vcf.fileName)}.*") into vcftoolsReport
 
-    when: !params.noReports
+    when: !'vcftools' in skip
 
     script:
     """
@@ -1738,8 +1735,6 @@ vcfVep = vcfVep.map {
 // STEP SNPEFF
 
 process Snpeff {
-    label 'singleCPUmem_x_task'
-
     tag {"${idSample} - ${variantCaller} - ${vcf}"}
 
     publishDir params.outdir, mode: params.publishDirMode, saveAs: {
@@ -1805,7 +1800,7 @@ compressVCFsnpEffOut = compressVCFsnpEffOut.dump(tag:'VCF')
 
 process VEP {
     label 'VEP'
-    label 'core4'
+    label 'cpus_4'
 
     tag {"${idSample} - ${variantCaller} - ${vcf}"}
 
@@ -1868,7 +1863,7 @@ vepReport = vepReport.dump(tag:'VEP')
 
 process VEPmerge {
     label 'VEP'
-    label 'core4'
+    label 'cpus_4'
 
     tag {"${idSample} - ${variantCaller} - ${vcf}"}
 
@@ -1983,7 +1978,7 @@ process MultiQC {
     output:
         set file("*multiqc_report.html"), file("*multiqc_data") into multiQCOut
 
-    when: !params.noReports
+    when: !'multiqc' in skip
 
     script:
     """
@@ -2291,6 +2286,19 @@ def defineStepList() {
         'mapping',
         'recalibrate',
         'variantcalling'
+    ]
+}
+
+// Define list of skipable QC tools
+def defineSkipList() {
+    return [
+        'bamqc',
+        'bcftools',
+        'fastqc',
+        'multiqc',
+        'samtools',
+        'vcftools',
+        'versions'
     ]
 }
 
