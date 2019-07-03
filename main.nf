@@ -127,12 +127,12 @@ if (step == 'preprocessing') step = 'mapping'
 if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
 if (!checkParameterExistence(step, stepList)) exit 1, "Unknown step ${step}, see --help for more information"
 
-tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
-skip = params.skip ? params.skip.split(',').collect{it.trim().toLowerCase()} : []
-annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
 toolList = defineToolList()
 skipList = defineSkipList()
-skip = skip == 'all' ? skip : skipList
+tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
+skip = params.skip ? params.skip == 'all' ? skipList : params.skip.split(',').collect{it.trim().toLowerCase()} : []
+annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
+
 if (!checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
 if (!checkParameterList(skip,skipList)) exit 1, 'Unknown QC tool(s), see --help for more information'
 
@@ -242,14 +242,14 @@ process GetSoftwareVersions {
     output:
         file 'software_versions_mqc.yaml' into yamlSoftwareVersion
 
-    when: !'versions' in skip
+    when: !('versions' in skip)
 
     script:
     """
     alleleCounter --version &> v_allelecount.txt  || true
     bcftools version > v_bcftools.txt 2>&1 || true
     bwa &> v_bwa.txt 2>&1 || true
-    cat ${baseDir}/bin/ascat.R | grep "ASCAT version" &> v_ascat.txt  || true
+    cat ${baseDir}/scripts/ascat.R | grep "ASCAT version" &> v_ascat.txt  || true
     configManta.py --version > v_manta.txt 2>&1 || true
     configureStrelkaGermlineWorkflow.py --version > v_strelka.txt 2>&1 || true
     echo "${workflow.manifest.version}" &> v_pipeline.txt 2>&1 || true
@@ -379,7 +379,7 @@ process FastQCFQ {
     output:
         file "*_fastqc.{zip,html}" into fastQCFQReport
 
-    when: step == 'mapping' && !'fastqc' in skip
+    when: step == 'mapping' && !('fastqc' in skip)
 
 
     script:
@@ -401,7 +401,7 @@ process FastQCBAM {
     output:
         file "*_fastqc.{zip,html}" into fastQCBAMReport
 
-    when: step == 'mapping' && !'fastqc' in skip
+    when: step == 'mapping' && !('fastqc' in skip)
 
     script:
     """
@@ -511,7 +511,7 @@ process MarkDuplicates {
 
     publishDir params.outdir, mode: params.publishDirMode,
         saveAs: {
-            if (it == "${idSample}.bam.metrics") "Reports/${idSample}/MarkDuplicates/${it}"
+            if (it == "${idSample}.bam.metrics" && 'markduplicates' in skip) "Reports/${idSample}/MarkDuplicates/${it}"
             else "Preprocessing/${idSample}/DuplicateMarked/${it}"
         }
 
@@ -538,6 +538,8 @@ process MarkDuplicates {
         --OUTPUT ${idSample}.md.bam
     """
 }
+
+if ('markduplicates' in skip) markDuplicatesReport.close()
 
 duplicateMarkedBams = duplicateMarkedBams.dump(tag:'MD BAM')
 markDuplicatesReport = markDuplicatesReport.dump(tag:'MD Report')
@@ -733,7 +735,7 @@ process SamtoolsStats {
     output:
     file ("${bam}.samtools.stats.out") into samtoolsStatsReport
 
-    when: !'samtools' in skip
+    when: !('samtools' in skip)
 
     script:
     """
@@ -762,7 +764,7 @@ process BamQC {
     output:
         file("${bam.baseName}") into bamQCReport
 
-    when: !'bamqc' in skip
+    when: !('bamqc' in skip)
 
     script:
     use_bed = params.targetBED ? "-gff ${targetBED}" : ''
@@ -1637,7 +1639,7 @@ process BcftoolsStats {
     output:
         file ("*.bcf.tools.stats.out") into bcftoolsReport
 
-    when: !'bcftools' in skip
+    when: !('bcftools' in skip)
 
     script:
     """
@@ -1660,7 +1662,7 @@ process Vcftools {
     output:
         file ("${reduceVCF(vcf.fileName)}.*") into vcftoolsReport
 
-    when: !'vcftools' in skip
+    when: !('vcftools' in skip)
 
     script:
     """
@@ -1971,14 +1973,14 @@ process MultiQC {
     publishDir "${params.outdir}/Reports/MultiQC", mode: params.publishDirMode
 
     input:
-        file (multiqcConfig) from Channel.value(params.multiqc_config ? file(params.multiqc_config) : createMultiQCconfig())
+        file (multiqcConfig) from Channel.value(params.multiqc_config ? file(params.multiqc_config) : "")
         file (reports) from multiQCReport
         file (versions) from yamlSoftwareVersion
 
     output:
         set file("*multiqc_report.html"), file("*multiqc_data") into multiQCOut
 
-    when: !'multiqc' in skip
+    when: !('multiqc' in skip)
 
     script:
     """
@@ -2220,28 +2222,6 @@ def checkReferenceMap(referenceMap) {
     }
 }
 
-// Personnalise the MultiQC report
-def createMultiQCconfig() {
-  def file = workDir.resolve('multiqc_config.yaml')
-  file.text  = """
-  custom_logo: ${baseDir}/docs/images/nf-core_logo.png
-  custom_logo_url: https://github.com/nf-core/sarek/
-  custom_logo_title: 'nf-core/sarek'
-  report_header_info:
-
-  top_modules:
-  - 'fastqc'
-  - 'picard'
-  - 'samtools'
-  - 'qualimap'
-  - 'bcftools'
-  - 'vcftools'
-  - 'snpeff'
-  """.stripIndent()
-
-  return file
-}
-
 // Define map of reference depending of tools and step
 def defineReferenceMap(step, tools) {
     def referenceMap = [
@@ -2295,6 +2275,7 @@ def defineSkipList() {
         'bamqc',
         'bcftools',
         'fastqc',
+        'markduplicates',
         'multiqc',
         'samtools',
         'vcftools',
