@@ -36,6 +36,8 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 -   [#13](https://github.com/nf-core/sarek/pull/13) - Add `CompressVCFsnpEff` and `CompressVCFvep` processes
 -   [#18](https://github.com/nf-core/sarek/pull/18) - Add --no-reports option for tests + add snpEff,VEP,merge to MULTIPLE test
 -   [#18](https://github.com/nf-core/sarek/pull/18) - Add possibility to download other genome for sareksnpeff and sarekvep containers
+-   [#18](https://github.com/nf-core/sarek/pull/18) - Add params `--skip` to skip specified QC tools
+-   [#18](https://github.com/nf-core/sarek/pull/18) - Add logo to MultiQC report
 
 ### `Changed`
 
@@ -60,12 +62,15 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 -   [#16](https://github.com/nf-core/sarek/pull/16) - Make scripts in `bin/` and `scripts/` executable
 -   [#18](https://github.com/nf-core/sarek/pull/18) - Use --no-reports for TravisCI testing
 -   [#18](https://github.com/nf-core/sarek/pull/18) - Add --no-reports for all tests but MULTIPLE in Jenkins
+-   [#18](https://github.com/nf-core/sarek/pull/18) - `--noReports` is now `--skip all`
+-   [#18](https://github.com/nf-core/sarek/pull/18) - Update logo
 
 ### `Removed`
 
 -   [#9](https://github.com/nf-core/sarek/pull/9) - Removed `relatedness2` graph from `vcftools stats`
 -   [#13](https://github.com/nf-core/sarek/pull/13) - Removed `BamQCmapped` and `BamQCrecalibrated` processes
 -   [#13](https://github.com/nf-core/sarek/pull/13) - Removed `CompressVCF`
+-   [#18](https://github.com/nf-core/sarek/pull/18) - Removed params `--noReports`
 
 ### `Fixed`
 
