@@ -149,13 +149,13 @@ So every member of the project who wants to use nf-core/sarek will need to do:
 And then nf-core/sarek can be used with:
 
 ```bash
-> nextflow run ~/sarek/main.nf -c ~/sarek/configs/conf/uppmax.config --project [PROJECT] --genome [GENOME ASSEMBLY] ...
+> nextflow run ~/sarek/main.nf -profile uppmax --custom_config_base ~/sarek/configs --project [PROJECT] --genome [GENOME ASSEMBLY] ...
 ```
 
 This is an example of how to run sarek with the tool Manta and the genome assembly version GRCh38:
 
 ```bash
-> nextflow run ~/sarek/main.nf -c ~/sarek/configs/conf/uppmax.config --project [PROJECT] --tools Manta --sample [SAMPLE.TSV] --genome GRCh38
+> nextflow run ~/sarek/main.nf -profile uppmax --custom_config_base ~/sarek/configs --project [PROJECT] --tools Manta --sample [SAMPLE.TSV] --genome GRCh38
 ```
 
 ## Update nf-core/sarek
