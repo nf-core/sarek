@@ -2082,9 +2082,9 @@ workflow.onComplete {
     c_purple = params.monochrome_logs ? '' : "\033[0;35m";
 
     if (workflow.stats.ignoredCountFmt > 0 && workflow.success) {
-        log.info "${c_purple}Warning, pipeline completed, but with errored process(es) ${c_reset}"
-        log.info "${c_red}Number of ignored errored process(es) : ${workflow.stats.ignoredCountFmt} ${c_reset}"
-        log.info "${c_green}Number of successfully ran process(es) : ${workflow.stats.succeedCountFmt} ${c_reset}"
+        log.info "${c_purple}Warning, pipeline completed, but with errored process(es)${c_reset}"
+        log.info "${c_red}Number of ignored errored process(es) : ${workflow.stats.ignoredCountFmt}${c_reset}"
+        log.info "${c_green}Number of successfully ran process(es) : ${workflow.stats.succeedCountFmt}${c_reset}"
     }
 
     if (workflow.success) log.info "${c_purple}[nf-core/sarek]${c_green} Pipeline completed successfully${c_reset}"
