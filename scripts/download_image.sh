@@ -3,22 +3,34 @@ set -xeuo pipefail
 
 # This script download and tag image for sarek tests
 
-usage() { echo "Usage: $0 <-t test> <-n engine>" 1>&2; exit 1; }
+usage() { echo "Usage: $0 <-t test|annotation tool> <-n engine> <-T version to pull/build> <-g genome>" 1>&2; exit 1; }
 
 ENGINE=docker
+GENOME=smallGRCh37
 NXF_SINGULARITY_CACHEDIR=${NXF_SINGULARITY_CACHEDIR:-work/singularity/.}
 TEST=ALL
+VERSION=dev
 
 while [[ $# -gt 0 ]]
 do
   key=$1
   case $key in
+    -g|--genome)
+    GENOME=$2
+    shift # past argument
+    shift # past value
+    ;; 
     -n|--engine)
     ENGINE=$2
     shift # past argument
     shift # past value
     ;;
-    -t|--test)
+    -T|--tagged-version)
+    VERSION=$2
+    shift # past argument
+    shift # past value
+    ;;
+    -t|--test|--tool) 
     TEST=$2
     shift # past argument
     shift # past value
@@ -30,44 +42,39 @@ do
   esac
 done
 
-if [[ ALL,ANNOTATEALL,ANNOTATESNPEFF =~ $TEST ]]
+SOURCEGENOME=${GENOME}
+
+if [[ smallGRCh37 =~ $SOURCEGENOME ]]
 then
-  if [[ docker =~ $ENGINE ]]
-  then
-    docker pull nfcore/sareksnpeff:dev.GRCh37
-    docker tag nfcore/sareksnpeff:dev.GRCh37 nfcore/sareksnpeff:dev.smallGRCh37
-  elif [[ singularity =~ $ENGINE ]]
-  then
-    mkdir -p work/singularity
-    singularity build nfcore-sareksnpeff-dev.GRCh37.img docker://nfcore/sareksnpeff:dev.GRCh37
-    mv nfcore-sareksnpeff-dev.GRCh37.img ${NXF_SINGULARITY_CACHEDIR}/.
-  fi
+  SOURCEGENOME=GRCh37
 fi
 
-if [[ ALL,ANNOTATEALL,ANNOTATEVEP =~ $TEST ]]
-then
+get_image(){
+  CONTAINER=$1
+  SOURCE=$2
+  TARGET=$3
   if [[ docker =~ $ENGINE ]]
   then
-    docker pull nfcore/sarekvep:dev.GRCh37
-    docker tag nfcore/sarekvep:dev.GRCh37 nfcore/sarekvep:dev.smallGRCh37
-  elif [[ singularity =~ $ENGINE ]]
+    docker pull nfcore/${1}:${2}
+    docker tag nfcore/${1}:${2} nfcore/${1}:${3}
+  elif  [[ singularity =~ $ENGINE ]]
   then
-    mkdir -p work/singularity
-    singularity build nfcore-sarekvep-dev.GRCh37.img docker://nfcore/sarekvep:dev.GRCh37
-    mv nfcore-sarekvep-dev.GRCh37.img ${NXF_SINGULARITY_CACHEDIR}/.
+    mkdir -p ${NXF_SINGULARITY_CACHEDIR}
+    singularity build ${NXF_SINGULARITY_CACHEDIR}/nfcore-${1}-${3}.img docker://nfcore/${1}:${2}
   fi
+}
+
+if [[ ALL,ANNOTATEBOTH,ANNOTATESNPEFF,SNPEFF =~ $TEST ]]
+then
+  get_image sareksnpeff ${VERSION}.${SOURCEGENOME} ${VERSION}.${GENOME}
 fi
 
-if [[ ANNOTATEALL,ANNOTATEVEP,ANNOTATESNPEFF != $TEST ]]
+if [[ ALL,ANNOTATEBOTH,ANNOTATEVEP,VEP =~ $TEST ]]
 then
-  if [[ docker =~ $ENGINE ]]
-  then
-    docker pull nfcore/sarek:dev
-    docker tag nfcore/sarek:dev nfcore/sarek:dev
-  elif [[ singularity =~ $ENGINE ]]
-  then
-    mkdir -p work/singularity
-    singularity build nfcore-sarek-dev.img docker://nfcore/sarek:dev
-    mv nfcore-sarek-dev.img ${NXF_SINGULARITY_CACHEDIR}/.
-  fi
+  get_image sarekvep ${VERSION}.${SOURCEGENOME} ${VERSION}.${GENOME}
+fi
+
+if ! [[ ANNOTATEBOTH,ANNOTATESNPEFF,ANNOTATEVEP,SNPEFF,VEP =~ $TEST ]]
+then
+  get_image sarek ${VERSION} ${VERSION}
 fi

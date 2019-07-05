@@ -8,12 +8,13 @@ usage() { echo "Usage: $0 <-p profile> <-t test> <-c cpus> <-n> <-v>" 1>&2; exit
 
 CPUS=2
 LOGS=''
+REPORTS=''
 NXF_SINGULARITY_CACHEDIR=${NXF_SINGULARITY_CACHEDIR:-work/singularity/.}
 OFFLINE=false
 PROFILE=docker
 TEST=ALL
-TRAVIS_BUILD_DIR=${TRAVIS_BUILD_DIR:-.}
 TRAVIS=${TRAVIS:-false}
+TRAVIS_BUILD_DIR=${TRAVIS_BUILD_DIR:-.}
 VERBOSE=''
 
 while [[ $# -gt 0 ]]
@@ -26,6 +27,10 @@ do
     ;;
     -n|--no-logs)
     LOGS=true
+    shift # past value
+    ;;
+    --no-reports)
+    REPORTS="--skip all"
     shift # past value
     ;;
     --offline)
@@ -61,7 +66,7 @@ function manage_logs() {
 }
 
 function run_sarek() {
-  nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile test,${PROFILE} ${VERBOSE} --monochrome_logs $@
+  nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile test,${PROFILE} ${VERBOSE} --monochrome_logs ${REPORTS} $@
 }
 
 if [[ ALL,GERMLINE =~ $TEST ]]
@@ -71,9 +76,9 @@ then
     rm -rf data
     git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data
   fi
-  run_sarek --tools=false --sample data/testdata/tiny/normal --noReports
-  run_sarek --tools=false --sample results/Preprocessing/TSV/duplicateMarked.tsv --step recalibrate --noReports
-  run_sarek --tools HaplotypeCaller --sample results/Preprocessing/TSV/recalibrated.tsv --step variantCalling --noReports
+  run_sarek --tools=false --sample data/testdata/tiny/normal
+  run_sarek --tools=false --sample results/Preprocessing/TSV/duplicateMarked.tsv --step recalibrate
+  run_sarek --tools HaplotypeCaller --sample results/Preprocessing/TSV/recalibrated.tsv --step variantCalling
   if [[ $OFFLINE == false ]]
   then
     rm -rf data
@@ -83,22 +88,24 @@ fi
 
 if [[ ALL,SOMATIC =~ $TEST ]]
 then
+  OPTIONS="--tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2"
   if [[ $OFFLINE == false ]]
   then
-    run_sarek --tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2 --noReports
+    run_sarek ${OPTIONS}
   else
-    run_sarek --tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2 --noReports --sample data/testdata/tsv/tiny-manta.tsv
+    run_sarek ${OPTIONS} --sample data/testdata/tsv/tiny-manta.tsv
   fi
   manage_logs
 fi
 
 if [[ ALL,TARGETED =~ $TEST ]]
 then
+  OPTIONS="--tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2"
   if [[ $OFFLINE == false ]]
   then
-    run_sarek --tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2 --noReports --targetBED https://github.com/nf-core/test-datasets/raw/sarek/testdata/target.bed
+    run_sarek ${OPTIONS} --targetBED https://github.com/nf-core/test-datasets/raw/sarek/testdata/target.bed
   else
-    run_sarek --tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2 --noReports --sample data/testdata/tsv/tiny-manta.tsv --targetBED data/testdata/target.bed
+    run_sarek ${OPTIONS} --sample data/testdata/tsv/tiny-manta.tsv --targetBED data/testdata/target.bed
   fi
   manage_logs
 fi
@@ -110,7 +117,7 @@ else
   pathToSample="data/testdata"
 fi
 
-if [[ ALL,ANNOTATEALL,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
+if [[ ALL,ANNOTATEBOTH,ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
 then
   if [[ $TEST = ANNOTATESNPEFF ]]
   then
@@ -118,21 +125,22 @@ then
   elif [[ $TEST = ANNOTATEVEP ]]
   then
     ANNOTATOR=VEP
-  elif [[ ALL,ANNOTATEALL =~ $TEST ]]
+  elif [[ ALL,ANNOTATEBOTH =~ $TEST ]]
   then
     ANNOTATOR=merge,snpEFF,VEP
   fi
-  run_sarek --step annotate --tools ${ANNOTATOR} --sample ${pathToSample}/vcf/Strelka_1234N_variants.vcf.gz --noReports
+  run_sarek --step annotate --tools ${ANNOTATOR} --sample ${pathToSample}/vcf/Strelka_1234N_variants.vcf.gz
   manage_logs
 fi
 
 if [[ MULTIPLE =~ $TEST ]]
 then
+  OPTIONS="--tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2,snpEff,VEP,merge"
   if [[ $OFFLINE == false ]]
   then
-    run_sarek --sample https://github.com/nf-core/test-datasets/raw/sarek/testdata/tsv/tiny-multiple-https.tsv --tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2 --noReports
+    run_sarek ${OPTIONS} --sample https://github.com/nf-core/test-datasets/raw/sarek/testdata/tsv/tiny-multiple-https.tsv
   else
-    run_sarek --sample data/testdata/tsv/tiny-multiple.tsv --tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2 --noReports
+    run_sarek ${OPTIONS} --sample data/testdata/tsv/tiny-multiple.tsv
   fi
   manage_logs
 fi

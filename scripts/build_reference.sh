@@ -44,8 +44,8 @@ do
 done
 
 # Build references for smallGRCh37
-if [[ $TEST != ANNOTATESNPEFF ]] && [[ $TEST != ANNOTATEVEP ]]
-then
+if ! [[ ANNOTATESNPEFF,ANNOTATEVEP =~ $TEST ]]
+ then
   rm -rf references
   nextflow run ${TRAVIS_BUILD_DIR}/build.nf -profile test,${PROFILE} --build --outdir references ${VERBOSE} ${OFFLINE}
   rm -rf .nextflow* references/pipeline_info work

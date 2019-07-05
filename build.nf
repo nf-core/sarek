@@ -387,12 +387,12 @@ def nfcoreHeader(){
     ${c_blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${c_yellow}}  {${c_reset}
     ${c_blue}  | \\| |       \\__, \\__/ |  \\ |___     ${c_green}\\`-._,-`-,${c_reset}
                                             ${c_green}`._,._,\'${c_reset}
-    ${c_white}       ____      ${c_blue}  _____               _ ${c_reset}
-    ${c_white}     .' _  `.    ${c_blue} / ____|             | | ${c_reset}
-    ${c_white}    /  ${c_green}|\\${c_white}`-_${c_white} \\ ${c_blue}  | (___  ___  _ __ __ | | __ ${c_reset}
-    ${c_white}   |   ${c_green}| \\  ${c_white}`-${c_white}| ${c_blue}  \\___ \\/__ \\| ´__/ _\\| |/ / ${c_reset}
-    ${c_white}    \\ ${c_green}|   \\  ${c_white}/ ${c_blue}   ____) | __ | | |  __|   < ${c_reset}
-    ${c_white}     `${c_green}|${c_white}____${c_green}\\${c_white}'   ${c_blue} |_____/\\____|_|  \\__/|_|\\_\\ ${c_reset}
+        ${c_white}____${c_reset}
+      ${c_white}.´ _  `.${c_reset}
+     ${c_white}/  ${c_green}|\\${c_reset}`-_ \\${c_reset}     ${c_blue} __        __   ___     ${c_reset}
+    ${c_white}|   ${c_green}| \\${c_reset}  `-|${c_reset}    ${c_blue}|__`  /\\  |__) |__  |__/${c_reset}
+     ${c_white}\\ ${c_green}|   \\${c_reset}  /${c_reset}     ${c_blue}.__| /¯¯\\ |  \\ |___ |  \\${c_reset}
+      ${c_white}`${c_green}|${c_reset}____${c_green}\\${c_reset}´${c_reset}
 
     ${c_purple}  nf-core/sarek v${workflow.manifest.version}${c_reset}
     ${c_dim}----------------------------------------------------${c_reset}

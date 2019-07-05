@@ -6,9 +6,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+
 Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/) template.
 
 ### `Added`
+
 -   [#2](https://github.com/nf-core/sarek/pull/2) - Create `nf-core/sarek` `environment.yml` file
 -   [#2](https://github.com/nf-core/sarek/pull/2), [#3](https://github.com/nf-core/sarek/pull/3), [#4](https://github.com/nf-core/sarek/pull/4), [#5](https://github.com/nf-core/sarek/pull/5), [#7](https://github.com/nf-core/sarek/pull/7), [#9](https://github.com/nf-core/sarek/pull/9), [#11](https://github.com/nf-core/sarek/pull/11), [#12](https://github.com/nf-core/sarek/pull/12) - Add CI for `nf-core/sarek`
 -   [#3](https://github.com/nf-core/sarek/pull/3) - Add preprocessing to `nf-core/sarek`
@@ -32,9 +34,14 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 -   [#13](https://github.com/nf-core/sarek/pull/13) - Add Citation documentation
 -   [#13](https://github.com/nf-core/sarek/pull/13) - Add `BamQC` process
 -   [#13](https://github.com/nf-core/sarek/pull/13) - Add `CompressVCFsnpEff` and `CompressVCFvep` processes
+-   [#18](https://github.com/nf-core/sarek/pull/18) - Add --no-reports option for tests + add snpEff,VEP,merge to MULTIPLE test
+-   [#18](https://github.com/nf-core/sarek/pull/18) - Add possibility to download other genome for sareksnpeff and sarekvep containers
+-   [#18](https://github.com/nf-core/sarek/pull/18) - Add params `--skip` to skip specified QC tools
+-   [#18](https://github.com/nf-core/sarek/pull/18) - Add logo to MultiQC report
 
 ### `Changed`
--   [#1](https://github.com/nf-core/sarek/pull/1), [#2](https://github.com/nf-core/sarek/pull/2), [#3](https://github.com/nf-core/sarek/pull/3), [#4](https://github.com/nf-core/sarek/pull/4), [#5](https://github.com/nf-core/sarek/pull/5), [#6](https://github.com/nf-core/sarek/pull/6), [#7](https://github.com/nf-core/sarek/pull/7), [#8](https://github.com/nf-core/sarek/pull/8), [#9](https://github.com/nf-core/sarek/pull/9), [#11](https://github.com/nf-core/sarek/pull/11), [#12](https://github.com/nf-core/sarek/pull/12) - Update docs
+
+-   [#1](https://github.com/nf-core/sarek/pull/1), [#2](https://github.com/nf-core/sarek/pull/2), [#3](https://github.com/nf-core/sarek/pull/3), [#4](https://github.com/nf-core/sarek/pull/4), [#5](https://github.com/nf-core/sarek/pull/5), [#6](https://github.com/nf-core/sarek/pull/6), [#7](https://github.com/nf-core/sarek/pull/7), [#8](https://github.com/nf-core/sarek/pull/8), [#9](https://github.com/nf-core/sarek/pull/9), [#11](https://github.com/nf-core/sarek/pull/11), [#12](https://github.com/nf-core/sarek/pull/12), [#18](https://github.com/nf-core/sarek/pull/18) - Update docs
 -   [#4](https://github.com/nf-core/sarek/pull/4) - Update `cancerit-allelecount` from `2.1.2` to `4.0.2`
 -   [#4](https://github.com/nf-core/sarek/pull/4) - Update `gatk4` from `4.1.1.0` to `4.1.2.0`
 -   [#7](https://github.com/nf-core/sarek/pull/7) - `--sampleDir` is now deprecated, use `--sample` instead
@@ -53,28 +60,38 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 -   [#13](https://github.com/nf-core/sarek/pull/13) - Merge `BamQCmapped` and `BamQCrecalibrated` processes into `BamQC` process
 -   [#13](https://github.com/nf-core/sarek/pull/13) - Split `CompressVCF` process into `CompressVCFsnpEff` and `CompressVCFvep` processes
 -   [#16](https://github.com/nf-core/sarek/pull/16) - Make scripts in `bin/` and `scripts/` executable
+-   [#18](https://github.com/nf-core/sarek/pull/18) - Use --no-reports for TravisCI testing
+-   [#18](https://github.com/nf-core/sarek/pull/18) - Add --no-reports for all tests but MULTIPLE in Jenkins
+-   [#18](https://github.com/nf-core/sarek/pull/18) - `--noReports` is now `--skip all`
+-   [#18](https://github.com/nf-core/sarek/pull/18) - Update logo
 
 ### `Removed`
 
 -   [#9](https://github.com/nf-core/sarek/pull/9) - Removed `relatedness2` graph from `vcftools stats`
 -   [#13](https://github.com/nf-core/sarek/pull/13) - Removed `BamQCmapped` and `BamQCrecalibrated` processes
 -   [#13](https://github.com/nf-core/sarek/pull/13) - Removed `CompressVCF`
+-   [#18](https://github.com/nf-core/sarek/pull/18) - Removed params `--noReports`
 
 ### `Fixed`
+
 -   [#3](https://github.com/nf-core/sarek/pull/3) - Fix Docker ownership
 -   [#11](https://github.com/nf-core/sarek/pull/11) - Fix MergeMpileup PublishDir
 -   [#13](https://github.com/nf-core/sarek/pull/13) - Fix merge in annotation
 -   [#14](https://github.com/nf-core/sarek/pull/14) - Fix output name for vcf files
 -   [#16](https://github.com/nf-core/sarek/pull/16) - Fix path to Rscript
+-   [#18](https://github.com/nf-core/sarek/pull/18) - Improve cpu usage
+-   [#18](https://github.com/nf-core/sarek/pull/18) - Use same font for nf-core and sarek in ascii art
 
 ## [2.3.FIX1] - 2019-03-04
 
 ### `Fixed`
+
 -   [#742](https://github.com/SciLifeLab/Sarek/pull/742) - Fix output dirs (HaplotypeCaller that was not recognized by annotate.nf introduced by [#728](https://github.com/SciLifeLab/Sarek/pull/728))
 
 ## [2.3] - Äpar - 2019-02-27
 
 ### `Added`
+
 -   [#628](https://github.com/SciLifeLab/Sarek/pull/628), [#722](https://github.com/SciLifeLab/Sarek/pull/722) - `ASCAT` now use `.gc` file
 -   [#712](https://github.com/SciLifeLab/Sarek/pull/712), [#718](https://github.com/SciLifeLab/Sarek/pull/718) - Added possibilities to run Sarek with `conda`
 -   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - Annotation documentation
@@ -116,6 +133,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 -   [#732](https://github.com/SciLifeLab/Sarek/pull/732) - Update VEP from `95.1` to `95.2`
 
 ### `Removed`
+
 -   [#715](https://github.com/SciLifeLab/Sarek/pull/715) - Remove `defReferencesFiles` function from `buildReferences.nf`
 -   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - `snpEff` base container is no longer used
 -   [#721](https://github.com/SciLifeLab/Sarek/pull/721) - Remove COSMIC docs
@@ -123,6 +141,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 -   [#732](https://github.com/SciLifeLab/Sarek/pull/732) - Removed `--database` option for VEP cf: [VEP docs](https://www.ensembl.org/info/docs/tools/vep/script/vep_other.html)
 
 ### `Fixed`
+
 -   [#720](https://github.com/SciLifeLab/Sarek/pull/720) - bamQC is now run on the recalibrated bams, and not after MarkDuplicates
 -   [#726](https://github.com/SciLifeLab/Sarek/pull/726) - Fix Ascat ref file input (one file can't be a set)
 -   [#727](https://github.com/SciLifeLab/Sarek/pull/727) - bamQC outputs are no longer overwritten (name of dir is now the file instead of sample)
