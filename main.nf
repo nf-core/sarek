@@ -51,13 +51,13 @@ def helpMessage() {
                                     Default: Mapping
         --tools                     Specify tools to use for variant calling, and annotation
                                     Available: ASCAT, ControlFREEC, FreeBayes, HaplotypeCaller
-                                    Manta, mpileup, MuTect2, Strelka, snpEff, VEP, merge
+                                    Manta, mpileup, Mutect2, Strelka, snpEff, VEP, merge
                                     Default: None
         --skip                      Specify which QC tools to skip when running Sarek
                                     Available: bamQC, BCFtools, FastQC, MultiQC, samtools, vcftools, versions
                                     Default: None
         --annotateTools             Specify from which tools Sarek will look for VCF files to annotate, only for step annotate
-                                    Available: HaplotypeCaller, Manta, MuTect2, Strelka
+                                    Available: HaplotypeCaller, Manta, Mutect2, Strelka
                                     Default: None
         --annotation_cache          Enable the use of cache for annotation, to be used with --snpEff_cache and/or --vep_cache
         --snpEff_cache              Specity the path to snpEff cache, to be used with --annotation_cache
@@ -1036,8 +1036,8 @@ pairBam = pairBam.dump(tag:'BAM Somatic Pair')
 intPairBam = pairBam.spread(bedIntervals)
 bamMpileup = bamMpileup.spread(intMpileup)
 
-// MuTect2, FreeBayes
-(pairBamMuTect2, pairBamFreeBayes) = intPairBam.into(3)
+// Mutect2, FreeBayes
+(pairBamMutect2, pairBamFreeBayes) = intPairBam.into(3)
 
 // STEP GATK MUTECT2
 
@@ -1045,7 +1045,7 @@ process Mutect2 {
     tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
 
     input:
-        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamMuTect2
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamMutect2
         set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
             referenceMap.genomeFile,
             referenceMap.genomeIndex,
@@ -1055,7 +1055,7 @@ process Mutect2 {
         ])
 
     output:
-        set val("MuTect2"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into vcfMuTect2
+        set val("Mutect2"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into vcfMutect2
 
     when: 'mutect2' in tools
 
@@ -1071,7 +1071,7 @@ process Mutect2 {
     """
 }
 
-vcfMuTect2 = vcfMuTect2.groupTuple(by:[0,1,2])
+vcfMutect2 = vcfMutect2.groupTuple(by:[0,1,2])
 
 // STEP FREEBAYES
 
@@ -1113,7 +1113,7 @@ vcfFreeBayes = vcfFreeBayes.groupTuple(by:[0,1,2])
 
 // STEP MERGING VCF - FREEBAYES, GATK HAPLOTYPECALLER & GATK MUTECT2
 
-vcfConcatenateVCFs = vcfMuTect2.mix(vcfFreeBayes, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
+vcfConcatenateVCFs = vcfMutect2.mix(vcfFreeBayes, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
 
 vcfConcatenateVCFs = vcfConcatenateVCFs.dump(tag:'VCF to merge')
 
@@ -1708,7 +1708,7 @@ if (step == 'annotate') {
     if (tsvPath == []) {
     // Sarek, by default, annotates all available vcfs that it can find in the VariantCalling directory
     // Excluding vcfs from FreeBayes, and g.vcf from HaplotypeCaller
-    // Basically it's: VariantCalling/*/{HaplotypeCaller,Manta,MuTect2,Strelka}/*.vcf.gz
+    // Basically it's: VariantCalling/*/{HaplotypeCaller,Manta,Mutect2,Strelka}/*.vcf.gz
     // Without *SmallIndels.vcf.gz from Manta, and *.genome.vcf.gz from Strelka
     // The small snippet `vcf.minus(vcf.fileName)[-2]` catches idSample
     // This field is used to output final annotated VCFs in the correct directory
@@ -1717,7 +1717,7 @@ if (step == 'annotate') {
           .flatten().map{vcf -> ['haplotypecaller', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
         Channel.fromPath("${params.outdir}/VariantCalling/*/Manta/*[!candidate]SV.vcf.gz")
           .flatten().map{vcf -> ['manta', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
-        Channel.fromPath("${params.outdir}/VariantCalling/*/MuTect2/*.vcf.gz")
+        Channel.fromPath("${params.outdir}/VariantCalling/*/Mutect2/*.vcf.gz")
           .flatten().map{vcf -> ['mutect2', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
         Channel.fromPath("${params.outdir}/VariantCalling/*/Strelka/*{somatic,variant}*.vcf.gz")
           .flatten().map{vcf -> ['strelka', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
@@ -2274,7 +2274,7 @@ def defineAnnoList() {
     return [
         'HaplotypeCaller',
         'Manta',
-        'MuTect2',
+        'Mutect2',
         'Strelka'
     ]
 }
