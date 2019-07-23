@@ -1,6 +1,7 @@
 # Genomes and reference files
 
 ## AWS iGenomes
+
 Sarek is using [AWS iGenomes](https://ewels.github.io/AWS-iGenomes/), which facilitate storing and sharing references.
 Sarek currently uses `GRCh38` by default.
 Both `GRCh37` and `GRCh38` are available with `--genome GRCh37` or `--genome GRCh38` respectively with any profile using the `conf/igenomes.config` file, or you can specify it with `-c conf/igenomes.config`.
@@ -40,6 +41,6 @@ Actual figures vary from 2 nucleotides/second to 30000 nucleotides/second.
 
 The [`build.nf`](#buildnf) script is used to build reference needed for smallGRCh37.
 
-```
+```bash
 nextflow run build.nf
 ```

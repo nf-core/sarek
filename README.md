@@ -1,9 +1,6 @@
-# [![Sarek](docs/images/Sarek_logo.png "Sarek")](https://sarek.scilifelab.se/)
-[![nf-core](docs/images/nf-core_logo.png "Sarek")](https://nf-co.re/)
+# [![Sarek](docs/images/nf-core_sarek_logo.png "Sarek")](https://sarek.scilifelab.se/)
 
-**An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing**
-
-> :warning: This pipeline is a work in progress being ported to nf-core from [SciLifeLab/Sarek](https://github/SciLifeLab/Sarek/)
+> **An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing**
 
 [![Nextflow version][nextflow-badge]](https://www.nextflow.io/)
 [![nf-core][nf-core-badge]](https://nf-co.re/)
@@ -17,7 +14,10 @@
 
 [![Join us on Slack][slack-badge]](https://nfcore.slack.com/messages/CGFUX04HZ/)
 
+> :warning: This pipeline is a work in progress being ported to nf-core from [SciLifeLab/Sarek](https://github/SciLifeLab/Sarek/)
+
 ## Introduction
+
 <img align="right" title="CAW" src="/docs/images/CAW_logo.png">
 
 Previously known as the Cancer Analysis Workflow (CAW),
@@ -32,6 +32,7 @@ Thus making installation trivial and results highly reproducible.
 It's listed on the [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek), [Dockstore](https://dockstore.org/workflows/github.com/SciLifeLab/Sarek/) and [omicX - Bioinformatics tools](https://omictools.com/sarek-tool).
 
 ## Documentation
+
 The nf-core/sarek pipeline comes with documentation about the pipeline, found in the `docs/` directory:
 
 1. [Installation](https://nf-co.re/usage/installation)
@@ -57,10 +58,12 @@ The nf-core/sarek pipeline comes with documentation about the pipeline, found in
 Sarek was developed at the [National Genomics Infastructure][ngi-link] and [National Bioinformatics Infastructure Sweden][nbis-link] which are both platforms at [SciLifeLab][scilifelab-link], with the support of [The Swedish Childhood Tumor Biobank (Barntumörbanken)][btb-link].
 
 Main authors:
+
 * [Maxime Garcia](https://github.com/MaxUlysse)
 * [Szilveszter Juhos](https://github.com/szilvajuhos)
 
 Helpful contributors:
+
 * [Johannes Alneberg](https://github.com/alneberg)
 * [Phil Ewels](https://github.com/ewels)
 * [Jesper Eisfeldt](https://github.com/J35P312)
@@ -87,21 +90,20 @@ For further information or help, don't hesitate to get in touch on [Slack](https
 * [CHANGELOG](CHANGELOG.md)
 
 ## Aknowledgements
+
 [![Barntumörbanken](docs/images/BTB_logo.png)](https://ki.se/forskning/barntumorbanken-0) | [![SciLifeLab](docs/images/SciLifeLab_logo.png)](https://scilifelab.se)
 :-:|:-:
 [![National Genomics Infrastructure](docs/images/NGI_logo.png)](https://ngisweden.scilifelab.se/) | [![National Bioinformatics Infrastructure Sweden](docs/images/NBIS_logo.png)](https://nbis.se)
 
-
 ## Citation
 
 If you use nf-core/sarek for your analysis, please cite the `Sarek` pre-print as follows:
-Garcia MU, Juhos S, Larsson M, Olason PI, Martin M, Eisfeldt J, DiLorenzo S, Sandgren J, de Ståhl TD, Wirta V, Nistér M, Nystedt B, Käller M. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants**. *bioRxiv*. 2018. p. 316976. [doi: 10.1101/316976](https://www.biorxiv.org/content/10.1101/316976v1).
+> Garcia MU, Juhos S, Larsson M, Olason PI, Martin M, Eisfeldt J, DiLorenzo S, Sandgren J, de Ståhl TD, Wirta V, Nistér M, Nystedt B, Käller M. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants**. *bioRxiv*. 2018. p. 316976. [doi: 10.1101/316976](https://www.biorxiv.org/content/10.1101/316976v1).
 
 You can cite the sarek zenodo record for a specific version using the following [doi: 10.5281/zenodo.2582812](https://doi.org/10.5281/zenodo.2582812)
 
 You can cite the `nf-core` pre-print as follows:
-Ewels PA, Peltzer A, Fillinger S, Alneberg JA, Patel H, Wilm A, Garcia MU, Di Tommaso P, Nahnsen S. **nf-core: Community curated bioinformatics pipelines**. *bioRxiv*. 2019. p. 610741. [doi: 10.1101/610741](https://www.biorxiv.org/content/10.1101/610741v3).
-
+> Ewels PA, Peltzer A, Fillinger S, Alneberg JA, Patel H, Wilm A, Garcia MU, Di Tommaso P, Nahnsen S. **nf-core: Community curated bioinformatics pipelines**. *bioRxiv*. 2019. p. 610741. [doi: 10.1101/610741](https://www.biorxiv.org/content/10.1101/610741v3).
 
 [bioconda-badge]: https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?logo=data:image/png;base64,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
 [btb-link]: https://ki.se/forskning/barntumorbanken-0
