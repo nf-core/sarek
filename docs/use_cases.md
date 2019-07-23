@@ -24,7 +24,8 @@ nextflow run nf-core/sarek/main.nf --sample mysample.tsv --tools <tool>
 ```
 
 The TSV file should look like:
-```
+
+```text
 SUBJECT_ID  XX    0    SAMPLE_ID    1    /samples/normal_1.fastq.gz    /samples/normal_2.fastq.gz
 ```
 
@@ -33,9 +34,11 @@ See the [input files documentation](docs/input.md) for more information.
 ## Starting from raw FASTQ - a directory with normal sample only
 
 The `--sample` option can be also used to point Sarek to a directory with FASTQ files:
+
 ```bash
 nextflow run nf-core/sarek/main.nf --sample path/to/FASTQ/files --tools <tool>
 ```
+
 The given directory is searched recursively for FASTQ files that are named `*_R1_*.fastq.gz`, and a matching pair with the same name except `_R2_` instead of `_R1_` is expected to exist alongside.
 All of the found FASTQ files are considered to belong to the sample.
 Each FASTQ file pair gets its own read group (`@RG`) in the resulting BAM file.
@@ -60,7 +63,7 @@ This is captured in the TSV file only in the following manner, adding read group
 All lanes belonging to the same Sample will be merged together after the FASTQ pairs are mapped to the reference genome.
 Obviously, if you do not have relapse samples, you can leave out the two last lines.
 
-```
+```text
 SUBJECT_ID  XX    0    SAMPLE_ID_N    1    /samples/normal1_1.fastq.gz    /samples/normal1_2.fastq.gz
 SUBJECT_ID  XX    0    SAMPLE_ID_N    2    /samples/normal2_1.fastq.gz    /samples/normal2_2.fastq.gz
 SUBJECT_ID  XX    1    SAMPLE_ID_T    3    /samples/tumor3_1.fastq.gz    /samples/tumor3_2.fastq.gz
@@ -81,7 +84,7 @@ nextflow run nf-core/sarek/main.nf --sample mysample.tsv --step recalibrate --to
 And the corresponding TSV file should be like:
 Obviously, if you do not have tumor or relapse samples, you can leave out the two last lines.
 
-```
+```text
 SUBJECT_ID  XX    0    SAMPLE_ID_N    /samples/SAMPLE_ID_N.bam    /samples/SAMPLE_ID_N.bai /samples/SAMPLE_ID_N.recal.table
 SUBJECT_ID  XX    1    SAMPLE_ID_T    /samples/SAMPLE_ID_T.bam    /samples/SAMPLE_ID_T.bai /samples/SAMPLE_ID_T.recal.table
 SUBJECT_ID  XX    1    SAMPLE_ID_R    /samples/SAMPLE_ID_R.bam    /samples/SAMPLE_ID_R.bai /samples/SAMPLE_ID_R.recal.table
@@ -99,7 +102,7 @@ nextflow run nf-core/sarek/main.nf --step variantcalling --tools <tool>
 
 And the corresponding TSV file should be like:
 
-```
+```text
 SUBJECT_ID  XX    0    SAMPLE_ID_N    /samples/SAMPLE_ID_N.bam    /samples/SAMPLE_ID_N.bai
 SUBJECT_ID  XX    1    SAMPLE_ID_T    /samples/SAMPLE_ID_T.bam    /samples/SAMPLE_ID_T.bai
 SUBJECT_ID  XX    1    SAMPLE_ID_R    /samples/SAMPLE_ID_R.bam    /samples/SAMPLE_ID_R.bai

@@ -3,6 +3,7 @@
 This document describes the output produced by the pipeline.
 
 ## Pipeline overview
+
 The pipeline processes data using the following steps:
 
 1. [**Preprocessing**](#Preprocessing) _(based on [GATK best practices](https://software.broadinstitute.org/gatk/best-practices/))_
@@ -218,6 +219,7 @@ For a Tumor/Normal pair only:
   * file with total copy number on a logarithmic scale
 
 ### ASCAT
+
 [ASCAT](https://github.com/Crick-CancerGenomics/ascat) is a method to derive copy number profiles of tumor cells, accounting for normal cell admixture and tumor aneuploidy.
 ASCAT infers tumor purity and ploidy and calculates whole-genome allele-specific copy number profiles.
 
@@ -246,16 +248,19 @@ For a Tumor/Normal pair only:
   * file with information about purity ploidy
 
 ### mpileup
+
 [samtools mpileup](https://www.htslib.org/doc/samtools.html) generate pileup for a BAM file.
 
 For further reading and documentation see the [samtools manual](https://www.htslib.org/doc/samtools.html#COMMANDS_AND_OPTIONS).
 
 For all samples:
 **Output directory: `results/VariantCalling/[SAMPLE]/mpileup`**
+
 * `[SAMPLE].pileup.gz`
   * The pileup format is a text-based format for summarizing the base calls of aligned reads to a reference sequence. Alignment records are grouped by sample (SM) identifiers in @RG header lines.
 
 ### Control-FREEC
+
 [Control-FREEC](https://github.com/BoevaLab/FREEC) is a tool for detection of copy-number changes and allelic imbalances (including LOH) using deep-sequencing data.
 Control-FREEC automatically computes, normalizes, segments copy number and beta allele frequency profiles, then calls copy number alterations and LOH.
 And also detects subclonal gains and losses and evaluate the likeliest average ploidy of the sample.
@@ -264,6 +269,7 @@ For further reading and documentation see the [Control-FREEC manual](http://boev
 
 For a Tumor/Normal pair only:
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/ControlFREEC`**
+
 * `[TUMORSAMPLE]_vs_[NORMALSAMPLE].config.txt`
   * Configuration file used to run Control-FREEC
 * `[TUMORSAMPLE].pileup.gz_CNVs` and `[TUMORSAMPLE].pileup.gz_normal_CNVs`
@@ -281,6 +287,7 @@ FreeBayes results are not annotated in the moment yet as we are lacking a decent
 For HaplotypeCaller the germline variations are annotated for both the tumor and the normal sample.
 
 ### snpEff
+
 [snpeff](http://snpeff.sourceforge.net/) is a genetic variant annotation and effect prediction toolbox.
 It annotates and predicts the effects of variants on genes (such as amino acid changes) using multiple databases for annotations.
 The generated VCF header contains the software version and the used command line.
@@ -294,10 +301,12 @@ For all samples:
   * VCF with Tabix index
 
 ### VEP
+
 [VEP (Variant Effect Predictor)](https://www.ensembl.org/info/docs/tools/vep/index.html), based on Ensembl, is a tools to determine the effects of all sorts of variants, including SNPs, indels, structural variants, CNVs.
 The generated VCF header contains the software version, also the version numbers for additional databases like Clinvar or dbSNP used in the "VEP" line.
 The format of the [consequence annotations](https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html) is also in the VCF header describing the INFO field.
 In the moment it contains:
+
 * Consequence: impact of the variation, if there is any
 * Codons: the codon change, i.e. cGt/cAt
 * Amino_acids: change in amino acids, i.e. R/H if there is any
@@ -321,6 +330,7 @@ For all samples:
 ## QC and reporting
 
 ### FastQC
+
 [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your reads.
 It provides information about the quality score distribution across your reads, the per base sequence content (%T/A/G/C).
 You get information about adapter contamination and other overrepresented sequences.
@@ -336,19 +346,23 @@ For all samples:
   * zip file containing the FastQC reports, tab-delimited data files and plot images
 
 ### bamQC
+
 [Qualimap bamqc](http://qualimap.bioinfo.cipf.es/) reports information for the evaluation of the quality of the provided alignment data. In short, the basic statistics of the alignment (number of reads, coverage, GC-content, etc.) are summarized and a number of useful graphs are produced.
 
 Plot will show:
+
 * Stats by non-reference allele frequency, depth distribution, stats by quality and per-sample counts, singleton stats, etc.
 
 For all samples:
 **Output directory: `results/Reports/[SAMPLE]/bamQC`**
+
 * `VariantCaller_[SAMPLE].bcf.tools.stats.out`
   * RAW statistics used by MultiQC
 
 For more information about how to use Qualimap bamqc reports, see [Qualimap bamqc manual](http://qualimap.bioinfo.cipf.es/doc_html/analysis.html#id7)
 
 ### MarkDuplicates reports
+
 [GATK MarkDuplicates](https://github.com/broadinstitute/gatk) locates and tags duplicate reads in a BAM or SAM file, where duplicate reads are defined as originating from a single fragment of DNA.
 Duplicates can arise during sample preparation e.g.
 library construction using PCR.
@@ -357,44 +371,54 @@ These duplication artifacts are referred to as optical duplicates.
 
 For all samples:
 **Output directory: `results/Reports/[SAMPLE]/MarkDuplicates`**
+
 * `[SAMPLE].bam.metrics`
   * RAW statistics used by MultiQC
 
 For further reading and documentation see the [MarkDuplicates manual](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.2.0/picard_sam_markduplicates_MarkDuplicates.php).
 
 ### samtools stats
+
 [samtools stats](https://www.htslib.org/doc/samtools.html) collects statistics from BAM files and outputs in a text format.
 Plots will show:
+
 * Alignment metrics.
 
 For all samples:
 **Output directory: `results/Reports/[SAMPLE]/SamToolsStats`**
+
 * `[SAMPLE].bam.samtools.stats.out`
   * RAW statistics used by MultiQC
 
 For further reading and documentation see the [samtools manual](https://www.htslib.org/doc/samtools.html#COMMANDS_AND_OPTIONS)
 
 ### bcftools stats
+
 [bcftools](https://samtools.github.io/bcftools/) is a program for variant calling and manipulating files in the Variant Call Format.
 Plot will show:
+
 * Stats by non-reference allele frequency, depth distribution, stats by quality and per-sample counts, singleton stats, etc.
 
 For all samples:
 **Output directory: `results/Reports/[SAMPLE]/BCFToolsStats`**
+
 * `VariantCaller_[SAMPLE].bcf.tools.stats.out`
   * RAW statistics used by MultiQC
 
 For further reading and documentation see the [bcftools stats manual](https://samtools.github.io/bcftools/bcftools.html#stats)
 
 ### VCFtools
+
 [VCFtools](https://vcftools.github.io/) is a program package designed for working with VCF files.
 Plots will show:
+
 * the summary counts of each type of transition to transversion ratio for each FILTER category.
 * the transition to transversion ratio as a function of alternative allele count (using only bi-allelic SNPs).
 * the transition to transversion ratio as a function of SNP quality threshold (using only bi-allelic SNPs).
 
 For all samples:
 **Output directory: `results/Reports/[SAMPLE]/VCFTools`**
+
 * `VariantCaller_[SAMPLE].FILTER.summary`
   * RAW statistics used by MultiQC
 * `VariantCaller_[SAMPLE].TsTv.count`
@@ -405,10 +429,12 @@ For all samples:
 For further reading and documentation see the [VCFtools manual](https://vcftools.github.io/man_latest.html#OUTPUT%20OPTIONS)
 
 ### snpEff reports
+
 [snpeff](http://snpeff.sourceforge.net/) is a genetic variant annotation and effect prediction toolbox.
 It annotates and predicts the effects of variants on genes (such as amino acid changes) using multiple databases for annotations.
 
 Plots will shows :
+
 * locations of detected variants in the genome and the number of variants for each location.
 * the putative impact of detected variants and the number of variants for each impact.
 * the effect of variants at protein level and the number of variants for each effect type.
@@ -416,6 +442,7 @@ Plots will shows :
 
 For all samples:
 **Output directory: `results/Reports/[SAMPLE]/snpEff`**
+
 * `VariantCaller_Sample_snpEff.csv`
   * RAW statistics used by MultiQC
 * `VariantCaller_Sample_snpEff.html`
@@ -426,16 +453,19 @@ For all samples:
 For further reading and documentation see the [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary)
 
 ### VEP reports
+
 [VEP (Variant Effect Predictor)](https://www.ensembl.org/info/docs/tools/vep/index.html), based on Ensembl, is a tools to determine the effects of all sorts of variants, including SNPs, indels, structural variants, CNVs.
 
 For all samples:
 **Output directory: `results/Reports/[SAMPLE]/VEP`**
+
 * `VariantCaller_Sample_VEP.summary.html`
   * Summary of the VEP run to be visualised with a web browser
 
 For further reading and documentation see the [VEP manual](https://www.ensembl.org/info/docs/tools/vep/index.html)
 
 ### MultiQC
+
 [MultiQC](http://multiqc.info) is a visualisation tool that generates a single HTML report summarising all samples in your project.
 Most of the pipeline QC results are visualised in the report and further statistics are available in within the report data directory.
 
