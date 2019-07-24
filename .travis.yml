@@ -34,13 +34,22 @@ install:
   - mkdir /tmp/nextflow && cd /tmp/nextflow
   - wget -qO- get.nextflow.io | bash
   - sudo ln -s /tmp/nextflow/nextflow /usr/local/bin/nextflow
+  # # Install nf-core/tools
+  # - pip install --upgrade pip
+  # - pip install nf-core
   # Reset
   - mkdir ${TRAVIS_BUILD_DIR}/tests && cd ${TRAVIS_BUILD_DIR}/tests
+  # Install markdownlint-cli
+  - sudo apt-get install npm && npm install -g markdownlint-cli
 
 # Build references if needed
 before_script:
   - "${TRAVIS_BUILD_DIR}/scripts/build_reference.sh --test $TEST --verbose"
 
-# Actual tests
 script:
+  # # Lint the pipeline code
+  # - nf-core lint ${TRAVIS_BUILD_DIR}
+  # Lint the documentation
+  - markdownlint ${TRAVIS_BUILD_DIR} -c ${TRAVIS_BUILD_DIR}/.github/markdownlint.yml
+  # Actual tests
   - "${TRAVIS_BUILD_DIR}/scripts/run_tests.sh --test $TEST --verbose --no-reports"
