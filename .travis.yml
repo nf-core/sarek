@@ -16,11 +16,12 @@ matrix:
 env:
   global:
     - NXF_VER=19.04.0
+    - NXF_VER=''
   matrix:
-    - TEST=SOMATIC
-    - TEST=GERMLINE
-    - TEST=TARGETED
     - TEST=ANNOTATEVEP
+    - TEST=SOMATIC
+    - TEST=TARGETED
+    - TEST=GERMLINE
     - TEST=ANNOTATESNPEFF
 
 before_install:
