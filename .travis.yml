@@ -16,14 +16,14 @@ matrix:
 env:
   matrix:
     - TEST=ANNOTATEVEP      NXF_VER=19.04.0
-    - TEST=SOMATIC          NXF_VER=19.04.0
-    - TEST=TARGETED         NXF_VER=19.04.0
-    - TEST=GERMLINE         NXF_VER=19.04.0
-    - TEST=ANNOTATESNPEFF   NXF_VER=19.04.0
     - TEST=ANNOTATEVEP      NXF_VER=''
+    - TEST=SOMATIC          NXF_VER=19.04.0
     - TEST=SOMATIC          NXF_VER=''
+    - TEST=TARGETED         NXF_VER=19.04.0
     - TEST=TARGETED         NXF_VER=''
+    - TEST=GERMLINE         NXF_VER=19.04.0
     - TEST=GERMLINE         NXF_VER=''
+    - TEST=ANNOTATESNPEFF   NXF_VER=19.04.0
     - TEST=ANNOTATESNPEFF   NXF_VER=''
 
 before_install:
