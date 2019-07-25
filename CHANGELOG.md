@@ -39,6 +39,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#18](https://github.com/nf-core/sarek/pull/18) - Add params `--skip` to skip specified QC tools
 - [#18](https://github.com/nf-core/sarek/pull/18) - Add logo to MultiQC report
 - [#20](https://github.com/nf-core/sarek/pull/20) - Add `markdownlint` config file
+- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Add more tests
 
 ### `Changed`
 
