@@ -14,15 +14,17 @@ matrix:
   fast_finish: true
 
 env:
-  global:
-    - NXF_VER=19.04.0
-    - NXF_VER=''
   matrix:
-    - TEST=ANNOTATEVEP
-    - TEST=SOMATIC
-    - TEST=TARGETED
-    - TEST=GERMLINE
-    - TEST=ANNOTATESNPEFF
+    - TEST=ANNOTATEVEP      NXF_VER=19.04.0
+    - TEST=SOMATIC          NXF_VER=19.04.0
+    - TEST=TARGETED         NXF_VER=19.04.0
+    - TEST=GERMLINE         NXF_VER=19.04.0
+    - TEST=ANNOTATESNPEFF   NXF_VER=19.04.0
+    - TEST=ANNOTATEVEP      NXF_VER=''
+    - TEST=SOMATIC          NXF_VER=''
+    - TEST=TARGETED         NXF_VER=''
+    - TEST=GERMLINE         NXF_VER=''
+    - TEST=ANNOTATESNPEFF   NXF_VER=''
 
 before_install:
   # PRs to master are only ok if coming from dev branch
@@ -43,14 +45,19 @@ install:
   # Install markdownlint-cli
   - sudo apt-get install npm && npm install -g markdownlint-cli
 
-# Build references if needed
-before_script:
-  - "${TRAVIS_BUILD_DIR}/scripts/build_reference.sh --test $TEST --verbose"
+jobs:
+  include:
+    - stage: "Linting"
+      name: "Markdown"
+      script:
+        - markdownlint ${TRAVIS_BUILD_DIR} -c ${TRAVIS_BUILD_DIR}/.github/markdownlint.yml
 
-script:
-  # # Lint the pipeline code
-  # - nf-core lint ${TRAVIS_BUILD_DIR}
-  # Lint the documentation
-  - markdownlint ${TRAVIS_BUILD_DIR} -c ${TRAVIS_BUILD_DIR}/.github/markdownlint.yml
-  # Actual tests
-  - "${TRAVIS_BUILD_DIR}/scripts/run_tests.sh --test $TEST --verbose --no-reports"
+    - stage: "Build references"
+      name: "References"
+      script:
+        - ${TRAVIS_BUILD_DIR}/scripts/build_reference.sh --test $TEST --verbose
+
+    - stage: "Tests"
+      name: "Test ${TEST}"
+      script:
+        - "${TRAVIS_BUILD_DIR}/scripts/run_tests.sh --test $TEST --verbose --no-reports"
