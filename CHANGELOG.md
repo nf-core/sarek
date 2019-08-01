@@ -39,11 +39,11 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#18](https://github.com/nf-core/sarek/pull/18) - Add params `--skip` to skip specified QC tools
 - [#18](https://github.com/nf-core/sarek/pull/18) - Add logo to MultiQC report
 - [#20](https://github.com/nf-core/sarek/pull/20) - Add `markdownlint` config file
-- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Add more tests
+- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Add tests for latest Nextflow version
 
 ### `Changed`
 
-- [#1](https://github.com/nf-core/sarek/pull/1), [#2](https://github.com/nf-core/sarek/pull/2), [#3](https://github.com/nf-core/sarek/pull/3), [#4](https://github.com/nf-core/sarek/pull/4), [#5](https://github.com/nf-core/sarek/pull/5), [#6](https://github.com/nf-core/sarek/pull/6), [#7](https://github.com/nf-core/sarek/pull/7), [#8](https://github.com/nf-core/sarek/pull/8), [#9](https://github.com/nf-core/sarek/pull/9), [#11](https://github.com/nf-core/sarek/pull/11), [#12](https://github.com/nf-core/sarek/pull/12), [#18](https://github.com/nf-core/sarek/pull/18), [#20](https://github.com/nf-core/sarek/pull/20) - Update docs
+- [#1](https://github.com/nf-core/sarek/pull/1), [#2](https://github.com/nf-core/sarek/pull/2), [#3](https://github.com/nf-core/sarek/pull/3), [#4](https://github.com/nf-core/sarek/pull/4), [#5](https://github.com/nf-core/sarek/pull/5), [#6](https://github.com/nf-core/sarek/pull/6), [#7](https://github.com/nf-core/sarek/pull/7), [#8](https://github.com/nf-core/sarek/pull/8), [#9](https://github.com/nf-core/sarek/pull/9), [#11](https://github.com/nf-core/sarek/pull/11), [#12](https://github.com/nf-core/sarek/pull/12), [#18](https://github.com/nf-core/sarek/pull/18), [#20](https://github.com/nf-core/sarek/pull/20), [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Update docs
 - [#4](https://github.com/nf-core/sarek/pull/4) - Update `cancerit-allelecount` from `2.1.2` to `4.0.2`
 - [#4](https://github.com/nf-core/sarek/pull/4) - Update `gatk4` from `4.1.1.0` to `4.1.2.0`
 - [#7](https://github.com/nf-core/sarek/pull/7) - `--sampleDir` is now deprecated, use `--sample` instead
@@ -65,7 +65,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#18](https://github.com/nf-core/sarek/pull/18) - Use `--no-reports` for TravisCI testing
 - [#18](https://github.com/nf-core/sarek/pull/18) - Add `--no-reports` for all tests but MULTIPLE in Jenkins
 - [#18](https://github.com/nf-core/sarek/pull/18) - `--noReports` is now `--skip all`
-- [#18](https://github.com/nf-core/sarek/pull/18) - Update logo
+- [#18](https://github.com/nf-core/sarek/pull/18), [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Update logo
 
 ### `Removed`
 
