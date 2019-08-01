@@ -83,7 +83,7 @@ Helpful contributors:
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
 
-For further information or help, don't hesitate to get in touch on [Slack](https://nfcore.slack.com/messages/CGFUX04HZ/) or contact us: maxime.garcia@scilifelab.se, szilveszter.juhos@scilifelab.se
+For further information or help, don't hesitate to get in touch on [Slack](https://nfcore.slack.com/channels/sarek) (you can join with [this invite](https://nf-co.re/join/slack)) or contact us: maxime.garcia@scilifelab.se, szilveszter.juhos@scilifelab.se
 
 ## CHANGELOG
 
