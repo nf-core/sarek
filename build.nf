@@ -74,15 +74,16 @@ params.vep_cache = null
 
 ch_referencesFiles = Channel.empty()
 
-if ((params.build) && (params.offline)) ch_referencesFiles = Channel.fromPath("data/reference/*")
-if ((params.build) && (!params.offline)) ch_referencesFiles = ch_referencesFiles.mix(
-  Channel.fromPath("https://github.com/nf-core/test-datasets/raw/sarek/reference/1000G_phase1.indels.b37.small.vcf.gz"),
-  Channel.fromPath("https://github.com/nf-core/test-datasets/raw/sarek/reference/1000G_phase3_20130502_SNP_maf0.3.small.loci"),
-  Channel.fromPath("https://github.com/nf-core/test-datasets/raw/sarek/reference/1000G_phase3_20130502_SNP_maf0.3.small.loci.gc"),
-  Channel.fromPath("https://github.com/nf-core/test-datasets/raw/sarek/reference/Mills_and_1000G_gold_standard.indels.b37.small.vcf.gz"),
-  Channel.fromPath("https://github.com/nf-core/test-datasets/raw/sarek/reference/dbsnp_138.b37.small.vcf.gz"),
-  Channel.fromPath("https://github.com/nf-core/test-datasets/raw/sarek/reference/human_g1k_v37_decoy.small.fasta.gz"),
-  Channel.fromPath("https://github.com/nf-core/test-datasets/raw/sarek/reference/small.intervals"))
+pathToSource = params.offline ? "data/reference/" : "https://github.com/nf-core/test-datasets/raw/sarek/reference"
+
+if (params.build) ch_referencesFiles = ch_referencesFiles.mix(
+  Channel.fromPath("${pathToSource}/1000G_phase1.indels.b37.small.vcf.gz"),
+  Channel.fromPath("${pathToSource}/1000G_phase3_20130502_SNP_maf0.3.small.loci"),
+  Channel.fromPath("${pathToSource}/1000G_phase3_20130502_SNP_maf0.3.small.loci.gc"),
+  Channel.fromPath("${pathToSource}/Mills_and_1000G_gold_standard.indels.b37.small.vcf.gz"),
+  Channel.fromPath("${pathToSource}/dbsnp_138.b37.small.vcf.gz"),
+  Channel.fromPath("${pathToSource}/human_g1k_v37_decoy.small.fasta.gz"),
+  Channel.fromPath("${pathToSource}/small.intervals"))
 
 ch_referencesFiles = ch_referencesFiles.dump(tag:'Reference Files')
 
@@ -134,7 +135,8 @@ if (params.email) {
   summary['MultiQC maxsize'] = params.maxMultiqcEmailFileSize
 }
 log.info summary.collect { k,v -> "${k.padRight(18)}: $v" }.join("\n")
-log.info "\033[2m----------------------------------------------------\033[0m"
+if (params.monochrome_logs) log.info "----------------------------------------------------"
+else log.info "\033[2m----------------------------------------------------\033[0m"
 
 // Check the hostnames against configured profiles
 checkHostname()
@@ -166,7 +168,7 @@ ch_compressedfiles = Channel.create()
 ch_notCompressedfiles = Channel.create()
 
 ch_referencesFiles
-  .choice(ch_compressedfiles, ch_notCompressedfiles) {it =~ ".(gz|tar.bz2)" ? 0 : 1}
+  .choice(ch_compressedfiles, ch_notCompressedfiles) {it =~ ".gz" ? 0 : 1}
 
 process DecompressFile {
   tag {f_reference}
@@ -178,15 +180,9 @@ process DecompressFile {
     file("*.{vcf,fasta,loci}") into ch_decompressedFiles
 
   script:
-  realReferenceFile="readlink ${f_reference}"
-  if (f_reference =~ ".gz")
-    """
-    gzip -d -c \$(${realReferenceFile}) > ${f_reference.baseName}
-    """
-  else if (f_reference =~ ".tar.bz2")
-    """
-    tar xvjf \$(${realReferenceFile})
-    """
+  """
+  gzip -d -c -f ${f_reference} > ${f_reference.baseName}
+  """
 }
 
 ch_decompressedFiles = ch_decompressedFiles.dump(tag:'DecompressedFile')
@@ -306,7 +302,7 @@ process BuildCache_snpEff {
   output:
     file("*")
 
-  when: params.snpEff_cache && params.download_cache
+  when: params.snpEff_cache && params.download_cache && !params.offline
 
   script:
   """
@@ -325,7 +321,7 @@ process BuildCache_VEP {
   output:
     file("*")
 
-  when: params.vep_cache && params.download_cache
+  when: params.vep_cache && params.download_cache && !params.offline
 
   script:
   genome = params.genome == "smallGRCh37" ? "GRCh37" : params.genome
@@ -363,7 +359,7 @@ process DownloadCADD {
   output:
     set file("*.tsv.gz"), file("*.tsv.gz.tbi")
 
-  when: params.cadd_cache && params.download_cache
+  when: params.cadd_cache && params.download_cache && !params.offline
 
   script:
   """
@@ -391,12 +387,12 @@ def nfcoreHeader(){
     ${c_blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${c_yellow}}  {${c_reset}
     ${c_blue}  | \\| |       \\__, \\__/ |  \\ |___     ${c_green}\\`-._,-`-,${c_reset}
                                             ${c_green}`._,._,\'${c_reset}
-    ${c_black}       ____      ${c_blue}  _____               _ ${c_reset}
-    ${c_black}     .' ${c_green}_${c_black}  `.    ${c_blue} / ____|             | | ${c_reset}
-    ${c_black}    /  ${c_green}|\\${c_white}`-_${c_black} \\ ${c_blue}  | (___  ___  _ __ __ | | __ ${c_reset}
-    ${c_black}   |   ${c_green}| \\  ${c_white}`-${c_black}| ${c_blue}  \\___ \\/__ \\| ´__/ _\\| |/ / ${c_reset}
-    ${c_black}    \\ ${c_green}|   \\  ${c_black}/ ${c_blue}   ____) | __ | | |  __|   < ${c_reset}
-    ${c_black}     `${c_green}|${c_black}____${c_green}\\${c_black}'   ${c_blue} |_____/\\____|_|  \\__/|_|\\_\\ ${c_reset}
+        ${c_white}____${c_reset}
+      ${c_white}.´ _  `.${c_reset}
+     ${c_white}/  ${c_green}|\\${c_reset}`-_ \\${c_reset}     ${c_blue} __        __   ___     ${c_reset}
+    ${c_white}|   ${c_green}| \\${c_reset}  `-|${c_reset}    ${c_blue}|__`  /\\  |__) |__  |__/${c_reset}
+     ${c_white}\\ ${c_green}|   \\${c_reset}  /${c_reset}     ${c_blue}.__| /¯¯\\ |  \\ |___ |  \\${c_reset}
+      ${c_white}`${c_green}|${c_reset}____${c_green}\\${c_reset}´${c_reset}
 
     ${c_purple}  nf-core/sarek v${workflow.manifest.version}${c_reset}
     ${c_dim}----------------------------------------------------${c_reset}

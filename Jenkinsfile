@@ -8,41 +8,41 @@ pipeline {
     stages {
         stage('Docker setup') {
             steps {
-                sh "./bin/download_docker.sh"
+                 sh "./scripts/download_image.sh -n docker -t ALL -T dev -g smallGRCh37"
             }
         }
         stage('Build references') {
             steps {
                 sh "rm -rf references/"
-                sh "./bin/build_reference.sh"
+                sh "./scripts/build_reference.sh"
             }
         }
         stage('Germline') {
             steps {
                 sh "rm -rf data/"
                 sh "git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data"
-                sh "./bin/run_tests.sh --test GERMLINE"
+                sh "./scripts/run_tests.sh --test GERMLINE --no-reports"
                 sh "rm -rf data/"
             }
         }
         stage('Somatic') {
             steps {
-                sh "./bin/run_tests.sh --test SOMATIC"
+                sh "./scripts/run_tests.sh --test SOMATIC --no-reports"
             }
         }
         stage('Targeted') {
             steps {
-                sh "./bin/run_tests.sh --test TARGETED"
+                sh "./scripts/run_tests.sh --test TARGETED --no-reports"
             }
         }
         stage('Annotation') {
             steps {
-                sh "./bin/run_tests.sh --test ANNOTATEALL"
+                sh "./scripts/run_tests.sh --test ANNOTATEBOTH --no-reports"
             }
         }
         stage('Multiple') {
             steps {
-                sh "./bin/run_tests.sh --test MULTIPLE"
+                sh "./scripts/run_tests.sh --test MULTIPLE"
             }
         }
     }

@@ -1,9 +1,11 @@
 # Containers
 
 Our main container is designed using [Conda](https://conda.io/) to install all tools used in Sarek:
+
 - [sarek](#sarek-)
 
 For annotation, the main container can be used, but the cache has to be downloaded, or additional containers are available with cache (see [extra annotation documentation](annotation.md)):
+
 - [sareksnpeff](#sareksnpeff-)
 - [sarekvep](#sarekvep-)
 
@@ -47,7 +49,43 @@ For annotation, the main container can be used, but the cache has to be download
 - Contain **[VEP][vep-link]** 96.0
 - Contain cache for `GRCh37`, `GRCh38`, or `GRCm38`
 
+## Using helper script
+
+An helper script, used for testing can also be used to help with pulling docker containers, or building singularity images.
+The following parameters can be used:
+
+### Engine: -n
+
+Specify which container engine to use: `docker` or `singularity`.
+Default:`docker`
+
+### Containers: -c
+
+Specify which containers to build: `SNPEFF`, `VEP` or `ALL`.
+Default:`ALL`
+
+### Version: -T
+
+Specify which release to pull or build: any tagged release, or `dev`.
+Default:`dev`
+
+### Genome: -g
+
+Specify which release genome to use for annotation containers (`sareksnpeff`, `sarekvep`): `GRCh37`, `GRCh38`, `smallGRCh37`, `CanFan3.1`, `GRCm38`.
+Default:`smallGRCh37`
+
+### Singularity
+
+To specify where to build singularity image, use the Nextflow ENV variable `NXF_SINGULARITY_CACHEDIR`, ie:
+
+```bash
+NXF_SINGULARITY_CACHEDIR=/data/singularity ./scripts/download_image.sh -n singularity -t ALL -T dev -g GRCh38
+```
+
+That will build the main container, plus the annotation containers (`sareksnpeff`, `sarekvep`) for `GRCh38`, in the `/data/singularity` folder.
+
 ## Building your own
+
 Our containers are designed using [Conda](https://conda.io/).
 The `environment.yml` file can easilly be modified if particular versions of tools are more suited to your needs.
 

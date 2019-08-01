@@ -3,6 +3,7 @@
 ## Tools
 
 With Sarek, annotation is done using `snpEff`, `VEP`, or even both consecutively:
+
 - `--tools snpEff`
   - To annotate using `snpEff`
 - `--tools VEP`
@@ -32,6 +33,7 @@ You need to specify the cache directory using `--snpEff_cache` and `--vep_cache`
 The cache will only be used when `--annotation_cache` and cache directories are specified (either in command lines or in a configuration file).
 
 Example:
+
 ```bash
 nextflow run nf-core/sarek/main.nf --tools snpEff --step annotate --sample file.vcf.gz --snpEff_cache /Path/To/snpEffCache --annotation_cache
 nextflow run nf-core/sarek/main.nf --tools VEP --step annotate --sample file.vcf.gz --vep_cache /Path/To/vepCache --annotation_cache
@@ -40,11 +42,13 @@ nextflow run nf-core/sarek/main.nf --tools VEP --step annotate --sample file.vcf
 ## Using VEP CADD plugin
 
 To enable the use of the VEP CADD plugin:
- - Download the CADD files
- - Specify them (either on the command line, like in the example or in a configuration file)
- - use the `--cadd_cache` flag
+
+- Download the CADD files
+- Specify them (either on the command line, like in the example or in a configuration file)
+- use the `--cadd_cache` flag
 
 Example:
+
 ```bash
 nextflow run nf-core/sarek/main.nf --step annotate --tools VEP --sample file.vcf.gz --cadd_cache \
     --cadd_InDels /PathToCADD/InDels.tsv.gz \
@@ -57,6 +61,7 @@ nextflow run nf-core/sarek/main.nf --step annotate --tools VEP --sample file.vcf
 
 An helper script has been designed to help downloading CADD files.
 Such files are meant to be share between multiple users, so this script is mainly meant for people administrating servers, clusters and advanced users.
+
 ```bash
 nextflow run build.nf --cadd_cache /Path/To/CADDcache --cadd_version <CADD version> --genome <GENOME>
 ```
@@ -64,9 +69,11 @@ nextflow run build.nf --cadd_cache /Path/To/CADDcache --cadd_version <CADD versi
 ## Using VEP GeneSplicer plugin
 
 To enable the use of the VEP GeneSplicer plugin:
- - use the `--genesplicer` flag
+
+- use the `--genesplicer` flag
 
 Example:
-```
+
+```bash
 nextflow run annotate.nf --tools VEP --sample file.vcf.gz --genesplicer
 ```
