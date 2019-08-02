@@ -20,7 +20,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#7](https://github.com/nf-core/sarek/pull/7) - Add annotation
 - [#7](https://github.com/nf-core/sarek/pull/7) - Add MultiQC
 - [#7](https://github.com/nf-core/sarek/pull/7) - Add social preview image in `png` and `svg` format
-- [#7](https://github.com/nf-core/sarek/pull/7), [#8](https://github.com/nf-core/sarek/pull/8), [#11](https://github.com/nf-core/sarek/pull/11) - Add helper script `run_tests.sh` to run different tests
+- [#7](https://github.com/nf-core/sarek/pull/7), [#8](https://github.com/nf-core/sarek/pull/8), [#11](https://github.com/nf-core/sarek/pull/11), [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Add helper script `run_tests.sh` to run different tests
 - [#7](https://github.com/nf-core/sarek/pull/7), [#8](https://github.com/nf-core/sarek/pull/8), [#9](https://github.com/nf-core/sarek/pull/9) - Add automatic build of specific containers for annotation for `GRCh37`, `GRCh38` and `GRCm38` using `CircleCI`
 - [#7](https://github.com/nf-core/sarek/pull/7), [#8](https://github.com/nf-core/sarek/pull/8), [#9](https://github.com/nf-core/sarek/pull/9), [#11](https://github.com/nf-core/sarek/pull/11) - Add helper script `build_reference.sh` to build small reference from [nf-core/test-datasets:sarek](https://github.com/nf-core/test-datasets/tree/sarek)
 - [#7](https://github.com/nf-core/sarek/pull/7), [#9](https://github.com/nf-core/sarek/pull/9), [#11](https://github.com/nf-core/sarek/pull/11), [#12](https://github.com/nf-core/sarek/pull/12) - Add helper script `download_image.sh` to download containers for testing
@@ -39,7 +39,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#18](https://github.com/nf-core/sarek/pull/18) - Add params `--skip` to skip specified QC tools
 - [#18](https://github.com/nf-core/sarek/pull/18) - Add logo to MultiQC report
 - [#20](https://github.com/nf-core/sarek/pull/20) - Add `markdownlint` config file
-- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Add tests for latest Nextflow version
+- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Add tests for latest Nextflow version as well
 
 ### `Changed`
 
