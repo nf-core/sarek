@@ -88,7 +88,7 @@ fi
 
 if [[ ALL,SOMATIC =~ $TEST ]]
 then
-  OPTIONS="--tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2"
+  OPTIONS="--tools FreeBayes,HaplotypeCaller,Manta,Strelka,TIDDIT,Mutect2"
   if [[ $OFFLINE == false ]]
   then
     run_sarek ${OPTIONS}
@@ -100,7 +100,7 @@ fi
 
 if [[ ALL,TARGETED =~ $TEST ]]
 then
-  OPTIONS="--tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2"
+  OPTIONS="--tools FreeBayes,HaplotypeCaller,Manta,Strelka,TIDDIT,Mutect2"
   if [[ $OFFLINE == false ]]
   then
     run_sarek ${OPTIONS} --targetBED https://github.com/nf-core/test-datasets/raw/sarek/testdata/target.bed
@@ -135,7 +135,7 @@ fi
 
 if [[ MULTIPLE =~ $TEST ]]
 then
-  OPTIONS="--tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2,snpEff,VEP,merge"
+  OPTIONS="--tools FreeBayes,HaplotypeCaller,Manta,Strelka,TIDDIT,Mutect2,snpEff,VEP,merge"
   if [[ $OFFLINE == false ]]
   then
     run_sarek ${OPTIONS} --sample https://github.com/nf-core/test-datasets/raw/sarek/testdata/tsv/tiny-multiple-https.tsv
