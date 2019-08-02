@@ -49,31 +49,21 @@ def helpMessage() {
         --step                      Specify starting step
                                     Available: Mapping, Recalibrate, VariantCalling, Annotate
                                     Default: Mapping
-<<<<<<< HEAD
-        --targetBED                 Target BED file for targeted or whole exome sequencing
         --tools                     Specify tools to use for variant calling:
                                     Available: ASCAT, ControlFREEC, FreeBayes, HaplotypeCaller
                                     Manta, mpileup, MuTect2, Strelka, TIDDIT
-                                    or for annotation:
-                                    snpEff, VEP
-                                    Default: HaplotypeCaller, Manta, Strelka
-        --annotateTools             Specify from which tools Sarek will annotate VCF, only for step annotate
-                                    Available: HaplotypeCaller, Manta, MuTect2, Strelka, TIDDIT
-=======
-        --tools                     Specify tools to use for variant calling, and annotation
-                                    Available: ASCAT, ControlFREEC, FreeBayes, HaplotypeCaller
-                                    Manta, mpileup, MuTect2, Strelka, snpEff, VEP, merge
+                                    and/or for annotation:
+                                    snpEff, VEP, merge
                                     Default: None
         --skip                      Specify which QC tools to skip when running Sarek
                                     Available: bamQC, BCFtools, FastQC, MultiQC, samtools, vcftools, versions
                                     Default: None
         --annotateTools             Specify from which tools Sarek will look for VCF files to annotate, only for step annotate
-                                    Available: HaplotypeCaller, Manta, MuTect2, Strelka
+                                    Available: HaplotypeCaller, Manta, MuTect2, Strelka, TIDDIT
                                     Default: None
         --annotation_cache          Enable the use of cache for annotation, to be used with --snpEff_cache and/or --vep_cache
         --snpEff_cache              Specity the path to snpEff cache, to be used with --annotation_cache
         --vep_cache                 Specity the path to VEP cache, to be used with --annotation_cache
->>>>>>> upstream/dev
 
     References                      If not specified in the configuration file or you wish to overwrite any of the references.
         --acLoci                    acLoci file
