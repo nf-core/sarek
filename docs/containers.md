@@ -32,6 +32,7 @@ For annotation, the main container can be used, but the cache has to be download
 - Contain **[samtools][samtools-link]** 1.9
 - Contain **[snpEff][snpeff-link]** 4.3.1t
 - Contain **[Strelka2][strelka-link]** 2.9.10
+- Contain **[TIDDIT][tiddit-link]** 2.7.1
 - Contain **[VCFanno][vcfanno-link]** 0.3.1
 - Contain **[VCFtools][vcftools-link]** 0.1.16
 - Contain **[VEP][vep-link]** 96.0
@@ -111,6 +112,7 @@ The `environment.yml` file can easilly be modified if particular versions of too
 [sareksnpeff-docker-badge]: https://img.shields.io/docker/automated/nfcore/sareksnpeff.svg
 [sareksnpeff-docker-link]: https://hub.docker.com/r/nfcore/sareksnpeff
 [strelka-link]: https://github.com/Illumina/strelka
+[tiddit-link]: https://github.com/SciLifeLab/TIDDIT
 [vcfanno-link]: https://github.com/brentp/vcfanno
 [vcftools-link]: https://vcftools.github.io/index.html
 [vep-link]: https://github.com/Ensembl/ensembl-vep
