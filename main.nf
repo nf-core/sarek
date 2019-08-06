@@ -1034,9 +1034,9 @@ process TIDDIT {
     """
     tiddit --sv -o TIDDIT_${idSample} --bam ${bam} --ref ${genomeFile}
 
-    cp TIDDIT_${idSample}.vcf TIDDIT_${idSample}.old.vcf
+    mv TIDDIT_${idSample}.vcf TIDDIT_${idSample}.old.vcf
 
-    grep -E "#|PASS" TIDDIT_${idSample}.vcf > TIDDIT_${idSample}.vcf
+    grep -E "#|PASS" TIDDIT_${idSample}.old.vcf > TIDDIT_${idSample}.vcf
 
     bgzip --threads ${task.cpus} -c TIDDIT_${idSample}.vcf > TIDDIT_${idSample}.vcf.gz
 
