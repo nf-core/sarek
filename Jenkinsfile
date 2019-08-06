@@ -21,28 +21,28 @@ pipeline {
             steps {
                 sh "rm -rf data/"
                 sh "git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data"
-                sh "./scripts/run_tests.sh --test GERMLINE --no-reports"
+                sh "./scripts/run_tests.sh --profile kraken --test GERMLINE --no-reports"
                 sh "rm -rf data/"
             }
         }
         stage('Somatic') {
             steps {
-                sh "./scripts/run_tests.sh --test SOMATIC --no-reports"
+                sh "./scripts/run_tests.sh --profile kraken --test SOMATIC --no-reports"
             }
         }
         stage('Targeted') {
             steps {
-                sh "./scripts/run_tests.sh --test TARGETED --no-reports"
+                sh "./scripts/run_tests.sh --profile kraken --test TARGETED --no-reports"
             }
         }
         stage('Annotation') {
             steps {
-                sh "./scripts/run_tests.sh --test ANNOTATEBOTH --no-reports"
+                sh "./scripts/run_tests.sh --profile kraken --test ANNOTATEBOTH --no-reports"
             }
         }
         stage('Multiple') {
             steps {
-                sh "./scripts/run_tests.sh --test MULTIPLE"
+                sh "./scripts/run_tests.sh --profile kraken --test MULTIPLE"
             }
         }
     }
