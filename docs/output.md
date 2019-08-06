@@ -157,14 +157,25 @@ For a Tumor/Normal pair only:
 [TIDDIT](https://github.com/SciLifeLab/TIDDIT)identifies intra and inter-chromosomal translocations, deletions, tandem-duplications and inversions.
 
 Germline calls are provided for all samples, to able comparison of both tumor and normal for possible mixup.
+Low quality calls are removed internally, to simplify processing of variant calls but they are saved by Sarek.
 
 For further reading and documentation see the [TIDDIT manual](https://github.com/SciLifeLab/TIDDIT/blob/master/README.md).
 
 For all samples:
 **Output directory: `results/VariantCalling/[SAMPLE]/TIDDIT`**
 
-* `TIDDIT_[SAMPLE].g.vcf.gz` and `TIDDIT_[SAMPLE].g.vcf.gz.tbi`
+* `TIDDIT_[SAMPLE].vcf.gz` and `TIDDIT_[SAMPLE].vcf.gz.tbi`
   * VCF with Tabix index
+* `TIDDIT_[SAMPLE].signals.tab`
+  * tab file describing coverage across the genome, binned per 50 bp
+* `TIDDIT_[SAMPLE].ploidy.tab`
+  * tab file describing the estimated ploïdy and coverage across each contig
+* `TIDDIT_[SAMPLE].old.vcf`
+  * VCF including the low qualiy calls
+* `TIDDIT_[SAMPLE].wig`
+  * wiggle file containing coverage across the genome, binned per 50 bp
+* `TIDDIT_[SAMPLE].gc.wig`
+  * wiggle file containing fraction of gc content, binned per 50 bp
 
 ### Strelka2
 
