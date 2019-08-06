@@ -967,7 +967,7 @@ process MantaSingle {
         ])
 
     output:
-        set val("Manta"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfMantaSingle
+        set val("Manta"), idPatient, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfMantaSingle
 
     when: 'manta' in tools
 
@@ -1025,14 +1025,18 @@ process TIDDIT {
         ])
 
     output:
-        set val("TIDDIT"), idPatient, idSample, file("*.vcf") into vcfTIDDIT
-        set file("*."), file("*.") into tidditOut
+        set val("TIDDIT"), idPatient, idSample, file("*.vcf.gz"), file("*.tbi") into vcfTIDDIT
+        set file("TIDDIT_${idSample}.ploidy.tab"), file("TIDDIT_${idSample}.signals.tab") into tidditOut
 
     when: 'tiddit' in tools
 
     script:
     """
-    tiddit --sv -o TIDDIT_${idSample}.vcf --bam ${bam} --ref ${genomeFile}
+    tiddit --sv -o TIDDIT_${idSample} --bam ${bam} --ref ${genomeFile}
+
+    bgzip --threads ${task.cpus} -c TIDDIT_${idSample}.vcf > TIDDIT_${idSample}.vcf.gz
+
+    tabix TIDDIT_${idSample}.vcf.gz
     """
 }
 
@@ -1396,7 +1400,7 @@ alleleCounterOut = alleleCountOutNormal.combine(alleleCountOutTumor)
 
 alleleCounterOut = alleleCounterOut.map {
     idPatientNormal, idSampleNormal, alleleCountOutNormal,
-    idPatientTumor,  idSampleTumor,  alleleCountOutTumor ->
+    idPatientTumor, idSampleTumor, alleleCountOutTumor ->
     [idPatientNormal, idSampleNormal, idSampleTumor, alleleCountOutNormal, alleleCountOutTumor]
 }
 
@@ -1525,7 +1529,7 @@ mpileupOut = mpileupOutNormal.combine(mpileupOutTumor)
 
 mpileupOut = mpileupOut.map {
     idPatientNormal, idSampleNormal, mpileupOutNormal,
-    idPatientTumor,  idSampleTumor,  mpileupOutTumor ->
+    idPatientTumor, idSampleTumor, mpileupOutTumor ->
     [idPatientNormal, idSampleNormal, idSampleTumor, mpileupOutNormal, mpileupOutTumor]
 }
 
@@ -1862,7 +1866,7 @@ process VEP {
     }
 
     input:
-        set variantCaller,  idSample, file(vcf), file(idx) from vcfVep
+        set variantCaller, idSample, file(vcf), file(idx) from vcfVep
         file dataDir from Channel.value(params.vep_cache ? file(params.vep_cache) : "null")
         val cache_version from Channel.value(params.genomes[params.genome].vepCacheVersion)
         set file(cadd_WG_SNVs), file(cadd_WG_SNVs_tbi), file(cadd_InDels), file(cadd_InDels_tbi) from Channel.value([
@@ -1925,7 +1929,7 @@ process VEPmerge {
     }
 
     input:
-        set variantCaller,  idSample, file(vcf), file(idx) from compressVCFsnpEffOut
+        set variantCaller, idSample, file(vcf), file(idx) from compressVCFsnpEffOut
         file dataDir from Channel.value(params.vep_cache ? file(params.vep_cache) : "null")
         val cache_version from Channel.value(params.genomes[params.genome].vepCacheVersion)
         set file(cadd_WG_SNVs), file(cadd_WG_SNVs_tbi), file(cadd_InDels), file(cadd_InDels_tbi) from Channel.value([
