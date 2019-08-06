@@ -1026,13 +1026,17 @@ process TIDDIT {
 
     output:
         set val("TIDDIT"), idPatient, idSample, file("*.vcf.gz"), file("*.tbi") into vcfTIDDIT
-        set file("TIDDIT_${idSample}.ploidy.tab"), file("TIDDIT_${idSample}.signals.tab") into tidditOut
+        set file("TIDDIT_${idSample}.old.vcf"), file("TIDDIT_${idSample}.ploidy.tab"), file("TIDDIT_${idSample}.signals.tab"), file("TIDDIT_${idSample}.wig"), file("TIDDIT_${idSample}.gc.wig") into tidditOut
 
     when: 'tiddit' in tools
 
     script:
     """
     tiddit --sv -o TIDDIT_${idSample} --bam ${bam} --ref ${genomeFile}
+
+    cp TIDDIT_${idSample}.vcf TIDDIT_${idSample}.old.vcf
+
+    grep -E "#|PASS" TIDDIT_${idSample}.vcf > TIDDIT_${idSample}.vcf
 
     bgzip --threads ${task.cpus} -c TIDDIT_${idSample}.vcf > TIDDIT_${idSample}.vcf.gz
 
