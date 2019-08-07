@@ -78,7 +78,7 @@ else
   SUFFIX=""
 fi
 
-OPTIONS="--tools FreeBayes,HaplotypeCaller,Manta,Strelka,Mutect2"
+OPTIONS="--tools FreeBayes,HaplotypeCaller,Manta,Mutect2,Strelka,TIDDIT"
 
 if [[ $TEST == "GERMLINE" ]] && [[ $OFFLINE == false ]]
 then
