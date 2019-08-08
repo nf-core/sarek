@@ -41,6 +41,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#18](https://github.com/nf-core/sarek/pull/18) - Add possibility to download other genome for `sareksnpeff` and `sarekvep` containers
 - [#20](https://github.com/nf-core/sarek/pull/20) - Add `markdownlint` config file
 - [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Add tests for latest Nextflow version as well
+- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Add `genomes.config` for genomes without AWS iGenomes
 
 ### `Changed`
 
@@ -67,6 +68,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#18](https://github.com/nf-core/sarek/pull/18) - Add `--no-reports` for all tests but MULTIPLE in Jenkins
 - [#18](https://github.com/nf-core/sarek/pull/18) - `--noReports` is now `--skip all`
 - [#18](https://github.com/nf-core/sarek/pull/18), [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Update logo
+- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Moved smallGRCh37 path to `genomes.config`
 
 ### `Removed`
 
