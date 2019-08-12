@@ -1053,9 +1053,6 @@ vcfTIDDIT = vcfTIDDIT.dump(tag:'TIDDIT')
 */
 
 // Ascat, Control-FREEC
-bamAscat = Channel.create()
-bamMpileup = Channel.create()
-
 (bamAscat, bamMpileup, bamRecalAll) = bamRecalAll.into(3)
 
 // separate BAM by status
