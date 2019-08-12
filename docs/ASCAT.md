@@ -40,7 +40,7 @@ Calculation of LogR and BAF based on AlleleCount output is done as in [runASCAT.
 
 ### Loci file
 
-The loci file was created based on the 1000Genomes latest release (phase 3, releasedate 20130502), available [here](ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp//release/20130502/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5b.20130502.sites.vcf.gz). The following filter was applied: Only bi-allelc SNPs with minor allele frequencies > 0.3. The filtered file can be found on [export.uppmax.uu.se](https://export.uppmax.uu.se/b2015110/caw-references/b37/1000G_phase3_20130502_SNP_maf0.3.loci.tar.bz2) and is stored on Uppmax in:
+The loci file was created based on the 1000Genomes latest release (phase 3, releasedate 20130502), available [here](ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp//release/20130502/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5b.20130502.sites.vcf.gz). The following filter was applied: Only bi-allelc SNPs with minor allele frequencies > 0.3. The filtered file can be found on [export.uppmax.uu.se](https://export.uppmax.uu.se/sllstore2017079/Sarek/1000G_phase3_20130502_SNP_maf0.3.loci.gc) and is stored on Uppmax in:
 
 
 ```
