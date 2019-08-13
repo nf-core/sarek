@@ -85,6 +85,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#18](https://github.com/nf-core/sarek/pull/18) - Use same font for nf-core and sarek in ascii art
 - [#20](https://github.com/nf-core/sarek/pull/20) - Use new logo in README
 - [#20](https://github.com/nf-core/sarek/pull/20) - Fix path to references genomes
+- [#22](https://github.com/nf-core/sarek/pull/22) - Fix --singleCPUMem issue
 
 ## [2.3.FIX1] - 2019-03-04
 
