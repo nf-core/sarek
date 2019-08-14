@@ -103,21 +103,21 @@ esac
 
 case $TEST in
   ANNOTATE)
-  run_sarek --step annotate --tools ${ANNOTATOR} --sample ${PATHTOSAMPLE}/vcf/Strelka_1234N_variants.vcf.gz
+  run_sarek --step annotate --tools ${ANNOTATOR} --input ${PATHTOSAMPLE}/vcf/Strelka_1234N_variants.vcf.gz
   ;;
   GERMLINE)
-  run_sarek --tools=false --sample data/testdata/tiny/normal
-  run_sarek --tools=false --sample results/Preprocessing/TSV/duplicateMarked.tsv --step recalibrate
-  run_sarek --tools HaplotypeCaller --sample results/Preprocessing/TSV/recalibrated.tsv --step variantCalling
+  run_sarek --tools=false --input data/testdata/tiny/normal
+  run_sarek --tools=false --input results/Preprocessing/TSV/duplicateMarked.tsv --step recalibrate
+  run_sarek --tools HaplotypeCaller --input results/Preprocessing/TSV/recalibrated.tsv --step variantCalling
   ;;
   MULTIPLE)
-  run_sarek ${OPTIONS},snpEff,VEP,merge --sample ${PATHTOSAMPLE}/tsv/tiny-multiple${SUFFIX}.tsv
+  run_sarek ${OPTIONS},snpEff,VEP,merge --input ${PATHTOSAMPLE}/tsv/tiny-multiple${SUFFIX}.tsv
   ;;
   SOMATIC)
-  run_sarek ${OPTIONS} --sample ${PATHTOSAMPLE}/tsv/tiny-manta${SUFFIX}.tsv
+  run_sarek ${OPTIONS} --input ${PATHTOSAMPLE}/tsv/tiny-manta${SUFFIX}.tsv
   ;;
   TARGETED)
-  run_sarek ${OPTIONS} --sample ${PATHTOSAMPLE}/tsv/tiny-manta${SUFFIX}.tsv --targetBED ${PATHTOSAMPLE}/target.bed
+  run_sarek ${OPTIONS} --input ${PATHTOSAMPLE}/tsv/tiny-manta${SUFFIX}.tsv --targetBED ${PATHTOSAMPLE}/target.bed
   ;;
 esac
 

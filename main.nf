@@ -28,10 +28,10 @@ def helpMessage() {
 
     The typical command for running the pipeline is as follows:
 
-    nextflow run nf-core/sarek --sample sample.tsv -profile docker
+    nextflow run nf-core/sarek --input sample.tsv -profile docker
 
     Mandatory arguments:
-        --sample                    Path to input TSV file on mapping, recalibrate and variantcalling steps
+        --input                     Path to input TSV file on mapping, recalibrate and variantcalling steps
                                     Multiple TSV files can be specified with quotes
                                     Works also with the path to a directory on mapping step with a single germline sample only
                                     Alternatively, path to VCF input file on annotate step
@@ -121,7 +121,7 @@ params.multiqc_config = null
 params.noGVCF = null
 params.noStrelkaBP = null
 params.nucleotidesPerSecond = 1000.0
-params.sample = null
+params.input = null
 params.sequencing_center = null
 params.skip = null
 params.snpEff_cache = null
@@ -170,12 +170,12 @@ if (workflow.profile == 'awsbatch') {
 ch_output_docs = Channel.fromPath("${baseDir}/docs/output.md")
 
 tsvPath = null
-if (params.sample) if (hasExtension(params.sample,"tsv") || hasExtension(params.sample,"vcf") || hasExtension(params.sample,"vcf.gz")) tsvPath = params.sample
-if (params.sample) if (hasExtension(params.sample,"vcf") || hasExtension(params.sample,"vcf.gz")) step = "annotate"
+if (params.input) if (hasExtension(params.input,"tsv") || hasExtension(params.input,"vcf") || hasExtension(params.input,"vcf.gz")) tsvPath = params.input
+if (params.input) if (hasExtension(params.input,"vcf") || hasExtension(params.input,"vcf.gz")) step = "annotate"
 
 // If no input file specified, trying to get TSV files corresponding to step in the TSV directory
 // only for steps recalibrate and variantCalling
-if (!params.sample && step != 'mapping' && step != 'annotate') {
+if (!params.input && step != 'mapping' && step != 'annotate') {
     tsvPath = step == 'recalibrate' ? "${params.outdir}/Preprocessing/TSV/duplicateMarked.tsv": "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"
 }
 
@@ -189,16 +189,16 @@ if (tsvPath) {
         case 'annotate': break
         default: exit 1, "Unknown step ${step}"
     }
-} else if (params.sample) if (!hasExtension(params.sample,"tsv")) {
+} else if (params.input) if (!hasExtension(params.input,"tsv")) {
     println "No TSV file"
     if (step != 'mapping') exit 1, 'No other step than "mapping" support a dir as an input'
-    println "Reading ${params.sample} directory"
-    inputSample = extractFastqFromDir(params.sample)
+    println "Reading ${params.input} directory"
+    inputSample = extractFastqFromDir(params.input)
     (inputSample, fastqTMP) = inputSample.into(2)
     fastqTMP.toList().subscribe onNext: {
-        if (it.size() == 0) exit 1, "No FASTQ files found in --sample directory '${params.sample}'"
+        if (it.size() == 0) exit 1, "No FASTQ files found in --input directory '${params.input}'"
     }
-    tsvFile = params.sample  // used in the reports
+    tsvFile = params.input  // used in the reports
 } else if (step == 'annotate') {
     println "Annotating ${tsvFile}"
 } else exit 1, 'No sample were defined, see --help'
@@ -212,7 +212,7 @@ if (workflow.revision)          summary['Pipeline Release'] = workflow.revision
 summary['Run Name']         = custom_runName ?: workflow.runName
 summary['Max Resources']    = "${params.max_memory} memory, ${params.max_cpus} cpus, ${params.max_time} time per job"
 if (workflow.containerEngine)   summary['Container']        = "${workflow.containerEngine} - ${workflow.container}"
-if (params.sample)              summary['Sample']           = params.sample
+if (params.input)               summary['Input']            = params.input
 if (params.targetBED)           summary['Target BED']       = params.targetBED
 if (params.step)                summary['Step']             = params.step
 if (params.tools)               summary['Tools']            = tools.join(', ')
@@ -2280,9 +2280,9 @@ def checkReferenceMap(referenceMap) {
 // Define map of reference depending of tools and step
 def defineReferenceMap(step, tools) {
     def referenceMap = [
-        'genomeDict'       : checkParamReturnFile("genomeDict"),
-        'genomeFile'       : checkParamReturnFile("genomeFile"),
-        'genomeIndex'      : checkParamReturnFile("genomeIndex"),
+        'genomeDict'       : checkParamReturnFile("dict"),
+        'genomeFile'       : checkParamReturnFile("fasta"),
+        'genomeIndex'      : checkParamReturnFile("fastaFai"),
         'intervals'        : checkParamReturnFile("intervals")
     ]
     if ('mapping' in step) {
