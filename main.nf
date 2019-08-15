@@ -49,15 +49,17 @@ def helpMessage() {
         --step                      Specify starting step
                                     Available: Mapping, Recalibrate, VariantCalling, Annotate
                                     Default: Mapping
-        --tools                     Specify tools to use for variant calling, and annotation
+        --tools                     Specify tools to use for variant calling:
                                     Available: ASCAT, ControlFREEC, FreeBayes, HaplotypeCaller
-                                    Manta, mpileup, Mutect2, Strelka, snpEff, VEP, merge
+                                    Manta, mpileup, Mutect2, Strelka, TIDDIT
+                                    and/or for annotation:
+                                    snpEff, VEP, merge
                                     Default: None
         --skip                      Specify which QC tools to skip when running Sarek
                                     Available: bamQC, BCFtools, FastQC, MultiQC, samtools, vcftools, versions
                                     Default: None
         --annotateTools             Specify from which tools Sarek will look for VCF files to annotate, only for step annotate
-                                    Available: HaplotypeCaller, Manta, Mutect2, Strelka
+                                    Available: HaplotypeCaller, Manta, Mutect2, Strelka, TIDDIT
                                     Default: None
         --annotation_cache          Enable the use of cache for annotation, to be used with --snpEff_cache and/or --vep_cache
         --snpEff_cache              Specity the path to snpEff cache, to be used with --annotation_cache
@@ -810,7 +812,7 @@ bamRecal = bamRecal.dump(tag:'BAM')
 // Manta will be run in Germline mode, or in Tumor mode depending on status
 // HaplotypeCaller and Strelka will be run for Normal and Tumor samples
 
-(bamMantaSingle, bamStrelkaSingle, bamRecalAllTemp, bamRecalAll) = bamRecal.into(4)
+(bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamRecalAll, bamRecalAllTemp) = bamRecal.into(5)
 
 // To speed Variant Callers up we are chopping the reference into smaller pieces
 // Do variant calling by this intervals, and re-merge the VCFs
@@ -965,7 +967,7 @@ process MantaSingle {
         ])
 
     output:
-        set val("Manta"), idPatient, idSample,  file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfMantaSingle
+        set val("Manta"), idPatient, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfMantaSingle
 
     when: 'manta' in tools
 
@@ -1002,6 +1004,48 @@ process MantaSingle {
 
 vcfMantaSingle = vcfMantaSingle.dump(tag:'Single Manta')
 
+// STEP TIDDIT
+
+process TIDDIT {
+    tag {idSample}
+
+    publishDir "${params.outdir}/VariantCalling/${idSample}/TIDDIT", mode: params.publishDirMode
+
+    publishDir params.outdir, mode: params.publishDirMode,
+        saveAs: {
+            if (it == "TIDDIT_${idSample}.vcf") "VariantCalling/${idSample}/TIDDIT/${it}"
+            else "Reports/${idSample}/TIDDIT/${it}"
+        }
+
+    input:
+        set idPatient, idSample, file(bam), file(bai) from bamTIDDIT
+        set file(genomeFile), file(genomeIndex) from Channel.value([
+            referenceMap.genomeFile,
+            referenceMap.genomeIndex
+        ])
+
+    output:
+        set val("TIDDIT"), idPatient, idSample, file("*.vcf.gz"), file("*.tbi") into vcfTIDDIT
+        set file("TIDDIT_${idSample}.old.vcf"), file("TIDDIT_${idSample}.ploidy.tab"), file("TIDDIT_${idSample}.signals.tab"), file("TIDDIT_${idSample}.wig"), file("TIDDIT_${idSample}.gc.wig") into tidditOut
+
+    when: 'tiddit' in tools
+
+    script:
+    """
+    tiddit --sv -o TIDDIT_${idSample} --bam ${bam} --ref ${genomeFile}
+
+    mv TIDDIT_${idSample}.vcf TIDDIT_${idSample}.old.vcf
+
+    grep -E "#|PASS" TIDDIT_${idSample}.old.vcf > TIDDIT_${idSample}.vcf
+
+    bgzip --threads ${task.cpus} -c TIDDIT_${idSample}.vcf > TIDDIT_${idSample}.vcf.gz
+
+    tabix TIDDIT_${idSample}.vcf.gz
+    """
+}
+
+vcfTIDDIT = vcfTIDDIT.dump(tag:'TIDDIT')
+
 /*
 ================================================================================
                              SOMATIC VARIANT CALLING
@@ -1009,9 +1053,6 @@ vcfMantaSingle = vcfMantaSingle.dump(tag:'Single Manta')
 */
 
 // Ascat, Control-FREEC
-bamAscat = Channel.create()
-bamMpileup = Channel.create()
-
 (bamAscat, bamMpileup, bamRecalAll) = bamRecalAll.into(3)
 
 // separate BAM by status
@@ -1048,13 +1089,13 @@ process Mutect2 {
 
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamMutect2
-        set file(genomeFile), file(genomeIndex), file(genomeDict), file(intervals), file(commonSNPs), file(commonSNPsIndex) from Channel.value([
+        set file(genomeFile), file(genomeIndex), file(genomeDict), file(intervals), file(germlineResource), file(germlineResourceIndex) from Channel.value([
             referenceMap.genomeFile,
             referenceMap.genomeIndex,
             referenceMap.genomeDict,
             referenceMap.intervals,
-            referenceMap.commonSNPs,
-            referenceMap.commonSNPsIndex
+            referenceMap.germlineResource,
+            referenceMap.germlineResourceIndex
         ])
 
     output:
@@ -1083,7 +1124,7 @@ process Mutect2 {
       -I ${bamTumor}  -tumor ${idSampleTumor} \
       -I ${bamNormal} -normal ${idSampleNormal} \
       -L ${intervalBed} \
-      --germline-resource ${commonSNPs} \
+      --germline-resource ${germlineResource} \
       ${PON} \
       -O ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
     """
@@ -1110,13 +1151,13 @@ mutect2Stats = mutect2Stats.groupTuple(by:[0,1,2])
 //        idSampleNormal, 
 //        idSampleTumor, 
 //        file(statsFiles) from mutect2Stats  // @TODO, we are overwriting idPatient, idSampleNormal/Tumor here - it is ugly
-//    set file(genomeFile), file(genomeIndex), file(genomeDict), file(intervals), file(commonSNPs), file(commonSNPsIndex) from Channel.value([
+//    set file(genomeFile), file(genomeIndex), file(genomeDict), file(intervals), file(germlineResource), file(germlineResourceIndex) from Channel.value([
 //        referenceMap.genomeFile,
 //        referenceMap.genomeIndex,
 //        referenceMap.genomeDict,
 //        referenceMap.intervals,
-//        referenceMap.commonSNPs,
-//        referenceMap.commonSNPsIndex
+//        referenceMap.germlineResource,
+//        referenceMap.germlineResourceIndex
 //      ])
 //
 //    output:
@@ -1209,9 +1250,9 @@ vcfsToMerge = vcfsToMerge.dump(tag:'VCF to merge')
 //
 //    input:
 //        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamPileupSummaries 
-//        set file(commonSNPs), file(commonSNPsIndex) from Channel.value([
-//            referenceMap.commonSNPs,
-//            referenceMap.commonSNPsIndex
+//        set file(germlineResource), file(germlineResourceIndex) from Channel.value([
+//            referenceMap.germlineResource,
+//            referenceMap.germlineResourceIndex
 //            ])
 //        set idPatient,
 //            idSampleNormal,
@@ -1231,7 +1272,7 @@ vcfsToMerge = vcfsToMerge.dump(tag:'VCF to merge')
 //        gatk --java-options "-Xmx${task.memory.toGiga()}g" \
 //            GetPileupSummaries \
 //            -I ${bamTumor} \
-//            -V ${commonSNPs} \
+//            -V ${germlineResource} \
 //            -L ${intervalBed} \
 //            -O ${intervalBed.baseName}_${idSampleTumor}_pileupsummaries.table
 //    """
@@ -1299,13 +1340,13 @@ vcfsToMerge = vcfsToMerge.dump(tag:'VCF to merge')
 //            idSampleTumor, 
 //            file("unfiltered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz"), 
 //            file("unfiltered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.tbi") from vcfConcatenatedForFilter
-//        set file(genomeFile), file(genomeIndex), file(genomeDict), file(intervals), file(commonSNPs), file(commonSNPsIndex) from Channel.value([
+//        set file(genomeFile), file(genomeIndex), file(genomeDict), file(intervals), file(germlineResource), file(germlineResourceIndex) from Channel.value([
 //            referenceMap.genomeFile,
 //            referenceMap.genomeIndex,
 //            referenceMap.genomeDict,
 //            referenceMap.intervals,
-//            referenceMap.commonSNPs,
-//            referenceMap.commonSNPsIndex
+//            referenceMap.germlineResource,
+//            referenceMap.germlineResourceIndex
 //            ])
 //        file("${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.stats") from mergedStatsFile
 //        file("${idSampleTumor}_contamination.table") from contaminationTable
@@ -1421,7 +1462,7 @@ process Manta {
     options = params.targetBED ? "--exome --callRegions call_targets.bed.gz" : ""
     """
     ${beforeScript}
-        configManta.py \
+    configManta.py \
         --normalBam ${bamNormal} \
         --tumorBam ${bamTumor} \
         --reference ${genomeFile} \
@@ -1555,7 +1596,7 @@ alleleCounterOut = alleleCountOutNormal.combine(alleleCountOutTumor)
 
 alleleCounterOut = alleleCounterOut.map {
     idPatientNormal, idSampleNormal, alleleCountOutNormal,
-    idPatientTumor,  idSampleTumor,  alleleCountOutTumor ->
+    idPatientTumor, idSampleTumor, alleleCountOutTumor ->
     [idPatientNormal, idSampleNormal, idSampleTumor, alleleCountOutNormal, alleleCountOutTumor]
 }
 
@@ -1632,7 +1673,7 @@ process Mpileup {
     output:
         set idPatient, idSample, file("${intervalBed.baseName}_${idSample}.pileup.gz") into mpileupMerge
 
-    when: ('controlfreec' in tools || 'mpileup' in tools)
+    when: 'controlfreec' in tools || 'mpileup' in tools
 
     script:
     """
@@ -1658,7 +1699,7 @@ process MergeMpileup {
     output:
         set idPatient, idSample, file("${idSample}.pileup.gz") into mpileupOut
 
-    when: ('controlfreec' in tools || 'mpileup' in tools)
+    when: 'controlfreec' in tools || 'mpileup' in tools
 
     script:
     """
@@ -1684,7 +1725,7 @@ mpileupOut = mpileupOutNormal.combine(mpileupOutTumor)
 
 mpileupOut = mpileupOut.map {
     idPatientNormal, idSampleNormal, mpileupOutNormal,
-    idPatientTumor,  idSampleTumor,  mpileupOutTumor ->
+    idPatientTumor, idSampleTumor, mpileupOutTumor ->
     [idPatientNormal, idSampleNormal, idSampleTumor, mpileupOutNormal, mpileupOutTumor]
 }
 
@@ -1825,6 +1866,10 @@ vcfKeep = Channel.empty().mix(
     vcfStrelkaBPSNVS.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
         [variantcaller, idSample, vcf[1]]
+    },
+    vcfTIDDIT.map {
+        variantcaller, idPatient, idSample, vcf, tbi ->
+        [variantcaller, idSample, vcf]
     })
 
 (vcfBCFtools, vcfVCFtools, vcfAnnotation) = vcfKeep.into(3)
@@ -2017,7 +2062,7 @@ process VEP {
     }
 
     input:
-        set variantCaller,  idSample, file(vcf), file(idx) from vcfVep
+        set variantCaller, idSample, file(vcf), file(idx) from vcfVep
         file dataDir from Channel.value(params.vep_cache ? file(params.vep_cache) : "null")
         val cache_version from Channel.value(params.genomes[params.genome].vepCacheVersion)
         set file(cadd_WG_SNVs), file(cadd_WG_SNVs_tbi), file(cadd_InDels), file(cadd_InDels_tbi) from Channel.value([
@@ -2080,7 +2125,7 @@ process VEPmerge {
     }
 
     input:
-        set variantCaller,  idSample, file(vcf), file(idx) from compressVCFsnpEffOut
+        set variantCaller, idSample, file(vcf), file(idx) from compressVCFsnpEffOut
         file dataDir from Channel.value(params.vep_cache ? file(params.vep_cache) : "null")
         val cache_version from Channel.value(params.genomes[params.genome].vepCacheVersion)
         set file(cadd_WG_SNVs), file(cadd_WG_SNVs_tbi), file(cadd_InDels), file(cadd_InDels_tbi) from Channel.value([
@@ -2402,6 +2447,7 @@ def checkParameterList(list, realList) {
 
 // Check if params.item exists and return params.genomes[params.genome].item otherwise
 def checkParamReturnFile(item) {
+    println "${item}"
     params."${item}" = params.genomes[params.genome]."${item}"
     return file(params."${item}")
 }
@@ -2460,6 +2506,12 @@ def defineReferenceMap(step, tools) {
             'dbsnpIndex'       : checkParamReturnFile("dbsnpIndex")
         )
     }
+    if('mutect2' in tools ) {
+        referenceMap.putAll(
+            'germlineResource'            : checkParamReturnFile("germlineResource"),
+            'germlineResourceIndex'       : checkParamReturnFile("germlineResourceIndex")
+        )
+    }
     if ('annotate' in step) return []
     return referenceMap
 }
@@ -2511,6 +2563,7 @@ def defineToolList() {
         'mutect2',
         'snpeff',
         'strelka',
+        'tiddit',
         'vep'
     ]
 }

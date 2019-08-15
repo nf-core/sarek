@@ -7,3 +7,6 @@ blanks-around-lists: false
 header-increment: false
 no-duplicate-header:
     siblings_only: true
+no-inline-html: 
+    allowed_elements:
+        - img
