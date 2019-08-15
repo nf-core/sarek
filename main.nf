@@ -1031,13 +1031,15 @@ pairBam = bamNormal.cross(bamTumor).map {
 pairBam = pairBam.dump(tag:'BAM Somatic Pair')
 
 // Manta and Strelka
-(pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBam) = pairBam.into(4)
+(pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBamCalculateContamination, pairBamFilterMutect2, pairBam) = pairBam.into(6)
 
-intPairBam = pairBam.spread(bedIntervals)
+intervalPairBam = pairBam.spread(bedIntervals)
+
 bamMpileup = bamMpileup.spread(intMpileup)
 
-// Mutect2, FreeBayes
-(pairBamMutect2, pairBamFreeBayes) = intPairBam.into(3)
+// intervals for Mutect2 calls, FreeBayes and pileups for Mutect2 filtering
+(pairBamMutect2, pairBamFreeBayes, pairBamPileupSummaries) = intervalPairBam.into(3)
+//(bamsForMT2, bamsFFB, bamsForPileupSummaries) = bamsTumorNormalIntervals.into(3)
 
 // STEP GATK MUTECT2
 
@@ -1093,177 +1095,44 @@ mutect2Output = mutect2Output.groupTuple(by:[0,1,2,3])
 (mutect2Stats,intervalStatsFiles) = mutect2Stats.into(2)
 mutect2Stats = mutect2Stats.groupTuple(by:[0,1,2])
 
-process MergeMutect2Stats {
-    tag {idSampleTumor + "_vs_" + idSampleNormal}
-
-    publishDir "${params.outDir}/VariantCalling/${idPatient}/Mutect2", mode: params.publishDirMode
-
-    input:
-        set caller,
-        idPatient,
-        idSampleNormal,
-        idSampleTumor,
-        file(vcfFiles) from mutect2OutForStats
-    set idPatient,
-        idSampleNormal, 
-        idSampleTumor, 
-        file(statsFiles) from mutect2Stats  // @TODO, we are overwriting idPatient, idSampleNormal/Tumor here - it is ugly
-    set file(genomeFile), file(genomeIndex), file(genomeDict), file(intervals), file(commonSNPs), file(commonSNPsIndex) from Channel.value([
-        referenceMap.genomeFile,
-        referenceMap.genomeIndex,
-        referenceMap.genomeDict,
-        referenceMap.intervals,
-        referenceMap.commonSNPs,
-        referenceMap.commonSNPsIndex
-      ])
-
-    output:
-        file("${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.stats") into mergedStatsFile
-
-    when: 'mutect2' in tools && !params.onlyQC
-
-    script:     
-      stats = statsFiles.collect{ "-stats ${it}" }.join(' ')
-    """
-      gatk --java-options "-Xmx${task.memory.toGiga()}g" \
-            MergeMutectStats \
-            ${stats} \
-            -O ${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.stats
-    """
-}
-
-process PileupSummariesForMutect2 {
-    tag {idSampleTumor + "_vs_" + idSampleNormal + "_" + intervalBed.baseName }
-
-    input:
-        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from bamsForPileupSummaries
-        set file(commonSNPs), file(commonSNPsIndex) from Channel.value([
-            referenceMap.commonSNPs,
-            referenceMap.commonSNPsIndex
-            ])
-        set idPatient,
-            idSampleNormal,
-            idSampleTumor,
-            file(statsFile) from intervalStatsFiles
-
-    output:
-        set idPatient,
-            idSampleTumor,
-            file("${intervalBed.baseName}_${idSampleTumor}_pileupsummaries.table") into pileupSummaries
-
-    when: 'mutect2' in tools && !params.onlyQC && params.pon
-
-    script:
-    """
-        # pileup summaries
-        gatk --java-options "-Xmx${task.memory.toGiga()}g" \
-            GetPileupSummaries \
-            -I ${bamTumor} \
-            -V ${commonSNPs} \
-            -L ${intervalBed} \
-            -O ${intervalBed.baseName}_${idSampleTumor}_pileupsummaries.table
-    """
-}
-pileupSummaries = pileupSummaries.groupTuple(by:[0,1])
-
-process MergePileupSummaries {
-    tag {idPatient + "_" + idSampleTumor}
-
-    publishDir "${params.outDir}/VariantCalling/${idPatient}/Mutect2", mode: params.publishDirMode
-
-    input:
-        file(genomeDict) from referenceMap.genomeDict
-        set idPatient, idSampleTumor, file(pileupSums) from pileupSummaries
-
-    output:
-        file("${idPatient}_${idSampleTumor}_pileupsummaries.table.tsv") into mergedPileupFile
-
-    when: 'mutect2' in tools && !params.onlyQC
-    script:
-        allPileups = pileupSums.collect{ "-I ${it}" }.join(' ')
-    """
-        gatk --java-options "-Xmx${task.memory.toGiga()}g" \
-            GatherPileupSummaries \
-            --sequence-dictionary ${genomeDict} \
-            ${allPileups} \
-            -O ${idPatient}_${idSampleTumor}_pileupsummaries.table.tsv
-    """
-}
-
-process CalculateContamination {
-    tag {idSampleTumor + "_vs_" + idSampleNormal}
-
-    publishDir "${params.outDir}/VariantCalling/${idPatient}/Mutect2", mode: params.publishDirMode
-
-    input:
-        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from bamsForCalculateContamination
-        file("${idPatient}_${idSampleTumor}_pileupsummaries.table") from mergedPileupFile
-  
-    output:
-        file("${idPatient}_${idSampleTumor}_contamination.table") into contaminationTable
-
-    when: 'mutect2' in tools && !params.onlyQC && params.pon
-
-    script:     
-    """
-        # calculate contamination
-        gatk --java-options "-Xmx${task.memory.toGiga()}g" \
-            CalculateContamination \
-            -I ${idPatient}_${idSampleTumor}_pileupsummaries.table \
-            -O ${idPatient}_${idSampleTumor}_contamination.table
-    """
-}
-
-process FilterMutect2Calls {
-    tag {idSampleTumor + "_vs_" + idSampleNormal}
-
-    publishDir "${params.outDir}/VariantCalling/${idPatient}/Mutect2", mode: params.publishDirMode
-
-    input:
-        set variantCaller, 
-            idPatient, 
-            idSampleNormal, 
-            idSampleTumor, 
-            file("unfiltered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz"), 
-            file("unfiltered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.tbi") from vcfConcatenatedForFilter
-        set file(genomeFile), file(genomeIndex), file(genomeDict), file(intervals), file(commonSNPs), file(commonSNPsIndex) from Channel.value([
-            referenceMap.genomeFile,
-            referenceMap.genomeIndex,
-            referenceMap.genomeDict,
-            referenceMap.intervals,
-            referenceMap.commonSNPs,
-            referenceMap.commonSNPsIndex
-            ])
-        file("${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.stats") from mergedStatsFile
-        file("${idSampleTumor}_contamination.table") from contaminationTable
-  
-    output:
-        set val("Mutect2"),
-            idPatient,
-            idSampleNormal,
-            idSampleTumor,
-            file("filtered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz"),
-            file("filtered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.tbi"),
-            file("filtered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.filteringStats.tsv") into filteredMutect2Output
-
-    when: 'mutect2' in tools && !params.onlyQC && params.pon
-
-    script:
-    """
-        # do the actual filtering
-        gatk --java-options "-Xmx${task.memory.toGiga()}g" \
-        FilterMutectCalls \
-        -V unfiltered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz \
-        --contamination-table ${idSampleTumor}_contamination.table \
-        --stats ${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.stats \
-        -R ${genomeFile} \
-        -O filtered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz
-    """
-}
-
-vcfMutect2 = vcfMutect2.groupTuple(by:[0,1,2])
-
-// STEP FREEBAYES
+//process MergeMutect2Stats {
+//    tag {idSampleTumor + "_vs_" + idSampleNormal}
+//
+//    publishDir "${params.outDir}/VariantCalling/${idPatient}/Mutect2", mode: params.publishDirMode
+//
+//    input:
+//        set caller,
+//        idPatient,
+//        idSampleNormal,
+//        idSampleTumor,
+//        file(vcfFiles) from mutect2OutForStats
+//    set idPatient,
+//        idSampleNormal, 
+//        idSampleTumor, 
+//        file(statsFiles) from mutect2Stats  // @TODO, we are overwriting idPatient, idSampleNormal/Tumor here - it is ugly
+//    set file(genomeFile), file(genomeIndex), file(genomeDict), file(intervals), file(commonSNPs), file(commonSNPsIndex) from Channel.value([
+//        referenceMap.genomeFile,
+//        referenceMap.genomeIndex,
+//        referenceMap.genomeDict,
+//        referenceMap.intervals,
+//        referenceMap.commonSNPs,
+//        referenceMap.commonSNPsIndex
+//      ])
+//
+//    output:
+//        file("${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.stats") into mergedStatsFile
+//
+//    when: 'mutect2' in tools && !params.onlyQC
+//
+//    script:     
+//      stats = statsFiles.collect{ "-stats ${it}" }.join(' ')
+//    """
+//      gatk --java-options "-Xmx${task.memory.toGiga()}g" \
+//            MergeMutectStats \
+//            ${stats} \
+//            -O ${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.stats
+//    """
+//}
 
 process FreeBayes {
     tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
@@ -1296,46 +1165,182 @@ process FreeBayes {
     """
 }
 
+vcfFreeBayes = vcfFreeBayes.groupTuple(by:[0,1,2])
+
 // we are merging the VCFs that are called separatelly for different intervals
 // so we can have a single sorted VCF containing all the calls for a given caller
 
-vcfFreeBayes = vcfFreeBayes.groupTuple(by:[0,1,2])
+vcfsToMerge = mutect2Output.mix(vcfFreeBayes)
 
-// STEP MERGING VCF - FREEBAYES, GATK HAPLOTYPECALLER & GATK MUTECT2
+vcfsToMerge = vcfsToMerge.dump(tag:'VCF to merge')
 
-vcfConcatenateVCFs = vcfMutect2.mix(vcfFreeBayes, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
-
-vcfConcatenateVCFs = vcfConcatenateVCFs.dump(tag:'VCF to merge')
-
-process ConcatVCF {
-    label 'cpus_8'
-
-    tag {variantCaller + "-" + idSample}
-
-    publishDir "${params.outdir}/VariantCalling/${idSample}/${"$variantCaller"}", mode: params.publishDirMode
-
-    input:
-        set variantCaller, idPatient, idSample, file(vcFiles) from vcfConcatenateVCFs
-        file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
-        file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
-
-    output:
-    // we have this funny *_* pattern to avoid copying the raw calls to publishdir
-        set variantCaller, idPatient, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into vcfConcatenated
-
-    when: ('haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools)
-
-    script:
-    if (variantCaller == 'HaplotypeCallerGVCF') outputFile = "HaplotypeCaller_${idSample}.g.vcf"
-    else outputFile = "${variantCaller}_${idSample}.vcf"
-    options = params.targetBED ? "-t ${targetBED}" : ""
-    """
-    concatenateVCFs.sh -i ${genomeIndex} -c ${task.cpus} -o ${outputFile} ${options}
-    """
-}
-
-vcfConcatenated = vcfConcatenated.dump(tag:'VCF')
-
+//process ConcatVCF {
+//    label 'cpus_8'
+//
+//    tag {variantCaller + "-" + idSample}
+//
+//    publishDir "${params.outdir}/VariantCalling/${idSample}/${"$variantCaller"}", mode: params.publishDirMode
+//
+//    input:
+//        set variantCaller, idPatient, idSample, file(vcFiles) from vcfConcatenateVCFs
+//        file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
+//        file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
+//
+//    output:
+//    // we have this funny *_* pattern to avoid copying the raw calls to publishdir
+//        set variantCaller, idPatient, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into vcfConcatenated
+//
+//    when: ('haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools)
+//
+//    script:
+//    if (variantCaller == 'HaplotypeCallerGVCF') outputFile = "HaplotypeCaller_${idSample}.g.vcf"
+//    else outputFile = "${variantCaller}_${idSample}.vcf"
+//    options = params.targetBED ? "-t ${targetBED}" : ""
+//    """
+//    concatenateVCFs.sh -i ${genomeIndex} -c ${task.cpus} -o ${outputFile} ${options}
+//    """
+//}
+//
+//(vcfConcatenated, vcfConcatenatedForFilter) = vcfConcatenated.into(2)
+//vcfConcatenated = vcfConcatenated.dump(tag:'VCF')
+//
+//process PileupSummariesForMutect2 {
+//    tag {idSampleTumor + "_vs_" + idSampleNormal + "_" + intervalBed.baseName }
+//
+//    input:
+//        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamPileupSummaries 
+//        set file(commonSNPs), file(commonSNPsIndex) from Channel.value([
+//            referenceMap.commonSNPs,
+//            referenceMap.commonSNPsIndex
+//            ])
+//        set idPatient,
+//            idSampleNormal,
+//            idSampleTumor,
+//            file(statsFile) from intervalStatsFiles
+//
+//    output:
+//        set idPatient,
+//            idSampleTumor,
+//            file("${intervalBed.baseName}_${idSampleTumor}_pileupsummaries.table") into pileupSummaries
+//
+//    when: 'mutect2' in tools && !params.onlyQC && params.pon
+//
+//    script:
+//    """
+//        # pileup summaries
+//        gatk --java-options "-Xmx${task.memory.toGiga()}g" \
+//            GetPileupSummaries \
+//            -I ${bamTumor} \
+//            -V ${commonSNPs} \
+//            -L ${intervalBed} \
+//            -O ${intervalBed.baseName}_${idSampleTumor}_pileupsummaries.table
+//    """
+//}
+//
+//pileupSummaries = pileupSummaries.groupTuple(by:[0,1])
+//
+//process MergePileupSummaries {
+//    tag {idPatient + "_" + idSampleTumor}
+//
+//    publishDir "${params.outDir}/VariantCalling/${idPatient}/Mutect2", mode: params.publishDirMode
+//
+//    input:
+//        file(genomeDict) from referenceMap.genomeDict
+//        set idPatient, idSampleTumor, file(pileupSums) from pileupSummaries
+//
+//    output:
+//        file("${idPatient}_${idSampleTumor}_pileupsummaries.table.tsv") into mergedPileupFile
+//
+//    when: 'mutect2' in tools && !params.onlyQC
+//    script:
+//        allPileups = pileupSums.collect{ "-I ${it}" }.join(' ')
+//    """
+//        gatk --java-options "-Xmx${task.memory.toGiga()}g" \
+//            GatherPileupSummaries \
+//            --sequence-dictionary ${genomeDict} \
+//            ${allPileups} \
+//            -O ${idPatient}_${idSampleTumor}_pileupsummaries.table.tsv
+//    """
+//}
+//
+//process CalculateContamination {
+//    tag {idSampleTumor + "_vs_" + idSampleNormal}
+//
+//    publishDir "${params.outDir}/VariantCalling/${idPatient}/Mutect2", mode: params.publishDirMode
+//
+//    input:
+//        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamCalculateContamination 
+//        file("${idPatient}_${idSampleTumor}_pileupsummaries.table") from mergedPileupFile
+//  
+//    output:
+//        file("${idPatient}_${idSampleTumor}_contamination.table") into contaminationTable
+//
+//    when: 'mutect2' in tools && !params.onlyQC && params.pon
+//
+//    script:     
+//    """
+//        # calculate contamination
+//        gatk --java-options "-Xmx${task.memory.toGiga()}g" \
+//            CalculateContamination \
+//            -I ${idPatient}_${idSampleTumor}_pileupsummaries.table \
+//            -O ${idPatient}_${idSampleTumor}_contamination.table
+//    """
+//}
+//
+//process FilterMutect2Calls {
+//    tag {idSampleTumor + "_vs_" + idSampleNormal}
+//
+//    publishDir "${params.outDir}/VariantCalling/${idPatient}/Mutect2", mode: params.publishDirMode
+//
+//    input:
+//        set variantCaller, 
+//            idPatient, 
+//            idSampleNormal, 
+//            idSampleTumor, 
+//            file("unfiltered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz"), 
+//            file("unfiltered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.tbi") from vcfConcatenatedForFilter
+//        set file(genomeFile), file(genomeIndex), file(genomeDict), file(intervals), file(commonSNPs), file(commonSNPsIndex) from Channel.value([
+//            referenceMap.genomeFile,
+//            referenceMap.genomeIndex,
+//            referenceMap.genomeDict,
+//            referenceMap.intervals,
+//            referenceMap.commonSNPs,
+//            referenceMap.commonSNPsIndex
+//            ])
+//        file("${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.stats") from mergedStatsFile
+//        file("${idSampleTumor}_contamination.table") from contaminationTable
+//  
+//    output:
+//        set val("Mutect2"),
+//            idPatient,
+//            idSampleNormal,
+//            idSampleTumor,
+//            file("filtered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz"),
+//            file("filtered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.tbi"),
+//            file("filtered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.filteringStats.tsv") into filteredMutect2Output
+//
+//    when: 'mutect2' in tools && !params.onlyQC && params.pon
+//
+//    script:
+//    """
+//        # do the actual filtering
+//        gatk --java-options "-Xmx${task.memory.toGiga()}g" \
+//        FilterMutectCalls \
+//        -V unfiltered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz \
+//        --contamination-table ${idSampleTumor}_contamination.table \
+//        --stats ${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.stats \
+//        -R ${genomeFile} \
+//        -O filtered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz
+//    """
+//}
+//
+//vcfMutect2 = vcfMutect2.groupTuple(by:[0,1,2])
+//
+//// STEP MERGING VCF - FREEBAYES, GATK HAPLOTYPECALLER & GATK MUTECT2
+//
+//vcfConcatenateVCFs = vcfMutect2.mix(vcfFreeBayes, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
+//
+//vcfConcatenateVCFs = vcfConcatenateVCFs.dump(tag:'VCF to merge')
 // STEP STRELKA.2 - SOMATIC PAIR
 
 process Strelka {
@@ -1785,10 +1790,10 @@ controlFreecVizOut.dump(tag:'ControlFreecViz')
 (vcfMantaSomaticSV, vcfMantaDiploidSV) = vcfManta.into(2)
 
 vcfKeep = Channel.empty().mix(
-    vcfConcatenated.map {
-        variantcaller, idPatient, idSample, vcf, tbi ->
-        [variantcaller, idSample, vcf]
-    },
+//    vcfConcatenated.map {
+//        variantcaller, idPatient, idSample, vcf, tbi ->
+//        [variantcaller, idSample, vcf]
+//    },
     vcfStrelkaSingle.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
         [variantcaller, idSample, vcf[1]]
