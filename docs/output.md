@@ -20,7 +20,7 @@ The pipeline processes data using the following steps:
         * [`FreeBayes`](#FreeBayes)
         * [`GATK HaplotypeCaller`](#HaplotypeCaller)
         * [`GATK GenotypeGVCFs`](#GenotypeGVCFs)
-        * [`GATK MuTect2`](#MuTect2)
+        * [`GATK Mutect2`](#Mutect2)
         * [`Strelka2`](#Strelka2)
     * Structural variants
         * [`Manta`](#Manta)
@@ -140,16 +140,16 @@ For all samples:
 * `HaplotypeCaller_[SAMPLE].g.vcf.gz` and `HaplotypeCaller_[SAMPLE].g.vcf.gz.tbi`
   * VCF with Tabix index
 
-### MuTect2
+### Mutect2
 
-[GATK MuTect2](https://github.com/broadinstitute/gatk) calls somatic SNVs and indels via local assembly of haplotypes.
+[GATK Mutect2](https://github.com/broadinstitute/gatk) calls somatic SNVs and indels via local assembly of haplotypes.
 
-For further reading and documentation see the [MuTect2 manual](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.2.0/org_broadinstitute_hellbender_tools_walkers_mutect_Mutect2.php).
+For further reading and documentation see the [Mutect2 manual](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.2.0/org_broadinstitute_hellbender_tools_walkers_mutect_Mutect2.php).
 
 For a Tumor/Normal pair only:
-**Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/MuTect2`**
+**Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/Mutect2`**
 
-* `MuTect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `MuTect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
+* `Mutect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `Mutect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
   * VCF with Tabix index
 
 ### TIDDIT
