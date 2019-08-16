@@ -22,6 +22,7 @@ regexes = {
     'samtools': ['v_samtools.txt', r"samtools (\S+)"],
     'SnpEff': ['v_snpeff.txt', r"version SnpEff (\S+)"],
     'Strelka': ['v_strelka.txt', r"([0-9.]+)"],
+    'TIDDIT': ['v_tiddit.txt', r"TIDDIT-(\S+)"],
     'vcftools': ['v_vcftools.txt', r"([0-9.]+)"],
     'VEP': ['v_vep.txt', r"ensembl-vep          : (\S+)"],
 }
@@ -43,6 +44,7 @@ results['R'] = '<span style="color:#999999;\">N/A</span>'
 results['samtools'] = '<span style="color:#999999;\">N/A</span>'
 results['SnpEff'] = '<span style="color:#999999;\">N/A</span>'
 results['Strelka'] = '<span style="color:#999999;\">N/A</span>'
+results['TIDDIT'] = '<span style="color:#999999;\">N/A</span>'
 results['vcftools'] = '<span style="color:#999999;\">N/A</span>'
 results['VEP'] = '<span style="color:#999999;\">N/A</span>'
 

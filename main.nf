@@ -274,6 +274,7 @@ process GetSoftwareVersions {
     qualimap --version &> v_qualimap.txt 2>&1 || true
     R --version &> v_r.txt  || true
     samtools --version &> v_samtools.txt 2>&1 || true
+    tiddit &> v_tiddit.txt 2>&1 || true
     vcftools --version &> v_vcftools.txt 2>&1 || true
     vep --help &> v_vep.txt 2>&1 || true
 
