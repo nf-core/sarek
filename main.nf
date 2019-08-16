@@ -56,7 +56,7 @@ def helpMessage() {
                                     snpEff, VEP, merge
                                     Default: None
         --skip                      Specify which QC tools to skip when running Sarek
-                                    Available: bamQC, BCFtools, FastQC, MultiQC, samtools, vcftools, versions
+                                    Available: all, bamQC, BCFtools, FastQC, MultiQC, samtools, vcftools, versions
                                     Default: None
         --annotateTools             Specify from which tools Sarek will look for VCF files to annotate, only for step annotate
                                     Available: HaplotypeCaller, Manta, MuTect2, Strelka, TIDDIT
@@ -71,9 +71,9 @@ def helpMessage() {
         --bwaIndex                  bwa indexes
         --dbsnp                     dbsnp file
         --dbsnpIndex                dbsnp index
-        --genomeDict                genome dict
-        --genomeFile                genome file
-        --genomeIndex               genome index
+        --dict                      dict from the fasta reference
+        --fasta                     fasta reference
+        --fastafai                  reference index
         --intervals                 intervals
         --knownIndels               knownIndels file
         --knownIndelsIndex          knownIndels index
