@@ -1292,14 +1292,14 @@ pileupSummaries = pileupSummaries.groupTuple(by:[0,1])
 process MergePileupSummaries {
     tag {idPatient + "_" + idSampleTumor}
 
-    publishDir "${params.outDir}/VariantCalling/${idPatient}/Mutect2", mode: params.publishDirMode
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Mutect2", mode: params.publishDirMode
 
     input:
         file(genomeDict) from referenceMap.genomeDict
         set idPatient, idSampleTumor, file(pileupSums) from pileupSummaries
 
     output:
-        file("${idPatient}_${idSampleTumor}_pileupsummaries.table.tsv") into mergedPileupFile
+        file("${idSampleTumor}_pileupsummaries.table.tsv") into mergedPileupFile
 
     when: 'mutect2' in tools
     script:
@@ -1309,21 +1309,21 @@ process MergePileupSummaries {
             GatherPileupSummaries \
             --sequence-dictionary ${genomeDict} \
             ${allPileups} \
-            -O ${idPatient}_${idSampleTumor}_pileupsummaries.table.tsv
+            -O ${idSampleTumor}_pileupsummaries.table.tsv
     """
 }
 
 process CalculateContamination {
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-    publishDir "${params.outDir}/VariantCalling/${idPatient}/Mutect2", mode: params.publishDirMode
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Mutect2", mode: params.publishDirMode
 
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamCalculateContamination 
-        file("${idPatient}_${idSampleTumor}_pileupsummaries.table") from mergedPileupFile
+        file("${idSampleTumor}_pileupsummaries.table") from mergedPileupFile
   
     output:
-        file("${idPatient}_${idSampleTumor}_contamination.table") into contaminationTable
+        file("${idSampleTumor}_contamination.table") into contaminationTable
 
     when: 'mutect2' in tools && params.pon
 
@@ -1332,23 +1332,22 @@ process CalculateContamination {
         # calculate contamination
         gatk --java-options "-Xmx${task.memory.toGiga()}g" \
             CalculateContamination \
-            -I ${idPatient}_${idSampleTumor}_pileupsummaries.table \
-            -O ${idPatient}_${idSampleTumor}_contamination.table
+            -I ${idSampleTumor}_pileupsummaries.table \
+            -O ${idSampleTumor}_contamination.table
     """
 }
 
 process FilterMutect2Calls {
-    tag {idSampleTumor + "_vs_" + idSampleNormal}
+    tag {idSampleTN}
 
-    publishDir "${params.outDir}/VariantCalling/${idPatient}/Mutect2", mode: params.publishDirMode
+    publishDir "${params.outdir}/VariantCalling/${idSampleTN}/${"$variantCaller"}", mode: params.publishDirMode
 
     input:
         set variantCaller, 
             idPatient, 
-            idSampleNormal, 
-            idSampleTumor, 
-            file("unfiltered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz"), 
-            file("unfiltered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.tbi") from vcfConcatenatedForFilter
+            idSampleTN, 
+            file(unfiltered), 
+            file(unfilteredIndex) from vcfConcatenatedForFilter
         set file(genomeFile), file(genomeIndex), file(genomeDict), file(intervals), file(germlineResource), file(germlineResourceIndex) from Channel.value([
             referenceMap.genomeFile,
             referenceMap.genomeIndex,
@@ -1357,17 +1356,16 @@ process FilterMutect2Calls {
             referenceMap.germlineResource,
             referenceMap.germlineResourceIndex
             ])
-        file("${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.stats") from mergedStatsFile
-        file("${idSampleTumor}_contamination.table") from contaminationTable
+        file("${idSampleTN}.vcf.gz.stats") from mergedStatsFile
+        file("${idSampleTN}_contamination.table") from contaminationTable
   
     output:
         set val("Mutect2"),
             idPatient,
-            idSampleNormal,
-            idSampleTumor,
-            file("filtered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz"),
-            file("filtered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.tbi"),
-            file("filtered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.filteringStats.tsv") into filteredMutect2Output
+            idSampleTN,
+            file("filtered_${variantCaller}_${idSampleTN}.vcf.gz"),
+            file("filtered_${variantCaller}_${idSampleTN}.vcf.gz.tbi"),
+            file("filtered_${variantCaller}_${idSampleTN}.vcf.gz.filteringStats.tsv") into filteredMutect2Output
 
     when: 'mutect2' in tools && params.pon
 
@@ -1376,11 +1374,11 @@ process FilterMutect2Calls {
         # do the actual filtering
         gatk --java-options "-Xmx${task.memory.toGiga()}g" \
         FilterMutectCalls \
-        -V unfiltered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz \
-        --contamination-table ${idSampleTumor}_contamination.table \
-        --stats ${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.stats \
+        -V $unfiltered \
+        --contamination-table ${idSampleTN}_contamination.table \
+        --stats ${idSampleTN}.vcf.gz.stats \
         -R ${genomeFile} \
-        -O filtered_${variantCaller}_${idSampleTumor}_vs_${idSampleNormal}.vcf.gz
+        -O filtered_${variantCaller}_${idSampleTN}.vcf.gz
     """
 }
 
