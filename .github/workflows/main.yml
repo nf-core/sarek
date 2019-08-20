@@ -13,7 +13,7 @@ jobs:
         sudo ln -s nextflow /usr/local/bin/nextflow
     - name: Build References
       run: |
-        ${GITHUB_WORKSPACE}/sarek/scripts/build_reference.sh --test SOMATIC --verbose
+        ${GITHUB_WORKSPACE}/scripts/build_reference.sh --test SOMATIC --verbose
     - name: Run test
       run: |
-        ${GITHUB_WORKSPACE}/sarek/scripts/run_test.sh --test SOMATIC --verbose
+        ${GITHUB_WORKSPACE}/scripts/run_test.sh --test SOMATIC --verbose
