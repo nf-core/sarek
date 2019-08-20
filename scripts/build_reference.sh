@@ -4,14 +4,15 @@ set -xeuo pipefail
 # This script build small reference for sarek tests
 # https://github.com/nf-core/test-datasets/raw/sarek
 
-usage() { echo "Usage: $0 <-p profile> <-t test> <-v>" 1>&2; exit 1; }
+usage() { echo "Usage: $0 <-p profile> <-t test> <-v> <-m memory>" 1>&2; exit 1; }
 
+MEMORY='7.GB'
 NXF_SINGULARITY_CACHEDIR=${NXF_SINGULARITY_CACHEDIR:-work/singularity/.}
 OFFLINE=''
 PROFILE=docker
 TEST=ALL
-TRAVIS_BUILD_DIR=${TRAVIS_BUILD_DIR:-.}
 TRAVIS=${TRAVIS:-false}
+TRAVIS_BUILD_DIR=${TRAVIS_BUILD_DIR:-.}
 VERBOSE=''
 
 while [[ $# -gt 0 ]]
@@ -20,6 +21,11 @@ do
   case $key in
     -t|--test)
     TEST=$2
+    shift # past argument
+    shift # past value
+    ;;
+    -m|--memory)
+    MEMORY=$2
     shift # past argument
     shift # past value
     ;;
@@ -47,6 +53,6 @@ done
 if ! [[ ANNOTATEBOTH,ANNOTATESNPEFF,ANNOTATEVEP,LINT =~ $TEST ]]
  then
   rm -rf references
-  nextflow run ${TRAVIS_BUILD_DIR}/build.nf -profile test,${PROFILE} --build --outdir references ${VERBOSE} ${OFFLINE}
+  nextflow run ${TRAVIS_BUILD_DIR}/build.nf -profile test,${PROFILE} --build --outdir references ${VERBOSE} ${OFFLINE} --max_memory ${MEMORY} --singleCPUMem ${MEMORY}
   rm -rf .nextflow* references/pipeline_info work
 fi

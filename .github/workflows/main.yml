@@ -13,7 +13,7 @@ jobs:
         sudo mv nextflow /usr/local/bin/
     - name: Build References
       run: |
-        ${GITHUB_WORKSPACE}/scripts/build_reference.sh --test SOMATIC --verbose
+        ${GITHUB_WORKSPACE}/scripts/build_reference.sh --test SOMATIC --verbose --memory 6.GB
     - name: Run test
       run: |
-        ${GITHUB_WORKSPACE}/scripts/run_test.sh --test SOMATIC --verbose
+        ${GITHUB_WORKSPACE}/scripts/run_test.sh --test SOMATIC --verbose --memory 6.GB

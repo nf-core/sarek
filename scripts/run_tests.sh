@@ -4,14 +4,15 @@ set -xeuo pipefail
 # This script run sarek tests
 # https://github.com/nf-core/test-datasets/raw/sarek
 
-usage() { echo "Usage: $0 <-p profile> <-t test> <-c cpus> <-n> <-v>" 1>&2; exit 1; }
+usage() { echo "Usage: $0 <-p profile> <-t test> <-c cpus> <-n> <-v> <-m memory>" 1>&2; exit 1; }
 
 CPUS=2
 LOGS=''
-REPORTS=''
+MEMORY='7.GB'
 NXF_SINGULARITY_CACHEDIR=${NXF_SINGULARITY_CACHEDIR:-work/singularity/.}
 OFFLINE=false
 PROFILE=docker
+REPORTS=''
 TEST=MULTIPLE
 TRAVIS=${TRAVIS:-false}
 TRAVIS_BUILD_DIR=${TRAVIS_BUILD_DIR:-.}
@@ -23,6 +24,11 @@ do
   case $key in
     -c|--cpus)
     CPUS=$2
+    shift # past value
+    ;;
+    -m|--memory)
+    MEMORY=$2
+    shift # past argument
     shift # past value
     ;;
     -n|--no-logs)
@@ -66,7 +72,7 @@ function manage_logs() {
 }
 
 function run_sarek() {
-  nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile test,${PROFILE} ${VERBOSE} --monochrome_logs ${REPORTS} $@
+  nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile test,${PROFILE} ${VERBOSE} --monochrome_logs ${REPORTS} --max_memory ${MEMORY} --singleCPUMem ${MEMORY} $@
 }
 
 if [[ $OFFLINE == false ]]
