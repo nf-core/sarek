@@ -53,6 +53,6 @@ done
 if ! [[ ANNOTATEBOTH,ANNOTATESNPEFF,ANNOTATEVEP,LINT =~ $TEST ]]
  then
   rm -rf references
-  nextflow run ${TRAVIS_BUILD_DIR}/build.nf -profile test,${PROFILE} --build --outdir references ${VERBOSE} ${OFFLINE} --max_memory ${MEMORY} --singleCPUMem ${MEMORY}
+  nextflow run ${TRAVIS_BUILD_DIR}/build.nf -profile test,${PROFILE} --build --outdir references ${VERBOSE} ${OFFLINE} --max_memory ${MEMORY}
   rm -rf .nextflow* references/pipeline_info work
 fi

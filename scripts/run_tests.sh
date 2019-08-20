@@ -72,7 +72,7 @@ function manage_logs() {
 }
 
 function run_sarek() {
-  nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile test,${PROFILE} ${VERBOSE} --monochrome_logs ${REPORTS} --max_memory ${MEMORY} --singleCPUMem ${MEMORY} $@
+  nextflow run ${TRAVIS_BUILD_DIR}/main.nf -profile test,${PROFILE} ${VERBOSE} --monochrome_logs ${REPORTS} --max_memory ${MEMORY} $@
 }
 
 if [[ $OFFLINE == false ]]
