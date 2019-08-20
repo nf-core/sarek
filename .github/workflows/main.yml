@@ -5,12 +5,8 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-    - name: Install Nextflow
-      run: |
-        wget -qO- get.nextflow.io | bash
-        sudo mv nextflow /usr/local/bin/
     - uses: actions/checkout@v1
+    - uses: MaxUlysse/actions/install/nextflow@master
     - name: Download image
       run: |
         ${GITHUB_WORKSPACE}/scripts/download_image.sh -n docker --test SOMATIC
