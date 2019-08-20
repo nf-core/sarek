@@ -10,7 +10,7 @@ jobs:
     - name: Install Nextflow
       run: |
         wget -qO- get.nextflow.io | bash
-        sudo ln -s nextflow /usr/local/bin/nextflow
+        sudo mv nextflow /usr/local/bin/
     - name: Build References
       run: |
         echo ${PATH}
