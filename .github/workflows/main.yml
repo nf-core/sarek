@@ -3,6 +3,10 @@ name: nf-core CI
 on: [push, pull_request]  
 
 jobs:
+  strategy:
+  matrix:
+    test: [ANNOTATEVEP, SOMATIC, TARGETED, GERMLINE, ANNOTATESNPEFF, LINT]
+    NXF_VER: [19.04.0, '']
   build:
     runs-on: ubuntu-latest
     steps:
@@ -11,9 +15,12 @@ jobs:
       run: |
         wget -qO- get.nextflow.io | bash
         sudo mv nextflow /usr/local/bin/
+    - name: Download image
+      run: |
+        ${GITHUB_WORKSPACE}/scripts/download_image.sh -n docker --test ${TEST}
     - name: Build References
       run: |
-        ${GITHUB_WORKSPACE}/scripts/build_reference.sh --test SOMATIC --verbose --memory 6.GB
+        ${GITHUB_WORKSPACE}/scripts/build_reference.sh --test ${TEST} --verbose --memory 6.GB
     - name: Run test
       run: |
-        ${GITHUB_WORKSPACE}/scripts/run_tests.sh --test SOMATIC --verbose --memory 6.GB
+        ${GITHUB_WORKSPACE}/scripts/run_tests.sh --test ${TEST} --verbose --memory 6.GB
