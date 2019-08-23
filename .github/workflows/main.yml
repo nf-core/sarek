@@ -3,19 +3,27 @@ name: nf-core CI
 on: [push, pull_request]  
 
 jobs:
-  build:
+  setup:
     runs-on: ubuntu-latest
-    - uses: actions/checkout@v1
-    - name: Install Nextflow
-      run: |
-        wget -qO- get.nextflow.io | bash
-        sudo mv nextflow /usr/local/bin/
-    - name: Download image
-      run: |
-        ${GITHUB_WORKSPACE}/scripts/download_image.sh -n docker --test SOMATIC
-    - name: Build References
-      run: |
-        ${GITHUB_WORKSPACE}/scripts/build_reference.sh --test SOMATIC --verbose --memory 6.GB
-    - name: Run test
-      run: |
-        ${GITHUB_WORKSPACE}/scripts/run_tests.sh --test SOMATIC --verbose --memory 6.GB
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+  test:
+    runs-on: ubuntu-latest
+    matrix:
+      test: [ANNOTATESNPEFF, ANNOTATEVEP, GERMLINE, SOMATIC, TARGETED]
+    steps:
+      - name: Download image
+        run: |
+          ${GITHUB_WORKSPACE}/scripts/download_image.sh -n docker --test {{ matrix.test }}
+      - name: Build References
+        run: |
+          ${GITHUB_WORKSPACE}/scripts/build_reference.sh --test {{ matrix.test }} --verbose --memory 6.GB
+      - name: Run test
+        run: |
+          ${GITHUB_WORKSPACE}/scripts/run_tests.sh --test {{ matrix.test }} --verbose --memory 6.GB
+        
+
