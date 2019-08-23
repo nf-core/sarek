@@ -13,8 +13,9 @@ jobs:
           sudo mv nextflow /usr/local/bin/
   test:
     runs-on: ubuntu-latest
-    matrix:
-      test: [ANNOTATESNPEFF, ANNOTATEVEP, GERMLINE, SOMATIC, TARGETED]
+    strategy:
+      matrix:
+        test: [ANNOTATESNPEFF, ANNOTATEVEP, GERMLINE, SOMATIC, TARGETED]
     steps:
       - name: Download image
         run: |
