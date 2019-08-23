@@ -1,9 +1,9 @@
-name: nf-core/sarek
+name: nf-core/sarek lint
 # This workflow is triggered on pushes and PRs to the repository.
 on: [push, pull_request]  
 
 jobs:
-  Linting:
+  Markdown:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1

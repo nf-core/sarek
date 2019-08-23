@@ -1,9 +1,9 @@
-name: nf-core/sarek
+name: nf-core/sarek CI
 # This workflow is triggered on pushes and PRs to the repository.
 on: [push, pull_request]  
 
 jobs:
-  CI:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
