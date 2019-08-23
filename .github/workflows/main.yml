@@ -3,20 +3,17 @@ name: nf-core CI
 on: [push, pull_request]  
 
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - name: Install Nextflow
-        run: |
-          wget -qO- get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         test: [ANNOTATESNPEFF, ANNOTATEVEP, GERMLINE, SOMATIC, TARGETED]
     steps:
+      - uses: actions/checkout@v1
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
       - name: Download image
         run: |
           ${GITHUB_WORKSPACE}/scripts/download_image.sh -n docker --test {{ matrix.test }}
