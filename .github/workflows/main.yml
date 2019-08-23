@@ -6,7 +6,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     - uses: actions/checkout@v1
-    - uses: MaxUlysse/actions/install/nextflow@master
+    - name: Install Nextflow
+      run: |
+        wget -qO- get.nextflow.io | bash
+        sudo mv nextflow /usr/local/bin/
     - name: Download image
       run: |
         ${GITHUB_WORKSPACE}/scripts/download_image.sh -n docker --test SOMATIC
