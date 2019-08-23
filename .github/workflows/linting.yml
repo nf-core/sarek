@@ -1,0 +1,19 @@
+name: nf-core/sarek linting
+# This workflow is triggered on pushes and PRs to the repository.
+on: [push, pull_request]  
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        nxf_ver: ['19.04.0', '']
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install markdownLint
+        run: |
+          sudo apt-get install npm && npm install -g markdownlint-cli
+      - name: Run Lint
+        run: |
+          markdownlint ${GITHUB_WORKSPACE} -c ${GITHUB_WORKSPACE}/.github/markdownlint.yml
+
