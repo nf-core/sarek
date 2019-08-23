@@ -3,7 +3,7 @@ name: nf-core/sarek linting
 on: [push, pull_request]  
 
 jobs:
-  test:
+  Lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1

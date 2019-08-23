@@ -3,7 +3,7 @@ name: nf-core/sarek CI
 on: [push, pull_request]  
 
 jobs:
-  test:
+  CI:
     runs-on: ubuntu-latest
     strategy:
       matrix:
