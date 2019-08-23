@@ -7,9 +7,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Install markdownLint
-        run: |
-          sudo apt-get install npm && npm install -g markdownlint-cli
+      - uses: actions/setup-node@v1
+          with:
+            node-version: '10'
+      - run: |
+          npm install -g markdownlint-cli
       - name: Run Lint
         run: |
           markdownlint ${GITHUB_WORKSPACE} -c ${GITHUB_WORKSPACE}/.github/markdownlint.yml
