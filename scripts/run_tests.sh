@@ -30,7 +30,7 @@ do
     shift # past value
     ;;
     --no-reports)
-    REPORTS="--skip all"
+    REPORTS="--skipQC all"
     shift # past value
     ;;
     --offline)
