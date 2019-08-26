@@ -142,7 +142,7 @@ if (!checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help fo
 
 skipQClist = defineSkipQClist()
 skipQC = params.skipQC ? params.skipQC == 'all' ? skipQClist : params.skipQC.split(',').collect{it.trim().toLowerCase()} : []
-if (!checkParameterList(skip,skipQClist)) exit 1, 'Unknown QC tool(s), see --help for more information'
+if (!checkParameterList(skipQC,skipQClist)) exit 1, 'Unknown QC tool(s), see --help for more information'
 
 annoList = defineAnnoList()
 annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
