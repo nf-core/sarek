@@ -14,7 +14,7 @@
   * [`--sample`](#--sample)
   * [`--noGVCF`](#--nogvcf)
   * [`--nucleotidesPerSecond`](#--nucleotidespersecond)
-  * [`--skip`](#--skip)
+  * [`--skipQC`](#--skipQC)
   * [`--step`](#--step)
   * [`--tools`](#--tools)
   * [`--noStrelkaBP`](#--nostrelkabp)
