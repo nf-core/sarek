@@ -11,7 +11,7 @@
   * [Reproducibility](#reproducibility)
 * [Main arguments](#main-arguments)
   * [`-profile`](#-profile)
-  * [`--sample`](#--sample)
+  * [`--input`](#--input)
   * [`--noGVCF`](#--nogvcf)
   * [`--noReports`](#--noreports)
   * [`--nucleotidesPerSecond`](#--nucleotidespersecond)
@@ -77,7 +77,7 @@ NXF_OPTS='-Xms1g -Xmx4g'
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/sarek --sample sample.tsv -profile docker
+nextflow run nf-core/sarek --input sample.tsv -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile.
@@ -142,13 +142,13 @@ If `-profile` is not specified at all the pipeline will be run locally and expec
   * A profile with a complete configuration for automated testing
   * Includes links to test data so needs no other parameters
 
-### `--sample`
+### `--input`
 
 Use this to specify the location of your input TSV file, on `mapping`, `recalibrate` and `variantcalling` steps.
 For example:
 
 ```bash
---sample sample.tsv
+--input sample.tsv
 ```
 
 Multiple TSV files can be specified if the path must be enclosed in quotes
@@ -157,14 +157,14 @@ Use this to specify the location to a directory on `mapping` step with a single 
 For example:
 
 ```bash
---sample PathToDirectory
+--input PathToDirectory
 ```
 
 Use this to specify the location of your VCF input file on `annotate` step.
 For example:
 
 ```bash
---sample sample.vcf
+--input sample.vcf
 ```
 
 Multiple VCF files can be specified if the path must be enclosed in quotes
