@@ -1081,12 +1081,12 @@ bamMpileup = bamMpileup.spread(intMpileup)
 
 // intervals for Mutect2 calls, FreeBayes and pileups for Mutect2 filtering
 (pairBamMutect2, pairBamFreeBayes, pairBamPileupSummaries) = intervalPairBam.into(3)
-//(bamsForMT2, bamsFFB, bamsForPileupSummaries) = bamsTumorNormalIntervals.into(3)
 
 // STEP GATK MUTECT2
 
 process Mutect2 {
     tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
+    label 'cpus_1'
 
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamMutect2
@@ -1131,7 +1131,7 @@ process Mutect2 {
     """
 }
 
-mutect2Output = mutect2Output.groupTuple(by:[0,1,2,3])
+mutect2Output = mutect2Output.groupTuple(by:[0,1,2])
 (mutect2Output, mutect2OutForStats) = mutect2Output.into(2)
 
 (mutect2Stats,intervalStatsFiles) = mutect2Stats.into(2)
@@ -1177,6 +1177,7 @@ process MergeMutect2Stats {
 
 process FreeBayes {
     tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
+    label 'cpus_1'
 
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamFreeBayes
@@ -1210,14 +1211,9 @@ vcfFreeBayes = vcfFreeBayes.groupTuple(by:[0,1,2])
 
 // we are merging the VCFs that are called separatelly for different intervals
 // so we can have a single sorted VCF containing all the calls for a given caller
-
-//vcfsToMerge = mutect2Output.mix(vcfFreeBayes)
-//vcfsToMerge = vcfsToMerge.dump(tag:'VCF to merge')
-
 // STEP MERGING VCF - FREEBAYES, GATK HAPLOTYPECALLER & GATK MUTECT2 (unfiltered)
 
 vcfConcatenateVCFs = mutect2Output.mix( vcfFreeBayes, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
-
 vcfConcatenateVCFs = vcfConcatenateVCFs.dump(tag:'VCF to merge')
 
 process ConcatVCF {
@@ -1256,6 +1252,7 @@ vcfConcatenated = vcfConcatenated.dump(tag:'VCF')
 
 process PileupSummariesForMutect2 {
     tag {idSampleTumor + "_vs_" + idSampleNormal + "_" + intervalBed.baseName }
+    label 'cpus_1'
 
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamPileupSummaries 
@@ -1291,6 +1288,7 @@ pileupSummaries = pileupSummaries.groupTuple(by:[0,1])
 
 process MergePileupSummaries {
     tag {idPatient + "_" + idSampleTumor}
+    label 'cpus_1'
 
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Mutect2", mode: params.publishDirMode
 
@@ -1315,6 +1313,7 @@ process MergePileupSummaries {
 
 process CalculateContamination {
     tag {idSampleTumor + "_vs_" + idSampleNormal}
+    label 'cpus_1'
 
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Mutect2", mode: params.publishDirMode
 
@@ -1339,6 +1338,7 @@ process CalculateContamination {
 
 process FilterMutect2Calls {
     tag {idSampleTN}
+    label 'cpus_1'
 
     publishDir "${params.outdir}/VariantCalling/${idSampleTN}/${"$variantCaller"}", mode: params.publishDirMode
 
@@ -1381,10 +1381,6 @@ process FilterMutect2Calls {
         -O filtered_${variantCaller}_${idSampleTN}.vcf.gz
     """
 }
-
-//vcfMutect2 = vcfMutect2.groupTuple(by:[0,1,2])
-
-
 
 // STEP STRELKA.2 - SOMATIC PAIR
 
