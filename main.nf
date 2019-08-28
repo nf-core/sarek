@@ -55,7 +55,7 @@ def helpMessage() {
                                     and/or for annotation:
                                     snpEff, VEP, merge
                                     Default: None
-        --skip                      Specify which QC tools to skip when running Sarek
+        --skipQC                    Specify which QC tools to skip when running Sarek
                                     Available: all, bamQC, BCFtools, FastQC, MultiQC, samtools, vcftools, versions
                                     Default: None
         --annotateTools             Specify from which tools Sarek will look for VCF files to annotate, only for step annotate
@@ -123,7 +123,7 @@ params.noStrelkaBP = null
 params.nucleotidesPerSecond = 1000.0
 params.input = null
 params.sequencing_center = null
-params.skip = null
+params.skipQC = null
 params.snpEff_cache = null
 params.step = 'mapping'
 params.targetBED = null
@@ -140,9 +140,9 @@ toolList = defineToolList()
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
 if (!checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
 
-skipList = defineSkipList()
-skip = params.skip ? params.skip == 'all' ? skipList : params.skip.split(',').collect{it.trim().toLowerCase()} : []
-if (!checkParameterList(skip,skipList)) exit 1, 'Unknown QC tool(s), see --help for more information'
+skipQClist = defineSkipQClist()
+skipQC = params.skipQC ? params.skipQC == 'all' ? skipQClist : params.skipQC.split(',').collect{it.trim().toLowerCase()} : []
+if (!checkParameterList(skipQC,skipQClist)) exit 1, 'Unknown QC tool(s), see --help for more information'
 
 annoList = defineAnnoList()
 annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
@@ -216,7 +216,7 @@ if (params.input)               summary['Input']            = params.input
 if (params.targetBED)           summary['Target BED']       = params.targetBED
 if (params.step)                summary['Step']             = params.step
 if (params.tools)               summary['Tools']            = tools.join(', ')
-if (params.skip)                summary['QC tools skip']    = skip.join(', ')
+if (params.skipQC)              summary['QC tools skip']    = skipQC.join(', ')
 if (params.noGVCF)              summary['No GVCF']          = params.noGVCF
 if (params.noStrelkaBP)         summary['No Strelka BP']    = params.noStrelkaBP
 if (params.sequencing_center)   summary['Sequenced by ']    = params.sequencing_center
@@ -254,7 +254,7 @@ process GetSoftwareVersions {
     output:
         file 'software_versions_mqc.yaml' into yamlSoftwareVersion
 
-    when: !('versions' in skip)
+    when: !('versions' in skipQC)
 
     script:
     """
@@ -392,7 +392,7 @@ process FastQCFQ {
     output:
         file "*_fastqc.{zip,html}" into fastQCFQReport
 
-    when: step == 'mapping' && !('fastqc' in skip)
+    when: step == 'mapping' && !('fastqc' in skipQC)
 
 
     script:
@@ -414,7 +414,7 @@ process FastQCBAM {
     output:
         file "*_fastqc.{zip,html}" into fastQCBAMReport
 
-    when: step == 'mapping' && !('fastqc' in skip)
+    when: step == 'mapping' && !('fastqc' in skipQC)
 
     script:
     """
@@ -524,7 +524,7 @@ process MarkDuplicates {
 
     publishDir params.outdir, mode: params.publishDirMode,
         saveAs: {
-            if (it == "${idSample}.bam.metrics" && 'markduplicates' in skip) "Reports/${idSample}/MarkDuplicates/${it}"
+            if (it == "${idSample}.bam.metrics" && 'markduplicates' in skipQC) "Reports/${idSample}/MarkDuplicates/${it}"
             else "Preprocessing/${idSample}/DuplicateMarked/${it}"
         }
 
@@ -552,7 +552,7 @@ process MarkDuplicates {
     """
 }
 
-if ('markduplicates' in skip) markDuplicatesReport.close()
+if ('markduplicates' in skipQC) markDuplicatesReport.close()
 
 duplicateMarkedBams = duplicateMarkedBams.dump(tag:'MD BAM')
 markDuplicatesReport = markDuplicatesReport.dump(tag:'MD Report')
@@ -748,7 +748,7 @@ process SamtoolsStats {
     output:
     file ("${bam}.samtools.stats.out") into samtoolsStatsReport
 
-    when: !('samtools' in skip)
+    when: !('samtools' in skipQC)
 
     script:
     """
@@ -777,7 +777,7 @@ process BamQC {
     output:
         file("${bam.baseName}") into bamQCReport
 
-    when: !('bamqc' in skip)
+    when: !('bamqc' in skipQC)
 
     script:
     use_bed = params.targetBED ? "-gff ${targetBED}" : ''
@@ -1697,7 +1697,7 @@ process BcftoolsStats {
     output:
         file ("*.bcf.tools.stats.out") into bcftoolsReport
 
-    when: !('bcftools' in skip)
+    when: !('bcftools' in skipQC)
 
     script:
     """
@@ -1720,7 +1720,7 @@ process Vcftools {
     output:
         file ("${reduceVCF(vcf.fileName)}.*") into vcftoolsReport
 
-    when: !('vcftools' in skip)
+    when: !('vcftools' in skipQC)
 
     script:
     """
@@ -2038,7 +2038,7 @@ process MultiQC {
     output:
         set file("*multiqc_report.html"), file("*multiqc_data") into multiQCOut
 
-    when: !('multiqc' in skip)
+    when: !('multiqc' in skipQC)
 
     script:
     """
@@ -2328,7 +2328,7 @@ def defineAnnoList() {
 }
 
 // Define list of skipable QC tools
-def defineSkipList() {
+def defineSkipQClist() {
     return [
         'bamqc',
         'bcftools',
