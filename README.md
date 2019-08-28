@@ -6,6 +6,8 @@
 [![nf-core][nf-core-badge]](https://nf-co.re/)
 
 [![Travis build status][travis-badge]](https://travis-ci.com/nf-core/sarek/)
+[![GitHub Actions CI Status](https://github.com/nf-core/sarek/workflows/ci/badge.svg)](https://github.com/nf-core/sarek/actions)
+[![GitHub Actions Linting Status](https://github.com/nf-core/sarek/workflows/linting/badge.svg)](https://github.com/nf-core/sarek/actions)
 [![CircleCi build status][circleci-badge]](https://circleci.com/gh/nf-core/sarek/)
 
 [![Install with bioconda][bioconda-badge]](https://bioconda.github.io/)
