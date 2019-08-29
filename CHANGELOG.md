@@ -42,6 +42,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#20](https://github.com/nf-core/sarek/pull/20) - Add `markdownlint` config file
 - [#21](https://github.com/nf-core/sarek/pull/21) - Add tests for latest Nextflow version as well
 - [#21](https://github.com/nf-core/sarek/pull/21) - Add `genomes.config` for genomes without AWS iGenomes
+- [#24](https://github.com/nf-core/sarek/pull/24) - Added GATK4 Mutect2 calling and filtering 
 
 ### `Changed`
 
@@ -69,6 +70,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#18](https://github.com/nf-core/sarek/pull/18) - `--noReports` is now `--skip all`
 - [#18](https://github.com/nf-core/sarek/pull/18), [#21](https://github.com/nf-core/sarek/pull/21) - Update logo
 - [#21](https://github.com/nf-core/sarek/pull/21) - Moved smallGRCh37 path to `genomes.config`
+- [#24](https://github.com/nf-core/sarek/pull/24) - iGenomes config now contains germline resource for GATK4 Mutect2
 
 ### `Removed`
 
@@ -76,6 +78,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#13](https://github.com/nf-core/sarek/pull/13) - Removed `BamQCmapped` and `BamQCrecalibrated` processes
 - [#13](https://github.com/nf-core/sarek/pull/13) - Removed `CompressVCF`
 - [#18](https://github.com/nf-core/sarek/pull/18) - Removed params `--noReports`
+- [#24](https://github.com/nf-core/sarek/pull/18) - Removed GATK3.X MuTect2
 
 ### `Fixed`
 
