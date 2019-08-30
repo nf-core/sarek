@@ -12,4 +12,6 @@ jobs:
       # PRs are only ok if coming from dev branch
       - name: Check PRs
         run: |
+          echo ${GITHUB_REPOSITORY}
+          echo ${GITHUB_HEAD_REF}
           [ ${GITHUB_REPOSITORY} = "nf-core/sarek" ] && [ ${GITHUB_HEAD_REF} = "dev" ]
