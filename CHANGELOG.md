@@ -37,7 +37,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#13](https://github.com/nf-core/sarek/pull/13) - Add `CompressVCFsnpEff` and `CompressVCFvep` processes
 - [#18](https://github.com/nf-core/sarek/pull/18) - Add `--no-reports` option for tests + add snpEff,VEP,merge to MULTIPLE test
 - [#18](https://github.com/nf-core/sarek/pull/18) - Add logo to MultiQC report
-- [#18](https://github.com/nf-core/sarek/pull/18) - Add params `--skip` to skip specified QC tools
+- [#18](https://github.com/nf-core/sarek/pull/18), [#29](https://github.com/nf-core/sarek/pull/29) - Add params `--skipQC` to skip specified QC tools
 - [#18](https://github.com/nf-core/sarek/pull/18) - Add possibility to download other genome for `sareksnpeff` and `sarekvep` containers
 - [#20](https://github.com/nf-core/sarek/pull/20) - Add `markdownlint` config file
 - [#21](https://github.com/nf-core/sarek/pull/21) - Add tests for latest Nextflow version as well
@@ -46,7 +46,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 
 ### `Changed`
 
-- [#1](https://github.com/nf-core/sarek/pull/1), [#2](https://github.com/nf-core/sarek/pull/2), [#3](https://github.com/nf-core/sarek/pull/3), [#4](https://github.com/nf-core/sarek/pull/4), [#5](https://github.com/nf-core/sarek/pull/5), [#6](https://github.com/nf-core/sarek/pull/6), [#7](https://github.com/nf-core/sarek/pull/7), [#8](https://github.com/nf-core/sarek/pull/8), [#9](https://github.com/nf-core/sarek/pull/9), [#10](https://github.com/nf-core/sarek/pull/10), [#11](https://github.com/nf-core/sarek/pull/11), [#12](https://github.com/nf-core/sarek/pull/12), [#18](https://github.com/nf-core/sarek/pull/18), [#20](https://github.com/nf-core/sarek/pull/20), [#21](https://github.com/nf-core/sarek/pull/21) - Update docs
+- [#1](https://github.com/nf-core/sarek/pull/1), [#2](https://github.com/nf-core/sarek/pull/2), [#3](https://github.com/nf-core/sarek/pull/3), [#4](https://github.com/nf-core/sarek/pull/4), [#5](https://github.com/nf-core/sarek/pull/5), [#6](https://github.com/nf-core/sarek/pull/6), [#7](https://github.com/nf-core/sarek/pull/7), [#8](https://github.com/nf-core/sarek/pull/8), [#9](https://github.com/nf-core/sarek/pull/9), [#10](https://github.com/nf-core/sarek/pull/10), [#11](https://github.com/nf-core/sarek/pull/11), [#12](https://github.com/nf-core/sarek/pull/12), [#18](https://github.com/nf-core/sarek/pull/18), [#20](https://github.com/nf-core/sarek/pull/20), [#21](https://github.com/nf-core/sarek/pull/21), [#29](https://github.com/nf-core/sarek/pull/29) - Update docs
 - [#4](https://github.com/nf-core/sarek/pull/4) - Update `cancerit-allelecount` from `2.1.2` to `4.0.2`
 - [#4](https://github.com/nf-core/sarek/pull/4) - Update `gatk4` from `4.1.1.0` to `4.1.2.0`
 - [#7](https://github.com/nf-core/sarek/pull/7) - `--sampleDir` is now deprecated, use `--sample` instead
@@ -67,7 +67,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#16](https://github.com/nf-core/sarek/pull/16) - Make scripts in `bin/` and `scripts/` executable
 - [#18](https://github.com/nf-core/sarek/pull/18) - Use `--no-reports` for TravisCI testing
 - [#18](https://github.com/nf-core/sarek/pull/18) - Add `--no-reports` for all tests but MULTIPLE in Jenkins
-- [#18](https://github.com/nf-core/sarek/pull/18) - `--noReports` is now `--skip all`
+- [#18](https://github.com/nf-core/sarek/pull/18), [#29](https://github.com/nf-core/sarek/pull/29) - `--noReports` is now `--skipQC all`
 - [#18](https://github.com/nf-core/sarek/pull/18), [#21](https://github.com/nf-core/sarek/pull/21) - Update logo
 - [#21](https://github.com/nf-core/sarek/pull/21) - Moved smallGRCh37 path to `genomes.config`
 - [#24](https://github.com/nf-core/sarek/pull/24) - iGenomes config now contains germline resource for GATK4 Mutect2
