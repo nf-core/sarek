@@ -26,9 +26,9 @@
   * [`--bwaIndex`](#--bwaindex)
   * [`--dbsnp`](#--dbsnp)
   * [`--dbsnpIndex`](#--dbsnpindex)
-  * [`--genomeDict`](#--genomedict)
-  * [`--genomeFile`](#--genomefile)
-  * [`--genomeIndex`](#--genomeindex)
+  * [`--dict`](#--dict)
+  * [`--fasta`](#--fasta)
+  * [`--fastaFai`](#--fastaFai)
   * [`--intervals`](#--intervals)
   * [`--knownIndels`](#--knownindels)
   * [`--knownIndelsIndex`](#--knownindelsindex)
@@ -233,9 +233,9 @@ params {
       bwaIndex         = '<path to the bwa indexes>'
       dbsnp            = '<path to the dbsnp file>'
       dbsnpIndex       = '<path to the dbsnp index>'
-      genomeDict       = '<path to the genomeDict file>'
-      genomeFile       = '<path to the genome file>'
-      genomeIndex      = '<path to the genome Index>'
+      dict             = '<path to the dict file>'
+      fasta            = '<path to the fasta file>'
+      fastaFai         = '<path to the fasta index>'
       intervals        = '<path to the intervals file>'
       knownIndels      = '<path to the knownIndels file>'
       knownIndelsIndex = '<path to the knownIndels index>'
@@ -287,28 +287,28 @@ If you prefer, you can specify the full path to your reference genome when you r
 --dbsnpIndex '[path to the dbsnp index]'
 ```
 
-### `--genomeDict`
+### `--dict`
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---genomeDict '[path to the genomeDict file]'
+--dict '[path to the dict file]'
 ```
 
-### `--genomeFile`
+### `--fasta`
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---genomeFile '[path to the genome file]'
+--fasta '[path to the genome file]'
 ```
 
-### `--genomeIndex`
+### `--fastaFai`
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---genomeIndex '[path to the genome Index]'
+--fastaFai '[path to the genome Index]'
 ```
 
 ### `--intervals`
