@@ -102,6 +102,22 @@ def helpMessage() {
 // Show help message
 if (params.help) exit 0, helpMessage()
 
+// Show deprecation message
+if (params.sample) {
+    println "--sample is now deprecated, please use --input instead"
+    params.input = params.sample
+}
+
+if (params.sampleDir) {
+    println "--sampleDir is now deprecated, please use --input instead"
+    params.input = params.sampleDir
+}
+
+if (params.annotateVCF) {
+    println "--annotateVCF is now deprecated, please use --input instead"
+    params.input = params.annotateVCF
+}
+
 // Check if genome exists in the config file
 if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
