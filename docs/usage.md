@@ -13,8 +13,8 @@
   * [`-profile`](#-profile)
   * [`--input`](#--input)
   * [`--noGVCF`](#--nogvcf)
-  * [`--noReports`](#--noreports)
   * [`--nucleotidesPerSecond`](#--nucleotidespersecond)
+  * [`--skipQC`](#--skipQC)
   * [`--step`](#--step)
   * [`--tools`](#--tools)
   * [`--noStrelkaBP`](#--nostrelkabp)
@@ -173,9 +173,11 @@ Multiple VCF files can be specified if the path must be enclosed in quotes
 
 Use this to disable g.vcf from `HaplotypeCaller`.
 
-### `--noReports`
+### `--skipQC`
 
-Use this to disable all QC an Reporting tools.
+Use this to disable specific QC and Reporting tools.
+Available: `all`, `bamQC`, `BCFtools`, `FastQC`, `MultiQC`, `samtools`, `vcftools`, `versions`
+Default: `None`
 
 ### `--nucleotidesPerSecond`
 
@@ -190,7 +192,7 @@ Available: `mapping`, `recalibrate`, `variantcalling` and `annotate`
 ### `--tools`
 
 Use this to specify the tools to run:
-Available: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `MuTect2`, `Strelka`
+Available: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `MuTect2`, `Strelka`, `TIDDIT`
 
 ### `--noStrelkaBP`
 
