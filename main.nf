@@ -435,7 +435,7 @@ process MapReads {
 
     input:
         set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from inputReads
-        set file(genomeFile), file(bwaIndex) from Channel.value([referenceMap.genomeFile, referenceMap.bwaIndex])
+        set file(fasta), file(bwaIndex) from Channel.value([referenceMap.fasta, referenceMap.bwaIndex])
 
     output:
         set idPatient, idSample, idRun, file("${idRun}.bam") into bamMapped
@@ -457,7 +457,7 @@ process MapReads {
     if (hasExtension(inputFile1,"fastq.gz") || hasExtension(inputFile1,"fq.gz"))
     """
         bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M \
-            ${genomeFile} ${inputFile1} ${inputFile2} | \
+            ${fasta} ${inputFile1} ${inputFile2} | \
         samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
     """
     else if (hasExtension(inputFile1,"bam"))
@@ -469,7 +469,7 @@ process MapReads {
             --INTERLEAVE=true \
             --NON_PF=true \
             | \
-        bwa mem -K 100000000 -p -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${genomeFile} \
+        bwa mem -K 100000000 -p -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
             /dev/stdin - 2> >(tee ${inputFile1}.bwa.stderr.log >&2) \
             | \
         samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
@@ -570,10 +570,10 @@ process BaseRecalibrator {
 
     input:
         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamBaseRecalibrator
-        set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex), file(knownIndels), file(knownIndelsIndex) from Channel.value([
-            referenceMap.genomeFile,
-            referenceMap.genomeIndex,
-            referenceMap.genomeDict,
+        set file(fasta), file(fastaFai), file(dict), file(dbsnp), file(dbsnpIndex), file(knownIndels), file(knownIndelsIndex) from Channel.value([
+            referenceMap.fasta,
+            referenceMap.fastaFai,
+            referenceMap.dict,
             referenceMap.dbsnp,
             referenceMap.dbsnpIndex,
             referenceMap.knownIndels,
@@ -594,7 +594,7 @@ process BaseRecalibrator {
         -I ${bam} \
         -O ${intervalBed.baseName}_${idSample}.recal.table \
         --tmp-dir /tmp \
-        -R ${genomeFile} \
+        -R ${fasta} \
         -L ${intervalBed} \
         --known-sites ${dbsnp} \
         ${known} \
@@ -668,10 +668,10 @@ process ApplyBQSR {
 
     input:
         set idPatient, idSample, file(bam), file(bai), file(recalibrationReport), file(intervalBed) from bamApplyBQSR
-        set file(genomeFile), file(genomeIndex), file(genomeDict)from Channel.value([
-            referenceMap.genomeFile,
-            referenceMap.genomeIndex,
-            referenceMap.genomeDict
+        set file(fasta), file(fastaFai), file(dict)from Channel.value([
+            referenceMap.fasta,
+            referenceMap.fastaFai,
+            referenceMap.dict
         ])
 
     output:
@@ -681,7 +681,7 @@ process ApplyBQSR {
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
         ApplyBQSR \
-        -R ${genomeFile} \
+        -R ${fasta} \
         --input ${bam} \
         --output ${intervalBed.baseName}_${idSample}.recal.bam \
         -L ${intervalBed} \
@@ -830,10 +830,10 @@ process HaplotypeCaller {
 
     input:
         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamHaplotypeCaller
-        set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
-            referenceMap.genomeFile,
-            referenceMap.genomeIndex,
-            referenceMap.genomeDict,
+        set file(fasta), file(fastaFai), file(dict), file(dbsnp), file(dbsnpIndex) from Channel.value([
+            referenceMap.fasta,
+            referenceMap.fastaFai,
+            referenceMap.dict,
             referenceMap.dbsnp,
             referenceMap.dbsnpIndex
         ])
@@ -848,7 +848,7 @@ process HaplotypeCaller {
     """
     gatk --java-options "-Xmx${task.memory.toGiga()}g -Xms6000m -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10" \
         HaplotypeCaller \
-        -R ${genomeFile} \
+        -R ${fasta} \
         -I ${bam} \
         -L ${intervalBed} \
         -D ${dbsnp} \
@@ -869,10 +869,10 @@ process GenotypeGVCFs {
 
     input:
         set idPatient, idSample, file(intervalBed), file(gvcf) from gvcfGenotypeGVCFs
-        set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
-            referenceMap.genomeFile,
-            referenceMap.genomeIndex,
-            referenceMap.genomeDict,
+        set file(fasta), file(fastaFai), file(dict), file(dbsnp), file(dbsnpIndex) from Channel.value([
+            referenceMap.fasta,
+            referenceMap.fastaFai,
+            referenceMap.dict,
             referenceMap.dbsnp,
             referenceMap.dbsnpIndex
         ])
@@ -890,7 +890,7 @@ process GenotypeGVCFs {
 
     gatk --java-options -Xmx${task.memory.toGiga()}g \
         GenotypeGVCFs \
-        -R ${genomeFile} \
+        -R ${fasta} \
         -L ${intervalBed} \
         -D ${dbsnp} \
         -V ${gvcf} \
@@ -913,9 +913,9 @@ process StrelkaSingle {
     input:
         set idPatient, idSample, file(bam), file(bai) from bamStrelkaSingle
         file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
-        set file(genomeFile), file(genomeIndex) from Channel.value([
-            referenceMap.genomeFile,
-            referenceMap.genomeIndex
+        set file(fasta), file(fastaFai) from Channel.value([
+            referenceMap.fasta,
+            referenceMap.fastaFai
         ])
 
     output:
@@ -930,7 +930,7 @@ process StrelkaSingle {
     ${beforeScript}
     configureStrelkaGermlineWorkflow.py \
         --bam ${bam} \
-        --referenceFasta ${genomeFile} \
+        --referenceFasta ${fasta} \
         ${options} \
         --runDir Strelka
 
@@ -962,9 +962,9 @@ process MantaSingle {
     input:
         set idPatient, idSample, file(bam), file(bai) from bamMantaSingle
         file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
-        set file(genomeFile), file(genomeIndex) from Channel.value([
-            referenceMap.genomeFile,
-            referenceMap.genomeIndex
+        set file(fasta), file(fastaFai) from Channel.value([
+            referenceMap.fasta,
+            referenceMap.fastaFai
         ])
 
     output:
@@ -982,7 +982,7 @@ process MantaSingle {
     ${beforeScript}
     configManta.py \
         ${inputbam} ${bam} \
-        --reference ${genomeFile} \
+        --reference ${fasta} \
         ${options} \
         --runDir Manta
 
@@ -1020,9 +1020,9 @@ process TIDDIT {
 
     input:
         set idPatient, idSample, file(bam), file(bai) from bamTIDDIT
-        set file(genomeFile), file(genomeIndex) from Channel.value([
-            referenceMap.genomeFile,
-            referenceMap.genomeIndex
+        set file(fasta), file(fastaFai) from Channel.value([
+            referenceMap.fasta,
+            referenceMap.fastaFai
         ])
 
     output:
@@ -1033,7 +1033,7 @@ process TIDDIT {
 
     script:
     """
-    tiddit --sv -o TIDDIT_${idSample} --bam ${bam} --ref ${genomeFile}
+    tiddit --sv -o TIDDIT_${idSample} --bam ${bam} --ref ${fasta}
 
     mv TIDDIT_${idSample}.vcf TIDDIT_${idSample}.old.vcf
 
@@ -1088,10 +1088,10 @@ process Mutect2 {
 
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamMuTect2
-        set file(genomeFile), file(genomeIndex), file(genomeDict), file(dbsnp), file(dbsnpIndex) from Channel.value([
-            referenceMap.genomeFile,
-            referenceMap.genomeIndex,
-            referenceMap.genomeDict,
+        set file(fasta), file(fastaFai), file(dict), file(dbsnp), file(dbsnpIndex) from Channel.value([
+            referenceMap.fasta,
+            referenceMap.fastaFai,
+            referenceMap.dict,
             referenceMap.dbsnp,
             referenceMap.dbsnpIndex
         ])
@@ -1105,7 +1105,7 @@ process Mutect2 {
     """
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
         Mutect2 \
-        -R ${genomeFile}\
+        -R ${fasta}\
         -I ${bamTumor}  -tumor ${idSampleTumor} \
         -I ${bamNormal} -normal ${idSampleNormal} \
         -L ${intervalBed} \
@@ -1122,9 +1122,9 @@ process FreeBayes {
 
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamFreeBayes
-        set file(genomeFile), file(genomeIndex) from Channel.value([
-            referenceMap.genomeFile,
-            referenceMap.genomeIndex
+        set file(fasta), file(fastaFai) from Channel.value([
+            referenceMap.fasta,
+            referenceMap.fastaFai
         ])
 
     output:
@@ -1135,7 +1135,7 @@ process FreeBayes {
     script:
     """
     freebayes \
-        -f ${genomeFile} \
+        -f ${fasta} \
         --pooled-continuous \
         --pooled-discrete \
         --genotype-qualities \
@@ -1170,7 +1170,7 @@ process ConcatVCF {
 
     input:
         set variantCaller, idPatient, idSample, file(vcFiles) from vcfConcatenateVCFs
-        file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
+        file(fastaFai) from Channel.value(referenceMap.fastaFai)
         file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
 
     output:
@@ -1184,7 +1184,7 @@ process ConcatVCF {
     else outputFile = "${variantCaller}_${idSample}.vcf"
     options = params.targetBED ? "-t ${targetBED}" : ""
     """
-    concatenateVCFs.sh -i ${genomeIndex} -c ${task.cpus} -o ${outputFile} ${options}
+    concatenateVCFs.sh -i ${fastaFai} -c ${task.cpus} -o ${outputFile} ${options}
     """
 }
 
@@ -1203,10 +1203,10 @@ process Strelka {
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamStrelka
         file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
-        set file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
-            referenceMap.genomeFile,
-            referenceMap.genomeIndex,
-            referenceMap.genomeDict
+        set file(fasta), file(fastaFai), file(dict) from Channel.value([
+            referenceMap.fasta,
+            referenceMap.fastaFai,
+            referenceMap.dict
         ])
 
     output:
@@ -1222,7 +1222,7 @@ process Strelka {
     configureStrelkaSomaticWorkflow.py \
         --tumor ${bamTumor} \
         --normal ${bamNormal} \
-        --referenceFasta ${genomeFile} \
+        --referenceFasta ${fasta} \
         ${options} \
         --runDir Strelka
 
@@ -1254,9 +1254,9 @@ process Manta {
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamManta
         file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
-        set file(genomeFile), file(genomeIndex) from Channel.value([
-            referenceMap.genomeFile,
-            referenceMap.genomeIndex
+        set file(fasta), file(fastaFai) from Channel.value([
+            referenceMap.fasta,
+            referenceMap.fastaFai
         ])
 
     output:
@@ -1273,7 +1273,7 @@ process Manta {
     configManta.py \
         --normalBam ${bamNormal} \
         --tumorBam ${bamTumor} \
-        --reference ${genomeFile} \
+        --reference ${fasta} \
         ${options} \
         --runDir Manta
 
@@ -1322,10 +1322,10 @@ process StrelkaBP {
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(mantaCSI), file(mantaCSIi) from pairBamStrelkaBP
         file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
-        set file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
-            referenceMap.genomeFile,
-            referenceMap.genomeIndex,
-            referenceMap.genomeDict
+        set file(fasta), file(fastaFai), file(dict) from Channel.value([
+            referenceMap.fasta,
+            referenceMap.fastaFai,
+            referenceMap.dict
         ])
 
     output:
@@ -1341,7 +1341,7 @@ process StrelkaBP {
     configureStrelkaSomaticWorkflow.py \
         --tumor ${bamTumor} \
         --normal ${bamNormal} \
-        --referenceFasta ${genomeFile} \
+        --referenceFasta ${fasta} \
         --indelCandidates ${mantaCSI} \
         ${options} \
         --runDir Strelka
@@ -1372,11 +1372,11 @@ process AlleleCounter {
 
     input:
         set idPatient, idSample, file(bam), file(bai) from bamAscat
-        set file(acLoci), file(genomeFile), file(genomeIndex), file(genomeDict) from Channel.value([
+        set file(acLoci), file(fasta), file(fastaFai), file(dict) from Channel.value([
             referenceMap.acLoci,
-            referenceMap.genomeFile,
-            referenceMap.genomeIndex,
-            referenceMap.genomeDict
+            referenceMap.fasta,
+            referenceMap.fastaFai,
+            referenceMap.dict
         ])
 
     output:
@@ -1388,7 +1388,7 @@ process AlleleCounter {
     """
     alleleCounter \
         -l ${acLoci} \
-        -r ${genomeFile} \
+        -r ${fasta} \
         -b ${bam} \
         -o ${idSample}.alleleCount;
     """
@@ -1473,9 +1473,9 @@ process Mpileup {
 
     input:
         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamMpileup
-        set file(genomeFile), file(genomeIndex) from Channel.value([
-            referenceMap.genomeFile,
-            referenceMap.genomeIndex
+        set file(fasta), file(fastaFai) from Channel.value([
+            referenceMap.fasta,
+            referenceMap.fastaFai
         ])
 
     output:
@@ -1486,7 +1486,7 @@ process Mpileup {
     script:
     """
     samtools mpileup \
-        -f ${genomeFile} ${bam} \
+        -f ${fasta} ${bam} \
         -l ${intervalBed} \
     | bgzip --threads ${task.cpus} -c > ${intervalBed.baseName}_${idSample}.pileup.gz
     """
@@ -1548,9 +1548,9 @@ process ControlFREEC {
 
     input:
         set idPatient, idSampleNormal, idSampleTumor, file(mpileupNormal), file(mpileupTumor) from mpileupOut
-        set file(genomeFile), file(genomeIndex), file(dbsnp), file(dbsnpIndex), file(chrDir), file(chrLength) from Channel.value([
-            referenceMap.genomeFile,
-            referenceMap.genomeIndex,
+        set file(fasta), file(fastaFai), file(dbsnp), file(dbsnpIndex), file(chrDir), file(chrLength) from Channel.value([
+            referenceMap.fasta,
+            referenceMap.fastaFai,
             referenceMap.dbsnp,
             referenceMap.dbsnpIndex,
             referenceMap.chrDir,
@@ -2283,9 +2283,9 @@ def checkReferenceMap(referenceMap) {
 // Define map of reference depending of tools and step
 def defineReferenceMap(step, tools) {
     def referenceMap = [
-        'genomeDict'       : checkParamReturnFile("dict"),
-        'genomeFile'       : checkParamReturnFile("fasta"),
-        'genomeIndex'      : checkParamReturnFile("fastaFai"),
+        'dict'       : checkParamReturnFile("dict"),
+        'fasta'       : checkParamReturnFile("fasta"),
+        'fastaFai'      : checkParamReturnFile("fastaFai"),
         'intervals'        : checkParamReturnFile("intervals")
     ]
     if ('mapping' in step) {
