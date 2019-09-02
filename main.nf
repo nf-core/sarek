@@ -118,6 +118,21 @@ if (params.annotateVCF) {
     params.input = params.annotateVCF
 }
 
+if (params.genomeDict) {
+    println "--genomeDict is now deprecated, please use --dict instead"
+    params.dict = params.genomeDict
+}
+
+if (params.genomeFile) {
+    println "--genomeFile is now deprecated, please use --fasta instead"
+    params.fasta = params.genomeFile
+}
+
+if (params.genomeIndex) {
+    println "--genomeIndex is now deprecated, please use --fastaFai instead"
+    params.fastaFai = params.genomeIndex
+}
+
 // Check if genome exists in the config file
 if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
