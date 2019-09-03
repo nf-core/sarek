@@ -3,7 +3,7 @@ name: nf-core branch protection
 on:
   pull_request:
     branches:
-    - master
+    - dev
 
 jobs:
   test:
@@ -11,4 +11,4 @@ jobs:
     steps:
       # PRs are only ok if coming from an nf-core dev branch
       - name: Check PRs
-        run:  [ ${GITHUB_ACTOR} = "nf-core" ] && [ ${GITHUB_HEAD_REF} = "dev" ]
+        run: [ ${GITHUB_ACTOR} = "nf-core" ] && [ ${GITHUB_HEAD_REF} = "dev" ]
