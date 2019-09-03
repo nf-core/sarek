@@ -20,7 +20,6 @@ nf-core/sarek:
 */
 
 def helpMessage() {
-    // TODO nf-core: Add to this help message with new command line parameters
     log.info nfcoreHeader()
     log.info"""
 
@@ -102,36 +101,21 @@ def helpMessage() {
 // Show help message
 if (params.help) exit 0, helpMessage()
 
-// Show deprecation message
-if (params.sample) {
-    println "--sample is now deprecated, please use --input instead"
-    params.input = params.sample
-}
-
-if (params.sampleDir) {
-    println "--sampleDir is now deprecated, please use --input instead"
-    params.input = params.sampleDir
-}
-
-if (params.annotateVCF) {
-    println "--annotateVCF is now deprecated, please use --input instead"
-    params.input = params.annotateVCF
-}
-
-if (params.genomeDict) {
-    println "--genomeDict is now deprecated, please use --dict instead"
-    params.dict = params.genomeDict
-}
-
-if (params.genomeFile) {
-    println "--genomeFile is now deprecated, please use --fasta instead"
-    params.fasta = params.genomeFile
-}
-
-if (params.genomeIndex) {
-    println "--genomeIndex is now deprecated, please use --fastaFai instead"
-    params.fastaFai = params.genomeIndex
-}
+// Handle deprecation
+params.noReports = null
+if (params.noReports) deprecationMessage("noReports", "skipQC all")
+params.annotateVCF = null
+if (params.annotateVCF) deprecationMessage("annotateVCF", "input")
+params.genomeDict = null
+if (params.genomeDict) deprecationMessage("genomeDict", "dict")
+params.genomeFile = null
+if (params.genomeFile) deprecationMessage("genomeFile", "fasta")
+params.genomeIndex = null
+if (params.genomeIndex) deprecationMessage("genomeIndex", "fastaFai")
+params.sample = null
+if (params.sample) deprecationMessage("sample", "input")
+params.sampleDir = null
+if (params.sampleDir) deprecationMessage("sampleDir", "input")
 
 // Check if genome exists in the config file
 if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
@@ -175,6 +159,9 @@ skipQClist = defineSkipQClist()
 skipQC = params.skipQC ? params.skipQC == 'all' ? skipQClist : params.skipQC.split(',').collect{it.trim().toLowerCase()} : []
 if (!checkParameterList(skipQC,skipQClist)) exit 1, 'Unknown QC tool(s), see --help for more information'
 
+// Handle deprecation
+if (params.noReports) skipQC = skipQClist
+
 annoList = defineAnnoList()
 annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
 if (!checkParameterList(annotateTools,annoList)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
@@ -200,9 +187,13 @@ if (workflow.profile == 'awsbatch') {
 // Stage config files
 ch_output_docs = Channel.fromPath("${baseDir}/docs/output.md")
 
-tsvPath = null
-if (params.input) if (hasExtension(params.input,"tsv") || hasExtension(params.input,"vcf") || hasExtension(params.input,"vcf.gz")) tsvPath = params.input
-if (params.input) if (hasExtension(params.input,"vcf") || hasExtension(params.input,"vcf.gz")) step = "annotate"
+if (params.input && (hasExtension(params.input,"tsv") || hasExtension(params.input,"vcf") || hasExtension(params.input,"vcf.gz"))) tsvPath = params.input
+if (params.input && (hasExtension(params.input,"vcf") || hasExtension(params.input,"vcf.gz"))) step = "annotate"
+
+// Handle deprecation
+if (params.annotateVCF) tsvPath = params.annotateVCF
+if (params.sample) tsvPath = params.sample
+if (params.sampleDir) tsvPath = params.sampleDir
 
 // If no input file specified, trying to get TSV files corresponding to step in the TSV directory
 // only for steps recalibrate and variantCalling
@@ -220,7 +211,7 @@ if (tsvPath) {
         case 'annotate': break
         default: exit 1, "Unknown step ${step}"
     }
-} else if (params.input) if (!hasExtension(params.input,"tsv")) {
+} else if (params.input && !hasExtension(params.input,"tsv")) {
     println "No TSV file"
     if (step != 'mapping') exit 1, 'No other step than "mapping" support a dir as an input'
     println "Reading ${params.input} directory"
@@ -2286,6 +2277,11 @@ def checkParameterList(list, realList) {
 
 // Check if params.item exists and return params.genomes[params.genome].item otherwise
 def checkParamReturnFile(item) {
+    // Handle deprecation
+    if (params.genomeDict && item == "dict") return file(params.genomeDict)
+    if (params.genomeFile && item == "fasta") return file(params.genomeFile)
+    if (params.genomeIndex && item == "fastaFai") return file(params.genomeIndex)
+
     params."${item}" = params.genomes[params.genome]."${item}"
     return file(params."${item}")
 }
@@ -2314,9 +2310,9 @@ def checkReferenceMap(referenceMap) {
 // Define map of reference depending of tools and step
 def defineReferenceMap(step, tools) {
     def referenceMap = [
-        'dict'       : checkParamReturnFile("dict"),
-        'fasta'       : checkParamReturnFile("fasta"),
-        'fastaFai'      : checkParamReturnFile("fastaFai"),
+        'dict'             : checkParamReturnFile("dict"),
+        'fasta'            : checkParamReturnFile("fasta"),
+        'fastaFai'         : checkParamReturnFile("fastaFai"),
         'intervals'        : checkParamReturnFile("intervals")
     ]
     if ('mapping' in step) {
@@ -2398,6 +2394,11 @@ def defineToolList() {
         'tiddit',
         'vep'
     ]
+}
+
+// Print deprecation message
+def deprecationMessage(oldParams, newParams) {
+    log.warn "The params `--${oldParams}` is deprecated, please use `--${newParams}` instead -- it will be removed in a future release"
 }
 
 // Channeling the TSV file containing BAM.
