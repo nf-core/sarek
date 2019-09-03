@@ -58,6 +58,6 @@ jobs:
   include:
     - stage: "Linting"
       name: "Markdown"
-      env: TEST=GERMLINE NXF_VER=19.04.0
+      env: TEST=LINT NXF_VER=19.04.0
       script:
         - markdownlint ${TRAVIS_BUILD_DIR} -c ${TRAVIS_BUILD_DIR}/.github/markdownlint.yml

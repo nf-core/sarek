@@ -1,0 +1,14 @@
+name: nf-core branch protection
+# This workflow is triggered on PRs to master branch on the repository
+on:
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # PRs are only ok if coming from an nf-core dev branch
+      - name: Check PRs
+        run:  [ ${GITHUB_ACTOR} = "nf-core" ] && [ ${GITHUB_HEAD_REF} = "dev" ]
