@@ -187,6 +187,7 @@ if (workflow.profile == 'awsbatch') {
 // Stage config files
 ch_output_docs = Channel.fromPath("${baseDir}/docs/output.md")
 
+tsvPath = null
 if (params.input && (hasExtension(params.input,"tsv") || hasExtension(params.input,"vcf") || hasExtension(params.input,"vcf.gz"))) tsvPath = params.input
 if (params.input && (hasExtension(params.input,"vcf") || hasExtension(params.input,"vcf.gz"))) step = "annotate"
 
@@ -202,7 +203,6 @@ if (!params.input && step != 'mapping' && step != 'annotate') {
 }
 
 inputSample = Channel.empty()
-tsvPath = null
 if (tsvPath) {
     tsvFile = file(tsvPath)
     switch (step) {
