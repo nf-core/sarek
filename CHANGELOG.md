@@ -43,6 +43,8 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#21](https://github.com/nf-core/sarek/pull/21) - Add tests for latest Nextflow version as well
 - [#21](https://github.com/nf-core/sarek/pull/21) - Add `genomes.config` for genomes without AWS iGenomes
 - [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Use Github actions for CI
+- [#31](https://github.com/nf-core/sarek/pull/31) - Add nf-core lint
+- [#31](https://github.com/nf-core/sarek/pull/31) - Add extra CI to GitHub Actions nf-core extra CI
 
 ### `Changed`
 
@@ -70,6 +72,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#18](https://github.com/nf-core/sarek/pull/18), [#29](https://github.com/nf-core/sarek/pull/29) - `--noReports` is now `--skipQC all`
 - [#18](https://github.com/nf-core/sarek/pull/18), [#21](https://github.com/nf-core/sarek/pull/21) - Update logo
 - [#21](https://github.com/nf-core/sarek/pull/21) - Moved smallGRCh37 path to `genomes.config`
+- [#31](https://github.com/nf-core/sarek/pull/31) - Move extra CI to GitHub Actions nf-core extra CI
 
 ### `Removed`
 
@@ -77,6 +80,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#13](https://github.com/nf-core/sarek/pull/13) - Removed `BamQCmapped` and `BamQCrecalibrated` processes
 - [#13](https://github.com/nf-core/sarek/pull/13) - Removed `CompressVCF`
 - [#18](https://github.com/nf-core/sarek/pull/18) - Removed params `--noReports`
+- [#31](https://github.com/nf-core/sarek/pull/31) - Remove extra CI from Travis CI and GitHub Actions nf-core CI
 
 ### `Fixed`
 
@@ -90,6 +94,8 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#20](https://github.com/nf-core/sarek/pull/20) - Use new logo in README
 - [#20](https://github.com/nf-core/sarek/pull/20) - Fix path to references genomes
 - [#22](https://github.com/nf-core/sarek/pull/22) - Fix --singleCPUMem issue
+- [#31](https://github.com/nf-core/sarek/pull/31) - Fix badges according to nf-core lint
+- [#31](https://github.com/nf-core/sarek/pull/31) - Fix rcolorbrewer version according to nf-core lint
 
 ## [2.3.FIX1] - 2019-03-04
 
