@@ -3,7 +3,6 @@ from __future__ import print_function
 from collections import OrderedDict
 import re
 
-# TODO nf-core: Add additional regexes for new tools in process get_software_versions
 regexes = {
     'AlleleCount': ['v_allelecount.txt', r"(\S+)"],
     'ASCAT': ['v_ascat.txt', r"(\d\.\d+)"],

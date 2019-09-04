@@ -6,7 +6,7 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - r-rcolorbrewer=1.1
+  - r-rcolorbrewer=1.1_2
   - r-base=3.5.1
   - bcftools=1.9
   - bioconductor-rtracklayer=1.42.1
