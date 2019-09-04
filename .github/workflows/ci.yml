@@ -7,7 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        test: [ANNOTATESNPEFF, ANNOTATEVEP, GERMLINE, SOMATIC, TARGETED]
         nxf_ver: ['19.04.0', '']
     steps:
       - uses: actions/checkout@v1
@@ -16,12 +15,6 @@ jobs:
           export NXF_VER=${{ matrix.nxf_ver }}
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-      - name: Download image
-        run: |
-          ${GITHUB_WORKSPACE}/scripts/download_image.sh -n docker --test ${{ matrix.test }}
-      - name: Build References
-        run: |
-          ${GITHUB_WORKSPACE}/scripts/build_reference.sh --test ${{ matrix.test }} --verbose --memory 6.GB
       - name: Run test
         run: |
-          ${GITHUB_WORKSPACE}/scripts/run_tests.sh --test ${{ matrix.test }} --verbose --memory 6.GB
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker

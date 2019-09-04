@@ -2,7 +2,7 @@
 
 > **An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing**
 
-[![Nextflow version][nextflow-badge]](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A519.04.0-brightgreen.svg)](https://www.nextflow.io/)
 [![nf-core][nf-core-badge]](https://nf-co.re/)
 
 [![Travis build status][travis-badge]](https://travis-ci.com/nf-core/sarek/)
@@ -10,7 +10,7 @@
 [![GitHub Actions Linting Status](https://github.com/nf-core/sarek/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/sarek/actions)
 [![CircleCi build status][circleci-badge]](https://circleci.com/gh/nf-core/sarek/)
 
-[![Install with bioconda][bioconda-badge]](https://bioconda.github.io/)
+[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](http://bioconda.github.io/)
 [![Docker Container available][docker-sarek-badge]](https://hub.docker.com/r/nfcore/sarek/)
 [![Install with Singularity][singularity-badge]](https://www.sylabs.io/docs/)
 

@@ -2,62 +2,42 @@ sudo: required
 language: python
 jdk: openjdk8
 services: docker
-
-addons:
-  apt:
-    update: true
-
 python: '3.6'
 cache: pip
-
 matrix:
   fast_finish: true
-
-env:
-  matrix:
-    - TEST=ANNOTATEVEP      NXF_VER=19.04.0
-    - TEST=ANNOTATEVEP      NXF_VER=''
-    - TEST=SOMATIC          NXF_VER=19.04.0
-    - TEST=SOMATIC          NXF_VER=''
-    - TEST=TARGETED         NXF_VER=19.04.0
-    - TEST=TARGETED         NXF_VER=''
-    - TEST=GERMLINE         NXF_VER=19.04.0
-    - TEST=GERMLINE         NXF_VER=''
-    - TEST=ANNOTATESNPEFF   NXF_VER=19.04.0
-    - TEST=ANNOTATESNPEFF   NXF_VER=''
 
 before_install:
   # PRs to master are only ok if coming from dev branch
   - '[ $TRAVIS_PULL_REQUEST = "false" ] || [ $TRAVIS_BRANCH != "master" ] || ([ $TRAVIS_PULL_REQUEST_SLUG = $TRAVIS_REPO_SLUG ] && [ $TRAVIS_PULL_REQUEST_BRANCH = "dev" ])'
   # Pull the docker image first so the test doesn't wait for this
-  - "travis_retry ./scripts/download_image.sh -n docker --test $TEST"
+  - docker pull nfcore/sarek:dev
+  # Fake the tag locally so that the pipeline runs properly
+  # Looks weird when this is :dev to :dev, but makes sense when testing code for a release (:dev to :1.0.1)
+  - docker tag nfcore/sarek:dev nfcore/sarek:dev
 
 install:
   # Install Nextflow
   - mkdir /tmp/nextflow && cd /tmp/nextflow
   - wget -qO- get.nextflow.io | bash
   - sudo ln -s /tmp/nextflow/nextflow /usr/local/bin/nextflow
-  # # Install nf-core/tools
-  # - pip install --upgrade pip
-  # - pip install nf-core
+  # Install nf-core/tools
+  - pip install --upgrade pip
+  - pip install nf-core
   # Reset
   - mkdir ${TRAVIS_BUILD_DIR}/tests && cd ${TRAVIS_BUILD_DIR}/tests
   # Install markdownlint-cli
   - sudo apt-get install npm && npm install -g markdownlint-cli
 
-# Build references if needed
-before_script:
-  - ${TRAVIS_BUILD_DIR}/scripts/build_reference.sh --test $TEST --verbose
+env:
+  - NXF_VER='19.04.0' # Specify a minimum NF version that should be tested and work
+  - NXF_VER='' # Plus: get the latest NF version and check that it works
 
-# Actual tests
 script:
-  - "${TRAVIS_BUILD_DIR}/scripts/run_tests.sh --test $TEST --verbose --no-reports"
-
-# Linting
-jobs:
-  include:
-    - stage: "Linting"
-      name: "Markdown"
-      env: TEST=LINT NXF_VER=19.04.0
-      script:
-        - markdownlint ${TRAVIS_BUILD_DIR} -c ${TRAVIS_BUILD_DIR}/.github/markdownlint.yml
+  # Lint the pipeline code
+  - nf-core lint ${TRAVIS_BUILD_DIR}
+  # Lint the documentation
+  - markdownlint ${TRAVIS_BUILD_DIR} -c ${TRAVIS_BUILD_DIR}/.github/markdownlint.yml
+  # Run the pipeline with the test profile
+  - nextflow run ${TRAVIS_BUILD_DIR}/build.nf -profile test,docker --build --outdir references
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker
