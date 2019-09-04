@@ -42,7 +42,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#20](https://github.com/nf-core/sarek/pull/20) - Add `markdownlint` config file
 - [#21](https://github.com/nf-core/sarek/pull/21) - Add tests for latest Nextflow version as well
 - [#21](https://github.com/nf-core/sarek/pull/21) - Add `genomes.config` for genomes without AWS iGenomes
-- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Use Github actions for CI
+- [#27](https://github.com/nf-core/sarek/pull/27), [#30](https://github.com/nf-core/sarek/pull/30) - Use Github actions for CI, linting and branch protection
 
 ### `Changed`
 
@@ -75,6 +75,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#23](https://github.com/nf-core/sarek/pull/23) - `--genomeFile` is now deprecated, use `--fasta` instead
 - [#23](https://github.com/nf-core/sarek/pull/23) - `--genomeIndex` is now deprecated, use `--fastaFai` instead
 - [#23](https://github.com/nf-core/sarek/pull/23) - `--genomeDict` is now deprecated, use `--dict` instead
+- [#30](https://github.com/nf-core/sarek/pull/30) - Simplify code for `MapReads` process
 
 ### `Removed`
 
@@ -86,7 +87,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 ### `Fixed`
 
 - [#3](https://github.com/nf-core/sarek/pull/3) - Fix Docker ownership
-- [#11](https://github.com/nf-core/sarek/pull/11) - Fix MergeMpileup PublishDir
+- [#11](https://github.com/nf-core/sarek/pull/11) - Fix `MergeMpileup` PublishDir
 - [#13](https://github.com/nf-core/sarek/pull/13) - Fix merge in annotation
 - [#14](https://github.com/nf-core/sarek/pull/14) - Fix output name for vcf files
 - [#16](https://github.com/nf-core/sarek/pull/16) - Fix path to Rscript
@@ -94,7 +95,8 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#18](https://github.com/nf-core/sarek/pull/18) - Use same font for nf-core and sarek in ascii art
 - [#20](https://github.com/nf-core/sarek/pull/20) - Use new logo in README
 - [#20](https://github.com/nf-core/sarek/pull/20) - Fix path to references genomes
-- [#22](https://github.com/nf-core/sarek/pull/22) - Fix --singleCPUMem issue
+- [#22](https://github.com/nf-core/sarek/pull/22) - Fix `--singleCPUMem` issue
+- [#30](https://github.com/nf-core/sarek/pull/30) - fix choice between `inputPairReadsFastQC` and `inputBAMFastQC` channels
 
 ## [2.3.FIX1] - 2019-03-04
 
