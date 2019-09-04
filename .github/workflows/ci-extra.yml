@@ -1,4 +1,4 @@
-name: nf-core CI
+name: nf-core extra CI
 # This workflow is triggered on pushes and PRs to the repository.
 on: [push, pull_request]  
 
@@ -7,6 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        test: [ANNOTATESNPEFF, ANNOTATEVEP, GERMLINE, SOMATIC, TARGETED]
         nxf_ver: ['19.04.0', '']
     steps:
       - uses: actions/checkout@v1
@@ -15,9 +16,12 @@ jobs:
           export NXF_VER=${{ matrix.nxf_ver }}
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-      - name: Build references
+      - name: Download image
         run: |
-          nextflow run ${GITHUB_WORKSPACE}/build.nf -profile test,docker --build --outdir references
+          ${GITHUB_WORKSPACE}/scripts/download_image.sh -n docker --test ${{ matrix.test }}
+      - name: Build References
+        run: |
+          ${GITHUB_WORKSPACE}/scripts/build_reference.sh --test ${{ matrix.test }} --verbose --memory 6.GB
       - name: Run test
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker
+          ${GITHUB_WORKSPACE}/scripts/run_tests.sh --test ${{ matrix.test }} --verbose --memory 6.GB

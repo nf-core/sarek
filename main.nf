@@ -153,11 +153,11 @@ if (!checkParameterExistence(step, stepList)) exit 1, "Unknown step ${step}, see
 
 toolList = defineToolList()
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
-if (!checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
+if (!checkParameterList(tools, toolList)) exit 1, 'Unknown tool(s), see --help for more information'
 
 skipQClist = defineSkipQClist()
 skipQC = params.skipQC ? params.skipQC == 'all' ? skipQClist : params.skipQC.split(',').collect{it.trim().toLowerCase()} : []
-if (!checkParameterList(skipQC,skipQClist)) exit 1, 'Unknown QC tool(s), see --help for more information'
+if (!checkParameterList(skipQC, skipQClist)) exit 1, 'Unknown QC tool(s), see --help for more information'
 
 // Handle deprecation
 if (params.noReports) skipQC = skipQClist
@@ -188,8 +188,8 @@ if (workflow.profile == 'awsbatch') {
 ch_output_docs = Channel.fromPath("${baseDir}/docs/output.md")
 
 tsvPath = null
-if (params.input && (hasExtension(params.input,"tsv") || hasExtension(params.input,"vcf") || hasExtension(params.input,"vcf.gz"))) tsvPath = params.input
-if (params.input && (hasExtension(params.input,"vcf") || hasExtension(params.input,"vcf.gz"))) step = "annotate"
+if (params.input && (hasExtension(params.input, "tsv") || hasExtension(params.input, "vcf") || hasExtension(params.input, "vcf.gz"))) tsvPath = params.input
+if (params.input && (hasExtension(params.input, "vcf") || hasExtension(params.input, "vcf.gz"))) step = "annotate"
 
 // Handle deprecation
 if (params.annotateVCF) tsvPath = params.annotateVCF
@@ -212,7 +212,7 @@ if (tsvPath) {
         case 'annotate': break
         default: exit 1, "Unknown step ${step}"
     }
-} else if (params.input && !hasExtension(params.input,"tsv")) {
+} else if (params.input && !hasExtension(params.input, "tsv")) {
     println "No TSV file"
     if (step != 'mapping') exit 1, 'No other step than "mapping" support a dir as an input'
     println "Reading ${params.input} directory"
@@ -261,7 +261,7 @@ if (params.email) {
     summary['E-mail Address']       = params.email
     summary['MultiQC maxsize']      = params.maxMultiqcEmailFileSize
 }
-log.info summary.collect { k,v -> "${k.padRight(18)}: $v" }.join("\n")
+log.info summary.collect { k, v -> "${k.padRight(18)}: $v" }.join("\n")
 if (params.monochrome_logs) log.info "----------------------------------------------------"
 else log.info "\033[2m----------------------------------------------------\033[0m"
 
@@ -297,6 +297,7 @@ process GetSoftwareVersions {
     qualimap --version &> v_qualimap.txt 2>&1 || true
     R --version &> v_r.txt  || true
     samtools --version &> v_samtools.txt 2>&1 || true
+    tiddit &> v_tiddit.txt 2>&1 || true
     vcftools --version &> v_vcftools.txt 2>&1 || true
     vep --help &> v_vep.txt 2>&1 || true
 
@@ -328,7 +329,7 @@ process CreateIntervalBeds {
     script:
     // If the interval file is BED format, the fifth column is interpreted to
     // contain runtime estimates, which is then used to combine short-running jobs
-    if (hasExtension(intervals,"bed"))
+    if (hasExtension(intervals, "bed"))
         """
         awk -vFS="\t" '{
           t = \$5  # runtime estimate
@@ -386,7 +387,7 @@ else (inputReads, inputReadsFastQC) = Channel.empty().into(2)
 inputPairReadsFastQC = Channel.create()
 inputBAMFastQC = Channel.create()
 
-inputReadsFastQC.choice(inputPairReadsFastQC, inputBAMFastQC) {hasExtension(it[4],"bam")? 1 : 0}
+inputReadsFastQC.choice(inputPairReadsFastQC, inputBAMFastQC) {hasExtension(it[3], "bam") ? 1 : 0}
 
 // Removing inputFile2 wich is null in case of uBAM
 inputBAMFastQC = inputBAMFastQC.map {
@@ -476,24 +477,12 @@ process MapReads {
     // adjust mismatch penalty for tumor samples
     status = statusMap[idPatient, idSample]
     extra = status == 1 ? "-B 3" : ""
-    if (hasExtension(inputFile1,"fastq.gz") || hasExtension(inputFile1,"fq.gz"))
+    convertToFastq = hasExtension(inputFile1, "bam") ? "gatk --java-options -Xmx${task.memory.toGiga()}g SamToFastq --INPUT=${inputFile1} --FASTQ=/dev/stdout --INTERLEAVE=true --NON_PF=true | \\" : ""
+    input = hasExtension(inputFile1, "bam") ? "-p /dev/stdin - 2> >(tee ${inputFile1}.bwa.stderr.log >&2)" : "${inputFile1} ${inputFile2}"
     """
-        bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M \
-            ${fasta} ${inputFile1} ${inputFile2} | \
-        samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
-    """
-    else if (hasExtension(inputFile1,"bam"))
-    """
-        gatk --java-options -Xmx${task.memory.toGiga()}g \
-            SamToFastq \
-            --INPUT=${inputFile1} \
-            --FASTQ=/dev/stdout \
-            --INTERLEAVE=true \
-            --NON_PF=true \
-            | \
-        bwa mem -K 100000000 -p -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
-            /dev/stdin - 2> >(tee ${inputFile1}.bwa.stderr.log >&2) \
-            | \
+        ${convertToFastq}
+        bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
+        ${input} | \
         samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
     """
 }
@@ -504,7 +493,7 @@ bamMapped = bamMapped.dump(tag:'Mapped BAM')
 
 singleBam = Channel.create()
 multipleBam = Channel.create()
-bamMapped.groupTuple(by:[0,1])
+bamMapped.groupTuple(by:[0, 1])
     .choice(singleBam, multipleBam) {it[2].size() > 1 ? 1 : 0}
 singleBam = singleBam.map {
     idPatient, idSample, idRun, bam ->
@@ -624,7 +613,7 @@ process BaseRecalibrator {
     """
 }
 
-tableGatherBQSRReports = tableGatherBQSRReports.groupTuple(by:[0,1])
+tableGatherBQSRReports = tableGatherBQSRReports.groupTuple(by:[0, 1])
 
 // STEP 3.5: MERGING RECALIBRATION TABLES
 
@@ -711,7 +700,7 @@ process ApplyBQSR {
     """
 }
 
-bamMergeBamRecal = bamMergeBamRecal.groupTuple(by:[0,1])
+bamMergeBamRecal = bamMergeBamRecal.groupTuple(by:[0, 1])
 
 // STEP 4.5: MERGING THE RECALIBRATED BAM FILES
 
@@ -879,7 +868,7 @@ process HaplotypeCaller {
     """
 }
 
-gvcfHaplotypeCaller = gvcfHaplotypeCaller.groupTuple(by:[0,1,2])
+gvcfHaplotypeCaller = gvcfHaplotypeCaller.groupTuple(by:[0, 1, 2])
 
 if (params.noGVCF) gvcfHaplotypeCaller.close()
 else gvcfHaplotypeCaller = gvcfHaplotypeCaller.dump(tag:'GVCF HaplotypeCaller')
@@ -920,7 +909,7 @@ process GenotypeGVCFs {
     """
 }
 
-vcfGenotypeGVCFs = vcfGenotypeGVCFs.groupTuple(by:[0,1,2])
+vcfGenotypeGVCFs = vcfGenotypeGVCFs.groupTuple(by:[0, 1, 2])
 
 // STEP STRELKA.1 - SINGLE MODE
 
@@ -1135,7 +1124,7 @@ process Mutect2 {
     """
 }
 
-vcfMuTect2 = vcfMuTect2.groupTuple(by:[0,1,2])
+vcfMuTect2 = vcfMuTect2.groupTuple(by:[0, 1, 2])
 
 // STEP FREEBAYES
 
@@ -1175,7 +1164,7 @@ process FreeBayes {
 // we are merging the VCFs that are called separatelly for different intervals
 // so we can have a single sorted VCF containing all the calls for a given caller
 
-vcfFreeBayes = vcfFreeBayes.groupTuple(by:[0,1,2])
+vcfFreeBayes = vcfFreeBayes.groupTuple(by:[0, 1, 2])
 
 // STEP MERGING VCF - FREEBAYES, GATK HAPLOTYPECALLER & GATK MUTECT2
 
@@ -1514,7 +1503,7 @@ process Mpileup {
     """
 }
 
-mpileupMerge = mpileupMerge.groupTuple(by:[0,1])
+mpileupMerge = mpileupMerge.groupTuple(by:[0, 1])
 
 // STEP CONTROLFREEC.2 - MERGE MPILEUP
 
@@ -2102,7 +2091,6 @@ workflow.onComplete {
     email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
     email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
 
-    // TODO nf-core: If not using MultiQC, strip out this code (including params.maxMultiqcEmailFileSize)
     // On success try attach the multiqc report
     def mqc_report = null
     try {
@@ -2190,7 +2178,7 @@ def create_workflow_summary(summary) {
     plot_type: 'html'
     data: |
         <dl class=\"dl-horizontal\">
-${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
+${summary.collect { k, v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
         </dl>
     """.stripIndent()
 
@@ -2415,8 +2403,8 @@ def extractBam(tsvFile) {
             def bamFile   = returnFile(row[4])
             def baiFile   = returnFile(row[5])
 
-            if (!hasExtension(bamFile,"bam")) exit 1, "File: ${bamFile} has the wrong extension. See --help for more information"
-            if (!hasExtension(baiFile,"bai")) exit 1, "File: ${baiFile} has the wrong extension. See --help for more information"
+            if (!hasExtension(bamFile, "bam")) exit 1, "File: ${bamFile} has the wrong extension. See --help for more information"
+            if (!hasExtension(baiFile, "bai")) exit 1, "File: ${baiFile} has the wrong extension. See --help for more information"
 
             return [idPatient, gender, status, idSample, bamFile, baiFile]
         }
@@ -2480,13 +2468,13 @@ def extractFastq(tsvFile) {
             def idSample   = row[3]
             def idRun      = row[4]
             def file1      = returnFile(row[5])
-            def file2      = file("null")
-            if (hasExtension(file1,"fastq.gz") || hasExtension(file1,"fq.gz")) {
+            def file2      = "null"
+            if (hasExtension(file1, "fastq.gz") || hasExtension(file1, "fq.gz")) {
                 checkNumberOfItem(row, 7)
                 file2 = returnFile(row[6])
-            if (!hasExtension(file2,"fastq.gz") && !hasExtension(file2,"fq.gz")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
+            if (!hasExtension(file2, "fastq.gz") && !hasExtension(file2, "fq.gz")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
         }
-        else if (hasExtension(file1,"bam")) checkNumberOfItem(row, 6)
+        else if (hasExtension(file1, "bam")) checkNumberOfItem(row, 6)
         else "No recognisable extention for input file: ${file1}"
 
         [idPatient, gender, status, idSample, idRun, file1, file2]
@@ -2508,9 +2496,9 @@ def extractRecal(tsvFile) {
             def baiFile    = returnFile(row[5])
             def recalTable = returnFile(row[6])
 
-            if (!hasExtension(bamFile,"bam")) exit 1, "File: ${bamFile} has the wrong extension. See --help for more information"
-            if (!hasExtension(baiFile,"bai")) exit 1, "File: ${baiFile} has the wrong extension. See --help for more information"
-            if (!hasExtension(recalTable,"recal.table")) exit 1, "File: ${recalTable} has the wrong extension. See --help for more information"
+            if (!hasExtension(bamFile, "bam")) exit 1, "File: ${bamFile} has the wrong extension. See --help for more information"
+            if (!hasExtension(baiFile, "bai")) exit 1, "File: ${baiFile} has the wrong extension. See --help for more information"
+            if (!hasExtension(recalTable, "recal.table")) exit 1, "File: ${recalTable} has the wrong extension. See --help for more information"
 
             [idPatient, gender, status, idSample, bamFile, baiFile, recalTable]
     }
