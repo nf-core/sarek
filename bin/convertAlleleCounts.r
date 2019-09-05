@@ -2,6 +2,8 @@
 # Description:
 # R-script for converting output from AlleleCount to BAF and LogR values.
 #
+# Testing new version of the script
+#
 # Input:
 # AlleleCounter output file for tumor and normal samples
 # The first line should contain a header describing the data
@@ -26,6 +28,8 @@ if(length(args)<5){
     normalac = args[4]
     gender = args[5]
 }
+
+
 
 tumorcounts = read.table(tumorac, header=F, sep="\t")
 normalcounts = read.table(normalac, header=F, sep="\t")
