@@ -103,19 +103,19 @@ if (params.help) exit 0, helpMessage()
 
 // Handle deprecation
 params.noReports = null
-if (params.noReports) deprecationMessage("noReports", "skipQC all")
+if (params.noReports) log.warn "The params `--noReports` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--skipQC"
 params.annotateVCF = null
-if (params.annotateVCF) deprecationMessage("annotateVCF", "input")
+if (params.annotateVCF) log.warn "The params `--annotateVCF` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--input"
 params.genomeDict = null
-if (params.genomeDict) deprecationMessage("genomeDict", "dict")
+if (params.genomeDict) log.warn "The params `--genomeDict` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--dict"
 params.genomeFile = null
-if (params.genomeFile) deprecationMessage("genomeFile", "fasta")
+if (params.genomeFile) log.warn "The params `--genomeFile` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--fasta"
 params.genomeIndex = null
-if (params.genomeIndex) deprecationMessage("genomeIndex", "fastaFai")
+if (params.genomeIndex) log.warn "The params `--genomeIndex` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--fastaFai"
 params.sample = null
-if (params.sample) deprecationMessage("sample", "input")
+if (params.sample) log.warn "The params `--sample` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--input"
 params.sampleDir = null
-if (params.sampleDir) deprecationMessage("sampleDir", "input")
+if (params.sampleDir) log.warn "The params `--sampleDir` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--input"
 
 // Check if genome exists in the config file
 if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
@@ -2385,8 +2385,9 @@ def defineToolList() {
 }
 
 // Print deprecation message
-def deprecationMessage(oldParams, newParams) {
-    log.warn "The params `--${oldParams}` is deprecated, please use `--${newParams}` instead -- it will be removed in a future release"
+def deprecationMessage(oldItem, newItem = null) {
+    extra = newItem == null ? "": ", please use `${newItem}` instead"
+    log.warn "The ${oldItem} is deprecated${extra} -- it will be removed in a future release"
 }
 
 // Channeling the TSV file containing BAM.
