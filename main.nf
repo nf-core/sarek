@@ -1821,10 +1821,6 @@ controlFreecVizOut.dump(tag:'ControlFreecViz')
 (vcfMantaSomaticSV, vcfMantaDiploidSV) = vcfManta.into(2)
 
 vcfKeep = Channel.empty().mix(
-//    vcfConcatenated.map {
-//        variantcaller, idPatient, idSample, vcf, tbi ->
-//        [variantcaller, idSample, vcf]
-//    },
     vcfStrelkaSingle.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
         [variantcaller, idSample, vcf[1]]
