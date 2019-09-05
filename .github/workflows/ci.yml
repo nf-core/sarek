@@ -15,6 +15,9 @@ jobs:
           export NXF_VER=${{ matrix.nxf_ver }}
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
+      - name: Download image
+        run: |
+          docker pull nfcore/sarek:dev
       - name: Build references
         run: |
           nextflow run ${GITHUB_WORKSPACE}/build.nf -profile test,docker --build --outdir references
