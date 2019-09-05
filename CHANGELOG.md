@@ -74,7 +74,6 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#21](https://github.com/nf-core/sarek/pull/21) - Moved smallGRCh37 path to `genomes.config`
 - [#31](https://github.com/nf-core/sarek/pull/31) - Move extra CI to GitHub Actions nf-core extra CI
 - [#32](https://github.com/nf-core/sarek/pull/32) - Install `ASCAT` with `conda` in the `environment.yml` file
-- [#32](https://github.com/nf-core/sarek/pull/32) - Changed `r-base` from `3.5.1` to `3.4.1` and `bioconductor-rtracklayer` from `1.42.1` to `1.38.3` to satisfy `conda` dependencies when adding `ASCAT` to the recipe
 
 ### `Removed`
 
@@ -83,6 +82,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#13](https://github.com/nf-core/sarek/pull/13) - Removed `CompressVCF`
 - [#18](https://github.com/nf-core/sarek/pull/18) - Removed params `--noReports`
 - [#31](https://github.com/nf-core/sarek/pull/31) - Remove extra CI from Travis CI and GitHub Actions nf-core CI
+- [#32](https://github.com/nf-core/sarek/pull/32) - Clean up `environment.yml` file
 
 ### `Fixed`
 

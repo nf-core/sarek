@@ -28,9 +28,6 @@ For annotation, the main container can be used, but the cache has to be download
 - Contain **[Manta](https://github.com/Illumina/manta)** 1.5.0
 - Contain **[MultiQC](https://github.com/ewels/MultiQC/)** 1.7
 - Contain **[Qualimap](http://qualimap.bioinfo.cipf.es)** 2.2.2b
-- Contain **[RColorBrewer](https://CRAN.R-project.org/package=RColorBrewer)** 1.1_2
-- Contain **[R](https://www.r-project.org/)** 3.4.1
-- Contain **[Rtracklayer](https://www.bioconductor.org/packages/release/bioc/html/rtracklayer.html)** 1.38.2
 - Contain **[samtools](https://github.com/samtools/samtools)** 1.9
 - Contain **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
 - Contain **[Strelka2](https://github.com/Illumina/strelka)** 2.9.10
