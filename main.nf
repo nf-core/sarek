@@ -1103,7 +1103,7 @@ process Mutect2 {
     label 'cpus_1'
 
     input:
-        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamMuTect2
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamMutect2
         set file(fasta), file(fastaFai), file(dict), file(intervals), file(germlineResource), file(germlineResourceIndex) from Channel.value([
             referenceMap.fasta,
             referenceMap.fastaFai,
