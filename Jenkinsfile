@@ -6,46 +6,43 @@ pipeline {
     }
 
     stages {
-        stage('Setup environment') {
+        stage('Docker setup') {
             steps {
-                sh "./bin/download_docker.sh -t ALL"
+                 sh "./scripts/download_image.sh -n docker -t ALL -T dev -g smallGRCh37"
             }
         }
-        stage('Build') {
+        stage('Build references') {
             steps {
-                sh "rm -rf data"
-                sh "./bin/build_reference.sh --test ALL --build"
-                sh "rm -rf work/ references/pipeline_info .nextflow*"
-            }
-        }
-        stage('Somatic') {
-            steps {
-                sh "./bin/run_tests.sh --test SOMATIC"
-                sh "rm -rf work/ .nextflow* results/"
+                sh "rm -rf references/"
+                sh "./scripts/build_reference.sh"
             }
         }
         stage('Germline') {
             steps {
-                sh "./bin/run_tests.sh --test GERMLINE"
-                sh "rm -rf work/ .nextflow* results/"
+                sh "rm -rf data/"
+                sh "git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data"
+                sh "./scripts/run_tests.sh --profile kraken --test GERMLINE --no-reports"
+                sh "rm -rf data/"
             }
         }
-        stage('targeted') {
+        stage('Somatic') {
             steps {
-                sh "./bin/run_tests.sh --test TARGETED"
-                sh "rm -rf work/ .nextflow* results/"
+                sh "./scripts/run_tests.sh --profile kraken --test SOMATIC --no-reports"
+            }
+        }
+        stage('Targeted') {
+            steps {
+                sh "./scripts/run_tests.sh --profile kraken --test TARGETED --no-reports"
             }
         }
         stage('Annotation') {
             steps {
-                sh "./bin/run_tests.sh --test ANNOTATEALL"
-                sh "rm -rf work/ .nextflow* results/"
+                sh "./scripts/run_tests.sh --profile kraken --test ANNOTATEBOTH --no-reports"
             }
         }
         stage('Multiple') {
             steps {
-                sh "./bin/run_tests.sh --test MULTIPLE"
-                sh "rm -rf work/ .nextflow* results/"
+                sh "./scripts/run_tests.sh --profile kraken --test MULTIPLE"
             }
         }
     }

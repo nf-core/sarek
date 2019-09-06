@@ -3,7 +3,6 @@ from __future__ import print_function
 from collections import OrderedDict
 import re
 
-# TODO nf-core: Add additional regexes for new tools in process get_software_versions
 regexes = {
     'AlleleCount': ['v_allelecount.txt', r"(\S+)"],
     'ASCAT': ['v_ascat.txt', r"(\d\.\d+)"],
@@ -22,6 +21,7 @@ regexes = {
     'samtools': ['v_samtools.txt', r"samtools (\S+)"],
     'SnpEff': ['v_snpeff.txt', r"version SnpEff (\S+)"],
     'Strelka': ['v_strelka.txt', r"([0-9.]+)"],
+    'TIDDIT': ['v_tiddit.txt', r"TIDDIT-(\S+)"], 
     'vcftools': ['v_vcftools.txt', r"([0-9.]+)"],
     'VEP': ['v_vep.txt', r"ensembl-vep          : (\S+)"],
 }
@@ -43,6 +43,7 @@ results['R'] = '<span style="color:#999999;\">N/A</span>'
 results['samtools'] = '<span style="color:#999999;\">N/A</span>'
 results['SnpEff'] = '<span style="color:#999999;\">N/A</span>'
 results['Strelka'] = '<span style="color:#999999;\">N/A</span>'
+results['TIDDIT'] = '<span style="color:#999999;\">N/A</span>' 
 results['vcftools'] = '<span style="color:#999999;\">N/A</span>'
 results['VEP'] = '<span style="color:#999999;\">N/A</span>'
 
@@ -62,7 +63,7 @@ for k in results:
 # Dump to YAML
 print ('''
 id: 'software_versions'
-section_name: 'nf-core/sarek Software Versions'
+section_name: 'nf-core/sarek software versions'
 section_href: 'https://github.com/nf-core/sarek'
 plot_type: 'html'
 description: 'are collected at run time from the software output.'

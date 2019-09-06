@@ -6,14 +6,12 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - r-rcolorbrewer=1.1
-  - r-base=3.5.1
+  - ascat=2.5.2
   - bcftools=1.9
-  - bioconductor-rtracklayer=1.42.1
   - bwa=0.7.17
   - cancerit-allelecount=4.0.2
   - control-freec=11.4
-  - ensembl-vep=96.0
+  - ensembl-vep=95.2
   - fastqc=0.11.8
   - freebayes=1.2.0
   - gatk4=4.1.2.0
@@ -26,5 +24,6 @@ dependencies:
   - samtools=1.9
   - snpeff=4.3.1t
   - strelka=2.9.10
+  - tiddit=2.7.1
   - vcfanno=0.3.1
   - vcftools=0.1.16
