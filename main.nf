@@ -1133,7 +1133,7 @@ process MergeMutect2Stats {
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Mutect2", mode: params.publishDirMode
 
     input:
-        set caller,
+    set caller,
         idPatient,
         idSampleTumor_vs_idSampleNormal,
         file(vcfFiles) from mutect2OutForStats  // corresponding small VCF chunks
@@ -1283,8 +1283,8 @@ process MergePileupSummaries {
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Mutect2", mode: params.publishDirMode
 
     input:
-        file(genomeDict) from Channel.value([referenceMap.genomeDict])
         set idPatient, idSampleTumor, file(pileupSums) from pileupSummaries
+        file(genomeDict) from Channel.value([referenceMap.genomeDict])
 
     output:
         file("${idSampleTumor}_pileupsummaries.table.tsv") into mergedPileupFile
