@@ -11,44 +11,43 @@ For annotation, the main container can be used, but the cache has to be download
 
 ## What is actually inside the containers
 
-### sarek [![sarek-docker status][sarek-docker-badge]][sarek-docker-link]
+### sarek [![sarek-docker status](https://img.shields.io/docker/automated/nfcore/sarek.svg)](https://hub.docker.com/r/nfcore/sarek)
 
 - Based on `nfcore/base:latest`
-- Contain **[AlleleCount][allelecount-link]** 4.0.2
-- Contain **[BCFTools][bcftools-link]** 1.9
-- Contain **[BWA][bwa-link]** 0.7.17
-- Contain **[FastQC][fastqc-link]** 0.11.8
-- Contain **[FreeBayes][freebayes-link]** 1.2.0
-- Contain **[GATK4][gatk4-link]** 4.1.2.0
-- Contain **[GeneSplicer][genesplicer-link]** 1.0
-- Contain **[HTSlib][htslib-link]** 1.9
-- Contain **[IGVtools][igvtools-link]** 2.3.93
-- Contain **[Manta][manta-link]** 1.5.0
-- Contain **[MultiQC][multiqc-link]** 1.7
-- Contain **[Qualimap][qualimap-link]** 2.2.2b
-- Contain **[R][r-link]** 3.5.1
-- Contain **[RColorBrewer][rcolorbrewer-link]** 1.1
-- Contain **[Rtracklayer][rtracklayer-link]** 1.42.1
-- Contain **[samtools][samtools-link]** 1.9
-- Contain **[snpEff][snpeff-link]** 4.3.1t
-- Contain **[Strelka2][strelka-link]** 2.9.10
-- Contain **[TIDDIT][tiddit-link]** 2.7.1
-- Contain **[VCFanno][vcfanno-link]** 0.3.1
-- Contain **[VCFtools][vcftools-link]** 0.1.16
-- Contain **[VEP][vep-link]** 96.0
+- Contain **[ASCAT](https://github.com/Crick-CancerGenomics/ascat)** 2.5.2
+- Contain **[AlleleCount](https://github.com/cancerit/alleleCount)** 4.0.2
+- Contain **[BCFTools](https://github.com/samtools/bcftools)** 1.9
+- Contain **[BWA](https://github.com/lh3/bwa)** 0.7.17
+- Contain **[Control-FREEC](https://github.com/BoevaLab/FREEC)** 11.4
+- Contain **[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)** 0.11.8
+- Contain **[FreeBayes](https://github.com/ekg/freebayes)** 1.2.0
+- Contain **[GATK4](https://github.com/broadinstitute/gatk)** 4.1.2.0
+- Contain **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
+- Contain **[HTSlib](https://github.com/samtools/htslib)** 1.9
+- Contain **[IGVtools](http://software.broadinstitute.org/software/igv/)** 2.3.93
+- Contain **[Manta](https://github.com/Illumina/manta)** 1.5.0
+- Contain **[MultiQC](https://github.com/ewels/MultiQC/)** 1.7
+- Contain **[Qualimap](http://qualimap.bioinfo.cipf.es)** 2.2.2b
+- Contain **[samtools](https://github.com/samtools/samtools)** 1.9
+- Contain **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
+- Contain **[Strelka2](https://github.com/Illumina/strelka)** 2.9.10
+- Contain **[TIDDIT](https://github.com/SciLifeLab/TIDDIT)** 2.7.1
+- Contain **[VCFanno](https://github.com/brentp/vcfanno)** 0.3.1
+- Contain **[VCFtools](https://vcftools.github.io/index.html)** 0.1.16
+- Contain **[VEP](https://github.com/Ensembl/ensembl-vep)** 95.2
 
-### sareksnpeff [![sareksnpeff-docker status][sareksnpeff-docker-badge]][sareksnpeff-docker-link]
-
-- Based on `nfcore/base:latest`
-- Contain **[snpEff][snpeff-link]** 4.3.1t
-- Contain cache for `GRCh37`, `GRCh38`, or `GRCm38`
-
-### sarekvep [![sarekvep-docker status][sarekvep-docker-badge]][sarekvep-docker-link]
+### sareksnpeff [![sareksnpeff-docker status](https://img.shields.io/docker/automated/nfcore/sareksnpeff.svg)](https://hub.docker.com/r/nfcore/sareksnpeff)
 
 - Based on `nfcore/base:latest`
-- Contain **[GeneSplicer][genesplicer-link]** 1.0
-- Contain **[VEP][vep-link]** 96.0
-- Contain cache for `GRCh37`, `GRCh38`, or `GRCm38`
+- Contain **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
+- Contain cache for `GRCh37`, `GRCh38`, `GRCm38` or `CanFam3.1`
+
+### sarekvep [![sarekvep-docker status](https://img.shields.io/docker/automated/nfcore/sarekvep.svg)](https://hub.docker.com/r/nfcore/sarekvep)
+
+- Based on `nfcore/base:latest`
+- Contain **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
+- Contain **[VEP](https://github.com/Ensembl/ensembl-vep)** 95.2
+- Contain cache for `GRCh37`, `GRCh38`, `GRCm38` or `CanFam3.1`
 
 ## Using helper script
 
@@ -72,7 +71,7 @@ Default:`dev`
 
 ### Genome: -g
 
-Specify which release genome to use for annotation containers (`sareksnpeff`, `sarekvep`): `GRCh37`, `GRCh38`, `smallGRCh37`, `CanFan3.1`, `GRCm38`.
+Specify which release genome to use for annotation containers (`sareksnpeff`, `sarekvep`): `smallGRCh37`, `GRCh37`, `GRCh38`, `GRCm38` or `CanFam3.1`.
 Default:`smallGRCh37`
 
 ### Singularity
@@ -89,32 +88,3 @@ That will build the main container, plus the annotation containers (`sareksnpeff
 
 Our containers are designed using [Conda](https://conda.io/).
 The `environment.yml` file can easilly be modified if particular versions of tools are more suited to your needs.
-
-[allelecount-link]: https://github.com/cancerit/alleleCount
-[bcftools-link]: https://github.com/samtools/bcftools
-[bwa-link]: https://github.com/lh3/bwa
-[fastqc-link]: http://www.bioinformatics.babraham.ac.uk/projects/fastqc/
-[freebayes-link]: https://github.com/ekg/freebayes
-[gatk4-link]: https://github.com/broadinstitute/gatk
-[genesplicer-link]: https://ccb.jhu.edu/software/genesplicer/
-[htslib-link]: https://github.com/samtools/htslib
-[igvtools-link]: http://software.broadinstitute.org/software/igv/
-[manta-link]: https://github.com/Illumina/manta
-[multiqc-link]: https://github.com/ewels/MultiQC/
-[qualimap-link]: http://qualimap.bioinfo.cipf.es
-[r-link]: https://www.r-project.org/
-[rcolorbrewer-link]: https://CRAN.R-project.org/package=RColorBrewer
-[rtracklayer-link]: https://www.bioconductor.org/packages/release/bioc/html/rtracklayer.html
-[samtools-link]: https://github.com/samtools/samtools
-[sarek-docker-badge]: https://img.shields.io/docker/automated/nfcore/sarek.svg
-[sarek-docker-link]: https://hub.docker.com/r/nfcore/sarek
-[snpeff-link]: http://snpeff.sourceforge.net/
-[sareksnpeff-docker-badge]: https://img.shields.io/docker/automated/nfcore/sareksnpeff.svg
-[sareksnpeff-docker-link]: https://hub.docker.com/r/nfcore/sareksnpeff
-[strelka-link]: https://github.com/Illumina/strelka
-[tiddit-link]: https://github.com/SciLifeLab/TIDDIT
-[vcfanno-link]: https://github.com/brentp/vcfanno
-[vcftools-link]: https://vcftools.github.io/index.html
-[vep-link]: https://github.com/Ensembl/ensembl-vep
-[sarekvep-docker-badge]: https://img.shields.io/docker/automated/nfcore/sarekvep.svg
-[sarekvep-docker-link]: https://hub.docker.com/r/nfcore/sarekvep

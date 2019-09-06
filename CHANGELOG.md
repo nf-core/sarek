@@ -79,6 +79,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#23](https://github.com/nf-core/sarek/pull/23) - `--genomeDict` is now deprecated, use `--dict` instead
 - [#30](https://github.com/nf-core/sarek/pull/30) - Simplify code for `MapReads` process
 - [#31](https://github.com/nf-core/sarek/pull/31) - Move extra CI to GitHub Actions nf-core extra CI
+- [#32](https://github.com/nf-core/sarek/pull/32) - Install `ASCAT` with `conda` in the `environment.yml` file
 
 ### `Removed`
 
@@ -87,6 +88,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#13](https://github.com/nf-core/sarek/pull/13) - Removed `CompressVCF`
 - [#18](https://github.com/nf-core/sarek/pull/18) - Removed params `--noReports`
 - [#31](https://github.com/nf-core/sarek/pull/31) - Remove extra CI from Travis CI and GitHub Actions nf-core CI
+- [#32](https://github.com/nf-core/sarek/pull/32) - Clean up `environment.yml` file
 
 ### `Fixed`
 
