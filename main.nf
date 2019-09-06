@@ -1283,7 +1283,7 @@ process MergePileupSummaries {
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Mutect2", mode: params.publishDirMode
 
     input:
-        file(genomeDict) from referenceMap.genomeDict
+        file(genomeDict) from Channel.value([referenceMap.genomeDict])
         set idPatient, idSampleTumor, file(pileupSums) from pileupSummaries
 
     output:
