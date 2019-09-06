@@ -8,7 +8,7 @@ usage() { echo "Usage: $0 <-p profile> <-t test> <-c cpus> <-n> <-v> <-m memory>
 
 CPUS=2
 LOGS=''
-MEMORY='7.GB'
+MEMORY='6.GB'
 NXF_SINGULARITY_CACHEDIR=${NXF_SINGULARITY_CACHEDIR:-work/singularity/.}
 OFFLINE=false
 PROFILE=docker
