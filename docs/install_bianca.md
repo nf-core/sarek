@@ -148,9 +148,12 @@ So every member of the project who wants to use nf-core/sarek will need to do:
 
 Singularity images for Sarek are available on Uppmax in /sw/data/uppnex/ToolBox/sarek. Sometimes nextflow needs write access to the image folder, and if so the images needs to be copied to a location with write permission, for example in a subfolder of your project folder. 
 ```bash
+#Create a folder for the singularity images somewhere in your project:
 mkdir sarek_simg
-cd sarek_simg
-cp /sw/data/uppnex/ToolBox/sarek/nfcore-sarek-dev.img .
+
+#Copy the relevant singularity image from the write protected folder on Uppmax to the fodler where you have write permission: 
+cp /sw/data/uppnex/ToolBox/sarek/nfcore-sarek-dev.img /path/to/sarek_simg/.
+
 #Update the ENV parameter NXF_SINGULARITY_CACHEDIR
 export NXF_SINGULARITY_CACHEDIR=/path/to/your/local/sarek_simg
 ```
