@@ -42,6 +42,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#20](https://github.com/nf-core/sarek/pull/20) - Add `markdownlint` config file
 - [#21](https://github.com/nf-core/sarek/pull/21) - Add tests for latest Nextflow version as well
 - [#21](https://github.com/nf-core/sarek/pull/21) - Add `genomes.config` for genomes without AWS iGenomes
+- [#24](https://github.com/nf-core/sarek/pull/24) - Added GATK4 Mutect2 calling and filtering 
 - [#27](https://github.com/nf-core/sarek/pull/27), [#30](https://github.com/nf-core/sarek/pull/30) - Use Github actions for CI, linting and branch protection
 - [#31](https://github.com/nf-core/sarek/pull/31) - Add nf-core lint
 - [#31](https://github.com/nf-core/sarek/pull/31) - Add extra CI to GitHub Actions nf-core extra CI
@@ -77,6 +78,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#23](https://github.com/nf-core/sarek/pull/23) - `--genomeFile` is now deprecated, use `--fasta` instead
 - [#23](https://github.com/nf-core/sarek/pull/23) - `--genomeIndex` is now deprecated, use `--fastaFai` instead
 - [#23](https://github.com/nf-core/sarek/pull/23) - `--genomeDict` is now deprecated, use `--dict` instead
+- [#24](https://github.com/nf-core/sarek/pull/24) - iGenomes config now contains germline resource for GATK4 Mutect2
 - [#30](https://github.com/nf-core/sarek/pull/30) - Simplify code for `MapReads` process
 - [#31](https://github.com/nf-core/sarek/pull/31) - Move extra CI to GitHub Actions nf-core extra CI
 - [#32](https://github.com/nf-core/sarek/pull/32) - Install `ASCAT` with `conda` in the `environment.yml` file
@@ -87,6 +89,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#13](https://github.com/nf-core/sarek/pull/13) - Removed `BamQCmapped` and `BamQCrecalibrated` processes
 - [#13](https://github.com/nf-core/sarek/pull/13) - Removed `CompressVCF`
 - [#18](https://github.com/nf-core/sarek/pull/18) - Removed params `--noReports`
+- [#24](https://github.com/nf-core/sarek/pull/18) - Removed GATK3.X MuTect2
 - [#31](https://github.com/nf-core/sarek/pull/31) - Remove extra CI from Travis CI and GitHub Actions nf-core CI
 - [#32](https://github.com/nf-core/sarek/pull/32) - Clean up `environment.yml` file
 
