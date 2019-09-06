@@ -42,7 +42,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#20](https://github.com/nf-core/sarek/pull/20) - Add `markdownlint` config file
 - [#21](https://github.com/nf-core/sarek/pull/21) - Add tests for latest Nextflow version as well
 - [#21](https://github.com/nf-core/sarek/pull/21) - Add `genomes.config` for genomes without AWS iGenomes
-- [#24](https://github.com/nf-core/sarek/pull/24) - Added GATK4 Mutect2 calling and filtering 
+- [#24](https://github.com/nf-core/sarek/pull/24) - Added GATK4 Mutect2 calling and filtering
 - [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Use Github actions for CI
 - [#31](https://github.com/nf-core/sarek/pull/31) - Add nf-core lint
 - [#31](https://github.com/nf-core/sarek/pull/31) - Add extra CI to GitHub Actions nf-core extra CI
