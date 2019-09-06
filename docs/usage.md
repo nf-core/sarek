@@ -29,10 +29,13 @@
   * [`--genomeDict`](#--genomedict)
   * [`--genomeFile`](#--genomefile)
   * [`--genomeIndex`](#--genomeindex)
+  * [`--germlineResource`](#--germlineResource)
+  * [`--germlineResourceIndex`](#--germlineResourceIndex)
   * [`--intervals`](#--intervals)
   * [`--knownIndels`](#--knownindels)
   * [`--knownIndelsIndex`](#--knownindelsindex)
   * [`--snpeffDb`](#--snpeffdb)
+  * [`--pon`](#--pon)
   * [`--vepCacheVersion`](#--vepcacheversion)
   * [`--igenomesIgnore`](#--igenomesignore)
 * [Job resources](#job-resources)
@@ -311,6 +314,19 @@ If you prefer, you can specify the full path to your reference genome when you r
 --genomeIndex '[path to the genome Index]'
 ```
 
+
+### `--germlineResource`
+### `--germlineResourceIndex`
+
+The [germline resource VCF file](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_Mutect2.php#--germline-resource) (bgzipped and tabixed) needed 
+by GATK4 Mutect2 is a collection of calls that are likely present in the sample, with allele frequencies. The AF info field must be present. 
+You can find a smaller, stripped gnomAD VCF file (most of the annotation is removed and only calls signed by PASS are stored) in the iGenomes Annotation/GermlineResource folder. To add your own
+germline resource supply
+
+```bash
+--germlineResource '[path to my resource.vcf.gz]' --germlineResourceIndex '[path to my resource.vcf.gz.idx]'
+```
+
 ### `--intervals`
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
@@ -334,6 +350,21 @@ If you prefer, you can specify the full path to your reference genome when you r
 ```bash
 --knownIndelsIndex '[path to the knownIndels index]'
 ```
+
+### `--pon`
+
+When a panel of normals [PON](https://gatkforums.broadinstitute.org/gatk/discussion/24057/how-to-call-somatic-mutations-using-gatk4-mutect2#latest) is defined, you will get filtered 
+somatic calls as a result. Without PON, there will be no calls with PASS in the INFO field, only an _unfiltered_ VCF is written. It is recommended to make your own panel-of-normals, 
+as it depends on sequencer and library preparation. For tests in iGenomes there is a dummy PON file in the Annotation/GermlineResource directory, but it _should not be used_ as a
+real panel-of-normals file. Provide your PON by:
+
+
+```bash
+--pon '[path to the PON VCF]'
+```
+
+If the PON file is bgzipped, there have to be a tabixed index file at the same directory.
+
 
 ### `--snpeffDb`
 
