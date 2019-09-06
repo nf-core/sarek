@@ -152,10 +152,10 @@ Singularity images for Sarek are available on Uppmax in /sw/data/uppnex/ToolBox/
 mkdir sarek_simg
 
 #Copy the relevant singularity image from the write protected folder on Uppmax to the fodler where you have write permission: 
-cp /sw/data/uppnex/ToolBox/sarek/nfcore-sarek-dev.img /path/to/sarek_simg/.
+cp /sw/data/uppnex/ToolBox/sarek/nfcore-sarek-dev.img /path/to/your/sarek_simg/.
 
 #Update the ENV parameter NXF_SINGULARITY_CACHEDIR
-export NXF_SINGULARITY_CACHEDIR=/path/to/your/local/sarek_simg
+export NXF_SINGULARITY_CACHEDIR=/path/to/your/sarek_simg
 ```
 
 And then nf-core/sarek can be used with:
