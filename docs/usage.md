@@ -169,6 +169,62 @@ For example:
 
 Multiple VCF files can be specified if the path must be enclosed in quotes
 
+### `--sample`
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--input`](#--input)
+
+Use this to specify the location of your input TSV file, on `mapping`, `recalibrate` and `variantcalling` steps.
+For example:
+
+```bash
+--sample sample.tsv
+```
+
+Multiple TSV files can be specified if the path must be enclosed in quotes
+
+Use this to specify the location to a directory on `mapping` step with a single germline sample only.
+For example:
+
+```bash
+--sample PathToDirectory
+```
+
+Use this to specify the location of your VCF input file on `annotate` step.
+For example:
+
+```bash
+--sample sample.vcf
+```
+
+Multiple VCF files can be specified if the path must be enclosed in quotes
+
+### `--sampleDir`
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--input`](#--input)
+
+Use this to specify the location to a directory on `mapping` step with a single germline sample only.
+For example:
+
+```bash
+--sampleDir PathToDirectory
+```
+
+### `--annotateVCF`
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--input`](#--input)
+
+Use this to specify the location of your VCF input file on `annotate` step.
+For example:
+
+```bash
+--annotateVCF sample.vcf
+```
+
+Multiple VCF files can be specified if the path must be enclosed in quotes
+
 ### `--noGVCF`
 
 Use this to disable g.vcf from `HaplotypeCaller`.
@@ -300,7 +356,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---fasta '[path to the genome file]'
+--fasta '[path to the reference fasta file]'
 ```
 
 ### `--fastaFai`
@@ -308,7 +364,40 @@ If you prefer, you can specify the full path to your reference genome when you r
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---fastaFai '[path to the genome Index]'
+--fastaFai '[path to the reference index]'
+```
+
+### `--genomeDict`
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--dict`](#--dict)
+
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--dict '[path to the dict file]'
+```
+
+### `--genomeFile`
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--fasta`](#--fasta)
+
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--fasta '[path to the reference fasta file]'
+```
+
+### `--genomeIndex`
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--fastaFai`](#--fastaFai)
+
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--fastaFai '[path to the reference index]'
 ```
 
 ### `--intervals`
