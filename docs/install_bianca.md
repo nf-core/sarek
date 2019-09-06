@@ -164,6 +164,14 @@ And then nf-core/sarek can be used with:
 > nextflow run ~/sarek/main.nf -profile uppmax --custom_config_base ~/sarek/configs --project [PROJECT] --genome [GENOME ASSEMBLY] ...
 ```
 
+This command worked on Bianca 20190906:
+```
+>screen -S SAMPLE /path/to/nextflow run /path/to/sarek/main.nf -profile uppmax --project PROJID --sample SAMPLE.tsv --genome GRCh37 --genomes_base /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37  --step variantcalling --tools ASCAT --igenomesIgnore
+
+#To detach screen:
+ctrl-A-D
+```
+
 This is an example of how to run sarek with the tool Manta and the genome assembly version GRCh38:
 
 ```bash
