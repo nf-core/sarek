@@ -263,7 +263,6 @@ process GetSoftwareVersions {
     alleleCounter --version &> v_allelecount.txt  || true
     bcftools version > v_bcftools.txt 2>&1 || true
     bwa &> v_bwa.txt 2>&1 || true
-    cat ${baseDir}/scripts/ascat.R | grep "ASCAT version" &> v_ascat.txt  || true
     configManta.py --version > v_manta.txt 2>&1 || true
     configureStrelkaGermlineWorkflow.py --version > v_strelka.txt 2>&1 || true
     echo "${workflow.manifest.version}" &> v_pipeline.txt 2>&1 || true
@@ -275,6 +274,7 @@ process GetSoftwareVersions {
     multiqc --version &> v_multiqc.txt 2>&1 || true
     qualimap --version &> v_qualimap.txt 2>&1 || true
     R --version &> v_r.txt  || true
+    R -e "library(ASCAT); help(package='ASCAT')" &> v_ascat.txt
     samtools --version &> v_samtools.txt 2>&1 || true
     tiddit &> v_tiddit.txt 2>&1 || true
     vcftools --version &> v_vcftools.txt 2>&1 || true
@@ -1803,12 +1803,12 @@ process ControlFreecViz {
     when: 'controlfreec' in tools
 
     """
-    cat /opt/conda/envs/sarek-2.5dev/bin/assess_significance.R | R --slave --args ${cnvTumor} ${ratioTumor}
-    cat /opt/conda/envs/sarek-2.5dev/bin/assess_significance.R | R --slave --args ${cnvNormal} ${ratioNormal}
-    cat /opt/conda/envs/sarek-2.5dev/bin/makeGraph.R | R --slave --args 2 ${ratioTumor} ${bafTumor}
-    cat /opt/conda/envs/sarek-2.5dev/bin/makeGraph.R | R --slave --args 2 ${ratioNormal} ${bafNormal}
-    perl /opt/conda/envs/sarek-2.5dev/bin/freec2bed.pl -f ${ratioTumor} > ${idSampleTumor}.bed
-    perl /opt/conda/envs/sarek-2.5dev/bin/freec2bed.pl -f ${ratioNormal} > ${idSampleNormal}.bed
+    cat /opt/conda/envs/sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args ${cnvTumor} ${ratioTumor}
+    cat /opt/conda/envs/sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args ${cnvNormal} ${ratioNormal}
+    cat /opt/conda/envs/sarek-${workflow.manifest.version}/bin/makeGraph.R | R --slave --args 2 ${ratioTumor} ${bafTumor}
+    cat /opt/conda/envs/sarek-${workflow.manifest.version}/bin/makeGraph.R | R --slave --args 2 ${ratioNormal} ${bafNormal}
+    perl /opt/conda/envs/sarek-${workflow.manifest.version}/bin/freec2bed.pl -f ${ratioTumor} > ${idSampleTumor}.bed
+    perl /opt/conda/envs/sarek-${workflow.manifest.version}/bin/freec2bed.pl -f ${ratioNormal} > ${idSampleNormal}.bed
     """
 }
 
@@ -2069,7 +2069,7 @@ process VEP {
     genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
     dir_cache = (params.vep_cache && params.annotation_cache) ? " \${PWD}/${dataDir}" : "/.vep"
     cadd = (params.cadd_cache && params.cadd_WG_SNVs && params.cadd_InDels) ? "--plugin CADD,whole_genome_SNVs.tsv.gz,InDels.tsv.gz" : ""
-    genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/sarek-2.5dev/bin/genesplicer,/opt/conda/envs/sarek-2.5dev/share/genesplicer-1.0-1/human,context=200,tmpdir=\$PWD/${reducedVCF}" : "--offline"
+    genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/sarek-${workflow.manifest.version}/bin/genesplicer,/opt/conda/envs/sarek-${workflow.manifest.version}/share/genesplicer-1.0-1/human,context=200,tmpdir=\$PWD/${reducedVCF}" : "--offline"
     """
     mkdir ${reducedVCF}
 
@@ -2132,7 +2132,7 @@ process VEPmerge {
     genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
     dir_cache = (params.vep_cache && params.annotation_cache) ? " \${PWD}/${dataDir}" : "/.vep"
     cadd = (params.cadd_cache && params.cadd_WG_SNVs && params.cadd_InDels) ? "--plugin CADD,whole_genome_SNVs.tsv.gz,InDels.tsv.gz" : ""
-    genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/sarek-2.5dev/bin/genesplicer,/opt/conda/envs/sarek-2.5dev/share/genesplicer-1.0-1/human,context=200,tmpdir=\$PWD/${reducedVCF}" : "--offline"
+    genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/sarek-${workflow.manifest.version}/bin/genesplicer,/opt/conda/envs/sarek-${workflow.manifest.version}/share/genesplicer-1.0-1/human,context=200,tmpdir=\$PWD/${reducedVCF}" : "--offline"
     """
     mkdir ${reducedVCF}
 
