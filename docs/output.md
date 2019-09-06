@@ -159,6 +159,8 @@ Files created:
   * filtered Mutect2 calls VCF with Tabix index: these entries has a PASS filter, you can get these when supplying a panel of normals using the `--pon` option
 * `[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.stats`
   * a stats file generated during calling raw variants (needed for filtering)
+* `[TUMORSAMPLE]_contamination.table`
+  * a text file exported when panel-of-normals provided about sample contamination
 
 ### TIDDIT
 
