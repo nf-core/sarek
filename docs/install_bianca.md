@@ -146,6 +146,15 @@ So every member of the project who wants to use nf-core/sarek will need to do:
 > ln -s /castor/project/proj_nobackup/sarek/default sarek
 ```
 
+Singularity images for Sarek are available on Uppmax in /sw/data/uppnex/ToolBox/sarek. Sometimes nextflow needs write access to the image folder, and if so the images needs to be copied to a location with write permission, for example in a subfolder of your project folder. 
+```bash
+mkdir sarek_simg
+cd sarek_simg
+cp /sw/data/uppnex/ToolBox/sarek/nfcore-sarek-dev.img .
+#Update the ENV parameter NXF_SINGULARITY_CACHEDIR
+export NXF_SINGULARITY_CACHEDIR=/path/to/your/local/sarek_simg
+```
+
 And then nf-core/sarek can be used with:
 
 ```bash
