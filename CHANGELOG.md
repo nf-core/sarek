@@ -15,7 +15,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#2](https://github.com/nf-core/sarek/pull/2), [#3](https://github.com/nf-core/sarek/pull/3), [#4](https://github.com/nf-core/sarek/pull/4), [#5](https://github.com/nf-core/sarek/pull/5), [#7](https://github.com/nf-core/sarek/pull/7), [#9](https://github.com/nf-core/sarek/pull/9), [#10](https://github.com/nf-core/sarek/pull/10), [#11](https://github.com/nf-core/sarek/pull/11), [#12](https://github.com/nf-core/sarek/pull/12) - Add CI for `nf-core/sarek`
 - [#3](https://github.com/nf-core/sarek/pull/3) - Add preprocessing to `nf-core/sarek`
 - [#4](https://github.com/nf-core/sarek/pull/4) - Add variant calling to `nf-core/sarek` with `HaplotypeCaller`, and single mode `Manta` and `Strelka`
-- [#5](https://github.com/nf-core/sarek/pull/5) - Add variant calling to `nf-core/sarek` with `Manta`, `Strelka`, `Strelka Best Practices`, `MuTecT2`, `FreeBayes`, `ASCAT`, `ControlFREEC`
+- [#5](https://github.com/nf-core/sarek/pull/5), [#34](https://github.com/nf-core/sarek/pull/34) - Add variant calling to `nf-core/sarek` with `Manta`, `Strelka`, `Strelka Best Practices`, `MuTecT2`, `FreeBayes`, `ASCAT`, `ControlFREEC`
 - [#6](https://github.com/nf-core/sarek/pull/6) - Add default containers for annotation to `nf-core/sarek`
 - [#7](https://github.com/nf-core/sarek/pull/7) - Add MultiQC
 - [#7](https://github.com/nf-core/sarek/pull/7) - Add annotation
@@ -73,10 +73,10 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#18](https://github.com/nf-core/sarek/pull/18), [#29](https://github.com/nf-core/sarek/pull/29) - `--noReports` is now `--skipQC all`
 - [#18](https://github.com/nf-core/sarek/pull/18), [#21](https://github.com/nf-core/sarek/pull/21) - Update logo
 - [#21](https://github.com/nf-core/sarek/pull/21) - Moved smallGRCh37 path to `genomes.config`
-- [#24](https://github.com/nf-core/sarek/pull/24) - iGenomes config now contains germline resource for GATK4 Mutect2
+- [#24](https://github.com/nf-core/sarek/pull/24) - iGenomes config now contains germline resource for `GATK4 Mutect2`
 - [#31](https://github.com/nf-core/sarek/pull/31) - Move extra CI to GitHub Actions nf-core extra CI
 - [#32](https://github.com/nf-core/sarek/pull/32), [#33](https://github.com/nf-core/sarek/pull/33) - Install `ASCAT` with `conda` in the `environment.yml` file
-- [#33](https://github.com/nf-core/sarek/pull/33) - use workflow.manifest.version to specify workflow version in path to R scripts for control-FREEC and VEP processes
+- [#33](https://github.com/nf-core/sarek/pull/33) - use `workflow.manifest.version` to specify workflow version in path to scripts for `ControlFREEC` and `VEP` processes
 
 ### `Removed`
 

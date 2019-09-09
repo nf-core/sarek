@@ -13,8 +13,8 @@
   * [`-profile`](#-profile)
   * [`--sample`](#--sample)
   * [`--noGVCF`](#--nogvcf)
+  * [`--skipQC`](#--skipqc)
   * [`--nucleotidesPerSecond`](#--nucleotidespersecond)
-  * [`--skipQC`](#--skipQC)
   * [`--step`](#--step)
   * [`--tools`](#--tools)
   * [`--noStrelkaBP`](#--nostrelkabp)
@@ -24,18 +24,20 @@
   * [`--acLoci`](#--acloci)
   * [`--acLociGC`](#--aclocigc)
   * [`--bwaIndex`](#--bwaindex)
+  * [`--chrDir`](#--chrdir)
+  * [`--chrLength`](#--chrlength)
   * [`--dbsnp`](#--dbsnp)
   * [`--dbsnpIndex`](#--dbsnpindex)
   * [`--genomeDict`](#--genomedict)
   * [`--genomeFile`](#--genomefile)
   * [`--genomeIndex`](#--genomeindex)
-  * [`--germlineResource`](#--germlineResource)
-  * [`--germlineResourceIndex`](#--germlineResourceIndex)
+  * [`--germlineResource`](#--germlineresource)
+  * [`--germlineResourceIndex`](#--germlineresourceindex)
   * [`--intervals`](#--intervals)
   * [`--knownIndels`](#--knownindels)
   * [`--knownIndelsIndex`](#--knownindelsindex)
-  * [`--snpeffDb`](#--snpeffdb)
   * [`--pon`](#--pon)
+  * [`--snpeffDb`](#--snpeffdb)
   * [`--vepCacheVersion`](#--vepcacheversion)
   * [`--igenomesIgnore`](#--igenomesignore)
 * [Job resources](#job-resources)
@@ -272,6 +274,22 @@ If you prefer, you can specify the full path to your reference genome when you r
 
 ```bash
 --bwaIndex '[path to the bwa indexes]'
+```
+
+### `--chrDir`
+
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--chrDir '[path to the Chromosomes folder]'
+```
+
+### `--chrLength`
+
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--chrLength '[path to the Chromosomes length file]'
 ```
 
 ### `--dbsnp`
