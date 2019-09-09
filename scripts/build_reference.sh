@@ -6,7 +6,7 @@ set -xeuo pipefail
 
 usage() { echo "Usage: $0 <-p profile> <-t test> <-v> <-m memory>" 1>&2; exit 1; }
 
-MEMORY='7.GB'
+MEMORY='6.GB'
 NXF_SINGULARITY_CACHEDIR=${NXF_SINGULARITY_CACHEDIR:-work/singularity/.}
 OFFLINE=''
 PROFILE=docker

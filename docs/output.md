@@ -144,9 +144,8 @@ For all samples:
 
 [GATK Mutect2](https://github.com/broadinstitute/gatk) calls somatic SNVs and indels via local assembly of haplotypes.
 
-For further reading and documentation see the [Mutect2 manual](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_Mutect2.php). 
-It is recommended to have panel of normals [PON](https://gatkforums.broadinstitute.org/gatk/discussion/11136/how-to-call-somatic-mutations-using-gatk4-mutect2) for this version of Mutect2 using at 
-least 40 normal samples, and you can add your PON file to get filtered somatic calls. 
+For further reading and documentation see the [Mutect2 manual](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_Mutect2.php).
+It is recommended to have panel of normals [PON](https://gatkforums.broadinstitute.org/gatk/discussion/11136/how-to-call-somatic-mutations-using-gatk4-mutect2) for this version of Mutect2 using at least 40 normal samples, and you can add your PON file to get filtered somatic calls.
 
 For a Tumor/Normal pair only:
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/Mutect2`**
