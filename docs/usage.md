@@ -17,6 +17,7 @@
   * [`--annotateVCF`](#--annotatevcf)
   * [`--noGVCF`](#--nogvcf)
   * [`--skipQC`](#--skipqc)
+  * [`--noReports`](#--noreports)
   * [`--nucleotidesPerSecond`](#--nucleotidespersecond)
   * [`--step`](#--step)
   * [`--tools`](#--tools)
@@ -243,6 +244,13 @@ Use this to disable g.vcf from `HaplotypeCaller`.
 Use this to disable specific QC and Reporting tools.
 Available: `all`, `bamQC`, `BCFtools`, `FastQC`, `MultiQC`, `samtools`, `vcftools`, `versions`
 Default: `None`
+
+### `--noReports`
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--skipQC`](#--skipQC)
+
+Use this to disable all QC and Reporting tools.
 
 ### `--nucleotidesPerSecond`
 
