@@ -5,7 +5,7 @@ import re
 
 regexes = {
     'AlleleCount': ['v_allelecount.txt', r"(\S+)"],
-    'ASCAT': ['v_ascat.txt', r"(\d\.\d+)"],
+    'ASCAT': ['v_ascat.txt', r"Version:       (\S+)"],
     'bcftools': ['v_bcftools.txt', r"bcftools (\S+)"],
     'BWA': ['v_bwa.txt', r"Version: (\S+)"],
     'FastQC': ['v_fastqc.txt', r"FastQC v(\S+)"],

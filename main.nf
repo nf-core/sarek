@@ -287,7 +287,6 @@ process GetSoftwareVersions {
     alleleCounter --version &> v_allelecount.txt  || true
     bcftools version > v_bcftools.txt 2>&1 || true
     bwa &> v_bwa.txt 2>&1 || true
-    cat ${baseDir}/scripts/ascat.R | grep "ASCAT version" &> v_ascat.txt  || true
     configManta.py --version > v_manta.txt 2>&1 || true
     configureStrelkaGermlineWorkflow.py --version > v_strelka.txt 2>&1 || true
     echo "${workflow.manifest.version}" &> v_pipeline.txt 2>&1 || true
@@ -299,6 +298,7 @@ process GetSoftwareVersions {
     multiqc --version &> v_multiqc.txt 2>&1 || true
     qualimap --version &> v_qualimap.txt 2>&1 || true
     R --version &> v_r.txt  || true
+    R -e "library(ASCAT); help(package='ASCAT')" &> v_ascat.txt
     samtools --version &> v_samtools.txt 2>&1 || true
     tiddit &> v_tiddit.txt 2>&1 || true
     vcftools --version &> v_vcftools.txt 2>&1 || true
@@ -1096,6 +1096,44 @@ bamMpileup = bamMpileup.spread(intMpileup)
 // intervals for Mutect2 calls, FreeBayes and pileups for Mutect2 filtering
 (pairBamMutect2, pairBamFreeBayes, pairBamPileupSummaries) = intervalPairBam.into(3)
 
+// STEP FREEBAYES
+
+process FreeBayes {
+    tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
+    label 'cpus_1'
+
+    input:
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamFreeBayes
+        set file(fasta), file(fastaFai) from Channel.value([
+            referenceMap.fasta,
+            referenceMap.fastaFai
+        ])
+
+    output:
+        set val("FreeBayes"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into vcfFreeBayes
+
+    when: 'freebayes' in tools
+
+    script:
+    """
+    freebayes \
+        -f ${fasta} \
+        --pooled-continuous \
+        --pooled-discrete \
+        --genotype-qualities \
+        --report-genotype-likelihood-max \
+        --allele-balance-priors-off \
+        --min-alternate-fraction 0.03 \
+        --min-repeat-entropy 1 \
+        --min-alternate-count 2 \
+        -t ${intervalBed} \
+        ${bamTumor} \
+        ${bamNormal} > ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
+    """
+}
+
+vcfFreeBayes = vcfFreeBayes.groupTuple(by:[0,1,2])
+
 // STEP GATK MUTECT2
 
 process Mutect2 {
@@ -1157,7 +1195,7 @@ process MergeMutect2Stats {
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Mutect2", mode: params.publishDirMode
 
     input:
-        set caller,
+    set caller,
         idPatient,
         idSampleTumor_vs_idSampleNormal,
         file(vcfFiles) from mutect2OutForStats  // corresponding small VCF chunks
@@ -1188,42 +1226,6 @@ process MergeMutect2Stats {
             -O ${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.stats
     """
 }
-
-process FreeBayes {
-    tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
-    label 'cpus_1'
-
-    input:
-        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamFreeBayes
-        set file(fasta), file(fastaFai) from Channel.value([
-            referenceMap.fasta,
-            referenceMap.fastaFai
-        ])
-
-    output:
-        set val("FreeBayes"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into vcfFreeBayes
-
-    when: 'freebayes' in tools
-
-    script:
-    """
-    freebayes \
-        -f ${fasta} \
-        --pooled-continuous \
-        --pooled-discrete \
-        --genotype-qualities \
-        --report-genotype-likelihood-max \
-        --allele-balance-priors-off \
-        --min-alternate-fraction 0.03 \
-        --min-repeat-entropy 1 \
-        --min-alternate-count 2 \
-        -t ${intervalBed} \
-        ${bamTumor} \
-        ${bamNormal} > ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
-    """
-}
-
-vcfFreeBayes = vcfFreeBayes.groupTuple(by:[0,1,2])
 
 // we are merging the VCFs that are called separatelly for different intervals
 // so we can have a single sorted VCF containing all the calls for a given caller
@@ -1265,6 +1267,8 @@ process ConcatVCF {
 
 (vcfConcatenated, vcfConcatenatedForFilter) = vcfConcatenated.into(2)
 vcfConcatenated = vcfConcatenated.dump(tag:'VCF')
+
+// STEP GATK MUTECT2
 
 process PileupSummariesForMutect2 {
     tag {idSampleTumor + "_vs_" + idSampleNormal + "_" + intervalBed.baseName }
@@ -1309,8 +1313,8 @@ process MergePileupSummaries {
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Mutect2", mode: params.publishDirMode
 
     input:
-        file(dict) from Channel.value([referenceMap.dict])
         set idPatient, idSampleTumor, file(pileupSums) from pileupSummaries
+        file(dict) from Channel.value([referenceMap.dict])
 
     output:
         file("${idSampleTumor}_pileupsummaries.table.tsv") into mergedPileupFile
@@ -1829,12 +1833,12 @@ process ControlFreecViz {
     when: 'controlfreec' in tools
 
     """
-    cat /opt/conda/envs/sarek-2.5dev/bin/assess_significance.R | R --slave --args ${cnvTumor} ${ratioTumor}
-    cat /opt/conda/envs/sarek-2.5dev/bin/assess_significance.R | R --slave --args ${cnvNormal} ${ratioNormal}
-    cat /opt/conda/envs/sarek-2.5dev/bin/makeGraph.R | R --slave --args 2 ${ratioTumor} ${bafTumor}
-    cat /opt/conda/envs/sarek-2.5dev/bin/makeGraph.R | R --slave --args 2 ${ratioNormal} ${bafNormal}
-    perl /opt/conda/envs/sarek-2.5dev/bin/freec2bed.pl -f ${ratioTumor} > ${idSampleTumor}.bed
-    perl /opt/conda/envs/sarek-2.5dev/bin/freec2bed.pl -f ${ratioNormal} > ${idSampleNormal}.bed
+    cat /opt/conda/envs/sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args ${cnvTumor} ${ratioTumor}
+    cat /opt/conda/envs/sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args ${cnvNormal} ${ratioNormal}
+    cat /opt/conda/envs/sarek-${workflow.manifest.version}/bin/makeGraph.R | R --slave --args 2 ${ratioTumor} ${bafTumor}
+    cat /opt/conda/envs/sarek-${workflow.manifest.version}/bin/makeGraph.R | R --slave --args 2 ${ratioNormal} ${bafNormal}
+    perl /opt/conda/envs/sarek-${workflow.manifest.version}/bin/freec2bed.pl -f ${ratioTumor} > ${idSampleTumor}.bed
+    perl /opt/conda/envs/sarek-${workflow.manifest.version}/bin/freec2bed.pl -f ${ratioNormal} > ${idSampleNormal}.bed
     """
 }
 
@@ -2095,7 +2099,7 @@ process VEP {
     genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
     dir_cache = (params.vep_cache && params.annotation_cache) ? " \${PWD}/${dataDir}" : "/.vep"
     cadd = (params.cadd_cache && params.cadd_WG_SNVs && params.cadd_InDels) ? "--plugin CADD,whole_genome_SNVs.tsv.gz,InDels.tsv.gz" : ""
-    genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/sarek-2.5dev/bin/genesplicer,/opt/conda/envs/sarek-2.5dev/share/genesplicer-1.0-1/human,context=200,tmpdir=\$PWD/${reducedVCF}" : "--offline"
+    genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/sarek-${workflow.manifest.version}/bin/genesplicer,/opt/conda/envs/sarek-${workflow.manifest.version}/share/genesplicer-1.0-1/human,context=200,tmpdir=\$PWD/${reducedVCF}" : "--offline"
     """
     mkdir ${reducedVCF}
 
@@ -2158,7 +2162,7 @@ process VEPmerge {
     genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
     dir_cache = (params.vep_cache && params.annotation_cache) ? " \${PWD}/${dataDir}" : "/.vep"
     cadd = (params.cadd_cache && params.cadd_WG_SNVs && params.cadd_InDels) ? "--plugin CADD,whole_genome_SNVs.tsv.gz,InDels.tsv.gz" : ""
-    genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/sarek-2.5dev/bin/genesplicer,/opt/conda/envs/sarek-2.5dev/share/genesplicer-1.0-1/human,context=200,tmpdir=\$PWD/${reducedVCF}" : "--offline"
+    genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/sarek-${workflow.manifest.version}/bin/genesplicer,/opt/conda/envs/sarek-${workflow.manifest.version}/share/genesplicer-1.0-1/human,context=200,tmpdir=\$PWD/${reducedVCF}" : "--offline"
     """
     mkdir ${reducedVCF}
 

@@ -81,7 +81,8 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#24](https://github.com/nf-core/sarek/pull/24) - iGenomes config now contains germline resource for GATK4 Mutect2
 - [#30](https://github.com/nf-core/sarek/pull/30) - Simplify code for `MapReads` process
 - [#31](https://github.com/nf-core/sarek/pull/31) - Move extra CI to GitHub Actions nf-core extra CI
-- [#32](https://github.com/nf-core/sarek/pull/32) - Install `ASCAT` with `conda` in the `environment.yml` file
+- [#32](https://github.com/nf-core/sarek/pull/32), [#33](https://github.com/nf-core/sarek/pull/33) - Install `ASCAT` with `conda` in the `environment.yml` file
+- [#33](https://github.com/nf-core/sarek/pull/33) - use workflow.manifest.version to specify workflow version in path to R scripts for control-FREEC and VEP processes
 
 ### `Removed`
 
@@ -108,6 +109,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#30](https://github.com/nf-core/sarek/pull/30) - fix choice between `inputPairReadsFastQC` and `inputBAMFastQC` channels
 - [#31](https://github.com/nf-core/sarek/pull/31) - Fix badges according to nf-core lint
 - [#31](https://github.com/nf-core/sarek/pull/31) - Fix rcolorbrewer version according to nf-core lint
+- [#33](https://github.com/nf-core/sarek/pull/33) - Fix MD Linting
 
 ## [2.3.FIX1] - 2019-03-04
 
