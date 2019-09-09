@@ -1072,6 +1072,42 @@ bamMpileup = bamMpileup.spread(intMpileup)
 // intervals for Mutect2 calls, FreeBayes and pileups for Mutect2 filtering
 (pairBamMutect2, pairBamFreeBayes, pairBamPileupSummaries) = intervalPairBam.into(3)
 
+// STEP FREEBAYES
+
+process FreeBayes {
+    tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
+    label 'cpus_1'
+
+    input:
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamFreeBayes
+        file(genomeFile) from Channel.value(referenceMap.genomeFile)
+        file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
+
+    output:
+        set val("FreeBayes"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into vcfFreeBayes
+
+    when: 'freebayes' in tools
+
+    script:
+    """
+    freebayes \
+        -f ${genomeFile} \
+        --pooled-continuous \
+        --pooled-discrete \
+        --genotype-qualities \
+        --report-genotype-likelihood-max \
+        --allele-balance-priors-off \
+        --min-alternate-fraction 0.03 \
+        --min-repeat-entropy 1 \
+        --min-alternate-count 2 \
+        -t ${intervalBed} \
+        ${bamTumor} \
+        ${bamNormal} > ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
+    """
+}
+
+vcfFreeBayes = vcfFreeBayes.groupTuple(by:[0,1,2])
+
 // STEP GATK MUTECT2
 
 process Mutect2 {
@@ -1164,40 +1200,6 @@ process MergeMutect2Stats {
             -O ${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.stats
     """
 }
-
-process FreeBayes {
-    tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
-    label 'cpus_1'
-
-    input:
-        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamFreeBayes
-        file(genomeFile) from Channel.value(referenceMap.genomeFile)
-        file(genomeIndex) from Channel.value(referenceMap.genomeIndex)
-
-    output:
-        set val("FreeBayes"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into vcfFreeBayes
-
-    when: 'freebayes' in tools
-
-    script:
-    """
-    freebayes \
-        -f ${genomeFile} \
-        --pooled-continuous \
-        --pooled-discrete \
-        --genotype-qualities \
-        --report-genotype-likelihood-max \
-        --allele-balance-priors-off \
-        --min-alternate-fraction 0.03 \
-        --min-repeat-entropy 1 \
-        --min-alternate-count 2 \
-        -t ${intervalBed} \
-        ${bamTumor} \
-        ${bamNormal} > ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
-    """
-}
-
-vcfFreeBayes = vcfFreeBayes.groupTuple(by:[0,1,2])
 
 // we are merging the VCFs that are called separatelly for different intervals
 // so we can have a single sorted VCF containing all the calls for a given caller
