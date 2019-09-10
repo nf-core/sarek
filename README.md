@@ -6,8 +6,9 @@
 [![nf-core](https://img.shields.io/badge/nf--core-pipeline-brightgreen.svg)](https://nf-co.re/)
 
 [![Travis build status](https://img.shields.io/travis/nf-core/sarek.svg)](https://travis-ci.com/nf-core/sarek/)
-[![GitHub Actions CI Status](https://github.com/nf-core/sarek/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/sarek/actions)
-[![GitHub Actions Linting Status](https://github.com/nf-core/sarek/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/sarek/actions)
+[![GitHub Actions CI Status](https://github.com/nf-core/sarek/workflows/sarek%20CI/badge.svg)](https://github.com/nf-core/sarek/actions)
+[![GitHub Actions extra CI Status](https://github.com/nf-core/sarek/workflows/sarek%20extra%20CI/badge.svg)](https://github.com/nf-core/sarek/actions)
+[![GitHub Actions Linting Status](https://github.com/nf-core/sarek/workflows/sarek%20linting/badge.svg)](https://github.com/nf-core/sarek/actions)
 [![CircleCi build status](https://img.shields.io/circleci/project/github/nf-core/sarek.svg)](https://circleci.com/gh/nf-core/sarek/)
 
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](http://bioconda.github.io/)

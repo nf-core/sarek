@@ -1,4 +1,4 @@
-name: nf-core CI
+name: sarek CI
 # This workflow is triggered on pushes and PRs to the repository.
 on: [push, pull_request]  
 
