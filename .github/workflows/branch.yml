@@ -1,4 +1,4 @@
-name: nf-core branch protection
+name: sarek branch protection
 # This workflow is triggered on PRs to master branch on the repository
 on:
   pull_request:
