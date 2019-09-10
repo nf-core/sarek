@@ -1,4 +1,4 @@
-name: nf-core linting
+name: sarek linting
 # This workflow is triggered on pushes and PRs to the repository.
 on: [push, pull_request]  
 
