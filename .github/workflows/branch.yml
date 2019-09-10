@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # PRs are only ok if coming from an nf-core dev branch
+      - uses: actions/checkout@v1
       - name: Check PRs
         run: |
           [[ $(git remote get-url origin) == *nf-core/sarek ]] && [ ${GITHUB_BASE_REF} = "master" ] && [ ${GITHUB_HEAD_REF} = "dev" ]
