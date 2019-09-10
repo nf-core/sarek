@@ -37,17 +37,11 @@ normalcounts = read.table(normalac, header=F, sep="\t")
 SNPpos = matrix(nrow = dim(normalcounts)[1],ncol = 2)
 
 rownames(SNPpos) = paste("snp",1:dim(SNPpos)[1],sep="")
-
-#Change rownames to "chr_pos" instead, such as 1_44552
-#This does not exactly work:
-#rownames(SNPpos) = apply(cbind(tumorcounts[,1], tumorcounts[,2]), 1, paste, collapse="_")
-#This is for compatibility with gc correction file
-
 colnames(SNPpos) = c("Chr","Position")
 SNPpos[,1] = as.vector(normalcounts[,1])
 SNPpos[,2] = normalcounts[,2]
 
-#Caclulate BAF
+
 Tumor_BAF = matrix(nrow = dim(normalcounts)[1],ncol = 1)
 rownames(Tumor_BAF) = rownames(SNPpos)
 colnames(Tumor_BAF) = c(tumorid)
@@ -75,14 +69,20 @@ rownames(Germline_LogR) = rownames(SNPpos)
 colnames(Germline_LogR) = c(normalid)
 Tumor_LogR[,1] = log(tumorcounts[,7]/normalcounts[,7],2)
 Germline_LogR[,1] = 0
-Tumor_LogR[is.infinite(Tumor_LogR)]=NA
+
+Tumor_LogR[! is.finite(Tumor_LogR)]=NA # infinite = coverage in normal only, NaN = no coverage in tumour or normal
+
 if(gender=="XY") {
     Tumor_LogR[SNPpos[,1]=="X",1] = Tumor_LogR[SNPpos[,1]=="X",1]-1
     Germline_LogR[SNPpos[,1]=="X",1] = Germline_LogR[SNPpos[,1]=="X",1]-1
+    Tumor_LogR[SNPpos[,1]=="Y",1] = Tumor_LogR[SNPpos[,1]=="Y",1]-1
+    Germline_LogR[SNPpos[,1]=="Y",1] = Germline_LogR[SNPpos[,1]=="Y",1]-1
 }
+
 Tumor_LogR[,1] = Tumor_LogR[,1] - median(Tumor_LogR[,1],na.rm=T)
+
 # set regions with 0 reads in tumor and normal to a LogR of 0.
-Tumor_LogR[is.na(Tumor_LogR[,1]),1] = 0
+#Tumor_LogR[is.na(Tumor_LogR[,1]),1] = 0 removed in updated version 20190910!
 
 # limit the number of digits:
 Tumor_LogR = round(Tumor_LogR,4)
