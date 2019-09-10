@@ -11,9 +11,13 @@
   * [Reproducibility](#reproducibility)
 * [Main arguments](#main-arguments)
   * [`-profile`](#-profile)
+  * [`--input`](#--input)
   * [`--sample`](#--sample)
+  * [`--sampleDir`](#--sampledir)
+  * [`--annotateVCF`](#--annotatevcf)
   * [`--noGVCF`](#--nogvcf)
   * [`--skipQC`](#--skipqc)
+  * [`--noReports`](#--noreports)
   * [`--nucleotidesPerSecond`](#--nucleotidespersecond)
   * [`--step`](#--step)
   * [`--tools`](#--tools)
@@ -28,6 +32,9 @@
   * [`--chrLength`](#--chrlength)
   * [`--dbsnp`](#--dbsnp)
   * [`--dbsnpIndex`](#--dbsnpindex)
+  * [`--dict`](#--dict)
+  * [`--fasta`](#--fasta)
+  * [`--fastaFai`](#--fastafai)
   * [`--genomeDict`](#--genomedict)
   * [`--genomeFile`](#--genomefile)
   * [`--genomeIndex`](#--genomeindex)
@@ -82,7 +89,7 @@ NXF_OPTS='-Xms1g -Xmx4g'
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/sarek --sample sample.tsv -profile docker
+nextflow run nf-core/sarek --input sample.tsv -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile.
@@ -147,7 +154,37 @@ If `-profile` is not specified at all the pipeline will be run locally and expec
   * A profile with a complete configuration for automated testing
   * Includes links to test data so needs no other parameters
 
+### `--input`
+
+Use this to specify the location of your input TSV file, on `mapping`, `recalibrate` and `variantcalling` steps.
+For example:
+
+```bash
+--input sample.tsv
+```
+
+Multiple TSV files can be specified if the path must be enclosed in quotes
+
+Use this to specify the location to a directory on `mapping` step with a single germline sample only.
+For example:
+
+```bash
+--input PathToDirectory
+```
+
+Use this to specify the location of your VCF input file on `annotate` step.
+For example:
+
+```bash
+--input sample.vcf
+```
+
+Multiple VCF files can be specified if the path must be enclosed in quotes
+
 ### `--sample`
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--input`](#--input)
 
 Use this to specify the location of your input TSV file, on `mapping`, `recalibrate` and `variantcalling` steps.
 For example:
@@ -174,6 +211,32 @@ For example:
 
 Multiple VCF files can be specified if the path must be enclosed in quotes
 
+### `--sampleDir`
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--input`](#--input)
+
+Use this to specify the location to a directory on `mapping` step with a single germline sample only.
+For example:
+
+```bash
+--sampleDir PathToDirectory
+```
+
+### `--annotateVCF`
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--input`](#--input)
+
+Use this to specify the location of your VCF input file on `annotate` step.
+For example:
+
+```bash
+--annotateVCF sample.vcf
+```
+
+Multiple VCF files can be specified if the path must be enclosed in quotes
+
 ### `--noGVCF`
 
 Use this to disable g.vcf from `HaplotypeCaller`.
@@ -183,6 +246,13 @@ Use this to disable g.vcf from `HaplotypeCaller`.
 Use this to disable specific QC and Reporting tools.
 Available: `all`, `bamQC`, `BCFtools`, `FastQC`, `MultiQC`, `samtools`, `vcftools`, `versions`
 Default: `None`
+
+### `--noReports`
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--skipQC`](#--skipQC)
+
+Use this to disable all QC and Reporting tools.
 
 ### `--nucleotidesPerSecond`
 
@@ -238,9 +308,9 @@ params {
       bwaIndex         = '<path to the bwa indexes>'
       dbsnp            = '<path to the dbsnp file>'
       dbsnpIndex       = '<path to the dbsnp index>'
-      genomeDict       = '<path to the genomeDict file>'
-      genomeFile       = '<path to the genome file>'
-      genomeIndex      = '<path to the genome Index>'
+      dict             = '<path to the dict file>'
+      fasta            = '<path to the fasta file>'
+      fastaFai         = '<path to the fasta index>'
       intervals        = '<path to the intervals file>'
       knownIndels      = '<path to the knownIndels file>'
       knownIndelsIndex = '<path to the knownIndels index>'
@@ -308,28 +378,61 @@ If you prefer, you can specify the full path to your reference genome when you r
 --dbsnpIndex '[path to the dbsnp index]'
 ```
 
-### `--genomeDict`
+### `--dict`
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---genomeDict '[path to the genomeDict file]'
+--dict '[path to the dict file]'
+```
+
+### `--fasta`
+
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--fasta '[path to the reference fasta file]'
+```
+
+### `--fastaFai`
+
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--fastaFai '[path to the reference index]'
+```
+
+### `--genomeDict`
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--dict`](#--dict)
+
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--dict '[path to the dict file]'
 ```
 
 ### `--genomeFile`
 
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--fasta`](#--fasta)
+
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---genomeFile '[path to the genome file]'
+--fasta '[path to the reference fasta file]'
 ```
 
 ### `--genomeIndex`
 
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--fastaFai`](#--fastaFai)
+
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---genomeIndex '[path to the genome Index]'
+--fastaFai '[path to the reference index]'
 ```
 
 ### `--germlineResource`

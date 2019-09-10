@@ -186,9 +186,6 @@ process DecompressFile {
 ch_decompressedFiles = ch_decompressedFiles.dump(tag:'DecompressedFile')
 
 ch_fastaFile = Channel.create()
-ch_fastaForBWA = Channel.create()
-ch_fastaReference = Channel.create()
-ch_fastaForSAMTools = Channel.create()
 ch_otherFile = Channel.create()
 ch_vcfFile = Channel.create()
 

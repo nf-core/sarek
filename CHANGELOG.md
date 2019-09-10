@@ -43,17 +43,17 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#21](https://github.com/nf-core/sarek/pull/21) - Add tests for latest Nextflow version as well
 - [#21](https://github.com/nf-core/sarek/pull/21) - Add `genomes.config` for genomes without AWS iGenomes
 - [#24](https://github.com/nf-core/sarek/pull/24) - Added GATK4 Mutect2 calling and filtering
-- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Use Github actions for CI
+- [#27](https://github.com/nf-core/sarek/pull/27), [#30](https://github.com/nf-core/sarek/pull/30) - Use Github actions for CI, linting and branch protection
 - [#31](https://github.com/nf-core/sarek/pull/31) - Add nf-core lint
 - [#31](https://github.com/nf-core/sarek/pull/31) - Add extra CI to GitHub Actions nf-core extra CI
 
 ### `Changed`
 
-- [#1](https://github.com/nf-core/sarek/pull/1), [#2](https://github.com/nf-core/sarek/pull/2), [#3](https://github.com/nf-core/sarek/pull/3), [#4](https://github.com/nf-core/sarek/pull/4), [#5](https://github.com/nf-core/sarek/pull/5), [#6](https://github.com/nf-core/sarek/pull/6), [#7](https://github.com/nf-core/sarek/pull/7), [#8](https://github.com/nf-core/sarek/pull/8), [#9](https://github.com/nf-core/sarek/pull/9), [#10](https://github.com/nf-core/sarek/pull/10), [#11](https://github.com/nf-core/sarek/pull/11), [#12](https://github.com/nf-core/sarek/pull/12), [#18](https://github.com/nf-core/sarek/pull/18), [#20](https://github.com/nf-core/sarek/pull/20), [#21](https://github.com/nf-core/sarek/pull/21), [#29](https://github.com/nf-core/sarek/pull/29) - Update docs
+- [#1](https://github.com/nf-core/sarek/pull/1), [#2](https://github.com/nf-core/sarek/pull/2), [#3](https://github.com/nf-core/sarek/pull/3), [#4](https://github.com/nf-core/sarek/pull/4), [#5](https://github.com/nf-core/sarek/pull/5), [#6](https://github.com/nf-core/sarek/pull/6), [#7](https://github.com/nf-core/sarek/pull/7), [#8](https://github.com/nf-core/sarek/pull/8), [#9](https://github.com/nf-core/sarek/pull/9), [#10](https://github.com/nf-core/sarek/pull/10), [#11](https://github.com/nf-core/sarek/pull/11), [#12](https://github.com/nf-core/sarek/pull/12), [#18](https://github.com/nf-core/sarek/pull/18), [#20](https://github.com/nf-core/sarek/pull/20), [#21](https://github.com/nf-core/sarek/pull/21), [#23](https://github.com/nf-core/sarek/pull/23), [#29](https://github.com/nf-core/sarek/pull/29) - Update docs
 - [#4](https://github.com/nf-core/sarek/pull/4) - Update `cancerit-allelecount` from `2.1.2` to `4.0.2`
 - [#4](https://github.com/nf-core/sarek/pull/4) - Update `gatk4` from `4.1.1.0` to `4.1.2.0`
-- [#7](https://github.com/nf-core/sarek/pull/7) - `--sampleDir` is now deprecated, use `--sample` instead
-- [#7](https://github.com/nf-core/sarek/pull/8) - `--annotateVCF` is now deprecated, use `--sample` instead
+- [#7](https://github.com/nf-core/sarek/pull/7), [#23](https://github.com/nf-core/sarek/pull/23) - `--sampleDir` is now deprecated, use `--input` instead
+- [#7](https://github.com/nf-core/sarek/pull/8), [#23](https://github.com/nf-core/sarek/pull/23) - `--annotateVCF` is now deprecated, use `--input` instead
 - [#8](https://github.com/nf-core/sarek/pull/8), [#12](https://github.com/nf-core/sarek/pull/12) - Improve helper script `build.nf` for downloading and building reference files
 - [#9](https://github.com/nf-core/sarek/pull/9) - ApplyBQSR is now parallelized
 - [#9](https://github.com/nf-core/sarek/pull/9) - Fastq files are named following "${idRun}_R1.fastq.gz" in the FastQC output for easier reporting
@@ -73,6 +73,13 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#18](https://github.com/nf-core/sarek/pull/18), [#29](https://github.com/nf-core/sarek/pull/29) - `--noReports` is now `--skipQC all`
 - [#18](https://github.com/nf-core/sarek/pull/18), [#21](https://github.com/nf-core/sarek/pull/21) - Update logo
 - [#21](https://github.com/nf-core/sarek/pull/21) - Moved smallGRCh37 path to `genomes.config`
+- [#23](https://github.com/nf-core/sarek/pull/23) - Rename `genomeFile`, `genomeIndex` and  `genomeDict` by `fasta`, `fastaFai` and `dict`
+- [#23](https://github.com/nf-core/sarek/pull/23) - `--sample` is now deprecated, use `--input` instead
+- [#23](https://github.com/nf-core/sarek/pull/23) - `--genomeFile` is now deprecated, use `--fasta` instead
+- [#23](https://github.com/nf-core/sarek/pull/23) - `--genomeIndex` is now deprecated, use `--fastaFai` instead
+- [#23](https://github.com/nf-core/sarek/pull/23) - `--genomeDict` is now deprecated, use `--dict` instead
+- [#24](https://github.com/nf-core/sarek/pull/24) - iGenomes config now contains germline resource for GATK4 Mutect2
+- [#30](https://github.com/nf-core/sarek/pull/30) - Simplify code for `MapReads` process
 - [#24](https://github.com/nf-core/sarek/pull/24) - iGenomes config now contains germline resource for `GATK4 Mutect2`
 - [#31](https://github.com/nf-core/sarek/pull/31) - Move extra CI to GitHub Actions nf-core extra CI
 - [#32](https://github.com/nf-core/sarek/pull/32), [#33](https://github.com/nf-core/sarek/pull/33) - Install `ASCAT` with `conda` in the `environment.yml` file
@@ -91,7 +98,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 ### `Fixed`
 
 - [#3](https://github.com/nf-core/sarek/pull/3) - Fix Docker ownership
-- [#11](https://github.com/nf-core/sarek/pull/11) - Fix MergeMpileup PublishDir
+- [#11](https://github.com/nf-core/sarek/pull/11) - Fix `MergeMpileup` PublishDir
 - [#13](https://github.com/nf-core/sarek/pull/13) - Fix merge in annotation
 - [#14](https://github.com/nf-core/sarek/pull/14) - Fix output name for vcf files
 - [#16](https://github.com/nf-core/sarek/pull/16) - Fix path to Rscript
@@ -99,10 +106,19 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#18](https://github.com/nf-core/sarek/pull/18) - Use same font for nf-core and sarek in ascii art
 - [#20](https://github.com/nf-core/sarek/pull/20) - Use new logo in README
 - [#20](https://github.com/nf-core/sarek/pull/20) - Fix path to references genomes
-- [#22](https://github.com/nf-core/sarek/pull/22) - Fix --singleCPUMem issue
+- [#22](https://github.com/nf-core/sarek/pull/22) - Fix `--singleCPUMem` issue
+- [#30](https://github.com/nf-core/sarek/pull/30) - fix choice between `inputPairReadsFastQC` and `inputBAMFastQC` channels
 - [#31](https://github.com/nf-core/sarek/pull/31) - Fix badges according to nf-core lint
 - [#31](https://github.com/nf-core/sarek/pull/31) - Fix rcolorbrewer version according to nf-core lint
 - [#33](https://github.com/nf-core/sarek/pull/33) - Fix MD Linting
+
+### `Deprecated`
+
+- [#23](https://github.com/nf-core/sarek/pull/23) - `--sample` is now deprecated, use `--input` instead
+- [#23](https://github.com/nf-core/sarek/pull/23) - `--genomeFile` is now deprecated, use `--fasta` instead
+- [#23](https://github.com/nf-core/sarek/pull/23) - `--genomeIndex` is now deprecated, use `--fastaFai` instead
+- [#23](https://github.com/nf-core/sarek/pull/23) - `--genomeDict` is now deprecated, use `--dict` instead
+- [#29](https://github.com/nf-core/sarek/pull/29) - `--noReports` is now deprecated, use `--skipQC all`
 
 ## [2.3.FIX1] - 2019-03-04
 
