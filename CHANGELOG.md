@@ -83,6 +83,14 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#31](https://github.com/nf-core/sarek/pull/31) - Move extra CI to GitHub Actions nf-core extra CI
 - [#32](https://github.com/nf-core/sarek/pull/32), [#33](https://github.com/nf-core/sarek/pull/33) - Install `ASCAT` with `conda` in the `environment.yml` file
 - [#33](https://github.com/nf-core/sarek/pull/33) - use workflow.manifest.version to specify workflow version in path to R scripts for control-FREEC and VEP processes
+- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Update `control-freec` from `11.4` to `11.5`
+- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Update `ensembl-vep` from `95.2` to `97.3`
+- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Update `freebayes` from `1.2.0` to `1.3.1`
+- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Update `gatk4` from `4.1.2.0` to `4.1.3.0`
+- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Update `igvtools` from `2.3.93` to `2.5.3`
+- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Update `manta` from `1.5.0` to `1.6.0`
+- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Update `qualimap` from `2.2.2b` to `2.2.2c`
+- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Update `vcfanno` from `0.3.1` to `0.3.2`
 
 ### `Removed`
 
