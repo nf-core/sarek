@@ -28,6 +28,8 @@
   * [`--acLoci`](#--acloci)
   * [`--acLociGC`](#--aclocigc)
   * [`--bwaIndex`](#--bwaindex)
+  * [`--chrDir`](#--chrdir)
+  * [`--chrLength`](#--chrlength)
   * [`--dbsnp`](#--dbsnp)
   * [`--dbsnpIndex`](#--dbsnpindex)
   * [`--dict`](#--dict)
@@ -342,6 +344,22 @@ If you prefer, you can specify the full path to your reference genome when you r
 
 ```bash
 --bwaIndex '[path to the bwa indexes]'
+```
+
+### `--chrDir`
+
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--chrDir '[path to the Chromosomes folder]'
+```
+
+### `--chrLength`
+
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--chrLength '[path to the Chromosomes length file]'
 ```
 
 ### `--dbsnp`
