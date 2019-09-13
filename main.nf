@@ -43,7 +43,8 @@ def helpMessage() {
         --genome                    Name of iGenomes reference
         --noGVCF                    No g.vcf output from HaplotypeCaller
         --noStrelkaBP               Will not use Manta candidateSmallIndels for Strelka as Best Practice
-        --nucleotidesPerSecond      To estimate interval size by default 1000.0
+        --nucleotidesPerSecond      To estimate interval size
+                                    Default: 1000.0
         --targetBED                 Target BED file for targeted or whole exome sequencing
         --step                      Specify starting step
                                     Available: Mapping, Recalibrate, VariantCalling, Annotate
@@ -102,20 +103,24 @@ def helpMessage() {
 // Show help message
 if (params.help) exit 0, helpMessage()
 
-// Handle deprecation
+// Default value for params
+
+// Set deprecated params to null
 params.noReports = null
-if (params.noReports) log.warn "The params `--noReports` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--skipQC"
 params.annotateVCF = null
-if (params.annotateVCF) log.warn "The params `--annotateVCF` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--input"
 params.genomeDict = null
-if (params.genomeDict) log.warn "The params `--genomeDict` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--dict"
 params.genomeFile = null
-if (params.genomeFile) log.warn "The params `--genomeFile` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--fasta"
 params.genomeIndex = null
-if (params.genomeIndex) log.warn "The params `--genomeIndex` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--fastaFai"
 params.sample = null
-if (params.sample) log.warn "The params `--sample` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--input"
 params.sampleDir = null
+
+// Print warning message
+if (params.noReports) log.warn "The params `--noReports` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--skipQC"
+if (params.annotateVCF) log.warn "The params `--annotateVCF` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--input"
+if (params.genomeDict) log.warn "The params `--genomeDict` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--dict"
+if (params.genomeFile) log.warn "The params `--genomeFile` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--fasta"
+if (params.genomeIndex) log.warn "The params `--genomeIndex` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--fastaFai"
+if (params.sample) log.warn "The params `--sample` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--input"
 if (params.sampleDir) log.warn "The params `--sampleDir` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--input"
 
 // Check if genome exists in the config file
@@ -123,21 +128,71 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
 }
 
-// Default value for params
+// Should be set up in the configs?
+// params.email = null
+// params.hostnames = null
+// params.markdup_java_options = null
+// params.max_cpus = null
+// params.max_memory = null
+// params.maxMultiqcEmailFileSize = null
+// params.max_time = null
+// params.monochrome_logs = null
+// params.name = null
+// params.outdir = null
+// params.plaintext_email = null
+// params.monochrome_logs = null
+
+// Decide what will happen in sarek
+// Which tools to annotate with --step annotate
 params.annotateTools = null
-params.annotation_cache = null
-params.cadd_cache = null
-params.genesplicer = null
-params.input = null
-params.monochrome_logs = null
-params.multiqc_config = null
+// No g.vcf produced
 params.noGVCF = null
+// Strelka will not use Manta candidateSmallIndels
 params.noStrelkaBP = null
-params.nucleotidesPerSecond = 1000.0
-params.sequencing_center = null
+// Which QC tools not to use
 params.skipQC = null
+// Which step to begin with
 params.step = 'mapping'
+// Which tools to use
 params.tools = null
+// What is the input
+params.input = null
+
+// Use annotation cache
+params.annotation_cache = null
+// Use cadd cache
+params.cadd_cache = null
+// Use genesplicer
+params.genesplicer = null
+// Specify a multiqc config
+params.multiqc_config = null
+// Estimate interval size
+params.nucleotidesPerSecond = 1000.0
+// Specify PublishDirMode
+params.publishDirMode = 'copy'
+// Enable Saving Indexes 
+params.saveGenomeIndex = null
+// Specify a sequencing center to be writen in BAM header in MapReads process
+params.sequencing_center = null
+
+// Initialize each params in params.genomes, catch the command line first if it was defined
+params.acLoci = params.genome ? params.genomes[params.genome].acLoci ?: null : null
+params.acLociGC = params.genome ? params.genomes[params.genome].acLociGC ?: null : null
+params.bwaIndex = params.genome && 'mapping' in step ? params.genomes[params.genome].bwa ?: null : null
+params.chrDir = params.genome ? params.genomes[params.genome].chrDir ?: null : null
+params.chrLength = params.genome  ? params.genomes[params.genome].chrLength ?: null : null
+params.dbsnp = params.genome && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools) ? params.genomes[params.genome].dbsnp ?: null : null
+params.dbsnpIndex = params.genome ? params.genomes[params.genome].dbsnpIndex ?: null : null
+params.dict = params.genome ? params.genomes[params.genome].dict ?: null : null
+params.fasta = params.genome && !('annotate' in step) ? params.genomes[params.genome].fasta ?: null : null
+params.fastaFai = params.genome ? params.genomes[params.genome].fastaFai ?: null : null
+params.germlineResource = params.genome && 'mutect2' in tools ? params.genomes[params.genome].germlineResource ?: null : null
+params.germlineResourceIndex = params.genome ? params.genomes[params.genome].germlineResourceIndex ?: null : null
+params.intervals = params.genome && !('annotate' in step) ? params.genomes[params.genome].intervals ?: null : null
+params.knownIndels = params.genome && 'mapping' in step ? params.genomes[params.genome].knownIndels ?: null : null
+params.knownIndelsIndex = params.genome ? params.genomes[params.genome].knownIndelsIndex ?: null : null
+params.snpeffDb = params.genome ? params.genomes[params.genome].snpeffDb ?: null : null
+params.vepCacheVersion = params.genome ? params.genomes[params.genome].vepCacheVersion ?: null : null
 
 // PON optionnal file for GATK Mutect2 Panel of Normal
 params.pon = false
@@ -241,26 +296,7 @@ if (tsvPath) {
 ================================================================================
 */
 
-// Initialize params, in case they were not define on the command line
-params.acLoci = params.genome ? params.genomes[params.genome].acLoci ?: null : null
-params.acLociGC = params.genome ? params.genomes[params.genome].acLociGC ?: null : null
-params.bwaIndex = params.genome && 'mapping' in step ? params.genomes[params.genome].bwa ?: null : null
-params.chrDir = params.genome ? params.genomes[params.genome].chrDir ?: null : null
-params.chrLength = params.genome  ? params.genomes[params.genome].chrLength ?: null : null
-params.dbsnp = params.genome && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools) ? params.genomes[params.genome].dbsnp ?: null : null
-params.dbsnpIndex = params.genome ? params.genomes[params.genome].dbsnpIndex ?: null : null
-params.dict = params.genome ? params.genomes[params.genome].dict ?: null : null
-params.fasta = params.genome && !('annotate' in step) ? params.genomes[params.genome].fasta ?: null : null
-params.fastaFai = params.genome ? params.genomes[params.genome].fastaFai ?: null : null
-params.germlineResource = params.genome && 'mutect2' in tools ? params.genomes[params.genome].germlineResource ?: null : null
-params.germlineResourceIndex = params.genome ? params.genomes[params.genome].germlineResourceIndex ?: null : null
-params.intervals = params.genome && !('annotate' in step) ? params.genomes[params.genome].intervals ?: null : null
-params.knownIndels = params.genome && 'mapping' in step ? params.genomes[params.genome].knownIndels ?: null : null
-params.knownIndelsIndex = params.genome ? params.genomes[params.genome].knownIndelsIndex ?: null : null
-params.snpeffDb = params.genome ? params.genomes[params.genome].snpeffDb ?: null : null
-params.vepCacheVersion = params.genome ? params.genomes[params.genome].vepCacheVersion ?: null : null
-
-// Initialize channels based on these params
+// Initialize channels based on params
 ch_acLoci = params.acLoci ? Channel.value(file(params.acLoci)) : "null"
 ch_acLociGC = params.acLociGC ? Channel.value(file(params.acLociGC)) : "null"
 ch_chrDir = params.chrDir ? Channel.value(file(params.chrDir)) : "null"
@@ -2370,8 +2406,6 @@ multiQCReport = Channel.empty()
         snpeffReport,
         vcftoolsReport
     ).collect()
-
-Channel.fromPath(params.multiqc_config)
 
 process MultiQC {
     publishDir "${params.outdir}/Reports/MultiQC", mode: params.publishDirMode
