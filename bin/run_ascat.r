@@ -20,11 +20,20 @@ if(!require(RColorBrewer)){
     source("http://bioconductor.org/biocLite.R")
     biocLite("RColorBrewer", suppressUpdates=TRUE, lib="$baseDir/scripts")
     library(RColorBrewer)
-}
+}ls
 options(bitmapType='cairo')
 
 #Load the  data
-ascat.bc <- ascat.loadData(Tumor_LogR_file=tumorlogr, Tumor_BAF_file=tumorbaf, Germline_LogR_file=normallogr, Germline_BAF_file=normalbaf, chrs = c(1:22,"X","Y"), gender = gender, sexchromosomes = c("X", "Y"))
+#ascat.bc <- ascat.loadData(Tumor_LogR_file=tumorlogr, Tumor_BAF_file=tumorbaf, Germline_LogR_file=normallogr, Germline_BAF_file=normalbaf, chrs = c(1:22,"X","Y"), gender = gender, sexchromosomes = c("X", "Y"))
+
+if(gender=="XY"){
+    ascat.bc = ascat.loadData(Tumor_LogR_file = tumorlogr, Tumor_BAF_file = tumorbaf, Germline_LogR_file = normallogr, Germline_BAF_file = normalbaf, gender = gender, chrs = c(1:22,"X","Y"), sexchromosomes = c("X","Y"))
+} else {
+    ascat.bc = ascat.loadData(Tumor_LogR_file = tumorlogr, Tumor_BAF_file = tumorbaf, Germline_LogR_file = normallogr, Germline_BAF_file = normalbaf, gender = gender, chrs = c(1:22,"X"), sexchromosomes = c("X"))
+
+}
+
+
 
 #GC wave correction
 ascat.bc = ascat.GCcorrect(ascat.bc, gcfile)
