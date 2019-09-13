@@ -17,7 +17,6 @@ dependencies:
   - gatk4=4.1.3.0
   - genesplicer=1.0
   - htslib=1.9
-  - igvtools=2.5.3
   - manta=1.6.0
   - multiqc=1.7
   - qualimap=2.2.2c

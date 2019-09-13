@@ -11,12 +11,6 @@ pipeline {
                  sh "./scripts/download_image.sh -n docker -t ALL -T dev -g smallGRCh37"
             }
         }
-        stage('Build references') {
-            steps {
-                sh "rm -rf references/"
-                sh "./scripts/build_reference.sh"
-            }
-        }
         stage('Germline') {
             steps {
                 sh "rm -rf data/"

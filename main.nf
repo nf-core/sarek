@@ -126,10 +126,6 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
 // Default value for params
 params.annotateTools = null
 params.annotation_cache = null
-params.cadd_InDels = null
-params.cadd_InDels_tbi = null
-params.cadd_WG_SNVs = null
-params.cadd_WG_SNVs_tbi = null
 params.cadd_cache = null
 params.genesplicer = null
 params.input = null
@@ -138,13 +134,25 @@ params.multiqc_config = null
 params.noGVCF = null
 params.noStrelkaBP = null
 params.nucleotidesPerSecond = 1000.0
-params.pon = null
 params.sequencing_center = null
 params.skipQC = null
-params.snpEff_cache = null
 params.step = 'mapping'
-params.targetBED = null
 params.tools = null
+
+// PON optionnal file for GATK Mutect2 Panel of Normal
+params.pon = false
+
+// TargetBED optionnal file for targeted sequencing
+params.targetBED = false
+
+// Optionnal CADD files
+params.cadd_InDels = false
+params.cadd_InDels_tbi = false
+params.cadd_WG_SNVs = false
+params.cadd_WG_SNVs_tbi = false
+
+// Optionnal directories for cache
+params.snpEff_cache = null
 params.vep_cache = null
 
 stepList = defineStepList()
@@ -167,9 +175,6 @@ if (params.noReports) skipQC = skipQClist
 annoList = defineAnnoList()
 annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
 if (!checkParameterList(annotateTools,annoList)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
-
-referenceMap = defineReferenceMap(step, tools)
-if (!checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
 
 // Has the run name been specified by the user?
 // This has the bonus effect of catching both -name and --name
@@ -230,39 +235,225 @@ if (tsvPath) {
 
 (genderMap, statusMap, inputSample) = extractInfos(inputSample)
 
+/*
+================================================================================
+                               CHECKING REFERENCES
+================================================================================
+*/
+
+// Initialize params, in case they were not define on the command line
+params.acLoci = params.genome ? params.genomes[params.genome].acLoci ?: null : null
+params.acLociGC = params.genome ? params.genomes[params.genome].acLociGC ?: null : null
+params.bwaIndex = params.genome && 'mapping' in step ? params.genomes[params.genome].bwa ?: null : null
+params.chrDir = params.genome ? params.genomes[params.genome].chrDir ?: null : null
+params.chrLength = params.genome  ? params.genomes[params.genome].chrLength ?: null : null
+params.dbsnp = params.genome && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools) ? params.genomes[params.genome].dbsnp ?: null : null
+params.dbsnpIndex = params.genome ? params.genomes[params.genome].dbsnpIndex ?: null : null
+params.dict = params.genome ? params.genomes[params.genome].dict ?: null : null
+params.fasta = params.genome && !('annotate' in step) ? params.genomes[params.genome].fasta ?: null : null
+params.fastaFai = params.genome ? params.genomes[params.genome].fastaFai ?: null : null
+params.germlineResource = params.genome && 'mutect2' in tools ? params.genomes[params.genome].germlineResource ?: null : null
+params.germlineResourceIndex = params.genome ? params.genomes[params.genome].germlineResourceIndex ?: null : null
+params.intervals = params.genome && !('annotate' in step) ? params.genomes[params.genome].intervals ?: null : null
+params.knownIndels = params.genome && 'mapping' in step ? params.genomes[params.genome].knownIndels ?: null : null
+params.knownIndelsIndex = params.genome ? params.genomes[params.genome].knownIndelsIndex ?: null : null
+params.snpeffDb = params.genome ? params.genomes[params.genome].snpeffDb ?: null : null
+params.vepCacheVersion = params.genome ? params.genomes[params.genome].vepCacheVersion ?: null : null
+
+// Initialize channels based on these params
+ch_acLoci = params.acLoci ? Channel.value(file(params.acLoci)) : "null"
+ch_acLociGC = params.acLociGC ? Channel.value(file(params.acLociGC)) : "null"
+ch_chrDir = params.chrDir ? Channel.value(file(params.chrDir)) : "null"
+ch_chrLength = params.chrLength ? Channel.value(file(params.chrLength)) : "null"
+ch_dbsnp = params.dbsnp ? Channel.value(file(params.dbsnp)) : "null"
+ch_fasta = params.fasta ? Channel.value(file(params.fasta)) : "null"
+ch_fastaFai = params.fastaFai ? Channel.value(file(params.fastaFai)) : "null"
+ch_germlineResource = params.germlineResource ? Channel.value(file(params.germlineResource)) : "null"
+ch_intervals = params.intervals ? Channel.value(file(params.intervals)) : "null"
+
+// knownIndels is a list of file, so transform it in a channel
+li_knownIndels = []
+if (params.knownIndels && ('mapping' in step)) params.knownIndels.each { li_knownIndels.add(file(it)) }
+ch_knownIndels = params.knownIndels ? Channel.value(li_knownIndels.collect()) : "null"
+
+ch_snpEff_cache = params.snpEff_cache ? Channel.value(file(params.snpEff_cache)) : "null"
+ch_snpeffDb = params.snpeffDb ? Channel.value(params.snpeffDb) : "null"
+ch_vepCacheVersion = params.vepCacheVersion ? Channel.value(params.vepCacheVersion) : "null"
+ch_vep_cache = params.vep_cache ? Channel.value(file(params.vep_cache)) : "null"
+
+// Optionnal files, not defined within the params.genomes[params.genome] scope
+ch_cadd_InDels = params.cadd_InDels ? Channel.value(file(params.cadd_InDels)) : "null"
+ch_cadd_InDels_tbi = params.cadd_InDels_tbi ? Channel.value(file(params.cadd_InDels_tbi)) : "null"
+ch_cadd_WG_SNVs = params.cadd_WG_SNVs ? Channel.value(file(params.cadd_WG_SNVs)) : "null"
+ch_cadd_WG_SNVs_tbi = params.cadd_WG_SNVs_tbi ? Channel.value(file(params.cadd_WG_SNVs_tbi)) : "null"
+ch_pon = params.pon ? Channel.value(file(params.pon)) : "null"
+ch_targetBED = params.targetBED ? Channel.value(file(params.targetBED)) : "null"
+
+process BuildBWAindexes {
+  tag {fasta}
+
+  publishDir params.outdir, mode: params.publishDirMode,
+    saveAs: {params.saveGenomeIndex ? "reference_genome/BWAIndex/${it}" : null }
+
+  input:
+    file(fasta) from ch_fasta
+
+  output:
+    file("${fasta}.*") into bwaIndexes
+
+  when: !(params.bwaIndex) && params.fasta && 'mapping' in step
+  script:
+  """
+  bwa index ${fasta}
+  """
+}
+
+process BuildDict {
+  tag {fasta}
+
+  publishDir params.outdir, mode: params.publishDirMode,
+    saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
+
+  input:
+    file(fasta) from ch_fasta
+
+  output:
+    file("${fasta.baseName}.dict") into dictBuilt
+
+  when: !(params.dict) && params.fasta && !('annotate' in step)
+  script:
+  """
+  gatk --java-options "-Xmx${task.memory.toGiga()}g" \
+  CreateSequenceDictionary \
+  --REFERENCE ${fasta} \
+  --OUTPUT ${fasta.baseName}.dict
+  """
+}
+
+process BuildFastaFai {
+  tag {fasta}
+
+  publishDir params.outdir, mode: params.publishDirMode,
+    saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
+
+  input:
+    file(fasta) from ch_fasta
+
+  output:
+    file("${fasta}.fai") into fastaFaiBuilt
+
+  when: !(params.fastaFai) && params.fasta && !('annotate' in step)
+  script:
+  """
+  samtools faidx ${fasta}
+  """
+}
+
+process BuildDbsnpIndex {
+  tag {dbsnp}
+
+  publishDir params.outdir, mode: params.publishDirMode,
+    saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
+
+  input:
+    file(dbsnp) from ch_dbsnp
+
+  output:
+    file("${dbsnp}.tbi") into dbsnpIndexBuilt
+
+  when: !(params.dbsnpIndex) && params.dbsnp && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools)
+  script:
+  """
+  tabix -p vcf ${dbsnp}
+  """
+}
+
+process BuildGermlineResourceIndex {
+  tag {germlineResource}
+
+  publishDir params.outdir, mode: params.publishDirMode,
+    saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
+
+  input:
+    file(germlineResource) from ch_germlineResource
+
+  output:
+    file("${germlineResource}.tbi") into germlineResourceIndexBuilt
+
+  when: !(params.germlineResourceIndex) && params.germlineResource && 'mutect2' in tools
+  script:
+  """
+  tabix -p vcf ${germlineResource}
+  """
+}
+
+process BuildKnownIndelsIndex {
+  tag {knownIndels}
+
+  publishDir params.outdir, mode: params.publishDirMode,
+    saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
+
+  input:
+    each file(knownIndels) from ch_knownIndels
+
+  output:
+    file("${knownIndels}.tbi") into knownIndelsIndexBuilt
+
+  when: !(params.knownIndelsIndex) && params.knownIndels && 'mapping' in step
+  script:
+  """
+  tabix -p vcf ${knownIndels}
+  """
+}
+
+// Initialize channels based on params or indexes that were just built
+ch_bwaIndex = params.bwaIndex ? Channel.value(file(params.bwaIndex)) : bwaIndexes
+ch_dbsnpIndex = params.dbsnpIndex ? Channel.value(file(params.dbsnpIndex)) : dbsnpIndexBuilt
+ch_dict = params.dict ? Channel.value(file(params.dict)) : dictBuilt
+ch_fastaFai = params.fastaFai ? Channel.value(file(params.fastaFai)) : fastaFaiBuilt
+ch_germlineResourceIndex = params.germlineResourceIndex ? Channel.value(file(params.germlineResourceIndex)) : germlineResourceIndexBuilt
+ch_knownIndelsIndex = params.knownIndelsIndex ? Channel.value(file(params.knownIndelsIndex)) : knownIndelsIndexBuilt.collect()
+
+/*
+================================================================================
+                                PRINTING SUMMARY
+================================================================================
+*/
+
 // Header log info
 log.info nfcoreHeader()
 def summary = [:]
-if (workflow.revision)          summary['Pipeline Release']   = workflow.revision
-summary['Run Name']         = custom_runName ?: workflow.runName
-summary['Max Resources']    = "${params.max_memory} memory, ${params.max_cpus} cpus, ${params.max_time} time per job"
-if (workflow.containerEngine)   summary['Container']        = "${workflow.containerEngine} - ${workflow.container}"
-if (params.input)               summary['Input']            = params.input
-if (params.targetBED)           summary['Target BED']       = params.targetBED
-if (params.step)                summary['Step']             = params.step
-if (params.tools)               summary['Tools']            = tools.join(', ')
-if (params.skipQC)              summary['QC tools skip']    = skipQC.join(', ')
-if (params.noGVCF)              summary['No GVCF']          = params.noGVCF
-if (params.noStrelkaBP)         summary['No Strelka BP']    = params.noStrelkaBP
-if (params.sequencing_center)   summary['Sequenced by ']    = params.sequencing_center
-if (params.pon)                 summary['Panel of normals ']  = params.pon
-summary['Nucleotides/s']    = params.nucleotidesPerSecond
-summary['Output dir']       = params.outdir
-summary['Launch dir']       = workflow.launchDir
-summary['Working dir']      = workflow.workDir
-summary['Script dir']       = workflow.projectDir
-summary['User']             = workflow.userName
+if (workflow.revision)          summary['Pipeline Release']    = workflow.revision
+summary['Run Name']          = custom_runName ?: workflow.runName
+summary['Max Resources']     = "${params.max_memory} memory, ${params.max_cpus} cpus, ${params.max_time} time per job"
+if (workflow.containerEngine)   summary['Container']         = "${workflow.containerEngine} - ${workflow.container}"
+if (params.input)               summary['Input']             = params.input
+if (params.targetBED)           summary['Target BED']        = params.targetBED
+if (params.step)                summary['Step']              = params.step
+if (params.tools)               summary['Tools']             = tools.join(', ')
+if (params.skipQC)              summary['QC tools skip']     = skipQC.join(', ')
+if (params.noGVCF)              summary['No GVCF']           = params.noGVCF
+if (params.noStrelkaBP)         summary['No Strelka BP']     = params.noStrelkaBP
+if (params.sequencing_center)   summary['Sequenced by ']     = params.sequencing_center
+if (params.pon)                 summary['Panel of normals '] = params.pon
+summary['Save Genome Index'] = params.saveGenomeIndex ? 'Yes' : 'No'
+summary['Nucleotides/s']     = params.nucleotidesPerSecond
+summary['Output dir']        = params.outdir
+summary['Launch dir']        = workflow.launchDir
+summary['Working dir']       = workflow.workDir
+summary['Script dir']        = workflow.projectDir
+summary['User']              = workflow.userName
 if (workflow.profile == 'awsbatch') {
-    summary['AWS Region']       = params.awsregion
-    summary['AWS Queue']        = params.awsqueue
+    summary['AWS Region']        = params.awsregion
+    summary['AWS Queue']         = params.awsqueue
 }
 summary['Config Profile'] = workflow.profile
-if (params.config_profile_description)  summary['Config Description'] = params.config_profile_description
-if (params.config_profile_contact)      summary['Config Contact']     = params.config_profile_contact
-if (params.config_profile_url)          summary['Config URL']         = params.config_profile_url
+if (params.config_profile_description)  summary['Config Description']  = params.config_profile_description
+if (params.config_profile_contact)      summary['Config Contact']      = params.config_profile_contact
+if (params.config_profile_url)          summary['Config URL']          = params.config_profile_url
 if (params.email) {
-    summary['E-mail Address']       = params.email
-    summary['MultiQC maxsize']      = params.maxMultiqcEmailFileSize
+    summary['E-mail Address']        = params.email
+    summary['MultiQC maxsize']       = params.maxMultiqcEmailFileSize
 }
 log.info summary.collect { k, v -> "${k.padRight(18)}: $v" }.join("\n")
 if (params.monochrome_logs) log.info "----------------------------------------------------"
@@ -322,7 +513,7 @@ process CreateIntervalBeds {
     tag {intervals.fileName}
 
     input:
-        file(intervals) from Channel.value(referenceMap.intervals)
+        file(intervals) from ch_intervals
 
     output:
         file '*.bed' into bedIntervals mode flatten
@@ -461,7 +652,8 @@ process MapReads {
 
     input:
         set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from inputReads
-        set file(fasta), file(bwaIndex) from Channel.value([referenceMap.fasta, referenceMap.bwaIndex])
+        file(bwaIndex) from ch_bwaIndex
+        file(fasta) from ch_fasta
 
     output:
         set idPatient, idSample, idRun, file("${idRun}.bam") into bamMapped
@@ -584,15 +776,13 @@ process BaseRecalibrator {
 
     input:
         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamBaseRecalibrator
-        set file(fasta), file(fastaFai), file(dict), file(dbsnp), file(dbsnpIndex), file(knownIndels), file(knownIndelsIndex) from Channel.value([
-            referenceMap.fasta,
-            referenceMap.fastaFai,
-            referenceMap.dict,
-            referenceMap.dbsnp,
-            referenceMap.dbsnpIndex,
-            referenceMap.knownIndels,
-            referenceMap.knownIndelsIndex
-        ])
+        file(dbsnp) from ch_dbsnp
+        file(dbsnpIndex) from ch_dbsnpIndex
+        file(dict) from ch_dict
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
+        file(knownIndels) from ch_knownIndels
+        file(knownIndelsIndex) from ch_knownIndelsIndex
 
     output:
         set idPatient, idSample, file("${intervalBed.baseName}_${idSample}.recal.table") into tableGatherBQSRReports
@@ -629,11 +819,11 @@ process GatherBQSRReports {
     publishDir "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked", mode: params.publishDirMode, overwrite: false
 
     input:
-    set idPatient, idSample, file(recal) from tableGatherBQSRReports
+        set idPatient, idSample, file(recal) from tableGatherBQSRReports
 
     output:
-    set idPatient, idSample, file("${idSample}.recal.table") into recalTable
-    set idPatient, idSample, val("${idSample}.md.bam"), val("${idSample}.md.bai"), val("${idSample}.recal.table") into (recalTableTSV, recalTableSampleTSV)
+        set idPatient, idSample, file("${idSample}.recal.table") into recalTable
+        set idPatient, idSample, val("${idSample}.md.bam"), val("${idSample}.md.bai"), val("${idSample}.recal.table") into (recalTableTSV, recalTableSampleTSV)
 
     when: step == 'mapping'
 
@@ -682,11 +872,9 @@ process ApplyBQSR {
 
     input:
         set idPatient, idSample, file(bam), file(bai), file(recalibrationReport), file(intervalBed) from bamApplyBQSR
-        set file(fasta), file(fastaFai), file(dict)from Channel.value([
-            referenceMap.fasta,
-            referenceMap.fastaFai,
-            referenceMap.dict
-        ])
+        file(dict) from ch_dict
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
 
     output:
         set idPatient, idSample, file("${intervalBed.baseName}_${idSample}.recal.bam") into bamMergeBamRecal
@@ -757,10 +945,10 @@ process SamtoolsStats {
     publishDir "${params.outdir}/Reports/${idSample}/SamToolsStats", mode: params.publishDirMode
 
     input:
-    set idPatient, idSample, file(bam), file(bai) from bamRecalSamToolsStats
+        set idPatient, idSample, file(bam), file(bai) from bamRecalSamToolsStats
 
     output:
-    file ("${bam}.samtools.stats.out") into samtoolsStatsReport
+        file ("${bam}.samtools.stats.out") into samtoolsStatsReport
 
     when: !('samtools' in skipQC)
 
@@ -786,7 +974,7 @@ process BamQC {
 
     input:
         set idPatient, idSample, file(bam) from bamBamQC
-        file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
+        file(targetBED) from ch_targetBED
 
     output:
         file("${bam.baseName}") into bamQCReport
@@ -844,13 +1032,11 @@ process HaplotypeCaller {
 
     input:
         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamHaplotypeCaller
-        set file(fasta), file(fastaFai), file(dict), file(dbsnp), file(dbsnpIndex) from Channel.value([
-            referenceMap.fasta,
-            referenceMap.fastaFai,
-            referenceMap.dict,
-            referenceMap.dbsnp,
-            referenceMap.dbsnpIndex
-        ])
+        file(dbsnp) from ch_dbsnp
+        file(dbsnpIndex) from ch_dbsnpIndex
+        file(dict) from ch_dict
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
 
     output:
         set val("HaplotypeCallerGVCF"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf") into gvcfHaplotypeCaller
@@ -883,13 +1069,11 @@ process GenotypeGVCFs {
 
     input:
         set idPatient, idSample, file(intervalBed), file(gvcf) from gvcfGenotypeGVCFs
-        set file(fasta), file(fastaFai), file(dict), file(dbsnp), file(dbsnpIndex) from Channel.value([
-            referenceMap.fasta,
-            referenceMap.fastaFai,
-            referenceMap.dict,
-            referenceMap.dbsnp,
-            referenceMap.dbsnpIndex
-        ])
+        file(dbsnp) from ch_dbsnp
+        file(dbsnpIndex) from ch_dbsnpIndex
+        file(dict) from ch_dict
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
 
     output:
     set val("HaplotypeCaller"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into vcfGenotypeGVCFs
@@ -926,11 +1110,9 @@ process StrelkaSingle {
 
     input:
         set idPatient, idSample, file(bam), file(bai) from bamStrelkaSingle
-        file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
-        set file(fasta), file(fastaFai) from Channel.value([
-            referenceMap.fasta,
-            referenceMap.fastaFai
-        ])
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
+        file(targetBED) from ch_targetBED
 
     output:
         set val("Strelka"), idPatient, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfStrelkaSingle
@@ -975,11 +1157,9 @@ process MantaSingle {
 
     input:
         set idPatient, idSample, file(bam), file(bai) from bamMantaSingle
-        file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
-        set file(fasta), file(fastaFai) from Channel.value([
-            referenceMap.fasta,
-            referenceMap.fastaFai
-        ])
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
+        file(targetBED) from ch_targetBED
 
     output:
         set val("Manta"), idPatient, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfMantaSingle
@@ -1034,10 +1214,8 @@ process TIDDIT {
 
     input:
         set idPatient, idSample, file(bam), file(bai) from bamTIDDIT
-        set file(fasta), file(fastaFai) from Channel.value([
-            referenceMap.fasta,
-            referenceMap.fastaFai
-        ])
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
 
     output:
         set val("TIDDIT"), idPatient, idSample, file("*.vcf.gz"), file("*.tbi") into vcfTIDDIT
@@ -1104,10 +1282,8 @@ process FreeBayes {
 
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamFreeBayes
-        set file(fasta), file(fastaFai) from Channel.value([
-            referenceMap.fasta,
-            referenceMap.fastaFai
-        ])
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
 
     output:
         set val("FreeBayes"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into vcfFreeBayes
@@ -1142,14 +1318,13 @@ process Mutect2 {
 
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamMutect2
-        set file(fasta), file(fastaFai), file(dict), file(intervals), file(germlineResource), file(germlineResourceIndex) from Channel.value([
-            referenceMap.fasta,
-            referenceMap.fastaFai,
-            referenceMap.dict,
-            referenceMap.intervals,
-            referenceMap.germlineResource,
-            referenceMap.germlineResourceIndex
-        ])
+        file(dict) from ch_dict
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
+        file(germlineResource) from ch_germlineResource
+        file(germlineResourceIndex) from ch_germlineResourceIndex
+        file(intervals) from ch_intervals
+        file(pon) from ch_pon
 
     output:
         set val("Mutect2"), 
@@ -1166,7 +1341,7 @@ process Mutect2 {
     script:
     // please make a panel-of-normals, using at least 40 samples
     // https://gatkforums.broadinstitute.org/gatk/discussion/11136/how-to-call-somatic-mutations-using-gatk4-mutect2
-    PON = params.pon ? "--panel-of-normals $params.pon" : ""
+    PON = params.pon ? "--panel-of-normals ${pon}" : ""
 
     """
     # Get raw calls
@@ -1195,22 +1370,14 @@ process MergeMutect2Stats {
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Mutect2", mode: params.publishDirMode
 
     input:
-    set caller,
-        idPatient,
-        idSampleTumor_vs_idSampleNormal,
-        file(vcfFiles) from mutect2OutForStats  // corresponding small VCF chunks
-    set idPatient,
-        idSampleTumor,
-        idSampleNormal,
-        file(statsFiles) from mutect2Stats      // the actual stats files
-    set file(fasta), file(fastaFai), file(dict), file(intervals), file(germlineResource), file(germlineResourceIndex) from Channel.value([
-        referenceMap.fasta,
-        referenceMap.fastaFai,
-        referenceMap.dict,
-        referenceMap.intervals,
-        referenceMap.germlineResource,
-        referenceMap.germlineResourceIndex
-      ])
+        set caller, idPatient, idSampleTumor_vs_idSampleNormal, file(vcfFiles) from mutect2OutForStats // corresponding small VCF chunks
+        set idPatient, idSampleTumor, idSampleNormal, file(statsFiles) from mutect2Stats               // the actual stats files
+        file(dict) from ch_dict
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
+        file(germlineResource) from ch_germlineResource
+        file(germlineResourceIndex) from ch_germlineResourceIndex
+        file(intervals) from ch_intervals
 
     output:
         file("${idSampleTumor_vs_idSampleNormal}.vcf.gz.stats") into mergedStatsFile
@@ -1243,8 +1410,8 @@ process ConcatVCF {
 
     input:
         set variantCaller, idPatient, idSample, file(vcFiles) from vcfConcatenateVCFs
-        file(fastaFai) from Channel.value(referenceMap.fastaFai)
-        file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
+        file(fastaFai) from ch_fastaFai
+        file(targetBED) from ch_targetBED
 
     output:
     // we have this funny *_* pattern to avoid copying the raw calls to publishdir
@@ -1276,14 +1443,9 @@ process PileupSummariesForMutect2 {
 
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamPileupSummaries 
-        set file(germlineResource), file(germlineResourceIndex) from Channel.value([
-            referenceMap.germlineResource,
-            referenceMap.germlineResourceIndex
-            ])
-        set idPatient,
-            idSampleNormal,
-            idSampleTumor,
-            file(statsFile) from intervalStatsFiles
+        set idPatient, idSampleNormal, idSampleTumor, file(statsFile) from intervalStatsFiles
+        file(germlineResource) from ch_germlineResource
+        file(germlineResourceIndex) from ch_germlineResourceIndex
 
     output:
         set idPatient,
@@ -1314,7 +1476,7 @@ process MergePileupSummaries {
 
     input:
         set idPatient, idSampleTumor, file(pileupSums) from pileupSummaries
-        file(dict) from Channel.value([referenceMap.dict])
+        file(dict) from ch_dict
 
     output:
         file("${idSampleTumor}_pileupsummaries.table.tsv") into mergedPileupFile
@@ -1363,26 +1525,18 @@ process FilterMutect2Calls {
     publishDir "${params.outdir}/VariantCalling/${idSampleTN}/${"$variantCaller"}", mode: params.publishDirMode
 
     input:
-        set variantCaller, 
-            idPatient, 
-            idSampleTN, 
-            file(unfiltered), 
-            file(unfilteredIndex) from vcfConcatenatedForFilter
-        set file(fasta), file(fastaFai), file(dict), file(intervals), file(germlineResource), file(germlineResourceIndex) from Channel.value([
-            referenceMap.fasta,
-            referenceMap.fastaFai,
-            referenceMap.dict,
-            referenceMap.intervals,
-            referenceMap.germlineResource,
-            referenceMap.germlineResourceIndex
-            ])
+        set variantCaller, idPatient, idSampleTN, file(unfiltered), file(unfilteredIndex) from vcfConcatenatedForFilter
         file("${idSampleTN}.vcf.gz.stats") from mergedStatsFile
         file("${idSampleTN}_contamination.table") from contaminationTable
-  
+        file(dict) from ch_dict
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
+        file(germlineResource) from ch_germlineResource
+        file(germlineResourceIndex) from ch_germlineResourceIndex
+        file(intervals) from ch_intervals
+        
     output:
-        set val("Mutect2"),
-            idPatient,
-            idSampleTN,
+        set val("Mutect2"), idPatient, idSampleTN,
             file("filtered_${variantCaller}_${idSampleTN}.vcf.gz"),
             file("filtered_${variantCaller}_${idSampleTN}.vcf.gz.tbi"),
             file("filtered_${variantCaller}_${idSampleTN}.vcf.gz.filteringStats.tsv") into filteredMutect2Output
@@ -1414,12 +1568,10 @@ process Strelka {
 
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamStrelka
-        file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
-        set file(fasta), file(fastaFai), file(dict) from Channel.value([
-            referenceMap.fasta,
-            referenceMap.fastaFai,
-            referenceMap.dict
-        ])
+        file(dict) from ch_dict
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
+        file(targetBED) from ch_targetBED
 
     output:
         set val("Strelka"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfStrelka
@@ -1465,11 +1617,9 @@ process Manta {
 
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamManta
-        file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
-        set file(fasta), file(fastaFai) from Channel.value([
-            referenceMap.fasta,
-            referenceMap.fastaFai
-        ])
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
+        file(targetBED) from ch_targetBED
 
     output:
         set val("Manta"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfManta
@@ -1533,12 +1683,10 @@ process StrelkaBP {
 
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(mantaCSI), file(mantaCSIi) from pairBamStrelkaBP
-        file(targetBED) from Channel.value(params.targetBED ? file(params.targetBED) : "null")
-        set file(fasta), file(fastaFai), file(dict) from Channel.value([
-            referenceMap.fasta,
-            referenceMap.fastaFai,
-            referenceMap.dict
-        ])
+        file(dict) from ch_dict
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
+        file(targetBED) from ch_targetBED
 
     output:
         set val("Strelka"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfStrelkaBP
@@ -1584,12 +1732,10 @@ process AlleleCounter {
 
     input:
         set idPatient, idSample, file(bam), file(bai) from bamAscat
-        set file(acLoci), file(fasta), file(fastaFai), file(dict) from Channel.value([
-            referenceMap.acLoci,
-            referenceMap.fasta,
-            referenceMap.fastaFai,
-            referenceMap.dict
-        ])
+        file(acLoci) from ch_acLoci
+        file(dict) from ch_dict
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
 
     output:
         set idPatient, idSample, file("${idSample}.alleleCount") into alleleCounterOut
@@ -1659,7 +1805,7 @@ process Ascat {
 
     input:
         set idPatient, idSampleNormal, idSampleTumor, file(bafNormal), file(logrNormal), file(bafTumor), file(logrTumor) from convertAlleleCountsOut
-        file(acLociGC) from Channel.value([referenceMap.acLociGC])
+        file(acLociGC) from ch_acLociGC
 
     output:
         set val("ASCAT"), idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.*.{png,txt}") into ascatOut
@@ -1685,10 +1831,8 @@ process Mpileup {
 
     input:
         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamMpileup
-        set file(fasta), file(fastaFai) from Channel.value([
-            referenceMap.fasta,
-            referenceMap.fastaFai
-        ])
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
 
     output:
         set idPatient, idSample, file("${intervalBed.baseName}_${idSample}.pileup.gz") into mpileupMerge
@@ -1760,14 +1904,12 @@ process ControlFREEC {
 
     input:
         set idPatient, idSampleNormal, idSampleTumor, file(mpileupNormal), file(mpileupTumor) from mpileupOut
-        set file(fasta), file(fastaFai), file(dbsnp), file(dbsnpIndex), file(chrDir), file(chrLength) from Channel.value([
-            referenceMap.fasta,
-            referenceMap.fastaFai,
-            referenceMap.dbsnp,
-            referenceMap.dbsnpIndex,
-            referenceMap.chrDir,
-            referenceMap.chrLength
-        ])
+        file(chrDir) from ch_chrDir
+        file(chrLength) from ch_chrLength
+        file(dbsnp) from ch_dbsnp
+        file(dbsnpIndex) from ch_dbsnpIndex
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
 
     output:
         set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.pileup.gz_CNVs"), file("${idSampleTumor}.pileup.gz_ratio.txt"), file("${idSampleTumor}.pileup.gz_normal_CNVs"), file("${idSampleTumor}.pileup.gz_normal_ratio.txt"), file("${idSampleTumor}.pileup.gz_BAF.txt"), file("${idSampleNormal}.pileup.gz_BAF.txt") into controlFreecViz
@@ -1782,8 +1924,8 @@ process ControlFREEC {
     touch ${config}
     echo "[general]" >> ${config}
     echo "BedGraphOutput = TRUE" >> ${config}
-    echo "chrFiles = \${PWD}/${referenceMap.chrDir.fileName}" >> ${config}
-    echo "chrLenFile = \${PWD}/${referenceMap.chrLength.fileName}" >> ${config}
+    echo "chrFiles = \${PWD}/${chrDir.fileName}" >> ${config}
+    echo "chrLenFile = \${PWD}/${chrLength.fileName}" >> ${config}
     echo "coefficientOfVariation = 0.05" >> ${config}
     echo "contaminationAdjustment = TRUE" >> ${config}
     echo "forceGCcontentNormalization = 0" >> ${config}
@@ -1807,7 +1949,7 @@ process ControlFREEC {
     echo "" >> ${config}
 
     echo "[BAF]" >> ${config}
-    echo "SNPfile = ${referenceMap.dbsnp.fileName}" >> ${config}
+    echo "SNPfile = ${dbsnp.fileName}" >> ${config}
 
     freec -conf ${config}
     """
@@ -1825,10 +1967,10 @@ process ControlFreecViz {
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/controlFREEC", mode: params.publishDirMode
 
     input:
-    set idPatient, idSampleNormal, idSampleTumor, file(cnvTumor), file(ratioTumor), file(cnvNormal), file(ratioNormal), file(bafTumor), file(bafNormal) from controlFreecViz
+        set idPatient, idSampleNormal, idSampleTumor, file(cnvTumor), file(ratioTumor), file(cnvNormal), file(ratioNormal), file(bafTumor), file(bafNormal) from controlFreecViz
 
     output:
-    set file("*.txt"), file("*.png"), file("*.bed") into controlFreecVizOut
+        set file("*.txt"), file("*.png"), file("*.bed") into controlFreecVizOut
 
     when: 'controlfreec' in tools
 
@@ -2012,8 +2154,8 @@ process Snpeff {
 
     input:
         set variantCaller, idSample, file(vcf) from vcfSnpeff
-        file dataDir from Channel.value(params.snpEff_cache ? file(params.snpEff_cache) : "null")
-        val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
+        file(dataDir) from ch_snpEff_cache
+        val snpeffDb from ch_snpeffDb
 
     output:
         set file("${reducedVCF}_snpEff.txt"), file("${reducedVCF}_snpEff.html"), file("${reducedVCF}_snpEff.csv") into snpeffReport
@@ -2079,14 +2221,12 @@ process VEP {
 
     input:
         set variantCaller, idSample, file(vcf), file(idx) from vcfVep
-        file dataDir from Channel.value(params.vep_cache ? file(params.vep_cache) : "null")
-        val cache_version from Channel.value(params.genomes[params.genome].vepCacheVersion)
-        set file(cadd_WG_SNVs), file(cadd_WG_SNVs_tbi), file(cadd_InDels), file(cadd_InDels_tbi) from Channel.value([
-            params.cadd_WG_SNVs ? file(params.cadd_WG_SNVs) : "null",
-            params.cadd_WG_SNVs_tbi ? file(params.cadd_WG_SNVs_tbi) : "null",
-            params.cadd_InDels ? file(params.cadd_InDels) : "null",
-            params.cadd_InDels_tbi ? file(params.cadd_InDels_tbi) : "null"
-        ])
+        file(dataDir) from ch_vep_cache
+        val cache_version from ch_vepCacheVersion
+        file(cadd_InDels) from ch_cadd_InDels
+        file(cadd_InDels_tbi) from ch_cadd_InDels_tbi
+        file(cadd_WG_SNVs) from ch_cadd_WG_SNVs
+        file(cadd_WG_SNVs_tbi) from ch_cadd_WG_SNVs_tbi
 
     output:
         set variantCaller, idSample, file("${reducedVCF}_VEP.ann.vcf") into vepVCF
@@ -2142,14 +2282,12 @@ process VEPmerge {
 
     input:
         set variantCaller, idSample, file(vcf), file(idx) from compressVCFsnpEffOut
-        file dataDir from Channel.value(params.vep_cache ? file(params.vep_cache) : "null")
-        val cache_version from Channel.value(params.genomes[params.genome].vepCacheVersion)
-        set file(cadd_WG_SNVs), file(cadd_WG_SNVs_tbi), file(cadd_InDels), file(cadd_InDels_tbi) from Channel.value([
-            params.cadd_WG_SNVs ? file(params.cadd_WG_SNVs) : "null",
-            params.cadd_WG_SNVs_tbi ? file(params.cadd_WG_SNVs_tbi) : "null",
-            params.cadd_InDels ? file(params.cadd_InDels) : "null",
-            params.cadd_InDels_tbi ? file(params.cadd_InDels_tbi) : "null"
-        ])
+        file(dataDir) from ch_vep_cache
+        val cache_version from ch_vepCacheVersion
+        file(cadd_InDels) from ch_cadd_InDels
+        file(cadd_InDels_tbi) from ch_cadd_InDels_tbi
+        file(cadd_WG_SNVs) from ch_cadd_WG_SNVs
+        file(cadd_WG_SNVs_tbi) from ch_cadd_WG_SNVs_tbi
 
     output:
         set variantCaller, idSample, file("${reducedVCF}_VEP.ann.vcf") into vepVCFmerge
@@ -2469,70 +2607,6 @@ def checkParamReturnFile(item) {
 
     params."${item}" = params.genomes[params.genome]."${item}"
     return file(params."${item}")
-}
-
-// Loop through all the references files to check their existence
-def checkRefExistence(referenceFile, fileToCheck) {
-    if (fileToCheck instanceof List) return fileToCheck.every{ checkRefExistence(referenceFile, it) }
-    def f = file(fileToCheck)
-    // this is an expanded wildcard: we can assume all files exist
-    if (f instanceof List && f.size() > 0) return true
-    else if (!f.exists()) {
-        println  "Missing references: ${referenceFile} ${fileToCheck}"
-        return false
-    }
-    return true
-}
-
-// Loop through all the references files to check their existence
-def checkReferenceMap(referenceMap) {
-    referenceMap.every {
-        referenceFile, fileToCheck ->
-        checkRefExistence(referenceFile, fileToCheck)
-    }
-}
-
-// Define map of reference depending of tools and step
-def defineReferenceMap(step, tools) {
-    def referenceMap = [
-        'dict'             : checkParamReturnFile("dict"),
-        'fasta'            : checkParamReturnFile("fasta"),
-        'fastaFai'         : checkParamReturnFile("fastaFai"),
-        'intervals'        : checkParamReturnFile("intervals")
-    ]
-    if ('mapping' in step) {
-        referenceMap.putAll(
-            'bwaIndex'         : checkParamReturnFile("bwaIndex"),
-            'knownIndels'      : checkParamReturnFile("knownIndels"),
-            'knownIndelsIndex' : checkParamReturnFile("knownIndelsIndex")
-        )
-    }
-    if ('controlfreec' in tools) {
-        referenceMap.putAll(
-            'chrDir'           : checkParamReturnFile("chrDir"),
-            'chrLength'        : checkParamReturnFile("chrLength")
-        )
-    }
-    if ('ascat' in tools) {
-        referenceMap.putAll(
-            'acLoci'           : checkParamReturnFile("acLoci"),
-            'acLociGC'         : checkParamReturnFile("acLociGC")
-        )
-    }
-    if ('mapping' in step || 'haplotypecaller' in tools || 'mutect2' in tools || 'controlfreec' in tools) {
-        referenceMap.putAll(
-            'dbsnp'            : checkParamReturnFile("dbsnp"),
-            'dbsnpIndex'       : checkParamReturnFile("dbsnpIndex")
-        )
-    }
-    if('mutect2' in tools ) {
-        referenceMap.putAll(
-            'germlineResource'            : checkParamReturnFile("germlineResource"),
-            'germlineResourceIndex'       : checkParamReturnFile("germlineResourceIndex")
-        )
-    }
-    if ('annotate' in step) return []
-    return referenceMap
 }
 
 // Define list of available tools to annotate

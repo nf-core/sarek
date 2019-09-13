@@ -19,9 +19,6 @@ jobs:
       - name: Download image
         run: |
           ${GITHUB_WORKSPACE}/scripts/download_image.sh -n docker --test ${{ matrix.test }}
-      - name: Build References
-        run: |
-          ${GITHUB_WORKSPACE}/scripts/build_reference.sh --test ${{ matrix.test }} --verbose
       - name: Run test
         run: |
           ${GITHUB_WORKSPACE}/scripts/run_tests.sh --test ${{ matrix.test }} --verbose
