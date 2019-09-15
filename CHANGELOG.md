@@ -93,7 +93,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#18](https://github.com/nf-core/sarek/pull/18) - Removed params `--noReports`
 - [#24](https://github.com/nf-core/sarek/pull/18) - Removed GATK3.X MuTect2
 - [#31](https://github.com/nf-core/sarek/pull/31) - Remove extra CI from Travis CI and GitHub Actions nf-core CI
-- [#32](https://github.com/nf-core/sarek/pull/32), [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Clean up `environment.yml` file
+- [#32](https://github.com/nf-core/sarek/pull/32), [#35](https://github.com/nf-core/sarek/pull/35) - Clean up `environment.yml` file
 
 ### `Fixed`
 
