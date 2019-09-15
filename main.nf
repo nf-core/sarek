@@ -158,6 +158,27 @@ params.tools = null
 // What is the input
 params.input = null
 
+stepList = defineStepList()
+step = params.step ? params.step.toLowerCase() : ''
+
+// Handle deprecation
+if (step == 'preprocessing') step = 'mapping'
+
+if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
+if (!checkParameterExistence(step, stepList)) exit 1, "Unknown step ${step}, see --help for more information"
+
+toolList = defineToolList()
+tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
+if (!checkParameterList(tools, toolList)) exit 1, 'Unknown tool(s), see --help for more information'
+
+skipQClist = defineSkipQClist()
+skipQC = params.skipQC ? params.skipQC == 'all' ? skipQClist : params.skipQC.split(',').collect{it.trim().toLowerCase()} : []
+if (!checkParameterList(skipQC, skipQClist)) exit 1, 'Unknown QC tool(s), see --help for more information'
+
+annoList = defineAnnoList()
+annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
+if (!checkParameterList(annotateTools,annoList)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
+
 // Use annotation cache
 params.annotation_cache = null
 // Use cadd cache
@@ -210,26 +231,8 @@ params.cadd_WG_SNVs_tbi = false
 params.snpEff_cache = null
 params.vep_cache = null
 
-stepList = defineStepList()
-step = params.step ? params.step.toLowerCase() : ''
-if (step == 'preprocessing') step = 'mapping'
-if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
-if (!checkParameterExistence(step, stepList)) exit 1, "Unknown step ${step}, see --help for more information"
-
-toolList = defineToolList()
-tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
-if (!checkParameterList(tools, toolList)) exit 1, 'Unknown tool(s), see --help for more information'
-
-skipQClist = defineSkipQClist()
-skipQC = params.skipQC ? params.skipQC == 'all' ? skipQClist : params.skipQC.split(',').collect{it.trim().toLowerCase()} : []
-if (!checkParameterList(skipQC, skipQClist)) exit 1, 'Unknown QC tool(s), see --help for more information'
-
 // Handle deprecation
 if (params.noReports) skipQC = skipQClist
-
-annoList = defineAnnoList()
-annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
-if (!checkParameterList(annotateTools,annoList)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
 
 // Has the run name been specified by the user?
 // This has the bonus effect of catching both -name and --name
@@ -297,15 +300,15 @@ if (tsvPath) {
 */
 
 // Initialize channels based on params
-ch_acLoci = params.acLoci ? Channel.value(file(params.acLoci)) : "null"
-ch_acLociGC = params.acLociGC ? Channel.value(file(params.acLociGC)) : "null"
-ch_chrDir = params.chrDir ? Channel.value(file(params.chrDir)) : "null"
-ch_chrLength = params.chrLength ? Channel.value(file(params.chrLength)) : "null"
-ch_dbsnp = params.dbsnp ? Channel.value(file(params.dbsnp)) : "null"
-ch_fasta = params.fasta ? Channel.value(file(params.fasta)) : "null"
-ch_fastaFai = params.fastaFai ? Channel.value(file(params.fastaFai)) : "null"
-ch_germlineResource = params.germlineResource ? Channel.value(file(params.germlineResource)) : "null"
-ch_intervals = params.intervals ? Channel.value(file(params.intervals)) : "null"
+ch_acLoci = params.acLoci && 'ascat' in tools ? Channel.value(file(params.acLoci)) : "null"
+ch_acLociGC = params.acLociGC && 'ascat' in tools ? Channel.value(file(params.acLociGC)) : "null"
+ch_chrDir = params.chrDir && 'controlfreec' in tools ? Channel.value(file(params.chrDir)) : "null"
+ch_chrLength = params.chrLength && 'controlfreec' in tools ? Channel.value(file(params.chrLength)) : "null"
+ch_dbsnp = params.dbsnp && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools) ? Channel.value(file(params.dbsnp)) : "null"
+ch_fasta = params.fasta && !('annotate' in step) ? Channel.value(file(params.fasta)) : "null"
+ch_fastaFai = params.fastaFai && !('annotate' in step) ? Channel.value(file(params.fastaFai)) : "null"
+ch_germlineResource = params.germlineResource && 'mutect2' in tools ? Channel.value(file(params.germlineResource)) : "null"
+ch_intervals = params.intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : "null"
 
 // knownIndels is a list of file, so transform it in a channel
 li_knownIndels = []
@@ -324,6 +327,113 @@ ch_cadd_WG_SNVs = params.cadd_WG_SNVs ? Channel.value(file(params.cadd_WG_SNVs))
 ch_cadd_WG_SNVs_tbi = params.cadd_WG_SNVs_tbi ? Channel.value(file(params.cadd_WG_SNVs_tbi)) : "null"
 ch_pon = params.pon ? Channel.value(file(params.pon)) : "null"
 ch_targetBED = params.targetBED ? Channel.value(file(params.targetBED)) : "null"
+
+/*
+================================================================================
+                                PRINTING SUMMARY
+================================================================================
+*/
+
+// Header log info
+log.info nfcoreHeader()
+def summary = [:]
+if (workflow.revision)          summary['Pipeline Release']    = workflow.revision
+summary['Run Name']          = custom_runName ?: workflow.runName
+summary['Max Resources']     = "${params.max_memory} memory, ${params.max_cpus} cpus, ${params.max_time} time per job"
+if (workflow.containerEngine)   summary['Container']         = "${workflow.containerEngine} - ${workflow.container}"
+if (params.input)               summary['Input']             = params.input
+if (params.targetBED)           summary['Target BED']        = params.targetBED
+if (params.step)                summary['Step']              = params.step
+if (params.tools)               summary['Tools']             = tools.join(', ')
+if (params.skipQC)              summary['QC tools skip']     = skipQC.join(', ')
+summary['GVCF']              = params.noGVCF ? 'No' : 'Yes'
+summary['Strelka BP']        = params.noStrelkaBP ? 'No' : 'Yes'
+if (params.sequencing_center)   summary['Sequenced by']      = params.sequencing_center
+if (params.pon)                 summary['Panel of normals']  = params.pon
+summary['Save Genome Index'] = params.saveGenomeIndex ? 'Yes' : 'No'
+summary['Nucleotides/s']     = params.nucleotidesPerSecond
+summary['Output dir']        = params.outdir
+summary['Launch dir']        = workflow.launchDir
+summary['Working dir']       = workflow.workDir
+summary['Script dir']        = workflow.projectDir
+summary['User']              = workflow.userName
+
+if (params.acLoci)              summary['acLoci']            = params.acLoci
+if (params.acLociGC)            summary['acLociGC']          = params.acLociGC
+if (params.chrDir)              summary['chrDir']            = params.chrDir
+if (params.chrLength)           summary['chrLength']         = params.chrLength
+if (params.dbsnp)               summary['dbsnp']             = params.dbsnp
+if (params.fasta)               summary['fasta']             = params.fasta
+if (params.germlineResource)    summary['germlineResource']  = params.germlineResource
+if (params.intervals)           summary['intervals']         = params.intervals
+if (params.knownIndels)         summary['knownIndels']       = params.knownIndels.join(', ')
+if (params.snpeffDb)            summary['snpeffDb']          = params.snpeffDb
+if (params.vepCacheVersion)     summary['vepCacheVersion']   = params.vepCacheVersion
+
+if (workflow.profile == 'awsbatch') {
+    summary['AWS Region']        = params.awsregion
+    summary['AWS Queue']         = params.awsqueue
+}
+summary['Config Profile'] = workflow.profile
+if (params.config_profile_description)  summary['Config Description']  = params.config_profile_description
+if (params.config_profile_contact)      summary['Config Contact']      = params.config_profile_contact
+if (params.config_profile_url)          summary['Config URL']          = params.config_profile_url
+if (params.email) {
+    summary['E-mail Address']        = params.email
+    summary['MultiQC maxsize']       = params.maxMultiqcEmailFileSize
+}
+log.info summary.collect { k, v -> "${k.padRight(18)}: $v" }.join("\n")
+if (params.monochrome_logs) log.info "----------------------------------------------------"
+else log.info "\033[2m----------------------------------------------------\033[0m"
+
+// Check the hostnames against configured profiles
+checkHostname()
+
+/*
+ * Parse software version numbers
+ */
+process GetSoftwareVersions {
+    publishDir path:"${params.outdir}/pipeline_info", mode: params.publishDirMode
+
+    output:
+        file 'software_versions_mqc.yaml' into yamlSoftwareVersion
+
+    when: !('versions' in skipQC)
+
+    script:
+    """
+    alleleCounter --version &> v_allelecount.txt  || true
+    bcftools version > v_bcftools.txt 2>&1 || true
+    bwa &> v_bwa.txt 2>&1 || true
+    configManta.py --version > v_manta.txt 2>&1 || true
+    configureStrelkaGermlineWorkflow.py --version > v_strelka.txt 2>&1 || true
+    echo "${workflow.manifest.version}" &> v_pipeline.txt 2>&1 || true
+    echo "${workflow.nextflow.version}" &> v_nextflow.txt 2>&1 || true
+    echo "SNPEFF version"\$(snpEff -h 2>&1) > v_snpeff.txt
+    fastqc --version > v_fastqc.txt 2>&1 || true
+    freebayes --version > v_freebayes.txt 2>&1 || true
+    gatk ApplyBQSR --help 2>&1 | grep Version: > v_gatk.txt 2>&1 || true
+    multiqc --version &> v_multiqc.txt 2>&1 || true
+    qualimap --version &> v_qualimap.txt 2>&1 || true
+    R --version &> v_r.txt  || true
+    R -e "library(ASCAT); help(package='ASCAT')" &> v_ascat.txt
+    samtools --version &> v_samtools.txt 2>&1 || true
+    tiddit &> v_tiddit.txt 2>&1 || true
+    vcftools --version &> v_vcftools.txt 2>&1 || true
+    vep --help &> v_vep.txt 2>&1 || true
+
+    scrape_software_versions.py &> software_versions_mqc.yaml
+    """
+}
+
+yamlSoftwareVersion = yamlSoftwareVersion.dump(tag:'SOFTWARE VERSIONS')
+
+/*
+================================================================================
+                                BUILDING INDEXES
+================================================================================
+*/
+
 
 process BuildBWAindexes {
   tag {fasta}
@@ -449,93 +559,6 @@ ch_dict = params.dict ? Channel.value(file(params.dict)) : dictBuilt
 ch_fastaFai = params.fastaFai ? Channel.value(file(params.fastaFai)) : fastaFaiBuilt
 ch_germlineResourceIndex = params.germlineResourceIndex ? Channel.value(file(params.germlineResourceIndex)) : germlineResourceIndexBuilt
 ch_knownIndelsIndex = params.knownIndelsIndex ? Channel.value(file(params.knownIndelsIndex)) : knownIndelsIndexBuilt.collect()
-
-/*
-================================================================================
-                                PRINTING SUMMARY
-================================================================================
-*/
-
-// Header log info
-log.info nfcoreHeader()
-def summary = [:]
-if (workflow.revision)          summary['Pipeline Release']    = workflow.revision
-summary['Run Name']          = custom_runName ?: workflow.runName
-summary['Max Resources']     = "${params.max_memory} memory, ${params.max_cpus} cpus, ${params.max_time} time per job"
-if (workflow.containerEngine)   summary['Container']         = "${workflow.containerEngine} - ${workflow.container}"
-if (params.input)               summary['Input']             = params.input
-if (params.targetBED)           summary['Target BED']        = params.targetBED
-if (params.step)                summary['Step']              = params.step
-if (params.tools)               summary['Tools']             = tools.join(', ')
-if (params.skipQC)              summary['QC tools skip']     = skipQC.join(', ')
-if (params.noGVCF)              summary['No GVCF']           = params.noGVCF
-if (params.noStrelkaBP)         summary['No Strelka BP']     = params.noStrelkaBP
-if (params.sequencing_center)   summary['Sequenced by ']     = params.sequencing_center
-if (params.pon)                 summary['Panel of normals '] = params.pon
-summary['Save Genome Index'] = params.saveGenomeIndex ? 'Yes' : 'No'
-summary['Nucleotides/s']     = params.nucleotidesPerSecond
-summary['Output dir']        = params.outdir
-summary['Launch dir']        = workflow.launchDir
-summary['Working dir']       = workflow.workDir
-summary['Script dir']        = workflow.projectDir
-summary['User']              = workflow.userName
-if (workflow.profile == 'awsbatch') {
-    summary['AWS Region']        = params.awsregion
-    summary['AWS Queue']         = params.awsqueue
-}
-summary['Config Profile'] = workflow.profile
-if (params.config_profile_description)  summary['Config Description']  = params.config_profile_description
-if (params.config_profile_contact)      summary['Config Contact']      = params.config_profile_contact
-if (params.config_profile_url)          summary['Config URL']          = params.config_profile_url
-if (params.email) {
-    summary['E-mail Address']        = params.email
-    summary['MultiQC maxsize']       = params.maxMultiqcEmailFileSize
-}
-log.info summary.collect { k, v -> "${k.padRight(18)}: $v" }.join("\n")
-if (params.monochrome_logs) log.info "----------------------------------------------------"
-else log.info "\033[2m----------------------------------------------------\033[0m"
-
-// Check the hostnames against configured profiles
-checkHostname()
-
-/*
- * Parse software version numbers
- */
-process GetSoftwareVersions {
-    publishDir path:"${params.outdir}/pipeline_info", mode: params.publishDirMode
-
-    output:
-        file 'software_versions_mqc.yaml' into yamlSoftwareVersion
-
-    when: !('versions' in skipQC)
-
-    script:
-    """
-    alleleCounter --version &> v_allelecount.txt  || true
-    bcftools version > v_bcftools.txt 2>&1 || true
-    bwa &> v_bwa.txt 2>&1 || true
-    configManta.py --version > v_manta.txt 2>&1 || true
-    configureStrelkaGermlineWorkflow.py --version > v_strelka.txt 2>&1 || true
-    echo "${workflow.manifest.version}" &> v_pipeline.txt 2>&1 || true
-    echo "${workflow.nextflow.version}" &> v_nextflow.txt 2>&1 || true
-    echo "SNPEFF version"\$(snpEff -h 2>&1) > v_snpeff.txt
-    fastqc --version > v_fastqc.txt 2>&1 || true
-    freebayes --version > v_freebayes.txt 2>&1 || true
-    gatk ApplyBQSR --help 2>&1 | grep Version: > v_gatk.txt 2>&1 || true
-    multiqc --version &> v_multiqc.txt 2>&1 || true
-    qualimap --version &> v_qualimap.txt 2>&1 || true
-    R --version &> v_r.txt  || true
-    R -e "library(ASCAT); help(package='ASCAT')" &> v_ascat.txt
-    samtools --version &> v_samtools.txt 2>&1 || true
-    tiddit &> v_tiddit.txt 2>&1 || true
-    vcftools --version &> v_vcftools.txt 2>&1 || true
-    vep --help &> v_vep.txt 2>&1 || true
-
-    scrape_software_versions.py &> software_versions_mqc.yaml
-    """
-}
-
-yamlSoftwareVersion = yamlSoftwareVersion.dump(tag:'SOFTWARE VERSIONS')
 
 /*
 ================================================================================
