@@ -310,7 +310,7 @@ ch_fastaFai = params.fastaFai && !('annotate' in step) ? Channel.value(file(para
 ch_germlineResource = params.germlineResource && 'mutect2' in tools ? Channel.value(file(params.germlineResource)) : "null"
 ch_intervals = params.intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : "null"
 
-// knownIndels is a list of file, so transform it in a channel
+// knownIndels is currently a list of file, so transform it in a channel
 li_knownIndels = []
 if (params.knownIndels && ('mapping' in step)) params.knownIndels.each { li_knownIndels.add(file(it)) }
 ch_knownIndels = params.knownIndels ? Channel.value(li_knownIndels.collect()) : "null"
@@ -434,7 +434,6 @@ yamlSoftwareVersion = yamlSoftwareVersion.dump(tag:'SOFTWARE VERSIONS')
 ================================================================================
 */
 
-
 process BuildBWAindexes {
   tag {fasta}
 
@@ -448,6 +447,7 @@ process BuildBWAindexes {
     file("${fasta}.*") into bwaIndexes
 
   when: !(params.bwaIndex) && params.fasta && 'mapping' in step
+
   script:
   """
   bwa index ${fasta}
@@ -467,6 +467,7 @@ process BuildDict {
     file("${fasta.baseName}.dict") into dictBuilt
 
   when: !(params.dict) && params.fasta && !('annotate' in step)
+
   script:
   """
   gatk --java-options "-Xmx${task.memory.toGiga()}g" \
@@ -489,6 +490,7 @@ process BuildFastaFai {
     file("${fasta}.fai") into fastaFaiBuilt
 
   when: !(params.fastaFai) && params.fasta && !('annotate' in step)
+
   script:
   """
   samtools faidx ${fasta}
@@ -527,6 +529,7 @@ process BuildGermlineResourceIndex {
     file("${germlineResource}.tbi") into germlineResourceIndexBuilt
 
   when: !(params.germlineResourceIndex) && params.germlineResource && 'mutect2' in tools
+
   script:
   """
   tabix -p vcf ${germlineResource}
@@ -546,6 +549,7 @@ process BuildKnownIndelsIndex {
     file("${knownIndels}.tbi") into knownIndelsIndexBuilt
 
   when: !(params.knownIndelsIndex) && params.knownIndels && 'mapping' in step
+
   script:
   """
   tabix -p vcf ${knownIndels}
@@ -669,8 +673,7 @@ process FastQCFQ {
         file "*_fastqc.{zip,html}" into fastQCFQReport
 
     when: step == 'mapping' && !('fastqc' in skipQC)
-
-
+    
     script:
     """
     fastqc -t 2 -q ${idRun}_R1.fastq.gz ${idRun}_R2.fastq.gz
@@ -850,7 +853,7 @@ process BaseRecalibrator {
 
     script:
     known = knownIndels.collect{"--known-sites ${it}"}.join(' ')
-    // --use-original-qualities ???
+    // TODO: --use-original-qualities ???
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
         BaseRecalibrator \
@@ -965,8 +968,8 @@ process MergeBamRecal {
         set idPatient, idSample, file(bam) from bamMergeBamRecal
 
     output:
-        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into (bamRecal, bamRecalSamToolsStats)
-        set idPatient, idSample, file("${idSample}.recal.bam") into bamRecalBamQC
+        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into bamRecal
+        set idPatient, idSample, file("${idSample}.recal.bam") into (bamRecalBamQC, bamRecalSamToolsStats)
         set idPatient, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into (bamRecalTSV, bamRecalSampleTSV)
 
     script:
@@ -1004,7 +1007,7 @@ process SamtoolsStats {
     publishDir "${params.outdir}/Reports/${idSample}/SamToolsStats", mode: params.publishDirMode
 
     input:
-        set idPatient, idSample, file(bam), file(bai) from bamRecalSamToolsStats
+        set idPatient, idSample, file(bam) from bamRecalSamToolsStats
 
     output:
         file ("${bam}.samtools.stats.out") into samtoolsStatsReport
@@ -1018,8 +1021,6 @@ process SamtoolsStats {
 }
 
 samtoolsStatsReport = samtoolsStatsReport.dump(tag:'SAMTools')
-
-// QC
 
 bamBamQC = bamMappedBamQC.mix(bamRecalBamQC)
 
@@ -1072,7 +1073,7 @@ bamRecal = bamRecal.dump(tag:'BAM')
 // Here we have a recalibrated bam set
 // The TSV file is formatted like: "idPatient status idSample bamFile baiFile"
 // Manta will be run in Germline mode, or in Tumor mode depending on status
-// HaplotypeCaller and Strelka will be run for Normal and Tumor samples
+// HaplotypeCaller, TIDDIT and Strelka will be run for Normal and Tumor samples
 
 (bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamRecalAll, bamRecalAllTemp) = bamRecal.into(5)
 
@@ -1369,7 +1370,7 @@ process FreeBayes {
 
 vcfFreeBayes = vcfFreeBayes.groupTuple(by:[0,1,2])
 
-// STEP GATK MUTECT2
+// STEP GATK MUTECT2.1 - RAW CALLS
 
 process Mutect2 {
     tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
@@ -1401,10 +1402,8 @@ process Mutect2 {
     // please make a panel-of-normals, using at least 40 samples
     // https://gatkforums.broadinstitute.org/gatk/discussion/11136/how-to-call-somatic-mutations-using-gatk4-mutect2
     PON = params.pon ? "--panel-of-normals ${pon}" : ""
-
     """
     # Get raw calls
-    # this case we are getting raw calls only for the intervals, we also have to concatenate them
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
       Mutect2 \
       -R ${fasta}\
@@ -1420,8 +1419,10 @@ process Mutect2 {
 mutect2Output = mutect2Output.groupTuple(by:[0,1,2])
 (mutect2Output, mutect2OutForStats) = mutect2Output.into(2)
 
-(mutect2Stats,intervalStatsFiles) = mutect2Stats.into(2)
+(mutect2Stats, intervalStatsFiles) = mutect2Stats.into(2)
 mutect2Stats = mutect2Stats.groupTuple(by:[0,1,2])
+
+// STEP GATK MUTECT2.2 - MERGING STATS
 
 process MergeMutect2Stats {
     tag {idSampleTumor + "_vs_" + idSampleNormal}
@@ -1446,16 +1447,17 @@ process MergeMutect2Stats {
     script:     
       stats = statsFiles.collect{ "-stats ${it} " }.join(' ')
     """
-      gatk --java-options "-Xmx${task.memory.toGiga()}g" \
-            MergeMutectStats \
-            ${stats} \
-            -O ${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.stats
+    gatk --java-options "-Xmx${task.memory.toGiga()}g" \
+        MergeMutectStats \
+        ${stats} \
+        -O ${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.stats
     """
 }
 
 // we are merging the VCFs that are called separatelly for different intervals
 // so we can have a single sorted VCF containing all the calls for a given caller
-// STEP MERGING VCF - FREEBAYES, GATK HAPLOTYPECALLER & GATK MUTECT2 (unfiltered)
+
+// STEP MERGING VCF - FREEBAYES, GATK HAPLOTYPECALLER & GATK MUTECT2 (UNFILTERED)
 
 vcfConcatenateVCFs = mutect2Output.mix( vcfFreeBayes, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
 vcfConcatenateVCFs = vcfConcatenateVCFs.dump(tag:'VCF to merge')
@@ -1494,7 +1496,7 @@ process ConcatVCF {
 (vcfConcatenated, vcfConcatenatedForFilter) = vcfConcatenated.into(2)
 vcfConcatenated = vcfConcatenated.dump(tag:'VCF')
 
-// STEP GATK MUTECT2
+// STEP GATK MUTECT2.3 - GENERATING PILEUP SUMMARIES
 
 process PileupSummariesForMutect2 {
     tag {idSampleTumor + "_vs_" + idSampleNormal + "_" + intervalBed.baseName }
@@ -1515,21 +1517,23 @@ process PileupSummariesForMutect2 {
 
     script:
     """
-        # pileup summaries
-        gatk --java-options "-Xmx${task.memory.toGiga()}g" \
-            GetPileupSummaries \
-            -I ${bamTumor} \
-            -V ${germlineResource} \
-            -L ${intervalBed} \
-            -O ${intervalBed.baseName}_${idSampleTumor}_pileupsummaries.table
+    gatk --java-options "-Xmx${task.memory.toGiga()}g" \
+        GetPileupSummaries \
+        -I ${bamTumor} \
+        -V ${germlineResource} \
+        -L ${intervalBed} \
+        -O ${intervalBed.baseName}_${idSampleTumor}_pileupsummaries.table
     """
 }
 
 pileupSummaries = pileupSummaries.groupTuple(by:[0,1])
 
+// STEP GATK MUTECT2.4 - MERGING PILEUP SUMMARIES
+
 process MergePileupSummaries {
-    tag {idPatient + "_" + idSampleTumor}
     label 'cpus_1'
+
+    tag {idPatient + "_" + idSampleTumor}
 
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Mutect2", mode: params.publishDirMode
 
@@ -1544,17 +1548,20 @@ process MergePileupSummaries {
     script:
         allPileups = pileupSums.collect{ "-I ${it} " }.join(' ')
     """
-        gatk --java-options "-Xmx${task.memory.toGiga()}g" \
-            GatherPileupSummaries \
-            --sequence-dictionary ${dict} \
-            ${allPileups} \
-            -O ${idSampleTumor}_pileupsummaries.table.tsv
+    gatk --java-options "-Xmx${task.memory.toGiga()}g" \
+        GatherPileupSummaries \
+        --sequence-dictionary ${dict} \
+        ${allPileups} \
+        -O ${idSampleTumor}_pileupsummaries.table.tsv
     """
 }
 
+// STEP GATK MUTECT2.5 - CALCULATING CONTAMINATION
+
 process CalculateContamination {
-    tag {idSampleTumor + "_vs_" + idSampleNormal}
     label 'cpus_1'
+
+    tag {idSampleTumor + "_vs_" + idSampleNormal}
 
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Mutect2", mode: params.publishDirMode
 
@@ -1569,17 +1576,20 @@ process CalculateContamination {
 
     script:     
     """
-        # calculate contamination
-        gatk --java-options "-Xmx${task.memory.toGiga()}g" \
-            CalculateContamination \
-            -I ${idSampleTumor}_pileupsummaries.table \
-            -O ${idSampleTumor}_contamination.table
+    # calculate contamination
+    gatk --java-options "-Xmx${task.memory.toGiga()}g" \
+        CalculateContamination \
+        -I ${idSampleTumor}_pileupsummaries.table \
+        -O ${idSampleTumor}_contamination.table
     """
 }
 
+// STEP GATK MUTECT2.6 - FILTERING CALLS
+
 process FilterMutect2Calls {
-    tag {idSampleTN}
     label 'cpus_1'
+
+    tag {idSampleTN}
 
     publishDir "${params.outdir}/VariantCalling/${idSampleTN}/${"$variantCaller"}", mode: params.publishDirMode
 
@@ -1604,10 +1614,10 @@ process FilterMutect2Calls {
 
     script:
     """
-        # do the actual filtering
-        gatk --java-options "-Xmx${task.memory.toGiga()}g" \
+    # do the actual filtering
+    gatk --java-options "-Xmx${task.memory.toGiga()}g" \
         FilterMutectCalls \
-        -V $unfiltered \
+        -V ${unfiltered} \
         --contamination-table ${idSampleTN}_contamination.table \
         --stats ${idSampleTN}.vcf.gz.stats \
         -R ${fasta} \
@@ -2165,7 +2175,7 @@ if (step == 'annotate') {
     if (tsvPath == []) {
     // Sarek, by default, annotates all available vcfs that it can find in the VariantCalling directory
     // Excluding vcfs from FreeBayes, and g.vcf from HaplotypeCaller
-    // Basically it's: VariantCalling/*/{HaplotypeCaller,Manta,Mutect2,Strelka}/*.vcf.gz
+    // Basically it's: VariantCalling/*/{HaplotypeCaller,Manta,Mutect2,Strelka,TIDDIT}/*.vcf.gz
     // Without *SmallIndels.vcf.gz from Manta, and *.genome.vcf.gz from Strelka
     // The small snippet `vcf.minus(vcf.fileName)[-2]` catches idSample
     // This field is used to output final annotated VCFs in the correct directory
@@ -2178,6 +2188,8 @@ if (step == 'annotate') {
           .flatten().map{vcf -> ['mutect2', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
         Channel.fromPath("${params.outdir}/VariantCalling/*/Strelka/*{somatic,variant}*.vcf.gz")
           .flatten().map{vcf -> ['strelka', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
+        Channel.fromPath("${params.outdir}/VariantCalling/*/TIDDIT/*.vcf.gz")
+          .flatten().map{vcf -> ['TIDDIT', vcf.minus(vcf.fileName)[-2].toString(), vcf]}
       ).choice(vcfToAnnotate, vcfNoAnnotate) {
         annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1
       }
@@ -2227,14 +2239,14 @@ process Snpeff {
     cache = (params.snpEff_cache && params.annotation_cache) ? "-dataDir \${PWD}/${dataDir}" : ""
     """
     snpEff -Xmx${task.memory.toGiga()}g \
-    ${snpeffDb} \
-    -csvStats ${reducedVCF}_snpEff.csv \
-    -nodownload \
-    ${cache} \
-    -canon \
-    -v \
-    ${vcf} \
-    > ${reducedVCF}_snpEff.ann.vcf
+        ${snpeffDb} \
+        -csvStats ${reducedVCF}_snpEff.csv \
+        -nodownload \
+        ${cache} \
+        -canon \
+        -v \
+        ${vcf} \
+        > ${reducedVCF}_snpEff.ann.vcf
 
     mv snpEff_summary.html ${reducedVCF}_snpEff.html
     mv ${reducedVCF}_snpEff.genes.txt ${reducedVCF}_snpEff.txt
@@ -2243,7 +2255,7 @@ process Snpeff {
 
 snpeffReport = snpeffReport.dump(tag:'snpEff report')
 
-// STEP COMPRESS AND INDEX VCF.1 - snpEff
+// STEP COMPRESS AND INDEX VCF.1 - SNPEFF
 
 process CompressVCFsnpEff {
     tag {"${idSample} - ${vcf}"}
@@ -2303,22 +2315,22 @@ process VEP {
     mkdir ${reducedVCF}
 
     vep \
-    -i ${vcf} \
-    -o ${reducedVCF}_VEP.ann.vcf \
-    --assembly ${genome} \
-    ${cadd} \
-    ${genesplicer} \
-    --cache \
-    --cache_version ${cache_version} \
-    --dir_cache ${dir_cache} \
-    --everything \
-    --filter_common \
-    --fork ${task.cpus} \
-    --format vcf \
-    --per_gene \
-    --stats_file ${reducedVCF}_VEP.summary.html \
-    --total_length \
-    --vcf
+        -i ${vcf} \
+        -o ${reducedVCF}_VEP.ann.vcf \
+        --assembly ${genome} \
+        ${cadd} \
+        ${genesplicer} \
+        --cache \
+        --cache_version ${cache_version} \
+        --dir_cache ${dir_cache} \
+        --everything \
+        --filter_common \
+        --fork ${task.cpus} \
+        --format vcf \
+        --per_gene \
+        --stats_file ${reducedVCF}_VEP.summary.html \
+        --total_length \
+        --vcf
 
     rm -rf ${reducedVCF}
     """
@@ -2326,7 +2338,7 @@ process VEP {
 
 vepReport = vepReport.dump(tag:'VEP')
 
-// STEP VEP.2 - VEP after snpEff
+// STEP VEP.2 - VEP AFTER SNPEFF
 
 process VEPmerge {
     label 'VEP'
@@ -2364,22 +2376,22 @@ process VEPmerge {
     mkdir ${reducedVCF}
 
     vep \
-    -i ${vcf} \
-    -o ${reducedVCF}_VEP.ann.vcf \
-    --assembly ${genome} \
-    ${cadd} \
-    ${genesplicer} \
-    --cache \
-    --cache_version ${cache_version} \
-    --dir_cache ${dir_cache} \
-    --everything \
-    --filter_common \
-    --fork ${task.cpus} \
-    --format vcf \
-    --per_gene \
-    --stats_file ${reducedVCF}_VEP.summary.html \
-    --total_length \
-    --vcf
+        -i ${vcf} \
+        -o ${reducedVCF}_VEP.ann.vcf \
+        --assembly ${genome} \
+        ${cadd} \
+        ${genesplicer} \
+        --cache \
+        --cache_version ${cache_version} \
+        --dir_cache ${dir_cache} \
+        --everything \
+        --filter_common \
+        --fork ${task.cpus} \
+        --format vcf \
+        --per_gene \
+        --stats_file ${reducedVCF}_VEP.summary.html \
+        --total_length \
+        --vcf
 
     rm -rf ${reducedVCF}
     """
@@ -2672,7 +2684,8 @@ def defineAnnoList() {
         'HaplotypeCaller',
         'Manta',
         'Mutect2',
-        'Strelka'
+        'Strelka',
+        'TIDDIT'
     ]
 }
 
