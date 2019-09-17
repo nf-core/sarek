@@ -128,7 +128,7 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
 }
 
-// Should be set up in the configs?
+// TODO: Should be set up?
 // params.email = null
 // params.hostnames = null
 // params.markdup_java_options = null
