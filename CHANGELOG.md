@@ -46,6 +46,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#27](https://github.com/nf-core/sarek/pull/27), [#30](https://github.com/nf-core/sarek/pull/30) - Use Github actions for CI, linting and branch protection
 - [#31](https://github.com/nf-core/sarek/pull/31) - Add nf-core lint
 - [#31](https://github.com/nf-core/sarek/pull/31) - Add extra CI to GitHub Actions nf-core extra CI
+- [#35](https://github.com/nf-core/sarek/pull/35) - Building indexes from [nf-core/test-datasets:sarek](https://github.com/nf-core/test-datasets/tree/sarek) for CI and small tests
 
 ### `Changed`
 
@@ -55,7 +56,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#7](https://github.com/nf-core/sarek/pull/7), [#23](https://github.com/nf-core/sarek/pull/23) - `--sampleDir` is now deprecated, use `--input` instead
 - [#7](https://github.com/nf-core/sarek/pull/8), [#23](https://github.com/nf-core/sarek/pull/23) - `--annotateVCF` is now deprecated, use `--input` instead
 - [#8](https://github.com/nf-core/sarek/pull/8), [#12](https://github.com/nf-core/sarek/pull/12) - Improve helper script `build.nf` for downloading and building reference files
-- [#9](https://github.com/nf-core/sarek/pull/9) - ApplyBQSR is now parallelized
+- [#9](https://github.com/nf-core/sarek/pull/9) - `ApplyBQSR` is now parallelized
 - [#9](https://github.com/nf-core/sarek/pull/9) - Fastq files are named following "${idRun}_R1.fastq.gz" in the FastQC output for easier reporting
 - [#9](https://github.com/nf-core/sarek/pull/9) - Status is now a map with `idpatient`, `idsample` as keys (ie: `status = statusMap[idPatient, idSample]`)
 - [#9](https://github.com/nf-core/sarek/pull/9) - Use `ensembl-vep` `95.2` instead of `96.0`
@@ -84,6 +85,11 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#31](https://github.com/nf-core/sarek/pull/31) - Move extra CI to GitHub Actions nf-core extra CI
 - [#32](https://github.com/nf-core/sarek/pull/32), [#33](https://github.com/nf-core/sarek/pull/33) - Install `ASCAT` with `conda` in the `environment.yml` file
 - [#33](https://github.com/nf-core/sarek/pull/33) - use `workflow.manifest.version` to specify workflow version in path to scripts for `ControlFREEC` and `VEP` processes
+- [#35](https://github.com/nf-core/sarek/pull/35) - Building indexes is now done in `main.nf`
+- [#35](https://github.com/nf-core/sarek/pull/35) - `build.nf` script now only download cache, so renamed to `downloadcache.nf`
+- [#35](https://github.com/nf-core/sarek/pull/35) - Use `tabix` instead of `IGVtools` to build vcf indexes
+- [#35](https://github.com/nf-core/sarek/pull/35) - Refactor references handling
+- [#35](https://github.com/nf-core/sarek/pull/35) - use Channel values instead of `referenceMap`
 
 ### `Removed`
 
@@ -93,7 +99,12 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#18](https://github.com/nf-core/sarek/pull/18) - Removed params `--noReports`
 - [#24](https://github.com/nf-core/sarek/pull/18) - Removed GATK3.X MuTect2
 - [#31](https://github.com/nf-core/sarek/pull/31) - Remove extra CI from Travis CI and GitHub Actions nf-core CI
-- [#32](https://github.com/nf-core/sarek/pull/32) - Clean up `environment.yml` file
+- [#32](https://github.com/nf-core/sarek/pull/32), [#35](https://github.com/nf-core/sarek/pull/35) - Clean up `environment.yml` file
+- [#35](https://github.com/nf-core/sarek/pull/35) - Remove building indexes from `build.nf` script
+- [#35](https://github.com/nf-core/sarek/pull/35) - Remove helper script `build_reference.sh`
+- [#35](https://github.com/nf-core/sarek/pull/35) - Remove `IGVtools`
+- [#35](https://github.com/nf-core/sarek/pull/35) - Remove `Mutect2` from `MULTIPLE` test
+- [#35](https://github.com/nf-core/sarek/pull/35) - Remove `referenceMap` and `defineReferenceMap()` and use Channel values instead
 
 ### `Fixed`
 

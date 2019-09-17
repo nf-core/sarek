@@ -24,7 +24,6 @@ For annotation, the main container can be used, but the cache has to be download
 - Contain **[GATK4](https://github.com/broadinstitute/gatk)** 4.1.2.0
 - Contain **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
 - Contain **[HTSlib](https://github.com/samtools/htslib)** 1.9
-- Contain **[IGVtools](http://software.broadinstitute.org/software/igv/)** 2.3.93
 - Contain **[Manta](https://github.com/Illumina/manta)** 1.5.0
 - Contain **[MultiQC](https://github.com/ewels/MultiQC/)** 1.7
 - Contain **[Qualimap](http://qualimap.bioinfo.cipf.es)** 2.2.2b

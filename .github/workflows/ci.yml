@@ -19,9 +19,6 @@ jobs:
         run: |
           docker pull nfcore/sarek:dev
           docker tag nfcore/sarek:dev nfcore/sarek:dev
-      - name: Build references
-        run: |
-          nextflow run ${GITHUB_WORKSPACE}/build.nf -profile test,docker --build --outdir references
       - name: Run test
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker
