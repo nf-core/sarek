@@ -27,4 +27,4 @@ The nf-core/sarek pipeline comes with documentation about the pipeline, found in
 <!-- TODO nf-core: Add a brief overview of what the pipeline does and how it works -->
 
 ## Credits
-nf-core/sarek was originally written by Maxime Garcia.
+nf-core/sarek was originally written by  Maxime Garcia, Szilveszter Juhos.

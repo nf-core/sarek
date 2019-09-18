@@ -1,5 +1,5 @@
 FROM nfcore/base
-LABEL authors="Maxime Garcia" \
+LABEL authors="Maxime Garcia, Szilveszter Juhos" \
       description="Docker image containing all requirements for nf-core/sarek pipeline"
 
 COPY environment.yml /
