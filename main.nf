@@ -274,10 +274,12 @@ if (params.targetBED)           summary['Target BED']        = params.targetBED
 if (params.step)                summary['Step']              = params.step
 if (params.tools)               summary['Tools']             = tools.join(', ')
 if (params.skipQC)              summary['QC tools skip']     = skipQC.join(', ')
-if ('haplotypecaller' in tools) summary['GVCF']              = params.noGVCF ? 'No' : 'Yes'
+
+if ('haplotypecaller' in tools)              summary['GVCF']              = params.noGVCF ? 'No' : 'Yes'
 if ('strelka' in tools && 'manta' in tools ) summary['Strelka BP']        = params.noStrelkaBP ? 'No' : 'Yes'
 if (params.sequencing_center)                summary['Sequenced by']      = params.sequencing_center
 if (params.pon && 'mutect2' in tools)        summary['Panel of normals']  = params.pon
+
 summary['Save Genome Index'] = params.saveGenomeIndex ? 'Yes' : 'No'
 summary['Nucleotides/s']     = params.nucleotidesPerSecond
 summary['Output dir']        = params.outdir
