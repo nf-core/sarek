@@ -269,8 +269,6 @@ if (workflow.revision)          summary['Pipeline Release']    = workflow.revisi
 summary['Run Name']          = custom_runName ?: workflow.runName
 summary['Max Resources']     = "${params.max_memory} memory, ${params.max_cpus} cpus, ${params.max_time} time per job"
 if (workflow.containerEngine)   summary['Container']         = "${workflow.containerEngine} - ${workflow.container}"
-// TODO: if annotation print containers used for annotation
-// Could be nfcore/sarek:dev or nfcore/sareksnpeff:dev.${params.genome}/nfcore/sarekvep:dev.${params.genome}
 if (params.input)               summary['Input']             = params.input
 if (params.targetBED)           summary['Target BED']        = params.targetBED
 if (params.step)                summary['Step']              = params.step
