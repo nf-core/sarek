@@ -554,6 +554,7 @@ Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a 
 ### `--outdir`
 
 The output directory where the results will be saved.
+Default: `results/
 
 ### `--sequencing_center`
 

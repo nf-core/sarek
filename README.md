@@ -58,7 +58,7 @@ The nf-core/sarek pipeline comes with documentation about the pipeline, found in
 
 ## Credits
 
-Sarek was developed at the [National Genomics Infa
+Sarek was developed at the [National Genomics Infastructure](https://ngisweden.scilifelab.se) and [National Bioinformatics Infastructure Sweden](https://nbis.se) which are both platforms at [SciLifeLab](https://scilifelab.se), with the support of [The Swedish Childhood Tumor Biobank (Barntumörbanken)](ttps://ki.se/forskning/barntumorbanken-0).
 
 Main authors:
 
