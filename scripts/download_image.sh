@@ -3,7 +3,7 @@ set -xeuo pipefail
 
 # This script download and tag image for sarek tests
 
-usage() { echo "Usage: $0 <-t test|annotation tool> <-n engine> <-T version to pull/build> <-a version to tag> <-g genome>" 1>&2; exit 1; }
+usage() { echo "Usage: $0 <-t test|annotation tool> <-n engine> <-S version to pull/build> <-T version to tag> <-g genome>" 1>&2; exit 1; }
 
 ENGINE=docker
 GENOME=smallGRCh37
@@ -26,12 +26,12 @@ do
     shift # past argument
     shift # past value
     ;;
-    -a|--target-version)
+    -T|--target-version)
     TARGETVERSION=$2
     shift # past argument
     shift # past value
     ;;
-    -T|--tagged-version)
+    -S|--source-version)
     VERSION=$2
     shift # past argument
     shift # past value
