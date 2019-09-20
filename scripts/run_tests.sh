@@ -109,7 +109,7 @@ esac
 
 case $TEST in
   ANNOTATE)
-  run_sarek --step annotate --tools ${ANNOTATOR} --input ${PATHTOSAMPLE}/vcf/Strelka_1234N_variants.vcf.gz
+  run_sarek --step annotate --tools ${ANNOTATOR} --input ${PATHTOSAMPLE}/vcf/Strelka_1234N_variants.vcf.gz --skipQC all
   ;;
   GERMLINE)
   run_sarek --tools=false --input data/testdata/tiny/normal
