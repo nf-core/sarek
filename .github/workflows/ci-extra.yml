@@ -18,7 +18,7 @@ jobs:
           sudo mv nextflow /usr/local/bin/
       - name: Download image
         run: |
-          ${GITHUB_WORKSPACE}/scripts/download_image.sh -n docker --test ${{ matrix.test }}
+          ${GITHUB_WORKSPACE}/scripts/download_image.sh -n docker --source-version dev --target-version 2.5 --test ${{ matrix.test }}
       - name: Run test
         run: |
           ${GITHUB_WORKSPACE}/scripts/run_tests.sh --test ${{ matrix.test }} --verbose

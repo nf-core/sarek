@@ -1,6 +1,6 @@
 # You can use this file to create a conda environment for this pipeline:
 # conda env create -f environment.yml
-name: sarek-vep-2.5dev
+name: sarek-vep-2.5
 channels:
   - conda-forge
   - bioconda

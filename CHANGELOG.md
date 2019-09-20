@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [2.5] - Ålkatj
 
 Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/) template.
 
@@ -90,6 +90,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#35](https://github.com/nf-core/sarek/pull/35) - Use `tabix` instead of `IGVtools` to build vcf indexes
 - [#35](https://github.com/nf-core/sarek/pull/35) - Refactor references handling
 - [#35](https://github.com/nf-core/sarek/pull/35) - use Channel values instead of `referenceMap`
+- [#37](https://github.com/nf-core/sarek/pull/37) - Bump version for Release
 
 ### `Removed`
 

@@ -7,7 +7,7 @@ LABEL \
 
 COPY environment.yml /
 RUN conda env create -f /environment.yml && conda clean -a
-ENV PATH /opt/conda/envs/sarek-vep-2.5dev/bin:$PATH
+ENV PATH /opt/conda/envs/sarek-vep-2.5/bin:$PATH
 
 # Setup default ARG variables
 ARG GENOME=GRCh38

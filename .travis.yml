@@ -14,7 +14,7 @@ before_install:
   - docker pull nfcore/sarek:dev
   # Fake the tag locally so that the pipeline runs properly
   # Looks weird when this is :dev to :dev, but makes sense when testing code for a release (:dev to :1.0.1)
-  - docker tag nfcore/sarek:dev nfcore/sarek:dev
+  - docker tag nfcore/sarek:dev nfcore/sarek:2.5
 
 install:
   # Install Nextflow
