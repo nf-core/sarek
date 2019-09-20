@@ -90,6 +90,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#35](https://github.com/nf-core/sarek/pull/35) - Use `tabix` instead of `IGVtools` to build vcf indexes
 - [#35](https://github.com/nf-core/sarek/pull/35) - Refactor references handling
 - [#35](https://github.com/nf-core/sarek/pull/35) - use Channel values instead of `referenceMap`
+- [#37](https://github.com/nf-core/sarek/pull/37) - Bump version for Release
 
 ### `Removed`
 
