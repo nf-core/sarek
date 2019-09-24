@@ -17,7 +17,6 @@
 
 [![Join us on Slack](https://img.shields.io/badge/slack-nfcore/sarek-blue.svg)](https://nfcore.slack.com/messages/CGFUX04HZ/)
 
-> :warning: This pipeline is a work in progress being ported to nf-core from [SciLifeLab/Sarek](https://github/SciLifeLab/Sarek/)
 
 ## Introduction
 
