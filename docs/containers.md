@@ -39,7 +39,7 @@ For annotation, the main container can be used, but the cache has to be download
 
 - Based on `nfcore/base:latest`
 - Contain **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
-- Contain cache for `GRCh37`, `GRCh38`, `GRCm38` or `CanFam3.1`
+- Contains cache for `GRCh37`, `GRCh38`, `GRCm38` or `CanFam3.1`
 
 ### sarekvep [![sarekvep-docker status](https://img.shields.io/docker/automated/nfcore/sarekvep.svg)](https://hub.docker.com/r/nfcore/sarekvep)
 
@@ -50,7 +50,7 @@ For annotation, the main container can be used, but the cache has to be download
 
 ## Using helper script
 
-An helper script, used for testing can also be used to help with pulling docker containers, or building singularity images.
+A helper script, used for testing can also be used to help with pulling docker containers, or building singularity images.
 The following parameters can be used:
 
 ### Engine: -n

@@ -6,8 +6,6 @@
 [![nf-core](https://img.shields.io/badge/nf--core-pipeline-brightgreen.svg)](https://nf-co.re/)
 
 [![Travis build status](https://img.shields.io/travis/nf-core/sarek.svg)](https://travis-ci.com/nf-core/sarek/)
-[![GitHub Actions extra CI Status](https://github.com/nf-core/sarek/workflows/sarek%20extra%20CI/badge.svg)](https://github.com/nf-core/sarek/actions)
-[![GitHub Actions Linting Status](https://github.com/nf-core/sarek/workflows/sarek%20linting/badge.svg)](https://github.com/nf-core/sarek/actions)
 [![CircleCi build status](https://img.shields.io/circleci/project/github/nf-core/sarek.svg)](https://circleci.com/gh/nf-core/sarek/)
 
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](http://bioconda.github.io/)
@@ -46,9 +44,7 @@ The nf-core/sarek pipeline comes with documentation about the pipeline, found in
 3. [Running the pipeline](docs/usage.md)
     * [Examples](docs/use_cases.md)
     * [Input files documentation](docs/input.md)
-    * [Extra documentation on variant calling](docs/variantcalling.md)
     * [Documentation about containers](docs/containers.md)
-    * [Extra documentation for targeted sequencing](docs/targetseq.md)
 4. [Output and how to interpret the results](docs/output.md)
     * [Complementary information about ASCAT](docs/ascat.md)
     * [Extra documentation on annotation](docs/annotation.md)

@@ -248,7 +248,7 @@ ch_snpeffDb = params.snpeffDb ? Channel.value(params.snpeffDb) : "null"
 ch_vepCacheVersion = params.vepCacheVersion ? Channel.value(params.vepCacheVersion) : "null"
 ch_vep_cache = params.vep_cache ? Channel.value(file(params.vep_cache)) : "null"
 
-// Optionnal files, not defined within the params.genomes[params.genome] scope
+// Optional files, not defined within the params.genomes[params.genome] scope
 ch_cadd_InDels = params.cadd_InDels ? Channel.value(file(params.cadd_InDels)) : "null"
 ch_cadd_InDels_tbi = params.cadd_InDels_tbi ? Channel.value(file(params.cadd_InDels_tbi)) : "null"
 ch_cadd_WG_SNVs = params.cadd_WG_SNVs ? Channel.value(file(params.cadd_WG_SNVs)) : "null"
@@ -2483,7 +2483,7 @@ workflow.onComplete {
     c_green  = params.monochrome_logs ? '' : "\033[0;32m";
     c_purple = params.monochrome_logs ? '' : "\033[0;35m";
 
-    if (workflow.stats.ignoredCountFmt > 0 && workflow.success) {
+    if (workflow.stats.ignoredCount > 0 && workflow.success) {
         log.info "${c_purple}Warning, pipeline completed, but with errored process(es)${c_reset}"
         log.info "${c_red}Number of ignored errored process(es) : ${workflow.stats.ignoredCountFmt}${c_reset}"
         log.info "${c_green}Number of successfully ran process(es) : ${workflow.stats.succeedCountFmt}${c_reset}"

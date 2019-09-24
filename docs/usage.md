@@ -491,7 +491,7 @@ Provide your PON by:
 --pon '[path to the PON VCF]'
 ```
 
-If the PON file is bgzipped, there have to be a tabixed index file at the same directory.
+If the PON file is bgzipped, there has to be a tabixed index file at the same directory.
 
 ### `--snpeffDb`
 
