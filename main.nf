@@ -759,6 +759,8 @@ markDuplicatesReport = markDuplicatesReport.dump(tag:'MD Report')
 (bamMD, bamMDToJoin) = duplicateMarkedBams.into(2)
 bamBaseRecalibrator = bamMD.combine(intBaseRecalibrator)
 
+bamBaseRecalibrator = bamBaseRecalibrator.dump(tag:'BAM FOR BASERECALIBRATOR')
+
 // STEP 3: CREATING RECALIBRATION TABLES
 
 process BaseRecalibrator {
