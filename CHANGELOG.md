@@ -125,6 +125,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#31](https://github.com/nf-core/sarek/pull/31) - Fix rcolorbrewer version according to nf-core lint
 - [#33](https://github.com/nf-core/sarek/pull/33) - Fix MD Linting
 - [#38](https://github.com/nf-core/sarek/pull/38) - Avoid collision in MultiQC
+- [#39](https://github.com/nf-core/sarek/pull/39) - Fix `ch_dbsnp` channel
 
 ### `Deprecated`
 

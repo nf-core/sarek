@@ -144,7 +144,7 @@ params.fasta = params.genome && !('annotate' in step) ? params.genomes[params.ge
 // The rest can be sorted
 params.acLoci = params.genome && 'ascat' in tools ? params.genomes[params.genome].acLoci ?: null : null
 params.acLociGC = params.genome && 'ascat' in tools ? params.genomes[params.genome].acLociGC ?: null : null
-params.bwaIndex = params.genome && params.fasta && 'mapping' in step ? params.genomes[params.genome].bwa ?: null : null
+params.bwaIndex = params.genome && params.fasta && 'mapping' in step ? params.genomes[params.genome].bwaIndex ?: null : null
 params.chrDir = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].chrDir ?: null : null
 params.chrLength = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].chrLength ?: null : null
 params.dbsnp = params.genome && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools) ? params.genomes[params.genome].dbsnp ?: null : null
@@ -238,10 +238,10 @@ ch_fastaFai = params.fastaFai && !('annotate' in step) ? Channel.value(file(para
 ch_germlineResource = params.germlineResource && 'mutect2' in tools ? Channel.value(file(params.germlineResource)) : "null"
 ch_intervals = params.intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : "null"
 
-// knownIndels is currently a list of file, so transform it in a channel
+// knownIndels is currently a list of file for smallGRCh37, so transform it in a channel
 li_knownIndels = []
 if (params.knownIndels && ('mapping' in step)) params.knownIndels.each { li_knownIndels.add(file(it)) }
-ch_knownIndels = params.knownIndels ? Channel.value(li_knownIndels.collect()) : "null"
+ch_knownIndels = params.knownIndels && params.genome == 'smallGRCh37' ? Channel.value(li_knownIndels.collect()) : params.knownIndels ? Channel.value(file(params.knownIndels)) : "null"
 
 ch_snpEff_cache = params.snpEff_cache ? Channel.value(file(params.snpEff_cache)) : "null"
 ch_snpeffDb = params.snpeffDb ? Channel.value(params.snpeffDb) : "null"
@@ -287,18 +287,25 @@ summary['Launch dir']        = workflow.launchDir
 summary['Working dir']       = workflow.workDir
 summary['Script dir']        = workflow.projectDir
 summary['User']              = workflow.userName
+summary['genome']            = params.genome
 
-if (params.acLoci)              summary['acLoci']            = params.acLoci
-if (params.acLociGC)            summary['acLociGC']          = params.acLociGC
-if (params.chrDir)              summary['chrDir']            = params.chrDir
-if (params.chrLength)           summary['chrLength']         = params.chrLength
-if (params.dbsnp)               summary['dbsnp']             = params.dbsnp
-if (params.fasta)               summary['fasta']             = params.fasta
-if (params.germlineResource)    summary['germlineResource']  = params.germlineResource
-if (params.intervals)           summary['intervals']         = params.intervals
-if (params.knownIndels)         summary['knownIndels']       = params.knownIndels.join(', ')
-if (params.snpeffDb)            summary['snpeffDb']          = params.snpeffDb
-if (params.vepCacheVersion)     summary['vepCacheVersion']   = params.vepCacheVersion
+if (params.fasta)                 summary['fasta']                 = params.fasta
+if (params.fastaFai)              summary['fastaFai']              = params.fastaFai
+if (params.dict)                  summary['dict']                  = params.dict
+if (params.bwaIndex)              summary['bwaIndex']              = params.bwaIndex
+if (params.germlineResource)      summary['germlineResource']      = params.germlineResource
+if (params.germlineResourceIndex) summary['germlineResourceIndex'] = params.germlineResourceIndex
+if (params.intervals)             summary['intervals']             = params.intervals
+if (params.acLoci)                summary['acLoci']                = params.acLoci
+if (params.acLociGC)              summary['acLociGC']              = params.acLociGC
+if (params.chrDir)                summary['chrDir']                = params.chrDir
+if (params.chrLength)             summary['chrLength']             = params.chrLength
+if (params.dbsnp)                 summary['dbsnp']                 = params.dbsnp
+if (params.dbsnpIndex)            summary['dbsnpIndex']            = params.dbsnpIndex
+if (params.knownIndels)           summary['knownIndels']           = params.knownIndels
+if (params.knownIndelsIndex)      summary['knownIndelsIndex']      = params.knownIndelsIndex
+if (params.snpeffDb)              summary['snpeffDb']              = params.snpeffDb
+if (params.vepCacheVersion)       summary['vepCacheVersion']       = params.vepCacheVersion
 
 if (workflow.profile == 'awsbatch') {
     summary['AWS Region']        = params.awsregion
@@ -758,6 +765,8 @@ markDuplicatesReport = markDuplicatesReport.dump(tag:'MD Report')
 (bamMD, bamMDToJoin) = duplicateMarkedBams.into(2)
 bamBaseRecalibrator = bamMD.combine(intBaseRecalibrator)
 
+bamBaseRecalibrator = bamBaseRecalibrator.dump(tag:'BAM FOR BASERECALIBRATOR')
+
 // STEP 3: CREATING RECALIBRATION TABLES
 
 process BaseRecalibrator {
@@ -770,8 +779,8 @@ process BaseRecalibrator {
         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamBaseRecalibrator
         file(dbsnp) from ch_dbsnp
         file(dbsnpIndex) from ch_dbsnpIndex
-        file(dict) from ch_dict
         file(fasta) from ch_fasta
+        file(dict) from ch_dict
         file(fastaFai) from ch_fastaFai
         file(knownIndels) from ch_knownIndels
         file(knownIndelsIndex) from ch_knownIndelsIndex
