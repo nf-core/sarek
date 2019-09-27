@@ -287,19 +287,25 @@ summary['Launch dir']        = workflow.launchDir
 summary['Working dir']       = workflow.workDir
 summary['Script dir']        = workflow.projectDir
 summary['User']              = workflow.userName
+summary['genome']            = params.genome
 
-if (params.acLoci)              summary['acLoci']            = params.acLoci
-if (params.acLociGC)            summary['acLociGC']          = params.acLociGC
-if (params.bwaIndex)            summary['bwaIndex']          = params.bwaIndex
-if (params.chrDir)              summary['chrDir']            = params.chrDir
-if (params.chrLength)           summary['chrLength']         = params.chrLength
-if (params.dbsnp)               summary['dbsnp']             = params.dbsnp
-if (params.fasta)               summary['fasta']             = params.fasta
-if (params.germlineResource)    summary['germlineResource']  = params.germlineResource
-if (params.intervals)           summary['intervals']         = params.intervals
-if (params.knownIndels)         summary['knownIndels']       = params.knownIndels
-if (params.snpeffDb)            summary['snpeffDb']          = params.snpeffDb
-if (params.vepCacheVersion)     summary['vepCacheVersion']   = params.vepCacheVersion
+if (params.acLoci)                summary['acLoci']                = params.acLoci
+if (params.acLociGC)              summary['acLociGC']              = params.acLociGC
+if (params.chrDir)                summary['chrDir']                = params.chrDir
+if (params.chrLength)             summary['chrLength']             = params.chrLength
+if (params.dbsnp)                 summary['dbsnp']                 = params.dbsnp
+if (params.params.dbsnpIndex)     summary['params.dbsnpIndex']     = params.params.dbsnpIndex
+if (params.fasta)                 summary['fasta']                 = params.fasta
+if (params.fastaFai)              summary['fastaFai']              = params.fastaFai
+if (params.dict)                  summary['dict']                  = params.dict
+if (params.bwaIndex)              summary['bwaIndex']              = params.bwaIndex
+if (params.germlineResource)      summary['germlineResource']      = params.germlineResource
+if (params.germlineResourceIndex) summary['germlineResourceIndex'] = params.germlineResourceIndex
+if (params.intervals)             summary['intervals']             = params.intervals
+if (params.knownIndels)           summary['knownIndels']           = params.knownIndels
+if (params.knownIndelsIndex)      summary['knownIndelsIndex']      = params.knownIndelsIndex
+if (params.snpeffDb)              summary['snpeffDb']              = params.snpeffDb
+if (params.vepCacheVersion)       summary['vepCacheVersion']       = params.vepCacheVersion
 
 if (workflow.profile == 'awsbatch') {
     summary['AWS Region']        = params.awsregion
