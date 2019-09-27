@@ -290,13 +290,14 @@ summary['User']              = workflow.userName
 
 if (params.acLoci)              summary['acLoci']            = params.acLoci
 if (params.acLociGC)            summary['acLociGC']          = params.acLociGC
+if (params.bwaIndex)            summary['bwaIndex']          = params.bwaIndex
 if (params.chrDir)              summary['chrDir']            = params.chrDir
 if (params.chrLength)           summary['chrLength']         = params.chrLength
 if (params.dbsnp)               summary['dbsnp']             = params.dbsnp
 if (params.fasta)               summary['fasta']             = params.fasta
 if (params.germlineResource)    summary['germlineResource']  = params.germlineResource
 if (params.intervals)           summary['intervals']         = params.intervals
-if (params.knownIndels)         summary['knownIndels']       = params.knownIndels.join(', ')
+if (params.knownIndels)         summary['knownIndels']       = params.knownIndels
 if (params.snpeffDb)            summary['snpeffDb']          = params.snpeffDb
 if (params.vepCacheVersion)     summary['vepCacheVersion']   = params.vepCacheVersion
 
