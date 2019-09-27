@@ -289,12 +289,6 @@ summary['Script dir']        = workflow.projectDir
 summary['User']              = workflow.userName
 summary['genome']            = params.genome
 
-if (params.acLoci)                summary['acLoci']                = params.acLoci
-if (params.acLociGC)              summary['acLociGC']              = params.acLociGC
-if (params.chrDir)                summary['chrDir']                = params.chrDir
-if (params.chrLength)             summary['chrLength']             = params.chrLength
-if (params.dbsnp)                 summary['dbsnp']                 = params.dbsnp
-if (params.dbsnpIndex)            summary['dbsnpIndex']            = params.dbsnpIndex
 if (params.fasta)                 summary['fasta']                 = params.fasta
 if (params.fastaFai)              summary['fastaFai']              = params.fastaFai
 if (params.dict)                  summary['dict']                  = params.dict
@@ -302,6 +296,12 @@ if (params.bwaIndex)              summary['bwaIndex']              = params.bwaI
 if (params.germlineResource)      summary['germlineResource']      = params.germlineResource
 if (params.germlineResourceIndex) summary['germlineResourceIndex'] = params.germlineResourceIndex
 if (params.intervals)             summary['intervals']             = params.intervals
+if (params.acLoci)                summary['acLoci']                = params.acLoci
+if (params.acLociGC)              summary['acLociGC']              = params.acLociGC
+if (params.chrDir)                summary['chrDir']                = params.chrDir
+if (params.chrLength)             summary['chrLength']             = params.chrLength
+if (params.dbsnp)                 summary['dbsnp']                 = params.dbsnp
+if (params.dbsnpIndex)            summary['dbsnpIndex']            = params.dbsnpIndex
 if (params.knownIndels)           summary['knownIndels']           = params.knownIndels
 if (params.knownIndelsIndex)      summary['knownIndelsIndex']      = params.knownIndelsIndex
 if (params.snpeffDb)              summary['snpeffDb']              = params.snpeffDb
@@ -779,8 +779,8 @@ process BaseRecalibrator {
         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamBaseRecalibrator
         file(dbsnp) from ch_dbsnp
         file(dbsnpIndex) from ch_dbsnpIndex
-        file(dict) from ch_dict
         file(fasta) from ch_fasta
+        file(dict) from ch_dict
         file(fastaFai) from ch_fastaFai
         file(knownIndels) from ch_knownIndels
         file(knownIndelsIndex) from ch_knownIndelsIndex
