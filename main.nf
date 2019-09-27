@@ -600,7 +600,7 @@ process FastQCFQ {
         set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsFastQC
 
     output:
-        file("*.{html.zip}") into fastQCFQReport
+        file("*.{html,zip}") into fastQCFQReport
 
     when: step == 'mapping' && !('fastqc' in skipQC)
     
@@ -621,7 +621,7 @@ process FastQCBAM {
         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") from inputBAMFastQC
 
     output:
-        file("*.{html.zip}") into fastQCBAMReport
+        file("*.{html,zip}") into fastQCBAMReport
 
     when: step == 'mapping' && !('fastqc' in skipQC)
 
