@@ -594,19 +594,19 @@ process FastQCFQ {
 
     tag {idPatient + "-" + idRun}
 
-    publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idRun}", mode: params.publishDirMode
+    publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idSample}_${idRun}", mode: params.publishDirMode
 
     input:
-        set idPatient, idSample, idRun, file("${idRun}_R1.fastq.gz"), file("${idRun}_R2.fastq.gz") from inputPairReadsFastQC
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsFastQC
 
     output:
-        file "*_fastqc.{zip,html}" into fastQCFQReport
+        file("*.{html,zip}") into fastQCFQReport
 
     when: step == 'mapping' && !('fastqc' in skipQC)
     
     script:
     """
-    fastqc -t 2 -q ${idRun}_R1.fastq.gz ${idRun}_R2.fastq.gz
+    fastqc -t 2 -q ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
     """
 }
 
@@ -615,19 +615,19 @@ process FastQCBAM {
 
     tag {idPatient + "-" + idRun}
 
-    publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idRun}", mode: params.publishDirMode
+    publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idSample}_${idRun}", mode: params.publishDirMode
 
     input:
-        set idPatient, idSample, idRun, file("${idRun}.bam") from inputBAMFastQC
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") from inputBAMFastQC
 
     output:
-        file "*_fastqc.{zip,html}" into fastQCBAMReport
+        file("*.{html,zip}") into fastQCBAMReport
 
     when: step == 'mapping' && !('fastqc' in skipQC)
 
     script:
     """
-    fastqc -t 2 -q "${idRun}.bam"
+    fastqc -t 2 -q ${idSample}_${idRun}.bam
     """
 }
 
@@ -648,8 +648,8 @@ process MapReads {
         file(fasta) from ch_fasta
 
     output:
-        set idPatient, idSample, idRun, file("${idRun}.bam") into bamMapped
-        set idPatient, idSample, file("${idRun}.bam") into bamMappedBamQC
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMapped
+        set idPatient, idSample, file("${idSample}_${idRun}.bam") into bamMappedBamQC
 
     when: step == 'mapping'
 
@@ -670,7 +670,7 @@ process MapReads {
         ${convertToFastq}
         bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
         ${input} | \
-        samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
+        samtools sort --threads ${task.cpus} -m 2G - > ${idSample}_${idRun}.bam
     """
 }
 
@@ -2361,24 +2361,19 @@ compressVCFOutVEP = compressVCFOutVEP.dump(tag:'VCF')
 
 // STEP MULTIQC
 
-multiQCReport = Channel.empty()
-    .mix(
-        bamQCReport,
-        bcftoolsReport,
-        fastQCReport,
-        markDuplicatesReport,
-        samtoolsStatsReport,
-        snpeffReport,
-        vcftoolsReport
-    ).collect()
-
 process MultiQC {
     publishDir "${params.outdir}/Reports/MultiQC", mode: params.publishDirMode
 
     input:
         file (multiqcConfig) from Channel.value(params.multiqc_config ? file(params.multiqc_config) : "")
-        file (reports) from multiQCReport
         file (versions) from yamlSoftwareVersion
+        file ('bamQC/*') from bamQCReport.collect().ifEmpty([])
+        file ('BCFToolsStats/*') from bcftoolsReport.collect().ifEmpty([])
+        file ('FastQC/*') from fastQCReport.collect().ifEmpty([])
+        file ('MarkDuplicates/*') from markDuplicatesReport.collect().ifEmpty([])
+        file ('SamToolsStats/*') from samtoolsStatsReport.collect().ifEmpty([])
+        file ('snpEff/*') from snpeffReport.collect().ifEmpty([])
+        file ('VCFTools/*') from vcftoolsReport.collect().ifEmpty([])
 
     output:
         set file("*multiqc_report.html"), file("*multiqc_data") into multiQCOut

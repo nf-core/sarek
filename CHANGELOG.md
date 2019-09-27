@@ -91,6 +91,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#35](https://github.com/nf-core/sarek/pull/35) - Refactor references handling
 - [#35](https://github.com/nf-core/sarek/pull/35) - use Channel values instead of `referenceMap`
 - [#37](https://github.com/nf-core/sarek/pull/37) - Bump version for Release
+- [#38](https://github.com/nf-core/sarek/pull/38) - File names before merge is based on `${idSample}_${idRun}` instead of `${idRun}`
 
 ### `Removed`
 
@@ -123,6 +124,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#31](https://github.com/nf-core/sarek/pull/31) - Fix badges according to nf-core lint
 - [#31](https://github.com/nf-core/sarek/pull/31) - Fix rcolorbrewer version according to nf-core lint
 - [#33](https://github.com/nf-core/sarek/pull/33) - Fix MD Linting
+- [#38](https://github.com/nf-core/sarek/pull/38) - Avoid collision in MultiQC
 
 ### `Deprecated`
 
