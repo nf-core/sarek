@@ -597,7 +597,7 @@ process FastQCFQ {
     publishDir "${params.outdir}/Reports/", mode: params.publishDirMode
 
     input:
-        set idPatient, idSample, idRun, file("${idRun}_R1.fastq.gz"), file("${idRun}_R2.fastq.gz") from inputPairReadsFastQC
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsFastQC
 
     output:
         file("${idSample}/FastQC/${idRun}") into fastQCFQReport
@@ -606,7 +606,7 @@ process FastQCFQ {
     
     script:
     """
-    fastqc -t 2 -q ${idRun}_R1.fastq.gz ${idRun}_R2.fastq.gz
+    fastqc -t 2 -q ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
     mkdir -p ${idSample}/FastQC/${idRun}
     mv *_fastqc.zip *_fastqc.html ${idSample}/FastQC/${idRun}
     """
@@ -620,7 +620,7 @@ process FastQCBAM {
     publishDir "${params.outdir}/Reports/", mode: params.publishDirMode
 
     input:
-        set idPatient, idSample, idRun, file("${idRun}.bam") from inputBAMFastQC
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") from inputBAMFastQC
 
     output:
         file("${idSample}/FastQC/${idRun}") into fastQCBAMReport
@@ -629,7 +629,7 @@ process FastQCBAM {
 
     script:
     """
-    fastqc -t 2 -q ${idRun}.bam
+    fastqc -t 2 -q ${idSample}_${idRun}.bam
     mkdir -p ${idSample}/FastQC/${idRun}
     mv *_fastqc.zip *_fastqc.html ${idSample}/FastQC/${idRun}
     """
@@ -652,8 +652,8 @@ process MapReads {
         file(fasta) from ch_fasta
 
     output:
-        set idPatient, idSample, idRun, file("${idRun}.bam") into bamMapped
-        set idPatient, idSample, file("${idRun}.bam") into bamMappedBamQC
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMapped
+        set idPatient, idSample, file("${idSample}_${idRun}.bam") into bamMappedBamQC
 
     when: step == 'mapping'
 
@@ -674,7 +674,7 @@ process MapReads {
         ${convertToFastq}
         bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
         ${input} | \
-        samtools sort --threads ${task.cpus} -m 2G - > ${idRun}.bam
+        samtools sort --threads ${task.cpus} -m 2G - > ${idSample}_${idRun}.bam
     """
 }
 
