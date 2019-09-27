@@ -501,6 +501,14 @@ ch_fastaFai = params.fastaFai ? Channel.value(file(params.fastaFai)) : fastaFaiB
 ch_germlineResourceIndex = params.germlineResourceIndex ? Channel.value(file(params.germlineResourceIndex)) : germlineResourceIndexBuilt
 ch_knownIndelsIndex = params.knownIndelsIndex ? Channel.value(file(params.knownIndelsIndex)) : knownIndelsIndexBuilt.collect()
 
+ch_dbsnp = ch_dbsnp.dump(tag:'CH_DBSNP')
+ch_dbsnpIndex = ch_dbsnpIndex.dump(tag:'CH_DBSNPINDEX')
+ch_fasta = ch_fasta.dump(tag:'CH_FASTA')
+ch_dict = ch_dict.dump(tag:'CH_DICT')
+ch_fastaFai = ch_fastaFai.dump(tag:'CH_FASTAFAI')
+ch_knownIndels = ch_knownIndels.dump(tag:'CH_KNOWNINDELS')
+ch_knownIndelsIndex = ch_knownIndelsIndex.dump(tag:'CH_KNOWNINDELSINDEX')
+
 /*
 ================================================================================
                                   PREPROCESSING
@@ -766,13 +774,6 @@ markDuplicatesReport = markDuplicatesReport.dump(tag:'MD Report')
 bamBaseRecalibrator = bamMD.combine(intBaseRecalibrator)
 
 bamBaseRecalibrator = bamBaseRecalibrator.dump(tag:'BAM FOR BASERECALIBRATOR')
-ch_dbsnp = ch_dbsnp.dump(tag:'CH_DBSNP')
-ch_dbsnpIndex = ch_dbsnpIndex.dump(tag:'CH_DBSNPINDEX')
-ch_fasta = ch_fasta.dump(tag:'CH_FASTA')
-ch_dict = ch_dict.dump(tag:'CH_DICT')
-ch_fastaFai = ch_fastaFai.dump(tag:'CH_FASTAFAI')
-ch_knownIndels = ch_knownIndels.dump(tag:'CH_KNOWNINDELS')
-ch_knownIndelsIndex = ch_knownIndelsIndex.dump(tag:'CH_KNOWNINDELSINDEX')
 
 // STEP 3: CREATING RECALIBRATION TABLES
 
