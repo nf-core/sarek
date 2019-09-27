@@ -594,21 +594,19 @@ process FastQCFQ {
 
     tag {idPatient + "-" + idRun}
 
-    publishDir "${params.outdir}/Reports/", mode: params.publishDirMode
+    publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idRun}", mode: params.publishDirMode
 
     input:
         set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsFastQC
 
     output:
-        file("${idSample}/FastQC/${idRun}") into fastQCFQReport
+        file("*.{html.zip}") into fastQCFQReport
 
     when: step == 'mapping' && !('fastqc' in skipQC)
     
     script:
     """
     fastqc -t 2 -q ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
-    mkdir -p ${idSample}/FastQC/${idRun}
-    mv *_fastqc.zip *_fastqc.html ${idSample}/FastQC/${idRun}
     """
 }
 
@@ -617,21 +615,19 @@ process FastQCBAM {
 
     tag {idPatient + "-" + idRun}
 
-    publishDir "${params.outdir}/Reports/", mode: params.publishDirMode
+    publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idRun}", mode: params.publishDirMode
 
     input:
         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") from inputBAMFastQC
 
     output:
-        file("${idSample}/FastQC/${idRun}") into fastQCBAMReport
+        file("*.{html.zip}") into fastQCBAMReport
 
     when: step == 'mapping' && !('fastqc' in skipQC)
 
     script:
     """
     fastqc -t 2 -q ${idSample}_${idRun}.bam
-    mkdir -p ${idSample}/FastQC/${idRun}
-    mv *_fastqc.zip *_fastqc.html ${idSample}/FastQC/${idRun}
     """
 }
 
@@ -964,14 +960,14 @@ process BamQC {
 
     tag {idPatient + "-" + idSample}
 
-    publishDir "${params.outdir}/Reports/", mode: params.publishDirMode
+    publishDir "${params.outdir}/Reports/${idSample}/bamQC", mode: params.publishDirMode
 
     input:
         set idPatient, idSample, file(bam) from bamBamQC
         file(targetBED) from ch_targetBED
 
     output:
-        file("${idSample}/bamQC/${bam.baseName}") into bamQCReport
+        file("${bam.baseName}") into bamQCReport
 
     when: !('bamqc' in skipQC)
 
@@ -987,7 +983,7 @@ process BamQC {
         -nt ${task.cpus} \
         -skip-duplicated \
         --skip-dup-mode 0 \
-        -outdir ${idSample}/bamQC/${bam.baseName} \
+        -outdir ${bam.baseName} \
         -outformat HTML
     """
 }
@@ -2371,9 +2367,9 @@ process MultiQC {
     input:
         file (multiqcConfig) from Channel.value(params.multiqc_config ? file(params.multiqc_config) : "")
         file (versions) from yamlSoftwareVersion
-        file ('*/bamQC/*') from bamQCReport.collect().ifEmpty([])
+        file ('bamQC/*') from bamQCReport.collect().ifEmpty([])
         file ('BCFToolsStats/*') from bcftoolsReport.collect().ifEmpty([])
-        file ('*/FastQC/*') from fastQCReport.collect().ifEmpty([])
+        file ('FastQC/*') from fastQCReport.collect().ifEmpty([])
         file ('MarkDuplicates/*') from markDuplicatesReport.collect().ifEmpty([])
         file ('SamToolsStats/*') from samtoolsStatsReport.collect().ifEmpty([])
         file ('snpEff/*') from snpeffReport.collect().ifEmpty([])
