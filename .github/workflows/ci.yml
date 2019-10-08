@@ -18,7 +18,7 @@ jobs:
       - name: Download and tag image
         run: |
           docker pull nfcore/sarek:dev
-          docker tag nfcore/sarek:dev nfcore/sarek:2.5
+          docker tag nfcore/sarek:dev nfcore/sarek:dev
       - name: Run test
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker
