@@ -4,6 +4,7 @@
 
 [![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A519.04.0-brightgreen.svg)](https://www.nextflow.io/)
 [![nf-core](https://img.shields.io/badge/nf--core-pipeline-brightgreen.svg)](https://nf-co.re/)
+[![DOI](https://zenodo.org/badge/184289291.svg)](https://zenodo.org/badge/latestdoi/184289291)
 
 [![Travis build status](https://img.shields.io/travis/nf-core/sarek.svg)](https://travis-ci.com/nf-core/sarek/)
 [![CircleCi build status](https://img.shields.io/circleci/project/github/nf-core/sarek.svg)](https://circleci.com/gh/nf-core/sarek/)
@@ -97,7 +98,7 @@ For further information or help, don't hesitate to get in touch on [Slack](https
 If you use nf-core/sarek for your analysis, please cite the `Sarek` pre-print as follows:
 > Garcia MU, Juhos S, Larsson M, Olason PI, Martin M, Eisfeldt J, DiLorenzo S, Sandgren J, de Ståhl TD, Wirta V, Nistér M, Nystedt B, Käller M. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants**. *bioRxiv*. 2018. p. 316976. [doi: 10.1101/316976](https://www.biorxiv.org/content/10.1101/316976v1).
 
-You can cite the sarek zenodo record for a specific version using the following [doi: 10.5281/zenodo.2582812](https://doi.org/10.5281/zenodo.2582812)
+You can cite the sarek zenodo record for a specific version using the following [DOI: 10.5281/zenodo.3476426 ](https://zenodo.org/badge/latestdoi/184289291)
 
 You can cite the `nf-core` pre-print as follows:
 > Ewels PA, Peltzer A, Fillinger S, Alneberg JA, Patel H, Wilm A, Garcia MU, Di Tommaso P, Nahnsen S. **nf-core: Community curated bioinformatics pipelines**. *bioRxiv*. 2019. p. 610741. [doi: 10.1101/610741](https://www.biorxiv.org/content/10.1101/610741v3).
