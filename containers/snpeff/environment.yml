@@ -1,0 +1,10 @@
+# You can use this file to create a conda environment for this pipeline:
+# conda env create -f environment.yml
+name: sarek-snpeff-2.5
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - snpeff=4.3.1t

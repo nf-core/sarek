@@ -1,0 +1,85 @@
+version: 2.0
+jobs:
+  snpeffgrch37: &buildsnpeff
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    environment:
+      GENOME: GRCh37
+      SNPEFF_CACHE_VERSION: "75"
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          command: docker build -t nfcore/sareksnpeff:2.5.${GENOME} containers/snpeff/. --build-arg GENOME=${GENOME} --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION}
+      - run:
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push nfcore/sareksnpeff:2.5.${GENOME}
+
+  snpeffgrch38:
+    << : *buildsnpeff
+    environment:
+      GENOME: GRCh38
+      SNPEFF_CACHE_VERSION: "86"
+
+  snpeffgrcm38:
+    << : *buildsnpeff
+    environment:
+      GENOME: GRCm38
+      SNPEFF_CACHE_VERSION: "86"
+
+  snpeffcanfam3_1:
+    << : *buildsnpeff
+    environment:
+      GENOME: CanFam3.1
+      SNPEFF_CACHE_VERSION: "86"
+
+  vepgrch37: &buildvep
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    environment:
+      GENOME: GRCh37
+      SPECIES: homo_sapiens
+      VEP_VERSION: "95"
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          command: docker build -t nfcore/sarekvep:2.5.${GENOME} containers/vep/. --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
+          no_output_timeout: 3h
+      - run:
+          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:2.5.${GENOME}
+
+  vepgrch38:
+    << : *buildvep
+    environment:
+      GENOME: GRCh38
+      SPECIES: homo_sapiens
+      VEP_VERSION: "95"
+
+  vepgrcm38:
+    << : *buildvep
+    environment:
+      GENOME: GRCm38
+      SPECIES: mus_musculus
+      VEP_VERSION: "95"
+
+  vepcanfam3_1:
+    << : *buildvep
+    environment:
+      GENOME: CanFam3.1
+      SPECIES: canis_familiaris
+      VEP_VERSION: "95"
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - snpeffcanfam3_1
+      - snpeffgrch37
+      - snpeffgrch38
+      - snpeffgrcm38
+      - vepcanfam3_1
+      - vepgrch37
+      - vepgrch38
+      - vepgrcm38
