@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## dev
 
+### `Fixed`
+
+- [#40](https://github.com/nf-core/sarek/pull/40) - Fix issue with `publishDirMode` within `test` profile
+
 ## [2.5] - Ålkatj
 
 Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/) template.
