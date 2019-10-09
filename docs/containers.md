@@ -18,22 +18,22 @@ For annotation, the main container can be used, but the cache has to be download
 - Contain **[AlleleCount](https://github.com/cancerit/alleleCount)** 4.0.2
 - Contain **[BCFTools](https://github.com/samtools/bcftools)** 1.9
 - Contain **[BWA](https://github.com/lh3/bwa)** 0.7.17
-- Contain **[Control-FREEC](https://github.com/BoevaLab/FREEC)** 11.4
+- Contain **[Control-FREEC](https://github.com/BoevaLab/FREEC)** 11.5
 - Contain **[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)** 0.11.8
-- Contain **[FreeBayes](https://github.com/ekg/freebayes)** 1.2.0
-- Contain **[GATK4](https://github.com/broadinstitute/gatk)** 4.1.2.0
+- Contain **[FreeBayes](https://github.com/ekg/freebayes)** 1.3.1
+- Contain **[GATK4](https://github.com/broadinstitute/gatk)** 4.1.4.0
 - Contain **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
 - Contain **[HTSlib](https://github.com/samtools/htslib)** 1.9
-- Contain **[Manta](https://github.com/Illumina/manta)** 1.5.0
+- Contain **[Manta](https://github.com/Illumina/manta)** 1.6.0
 - Contain **[MultiQC](https://github.com/ewels/MultiQC/)** 1.7
-- Contain **[Qualimap](http://qualimap.bioinfo.cipf.es)** 2.2.2b
+- Contain **[Qualimap](http://qualimap.bioinfo.cipf.es)** 2.2.2c
 - Contain **[samtools](https://github.com/samtools/samtools)** 1.9
 - Contain **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
 - Contain **[Strelka2](https://github.com/Illumina/strelka)** 2.9.10
-- Contain **[TIDDIT](https://github.com/SciLifeLab/TIDDIT)** 2.7.1
-- Contain **[VCFanno](https://github.com/brentp/vcfanno)** 0.3.1
+- Contain **[TIDDIT](https://github.com/SciLifeLab/TIDDIT)** 2.8.0
+- Contain **[VCFanno](https://github.com/brentp/vcfanno)** 0.3.2
 - Contain **[VCFtools](https://vcftools.github.io/index.html)** 0.1.16
-- Contain **[VEP](https://github.com/Ensembl/ensembl-vep)** 95.2
+- Contain **[VEP](https://github.com/Ensembl/ensembl-vep)** 98.2
 
 ### sareksnpeff [![sareksnpeff-docker status](https://img.shields.io/docker/automated/nfcore/sareksnpeff.svg)](https://hub.docker.com/r/nfcore/sareksnpeff)
 
@@ -45,7 +45,7 @@ For annotation, the main container can be used, but the cache has to be download
 
 - Based on `nfcore/base:latest`
 - Contain **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
-- Contain **[VEP](https://github.com/Ensembl/ensembl-vep)** 95.2
+- Contain **[VEP](https://github.com/Ensembl/ensembl-vep)** 98.2
 - Contain cache for `GRCh37`, `GRCh38`, `GRCm38` or `CanFam3.1`
 
 ## Using helper script
