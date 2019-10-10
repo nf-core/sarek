@@ -19,7 +19,7 @@ if(!require(RColorBrewer)){
     source("http://bioconductor.org/biocLite.R")
     biocLite("RColorBrewer", suppressUpdates=TRUE, lib="$baseDir/scripts")
     library(RColorBrewer)
-}ls
+}
 options(bitmapType='cairo')
 
 #Load the  data
