@@ -19,8 +19,8 @@
    viewBox="0 0 712.22505 1427.69"
    sodipodi:docname="sarek_workflow.svg"
    inkscape:export-filename="sarek_workflow.png"
-   inkscape:export-xdpi="50.419456"
-   inkscape:export-ydpi="50.419456"><metadata
+   inkscape:export-xdpi="37.783001"
+   inkscape:export-ydpi="37.783001"><metadata
      id="metadata8"><rdf:RDF><cc:Work
          rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><defs
@@ -2218,8 +2218,8 @@
      id="namedview4"
      showgrid="false"
      inkscape:zoom="0.5"
-     inkscape:cx="241.36747"
-     inkscape:cy="682.5213"
+     inkscape:cx="-79.63253"
+     inkscape:cy="922.5213"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -2249,6 +2249,7 @@
      id="tspan3424"
      y="-2749.4028"
      x="866.00854" /></text>
+
 
 
 
@@ -2785,6 +2786,7 @@
 
 
 
+
 <text
    style="font-style:normal;font-weight:bold;font-size:medium;font-family:sans-serif;color-interpolation:auto;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1.45000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
    x="32.745098"
@@ -2794,6 +2796,7 @@
    xml:space="preserve"
    id="text8514"
    transform="matrix(1.9071373,0,0,-1.9071373,542.56229,2077.7321)" />
+
 
 
 
@@ -3134,6 +3137,7 @@
      id="tspan4885"
      style="font-size:11.90393639px">Preprocessing</tspan></text>
 
+
 <rect
    ry="5.2434611"
    rx="5.2434611"
@@ -3239,6 +3243,7 @@
      style="font-size:11.90393639px"
      id="tspan4907">Annotation</tspan></text>
 
+
 <rect
    transform="matrix(3.3334488,0,0,-2.7685238,1558.6733,1718.605)"
    id="rect4911"
@@ -3259,6 +3264,7 @@
    style="font-style:normal;font-weight:bold;font-size:medium;line-height:0%;font-family:sans-serif;color-interpolation:auto;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1.45000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"><tspan
      style="font-size:11.90393639px"
      id="tspan4923">Reports</tspan></text>
+
 
 <g
    id="g4697"
