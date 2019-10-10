@@ -13,7 +13,6 @@ if(length(args)<6){
     gender = args[8]
 }
 
-#source(paste(baseDir,"/scripts/ascat.R", sep=""))
 library(ASCAT)
 
 if(!require(RColorBrewer)){
