@@ -23,13 +23,13 @@
 Previously known as the Cancer Analysis Workflow (CAW),
 Sarek is a workflow designed to run analyses on whole genome or targeted sequencing data from regular samples or tumour / normal pairs and could include additional relapses.
 
-![Sarek Workflow](docs/images/sarek_workflow.png)
-
 It's built using [Nextflow](https://www.nextflow.io),
 a domain specific language for workflow building,
 across multiple compute infrastructures in a very portable manner.
 Software dependencies are handled using [Conda](https://conda.io/), [Docker](https://www.docker.com) or [Singularity](https://www.sylabs.io/singularity/) - environment/container technologies that provide excellent reproducibility and ease of use.
 Thus making installation trivial and results highly reproducible.
+
+<img align="center" title="Sarek Workflow" src="/docs/images/sarek_workflow.png">
 
 It's listed on the [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek), [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek) and [omicX - Bioinformatics tools](https://omictools.com/sarek-tool).
 
