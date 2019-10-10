@@ -1,7 +1,0 @@
-[submodule "configs"]
-	path = configs
-	url = https://github.com/nf-core/configs.git
-[submodule "data"]
-	path = data
-	url = https://github.com/nf-core/test-datasets.git
-	branch = sarek
