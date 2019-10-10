@@ -15,7 +15,6 @@
 
 [![Join us on Slack](https://img.shields.io/badge/slack-nfcore/sarek-blue.svg)](https://nfcore.slack.com/messages/CGFUX04HZ/)
 
-
 ## Introduction
 
 <img align="right" title="CAW" src="/docs/images/CAW_logo.png">
@@ -29,7 +28,9 @@ across multiple compute infrastructures in a very portable manner.
 Software dependencies are handled using [Conda](https://conda.io/), [Docker](https://www.docker.com) or [Singularity](https://www.sylabs.io/singularity/) - environment/container technologies that provide excellent reproducibility and ease of use.
 Thus making installation trivial and results highly reproducible.
 
-<img display="block" margin-left="auto" margin-right="auto" width="50%" title="Sarek Workflow" src="/docs/images/sarek_workflow.png">
+<p align="center">
+    <img width="50%" title="Sarek Workflow" src="/docs/images/sarek_workflow.png">
+</p>
 
 It's listed on the [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek), [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek) and [omicX - Bioinformatics tools](https://omictools.com/sarek-tool).
 
