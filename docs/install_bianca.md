@@ -167,7 +167,8 @@ And then nf-core/sarek can be used with:
 ```
 
 This command worked on Bianca 20190906:
-```
+
+```bash
 >screen -S SAMPLE /path/to/nextflow run /path/to/sarek/main.nf -profile uppmax --project PROJID --sample SAMPLE.tsv --genome GRCh37 --genomes_base /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37  --step variantcalling --tools ASCAT --igenomesIgnore
 
 #To detach screen:
