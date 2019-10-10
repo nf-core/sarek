@@ -29,7 +29,7 @@ across multiple compute infrastructures in a very portable manner.
 Software dependencies are handled using [Conda](https://conda.io/), [Docker](https://www.docker.com) or [Singularity](https://www.sylabs.io/singularity/) - environment/container technologies that provide excellent reproducibility and ease of use.
 Thus making installation trivial and results highly reproducible.
 
-<img align="center" title="Sarek Workflow" src="/docs/images/sarek_workflow.png">
+<img display="block" margin-left="auto" margin-right="auto" width="50%" title="Sarek Workflow" src="/docs/images/sarek_workflow.png">
 
 It's listed on the [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek), [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek) and [omicX - Bioinformatics tools](https://omictools.com/sarek-tool).
 
