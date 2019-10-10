@@ -1,4 +1,4 @@
-#!/bin/env Rscript
+q#!/bin/env Rscript
 args = commandArgs(trailingOnly=TRUE)
 if(length(args)<6){
     stop("No input files supplied\n\nUsage:\nRscript run_ascat.r tumor_baf tumor_logr normal_baf normal_logr tumor_sample_name baseDir gcfile\n\n")
@@ -20,7 +20,7 @@ if(!require(RColorBrewer)){
     source("http://bioconductor.org/biocLite.R")
     biocLite("RColorBrewer", suppressUpdates=TRUE, lib="$baseDir/scripts")
     library(RColorBrewer)
-}ls
+}
 options(bitmapType='cairo')
 
 #Load the  data
@@ -32,7 +32,6 @@ if(gender=="XY"){
     ascat.bc = ascat.loadData(Tumor_LogR_file = tumorlogr, Tumor_BAF_file = tumorbaf, Germline_LogR_file = normallogr, Germline_BAF_file = normalbaf, gender = gender, chrs = c(1:22,"X"), sexchromosomes = c("X"))
 
 }
-
 
 
 #GC wave correction
