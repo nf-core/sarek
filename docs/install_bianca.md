@@ -153,7 +153,7 @@ Sometimes Nextflow needs write access to the image folder, and if so the images 
 #Create a folder for the singularity images somewhere in your project:
 mkdir sarek_simg
 
-#Copy the relevant singularity image from the write protected folder on Uppmax to the fodler where you have write permission: 
+#Copy the relevant singularity image from the write protected folder on Uppmax to the folder where you have write permission:
 cp /sw/data/uppnex/ToolBox/sarek/nfcore-sarek-dev.img /path/to/your/sarek_simg/.
 
 #Update the ENV parameter NXF_SINGULARITY_CACHEDIR
