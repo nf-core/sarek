@@ -12,8 +12,8 @@ Settings in `igenomes.config` can be tailored to your needs.
 
 To speed up some preprocessing and variant calling processes, the reference is chopped into smaller pieces.
 The intervals are chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs.
-We are ignoring the hs37d5 contig that contains concatenated decoy sequences.
-Parts of preprocessing and variant calling are done by this intervals, and the different resulting files are then merged.
+We are ignoring the `hs37d5` contig that contains concatenated decoy sequences.
+Parts of preprocessing and variant calling are done by these intervals, and the different resulting files are then merged.
 This can parallelize processes, and push down wall clock time significantly.
 
 The calling intervals can be defined using a `.list` or a `.bed` file.
@@ -36,11 +36,3 @@ First, when there are multiple consecutive intervals in the file that take littl
 Second, the jobs with largest processing time are started first, which reduces wall-clock time.
 If no runtime is given, a time of 1000 nucleotides per second is assumed.
 Actual figures vary from 2 nucleotides/second to 30000 nucleotides/second.
-
-## build.nf
-
-The [`build.nf`](#buildnf) script is used to build reference needed for smallGRCh37.
-
-```bash
-nextflow run build.nf
-```
