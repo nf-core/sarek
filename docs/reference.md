@@ -35,4 +35,12 @@ The runtime estimate is used in two different ways.
 First, when there are multiple consecutive intervals in the file that take little time to compute, they are processed as a single job, thus reducing the number of processes that needs to be spawned.
 Second, the jobs with largest processing time are started first, which reduces wall-clock time.
 If no runtime is given, a time of 1000 nucleotides per second is assumed.
-Actual figures vary from 2 nucleotides/second to 30000 nucleotides/second.
+ Actual figures vary from 2 nucleotides/second to 30000 nucleotides/second.
+
+### Working with whole exom (WES) or panel data
+
+The `--targetBED` parameter does _not_  imply that the workflow is running alignment or variant calling only for the supplied targets.
+Instead, we are aligning for the whole genome, and selecting variants only at the very end by intersecting with the provided target file.
+Adding every exon as an interval in case of WES can generate >200K processes or jobs, much more forks, and similar number of directories in the Nextflow work directory.
+Furthermore, primers and/or baits are not 100% specific, (certainly not for MHC and KIR, etc.), quite likely there going to be reads mapping to multiple locations.
+If you are certain that the target is unique for your genome (all the reads will certainly map to only one location), and aligning to the whole genome is an overkill, better to change the reference itself.
