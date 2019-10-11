@@ -35,7 +35,7 @@ The runtime estimate is used in two different ways.
 First, when there are multiple consecutive intervals in the file that take little time to compute, they are processed as a single job, thus reducing the number of processes that needs to be spawned.
 Second, the jobs with largest processing time are started first, which reduces wall-clock time.
 If no runtime is given, a time of 1000 nucleotides per second is assumed.
- Actual figures vary from 2 nucleotides/second to 30000 nucleotides/second.
+Actual figures vary from 2 nucleotides/second to 30000 nucleotides/second.
 
 ### Working with whole exom (WES) or panel data
 
