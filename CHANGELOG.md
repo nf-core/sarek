@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Removed`
 
+- [#45](https://github.com/nf-core/sarek/pull/45) - Include Workflow figure in `README.md`
 - [#46](https://github.com/nf-core/sarek/pull/46) - Remove mention of old `build.nf` script which was included in `main.nf`
 
 ### `Fixed`
