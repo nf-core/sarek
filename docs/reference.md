@@ -37,7 +37,7 @@ Second, the jobs with largest processing time are started first, which reduces w
 If no runtime is given, a time of 1000 nucleotides per second is assumed.
 Actual figures vary from 2 nucleotides/second to 30000 nucleotides/second.
 
-### Working with whole exom (WES) or panel data
+### Working with whole exome (WES) or panel data
 
 The `--targetBED` parameter does _not_  imply that the workflow is running alignment or variant calling only for the supplied targets.
 Instead, we are aligning for the whole genome, and selecting variants only at the very end by intersecting with the provided target file.
