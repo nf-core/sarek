@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#41](https://github.com/nf-core/sarek/pull/41) - Update `qualimap` from `2.2.2b` to `2.2.2c`
 - [#41](https://github.com/nf-core/sarek/pull/41) - Update `tiddit` from `2.7.1` to `2.8.0`
 - [#41](https://github.com/nf-core/sarek/pull/41) - Update `vcfanno` from `0.3.1` to `0.3.2`
+- [#46](https://github.com/nf-core/sarek/pull/46) - Add location to abstacts.
+
+### `Removed`
+
+- [#46](https://github.com/nf-core/sarek/pull/46) - Remove mention of old `build.nf` script which was included in `main.nf`
 
 ### `Fixed`
 
