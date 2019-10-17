@@ -1,6 +1,6 @@
 # You can use this file to create a conda environment for this pipeline:
 #   conda env create -f environment.yml
-name: nf-core-sarek-2.5
+name: nf-core-sarek-2.5.1dev
 channels:
   - conda-forge
   - bioconda
@@ -10,19 +10,19 @@ dependencies:
   - bcftools=1.9
   - bwa=0.7.17
   - cancerit-allelecount=4.0.2
-  - control-freec=11.4
-  - ensembl-vep=95.2
+  - control-freec=11.5
+  - ensembl-vep=98.2
   - fastqc=0.11.8
-  - freebayes=1.2.0
-  - gatk4=4.1.2.0
+  - freebayes=1.3.1
+  - gatk4=4.1.4.0
   - genesplicer=1.0
   - htslib=1.9
-  - manta=1.5.0
+  - manta=1.6.0
   - multiqc=1.7
-  - qualimap=2.2.2b
+  - qualimap=2.2.2c
   - samtools=1.9
   - snpeff=4.3.1t
   - strelka=2.9.10
-  - tiddit=2.7.1
-  - vcfanno=0.3.1
+  - tiddit=2.8.0
+  - vcfanno=0.3.2
   - vcftools=0.1.16

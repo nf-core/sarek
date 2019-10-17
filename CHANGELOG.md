@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## dev
+
+### `Added`
+
+- [#41](https://github.com/nf-core/sarek/pull/41) - Update `control-freec` from `11.4` to `11.5`
+- [#41](https://github.com/nf-core/sarek/pull/41) - Update `ensembl-vep` from `95.2` to `98.2`
+- [#41](https://github.com/nf-core/sarek/pull/41) - Update `freebayes` from `1.2.0` to `1.3.1`
+- [#41](https://github.com/nf-core/sarek/pull/41) - Update `gatk4` from `4.1.2.0` to `4.1.4.0`
+- [#41](https://github.com/nf-core/sarek/pull/41) - Update `manta` from `1.5.0` to `1.6.0`
+- [#41](https://github.com/nf-core/sarek/pull/41) - Update `qualimap` from `2.2.2b` to `2.2.2c`
+- [#41](https://github.com/nf-core/sarek/pull/41) - Update `tiddit` from `2.7.1` to `2.8.0`
+- [#41](https://github.com/nf-core/sarek/pull/41) - Update `vcfanno` from `0.3.1` to `0.3.2`
+- [#45](https://github.com/nf-core/sarek/pull/45) - Include Workflow figure in `README.md`
+
+### `Fixed`
+
+- [#40](https://github.com/nf-core/sarek/pull/40) - Fix issue with `publishDirMode` within `test` profile
+- [#42](https://github.com/nf-core/sarek/pull/42) - Fix typos, and minor updates in `README.md`
+- [#43](https://github.com/nf-core/sarek/pull/43) - Fix automated `VEP` builds with circleCI
+
 ## [2.5] - Ålkatj
 
 Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/) template.
