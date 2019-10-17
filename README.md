@@ -47,11 +47,19 @@ nextflow run nf-core/sarek -profile test,<docker/singularity/conda/institute>
 
 iv. Start running your own analysis!
 
+<<<<<<< HEAD
 ```bash
 nextflow run nf-core/sarek -profile <docker/singularity/conda/institute> --input '*.tsv' --genome GRCh38
 ```
 
 See [usage docs](docs/usage.md) for all of the available options when running the pipeline.
+=======
+<p align="center">
+    <img title="Sarek Workflow" src="./docs/images/sarek_workflow.png">
+</p>
+
+It's listed on the [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek), [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek) and [omicX - Bioinformatics tools](https://omictools.com/sarek-tool).
+>>>>>>> 8518d36... added script to help downstream analysis, adding RankScore for Scout
 
 ## Documentation
 
@@ -73,6 +81,7 @@ The nf-core/sarek pipeline comes with documentation about the pipeline, found in
     * [Complementary information about ASCAT](docs/ascat.md)
     * [Complementary information about Sentieon](docs/sentieon.md)
     * [Extra documentation on annotation](docs/annotation.md)
+    * [Downstream processing, ranking, and connection to Scout](docs/downstream.md)
 5. [Troubleshooting](https://nf-co.re/usage/troubleshooting)
 
 ## Credits
@@ -129,12 +138,19 @@ For further information or help, don't hesitate to get in touch on [Slack](https
 
 ## Citation
 
+<<<<<<< HEAD
 If you use `nf-core/sarek` for your analysis, please cite the `Sarek` article as follows:
 > Garcia M, Juhos S, Larsson M et al. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants [version 1; peer review: 2 approved]** *F1000Research* 2020, 9:63 [doi: 10.12688/f1000research.16665.1](https://f1000research.com/articles/9-63/v1).
 
 You can cite the sarek zenodo record for a specific version using the following [doi: 10.5281/zenodo.3476426](https://zenodo.org/badge/latestdoi/184289291)
 
 You can cite the `nf-core` publication as follows:
+=======
+If you use `nf-core/sarek` for your analysis, please cite the `Sarek` pre-print as follows:
+> Garcia MU, Juhos S, Larsson M, Olason PI, Martin M, Eisfeldt J, DiLorenzo S, Sandgren J, de Ståhl TD, Wirta V, Nistér M, Nystedt B, Käller M. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants**. *bioRxiv*. 2018. p. 316976. [doi: 10.1101/316976](https://www.biorxiv.org/content/10.1101/316976v1).
+
+You can cite the sarek zenodo record for a specific version using the following [doi: 10.5281/zenodo.3476426](https://zenodo.org/badge/latestdoi/184289291)
+>>>>>>> 8518d36... added script to help downstream analysis, adding RankScore for Scout
 
 > **The nf-core framework for community-curated bioinformatics pipelines.**
 >
