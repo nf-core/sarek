@@ -938,7 +938,7 @@ process RunGenomeChronicler {
   file(vep) from vepGenomeChronicler
 
   output:
-  file("${bam.simpleName}/*") into chronicler_results
+  file("*") into chronicler_results
 
   script:
   
@@ -948,6 +948,7 @@ process RunGenomeChronicler {
   cat \$(basename $bam)
   genomechronicler \
   --bamFile $bam $optional_argument
+  echo \$(ls -lh) 
   """
 }
 
