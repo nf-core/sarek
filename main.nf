@@ -2530,338 +2530,338 @@ process RunGenomeChronicler {
 //     }
 // }
 
-// /*
-// ================================================================================
-//                                 nf-core functions
-// ================================================================================
-// */
+/*
+================================================================================
+                                nf-core functions
+================================================================================
+*/
 
-// def create_workflow_summary(summary) {
-//     def yaml_file = workDir.resolve('workflow_summary_mqc.yaml')
-//     yaml_file.text  = """
-//     id: 'nf-core-sarek-summary'
-//     description: " - this information is collected when the pipeline is started."
-//     section_name: 'nf-core/sarek Workflow Summary'
-//     section_href: 'https://github.com/nf-core/sarek'
-//     plot_type: 'html'
-//     data: |
-//         <dl class=\"dl-horizontal\">
-// ${summary.collect { k, v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
-//         </dl>
-//     """.stripIndent()
+def create_workflow_summary(summary) {
+    def yaml_file = workDir.resolve('workflow_summary_mqc.yaml')
+    yaml_file.text  = """
+    id: 'nf-core-sarek-summary'
+    description: " - this information is collected when the pipeline is started."
+    section_name: 'nf-core/sarek Workflow Summary'
+    section_href: 'https://github.com/nf-core/sarek'
+    plot_type: 'html'
+    data: |
+        <dl class=\"dl-horizontal\">
+${summary.collect { k, v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
+        </dl>
+    """.stripIndent()
 
-//    return yaml_file
-// }
+   return yaml_file
+}
 
-// def nfcoreHeader() {
-//     // Log colors ANSI codes
-//     c_reset  = params.monochrome_logs ? '' : "\033[0m";
-//     c_dim    = params.monochrome_logs ? '' : "\033[2m";
-//     c_black  = params.monochrome_logs ? '' : "\033[0;30m";
-//     c_red    = params.monochrome_logs ? '' : "\033[0;31m";
-//     c_green  = params.monochrome_logs ? '' : "\033[0;32m";
-//     c_yellow = params.monochrome_logs ? '' : "\033[0;33m";
-//     c_blue   = params.monochrome_logs ? '' : "\033[0;34m";
-//     c_purple = params.monochrome_logs ? '' : "\033[0;35m";
-//     c_cyan   = params.monochrome_logs ? '' : "\033[0;36m";
-//     c_white  = params.monochrome_logs ? '' : "\033[0;37m";
+def nfcoreHeader() {
+    // Log colors ANSI codes
+    c_reset  = params.monochrome_logs ? '' : "\033[0m";
+    c_dim    = params.monochrome_logs ? '' : "\033[2m";
+    c_black  = params.monochrome_logs ? '' : "\033[0;30m";
+    c_red    = params.monochrome_logs ? '' : "\033[0;31m";
+    c_green  = params.monochrome_logs ? '' : "\033[0;32m";
+    c_yellow = params.monochrome_logs ? '' : "\033[0;33m";
+    c_blue   = params.monochrome_logs ? '' : "\033[0;34m";
+    c_purple = params.monochrome_logs ? '' : "\033[0;35m";
+    c_cyan   = params.monochrome_logs ? '' : "\033[0;36m";
+    c_white  = params.monochrome_logs ? '' : "\033[0;37m";
 
-//     return """    ${c_dim}----------------------------------------------------${c_reset}
-//                                             ${c_green},--.${c_black}/${c_green},-.${c_reset}
-//     ${c_blue}        ___     __   __   __   ___     ${c_green}/,-._.--~\'${c_reset}
-//     ${c_blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${c_yellow}}  {${c_reset}
-//     ${c_blue}  | \\| |       \\__, \\__/ |  \\ |___     ${c_green}\\`-._,-`-,${c_reset}
-//                                             ${c_green}`._,._,\'${c_reset}
-//         ${c_white}____${c_reset}
-//       ${c_white}.´ _  `.${c_reset}
-//      ${c_white}/  ${c_green}|\\${c_reset}`-_ \\${c_reset}     ${c_blue} __        __   ___     ${c_reset}
-//     ${c_white}|   ${c_green}| \\${c_reset}  `-|${c_reset}    ${c_blue}|__`  /\\  |__) |__  |__/${c_reset}
-//      ${c_white}\\ ${c_green}|   \\${c_reset}  /${c_reset}     ${c_blue}.__| /¯¯\\ |  \\ |___ |  \\${c_reset}
-//       ${c_white}`${c_green}|${c_reset}____${c_green}\\${c_reset}´${c_reset}
+    return """    ${c_dim}----------------------------------------------------${c_reset}
+                                            ${c_green},--.${c_black}/${c_green},-.${c_reset}
+    ${c_blue}        ___     __   __   __   ___     ${c_green}/,-._.--~\'${c_reset}
+    ${c_blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${c_yellow}}  {${c_reset}
+    ${c_blue}  | \\| |       \\__, \\__/ |  \\ |___     ${c_green}\\`-._,-`-,${c_reset}
+                                            ${c_green}`._,._,\'${c_reset}
+        ${c_white}____${c_reset}
+      ${c_white}.´ _  `.${c_reset}
+     ${c_white}/  ${c_green}|\\${c_reset}`-_ \\${c_reset}     ${c_blue} __        __   ___     ${c_reset}
+    ${c_white}|   ${c_green}| \\${c_reset}  `-|${c_reset}    ${c_blue}|__`  /\\  |__) |__  |__/${c_reset}
+     ${c_white}\\ ${c_green}|   \\${c_reset}  /${c_reset}     ${c_blue}.__| /¯¯\\ |  \\ |___ |  \\${c_reset}
+      ${c_white}`${c_green}|${c_reset}____${c_green}\\${c_reset}´${c_reset}
 
-//     ${c_purple}  nf-core/sarek v${workflow.manifest.version}${c_reset}
-//     ${c_dim}----------------------------------------------------${c_reset}
-//     """.stripIndent()
-// }
+    ${c_purple}  nf-core/sarek v${workflow.manifest.version}${c_reset}
+    ${c_dim}----------------------------------------------------${c_reset}
+    """.stripIndent()
+}
 
-// def checkHostname() {
-//     def c_reset = params.monochrome_logs ? '' : "\033[0m"
-//     def c_white = params.monochrome_logs ? '' : "\033[0;37m"
-//     def c_red = params.monochrome_logs ? '' : "\033[1;91m"
-//     def c_yellow_bold = params.monochrome_logs ? '' : "\033[1;93m"
-//     if (params.hostnames) {
-//         def hostname = "hostname".execute().text.trim()
-//         params.hostnames.each { prof, hnames ->
-//             hnames.each { hname ->
-//                 if (hostname.contains(hname) && !workflow.profile.contains(prof)) {
-//                     log.error "====================================================\n" +
-//                             "  ${c_red}WARNING!${c_reset} You are running with `-profile $workflow.profile`\n" +
-//                             "  but your machine hostname is ${c_white}'$hostname'${c_reset}\n" +
-//                             "  ${c_yellow_bold}It's highly recommended that you use `-profile $prof${c_reset}`\n" +
-//                             "============================================================"
-//                 }
-//             }
-//         }
-//     }
-// }
+def checkHostname() {
+    def c_reset = params.monochrome_logs ? '' : "\033[0m"
+    def c_white = params.monochrome_logs ? '' : "\033[0;37m"
+    def c_red = params.monochrome_logs ? '' : "\033[1;91m"
+    def c_yellow_bold = params.monochrome_logs ? '' : "\033[1;93m"
+    if (params.hostnames) {
+        def hostname = "hostname".execute().text.trim()
+        params.hostnames.each { prof, hnames ->
+            hnames.each { hname ->
+                if (hostname.contains(hname) && !workflow.profile.contains(prof)) {
+                    log.error "====================================================\n" +
+                            "  ${c_red}WARNING!${c_reset} You are running with `-profile $workflow.profile`\n" +
+                            "  but your machine hostname is ${c_white}'$hostname'${c_reset}\n" +
+                            "  ${c_yellow_bold}It's highly recommended that you use `-profile $prof${c_reset}`\n" +
+                            "============================================================"
+                }
+            }
+        }
+    }
+}
 
-// /*
-// ================================================================================
-//                                  sarek functions
-// ================================================================================
-// */
+/*
+================================================================================
+                                 sarek functions
+================================================================================
+*/
 
-// // Check if a row has the expected number of item
-// def checkNumberOfItem(row, number) {
-//     if (row.size() != number) exit 1, "Malformed row in TSV file: ${row}, see --help for more information"
-//     return true
-// }
+// Check if a row has the expected number of item
+def checkNumberOfItem(row, number) {
+    if (row.size() != number) exit 1, "Malformed row in TSV file: ${row}, see --help for more information"
+    return true
+}
 
-// // Check parameter existence
-// def checkParameterExistence(it, list) {
-//     if (!list.contains(it)) {
-//         println("Unknown parameter: ${it}")
-//         return false
-//     }
-//     return true
-// }
+// Check parameter existence
+def checkParameterExistence(it, list) {
+    if (!list.contains(it)) {
+        println("Unknown parameter: ${it}")
+        return false
+    }
+    return true
+}
 
-// // Compare each parameter with a list of parameters
-// def checkParameterList(list, realList) {
-//     return list.every{ checkParameterExistence(it, realList) }
-// }
+// Compare each parameter with a list of parameters
+def checkParameterList(list, realList) {
+    return list.every{ checkParameterExistence(it, realList) }
+}
 
-// // Check if params.item exists and return params.genomes[params.genome].item otherwise
-// def checkParamReturnFile(item) {
-//     // Handle deprecation
-//     if (params.genomeDict && item == "dict") return file(params.genomeDict)
-//     if (params.genomeFile && item == "fasta") return file(params.genomeFile)
-//     if (params.genomeIndex && item == "fastaFai") return file(params.genomeIndex)
+// Check if params.item exists and return params.genomes[params.genome].item otherwise
+def checkParamReturnFile(item) {
+    // Handle deprecation
+    if (params.genomeDict && item == "dict") return file(params.genomeDict)
+    if (params.genomeFile && item == "fasta") return file(params.genomeFile)
+    if (params.genomeIndex && item == "fastaFai") return file(params.genomeIndex)
 
-//     params."${item}" = params.genomes[params.genome]."${item}"
-//     return file(params."${item}")
-// }
+    params."${item}" = params.genomes[params.genome]."${item}"
+    return file(params."${item}")
+}
 
-// // Define list of available tools to annotate
-// def defineAnnoList() {
-//     return [
-//         'HaplotypeCaller',
-//         'Manta',
-//         'Mutect2',
-//         'Strelka',
-//         'TIDDIT'
-//     ]
-// }
+// Define list of available tools to annotate
+def defineAnnoList() {
+    return [
+        'HaplotypeCaller',
+        'Manta',
+        'Mutect2',
+        'Strelka',
+        'TIDDIT'
+    ]
+}
 
-// // Define list of skipable QC tools
-// def defineSkipQClist() {
-//     return [
-//         'bamqc',
-//         'bcftools',
-//         'fastqc',
-//         'markduplicates',
-//         'multiqc',
-//         'samtools',
-//         'vcftools',
-//         'versions'
-//     ]
-// }
+// Define list of skipable QC tools
+def defineSkipQClist() {
+    return [
+        'bamqc',
+        'bcftools',
+        'fastqc',
+        'markduplicates',
+        'multiqc',
+        'samtools',
+        'vcftools',
+        'versions'
+    ]
+}
 
-// // Define list of available step
-// def defineStepList() {
-//     return [
-//         'annotate',
-//         'mapping',
-//         'recalibrate',
-//         'variantcalling'
-//     ]
-// }
+// Define list of available step
+def defineStepList() {
+    return [
+        'annotate',
+        'mapping',
+        'recalibrate',
+        'variantcalling'
+    ]
+}
 
-// // Define list of available tools
-// def defineToolList() {
-//     return [
-//         'ascat',
-//         'controlfreec',
-//         'freebayes',
-//         'haplotypecaller',
-//         'manta',
-//         'merge',
-//         'mpileup',
-//         'mutect2',
-//         'snpeff',
-//         'strelka',
-//         'tiddit',
-//         'vep'
-//     ]
-// }
+// Define list of available tools
+def defineToolList() {
+    return [
+        'ascat',
+        'controlfreec',
+        'freebayes',
+        'haplotypecaller',
+        'manta',
+        'merge',
+        'mpileup',
+        'mutect2',
+        'snpeff',
+        'strelka',
+        'tiddit',
+        'vep'
+    ]
+}
 
-// // Print deprecation message
-// def deprecationMessage(oldItem, newItem = null) {
-//     extra = newItem == null ? "": ", please use `${newItem}` instead"
-//     log.warn "The ${oldItem} is deprecated${extra} -- it will be removed in a future release"
-// }
+// Print deprecation message
+def deprecationMessage(oldItem, newItem = null) {
+    extra = newItem == null ? "": ", please use `${newItem}` instead"
+    log.warn "The ${oldItem} is deprecated${extra} -- it will be removed in a future release"
+}
 
-// // Channeling the TSV file containing BAM.
-// // Format is: "subject gender status sample bam bai"
-// def extractBam(tsvFile) {
-//     Channel.from(tsvFile)
-//         .splitCsv(sep: '\t')
-//         .map { row ->
-//             checkNumberOfItem(row, 6)
-//             def idPatient = row[0]
-//             def gender    = row[1]
-//             def status    = returnStatus(row[2].toInteger())
-//             def idSample  = row[3]
-//             def bamFile   = returnFile(row[4])
-//             def baiFile   = returnFile(row[5])
+// Channeling the TSV file containing BAM.
+// Format is: "subject gender status sample bam bai"
+def extractBam(tsvFile) {
+    Channel.from(tsvFile)
+        .splitCsv(sep: '\t')
+        .map { row ->
+            checkNumberOfItem(row, 6)
+            def idPatient = row[0]
+            def gender    = row[1]
+            def status    = returnStatus(row[2].toInteger())
+            def idSample  = row[3]
+            def bamFile   = returnFile(row[4])
+            def baiFile   = returnFile(row[5])
 
-//             if (!hasExtension(bamFile, "bam")) exit 1, "File: ${bamFile} has the wrong extension. See --help for more information"
-//             if (!hasExtension(baiFile, "bai")) exit 1, "File: ${baiFile} has the wrong extension. See --help for more information"
+            if (!hasExtension(bamFile, "bam")) exit 1, "File: ${bamFile} has the wrong extension. See --help for more information"
+            if (!hasExtension(baiFile, "bai")) exit 1, "File: ${baiFile} has the wrong extension. See --help for more information"
 
-//             return [idPatient, gender, status, idSample, bamFile, baiFile]
-//         }
-// }
+            return [idPatient, gender, status, idSample, bamFile, baiFile]
+        }
+}
 
-// // Create a channel of germline FASTQs from a directory pattern: "my_samples/*/"
-// // All FASTQ files in subdirectories are collected and emitted;
-// // they must have _R1_ and _R2_ in their names.
-// def extractFastqFromDir(pattern) {
-//     def fastq = Channel.create()
-//     // a temporary channel does all the work
-//     Channel
-//         .fromPath(pattern, type: 'dir')
-//         .ifEmpty { error "No directories found matching pattern '${pattern}'" }
-//         .subscribe onNext: { sampleDir ->
-//             // the last name of the sampleDir is assumed to be a unique sample id
-//             sampleId = sampleDir.getFileName().toString()
+// Create a channel of germline FASTQs from a directory pattern: "my_samples/*/"
+// All FASTQ files in subdirectories are collected and emitted;
+// they must have _R1_ and _R2_ in their names.
+def extractFastqFromDir(pattern) {
+    def fastq = Channel.create()
+    // a temporary channel does all the work
+    Channel
+        .fromPath(pattern, type: 'dir')
+        .ifEmpty { error "No directories found matching pattern '${pattern}'" }
+        .subscribe onNext: { sampleDir ->
+            // the last name of the sampleDir is assumed to be a unique sample id
+            sampleId = sampleDir.getFileName().toString()
 
-//             for (path1 in file("${sampleDir}/**_R1_*.fastq.gz")) {
-//                 assert path1.getName().contains('_R1_')
-//                 path2 = file(path1.toString().replace('_R1_', '_R2_'))
-//                 if (!path2.exists()) error "Path '${path2}' not found"
-//                 (flowcell, lane) = flowcellLaneFromFastq(path1)
-//                 patient = sampleId
-//                 gender = 'ZZ'  // unused
-//                 status = 0  // normal (not tumor)
-//                 rgId = "${flowcell}.${sampleId}.${lane}"
-//                 result = [patient, gender, status, sampleId, rgId, path1, path2]
-//                 fastq.bind(result)
-//             }
-//     }, onComplete: { fastq.close() }
-//     fastq
-// }
+            for (path1 in file("${sampleDir}/**_R1_*.fastq.gz")) {
+                assert path1.getName().contains('_R1_')
+                path2 = file(path1.toString().replace('_R1_', '_R2_'))
+                if (!path2.exists()) error "Path '${path2}' not found"
+                (flowcell, lane) = flowcellLaneFromFastq(path1)
+                patient = sampleId
+                gender = 'ZZ'  // unused
+                status = 0  // normal (not tumor)
+                rgId = "${flowcell}.${sampleId}.${lane}"
+                result = [patient, gender, status, sampleId, rgId, path1, path2]
+                fastq.bind(result)
+            }
+    }, onComplete: { fastq.close() }
+    fastq
+}
 
-// // Extract gender and status from Channel
-// def extractInfos(channel) {
-//     def genderMap = [:]
-//     def statusMap = [:]
-//     channel = channel.map{ it ->
-//         def idPatient = it[0]
-//         def gender = it[1]
-//         def status = it[2]
-//         def idSample = it[3]
-//         genderMap[idPatient] = gender
-//         statusMap[idPatient, idSample] = status
-//         [idPatient] + it[3..-1]
-//     }
-//     [genderMap, statusMap, channel]
-// }
+// Extract gender and status from Channel
+def extractInfos(channel) {
+    def genderMap = [:]
+    def statusMap = [:]
+    channel = channel.map{ it ->
+        def idPatient = it[0]
+        def gender = it[1]
+        def status = it[2]
+        def idSample = it[3]
+        genderMap[idPatient] = gender
+        statusMap[idPatient, idSample] = status
+        [idPatient] + it[3..-1]
+    }
+    [genderMap, statusMap, channel]
+}
 
-// // Channeling the TSV file containing FASTQ or BAM
-// // Format is: "subject gender status sample lane fastq1 fastq2"
-// // or: "subject gender status sample lane bam"
-// def extractFastq(tsvFile) {
-//     Channel.from(tsvFile)
-//         .splitCsv(sep: '\t')
-//         .map { row ->
-//             def idPatient  = row[0]
-//             def gender     = row[1]
-//             def status     = returnStatus(row[2].toInteger())
-//             def idSample   = row[3]
-//             def idRun      = row[4]
-//             def file1      = returnFile(row[5])
-//             def file2      = "null"
-//             if (hasExtension(file1, "fastq.gz") || hasExtension(file1, "fq.gz")) {
-//                 checkNumberOfItem(row, 7)
-//                 file2 = returnFile(row[6])
-//             if (!hasExtension(file2, "fastq.gz") && !hasExtension(file2, "fq.gz")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
-//         }
-//         else if (hasExtension(file1, "bam")) checkNumberOfItem(row, 6)
-//         else "No recognisable extention for input file: ${file1}"
+// Channeling the TSV file containing FASTQ or BAM
+// Format is: "subject gender status sample lane fastq1 fastq2"
+// or: "subject gender status sample lane bam"
+def extractFastq(tsvFile) {
+    Channel.from(tsvFile)
+        .splitCsv(sep: '\t')
+        .map { row ->
+            def idPatient  = row[0]
+            def gender     = row[1]
+            def status     = returnStatus(row[2].toInteger())
+            def idSample   = row[3]
+            def idRun      = row[4]
+            def file1      = returnFile(row[5])
+            def file2      = "null"
+            if (hasExtension(file1, "fastq.gz") || hasExtension(file1, "fq.gz")) {
+                checkNumberOfItem(row, 7)
+                file2 = returnFile(row[6])
+            if (!hasExtension(file2, "fastq.gz") && !hasExtension(file2, "fq.gz")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
+        }
+        else if (hasExtension(file1, "bam")) checkNumberOfItem(row, 6)
+        else "No recognisable extention for input file: ${file1}"
 
-//         [idPatient, gender, status, idSample, idRun, file1, file2]
-//     }
-// }
+        [idPatient, gender, status, idSample, idRun, file1, file2]
+    }
+}
 
-// // Channeling the TSV file containing Recalibration Tables.
-// // Format is: "subject gender status sample bam bai recalTables"
-// def extractRecal(tsvFile) {
-//     Channel.from(tsvFile)
-//         .splitCsv(sep: '\t')
-//         .map { row ->
-//             checkNumberOfItem(row, 7)
-//             def idPatient  = row[0]
-//             def gender     = row[1]
-//             def status     = returnStatus(row[2].toInteger())
-//             def idSample   = row[3]
-//             def bamFile    = returnFile(row[4])
-//             def baiFile    = returnFile(row[5])
-//             def recalTable = returnFile(row[6])
+// Channeling the TSV file containing Recalibration Tables.
+// Format is: "subject gender status sample bam bai recalTables"
+def extractRecal(tsvFile) {
+    Channel.from(tsvFile)
+        .splitCsv(sep: '\t')
+        .map { row ->
+            checkNumberOfItem(row, 7)
+            def idPatient  = row[0]
+            def gender     = row[1]
+            def status     = returnStatus(row[2].toInteger())
+            def idSample   = row[3]
+            def bamFile    = returnFile(row[4])
+            def baiFile    = returnFile(row[5])
+            def recalTable = returnFile(row[6])
 
-//             if (!hasExtension(bamFile, "bam")) exit 1, "File: ${bamFile} has the wrong extension. See --help for more information"
-//             if (!hasExtension(baiFile, "bai")) exit 1, "File: ${baiFile} has the wrong extension. See --help for more information"
-//             if (!hasExtension(recalTable, "recal.table")) exit 1, "File: ${recalTable} has the wrong extension. See --help for more information"
+            if (!hasExtension(bamFile, "bam")) exit 1, "File: ${bamFile} has the wrong extension. See --help for more information"
+            if (!hasExtension(baiFile, "bai")) exit 1, "File: ${baiFile} has the wrong extension. See --help for more information"
+            if (!hasExtension(recalTable, "recal.table")) exit 1, "File: ${recalTable} has the wrong extension. See --help for more information"
 
-//             [idPatient, gender, status, idSample, bamFile, baiFile, recalTable]
-//     }
-// }
+            [idPatient, gender, status, idSample, bamFile, baiFile, recalTable]
+    }
+}
 
-// // Parse first line of a FASTQ file, return the flowcell id and lane number.
-// def flowcellLaneFromFastq(path) {
-//     // expected format:
-//     // xx:yy:FLOWCELLID:LANE:... (seven fields)
-//     // or
-//     // FLOWCELLID:LANE:xx:... (five fields)
-//     InputStream fileStream = new FileInputStream(path.toFile())
-//     InputStream gzipStream = new java.util.zip.GZIPInputStream(fileStream)
-//     Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
-//     BufferedReader buffered = new BufferedReader(decoder)
-//     def line = buffered.readLine()
-//     assert line.startsWith('@')
-//     line = line.substring(1)
-//     def fields = line.split(' ')[0].split(':')
-//     String fcid
-//     int lane
-//     if (fields.size() == 7) {
-//         // CASAVA 1.8+ format
-//         fcid = fields[2]
-//         lane = fields[3].toInteger()
-//     } else if (fields.size() == 5) {
-//         fcid = fields[0]
-//         lane = fields[1].toInteger()
-//     }
-//     [fcid, lane]
-// }
+// Parse first line of a FASTQ file, return the flowcell id and lane number.
+def flowcellLaneFromFastq(path) {
+    // expected format:
+    // xx:yy:FLOWCELLID:LANE:... (seven fields)
+    // or
+    // FLOWCELLID:LANE:xx:... (five fields)
+    InputStream fileStream = new FileInputStream(path.toFile())
+    InputStream gzipStream = new java.util.zip.GZIPInputStream(fileStream)
+    Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
+    BufferedReader buffered = new BufferedReader(decoder)
+    def line = buffered.readLine()
+    assert line.startsWith('@')
+    line = line.substring(1)
+    def fields = line.split(' ')[0].split(':')
+    String fcid
+    int lane
+    if (fields.size() == 7) {
+        // CASAVA 1.8+ format
+        fcid = fields[2]
+        lane = fields[3].toInteger()
+    } else if (fields.size() == 5) {
+        fcid = fields[0]
+        lane = fields[1].toInteger()
+    }
+    [fcid, lane]
+}
 
-// // Check file extension
-// def hasExtension(it, extension) {
-//     it.toString().toLowerCase().endsWith(extension.toLowerCase())
-// }
+// Check file extension
+def hasExtension(it, extension) {
+    it.toString().toLowerCase().endsWith(extension.toLowerCase())
+}
 
-// // Return file if it exists
-// def returnFile(it) {
-//     if (!file(it).exists()) exit 1, "Missing file in TSV file: ${it}, see --help for more information"
-//     return file(it)
-// }
+// Return file if it exists
+def returnFile(it) {
+    if (!file(it).exists()) exit 1, "Missing file in TSV file: ${it}, see --help for more information"
+    return file(it)
+}
 
-// // Remove .ann .gz and .vcf extension from a VCF file
-// def reduceVCF(file) {
-//     return file.fileName.toString().minus(".ann").minus(".vcf").minus(".gz")
-// }
+// Remove .ann .gz and .vcf extension from a VCF file
+def reduceVCF(file) {
+    return file.fileName.toString().minus(".ann").minus(".vcf").minus(".gz")
+}
 
-// // Return status [0,1]
-// // 0 == Normal, 1 == Tumor
-// def returnStatus(it) {
-//     if (!(it in [0, 1])) exit 1, "Status is not recognized in TSV file: ${it}, see --help for more information"
-//     return it
-// }
+// Return status [0,1]
+// 0 == Normal, 1 == Tumor
+def returnStatus(it) {
+    if (!(it in [0, 1])) exit 1, "Status is not recognized in TSV file: ${it}, see --help for more information"
+    return it
+}
