@@ -908,8 +908,9 @@ process MergeBamRecal {
 
     output:
         set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into bamRecal
-        set idPatient, idSample, file("${idSample}.recal.bam") into (bamRecalBamQC, bamRecalSamToolsStats, bamGenomeChronicler)
+        set idPatient, idSample, file("${idSample}.recal.bam") into (bamRecalBamQC, bamRecalSamToolsStat)
         set idPatient, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into (bamRecalTSV, bamRecalSampleTSV)
+        set file("${idSample}.recal.bam") into bamGenomeChronicler
 
     script:
     """
