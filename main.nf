@@ -894,7 +894,7 @@ process ApplyBQSR {
 
 bamMergeBamRecal = bamMergeBamRecal.groupTuple(by:[0, 1])
 
-// STEP 4.5: MERGING THE RECALIBRATED BAM FILES
+// STEP 4.5.1: MERGING THE RECALIBRATED BAM FILES
 
 process MergeBamRecal {
     label 'cpus_8'
@@ -908,7 +908,7 @@ process MergeBamRecal {
 
     output:
         set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into bamRecal
-        set idPatient, idSample, file("${idSample}.recal.bam") into (bamRecalBamQC, bamRecalSamToolsStats)
+        set idPatient, idSample, file("${idSample}.recal.bam") into (bamRecalBamQC, bamRecalSamToolsStats, bamGenomeChronicler)
         set idPatient, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into (bamRecalTSV, bamRecalSampleTSV)
 
     script:
@@ -917,6 +917,35 @@ process MergeBamRecal {
     samtools index ${idSample}.recal.bam
     mv ${idSample}.recal.bam.bai ${idSample}.recal.bai
     """
+}
+
+// TODO: Bind this with HaplotypeCaller output and migrate process chuck after HaplotypeCasller + VEP
+Channel.fromPath(params.vepFile)
+       .ifEmpty { exit 1, "--vepFile not specified or no file found at that destination with the suffix .html. Please make sure to provide the file path correctly}" }
+       .set { vepGenomeChronicler }
+
+
+// STEP 4.5.2: RUNNING GenomeChronicler FOR THE RECALIBRATED BAM FILES
+process RunGenomeChronicler {
+  tag "$bam"
+  publishDir "$params.outdir/GenomeChronicler", mode: 'copy'
+  echo true 
+
+  input:
+  file(bam) from bamGenomeChronicler
+  file(vep) from vepGenomeChronicler
+
+  output:
+  file("*") into chronicler_results
+
+  script:
+  
+  optional_argument = vep.endsWith("no_vepFile.txt") ? '' : "--vepFile ${vep}"
+
+  """
+  genomechronicler \
+  --bamFile $bam $optional_argument
+  """
 }
 
 // Creating a TSV file to restart from this step
