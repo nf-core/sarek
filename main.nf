@@ -926,6 +926,7 @@ Channel.fromPath(params.vepFile)
        .set { vepGenomeChronicler }
 
 
+
 // STEP 4.5.2: RUNNING GenomeChronicler FOR THE RECALIBRATED BAM FILES
 process RunGenomeChronicler {
   tag "$bam"
@@ -937,17 +938,22 @@ process RunGenomeChronicler {
   file(vep) from vepGenomeChronicler
 
   output:
-  file("*") into chronicler_results
+  file("${bam.simpleName}/*") into chronicler_results
 
   script:
   
   optional_argument = vep.endsWith("no_vepFile.txt") ? '' : "--vepFile ${vep}"
 
   """
+  cat \$(basename $bam)
   genomechronicler \
   --bamFile $bam $optional_argument
   """
 }
+
+
+
+
 
 // // Creating a TSV file to restart from this step
 // bamRecalTSV.map { idPatient, idSample, bam, bai ->
@@ -2865,3 +2871,4 @@ def returnStatus(it) {
     if (!(it in [0, 1])) exit 1, "Status is not recognized in TSV file: ${it}, see --help for more information"
     return it
 }
+
