@@ -518,7 +518,7 @@ process CreateIntervalBeds {
     output:
         file '*.bed' into bedIntervals mode flatten
 
-    when: step != 'annotate'
+    when: params.intervals && step != 'annotate'
 
     script:
     // If the interval file is BED format, the fifth column is interpreted to
@@ -762,7 +762,10 @@ if ('markduplicates' in skipQC) markDuplicatesReport.close()
 duplicateMarkedBams = duplicateMarkedBams.dump(tag:'MD BAM')
 markDuplicatesReport = markDuplicatesReport.dump(tag:'MD Report')
 
-(bamMD, bamMDToJoin) = duplicateMarkedBams.into(2)
+(bamMD, bamBaseRecalibratorNoInt, bamMDToJoin) = duplicateMarkedBams.into(3)
+
+// if (params.intervals) bamBaseRecalibratorNoInt.close()
+
 bamBaseRecalibrator = bamMD.combine(intBaseRecalibrator)
 
 bamBaseRecalibrator = bamBaseRecalibrator.dump(tag:'BAM FOR BASERECALIBRATOR')
@@ -791,7 +794,8 @@ process BaseRecalibrator {
     when: step == 'mapping'
 
     script:
-    known = knownIndels.collect{"--known-sites ${it}"}.join(' ')
+    dbsnpOptions = params.dbsnp ? "--known-sites ${dbsnp}" : ""
+    knownOptions = params.knownIndels ? knownIndels.collect{"--known-sites ${it}"}.join(' ') : ""
     // TODO: --use-original-qualities ???
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
@@ -801,8 +805,44 @@ process BaseRecalibrator {
         --tmp-dir /tmp \
         -R ${fasta} \
         -L ${intervalBed} \
-        --known-sites ${dbsnp} \
-        ${known} \
+        ${dbsnpOptions} \
+        ${knownOptions} \
+        --verbosity INFO
+    """
+}
+
+// STEP 3': CREATING RECALIBRATION TABLES WITHOUT INTERVALS
+
+process BaseRecalibratorNoIntervals {
+    label 'memory_max'
+    label 'cpus_1'
+
+    tag {idPatient + "-" + idSample}
+
+    input:
+        set idPatient, idSample, file(bam), file(bai) from bamBaseRecalibratorNoInt
+        file(fasta) from ch_fasta
+        file(dict) from ch_dict
+        file(fastaFai) from ch_fastaFai
+        file(knownIndels) from ch_knownIndels
+        file(knownIndelsIndex) from ch_knownIndelsIndex
+
+    output:
+        set idPatient, idSample, file("${idSample}.recal.table") into bamMDnoInt
+
+    when: step == 'mapping'
+
+    script:
+    knownOptions = params.knownIndels ? knownIndels.collect{"--known-sites ${it}"}.join(' ') : ""
+    // TODO: --use-original-qualities ???
+    """
+    gatk --java-options -Xmx${task.memory.toGiga()}g \
+        BaseRecalibrator \
+        -I ${bam} \
+        -O ${idSample}.recal.table \
+        --tmp-dir /tmp \
+        -R ${fasta} \
+        ${knownOptions} \
         --verbosity INFO
     """
 }
@@ -893,6 +933,34 @@ process ApplyBQSR {
 }
 
 bamMergeBamRecal = bamMergeBamRecal.groupTuple(by:[0, 1])
+
+// STEP 4': RECALIBRATING WITHOUT INTERVALS
+
+process ApplyBQSRnoIntervals {
+    label 'memory_singleCPU_2_task'
+    label 'cpus_2'
+
+    tag {idPatient + "-" + idSample}
+
+    input:
+        set idPatient, idSample, file(bam), file(bai), file(recalibrationReport) from bamMDnoInt
+        file(dict) from ch_dict
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
+
+    output:
+        set idPatient, idSample, file("${idSample}.recal.bam") into bamRecalNoInt
+
+    script:
+    """
+    gatk --java-options -Xmx${task.memory.toGiga()}g \
+        ApplyBQSR \
+        -R ${fasta} \
+        --input ${bam} \
+        --output ${idSample}.recal.bam \
+        --bqsr-recal-file ${recalibrationReport}
+    """
+}
 
 // STEP 4.5: MERGING THE RECALIBRATED BAM FILES
 
