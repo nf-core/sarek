@@ -4,10 +4,9 @@
 
 [![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A519.04.0-brightgreen.svg)](https://www.nextflow.io/)
 [![nf-core](https://img.shields.io/badge/nf--core-pipeline-brightgreen.svg)](https://nf-co.re/)
+[![DOI](https://zenodo.org/badge/184289291.svg)](https://zenodo.org/badge/latestdoi/184289291)
 
 [![Travis build status](https://img.shields.io/travis/nf-core/sarek.svg)](https://travis-ci.com/nf-core/sarek/)
-[![GitHub Actions CI Status](https://github.com/nf-core/sarek/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/sarek/actions)
-[![GitHub Actions Linting Status](https://github.com/nf-core/sarek/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/sarek/actions)
 [![CircleCi build status](https://img.shields.io/circleci/project/github/nf-core/sarek.svg)](https://circleci.com/gh/nf-core/sarek/)
 
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](http://bioconda.github.io/)
@@ -16,11 +15,9 @@
 
 [![Join us on Slack](https://img.shields.io/badge/slack-nfcore/sarek-blue.svg)](https://nfcore.slack.com/messages/CGFUX04HZ/)
 
-> :warning: This pipeline is a work in progress being ported to nf-core from [SciLifeLab/Sarek](https://github/SciLifeLab/Sarek/)
-
 ## Introduction
 
-<img align="right" title="CAW" src="/docs/images/CAW_logo.png">
+<img align="right" title="CAW" src="./docs/images/CAW_logo.png">
 
 Previously known as the Cancer Analysis Workflow (CAW),
 Sarek is a workflow designed to run analyses on whole genome or targeted sequencing data from regular samples or tumour / normal pairs and could include additional relapses.
@@ -31,7 +28,11 @@ across multiple compute infrastructures in a very portable manner.
 Software dependencies are handled using [Conda](https://conda.io/), [Docker](https://www.docker.com) or [Singularity](https://www.sylabs.io/singularity/) - environment/container technologies that provide excellent reproducibility and ease of use.
 Thus making installation trivial and results highly reproducible.
 
-It's listed on the [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek), [Dockstore](https://dockstore.org/workflows/github.com/SciLifeLab/Sarek/) and [omicX - Bioinformatics tools](https://omictools.com/sarek-tool).
+<p align="center">
+    <img title="Sarek Workflow" src="./docs/images/sarek_workflow.png">
+</p>
+
+It's listed on the [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek), [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek) and [omicX - Bioinformatics tools](https://omictools.com/sarek-tool).
 
 ## Documentation
 
@@ -47,9 +48,7 @@ The nf-core/sarek pipeline comes with documentation about the pipeline, found in
 3. [Running the pipeline](docs/usage.md)
     * [Examples](docs/use_cases.md)
     * [Input files documentation](docs/input.md)
-    * [Extra documentation on variant calling](docs/variantcalling.md)
     * [Documentation about containers](docs/containers.md)
-    * [Extra documentation for targeted sequencing](docs/targetseq.md)
 4. [Output and how to interpret the results](docs/output.md)
     * [Complementary information about ASCAT](docs/ascat.md)
     * [Extra documentation on annotation](docs/annotation.md)
@@ -57,7 +56,7 @@ The nf-core/sarek pipeline comes with documentation about the pipeline, found in
 
 ## Credits
 
-Sarek was developed at the [National Genomics Infa
+Sarek was developed at the [National Genomics Infastructure](https://ngisweden.scilifelab.se) and [National Bioinformatics Infastructure Sweden](https://nbis.se) which are both platforms at [SciLifeLab](https://scilifelab.se), with the support of [The Swedish Childhood Tumor Biobank (Barntumörbanken)](ttps://ki.se/forskning/barntumorbanken-0).
 
 Main authors:
 
@@ -99,10 +98,10 @@ For further information or help, don't hesitate to get in touch on [Slack](https
 
 ## Citation
 
-If you use nf-core/sarek for your analysis, please cite the `Sarek` pre-print as follows:
+If you use `nf-core/sarek` for your analysis, please cite the `Sarek` pre-print as follows:
 > Garcia MU, Juhos S, Larsson M, Olason PI, Martin M, Eisfeldt J, DiLorenzo S, Sandgren J, de Ståhl TD, Wirta V, Nistér M, Nystedt B, Käller M. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants**. *bioRxiv*. 2018. p. 316976. [doi: 10.1101/316976](https://www.biorxiv.org/content/10.1101/316976v1).
 
-You can cite the sarek zenodo record for a specific version using the following [doi: 10.5281/zenodo.2582812](https://doi.org/10.5281/zenodo.2582812)
+You can cite the sarek zenodo record for a specific version using the following [doi: 10.5281/zenodo.3476426](https://zenodo.org/badge/latestdoi/184289291)
 
 You can cite the `nf-core` pre-print as follows:
 > Ewels PA, Peltzer A, Fillinger S, Alneberg JA, Patel H, Wilm A, Garcia MU, Di Tommaso P, Nahnsen S. **nf-core: Community curated bioinformatics pipelines**. *bioRxiv*. 2019. p. 610741. [doi: 10.1101/610741](https://www.biorxiv.org/content/10.1101/610741v3).

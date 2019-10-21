@@ -12,8 +12,8 @@ Settings in `igenomes.config` can be tailored to your needs.
 
 To speed up some preprocessing and variant calling processes, the reference is chopped into smaller pieces.
 The intervals are chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs.
-We are ignoring the hs37d5 contig that contains concatenated decoy sequences.
-Parts of preprocessing and variant calling are done by this intervals, and the different resulting files are then merged.
+We are ignoring the `hs37d5` contig that contains concatenated decoy sequences.
+Parts of preprocessing and variant calling are done by these intervals, and the different resulting files are then merged.
 This can parallelize processes, and push down wall clock time significantly.
 
 The calling intervals can be defined using a `.list` or a `.bed` file.
@@ -37,10 +37,10 @@ Second, the jobs with largest processing time are started first, which reduces w
 If no runtime is given, a time of 1000 nucleotides per second is assumed.
 Actual figures vary from 2 nucleotides/second to 30000 nucleotides/second.
 
-## build.nf
+### Working with whole exome (WES) or panel data
 
-The [`build.nf`](#buildnf) script is used to build reference needed for smallGRCh37.
-
-```bash
-nextflow run build.nf
-```
+The `--targetBED` parameter does _not_  imply that the workflow is running alignment or variant calling only for the supplied targets.
+Instead, we are aligning for the whole genome, and selecting variants only at the very end by intersecting with the provided target file.
+Adding every exon as an interval in case of WES can generate >200K processes or jobs, much more forks, and similar number of directories in the Nextflow work directory.
+Furthermore, primers and/or baits are not 100% specific, (certainly not for MHC and KIR, etc.), quite likely there going to be reads mapping to multiple locations.
+If you are certain that the target is unique for your genome (all the reads will certainly map to only one location), and aligning to the whole genome is an overkill, better to change the reference itself.

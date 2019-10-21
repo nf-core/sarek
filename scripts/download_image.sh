@@ -3,13 +3,14 @@ set -xeuo pipefail
 
 # This script download and tag image for sarek tests
 
-usage() { echo "Usage: $0 <-t test|annotation tool> <-n engine> <-T version to pull/build> <-g genome>" 1>&2; exit 1; }
+usage() { echo "Usage: $0 <-t test|annotation tool> <-n engine> <-S version to pull/build> <-T version to tag> <-g genome>" 1>&2; exit 1; }
 
 ENGINE=docker
 GENOME=smallGRCh37
 NXF_SINGULARITY_CACHEDIR=${NXF_SINGULARITY_CACHEDIR:-work/singularity/.}
 TEST=ALL
 VERSION=dev
+TARGETVERSION=${VERSION}
 
 while [[ $# -gt 0 ]]
 do
@@ -25,7 +26,12 @@ do
     shift # past argument
     shift # past value
     ;;
-    -T|--tagged-version)
+    -T|--target-version)
+    TARGETVERSION=$2
+    shift # past argument
+    shift # past value
+    ;;
+    -S|--source-version)
     VERSION=$2
     shift # past argument
     shift # past value
@@ -66,15 +72,15 @@ get_image(){
 
 if [[ ALL,ANNOTATEBOTH,ANNOTATESNPEFF,SNPEFF =~ $TEST ]]
 then
-  get_image sareksnpeff ${VERSION}.${SOURCEGENOME} ${VERSION}.${GENOME}
+  get_image sareksnpeff ${VERSION}.${SOURCEGENOME} ${TARGETVERSION}.${GENOME}
 fi
 
 if [[ ALL,ANNOTATEBOTH,ANNOTATEVEP,VEP =~ $TEST ]]
 then
-  get_image sarekvep ${VERSION}.${SOURCEGENOME} ${VERSION}.${GENOME}
+  get_image sarekvep ${VERSION}.${SOURCEGENOME} ${TARGETVERSION}.${GENOME}
 fi
 
 if ! [[ ANNOTATEBOTH,ANNOTATESNPEFF,ANNOTATEVEP,LINT,SNPEFF,VEP =~ $TEST ]]
 then
-  get_image sarek ${VERSION} ${VERSION}
+  get_image sarek ${VERSION} ${TARGETVERSION}
 fi

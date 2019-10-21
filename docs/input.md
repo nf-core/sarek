@@ -2,7 +2,7 @@
 
 ## Information about the TSV files
 
-Input files for Sarek can be specified using a TSV file given to the `--sample` command.
+Input files for Sarek can be specified using a TSV file given to the `--input` command.
 The TSV file is a Tab Separated Value file with columns:
 
 - `subject gender status sample lane fastq1 fastq2` for step `mapping` with paired-end FASTQs
@@ -49,10 +49,10 @@ G15511    XX    1    D0ENMT    D0ENM_2    pathToFiles/D0ENMACXX111207.2_1.fastq.
 
 ## Path to a FASTQ directory for a single normal sample (step mapping)
 
-Input files for Sarek can be specified using the path to a FASTQ directory given to the `--sample` command only with the `mapping` step.
+Input files for Sarek can be specified using the path to a FASTQ directory given to the `--input` command only with the `mapping` step.
 
 ```bash
-nextflow run nf-core/sarek --sample pathToDirectory ...
+nextflow run nf-core/sarek --input pathToDirectory ...
 ```
 
 ### Input FASTQ file name best practices
@@ -128,9 +128,9 @@ G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.md.recal.bam    pathToF
 
 ## VCF files for annotation
 
-Input files for Sarek can be specified using the path to a VCF directory given to the `--sample` command only with the `annotate` step.
+Input files for Sarek can be specified using the path to a VCF directory given to the `--input` command only with the `annotate` step.
 Multiple VCF files can be specified if the path is enclosed in quotes.
 
 ```bash
-nextflow run nf-core/sarek --step annotate --sample "results/VariantCalling/*/.vcf.gz" ...
+nextflow run nf-core/sarek --step annotate --input "results/VariantCalling/*/.vcf.gz" ...
 ```

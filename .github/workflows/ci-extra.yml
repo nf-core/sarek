@@ -1,4 +1,4 @@
-name: nf-core extra CI
+name: sarek extra CI
 # This workflow is triggered on pushes and PRs to the repository.
 on: [push, pull_request]  
 
@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        test: [ANNOTATESNPEFF, ANNOTATEVEP, GERMLINE, SOMATIC, TARGETED]
+        test: [ANNOTATESNPEFF, GERMLINE, SOMATIC, TARGETED]
         nxf_ver: ['19.04.0', '']
     steps:
       - uses: actions/checkout@v1
@@ -18,10 +18,7 @@ jobs:
           sudo mv nextflow /usr/local/bin/
       - name: Download image
         run: |
-          ${GITHUB_WORKSPACE}/scripts/download_image.sh -n docker --test ${{ matrix.test }}
-      - name: Build References
-        run: |
-          ${GITHUB_WORKSPACE}/scripts/build_reference.sh --test ${{ matrix.test }} --verbose
+          ${GITHUB_WORKSPACE}/scripts/download_image.sh -n docker --source-version dev --target-version dev --test ${{ matrix.test }}
       - name: Run test
         run: |
           ${GITHUB_WORKSPACE}/scripts/run_tests.sh --test ${{ matrix.test }} --verbose

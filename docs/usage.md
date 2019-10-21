@@ -11,10 +11,14 @@
   * [Reproducibility](#reproducibility)
 * [Main arguments](#main-arguments)
   * [`-profile`](#-profile)
+  * [`--input`](#--input)
   * [`--sample`](#--sample)
+  * [`--sampleDir`](#--sampledir)
+  * [`--annotateVCF`](#--annotatevcf)
   * [`--noGVCF`](#--nogvcf)
+  * [`--skipQC`](#--skipqc)
+  * [`--noReports`](#--noreports)
   * [`--nucleotidesPerSecond`](#--nucleotidespersecond)
-  * [`--skipQC`](#--skipQC)
   * [`--step`](#--step)
   * [`--tools`](#--tools)
   * [`--noStrelkaBP`](#--nostrelkabp)
@@ -24,14 +28,22 @@
   * [`--acLoci`](#--acloci)
   * [`--acLociGC`](#--aclocigc)
   * [`--bwaIndex`](#--bwaindex)
+  * [`--chrDir`](#--chrdir)
+  * [`--chrLength`](#--chrlength)
   * [`--dbsnp`](#--dbsnp)
   * [`--dbsnpIndex`](#--dbsnpindex)
+  * [`--dict`](#--dict)
+  * [`--fasta`](#--fasta)
+  * [`--fastaFai`](#--fastafai)
   * [`--genomeDict`](#--genomedict)
   * [`--genomeFile`](#--genomefile)
   * [`--genomeIndex`](#--genomeindex)
+  * [`--germlineResource`](#--germlineresource)
+  * [`--germlineResourceIndex`](#--germlineresourceindex)
   * [`--intervals`](#--intervals)
   * [`--knownIndels`](#--knownindels)
   * [`--knownIndelsIndex`](#--knownindelsindex)
+  * [`--pon`](#--pon)
   * [`--snpeffDb`](#--snpeffdb)
   * [`--vepCacheVersion`](#--vepcacheversion)
   * [`--igenomesIgnore`](#--igenomesignore)
@@ -77,7 +89,7 @@ NXF_OPTS='-Xms1g -Xmx4g'
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/sarek --sample sample.tsv -profile docker
+nextflow run nf-core/sarek --input sample.tsv -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile.
@@ -142,7 +154,37 @@ If `-profile` is not specified at all the pipeline will be run locally and expec
   * A profile with a complete configuration for automated testing
   * Includes links to test data so needs no other parameters
 
+### `--input`
+
+Use this to specify the location of your input TSV file, on `mapping`, `recalibrate` and `variantcalling` steps.
+For example:
+
+```bash
+--input sample.tsv
+```
+
+Multiple TSV files can be specified if the path must be enclosed in quotes
+
+Use this to specify the location to a directory on `mapping` step with a single germline sample only.
+For example:
+
+```bash
+--input PathToDirectory
+```
+
+Use this to specify the location of your VCF input file on `annotate` step.
+For example:
+
+```bash
+--input sample.vcf
+```
+
+Multiple VCF files can be specified if the path must be enclosed in quotes
+
 ### `--sample`
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--input`](#--input)
 
 Use this to specify the location of your input TSV file, on `mapping`, `recalibrate` and `variantcalling` steps.
 For example:
@@ -169,6 +211,32 @@ For example:
 
 Multiple VCF files can be specified if the path must be enclosed in quotes
 
+### `--sampleDir`
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--input`](#--input)
+
+Use this to specify the location to a directory on `mapping` step with a single germline sample only.
+For example:
+
+```bash
+--sampleDir PathToDirectory
+```
+
+### `--annotateVCF`
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--input`](#--input)
+
+Use this to specify the location of your VCF input file on `annotate` step.
+For example:
+
+```bash
+--annotateVCF sample.vcf
+```
+
+Multiple VCF files can be specified if the path must be enclosed in quotes
+
 ### `--noGVCF`
 
 Use this to disable g.vcf from `HaplotypeCaller`.
@@ -178,6 +246,13 @@ Use this to disable g.vcf from `HaplotypeCaller`.
 Use this to disable specific QC and Reporting tools.
 Available: `all`, `bamQC`, `BCFtools`, `FastQC`, `MultiQC`, `samtools`, `vcftools`, `versions`
 Default: `None`
+
+### `--noReports`
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--skipQC`](#--skipQC)
+
+Use this to disable all QC and Reporting tools.
 
 ### `--nucleotidesPerSecond`
 
@@ -233,9 +308,9 @@ params {
       bwaIndex         = '<path to the bwa indexes>'
       dbsnp            = '<path to the dbsnp file>'
       dbsnpIndex       = '<path to the dbsnp index>'
-      genomeDict       = '<path to the genomeDict file>'
-      genomeFile       = '<path to the genome file>'
-      genomeIndex      = '<path to the genome Index>'
+      dict             = '<path to the dict file>'
+      fasta            = '<path to the fasta file>'
+      fastaFai         = '<path to the fasta index>'
       intervals        = '<path to the intervals file>'
       knownIndels      = '<path to the knownIndels file>'
       knownIndelsIndex = '<path to the knownIndels index>'
@@ -271,6 +346,22 @@ If you prefer, you can specify the full path to your reference genome when you r
 --bwaIndex '[path to the bwa indexes]'
 ```
 
+### `--chrDir`
+
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--chrDir '[path to the Chromosomes folder]'
+```
+
+### `--chrLength`
+
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--chrLength '[path to the Chromosomes length file]'
+```
+
 ### `--dbsnp`
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
@@ -287,28 +378,81 @@ If you prefer, you can specify the full path to your reference genome when you r
 --dbsnpIndex '[path to the dbsnp index]'
 ```
 
-### `--genomeDict`
+### `--dict`
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---genomeDict '[path to the genomeDict file]'
+--dict '[path to the dict file]'
+```
+
+### `--fasta`
+
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--fasta '[path to the reference fasta file]'
+```
+
+### `--fastaFai`
+
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--fastaFai '[path to the reference index]'
+```
+
+### `--genomeDict`
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--dict`](#--dict)
+
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--dict '[path to the dict file]'
 ```
 
 ### `--genomeFile`
 
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--fasta`](#--fasta)
+
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---genomeFile '[path to the genome file]'
+--fasta '[path to the reference fasta file]'
 ```
 
 ### `--genomeIndex`
 
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--fastaFai`](#--fastaFai)
+
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---genomeIndex '[path to the genome Index]'
+--fastaFai '[path to the reference index]'
+```
+
+### `--germlineResource`
+
+The [germline resource VCF file](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_Mutect2.php#--germline-resource) (bgzipped and tabixed) needed by GATK4 Mutect2 is a collection of calls that are likely present in the sample, with allele frequencies.
+The AF info field must be present.
+You can find a smaller, stripped gnomAD VCF file (most of the annotation is removed and only calls signed by PASS are stored) in the iGenomes Annotation/GermlineResource folder.
+To add your own germline resource supply
+
+```bash
+--germlineResource '[path to my resource.vcf.gz]'
+```
+
+### `--germlineResourceIndex`
+
+Tabix index of the germline resource specified at [`--germlineResource`](#--germlineResource).
+To add your own germline resource supply
+
+```bash
+--germlineResourceIndex '[path to my resource.vcf.gz.idx]'
 ```
 
 ### `--intervals`
@@ -334,6 +478,20 @@ If you prefer, you can specify the full path to your reference genome when you r
 ```bash
 --knownIndelsIndex '[path to the knownIndels index]'
 ```
+
+### `--pon`
+
+When a panel of normals [PON](https://gatkforums.broadinstitute.org/gatk/discussion/24057/how-to-call-somatic-mutations-using-gatk4-mutect2#latest) is defined, you will get filtered somatic calls as a result.
+Without PON, there will be no calls with PASS in the INFO field, only an _unfiltered_ VCF is written.
+It is recommended to make your own panel-of-normals, as it depends on sequencer and library preparation.
+For tests in iGenomes there is a dummy PON file in the Annotation/GermlineResource directory, but it _should not be used_ as a real panel-of-normals file.
+Provide your PON by:
+
+```bash
+--pon '[path to the PON VCF]'
+```
+
+If the PON file is bgzipped, there has to be a tabixed index file at the same directory.
 
 ### `--snpeffDb`
 
@@ -396,6 +554,7 @@ Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a 
 ### `--outdir`
 
 The output directory where the results will be saved.
+Default: `results/
 
 ### `--sequencing_center`
 

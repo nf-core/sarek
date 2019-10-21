@@ -20,7 +20,7 @@ The pipeline processes data using the following steps:
         * [`FreeBayes`](#FreeBayes)
         * [`GATK HaplotypeCaller`](#HaplotypeCaller)
         * [`GATK GenotypeGVCFs`](#GenotypeGVCFs)
-        * [`GATK MuTect2`](#MuTect2)
+        * [`GATK Mutect2`](#Mutect2)
         * [`Strelka2`](#Strelka2)
     * Structural variants
         * [`Manta`](#Manta)
@@ -140,21 +140,30 @@ For all samples:
 * `HaplotypeCaller_[SAMPLE].g.vcf.gz` and `HaplotypeCaller_[SAMPLE].g.vcf.gz.tbi`
   * VCF with Tabix index
 
-### MuTect2
+### Mutect2
 
-[GATK MuTect2](https://github.com/broadinstitute/gatk) calls somatic SNVs and indels via local assembly of haplotypes.
+[GATK Mutect2](https://github.com/broadinstitute/gatk) calls somatic SNVs and indels via local assembly of haplotypes.
 
-For further reading and documentation see the [MuTect2 manual](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.2.0/org_broadinstitute_hellbender_tools_walkers_mutect_Mutect2.php).
+For further reading and documentation see the [Mutect2 manual](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_Mutect2.php).
+It is recommended to have panel of normals [PON](https://gatkforums.broadinstitute.org/gatk/discussion/11136/how-to-call-somatic-mutations-using-gatk4-mutect2) for this version of Mutect2 using at least 40 normal samples, and you can add your PON file to get filtered somatic calls.
 
 For a Tumor/Normal pair only:
-**Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/MuTect2`**
+**Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/Mutect2`**
 
-* `MuTect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `MuTect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
-  * VCF with Tabix index
+Files created:
+
+* `unfiltered_Mutect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `unfiltered_Mutect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
+  * unfiltered (raw) Mutect2 calls VCF with Tabix index
+* `filtered_Mutect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `filtered_Mutect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
+  * filtered Mutect2 calls VCF with Tabix index: these entries has a PASS filter, you can get these when supplying a panel of normals using the `--pon` option
+* `[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.stats`
+  * a stats file generated during calling raw variants (needed for filtering)
+* `[TUMORSAMPLE]_contamination.table`
+  * a text file exported when panel-of-normals provided about sample contamination
 
 ### TIDDIT
 
-[TIDDIT](https://github.com/SciLifeLab/TIDDIT)identifies intra and inter-chromosomal translocations, deletions, tandem-duplications and inversions.
+[TIDDIT](https://github.com/SciLifeLab/TIDDIT) identifies intra and inter-chromosomal translocations, deletions, tandem-duplications and inversions.
 
 Germline calls are provided for all samples, to able comparison of both tumor and normal for possible mixup.
 Low quality calls are removed internally, to simplify processing of variant calls but they are saved by Sarek.

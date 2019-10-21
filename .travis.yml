@@ -9,7 +9,7 @@ matrix:
 
 before_install:
   # PRs to master are only ok if coming from dev branch
-  - '[ $TRAVIS_PULL_REQUEST = "false" ] || [ $TRAVIS_BRANCH != "master" ] || ([ $TRAVIS_PULL_REQUEST_SLUG = $TRAVIS_REPO_SLUG ] && [ $TRAVIS_PULL_REQUEST_BRANCH = "dev" ])'
+  - '[ $TRAVIS_PULL_REQUEST = "false" ] || [ $TRAVIS_BRANCH != "master" ] || ([ $TRAVIS_PULL_REQUEST_SLUG = $TRAVIS_REPO_SLUG ] && ([ $TRAVIS_PULL_REQUEST_BRANCH = "dev" ] || [ $TRAVIS_PULL_REQUEST_BRANCH = "patch" ]))'
   # Pull the docker image first so the test doesn't wait for this
   - docker pull nfcore/sarek:dev
   # Fake the tag locally so that the pipeline runs properly
@@ -39,5 +39,4 @@ script:
   # Lint the documentation
   - markdownlint ${TRAVIS_BUILD_DIR} -c ${TRAVIS_BUILD_DIR}/.github/markdownlint.yml
   # Run the pipeline with the test profile
-  - nextflow run ${TRAVIS_BUILD_DIR}/build.nf -profile test,docker --build --outdir references
   - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker
