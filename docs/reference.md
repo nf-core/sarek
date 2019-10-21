@@ -36,11 +36,3 @@ First, when there are multiple consecutive intervals in the file that take littl
 Second, the jobs with largest processing time are started first, which reduces wall-clock time.
 If no runtime is given, a time of 1000 nucleotides per second is assumed.
 Actual figures vary from 2 nucleotides/second to 30000 nucleotides/second.
-
-## build.nf
-
-The [`build.nf`](#buildnf) script is used to build reference needed for smallGRCh37.
-
-```bash
-nextflow run build.nf
-```
