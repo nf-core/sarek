@@ -30,6 +30,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#42](https://github.com/nf-core/sarek/pull/42) - Fix typos, and minor updates in `README.md`
 - [#43](https://github.com/nf-core/sarek/pull/43) - Fix automated `VEP` builds with circleCI
 
+## [2.5.1] - Årjep-Ålkatjjekna
+
+Årjep-Ålkatjjekna is one of the two glaciers of the Ålkatj Massif.
+
+### `Fixed`
+
+- [#48](https://github.com/nf-core/sarek/issues/48) - Fix `singularity.autoMounts` issue.
+- [#49](https://github.com/nf-core/sarek/issues/49) - Use correct tag for annotation containers.
+- [#50](https://github.com/nf-core/sarek/issues/50) - Fix paths for scripts.
+
 ## [2.5] - Ålkatj
 
 Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/) template.
