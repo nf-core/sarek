@@ -17,8 +17,8 @@ jobs:
           sudo mv nextflow /usr/local/bin/
       - name: Download and tag image
         run: |
-          docker pull nfcore/sarek:dev
-          docker tag nfcore/sarek:dev nfcore/sarek:2.5
+          docker pull nfcore/sarek:2.5
+          docker tag nfcore/sarek:2.5 nfcore/sarek:2.5.1
       - name: Run test
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker

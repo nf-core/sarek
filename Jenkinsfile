@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Docker setup') {
             steps {
-                 sh "./scripts/download_image.sh -n docker -t ALL --source-version dev --target-version 2.5 -g smallGRCh37"
+                 sh "./scripts/download_image.sh -n docker -t ALL --source-version 2.5 --target-version 2.5.1 -g smallGRCh37"
             }
         }
         stage('Germline') {

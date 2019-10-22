@@ -63,7 +63,7 @@ An helper script has been designed to help downloading CADD files.
 Such files are meant to be share between multiple users, so this script is mainly meant for people administrating servers, clusters and advanced users.
 
 ```bash
-nextflow run build.nf --cadd_cache /Path/To/CADDcache --cadd_version <CADD version> --genome <GENOME>
+nextflow run downloadcache.nf --cadd_cache /Path/To/CADDcache --cadd_version <CADD version> --genome <GENOME>
 ```
 
 ## Using VEP GeneSplicer plugin
