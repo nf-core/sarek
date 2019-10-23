@@ -17,7 +17,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#41](https://github.com/nf-core/sarek/pull/41) - Update `qualimap` from `2.2.2b` to `2.2.2c`
 - [#41](https://github.com/nf-core/sarek/pull/41) - Update `tiddit` from `2.7.1` to `2.8.0`
 - [#41](https://github.com/nf-core/sarek/pull/41) - Update `vcfanno` from `0.3.1` to `0.3.2`
-- [#46](https://github.com/nf-core/sarek/pull/46) - Add location to abstacts.
+- [#46](https://github.com/nf-core/sarek/pull/46) - Add location to abstacts
+
+### `Changed`
+
+- [#54](https://github.com/nf-core/sarek/pull/54) - Bump version to `2.5.2dev`
 
 ### `Removed`
 
@@ -29,6 +33,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#40](https://github.com/nf-core/sarek/pull/40) - Fix issue with `publishDirMode` within `test` profile
 - [#42](https://github.com/nf-core/sarek/pull/42) - Fix typos, and minor updates in `README.md`
 - [#43](https://github.com/nf-core/sarek/pull/43) - Fix automated `VEP` builds with circleCI
+- [#54](https://github.com/nf-core/sarek/pull/54) - Apply fixes from release `2.5.1`
+
+## [2.5.1] - Årjep-Ålkatjjekna
+
+Årjep-Ålkatjjekna is one of the two glaciers of the Ålkatj Massif.
+
+### `Added`
+
+- [#53](https://github.com/nf-core/sarek/pull/53) - Release `2.5.1`
+
+### `Fixed`
+
+- [#48](https://github.com/nf-core/sarek/issues/48) - Fix `singularity.autoMounts` issue.
+- [#49](https://github.com/nf-core/sarek/issues/49) - Use correct tag for annotation containers.
+- [#50](https://github.com/nf-core/sarek/issues/50) - Fix paths for scripts.
 
 ## [2.5] - Ålkatj
 
