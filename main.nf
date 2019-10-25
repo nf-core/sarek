@@ -948,6 +948,7 @@ process RunGenomeChronicler {
   """
   echo \$(basename $bam)
   genomechronicler \
+  --resultsDir '/GenomeChronicler'
   --bamFile $bam $optional_argument &> STDERR.txt
   cp -r /GenomeChronicler/results/results_${bam.simpleName} .
   mv STDERR.txt results_${bam.simpleName}/
