@@ -2408,7 +2408,7 @@ compressVCFOutVEP = compressVCFOutVEP.dump(tag:'VCF')
 // STEP MULTIQC
 
 process MultiQC {
-    publishDir "${params.outdir}/Reports/MultiQC", mode: params.publishDirMode
+    publishDir "${params.outdir}/MultiQC", mode: params.publishDirMode
 
     input:
         file (multiqcConfig) from Channel.value(params.multiqc_config ? file(params.multiqc_config) : "")
