@@ -908,7 +908,7 @@ process MergeBamRecal {
 
     output:
         set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into bamRecal
-        set idPatient, idSample, file("${idSample}.recal.bam") into (bamRecalBamQC, bamRecalSamToolsStat)
+        set idPatient, idSample, file("${idSample}.recal.bam") into (bamRecalBamQC, bamRecalSamToolsStats)
         set idPatient, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into (bamRecalTSV, bamRecalSampleTSV)
         file("${idSample}.recal.bam") into (bamGenomeChronicler, bamGenomeChroniclerToPrint)
 
@@ -981,7 +981,7 @@ process SamtoolsStats {
     publishDir "${params.outdir}/Reports/${idSample}/SamToolsStats", mode: params.publishDirMode
 
     input:
-        set idPatient, idSample, file(bam) from bamRecalSamToolsStat
+        set idPatient, idSample, file(bam) from bamRecalSamToolsStats
 
     output:
         file ("${bam}.samtools.stats.out") into samtoolsStatsReport
