@@ -92,10 +92,10 @@ You can either download nf-core/sarek on your computer or on `rackham`, make an 
 > pip install git-archive-all
 # If you used --user before, you might want to do that here too
 > pip install git-archive-all --user
-> ./scripts/makeSnapshot.sh --include-test-data --include-configs
+> ./scripts/make_snapshot.sh --include-test-data --include-configs
 
 # Or you can just include nf-core/sarek:
-> ./scripts/makeSnapshot.sh
+> ./scripts/make_snapshot.sh
 
 # You will get this message in your terminal
 Wrote sarek-[snapID].tar.gz
