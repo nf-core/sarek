@@ -575,8 +575,8 @@ bedIntervals = bedIntervals.dump(tag:'bedintervals')
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
-if (step == 'mapping') (inputReads, inputReadsFastQC) = inputSample.into(2)
-else (inputReads, inputReadsFastQC) = Channel.empty().into(2)
+if (step == 'mapping') (inputReads, inputReadsBWAaln, inputReadsFastQC) = inputSample.into(3)
+else (inputReads, inputReadsBWAaln, inputReadsFastQC) = Channel.empty().into(3)
 
 inputPairReadsFastQC = Channel.create()
 inputBAMFastQC = Channel.create()
@@ -658,7 +658,7 @@ process MapReads {
         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMapped
         set idPatient, idSample, file("${idSample}_${idRun}.bam") into bamMappedBamQC
 
-    when: step == 'mapping'
+    when: step == 'mapping' && params.knownIndels
 
     script:
     // -K is an hidden option, used to fix the number of reads processed by bwa mem
@@ -683,10 +683,42 @@ process MapReads {
 
 bamMapped = bamMapped.dump(tag:'Mapped BAM')
 
+process MapReadsBWAaln {
+    label 'cpus_max'
+
+    tag {idPatient + "-" + idRun}
+
+    input:
+        set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from inputReadsBWAaln
+        file(bwaIndex) from ch_bwaIndex
+        file(fasta) from ch_fasta
+
+    output:
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMappedbwaaln
+        set idPatient, idSample, file("${idSample}_${idRun}.bam") into bamMappedBamQCbwaaln
+
+    when: step == 'mapping' && !params.knownIndels
+
+    script:
+    """
+        bwa aln ${fasta} ${inputFile1} > ${idSample}_${idRun}_R1.sai
+        bwa aln ${fasta} ${inputFile2} > ${idSample}_${idRun}_R2.sai
+
+        bwa sampe ${fasta} ${idSample}_${idRun}_R1.sai ${idSample}_${idRun}_R2.sai  ${inputFile1}  ${inputFile2} > ${idSample}_${idRun}.sam
+
+        samtools view -S -b ${idSample}_${idRun}.sam > ${idSample}_${idRun}.unsorted.sam
+
+        samtools sort ${idSample}_${idRun}.unsorted.sam -o ${idSample}_${idRun}.bam
+    """
+}
+
+bamMappedbwaaln = bamMappedbwaaln.dump(tag:'Mapped BAM bwa aln')
+
 // Sort BAM whether they are standalone or should be merged
 
 singleBam = Channel.create()
 multipleBam = Channel.create()
+bamMapped = bamMapped.mix(bamMappedbwaaln)
 bamMapped.groupTuple(by:[0, 1])
     .choice(singleBam, multipleBam) {it[2].size() > 1 ? 1 : 0}
 singleBam = singleBam.map {
@@ -720,6 +752,28 @@ mergedBam = mergedBam.dump(tag:'Merged BAM')
 mergedBam = mergedBam.mix(singleBam)
 mergedBam = mergedBam.dump(tag:'BAMs for MD')
 
+(mergedBam, mergedBamBWAaln) = mergedBam.into(2)
+
+process IndexBamFile {
+    label 'cpus_8'
+
+    tag {idPatient + "-" + idSample}
+
+    input:
+        set idPatient, idSample, file(bam) from mergedBamBWAaln
+
+    output:
+        set idPatient, idSample, file(bam), file("*.bai") into indexedBam
+
+    when: !params.knownIndels
+
+    script:
+    """
+    samtools index ${bam}
+    mv ${bam}.bai ${bam.baseName}.bai
+    """
+}
+
 // STEP 2: MARKING DUPLICATES
 
 process MarkDuplicates {
@@ -740,7 +794,7 @@ process MarkDuplicates {
         set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bai") into duplicateMarkedBams
         file ("${idSample}.bam.metrics") into markDuplicatesReport
 
-    when: step == 'mapping'
+    when: step == 'mapping' && params.knownIndels
 
     script:
     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
@@ -762,7 +816,7 @@ if ('markduplicates' in skipQC) markDuplicatesReport.close()
 duplicateMarkedBams = duplicateMarkedBams.dump(tag:'MD BAM')
 markDuplicatesReport = markDuplicatesReport.dump(tag:'MD Report')
 
-(bamMD, bamBaseRecalibratorNoInt, bamMDToJoin) = duplicateMarkedBams.into(3)
+(bamMD, bamBaseRecalibratorNoInt, bamMDToJoin, bamMDToJoinNoInt) = duplicateMarkedBams.into(4)
 
 // if (params.intervals) bamBaseRecalibratorNoInt.close()
 
@@ -828,9 +882,9 @@ process BaseRecalibratorNoIntervals {
         file(knownIndelsIndex) from ch_knownIndelsIndex
 
     output:
-        set idPatient, idSample, file("${idSample}.recal.table") into bamMDnoInt
+        set idPatient, idSample, file("${idSample}.recal.table") into recalNoInt
 
-    when: step == 'mapping'
+    when: !params.intervals && step == 'mapping'
 
     script:
     knownOptions = params.knownIndels ? knownIndels.collect{"--known-sites ${it}"}.join(' ') : ""
@@ -903,6 +957,8 @@ bamApplyBQSR = bamApplyBQSR.dump(tag:'recal.table')
 
 bamApplyBQSR = bamApplyBQSR.combine(intApplyBQSR)
 
+bamApplyBQSRnoInt = bamMDToJoinNoInt.join(recalNoInt, by:[0,1])
+
 // STEP 4: RECALIBRATING
 
 process ApplyBQSR {
@@ -943,13 +999,13 @@ process ApplyBQSRnoIntervals {
     tag {idPatient + "-" + idSample}
 
     input:
-        set idPatient, idSample, file(bam), file(bai), file(recalibrationReport) from bamMDnoInt
+        set idPatient, idSample, file(bam), file(bai), file(recalibrationReport) from bamApplyBQSRnoInt
         file(dict) from ch_dict
         file(fasta) from ch_fasta
         file(fastaFai) from ch_fastaFai
 
     output:
-        set idPatient, idSample, file("${idSample}.recal.bam") into bamRecalNoInt
+        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into bamRecalNoInt
 
     script:
     """
@@ -959,6 +1015,9 @@ process ApplyBQSRnoIntervals {
         --input ${bam} \
         --output ${idSample}.recal.bam \
         --bqsr-recal-file ${recalibrationReport}
+
+    samtools index ${idSample}.recal.bam
+    mv ${idSample}.recal.bam.bai ${idSample}.recal.bai
     """
 }
 
@@ -1072,6 +1131,8 @@ bamQCReport = bamQCReport.dump(tag:'BamQC')
                             GERMLINE VARIANT CALLING
 ================================================================================
 */
+
+bamRecal = params.knownIndels ? bamRecal.mix(bamRecalNoInt) : indexedBam
 
 if (step == 'variantcalling') bamRecal = inputSample
 
@@ -1313,7 +1374,7 @@ vcfTIDDIT = vcfTIDDIT.dump(tag:'TIDDIT')
 */
 
 // Ascat, Control-FREEC
-(bamAscat, bamMpileup, bamRecalAll) = bamRecalAll.into(3)
+(bamAscat, bamMpileup, bamMpileupNoInt, bamRecalAll) = bamRecalAll.into(4)
 
 // separate BAM by status
 bamNormal = Channel.create()
@@ -1924,7 +1985,28 @@ process Mpileup {
     """
 }
 
-mpileupMerge = mpileupMerge.groupTuple(by:[0, 1])
+process MpileupNoIntervals {
+    label 'memory_singleCPU_2_task'
+
+    tag {idSample}
+
+    input:
+        set idPatient, idSample, file(bam), file(bai) from bamMpileupNoInt
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
+
+    output:
+        set idPatient, idSample, file("${idSample}.pileup.gz") into mpileupNoIntOut
+
+    when: !params.intervals && 'mpileup' in tools
+
+    script:
+    """
+    samtools mpileup \
+        -f ${fasta} ${bam} \
+    | bgzip --threads ${task.cpus} -c > ${idSample}.pileup.gz
+    """
+}
 
 // STEP CONTROLFREEC.2 - MERGE MPILEUP
 
