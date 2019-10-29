@@ -683,42 +683,10 @@ process MapReads {
 
 bamMapped = bamMapped.dump(tag:'Mapped BAM')
 
-process MapReadsBWAaln {
-    label 'cpus_max'
-
-    tag {idPatient + "-" + idRun}
-
-    input:
-        set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from inputReadsBWAaln
-        file(bwaIndex) from ch_bwaIndex
-        file(fasta) from ch_fasta
-
-    output:
-        set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMappedbwaaln
-        set idPatient, idSample, file("${idSample}_${idRun}.bam") into bamMappedBamQCbwaaln
-
-    when: step == 'mapping' && !params.knownIndels
-
-    script:
-    """
-        bwa aln ${fasta} ${inputFile1} > ${idSample}_${idRun}_R1.sai
-        bwa aln ${fasta} ${inputFile2} > ${idSample}_${idRun}_R2.sai
-
-        bwa sampe ${fasta} ${idSample}_${idRun}_R1.sai ${idSample}_${idRun}_R2.sai  ${inputFile1}  ${inputFile2} > ${idSample}_${idRun}.sam
-
-        samtools view -S -b ${idSample}_${idRun}.sam > ${idSample}_${idRun}.unsorted.sam
-
-        samtools sort ${idSample}_${idRun}.unsorted.sam -o ${idSample}_${idRun}.bam
-    """
-}
-
-bamMappedbwaaln = bamMappedbwaaln.dump(tag:'Mapped BAM bwa aln')
-
 // Sort BAM whether they are standalone or should be merged
 
 singleBam = Channel.create()
 multipleBam = Channel.create()
-bamMapped = bamMapped.mix(bamMappedbwaaln)
 bamMapped.groupTuple(by:[0, 1])
     .choice(singleBam, multipleBam) {it[2].size() > 1 ? 1 : 0}
 singleBam = singleBam.map {
@@ -752,7 +720,7 @@ mergedBam = mergedBam.dump(tag:'Merged BAM')
 mergedBam = mergedBam.mix(singleBam)
 mergedBam = mergedBam.dump(tag:'BAMs for MD')
 
-(mergedBam, mergedBamBWAaln) = mergedBam.into(2)
+(mergedBam, mergedBamToIndex) = mergedBam.into(2)
 
 process IndexBamFile {
     label 'cpus_8'
@@ -760,7 +728,7 @@ process IndexBamFile {
     tag {idPatient + "-" + idSample}
 
     input:
-        set idPatient, idSample, file(bam) from mergedBamBWAaln
+        set idPatient, idSample, file(bam) from mergedBamToIndex
 
     output:
         set idPatient, idSample, file(bam), file("*.bai") into indexedBam
@@ -1984,6 +1952,8 @@ process Mpileup {
     | bgzip --threads ${task.cpus} -c > ${intervalBed.baseName}_${idSample}.pileup.gz
     """
 }
+
+mpileupMerge = mpileupMerge.groupTuple(by:[0, 1])
 
 process MpileupNoIntervals {
     label 'memory_singleCPU_2_task'
