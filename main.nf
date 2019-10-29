@@ -43,6 +43,7 @@ def helpMessage() {
         --genome                    Name of iGenomes reference
         --noGVCF                    No g.vcf output from HaplotypeCaller
         --noStrelkaBP               Will not use Manta candidateSmallIndels for Strelka as Best Practice
+        --noIntervals               Disable usage of intervals
         --nucleotidesPerSecond      To estimate interval size
                                     Default: 1000.0
         --targetBED                 Target BED file for targeted or whole exome sequencing
@@ -69,14 +70,21 @@ def helpMessage() {
         --acLoci                    acLoci file
         --acLociGC                  acLoci GC file
         --bwaIndex                  bwa indexes
+                                    If none provided, will be generated automatically
         --dbsnp                     dbsnp file
         --dbsnpIndex                dbsnp index
+                                    If none provided, will be generated automatically
         --dict                      dict from the fasta reference
+                                    If none provided, will be generated automatically
         --fasta                     fasta reference
         --fastafai                  reference index
+                                    If none provided, will be generated automatically
         --intervals                 intervals
+                                    If none provided, will be generated automatically
+                                    Use --noIntervals to disable automatic generation
         --knownIndels               knownIndels file
         --knownIndelsIndex          knownIndels index
+                                    If none provided, will be generated automatically
         --snpeffDb                  snpeffDb version
         --vepCacheVersion           VEP Cache version
 
@@ -236,7 +244,6 @@ ch_dbsnp = params.dbsnp && ('mapping' in step || 'controlfreec' in tools || 'hap
 ch_fasta = params.fasta && !('annotate' in step) ? Channel.value(file(params.fasta)) : "null"
 ch_fastaFai = params.fastaFai && !('annotate' in step) ? Channel.value(file(params.fastaFai)) : "null"
 ch_germlineResource = params.germlineResource && 'mutect2' in tools ? Channel.value(file(params.germlineResource)) : "null"
-ch_intervals = params.intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : "null"
 
 // knownIndels is currently a list of file for smallGRCh37, so transform it in a channel
 li_knownIndels = []
@@ -371,6 +378,8 @@ yamlSoftwareVersion = yamlSoftwareVersion.dump(tag:'SOFTWARE VERSIONS')
 ================================================================================
 */
 
+// And then initialize channels based on params or indexes that were just built
+
 process BuildBWAindexes {
   tag {fasta}
 
@@ -390,6 +399,8 @@ process BuildBWAindexes {
   bwa index ${fasta}
   """
 }
+
+ch_bwaIndex = params.bwaIndex ? Channel.value(file(params.bwaIndex)) : bwaIndexes
 
 process BuildDict {
   tag {fasta}
@@ -414,6 +425,8 @@ process BuildDict {
   """
 }
 
+ch_dict = params.dict ? Channel.value(file(params.dict)) : dictBuilt
+
 process BuildFastaFai {
   tag {fasta}
 
@@ -434,6 +447,8 @@ process BuildFastaFai {
   """
 }
 
+ch_fastaFai = params.fastaFai ? Channel.value(file(params.fastaFai)) : fastaFaiBuilt
+
 process BuildDbsnpIndex {
   tag {dbsnp}
 
@@ -452,6 +467,8 @@ process BuildDbsnpIndex {
   tabix -p vcf ${dbsnp}
   """
 }
+
+ch_dbsnpIndex = params.dbsnpIndex ? Channel.value(file(params.dbsnpIndex)) : dbsnpIndexBuilt
 
 process BuildGermlineResourceIndex {
   tag {germlineResource}
@@ -473,6 +490,8 @@ process BuildGermlineResourceIndex {
   """
 }
 
+ch_germlineResourceIndex = params.germlineResourceIndex ? Channel.value(file(params.germlineResourceIndex)) : germlineResourceIndexBuilt
+
 process BuildKnownIndelsIndex {
   tag {knownIndels}
 
@@ -493,13 +512,29 @@ process BuildKnownIndelsIndex {
   """
 }
 
-// Initialize channels based on params or indexes that were just built
-ch_bwaIndex = params.bwaIndex ? Channel.value(file(params.bwaIndex)) : bwaIndexes
-ch_dbsnpIndex = params.dbsnpIndex ? Channel.value(file(params.dbsnpIndex)) : dbsnpIndexBuilt
-ch_dict = params.dict ? Channel.value(file(params.dict)) : dictBuilt
-ch_fastaFai = params.fastaFai ? Channel.value(file(params.fastaFai)) : fastaFaiBuilt
-ch_germlineResourceIndex = params.germlineResourceIndex ? Channel.value(file(params.germlineResourceIndex)) : germlineResourceIndexBuilt
 ch_knownIndelsIndex = params.knownIndelsIndex ? Channel.value(file(params.knownIndelsIndex)) : knownIndelsIndexBuilt.collect()
+
+process BuildIntervals {
+  tag {fastaFai}
+
+  publishDir params.outdir, mode: params.publishDirMode,
+    saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
+
+  input:
+    file(fastaFai) from ch_fastaFai
+
+  output:
+    file("${fastaFai.baseName}.bed") into intervalBuilt
+
+  when: !(params.intervals) && !('annotate' in step) && !(params.noIntervals)
+
+  script:
+  """
+  awk -v FS='\t' -v OFS='\t' '{ print \$1, \"0\", \$2 }' ${fastaFai} > ${fastaFai.baseName}.bed
+  """
+}
+
+ch_intervals = params.noIntervals ? "null" : params.intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : intervalBuilt
 
 /*
 ================================================================================
@@ -518,7 +553,7 @@ process CreateIntervalBeds {
     output:
         file '*.bed' into bedIntervals mode flatten
 
-    when: params.intervals && step != 'annotate'
+    when: !(params.noIntervals) && step != 'annotate'
 
     script:
     // If the interval file is BED format, the fifth column is interpreted to
@@ -575,8 +610,8 @@ bedIntervals = bedIntervals.dump(tag:'bedintervals')
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
-if (step == 'mapping') (inputReads, inputReadsBWAaln, inputReadsFastQC) = inputSample.into(3)
-else (inputReads, inputReadsBWAaln, inputReadsFastQC) = Channel.empty().into(3)
+if (step == 'mapping') (inputReads, inputReadsFastQC) = inputSample.into(2)
+else (inputReads, inputReadsFastQC) = Channel.empty().into(2)
 
 inputPairReadsFastQC = Channel.create()
 inputBAMFastQC = Channel.create()
@@ -658,7 +693,7 @@ process MapReads {
         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMapped
         set idPatient, idSample, file("${idSample}_${idRun}.bam") into bamMappedBamQC
 
-    when: step == 'mapping' && params.knownIndels
+    when: step == 'mapping'
 
     script:
     // -K is an hidden option, used to fix the number of reads processed by bwa mem
@@ -786,8 +821,6 @@ markDuplicatesReport = markDuplicatesReport.dump(tag:'MD Report')
 
 (bamMD, bamBaseRecalibratorNoInt, bamMDToJoin, bamMDToJoinNoInt) = duplicateMarkedBams.into(4)
 
-// if (params.intervals) bamBaseRecalibratorNoInt.close()
-
 bamBaseRecalibrator = bamMD.combine(intBaseRecalibrator)
 
 bamBaseRecalibrator = bamBaseRecalibrator.dump(tag:'BAM FOR BASERECALIBRATOR')
@@ -852,7 +885,7 @@ process BaseRecalibratorNoIntervals {
     output:
         set idPatient, idSample, file("${idSample}.recal.table") into recalNoInt
 
-    when: !params.intervals && step == 'mapping'
+    when: params.noIntervals && step == 'mapping'
 
     script:
     knownOptions = params.knownIndels ? knownIndels.collect{"--known-sites ${it}"}.join(' ') : ""
@@ -1968,7 +2001,7 @@ process MpileupNoIntervals {
     output:
         set idPatient, idSample, file("${idSample}.pileup.gz") into mpileupNoIntOut
 
-    when: !params.intervals && 'mpileup' in tools
+    when: params.noIntervals && 'mpileup' in tools
 
     script:
     """
