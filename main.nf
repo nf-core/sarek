@@ -680,7 +680,7 @@ process MapReads {
     """
 }
 
-// STEP 1.1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
+// STEP 1.1: COORDINATE SORT BAM FILE OBTAINED FROM BWA MEM
 
 process SortBAM {
     label 'cpus_8'
