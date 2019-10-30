@@ -698,7 +698,7 @@ process SortBAM {
 
     script:
     """
-        samtools sort -@ $task.cpus -o ${idSample}_${idRun}.bam -T ${idSample}_${idRun} ${idSample}_${idRun}.name.bam
+        samtools sort -@ $task.cpus -o ${idSample}_${idRun}.bam -T ${idSample}_${idRun} $bam
     """
 }
 
