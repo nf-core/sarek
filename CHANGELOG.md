@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#42](https://github.com/nf-core/sarek/pull/42) - Fix typos, and minor updates in `README.md`
 - [#43](https://github.com/nf-core/sarek/pull/43) - Fix automated `VEP` builds with circleCI
 - [#54](https://github.com/nf-core/sarek/pull/54) - Apply fixes from release `2.5.1`
-- Remove pipe from `bwa mem` to `samtools sort` and run as a separate command
+- [#57](https://github.com/nf-core/sarek/pull/57) - Remove pipe from `bwa mem` to `samtools sort` and run as a separate process
 
 ## [2.5.1] - Årjep-Ålkatjjekna
 
