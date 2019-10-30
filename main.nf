@@ -545,11 +545,10 @@ process CreateIntervalBeds {
         """
     else if (hasExtension(intervals, "interval_list"))
         """
-        cat ${intervals} | grep -v "@" > intervals.temp
-        awk -vFS="\t" '{
+        grep -v '^@' ${intervals} | awk -vFS="\t" '{
           name = sprintf("%s_%d-%d", \$1, \$2, \$3);
           printf("%s\\t%d\\t%d\\n", \$1, \$2-1, \$3) > name ".bed"
-        }' intervals.temp
+        }'
         """
     else
         """
