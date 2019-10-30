@@ -676,8 +676,7 @@ process MapReads {
     """
         ${convertToFastq}
         bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
-        ${input} | \
-        samtools sort --threads ${task.cpus} -m 2G - > ${idSample}_${idRun}.bam
+        ${input} |  samtools sort - > ${idSample}_${idRun}.bam
     """
 }
 
