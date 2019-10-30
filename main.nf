@@ -655,8 +655,7 @@ process MapReads {
         file(fasta) from ch_fasta
 
     output:
-        set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMapped
-        set idPatient, idSample, file("${idSample}_${idRun}.bam") into bamMappedBamQC
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}.name.bam") into bamMapped
 
     when: step == 'mapping'
 
@@ -678,18 +677,39 @@ process MapReads {
         bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
         ${input} | \
         samtools view -@ $task.cpus -b -h -O BAM -o ${idSample}_${idRun}.name.bam -
+    """
+}
 
+// STEP 1.1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
+
+process SortBAM {
+    label 'cpus_8'
+
+    tag {idPatient + "-" + idRun}
+
+    input:
+        set idPatient, idSample, idRun, file(bam) from bamMapped
+
+    output:
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into sortBamMapped
+        set idPatient, idSample, file("${idSample}_${idRun}.bam") into sortBamMappedBamQC
+
+    when: step == 'mapping'
+
+    script:
+    """
         samtools sort -@ $task.cpus -o ${idSample}_${idRun}.bam -T ${idSample}_${idRun} ${idSample}_${idRun}.name.bam
     """
 }
 
-bamMapped = bamMapped.dump(tag:'Mapped BAM')
+
+sortBamMapped = sortBamMapped.dump(tag:'Mapped BAM')
 
 // Sort BAM whether they are standalone or should be merged
 
 singleBam = Channel.create()
 multipleBam = Channel.create()
-bamMapped.groupTuple(by:[0, 1])
+sortBamMapped.groupTuple(by:[0, 1])
     .choice(singleBam, multipleBam) {it[2].size() > 1 ? 1 : 0}
 singleBam = singleBam.map {
     idPatient, idSample, idRun, bam ->
@@ -697,7 +717,7 @@ singleBam = singleBam.map {
 }
 singleBam = singleBam.dump(tag:'Single BAM')
 
-// STEP 1.5: MERGING BAM FROM MULTIPLE LANES
+// STEP 1.2: MERGING BAM FROM MULTIPLE LANES
 
 process MergeBamMapped {
     label 'cpus_8'
@@ -963,7 +983,7 @@ process SamtoolsStats {
 
 samtoolsStatsReport = samtoolsStatsReport.dump(tag:'SAMTools')
 
-bamBamQC = bamMappedBamQC.mix(bamRecalBamQC)
+bamBamQC = sortBamMappedBamQC.mix(bamRecalBamQC)
 
 process BamQC {
     label 'memory_max'
