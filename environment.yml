@@ -1,6 +1,6 @@
 # You can use this file to create a conda environment for this pipeline:
 #   conda env create -f environment.yml
-name: nf-core-sarek-2.5.1dev
+name: nf-core-sarek-2.5.2dev
 channels:
   - conda-forge
   - bioconda
@@ -23,6 +23,6 @@ dependencies:
   - samtools=1.9
   - snpeff=4.3.1t
   - strelka=2.9.10
-  - tiddit=2.8.0
+  - tiddit=2.8.1
   - vcfanno=0.3.2
   - vcftools=0.1.16
