@@ -2258,7 +2258,7 @@ process VEP {
         -i ${vcf} \
         -o ${reducedVCF}_VEP.ann.vcf \
         --assembly ${genome} \
-        --species mus_musculus \
+        --species ${params.species} \
         ${cadd} \
         ${genesplicer} \
         --cache \
@@ -2320,6 +2320,7 @@ process VEPmerge {
         -i ${vcf} \
         -o ${reducedVCF}_VEP.ann.vcf \
         --assembly ${genome} \
+        --species ${params.species} \
         ${cadd} \
         ${genesplicer} \
         --cache \
