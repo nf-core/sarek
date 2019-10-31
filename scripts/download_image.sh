@@ -80,7 +80,4 @@ then
   get_image sarekvep ${VERSION}.${SOURCEGENOME} ${TARGETVERSION}.${GENOME}
 fi
 
-if ! [[ ANNOTATEBOTH,ANNOTATESNPEFF,ANNOTATEVEP,LINT,SNPEFF,VEP =~ $TEST ]]
-then
-  get_image sarek ${VERSION} ${TARGETVERSION}
-fi
+get_image sarek ${VERSION} ${TARGETVERSION}

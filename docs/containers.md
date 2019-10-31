@@ -30,7 +30,7 @@ For annotation, the main container can be used, but the cache has to be download
 - Contain **[samtools](https://github.com/samtools/samtools)** 1.9
 - Contain **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
 - Contain **[Strelka2](https://github.com/Illumina/strelka)** 2.9.10
-- Contain **[TIDDIT](https://github.com/SciLifeLab/TIDDIT)** 2.8.0
+- Contain **[TIDDIT](https://github.com/SciLifeLab/TIDDIT)** 2.8.1
 - Contain **[VCFanno](https://github.com/brentp/vcfanno)** 0.3.2
 - Contain **[VCFtools](https://vcftools.github.io/index.html)** 0.1.16
 - Contain **[VEP](https://github.com/Ensembl/ensembl-vep)** 98.2
