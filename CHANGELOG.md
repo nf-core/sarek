@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### `Added`
 
 - [#46](https://github.com/nf-core/sarek/pull/46) - Add location to abstacts
+- [#52](https://github.com/nf-core/sarek/pull/52) - Add support for mouse data `GRCm38`
 
 ### `Changed`
 
@@ -22,7 +23,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#41](https://github.com/nf-core/sarek/pull/41), [#55](https://github.com/nf-core/sarek/pull/55) - Update `tiddit` from `2.7.1` to `2.8.1`
 - [#41](https://github.com/nf-core/sarek/pull/41) - Update `vcfanno` from `0.3.1` to `0.3.2`
 - [#46](https://github.com/nf-core/sarek/pull/46) - Add location to abstracts.
-- [#52](https://github.com/nf-core/sarek/pull/52) - Add support for mouse data `GRCm38`
 - [#54](https://github.com/nf-core/sarek/pull/54) - Bump version to `2.5.2dev`
 
 ### `Removed`
