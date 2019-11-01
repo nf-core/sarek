@@ -747,7 +747,7 @@ process MarkDuplicates {
     """
     gatk --java-options ${markdup_java_options} \
         MarkDuplicates \
-        --MAX_RECORDS_IN_RAM 50000 \
+        --MAX_RECORDS_IN_RAM 500 \
         --INPUT ${idSample}.bam \
         --METRICS_FILE ${idSample}.bam.metrics \
         --TMP_DIR . \
