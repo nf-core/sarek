@@ -722,7 +722,8 @@ mergedBam = mergedBam.dump(tag:'BAMs for MD')
 // STEP 2: MARKING DUPLICATES
 
 process MarkDuplicates {
-    label 'cpus_16'
+    label 'cpus_max'
+    label 'memory_max'
 
     tag {idPatient + "-" + idSample}
 
@@ -746,7 +747,7 @@ process MarkDuplicates {
     """
     gatk --java-options ${markdup_java_options} \
         MarkDuplicates \
-        --MAX_RECORDS_IN_RAM 500000 \
+        --MAX_RECORDS_IN_RAM 50000 \
         --INPUT ${idSample}.bam \
         --METRICS_FILE ${idSample}.bam.metrics \
         --TMP_DIR . \
