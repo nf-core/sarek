@@ -468,7 +468,7 @@ process BuildDbsnpIndex {
   """
 }
 
-ch_dbsnpIndex = params.dbsnpIndex ? Channel.value(file(params.dbsnpIndex)) : dbsnpIndexBuilt
+ch_dbsnpIndex = params.dbsnp ? params.dbsnpIndex ? Channel.value(file(params.dbsnpIndex)) : dbsnpIndexBuilt : "null"
 
 process BuildGermlineResourceIndex {
   tag {germlineResource}
@@ -490,7 +490,7 @@ process BuildGermlineResourceIndex {
   """
 }
 
-ch_germlineResourceIndex = params.germlineResourceIndex ? Channel.value(file(params.germlineResourceIndex)) : germlineResourceIndexBuilt
+ch_germlineResourceIndex = params.germlineResource ? params.germlineResourceIndex ? Channel.value(file(params.germlineResourceIndex)) : germlineResourceIndexBuilt : "null"
 
 process BuildKnownIndelsIndex {
   tag {knownIndels}
@@ -512,7 +512,7 @@ process BuildKnownIndelsIndex {
   """
 }
 
-ch_knownIndelsIndex = params.knownIndelsIndex ? Channel.value(file(params.knownIndelsIndex)) : knownIndelsIndexBuilt.collect()
+ch_knownIndelsIndex = params.knownIndels ? params.knownIndelsIndex ? Channel.value(file(params.knownIndelsIndex)) : knownIndelsIndexBuilt.collect() : "null"
 
 process BuildIntervals {
   tag {fastaFai}
@@ -553,7 +553,7 @@ process CreateIntervalBeds {
     output:
         file '*.bed' into bedIntervals mode flatten
 
-    when: !(params.noIntervals) && step != 'annotate'
+    when: (!params.noIntervals) && step != 'annotate'
 
     script:
     // If the interval file is BED format, the fifth column is interpreted to
@@ -605,6 +605,8 @@ bedIntervals = bedIntervals
     .map{duration, intervalFile -> intervalFile}
 
 bedIntervals = bedIntervals.dump(tag:'bedintervals')
+
+if (params.noIntervals) bedIntervals = Channel.from(file("no_intervals.bed"))
 
 (intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intMpileup, bedIntervals) = bedIntervals.into(5)
 
@@ -786,7 +788,8 @@ process MarkDuplicates {
 
     publishDir params.outdir, mode: params.publishDirMode,
         saveAs: {
-            if (it == "${idSample}.bam.metrics" && 'markduplicates' in skipQC) "Reports/${idSample}/MarkDuplicates/${it}"
+            if (it == "${idSample}.bam.metrics" && 'markduplicates' in skipQC) null
+            else if (it == "${idSample}.bam.metrics") "Reports/${idSample}/MarkDuplicates/${it}"
             else "Preprocessing/${idSample}/DuplicateMarked/${it}"
         }
 
@@ -819,7 +822,7 @@ if ('markduplicates' in skipQC) markDuplicatesReport.close()
 duplicateMarkedBams = duplicateMarkedBams.dump(tag:'MD BAM')
 markDuplicatesReport = markDuplicatesReport.dump(tag:'MD Report')
 
-(bamMD, bamBaseRecalibratorNoInt, bamMDToJoin, bamMDToJoinNoInt) = duplicateMarkedBams.into(4)
+(bamMD, bamMDToJoin) = duplicateMarkedBams.into(2)
 
 bamBaseRecalibrator = bamMD.combine(intBaseRecalibrator)
 
@@ -831,7 +834,7 @@ process BaseRecalibrator {
     label 'memory_max'
     label 'cpus_1'
 
-    tag {idPatient + "-" + idSample + "-" + intervalBed}
+    tag {idPatient + "-" + idSample + "-" + intervalBed.baseName}
 
     input:
         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamBaseRecalibrator
@@ -844,65 +847,39 @@ process BaseRecalibrator {
         file(knownIndelsIndex) from ch_knownIndelsIndex
 
     output:
-        set idPatient, idSample, file("${intervalBed.baseName}_${idSample}.recal.table") into tableGatherBQSRReports
+        set idPatient, idSample, file("${prefix}${idSample}.recal.table") into tableGatherBQSRReports
+        set idPatient, idSample into recalTableTSVnoInt
 
-    when: step == 'mapping'
+    when: step == 'mapping' && params.knownIndels
 
     script:
     dbsnpOptions = params.dbsnp ? "--known-sites ${dbsnp}" : ""
     knownOptions = params.knownIndels ? knownIndels.collect{"--known-sites ${it}"}.join(' ') : ""
+    prefix = params.noIntervals ? "" : "${intervalBed.baseName}_"
+    intervalsOptions = params.noIntervals ? "" : "-L ${intervalBed}"
     // TODO: --use-original-qualities ???
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
         BaseRecalibrator \
         -I ${bam} \
-        -O ${intervalBed.baseName}_${idSample}.recal.table \
+        -O ${prefix}${idSample}.recal.table \
         --tmp-dir /tmp \
         -R ${fasta} \
-        -L ${intervalBed} \
+        ${intervalsOptions} \
         ${dbsnpOptions} \
         ${knownOptions} \
         --verbosity INFO
     """
 }
 
-// STEP 3': CREATING RECALIBRATION TABLES WITHOUT INTERVALS
+if (!params.noIntervals) tableGatherBQSRReports = tableGatherBQSRReports.groupTuple(by:[0, 1])
 
-process BaseRecalibratorNoIntervals {
-    label 'memory_max'
-    label 'cpus_1'
+tableGatherBQSRReports = tableGatherBQSRReports.dump(tag:'BQSR REPORTS')
 
-    tag {idPatient + "-" + idSample}
-
-    input:
-        set idPatient, idSample, file(bam), file(bai) from bamBaseRecalibratorNoInt
-        file(fasta) from ch_fasta
-        file(dict) from ch_dict
-        file(fastaFai) from ch_fastaFai
-        file(knownIndels) from ch_knownIndels
-        file(knownIndelsIndex) from ch_knownIndelsIndex
-
-    output:
-        set idPatient, idSample, file("${idSample}.recal.table") into recalNoInt
-
-    when: params.noIntervals && step == 'mapping'
-
-    script:
-    knownOptions = params.knownIndels ? knownIndels.collect{"--known-sites ${it}"}.join(' ') : ""
-    // TODO: --use-original-qualities ???
-    """
-    gatk --java-options -Xmx${task.memory.toGiga()}g \
-        BaseRecalibrator \
-        -I ${bam} \
-        -O ${idSample}.recal.table \
-        --tmp-dir /tmp \
-        -R ${fasta} \
-        ${knownOptions} \
-        --verbosity INFO
-    """
-}
-
-tableGatherBQSRReports = tableGatherBQSRReports.groupTuple(by:[0, 1])
+if (params.noIntervals) {
+    (tableGatherBQSRReports, tableGatherBQSRReportsNoInt) = tableGatherBQSRReports.into(2)
+    recalTable = tableGatherBQSRReportsNoInt
+} else recalTableTSVnoInt.close()
 
 // STEP 3.5: MERGING RECALIBRATION TABLES
 
@@ -919,9 +896,9 @@ process GatherBQSRReports {
 
     output:
         set idPatient, idSample, file("${idSample}.recal.table") into recalTable
-        set idPatient, idSample, val("${idSample}.md.bam"), val("${idSample}.md.bai"), val("${idSample}.recal.table") into (recalTableTSV, recalTableSampleTSV)
+        set idPatient, idSample into recalTableTSV
 
-    when: step == 'mapping'
+    when: step == 'mapping' && !(params.noIntervals)
 
     script:
     input = recal.collect{"-I ${it}"}.join(' ')
@@ -933,32 +910,44 @@ process GatherBQSRReports {
     """
 }
 
+recalTable = recalTable.dump(tag:'RECAL TABLE')
+
+(recalTableTSV, recalTableSampleTSV) = recalTableTSV.mix(recalTableTSVnoInt).into(2)
+
 // Create TSV files to restart from this step
-recalTableTSV.map { idPatient, idSample, bam, bai, recalTable ->
+recalTableTSV.map { idPatient, idSample ->
     status = statusMap[idPatient, idSample]
     gender = genderMap[idPatient]
-    "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bam}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bai}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${recalTable}\n"
+    bam = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bam"
+    bai = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bai"
+    recalTable = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.recal.table"
+    "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${recalTable}\n"
 }.collectFile(
     name: 'duplicateMarked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
 )
 
 recalTableSampleTSV
     .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV/") {
-        idPatient, idSample, bam, bai, recalTable ->
+        idPatient, idSample ->
         status = statusMap[idPatient, idSample]
         gender = genderMap[idPatient]
-        ["duplicateMarked_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bam}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bai}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${recalTable}\n"]
+        bam = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bam"
+        bai = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bai"
+        recalTable = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.recal.table"
+        ["duplicateMarked_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${recalTable}\n"]
 }
 
 bamApplyBQSR = bamMDToJoin.join(recalTable, by:[0,1])
 
 if (step == 'recalibrate') bamApplyBQSR = inputSample
 
-bamApplyBQSR = bamApplyBQSR.dump(tag:'recal.table')
+bamApplyBQSR = bamApplyBQSR.dump(tag:'BAM + BAI + RECAL TABLE')
+// [DUMP: recal.table] ['normal', 'normal', normal.md.bam, normal.md.bai, normal.recal.table]
 
 bamApplyBQSR = bamApplyBQSR.combine(intApplyBQSR)
 
-bamApplyBQSRnoInt = bamMDToJoinNoInt.join(recalNoInt, by:[0,1])
+bamApplyBQSR = bamApplyBQSR.dump(tag:'BAM + BAI + RECAL TABLE + INT')
+// [DUMP: BAM + BAI + RECAL TABLE + INT] ['normal', 'normal', normal.md.bam, normal.md.bai, normal.recal.table, 1_1-200000.bed]
 
 // STEP 4: RECALIBRATING
 
@@ -975,52 +964,24 @@ process ApplyBQSR {
         file(fastaFai) from ch_fastaFai
 
     output:
-        set idPatient, idSample, file("${intervalBed.baseName}_${idSample}.recal.bam") into bamMergeBamRecal
+        set idPatient, idSample, file("${prefix}${idSample}.recal.bam") into bamMergeBamRecal
 
     script:
+    prefix = params.noIntervals ? "" : "${intervalBed.baseName}_"
+    intervalsOptions = params.noIntervals ? "" : "-L ${intervalBed}"
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
         ApplyBQSR \
         -R ${fasta} \
         --input ${bam} \
-        --output ${intervalBed.baseName}_${idSample}.recal.bam \
-        -L ${intervalBed} \
+        --output ${prefix}${idSample}.recal.bam \
+        ${intervalsOptions} \
         --bqsr-recal-file ${recalibrationReport}
     """
 }
 
 bamMergeBamRecal = bamMergeBamRecal.groupTuple(by:[0, 1])
-
-// STEP 4': RECALIBRATING WITHOUT INTERVALS
-
-process ApplyBQSRnoIntervals {
-    label 'memory_singleCPU_2_task'
-    label 'cpus_2'
-
-    tag {idPatient + "-" + idSample}
-
-    input:
-        set idPatient, idSample, file(bam), file(bai), file(recalibrationReport) from bamApplyBQSRnoInt
-        file(dict) from ch_dict
-        file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
-
-    output:
-        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into bamRecalNoInt
-
-    script:
-    """
-    gatk --java-options -Xmx${task.memory.toGiga()}g \
-        ApplyBQSR \
-        -R ${fasta} \
-        --input ${bam} \
-        --output ${idSample}.recal.bam \
-        --bqsr-recal-file ${recalibrationReport}
-
-    samtools index ${idSample}.recal.bam
-    mv ${idSample}.recal.bam.bai ${idSample}.recal.bai
-    """
-}
+(bamMergeBamRecal, bamMergeBamRecalNoInt) = bamMergeBamRecal.into(2)
 
 // STEP 4.5: MERGING THE RECALIBRATED BAM FILES
 
@@ -1036,8 +997,10 @@ process MergeBamRecal {
 
     output:
         set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into bamRecal
-        set idPatient, idSample, file("${idSample}.recal.bam") into (bamRecalBamQC, bamRecalSamToolsStats)
-        set idPatient, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into (bamRecalTSV, bamRecalSampleTSV)
+        set idPatient, idSample, file("${idSample}.recal.bam") into bamRecalQC
+        set idPatient, idSample into bamRecalTSV
+
+    when: !(params.noIntervals)
 
     script:
     """
@@ -1047,21 +1010,58 @@ process MergeBamRecal {
     """
 }
 
+// STEP 4.5': INDEXING THE RECALIBRATED BAM FILES
+
+process IndexBamRecal {
+    label 'cpus_8'
+
+    tag {idPatient + "-" + idSample}
+
+    publishDir "${params.outdir}/Preprocessing/${idSample}/Recalibrated", mode: params.publishDirMode
+
+    input:
+        set idPatient, idSample, file("${idSample}.recal.bam") from bamMergeBamRecalNoInt
+
+    output:
+        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into bamRecalNoInt
+        set idPatient, idSample, file("${idSample}.recal.bam") into bamRecalQCnoInt
+        set idPatient, idSample into bamRecalTSVnoInt
+
+    when: params.noIntervals
+
+    script:
+    """
+    samtools index ${idSample}.recal.bam
+    mv ${idSample}.recal.bam.bai ${idSample}.recal.bai
+    """
+}
+
+bamRecal = bamRecal.mix(bamRecalNoInt)
+bamRecalQC = bamRecalQC.mix(bamRecalQCnoInt)
+bamRecalTSV = bamRecalTSV.mix(bamRecalTSVnoInt)
+
+(bamRecalBamQC, bamRecalSamToolsStats) = bamRecalQC.into(2)
+(bamRecalTSV, bamRecalSampleTSV) = bamRecalTSV.into(2)
+
 // Creating a TSV file to restart from this step
-bamRecalTSV.map { idPatient, idSample, bam, bai ->
+bamRecalTSV.map { idPatient, idSample ->
     gender = genderMap[idPatient]
     status = statusMap[idPatient, idSample]
-    "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bam}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bai}\n"
+    bam = "${params.outdir}/Preprocessing/${idSample}/Recalibrated/${idSample}.recal.bam"
+    bai = "${params.outdir}/Preprocessing/${idSample}/Recalibrated/${idSample}.recal.bai"
+    "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"
 }.collectFile(
     name: 'recalibrated.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
 )
 
 bamRecalSampleTSV
     .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") {
-        idPatient, idSample, bam, bai ->
+        idPatient, idSample ->
         status = statusMap[idPatient, idSample]
         gender = genderMap[idPatient]
-        ["recalibrated_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bam}\t${params.outdir}/Preprocessing/${idSample}/Recalibrated/${bai}\n"]
+        bam = "${params.outdir}/Preprocessing/${idSample}/Recalibrated/${idSample}.recal.bam"
+        bai = "${params.outdir}/Preprocessing/${idSample}/Recalibrated/${idSample}.recal.bai"
+        ["recalibrated_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
 }
 
 // STEP 5: QC
@@ -1133,7 +1133,7 @@ bamQCReport = bamQCReport.dump(tag:'BamQC')
 ================================================================================
 */
 
-bamRecal = params.knownIndels ? bamRecal.mix(bamRecalNoInt) : indexedBam
+bamRecal = params.knownIndels ? bamRecal : indexedBam
 
 if (step == 'variantcalling') bamRecal = inputSample
 
@@ -1960,7 +1960,7 @@ process Ascat {
 
 ascatOut.dump(tag:'ASCAT')
 
-// STEP CONTROLFREEC.1 - MPILEUP
+// STEP MPILEUP.1
 
 process Mpileup {
     label 'memory_singleCPU_2_task'
@@ -1973,45 +1973,30 @@ process Mpileup {
         file(fastaFai) from ch_fastaFai
 
     output:
-        set idPatient, idSample, file("${intervalBed.baseName}_${idSample}.pileup.gz") into mpileupMerge
+        set idPatient, idSample, file("${prefix}${idSample}.pileup.gz") into mpileupMerge
 
     when: 'controlfreec' in tools || 'mpileup' in tools
 
     script:
+    prefix = params.noIntervals ? "" : "${intervalBed.baseName}_"
+    intervalsOptions = params.noIntervals ? "" : "-l ${intervalBed}"
     """
     samtools mpileup \
         -f ${fasta} ${bam} \
-        -l ${intervalBed} \
-    | bgzip --threads ${task.cpus} -c > ${intervalBed.baseName}_${idSample}.pileup.gz
+        ${intervalsOptions} \
+    | bgzip --threads ${task.cpus} -c > ${prefix}${idSample}.pileup.gz
     """
 }
 
-mpileupMerge = mpileupMerge.groupTuple(by:[0, 1])
-
-process MpileupNoIntervals {
-    label 'memory_singleCPU_2_task'
-
-    tag {idSample}
-
-    input:
-        set idPatient, idSample, file(bam), file(bai) from bamMpileupNoInt
-        file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
-
-    output:
-        set idPatient, idSample, file("${idSample}.pileup.gz") into mpileupNoIntOut
-
-    when: params.noIntervals && 'mpileup' in tools
-
-    script:
-    """
-    samtools mpileup \
-        -f ${fasta} ${bam} \
-    | bgzip --threads ${task.cpus} -c > ${idSample}.pileup.gz
-    """
+if (!params.noIntervals) {
+    mpileupMerge = mpileupMerge.groupTuple(by:[0, 1])
+    mpileupNoInt = Channel.empty()
+} else {
+    (mpileupMerge, mpileupNoInt) = mpileupMerge.into(2)
+    mpileupMerge.close()
 }
 
-// STEP CONTROLFREEC.2 - MERGE MPILEUP
+// STEP MPILEUP.2 - MERGE
 
 process MergeMpileup {
     tag {idSample}
@@ -2024,7 +2009,7 @@ process MergeMpileup {
     output:
         set idPatient, idSample, file("${idSample}.pileup.gz") into mpileupOut
 
-    when: 'controlfreec' in tools || 'mpileup' in tools
+    when: !(params.noIntervals) && 'controlfreec' in tools || 'mpileup' in tools
 
     script:
     """
@@ -2038,6 +2023,7 @@ process MergeMpileup {
     """
 }
 
+mpileupOut = mpileupOut.mix(mpileupNoInt)
 mpileupOut = mpileupOut.dump(tag:'mpileup')
 
 mpileupOutNormal = Channel.create()
@@ -2054,7 +2040,7 @@ mpileupOut = mpileupOut.map {
     [idPatientNormal, idSampleNormal, idSampleTumor, mpileupOutNormal, mpileupOutTumor]
 }
 
-// STEP CONTROLFREEC.3 - CONTROLFREEC
+// STEP CONTROLFREEC.1 - CONTROLFREEC
 
 process ControlFREEC {
     label 'memory_singleCPU_2_task'
