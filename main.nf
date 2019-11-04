@@ -73,18 +73,21 @@ def helpMessage() {
                                     If none provided, will be generated automatically
         --dbsnp                     dbsnp file
         --dbsnpIndex                dbsnp index
-                                    If none provided, will be generated automatically
+                                    If none provided, will be generated automatically if a dbsnp file is provided
         --dict                      dict from the fasta reference
                                     If none provided, will be generated automatically
         --fasta                     fasta reference
         --fastafai                  reference index
                                     If none provided, will be generated automatically
+        --germlineResource          Germline Resource File
+        --germlineResourceIndex     Germline Resource Index
+                                    If none provided, will be generated automatically if a germlineResource file is provided
         --intervals                 intervals
                                     If none provided, will be generated automatically
                                     Use --noIntervals to disable automatic generation
         --knownIndels               knownIndels file
         --knownIndelsIndex          knownIndels index
-                                    If none provided, will be generated automatically
+                                    If none provided, will be generated automatically if a knownIndels file is provided
         --snpeffDb                  snpeffDb version
         --vepCacheVersion           VEP Cache version
 
