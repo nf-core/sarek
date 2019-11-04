@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### `Added`
 
 - [#46](https://github.com/nf-core/sarek/pull/46) - Add location to abstacts
+- [#52](https://github.com/nf-core/sarek/pull/52) - Add support for mouse data `GRCm38`
 
 ### `Changed`
 

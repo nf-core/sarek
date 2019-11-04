@@ -47,6 +47,7 @@
   * [`--snpeffDb`](#--snpeffdb)
   * [`--vepCacheVersion`](#--vepcacheversion)
   * [`--igenomesIgnore`](#--igenomesignore)
+  * [`--species`](#--species)
 * [Job resources](#job-resources)
   * [Automatic resubmission](#automatic-resubmission)
   * [Custom resource requests](#custom-resource-requests)
@@ -513,6 +514,10 @@ If you prefer, you can specify the cache version when you run the pipeline:
 
 Do not load `igenomes.config` when running the pipeline.
 You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.
+
+### `--species`
+
+This specifies the species used for running VEP annotation. For human data, this needs to be set to `homo_sapiens`, for mouse data `mus_musculus` as the annotation needs to know where to look for appropriate annotation references. If you use iGenomes or a local resource with `genomes.conf`, this has already been set for you appropriately.
 
 ## Job resources
 
