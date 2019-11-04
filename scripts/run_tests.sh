@@ -84,7 +84,7 @@ else
   SUFFIX=""
 fi
 
-OPTIONS="--tools FreeBayes,HaplotypeCaller,Manta,Mutect2,Strelka,TIDDIT"
+OPTIONS="--tools FreeBayes,HaplotypeCaller,Manta,mpileup,Mutect2,Strelka"
 
 if [[ $TEST == "GERMLINE" ]] && [[ $OFFLINE == false ]]
 then
@@ -113,11 +113,17 @@ case $TEST in
   ;;
   GERMLINE)
   run_sarek --tools=false --input data/testdata/tiny/normal
-  run_sarek --tools=false --input results/Preprocessing/TSV/duplicateMarked.tsv --step recalibrate
+  run_sarek --tools=false --input results/Preprocessing/TSV/duplicateMarked.tsv --step recalibrate  -resume
   run_sarek --tools HaplotypeCaller --input results/Preprocessing/TSV/recalibrated.tsv --step variantCalling
   ;;
+  MINIMAL)
+  run_sarek --tools manta,mpileup,strelka --input ${PATHTOSAMPLE}/tsv/tiny-manta-normal${SUFFIX}.tsv --genome smallerGRCh37
+  run_sarek --tools manta,mpileup,strelka --input ${PATHTOSAMPLE}/tsv/tiny-manta-normal${SUFFIX}.tsv --genome smallerGRCh37 --noIntervals -resume
+  run_sarek --tools manta,mpileup,strelka --input ${PATHTOSAMPLE}/tsv/tiny-manta-normal${SUFFIX}.tsv --genome minimalGRCh37 -resume
+  run_sarek --tools manta,mpileup,strelka --input ${PATHTOSAMPLE}/tsv/tiny-manta-normal${SUFFIX}.tsv --genome minimalGRCh37 --noIntervals -resume
+  ;;
   MULTIPLE)
-  run_sarek --tools FreeBayes,HaplotypeCaller,Manta,Strelka,TIDDIT,snpEff,VEP,merge --input ${PATHTOSAMPLE}/tsv/tiny-multiple${SUFFIX}.tsv
+  run_sarek --tools FreeBayes,HaplotypeCaller,Manta,mpileup,Strelka,snpEff,VEP,merge --input ${PATHTOSAMPLE}/tsv/tiny-multiple${SUFFIX}.tsv
   ;;
   SOMATIC)
   run_sarek ${OPTIONS} --input ${PATHTOSAMPLE}/tsv/tiny-manta${SUFFIX}.tsv
