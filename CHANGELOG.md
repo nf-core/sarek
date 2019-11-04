@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [#46](https://github.com/nf-core/sarek/pull/46) - Add location to abstacts
 - [#52](https://github.com/nf-core/sarek/pull/52) - Add support for mouse data `GRCm38`
+- [#60](https://github.com/nf-core/sarek/pull/60) - Add `no_intervals` params
+- [#60](https://github.com/nf-core/sarek/pull/60) - Add automatic generation of `intervals` file with `BuildIntervals` process
+- [#60](https://github.com/nf-core/sarek/pull/60) - Add minimal support for minimal genome (only `fasta`, or `fasta` + `knownIndels`)
+- [#60](https://github.com/nf-core/sarek/pull/60) - Add new processes (`IndexBamFile`, `IndexBamRecal`) to deal with optional usage of interval files and minimal genome
+- [#60](https://github.com/nf-core/sarek/pull/60) - Add tests for minimal genome usage
+- [#60](https://github.com/nf-core/sarek/pull/60) - Add new minimal genomes (`AGPv3`, `BDGP6`, `CHIMP2.1.4`, `CanFam3.1`, `EB1`, `EB2`, `EF2`, `EquCab2`, `GRCz10`, `Galgal4`, `Gm01`, `IRGSP-1.0`, `Mmul_1`, `R64-1-1`, `Rnor_6.0`, `Sbi1`, `Sscrofa10.2`, `TAIR10`, `UMD3.1`, `WBcel235`, `bosTau8`, `canFam3`, `ce10`, `danRer10`, `dm6`, `equCab2`, `galGal4`, `hg19`, `hg38`, `mm10`, `panTro4`, `rn6`, `sacCer3`, `susScr3`) to `igenomes.config`
 
 ### `Changed`
 
@@ -23,6 +29,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#41](https://github.com/nf-core/sarek/pull/41), [#55](https://github.com/nf-core/sarek/pull/55) - Update `tiddit` from `2.7.1` to `2.8.1`
 - [#41](https://github.com/nf-core/sarek/pull/41) - Update `vcfanno` from `0.3.1` to `0.3.2`
 - [#54](https://github.com/nf-core/sarek/pull/54) - Bump version to `2.5.2dev`
+- [#60](https://github.com/nf-core/sarek/pull/60) - Some process (`BaseRecalibrator`, `ApplyBQSR`, `Mpileup`) have now optional usage of interval files
+- [#60](https://github.com/nf-core/sarek/pull/60) - Update documentation
 
 ### `Removed`
 
