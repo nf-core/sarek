@@ -43,7 +43,7 @@ def helpMessage() {
         --genome                    Name of iGenomes reference
         --noGVCF                    No g.vcf output from HaplotypeCaller
         --noStrelkaBP               Will not use Manta candidateSmallIndels for Strelka as Best Practice
-        --noIntervals               Disable usage of intervals
+        --no_intervals              Disable usage of intervals
         --nucleotidesPerSecond      To estimate interval size
                                     Default: 1000.0
         --targetBED                 Target BED file for targeted or whole exome sequencing
@@ -70,24 +70,25 @@ def helpMessage() {
         --acLoci                    acLoci file
         --acLociGC                  acLoci GC file
         --bwaIndex                  bwa indexes
-                                    If none provided, will be generated automatically
+                                    If none provided, will be generated automatically from the fasta reference
         --dbsnp                     dbsnp file
         --dbsnpIndex                dbsnp index
                                     If none provided, will be generated automatically if a dbsnp file is provided
         --dict                      dict from the fasta reference
-                                    If none provided, will be generated automatically
+                                    If none provided, will be generated automatically from the fasta reference
         --fasta                     fasta reference
         --fastafai                  reference index
-                                    If none provided, will be generated automatically
+                                    If none provided, will be generated automatically from the fasta reference
         --germlineResource          Germline Resource File
         --germlineResourceIndex     Germline Resource Index
                                     If none provided, will be generated automatically if a germlineResource file is provided
         --intervals                 intervals
-                                    If none provided, will be generated automatically
-                                    Use --noIntervals to disable automatic generation
+                                    If none provided, will be generated automatically from the fasta reference
+                                    Use --no_intervals to disable automatic generation
         --knownIndels               knownIndels file
         --knownIndelsIndex          knownIndels index
                                     If none provided, will be generated automatically if a knownIndels file is provided
+        --species                   species for VEP
         --snpeffDb                  snpeffDb version
         --vepCacheVersion           VEP Cache version
 
@@ -168,6 +169,7 @@ params.intervals = params.genome && !('annotate' in step) ? params.genomes[param
 params.knownIndels = params.genome && 'mapping' in step ? params.genomes[params.genome].knownIndels ?: null : null
 params.knownIndelsIndex = params.genome && params.knownIndels ? params.genomes[params.genome].knownIndelsIndex ?: null : null
 params.snpeffDb = params.genome && 'snpeff' in tools ? params.genomes[params.genome].snpeffDb ?: null : null
+params.species = params.genome && 'vep' in tools ? params.genomes[params.genome].species ?: null : null
 params.vepCacheVersion = params.genome && 'vep' in tools ? params.genomes[params.genome].vepCacheVersion ?: null : null
 
 // Handle deprecation
@@ -285,10 +287,11 @@ if (params.step)                summary['Step']              = params.step
 if (params.tools)               summary['Tools']             = tools.join(', ')
 if (params.skipQC)              summary['QC tools skip']     = skipQC.join(', ')
 
-if ('haplotypecaller' in tools)              summary['GVCF']              = params.noGVCF ? 'No' : 'Yes'
-if ('strelka' in tools && 'manta' in tools ) summary['Strelka BP']        = params.noStrelkaBP ? 'No' : 'Yes'
-if (params.sequencing_center)                summary['Sequenced by']      = params.sequencing_center
-if (params.pon && 'mutect2' in tools)        summary['Panel of normals']  = params.pon
+if (params.no_intervals && step != 'annotate') summary['Intervals']         = 'Do not use'
+if ('haplotypecaller' in tools)                summary['GVCF']              = params.noGVCF ? 'No' : 'Yes'
+if ('strelka' in tools && 'manta' in tools )   summary['Strelka BP']        = params.noStrelkaBP ? 'No' : 'Yes'
+if (params.sequencing_center)                  summary['Sequenced by']      = params.sequencing_center
+if (params.pon && 'mutect2' in tools)          summary['Panel of normals']  = params.pon
 
 summary['Save Genome Index'] = params.saveGenomeIndex ? 'Yes' : 'No'
 summary['Nucleotides/s']     = params.nucleotidesPerSecond
@@ -315,6 +318,7 @@ if (params.dbsnpIndex)            summary['dbsnpIndex']            = params.dbsn
 if (params.knownIndels)           summary['knownIndels']           = params.knownIndels
 if (params.knownIndelsIndex)      summary['knownIndelsIndex']      = params.knownIndelsIndex
 if (params.snpeffDb)              summary['snpeffDb']              = params.snpeffDb
+if (params.species)               summary['species']               = params.species
 if (params.vepCacheVersion)       summary['vepCacheVersion']       = params.vepCacheVersion
 
 if (workflow.profile == 'awsbatch') {
@@ -529,7 +533,7 @@ process BuildIntervals {
   output:
     file("${fastaFai.baseName}.bed") into intervalBuilt
 
-  when: !(params.intervals) && !('annotate' in step) && !(params.noIntervals)
+  when: !(params.intervals) && !('annotate' in step) && !(params.no_intervals)
 
   script:
   """
@@ -537,7 +541,7 @@ process BuildIntervals {
   """
 }
 
-ch_intervals = params.noIntervals ? "null" : params.intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : intervalBuilt
+ch_intervals = params.no_intervals ? "null" : params.intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : intervalBuilt
 
 /*
 ================================================================================
@@ -556,7 +560,7 @@ process CreateIntervalBeds {
     output:
         file '*.bed' into bedIntervals mode flatten
 
-    when: (!params.noIntervals) && step != 'annotate'
+    when: (!params.no_intervals) && step != 'annotate'
 
     script:
     // If the interval file is BED format, the fifth column is interpreted to
@@ -616,7 +620,7 @@ bedIntervals = bedIntervals
 
 bedIntervals = bedIntervals.dump(tag:'bedintervals')
 
-if (params.noIntervals) bedIntervals = Channel.from(file("no_intervals.bed"))
+if (params.no_intervals && step != 'annotate') bedIntervals = Channel.from(file("no_intervals.bed"))
 
 (intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intMpileup, bedIntervals) = bedIntervals.into(5)
 
@@ -865,8 +869,8 @@ process BaseRecalibrator {
     script:
     dbsnpOptions = params.dbsnp ? "--known-sites ${dbsnp}" : ""
     knownOptions = params.knownIndels ? knownIndels.collect{"--known-sites ${it}"}.join(' ') : ""
-    prefix = params.noIntervals ? "" : "${intervalBed.baseName}_"
-    intervalsOptions = params.noIntervals ? "" : "-L ${intervalBed}"
+    prefix = params.no_intervals ? "" : "${intervalBed.baseName}_"
+    intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
     // TODO: --use-original-qualities ???
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
@@ -882,11 +886,11 @@ process BaseRecalibrator {
     """
 }
 
-if (!params.noIntervals) tableGatherBQSRReports = tableGatherBQSRReports.groupTuple(by:[0, 1])
+if (!params.no_intervals) tableGatherBQSRReports = tableGatherBQSRReports.groupTuple(by:[0, 1])
 
 tableGatherBQSRReports = tableGatherBQSRReports.dump(tag:'BQSR REPORTS')
 
-if (params.noIntervals) {
+if (params.no_intervals) {
     (tableGatherBQSRReports, tableGatherBQSRReportsNoInt) = tableGatherBQSRReports.into(2)
     recalTable = tableGatherBQSRReportsNoInt
 } else recalTableTSVnoInt.close()
@@ -908,7 +912,7 @@ process GatherBQSRReports {
         set idPatient, idSample, file("${idSample}.recal.table") into recalTable
         set idPatient, idSample into recalTableTSV
 
-    when: step == 'mapping' && !(params.noIntervals)
+    when: step == 'mapping' && !(params.no_intervals)
 
     script:
     input = recal.collect{"-I ${it}"}.join(' ')
@@ -977,8 +981,8 @@ process ApplyBQSR {
         set idPatient, idSample, file("${prefix}${idSample}.recal.bam") into bamMergeBamRecal
 
     script:
-    prefix = params.noIntervals ? "" : "${intervalBed.baseName}_"
-    intervalsOptions = params.noIntervals ? "" : "-L ${intervalBed}"
+    prefix = params.no_intervals ? "" : "${intervalBed.baseName}_"
+    intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
         ApplyBQSR \
@@ -1010,7 +1014,7 @@ process MergeBamRecal {
         set idPatient, idSample, file("${idSample}.recal.bam") into bamRecalQC
         set idPatient, idSample into bamRecalTSV
 
-    when: !(params.noIntervals)
+    when: !(params.no_intervals)
 
     script:
     """
@@ -1037,7 +1041,7 @@ process IndexBamRecal {
         set idPatient, idSample, file("${idSample}.recal.bam") into bamRecalQCnoInt
         set idPatient, idSample into bamRecalTSVnoInt
 
-    when: params.noIntervals
+    when: params.no_intervals
 
     script:
     """
@@ -1988,8 +1992,8 @@ process Mpileup {
     when: 'controlfreec' in tools || 'mpileup' in tools
 
     script:
-    prefix = params.noIntervals ? "" : "${intervalBed.baseName}_"
-    intervalsOptions = params.noIntervals ? "" : "-l ${intervalBed}"
+    prefix = params.no_intervals ? "" : "${intervalBed.baseName}_"
+    intervalsOptions = params.no_intervals ? "" : "-l ${intervalBed}"
     """
     samtools mpileup \
         -f ${fasta} ${bam} \
@@ -1998,7 +2002,7 @@ process Mpileup {
     """
 }
 
-if (!params.noIntervals) {
+if (!params.no_intervals) {
     mpileupMerge = mpileupMerge.groupTuple(by:[0, 1])
     mpileupNoInt = Channel.empty()
 } else {
@@ -2019,7 +2023,7 @@ process MergeMpileup {
     output:
         set idPatient, idSample, file("${idSample}.pileup.gz") into mpileupOut
 
-    when: !(params.noIntervals) && 'controlfreec' in tools || 'mpileup' in tools
+    when: !(params.no_intervals) && 'controlfreec' in tools || 'mpileup' in tools
 
     script:
     """
