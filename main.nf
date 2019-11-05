@@ -664,7 +664,7 @@ process MapReads {
         file(fastaFai) from ch_fastaFai
 
     output:
-        set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMapped
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam"), file("${idSample}_${idRun}.bam.bai") into bamMapped
         set idPatient, idSample, file("${idSample}_${idRun}.bam") into bamMappedBamQC
 
     when: step == 'mapping'
@@ -688,6 +688,7 @@ process MapReads {
         bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
         ${input} | \
         samtools sort --threads ${task.cpus} -m 2G - > ${idSample}_${idRun}.bam
+        touch ${idSample}_${idRun}.bam.bai
     """
     else
     """
@@ -697,8 +698,12 @@ process MapReads {
     """
 }
 
-bamMapped = bamMapped.dump(tag:'Mapped BAM')
+if (!params.sentieon) {
+    bamMapped = bamMapped.map{idPatient, idSample, idRun, bam, bai ->
+        [idPatient, idSample, idRun, bam]}
+}
 
+bamMapped = bamMapped.dump(tag:'Mapped BAM')
 // Sort BAM whether they are standalone or should be merged
 
 singleBam = Channel.create()
