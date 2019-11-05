@@ -664,7 +664,7 @@ process MapReads {
         file(fastaFai) from ch_fastaFai
 
     output:
-        set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam"), file("${idSample}_${idRun}.bam.bai") into bamMapped
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMapped
         set idPatient, idSample, file("${idSample}_${idRun}.bam") into bamMappedBamQC
 
     when: step == 'mapping'
@@ -688,7 +688,6 @@ process MapReads {
         bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
         ${input} | \
         samtools sort --threads ${task.cpus} -m 2G - > ${idSample}_${idRun}.bam
-        touch ${idSample}_${idRun}.bam.bai
     """
     else
     """
@@ -696,11 +695,6 @@ process MapReads {
         ${input} | \
         sentieon util sort -r ${fasta} -o ${idSample}_${idRun}.bam -t ${task.cpus} --sam2bam -i - 
     """
-}
-
-if (!params.sentieon) {
-    bamMapped = bamMapped.map{idPatient, idSample, idRun, bam, bai ->
-        [idPatient, idSample, idRun, bam]}
 }
 
 bamMapped = bamMapped.dump(tag:'Mapped BAM')
@@ -740,6 +734,11 @@ process MergeBamMapped {
 mergedBam = mergedBam.dump(tag:'Merged BAM')
 mergedBam = mergedBam.mix(singleBam)
 mergedBam = mergedBam.dump(tag:'BAMs for MD')
+
+(mergedBam, mergedBamForSentieion) = mergedBam.into(2)
+
+if (params.sentieon) mergedBam.close()
+else mergedBamForSentieion.close()
 
 // STEP 2: MARKING DUPLICATES
 
@@ -787,6 +786,49 @@ markDuplicatesReport = markDuplicatesReport.dump(tag:'MD Report')
 bamBaseRecalibrator = bamMD.combine(intBaseRecalibrator)
 
 bamBaseRecalibrator = bamBaseRecalibrator.dump(tag:'BAM FOR BASERECALIBRATOR')
+
+// STEP 2': SENTIEON DEDUP
+
+process SentieonDedup {
+    label 'cpus_16'
+    label 'sentieon'
+
+    tag {idPatient + "-" + idSample}
+
+    publishDir params.outdir, mode: params.publishDirMode,
+        saveAs: {
+            if (it == "${idSample}_*.txt" && 'sentieon' in skipQC) "Reports/${idSample}/Sentieion/${it}"
+            else "Preprocessing/${idSample}/Deduped/${it}"
+        }
+
+    input:
+        set idPatient, idSample, file("${idSample}.bam") from mergedBamForSentieion
+        file(fasta) from ch_fasta
+
+    output:
+        set idPatient, idSample, file("${idSample}.deduped.bam") into dedupedSentieionBams
+        file("${idSample}_*.txt") into dedupedSentieionBamsQC
+
+    when: step == 'mapping' && params.sentieon
+
+    script:
+    markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
+    """
+    sentieon driver -t ${task.cpus} -r ${fasta} -i ${idSample}.bam \
+        --algo GCBias --summary ${idSample}_gc_summary.txt ${idSample}_gc_metric.txt \
+        --algo MeanQualityByCycle ${idSample}_mq_metric.txt \
+        --algo QualDistribution ${idSample}_qd_metric.txt \
+        --algo InsertSizeMetricAlgo ${idSample}_is_metric.txt  \
+        --algo AlignmentStat ${idSample}_aln_metric.txt
+
+    sentieon driver -t $THREADS -i ${idSample}.bam \
+        --algo LocusCollector --fun score_info ${idSample}_score.gz
+
+    sentieon driver -t $THREADS -i ${idSample}.bam \
+        --algo Dedup --rmdup --score_info ${idSample}_score.gz  \
+        --metrics ${idSample}_dedup_metric.txt ${idSample}.deduped.bam
+    """
+}
 
 // STEP 3: CREATING RECALIBRATION TABLES
 
