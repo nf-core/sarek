@@ -821,10 +821,10 @@ process SentieonDedup {
         --algo InsertSizeMetricAlgo ${idSample}_is_metric.txt  \
         --algo AlignmentStat ${idSample}_aln_metric.txt
 
-    sentieon driver -t $THREADS -i ${idSample}.bam \
+    sentieon driver -t ${task.cpus} -i ${idSample}.bam \
         --algo LocusCollector --fun score_info ${idSample}_score.gz
 
-    sentieon driver -t $THREADS -i ${idSample}.bam \
+    sentieon driver -t ${task.cpus} -i ${idSample}.bam \
         --algo Dedup --rmdup --score_info ${idSample}_score.gz  \
         --metrics ${idSample}_dedup_metric.txt ${idSample}.deduped.bam
     """
