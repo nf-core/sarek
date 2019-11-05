@@ -693,7 +693,7 @@ process MapReads {
     """
         sentieon bwa mem -K 100000000 -R \"${readGroup}\" -t ${task.cpus} -M ${fasta} \
         ${input} | \
-        sentieon util sort -r ${fasta} -o ${idSample}_${idRun}.sorted.bam -t ${task.cpus} --sam2bam -i - 
+        sentieon util sort -r ${fasta} -o ${idSample}_${idRun}.bam -t ${task.cpus} --sam2bam -i - 
     """
 }
 
