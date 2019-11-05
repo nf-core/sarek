@@ -122,6 +122,9 @@ case $TEST in
   SOMATIC)
   run_sarek ${OPTIONS} --input ${PATHTOSAMPLE}/tsv/tiny-manta${SUFFIX}.tsv
   ;;
+  SPLITFASTQ)
+  run_sarek ${OPTIONS} --input ${PATHTOSAMPLE}/tsv/tiny-manta-normal${SUFFIX}.tsv --split_fastq 500
+  ;;
   TARGETED)
   run_sarek ${OPTIONS} --input ${PATHTOSAMPLE}/tsv/tiny-manta${SUFFIX}.tsv --targetBED ${PATHTOSAMPLE}/target.bed
   ;;
