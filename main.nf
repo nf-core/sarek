@@ -903,7 +903,7 @@ process SentieonBQSR {
 
     output:
         set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bamRecalSentieon 
-        file("${idSample}_recal_result.CSV") into bamRecalSentieonQC
+        file("${idSample}_recal_result.csv") into bamRecalSentieonQC
 
     when: step == 'mapping' && params.sentieon
 
