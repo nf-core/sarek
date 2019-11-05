@@ -719,7 +719,7 @@ process MergeBamMapped {
     tag {idPatient + "-" + idSample}
 
     input:
-        set idPatient, idSample, idRun, file(bam) from multipleBam
+        set idPatient, idSample, idRun, file(bam), file(bai) from multipleBam
 
     output:
         set idPatient, idSample, file("${idSample}.bam"), file("${idSample}.bam.bai") into mergedBam
