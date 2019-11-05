@@ -661,6 +661,7 @@ process MapReads {
         set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from inputReads
         file(bwaIndex) from ch_bwaIndex
         file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
 
     output:
         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMapped
