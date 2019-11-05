@@ -801,7 +801,7 @@ process SentieonDedup {
     publishDir params.outdir, mode: params.publishDirMode,
         saveAs: {
             if (it == "${idSample}_*.txt" && 'sentieon' in skipQC) "Reports/${idSample}/Sentieion/${it}"
-            else "Preprocessing/${idSample}/Deduped/${it}"
+            else "Preprocessing/${idSample}/DedupedSentieon/${it}"
         }
 
     input:
@@ -810,8 +810,8 @@ process SentieonDedup {
         file(fastaFai) from ch_fastaFai
 
     output:
-        set idPatient, idSample, file("${idSample}.deduped.bam") into dedupedSentieionBams
-        file("${idSample}_*.txt") into dedupedSentieionBamsQC
+        set idPatient, idSample, file("${idSample}.deduped.bam"), file("${idSample}.deduped.bam.bai") into dedupedSentieionBam
+        file("${idSample}_*.txt") into dedupedSentieionBamQC
 
     when: step == 'mapping' && params.sentieon
 
@@ -875,6 +875,67 @@ process BaseRecalibrator {
 }
 
 tableGatherBQSRReports = tableGatherBQSRReports.groupTuple(by:[0, 1])
+
+// STEP 3': SENTIEON BQSR
+
+process SentieonBQSR {
+    label 'memory_max'
+    label 'cpus_1'
+
+    tag {idPatient + "-" + idSample}
+
+    publishDir params.outdir, mode: params.publishDirMode,
+        saveAs: {
+            if (it == "${idSample}_recal_result.csv" && 'sentieon' in skipQC) "Reports/${idSample}/Sentieion/${it}"
+            else "Preprocessing/${idSample}/RecalSentieon/${it}"
+        }
+
+    input:
+        set idPatient, idSample, file(bam), file(bai) from dedupedSentieionBam
+        file(dbsnp) from ch_dbsnp
+        file(dbsnpIndex) from ch_dbsnpIndex
+        file(fasta) from ch_fasta
+        file(dict) from ch_dict
+        file(fastaFai) from ch_fastaFai
+        file(knownIndels) from ch_knownIndels
+        file(knownIndelsIndex) from ch_knownIndelsIndex
+
+    output:
+        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bamRecalSentieon 
+        file("${idSample}_recal_result.CSV") into bamRecalSentieonQC
+
+    when: step == 'mapping' && params.sentieon
+
+    script:
+    known = knownIndels.collect{"--known-sites ${it}"}.join(' ')
+    """
+    sentieon driver  \
+    -t ${task.cpus} \
+    -r ${fasta} \
+    -i ${idSample}.deduped.bam \
+    --algo QualCal \
+    -k ${dbsnp} \
+    ${idSample}.recal.table
+
+    sentieon driver \
+    -t ${task.cpus} \
+    -r ${fasta} \
+    -i ${idSample}.deduped.bam \
+    -q ${idSample}.recal.table \
+    --algo QualCal \
+    -k ${dbsnp} \
+    ${idSample}.table.post \
+    --algo ReadWriter ${idSample}.recal.bam
+
+    sentieon driver \
+    -t ${task.cpus} \
+    --algo QualCal \
+    --plot \
+    --before ${idSample}.recal.table \
+    --after ${idSample}.table.post \
+    ${idSample}_recal_result.csv
+    """
+}
 
 // STEP 3.5: MERGING RECALIBRATION TABLES
 
@@ -1070,6 +1131,8 @@ bamQCReport = bamQCReport.dump(tag:'BamQC')
                             GERMLINE VARIANT CALLING
 ================================================================================
 */
+
+if (params.sentieon) bamRecal = bamRecalSentieon
 
 if (step == 'variantcalling') bamRecal = inputSample
 
