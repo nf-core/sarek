@@ -664,7 +664,7 @@ process MapReads {
         file(fastaFai) from ch_fastaFai
 
     output:
-        set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMapped
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam"), file("${idSample}_${idRun}.bam.bai") into bamMapped
         set idPatient, idSample, file("${idSample}_${idRun}.bam") into bamMappedBamQC
 
     when: step == 'mapping'
@@ -688,6 +688,7 @@ process MapReads {
         bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
         ${input} | \
         samtools sort --threads ${task.cpus} -m 2G - > ${idSample}_${idRun}.bam
+        samtools index ${idSample}_${idRun}.bam
     """
     else
     """
@@ -721,21 +722,23 @@ process MergeBamMapped {
         set idPatient, idSample, idRun, file(bam) from multipleBam
 
     output:
-        set idPatient, idSample, file("${idSample}.bam") into mergedBam
+        set idPatient, idSample, file("${idSample}.bam"), file("${idSample}.bam.bai") into mergedBam
 
     when: step == 'mapping'
 
     script:
     """
     samtools merge --threads ${task.cpus} ${idSample}.bam ${bam}
+    samtools index ${idSample}.bam
     """
 }
 
 mergedBam = mergedBam.dump(tag:'Merged BAM')
-mergedBam = mergedBam.mix(singleBam)
-mergedBam = mergedBam.dump(tag:'BAMs for MD')
 
 (mergedBam, mergedBamForSentieion) = mergedBam.into(2)
+
+mergedBam = mergedBam.mix(singleBam)
+mergedBam = mergedBam.dump(tag:'BAMs for MD')
 
 if (params.sentieon) mergedBam.close()
 else mergedBamForSentieion.close()
@@ -971,15 +974,14 @@ process MergeBamRecal {
         set idPatient, idSample, file(bam) from bamMergeBamRecal
 
     output:
-        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into bamRecal
+        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bamRecal
         set idPatient, idSample, file("${idSample}.recal.bam") into (bamRecalBamQC, bamRecalSamToolsStats)
-        set idPatient, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bai") into (bamRecalTSV, bamRecalSampleTSV)
+        set idPatient, idSample, val("${idSample}.recal.bam"), val("${idSample}.recal.bam.bai") into (bamRecalTSV, bamRecalSampleTSV)
 
     script:
     """
     samtools merge --threads ${task.cpus} ${idSample}.recal.bam ${bam}
     samtools index ${idSample}.recal.bam
-    mv ${idSample}.recal.bam.bai ${idSample}.recal.bai
     """
 }
 
