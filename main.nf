@@ -880,6 +880,7 @@ tableGatherBQSRReports = tableGatherBQSRReports.groupTuple(by:[0, 1])
 
 process SentieonBQSR {
     label 'memory_max'
+    label 'sentieon'
     label 'cpus_1'
 
     tag {idPatient + "-" + idSample}
