@@ -757,7 +757,7 @@ process MarkDuplicates {
         }
 
     input:
-        set idPatient, idSample, file("${idSample}.bam") from mergedBam
+        set idPatient, idSample, file("${idSample}.bam"), file("${idSample}.bam.bai") from mergedBam
 
     output:
         set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bai") into duplicateMarkedBams
@@ -805,7 +805,7 @@ process SentieonDedup {
         }
 
     input:
-        set idPatient, idSample, file("${idSample}.bam") from mergedBamForSentieion
+        set idPatient, idSample, file("${idSample}.bam"), file("${idSample}.bam.bai") from mergedBamForSentieion
         file(fasta) from ch_fasta
         file(fastaFai) from ch_fastaFai
 
