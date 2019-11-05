@@ -804,6 +804,7 @@ process SentieonDedup {
     input:
         set idPatient, idSample, file("${idSample}.bam") from mergedBamForSentieion
         file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
 
     output:
         set idPatient, idSample, file("${idSample}.deduped.bam") into dedupedSentieionBams
