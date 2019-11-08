@@ -692,7 +692,7 @@ process MapReads {
     """
     else
     """
-        sentieon bwa mem -K 100000000 -R \"${readGroup}\" -t ${task.cpus} -M ${fasta} \
+        sentieon bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
         ${input} | \
         sentieon util sort -r ${fasta} -o ${idSample}_${idRun}.bam -t ${task.cpus} --sam2bam -i - 
     """
@@ -881,7 +881,6 @@ tableGatherBQSRReports = tableGatherBQSRReports.groupTuple(by:[0, 1])
 process SentieonBQSR {
     label 'memory_max'
     label 'sentieon'
-    label 'cpus_1'
 
     tag {idPatient + "-" + idSample}
 
