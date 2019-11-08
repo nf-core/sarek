@@ -664,7 +664,7 @@ process MapReads {
         file(fastaFai) from ch_fastaFai
 
     output:
-        set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam"), file("${idSample}_${idRun}.bam.bai") into bamMapped
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMapped
         set idPatient, idSample, file("${idSample}_${idRun}.bam") into bamMappedBamQC
 
     when: step == 'mapping'
@@ -688,7 +688,6 @@ process MapReads {
         bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
         ${input} | \
         samtools sort --threads ${task.cpus} -m 2G - > ${idSample}_${idRun}.bam
-        samtools index ${idSample}_${idRun}.bam
     """
     else
     """
@@ -719,17 +718,16 @@ process MergeBamMapped {
     tag {idPatient + "-" + idSample}
 
     input:
-        set idPatient, idSample, idRun, file(bam), file(bai) from multipleBam
+        set idPatient, idSample, idRun, file(bam) from multipleBam
 
     output:
-        set idPatient, idSample, file("${idSample}.bam"), file("${idSample}.bam.bai") into mergedBam
+        set idPatient, idSample, file("${idSample}.bam") into mergedBam
 
     when: step == 'mapping'
 
     script:
     """
     samtools merge --threads ${task.cpus} ${idSample}.bam ${bam}
-    samtools index ${idSample}.bam
     """
 }
 
@@ -757,7 +755,7 @@ process MarkDuplicates {
         }
 
     input:
-        set idPatient, idSample, file("${idSample}.bam"), file("${idSample}.bam.bai") from mergedBam
+        set idPatient, idSample, file("${idSample}.bam") from mergedBam
 
     output:
         set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bai") into duplicateMarkedBams
@@ -805,7 +803,7 @@ process SentieonDedup {
         }
 
     input:
-        set idPatient, idSample, file("${idSample}.bam"), file("${idSample}.bam.bai") from mergedBamForSentieion
+        set idPatient, idSample, file("${idSample}.bam") from mergedBamForSentieion
         file(fasta) from ch_fasta
         file(fastaFai) from ch_fastaFai
 
