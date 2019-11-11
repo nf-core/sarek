@@ -5,14 +5,59 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### `Changed`
+
+-   [#741](https://github.com/SciLifeLab/Sarek/pull/741) - Use [dump](https://www.nextflow.io/docs/latest/operator.html#dump) operator
+-   [#744](https://github.com/SciLifeLab/Sarek/pull/744) - Refactor `germlineVC.nf`
+-   [#744](https://github.com/SciLifeLab/Sarek/pull/744) - Refactor `germlineVC.nf`
+-   [#753](https://github.com/SciLifeLab/Sarek/pull/753) - Update `binac`, `cfc` configuration
+-   [#775](https://github.com/SciLifeLab/Sarek/pull/775) - Update paths for munin configuration
+-   [#776](https://github.com/SciLifeLab/Sarek/pull/776) - Helper script now download annotations for VEP CADD plugin
+-   [#776](https://github.com/SciLifeLab/Sarek/pull/776) - Helper script now download annotations for VEP CADD plugin
+-   [#778](https://github.com/SciLifeLab/Sarek/pull/778) - add `|| true` for all tools when gathering versions
+-   [#793](https://github.com/SciLifeLab/Sarek/pull/793) - Update munin configuration
+-   [#798](https://github.com/SciLifeLab/Sarek/pull/798) - Can handle both `fastq.gz` and `fq.gz`
+
+### `Added`
+
+-   [#766](https://github.com/SciLifeLab/Sarek/pull/766) - Added `ps` in `r-base` and `runallelecount` containers
+-   [#774](https://github.com/SciLifeLab/Sarek/pull/774) - Autogenerates memory requirements from MarkDuplicates when less that 8G is available. cf [nf-core/rnaseq#179](https://github.com/nf-core/rnaseq/pull/179)
+-   [#777](https://github.com/SciLifeLab/Sarek/pull/777) - Add `removeVCF()` function to remove `.ann`, `.gz` and `.vcf` from a VCF filename
+-   [#777](https://github.com/SciLifeLab/Sarek/pull/777) - Add GeneSplicer `1.0` to container
+-   [#777](https://github.com/SciLifeLab/Sarek/pull/777) - Add possibility to use VEP GeneSplicer plugin
+
+### `Fixed`
+
+-   [#747](https://github.com/SciLifeLab/Sarek/pull/747) - Exclude Manta `*candidateSV.vcf` from annotation
+-   [#749](https://github.com/SciLifeLab/Sarek/pull/749) - Fix config problematic use of queue `core` for uppmax-slurm
+-   [#751](https://github.com/SciLifeLab/Sarek/pull/751), [#756](https://github.com/SciLifeLab/Sarek/pull/756) - Typos in `igenomes.config`
+-   [#757](https://github.com/SciLifeLab/Sarek/pull/757) - Typos in `binac`, `cfc` configuration
+-   [#758](https://github.com/SciLifeLab/Sarek/pull/758) - Typos in `ASCAT` documentation
+-   [#760](https://github.com/SciLifeLab/Sarek/pull/749) - Fix undefined `task.mem`
+-   [#765](https://github.com/SciLifeLab/Sarek/pull/765) - Check only for references that are needed to fix [#754](https://github.com/SciLifeLab/Sarek/issues/754)
+-   [#777](https://github.com/SciLifeLab/Sarek/pull/777) - Fix name collision in `annotate.nf`
+-   [#788](https://github.com/SciLifeLab/Sarek/pull/788) - Fix `genome_base` path in `munin.config`
+-   [#788](https://github.com/SciLifeLab/Sarek/pull/788) - Fix `markdup_java_options` definition
+-   [#788](https://github.com/SciLifeLab/Sarek/pull/788) - Include `conf/resources.config` in `btb` profile
+-   [#795](https://github.com/SciLifeLab/Sarek/pull/795) - Use BED file for [QualiMap coverage calculation](https://github.com/SciLifeLab/Sarek/issues/794) on Targeted Data
+-   [#801](https://github.com/SciLifeLab/Sarek/pull/801) - Uppmax specific config fix for jobs not using a full node
+
+### `Deprecated`
+
+-   [#741](https://github.com/SciLifeLab/Sarek/pull/741) - Deprecated `verbose` params
+
 ## [2.3.FIX1] - 2019-03-04
 
 ### `Fixed`
+
 -   [#742](https://github.com/SciLifeLab/Sarek/pull/742) - Fix output dirs (HaplotypeCaller that was not recognized by annotate.nf introduced by [#728](https://github.com/SciLifeLab/Sarek/pull/728))
 
 ## [2.3] - Äpar - 2019-02-27
 
 ### `Added`
+
 -   [#628](https://github.com/SciLifeLab/Sarek/pull/628), [#722](https://github.com/SciLifeLab/Sarek/pull/722) - `ASCAT` now use `.gc` file
 -   [#712](https://github.com/SciLifeLab/Sarek/pull/712), [#718](https://github.com/SciLifeLab/Sarek/pull/718) - Added possibilities to run Sarek with `conda`
 -   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - Annotation documentation
@@ -54,6 +99,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#732](https://github.com/SciLifeLab/Sarek/pull/732) - Update VEP from `95.1` to `95.2`
 
 ### `Removed`
+
 -   [#715](https://github.com/SciLifeLab/Sarek/pull/715) - Remove `defReferencesFiles` function from `buildReferences.nf`
 -   [#719](https://github.com/SciLifeLab/Sarek/pull/719) - `snpEff` base container is no longer used
 -   [#721](https://github.com/SciLifeLab/Sarek/pull/721) - Remove COSMIC docs
@@ -61,6 +107,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#732](https://github.com/SciLifeLab/Sarek/pull/732) - Removed `--database` option for VEP cf: [VEP docs](https://www.ensembl.org/info/docs/tools/vep/script/vep_other.html)
 
 ### `Fixed`
+
 -   [#720](https://github.com/SciLifeLab/Sarek/pull/720) - bamQC is now run on the recalibrated bams, and not after MarkDuplicates
 -   [#726](https://github.com/SciLifeLab/Sarek/pull/726) - Fix Ascat ref file input (one file can't be a set)
 -   [#727](https://github.com/SciLifeLab/Sarek/pull/727) - bamQC outputs are no longer overwritten (name of dir is now the file instead of sample)
@@ -194,14 +241,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   [#597](https://github.com/SciLifeLab/Sarek/pull/597) - `extractBams()` now takes an extra parameter.
 -   [#597](https://github.com/SciLifeLab/Sarek/pull/597) - Move `checkFileExtension()`, `checkParameterExistence()`, `checkParameterList()`, `checkReferenceMap()`, `checkRefExistence()`, `extractBams()`, `extractGenders()`, `returnFile()`, `returnStatus()` and `returnTSV()` functions to `SarekUtils`
 -   [#597](https://github.com/SciLifeLab/Sarek/pull/597) - Reduce data footprint for Process `CreateRecalibrationTable`
--   [#597](https://github.com/SciLifeLab/Sarek/pull/597) - Replace depreciated operator `phase` by `join`.
+-   [#597](https://github.com/SciLifeLab/Sarek/pull/597) - Replace deprecated operator `phase` by `join`.
 -   [#599](https://github.com/SciLifeLab/Sarek/pull/599) - Merge is tested with `ANNOTATEALL`
 -   [#604](https://github.com/SciLifeLab/Sarek/pull/604) - Synching `GRCh38` `wgs_calling_regions` bedfiles
 -   [#607](https://github.com/SciLifeLab/Sarek/pull/607) - One container approach
 -   [#607](https://github.com/SciLifeLab/Sarek/pull/607) - Update to GATK4
 -   [#608](https://github.com/SciLifeLab/Sarek/pull/608) - Update Nextflow required version
 -   [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Update CHANGELOG
--   [#617](https://github.com/SciLifeLab/Sarek/pull/617) - Replace depreciated $name syntax with withName
+-   [#617](https://github.com/SciLifeLab/Sarek/pull/617) - Replace deprecated $name syntax with withName
 
 ### `Fixed`
 

@@ -87,11 +87,11 @@ The genomc reference file we use in Sarek for GRCh37 is coded without "chr" in t
 These two lines in createWindowBed.pl generate output (lines 61 and 64):
 ```
 (61)  print OUT "chr".$tab[1]."\t".$start."\t".$stop."\t".$tab[0]."\t".$tab[2]."\t".($w*2+1)."\n";
-(64)  print OUT $tab[1]."\t".$start."\t".$stop."\t".$tab[0]."\t".$tab[2]."\t".($w*2+1)."\n";
+(64)  print OUT "chr".$tab[1]."\t".$start."\t".$stop."\t".$tab[0]."\t".$tab[2]."\t".($w*2)."\n";
 ```
 and were changed to:
 ```
-(61)  print OUT "chr".$tab[1]."\t".$start."\t".$stop."\t".$tab[0]."\t".$tab[2]."\t".($w*2)."\n";
+(61)  print OUT $tab[1]."\t".$start."\t".$stop."\t".$tab[0]."\t".$tab[2]."\t".($w*2+1)."\n";
 (64)  print OUT $tab[1]."\t".$start."\t".$stop."\t".$tab[0]."\t".$tab[2]."\t".($w*2)."\n";
 ```
 After this modification the script works for our GRCh37 loci file.

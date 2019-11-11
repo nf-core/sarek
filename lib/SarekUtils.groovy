@@ -62,6 +62,7 @@ class SarekUtils {
       'download',
       'explicit-bqsr-needed',
       'explicitBqsrNeeded',
+      'genesplicer',
       'genome_base',
       'genome-dict',
       'genome-file',
@@ -173,8 +174,8 @@ class SarekUtils {
         def bamFile   = SarekUtils.returnFile(row[4])
         def baiFile   = SarekUtils.returnFile(row[5])
 
-        if (!SarekUtils.hasExtension(bamFile,".bam")) exit 1, "File: ${bamFile} has the wrong extension. See --help for more information"
-        if (!SarekUtils.hasExtension(baiFile,".bai")) exit 1, "File: ${baiFile} has the wrong extension. See --help for more information"
+        if (!SarekUtils.hasExtension(bamFile,"bam")) exit 1, "File: ${bamFile} has the wrong extension. See --help for more information"
+        if (!SarekUtils.hasExtension(baiFile,"bai")) exit 1, "File: ${baiFile} has the wrong extension. See --help for more information"
 
         if (mode == "germline") return [ idPatient, status, idSample, bamFile, baiFile ]
         else return [ idPatient, gender, status, idSample, bamFile, baiFile ]
@@ -210,6 +211,12 @@ class SarekUtils {
     return test
   }
 
+  // Remove .ann .gz and .vcf extension from a VCF file
+  static def reduceVCF(file) {
+    return file.fileName.toString().minus(".ann").minus(".vcf").minus(".gz")
+  }
+
+
   // Return file if it exists
   static def returnFile(it) {
     if (!file(it).exists()) exit 1, "Missing file in TSV file: ${it}, see --help for more information"
@@ -231,6 +238,12 @@ class SarekUtils {
     println "|   | \\  `-|   \\___ \\/__ \\| ´__/ _\\| |/ /"
     println " \\ |   \\  /    ____) | __ | | |  __|   < "
     println "  `|____\\'    |_____/\\____|_|  \\__/|_|\\_\\"
+  }
+
+  // Deprecation message for verbose command
+  static def verbose() {
+    println "--verbose is deprecated"
+    println "please use -dump-channels instead"
   }
 
 }

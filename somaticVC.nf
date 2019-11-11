@@ -39,8 +39,6 @@ kate: syntax groovy; space-indent on; indent-width 2;
  - RunAscat - Run ASCAT for CNV
  - RunBcftoolsStats - Run BCFTools stats on vcf files
  - RunVcftools - Run VCFTools on vcf files
- - GetVersionAlleleCount - Get version of tools
- - GetVersionASCAT - Get version of tools
 ================================================================================
 =                           C O N F I G U R A T I O N                          =
 ================================================================================
@@ -49,6 +47,7 @@ kate: syntax groovy; space-indent on; indent-width 2;
 if (params.help) exit 0, helpMessage()
 if (!SarekUtils.isAllowedParams(params)) exit 1, "params unknown, see --help for more information"
 if (!checkUppmaxProject()) exit 1, "No UPPMAX project ID found! Use --project <UPPMAX Project ID>"
+if (params.verbose) SarekUtils.verbose()
 
 // Check for awsbatch profile configuration
 // make sure queue is defined
@@ -58,11 +57,11 @@ if (workflow.profile == 'awsbatch') {
 
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
 
-referenceMap = defineReferenceMap()
 toolList = defineToolList()
-
-if (!SarekUtils.checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
 if (!SarekUtils.checkParameterList(tools,toolList)) exit 1, 'Unknown tool(s), see --help for more information'
+
+referenceMap = defineReferenceMap(tools)
+if (!SarekUtils.checkReferenceMap(referenceMap)) exit 1, 'Missing Reference file(s), see --help for more information'
 
 if (params.test && params.genome in ['GRCh37', 'GRCh38']) {
   referenceMap.intervals = file("$workflow.projectDir/repeats/tiny_${params.genome}.list")
@@ -90,11 +89,7 @@ if (tsvPath) {
 
 startMessage()
 
-if (params.verbose) bamFiles = bamFiles.view {
-  "BAMs for variant Calling:\n\
-  ID    : ${it[0]}\tStatus: ${it[1]}\tSample: ${it[2]}\n\
-  Files : [${it[3].fileName}, ${it[4].fileName}]"
-}
+bamFiles = bamFiles.dump(tag:'BAM')
 
 // separate recalibrateBams by status
 bamsNormal = Channel.create()
@@ -183,9 +178,7 @@ bedIntervals = bedIntervals
   .flatten().collate(2)
   .map{duration, intervalFile -> intervalFile}
 
-if (params.verbose) bedIntervals = bedIntervals.view {
-  "  Interv: ${it.baseName}"
-}
+bedIntervals = bedIntervals.dump(tag:'Intervals')
 
 bamsAll = bamsNormal.join(bamsTumor)
 
@@ -270,11 +263,8 @@ freebayesOutput = freebayesOutput.groupTuple(by:[0,1,2,3])
 // so we can have a single sorted VCF containing all the calls for a given caller
 
 vcfsToMerge = mutect2Output.mix(freebayesOutput)
-if (params.verbose) vcfsToMerge = vcfsToMerge.view {
-  "VCFs To be merged:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  Files : ${it[4].fileName}"
-}
+
+vcfsToMerge = vcfsToMerge.dump(tag:'VCF to merge')
 
 process ConcatVCF {
   tag {variantCaller + "_" + idSampleTumor + "_vs_" + idSampleNormal}
@@ -301,11 +291,7 @@ process ConcatVCF {
   """
 }
 
-if (params.verbose) vcfConcatenated = vcfConcatenated.view {
-  "Variant Calling output:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  File  : ${it[4].fileName}"
-}
+vcfConcatenated = vcfConcatenated.dump(tag:'VCF')
 
 process RunStrelka {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
@@ -346,12 +332,7 @@ process RunStrelka {
   """
 }
 
-if (params.verbose) strelkaOutput = strelkaOutput.view {
-  "Variant Calling output:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  Files : ${it[4].fileName}\n\
-  Index : ${it[5].fileName}"
-}
+strelkaOutput = strelkaOutput.dump(tag:'Strelka')
 
 process RunManta {
   tag {idSampleTumor + "_vs_" + idSampleNormal}
@@ -405,12 +386,7 @@ process RunManta {
   """
 }
 
-if (params.verbose) mantaOutput = mantaOutput.view {
-  "Variant Calling output:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  Files : ${it[4].fileName}\n\
-  Index : ${it[5].fileName}"
-}
+mantaOutput = mantaOutput.dump(tag:'Manta')
 
 process RunSingleManta {
   tag {idSample + " - Tumor-Only"}
@@ -458,12 +434,7 @@ process RunSingleManta {
   """
 }
 
-if (params.verbose) singleMantaOutput = singleMantaOutput.view {
-  "Variant Calling output:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: ${it[2]}\n\
-  Files : ${it[3].fileName}\n\
-  Index : ${it[4].fileName}"
-}
+singleMantaOutput = singleMantaOutput.dump(tag:'single Manta')
 
 // Running Strelka Best Practice with Manta indel candidates
 // For easier joining, remaping channels to idPatient, idSampleNormal, idSampleTumor...
@@ -521,12 +492,7 @@ process RunStrelkaBP {
   """
 }
 
-if (params.verbose) strelkaBPOutput = strelkaBPOutput.view {
-  "Variant Calling output:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  Files : ${it[4].fileName}\n\
-  Index : ${it[5].fileName}"
-}
+strelkaBPOutput = strelkaBPOutput.dump(tag:'Strelka BP')
 
 // Run commands and code from Malin Larsson
 // Based on Jesper Eisfeldt's code
@@ -617,11 +583,7 @@ process RunAscat {
   """
 }
 
-if (params.verbose) ascatOutput = ascatOutput.view {
-  "Variant Calling output:\n\
-  Tool  : ${it[0]}\tID    : ${it[1]}\tSample: [${it[3]}, ${it[2]}]\n\
-  Files : [${it[4].fileName}]"
-}
+ascatOutput.dump(tag:'ASCAT')
 
 (strelkaIndels, strelkaSNVS) = strelkaOutput.into(2)
 (mantaSomaticSV, mantaDiploidSV) = mantaOutput.into(2)
@@ -663,22 +625,17 @@ process RunBcftoolsStats {
     set variantCaller, file(vcf) from vcfForBCFtools
 
   output:
-    file ("${vcf.simpleName}.bcf.tools.stats.out") into bcfReport
+    file ("*.bcf.tools.stats.out") into bcfReport
 
   when: !params.noReports
 
   script: QC.bcftools(vcf)
 }
 
-if (params.verbose) bcfReport = bcfReport.view {
-  "BCFTools stats report:\n\
-  File  : [${it.fileName}]"
-}
-
-bcfReport.close()
+bcfReport.dump(tag:'BCFTools')
 
 process RunVcftools {
-  tag {vcf}
+  tag {"${variantCaller} - ${vcf}"}
 
   publishDir "${params.outDir}/Reports/VCFTools", mode: params.publishDirMode
 
@@ -686,42 +643,16 @@ process RunVcftools {
     set variantCaller, file(vcf) from vcfForVCFtools
 
   output:
-    file ("${vcf.simpleName}.*") into vcfReport
+    file ("${reducedVCF}.*") into vcfReport
 
   when: !params.noReports
 
-  script: QC.vcftools(vcf)
-}
-
-if (params.verbose) vcfReport = vcfReport.view {
-  "VCFTools stats report:\n\
-  File  : [${it.fileName}]"
-}
-
-vcfReport.close()
-
-process GetVersionAlleleCount {
-  publishDir "${params.outDir}/Reports/ToolsVersion", mode: params.publishDirMode
-  output: file("v_*.txt")
-  when: 'ascat' in tools && !params.onlyQC
-
   script:
-  """
-  alleleCounter --version > v_allelecount.txt
-  """
+    reducedVCF = SarekUtils.reduceVCF(vcf)
+    QC.vcftools(vcf)
 }
 
-process GetVersionASCAT {
-  publishDir "${params.outDir}/Reports/ToolsVersion", mode: params.publishDirMode
-  output: file("v_*.txt")
-  when: 'ascat' in tools && !params.onlyQC
-
-  script:
-  """
-  R --version > v_r.txt
-  cat ${baseDir}/scripts/ascat.R | grep "ASCAT version" > v_ascat.txt
-  """
-}
+vcfReport.dump(tag:'VCFTools')
 
 /*
 ================================================================================
@@ -748,23 +679,28 @@ def checkUppmaxProject() {
   return !(workflow.profile == 'slurm' && !params.project)
 }
 
-def defineReferenceMap() {
+def defineReferenceMap(tools) {
   if (!(params.genome in params.genomes)) exit 1, "Genome ${params.genome} not found in configuration"
-  return [
-    // loci file for ascat
-    'acLoci'           : checkParamReturnFile("acLoci"),
-    'acLociGC'           : checkParamReturnFile("acLociGC"),
-    'dbsnp'            : checkParamReturnFile("dbsnp"),
-    'dbsnpIndex'       : checkParamReturnFile("dbsnpIndex"),
-    // genome reference dictionary
+  def referenceMap =
+  [
     'genomeDict'       : checkParamReturnFile("genomeDict"),
-    // FASTA genome reference
     'genomeFile'       : checkParamReturnFile("genomeFile"),
-    // genome .fai file
     'genomeIndex'      : checkParamReturnFile("genomeIndex"),
-    // intervals file for spread-and-gather processes
     'intervals'        : checkParamReturnFile("intervals")
   ]
+  if ('ascat' in tools) {
+    referenceMap.putAll(
+      'acLoci'           : checkParamReturnFile("acLoci"),
+      'acLociGC'         : checkParamReturnFile("acLociGC")
+    )
+  }
+  if ('mutect2' in tools) {
+    referenceMap.putAll(
+      'dbsnp'            : checkParamReturnFile("dbsnp"),
+      'dbsnpIndex'       : checkParamReturnFile("dbsnpIndex")
+    )
+  }
+  return referenceMap
 }
 
 def defineToolList() {
@@ -814,8 +750,6 @@ def helpMessage() {
   log.info "       Run only QC tools and gather reports"
   log.info "    --help"
   log.info "       you're reading it"
-  log.info "    --verbose"
-  log.info "       Adds more verbosity to workflow"
 }
 
 def minimalInformationMessage() {

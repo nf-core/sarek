@@ -53,3 +53,13 @@ Such files are meant to be share between multiple users, so this script is mainl
 ```
 nextflow run build.nf --cadd_cache /Path/To/CADDcache --genome <GENOME>
 ```
+
+## Using VEP GeneSplicer plugin
+
+To enable the use of the VEP GeneSplicer plugin:
+ - use the `--genesplicer` flag
+
+Example:
+```
+nextflow run annotate.nf --tools VEP --annotateVCF file.vcf.gz --genome GRCh38 --genesplicer
+```
