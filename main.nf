@@ -733,13 +733,33 @@ process MergeBamMapped {
 
 mergedBam = mergedBam.dump(tag:'Merged BAM')
 
-(mergedBam, mergedBamForSentieion) = mergedBam.into(2)
-
 mergedBam = mergedBam.mix(singleBam)
 mergedBam = mergedBam.dump(tag:'BAMs for MD')
 
+(mergedBam, mergedBamForSentieion) = mergedBam.into(2)
+
 if (params.sentieon) mergedBam.close()
 else mergedBamForSentieion.close()
+
+process IndexBamMergedForSentieon {
+    label 'cpus_8'
+
+    tag {idPatient + "-" + idSample}
+
+    input:
+        set idPatient, idSample, file(bam) from mergedBamForSentieion
+
+    output:
+        set idPatient, idSample, file(bam), file("${idSample}.bam.bai") into bamForSentieionDedup
+
+    when: step == 'mapping' && params.sentieon
+
+    script:
+    """
+    samtools index ${bam}
+    """
+}
+
 
 // STEP 2: MARKING DUPLICATES
 
@@ -798,12 +818,13 @@ process SentieonDedup {
 
     publishDir params.outdir, mode: params.publishDirMode,
         saveAs: {
-            if (it == "${idSample}_*.txt" && 'sentieon' in skipQC) "Reports/${idSample}/Sentieion/${it}"
+            if (it == "${idSample}_*.txt" && 'sentieon' in skipQC) null
+            else if (it == "${idSample}_*.txt") "Reports/${idSample}/Sentieion/${it}"
             else "Preprocessing/${idSample}/DedupedSentieon/${it}"
         }
 
     input:
-        set idPatient, idSample, file("${idSample}.bam") from mergedBamForSentieion
+        set idPatient, idSample, file(bam), file(bai) from bamForSentieionDedup
         file(fasta) from ch_fasta
         file(fastaFai) from ch_fastaFai
 
@@ -814,19 +835,18 @@ process SentieonDedup {
     when: step == 'mapping' && params.sentieon
 
     script:
-    markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
     """
-    sentieon driver -t ${task.cpus} -r ${fasta} -i ${idSample}.bam \
+    sentieon driver -t ${task.cpus} -r ${fasta} -i ${bam} \
         --algo GCBias --summary ${idSample}_gc_summary.txt ${idSample}_gc_metric.txt \
         --algo MeanQualityByCycle ${idSample}_mq_metric.txt \
         --algo QualDistribution ${idSample}_qd_metric.txt \
         --algo InsertSizeMetricAlgo ${idSample}_is_metric.txt  \
         --algo AlignmentStat ${idSample}_aln_metric.txt
 
-    sentieon driver -t ${task.cpus} -i ${idSample}.bam \
+    sentieon driver -t ${task.cpus} -i ${bam} \
         --algo LocusCollector --fun score_info ${idSample}_score.gz
 
-    sentieon driver -t ${task.cpus} -i ${idSample}.bam \
+    sentieon driver -t ${task.cpus} -i ${bam} \
         --algo Dedup --rmdup --score_info ${idSample}_score.gz  \
         --metrics ${idSample}_dedup_metric.txt ${idSample}.deduped.bam
     """
@@ -2762,6 +2782,7 @@ def defineSkipQClist() {
         'markduplicates',
         'multiqc',
         'samtools',
+        'senteion',
         'vcftools',
         'versions'
     ]
@@ -2782,6 +2803,8 @@ def defineToolList() {
     return [
         'ascat',
         'controlfreec',
+        'dnascope',
+        'dnaseq',
         'freebayes',
         'haplotypecaller',
         'manta',
@@ -2791,14 +2814,9 @@ def defineToolList() {
         'snpeff',
         'strelka',
         'tiddit',
+        'tnscope',
         'vep'
     ]
-}
-
-// Print deprecation message
-def deprecationMessage(oldItem, newItem = null) {
-    extra = newItem == null ? "": ", please use `${newItem}` instead"
-    log.warn "The ${oldItem} is deprecated${extra} -- it will be removed in a future release"
 }
 
 // Channeling the TSV file containing BAM.
