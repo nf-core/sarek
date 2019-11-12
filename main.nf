@@ -193,7 +193,8 @@ if (params.sampleDir) tsvPath = params.sampleDir
 // only for steps recalibrate and variantCalling
 if (!params.input && step != 'mapping' && step != 'annotate') {
     if (params.sentieon) {
-        tsvPath = step == 'recalibrate' ? "${params.outdir}/Preprocessing/TSV/deduped_sentieon.tsv" : "${params.outdir}/Preprocessing/TSV/recalibrated_sentieon.tsv"
+        if (step == 'variantcalling') tsvPath =  "${params.outdir}/Preprocessing/TSV/recalibrated_sentieon.tsv"
+        else exit 1, "Not possible to restart from that step"
     }
     else {
         tsvPath = step == 'recalibrate' ? "${params.outdir}/Preprocessing/TSV/duplicateMarked.tsv" : "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"
@@ -880,7 +881,6 @@ process SentieonDedup {
 
     output:
         set idPatient, idSample, file("${idSample}.deduped.bam"), file("${idSample}.deduped.bam.bai") into bamDedupedSentieon
-        set idPatient, idSample into bamDedupedSentieonTSV
         file("${idSample}_*.txt") into bamDedupedSentieonQC
 
     script:
@@ -899,29 +899,6 @@ process SentieonDedup {
         --algo Dedup --rmdup --score_info ${idSample}_score.gz  \
         --metrics ${idSample}_dedup_metric.txt ${idSample}.deduped.bam
     """
-}
-
-(bamDedupedSentieonTSV, bamDedupedSentieonSampleTSV) = bamDedupedSentieonTSV.into(2)
-
-// Creating a TSV file to restart from this step
-bamDedupedSentieonTSV.map { idPatient, idSample ->
-    gender = genderMap[idPatient]
-    status = statusMap[idPatient, idSample]
-    bam = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam"
-    bai = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam.bai"
-    "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"
-}.collectFile(
-    name: 'deduped_sentieon.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
-)
-
-bamDedupedSentieonSampleTSV
-    .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") {
-        idPatient, idSample ->
-        status = statusMap[idPatient, idSample]
-        gender = genderMap[idPatient]
-        bam = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam"
-        bai = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam.bai"
-        ["deduped_sentieon_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
 }
 
 // STEP 3: CREATING RECALIBRATION TABLES
@@ -1010,10 +987,7 @@ recalTableSampleTSV
 
 bamApplyBQSR = bamMDToJoin.join(recalTable, by:[0,1])
 
-if (step == 'recalibrate') {
-    if (params.sentieon) bamDedupedSentieon = inputSample
-    else bamApplyBQSR = inputSample
-}
+if (step == 'recalibrate') bamApplyBQSR = inputSample
 
 bamApplyBQSR = bamApplyBQSR.dump(tag:'recal.table')
 
