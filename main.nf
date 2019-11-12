@@ -1384,15 +1384,15 @@ process SentieonDNAscope {
         -t ${task.cpus} \
         -r ${fasta}\
         -i ${bam} \
-        --algo DNAscope
+        --algo DNAscope \
         --var_type bnd \
-        -d ${dbsnp}
+        -d ${dbsnp} \
         DNAscope_${idSample}.temp.vcf
 
     sentieon driver \
         -t ${task.cpus} \
         -r ${fasta}\
-        --algo SVSolver  \
+        --algo SVSolver \
         -v DNAscope_${idSample}.temp.vcf \
         DNAscope_SV_${idSample}.vcf
     """
