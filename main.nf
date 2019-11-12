@@ -981,6 +981,8 @@ tableGatherBQSRReports = tableGatherBQSRReports.groupTuple(by:[0, 1])
 
 if (step == 'recalibrate' && params.sentieon) bamDedupedSentieon = inputSample
 
+bamDedupedSentieon = bamDedupedSentieon.dump(tag:'deduped.bam')
+
 process SentieonBQSR {
     label 'cpus_max'
     label 'memory_max'
