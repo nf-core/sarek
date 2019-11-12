@@ -2878,7 +2878,7 @@ def defineSkipQClist() {
         'markduplicates',
         'multiqc',
         'samtools',
-        'senteion',
+        'sentieon',
         'vcftools',
         'versions'
     ]
