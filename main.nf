@@ -1007,7 +1007,7 @@ process SentieonBQSR {
         set idPatient, idSample into bamRecalSentieonTSV
         file("${idSample}_recal_result.csv") into bamRecalSentieonQC
 
-    when: params.sentieon && (step == 'mapping' || step == 'recalibrate')
+    when: params.sentieon && step in ['mapping','recalibrate']
 
     script:
     known = knownIndels.collect{"--known-sites ${it}"}.join(' ')
@@ -1258,7 +1258,7 @@ bamQCReport = bamQCReport.dump(tag:'BamQC')
 ================================================================================
 */
 
-if (params.sentieon && (step == 'mapping' || step == 'recalibrate')) bamRecal = bamRecalSentieon
+if (params.sentieon && step in ['mapping', 'recalibrate']) bamRecal = bamRecalSentieon
 
 if (step == 'variantcalling') bamRecal = inputSample
 
