@@ -211,9 +211,9 @@ if (tsvPath) {
         default: exit 1, "Unknown step ${step}"
     }
 } else if (params.input && !hasExtension(params.input, "tsv")) {
-    println "No TSV file"
+    log.info "No TSV file"
     if (step != 'mapping') exit 1, 'No other step than "mapping" support a dir as an input'
-    println "Reading ${params.input} directory"
+    log.info "Reading ${params.input} directory"
     inputSample = extractFastqFromDir(params.input)
     (inputSample, fastqTMP) = inputSample.into(2)
     fastqTMP.toList().subscribe onNext: {
@@ -221,7 +221,7 @@ if (tsvPath) {
     }
     tsvFile = params.input  // used in the reports
 } else if (step == 'annotate') {
-    println "Annotating ${tsvFile}"
+    log.info "Annotating ${tsvFile}"
 } else exit 1, 'No sample were defined, see --help'
 
 (genderMap, statusMap, inputSample) = extractInfos(inputSample)
@@ -1012,7 +1012,7 @@ process SentieonBQSR {
         set idPatient, idSample into bamRecalSentieonTSV
         file("${idSample}_recal_result.csv") into bamRecalSentieonQC
 
-    when: params.sentieon && step in ['mapping', 'recalibrate']
+    when: params.sentieon && (step in ['mapping', 'recalibrate'])
 
     script:
     known = knownIndels.collect{"--known-sites ${it}"}.join(' ')
@@ -2853,7 +2853,7 @@ def checkNumberOfItem(row, number) {
 // Check parameter existence
 def checkParameterExistence(it, list) {
     if (!list.contains(it)) {
-        println("Unknown parameter: ${it}")
+        log.warn "Unknown parameter: ${it}"
         return false
     }
     return true
