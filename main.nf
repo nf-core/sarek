@@ -622,7 +622,7 @@ process FastQCFQ {
     output:
         file("*.{html,zip}") into fastQCFQReport
 
-    when: step == 'mapping' && !('fastqc' in skipQC)
+    when: !('fastqc' in skipQC)
     
     script:
     """
@@ -643,7 +643,7 @@ process FastQCBAM {
     output:
         file("*.{html,zip}") into fastQCBAMReport
 
-    when: step == 'mapping' && !('fastqc' in skipQC)
+    when: !('fastqc' in skipQC)
 
     script:
     """
@@ -677,8 +677,6 @@ process MapReads {
     output:
         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMapped
         set idPatient, idSample, file("${idSample}_${idRun}.bam") into bamMappedBamQC
-
-    when: step == 'mapping'
 
     script:
     // -K is an hidden option, used to fix the number of reads processed by bwa mem
@@ -733,8 +731,6 @@ process SentieonMapReads {
         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMappedSentieon
         set idPatient, idSample, file("${idSample}_${idRun}.bam") into bamMappedSentieonBamQC
 
-    when: step == 'mapping' && params.sentieon
-
     script:
     // -K is an hidden option, used to fix the number of reads processed by bwa mem
     // Chunk size can affect bwa results, if not specified,
@@ -781,8 +777,6 @@ process MergeBamMapped {
     output:
         set idPatient, idSample, file("${idSample}.bam") into mergedBam
 
-    when: step == 'mapping'
-
     script:
     """
     samtools merge --threads ${task.cpus} ${idSample}.bam ${bam}
@@ -812,8 +806,6 @@ process IndexBamMergedForSentieon {
     output:
         set idPatient, idSample, file(bam), file("${idSample}.bam.bai") into bamForSentieonDedup
 
-    when: step == 'mapping'
-
     script:
     """
     samtools index ${bam}
@@ -839,8 +831,6 @@ process MarkDuplicates {
     output:
         set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bai") into duplicateMarkedBams
         file ("${idSample}.bam.metrics") into markDuplicatesReport
-
-    when: step == 'mapping'
 
     script:
     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
@@ -892,8 +882,6 @@ process SentieonDedup {
         set idPatient, idSample, file("${idSample}.deduped.bam"), file("${idSample}.deduped.bam.bai") into bamDedupedSentieon
         set idPatient, idSample into bamDedupedSentieonTSV
         file("${idSample}_*.txt") into bamDedupedSentieonQC
-
-    when: step == 'mapping' && params.sentieon
 
     script:
     """
@@ -957,8 +945,6 @@ process BaseRecalibrator {
     output:
         set idPatient, idSample, file("${intervalBed.baseName}_${idSample}.recal.table") into tableGatherBQSRReports
 
-    when: step == 'mapping'
-
     script:
     known = knownIndels.collect{"--known-sites ${it}"}.join(' ')
     // TODO: --use-original-qualities ???
@@ -994,8 +980,6 @@ process GatherBQSRReports {
     output:
         set idPatient, idSample, file("${idSample}.recal.table") into recalTable
         set idPatient, idSample, val("${idSample}.md.bam"), val("${idSample}.md.bai"), val("${idSample}.recal.table") into (recalTableTSV, recalTableSampleTSV)
-
-    when: step == 'mapping'
 
     script:
     input = recal.collect{"-I ${it}"}.join(' ')
@@ -1097,8 +1081,6 @@ process SentieonBQSR {
         set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bamRecalSentieon 
         set idPatient, idSample into bamRecalSentieonTSV
         file("${idSample}_recal_result.csv") into bamRecalSentieonQC
-
-    when: params.sentieon
 
     script:
     known = knownIndels.collect{"--known-sites ${it}"}.join(' ')
