@@ -1258,7 +1258,7 @@ bamQCReport = bamQCReport.dump(tag:'BamQC')
 ================================================================================
 */
 
-if (params.sentieon) bamRecal = bamRecalSentieon
+if (params.sentieon && (step == 'mapping' || step == 'recalibrate')) bamRecal = bamRecalSentieon
 
 if (step == 'variantcalling') bamRecal = inputSample
 
