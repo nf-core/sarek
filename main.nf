@@ -192,7 +192,7 @@ if (params.sampleDir) tsvPath = params.sampleDir
 // If no input file specified, trying to get TSV files corresponding to step in the TSV directory
 // only for steps recalibrate and variantCalling
 if (!params.input && step != 'mapping' && step != 'annotate') {
-    tsvPath = step == 'recalibrate' ? "${params.outdir}/Preprocessing/TSV/duplicateMarked.tsv": "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"
+    tsvPath = step == 'recalibrate' ? "${params.outdir}/Preprocessing/TSV/duplicateMarked.tsv": params.sention ? "${params.outdir}/Preprocessing/TSV/sentieon.tsv" : "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"
 }
 
 inputSample = Channel.empty()
@@ -970,6 +970,7 @@ process SentieonBQSR {
 
     output:
         set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bamRecalSentieon 
+        set idPatient, idSample into bamRecalSentieonTSV
         file("${idSample}_recal_result.csv") into bamRecalSentieonQC
 
     when: step == 'mapping' && params.sentieon
@@ -1005,6 +1006,28 @@ process SentieonBQSR {
     """
 }
 
+(bamRecalSentieonTSV, bamRecalSentieonSampleTSV) = bamRecalSentieonTSV.into(2)
+
+// Creating a TSV file to restart from this step
+bamRecalSentieonTSV.map { idPatient, idSample ->
+    gender = genderMap[idPatient]
+    status = statusMap[idPatient, idSample]
+    bam = "${params.outdir}/Preprocessing/${idSample}/Sentieion/${idSample}.recal.bam"
+    bai = "${params.outdir}/Preprocessing/${idSample}/Sentieion/${idSample}.recal.bam.bai"
+    "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"
+}.collectFile(
+    name: 'sentieion.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
+)
+
+bamRecalSentieonSampleTSV
+    .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") {
+        idPatient, idSample ->
+        status = statusMap[idPatient, idSample]
+        gender = genderMap[idPatient]
+        bam = "${params.outdir}/Preprocessing/${idSample}/Sentieion/${idSample}.recal.bam"
+        bai = "${params.outdir}/Preprocessing/${idSample}/Sentieion/${idSample}.recal.bam.bai"
+        ["sentieion_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
+}
 // STEP 3.5: MERGING RECALIBRATION TABLES
 
 process GatherBQSRReports {
