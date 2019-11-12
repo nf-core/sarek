@@ -916,8 +916,8 @@ process SentieonDedup {
 bamDedupedSentieonTSV.map { idPatient, idSample ->
     gender = genderMap[idPatient]
     status = statusMap[idPatient, idSample]
-    bam = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.recal.bam"
-    bai = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.recal.bam.bai"
+    bam = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam"
+    bai = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam.bai"
     "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"
 }.collectFile(
     name: 'deduped_sentieon.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
@@ -928,8 +928,8 @@ bamDedupedSentieonSampleTSV
         idPatient, idSample ->
         status = statusMap[idPatient, idSample]
         gender = genderMap[idPatient]
-        bam = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.recal.bam"
-        bai = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.recal.bam.bai"
+        bam = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam"
+        bai = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam.bai"
         ["deduped_sentieon_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
 }
 
