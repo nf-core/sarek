@@ -372,125 +372,126 @@ yamlSoftwareVersion = yamlSoftwareVersion.dump(tag:'SOFTWARE VERSIONS')
 */
 
 process BuildBWAindexes {
-  tag {fasta}
+    tag {fasta}
 
-  publishDir params.outdir, mode: params.publishDirMode,
-    saveAs: {params.saveGenomeIndex ? "reference_genome/BWAIndex/${it}" : null }
+    publishDir params.outdir, mode: params.publishDirMode,
+        saveAs: {params.saveGenomeIndex ? "reference_genome/BWAIndex/${it}" : null }
 
-  input:
-    file(fasta) from ch_fasta
+    input:
+        file(fasta) from ch_fasta
 
-  output:
-    file("${fasta}.*") into bwaIndexes
+    output:
+        file("${fasta}.*") into bwaIndexes
 
-  when: !(params.bwaIndex) && params.fasta && 'mapping' in step
+    when: !(params.bwaIndex) && params.fasta && 'mapping' in step
 
-  script:
-  """
-  bwa index ${fasta}
-  """
+    script:
+    """
+    bwa index ${fasta}
+    """
 }
 
 process BuildDict {
-  tag {fasta}
+    tag {fasta}
 
-  publishDir params.outdir, mode: params.publishDirMode,
-    saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
+    publishDir params.outdir, mode: params.publishDirMode,
+        saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
 
-  input:
-    file(fasta) from ch_fasta
+    input:
+        file(fasta) from ch_fasta
 
-  output:
-    file("${fasta.baseName}.dict") into dictBuilt
+    output:
+        file("${fasta.baseName}.dict") into dictBuilt
 
-  when: !(params.dict) && params.fasta && !('annotate' in step)
+    when: !(params.dict) && params.fasta && !('annotate' in step)
 
-  script:
-  """
-  gatk --java-options "-Xmx${task.memory.toGiga()}g" \
-  CreateSequenceDictionary \
-  --REFERENCE ${fasta} \
-  --OUTPUT ${fasta.baseName}.dict
-  """
+    script:
+    """
+    gatk --java-options "-Xmx${task.memory.toGiga()}g" \
+        CreateSequenceDictionary \
+        --REFERENCE ${fasta} \
+        --OUTPUT ${fasta.baseName}.dict
+    """
 }
 
 process BuildFastaFai {
-  tag {fasta}
+    tag {fasta}
 
-  publishDir params.outdir, mode: params.publishDirMode,
-    saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
+    publishDir params.outdir, mode: params.publishDirMode,
+        saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
 
-  input:
-    file(fasta) from ch_fasta
+    input:
+        file(fasta) from ch_fasta
 
-  output:
-    file("${fasta}.fai") into fastaFaiBuilt
+    output:
+        file("${fasta}.fai") into fastaFaiBuilt
 
-  when: !(params.fastaFai) && params.fasta && !('annotate' in step)
+    when: !(params.fastaFai) && params.fasta && !('annotate' in step)
 
-  script:
-  """
-  samtools faidx ${fasta}
-  """
+    script:
+    """
+    samtools faidx ${fasta}
+    """
 }
 
 process BuildDbsnpIndex {
-  tag {dbsnp}
+    tag {dbsnp}
 
-  publishDir params.outdir, mode: params.publishDirMode,
-    saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
+    publishDir params.outdir, mode: params.publishDirMode,
+        saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
 
-  input:
-    file(dbsnp) from ch_dbsnp
+    input:
+        file(dbsnp) from ch_dbsnp
 
-  output:
-    file("${dbsnp}.tbi") into dbsnpIndexBuilt
+    output:
+        file("${dbsnp}.tbi") into dbsnpIndexBuilt
 
-  when: !(params.dbsnpIndex) && params.dbsnp && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools)
-  script:
-  """
-  tabix -p vcf ${dbsnp}
-  """
+    when: !(params.dbsnpIndex) && params.dbsnp && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools)
+
+    script:
+    """
+    tabix -p vcf ${dbsnp}
+    """
 }
 
 process BuildGermlineResourceIndex {
-  tag {germlineResource}
+    tag {germlineResource}
 
-  publishDir params.outdir, mode: params.publishDirMode,
-    saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
+    publishDir params.outdir, mode: params.publishDirMode,
+        saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
 
-  input:
-    file(germlineResource) from ch_germlineResource
+    input:
+        file(germlineResource) from ch_germlineResource
 
-  output:
-    file("${germlineResource}.tbi") into germlineResourceIndexBuilt
+    output:
+        file("${germlineResource}.tbi") into germlineResourceIndexBuilt
 
-  when: !(params.germlineResourceIndex) && params.germlineResource && 'mutect2' in tools
+    when: !(params.germlineResourceIndex) && params.germlineResource && 'mutect2' in tools
 
-  script:
-  """
-  tabix -p vcf ${germlineResource}
-  """
+    script:
+    """
+    tabix -p vcf ${germlineResource}
+    """
 }
 
 process BuildKnownIndelsIndex {
-  tag {knownIndels}
+    tag {knownIndels}
 
-  publishDir params.outdir, mode: params.publishDirMode,
-    saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
+    publishDir params.outdir, mode: params.publishDirMode,
+        saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
 
-  input:
-    each file(knownIndels) from ch_knownIndels
+    input:
+        each file(knownIndels) from ch_knownIndels
 
-  output:
-    file("${knownIndels}.tbi") into knownIndelsIndexBuilt
+    output:
+        file("${knownIndels}.tbi") into knownIndelsIndexBuilt
 
-  when: !(params.knownIndelsIndex) && params.knownIndels && 'mapping' in step
+    when: !(params.knownIndelsIndex) && params.knownIndels && 'mapping' in step
 
-  script:
-  """
-  tabix -p vcf ${knownIndels}
-  """
+    script:
+    """
+    tabix -p vcf ${knownIndels}
+    """
 }
 
 // Initialize channels based on params or indexes that were just built
@@ -596,8 +597,6 @@ inputBAMFastQC = inputBAMFastQC.map {
     [idPatient, idSample, idRun, inputFile1]
 }
 
-inputReads = inputReads.dump(tag:'INPUT')
-
 // STEP 0.5: QC ON READS
 
 // TODO: Use only one process for FastQC for FASTQ files and uBAM files
@@ -651,9 +650,14 @@ fastQCReport = fastQCReport.dump(tag:'FastQC')
 
 // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
 
+inputReads = inputReads.dump(tag:'INPUT')
+
+(inputReads, inputReadsSentieon) = inputReads.into(2)
+if (params.sentieon) inputReads.close()
+else inputReadsSentieon.close()
+
 process MapReads {
     label 'cpus_max'
-    label 'sentieon'
 
     tag {idPatient + "-" + idRun}
 
@@ -682,18 +686,11 @@ process MapReads {
     extra = status == 1 ? "-B 3" : ""
     convertToFastq = hasExtension(inputFile1, "bam") ? "gatk --java-options -Xmx${task.memory.toGiga()}g SamToFastq --INPUT=${inputFile1} --FASTQ=/dev/stdout --INTERLEAVE=true --NON_PF=true | \\" : ""
     input = hasExtension(inputFile1, "bam") ? "-p /dev/stdin - 2> >(tee ${inputFile1}.bwa.stderr.log >&2)" : "${inputFile1} ${inputFile2}"
-    if (!params.sentieon)
     """
         ${convertToFastq}
         bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
         ${input} | \
         samtools sort --threads ${task.cpus} -m 2G - > ${idSample}_${idRun}.bam
-    """
-    else
-    """
-        sentieon bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
-        ${input} | \
-        sentieon util sort -r ${fasta} -o ${idSample}_${idRun}.bam -t ${task.cpus} --sam2bam -i - 
     """
 }
 
@@ -710,7 +707,60 @@ singleBam = singleBam.map {
 }
 singleBam = singleBam.dump(tag:'Single BAM')
 
+// STEP 1': MAPPING READS TO REFERENCE GENOME WITH SENTIEON BWA MEM
+
+process SentieonMapReads {
+    label 'cpus_max'
+    label 'sentieon'
+
+    tag {idPatient + "-" + idRun}
+
+    input:
+        set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from inputReadsSentieon
+        file(bwaIndex) from ch_bwaIndex
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
+
+    output:
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMappedSentieon
+        set idPatient, idSample, file("${idSample}_${idRun}.bam") into bamMappedSentieonBamQC
+
+    when: step == 'mapping' && params.sentieon
+
+    script:
+    // -K is an hidden option, used to fix the number of reads processed by bwa mem
+    // Chunk size can affect bwa results, if not specified,
+    // the number of threads can change which can give not deterministic result.
+    // cf https://github.com/CCDG/Pipeline-Standardization/blob/master/PipelineStandard.md
+    // and https://github.com/gatk-workflows/gatk4-data-processing/blob/8ffa26ff4580df4ac3a5aa9e272a4ff6bab44ba2/processing-for-variant-discovery-gatk4.b37.wgs.inputs.json#L29
+    CN = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
+    readGroup = "@RG\\tID:${idRun}\\t${CN}PU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
+    // adjust mismatch penalty for tumor samples
+    status = statusMap[idPatient, idSample]
+    extra = status == 1 ? "-B 3" : ""
+    """
+    sentieon bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
+    ${inputFile1} ${inputFile2} | \
+    sentieon util sort -r ${fasta} -o ${idSample}_${idRun}.bam -t ${task.cpus} --sam2bam -i - 
+    """
+}
+
+bamMappedSentieon = bamMappedSentieon.dump(tag:'Sentieon Mapped BAM')
+// Sort BAM whether they are standalone or should be merged
+
+singleBamSentieon = Channel.create()
+multipleBamSentieon = Channel.create()
+bamMappedSentieon.groupTuple(by:[0, 1])
+    .choice(singleBamSentieon, multipleBamSentieon) {it[2].size() > 1 ? 1 : 0}
+singleBamSentieon = singleBamSentieon.map {
+    idPatient, idSample, idRun, bam ->
+    [idPatient, idSample, bam]
+}
+singleBamSentieon = singleBamSentieon.dump(tag:'Single BAM')
+
 // STEP 1.5: MERGING BAM FROM MULTIPLE LANES
+
+multipleBam = multipleBam.mix(multipleBamSentieon)
 
 process MergeBamMapped {
     label 'cpus_8'
@@ -733,7 +783,8 @@ process MergeBamMapped {
 
 mergedBam = mergedBam.dump(tag:'Merged BAM')
 
-mergedBam = mergedBam.mix(singleBam)
+mergedBam = mergedBam.mix(singleBam,singleBamSentieon)
+
 mergedBam = mergedBam.dump(tag:'BAMs for MD')
 
 (mergedBam, mergedBamForSentieion) = mergedBam.into(2)
@@ -759,7 +810,6 @@ process IndexBamMergedForSentieon {
     samtools index ${bam}
     """
 }
-
 
 // STEP 2: MARKING DUPLICATES
 
@@ -1286,7 +1336,7 @@ process StrelkaSingle {
         Strelka_${idSample}_variants.vcf.gz
     mv Strelka/results/variants/variants.vcf.gz.tbi \
         Strelka_${idSample}_variants.vcf.gz.tbi
-  """
+    """
 }
 
 vcfStrelkaSingle = vcfStrelkaSingle.dump(tag:'Strelka - Single Mode')
@@ -1755,7 +1805,7 @@ process Strelka {
         Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
     mv Strelka/results/variants/somatic.snvs.vcf.gz.tbi \
         Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz.tbi
-  """
+    """
 }
 
 vcfStrelka = vcfStrelka.dump(tag:'Strelka')
@@ -1871,7 +1921,7 @@ process StrelkaBP {
         StrelkaBP_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
     mv Strelka/results/variants/somatic.snvs.vcf.gz.tbi \
         StrelkaBP_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz.tbi
-  """
+    """
 }
 
 vcfStrelkaBP = vcfStrelkaBP.dump(tag:'Strelka BP')
