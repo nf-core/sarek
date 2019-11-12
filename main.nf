@@ -588,6 +588,8 @@ bedIntervals = bedIntervals.dump(tag:'bedintervals')
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
+inputSample = inputSample.dump(tag:'INPUT SAMPLE')
+
 if (step == 'mapping') (inputReads, inputReadsFastQC) = inputSample.into(2)
 else (inputReads, inputReadsFastQC) = Channel.empty().into(2)
 
