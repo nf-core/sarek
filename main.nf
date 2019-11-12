@@ -977,6 +977,8 @@ tableGatherBQSRReports = tableGatherBQSRReports.groupTuple(by:[0, 1])
 
 // STEP 3': SENTIEON BQSR
 
+if (step == 'recalibrate' && params.sentieon) bamDedupedSentieon = inputSample
+
 process SentieonBQSR {
     label 'cpus_max'
     label 'memory_max'
@@ -1109,7 +1111,7 @@ recalTableSampleTSV
 
 bamApplyBQSR = bamMDToJoin.join(recalTable, by:[0,1])
 
-if (step == 'recalibrate') bamApplyBQSR = inputSample
+if (step == 'recalibrate' && (!params.sentieon)) bamApplyBQSR = inputSample
 
 bamApplyBQSR = bamApplyBQSR.dump(tag:'recal.table')
 
