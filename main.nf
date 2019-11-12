@@ -1231,7 +1231,7 @@ bamRecal = bamRecal.dump(tag:'BAM')
 // Manta will be run in Germline mode, or in Tumor mode depending on status
 // HaplotypeCaller, TIDDIT and Strelka will be run for Normal and Tumor samples
 
-(bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamRecalAll, bamRecalAllTemp) = bamRecal.into(5)
+(bamSentieonDNAscope, bamSentieonDNAseq, bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamRecalAll, bamRecalAllTemp) = bamRecal.into(7)
 
 // To speed Variant Callers up we are chopping the reference into smaller pieces
 // Do variant calling by this intervals, and re-merge the VCFs
@@ -1313,6 +1313,92 @@ process GenotypeGVCFs {
 }
 
 vcfGenotypeGVCFs = vcfGenotypeGVCFs.groupTuple(by:[0, 1, 2])
+
+// STEP SENTIEON DNAseq
+
+process SentieonDNAseq {
+    label 'cpus_max'
+    label 'memory_max'
+    label 'sentieon'
+
+    tag {idSample}
+
+    input:
+        set idPatient, idSample, file(bam), file(bai) from bamSentieonDNAseq
+        file(dbsnp) from ch_dbsnp
+        file(dbsnpIndex) from ch_dbsnpIndex
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
+
+    output:
+    set val("SentieonDNAseq"), idPatient, idSample, file("DNAseq_${idSample}.vcf") into sentieonDNAseqVCF
+
+    when: 'dnaseq' in tools && params.sentieon
+
+    script:
+    """
+    sentieon driver \
+        -t ${task.cpus} \
+        -r ${fasta} \
+        -i ${bam} \
+        --algo Genotyper \
+        -d ${dbsnp} \
+        DNAseq_${idSample}.vcf
+    """
+}
+
+sentieonDNAseqVCF = sentieonDNAseqVCF.dump(tag:'sentieon DNAseq')
+
+// STEP SENTIEON DNAscope
+
+process SentieonDNAscope {
+    label 'cpus_max'
+    label 'memory_max'
+    label 'sentieon'
+
+    tag {idSample}
+
+    input:
+        set idPatient, idSample, file(bam), file(bai) from bamSentieonDNAscope
+        file(dbsnp) from ch_dbsnp
+        file(dbsnpIndex) from ch_dbsnpIndex
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
+
+    output:
+    set val("SentieonDNAscope"), idPatient, idSample, file("DNAscope_${idSample}.vcf"), file("DNAscope_SV_${idSample}.vcf") into sentieonDNAscopeVCF
+
+    when: 'dnascope' in tools && params.sentieon
+
+    script:
+    """
+    sentieon driver \
+        -t ${task.cpus} \
+        -r ${fasta} \
+        -i ${bam} \
+        --algo DNAscope \
+        -d ${dbsnp} \
+        DNAscope_${idSample}.vcf
+
+    sentieon driver \
+        -t ${task.cpus} \
+        -r ${fasta}\
+        -i ${bam} \
+        --algo DNAscope
+        --var_type bnd \
+        -d ${dbsnp}
+        DNAscope_${idSample}.temp.vcf
+
+    sentieon driver \
+        -t ${task.cpus} \
+        -r ${fasta}\
+        --algo SVSolver  \
+        -v DNAscope_${idSample}.temp.vcf \
+        DNAscope_SV_${idSample}.vcf
+    """
+}
+
+sentieonDNAscopeVCF = sentieonDNAscopeVCF.dump(tag:'sentieon DNAscope')
 
 // STEP STRELKA.1 - SINGLE MODE
 
