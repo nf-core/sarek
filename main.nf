@@ -978,9 +978,95 @@ process BaseRecalibrator {
 
 tableGatherBQSRReports = tableGatherBQSRReports.groupTuple(by:[0, 1])
 
-// STEP 3': SENTIEON BQSR
+// STEP 3.5: MERGING RECALIBRATION TABLES
 
-if (step == 'recalibrate' && params.sentieon) bamDedupedSentieon = inputSample
+process GatherBQSRReports {
+    label 'memory_singleCPU_2_task'
+    label 'cpus_2'
+
+    tag {idPatient + "-" + idSample}
+
+    publishDir "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked", mode: params.publishDirMode, overwrite: false
+
+    input:
+        set idPatient, idSample, file(recal) from tableGatherBQSRReports
+
+    output:
+        set idPatient, idSample, file("${idSample}.recal.table") into recalTable
+        set idPatient, idSample, val("${idSample}.md.bam"), val("${idSample}.md.bai"), val("${idSample}.recal.table") into (recalTableTSV, recalTableSampleTSV)
+
+    when: step == 'mapping'
+
+    script:
+    input = recal.collect{"-I ${it}"}.join(' ')
+    """
+    gatk --java-options -Xmx${task.memory.toGiga()}g \
+        GatherBQSRReports \
+        ${input} \
+        -O ${idSample}.recal.table \
+    """
+}
+
+// Create TSV files to restart from this step
+recalTableTSV.map { idPatient, idSample, bam, bai, recalTable ->
+    status = statusMap[idPatient, idSample]
+    gender = genderMap[idPatient]
+    "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bam}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bai}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${recalTable}\n"
+}.collectFile(
+    name: 'duplicateMarked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
+)
+
+recalTableSampleTSV
+    .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV/") {
+        idPatient, idSample, bam, bai, recalTable ->
+        status = statusMap[idPatient, idSample]
+        gender = genderMap[idPatient]
+        ["duplicateMarked_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bam}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bai}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${recalTable}\n"]
+}
+
+bamApplyBQSR = bamMDToJoin.join(recalTable, by:[0,1])
+
+if (step == 'recalibrate') {
+    if (params.sentieon) bamDedupedSentieon = inputSample
+    else bamApplyBQSR = inputSample
+}
+
+bamApplyBQSR = bamApplyBQSR.dump(tag:'recal.table')
+
+bamApplyBQSR = bamApplyBQSR.combine(intApplyBQSR)
+
+// STEP 4: RECALIBRATING
+
+process ApplyBQSR {
+    label 'memory_singleCPU_2_task'
+    label 'cpus_2'
+
+    tag {idPatient + "-" + idSample + "-" + intervalBed.baseName}
+
+    input:
+        set idPatient, idSample, file(bam), file(bai), file(recalibrationReport), file(intervalBed) from bamApplyBQSR
+        file(dict) from ch_dict
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
+
+    output:
+        set idPatient, idSample, file("${intervalBed.baseName}_${idSample}.recal.bam") into bamMergeBamRecal
+
+    script:
+    """
+    gatk --java-options -Xmx${task.memory.toGiga()}g \
+        ApplyBQSR \
+        -R ${fasta} \
+        --input ${bam} \
+        --output ${intervalBed.baseName}_${idSample}.recal.bam \
+        -L ${intervalBed} \
+        --bqsr-recal-file ${recalibrationReport}
+    """
+}
+
+bamMergeBamRecal = bamMergeBamRecal.groupTuple(by:[0, 1])
+
+// STEP 4': SENTIEON BQSR
 
 bamDedupedSentieon = bamDedupedSentieon.dump(tag:'deduped.bam')
 
@@ -1067,91 +1153,6 @@ bamRecalSentieonSampleTSV
         bai = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.bam.bai"
         ["recalibrated_sentieon_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
 }
-
-// STEP 3.5: MERGING RECALIBRATION TABLES
-
-process GatherBQSRReports {
-    label 'memory_singleCPU_2_task'
-    label 'cpus_2'
-
-    tag {idPatient + "-" + idSample}
-
-    publishDir "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked", mode: params.publishDirMode, overwrite: false
-
-    input:
-        set idPatient, idSample, file(recal) from tableGatherBQSRReports
-
-    output:
-        set idPatient, idSample, file("${idSample}.recal.table") into recalTable
-        set idPatient, idSample, val("${idSample}.md.bam"), val("${idSample}.md.bai"), val("${idSample}.recal.table") into (recalTableTSV, recalTableSampleTSV)
-
-    when: step == 'mapping'
-
-    script:
-    input = recal.collect{"-I ${it}"}.join(' ')
-    """
-    gatk --java-options -Xmx${task.memory.toGiga()}g \
-        GatherBQSRReports \
-        ${input} \
-        -O ${idSample}.recal.table \
-    """
-}
-
-// Create TSV files to restart from this step
-recalTableTSV.map { idPatient, idSample, bam, bai, recalTable ->
-    status = statusMap[idPatient, idSample]
-    gender = genderMap[idPatient]
-    "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bam}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bai}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${recalTable}\n"
-}.collectFile(
-    name: 'duplicateMarked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
-)
-
-recalTableSampleTSV
-    .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV/") {
-        idPatient, idSample, bam, bai, recalTable ->
-        status = statusMap[idPatient, idSample]
-        gender = genderMap[idPatient]
-        ["duplicateMarked_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bam}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${bai}\t${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${recalTable}\n"]
-}
-
-bamApplyBQSR = bamMDToJoin.join(recalTable, by:[0,1])
-
-if (step == 'recalibrate' && (!params.sentieon)) bamApplyBQSR = inputSample
-
-bamApplyBQSR = bamApplyBQSR.dump(tag:'recal.table')
-
-bamApplyBQSR = bamApplyBQSR.combine(intApplyBQSR)
-
-// STEP 4: RECALIBRATING
-
-process ApplyBQSR {
-    label 'memory_singleCPU_2_task'
-    label 'cpus_2'
-
-    tag {idPatient + "-" + idSample + "-" + intervalBed.baseName}
-
-    input:
-        set idPatient, idSample, file(bam), file(bai), file(recalibrationReport), file(intervalBed) from bamApplyBQSR
-        file(dict) from ch_dict
-        file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
-
-    output:
-        set idPatient, idSample, file("${intervalBed.baseName}_${idSample}.recal.bam") into bamMergeBamRecal
-
-    script:
-    """
-    gatk --java-options -Xmx${task.memory.toGiga()}g \
-        ApplyBQSR \
-        -R ${fasta} \
-        --input ${bam} \
-        --output ${intervalBed.baseName}_${idSample}.recal.bam \
-        -L ${intervalBed} \
-        --bqsr-recal-file ${recalibrationReport}
-    """
-}
-
-bamMergeBamRecal = bamMergeBamRecal.groupTuple(by:[0, 1])
 
 // STEP 4.5: MERGING THE RECALIBRATED BAM FILES
 
