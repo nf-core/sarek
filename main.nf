@@ -192,11 +192,11 @@ if (params.sampleDir) tsvPath = params.sampleDir
 // If no input file specified, trying to get TSV files corresponding to step in the TSV directory
 // only for steps recalibrate and variantCalling
 if (!params.input && step != 'mapping' && step != 'annotate') {
-    if (!params.sentieon) {
-        tsvPath = step == 'recalibrate' ? "${params.outdir}/Preprocessing/TSV/duplicateMarked.tsv" : "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"
+    if (params.sentieon) {
+        tsvPath = step == 'recalibrate' ? "${params.outdir}/Preprocessing/TSV/deduped_sentieon.tsv" : "${params.outdir}/Preprocessing/TSV/recalibrated_sentieon.tsv"
     }
     else {
-        tsvPath = step == 'recalibrate' ? "${params.outdir}/Preprocessing/TSV/deduped_sentieon.tsv" : "${params.outdir}/Preprocessing/TSV/recalibrated_sentieon.tsv"
+        tsvPath = step == 'recalibrate' ? "${params.outdir}/Preprocessing/TSV/duplicateMarked.tsv" : "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"
     }
 }
 
@@ -793,12 +793,13 @@ mergedBam = mergedBam.dump(tag:'Merged BAM')
 
 mergedBam = mergedBam.mix(singleBam,singleBamSentieon)
 
-mergedBam = mergedBam.dump(tag:'BAMs for MD')
-
 (mergedBam, mergedBamForSentieon) = mergedBam.into(2)
 
-if (params.sentieon) mergedBam.close()
-else mergedBamForSentieon.close()
+if (!params.sentieon) mergedBamForSentieon.close()
+else mergedBam.close()
+
+mergedBam = mergedBam.dump(tag:'BAMs for MD')
+mergedBamForSentieon = mergedBamForSentieon.dump(tag:'Sentieon BAMs to Index')
 
 process IndexBamMergedForSentieon {
     label 'cpus_8'
@@ -811,7 +812,7 @@ process IndexBamMergedForSentieon {
     output:
         set idPatient, idSample, file(bam), file("${idSample}.bam.bai") into bamForSentieonDedup
 
-    when: step == 'mapping' && params.sentieon
+    when: step == 'mapping'
 
     script:
     """
@@ -1011,36 +1012,36 @@ process SentieonBQSR {
         set idPatient, idSample into bamRecalSentieonTSV
         file("${idSample}_recal_result.csv") into bamRecalSentieonQC
 
-    when: params.sentieon && step in ['mapping','recalibrate']
+    when: params.sentieon && step in ['mapping', 'recalibrate']
 
     script:
     known = knownIndels.collect{"--known-sites ${it}"}.join(' ')
     """
     sentieon driver  \
-    -t ${task.cpus} \
-    -r ${fasta} \
-    -i ${idSample}.deduped.bam \
-    --algo QualCal \
-    -k ${dbsnp} \
-    ${idSample}.recal.table
+        -t ${task.cpus} \
+        -r ${fasta} \
+        -i ${idSample}.deduped.bam \
+        --algo QualCal \
+        -k ${dbsnp} \
+        ${idSample}.recal.table
 
     sentieon driver \
-    -t ${task.cpus} \
-    -r ${fasta} \
-    -i ${idSample}.deduped.bam \
-    -q ${idSample}.recal.table \
-    --algo QualCal \
-    -k ${dbsnp} \
-    ${idSample}.table.post \
-    --algo ReadWriter ${idSample}.recal.bam
+        -t ${task.cpus} \
+        -r ${fasta} \
+        -i ${idSample}.deduped.bam \
+        -q ${idSample}.recal.table \
+        --algo QualCal \
+        -k ${dbsnp} \
+        ${idSample}.table.post \
+        --algo ReadWriter ${idSample}.recal.bam
 
     sentieon driver \
-    -t ${task.cpus} \
-    --algo QualCal \
-    --plot \
-    --before ${idSample}.recal.table \
-    --after ${idSample}.table.post \
-    ${idSample}_recal_result.csv
+        -t ${task.cpus} \
+        --algo QualCal \
+        --plot \
+        --before ${idSample}.recal.table \
+        --after ${idSample}.table.post \
+        ${idSample}_recal_result.csv
     """
 }
 
