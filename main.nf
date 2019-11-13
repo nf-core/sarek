@@ -223,7 +223,7 @@ if (tsvPath) {
     }
     tsvFile = params.input  // used in the reports
 } else if (step == 'annotate') {
-    log.info "Annotating ${tsvFile}"
+    log.info "Annotating ${tsvPath}"
 } else exit 1, 'No sample were defined, see --help'
 
 (genderMap, statusMap, inputSample) = extractInfos(inputSample)
