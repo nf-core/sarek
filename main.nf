@@ -1935,7 +1935,7 @@ process SentieonTNscope {
     output:
         set val("SentieonTNscope"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf") into vcfTNscope
 
-    when: 'tnscope' in tools
+    when: 'tnscope' in tools && params.sentieon
 
     script:
     PON = params.pon ? "--pon ${pon}" : ""
