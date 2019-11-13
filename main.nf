@@ -315,6 +315,9 @@ if (params.knownIndels)           summary['knownIndels']           = params.know
 if (params.knownIndelsIndex)      summary['knownIndelsIndex']      = params.knownIndelsIndex
 if (params.snpeffDb)              summary['snpeffDb']              = params.snpeffDb
 if (params.vepCacheVersion)       summary['vepCacheVersion']       = params.vepCacheVersion
+if (params.species)               summary['species']               = params.species
+if (params.snpEff_cache)          summary['snpEff_cache']          = params.snpEff_cache
+if (params.vep_cache)             summary['vep_cache']             = params.vep_cache
 
 if (workflow.profile == 'awsbatch') {
     summary['AWS Region']        = params.awsregion
@@ -515,7 +518,7 @@ process BuildPonIndex {
     output:
         file("${pon}.tbi") into ponIndexBuilt
 
-    when: !(params.ponIndex) && params.pon && ('tnscope' in tools || 'mutect2' in tools)
+    when: !(params.pon_index) && params.pon && ('tnscope' in tools || 'mutect2' in tools)
 
     script:
     """
@@ -530,7 +533,7 @@ ch_dict = params.dict ? Channel.value(file(params.dict)) : dictBuilt
 ch_fastaFai = params.fastaFai ? Channel.value(file(params.fastaFai)) : fastaFaiBuilt
 ch_germlineResourceIndex = params.germlineResourceIndex ? Channel.value(file(params.germlineResourceIndex)) : germlineResourceIndexBuilt
 ch_knownIndelsIndex = params.knownIndelsIndex ? Channel.value(file(params.knownIndelsIndex)) : knownIndelsIndexBuilt.collect()
-ch_ponIndex = params.ponIndex ? Channel.value(file(params.ponIndex)) : ponIndexBuilt
+ch_ponIndex = params.pon_index ? Channel.value(file(params.pon_index)) : ponIndexBuilt
 
 /*
 ================================================================================
@@ -2530,7 +2533,7 @@ if (step == 'annotate') {
     if (tsvPath == []) {
     // Sarek, by default, annotates all available vcfs that it can find in the VariantCalling directory
     // Excluding vcfs from FreeBayes, and g.vcf from HaplotypeCaller
-    // Basically it's: VariantCalling/*/{HaplotypeCaller,Manta,Mutect2,Strelka,TIDDIT}/*.vcf.gz
+    // Basically it's: results/VariantCalling/*/{HaplotypeCaller,Manta,Mutect2,SentieonDNAseq,SentieonDNAscope,SentieonTNscope,Strelka,TIDDIT}/*.vcf.gz
     // Without *SmallIndels.vcf.gz from Manta, and *.genome.vcf.gz from Strelka
     // The small snippet `vcf.minus(vcf.fileName)[-2]` catches idSample
     // This field is used to output final annotated VCFs in the correct directory
