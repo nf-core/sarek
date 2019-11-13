@@ -871,7 +871,7 @@ process SentieonDedup {
         saveAs: {
             if (it == "${idSample}_*.txt" && 'sentieon' in skipQC) null
             else if (it == "${idSample}_*.txt") "Reports/${idSample}/Sentieon/${it}"
-            else "Preprocessing/${idSample}/DedupedSentieon/${it}"
+            else null
         }
 
     input:
@@ -885,18 +885,28 @@ process SentieonDedup {
 
     script:
     """
-    sentieon driver -t ${task.cpus} -r ${fasta} -i ${bam} \
+    sentieon driver \
+        -t ${task.cpus} \
+        -i ${bam} \
+        -r ${fasta} \
         --algo GCBias --summary ${idSample}_gc_summary.txt ${idSample}_gc_metric.txt \
         --algo MeanQualityByCycle ${idSample}_mq_metric.txt \
         --algo QualDistribution ${idSample}_qd_metric.txt \
         --algo InsertSizeMetricAlgo ${idSample}_is_metric.txt  \
         --algo AlignmentStat ${idSample}_aln_metric.txt
 
-    sentieon driver -t ${task.cpus} -i ${bam} \
-        --algo LocusCollector --fun score_info ${idSample}_score.gz
+    sentieon driver \
+        -t ${task.cpus} \
+        -i ${bam} \
+        --algo LocusCollector \
+        --fun score_info ${idSample}_score.gz
 
-    sentieon driver -t ${task.cpus} -i ${bam} \
-        --algo Dedup --rmdup --score_info ${idSample}_score.gz  \
+    sentieon driver \
+        -t ${task.cpus} \
+        -i ${bam} \
+        --algo Dedup \
+        --rmdup \
+        --score_info ${idSample}_score.gz  \
         --metrics ${idSample}_dedup_metric.txt ${idSample}.deduped.bam
     """
 }
@@ -1323,6 +1333,8 @@ process SentieonDNAseq {
 
     tag {idSample}
 
+    publishDir "${params.outdir}/VariantCalling/${idSample}/SentieonDNAseq", mode: params.publishDirMode
+
     input:
         set idPatient, idSample, file(bam), file(bai) from bamSentieonDNAseq
         file(dbsnp) from ch_dbsnp
@@ -1357,6 +1369,8 @@ process SentieonDNAscope {
     label 'sentieon'
 
     tag {idSample}
+
+    publishDir "${params.outdir}/VariantCalling/${idSample}/SentieonDNAscope", mode: params.publishDirMode
 
     input:
         set idPatient, idSample, file(bam), file(bai) from bamSentieonDNAscope
@@ -1566,8 +1580,8 @@ pairBam = bamNormal.cross(bamTumor).map {
 
 pairBam = pairBam.dump(tag:'BAM Somatic Pair')
 
-// Manta and Strelka
-(pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBamCalculateContamination, pairBamFilterMutect2, pairBam) = pairBam.into(6)
+// Manta, Strelka, Mutect2
+(pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBamCalculateContamination, pairBamFilterMutect2, pairBamTNscope, pairBam) = pairBam.into(7)
 
 intervalPairBam = pairBam.spread(bedIntervals)
 
@@ -1866,6 +1880,47 @@ process FilterMutect2Calls {
         -O filtered_${variantCaller}_${idSampleTN}.vcf.gz
     """
 }
+
+// STEP SENTIEON TNSCOPE
+
+process SentieonTNscope {
+    label 'cpus_max'
+    label 'memory_max'
+    label 'sentieon'
+
+    tag {idSampleTumor + "_vs_" + idSampleNormal}
+
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/SentieonTNscope", mode: params.publishDirMode
+
+    input:
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamTNscope
+        file(dict) from ch_dict
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
+        file(dbsnp) from ch_dbsnp
+        file(dbsnpIndex) from ch_dbsnpIndex
+
+    output:
+        set val("SentieonTNscope"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfTNscope
+
+    when: 'tnscope' in tools
+
+    script:
+    """
+    sentieon driver \
+        -t ${task.cpus} \
+        -r ${fasta} \
+        -i ${bamTumor} \
+        -i ${bamNormal} \
+        --algo TNscope \
+        --tumor_sample ${idSampleTumor} \
+        --normal_sample ${idSampleNormal} \
+        --dbsnp ${dbsnp} \
+        SentieonTNscope_${idSampleTumor}_vs_${idSampleNormal}.vcf
+    """
+}
+
+vcfTNscope = vcfTNscope.dump(tag:'SentieonTNscope')
 
 // STEP STRELKA.2 - SOMATIC PAIR
 
