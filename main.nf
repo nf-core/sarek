@@ -1901,7 +1901,7 @@ process SentieonTNscope {
         file(dbsnpIndex) from ch_dbsnpIndex
 
     output:
-        set val("SentieonTNscope"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfTNscope
+        set val("SentieonTNscope"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf") into vcfTNscope
 
     when: 'tnscope' in tools
 
