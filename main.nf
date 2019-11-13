@@ -1402,7 +1402,8 @@ process SentieonDNAscope {
         file(fastaFai) from ch_fastaFai
 
     output:
-    set val("SentieonDNAscope"), idPatient, idSample, file("DNAscope_${idSample}.vcf"), file("DNAscope_SV_${idSample}.vcf") into sentieonDNAscopeVCF
+    set val("SentieonDNAscope"), idPatient, idSample, file("DNAscope_${idSample}.vcf") into sentieonDNAscopeVCF
+    set val("SentieonDNAscope"), idPatient, idSample, file("DNAscope_SV_${idSample}.vcf") into sentieonDNAscopeSVVCF
 
     when: 'dnascope' in tools && params.sentieon
 
@@ -1435,6 +1436,7 @@ process SentieonDNAscope {
 }
 
 sentieonDNAscopeVCF = sentieonDNAscopeVCF.dump(tag:'sentieon DNAscope')
+sentieonDNAscopeSVVCF = sentieonDNAscopeSVVCF.dump(tag:'sentieon DNAscope SV')
 
 // STEP STRELKA.1 - SINGLE MODE
 
@@ -1948,7 +1950,29 @@ process SentieonTNscope {
     """
 }
 
-vcfTNscope = vcfTNscope.dump(tag:'SentieonTNscope')
+vcfTNscope = vcfTNscope.dump(tag:'Sentieon TNscope')
+
+sentieonVCF = sentieonDNAseqVCF.mix(sentieonDNAscopeVCF, sentieonDNAscopeSVVCF, vcfTNscope)
+
+process CompressSentieonVCF {
+    tag {"${idSample} - ${vcf}"}
+
+    publishDir "${params.outdir}/VariantCalling/${idSample}/${variantCaller}", mode: params.publishDirMode
+
+    input:
+        set variantCaller, idPatient, idSample, file(vcf) from sentieonVCF
+
+    output:
+        set variantCaller, idPatient, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfSentieon
+
+    script:
+    """
+    bgzip < ${vcf} > ${vcf}.gz
+    tabix ${vcf}.gz
+    """
+}
+
+vcfSentieon = vcfSentieon.dump(tag:'Sentieon VCF indexed')
 
 // STEP STRELKA.2 - SOMATIC PAIR
 
@@ -2387,6 +2411,10 @@ controlFreecVizOut.dump(tag:'ControlFreecViz')
 (vcfMantaSomaticSV, vcfMantaDiploidSV) = vcfManta.into(2)
 
 vcfKeep = Channel.empty().mix(
+    vcfSentieon.map {
+        variantcaller, idPatient, idSample, vcf, tbi ->
+        [variantcaller, idSample, vcf
+    },
     vcfStrelkaSingle.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
         [variantcaller, idSample, vcf[1]]
@@ -2506,13 +2534,19 @@ if (step == 'annotate') {
     // This field is used to output final annotated VCFs in the correct directory
       Channel.empty().mix(
         Channel.fromPath("${params.outdir}/VariantCalling/*/HaplotypeCaller/*.vcf.gz")
-          .flatten().map{vcf -> ['haplotypecaller', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
+          .flatten().map{vcf -> ['HaplotypeCaller', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
         Channel.fromPath("${params.outdir}/VariantCalling/*/Manta/*[!candidate]SV.vcf.gz")
-          .flatten().map{vcf -> ['manta', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
+          .flatten().map{vcf -> ['Manta', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
         Channel.fromPath("${params.outdir}/VariantCalling/*/Mutect2/*.vcf.gz")
-          .flatten().map{vcf -> ['mutect2', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
+          .flatten().map{vcf -> ['Mutect2', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
+        Channel.fromPath("${params.outdir}/VariantCalling/*/SentieonDNAseq/*.vcf.gz")
+          .flatten().map{vcf -> ['SentieonDNAseq', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
+        Channel.fromPath("${params.outdir}/VariantCalling/*/SentieonDNAscope/*.vcf.gz")
+          .flatten().map{vcf -> ['SentieonDNAscope', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
+        Channel.fromPath("${params.outdir}/VariantCalling/*/SentieonTNscope/*.vcf.gz")
+          .flatten().map{vcf -> ['SentieonTNscope', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
         Channel.fromPath("${params.outdir}/VariantCalling/*/Strelka/*{somatic,variant}*.vcf.gz")
-          .flatten().map{vcf -> ['strelka', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
+          .flatten().map{vcf -> ['Strelka', vcf.minus(vcf.fileName)[-2].toString(), vcf]},
         Channel.fromPath("${params.outdir}/VariantCalling/*/TIDDIT/*.vcf.gz")
           .flatten().map{vcf -> ['TIDDIT', vcf.minus(vcf.fileName)[-2].toString(), vcf]}
       ).choice(vcfToAnnotate, vcfNoAnnotate) {
