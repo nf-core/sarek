@@ -1899,6 +1899,7 @@ process SentieonTNscope {
         file(fastaFai) from ch_fastaFai
         file(dbsnp) from ch_dbsnp
         file(dbsnpIndex) from ch_dbsnpIndex
+        file(pon) from ch_pon
 
     output:
         set val("SentieonTNscope"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf") into vcfTNscope
@@ -1906,6 +1907,7 @@ process SentieonTNscope {
     when: 'tnscope' in tools
 
     script:
+    PON = params.pon ? "--pon ${pon}" : ""
     """
     sentieon driver \
         -t ${task.cpus} \
@@ -1916,6 +1918,7 @@ process SentieonTNscope {
         --tumor_sample ${idSampleTumor} \
         --normal_sample ${idSampleNormal} \
         --dbsnp ${dbsnp} \
+        ${PON} \
         SentieonTNscope_${idSampleTumor}_vs_${idSampleNormal}.vcf
     """
 }
