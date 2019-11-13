@@ -222,8 +222,10 @@ if (tsvPath) {
         if (it.size() == 0) exit 1, "No FASTQ files found in --input directory '${params.input}'"
     }
     tsvFile = params.input  // used in the reports
-} else if (step == 'annotate') {
+} else if (tsvPath && step == 'annotate') {
     log.info "Annotating ${tsvPath}"
+} else if (step == 'annotate') {
+    log.info "Trying automatic annotation on file in the VariantCalling directory"
 } else exit 1, 'No sample were defined, see --help'
 
 (genderMap, statusMap, inputSample) = extractInfos(inputSample)
