@@ -2413,7 +2413,7 @@ controlFreecVizOut.dump(tag:'ControlFreecViz')
 vcfKeep = Channel.empty().mix(
     vcfSentieon.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
-        [variantcaller, idSample, vcf
+        [variantcaller, idSample, vcf]
     },
     vcfStrelkaSingle.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
