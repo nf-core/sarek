@@ -1671,7 +1671,6 @@ process Mutect2 {
         file(intervals) from ch_intervals
         file(pon) from ch_pon
         file(ponIndex) from ch_ponIndex
-        file(ponIndex) from ch_ponIndex
 
     output:
         set val("Mutect2"), 
