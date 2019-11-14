@@ -207,7 +207,7 @@ if (tsvPath) {
     tsvFile = file(tsvPath)
     switch (step) {
         case 'mapping': inputSample = extractFastq(tsvFile); break
-        case 'recalibrate': inputSample = params.sentieon ? extractBam(tsvFile) : extractRecal(tsvFile) ; break
+        case 'recalibrate': inputSample = extractRecal(tsvFile) ; break
         case 'variantcalling': inputSample = extractBam(tsvFile); break
         case 'annotate': break
         default: exit 1, "Unknown step ${step}"
@@ -1257,7 +1257,7 @@ bamQCReport = bamQCReport.dump(tag:'BamQC')
 ================================================================================
 */
 
-if (params.sentieon && step in ['mapping', 'recalibrate']) bamRecal = bamRecalSentieon
+if (params.sentieon && step == 'mapping') bamRecal = bamRecalSentieon
 
 if (step == 'variantcalling') bamRecal = inputSample
 
