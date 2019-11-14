@@ -207,7 +207,7 @@ if (tsvPath) {
     tsvFile = file(tsvPath)
     switch (step) {
         case 'mapping': inputSample = extractFastq(tsvFile); break
-        case 'recalibrate': inputSample = extractRecal(tsvFile) ; break
+        case 'recalibrate': inputSample = extractRecal(tsvFile); break
         case 'variantcalling': inputSample = extractBam(tsvFile); break
         case 'annotate': break
         default: exit 1, "Unknown step ${step}"
