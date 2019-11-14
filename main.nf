@@ -323,6 +323,8 @@ log.info summary.collect { k, v -> "${k.padRight(18)}: $v" }.join("\n")
 if (params.monochrome_logs) log.info "----------------------------------------------------"
 else log.info "\033[2m----------------------------------------------------\033[0m"
 
+if ('mutect2' in tools && !(params.pon)) log.warn "[nf-core/sarek] Mutect2 was requested, but as no panel of normals were given, results will not be optimal"
+
 // Check the hostnames against configured profiles
 checkHostname()
 
@@ -1430,7 +1432,7 @@ process ConcatVCF {
     if (variantCaller == 'HaplotypeCallerGVCF') 
       outputFile = "HaplotypeCaller_${idSample}.g.vcf"
     else if (variantCaller == "Mutect2") 
-      outputFile = "unfiltered_${variantCaller}_${idSample}.vcf"
+      outputFile = "Mutect2_unfiltered_${idSample}.vcf"
     else 
       outputFile = "${variantCaller}_${idSample}.vcf"
     options = params.targetBED ? "-t ${targetBED}" : ""
@@ -1459,7 +1461,7 @@ process PileupSummariesForMutect2 {
             idSampleTumor,
             file("${intervalBed.baseName}_${idSampleTumor}_pileupsummaries.table") into pileupSummaries
 
-    when: 'mutect2' in tools && params.pon
+    when: 'mutect2' in tools
 
     script:
     """
@@ -1518,7 +1520,7 @@ process CalculateContamination {
     output:
         file("${idSampleTumor}_contamination.table") into contaminationTable
 
-    when: 'mutect2' in tools && params.pon
+    when: 'mutect2' in tools
 
     script:     
     """
@@ -1537,7 +1539,7 @@ process FilterMutect2Calls {
 
     tag {idSampleTN}
 
-    publishDir "${params.outdir}/VariantCalling/${idSampleTN}/${"$variantCaller"}", mode: params.publishDirMode
+    publishDir "${params.outdir}/VariantCalling/${idSampleTN}/Mutect2", mode: params.publishDirMode
 
     input:
         set variantCaller, idPatient, idSampleTN, file(unfiltered), file(unfilteredIndex) from vcfConcatenatedForFilter
@@ -1552,11 +1554,11 @@ process FilterMutect2Calls {
         
     output:
         set val("Mutect2"), idPatient, idSampleTN,
-            file("filtered_${variantCaller}_${idSampleTN}.vcf.gz"),
-            file("filtered_${variantCaller}_${idSampleTN}.vcf.gz.tbi"),
-            file("filtered_${variantCaller}_${idSampleTN}.vcf.gz.filteringStats.tsv") into filteredMutect2Output
+            file("${variantCaller}_filtered_${idSampleTN}.vcf.gz"),
+            file("${variantCaller}_filtered_${idSampleTN}.vcf.gz.tbi"),
+            file("${variantCaller}_filtered_${idSampleTN}.vcf.gz.filteringStats.tsv") into filteredMutect2Output
 
-    when: 'mutect2' in tools && params.pon
+    when: 'mutect2' in tools
 
     script:
     """
@@ -1567,7 +1569,7 @@ process FilterMutect2Calls {
         --contamination-table ${idSampleTN}_contamination.table \
         --stats ${idSampleTN}.vcf.gz.stats \
         -R ${fasta} \
-        -O filtered_${variantCaller}_${idSampleTN}.vcf.gz
+        -O ${variantCaller}_filtered_${idSampleTN}.vcf.gz
     """
 }
 
