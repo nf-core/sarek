@@ -759,6 +759,8 @@ process SentieonMapReads {
         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMappedSentieon
         set idPatient, idSample, file("${idSample}_${idRun}.bam") into bamMappedSentieonBamQC
 
+    when: params.sentieon
+
     script:
     // -K is an hidden option, used to fix the number of reads processed by bwa mem
     // Chunk size can affect bwa results, if not specified,
@@ -909,6 +911,8 @@ process SentieonDedup {
     output:
         set idPatient, idSample, file("${idSample}.deduped.bam"), file("${idSample}.deduped.bam.bai") into bamDedupedSentieon
         file("${idSample}_*.txt") into bamDedupedSentieonQC
+
+    when: params.sentieon
 
     script:
     """
@@ -1092,6 +1096,8 @@ process SentieonBQSR {
         set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bamRecalSentieon 
         set idPatient, idSample into bamRecalSentieonTSV
         file("${idSample}_recal_result.csv") into bamRecalSentieonQC
+
+    when: params.sentieon
 
     script:
     known = knownIndels.collect{"--known-sites ${it}"}.join(' ')
@@ -1968,6 +1974,8 @@ process CompressSentieonVCF {
 
     output:
         set variantCaller, idPatient, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfSentieon
+
+    when: params.sentieon
 
     script:
     """
