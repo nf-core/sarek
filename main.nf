@@ -746,10 +746,8 @@ process MarkDuplicatesSpark {
     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
     """
     gatk MarkDuplicatesSpark \
-        --MAX_RECORDS_IN_RAM 500 \
         --INPUT ${idSample}.bam \
         --METRICS_FILE ${idSample}.bam.metrics \
-        --TMP_DIR . \
         --ASSUME_SORT_ORDER coordinate \
         --CREATE_INDEX true \
         --OUTPUT ${idSample}.md.bam \
