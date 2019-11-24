@@ -721,7 +721,7 @@ mergedBam = mergedBam.dump(tag:'BAMs for MD')
 
 // STEP 2: MARKING DUPLICATES
 
-process MarkDuplicates {
+process MarkDuplicatesSpark {
     label 'cpus_max'
     label 'memory_max'
 
@@ -745,15 +745,15 @@ process MarkDuplicates {
     script:
     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
     """
-    gatk --java-options ${markdup_java_options} \
-        MarkDuplicates \
+    gatk MarkDuplicatesSpark \
         --MAX_RECORDS_IN_RAM 500 \
         --INPUT ${idSample}.bam \
         --METRICS_FILE ${idSample}.bam.metrics \
         --TMP_DIR . \
         --ASSUME_SORT_ORDER coordinate \
         --CREATE_INDEX true \
-        --OUTPUT ${idSample}.md.bam
+        --OUTPUT ${idSample}.md.bam \
+        --spark-runner LOCAL --spark-master local[${task.cpus}]
     """
 }
 
@@ -769,7 +769,7 @@ bamBaseRecalibrator = bamBaseRecalibrator.dump(tag:'BAM FOR BASERECALIBRATOR')
 
 // STEP 3: CREATING RECALIBRATION TABLES
 
-process BaseRecalibrator {
+process BaseRecalibratorSpark {
     label 'memory_max'
     label 'cpus_1'
 
@@ -794,8 +794,7 @@ process BaseRecalibrator {
     known = knownIndels.collect{"--known-sites ${it}"}.join(' ')
     // TODO: --use-original-qualities ???
     """
-    gatk --java-options -Xmx${task.memory.toGiga()}g \
-        BaseRecalibrator \
+    gatk BaseRecalibratorSpark \
         -I ${bam} \
         -O ${intervalBed.baseName}_${idSample}.recal.table \
         --tmp-dir /tmp \
@@ -803,7 +802,8 @@ process BaseRecalibrator {
         -L ${intervalBed} \
         --known-sites ${dbsnp} \
         ${known} \
-        --verbosity INFO
+        --verbosity INFO \
+        --spark-runner LOCAL --spark-master local[${task.cpus}]
     """
 }
 
