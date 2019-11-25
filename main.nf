@@ -738,7 +738,7 @@ process MarkDuplicatesSpark {
         set idPatient, idSample, file("${idSample}.bam") from mergedBam
 
     output:
-        set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bai") into duplicateMarkedBams
+        set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bam.bai") into duplicateMarkedBams
         file ("${idSample}.bam.metrics") into markDuplicatesReport
 
     when: step == 'mapping'
@@ -750,7 +750,7 @@ process MarkDuplicatesSpark {
         --input ${idSample}.bam \
         --metrics-file ${idSample}.bam.metrics \
         --output ${idSample}.md.bam \
-        --tmp-dir /tmp \
+        --tmp-dir . \
         --verbosity ERROR \
         --create-output-bam-index true \
         --spark-runner LOCAL --spark-master local[${task.cpus}] &> markduplicates.log.txt
@@ -798,7 +798,7 @@ process BaseRecalibratorSpark {
     gatk BaseRecalibratorSpark \
         --input ${bam} \
         --output ${intervalBed.baseName}_${idSample}.recal.table \
-        --tmp-dir /tmp \
+        --tmp-dir . \
         --reference ${fasta} \
         --intervals ${intervalBed} \
         --known-sites ${dbsnp} \
