@@ -866,7 +866,7 @@ bamApplyBQSR = bamApplyBQSR.combine(intApplyBQSR)
 
 // STEP 4: RECALIBRATING
 
-process ApplyBQSR {
+process ApplyBQSRSpark {
     label 'memory_singleCPU_2_task'
     label 'cpus_2'
 
@@ -884,12 +884,13 @@ process ApplyBQSR {
     script:
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
-        ApplyBQSR \
-        -R ${fasta} \
+        ApplyBQSRSpark \
+        --reference ${fasta} \
         --input ${bam} \
         --output ${intervalBed.baseName}_${idSample}.recal.bam \
-        -L ${intervalBed} \
-        --bqsr-recal-file ${recalibrationReport}
+        --intervals ${intervalBed} \
+        --bqsr-recal-file ${recalibrationReport} \
+        --spark-runner LOCAL --spark-master local[${task.cpus}] &> applyBQSRspark.log.txt
     """
 }
 
