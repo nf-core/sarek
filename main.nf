@@ -933,6 +933,7 @@ Channel.fromPath(params.vepFile)
 process RunGenomeChronicler {
   tag "$bam"
   publishDir "$params.outdir/GenomeChronicler", mode: 'copy'
+  echo true
 
   input:
   file(bam) from bamGenomeChronicler
