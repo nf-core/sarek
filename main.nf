@@ -753,7 +753,7 @@ process MarkDuplicatesSpark {
         --tmp-dir /tmp \
         --verbosity ERROR \
         --create-output-bam-index true \
-        --spark-runner LOCAL --spark-master local[${task.cpus}]
+        --spark-runner LOCAL --spark-master local[${task.cpus}] &> markduplicates.log.txt
     """
 }
 
