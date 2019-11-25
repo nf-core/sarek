@@ -726,6 +726,7 @@ process MarkDuplicatesSpark {
     label 'memory_max'
 
     tag {idPatient + "-" + idSample}
+    echo true
 
     publishDir params.outdir, mode: params.publishDirMode,
         saveAs: {
@@ -746,11 +747,11 @@ process MarkDuplicatesSpark {
     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
     """
     gatk MarkDuplicatesSpark \
-        --INPUT ${idSample}.bam \
-        --METRICS_FILE ${idSample}.bam.metrics \
-        --ASSUME_SORT_ORDER coordinate \
-        --CREATE_INDEX true \
-        --OUTPUT ${idSample}.md.bam \
+        --input ${idSample}.bam \
+        --metrics-file ${idSample}.bam.metrics \
+        --output ${idSample}.md.bam \
+        --tmp-dir /tmp \
+        --create-output-bam-index true \
         --spark-runner LOCAL --spark-master local[${task.cpus}]
     """
 }
@@ -772,6 +773,7 @@ process BaseRecalibratorSpark {
     label 'cpus_1'
 
     tag {idPatient + "-" + idSample + "-" + intervalBed}
+    echo true
 
     input:
         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamBaseRecalibrator
@@ -793,11 +795,11 @@ process BaseRecalibratorSpark {
     // TODO: --use-original-qualities ???
     """
     gatk BaseRecalibratorSpark \
-        -I ${bam} \
-        -O ${intervalBed.baseName}_${idSample}.recal.table \
+        --input ${bam} \
+        --output ${intervalBed.baseName}_${idSample}.recal.table \
         --tmp-dir /tmp \
-        -R ${fasta} \
-        -L ${intervalBed} \
+        --reference ${fasta} \
+        --intervals ${intervalBed} \
         --known-sites ${dbsnp} \
         ${known} \
         --verbosity INFO \
@@ -930,7 +932,7 @@ Channel.fromPath(params.vepFile)
 process RunGenomeChronicler {
   tag "$bam"
   publishDir "$params.outdir/GenomeChronicler", mode: 'copy'
-  echo true 
+  echo true
 
   input:
   file(bam) from bamGenomeChronicler
