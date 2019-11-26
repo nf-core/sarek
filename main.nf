@@ -159,6 +159,7 @@ params.knownIndelsIndex = params.genome && params.knownIndels ? params.genomes[p
 params.snpeffDb = params.genome && 'snpeff' in tools ? params.genomes[params.genome].snpeffDb ?: null : null
 params.vepCacheVersion = params.genome && 'vep' in tools ? params.genomes[params.genome].vepCacheVersion ?: null : null
 
+
 // Handle deprecation
 if (params.noReports) skipQC = skipQClist
 
