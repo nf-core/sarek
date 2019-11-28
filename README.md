@@ -1,25 +1,24 @@
-# [![Sarek](docs/images/nf-core_sarek_logo.png "Sarek")](https://sarek.scilifelab.se/)
+# [![Sarek](docs/images/nf-core_sarek_logo.png "Sarek")](https://nf-co.re/sarek)
 
 > **An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing**
 
-[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A519.04.0-brightgreen.svg)](https://www.nextflow.io/)
-[![nf-core](https://img.shields.io/badge/nf--core-pipeline-brightgreen.svg)](https://nf-co.re/)
+[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A519.04.0-brightgreen)](https://www.nextflow.io/)
+[![nf-core](https://img.shields.io/badge/nf--core-pipeline-brightgreen)](https://nf-co.re/)
 [![DOI](https://zenodo.org/badge/184289291.svg)](https://zenodo.org/badge/latestdoi/184289291)
 
-[![Travis build status](https://img.shields.io/travis/nf-core/sarek.svg)](https://travis-ci.com/nf-core/sarek/)
-[![CircleCi build status](https://img.shields.io/circleci/project/github/nf-core/sarek.svg)](https://circleci.com/gh/nf-core/sarek/)
+[![GitHub Actions CI status](https://github.com/nf-core/sarek/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22sarek+CI%22)
+[![GitHub Actions extra-CI status](https://github.com/nf-core/sarek/workflows/nf-core%20extra%20CI/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22sarek+extra+CI%22)
+[![GitHub Actions Linting status](https://github.com/nf-core/sarek/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22sarek+linting%22)
+[![CircleCi build status](https://img.shields.io/circleci/project/github/nf-core/sarek?logo=circleci)](https://circleci.com/gh/nf-core/sarek/)
 
-[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](http://bioconda.github.io/)
-[![Docker Container available](https://img.shields.io/docker/automated/nfcore/sarek.svg)](https://hub.docker.com/r/nfcore/sarek/)
-[![Install with Singularity](https://img.shields.io/badge/use%20with-singularity-purple.svg)](https://www.sylabs.io/docs/)
+[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen)](http://bioconda.github.io/)
+[![Docker Container available](https://img.shields.io/docker/automated/nfcore/sarek)](https://hub.docker.com/r/nfcore/sarek/)
+[![Install with Singularity](https://img.shields.io/badge/use%20with-singularity-purple)](https://www.sylabs.io/docs/)
 
-[![Join us on Slack](https://img.shields.io/badge/slack-nfcore/sarek-blue.svg)](https://nfcore.slack.com/messages/CGFUX04HZ/)
+[![Join us on Slack](https://img.shields.io/badge/slack-nfcore/sarek-blue)](https://nfcore.slack.com/channels/sarek)
 
 ## Introduction
 
-<img align="right" title="CAW" src="./docs/images/CAW_logo.png">
-
-Previously known as the Cancer Analysis Workflow (CAW),
 Sarek is a workflow designed to run analyses on whole genome or targeted sequencing data from regular samples or tumour / normal pairs and could include additional relapses.
 
 It's built using [Nextflow](https://www.nextflow.io),
