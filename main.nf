@@ -543,6 +543,13 @@ process CreateIntervalBeds {
           print \$0 > name
         }' ${intervals}
         """
+    else if (hasExtension(intervals, "interval_list"))
+        """
+        grep -v '^@' ${intervals} | awk -vFS="\t" '{
+          name = sprintf("%s_%d-%d", \$1, \$2, \$3);
+          printf("%s\\t%d\\t%d\\n", \$1, \$2-1, \$3) > name ".bed"
+        }'
+        """
     else
         """
         awk -vFS="[:-]" '{
@@ -2268,6 +2275,7 @@ process VEP {
     script:
     reducedVCF = reduceVCF(vcf.fileName)
     genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
+
     dir_cache = (params.vep_cache && params.annotation_cache) ? " \${PWD}/${dataDir}" : "/.vep"
     cadd = (params.cadd_cache && params.cadd_WG_SNVs && params.cadd_InDels) ? "--plugin CADD,whole_genome_SNVs.tsv.gz,InDels.tsv.gz" : ""
     genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/genesplicer,/opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/share/genesplicer-1.0-1/human,context=200,tmpdir=\$PWD/${reducedVCF}" : "--offline"
@@ -2278,6 +2286,7 @@ process VEP {
         -i ${vcf} \
         -o ${reducedVCF}_VEP.ann.vcf \
         --assembly ${genome} \
+        --species ${params.species} \
         ${cadd} \
         ${genesplicer} \
         --cache \
@@ -2339,6 +2348,7 @@ process VEPmerge {
         -i ${vcf} \
         -o ${reducedVCF}_VEP.ann.vcf \
         --assembly ${genome} \
+        --species ${params.species} \
         ${cadd} \
         ${genesplicer} \
         --cache \

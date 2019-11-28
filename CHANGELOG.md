@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### `Added`
 
 - [#46](https://github.com/nf-core/sarek/pull/46) - Add location to abstacts
+- [#52](https://github.com/nf-core/sarek/pull/52) - Add support for mouse data `GRCm38`
 
 ### `Changed`
 
@@ -34,6 +35,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#42](https://github.com/nf-core/sarek/pull/42) - Fix typos, and minor updates in `README.md`
 - [#43](https://github.com/nf-core/sarek/pull/43) - Fix automated `VEP` builds with circleCI
 - [#54](https://github.com/nf-core/sarek/pull/54) - Apply fixes from release `2.5.1`
+- [#58](https://github.com/nf-core/sarek/pull/58) - Fix issue with `.interval_list` file from the GATK bundle [#56](https://github.com/nf-core/sarek/issues/56) that was not recognized in the `CreateIntervalsBed` process
 
 ## [2.5.1] - Årjep-Ålkatjjekna
 
