@@ -84,7 +84,7 @@ else
   SUFFIX=""
 fi
 
-OPTIONS="--tools FreeBayes,HaplotypeCaller,Manta,Mutect2,Strelka,TIDDIT"
+OPTIONS="--tools HaplotypeCaller,Manta,Mutect2,Strelka,TIDDIT"
 
 if [[ $TEST == "GERMLINE" ]] && [[ $OFFLINE == false ]]
 then
@@ -117,7 +117,7 @@ case $TEST in
   run_sarek --tools HaplotypeCaller --input results/Preprocessing/TSV/recalibrated.tsv --step variantCalling
   ;;
   MULTIPLE)
-  run_sarek --tools FreeBayes,HaplotypeCaller,Manta,Strelka,TIDDIT,snpEff,VEP,merge --input ${PATHTOSAMPLE}/tsv/tiny-multiple${SUFFIX}.tsv
+  run_sarek --tools HaplotypeCaller,Manta,Strelka,TIDDIT,snpEff,VEP,merge --input ${PATHTOSAMPLE}/tsv/tiny-multiple${SUFFIX}.tsv
   ;;
   SOMATIC)
   run_sarek ${OPTIONS} --input ${PATHTOSAMPLE}/tsv/tiny-manta${SUFFIX}.tsv
