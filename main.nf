@@ -585,7 +585,10 @@ bedIntervals = bedIntervals.dump(tag:'bedintervals')
 inputPairReads = Channel.create()
 inputBam = Channel.create()
 
-inputSample.choice(inputPairReads, inputBam) {hasExtension(it[3], "bam") ? 1 : 0}
+if (step in ['recalibrate', 'variantcalling']) {
+    inputBam.close()
+    inputPairReads.close()
+} else inputSample.choice(inputPairReads, inputBam) {hasExtension(it[3], "bam") ? 1 : 0}
 
 (inputBam, inputBamFastQC) = inputBam.into(2)
 
