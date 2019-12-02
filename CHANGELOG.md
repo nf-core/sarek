@@ -11,6 +11,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#45](https://github.com/nf-core/sarek/pull/45) - Include Workflow figure in `README.md`
 - [#46](https://github.com/nf-core/sarek/pull/46) - Add location to abstracts
 - [#52](https://github.com/nf-core/sarek/pull/52) - Add support for mouse data `GRCm38`
+- [#61](https://github.com/nf-core/sarek/pull/61) - Add params `split_fastq`
+- [#61](https://github.com/nf-core/sarek/pull/61) - Add test `SPLITFASTQ`
 
 ### `Changed`
 

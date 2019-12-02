@@ -84,8 +84,6 @@ else
   SUFFIX=""
 fi
 
-OPTIONS="--tools HaplotypeCaller,Manta,Mutect2,Strelka,TIDDIT"
-
 if [[ $TEST == "GERMLINE" ]] && [[ $OFFLINE == false ]]
 then
   rm -rf data
@@ -122,11 +120,17 @@ case $TEST in
   run_sarek --tools=false --input results/Preprocessing/TSV/duplicateMarked.tsv --step recalibrate
   run_sarek --tools HaplotypeCaller --input results/Preprocessing/TSV/recalibrated.tsv --step variantCalling
   ;;
-  TOOLS)
-  run_sarek --input ${PATHTOSAMPLE}/tsv/tiny-manta${SUFFIX}.tsv --tools ${TOOLS}
+  MULTIPLE)
+  run_sarek --tools FreeBayes,HaplotypeCaller,Manta,Strelka,snpEff,VEP,merge --input ${PATHTOSAMPLE}/tsv/tiny-multiple${SUFFIX}.tsv
+  ;;
+  SPLITFASTQ)
+  run_sarek --input ${PATHTOSAMPLE}/tsv/tiny-manta-normal${SUFFIX}.tsv --split_fastq 500
   ;;
   TARGETED)
   run_sarek --input ${PATHTOSAMPLE}/tsv/tiny-manta${SUFFIX}.tsv --targetBED ${PATHTOSAMPLE}/target.bed --tools Manta,Strelka
+  ;;
+  TOOLS)
+  run_sarek --input ${PATHTOSAMPLE}/tsv/tiny-manta${SUFFIX}.tsv --tools ${TOOLS}
   ;;
 esac
 
