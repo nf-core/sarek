@@ -110,9 +110,8 @@ esac
 if [[ HAPLOTYPECALLER,MANTA,MUTECT2,STRELKA,TIDDIT =~ $TEST ]]
 then
   TOOLS=$TEST
+  TEST="TOOLS"
 fi
-
-
 
 case $TEST in
   ANNOTATE)
