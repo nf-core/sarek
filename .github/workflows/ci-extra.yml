@@ -7,15 +7,15 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        test: [ANNOTATESNPEFF, GERMLINE, SOMATIC, TARGETED]
-        nxf_ver: ['19.04.0', '']
+        test: [ANNOTATESNPEFF, GERMLINE, TARGETED, HAPLOTYPECALLER, MANTA, MUTECT2, STRELKA, TIDDIT]
     steps:
       - uses: actions/checkout@v1
       - name: Install Nextflow
         run: |
-          export NXF_VER=${{ matrix.nxf_ver }}
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
+        env:
+          NXF_VER: '19.04.0'
       - name: Download image
         run: |
           ${GITHUB_WORKSPACE}/scripts/download_image.sh -n docker --source-version dev --target-version dev --test ${{ matrix.test }}
