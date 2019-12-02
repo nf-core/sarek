@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [#46](https://github.com/nf-core/sarek/pull/46) - Add location to abstacts
 - [#52](https://github.com/nf-core/sarek/pull/52) - Add support for mouse data `GRCm38`
+- [#61](https://github.com/nf-core/sarek/pull/61) - Add params `split_fastq`
+- [#61](https://github.com/nf-core/sarek/pull/61) - Add test `SPLITFASTQ`
 
 ### `Changed`
 

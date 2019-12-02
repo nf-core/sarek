@@ -12,6 +12,7 @@
 * [Main arguments](#main-arguments)
   * [`-profile`](#-profile)
   * [`--input`](#--input)
+  * [`--split_fastq`](#--split_fastq)
   * [`--sample`](#--sample)
   * [`--sampleDir`](#--sampledir)
   * [`--annotateVCF`](#--annotatevcf)
@@ -181,6 +182,15 @@ For example:
 ```
 
 Multiple VCF files can be specified if the path must be enclosed in quotes
+
+### `--split_fastq`
+
+Use the Nextflow [`splitFastq`](https://www.nextflow.io/docs/latest/operator.html#splitfastq) operator to specify how many reads should be contained in the split fastq file.
+For example:
+
+```bash
+--split_fastq 10000
+```
 
 ### `--sample`
 

@@ -582,21 +582,43 @@ bedIntervals = bedIntervals.dump(tag:'bedintervals')
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
-if (step == 'mapping') (inputReads, inputReadsFastQC) = inputSample.into(2)
-else (inputReads, inputReadsFastQC) = Channel.empty().into(2)
+inputPairReads = Channel.create()
+inputBam = Channel.create()
 
-inputPairReadsFastQC = Channel.create()
-inputBAMFastQC = Channel.create()
+if (step in ['recalibrate', 'variantcalling']) {
+    inputBam.close()
+    inputPairReads.close()
+} else inputSample.choice(inputPairReads, inputBam) {hasExtension(it[3], "bam") ? 1 : 0}
 
-inputReadsFastQC.choice(inputPairReadsFastQC, inputBAMFastQC) {hasExtension(it[3], "bam") ? 1 : 0}
+(inputBam, inputBamFastQC) = inputBam.into(2)
 
 // Removing inputFile2 wich is null in case of uBAM
-inputBAMFastQC = inputBAMFastQC.map {
+inputBamFastQC = inputBamFastQC.map {
     idPatient, idSample, idRun, inputFile1, inputFile2 ->
     [idPatient, idSample, idRun, inputFile1]
 }
 
-inputReads = inputReads.dump(tag:'INPUT')
+if (params.split_fastq){
+    inputPairReads = inputPairReads
+        // newly splitfastq are named based on split, so the name is easier to catch
+        .splitFastq(by: params.split_fastq, compress:true, file:"split", pe:true)
+        .map {idPatient, idSample, idRun, reads1, reads2 ->
+            // The split fastq read1 is the 4th element (indexed 3) its name is split_3
+            // The split fastq read2's name is split_4
+            // It's followed by which split it's acutally based on the mother fastq file
+            // Index start at 1
+            // Extracting the index to get a new IdRun
+            splitIndex = reads1.fileName.toString().minus("split_3.").minus(".gz")
+            newIdRun = idRun + "_" + splitIndex
+            // Giving the files a new nice name
+            newReads1 = file("${idSample}_${newIdRun}_R1.fastq.gz")
+            newReads2 = file("${idSample}_${newIdRun}_R2.fastq.gz")
+            [idPatient, idSample, newIdRun, reads1, reads2]}
+}
+
+inputPairReads = inputPairReads.dump(tag:'INPUT')
+
+(inputPairReads, inputPairReadsFastQC) = inputPairReads.into(2)
 
 // STEP 0.5: QC ON READS
 
@@ -632,7 +654,7 @@ process FastQCBAM {
     publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idSample}_${idRun}", mode: params.publishDirMode
 
     input:
-        set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") from inputBAMFastQC
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") from inputBamFastQC
 
     output:
         file("*.{html,zip}") into fastQCBAMReport
@@ -651,6 +673,8 @@ fastQCReport = fastQCReport.dump(tag:'FastQC')
 
 // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
 
+inputReads = inputPairReads.mix(inputBam)
+
 process MapReads {
     label 'cpus_max'
 
@@ -663,7 +687,7 @@ process MapReads {
 
     output:
         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMapped
-        set idPatient, idSample, file("${idSample}_${idRun}.bam") into bamMappedBamQC
+        set idPatient, val("${idSample}_${idRun}"), file("${idSample}_${idRun}.bam") into bamMappedBamQC
 
     when: step == 'mapping'
 
