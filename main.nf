@@ -603,6 +603,7 @@ inputReads = inputReads.dump(tag:'INPUT')
 // FASTQ and uBAM files are renamed based on the sample name
 
 process FastQCFQ {
+    label 'FastQC'
     label 'cpus_2'
 
     tag {idPatient + "-" + idRun}
@@ -624,6 +625,7 @@ process FastQCFQ {
 }
 
 process FastQCBAM {
+    label 'FastQC'
     label 'cpus_2'
 
     tag {idPatient + "-" + idRun}
