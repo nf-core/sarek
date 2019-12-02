@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [#60](https://github.com/nf-core/sarek/pull/60) - Add new processes (`IndexBamFile`, `IndexBamRecal`) to deal with optional usage of interval files and minimal genome
 - [#60](https://github.com/nf-core/sarek/pull/60) - Add tests for minimal genome usage
 - [#60](https://github.com/nf-core/sarek/pull/60) - Add new minimal genomes (`AGPv3`, `BDGP6`, `CHIMP2.1.4`, `CanFam3.1`, `EB1`, `EB2`, `EF2`, `EquCab2`, `GRCz10`, `Galgal4`, `Gm01`, `IRGSP-1.0`, `Mmul_1`, `R64-1-1`, `Rnor_6.0`, `Sbi1`, `Sscrofa10.2`, `TAIR10`, `UMD3.1`, `WBcel235`, `bosTau8`, `canFam3`, `ce10`, `danRer10`, `dm6`, `equCab2`, `galGal4`, `hg19`, `hg38`, `mm10`, `panTro4`, `rn6`, `sacCer3`, `susScr3`) to `igenomes.config`
+- [#61](https://github.com/nf-core/sarek/pull/61) - Add params `split_fastq`
+- [#61](https://github.com/nf-core/sarek/pull/61) - Add test `SPLITFASTQ`
 
 ### `Changed`
 
