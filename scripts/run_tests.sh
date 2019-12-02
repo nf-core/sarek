@@ -123,7 +123,7 @@ case $TEST in
   run_sarek --tools HaplotypeCaller --input results/Preprocessing/TSV/recalibrated.tsv --step variantCalling
   ;;
   TOOLS)
-  run_sarek --input ${PATHTOSAMPLE}/tsv/tiny-manta${SUFFIX}.tsv --TOOLS ${TOOLS}
+  run_sarek --input ${PATHTOSAMPLE}/tsv/tiny-manta${SUFFIX}.tsv --tools ${TOOLS}
   ;;
   TARGETED)
   run_sarek --input ${PATHTOSAMPLE}/tsv/tiny-manta${SUFFIX}.tsv --targetBED ${PATHTOSAMPLE}/target.bed --tools Manta,Strelka
