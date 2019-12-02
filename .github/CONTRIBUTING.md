@@ -46,8 +46,12 @@ These tests are run both with the latest available version of `Nextflow` and als
 
 ## Patch
 
-When patching a release, please work on your fork on a new branch named `patch`
+: warning: Only in the unlikely and regretful event of a release happening with a bug.
+
+* On your own fork, make a new branch `patch` based on `upstream/master`.
+* Fix the bug, and bump version (X.Y.Z+1).
+* A PR should be made on `master` from patch to directly this particular bug.
 
 ## Getting help
 
-For further information/help, please consult the [nf-core/sarek documentation](https://github.com/nf-core/sarek#documentation) and don't hesitate to get in touch on the nf-core Slack [#sarek](https://nfcore.slack.com/channels/sarek) channel ([join our Slack here](https://nf-co.re/join/slack)).
+For further information/help, please consult the [nf-core/sarek documentation](https://nf-co.re/sarek/docs) and don't hesitate to get in touch on the nf-core Slack [#sarek](https://nfcore.slack.com/channels/sarek) channel ([join our Slack here](https://nf-co.re/join/slack)).

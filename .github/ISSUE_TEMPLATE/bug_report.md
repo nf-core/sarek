@@ -22,20 +22,20 @@ A clear and concise description of what you expected to happen.
 
 ## System
 
-- Hardware: [e.g. HPC, Desktop, Cloud...]
-- Executor: [e.g. slurm, local, awsbatch...]
-- OS: [e.g. CentOS Linux, macOS, Linux Mint...]
-- Version [e.g. 7, 10.13.6, 18.3...]
+- Hardware: <!-- [e.g. HPC, Desktop, Cloud...] -->
+- Executor: <!-- [e.g. slurm, local, awsbatch...] -->
+- OS: <!-- [e.g. CentOS Linux, macOS, Linux Mint...] -->
+- Version <!-- [e.g. 7, 10.13.6, 18.3...] -->
 
 ## Nextflow Installation
 
-- Version: [e.g. 0.31.0]
+- Version: <!-- [e.g. 19.10.0] -->
 
 ## Container engine
 
-- Engine: [e.g. Conda, Docker or Singularity]
-- version: [e.g. 1.0.0]
-- Image tag: [e.g. nfcore/sarek:2.5.1]
+- Engine: <!-- [e.g. Conda, Docker or Singularity] -->
+- version: <!-- [e.g. 1.0.0] -->
+- Image tag: <!-- [e.g. nfcore/sarek:2.5.1] -->
 
 ## Additional context
 
