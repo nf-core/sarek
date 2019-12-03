@@ -152,9 +152,9 @@ For a Tumor/Normal pair only:
 
 Files created:
 
-* `unfiltered_Mutect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `unfiltered_Mutect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
+* `Mutect2_unfiltered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `Mutect2_unfiltered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
   * unfiltered (raw) Mutect2 calls VCF with Tabix index
-* `filtered_Mutect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `filtered_Mutect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
+* `Mutect2_filtered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `Mutect2_filtered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
   * filtered Mutect2 calls VCF with Tabix index: these entries has a PASS filter, you can get these when supplying a panel of normals using the `--pon` option
 * `[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.stats`
   * a stats file generated during calling raw variants (needed for filtering)
