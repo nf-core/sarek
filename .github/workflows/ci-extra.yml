@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        tool: [Haplotypecaller, Manta, mpileup, Mutect2, Strelka]
+        tool: [Haplotypecaller, Freebayes, Manta, mpileup, Mutect2, Strelka]
     steps:
       - uses: actions/checkout@v1
       - name: Install Nextflow

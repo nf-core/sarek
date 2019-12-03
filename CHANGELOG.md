@@ -31,7 +31,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### `Removed`
 
 - [#46](https://github.com/nf-core/sarek/pull/46) - Remove mention of old `build.nf` script which was included in `main.nf`
-- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Remove `Freebayes`
 
 ### `Fixed`
 

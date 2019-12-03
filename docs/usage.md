@@ -279,7 +279,7 @@ Available: `mapping`, `recalibrate`, `variantcalling` and `annotate`
 ### `--tools`
 
 Use this to specify the tools to run:
-Available: `ASCAT`, `ControlFREEC`, `HaplotypeCaller`, `Manta`, `mpileup`, `Mutect2`, `Strelka`, `TIDDIT`
+Available: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `Mutect2`, `Strelka`, `TIDDIT`
 
 ### `--noStrelkaBP`
 

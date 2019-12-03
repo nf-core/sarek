@@ -50,7 +50,7 @@ def helpMessage() {
                                     Available: Mapping, Recalibrate, VariantCalling, Annotate
                                     Default: Mapping
         --tools                     Specify tools to use for variant calling:
-                                    Available: ASCAT, ControlFREEC, HaplotypeCaller
+                                    Available: ASCAT, ControlFREEC, FreeBayes, HaplotypeCaller
                                     Manta, mpileup, Mutect2, Strelka, TIDDIT
                                     and/or for annotation:
                                     snpEff, VEP, merge
@@ -348,6 +348,7 @@ process GetSoftwareVersions {
     echo "${workflow.nextflow.version}" &> v_nextflow.txt 2>&1 || true
     echo "SNPEFF version"\$(snpEff -h 2>&1) > v_snpeff.txt
     fastqc --version > v_fastqc.txt 2>&1 || true
+    freebayes --version > v_freebayes.txt 2>&1 || true
     gatk ApplyBQSR --help 2>&1 | grep Version: > v_gatk.txt 2>&1 || true
     multiqc --version &> v_multiqc.txt 2>&1 || true
     qualimap --version &> v_qualimap.txt 2>&1 || true
@@ -1302,8 +1303,44 @@ intervalPairBam = pairBam.spread(bedIntervals)
 
 bamMpileup = bamMpileup.spread(intMpileup)
 
-// intervals for Mutect2 calls and pileups for Mutect2 filtering
-(pairBamMutect2, pairBamPileupSummaries) = intervalPairBam.into(2)
+// intervals for Mutect2 calls, FreeBayes and pileups for Mutect2 filtering
+(pairBamMutect2, pairBamFreeBayes, pairBamPileupSummaries) = intervalPairBam.into(3)
+
+// STEP FREEBAYES
+
+process FreeBayes {
+    tag {idSampleTumor + "_vs_" + idSampleNormal + "-" + intervalBed.baseName}
+    label 'cpus_1'
+
+    input:
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamFreeBayes
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fastaFai
+
+    output:
+        set val("FreeBayes"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into vcfFreeBayes
+
+    when: 'freebayes' in tools
+
+    script:
+    """
+    freebayes \
+        -f ${fasta} \
+        --pooled-continuous \
+        --pooled-discrete \
+        --genotype-qualities \
+        --report-genotype-likelihood-max \
+        --allele-balance-priors-off \
+        --min-alternate-fraction 0.03 \
+        --min-repeat-entropy 1 \
+        --min-alternate-count 2 \
+        -t ${intervalBed} \
+        ${bamTumor} \
+        ${bamNormal} > ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
+    """
+}
+
+vcfFreeBayes = vcfFreeBayes.groupTuple(by:[0,1,2])
 
 // STEP GATK MUTECT2.1 - RAW CALLS
 
@@ -1392,9 +1429,9 @@ process MergeMutect2Stats {
 // we are merging the VCFs that are called separatelly for different intervals
 // so we can have a single sorted VCF containing all the calls for a given caller
 
-// STEP MERGING VCF - GATK HAPLOTYPECALLER & GATK MUTECT2 (UNFILTERED)
+// STEP MERGING VCF - FREEBAYES, GATK HAPLOTYPECALLER & GATK MUTECT2 (UNFILTERED)
 
-vcfConcatenateVCFs = mutect2Output.mix(vcfGenotypeGVCFs, gvcfHaplotypeCaller)
+vcfConcatenateVCFs = mutect2Output.mix(vcfFreeBayes, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
 vcfConcatenateVCFs = vcfConcatenateVCFs.dump(tag:'VCF to merge')
 
 process ConcatVCF {
@@ -1413,7 +1450,7 @@ process ConcatVCF {
     // we have this funny *_* pattern to avoid copying the raw calls to publishdir
         set variantCaller, idPatient, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into vcfConcatenated
 
-    when: ('haplotypecaller' in tools || 'mutect2' in tools)
+    when: ('haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools)
 
     script:
     if (variantCaller == 'HaplotypeCallerGVCF') 
@@ -2109,7 +2146,7 @@ if (step == 'annotate') {
 
     if (tsvPath == []) {
     // Sarek, by default, annotates all available vcfs that it can find in the VariantCalling directory
-    // Excluding g.vcf from HaplotypeCaller
+    // Excluding vcfs from FreeBayes, and g.vcf from HaplotypeCaller
     // Basically it's: VariantCalling/*/{HaplotypeCaller,Manta,Mutect2,Strelka,TIDDIT}/*.vcf.gz
     // Without *SmallIndels.vcf.gz from Manta, and *.genome.vcf.gz from Strelka
     // The small snippet `vcf.minus(vcf.fileName)[-2]` catches idSample
@@ -2651,6 +2688,7 @@ def defineToolList() {
     return [
         'ascat',
         'controlfreec',
+        'freebayes',
         'haplotypecaller',
         'manta',
         'merge',

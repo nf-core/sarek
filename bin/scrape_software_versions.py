@@ -9,6 +9,7 @@ regexes = {
     'bcftools': ['v_bcftools.txt', r"bcftools (\S+)"],
     'BWA': ['v_bwa.txt', r"Version: (\S+)"],
     'FastQC': ['v_fastqc.txt', r"FastQC v(\S+)"],
+    'FreeBayes': ['v_freebayes.txt', r"version:  v(\d\.\d\.\d+)"],
     'GATK': ['v_gatk.txt', r"Version:(\S+)"],
     'htslib': ['v_samtools.txt', r"htslib (\S+)"],
     'Manta': ['v_manta.txt', r"([0-9.]+)"],
@@ -32,6 +33,7 @@ results['ASCAT'] = '<span style="color:#999999;\">N/A</span>'
 results['bcftools'] = '<span style="color:#999999;\">N/A</span>'
 results['BWA'] = '<span style="color:#999999;\">N/A</span>'
 results['FastQC'] = '<span style="color:#999999;\">N/A</span>'
+results['FreeBayes'] = '<span style="color:#999999;\">N/A</span>'
 results['GATK'] = '<span style="color:#999999;\">N/A</span>'
 results['htslib'] = '<span style="color:#999999;\">N/A</span>'
 results['Manta'] = '<span style="color:#999999;\">N/A</span>'

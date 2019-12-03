@@ -17,6 +17,7 @@ The pipeline processes data using the following steps:
         * `GATK ApplyBQSR`
 2. [**Variant calling**](#Variant-Calling)
     * SNVs and small indels
+        * [`FreeBayes`](#FreeBayes)
         * [`GATK HaplotypeCaller`](#HaplotypeCaller)
         * [`GATK GenotypeGVCFs`](#GenotypeGVCFs)
         * [`GATK Mutect2`](#Mutect2)
@@ -98,6 +99,18 @@ For all samples:
 All the results regarding variant-calling are collected in this directory.
 
 Recalibrated BAM files can also be used as an input to start the Variant Calling, for more information see [TSV files output information](#TSV-files)
+
+### FreeBayes
+
+[FreeBayes](https://github.com/ekg/freebayes) is a Bayesian genetic variant detector designed to find small polymorphisms, specifically SNPs, indels, MNPs, and complex events smaller than the length of a short-read sequencing alignment..
+
+For further reading and documentation see the [FreeBayes manual](https://github.com/ekg/freebayes/blob/master/README.md#user-manual-and-guide).
+
+For a Tumor/Normal pair only:
+**Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/FreeBayes`**
+
+* `FreeBayes_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `FreeBayes_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
+  * VCF with Tabix index
 
 ### HaplotypeCaller
 
@@ -318,6 +331,7 @@ For a Tumor/Normal pair only:
 
 This directory contains results from the final annotation steps: two software are used for annotation, [snpEff](http://snpeff.sourceforge.net/) and [VEP](https://www.ensembl.org/info/docs/tools/vep/index.html).
 Only a subset of the VCF files are annotated, and only variants that have a PASS filter.
+FreeBayes results are not annotated in the moment yet as we are lacking a decent somatic filter.
 For HaplotypeCaller the germline variations are annotated for both the tumor and the normal sample.
 
 ### snpEff
