@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        profile: [splitfastq, targeted]
+        profile: [test_splitfastq, test_targeted]
     steps:
       - uses: actions/checkout@v1
       - name: Install Nextflow
@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        tool: [Haplotypecaller, Manta, mpileup, Mutect2, Strelka, TIDDIT]
+        tool: [Haplotypecaller, Manta, mpileup, Mutect2, Strelka]
     steps:
       - uses: actions/checkout@v1
       - name: Install Nextflow
@@ -59,8 +59,8 @@ jobs:
           NXF_VER: '19.04.0'
       - name: Download image
         run: |
-          docker pull nfcore/sarek${{ matrix.annotator }}:dev.{{ matrix.specie }}
-          docker tag nfcore/sarek${{ matrix.annotator }}:dev.{{ matrix.specie }} nfcore/sarek${{ matrix.annotator }}:dev.{{ matrix.specie }}
+          docker pull nfcore/sarek${{ matrix.annotator }}:dev.${{ matrix.specie }}
+          docker tag nfcore/sarek${{ matrix.annotator }}:dev.${{ matrix.specie }} nfcore/sarek${{ matrix.annotator }}:dev.${{ matrix.specie }}
       - name: Run test
         run: |
           nextflow run . -profile test_annotation,docker --verbose --tools ${{ matrix.annotator }}
