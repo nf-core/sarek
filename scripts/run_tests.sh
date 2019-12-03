@@ -105,16 +105,7 @@ case $TEST in
   ;;
 esac
 
-if [[ HAPLOTYPECALLER,MANTA,MPILEUP,MUTECT2,STRELKA,TIDDIT =~ $TEST ]]
-then
-  TOOLS=$TEST
-  TEST="TOOLS"
-fi
-
 case $TEST in
-  ANNOTATE)
-  run_sarek --step annotate --tools ${ANNOTATOR} --input ${PATHTOSAMPLE}/vcf/Strelka_1234N_variants.vcf.gz --skipQC all
-  ;;
   GERMLINE)
   run_sarek --tools=false --input data/testdata/tiny/normal
   run_sarek --tools=false --input results/Preprocessing/TSV/duplicateMarked.tsv --step recalibrate
@@ -122,15 +113,6 @@ case $TEST in
   ;;
   MULTIPLE)
   run_sarek --tools FreeBayes,HaplotypeCaller,Manta,Strelka,snpEff,VEP,merge --input ${PATHTOSAMPLE}/tsv/tiny-multiple${SUFFIX}.tsv
-  ;;
-  SPLITFASTQ)
-  run_sarek --input ${PATHTOSAMPLE}/tsv/tiny-manta-normal${SUFFIX}.tsv --split_fastq 500
-  ;;
-  TARGETED)
-  run_sarek --input ${PATHTOSAMPLE}/tsv/tiny-manta${SUFFIX}.tsv --targetBED ${PATHTOSAMPLE}/target.bed --tools Manta,Strelka
-  ;;
-  TOOLS)
-  run_sarek --input ${PATHTOSAMPLE}/tsv/tiny-manta${SUFFIX}.tsv --tools ${TOOLS}
   ;;
 esac
 

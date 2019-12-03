@@ -3,11 +3,11 @@ name: sarek extra CI
 on: [push, pull_request]  
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  profile:
+    runs-on: ubuntu-18.04
     strategy:
       matrix:
-        test: [ANNOTATESNPEFF, GERMLINE, SPLITFASTQ, TARGETED, HAPLOTYPECALLER, MANTA, MPILEUP, MUTECT2, STRELKA, TIDDIT]
+        profile: [splitfastq, targeted]
     steps:
       - uses: actions/checkout@v1
       - name: Install Nextflow
@@ -18,7 +18,49 @@ jobs:
           NXF_VER: '19.04.0'
       - name: Download image
         run: |
-          ${GITHUB_WORKSPACE}/scripts/download_image.sh -n docker --source-version dev --target-version dev --test ${{ matrix.test }}
+          docker pull nfcore/sarek:dev
+          docker tag nfcore/sarek:dev nfcore/sarek:dev
       - name: Run test
         run: |
-          ${GITHUB_WORKSPACE}/scripts/run_tests.sh --test ${{ matrix.test }} --verbose
+          nextflow run . -profile ${{ matrix.profile }},docker --verbose
+  tools:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        tool: [Haplotypecaller, Manta, mpileup, Mutect2, Strelka, TIDDIT]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+        env:
+          NXF_VER: '19.04.0'
+      - name: Download image
+        run: |
+          docker pull nfcore/sarek:dev
+          docker tag nfcore/sarek:dev nfcore/sarek:dev
+      - name: Run test
+        run: |
+          nextflow run . -profile test_tool,docker --verbose --tools ${{ matrix.tool }}
+  annotation:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        annotator: [snpeff]
+        specie: [GRCh37]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+        env:
+          NXF_VER: '19.04.0'
+      - name: Download image
+        run: |
+          docker pull nfcore/sarek${{ matrix.annotator }}:dev.{{ matrix.specie }}
+          docker tag nfcore/sarek${{ matrix.annotator }}:dev.{{ matrix.specie }} nfcore/sarek${{ matrix.annotator }}:dev.{{ matrix.specie }}
+      - name: Run test
+        run: |
+          nextflow run . -profile test_annotation,docker --verbose --tools ${{ matrix.annotator }}
