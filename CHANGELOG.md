@@ -25,8 +25,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#41](https://github.com/nf-core/sarek/pull/41), [#55](https://github.com/nf-core/sarek/pull/55) - Update `tiddit` from `2.7.1` to `2.8.1`
 - [#41](https://github.com/nf-core/sarek/pull/41) - Update `vcfanno` from `0.3.1` to `0.3.2`
 - [#54](https://github.com/nf-core/sarek/pull/54) - Bump version to `2.5.2dev`
-- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Update `README`
-- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Update `CHANGELOG`
+- [#71](https://github.com/nf-core/sarek/pull/71) - Update `README`
+- [#71](https://github.com/nf-core/sarek/pull/71) - Update `CHANGELOG`
 
 ### `Removed`
 
@@ -39,7 +39,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#43](https://github.com/nf-core/sarek/pull/43) - Fix automated `VEP` builds with circleCI
 - [#54](https://github.com/nf-core/sarek/pull/54) - Apply fixes from release `2.5.1`
 - [#58](https://github.com/nf-core/sarek/pull/58) - Fix issue with `.interval_list` file from the `GATK` bundle [#56](https://github.com/nf-core/sarek/issues/56) that was not recognized in the `CreateIntervalsBed` process
-- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Fix typos in `CHANGELOG`
+- [#71](https://github.com/nf-core/sarek/pull/71) - Fix typos in `CHANGELOG`
+- [#73](https://github.com/nf-core/sarek/pull/73) - Fix issue with label `memory_max` for `BaseRecalibrator` process [#72](https://github.com/nf-core/sarek/issues/72)
 
 ## [2.5.1] - Årjep-Ålkatjjekna
 
