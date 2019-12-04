@@ -626,6 +626,7 @@ inputPairReads = inputPairReads.dump(tag:'INPUT')
 // FASTQ and uBAM files are renamed based on the sample name
 
 process FastQCFQ {
+    label 'FastQC'
     label 'cpus_2'
 
     tag {idPatient + "-" + idRun}
@@ -647,6 +648,7 @@ process FastQCFQ {
 }
 
 process FastQCBAM {
+    label 'FastQC'
     label 'cpus_2'
 
     tag {idPatient + "-" + idRun}
@@ -1428,7 +1430,7 @@ process MergeMutect2Stats {
 
 // STEP MERGING VCF - FREEBAYES, GATK HAPLOTYPECALLER & GATK MUTECT2 (UNFILTERED)
 
-vcfConcatenateVCFs = mutect2Output.mix( vcfFreeBayes, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
+vcfConcatenateVCFs = mutect2Output.mix(vcfFreeBayes, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
 vcfConcatenateVCFs = vcfConcatenateVCFs.dump(tag:'VCF to merge')
 
 process ConcatVCF {

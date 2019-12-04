@@ -107,8 +107,9 @@ results         # Finished results (configurable, see below)
 ```
 
 The nf-core/sarek pipeline comes with more documentation about running the pipeline, found in the `docs/` directory:
-    * [Extra Documentation on variant calling](docs/variantcalling.md)
-    * [Extra Documentation on annotation](docs/annotation.md)
+
+* [Output and how to interpret the results](output.md)
+* [Extra Documentation on annotation](annotation.md)
 
 ### Updating the pipeline
 
@@ -278,7 +279,7 @@ Available: `mapping`, `recalibrate`, `variantcalling` and `annotate`
 ### `--tools`
 
 Use this to specify the tools to run:
-Available: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `MuTect2`, `Strelka`, `TIDDIT`
+Available: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `Mutect2`, `Strelka`, `TIDDIT`
 
 ### `--noStrelkaBP`
 
@@ -290,7 +291,7 @@ Use this to specify the target BED file for targeted or whole exome sequencing.
 
 ## Reference genomes
 
-The pipeline config files come bundled with paths to the illumina iGenomes reference index files.
+The pipeline config files come bundled with paths to the Illumina iGenomes reference index files.
 If running with docker or AWS, the configuration is set up to use the [AWS-iGenomes](https://ewels.github.io/AWS-iGenomes/) resource.
 
 ### `--genome` (using iGenomes)

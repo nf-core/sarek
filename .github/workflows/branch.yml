@@ -7,10 +7,10 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       # PRs are only ok if coming from an nf-core dev branch
       - uses: actions/checkout@v1
       - name: Check PRs
         run: |
-          { [[ $(git remote get-url origin) == *nf-core/sarek ]] && [[ ${GITHUB_BASE_REF} = "master" ]] && [[ ${GITHUB_HEAD_REF} = "dev" ]]; } || [[ ${GITHUB_HEAD_REF} == patch* ]]
+          { [[ $(git remote get-url origin) == *nf-core/sarek ]] && [[ ${GITHUB_HEAD_REF} = "dev" ]]; } || [[ ${GITHUB_HEAD_REF} == "patch" ]]

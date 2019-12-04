@@ -14,6 +14,7 @@ With Sarek, annotation is done using `snpEff`, `VEP`, or even both consecutively
   - To annotate using `snpEff` followed by `VEP`
 
 VCF produced by Sarek will be annotated if `snpEff` or `VEP` are specified with the `--tools` command.
+As Sarek will use `bgzip` and `tabix` to compress and index VCF files annotated, it expects VCF files to be sorted.
 
 In these examples, all command lines will be launched starting with step `annotate`.
 It can of course be started directly from any other step instead.
@@ -23,7 +24,7 @@ It can of course be started directly from any other step instead.
 Sarek has already designed containers with `snpEff` and `VEP` files for `GRCh37`, `GRCh38` and `GRCm38`.
 Default settings will run using these containers.
 
-The main Sarek container has also `snpEff` and `VEP` installed, but without the cache files that can be downloaded separatelly.
+The main Sarek container has also `snpEff` and `VEP` installed, but without the cache files that can be downloaded separately.
 
 ## Using downloaded cache
 

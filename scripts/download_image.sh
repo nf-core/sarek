@@ -6,7 +6,7 @@ set -xeuo pipefail
 usage() { echo "Usage: $0 <-t test|annotation tool> <-n engine> <-S version to pull/build> <-T version to tag> <-g genome>" 1>&2; exit 1; }
 
 ENGINE=docker
-GENOME=smallGRCh37
+GENOME=GRCh37
 NXF_SINGULARITY_CACHEDIR=${NXF_SINGULARITY_CACHEDIR:-work/singularity/.}
 TEST=ALL
 VERSION=dev
@@ -48,13 +48,6 @@ do
   esac
 done
 
-SOURCEGENOME=${GENOME}
-
-if [[ smallGRCh37 =~ $SOURCEGENOME ]]
-then
-  SOURCEGENOME=GRCh37
-fi
-
 get_image(){
   CONTAINER=$1
   SOURCE=$2
@@ -72,12 +65,12 @@ get_image(){
 
 if [[ ALL,ANNOTATEBOTH,ANNOTATESNPEFF,SNPEFF =~ $TEST ]]
 then
-  get_image sareksnpeff ${VERSION}.${SOURCEGENOME} ${TARGETVERSION}.${GENOME}
+  get_image sareksnpeff ${VERSION}.${GENOME} ${TARGETVERSION}.${GENOME}
 fi
 
 if [[ ALL,ANNOTATEBOTH,ANNOTATEVEP,VEP =~ $TEST ]]
 then
-  get_image sarekvep ${VERSION}.${SOURCEGENOME} ${TARGETVERSION}.${GENOME}
+  get_image sarekvep ${VERSION}.${GENOME} ${TARGETVERSION}.${GENOME}
 fi
 
 get_image sarek ${VERSION} ${TARGETVERSION}
