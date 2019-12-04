@@ -759,9 +759,9 @@ process MarkDuplicatesSpark {
         --metrics-file ${idSample}.bam.metrics \
         --output ${idSample}.md.bam \
         --tmp-dir . \
-        --verbosity ERROR \
+        --verbosity INFO \
         --create-output-bam-index true \
-        --spark-runner LOCAL --spark-master local[${task.cpus}] &> markduplicates.log.txt
+        --spark-runner LOCAL --spark-master local[${task.cpus}]
     """
 }
 
@@ -811,7 +811,7 @@ process BaseRecalibratorSpark {
         --intervals ${intervalBed} \
         --known-sites ${dbsnp} \
         ${known} \
-        --verbosity ERROR \
+        --verbosity INFO \
         --spark-runner LOCAL --spark-master local[${task.cpus}]
     """
 }
@@ -898,6 +898,7 @@ process ApplyBQSRSpark {
         --output ${intervalBed.baseName}_${idSample}.recal.bam \
         --intervals ${intervalBed} \
         --bqsr-recal-file ${recalibrationReport} \
+        --verbosity INFO \
         --spark-runner LOCAL --spark-master local[${task.cpus}] &> applyBQSRspark.log.txt
     """
 }
