@@ -801,7 +801,6 @@ bamBaseRecalibrator = bamBaseRecalibrator.dump(tag:'BAM FOR BASERECALIBRATOR')
 // STEP 3: CREATING RECALIBRATION TABLES
 
 process BaseRecalibrator {
-    label 'memory_max'
     label 'cpus_1'
 
     tag {idPatient + "-" + idSample + "-" + intervalBed}
