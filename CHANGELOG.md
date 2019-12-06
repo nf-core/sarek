@@ -11,6 +11,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#45](https://github.com/nf-core/sarek/pull/45) - Include Workflow figure in `README.md`
 - [#46](https://github.com/nf-core/sarek/pull/46) - Add location to abstracts
 - [#52](https://github.com/nf-core/sarek/pull/52) - Add support for mouse data `GRCm38`
+- [#60](https://github.com/nf-core/sarek/pull/60) - Add `no_intervals` params
+- [#60](https://github.com/nf-core/sarek/pull/60) - Add automatic generation of `intervals` file with `BuildIntervals` process
+- [#60](https://github.com/nf-core/sarek/pull/60) - Add minimal support for minimal genome (only `fasta`, or `fasta` + `knownIndels`)
+- [#60](https://github.com/nf-core/sarek/pull/60) - Add new processes (`IndexBamFile`, `IndexBamRecal`) to deal with optional usage of interval files and minimal genome
+- [#60](https://github.com/nf-core/sarek/pull/60) - Add tests for minimal genome usage
+- [#60](https://github.com/nf-core/sarek/pull/60) - Add new minimal genomes (`TAIR10`, `EB2`, `UMD3.1`, `bosTau8`, `WBcel235`, `ce10`, `CanFam3.1`, `canFam3`, `GRCz10`, `danRer10`, `BDGP6`, `dm6`, `EquCab2`, `equCab2`, `EB1`, `Galgal4`, `galGal4`, `Gm01`, `hg38`, `hg19`, `Mmul_1`, `mm10`, `IRGSP-1.0`, `CHIMP2.1.4`, `panTro4`, `Rnor_6.0`, `rn6`, `R64-1-1`, `sacCer3`, `EF2`, `Sbi1`, `Sscrofa10.2`, `susScr3`, `AGPv3`) to `igenomes.config`
 - [#61](https://github.com/nf-core/sarek/pull/61) - Add params `split_fastq`
 - [#61](https://github.com/nf-core/sarek/pull/61) - Add test `SPLITFASTQ`
 
@@ -25,6 +31,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#41](https://github.com/nf-core/sarek/pull/41), [#55](https://github.com/nf-core/sarek/pull/55) - Update `tiddit` from `2.7.1` to `2.8.1`
 - [#41](https://github.com/nf-core/sarek/pull/41) - Update `vcfanno` from `0.3.1` to `0.3.2`
 - [#54](https://github.com/nf-core/sarek/pull/54) - Bump version to `2.5.2dev`
+- [#60](https://github.com/nf-core/sarek/pull/60) - Some process (`BaseRecalibrator`, `ApplyBQSR`, `Mpileup`) have now optional usage of interval files
+- [#60](https://github.com/nf-core/sarek/pull/60) - Update documentation
 - [#71](https://github.com/nf-core/sarek/pull/71) - Update `README`
 - [#71](https://github.com/nf-core/sarek/pull/71) - Update `CHANGELOG`
 

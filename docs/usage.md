@@ -23,6 +23,7 @@
   * [`--step`](#--step)
   * [`--tools`](#--tools)
   * [`--noStrelkaBP`](#--nostrelkabp)
+  * [`--no_intervals`](#--no_intervals)
   * [`--targetBED`](#--targetbed)
 * [Reference genomes](#reference-genomes)
   * [`--genome` (using iGenomes)](#--genome-using-igenomes)
@@ -285,6 +286,10 @@ Available: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mp
 
 Use this not to use `Manta` `candidateSmallIndels` for `Strelka` as Best Practice.
 
+### `--no_intervals_`
+
+Disable usage of intervals file, and disable automatic generation of intervals file when none are provided.
+
 ### `--targetBED`
 
 Use this to specify the target BED file for targeted or whole exome sequencing.
@@ -302,9 +307,92 @@ To run the pipeline, you must specify which to use with the `--genome` flag.
 You can find the keys to specify the genomes in the [iGenomes config file](../conf/igenomes.config).
 Genomes that are supported are:
 
-* Human
-  * `--genome GRCh37`
-  * `--genome GRCh38`
+* Homo sapiens
+  * `--genome GRCh37` (GATK Bundle)
+  * `--genome GRCh38` (GATK Bundle)
+
+* Mus musculus
+  * `--genome GRCm38` (Ensembl)
+
+Limited support for:
+
+* Arabidopsis thaliana
+  * `--genome TAIR10` (Ensembl)
+
+* Bacillus subtilis 168
+  * `--genome EB2` (Ensembl)
+
+* Bos taurus
+  * `--genome UMD3.1` (Ensembl)
+  * `--genome bosTau8` (UCSC)
+
+* Caenorhabditis elegans
+  * `--genome WBcel235` (Ensembl)
+  * `--genome ce10` (UCSC)
+
+* Canis familiaris
+  * `--genome CanFam3.1`  (Ensembl)
+  * `--genome canFam3`  (UCSC)
+
+* Danio rerio
+  * `--genome GRCz10`  (Ensembl)
+  * `--genome danRer10`  (UCSC)
+
+* Drosophila melanogaster
+  * `--genome BDGP6`  (Ensembl)
+  * `--genome dm6`  (UCSC)
+
+* Equus caballus
+  * `--genome EquCab2`  (Ensembl)
+  * `--genome equCab2`  (UCSC)
+
+* Escherichia coli K 12 DH10B
+  * `--genome EB1`  (Ensembl)
+
+* Gallus gallus
+  * `--genome Galgal4`  (Ensembl)
+  * `--genome galgal4`  (UCSC)
+
+* Glycine max
+  * `--genome Gm01`  (Ensembl)
+
+* Homo sapiens
+  * `--genome hg19`  (UCSC)
+  * `--genome hg38`  (UCSC)
+
+* Macaca mulatta
+  * `--genome Mmul_1`  (Ensembl)
+
+* Mus musculus
+  * `--genome mm10`  (Ensembl)
+
+* Oryza sativa japonica
+  * `--genome IRGSP-1.0`  (Ensembl)
+
+* Pan troglodytes
+  * `--genome CHIMP2.1.4`  (Ensembl)
+  * `--genome panTro4`  (UCSC)
+
+* Rattus norvegicus
+  * `--genome Rnor_6.0`  (Ensembl)
+  * `--genome rn6`  (UCSC)
+
+* Saccharomyces cerevisiae
+  * `--genome R64-1-1`  (Ensembl)
+  * `--genome sacCer3`  (UCSC)
+
+* Schizosaccharomyces pombe
+  * `--genome EF2`  (Ensembl)
+
+* Sorghum bicolor
+  * `--genome Sbi1`  (Ensembl)
+
+* Sus scrofa
+  * `--genome Sscrofa10.2`  (Ensembl)
+  * `--genome susScr3`  (UCSC)
+
+* Zea mays
+  * `--genome AGPv3`  (Ensembl)
 
 Note that you can use the same configuration setup to save sets of reference files for your own use, even if they are not part of the iGenomes resource.
 See the [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for instructions on where to save such a file.
