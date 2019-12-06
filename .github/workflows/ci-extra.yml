@@ -16,7 +16,7 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
         env:
-          NXF_VER: '19.04.0'
+          NXF_VER: '19.10.0'
       - name: Download image
         run: |
           docker pull nfcore/sarek:dev
@@ -36,7 +36,7 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
         env:
-          NXF_VER: '19.04.0'
+          NXF_VER: '19.10.0'
       - name: Download image
         run: |
           docker pull nfcore/sarek:dev
@@ -56,7 +56,7 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
         env:
-          NXF_VER: '19.04.0'
+          NXF_VER: '19.10.0'
       - name: Download image
         run: |
           docker pull nfcore/sarek:dev
@@ -77,7 +77,7 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
         env:
-          NXF_VER: '19.04.0'
+          NXF_VER: '19.10.0'
       - name: Download image
         run: |
           docker pull nfcore/sarek${{ matrix.annotator }}:dev.${{ matrix.specie }}
