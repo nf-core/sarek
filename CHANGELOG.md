@@ -16,7 +16,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#60](https://github.com/nf-core/sarek/pull/60) - Add minimal support for minimal genome (only `fasta`, or `fasta` + `knownIndels`)
 - [#60](https://github.com/nf-core/sarek/pull/60) - Add new processes (`IndexBamFile`, `IndexBamRecal`) to deal with optional usage of interval files and minimal genome
 - [#60](https://github.com/nf-core/sarek/pull/60) - Add tests for minimal genome usage
-- [#60](https://github.com/nf-core/sarek/pull/60) - Add new minimal genomes (`AGPv3`, `BDGP6`, `CHIMP2.1.4`, `CanFam3.1`, `EB1`, `EB2`, `EF2`, `EquCab2`, `GRCz10`, `Galgal4`, `Gm01`, `IRGSP-1.0`, `Mmul_1`, `R64-1-1`, `Rnor_6.0`, `Sbi1`, `Sscrofa10.2`, `TAIR10`, `UMD3.1`, `WBcel235`, `bosTau8`, `canFam3`, `ce10`, `danRer10`, `dm6`, `equCab2`, `galGal4`, `hg19`, `hg38`, `mm10`, `panTro4`, `rn6`, `sacCer3`, `susScr3`) to `igenomes.config`
+- [#60](https://github.com/nf-core/sarek/pull/60) - Add new minimal genomes (`TAIR10`, `EB2`, `UMD3.1`, `bosTau8`, `WBcel235`, `ce10`, `CanFam3.1`, `canFam3`, `GRCz10`, `danRer10`, `BDGP6`, `dm6`, `EquCab2`, `equCab2`, `EB1`, `Galgal4`, `galGal4`, `Gm01`, `hg38`, `hg19`, `Mmul_1`, `mm10`, `IRGSP-1.0`, `CHIMP2.1.4`, `panTro4`, `Rnor_6.0`, `rn6`, `R64-1-1`, `sacCer3`, `EF2`, `Sbi1`, `Sscrofa10.2`, `susScr3`, `AGPv3`) to `igenomes.config`
 - [#61](https://github.com/nf-core/sarek/pull/61) - Add params `split_fastq`
 - [#61](https://github.com/nf-core/sarek/pull/61) - Add test `SPLITFASTQ`
 

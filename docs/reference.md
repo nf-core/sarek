@@ -58,3 +58,5 @@ If you are certain that the target is unique for your genome (all the reads will
 > :warning: This is a new feature, in active development, so usage could change.
 
 Sarek can also do limited preprocessing from any genome, providing a `fasta` file as a reference genome, followed by limited variant calling using `mpileup`, `Manta` and `Strelka`.
+
+Limited support for `TAIR10`, `EB2`, `UMD3.1`, `bosTau8`, `WBcel235`, `ce10`, `CanFam3.1`, `canFam3`, `GRCz10`, `danRer10`, `BDGP6`, `dm6`, `EquCab2`, `equCab2`, `EB1`, `Galgal4`, `galGal4`, `Gm01`, `hg38`, `hg19`, `Mmul_1`, `mm10`, `IRGSP-1.0`, `CHIMP2.1.4`, `panTro4`, `Rnor_6.0`, `rn6`, `R64-1-1`, `sacCer3`, `EF2`, `Sbi1`, `Sscrofa10.2`, `susScr3`, `AGPv3`.
