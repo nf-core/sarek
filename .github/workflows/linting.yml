@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   Markdown:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
@@ -17,7 +17,7 @@ jobs:
         run: |
           markdownlint ${GITHUB_WORKSPACE} -c ${GITHUB_WORKSPACE}/.github/markdownlint.yml
   YAML:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
@@ -30,7 +30,7 @@ jobs:
         run: |
           yamllint $(find ${GITHUB_WORKSPACE} -type f -name "*.yml")
   nf-core:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v1
       - name: Install Nextflow

@@ -3,22 +3,85 @@ name: sarek extra CI
 on: [push, pull_request]  
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  minimal:
+    runs-on: ubuntu-18.04
     strategy:
       matrix:
-        test: [ANNOTATESNPEFF, GERMLINE, MINIMAL, SOMATIC, SPLITFASTQ, TARGETED]
-        nxf_ver: ['19.04.0', '']
+        genome: [smallerGRCh37, minimalGRCh37]
+        intervals: [--no_intervals, '']
     steps:
       - uses: actions/checkout@v1
       - name: Install Nextflow
         run: |
-          export NXF_VER=${{ matrix.nxf_ver }}
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
+        env:
+          NXF_VER: '19.04.0'
       - name: Download image
         run: |
-          ${GITHUB_WORKSPACE}/scripts/download_image.sh -n docker --source-version dev --target-version dev --test ${{ matrix.test }}
+          docker pull nfcore/sarek:dev
+          docker tag nfcore/sarek:dev nfcore/sarek:dev
       - name: Run test
         run: |
-          ${GITHUB_WORKSPACE}/scripts/run_tests.sh --test ${{ matrix.test }} --verbose
+          nextflow run . -profile test,docker --verbose --genome ${{ matrix.genome }} ${{ matrix.intervals }}
+  profile:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        profile: [test_splitfastq, test_targeted]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+        env:
+          NXF_VER: '19.04.0'
+      - name: Download image
+        run: |
+          docker pull nfcore/sarek:dev
+          docker tag nfcore/sarek:dev nfcore/sarek:dev
+      - name: Run test
+        run: |
+          nextflow run . -profile ${{ matrix.profile }},docker --verbose
+  tools:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        tool: [Haplotypecaller, Freebayes, Manta, mpileup, Mutect2, Strelka]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+        env:
+          NXF_VER: '19.04.0'
+      - name: Download image
+        run: |
+          docker pull nfcore/sarek:dev
+          docker tag nfcore/sarek:dev nfcore/sarek:dev
+      - name: Run test
+        run: |
+          nextflow run . -profile test_tool,docker --verbose --tools ${{ matrix.tool }}
+  annotation:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        annotator: [snpeff]
+        specie: [GRCh37]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+        env:
+          NXF_VER: '19.04.0'
+      - name: Download image
+        run: |
+          docker pull nfcore/sarek${{ matrix.annotator }}:dev.${{ matrix.specie }}
+          docker tag nfcore/sarek${{ matrix.annotator }}:dev.${{ matrix.specie }} nfcore/sarek${{ matrix.annotator }}:dev.${{ matrix.specie }}
+      - name: Run test
+        run: |
+          nextflow run . -profile test_annotation,docker --verbose --tools ${{ matrix.annotator }}
