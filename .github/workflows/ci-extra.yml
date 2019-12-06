@@ -23,7 +23,7 @@ jobs:
           docker tag nfcore/sarek:dev nfcore/sarek:dev
       - name: Run test
         run: |
-          nextflow run . -profile test,docker --verbose --genome ${{ matrix.genome }} ${{ matrix.intervals }}
+          nextflow run . -profile test,docker --skipQC all --verbose --genome ${{ matrix.genome }} ${{ matrix.intervals }} --tools Manta,mpileup,Strelka
   profile:
     runs-on: ubuntu-18.04
     strategy:
