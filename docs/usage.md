@@ -23,6 +23,7 @@
   * [`--step`](#--step)
   * [`--tools`](#--tools)
   * [`--noStrelkaBP`](#--nostrelkabp)
+  * [`--no_intervals`](#--no_intervals)
   * [`--targetBED`](#--targetbed)
 * [Reference genomes](#reference-genomes)
   * [`--genome` (using iGenomes)](#--genome-using-igenomes)
@@ -284,6 +285,10 @@ Available: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mp
 ### `--noStrelkaBP`
 
 Use this not to use `Manta` `candidateSmallIndels` for `Strelka` as Best Practice.
+
+### `--no_intervals_`
+
+Disable usage of intervals file, and disable automatic generation of intervals file when none are provided.
 
 ### `--targetBED`
 

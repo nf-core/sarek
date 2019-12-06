@@ -37,6 +37,14 @@ Second, the jobs with largest processing time are started first, which reduces w
 If no runtime is given, a time of 1000 nucleotides per second is assumed.
 Actual figures vary from 2 nucleotides/second to 30000 nucleotides/second.
 
+If no intervals files are specified, one will be automatically generated following:
+
+```bash
+awk -v FS='\t' -v OFS='\t' '{ print \$1, \"0\", \$2 }' <REFERENCE>.fasta.fai > <REFERENCE>.bed
+```
+
+To disable this feature, please use [`--no_intervals`](usage.md#--no_intervals)
+
 ### Working with whole exome (WES) or panel data
 
 The `--targetBED` parameter does _not_  imply that the workflow is running alignment or variant calling only for the supplied targets.
@@ -44,3 +52,9 @@ Instead, we are aligning for the whole genome, and selecting variants only at th
 Adding every exon as an interval in case of WES can generate >200K processes or jobs, much more forks, and similar number of directories in the Nextflow work directory.
 Furthermore, primers and/or baits are not 100% specific, (certainly not for MHC and KIR, etc.), quite likely there going to be reads mapping to multiple locations.
 If you are certain that the target is unique for your genome (all the reads will certainly map to only one location), and aligning to the whole genome is an overkill, better to change the reference itself.
+
+### Working with other genomes
+
+> :warning: This is a new feature, in active development, so usage could change.
+
+Sarek can also do limited preprocessing from any genome, providing a `fasta` file as a reference genome, followed by limited variant calling using `mpileup`, `Manta` and `Strelka`.
