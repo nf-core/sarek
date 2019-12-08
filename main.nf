@@ -756,7 +756,6 @@ process MarkDuplicatesSpark {
     """
     gatk MarkDuplicatesSpark \
         --input ${idSample}.bam \
-        --metrics-file ${idSample}.bam.metrics \
         --output ${idSample}.md.bam \
         --tmp-dir . \
         --verbosity DEBUG \
