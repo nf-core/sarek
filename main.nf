@@ -675,16 +675,9 @@ process MapReads {
     convertToFastq = hasExtension(inputFile1, "bam") ? "gatk --java-options -Xmx${task.memory.toGiga()}g SamToFastq --INPUT=${inputFile1} --FASTQ=/dev/stdout --INTERLEAVE=true --NON_PF=true | \\" : ""
     input = hasExtension(inputFile1, "bam") ? "-p /dev/stdin - 2> >(tee ${inputFile1}.bwa.stderr.log >&2)" : "${inputFile1} ${inputFile2}"
     """
-    # map to sam
     ${convertToFastq}
     bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
-    ${input} >  ${idSample}_${idRun}.sam
-
-    # create bam
-    samtools view -@ ${task.cpus} -b -h -O BAM -o ${idSample}_${idRun}.bwamem.bam ${idSample}_${idRun}.sam
-
-    # sort bam
-    samtools sort -@ ${task.cpus} -o ${idSample}_${idRun}.bam
+    ${input} |  samtools sort - > ${idSample}_${idRun}.bam
     """
 }
 
