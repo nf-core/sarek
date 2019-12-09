@@ -1431,10 +1431,13 @@ bamQCReport = bamQCReport.dump(tag:'BamQC')
 ================================================================================
 */
 
+// When using sentieon for mapping, Channel bamRecal is bamRecalSentieon
 if (params.sentieon && step == 'mapping') bamRecal = bamRecalSentieon
 
-bamRecal = params.knownIndels ? bamRecal : indexedBam
+// When no knownIndels for mapping, Channel bamRecal is indexedBam
+bamRecal = (params.knownIndels && step == 'mapping') ? bamRecal : indexedBam
 
+// When starting with variant calling, Channel bamRecal is inputSample
 if (step == 'variantcalling') bamRecal = inputSample
 
 bamRecal = bamRecal.dump(tag:'BAM')
