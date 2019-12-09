@@ -1295,7 +1295,7 @@ process MergeBamRecal {
         set idPatient, idSample, file(bam) from bamMergeBamRecal
 
     output:
-        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into bamRecal
+        set idPatient, idSample, file("${idSample}.recal.bam") into bamRecal
         set idPatient, idSample, file("${idSample}.recal.bam") into bamRecalQC
         set idPatient, idSample into bamRecalTSV
 
