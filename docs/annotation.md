@@ -36,8 +36,8 @@ The cache will only be used when `--annotation_cache` and cache directories are 
 Example:
 
 ```bash
-nextflow run nf-core/sarek/main.nf --tools snpEff --step annotate --sample file.vcf.gz --snpEff_cache /Path/To/snpEffCache --annotation_cache
-nextflow run nf-core/sarek/main.nf --tools VEP --step annotate --sample file.vcf.gz --vep_cache /Path/To/vepCache --annotation_cache
+nextflow run nf-core/sarek --tools snpEff --step annotate --sample file.vcf.gz --snpEff_cache /Path/To/snpEffCache --annotation_cache
+nextflow run nf-core/sarek --tools VEP --step annotate --sample file.vcf.gz --vep_cache /Path/To/vepCache --annotation_cache
 ```
 
 ## Using VEP CADD plugin
@@ -51,7 +51,7 @@ To enable the use of the VEP CADD plugin:
 Example:
 
 ```bash
-nextflow run nf-core/sarek/main.nf --step annotate --tools VEP --sample file.vcf.gz --cadd_cache \
+nextflow run nf-core/sarek --step annotate --tools VEP --sample file.vcf.gz --cadd_cache \
     --cadd_InDels /PathToCADD/InDels.tsv.gz \
     --cadd_InDels_tbi /PathToCADD/InDels.tsv.gz.tbi \
     --cadd_WG_SNVs /PathToCADD/whole_genome_SNVs.tsv.gz \
@@ -76,5 +76,5 @@ To enable the use of the VEP GeneSplicer plugin:
 Example:
 
 ```bash
-nextflow run nf-core/sarek/main.nf --step annotate --tools VEP --sample file.vcf.gz --genesplicer
+nextflow run nf-core/sarek --step annotate --tools VEP --sample file.vcf.gz --genesplicer
 ```
