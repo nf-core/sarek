@@ -62,9 +62,9 @@ jobs:
           git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data
       - name: Run test
         run: |
-          nextflow run --input data/testdata/tiny/normal
-          nextflow run --input=false --step recalibrate -resume
-          nextflow run --input=false --step variantCalling
+          nextflow run . -profile test,docker --input data/testdata/tiny/normal
+          nextflow run . -profile test,docker --input=false --step recalibrate -resume
+          nextflow run . -profile test,docker --input=false --step variantCalling
   minimal:
     runs-on: ubuntu-18.04
     strategy:

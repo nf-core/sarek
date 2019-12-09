@@ -18,36 +18,36 @@ pipeline {
         }
         stage('Annotation') {
             steps {
-                sh "nextflow run . -profile test_annotation,docker --verbose --tools snpeff,vep,merge"
+                sh "nextflow run . -profile test_annotation,kraken --verbose --tools snpeff,vep,merge"
             }
         }
         stage('Germline') {
             steps {
                 sh "rm -rf data/"
                 sh "git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data"
-                sh "nextflow run --input data/testdata/tiny/normal"
-                sh "nextflow run --input=false --step recalibrate -resume"
-                sh "nextflow run --input=false --step variantCalling"
+                sh "nextflow run . -profile test,kraken --input data/testdata/tiny/normal"
+                sh "nextflow run . -profile test,kraken --input=false --step recalibrate -resume"
+                sh "nextflow run . -profile test,kraken --input=false --step variantCalling"
                 sh "rm -rf data/"
             }
         }
         stage('Minimal') {
             steps {
-                sh "nextflow run . -profile test,docker --skipQC all --verbose --genome smallerGRCh37 --no_intervals --tools Manta,mpileup,Strelka"
-                sh "nextflow run . -profile test,docker --skipQC all --verbose --genome smallerGRCh37 --tools Manta,mpileup,Strelka"
-                sh "nextflow run . -profile test,docker --skipQC all --verbose --genome minimalGRCh37 --no_intervals --tools Manta,mpileup,Strelka"
-                sh "nextflow run . -profile test,docker --skipQC all --verbose --genome minimalGRCh37 --tools Manta,mpileup,Strelka"
+                sh "nextflow run . -profile test,kraken --skipQC all --verbose --genome smallerGRCh37 --no_intervals --tools Manta,mpileup,Strelka"
+                sh "nextflow run . -profile test,kraken --skipQC all --verbose --genome smallerGRCh37 --tools Manta,mpileup,Strelka"
+                sh "nextflow run . -profile test,kraken --skipQC all --verbose --genome minimalGRCh37 --no_intervals --tools Manta,mpileup,Strelka"
+                sh "nextflow run . -profile test,kraken --skipQC all --verbose --genome minimalGRCh37 --tools Manta,mpileup,Strelka"
             }
         }
         stage('Profile') {
             steps {
-                sh "nextflow run . -profile test_splitfastq,docker --verbose"
-                sh "nextflow run . -profile test_targeted,docker --verbose"
+                sh "nextflow run . -profile test_splitfastq,kraken --verbose"
+                sh "nextflow run . -profile test_targeted,kraken --verbose"
             }
         }
         stage('Tools') {
             steps {
-                sh "nextflow run . -profile test_tool,docker --verbose --tools Haplotypecaller,Freebayes,Manta,mpileup,Mutect2,Strelka"
+                sh "nextflow run . -profile test_tool,kraken --verbose --tools Haplotypecaller,Freebayes,Manta,mpileup,Mutect2,Strelka"
             }
         }
     }
