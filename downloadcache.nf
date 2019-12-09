@@ -182,7 +182,7 @@ process BuildCache_VEP {
   when: params.vep_cache && params.download_cache && !params.offline
 
   script:
-  genome = params.genome == "smallGRCh37" ? "GRCh37" : params.genome
+  genome = params.genome
   species = genome =~ "GRCh3*" ? "homo_sapiens" : genome =~ "GRCm3*" ? "mus_musculus" : ""
   """
   vep_install \
