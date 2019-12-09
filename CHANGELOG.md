@@ -35,10 +35,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#60](https://github.com/nf-core/sarek/pull/60) - Update documentation
 - [#71](https://github.com/nf-core/sarek/pull/71) - Update `README`
 - [#71](https://github.com/nf-core/sarek/pull/71) - Update `CHANGELOG`
+- [#74](https://github.com/nf-core/sarek/pull/74) - Update docs
+- [#74](https://github.com/nf-core/sarek/pull/74) - Improve CI tests (both Jenkins and GitHub actions tests)
+- [#74](https://github.com/nf-core/sarek/pull/74) - Move all ci from `ci-extra.yml` to `ci.yml`
 
 ### `Removed`
 
 - [#46](https://github.com/nf-core/sarek/pull/46) - Remove mention of old `build.nf` script which was included in `main.nf`
+- [#74](https://github.com/nf-core/sarek/pull/74) - Remove `download_image.sh` and `run_tests.sh` scripts
 
 ### `Fixed`
 

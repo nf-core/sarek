@@ -7,7 +7,6 @@
 [![DOI](https://zenodo.org/badge/184289291.svg)](https://zenodo.org/badge/latestdoi/184289291)
 
 [![GitHub Actions CI status](https://github.com/nf-core/sarek/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22sarek+CI%22)
-[![GitHub Actions extra-CI status](https://github.com/nf-core/sarek/workflows/nf-core%20extra%20CI/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22sarek+extra+CI%22)
 [![GitHub Actions Linting status](https://github.com/nf-core/sarek/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22sarek+linting%22)
 [![CircleCi build status](https://img.shields.io/circleci/project/github/nf-core/sarek?logo=circleci)](https://circleci.com/gh/nf-core/sarek/)
 
