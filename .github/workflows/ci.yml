@@ -36,11 +36,13 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           NXF_VER: '19.10.0'
-      - name: Download image
+      - name: Download and tag images
         run: |
+          docker pull nfcore/sarek:dev
+          docker tag nfcore/sarek:dev nfcore/sarek:dev
           docker pull nfcore/sarek${{ matrix.annotator }}:dev.${{ matrix.specie }}
           docker tag nfcore/sarek${{ matrix.annotator }}:dev.${{ matrix.specie }} nfcore/sarek${{ matrix.annotator }}:dev.${{ matrix.specie }}
-      - name: Run test
+      - name: Run annotation test
         run: |
           nextflow run . -profile test_annotation,docker --verbose --tools ${{ matrix.annotator }}
   germline:
@@ -53,14 +55,14 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           NXF_VER: '19.10.0'
-      - name: Download image
+      - name: Download and tag image
         run: |
           docker pull nfcore/sarek:dev
           docker tag nfcore/sarek:dev nfcore/sarek:dev
       - name: Get test data
         run: |
           git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data
-      - name: Run test
+      - name: Run germline test
         run: |
           nextflow run . -profile test,docker --input data/testdata/tiny/normal
           nextflow run . -profile test,docker --input=false --step recalibrate -resume
@@ -79,11 +81,11 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           NXF_VER: '19.10.0'
-      - name: Download image
+      - name: Download and tag image
         run: |
           docker pull nfcore/sarek:dev
           docker tag nfcore/sarek:dev nfcore/sarek:dev
-      - name: Run test
+      - name: Run test for minimal genomes
         run: |
           nextflow run . -profile test,docker --skipQC all --verbose --genome ${{ matrix.genome }} ${{ matrix.intervals }} --tools Manta,mpileup,Strelka
   profile:
@@ -99,11 +101,11 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           NXF_VER: '19.10.0'
-      - name: Download image
+      - name: Download and tag image
         run: |
           docker pull nfcore/sarek:dev
           docker tag nfcore/sarek:dev nfcore/sarek:dev
-      - name: Run test
+      - name: Run targeted and splitfastq tests
         run: |
           nextflow run . -profile ${{ matrix.profile }},docker --verbose
   tools:
@@ -119,10 +121,10 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           NXF_VER: '19.10.0'
-      - name: Download image
+      - name: Download and tag image
         run: |
           docker pull nfcore/sarek:dev
           docker tag nfcore/sarek:dev nfcore/sarek:dev
-      - name: Run test
+      - name: Run vriant calling test on specific tools
         run: |
           nextflow run . -profile test_tool,docker --verbose --tools ${{ matrix.tool }}
