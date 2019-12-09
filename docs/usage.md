@@ -12,6 +12,7 @@
 * [Main arguments](#main-arguments)
   * [`-profile`](#-profile)
   * [`--input`](#--input)
+  * [`--split_fastq`](#--split_fastq)
   * [`--sample`](#--sample)
   * [`--sampleDir`](#--sampledir)
   * [`--annotateVCF`](#--annotatevcf)
@@ -22,6 +23,7 @@
   * [`--step`](#--step)
   * [`--tools`](#--tools)
   * [`--noStrelkaBP`](#--nostrelkabp)
+  * [`--no_intervals`](#--no_intervals)
   * [`--targetBED`](#--targetbed)
 * [Reference genomes](#reference-genomes)
   * [`--genome` (using iGenomes)](#--genome-using-igenomes)
@@ -106,8 +108,9 @@ results         # Finished results (configurable, see below)
 ```
 
 The nf-core/sarek pipeline comes with more documentation about running the pipeline, found in the `docs/` directory:
-    * [Extra Documentation on variant calling](docs/variantcalling.md)
-    * [Extra Documentation on annotation](docs/annotation.md)
+
+* [Output and how to interpret the results](output.md)
+* [Extra Documentation on annotation](annotation.md)
 
 ### Updating the pipeline
 
@@ -181,6 +184,15 @@ For example:
 ```
 
 Multiple VCF files can be specified if the path must be enclosed in quotes
+
+### `--split_fastq`
+
+Use the Nextflow [`splitFastq`](https://www.nextflow.io/docs/latest/operator.html#splitfastq) operator to specify how many reads should be contained in the split fastq file.
+For example:
+
+```bash
+--split_fastq 10000
+```
 
 ### `--sample`
 
@@ -268,11 +280,15 @@ Available: `mapping`, `recalibrate`, `variantcalling` and `annotate`
 ### `--tools`
 
 Use this to specify the tools to run:
-Available: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `MuTect2`, `Strelka`, `TIDDIT`
+Available: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `Mutect2`, `Strelka`, `TIDDIT`
 
 ### `--noStrelkaBP`
 
 Use this not to use `Manta` `candidateSmallIndels` for `Strelka` as Best Practice.
+
+### `--no_intervals_`
+
+Disable usage of intervals file, and disable automatic generation of intervals file when none are provided.
 
 ### `--targetBED`
 
@@ -280,7 +296,7 @@ Use this to specify the target BED file for targeted or whole exome sequencing.
 
 ## Reference genomes
 
-The pipeline config files come bundled with paths to the illumina iGenomes reference index files.
+The pipeline config files come bundled with paths to the Illumina iGenomes reference index files.
 If running with docker or AWS, the configuration is set up to use the [AWS-iGenomes](https://ewels.github.io/AWS-iGenomes/) resource.
 
 ### `--genome` (using iGenomes)
@@ -291,9 +307,92 @@ To run the pipeline, you must specify which to use with the `--genome` flag.
 You can find the keys to specify the genomes in the [iGenomes config file](../conf/igenomes.config).
 Genomes that are supported are:
 
-* Human
-  * `--genome GRCh37`
-  * `--genome GRCh38`
+* Homo sapiens
+  * `--genome GRCh37` (GATK Bundle)
+  * `--genome GRCh38` (GATK Bundle)
+
+* Mus musculus
+  * `--genome GRCm38` (Ensembl)
+
+Limited support for:
+
+* Arabidopsis thaliana
+  * `--genome TAIR10` (Ensembl)
+
+* Bacillus subtilis 168
+  * `--genome EB2` (Ensembl)
+
+* Bos taurus
+  * `--genome UMD3.1` (Ensembl)
+  * `--genome bosTau8` (UCSC)
+
+* Caenorhabditis elegans
+  * `--genome WBcel235` (Ensembl)
+  * `--genome ce10` (UCSC)
+
+* Canis familiaris
+  * `--genome CanFam3.1`  (Ensembl)
+  * `--genome canFam3`  (UCSC)
+
+* Danio rerio
+  * `--genome GRCz10`  (Ensembl)
+  * `--genome danRer10`  (UCSC)
+
+* Drosophila melanogaster
+  * `--genome BDGP6`  (Ensembl)
+  * `--genome dm6`  (UCSC)
+
+* Equus caballus
+  * `--genome EquCab2`  (Ensembl)
+  * `--genome equCab2`  (UCSC)
+
+* Escherichia coli K 12 DH10B
+  * `--genome EB1`  (Ensembl)
+
+* Gallus gallus
+  * `--genome Galgal4`  (Ensembl)
+  * `--genome galgal4`  (UCSC)
+
+* Glycine max
+  * `--genome Gm01`  (Ensembl)
+
+* Homo sapiens
+  * `--genome hg19`  (UCSC)
+  * `--genome hg38`  (UCSC)
+
+* Macaca mulatta
+  * `--genome Mmul_1`  (Ensembl)
+
+* Mus musculus
+  * `--genome mm10`  (Ensembl)
+
+* Oryza sativa japonica
+  * `--genome IRGSP-1.0`  (Ensembl)
+
+* Pan troglodytes
+  * `--genome CHIMP2.1.4`  (Ensembl)
+  * `--genome panTro4`  (UCSC)
+
+* Rattus norvegicus
+  * `--genome Rnor_6.0`  (Ensembl)
+  * `--genome rn6`  (UCSC)
+
+* Saccharomyces cerevisiae
+  * `--genome R64-1-1`  (Ensembl)
+  * `--genome sacCer3`  (UCSC)
+
+* Schizosaccharomyces pombe
+  * `--genome EF2`  (Ensembl)
+
+* Sorghum bicolor
+  * `--genome Sbi1`  (Ensembl)
+
+* Sus scrofa
+  * `--genome Sscrofa10.2`  (Ensembl)
+  * `--genome susScr3`  (UCSC)
+
+* Zea mays
+  * `--genome AGPv3`  (Ensembl)
 
 Note that you can use the same configuration setup to save sets of reference files for your own use, even if they are not part of the iGenomes resource.
 See the [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for instructions on where to save such a file.
