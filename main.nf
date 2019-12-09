@@ -755,13 +755,13 @@ fastQCReport = fastQCReport.dump(tag:'FastQC')
 
 // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
 
-inputReads = inputReads.dump(tag:'INPUT')
+inputPairReads = inputPairReads.dump(tag:'INPUT')
 
-inputReads = inputPairReads.mix(inputBam)
+inputPairReads = inputPairReads.mix(inputBam)
 
-(inputReads, inputReadsSentieon) = inputReads.into(2)
-if (params.sentieon) inputReads.close()
-else inputReadsSentieon.close()
+(inputPairReads, inputPairReadsSentieon) = inputPairReads.into(2)
+if (params.sentieon) inputPairReads.close()
+else inputPairReadsSentieon.close()
 
 process MapReads {
     label 'cpus_max'
@@ -769,7 +769,7 @@ process MapReads {
     tag {idPatient + "-" + idRun}
 
     input:
-        set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from inputReads
+        set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from inputPairReads
         file(bwaIndex) from ch_bwaIndex
         file(fasta) from ch_fasta
         file(fastaFai) from ch_fastaFai
@@ -822,7 +822,7 @@ process SentieonMapReads {
     tag {idPatient + "-" + idRun}
 
     input:
-        set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from inputReadsSentieon
+        set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from inputPairReadsSentieon
         file(bwaIndex) from ch_bwaIndex
         file(fasta) from ch_fasta
         file(fastaFai) from ch_fastaFai
