@@ -54,7 +54,7 @@ params.build = null
 params.offline = null
 params.cadd_cache = null
 params.cadd_version = 'v1.5'
-params.genome = 'smallGRCh37'
+params.genome = 'GRCh37'
 params.snpEff_cache = null
 params.vep_cache = null
 
