@@ -10,7 +10,7 @@ The pipeline processes data using the following steps:
   - [Map to Reference](#map-to-reference)
     - [BWA mem](#bwa-mem)
   - [Mark Duplicates](#mark-duplicates)
-    - [GATK MarkDuplicates](#gatk-markduplicates)
+    - [GATK MarkDuplicatesSpark](#gatk-markduplicatesspark)
   - [Base (Quality Score) Recalibration](#base-quality-score-recalibration)
     - [GATK BaseRecalibrator](#gatk-baserecalibrator)
     - [GATK ApplyBQSR](#gatk-applybqsr)
@@ -66,9 +66,9 @@ Such files are intermediate and not kept in the final files delivered to users.
 
 ### Mark Duplicates
 
-#### GATK MarkDuplicates
+#### GATK MarkDuplicatesSpark
 
-[GATK MarkDuplicates](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.4.0/picard_sam_markduplicates_MarkDuplicates.php) locates and tags duplicate reads in a BAM or SAM file, where duplicate reads are defined as originating from a single fragment of DNA.
+[GATK MarkDuplicatesSpark](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_spark_transforms_markduplicates_MarkDuplicatesSpark.php) is a Spark implementation of [Picard MarkDuplicates](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/picard_sam_markduplicates_MarkDuplicates.php) and locates and tags duplicate reads in a BAM or SAM file, where duplicate reads are defined as originating from a single fragment of DNA.
 
 This directory is the location for the BAM files delivered to users.
 Besides the duplicate marked BAM files, the recalibration tables (`*.recal.table`) are also stored, and can be used to create base recalibrated files.
