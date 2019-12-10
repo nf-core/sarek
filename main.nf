@@ -1345,7 +1345,7 @@ bamRecalTSV.map { idPatient, idSample ->
     gender = genderMap[idPatient]
     status = statusMap[idPatient, idSample]
     bam = "${params.outdir}/Preprocessing/${idSample}/Recalibrated/${idSample}.recal.bam"
-    bai = "${params.outdir}/Preprocessing/${idSample}/Recalibrated/${idSample}.recal.bai"
+    bai = "${params.outdir}/Preprocessing/${idSample}/Recalibrated/${idSample}.recal.bam.bai"
     "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"
 }.collectFile(
     name: 'recalibrated.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
@@ -1357,7 +1357,7 @@ bamRecalSampleTSV
         status = statusMap[idPatient, idSample]
         gender = genderMap[idPatient]
         bam = "${params.outdir}/Preprocessing/${idSample}/Recalibrated/${idSample}.recal.bam"
-        bai = "${params.outdir}/Preprocessing/${idSample}/Recalibrated/${idSample}.recal.bai"
+        bai = "${params.outdir}/Preprocessing/${idSample}/Recalibrated/${idSample}.recal.bam.bai"
         ["recalibrated_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
 }
 
