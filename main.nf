@@ -1513,7 +1513,8 @@ process GenotypeGVCFs {
     // Using -L is important for speed and we have to index the interval files also
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
-        IndexFeatureFile -F ${gvcf}
+        IndexFeatureFile \
+        -I ${gvcf}
 
     gatk --java-options -Xmx${task.memory.toGiga()}g \
         GenotypeGVCFs \
