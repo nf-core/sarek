@@ -35,9 +35,9 @@ def helpMessage() {
                                     Works also with the path to a directory on mapping step with a single germline sample only
                                     Alternatively, path to VCF input file on annotate step
                                     Multiple VCF files can be specified with quotes
-
-        -profile                    Configuration profile to use. Can use multiple (comma separated)
-                                    Available: conda, docker, singularity, awsbatch, test and more.
+        -profile                    Configuration profile to use
+                                    Can use multiple (comma separated)
+                                    Available: conda, docker, singularity, test and more
 
     Options:
         --genome                    Name of iGenomes reference
@@ -62,6 +62,8 @@ def helpMessage() {
         --annotateTools             Specify from which tools Sarek will look for VCF files to annotate, only for step annotate
                                     Available: HaplotypeCaller, Manta, Mutect2, Strelka, TIDDIT
                                     Default: None
+        --sentieon                  If sentieon is available, will enable it for preprocessing, and variant calling
+                                    Adds the following tools for --tools: DNAseq, DNAscope and TNscope
         --annotation_cache          Enable the use of cache for annotation, to be used with --snpEff_cache and/or --vep_cache
         --snpEff_cache              Specity the path to snpEff cache, to be used with --annotation_cache
         --vep_cache                 Specity the path to VEP cache, to be used with --annotation_cache
@@ -1538,8 +1540,6 @@ process SentieonDNAseq {
 
     tag {idSample}
 
-    publishDir "${params.outdir}/VariantCalling/${idSample}/SentieonDNAseq", mode: params.publishDirMode
-
     input:
         set idPatient, idSample, file(bam), file(bai) from bamSentieonDNAseq
         file(dbsnp) from ch_dbsnp
@@ -1574,8 +1574,6 @@ process SentieonDNAscope {
     label 'sentieon'
 
     tag {idSample}
-
-    publishDir "${params.outdir}/VariantCalling/${idSample}/SentieonDNAscope", mode: params.publishDirMode
 
     input:
         set idPatient, idSample, file(bam), file(bai) from bamSentieonDNAscope
@@ -2098,8 +2096,6 @@ process SentieonTNscope {
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/SentieonTNscope", mode: params.publishDirMode
-
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamTNscope
         file(dict) from ch_dict
@@ -2128,7 +2124,7 @@ process SentieonTNscope {
         --normal_sample ${idSampleNormal} \
         --dbsnp ${dbsnp} \
         ${PON} \
-        SentieonTNscope_${idSampleTumor}_vs_${idSampleNormal}.vcf
+        TNscope_${idSampleTumor}_vs_${idSampleNormal}.vcf
     """
 }
 
