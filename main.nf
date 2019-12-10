@@ -1130,7 +1130,7 @@ recalTableTSV.map { idPatient, idSample ->
     status = statusMap[idPatient, idSample]
     gender = genderMap[idPatient]
     bam = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bam"
-    bai = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bai"
+    bai = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bam.bai"
     recalTable = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.recal.table"
     "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${recalTable}\n"
 }.collectFile(
@@ -1143,7 +1143,7 @@ recalTableSampleTSV
         status = statusMap[idPatient, idSample]
         gender = genderMap[idPatient]
         bam = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bam"
-        bai = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bai"
+        bai = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bam.bai"
         recalTable = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.recal.table"
         ["duplicateMarked_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${recalTable}\n"]
 }
@@ -1153,12 +1153,10 @@ bamApplyBQSR = bamMDToJoin.join(recalTable, by:[0,1])
 if (step == 'recalibrate') bamApplyBQSR = inputSample
 
 bamApplyBQSR = bamApplyBQSR.dump(tag:'BAM + BAI + RECAL TABLE')
-// [DUMP: recal.table] ['normal', 'normal', normal.md.bam, normal.md.bai, normal.recal.table]
 
 bamApplyBQSR = bamApplyBQSR.combine(intApplyBQSR)
 
 bamApplyBQSR = bamApplyBQSR.dump(tag:'BAM + BAI + RECAL TABLE + INT')
-// [DUMP: BAM + BAI + RECAL TABLE + INT] ['normal', 'normal', normal.md.bam, normal.md.bai, normal.recal.table, 1_1-200000.bed]
 
 // STEP 4: RECALIBRATING
 
