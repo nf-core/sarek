@@ -1295,7 +1295,7 @@ process MergeBamRecal {
         set idPatient, idSample, file(bam) from bamMergeBamRecal
 
     output:
-        set idPatient, idSample, file("${idSample}.recal.bam") into bamRecal
+        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bamRecal
         set idPatient, idSample, file("${idSample}.recal.bam") into bamRecalQC
         set idPatient, idSample into bamRecalTSV
 
@@ -1321,7 +1321,7 @@ process IndexBamRecal {
         set idPatient, idSample, file("${idSample}.recal.bam") from bamMergeBamRecalNoInt
 
     output:
-        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bai") into bamRecalNoInt
+        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bamRecalNoInt
         set idPatient, idSample, file("${idSample}.recal.bam") into bamRecalQCnoInt
         set idPatient, idSample into bamRecalTSVnoInt
 
@@ -1330,7 +1330,6 @@ process IndexBamRecal {
     script:
     """
     samtools index ${idSample}.recal.bam
-    mv ${idSample}.recal.bam.bai ${idSample}.recal.bai
     """
 }
 
