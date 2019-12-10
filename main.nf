@@ -822,15 +822,14 @@ process IndexBamFile {
 
 // STEP 2: MARKING DUPLICATES
 
-process MarkDuplicates {
+process MarkDuplicatesSpark {
     label 'cpus_16'
 
     tag {idPatient + "-" + idSample}
 
     publishDir params.outdir, mode: params.publishDirMode,
         saveAs: {
-            if (it == "${idSample}.bam.metrics" && 'markduplicates' in skipQC) null
-            else if (it == "${idSample}.bam.metrics") "Reports/${idSample}/MarkDuplicates/${it}"
+            if (it == "${idSample}.bam.metrics") "Reports/${idSample}/MarkDuplicates/${it}"
             else "Preprocessing/${idSample}/DuplicateMarked/${it}"
         }
 
@@ -838,23 +837,22 @@ process MarkDuplicates {
         set idPatient, idSample, file("${idSample}.bam") from mergedBam
 
     output:
-        set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bai") into duplicateMarkedBams
-        file ("${idSample}.bam.metrics") into markDuplicatesReport
+        set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bam.bai") into duplicateMarkedBams
+        file ("${idSample}.bam.metrics") optional true into markDuplicatesReport
 
     when: step == 'mapping' && params.knownIndels
 
     script:
     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
+    metrics = 'markduplicates' in skipQC ? '' : "-M ${idSample}.bam.metrics"
     """
     gatk --java-options ${markdup_java_options} \
-        MarkDuplicates \
-        --MAX_RECORDS_IN_RAM 50000 \
-        --INPUT ${idSample}.bam \
-        --METRICS_FILE ${idSample}.bam.metrics \
-        --TMP_DIR . \
-        --ASSUME_SORT_ORDER coordinate \
-        --CREATE_INDEX true \
-        --OUTPUT ${idSample}.md.bam
+        MarkDuplicatesSpark \
+        -I ${idSample}.bam \
+        -O ${idSample}.md.bam \
+        ${metrics} \
+        --tmp-dir . \
+        --create-output-bam-index true
     """
 }
 
