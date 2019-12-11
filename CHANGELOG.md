@@ -4,7 +4,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## dev
+## [2.5.2] - Jåkkåtjkaskajekna
+
+Jåkkåtjkaskajekna is one of the two glaciers of the Ålkatj Massif.
 
 ### `Added`
 
@@ -29,7 +31,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#71](https://github.com/nf-core/sarek/pull/71) - Update `CHANGELOG`
 - [#74](https://github.com/nf-core/sarek/pull/74) - Update docs
 - [#74](https://github.com/nf-core/sarek/pull/74) - Improve CI tests (both Jenkins and GitHub actions tests)
-- [#74](https://github.com/nf-core/sarek/pull/74) - Move all ci from `ci-extra.yml` to `ci.yml`
+- [#74](https://github.com/nf-core/sarek/pull/74) - Move all CI from `ci-extra.yml` to `ci.yml`
 
 ### `Removed`
 
