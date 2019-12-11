@@ -9,11 +9,11 @@ pipeline {
         stage('Docker setup') {
             steps {
                  sh "docker pull nfcore/sarek:dev"
-                 sh "docker tag nfcore/sarek:dev nfcore/sarek:dev"
+                 sh "docker tag nfcore/sarek:dev nfcore/sarek:2.5.2"
                  sh "docker pull nfcore/sareksnpeff:dev.GRCh37"
-                 sh "docker tag nfcore/sareksnpeff:dev.GRCh37 nfcore/sareksnpeff:dev.GRCh37"
+                 sh "docker tag nfcore/sareksnpeff:dev.GRCh37 nfcore/sareksnpeff:2.5.2.GRCh37"
                  sh "docker pull nfcore/sarekvep:dev.GRCh37"
-                 sh "docker tag nfcore/sarekvep:dev.GRCh37 nfcore/sarekvep:dev.GRCh37"
+                 sh "docker tag nfcore/sarekvep:dev.GRCh37 nfcore/sarekvep:2.5.2.GRCh37"
             }
         }
         stage('Annotation') {
