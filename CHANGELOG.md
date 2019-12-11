@@ -22,14 +22,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ### `Changed`
 
-- [#41](https://github.com/nf-core/sarek/pull/41) - Update `control-freec` from `11.4` to `11.5`
-- [#41](https://github.com/nf-core/sarek/pull/41) - Update `ensembl-vep` from `95.2` to `98.2`
-- [#41](https://github.com/nf-core/sarek/pull/41) - Update `freebayes` from `1.2.0` to `1.3.1`
-- [#41](https://github.com/nf-core/sarek/pull/41) - Update `gatk4` from `4.1.2.0` to `4.1.4.0`
-- [#41](https://github.com/nf-core/sarek/pull/41) - Update `manta` from `1.5.0` to `1.6.0`
-- [#41](https://github.com/nf-core/sarek/pull/41) - Update `qualimap` from `2.2.2b` to `2.2.2c`
-- [#41](https://github.com/nf-core/sarek/pull/41), [#55](https://github.com/nf-core/sarek/pull/55) - Update `tiddit` from `2.7.1` to `2.8.1`
-- [#41](https://github.com/nf-core/sarek/pull/41) - Update `vcfanno` from `0.3.1` to `0.3.2`
 - [#54](https://github.com/nf-core/sarek/pull/54) - Bump version to `2.5.2dev`
 - [#60](https://github.com/nf-core/sarek/pull/60) - Some process (`BaseRecalibrator`, `ApplyBQSR`, `Mpileup`) have now optional usage of interval files
 - [#60](https://github.com/nf-core/sarek/pull/60) - Update documentation
