@@ -2217,11 +2217,11 @@
      inkscape:window-height="1012"
      id="namedview4"
      showgrid="false"
-     inkscape:zoom="0.5"
-     inkscape:cx="-604.69523"
-     inkscape:cy="732.99056"
-     inkscape:window-x="1920"
-     inkscape:window-y="759"
+     inkscape:zoom="0.70710678"
+     inkscape:cx="394.00446"
+     inkscape:cy="931.73227"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="g10"
      units="mm"
@@ -2249,6 +2249,7 @@
      id="tspan3424"
      y="-2749.4028"
      x="866.00854" /></text>
+
 
 
 
@@ -2793,6 +2794,7 @@
 
 
 
+
 <text
    style="font-style:normal;font-weight:bold;font-size:medium;font-family:sans-serif;color-interpolation:auto;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1.45000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
    x="32.745098"
@@ -2802,6 +2804,7 @@
    xml:space="preserve"
    id="text8514"
    transform="matrix(1.9071373,0,0,-1.9071373,542.56229,2077.7321)" />
+
 
 
 
@@ -3150,6 +3153,7 @@
 
 
 
+
 <rect
    ry="5.2434611"
    rx="5.2434611"
@@ -3175,7 +3179,7 @@
      id="flowPara10112-0"
      style="font-size:20.2700367px;line-height:1.25">• HaplotypeCaller</flowPara><flowPara
      id="flowPara4887"
-     style="font-size:20.2700367px;line-height:1.25">    Strelka2</flowPara><flowPara
+     style="font-size:20.2700367px;line-height:1.25">    mpileup, Strelka2</flowPara><flowPara
      id="flowPara5971"
      style="font-size:20.2700367px;line-height:1.25">• Manta, TIDDIT</flowPara></flowRoot><flowRoot
    xml:space="preserve"
@@ -3259,6 +3263,7 @@
 
 
 
+
 <rect
    transform="matrix(3.3334488,0,0,-2.7685238,1558.6733,1718.605)"
    id="rect4911"
@@ -3279,6 +3284,7 @@
    style="font-style:normal;font-weight:bold;font-size:medium;line-height:0%;font-family:sans-serif;color-interpolation:auto;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1.45000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"><tspan
      style="font-size:11.90393639px"
      id="tspan4923">Reports</tspan></text>
+
 
 
 
@@ -3560,7 +3566,7 @@
                width="150"
                id="rect2357-0" /></flowRegion><flowPara
              style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro'"
-             id="flowPara2359-7">2.6</flowPara></flowRoot></g></g></g><g
+             id="flowPara2359-7">2.5.2</flowPara></flowRoot></g></g></g><g
      transform="matrix(0.8,0,0,-0.8,1644.3714,2497.358)"
      id="g557-5"><path
        d="m 100.42371,40.737998 c 0,-23.050353 -18.686065,-41.73674603 -41.736759,-41.73674603 -23.050353,0 -41.736736,18.68639303 -41.736736,41.73674603 0,23.050354 18.686383,41.736747 41.736736,41.736747 23.050694,0 41.736759,-18.686393 41.736759,-41.736747 z"
