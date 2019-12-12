@@ -102,7 +102,7 @@ For further reading and documentation see the [data pre-processing workflow from
 For all samples:
 **Output directory: `results/Preprocessing/[SAMPLE]/Recalibrated`**
 
-- `[SAMPLE].recal.bam` and `[SAMPLE].recal.bai`
+- `[SAMPLE].recal.bam` and `[SAMPLE].recal.bam.bai`
   - BAM file and index
 
 ### TSV files
