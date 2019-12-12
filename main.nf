@@ -791,6 +791,8 @@ process MapReads {
     // adjust mismatch penalty for tumor samples
     status = statusMap[idPatient, idSample]
     extra = status == 1 ? "-B 3" : ""
+    // TODO: this command can use all requested memory and fails when piped to bwa.
+    // TODO: the bwa and samtools pipe below uses 2x the number of requested CPUs.
     convertToFastq = hasExtension(inputFile1, "bam") ? "gatk --java-options -Xmx${task.memory.toGiga()}g SamToFastq --INPUT=${inputFile1} --FASTQ=/dev/stdout --INTERLEAVE=true --NON_PF=true | \\" : ""
     input = hasExtension(inputFile1, "bam") ? "-p /dev/stdin - 2> >(tee ${inputFile1}.bwa.stderr.log >&2)" : "${inputFile1} ${inputFile2}"
     """
