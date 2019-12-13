@@ -112,7 +112,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        tool: [Haplotypecaller, Freebayes, Manta, mpileup, Mutect2, Strelka]
+        tool: [Haplotypecaller, Freebayes, Manta, mpileup, Mutect2, Strelka, TIDDIT]
     steps:
       - uses: actions/checkout@v1
       - name: Install Nextflow
@@ -125,6 +125,6 @@ jobs:
         run: |
           docker pull nfcore/sarek:dev
           docker tag nfcore/sarek:dev nfcore/sarek:2.5.2
-      - name: Run vriant calling test on specific tools
+      - name: Run variant calling test on specific tools
         run: |
           nextflow run . -profile test_tool,docker --verbose --tools ${{ matrix.tool }}
