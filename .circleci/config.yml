@@ -10,11 +10,11 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          command: docker build -t nfcore/sareksnpeff:2.5.1.${GENOME} containers/snpeff/. --build-arg GENOME=${GENOME} --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION}
+          command: docker build -t nfcore/sareksnpeff:2.5.2.${GENOME} containers/snpeff/. --build-arg GENOME=${GENOME} --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION}
       - run:
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push nfcore/sareksnpeff:2.5.1.${GENOME}
+            docker push nfcore/sareksnpeff:2.5.2.${GENOME}
 
   snpeffgrch38:
     << : *buildsnpeff
@@ -45,10 +45,10 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          command: docker build -t nfcore/sarekvep:2.5.1.${GENOME} containers/vep/. --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
+          command: docker build -t nfcore/sarekvep:2.5.2.${GENOME} containers/vep/. --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
           no_output_timeout: 3h
       - run:
-          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:2.5.1.${GENOME}
+          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:2.5.2.${GENOME}
 
   vepgrch38:
     << : *buildvep

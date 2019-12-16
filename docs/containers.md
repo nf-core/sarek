@@ -48,42 +48,96 @@ For annotation, the main container can be used, but the cache has to be download
 - Contain **[VEP](https://github.com/Ensembl/ensembl-vep)** 95.2
 - Contain cache for `GRCh37`, `GRCh38`, `GRCm38` or `CanFam3.1`
 
-## Using helper script
-
-A helper script, used for testing can also be used to help with pulling docker containers, or building singularity images.
-The following parameters can be used:
-
-### Engine: -n
-
-Specify which container engine to use: `docker` or `singularity`.
-Default:`docker`
-
-### Containers: -c
-
-Specify which containers to build: `SNPEFF`, `VEP` or `ALL`.
-Default:`ALL`
-
-### Version: -T
-
-Specify which release to pull or build: any tagged release, or `dev`.
-Default:`dev`
-
-### Genome: -g
-
-Specify which release genome to use for annotation containers (`sareksnpeff`, `sarekvep`): `smallGRCh37`, `GRCh37`, `GRCh38`, `GRCm38` or `CanFam3.1`.
-Default:`smallGRCh37`
-
-### Singularity
-
-To specify where to build singularity image, use the Nextflow ENV variable `NXF_SINGULARITY_CACHEDIR`, ie:
-
-```bash
-NXF_SINGULARITY_CACHEDIR=/data/singularity ./scripts/download_image.sh -n singularity -t ALL -T dev -g GRCh38
-```
-
-That will build the main container, plus the annotation containers (`sareksnpeff`, `sarekvep`) for `GRCh38`, in the `/data/singularity` folder.
-
 ## Building your own
 
 Our containers are designed using [Conda](https://conda.io/).
-The `environment.yml` file can easilly be modified if particular versions of tools are more suited to your needs.
+The [`environment.yml`](../environment.yml) file can be modified if particular versions of tools are more suited to your needs.
+
+The following commands can be used to build/download containers on your own system:
+
+- Adjust `VERSION` for sarek version (typically a release or `dev`).
+
+### Build with Conda
+
+```Bash
+conda env create -f environment.yml
+```
+
+### Build with Docker
+
+- `sarek`
+
+```Bash
+docker build -t nfcore/sarek:<VERSION> .
+```
+
+- `sareksnpeff`
+
+Adjust arguments for `GENOME` version and snpEff `CACHE_VERSION`
+
+```Bash
+docker build -t nfcore/sareksnpeff:<VERSION>.<GENOME> containers/snpeff/. --build-arg GENOME=<GENOME> --build-arg CACHE_VERSION=<CACHE_VERSION>
+```
+
+- `sarekvep`
+
+Adjust arguments for `GENOME` version, `SPECIES` name and VEP `VEP_VERSION`
+
+```Bash
+docker build -t nfcore/sarekvep:<VERSION>.<GENOME> containers/vep/. --build-arg GENOME=<GENOME> --build-arg SPECIES=<SPECIES> --build-arg VEP_VERSION=<VEP_VERSION>
+```
+
+### Pull with Docker
+
+- `sarek`
+
+```Bash
+docker pull nfcore/sarek:<VERSION>
+```
+
+- `sareksnpeff`
+
+Adjust arguments for `GENOME` version
+
+```Bash
+docker pull nfcore/sareksnpeff:<VERSION>.<GENOME>
+```
+
+- `sarekvep`
+
+Adjust arguments for `GENOME` version
+
+```Bash
+docker pull nfcore/sarekvep:<VERSION>.<GENOME>
+```
+
+### Pull with Singularity
+
+You can directly pull singularity image, in the path used by the Nextflow ENV variable `NXF_SINGULARITY_CACHEDIR`, ie:
+
+```Bash
+cd $NXF_SINGULARITY_CACHEDIR
+singularity build ...
+```
+
+- `sarek`
+
+```Bash
+singularity build nfcore-sarek-<VERSION>.img docker://nfcore/sarek:<VERSION>
+```
+
+- `sareksnpeff`
+
+Adjust arguments for `GENOME` version
+
+```Bash
+singularity build nfcore-sareksnpeff-<VERSION>.<GENOME>.img docker://nfcore/sareksnpeff:<VERSION>.<GENOME>
+```
+
+- `sarekvep`
+
+Adjust arguments for `GENOME` version
+
+```Bash
+singularity build nfcore-sarekvep-<VERSION>.<GENOME>.img docker://nfcore/sarekvep:<VERSION>.<GENOME>
+```
