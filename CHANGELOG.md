@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## dev
+
+- [#80](https://github.com/nf-core/sarek/pull/80) - Re-bump `dev` branch
+
 ## [2.5.2] - Jåkkåtjkaskajekna
 
 Jåkkåtjkaskajekna is one of the two glaciers of the Ålkatj Massif.
