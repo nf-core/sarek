@@ -27,7 +27,7 @@ Software dependencies are handled using [Conda](https://conda.io/), [Docker](htt
 Thus making installation trivial and results highly reproducible.
 
 <p align="center">
-    <img title="Sarek Workflow" src="./docs/images/sarek_workflow.png">
+    <a href="./docs/images/sarek_workflow.png"><img title="Sarek Workflow" src="./docs/images/sarek_workflow.png" width=40%></a>
 </p>
 
 It's listed on the [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek), [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek) and [omicX - Bioinformatics tools](https://omictools.com/sarek-tool).
