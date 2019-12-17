@@ -125,6 +125,6 @@ jobs:
         run: |
           docker pull nfcore/sarek:dev
           docker tag nfcore/sarek:dev nfcore/sarek:dev
-      - name: Run variant calling test on ${{ matrix.tool }}
+      - name: Run ${{ matrix.tool }} test
         run: |
           nextflow run . -profile test_tool,docker --verbose --tools ${{ matrix.tool }}

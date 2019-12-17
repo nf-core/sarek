@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## dev
 
+### `Added`
+
+- [#76](https://github.com/nf-core/sarek/pull/76) - Add `GATK Spark` possibilities to Sarek
+
 ### `Changed`
 
 - [#76](https://github.com/nf-core/sarek/pull/76) - Use `MarkDuplicatesSpark` instead of `MarkDuplicates`
@@ -30,7 +34,6 @@ Jåkkåtjkaskajekna is one of the two glaciers of the Ålkatj Massif.
 - [#61](https://github.com/nf-core/sarek/pull/61) - Add params `split_fastq`
 - [#61](https://github.com/nf-core/sarek/pull/61) - Add test `SPLITFASTQ`
 - [#66](https://github.com/nf-core/sarek/pull/66) - Add `Sentieon` possibilities to Sarek
-- [#76](https://github.com/nf-core/sarek/pull/76) - Add `GATK Spark` possibilities to Sarek
 
 ### `Changed`
 
