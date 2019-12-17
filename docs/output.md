@@ -510,9 +510,13 @@ For more information about how to use Qualimap bamqc reports, see [Qualimap bamq
 
 #### MarkDuplicates reports
 
-[GATK MarkDuplicates](https://github.com/broadinstitute/gatk) locates and tags duplicate reads in a BAM or SAM file, where duplicate reads are defined as originating from a single fragment of DNA.
-Duplicates can arise during sample preparation e.g.
-library construction using PCR.
+[[GATK MarkDuplicatesSpark](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_spark_transforms_markduplicates_MarkDuplicatesSpark.php), Spark implementation of [Picard MarkDuplicates](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/picard_sam_markduplicates_MarkDuplicates.php)
+) locates and tags duplicate reads in a BAM or SAM file, where duplicate reads are defined as originating from a single fragment of DNA.
+
+Collecting duplicate metrics slows down performance.
+To disable them use `--skipQC MarkDuplicates`.
+
+Duplicates can arise during sample preparation _e.g._ library construction using PCR.
 Duplicate reads can also result from a single amplification cluster, incorrectly detected as multiple clusters by the optical sensor of the sequencing instrument.
 These duplication artifacts are referred to as optical duplicates.
 
