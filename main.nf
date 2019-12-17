@@ -557,7 +557,7 @@ process BuildPonIndex {
     """
 }
 
-ch_ponIndex = params.pon_index ? Channel.value(file(params.pon_index)) : ponIndexBuilt
+ch_ponIndex = params.pon ? params.pon_index ? Channel.value(file(params.pon_index)) : ponIndexBuilt : "null"
 
 process BuildIntervals {
   tag {fastaFai}
@@ -1437,7 +1437,7 @@ bamRecal = (params.knownIndels && step == 'mapping') ? bamRecal : indexedBam
 // When starting with variant calling, Channel bamRecal is inputSample
 if (step == 'variantcalling') bamRecal = inputSample
 
-bamRecal = bamRecal.dump(tag:'BAM')
+bamRecal = bamRecal.dump(tag:'BAM for Variant Calling')
 
 // Here we have a recalibrated bam set
 // The TSV file is formatted like: "idPatient status idSample bamFile baiFile"
