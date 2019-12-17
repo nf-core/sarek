@@ -4,4 +4,4 @@ LABEL authors="Maxime Garcia, Szilveszter Juhos" \
 
 COPY environment.yml /
 RUN conda env create -f /environment.yml && conda clean -a
-ENV PATH /opt/conda/envs/nf-core-sarek-2.5.2dev/bin:$PATH
+ENV PATH /opt/conda/envs/nf-core-sarek-dev/bin:$PATH

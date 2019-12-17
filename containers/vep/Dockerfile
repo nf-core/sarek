@@ -7,12 +7,12 @@ LABEL \
 
 COPY environment.yml /
 RUN conda env create -f /environment.yml && conda clean -a
-ENV PATH /opt/conda/envs/sarek-vep-2.5.2dev/bin:$PATH
+ENV PATH /opt/conda/envs/sarek-vep-dev/bin:$PATH
 
 # Setup default ARG variables
 ARG GENOME=GRCh38
 ARG SPECIES=homo_sapiens
-ARG VEP_VERSION=98
+ARG VEP_VERSION=95
 
 # Download Genome
 RUN vep_install \
