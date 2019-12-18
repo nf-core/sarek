@@ -7,7 +7,7 @@ variations, focusing on rare diseases. However, adding cancer capabilities are o
 somatic mutations is to rank them in the VCF and load them to Scout. The scores have to be added as a `RankScore` INFO
 field, and have to have the format like:
 
-```
+```text
 chr1  514206  rs1247069502  A C . PASS  ECNT=1;dbSNP=rs1247069502 RankScore=ScoreTest:0 GT:AD:AF  0/1:2,6:0.750 0/0:33,1:0.029
 ```
 
@@ -105,6 +105,5 @@ samples:
 vcf_cancer: testM2.vcf
 
 ```
-
 
 
