@@ -82,7 +82,7 @@ like `-f ThisIsIt` , the header line will be
 and annotations will be like `RankScore=ThisIsIt:7` . The `.yaml` file for Scout to load the case has to be prepared in
 a way, that the `family` entry and the `sample_id` in the `samples:` sections also contain this key. Example:
 
-```
+```text
 ---
 
 owner:  BTB
