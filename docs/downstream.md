@@ -67,7 +67,7 @@ Options:
 Three parameters have to be provided, `-v` and `-c` are the name of the VCF and CSV files respectively, the `-f`
 parameter is the name of the normal sample in the VCF file. MuTect2 (GATK version < 4.0) VCF has a header line like:
 
-```
+```text
 #CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  TUMOR   NORMAL
 ```
 
