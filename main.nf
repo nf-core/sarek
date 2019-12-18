@@ -2420,7 +2420,7 @@ ascatOut.dump(tag:'ASCAT')
 // STEP MPILEUP.1
 
 process Mpileup {
-    label 'memory_singleCPU_2_task'
+    label 'cpus_1'
 
     tag {idSample + "-" + intervalBed.baseName}
 
@@ -2456,6 +2456,8 @@ if (!params.no_intervals) {
 // STEP MPILEUP.2 - MERGE
 
 process MergeMpileup {
+    label 'cpus_1'
+
     tag {idSample}
 
     publishDir params.outdir, mode: params.publishDirMode, saveAs: { it == "${idSample}.pileup.gz" ? "VariantCalling/${idSample}/mpileup/${it}" : '' }
