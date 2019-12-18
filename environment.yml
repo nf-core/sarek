@@ -14,7 +14,7 @@ dependencies:
   - ensembl-vep=95.2
   - fastqc=0.11.8
   - freebayes=1.2.0
-  - gatk4=4.1.2.0
+  - gatk4-spark=4.1.4.1
   - genesplicer=1.0
   - htslib=1.9
   - manta=1.5.0
