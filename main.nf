@@ -2989,6 +2989,8 @@ if (!params.no_intervals) {
 // STEP MPILEUP.2 - MERGE
 
 process MergeMpileup {
+    label 'cpus_1'
+
     tag {idSample}
 
     publishDir params.outdir, mode: params.publish_dir_mode, saveAs: { it == "${idSample}.pileup.gz" ? "VariantCalling/${idSample}/mpileup/${it}" : '' }
