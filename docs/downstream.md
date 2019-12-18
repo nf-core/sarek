@@ -14,7 +14,7 @@ chr1  514206  rs1247069502  A C . PASS  ECNT=1;dbSNP=rs1247069502 RankScore=Scor
 where the `ScoreTest` is the sample (normal) ID, and the score of this particular variation is 0. Scout will accept and
 show any sort of scores if the VCF is annotated properly. There have to be an info line in the VCF like:
 
-```
+```text
 ##INFO=<ID=RankScore,Number=.,Type=String,Description="The rank score for this variant ... . family_id:rank_score.">
 ``` 
 
@@ -105,5 +105,4 @@ samples:
 vcf_cancer: testM2.vcf
 
 ```
-
 
