@@ -73,7 +73,7 @@ parameter is the name of the normal sample in the VCF file. MuTect2 (GATK versio
 
 not showing sample names, only the `TUMOR` and `NORMAL` columns. For Scout, the `NORMAL` part has to be altered to
 reflect actual sample name: this sample name will be also used in the RankScore annotation. By providing the something
-like `-f ThisIsIt` , the header line will be 
+like `-f ThisIsIt` , the header line will be
 
 ```
 #CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  TUMOR  ThisIsIt
