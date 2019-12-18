@@ -76,7 +76,7 @@ reflect actual sample name: this sample name will be also used in the RankScore 
 like `-f ThisIsIt` , the header line will be 
 
 ```
-#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  TUMOR  ThisIsIt 
+#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  TUMOR  ThisIsIt
 ```
 
 and annotations will be like `RankScore=ThisIsIt:7` . The `.yaml` file for Scout to load the case has to be prepared in
@@ -106,4 +106,3 @@ samples:
 vcf_cancer: testM2.vcf
 
 ```
-
