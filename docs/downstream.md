@@ -75,7 +75,7 @@ not showing sample names, only the `TUMOR` and `NORMAL` columns. For Scout, the 
 reflect actual sample name: this sample name will be also used in the RankScore annotation. By providing the something
 like `-f ThisIsIt` , the header line will be
 
-```
+```text
 #CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  TUMOR  ThisIsIt
 ```
 
