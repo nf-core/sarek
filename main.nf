@@ -2420,7 +2420,7 @@ ascatOut.dump(tag:'ASCAT')
 // STEP MPILEUP.1
 
 process Mpileup {
-    label 'cpus_1'
+    label 'memory_singleCPU_2_task'
 
     tag {idSample + "-" + intervalBed.baseName}
 

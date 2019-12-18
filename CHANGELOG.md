@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ### `Added`
 
+- [#51](https://github.com/nf-core/sarek/pull/51) - Script for RankScore annotation
 - [#76](https://github.com/nf-core/sarek/pull/76) - Add `GATK Spark` possibilities to Sarek
 
 ### `Changed`
@@ -49,7 +50,6 @@ Jåkkåtjkaskajekna is one of the two glaciers of the Ålkatj Massif.
 ### `Removed`
 
 - [#46](https://github.com/nf-core/sarek/pull/46) - Remove mention of old `build.nf` script which was included in `main.nf`
-- [#51](https://github.com/nf-core/sarek/pull/51) - Script for RankScore annotation
 - [#74](https://github.com/nf-core/sarek/pull/74) - Remove `download_image.sh` and `run_tests.sh` scripts
 - [#76](https://github.com/nf-core/sarek/pull/76) - Remove `runOptions = "-u \$(id -u):\$(id -g)"` in `nextflow.config` to enable `Spark` possibilities
 
@@ -70,16 +70,6 @@ Jåkkåtjkaskajekna is one of the two glaciers of the Ålkatj Massif.
 ### `Added`
 
 - [#53](https://github.com/nf-core/sarek/pull/53) - Release `2.5.1`
-
-### `Fixed`
-
-- [#48](https://github.com/nf-core/sarek/issues/48) - Fix `singularity.autoMounts` issue.
-- [#49](https://github.com/nf-core/sarek/issues/49) - Use correct tag for annotation containers.
-- [#50](https://github.com/nf-core/sarek/issues/50) - Fix paths for scripts.
-
-## [2.5.1] - Årjep-Ålkatjjekna
-
-Årjep-Ålkatjjekna is one of the two glaciers of the Ålkatj Massif.
 
 ### `Fixed`
 
