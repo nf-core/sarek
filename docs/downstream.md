@@ -52,6 +52,7 @@ very last one in the file will be stored only.
 ## Usage of `scripts/addPFRanksToVCF.py` : transferring Pathfindr rank_score to Scout
 
 Usage is:
+
 ```bash
 $ ./addPFRanksToVCF.py -h
 Usage: addPFRanksToVCF.py [OPTIONS]
