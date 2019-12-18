@@ -105,7 +105,7 @@ jobs:
         run: |
           docker pull nfcore/sarek:dev
           docker tag nfcore/sarek:dev nfcore/sarek:dev
-      - name: Run targeted and splitfastq tests
+      - name: Run ${{ matrix.profile }} test
         run: |
           nextflow run . -profile ${{ matrix.profile }},docker --verbose
   tools:
@@ -125,6 +125,6 @@ jobs:
         run: |
           docker pull nfcore/sarek:dev
           docker tag nfcore/sarek:dev nfcore/sarek:dev
-      - name: Run variant calling test on specific tools
+      - name: Run ${{ matrix.tool }} test
         run: |
           nextflow run . -profile test_tool,docker --verbose --tools ${{ matrix.tool }}
