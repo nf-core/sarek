@@ -16,6 +16,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#76](https://github.com/nf-core/sarek/pull/76) - Use `gatk4-spark` instead of `gatk4` in `environment.yml`
 - [#80](https://github.com/nf-core/sarek/pull/80) - Re-bump `dev` branch
 
+### `Fixed`
+
+- [#83](https://github.com/nf-core/sarek/pull/83) - Fix some typos in `docs/input.md`
+
 ## [2.5.2] - Jåkkåtjkaskajekna
 
 Jåkkåtjkaskajekna is one of the two glaciers of the Ålkatj Massif.
