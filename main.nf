@@ -676,8 +676,8 @@ process MapReads {
     input = hasExtension(inputFile1, "bam") ? "-p /dev/stdin - 2> >(tee ${inputFile1}.bwa.stderr.log >&2)" : "${inputFile1} ${inputFile2}"
     """
     ${convertToFastq}
-    bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
-    ${input} |  samtools sort - > ${idSample}_${idRun}.bam
+    bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -M ${fasta} \
+    ${input} |  samtools sort -o  ${idSample}_${idRun}.bam -
     """
 }
 
