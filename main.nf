@@ -674,6 +674,9 @@ process MapReads {
     extra = status == 1 ? "-B 3" : ""
     convertToFastq = hasExtension(inputFile1, "bam") ? "gatk --java-options -Xmx${task.memory.toGiga()}g SamToFastq --INPUT=${inputFile1} --FASTQ=/dev/stdout --INTERLEAVE=true --NON_PF=true | \\" : ""
     input = hasExtension(inputFile1, "bam") ? "-p /dev/stdin - 2> >(tee ${inputFile1}.bwa.stderr.log >&2)" : "${inputFile1} ${inputFile2}"
+    // Pseudo-code: Add soft-coded memory allocation to the two tools:
+    bwa_memory  = task.memory.toGiga() * 0.60
+    sort_memory = task.memory.toGiga() * 0.40
     """
     ${convertToFastq}
     bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -M ${fasta} \
