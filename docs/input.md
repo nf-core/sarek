@@ -131,6 +131,8 @@ G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.md.recal.bam    pathToF
 Input files for Sarek can be specified using the path to a VCF directory given to the `--input` command only with the `annotate` step.
 Multiple VCF files can be specified if the path is enclosed in quotes.
 
+As Sarek will use `bgzip` and `tabix` to compress and index VCF files annotated, it expects VCF files to be sorted.
+
 ```bash
 nextflow run nf-core/sarek --step annotate --input "results/VariantCalling/*/.vcf.gz" ...
 ```

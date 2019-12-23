@@ -14,7 +14,7 @@ before_install:
   - docker pull nfcore/sarek:dev
   # Fake the tag locally so that the pipeline runs properly
   # Looks weird when this is :dev to :dev, but makes sense when testing code for a release (:dev to :1.0.1)
-  - docker tag nfcore/sarek:dev nfcore/sarek:2.5.1
+  - docker tag nfcore/sarek:dev nfcore/sarek:2.5.2
 
 install:
   # Install Nextflow
@@ -30,7 +30,7 @@ install:
   - sudo apt-get install npm && npm install -g markdownlint-cli
 
 env:
-  - NXF_VER='19.04.0' # Specify a minimum NF version that should be tested and work
+  - NXF_VER='19.10.0' # Specify a minimum NF version that should be tested and work
   - NXF_VER='' # Plus: get the latest NF version and check that it works
 
 script:
