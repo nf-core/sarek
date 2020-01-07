@@ -1,4 +1,4 @@
-FROM nfcore/base:1.6
+FROM nfcore/base:1.7
 
 LABEL \
   author="Maxime Garcia" \
@@ -7,7 +7,7 @@ LABEL \
 
 COPY environment.yml /
 RUN conda env create -f /environment.yml && conda clean -a
-ENV PATH /opt/conda/envs/sarek-vep-2.5dev/bin:$PATH
+ENV PATH /opt/conda/envs/sarek-vep-dev/bin:$PATH
 
 # Setup default ARG variables
 ARG GENOME=GRCh38

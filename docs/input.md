@@ -2,7 +2,7 @@
 
 ## Information about the TSV files
 
-Input files for Sarek can be specified using a TSV file given to the `--sample` command.
+Input files for Sarek can be specified using a TSV file given to the `--input` command.
 The TSV file is a Tab Separated Value file with columns:
 
 - `subject gender status sample lane fastq1 fastq2` for step `mapping` with paired-end FASTQs
@@ -49,15 +49,15 @@ G15511    XX    1    D0ENMT    D0ENM_2    pathToFiles/D0ENMACXX111207.2_1.fastq.
 
 ## Path to a FASTQ directory for a single normal sample (step mapping)
 
-Input files for Sarek can be specified using the path to a FASTQ directory given to the `--sample` command only with the `mapping` step.
+Input files for Sarek can be specified using the path to a FASTQ directory given to the `--input` command only with the `mapping` step.
 
 ```bash
-nextflow run nf-core/sarek --sample pathToDirectory ...
+nextflow run nf-core/sarek --input pathToDirectory ...
 ```
 
 ### Input FASTQ file name best practices
 
-The input folder, containing the FASTQ files for one individual (ID) should be organized into one subfolder for every sample.
+The input folder, containing the FASTQ files for one individual (ID) should be organized into one sub-folder for every sample.
 All fastq files for that sample should be collected here.
 
 ```text
@@ -85,8 +85,8 @@ Fastq filename structure:
 Where:
 
 - `sample` = sample id
-- `lib` = indentifier of libaray preparation
-- `flowcell` = identifyer of flow cell for the sequencing run
+- `lib` = identifier of library preparation
+- `flowcell` = identifier of flow cell for the sequencing run
 - `lane` = identifier of the lane of the sequencing run
 
 Read group information will be parsed from fastq file names according to this:
@@ -128,9 +128,11 @@ G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.md.recal.bam    pathToF
 
 ## VCF files for annotation
 
-Input files for Sarek can be specified using the path to a VCF directory given to the `--sample` command only with the `annotate` step.
-Multiple VCF files can be specified if the path is enclosed in quotes.
+Input files for Sarek can be specified using the path to a VCF directory given to the `--input` command only with the `annotate` step.
+As Sarek will use `bgzip` and `tabix` to compress and index VCF files annotated, it expects VCF files to be sorted.
+Multiple VCF files can be specified, using a [glob path](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob), if enclosed in quotes.
+For example:
 
 ```bash
-nextflow run nf-core/sarek --step annotate --sample "results/VariantCalling/*/.vcf.gz" ...
+nextflow run nf-core/sarek --step annotate --input "results/VariantCalling/*/{HaplotypeCaller,Manta,Mutect2,Strelka,TIDDIT}/*.vcf.gz" ...
 ```

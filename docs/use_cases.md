@@ -5,7 +5,7 @@ Using the `mapping` directive one will have a pair of mapped, deduplicated and r
 This is the usual option you have to give when you are starting from raw FASTQ data:
 
 ```bash
-nextflow run nf-core/sarek/main.nf --sample mysample.tsv --tools <tool>
+nextflow run nf-core/sarek --input mysample.tsv --tools <tool>
 ```
 
 `mapping` will start by default, you do not have to give any additional parameters, only the TSV file describing the sample (see below).
@@ -20,7 +20,7 @@ Also, older version are renamed with incremented numbers.
 The workflow should be started in this case with the smallest set of options as written above:
 
 ```bash
-nextflow run nf-core/sarek/main.nf --sample mysample.tsv --tools <tool>
+nextflow run nf-core/sarek --input mysample.tsv --tools <tool>
 ```
 
 The TSV file should look like:
@@ -33,22 +33,22 @@ See the [input files documentation](docs/input.md) for more information.
 
 ## Starting from raw FASTQ - a directory with normal sample only
 
-The `--sample` option can be also used to point Sarek to a directory with FASTQ files:
+The `--input` option can be also used to point Sarek to a directory with FASTQ files:
 
 ```bash
-nextflow run nf-core/sarek/main.nf --sample path/to/FASTQ/files --tools <tool>
+nextflow run nf-core/sarek --input path/to/FASTQ/files --tools <tool>
 ```
 
 The given directory is searched recursively for FASTQ files that are named `*_R1_*.fastq.gz`, and a matching pair with the same name except `_R2_` instead of `_R1_` is expected to exist alongside.
 All of the found FASTQ files are considered to belong to the sample.
 Each FASTQ file pair gets its own read group (`@RG`) in the resulting BAM file.
 
-### Metadata when using `--sample` with a directory
+### Metadata when using `--input` with a directory
 
-When using `--sample` with a directory, the metadata about the sample that are written to the BAM header in the `@RG` tag are determined in the following way.
+When using `--input` with a directory, the metadata about the sample that are written to the BAM header in the `@RG` tag are determined in the following way.
 
-- The sample name (`SM`) is derived from the the last component of the path given to `--sample`.
-That is, you should make sure that that directory has a meaningful name! For example, with `--sample=/my/fastqs/sample123`, the sample name will be `sample123`.
+- The sample name (`SM`) is derived from the the last component of the path given to `--input`.
+That is, you should make sure that that directory has a meaningful name! For example, with `--input=/my/fastqs/sample123`, the sample name will be `sample123`.
 - The read group id is set to *flowcell.samplename.lane*.
 The flowcell id and lane number are auto-detected from the name of the first read in the FASTQ file.
 
@@ -78,7 +78,7 @@ See the [input files documentation](docs/input.md) for more information.
 ## Starting from recalibration
 
 ```bash
-nextflow run nf-core/sarek/main.nf --sample mysample.tsv --step recalibrate --tools <tool>
+nextflow run nf-core/sarek --input mysample.tsv --step recalibrate --tools <tool>
 ```
 
 And the corresponding TSV file should be like:
@@ -97,7 +97,7 @@ See the [input files documentation](docs/input.md) for more information.
 At this step we are assuming that all the required preprocessing is over, we only want to run variant callers or other tools using recalibrated BAM files.
 
 ```bash
-nextflow run nf-core/sarek/main.nf --step variantcalling --tools <tool>
+nextflow run nf-core/sarek --step variantcalling --tools <tool>
 ```
 
 And the corresponding TSV file should be like:
@@ -121,5 +121,5 @@ It is adviced to pad the variant calling regions (exons or the target) to some e
 To add the target BED file configure the flow like:
 
 ```bash
-nextflow run nf-core/sarek/main.nf --tools haplotypecaller,strelka,mutect2 --targetBED targets.bed --sample my_panel.tsv
+nextflow run nf-core/sarek --tools haplotypecaller,strelka,mutect2 --targetBED targets.bed --input my_panel.tsv
 ```
