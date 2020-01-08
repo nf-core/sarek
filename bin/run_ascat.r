@@ -1,8 +1,19 @@
 q#!/bin/env Rscript
 args = commandArgs(trailingOnly=TRUE)
-if(length(args)<6){
-    stop("No input files supplied\n\nUsage:\nRscript run_ascat.r tumor_baf tumor_logr normal_baf normal_logr tumor_sample_name baseDir gcfile\n\n")
-} else{
+if(length(args)<7){
+    stop("No input files supplied\n\nUsage:\nRscript run_ascat.r tumor_baf tumor_logr normal_baf normal_logr tumor_sample_name baseDir gcfile purity ploidy\n\n")
+}
+elseif(length(args)==7){
+tumorbaf = args[1]
+    tumorlogr = args[2]
+    normalbaf = args[3]
+    normallogr = args[4]
+    tumorname = args[5]
+    baseDir = args[6]
+    gcfile = args[7]
+    gender = args[8]
+}
+else{
     tumorbaf = args[1]
     tumorlogr = args[2]
     normalbaf = args[3]
@@ -11,6 +22,8 @@ if(length(args)<6){
     baseDir = args[6]
     gcfile = args[7]
     gender = args[8]
+    purity = args[9]
+    ploidy = args[10]
 }
 
 library(ASCAT)
@@ -46,7 +59,13 @@ ascat.bc <- ascat.aspcf(ascat.bc)
 ascat.plotSegmentedData(ascat.bc)
 
 #Run ASCAT to fit every tumor to a model, inferring ploidy, normal cell contamination, and discrete copy numbers
-ascat.output <- ascat.runAscat(ascat.bc, gamma=1)
+#If psi and rho are manually set:
+if (exists(purity) and exists(ploidy)){
+    ascat.output <- ascat.runAscat(ascat.bc, gamma=1, rho_manual=purity, psi_manual=ploidy)
+} else {
+    ascat.output <- ascat.runAscat(ascat.bc, gamma=1)
+}
+
 
 #Write out segmented regions (including regions with one copy of each allele)
 #write.table(ascat.output$segments, file=paste(tumorname, ".segments.txt", sep=""), sep="\t", quote=F, row.names=F)

@@ -46,6 +46,8 @@
   - [--snpeffDb](#--snpeffdb)
   - [--vepCacheVersion](#--vepcacheversion)
   - [--igenomesIgnore](#--igenomesignore)
+  - [--ascat_ploidy](#--ascat_ploidy)
+  - [--ascat_purity](#--ascat_purity)
   - [--species](#--species)
 - [Job resources](#job-resources)
   - [Automatic resubmission](#automatic-resubmission)
@@ -442,6 +444,14 @@ If you prefer, you can specify the full path to your reference genome when you r
 ```bash
 --acLociGC '[path to the acLociGC file]'
 ```
+
+### --ascat_ploidy
+
+Use this parameter to overwrite default behavior from ASCAT regarding ploidy.
+
+### --ascat_purity
+
+Use this parameter to overwrite default behavior from ASCAT regarding purity.
 
 ### --bwaIndex
 

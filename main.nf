@@ -2409,10 +2409,12 @@ process Ascat {
 
     script:
     gender = genderMap[idPatient]
+    ascat_ploidy = params.ascat_ploidy ? "use ploidy: ${ascat_ploidy}" : "use default ploidy"
+    ascat_purity = params.ascat_purity ? "use purity: ${ascat_purity}" : "use default purity"
     """
     # get rid of "chr" string if there is any
-    #for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
-    Rscript ${workflow.projectDir}/bin/run_ascat.r ${bafTumor} ${logrTumor} ${bafNormal} ${logrNormal} ${idSampleTumor} ${baseDir} ${acLociGC} ${gender}
+    for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
+    Rscript ${workflow.projectDir}/bin/run_ascat.r ${bafTumor} ${logrTumor} ${bafNormal} ${logrNormal} ${idSampleTumor} ${baseDir} ${acLociGC} ${gender} ${ascat_purity} ${ascat_ploidy}
     """
 }
 
