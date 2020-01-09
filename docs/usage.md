@@ -46,8 +46,6 @@
   - [--snpeffDb](#--snpeffdb)
   - [--vepCacheVersion](#--vepcacheversion)
   - [--igenomesIgnore](#--igenomesignore)
-  - [--ascat_ploidy](#--ascat_ploidy)
-  - [--ascat_purity](#--ascat_purity)
   - [--species](#--species)
 - [Job resources](#job-resources)
   - [Automatic resubmission](#automatic-resubmission)
@@ -70,6 +68,8 @@
   - [--plaintext_email](#--plaintext_email)
   - [--monochrome_logs](#--monochrome_logs)
   - [--multiqc_config](#--multiqc_config)
+  - [--ascat_ploidy](#--ascat_ploidy)
+  - [--ascat_purity](#--ascat_purity)
 
 ## Introduction
 
