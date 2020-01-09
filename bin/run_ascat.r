@@ -2,15 +2,6 @@ q#!/bin/env Rscript
 args = commandArgs(trailingOnly=TRUE)
 if(length(args)<8) {
     stop("No input files supplied\n\nUsage:\nRscript run_ascat.r tumor_baf tumor_logr normal_baf normal_logr tumor_sample_name baseDir gcfile gender purity ploidy\n\n")
-} else if(length(args)==8) {
-    tumorbaf = args[1]
-    tumorlogr = args[2]
-    normalbaf = args[3]
-    normallogr = args[4]
-    tumorname = args[5]
-    baseDir = args[6]
-    gcfile = args[7]
-    gender = args[8]
 } else {
     tumorbaf = args[1]
     tumorlogr = args[2]
@@ -32,6 +23,12 @@ if(!require(RColorBrewer)){
     library(RColorBrewer)
 }
 options(bitmapType='cairo')
+
+if (exists(purity) and exists(ploidy)){
+    fileConn<-file("test.txt")
+    writeLines(c("purity",,"  ", ploidy"), fileConn)
+    close(fileConn)
+}
 
 #Load the  data
 #ascat.bc <- ascat.loadData(Tumor_LogR_file=tumorlogr, Tumor_BAF_file=tumorbaf, Germline_LogR_file=normallogr, Germline_BAF_file=normalbaf, chrs = c(1:22,"X","Y"), gender = gender, sexchromosomes = c("X", "Y"))
