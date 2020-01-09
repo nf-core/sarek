@@ -1,10 +1,9 @@
 q#!/bin/env Rscript
 args = commandArgs(trailingOnly=TRUE)
-if(length(args)<7){
-    stop("No input files supplied\n\nUsage:\nRscript run_ascat.r tumor_baf tumor_logr normal_baf normal_logr tumor_sample_name baseDir gcfile purity ploidy\n\n")
-}
-elseif(length(args)==7){
-tumorbaf = args[1]
+if(length(args)<8) {
+    stop("No input files supplied\n\nUsage:\nRscript run_ascat.r tumor_baf tumor_logr normal_baf normal_logr tumor_sample_name baseDir gcfile gender purity ploidy\n\n")
+} else if(length(args)==8) {
+    tumorbaf = args[1]
     tumorlogr = args[2]
     normalbaf = args[3]
     normallogr = args[4]
@@ -12,8 +11,7 @@ tumorbaf = args[1]
     baseDir = args[6]
     gcfile = args[7]
     gender = args[8]
-}
-else{
+} else {
     tumorbaf = args[1]
     tumorlogr = args[2]
     normalbaf = args[3]
