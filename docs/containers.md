@@ -21,7 +21,7 @@ For annotation, the main container can be used, but the cache has to be download
 - Contain **[Control-FREEC](https://github.com/BoevaLab/FREEC)** 11.4
 - Contain **[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)** 0.11.8
 - Contain **[FreeBayes](https://github.com/ekg/freebayes)** 1.2.0
-- Contain **[GATK4](https://github.com/broadinstitute/gatk)** 4.1.2.0
+- Contain **[GATK4-spark](https://github.com/broadinstitute/gatk)** 4.1.4.1
 - Contain **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
 - Contain **[HTSlib](https://github.com/samtools/htslib)** 1.9
 - Contain **[Manta](https://github.com/Illumina/manta)** 1.5.0

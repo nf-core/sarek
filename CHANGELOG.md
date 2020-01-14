@@ -6,7 +6,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## dev
 
+### `Added`
+
+- [#76](https://github.com/nf-core/sarek/pull/76) - Add `GATK Spark` possibilities to Sarek
+
+### `Changed`
+
+- [#76](https://github.com/nf-core/sarek/pull/76) - Use `MarkDuplicatesSpark` instead of `MarkDuplicates`
+- [#76](https://github.com/nf-core/sarek/pull/76) - Use `gatk4-spark` instead of `gatk4` in `environment.yml`
 - [#80](https://github.com/nf-core/sarek/pull/80) - Re-bump `dev` branch
+
+### `Fixed`
+
+- [#83](https://github.com/nf-core/sarek/pull/83) - Fix some typos in `docs/input.md`
 
 ## [2.5.2] - Jåkkåtjkaskajekna
 
@@ -25,6 +37,7 @@ Jåkkåtjkaskajekna is one of the two glaciers of the Ålkatj Massif.
 - [#60](https://github.com/nf-core/sarek/pull/60) - Add new minimal genomes (`TAIR10`, `EB2`, `UMD3.1`, `bosTau8`, `WBcel235`, `ce10`, `CanFam3.1`, `canFam3`, `GRCz10`, `danRer10`, `BDGP6`, `dm6`, `EquCab2`, `equCab2`, `EB1`, `Galgal4`, `galGal4`, `Gm01`, `hg38`, `hg19`, `Mmul_1`, `mm10`, `IRGSP-1.0`, `CHIMP2.1.4`, `panTro4`, `Rnor_6.0`, `rn6`, `R64-1-1`, `sacCer3`, `EF2`, `Sbi1`, `Sscrofa10.2`, `susScr3`, `AGPv3`) to `igenomes.config`
 - [#61](https://github.com/nf-core/sarek/pull/61) - Add params `split_fastq`
 - [#61](https://github.com/nf-core/sarek/pull/61) - Add test `SPLITFASTQ`
+- [#66](https://github.com/nf-core/sarek/pull/66) - Add `Sentieon` possibilities to Sarek
 
 ### `Changed`
 
@@ -41,6 +54,7 @@ Jåkkåtjkaskajekna is one of the two glaciers of the Ålkatj Massif.
 
 - [#46](https://github.com/nf-core/sarek/pull/46) - Remove mention of old `build.nf` script which was included in `main.nf`
 - [#74](https://github.com/nf-core/sarek/pull/74) - Remove `download_image.sh` and `run_tests.sh` scripts
+- [#76](https://github.com/nf-core/sarek/pull/76) - Remove `runOptions = "-u \$(id -u):\$(id -g)"` in `nextflow.config` to enable `Spark` possibilities
 
 ### `Fixed`
 

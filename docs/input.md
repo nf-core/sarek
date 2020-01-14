@@ -57,7 +57,7 @@ nextflow run nf-core/sarek --input pathToDirectory ...
 
 ### Input FASTQ file name best practices
 
-The input folder, containing the FASTQ files for one individual (ID) should be organized into one subfolder for every sample.
+The input folder, containing the FASTQ files for one individual (ID) should be organized into one sub-folder for every sample.
 All fastq files for that sample should be collected here.
 
 ```text
@@ -85,8 +85,8 @@ Fastq filename structure:
 Where:
 
 - `sample` = sample id
-- `lib` = indentifier of libaray preparation
-- `flowcell` = identifyer of flow cell for the sequencing run
+- `lib` = identifier of library preparation
+- `flowcell` = identifier of flow cell for the sequencing run
 - `lane` = identifier of the lane of the sequencing run
 
 Read group information will be parsed from fastq file names according to this:
@@ -129,10 +129,10 @@ G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.md.recal.bam    pathToF
 ## VCF files for annotation
 
 Input files for Sarek can be specified using the path to a VCF directory given to the `--input` command only with the `annotate` step.
-Multiple VCF files can be specified if the path is enclosed in quotes.
-
 As Sarek will use `bgzip` and `tabix` to compress and index VCF files annotated, it expects VCF files to be sorted.
+Multiple VCF files can be specified, using a [glob path](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob), if enclosed in quotes.
+For example:
 
 ```bash
-nextflow run nf-core/sarek --step annotate --input "results/VariantCalling/*/.vcf.gz" ...
+nextflow run nf-core/sarek --step annotate --input "results/VariantCalling/*/{HaplotypeCaller,Manta,Mutect2,Strelka,TIDDIT}/*.vcf.gz" ...
 ```
