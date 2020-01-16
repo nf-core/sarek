@@ -39,11 +39,6 @@ if(!require(RColorBrewer)){
 }
 options(bitmapType='cairo')
 
-if (!is.null(opt$ploidy) && !is.null(opt$purity)){
-    fileConn<-file("test.txt")
-    writeLines(c(opt$ploidy,"  ", opt$purity), fileConn)
-    close(fileConn)
-}
 
 #Load the  data
 #ascat.bc <- ascat.loadData(Tumor_LogR_file=opt$tumorlogr, Tumor_BAF_file=opt$tumorbaf, Germline_LogR_file=opt$normallogr, Germline_BAF_file=opt$normalbaf, chrs = c(1:22,"X","Y"), opt$gender = opt$gender, sexchromosomes = c("X", "Y"))
@@ -57,31 +52,27 @@ if(opt$gender=="XY"){
 
 
 #GC wave correction
-#ascat.bc = ascat.GCcorrect(ascat.bc, opt$gcfile)
+ascat.bc = ascat.GCcorrect(ascat.bc, opt$gcfile)
 
 #Plot the raw data
-#ascat.plotRawData(ascat.bc)
+ascat.plotRawData(ascat.bc)
 
 #Segment the data
-#ascat.bc <- ascat.aspcf(ascat.bc)
+ascat.bc <- ascat.aspcf(ascat.bc)
 
 #Plot the segmented data
-#ascat.plotSegmentedData(ascat.bc)
+ascat.plotSegmentedData(ascat.bc)
 
 #Run ASCAT to fit every tumor to a model, inferring ploidy, normal cell contamination, and discrete copy numbers
 #If psi and rho are manually set:
 if (!is.null(opt$purity) && !is.null(opt$ploidy)){
-  ascat.plotRawData(ascat.bc)
-    #ascat.output <- ascat.runAscat(ascat.bc, gamma=1, rho_manual=opt$purity, psi_manual=opt$ploidy)
+  ascat.output <- ascat.runAscat(ascat.bc, gamma=1, rho_manual=opt$purity, psi_manual=opt$ploidy)
 } else if(!is.null(opt$purity) && is.null(opt$ploidy)){
-  ascat.plotRawData(ascat.bc)
-    #ascat.output <- ascat.runAscat(ascat.bc, gamma=1, rho_manual=opt$purity)
+  ascat.output <- ascat.runAscat(ascat.bc, gamma=1, rho_manual=opt$purity)
 } else if(!is.null(opt$ploidy) && is.null(opt$purity)){
-  ascat.plotRawData(ascat.bc)
-    #ascat.output <- ascat.runAscat(ascat.bc, gamma=1, psi_manual=opt$ploidy)
+  ascat.output <- ascat.runAscat(ascat.bc, gamma=1, psi_manual=opt$ploidy)
 } else {
-  ascat.plotRawData(ascat.bc)
-    #ascat.output <- ascat.runAscat(ascat.bc, gamma=1)
+  ascat.output <- ascat.runAscat(ascat.bc, gamma=1)
 }
 
 
