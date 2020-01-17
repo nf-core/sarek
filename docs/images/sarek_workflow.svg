@@ -2218,8 +2218,8 @@
      id="namedview4"
      showgrid="false"
      inkscape:zoom="1"
-     inkscape:cx="265.76574"
-     inkscape:cy="561.72374"
+     inkscape:cx="289.04792"
+     inkscape:cy="697.48921"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -2254,6 +2254,7 @@
      id="tspan3424"
      y="-2749.4028"
      x="866.00854" /></text>
+
 
 
 
@@ -2806,6 +2807,7 @@
 
 
 
+
 <text
    style="font-style:normal;font-weight:bold;font-size:medium;font-family:sans-serif;color-interpolation:auto;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1.45000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
    x="32.745098"
@@ -2815,6 +2817,7 @@
    xml:space="preserve"
    id="text8514"
    transform="matrix(1.9071373,0,0,-1.9071373,542.56229,2077.7321)" />
+
 
 
 
@@ -3170,6 +3173,7 @@
 
 
 
+
 <rect
    ry="5.2434611"
    rx="5.2434611"
@@ -3193,7 +3197,7 @@
        y="2056.7422"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20.2700367px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro'" /></flowRegion><flowPara
      id="flowPara10112-0"
-     style="font-size:20.2700367px;line-height:1.25">• HaplotypeCaller</flowPara><flowPara
+     style="font-size:20.2700367px;line-height:1.25">• GATK HaplotypeCaller</flowPara><flowPara
      id="flowPara4887"
      style="font-size:20.2700367px;line-height:1.25">    mpileup, Strelka2</flowPara><flowPara
      id="flowPara5971"
@@ -3222,9 +3226,11 @@
        y="2056.7422"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20.2700367px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro'" /></flowRegion><flowPara
      id="flowPara4387"
-     style="font-size:20.2700367px;line-height:1.25">• FreeBayes, Mutect2</flowPara><flowPara
+     style="font-size:20.2700367px;line-height:1.25">• FreeBayes, Strelka2</flowPara><flowPara
      style="font-size:20.2700367px;line-height:1.25"
-     id="flowPara1944">    Strelka2</flowPara><flowPara
+     id="flowPara1946">    GATK Mutect2</flowPara><flowPara
+     style="font-size:20.2700367px;line-height:1.25"
+     id="flowPara1944" /><flowPara
      id="flowPara4385"
      style="font-size:20.2700367px;line-height:1.25">• Manta</flowPara><flowPara
      id="flowPara5991"
@@ -3283,6 +3289,7 @@
 
 
 
+
 <rect
    transform="matrix(3.3334488,0,0,-2.7685238,1558.6733,1718.605)"
    id="rect4911"
@@ -3303,6 +3310,7 @@
    style="font-style:normal;font-weight:bold;font-size:medium;line-height:0%;font-family:sans-serif;color-interpolation:auto;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1.45000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"><tspan
      style="font-size:11.90393639px"
      id="tspan4923">Reports</tspan></text>
+
 
 
 
