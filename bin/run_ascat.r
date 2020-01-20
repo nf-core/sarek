@@ -17,9 +17,9 @@ option_list = list(
               help="GC correction file", metavar="character"),
               make_option("--gender", type="character", default=NULL,
               help="gender on format XX or XY", metavar="character"),
-              make_option("--purity", type="character", default=NULL,
+              make_option("--purity", type="double", default=NULL,
               help="override Ascat purity parameter (rho_manual) ", metavar="character"),
-              make_option("--ploidy", type="character", default=NULL,
+              make_option("--ploidy", type="double", default=NULL,
               help="override Ascat ploidy parameter (psi_manual)", metavar="character"))
 
 opt_parser = OptionParser(option_list=option_list)
