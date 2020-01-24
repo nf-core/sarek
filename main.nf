@@ -112,8 +112,10 @@ def helpMessage() {
 }
 
 /*
- * SET UP CONFIGURATION VARIABLES
- */
+================================================================================
+                         SET UP CONFIGURATION VARIABLES
+================================================================================
+*/
 
 // Show help message
 if (params.help) exit 0, helpMessage()
@@ -352,8 +354,11 @@ else log.info "\033[2m----------------------------------------------------\033[0
 checkHostname()
 
 /*
- * Parse software version numbers
- */
+================================================================================
+                         PARSE SOFTWARE VERSION NUMBERS
+================================================================================
+*/
+
 process GetSoftwareVersions {
     publishDir path:"${params.outdir}/pipeline_info", mode: params.publishDirMode
 
@@ -2969,11 +2974,9 @@ compressVCFOutVEP = compressVCFOutVEP.dump(tag:'VCF')
 
 /*
 ================================================================================
-                                     MultiQC
+                                     MULTIQC
 ================================================================================
 */
-
-// STEP MULTIQC
 
 process MultiQC {
     publishDir "${params.outdir}/Reports/MultiQC", mode: params.publishDirMode
@@ -3003,8 +3006,11 @@ process MultiQC {
 multiQCOut.dump(tag:'MultiQC')
 
 /*
- * Completion e-mail notification
- */
+================================================================================
+                         COMPLETION E-MAIL NOTIFICATION
+================================================================================
+*/
+
 workflow.onComplete {
 
     // Set up the e-mail variables
@@ -3107,7 +3113,7 @@ workflow.onComplete {
 
 /*
 ================================================================================
-                                nf-core functions
+                                NF-CORE FUNCTIONS
 ================================================================================
 */
 
@@ -3182,7 +3188,7 @@ def checkHostname() {
 
 /*
 ================================================================================
-                                 sarek functions
+                                 SAREK FUNCTIONS
 ================================================================================
 */
 
