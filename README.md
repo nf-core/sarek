@@ -1,19 +1,21 @@
 # [![Sarek](https://raw.githubusercontent.com/SciLifeLab/Sarek/master/docs/images/Sarek_logo.png "Sarek")](http://sarek.scilifelab.se/)
 
-This pipeline has moved!
+# This pipeline has moved!
 
-This pipeline has been moved to the new nf-core project. You can now find it here:
-https://github.com/nf-core/sarek
+This pipeline has been moved to the new [nf-core](http://nf-co.re/) project.
+You can now find it here:
+
+### https://github.com/nf-core/sarek
 
 If you have any problems with the pipeline, please create an issue at the above repository instead.
 
-To find out more about nf-core, visit http://nf-co.re/
+To find out more about nf-core, visit [http://nf-co.re/](http://nf-co.re/)
 
 This repository will be archived to maintain the released versions for future reruns, in the spirit of full reproducibility.
 
 If you have any questions, please get in touch: support@ngisweden.se
 
-// Maxime Garcia, 2020-01-27
+// [Maxime Garcia](https://github.com/MaxUlysse/), 2020-01-27
 
 #### An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing
 
