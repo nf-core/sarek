@@ -1529,7 +1529,7 @@ process GenotypeGVCFs {
 
 vcfGenotypeGVCFs = vcfGenotypeGVCFs.groupTuple(by:[0, 1, 2])
 
-// STEP SENTIEON DNAseq
+// STEP SENTIEON DNASEQ
 
 process SentieonDNAseq {
     label 'cpus_max'
@@ -1564,7 +1564,7 @@ process SentieonDNAseq {
 
 sentieonDNAseqVCF = sentieonDNAseqVCF.dump(tag:'sentieon DNAseq')
 
-// STEP SENTIEON DNAscope
+// STEP SENTIEON DNASCOPE
 
 process SentieonDNAscope {
     label 'cpus_max'
@@ -2319,8 +2319,6 @@ vcfStrelkaBP = vcfStrelkaBP.dump(tag:'Strelka BP')
 
 // STEP ASCAT.1 - ALLELECOUNTER
 
-// Run commands and code from Malin Larsson
-// Based on Jesper Eisfeldt's code
 process AlleleCounter {
     label 'memory_singleCPU_2_task'
 
@@ -2364,8 +2362,7 @@ alleleCounterOut = alleleCounterOut.map {
 
 // STEP ASCAT.2 - CONVERTALLELECOUNTS
 
-// R script from Malin Larssons bitbucket repo:
-// https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
+// R script from https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
 process ConvertAlleleCounts {
     label 'memory_singleCPU_2_task'
 
@@ -2390,8 +2387,7 @@ process ConvertAlleleCounts {
 
 // STEP ASCAT.3 - ASCAT
 
-// R scripts from Malin Larssons bitbucket repo:
-// https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
+// R scripts from https://bitbucket.org/malinlarsson/somatic_wgs_pipeline
 process Ascat {
     label 'memory_singleCPU_2_task'
 
