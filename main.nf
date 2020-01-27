@@ -1105,6 +1105,7 @@ process GatherBQSRReports {
 
     output:
         set idPatient, idSample, file("${idSample}.recal.table") into recalTable
+        file("${idSample}.recal.table") into baseRecalibratorReport
         set idPatient, idSample into recalTableTSV
 
     when: !(params.no_intervals)
@@ -2987,6 +2988,7 @@ process MultiQC {
         file ('BCFToolsStats/*') from bcftoolsReport.collect().ifEmpty([])
         file ('FastQC/*') from fastQCReport.collect().ifEmpty([])
         file ('MarkDuplicates/*') from markDuplicatesReport.collect().ifEmpty([])
+        file ('DuplicateMarked/*.recal.table') from baseRecalibratorReport.collect().ifEmpty([])
         file ('SamToolsStats/*') from samtoolsStatsReport.collect().ifEmpty([])
         file ('snpEff/*') from snpeffReport.collect().ifEmpty([])
         file ('VCFTools/*') from vcftoolsReport.collect().ifEmpty([])
