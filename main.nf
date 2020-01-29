@@ -261,11 +261,7 @@ ch_fasta = params.fasta && !('annotate' in step) ? Channel.value(file(params.fas
 ch_fastaFai = params.fastaFai && !('annotate' in step) ? Channel.value(file(params.fastaFai)) : "null"
 ch_germlineResource = params.germlineResource && 'mutect2' in tools ? Channel.value(file(params.germlineResource)) : "null"
 ch_intervals = params.intervals && !params.no_intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : "null"
-
-// knownIndels is currently a list of file for smallGRCh37, so transform it in a channel
-li_knownIndels = []
-if (params.knownIndels && ('mapping' in step)) params.knownIndels.each { li_knownIndels.add(file(it)) }
-ch_knownIndels = params.knownIndels && params.genome == 'smallGRCh37' ? Channel.value(li_knownIndels.collect()) : params.knownIndels ? Channel.value(file(params.knownIndels)) : "null"
+ch_knownIndels = params.knownIndels && 'mapping' in step ? Channel.value(file(params.knownIndels)) : "null"
 
 ch_snpEff_cache = params.snpEff_cache ? Channel.value(file(params.snpEff_cache)) : "null"
 ch_snpeffDb = params.snpeffDb ? Channel.value(params.snpeffDb) : "null"
@@ -1107,6 +1103,7 @@ process GatherBQSRReports {
 
     output:
         set idPatient, idSample, file("${idSample}.recal.table") into recalTable
+        file("${idSample}.recal.table") into baseRecalibratorReport
         set idPatient, idSample into recalTableTSV
 
     when: !(params.no_intervals)
@@ -2989,6 +2986,7 @@ process MultiQC {
         file ('BCFToolsStats/*') from bcftoolsReport.collect().ifEmpty([])
         file ('FastQC/*') from fastQCReport.collect().ifEmpty([])
         file ('MarkDuplicates/*') from markDuplicatesReport.collect().ifEmpty([])
+        file ('DuplicateMarked/*.recal.table') from baseRecalibratorReport.collect().ifEmpty([])
         file ('SamToolsStats/*') from samtoolsStatsReport.collect().ifEmpty([])
         file ('snpEff/*') from snpeffReport.collect().ifEmpty([])
         file ('VCFTools/*') from vcftoolsReport.collect().ifEmpty([])

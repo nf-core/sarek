@@ -15,6 +15,7 @@ export_plots: true
 top_modules:
 - 'fastqc'
 - 'picard'
+- 'gatk'
 - 'samtools'
 - 'qualimap'
 - 'bcftools'
