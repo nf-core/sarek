@@ -98,6 +98,9 @@ def helpMessage() {
 
     Other options:
         --outdir                    The output directory where the results will be saved
+        --publish_dir_mode          Mode of publishing data in the output directory.
+                                    Available: symlink, rellink, link, copy, copyNoFollow, move
+                                    Default: link
         --sequencing_center         Name of sequencing center to be displayed in BAM file
         --multiqc_config            Specify a custom config file for MultiQC
         --monochrome_logs           Logs will be without colors
@@ -197,6 +200,13 @@ if (params.nucleotidesPerSecond) {
     log.warn "The params `--nucleotidesPerSecond` is deprecated -- it will be removed in a future release."
     log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--nucleotides_per_second"
     params.nucleotides_per_second = params.nucleotidesPerSecond
+}
+
+params.publishDirMode = null
+if (params.publishDirMode) {
+    log.warn "The params `--publishDirMode` is deprecated -- it will be removed in a future release."
+    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--publish_dir_mode"
+    params.publish_dir_mode = params.publishDirMode
 }
 
 params.sample = null
