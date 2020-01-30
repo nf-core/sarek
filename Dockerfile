@@ -1,4 +1,4 @@
-FROM nfcore/base:1.8
+FROM nfcore/base:dev
 LABEL authors="Maxime Garcia, Szilveszter Juhos" \
       description="Docker image containing all requirements for nf-core/sarek pipeline"
 
