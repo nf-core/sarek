@@ -738,8 +738,8 @@ Default: `results/
 ## --publish_dir_mode
 
 The file publishing method.
-Available: symlink, rellink, link, copy, copyNoFollow, move
-Default: link
+Available: `symlink`, `rellink`, `link`, `copy`, `copyNoFollow`, `move`
+Default: `copy`
 
 ## --publishDirMode
 

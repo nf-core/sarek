@@ -100,7 +100,7 @@ def helpMessage() {
         --outdir                    The output directory where the results will be saved
         --publish_dir_mode          Mode of publishing data in the output directory.
                                     Available: symlink, rellink, link, copy, copyNoFollow, move
-                                    Default: link
+                                    Default: copy
         --sequencing_center         Name of sequencing center to be displayed in BAM file
         --multiqc_config            Specify a custom config file for MultiQC
         --monochrome_logs           Logs will be without colors
