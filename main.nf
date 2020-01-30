@@ -111,15 +111,16 @@ def helpMessage() {
     """.stripIndent()
 }
 
-/*
- * SET UP CONFIGURATION VARIABLES
- */
-
 // Show help message
 if (params.help) exit 0, helpMessage()
 
-// Handle deprecated params
+/*
+================================================================================
+                                HANDLE OLD PARAMS
+================================================================================
+*/
 
+// Warnings for deprecated params
 
 params.annotateTools = null
 if (params.annotateTools) {
@@ -240,6 +241,65 @@ if (params.targetBed) {
     params.target_bed = params.targetBed
 }
 
+// Errors for removed params
+
+params.acLoci = null
+if (params.acLoci) exit 1, "The params `--acLoci` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--ac_loci"
+
+params.acLociGC = null
+if (params.acLociGC) exit 1, "The params `--acLociGC` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--ac_loci_gc"
+
+params.bwaIndex = null
+if (params.bwaIndex) exit 1, "The params `--bwaIndex` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--bwa"
+
+params.chrDir = null
+if (params.chrDir) exit 1, "The params `--chrDir` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--chr_dir"
+
+params.chrLength = null
+if (params.chrLength) exit 1, "The params `--chrLength` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--chr_length"
+
+params.dnsnpIndex = null
+if (params.dnsnpIndex) exit 1, "The params `--dnsnpIndex` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--dnsnp_index"
+
+params.fastaFai = null
+if (params.fastaFai) exit 1, "The params `--fastaFai` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--fasta_fai"
+
+params.genomeDict = null
+if (params.genomeDict) exit 1, "The params `--genomeDict` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--dict"
+
+params.genomeFile = null
+if (params.genomeFile) exit 1, "The params `--genomeFile` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--fasta"
+
+params.genomeIndex = null
+if (params.genomeIndex) exit 1, "The params `--genomeIndex` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--fasta_fai"
+
+params.germlineResource = null
+if (params.germlineResource) exit 1, "The params `--germlineResource` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--germline_resource"
+
+params.germlineResourceIndex = null
+if (params.germlineResourceIndex) exit 1, "The params `--germlineResourceIndex` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--germline_resource_index"
+
+params.igenomesIgnore = null
+if (params.igenomesIgnore) exit 1, "The params `--igenomesIgnore` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--igenomes_ignore"
+
+params.knownIndels = null
+if (params.knownIndels) exit 1, "The params `--knownIndels` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--known_indels"
+
+params.knownIndelsIndex = null
+if (params.knownIndelsIndex) exit 1, "The params `--knownIndelsIndex` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--known_indels_index"
+
+params.snpeffDb = null
+if (params.snpeffDb) exit 1, "The params `--snpeffDb` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--snpeff_db"
+
+params.vepCacheVersion = null
+if (params.vepCacheVersion) exit 1, "The params `--vepCacheVersion` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--vep_cache_version"
+
+/*
+================================================================================
+                         SET UP CONFIGURATION VARIABLES
+================================================================================
+*/
+
 // Check if genome exists in the config file
 if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
@@ -357,29 +417,29 @@ params.species = params.genome && 'vep' in tools ? params.genomes[params.genome]
 params.vep_cache_version = params.genome && 'vep' in tools ? params.genomes[params.genome].vep_cache_version ?: null : null
 
 // Initialize channels based on params
-ch_acLoci = params.ac_loci && 'ascat' in tools ? Channel.value(file(params.ac_loci)) : "null"
-ch_acLociGC = params.ac_loci_gc && 'ascat' in tools ? Channel.value(file(params.ac_loci_gc)) : "null"
-ch_chrDir = params.chr_dir && 'controlfreec' in tools ? Channel.value(file(params.chr_dir)) : "null"
-ch_chrLength = params.chr_length && 'controlfreec' in tools ? Channel.value(file(params.chr_length)) : "null"
+ch_ac_loci = params.ac_loci && 'ascat' in tools ? Channel.value(file(params.ac_loci)) : "null"
+ch_ac_loci_gc = params.ac_loci_gc && 'ascat' in tools ? Channel.value(file(params.ac_loci_gc)) : "null"
+ch_chr_dir = params.chr_dir && 'controlfreec' in tools ? Channel.value(file(params.chr_dir)) : "null"
+ch_chr_length = params.chr_length && 'controlfreec' in tools ? Channel.value(file(params.chr_length)) : "null"
 ch_dbsnp = params.dbsnp && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools) ? Channel.value(file(params.dbsnp)) : "null"
 ch_fasta = params.fasta && !('annotate' in step) ? Channel.value(file(params.fasta)) : "null"
-ch_fastaFai = params.fasta_fai && !('annotate' in step) ? Channel.value(file(params.fasta_fai)) : "null"
-ch_germlineResource = params.germline_resource && 'mutect2' in tools ? Channel.value(file(params.germline_resource)) : "null"
+ch_fai = params.fasta_fai && !('annotate' in step) ? Channel.value(file(params.fasta_fai)) : "null"
+ch_germline_resource = params.germline_resource && 'mutect2' in tools ? Channel.value(file(params.germline_resource)) : "null"
 ch_intervals = params.intervals && !params.no_intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : "null"
-ch_knownIndels = params.known_indels && 'mapping' in step ? Channel.value(file(params.known_indels)) : "null"
+ch_known_indels = params.known_indels && 'mapping' in step ? Channel.value(file(params.known_indels)) : "null"
 
-ch_snpEff_cache = params.snpeff_cache ? Channel.value(file(params.snpeff_cache)) : "null"
-ch_snpeffDb = params.snpeff_db ? Channel.value(params.snpeff_db) : "null"
-ch_vepCacheVersion = params.vep_cache_version ? Channel.value(params.vep_cache_version) : "null"
+ch_snpeff_cache = params.snpeff_cache ? Channel.value(file(params.snpeff_cache)) : "null"
+ch_snpeff_db = params.snpeff_db ? Channel.value(params.snpeff_db) : "null"
+ch_vep_cache_version = params.vep_cache_version ? Channel.value(params.vep_cache_version) : "null"
 ch_vep_cache = params.vep_cache ? Channel.value(file(params.vep_cache)) : "null"
 
 // Optional files, not defined within the params.genomes[params.genome] scope
-ch_cadd_InDels = params.cadd_indels ? Channel.value(file(params.cadd_indels)) : "null"
-ch_cadd_InDels_tbi = params.cadd_indels_tbi ? Channel.value(file(params.cadd_indels_tbi)) : "null"
-ch_cadd_WG_SNVs = params.cadd_wg_snvs ? Channel.value(file(params.cadd_wg_snvs)) : "null"
-ch_cadd_WG_SNVs_tbi = params.cadd_wg_snvs_tbi ? Channel.value(file(params.cadd_wg_snvs_tbi)) : "null"
+ch_cadd_indels = params.cadd_indels ? Channel.value(file(params.cadd_indels)) : "null"
+ch_cadd_indels_tbi = params.cadd_indels_tbi ? Channel.value(file(params.cadd_indels_tbi)) : "null"
+ch_cadd_wg_snvs = params.cadd_wg_snvs ? Channel.value(file(params.cadd_wg_snvs)) : "null"
+ch_cadd_wg_snvs_tbi = params.cadd_wg_snvs_tbi ? Channel.value(file(params.cadd_wg_snvs_tbi)) : "null"
 ch_pon = params.pon ? Channel.value(file(params.pon)) : "null"
-ch_targetBED = params.target_bed ? Channel.value(file(params.target_bed)) : "null"
+ch_target_bed = params.target_bed ? Channel.value(file(params.target_bed)) : "null"
 
 /*
 ================================================================================
@@ -513,7 +573,7 @@ process BuildBWAindexes {
         file(fasta) from ch_fasta
 
     output:
-        file("${fasta}.*") into bwaIndexes
+        file("${fasta}.*") into bwaBuilt
 
     when: !(params.bwa) && params.fasta && 'mapping' in step
 
@@ -523,7 +583,7 @@ process BuildBWAindexes {
     """
 }
 
-ch_bwaIndex = params.bwa ? Channel.value(file(params.bwa)) : bwaIndexes
+ch_bwa = params.bwa ? Channel.value(file(params.bwa)) : bwaBuilt
 
 process BuildDict {
     tag {fasta}
@@ -560,7 +620,7 @@ process BuildFastaFai {
         file(fasta) from ch_fasta
 
     output:
-        file("${fasta}.fai") into fastaFaiBuilt
+        file("${fasta}.fai") into faiBuilt
 
     when: !(params.fasta_fai) && params.fasta && !('annotate' in step)
 
@@ -570,7 +630,7 @@ process BuildFastaFai {
     """
 }
 
-ch_fastaFai = params.fasta_fai ? Channel.value(file(params.fasta_fai)) : fastaFaiBuilt
+ch_fai = params.fasta_fai ? Channel.value(file(params.fasta_fai)) : faiBuilt
 
 process BuildDbsnpIndex {
     tag {dbsnp}
@@ -582,7 +642,7 @@ process BuildDbsnpIndex {
         file(dbsnp) from ch_dbsnp
 
     output:
-        file("${dbsnp}.tbi") into dbsnpIndexBuilt
+        file("${dbsnp}.tbi") into dbsnp_tbi
 
     when: !(params.dbsnp_index) && params.dbsnp && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools)
 
@@ -592,7 +652,7 @@ process BuildDbsnpIndex {
     """
 }
 
-ch_dbsnpIndex = params.dbsnp ? params.dbsnp_index ? Channel.value(file(params.dbsnp_index)) : dbsnpIndexBuilt : "null"
+ch_dbsnp_tbi = params.dbsnp ? params.dbsnp_index ? Channel.value(file(params.dbsnp_index)) : dbsnp_tbi : "null"
 
 process BuildGermlineResourceIndex {
     tag {germlineResource}
@@ -601,10 +661,10 @@ process BuildGermlineResourceIndex {
         saveAs: {params.save_reference ? "reference_genome/${it}" : null }
 
     input:
-        file(germlineResource) from ch_germlineResource
+        file(germlineResource) from ch_germline_resource
 
     output:
-        file("${germlineResource}.tbi") into germlineResourceIndexBuilt
+        file("${germlineResource}.tbi") into germline_resource_tbi
 
     when: !(params.germline_resource_index) && params.germline_resource && 'mutect2' in tools
 
@@ -614,7 +674,7 @@ process BuildGermlineResourceIndex {
     """
 }
 
-ch_germlineResourceIndex = params.germline_resource ? params.germline_resource_index ? Channel.value(file(params.germline_resource_index)) : germlineResourceIndexBuilt : "null"
+ch_germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? Channel.value(file(params.germline_resource_index)) : germline_resource_tbi : "null"
 
 process BuildKnownIndelsIndex {
     tag {knownIndels}
@@ -623,10 +683,10 @@ process BuildKnownIndelsIndex {
         saveAs: {params.save_reference ? "reference_genome/${it}" : null }
 
     input:
-        each file(knownIndels) from ch_knownIndels
+        each file(knownIndels) from ch_known_indels
 
     output:
-        file("${knownIndels}.tbi") into knownIndelsIndexBuilt
+        file("${knownIndels}.tbi") into known_indels_tbi
 
     when: !(params.known_indels_index) && params.known_indels && 'mapping' in step
 
@@ -636,7 +696,7 @@ process BuildKnownIndelsIndex {
     """
 }
 
-ch_knownIndelsIndex = params.known_indels ? params.known_indels_index ? Channel.value(file(params.known_indels_index)) : knownIndelsIndexBuilt.collect() : "null"
+ch_known_indels_tbi = params.known_indels ? params.known_indels_index ? Channel.value(file(params.known_indels_index)) : known_indels_tbi.collect() : "null"
 
 process BuildPonIndex {
     tag {pon}
@@ -648,7 +708,7 @@ process BuildPonIndex {
         file(pon) from ch_pon
 
     output:
-        file("${pon}.tbi") into ponIndexBuilt
+        file("${pon}.tbi") into pon_tbi
 
     when: !(params.pon_index) && params.pon && ('tnscope' in tools || 'mutect2' in tools)
 
@@ -658,7 +718,7 @@ process BuildPonIndex {
     """
 }
 
-ch_ponIndex = params.pon ? params.pon_index ? Channel.value(file(params.pon_index)) : ponIndexBuilt : "null"
+ch_pon_tbi = params.pon ? params.pon_index ? Channel.value(file(params.pon_index)) : pon_tbi : "null"
 
 process BuildIntervals {
   tag {fastaFai}
@@ -667,7 +727,7 @@ process BuildIntervals {
     saveAs: {params.save_reference ? "reference_genome/${it}" : null }
 
   input:
-    file(fastaFai) from ch_fastaFai
+    file(fastaFai) from ch_fai
 
   output:
     file("${fastaFai.baseName}.bed") into intervalBuilt
@@ -873,9 +933,9 @@ process MapReads {
 
     input:
         set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from inputPairReads
-        file(bwaIndex) from ch_bwaIndex
+        file(bwaIndex) from ch_bwa
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMapped
@@ -926,9 +986,9 @@ process SentieonMapReads {
 
     input:
         set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from inputPairReadsSentieon
-        file(bwaIndex) from ch_bwaIndex
+        file(bwaIndex) from ch_bwa
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMappedSentieon
@@ -1105,7 +1165,7 @@ process SentieonDedup {
     input:
         set idPatient, idSample, file(bam), file(bai) from bamForSentieonDedup
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
         set idPatient, idSample, file("${idSample}.deduped.bam"), file("${idSample}.deduped.bam.bai") into bamDedupedSentieon
@@ -1151,12 +1211,12 @@ process BaseRecalibrator {
     input:
         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamBaseRecalibrator
         file(dbsnp) from ch_dbsnp
-        file(dbsnpIndex) from ch_dbsnpIndex
+        file(dbsnpIndex) from ch_dbsnp_tbi
         file(fasta) from ch_fasta
         file(dict) from ch_dict
-        file(fastaFai) from ch_fastaFai
-        file(knownIndels) from ch_knownIndels
-        file(knownIndelsIndex) from ch_knownIndelsIndex
+        file(fastaFai) from ch_fai
+        file(knownIndels) from ch_known_indels
+        file(knownIndelsIndex) from ch_known_indels_tbi
 
     output:
         set idPatient, idSample, file("${prefix}${idSample}.recal.table") into tableGatherBQSRReports
@@ -1272,7 +1332,7 @@ process ApplyBQSR {
         set idPatient, idSample, file(bam), file(bai), file(recalibrationReport), file(intervalBed) from bamApplyBQSR
         file(dict) from ch_dict
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
         set idPatient, idSample, file("${prefix}${idSample}.recal.bam") into bamMergeBamRecal
@@ -1314,12 +1374,12 @@ process SentieonBQSR {
     input:
         set idPatient, idSample, file(bam), file(bai) from bamDedupedSentieon
         file(dbsnp) from ch_dbsnp
-        file(dbsnpIndex) from ch_dbsnpIndex
+        file(dbsnpIndex) from ch_dbsnp_tbi
         file(fasta) from ch_fasta
         file(dict) from ch_dict
-        file(fastaFai) from ch_fastaFai
-        file(knownIndels) from ch_knownIndels
-        file(knownIndelsIndex) from ch_knownIndelsIndex
+        file(fastaFai) from ch_fai
+        file(knownIndels) from ch_known_indels
+        file(knownIndelsIndex) from ch_known_indels_tbi
 
     output:
         set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bamRecalSentieon 
@@ -1498,7 +1558,7 @@ process BamQC {
 
     input:
         set idPatient, idSample, file(bam) from bamBamQC
-        file(targetBED) from ch_targetBED
+        file(targetBED) from ch_target_bed
 
     output:
         file("${bam.baseName}") into bamQCReport
@@ -1564,10 +1624,10 @@ process HaplotypeCaller {
     input:
         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamHaplotypeCaller
         file(dbsnp) from ch_dbsnp
-        file(dbsnpIndex) from ch_dbsnpIndex
+        file(dbsnpIndex) from ch_dbsnp_tbi
         file(dict) from ch_dict
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
         set val("HaplotypeCallerGVCF"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf") into gvcfHaplotypeCaller
@@ -1601,10 +1661,10 @@ process GenotypeGVCFs {
     input:
         set idPatient, idSample, file(intervalBed), file(gvcf) from gvcfGenotypeGVCFs
         file(dbsnp) from ch_dbsnp
-        file(dbsnpIndex) from ch_dbsnpIndex
+        file(dbsnpIndex) from ch_dbsnp_tbi
         file(dict) from ch_dict
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
     set val("HaplotypeCaller"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into vcfGenotypeGVCFs
@@ -1642,9 +1702,9 @@ process SentieonDNAseq {
     input:
         set idPatient, idSample, file(bam), file(bai) from bamSentieonDNAseq
         file(dbsnp) from ch_dbsnp
-        file(dbsnpIndex) from ch_dbsnpIndex
+        file(dbsnpIndex) from ch_dbsnp_tbi
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
     set val("SentieonDNAseq"), idPatient, idSample, file("DNAseq_${idSample}.vcf") into sentieonDNAseqVCF
@@ -1677,9 +1737,9 @@ process SentieonDNAscope {
     input:
         set idPatient, idSample, file(bam), file(bai) from bamSentieonDNAscope
         file(dbsnp) from ch_dbsnp
-        file(dbsnpIndex) from ch_dbsnpIndex
+        file(dbsnpIndex) from ch_dbsnp_tbi
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
     set val("SentieonDNAscope"), idPatient, idSample, file("DNAscope_${idSample}.vcf") into sentieonDNAscopeVCF
@@ -1731,8 +1791,8 @@ process StrelkaSingle {
     input:
         set idPatient, idSample, file(bam), file(bai) from bamStrelkaSingle
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
-        file(targetBED) from ch_targetBED
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
 
     output:
         set val("Strelka"), idPatient, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfStrelkaSingle
@@ -1778,8 +1838,8 @@ process MantaSingle {
     input:
         set idPatient, idSample, file(bam), file(bai) from bamMantaSingle
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
-        file(targetBED) from ch_targetBED
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
 
     output:
         set val("Manta"), idPatient, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfMantaSingle
@@ -1835,7 +1895,7 @@ process TIDDIT {
     input:
         set idPatient, idSample, file(bam), file(bai) from bamTIDDIT
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
         set val("TIDDIT"), idPatient, idSample, file("*.vcf.gz"), file("*.tbi") into vcfTIDDIT
@@ -1903,7 +1963,7 @@ process FreeBayes {
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamFreeBayes
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
         set val("FreeBayes"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into vcfFreeBayes
@@ -1940,12 +2000,12 @@ process Mutect2 {
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamMutect2
         file(dict) from ch_dict
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
-        file(germlineResource) from ch_germlineResource
-        file(germlineResourceIndex) from ch_germlineResourceIndex
+        file(fastaFai) from ch_fai
+        file(germlineResource) from ch_germline_resource
+        file(germlineResourceIndex) from ch_germline_resource_tbi
         file(intervals) from ch_intervals
         file(pon) from ch_pon
-        file(ponIndex) from ch_ponIndex
+        file(ponIndex) from ch_pon_tbi
 
     output:
         set val("Mutect2"), 
@@ -1995,9 +2055,9 @@ process MergeMutect2Stats {
         set idPatient, idSampleTumor, idSampleNormal, file(statsFiles) from mutect2Stats               // the actual stats files
         file(dict) from ch_dict
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
-        file(germlineResource) from ch_germlineResource
-        file(germlineResourceIndex) from ch_germlineResourceIndex
+        file(fastaFai) from ch_fai
+        file(germlineResource) from ch_germline_resource
+        file(germlineResourceIndex) from ch_germline_resource_tbi
         file(intervals) from ch_intervals
 
     output:
@@ -2032,8 +2092,8 @@ process ConcatVCF {
 
     input:
         set variantCaller, idPatient, idSample, file(vcFiles) from vcfConcatenateVCFs
-        file(fastaFai) from ch_fastaFai
-        file(targetBED) from ch_targetBED
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
 
     output:
     // we have this funny *_* pattern to avoid copying the raw calls to publishdir
@@ -2066,8 +2126,8 @@ process PileupSummariesForMutect2 {
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamPileupSummaries 
         set idPatient, idSampleNormal, idSampleTumor, file(statsFile) from intervalStatsFiles
-        file(germlineResource) from ch_germlineResource
-        file(germlineResourceIndex) from ch_germlineResourceIndex
+        file(germlineResource) from ch_germline_resource
+        file(germlineResourceIndex) from ch_germline_resource_tbi
 
     output:
         set idPatient,
@@ -2160,9 +2220,9 @@ process FilterMutect2Calls {
         file("${idSampleTN}_contamination.table") from contaminationTable
         file(dict) from ch_dict
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
-        file(germlineResource) from ch_germlineResource
-        file(germlineResourceIndex) from ch_germlineResourceIndex
+        file(fastaFai) from ch_fai
+        file(germlineResource) from ch_germline_resource
+        file(germlineResourceIndex) from ch_germline_resource_tbi
         file(intervals) from ch_intervals
         
     output:
@@ -2199,11 +2259,11 @@ process SentieonTNscope {
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamTNscope
         file(dict) from ch_dict
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
         file(dbsnp) from ch_dbsnp
-        file(dbsnpIndex) from ch_dbsnpIndex
+        file(dbsnpIndex) from ch_dbsnp_tbi
         file(pon) from ch_pon
-        file(ponIndex) from ch_ponIndex
+        file(ponIndex) from ch_pon_tbi
 
     output:
         set val("SentieonTNscope"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf") into vcfTNscope
@@ -2267,8 +2327,8 @@ process Strelka {
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamStrelka
         file(dict) from ch_dict
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
-        file(targetBED) from ch_targetBED
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
 
     output:
         set val("Strelka"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfStrelka
@@ -2315,8 +2375,8 @@ process Manta {
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamManta
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
-        file(targetBED) from ch_targetBED
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
 
     output:
         set val("Manta"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfManta
@@ -2382,8 +2442,8 @@ process StrelkaBP {
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(mantaCSI), file(mantaCSIi) from pairBamStrelkaBP
         file(dict) from ch_dict
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
-        file(targetBED) from ch_targetBED
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
 
     output:
         set val("Strelka"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfStrelkaBP
@@ -2429,10 +2489,10 @@ process AlleleCounter {
 
     input:
         set idPatient, idSample, file(bam), file(bai) from bamAscat
-        file(acLoci) from ch_acLoci
+        file(acLoci) from ch_ac_loci
         file(dict) from ch_dict
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
         set idPatient, idSample, file("${idSample}.alleleCount") into alleleCounterOut
@@ -2502,7 +2562,7 @@ process Ascat {
 
     input:
         set idPatient, idSampleNormal, idSampleTumor, file(bafNormal), file(logrNormal), file(bafTumor), file(logrTumor) from convertAlleleCountsOut
-        file(acLociGC) from ch_acLociGC
+        file(acLociGC) from ch_ac_loci_gc
 
     output:
         set val("ASCAT"), idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.*.{png,txt}") into ascatOut
@@ -2529,7 +2589,7 @@ process Mpileup {
     input:
         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamMpileup
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
         set idPatient, idSample, file("${prefix}${idSample}.pileup.gz") into mpileupMerge
@@ -2610,12 +2670,12 @@ process ControlFREEC {
 
     input:
         set idPatient, idSampleNormal, idSampleTumor, file(mpileupNormal), file(mpileupTumor) from mpileupOut
-        file(chrDir) from ch_chrDir
-        file(chrLength) from ch_chrLength
+        file(chrDir) from ch_chr_dir
+        file(chrLength) from ch_chr_length
         file(dbsnp) from ch_dbsnp
-        file(dbsnpIndex) from ch_dbsnpIndex
+        file(dbsnpIndex) from ch_dbsnp_tbi
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
         set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.pileup.gz_CNVs"), file("${idSampleTumor}.pileup.gz_ratio.txt"), file("${idSampleTumor}.pileup.gz_normal_CNVs"), file("${idSampleTumor}.pileup.gz_normal_ratio.txt"), file("${idSampleTumor}.pileup.gz_BAF.txt"), file("${idSampleNormal}.pileup.gz_BAF.txt") into controlFreecViz
@@ -2872,8 +2932,8 @@ process Snpeff {
 
     input:
         set variantCaller, idSample, file(vcf) from vcfSnpeff
-        file(dataDir) from ch_snpEff_cache
-        val snpeffDb from ch_snpeffDb
+        file(dataDir) from ch_snpeff_cache
+        val snpeffDb from ch_snpeff_db
 
     output:
         set file("${reducedVCF}_snpEff.txt"), file("${reducedVCF}_snpEff.html"), file("${reducedVCF}_snpEff.csv") into snpeffReport
@@ -2940,11 +3000,11 @@ process VEP {
     input:
         set variantCaller, idSample, file(vcf), file(idx) from vcfVep
         file(dataDir) from ch_vep_cache
-        val cache_version from ch_vepCacheVersion
-        file(cadd_InDels) from ch_cadd_InDels
-        file(cadd_InDels_tbi) from ch_cadd_InDels_tbi
-        file(cadd_WG_SNVs) from ch_cadd_WG_SNVs
-        file(cadd_WG_SNVs_tbi) from ch_cadd_WG_SNVs_tbi
+        val cache_version from ch_vep_cache_version
+        file(cadd_InDels) from ch_cadd_indels
+        file(cadd_InDels_tbi) from ch_cadd_indels_tbi
+        file(cadd_WG_SNVs) from ch_cadd_wg_snvs
+        file(cadd_WG_SNVs_tbi) from ch_cadd_wg_snvs_tbi
 
     output:
         set variantCaller, idSample, file("${reducedVCF}_VEP.ann.vcf") into vepVCF
@@ -3003,11 +3063,11 @@ process VEPmerge {
     input:
         set variantCaller, idSample, file(vcf), file(idx) from compressVCFsnpEffOut
         file(dataDir) from ch_vep_cache
-        val cache_version from ch_vepCacheVersion
-        file(cadd_InDels) from ch_cadd_InDels
-        file(cadd_InDels_tbi) from ch_cadd_InDels_tbi
-        file(cadd_WG_SNVs) from ch_cadd_WG_SNVs
-        file(cadd_WG_SNVs_tbi) from ch_cadd_WG_SNVs_tbi
+        val cache_version from ch_vep_cache_version
+        file(cadd_InDels) from ch_cadd_indels
+        file(cadd_InDels_tbi) from ch_cadd_indels_tbi
+        file(cadd_WG_SNVs) from ch_cadd_wg_snvs
+        file(cadd_WG_SNVs_tbi) from ch_cadd_wg_snvs_tbi
 
     output:
         set variantCaller, idSample, file("${reducedVCF}_VEP.ann.vcf") into vepVCFmerge
