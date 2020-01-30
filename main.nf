@@ -301,6 +301,9 @@ if (params.knownIndelsIndex) exit 1, "The params `--knownIndelsIndex` has been r
 params.snpeffDb = null
 if (params.snpeffDb) exit 1, "The params `--snpeffDb` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--snpeff_db"
 
+params.singleCPUMem = null
+if (params.singleCPUMem) exit 1, "The params `--singleCPUMem` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--single_cpu_mem"
+
 params.vepCacheVersion = null
 if (params.vepCacheVersion) exit 1, "The params `--vepCacheVersion` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--vep_cache_version"
 

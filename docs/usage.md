@@ -84,6 +84,8 @@
   - [--custom_config_version](#--custom_config_version)
   - [--custom_config_base](#--custom_config_base)
   - [--max_memory](#--max_memory)
+  - [--single_cpu_mem](#--single_cpu_mem)
+  - [--singleCPUMem](#--singlecpumem)
   - [--max_time](#--max_time)
   - [--max_cpus](#--max_cpus)
   - [--plaintext_email](#--plaintext_email)
@@ -819,6 +821,16 @@ nextflow run /path/to/pipeline/ --custom_config_base /path/to/my/configs/configs
 
 Use to set a top-limit for the default memory requirement for each process.
 Should be a string in the format integer-unit eg. `--max_memory '8.GB'`
+
+### --single_cpu_mem
+
+Use to set memory for a single CPU.
+Should be a string in the format integer-unit eg. `--single_cpu_mem '8.GB'`
+
+### --singleCPUMem
+
+> :warning: This params has been removed.
+> Please check: [`--single_cpu_mem`](#--single_cpu_mem)
 
 ### --max_time
 
