@@ -2204,7 +2204,7 @@ process CalculateContamination {
         set idPatient, idSampleNormal, idSampleTumor, file(bamNormal), file(baiNormal), file(bamTumor), file(baiTumor), file(mergedPileup) from pairBamCalculateContamination
   
     output:
-        set idPatient, idSamplePair, file("${idSampleTumor}_contamination.table") into contaminationTable
+        set idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${idSampleTumor}_contamination.table") into contaminationTable
 
     when: 'mutect2' in tools
 
