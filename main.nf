@@ -2242,7 +2242,7 @@ process FilterMutect2Calls {
         file(intervals) from ch_intervals
         
     output:
-        set val("Mutect2"), idPatient, idSamplePair, file("${variantCaller}_filtered_${idSamplePair}.vcf.gz"), file("${variantCaller}_filtered_${idSamplePair}.vcf.gz.tbi"), file("${variantCaller}_filtered_${idSamplePair}.vcf.gz.filteringStats.tsv") into filteredMutect2Output
+        set val("Mutect2"), idPatient, idSamplePair, file("Mutect2_filtered_${idSamplePair}.vcf.gz"), file("Mutect2_filtered_${idSamplePair}.vcf.gz.tbi"), file("Mutect2_filtered_${idSamplePair}.vcf.gz.filteringStats.tsv") into filteredMutect2Output
 
     when: 'mutect2' in tools
 
@@ -2255,7 +2255,7 @@ process FilterMutect2Calls {
         --contamination-table ${contaminationTable} \
         --stats ${stats} \
         -R ${fasta} \
-        -O ${variantCaller}_filtered_${idSamplePair}.vcf.gz
+        -O Mutect2_filtered_${idSamplePair}.vcf.gz
     """
 }
 
