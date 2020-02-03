@@ -11,42 +11,61 @@
   - [--sample](#--sample)
   - [--sampleDir](#--sampledir)
   - [--annotateVCF](#--annotatevcf)
+  - [--no_gvcf](#--no_gvcf)
   - [--noGVCF](#--nogvcf)
+  - [--skip_qc](#--skip_qc)
   - [--skipQC](#--skipqc)
   - [--noReports](#--noreports)
+  - [--nucleotides_per_second](#--nucleotides_per_second)
   - [--nucleotidesPerSecond](#--nucleotidespersecond)
   - [--step](#--step)
   - [--tools](#--tools)
   - [--sentieon](#--sentieon)
+  - [--no_strelka_bp](#--no_strelka_bp)
   - [--noStrelkaBP](#--nostrelkabp)
   - [--no_intervals](#--no_intervals)
+  - [--target_bed](#--target_bed)
   - [--targetBED](#--targetbed)
 - [Reference genomes](#reference-genomes)
   - [--genome (using iGenomes)](#--genome-using-igenomes)
+  - [--ac_loci](#--ac_loci)
   - [--acLoci](#--acloci)
+  - [--ac_loci_gc](#--ac_loci_gc)
   - [--acLociGC](#--aclocigc)
+  - [--bwa](#--bwa)
   - [--bwaIndex](#--bwaindex)
+  - [--chr_dir](#--chr_dir)
   - [--chrDir](#--chrdir)
+  - [--chr_length](#--chr_length)
   - [--chrLength](#--chrlength)
   - [--dbsnp](#--dbsnp)
+  - [--dbsnp_index](#--dbsnp_index)
   - [--dbsnpIndex](#--dbsnpindex)
   - [--dict](#--dict)
   - [--fasta](#--fasta)
+  - [--fasta_fai](#--fasta_fai)
   - [--fastaFai](#--fastafai)
   - [--genomeDict](#--genomedict)
   - [--genomeFile](#--genomefile)
   - [--genomeIndex](#--genomeindex)
+  - [--germline_resource](#--germline_resource)
   - [--germlineResource](#--germlineresource)
+  - [--germline_resource_index](#--germline_resource_index)
   - [--germlineResourceIndex](#--germlineresourceindex)
   - [--intervals](#--intervals)
+  - [--known_indels](#--known_indels)
   - [--knownIndels](#--knownindels)
+  - [--known_indels_index](#--known_indels_index)
   - [--knownIndelsIndex](#--knownindelsindex)
   - [--pon](#--pon)
   - [--pon_index](#--pon_index)
+  - [--snpeff_db](#--snpeff_db)
   - [--snpeffDb](#--snpeffdb)
-  - [--vepCacheVersion](#--vepcacheversion)
-  - [--igenomesIgnore](#--igenomesignore)
   - [--species](#--species)
+  - [--vep_cache_version](#--vep_cache_version)
+  - [--vepCacheVersion](#--vepcacheversion)
+  - [--igenomes_ignore](#--igenomes_ignore)
+  - [--igenomesIgnore](#--igenomesignore)
 - [Job resources](#job-resources)
   - [Automatic resubmission](#automatic-resubmission)
   - [Custom resource requests](#custom-resource-requests)
@@ -55,6 +74,8 @@
   - [--awsregion](#--awsregion)
 - [Other command line parameters](#other-command-line-parameters)
   - [--outdir](#--outdir)
+- [--publish_dir_mode](#--publish_dir_mode)
+- [--publishDirMode](#--publishdirmode)
   - [--sequencing_center](#--sequencing_center)
   - [--email](#--email)
   - [-name](#-name)
@@ -63,6 +84,8 @@
   - [--custom_config_version](#--custom_config_version)
   - [--custom_config_base](#--custom_config_base)
   - [--max_memory](#--max_memory)
+  - [--single_cpu_mem](#--single_cpu_mem)
+  - [--singleCPUMem](#--singlecpumem)
   - [--max_time](#--max_time)
   - [--max_cpus](#--max_cpus)
   - [--plaintext_email](#--plaintext_email)
@@ -195,77 +218,51 @@ For example:
 > :warning: This params is deprecated -- it will be removed in a future release.
 > Please check: [`--input`](#--input)
 
-Use this to specify the location of your input TSV file, on `mapping`, `recalibrate` and `variantcalling` steps.
-For example:
-
-```bash
---sample sample.tsv
-```
-
-Multiple TSV files can be specified if the path must be enclosed in quotes
-
-Use this to specify the location to a directory on `mapping` step with a single germline sample only.
-For example:
-
-```bash
---sample PathToDirectory
-```
-
-Use this to specify the location of your VCF input file on `annotate` step.
-For example:
-
-```bash
---sample sample.vcf
-```
-
-Multiple VCF files can be specified if the path must be enclosed in quotes
-
 ### --sampleDir
 
 > :warning: This params is deprecated -- it will be removed in a future release.
 > Please check: [`--input`](#--input)
-
-Use this to specify the location to a directory on `mapping` step with a single germline sample only.
-For example:
-
-```bash
---sampleDir PathToDirectory
-```
 
 ### --annotateVCF
 
 > :warning: This params is deprecated -- it will be removed in a future release.
 > Please check: [`--input`](#--input)
 
-Use this to specify the location of your VCF input file on `annotate` step.
-For example:
-
-```bash
---annotateVCF sample.vcf
-```
-
 Multiple VCF files can be specified if the path must be enclosed in quotes
 
-### --noGVCF
+### --no_gvcf
 
 Use this to disable g.vcf from `HaplotypeCaller`.
 
-### --skipQC
+### --noGVCF
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--no_gvcf`](#--no_gvcf)
+
+### --skip_qc
 
 Use this to disable specific QC and Reporting tools.
 Available: `all`, `bamQC`, `BCFtools`, `FastQC`, `MultiQC`, `samtools`, `vcftools`, `versions`
 Default: `None`
+
+### --skipQC
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--skip_qc`](#--skip_qc)
 
 ### --noReports
 
 > :warning: This params is deprecated -- it will be removed in a future release.
 > Please check: [`--skipQC`](#--skipQC)
 
-Use this to disable all QC and Reporting tools.
+### --nucleotides_per_second
+
+Use this to estimate of how many seconds it will take to call variants on any interval, the default value is `1000` is it's not specified in the `<intervals>.bed` file.
 
 ### --nucleotidesPerSecond
 
-Use this to estimate of how many seconds it will take to call variants on any interval, the default value is `1000` is it's not specified in the `<intervals>.bed` file.
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--nucleotides_per_second`](#--nucleotides_per_second)
 
 ### --step
 
@@ -287,17 +284,27 @@ Please refer to the [nf-core/configs](https://github.com/nf-core/configs#adding-
 
 Or ask us on the [nf-core Slack](http://nf-co.re/join/slack) on the following channels: [#sarek](https://nfcore.slack.com/channels/sarek) [#configs](https://nfcore.slack.com/channels/configs).
 
-### --noStrelkaBP
+### --no_strelka_bp
 
 Use this not to use `Manta` `candidateSmallIndels` for `Strelka` as Best Practice.
+
+### --noStrelkaBP
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--no_strelka_bp`](#--no_strelka_bp)
 
 ### --no_intervals
 
 Disable usage of intervals file, and disable automatic generation of intervals file when none are provided.
 
-### --targetBED
+### --target_bed
 
 Use this to specify the target BED file for targeted or whole exome sequencing.
+
+### --targetBED
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--target_bed`](#--target_bed)
 
 ## Reference genomes
 
@@ -408,64 +415,94 @@ The syntax for this reference configuration is as follows:
 params {
   genomes {
     'GRCh38' {
-      acLoci           = '<path to the acLoci file>'
-      acLociGC         = '<path to the acLociGC file>'
-      bwaIndex         = '<path to the bwa indexes>'
-      dbsnp            = '<path to the dbsnp file>'
-      dbsnpIndex       = '<path to the dbsnp index>'
-      dict             = '<path to the dict file>'
-      fasta            = '<path to the fasta file>'
-      fastaFai         = '<path to the fasta index>'
-      intervals        = '<path to the intervals file>'
-      knownIndels      = '<path to the knownIndels file>'
-      knownIndelsIndex = '<path to the knownIndels index>'
-      snpeffDb         = '<version of the snpEff DB>'
-      vepCacheVersion  = '<version of the VEP cache>'
+      ac_loci                  = '<path to the acLoci file>'
+      ac_lociGC                = '<path to the acLociGC file>'
+      bwa                      = '<path to the bwa indexes>'
+      chr_dir                  = '<path to the chromosomes folder>'
+      chr_length               = '<path to the chromosomes lenght file>'
+      dbsnp                    = '<path to the dbsnp file>'
+      dbsnp_index              = '<path to the dbsnp index>'
+      dict                     = '<path to the dict file>'
+      fasta                    = '<path to the fasta file>'
+      fasta_fai                = '<path to the fasta index>'
+      germline_resource        = '<path to the germlineResource file>'
+      germline_resource_index  = '<path to the germlineResource index>'
+      intervals                = '<path to the intervals file>'
+      known_indels             = '<path to the knownIndels file>'
+      known_indels_index       = '<path to the knownIndels index>'
+      snpeff_db                = '<version of the snpEff DB>'
+      species                  = '<species>'
+      vep_cache_version        = '<version of the VEP cache>'
     }
     // Any number of additional genomes, key is used with --genome
   }
 }
 ```
 
-### --acLoci
+### --ac_loci
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---acLoci '[path to the acLoci file]'
+--ac_loci '[path to the acLoci file]'
+```
+
+### --acLoci
+
+> :warning: This params has been removed.
+> Please check: [`--ac_loci`](#--ac_loci)
+
+### --ac_loci_gc
+
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--ac_loci_gc '[path to the acLociGC file]'
 ```
 
 ### --acLociGC
 
+> :warning: This params has been removed.
+> Please check: [`--ac_loci_gc`](#--ac_loci_gc)
+
+### --bwa
+
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---acLociGC '[path to the acLociGC file]'
+--bwa '[path to the bwa indexes]'
 ```
 
 ### --bwaIndex
 
+> :warning: This params has been removed.
+> Please check: [`--bwa`](#--bwa)
+
+### --chr_dir
+
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---bwaIndex '[path to the bwa indexes]'
+--chr_dir '[path to the Chromosomes folder]'
 ```
 
 ### --chrDir
 
+> :warning: This params has been removed.
+> Please check: [`--chr_dir`](#--chr_dir)
+
+### --chr_length
+
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---chrDir '[path to the Chromosomes folder]'
+--chr_length '[path to the Chromosomes length file]'
 ```
 
 ### --chrLength
 
-If you prefer, you can specify the full path to your reference genome when you run the pipeline:
-
-```bash
---chrLength '[path to the Chromosomes length file]'
-```
+> :warning: This params has been removed.
+> Please check: [`--chr_length`](#--chr_length)
 
 ### --dbsnp
 
@@ -475,13 +512,18 @@ If you prefer, you can specify the full path to your reference genome when you r
 --dbsnp '[path to the dbsnp file]'
 ```
 
-### --dbsnpIndex
+### --dbsnp_index
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---dbsnpIndex '[path to the dbsnp index]'
+--dbsnp_index '[path to the dbsnp index]'
 ```
+
+### --dbsnpIndex
+
+> :warning: This params has been removed.
+> Please check: [`--dbsnp_index`](#--dbsnp_index)
 
 ### --dict
 
@@ -499,48 +541,35 @@ If you prefer, you can specify the full path to your reference genome when you r
 --fasta '[path to the reference fasta file]'
 ```
 
-### --fastaFai
+### --fasta_fai
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---fastaFai '[path to the reference index]'
+--fasta_fai '[path to the reference index]'
 ```
+
+### --fastaFai
+
+> :warning: This params has been removed.
+> Please check: [`--dbsnp_index`](#--dbsnp_index)
 
 ### --genomeDict
 
-> :warning: This params is deprecated -- it will be removed in a future release.
+> :warning: This params has been removed.
 > Please check: [`--dict`](#--dict)
-
-If you prefer, you can specify the full path to your reference genome when you run the pipeline:
-
-```bash
---dict '[path to the dict file]'
-```
 
 ### --genomeFile
 
-> :warning: This params is deprecated -- it will be removed in a future release.
+> :warning: This params has been removed.
 > Please check: [`--fasta`](#--fasta)
-
-If you prefer, you can specify the full path to your reference genome when you run the pipeline:
-
-```bash
---fasta '[path to the reference fasta file]'
-```
 
 ### --genomeIndex
 
-> :warning: This params is deprecated -- it will be removed in a future release.
+> :warning: This params has been removed.
 > Please check: [`--fastaFai`](#--fastaFai)
 
-If you prefer, you can specify the full path to your reference genome when you run the pipeline:
-
-```bash
---fastaFai '[path to the reference index]'
-```
-
-### --germlineResource
+### --germline_resource
 
 The [germline resource VCF file](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_Mutect2.php#--germline-resource) (bgzipped and tabixed) needed by GATK4 Mutect2 is a collection of calls that are likely present in the sample, with allele frequencies.
 The AF info field must be present.
@@ -548,17 +577,27 @@ You can find a smaller, stripped gnomAD VCF file (most of the annotation is remo
 To add your own germline resource supply
 
 ```bash
---germlineResource '[path to my resource.vcf.gz]'
+--germline_resource '[path to my resource.vcf.gz]'
+```
+
+### --germlineResource
+
+> :warning: This params has been removed.
+> Please check: [`--germline_resource`](#--germline_resource)
+
+### --germline_resource_index
+
+Tabix index of the germline resource specified at [`--germline_resource`](#--germline_resource).
+To add your own germline resource supply
+
+```bash
+--germline_resource_index '[path to my resource.vcf.gz.idx]'
 ```
 
 ### --germlineResourceIndex
 
-Tabix index of the germline resource specified at [`--germlineResource`](#--germlineResource).
-To add your own germline resource supply
-
-```bash
---germlineResourceIndex '[path to my resource.vcf.gz.idx]'
-```
+> :warning: This params has been removed.
+> Please check: [`--germline_resource_index`](#--germline_resource_index)
 
 ### --intervals
 
@@ -568,21 +607,31 @@ If you prefer, you can specify the full path to your reference genome when you r
 --intervals '[path to the intervals file]'
 ```
 
-### --knownIndels
+### --known_indels
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---knownIndels '[path to the knownIndels file]'
+--known_indels '[path to the knownIndels file]'
+```
+
+### --knownIndels
+
+> :warning: This params has been removed.
+> Please check: [`--known_indels`](#--known_indels)
+
+### --known_indels_index
+
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+```bash
+--known_indels_index '[path to the knownIndels index]'
 ```
 
 ### --knownIndelsIndex
 
-If you prefer, you can specify the full path to your reference genome when you run the pipeline:
-
-```bash
---knownIndelsIndex '[path to the knownIndels index]'
-```
+> :warning: This params has been removed.
+> Please check: [`--known_indels_index`](#--known_indels_index)
 
 ### --pon
 
@@ -602,30 +651,49 @@ If the PON file is bgzipped, there has to be a tabixed index file at the same di
 
 Tabix index of the panel-of-normals bgzipped VCF file.
 
-### --snpeffDb
+### --snpeff_db
 
 If you prefer, you can specify the DB version when you run the pipeline:
 
 ```bash
---snpeffDb '[version of the snpEff DB]'
+--snpeff_db '[version of the snpEff DB]'
 ```
 
-### --vepCacheVersion
+### --snpeffDb
 
-If you prefer, you can specify the cache version when you run the pipeline:
-
-```bash
---vepCacheVersion '[version of the VEP cache]'
-```
-
-### --igenomesIgnore
-
-Do not load `igenomes.config` when running the pipeline.
-You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.
+> :warning: This params has been removed.
+> Please check: [`--snpeff_db`](#--snpeff_db)
 
 ### --species
 
 This specifies the species used for running VEP annotation. For human data, this needs to be set to `homo_sapiens`, for mouse data `mus_musculus` as the annotation needs to know where to look for appropriate annotation references. If you use iGenomes or a local resource with `genomes.conf`, this has already been set for you appropriately.
+
+### --vep_cache_version
+
+If you prefer, you can specify the cache version when you run the pipeline:
+
+```bash
+--vep_cache_version '[version of the VEP cache]'
+```
+
+### --vepCacheVersion
+
+> :warning: This params has been removed.
+> Please check: [`--vep_cache_version`](#--vep_cache_version)
+
+### --igenomes_ignore
+
+Do not load `igenomes.config` when running the pipeline.
+You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.
+
+```bash
+--igenomes_ignore
+```
+
+### --igenomesIgnore
+
+> :warning: This params has been removed.
+> Please check: [`--igenomes_ignore`](#--igenomes_ignore)
 
 ## Job resources
 
@@ -668,6 +736,17 @@ Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a 
 
 The output directory where the results will be saved.
 Default: `results/
+
+## --publish_dir_mode
+
+The file publishing method.
+Available: `symlink`, `rellink`, `link`, `copy`, `copyNoFollow`, `move`
+Default: `copy`
+
+## --publishDirMode
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--publish_dir_mode`](#--publish_dir_mode)
 
 ### --sequencing_center
 
@@ -742,6 +821,16 @@ nextflow run /path/to/pipeline/ --custom_config_base /path/to/my/configs/configs
 
 Use to set a top-limit for the default memory requirement for each process.
 Should be a string in the format integer-unit eg. `--max_memory '8.GB'`
+
+### --single_cpu_mem
+
+Use to set memory for a single CPU.
+Should be a string in the format integer-unit eg. `--single_cpu_mem '8.GB'`
+
+### --singleCPUMem
+
+> :warning: This params has been removed.
+> Please check: [`--single_cpu_mem`](#--single_cpu_mem)
 
 ### --max_time
 

@@ -12,10 +12,10 @@ nf-core/sarek:
   from whole genome or targeted sequencing
 --------------------------------------------------------------------------------
  @Homepage
- https://sarek.scilifelab.se/
+ https://nf-co.re/sarek
 --------------------------------------------------------------------------------
  @Documentation
- https://github.com/nf-core/sarek/README.md
+ https://nf-co.re/sarek/docs
 --------------------------------------------------------------------------------
 */
 
@@ -41,12 +41,12 @@ def helpMessage() {
 
     Options:
         --genome                    Name of iGenomes reference
-        --noGVCF                    No g.vcf output from HaplotypeCaller
-        --noStrelkaBP               Will not use Manta candidateSmallIndels for Strelka as Best Practice
+        --no_gvcf                   No g.vcf output from HaplotypeCaller
+        --no_strelka_bp             Will not use Manta candidateSmallIndels for Strelka as Best Practice
         --no_intervals              Disable usage of intervals
-        --nucleotidesPerSecond      To estimate interval size
+        --nucleotides_per_second    To estimate interval size
                                     Default: 1000.0
-        --targetBED                 Target BED file for targeted or whole exome sequencing
+        --target_bed                Target BED file for targeted or whole exome sequencing
         --step                      Specify starting step
                                     Available: Mapping, Recalibrate, VariantCalling, Annotate
                                     Default: Mapping
@@ -56,53 +56,56 @@ def helpMessage() {
                                     and/or for annotation:
                                     snpEff, VEP, merge
                                     Default: None
-        --skipQC                    Specify which QC tools to skip when running Sarek
+        --skip_qc                   Specify which QC tools to skip when running Sarek
                                     Available: all, bamQC, BCFtools, FastQC, MultiQC, samtools, vcftools, versions
                                     Default: None
-        --annotateTools             Specify from which tools Sarek will look for VCF files to annotate, only for step annotate
+        --annotate_tools            Specify from which tools Sarek will look for VCF files to annotate, only for step annotate
                                     Available: HaplotypeCaller, Manta, Mutect2, Strelka, TIDDIT
                                     Default: None
         --sentieon                  If sentieon is available, will enable it for preprocessing, and variant calling
                                     Adds the following tools for --tools: DNAseq, DNAscope and TNscope
-        --annotation_cache          Enable the use of cache for annotation, to be used with --snpEff_cache and/or --vep_cache
-        --snpEff_cache              Specity the path to snpEff cache, to be used with --annotation_cache
+        --annotation_cache          Enable the use of cache for annotation, to be used with --snpeff_cache and/or --vep_cache
+        --snpeff_cache              Specity the path to snpEff cache, to be used with --annotation_cache
         --vep_cache                 Specity the path to VEP cache, to be used with --annotation_cache
         --pon                       panel-of-normals VCF (bgzipped, indexed). See: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_CreateSomaticPanelOfNormals.php
         --pon_index                 index of pon panel-of-normals VCF
 
     References                      If not specified in the configuration file or you wish to overwrite any of the references.
-        --acLoci                    acLoci file
-        --acLociGC                  acLoci GC file
-        --bwaIndex                  bwa indexes
+        --ac_loci                   acLoci file
+        --ac_loci_gc                acLoci GC file
+        --bwa                       bwa indexes
                                     If none provided, will be generated automatically from the fasta reference
         --dbsnp                     dbsnp file
-        --dbsnpIndex                dbsnp index
+        --dbsnp_index               dbsnp index
                                     If none provided, will be generated automatically if a dbsnp file is provided
         --dict                      dict from the fasta reference
                                     If none provided, will be generated automatically from the fasta reference
         --fasta                     fasta reference
-        --fastafai                  reference index
+        --fasta_fai                 reference index
                                     If none provided, will be generated automatically from the fasta reference
-        --germlineResource          Germline Resource File
-        --germlineResourceIndex     Germline Resource Index
+        --germline_resource         Germline Resource File
+        --germline_resource_index   Germline Resource Index
                                     If none provided, will be generated automatically if a germlineResource file is provided
         --intervals                 intervals
                                     If none provided, will be generated automatically from the fasta reference
                                     Use --no_intervals to disable automatic generation
-        --knownIndels               knownIndels file
-        --knownIndelsIndex          knownIndels index
+        --known_indels              knownIndels file
+        --known_indels_index        knownIndels index
                                     If none provided, will be generated automatically if a knownIndels file is provided
         --species                   species for VEP
-        --snpeffDb                  snpeffDb version
-        --vepCacheVersion           VEP Cache version
+        --snpeff_db                 snpeffDb version
+        --vep_cache_version         VEP Cache version
 
     Other options:
         --outdir                    The output directory where the results will be saved
+        --publish_dir_mode          Mode of publishing data in the output directory.
+                                    Available: symlink, rellink, link, copy, copyNoFollow, move
+                                    Default: copy
         --sequencing_center         Name of sequencing center to be displayed in BAM file
         --multiqc_config            Specify a custom config file for MultiQC
         --monochrome_logs           Logs will be without colors
         --email                     Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
-        --maxMultiqcEmailFileSize   Theshold size for MultiQC report to be attached in notification email. If file generated by pipeline exceeds the threshold, it will not be attached (Default: 25MB)
+        --max_multiqc_email_size    Theshold size for MultiQC report to be attached in notification email. If file generated by pipeline exceeds the threshold, it will not be attached (Default: 25MB)
         -name                       Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic
 
     AWSBatch options:
@@ -111,23 +114,204 @@ def helpMessage() {
     """.stripIndent()
 }
 
+// Show help message
+if (params.help) exit 0, helpMessage()
+
+/*
+================================================================================
+                                HANDLE OLD PARAMS
+================================================================================
+*/
+
+// Warnings for deprecated params
+
+params.annotateTools = null
+if (params.annotateTools) {
+    log.warn "The params `--annotateTools` is deprecated -- it will be removed in a future release."
+    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--annotate_tools"
+    params.annotate_tools = params.annotateTools
+}
+
+params.annotateVCF = null
+if (params.annotateVCF) {
+    log.warn "The params `--annotateVCF` is deprecated -- it will be removed in a future release."
+    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--input"
+    input = params.annotateVCF
+}
+
+params.cadd_InDels = null
+if (params.cadd_InDels) {
+    log.warn "The params `--cadd_InDels is deprecated -- it will be removed in a future release."
+    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--cadd_indels"
+    params.cadd_indels = params.cadd_InDels
+}
+
+params.cadd_InDels_tbi = null
+if (params.cadd_InDels_tbi) {
+    log.warn "The params `--cadd_InDels_tbi is deprecated -- it will be removed in a future release."
+    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--cadd_indels_tbi"
+    params.cadd_indels_tbi = params.cadd_InDels_tbi
+}
+
+params.cadd_WG_SNVs = null
+if (params.cadd_WG_SNVs) {
+    log.warn "The params `--cadd_WG_SNVs is deprecated -- it will be removed in a future release."
+    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--cadd_wg_snvs"
+    params.cadd_wg_snvs = params.cadd_WG_SNVs
+}
+
+params.cadd_WG_SNVs_tbi = null
+if (params.cadd_WG_SNVs_tbi) {
+    log.warn "The params `--cadd_WG_SNVs_tbi is deprecated -- it will be removed in a future release."
+    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--cadd_wg_snvs_tbi"
+    params.cadd_wg_snvs_tbi = params.cadd_WG_SNVs_tbi
+}
+
+params.maxMultiqcEmailFileSize = null
+if (params.maxMultiqcEmailFileSize) {
+    log.warn "The params `--maxMultiqcEmailFileSize` is deprecated -- it will be removed in a future release."
+    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--max_multiqc_email_size"
+    params.max_multiqc_email_size = params.maxMultiqcEmailFileSize
+}
+
+params.noGVCF = null
+if (params.noGVCF) {
+    log.warn "The params `--noGVCF` is deprecated -- it will be removed in a future release."
+    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--no_gvcf"
+    params.no_gvcf = params.noGVCF
+}
+
+params.noReports = null
+if (params.noReports) {
+    log.warn "The params `--noReports` is deprecated -- it will be removed in a future release."
+    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--skip_qc"
+    params.skip_qc = 'all'
+}
+
+params.noStrelkaBP = null
+if (params.noStrelkaBP) {
+    log.warn "The params `--noStrelkaBP` is deprecated -- it will be removed in a future release."
+    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--no_strelka_bp"
+    params.no_strelka_bp = params.noStrelkaBP
+}
+
+params.nucleotidesPerSecond = null
+if (params.nucleotidesPerSecond) {
+    log.warn "The params `--nucleotidesPerSecond` is deprecated -- it will be removed in a future release."
+    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--nucleotides_per_second"
+    params.nucleotides_per_second = params.nucleotidesPerSecond
+}
+
+params.publishDirMode = null
+if (params.publishDirMode) {
+    log.warn "The params `--publishDirMode` is deprecated -- it will be removed in a future release."
+    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--publish_dir_mode"
+    params.publish_dir_mode = params.publishDirMode
+}
+
+params.sample = null
+if (params.sample) {
+    log.warn "The params `--sample` is deprecated -- it will be removed in a future release."
+    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--input"
+    params.input = params.sample
+}
+
+params.sampleDir = null
+if (params.sampleDir) {
+    log.warn "The params `--sampleDir` is deprecated -- it will be removed in a future release."
+    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--input"
+    params.input = params.sampleDir
+}
+
+params.saveGenomeIndex = null
+if (params.saveGenomeIndex) {
+    log.warn "The params `--saveGenomeIndex` is deprecated -- it will be removed in a future release."
+    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--save_reference"
+    params.save_reference = params.saveGenomeIndex
+}
+
+params.skipQC = null
+if (params.skipQC) {
+    log.warn "The params `--skipQC` is deprecated -- it will be removed in a future release."
+    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--skip_qc"
+    params.skip_qc = params.skipQC
+}
+
+params.snpEff_cache = null
+if (params.snpEff_cache) {
+    log.warn "The params `--snpEff_cache` is deprecated -- it will be removed in a future release."
+    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--snpeff_cache"
+    params.snpeff_cache = params.snpEff_cache
+}
+
+params.targetBed = null
+if (params.targetBed) {
+    log.warn "The params `--targetBed` is deprecated -- it will be removed in a future release."
+    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--target_bed"
+    params.target_bed = params.targetBed
+}
+
+// Errors for removed params
+
+params.acLoci = null
+if (params.acLoci) exit 1, "The params `--acLoci` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--ac_loci"
+
+params.acLociGC = null
+if (params.acLociGC) exit 1, "The params `--acLociGC` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--ac_loci_gc"
+
+params.bwaIndex = null
+if (params.bwaIndex) exit 1, "The params `--bwaIndex` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--bwa"
+
+params.chrDir = null
+if (params.chrDir) exit 1, "The params `--chrDir` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--chr_dir"
+
+params.chrLength = null
+if (params.chrLength) exit 1, "The params `--chrLength` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--chr_length"
+
+params.dnsnpIndex = null
+if (params.dnsnpIndex) exit 1, "The params `--dnsnpIndex` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--dnsnp_index"
+
+params.fastaFai = null
+if (params.fastaFai) exit 1, "The params `--fastaFai` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--fasta_fai"
+
+params.genomeDict = null
+if (params.genomeDict) exit 1, "The params `--genomeDict` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--dict"
+
+params.genomeFile = null
+if (params.genomeFile) exit 1, "The params `--genomeFile` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--fasta"
+
+params.genomeIndex = null
+if (params.genomeIndex) exit 1, "The params `--genomeIndex` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--fasta_fai"
+
+params.germlineResource = null
+if (params.germlineResource) exit 1, "The params `--germlineResource` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--germline_resource"
+
+params.germlineResourceIndex = null
+if (params.germlineResourceIndex) exit 1, "The params `--germlineResourceIndex` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--germline_resource_index"
+
+params.igenomesIgnore = null
+if (params.igenomesIgnore) exit 1, "The params `--igenomesIgnore` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--igenomes_ignore"
+
+params.knownIndels = null
+if (params.knownIndels) exit 1, "The params `--knownIndels` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--known_indels"
+
+params.knownIndelsIndex = null
+if (params.knownIndelsIndex) exit 1, "The params `--knownIndelsIndex` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--known_indels_index"
+
+params.snpeffDb = null
+if (params.snpeffDb) exit 1, "The params `--snpeffDb` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--snpeff_db"
+
+params.singleCPUMem = null
+if (params.singleCPUMem) exit 1, "The params `--singleCPUMem` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--single_cpu_mem"
+
+params.vepCacheVersion = null
+if (params.vepCacheVersion) exit 1, "The params `--vepCacheVersion` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--vep_cache_version"
+
 /*
 ================================================================================
                          SET UP CONFIGURATION VARIABLES
 ================================================================================
 */
-
-// Show help message
-if (params.help) exit 0, helpMessage()
-
-// Print warning message
-if (params.noReports) log.warn "The params `--noReports` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--skipQC"
-if (params.annotateVCF) log.warn "The params `--annotateVCF` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--input"
-if (params.genomeDict) log.warn "The params `--genomeDict` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--dict"
-if (params.genomeFile) log.warn "The params `--genomeFile` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--fasta"
-if (params.genomeIndex) log.warn "The params `--genomeIndex` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--fastaFai"
-if (params.sample) log.warn "The params `--sample` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--input"
-if (params.sampleDir) log.warn "The params `--sampleDir` is deprecated -- it will be removed in a future release.\n\tPlease check: https://github.com/nf-core/sarek/blob/master/docs/usage.md#--input"
 
 // Check if genome exists in the config file
 if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
@@ -148,15 +332,12 @@ tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} 
 if (!checkParameterList(tools, toolList)) exit 1, 'Unknown tool(s), see --help for more information'
 
 skipQClist = defineSkipQClist()
-skipQC = params.skipQC ? params.skipQC == 'all' ? skipQClist : params.skipQC.split(',').collect{it.trim().toLowerCase()} : []
+skipQC = params.skip_qc ? params.skip_qc == 'all' ? skipQClist : params.skip_qc.split(',').collect{it.trim().toLowerCase()} : []
 if (!checkParameterList(skipQC, skipQClist)) exit 1, 'Unknown QC tool(s), see --help for more information'
 
 annoList = defineAnnoList()
-annotateTools = params.annotateTools ? params.annotateTools.split(',').collect{it.trim().toLowerCase()} : []
+annotateTools = params.annotate_tools ? params.annotate_tools.split(',').collect{it.trim().toLowerCase()} : []
 if (!checkParameterList(annotateTools,annoList)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
-
-// Handle deprecation
-if (params.noReports) skipQC = skipQClist
 
 // Has the run name been specified by the user?
 // This has the bonus effect of catching both -name and --name
@@ -179,11 +360,6 @@ ch_output_docs = Channel.fromPath("${baseDir}/docs/output.md")
 tsvPath = null
 if (params.input && (hasExtension(params.input, "tsv") || hasExtension(params.input, "vcf") || hasExtension(params.input, "vcf.gz"))) tsvPath = params.input
 if (params.input && (hasExtension(params.input, "vcf") || hasExtension(params.input, "vcf.gz"))) step = "annotate"
-
-// Handle deprecation
-if (params.annotateVCF) tsvPath = params.annotateVCF
-if (params.sample) tsvPath = params.sample
-if (params.sampleDir) tsvPath = params.sampleDir
 
 // If no input file specified, trying to get TSV files corresponding to step in the TSV directory
 // only for steps recalibrate and variantCalling
@@ -235,48 +411,48 @@ if (tsvPath) {
 // params.fasta has to be the first one
 params.fasta = params.genome && !('annotate' in step) ? params.genomes[params.genome].fasta ?: null : null
 // The rest can be sorted
-params.acLoci = params.genome && 'ascat' in tools ? params.genomes[params.genome].acLoci ?: null : null
-params.acLociGC = params.genome && 'ascat' in tools ? params.genomes[params.genome].acLociGC ?: null : null
-params.bwaIndex = params.genome && params.fasta && 'mapping' in step ? params.genomes[params.genome].bwaIndex ?: null : null
-params.chrDir = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].chrDir ?: null : null
-params.chrLength = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].chrLength ?: null : null
+params.ac_loci = params.genome && 'ascat' in tools ? params.genomes[params.genome].ac_loci ?: null : null
+params.ac_loci_gc = params.genome && 'ascat' in tools ? params.genomes[params.genome].ac_loci_gc ?: null : null
+params.bwa = params.genome && params.fasta && 'mapping' in step ? params.genomes[params.genome].bwa ?: null : null
+params.chr_dir = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].chr_dir ?: null : null
+params.chr_length = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].chr_length ?: null : null
 params.dbsnp = params.genome && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools) ? params.genomes[params.genome].dbsnp ?: null : null
-params.dbsnpIndex = params.genome && params.dbsnp ? params.genomes[params.genome].dbsnpIndex ?: null : null
+params.dbsnp_index = params.genome && params.dbsnp ? params.genomes[params.genome].dbsnp_index ?: null : null
 params.dict = params.genome && params.fasta ? params.genomes[params.genome].dict ?: null : null
-params.fastaFai = params.genome && params.fasta ? params.genomes[params.genome].fastaFai ?: null : null
-params.germlineResource = params.genome && 'mutect2' in tools ? params.genomes[params.genome].germlineResource ?: null : null
-params.germlineResourceIndex = params.genome && params.germlineResource ? params.genomes[params.genome].germlineResourceIndex ?: null : null
+params.fasta_fai = params.genome && params.fasta ? params.genomes[params.genome].fasta_fai ?: null : null
+params.germline_resource = params.genome && 'mutect2' in tools ? params.genomes[params.genome].germline_resource ?: null : null
+params.germline_resource_index = params.genome && params.germline_resource ? params.genomes[params.genome].germline_resource_index ?: null : null
 params.intervals = params.genome && !('annotate' in step) ? params.genomes[params.genome].intervals ?: null : null
-params.knownIndels = params.genome && 'mapping' in step ? params.genomes[params.genome].knownIndels ?: null : null
-params.knownIndelsIndex = params.genome && params.knownIndels ? params.genomes[params.genome].knownIndelsIndex ?: null : null
-params.snpeffDb = params.genome && 'snpeff' in tools ? params.genomes[params.genome].snpeffDb ?: null : null
+params.known_indels = params.genome && 'mapping' in step ? params.genomes[params.genome].known_indels ?: null : null
+params.known_indels_index = params.genome && params.known_indels ? params.genomes[params.genome].known_indels_index ?: null : null
+params.snpeff_db = params.genome && 'snpeff' in tools ? params.genomes[params.genome].snpeff_db ?: null : null
 params.species = params.genome && 'vep' in tools ? params.genomes[params.genome].species ?: null : null
-params.vepCacheVersion = params.genome && 'vep' in tools ? params.genomes[params.genome].vepCacheVersion ?: null : null
+params.vep_cache_version = params.genome && 'vep' in tools ? params.genomes[params.genome].vep_cache_version ?: null : null
 
 // Initialize channels based on params
-ch_acLoci = params.acLoci && 'ascat' in tools ? Channel.value(file(params.acLoci)) : "null"
-ch_acLociGC = params.acLociGC && 'ascat' in tools ? Channel.value(file(params.acLociGC)) : "null"
-ch_chrDir = params.chrDir && 'controlfreec' in tools ? Channel.value(file(params.chrDir)) : "null"
-ch_chrLength = params.chrLength && 'controlfreec' in tools ? Channel.value(file(params.chrLength)) : "null"
+ch_ac_loci = params.ac_loci && 'ascat' in tools ? Channel.value(file(params.ac_loci)) : "null"
+ch_ac_loci_gc = params.ac_loci_gc && 'ascat' in tools ? Channel.value(file(params.ac_loci_gc)) : "null"
+ch_chr_dir = params.chr_dir && 'controlfreec' in tools ? Channel.value(file(params.chr_dir)) : "null"
+ch_chr_length = params.chr_length && 'controlfreec' in tools ? Channel.value(file(params.chr_length)) : "null"
 ch_dbsnp = params.dbsnp && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools) ? Channel.value(file(params.dbsnp)) : "null"
 ch_fasta = params.fasta && !('annotate' in step) ? Channel.value(file(params.fasta)) : "null"
-ch_fastaFai = params.fastaFai && !('annotate' in step) ? Channel.value(file(params.fastaFai)) : "null"
-ch_germlineResource = params.germlineResource && 'mutect2' in tools ? Channel.value(file(params.germlineResource)) : "null"
+ch_fai = params.fasta_fai && !('annotate' in step) ? Channel.value(file(params.fasta_fai)) : "null"
+ch_germline_resource = params.germline_resource && 'mutect2' in tools ? Channel.value(file(params.germline_resource)) : "null"
 ch_intervals = params.intervals && !params.no_intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : "null"
-ch_knownIndels = params.knownIndels && 'mapping' in step ? Channel.value(file(params.knownIndels)) : "null"
+ch_known_indels = params.known_indels && 'mapping' in step ? Channel.value(file(params.known_indels)) : "null"
 
-ch_snpEff_cache = params.snpEff_cache ? Channel.value(file(params.snpEff_cache)) : "null"
-ch_snpeffDb = params.snpeffDb ? Channel.value(params.snpeffDb) : "null"
-ch_vepCacheVersion = params.vepCacheVersion ? Channel.value(params.vepCacheVersion) : "null"
+ch_snpeff_cache = params.snpeff_cache ? Channel.value(file(params.snpeff_cache)) : "null"
+ch_snpeff_db = params.snpeff_db ? Channel.value(params.snpeff_db) : "null"
+ch_vep_cache_version = params.vep_cache_version ? Channel.value(params.vep_cache_version) : "null"
 ch_vep_cache = params.vep_cache ? Channel.value(file(params.vep_cache)) : "null"
 
 // Optional files, not defined within the params.genomes[params.genome] scope
-ch_cadd_InDels = params.cadd_InDels ? Channel.value(file(params.cadd_InDels)) : "null"
-ch_cadd_InDels_tbi = params.cadd_InDels_tbi ? Channel.value(file(params.cadd_InDels_tbi)) : "null"
-ch_cadd_WG_SNVs = params.cadd_WG_SNVs ? Channel.value(file(params.cadd_WG_SNVs)) : "null"
-ch_cadd_WG_SNVs_tbi = params.cadd_WG_SNVs_tbi ? Channel.value(file(params.cadd_WG_SNVs_tbi)) : "null"
+ch_cadd_indels = params.cadd_indels ? Channel.value(file(params.cadd_indels)) : "null"
+ch_cadd_indels_tbi = params.cadd_indels_tbi ? Channel.value(file(params.cadd_indels_tbi)) : "null"
+ch_cadd_wg_snvs = params.cadd_wg_snvs ? Channel.value(file(params.cadd_wg_snvs)) : "null"
+ch_cadd_wg_snvs_tbi = params.cadd_wg_snvs_tbi ? Channel.value(file(params.cadd_wg_snvs_tbi)) : "null"
 ch_pon = params.pon ? Channel.value(file(params.pon)) : "null"
-ch_targetBED = params.targetBED ? Channel.value(file(params.targetBED)) : "null"
+ch_target_bed = params.target_bed ? Channel.value(file(params.target_bed)) : "null"
 
 /*
 ================================================================================
@@ -292,19 +468,19 @@ summary['Run Name']          = custom_runName ?: workflow.runName
 summary['Max Resources']     = "${params.max_memory} memory, ${params.max_cpus} cpus, ${params.max_time} time per job"
 if (workflow.containerEngine)   summary['Container']         = "${workflow.containerEngine} - ${workflow.container}"
 if (params.input)               summary['Input']             = params.input
-if (params.targetBED)           summary['Target BED']        = params.targetBED
+if (params.target_bed)          summary['Target BED']        = params.target_bed
 if (step)                       summary['Step']              = step
 if (params.tools)               summary['Tools']             = tools.join(', ')
-if (params.skipQC)              summary['QC tools skip']     = skipQC.join(', ')
+if (params.skip_qc)             summary['QC tools skip']     = skipQC.join(', ')
 
 if (params.no_intervals && step != 'annotate') summary['Intervals']         = 'Do not use'
-if ('haplotypecaller' in tools)                summary['GVCF']              = params.noGVCF ? 'No' : 'Yes'
-if ('strelka' in tools && 'manta' in tools )   summary['Strelka BP']        = params.noStrelkaBP ? 'No' : 'Yes'
+if ('haplotypecaller' in tools)                summary['GVCF']              = params.no_gvcf ? 'No' : 'Yes'
+if ('strelka' in tools && 'manta' in tools )   summary['Strelka BP']        = params.no_strelka_bp ? 'No' : 'Yes'
 if (params.sequencing_center)                  summary['Sequenced by']      = params.sequencing_center
 if (params.pon && 'mutect2' in tools)          summary['Panel of normals']  = params.pon
 
-summary['Save Genome Index'] = params.saveGenomeIndex ? 'Yes' : 'No'
-summary['Nucleotides/s']     = params.nucleotidesPerSecond
+summary['Save Reference']    = params.save_reference ? 'Yes' : 'No'
+summary['Nucleotides/s']     = params.nucleotides_per_second
 summary['Output dir']        = params.outdir
 summary['Launch dir']        = workflow.launchDir
 summary['Working dir']       = workflow.workDir
@@ -312,27 +488,27 @@ summary['Script dir']        = workflow.projectDir
 summary['User']              = workflow.userName
 summary['genome']            = params.genome
 
-if (params.fasta)                 summary['fasta']                 = params.fasta
-if (params.fastaFai)              summary['fastaFai']              = params.fastaFai
-if (params.dict)                  summary['dict']                  = params.dict
-if (params.bwaIndex)              summary['bwaIndex']              = params.bwaIndex
-if (params.germlineResource)      summary['germlineResource']      = params.germlineResource
-if (params.germlineResourceIndex) summary['germlineResourceIndex'] = params.germlineResourceIndex
-if (params.intervals)             summary['intervals']             = params.intervals
-if (params.acLoci)                summary['acLoci']                = params.acLoci
-if (params.acLociGC)              summary['acLociGC']              = params.acLociGC
-if (params.chrDir)                summary['chrDir']                = params.chrDir
-if (params.chrLength)             summary['chrLength']             = params.chrLength
-if (params.dbsnp)                 summary['dbsnp']                 = params.dbsnp
-if (params.dbsnpIndex)            summary['dbsnpIndex']            = params.dbsnpIndex
-if (params.knownIndels)           summary['knownIndels']           = params.knownIndels
-if (params.knownIndelsIndex)      summary['knownIndelsIndex']      = params.knownIndelsIndex
-if (params.snpeffDb)              summary['snpeffDb']              = params.snpeffDb
-if (params.species)               summary['species']               = params.species
-if (params.vepCacheVersion)       summary['vepCacheVersion']       = params.vepCacheVersion
-if (params.species)               summary['species']               = params.species
-if (params.snpEff_cache)          summary['snpEff_cache']          = params.snpEff_cache
-if (params.vep_cache)             summary['vep_cache']             = params.vep_cache
+if (params.fasta)                   summary['fasta']                 = params.fasta
+if (params.fasta_fai)               summary['fastaFai']              = params.fasta_fai
+if (params.dict)                    summary['dict']                  = params.dict
+if (params.bwa)                     summary['bwa']                   = params.bwa
+if (params.germline_resource)       summary['germlineResource']      = params.germline_resource
+if (params.germline_resource_index) summary['germlineResourceIndex'] = params.germline_resource_index
+if (params.intervals)               summary['intervals']             = params.intervals
+if (params.ac_loci)                 summary['acLoci']                = params.ac_loci
+if (params.ac_loci_gc)              summary['acLociGC']              = params.ac_loci_gc
+if (params.chr_dir)                 summary['chrDir']                = params.chr_dir
+if (params.chr_length)              summary['chrLength']             = params.chr_length
+if (params.dbsnp)                   summary['dbsnp']                 = params.dbsnp
+if (params.dbsnp_index)             summary['dbsnpIndex']            = params.dbsnp_index
+if (params.known_indels)            summary['knownIndels']           = params.known_indels
+if (params.known_indels_index)      summary['knownIndelsIndex']      = params.known_indels_index
+if (params.snpeff_db)               summary['snpeffDb']              = params.snpeff_db
+if (params.species)                 summary['species']               = params.species
+if (params.vep_cache_version)       summary['vepCacheVersion']       = params.vep_cache_version
+if (params.species)                 summary['species']               = params.species
+if (params.snpeff_cache)            summary['snpEff_cache']          = params.snpeff_cache
+if (params.vep_cache)               summary['vep_cache']             = params.vep_cache
 
 if (workflow.profile == 'awsbatch') {
     summary['AWS Region']        = params.awsregion
@@ -344,7 +520,7 @@ if (params.config_profile_contact)      summary['Config Contact']      = params.
 if (params.config_profile_url)          summary['Config URL']          = params.config_profile_url
 if (params.email) {
     summary['E-mail Address']        = params.email
-    summary['MultiQC maxsize']       = params.maxMultiqcEmailFileSize
+    summary['MultiQC maxsize']       = params.max_multiqc_email_size
 }
 log.info summary.collect { k, v -> "${k.padRight(18)}: $v" }.join("\n")
 if (params.monochrome_logs) log.info "----------------------------------------------------"
@@ -360,7 +536,7 @@ checkHostname()
 */
 
 process GetSoftwareVersions {
-    publishDir path:"${params.outdir}/pipeline_info", mode: params.publishDirMode
+    publishDir path:"${params.outdir}/pipeline_info", mode: params.publish_dir_mode
 
     output:
         file 'software_versions_mqc.yaml' into yamlSoftwareVersion
@@ -406,16 +582,16 @@ yamlSoftwareVersion = yamlSoftwareVersion.dump(tag:'SOFTWARE VERSIONS')
 process BuildBWAindexes {
     tag {fasta}
 
-    publishDir params.outdir, mode: params.publishDirMode,
-        saveAs: {params.saveGenomeIndex ? "reference_genome/BWAIndex/${it}" : null }
+    publishDir params.outdir, mode: params.publish_dir_mode,
+        saveAs: {params.save_reference ? "reference_genome/BWAIndex/${it}" : null }
 
     input:
         file(fasta) from ch_fasta
 
     output:
-        file("${fasta}.*") into bwaIndexes
+        file("${fasta}.*") into bwaBuilt
 
-    when: !(params.bwaIndex) && params.fasta && 'mapping' in step
+    when: !(params.bwa) && params.fasta && 'mapping' in step
 
     script:
     """
@@ -423,13 +599,13 @@ process BuildBWAindexes {
     """
 }
 
-ch_bwaIndex = params.bwaIndex ? Channel.value(file(params.bwaIndex)) : bwaIndexes
+ch_bwa = params.bwa ? Channel.value(file(params.bwa)) : bwaBuilt
 
 process BuildDict {
     tag {fasta}
 
-    publishDir params.outdir, mode: params.publishDirMode,
-        saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
+    publishDir params.outdir, mode: params.publish_dir_mode,
+        saveAs: {params.save_reference ? "reference_genome/${it}" : null }
 
     input:
         file(fasta) from ch_fasta
@@ -453,16 +629,16 @@ ch_dict = params.dict ? Channel.value(file(params.dict)) : dictBuilt
 process BuildFastaFai {
     tag {fasta}
 
-    publishDir params.outdir, mode: params.publishDirMode,
-        saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
+    publishDir params.outdir, mode: params.publish_dir_mode,
+        saveAs: {params.save_reference ? "reference_genome/${it}" : null }
 
     input:
         file(fasta) from ch_fasta
 
     output:
-        file("${fasta}.fai") into fastaFaiBuilt
+        file("${fasta}.fai") into faiBuilt
 
-    when: !(params.fastaFai) && params.fasta && !('annotate' in step)
+    when: !(params.fasta_fai) && params.fasta && !('annotate' in step)
 
     script:
     """
@@ -470,21 +646,21 @@ process BuildFastaFai {
     """
 }
 
-ch_fastaFai = params.fastaFai ? Channel.value(file(params.fastaFai)) : fastaFaiBuilt
+ch_fai = params.fasta_fai ? Channel.value(file(params.fasta_fai)) : faiBuilt
 
 process BuildDbsnpIndex {
     tag {dbsnp}
 
-    publishDir params.outdir, mode: params.publishDirMode,
-        saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
+    publishDir params.outdir, mode: params.publish_dir_mode,
+        saveAs: {params.save_reference ? "reference_genome/${it}" : null }
 
     input:
         file(dbsnp) from ch_dbsnp
 
     output:
-        file("${dbsnp}.tbi") into dbsnpIndexBuilt
+        file("${dbsnp}.tbi") into dbsnp_tbi
 
-    when: !(params.dbsnpIndex) && params.dbsnp && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools)
+    when: !(params.dbsnp_index) && params.dbsnp && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools)
 
     script:
     """
@@ -492,21 +668,21 @@ process BuildDbsnpIndex {
     """
 }
 
-ch_dbsnpIndex = params.dbsnp ? params.dbsnpIndex ? Channel.value(file(params.dbsnpIndex)) : dbsnpIndexBuilt : "null"
+ch_dbsnp_tbi = params.dbsnp ? params.dbsnp_index ? Channel.value(file(params.dbsnp_index)) : dbsnp_tbi : "null"
 
 process BuildGermlineResourceIndex {
     tag {germlineResource}
 
-    publishDir params.outdir, mode: params.publishDirMode,
-        saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
+    publishDir params.outdir, mode: params.publish_dir_mode,
+        saveAs: {params.save_reference ? "reference_genome/${it}" : null }
 
     input:
-        file(germlineResource) from ch_germlineResource
+        file(germlineResource) from ch_germline_resource
 
     output:
-        file("${germlineResource}.tbi") into germlineResourceIndexBuilt
+        file("${germlineResource}.tbi") into germline_resource_tbi
 
-    when: !(params.germlineResourceIndex) && params.germlineResource && 'mutect2' in tools
+    when: !(params.germline_resource_index) && params.germline_resource && 'mutect2' in tools
 
     script:
     """
@@ -514,21 +690,21 @@ process BuildGermlineResourceIndex {
     """
 }
 
-ch_germlineResourceIndex = params.germlineResource ? params.germlineResourceIndex ? Channel.value(file(params.germlineResourceIndex)) : germlineResourceIndexBuilt : "null"
+ch_germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? Channel.value(file(params.germline_resource_index)) : germline_resource_tbi : "null"
 
 process BuildKnownIndelsIndex {
     tag {knownIndels}
 
-    publishDir params.outdir, mode: params.publishDirMode,
-        saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
+    publishDir params.outdir, mode: params.publish_dir_mode,
+        saveAs: {params.save_reference ? "reference_genome/${it}" : null }
 
     input:
-        each file(knownIndels) from ch_knownIndels
+        each file(knownIndels) from ch_known_indels
 
     output:
-        file("${knownIndels}.tbi") into knownIndelsIndexBuilt
+        file("${knownIndels}.tbi") into known_indels_tbi
 
-    when: !(params.knownIndelsIndex) && params.knownIndels && 'mapping' in step
+    when: !(params.known_indels_index) && params.known_indels && 'mapping' in step
 
     script:
     """
@@ -536,19 +712,19 @@ process BuildKnownIndelsIndex {
     """
 }
 
-ch_knownIndelsIndex = params.knownIndels ? params.knownIndelsIndex ? Channel.value(file(params.knownIndelsIndex)) : knownIndelsIndexBuilt.collect() : "null"
+ch_known_indels_tbi = params.known_indels ? params.known_indels_index ? Channel.value(file(params.known_indels_index)) : known_indels_tbi.collect() : "null"
 
 process BuildPonIndex {
     tag {pon}
 
-    publishDir params.outdir, mode: params.publishDirMode,
-        saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
+    publishDir params.outdir, mode: params.publish_dir_mode,
+        saveAs: {params.save_reference ? "reference_genome/${it}" : null }
 
     input:
         file(pon) from ch_pon
 
     output:
-        file("${pon}.tbi") into ponIndexBuilt
+        file("${pon}.tbi") into pon_tbi
 
     when: !(params.pon_index) && params.pon && ('tnscope' in tools || 'mutect2' in tools)
 
@@ -558,16 +734,16 @@ process BuildPonIndex {
     """
 }
 
-ch_ponIndex = params.pon ? params.pon_index ? Channel.value(file(params.pon_index)) : ponIndexBuilt : "null"
+ch_pon_tbi = params.pon ? params.pon_index ? Channel.value(file(params.pon_index)) : pon_tbi : "null"
 
 process BuildIntervals {
   tag {fastaFai}
 
-  publishDir params.outdir, mode: params.publishDirMode,
-    saveAs: {params.saveGenomeIndex ? "reference_genome/${it}" : null }
+  publishDir params.outdir, mode: params.publish_dir_mode,
+    saveAs: {params.save_reference ? "reference_genome/${it}" : null }
 
   input:
-    file(fastaFai) from ch_fastaFai
+    file(fastaFai) from ch_fai
 
   output:
     file("${fastaFai.baseName}.bed") into intervalBuilt
@@ -610,7 +786,7 @@ process CreateIntervalBeds {
           t = \$5  # runtime estimate
           if (t == "") {
             # no runtime estimate in this row, assume default value
-            t = (\$3 - \$2) / ${params.nucleotidesPerSecond}
+            t = (\$3 - \$2) / ${params.nucleotides_per_second}
           }
           if (name == "" || (chunk > 600 && (chunk + t) > longest * 1.05)) {
             # start a new chunk
@@ -649,7 +825,7 @@ bedIntervals = bedIntervals
             else {
                 start = fields[1].toInteger()
                 end = fields[2].toInteger()
-                duration += (end - start) / params.nucleotidesPerSecond
+                duration += (end - start) / params.nucleotides_per_second
             }
         }
         [duration, intervalFile]
@@ -714,7 +890,7 @@ process FastQCFQ {
 
     tag {idPatient + "-" + idRun}
 
-    publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idSample}_${idRun}", mode: params.publishDirMode
+    publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idSample}_${idRun}", mode: params.publish_dir_mode
 
     input:
         set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsFastQC
@@ -736,7 +912,7 @@ process FastQCBAM {
 
     tag {idPatient + "-" + idRun}
 
-    publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idSample}_${idRun}", mode: params.publishDirMode
+    publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idSample}_${idRun}", mode: params.publish_dir_mode
 
     input:
         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") from inputBamFastQC
@@ -773,9 +949,9 @@ process MapReads {
 
     input:
         set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from inputPairReads
-        file(bwaIndex) from ch_bwaIndex
+        file(bwaIndex) from ch_bwa
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMapped
@@ -826,9 +1002,9 @@ process SentieonMapReads {
 
     input:
         set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from inputPairReadsSentieon
-        file(bwaIndex) from ch_bwaIndex
+        file(bwaIndex) from ch_bwa
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMappedSentieon
@@ -930,7 +1106,7 @@ process IndexBamFile {
     output:
         set idPatient, idSample, file(bam), file("*.bai") into indexedBam
 
-    when: !params.knownIndels
+    when: !params.known_indels
 
     script:
     """
@@ -946,7 +1122,7 @@ process MarkDuplicatesSpark {
 
     tag {idPatient + "-" + idSample}
 
-    publishDir params.outdir, mode: params.publishDirMode,
+    publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: {
             if (it == "${idSample}.bam.metrics") "Reports/${idSample}/MarkDuplicates/${it}"
             else "Preprocessing/${idSample}/DuplicateMarked/${it}"
@@ -959,7 +1135,7 @@ process MarkDuplicatesSpark {
         set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bam.bai") into duplicateMarkedBams
         file ("${idSample}.bam.metrics") optional true into markDuplicatesReport
 
-    when: params.knownIndels
+    when: params.known_indels
 
     script:
     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
@@ -995,7 +1171,7 @@ process SentieonDedup {
 
     tag {idPatient + "-" + idSample}
 
-    publishDir params.outdir, mode: params.publishDirMode,
+    publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: {
             if (it == "${idSample}_*.txt" && 'sentieon' in skipQC) null
             else if (it == "${idSample}_*.txt") "Reports/${idSample}/Sentieon/${it}"
@@ -1005,7 +1181,7 @@ process SentieonDedup {
     input:
         set idPatient, idSample, file(bam), file(bai) from bamForSentieonDedup
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
         set idPatient, idSample, file("${idSample}.deduped.bam"), file("${idSample}.deduped.bam.bai") into bamDedupedSentieon
@@ -1051,22 +1227,22 @@ process BaseRecalibrator {
     input:
         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamBaseRecalibrator
         file(dbsnp) from ch_dbsnp
-        file(dbsnpIndex) from ch_dbsnpIndex
+        file(dbsnpIndex) from ch_dbsnp_tbi
         file(fasta) from ch_fasta
         file(dict) from ch_dict
-        file(fastaFai) from ch_fastaFai
-        file(knownIndels) from ch_knownIndels
-        file(knownIndelsIndex) from ch_knownIndelsIndex
+        file(fastaFai) from ch_fai
+        file(knownIndels) from ch_known_indels
+        file(knownIndelsIndex) from ch_known_indels_tbi
 
     output:
         set idPatient, idSample, file("${prefix}${idSample}.recal.table") into tableGatherBQSRReports
         set idPatient, idSample into recalTableTSVnoInt
 
-    when: params.knownIndels
+    when: params.known_indels
 
     script:
     dbsnpOptions = params.dbsnp ? "--known-sites ${dbsnp}" : ""
-    knownOptions = params.knownIndels ? knownIndels.collect{"--known-sites ${it}"}.join(' ') : ""
+    knownOptions = params.known_indels ? knownIndels.collect{"--known-sites ${it}"}.join(' ') : ""
     prefix = params.no_intervals ? "" : "${intervalBed.baseName}_"
     intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
     // TODO: --use-original-qualities ???
@@ -1101,13 +1277,14 @@ process GatherBQSRReports {
 
     tag {idPatient + "-" + idSample}
 
-    publishDir "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked", mode: params.publishDirMode, overwrite: false
+    publishDir "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked", mode: params.publish_dir_mode, overwrite: false
 
     input:
         set idPatient, idSample, file(recal) from tableGatherBQSRReports
 
     output:
         set idPatient, idSample, file("${idSample}.recal.table") into recalTable
+        file("${idSample}.recal.table") into baseRecalibratorReport
         set idPatient, idSample into recalTableTSV
 
     when: !(params.no_intervals)
@@ -1171,7 +1348,7 @@ process ApplyBQSR {
         set idPatient, idSample, file(bam), file(bai), file(recalibrationReport), file(intervalBed) from bamApplyBQSR
         file(dict) from ch_dict
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
         set idPatient, idSample, file("${prefix}${idSample}.recal.bam") into bamMergeBamRecal
@@ -1204,7 +1381,7 @@ process SentieonBQSR {
 
     tag {idPatient + "-" + idSample}
 
-    publishDir params.outdir, mode: params.publishDirMode,
+    publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: {
             if (it == "${idSample}_recal_result.csv" && 'sentieon' in skipQC) "Reports/${idSample}/Sentieon/${it}"
             else "Preprocessing/${idSample}/RecalSentieon/${it}"
@@ -1213,12 +1390,12 @@ process SentieonBQSR {
     input:
         set idPatient, idSample, file(bam), file(bai) from bamDedupedSentieon
         file(dbsnp) from ch_dbsnp
-        file(dbsnpIndex) from ch_dbsnpIndex
+        file(dbsnpIndex) from ch_dbsnp_tbi
         file(fasta) from ch_fasta
         file(dict) from ch_dict
-        file(fastaFai) from ch_fastaFai
-        file(knownIndels) from ch_knownIndels
-        file(knownIndelsIndex) from ch_knownIndelsIndex
+        file(fastaFai) from ch_fai
+        file(knownIndels) from ch_known_indels
+        file(knownIndelsIndex) from ch_known_indels_tbi
 
     output:
         set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bamRecalSentieon 
@@ -1288,7 +1465,7 @@ process MergeBamRecal {
 
     tag {idPatient + "-" + idSample}
 
-    publishDir "${params.outdir}/Preprocessing/${idSample}/Recalibrated", mode: params.publishDirMode
+    publishDir "${params.outdir}/Preprocessing/${idSample}/Recalibrated", mode: params.publish_dir_mode
 
     input:
         set idPatient, idSample, file(bam) from bamMergeBamRecal
@@ -1314,7 +1491,7 @@ process IndexBamRecal {
 
     tag {idPatient + "-" + idSample}
 
-    publishDir "${params.outdir}/Preprocessing/${idSample}/Recalibrated", mode: params.publishDirMode
+    publishDir "${params.outdir}/Preprocessing/${idSample}/Recalibrated", mode: params.publish_dir_mode
 
     input:
         set idPatient, idSample, file("${idSample}.recal.bam") from bamMergeBamRecalNoInt
@@ -1367,7 +1544,7 @@ process SamtoolsStats {
 
     tag {idPatient + "-" + idSample}
 
-    publishDir "${params.outdir}/Reports/${idSample}/SamToolsStats", mode: params.publishDirMode
+    publishDir "${params.outdir}/Reports/${idSample}/SamToolsStats", mode: params.publish_dir_mode
 
     input:
         set idPatient, idSample, file(bam) from bamRecalSamToolsStats
@@ -1393,11 +1570,11 @@ process BamQC {
 
     tag {idPatient + "-" + idSample}
 
-    publishDir "${params.outdir}/Reports/${idSample}/bamQC", mode: params.publishDirMode
+    publishDir "${params.outdir}/Reports/${idSample}/bamQC", mode: params.publish_dir_mode
 
     input:
         set idPatient, idSample, file(bam) from bamBamQC
-        file(targetBED) from ch_targetBED
+        file(targetBED) from ch_target_bed
 
     output:
         file("${bam.baseName}") into bamQCReport
@@ -1405,7 +1582,7 @@ process BamQC {
     when: !('bamqc' in skipQC)
 
     script:
-    use_bed = params.targetBED ? "-gff ${targetBED}" : ''
+    use_bed = params.target_bed ? "-gff ${targetBED}" : ''
     """
     qualimap --java-mem-size=${task.memory.toGiga()}G \
         bamqc \
@@ -1433,7 +1610,7 @@ bamQCReport = bamQCReport.dump(tag:'BamQC')
 if (params.sentieon && step == 'mapping') bamRecal = bamRecalSentieon
 
 // When no knownIndels for mapping, Channel bamRecal is indexedBam
-bamRecal = (params.knownIndels && step == 'mapping') ? bamRecal : indexedBam
+bamRecal = (params.known_indels && step == 'mapping') ? bamRecal : indexedBam
 
 // When starting with variant calling, Channel bamRecal is inputSample
 if (step == 'variantcalling') bamRecal = inputSample
@@ -1463,10 +1640,10 @@ process HaplotypeCaller {
     input:
         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamHaplotypeCaller
         file(dbsnp) from ch_dbsnp
-        file(dbsnpIndex) from ch_dbsnpIndex
+        file(dbsnpIndex) from ch_dbsnp_tbi
         file(dict) from ch_dict
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
         set val("HaplotypeCallerGVCF"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf") into gvcfHaplotypeCaller
@@ -1489,7 +1666,7 @@ process HaplotypeCaller {
 
 gvcfHaplotypeCaller = gvcfHaplotypeCaller.groupTuple(by:[0, 1, 2])
 
-if (params.noGVCF) gvcfHaplotypeCaller.close()
+if (params.no_gvcf) gvcfHaplotypeCaller.close()
 else gvcfHaplotypeCaller = gvcfHaplotypeCaller.dump(tag:'GVCF HaplotypeCaller')
 
 // STEP GATK HAPLOTYPECALLER.2
@@ -1500,10 +1677,10 @@ process GenotypeGVCFs {
     input:
         set idPatient, idSample, file(intervalBed), file(gvcf) from gvcfGenotypeGVCFs
         file(dbsnp) from ch_dbsnp
-        file(dbsnpIndex) from ch_dbsnpIndex
+        file(dbsnpIndex) from ch_dbsnp_tbi
         file(dict) from ch_dict
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
     set val("HaplotypeCaller"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into vcfGenotypeGVCFs
@@ -1541,9 +1718,9 @@ process SentieonDNAseq {
     input:
         set idPatient, idSample, file(bam), file(bai) from bamSentieonDNAseq
         file(dbsnp) from ch_dbsnp
-        file(dbsnpIndex) from ch_dbsnpIndex
+        file(dbsnpIndex) from ch_dbsnp_tbi
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
     set val("SentieonDNAseq"), idPatient, idSample, file("DNAseq_${idSample}.vcf") into sentieonDNAseqVCF
@@ -1576,9 +1753,9 @@ process SentieonDNAscope {
     input:
         set idPatient, idSample, file(bam), file(bai) from bamSentieonDNAscope
         file(dbsnp) from ch_dbsnp
-        file(dbsnpIndex) from ch_dbsnpIndex
+        file(dbsnpIndex) from ch_dbsnp_tbi
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
     set val("SentieonDNAscope"), idPatient, idSample, file("DNAscope_${idSample}.vcf") into sentieonDNAscopeVCF
@@ -1625,13 +1802,13 @@ process StrelkaSingle {
 
     tag {idSample}
 
-    publishDir "${params.outdir}/VariantCalling/${idSample}/Strelka", mode: params.publishDirMode
+    publishDir "${params.outdir}/VariantCalling/${idSample}/Strelka", mode: params.publish_dir_mode
 
     input:
         set idPatient, idSample, file(bam), file(bai) from bamStrelkaSingle
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
-        file(targetBED) from ch_targetBED
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
 
     output:
         set val("Strelka"), idPatient, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfStrelkaSingle
@@ -1639,8 +1816,8 @@ process StrelkaSingle {
     when: 'strelka' in tools
 
     script:
-    beforeScript = params.targetBED ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
-    options = params.targetBED ? "--exome --callRegions call_targets.bed.gz" : ""
+    beforeScript = params.target_bed ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
+    options = params.target_bed ? "--exome --callRegions call_targets.bed.gz" : ""
     """
     ${beforeScript}
     configureStrelkaGermlineWorkflow.py \
@@ -1672,13 +1849,13 @@ process MantaSingle {
 
     tag {idSample}
 
-    publishDir "${params.outdir}/VariantCalling/${idSample}/Manta", mode: params.publishDirMode
+    publishDir "${params.outdir}/VariantCalling/${idSample}/Manta", mode: params.publish_dir_mode
 
     input:
         set idPatient, idSample, file(bam), file(bai) from bamMantaSingle
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
-        file(targetBED) from ch_targetBED
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
 
     output:
         set val("Manta"), idPatient, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfMantaSingle
@@ -1686,8 +1863,8 @@ process MantaSingle {
     when: 'manta' in tools
 
     script:
-    beforeScript = params.targetBED ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
-    options = params.targetBED ? "--exome --callRegions call_targets.bed.gz" : ""
+    beforeScript = params.target_bed ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
+    options = params.target_bed ? "--exome --callRegions call_targets.bed.gz" : ""
     status = statusMap[idPatient, idSample]
     inputbam = status == 0 ? "--bam" : "--tumorBam"
     vcftype = status == 0 ? "diploid" : "tumor"
@@ -1723,9 +1900,9 @@ vcfMantaSingle = vcfMantaSingle.dump(tag:'Single Manta')
 process TIDDIT {
     tag {idSample}
 
-    publishDir "${params.outdir}/VariantCalling/${idSample}/TIDDIT", mode: params.publishDirMode
+    publishDir "${params.outdir}/VariantCalling/${idSample}/TIDDIT", mode: params.publish_dir_mode
 
-    publishDir params.outdir, mode: params.publishDirMode,
+    publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: {
             if (it == "TIDDIT_${idSample}.vcf") "VariantCalling/${idSample}/TIDDIT/${it}"
             else "Reports/${idSample}/TIDDIT/${it}"
@@ -1734,7 +1911,7 @@ process TIDDIT {
     input:
         set idPatient, idSample, file(bam), file(bai) from bamTIDDIT
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
         set val("TIDDIT"), idPatient, idSample, file("*.vcf.gz"), file("*.tbi") into vcfTIDDIT
@@ -1802,7 +1979,7 @@ process FreeBayes {
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamFreeBayes
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
         set val("FreeBayes"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into vcfFreeBayes
@@ -1839,12 +2016,12 @@ process Mutect2 {
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamMutect2
         file(dict) from ch_dict
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
-        file(germlineResource) from ch_germlineResource
-        file(germlineResourceIndex) from ch_germlineResourceIndex
+        file(fastaFai) from ch_fai
+        file(germlineResource) from ch_germline_resource
+        file(germlineResourceIndex) from ch_germline_resource_tbi
         file(intervals) from ch_intervals
         file(pon) from ch_pon
-        file(ponIndex) from ch_ponIndex
+        file(ponIndex) from ch_pon_tbi
 
     output:
         set val("Mutect2"), 
@@ -1887,16 +2064,16 @@ mutect2Stats = mutect2Stats.groupTuple(by:[0,1,2])
 process MergeMutect2Stats {
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Mutect2", mode: params.publishDirMode
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Mutect2", mode: params.publish_dir_mode
 
     input:
         set caller, idPatient, idSampleTumor_vs_idSampleNormal, file(vcfFiles) from mutect2OutForStats // corresponding small VCF chunks
         set idPatient, idSampleTumor, idSampleNormal, file(statsFiles) from mutect2Stats               // the actual stats files
         file(dict) from ch_dict
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
-        file(germlineResource) from ch_germlineResource
-        file(germlineResourceIndex) from ch_germlineResourceIndex
+        file(fastaFai) from ch_fai
+        file(germlineResource) from ch_germline_resource
+        file(germlineResourceIndex) from ch_germline_resource_tbi
         file(intervals) from ch_intervals
 
     output:
@@ -1927,12 +2104,12 @@ process ConcatVCF {
 
     tag {variantCaller + "-" + idSample}
 
-    publishDir "${params.outdir}/VariantCalling/${idSample}/${"$variantCaller"}", mode: params.publishDirMode
+    publishDir "${params.outdir}/VariantCalling/${idSample}/${"$variantCaller"}", mode: params.publish_dir_mode
 
     input:
         set variantCaller, idPatient, idSample, file(vcFiles) from vcfConcatenateVCFs
-        file(fastaFai) from ch_fastaFai
-        file(targetBED) from ch_targetBED
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
 
     output:
     // we have this funny *_* pattern to avoid copying the raw calls to publishdir
@@ -1947,7 +2124,7 @@ process ConcatVCF {
       outputFile = "unfiltered_${variantCaller}_${idSample}.vcf"
     else 
       outputFile = "${variantCaller}_${idSample}.vcf"
-    options = params.targetBED ? "-t ${targetBED}" : ""
+    options = params.target_bed ? "-t ${targetBED}" : ""
     """
     concatenateVCFs.sh -i ${fastaFai} -c ${task.cpus} -o ${outputFile} ${options}
     """
@@ -1965,8 +2142,8 @@ process PileupSummariesForMutect2 {
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamPileupSummaries 
         set idPatient, idSampleNormal, idSampleTumor, file(statsFile) from intervalStatsFiles
-        file(germlineResource) from ch_germlineResource
-        file(germlineResourceIndex) from ch_germlineResourceIndex
+        file(germlineResource) from ch_germline_resource
+        file(germlineResourceIndex) from ch_germline_resource_tbi
 
     output:
         set idPatient,
@@ -1995,7 +2172,7 @@ process MergePileupSummaries {
 
     tag {idPatient + "_" + idSampleTumor}
 
-    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Mutect2", mode: params.publishDirMode
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Mutect2", mode: params.publish_dir_mode
 
     input:
         set idPatient, idSampleTumor, file(pileupSums) from pileupSummaries
@@ -2023,7 +2200,7 @@ process CalculateContamination {
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Mutect2", mode: params.publishDirMode
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Mutect2", mode: params.publish_dir_mode
 
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamCalculateContamination 
@@ -2051,7 +2228,7 @@ process FilterMutect2Calls {
 
     tag {idSampleTN}
 
-    publishDir "${params.outdir}/VariantCalling/${idSampleTN}/${"$variantCaller"}", mode: params.publishDirMode
+    publishDir "${params.outdir}/VariantCalling/${idSampleTN}/${"$variantCaller"}", mode: params.publish_dir_mode
 
     input:
         set variantCaller, idPatient, idSampleTN, file(unfiltered), file(unfilteredIndex) from vcfConcatenatedForFilter
@@ -2059,9 +2236,9 @@ process FilterMutect2Calls {
         file("${idSampleTN}_contamination.table") from contaminationTable
         file(dict) from ch_dict
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
-        file(germlineResource) from ch_germlineResource
-        file(germlineResourceIndex) from ch_germlineResourceIndex
+        file(fastaFai) from ch_fai
+        file(germlineResource) from ch_germline_resource
+        file(germlineResourceIndex) from ch_germline_resource_tbi
         file(intervals) from ch_intervals
         
     output:
@@ -2098,11 +2275,11 @@ process SentieonTNscope {
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamTNscope
         file(dict) from ch_dict
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
         file(dbsnp) from ch_dbsnp
-        file(dbsnpIndex) from ch_dbsnpIndex
+        file(dbsnpIndex) from ch_dbsnp_tbi
         file(pon) from ch_pon
-        file(ponIndex) from ch_ponIndex
+        file(ponIndex) from ch_pon_tbi
 
     output:
         set val("SentieonTNscope"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf") into vcfTNscope
@@ -2133,7 +2310,7 @@ sentieonVCF = sentieonDNAseqVCF.mix(sentieonDNAscopeVCF, sentieonDNAscopeSVVCF, 
 process CompressSentieonVCF {
     tag {"${idSample} - ${vcf}"}
 
-    publishDir "${params.outdir}/VariantCalling/${idSample}/${variantCaller}", mode: params.publishDirMode
+    publishDir "${params.outdir}/VariantCalling/${idSample}/${variantCaller}", mode: params.publish_dir_mode
 
     input:
         set variantCaller, idPatient, idSample, file(vcf) from sentieonVCF
@@ -2160,14 +2337,14 @@ process Strelka {
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Strelka", mode: params.publishDirMode
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Strelka", mode: params.publish_dir_mode
 
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamStrelka
         file(dict) from ch_dict
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
-        file(targetBED) from ch_targetBED
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
 
     output:
         set val("Strelka"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfStrelka
@@ -2175,8 +2352,8 @@ process Strelka {
     when: 'strelka' in tools
 
     script:
-    beforeScript = params.targetBED ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
-    options = params.targetBED ? "--exome --callRegions call_targets.bed.gz" : ""
+    beforeScript = params.target_bed ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
+    options = params.target_bed ? "--exome --callRegions call_targets.bed.gz" : ""
     """
     ${beforeScript}
     configureStrelkaSomaticWorkflow.py \
@@ -2209,13 +2386,13 @@ process Manta {
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Manta", mode: params.publishDirMode
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Manta", mode: params.publish_dir_mode
 
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamManta
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
-        file(targetBED) from ch_targetBED
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
 
     output:
         set val("Manta"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfManta
@@ -2224,8 +2401,8 @@ process Manta {
     when: 'manta' in tools
 
     script:
-    beforeScript = params.targetBED ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
-    options = params.targetBED ? "--exome --callRegions call_targets.bed.gz" : ""
+    beforeScript = params.target_bed ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
+    options = params.target_bed ? "--exome --callRegions call_targets.bed.gz" : ""
     """
     ${beforeScript}
     configManta.py \
@@ -2275,23 +2452,23 @@ process StrelkaBP {
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Strelka", mode: params.publishDirMode
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Strelka", mode: params.publish_dir_mode
 
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(mantaCSI), file(mantaCSIi) from pairBamStrelkaBP
         file(dict) from ch_dict
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
-        file(targetBED) from ch_targetBED
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
 
     output:
         set val("Strelka"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfStrelkaBP
 
-    when: 'strelka' in tools && 'manta' in tools && !params.noStrelkaBP
+    when: 'strelka' in tools && 'manta' in tools && !params.no_strelka_bp
 
     script:
-    beforeScript = params.targetBED ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
-    options = params.targetBED ? "--exome --callRegions call_targets.bed.gz" : ""
+    beforeScript = params.target_bed ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
+    options = params.target_bed ? "--exome --callRegions call_targets.bed.gz" : ""
     """
     ${beforeScript}
     configureStrelkaSomaticWorkflow.py \
@@ -2326,10 +2503,10 @@ process AlleleCounter {
 
     input:
         set idPatient, idSample, file(bam), file(bai) from bamAscat
-        file(acLoci) from ch_acLoci
+        file(acLoci) from ch_ac_loci
         file(dict) from ch_dict
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
         set idPatient, idSample, file("${idSample}.alleleCount") into alleleCounterOut
@@ -2368,7 +2545,7 @@ process ConvertAlleleCounts {
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/ASCAT", mode: params.publishDirMode
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/ASCAT", mode: params.publish_dir_mode
 
     input:
         set idPatient, idSampleNormal, idSampleTumor, file(alleleCountNormal), file(alleleCountTumor) from alleleCounterOut
@@ -2393,11 +2570,11 @@ process Ascat {
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/ASCAT", mode: params.publishDirMode
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/ASCAT", mode: params.publish_dir_mode
 
     input:
         set idPatient, idSampleNormal, idSampleTumor, file(bafNormal), file(logrNormal), file(bafTumor), file(logrTumor) from convertAlleleCountsOut
-        file(acLociGC) from ch_acLociGC
+        file(acLociGC) from ch_ac_loci_gc
 
     output:
         set val("ASCAT"), idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.*.{png,txt}") into ascatOut
@@ -2424,7 +2601,7 @@ process Mpileup {
     input:
         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamMpileup
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
         set idPatient, idSample, file("${prefix}${idSample}.pileup.gz") into mpileupMerge
@@ -2455,7 +2632,7 @@ if (!params.no_intervals) {
 process MergeMpileup {
     tag {idSample}
 
-    publishDir params.outdir, mode: params.publishDirMode, saveAs: { it == "${idSample}.pileup.gz" ? "VariantCalling/${idSample}/mpileup/${it}" : '' }
+    publishDir params.outdir, mode: params.publish_dir_mode, saveAs: { it == "${idSample}.pileup.gz" ? "VariantCalling/${idSample}/mpileup/${it}" : '' }
 
     input:
         set idPatient, idSample, file(mpileup) from mpileupMerge
@@ -2501,16 +2678,16 @@ process ControlFREEC {
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/controlFREEC", mode: params.publishDirMode
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/controlFREEC", mode: params.publish_dir_mode
 
     input:
         set idPatient, idSampleNormal, idSampleTumor, file(mpileupNormal), file(mpileupTumor) from mpileupOut
-        file(chrDir) from ch_chrDir
-        file(chrLength) from ch_chrLength
+        file(chrDir) from ch_chr_dir
+        file(chrLength) from ch_chr_length
         file(dbsnp) from ch_dbsnp
-        file(dbsnpIndex) from ch_dbsnpIndex
+        file(dbsnpIndex) from ch_dbsnp_tbi
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_fastaFai
+        file(fastaFai) from ch_fai
 
     output:
         set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.pileup.gz_CNVs"), file("${idSampleTumor}.pileup.gz_ratio.txt"), file("${idSampleTumor}.pileup.gz_normal_CNVs"), file("${idSampleTumor}.pileup.gz_normal_ratio.txt"), file("${idSampleTumor}.pileup.gz_BAF.txt"), file("${idSampleNormal}.pileup.gz_BAF.txt") into controlFreecViz
@@ -2565,7 +2742,7 @@ process ControlFreecViz {
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/controlFREEC", mode: params.publishDirMode
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/controlFREEC", mode: params.publish_dir_mode
 
     input:
         set idPatient, idSampleNormal, idSampleTumor, file(cnvTumor), file(ratioTumor), file(cnvNormal), file(ratioNormal), file(bafTumor), file(bafNormal) from controlFreecViz
@@ -2644,7 +2821,7 @@ process BcftoolsStats {
 
     tag {"${variantCaller} - ${vcf}"}
 
-    publishDir "${params.outdir}/Reports/${idSample}/BCFToolsStats", mode: params.publishDirMode
+    publishDir "${params.outdir}/Reports/${idSample}/BCFToolsStats", mode: params.publish_dir_mode
 
     input:
         set variantCaller, idSample, file(vcf) from vcfBCFtools
@@ -2667,7 +2844,7 @@ process Vcftools {
 
     tag {"${variantCaller} - ${vcf}"}
 
-    publishDir "${params.outdir}/Reports/${idSample}/VCFTools", mode: params.publishDirMode
+    publishDir "${params.outdir}/Reports/${idSample}/VCFTools", mode: params.publish_dir_mode
 
     input:
         set variantCaller, idSample, file(vcf) from vcfVCFtools
@@ -2760,15 +2937,15 @@ vcfVep = vcfVep.map {
 process Snpeff {
     tag {"${idSample} - ${variantCaller} - ${vcf}"}
 
-    publishDir params.outdir, mode: params.publishDirMode, saveAs: {
+    publishDir params.outdir, mode: params.publish_dir_mode, saveAs: {
         if (it == "${reducedVCF}_snpEff.ann.vcf") null
         else "Reports/${idSample}/snpEff/${it}"
     }
 
     input:
         set variantCaller, idSample, file(vcf) from vcfSnpeff
-        file(dataDir) from ch_snpEff_cache
-        val snpeffDb from ch_snpeffDb
+        file(dataDir) from ch_snpeff_cache
+        val snpeffDb from ch_snpeff_db
 
     output:
         set file("${reducedVCF}_snpEff.txt"), file("${reducedVCF}_snpEff.html"), file("${reducedVCF}_snpEff.csv") into snpeffReport
@@ -2778,7 +2955,7 @@ process Snpeff {
 
     script:
     reducedVCF = reduceVCF(vcf.fileName)
-    cache = (params.snpEff_cache && params.annotation_cache) ? "-dataDir \${PWD}/${dataDir}" : ""
+    cache = (params.snpeff_cache && params.annotation_cache) ? "-dataDir \${PWD}/${dataDir}" : ""
     """
     snpEff -Xmx${task.memory.toGiga()}g \
         ${snpeffDb} \
@@ -2802,7 +2979,7 @@ snpeffReport = snpeffReport.dump(tag:'snpEff report')
 process CompressVCFsnpEff {
     tag {"${idSample} - ${vcf}"}
 
-    publishDir "${params.outdir}/Annotation/${idSample}/snpEff", mode: params.publishDirMode
+    publishDir "${params.outdir}/Annotation/${idSample}/snpEff", mode: params.publish_dir_mode
 
     input:
         set variantCaller, idSample, file(vcf) from snpeffVCF
@@ -2827,7 +3004,7 @@ process VEP {
 
     tag {"${idSample} - ${variantCaller} - ${vcf}"}
 
-    publishDir params.outdir, mode: params.publishDirMode, saveAs: {
+    publishDir params.outdir, mode: params.publish_dir_mode, saveAs: {
         if (it == "${reducedVCF}_VEP.summary.html") "Reports/${idSample}/VEP/${it}"
         else null
     }
@@ -2835,11 +3012,11 @@ process VEP {
     input:
         set variantCaller, idSample, file(vcf), file(idx) from vcfVep
         file(dataDir) from ch_vep_cache
-        val cache_version from ch_vepCacheVersion
-        file(cadd_InDels) from ch_cadd_InDels
-        file(cadd_InDels_tbi) from ch_cadd_InDels_tbi
-        file(cadd_WG_SNVs) from ch_cadd_WG_SNVs
-        file(cadd_WG_SNVs_tbi) from ch_cadd_WG_SNVs_tbi
+        val cache_version from ch_vep_cache_version
+        file(cadd_InDels) from ch_cadd_indels
+        file(cadd_InDels_tbi) from ch_cadd_indels_tbi
+        file(cadd_WG_SNVs) from ch_cadd_wg_snvs
+        file(cadd_WG_SNVs_tbi) from ch_cadd_wg_snvs_tbi
 
     output:
         set variantCaller, idSample, file("${reducedVCF}_VEP.ann.vcf") into vepVCF
@@ -2852,7 +3029,7 @@ process VEP {
     genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
 
     dir_cache = (params.vep_cache && params.annotation_cache) ? " \${PWD}/${dataDir}" : "/.vep"
-    cadd = (params.cadd_cache && params.cadd_WG_SNVs && params.cadd_InDels) ? "--plugin CADD,whole_genome_SNVs.tsv.gz,InDels.tsv.gz" : ""
+    cadd = (params.cadd_cache && params.cadd_wg_snvs && params.cadd_indels) ? "--plugin CADD,whole_genome_SNVs.tsv.gz,InDels.tsv.gz" : ""
     genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/genesplicer,/opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/share/genesplicer-1.0-1/human,context=200,tmpdir=\$PWD/${reducedVCF}" : "--offline"
     """
     mkdir ${reducedVCF}
@@ -2890,7 +3067,7 @@ process VEPmerge {
 
     tag {"${idSample} - ${variantCaller} - ${vcf}"}
 
-    publishDir params.outdir, mode: params.publishDirMode, saveAs: {
+    publishDir params.outdir, mode: params.publish_dir_mode, saveAs: {
         if (it == "${reducedVCF}_VEP.summary.html") "Reports/${idSample}/VEP/${it}"
         else null
     }
@@ -2898,11 +3075,11 @@ process VEPmerge {
     input:
         set variantCaller, idSample, file(vcf), file(idx) from compressVCFsnpEffOut
         file(dataDir) from ch_vep_cache
-        val cache_version from ch_vepCacheVersion
-        file(cadd_InDels) from ch_cadd_InDels
-        file(cadd_InDels_tbi) from ch_cadd_InDels_tbi
-        file(cadd_WG_SNVs) from ch_cadd_WG_SNVs
-        file(cadd_WG_SNVs_tbi) from ch_cadd_WG_SNVs_tbi
+        val cache_version from ch_vep_cache_version
+        file(cadd_InDels) from ch_cadd_indels
+        file(cadd_InDels_tbi) from ch_cadd_indels_tbi
+        file(cadd_WG_SNVs) from ch_cadd_wg_snvs
+        file(cadd_WG_SNVs_tbi) from ch_cadd_wg_snvs_tbi
 
     output:
         set variantCaller, idSample, file("${reducedVCF}_VEP.ann.vcf") into vepVCFmerge
@@ -2914,7 +3091,7 @@ process VEPmerge {
     reducedVCF = reduceVCF(vcf.fileName)
     genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
     dir_cache = (params.vep_cache && params.annotation_cache) ? " \${PWD}/${dataDir}" : "/.vep"
-    cadd = (params.cadd_cache && params.cadd_WG_SNVs && params.cadd_InDels) ? "--plugin CADD,whole_genome_SNVs.tsv.gz,InDels.tsv.gz" : ""
+    cadd = (params.cadd_cache && params.cadd_wg_snvs && params.cadd_indels) ? "--plugin CADD,whole_genome_SNVs.tsv.gz,InDels.tsv.gz" : ""
     genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/genesplicer,/opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/share/genesplicer-1.0-1/human,context=200,tmpdir=\$PWD/${reducedVCF}" : "--offline"
     """
     mkdir ${reducedVCF}
@@ -2951,7 +3128,7 @@ vcfCompressVCFvep = vepVCF.mix(vepVCFmerge)
 process CompressVCFvep {
     tag {"${idSample} - ${vcf}"}
 
-    publishDir "${params.outdir}/Annotation/${idSample}/VEP", mode: params.publishDirMode
+    publishDir "${params.outdir}/Annotation/${idSample}/VEP", mode: params.publish_dir_mode
 
     input:
         set variantCaller, idSample, file(vcf) from vcfCompressVCFvep
@@ -2975,7 +3152,7 @@ compressVCFOutVEP = compressVCFOutVEP.dump(tag:'VCF')
 */
 
 process MultiQC {
-    publishDir "${params.outdir}/Reports/MultiQC", mode: params.publishDirMode
+    publishDir "${params.outdir}/Reports/MultiQC", mode: params.publish_dir_mode
 
     input:
         file (multiqcConfig) from Channel.value(params.multiqc_config ? file(params.multiqc_config) : "")
@@ -2984,6 +3161,7 @@ process MultiQC {
         file ('BCFToolsStats/*') from bcftoolsReport.collect().ifEmpty([])
         file ('FastQC/*') from fastQCReport.collect().ifEmpty([])
         file ('MarkDuplicates/*') from markDuplicatesReport.collect().ifEmpty([])
+        file ('DuplicateMarked/*.recal.table') from baseRecalibratorReport.collect().ifEmpty([])
         file ('SamToolsStats/*') from samtoolsStatsReport.collect().ifEmpty([])
         file ('snpEff/*') from snpeffReport.collect().ifEmpty([])
         file ('VCFTools/*') from vcftoolsReport.collect().ifEmpty([])
@@ -3062,7 +3240,7 @@ workflow.onComplete {
     def email_html = html_template.toString()
 
     // Render the sendmail template
-    def smail_fields = [ email: params.email, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir", mqcFile: mqc_report, mqcMaxSize: params.maxMultiqcEmailFileSize.toBytes() ]
+    def smail_fields = [ email: params.email, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir", mqcFile: mqc_report, mqcMaxSize: params.max_multiqc_email_size.toBytes() ]
     def sf = new File("$baseDir/assets/sendmail_template.txt")
     def sendmail_template = engine.createTemplate(sf).make(smail_fields)
     def sendmail_html = sendmail_template.toString()
@@ -3206,17 +3384,6 @@ def checkParameterExistence(it, list) {
 // Compare each parameter with a list of parameters
 def checkParameterList(list, realList) {
     return list.every{ checkParameterExistence(it, realList) }
-}
-
-// Check if params.item exists and return params.genomes[params.genome].item otherwise
-def checkParamReturnFile(item) {
-    // Handle deprecation
-    if (params.genomeDict && item == "dict") return file(params.genomeDict)
-    if (params.genomeFile && item == "fasta") return file(params.genomeFile)
-    if (params.genomeIndex && item == "fastaFai") return file(params.genomeIndex)
-
-    params."${item}" = params.genomes[params.genome]."${item}"
-    return file(params."${item}")
 }
 
 // Define list of available tools to annotate
