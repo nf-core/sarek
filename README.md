@@ -97,7 +97,7 @@ For further information or help, don't hesitate to get in touch on [Slack](https
 ## Citation
 
 If you use `nf-core/sarek` for your analysis, please cite the `Sarek` pre-print as follows:
-> Garcia MU, Juhos S, Larsson M, Olason PI, Martin M, Eisfeldt J, DiLorenzo S, Sandgren J, de Ståhl TD, Wirta V, Nistér M, Nystedt B, Käller M. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants**. *bioRxiv*. 2018. p. 316976. [doi: 10.1101/316976](https://www.biorxiv.org/content/10.1101/316976v1).
+> Garcia MU, Juhos S, Larsson M, Olason PI, Martin M, Eisfeldt J, DiLorenzo S, Sandgren J, Díaz De Ståhl TD, Ewels P, Wirta V, Nistér M, Käller M, Nystedt B. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants**. *F1000Research*. 2020. 9:63. [doi: 10.12688/f1000research.16665.1](https://doi.org/10.12688/f1000research.16665.1).
 
 You can cite the sarek zenodo record for a specific version using the following [doi: 10.5281/zenodo.3476426](https://zenodo.org/badge/latestdoi/184289291)
 
