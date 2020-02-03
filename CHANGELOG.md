@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#76](https://github.com/nf-core/sarek/pull/76) - Use `gatk4-spark` instead of `gatk4` in `environment.yml`
 - [#80](https://github.com/nf-core/sarek/pull/80) - Re-bump `dev` branch
 - [#85](https://github.com/nf-core/sarek/pull/85) - Use new merged vcf files for known indels to simplify setting up channel
+- [#104](https://github.com/nf-core/sarek/pull/104) - Update Figure 1
 - [#107](https://github.com/nf-core/sarek/pull/107) - Switch params to snake_case
 
 ### `Fixed`
