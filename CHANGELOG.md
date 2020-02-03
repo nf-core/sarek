@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 - [#83](https://github.com/nf-core/sarek/pull/83) - Fix some typos in `docs/input.md`
 - [#107](https://github.com/nf-core/sarek/pull/107) - Fix linting
+- [#110](https://github.com/nf-core/sarek/pull/110) - Fix `snpEff` report issue cf [#106](https://github.com/nf-core/sarek/issues/106)
 
 ### `Deprecated`
 
