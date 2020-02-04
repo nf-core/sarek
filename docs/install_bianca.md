@@ -146,10 +146,33 @@ So every member of the project who wants to use nf-core/sarek will need to do:
 > ln -s /castor/project/proj_nobackup/sarek/default sarek
 ```
 
+Singularity images for Sarek are available on Uppmax in `/sw/data/uppnex/ToolBox/sarek`.
+Sometimes Nextflow needs write access to the image folder, and if so the images needs to be copied to a location with write permission, for example in a subfolder of your project folder.
+
+```bash
+#Create a folder for the singularity images somewhere in your project:
+mkdir sarek_simg
+
+#Copy the relevant singularity image from the write protected folder on Uppmax to the folder where you have write permission:
+cp /sw/data/uppnex/ToolBox/sarek/nfcore-sarek-dev.img /path/to/your/sarek_simg/.
+
+#Update the ENV parameter NXF_SINGULARITY_CACHEDIR
+export NXF_SINGULARITY_CACHEDIR=/path/to/your/sarek_simg
+```
+
 And then nf-core/sarek can be used with:
 
 ```bash
 > nextflow run ~/sarek/main.nf -profile uppmax --custom_config_base ~/sarek/configs --project [PROJECT] --genome [GENOME ASSEMBLY] ...
+```
+
+This command worked on Bianca 20190906:
+
+```bash
+>screen -S SAMPLE /path/to/nextflow run /path/to/sarek/main.nf -profile uppmax --project PROJID --sample SAMPLE.tsv --genome GRCh37 --genomes_base /sw/data/uppnex/ToolBox/ReferenceAssemblies/hg38make/bundle/2.8/b37  --step variantcalling --tools ASCAT --igenomesIgnore
+
+#To detach screen:
+ctrl-A-D
 ```
 
 This is an example of how to run sarek with the tool Manta and the genome assembly version GRCh38:

@@ -189,9 +189,9 @@ For a Tumor/Normal pair only:
 
 Files created:
 
-- `unfiltered_Mutect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `unfiltered_Mutect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
+- `Mutect2_unfiltered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `Mutect2_unfiltered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
   - unfiltered (raw) Mutect2 calls VCF with Tabix index
-- `filtered_Mutect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `filtered_Mutect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
+- `Mutect2_filtered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `Mutect2_filtered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
   - filtered Mutect2 calls VCF with Tabix index: these entries has a PASS filter, you can get these when supplying a panel of normals using the `--pon` option
 - `[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.stats`
   - a stats file generated during calling raw variants (needed for filtering)
@@ -598,7 +598,7 @@ For all samples:
   - RAW statistics used by MultiQC
 - `VariantCaller_Sample_snpEff.html`
   - Statistics to be visualised with a web browser
-- `VariantCaller_Sample_snpEff.txt`
+- `VariantCaller_Sample_snpEff.genes.txt`
   - TXT (tab separated) summary counts for variants affecting each transcript and gene
 
 For further reading and documentation see the [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary)
