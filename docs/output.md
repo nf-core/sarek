@@ -598,7 +598,7 @@ For all samples:
   - RAW statistics used by MultiQC
 - `VariantCaller_Sample_snpEff.html`
   - Statistics to be visualised with a web browser
-- `VariantCaller_Sample_snpEff.txt`
+- `VariantCaller_Sample_snpEff.genes.txt`
   - TXT (tab separated) summary counts for variants affecting each transcript and gene
 
 For further reading and documentation see the [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary)
