@@ -837,7 +837,7 @@ bedIntervals = bedIntervals.dump(tag:'bedintervals')
 
 if (params.no_intervals && step != 'annotate') bedIntervals = Channel.from(file("no_intervals.bed"))
 
-(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intMpileup, bedIntervals) = bedIntervals.into(5)
+(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, int_samtools_mpileup, int_bcftools_mpileup, bedIntervals) = bedIntervals.into(6)
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
@@ -1030,7 +1030,7 @@ process SentieonMapReads {
     """
 }
 
-bamMappedSentieon = bamMappedSentieon.dump(tag:'Sentieon Mapped BAM')
+bamMappedSentieon = bamMappedSentieon.dump(tag:'SENTIEON MAPPED BAM')
 // Sort BAM whether they are standalone or should be merged
 
 singleBamSentieon = Channel.create()
@@ -1074,7 +1074,7 @@ if (!params.sentieon) mergedBamForSentieon.close()
 else mergedBam.close()
 
 mergedBam = mergedBam.dump(tag:'BAMs for MD')
-mergedBamForSentieon = mergedBamForSentieon.dump(tag:'Sentieon BAMs to Index')
+mergedBamForSentieon = mergedBamForSentieon.dump(tag:'SENTIEON BAMS TO INDEX')
 
 process IndexBamMergedForSentieon {
     label 'cpus_8'
@@ -1622,14 +1622,16 @@ bamRecal = bamRecal.dump(tag:'BAM for Variant Calling')
 // Manta will be run in Germline mode, or in Tumor mode depending on status
 // HaplotypeCaller, TIDDIT and Strelka will be run for Normal and Tumor samples
 
-(bamSentieonDNAscope, bamSentieonDNAseq, bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamRecalAll, bamRecalAllTemp) = bamRecal.into(7)
+(bamSentieonDNAscope, bamSentieonDNAseq, bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamRecalAll, bamRecalAllHC, bamRecalAllMpileup) = bamRecal.into(8)
 
 // To speed Variant Callers up we are chopping the reference into smaller pieces
 // Do variant calling by this intervals, and re-merge the VCFs
 
-bamHaplotypeCaller = bamRecalAllTemp.combine(intHaplotypeCaller)
+bamHaplotypeCaller = bamRecalAllHC.combine(intHaplotypeCaller)
 
-// STEP GATK HAPLOTYPECALLER.1
+bam_bcftools_mpileup = bamRecalAllMpileup.combine(int_bcftools_mpileup)
+
+// STEP GATK HAPLOTYPECALLER.1 - GVCF
 
 process HaplotypeCaller {
     label 'memory_singleCPU_task_sq'
@@ -1664,12 +1666,10 @@ process HaplotypeCaller {
     """
 }
 
-gvcfHaplotypeCaller = gvcfHaplotypeCaller.groupTuple(by:[0, 1, 2])
-
+gvcfHaplotypeCaller = gvcfHaplotypeCaller.groupTuple(by:[0,1,2])
 if (params.no_gvcf) gvcfHaplotypeCaller.close()
-else gvcfHaplotypeCaller = gvcfHaplotypeCaller.dump(tag:'GVCF HaplotypeCaller')
 
-// STEP GATK HAPLOTYPECALLER.2
+// STEP GATK HAPLOTYPECALLER.2 - VCF
 
 process GenotypeGVCFs {
     tag {idSample + "-" + intervalBed.baseName}
@@ -1704,7 +1704,36 @@ process GenotypeGVCFs {
     """
 }
 
-vcfGenotypeGVCFs = vcfGenotypeGVCFs.groupTuple(by:[0, 1, 2])
+vcfGenotypeGVCFs = vcfGenotypeGVCFs.groupTuple(by:[0,1,2])
+haplotypecaller_merge_in = vcfGenotypeGVCFs.mix(gvcfHaplotypeCaller)
+haplotypecaller_merge_in = haplotypecaller_merge_in.dump(tag:'HAPLOTYPECALLER VCF TO MERGE')
+
+// STEP GATK HAPLOTYPECALLER.3 - MERGE
+
+process Concat_VCF_HaplotypeCaller {
+    label 'cpus_8'
+
+    tag {variantCaller + "-" + idSample}
+
+    publishDir "${params.outdir}/VariantCalling/${idSample}/${"$variantCaller"}", mode: params.publish_dir_mode
+
+    input:
+        set variantCaller, idPatient, idSample, file(vcFiles) from haplotypecaller_merge_in
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
+
+    output:
+    set variantCaller, idPatient, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into haplotypecaller_merge_out
+
+    script:
+    options = params.target_bed ? "-t ${targetBED}" : ""
+    extension = variantCaller == 'HaplotypeCallerGVCF' ? 'g.vcf' : 'vcf'
+    """
+    concatenateVCFs.sh -i ${fastaFai} -c ${task.cpus} -o ${variantCaller}_${idSample}.${extension} ${options}
+    """
+}
+
+haplotypecaller_merge_out = haplotypecaller_merge_out.dump(tag:'HAPLOTYPECALLER VCF')
 
 // STEP SENTIEON DNASEQ
 
@@ -1739,7 +1768,7 @@ process SentieonDNAseq {
     """
 }
 
-sentieonDNAseqVCF = sentieonDNAseqVCF.dump(tag:'sentieon DNAseq')
+sentieonDNAseqVCF = sentieonDNAseqVCF.dump(tag:'SENTIEON DNASEQ')
 
 // STEP SENTIEON DNASCOPE
 
@@ -1791,8 +1820,8 @@ process SentieonDNAscope {
     """
 }
 
-sentieonDNAscopeVCF = sentieonDNAscopeVCF.dump(tag:'sentieon DNAscope')
-sentieonDNAscopeSVVCF = sentieonDNAscopeSVVCF.dump(tag:'sentieon DNAscope SV')
+sentieonDNAscopeVCF = sentieonDNAscopeVCF.dump(tag:'SENTIEON DNASCOPE')
+sentieonDNAscopeSVVCF = sentieonDNAscopeSVVCF.dump(tag:'SENTIEON DNASCOPE SV')
 
 // STEP STRELKA.1 - SINGLE MODE
 
@@ -1935,6 +1964,64 @@ process TIDDIT {
 
 vcfTIDDIT = vcfTIDDIT.dump(tag:'TIDDIT')
 
+// STEP BCFTOOLS MPILEUP.1
+
+process Bcftools_mpileup {
+    label 'memory_singleCPU_2_task'
+
+    tag {idSample + "-" + intervalBed.baseName}
+
+    input:
+        set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bam_bcftools_mpileup
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fai
+
+    output:
+        set idPatient, idSample, file("${prefix}${idSample}.vcf") into bcftools_mpileup_out
+
+    when: 'mpileup' in tools
+
+    script:
+    prefix = params.no_intervals ? "" : "${intervalBed.baseName}_"
+    intervalsOptions = params.no_intervals ? "" : "-t ${intervalBed}"
+    """
+    bcftools mpileup \
+        -f ${fasta} \
+        ${bam} \
+        ${intervalsOptions} \
+        -o ${intervalBed.baseName}_${idSample}.vcf
+    """
+}
+
+bcftools_mpileup_out = bcftools_mpileup_out.groupTuple(by:[0,1])
+bcftools_mpileup_out = bcftools_mpileup_out.dump(tag:'mpileup')
+
+// STEP MPILEUP.2 - MERGE
+
+process Concat_VCF_bcftools_mpileup {
+    label 'cpus_8'
+
+    tag {"mpileup-" + idSample}
+
+    publishDir "${params.outdir}/VariantCalling/${idSample}/mpileup", mode: params.publish_dir_mode
+
+    input:
+        set idPatient, idSample, file(vcFiles) from bcftools_mpileup_out
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
+
+    output:
+    set val("mpileup"), idPatient, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into bcftools_mpileup_merge_out
+
+    script:
+    options = params.target_bed ? "-t ${targetBED}" : ""
+    """
+    concatenateVCFs.sh -i ${fastaFai} -c ${task.cpus} -o mpileup_${idSample}.vcf ${options}
+    """
+}
+
+bcftools_mpileup_merge_out = bcftools_mpileup_merge_out.dump(tag:'BCFTOOLS MPILEUP VCF')
+
 /*
 ================================================================================
                              SOMATIC VARIANT CALLING
@@ -1942,7 +2029,7 @@ vcfTIDDIT = vcfTIDDIT.dump(tag:'TIDDIT')
 */
 
 // Ascat, Control-FREEC
-(bamAscat, bamMpileup, bamMpileupNoInt, bamRecalAll) = bamRecalAll.into(4)
+(bamAscat, bam_samtools_Mpileup, bamRecalAll) = bamRecalAll.into(3)
 
 // separate BAM by status
 bamNormal = Channel.create()
@@ -1965,7 +2052,7 @@ pairBam = pairBam.dump(tag:'BAM Somatic Pair')
 
 intervalPairBam = pairBam.spread(bedIntervals)
 
-bamMpileup = bamMpileup.spread(intMpileup)
+bam_samtools_Mpileup = bam_samtools_Mpileup.spread(int_samtools_mpileup)
 
 // intervals for Mutect2 calls, FreeBayes and pileups for Mutect2 filtering
 (pairBamMutect2, pairBamFreeBayes, pairBamPileupSummaries) = intervalPairBam.into(3)
@@ -2053,8 +2140,50 @@ process Mutect2 {
     """
 }
 
-mutect2Output = mutect2Output.groupTuple(by:[0,1,2])
-(mutect2Output, mutect2OutForStats) = mutect2Output.into(2)
+(mutect2Output, mutect2OutForStats) = mutect2Output.groupTuple(by:[0,1,2]).mutect2Output.into(2)
+
+// STEP MERGING VCF - FREEBAYES, GATK HAPLOTYPECALLER & GATK MUTECT2 (UNFILTERED)
+ 
+vcfConcatenateVCFs = mutect2Output.mix(vcfFreeBayes, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
+vcfConcatenateVCFs = vcfConcatenateVCFs.dump(tag:'VCF to merge')
+ 
+process Concat_VCF_Mutect2 {
+    label 'cpus_8'
+ 
+    tag {variantCaller + "-" + idSample}
+ 
+    publishDir "${params.outdir}/VariantCalling/${idSample}/${"$variantCaller"}", mode: params.publish_dir_mode
+ 
+    input:
+        set variantCaller, idPatient, idSample, file(vcFiles) from vcfConcatenateVCFs
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
+ 
+    output:
+    // we have this funny *_* pattern to avoid copying the raw calls to publishdir
+        set variantCaller, idPatient, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into vcfConcatenated
+ 
+    when: ('haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools)
+ 
+    script:
+    if (variantCaller == 'HaplotypeCallerGVCF') 
+      outputFile = "HaplotypeCaller_${idSample}.g.vcf"
+    else if (variantCaller == "Mutect2") 
+      outputFile = "unfiltered_${variantCaller}_${idSample}.vcf"
+    else 
+      outputFile = "${variantCaller}_${idSample}.vcf"
+    options = params.target_bed ? "-t ${targetBED}" : ""
+    """
+    concatenateVCFs.sh -i ${fastaFai} -c ${task.cpus} -o ${outputFile} ${options}
+    """
+}
+ 
+(vcfConcatenated, vcfConcatenatedForFilter) = vcfConcatenated.into(2)
+vcfConcatenated = vcfConcatenated.dump(tag:'VCF')
+
+
+
+
 
 (mutect2Stats, intervalStatsFiles) = mutect2Stats.into(2)
 mutect2Stats = mutect2Stats.groupTuple(by:[0,1,2])
@@ -2090,48 +2219,6 @@ process MergeMutect2Stats {
         -O ${idSampleTumor}_vs_${idSampleNormal}.vcf.gz.stats
     """
 }
-
-// we are merging the VCFs that are called separatelly for different intervals
-// so we can have a single sorted VCF containing all the calls for a given caller
-
-// STEP MERGING VCF - FREEBAYES, GATK HAPLOTYPECALLER & GATK MUTECT2 (UNFILTERED)
-
-vcfConcatenateVCFs = mutect2Output.mix(vcfFreeBayes, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
-vcfConcatenateVCFs = vcfConcatenateVCFs.dump(tag:'VCF to merge')
-
-process ConcatVCF {
-    label 'cpus_8'
-
-    tag {variantCaller + "-" + idSample}
-
-    publishDir "${params.outdir}/VariantCalling/${idSample}/${"$variantCaller"}", mode: params.publish_dir_mode
-
-    input:
-        set variantCaller, idPatient, idSample, file(vcFiles) from vcfConcatenateVCFs
-        file(fastaFai) from ch_fai
-        file(targetBED) from ch_target_bed
-
-    output:
-    // we have this funny *_* pattern to avoid copying the raw calls to publishdir
-        set variantCaller, idPatient, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into vcfConcatenated
-
-    when: ('haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools)
-
-    script:
-    if (variantCaller == 'HaplotypeCallerGVCF') 
-      outputFile = "HaplotypeCaller_${idSample}.g.vcf"
-    else if (variantCaller == "Mutect2") 
-      outputFile = "unfiltered_${variantCaller}_${idSample}.vcf"
-    else 
-      outputFile = "${variantCaller}_${idSample}.vcf"
-    options = params.target_bed ? "-t ${targetBED}" : ""
-    """
-    concatenateVCFs.sh -i ${fastaFai} -c ${task.cpus} -o ${outputFile} ${options}
-    """
-}
-
-(vcfConcatenated, vcfConcatenatedForFilter) = vcfConcatenated.into(2)
-vcfConcatenated = vcfConcatenated.dump(tag:'VCF')
 
 // STEP GATK MUTECT2.3 - GENERATING PILEUP SUMMARIES
 
@@ -2303,7 +2390,7 @@ process SentieonTNscope {
     """
 }
 
-vcfTNscope = vcfTNscope.dump(tag:'Sentieon TNscope')
+vcfTNscope = vcfTNscope.dump(tag:'SENTIEON TNSCOPE')
 
 sentieonVCF = sentieonDNAseqVCF.mix(sentieonDNAscopeVCF, sentieonDNAscopeSVVCF, vcfTNscope)
 
@@ -2327,7 +2414,7 @@ process CompressSentieonVCF {
     """
 }
 
-vcfSentieon = vcfSentieon.dump(tag:'Sentieon VCF indexed')
+vcfSentieon = vcfSentieon.dump(tag:'SENTIEON VCF INDEXED')
 
 // STEP STRELKA.2 - SOMATIC PAIR
 
@@ -2591,45 +2678,37 @@ process Ascat {
 
 ascatOut.dump(tag:'ASCAT')
 
-// STEP MPILEUP.1
+// STEP SAMTOOLS MPILEUP.1
 
-process Mpileup {
+process Samtools_mpileup {
     label 'memory_singleCPU_2_task'
 
     tag {idSample + "-" + intervalBed.baseName}
 
     input:
-        set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamMpileup
+        set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bam_samtools_Mpileup
         file(fasta) from ch_fasta
         file(fastaFai) from ch_fai
 
     output:
-        set idPatient, idSample, file("${prefix}${idSample}.pileup.gz") into mpileupMerge
+        set idPatient, idSample, file("${intervalBed.baseName}_${idSample}.pileup.gz") into mpileupMerge
 
-    when: 'controlfreec' in tools || 'mpileup' in tools
+    when: 'controlfreec' in tools
 
     script:
-    prefix = params.no_intervals ? "" : "${intervalBed.baseName}_"
-    intervalsOptions = params.no_intervals ? "" : "-l ${intervalBed}"
     """
     samtools mpileup \
         -f ${fasta} ${bam} \
-        ${intervalsOptions} \
-    | bgzip --threads ${task.cpus} -c > ${prefix}${idSample}.pileup.gz
+        -l ${intervalBed} \
+    | bgzip --threads ${task.cpus} -c > ${intervalBed.baseName}_${idSample}.pileup.gz
     """
 }
 
-if (!params.no_intervals) {
-    mpileupMerge = mpileupMerge.groupTuple(by:[0, 1])
-    mpileupNoInt = Channel.empty()
-} else {
-    (mpileupMerge, mpileupNoInt) = mpileupMerge.into(2)
-    mpileupMerge.close()
-}
+mpileupMerge = mpileupMerge.groupTuple(by:[0, 1])
 
-// STEP MPILEUP.2 - MERGE
+// STEP SAMTOOLS MPILEUP.2 - MERGE
 
-process MergeMpileup {
+process Merge_samtools_mpileup {
     tag {idSample}
 
     publishDir params.outdir, mode: params.publish_dir_mode, saveAs: { it == "${idSample}.pileup.gz" ? "VariantCalling/${idSample}/mpileup/${it}" : '' }
@@ -2640,7 +2719,7 @@ process MergeMpileup {
     output:
         set idPatient, idSample, file("${idSample}.pileup.gz") into mpileupOut
 
-    when: !(params.no_intervals) && 'controlfreec' in tools || 'mpileup' in tools
+    when: !(params.no_intervals) && 'controlfreec' in tools
 
     script:
     """
@@ -2654,7 +2733,6 @@ process MergeMpileup {
     """
 }
 
-mpileupOut = mpileupOut.mix(mpileupNoInt)
 mpileupOut = mpileupOut.dump(tag:'mpileup')
 
 mpileupOutNormal = Channel.create()
