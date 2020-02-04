@@ -2970,7 +2970,7 @@ process Snpeff {
         val snpeffDb from ch_snpeff_db
 
     output:
-        set file("${reducedVCF}_snpEff.txt"), file("${reducedVCF}_snpEff.html"), file("${reducedVCF}_snpEff.csv") into snpeffReport
+        set file("${reducedVCF}_snpEff.genes.txt"), file("${reducedVCF}_snpEff.html"), file("${reducedVCF}_snpEff.csv") into snpeffReport
         set variantCaller, idSample, file("${reducedVCF}_snpEff.ann.vcf") into snpeffVCF
 
     when: 'snpeff' in tools || 'merge' in tools
@@ -2990,7 +2990,6 @@ process Snpeff {
         > ${reducedVCF}_snpEff.ann.vcf
 
     mv snpEff_summary.html ${reducedVCF}_snpEff.html
-    mv ${reducedVCF}_snpEff.genes.txt ${reducedVCF}_snpEff.txt
     """
 }
 
