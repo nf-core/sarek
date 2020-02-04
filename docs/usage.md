@@ -91,6 +91,8 @@
   - [--plaintext_email](#--plaintext_email)
   - [--monochrome_logs](#--monochrome_logs)
   - [--multiqc_config](#--multiqc_config)
+  - [--ascat_ploidy](#--ascat_ploidy)
+  - [--ascat_purity](#--ascat_purity)
 
 ## Introduction
 
@@ -472,6 +474,14 @@ If you prefer, you can specify the full path to your reference genome when you r
 ```bash
 --bwa '[path to the bwa indexes]'
 ```
+
+### --ascat_ploidy
+
+Use this parameter to overwrite default behavior from ASCAT regarding ploidy.
+
+### --ascat_purity
+
+Use this parameter to overwrite default behavior from ASCAT regarding purity.
 
 ### --bwaIndex
 
