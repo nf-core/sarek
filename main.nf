@@ -1696,7 +1696,7 @@ process GenotypeGVCFs {
         file(fastaFai) from ch_fai
 
     output:
-    set val("HaplotypeCaller"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into vcfGenotypeGVCFs
+        set val("HaplotypeCaller"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into vcfGenotypeGVCFs
 
     when: 'haplotypecaller' in tools
 
@@ -1718,8 +1718,8 @@ process GenotypeGVCFs {
 }
 
 vcfGenotypeGVCFs = vcfGenotypeGVCFs.groupTuple(by:[0,1,2])
-haplotypecaller_merge_in = vcfGenotypeGVCFs.mix(gvcfHaplotypeCaller)
-haplotypecaller_merge_in = haplotypecaller_merge_in.dump(tag:'HAPLOTYPECALLER VCF TO MERGE')
+haplotypecaller_out = vcfGenotypeGVCFs.mix(gvcfHaplotypeCaller)
+haplotypecaller_out = haplotypecaller_out.dump(tag:'HAPLOTYPECALLER VCF TO MERGE')
 
 // STEP GATK HAPLOTYPECALLER.3 - MERGE
 
@@ -1731,12 +1731,12 @@ process Concat_VCF_HaplotypeCaller {
     publishDir "${params.outdir}/VariantCalling/${idSample}/${"$variantCaller"}", mode: params.publish_dir_mode
 
     input:
-        set variantCaller, idPatient, idSample, file(vcFiles) from haplotypecaller_merge_in
+        set variantCaller, idPatient, idSample, file(vcFiles) from haplotypecaller_out
         file(fastaFai) from ch_fai
         file(targetBED) from ch_target_bed
 
     output:
-    set variantCaller, idPatient, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into haplotypecaller_merge_out
+        set variantCaller, idPatient, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into haplotypecaller_out_merge
 
     script:
     options = params.target_bed ? "-t ${targetBED}" : ""
@@ -1746,7 +1746,7 @@ process Concat_VCF_HaplotypeCaller {
     """
 }
 
-haplotypecaller_merge_out = haplotypecaller_merge_out.dump(tag:'HAPLOTYPECALLER VCF')
+haplotypecaller_out_merge = haplotypecaller_out_merge.dump(tag:'HAPLOTYPECALLER VCF')
 
 // STEP SENTIEON DNASEQ
 
@@ -1765,7 +1765,7 @@ process SentieonDNAseq {
         file(fastaFai) from ch_fai
 
     output:
-    set val("SentieonDNAseq"), idPatient, idSample, file("DNAseq_${idSample}.vcf") into sentieonDNAseqVCF
+        set val("SentieonDNAseq"), idPatient, idSample, file("DNAseq_${idSample}.vcf") into sentieonDNAseqVCF
 
     when: 'dnaseq' in tools && params.sentieon
 
@@ -1800,7 +1800,7 @@ process SentieonDNAscope {
         file(fastaFai) from ch_fai
 
     output:
-    set val("SentieonDNAscope"), idPatient, idSample, file("DNAscope_${idSample}.vcf") into sentieonDNAscopeVCF
+        set val("SentieonDNAscope"), idPatient, idSample, file("DNAscope_${idSample}.vcf") into sentieonDNAscopeVCF
     set val("SentieonDNAscope"), idPatient, idSample, file("DNAscope_SV_${idSample}.vcf") into sentieonDNAscopeSVVCF
 
     when: 'dnascope' in tools && params.sentieon
@@ -2024,7 +2024,7 @@ process Concat_VCF_bcftools_mpileup {
         file(targetBED) from ch_target_bed
 
     output:
-    set val("mpileup"), idPatient, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into bcftools_mpileup_merge_out
+        set val("mpileup"), idPatient, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into bcftools_mpileup_merge_out
 
     script:
     options = params.target_bed ? "-t ${targetBED}" : ""
@@ -2082,7 +2082,7 @@ process FreeBayes {
         file(fastaFai) from ch_fai
 
     output:
-        set val("FreeBayes"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into vcfFreeBayes
+        set idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into freebayes_out
 
     when: 'freebayes' in tools
 
@@ -2104,7 +2104,31 @@ process FreeBayes {
     """
 }
 
-vcfFreeBayes = vcfFreeBayes.groupTuple(by:[0,1,2])
+freebayes_out = freebayes_out.groupTuple(by:[0,1])
+
+process Concat_VCF_Freebayes {
+    label 'cpus_8'
+ 
+    tag {"Freebayes-" + idSamplePair}
+ 
+    publishDir "${params.outdir}/VariantCalling/${idSamplePair}/Freebayes", mode: params.publish_dir_mode
+ 
+    input:
+        set idPatient, idSamplePair, file(vcFiles) from freebayes_out
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
+ 
+    output:
+        set val("Freebayes"), idPatient, idSamplePair, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into freebayes_out_merge
+ 
+    script:
+    options = params.target_bed ? "-t ${targetBED}" : ""
+    """
+    concatenateVCFs.sh -i ${fastaFai} -c ${task.cpus} -o Freebayes_${idSamplePair}.vcf ${options}
+    """
+}
+ 
+freebayes_out_merge = freebayes_out_merge.dump(tag:'FREEBAYES UNFILTERED VCF')
 
 // STEP GATK MUTECT2.1 - RAW CALLS
 
@@ -2124,7 +2148,7 @@ process Mutect2 {
         file(ponIndex) from ch_pon_tbi
 
     output:
-        set val("Mutect2"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2Output
+        set idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2_unfiltered_out
         set idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf.stats") optional true into intervalStatsFiles
         set idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf.stats"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") optional true into mutect2Stats
 
@@ -2148,58 +2172,34 @@ process Mutect2 {
     """
 }
 
-<<<<<<< HEAD
-(mutect2Output, mutect2OutForStats) = mutect2Output.groupTuple(by:[0,1,2]).mutect2Output.into(2)
+mutect2_unfiltered_out = mutect2_unfiltered_out.groupTuple(by:[0,1])
 
-// STEP MERGING VCF - FREEBAYES, GATK HAPLOTYPECALLER & GATK MUTECT2 (UNFILTERED)
- 
-vcfConcatenateVCFs = mutect2Output.mix(vcfFreeBayes, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
-vcfConcatenateVCFs = vcfConcatenateVCFs.dump(tag:'VCF to merge')
- 
 process Concat_VCF_Mutect2 {
     label 'cpus_8'
  
-    tag {variantCaller + "-" + idSample}
+    tag {"Mutect2-" + idSamplePair}
  
-    publishDir "${params.outdir}/VariantCalling/${idSample}/${"$variantCaller"}", mode: params.publish_dir_mode
+    publishDir "${params.outdir}/VariantCalling/${idSamplePair}/Mutect2", mode: params.publish_dir_mode
  
     input:
-        set variantCaller, idPatient, idSample, file(vcFiles) from vcfConcatenateVCFs
+        set idPatient, idSamplePair, file(vcFiles) from mutect2_unfiltered_out
         file(fastaFai) from ch_fai
         file(targetBED) from ch_target_bed
  
     output:
-    // we have this funny *_* pattern to avoid copying the raw calls to publishdir
-        set variantCaller, idPatient, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into vcfConcatenated
- 
-    when: ('haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools)
+        set idPatient, idSamplePair, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into mutect2_unfiltered_out_merge
  
     script:
-    if (variantCaller == 'HaplotypeCallerGVCF') 
-      outputFile = "HaplotypeCaller_${idSample}.g.vcf"
-    else if (variantCaller == "Mutect2") 
-      outputFile = "unfiltered_${variantCaller}_${idSample}.vcf"
-    else 
-      outputFile = "${variantCaller}_${idSample}.vcf"
     options = params.target_bed ? "-t ${targetBED}" : ""
     """
-    concatenateVCFs.sh -i ${fastaFai} -c ${task.cpus} -o ${outputFile} ${options}
+    concatenateVCFs.sh -i ${fastaFai} -c ${task.cpus} -o unfiltered_Mutect2_${idSamplePair}.vcf ${options}
     """
 }
  
-(vcfConcatenated, vcfConcatenatedForFilter) = vcfConcatenated.into(2)
-vcfConcatenated = vcfConcatenated.dump(tag:'VCF')
-
-
-
-
+mutect2_unfiltered_out_merge = mutect2_unfiltered_out_merge.dump(tag:'MUTECT2 UNFILTERED VCF')
 
 (mutect2Stats, intervalStatsFiles) = mutect2Stats.into(2)
 mutect2Stats = mutect2Stats.groupTuple(by:[0,1,2])
-=======
-mutect2Output = mutect2Output.groupTuple(by:[0,1,2])
-mutect2Stats = mutect2Stats.groupTuple(by:[0,1])
->>>>>>> upstream/dev
 
 // STEP GATK MUTECT2.2 - MERGING STATS
 
@@ -2232,51 +2232,6 @@ process MergeMutect2Stats {
     """
 }
 
-<<<<<<< HEAD
-=======
-// we are merging the VCFs that are called separatelly for different intervals
-// so we can have a single sorted VCF containing all the calls for a given caller
-
-// STEP MERGING VCF - FREEBAYES, GATK HAPLOTYPECALLER & GATK MUTECT2 (UNFILTERED)
-
-vcfConcatenateVCFs = mutect2Output.mix(vcfFreeBayes, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
-vcfConcatenateVCFs = vcfConcatenateVCFs.dump(tag:'VCF to merge')
-
-process ConcatVCF {
-    label 'cpus_8'
-
-    tag {variantCaller + "-" + idSample}
-
-    publishDir "${params.outdir}/VariantCalling/${idSample}/${"$variantCaller"}", mode: params.publish_dir_mode
-
-    input:
-        set variantCaller, idPatient, idSample, file(vcf) from vcfConcatenateVCFs
-        file(fastaFai) from ch_fai
-        file(targetBED) from ch_target_bed
-
-    output:
-    // we have this funny *_* pattern to avoid copying the raw calls to publishdir
-        set variantCaller, idPatient, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into vcfConcatenated
-
-    when: ('haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools)
-
-    script:
-    if (variantCaller == 'HaplotypeCallerGVCF') 
-      outputFile = "HaplotypeCaller_${idSample}.g.vcf"
-    else if (variantCaller == "Mutect2") 
-      outputFile = "Mutect2_unfiltered_${idSample}.vcf"
-    else 
-      outputFile = "${variantCaller}_${idSample}.vcf"
-    options = params.target_bed ? "-t ${targetBED}" : ""
-    """
-    concatenateVCFs.sh -i ${fastaFai} -c ${task.cpus} -o ${outputFile} ${options}
-    """
-}
-
-(vcfConcatenated, vcfConcatenatedForFilter) = vcfConcatenated.into(2)
-vcfConcatenated = vcfConcatenated.dump(tag:'VCF')
-
->>>>>>> upstream/dev
 // STEP GATK MUTECT2.3 - GENERATING PILEUP SUMMARIES
 
 pairBamPileupSummaries = pairBamPileupSummaries.map{
@@ -2374,10 +2329,7 @@ process CalculateContamination {
 
 // STEP GATK MUTECT2.6 - FILTERING CALLS
 
-mutect2CallsToFilter = vcfConcatenatedForFilter.map{
-    variantCaller, idPatient, idSamplePair, vcf, tbi ->
-    [idPatient, idSamplePair, vcf, tbi]
-}.join(mergedStatsFile, by:[0,1]).join(contaminationTable, by:[0,1])
+mutect2CallsToFilter = mutect2_unfiltered_out_merge.join(mergedStatsFile, by:[0,1]).join(contaminationTable, by:[0,1])
 
 process FilterMutect2Calls {
     label 'cpus_1'
@@ -2396,7 +2348,8 @@ process FilterMutect2Calls {
         file(intervals) from ch_intervals
         
     output:
-        set val("Mutect2"), idPatient, idSamplePair, file("Mutect2_filtered_${idSamplePair}.vcf.gz"), file("Mutect2_filtered_${idSamplePair}.vcf.gz.tbi"), file("Mutect2_filtered_${idSamplePair}.vcf.gz.filteringStats.tsv") into filteredMutect2Output
+        set val("Mutect2"), idPatient, idSamplePair, file("Mutect2_filtered_${idSamplePair}.vcf.gz"), file("Mutect2_filtered_${idSamplePair}.vcf.gz.tbi") into mutect2_filtered_out
+        file("Mutect2_filtered_${idSamplePair}.vcf.gz.filteringStats.tsv")
 
     when: 'mutect2' in tools
 
@@ -2962,6 +2915,19 @@ vcfKeep = Channel.empty().mix(
     vcfTIDDIT.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
         [variantcaller, idSample, vcf]
+    },
+    freebayes_out_merge.map {
+        variantcaller, idPatient, idSample, vcf, tbi ->
+        [variantcaller, idSample, vcf]
+
+    },
+    mutect2_filtered_out.map{
+        variantcaller, idPatient, idSample, vcf, tbi ->
+        [variantcaller, idSample, vcf]
+    },
+    haplotypecaller_out_merge.map{
+        variantcaller, idPatient, idSample, vcf, tbi ->
+        [variantcaller, idSample, vcf]
     })
 
 (vcfBCFtools, vcfVCFtools, vcfAnnotation) = vcfKeep.into(3)
@@ -3073,6 +3039,15 @@ if (step == 'annotate') {
 
     vcfNoAnnotate.close()
     vcfAnnotation = vcfAnnotation.mix(vcfToAnnotate)
+} else {
+    vcfToAnnotate = Channel.create()
+    vcfNoAnnotate = Channel.create()
+
+    vcfAnnotation.choice(vcfToAnnotate, vcfNoAnnotate) {
+        it[0] != 'Mutect2_unfiltered' && it[0] != 'Freebayes' && it[0] != 'HaplotypeCallerGVCF' ? 0 :1
+    }
+    vcfNoAnnotate.close()
+    vcfAnnotation = vcfToAnnotate
 }
 
 // as now have the list of VCFs to annotate, the first step is to annotate with allele frequencies, if there are any
