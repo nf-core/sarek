@@ -29,7 +29,7 @@ The TSV file should look like:
 SUBJECT_ID  XX    0    SAMPLE_ID    1    /samples/normal_1.fastq.gz    /samples/normal_2.fastq.gz
 ```
 
-See the [input files documentation](docs/input.md) for more information.
+See the [input files documentation](input.md) for more information.
 
 ## Starting from raw FASTQ - a directory with normal sample only
 
@@ -73,7 +73,7 @@ SUBJECT_ID  XX    1    SAMPLE_ID_R    7    /samples/relapse7_1.fastq.gz    /samp
 SUBJECT_ID  XX    1    SAMPLE_ID_R    9    /samples/relapse9_1.fastq.gz    /samples/relapse9_2.fastq.gz
 ```
 
-See the [input files documentation](docs/input.md) for more information.
+See the [input files documentation](input.md) for more information.
 
 ## Starting from recalibration
 
@@ -90,7 +90,7 @@ SUBJECT_ID  XX    1    SAMPLE_ID_T    /samples/SAMPLE_ID_T.bam    /samples/SAMPL
 SUBJECT_ID  XX    1    SAMPLE_ID_R    /samples/SAMPLE_ID_R.bam    /samples/SAMPLE_ID_R.bai /samples/SAMPLE_ID_R.recal.table
 ```
 
-See the [input files documentation](docs/input.md) for more information.
+See the [input files documentation](input.md) for more information.
 
 ## Starting from a recalibrated BAM file
 
@@ -108,7 +108,7 @@ SUBJECT_ID  XX    1    SAMPLE_ID_T    /samples/SAMPLE_ID_T.bam    /samples/SAMPL
 SUBJECT_ID  XX    1    SAMPLE_ID_R    /samples/SAMPLE_ID_R.bam    /samples/SAMPLE_ID_R.bai
 ```
 
-See the [input files documentation](docs/input.md) for more information.
+See the [input files documentation](input.md) for more information.
 
 If you want to restart a previous run of the pipeline, you may not have a recalibrated BAM file.
 In this case, you need to start with `--step=recalibrate` (see previous section).
