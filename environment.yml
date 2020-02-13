@@ -8,6 +8,7 @@ channels:
 dependencies:
   - ascat=2.5.2
   - bcftools=1.9
+  - beagle=5.1
   - bwa=0.7.17
   - cancerit-allelecount=4.0.2
   - control-freec=11.4
@@ -18,9 +19,14 @@ dependencies:
   - genesplicer=1.0
   - htslib=1.9
   - manta=1.5.0
+  - mapdamage2
   - multiqc=1.7
+  - perl-sanger-cgp-battenberg=1.4.1
+  - platypus-variant=0.8.1.2
   - qualimap=2.2.2b
+  - r-sequenza=3.0.0
   - samtools=1.9
+  - skewer=0.2.2
   - snpeff=4.3.1t
   - strelka=2.9.10
   - tiddit=2.7.1
