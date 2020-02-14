@@ -572,6 +572,7 @@ process GetSoftwareVersions {
     R -e "library(ASCAT); help(package='ASCAT')" &> v_ascat.txt
     samtools --version &> v_samtools.txt 2>&1 || true
     tiddit &> v_tiddit.txt 2>&1 || true
+    trim_galore -v &> v_trim_galore.txt 2>&1 || true
     vcftools --version &> v_vcftools.txt 2>&1 || true
     vep --help &> v_vep.txt 2>&1 || true
 
@@ -887,7 +888,7 @@ if (params.split_fastq){
 
 inputPairReads = inputPairReads.dump(tag:'INPUT')
 
-(inputPairReads, inputPairReadsFastQC) = inputPairReads.into(2)
+(inputPairReads, inputPairReadsTrimGalore, inputPairReadsFastQC) = inputPairReads.into(3)
 
 // STEP 0.5: QC ON READS
 
@@ -942,11 +943,33 @@ fastQCReport = fastQCFQReport.mix(fastQCBAMReport)
 
 fastQCReport = fastQCReport.dump(tag:'FastQC')
 
+
+process TrimGalore {
+    label 'TrimGalore'
+
+    tag {idPatient + "-" + idRun}
+
+    publishDir "${params.outdir}/Reports/${idSample}/TrimGalore/${idSample}_${idRun}", mode: params.publish_dir_mode
+
+    input:
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsTrimGalore
+
+    output:
+        file("*.txt") into TrimGaloreReport
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1_val_1.fq.gz"), file("${idSample}_${idRun}_R2_val_2.fq.gz") into outputPairReadsTrimGalore
+
+    script:
+    """
+    trim_galore --paired --gzip ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
+    """
+}
+
+
 // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
 
 inputPairReads = inputPairReads.dump(tag:'INPUT')
 
-inputPairReads = inputPairReads.mix(inputBam)
+inputPairReads = outputPairReadsTrimGalore.mix(inputBam)
 
 (inputPairReads, inputPairReadsSentieon) = inputPairReads.into(2)
 if (params.sentieon) inputPairReads.close()
@@ -3187,6 +3210,7 @@ process MultiQC {
         file ('DuplicateMarked/*.recal.table') from baseRecalibratorReport.collect().ifEmpty([])
         file ('SamToolsStats/*') from samtoolsStatsReport.collect().ifEmpty([])
         file ('snpEff/*') from snpeffReport.collect().ifEmpty([])
+        file ('TrimGalore/*') from TrimGaloreReport.collect().ifEmpty([])
         file ('VCFTools/*') from vcftoolsReport.collect().ifEmpty([])
 
     output:
