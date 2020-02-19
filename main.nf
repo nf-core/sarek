@@ -969,7 +969,13 @@ process TrimGalore {
 
     tag {idPatient + "-" + idRun}
 
-    publishDir "${params.outdir}/Reports/${idSample}/TrimGalore/${idSample}_${idRun}", mode: params.publish_dir_mode
+    publishDir "${params.outdir}/Reports/${idSample}/TrimGalore/${idSample}_${idRun}", mode: params.publish_dir_mode,
+      saveAs: {filename ->
+        if (filename.indexOf("_fastqc") > 0) "FastQC/$filename"
+        else if (filename.indexOf("trimming_report.txt") > 0) "logs/$filename"
+        else if (params.saveTrimmed) filename
+        else null
+      }
 
     input:
         set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsTrimGalore
