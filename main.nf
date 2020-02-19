@@ -71,7 +71,7 @@ def helpMessage() {
         --pon_index                 index of pon panel-of-normals VCF
 
     Trimming:
-        --trimFastq                   Run Trim Galore
+        --trim_fastq                  Run Trim Galore
         --clip_r1 [int]               Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
         --clip_r2 [int]               Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
         --three_prime_clip_r1 [int]   Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
