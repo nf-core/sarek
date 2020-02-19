@@ -981,7 +981,7 @@ process TrimGalore {
         set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsTrimGalore
 
     output:
-        file("*.{html,zip,txt}") into TrimGaloreReport
+        file("*.{html,zip,txt}") into trimGaloreReport
         set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1_val_1.fq.gz"), file("${idSample}_${idRun}_R2_val_2.fq.gz") into outputPairReadsTrimGalore
 
     script:
