@@ -973,7 +973,7 @@ process TrimGalore {
       saveAs: {filename ->
         if (filename.indexOf("_fastqc") > 0) "FastQC/$filename"
         else if (filename.indexOf("trimming_report.txt") > 0) "logs/$filename"
-        else if (params.saveTrimmed) filename
+        else if (params.save_trimmed) filename
         else null
       }
 
