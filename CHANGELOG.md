@@ -7,13 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ## dev
 
 ### `Added`
-- Add `Trim Galore` possibilities to Sarek
-- Add `Trim Galore` plot to `MultiQC` report
-- include `Trim Galore` in `scrape_software_versions.py`
-- include `Trim Galore` in `environment.yml`
-
-### `Added`
-
+- [#117](https://github.com/nf-core/sarek/pull/117) - Add `Trim Galore` possibilities to Sarek
 - [#76](https://github.com/nf-core/sarek/pull/76) - Add `GATK Spark` possibilities to Sarek
 - [#87](https://github.com/nf-core/sarek/pull/87) - Add `GATK BaseRecalibrator` plot to `MultiQC` report
 
