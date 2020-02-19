@@ -489,7 +489,7 @@ if (params.target_bed)          summary['Target BED']        = params.target_bed
 if (step)                       summary['Step']              = step
 if (params.tools)               summary['Tools']             = tools.join(', ')
 if (params.skip_qc)             summary['QC tools skip']     = skipQC.join(', ')
-if (params.trimFastq)           summary['Fastq trim']        = "Fastq trim selected"
+if (params.trim_fastq)          summary['Fastq trim']        = "Fastq trim selected"
 
 if (params.no_intervals && step != 'annotate') summary['Intervals']         = 'Do not use'
 if ('haplotypecaller' in tools)                summary['GVCF']              = params.no_gvcf ? 'No' : 'Yes'
