@@ -963,7 +963,7 @@ fastQCReport = fastQCReport.dump(tag:'FastQC')
 
 outputPairReadsTrimGalore = Channel.create()
 
-if (params.trimFastq) {
+if (params.trim_fastq) {
 process TrimGalore {
     label 'TrimGalore'
 
