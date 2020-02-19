@@ -70,6 +70,15 @@ def helpMessage() {
         --pon                       panel-of-normals VCF (bgzipped, indexed). See: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_CreateSomaticPanelOfNormals.php
         --pon_index                 index of pon panel-of-normals VCF
 
+    Trimming:
+        --trimFastq                   Run Trim Galore
+        --clip_r1 [int]               Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
+        --clip_r2 [int]               Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
+        --three_prime_clip_r1 [int]   Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
+        --three_prime_clip_r2 [int]   Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
+        --trim_nextseq [int]          Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails
+        //--saveTrimmed                 Save trimmed FastQ file intermediates
+
     References                      If not specified in the configuration file or you wish to overwrite any of the references.
         --ac_loci                   acLoci file
         --ac_loci_gc                acLoci GC file
@@ -480,6 +489,7 @@ if (params.target_bed)          summary['Target BED']        = params.target_bed
 if (step)                       summary['Step']              = step
 if (params.tools)               summary['Tools']             = tools.join(', ')
 if (params.skip_qc)             summary['QC tools skip']     = skipQC.join(', ')
+if (params.trimFastq)           summary['Fastq trim']        = "Fastq trim selected"
 
 if (params.no_intervals && step != 'annotate') summary['Intervals']         = 'Do not use'
 if ('haplotypecaller' in tools)                summary['GVCF']              = params.no_gvcf ? 'No' : 'Yes'
@@ -487,6 +497,8 @@ if ('strelka' in tools && 'manta' in tools )   summary['Strelka BP']        = pa
 if (params.sequencing_center)                  summary['Sequenced by']      = params.sequencing_center
 if (params.pon && 'mutect2' in tools)          summary['Panel of normals']  = params.pon
 
+summary['Trim Fastq']      = params.trimFastq ? 'Yes' : 'No'
+//summary['Saved Trimmed Fastq']        = params.saveTrimmed ? 'Yes' : 'No'
 summary['Save Reference']    = params.save_reference ? 'Yes' : 'No'
 summary['Nucleotides/s']     = params.nucleotides_per_second
 summary['Output dir']        = params.outdir
@@ -943,7 +955,9 @@ fastQCReport = fastQCFQReport.mix(fastQCBAMReport)
 
 fastQCReport = fastQCReport.dump(tag:'FastQC')
 
+outputPairReadsTrimGalore = Channel.create()
 
+if (params.trimFastq) {
 process TrimGalore {
     label 'TrimGalore'
 
@@ -955,21 +969,25 @@ process TrimGalore {
         set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsTrimGalore
 
     output:
-        file("*.txt") into TrimGaloreReport
+        file("*.{fastqc,zip,txt}") into TrimGaloreReport
         set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1_val_1.fq.gz"), file("${idSample}_${idRun}_R2_val_2.fq.gz") into outputPairReadsTrimGalore
 
     script:
     """
-    trim_galore --paired --gzip ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
+    trim_galore --paired --fastqc --gzip ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
     """
+  }
+} else {
+  inputPairReadsTrimGalore
+   .set {outputPairReadsTrimGalore}
+   TrimGaloreReport = Channel.empty()
 }
-
 
 // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
 
-inputPairReads = inputPairReads.dump(tag:'INPUT')
 
 inputPairReads = outputPairReadsTrimGalore.mix(inputBam)
+inputPairReads = inputPairReads.dump(tag:'INPUT')
 
 (inputPairReads, inputPairReadsSentieon) = inputPairReads.into(2)
 if (params.sentieon) inputPairReads.close()
