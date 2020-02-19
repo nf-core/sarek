@@ -551,6 +551,12 @@ else log.info "\033[2m----------------------------------------------------\033[0
 
 if ('mutect2' in tools && !(params.pon)) log.warn "[nf-core/sarek] Mutect2 was requested, but as no panel of normals were given, results will not be optimal"
 
+
+// Define regular variables so that they can be overwritten
+clip_r1 = params.clip_r1
+clip_r2 = params.clip_r2
+three_prime_clip_r1 = params.three_prime_clip_r1
+three_prime_clip_r2 = params.three_prime_clip_r2
 // Check the hostnames against configured profiles
 checkHostname()
 
@@ -922,7 +928,7 @@ process FastQCFQ {
         file("*.{html,zip}") into fastQCFQReport
 
     when: !('fastqc' in skipQC)
-    
+
     script:
     """
     fastqc -t 2 -q ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
@@ -969,12 +975,17 @@ process TrimGalore {
         set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsTrimGalore
 
     output:
-        file("*.{fastqc,zip,txt}") into TrimGaloreReport
+        file("*.{html,zip,txt}") into TrimGaloreReport
         set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1_val_1.fq.gz"), file("${idSample}_${idRun}_R2_val_2.fq.gz") into outputPairReadsTrimGalore
 
     script:
+    c_r1 = clip_r1 > 0 ? "--clip_r1 ${clip_r1}" : ''
+    c_r2 = clip_r2 > 0 ? "--clip_r2 ${clip_r2}" : ''
+    tpc_r1 = three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${three_prime_clip_r1}" : ''
+    tpc_r2 = three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${three_prime_clip_r2}" : ''
+    nextseq = params.trim_nextseq > 0 ? "--nextseq ${params.trim_nextseq}" : ''
     """
-    trim_galore --paired --fastqc --gzip ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
+    trim_galore --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $nextseq  ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
     """
   }
 } else {
@@ -1077,7 +1088,7 @@ process SentieonMapReads {
     """
     sentieon bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
     ${inputFile1} ${inputFile2} | \
-    sentieon util sort -r ${fasta} -o ${idSample}_${idRun}.bam -t ${task.cpus} --sam2bam -i - 
+    sentieon util sort -r ${fasta} -o ${idSample}_${idRun}.bam -t ${task.cpus} --sam2bam -i -
     """
 }
 
@@ -1449,7 +1460,7 @@ process SentieonBQSR {
         file(knownIndelsIndex) from ch_known_indels_tbi
 
     output:
-        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bamRecalSentieon 
+        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bamRecalSentieon
         set idPatient, idSample into bamRecalSentieonTSV
         file("${idSample}_recal_result.csv") into bamRecalSentieonQC
 
@@ -2123,7 +2134,7 @@ process MergeMutect2Stats {
 
     when: 'mutect2' in tools
 
-    script:     
+    script:
       stats = statsFiles.collect{ "-stats ${it} " }.join(' ')
     """
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
@@ -2160,11 +2171,11 @@ process ConcatVCF {
     when: ('haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools)
 
     script:
-    if (variantCaller == 'HaplotypeCallerGVCF') 
+    if (variantCaller == 'HaplotypeCallerGVCF')
       outputFile = "HaplotypeCaller_${idSample}.g.vcf"
-    else if (variantCaller == "Mutect2") 
+    else if (variantCaller == "Mutect2")
       outputFile = "Mutect2_unfiltered_${idSample}.vcf"
-    else 
+    else
       outputFile = "${variantCaller}_${idSample}.vcf"
     options = params.target_bed ? "-t ${targetBED}" : ""
     """
@@ -2254,13 +2265,13 @@ process CalculateContamination {
 
     input:
         set idPatient, idSampleNormal, idSampleTumor, file(bamNormal), file(baiNormal), file(bamTumor), file(baiTumor), file(mergedPileup) from pairBamCalculateContamination
-  
+
     output:
         set idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${idSampleTumor}_contamination.table") into contaminationTable
 
     when: 'mutect2' in tools
 
-    script:     
+    script:
     """
     # calculate contamination
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
@@ -2292,7 +2303,7 @@ process FilterMutect2Calls {
         file(germlineResource) from ch_germline_resource
         file(germlineResourceIndex) from ch_germline_resource_tbi
         file(intervals) from ch_intervals
-        
+
     output:
         set val("Mutect2"), idPatient, idSamplePair, file("Mutect2_filtered_${idSamplePair}.vcf.gz"), file("Mutect2_filtered_${idSamplePair}.vcf.gz.tbi"), file("Mutect2_filtered_${idSamplePair}.vcf.gz.filteringStats.tsv") into filteredMutect2Output
 
