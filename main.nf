@@ -997,7 +997,7 @@ process TrimGalore {
 } else {
   inputPairReadsTrimGalore
    .set {outputPairReadsTrimGalore}
-   TrimGaloreReport = Channel.empty()
+   trimGaloreReport = Channel.empty()
 }
 
 // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
