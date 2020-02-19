@@ -77,7 +77,7 @@ def helpMessage() {
         --three_prime_clip_r1 [int]   Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
         --three_prime_clip_r2 [int]   Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
         --trim_nextseq [int]          Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails
-        //--saveTrimmed                 Save trimmed FastQ file intermediates
+        --saveTrimmed                 Save trimmed FastQ file intermediates
 
     References                      If not specified in the configuration file or you wish to overwrite any of the references.
         --ac_loci                   acLoci file
