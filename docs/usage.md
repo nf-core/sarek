@@ -14,7 +14,7 @@
   - [--three_prime_clip_r1](#--three_prime_clip_r1)
   - [--three_prime_clip_r2](#--three_prime_clip_r2)
   - [--trim_nextseq](#--trim_nextseq)
-   - [--save_trimmed](#--save_trimmed)
+  - [--save_trimmed](#--save_trimmed)
   - [--sample](#--sample)
   - [--sampleDir](#--sampledir)
   - [--annotateVCF](#--annotatevcf)
