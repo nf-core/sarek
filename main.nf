@@ -3245,7 +3245,7 @@ process MultiQC {
         file ('DuplicateMarked/*.recal.table') from baseRecalibratorReport.collect().ifEmpty([])
         file ('SamToolsStats/*') from samtoolsStatsReport.collect().ifEmpty([])
         file ('snpEff/*') from snpeffReport.collect().ifEmpty([])
-        file ('TrimGalore/*') from TrimGaloreReport.collect().ifEmpty([])
+        file ('TrimGalore/*') from trimGaloreReport.collect().ifEmpty([])
         file ('VCFTools/*') from vcftoolsReport.collect().ifEmpty([])
 
     output:
