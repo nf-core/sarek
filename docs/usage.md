@@ -221,6 +221,28 @@ For example:
 ```bash
 --split_fastq 10000
 ```
+
+### --sample
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--input`](#--input)
+
+Use this to specify the location of your input TSV file, on `mapping`, `recalibrate` and `variantcalling` steps.
+For example:
+
+```bash
+--sample sample.tsv
+```
+
+Multiple TSV files can be specified if the path must be enclosed in quotes
+
+Use this to specify the location to a directory on `mapping` step with a single germline sample only.
+For example:
+
+```bash
+--sample PathToDirectory
+```
+
 ### --trim_fastq
 Use this to perform adapter trimming [Trim Galore](https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md)
 
