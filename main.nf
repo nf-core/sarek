@@ -72,6 +72,7 @@ def helpMessage() {
 
     Trimming:
         --trim_fastq                  Run Trim Galore
+        --cores                       Instructs Trim Galore to use up to 4 cores
         --clip_r1 [int]               Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
         --clip_r2 [int]               Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
         --three_prime_clip_r1 [int]   Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
@@ -985,13 +986,22 @@ process TrimGalore {
         set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1_val_1.fq.gz"), file("${idSample}_${idRun}_R2_val_2.fq.gz") into outputPairReadsTrimGalore
 
     script:
+    // Calculate number of --cores for TrimGalore based on value of task.cpus
+    // See: https://github.com/FelixKrueger/TrimGalore/blob/master/Changelog.md#version-060-release-on-1-mar-2019
+    // See: https://github.com/nf-core/atacseq/pull/65
+    def cores = 1
+    if (task.cpus) {
+      cores = (task.cpus as int) - 4
+      if (cores < 1) cores = 1
+      if (cores > 4) cores = 4
+      }
     c_r1 = clip_r1 > 0 ? "--clip_r1 ${clip_r1}" : ''
     c_r2 = clip_r2 > 0 ? "--clip_r2 ${clip_r2}" : ''
     tpc_r1 = three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${three_prime_clip_r1}" : ''
     tpc_r2 = three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${three_prime_clip_r2}" : ''
     nextseq = params.trim_nextseq > 0 ? "--nextseq ${params.trim_nextseq}" : ''
     """
-    trim_galore --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $nextseq  ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
+    trim_galore --cores $cores --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $nextseq  ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
     """
   }
 } else {
