@@ -557,6 +557,9 @@ else log.info "\033[2m----------------------------------------------------\033[0
 
 if ('mutect2' in tools && !(params.pon)) log.warn "[nf-core/sarek] Mutect2 was requested, but as no panel of normals were given, results will not be optimal"
 
+// Check the hostnames against configured profiles
+checkHostname()
+
 /*
  * Parse software version numbers
  */
