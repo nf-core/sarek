@@ -503,7 +503,6 @@ if ('strelka' in tools && 'manta' in tools )   summary['Strelka BP']        = pa
 if (params.sequencing_center)                  summary['Sequenced by']      = params.sequencing_center
 if (params.pon && 'mutect2' in tools)          summary['Panel of normals']  = params.pon
 
-summary['Trim Fastq']      = params.trim_fastq ? 'Yes' : 'No'
 //summary['Saved Trimmed Fastq']        = params.saveTrimmed ? 'Yes' : 'No'
 summary['Save Reference']    = params.save_reference ? 'Yes' : 'No'
 summary['Nucleotides/s']     = params.nucleotides_per_second
