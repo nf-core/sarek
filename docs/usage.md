@@ -257,6 +257,11 @@ Option to keep trimmed fastqs
 > :warning: This params is deprecated -- it will be removed in a future release.
 > Please check: [`--input`](#--input)
 
+### --annotateVCF
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--input`](#--input)
+
 ### --nucleotides_per_second
 
 Use this to estimate of how many seconds it will take to call variants on any interval, the default value is `1000` is it's not specified in the `<intervals>.bed` file.
