@@ -9,6 +9,7 @@
   - [--input](#--input)
   - [--split_fastq](#--split_fastq)
   - [--trim_fastq](#--trim_fastq)
+  - [--cores](#--cores)
   - [--clip_r1](#--clip_r1)
   - [--clip_r2](#--clip_r2)
   - [--three_prime_clip_r1](#--three_prime_clip_r1)
@@ -224,6 +225,9 @@ For example:
 
 ### --trim_fastq
 Use this to perform adapter trimming [Trim Galore](https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md)
+
+### --cores
+Instructs Trim Galore to use up to four cores.
 
 ### --clip_r1
 Instructs Trim Galore to remove <int> bp from the 5' end of read 1 (or single-end reads). This may be useful if the qualities were very poor, or if there is some sort of unwanted bias at the 5' end.
