@@ -489,8 +489,14 @@ if (params.target_bed)          summary['Target BED']        = params.target_bed
 if (step)                       summary['Step']              = step
 if (params.tools)               summary['Tools']             = tools.join(', ')
 if (params.skip_qc)             summary['QC tools skip']     = skipQC.join(', ')
-if (params.trim_fastq)          summary['Fastq trim']        = "Fastq trim selected"
-
+if (params.trim_fastq) {
+    summary['Fastq trim']        = "Fastq trim selected"
+    summary['Trim R1']            = "$params.clip_r1 bp"
+    summary['Trim R2']            = "$params.clip_r2 bp"
+    summary["Trim 3' R1"]         = "$params.three_prime_clip_r1 bp"
+    summary["Trim 3' R2"]         = "$params.three_prime_clip_r2 bp"
+    summary["NextSeq Trim"]       = "$params.trim_nextseq bp"
+}
 if (params.no_intervals && step != 'annotate') summary['Intervals']         = 'Do not use'
 if ('haplotypecaller' in tools)                summary['GVCF']              = params.no_gvcf ? 'No' : 'Yes'
 if ('strelka' in tools && 'manta' in tools )   summary['Strelka BP']        = params.no_strelka_bp ? 'No' : 'Yes'
