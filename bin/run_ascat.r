@@ -52,7 +52,7 @@ if(opt$gender=="XY"){
 
 
 #GC wave correction
-#ascat.bc = ascat.GCcorrect(ascat.bc, opt$gcfile)
+ascat.bc = ascat.GCcorrect(ascat.bc, opt$gcfile)
 
 #Plot the raw data
 ascat.plotRawData(ascat.bc)
