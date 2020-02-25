@@ -1,4 +1,4 @@
-q#!/bin/env Rscript
+#!/usr/bin/env Rscript
 library("optparse")
 option_list = list(
     make_option("--tumorbaf", type="character", default=NULL,
