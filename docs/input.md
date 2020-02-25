@@ -5,15 +5,15 @@
 Input files for Sarek can be specified using a TSV file given to the `--input` command.
 The TSV file is a Tab Separated Value file with columns:
 
-- `subject gender status sample lane fastq1 fastq2` for step `mapping` with paired-end FASTQs
-- `subject gender status sample lane bam` for step `mapping` with unmapped BAMs
-- `subject gender status sample bam bai recaltable` for step `recalibrate` with BAMs
-- `subject gender status sample bam bai` for step `variantcalling` with BAMs
+- `subject sex status sample lane fastq1 fastq2` for step `mapping` with paired-end FASTQs
+- `subject sex status sample lane bam` for step `mapping` with unmapped BAMs
+- `subject sex status sample bam bai recaltable` for step `recalibrate` with BAMs
+- `subject sex status sample bam bai` for step `variantcalling` with BAMs
 
 The content of these columns is quite straight-forward:
 
 - `subject` designate the subject, it should be the ID of the Patient, and it must design only one patient
-- `gender` is the gender of the Patient, (XX or XY)
+- `sex` are the sex chromosomes of the Patient, (XX or XY)
 - `status` is the status of the Patient, (0 for Normal or 1 for Tumor)
 - `sample` designate the Sample, it should be the ID of the sample (it is possible to have more than one tumor sample for each patient, i.e. a tumor and a relapse), it must design only one sample
 - `lane` is used when the sample is multiplexed on several lanes, it must be unique for each lane in the same sample
