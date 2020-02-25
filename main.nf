@@ -490,7 +490,7 @@ if (step)                       summary['Step']              = step
 if (params.tools)               summary['Tools']             = tools.join(', ')
 if (params.skip_qc)             summary['QC tools skip']     = skipQC.join(', ')
 if (params.trim_fastq) {
-    summary['Fastq trim']        = "Fastq trim selected"
+    summary['Fastq trim']         = "Fastq trim selected"
     summary['Trim R1']            = "$params.clip_r1 bp"
     summary['Trim R2']            = "$params.clip_r2 bp"
     summary["Trim 3' R1"]         = "$params.three_prime_clip_r1 bp"
