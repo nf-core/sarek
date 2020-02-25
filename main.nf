@@ -496,6 +496,7 @@ if (params.trim_fastq) {
     summary["Trim 3' R1"]         = "$params.three_prime_clip_r1 bp"
     summary["Trim 3' R2"]         = "$params.three_prime_clip_r2 bp"
     summary["NextSeq Trim"]       = "$params.trim_nextseq bp"
+    summary['Saved Trimmed Fastq'] = params.saveTrimmed ? 'Yes' : 'No'
 }
 if (params.no_intervals && step != 'annotate') summary['Intervals']         = 'Do not use'
 if ('haplotypecaller' in tools)                summary['GVCF']              = params.no_gvcf ? 'No' : 'Yes'
