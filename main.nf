@@ -2569,7 +2569,7 @@ process ConvertAlleleCounts {
     script:
     gender = genderMap[idPatient]
     """
-    Rscript ${workflow.projectDir}/bin/convertAlleleCounts.r ${idSampleTumor} ${alleleCountTumor} ${idSampleNormal} ${alleleCountNormal} ${gender}
+    convertAlleleCounts.r ${idSampleTumor} ${alleleCountTumor} ${idSampleNormal} ${alleleCountNormal} ${gender}
     """
 }
 
@@ -2599,16 +2599,14 @@ process Ascat {
     ascat_ploidy=params.ascat_ploidy
     if (params.ascat_purity && params.ascat_ploidy)
     """
-        for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
-        Rscript ${workflow.projectDir}/bin/run_ascat.r --tumorbaf ${bafTumor} --tumorlogr ${logrTumor} --normalbaf ${bafNormal} --normallogr ${logrNormal} --tumorname ${idSampleTumor} --basedir ${baseDir} --gcfile ${acLociGC} --gender ${gender} --purity ${ascat_purity} --ploidy ${ascat_ploidy}
+    for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
+    run_ascat.r --tumorbaf ${bafTumor} --tumorlogr ${logrTumor} --normalbaf ${bafNormal} --normallogr ${logrNormal} --tumorname ${idSampleTumor} --basedir ${baseDir} --gcfile ${acLociGC} --gender ${gender} --purity ${ascat_purity} --ploidy ${ascat_ploidy}
     """
     else
     """
-        for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
-        Rscript ${workflow.projectDir}/bin/run_ascat.r --tumorbaf ${bafTumor} --tumorlogr ${logrTumor} --normalbaf ${bafNormal} --normallogr ${logrNormal} --tumorname ${idSampleTumor} --basedir ${baseDir} --gcfile ${acLociGC} --gender ${gender}
+    for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
+    run_ascat.r --tumorbaf ${bafTumor} --tumorlogr ${logrTumor} --normalbaf ${bafNormal} --normallogr ${logrNormal} --tumorname ${idSampleTumor} --basedir ${baseDir} --gcfile ${acLociGC} --gender ${gender}
     """
-
-
 }
 
 ascatOut.dump(tag:'ASCAT')
