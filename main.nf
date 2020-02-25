@@ -2602,8 +2602,6 @@ process Ascat {
     for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
     run_ascat.r --tumorbaf ${bafTumor} --tumorlogr ${logrTumor} --normalbaf ${bafNormal} --normallogr ${logrNormal} --tumorname ${idSampleTumor} --basedir ${baseDir} --gcfile ${acLociGC} --gender ${gender} ${purity_ploidy}
     """""
-
-
 }
 
 ascatOut.dump(tag:'ASCAT')
