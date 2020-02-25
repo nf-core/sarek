@@ -2595,17 +2595,17 @@ process Ascat {
 
     script:
     gender = genderMap[idPatient]
-    ascat_purity=params.ascat_purity 
-    ascat_ploidy=params.ascat_ploidy 
-    if (params.ascat_purity && params.ascat_ploidy) 
-    """ 
-    for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done 
-    run_ascat.r --tumorbaf ${bafTumor} --tumorlogr ${logrTumor} --normalbaf ${bafNormal} --normallogr ${logrNormal} --tumorname ${idSampleTumor} --basedir ${baseDir} --gcfile ${acLociGC} --gender ${gender} --purity ${ascat_purity} --ploidy ${ascat_ploidy} 
-    """ 
-    else 
-    """ 
-    for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done 
-    run_ascat.r --tumorbaf ${bafTumor} --tumorlogr ${logrTumor} --normalbaf ${bafNormal} --normallogr ${logrNormal} --tumorname ${idSampleTumor} --basedir ${baseDir} --gcfile ${acLociGC} --gender ${gender} 
+    ascat_purity=params.ascat_purity
+    ascat_ploidy=params.ascat_ploidy
+    if (params.ascat_purity && params.ascat_ploidy)
+    """
+    for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
+    run_ascat.r --tumorbaf ${bafTumor} --tumorlogr ${logrTumor} --normalbaf ${bafNormal} --normallogr ${logrNormal} --tumorname ${idSampleTumor} --basedir ${baseDir} --gcfile ${acLociGC} --gender ${gender} --purity ${ascat_purity} --ploidy ${ascat_ploidy}
+    """
+    else
+    """
+    for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
+    run_ascat.r --tumorbaf ${bafTumor} --tumorlogr ${logrTumor} --normalbaf ${bafNormal} --normallogr ${logrNormal} --tumorname ${idSampleTumor} --basedir ${baseDir} --gcfile ${acLociGC} --gender ${gender}
     """
 }
 
