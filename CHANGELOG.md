@@ -34,6 +34,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#110](https://github.com/nf-core/sarek/pull/110) - Fix `snpEff` report issue cf [#106](https://github.com/nf-core/sarek/issues/106)
 - [#126](https://github.com/nf-core/sarek/pull/126) - Fix `iGenomes` paths
 - [#127](https://github.com/nf-core/sarek/pull/127), [#128](https://github.com/nf-core/sarek/pull/128) - Fix `ASCAT`
+- [#129](https://github.com/nf-core/sarek/pull/129)- Fix issue with Channel `channel ch_software_versions_yaml`
 
 ### `Deprecated`
 
