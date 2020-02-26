@@ -622,7 +622,7 @@ process Get_software_versions {
     """
 }
 
-yamlSoftwareVersion = yamlSoftwareVersion.dump(tag:'SOFTWARE VERSIONS')
+ch_software_versions_yaml = ch_software_versions_yaml.dump(tag:'SOFTWARE VERSIONS')
 
 /*
 ================================================================================
@@ -1377,7 +1377,12 @@ process GatherBQSRReports {
 
     tag {idPatient + "-" + idSample}
 
-    publishDir "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked", mode: params.publish_dir_mode, overwrite: false
+    publishDir "${params.outdir}", mode: params.publish_dir_mode, overwrite: false,
+        saveAs: {
+            if (it == "${idSample}.recal.table" && 'baserecalibrator' in skipQC) null
+            else if (it == "${idSample}.recal.table") "Reports/${idSample}/BaseRecalibrator/${it}"
+            else "Preprocessing/${idSample}/DuplicateMarked/${it}"
+        }
 
     input:
         set idPatient, idSample, file(recal) from tableGatherBQSRReports
@@ -1398,6 +1403,8 @@ process GatherBQSRReports {
         -O ${idSample}.recal.table \
     """
 }
+
+if ('baserecalibrator' in skipQC) baseRecalibratorReport.close()
 
 recalTable = recalTable.dump(tag:'RECAL TABLE')
 
@@ -3541,6 +3548,7 @@ def defineAnnoList() {
 def defineSkipQClist() {
     return [
         'bamqc',
+        'baserecalibrator',
         'bcftools',
         'fastqc',
         'markduplicates',
