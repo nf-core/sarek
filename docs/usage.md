@@ -258,6 +258,33 @@ Option to keep trimmed fastqs
 > :warning: This params is deprecated -- it will be removed in a future release.
 > Please check: [`--input`](#--input)
 
+Multiple VCF files can be specified if the path must be enclosed in quotes
+
+### --no_gvcf
+
+Use this to disable g.vcf from `HaplotypeCaller`.
+
+### --noGVCF
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--no_gvcf`](#--no_gvcf)
+
+### --skip_qc
+
+Use this to disable specific QC and Reporting tools.
+Available: `all`, `bamQC`, `BCFtools`, `FastQC`, `MultiQC`, `samtools`, `vcftools`, `versions`
+Default: `None`
+
+### --skipQC
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--skip_qc`](#--skip_qc)
+
+### --noReports
+
+> :warning: This params is deprecated -- it will be removed in a future release.
+> Please check: [`--skipQC`](#--skipQC)
+
 ### --nucleotides_per_second
 
 Use this to estimate of how many seconds it will take to call variants on any interval, the default value is `1000` is it's not specified in the `<intervals>.bed` file.
