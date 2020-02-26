@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ## dev
 
 ### `Added`
+
 - [#117](https://github.com/nf-core/sarek/pull/117) - Add `Trim Galore` possibilities to Sarek
 - [#76](https://github.com/nf-core/sarek/pull/76) - Add `GATK Spark` possibilities to Sarek
 - [#87](https://github.com/nf-core/sarek/pull/87) - Add `GATK BaseRecalibrator` plot to `MultiQC` report
@@ -22,12 +23,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#107](https://github.com/nf-core/sarek/pull/107) - Switch params to snake_case
 - [#109](https://github.com/nf-core/sarek/pull/109) - Update publication with F1000Research preprint
 - [#113](https://github.com/nf-core/sarek/pull/113) - Move social preview image
+- [#120](https://github.com/nf-core/sarek/pull/120) - Sync TEMPLATE
+- [#121](https://github.com/nf-core/sarek/pull/121) - Update `MultiQC` to `1.8`
+- [#126](https://github.com/nf-core/sarek/pull/126) - Update docs
 
 ### `Fixed`
 
 - [#83](https://github.com/nf-core/sarek/pull/83) - Fix some typos in `docs/input.md`
 - [#107](https://github.com/nf-core/sarek/pull/107) - Fix linting
 - [#110](https://github.com/nf-core/sarek/pull/110) - Fix `snpEff` report issue cf [#106](https://github.com/nf-core/sarek/issues/106)
+- [#126](https://github.com/nf-core/sarek/pull/126) - Fix `iGenomes` paths
+- [#127](https://github.com/nf-core/sarek/pull/127), [#128](https://github.com/nf-core/sarek/pull/128) - Fix `ASCAT`
 
 ### `Deprecated`
 

@@ -4,7 +4,7 @@ This document describes the output produced by the pipeline.
 
 ## Pipeline overview <!-- omit in toc -->
 
-The pipeline processes data using the following steps:
+The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
 - [Preprocessing](#preprocessing)
   - [Map to Reference](#map-to-reference)
