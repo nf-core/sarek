@@ -8,6 +8,13 @@
   - [-profile](#-profile)
   - [--input](#--input)
   - [--split_fastq](#--split_fastq)
+  - [--trim_fastq](#--trim_fastq)
+  - [--clip_r1](#--clip_r1)
+  - [--clip_r2](#--clip_r2)
+  - [--three_prime_clip_r1](#--three_prime_clip_r1)
+  - [--three_prime_clip_r2](#--three_prime_clip_r2)
+  - [--trim_nextseq](#--trim_nextseq)
+  - [--save_trimmed](#--save_trimmed)
   - [--sample](#--sample)
   - [--sampleDir](#--sampledir)
   - [--annotateVCF](#--annotatevcf)
@@ -214,6 +221,27 @@ For example:
 ```bash
 --split_fastq 10000
 ```
+
+### --trim_fastq
+Use this to perform adapter trimming [Trim Galore](https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md)
+
+### --clip_r1
+Instructs Trim Galore to remove <int> bp from the 5' end of read 1 (or single-end reads). This may be useful if the qualities were very poor, or if there is some sort of unwanted bias at the 5' end.
+
+### --clip_r2
+Instructs Trim Galore to remove <int> bp from the 5' end of read 2 (paired-end reads only). This may be useful if the qualities were very poor, or if there is some sort of unwanted bias at the 5' end.
+
+### --three_prime_clip_r1
+Instructs Trim Galore to remove <int> bp from the 3' end of read 1 (or single-end reads) AFTER adapter/quality trimming has been performed. This may remove some unwanted bias from the 3' end that is not directly related to adapter sequence or basecall quality.
+
+### --three_prime_clip_r2
+Instructs Trim Galore to re move <int> bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed. This may remove some unwanted bias from the 3' end that is not directly related to adapter sequence or basecall quality.
+
+### --trim_nextseq
+This enables the option --nextseq-trim=3'CUTOFF within Cutadapt, which will set a quality cutoff (that is normally given with -q instead), but qualities of G bases are ignored. This trimming is in common for the NextSeq- and NovaSeq-platforms, where basecalls without any signal are called as high-quality G bases. 
+
+### --save_trimmed
+Option to keep trimmed fastqs
 
 ### --sample
 

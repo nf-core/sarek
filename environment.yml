@@ -24,5 +24,7 @@ dependencies:
   - snpeff=4.3.1t
   - strelka=2.9.10
   - tiddit=2.7.1
+  - trim-galore=0.6.5
+  - conda-forge::pigz=2.3.4 
   - vcfanno=0.3.1
   - vcftools=0.1.16

@@ -70,6 +70,15 @@ def helpMessage() {
         --pon                       panel-of-normals VCF (bgzipped, indexed). See: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_CreateSomaticPanelOfNormals.php
         --pon_index                 index of pon panel-of-normals VCF
 
+    Trimming:
+        --trim_fastq [bool]           Run Trim Galore
+        --clip_r1 [int]               Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
+        --clip_r2 [int]               Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
+        --three_prime_clip_r1 [int]   Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
+        --three_prime_clip_r2 [int]   Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
+        --trim_nextseq [int]          Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails
+        --save_trimmed [bool]         Save trimmed FastQ file intermediates
+
     References                      If not specified in the configuration file or you wish to overwrite any of the references.
         --ac_loci                   acLoci file
         --ac_loci_gc                acLoci GC file
@@ -480,7 +489,15 @@ if (params.target_bed)          summary['Target BED']        = params.target_bed
 if (step)                       summary['Step']              = step
 if (params.tools)               summary['Tools']             = tools.join(', ')
 if (params.skip_qc)             summary['QC tools skip']     = skipQC.join(', ')
-
+if (params.trim_fastq) {
+    summary['Fastq trim']         = "Fastq trim selected"
+    summary['Trim R1']            = "$params.clip_r1 bp"
+    summary['Trim R2']            = "$params.clip_r2 bp"
+    summary["Trim 3' R1"]         = "$params.three_prime_clip_r1 bp"
+    summary["Trim 3' R2"]         = "$params.three_prime_clip_r2 bp"
+    summary["NextSeq Trim"]       = "$params.trim_nextseq bp"
+    summary['Saved Trimmed Fastq'] = params.saveTrimmed ? 'Yes' : 'No'
+}
 if (params.no_intervals && step != 'annotate') summary['Intervals']         = 'Do not use'
 if ('haplotypecaller' in tools)                summary['GVCF']              = params.no_gvcf ? 'No' : 'Yes'
 if ('strelka' in tools && 'manta' in tools )   summary['Strelka BP']        = params.no_strelka_bp ? 'No' : 'Yes'
@@ -572,6 +589,7 @@ process GetSoftwareVersions {
     R -e "library(ASCAT); help(package='ASCAT')" &> v_ascat.txt
     samtools --version &> v_samtools.txt 2>&1 || true
     tiddit &> v_tiddit.txt 2>&1 || true
+    trim_galore -v &> v_trim_galore.txt 2>&1 || true
     vcftools --version &> v_vcftools.txt 2>&1 || true
     vep --help &> v_vep.txt 2>&1 || true
 
@@ -887,7 +905,7 @@ if (params.split_fastq){
 
 inputPairReads = inputPairReads.dump(tag:'INPUT')
 
-(inputPairReads, inputPairReadsFastQC) = inputPairReads.into(2)
+(inputPairReads, inputPairReadsTrimGalore, inputPairReadsFastQC) = inputPairReads.into(3)
 
 // STEP 0.5: QC ON READS
 
@@ -909,7 +927,7 @@ process FastQCFQ {
         file("*.{html,zip}") into fastQCFQReport
 
     when: !('fastqc' in skipQC)
-    
+
     script:
     """
     fastqc -t 2 -q ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
@@ -942,11 +960,59 @@ fastQCReport = fastQCFQReport.mix(fastQCBAMReport)
 
 fastQCReport = fastQCReport.dump(tag:'FastQC')
 
+outputPairReadsTrimGalore = Channel.create()
+
+if (params.trim_fastq) {
+process TrimGalore {
+    label 'TrimGalore'
+
+    tag {idPatient + "-" + idRun}
+
+    publishDir "${params.outdir}/Reports/${idSample}/TrimGalore/${idSample}_${idRun}", mode: params.publish_dir_mode,
+      saveAs: {filename ->
+        if (filename.indexOf("_fastqc") > 0) "FastQC/$filename"
+        else if (filename.indexOf("trimming_report.txt") > 0) "logs/$filename"
+        else if (params.save_trimmed) filename
+        else null
+      }
+
+    input:
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsTrimGalore
+
+    output:
+        file("*.{html,zip,txt}") into trimGaloreReport
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1_val_1.fq.gz"), file("${idSample}_${idRun}_R2_val_2.fq.gz") into outputPairReadsTrimGalore
+
+    script:
+    // Calculate number of --cores for TrimGalore based on value of task.cpus
+    // See: https://github.com/FelixKrueger/TrimGalore/blob/master/Changelog.md#version-060-release-on-1-mar-2019
+    // See: https://github.com/nf-core/atacseq/pull/65
+    def cores = 1
+    if (task.cpus) {
+      cores = (task.cpus as int) - 4
+      if (cores < 1) cores = 1
+      if (cores > 4) cores = 4
+      }
+    c_r1 = params.clip_r1 > 0 ? "--clip_r1 ${params.clip_r1}" : ''
+    c_r2 = params.clip_r2 > 0 ? "--clip_r2 ${params.clip_r2}" : ''
+    tpc_r1 = params.three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${params.three_prime_clip_r1}" : ''
+    tpc_r2 = params.three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${params.three_prime_clip_r2}" : ''
+    nextseq = params.trim_nextseq > 0 ? "--nextseq ${params.trim_nextseq}" : ''
+    """
+    trim_galore --cores $cores --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $nextseq  ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
+    """
+  }
+} else {
+  inputPairReadsTrimGalore
+   .set {outputPairReadsTrimGalore}
+   trimGaloreReport = Channel.empty()
+}
+
 // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
 
-inputPairReads = inputPairReads.dump(tag:'INPUT')
 
-inputPairReads = inputPairReads.mix(inputBam)
+inputPairReads = outputPairReadsTrimGalore.mix(inputBam)
+inputPairReads = inputPairReads.dump(tag:'INPUT')
 
 (inputPairReads, inputPairReadsSentieon) = inputPairReads.into(2)
 if (params.sentieon) inputPairReads.close()
@@ -1036,7 +1102,7 @@ process SentieonMapReads {
     """
     sentieon bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
     ${inputFile1} ${inputFile2} | \
-    sentieon util sort -r ${fasta} -o ${idSample}_${idRun}.bam -t ${task.cpus} --sam2bam -i - 
+    sentieon util sort -r ${fasta} -o ${idSample}_${idRun}.bam -t ${task.cpus} --sam2bam -i -
     """
 }
 
@@ -1408,7 +1474,7 @@ process SentieonBQSR {
         file(knownIndelsIndex) from ch_known_indels_tbi
 
     output:
-        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bamRecalSentieon 
+        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bamRecalSentieon
         set idPatient, idSample into bamRecalSentieonTSV
         file("${idSample}_recal_result.csv") into bamRecalSentieonQC
 
@@ -2082,7 +2148,7 @@ process MergeMutect2Stats {
 
     when: 'mutect2' in tools
 
-    script:     
+    script:
       stats = statsFiles.collect{ "-stats ${it} " }.join(' ')
     """
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
@@ -2119,11 +2185,11 @@ process ConcatVCF {
     when: ('haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools)
 
     script:
-    if (variantCaller == 'HaplotypeCallerGVCF') 
+    if (variantCaller == 'HaplotypeCallerGVCF')
       outputFile = "HaplotypeCaller_${idSample}.g.vcf"
-    else if (variantCaller == "Mutect2") 
+    else if (variantCaller == "Mutect2")
       outputFile = "Mutect2_unfiltered_${idSample}.vcf"
-    else 
+    else
       outputFile = "${variantCaller}_${idSample}.vcf"
     options = params.target_bed ? "-t ${targetBED}" : ""
     """
@@ -2213,13 +2279,13 @@ process CalculateContamination {
 
     input:
         set idPatient, idSampleNormal, idSampleTumor, file(bamNormal), file(baiNormal), file(bamTumor), file(baiTumor), file(mergedPileup) from pairBamCalculateContamination
-  
+
     output:
         set idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${idSampleTumor}_contamination.table") into contaminationTable
 
     when: 'mutect2' in tools
 
-    script:     
+    script:
     """
     # calculate contamination
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
@@ -2251,7 +2317,7 @@ process FilterMutect2Calls {
         file(germlineResource) from ch_germline_resource
         file(germlineResourceIndex) from ch_germline_resource_tbi
         file(intervals) from ch_intervals
-        
+
     output:
         set val("Mutect2"), idPatient, idSamplePair, file("Mutect2_filtered_${idSamplePair}.vcf.gz"), file("Mutect2_filtered_${idSamplePair}.vcf.gz.tbi"), file("Mutect2_filtered_${idSamplePair}.vcf.gz.filteringStats.tsv") into filteredMutect2Output
 
@@ -3185,6 +3251,7 @@ process MultiQC {
         file ('DuplicateMarked/*.recal.table') from baseRecalibratorReport.collect().ifEmpty([])
         file ('SamToolsStats/*') from samtoolsStatsReport.collect().ifEmpty([])
         file ('snpEff/*') from snpeffReport.collect().ifEmpty([])
+        file ('TrimGalore/*') from trimGaloreReport.collect().ifEmpty([])
         file ('VCFTools/*') from vcftoolsReport.collect().ifEmpty([])
 
     output:
