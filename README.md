@@ -22,7 +22,7 @@ It's built using [Nextflow](https://www.nextflow.io), a workflow tool to run tas
 It comes with docker containers making installation trivial and results highly reproducible.
 
 <p align="center">
-    <a href="./docs/images/sarek_workflow.png"><img title="Sarek Workflow" src="./docs/images/sarek_workflow.png" width=40%></a>
+    <img title="Sarek Workflow" src="docs/images/sarek_workflow.png" width=40%>
 </p>
 
 It's listed on the [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek), [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek) and [omicX - Bioinformatics tools](https://omictools.com/sarek-tool).
