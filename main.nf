@@ -1377,12 +1377,7 @@ process GatherBQSRReports {
 
     tag {idPatient + "-" + idSample}
 
-    publishDir "${params.outdir}", mode: params.publish_dir_mode, overwrite: false,
-        saveAs: {
-            if (it == "${idSample}.recal.table" && 'baserecalibrator' in skipQC) null
-            else if (it == "${idSample}.recal.table") "Reports/${idSample}/BaseRecalibrator/${it}"
-            else "Preprocessing/${idSample}/DuplicateMarked/${it}"
-        }
+    publishDir "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/", mode: params.publish_dir_mode, overwrite: false
 
     input:
         set idPatient, idSample, file(recal) from tableGatherBQSRReports
