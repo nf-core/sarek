@@ -4,9 +4,10 @@ import argparse
 import markdown
 import os
 import sys
+import io
 
 def convert_markdown(in_fn):
-    input_md = open(in_fn, mode="r", encoding="utf-8").read()
+    input_md = io.open(in_fn, mode="r", encoding='utf-8').read()
     html = markdown.markdown(
         "[TOC]\n" + input_md,
         extensions = [
