@@ -84,8 +84,8 @@
   - [--awscli](#--awscli)
 - [Other command line parameters](#other-command-line-parameters)
   - [--outdir](#--outdir)
-- [--publish_dir_mode](#--publish_dir_mode)
-- [--publishDirMode](#--publishdirmode)
+  - [--publish_dir_mode](#--publish_dir_mode)
+  - [--publishDirMode](#--publishdirmode)
   - [--sequencing_center](#--sequencing_center)
   - [--email](#--email)
   - [--email_on_fail](#--email_on_fail)
@@ -799,13 +799,13 @@ Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a 
 The output directory where the results will be saved.
 Default: `results/`
 
-## --publish_dir_mode
+### --publish_dir_mode
 
 The file publishing method.
 Available: `symlink`, `rellink`, `link`, `copy`, `copyNoFollow`, `move`
 Default: `copy`
 
-## --publishDirMode
+### --publishDirMode
 
 > :warning: This params is deprecated -- it will be removed in a future release.
 > Please check: [`--publish_dir_mode`](#--publish_dir_mode)
