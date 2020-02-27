@@ -244,7 +244,7 @@ Using [Strelka Best Practices](https://github.com/Illumina/strelka/blob/v2.9.x/d
 
 > `/!\` Only with [`--sentieon`](usage.md#--sentieon)
 
-[Sentieon DNAseq](https://www.sentieon.com/products/#dnaseq) implements the same mathematics used in the Broad Institute’s BWA-GATK HaplotypeCaller 3.3-4.1 Best Practices Workflow pipeline.
+[Sentieon DNAseq](https://www.sentieon.com/products/#dnaseq) implements the same mathematics used in the Broad Institute's BWA-GATK HaplotypeCaller 3.3-4.1 Best Practices Workflow pipeline.
 
 For further reading and documentation see the [Sentieon DNAseq user guide](https://support.sentieon.com/manual/DNAseq_usage/dnaseq/).
 
