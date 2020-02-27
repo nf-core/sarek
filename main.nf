@@ -30,14 +30,14 @@ def helpMessage() {
     nextflow run nf-core/sarek --input sample.tsv -profile docker
 
     Mandatory arguments:
-      --input                [file] Path to input TSV file on mapping, recalibrate and variantcalling steps
-                                    Multiple TSV files can be specified with quotes
-                                    Works also with the path to a directory on mapping step with a single germline sample only
-                                    Alternatively, path to VCF input file on annotate step
-                                    Multiple VCF files can be specified with quotes
-      -profile                [str] Configuration profile to use
-                                    Can use multiple (comma separated)
-                                    Available: conda, docker, singularity, test and more
+      --input                  [file] Path to input TSV file on mapping, recalibrate and variantcalling steps
+                                      Multiple TSV files can be specified with quotes
+                                      Works also with the path to a directory on mapping step with a single germline sample only
+                                      Alternatively, path to VCF input file on annotate step
+                                      Multiple VCF files can be specified with quotes
+      -profile                  [str] Configuration profile to use
+                                      Can use multiple (comma separated)
+                                      Available: conda, docker, singularity, test and more
       --genome                  [str] Name of iGenomes reference
       --step                    [str] Specify starting step
                                       Available: Mapping, Recalibrate, VariantCalling, Annotate
@@ -57,7 +57,7 @@ def helpMessage() {
                                       snpEff, VEP, merge
                                       Default: None
       --skip_qc                 [str] Specify which QC tools to skip when running Sarek
-                                      Available: all, bamQC, BCFtools, FastQC, MultiQC, samtools, vcftools, versions
+                                      Available: all, bamQC, BaseRecalibrator, BCFtools, Documentation, FastQC, MultiQC, samtools, vcftools, versions
                                       Default: None
       --annotate_tools          [str] Specify from which tools Sarek will look for VCF files to annotate, only for step annotate
                                       Available: HaplotypeCaller, Manta, Mutect2, Strelka, TIDDIT
@@ -3311,6 +3311,8 @@ process Output_documentation {
     output:
         file "results_description.html"
 
+    when: !('documentation' in skipQC)
+
     script:
     """
     markdown_to_html.py $output_docs -o results_description.html
@@ -3545,6 +3547,7 @@ def defineSkipQClist() {
         'bamqc',
         'baserecalibrator',
         'bcftools',
+        'documentation',
         'fastqc',
         'markduplicates',
         'multiqc',
