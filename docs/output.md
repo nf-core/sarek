@@ -119,7 +119,7 @@ For all samples:
 - `duplicateMarked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
   - TSV files to start Sarek from `recalibration` or `variantcalling` steps for a specific sample.
 
-> :warning: Only with [`--sentieon`](usage.md#--sentieon)
+> `/!\` Only with [`--sentieon`](usage.md#--sentieon)
 
 For all samples:
 **Output directory: `results/Preprocessing/TSV`**
@@ -242,7 +242,7 @@ Using [Strelka Best Practices](https://github.com/Illumina/strelka/blob/v2.9.x/d
 
 #### Sentieon DNAseq
 
-> :warning: Only with [`--sentieon`](usage.md#--sentieon)
+> `/!\` Only with [`--sentieon`](usage.md#--sentieon)
 
 [Sentieon DNAseq](https://www.sentieon.com/products/#dnaseq) implements the same mathematics used in the Broad Institute’s BWA-GATK HaplotypeCaller 3.3-4.1 Best Practices Workflow pipeline.
 
@@ -256,7 +256,7 @@ For all samples:
 
 #### Sentieon DNAscope
 
-> :warning: Only with [`--sentieon`](usage.md#--sentieon)
+> `/!\` Only with [`--sentieon`](usage.md#--sentieon)
 
 [Sentieon DNAscope](https://www.sentieon.com/products) calls SNPs and small indels.
 
@@ -270,7 +270,7 @@ For all samples:
 
 #### Sentieon TNscope
 
-> :warning: Only with [`--sentieon`](usage.md#--sentieon)
+> `/!\` Only with [`--sentieon`](usage.md#--sentieon)
 
 [Sentieon TNscope](https://www.sentieon.com/products/#tnscope) calls SNPs and small indels on an Tumor/Normal pair.
 
@@ -349,7 +349,7 @@ For all samples:
 
 #### Sentieon DNAscope SV
 
-> :warning: Only with [`--sentieon`](usage.md#--sentieon)
+> `/!\` Only with [`--sentieon`](usage.md#--sentieon)
 
 [Sentieon DNAscope](https://www.sentieon.com/products) can perform structural variant calling in addition to calling SNPs and small indels.
 
