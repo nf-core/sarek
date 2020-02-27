@@ -339,7 +339,7 @@ For all samples:
 - `TIDDIT_[SAMPLE].signals.tab`
   - tab file describing coverage across the genome, binned per 50 bp
 - `TIDDIT_[SAMPLE].ploidy.tab`
-  - tab file describing the estimated ploïdy and coverage across each contig
+  - tab file describing the estimated ploidy and coverage across each contig
 - `TIDDIT_[SAMPLE].old.vcf`
   - VCF including the low qualiy calls
 - `TIDDIT_[SAMPLE].wig`
