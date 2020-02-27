@@ -26,7 +26,7 @@ dependencies:
   - bioconda::samtools=1.9
   - bioconda::snpeff=4.3.1t
   - bioconda::strelka=2.9.10
-  - bioconda::tiddit=2.10.0
+  - bioconda::tiddit=2.7.1
   - bioconda::trim-galore=0.6.5
   - bioconda::vcfanno=0.3.2
   - bioconda::vcftools=0.1.16
