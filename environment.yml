@@ -6,11 +6,11 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - conda-forge::markdown=3.2.1
+  - conda-forge::markdown=3.1.1
   - conda-forge::pymdown-extensions=6.0
   - conda-forge::pygments=2.5.2
   - bioconda::ascat=2.5.2
-  - bioconda::bcftools=1.10.2
+  - bioconda::bcftools=1.9
   - bioconda::bwa=0.7.17
   - bioconda::cancerit-allelecount=4.0.2
   - bioconda::control-freec=11.5
@@ -19,11 +19,11 @@ dependencies:
   - bioconda::freebayes=1.3.2
   - bioconda::gatk4-spark=4.1.4.1
   - bioconda::genesplicer=1.0
-  - bioconda::htslib=1.10.2
+  - bioconda::htslib=1.9
   - bioconda::manta=1.6.0
   - bioconda::multiqc=1.8
   - bioconda::qualimap=2.2.2d
-  - bioconda::samtools=1.10
+  - bioconda::samtools=1.9
   - bioconda::snpeff=4.3.1t
   - bioconda::strelka=2.9.10
   - bioconda::tiddit=2.10.0
