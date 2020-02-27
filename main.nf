@@ -69,8 +69,8 @@ def helpMessage() {
       --vep_cache              [file] Specity the path to VEP cache, to be used with --annotation_cache
       --pon                    [file] Panel-of-normals VCF (bgzipped, indexed). See: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_CreateSomaticPanelOfNormals.php
       --pon_index              [file] Index of pon panel-of-normals VCF
-      --ascat_ploidy           [bool] Use this parameter together with to overwrite default behavior from ASCAT regarding ploidy. Note: Also requires that --ascat_purity is set.
-      --ascat_purity           [bool] Use this parameter to overwrite default behavior from ASCAT regarding purity. Note: Also requires that --ascat_ploidy is set.
+      --ascat_ploidy            [int] Use this parameter together with to overwrite default behavior from ASCAT regarding ploidy. Note: Also requires that --ascat_purity is set.
+      --ascat_purity            [int] Use this parameter to overwrite default behavior from ASCAT regarding purity. Note: Also requires that --ascat_ploidy is set.
 
     Trimming:
       --trim_fastq             [bool] Run Trim Galore
@@ -2687,20 +2687,20 @@ process Ascat {
 
     script:
     gender = genderMap[idPatient]
-    ascat_purity=params.ascat_purity
-    ascat_ploidy=params.ascat_ploidy
-    if (params.ascat_purity && params.ascat_ploidy)
+    purity_ploidy = (params.ascat_purity && params.ascat_ploidy) ? "--purity ${params.ascat_purity} --ploidy ${params.ascat_ploidy}" : ""
     """
-        for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
-        Rscript ${workflow.projectDir}/bin/run_ascat.r --tumorbaf ${bafTumor} --tumorlogr ${logrTumor} --normalbaf ${bafNormal} --normallogr ${logrNormal} --tumorname ${idSampleTumor} --basedir ${baseDir} --gcfile ${acLociGC} --gender ${gender} --purity ${ascat_purity} --ploidy ${ascat_ploidy}
+    for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
+    Rscript ${workflow.projectDir}/bin/run_ascat.r \
+        --tumorbaf ${bafTumor} \
+        --tumorlogr ${logrTumor} \
+        --normalbaf ${bafNormal} \
+        --normallogr ${logrNormal} \
+        --tumorname ${idSampleTumor} \
+        --basedir ${baseDir} \
+        --gcfile ${acLociGC} \
+        --gender ${gender} \
+        ${purity_ploidy}
     """
-    else
-    """
-        for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
-        Rscript ${workflow.projectDir}/bin/run_ascat.r --tumorbaf ${bafTumor} --tumorlogr ${logrTumor} --normalbaf ${bafNormal} --normallogr ${logrNormal} --tumorname ${idSampleTumor} --basedir ${baseDir} --gcfile ${acLociGC} --gender ${gender}
-    """
-
-
 }
 
 ascatOut.dump(tag:'ASCAT')
