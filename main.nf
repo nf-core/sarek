@@ -1377,7 +1377,7 @@ process GatherBQSRReports {
 
     tag {idPatient + "-" + idSample}
 
-    publishDir "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/", mode: params.publish_dir_mode, overwrite: false
+    publishDir "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked", mode: params.publish_dir_mode, overwrite: false
 
     input:
         set idPatient, idSample, file(recal) from tableGatherBQSRReports
