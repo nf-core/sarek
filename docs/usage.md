@@ -292,7 +292,7 @@ Use this to disable g.vcf from `HaplotypeCaller`.
 ### --skip_qc
 
 Use this to disable specific QC and Reporting tools.
-Available: `all`, `bamQC`, `BCFtools`, `FastQC`, `MultiQC`, `samtools`, `vcftools`, `versions`
+Available: `all`, `bamQC`, `BaseRecalibrator`, `BCFtools`, `Documentation`, `FastQC`, `MultiQC`, `samtools`, `vcftools`, `versions`
 Default: `None`
 
 ### --skipQC
