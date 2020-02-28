@@ -145,7 +145,7 @@ process BuildCache_snpEff {
   output:
     file("*")
 
-  when: params.snpeff_cache && params.download_cache && !params.offline
+  when: params.snpeff_cache && params.download_cache
 
   script:
   """
@@ -160,15 +160,15 @@ process BuildCache_VEP {
 
   input:
     val cache_version from Channel.value(params.genomes[params.genome].vepCacheVersion)
+    val species from Channel.value(params.genomes[params.genome].species)
 
   output:
     file("*")
 
-  when: params.vep_cache && params.download_cache && !params.offline
+  when: params.vep_cache && params.download_cache
 
   script:
   genome = params.genome
-  species = genome =~ "GRCh3*" ? "homo_sapiens" : genome =~ "GRCm3*" ? "mus_musculus" : ""
   """
   vep_install \
     -a cf \
@@ -201,7 +201,7 @@ process DownloadCADD {
   output:
     set file("*.tsv.gz"), file("*.tsv.gz.tbi")
 
-  when: params.cadd_cache && params.download_cache && !params.offline
+  when: params.cadd_cache && params.download_cache
 
   script:
   """
