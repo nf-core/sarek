@@ -137,7 +137,7 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 process BuildCache_snpEff {
   tag {snpeffDb}
 
-  publishDir params.snpeff_cache, mode: params.publishDirMode
+  publishDir params.snpeff_cache, mode: params.publish_dir_mode
 
   input:
     val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
@@ -156,7 +156,7 @@ process BuildCache_snpEff {
 process BuildCache_VEP {
   tag {"${species}_${cache_version}_${genome}"}
 
-  publishDir "${params.vep_cache}/${species}", mode: params.publishDirMode
+  publishDir "${params.vep_cache}/${species}", mode: params.publish_dir_mode
 
   input:
     val cache_version from Channel.value(params.genomes[params.genome].vepCacheVersion)
@@ -193,7 +193,7 @@ caddFileToDownload = (params.cadd_version) && (params.genome == "GRCh37" || para
 process DownloadCADD {
   tag {caddFile}
 
-  publishDir "${params.cadd_cache}/${params.genome}", mode: params.publishDirMode
+  publishDir "${params.cadd_cache}/${params.genome}", mode: params.publish_dir_mode
 
   input:
     val(caddFile) from caddFileToDownload
