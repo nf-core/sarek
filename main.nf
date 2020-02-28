@@ -352,7 +352,7 @@ annotateTools = params.annotate_tools ? params.annotate_tools.split(',').collect
 if (!checkParameterList(annotateTools,annoList)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
 
 // Check parameters
-if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both ascat_purity and ascat_ploidy, or none of them'
+if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
 
 // Has the run name been specified by the user?
 // This has the bonus effect of catching both -name and --name
@@ -3667,10 +3667,13 @@ def extractFastq(tsvFile) {
             def idRun      = row[4]
             def file1      = returnFile(row[5])
             def file2      = "null"
-            if (hasExtension(file1, "fastq.gz") || hasExtension(file1, "fq.gz")) {
+            if (hasExtension(file1, "fastq.gz") || hasExtension(file1, "fq.gz") || hasExtension(file1, "fastq") || hasExtension(file1, "fq")) {
                 checkNumberOfItem(row, 7)
                 file2 = returnFile(row[6])
-            if (!hasExtension(file2, "fastq.gz") && !hasExtension(file2, "fq.gz")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
+            if (!hasExtension(file2, "fastq.gz") && !hasExtension(file2, "fq.gz")  && !hasExtension(file2, "fastq") && !hasExtension(file2, "fq")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
+            if (hasExtension(file1, "fastq") || hasExtension(file1, "fq") || hasExtension(file2, "fastq") || hasExtension(file2, "fq")) {
+                log.warn "We do recommend to use gziped fastq file to help you reduce your data footprint."
+            }
         }
         else if (hasExtension(file1, "bam")) checkNumberOfItem(row, 6)
         else "No recognisable extention for input file: ${file1}"
