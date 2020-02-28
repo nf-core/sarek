@@ -22,7 +22,7 @@ It's built using [Nextflow](https://www.nextflow.io), a workflow tool to run tas
 It comes with docker containers making installation trivial and results highly reproducible.
 
 <p align="center">
-    <a href="./docs/images/sarek_workflow.png"><img title="Sarek Workflow" src="./docs/images/sarek_workflow.png" width=40%></a>
+    <img title="Sarek Workflow" src="docs/images/sarek_workflow.png" width=40%>
 </p>
 
 It's listed on the [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek), [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek) and [omicX - Bioinformatics tools](https://omictools.com/sarek-tool).
@@ -73,7 +73,7 @@ The nf-core/sarek pipeline comes with documentation about the pipeline, found in
 
 ## Credits
 
-Sarek was developed at the [National Genomics Infastructure](https://ngisweden.scilifelab.se) and [National Bioinformatics Infastructure Sweden](https://nbis.se) which are both platforms at [SciLifeLab](https://scilifelab.se), with the support of [The Swedish Childhood Tumor Biobank (Barntumörbanken)](ttps://ki.se/forskning/barntumorbanken-0).
+Sarek was developed at the [National Genomics Infastructure](https://ngisweden.scilifelab.se) and [National Bioinformatics Infastructure Sweden](https://nbis.se) which are both platforms at [SciLifeLab](https://scilifelab.se), with the support of [The Swedish Childhood Tumor Biobank (Barntumörbanken)](https://ki.se/forskning/barntumorbanken).
 
 Main authors:
 
@@ -109,7 +109,7 @@ For further information or help, don't hesitate to get in touch on [Slack](https
 
 ## Acknowledgements
 
-[![Barntumörbanken](docs/images/BTB_logo.png)](https://ki.se/forskning/barntumorbanken-0) | [![SciLifeLab](docs/images/SciLifeLab_logo.png)](https://scilifelab.se)
+[![Barntumörbanken](docs/images/BTB_logo.png)](https://ki.se/forskning/barntumorbanken) | [![SciLifeLab](docs/images/SciLifeLab_logo.png)](https://scilifelab.se)
 :-:|:-:
 [![National Genomics Infrastructure](docs/images/NGI_logo.png)](https://ngisweden.scilifelab.se/) | [![National Bioinformatics Infrastructure Sweden](docs/images/NBIS_logo.png)](https://nbis.se)
 

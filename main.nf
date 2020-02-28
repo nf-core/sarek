@@ -69,8 +69,8 @@ def helpMessage() {
       --vep_cache              [file] Specity the path to VEP cache, to be used with --annotation_cache
       --pon                    [file] Panel-of-normals VCF (bgzipped, indexed). See: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_CreateSomaticPanelOfNormals.php
       --pon_index              [file] Index of pon panel-of-normals VCF
-      --ascat_ploidy           [bool] Use this parameter together with to overwrite default behavior from ASCAT regarding ploidy. Note: Also requires that --ascat_purity is set.
-      --ascat_purity           [bool] Use this parameter to overwrite default behavior from ASCAT regarding purity. Note: Also requires that --ascat_ploidy is set.
+      --ascat_ploidy            [int] Use this parameter together with to overwrite default behavior from ASCAT regarding ploidy. Note: Also requires that --ascat_purity is set.
+      --ascat_purity            [int] Use this parameter to overwrite default behavior from ASCAT regarding purity. Note: Also requires that --ascat_ploidy is set.
 
     Trimming:
       --trim_fastq             [bool] Run Trim Galore
@@ -352,7 +352,7 @@ annotateTools = params.annotate_tools ? params.annotate_tools.split(',').collect
 if (!checkParameterList(annotateTools,annoList)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
 
 // Check parameters
-if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both ascat_purity and ascat_ploidy, or none of them'
+if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
 
 // Has the run name been specified by the user?
 // This has the bonus effect of catching both -name and --name
@@ -571,10 +571,10 @@ Channel.from(summary.collect{ [it.key, it.value] })
     .map { k,v -> "<dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }
     .reduce { a, b -> return [a, b].join("\n            ") }
     .map { x -> """
-    id: '{{ cookiecutter.name_noslash }}-summary'
+    id: 'sarek-summary'
     description: " - this information is collected when the pipeline is started."
-    section_name: '{{ cookiecutter.name }} Workflow Summary'
-    section_href: 'https://github.com/{{ cookiecutter.name }}'
+    section_name: 'nf-core/sarek Workflow Summary'
+    section_href: 'https://github.com/nf-core/sarek'
     plot_type: 'html'
     data: |
         <dl class=\"dl-horizontal\">
@@ -2687,20 +2687,20 @@ process Ascat {
 
     script:
     gender = genderMap[idPatient]
-    ascat_purity=params.ascat_purity
-    ascat_ploidy=params.ascat_ploidy
-    if (params.ascat_purity && params.ascat_ploidy)
+    purity_ploidy = (params.ascat_purity && params.ascat_ploidy) ? "--purity ${params.ascat_purity} --ploidy ${params.ascat_ploidy}" : ""
     """
-        for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
-        Rscript ${workflow.projectDir}/bin/run_ascat.r --tumorbaf ${bafTumor} --tumorlogr ${logrTumor} --normalbaf ${bafNormal} --normallogr ${logrNormal} --tumorname ${idSampleTumor} --basedir ${baseDir} --gcfile ${acLociGC} --gender ${gender} --purity ${ascat_purity} --ploidy ${ascat_ploidy}
+    for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
+    Rscript ${workflow.projectDir}/bin/run_ascat.r \
+        --tumorbaf ${bafTumor} \
+        --tumorlogr ${logrTumor} \
+        --normalbaf ${bafNormal} \
+        --normallogr ${logrNormal} \
+        --tumorname ${idSampleTumor} \
+        --basedir ${baseDir} \
+        --gcfile ${acLociGC} \
+        --gender ${gender} \
+        ${purity_ploidy}
     """
-    else
-    """
-        for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
-        Rscript ${workflow.projectDir}/bin/run_ascat.r --tumorbaf ${bafTumor} --tumorlogr ${logrTumor} --normalbaf ${bafNormal} --normallogr ${logrNormal} --tumorname ${idSampleTumor} --basedir ${baseDir} --gcfile ${acLociGC} --gender ${gender}
-    """
-
-
 }
 
 ascatOut.dump(tag:'ASCAT')
@@ -3323,9 +3323,9 @@ process Output_documentation {
 workflow.onComplete {
 
     // Set up the e-mail variables
-    def subject = "[{{ cookiecutter.name }}] Successful: $workflow.runName"
+    def subject = "[nf-core/sarek] Successful: $workflow.runName"
     if (!workflow.success) {
-        subject = "[{{ cookiecutter.name }}] FAILED: $workflow.runName"
+        subject = "[nf-core/sarek] FAILED: $workflow.runName"
     }
     def email_fields = [:]
     email_fields['version'] = workflow.manifest.version
@@ -3355,12 +3355,12 @@ workflow.onComplete {
         if (workflow.success) {
             mqc_report = ch_multiqc_report.getVal()
             if (mqc_report.getClass() == ArrayList) {
-                log.warn "[{{ cookiecutter.name }}] Found multiple reports from process 'multiqc', will use only one"
+                log.warn "[nf-core/sarek] Found multiple reports from process 'multiqc', will use only one"
                 mqc_report = mqc_report[0]
             }
         }
     } catch (all) {
-        log.warn "[{{ cookiecutter.name }}] Could not attach MultiQC report to summary email"
+        log.warn "[nf-core/sarek] Could not attach MultiQC report to summary email"
     }
 
     // Check if we are only sending emails on failure
@@ -3392,11 +3392,11 @@ workflow.onComplete {
             if (params.plaintext_email) { throw GroovyException('Send plaintext e-mail, not HTML') }
             // Try to send HTML e-mail using sendmail
             [ 'sendmail', '-t' ].execute() << sendmail_html
-            log.info "[{{ cookiecutter.name }}] Sent summary e-mail to $email_address (sendmail)"
+            log.info "[nf-core/sarek] Sent summary e-mail to $email_address (sendmail)"
         } catch (all) {
             // Catch failures and try with plaintext
             [ 'mail', '-s', subject, email_address ].execute() << email_txt
-            log.info "[{{ cookiecutter.name }}] Sent summary e-mail to $email_address (mail)"
+            log.info "[nf-core/sarek] Sent summary e-mail to $email_address (mail)"
         }
     }
 
@@ -3422,10 +3422,10 @@ workflow.onComplete {
     }
 
     if (workflow.success) {
-        log.info "-${c_purple}[{{ cookiecutter.name }}]${c_green} Pipeline completed successfully${c_reset}-"
+        log.info "-${c_purple}[nf-core/sarek]${c_green} Pipeline completed successfully${c_reset}-"
     } else {
         checkHostname()
-        log.info "-${c_purple}[{{ cookiecutter.name }}]${c_red} Pipeline completed with errors${c_reset}-"
+        log.info "-${c_purple}[nf-core/sarek]${c_red} Pipeline completed with errors${c_reset}-"
     }
 }
 
@@ -3667,10 +3667,13 @@ def extractFastq(tsvFile) {
             def idRun      = row[4]
             def file1      = returnFile(row[5])
             def file2      = "null"
-            if (hasExtension(file1, "fastq.gz") || hasExtension(file1, "fq.gz")) {
+            if (hasExtension(file1, "fastq.gz") || hasExtension(file1, "fq.gz") || hasExtension(file1, "fastq") || hasExtension(file1, "fq")) {
                 checkNumberOfItem(row, 7)
                 file2 = returnFile(row[6])
-            if (!hasExtension(file2, "fastq.gz") && !hasExtension(file2, "fq.gz")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
+            if (!hasExtension(file2, "fastq.gz") && !hasExtension(file2, "fq.gz")  && !hasExtension(file2, "fastq") && !hasExtension(file2, "fq")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
+            if (hasExtension(file1, "fastq") || hasExtension(file1, "fq") || hasExtension(file2, "fastq") || hasExtension(file2, "fq")) {
+                exit 1, "We do recommend to use gziped fastq file to help you reduce your data footprint."
+            }
         }
         else if (hasExtension(file1, "bam")) checkNumberOfItem(row, 6)
         else "No recognisable extention for input file: ${file1}"
