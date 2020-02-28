@@ -571,10 +571,10 @@ Channel.from(summary.collect{ [it.key, it.value] })
     .map { k,v -> "<dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }
     .reduce { a, b -> return [a, b].join("\n            ") }
     .map { x -> """
-    id: '{{ cookiecutter.name_noslash }}-summary'
+    id: 'sarek-summary'
     description: " - this information is collected when the pipeline is started."
-    section_name: '{{ cookiecutter.name }} Workflow Summary'
-    section_href: 'https://github.com/{{ cookiecutter.name }}'
+    section_name: 'nf-core/sarek Workflow Summary'
+    section_href: 'https://github.com/nf-core/sarek'
     plot_type: 'html'
     data: |
         <dl class=\"dl-horizontal\">
@@ -3323,9 +3323,9 @@ process Output_documentation {
 workflow.onComplete {
 
     // Set up the e-mail variables
-    def subject = "[{{ cookiecutter.name }}] Successful: $workflow.runName"
+    def subject = "[nf-core/sarek] Successful: $workflow.runName"
     if (!workflow.success) {
-        subject = "[{{ cookiecutter.name }}] FAILED: $workflow.runName"
+        subject = "[nf-core/sarek] FAILED: $workflow.runName"
     }
     def email_fields = [:]
     email_fields['version'] = workflow.manifest.version
@@ -3355,12 +3355,12 @@ workflow.onComplete {
         if (workflow.success) {
             mqc_report = ch_multiqc_report.getVal()
             if (mqc_report.getClass() == ArrayList) {
-                log.warn "[{{ cookiecutter.name }}] Found multiple reports from process 'multiqc', will use only one"
+                log.warn "[nf-core/sarek] Found multiple reports from process 'multiqc', will use only one"
                 mqc_report = mqc_report[0]
             }
         }
     } catch (all) {
-        log.warn "[{{ cookiecutter.name }}] Could not attach MultiQC report to summary email"
+        log.warn "[nf-core/sarek] Could not attach MultiQC report to summary email"
     }
 
     // Check if we are only sending emails on failure
@@ -3392,11 +3392,11 @@ workflow.onComplete {
             if (params.plaintext_email) { throw GroovyException('Send plaintext e-mail, not HTML') }
             // Try to send HTML e-mail using sendmail
             [ 'sendmail', '-t' ].execute() << sendmail_html
-            log.info "[{{ cookiecutter.name }}] Sent summary e-mail to $email_address (sendmail)"
+            log.info "[nf-core/sarek] Sent summary e-mail to $email_address (sendmail)"
         } catch (all) {
             // Catch failures and try with plaintext
             [ 'mail', '-s', subject, email_address ].execute() << email_txt
-            log.info "[{{ cookiecutter.name }}] Sent summary e-mail to $email_address (mail)"
+            log.info "[nf-core/sarek] Sent summary e-mail to $email_address (mail)"
         }
     }
 
@@ -3422,10 +3422,10 @@ workflow.onComplete {
     }
 
     if (workflow.success) {
-        log.info "-${c_purple}[{{ cookiecutter.name }}]${c_green} Pipeline completed successfully${c_reset}-"
+        log.info "-${c_purple}[nf-core/sarek]${c_green} Pipeline completed successfully${c_reset}-"
     } else {
         checkHostname()
-        log.info "-${c_purple}[{{ cookiecutter.name }}]${c_red} Pipeline completed with errors${c_reset}-"
+        log.info "-${c_purple}[nf-core/sarek]${c_red} Pipeline completed with errors${c_reset}-"
     }
 }
 
@@ -3672,7 +3672,7 @@ def extractFastq(tsvFile) {
                 file2 = returnFile(row[6])
             if (!hasExtension(file2, "fastq.gz") && !hasExtension(file2, "fq.gz")  && !hasExtension(file2, "fastq") && !hasExtension(file2, "fq")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
             if (hasExtension(file1, "fastq") || hasExtension(file1, "fq") || hasExtension(file2, "fastq") || hasExtension(file2, "fq")) {
-                log.warn "We do recommend to use gziped fastq file to help you reduce your data footprint."
+                exit 1, "We do recommend to use gziped fastq file to help you reduce your data footprint."
             }
         }
         else if (hasExtension(file1, "bam")) checkNumberOfItem(row, 6)
