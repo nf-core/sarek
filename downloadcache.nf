@@ -54,24 +54,9 @@ params.build = null
 params.offline = null
 params.cadd_cache = null
 params.cadd_version = 'v1.5'
-params.genome = 'GRCh37'
+params.genome = 'GRCh38'
 params.snpeff_cache = null
 params.vep_cache = null
-
-ch_referencesFiles = Channel.empty()
-
-pathToSource = params.offline ? "data/reference/" : "https://github.com/nf-core/test-datasets/raw/sarek/reference"
-
-if (params.build) ch_referencesFiles = ch_referencesFiles.mix(
-  Channel.fromPath("${pathToSource}/1000G_phase1.indels.b37.small.vcf.gz"),
-  Channel.fromPath("${pathToSource}/1000G_phase3_20130502_SNP_maf0.3.small.loci"),
-  Channel.fromPath("${pathToSource}/1000G_phase3_20130502_SNP_maf0.3.small.loci.gc"),
-  Channel.fromPath("${pathToSource}/Mills_and_1000G_gold_standard.indels.b37.small.vcf.gz"),
-  Channel.fromPath("${pathToSource}/dbsnp_138.b37.small.vcf.gz"),
-  Channel.fromPath("${pathToSource}/human_g1k_v37_decoy.small.fasta.gz"),
-  Channel.fromPath("${pathToSource}/small.intervals"))
-
-ch_referencesFiles = ch_referencesFiles.dump(tag:'Reference Files')
 
 // Check if genome exists in the config file
 if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
@@ -85,14 +70,14 @@ if ( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
   custom_runName = workflow.runName
 }
 
-if ( workflow.profile == 'awsbatch') {
+if (workflow.profile.contains('awsbatch')) {
   // AWSBatch sanity checking
   if (!params.awsqueue || !params.awsregion) exit 1, "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
   // Check outdir paths to be S3 buckets if running on AWSBatch
   // related: https://github.com/nextflow-io/nextflow/issues/813
   if (!params.outdir.startsWith('s3:')) exit 1, "Outdir not on S3 - specify S3 Bucket to run on AWSBatch!"
   // Prevent trace files to be stored on S3 since S3 does not support rolling files.
-  if (workflow.tracedir.startsWith('s3:')) exit 1, "Specify a local tracedir or run without trace! S3 cannot be used for tracefiles."
+  if (params.tracedir.startsWith('s3:')) exit 1, "Specify a local tracedir or run without trace! S3 cannot be used for tracefiles."
 }
 
 // Header log info
