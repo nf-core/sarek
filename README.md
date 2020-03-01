@@ -1,7 +1,5 @@
 # [![Sarek](docs/images/nf-core_sarek_logo.png "Sarek")](https://nf-co.re/sarek)
 
-> **An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing**
-
 [![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A519.10.0-brightgreen.svg)](https://www.nextflow.io/)
 [![nf-core](https://img.shields.io/badge/nf--core-pipeline-brightgreen.svg)](https://nf-co.re/)
 [![DOI](https://zenodo.org/badge/184289291.svg)](https://zenodo.org/badge/latestdoi/184289291)
@@ -20,17 +18,38 @@
 
 Sarek is a workflow designed to run analyses on whole genome or targeted sequencing data from regular samples or tumour / normal pairs and could include additional relapses.
 
-It's built using [Nextflow](https://www.nextflow.io),
-a domain specific language for workflow building,
-across multiple compute infrastructures in a very portable manner.
-Software dependencies are handled using [Conda](https://conda.io/), [Docker](https://www.docker.com) or [Singularity](https://www.sylabs.io/singularity/) - environment/container technologies that provide excellent reproducibility and ease of use.
-Thus making installation trivial and results highly reproducible.
+It's built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner.
+It comes with docker containers making installation trivial and results highly reproducible.
 
 <p align="center">
-    <a href="./docs/images/sarek_workflow.png"><img title="Sarek Workflow" src="./docs/images/sarek_workflow.png" width=40%></a>
+    <img title="Sarek Workflow" src="docs/images/sarek_workflow.png" width=40%>
 </p>
 
 It's listed on the [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek), [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek) and [omicX - Bioinformatics tools](https://omictools.com/sarek-tool).
+
+## Quick Start
+
+i. Install [`Nextflow`](https://nf-co.re/usage/installation)
+
+ii. Install either [`Docker`](https://docs.docker.com/engine/installation/) or [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/) for full pipeline reproducibility (please only use [`Conda`](https://conda.io/miniconda.html) as a last resort; see [docs](https://nf-co.re/usage/configuration#basic-configuration-profiles))
+
+iii. Download the pipeline and test it on a minimal dataset with a single command
+
+```bash
+nextflow run nf-core/sarek -profile test,<docker/singularity/conda/institute>
+```
+
+> Please check [nf-core/configs](https://github.com/nf-core/configs#documentation) to see if a custom config file to run nf-core pipelines already exists for your Institute.
+> If so, you can simply use `-profile <institute>` in your command.
+> This will enable either `docker` or `singularity` and set the appropriate execution settings for your local compute environment.
+
+iv. Start running your own analysis!
+
+```bash
+nextflow run nf-core/sarek -profile <docker/singularity/conda/institute> --input '*.tsv' --genome GRCh38
+```
+
+See [usage docs](docs/usage.md) for all of the available options when running the pipeline.
 
 ## Documentation
 
@@ -54,7 +73,7 @@ The nf-core/sarek pipeline comes with documentation about the pipeline, found in
 
 ## Credits
 
-Sarek was developed at the [National Genomics Infastructure](https://ngisweden.scilifelab.se) and [National Bioinformatics Infastructure Sweden](https://nbis.se) which are both platforms at [SciLifeLab](https://scilifelab.se), with the support of [The Swedish Childhood Tumor Biobank (Barntumörbanken)](ttps://ki.se/forskning/barntumorbanken-0).
+Sarek was developed at the [National Genomics Infastructure](https://ngisweden.scilifelab.se) and [National Bioinformatics Infastructure Sweden](https://nbis.se) which are both platforms at [SciLifeLab](https://scilifelab.se), with the support of [The Swedish Childhood Tumor Biobank (Barntumörbanken)](https://ki.se/forskning/barntumorbanken).
 
 Main authors:
 
@@ -88,9 +107,9 @@ For further information or help, don't hesitate to get in touch on [Slack](https
 
 * [CHANGELOG](CHANGELOG.md)
 
-## Aknowledgements
+## Acknowledgements
 
-[![Barntumörbanken](docs/images/BTB_logo.png)](https://ki.se/forskning/barntumorbanken-0) | [![SciLifeLab](docs/images/SciLifeLab_logo.png)](https://scilifelab.se)
+[![Barntumörbanken](docs/images/BTB_logo.png)](https://ki.se/forskning/barntumorbanken) | [![SciLifeLab](docs/images/SciLifeLab_logo.png)](https://scilifelab.se)
 :-:|:-:
 [![National Genomics Infrastructure](docs/images/NGI_logo.png)](https://ngisweden.scilifelab.se/) | [![National Bioinformatics Infrastructure Sweden](docs/images/NBIS_logo.png)](https://nbis.se)
 

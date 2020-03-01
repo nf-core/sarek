@@ -4,7 +4,7 @@ This document describes the output produced by the pipeline.
 
 ## Pipeline overview <!-- omit in toc -->
 
-The pipeline processes data using the following steps:
+The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
 - [Preprocessing](#preprocessing)
   - [Map to Reference](#map-to-reference)
@@ -119,7 +119,7 @@ For all samples:
 - `duplicateMarked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
   - TSV files to start Sarek from `recalibration` or `variantcalling` steps for a specific sample.
 
-> :warning: Only with [`--sentieon`](usage.md#--sentieon)
+> `/!\` Only with [`--sentieon`](usage.md#--sentieon)
 
 For all samples:
 **Output directory: `results/Preprocessing/TSV`**
@@ -242,9 +242,9 @@ Using [Strelka Best Practices](https://github.com/Illumina/strelka/blob/v2.9.x/d
 
 #### Sentieon DNAseq
 
-> :warning: Only with [`--sentieon`](usage.md#--sentieon)
+> `/!\` Only with [`--sentieon`](usage.md#--sentieon)
 
-[Sentieon DNAseq](https://www.sentieon.com/products/#dnaseq) implements the same mathematics used in the Broad Institute’s BWA-GATK HaplotypeCaller 3.3-4.1 Best Practices Workflow pipeline.
+[Sentieon DNAseq](https://www.sentieon.com/products/#dnaseq) implements the same mathematics used in the Broad Institute's BWA-GATK HaplotypeCaller 3.3-4.1 Best Practices Workflow pipeline.
 
 For further reading and documentation see the [Sentieon DNAseq user guide](https://support.sentieon.com/manual/DNAseq_usage/dnaseq/).
 
@@ -256,7 +256,7 @@ For all samples:
 
 #### Sentieon DNAscope
 
-> :warning: Only with [`--sentieon`](usage.md#--sentieon)
+> `/!\` Only with [`--sentieon`](usage.md#--sentieon)
 
 [Sentieon DNAscope](https://www.sentieon.com/products) calls SNPs and small indels.
 
@@ -270,7 +270,7 @@ For all samples:
 
 #### Sentieon TNscope
 
-> :warning: Only with [`--sentieon`](usage.md#--sentieon)
+> `/!\` Only with [`--sentieon`](usage.md#--sentieon)
 
 [Sentieon TNscope](https://www.sentieon.com/products/#tnscope) calls SNPs and small indels on an Tumor/Normal pair.
 
@@ -339,7 +339,7 @@ For all samples:
 - `TIDDIT_[SAMPLE].signals.tab`
   - tab file describing coverage across the genome, binned per 50 bp
 - `TIDDIT_[SAMPLE].ploidy.tab`
-  - tab file describing the estimated ploïdy and coverage across each contig
+  - tab file describing the estimated ploidy and coverage across each contig
 - `TIDDIT_[SAMPLE].old.vcf`
   - VCF including the low qualiy calls
 - `TIDDIT_[SAMPLE].wig`
@@ -349,7 +349,7 @@ For all samples:
 
 #### Sentieon DNAscope SV
 
-> :warning: Only with [`--sentieon`](usage.md#--sentieon)
+> `/!\` Only with [`--sentieon`](usage.md#--sentieon)
 
 [Sentieon DNAscope](https://www.sentieon.com/products) can perform structural variant calling in addition to calling SNPs and small indels.
 

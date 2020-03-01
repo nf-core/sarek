@@ -22,6 +22,7 @@ regexes = {
     'SnpEff': ['v_snpeff.txt', r"version SnpEff (\S+)"],
     'Strelka': ['v_strelka.txt', r"([0-9.]+)"],
     'TIDDIT': ['v_tiddit.txt', r"TIDDIT-(\S+)"], 
+    'Trim Galore': ['v_trim_galore.txt', r"version (\S+)"], 
     'vcftools': ['v_vcftools.txt', r"([0-9.]+)"],
     'VEP': ['v_vep.txt', r"ensembl-vep          : (\S+)"],
 }
@@ -44,19 +45,23 @@ results['samtools'] = '<span style="color:#999999;\">N/A</span>'
 results['SnpEff'] = '<span style="color:#999999;\">N/A</span>'
 results['Strelka'] = '<span style="color:#999999;\">N/A</span>'
 results['TIDDIT'] = '<span style="color:#999999;\">N/A</span>' 
+results['Trim Galore'] = '<span style="color:#999999;\">N/A</span>' 
 results['vcftools'] = '<span style="color:#999999;\">N/A</span>'
 results['VEP'] = '<span style="color:#999999;\">N/A</span>'
 
 # Search each file using its regex
 for k, v in regexes.items():
-    with open(v[0]) as x:
-        versions = x.read()
-        match = re.search(v[1], versions)
-        if match:
-            results[k] = "v{}".format(match.group(1))
+    try:
+        with open(v[0]) as x:
+            versions = x.read()
+            match = re.search(v[1], versions)
+            if match:
+                results[k] = "v{}".format(match.group(1))
+    except IOError:
+        results[k] = False
 
 # Remove software set to false in results
-for k in results:
+for k in list(results):
     if not results[k]:
         del(results[k])
 

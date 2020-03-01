@@ -20,11 +20,11 @@ Usage:
       you're reading it
 
 DOWNLOAD CACHE:
-  nextflow run build.nf --download_cache [--snpEff_cache <pathToSNPEFFcache>] [--vep_cache <pathToVEPcache>]
+  nextflow run build.nf --download_cache [--snpeff_cache <pathToSNPEFFcache>] [--vep_cache <pathToVEPcache>]
                                          [--cadd_cache <pathToCADDcache> --cadd_version <CADD Version>]
     --download_cache
       Will download specified cache
-    --snpEff_cache <Directoy>
+    --snpeff_cache <Directoy>
       Specify path to snpEff cache
       If none, will use snpEff version specified in configuration
       Will use snpEff cache version for ${params.genome}: ${params.genomes[params.genome].snpeffDb} in igenomes configuration file:
@@ -55,7 +55,7 @@ params.offline = null
 params.cadd_cache = null
 params.cadd_version = 'v1.5'
 params.genome = 'GRCh37'
-params.snpEff_cache = null
+params.snpeff_cache = null
 params.vep_cache = null
 
 ch_referencesFiles = Channel.empty()
@@ -152,7 +152,7 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 process BuildCache_snpEff {
   tag {snpeffDb}
 
-  publishDir params.snpEff_cache, mode: params.publishDirMode
+  publishDir params.snpeff_cache, mode: params.publishDirMode
 
   input:
     val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
@@ -160,7 +160,7 @@ process BuildCache_snpEff {
   output:
     file("*")
 
-  when: params.snpEff_cache && params.download_cache && !params.offline
+  when: params.snpeff_cache && params.download_cache && !params.offline
 
   script:
   """
@@ -189,7 +189,6 @@ process BuildCache_VEP {
     -a cf \
     -c . \
     -s ${species} \
-    -v ${cache_version} \
     -y ${genome} \
     --CACHE_VERSION ${cache_version} \
     --CONVERT \
