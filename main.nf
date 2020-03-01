@@ -2661,7 +2661,7 @@ process ConvertAlleleCounts {
     script:
     gender = genderMap[idPatient]
     """
-    Rscript ${workflow.projectDir}/bin/convertAlleleCounts.r ${idSampleTumor} ${alleleCountTumor} ${idSampleNormal} ${alleleCountNormal} ${gender}
+    convertAlleleCounts.r ${idSampleTumor} ${alleleCountTumor} ${idSampleNormal} ${alleleCountNormal} ${gender}
     """
 }
 
@@ -2690,7 +2690,7 @@ process Ascat {
     purity_ploidy = (params.ascat_purity && params.ascat_ploidy) ? "--purity ${params.ascat_purity} --ploidy ${params.ascat_ploidy}" : ""
     """
     for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
-    Rscript ${workflow.projectDir}/bin/run_ascat.r \
+    run_ascat.r \
         --tumorbaf ${bafTumor} \
         --tumorlogr ${logrTumor} \
         --normalbaf ${bafNormal} \
