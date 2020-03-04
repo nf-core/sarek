@@ -1091,10 +1091,22 @@ process UMIFastqToBAM {
 // this is necessary because the UMI groups are created based on
 // mapping position + same UMI tag
 
+
+// first we need to duplicate the reference and indexes
+if (params.umi){
+  (ch_bwa, ch_bwa_umi) = ch_bwa.into(2)
+  (ch_fasta, ch_fasta_umi) = ch_fasta.into(2)
+  (ch_fai, ch_fai_umi) = ch_fai.into(2)
+}
+
+
 process UMIMapBamFile {
 
   input:
   set idPatient, idSample, idRun, file(convertedBam) from umi_converted_bams_ch
+  file(bwaIndex) from ch_bwa_umi
+  file(fasta) from ch_fasta_umi
+  file(fastaFai) from ch_fai_umi
 
   output:
   tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi_unsorted.bam") into umi_aligned_bams_ch
@@ -1105,7 +1117,7 @@ process UMIMapBamFile {
   """
   samtools bam2fq -T RX ${convertedBam} | \
   bwa mem -p -t ${task.cpus} -C -M -R \"@RG\\tID:${idSample}\\tSM:${idSample}\\tPL:Illumina\" \
-  ${params.reference} - | \
+  ${fasta} - | \
   samtools view -bS - > ${idSample}_umi_unsorted.bam
   """
 
