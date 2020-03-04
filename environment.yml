@@ -22,7 +22,7 @@ dependencies:
   - bioconda::htslib=1.9
   - bioconda::manta=1.6.0
   - bioconda::multiqc=1.8
-  - bioconda::platypus-variant=v0.8.1.2
+  - bioconda::platypus-variant=0.8.1.2
   - bioconda::qualimap=2.2.2d
   - bioconda::samtools=1.9
   - bioconda::snpeff=4.3.1t
