@@ -933,7 +933,10 @@ if (params.split_fastq){
 
 inputPairReads = inputPairReads.dump(tag:'INPUT')
 
-(inputPairReads, inputPairReadsTrimGalore, inputPairReadsFastQC) = inputPairReads.into(3)
+(inputPairReads, inputPairReadsTrimGalore, inputPairReadsFastQC, inputPairReadsUMI) = inputPairReads.into(4)
+if(params.umi) inputPairReads.close()
+else inputPairReadsUMI.close()
+
 
 // STEP 0.5: QC ON READS
 
