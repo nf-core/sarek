@@ -40,7 +40,7 @@ jobs:
       GENOME: WBcel235
       SNPEFF_CACHE_VERSION: "86"
 
-      vepgrch37: &buildvep
+  vepgrch37: &buildvep
     docker:
       - image: circleci/buildpack-deps:stretch
     environment:
