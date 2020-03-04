@@ -65,12 +65,12 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 
 ### Added
 
-- [#142](https://github.com/nf-core/sarek/pull/142) - Add `Platypus` possibilities to Sarek
 - [#76](https://github.com/nf-core/sarek/pull/76) - Add `GATK Spark` possibilities to Sarek
 - [#87](https://github.com/nf-core/sarek/pull/87) - Add `GATK BaseRecalibrator` plot to `MultiQC` report
 - [#115](https://github.com/nf-core/sarek/pull/115) - Add [@szilvajuhos](https://github.com/szilvajuhos) abstract for ESHG2020
 - [#117](https://github.com/nf-core/sarek/pull/117) - Add `Trim Galore` possibilities to Sarek
 - [#141](https://github.com/nf-core/sarek/pull/141) - Add containers for `WBcel235`
+- [#142](https://github.com/nf-core/sarek/pull/142) - Add `Platypus` possibilities to Sarek
 - [#150](https://github.com/nf-core/sarek/pull/150), [#151](https://github.com/nf-core/sarek/pull/151), [#154](https://github.com/nf-core/sarek/pull/154) - Add AWS mega test GitHub Actions
 - [#153](https://github.com/nf-core/sarek/pull/153) - Add `CNVkit` possibilities to Sarek
 - [#158](https://github.com/nf-core/sarek/pull/158) - Added `ggplot2` version `3.3.0`
