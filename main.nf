@@ -1162,7 +1162,7 @@ process CallMolecularConsensusReads {
   set idPatient, idSample, idRun, file(groupedBamFile) from umi_grouped_bams_ch
 
   output:
-  val(idPatient), val(idSample), val(idRun), file("${idSample}_umi-consensus.bam") into consensus_bam_ch
+  tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi-consensus.bam") into consensus_bam_ch
 
   when: params.umi && params.read_structure1 && params.read_structure2
 
