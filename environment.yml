@@ -21,7 +21,7 @@ dependencies:
   - bioconda::genesplicer=1.0
   - bioconda::htslib=1.9
   - bioconda::manta=1.6.0
-  - bioconda::mapdamage2=2.2.0=pyr36_1
+  - bioconda::mapdamage2
   - bioconda::multiqc=1.8
   - bioconda::qualimap=2.2.2d
   - bioconda::samtools=1.9
