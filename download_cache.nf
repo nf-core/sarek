@@ -140,7 +140,7 @@ process BuildCache_snpEff {
     val snpeffDb from Channel.value(params.snpeff_db)
 
   output:
-    file("*")
+    file("*") into snpeff_cache_out
 
   when: params.snpeff_cache
 
@@ -150,17 +150,19 @@ process BuildCache_snpEff {
   """
 }
 
+snpeff_cache_out = snpeff_cache_out.dump(tag: 'snpeff_cache_out')
+
 process BuildCache_VEP {
   tag {"${species}_${cache_version}_${genome}"}
 
   publishDir "${params.vep_cache}/${species}", mode: params.publish_dir_mode
 
   input:
-    val cache_version from Channel.value(params.vep_cache_version)
+    val vep_cache_version from Channel.value(params.vep_cache_version)
     val species from Channel.value(params.species)
 
   output:
-    file("*")
+    file("*") into vep_cache_out
 
   when: params.vep_cache
 
@@ -172,7 +174,7 @@ process BuildCache_VEP {
     -c . \
     -s ${species} \
     -y ${genome} \
-    --CACHE_VERSION ${cache_version} \
+    --CACHE_VERSION ${vep_cache_version} \
     --CONVERT \
     --NO_HTSLIB --NO_TEST --NO_BIOPERL --NO_UPDATE
 
@@ -180,6 +182,8 @@ process BuildCache_VEP {
   rm -rf ${species}
   """
 }
+
+vep_cache_version = vep_cache_version.dump(tag: 'vep_cache_version')
 
 caddFileToDownload = (params.cadd_version) && (params.genome == "GRCh37" || params.genome == "GRCh38") ?
   Channel.from(
@@ -196,7 +200,7 @@ process DownloadCADD {
     val(caddFile) from caddFileToDownload
 
   output:
-    set file("*.tsv.gz"), file("*.tsv.gz.tbi")
+    set file("*.tsv.gz"), file("*.tsv.gz.tbi") into cadd_files
 
   when: params.cadd_cache
 
@@ -206,6 +210,8 @@ process DownloadCADD {
   wget --quiet ${caddFile}.tbi
   """
 }
+
+cadd_files = cadd_files.dump(tag: 'cadd_files')
 
 def nfcoreHeader(){
     // Log colors ANSI codes
@@ -257,17 +263,4 @@ def checkHostname(){
             }
         }
     }
-}
-
-/*
-================================================================================
-=                               F U N C T I O N S                              =
-================================================================================
-*/
-
-def checkFile(it) {
-  // Check file existence
-  final f = file(it)
-  if (!f.exists()) exit 1, "Missing file: ${it}, see --help for more information"
-  return true
 }
