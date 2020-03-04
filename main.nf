@@ -1043,6 +1043,147 @@ process TrimGalore {
    trimGaloreReport = Channel.empty()
 }
 
+
+
+
+/*
+================================================================================
+                            UMIs PROCESSING
+================================================================================
+*/
+
+// UMI - STEP 1 - ANNOTATE
+// the process needs to convert fastq to unmapped bam
+// and while doing the conversion, tag the bam field RX with the UMI sequence
+
+process UMIFastqToBAM {
+
+  publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publishDirMode
+
+  input:
+  set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsUMI
+
+  output:
+  tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi_converted.bam") into umi_converted_bams_ch
+
+  when: params.umi && params.read_structure1 && params.read_structure2
+
+
+  // tmp folder for fgbio might be solved more elengantly?
+
+  script:
+  """
+  mkdir tmpFolder
+
+  fgbio --tmp-dir=${PWD}/tmpFolder \
+  FastqToBam \
+  -i "${idSample}_${idRun}_R1.fastq.gz" "${idSample}_${idRun}_R2.fastq.gz" \
+  -o "${idSample}_umi_converted.bam" \
+  --read-structures $params.read_structure1 $params.read_structure2 \
+  --sample $idSample \
+  --library $idSample
+  """
+
+}
+
+
+// UMI - STEP 2 - MAP THE BAM FILE
+// this is necessary because the UMI groups are created based on
+// mapping position + same UMI tag
+
+process UMIMapBamFile {
+
+  input:
+  set idPatient, idSample, idRun, file(convertedBam) from umi_converted_bams_ch
+
+  output:
+  tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi_unsorted.bam") into umi_aligned_bams_ch
+
+  when: params.umi && params.read_structure1 && params.read_structure2
+
+  script:
+  """
+  samtools bam2fq -T RX ${convertedBam} | \
+  bwa mem -p -t ${task.cpus} -C -M -R \"@RG\\tID:${idSample}\\tSM:${idSample}\\tPL:Illumina\" \
+  ${params.reference} - | \
+  samtools view -bS - > ${idSample}_umi_unsorted.bam
+  """
+
+}
+
+
+// UMI - STEP 3 - GROUP READS BY UMIs
+// We have chose the Adjacency method, following the nice paper and blog explanation integrated in both
+// UMItools and FGBIO
+// https://cgatoxford.wordpress.com/2015/08/14/unique-molecular-identifiers-the-problem-the-solution-and-the-proof/
+// alternatively we can define this as input for the user to choose from
+
+process GroupReadsByUmi {
+
+  publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publishDirMode
+
+  input:
+  set idPatient, idSample, idRun, file(alignedBam) from umi_aligned_bams_ch
+
+  output:
+  file("${idSample}_umi_histogram.txt") into umi_histogram_ch
+  tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi-grouped.bam") into umi_grouped_bams_ch
+
+  when: params.umi && params.read_structure1 && params.read_structure2
+
+  script:
+  """
+  mkdir tmpFolder
+
+  samtools view -h $alignedBam | \
+  samblaster -M --addMateTags | \
+  samtools view -Sb - >${idSample}_unsorted_tagged.bam
+
+  fgbio --tmp-dir=${PWD}/tmpFolder \
+  GroupReadsByUmi \
+  -s Adjacency \
+  -i ${idSample}_unsorted_tagged.bam \
+  -o ${idSample}_umi-grouped.bam \
+  -f ${idSample}_umi_histogram.txt
+  """
+
+}
+
+// UMI - STEP 4 - CALL MOLECULAR CONSENSUS
+// Now that the reads are organised by UMI groups a molecular consensus will be created
+// the resulting bam file will be again unmapped and therefore can be fed into the
+// existing workflow from the step mapping
+
+process CallMolecularConsensusReads {
+
+  publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publishDirMode
+
+  input:
+  set idPatient, idSample, idRun, file(groupedBamFile) from umi_grouped_bams_ch
+
+  output:
+  val(idPatient), val(idSample), val(idRun), file("${idSample}_umi-consensus.bam") into consensus_bam_ch
+
+  when: params.umi && params.read_structure1 && params.read_structure2
+
+  script:
+  """
+  mkdir tmpFolder
+
+  fgbio --tmp-dir=${PWD}/tmpFolder \
+  CallMolecularConsensusReads \
+  -i $groupedBamFile \
+  -o ${idSample}_umi-consensus.bam \
+  -M 1 -S Coordinate
+  """
+}
+
+// ################# END OF UMI READS PRE-PROCESSING
+// from this moment on the generated uBam files can feed into the existing tools
+
+
+
+
 // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
 
 inputPairReads = outputPairReadsTrimGalore.mix(inputBam)
