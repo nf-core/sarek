@@ -27,7 +27,6 @@ Usage:
     --help
       you're reading it
 
-DOWNLOAD CACHE:
   nextflow run download_cache.nf [--snpeff_cache <pathToSNPEFFcache>] [--vep_cache <pathToVEPcache>]
                                  [--cadd_cache <pathToCADDcache> --cadd_version <CADD Version>]
     --snpeff_cache <Directoy>
@@ -69,6 +68,10 @@ if ( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
   custom_runName = workflow.runName
 }
 
+params.snpeff_db = params.genome ? params.genomes[params.genome].snpeff_db ?: null : null
+params.species = params.genome ? params.genomes[params.genome].species ?: null : null
+params.vep_cache_version = params.genome ? params.genomes[params.genome].vep_cache_version ?: null : null
+
 // Header log info
 log.info nfcoreHeader()
 def summary = [:]
@@ -76,6 +79,11 @@ if (workflow.revision) summary['Pipeline Release'] = workflow.revision
 summary['Run Name']         = custom_runName ?: workflow.runName
 summary['Max Resources']    = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
 if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
+if (params.snpeff_db)               summary['snpeffDb']              = params.snpeff_db
+if (params.vep_cache_version)       summary['vepCacheVersion']       = params.vep_cache_version
+if (params.species)                 summary['species']               = params.species
+if (params.snpeff_cache)            summary['snpEff_cache']          = params.snpeff_cache
+if (params.vep_cache)               summary['vep_cache']             = params.vep_cache
 summary['Output dir']       = params.outdir
 summary['Launch dir']       = workflow.launchDir
 summary['Working dir']      = workflow.workDir
@@ -129,12 +137,12 @@ process BuildCache_snpEff {
   publishDir params.snpeff_cache, mode: params.publish_dir_mode
 
   input:
-    val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
+    val snpeffDb from Channel.value(params.snpeff_db)
 
   output:
     file("*")
 
-  when: params.snpeff_cache && params.download_cache
+  when: params.snpeff_cache
 
   script:
   """
@@ -148,13 +156,13 @@ process BuildCache_VEP {
   publishDir "${params.vep_cache}/${species}", mode: params.publish_dir_mode
 
   input:
-    val cache_version from Channel.value(params.genomes[params.genome].vepCacheVersion)
-    val species from Channel.value(params.genomes[params.genome].species)
+    val cache_version from Channel.value(params.vep_cache_version)
+    val species from Channel.value(params.species)
 
   output:
     file("*")
 
-  when: params.vep_cache && params.download_cache
+  when: params.vep_cache
 
   script:
   genome = params.genome
@@ -190,7 +198,7 @@ process DownloadCADD {
   output:
     set file("*.tsv.gz"), file("*.tsv.gz.tbi")
 
-  when: params.cadd_cache && params.download_cache
+  when: params.cadd_cache
 
   script:
   """
