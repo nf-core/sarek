@@ -71,6 +71,9 @@ def helpMessage() {
       --pon_index              [file] Index of pon panel-of-normals VCF
       --ascat_ploidy            [int] Use this parameter together with to overwrite default behavior from ASCAT regarding ploidy. Note: Also requires that --ascat_purity is set.
       --ascat_purity            [int] Use this parameter to overwrite default behavior from ASCAT regarding purity. Note: Also requires that --ascat_ploidy is set.
+      --umi                       If provided, UMIs steps will be run to extract and annotate the reads with UMI and create consensus reads
+      --read_structure1           When reads contain UMIs a structure for read 1 should be provided, to allow removal of UMI sequence from the read. See: https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
+      --read_structure2           When reads contain UMIs a structure for read 2 should be provided, to allow removal of UMI sequence from the read. See: https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
 
     Trimming:
       --trim_fastq             [bool] Run Trim Galore
@@ -2178,7 +2181,7 @@ process MergeMutect2Stats {
 
     when: 'mutect2' in tools
 
-    script:   
+    script:
                stats = statsFiles.collect{ "-stats ${it} " }.join(' ')
     """
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
@@ -2309,13 +2312,13 @@ process CalculateContamination {
 
     input:
         set idPatient, idSampleNormal, idSampleTumor, file(bamNormal), file(baiNormal), file(bamTumor), file(baiTumor), file(mergedPileup) from pairBamCalculateContamination
- 
+
      output:
         set idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${idSampleTumor}_contamination.table") into contaminationTable
 
     when: 'mutect2' in tools
 
-    script:   
+    script:
              """
     # calculate contamination
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
@@ -2347,7 +2350,7 @@ process FilterMutect2Calls {
         file(germlineResource) from ch_germline_resource
         file(germlineResourceIndex) from ch_germline_resource_tbi
         file(intervals) from ch_intervals
-      
+
                   output:
         set val("Mutect2"), idPatient, idSamplePair, file("Mutect2_filtered_${idSamplePair}.vcf.gz"), file("Mutect2_filtered_${idSamplePair}.vcf.gz.tbi"), file("Mutect2_filtered_${idSamplePair}.vcf.gz.filteringStats.tsv") into filteredMutect2Output
 
