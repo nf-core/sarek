@@ -1,14 +1,22 @@
 #!/usr/bin/env nextflow
+
 /*
-========================================================================================
-                         nf-core/sarek
-========================================================================================
- nf-core/sarek Analysis Pipeline.
+================================================================================
+                                  nf-core/sarek
+================================================================================
+Started March 2016.
+Ported to nf-core May 2019.
+--------------------------------------------------------------------------------
+nf-core/sarek:
+  An open-source analysis pipeline to detect germline or somatic variants
+  from whole genome or targeted sequencing
+--------------------------------------------------------------------------------
  @Homepage
- https://sarek.scilifelab.se/
+ https://nf-co.re/sarek
+--------------------------------------------------------------------------------
  @Documentation
- https://github.com/nf-core/sarek/README.md
-----------------------------------------------------------------------------------------
+ https://nf-co.re/sarek/docs
+--------------------------------------------------------------------------------
 */
 
 def helpMessage() {
@@ -20,19 +28,19 @@ Usage:
       you're reading it
 
 DOWNLOAD CACHE:
-  nextflow run build.nf --download_cache [--snpeff_cache <pathToSNPEFFcache>] [--vep_cache <pathToVEPcache>]
-                                         [--cadd_cache <pathToCADDcache> --cadd_version <CADD Version>]
-    --download_cache
-      Will download specified cache
+  nextflow run download_cache.nf [--snpeff_cache <pathToSNPEFFcache>] [--vep_cache <pathToVEPcache>]
+                                 [--cadd_cache <pathToCADDcache> --cadd_version <CADD Version>]
     --snpeff_cache <Directoy>
       Specify path to snpEff cache
       If none, will use snpEff version specified in configuration
-      Will use snpEff cache version for ${params.genome}: ${params.genomes[params.genome].snpeffDb} in igenomes configuration file:
+      Will use snpEff cache version for ${params.genome}: ${params.genomes[params.genome].snpeff_db} in igenomes configuration file:
       Change with --genome or in configuration files
     --vep_cache <Directoy>
       Specify path to VEP cache
       If none, will use VEP version specified in configuration
-      Will use VEP cache version for ${params.genome}: ${params.genomes[params.genome].vepCacheVersion} in igenomes configuration file:
+      Will from th iGenomes configuration file for ${params.genome}:
+      VEP cache version: ${params.genomes[params.genome].vep_cache_version}
+      and species ${params.genomes[params.genome].species}
       Change with --genome or in configuration files
     --cadd_cache <Directoy>
       Specify path to CADD cache
@@ -49,15 +57,6 @@ DOWNLOAD CACHE:
 // Show help message
 if (params.help) exit 0, helpMessage()
 
-// Default value for params
-params.build = null
-params.offline = null
-params.cadd_cache = null
-params.cadd_version = 'v1.5'
-params.genome = 'GRCh38'
-params.snpeff_cache = null
-params.vep_cache = null
-
 // Check if genome exists in the config file
 if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
@@ -68,16 +67,6 @@ if (params.genomes && params.genome && !params.genomes.containsKey(params.genome
 custom_runName = params.name
 if ( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
   custom_runName = workflow.runName
-}
-
-if (workflow.profile.contains('awsbatch')) {
-  // AWSBatch sanity checking
-  if (!params.awsqueue || !params.awsregion) exit 1, "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
-  // Check outdir paths to be S3 buckets if running on AWSBatch
-  // related: https://github.com/nextflow-io/nextflow/issues/813
-  if (!params.outdir.startsWith('s3:')) exit 1, "Outdir not on S3 - specify S3 Bucket to run on AWSBatch!"
-  // Prevent trace files to be stored on S3 since S3 does not support rolling files.
-  if (params.tracedir.startsWith('s3:')) exit 1, "Specify a local tracedir or run without trace! S3 cannot be used for tracefiles."
 }
 
 // Header log info
