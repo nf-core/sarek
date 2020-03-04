@@ -183,7 +183,7 @@ process BuildCache_VEP {
   """
 }
 
-vep_cache_version = vep_cache_version.dump(tag: 'vep_cache_version')
+vep_cache_out = vep_cache_out.dump(tag: 'vep_cache_out')
 
 caddFileToDownload = (params.cadd_version) && (params.genome == "GRCh37" || params.genome == "GRCh38") ?
   Channel.from(
