@@ -1,14 +1,22 @@
 #!/usr/bin/env nextflow
+
 /*
-========================================================================================
-                         nf-core/sarek
-========================================================================================
- nf-core/sarek Analysis Pipeline.
+================================================================================
+                                  nf-core/sarek
+================================================================================
+Started March 2016.
+Ported to nf-core May 2019.
+--------------------------------------------------------------------------------
+nf-core/sarek:
+  An open-source analysis pipeline to detect germline or somatic variants
+  from whole genome or targeted sequencing
+--------------------------------------------------------------------------------
  @Homepage
- https://sarek.scilifelab.se/
+ https://nf-co.re/sarek
+--------------------------------------------------------------------------------
  @Documentation
- https://github.com/nf-core/sarek/README.md
-----------------------------------------------------------------------------------------
+ https://nf-co.re/sarek/docs
+--------------------------------------------------------------------------------
 */
 
 def helpMessage() {
@@ -19,20 +27,19 @@ Usage:
     --help
       you're reading it
 
-DOWNLOAD CACHE:
-  nextflow run build.nf --download_cache [--snpeff_cache <pathToSNPEFFcache>] [--vep_cache <pathToVEPcache>]
-                                         [--cadd_cache <pathToCADDcache> --cadd_version <CADD Version>]
-    --download_cache
-      Will download specified cache
+  nextflow run download_cache.nf [--snpeff_cache <pathToSNPEFFcache>] [--vep_cache <pathToVEPcache>]
+                                 [--cadd_cache <pathToCADDcache> --cadd_version <CADD Version>]
     --snpeff_cache <Directoy>
       Specify path to snpEff cache
       If none, will use snpEff version specified in configuration
-      Will use snpEff cache version for ${params.genome}: ${params.genomes[params.genome].snpeffDb} in igenomes configuration file:
+      Will use snpEff cache version for ${params.genome}: ${params.genomes[params.genome].snpeff_db} in igenomes configuration file:
       Change with --genome or in configuration files
     --vep_cache <Directoy>
       Specify path to VEP cache
       If none, will use VEP version specified in configuration
-      Will use VEP cache version for ${params.genome}: ${params.genomes[params.genome].vepCacheVersion} in igenomes configuration file:
+      Will from th iGenomes configuration file for ${params.genome}:
+      VEP cache version: ${params.genomes[params.genome].vep_cache_version}
+      and species ${params.genomes[params.genome].species}
       Change with --genome or in configuration files
     --cadd_cache <Directoy>
       Specify path to CADD cache
@@ -49,30 +56,6 @@ DOWNLOAD CACHE:
 // Show help message
 if (params.help) exit 0, helpMessage()
 
-// Default value for params
-params.build = null
-params.offline = null
-params.cadd_cache = null
-params.cadd_version = 'v1.5'
-params.genome = 'GRCh37'
-params.snpeff_cache = null
-params.vep_cache = null
-
-ch_referencesFiles = Channel.empty()
-
-pathToSource = params.offline ? "data/reference/" : "https://github.com/nf-core/test-datasets/raw/sarek/reference"
-
-if (params.build) ch_referencesFiles = ch_referencesFiles.mix(
-  Channel.fromPath("${pathToSource}/1000G_phase1.indels.b37.small.vcf.gz"),
-  Channel.fromPath("${pathToSource}/1000G_phase3_20130502_SNP_maf0.3.small.loci"),
-  Channel.fromPath("${pathToSource}/1000G_phase3_20130502_SNP_maf0.3.small.loci.gc"),
-  Channel.fromPath("${pathToSource}/Mills_and_1000G_gold_standard.indels.b37.small.vcf.gz"),
-  Channel.fromPath("${pathToSource}/dbsnp_138.b37.small.vcf.gz"),
-  Channel.fromPath("${pathToSource}/human_g1k_v37_decoy.small.fasta.gz"),
-  Channel.fromPath("${pathToSource}/small.intervals"))
-
-ch_referencesFiles = ch_referencesFiles.dump(tag:'Reference Files')
-
 // Check if genome exists in the config file
 if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
@@ -85,15 +68,12 @@ if ( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
   custom_runName = workflow.runName
 }
 
-if ( workflow.profile == 'awsbatch') {
-  // AWSBatch sanity checking
-  if (!params.awsqueue || !params.awsregion) exit 1, "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
-  // Check outdir paths to be S3 buckets if running on AWSBatch
-  // related: https://github.com/nextflow-io/nextflow/issues/813
-  if (!params.outdir.startsWith('s3:')) exit 1, "Outdir not on S3 - specify S3 Bucket to run on AWSBatch!"
-  // Prevent trace files to be stored on S3 since S3 does not support rolling files.
-  if (workflow.tracedir.startsWith('s3:')) exit 1, "Specify a local tracedir or run without trace! S3 cannot be used for tracefiles."
-}
+params.snpeff_db = params.genome ? params.genomes[params.genome].snpeff_db ?: null : null
+params.species = params.genome ? params.genomes[params.genome].species ?: null : null
+params.vep_cache_version = params.genome ? params.genomes[params.genome].vep_cache_version ?: null : null
+
+ch_snpeff_db = params.snpeff_db ? Channel.value(params.snpeff_db) : "null"
+ch_vep_cache_version = params.vep_cache_version ? Channel.value(params.vep_cache_version) : "null"
 
 // Header log info
 log.info nfcoreHeader()
@@ -102,6 +82,11 @@ if (workflow.revision) summary['Pipeline Release'] = workflow.revision
 summary['Run Name']         = custom_runName ?: workflow.runName
 summary['Max Resources']    = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
 if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
+if (params.snpeff_db)               summary['snpeffDb']              = params.snpeff_db
+if (params.vep_cache_version)       summary['vepCacheVersion']       = params.vep_cache_version
+if (params.species)                 summary['species']               = params.species
+if (params.snpeff_cache)            summary['snpEff_cache']          = params.snpeff_cache
+if (params.vep_cache)               summary['vep_cache']             = params.vep_cache
 summary['Output dir']       = params.outdir
 summary['Launch dir']       = workflow.launchDir
 summary['Working dir']      = workflow.workDir
@@ -150,47 +135,49 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 */
 
 process BuildCache_snpEff {
-  tag {snpeffDb}
+  tag {snpeff_db}
 
-  publishDir params.snpeff_cache, mode: params.publishDirMode
+  publishDir params.snpeff_cache, mode: params.publish_dir_mode
 
   input:
-    val snpeffDb from Channel.value(params.genomes[params.genome].snpeffDb)
+    val snpeff_db from ch_snpeff_db
 
   output:
-    file("*")
+    file("*") into snpeff_cache_out
 
-  when: params.snpeff_cache && params.download_cache && !params.offline
+  when: params.snpeff_cache
 
   script:
   """
-  snpEff download -v ${snpeffDb} -dataDir \${PWD}
+  snpEff download -v ${snpeff_db} -dataDir \${PWD}
   """
 }
 
-process BuildCache_VEP {
-  tag {"${species}_${cache_version}_${genome}"}
+snpeff_cache_out = snpeff_cache_out.dump(tag: 'snpeff_cache_out')
 
-  publishDir "${params.vep_cache}/${species}", mode: params.publishDirMode
+process BuildCache_VEP {
+  tag {"${species}_${vep_cache_version}_${genome}"}
+
+  publishDir "${params.vep_cache}/${species}", mode: params.publish_dir_mode
 
   input:
-    val cache_version from Channel.value(params.genomes[params.genome].vepCacheVersion)
+    val vep_cache_version from ch_vep_cache_version
+    val species from Channel.value(params.species)
 
   output:
-    file("*")
+    file("*") into vep_cache_out
 
-  when: params.vep_cache && params.download_cache && !params.offline
+  when: params.vep_cache
 
   script:
   genome = params.genome
-  species = genome =~ "GRCh3*" ? "homo_sapiens" : genome =~ "GRCm3*" ? "mus_musculus" : ""
   """
   vep_install \
     -a cf \
     -c . \
     -s ${species} \
     -y ${genome} \
-    --CACHE_VERSION ${cache_version} \
+    --CACHE_VERSION ${vep_cache_version} \
     --CONVERT \
     --NO_HTSLIB --NO_TEST --NO_BIOPERL --NO_UPDATE
 
@@ -199,7 +186,9 @@ process BuildCache_VEP {
   """
 }
 
-caddFileToDownload = (params.cadd_version) && (params.genome == "GRCh37" || params.genome == "GRCh38") ?
+vep_cache_out = vep_cache_out.dump(tag: 'vep_cache_out')
+
+caddFileToDownload = (params.cadd_cache && params.cadd_version) && (params.genome == "GRCh37" || params.genome == "GRCh38") ?
   Channel.from(
     "https://krishna.gs.washington.edu/download/CADD/${params.cadd_version}/${params.genome}/InDels_inclAnno.tsv.gz",
     "https://krishna.gs.washington.edu/download/CADD/${params.cadd_version}/${params.genome}/whole_genome_SNVs_inclAnno.tsv.gz"
@@ -208,15 +197,15 @@ caddFileToDownload = (params.cadd_version) && (params.genome == "GRCh37" || para
 process DownloadCADD {
   tag {caddFile}
 
-  publishDir "${params.cadd_cache}/${params.genome}", mode: params.publishDirMode
+  publishDir "${params.cadd_cache}/${params.genome}", mode: params.publish_dir_mode
 
   input:
-    val(caddFile) from caddFileToDownload
+    val caddFile from caddFileToDownload
 
   output:
-    set file("*.tsv.gz"), file("*.tsv.gz.tbi")
+    set file("*.tsv.gz"), file("*.tsv.gz.tbi") into cadd_files
 
-  when: params.cadd_cache && params.download_cache && !params.offline
+  when: (params.cadd_cache && params.cadd_version) && (params.genome == "GRCh37" || params.genome == "GRCh38")
 
   script:
   """
@@ -224,6 +213,8 @@ process DownloadCADD {
   wget --quiet ${caddFile}.tbi
   """
 }
+
+cadd_files = cadd_files.dump(tag: 'cadd_files')
 
 def nfcoreHeader(){
     // Log colors ANSI codes
@@ -275,17 +266,4 @@ def checkHostname(){
             }
         }
     }
-}
-
-/*
-================================================================================
-=                               F U N C T I O N S                              =
-================================================================================
-*/
-
-def checkFile(it) {
-  // Check file existence
-  final f = file(it)
-  if (!f.exists()) exit 1, "Missing file: ${it}, see --help for more information"
-  return true
 }
