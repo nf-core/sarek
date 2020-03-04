@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#87](https://github.com/nf-core/sarek/pull/87) - Add `GATK BaseRecalibrator` plot to `MultiQC` report
 - [#115](https://github.com/nf-core/sarek/pull/115) - Add [@szilvajuhos](https://github.com/szilvajuhos) abstract for ESHG2020
 - [#117](https://github.com/nf-core/sarek/pull/117) - Add `Trim Galore` possibilities to Sarek
+- [#141](https://github.com/nf-core/sarek/pull/141) - Add containers for `WBcel235`
 
 ### `Changed`
 
@@ -33,6 +34,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#131](https://github.com/nf-core/sarek/pull/131) - Update `Manta` to `1.6.0`
 - [#131](https://github.com/nf-core/sarek/pull/131) - Update `Qualimap` to `2.2.2d`
 - [#131](https://github.com/nf-core/sarek/pull/131) - Update `VEP` to `99.2`
+- [#141](https://github.com/nf-core/sarek/pull/141) - Update `snpEff` cache version to `87` for `GRCh37`
+- [#141](https://github.com/nf-core/sarek/pull/141) - Update `snpEff` cache version to `92` for `GRCh38`
+- [#141](https://github.com/nf-core/sarek/pull/141) - Update `VEP` databases to `99`
 
 ### `Fixed`
 
@@ -41,10 +45,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#110](https://github.com/nf-core/sarek/pull/110) - Fix `snpEff` report issue cf [#106](https://github.com/nf-core/sarek/issues/106)
 - [#126](https://github.com/nf-core/sarek/pull/126) - Fix `iGenomes` paths
 - [#127](https://github.com/nf-core/sarek/pull/127), [#128](https://github.com/nf-core/sarek/pull/128) - Fix `ASCAT`
-- [#129](https://github.com/nf-core/sarek/pull/129)- Fix issue with Channel `channel ch_software_versions_yaml`
-- [#129](https://github.com/nf-core/sarek/pull/129)- Apply @drpatelh fix for `mardown_to_html.py` compatibility with Python 2
-- [#129](https://github.com/nf-core/sarek/pull/129)- Removed `Python` `3.7.3` from conda environment due to incompatibility
-- [#129](https://github.com/nf-core/sarek/pull/129)- Change ascii characters that were not supported from the `output.md` docs
+- [#129](https://github.com/nf-core/sarek/pull/129) - Fix issue with Channel `channel ch_software_versions_yaml`
+- [#129](https://github.com/nf-core/sarek/pull/129) - Apply @drpatelh fix for `mardown_to_html.py` compatibility with Python 2
+- [#129](https://github.com/nf-core/sarek/pull/129) - Removed `Python` `3.7.3` from conda environment due to incompatibility
+- [#129](https://github.com/nf-core/sarek/pull/129) - Change ascii characters that were not supported from the `output.md` docs
+- [#141](https://github.com/nf-core/sarek/pull/141) - Fix `download_cache.nf` script to download cache for `snpEff` and `VEP`
 
 ### `Deprecated`
 
