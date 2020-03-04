@@ -156,7 +156,7 @@ process BuildCache_snpEff {
 snpeff_cache_out = snpeff_cache_out.dump(tag: 'snpeff_cache_out')
 
 process BuildCache_VEP {
-  tag {"${species}_${cache_version}_${genome}"}
+  tag {"${species}_${vep_cache_version}_${genome}"}
 
   publishDir "${params.vep_cache}/${species}", mode: params.publish_dir_mode
 
