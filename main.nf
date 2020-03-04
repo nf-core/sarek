@@ -1024,6 +1024,10 @@ process TrimGalore {
     nextseq = params.trim_nextseq > 0 ? "--nextseq ${params.trim_nextseq}" : ''
     """
     trim_galore --cores $cores --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $nextseq  ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
+    mv *val_1_fastqc.html "${idSample}_${idRun}_R1.trimmed_fastqc.html"
+    mv *val_2_fastqc.html "${idSample}_${idRun}_R2.trimmed_fastqc.html"
+    mv *val_1_fastqc.zip "${idSample}_${idRun}_R1.trimmed_fastqc.zip"
+    mv *val_2_fastqc.zip "${idSample}_${idRun}_R2.trimmed_fastqc.zip"
     """
   }
 } else {
@@ -2660,7 +2664,7 @@ process ConvertAlleleCounts {
     script:
     gender = genderMap[idPatient]
     """
-    Rscript ${workflow.projectDir}/bin/convertAlleleCounts.r ${idSampleTumor} ${alleleCountTumor} ${idSampleNormal} ${alleleCountNormal} ${gender}
+    convertAlleleCounts.r ${idSampleTumor} ${alleleCountTumor} ${idSampleNormal} ${alleleCountNormal} ${gender}
     """
 }
 
@@ -2689,7 +2693,7 @@ process Ascat {
     purity_ploidy = (params.ascat_purity && params.ascat_ploidy) ? "--purity ${params.ascat_purity} --ploidy ${params.ascat_ploidy}" : ""
     """
     for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
-    Rscript ${workflow.projectDir}/bin/run_ascat.r \
+    run_ascat.r \
         --tumorbaf ${bafTumor} \
         --tumorlogr ${logrTumor} \
         --normalbaf ${bafNormal} \
@@ -3276,6 +3280,7 @@ process MultiQC {
         file ('bamQC/*') from bamQCReport.collect().ifEmpty([])
         file ('BCFToolsStats/*') from bcftoolsReport.collect().ifEmpty([])
         file ('FastQC/*') from fastQCReport.collect().ifEmpty([])
+        file ('TrimmedFastQC/*') from trimGaloreReport.collect().ifEmpty([])
         file ('MarkDuplicates/*') from markDuplicatesReport.collect().ifEmpty([])
         file ('DuplicateMarked/*.recal.table') from baseRecalibratorReport.collect().ifEmpty([])
         file ('SamToolsStats/*') from samtoolsStatsReport.collect().ifEmpty([])

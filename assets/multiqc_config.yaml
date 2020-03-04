@@ -15,7 +15,15 @@ report_section_order:
 export_plots: true
 
 top_modules:
-- 'fastqc'
+- 'fastqc':
+     name: 'FastQC'
+     path_filters_exclude: 
+        - '*trimmed_fastqc*'
+- 'fastqc':
+     name: 'FastQC after trimming'
+     info: 'FastQC after applying TrimGalore.'
+     path_filters: 
+        - '*trimmed_fastqc*'
 - 'picard'
 - 'gatk'
 - 'samtools'
