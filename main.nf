@@ -1186,12 +1186,23 @@ process CallMolecularConsensusReads {
 
 // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
 
-inputPairReads = outputPairReadsTrimGalore.mix(inputBam)
-inputPairReads = inputPairReads.dump(tag:'INPUT')
+if(params.umi){
+  (inputPairReads, inputPairReadsSentieon) = consensus_bam_ch.into(2)
 
-(inputPairReads, inputPairReadsSentieon) = inputPairReads.into(2)
-if (params.sentieon) inputPairReads.close()
-else inputPairReadsSentieon.close()
+  inputPairReads = inputPairReads.dump(tag:'INPUT')
+
+  if (params.sentieon) inputPairReads.close()
+  else inputPairReadsSentieon.close()
+}
+else {
+  inputPairReads = outputPairReadsTrimGalore.mix(inputBam)
+  inputPairReads = inputPairReads.dump(tag:'INPUT')
+
+  (inputPairReads, inputPairReadsSentieon) = inputPairReads.into(2)
+  if (params.sentieon) inputPairReads.close()
+  else inputPairReadsSentieon.close()
+}
+
 
 process MapReads {
     label 'cpus_max'
