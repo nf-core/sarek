@@ -185,7 +185,7 @@ process BuildCache_VEP {
 
 vep_cache_out = vep_cache_out.dump(tag: 'vep_cache_out')
 
-caddFileToDownload = (params.cadd_version) && (params.genome == "GRCh37" || params.genome == "GRCh38") ?
+caddFileToDownload = (params.cadd_cache && params.cadd_version) && (params.genome == "GRCh37" || params.genome == "GRCh38") ?
   Channel.from(
     "https://krishna.gs.washington.edu/download/CADD/${params.cadd_version}/${params.genome}/InDels_inclAnno.tsv.gz",
     "https://krishna.gs.washington.edu/download/CADD/${params.cadd_version}/${params.genome}/whole_genome_SNVs_inclAnno.tsv.gz"
@@ -202,7 +202,7 @@ process DownloadCADD {
   output:
     set file("*.tsv.gz"), file("*.tsv.gz.tbi") into cadd_files
 
-  when: params.cadd_cache
+  when: (params.cadd_cache && params.cadd_version) && (params.genome == "GRCh37" || params.genome == "GRCh38")
 
   script:
   """
