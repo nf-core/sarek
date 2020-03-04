@@ -30,4 +30,6 @@ dependencies:
   - bioconda::trim-galore=0.6.5
   - bioconda::vcfanno=0.3.2
   - bioconda::vcftools=0.1.16
-  - conda-forge::pigz=2.3.4 
+  - conda-forge::pigz=2.3.4
+  - bioconda::fgbio=1.1.0
+  - bioconda::samblaster=0.1.24
