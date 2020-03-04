@@ -1096,12 +1096,12 @@ process UMIFastqToBAM {
 if (params.umi){
   (ch_bwa, ch_bwa_sentieon, ch_bwa_umi) = ch_bwa.into(3)
   (ch_fasta, ch_fasta_sentieon, ch_fasta_umi) = ch_fasta.into(3)
-  (ch_fai, ch_fai, ch_fai_sentieon, ch_fai_umi) = ch_fai.into(3)
+  (ch_fai, ch_fai_sentieon, ch_fai_umi) = ch_fai.into(3)
 }
 else {
   (ch_bwa, ch_bwa_sentieon) = ch_bwa.into(2)
   (ch_fasta, ch_fasta_sentieon) = ch_fasta.into(2)
-  (ch_fai, ch_fai, ch_fai_sentieon) = ch_fai.into(2)
+  (ch_fai, ch_fai_sentieon) = ch_fai.into(2)
 }
 
 
