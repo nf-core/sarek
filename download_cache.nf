@@ -72,6 +72,9 @@ params.snpeff_db = params.genome ? params.genomes[params.genome].snpeff_db ?: nu
 params.species = params.genome ? params.genomes[params.genome].species ?: null : null
 params.vep_cache_version = params.genome ? params.genomes[params.genome].vep_cache_version ?: null : null
 
+ch_snpeff_db = params.snpeff_db ? Channel.value(params.snpeff_db) : "null"
+ch_vep_cache_version = params.vep_cache_version ? Channel.value(params.vep_cache_version) : "null"
+
 // Header log info
 log.info nfcoreHeader()
 def summary = [:]
@@ -132,12 +135,12 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 */
 
 process BuildCache_snpEff {
-  tag {snpeffDb}
+  tag {snpeff_db}
 
   publishDir params.snpeff_cache, mode: params.publish_dir_mode
 
   input:
-    val snpeffDb from Channel.value(params.snpeff_db)
+    val snpeff_db from ch_snpeff_db
 
   output:
     file("*") into snpeff_cache_out
@@ -146,7 +149,7 @@ process BuildCache_snpEff {
 
   script:
   """
-  snpEff download -v ${snpeffDb} -dataDir \${PWD}
+  snpEff download -v ${snpeff_db} -dataDir \${PWD}
   """
 }
 
@@ -158,7 +161,7 @@ process BuildCache_VEP {
   publishDir "${params.vep_cache}/${species}", mode: params.publish_dir_mode
 
   input:
-    val vep_cache_version from Channel.value(params.vep_cache_version)
+    val vep_cache_version from ch_vep_cache_version
     val species from Channel.value(params.species)
 
   output:
@@ -197,7 +200,7 @@ process DownloadCADD {
   publishDir "${params.cadd_cache}/${params.genome}", mode: params.publish_dir_mode
 
   input:
-    val(caddFile) from caddFileToDownload
+    val caddFile from caddFileToDownload
 
   output:
     set file("*.tsv.gz"), file("*.tsv.gz.tbi") into cadd_files
