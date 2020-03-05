@@ -10,9 +10,10 @@ on:
 jobs:
     Awstest:
         runs-on: ${{ matrix.os }}
-        matrix:
-            os: ['ubuntu-latest']
-            python-version: ['3.7']
+        strategy:
+            matrix:
+                os: ['ubuntu-latest']
+                python-version: ['3.7']
         steps:
         - uses: goanpeca/setup-miniconda@v1
           with:
