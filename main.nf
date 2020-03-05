@@ -2369,7 +2369,7 @@ process FilterMutect2Calls {
 filteredMutect2Output = filteredMutect2Output.dump(tag: 'filter mutect output')
 pairBamPlatypus = pairBamPlatypus.dump(tag: 'platypus')
 
-processs PlatypusCalling {
+process PlatypusCalling {
 
     tag {idPatient + "_" + idSampleTumor}
     
