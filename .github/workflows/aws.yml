@@ -14,10 +14,7 @@ jobs:
     name: Install awscli
     runs-on: ubuntu-latest
     steps:
-      - uses: goanpeca/setup-miniconda@v1
-        with:
-          auto-update-conda: true
+      - uses: actions/checkout@v2
           python-version: 3.7
-      - name: Conda info
+      - name: Conda install awscli
         run: conda install -c conda-forge awscli 
-
