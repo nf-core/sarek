@@ -30,28 +30,27 @@ def helpMessage() {
     nextflow run nf-core/sarek --input sample.tsv -profile docker
 
     Mandatory arguments:
-      -profile                  [str] Configuration profile to use
-                                      Can use multiple (comma separated)
-                                      Available: conda, docker, singularity, test and more
       --input                  [file] Path to input TSV file on mapping, prepare_recalibration, recalibrate, variant_calling and Control-FREEC steps
-                                      Multiple TSV files can be specified with quotes
+                                      Multiple TSV files can be specified surrounded with quotes
                                       Works also with the path to a directory on mapping step with a single germline sample only
-                                      Alternatively, path to VCF input file on annotate step  
-                                      Available: conda, docker, singularity, test and more
+                                      Alternatively, path to VCF input file on annotate step
+                                      Multiple VCF files can be specified surrounded with quotes
+    -profile                    [str] Configuration profile to use.  Can use multiple (comma separated)
+                                      Available: conda, docker, singularity, test, awsbatch, <institute>  and more
       --step                   [list] Specify starting step
                                       Available: mapping, prepare_recalibration, variant_calling, annotate, Control-FREEC
                                       Default: ${params.step}
       --genome                  [str] Name of iGenomes reference
                                       Default: ${params.genome}
 
-    Options:
+    Main Options:
       --help                   [bool] You're reading it
       --no_intervals           [bool] Disable usage of intervals
                                       Intervals are part of the genome chopped up, used to speed up preprocessing and variant callilng  
       --nucleotides_per_second  [int] To estimate interval size
                                       Default: ${params.nucleotides_per_second}
-      --sentieon               [bool] If sentieon is available, will enable it for Preprocessing, and Variant calling
-                                      Adds the following tools for --tools: DNAseq, DNAscope and TNscope
+      --sentieon               [bool] If sentieon is available, will enable it for Preprocessing, and Variant Calling
+                                      Adds the following options for --tools: DNAseq, DNAscope and TNscope
       --skip_qc                 [str] Specify which QC tools to skip when running Sarek (multiple separated with commas)
                                       Available: all, bamQC, BaseRecalibrator, BCFtools, Documentation
                                       FastQC, MultiQC, samtools, vcftools, versions
@@ -60,7 +59,7 @@ def helpMessage() {
                                       Default: None
       --tools                   [str] Specify tools to use for variant calling (multiple separated with commas):
                                       Available: ASCAT, CNVkit, ControlFREEC, FreeBayes, HaplotypeCaller
-                                      Manta, mpileup, MSIsensor, Mutect2, Platypus, Strelka, TIDDIT
+                                      Manta, mpileup, MSIsensor, Mutect2, Strelka, TIDDIT
                                       and/or for annotation:
                                       snpEff, VEP, merge
                                       Default: None
@@ -2723,7 +2722,11 @@ process FilterMutect2Calls {
 filteredMutect2Output = filteredMutect2Output.dump(tag: 'filter mutect output')
 pairBamPlatypus = pairBamPlatypus.dump(tag: 'platypus')
 
+<<<<<<< HEAD
 process PlatypusCalling {
+=======
+processs PlatypusCalling {
+>>>>>>> add platypus process to main.nf
 
     tag {idPatient + "_" + idSampleTumor}
     
@@ -4077,12 +4080,21 @@ def checkParameterList(list, realList) {
 // Define list of available tools to annotate
 def defineAnnoList() {
     return [
+<<<<<<< HEAD
         'haplotypecaller',
         'manta',
         'mutect2',
         'platypus',
         'strelka',
         'tiddit'
+=======
+        'HaplotypeCaller',
+        'Manta',
+        'Mutect2',
+        'platypus',
+        'Strelka',
+        'TIDDIT'
+>>>>>>> add platypus process to main.nf
     ]
 }
 
