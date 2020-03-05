@@ -37,6 +37,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#141](https://github.com/nf-core/sarek/pull/141) - Update `snpEff` cache version to `87` for `GRCh37`
 - [#141](https://github.com/nf-core/sarek/pull/141) - Update `snpEff` cache version to `92` for `GRCh38`
 - [#141](https://github.com/nf-core/sarek/pull/141) - Update `VEP` databases to `99`
+- [#143](https://github.com/nf-core/sarek/pull/143) - Revert `snpEff` cache version to `75` for `GRCh37`
+- [#143](https://github.com/nf-core/sarek/pull/143) - Revert `snpEff` cache version to `86` for `GRCh38`
 
 ### `Fixed`
 
@@ -50,6 +52,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#129](https://github.com/nf-core/sarek/pull/129) - Removed `Python` `3.7.3` from conda environment due to incompatibility
 - [#129](https://github.com/nf-core/sarek/pull/129) - Change ascii characters that were not supported from the `output.md` docs
 - [#141](https://github.com/nf-core/sarek/pull/141) - Fix `download_cache.nf` script to download cache for `snpEff` and `VEP`
+- [#143](https://github.com/nf-core/sarek/pull/143) - Fix annotation CI testing with `snpEff` and `VEP`
 
 ### `Deprecated`
 
