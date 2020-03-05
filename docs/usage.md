@@ -33,6 +33,9 @@
   - [--no_intervals](#--no_intervals)
   - [--target_bed](#--target_bed)
   - [--targetBED](#--targetbed)
+  - [--umi](#--umi)
+  - [--read_structure1](#--read_structure1)
+  - [--read_structure2](#--read_structure2)
 - [Reference genomes](#reference-genomes)
   - [--genome (using iGenomes)](#--genome-using-igenomes)
   - [--ac_loci](#--ac_loci)
@@ -355,6 +358,23 @@ Use this to specify the target BED file for targeted or whole exome sequencing.
 
 > :warning: This params is deprecated -- it will be removed in a future release.
 > Please check: [`--target_bed`](#--target_bed)
+
+### --umi
+
+If provided, UMIs steps will be run to extract and annotate the reads with UMIs and create consensus reads: this part of the pipeline uses *FGBIO* to convert the fastq files into a unmapped BAM, where reads are tagged with the UMIs extracted from the fastq sequences. In order to allow the correct tagging, the UMI sequence must be contained in the read sequence itself, and not in the FASTQ name.
+Following this step, the uBam is aligned and reads are then grouped based on mapping position and UMI tag.
+Finally, reads in the same groups are collapsed to create a consensus read. To create consensus, we have chosen to use the *adjacency method* [ref](https://cgatoxford.wordpress.com/2015/08/14/unique-molecular-identifiers-the-problem-the-solution-and-the-proof/).
+In order for the correct tagging to be performed, a read structure needs to be  specified as indicated below.
+
+### --read_structure1
+
+When reads contain UMIs a structure for read 1 should be provided, to allow removal of UMI sequence from the read and correct annotation of the bam file. The read structure follows a format adopted by different tools, and described [here](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures)
+
+
+### --read_structure2
+
+When reads contain UMIs a structure for read 2 should be provided, to allow removal of UMI sequence from the read and correct annotation of the bam file. The read structure follows a format adopted by different tools, and described [here](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures) 
+
 
 ## Reference genomes
 
