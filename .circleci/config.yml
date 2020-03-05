@@ -5,7 +5,7 @@ jobs:
       - image: circleci/buildpack-deps:stretch
     environment:
       GENOME: GRCh37
-      SNPEFF_CACHE_VERSION: "87"
+      SNPEFF_CACHE_VERSION: "75"
     steps:
       - checkout
       - setup_remote_docker
@@ -20,7 +20,7 @@ jobs:
     << : *buildsnpeff
     environment:
       GENOME: GRCh38
-      SNPEFF_CACHE_VERSION: "92"
+      SNPEFF_CACHE_VERSION: "86"
 
   snpeffgrcm38:
     << : *buildsnpeff
@@ -60,29 +60,24 @@ jobs:
     << : *buildvep
     environment:
       GENOME: GRCh38
-      SPECIES: homo_sapiens
-      VEP_VERSION: "99"
 
   vepgrcm38:
     << : *buildvep
     environment:
       GENOME: GRCm38
       SPECIES: mus_musculus
-      VEP_VERSION: "99"
 
   vepcanfam3_1:
     << : *buildvep
     environment:
       GENOME: CanFam3.1
       SPECIES: canis_familiaris
-      VEP_VERSION: "99"
 
   vepwbcel235:
     << : *buildvep
     environment:
       GENOME: WBcel235
       SPECIES: caenorhabditis_elegans
-      VEP_VERSION: "99"
 
 workflows:
   version: 2
