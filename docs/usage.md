@@ -372,7 +372,7 @@ When processing UMIs, a read structure should always be provided for each of the
 
 ### --read_structure2
 
-When reads contain UMIs a structure for read 2 should be provided, to allow removal of UMI sequence from the read and correct annotation of the bam file. The read structure follows a format adopted by different tools, and described [here](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures) 
+When processing UMIs, a read structure should always be provided for each of the fastq files, to allow the correct annotation of the bam file. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length). The read structure follows a format adopted by different tools, and described [here](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures)
 
 ## Reference genomes
 
