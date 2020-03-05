@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        tools: [snpeff, VEP]
+        tools: [snpeff, vep]
         species: [WBcel235]
     steps:
       - uses: actions/checkout@v2
