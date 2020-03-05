@@ -53,7 +53,7 @@ def helpMessage() {
       --target_bed             [file] Target BED file for targeted or whole exome sequencing
       --tools                   [str] Specify tools to use for variant calling:
                                       Available: ASCAT, ControlFREEC, FreeBayes, HaplotypeCaller
-                                      Manta, mpileup, Mutect2, Strelka, TIDDIT
+                                      Manta, mpileup, Mutect2, Platypus, Strelka, TIDDIT
                                       and/or for annotation:
                                       snpEff, VEP, merge
                                       Default: None
@@ -62,7 +62,7 @@ def helpMessage() {
                                       FastQC, MultiQC, samtools, vcftools, versions
                                       Default: None
       --annotate_tools          [str] Specify from which tools Sarek will look for VCF files to annotate, only for step annotate
-                                      Available: HaplotypeCaller, Manta, Mutect2, Strelka, TIDDIT
+                                      Available: HaplotypeCaller, Manta, Mutect2, Strelka, TIDDIT, Platypus
                                       Default: None
       --sentieon               [bool] If sentieon is available, will enable it for preprocessing, and variant calling
                                       Adds the following options for --tools: DNAseq, DNAscope and TNscope
@@ -610,6 +610,7 @@ process Get_software_versions {
     freebayes --version > v_freebayes.txt 2>&1 || true
     gatk ApplyBQSR --help 2>&1 | grep Version: > v_gatk.txt 2>&1 || true
     multiqc --version &> v_multiqc.txt 2>&1 || true
+    # TODO platypus will not output a version
     qualimap --version &> v_qualimap.txt 2>&1 || true
     R --version &> v_r.txt  || true
     R -e "library(ASCAT); help(package='ASCAT')" &> v_ascat.txt
@@ -2078,7 +2079,7 @@ intervalPairBam = pairBam.spread(bedIntervals)
 bamMpileup = bamMpileup.spread(intMpileup)
 
 // intervals for Mutect2 calls, FreeBayes and pileups for Mutect2 filtering
-(pairBamMutect2, pairBamFreeBayes, pairBamPileupSummaries) = intervalPairBam.into(3)
+(pairBamMutect2, pairBamFreeBayes, pairBamPileupSummaries, pairBamPlatypus) = intervalPairBam.into(4)
 
 // STEP FREEBAYES
 
@@ -2371,6 +2372,47 @@ process FilterMutect2Calls {
         --stats ${stats} \
         -R ${fasta} \
         -O Mutect2_filtered_${idSamplePair}.vcf.gz
+    """
+}
+
+// STEP PLATYPUS VARIANT CALLING
+
+filteredMutect2Output = filteredMutect2Output.dump(tag: 'filter mutect output')
+pairBamPlatypus = pairBamPlatypus.dump(tag: 'platypus')
+
+processs PlatypusCalling {
+
+    tag {idPatient + "_" + idSampleTumor}
+    
+    publishDir "${params.outdir}/Reports/${idSample}", mode: params.publish_dir_mode,
+      saveAs: {filename ->
+        if (filename.indexOf("log") > 0) "Platypus/${filename}"
+        else null
+      }
+
+    input:
+        set variantcaller, idPatient, idSamplePair, file(mutect_filtered_vcf), file(mutect_filtered_vcf_index), file(stats) from filteredMutect2Output
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamPlatypus
+        file(fasta) from ch_fasta
+        file(intervals) from ch_intervals
+    
+    output:
+        set val("Platypus"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into platypusOutput
+        set val("Platypus"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.log") into platypusLogOutput
+    
+    when: 'platypus' in tools
+    
+    script:
+    """    
+    mv "${intervals}" "${intervals}".txt
+    platypus callVariants \
+        --refFile="${fasta}" --bamFiles="${bamNormal}","${bamtumor}" \
+        --output="${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}".vcf \
+        --source="${mutect_filtered_vcf}" \
+        --filterReadPairsWithSmallInserts=0 --maxReads=100000000 \
+        --maxVariants=100 --minPosterior=0 \
+        --nCPU=16 --regions="${intervals}".txt \
+        --logFileName "${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}".log
     """
 }
 
@@ -3605,6 +3647,7 @@ def defineAnnoList() {
         'HaplotypeCaller',
         'Manta',
         'Mutect2',
+        'platypus',
         'Strelka',
         'TIDDIT'
     ]
@@ -3650,6 +3693,7 @@ def defineToolList() {
         'merge',
         'mpileup',
         'mutect2',
+        'platypus', 
         'snpeff',
         'strelka',
         'tiddit',
