@@ -1092,26 +1092,14 @@ process UMIFastqToBAM {
 // mapping position + same UMI tag
 
 
-// first we need to duplicate the reference and indexes
-if (params.umi){
-  (ch_bwa, ch_bwa_sentieon, ch_bwa_umi) = ch_bwa.into(3)
-  (ch_fasta, ch_fasta_sentieon, ch_fasta_umi) = ch_fasta.into(3)
-  (ch_fai, ch_fai_sentieon, ch_fai_umi) = ch_fai.into(3)
-}
-else {
-  (ch_bwa, ch_bwa_sentieon) = ch_bwa.into(2)
-  (ch_fasta, ch_fasta_sentieon) = ch_fasta.into(2)
-  (ch_fai, ch_fai_sentieon) = ch_fai.into(2)
-}
-
 
 process UMIMapBamFile {
 
   input:
   set idPatient, idSample, idRun, file(convertedBam) from umi_converted_bams_ch
-  file(bwaIndex) from ch_bwa_umi
-  file(fasta) from ch_fasta_umi
-  file(fastaFai) from ch_fai_umi
+  file(bwaIndex) from ch_bwa
+  file(fasta) from ch_fasta
+  file(fastaFai) from ch_fai
 
   output:
   tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi_unsorted.bam") into umi_aligned_bams_ch
@@ -1281,9 +1269,9 @@ process SentieonMapReads {
 
     input:
         set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from inputPairReadsSentieon
-        file(bwaIndex) from ch_bwa_sentieon
-        file(fasta) from ch_fasta_sentieon
-        file(fastaFai) from ch_fai_sentieon
+        file(bwaIndex) from ch_bwa
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fai
 
     output:
         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMappedSentieon
