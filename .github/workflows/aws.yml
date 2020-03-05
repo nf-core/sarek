@@ -10,8 +10,8 @@ on:
     - '*'
 
 jobs:
-  install-conda:
-    name: Install miniconda
+  install-awscli:
+    name: Install awscli
     runs-on: ubuntu-latest
     steps:
       - uses: goanpeca/setup-miniconda@v1
@@ -20,4 +20,4 @@ jobs:
           python-version: 3.7
       - name: Conda info
         run: conda install -c conda-forge awscli 
-        
+
