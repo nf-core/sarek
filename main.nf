@@ -59,7 +59,7 @@ def helpMessage() {
                                       Default: None
       --tools                   [str] Specify tools to use for variant calling (multiple separated with commas):
                                       Available: ASCAT, CNVkit, ControlFREEC, FreeBayes, HaplotypeCaller
-                                      Manta, mpileup, MSIsensor, Mutect2, Strelka, TIDDIT
+                                      Manta, mpileup, MSIsensor, Mutect2, Platypus, Strelka, TIDDIT
                                       and/or for annotation:
                                       snpEff, VEP, merge
                                       Default: None
@@ -2719,47 +2719,128 @@ process FilterMutect2Calls {
 
 // STEP PLATYPUS VARIANT CALLING
 
-filteredMutect2Output = filteredMutect2Output.dump(tag: 'filter mutect output')
-pairBamPlatypus = pairBamPlatypus.dump(tag: 'platypus')
+(intervalFilteredMutect2Output, filteredMutect2Output) = filteredMutect2Output.into(2)
+// get rid of stats file
+intervalFilteredMutect2Output = intervalFilteredMutect2Output
+                                    .map{ caller, idPatient, idSamplePair, vcfFile, tbiFile, statsFile ->
+                                          [ idPatient, idSamplePair, vcfFile, tbiFile]}
+// split using bedIntervals
+intervalFilteredMutect2Output = intervalFilteredMutect2Output.spread(intPlatypusVCF)
+// group by patient and bed
+intervalFilteredMutect2Output = intervalFilteredMutect2Output.groupTuple(by: [0,4])
+intervalFilteredMutect2Output = intervalFilteredMutect2Output.dump(tag: 'filteredMutect2Output' )   
 
-<<<<<<< HEAD
-process PlatypusCalling {
-=======
-processs PlatypusCalling {
->>>>>>> add platypus process to main.nf
+// again split using bedIntervals
+bamPlatypus = bamPlatypus.spread(intPlatpusBam)
+bamPlatypus = bamPlatypus.dump(tag: 'spreadPlatypus')
+bamPlatypus = bamPlatypus.groupTuple(by:[0,4])
+bamPlatypus = bamPlatypus.dump(tag: 'bamPlatypus' )
 
-    tag {idPatient + "_" + idSampleTumor}
-    
-    publishDir "${params.outdir}/Reports/${idSample}", mode: params.publish_dir_mode,
-      saveAs: {filename ->
-        if (filename.indexOf("log") > 0) "Platypus/${filename}"
-        else null
-      }
+platypusInput = bamPlatypus.join(intervalFilteredMutect2Output, by: [0,4])
+platypusInput = platypusInput.dump(tag: 'platypusInput')
+
+process platypus {
+
+	label 'cpus_max'
+	label 'memory_max' 
+    tag "${idPatient}"
 
     input:
-        set variantcaller, idPatient, idSamplePair, file(mutect_filtered_vcf), file(mutect_filtered_vcf_index), file(stats) from filteredMutect2Output
-        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamPlatypus
+        set idPatient, file(intervalBed), samples, file(bams), file(bais), idSamplePair, file(mutect2Vcf), file(mutect2Tbi) from platypusInput
         file(fasta) from ch_fasta
-        file(intervals) from ch_intervals
-    
+        file(fastaFai) from ch_fai
+
     output:
-        set val("Platypus"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into platypusOutput
-        set val("Platypus"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.log") into platypusLogOutput
-    
-    when: 'platypus' in tools
-    
+        set val("Platypus"), idPatient, file("${intervalBed.baseName}_${idPatient}.vcf") into platypusOutput
+ 	
+	when:
+		'platypus' in tools
+   
     script:
-    """    
-    mv "${intervals}" "${intervals}".txt
-    platypus callVariants \
-        --refFile="${fasta}" --bamFiles="${bamNormal}","${bamtumor}" \
-        --output="${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}".vcf \
-        --source="${mutect_filtered_vcf}" \
-        --filterReadPairsWithSmallInserts=0 --maxReads=100000000 \
-        --maxVariants=100 --minPosterior=0 \
-        --nCPU=16 --regions="${intervals}".txt \
-        --logFileName "${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}".log
+	intervalsOptions = params.no_intervals ? "" : "--regions=${intervalBed}.txt"
     """
+	if [[ $intervalsOptions == "*regions*" ]]; then
+	    awk 'BEGIN{OFS=""}{print \$1,":",\$2,"-",\$3}' ${intervalBed} > ${intervalBed}.txt
+    fi
+	platypus callVariants \
+        --refFile=${fasta} --bamFiles=${bams.join(',')} \
+        --output=${intervalBed.baseName}_${idPatient}.vcf \
+        --source=${mutect2Vcf.join(',')} \
+        --filterReadPairsWithSmallInserts=0 \
+		--maxReads=100000000 \
+        --maxVariants=100 \
+		--minPosterior=0 \
+        --nCPU=${task.cpus} \
+		${intervalsOptions} \
+        --logFileName ${idPatient}_${intervalBed.baseName}.log
+    """
+}
+
+// STEP MERGING VCF - platypus
+platypusOutput = platypusOutput.groupTuple(by: [0,1])
+platypusOutput = platypusOutput.dump(tag:'platypus VCF to merge')
+
+process ConcatPlatypusVCF {
+    label 'cpus_8'
+
+    tag "${variantCaller}-${idPatient}"
+
+    input:
+        set variantCaller, idPatient, file(vcf) from platypusOutput
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
+
+    output:
+    // we have this funny *_* pattern to avoid copying the raw calls to publishdir
+        set variantCaller, idPatient, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into PlatypusVcfConcatenated
+
+    when: 'platypus' in tools
+
+    script:
+    outputFile = "${variantCaller}_${idPatient}.vcf"
+    options = params.target_bed ? "-t ${targetBED}" : ""
+    intervalsOptions = params.no_intervals ? "-n" : ""
+    """
+    concatenateVCFs.sh -i ${fastaFai} -c ${task.cpus} -o ${outputFile} ${options} ${intervalsOptions}
+    """
+}
+
+// only need patientID and normalSampleID for filterPlatypus
+
+normalBamForPlatypus = normalBamForPlatypus
+                              .map{idPatient,idSample,bamNormal,baiNormal -> [idPatient,idSample]}
+
+// shuffle the platypusOutput for join to work
+PlatypusVcfConcatenated = PlatypusVcfConcatenated
+								.map{variantCaller, idPatient, vcf, tbi -> [idPatient, vcf, tbi, variantCaller]}
+normalBamForPlatypus = normalBamForPlatypus.join(PlatypusVcfConcatenated)
+// shuffle back
+normalBamForPlatypus = normalBamForPlatypus
+								.map{idPatient, idSampleNormal, vcf, tbi, variantCaller -> [variantCaller, idPatient,idSampleNormal, vcf, tbi]}
+normalBamForPlatypus = normalBamForPlatypus.dump(tag: 'normalBamForPlatypus')
+
+process filterPlatypus {
+
+	tag "${variantCaller}-${idPatient}"
+
+	publishDir "${params.outdir}/VariantCalling/${idPatient}/${variantCaller}", mode: params.publish_dir_mode
+
+	input:
+    	set variantCaller, idPatient, idSampleNormal, file(vcf), file(tbi)from normalBamForPlatypus
+		val(tef) from ch_tef
+
+	output:
+        set variantCaller, idPatient, file("${variantCaller}_${idPatient}_filtered.vcf.gz"), file("${variantCaller}_${idPatient}_filtered.vcf.gz.tbi") into PlatypusVcfFiltered
+
+	when: 'platypus' in tools
+
+	script:
+	"""
+	bgzip -d ${vcf}
+	filter_platypus.py "${variantCaller}_${idPatient}".vcf ${idSampleNormal} ${tef}
+    bgzip  "${variantCaller}_${idPatient}"_filtered.vcf
+	tabix -p vcf "${variantCaller}_${idPatient}"_filtered.vcf.gz
+	"""
 }
 
 // STEP SENTIEON TNSCOPE
