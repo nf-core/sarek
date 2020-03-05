@@ -418,8 +418,6 @@ if (tsvPath) {
 
 (genderMap, statusMap, inputSample) = extractInfos(inputSample)
 
-
-
 /*
 ================================================================================
                                CHECKING REFERENCES
