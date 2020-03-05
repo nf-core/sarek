@@ -2632,11 +2632,11 @@ alleleCountOutTumor = Channel.create()
 alleleCounterOut
     .choice(alleleCountOutTumor, alleleCountOutNormal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
 
-alleleCounterOut = alleleCountOutNormal.combine(alleleCountOutTumor)
+alleleCounterOut = alleleCountOutNormal.combine(alleleCountOutTumor, by:0)
 
 alleleCounterOut = alleleCounterOut.map {
     idPatientNormal, idSampleNormal, alleleCountOutNormal,
-    idPatientTumor, idSampleTumor, alleleCountOutTumor ->
+    idSampleTumor, alleleCountOutTumor ->
     [idPatientNormal, idSampleNormal, idSampleTumor, alleleCountOutNormal, alleleCountOutTumor]
 }
 
