@@ -3601,6 +3601,7 @@ def defineStepList() {
 def defineToolList() {
     return [
         'ascat',
+        'cnvkit',
         'controlfreec',
         'dnascope',
         'dnaseq',
