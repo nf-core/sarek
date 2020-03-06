@@ -1920,12 +1920,13 @@ process HaplotypeCaller {
     when: 'haplotypecaller' in tools
 
     script:
+    intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
     """
     gatk --java-options "-Xmx${task.memory.toGiga()}g -Xms6000m -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10" \
         HaplotypeCaller \
         -R ${fasta} \
         -I ${bam} \
-        -L ${intervalBed} \
+        ${intervalsOptions} \
         -D ${dbsnp} \
         -O ${intervalBed.baseName}_${idSample}.g.vcf \
         -ERC GVCF
@@ -1957,6 +1958,7 @@ process GenotypeGVCFs {
 
     script:
     // Using -L is important for speed and we have to index the interval files also
+    intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
         IndexFeatureFile \
@@ -1965,7 +1967,7 @@ process GenotypeGVCFs {
     gatk --java-options -Xmx${task.memory.toGiga()}g \
         GenotypeGVCFs \
         -R ${fasta} \
-        -L ${intervalBed} \
+        ${intervalsOptions} \
         -D ${dbsnp} \
         -V ${gvcf} \
         -O ${intervalBed.baseName}_${idSample}.vcf
@@ -2255,6 +2257,7 @@ process FreeBayes {
     when: 'freebayes' in tools
 
     script:
+    intervalsOptions = params.no_intervals ? "" : "-t ${intervalBed}"
     """
     freebayes \
         -f ${fasta} \
@@ -2266,7 +2269,7 @@ process FreeBayes {
         --min-alternate-fraction 0.03 \
         --min-repeat-entropy 1 \
         --min-alternate-count 2 \
-        -t ${intervalBed} \
+        ${intervalsOptions} \
         ${bamTumor} \
         ${bamNormal} > ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
     """
@@ -2302,6 +2305,7 @@ process Mutect2 {
     // please make a panel-of-normals, using at least 40 samples
     // https://gatkforums.broadinstitute.org/gatk/discussion/11136/how-to-call-somatic-mutations-using-gatk4-mutect2
     PON = params.pon ? "--panel-of-normals ${pon}" : ""
+    intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
     """
     # Get raw calls
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
@@ -2309,7 +2313,7 @@ process Mutect2 {
       -R ${fasta}\
       -I ${bamTumor}  -tumor ${idSampleTumor} \
       -I ${bamNormal} -normal ${idSampleNormal} \
-      -L ${intervalBed} \
+      ${intervalsOptions} \
       --germline-resource ${germlineResource} \
       ${PON} \
       -O ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
@@ -2384,8 +2388,9 @@ process ConcatVCF {
     else
           outputFile = "${variantCaller}_${idSample}.vcf"
     options = params.target_bed ? "-t ${targetBED}" : ""
+    intervalsOptions = params.no_intervals ? "-n" : ""
     """
-    concatenateVCFs.sh -i ${fastaFai} -c ${task.cpus} -o ${outputFile} ${options}
+    concatenateVCFs.sh -i ${fastaFai} -c ${task.cpus} -o ${outputFile} ${options} ${intervalsOptions}
     """
 }
 
@@ -2415,12 +2420,13 @@ process PileupSummariesForMutect2 {
     when: 'mutect2' in tools
 
     script:
+    intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
     """
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
         GetPileupSummaries \
         -I ${bamTumor} \
         -V ${germlineResource} \
-        -L ${intervalBed} \
+        ${intervalsOptions} \
         -O ${intervalBed.baseName}_${idSampleTumor}_pileupsummaries.table
     """
 }
@@ -2943,11 +2949,11 @@ mpileupOutTumor = Channel.create()
 mpileupOut
     .choice(mpileupOutTumor, mpileupOutNormal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
 
-mpileupOut = mpileupOutNormal.combine(mpileupOutTumor)
+mpileupOut = mpileupOutNormal.combine(mpileupOutTumor, by:0)
 
 mpileupOut = mpileupOut.map {
     idPatientNormal, idSampleNormal, mpileupOutNormal,
-    idPatientTumor, idSampleTumor, mpileupOutTumor ->
+    idSampleTumor, mpileupOutTumor ->
     [idPatientNormal, idSampleNormal, idSampleTumor, mpileupOutNormal, mpileupOutTumor]
 }
 

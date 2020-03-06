@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#117](https://github.com/nf-core/sarek/pull/117) - Add `Trim Galore` possibilities to Sarek
 - [#141](https://github.com/nf-core/sarek/pull/141) - Add containers for `WBcel235`
 - [#145](https://github.com/nf-core/sarek/pull/145) - Add `UMI annotation and consensus` functionality to Sarek
+- GitHub actions AWS megatests
 
 ### `Changed`
 
