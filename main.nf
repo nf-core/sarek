@@ -2605,6 +2605,7 @@ process CNVkit {
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamCNVkit
         file(targetBED) from ch_target_bed
+        file(fasta) from ch_fasta
     output:
 
     when: 'cnvkit' in tools && params.target_bed
