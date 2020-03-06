@@ -32,8 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        tools: [snpeff]
-        species: [GRCh37]
+        tools: [snpeff, vep]
+        species: [WBcel235]
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
