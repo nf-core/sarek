@@ -423,8 +423,6 @@ if (tsvPath) {
 
 (genderMap, statusMap, inputSample) = extractInfos(inputSample)
 
-
-
 /*
 ================================================================================
                                CHECKING REFERENCES
@@ -541,7 +539,6 @@ if (params.dbsnp_index)             summary['dbsnpIndex']            = params.db
 if (params.known_indels)            summary['knownIndels']           = params.known_indels
 if (params.known_indels_index)      summary['knownIndelsIndex']      = params.known_indels_index
 if (params.snpeff_db)               summary['snpeffDb']              = params.snpeff_db
-if (params.species)                 summary['species']               = params.species
 if (params.vep_cache_version)       summary['vepCacheVersion']       = params.vep_cache_version
 if (params.species)                 summary['species']               = params.species
 if (params.snpeff_cache)            summary['snpEff_cache']          = params.snpeff_cache
@@ -2800,11 +2797,11 @@ alleleCountOutTumor = Channel.create()
 alleleCounterOut
     .choice(alleleCountOutTumor, alleleCountOutNormal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
 
-alleleCounterOut = alleleCountOutNormal.combine(alleleCountOutTumor)
+alleleCounterOut = alleleCountOutNormal.combine(alleleCountOutTumor, by:0)
 
 alleleCounterOut = alleleCounterOut.map {
     idPatientNormal, idSampleNormal, alleleCountOutNormal,
-    idPatientTumor, idSampleTumor, alleleCountOutTumor ->
+    idSampleTumor, alleleCountOutTumor ->
     [idPatientNormal, idSampleNormal, idSampleTumor, alleleCountOutNormal, alleleCountOutTumor]
 }
 
