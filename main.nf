@@ -51,7 +51,7 @@ def helpMessage() {
                                       Default: 1000.0
       --target_bed             [file] Target BED file for targeted or whole exome sequencing
       --tools                   [str] Specify tools to use for variant calling:
-                                      Available: ASCAT, ControlFREEC, FreeBayes, HaplotypeCaller
+                                      Available: ASCAT, CNVkit, ControlFREEC, FreeBayes, HaplotypeCaller
                                       Manta, mpileup, Mutect2, Strelka, TIDDIT
                                       and/or for annotation:
                                       snpEff, VEP, merge
@@ -2064,7 +2064,7 @@ pairBam = bamNormal.cross(bamTumor).map {
 pairBam = pairBam.dump(tag:'BAM Somatic Pair')
 
 // Manta, Strelka, Mutect2
-(pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBamCalculateContamination, pairBamFilterMutect2, pairBamTNscope, pairBam) = pairBam.into(7)
+(pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBamCalculateContamination, pairBamFilterMutect2, pairBamTNscope, pairBam, pairBamCNVkit) = pairBam.into(8)
 
 intervalPairBam = pairBam.spread(bedIntervals)
 
@@ -2594,6 +2594,35 @@ process StrelkaBP {
 }
 
 vcfStrelkaBP = vcfStrelkaBP.dump(tag:'Strelka BP')
+
+// STEP CNVkit
+
+process CNVkit {
+    tag {idSamplePair}
+
+    publishDir "${params.outdir}/VariantCalling/${idSamplePair}/CNVkit", mode: params.publish_dir_mode
+
+    input:
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamCNVkit
+        file(targetBED) from ch_target_bed
+    output:
+
+    when: 'cnvkit' in tools && params.target_bed
+
+    script:
+    """
+    cnvkit.py \
+      batch \
+      ${bamTumor} \
+      --normal ${bamNormal} \
+      --targets ${targetBED} \
+      --fasta ${fasta} \
+      --output-reference output_reference.cnn \
+      --output-dir CNVkit/ \
+      --diagram \
+      --scatter 
+    """
+}
 
 // STEP ASCAT.1 - ALLELECOUNTER
 
