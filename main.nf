@@ -2223,8 +2223,9 @@ process ConcatVCF {
     else
           outputFile = "${variantCaller}_${idSample}.vcf"
     options = params.target_bed ? "-t ${targetBED}" : ""
+    intervalsOptions = params.no_intervals ? "" : "-n"
     """
-    concatenateVCFs.sh -i ${fastaFai} -c ${task.cpus} -o ${outputFile} ${options}
+    concatenateVCFs.sh -i ${fastaFai} -c ${task.cpus} -o ${outputFile} ${options} ${intervalsOptions}
     """
 }
 
