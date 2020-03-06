@@ -100,7 +100,7 @@ jobs:
           docker pull nfcore/sarek:dev
           docker tag nfcore/sarek:dev nfcore/sarek:dev
       - name: Run test for minimal genomes
-        run: nextflow run . -profile test,docker --skipQC all --verbose --genome ${{ matrix.genome }} ${{ matrix.intervals }} --tools Manta,mpileup,Strelka
+        run: nextflow run . -profile test,docker --skipQC all --verbose --genome ${{ matrix.genome }} ${{ matrix.intervals }} --tools Manta,mpileup,Strelka,FreeBayes
 
   profile:
     env:
