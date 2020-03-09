@@ -57,20 +57,24 @@ def helpMessage() {
                                       snpEff, VEP, merge
                                       Default: None
       --skip_qc                 [str] Specify which QC tools to skip when running Sarek
-                                      Available: all, bamQC, BaseRecalibrator, BCFtools, Documentation, FastQC, MultiQC, samtools, vcftools, versions
+                                      Available: all, bamQC, BaseRecalibrator, BCFtools, Documentation
+                                      FastQC, MultiQC, samtools, vcftools, versions
                                       Default: None
       --annotate_tools          [str] Specify from which tools Sarek will look for VCF files to annotate, only for step annotate
                                       Available: HaplotypeCaller, Manta, Mutect2, Strelka, TIDDIT
                                       Default: None
       --sentieon               [bool] If sentieon is available, will enable it for preprocessing, and variant calling
-                                      Adds the following tools for --tools: DNAseq, DNAscope and TNscope
+                                      Adds the following options for --tools: DNAseq, DNAscope and TNscope
       --annotation_cache       [bool] Enable the use of cache for annotation, to be used with --snpeff_cache and/or --vep_cache
       --snpeff_cache           [file] Specity the path to snpEff cache, to be used with --annotation_cache
       --vep_cache              [file] Specity the path to VEP cache, to be used with --annotation_cache
-      --pon                    [file] Panel-of-normals VCF (bgzipped, indexed). See: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_CreateSomaticPanelOfNormals.php
+      --pon                    [file] Panel-of-normals VCF (bgzipped, indexed)
+                                      See: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_CreateSomaticPanelOfNormals.php
       --pon_index              [file] Index of pon panel-of-normals VCF
-      --ascat_ploidy            [int] Use this parameter together with to overwrite default behavior from ASCAT regarding ploidy. Note: Also requires that --ascat_purity is set.
-      --ascat_purity            [int] Use this parameter to overwrite default behavior from ASCAT regarding purity. Note: Also requires that --ascat_ploidy is set.
+      --ascat_ploidy            [int] Use this parameter to overwrite default behavior from ASCAT regarding ploidy
+                                      Requires that --ascat_purity is set
+      --ascat_purity            [int] Use this parameter to overwrite default behavior from ASCAT regarding purity
+                                      Requires that --ascat_ploidy is set
 
     Trimming:
       --trim_fastq             [bool] Run Trim Galore
@@ -105,7 +109,7 @@ def helpMessage() {
                                       If none provided, will be generated automatically if a knownIndels file is provided
       --species                 [str] Species for VEP
       --snpeff_db               [str] snpEff Database version
-      --vep_cache_version       [str] VEP Cache version
+      --vep_cache_version       [int] VEP Cache version
 
     Other options:
       --outdir                 [file] The output directory where the results will be saved
@@ -120,9 +124,9 @@ def helpMessage() {
       -name                     [str] Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic
 
     AWSBatch options:
-      --awsqueue [str]                The AWSBatch JobQueue that needs to be set when running on AWSBatch
-      --awsregion [str]               The AWS Region for your AWS Batch job to run on
-      --awscli [str]                  Path to the AWS CLI tool
+      --awsqueue                [str] The AWSBatch JobQueue that needs to be set when running on AWSBatch
+      --awsregion               [str] The AWS Region for your AWS Batch job to run on
+      --awscli                  [str] Path to the AWS CLI tool
     """.stripIndent()
 }
 
@@ -470,7 +474,6 @@ ch_cadd_wg_snvs = params.cadd_wg_snvs ? Channel.value(file(params.cadd_wg_snvs))
 ch_cadd_wg_snvs_tbi = params.cadd_wg_snvs_tbi ? Channel.value(file(params.cadd_wg_snvs_tbi)) : "null"
 ch_pon = params.pon ? Channel.value(file(params.pon)) : "null"
 ch_target_bed = params.target_bed ? Channel.value(file(params.target_bed)) : "null"
-
 
 /*
 ================================================================================
