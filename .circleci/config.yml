@@ -60,24 +60,29 @@ jobs:
     << : *buildvep
     environment:
       GENOME: GRCh38
+      SPECIES: homo_sapiens
+      VEP_VERSION: "99"
 
   vepgrcm38:
     << : *buildvep
     environment:
       GENOME: GRCm38
       SPECIES: mus_musculus
+      VEP_VERSION: "99"
 
   vepcanfam3_1:
     << : *buildvep
     environment:
       GENOME: CanFam3.1
       SPECIES: canis_familiaris
+      VEP_VERSION: "99"
 
   vepwbcel235:
     << : *buildvep
     environment:
       GENOME: WBcel235
       SPECIES: caenorhabditis_elegans
+      VEP_VERSION: "99"
 
 workflows:
   version: 2
