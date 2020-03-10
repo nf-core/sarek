@@ -44,6 +44,7 @@ def helpMessage() {
                                       Default: Mapping
 
     Options:
+      --help                   [bool] You're reading it
       --no_gvcf                [bool] No g.vcf output from HaplotypeCaller
       --no_strelka_bp          [bool] Will not use Manta candidateSmallIndels for Strelka as Best Practice
       --no_intervals           [bool] Disable usage of intervals
