@@ -16,8 +16,11 @@ jobs:
     name: Run AWS test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Setup Miniconda
+        uses: goanpeca/setup-miniconda@v1.0.2
         with:
-           python-version: 3.7
-       - name: Conda install awscli
-         run: conda install -c conda-forge awscli
+          auto-update-conda: true
+          python-version: 3.7
+      - name: Install awscli
+        run: conda install -c conda-forge awscli
+     
