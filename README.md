@@ -82,19 +82,28 @@ Main authors:
 
 Helpful contributors:
 
-* [Johannes Alneberg](https://github.com/alneberg)
-* [Phil Ewels](https://github.com/ewels)
+* [Adrian Lärkeryd](https://github.com/adrlar)
+* [Alexander Peltzer](https://github.com/apeltzer)
+* [Chela James](https://github.com/chelauk)
+* [Francesco L](https://github.com/nibscles)
+* [FriederikeHanssen](https://github.com/FriederikeHanssen)
+* [Gisela Gabernet](https://github.com/ggabernet)
 * [Jesper Eisfeldt](https://github.com/J35P312)
+* [Johannes Alneberg](https://github.com/alneberg)
+* [KochTobi](https://github.com/KochTobi)
+* [Lucia Conde](https://github.com/lconde-ucl)
 * [Malin Larsson](https://github.com/malinlarsson)
 * [Marcel Martin](https://github.com/marcelm)
-* [Alexander Peltzer](https://github.com/apeltzer)
 * [Nilesh Tawari](https://github.com/nilesh-tawari)
+* [Phil Ewels](https://github.com/ewels)
+* [Sabrina Krakau](https://github.com/skrakau)
+* [Sebastian-D](https://github.com/Sebastian-D)
+* [Winni Kretzschmar](https://github.com/winni2k)
 * [arontommi](https://github.com/arontommi)
 * [bjornnystedt](https://github.com/bjornnystedt)
+* [cgpu](https://github.com/cgpu)
 * [gulfshores](https://github.com/gulfshores)
-* [KochTobi](https://github.com/KochTobi)
 * [pallolason](https://github.com/pallolason)
-* [Sebastian-D](https://github.com/Sebastian-D)
 * [silviamorins](https://github.com/silviamorins)
 
 ## Contributions & Support
