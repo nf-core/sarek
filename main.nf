@@ -2598,15 +2598,16 @@ vcfStrelkaBP = vcfStrelkaBP.dump(tag:'Strelka BP')
 // STEP CNVkit
 
 process CNVkit {
-    tag {idSamplePair}
+    tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-    publishDir "${params.outdir}/VariantCalling/${idSamplePair}/CNVkit", mode: params.publish_dir_mode
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/CNVkit", mode: params.publish_dir_mode
 
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamCNVkit
         file(targetBED) from ch_target_bed
         file(fasta) from ch_fasta
     output:
+        set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}*"), file("${idSampleNormal}*") into cnvkitOut
 
     when: 'cnvkit' in tools && params.target_bed
 
@@ -2619,7 +2620,7 @@ process CNVkit {
       --targets ${targetBED} \
       --fasta ${fasta} \
       --output-reference output_reference.cnn \
-      --output-dir CNVkit/ \
+      --output-dir ./ \
       --diagram \
       --scatter 
     """
