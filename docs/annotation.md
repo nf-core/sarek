@@ -28,7 +28,7 @@ The main Sarek container has also `snpEff` and `VEP` installed, but without the 
 
 ## Download cache
 
-An Nextflow helper script has been designed to help downloading `snpEff` and `VEP` cache.
+A Nextflow helper script has been designed to help downloading `snpEff` and `VEP` cache.
 Such files are meant to be share between multiple users, so this script is mainly meant for people administrating servers, clusters and advanced users.
 
 ```bash
