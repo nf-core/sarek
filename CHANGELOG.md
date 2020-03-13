@@ -58,6 +58,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#143](https://github.com/nf-core/sarek/pull/143) - Fix annotation CI testing with `snpEff` and `VEP`
 - [#144](https://github.com/nf-core/sarek/pull/144) - Fix CircleCI for building `VEP` containers
 - [#146](https://github.com/nf-core/sarek/pull/146) - Fix `--no_intervals` for `Mutect2` cf [#135](https://github.com/nf-core/sarek/issues/135)
+- [#156](https://github.com/nf-core/sarek/pull/156) - Fix typos
+- [#156](https://github.com/nf-core/sarek/pull/156) - Fix issues with `dbsnp` files while using only `Sention` tools
 
 ### `Deprecated`
 
