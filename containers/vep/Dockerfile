@@ -17,7 +17,7 @@ RUN conda env export --name nf-core-sarek-vep-dev > nf-core-sarek-vep-dev.yml
 # Setup default ARG variables
 ARG GENOME=GRCh38
 ARG SPECIES=homo_sapiens
-ARG VEP_VERSION=95
+ARG VEP_VERSION=99
 
 # Download Genome
 RUN vep_install \
