@@ -618,6 +618,7 @@ process Get_software_versions {
     trim_galore -v &> v_trim_galore.txt 2>&1 || true
     vcftools --version &> v_vcftools.txt 2>&1 || true
     vep --help &> v_vep.txt 2>&1 || true
+    msisensor &> v_msisensor.txt 2>&1 || true
 
     scrape_software_versions.py &> software_versions_mqc.yaml
     """
@@ -2070,7 +2071,7 @@ pairBam = bamNormal.cross(bamTumor).map {
 pairBam = pairBam.dump(tag:'BAM Somatic Pair')
 
 // Manta, Strelka, Mutect2
-(pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBamCalculateContamination, pairBamFilterMutect2, pairBamTNscope, pairBam) = pairBam.into(7)
+(pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBamCalculateContamination, pairBamFilterMutect2, pairBamTNscope, pairBamMsisensor, pairBam) = pairBam.into(8)
 
 intervalPairBam = pairBam.spread(bedIntervals)
 
@@ -2604,6 +2605,64 @@ process StrelkaBP {
 }
 
 vcfStrelkaBP = vcfStrelkaBP.dump(tag:'Strelka BP')
+
+// STEP MSISENSOR.1 - SCAN
+
+// Scan reference genome for microsattelites
+process msisensorScan {
+    label 'cpus_1'
+    label 'memory_max'
+    // memory '20 GB'
+
+    tag {fasta}
+
+    input:
+    file(fasta) from ch_fasta
+    file(fastaFai) from ch_fastaFai
+
+    output:
+    file "microsatellites.list" into msi_scan_ch
+
+    when: 'msisensor' in tools
+
+    script:
+    """
+    msisensor scan -d ${fasta} -o microsatellites.list
+    """
+}
+
+// STEP MSISENSOR.2 - SCORE
+
+// Score the normal vs somatic pair of bams
+
+process msisensor {
+    label 'cpus_4'
+    label 'memory_max'
+    // memory '10 GB'
+
+    tag {idSampleTumor + "_vs_" + idSampleNormal}
+
+    publishDir "${params.outdir}/MSI/${idSampleTumor}_vs_${idSampleNormal}/msisensor", mode: params.publishDirMode
+
+    input:
+    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamMsisensor
+    file msiSites from msi_scan_ch
+
+    output:
+    set sampleId, file("${idSampleTumor}_vs_${idSampleNormal}_msisensor"), file("${idSampleTumor}_vs_${idSampleNormal}_msisensor_dis"), file("${idSampleTumor}_vs_${idSampleNormal}_msisensor_germline"), file("${idSampleTumor}_vs_${idSampleNormal}_msisensor_somatic") into msisensor_out_ch
+
+    when:
+    when: 'msisensor' in tools
+
+    script:
+    """
+    msisensor msi -d ${msiSites} \
+                  -b 4 \
+                  -n ${bamNormal} \
+                  -t ${bamTumor} \
+                  -o ${idSampleTumor}_vs_${idSampleNormal}_msisensor
+    """
+}
 
 // STEP ASCAT.1 - ALLELECOUNTER
 
