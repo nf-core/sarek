@@ -3,9 +3,10 @@ name: AWS Megatests
 # It runs the -profile 'test' on AWS batch
 
 on:
-  pull_request:
+  push:
     branches:
-    - dev
+      - master
+      - dev
   release:
     types: [published]
 
