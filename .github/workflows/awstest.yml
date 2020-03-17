@@ -1,4 +1,4 @@
-name: AWS Megatests
+name: nf-core AWS test
 # This workflow is triggered on PRs to the master branch.
 # It runs the -profile 'test' on AWS batch
 
