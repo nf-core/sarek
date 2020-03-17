@@ -31,3 +31,4 @@ dependencies:
   - bioconda::vcfanno=0.3.2
   - bioconda::vcftools=0.1.16
   - conda-forge::pigz=2.3.4 
+  - conda-forge::r-ggplot2=3.0.0
