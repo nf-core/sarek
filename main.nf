@@ -44,6 +44,7 @@ def helpMessage() {
                                       Default: Mapping
 
     Options:
+      --help                   [bool] You're reading it
       --no_gvcf                [bool] No g.vcf output from HaplotypeCaller
       --no_strelka_bp          [bool] Will not use Manta candidateSmallIndels for Strelka as Best Practice
       --no_intervals           [bool] Disable usage of intervals
@@ -57,20 +58,24 @@ def helpMessage() {
                                       snpEff, VEP, merge
                                       Default: None
       --skip_qc                 [str] Specify which QC tools to skip when running Sarek
-                                      Available: all, bamQC, BaseRecalibrator, BCFtools, Documentation, FastQC, MultiQC, samtools, vcftools, versions
+                                      Available: all, bamQC, BaseRecalibrator, BCFtools, Documentation
+                                      FastQC, MultiQC, samtools, vcftools, versions
                                       Default: None
       --annotate_tools          [str] Specify from which tools Sarek will look for VCF files to annotate, only for step annotate
                                       Available: HaplotypeCaller, Manta, Mutect2, Strelka, TIDDIT
                                       Default: None
       --sentieon               [bool] If sentieon is available, will enable it for preprocessing, and variant calling
-                                      Adds the following tools for --tools: DNAseq, DNAscope and TNscope
+                                      Adds the following options for --tools: DNAseq, DNAscope and TNscope
       --annotation_cache       [bool] Enable the use of cache for annotation, to be used with --snpeff_cache and/or --vep_cache
       --snpeff_cache           [file] Specity the path to snpEff cache, to be used with --annotation_cache
       --vep_cache              [file] Specity the path to VEP cache, to be used with --annotation_cache
-      --pon                    [file] Panel-of-normals VCF (bgzipped, indexed). See: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_CreateSomaticPanelOfNormals.php
+      --pon                    [file] Panel-of-normals VCF (bgzipped, indexed)
+                                      See: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_CreateSomaticPanelOfNormals.php
       --pon_index              [file] Index of pon panel-of-normals VCF
-      --ascat_ploidy            [int] Use this parameter together with to overwrite default behavior from ASCAT regarding ploidy. Note: Also requires that --ascat_purity is set.
-      --ascat_purity            [int] Use this parameter to overwrite default behavior from ASCAT regarding purity. Note: Also requires that --ascat_ploidy is set.
+      --ascat_ploidy            [int] Use this parameter to overwrite default behavior from ASCAT regarding ploidy
+                                      Requires that --ascat_purity is set
+      --ascat_purity            [int] Use this parameter to overwrite default behavior from ASCAT regarding purity
+                                      Requires that --ascat_ploidy is set
 
     Trimming:
       --trim_fastq             [bool] Run Trim Galore
@@ -105,7 +110,7 @@ def helpMessage() {
                                       If none provided, will be generated automatically if a knownIndels file is provided
       --species                 [str] Species for VEP
       --snpeff_db               [str] snpEff Database version
-      --vep_cache_version       [str] VEP Cache version
+      --vep_cache_version       [int] VEP Cache version
 
     Other options:
       --outdir                 [file] The output directory where the results will be saved
@@ -120,9 +125,9 @@ def helpMessage() {
       -name                     [str] Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic
 
     AWSBatch options:
-      --awsqueue [str]                The AWSBatch JobQueue that needs to be set when running on AWSBatch
-      --awsregion [str]               The AWS Region for your AWS Batch job to run on
-      --awscli [str]                  Path to the AWS CLI tool
+      --awsqueue                [str] The AWSBatch JobQueue that needs to be set when running on AWSBatch
+      --awsregion               [str] The AWS Region for your AWS Batch job to run on
+      --awscli                  [str] Path to the AWS CLI tool
     """.stripIndent()
 }
 
@@ -280,8 +285,8 @@ if (params.chrDir) exit 1, "The params `--chrDir` has been removed.\n\tPlease ch
 params.chrLength = null
 if (params.chrLength) exit 1, "The params `--chrLength` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--chr_length"
 
-params.dnsnpIndex = null
-if (params.dnsnpIndex) exit 1, "The params `--dnsnpIndex` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--dnsnp_index"
+params.dbsnpIndex = null
+if (params.dbsnpIndex) exit 1, "The params `--dbsnpIndex` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--dbsnp_index"
 
 params.fastaFai = null
 if (params.fastaFai) exit 1, "The params `--fastaFai` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--fasta_fai"
@@ -433,7 +438,7 @@ params.ac_loci_gc = params.genome && 'ascat' in tools ? params.genomes[params.ge
 params.bwa = params.genome && params.fasta && 'mapping' in step ? params.genomes[params.genome].bwa ?: null : null
 params.chr_dir = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].chr_dir ?: null : null
 params.chr_length = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].chr_length ?: null : null
-params.dbsnp = params.genome && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools) ? params.genomes[params.genome].dbsnp ?: null : null
+params.dbsnp = params.genome && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? params.genomes[params.genome].dbsnp ?: null : null
 params.dbsnp_index = params.genome && params.dbsnp ? params.genomes[params.genome].dbsnp_index ?: null : null
 params.dict = params.genome && params.fasta ? params.genomes[params.genome].dict ?: null : null
 params.fasta_fai = params.genome && params.fasta ? params.genomes[params.genome].fasta_fai ?: null : null
@@ -451,7 +456,7 @@ ch_ac_loci = params.ac_loci && 'ascat' in tools ? Channel.value(file(params.ac_l
 ch_ac_loci_gc = params.ac_loci_gc && 'ascat' in tools ? Channel.value(file(params.ac_loci_gc)) : "null"
 ch_chr_dir = params.chr_dir && 'controlfreec' in tools ? Channel.value(file(params.chr_dir)) : "null"
 ch_chr_length = params.chr_length && 'controlfreec' in tools ? Channel.value(file(params.chr_length)) : "null"
-ch_dbsnp = params.dbsnp && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools) ? Channel.value(file(params.dbsnp)) : "null"
+ch_dbsnp = params.dbsnp && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? Channel.value(file(params.dbsnp)) : "null"
 ch_fasta = params.fasta && !('annotate' in step) ? Channel.value(file(params.fasta)) : "null"
 ch_fai = params.fasta_fai && !('annotate' in step) ? Channel.value(file(params.fasta_fai)) : "null"
 ch_germline_resource = params.germline_resource && 'mutect2' in tools ? Channel.value(file(params.germline_resource)) : "null"
@@ -470,7 +475,6 @@ ch_cadd_wg_snvs = params.cadd_wg_snvs ? Channel.value(file(params.cadd_wg_snvs))
 ch_cadd_wg_snvs_tbi = params.cadd_wg_snvs_tbi ? Channel.value(file(params.cadd_wg_snvs_tbi)) : "null"
 ch_pon = params.pon ? Channel.value(file(params.pon)) : "null"
 ch_target_bed = params.target_bed ? Channel.value(file(params.target_bed)) : "null"
-
 
 /*
 ================================================================================
