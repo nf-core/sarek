@@ -23,6 +23,7 @@ For annotation, the main container can be used, but the cache has to be download
 - Contain **[FreeBayes](https://github.com/ekg/freebayes)** 1.3.2
 - Contain **[GATK4-spark](https://github.com/broadinstitute/gatk)** 4.1.4.1
 - Contain **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
+- Contain **[ggplot2](https://github.com/tidyverse/ggplot2)** 3.3.0
 - Contain **[HTSlib](https://github.com/samtools/htslib)** 1.9
 - Contain **[Manta](https://github.com/Illumina/manta)** 1.6.0
 - Contain **[MultiQC](https://github.com/ewels/MultiQC/)** 1.8
@@ -41,14 +42,14 @@ For annotation, the main container can be used, but the cache has to be download
 
 - Based on `nfcore/base:1.9`
 - Contain **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
-- Contains cache for `GRCh37`, `GRCh38`, `GRCm38` or `CanFam3.1`
+- Contains cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
 
 ### sarekvep [![sarekvep-docker status](https://img.shields.io/docker/automated/nfcore/sarekvep.svg)](https://hub.docker.com/r/nfcore/sarekvep)
 
 - Based on `nfcore/base:1.9`
 - Contain **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
 - Contain **[VEP](https://github.com/Ensembl/ensembl-vep)** 99.2
-- Contain cache for `GRCh37`, `GRCh38`, `GRCm38` or `CanFam3.1`
+- Contain cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
 
 ## Building your own
 
