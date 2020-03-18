@@ -2618,7 +2618,7 @@ process msisensorScan {
 
     input:
     file(fasta) from ch_fasta
-    file(fastaFai) from ch_fastaFai
+    file(fastaFai) from ch_fai
 
     output:
     file "microsatellites.list" into msi_scan_ch
@@ -2649,7 +2649,7 @@ process msisensor {
     file msiSites from msi_scan_ch
 
     output:
-    set sampleId, file("${idSampleTumor}_vs_${idSampleNormal}_msisensor"), file("${idSampleTumor}_vs_${idSampleNormal}_msisensor_dis"), file("${idSampleTumor}_vs_${idSampleNormal}_msisensor_germline"), file("${idSampleTumor}_vs_${idSampleNormal}_msisensor_somatic") into msisensor_out_ch
+    set val("Msisensor"), idPatient, file("${idSampleTumor}_vs_${idSampleNormal}_msisensor"), file("${idSampleTumor}_vs_${idSampleNormal}_msisensor_dis"), file("${idSampleTumor}_vs_${idSampleNormal}_msisensor_germline"), file("${idSampleTumor}_vs_${idSampleNormal}_msisensor_somatic") into msisensor_out_ch
 
     when:
     when: 'msisensor' in tools
@@ -3654,7 +3654,8 @@ def defineToolList() {
         'strelka',
         'tiddit',
         'tnscope',
-        'vep'
+        'vep',
+        'msisensor'
     ]
 }
 
