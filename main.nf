@@ -497,11 +497,11 @@ if (params.skip_qc)             summary['QC tools skip']     = skipQC.join(', ')
 
 if (params.trim_fastq) {
     summary['Fastq trim']         = "Fastq trim selected"
-    summary['Trim R1']            = "$params.clip_r1 bp"
-    summary['Trim R2']            = "$params.clip_r2 bp"
-    summary["Trim 3' R1"]         = "$params.three_prime_clip_r1 bp"
-    summary["Trim 3' R2"]         = "$params.three_prime_clip_r2 bp"
-    summary["NextSeq Trim"]       = "$params.trim_nextseq bp"
+    summary['Trim R1']            = "${params.clip_r1} bp"
+    summary['Trim R2']            = "${params.clip_r2} bp"
+    summary["Trim 3' R1"]         = "${params.three_prime_clip_r1} bp"
+    summary["Trim 3' R2"]         = "${params.three_prime_clip_r2} bp"
+    summary["NextSeq Trim"]       = "${params.trim_nextseq} bp"
     summary['Saved Trimmed Fastq'] = params.saveTrimmed ? 'Yes' : 'No'
 }
 
@@ -588,7 +588,7 @@ Channel.from(summary.collect{ [it.key, it.value] })
 
 process Get_software_versions {
     publishDir path:"${params.outdir}/pipeline_info", mode: params.publish_dir_mode,
-        saveAs: { it.indexOf(".csv") > 0 ? it : null }
+        saveAs: {it.indexOf(".csv") > 0 ? it : null}
 
     output:
         file 'software_versions_mqc.yaml' into ch_software_versions_yaml
@@ -986,9 +986,6 @@ fastQCReport = fastQCFQReport.mix(fastQCBAMReport)
 
 fastQCReport = fastQCReport.dump(tag:'FastQC')
 
-outputPairReadsTrimGalore = Channel.create()
-
-if (params.trim_fastq) {
 process TrimGalore {
     label 'TrimGalore'
 
@@ -1009,6 +1006,8 @@ process TrimGalore {
         file("*.{html,zip,txt}") into trimGaloreReport
         set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1_val_1.fq.gz"), file("${idSample}_${idRun}_R2_val_2.fq.gz") into outputPairReadsTrimGalore
 
+    when: params.trim_fastq
+
     script:
     // Calculate number of --cores for TrimGalore based on value of task.cpus
     // See: https://github.com/FelixKrueger/TrimGalore/blob/master/Changelog.md#version-060-release-on-1-mar-2019
@@ -1025,22 +1024,30 @@ process TrimGalore {
     tpc_r2 = params.three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${params.three_prime_clip_r2}" : ''
     nextseq = params.trim_nextseq > 0 ? "--nextseq ${params.trim_nextseq}" : ''
     """
-    trim_galore --cores $cores --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $nextseq  ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
+    trim_galore \
+         --cores ${cores} \
+        --paired \
+        --fastqc \
+        --gzip \
+        ${c_r1} ${c_r2} \
+        ${tpc_r1} ${tpc_r2} \
+        ${nextseq} \
+        ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
+
     mv *val_1_fastqc.html "${idSample}_${idRun}_R1.trimmed_fastqc.html"
     mv *val_2_fastqc.html "${idSample}_${idRun}_R2.trimmed_fastqc.html"
     mv *val_1_fastqc.zip "${idSample}_${idRun}_R1.trimmed_fastqc.zip"
     mv *val_2_fastqc.zip "${idSample}_${idRun}_R2.trimmed_fastqc.zip"
     """
-  }
-} else {
-  inputPairReadsTrimGalore
-   .set{outputPairReadsTrimGalore}
-   trimGaloreReport = Channel.empty()
 }
+
+if (!params.trim_fastq) inputPairReadsTrimGalore.close()
 
 // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
 
-inputPairReads = outputPairReadsTrimGalore.mix(inputBam)
+if (params.trim_fastq) inputPairReads = outputPairReadsTrimGalore
+else inputPairReads = inputPairReads.mix(inputBam)
+
 inputPairReads = inputPairReads.dump(tag:'INPUT')
 
 (inputPairReads, inputPairReadsSentieon) = inputPairReads.into(2)
@@ -1061,6 +1068,8 @@ process MapReads {
     output:
         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMapped
         set idPatient, val("${idSample}_${idRun}"), file("${idSample}_${idRun}.bam") into bamMappedBamQC
+
+    when: !(params.sentieon)
 
     script:
     // -K is an hidden option, used to fix the number of reads processed by bwa mem
@@ -1211,7 +1220,7 @@ process IndexBamFile {
     output:
         set idPatient, idSample, file(bam), file("*.bai") into indexedBam
 
-    when: !params.known_indels
+    when: !(params.known_indels)
 
     script:
     """
