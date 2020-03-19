@@ -25,6 +25,7 @@ For annotation, the main container can be used, but the cache has to be download
 - Contain **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
 - Contain **[HTSlib](https://github.com/samtools/htslib)** 1.9
 - Contain **[Manta](https://github.com/Illumina/manta)** 1.6.0
+- Contain **[msisensor](https://github.com/ding-lab/msisensor)** 0.5
 - Contain **[MultiQC](https://github.com/ewels/MultiQC/)** 1.8
 - Contain **[Qualimap](http://qualimap.bioinfo.cipf.es)** 2.2.2d
 - Contain **[samtools](https://github.com/samtools/samtools)** 1.9
