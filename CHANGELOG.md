@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#117](https://github.com/nf-core/sarek/pull/117) - Add `Trim Galore` possibilities to Sarek
 - [#141](https://github.com/nf-core/sarek/pull/141) - Add containers for `WBcel235`
 - [#150](https://github.com/nf-core/sarek/pull/150), [#151](https://github.com/nf-core/sarek/pull/151), [#154](https://github.com/nf-core/sarek/pull/154) - Add AWS mega test GitHub Actions
+- [#158](https://github.com/nf-core/sarek/pull/158) - Added `ggplot2` v `3.3.0`
 - [#163](https://github.com/nf-core/sarek/pull/163) - Add [msisensor](https://github.com/ding-lab/msisensor) in tools and container
 
 ### `Changed`
@@ -41,7 +42,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#141](https://github.com/nf-core/sarek/pull/141) - Update `VEP` databases to `99`
 - [#143](https://github.com/nf-core/sarek/pull/143) - Revert `snpEff` cache version to `75` for `GRCh37`
 - [#143](https://github.com/nf-core/sarek/pull/143) - Revert `snpEff` cache version to `86` for `GRCh38`
-- [#152](https://github.com/nf-core/sarek/pull/152) - Update docs
+- [#152](https://github.com/nf-core/sarek/pull/152), [#158](https://github.com/nf-core/sarek/pull/158) - Update docs
 
 ### `Fixed`
 
@@ -61,6 +62,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#146](https://github.com/nf-core/sarek/pull/146) - Fix `--no_intervals` for `Mutect2` cf [#135](https://github.com/nf-core/sarek/issues/135)
 - [#156](https://github.com/nf-core/sarek/pull/156) - Fix typos
 - [#156](https://github.com/nf-core/sarek/pull/156) - Fix issues with `dbsnp` files while using only `Sention` tools
+- [#158](https://github.com/nf-core/sarek/pull/158) - Fix typo with `params.snpeff_cache` to decide containers for `snpEff`
 
 ### `Deprecated`
 
