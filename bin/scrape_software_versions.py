@@ -13,6 +13,7 @@ regexes = {
     'GATK': ['v_gatk.txt', r"Version:(\S+)"],
     'htslib': ['v_samtools.txt', r"htslib (\S+)"],
     'Manta': ['v_manta.txt', r"([0-9.]+)"],
+    'msisensor': ["v_msisensor.txt", r"Version: v(\S+)"],
     'MultiQC': ['v_multiqc.txt', r"multiqc, version (\S+)"],
     'Nextflow': ['v_nextflow.txt', r"(\S+)"],
     'nf-core/sarek': ['v_pipeline.txt', r"(\S+)"],
@@ -38,6 +39,7 @@ results['FreeBayes'] = '<span style="color:#999999;\">N/A</span>'
 results['GATK'] = '<span style="color:#999999;\">N/A</span>'
 results['htslib'] = '<span style="color:#999999;\">N/A</span>'
 results['Manta'] = '<span style="color:#999999;\">N/A</span>'
+results['msisensor'] = '<span style="color:#999999;\">N/A</span>'
 results['MultiQC'] = '<span style="color:#999999;\">N/A</span>'
 results['Qualimap'] = '<span style="color:#999999;\">N/A</span>'
 results['R'] = '<span style="color:#999999;\">N/A</span>'
