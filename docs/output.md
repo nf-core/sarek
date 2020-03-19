@@ -426,11 +426,10 @@ For a Tumor/Normal pair only:
 - `[TUMORSAMPLE].pileup.gz_BAF.txt` and `[NORMALSAMPLE].pileup.gz_BAF.txt`
   - file with beta allele frequencies for each possibly heterozygous SNP position
 
-
 ### MSI status
 
 [Microsatellite instability](https://en.wikipedia.org/wiki/Microsatellite_instability)
-is a genetic condition associated to deficienceies in the 
+is a genetic condition associated to deficienceies in the
 mismatch repair (MMR) system which causes a tendency to accumulate a high
 number of mutations (SNVs and indels).
 
@@ -439,7 +438,7 @@ number of mutations (SNVs and indels).
 [msisensor](https://github.com/ding-lab/msisensor) is a tool to detect the MSI
 status of a tumor scaning the length of the microsatellite regions. An altered
 distribution of  microsatellite length is associated to a missed replication
-slippage which would be corrected under normal MMR conditions. It requires 
+slippage which would be corrected under normal MMR conditions. It requires
 a normal sample for each tumour to differentiate the somatic and germline
 cases.
 
@@ -448,13 +447,13 @@ For further reading see the [msisensor paper](https://www.ncbi.nlm.nih.gov/pubme
 For a Tumor/Normal pair only:
 **Output directory: `results/MSI/[TUMORSAMPLE]_vs_[NORMALSAMPLE]/msisensor`**
 
-- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]_msisensor
+- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]`_msisensor
   - MSI score output, contains information about the number of somatic sites.
-- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]_msisensor_dis
+- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]`_msisensor_dis
   - The normal and tumor length distribution for each microsatellite position.
-- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]_msisensor_germline
+- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]`_msisensor_germline
   - somatic sites detected
-- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]_msisensor_somatic
+- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]`_msisensor_somatic
   - germ line sites detected
 
 ## Variant annotation
@@ -504,13 +503,6 @@ For all samples:
 
 - `VariantCaller_Sample_VEP.ann.vcf.gz` and `VariantCaller_Sample_VEP.ann.vcf.gz.tbi`
   - VCF with Tabix index
-
-
-## MSI status
-
-
-All the results regarding the MSI status of the samples are 
-
 
 ## QC and reporting
 
