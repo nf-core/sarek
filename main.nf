@@ -2070,7 +2070,7 @@ pairBam = bamNormal.cross(bamTumor).map {
 
 pairBam = pairBam.dump(tag:'BAM Somatic Pair')
 
-// Manta, Strelka, Mutect2
+// Manta, Strelka, Mutect2, MSIsensor
 (pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBamCalculateContamination, pairBamFilterMutect2, pairBamTNscope, pairBamMsisensor, pairBam) = pairBam.into(8)
 
 intervalPairBam = pairBam.spread(bedIntervals)
