@@ -331,8 +331,10 @@ if (params.vepCacheVersion) exit 1, "The params `--vepCacheVersion` has been rem
 */
 
 // Check if genome exists in the config file
-if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
+if (params.genomes && params.genome && !params.genomes.containsKey(params.genome) && !params.igenomes_ignore) {
     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
+else if (params.genomes && params.genome && !params.genomes.containsKey(params.genome) && params.igenomes_ignore) {
+    exit 1, "The provided genome '${params.genome}' is not available in the genomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
 }
 
 stepList = defineStepList()
@@ -564,6 +566,7 @@ if (params.monochrome_logs) log.info "------------------------------------------
 else log.info "-\033[2m--------------------------------------------------\033[0m-"
 
 if ('mutect2' in tools && !(params.pon)) log.warn "[nf-core/sarek] Mutect2 was requested, but as no panel of normals were given, results will not be optimal"
+if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works if Sentieon is available where nf-core/sarek is run"
 
 // Check the hostnames against configured profiles
 checkHostname()
