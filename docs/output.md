@@ -426,11 +426,10 @@ For a Tumor/Normal pair only:
 - `[TUMORSAMPLE].pileup.gz_BAF.txt` and `[NORMALSAMPLE].pileup.gz_BAF.txt`
   - file with beta allele frequencies for each possibly heterozygous SNP position
 
-
 ### MSI status
 
 [Microsatellite instability](https://en.wikipedia.org/wiki/Microsatellite_instability)
-is a genetic condition associated to deficienceies in the 
+is a genetic condition associated to deficienceies in the
 mismatch repair (MMR) system which causes a tendency to accumulate a high
 number of mutations (SNVs and indels).
 
@@ -439,7 +438,7 @@ number of mutations (SNVs and indels).
 [msisensor](https://github.com/ding-lab/msisensor) is a tool to detect the MSI
 status of a tumor scaning the length of the microsatellite regions. An altered
 distribution of  microsatellite length is associated to a missed replication
-slippage which would be corrected under normal MMR conditions. It requires 
+slippage which would be corrected under normal MMR conditions. It requires
 a normal sample for each tumour to differentiate the somatic and germline
 cases.
 
@@ -504,13 +503,6 @@ For all samples:
 
 - `VariantCaller_Sample_VEP.ann.vcf.gz` and `VariantCaller_Sample_VEP.ann.vcf.gz.tbi`
   - VCF with Tabix index
-
-
-## MSI status
-
-
-All the results regarding the MSI status of the samples are 
-
 
 ## QC and reporting
 
