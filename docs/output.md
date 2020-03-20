@@ -445,7 +445,7 @@ cases.
 For further reading see the [MSIsensor paper](https://www.ncbi.nlm.nih.gov/pubmed/24371154).
 
 For a Tumor/Normal pair only:
-**Output directory: `results/[TUMORSAMPLE]_vs_[NORMALSAMPLE]/MSIsensor`**
+**Output directory: `results/VariantCalling/[TUMORSAMPLE]_vs_[NORMALSAMPLE]/MSIsensor`**
 
 - `[TUMORSAMPLE]_vs_[NORMALSAMPLE]`_msisensor
   - MSI score output, contains information about the number of somatic sites.
