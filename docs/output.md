@@ -34,6 +34,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [ConvertAlleleCounts](#convertallelecounts)
     - [ASCAT](#ascat)
     - [Control-FREEC](#control-freec)
+  - [MSI status](#msi-status)
+    - [MSIsensor](#msisensor)
 - [Variant annotation](#variant-annotation)
   - [snpEff](#snpeff)
   - [VEP](#vep)
@@ -423,6 +425,36 @@ For a Tumor/Normal pair only:
   - file with ratios and predicted copy number alterations for each window
 - `[TUMORSAMPLE].pileup.gz_BAF.txt` and `[NORMALSAMPLE].pileup.gz_BAF.txt`
   - file with beta allele frequencies for each possibly heterozygous SNP position
+
+### MSI status
+
+[Microsatellite instability](https://en.wikipedia.org/wiki/Microsatellite_instability)
+is a genetic condition associated to deficienceies in the
+mismatch repair (MMR) system which causes a tendency to accumulate a high
+number of mutations (SNVs and indels).
+
+#### MSIsensor
+
+[MSIsensor](https://github.com/ding-lab/msisensor) is a tool to detect the MSI
+status of a tumor scaning the length of the microsatellite regions. An altered
+distribution of  microsatellite length is associated to a missed replication
+slippage which would be corrected under normal mismatch repair (MMR) conditions. It requires
+a normal sample for each tumour to differentiate the somatic and germline
+cases.
+
+For further reading see the [MSIsensor paper](https://www.ncbi.nlm.nih.gov/pubmed/24371154).
+
+For a Tumor/Normal pair only:
+**Output directory: `results/VariantCalling/[TUMORSAMPLE]_vs_[NORMALSAMPLE]/MSIsensor`**
+
+- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]`_msisensor
+  - MSI score output, contains information about the number of somatic sites.
+- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]`_msisensor_dis
+  - The normal and tumor length distribution for each microsatellite position.
+- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]`_msisensor_germline
+  - somatic sites detected
+- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]`_msisensor_somatic
+  - germ line sites detected
 
 ## Variant annotation
 
