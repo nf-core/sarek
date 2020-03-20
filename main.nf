@@ -53,7 +53,7 @@ def helpMessage() {
       --target_bed             [file] Target BED file for targeted or whole exome sequencing
       --tools                   [str] Specify tools to use for variant calling:
                                       Available: ASCAT, ControlFREEC, FreeBayes, HaplotypeCaller
-                                      Manta, mpileup, Mutect2, Strelka, TIDDIT
+                                      Manta, mpileup, MSIsensor, Mutect2, Strelka, TIDDIT
                                       and/or for annotation:
                                       snpEff, VEP, merge
                                       Default: None
