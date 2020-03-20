@@ -333,7 +333,7 @@ if (params.vepCacheVersion) exit 1, "The params `--vepCacheVersion` has been rem
 // Check if genome exists in the config file
 if (params.genomes && params.genome && !params.genomes.containsKey(params.genome) && !params.igenomes_ignore) {
     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
-else if (params.genomes && params.genome && !params.genomes.containsKey(params.genome) && params.igenomes_ignore) {
+} else if (params.genomes && params.genome && !params.genomes.containsKey(params.genome) && params.igenomes_ignore) {
     exit 1, "The provided genome '${params.genome}' is not available in the genomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
 }
 
@@ -409,8 +409,9 @@ if (tsvPath) {
     }
 } else if (params.input && !hasExtension(params.input, "tsv")) {
     log.info "No TSV file"
-    if (step != 'mapping') exit 1, 'No other step than "mapping" support a dir as an input'
+    if (step != 'mapping') exit 1, 'No other step than "mapping" support a directory as an input'
     log.info "Reading ${params.input} directory"
+    log.warn "[nf-core/sarek] in ${params.input} directory, all fastqs are assuming to be from the same sample, which is assumed to be a germline one"
     inputSample = extractFastqFromDir(params.input)
     (inputSample, fastqTMP) = inputSample.into(2)
     fastqTMP.toList().subscribe onNext: {
