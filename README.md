@@ -105,6 +105,7 @@ Helpful contributors:
 * [gulfshores](https://github.com/gulfshores)
 * [pallolason](https://github.com/pallolason)
 * [silviamorins](https://github.com/silviamorins)
+* [David Mas-Ponte](https://github.com/davidmasp)
 
 ## Contributions & Support
 
