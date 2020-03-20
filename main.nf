@@ -2642,7 +2642,7 @@ process msisensor {
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-    publishDir "${params.outdir}/MSI/${idSampleTumor}_vs_${idSampleNormal}/msisensor", mode: params.publishDirMode
+    publishDir "${params.outdir}/${idSampleTumor}_vs_${idSampleNormal}/MSIsensor", mode: params.publishDirMode
 
     input:
     set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamMsisensor

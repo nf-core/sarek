@@ -35,7 +35,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [ASCAT](#ascat)
     - [Control-FREEC](#control-freec)
   - [MSI status](#msi-status)
-    - [msisensor](#msisensor)
+    - [MSIsensor](#msisensor)
 - [Variant annotation](#variant-annotation)
   - [snpEff](#snpeff)
   - [VEP](#vep)
@@ -433,19 +433,19 @@ is a genetic condition associated to deficienceies in the
 mismatch repair (MMR) system which causes a tendency to accumulate a high
 number of mutations (SNVs and indels).
 
-#### msisensor
+#### MSIsensor
 
-[msisensor](https://github.com/ding-lab/msisensor) is a tool to detect the MSI
+[MSIsensor](https://github.com/ding-lab/msisensor) is a tool to detect the MSI
 status of a tumor scaning the length of the microsatellite regions. An altered
 distribution of  microsatellite length is associated to a missed replication
-slippage which would be corrected under normal MMR conditions. It requires
+slippage which would be corrected under normal mismatch repair (MMR) conditions. It requires
 a normal sample for each tumour to differentiate the somatic and germline
 cases.
 
-For further reading see the [msisensor paper](https://www.ncbi.nlm.nih.gov/pubmed/24371154).
+For further reading see the [MSIsensor paper](https://www.ncbi.nlm.nih.gov/pubmed/24371154).
 
 For a Tumor/Normal pair only:
-**Output directory: `results/MSI/[TUMORSAMPLE]_vs_[NORMALSAMPLE]/msisensor`**
+**Output directory: `results/[TUMORSAMPLE]_vs_[NORMALSAMPLE]/MSIsensor`**
 
 - `[TUMORSAMPLE]_vs_[NORMALSAMPLE]`_msisensor
   - MSI score output, contains information about the number of somatic sites.
