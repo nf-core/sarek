@@ -2234,11 +2234,11 @@ process ConcatVCF {
 
     script:
     if (variantCaller == 'HaplotypeCallerGVCF')
-          outputFile = "HaplotypeCaller_${idSample}.g.vcf"
+        outputFile = "HaplotypeCaller_${idSample}.g.vcf"
     else if (variantCaller == "Mutect2")
-          outputFile = "Mutect2_unfiltered_${idSample}.vcf"
+        outputFile = "Mutect2_unfiltered_${idSample}.vcf"
     else
-          outputFile = "${variantCaller}_${idSample}.vcf"
+        outputFile = "${variantCaller}_${idSample}.vcf"
     options = params.target_bed ? "-t ${targetBED}" : ""
     intervalsOptions = params.no_intervals ? "-n" : ""
     """
