@@ -85,6 +85,7 @@ Helpful contributors:
 * [Adrian Lärkeryd](https://github.com/adrlar)
 * [Alexander Peltzer](https://github.com/apeltzer)
 * [Chela James](https://github.com/chelauk)
+* [David Mas-Ponte](https://github.com/davidmasp)
 * [Francesco L](https://github.com/nibscles)
 * [FriederikeHanssen](https://github.com/FriederikeHanssen)
 * [Gisela Gabernet](https://github.com/ggabernet)
@@ -105,7 +106,6 @@ Helpful contributors:
 * [gulfshores](https://github.com/gulfshores)
 * [pallolason](https://github.com/pallolason)
 * [silviamorins](https://github.com/silviamorins)
-* [David Mas-Ponte](https://github.com/davidmasp)
 
 ## Contributions & Support
 
