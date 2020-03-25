@@ -9,10 +9,8 @@ dependencies:
   - conda-forge::llvm-openmp=8.0.1
   - conda-forge::openmp=8.0.1
   - conda-forge::markdown=3.1.1
-  - conda-forge::pigz=2.3.4 
   - conda-forge::pymdown-extensions=6.0
   - conda-forge::pygments=2.5.2
-  - conda-forge::r-ggplot2=3.3.0
   - bioconda::ascat=2.5.2
   - bioconda::bcftools=1.9
   - bioconda::bwa-mem2=2.0
@@ -40,3 +38,5 @@ dependencies:
   - bioconda::trim-galore=0.6.5
   - bioconda::vcfanno=0.3.2
   - bioconda::vcftools=0.1.16
+  - conda-forge::pigz=2.3.4 
+  - conda-forge::r-ggplot2=3.3.0
