@@ -126,7 +126,7 @@ def helpMessage() {
 
     AWSBatch options:
       --awsqueue                [str] The AWSBatch JobQueue that needs to be set when running on AWSBatch
-      --awsregion               [str] The AWS Region for your AWS Batch job to run on
+      --awsregion               [str] The AWS Region for your AWSBatch job to run on
       --awscli                  [str] Path to the AWS CLI tool
     """.stripIndent()
 }
