@@ -1271,6 +1271,8 @@ process MarkDuplicates {
         --ASSUME_SORT_ORDER coordinate \
         --CREATE_INDEX true \
         --OUTPUT ${idSample}.md.bam
+    
+    mv ${idSample}.md.bai ${idSample}.md.bam.bai
     """
     else
     """
@@ -2637,7 +2639,7 @@ vcfStrelkaBP = vcfStrelkaBP.dump(tag:'Strelka BP')
 // STEP MSISENSOR.1 - SCAN
 
 // Scan reference genome for microsattelites
-process msisensorScan {
+process MSIsensor_scan {
     label 'cpus_1'
     label 'memory_max'
     // memory '20 GB'
@@ -2663,7 +2665,7 @@ process msisensorScan {
 
 // Score the normal vs somatic pair of bams
 
-process msisensor {
+process MSIsensor_msi {
     label 'cpus_4'
     label 'memory_max'
     // memory '10 GB'

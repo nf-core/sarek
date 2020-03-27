@@ -50,7 +50,7 @@ jobs:
           docker pull nfcore/sarek${{ matrix.tools }}:dev.${{ matrix.species }}
           docker tag nfcore/sarek${{ matrix.tools }}:dev.${{ matrix.species }} nfcore/sarek${{ matrix.tools }}:dev.${{ matrix.species }}
       - name: Run annotation test
-        run: nextflow run . -profile test_annotation,docker --verbose --tools ${{ matrix.tools }}
+        run: nextflow run . -profile test_annotation,docker --tools ${{ matrix.tools }}
 
   germline:
     env:
@@ -100,7 +100,7 @@ jobs:
           docker pull nfcore/sarek:dev
           docker tag nfcore/sarek:dev nfcore/sarek:dev
       - name: Run test for minimal genomes
-        run: nextflow run . -profile test,docker --skipQC all --verbose --genome ${{ matrix.genome }} ${{ matrix.intervals }} --tools Manta,mpileup,Strelka,FreeBayes
+        run: nextflow run . -profile test,docker --skipQC all --genome ${{ matrix.genome }} ${{ matrix.intervals }} --tools Manta,mpileup,Strelka,FreeBayes
 
   profile:
     env:
@@ -123,7 +123,7 @@ jobs:
           docker pull nfcore/sarek:dev
           docker tag nfcore/sarek:dev nfcore/sarek:dev
       - name: Run ${{ matrix.profile }} test
-        run: nextflow run . -profile ${{ matrix.profile }},docker --verbose
+        run: nextflow run . -profile ${{ matrix.profile }},docker
 
   tools:
     env:
@@ -146,4 +146,4 @@ jobs:
           docker pull nfcore/sarek:dev
           docker tag nfcore/sarek:dev nfcore/sarek:dev
       - name: Run ${{ matrix.tool }} test
-        run: nextflow run . -profile test_tool,docker --verbose --tools ${{ matrix.tool }}
+        run: nextflow run . -profile test_tool,docker --tools ${{ matrix.tool }}
