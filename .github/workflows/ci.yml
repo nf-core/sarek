@@ -41,7 +41,7 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
         env:
-          # Only check Nextflow pipeline minimum version for other C
+          # Only check Nextflow pipeline minimum version
           NXF_VER: '19.10.0'
       - name: Pull docker image
         run: |
@@ -63,7 +63,7 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
         env:
-          # Only check Nextflow pipeline minimum version for other C
+          # Only check Nextflow pipeline minimum version
           NXF_VER: '19.10.0'
       - name: Pull docker image
         run: |
@@ -93,7 +93,7 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
         env:
-          # Only check Nextflow pipeline minimum version for other C
+          # Only check Nextflow pipeline minimum version
           NXF_VER: '19.10.0'
       - name: Pull docker image
         run: |
@@ -116,7 +116,7 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
         env:
-          # Only check Nextflow pipeline minimum version for other C
+          # Only check Nextflow pipeline minimum version
           NXF_VER: '19.10.0'
       - name: Pull docker image
         run: |
@@ -131,7 +131,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        tool: [Haplotypecaller, Freebayes, Manta, mpileup, Strelka, TIDDIT, msisensor]
+        tool: [Haplotypecaller, Freebayes, Manta, mpileup, Strelka, TIDDIT, MSIsensor]
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
@@ -139,7 +139,7 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
         env:
-          # Only check Nextflow pipeline minimum version for other C
+          # Only check Nextflow pipeline minimum version
           NXF_VER: '19.10.0'
       - name: Pull docker image
         run: |
