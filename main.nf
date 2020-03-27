@@ -1280,7 +1280,7 @@ process MarkDuplicates {
         -O ${idSample}.md.bam \
         ${metrics} \
         --tmp-dir . \
-        --create-output-bam-index true
+        --create-output-bam-index true \
         --spark-master local[${task.cpus}]
     """
 }
