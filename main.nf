@@ -48,6 +48,7 @@ def helpMessage() {
       --no_gvcf                [bool] No g.vcf output from HaplotypeCaller
       --no_strelka_bp          [bool] Will not use Manta candidateSmallIndels for Strelka as Best Practice
       --no_intervals           [bool] Disable usage of intervals
+      --no_gatk_spark          [bool] Disable usage of GATK Spark implementation of their tools in local mode
       --nucleotides_per_second  [int] To estimate interval size
                                       Default: 1000.0
       --target_bed             [file] Target BED file for targeted or whole exome sequencing
@@ -1236,7 +1237,7 @@ process IndexBamFile {
 
 // STEP 2: MARKING DUPLICATES
 
-process MarkDuplicatesSpark {
+process MarkDuplicates {
     label 'cpus_16'
 
     tag {idPatient + "-" + idSample}
@@ -1259,6 +1260,19 @@ process MarkDuplicatesSpark {
     script:
     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
     metrics = 'markduplicates' in skipQC ? '' : "-M ${idSample}.bam.metrics"
+    if (params.no_gatk_spark)
+    """
+    gatk --java-options ${markdup_java_options} \
+        MarkDuplicates \
+        --MAX_RECORDS_IN_RAM 50000 \
+        --INPUT ${idSample}.bam \
+        --METRICS_FILE ${idSample}.bam.metrics \
+        --TMP_DIR . \
+        --ASSUME_SORT_ORDER coordinate \
+        --CREATE_INDEX true \
+        --OUTPUT ${idSample}.md.bam
+    """
+    else
     """
     gatk --java-options ${markdup_java_options} \
         MarkDuplicatesSpark \
@@ -1267,6 +1281,7 @@ process MarkDuplicatesSpark {
         ${metrics} \
         --tmp-dir . \
         --create-output-bam-index true
+        --spark-master local[${task.cpus}]
     """
 }
 

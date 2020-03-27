@@ -20,6 +20,7 @@
   - [--annotateVCF](#--annotatevcf)
   - [--no_gvcf](#--no_gvcf)
   - [--noGVCF](#--nogvcf)
+  - [--no_gatk_spark](#--no_gatk_spark)
   - [--skip_qc](#--skip_qc)
   - [--skipQC](#--skipqc)
   - [--noReports](#--noreports)
@@ -78,7 +79,7 @@
 - [Job resources](#job-resources)
   - [Automatic resubmission](#automatic-resubmission)
   - [Custom resource requests](#custom-resource-requests)
-- [AWS Batch specific parameters](#aws-batch-specific-parameters)
+- [AWSBatch specific parameters](#awsbatch-specific-parameters)
   - [--awsqueue](#--awsqueue)
   - [--awsregion](#--awsregion)
   - [--awscli](#--awscli)
@@ -288,6 +289,10 @@ Use this to disable g.vcf from `HaplotypeCaller`.
 
 > :warning: This params is deprecated -- it will be removed in a future release.
 > Please check: [`--no_gvcf`](#--no_gvcf)
+
+### --no_gatk_spark
+
+Use this to disable usage of GATK Spark implementation of their tools in local mode.
 
 ### --skip_qc
 
@@ -772,14 +777,14 @@ You can then create a pull request to the `nf-core/configs` repository with the 
 
 If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack).
 
-## AWS Batch specific parameters
+## AWSBatch specific parameters
 
-Running the pipeline on AWS Batch requires a couple of specific parameters to be set according to your AWS Batch configuration.
+Running the pipeline on AWSBatch requires a couple of specific parameters to be set according to your AWSBatch configuration.
 Please use [`-profile awsbatch`](https://github.com/nf-core/configs/blob/master/conf/awsbatch.config) and then specify all of the following parameters.
 
 ### --awsqueue
 
-The JobQueue that you intend to use on AWS Batch.
+The JobQueue that you intend to use on AWSBatch.
 
 ### --awsregion
 
@@ -788,7 +793,8 @@ Default is set to `eu-west-1` but can be adjusted to your needs.
 
 ### --awscli
 
-The [AWS CLI](https://www.nextflow.io/docs/latest/awscloud.html#aws-cli-installation) path in your custom AMI. Default: `/home/ec2-user/miniconda/bin/aws`.
+The [AWS CLI](https://www.nextflow.io/docs/latest/awscloud.html#aws-cli-installation) path in your custom AMI.
+Default: `/home/ec2-user/miniconda/bin/aws`.
 
 Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a S3 storage bucket of your choice - you'll get an error message notifying you if you didn't.
 
