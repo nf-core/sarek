@@ -79,6 +79,7 @@
 - [Job resources](#job-resources)
   - [Automatic resubmission](#automatic-resubmission)
   - [Custom resource requests](#custom-resource-requests)
+  - [--markdup_java_options](#--markdup_java_options)
 - [AWSBatch specific parameters](#awsbatch-specific-parameters)
   - [--awsqueue](#--awsqueue)
   - [--awsregion](#--awsregion)
@@ -776,6 +777,14 @@ Before you do this please can you test that the config file works with your pipe
 You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
 
 If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack).
+
+## --markdup_java_options
+
+To control the java options necessary for the GATK `MarkDuplicates` process, you can set this parameter. For example (those are the default settings):
+
+```bash
+--markdup_java_options "-Xms4000m -Xmx7g"
+```
 
 ## AWSBatch specific parameters
 
