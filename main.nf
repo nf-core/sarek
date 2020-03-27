@@ -48,12 +48,13 @@ def helpMessage() {
       --no_gvcf                [bool] No g.vcf output from HaplotypeCaller
       --no_strelka_bp          [bool] Will not use Manta candidateSmallIndels for Strelka as Best Practice
       --no_intervals           [bool] Disable usage of intervals
+      --no_gatk_spark          [bool] Disable usage of GATK Spark implementation of their tools in local mode
       --nucleotides_per_second  [int] To estimate interval size
                                       Default: 1000.0
       --target_bed             [file] Target BED file for targeted or whole exome sequencing
       --tools                   [str] Specify tools to use for variant calling:
                                       Available: ASCAT, ControlFREEC, FreeBayes, HaplotypeCaller
-                                      Manta, mpileup, Mutect2, Strelka, TIDDIT
+                                      Manta, mpileup, MSIsensor, Mutect2, Strelka, TIDDIT
                                       and/or for annotation:
                                       snpEff, VEP, merge
                                       Default: None
@@ -126,7 +127,7 @@ def helpMessage() {
 
     AWSBatch options:
       --awsqueue                [str] The AWSBatch JobQueue that needs to be set when running on AWSBatch
-      --awsregion               [str] The AWS Region for your AWS Batch job to run on
+      --awsregion               [str] The AWS Region for your AWSBatch job to run on
       --awscli                  [str] Path to the AWS CLI tool
     """.stripIndent()
 }
@@ -331,8 +332,10 @@ if (params.vepCacheVersion) exit 1, "The params `--vepCacheVersion` has been rem
 */
 
 // Check if genome exists in the config file
-if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
+if (params.genomes && params.genome && !params.genomes.containsKey(params.genome) && !params.igenomes_ignore) {
     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
+} else if (params.genomes && params.genome && !params.genomes.containsKey(params.genome) && params.igenomes_ignore) {
+    exit 1, "The provided genome '${params.genome}' is not available in the genomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
 }
 
 stepList = defineStepList()
@@ -407,8 +410,9 @@ if (tsvPath) {
     }
 } else if (params.input && !hasExtension(params.input, "tsv")) {
     log.info "No TSV file"
-    if (step != 'mapping') exit 1, 'No other step than "mapping" support a dir as an input'
+    if (step != 'mapping') exit 1, 'No other step than "mapping" support a directory as an input'
     log.info "Reading ${params.input} directory"
+    log.warn "[nf-core/sarek] in ${params.input} directory, all fastqs are assuming to be from the same sample, which is assumed to be a germline one"
     inputSample = extractFastqFromDir(params.input)
     (inputSample, fastqTMP) = inputSample.into(2)
     fastqTMP.toList().subscribe onNext: {
@@ -497,12 +501,12 @@ if (params.skip_qc)             summary['QC tools skip']     = skipQC.join(', ')
 
 if (params.trim_fastq) {
     summary['Fastq trim']         = "Fastq trim selected"
-    summary['Trim R1']            = "$params.clip_r1 bp"
-    summary['Trim R2']            = "$params.clip_r2 bp"
-    summary["Trim 3' R1"]         = "$params.three_prime_clip_r1 bp"
-    summary["Trim 3' R2"]         = "$params.three_prime_clip_r2 bp"
-    summary["NextSeq Trim"]       = "$params.trim_nextseq bp"
-    summary['Saved Trimmed Fastq'] = params.saveTrimmed ? 'Yes' : 'No'
+    summary['Trim R1']            = "${params.clip_r1} bp"
+    summary['Trim R2']            = "${params.clip_r2} bp"
+    summary["Trim 3' R1"]         = "${params.three_prime_clip_r1} bp"
+    summary["Trim 3' R2"]         = "${params.three_prime_clip_r2} bp"
+    summary["NextSeq Trim"]       = "${params.trim_nextseq} bp"
+    summary['Saved Trimmed Fastq'] = params.save_trimmed ? 'Yes' : 'No'
 }
 
 if (params.no_intervals && step != 'annotate') summary['Intervals']         = 'Do not use'
@@ -564,6 +568,7 @@ if (params.monochrome_logs) log.info "------------------------------------------
 else log.info "-\033[2m--------------------------------------------------\033[0m-"
 
 if ('mutect2' in tools && !(params.pon)) log.warn "[nf-core/sarek] Mutect2 was requested, but as no panel of normals were given, results will not be optimal"
+if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works if Sentieon is available where nf-core/sarek is run"
 
 // Check the hostnames against configured profiles
 checkHostname()
@@ -588,7 +593,7 @@ Channel.from(summary.collect{ [it.key, it.value] })
 
 process Get_software_versions {
     publishDir path:"${params.outdir}/pipeline_info", mode: params.publish_dir_mode,
-        saveAs: { it.indexOf(".csv") > 0 ? it : null }
+        saveAs: {it.indexOf(".csv") > 0 ? it : null}
 
     output:
         file 'software_versions_mqc.yaml' into ch_software_versions_yaml
@@ -987,9 +992,6 @@ fastQCReport = fastQCFQReport.mix(fastQCBAMReport)
 
 fastQCReport = fastQCReport.dump(tag:'FastQC')
 
-outputPairReadsTrimGalore = Channel.create()
-
-if (params.trim_fastq) {
 process TrimGalore {
     label 'TrimGalore'
 
@@ -1010,6 +1012,8 @@ process TrimGalore {
         file("*.{html,zip,txt}") into trimGaloreReport
         set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1_val_1.fq.gz"), file("${idSample}_${idRun}_R2_val_2.fq.gz") into outputPairReadsTrimGalore
 
+    when: params.trim_fastq
+
     script:
     // Calculate number of --cores for TrimGalore based on value of task.cpus
     // See: https://github.com/FelixKrueger/TrimGalore/blob/master/Changelog.md#version-060-release-on-1-mar-2019
@@ -1026,22 +1030,30 @@ process TrimGalore {
     tpc_r2 = params.three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${params.three_prime_clip_r2}" : ''
     nextseq = params.trim_nextseq > 0 ? "--nextseq ${params.trim_nextseq}" : ''
     """
-    trim_galore --cores $cores --paired --fastqc --gzip $c_r1 $c_r2 $tpc_r1 $tpc_r2 $nextseq  ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
+    trim_galore \
+         --cores ${cores} \
+        --paired \
+        --fastqc \
+        --gzip \
+        ${c_r1} ${c_r2} \
+        ${tpc_r1} ${tpc_r2} \
+        ${nextseq} \
+        ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
+
     mv *val_1_fastqc.html "${idSample}_${idRun}_R1.trimmed_fastqc.html"
     mv *val_2_fastqc.html "${idSample}_${idRun}_R2.trimmed_fastqc.html"
     mv *val_1_fastqc.zip "${idSample}_${idRun}_R1.trimmed_fastqc.zip"
     mv *val_2_fastqc.zip "${idSample}_${idRun}_R2.trimmed_fastqc.zip"
     """
-  }
-} else {
-  inputPairReadsTrimGalore
-   .set{outputPairReadsTrimGalore}
-   trimGaloreReport = Channel.empty()
 }
+
+if (!params.trim_fastq) inputPairReadsTrimGalore.close()
 
 // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
 
-inputPairReads = outputPairReadsTrimGalore.mix(inputBam)
+if (params.trim_fastq) inputPairReads = outputPairReadsTrimGalore
+else inputPairReads = inputPairReads.mix(inputBam)
+
 inputPairReads = inputPairReads.dump(tag:'INPUT')
 
 (inputPairReads, inputPairReadsSentieon) = inputPairReads.into(2)
@@ -1062,6 +1074,8 @@ process MapReads {
     output:
         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMapped
         set idPatient, val("${idSample}_${idRun}"), file("${idSample}_${idRun}.bam") into bamMappedBamQC
+
+    when: !(params.sentieon)
 
     script:
     // -K is an hidden option, used to fix the number of reads processed by bwa mem
@@ -1212,7 +1226,7 @@ process IndexBamFile {
     output:
         set idPatient, idSample, file(bam), file("*.bai") into indexedBam
 
-    when: !params.known_indels
+    when: !(params.known_indels)
 
     script:
     """
@@ -1223,7 +1237,7 @@ process IndexBamFile {
 
 // STEP 2: MARKING DUPLICATES
 
-process MarkDuplicatesSpark {
+process MarkDuplicates {
     label 'cpus_16'
 
     tag {idPatient + "-" + idSample}
@@ -1246,6 +1260,21 @@ process MarkDuplicatesSpark {
     script:
     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
     metrics = 'markduplicates' in skipQC ? '' : "-M ${idSample}.bam.metrics"
+    if (params.no_gatk_spark)
+    """
+    gatk --java-options ${markdup_java_options} \
+        MarkDuplicates \
+        --MAX_RECORDS_IN_RAM 50000 \
+        --INPUT ${idSample}.bam \
+        --METRICS_FILE ${idSample}.bam.metrics \
+        --TMP_DIR . \
+        --ASSUME_SORT_ORDER coordinate \
+        --CREATE_INDEX true \
+        --OUTPUT ${idSample}.md.bam
+    
+    mv ${idSample}.md.bai ${idSample}.md.bam.bai
+    """
+    else
     """
     gatk --java-options ${markdup_java_options} \
         MarkDuplicatesSpark \
@@ -1253,7 +1282,8 @@ process MarkDuplicatesSpark {
         -O ${idSample}.md.bam \
         ${metrics} \
         --tmp-dir . \
-        --create-output-bam-index true
+        --create-output-bam-index true \
+        --spark-master local[${task.cpus}]
     """
 }
 
@@ -2222,11 +2252,11 @@ process ConcatVCF {
 
     script:
     if (variantCaller == 'HaplotypeCallerGVCF')
-          outputFile = "HaplotypeCaller_${idSample}.g.vcf"
+        outputFile = "HaplotypeCaller_${idSample}.g.vcf"
     else if (variantCaller == "Mutect2")
-          outputFile = "Mutect2_unfiltered_${idSample}.vcf"
+        outputFile = "Mutect2_unfiltered_${idSample}.vcf"
     else
-          outputFile = "${variantCaller}_${idSample}.vcf"
+        outputFile = "${variantCaller}_${idSample}.vcf"
     options = params.target_bed ? "-t ${targetBED}" : ""
     intervalsOptions = params.no_intervals ? "-n" : ""
     """
@@ -2609,7 +2639,7 @@ vcfStrelkaBP = vcfStrelkaBP.dump(tag:'Strelka BP')
 // STEP MSISENSOR.1 - SCAN
 
 // Scan reference genome for microsattelites
-process msisensorScan {
+process MSIsensor_scan {
     label 'cpus_1'
     label 'memory_max'
     // memory '20 GB'
@@ -2635,7 +2665,7 @@ process msisensorScan {
 
 // Score the normal vs somatic pair of bams
 
-process msisensor {
+process MSIsensor_msi {
     label 'cpus_4'
     label 'memory_max'
     // memory '10 GB'
@@ -2955,6 +2985,10 @@ controlFreecVizOut.dump(tag:'ControlFreecViz')
 (vcfMantaSomaticSV, vcfMantaDiploidSV) = vcfManta.into(2)
 
 vcfKeep = Channel.empty().mix(
+    vcfConcatenated.map{
+        variantcaller, idPatient, idSample, vcf, tbi ->
+        [variantcaller, idSample, vcf]
+    },
     vcfSentieon.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
         [variantcaller, idSample, vcf]
