@@ -6,7 +6,7 @@
   - [Reproducibility](#reproducibility)
 - [Main arguments](#main-arguments)
   - [-profile](#-profile)
-  - [`--reads`](#--reads)
+  - [`--input`](#--input)
   - [--split_fastq](#--split_fastq)
   - [--trim_fastq](#--trim_fastq)
   - [--clip_r1](#--clip_r1)
@@ -197,7 +197,7 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
   - A profile with a complete configuration for automated testing
   - Includes links to test data so needs no other parameters
 
-### `--reads`
+### `--input`
 
 Use this to specify the location of your input FastQ files. For example:
 
