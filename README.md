@@ -4,8 +4,8 @@
 [![nf-core](https://img.shields.io/badge/nf--core-pipeline-brightgreen.svg)](https://nf-co.re/)
 [![DOI](https://zenodo.org/badge/184289291.svg)](https://zenodo.org/badge/latestdoi/184289291)
 
-[![GitHub Actions CI status](https://github.com/nf-core/sarek/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22sarek+CI%22)
-[![GitHub Actions Linting status](https://github.com/nf-core/sarek/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22sarek+linting%22)
+[![GitHub Actions CI status](https://github.com/nf-core/sarek/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22nf-core+CI%22)
+[![GitHub Actions Linting status](https://github.com/nf-core/sarek/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22nf-core+linting%22)
 [![CircleCi build status](https://img.shields.io/circleci/project/github/nf-core/sarek?logo=circleci)](https://circleci.com/gh/nf-core/sarek/)
 
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](http://bioconda.github.io/)
@@ -85,6 +85,7 @@ Helpful contributors:
 * [Adrian Lärkeryd](https://github.com/adrlar)
 * [Alexander Peltzer](https://github.com/apeltzer)
 * [Chela James](https://github.com/chelauk)
+* [David Mas-Ponte](https://github.com/davidmasp)
 * [Francesco L](https://github.com/nibscles)
 * [FriederikeHanssen](https://github.com/FriederikeHanssen)
 * [Gisela Gabernet](https://github.com/ggabernet)
@@ -105,7 +106,6 @@ Helpful contributors:
 * [gulfshores](https://github.com/gulfshores)
 * [pallolason](https://github.com/pallolason)
 * [silviamorins](https://github.com/silviamorins)
-* [David Mas-Ponte](https://github.com/davidmasp)
 
 ## Contributions & Support
 

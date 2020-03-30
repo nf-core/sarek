@@ -41,7 +41,7 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
         env:
-          # Only check Nextflow pipeline minimum version for other C
+          # Only check Nextflow pipeline minimum version
           NXF_VER: '19.10.0'
       - name: Pull docker image
         run: |
@@ -50,7 +50,7 @@ jobs:
           docker pull nfcore/sarek${{ matrix.tools }}:dev.${{ matrix.species }}
           docker tag nfcore/sarek${{ matrix.tools }}:dev.${{ matrix.species }} nfcore/sarek${{ matrix.tools }}:dev.${{ matrix.species }}
       - name: Run annotation test
-        run: nextflow run . -profile test_annotation,docker --verbose --tools ${{ matrix.tools }}
+        run: nextflow run . -profile test_annotation,docker --tools ${{ matrix.tools }}
 
   germline:
     env:
@@ -63,7 +63,7 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
         env:
-          # Only check Nextflow pipeline minimum version for other C
+          # Only check Nextflow pipeline minimum version
           NXF_VER: '19.10.0'
       - name: Pull docker image
         run: |
@@ -93,14 +93,14 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
         env:
-          # Only check Nextflow pipeline minimum version for other C
+          # Only check Nextflow pipeline minimum version
           NXF_VER: '19.10.0'
       - name: Pull docker image
         run: |
           docker pull nfcore/sarek:dev
           docker tag nfcore/sarek:dev nfcore/sarek:dev
       - name: Run test for minimal genomes
-        run: nextflow run . -profile test,docker --skipQC all --verbose --genome ${{ matrix.genome }} ${{ matrix.intervals }} --tools Manta,mpileup,Strelka,FreeBayes
+        run: nextflow run . -profile test,docker --skipQC all --genome ${{ matrix.genome }} ${{ matrix.intervals }} --tools Manta,mpileup,Strelka,FreeBayes
 
   profile:
     env:
@@ -108,7 +108,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        profile: [test_splitfastq, test_targeted, test_trimming]
+        profile: [test_split_fastq, test_targeted, test_trimming, test_no_gatk_spark]
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
@@ -116,14 +116,14 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
         env:
-          # Only check Nextflow pipeline minimum version for other C
+          # Only check Nextflow pipeline minimum version
           NXF_VER: '19.10.0'
       - name: Pull docker image
         run: |
           docker pull nfcore/sarek:dev
           docker tag nfcore/sarek:dev nfcore/sarek:dev
       - name: Run ${{ matrix.profile }} test
-        run: nextflow run . -profile ${{ matrix.profile }},docker --verbose
+        run: nextflow run . -profile ${{ matrix.profile }},docker
 
   tools:
     env:
@@ -131,7 +131,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        tool: [Haplotypecaller, Freebayes, Manta, mpileup, Strelka, TIDDIT, msisensor]
+        tool: [Haplotypecaller, Freebayes, Manta, mpileup, Strelka, TIDDIT, MSIsensor]
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
@@ -139,11 +139,11 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
         env:
-          # Only check Nextflow pipeline minimum version for other C
+          # Only check Nextflow pipeline minimum version
           NXF_VER: '19.10.0'
       - name: Pull docker image
         run: |
           docker pull nfcore/sarek:dev
           docker tag nfcore/sarek:dev nfcore/sarek:dev
       - name: Run ${{ matrix.tool }} test
-        run: nextflow run . -profile test_tool,docker --verbose --tools ${{ matrix.tool }}
+        run: nextflow run . -profile test_tool,docker --tools ${{ matrix.tool }}
