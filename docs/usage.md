@@ -8,11 +8,19 @@
   - [-profile](#-profile)
   - [--input](#--input)
   - [--split_fastq](#--split_fastq)
+  - [--trim_fastq](#--trim_fastq)
+  - [--clip_r1](#--clip_r1)
+  - [--clip_r2](#--clip_r2)
+  - [--three_prime_clip_r1](#--three_prime_clip_r1)
+  - [--three_prime_clip_r2](#--three_prime_clip_r2)
+  - [--trim_nextseq](#--trim_nextseq)
+  - [--save_trimmed](#--save_trimmed)
   - [--sample](#--sample)
   - [--sampleDir](#--sampledir)
   - [--annotateVCF](#--annotatevcf)
   - [--no_gvcf](#--no_gvcf)
   - [--noGVCF](#--nogvcf)
+  - [--no_gatk_spark](#--no_gatk_spark)
   - [--skip_qc](#--skip_qc)
   - [--skipQC](#--skipqc)
   - [--noReports](#--noreports)
@@ -33,6 +41,8 @@
   - [--ac_loci_gc](#--ac_loci_gc)
   - [--acLociGC](#--aclocigc)
   - [--bwa](#--bwa)
+  - [--ascat_ploidy](#--ascat_ploidy)
+  - [--ascat_purity](#--ascat_purity)
   - [--bwaIndex](#--bwaindex)
   - [--chr_dir](#--chr_dir)
   - [--chrDir](#--chrdir)
@@ -69,15 +79,19 @@
 - [Job resources](#job-resources)
   - [Automatic resubmission](#automatic-resubmission)
   - [Custom resource requests](#custom-resource-requests)
-- [AWS Batch specific parameters](#aws-batch-specific-parameters)
+  - [--markdup_java_options](#--markdup_java_options)
+- [AWSBatch specific parameters](#awsbatch-specific-parameters)
   - [--awsqueue](#--awsqueue)
   - [--awsregion](#--awsregion)
+  - [--awscli](#--awscli)
 - [Other command line parameters](#other-command-line-parameters)
   - [--outdir](#--outdir)
-- [--publish_dir_mode](#--publish_dir_mode)
-- [--publishDirMode](#--publishdirmode)
+  - [--publish_dir_mode](#--publish_dir_mode)
+  - [--publishDirMode](#--publishdirmode)
   - [--sequencing_center](#--sequencing_center)
   - [--email](#--email)
+  - [--email_on_fail](#--email_on_fail)
+  - [--max_multiqc_email_size](#--max_multiqc_email_size)
   - [-name](#-name)
   - [-resume](#-resume)
   - [-c](#-c)
@@ -91,8 +105,6 @@
   - [--plaintext_email](#--plaintext_email)
   - [--monochrome_logs](#--monochrome_logs)
   - [--multiqc_config](#--multiqc_config)
-  - [--ascat_ploidy](#--ascat_ploidy)
-  - [--ascat_purity](#--ascat_purity)
 
 ## Introduction
 
@@ -149,8 +161,8 @@ It's a good idea to specify a pipeline version when running the pipeline on your
 This ensures that a specific version of the pipeline code and software are used when you run your pipeline.
 If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `2.5.0`).
-Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 2.5.0`.
+First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `2.5.2`).
+Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 2.5.2`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 
@@ -158,31 +170,36 @@ This version number will be logged in reports when you run the pipeline, so that
 
 ### -profile
 
-Use this parameter to choose a configuration profile.
-Profiles can give configuration presets for different compute environments.
-Note that multiple profiles can be loaded, for example: `-profile docker` - the order of arguments is important!
+Use this parameter to choose a configuration profile. Profiles can give configuration presets for different compute environments.
 
-If `-profile` is not specified at all the pipeline will be run locally and expects all software to be installed and available on the `PATH`.
+Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Conda) - see below.
 
-- `awsbatch`
-  - A generic configuration profile to be used with AWS Batch.
-- `conda`
-  - A generic configuration profile to be used with [conda](https://conda.io/docs/)
-  - Pulls most software from [Bioconda](https://bioconda.github.io/)
+> We highly recommend the use of Docker or Singularity containers for full pipeline reproducibility, however when this is not possible, Conda is also supported.
+
+The pipeline also dynamically loads configurations from [https://github.com/nf-core/configs](https://github.com/nf-core/configs) when it runs, making multiple config profiles for various institutional clusters available at run time. For more information and to see if your system is available in these configs please see the [nf-core/configs documentation](https://github.com/nf-core/configs#documentation).
+
+Note that multiple profiles can be loaded, for example: `-profile test,docker` - the order of arguments is important!
+They are loaded in sequence, so later profiles can overwrite earlier profiles.
+
+If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`. This is _not_ recommended.
+
 - `docker`
   - A generic configuration profile to be used with [Docker](http://docker.com/)
   - Pulls software from dockerhub: [`nfcore/sarek`](http://hub.docker.com/r/nfcore/sarek/)
 - `singularity`
-  - A generic configuration profile to be used with [Singularity](http://singularity.lbl.gov/)
+  - A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
   - Pulls software from DockerHub: [`nfcore/sarek`](http://hub.docker.com/r/nfcore/sarek/)
+- `conda`
+  - Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker or Singularity.
+  - A generic configuration profile to be used with [conda](https://conda.io/docs/)
+  - Pulls most software from [Bioconda](https://bioconda.github.io/)
 - `test`
   - A profile with a complete configuration for automated testing
   - Includes links to test data so needs no other parameters
 
 ### --input
 
-Use this to specify the location of your input TSV file, on `mapping`, `recalibrate` and `variantcalling` steps.
-For example:
+Use this to specify the location of your input FastQ files. For example:
 
 ```bash
 --input sample.tsv
@@ -215,6 +232,39 @@ For example:
 --split_fastq 10000
 ```
 
+### --trim_fastq
+
+Use this to perform adapter trimming [Trim Galore](https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md)
+
+### --clip_r1
+
+Instructs Trim Galore to remove a number of bp from the 5' end of read 1 (or single-end reads).
+This may be useful if the qualities were very poor, or if there is some sort of unwanted bias at the 5' end.
+
+### --clip_r2
+
+Instructs Trim Galore to remove a number of bp from the 5' end of read 2 (paired-end reads only).
+This may be useful if the qualities were very poor, or if there is some sort of unwanted bias at the 5' end.
+
+### --three_prime_clip_r1
+
+Instructs Trim Galore to remove a number of bp from the 3' end of read 1 (or single-end reads) AFTER adapter/quality trimming has been performed.
+This may remove some unwanted bias from the 3' end that is not directly related to adapter sequence or basecall quality.
+
+### --three_prime_clip_r2
+
+Instructs Trim Galore to remove a number of bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed.
+This may remove some unwanted bias from the 3' end that is not directly related to adapter sequence or basecall quality.
+
+### --trim_nextseq
+
+This enables the option `--nextseq-trim=3'CUTOFF` within `Cutadapt`, which will set a quality cutoff (that is normally given with `-q` instead), but qualities of G bases are ignored.
+This trimming is in common for the NextSeq and NovaSeq-platforms, where basecalls without any signal are called as high-quality G bases.
+
+### --save_trimmed
+
+Option to keep trimmed FASTQs
+
 ### --sample
 
 > :warning: This params is deprecated -- it will be removed in a future release.
@@ -241,10 +291,14 @@ Use this to disable g.vcf from `HaplotypeCaller`.
 > :warning: This params is deprecated -- it will be removed in a future release.
 > Please check: [`--no_gvcf`](#--no_gvcf)
 
+### --no_gatk_spark
+
+Use this to disable usage of GATK Spark implementation of their tools in local mode.
+
 ### --skip_qc
 
 Use this to disable specific QC and Reporting tools.
-Available: `all`, `bamQC`, `BCFtools`, `FastQC`, `MultiQC`, `samtools`, `vcftools`, `versions`
+Available: `all`, `bamQC`, `BaseRecalibrator`, `BCFtools`, `Documentation`, `FastQC`, `MultiQC`, `samtools`, `vcftools`, `versions`
 Default: `None`
 
 ### --skipQC
@@ -275,7 +329,7 @@ Available: `mapping`, `recalibrate`, `variantcalling` and `annotate`
 ### --tools
 
 Use this to specify the tools to run:
-Available: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `Mutect2`, `Strelka`, `TIDDIT`
+Available: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `MSIsensor`, `Mutect2`, `Strelka`, `TIDDIT`
 
 ### --sentieon
 
@@ -722,21 +776,34 @@ If you are likely to be running `nf-core` pipelines regularly it may be a good i
 Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter (see definition below).
 You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
 
-If you have any questions or issues please send us a message on [Slack](https://nf-core-invite.herokuapp.com/).
+If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack).
 
-## AWS Batch specific parameters
+## --markdup_java_options
 
-Running the pipeline on AWS Batch requires a couple of specific parameters to be set according to your AWS Batch configuration.
-Please use the `-awsbatch` profile and then specify all of the following parameters.
+To control the java options necessary for the GATK `MarkDuplicates` process, you can set this parameter. For example (those are the default settings):
+
+```bash
+--markdup_java_options "-Xms4000m -Xmx7g"
+```
+
+## AWSBatch specific parameters
+
+Running the pipeline on AWSBatch requires a couple of specific parameters to be set according to your AWSBatch configuration.
+Please use [`-profile awsbatch`](https://github.com/nf-core/configs/blob/master/conf/awsbatch.config) and then specify all of the following parameters.
 
 ### --awsqueue
 
-The JobQueue that you intend to use on AWS Batch.
+The JobQueue that you intend to use on AWSBatch.
 
 ### --awsregion
 
 The AWS region to run your job in.
 Default is set to `eu-west-1` but can be adjusted to your needs.
+
+### --awscli
+
+The [AWS CLI](https://www.nextflow.io/docs/latest/awscloud.html#aws-cli-installation) path in your custom AMI.
+Default: `/home/ec2-user/miniconda/bin/aws`.
 
 Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a S3 storage bucket of your choice - you'll get an error message notifying you if you didn't.
 
@@ -745,15 +812,15 @@ Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a 
 ### --outdir
 
 The output directory where the results will be saved.
-Default: `results/
+Default: `results/`
 
-## --publish_dir_mode
+### --publish_dir_mode
 
 The file publishing method.
 Available: `symlink`, `rellink`, `link`, `copy`, `copyNoFollow`, `move`
 Default: `copy`
 
-## --publishDirMode
+### --publishDirMode
 
 > :warning: This params is deprecated -- it will be removed in a future release.
 > Please check: [`--publish_dir_mode`](#--publish_dir_mode)
@@ -766,6 +833,14 @@ The sequencing center that will be used in the BAM CN field
 
 Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits.
 If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.
+
+### --email_on_fail
+
+This works exactly as with `--email`, except emails are only sent if the workflow is not successful.
+
+### --max_multiqc_email_size
+
+Threshold size for MultiQC report to be attached in notification email. If file generated by pipeline exceeds the threshold, it will not be attached (Default: 25MB).
 
 ### -name
 
