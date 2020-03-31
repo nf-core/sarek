@@ -4,9 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## dev
+## [2.6] - Piellorieppe
 
-### Added
+Piellorieppe is one of the main massif in the Sarek National Park.
+
+### Added - [2.6]
 
 - [#76](https://github.com/nf-core/sarek/pull/76) - Add `GATK Spark` possibilities to Sarek
 - [#87](https://github.com/nf-core/sarek/pull/87) - Add `GATK BaseRecalibrator` plot to `MultiQC` report
@@ -19,7 +21,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#164](https://github.com/nf-core/sarek/pull/164) - Add `--no_gatk_spark` params and tests
 - [#166](https://github.com/nf-core/sarek/issues/166) - Add `--markdup_java_options` documentation
 
-### Changed
+### Changed - [2.6]
 
 - [#76](https://github.com/nf-core/sarek/pull/76) - Use `MarkDuplicatesSpark` instead of `MarkDuplicates`
 - [#76](https://github.com/nf-core/sarek/pull/76) - Use `gatk4-spark` instead of `gatk4` in `environment.yml`
@@ -48,7 +50,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#164](https://github.com/nf-core/sarek/pull/164) - Update `gatk4-spark` from `4.1.4.1` to `4.1.6.0`
 - [#164](https://github.com/nf-core/sarek/pull/164) - Update docs
 
-### Fixed
+### Fixed - [2.6]
 
 - [#83](https://github.com/nf-core/sarek/pull/83) - Fix some typos in `docs/input.md`
 - [#107](https://github.com/nf-core/sarek/pull/107) - Fix linting
@@ -70,7 +72,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#164](https://github.com/nf-core/sarek/pull/164) - Fix issues when running with `Sentieon`
 - [#164](https://github.com/nf-core/sarek/pull/164) - Add more VCFs to annotation
 
-### Deprecated
+### Deprecated - [2.6]
 
 - [#107](https://github.com/nf-core/sarek/pull/107) - `--annotateTools` is now deprecated, use `--annotate_tools` instead
 - [#107](https://github.com/nf-core/sarek/pull/107) - `--cadd_InDels` is now deprecated, use `--cadd_indels` instead
@@ -87,7 +89,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#107](https://github.com/nf-core/sarek/pull/107) - `--snpEff_cache` is now deprecated, use `--snpeff_cache` instead
 - [#107](https://github.com/nf-core/sarek/pull/107) - `--targetBed` is now deprecated, use `--target_bed` instead
 
-### Removed
+### Removed - [2.6]
 
 - [#107](https://github.com/nf-core/sarek/pull/107) - `--acLociGC` is now removed, use `--ac_loci_gc` instead
 - [#107](https://github.com/nf-core/sarek/pull/107) - `--acLoci` is now removed, use `--ac_loci` instead

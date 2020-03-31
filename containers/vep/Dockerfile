@@ -9,10 +9,10 @@ COPY environment.yml /
 RUN conda env create -f /environment.yml && conda clean -a
 
 # Add conda installation dir to PATH (instead of doing 'conda activate')
-ENV PATH /opt/conda/envs/nf-core-sarek-vep-dev/bin:$PATH
+ENV PATH /opt/conda/envs/nf-core-sarek-vep-2.6/bin:$PATH
 
 # Dump the details of the installed packages to a file for posterity
-RUN conda env export --name nf-core-sarek-vep-dev > nf-core-sarek-vep-dev.yml
+RUN conda env export --name nf-core-sarek-vep-2.6 > nf-core-sarek-vep-2.6.yml
 
 # Setup default ARG variables
 ARG GENOME=GRCh38

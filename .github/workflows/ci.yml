@@ -21,8 +21,7 @@ jobs:
           sudo mv nextflow /usr/local/bin/
       - name: Pull docker image
         run: |
-          docker pull nfcore/sarek:dev
-          docker tag nfcore/sarek:dev nfcore/sarek:dev
+          docker pull nfcore/sarek:2.6
       - name: Run test
         run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker
 
@@ -45,10 +44,8 @@ jobs:
           NXF_VER: '19.10.0'
       - name: Pull docker image
         run: |
-          docker pull nfcore/sarek:dev
-          docker tag nfcore/sarek:dev nfcore/sarek:dev
-          docker pull nfcore/sarek${{ matrix.tools }}:dev.${{ matrix.species }}
-          docker tag nfcore/sarek${{ matrix.tools }}:dev.${{ matrix.species }} nfcore/sarek${{ matrix.tools }}:dev.${{ matrix.species }}
+          docker pull nfcore/sarek:2.6
+          docker pull nfcore/sarek${{ matrix.tools }}:2.6.${{ matrix.species }}
       - name: Run annotation test
         run: nextflow run . -profile test_annotation,docker --tools ${{ matrix.tools }}
 
@@ -67,8 +64,7 @@ jobs:
           NXF_VER: '19.10.0'
       - name: Pull docker image
         run: |
-          docker pull nfcore/sarek:dev
-          docker tag nfcore/sarek:dev nfcore/sarek:dev
+          docker pull nfcore/sarek:2.6
       - name: Get test data
         run: |
           git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data
@@ -97,8 +93,7 @@ jobs:
           NXF_VER: '19.10.0'
       - name: Pull docker image
         run: |
-          docker pull nfcore/sarek:dev
-          docker tag nfcore/sarek:dev nfcore/sarek:dev
+          docker pull nfcore/sarek:2.6
       - name: Run test for minimal genomes
         run: nextflow run . -profile test,docker --skipQC all --genome ${{ matrix.genome }} ${{ matrix.intervals }} --tools Manta,mpileup,Strelka,FreeBayes
 
@@ -120,8 +115,7 @@ jobs:
           NXF_VER: '19.10.0'
       - name: Pull docker image
         run: |
-          docker pull nfcore/sarek:dev
-          docker tag nfcore/sarek:dev nfcore/sarek:dev
+          docker pull nfcore/sarek:2.6
       - name: Run ${{ matrix.profile }} test
         run: nextflow run . -profile ${{ matrix.profile }},docker
 
@@ -143,7 +137,6 @@ jobs:
           NXF_VER: '19.10.0'
       - name: Pull docker image
         run: |
-          docker pull nfcore/sarek:dev
-          docker tag nfcore/sarek:dev nfcore/sarek:dev
+          docker pull nfcore/sarek:2.6
       - name: Run ${{ matrix.tool }} test
         run: nextflow run . -profile test_tool,docker --tools ${{ matrix.tool }}
