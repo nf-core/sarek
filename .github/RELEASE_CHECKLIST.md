@@ -33,10 +33,13 @@
 13. Checkout the `CHANGELOG.md` from `master`
     - `git checkout upstream/master -- CHANGELOG.md`
 14. Add a new `Unreleased` section in `CHANGELOG.md` for the `dev` version
-15. Make a PR to `dev`
-16. Wait for review
-17. Merge said PR
-18. Download all new containers to `/sw/data/uppnex/ToolBox/nf-core` on `rackham`
-19. Download newest `nf-core/sarek` to `/data1/containers` on `munin`
-20. Commit and push. Continue making more awesome :metal:
-21. Have fika :cake:
+15. Checkout `docs/images/sarek_workflow.svg` and `docs/images/sarek_workflow.pnh` from `master`
+    - `git checkout upstream/master -- docs/images/sarek_workflow.svg`
+    - `git checkout upstream/master -- docs/images/sarek_workflow.png`
+16. Make a PR to `dev`
+17. Wait for review
+18. Merge said PR
+19. Download all new containers to `/sw/data/uppnex/ToolBox/nf-core` on `rackham`
+20. Download newest `nf-core/sarek` to `/data1/containers` on `munin`
+21. Commit and push. Continue making more awesome :metal:
+22. Have fika :cake:
