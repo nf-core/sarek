@@ -25,7 +25,7 @@ It comes with docker containers making installation trivial and results highly r
     <img title="Sarek Workflow" src="docs/images/sarek_workflow.png" width=40%>
 </p>
 
-It's listed on the [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek), [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek) and [omicX - Bioinformatics tools](https://omictools.com/sarek-tool).
+It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek) and [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek).
 
 ## Quick Start
 
