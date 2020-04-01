@@ -25,7 +25,7 @@ It comes with docker containers making installation trivial and results highly r
     <img title="Sarek Workflow" src="docs/images/sarek_workflow.png" width=40%>
 </p>
 
-It's listed on the [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek), [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek) and [omicX - Bioinformatics tools](https://omictools.com/sarek-tool).
+It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek) and [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek).
 
 ## Quick Start
 
@@ -126,7 +126,7 @@ For further information or help, don't hesitate to get in touch on [Slack](https
 ## Citation
 
 If you use `nf-core/sarek` for your analysis, please cite the `Sarek` pre-print as follows:
-> Garcia M, Juhos S, Larsson M et al. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants [version 1; peer review: 1 approved]** *F1000Research* 2020, 9:63 [doi: 10.12688/f1000research.16665.1](https://f1000research.com/articles/9-63/v1).
+> Garcia M, Juhos S, Larsson M et al. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants [version 1; peer review: 2 approved]** *F1000Research* 2020, 9:63 [doi: 10.12688/f1000research.16665.1](https://f1000research.com/articles/9-63/v1).
 
 You can cite the sarek zenodo record for a specific version using the following [doi: 10.5281/zenodo.3476426](https://zenodo.org/badge/latestdoi/184289291)
 

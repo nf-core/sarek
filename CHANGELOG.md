@@ -19,7 +19,8 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#158](https://github.com/nf-core/sarek/pull/158) - Added `ggplot2` version `3.3.0`
 - [#163](https://github.com/nf-core/sarek/pull/163) - Add [MSIsensor](https://github.com/ding-lab/msisensor) in tools and container
 - [#164](https://github.com/nf-core/sarek/pull/164) - Add `--no_gatk_spark` params and tests
-- [#166](https://github.com/nf-core/sarek/issues/166) - Add `--markdup_java_options` documentation
+- [#167](https://github.com/nf-core/sarek/pull/167) - Add `--markdup_java_options` documentation
+- [#169](https://github.com/nf-core/sarek/pull/169) - Add `RELEASE_CHECKLIST.md` document
 
 ### Changed - [2.6]
 
@@ -71,6 +72,7 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#158](https://github.com/nf-core/sarek/pull/158) - Fix typo with `params.snpeff_cache` to decide containers for `snpEff`
 - [#164](https://github.com/nf-core/sarek/pull/164) - Fix issues when running with `Sentieon`
 - [#164](https://github.com/nf-core/sarek/pull/164) - Add more VCFs to annotation
+- [#167](https://github.com/nf-core/sarek/pull/167) - Add `--markdup_java_options` documentation to fix [#166](https://github.com/nf-core/sarek/issues/166)
 
 ### Deprecated - [2.6]
 
@@ -110,6 +112,7 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#107](https://github.com/nf-core/sarek/pull/107) - `--snpeffDb` is now removed, use `--snpeff_db` instead
 - [#107](https://github.com/nf-core/sarek/pull/107) - `--vepCacheVersion` is now removed, use `--vep_cache_version` instead
 - [#152](https://github.com/nf-core/sarek/pull/152) - Removed `Jenkinsfile`
+- [#169](https://github.com/nf-core/sarek/pull/169) - Removed omicX from README
 
 ## [2.5.2] - Jåkkåtjkaskajekna
 
