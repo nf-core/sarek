@@ -699,7 +699,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 
 ### --pon
 
-When a panel of normals [PON](https://gatkforums.broadinstitute.org/gatk/discussion/24057/how-to-call-somatic-mutations-using-gatk4-mutect2#latest) is defined, you will get filtered somatic calls as a result.
+When a panel of normals [PON](https://gatkforums.broadinstitute.org/gatk/discussion/24057/how-to-call-somatic-mutations-using-gatk4-mutect2#latest) is defined, it will be use to filter somatic calls.
 Without PON, there will be no calls with PASS in the INFO field, only an _unfiltered_ VCF is written.
 It is recommended to make your own panel-of-normals, as it depends on sequencer and library preparation.
 For tests in iGenomes there is a dummy PON file in the Annotation/GermlineResource directory, but it _should not be used_ as a real panel-of-normals file.
