@@ -161,8 +161,8 @@ It's a good idea to specify a pipeline version when running the pipeline on your
 This ensures that a specific version of the pipeline code and software are used when you run your pipeline.
 If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `2.5.2`).
-Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 2.5.2`.
+First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `2.6`).
+Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 2.6`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 
@@ -472,7 +472,7 @@ params {
   genomes {
     'GRCh38' {
       ac_loci                  = '<path to the acLoci file>'
-      ac_lociGC                = '<path to the acLociGC file>'
+      ac_loci_gc               = '<path to the acLociGC file>'
       bwa                      = '<path to the bwa indexes>'
       chr_dir                  = '<path to the chromosomes folder>'
       chr_length               = '<path to the chromosomes lenght file>'
@@ -631,7 +631,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 ### --genomeIndex
 
 > :warning: This params has been removed.
-> Please check: [`--fastaFai`](#--fastaFai)
+> Please check: [`--fasta_fai`](#--fasta_fai)
 
 ### --germline_resource
 
