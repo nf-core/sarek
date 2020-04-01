@@ -11,7 +11,7 @@
    - i.e. Peaks in [Sarek National Park](https://en.wikipedia.org/wiki/Sarek_National_Park#Topography)
 4. Sync `dev` and checkout a new branch for the release
 5. Bump version:
-   - `.nf-core bump-version . 2.6`
+   - `nf-core bump-version . 2.6`
    - edit `.circleci/config.yml`
    - edit `.github/workflows/ci.yml`
    - edit `conf/base.config`
