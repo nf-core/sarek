@@ -48,6 +48,8 @@ This is just supported for a limited variant callers.
 
 Here is a list of the variant calling tools that support tumor-only somatic variant calling:
 
+- Manta
 - Mutect2
+- TIDDIT
 
 For more information on the individual variant callers, and where to find the variant calling results, check the [output](output.md) documentation.

@@ -68,9 +68,9 @@ The nf-core/sarek pipeline comes with documentation about the pipeline, found in
     * [Input files documentation](docs/input.md)
     * [Documentation about containers](docs/containers.md)
 4. [Output and how to interpret the results](docs/output.md)
-    * [Complementary information about ASCAT](docs/ascat.md)
-    * [Extra documentation on annotation](docs/annotation.md)
     * [Extra documentation on variant calling](docs/variant_calling.md)
+    * [Extra documentation on annotation](docs/annotation.md)
+    * [Complementary information about ASCAT](docs/ascat.md)
 5. [Troubleshooting](https://nf-co.re/usage/troubleshooting)
 
 ## Credits
