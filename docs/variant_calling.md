@@ -33,7 +33,6 @@ Here is a list of the variant calling tools that support somatic variant calling
 - ControlFREEC
 - Freebayes
 - Manta
-- Mpileup
 - MSIsensor
 - Mutect2
 - Sentieon (check the specific [sentieon](sentieon.md) documentation)
