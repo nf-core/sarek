@@ -135,7 +135,7 @@ For all samples:
 
 ## Variant Calling
 
-All the results regarding Variant Calling are collected in this directory.
+All the results regarding Variant Calling are collected in this directory. If some results from a variant caller do not appear here, please check out the [Variant calling](./variant_calling.md) documentation.
 
 Recalibrated BAM files can also be used as an input to start the Variant Calling, for more information see [TSV files output information](#tsv-files)
 
