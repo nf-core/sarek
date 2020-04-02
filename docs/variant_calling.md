@@ -32,7 +32,7 @@ Here is a list of the variant calling tools that support somatic variant calling
 
 - ASCAT (check the specific [ASCAT](ascat.md) documentation)
 - ControlFREEC
-- Freebayes
+- FreeBayes
 - Manta
 - MSIsensor
 - Mutect2
