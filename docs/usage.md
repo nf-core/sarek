@@ -328,8 +328,17 @@ Available: `mapping`, `recalibrate`, `variantcalling` and `annotate`
 
 ### --tools
 
-Use this to specify the tools to run:
-Available: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `MSIsensor`, `Mutect2`, `Strelka`, `TIDDIT`
+Use this parameter to specify the variant calling and annotation tools to be used. For example:
+
+```bash
+--tools 'Strelka,mutect2,SnpEff'
+```
+
+Available variant callers: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `MSIsensor`, `Mutect2`, `Strelka`, `TIDDIT`.
+
+> `/!\` Not all variant callers are available for both germline and somatic variant calling. For more details please check the [variant calling](variant_calling.md) extra documentation.
+
+Available annotation tools: `VEP`, `SnpEff`, `merge`. For more details, please check the [annotation](annotation.md) extra documentation.
 
 ### --sentieon
 
