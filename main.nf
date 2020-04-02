@@ -377,11 +377,13 @@ if (workflow.profile.contains('awsbatch')) {
     if (params.tracedir.startsWith('s3:')) exit 1, "Specify a local tracedir or run without trace! S3 cannot be used for tracefiles."
 }
 
+// MultiQC
 // Stage config files
 ch_multiqc_config = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
 ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
 
+// Handle input
 tsvPath = null
 if (params.input && (hasExtension(params.input, "tsv") || hasExtension(params.input, "vcf") || hasExtension(params.input, "vcf.gz"))) tsvPath = params.input
 if (params.input && (hasExtension(params.input, "vcf") || hasExtension(params.input, "vcf.gz"))) step = "annotate"
@@ -410,7 +412,7 @@ if (tsvPath) {
     }
 } else if (params.input && !hasExtension(params.input, "tsv")) {
     log.info "No TSV file"
-    if (step != 'mapping') exit 1, 'No other step than "mapping" support a directory as an input'
+    if (step != 'mapping') exit 1, 'No step other than "mapping" supports a directory as an input'
     log.info "Reading ${params.input} directory"
     log.warn "[nf-core/sarek] in ${params.input} directory, all fastqs are assuming to be from the same sample, which is assumed to be a germline one"
     inputSample = extractFastqFromDir(params.input)
@@ -514,6 +516,7 @@ if ('haplotypecaller' in tools)                summary['GVCF']              = pa
 if ('strelka' in tools && 'manta' in tools )   summary['Strelka BP']        = params.no_strelka_bp ? 'No' : 'Yes'
 if (params.ascat_purity)                       summary['ASCAT purity']      = params.ascat_purity
 if (params.ascat_ploidy)                       summary['ASCAT ploidy']      = params.ascat_ploidy
+if (params.no_gatk_spark)                       summary['MarkDuplicates GATK Spark']      = params.no_gatk_spark ? 'No' : 'Yes'
 if (params.sequencing_center)                  summary['Sequenced by']      = params.sequencing_center
 if (params.pon && 'mutect2' in tools)          summary['Panel of normals']  = params.pon
 
@@ -649,7 +652,7 @@ process BuildBWAindexes {
         file(fasta) from ch_fasta
 
     output:
-        file("${fasta}.*") into bwaBuilt
+        file("${fasta}.*") into bwa_built
 
     when: !(params.bwa) && params.fasta && 'mapping' in step
 
@@ -659,7 +662,7 @@ process BuildBWAindexes {
     """
 }
 
-ch_bwa = params.bwa ? Channel.value(file(params.bwa)) : bwaBuilt
+ch_bwa = params.bwa ? Channel.value(file(params.bwa)) : bwa_built
 
 process BuildDict {
     tag {fasta}
@@ -696,7 +699,7 @@ process BuildFastaFai {
         file(fasta) from ch_fasta
 
     output:
-        file("${fasta}.fai") into faiBuilt
+        file("${fasta}.fai") into fai_built
 
     when: !(params.fasta_fai) && params.fasta && !('annotate' in step)
 
@@ -706,7 +709,7 @@ process BuildFastaFai {
     """
 }
 
-ch_fai = params.fasta_fai ? Channel.value(file(params.fasta_fai)) : faiBuilt
+ch_fai = params.fasta_fai ? Channel.value(file(params.fasta_fai)) : fai_built
 
 process BuildDbsnpIndex {
     tag {dbsnp}
@@ -720,7 +723,7 @@ process BuildDbsnpIndex {
     output:
         file("${dbsnp}.tbi") into dbsnp_tbi
 
-    when: !(params.dbsnp_index) && params.dbsnp && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools)
+    when: !(params.dbsnp_index) && params.dbsnp && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || 'tnscope' in tools)
 
     script:
     """
@@ -2420,8 +2423,6 @@ process SentieonTNscope {
         file(fastaFai) from ch_fai
         file(dbsnp) from ch_dbsnp
         file(dbsnpIndex) from ch_dbsnp_tbi
-        file(pon) from ch_pon
-        file(ponIndex) from ch_pon_tbi
 
     output:
         set val("SentieonTNscope"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf") into vcfTNscope
@@ -2429,7 +2430,6 @@ process SentieonTNscope {
     when: 'tnscope' in tools && params.sentieon
 
     script:
-    PON = params.pon ? "--pon ${pon}" : ""
     """
     sentieon driver \
         -t ${task.cpus} \
@@ -2440,7 +2440,6 @@ process SentieonTNscope {
         --tumor_sample ${idSampleTumor} \
         --normal_sample ${idSampleNormal} \
         --dbsnp ${dbsnp} \
-        ${PON} \
         TNscope_${idSampleTumor}_vs_${idSampleNormal}.vcf
     """
 }
@@ -2675,13 +2674,12 @@ process MSIsensor_msi {
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/MSIsensor", mode: params.publishDirMode
 
     input:
-    set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamMsisensor
-    file msiSites from msi_scan_ch
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamMsisensor
+        file msiSites from msi_scan_ch
 
     output:
-    set val("Msisensor"), idPatient, file("${idSampleTumor}_vs_${idSampleNormal}_msisensor"), file("${idSampleTumor}_vs_${idSampleNormal}_msisensor_dis"), file("${idSampleTumor}_vs_${idSampleNormal}_msisensor_germline"), file("${idSampleTumor}_vs_${idSampleNormal}_msisensor_somatic") into msisensor_out_ch
+        set val("Msisensor"), idPatient, file("${idSampleTumor}_vs_${idSampleNormal}_msisensor"), file("${idSampleTumor}_vs_${idSampleNormal}_msisensor_dis"), file("${idSampleTumor}_vs_${idSampleNormal}_msisensor_germline"), file("${idSampleTumor}_vs_${idSampleNormal}_msisensor_somatic") into msisensor_out_ch
 
-    when:
     when: 'msisensor' in tools
 
     script:

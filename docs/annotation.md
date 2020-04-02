@@ -21,7 +21,7 @@ It can of course be started directly from any other step instead.
 
 ## Using genome specific containers
 
-Sarek has already designed containers with `snpEff` and `VEP` files for Human (`GRCh37`, `GRCh38`) Mouse (`GRCm38`), Dog (`CanFam3.1`) and Roundworm (`WBcel235`).
+Sarek has already designed containers with `snpEff` and `VEP` files for Human (`GRCh37`, `GRCh38`), Mouse (`GRCm38`), Dog (`CanFam3.1`) and Roundworm (`WBcel235`).
 Default settings will run using these containers.
 
 The main Sarek container has also `snpEff` and `VEP` installed, but without the cache files that can be downloaded separately.
