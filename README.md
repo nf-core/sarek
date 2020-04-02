@@ -1,5 +1,6 @@
 # [![Sarek](docs/images/nf-core_sarek_logo.png "Sarek")](https://nf-co.re/sarek)
 
+> **An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing**
 [![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A519.10.0-brightgreen.svg)](https://www.nextflow.io/)
 [![nf-core](https://img.shields.io/badge/nf--core-pipeline-brightgreen.svg)](https://nf-co.re/)
 [![DOI](https://zenodo.org/badge/184289291.svg)](https://zenodo.org/badge/latestdoi/184289291)
@@ -87,11 +88,11 @@ Helpful contributors:
 * [Chela James](https://github.com/chelauk)
 * [David Mas-Ponte](https://github.com/davidmasp)
 * [Francesco L](https://github.com/nibscles)
-* [FriederikeHanssen](https://github.com/FriederikeHanssen)
+* [Friederike Hanssen](https://github.com/FriederikeHanssen)
 * [Gisela Gabernet](https://github.com/ggabernet)
 * [Jesper Eisfeldt](https://github.com/J35P312)
 * [Johannes Alneberg](https://github.com/alneberg)
-* [KochTobi](https://github.com/KochTobi)
+* [Tobias Koch](https://github.com/KochTobi)
 * [Lucia Conde](https://github.com/lconde-ucl)
 * [Malin Larsson](https://github.com/malinlarsson)
 * [Marcel Martin](https://github.com/marcelm)
@@ -125,7 +126,7 @@ For further information or help, don't hesitate to get in touch on [Slack](https
 
 ## Citation
 
-If you use `nf-core/sarek` for your analysis, please cite the `Sarek` pre-print as follows:
+If you use `nf-core/sarek` for your analysis, please cite the `Sarek` article as follows:
 > Garcia M, Juhos S, Larsson M et al. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants [version 1; peer review: 2 approved]** *F1000Research* 2020, 9:63 [doi: 10.12688/f1000research.16665.1](https://f1000research.com/articles/9-63/v1).
 
 You can cite the sarek zenodo record for a specific version using the following [doi: 10.5281/zenodo.3476426](https://zenodo.org/badge/latestdoi/184289291)
