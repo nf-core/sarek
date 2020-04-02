@@ -11,7 +11,7 @@ You can specify the variant caller to use with the `--tools` parameter (see [usa
 
 Germline variant calling can currently only be performed with the following variant callers:
 
-- Haplotypecaller
+- HaplotypeCaller
 - Manta
 - Sentieon (check the specific [sentieon](sentieon.md) documentation)
 - Strelka
