@@ -49,6 +49,7 @@ This is just supported for a limited variant callers.
 Here is a list of the variant calling tools that support tumor-only somatic variant calling:
 
 - Manta
+- mpileup
 - Mutect2
 - TIDDIT
 
