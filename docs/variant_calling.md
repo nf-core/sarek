@@ -15,7 +15,7 @@ Germline variant calling can currently only be performed with the following vari
 - Manta
 - Sentieon (check the specific [sentieon](sentieon.md) documentation)
 - Strelka
-- Tiddit
+- TIDDIT
 
 For more information on the individual variant callers, and where to find the variant calling results, check the [output](output.md) documentation.
 
