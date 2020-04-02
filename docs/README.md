@@ -15,6 +15,6 @@ The nf-core/sarek documentation is split into the following files:
     * [Documentation about containers](containers.md)
 4. [Output and how to interpret the results](output.md)
     * [Extra documentation on variant calling](variant_calling.md)
-    * [Extra documentation on annotation](annotation.md)
     * [Complementary information about ASCAT](ascat.md)
+    * [Extra documentation on annotation](annotation.md)
 5. [Troubleshooting](https://nf-co.re/usage/troubleshooting)
