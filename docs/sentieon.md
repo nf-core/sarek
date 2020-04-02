@@ -34,7 +34,7 @@ This tool is enabled by default within Sarek if `--sention` is specified and if 
 ### Germline SNV/INDEL Variant Calling - DNAseq
 
 > Precision FDA award-winning software.
-> Matches GATK 3.3-4.1, and without down-sampling. 
+> Matches GATK 3.3-4.1, and without down-sampling.
 > Results up to 10x faster and 100% consistent every time.
 
 This tool is enabled within Sarek if `--sention` is specified and if `--tools DNAseq` is specified cf [--tools](#--tools).
