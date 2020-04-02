@@ -13,6 +13,7 @@ Germline variant calling can currently only be performed with the following vari
 
 - HaplotypeCaller
 - Manta
+- mpileup
 - Sentieon (check the specific [sentieon](sentieon.md) documentation)
 - Strelka
 - TIDDIT
