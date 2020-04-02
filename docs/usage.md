@@ -480,8 +480,8 @@ The syntax for this reference configuration is as follows:
 params {
   genomes {
     'GRCh38' {
-      ac_loci                  = '<path to the acLoci file>'
-      ac_loci_gc               = '<path to the acLociGC file>'
+      ac_loci                  = '<path to the ac_loci file>'
+      ac_loci_gc               = '<path to the ac_loci_gc file>'
       bwa                      = '<path to the bwa indexes>'
       chr_dir                  = '<path to the chromosomes folder>'
       chr_length               = '<path to the chromosomes lenght file>'
@@ -490,11 +490,11 @@ params {
       dict                     = '<path to the dict file>'
       fasta                    = '<path to the fasta file>'
       fasta_fai                = '<path to the fasta index>'
-      germline_resource        = '<path to the germlineResource file>'
-      germline_resource_index  = '<path to the germlineResource index>'
+      germline_resource        = '<path to the germline_resource file>'
+      germline_resource_index  = '<path to the germline_resource index>'
       intervals                = '<path to the intervals file>'
-      known_indels             = '<path to the knownIndels file>'
-      known_indels_index       = '<path to the knownIndels index>'
+      known_indels             = '<path to the known_indels file>'
+      known_indels_index       = '<path to the known_indels index>'
       snpeff_db                = '<version of the snpEff DB>'
       species                  = '<species>'
       vep_cache_version        = '<version of the VEP cache>'
