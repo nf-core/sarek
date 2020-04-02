@@ -29,7 +29,7 @@ If the selected variant caller allows only for somatic variant calling, then onl
 
 Here is a list of the variant calling tools that support somatic variant calling:
 
-- Ascat (check the specific [Ascat](ascat.md) documentation)
+- ASCAT (check the specific [ASCAT](ascat.md) documentation)
 - ControlFREEC
 - Freebayes
 - Manta
