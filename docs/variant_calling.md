@@ -36,7 +36,7 @@ Here is a list of the variant calling tools that support somatic variant calling
 - Mpileup
 - MSIsensor
 - Mutect2
-- Sentieon (check the specific [sentieon](TODO add link) documentation)
+- Sentieon (check the specific [sentieon](sentieon.md) documentation)
 - Strelka
 
 For more information on the individual variant callers, and where to find the variant calling results, check the [output](output.md) documentation.
