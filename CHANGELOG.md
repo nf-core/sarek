@@ -4,11 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.6] - Piellorieppe
+## [2.6dev] - Piellorieppe
 
 Piellorieppe is one of the main massif in the Sarek National Park.
 
-### Added - [2.6]
+### Added - [2.6dev]
 
 - [#76](https://github.com/nf-core/sarek/pull/76) - Add `GATK Spark` possibilities to Sarek
 - [#87](https://github.com/nf-core/sarek/pull/87) - Add `GATK BaseRecalibrator` plot to `MultiQC` report
@@ -22,7 +22,7 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#167](https://github.com/nf-core/sarek/pull/167) - Add `--markdup_java_options` documentation
 - [#169](https://github.com/nf-core/sarek/pull/169) - Add `RELEASE_CHECKLIST.md` document
 
-### Changed - [2.6]
+### Changed - [2.6dev]
 
 - [#76](https://github.com/nf-core/sarek/pull/76) - Use `MarkDuplicatesSpark` instead of `MarkDuplicates`
 - [#76](https://github.com/nf-core/sarek/pull/76) - Use `gatk4-spark` instead of `gatk4` in `environment.yml`
@@ -51,7 +51,7 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#164](https://github.com/nf-core/sarek/pull/164) - Update `gatk4-spark` from `4.1.4.1` to `4.1.6.0`
 - [#164](https://github.com/nf-core/sarek/pull/164) - Update docs
 
-### Fixed - [2.6]
+### Fixed - [2.6dev]
 
 - [#83](https://github.com/nf-core/sarek/pull/83) - Fix some typos in `docs/input.md`
 - [#107](https://github.com/nf-core/sarek/pull/107) - Fix linting
@@ -74,7 +74,7 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#164](https://github.com/nf-core/sarek/pull/164) - Add more VCFs to annotation
 - [#167](https://github.com/nf-core/sarek/pull/167) - Add `--markdup_java_options` documentation to fix [#166](https://github.com/nf-core/sarek/issues/166)
 
-### Deprecated - [2.6]
+### Deprecated - [2.6dev]
 
 - [#107](https://github.com/nf-core/sarek/pull/107) - `--annotateTools` is now deprecated, use `--annotate_tools` instead
 - [#107](https://github.com/nf-core/sarek/pull/107) - `--cadd_InDels` is now deprecated, use `--cadd_indels` instead
@@ -91,7 +91,7 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#107](https://github.com/nf-core/sarek/pull/107) - `--snpEff_cache` is now deprecated, use `--snpeff_cache` instead
 - [#107](https://github.com/nf-core/sarek/pull/107) - `--targetBed` is now deprecated, use `--target_bed` instead
 
-### Removed - [2.6]
+### Removed - [2.6dev]
 
 - [#107](https://github.com/nf-core/sarek/pull/107) - `--acLociGC` is now removed, use `--ac_loci_gc` instead
 - [#107](https://github.com/nf-core/sarek/pull/107) - `--acLoci` is now removed, use `--ac_loci` instead
@@ -385,7 +385,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#692](https://github.com/SciLifeLab/Sarek/pull/692), [#697](https://github.com/SciLifeLab/Sarek/pull/697) - Add `AWS iGenomes` possibilities (within `conf/igenomes.conf`)
 - [#694](https://github.com/SciLifeLab/Sarek/pull/694) - Add monochrome and grey logos for light or dark background
 - [#698](https://github.com/SciLifeLab/Sarek/pull/698) - Add btb profile for munin server
-- [#702](https://github.com/SciLifeLab/Sarek/pull/702) - Add `font-ttf-dejavu-sans-mono` `2.37` and `fontconfig` `2.12.6` to container
+- [#702](https://github.com/SciLifeLab/Sarek/pull/702) - Add `font-ttf-dejavu-sans-mono` `2.37` and `fontconfig` `2.1dev` to container
 
 ### Changed - [2.2.2]
 
