@@ -15,5 +15,6 @@ The nf-core/sarek documentation is split into the following files:
     * [Documentation about containers](containers.md)
 4. [Output and how to interpret the results](output.md)
     * [Complementary information about ASCAT](ascat.md)
+    * [Complementary information about Sentieon](sentieon.md)
     * [Extra documentation on annotation](annotation.md)
 5. [Troubleshooting](https://nf-co.re/usage/troubleshooting)
