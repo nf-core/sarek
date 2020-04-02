@@ -79,7 +79,7 @@
 - [Job resources](#job-resources)
   - [Automatic resubmission](#automatic-resubmission)
   - [Custom resource requests](#custom-resource-requests)
-  - [--markdup_java_options](#--markdup_java_options)
+- [--markdup_java_options](#--markdup_java_options)
 - [AWSBatch specific parameters](#awsbatch-specific-parameters)
   - [--awsqueue](#--awsqueue)
   - [--awsregion](#--awsregion)
@@ -336,9 +336,7 @@ Available: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mp
 If [Sentieon](https://www.sentieon.com/) is available, use this to enable it for preprocessing, and variant calling.
 Adds the following tools for the [`--tools`](#--tools) options: `DNAseq`, `DNAscope` and `TNscope`.
 
-Please refer to the [nf-core/configs](https://github.com/nf-core/configs#adding-a-new-pipeline-specific-config) repository on how to make a pipeline-specific configuration file based on the [munin-sarek specific configuration file](https://github.com/nf-core/configs/blob/master/conf/pipeline/sarek/munin.config).
-
-Or ask us on the [nf-core Slack](http://nf-co.re/join/slack) on the following channels: [#sarek](https://nfcore.slack.com/channels/sarek) [#configs](https://nfcore.slack.com/channels/configs).
+More information in the [sention](sentieon.md) documentation.
 
 ### --no_strelka_bp
 
