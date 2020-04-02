@@ -720,7 +720,7 @@ process BuildDbsnpIndex {
     output:
         file("${dbsnp}.tbi") into dbsnp_tbi
 
-    when: !(params.dbsnp_index) && params.dbsnp && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools)
+    when: !(params.dbsnp_index) && params.dbsnp && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || 'tnscope' in tools)
 
     script:
     """
@@ -2420,8 +2420,6 @@ process SentieonTNscope {
         file(fastaFai) from ch_fai
         file(dbsnp) from ch_dbsnp
         file(dbsnpIndex) from ch_dbsnp_tbi
-        file(pon) from ch_pon
-        file(ponIndex) from ch_pon_tbi
 
     output:
         set val("SentieonTNscope"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf") into vcfTNscope
@@ -2429,7 +2427,6 @@ process SentieonTNscope {
     when: 'tnscope' in tools && params.sentieon
 
     script:
-    PON = params.pon ? "--pon ${pon}" : ""
     """
     sentieon driver \
         -t ${task.cpus} \
@@ -2440,7 +2437,6 @@ process SentieonTNscope {
         --tumor_sample ${idSampleTumor} \
         --normal_sample ${idSampleNormal} \
         --dbsnp ${dbsnp} \
-        ${PON} \
         TNscope_${idSampleTumor}_vs_${idSampleNormal}.vcf
     """
 }
