@@ -11,11 +11,12 @@ You can specify the variant caller to use with the `--tools` parameter (see [usa
 
 Germline variant calling can currently only be performed with the following variant callers:
 
-- Haplotypecaller
+- HaplotypeCaller
 - Manta
+- mpileup
 - Sentieon (check the specific [sentieon](sentieon.md) documentation)
 - Strelka
-- Tiddit
+- TIDDIT
 
 For more information on the individual variant callers, and where to find the variant calling results, check the [output](output.md) documentation.
 
@@ -29,11 +30,10 @@ If the selected variant caller allows only for somatic variant calling, then onl
 
 Here is a list of the variant calling tools that support somatic variant calling:
 
-- Ascat (check the specific [Ascat](ascat.md) documentation)
+- ASCAT (check the specific [ASCAT](ascat.md) documentation)
 - ControlFREEC
-- Freebayes
+- FreeBayes
 - Manta
-- Mpileup
 - MSIsensor
 - Mutect2
 - Sentieon (check the specific [sentieon](sentieon.md) documentation)
