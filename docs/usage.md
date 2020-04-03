@@ -79,6 +79,11 @@
 - [Job resources](#job-resources)
   - [Automatic resubmission](#automatic-resubmission)
   - [Custom resource requests](#custom-resource-requests)
+  - [--max_memory](#--max_memory)
+  - [--single_cpu_mem](#--single_cpu_mem)
+  - [--singleCPUMem](#--singlecpumem)
+  - [--max_time](#--max_time)
+  - [--max_cpus](#--max_cpus)
   - [--markdup_java_options](#--markdup_java_options)
 - [AWSBatch specific parameters](#awsbatch-specific-parameters)
   - [--awsqueue](#--awsqueue)
@@ -97,11 +102,6 @@
   - [-c](#-c)
   - [--custom_config_version](#--custom_config_version)
   - [--custom_config_base](#--custom_config_base)
-  - [--max_memory](#--max_memory)
-  - [--single_cpu_mem](#--single_cpu_mem)
-  - [--singleCPUMem](#--singlecpumem)
-  - [--max_time](#--max_time)
-  - [--max_cpus](#--max_cpus)
   - [--plaintext_email](#--plaintext_email)
   - [--monochrome_logs](#--monochrome_logs)
   - [--multiqc_config](#--multiqc_config)
@@ -345,9 +345,7 @@ Available annotation tools: `VEP`, `SnpEff`, `merge`. For more details, please c
 If [Sentieon](https://www.sentieon.com/) is available, use this to enable it for preprocessing, and variant calling.
 Adds the following tools for the [`--tools`](#--tools) options: `DNAseq`, `DNAscope` and `TNscope`.
 
-Please refer to the [nf-core/configs](https://github.com/nf-core/configs#adding-a-new-pipeline-specific-config) repository on how to make a pipeline-specific configuration file based on the [munin-sarek specific configuration file](https://github.com/nf-core/configs/blob/master/conf/pipeline/sarek/munin.config).
-
-Or ask us on the [nf-core Slack](http://nf-co.re/join/slack) on the following channels: [#sarek](https://nfcore.slack.com/channels/sarek) [#configs](https://nfcore.slack.com/channels/configs).
+More information in the [sentieon](sentieon.md) documentation.
 
 ### --no_strelka_bp
 
@@ -787,7 +785,32 @@ You can then create a pull request to the `nf-core/configs` repository with the 
 
 If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack).
 
-## --markdup_java_options
+### --max_memory
+
+Use to set a top-limit for the default memory requirement for each process.
+Should be a string in the format integer-unit eg. `--max_memory '8.GB'`
+
+### --single_cpu_mem
+
+Use to set memory for a single CPU.
+Should be a string in the format integer-unit eg. `--single_cpu_mem '8.GB'`
+
+### --singleCPUMem
+
+> :warning: This params has been removed.
+> Please check: [`--single_cpu_mem`](#--single_cpu_mem)
+
+### --max_time
+
+Use to set a top-limit for the default time requirement for each process.
+Should be a string in the format integer-unit eg. `--max_time '2.h'`
+
+### --max_cpus
+
+Use to set a top-limit for the default CPU requirement for each process.
+Should be a string in the format integer-unit eg. `--max_cpus 1`
+
+### --markdup_java_options
 
 To control the java options necessary for the GATK `MarkDuplicates` process, you can set this parameter. For example (those are the default settings):
 
@@ -910,31 +933,6 @@ nextflow run /path/to/pipeline/ --custom_config_base /path/to/my/configs/configs
 
 > Note that the nf-core/tools helper package has a `download` command to download all required pipeline
 > files + singularity containers + institutional configs in one go for you, to make this process easier.
-
-### --max_memory
-
-Use to set a top-limit for the default memory requirement for each process.
-Should be a string in the format integer-unit eg. `--max_memory '8.GB'`
-
-### --single_cpu_mem
-
-Use to set memory for a single CPU.
-Should be a string in the format integer-unit eg. `--single_cpu_mem '8.GB'`
-
-### --singleCPUMem
-
-> :warning: This params has been removed.
-> Please check: [`--single_cpu_mem`](#--single_cpu_mem)
-
-### --max_time
-
-Use to set a top-limit for the default time requirement for each process.
-Should be a string in the format integer-unit eg. `--max_time '2.h'`
-
-### --max_cpus
-
-Use to set a top-limit for the default CPU requirement for each process.
-Should be a string in the format integer-unit eg. `--max_cpus 1`
 
 ### --plaintext_email
 
