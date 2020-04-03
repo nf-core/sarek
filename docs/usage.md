@@ -336,7 +336,7 @@ Available: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mp
 If [Sentieon](https://www.sentieon.com/) is available, use this to enable it for preprocessing, and variant calling.
 Adds the following tools for the [`--tools`](#--tools) options: `DNAseq`, `DNAscope` and `TNscope`.
 
-More information in the [sention](sentieon.md) documentation.
+More information in the [sentieon](sentieon.md) documentation.
 
 ### --no_strelka_bp
 

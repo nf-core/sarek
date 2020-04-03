@@ -29,7 +29,7 @@ The following Sentieon Analysis Pipelines & Tools are available within Sarek.
 
 > Sentieon BWA matches BWA-MEM with > 2X speedup.
 
-This tool is enabled by default within Sarek if `--sention` is specified and if the pipeline is started with the `mapping` [step](usage.md#--step).
+This tool is enabled by default within Sarek if `--sentieon` is specified and if the pipeline is started with the `mapping` [step](usage.md#--step).
 
 ### Germline SNV/INDEL Variant Calling - DNAseq
 
@@ -37,28 +37,28 @@ This tool is enabled by default within Sarek if `--sention` is specified and if 
 > Matches GATK 3.3-4.1, and without down-sampling.
 > Results up to 10x faster and 100% consistent every time.
 
-This tool is enabled within Sarek if `--sention` is specified and if `--tools DNAseq` is specified cf [--tools](#--tools).
+This tool is enabled within Sarek if `--sentieon` is specified and if `--tools DNAseq` is specified cf [--tools](#--tools).
 
 ### Germline SNV/INDEL Variant Calling - DNAscope
 
 > Improved accuracy and genome characterization.
 > Machine learning enhanced filtering producing top variant calling accuracy.
 
-This tool is enabled within Sarek if `--sention` is specified and if `--tools DNAscope` is specified cf [--tools](#--tools).
+This tool is enabled within Sarek if `--sentieon` is specified and if `--tools DNAscope` is specified cf [--tools](#--tools).
 
 ### Somatic SNV/INDEL Variant Calling - TNscope
 
 > Winner of ICGC-TCGA DREAM challenge.
 > Improved accuracy, machine learning enhanced filtering.
-> Supports molecular barcodes and unique molecular identifies.
+> Supports molecular barcodes and unique molecular identifiers.
 
-This tool is enabled within Sarek if `--sention` is specified and if `--tools TNscope` is specified cf [--tools](#--tools).
+This tool is enabled within Sarek if `--sentieon` is specified and if `--tools TNscope` is specified cf [--tools](#--tools).
 
 ### Structural Variant Calling
 
 > Germline and somatic SV calling, including translocations, inversions, duplications and large INDELs
 
-This tool is enabled within Sarek if `--sention` is specified and if `--tools DNAscope` is specified cf [--tools](#--tools).
+This tool is enabled within Sarek if `--sentieon` is specified and if `--tools DNAscope` is specified cf [--tools](#--tools).
 
 ## usage
 

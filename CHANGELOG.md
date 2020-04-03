@@ -21,7 +21,7 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#164](https://github.com/nf-core/sarek/pull/164) - Add `--no_gatk_spark` params and tests
 - [#167](https://github.com/nf-core/sarek/pull/167) - Add `--markdup_java_options` documentation
 - [#169](https://github.com/nf-core/sarek/pull/169) - Add `RELEASE_CHECKLIST.md` document
-- [#169](https://github.com/nf-core/sarek/pull/169) - Add `Sentieon` documentation
+- [#175](https://github.com/nf-core/sarek/pull/175) - Add `Sentieon` documentation
 
 ### Changed - [2.6dev]
 
