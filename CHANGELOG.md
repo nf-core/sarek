@@ -21,6 +21,7 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#164](https://github.com/nf-core/sarek/pull/164) - Add `--no_gatk_spark` params and tests
 - [#167](https://github.com/nf-core/sarek/pull/167) - Add `--markdup_java_options` documentation
 - [#169](https://github.com/nf-core/sarek/pull/169) - Add `RELEASE_CHECKLIST.md` document
+- [#174](https://github.com/nf-core/sarek/pull/174) - Add `variant_calling.md` documentation
 - [#175](https://github.com/nf-core/sarek/pull/175) - Add `Sentieon` documentation
 
 ### Changed - [2.6dev]
@@ -48,9 +49,8 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#141](https://github.com/nf-core/sarek/pull/141) - Update `VEP` databases to `99`
 - [#143](https://github.com/nf-core/sarek/pull/143) - Revert `snpEff` cache version to `75` for `GRCh37`
 - [#143](https://github.com/nf-core/sarek/pull/143) - Revert `snpEff` cache version to `86` for `GRCh38`
-- [#152](https://github.com/nf-core/sarek/pull/152), [#158](https://github.com/nf-core/sarek/pull/158) - Update docs
+- [#152](https://github.com/nf-core/sarek/pull/152), [#158](https://github.com/nf-core/sarek/pull/158), [#164](https://github.com/nf-core/sarek/pull/164), [#174](https://github.com/nf-core/sarek/pull/174) - Update docs
 - [#164](https://github.com/nf-core/sarek/pull/164) - Update `gatk4-spark` from `4.1.4.1` to `4.1.6.0`
-- [#164](https://github.com/nf-core/sarek/pull/164) - Update docs
 
 ### Fixed - [2.6dev]
 
