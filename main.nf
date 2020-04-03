@@ -1314,7 +1314,7 @@ process SentieonDedup {
         saveAs: {
             if (it == "${idSample}_*.txt" && 'sentieon' in skipQC) null
             else if (it == "${idSample}_*.txt") "Reports/${idSample}/Sentieon/${it}"
-            else null
+            else "Preprocessing/${idSample}/DedupedSentieon/${it}"
         }
 
     input:
@@ -1540,7 +1540,8 @@ process SentieonBQSR {
 
     output:
         set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bamRecalSentieon
-                set idPatient, idSample into bamRecalSentieonTSV
+        set idPatient, idSample, file(bam), file(bai), file("${idSample}.recal.table") into bamDedupedTableSentieon
+        set idPatient, idSample into bamSentieonTSV
         file("${idSample}_recal_result.csv") into bamRecalSentieonQC
 
     when: params.sentieon
@@ -1576,7 +1577,29 @@ process SentieonBQSR {
     """
 }
 
-(bamRecalSentieonTSV, bamRecalSentieonSampleTSV) = bamRecalSentieonTSV.into(2)
+(bamDedupedSentieonTSV, bamDedupedSentieonSampleTSV, bamRecalSentieonTSV, bamRecalSentieonSampleTSV) = bamSentieonTSV.into(2)
+
+// Creating a TSV file to restart from this step
+bamDedupedSentieonTSV.map { idPatient, idSample ->
+    gender = genderMap[idPatient]
+    status = statusMap[idPatient, idSample]
+    bam = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam"
+    bai = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam.bai"
+    table = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.table"
+    "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${table}\n"
+}.collectFile(
+    name: 'deduped_sentieon.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
+)
+
+bamDedupedSentieonSampleTSV
+    .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { idPatient, idSample ->
+        status = statusMap[idPatient, idSample]
+        gender = genderMap[idPatient]
+        bam = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam"
+        bai = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam.bai"
+        table = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.table"
+        ["deduped_sentieon_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
+}
 
 // Creating a TSV file to restart from this step
 bamRecalSentieonTSV.map { idPatient, idSample ->
@@ -1590,8 +1613,7 @@ bamRecalSentieonTSV.map { idPatient, idSample ->
 )
 
 bamRecalSentieonSampleTSV
-    .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") {
-        idPatient, idSample ->
+    .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { idPatient, idSample ->
         status = statusMap[idPatient, idSample]
         gender = genderMap[idPatient]
         bam = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.bam"
