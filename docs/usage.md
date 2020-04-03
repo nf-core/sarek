@@ -79,6 +79,11 @@
 - [Job resources](#job-resources)
   - [Automatic resubmission](#automatic-resubmission)
   - [Custom resource requests](#custom-resource-requests)
+  - [--max_memory](#--max_memory)
+  - [--single_cpu_mem](#--single_cpu_mem)
+  - [--singleCPUMem](#--singlecpumem)
+  - [--max_time](#--max_time)
+  - [--max_cpus](#--max_cpus)
   - [--markdup_java_options](#--markdup_java_options)
 - [AWSBatch specific parameters](#awsbatch-specific-parameters)
   - [--awsqueue](#--awsqueue)
@@ -97,11 +102,6 @@
   - [-c](#-c)
   - [--custom_config_version](#--custom_config_version)
   - [--custom_config_base](#--custom_config_base)
-  - [--max_memory](#--max_memory)
-  - [--single_cpu_mem](#--single_cpu_mem)
-  - [--singleCPUMem](#--singlecpumem)
-  - [--max_time](#--max_time)
-  - [--max_cpus](#--max_cpus)
   - [--plaintext_email](#--plaintext_email)
   - [--monochrome_logs](#--monochrome_logs)
   - [--multiqc_config](#--multiqc_config)
@@ -161,8 +161,8 @@ It's a good idea to specify a pipeline version when running the pipeline on your
 This ensures that a specific version of the pipeline code and software are used when you run your pipeline.
 If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `2.5.2`).
-Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 2.5.2`.
+First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `2.6`).
+Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 2.6`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 
@@ -328,17 +328,24 @@ Available: `mapping`, `recalibrate`, `variantcalling` and `annotate`
 
 ### --tools
 
-Use this to specify the tools to run:
-Available: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `MSIsensor`, `Mutect2`, `Strelka`, `TIDDIT`
+Use this parameter to specify the variant calling and annotation tools to be used. For example:
+
+```bash
+--tools 'Strelka,mutect2,SnpEff'
+```
+
+Available variant callers: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `MSIsensor`, `Mutect2`, `Strelka`, `TIDDIT`.
+
+> `/!\` Not all variant callers are available for both germline and somatic variant calling. For more details please check the [variant calling](variant_calling.md) extra documentation.
+
+Available annotation tools: `VEP`, `SnpEff`, `merge`. For more details, please check the [annotation](annotation.md) extra documentation.
 
 ### --sentieon
 
 If [Sentieon](https://www.sentieon.com/) is available, use this to enable it for preprocessing, and variant calling.
 Adds the following tools for the [`--tools`](#--tools) options: `DNAseq`, `DNAscope` and `TNscope`.
 
-Please refer to the [nf-core/configs](https://github.com/nf-core/configs#adding-a-new-pipeline-specific-config) repository on how to make a pipeline-specific configuration file based on the [munin-sarek specific configuration file](https://github.com/nf-core/configs/blob/master/conf/pipeline/sarek/munin.config).
-
-Or ask us on the [nf-core Slack](http://nf-co.re/join/slack) on the following channels: [#sarek](https://nfcore.slack.com/channels/sarek) [#configs](https://nfcore.slack.com/channels/configs).
+More information in the [sentieon](sentieon.md) documentation.
 
 ### --no_strelka_bp
 
@@ -471,8 +478,8 @@ The syntax for this reference configuration is as follows:
 params {
   genomes {
     'GRCh38' {
-      ac_loci                  = '<path to the acLoci file>'
-      ac_lociGC                = '<path to the acLociGC file>'
+      ac_loci                  = '<path to the ac_loci file>'
+      ac_loci_gc               = '<path to the ac_loci_gc file>'
       bwa                      = '<path to the bwa indexes>'
       chr_dir                  = '<path to the chromosomes folder>'
       chr_length               = '<path to the chromosomes lenght file>'
@@ -481,11 +488,11 @@ params {
       dict                     = '<path to the dict file>'
       fasta                    = '<path to the fasta file>'
       fasta_fai                = '<path to the fasta index>'
-      germline_resource        = '<path to the germlineResource file>'
-      germline_resource_index  = '<path to the germlineResource index>'
+      germline_resource        = '<path to the germline_resource file>'
+      germline_resource_index  = '<path to the germline_resource index>'
       intervals                = '<path to the intervals file>'
-      known_indels             = '<path to the knownIndels file>'
-      known_indels_index       = '<path to the knownIndels index>'
+      known_indels             = '<path to the known_indels file>'
+      known_indels_index       = '<path to the known_indels index>'
       snpeff_db                = '<version of the snpEff DB>'
       species                  = '<species>'
       vep_cache_version        = '<version of the VEP cache>'
@@ -631,7 +638,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 ### --genomeIndex
 
 > :warning: This params has been removed.
-> Please check: [`--fastaFai`](#--fastaFai)
+> Please check: [`--fasta_fai`](#--fasta_fai)
 
 ### --germline_resource
 
@@ -699,7 +706,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 
 ### --pon
 
-When a panel of normals [PON](https://gatkforums.broadinstitute.org/gatk/discussion/24057/how-to-call-somatic-mutations-using-gatk4-mutect2#latest) is defined, you will get filtered somatic calls as a result.
+When a panel of normals [PON](https://gatkforums.broadinstitute.org/gatk/discussion/24057/how-to-call-somatic-mutations-using-gatk4-mutect2#latest) is defined, it will be use to filter somatic calls.
 Without PON, there will be no calls with PASS in the INFO field, only an _unfiltered_ VCF is written.
 It is recommended to make your own panel-of-normals, as it depends on sequencer and library preparation.
 For tests in iGenomes there is a dummy PON file in the Annotation/GermlineResource directory, but it _should not be used_ as a real panel-of-normals file.
@@ -778,7 +785,32 @@ You can then create a pull request to the `nf-core/configs` repository with the 
 
 If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack).
 
-## --markdup_java_options
+### --max_memory
+
+Use to set a top-limit for the default memory requirement for each process.
+Should be a string in the format integer-unit eg. `--max_memory '8.GB'`
+
+### --single_cpu_mem
+
+Use to set memory for a single CPU.
+Should be a string in the format integer-unit eg. `--single_cpu_mem '8.GB'`
+
+### --singleCPUMem
+
+> :warning: This params has been removed.
+> Please check: [`--single_cpu_mem`](#--single_cpu_mem)
+
+### --max_time
+
+Use to set a top-limit for the default time requirement for each process.
+Should be a string in the format integer-unit eg. `--max_time '2.h'`
+
+### --max_cpus
+
+Use to set a top-limit for the default CPU requirement for each process.
+Should be a string in the format integer-unit eg. `--max_cpus 1`
+
+### --markdup_java_options
 
 To control the java options necessary for the GATK `MarkDuplicates` process, you can set this parameter. For example (those are the default settings):
 
@@ -901,31 +933,6 @@ nextflow run /path/to/pipeline/ --custom_config_base /path/to/my/configs/configs
 
 > Note that the nf-core/tools helper package has a `download` command to download all required pipeline
 > files + singularity containers + institutional configs in one go for you, to make this process easier.
-
-### --max_memory
-
-Use to set a top-limit for the default memory requirement for each process.
-Should be a string in the format integer-unit eg. `--max_memory '8.GB'`
-
-### --single_cpu_mem
-
-Use to set memory for a single CPU.
-Should be a string in the format integer-unit eg. `--single_cpu_mem '8.GB'`
-
-### --singleCPUMem
-
-> :warning: This params has been removed.
-> Please check: [`--single_cpu_mem`](#--single_cpu_mem)
-
-### --max_time
-
-Use to set a top-limit for the default time requirement for each process.
-Should be a string in the format integer-unit eg. `--max_time '2.h'`
-
-### --max_cpus
-
-Use to set a top-limit for the default CPU requirement for each process.
-Should be a string in the format integer-unit eg. `--max_cpus 1`
 
 ### --plaintext_email
 
