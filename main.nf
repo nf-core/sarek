@@ -392,8 +392,7 @@ if (params.input && (hasExtension(params.input, "vcf") || hasExtension(params.in
 // only for steps recalibrate and variantCalling
 if (!params.input && step != 'mapping' && step != 'annotate') {
     if (params.sentieon) {
-        if (step == 'variantcalling') tsvPath =  "${params.outdir}/Preprocessing/TSV/recalibrated_sentieon.tsv"
-        else exit 1, "Not possible to restart from that step"
+        tsvPath = step == 'recalibrate' ? "${params.outdir}/Preprocessing/TSV/deduped_sentieon.tsv" : "${params.outdir}/Preprocessing/TSV/recalibrated_sentieon.tsv"
     }
     else {
         tsvPath = step == 'recalibrate' ? "${params.outdir}/Preprocessing/TSV/duplicateMarked.tsv" : "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"
