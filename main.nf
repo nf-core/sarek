@@ -391,12 +391,8 @@ if (params.input && (hasExtension(params.input, "vcf") || hasExtension(params.in
 // If no input file specified, trying to get TSV files corresponding to step in the TSV directory
 // only for steps recalibrate and variantCalling
 if (!params.input && step != 'mapping' && step != 'annotate') {
-    if (params.sentieon) {
-        tsvPath = step == 'recalibrate' ? "${params.outdir}/Preprocessing/TSV/deduped_sentieon.tsv" : "${params.outdir}/Preprocessing/TSV/recalibrated_sentieon.tsv"
-    }
-    else {
-        tsvPath = step == 'recalibrate' ? "${params.outdir}/Preprocessing/TSV/duplicateMarked.tsv" : "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"
-    }
+    if (step == 'recalibrate') tsvPath = params.sentieon ? "${params.outdir}/Preprocessing/TSV/deduped_sentieon.tsv" : "${params.outdir}/Preprocessing/TSV/duplicateMarked.tsv"
+    else tsvPath = params.sentieon ? "${params.outdir}/Preprocessing/TSV/recalibrated_sentieon.tsv" : "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"
 }
 
 inputSample = Channel.empty()
