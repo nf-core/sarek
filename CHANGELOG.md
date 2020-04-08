@@ -23,6 +23,7 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#169](https://github.com/nf-core/sarek/pull/169) - Add `RELEASE_CHECKLIST.md` document
 - [#174](https://github.com/nf-core/sarek/pull/174) - Add `variant_calling.md` documentation
 - [#175](https://github.com/nf-core/sarek/pull/175) - Add `Sentieon` documentation
+- [#176](https://github.com/nf-core/sarek/pull/176) - Add empty `custom` genome in `genomes.config` to allow genomes that are not in `AWS iGenomes`
 
 ### Changed - [2.6dev]
 
