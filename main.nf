@@ -1572,7 +1572,7 @@ process SentieonBQSR {
     """
 }
 
-(bamDedupedSentieonTSV, bamDedupedSentieonSampleTSV, bamRecalSentieonTSV, bamRecalSentieonSampleTSV) = bamSentieonTSV.into(2)
+(bamDedupedSentieonTSV, bamDedupedSentieonSampleTSV, bamRecalSentieonTSV, bamRecalSentieonSampleTSV) = bamSentieonTSV.into(4)
 
 // Creating a TSV file to restart from this step
 bamDedupedSentieonTSV.map { idPatient, idSample ->
