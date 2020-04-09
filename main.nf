@@ -2100,7 +2100,7 @@ process FreebayesSingle {
     """
     freebayes \
         -f ${fasta} \
-        --pooled-cotinuous \
+        --pooled-continuous \
         --pooled-discrete \
         --genotype-qualities \
         --report-genotype-likelihood-max \
