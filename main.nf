@@ -1054,9 +1054,9 @@ else inputPairReads = inputPairReads.mix(inputBam)
 
 inputPairReads = inputPairReads.dump(tag:'INPUT')
 
-(inputPairReads, inputPairReadsSentieon) = inputPairReads.into(2)
+(inputPairReads, input_pair_reads_sentieon) = inputPairReads.into(2)
 if (params.sentieon) inputPairReads.close()
-else inputPairReadsSentieon.close()
+else input_pair_reads_sentieon.close()
 
 process MapReads {
     label 'cpus_max'
@@ -1119,14 +1119,13 @@ process SentieonMapReads {
     tag {idPatient + "-" + idRun}
 
     input:
-        set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from inputPairReadsSentieon
+        set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from input_pair_reads_sentieon
         file(bwaIndex) from ch_bwa
         file(fasta) from ch_fasta
         file(fastaFai) from ch_fai
 
     output:
-        set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMappedSentieon
-        set idPatient, idSample, file("${idSample}_${idRun}.bam") into bamMappedSentieonBamQC
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bam_sentieon_mapped
 
     when: params.sentieon
 
@@ -1148,12 +1147,12 @@ process SentieonMapReads {
         """
 }
 
-bamMappedSentieon = bamMappedSentieon.dump(tag:'Sentieon Mapped BAM')
+bam_sentieon_mapped = bam_sentieon_mapped.dump(tag:'Sentieon Mapped BAM')
 // Sort BAM whether they are standalone or should be merged
 
 singleBamSentieon = Channel.create()
 multipleBamSentieon = Channel.create()
-bamMappedSentieon.groupTuple(by:[0, 1])
+bam_sentieon_mapped.groupTuple(by:[0, 1])
     .choice(singleBamSentieon, multipleBamSentieon) {it[2].size() > 1 ? 1 : 0}
 singleBamSentieon = singleBamSentieon.map {
     idPatient, idSample, idRun, bam ->
@@ -1186,13 +1185,13 @@ mergedBam = mergedBam.dump(tag:'Merged BAM')
 
 mergedBam = mergedBam.mix(singleBam,singleBamSentieon)
 
-(mergedBam, mergedBamForSentieon) = mergedBam.into(2)
+(mergedBam, bam_sentieon_merged) = mergedBam.into(2)
 
-if (!params.sentieon) mergedBamForSentieon.close()
+if (!params.sentieon) bam_sentieon_merged.close()
 else mergedBam.close()
 
 mergedBam = mergedBam.dump(tag:'BAMs for MD')
-mergedBamForSentieon = mergedBamForSentieon.dump(tag:'Sentieon BAMs to Index')
+bam_sentieon_merged = bam_sentieon_merged.dump(tag:'Sentieon BAMs to Index')
 
 process IndexBamMergedForSentieon {
     label 'cpus_8'
@@ -1200,10 +1199,10 @@ process IndexBamMergedForSentieon {
     tag {idPatient + "-" + idSample}
 
     input:
-        set idPatient, idSample, file(bam) from mergedBamForSentieon
+        set idPatient, idSample, file(bam) from bam_sentieon_merged
 
     output:
-        set idPatient, idSample, file(bam), file("${idSample}.bam.bai") into bamForSentieonDedup
+        set idPatient, idSample, file(bam), file("${idSample}.bam.bai") into bam_sentieon_merged_indexed
 
     script:
     """
@@ -1313,13 +1312,12 @@ process SentieonDedup {
         }
 
     input:
-        set idPatient, idSample, file(bam), file(bai) from bamForSentieonDedup
+        set idPatient, idSample, file(bam), file(bai) from bam_sentieon_merged_indexed
         file(fasta) from ch_fasta
         file(fastaFai) from ch_fai
 
     output:
-        set idPatient, idSample, file("${idSample}.deduped.bam"), file("${idSample}.deduped.bam.bai") into bamDedupedSentieon
-        file("${idSample}_*.txt") into bamDedupedSentieonQC
+        set idPatient, idSample, file("${idSample}.deduped.bam"), file("${idSample}.deduped.bam.bai") into bam_sentieon_dedup
 
     when: params.sentieon
 
@@ -1508,7 +1506,7 @@ bamMergeBamRecal = bamMergeBamRecal.groupTuple(by:[0, 1])
 
 // STEP 4': SENTIEON BQSR
 
-bamDedupedSentieon = bamDedupedSentieon.dump(tag:'deduped.bam')
+bam_sentieon_dedup = bam_sentieon_dedup.dump(tag:'deduped.bam')
 
 process SentieonBQSR {
     label 'cpus_max'
@@ -1524,7 +1522,7 @@ process SentieonBQSR {
         }
 
     input:
-        set idPatient, idSample, file(bam), file(bai) from bamDedupedSentieon
+        set idPatient, idSample, file(bam), file(bai) from bam_sentieon_dedup
         file(dbsnp) from ch_dbsnp
         file(dbsnpIndex) from ch_dbsnp_tbi
         file(fasta) from ch_fasta
@@ -1534,10 +1532,9 @@ process SentieonBQSR {
         file(knownIndelsIndex) from ch_known_indels_tbi
 
     output:
-        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bamRecalSentieon
-        set idPatient, idSample, file(bam), file(bai), file("${idSample}.recal.table") into bamDedupedTableSentieon
-        set idPatient, idSample into bamSentieonTSV
-        file("${idSample}_recal_result.csv") into bamRecalSentieonQC
+        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bam_sentieon_recal
+        set idPatient, idSample, file(bam), file(bai), file("${idSample}.recal.table") into bam_sentieon_deduped_table
+        set idPatient, idSample into tsv_sentieon
 
     when: params.sentieon
 
@@ -1572,10 +1569,10 @@ process SentieonBQSR {
     """
 }
 
-(bamDedupedSentieonTSV, bamDedupedSentieonSampleTSV, bamRecalSentieonTSV, bamRecalSentieonSampleTSV) = bamSentieonTSV.into(4)
+(tsv_sentieon_deduped, tsv_sentieon_deduped_sample, tsv_sentieon_recal, tsv_sentieon_recal_sample) = tsv_sentieon.into(4)
 
 // Creating a TSV file to restart from this step
-bamDedupedSentieonTSV.map { idPatient, idSample ->
+tsv_sentieon_deduped.map { idPatient, idSample ->
     gender = genderMap[idPatient]
     status = statusMap[idPatient, idSample]
     bam = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam"
@@ -1586,7 +1583,7 @@ bamDedupedSentieonTSV.map { idPatient, idSample ->
     name: 'deduped_sentieon.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
 )
 
-bamDedupedSentieonSampleTSV
+tsv_sentieon_deduped_sample
     .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { idPatient, idSample ->
         status = statusMap[idPatient, idSample]
         gender = genderMap[idPatient]
@@ -1597,7 +1594,7 @@ bamDedupedSentieonSampleTSV
 }
 
 // Creating a TSV file to restart from this step
-bamRecalSentieonTSV.map { idPatient, idSample ->
+tsv_sentieon_recal.map { idPatient, idSample ->
     gender = genderMap[idPatient]
     status = statusMap[idPatient, idSample]
     bam = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.bam"
@@ -1607,7 +1604,7 @@ bamRecalSentieonTSV.map { idPatient, idSample ->
     name: 'recalibrated_sentieon.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
 )
 
-bamRecalSentieonSampleTSV
+tsv_sentieon_recal_sample
     .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { idPatient, idSample ->
         status = statusMap[idPatient, idSample]
         gender = genderMap[idPatient]
@@ -1764,8 +1761,8 @@ bamQCReport = bamQCReport.dump(tag:'BamQC')
 ================================================================================
 */
 
-// When using sentieon for mapping, Channel bamRecal is bamRecalSentieon
-if (params.sentieon && step == 'mapping') bamRecal = bamRecalSentieon
+// When using sentieon for mapping, Channel bamRecal is bam_sentieon_recal
+if (params.sentieon && step == 'mapping') bamRecal = bam_sentieon_recal
 
 // When no knownIndels for mapping, Channel bamRecal is indexedBam
 bamRecal = (params.known_indels && step == 'mapping') ? bamRecal : indexedBam
@@ -1780,7 +1777,7 @@ bamRecal = bamRecal.dump(tag:'BAM for Variant Calling')
 // Manta will be run in Germline mode, or in Tumor mode depending on status
 // HaplotypeCaller, TIDDIT and Strelka will be run for Normal and Tumor samples
 
-(bamSentieonDNAscope, bamSentieonDNAseq, bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamRecalAll, bamRecalAllTemp) = bamRecal.into(7)
+(bam_sentieon_DNAscope, bam_sentieon_DNAseq, bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamRecalAll, bamRecalAllTemp) = bamRecal.into(7)
 
 // To speed Variant Callers up we are chopping the reference into smaller pieces
 // Do variant calling by this intervals, and re-merge the VCFs
@@ -1876,14 +1873,14 @@ process SentieonDNAseq {
     tag {idSample}
 
     input:
-        set idPatient, idSample, file(bam), file(bai) from bamSentieonDNAseq
+        set idPatient, idSample, file(bam), file(bai) from bam_sentieon_DNAseq
         file(dbsnp) from ch_dbsnp
         file(dbsnpIndex) from ch_dbsnp_tbi
         file(fasta) from ch_fasta
         file(fastaFai) from ch_fai
 
     output:
-    set val("SentieonDNAseq"), idPatient, idSample, file("DNAseq_${idSample}.vcf") into sentieonDNAseqVCF
+    set val("SentieonDNAseq"), idPatient, idSample, file("DNAseq_${idSample}.vcf") into vcf_sentieon_DNAseq
 
     when: 'dnaseq' in tools && params.sentieon
 
@@ -1899,7 +1896,7 @@ process SentieonDNAseq {
     """
 }
 
-sentieonDNAseqVCF = sentieonDNAseqVCF.dump(tag:'sentieon DNAseq')
+vcf_sentieon_DNAseq = vcf_sentieon_DNAseq.dump(tag:'sentieon DNAseq')
 
 // STEP SENTIEON DNAscope
 
@@ -1911,15 +1908,15 @@ process SentieonDNAscope {
     tag {idSample}
 
     input:
-        set idPatient, idSample, file(bam), file(bai) from bamSentieonDNAscope
+        set idPatient, idSample, file(bam), file(bai) from bam_sentieon_DNAscope
         file(dbsnp) from ch_dbsnp
         file(dbsnpIndex) from ch_dbsnp_tbi
         file(fasta) from ch_fasta
         file(fastaFai) from ch_fai
 
     output:
-    set val("SentieonDNAscope"), idPatient, idSample, file("DNAscope_${idSample}.vcf") into sentieonDNAscopeVCF
-    set val("SentieonDNAscope"), idPatient, idSample, file("DNAscope_SV_${idSample}.vcf") into sentieonDNAscopeSVVCF
+    set val("SentieonDNAscope"), idPatient, idSample, file("DNAscope_${idSample}.vcf") into vcf_sentieon_DNAscope
+    set val("SentieonDNAscope"), idPatient, idSample, file("DNAscope_SV_${idSample}.vcf") into vcf_sentieon_DNAscope_SV
 
     when: 'dnascope' in tools && params.sentieon
 
@@ -1951,8 +1948,8 @@ process SentieonDNAscope {
     """
 }
 
-sentieonDNAscopeVCF = sentieonDNAscopeVCF.dump(tag:'sentieon DNAscope')
-sentieonDNAscopeSVVCF = sentieonDNAscopeSVVCF.dump(tag:'sentieon DNAscope SV')
+vcf_sentieon_DNAscope = vcf_sentieon_DNAscope.dump(tag:'sentieon DNAscope')
+vcf_sentieon_DNAscope_SV = vcf_sentieon_DNAscope_SV.dump(tag:'sentieon DNAscope SV')
 
 // STEP STRELKA.1 - SINGLE MODE
 
@@ -2442,7 +2439,7 @@ process SentieonTNscope {
         file(dbsnpIndex) from ch_dbsnp_tbi
 
     output:
-        set val("SentieonTNscope"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf") into vcfTNscope
+        set val("SentieonTNscope"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf") into vcf_sentieon_TNscope
 
     when: 'tnscope' in tools && params.sentieon
 
@@ -2461,9 +2458,9 @@ process SentieonTNscope {
     """
 }
 
-vcfTNscope = vcfTNscope.dump(tag:'Sentieon TNscope')
+vcf_sentieon_TNscope = vcf_sentieon_TNscope.dump(tag:'Sentieon TNscope')
 
-sentieonVCF = sentieonDNAseqVCF.mix(sentieonDNAscopeVCF, sentieonDNAscopeSVVCF, vcfTNscope)
+vcf_sentieon = vcf_sentieon_DNAseq.mix(vcf_sentieon_DNAscope, vcf_sentieon_DNAscope_SV, vcf_sentieon_TNscope)
 
 process CompressSentieonVCF {
     tag {"${idSample} - ${vcf}"}
@@ -2471,12 +2468,10 @@ process CompressSentieonVCF {
     publishDir "${params.outdir}/VariantCalling/${idSample}/${variantCaller}", mode: params.publish_dir_mode
 
     input:
-        set variantCaller, idPatient, idSample, file(vcf) from sentieonVCF
+        set variantCaller, idPatient, idSample, file(vcf) from vcf_sentieon
 
     output:
-        set variantCaller, idPatient, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfSentieon
-
-    when: params.sentieon
+        set variantCaller, idPatient, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcf_sentieon_compressed
 
     script:
     """
@@ -2485,7 +2480,7 @@ process CompressSentieonVCF {
     """
 }
 
-vcfSentieon = vcfSentieon.dump(tag:'Sentieon VCF indexed')
+vcf_sentieon_compressed = vcf_sentieon_compressed.dump(tag:'Sentieon VCF indexed')
 
 // STEP STRELKA.2 - SOMATIC PAIR
 
@@ -3004,7 +2999,7 @@ vcfKeep = Channel.empty().mix(
         variantcaller, idPatient, idSample, vcf, tbi ->
         [variantcaller, idSample, vcf]
     },
-    vcfSentieon.map {
+    vcf_sentieon_compressed.map {
         variantcaller, idPatient, idSample, vcf, tbi ->
         [variantcaller, idSample, vcf]
     },
