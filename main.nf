@@ -2091,7 +2091,7 @@ process FreebayesSingle {
         file(fastaFai) from ch_software_versions_yaml
     
     output:
-        set val("Freebayes"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into vcfFreebayesSingle
+        set val("FreeBayes"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into vcfFreebayesSingle
     
     when: 'freebayes' in tools
 
