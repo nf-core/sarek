@@ -2113,7 +2113,7 @@ process FreebayesSingle {
     """
 }
 
-vcfFreeBayesSingle = vcfFreeBayesSingle.groupTuple(by: [0,1,2])
+vcfFreebayesSingle = vcfFreebayesSingle.groupTuple(by: [0,1,2])
 
 /*
 ================================================================================
@@ -2269,7 +2269,7 @@ process MergeMutect2Stats {
 
 // STEP MERGING VCF - FREEBAYES, GATK HAPLOTYPECALLER & GATK MUTECT2 (UNFILTERED)
 
-vcfConcatenateVCFs = mutect2Output.mix(vcfFreeBayes, vcfFreeBayesSingle, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
+vcfConcatenateVCFs = mutect2Output.mix(vcfFreeBayes, vcfFreebayesSingle, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
 vcfConcatenateVCFs = vcfConcatenateVCFs.dump(tag:'VCF to merge')
 
 process ConcatVCF {
