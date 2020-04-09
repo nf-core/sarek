@@ -2109,7 +2109,7 @@ process FreebayesSingle {
         --min-repeat-entropy 1 \
         --min-alternate-count 2 \
         ${intervalsOptions} \
-        ${bamNormal} > ${intervalBed.baseName}_${idSample}.vcf
+        ${bam} > ${intervalBed.baseName}_${idSample}.vcf
     """
 }
 
