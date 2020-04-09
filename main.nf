@@ -900,7 +900,7 @@ bedIntervals = bedIntervals.dump(tag:'bedintervals')
 
 if (params.no_intervals && step != 'annotate') bedIntervals = Channel.from(file("no_intervals.bed"))
 
-(intBaseRecalibrator, intApplyBQSR, intGermlineCallers, intMpileup, bedIntervals) = bedIntervals.into(5)
+(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervals) = bedIntervals.into(6)
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
@@ -1768,8 +1768,8 @@ bamRecal = bamRecal.dump(tag:'BAM for Variant Calling')
 // To speed Variant Callers up we are chopping the reference into smaller pieces
 // Do variant calling by this intervals, and re-merge the VCFs
 
-(bamHaplotypeCallerNoIntervals, bamFreebayesSingleNoIntervals) = bamNoIntervals.into(2)
-(bamHaplotypeCaller, bamFreebayesSingle) = bamNoIntervals.spread(intGermlineCallers)
+bamHaplotypeCaller = bamHaplotypeCallerNoIntervals.spread(intHaplotypeCaller)
+bamFreebayesSingle = bamFreebayesSingleNoIntervals.spread(intFreebayesSingle)
 
 // STEP GATK HAPLOTYPECALLER.1
 
