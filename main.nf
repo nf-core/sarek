@@ -3671,11 +3671,11 @@ def checkParameterList(list, realList) {
 // Define list of available tools to annotate
 def defineAnnoList() {
     return [
-        'HaplotypeCaller',
-        'Manta',
-        'Mutect2',
-        'Strelka',
-        'TIDDIT'
+        'haplotypecaller',
+        'manta',
+        'mutect2',
+        'strelka',
+        'tiddit'
     ]
 }
 
