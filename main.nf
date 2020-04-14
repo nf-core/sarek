@@ -900,7 +900,7 @@ bedIntervals = bedIntervals.dump(tag:'bedintervals')
 
 if (params.no_intervals && step != 'annotate') bedIntervals = Channel.from(file("no_intervals.bed"))
 
-(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intMpileup, bedIntervals) = bedIntervals.into(5)
+(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervals) = bedIntervals.into(6)
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
@@ -1763,12 +1763,13 @@ bamRecal = bamRecal.dump(tag:'BAM for Variant Calling')
 // Manta will be run in Germline mode, or in Tumor mode depending on status
 // HaplotypeCaller, TIDDIT and Strelka will be run for Normal and Tumor samples
 
-(bamSentieonDNAscope, bamSentieonDNAseq, bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamRecalAll, bamRecalAllTemp) = bamRecal.into(7)
+(bamSentieonDNAscope, bamSentieonDNAseq, bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll) = bamRecal.into(8)
 
 // To speed Variant Callers up we are chopping the reference into smaller pieces
 // Do variant calling by this intervals, and re-merge the VCFs
 
-bamHaplotypeCaller = bamRecalAllTemp.combine(intHaplotypeCaller)
+bamHaplotypeCaller = bamHaplotypeCallerNoIntervals.spread(intHaplotypeCaller)
+bamFreebayesSingle = bamFreebayesSingleNoIntervals.spread(intFreebayesSingle)
 
 // STEP GATK HAPLOTYPECALLER.1
 
@@ -2078,6 +2079,42 @@ process TIDDIT {
 
 vcfTIDDIT = vcfTIDDIT.dump(tag:'TIDDIT')
 
+// STEP FREEBAYES SINGLE MODE
+
+process FreebayesSingle {
+    tag {idSample + "-" + intervalBed.baseName}
+    label 'cpus_1'
+    
+    input:
+        set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamFreebayesSingle
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_software_versions_yaml
+    
+    output:
+        set val("FreeBayes"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into vcfFreebayesSingle
+    
+    when: 'freebayes' in tools
+
+    script:
+    intervalsOptions = params.no_intervals ? "" : "-t ${intervalBed}"
+    """
+    freebayes \
+        -f ${fasta} \
+        --pooled-continuous \
+        --pooled-discrete \
+        --genotype-qualities \
+        --report-genotype-likelihood-max \
+        --allele-balance-priors-off \
+        --min-alternate-fraction 0.03 \
+        --min-repeat-entropy 1 \
+        --min-alternate-count 2 \
+        ${intervalsOptions} \
+        ${bam} > ${intervalBed.baseName}_${idSample}.vcf
+    """
+}
+
+vcfFreebayesSingle = vcfFreebayesSingle.groupTuple(by: [0,1,2])
+
 /*
 ================================================================================
                              SOMATIC VARIANT CALLING
@@ -2232,7 +2269,7 @@ process MergeMutect2Stats {
 
 // STEP MERGING VCF - FREEBAYES, GATK HAPLOTYPECALLER & GATK MUTECT2 (UNFILTERED)
 
-vcfConcatenateVCFs = mutect2Output.mix(vcfFreeBayes, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
+vcfConcatenateVCFs = mutect2Output.mix(vcfFreeBayes, vcfFreebayesSingle, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
 vcfConcatenateVCFs = vcfConcatenateVCFs.dump(tag:'VCF to merge')
 
 process ConcatVCF {

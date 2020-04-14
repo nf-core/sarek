@@ -11,6 +11,7 @@ You can specify the variant caller to use with the `--tools` parameter (see [usa
 
 Germline variant calling can currently only be performed with the following variant callers:
 
+- FreeBayes
 - HaplotypeCaller
 - Manta
 - mpileup
