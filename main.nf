@@ -1185,23 +1185,13 @@ bam_mapped_merged = bam_mapped_merged.dump(tag:'Merged BAM')
 
 bam_mapped_merged = bam_mapped_merged.mix(singleBam,singleBamSentieon)
 
-<<<<<<< HEAD
-(mergedBam, bam_sentieon_merged) = mergedBam.into(2)
+(bam_mapped_merged, bam_sentieon_mapped_merged) = bam_mapped_merged.into(2)
 
-if (!params.sentieon) bam_sentieon_merged.close()
-else mergedBam.close()
-
-mergedBam = mergedBam.dump(tag:'BAMs for MD')
-bam_sentieon_merged = bam_sentieon_merged.dump(tag:'Sentieon BAMs to Index')
-=======
-(bam_mapped_merged, mergedBamForSentieon) = bam_mapped_merged.into(2)
-
-if (!params.sentieon) mergedBamForSentieon.close()
+if (!params.sentieon) bam_sentieon_mapped_merged.close()
 else bam_mapped_merged.close()
 
 bam_mapped_merged = bam_mapped_merged.dump(tag:'BAMs for MD')
-mergedBamForSentieon = mergedBamForSentieon.dump(tag:'Sentieon BAMs to Index')
->>>>>>> upstream/dev
+bam_sentieon_mapped_merged = bam_sentieon_mapped_merged.dump(tag:'Sentieon BAMs to Index')
 
 process IndexBamMergedForSentieon {
     label 'cpus_8'
@@ -1209,10 +1199,10 @@ process IndexBamMergedForSentieon {
     tag {idPatient + "-" + idSample}
 
     input:
-        set idPatient, idSample, file(bam) from bam_sentieon_merged
+        set idPatient, idSample, file(bam) from bam_sentieon_mapped_merged
 
     output:
-        set idPatient, idSample, file(bam), file("${idSample}.bam.bai") into bam_sentieon_merged_indexed
+        set idPatient, idSample, file(bam), file("${idSample}.bam.bai") into bam_sentieon_mapped_merged_indexed
 
     script:
     """
@@ -1346,7 +1336,7 @@ process SentieonDedup {
         }
 
     input:
-        set idPatient, idSample, file(bam), file(bai) from bam_sentieon_merged_indexed
+        set idPatient, idSample, file(bam), file(bai) from bam_sentieon_mapped_merged_indexed
         file(fasta) from ch_fasta
         file(fastaFai) from ch_fai
 
