@@ -6,17 +6,17 @@ Input files for Sarek can be specified using a TSV file given to the `--input` c
 The TSV file is a Tab Separated Value file with columns:
 
 - `subject sex status sample lane fastq1 fastq2` for step `mapping` with paired-end FASTQs
-- `subject sex status sample lane bam` for step `mapping` with unmapped BAMs
-- `subject sex status sample bam bai recaltable` for step `recalibrate` with BAMs
+- `subject sex status sample lane bam` for step `mapping` with unmapped BAMs (uBAMs)
+- `subject sex status sample bam bai recaltable` for step `recalibrate` with mapped BAMs
 - `subject sex status sample bam bai` for step `variantcalling` with BAMs
 
 The content of these columns is quite straight-forward:
 
-- `subject` designate the subject, it should be the ID of the Patient, and it must design only one patient
+- `subject` designates the subject, it should be the ID of the Patient, and it must be unique for each patient
 - `sex` are the sex chromosomes of the Patient, (XX or XY)
-- `status` is the status of the Patient, (0 for Normal or 1 for Tumor)
-- `sample` designate the Sample, it should be the ID of the sample (it is possible to have more than one tumor sample for each patient, i.e. a tumor and a relapse), it must design only one sample
-- `lane` is used when the sample is multiplexed on several lanes, it must be unique for each lane in the same sample
+- `status` is the status of the measured sample, (0 for Normal or 1 for Tumor)
+- `sample` designates the Sample, it should be the ID of the sample (it is possible to have more than one tumor sample for each patient, i.e. a tumor and a relapse), it must be unique for each sample
+- `lane` is used when the sample is multiplexed on several lanes, it must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one letter
 - `fastq1` is the path to the first pair of the fastq file
 - `fastq2` is the path to the second pair of the fastq file
 - `bam` is the bam file
@@ -24,12 +24,12 @@ The content of these columns is quite straight-forward:
 - `recaltable` is the recalibration table
 
 It is recommended to add the absolute path of the files, but relative path should work also.
-Note, the delimiter is the tab (`\t`) character:
+Note, the delimiter is the tab (`\t`) character.
 
 All examples are given for a normal/tumor pair.
-If no tumors are listed in the TSV file, then the workflow will proceed as if it is a normal sample instead of a normal/tumor pair.
+If no tumors are listed in the TSV file, then the workflow will proceed as if it is a normal sample instead of a normal/tumor pair, producing the germline variant calling results only.
 
-Sarek will output results is a different directory for each sample.
+Sarek will output results in a different directory for each sample.
 If multiple samples are specified in the TSV file, Sarek will consider all files to be from different samples.
 Multiple TSV files can be specified if the path is enclosed in quotes.
 
@@ -117,6 +117,8 @@ G15511    XX    0    C09DFN    pathToFiles/G15511.C09DFN.md.bam    pathToFiles/G
 G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.md.bam    pathToFiles/G15511.D0ENMT.md.bai pathToFiles/G15511.D0ENMT.md.recal.table
 ```
 
+When starting Sarek from the mapping step, a TSV file is generated automatically after the MarkDuplicates process. This TSV file is stored under `results/Preprocessing/TSV/duplicateMarked.tsv` and can be used to restart Sarek from the non-recalibrated BAM files, giving it as `--input` and setting the step `--step recalibrate`.
+
 ## Example TSV file for a normal/tumor pair with recalibrated BAM files (step variantcalling)
 
 The same way, if you have recalibrated BAMs and their indexes, you should use a structure like:
@@ -125,6 +127,8 @@ The same way, if you have recalibrated BAMs and their indexes, you should use a 
 G15511    XX    0    C09DFN    pathToFiles/G15511.C09DFN.md.recal.bam    pathToFiles/G15511.C09DFN.md.recal.bai
 G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.md.recal.bam    pathToFiles/G15511.D0ENMT.md.recal.bai
 ```
+
+When starting Sarek from the mapping or recalibrate steps, a TSV file is generated automatically after the recalibration processes. This TSV file is stored under `results/Preprocessing/TSV/recalibrated.tsv` and can be used to restart Sarek from the recalibrated BAM files, giving it as `--input` and setting the step `--step variantcalling`.
 
 ## VCF files for annotation
 
