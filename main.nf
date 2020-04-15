@@ -1179,7 +1179,7 @@ process MergeBamMapped {
         set idPatient, idSample, idRun, file(bam) from multipleBam
 
     output:
-        set idPatient, idSample, file("${idSample}.bam") into mergedBam
+        set idPatient, idSample, file("${idSample}.bam") into bam_mapped_merged
 
     script:
     """
@@ -1187,16 +1187,16 @@ process MergeBamMapped {
     """
 }
 
-mergedBam = mergedBam.dump(tag:'Merged BAM')
+bam_mapped_merged = bam_mapped_merged.dump(tag:'Merged BAM')
 
-mergedBam = mergedBam.mix(singleBam,singleBamSentieon)
+bam_mapped_merged = bam_mapped_merged.mix(singleBam,singleBamSentieon)
 
-(mergedBam, mergedBamForSentieon) = mergedBam.into(2)
+(bam_mapped_merged, mergedBamForSentieon) = bam_mapped_merged.into(2)
 
 if (!params.sentieon) mergedBamForSentieon.close()
-else mergedBam.close()
+else bam_mapped_merged.close()
 
-mergedBam = mergedBam.dump(tag:'BAMs for MD')
+bam_mapped_merged = bam_mapped_merged.dump(tag:'BAMs for MD')
 mergedBamForSentieon = mergedBamForSentieon.dump(tag:'Sentieon BAMs to Index')
 
 process IndexBamMergedForSentieon {
@@ -1216,18 +1216,21 @@ process IndexBamMergedForSentieon {
     """
 }
 
-(mergedBam, mergedBamToIndex) = mergedBam.into(2)
+(bam_mapped_merged, bam_mapped_merged_to_index) = bam_mapped_merged.into(2)
 
 process IndexBamFile {
     label 'cpus_8'
 
     tag {idPatient + "-" + idSample}
 
+    publishDir "${params.outdir}/Preprocessing/${idSample}/Mapped/${it}", mode: params.publish_dir_mode
+
     input:
-        set idPatient, idSample, file(bam) from mergedBamToIndex
+        set idPatient, idSample, file(bam) from bam_mapped_merged_to_index
 
     output:
-        set idPatient, idSample, file(bam), file("*.bai") into indexedBam
+        set idPatient, idSample, file(bam), file("*.bai") into bam_mapped_merged_indexed
+        set idPatient, idSample into tsv_bam_indexed
 
     when: !(params.known_indels)
 
@@ -1238,6 +1241,27 @@ process IndexBamFile {
     """
 }
 
+(tsv_bam_indexed, tsv_bam_indexed_sample) = tsv_bam_indexed.into(2)
+
+// Creating a TSV file to restart from this step
+tsv_bam_indexed.map { idPatient, idSample ->
+    gender = genderMap[idPatient]
+    status = statusMap[idPatient, idSample]
+    bam = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam"
+    bai = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam.bai"
+    "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"
+}.collectFile(
+    name: 'mapped.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
+)
+
+tsv_bam_indexed_sample
+    .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { idPatient, idSample ->
+        status = statusMap[idPatient, idSample]
+        gender = genderMap[idPatient]
+        bam = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam"
+        bai = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam.bai"
+        ["mapped_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
+}
 // STEP 2: MARKING DUPLICATES
 
 process MarkDuplicates {
@@ -1252,7 +1276,7 @@ process MarkDuplicates {
         }
 
     input:
-        set idPatient, idSample, file("${idSample}.bam") from mergedBam
+        set idPatient, idSample, file("${idSample}.bam") from bam_mapped_merged
 
     output:
         set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bam.bai") into duplicateMarkedBams
@@ -1750,8 +1774,8 @@ bamQCReport = bamQCReport.dump(tag:'BamQC')
 // When using sentieon for mapping, Channel bamRecal is bamRecalSentieon
 if (params.sentieon && step == 'mapping') bamRecal = bamRecalSentieon
 
-// When no knownIndels for mapping, Channel bamRecal is indexedBam
-bamRecal = (params.known_indels && step == 'mapping') ? bamRecal : indexedBam
+// When no knownIndels for mapping, Channel bamRecal is bam_mapped_merged_indexed
+bamRecal = (params.known_indels && step == 'mapping') ? bamRecal : bam_mapped_merged_indexed
 
 // When starting with variant calling, Channel bamRecal is inputSample
 if (step == 'variantcalling') bamRecal = inputSample
