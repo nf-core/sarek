@@ -1223,7 +1223,7 @@ process IndexBamFile {
 
     tag {idPatient + "-" + idSample}
 
-    publishDir "${params.outdir}/Preprocessing/${idSample}/Mapped/${it}", mode: params.publish_dir_mode
+    publishDir "${params.outdir}/Preprocessing/${idSample}/Mapped", mode: params.publish_dir_mode
 
     input:
         set idPatient, idSample, file(bam) from bam_mapped_merged_to_index
@@ -1819,13 +1819,14 @@ process HaplotypeCaller {
 
     script:
     intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
+    dbsnpOptions = params.dbsnp ? "--D ${dbsnp}" : ""
     """
     gatk --java-options "-Xmx${task.memory.toGiga()}g -Xms6000m -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10" \
         HaplotypeCaller \
         -R ${fasta} \
         -I ${bam} \
         ${intervalsOptions} \
-        -D ${dbsnp} \
+        ${dbsnpOptions} \
         -O ${intervalBed.baseName}_${idSample}.g.vcf \
         -ERC GVCF
     """
@@ -1857,6 +1858,7 @@ process GenotypeGVCFs {
     script:
     // Using -L is important for speed and we have to index the interval files also
     intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
+    dbsnpOptions = params.dbsnp ? "--D ${dbsnp}" : ""
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
         IndexFeatureFile \
@@ -1866,7 +1868,7 @@ process GenotypeGVCFs {
         GenotypeGVCFs \
         -R ${fasta} \
         ${intervalsOptions} \
-        -D ${dbsnp} \
+        ${dbsnpOptions} \
         -V ${gvcf} \
         -O ${intervalBed.baseName}_${idSample}.vcf
     """
