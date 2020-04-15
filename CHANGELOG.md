@@ -25,6 +25,7 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#175](https://github.com/nf-core/sarek/pull/175) - Add `Sentieon` documentation
 - [#176](https://github.com/nf-core/sarek/pull/176) - Add empty `custom` genome in `genomes.config` to allow genomes that are not in `AWS iGenomes`
 - [#179](https://github.com/nf-core/sarek/pull/179) - Add `FreeBayes` germline variant calling
+- [#180](https://github.com/nf-core/sarek/pull/180) - Now saving Mapped Bams (and creating TSV) in minimal setting
 
 ### Changed - [2.6dev]
 
@@ -53,6 +54,7 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#143](https://github.com/nf-core/sarek/pull/143) - Revert `snpEff` cache version to `86` for `GRCh38`
 - [#152](https://github.com/nf-core/sarek/pull/152), [#158](https://github.com/nf-core/sarek/pull/158), [#164](https://github.com/nf-core/sarek/pull/164), [#174](https://github.com/nf-core/sarek/pull/174) - Update docs
 - [#164](https://github.com/nf-core/sarek/pull/164) - Update `gatk4-spark` from `4.1.4.1` to `4.1.6.0`
+- [#180](https://github.com/nf-core/sarek/pull/180) - Improve minimal setting
 
 ### Fixed - [2.6dev]
 
