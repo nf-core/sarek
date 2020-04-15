@@ -391,8 +391,8 @@ if (params.input && (hasExtension(params.input, "vcf") || hasExtension(params.in
 // If no input file specified, trying to get TSV files corresponding to step in the TSV directory
 // only for steps recalibrate and variantCalling
 if (!params.input && step != 'mapping' && step != 'annotate') {
-    if (step == 'recalibrate') tsvPath = params.sentieon ? "${params.outdir}/Preprocessing/TSV/deduped_sentieon.tsv" : "${params.outdir}/Preprocessing/TSV/duplicateMarked.tsv"
-    else tsvPath = params.sentieon ? "${params.outdir}/Preprocessing/TSV/recalibrated_sentieon.tsv" : "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"
+    if (step == 'recalibrate') tsvPath = params.sentieon ? "${params.outdir}/Preprocessing/TSV/sentieon_deduped.tsv" : "${params.outdir}/Preprocessing/TSV/duplicateMarked.tsv"
+    else tsvPath = params.sentieon ? "${params.outdir}/Preprocessing/TSV/sentieon_recalibrated.tsv" : "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"
 }
 
 inputSample = Channel.empty()
@@ -1614,7 +1614,7 @@ tsv_sentieon_deduped.map { idPatient, idSample ->
     table = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.table"
     "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${table}\n"
 }.collectFile(
-    name: 'deduped_sentieon.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
+    name: 'sentieon_deduped.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
 )
 
 tsv_sentieon_deduped_sample
@@ -1624,7 +1624,7 @@ tsv_sentieon_deduped_sample
         bam = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam"
         bai = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam.bai"
         table = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.table"
-        ["deduped_sentieon_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
+        ["sentieon_deduped_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${table}\n"]
 }
 
 // Creating a TSV file to restart from this step
@@ -1635,7 +1635,7 @@ tsv_sentieon_recal.map { idPatient, idSample ->
     bai = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.bam.bai"
     "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"
 }.collectFile(
-    name: 'recalibrated_sentieon.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
+    name: 'sentieon_recalibrated.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
 )
 
 tsv_sentieon_recal_sample
@@ -1644,7 +1644,7 @@ tsv_sentieon_recal_sample
         gender = genderMap[idPatient]
         bam = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.bam"
         bai = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.bam.bai"
-        ["recalibrated_sentieon_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
+        ["sentieon_recalibrated_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
 }
 
 // STEP 4.5: MERGING THE RECALIBRATED BAM FILES
