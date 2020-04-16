@@ -23,7 +23,7 @@ LogRi(tumor)=log2((countsAi(tumor)+countsBi(tumor))/(countsAi(normal)+countsBi(n
 LogRi(normal)=0
 ```
 
-For male samples, the X chromosome markers have special treatment:
+For male samples, the X and Y chromosome markers have special treatment:
 
 ```R
 LogRi(tumor)=log2((countsAi(tumor)+countsBi(tumor))/(countsAi(normal)+countsBi(normal))-1 - median(log2((countsA(tumor)+countsB(tumor))/(countsA(normal)+countsB(normal))-1)
