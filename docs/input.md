@@ -13,7 +13,7 @@ For all possible TSV files, described in the next sections, here is an explanati
 - `lane` is used when the sample is multiplexed on several lanes, it must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character
 - `fastq1` is the path to the first pair of the fastq file
 - `fastq2` is the path to the second pair of the fastq file
-- `bam` is the bam file
+- `bam` is the path to the bam file
 - `bai` is the bam index file
 - `recaltable` is the recalibration table
 
