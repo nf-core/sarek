@@ -14,7 +14,7 @@ For all possible TSV files, described in the next sections, here is an explanati
 - `fastq1` is the path to the first pair of the fastq file
 - `fastq2` is the path to the second pair of the fastq file
 - `bam` is the path to the bam file
-- `bai` is the bam index file
+- `bai` is the path to the bam index file
 - `recaltable` is the recalibration table
 
 It is recommended to add the absolute path of the files, but relative path should work also.
