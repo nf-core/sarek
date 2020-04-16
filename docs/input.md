@@ -9,7 +9,7 @@ For all possible TSV files, described in the next sections, here is an explanati
 - `subject` designates the subject, it should be the ID of the Patient, and it must be unique for each patient
 - `sex` are the sex chromosomes of the Patient, (XX or XY)
 - `status` is the status of the measured sample, (0 for Normal or 1 for Tumor)
-- `sample` designates the sample, it should be the ID of the sample (it is possible to have more than one tumor sample for each patient, i.e. a tumor and a relapse), it must be unique for each sample
+- `sample` designates the sample, it should be the ID of the sample (it is possible to have more than one tumor sample for each patient, i.e. a tumor and a relapse), it must be unique, but samples can have multiple lanes (which will later be merged)
 - `lane` is used when the sample is multiplexed on several lanes, it must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character
 - `fastq1` is the path to the first pair of the fastq file
 - `fastq2` is the path to the second pair of the fastq file
