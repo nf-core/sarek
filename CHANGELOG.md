@@ -24,6 +24,10 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#169](https://github.com/nf-core/sarek/pull/169) - Add `RELEASE_CHECKLIST.md` document
 - [#174](https://github.com/nf-core/sarek/pull/174) - Add `variant_calling.md` documentation
 - [#175](https://github.com/nf-core/sarek/pull/175) - Add `Sentieon` documentation
+- [#176](https://github.com/nf-core/sarek/pull/176) - Add empty `custom` genome in `genomes.config` to allow genomes that are not in `AWS iGenomes`
+- [#179](https://github.com/nf-core/sarek/pull/179) - Add `FreeBayes` germline variant calling
+- [#180](https://github.com/nf-core/sarek/pull/180) - Now saving Mapped Bams (and creating TSV) in minimal setting
+- [#182](https://github.com/nf-core/sarek/pull/182) - Add possibility to run `HaplotypeCaller` without `dbsnp` so it can be used to actually generate vcfs to build a set of known sites (cf [gatkforums](https://gatkforums.broadinstitute.org/gatk/discussion/1247/what-should-i-use-as-known-variants-sites-for-running-tool-x))
 
 ### Changed - [2.6dev]
 
@@ -52,6 +56,7 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#143](https://github.com/nf-core/sarek/pull/143) - Revert `snpEff` cache version to `86` for `GRCh38`
 - [#152](https://github.com/nf-core/sarek/pull/152), [#158](https://github.com/nf-core/sarek/pull/158), [#164](https://github.com/nf-core/sarek/pull/164), [#174](https://github.com/nf-core/sarek/pull/174) - Update docs
 - [#164](https://github.com/nf-core/sarek/pull/164) - Update `gatk4-spark` from `4.1.4.1` to `4.1.6.0`
+- [#180](https://github.com/nf-core/sarek/pull/180) - Improve minimal setting
 
 ### Fixed - [2.6dev]
 
@@ -115,6 +120,7 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#107](https://github.com/nf-core/sarek/pull/107) - `--vepCacheVersion` is now removed, use `--vep_cache_version` instead
 - [#152](https://github.com/nf-core/sarek/pull/152) - Removed `Jenkinsfile`
 - [#169](https://github.com/nf-core/sarek/pull/169) - Removed omicX from README
+- [#181](https://github.com/nf-core/sarek/pull/181) - Remove duplicate code in `nextflow.config`
 
 ## [2.5.2] - Jåkkåtjkaskajekna
 

@@ -147,10 +147,10 @@ Recalibrated BAM files can also be used as an input to start the Variant Calling
 
 For further reading and documentation see the [FreeBayes manual](https://github.com/ekg/freebayes/blob/master/README.md#user-manual-and-guide).
 
-For a Tumor/Normal pair only:
-**Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/FreeBayes`**
+For all samples:
+**Output directory: `results/VariantCalling/[SAMPLE]/FreeBayes`**
 
-- `FreeBayes_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `FreeBayes_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
+- `FreeBayes_[SAMPLE].vcf.gz` and `FreeBayes_[SAMPLE].vcf.gz.tbi`
   - VCF with Tabix index
 
 #### GATK HaplotypeCaller

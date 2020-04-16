@@ -756,6 +756,8 @@ If you prefer, you can specify the cache version when you run the pipeline:
 
 Do not load `igenomes.config` when running the pipeline.
 You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.
+This option will load the `genomes.config` file instead.
+You can then specify the `--genome custom` and specify any reference file on the command line or within a config file.
 
 ```bash
 --igenomes_ignore

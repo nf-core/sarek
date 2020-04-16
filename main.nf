@@ -901,7 +901,7 @@ bedIntervals = bedIntervals.dump(tag:'bedintervals')
 
 if (params.no_intervals && step != 'annotate') bedIntervals = Channel.from(file("no_intervals.bed"))
 
-(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intMpileup, bedIntervals) = bedIntervals.into(5)
+(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervals) = bedIntervals.into(6)
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
@@ -1180,7 +1180,7 @@ process MergeBamMapped {
         set idPatient, idSample, idRun, file(bam) from multipleBam
 
     output:
-        set idPatient, idSample, file("${idSample}.bam") into mergedBam
+        set idPatient, idSample, file("${idSample}.bam") into bam_mapped_merged
 
     script:
     """
@@ -1188,16 +1188,16 @@ process MergeBamMapped {
     """
 }
 
-mergedBam = mergedBam.dump(tag:'Merged BAM')
+bam_mapped_merged = bam_mapped_merged.dump(tag:'Merged BAM')
 
-mergedBam = mergedBam.mix(singleBam,singleBamSentieon)
+bam_mapped_merged = bam_mapped_merged.mix(singleBam,singleBamSentieon)
 
-(mergedBam, mergedBamForSentieon) = mergedBam.into(2)
+(bam_mapped_merged, mergedBamForSentieon) = bam_mapped_merged.into(2)
 
 if (!params.sentieon) mergedBamForSentieon.close()
-else mergedBam.close()
+else bam_mapped_merged.close()
 
-mergedBam = mergedBam.dump(tag:'BAMs for MD')
+bam_mapped_merged = bam_mapped_merged.dump(tag:'BAMs for MD')
 mergedBamForSentieon = mergedBamForSentieon.dump(tag:'Sentieon BAMs to Index')
 
 process IndexBamMergedForSentieon {
@@ -1217,18 +1217,21 @@ process IndexBamMergedForSentieon {
     """
 }
 
-(mergedBam, mergedBamToIndex) = mergedBam.into(2)
+(bam_mapped_merged, bam_mapped_merged_to_index) = bam_mapped_merged.into(2)
 
 process IndexBamFile {
     label 'cpus_8'
 
     tag {idPatient + "-" + idSample}
 
+    publishDir "${params.outdir}/Preprocessing/${idSample}/Mapped", mode: params.publish_dir_mode
+
     input:
-        set idPatient, idSample, file(bam) from mergedBamToIndex
+        set idPatient, idSample, file(bam) from bam_mapped_merged_to_index
 
     output:
-        set idPatient, idSample, file(bam), file("*.bai") into indexedBam
+        set idPatient, idSample, file(bam), file("*.bai") into bam_mapped_merged_indexed
+        set idPatient, idSample into tsv_bam_indexed
 
     when: !(params.known_indels)
 
@@ -1239,6 +1242,27 @@ process IndexBamFile {
     """
 }
 
+(tsv_bam_indexed, tsv_bam_indexed_sample) = tsv_bam_indexed.into(2)
+
+// Creating a TSV file to restart from this step
+tsv_bam_indexed.map { idPatient, idSample ->
+    gender = genderMap[idPatient]
+    status = statusMap[idPatient, idSample]
+    bam = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam"
+    bai = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam.bai"
+    "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"
+}.collectFile(
+    name: 'mapped.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
+)
+
+tsv_bam_indexed_sample
+    .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { idPatient, idSample ->
+        status = statusMap[idPatient, idSample]
+        gender = genderMap[idPatient]
+        bam = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam"
+        bai = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam.bai"
+        ["mapped_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
+}
 // STEP 2: MARKING DUPLICATES
 
 process MarkDuplicates {
@@ -1253,7 +1277,7 @@ process MarkDuplicates {
         }
 
     input:
-        set idPatient, idSample, file("${idSample}.bam") from mergedBam
+        set idPatient, idSample, file("${idSample}.bam") from bam_mapped_merged
 
     output:
         set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bam.bai") into duplicateMarkedBams
@@ -1751,8 +1775,8 @@ bamQCReport = bamQCReport.dump(tag:'BamQC')
 // When using sentieon for mapping, Channel bamRecal is bamRecalSentieon
 if (params.sentieon && step == 'mapping') bamRecal = bamRecalSentieon
 
-// When no knownIndels for mapping, Channel bamRecal is indexedBam
-bamRecal = (params.known_indels && step == 'mapping') ? bamRecal : indexedBam
+// When no knownIndels for mapping, Channel bamRecal is bam_mapped_merged_indexed
+bamRecal = (params.known_indels && step == 'mapping') ? bamRecal : bam_mapped_merged_indexed
 
 // When starting with variant calling, Channel bamRecal is inputSample
 if (step == 'variantcalling') bamRecal = inputSample
@@ -1764,12 +1788,13 @@ bamRecal = bamRecal.dump(tag:'BAM for Variant Calling')
 // Manta will be run in Germline mode, or in Tumor mode depending on status
 // HaplotypeCaller, TIDDIT and Strelka will be run for Normal and Tumor samples
 
-(bamSentieonDNAscope, bamSentieonDNAseq, bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamRecalAll, bamRecalAllTemp) = bamRecal.into(7)
+(bamSentieonDNAscope, bamSentieonDNAseq, bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll) = bamRecal.into(8)
 
 // To speed Variant Callers up we are chopping the reference into smaller pieces
 // Do variant calling by this intervals, and re-merge the VCFs
 
-bamHaplotypeCaller = bamRecalAllTemp.combine(intHaplotypeCaller)
+bamHaplotypeCaller = bamHaplotypeCallerNoIntervals.spread(intHaplotypeCaller)
+bamFreebayesSingle = bamFreebayesSingleNoIntervals.spread(intFreebayesSingle)
 
 // STEP GATK HAPLOTYPECALLER.1
 
@@ -1795,13 +1820,14 @@ process HaplotypeCaller {
 
     script:
     intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
+    dbsnpOptions = params.dbsnp ? "--D ${dbsnp}" : ""
     """
     gatk --java-options "-Xmx${task.memory.toGiga()}g -Xms6000m -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10" \
         HaplotypeCaller \
         -R ${fasta} \
         -I ${bam} \
         ${intervalsOptions} \
-        -D ${dbsnp} \
+        ${dbsnpOptions} \
         -O ${intervalBed.baseName}_${idSample}.g.vcf \
         -ERC GVCF
     """
@@ -1833,6 +1859,7 @@ process GenotypeGVCFs {
     script:
     // Using -L is important for speed and we have to index the interval files also
     intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
+    dbsnpOptions = params.dbsnp ? "--D ${dbsnp}" : ""
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
         IndexFeatureFile \
@@ -1842,7 +1869,7 @@ process GenotypeGVCFs {
         GenotypeGVCFs \
         -R ${fasta} \
         ${intervalsOptions} \
-        -D ${dbsnp} \
+        ${dbsnpOptions} \
         -V ${gvcf} \
         -O ${intervalBed.baseName}_${idSample}.vcf
     """
@@ -2079,6 +2106,42 @@ process TIDDIT {
 
 vcfTIDDIT = vcfTIDDIT.dump(tag:'TIDDIT')
 
+// STEP FREEBAYES SINGLE MODE
+
+process FreebayesSingle {
+    tag {idSample + "-" + intervalBed.baseName}
+    label 'cpus_1'
+    
+    input:
+        set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamFreebayesSingle
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_software_versions_yaml
+    
+    output:
+        set val("FreeBayes"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into vcfFreebayesSingle
+    
+    when: 'freebayes' in tools
+
+    script:
+    intervalsOptions = params.no_intervals ? "" : "-t ${intervalBed}"
+    """
+    freebayes \
+        -f ${fasta} \
+        --pooled-continuous \
+        --pooled-discrete \
+        --genotype-qualities \
+        --report-genotype-likelihood-max \
+        --allele-balance-priors-off \
+        --min-alternate-fraction 0.03 \
+        --min-repeat-entropy 1 \
+        --min-alternate-count 2 \
+        ${intervalsOptions} \
+        ${bam} > ${intervalBed.baseName}_${idSample}.vcf
+    """
+}
+
+vcfFreebayesSingle = vcfFreebayesSingle.groupTuple(by: [0,1,2])
+
 /*
 ================================================================================
                              SOMATIC VARIANT CALLING
@@ -2233,7 +2296,7 @@ process MergeMutect2Stats {
 
 // STEP MERGING VCF - FREEBAYES, GATK HAPLOTYPECALLER & GATK MUTECT2 (UNFILTERED)
 
-vcfConcatenateVCFs = mutect2Output.mix(vcfFreeBayes, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
+vcfConcatenateVCFs = mutect2Output.mix(vcfFreeBayes, vcfFreebayesSingle, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
 vcfConcatenateVCFs = vcfConcatenateVCFs.dump(tag:'VCF to merge')
 
 process ConcatVCF {
@@ -3676,12 +3739,12 @@ def checkParameterList(list, realList) {
 // Define list of available tools to annotate
 def defineAnnoList() {
     return [
-        'HaplotypeCaller',
-        'Manta',
-        'Mutect2',
+        'haplotypecaller',
+        'manta',
+        'mutect2',
         'platypus',
-        'Strelka',
-        'TIDDIT'
+        'strelka',
+        'tiddit'
     ]
 }
 
