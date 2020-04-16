@@ -7,7 +7,7 @@ The TSV file is a Tab Separated Value file with columns:
 
 - `subject sex status sample lane fastq1 fastq2` for step `mapping` with paired-end FASTQs
 - `subject sex status sample lane bam` for step `mapping` with unmapped BAMs (uBAMs)
-- `subject sex status sample bam bai recaltable` for step `recalibrate` with mapped BAMs
+- `subject sex status sample bam bai recaltable` for step `recalibrate` with mapped BAMs and corresponding recalibration table
 - `subject sex status sample bam bai` for step `variantcalling` with BAMs
 
 The content of these columns is quite straight-forward:
