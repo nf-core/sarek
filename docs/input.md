@@ -6,7 +6,7 @@ Input files for Sarek can be specified using a TSV file given to the `--input` c
 There are different kinds of TSV files that can be used as input, depending on the input files available (fastq, uBAM, BAM...).
 For all possible TSV files, described in the next sections, here is an explanation of what the columns refer to:
 
-- `subject` designates the subject, it should be the ID of the Patient, and it must be unique for each patient
+- `subject` designates the subject, it should be the ID of the patient, and it must be unique for each patient, but one patient can have multiple samples (e.g. normal and tumor)
 - `sex` are the sex chromosomes of the Patient, (XX or XY)
 - `status` is the status of the measured sample, (0 for Normal or 1 for Tumor)
 - `sample` designates the sample, it should be the ID of the sample (it is possible to have more than one tumor sample for each patient, i.e. a tumor and a relapse), it must be unique, but samples can have multiple lanes (which will later be merged)
