@@ -122,10 +122,16 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        tool: [Haplotypecaller, Freebayes, Manta, mpileup, Strelka, TIDDIT, MSIsensor]
+        tool: [Haplotypecaller, Freebayes, Manta, mpileup, MSIsensor, Strelka, TIDDIT]
         intervals: [--no_intervals, '']
         exclude:
-          - tool: [Manta, Strelka, TIDDIT, MSIsensor]
+          - tool: Manta
+            intervals: --no_intervals
+          - tool: MSIsensor
+            intervals: --no_intervals
+          - tool: Strelka
+            intervals: --no_intervals
+          - tool: TIDDIT
             intervals: --no_intervals
     steps:
       - uses: actions/checkout@v2
