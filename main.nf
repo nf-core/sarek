@@ -2200,6 +2200,14 @@ bam_sentieon_tumor = Channel.create()
 bam_sentieon_all
     .choice(bam_sentieon_tumor, bam_sention_normal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
 
+// Crossing Normal and Tumor to get a T/N pair for Somatic Variant Calling
+// Remapping channel to remove common key idPatient
+
+bam_pair_sentieon_TNscope = bam_sention_normal.cross(bam_sentieon_tumor).map {
+    normal, tumor ->
+    [normal[0], normal[1], normal[2], normal[3], normal[4], tumor[1], tumor[2], tumor[3], tumor[4]]
+}
+
 intervalPairBam = pairBam.spread(bedIntervals)
 
 bamMpileup = bamMpileup.spread(intMpileup)
@@ -2511,7 +2519,7 @@ process Sentieon_TNscope {
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
     input:
-        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), file(recalNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(recalTumor) from bam_sentieon_all
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), file(recalNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(recalTumor) from bam_pair_sentieon_TNscope
         file(dict) from ch_dict
         file(fasta) from ch_fasta
         file(fastaFai) from ch_fai
