@@ -1208,7 +1208,7 @@ process IndexBamMergedForSentieon {
         set idPatient, idSample, file("${idSample}.bam") from mergedBamForSentieon
 
     output:
-        set idPatient, idSample, file(bam), file("${idSample}.bam.bai") into bamForSentieonDedup
+        set idPatient, idSample, file("${idSample}.bam"), file("${idSample}.bam.bai") into bamForSentieonDedup
 
     script:
     """
@@ -1229,7 +1229,7 @@ process IndexBamFile {
         set idPatient, idSample, file("${idSample}.bam") from bam_mapped_merged_to_index
 
     output:
-        set idPatient, idSample, file(bam), file("${idSample}.bam.bai") into bam_mapped_merged_indexed
+        set idPatient, idSample, file("${idSample}.bam"), file("${idSample}.bam.bai") into bam_mapped_merged_indexed
         set idPatient, idSample into tsv_bam_indexed
 
     when: !(params.known_indels)
