@@ -125,8 +125,8 @@ jobs:
         tool: [Haplotypecaller, Freebayes, Manta, mpileup, Strelka, TIDDIT, MSIsensor]
         intervals: [--no_intervals, '']
         exclude:
-          - intervals: --no_intervals
-            tool: [Manta, Strelka, TIDDIT, MSIsensor]
+          - tool: [Manta, Strelka, TIDDIT, MSIsensor]
+            intervals: --no_intervals
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
