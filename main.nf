@@ -1114,7 +1114,7 @@ singleBam = singleBam.dump(tag:'Single BAM')
 
 // STEP 1': MAPPING READS TO REFERENCE GENOME WITH SENTIEON BWA MEM
 
-process SentieonMapReads {
+process Sentieon_MapReads {
     label 'cpus_max'
     label 'memory_max'
     label 'sentieon'
@@ -1323,7 +1323,7 @@ bamBaseRecalibrator = bamBaseRecalibrator.dump(tag:'BAM FOR BASERECALIBRATOR')
 
 // STEP 2': SENTIEON DEDUP
 
-process SentieonDedup {
+process Sentieon_Dedup {
     label 'cpus_max'
     label 'memory_max'
     label 'sentieon'
@@ -1534,7 +1534,7 @@ bamMergeBamRecal = bamMergeBamRecal.groupTuple(by:[0, 1])
 
 bam_sentieon_dedup = bam_sentieon_dedup.dump(tag:'deduped.bam')
 
-process SentieonBQSR {
+process Sentieon_BQSR {
     label 'cpus_max'
     label 'memory_max'
     label 'sentieon'
@@ -1803,7 +1803,9 @@ bamRecal = bamRecal.dump(tag:'BAM for Variant Calling')
 // Manta will be run in Germline mode, or in Tumor mode depending on status
 // HaplotypeCaller, TIDDIT and Strelka will be run for Normal and Tumor samples
 
-(bam_sentieon_DNAscope, bam_sentieon_DNAseq, bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll) = bamRecal.into(8)
+(bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll) = bamRecal.into(6)
+
+(bam_sentieon_DNAseq, bam_sentieon_DNAscope, bam_sentieon_all) = bam_sentieon_deduped_table.into(3)
 
 // To speed Variant Callers up we are chopping the reference into smaller pieces
 // Do variant calling by this intervals, and re-merge the VCFs
@@ -1894,7 +1896,7 @@ vcfGenotypeGVCFs = vcfGenotypeGVCFs.groupTuple(by:[0, 1, 2])
 
 // STEP SENTIEON DNAseq
 
-process SentieonDNAseq {
+process Sentieon_DNAseq {
     label 'cpus_max'
     label 'memory_max'
     label 'sentieon'
@@ -1902,7 +1904,7 @@ process SentieonDNAseq {
     tag {idSample}
 
     input:
-        set idPatient, idSample, file(bam), file(bai) from bam_sentieon_DNAseq
+        set idPatient, idSample, file(bam), file(bai), file(recal) from bam_sentieon_DNAseq
         file(dbsnp) from ch_dbsnp
         file(dbsnpIndex) from ch_dbsnp_tbi
         file(fasta) from ch_fasta
@@ -1919,7 +1921,8 @@ process SentieonDNAseq {
         -t ${task.cpus} \
         -r ${fasta} \
         -i ${bam} \
-        --algo Genotyper \
+        -q ${recal} \
+        --algo Haplotyper \
         -d ${dbsnp} \
         DNAseq_${idSample}.vcf
     """
@@ -1929,7 +1932,7 @@ vcf_sentieon_DNAseq = vcf_sentieon_DNAseq.dump(tag:'sentieon DNAseq')
 
 // STEP SENTIEON DNAscope
 
-process SentieonDNAscope {
+process Sentieon_DNAscope {
     label 'cpus_max'
     label 'memory_max'
     label 'sentieon'
@@ -1937,7 +1940,7 @@ process SentieonDNAscope {
     tag {idSample}
 
     input:
-        set idPatient, idSample, file(bam), file(bai) from bam_sentieon_DNAscope
+        set idPatient, idSample, file(bam), file(bai), file(recal) from bam_sentieon_DNAscope
         file(dbsnp) from ch_dbsnp
         file(dbsnpIndex) from ch_dbsnp_tbi
         file(fasta) from ch_fasta
@@ -1955,6 +1958,7 @@ process SentieonDNAscope {
         -t ${task.cpus} \
         -r ${fasta} \
         -i ${bam} \
+        -q ${recal} \
         --algo DNAscope \
         -d ${dbsnp} \
         DNAscope_${idSample}.vcf
@@ -1963,6 +1967,7 @@ process SentieonDNAscope {
         -t ${task.cpus} \
         -r ${fasta}\
         -i ${bam} \
+        -q ${recal} \
         --algo DNAscope \
         --var_type bnd \
         -d ${dbsnp} \
@@ -1971,6 +1976,7 @@ process SentieonDNAscope {
     sentieon driver \
         -t ${task.cpus} \
         -r ${fasta}\
+        -q ${recal} \
         --algo SVSolver \
         -v DNAscope_${idSample}.temp.vcf \
         DNAscope_SV_${idSample}.vcf
@@ -2183,7 +2189,16 @@ pairBam = bamNormal.cross(bamTumor).map {
 pairBam = pairBam.dump(tag:'BAM Somatic Pair')
 
 // Manta, Strelka, Mutect2, MSIsensor
-(pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBamCalculateContamination, pairBamFilterMutect2, pairBamTNscope, pairBamMsisensor, pairBam) = pairBam.into(8)
+(pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBamCalculateContamination, pairBamFilterMutect2, pairBamMsisensor, pairBam) = pairBam.into(7)
+
+// Making Pair Bam for Sention
+
+// separate BAM by status
+bam_sention_normal = Channel.create()
+bam_sentieon_tumor = Channel.create()
+
+bam_sentieon_all
+    .choice(bam_sentieon_tumor, bam_sention_normal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
 
 intervalPairBam = pairBam.spread(bedIntervals)
 
@@ -2488,7 +2503,7 @@ process FilterMutect2Calls {
 
 // STEP SENTIEON TNSCOPE
 
-process SentieonTNscope {
+process Sentieon_TNscope {
     label 'cpus_max'
     label 'memory_max'
     label 'sentieon'
@@ -2496,7 +2511,7 @@ process SentieonTNscope {
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
     input:
-        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamTNscope
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), file(recalNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(recalTumor) from bam_sentieon_all
         file(dict) from ch_dict
         file(fasta) from ch_fasta
         file(fastaFai) from ch_fai
@@ -2514,7 +2529,9 @@ process SentieonTNscope {
         -t ${task.cpus} \
         -r ${fasta} \
         -i ${bamTumor} \
+        -q ${recalTumor} \
         -i ${bamNormal} \
+        -q ${recalNormal} \
         --algo TNscope \
         --tumor_sample ${idSampleTumor} \
         --normal_sample ${idSampleNormal} \
