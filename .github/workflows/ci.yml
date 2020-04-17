@@ -126,7 +126,7 @@ jobs:
         intervals: [--no_intervals, '']
         exclude:
           - intervals: --no_intervals
-            node: [Manta, Strelka, TIDDIT, MSIsensor]
+            tool: [Manta, Strelka, TIDDIT, MSIsensor]
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
