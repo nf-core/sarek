@@ -56,6 +56,7 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#152](https://github.com/nf-core/sarek/pull/152), [#158](https://github.com/nf-core/sarek/pull/158), [#164](https://github.com/nf-core/sarek/pull/164), [#174](https://github.com/nf-core/sarek/pull/174) - Update docs
 - [#164](https://github.com/nf-core/sarek/pull/164) - Update `gatk4-spark` from `4.1.4.1` to `4.1.6.0`
 - [#180](https://github.com/nf-core/sarek/pull/180) - Improve minimal setting
+- [#183](https://github.com/nf-core/sarek/pull/183) - Update input.md documentation
 
 ### Fixed - [2.6dev]
 
@@ -79,6 +80,8 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#164](https://github.com/nf-core/sarek/pull/164) - Fix issues when running with `Sentieon`
 - [#164](https://github.com/nf-core/sarek/pull/164) - Add more VCFs to annotation
 - [#167](https://github.com/nf-core/sarek/pull/167) - Add `--markdup_java_options` documentation to fix [#166](https://github.com/nf-core/sarek/issues/166)
+- [#188](https://github.com/nf-core/sarek/pull/188) - Fix input/output channels for process `IndexBamFile` to match actual files in the `mapped.tsv` files
+- [#189](https://github.com/nf-core/sarek/pull/189) - Fix `no_intervals` for process `HaplotypeCaller` (the file just need to actually exists...)
 
 ### Deprecated - [2.6dev]
 

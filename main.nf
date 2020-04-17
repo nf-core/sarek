@@ -893,7 +893,10 @@ bedIntervals = bedIntervals
 
 bedIntervals = bedIntervals.dump(tag:'bedintervals')
 
-if (params.no_intervals && step != 'annotate') bedIntervals = Channel.from(file("no_intervals.bed"))
+if (params.no_intervals && step != 'annotate') {
+    file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
+    bedIntervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
+}
 
 (intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervals) = bedIntervals.into(6)
 
@@ -1199,10 +1202,10 @@ process IndexBamMergedForSentieon {
     tag {idPatient + "-" + idSample}
 
     input:
-        set idPatient, idSample, file(bam) from bam_sentieon_mapped_merged
+        set idPatient, idSample, file("${idSample}.bam") from mergedBamForSentieon
 
     output:
-        set idPatient, idSample, file(bam), file("${idSample}.bam.bai") into bam_sentieon_mapped_merged_indexed
+        set idPatient, idSample, file("${idSample}.bam"), file("${idSample}.bam.bai") into bam_sentieon_mapped_merged_indexed
 
     script:
     """
@@ -1220,18 +1223,17 @@ process IndexBamFile {
     publishDir "${params.outdir}/Preprocessing/${idSample}/Mapped", mode: params.publish_dir_mode
 
     input:
-        set idPatient, idSample, file(bam) from bam_mapped_merged_to_index
+        set idPatient, idSample, file("${idSample}.bam") from bam_mapped_merged_to_index
 
     output:
-        set idPatient, idSample, file(bam), file("*.bai") into bam_mapped_merged_indexed
+        set idPatient, idSample, file("${idSample}.bam"), file("${idSample}.bam.bai") into bam_mapped_merged_indexed
         set idPatient, idSample into tsv_bam_indexed
 
     when: !(params.known_indels)
 
     script:
     """
-    samtools index ${bam}
-    mv ${bam}.bai ${bam.baseName}.bai
+    samtools index ${idSample}.bam
     """
 }
 

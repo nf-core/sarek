@@ -122,7 +122,17 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        tool: [Haplotypecaller, Freebayes, Manta, mpileup, Strelka, TIDDIT, MSIsensor]
+        tool: [Haplotypecaller, Freebayes, Manta, mpileup, MSIsensor, Strelka, TIDDIT]
+        intervals: [--no_intervals, '']
+        exclude:
+          - tool: Manta
+            intervals: --no_intervals
+          - tool: MSIsensor
+            intervals: --no_intervals
+          - tool: Strelka
+            intervals: --no_intervals
+          - tool: TIDDIT
+            intervals: --no_intervals
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
@@ -135,4 +145,4 @@ jobs:
       - name: Pull docker image
         run: docker pull nfcore/sarek:dev
       - name: Run ${{ matrix.tool }} test
-        run: nextflow run . -profile test_tool,docker --tools ${{ matrix.tool }}
+        run: nextflow run . -profile test_tool,docker --tools ${{ matrix.tool }} ${{ matrix.intervals }}
