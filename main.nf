@@ -1202,7 +1202,7 @@ process IndexBamMergedForSentieon {
     tag {idPatient + "-" + idSample}
 
     input:
-        set idPatient, idSample, file("${idSample}.bam") from mergedBamForSentieon
+        set idPatient, idSample, file("${idSample}.bam") from bam_sentieon_mapped_merged
 
     output:
         set idPatient, idSample, file("${idSample}.bam"), file("${idSample}.bam.bai") into bam_sentieon_mapped_merged_indexed
