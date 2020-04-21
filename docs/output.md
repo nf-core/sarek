@@ -4,7 +4,7 @@ This document describes the output produced by the pipeline.
 
 ## Pipeline overview <!-- omit in toc -->
 
-The pipeline processes data using the following steps:
+The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
 - [Preprocessing](#preprocessing)
   - [Map to Reference](#map-to-reference)
@@ -34,6 +34,8 @@ The pipeline processes data using the following steps:
     - [ConvertAlleleCounts](#convertallelecounts)
     - [ASCAT](#ascat)
     - [Control-FREEC](#control-freec)
+  - [MSI status](#msi-status)
+    - [MSIsensor](#msisensor)
 - [Variant annotation](#variant-annotation)
   - [snpEff](#snpeff)
   - [VEP](#vep)
@@ -69,6 +71,8 @@ Such files are intermediate and not kept in the final files delivered to users.
 #### GATK MarkDuplicatesSpark
 
 [GATK MarkDuplicatesSpark](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_spark_transforms_markduplicates_MarkDuplicatesSpark.php) is a Spark implementation of [Picard MarkDuplicates](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/picard_sam_markduplicates_MarkDuplicates.php) and locates and tags duplicate reads in a BAM or SAM file, where duplicate reads are defined as originating from a single fragment of DNA.
+
+If the pipeline is run with the option `--no_gatk_spark` then [GATK MarkDuplicates](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.4.0/picard_sam_markduplicates_MarkDuplicates.php) is used instead.
 
 This directory is the location for the BAM files delivered to users.
 Besides the duplicate marked BAM files, the recalibration tables (`*.recal.table`) are also stored, and can be used to create base recalibrated files.
@@ -119,7 +123,7 @@ For all samples:
 - `duplicateMarked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
   - TSV files to start Sarek from `recalibration` or `variantcalling` steps for a specific sample.
 
-> :warning: Only with [`--sentieon`](usage.md#--sentieon)
+> `/!\` Only with [`--sentieon`](usage.md#--sentieon)
 
 For all samples:
 **Output directory: `results/Preprocessing/TSV`**
@@ -131,7 +135,7 @@ For all samples:
 
 ## Variant Calling
 
-All the results regarding Variant Calling are collected in this directory.
+All the results regarding Variant Calling are collected in this directory. If some results from a variant caller do not appear here, please check out the [Variant calling](./variant_calling.md) documentation.
 
 Recalibrated BAM files can also be used as an input to start the Variant Calling, for more information see [TSV files output information](#tsv-files)
 
@@ -139,14 +143,14 @@ Recalibrated BAM files can also be used as an input to start the Variant Calling
 
 #### FreeBayes
 
-[FreeBayes](https://github.com/ekg/freebayes) is a Bayesian genetic variant detector designed to find small polymorphisms, specifically SNPs, indels, MNPs, and complex events smaller than the length of a short-read sequencing alignment..
+[FreeBayes](https://github.com/ekg/freebayes) is a Bayesian genetic variant detector designed to find small polymorphisms, specifically SNPs, indels, MNPs, and complex events smaller than the length of a short-read sequencing alignment.
 
 For further reading and documentation see the [FreeBayes manual](https://github.com/ekg/freebayes/blob/master/README.md#user-manual-and-guide).
 
-For a Tumor/Normal pair only:
-**Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/FreeBayes`**
+For all samples:
+**Output directory: `results/VariantCalling/[SAMPLE]/FreeBayes`**
 
-- `FreeBayes_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `FreeBayes_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
+- `FreeBayes_[SAMPLE].vcf.gz` and `FreeBayes_[SAMPLE].vcf.gz.tbi`
   - VCF with Tabix index
 
 #### GATK HaplotypeCaller
@@ -189,9 +193,9 @@ For a Tumor/Normal pair only:
 
 Files created:
 
-- `unfiltered_Mutect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `unfiltered_Mutect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
+- `Mutect2_unfiltered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `Mutect2_unfiltered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
   - unfiltered (raw) Mutect2 calls VCF with Tabix index
-- `filtered_Mutect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `filtered_Mutect2_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
+- `Mutect2_filtered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `Mutect2_filtered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
   - filtered Mutect2 calls VCF with Tabix index: these entries has a PASS filter, you can get these when supplying a panel of normals using the `--pon` option
 - `[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.stats`
   - a stats file generated during calling raw variants (needed for filtering)
@@ -242,9 +246,9 @@ Using [Strelka Best Practices](https://github.com/Illumina/strelka/blob/v2.9.x/d
 
 #### Sentieon DNAseq
 
-> :warning: Only with [`--sentieon`](usage.md#--sentieon)
+> `/!\` Only with [`--sentieon`](usage.md#--sentieon)
 
-[Sentieon DNAseq](https://www.sentieon.com/products/#dnaseq) implements the same mathematics used in the Broad Institute’s BWA-GATK HaplotypeCaller 3.3-4.1 Best Practices Workflow pipeline.
+[Sentieon DNAseq](https://www.sentieon.com/products/#dnaseq) implements the same mathematics used in the Broad Institute's BWA-GATK HaplotypeCaller 3.3-4.1 Best Practices Workflow pipeline.
 
 For further reading and documentation see the [Sentieon DNAseq user guide](https://support.sentieon.com/manual/DNAseq_usage/dnaseq/).
 
@@ -256,7 +260,7 @@ For all samples:
 
 #### Sentieon DNAscope
 
-> :warning: Only with [`--sentieon`](usage.md#--sentieon)
+> `/!\` Only with [`--sentieon`](usage.md#--sentieon)
 
 [Sentieon DNAscope](https://www.sentieon.com/products) calls SNPs and small indels.
 
@@ -270,7 +274,7 @@ For all samples:
 
 #### Sentieon TNscope
 
-> :warning: Only with [`--sentieon`](usage.md#--sentieon)
+> `/!\` Only with [`--sentieon`](usage.md#--sentieon)
 
 [Sentieon TNscope](https://www.sentieon.com/products/#tnscope) calls SNPs and small indels on an Tumor/Normal pair.
 
@@ -339,7 +343,7 @@ For all samples:
 - `TIDDIT_[SAMPLE].signals.tab`
   - tab file describing coverage across the genome, binned per 50 bp
 - `TIDDIT_[SAMPLE].ploidy.tab`
-  - tab file describing the estimated ploïdy and coverage across each contig
+  - tab file describing the estimated ploidy and coverage across each contig
 - `TIDDIT_[SAMPLE].old.vcf`
   - VCF including the low qualiy calls
 - `TIDDIT_[SAMPLE].wig`
@@ -349,7 +353,7 @@ For all samples:
 
 #### Sentieon DNAscope SV
 
-> :warning: Only with [`--sentieon`](usage.md#--sentieon)
+> `/!\` Only with [`--sentieon`](usage.md#--sentieon)
 
 [Sentieon DNAscope](https://www.sentieon.com/products) can perform structural variant calling in addition to calling SNPs and small indels.
 
@@ -423,6 +427,36 @@ For a Tumor/Normal pair only:
   - file with ratios and predicted copy number alterations for each window
 - `[TUMORSAMPLE].pileup.gz_BAF.txt` and `[NORMALSAMPLE].pileup.gz_BAF.txt`
   - file with beta allele frequencies for each possibly heterozygous SNP position
+
+### MSI status
+
+[Microsatellite instability](https://en.wikipedia.org/wiki/Microsatellite_instability)
+is a genetic condition associated to deficienceies in the
+mismatch repair (MMR) system which causes a tendency to accumulate a high
+number of mutations (SNVs and indels).
+
+#### MSIsensor
+
+[MSIsensor](https://github.com/ding-lab/msisensor) is a tool to detect the MSI
+status of a tumor scaning the length of the microsatellite regions. An altered
+distribution of  microsatellite length is associated to a missed replication
+slippage which would be corrected under normal mismatch repair (MMR) conditions. It requires
+a normal sample for each tumour to differentiate the somatic and germline
+cases.
+
+For further reading see the [MSIsensor paper](https://www.ncbi.nlm.nih.gov/pubmed/24371154).
+
+For a Tumor/Normal pair only:
+**Output directory: `results/VariantCalling/[TUMORSAMPLE]_vs_[NORMALSAMPLE]/MSIsensor`**
+
+- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]`_msisensor
+  - MSI score output, contains information about the number of somatic sites.
+- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]`_msisensor_dis
+  - The normal and tumor length distribution for each microsatellite position.
+- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]`_msisensor_germline
+  - somatic sites detected
+- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]`_msisensor_somatic
+  - germ line sites detected
 
 ## Variant annotation
 
@@ -510,8 +544,9 @@ For more information about how to use Qualimap bamqc reports, see [Qualimap bamq
 
 #### MarkDuplicates reports
 
-[[GATK MarkDuplicatesSpark](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_spark_transforms_markduplicates_MarkDuplicatesSpark.php), Spark implementation of [Picard MarkDuplicates](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/picard_sam_markduplicates_MarkDuplicates.php)
-) locates and tags duplicate reads in a BAM or SAM file, where duplicate reads are defined as originating from a single fragment of DNA.
+[[GATK MarkDuplicatesSpark](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_spark_transforms_markduplicates_MarkDuplicatesSpark.php), Spark implementation of [Picard MarkDuplicates](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/picard_sam_markduplicates_MarkDuplicates.php) locates and tags duplicate reads in a BAM or SAM file, where duplicate reads are defined as originating from a single fragment of DNA.
+
+If the pipeline is run with the option `--no_gatk_spark` then [GATK MarkDuplicates](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.4.0/picard_sam_markduplicates_MarkDuplicates.php) is used instead.
 
 Collecting duplicate metrics slows down performance.
 To disable them use `--skipQC MarkDuplicates`.
@@ -598,7 +633,7 @@ For all samples:
   - RAW statistics used by MultiQC
 - `VariantCaller_Sample_snpEff.html`
   - Statistics to be visualised with a web browser
-- `VariantCaller_Sample_snpEff.txt`
+- `VariantCaller_Sample_snpEff.genes.txt`
   - TXT (tab separated) summary counts for variants affecting each transcript and gene
 
 For further reading and documentation see the [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary)
