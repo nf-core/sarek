@@ -73,6 +73,7 @@
   - [--snpeffDb](#--snpeffdb)
   - [--species](#--species)
   - [--vep_cache_version](#--vep_cache_version)
+  - [--vepCacheVersion](#--vepcacheversion)
   - [--annotation_cache](#--annotation_cache)
   - [--snpeff_cache](#--snpeff_cache)
   - [--vep_cache](#--vep_cache)
@@ -748,6 +749,11 @@ If you prefer, you can specify the cache version when you run the pipeline:
 ```bash
 --vep_cache_version '[version of the VEP cache]'
 ```
+
+### --vepCacheVersion
+
+> :warning: This params has been removed.
+> Please check: [`--vep_cache_version`](#--vep_cache_version)
 
 ### --annotation_cache
 
