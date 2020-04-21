@@ -40,13 +40,13 @@ nextflow run download_cache.nf --vep_cache </Path/To/VEPcache> --species <specie
 
 Both `snpEff` and `VEP` enable usage of cache.
 If cache is available on the machine where Sarek is run, it is possible to run annotation using cache.
-You need to specify the cache directory using `--snpEff_cache` and `--vep_cache` in the command lines or within configuration files.
+You need to specify the cache directory using `--snpeff_cache` and `--vep_cache` in the command lines or within configuration files.
 The cache will only be used when `--annotation_cache` and cache directories are specified (either in command lines or in a configuration file).
 
 Example:
 
 ```bash
-nextflow run nf-core/sarek --tools snpEff --step annotate --sample file.vcf.gz --snpEff_cache </Path/To/snpEffCache> --annotation_cache
+nextflow run nf-core/sarek --tools snpEff --step annotate --sample file.vcf.gz --snpeff_cache </Path/To/snpEffCache> --annotation_cache
 nextflow run nf-core/sarek --tools VEP --step annotate --sample file.vcf.gz --vep_cache </Path/To/vepCache> --annotation_cache
 ```
 
