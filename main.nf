@@ -1209,7 +1209,7 @@ process IndexBamMergedForSentieon {
 
     script:
     """
-    samtools index ${bam}
+    samtools index ${idSample}.bam
     """
 }
 
