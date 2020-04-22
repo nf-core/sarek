@@ -74,6 +74,9 @@
   - [--species](#--species)
   - [--vep_cache_version](#--vep_cache_version)
   - [--vepCacheVersion](#--vepcacheversion)
+  - [--annotation_cache](#--annotation_cache)
+  - [--snpeff_cache](#--snpeff_cache)
+  - [--vep_cache](#--vep_cache)
   - [--igenomes_ignore](#--igenomes_ignore)
   - [--igenomesIgnore](#--igenomesignore)
 - [Job resources](#job-resources)
@@ -751,6 +754,31 @@ If you prefer, you can specify the cache version when you run the pipeline:
 
 > :warning: This params has been removed.
 > Please check: [`--vep_cache_version`](#--vep_cache_version)
+
+### --annotation_cache
+
+Enable usage of annotation cache, and disable usage of already built containers within Sarek.
+For more information, follow the [annotation guidelines](annotation.md#using-downloaded-cache).
+
+```bash
+--annotation_cache
+```
+
+### --snpeff_cache
+
+To be used conjointly with [`--annotation_cache`](#--annotation_cache), specify the cache snpEff directory:
+
+```bash
+--snpeff_cache /path/to/snpeff_cache
+```
+
+### --vep_cache
+
+To be used conjointly with [`--annotation_cache`](#--annotation_cache), specify the cache VEP directory:
+
+```bash
+--vep_cache /path/to/vep_cache
+```
 
 ### --igenomes_ignore
 
