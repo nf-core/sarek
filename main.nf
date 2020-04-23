@@ -1720,7 +1720,7 @@ bam_recalibrated = bam_recalibrated.mix(bam_recalibrated_indexed)
 bam_recalibrated_qc = bam_recalibrated_qc.mix(bam_recalibrated_no_int_qc)
 tsv_bam_recalibrated = tsv_bam_recalibrated.mix(tsv_bam_recalibrated_no_int)
 
-(bamRecalBamQC, bamRecalSamToolsStats) = bamRecalQC.into(2)
+(bam_recalibrated_bamqc, bam_recalibrated_samtools_stats) = bam_recalibrated_qc.into(2)
 (tsv_bam_recalibrated, tsv_bam_recalibrated_sample) = tsv_bam_recalibrated.into(2)
 
 // Creating a TSV file to restart from this step
@@ -1754,7 +1754,7 @@ process SamtoolsStats {
     publishDir "${params.outdir}/Reports/${idSample}/SamToolsStats", mode: params.publish_dir_mode
 
     input:
-        set idPatient, idSample, file(bam) from bamRecalSamToolsStats
+        set idPatient, idSample, file(bam) from bam_recalibrated_samtools_stats
 
     output:
         file ("${bam}.samtools.stats.out") into samtoolsStatsReport
@@ -1769,7 +1769,7 @@ process SamtoolsStats {
 
 samtoolsStatsReport = samtoolsStatsReport.dump(tag:'SAMTools')
 
-bamBamQC = bamMappedBamQC.mix(bamRecalBamQC)
+bamBamQC = bamMappedBamQC.mix(bam_recalibrated_bamqc)
 
 process BamQC {
     label 'memory_max'
