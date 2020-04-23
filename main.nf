@@ -1705,7 +1705,7 @@ process IndexBamRecal {
 
     output:
         set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bam_recalibrated_indexed
-        set idPatient, idSample, file("${idSample}.recal.bam") into bam_recalibrated_no_int_QC
+        set idPatient, idSample, file("${idSample}.recal.bam") into bam_recalibrated_no_int_qc
         set idPatient, idSample into tsv_bam_recalibrated_no_int
 
     when: params.no_intervals
@@ -1717,7 +1717,7 @@ process IndexBamRecal {
 }
 
 bam_recalibrated = bam_recalibrated.mix(bam_recalibrated_indexed)
-bam_recalibrated_QC = bam_recalibrated_QC.mix(bam_recalibrated_no_int_QC)
+bam_recalibrated_qc = bam_recalibrated_qc.mix(bam_recalibrated_no_int_qc)
 tsv_bam_recalibrated = tsv_bam_recalibrated.mix(tsv_bam_recalibrated_no_int)
 
 (bamRecalBamQC, bamRecalSamToolsStats) = bamRecalQC.into(2)
