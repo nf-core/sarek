@@ -25,8 +25,10 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#175](https://github.com/nf-core/sarek/pull/175) - Add `Sentieon` documentation
 - [#176](https://github.com/nf-core/sarek/pull/176) - Add empty `custom` genome in `genomes.config` to allow genomes that are not in `AWS iGenomes`
 - [#179](https://github.com/nf-core/sarek/pull/179) - Add `FreeBayes` germline variant calling
-- [#180](https://github.com/nf-core/sarek/pull/180) - Now saving Mapped Bams (and creating TSV) in minimal setting
+- [#180](https://github.com/nf-core/sarek/pull/180) - Now saving Mapped BAMs (and creating TSV) in minimal setting
 - [#182](https://github.com/nf-core/sarek/pull/182) - Add possibility to run `HaplotypeCaller` without `dbsnp` so it can be used to actually generate vcfs to build a set of known sites (cf [gatkforums](https://gatkforums.broadinstitute.org/gatk/discussion/1247/what-should-i-use-as-known-variants-sites-for-running-tool-x))
+- [#195](https://github.com/nf-core/sarek/pull/195) - Now creating TSV for duplicates marked BAMs in minimal setting
+- [#195](https://github.com/nf-core/sarek/pull/195) - Add `--same_bam_mapped` params to save mapped BAMs.
 
 ### Changed - [2.6dev]
 
@@ -55,7 +57,7 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#143](https://github.com/nf-core/sarek/pull/143) - Revert `snpEff` cache version to `86` for `GRCh38`
 - [#152](https://github.com/nf-core/sarek/pull/152), [#158](https://github.com/nf-core/sarek/pull/158), [#164](https://github.com/nf-core/sarek/pull/164), [#174](https://github.com/nf-core/sarek/pull/174), [#194](https://github.com/nf-core/sarek/pull/194) - Update docs
 - [#164](https://github.com/nf-core/sarek/pull/164) - Update `gatk4-spark` from `4.1.4.1` to `4.1.6.0`
-- [#180](https://github.com/nf-core/sarek/pull/180) - Improve minimal setting
+- [#180](https://github.com/nf-core/sarek/pull/180), [#195](https://github.com/nf-core/sarek/pull/195) - Improve minimal setting
 - [#183](https://github.com/nf-core/sarek/pull/183) - Update `input.md` documentation
 
 ### Fixed - [2.6dev]
@@ -379,7 +381,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 
 ### Fixed - [2.3]
 
-- [#720](https://github.com/SciLifeLab/Sarek/pull/720) - `bamQC` is now run on the recalibrated bams, and not after `MarkDuplicates`
+- [#720](https://github.com/SciLifeLab/Sarek/pull/720) - `bamQC` is now run on the recalibrated BAMs, and not after `MarkDuplicates`
 - [#726](https://github.com/SciLifeLab/Sarek/pull/726) - Fix `Ascat` ref file input (one file can't be a set)
 - [#727](https://github.com/SciLifeLab/Sarek/pull/727) - `bamQC` outputs are no longer overwritten (name of dir is now the file instead of sample)
 - [#728](https://github.com/SciLifeLab/Sarek/pull/728) - Fix issue with annotation that was consuming `cache` channels
