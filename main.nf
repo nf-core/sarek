@@ -1693,7 +1693,7 @@ process MergeBamRecal {
 
 // STEP 4.5': INDEXING THE RECALIBRATED BAM FILES
 
-process Indexbam_recalibrated {
+process IndexBamRecal {
     label 'cpus_8'
 
     tag {idPatient + "-" + idSample}
