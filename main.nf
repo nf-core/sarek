@@ -506,9 +506,9 @@ ch_pon = params.pon ? Channel.value(file(params.pon)) : "null"
 ch_target_bed = params.target_bed ? Channel.value(file(params.target_bed)) : "null"
 
 // parameters to experiment with Control-FREEC
-cf_window = params.cf_window ? Channel.value(file(params.cf_window)) : "null"
-cf_coeff = params.cf_coeff ? Channel.value(file(params.cf_coeff)) : "null"
-cf_ploidy = params.cf_ploidy ? Channel.value(file(params.cf_ploidy)) : "null"
+cf_window = params.cf_window ? Channel.value(params.cf_window) : "null"
+cf_coeff = params.cf_coeff ? Channel.value(params.cf_coeff) : "null"
+cf_ploidy = params.cf_ploidy ? Channel.value(params.cf_ploidy) : "null"
 
 
 /*
@@ -540,14 +540,18 @@ if (params.trim_fastq) {
     summary['Saved Trimmed Fastq'] = params.save_trimmed ? 'Yes' : 'No'
 }
 
-if (params.no_intervals && step != 'annotate') summary['Intervals']         = 'Do not use'
-if ('haplotypecaller' in tools)                summary['GVCF']              = params.no_gvcf ? 'No' : 'Yes'
-if ('strelka' in tools && 'manta' in tools )   summary['Strelka BP']        = params.no_strelka_bp ? 'No' : 'Yes'
-if (params.ascat_purity)                       summary['ASCAT purity']      = params.ascat_purity
-if (params.ascat_ploidy)                       summary['ASCAT ploidy']      = params.ascat_ploidy
+if (params.no_intervals && step != 'annotate')  summary['Intervals']         = 'Do not use'
+if ('haplotypecaller' in tools)                 summary['GVCF']              = params.no_gvcf ? 'No' : 'Yes'
+if ('strelka' in tools && 'manta' in tools )    summary['Strelka BP']        = params.no_strelka_bp ? 'No' : 'Yes'
+if (params.ascat_purity)                        summary['ASCAT purity']      = params.ascat_purity
+if (params.ascat_ploidy)                        summary['ASCAT ploidy']      = params.ascat_ploidy
 if (params.no_gatk_spark)                       summary['MarkDuplicates GATK Spark']      = params.no_gatk_spark ? 'No' : 'Yes'
-if (params.sequencing_center)                  summary['Sequenced by']      = params.sequencing_center
-if (params.pon && 'mutect2' in tools)          summary['Panel of normals']  = params.pon
+if (params.sequencing_center)                   summary['Sequenced by']      = params.sequencing_center
+if (params.pon && 'mutect2' in tools)           summary['Panel of normals']  = params.pon
+if (params.mappability)                         summary['Mappability for Control-FREEC']  = params.mappability
+if (params.cf_window)                           summary['Window for Control-FREEC']  = params.cf_window
+if (params.cf_coeff)                            summary['coefficientOfVariation for Control-FREEC']  = params.cf_coeff
+if (params.cf_ploidy)                           summary['Ploidy for Control-FREEC']  = params.cf_ploidy
 
 summary['Save Reference']    = params.save_reference ? 'Yes' : 'No'
 summary['Nucleotides/s']     = params.nucleotides_per_second
@@ -3089,7 +3093,7 @@ process ControlFREEC {
     script:
     config = "${idSampleTumor}_vs_${idSampleNormal}.config.txt"
     gender = genderMap[idPatient]
-    ploidy = params.cf_ploidy ? "${params.cf_ploidy}" : "2"
+    //ploidy = params.cf_ploidy ? "${params.cf_ploidy}" : "2"
     // if we are using coefficientOfVariation, we must delete the window parameter 
     if(params.cf_coeff) {
       coeff = "coefficientOfVariation = $params.cf_coeff"
