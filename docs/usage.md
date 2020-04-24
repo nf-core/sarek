@@ -34,6 +34,7 @@
   - [--no_intervals](#--no_intervals)
   - [--target_bed](#--target_bed)
   - [--targetBED](#--targetbed)
+  - [--save_bam_mapped](#--save_bam_mapped)
 - [Reference genomes](#reference-genomes)
   - [--genome (using iGenomes)](#--genome-using-igenomes)
   - [--ac_loci](#--ac_loci)
@@ -371,6 +372,10 @@ Use this to specify the target BED file for targeted or whole exome sequencing.
 
 > :warning: This params is deprecated -- it will be removed in a future release.
 > Please check: [`--target_bed`](#--target_bed)
+
+### --save_bam_mapped
+
+Will save mapped BAMs.
 
 ## Reference genomes
 
