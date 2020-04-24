@@ -369,6 +369,10 @@ if (!checkParameterList(annotateTools,annoList)) exit 1, 'Unknown tool(s) to ann
 
 // Check parameters
 if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
+if ((params.normal_pileup && !params.tumor_pileup) || (!params.normal_pileup && params.tumor_pileup)) exit 1, 'Please specify both --normal_pileup and --tumor_pileup, or none of them'
+
+// for Control-FREEC window and coefficientOfVariation we need only one of them
+if (params.cf_window && params.cf_coeff) exit 1, 'Please specify either --cf_window OR --cf_coeff, but not both of them'
 
 // Has the run name been specified by the user?
 // This has the bonus effect of catching both -name and --name
@@ -489,6 +493,12 @@ ch_cadd_wg_snvs = params.cadd_wg_snvs ? Channel.value(file(params.cadd_wg_snvs))
 ch_cadd_wg_snvs_tbi = params.cadd_wg_snvs_tbi ? Channel.value(file(params.cadd_wg_snvs_tbi)) : "null"
 ch_pon = params.pon ? Channel.value(file(params.pon)) : "null"
 ch_target_bed = params.target_bed ? Channel.value(file(params.target_bed)) : "null"
+
+// parameters to experiment with Control-FREEC
+cf_window = params.cf_window ? Channel.value(file(params.cf_window)) : "null"
+cf_coeff = params.cf_coeff ? Channel.value(file(params.cf_coeff)) : "null"
+cf_ploidy = params.cf_ploidy ? Channel.value(file(params.cf_ploidy)) : "null"
+
 
 /*
 ================================================================================
@@ -2888,7 +2898,7 @@ process Mpileup {
         file(fastaFai) from ch_fai
 
     output:
-        set idPatient, idSample, file("${prefix}${idSample}.pileup.gz") into mpileupMerge
+        set idPatient, idSample, file("${prefix}${idSample}.pileup") into mpileupMerge
 
     when: 'controlfreec' in tools || 'mpileup' in tools
 
@@ -2898,18 +2908,17 @@ process Mpileup {
 
     if(params.normal_pileup && params.tumor_pileup)   // we already have pileups
     """
-    touch ${prefix}${idSample}.pileup.gz  
+    touch ${prefix}${idSample}.pileup 
     """
     else    
     """
+    # Control-FREEC reads uncompresses the zipped file TWICE in single-threaded mode.
+    # For the moment we are not using compressed pileups.
     samtools mpileup \
         -f ${fasta} ${bam} \
-        ${intervalsOptions} \
-    | bgzip --threads ${task.cpus} -c > ${prefix}${idSample}.pileup.gz
+        ${intervalsOptions} > ${prefix}${idSample}.pileup # | bgzip --threads ${task.cpus} -c > ${prefix}${idSample}.pileup.gz
     """
 }
-
-mpileupMerge = mpileupMerge.view {"$it"}
 
 if (!params.no_intervals) {
     mpileupMerge = mpileupMerge.groupTuple(by:[0, 1])
@@ -2931,25 +2940,25 @@ process MergeMpileup {
         set idPatient, idSample, file(mpileup) from mpileupMerge
 
     output:
-        set idPatient, idSample, file("${idSample}.pileup.gz") into mpileupOut
+        set idPatient, idSample, file("${idSample}.pileup") into mpileupOut
 
     when: !(params.no_intervals) && 'controlfreec' in tools || 'mpileup' in tools
 
     script:
     if(params.normal_pileup && params.tumor_pileup)
     """
-    if [[ ${params.normal_pileup} =~ $idSample ]] ; then ln -s ${params.normal_pileup} ${idSample}.pileup.gz ; fi
-    if [[ ${params.tumor_pileup} =~ $idSample ]] ; then ln -s ${params.tumor_pileup} ${idSample}.pileup.gz ; fi
+    if [[ ${params.normal_pileup} =~ $idSample ]] ; then ln -s ${params.normal_pileup} ${idSample}.pileup ; fi
+    if [[ ${params.tumor_pileup} =~ $idSample ]] ; then ln -s ${params.tumor_pileup} ${idSample}.pileup ; fi
     """
     else
     """
-    for i in `ls -1v *.pileup.gz`;
-        do zcat \$i >> ${idSample}.pileup
+    for i in `ls -1v *.pileup`;
+        do cat \$i >> ${idSample}.pileup
     done
 
-    bgzip --threads ${task.cpus} -c ${idSample}.pileup > ${idSample}.pileup.gz
+    #bgzip --threads ${task.cpus} -c ${idSample}.pileup > ${idSample}.pileup.gz
 
-    rm ${idSample}.pileup
+    #rm ${idSample}.pileup
     """
 }
 
@@ -2973,7 +2982,8 @@ mpileupOut = mpileupOut.map {
 // STEP CONTROLFREEC.1 - CONTROLFREEC
 
 process ControlFREEC {
-    label 'memory_singleCPU_2_task'
+    label 'cpus_max'
+    //label 'memory_singleCPU_2_task'
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
@@ -2989,8 +2999,8 @@ process ControlFREEC {
         file(fastaFai) from ch_fai
 
     output:
-        set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.pileup.gz_CNVs"), file("${idSampleTumor}.pileup.gz_ratio.txt"), file("${idSampleTumor}.pileup.gz_normal_CNVs"), file("${idSampleTumor}.pileup.gz_normal_ratio.txt"), file("${idSampleTumor}.pileup.gz_BAF.txt"), file("${idSampleNormal}.pileup.gz_BAF.txt") into controlFreecViz
-        set file("*.pileup.gz*"), file("${idSampleTumor}_vs_${idSampleNormal}.config.txt") into controlFreecOut
+        set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.pileup_CNVs"), file("${idSampleTumor}.pileup_ratio.txt"), file("${idSampleTumor}.pileup_normal_CNVs"), file("${idSampleTumor}.pileup_normal_ratio.txt"), file("${idSampleTumor}.pileup_BAF.txt"), file("${idSampleNormal}.pileup_BAF.txt") into controlFreecViz
+        set file("*.pileup*"), file("${idSampleTumor}_vs_${idSampleNormal}.config.txt") into controlFreecOut
 
     when: 'controlfreec' in tools
 
@@ -3005,11 +3015,11 @@ process ControlFREEC {
     }
     else if(params.cf_window) {
       coeff = ""
-      window = "${params.cf_window}"
+      window = "window = ${params.cf_window}"
     }
     else {  // default settings
-      coeff = ""
-      window = "20000"
+      coeff = "coefficientOfVariation = 0.015"
+      window = "" // it is "window = 20000" in the default settings, without coefficientOfVariation set, but we do not like it. Note, it is not written in stone
     }
     mappability = "gemMappabilityFile = ${params.mappability}"
     """
@@ -3068,11 +3078,20 @@ process ControlFreecViz {
     when: 'controlfreec' in tools
 
     """
-    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args ${cnvTumor} ${ratioTumor}
-    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args ${cnvNormal} ${ratioNormal}
+    echo "Shaping CNV files to make sure we can assess signifacance"
+    awk 'NF==9{print}' ${cnvTumor} > TUMOR.CNVs
+    awk 'NF==7{print}' ${cnvNormal} > NORMAL.CNVs
+    echo "############### Calculating significance values for TUMOR CNVs #############"
+    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args TUMOR.CNVs ${ratioTumor}
+    echo "############### Calculating significance values for NORMAL CNVs ############"
+    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args NORMAL.CNVs ${ratioNormal}
+    echo "############### Creating graph for TUMOR ratios ###############"
     cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/makeGraph.R | R --slave --args 2 ${ratioTumor} ${bafTumor}
+    echo "############### Creating graph for NORMAL ratios ##############"
     cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/makeGraph.R | R --slave --args 2 ${ratioNormal} ${bafNormal}
+    echo "############### Creating BED files for TUMOR ##############"
     perl /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/freec2bed.pl -f ${ratioTumor} > ${idSampleTumor}.bed
+    echo "############### Creating BED files for NORMAL #############"
     perl /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/freec2bed.pl -f ${ratioNormal} > ${idSampleNormal}.bed
     """
 }
