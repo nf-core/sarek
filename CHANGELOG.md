@@ -10,7 +10,6 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 
 ### Added - [2.6dev]
 
-- [#51](https://github.com/nf-core/sarek/pull/51) - Script for RankScore annotation
 - [#76](https://github.com/nf-core/sarek/pull/76) - Add `GATK Spark` possibilities to Sarek
 - [#87](https://github.com/nf-core/sarek/pull/87) - Add `GATK BaseRecalibrator` plot to `MultiQC` report
 - [#115](https://github.com/nf-core/sarek/pull/115) - Add [@szilvajuhos](https://github.com/szilvajuhos) abstract for ESHG2020
