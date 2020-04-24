@@ -1092,10 +1092,10 @@ process MapReads {
     convertToFastq = hasExtension(inputFile1, "bam") ? "gatk --java-options -Xmx${task.memory.toGiga()}g SamToFastq --INPUT=${inputFile1} --FASTQ=/dev/stdout --INTERLEAVE=true --NON_PF=true | \\" : ""
     input = hasExtension(inputFile1, "bam") ? "-p /dev/stdin - 2> >(tee ${inputFile1}.bwa.stderr.log >&2)" : "${inputFile1} ${inputFile2}"
     """
-        ${convertToFastq}
-        bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
-        ${input} | \
-        samtools sort --threads ${task.cpus} -m 2G - > ${idSample}_${idRun}.bam
+    ${convertToFastq}
+    bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
+    ${input} | \
+    samtools sort --threads ${task.cpus} -m 2G - > ${idSample}_${idRun}.bam
     """
 }
 
@@ -1147,7 +1147,7 @@ process Sentieon_MapReads {
     sentieon bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
     ${inputFile1} ${inputFile2} | \
     sentieon util sort -r ${fasta} -o ${idSample}_${idRun}.bam -t ${task.cpus} --sam2bam -i -
-        """
+    """
 }
 
 bam_sentieon_mapped = bam_sentieon_mapped.dump(tag:'Sentieon Mapped BAM')
@@ -1220,7 +1220,11 @@ process IndexBamFile {
 
     tag {idPatient + "-" + idSample}
 
-    publishDir "${params.outdir}/Preprocessing/${idSample}/Mapped", mode: params.publish_dir_mode
+    publishDir params.outdir, mode: params.publish_dir_mode,
+        saveAs: {
+            if (params.save_bam_mapped) "Preprocessing/${idSample}/Mapped/${it}"
+            null
+        }
 
     input:
         set idPatient, idSample, file("${idSample}.bam") from bam_mapped_merged_to_index
@@ -1236,6 +1240,8 @@ process IndexBamFile {
     samtools index ${idSample}.bam
     """
 }
+
+if (!params.save_bam_mapped) tsv_bam_indexed.close()
 
 (tsv_bam_indexed, tsv_bam_indexed_sample) = tsv_bam_indexed.into(2)
 
@@ -1275,10 +1281,9 @@ process MarkDuplicates {
         set idPatient, idSample, file("${idSample}.bam") from bam_mapped_merged
 
     output:
-        set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bam.bai") into duplicateMarkedBams
+        set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bam.bai") into bam_duplicates_marked
+        set idPatient, idSample into tsv_bam_duplicates_marked
         file ("${idSample}.bam.metrics") optional true into markDuplicatesReport
-
-    when: params.known_indels
 
     script:
     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
@@ -1310,12 +1315,34 @@ process MarkDuplicates {
     """
 }
 
+(tsv_bam_duplicates_marked, tsv_bam_duplicates_marked_sample) = tsv_bam_duplicates_marked.into(2)
+
+// Creating a TSV file to restart from this step
+tsv_bam_duplicates_marked.map { idPatient, idSample ->
+    gender = genderMap[idPatient]
+    status = statusMap[idPatient, idSample]
+    bam = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bam"
+    bai = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bam.bai"
+    "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"
+}.collectFile(
+    name: 'duplicatemarked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
+)
+
+tsv_bam_duplicates_marked_sample
+    .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { idPatient, idSample ->
+        status = statusMap[idPatient, idSample]
+        gender = genderMap[idPatient]
+        bam = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bam"
+        bai = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bam.bai"
+        ["duplicatemarked_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
+}
+
 if ('markduplicates' in skipQC) markDuplicatesReport.close()
 
-duplicateMarkedBams = duplicateMarkedBams.dump(tag:'MD BAM')
+bam_duplicates_marked = bam_duplicates_marked.dump(tag:'MD BAM')
 markDuplicatesReport = markDuplicatesReport.dump(tag:'MD Report')
 
-(bamMD, bamMDToJoin) = duplicateMarkedBams.into(2)
+(bamMD, bamMDToJoin, bam_duplicates_marked) = bam_duplicates_marked.into(3)
 
 bamBaseRecalibrator = bamMD.combine(intBaseRecalibrator)
 
@@ -1511,7 +1538,7 @@ process ApplyBQSR {
         file(fastaFai) from ch_fai
 
     output:
-        set idPatient, idSample, file("${prefix}${idSample}.recal.bam") into bamMergeBamRecal
+        set idPatient, idSample, file("${prefix}${idSample}.recal.bam") into bam_recalibrated_to_merge
 
     script:
     prefix = params.no_intervals ? "" : "${intervalBed.baseName}_"
@@ -1527,8 +1554,7 @@ process ApplyBQSR {
     """
 }
 
-bamMergeBamRecal = bamMergeBamRecal.groupTuple(by:[0, 1])
-(bamMergeBamRecal, bamMergeBamRecalNoInt) = bamMergeBamRecal.into(2)
+(bam_recalibrated_to_merge, bam_recalibrated_to_index) = bam_recalibrated_to_merge.groupTuple(by:[0, 1]).into(2)
 
 // STEP 4': SENTIEON BQSR
 
@@ -1649,12 +1675,12 @@ process MergeBamRecal {
     publishDir "${params.outdir}/Preprocessing/${idSample}/Recalibrated", mode: params.publish_dir_mode
 
     input:
-        set idPatient, idSample, file(bam) from bamMergeBamRecal
+        set idPatient, idSample, file(bam) from bam_recalibrated_to_merge
 
     output:
-        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bamRecal
-        set idPatient, idSample, file("${idSample}.recal.bam") into bamRecalQC
-        set idPatient, idSample into bamRecalTSV
+        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bam_recalibrated
+        set idPatient, idSample, file("${idSample}.recal.bam") into bam_recalibrated_qc
+        set idPatient, idSample into tsv_bam_recalibrated
 
     when: !(params.no_intervals)
 
@@ -1675,12 +1701,12 @@ process IndexBamRecal {
     publishDir "${params.outdir}/Preprocessing/${idSample}/Recalibrated", mode: params.publish_dir_mode
 
     input:
-        set idPatient, idSample, file("${idSample}.recal.bam") from bamMergeBamRecalNoInt
+        set idPatient, idSample, file("${idSample}.recal.bam") from bam_recalibrated_to_index
 
     output:
-        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bamRecalNoInt
-        set idPatient, idSample, file("${idSample}.recal.bam") into bamRecalQCnoInt
-        set idPatient, idSample into bamRecalTSVnoInt
+        set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bam_recalibrated_indexed
+        set idPatient, idSample, file("${idSample}.recal.bam") into bam_recalibrated_no_int_qc
+        set idPatient, idSample into tsv_bam_recalibrated_no_int
 
     when: params.no_intervals
 
@@ -1690,15 +1716,15 @@ process IndexBamRecal {
     """
 }
 
-bamRecal = bamRecal.mix(bamRecalNoInt)
-bamRecalQC = bamRecalQC.mix(bamRecalQCnoInt)
-bamRecalTSV = bamRecalTSV.mix(bamRecalTSVnoInt)
+bam_recalibrated = bam_recalibrated.mix(bam_recalibrated_indexed)
+bam_recalibrated_qc = bam_recalibrated_qc.mix(bam_recalibrated_no_int_qc)
+tsv_bam_recalibrated = tsv_bam_recalibrated.mix(tsv_bam_recalibrated_no_int)
 
-(bamRecalBamQC, bamRecalSamToolsStats) = bamRecalQC.into(2)
-(bamRecalTSV, bamRecalSampleTSV) = bamRecalTSV.into(2)
+(bam_recalibrated_bamqc, bam_recalibrated_samtools_stats) = bam_recalibrated_qc.into(2)
+(tsv_bam_recalibrated, tsv_bam_recalibrated_sample) = tsv_bam_recalibrated.into(2)
 
 // Creating a TSV file to restart from this step
-bamRecalTSV.map { idPatient, idSample ->
+tsv_bam_recalibrated.map { idPatient, idSample ->
     gender = genderMap[idPatient]
     status = statusMap[idPatient, idSample]
     bam = "${params.outdir}/Preprocessing/${idSample}/Recalibrated/${idSample}.recal.bam"
@@ -1708,7 +1734,7 @@ bamRecalTSV.map { idPatient, idSample ->
     name: 'recalibrated.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
 )
 
-bamRecalSampleTSV
+tsv_bam_recalibrated_sample
     .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") {
         idPatient, idSample ->
         status = statusMap[idPatient, idSample]
@@ -1728,7 +1754,7 @@ process SamtoolsStats {
     publishDir "${params.outdir}/Reports/${idSample}/SamToolsStats", mode: params.publish_dir_mode
 
     input:
-        set idPatient, idSample, file(bam) from bamRecalSamToolsStats
+        set idPatient, idSample, file(bam) from bam_recalibrated_samtools_stats
 
     output:
         file ("${bam}.samtools.stats.out") into samtoolsStatsReport
@@ -1743,7 +1769,7 @@ process SamtoolsStats {
 
 samtoolsStatsReport = samtoolsStatsReport.dump(tag:'SAMTools')
 
-bamBamQC = bamMappedBamQC.mix(bamRecalBamQC)
+bamBamQC = bamMappedBamQC.mix(bam_recalibrated_bamqc)
 
 process BamQC {
     label 'memory_max'
@@ -1787,23 +1813,23 @@ bamQCReport = bamQCReport.dump(tag:'BamQC')
 ================================================================================
 */
 
-// When using sentieon for mapping, Channel bamRecal is bam_sentieon_recal
-if (params.sentieon && step == 'mapping') bamRecal = bam_sentieon_recal
+// When using sentieon for mapping, Channel bam_recalibrated is bam_sentieon_recal
+if (params.sentieon && step == 'mapping') bam_recalibrated = bam_sentieon_recal
 
-// When no knownIndels for mapping, Channel bamRecal is bam_mapped_merged_indexed
-bamRecal = (params.known_indels && step == 'mapping') ? bamRecal : bam_mapped_merged_indexed
+// When no knownIndels for mapping, Channel bam_recalibrated is bam_duplicates_marked
+bam_recalibrated = (params.known_indels && step == 'mapping') ? bam_recalibrated : bam_duplicates_marked
 
-// When starting with variant calling, Channel bamRecal is inputSample
-if (step == 'variantcalling') bamRecal = inputSample
+// When starting with variant calling, Channel bam_recalibrated is inputSample
+if (step == 'variantcalling') bam_recalibrated = inputSample
 
-bamRecal = bamRecal.dump(tag:'BAM for Variant Calling')
+bam_recalibrated = bam_recalibrated.dump(tag:'BAM for Variant Calling')
 
 // Here we have a recalibrated bam set
 // The TSV file is formatted like: "idPatient status idSample bamFile baiFile"
 // Manta will be run in Germline mode, or in Tumor mode depending on status
 // HaplotypeCaller, TIDDIT and Strelka will be run for Normal and Tumor samples
 
-(bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll) = bamRecal.into(6)
+(bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll) = bam_recalibrated.into(6)
 
 (bam_sentieon_DNAseq, bam_sentieon_DNAscope, bam_sentieon_all) = bam_sentieon_deduped_table.into(3)
 
@@ -2425,8 +2451,9 @@ process MergePileupSummaries {
         set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}_pileupsummaries.table") into mergedPileupFile
 
     when: 'mutect2' in tools
+
     script:
-        allPileups = pileupSums.collect{ "-I ${it} " }.join(' ')
+    allPileups = pileupSums.collect{ "-I ${it} " }.join(' ')
     """
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
         GatherPileupSummaries \
@@ -2459,7 +2486,7 @@ process CalculateContamination {
     when: 'mutect2' in tools
 
     script:   
-             """
+    """
     # calculate contamination
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
         CalculateContamination \
