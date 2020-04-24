@@ -73,7 +73,6 @@ The nf-core/sarek pipeline comes with documentation about the pipeline, found in
     * [Complementary information about ASCAT](docs/ascat.md)
     * [Complementary information about Sentieon](docs/sentieon.md)
     * [Extra documentation on annotation](docs/annotation.md)
-    * [Downstream processing, ranking, and connection to Scout](docs/downstream.md)
 5. [Troubleshooting](https://nf-co.re/usage/troubleshooting)
 
 ## Credits
