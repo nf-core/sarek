@@ -489,12 +489,6 @@ ch_cadd_wg_snvs_tbi = params.cadd_wg_snvs_tbi ? Channel.value(file(params.cadd_w
 ch_pon = params.pon ? Channel.value(file(params.pon)) : "null"
 ch_target_bed = params.target_bed ? Channel.value(file(params.target_bed)) : "null"
 
-// parameters to experiment with Control-FREEC
-cf_window = params.cf_window ? Channel.value(params.cf_window) : "null"
-cf_coeff = params.cf_coeff ? Channel.value(params.cf_coeff) : "null"
-cf_ploidy = params.cf_ploidy ? Channel.value(params.cf_ploidy) : "null"
-
-
 /*
 ================================================================================
                                 PRINTING SUMMARY
@@ -3075,21 +3069,19 @@ process ControlFREEC {
     script:
     config = "${idSampleTumor}_vs_${idSampleNormal}.config.txt"
     gender = genderMap[idPatient]
-    //ploidy = params.cf_ploidy ? "${params.cf_ploidy}" : "2"
     // if we are using coefficientOfVariation, we must delete the window parameter 
-    if(params.cf_coeff) {
-      coeff = "coefficientOfVariation = $params.cf_coeff"
-      window = ""
-    }
-    else if(params.cf_window) {
-      coeff = ""
-      window = "window = ${params.cf_window}"
-    }
-    else {  // default settings
+    // it is "window = 20000" in the default settings, without coefficientOfVariation set, 
+    // but we do not like it. Note, it is not written in stone
+    coeff = "# coefficientOfVariation is not used"
+    window = "# window parameter is not used"
+    if(params.cf_coeff) { 
+      coeff = "$params.cf_coeff" 
+    } else if(params.cf_window) { 
+      window = "window = ${params.cf_window}" 
+    } else {  // default settings
       coeff = "coefficientOfVariation = 0.015"
-      window = "" // it is "window = 20000" in the default settings, without coefficientOfVariation set, but we do not like it. Note, it is not written in stone
     }
-    mappability = "gemMappabilityFile = ${params.mappability}"
+    mappability = params.mappability ? "gemMappabilityFile = ${params.mappability}" : "# gemMappabilityFile is not used "
     """
     touch ${config}
     echo "[general]" >> ${config}
@@ -3101,7 +3093,7 @@ process ControlFREEC {
     echo "forceGCcontentNormalization = 1" >> ${config}
     echo "maxThreads = ${task.cpus}" >> ${config}
     echo "minimalSubclonePresence = 20" >> ${config}
-    echo "ploidy = ${ploidy}" >> ${config}
+    echo "ploidy = ${params.cf_ploidy}" >> ${config}
     echo "sex = ${gender}" >> ${config}
     echo "${window}" >> ${config}
     echo "${mappability}" >> ${config}
