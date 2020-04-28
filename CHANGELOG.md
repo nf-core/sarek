@@ -28,7 +28,8 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#180](https://github.com/nf-core/sarek/pull/180) - Now saving Mapped BAMs (and creating TSV) in minimal setting
 - [#182](https://github.com/nf-core/sarek/pull/182) - Add possibility to run `HaplotypeCaller` without `dbsnp` so it can be used to actually generate vcfs to build a set of known sites (cf [gatkforums](https://gatkforums.broadinstitute.org/gatk/discussion/1247/what-should-i-use-as-known-variants-sites-for-running-tool-x))
 - [#195](https://github.com/nf-core/sarek/pull/195) - Now creating TSV for duplicates marked BAMs in minimal setting
-- [#195](https://github.com/nf-core/sarek/pull/195) - Add `--same_bam_mapped` params to save mapped BAMs.
+- [#195](https://github.com/nf-core/sarek/pull/195) - Add `--save_bam_mapped` params to save mapped BAMs.
+- [#197](https://github.com/nf-core/sarek/pull/197) - Add step `prepare_recalibration` to allow restart from DuplicatesMarked BAMs
 
 ### Changed
 
@@ -85,6 +86,8 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#178](https://github.com/nf-core/sarek/pull/178) - Fix `Sentieon` variant calling, now using deduped bam files
 - [#188](https://github.com/nf-core/sarek/pull/188) - Fix input/output channels for process `IndexBamFile` to match actual files in the `mapped.tsv` files
 - [#189](https://github.com/nf-core/sarek/pull/189) - Fix `no_intervals` for process `HaplotypeCaller` (the file just need to actually exists...)
+- [#197](https://github.com/nf-core/sarek/pull/197) - Fix issue with `--step recalibrate`
+- [#197](https://github.com/nf-core/sarek/pull/197) - Fix typo in output directory `DuplicateMarked` -> `DuplicatesMarked`
 
 ### Deprecated
 
