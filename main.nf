@@ -389,10 +389,25 @@ if (params.input && (hasExtension(params.input, "tsv") || hasExtension(params.in
 if (params.input && (hasExtension(params.input, "vcf") || hasExtension(params.input, "vcf.gz"))) step = "annotate"
 
 // If no input file specified, trying to get TSV files corresponding to step in the TSV directory
-// only for steps recalibrate and variantCalling
-if (!params.input && step != 'mapping' && step != 'annotate') {
-    if (step == 'recalibrate') tsvPath = params.sentieon ? "${params.outdir}/Preprocessing/TSV/sentieon_deduped.tsv" : "${params.outdir}/Preprocessing/TSV/duplicateMarked.tsv"
-    else tsvPath = params.sentieon ? "${params.outdir}/Preprocessing/TSV/sentieon_recalibrated.tsv" : "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"
+// only for steps prepare_recalibration, recalibrate and variantCalling
+if (!params.input && params.sentieon) {
+    switch (step) {
+        case 'mapping': break
+        case 'prepare_recalibration': break
+        case 'recalibrate': tsvPath = "${params.outdir}/Preprocessing/TSV/sentieon_deduped.tsv"; break
+        case 'variantcalling': tsvPath = "${params.outdir}/Preprocessing/TSV/sentieon_recalibrated.tsv"; break
+        case 'annotate': break
+        default: exit 1, "Unknown step ${step}"
+    }
+} else if (!params.input && !params.sentieon) {
+    switch (step) {
+        case 'mapping': break
+        case 'prepare_recalibration': tsvPath = "${params.outdir}/Preprocessing/TSV/duplicates_marked_no_table.tsv"; break
+        case 'recalibrate': tsvPath = "${params.outdir}/Preprocessing/TSV/duplicates_marked.tsv"; break
+        case 'variantcalling': tsvPath = "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"; break
+        case 'annotate': break
+        default: exit 1, "Unknown step ${step}"
+    }
 }
 
 inputSample = Channel.empty()
@@ -400,6 +415,7 @@ if (tsvPath) {
     tsvFile = file(tsvPath)
     switch (step) {
         case 'mapping': inputSample = extractFastq(tsvFile); break
+        case 'prepare_recalibration': inputSample = extractBam(tsvFile); break
         case 'recalibrate': inputSample = extractRecal(tsvFile); break
         case 'variantcalling': inputSample = extractBam(tsvFile); break
         case 'annotate': break
@@ -419,7 +435,7 @@ if (tsvPath) {
 } else if (tsvPath && step == 'annotate') {
     log.info "Annotating ${tsvPath}"
 } else if (step == 'annotate') {
-    log.info "Trying automatic annotation on file in the VariantCalling directory"
+    log.info "Trying automatic annotation on files in the VariantCalling/ directory"
 } else exit 1, 'No sample were defined, see --help'
 
 (genderMap, statusMap, inputSample) = extractInfos(inputSample)
@@ -439,14 +455,14 @@ params.ac_loci_gc = params.genome && 'ascat' in tools ? params.genomes[params.ge
 params.bwa = params.genome && params.fasta && 'mapping' in step ? params.genomes[params.genome].bwa ?: null : null
 params.chr_dir = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].chr_dir ?: null : null
 params.chr_length = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].chr_length ?: null : null
-params.dbsnp = params.genome && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? params.genomes[params.genome].dbsnp ?: null : null
+params.dbsnp = params.genome && ('mapping' in step || 'prepare_recalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? params.genomes[params.genome].dbsnp ?: null : null
 params.dbsnp_index = params.genome && params.dbsnp ? params.genomes[params.genome].dbsnp_index ?: null : null
 params.dict = params.genome && params.fasta ? params.genomes[params.genome].dict ?: null : null
 params.fasta_fai = params.genome && params.fasta ? params.genomes[params.genome].fasta_fai ?: null : null
 params.germline_resource = params.genome && 'mutect2' in tools ? params.genomes[params.genome].germline_resource ?: null : null
 params.germline_resource_index = params.genome && params.germline_resource ? params.genomes[params.genome].germline_resource_index ?: null : null
 params.intervals = params.genome && !('annotate' in step) ? params.genomes[params.genome].intervals ?: null : null
-params.known_indels = params.genome && 'mapping' in step ? params.genomes[params.genome].known_indels ?: null : null
+params.known_indels = params.genome && ('mapping' in step || 'prepare_recalibration' in step) ? params.genomes[params.genome].known_indels ?: null : null
 params.known_indels_index = params.genome && params.known_indels ? params.genomes[params.genome].known_indels_index ?: null : null
 params.snpeff_db = params.genome && 'snpeff' in tools ? params.genomes[params.genome].snpeff_db ?: null : null
 params.species = params.genome && 'vep' in tools ? params.genomes[params.genome].species ?: null : null
@@ -457,12 +473,12 @@ ch_ac_loci = params.ac_loci && 'ascat' in tools ? Channel.value(file(params.ac_l
 ch_ac_loci_gc = params.ac_loci_gc && 'ascat' in tools ? Channel.value(file(params.ac_loci_gc)) : "null"
 ch_chr_dir = params.chr_dir && 'controlfreec' in tools ? Channel.value(file(params.chr_dir)) : "null"
 ch_chr_length = params.chr_length && 'controlfreec' in tools ? Channel.value(file(params.chr_length)) : "null"
-ch_dbsnp = params.dbsnp && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? Channel.value(file(params.dbsnp)) : "null"
+ch_dbsnp = params.dbsnp && ('mapping' in step || 'prepare_recalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? Channel.value(file(params.dbsnp)) : "null"
 ch_fasta = params.fasta && !('annotate' in step) ? Channel.value(file(params.fasta)) : "null"
 ch_fai = params.fasta_fai && !('annotate' in step) ? Channel.value(file(params.fasta_fai)) : "null"
 ch_germline_resource = params.germline_resource && 'mutect2' in tools ? Channel.value(file(params.germline_resource)) : "null"
 ch_intervals = params.intervals && !params.no_intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : "null"
-ch_known_indels = params.known_indels && 'mapping' in step ? Channel.value(file(params.known_indels)) : "null"
+ch_known_indels = params.known_indels && ('mapping' in step || 'prepare_recalibration' in step) ? Channel.value(file(params.known_indels)) : "null"
 
 ch_snpeff_cache = params.snpeff_cache ? Channel.value(file(params.snpeff_cache)) : "null"
 ch_snpeff_db = params.snpeff_db ? Channel.value(params.snpeff_db) : "null"
@@ -718,7 +734,7 @@ process BuildDbsnpIndex {
     output:
         file("${dbsnp}.tbi") into dbsnp_tbi
 
-    when: !(params.dbsnp_index) && params.dbsnp && ('mapping' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || 'tnscope' in tools)
+    when: !(params.dbsnp_index) && params.dbsnp && ('mapping' in step || 'prepare_recalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || 'tnscope' in tools)
 
     script:
     """
@@ -762,7 +778,7 @@ process BuildKnownIndelsIndex {
     output:
         file("${knownIndels}.tbi") into known_indels_tbi
 
-    when: !(params.known_indels_index) && params.known_indels && 'mapping' in step
+    when: !(params.known_indels_index) && params.known_indels && ('mapping' in step || 'prepare_recalibration' in step)
 
     script:
     """
@@ -806,7 +822,7 @@ process BuildIntervals {
   output:
     file("${fastaFai.baseName}.bed") into intervalBuilt
 
-  when: !(params.intervals) && !('annotate' in step) && !(params.no_intervals)
+  when: !(params.intervals) && !('annotate' in step)
 
   script:
   """
@@ -905,7 +921,7 @@ if (params.no_intervals && step != 'annotate') {
 inputBam = Channel.create()
 inputPairReads = Channel.create()
 
-if (step in ['recalibrate', 'variantcalling', 'annotate']) {
+if (step in ['prepare_recalibration', 'recalibrate', 'variantcalling', 'annotate']) {
     inputBam.close()
     inputPairReads.close()
 } else inputSample.choice(inputPairReads, inputBam) {hasExtension(it[3], "bam") ? 1 : 0}
@@ -1274,7 +1290,7 @@ process MarkDuplicates {
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: {
             if (it == "${idSample}.bam.metrics") "Reports/${idSample}/MarkDuplicates/${it}"
-            else "Preprocessing/${idSample}/DuplicateMarked/${it}"
+            else "Preprocessing/${idSample}/DuplicatesMarked/${it}"
         }
 
     input:
@@ -1283,7 +1299,7 @@ process MarkDuplicates {
     output:
         set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bam.bai") into bam_duplicates_marked
         set idPatient, idSample into tsv_bam_duplicates_marked
-        file ("${idSample}.bam.metrics") optional true into markDuplicatesReport
+        file ("${idSample}.bam.metrics") optional true into duplicates_marked_report
 
     script:
     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
@@ -1321,26 +1337,28 @@ process MarkDuplicates {
 tsv_bam_duplicates_marked.map { idPatient, idSample ->
     gender = genderMap[idPatient]
     status = statusMap[idPatient, idSample]
-    bam = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bam"
-    bai = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bam.bai"
+    bam = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam"
+    bai = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam.bai"
     "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"
 }.collectFile(
-    name: 'duplicatemarked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
+    name: 'duplicates_marked_no_table.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
 )
 
 tsv_bam_duplicates_marked_sample
     .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { idPatient, idSample ->
         status = statusMap[idPatient, idSample]
         gender = genderMap[idPatient]
-        bam = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bam"
-        bai = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bam.bai"
-        ["duplicatemarked_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
+        bam = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam"
+        bai = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam.bai"
+        ["duplicates_marked_no_table_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
 }
 
-if ('markduplicates' in skipQC) markDuplicatesReport.close()
+if ('markduplicates' in skipQC) duplicates_marked_report.close()
+
+if (step == 'prepare_recalibration') bam_duplicates_marked = inputSample
 
 bam_duplicates_marked = bam_duplicates_marked.dump(tag:'MD BAM')
-markDuplicatesReport = markDuplicatesReport.dump(tag:'MD Report')
+duplicates_marked_report = duplicates_marked_report.dump(tag:'MD Report')
 
 (bamMD, bamMDToJoin, bam_duplicates_marked) = bam_duplicates_marked.into(3)
 
@@ -1462,7 +1480,7 @@ process GatherBQSRReports {
 
     tag {idPatient + "-" + idSample}
 
-    publishDir "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked", mode: params.publish_dir_mode, overwrite: false
+    publishDir "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked", mode: params.publish_dir_mode, overwrite: false
 
     input:
         set idPatient, idSample, file(recal) from tableGatherBQSRReports
@@ -1494,12 +1512,12 @@ recalTable = recalTable.dump(tag:'RECAL TABLE')
 recalTableTSV.map { idPatient, idSample ->
     status = statusMap[idPatient, idSample]
     gender = genderMap[idPatient]
-    bam = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bam"
-    bai = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bam.bai"
-    recalTable = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.recal.table"
+    bam = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam"
+    bai = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam.bai"
+    recalTable = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.recal.table"
     "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${recalTable}\n"
 }.collectFile(
-    name: 'duplicateMarked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
+    name: 'duplicates_marked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
 )
 
 recalTableSampleTSV
@@ -1507,10 +1525,10 @@ recalTableSampleTSV
         idPatient, idSample ->
         status = statusMap[idPatient, idSample]
         gender = genderMap[idPatient]
-        bam = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bam"
-        bai = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.md.bam.bai"
-        recalTable = "${params.outdir}/Preprocessing/${idSample}/DuplicateMarked/${idSample}.recal.table"
-        ["duplicateMarked_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${recalTable}\n"]
+        bam = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam"
+        bai = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam.bai"
+        recalTable = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.recal.table"
+        ["duplicates_marked_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${recalTable}\n"]
 }
 
 bamApplyBQSR = bamMDToJoin.join(recalTable, by:[0,1])
@@ -1817,7 +1835,7 @@ bamQCReport = bamQCReport.dump(tag:'BamQC')
 if (params.sentieon && step == 'mapping') bam_recalibrated = bam_sentieon_recal
 
 // When no knownIndels for mapping, Channel bam_recalibrated is bam_duplicates_marked
-bam_recalibrated = (params.known_indels && step == 'mapping') ? bam_recalibrated : bam_duplicates_marked
+if (!params.known_indels && step == 'mapping') bam_recalibrated = bam_duplicates_marked
 
 // When starting with variant calling, Channel bam_recalibrated is inputSample
 if (step == 'variantcalling') bam_recalibrated = inputSample
@@ -3509,8 +3527,8 @@ process MultiQC {
         file ('BCFToolsStats/*') from bcftoolsReport.collect().ifEmpty([])
         file ('FastQC/*') from fastQCReport.collect().ifEmpty([])
         file ('TrimmedFastQC/*') from trimGaloreReport.collect().ifEmpty([])
-        file ('MarkDuplicates/*') from markDuplicatesReport.collect().ifEmpty([])
-        file ('DuplicateMarked/*.recal.table') from baseRecalibratorReport.collect().ifEmpty([])
+        file ('MarkDuplicates/*') from duplicates_marked_report.collect().ifEmpty([])
+        file ('DuplicatesMarked/*.recal.table') from baseRecalibratorReport.collect().ifEmpty([])
         file ('SamToolsStats/*') from samtoolsStatsReport.collect().ifEmpty([])
         file ('snpEff/*') from snpeffReport.collect().ifEmpty([])
         file ('VCFTools/*') from vcftoolsReport.collect().ifEmpty([])
@@ -3793,6 +3811,7 @@ def defineStepList() {
     return [
         'annotate',
         'mapping',
+        'prepare_recalibration',
         'recalibrate',
         'variantcalling'
     ]
@@ -3916,7 +3935,7 @@ def extractFastq(tsvFile) {
 }
 
 // Channeling the TSV file containing Recalibration Tables.
-// Format is: "subject gender status sample bam bai recalTables"
+// Format is: "subject gender status sample bam bai recalTable"
 def extractRecal(tsvFile) {
     Channel.from(tsvFile)
         .splitCsv(sep: '\t')
