@@ -1,4 +1,4 @@
-# Variant calling
+# Variant calling <!-- omit in toc -->
 
 - [Germline variant calling](#germline-variant-calling)
 - [Somatic variant calling with tumor - normal pairs](#somatic-variant-calling-with-tumor---normal-pairs)
