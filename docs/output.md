@@ -80,10 +80,10 @@ Besides the duplicate marked BAM files, the recalibration tables (`*.recal.table
 For further reading and documentation see the [data pre-processing workflow from the GATK best practices](https://software.broadinstitute.org/gatk/best-practices/workflow?id=11165).
 
 For all samples:
-**Output directory: `results/Preprocessing/[SAMPLE]/DuplicateMarked`**
+**Output directory: `results/Preprocessing/[SAMPLE]/DuplicatesMarked`**
 
-- `[SAMPLE].md.bam`, `[SAMPLE].md.bai` and `[SAMPLE].recal.table`
-  - BAM file and index with Recalibration Table
+- `[SAMPLE].md.bam` and `[SAMPLE].md.bai`
+  - BAM file and index
 
 ### Base (Quality Score) Recalibration
 
@@ -91,7 +91,11 @@ For all samples:
 
 [GATK BaseRecalibrator](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_bqsr_BaseRecalibrator.php) generates a recalibration table based on various covariates.
 
-Such files are intermediate and not kept in the final files delivered to users.
+For all samples:
+**Output directory: `results/Preprocessing/[SAMPLE]/DuplicatesMarked`**
+
+- `[SAMPLE].recal.table`
+  - Recalibration Table associated to the Marked Duplicates BAMs.
 
 #### GATK ApplyBQSR
 
@@ -99,7 +103,7 @@ Such files are intermediate and not kept in the final files delivered to users.
 
 This directory is usually empty, it is the location for the final recalibrated BAM files.
 Recalibrated BAM files are usually 2-3 times larger than the duplicate marked BAM files.
-To re-generate recalibrated BAM file you have to apply the recalibration table delivered to the `DuplicateMarked` directory either within Sarek, or doing this recalibration step yourself.
+To re-generate recalibrated BAM file you have to apply the recalibration table delivered to the `DuplicatesMarked` directory either within Sarek, or doing this recalibration step yourself.
 
 For further reading and documentation see the [data pre-processing workflow from the GATK best practices](https://software.broadinstitute.org/gatk/best-practices/workflow?id=11165).
 
@@ -118,19 +122,19 @@ For further reading and documentation see the [input documentation](https://gith
 For all samples:
 **Output directory: `results/Preprocessing/TSV`**
 
-- `duplicateMarked.tsv` and `recalibrated.tsv`
-  - TSV files to start Sarek from `recalibration` or `variantcalling` steps.
-- `duplicateMarked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
-  - TSV files to start Sarek from `recalibration` or `variantcalling` steps for a specific sample.
+- `duplicates_marked_no_table.tsv`, `duplicates_marked.tsv` and `recalibrated.tsv`
+  - TSV files to start Sarek from `prepare_recalibration`, `recalibrate` or `variantcalling` steps.
+- `duplicates_marked_no_table_[SAMPLE].tsv` `duplicates_marked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
+  - TSV files to start Sarek from `prepare_recalibration`, `recalibrate` or `variantcalling` steps for a specific sample.
 
 > `/!\` Only with [`--sentieon`](usage.md#--sentieon)
 
 For all samples:
 **Output directory: `results/Preprocessing/TSV`**
 
-- `recalibrated_sentieon.tsv`
+- `sentieon_deduped.tsv` and `recalibrated_sentieon.tsv`
   - TSV files to start Sarek from `variantcalling` step.
-- `recalibrated_sentieon_[SAMPLE].tsv`
+- `sentieon_deduped_[SAMPLE].tsv` and `recalibrated_sentieon_[SAMPLE].tsv`
   - TSV files to start Sarek from `variantcalling` step for a specific sample.
 
 ## Variant Calling
