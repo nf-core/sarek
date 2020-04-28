@@ -7,5 +7,5 @@ channels:
   - defaults
 
 dependencies:
-  - ensembl-vep=99.2
-  - genesplicer=1.0
+  - bioconda::ensembl-vep=99.2
+  - bioconda::genesplicer=1.0
