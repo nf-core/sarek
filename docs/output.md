@@ -75,7 +75,7 @@ Such files are intermediate and not kept in the final files delivered to users.
 If the pipeline is run with the option `--no_gatk_spark` then [GATK MarkDuplicates](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.4.0/picard_sam_markduplicates_MarkDuplicates.php) is used instead.
 
 This directory is the location for the BAM files delivered to users.
-Besides the duplicate marked BAM files, the recalibration tables (`*.recal.table`) are also stored, and can be used to create base recalibrated files.
+Besides the duplicates marked BAM files, the recalibration tables (`*.recal.table`) are also stored, and can be used to create base recalibrated files.
 
 For further reading and documentation see the [data pre-processing workflow from the GATK best practices](https://software.broadinstitute.org/gatk/best-practices/workflow?id=11165).
 
@@ -95,14 +95,14 @@ For all samples:
 **Output directory: `results/Preprocessing/[SAMPLE]/DuplicatesMarked`**
 
 - `[SAMPLE].recal.table`
-  - Recalibration Table associated to the Marked Duplicates BAMs.
+  - Recalibration Table associated to the duplicates marked BAMs.
 
 #### GATK ApplyBQSR
 
 [GATK ApplyBQSR](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_bqsr_ApplyBQSR.php) recalibrates the base qualities of the input reads based on the recalibration table produced by the [`BaseRecalibrator`](#gatk-baserecalibrator) tool.
 
 This directory is usually empty, it is the location for the final recalibrated BAM files.
-Recalibrated BAM files are usually 2-3 times larger than the duplicate marked BAM files.
+Recalibrated BAM files are usually 2-3 times larger than the duplicates marked BAM files.
 To re-generate recalibrated BAM file you have to apply the recalibration table delivered to the `DuplicatesMarked` directory either within Sarek, or doing this recalibration step yourself.
 
 For further reading and documentation see the [data pre-processing workflow from the GATK best practices](https://software.broadinstitute.org/gatk/best-practices/workflow?id=11165).
@@ -553,7 +553,7 @@ For more information about how to use Qualimap bamqc reports, see [Qualimap bamq
 If the pipeline is run with the option `--no_gatk_spark` then [GATK MarkDuplicates](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.4.0/picard_sam_markduplicates_MarkDuplicates.php) is used instead.
 
 Collecting duplicate metrics slows down performance.
-To disable them use `--skipQC MarkDuplicates`.
+To disable them use `--skip_qc MarkDuplicates`.
 
 Duplicates can arise during sample preparation _e.g._ library construction using PCR.
 Duplicate reads can also result from a single amplification cluster, incorrectly detected as multiple clusters by the optical sensor of the sequencing instrument.
