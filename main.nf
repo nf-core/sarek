@@ -332,9 +332,9 @@ if (params.vepCacheVersion) exit 1, "The params `--vepCacheVersion` has been rem
 */
 
 // Check if genome exists in the config file
-if (params.genomes && params.genome && !params.genomes.containsKey(params.genome) && !params.igenomes_ignore) {
+if (params.genomes && !params.genomes.containsKey(params.genome) && !params.igenomes_ignore) {
     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
-} else if (params.genomes && params.genome && !params.genomes.containsKey(params.genome) && params.igenomes_ignore) {
+} else if (params.genomes && !params.genomes.containsKey(params.genome) && params.igenomes_ignore) {
     exit 1, "The provided genome '${params.genome}' is not available in the genomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
 }
 
