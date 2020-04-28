@@ -129,6 +129,7 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#152](https://github.com/nf-core/sarek/pull/152) - Removed `Jenkinsfile`
 - [#169](https://github.com/nf-core/sarek/pull/169) - Removed omicX from README
 - [#181](https://github.com/nf-core/sarek/pull/181) - Remove duplicate code in `nextflow.config`
+- [#197](https://github.com/nf-core/sarek/pull/197) - Output directory `DuplicateMarked` is now replaced by`DuplicatesMarked`
 
 ## [2.5.2] - Jåkkåtjkaskajekna
 
