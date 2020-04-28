@@ -70,6 +70,7 @@ jobs:
       - name: Run germline test
         run: |
           nextflow run . -profile test,docker --input data/testdata/tiny/normal
+          nextflow run . -profile test,docker --input=false --step prepare_recalibration -resume
           nextflow run . -profile test,docker --input=false --step recalibrate -resume
           nextflow run . -profile test,docker --input=false --step variantCalling
 
