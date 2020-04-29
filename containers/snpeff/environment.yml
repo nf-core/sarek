@@ -7,4 +7,4 @@ channels:
   - defaults
 
 dependencies:
-  - snpeff=4.3.1t
+  - bioconda::snpeff=4.3.1t

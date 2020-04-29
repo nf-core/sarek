@@ -118,6 +118,24 @@ G15511    XX    1    D0ENMT    D0ENM_1    pathToFiles/D0ENMAC_1.bam
 G15511    XX    1    D0ENMT    D0ENM_2    pathToFiles/D0ENMAC_2.bam
 ```
 
+## Starting from the BAM prepare recalibration step
+
+To start from the preparation of the recalibration step (`--step prepare_recalibration`), a TSV file for a normal/tumor pair needs to be given as input containing the paths to the non recalibrated but already mapped BAM files.
+The TSV needs to contain the following columns:
+
+- `subject sex status sample bam bai`
+
+The same way, if you have non recalibrated BAMs and their indexes, you should use a structure like:
+
+```text
+G15511    XX    0    C09DFN    pathToFiles/G15511.C09DFN.md.bam    pathToFiles/G15511.C09DFN.md.bai
+G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.md.bam    pathToFiles/G15511.D0ENMT.md.bai
+```
+
+When starting Sarek from the mapping step, a TSV file is generated automatically after the `MarkDuplicates` process. This TSV file is stored under `results/Preprocessing/TSV/duplicates_marked_no_table.tsv` and can be used to restart Sarek from the non-recalibrated BAM files. Setting the step `--step prepare_recalibration` will automatically take this file as input.
+
+Additionally, individual TSV files for each sample (`duplicates_marked_no_table_[SAMPLE].tsv`) can be found in the same directory.
+
 ## Starting from the BAM recalibration step
 
 To start from the recalibration step (`--step recalibrate`), a TSV file for a normal/tumor pair needs to be given as input containing the paths to the non recalibrated but already mapped BAM files.
@@ -132,9 +150,9 @@ G15511    XX    0    C09DFN    pathToFiles/G15511.C09DFN.md.bam    pathToFiles/G
 G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.md.bam    pathToFiles/G15511.D0ENMT.md.bai pathToFiles/G15511.D0ENMT.md.recal.table
 ```
 
-When starting Sarek from the mapping step, a TSV file is generated automatically after the `MarkDuplicates` process. This TSV file is stored under `results/Preprocessing/TSV/duplicateMarked.tsv` and can be used to restart Sarek from the non-recalibrated BAM files. Setting the step `--step recalibrate` will automatically take this file as input.
+When starting Sarek from the mapping step, a TSV file is generated automatically after the `MarkDuplicates` process. This TSV file is stored under `results/Preprocessing/TSV/duplicates_marked.tsv` and can be used to restart Sarek from the non-recalibrated BAM files. Setting the step `--step recalibrate` will automatically take this file as input.
 
-Additionally, individual TSV files for each sample (`duplicateMarked_[SAMPLE].tsv`) can be found in the same directory.
+Additionally, individual TSV files for each sample (`duplicates_marked_[SAMPLE].tsv`) can be found in the same directory.
 
 ## Starting from the variant calling step
 
