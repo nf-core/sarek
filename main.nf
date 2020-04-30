@@ -2514,7 +2514,7 @@ process MergeMutect2Stats {
 
 // STEP MERGING VCF - FREEBAYES, GATK HAPLOTYPECALLER & GATK MUTECT2 (UNFILTERED)
 
-vcfConcatenateVCFs = mutect2_unfiltered_out.mix(filteredMutect2Output, vcfFreeBayes, vcfFreebayesSingle, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
+vcfConcatenateVCFs = vcfFreeBayes.mix(vcfFreebayesSingle, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
 vcfConcatenateVCFs = vcfConcatenateVCFs.dump(tag:'VCF to merge')
 
 process ConcatVCF {
@@ -2670,9 +2670,7 @@ process FilterMutect2Calls {
         file(intervals) from ch_intervals
       
     output:
-        set val("Mutect2"), idPatient, idSamplePair, file("Mutect2_filtered_${idSamplePair}.vcf.gz"), file("Mutect2_filtered_${idSamplePair}.vcf.gz.tbi"), file("Mutect2_filtered_${idSamplePair}.vcf.gz.filteringStats.tsv") into filteredMutect2Output
-
-    when: 'mutect2' in tools
+        set val("Mutect2"), idPatient, idSamplePair, file("Mutect2_filtered_${idSamplePair}.vcf.gz"), file("Mutect2_filtered_${idSamplePair}.vcf.gz.tbi"), file("Mutect2_filtered_${idSamplePair}.vcf.gz.filteringStats.tsv") into     when: 'mutect2' in tools
 
     script:
     """
