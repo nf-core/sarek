@@ -72,16 +72,18 @@ Such files are intermediate and not kept in the final files delivered to users.
 
 [GATK MarkDuplicatesSpark](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_spark_transforms_markduplicates_MarkDuplicatesSpark.php) is a Spark implementation of [Picard MarkDuplicates](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/picard_sam_markduplicates_MarkDuplicates.php) and locates and tags duplicate reads in a BAM or SAM file, where duplicate reads are defined as originating from a single fragment of DNA.
 
+If the pipeline is run with the option `--no_gatk_spark` then [GATK MarkDuplicates](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.4.0/picard_sam_markduplicates_MarkDuplicates.php) is used instead.
+
 This directory is the location for the BAM files delivered to users.
-Besides the duplicate marked BAM files, the recalibration tables (`*.recal.table`) are also stored, and can be used to create base recalibrated files.
+Besides the duplicates marked BAM files, the recalibration tables (`*.recal.table`) are also stored, and can be used to create base recalibrated files.
 
 For further reading and documentation see the [data pre-processing workflow from the GATK best practices](https://software.broadinstitute.org/gatk/best-practices/workflow?id=11165).
 
 For all samples:
-**Output directory: `results/Preprocessing/[SAMPLE]/DuplicateMarked`**
+**Output directory: `results/Preprocessing/[SAMPLE]/DuplicatesMarked`**
 
-- `[SAMPLE].md.bam`, `[SAMPLE].md.bai` and `[SAMPLE].recal.table`
-  - BAM file and index with Recalibration Table
+- `[SAMPLE].md.bam` and `[SAMPLE].md.bai`
+  - BAM file and index
 
 ### Base (Quality Score) Recalibration
 
@@ -89,15 +91,19 @@ For all samples:
 
 [GATK BaseRecalibrator](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_bqsr_BaseRecalibrator.php) generates a recalibration table based on various covariates.
 
-Such files are intermediate and not kept in the final files delivered to users.
+For all samples:
+**Output directory: `results/Preprocessing/[SAMPLE]/DuplicatesMarked`**
+
+- `[SAMPLE].recal.table`
+  - Recalibration Table associated to the duplicates marked BAMs.
 
 #### GATK ApplyBQSR
 
 [GATK ApplyBQSR](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_bqsr_ApplyBQSR.php) recalibrates the base qualities of the input reads based on the recalibration table produced by the [`BaseRecalibrator`](#gatk-baserecalibrator) tool.
 
 This directory is usually empty, it is the location for the final recalibrated BAM files.
-Recalibrated BAM files are usually 2-3 times larger than the duplicate marked BAM files.
-To re-generate recalibrated BAM file you have to apply the recalibration table delivered to the `DuplicateMarked` directory either within Sarek, or doing this recalibration step yourself.
+Recalibrated BAM files are usually 2-3 times larger than the duplicates marked BAM files.
+To re-generate recalibrated BAM file you have to apply the recalibration table delivered to the `DuplicatesMarked` directory either within Sarek, or doing this recalibration step yourself.
 
 For further reading and documentation see the [data pre-processing workflow from the GATK best practices](https://software.broadinstitute.org/gatk/best-practices/workflow?id=11165).
 
@@ -116,24 +122,24 @@ For further reading and documentation see the [input documentation](https://gith
 For all samples:
 **Output directory: `results/Preprocessing/TSV`**
 
-- `duplicateMarked.tsv` and `recalibrated.tsv`
-  - TSV files to start Sarek from `recalibration` or `variantcalling` steps.
-- `duplicateMarked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
-  - TSV files to start Sarek from `recalibration` or `variantcalling` steps for a specific sample.
+- `duplicates_marked_no_table.tsv`, `duplicates_marked.tsv` and `recalibrated.tsv`
+  - TSV files to start Sarek from `prepare_recalibration`, `recalibrate` or `variantcalling` steps.
+- `duplicates_marked_no_table_[SAMPLE].tsv` `duplicates_marked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
+  - TSV files to start Sarek from `prepare_recalibration`, `recalibrate` or `variantcalling` steps for a specific sample.
 
 > `/!\` Only with [`--sentieon`](usage.md#--sentieon)
 
 For all samples:
 **Output directory: `results/Preprocessing/TSV`**
 
-- `recalibrated_sentieon.tsv`
+- `sentieon_deduped.tsv` and `recalibrated_sentieon.tsv`
   - TSV files to start Sarek from `variantcalling` step.
-- `recalibrated_sentieon_[SAMPLE].tsv`
+- `sentieon_deduped_[SAMPLE].tsv` and `recalibrated_sentieon_[SAMPLE].tsv`
   - TSV files to start Sarek from `variantcalling` step for a specific sample.
 
 ## Variant Calling
 
-All the results regarding Variant Calling are collected in this directory.
+All the results regarding Variant Calling are collected in this directory. If some results from a variant caller do not appear here, please check out the [Variant calling](./variant_calling.md) documentation.
 
 Recalibrated BAM files can also be used as an input to start the Variant Calling, for more information see [TSV files output information](#tsv-files)
 
@@ -141,14 +147,14 @@ Recalibrated BAM files can also be used as an input to start the Variant Calling
 
 #### FreeBayes
 
-[FreeBayes](https://github.com/ekg/freebayes) is a Bayesian genetic variant detector designed to find small polymorphisms, specifically SNPs, indels, MNPs, and complex events smaller than the length of a short-read sequencing alignment..
+[FreeBayes](https://github.com/ekg/freebayes) is a Bayesian genetic variant detector designed to find small polymorphisms, specifically SNPs, indels, MNPs, and complex events smaller than the length of a short-read sequencing alignment.
 
 For further reading and documentation see the [FreeBayes manual](https://github.com/ekg/freebayes/blob/master/README.md#user-manual-and-guide).
 
-For a Tumor/Normal pair only:
-**Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/FreeBayes`**
+For all samples:
+**Output directory: `results/VariantCalling/[SAMPLE]/FreeBayes`**
 
-- `FreeBayes_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `FreeBayes_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
+- `FreeBayes_[SAMPLE].vcf.gz` and `FreeBayes_[SAMPLE].vcf.gz.tbi`
   - VCF with Tabix index
 
 #### GATK HaplotypeCaller
@@ -542,11 +548,12 @@ For more information about how to use Qualimap bamqc reports, see [Qualimap bamq
 
 #### MarkDuplicates reports
 
-[[GATK MarkDuplicatesSpark](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_spark_transforms_markduplicates_MarkDuplicatesSpark.php), Spark implementation of [Picard MarkDuplicates](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/picard_sam_markduplicates_MarkDuplicates.php)
-) locates and tags duplicate reads in a BAM or SAM file, where duplicate reads are defined as originating from a single fragment of DNA.
+[[GATK MarkDuplicatesSpark](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_spark_transforms_markduplicates_MarkDuplicatesSpark.php), Spark implementation of [Picard MarkDuplicates](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/picard_sam_markduplicates_MarkDuplicates.php) locates and tags duplicate reads in a BAM or SAM file, where duplicate reads are defined as originating from a single fragment of DNA.
+
+If the pipeline is run with the option `--no_gatk_spark` then [GATK MarkDuplicates](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.4.0/picard_sam_markduplicates_MarkDuplicates.php) is used instead.
 
 Collecting duplicate metrics slows down performance.
-To disable them use `--skipQC MarkDuplicates`.
+To disable them use `--skip_qc MarkDuplicates`.
 
 Duplicates can arise during sample preparation _e.g._ library construction using PCR.
 Duplicate reads can also result from a single amplification cluster, incorrectly detected as multiple clusters by the optical sensor of the sequencing instrument.
