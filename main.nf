@@ -2268,7 +2268,7 @@ process FreebayesSingle {
     input:
         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamFreebayesSingle
         file(fasta) from ch_fasta
-        file(fastaFai) from ch_software_versions_yaml
+        file(fastaFai) from ch_fai
     
     output:
         set val("FreeBayes"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into vcfFreebayesSingle
