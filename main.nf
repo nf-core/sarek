@@ -3254,8 +3254,8 @@ vcfKeep = Channel.empty().mix(
         [variantcaller, idSample, vcf]
 
     },
-    mutect2_filtered_out.map{
-        variantcaller, idPatient, idSample, vcf, tbi ->
+    filteredMutect2Output.map{
+        variantcaller, idPatient, idSample, vcf, tbi, stats ->
         [variantcaller, idSample, vcf]
     },
     haplotypecaller_out_merge.map{
