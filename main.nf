@@ -1876,8 +1876,7 @@ process HaplotypeCaller {
         file(fastaFai) from ch_fai
 
     output:
-        set val("HaplotypeCallerGVCF"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf") into gvcfHaplotypeCaller
-        set idPatient, idSample, file(intervalBed), file("${intervalBed.baseName}_${idSample}.g.vcf") into gvcfGenotypeGVCFs
+        set val("HaplotypeCallerGVCF"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf")        set idPatient, idSample, file(intervalBed), file("${intervalBed.baseName}_${idSample}.g.vcf") into gvcfGenotypeGVCFs
 
     when: 'haplotypecaller' in tools
 
@@ -1893,11 +1892,8 @@ process HaplotypeCaller {
         ${dbsnpOptions} \
         -O ${intervalBed.baseName}_${idSample}.g.vcf \
         -ERC GVCF
-    """
-}
-
-gvcfHaplotypeCaller = gvcfHaplotypeCaller.groupTuple(by:[0,1,2])
-if (params.no_gvcf) gvcfHaplotypeCaller.close()
+    """=groupTuple(by:[0,1,2])
+if (params.no_gvcclose()
 
 // STEP GATK HAPLOTYPECALLER.2 - VCF
 
@@ -1937,7 +1933,7 @@ process GenotypeGVCFs {
 }
 
 vcfGenotypeGVCFs = vcfGenotypeGVCFs.groupTuple(by:[0,1,2])
-haplotypecaller_out = vcfGenotypeGVCFs.mix(gvcfHaplotypeCaller)
+haplotypecaller_out = vcfGenotypeGVCFs
 haplotypecaller_out = haplotypecaller_out.dump(tag:'HAPLOTYPECALLER VCF TO MERGE')
 
 // STEP GATK HAPLOTYPECALLER.3 - MERGE
@@ -2380,7 +2376,7 @@ process FreeBayes {
     """
 }
 
-freebayes_out = freebayes_out.groupTuple(by:[0,1])
+freebayes_out = freebayes_out.groupTuple(by:[0,1]).mix(vcfFreebayesSingle)
 
 process Concat_VCF_Freebayes {
     label 'cpus_8'
@@ -2508,49 +2504,6 @@ process MergeMutect2Stats {
         -O ${idSamplePair}.vcf.gz.stats
     """
 }
-
-// we are merging the VCFs that are called separatelly for different intervals
-// so we can have a single sorted VCF containing all the calls for a given caller
-
-// STEP MERGING VCF - FREEBAYES, GATK HAPLOTYPECALLER & GATK MUTECT2 (UNFILTERED)
-
-vcfConcatenateVCFs = vcfFreebayesSingle.mix(vcfGenotypeGVCFs, gvcfHaplotypeCaller)
-vcfConcatenateVCFs = vcfConcatenateVCFs.dump(tag:'VCF to merge')
-
-process ConcatVCF {
-    label 'cpus_8'
-
-    tag {variantCaller + "-" + idSample}
-
-    publishDir "${params.outdir}/VariantCalling/${idSample}/${"$variantCaller"}", mode: params.publish_dir_mode
-
-    input:
-        set variantCaller, idPatient, idSample, file(vcf) from vcfConcatenateVCFs
-        file(fastaFai) from ch_fai
-        file(targetBED) from ch_target_bed
-
-    output:
-    // we have this funny *_* pattern to avoid copying the raw calls to publishdir
-        set variantCaller, idPatient, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into vcfConcatenated
-
-    when: ('haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools)
-
-    script:
-    if (variantCaller == 'HaplotypeCallerGVCF')
-        outputFile = "HaplotypeCaller_${idSample}.g.vcf"
-    else if (variantCaller == "Mutect2")
-        outputFile = "Mutect2_unfiltered_${idSample}.vcf"
-    else
-        outputFile = "${variantCaller}_${idSample}.vcf"
-    options = params.target_bed ? "-t ${targetBED}" : ""
-    intervalsOptions = params.no_intervals ? "-n" : ""
-    """
-    concatenateVCFs.sh -i ${fastaFai} -c ${task.cpus} -o ${outputFile} ${options} ${intervalsOptions}
-    """
-}
-
-(vcfConcatenated, vcfConcatenatedForFilter) = vcfConcatenated.into(2)
-vcfConcatenated = vcfConcatenated.dump(tag:'VCF')
 
 // STEP GATK MUTECT2.3 - GENERATING PILEUP SUMMARIES
 
