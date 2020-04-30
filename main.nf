@@ -1876,7 +1876,8 @@ process HaplotypeCaller {
         file(fastaFai) from ch_fai
 
     output:
-        set val("HaplotypeCallerGVCF"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf")        set idPatient, idSample, file(intervalBed), file("${intervalBed.baseName}_${idSample}.g.vcf") into gvcfGenotypeGVCFs
+        set val("HaplotypeCallerGVCF"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf") into gvcfHaplotypeCaller
+        set idPatient, idSample, file(intervalBed), file("${intervalBed.baseName}_${idSample}.g.vcf") into gvcfGenotypeGVCFs
 
     when: 'haplotypecaller' in tools
 
@@ -1892,8 +1893,13 @@ process HaplotypeCaller {
         ${dbsnpOptions} \
         -O ${intervalBed.baseName}_${idSample}.g.vcf \
         -ERC GVCF
-    """=groupTuple(by:[0,1,2])
-if (params.no_gvcclose()
+    """
+}
+
+gvcfHaplotypeCaller = gvcfHaplotypeCaller.groupTuple(by:[0, 1, 2])
+
+if (params.no_gvcf) gvcfHaplotypeCaller.close()
+else gvcfHaplotypeCaller = gvcfHaplotypeCaller.dump(tag:'GVCF HaplotypeCaller')
 
 // STEP GATK HAPLOTYPECALLER.2 - VCF
 
