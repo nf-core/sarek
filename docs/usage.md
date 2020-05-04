@@ -37,6 +37,8 @@
   - [--save_bam_mapped](#--save_bam_mapped)
 - [Reference genomes](#reference-genomes)
   - [--genome (using iGenomes)](#--genome-using-igenomes)
+  - [--save_reference](#--save_reference)
+  - [--saveGenomeIndex](#--savegenomeindex)
   - [--ac_loci](#--ac_loci)
   - [--acLoci](#--acloci)
   - [--ac_loci_gc](#--ac_loci_gc)
@@ -509,6 +511,19 @@ params {
   }
 }
 ```
+
+### --save_reference
+
+Enable saving reference indexes and other files built within Sarek.
+
+```bash
+--save_reference
+```
+
+### --saveGenomeIndex
+
+> :warning: This params has been removed.
+> Please check: [`--save_reference`](#--save_reference)
 
 ### --ac_loci
 
