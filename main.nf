@@ -2192,14 +2192,8 @@ process FreebayesSingle {
     """
     freebayes \
         -f ${fasta} \
-        --pooled-continuous \
-        --pooled-discrete \
-        --genotype-qualities \
-        --report-genotype-likelihood-max \
-        --allele-balance-priors-off \
-        --min-alternate-fraction 0.03 \
-        --min-repeat-entropy 1 \
-        --min-alternate-count 2 \
+        --min-alternate-fraction 0.1 \
+        --min-mapping-quality 1 \
         ${intervalsOptions} \
         ${bam} > ${intervalBed.baseName}_${idSample}.vcf
     """
