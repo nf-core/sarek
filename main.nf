@@ -2216,7 +2216,7 @@ vcfFreebayesSingle = vcfFreebayesSingle.groupTuple(by: [0,1,2])
                              SOMATIC VARIANT CALLING
 ================================================================================
 */
-// Ascat, pileup, pileups with no intervals, recalibrated, and IDs when the pileup is provided by CLI for Control-FREEC
+// Ascat, pileup, pileups with no intervals, recalibrated BAMs
 (bamAscat, bamMpileup, bamMpileupNoInt, bamRecalAll) = bamRecalAll.into(4)
 
 // separate BAM by status
