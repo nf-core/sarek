@@ -28,7 +28,7 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#180](https://github.com/nf-core/sarek/pull/180) - Now saving Mapped BAMs (and creating TSV) in minimal setting
 - [#182](https://github.com/nf-core/sarek/pull/182) - Add possibility to run `HaplotypeCaller` without `dbsnp` so it can be used to actually generate vcfs to build a set of known sites (cf [gatkforums](https://gatkforums.broadinstitute.org/gatk/discussion/1247/what-should-i-use-as-known-variants-sites-for-running-tool-x))
 - [#195](https://github.com/nf-core/sarek/pull/195) - Now creating TSV for duplicates marked BAMs in minimal setting
-- [#195](https://github.com/nf-core/sarek/pull/195) - Add `--save_bam_mapped` params to save mapped BAMs.
+- [#195](https://github.com/nf-core/sarek/pull/195), [#202](https://github.com/nf-core/sarek/pull/202) - Add `--save_bam_mapped` params to save mapped BAMs.
 - [#197](https://github.com/nf-core/sarek/pull/197) - Add step `prepare_recalibration` to allow restart from DuplicatesMarked BAMs
 
 ### Changed
