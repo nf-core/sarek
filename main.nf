@@ -1252,7 +1252,7 @@ process IndexBamFile {
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: {
             if (params.save_bam_mapped) "Preprocessing/${idSample}/Mapped/${it}"
-            null
+            else null
         }
 
     input:
@@ -1262,7 +1262,7 @@ process IndexBamFile {
         set idPatient, idSample, file("${idSample}.bam"), file("${idSample}.bam.bai") into bam_mapped_merged_indexed
         set idPatient, idSample into tsv_bam_indexed
 
-    when: !(params.known_indels)
+    when: params.save_bam_mapped || !(params.known_indels)
 
     script:
     """
@@ -2149,8 +2149,6 @@ vcfMantaSingle = vcfMantaSingle.dump(tag:'Single Manta')
 process TIDDIT {
     tag {idSample}
 
-    publishDir "${params.outdir}/VariantCalling/${idSample}/TIDDIT", mode: params.publish_dir_mode
-
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: {
             if (it == "TIDDIT_${idSample}.vcf") "VariantCalling/${idSample}/TIDDIT/${it}"
@@ -2824,7 +2822,7 @@ process MSIsensor_msi {
 
     tag {idSampleTumor + "_vs_" + idSampleNormal}
 
-    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/MSIsensor", mode: params.publishDirMode
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/MSIsensor", mode: params.publish_dir_mode
 
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamMsisensor
