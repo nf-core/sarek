@@ -3765,8 +3765,6 @@ def nfcoreHeader() {
     c_white  = params.monochrome_logs ? '' : "\033[0;37m";
     c_yellow = params.monochrome_logs ? '' : "\033[0;33m";
     
-    return "--"
-
     return """    -${c_dim}--------------------------------------------------${c_reset}-
                                             ${c_green},--.${c_black}/${c_green},-.${c_reset}
     ${c_blue}        ___     __   __   __   ___     ${c_green}/,-._.--~\'${c_reset}
