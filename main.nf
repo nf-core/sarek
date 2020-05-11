@@ -472,6 +472,7 @@ params.germline_resource_index = params.genome && params.germline_resource ? par
 params.intervals = params.genome && !('annotate' in step) ? params.genomes[params.genome].intervals ?: null : null
 params.known_indels = params.genome && ('mapping' in step || 'prepare_recalibration' in step) ? params.genomes[params.genome].known_indels ?: null : null
 params.known_indels_index = params.genome && params.known_indels ? params.genomes[params.genome].known_indels_index ?: null : null
+params.mappability = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].mappability ?: null : null
 params.snpeff_db = params.genome && 'snpeff' in tools ? params.genomes[params.genome].snpeff_db ?: null : null
 params.species = params.genome && 'vep' in tools ? params.genomes[params.genome].species ?: null : null
 params.vep_cache_version = params.genome && 'vep' in tools ? params.genomes[params.genome].vep_cache_version ?: null : null
@@ -487,6 +488,7 @@ ch_fai = params.fasta_fai && !('annotate' in step) ? Channel.value(file(params.f
 ch_germline_resource = params.germline_resource && 'mutect2' in tools ? Channel.value(file(params.germline_resource)) : "null"
 ch_intervals = params.intervals && !params.no_intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : "null"
 ch_known_indels = params.known_indels && ('mapping' in step || 'prepare_recalibration' in step) ? Channel.value(file(params.known_indels)) : "null"
+ch_mappability = params.mappability && 'controlfreec' in tools ? Channel.value(file(params.mappability)) : "null"
 
 ch_snpeff_cache = params.snpeff_cache ? Channel.value(file(params.snpeff_cache)) : "null"
 ch_snpeff_db = params.snpeff_db ? Channel.value(params.snpeff_db) : "null"
@@ -538,7 +540,6 @@ if (params.ascat_ploidy)                        summary['ASCAT ploidy']      = p
 if (params.no_gatk_spark)                       summary['MarkDuplicates GATK Spark']      = params.no_gatk_spark ? 'No' : 'Yes'
 if (params.sequencing_center)                   summary['Sequenced by']      = params.sequencing_center
 if (params.pon && 'mutect2' in tools)           summary['Panel of normals']  = params.pon
-if (params.mappability)                         summary['Mappability for Control-FREEC']  = params.mappability
 if (params.cf_window)                           summary['Window for Control-FREEC']  = params.cf_window
 if (params.cf_coeff)                            summary['coefficientOfVariation for Control-FREEC']  = params.cf_coeff
 if (params.cf_ploidy)                           summary['Ploidy for Control-FREEC']  = params.cf_ploidy
@@ -567,6 +568,7 @@ if (params.dbsnp)                   summary['dbsnp']                 = params.db
 if (params.dbsnp_index)             summary['dbsnpIndex']            = params.dbsnp_index
 if (params.known_indels)            summary['knownIndels']           = params.known_indels
 if (params.known_indels_index)      summary['knownIndelsIndex']      = params.known_indels_index
+if (params.mappability)             summary['Mappability']           = params.mappability
 if (params.snpeff_db)               summary['snpeffDb']              = params.snpeff_db
 if (params.vep_cache_version)       summary['vepCacheVersion']       = params.vep_cache_version
 if (params.species)                 summary['species']               = params.species
@@ -3071,6 +3073,7 @@ process ControlFREEC {
     input:
         set idPatient, idSampleNormal, idSampleTumor, file(mpileupNormal), file(mpileupTumor) from mpileupOut
         file(chrDir) from ch_chr_dir
+        file(mappability) from ch_mappability
         file(chrLength) from ch_chr_length
         file(dbsnp) from ch_dbsnp
         file(dbsnpIndex) from ch_dbsnp_tbi
@@ -3089,31 +3092,21 @@ process ControlFREEC {
     // if we are using coefficientOfVariation, we must delete the window parameter 
     // it is "window = 20000" in the default settings, without coefficientOfVariation set, 
     // but we do not like it. Note, it is not written in stone
-    coeff = "# coefficientOfVariation is not used"
-    window = "# window parameter is not used"
-    if(params.cf_coeff) { 
-      coeff = "coefficientOfVariation = ${params.cf_coeff}" 
-    } else if(params.cf_window) { 
-      window = "window = ${params.cf_window}" 
-    } else {  // default settings
-      coeff = "coefficientOfVariation = 0.015"
-    }
-    mappability = params.mappability ? "gemMappabilityFile = ${params.mappability}" : "# gemMappabilityFile is not used "
+    coeff_or_window = params.cf_coeff ? "coefficientOfVariation = ${params.cf_coeff}" : params.params.cf_window ? "window = ${params.cf_window}" : "coefficientOfVariation = 0.015"
     """
     touch ${config}
     echo "[general]" >> ${config}
     echo "BedGraphOutput = TRUE" >> ${config}
     echo "chrFiles = \${PWD}/${chrDir.fileName}" >> ${config}
     echo "chrLenFile = \${PWD}/${chrLength.fileName}" >> ${config}
-    echo "${coeff}" >> ${config}
+    echo "gemMappabilityFile = \${PWD}/${mappability}" >> ${config}
+    echo "${coeff_or_window}" >> ${config}
     echo "contaminationAdjustment = TRUE" >> ${config}
     echo "forceGCcontentNormalization = 1" >> ${config}
     echo "maxThreads = ${task.cpus}" >> ${config}
     echo "minimalSubclonePresence = 20" >> ${config}
     echo "ploidy = ${params.cf_ploidy}" >> ${config}
     echo "sex = ${gender}" >> ${config}
-    echo "${window}" >> ${config}
-    echo "${mappability}" >> ${config}
     echo "" >> ${config}
 
     echo "[control]" >> ${config}
@@ -3155,19 +3148,25 @@ process ControlFreecViz {
     when: 'controlfreec' in tools
 
     """
-    echo "Shaping CNV files to make sure we can assess signifacance"
+    echo "Shaping CNV files to make sure we can assess significance"
     awk 'NF==9{print}' ${cnvTumor} > TUMOR.CNVs
     awk 'NF==7{print}' ${cnvNormal} > NORMAL.CNVs
+
     echo "############### Calculating significance values for TUMOR CNVs #############"
     cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args TUMOR.CNVs ${ratioTumor}
+
     echo "############### Calculating significance values for NORMAL CNVs ############"
     cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args NORMAL.CNVs ${ratioNormal}
+
     echo "############### Creating graph for TUMOR ratios ###############"
     cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/makeGraph.R | R --slave --args 2 ${ratioTumor} ${bafTumor}
+
     echo "############### Creating graph for NORMAL ratios ##############"
     cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/makeGraph.R | R --slave --args 2 ${ratioNormal} ${bafNormal}
+
     echo "############### Creating BED files for TUMOR ##############"
     perl /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/freec2bed.pl -f ${ratioTumor} > ${idSampleTumor}.bed
+
     echo "############### Creating BED files for NORMAL #############"
     perl /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/freec2bed.pl -f ${ratioNormal} > ${idSampleNormal}.bed
     """
