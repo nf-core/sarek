@@ -401,7 +401,6 @@ if (!params.input && params.sentieon) {
         case 'prepare_recalibration': break
         case 'recalibrate': tsvPath = "${params.outdir}/Preprocessing/TSV/sentieon_deduped.tsv"; break
         case 'variantcalling': tsvPath = "${params.outdir}/Preprocessing/TSV/sentieon_recalibrated.tsv"; break
-        case 'controlfreec': tsvPath = "${params.outdir}/VariantCalling/TSV/mpileup.tsv"; break
         case 'annotate': break
         default: exit 1, "Unknown step ${step}"
     }
@@ -411,7 +410,7 @@ if (!params.input && params.sentieon) {
         case 'prepare_recalibration': tsvPath = "${params.outdir}/Preprocessing/TSV/duplicates_marked_no_table.tsv"; break
         case 'recalibrate': tsvPath = "${params.outdir}/Preprocessing/TSV/duplicates_marked.tsv"; break
         case 'variantcalling': tsvPath = "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"; break
-        case 'controlfreec': tsvPath = "${params.outdir}/VariantCalling/TSV/mpileup.tsv"; break
+        case 'controlfreec': tsvPath = "${params.outdir}/VariantCalling/TSV/control-freec_mpileup.tsv"; break
         case 'annotate': break
         default: exit 1, "Unknown step ${step}"
     }
@@ -2997,7 +2996,7 @@ tsv_mpileup.map { idPatient, idSample ->
     mpileup = "${params.outdir}/VariantCalling/${idSample}/Control-FREEC/${idSample}.pileup"
     "${idPatient}\t${gender}\t${status}\t${idSample}\t${mpileup}\n"
 }.collectFile(
-    name: 'mpileup.tsv', sort: true, storeDir: "${params.outdir}/VariantCalling/TSV"
+    name: 'control-freec_mpileup.tsv', sort: true, storeDir: "${params.outdir}/VariantCalling/TSV"
 )
 
 tsv_mpileup_sample
@@ -3006,7 +3005,7 @@ tsv_mpileup_sample
         status = statusMap[idPatient, idSample]
         gender = genderMap[idPatient]
         mpileup = "${params.outdir}/VariantCalling/${idSample}/Control-FREEC/${idSample}.pileup"
-        ["mpileup_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${mpileup}\n"]
+        ["control-freec_mpileup_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${mpileup}\n"]
 }
 
 if (!params.no_intervals) {
