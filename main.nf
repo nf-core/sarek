@@ -343,7 +343,7 @@ if (params.genomes && !params.genomes.containsKey(params.genome) && !params.igen
 }
 
 stepList = defineStepList()
-step = params.step ? params.step.toLowerCase() : ''
+step = params.step ? params.step.toLowerCase().replaceAll('-', '') : ''
 
 // Handle deprecation
 if (step == 'preprocessing') step = 'mapping'
@@ -352,15 +352,15 @@ if (step.contains(',')) exit 1, 'You can choose only one step, see --help for mo
 if (!checkParameterExistence(step, stepList)) exit 1, "Unknown step ${step}, see --help for more information"
 
 toolList = defineToolList()
-tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase()} : []
+tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
 if (!checkParameterList(tools, toolList)) exit 1, 'Unknown tool(s), see --help for more information'
 
 skipQClist = defineSkipQClist()
-skipQC = params.skip_qc ? params.skip_qc == 'all' ? skipQClist : params.skip_qc.split(',').collect{it.trim().toLowerCase()} : []
+skipQC = params.skip_qc ? params.skip_qc == 'all' ? skipQClist : params.skip_qc.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
 if (!checkParameterList(skipQC, skipQClist)) exit 1, 'Unknown QC tool(s), see --help for more information'
 
 annoList = defineAnnoList()
-annotateTools = params.annotate_tools ? params.annotate_tools.split(',').collect{it.trim().toLowerCase()} : []
+annotateTools = params.annotate_tools ? params.annotate_tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
 if (!checkParameterList(annotateTools,annoList)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
 
 // Check parameters
