@@ -30,9 +30,9 @@ def helpMessage() {
     nextflow run nf-core/sarek --input sample.tsv -profile docker
 
     Mandatory arguments:
-      --input                  [file] Path to input TSV file on mapping, recalibrate and variantcalling steps
+      --input                  [file] Path to input TSV file on Mapping, Prepare_Recalibration, Recalibrate, VariantCalling and Control-FREEC steps
                                       Multiple TSV files can be specified with quotes
-                                      Works also with the path to a directory on mapping step with a single germline sample only
+                                      Works also with the path to a directory on Mapping step with a single germline sample only
                                       Alternatively, path to VCF input file on annotate step
                                       Multiple VCF files can be specified with quotes
       -profile                  [str] Configuration profile to use
@@ -40,7 +40,7 @@ def helpMessage() {
                                       Available: conda, docker, singularity, test and more
       --genome                  [str] Name of iGenomes reference
       --step                    [str] Specify starting step
-                                      Available: Mapping, Recalibrate, VariantCalling, ControlFREEC, Annotate
+                                      Available: Mapping, Prepare_Recalibration, Recalibrate, VariantCalling, Annotate, Control-FREEC
                                       Default: Mapping
 
     Options:
