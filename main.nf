@@ -3091,7 +3091,8 @@ process ControlFREEC {
     // if we are using coefficientOfVariation, we must delete the window parameter 
     // it is "window = 20000" in the default settings, without coefficientOfVariation set, 
     // but we do not like it. Note, it is not written in stone
-    coeff_or_window = params.cf_coeff ? "coefficientOfVariation = ${params.cf_coeff}" : params.params.cf_window ? "window = ${params.cf_window}" : "coefficientOfVariation = 0.015"
+    coeff_or_window = params.cf_window ? "window = ${params.cf_window}" : "coefficientOfVariation = ${params.cf_coeff}"
+
     """
     touch ${config}
     echo "[general]" >> ${config}
