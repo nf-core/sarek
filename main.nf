@@ -100,7 +100,7 @@ def helpMessage() {
                                       If none provided, will be generated automatically from the PON
 
     Annotation:
-      --annotate_tools          [str] Specify from which tools Sarek will look for VCF files to annotate, only for step Annotate
+      --annotate_tools          [str] Specify from which tools Sarek should look for VCF files to annotate, only for step Annotate
                                       Available: HaplotypeCaller, Manta, Mutect2, Strelka, TIDDIT
                                       Default: None
       --annotation_cache       [bool] Enable the use of cache for annotation, to be used with --snpeff_cache and/or --vep_cache
@@ -116,15 +116,17 @@ def helpMessage() {
     References options:
       --igenomes_base          [file] Specify base path to AWS iGenomes
                                       Default: s3://ngi-igenomes/igenomes/
-      --igenomes_ignore        [bool] Do not use AWS iGenomes
-      --save_reference         [bool] Save built references
+      --igenomes_ignore        [bool] Do not use AWS iGenomes. Will load genomes.config instead of igenomes.config
       --genomes_base           [file] Specify base path to reference genome
+      --save_reference         [bool] Save built references
 
     References:                       If not specified in the configuration file or you wish to overwrite any of the references.
       --ac_loci                [file] Loci file for ASCAT
       --ac_loci_gc             [file] Loci GC file for ASCAT
       --bwa                    [file] BWA indexes
                                       If none provided, will be generated automatically from the fasta reference
+      --chr_dir                [file] Chromosomes folder
+      --chr_length             [file] Chromosomes length file
       --dbsnp                  [file] Dbsnp file
       --dbsnp_index            [file] Dbsnp index
                                       If none provided, will be generated automatically if a dbsnp file is provided
@@ -139,12 +141,12 @@ def helpMessage() {
       --intervals              [file] Intervals
                                       If none provided, will be generated automatically from the fasta reference
                                       Use --no_intervals to disable automatic generation
-      --known_indels           [file] Known Indels file
-      --known_indels_index     [file] Known Indels index
+      --known_indels           [file] Known indels file
+      --known_indels_index     [file] Known indels index
                                       If none provided, will be generated automatically if a knownIndels file is provided
       --mappability            [file] Mappability file for Control-FREEC
-      --species                 [str] Species for VEP
       --snpeff_db               [str] snpEff Database version
+      --species                 [str] Species for VEP
       --vep_cache_version       [int] VEP cache version
 
     Other options:
