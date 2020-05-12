@@ -30,58 +30,41 @@ def helpMessage() {
     nextflow run nf-core/sarek --input sample.tsv -profile docker
 
     Mandatory arguments:
-      --input                  [file] Path to input TSV file on Mapping, Prepare_Recalibration, Recalibrate, VariantCalling and Control-FREEC steps
-                                      Multiple TSV files can be specified with quotes
-                                      Works also with the path to a directory on Mapping step with a single germline sample only
-                                      Alternatively, path to VCF input file on annotate step
-                                      Multiple VCF files can be specified with quotes
       -profile                  [str] Configuration profile to use
                                       Can use multiple (comma separated)
                                       Available: conda, docker, singularity, test and more
+      --input                  [file] Path to input TSV file on mapping, prepare_recalibration, recalibrate, variant_calling and Control-FREEC steps
+                                      Multiple TSV files can be specified with quotes
+                                      Works also with the path to a directory on mapping step with a single germline sample only
+                                      Alternatively, path to VCF input file on annotate step
+                                      Multiple VCF files can be specified with quotes
+      --step                   [list] Specify starting step
+                                      Available: mapping, prepare_recalibration, recalibrate, variant_calling, annotate, Control-FREEC
+                                      Default: mapping
       --genome                  [str] Name of iGenomes reference
-      --step                    [str] Specify starting step
-                                      Available: Mapping, Prepare_Recalibration, Recalibrate, VariantCalling, Annotate, Control-FREEC
-                                      Default: Mapping
+                                      Default: GRCh38
 
-    Options:
+    Main options:
       --help                   [bool] You're reading it
-      --no_gvcf                [bool] No g.vcf output from HaplotypeCaller
-      --no_strelka_bp          [bool] Will not use Manta candidateSmallIndels for Strelka as Best Practice
       --no_intervals           [bool] Disable usage of intervals
-      --no_gatk_spark          [bool] Disable usage of GATK Spark implementation of their tools in local mode
       --nucleotides_per_second  [int] To estimate interval size
+      --sentieon               [bool] If sentieon is available, will enable it for Preprocessing, and Variant Calling
+                                      Adds the following options for --tools: DNAseq, DNAscope and TNscope
+                                      Default: False
+      --skip_qc                 [str] Specify which QC tools to skip when running Sarek
+                                      Available: all, bamQC, BaseRecalibrator, BCFtools, Documentation
+                                      FastQC, MultiQC, samtools, vcftools, versions
+                                      Default: None
+      --target_bed             [file] Target BED file for whole exome or targeted sequencing
                                       Default: 1000.0
-      --target_bed             [file] Target BED file for targeted or whole exome sequencing
       --tools                   [str] Specify tools to use for variant calling:
                                       Available: ASCAT, ControlFREEC, FreeBayes, HaplotypeCaller
                                       Manta, mpileup, MSIsensor, Mutect2, Strelka, TIDDIT
                                       and/or for annotation:
                                       snpEff, VEP, merge
                                       Default: None
-      --skip_qc                 [str] Specify which QC tools to skip when running Sarek
-                                      Available: all, bamQC, BaseRecalibrator, BCFtools, Documentation
-                                      FastQC, MultiQC, samtools, vcftools, versions
-                                      Default: None
-      --annotate_tools          [str] Specify from which tools Sarek will look for VCF files to annotate, only for step annotate
-                                      Available: HaplotypeCaller, Manta, Mutect2, Strelka, TIDDIT
-                                      Default: None
-      --sentieon               [bool] If sentieon is available, will enable it for preprocessing, and variant calling
-                                      Adds the following options for --tools: DNAseq, DNAscope and TNscope
-      --annotation_cache       [bool] Enable the use of cache for annotation, to be used with --snpeff_cache and/or --vep_cache
-      --snpeff_cache           [file] Specity the path to snpEff cache, to be used with --annotation_cache
-      --vep_cache              [file] Specity the path to VEP cache, to be used with --annotation_cache
-      --pon                    [file] Panel-of-normals VCF (bgzipped, indexed)
-                                      See: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_CreateSomaticPanelOfNormals.php
-      --pon_index              [file] Index of pon panel-of-normals VCF
-      --ascat_ploidy            [int] Use this parameter to overwrite default behavior from ASCAT regarding ploidy
-                                      Requires that --ascat_purity is set
-      --ascat_purity            [int] Use this parameter to overwrite default behavior from ASCAT regarding purity
-                                      Requires that --ascat_ploidy is set
-      --cf_coeff                [str] Control-FREEC coefficientOfVariation [0.015]
-      --cf_ploidy               [int] Control-FREEC ploidy [2]
-      --cf_window               [int] Control-FREEC window size [not set, as using coefficientOfVariation by default]
 
-    Trimming:
+    Modify fastqs (trim/split):
       --trim_fastq             [bool] Run Trim Galore
       --clip_r1                 [int] Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
       --clip_r2                 [int] Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
@@ -89,43 +72,92 @@ def helpMessage() {
       --three_prime_clip_r2     [int] Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
       --trim_nextseq            [int] Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails
       --save_trimmed           [bool] Save trimmed FastQ file intermediates
+      --split_fastq             [int] Specify how many reads should be contained in the split fastq file
+                                      Default: no split
 
-    References                        If not specified in the configuration file or you wish to overwrite any of the references.
-      --ac_loci                [file] acLoci file
-      --ac_loci_gc             [file] acLoci GC file
-      --bwa                    [file] bwa indexes
+    Preprocessing:
+      --markdup_java_options    [str] Establish values for markDuplicates memory consumption
+                                      Default: "-Xms4000m -Xmx7g"
+      --no_gatk_spark          [bool] Disable usage of GATK Spark implementation of their tools in local mode
+      --save_bam_mapped        [bool] Save Mapped BAMs
+
+    Variant Calling:
+      --ascat_ploidy            [int] Use this parameter to overwrite default behavior from ASCAT regarding ploidy
+                                      Requires that --ascat_purity is set
+      --ascat_purity            [int] Use this parameter to overwrite default behavior from ASCAT regarding purity
+                                      Requires that --ascat_ploidy is set
+      --cf_coeff                [str] Control-FREEC coefficientOfVariation
+                                      Default: 0.015
+      --cf_ploidy               [int] Control-FREEC ploidy
+                                      Default: 2
+      --cf_window               [int] Control-FREEC window size
+                                      Default: Disabled
+      --no_gvcf                [bool] No g.vcf output from GATK HaplotypeCaller
+      --no_strelka_bp          [bool] Will not use Manta candidateSmallIndels for Strelka (not recommended by Best Practices)
+      --pon                    [file] Panel-of-normals VCF (bgzipped) for GATK Mutect2 / Sentieon TNscope
+                                      See: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_CreateSomaticPanelOfNormals.php
+      --pon_index              [file] Index of pon panel-of-normals VCF
+                                      If none provided, will be generated automatically from the PON
+
+    Annotation:
+      --annotate_tools          [str] Specify from which tools Sarek will look for VCF files to annotate, only for step Annotate
+                                      Available: HaplotypeCaller, Manta, Mutect2, Strelka, TIDDIT
+                                      Default: None
+      --annotation_cache       [bool] Enable the use of cache for annotation, to be used with --snpeff_cache and/or --vep_cache
+      --snpeff_cache           [file] Specity the path to snpEff cache, to be used with --annotation_cache
+      --vep_cache              [file] Specity the path to VEP cache, to be used with --annotation_cache
+      --cadd_cache             [bool] Enable CADD cache
+      --cadd_indels            [file] Path to CADD InDels file
+      --cadd_indels_tbi        [file] Path to CADD InDels index
+      --cadd_wg_snvs           [file] Path to CADD SNVs file
+      --cadd_wg_snvs_tbi       [file] Path to CADD SNVs index
+      --genesplicer            [file] Enable genesplicer within VEP
+
+    References options:
+      --igenomes_base          [file] Specify base path to AWS iGenomes
+                                      Default: s3://ngi-igenomes/igenomes/
+      --igenomes_ignore        [bool] Do not use AWS iGenomes
+      --save_reference         [bool] Save built references
+      --genomes_base           [file] Specify base path to reference genome
+
+    References:                       If not specified in the configuration file or you wish to overwrite any of the references.
+      --ac_loci                [file] Loci file for ASCAT
+      --ac_loci_gc             [file] Loci GC file for ASCAT
+      --bwa                    [file] BWA indexes
                                       If none provided, will be generated automatically from the fasta reference
-      --dbsnp                  [file] dbsnp file
-      --dbsnp_index            [file] dbsnp index
+      --dbsnp                  [file] Dbsnp file
+      --dbsnp_index            [file] Dbsnp index
                                       If none provided, will be generated automatically if a dbsnp file is provided
-      --dict                   [file] dict from the fasta reference
+      --dict                   [file] Fasta dictionary file
                                       If none provided, will be generated automatically from the fasta reference
-      --fasta                  [file] fasta reference
-      --fasta_fai              [file] reference index
+      --fasta                  [file] Fasta reference
+      --fasta_fai              [file] Fasta reference index
                                       If none provided, will be generated automatically from the fasta reference
-      --germline_resource      [file] Germline Resource File
-      --germline_resource_index       Germline Resource Index
+      --germline_resource      [file] Germline Resource File for GATK Mutect2
+      --germline_resource_index       Germline Resource Index for GATK Mutect2
                                [file] if none provided, will be generated automatically if a germlineResource file is provided
-      --intervals              [file] intervals
+      --intervals              [file] Intervals
                                       If none provided, will be generated automatically from the fasta reference
                                       Use --no_intervals to disable automatic generation
-      --known_indels           [file] knownIndels file
-      --known_indels_index     [file] knownIndels index
+      --known_indels           [file] Known Indels file
+      --known_indels_index     [file] Known Indels index
                                       If none provided, will be generated automatically if a knownIndels file is provided
       --mappability            [file] Mappability file for Control-FREEC
       --species                 [str] Species for VEP
       --snpeff_db               [str] snpEff Database version
-      --vep_cache_version       [int] VEP Cache version
+      --vep_cache_version       [int] VEP cache version
 
     Other options:
-      --outdir                 [file] The output directory where the results will be saved
-      --publish_dir_mode        [str] Mode of publishing data in the output directory.
+      --outdir                 [file] Output directory where the results will be saved
+      --publish_dir_mode       [list] Mode of publishing data in the output directory.
                                       Available: symlink, rellink, link, copy, copyNoFollow, move
                                       Default: copy
       --sequencing_center       [str] Name of sequencing center to be displayed in BAM file
       --multiqc_config         [file] Specify a custom config file for MultiQC
       --monochrome_logs        [bool] Logs will be without colors
       --email                   [str] Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
+      --email_on_fail           [str] Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you if the workflow fails
+      --plaintext_email        [bool] Enable plaintext email
       --max_multiqc_email_size  [str] Theshold size for MultiQC report to be attached in notification email. If file generated by pipeline exceeds the threshold, it will not be attached (Default: 25MB)
       -name                     [str] Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic
 
@@ -343,7 +375,7 @@ if (params.genomes && !params.genomes.containsKey(params.genome) && !params.igen
 }
 
 stepList = defineStepList()
-step = params.step ? params.step.toLowerCase().replaceAll('-', '') : ''
+step = params.step ? params.step.toLowerCase().replaceAll('-', '').replaceAll('_', '') : ''
 
 // Handle deprecation
 if (step == 'preprocessing') step = 'mapping'
@@ -352,11 +384,11 @@ if (step.contains(',')) exit 1, 'You can choose only one step, see --help for mo
 if (!checkParameterExistence(step, stepList)) exit 1, "Unknown step ${step}, see --help for more information"
 
 toolList = defineToolList()
-tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
+tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
 if (!checkParameterList(tools, toolList)) exit 1, 'Unknown tool(s), see --help for more information'
 
 skipQClist = defineSkipQClist()
-skipQC = params.skip_qc ? params.skip_qc == 'all' ? skipQClist : params.skip_qc.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
+skipQC = params.skip_qc ? params.skip_qc == 'all' ? skipQClist : params.skip_qc.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
 if (!checkParameterList(skipQC, skipQClist)) exit 1, 'Unknown QC tool(s), see --help for more information'
 
 annoList = defineAnnoList()
