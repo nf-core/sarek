@@ -188,9 +188,9 @@ G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.pileup
 ```
 
 When starting Sarek from the Control-FREEC step, a TSV file is generated automatically after the `mpileup` process.
-This TSV file is stored under `results/VariantCalling/TSV/mpileup.tsv` and can be used to restart Sarek from the mpileup files. Setting the step `--step Control-FREEC` will automatically take this file as input.
+This TSV file is stored under `results/VariantCalling/TSV/control-freec_mpileup.tsv` and can be used to restart Sarek from the mpileup files. Setting the step `--step Control-FREEC` will automatically take this file as input.
 
-Additionally, individual TSV files for each sample (`mpileup_[SAMPLE].tsv`) can be found in the same directory.
+Additionally, individual TSV files for each sample (`control-freec_mpileup_[SAMPLE].tsv`) can be found in the same directory.
 
 ## VCF files for annotation
 
