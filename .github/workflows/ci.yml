@@ -48,7 +48,7 @@ jobs:
           docker pull nfcore/sarek:dev
           docker pull nfcore/sarek${{ matrix.tools }}:dev.${{ matrix.species }}
       - name: Run annotation test
-        run: nextflow run . -profile test_annotation,docker --tools ${{ matrix.tools }}
+        run: nextflow run ${GITHUB_WORKSPACE} -profile test_annotation,docker --tools ${{ matrix.tools }}
 
   germline:
     env:
@@ -69,9 +69,10 @@ jobs:
         run: git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data
       - name: Run germline test
         run: |
-          nextflow run . -profile test,docker --input data/testdata/tiny/normal
-          nextflow run . -profile test,docker --input=false --step recalibrate -resume
-          nextflow run . -profile test,docker --input=false --step variantCalling
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --input data/testdata/tiny/normal
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --input=false --step prepare_recalibration -resume
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --input=false --step recalibrate -resume
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --input=false --step variantCalling
 
   minimal:
     env:
@@ -93,7 +94,7 @@ jobs:
       - name: Pull docker image
         run: docker pull nfcore/sarek:dev
       - name: Run test for minimal genomes
-        run: nextflow run . -profile test,docker --skipQC all --genome ${{ matrix.genome }} ${{ matrix.intervals }} --tools Manta,mpileup,Strelka,FreeBayes
+        run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --skipQC all --genome ${{ matrix.genome }} ${{ matrix.intervals }} --tools Manta,mpileup,Strelka,FreeBayes
 
   profile:
     env:
@@ -114,7 +115,7 @@ jobs:
       - name: Pull docker image
         run: docker pull nfcore/sarek:dev
       - name: Run ${{ matrix.profile }} test
-        run: nextflow run . -profile ${{ matrix.profile }},docker
+        run: nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker
 
   tools:
     env:
@@ -122,7 +123,17 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        tool: [Haplotypecaller, Freebayes, Manta, mpileup, Strelka, TIDDIT, MSIsensor]
+        tool: [Haplotypecaller, Freebayes, Manta, mpileup, MSIsensor, Strelka, TIDDIT]
+        intervals: [--no_intervals, '']
+        exclude:
+          - tool: Manta
+            intervals: --no_intervals
+          - tool: MSIsensor
+            intervals: --no_intervals
+          - tool: Strelka
+            intervals: --no_intervals
+          - tool: TIDDIT
+            intervals: --no_intervals
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
@@ -135,4 +146,4 @@ jobs:
       - name: Pull docker image
         run: docker pull nfcore/sarek:dev
       - name: Run ${{ matrix.tool }} test
-        run: nextflow run . -profile test_tool,docker --tools ${{ matrix.tool }}
+        run: nextflow run ${GITHUB_WORKSPACE} -profile test_tool,docker --tools ${{ matrix.tool }} ${{ matrix.intervals }}
