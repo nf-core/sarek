@@ -34,8 +34,11 @@
   - [--no_intervals](#--no_intervals)
   - [--target_bed](#--target_bed)
   - [--targetBED](#--targetbed)
+  - [--save_bam_mapped](#--save_bam_mapped)
 - [Reference genomes](#reference-genomes)
   - [--genome (using iGenomes)](#--genome-using-igenomes)
+  - [--save_reference](#--save_reference)
+  - [--saveGenomeIndex](#--savegenomeindex)
   - [--ac_loci](#--ac_loci)
   - [--acLoci](#--acloci)
   - [--ac_loci_gc](#--ac_loci_gc)
@@ -74,6 +77,9 @@
   - [--species](#--species)
   - [--vep_cache_version](#--vep_cache_version)
   - [--vepCacheVersion](#--vepcacheversion)
+  - [--annotation_cache](#--annotation_cache)
+  - [--snpeff_cache](#--snpeff_cache)
+  - [--vep_cache](#--vep_cache)
   - [--igenomes_ignore](#--igenomes_ignore)
   - [--igenomesIgnore](#--igenomesignore)
 - [Job resources](#job-resources)
@@ -369,6 +375,10 @@ Use this to specify the target BED file for targeted or whole exome sequencing.
 > :warning: This params is deprecated -- it will be removed in a future release.
 > Please check: [`--target_bed`](#--target_bed)
 
+### --save_bam_mapped
+
+Will save mapped BAMs.
+
 ## Reference genomes
 
 The pipeline config files come bundled with paths to the Illumina iGenomes reference index files.
@@ -501,6 +511,19 @@ params {
   }
 }
 ```
+
+### --save_reference
+
+Enable saving reference indexes and other files built within Sarek.
+
+```bash
+--save_reference
+```
+
+### --saveGenomeIndex
+
+> :warning: This params has been removed.
+> Please check: [`--save_reference`](#--save_reference)
 
 ### --ac_loci
 
@@ -751,6 +774,31 @@ If you prefer, you can specify the cache version when you run the pipeline:
 
 > :warning: This params has been removed.
 > Please check: [`--vep_cache_version`](#--vep_cache_version)
+
+### --annotation_cache
+
+Enable usage of annotation cache, and disable usage of already built containers within Sarek.
+For more information, follow the [annotation guidelines](annotation.md#using-downloaded-cache).
+
+```bash
+--annotation_cache
+```
+
+### --snpeff_cache
+
+To be used conjointly with [`--annotation_cache`](#--annotation_cache), specify the cache snpEff directory:
+
+```bash
+--snpeff_cache /path/to/snpeff_cache
+```
+
+### --vep_cache
+
+To be used conjointly with [`--annotation_cache`](#--annotation_cache), specify the cache VEP directory:
+
+```bash
+--vep_cache /path/to/vep_cache
+```
 
 ### --igenomes_ignore
 
