@@ -80,6 +80,7 @@ def helpMessage() {
                                       Default: "-Xms4000m -Xmx7g"
       --no_gatk_spark          [bool] Disable usage of GATK Spark implementation of their tools in local mode
       --save_bam_mapped        [bool] Save Mapped BAMs
+       --skip_markduplicates    [bool] Skip MarkDuplicates
 
     Variant Calling:
       --ascat_ploidy            [int] Use this parameter to overwrite default behavior from ASCAT regarding ploidy
@@ -428,6 +429,8 @@ tsvPath = null
 if (params.input && (hasExtension(params.input, "tsv") || hasExtension(params.input, "vcf") || hasExtension(params.input, "vcf.gz"))) tsvPath = params.input
 if (params.input && (hasExtension(params.input, "vcf") || hasExtension(params.input, "vcf.gz"))) step = "annotate"
 
+save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? true : false
+
 // If no input file specified, trying to get TSV files corresponding to step in the TSV directory
 // only for steps preparerecalibration, recalibrate, variantcalling and controlfreec
 if (!params.input && params.sentieon) {
@@ -438,11 +441,21 @@ if (!params.input && params.sentieon) {
         case 'annotate': break
         default: exit 1, "Unknown step ${step}"
     }
-} else if (!params.input && !params.sentieon) {
+} else if (!params.input && !params.sentieon && !params.skip_markduplicates) {
     switch (step) {
         case 'mapping': break
         case 'preparerecalibration': tsvPath = "${params.outdir}/Preprocessing/TSV/duplicates_marked_no_table.tsv"; break
         case 'recalibrate': tsvPath = "${params.outdir}/Preprocessing/TSV/duplicates_marked.tsv"; break
+        case 'variantcalling': tsvPath = "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"; break
+        case 'controlfreec': tsvPath = "${params.outdir}/VariantCalling/TSV/control-freec_mpileup.tsv"; break
+        case 'annotate': break
+        default: exit 1, "Unknown step ${step}"
+    }
+} else if (!params.input && !params.sentieon && params.skip_markduplicates) {
+    switch (step) {
+        case 'mapping': break
+        case 'preparerecalibration': tsvPath = "${params.outdir}/Preprocessing/TSV/mapped.tsv"; break
+        case 'recalibrate': tsvPath = "${params.outdir}/Preprocessing/TSV/mapped_no_duplicates_marked.tsv"; break
         case 'variantcalling': tsvPath = "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"; break
         case 'controlfreec': tsvPath = "${params.outdir}/VariantCalling/TSV/control-freec_mpileup.tsv"; break
         case 'annotate': break
@@ -1285,7 +1298,7 @@ process IndexBamFile {
 
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: {
-            if (params.save_bam_mapped) "Preprocessing/${idSample}/Mapped/${it}"
+            if (save_bam_mapped) "Preprocessing/${idSample}/Mapped/${it}"
             else null
         }
 
@@ -1296,7 +1309,7 @@ process IndexBamFile {
         set idPatient, idSample, file("${idSample}.bam"), file("${idSample}.bam.bai") into bam_mapped_merged_indexed
         set idPatient, idSample into tsv_bam_indexed
 
-    when: params.save_bam_mapped || !(params.known_indels)
+    when: save_bam_mapped || !(params.known_indels)
 
     script:
     """
@@ -1304,7 +1317,7 @@ process IndexBamFile {
     """
 }
 
-if (!params.save_bam_mapped) tsv_bam_indexed.close()
+if (!save_bam_mapped) tsv_bam_indexed.close()
 
 (tsv_bam_indexed, tsv_bam_indexed_sample) = tsv_bam_indexed.into(2)
 
@@ -1347,6 +1360,8 @@ process MarkDuplicates {
         set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bam.bai") into bam_duplicates_marked
         set idPatient, idSample into tsv_bam_duplicates_marked
         file ("${idSample}.bam.metrics") optional true into duplicates_marked_report
+
+    when: !(params.skip_markduplicates)
 
     script:
     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
@@ -1406,6 +1421,8 @@ if (step == 'preparerecalibration') bam_duplicates_marked = inputSample
 
 bam_duplicates_marked = bam_duplicates_marked.dump(tag:'MD BAM')
 duplicates_marked_report = duplicates_marked_report.dump(tag:'MD Report')
+
+if (params.skip_markduplicates) bam_duplicates_marked = bam_mapped_merged_indexed
 
 (bamMD, bamMDToJoin, bam_duplicates_marked) = bam_duplicates_marked.into(3)
 
@@ -1527,7 +1544,11 @@ process GatherBQSRReports {
 
     tag {idPatient + "-" + idSample}
 
-    publishDir "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked", mode: params.publish_dir_mode, overwrite: false
+    publishDir params.outdir, mode: params.publish_dir_mode,
+        saveAs: {
+            if (it == "${idSample}.recal.table" && !params.skip_markduplicates) "Preprocessing/${idSample}/DuplicatesMarked/${it}"
+            else "Preprocessing/${idSample}/Mapped/${it}"
+        }
 
     input:
         set idPatient, idSample, file(recal) from tableGatherBQSRReports
@@ -1556,26 +1577,51 @@ recalTable = recalTable.dump(tag:'RECAL TABLE')
 (recalTableTSV, recalTableSampleTSV) = recalTableTSV.mix(recalTableTSVnoInt).into(2)
 
 // Create TSV files to restart from this step
-recalTableTSV.map { idPatient, idSample ->
+if (params.skip_markduplicates) {
+    recalTableTSV.map { idPatient, idSample ->
+        status = statusMap[idPatient, idSample]
+        gender = genderMap[idPatient]
+        bam = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam"
+        bai = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam.bai"
+        recalTable = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.recal.table"
+        "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${recalTable}\n"
+    }.collectFile(
+        name: 'mapped_no_duplicates_marked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
+    )
+
+    recalTableSampleTSV
+        .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV/") {
+            idPatient, idSample ->
+            status = statusMap[idPatient, idSample]
+            gender = genderMap[idPatient]
+            bam = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam"
+            bai = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam.bai"
+            recalTable = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.recal.table"
+            ["mapped_no_duplicates_marked_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${recalTable}\n"]
+    }
+} else {
+    recalTableTSV.map { idPatient, idSample ->
     status = statusMap[idPatient, idSample]
     gender = genderMap[idPatient]
     bam = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam"
     bai = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam.bai"
     recalTable = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.recal.table"
-    "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${recalTable}\n"
-}.collectFile(
-    name: 'duplicates_marked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
-)
 
-recalTableSampleTSV
-    .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV/") {
-        idPatient, idSample ->
-        status = statusMap[idPatient, idSample]
-        gender = genderMap[idPatient]
-        bam = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam"
-        bai = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam.bai"
-        recalTable = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.recal.table"
-        ["duplicates_marked_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${recalTable}\n"]
+        "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${recalTable}\n"
+    }.collectFile(
+        name: 'duplicates_marked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
+    )
+
+    recalTableSampleTSV
+        .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV/") {
+            idPatient, idSample ->
+            status = statusMap[idPatient, idSample]
+            gender = genderMap[idPatient]
+            bam = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam"
+            bai = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam.bai"
+            recalTable = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.recal.table"
+            ["duplicates_marked_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${recalTable}\n"]
+    }
 }
 
 bamApplyBQSR = bamMDToJoin.join(recalTable, by:[0,1])
