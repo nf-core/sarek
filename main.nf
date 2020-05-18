@@ -80,7 +80,7 @@ def helpMessage() {
                                       Default: "-Xms4000m -Xmx7g"
       --no_gatk_spark          [bool] Disable usage of GATK Spark implementation of their tools in local mode
       --save_bam_mapped        [bool] Save Mapped BAMs
-       --skip_markduplicates    [bool] Skip MarkDuplicates
+      --skip_markduplicates    [bool] Skip MarkDuplicates
 
     Variant Calling:
       --ascat_ploidy            [int] Use this parameter to overwrite default behavior from ASCAT regarding ploidy
