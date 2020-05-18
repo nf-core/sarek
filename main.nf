@@ -58,7 +58,7 @@ def helpMessage() {
       --target_bed             [file] Target BED file for whole exome or targeted sequencing
                                       Default: 1000.0
       --tools                   [str] Specify tools to use for variant calling:
-                                      Available: ASCAT, ControlFREEC, FreeBayes, HaplotypeCaller
+                                      Available: ASCAT, CNVkit, ControlFREEC, FreeBayes, HaplotypeCaller
                                       Manta, mpileup, MSIsensor, Mutect2, Strelka, TIDDIT
                                       and/or for annotation:
                                       snpEff, VEP, merge
@@ -2317,7 +2317,7 @@ pairBam = bamNormal.cross(bamTumor).map {
 pairBam = pairBam.dump(tag:'BAM Somatic Pair')
 
 // Manta, Strelka, Mutect2, MSIsensor
-(pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBamCalculateContamination, pairBamFilterMutect2, pairBamMsisensor, pairBam) = pairBam.into(7)
+(pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBamCalculateContamination, pairBamFilterMutect2, pairBamMsisensor, pairBamCNVkit, pairBam) = pairBam.into(8)
 
 // Making Pair Bam for Sention
 
@@ -2865,6 +2865,37 @@ process StrelkaBP {
 }
 
 vcfStrelkaBP = vcfStrelkaBP.dump(tag:'Strelka BP')
+
+// STEP CNVkit
+
+process CNVkit {
+    tag {idSampleTumor + "_vs_" + idSampleNormal}
+
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/CNVkit", mode: params.publish_dir_mode
+
+    input:
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamCNVkit
+        file(targetBED) from ch_target_bed
+        file(fasta) from ch_fasta
+    output:
+        set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}*"), file("${idSampleNormal}*") into cnvkitOut
+
+    when: 'cnvkit' in tools && params.target_bed
+
+    script:
+    """
+    cnvkit.py \
+      batch \
+      ${bamTumor} \
+      --normal ${bamNormal} \
+      --targets ${targetBED} \
+      --fasta ${fasta} \
+      --output-reference output_reference.cnn \
+      --output-dir ./ \
+      --diagram \
+      --scatter 
+    """
+}
 
 // STEP MSISENSOR.1 - SCAN
 
@@ -3954,6 +3985,7 @@ def defineStepList() {
 def defineToolList() {
     return [
         'ascat',
+        'cnvkit',
         'controlfreec',
         'dnascope',
         'dnaseq',
