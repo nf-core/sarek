@@ -28,6 +28,7 @@
   - [--markdup_java_options](#--markdup_java_options)
   - [--no_gatk_spark](#--no_gatk_spark)
   - [--save_bam_mapped](#--save_bam_mapped)
+  - [--skip_markduplicates](#--skip_markduplicates)
 - [Variant Calling](#variant-calling)
   - [--ascat_ploidy](#--ascat_ploidy)
   - [--ascat_purity](#--ascat_purity)
@@ -363,6 +364,10 @@ Use this to disable usage of GATK Spark implementation of their tools in local m
 ### --save_bam_mapped
 
 Will save mapped BAMs.
+
+### --skip_markduplicates
+
+Will skip MarkDuplicates. This params will also save the mapped BAMS, to enable restart from step `prepare_recalibration`
 
 ## Variant Calling
 
