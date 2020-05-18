@@ -31,6 +31,7 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#195](https://github.com/nf-core/sarek/pull/195), [#202](https://github.com/nf-core/sarek/pull/202) - Add `--save_bam_mapped` params to save mapped BAMs.
 - [#197](https://github.com/nf-core/sarek/pull/197) - Add step `prepare_recalibration` to allow restart from DuplicatesMarked BAMs
 - [#204](https://github.com/nf-core/sarek/pull/204) - Add step `Control-FREEC` to allow restart from pileup files
+- [#205](https://github.com/nf-core/sarek/pull/205) - Add `--skip_markduplicates` to allow skipping the `MarkDuplicates` process
 
 ### Changed
 
@@ -61,6 +62,8 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#164](https://github.com/nf-core/sarek/pull/164) - Update `gatk4-spark` from `4.1.4.1` to `4.1.6.0`
 - [#180](https://github.com/nf-core/sarek/pull/180), [#195](https://github.com/nf-core/sarek/pull/195) - Improve minimal setting
 - [#183](https://github.com/nf-core/sarek/pull/183), [#204](https://github.com/nf-core/sarek/pull/204) - Update `input.md` documentation
+- [#197](https://github.com/nf-core/sarek/pull/197) - Output directory `DuplicateMarked` is now replaced by`DuplicatesMarked`
+- [#204](https://github.com/nf-core/sarek/pull/204) - Output directory `controlFREEC` is now replaced by`Control-FREEC`
 
 ### Fixed
 
@@ -130,7 +133,6 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#152](https://github.com/nf-core/sarek/pull/152) - Removed `Jenkinsfile`
 - [#169](https://github.com/nf-core/sarek/pull/169) - Removed omicX from README
 - [#181](https://github.com/nf-core/sarek/pull/181) - Remove duplicate code in `nextflow.config`
-- [#197](https://github.com/nf-core/sarek/pull/197) - Output directory `DuplicateMarked` is now replaced by`DuplicatesMarked`
 
 ## [2.5.2] - Jåkkåtjkaskajekna
 
