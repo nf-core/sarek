@@ -16,8 +16,9 @@ For all possible TSV files, described in the next sections, here is an explanati
 - `bam` is the path to the bam file
 - `bai` is the path to the bam index file
 - `recaltable` is the path to the recalibration table
+- `mpileup` is the path to the mpileup file
 
-It is recommended to add the absolute path of the files, but relative path should work also.
+It is recommended to add the absolute path of the files, but relative path should also work.
 Note, the delimiter is the tab (`\t`) character.
 
 All examples are given for a normal/tumor pair.
@@ -171,6 +172,25 @@ G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.md.recal.bam    pathToF
 When starting Sarek from the mapping or recalibrate steps, a TSV file is generated automatically after the recalibration processes. This TSV file is stored under `results/Preprocessing/TSV/recalibrated.tsv` and can be used to restart Sarek from the recalibrated BAM files. Setting the step `--step variantcalling` will automatically take this file as input.
 
 Additionally, individual TSV files for each sample (`recalibrated_[SAMPLE].tsv`) can be found in the same directory.
+
+## Starting from the mpileup file with the Control-FREEC step
+
+To start from the Control-FREEC step (`--step Control-FREEC`), a TSV file for a normal/tumor pair needs to be given as input containing the paths to the mpileup files.
+The TSV needs to contain the following columns:
+
+- `subject sex status sample mpileup`
+
+The same way, if you have non recalibrated BAMs and their indexes, you should use a structure like:
+
+```text
+G15511    XX    0    C09DFN    pathToFiles/G15511.C09DFN.pileup
+G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.pileup
+```
+
+When starting Sarek from the Control-FREEC step, a TSV file is generated automatically after the `mpileup` process.
+This TSV file is stored under `results/VariantCalling/TSV/control-freec_mpileup.tsv` and can be used to restart Sarek from the mpileup files. Setting the step `--step Control-FREEC` will automatically take this file as input.
+
+Additionally, individual TSV files for each sample (`control-freec_mpileup_[SAMPLE].tsv`) can be found in the same directory.
 
 ## VCF files for annotation
 
