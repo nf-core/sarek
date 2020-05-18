@@ -387,6 +387,7 @@ if (!checkParameterExistence(step, stepList)) exit 1, "Unknown step ${step}, see
 
 toolList = defineToolList()
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
+if (step == 'controlfreec') tools = 'controlfreec'
 if (!checkParameterList(tools, toolList)) exit 1, 'Unknown tool(s), see --help for more information'
 
 skipQClist = defineSkipQClist()
