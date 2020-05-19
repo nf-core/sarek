@@ -18,7 +18,9 @@
 
 ## Introduction
 
-Sarek is a workflow designed to run analyses on whole genome or targeted sequencing data from regular samples or tumour / normal pairs and could include additional relapses.
+Sarek is a workflow designed to detect variants on whole genome or targeted sequencing data.
+Initially designed for Human, and Mouse, it can work on any species with a reference genome.
+Sarek can also handle tumour / normal pairs and could include additional relapses.
 
 It's built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner.
 It comes with docker containers making installation trivial and results highly reproducible.
