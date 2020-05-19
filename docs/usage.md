@@ -197,7 +197,7 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
   - A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
   - Pulls software from DockerHub: [`nfcore/sarek`](http://hub.docker.com/r/nfcore/sarek/)
 - `conda`
-  - Please only use Conda as a last resort `i.e.` when it's not possible to run the pipeline with Docker or Singularity.
+  - Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker or Singularity.
   - A generic configuration profile to be used with [conda](https://conda.io/docs/)
   - Pulls most software from [Bioconda](https://bioconda.github.io/)
 - `test`
@@ -237,7 +237,7 @@ Use this to specify the location to a directory with fastq files on `mapping` st
 For example:
 
 ```bash
---input /path/to/directory
+--input </path/to/directory>
 ```
 
 Use this to specify the location of your VCF input file on `annotate` step.
@@ -305,7 +305,7 @@ Available annotation tools: `VEP`, `SnpEff`, `merge`. For more details, please c
 
 ### --trim_fastq
 
-Use this to perform adapter trimming [Trim Galore](https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md)
+Use this to perform adapter trimming with [Trim Galore](https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md)
 
 ### --clip_r1
 
@@ -402,7 +402,7 @@ Use this to disable g.vcf output from `GATK HaplotypeCaller`.
 
 ### --no_strelka_bp
 
-Use this not to use `Manta` `candidateSmallIndels` for `Strelka` (not recommended by Best Practices).
+Use this not to use `Manta` `candidateSmallIndels` for `Strelka` (not recommended by Broad Institute's Best Practices).
 
 ### --pon
 
@@ -445,7 +445,7 @@ For more information, follow the [annotation guidelines](annotation.md#using-dow
 To be used conjointly with [`--annotation_cache`](#--annotation_cache), specify the cache snpEff directory:
 
 ```bash
---snpeff_cache /path/to/snpeff_cache
+--snpeff_cache </path/to/snpeff_cache>
 ```
 
 ### --vep_cache
@@ -453,7 +453,7 @@ To be used conjointly with [`--annotation_cache`](#--annotation_cache), specify 
 To be used conjointly with [`--annotation_cache`](#--annotation_cache), specify the cache VEP directory:
 
 ```bash
---vep_cache /path/to/vep_cache
+--vep_cache </path/to/vep_cache>
 ```
 
 ### --cadd_cache
