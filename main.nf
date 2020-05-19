@@ -2877,6 +2877,7 @@ process CNVkit {
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamCNVkit
         file(targetBED) from ch_target_bed
         file(fasta) from ch_fasta
+
     output:
         set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}*"), file("${idSampleNormal}*") into cnvkitOut
 
