@@ -224,14 +224,15 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 
 ### --input
 
-Use this to specify the location of your input TSV file. For example:
+Use this to specify the location of your input TSV file.
+For example:
 TSV file should correspond to the correct step, see [`--step`](#--step) and [input](input.md) documentation for more information
 
 ```bash
 --input <sample.tsv>
 ```
 
-Multiple TSV files can be specified if the path must be enclosed in quotes.
+Multiple TSV files can be specified, using a [glob path](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob), if enclosed in quotes.
 
 Use this to specify the location to a directory with fastq files for the `mapping` step of single germline samples only.
 For example:
@@ -247,7 +248,8 @@ For example:
 --input <sample.vcf.gz>
 ```
 
-Multiple VCF files can be specified if the path must be enclosed in quotes
+Multiple VCF files can be specified, using a [glob path](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob), if enclosed in quotes.
+
 
 ### --step
 
