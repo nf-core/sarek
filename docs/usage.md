@@ -265,7 +265,7 @@ Disable usage of intervals file, and disable automatic generation of intervals f
 
 ### --nucleotides_per_second
 
-Use this to estimate of how many seconds it will take to call variants on any interval, the default value is `1000` is it's not specified in the `<intervals>.bed` file.
+Use this to estimate of how many seconds it will take to call variants on any interval, the default value is `1000` is it's not specified in the [`intervals`](#--intervals) file.
 
 ### --sentieon
 
@@ -750,6 +750,8 @@ If you prefer, you can specify the full path to your reference genome when you r
 ```
 
 ### --intervals
+
+Used to speed up Preprocessing and/or Variant Calling, for more information, read the [intervals section in the extra documentation on reference](reference.md#Intervals).
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
