@@ -593,7 +593,7 @@ params {
       ac_loci_gc               = '<path to the ac_loci_gc file>'
       bwa                      = '<path to the bwa indexes>'
       chr_dir                  = '<path to the chromosomes folder>'
-      chr_length               = '<path to the chromosomes lenght file>'
+      chr_length               = '<path to the chromosomes length file>'
       dbsnp                    = '<path to the dbsnp file>'
       dbsnp_index              = '<path to the dbsnp index>'
       dict                     = '<path to the dict file>'
