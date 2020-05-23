@@ -32,8 +32,8 @@ A Nextflow helper script has been designed to help downloading `snpEff` and `VEP
 Such files are meant to be shared between multiple users, so this script is mainly meant for people administrating servers, clusters and advanced users.
 
 ```bash
-nextflow run download_cache.nf --snpeff_cache </Path/To/snpEffCache> --snpeff_db <snpEff DB version> --genome <GENOME>
-nextflow run download_cache.nf --vep_cache </Path/To/VEPcache> --species <species> --vep_cache_version <VEP cache version> --genome <GENOME>
+nextflow run download_cache.nf --snpeff_cache </path/to/snpEff/cache> --snpeff_db <snpEff DB version> --genome <GENOME>
+nextflow run download_cache.nf --vep_cache </path/to/VEP/cache> --species <species> --vep_cache_version <VEP cache version> --genome <GENOME>
 ```
 
 ## Using downloaded cache
@@ -46,8 +46,8 @@ The cache will only be used when `--annotation_cache` and cache directories are 
 Example:
 
 ```bash
-nextflow run nf-core/sarek --tools snpEff --step annotate --sample <file.vcf.gz> --snpeff_cache </Path/To/snpEffCache> --annotation_cache
-nextflow run nf-core/sarek --tools VEP --step annotate --sample <file.vcf.gz> --vep_cache </Path/To/vepCache> --annotation_cache
+nextflow run nf-core/sarek --tools snpEff --step annotate --sample <file.vcf.gz> --snpeff_cache </path/to/snpEff/cache> --annotation_cache
+nextflow run nf-core/sarek --tools VEP --step annotate --sample <file.vcf.gz> --vep_cache </path/to/VEP/cache> --annotation_cache
 ```
 
 ## Using VEP CADD plugin
@@ -62,10 +62,10 @@ Example:
 
 ```bash
 nextflow run nf-core/sarek --step annotate --tools VEP --sample <file.vcf.gz> --cadd_cache \
-    --cadd_InDels </PathToCADD/InDels.tsv.gz> \
-    --cadd_InDels_tbi </PathToCADD/InDels.tsv.gz.tbi> \
-    --cadd_WG_SNVs </PathToCADD/whole_genome_SNVs.tsv.gz> \
-    --cadd_WG_SNVs_tbi </PathToCADD/whole_genome_SNVs.tsv.gz.tbi>
+    --cadd_indels </path/to/CADD/cache/InDels.tsv.gz> \
+    --cadd_indels_tbi </path/to/CADD/cache/InDels.tsv.gz.tbi> \
+    --cadd_wg_snvs </path/to/CADD/cache/whole_genome_SNVs.tsv.gz> \
+    --cadd_wg_snvs_tbi </path/to/CADD/cache/whole_genome_SNVs.tsv.gz.tbi>
 ```
 
 ### Downloading CADD files
@@ -74,7 +74,7 @@ An helper script has been designed to help downloading CADD files.
 Such files are meant to be share between multiple users, so this script is mainly meant for people administrating servers, clusters and advanced users.
 
 ```bash
-nextflow run download_cache.nf --cadd_cache </Path/To/CADDcache> --cadd_version <CADD version> --genome <GENOME>
+nextflow run download_cache.nf --cadd_cache </path/to/CADD/cache> --cadd_version <CADD version> --genome <GENOME>
 ```
 
 ## Using VEP GeneSplicer plugin
