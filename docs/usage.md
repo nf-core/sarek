@@ -250,7 +250,6 @@ For example:
 
 Multiple VCF files can be specified, using a [glob path](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob), if enclosed in quotes.
 
-
 ### --step
 
 Use this to specify the starting step:
