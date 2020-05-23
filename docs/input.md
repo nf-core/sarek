@@ -136,7 +136,7 @@ G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.md.bam    pathToFiles/G
 
 When starting Sarek from the mapping step, a TSV file is generated automatically after the `MarkDuplicates` process.
 This TSV file is stored under `results/Preprocessing/TSV/duplicates_marked_no_table.tsv` and can be used to restart Sarek from the non-recalibrated BAM files.
-Using `--step prepare_recalibration` will automatically take this file as input.
+Using the parameter `--step prepare_recalibration` will automatically take this file as input.
 
 Additionally, individual TSV files for each sample (`duplicates_marked_no_table_[SAMPLE].tsv`) can be found in the same directory.
 
@@ -149,7 +149,7 @@ G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.bam    pathToFiles/G155
 
 When starting Sarek from the mapping step with `--skip_markduplicates`, a TSV file is generated automatically after the `Mapping` processes.
 This TSV file is stored under `results/Preprocessing/TSV/mapped.tsv` and can be used to restart Sarek from the non-recalibrated BAM files.
-Using `--step recalibrate --skip_markduplicates` will automatically take this file as input.
+Using the parameter `--step recalibrate --skip_markduplicates` will automatically take this file as input.
 
 Additionally, individual TSV files for each sample (`mapped_[SAMPLE].tsv`) can be found in the same directory.
 
@@ -202,7 +202,7 @@ G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.recal.bam    pathToFile
 
 When starting Sarek from the mapping or recalibrate steps, a TSV file is generated automatically after the recalibration processes.
 This TSV file is stored under `results/Preprocessing/TSV/recalibrated.tsv` and can be used to restart Sarek from the recalibrated BAM files.
-Using `--step variantcalling` will automatically take this file as input.
+Using the parameter `--step variantcalling` will automatically take this file as input.
 
 Additionally, individual TSV files for each sample (`recalibrated_[SAMPLE].tsv`) can be found in the same directory.
 
@@ -222,7 +222,7 @@ G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.pileup
 
 When starting Sarek from the Control-FREEC step, a TSV file is generated automatically after the `mpileup` process.
 This TSV file is stored under `results/VariantCalling/TSV/control-freec_mpileup.tsv` and can be used to restart Sarek from the mpileup files.
-Using `--step Control-FREEC` will automatically take this file as input.
+Using the parameter `--step Control-FREEC` will automatically take this file as input.
 
 Additionally, individual TSV files for each sample (`control-freec_mpileup_[SAMPLE].tsv`) can be found in the same directory.
 

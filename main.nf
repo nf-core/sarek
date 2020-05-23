@@ -2902,7 +2902,7 @@ process CNVkit {
 
 // STEP MSISENSOR.1 - SCAN
 
-// Scan reference genome for microsattelites
+// Scan reference genome for microsatellites
 process MSIsensor_scan {
     label 'cpus_1'
     label 'memory_max'
