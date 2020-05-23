@@ -47,20 +47,20 @@ The TSV file to start with the step mapping with paired-end FASTQs should contai
 
 In this sample for the normal case there are 3 read groups, and 2 for the tumor.
 
-```text
-G15511    XX    0    C09DFN    C09DF_1    pathToFiles/C09DFACXX111207.1_1.fastq.gz    pathToFiles/C09DFACXX111207.1_2.fastq.gz
-G15511    XX    0    C09DFN    C09DF_2    pathToFiles/C09DFACXX111207.2_1.fastq.gz    pathToFiles/C09DFACXX111207.2_2.fastq.gz
-G15511    XX    0    C09DFN    C09DF_3    pathToFiles/C09DFACXX111207.3_1.fastq.gz    pathToFiles/C09DFACXX111207.3_2.fastq.gz
-G15511    XX    1    D0ENMT    D0ENM_1    pathToFiles/D0ENMACXX111207.1_1.fastq.gz    pathToFiles/D0ENMACXX111207.1_2.fastq.gz
-G15511    XX    1    D0ENMT    D0ENM_2    pathToFiles/D0ENMACXX111207.2_1.fastq.gz    pathToFiles/D0ENMACXX111207.2_2.fastq.gz
-```
+| | | | | | |
+|-|-|-|-|-|-|
+|G15511|XX|0|C09DFN|C09DF_1|/path/to/C09DFACXX111207.1_1.fastq.gz|/path/to/C09DFACXX111207.1_2.fastq.gz|
+|G15511|XX|0|C09DFN|C09DF_2|/path/to/C09DFACXX111207.2_1.fastq.gz|/path/to/C09DFACXX111207.2_2.fastq.gz|
+|G15511|XX|0|C09DFN|C09DF_3|/path/to/C09DFACXX111207.3_1.fastq.gz|/path/to/C09DFACXX111207.3_2.fastq.gz|
+|G15511|XX|1|D0ENMT|D0ENM_1|/path/to/D0ENMACXX111207.1_1.fastq.gz|/path/to/D0ENMACXX111207.1_2.fastq.gz|
+|G15511|XX|1|D0ENMT|D0ENM_2|/path/to/D0ENMACXX111207.2_1.fastq.gz|/path/to/D0ENMACXX111207.2_2.fastq.gz|
 
 ### Providing the path to a FASTQ directory
 
 Input files for Sarek can be specified using the path to a FASTQ directory given to the `--input` command only with the `mapping` step.
 
 ```bash
-nextflow run nf-core/sarek --input /path/To/Directory ...
+nextflow run nf-core/sarek --input </path/To/Directory> ...
 ```
 
 #### Input FASTQ file name best practices
@@ -112,13 +112,13 @@ The TSV file for starting the mapping from uBAM files should contain the columns
 
 In this sample for the normal case there are 3 read groups, and 2 for the tumor.
 
-```text
-G15511    XX    0    C09DFN    C09DF_1    pathToFiles/C09DFAC_1.bam
-G15511    XX    0    C09DFN    C09DF_2    pathToFiles/C09DFAC_2.bam
-G15511    XX    0    C09DFN    C09DF_3    pathToFiles/C09DFAC_3.bam
-G15511    XX    1    D0ENMT    D0ENM_1    pathToFiles/D0ENMAC_1.bam
-G15511    XX    1    D0ENMT    D0ENM_2    pathToFiles/D0ENMAC_2.bam
-```
+| | | | | | |
+|-|-|-|-|-|-|
+|G15511|XX|0|C09DFN|C09DF_1|/path/to/C09DFAC_1.bam|
+|G15511|XX|0|C09DFN|C09DF_2|/path/to/C09DFAC_2.bam|
+|G15511|XX|0|C09DFN|C09DF_3|/path/to/C09DFAC_3.bam|
+|G15511|XX|1|D0ENMT|D0ENM_1|/path/to/D0ENMAC_1.bam|
+|G15511|XX|1|D0ENMT|D0ENM_2|/path/to/D0ENMAC_2.bam|
 
 ## Starting from the BAM prepare recalibration step
 
@@ -129,10 +129,10 @@ The TSV needs to contain the following columns:
 
 The same way, if you have non recalibrated BAMs and their indexes, you should use a structure like:
 
-```text
-G15511    XX    0    C09DFN    pathToFiles/G15511.C09DFN.md.bam    pathToFiles/G15511.C09DFN.md.bai
-G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.md.bam    pathToFiles/G15511.D0ENMT.md.bai
-```
+| | | | | | |
+|-|-|-|-|-|-|
+|G15511|XX|0|C09DFN|/path/to/G15511.C09DFN.md.bam|/path/to/G15511.C09DFN.md.bai|
+|G15511|XX|1|D0ENMT|/path/to/G15511.D0ENMT.md.bam|/path/to/G15511.D0ENMT.md.bai|
 
 When starting Sarek from the mapping step, a TSV file is generated automatically after the `MarkDuplicates` process.
 This TSV file is stored under `results/Preprocessing/TSV/duplicates_marked_no_table.tsv` and can be used to restart Sarek from the non-recalibrated BAM files.
@@ -142,10 +142,10 @@ Additionally, individual TSV files for each sample (`duplicates_marked_no_table_
 
 If `--skip_markduplicates` has been specified, the TSV file for this step will be slightly different:
 
-```text
-G15511    XX    0    C09DFN    pathToFiles/G15511.C09DFN.bam    pathToFiles/G15511.C09DFN.bai
-G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.bam    pathToFiles/G15511.D0ENMT.bai
-```
+| | | | | | |
+|-|-|-|-|-|-|
+|G15511|XX|0|C09DFN|/path/to/G15511.C09DFN.bam|/path/to/G15511.C09DFN.bai|
+|G15511|XX|1|D0ENMT|/path/to/G15511.D0ENMT.bam|/path/to/G15511.D0ENMT.bai|
 
 When starting Sarek from the mapping step with `--skip_markduplicates`, a TSV file is generated automatically after the `Mapping` processes.
 This TSV file is stored under `results/Preprocessing/TSV/mapped.tsv` and can be used to restart Sarek from the non-recalibrated BAM files.
@@ -162,10 +162,10 @@ The TSV needs to contain the following columns:
 
 The same way, if you have non recalibrated BAMs, their indexes and their recalibration tables, you should use a structure like:
 
-```text
-G15511    XX    0    C09DFN    pathToFiles/G15511.C09DFN.md.bam    pathToFiles/G15511.C09DFN.md.bai pathToFiles/G15511.C09DFN.recal.table
-G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.md.bam    pathToFiles/G15511.D0ENMT.md.bai pathToFiles/G15511.D0ENMT.recal.table
-```
+| | | | | | | |
+|-|-|-|-|-|-|-|
+|G15511|XX|0|C09DFN|/path/to/G15511.C09DFN.md.bam|/path/to/G15511.C09DFN.md.bai|/path/to/G15511.C09DFN.recal.table|
+|G15511|XX|1|D0ENMT|/path/to/G15511.D0ENMT.md.bam|/path/to/G15511.D0ENMT.md.bai|/path/to/G15511.D0ENMT.recal.table|
 
 When starting Sarek from the mapping step, a TSV file is generated automatically after the `BaseRecalibrator` processes.
 This TSV file is stored under `results/Preprocessing/TSV/duplicates_marked.tsv` and can be used to restart Sarek from the non-recalibrated BAM files.
@@ -173,12 +173,12 @@ Using `--step recalibrate` will automatically take this file as input.
 
 Additionally, individual TSV files for each sample (`duplicates_marked_[SAMPLE].tsv`) can be found in the same directory.
 
-If `--skip_markduplicates --skip_markduplicates` has been specified, the TSV file for this step will be slightly different:
+If `--skip_markduplicates` has been specified, the TSV file for this step will be slightly different:
 
-```text
-G15511    XX    0    C09DFN    pathToFiles/G15511.C09DFN.bam    pathToFiles/G15511.C09DFN.bai pathToFiles/G15511.C09DFN.recal.table
-G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.bam    pathToFiles/G15511.D0ENMT.bai pathToFiles/G15511.D0ENMT.recal.table
-```
+| | | | | | | |
+|-|-|-|-|-|-|-|
+|G15511|XX|0|C09DFN|/path/to/G15511.C09DFN.bam|/path/to/G15511.C09DFN.bai|/path/to/G15511.C09DFN.recal.table|
+|G15511|XX|1|D0ENMT|/path/to/G15511.D0ENMT.bam|/path/to/G15511.D0ENMT.bai|/path/to/G15511.D0ENMT.recal.table|
 
 When starting Sarek from the mapping step with `--skip_markduplicates`, a TSV file is generated automatically after the `BaseRecalibrator` processes.
 This TSV file is stored under `results/Preprocessing/TSV/mapped_no_duplicates_marked.tsv` and can be used to restart Sarek from the non-recalibrated BAM files.
@@ -195,10 +195,10 @@ The TSV file should contain the columns:
 
 Here is an example for two samples from the same subject:
 
-```text
-G15511    XX    0    C09DFN    pathToFiles/G15511.C09DFN.recal.bam    pathToFiles/G15511.C09DFN.recal.bai
-G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.recal.bam    pathToFiles/G15511.D0ENMT.recal.bai
-```
+| | | | | | |
+|-|-|-|-|-|-|
+|G15511|XX|0|C09DFN|/path/to/G15511.C09DFN.recal.bam|/path/to/G15511.C09DFN.recal.bai|
+|G15511|XX|1|D0ENMT|/path/to/G15511.D0ENMT.recal.bam|/path/to/G15511.D0ENMT.recal.bai|
 
 When starting Sarek from the mapping or recalibrate steps, a TSV file is generated automatically after the recalibration processes.
 This TSV file is stored under `results/Preprocessing/TSV/recalibrated.tsv` and can be used to restart Sarek from the recalibrated BAM files.
@@ -215,10 +215,10 @@ The TSV needs to contain the following columns:
 
 Here is an example for one normal/tumor pair from one subjects:
 
-```text
-G15511    XX    0    C09DFN    pathToFiles/G15511.C09DFN.pileup
-G15511    XX    1    D0ENMT    pathToFiles/G15511.D0ENMT.pileup
-```
+| | | | | |
+|-|-|-|-|-|
+|G15511|XX|0|C09DFN|/path/to/G15511.C09DFN.pileup|
+|G15511|XX|1|D0ENMT|/path/to/G15511.D0ENMT.pileup|
 
 When starting Sarek from the Control-FREEC step, a TSV file is generated automatically after the `mpileup` process.
 This TSV file is stored under `results/VariantCalling/TSV/control-freec_mpileup.tsv` and can be used to restart Sarek from the mpileup files.

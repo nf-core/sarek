@@ -7,7 +7,7 @@ ASCAT is written in R and available here: [github.com/Crick-CancerGenomics/ascat
 
 To run ASCAT on NGS data we need BAM files for the tumor and normal samples, as well as a loci file with SNP positions.
 If ASCAT is run on SNP array data, the loci file contains the SNPs on the chip.
-When runnig ASCAT on NGS data we can use the same loci file, for exampe the one corresponding to the AffymetrixGenome-Wide Human SNP Array 6.0, but we can also choose a loci file of our choice with i.e. SNPs detected in the 1000 Genomes project.
+When runnig ASCAT on NGS data we can use the same loci file, for example the one corresponding to the AffymetrixGenome-Wide Human SNP Array 6.0, but we can also choose a loci file of our choice with i.e. SNPs detected in the 1000 Genomes project.
 
 ### BAF and LogR values
 
@@ -132,16 +132,16 @@ Names of the chromosomes in chrom.sizes file must be the same as in the genome r
 
 This created GC correction files with the following column headers:
 
-```text
-Chr Position    25  50  100 200 500 1000    2000    5000    10000   20000   50000   100000  200000  500000  1M  2M  5M  10M
-```
+| | | | | | | | | | | | | | | | | | | | |
+|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
+|Chr|Position|25|50|100|200|500|1000|2000|5000|10000|20000|50000|100000|200000|500000|1M|2M|5M|10M|
 
 This file gave an error when running ASCAT, and the error message suggested that it had to do with the column headers.
 The Readme.txt in <https://github.com/Crick-CancerGenomics/ascat/tree/master/gcProcessing> suggested that the column headers should be:
 
-```text
-Chr Position    25bp    50bp    100bp   200bp   500bp   1000bp  2000bp  5000bp  10000bp 20000bp 50000bp 100000bp    200000bp    500000bp    1M  2M  5M  10M
-```
+| | | | | | | | | | | | | | | | | | | | |
+|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
+|Chr|Position|25bp|50bp|100bp|200bp|500bp|1000bp|2000bp|5000bp|10000bp|20000bp|50000bp|100000bp|200000bp|500000bp|1M|2M|5M|10M|
 
 The column headers headers of the generated GC correction files were therefore manually edited.
 
@@ -149,12 +149,11 @@ The column headers headers of the generated GC correction files were therefore m
 
 The final files are tab-delimited with the following columns (and some example data):
 
-```text
-Chr Position    25bp    50bp    100bp   200bp   500bp   1000bp  2000bp  5000bp  10000bp 20000bp 50000bp 100000bp    200000bp    500000bp    1M  2M  5M  10M
-snp1    1   14930   0.541667    0.58    0.61    0.585   0.614   0.62    0.6 0.5888  0.588   0.4277  0.395041    0.380702    0.383259    0.341592    0.339747    0.386343    0.500537    0.511514
-snp2    1   15211   0.625   0.64    0.67    0.63    0.61    0.612   0.6135  0.591   0.5922  0.4358  0.39616 0.380411    0.383167    0.34163 0.339771 0.386417   0.500558    0.511511
-snp3    1   15820   0.541667    0.56    0.62    0.655   0.65    0.612   0.5885  0.5936  0.5797  0.4511  0.397771    0.379945    0.382999    0.341791    0.339832    0.386554    0.500579    0.511504
-```
+|Chr|Position|25bp|50bp|100bp|200bp|500bp|1000bp|2000bp|5000bp|10000bp|20000bp|50000bp|100000bp|200000bp|500000bp|1M|2M|5M|10M|
+|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
+|snp1|1|14930|0.541667|0.58|0.61|0.585|0.614|0.62|0.6|0.5888|0.588|0.4277|0.395041|0.380702|0.383259|0.341592|0.339747|0.386343|0.500537|0.511514
+|snp2|1|15211|0.625|0.64|0.67|0.63|0.61|0.612|0.6135|0.591|0.5922|0.4358|0.39616|0.380411|0.383167|0.34163|0.339771|0.386417|0.500558|0.511511
+|snp3|1|15820|0.541667|0.56|0.62|0.655|0.65|0.612|0.5885|0.5936|0.5797|0.4511|0.397771|0.379945|0.382999|0.341791|0.339832|0.386554|0.500579|0.511504
 
 ### Output
 

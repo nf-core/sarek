@@ -61,7 +61,7 @@ To enable the use of the VEP CADD plugin:
 Example:
 
 ```bash
-nextflow run nf-core/sarek --step annotate --tools VEP --sample file.vcf.gz --cadd_cache \
+nextflow run nf-core/sarek --step annotate --tools VEP --sample <file.vcf.gz> --cadd_cache \
     --cadd_InDels </PathToCADD/InDels.tsv.gz> \
     --cadd_InDels_tbi </PathToCADD/InDels.tsv.gz.tbi> \
     --cadd_WG_SNVs </PathToCADD/whole_genome_SNVs.tsv.gz> \
@@ -86,5 +86,5 @@ To enable the use of the VEP GeneSplicer plugin:
 Example:
 
 ```bash
-nextflow run nf-core/sarek --step annotate --tools VEP --sample file.vcf.gz --genesplicer
+nextflow run nf-core/sarek --step annotate --tools VEP --sample <file.vcf.gz> --genesplicer
 ```
