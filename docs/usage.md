@@ -233,7 +233,7 @@ TSV file should correspond to the correct step, see [`--step`](#--step) and [inp
 
 Multiple TSV files can be specified if the path must be enclosed in quotes.
 
-Use this to specify the location to a directory with fastq files on `mapping` step for a single germline sample only.
+Use this to specify the location to a directory with fastq files for the `mapping` step of single germline samples only.
 For example:
 
 ```bash

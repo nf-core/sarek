@@ -46,8 +46,8 @@ The cache will only be used when `--annotation_cache` and cache directories are 
 Example:
 
 ```bash
-nextflow run nf-core/sarek --tools snpEff --step annotate --sample file.vcf.gz --snpeff_cache </Path/To/snpEffCache> --annotation_cache
-nextflow run nf-core/sarek --tools VEP --step annotate --sample file.vcf.gz --vep_cache </Path/To/vepCache> --annotation_cache
+nextflow run nf-core/sarek --tools snpEff --step annotate --sample <file.vcf.gz> --snpeff_cache </Path/To/snpEffCache> --annotation_cache
+nextflow run nf-core/sarek --tools VEP --step annotate --sample <file.vcf.gz> --vep_cache </Path/To/vepCache> --annotation_cache
 ```
 
 ## Using VEP CADD plugin
