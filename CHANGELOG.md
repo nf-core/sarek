@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [dev]
+
+### Added
+
+### Changed
+
+- [#208](https://github.com/nf-core/sarek/pull/208) - Merge changes from the release PR
+- [#208](https://github.com/nf-core/sarek/pull/208) - Bump version to `3.0dev`
+
+### Fixed
+
+### Deprecated
+
+### Removed
+
 ## [2.6] - Piellorieppe
 
 Piellorieppe is one of the main massif in the Sarek National Park.
