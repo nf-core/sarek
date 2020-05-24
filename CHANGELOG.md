@@ -4,11 +4,142 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.6] - Piellorieppe
+
+Piellorieppe is one of the main massif in the Sarek National Park.
+
+### Added
+
+- [#76](https://github.com/nf-core/sarek/pull/76) - Add `GATK Spark` possibilities to Sarek
+- [#87](https://github.com/nf-core/sarek/pull/87) - Add `GATK BaseRecalibrator` plot to `MultiQC` report
+- [#115](https://github.com/nf-core/sarek/pull/115) - Add [@szilvajuhos](https://github.com/szilvajuhos) abstract for ESHG2020
+- [#117](https://github.com/nf-core/sarek/pull/117) - Add `Trim Galore` possibilities to Sarek
+- [#141](https://github.com/nf-core/sarek/pull/141) - Add containers for `WBcel235`
+- [#150](https://github.com/nf-core/sarek/pull/150), [#151](https://github.com/nf-core/sarek/pull/151), [#154](https://github.com/nf-core/sarek/pull/154) - Add AWS mega test GitHub Actions
+- [#153](https://github.com/nf-core/sarek/pull/153) - Add `CNVkit` possibilities to Sarek
+- [#158](https://github.com/nf-core/sarek/pull/158) - Added `ggplot2` version `3.3.0`
+- [#163](https://github.com/nf-core/sarek/pull/163) - Add [MSIsensor](https://github.com/ding-lab/msisensor) in tools and container
+- [#164](https://github.com/nf-core/sarek/pull/164) - Add `--no_gatk_spark` params and tests
+- [#167](https://github.com/nf-core/sarek/pull/167) - Add `--markdup_java_options` documentation
+- [#169](https://github.com/nf-core/sarek/pull/169) - Add `RELEASE_CHECKLIST.md` document
+- [#174](https://github.com/nf-core/sarek/pull/174) - Add `variant_calling.md` documentation
+- [#175](https://github.com/nf-core/sarek/pull/175) - Add `Sentieon` documentation
+- [#176](https://github.com/nf-core/sarek/pull/176) - Add empty `custom` genome in `genomes.config` to allow genomes that are not in `AWS iGenomes`
+- [#179](https://github.com/nf-core/sarek/pull/179), [#201](https://github.com/nf-core/sarek/pull/201) - Add `FreeBayes` germline variant calling
+- [#180](https://github.com/nf-core/sarek/pull/180) - Now saving Mapped BAMs (and creating TSV) in minimal setting
+- [#182](https://github.com/nf-core/sarek/pull/182) - Add possibility to run `HaplotypeCaller` without `dbsnp` so it can be used to actually generate vcfs to build a set of known sites (cf [gatkforums](https://gatkforums.broadinstitute.org/gatk/discussion/1247/what-should-i-use-as-known-variants-sites-for-running-tool-x))
+- [#195](https://github.com/nf-core/sarek/pull/195) - Now creating TSV for duplicates marked BAMs in minimal setting
+- [#195](https://github.com/nf-core/sarek/pull/195), [#202](https://github.com/nf-core/sarek/pull/202) - Add `--save_bam_mapped` params to save mapped BAMs.
+- [#197](https://github.com/nf-core/sarek/pull/197) - Add step `prepare_recalibration` to allow restart from DuplicatesMarked BAMs
+- [#204](https://github.com/nf-core/sarek/pull/204) - Add step `Control-FREEC` to allow restart from pileup files
+- [#205](https://github.com/nf-core/sarek/pull/205) - Add `--skip_markduplicates` to allow skipping the `MarkDuplicates` process
+
+### Changed
+
+- [#76](https://github.com/nf-core/sarek/pull/76) - Use `MarkDuplicatesSpark` instead of `MarkDuplicates`
+- [#76](https://github.com/nf-core/sarek/pull/76) - Use `gatk4-spark` instead of `gatk4` in `environment.yml`
+- [#80](https://github.com/nf-core/sarek/pull/80) - Re-bump `dev` branch
+- [#85](https://github.com/nf-core/sarek/pull/85) - Use new merged vcf files for known indels to simplify setting up channel
+- [#104](https://github.com/nf-core/sarek/pull/104) - Update Figure 1
+- [#107](https://github.com/nf-core/sarek/pull/107) - Switch params to snake_case
+- [#109](https://github.com/nf-core/sarek/pull/109) - Update publication with F1000Research preprint
+- [#113](https://github.com/nf-core/sarek/pull/113) - Move social preview image
+- [#120](https://github.com/nf-core/sarek/pull/120) - Sync TEMPLATE
+- [#121](https://github.com/nf-core/sarek/pull/121) - Update `MultiQC` to `1.8`
+- [#126](https://github.com/nf-core/sarek/pull/126), [#131](https://github.com/nf-core/sarek/pull/131) - Update docs
+- [#131](https://github.com/nf-core/sarek/pull/131) - Use `nfcore/base:1.9` as base for containers
+- [#131](https://github.com/nf-core/sarek/pull/131) - Update `Control-FREEC` to `11.5`
+- [#131](https://github.com/nf-core/sarek/pull/131) - Update `FastQC` to `0.11.9`
+- [#131](https://github.com/nf-core/sarek/pull/131) - Update `FreeBayes` to `1.3.2`
+- [#131](https://github.com/nf-core/sarek/pull/131) - Update `Manta` to `1.6.0`
+- [#131](https://github.com/nf-core/sarek/pull/131) - Update `Qualimap` to `2.2.2d`
+- [#131](https://github.com/nf-core/sarek/pull/131) - Update `VEP` to `99.2`
+- [#141](https://github.com/nf-core/sarek/pull/141) - Update `snpEff` cache version from `75` to `87` for `GRCh37`
+- [#141](https://github.com/nf-core/sarek/pull/141) - Update `snpEff` cache version from `86` to `92` for `GRCh38`
+- [#141](https://github.com/nf-core/sarek/pull/141) - Update `VEP` databases to `99`
+- [#143](https://github.com/nf-core/sarek/pull/143) - Revert `snpEff` cache version to `75` for `GRCh37`
+- [#143](https://github.com/nf-core/sarek/pull/143) - Revert `snpEff` cache version to `86` for `GRCh38`
+- [#152](https://github.com/nf-core/sarek/pull/152), [#158](https://github.com/nf-core/sarek/pull/158), [#164](https://github.com/nf-core/sarek/pull/164), [#174](https://github.com/nf-core/sarek/pull/174), [#194](https://github.com/nf-core/sarek/pull/194), [#198](https://github.com/nf-core/sarek/pull/198), [#204](https://github.com/nf-core/sarek/pull/204) - Update docs
+- [#164](https://github.com/nf-core/sarek/pull/164) - Update `gatk4-spark` from `4.1.4.1` to `4.1.6.0`
+- [#180](https://github.com/nf-core/sarek/pull/180), [#195](https://github.com/nf-core/sarek/pull/195) - Improve minimal setting
+- [#183](https://github.com/nf-core/sarek/pull/183), [#204](https://github.com/nf-core/sarek/pull/204) - Update `input.md` documentation
+- [#197](https://github.com/nf-core/sarek/pull/197) - Output directory `DuplicateMarked` is now replaced by`DuplicatesMarked`
+- [#204](https://github.com/nf-core/sarek/pull/204) - Output directory `controlFREEC` is now replaced by`Control-FREEC`
+
+### Fixed
+
+- [#83](https://github.com/nf-core/sarek/pull/83) - Fix some typos in `docs/input.md`
+- [#107](https://github.com/nf-core/sarek/pull/107) - Fix linting
+- [#110](https://github.com/nf-core/sarek/pull/110) - Fix `snpEff` report issue cf [#106](https://github.com/nf-core/sarek/issues/106)
+- [#126](https://github.com/nf-core/sarek/pull/126) - Fix `iGenomes` paths
+- [#127](https://github.com/nf-core/sarek/pull/127), [#128](https://github.com/nf-core/sarek/pull/128) - Fix `ASCAT`
+- [#129](https://github.com/nf-core/sarek/pull/129) - Fix issue with Channel `channel ch_software_versions_yaml`
+- [#129](https://github.com/nf-core/sarek/pull/129) - Apply @drpatelh fix for `mardown_to_html.py` compatibility with Python 2
+- [#129](https://github.com/nf-core/sarek/pull/129) - Removed `Python` `3.7.3` from conda environment due to incompatibility
+- [#129](https://github.com/nf-core/sarek/pull/129) - Change ascii characters that were not supported from the `output.md` docs
+- [#140](https://github.com/nf-core/sarek/pull/140) - Fix extra T/N combinations for `ASCAT` cf [#136](https://github.com/nf-core/sarek/issues/136)
+- [#141](https://github.com/nf-core/sarek/pull/141) - Fix `download_cache.nf` script to download cache for `snpEff` and `VEP`
+- [#143](https://github.com/nf-core/sarek/pull/143) - Fix annotation CI testing with `snpEff` and `VEP`
+- [#144](https://github.com/nf-core/sarek/pull/144) - Fix CircleCI for building `VEP` containers
+- [#146](https://github.com/nf-core/sarek/pull/146) - Fix `--no_intervals` for `Mutect2` cf [#135](https://github.com/nf-core/sarek/issues/135)
+- [#156](https://github.com/nf-core/sarek/pull/156) - Fix typos
+- [#156](https://github.com/nf-core/sarek/pull/156) - Fix issues with `dbsnp` files while using only `Sention` tools
+- [#158](https://github.com/nf-core/sarek/pull/158) - Fix typo with `params.snpeff_cache` to decide containers for `snpEff`
+- [#164](https://github.com/nf-core/sarek/pull/164) - Fix issues when running with `Sentieon`
+- [#164](https://github.com/nf-core/sarek/pull/164) - Add more VCFs to annotation
+- [#167](https://github.com/nf-core/sarek/pull/167) - Add `--markdup_java_options` documentation to fix [#166](https://github.com/nf-core/sarek/issues/166)
+- [#178](https://github.com/nf-core/sarek/pull/178) - Fix `Sentieon` variant calling, now using deduped bam files
+- [#188](https://github.com/nf-core/sarek/pull/188) - Fix input/output channels for process `IndexBamFile` to match actual files in the `mapped.tsv` files
+- [#189](https://github.com/nf-core/sarek/pull/189) - Fix `no_intervals` for process `HaplotypeCaller` (the file just need to actually exists...)
+- [#197](https://github.com/nf-core/sarek/pull/197) - Fix issue with `--step recalibrate`
+- [#197](https://github.com/nf-core/sarek/pull/197) - Fix typo in output directory `DuplicateMarked` -> `DuplicatesMarked`
+
+### Deprecated
+
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--annotateTools` is now deprecated, use `--annotate_tools` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--cadd_InDels` is now deprecated, use `--cadd_indels` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--cadd_InDels_tbi` is now deprecated, use `--cadd_indels_tbi` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--cadd_WG_SNVs` is now deprecated, use `--cadd_wg_snvs` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--cadd_WG_SNVs_tbi` is now deprecated, use `--cadd_wg_snvs_tbi` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--maxMultiqcEmailFileSize` is now deprecated, use `--max_multiqc_email_size` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--noGVCF` is now deprecated, use `--no_gvcf` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--noStrelkaBP` is now deprecated, use `--no_strelka_bp` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--nucleotidesPerSecond` is now deprecated, use `--nucleotides_per_second` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--publishDirMode` is now deprecated, use `--publish_dir_mode` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--saveGenomeIndex` is now deprecated, use `--save_reference` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--skipQC` is now deprecated, use `--skip_qc` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--snpEff_cache` is now deprecated, use `--snpeff_cache` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--targetBed` is now deprecated, use `--target_bed` instead
+
+### Removed
+
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--acLociGC` is now removed, use `--ac_loci_gc` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--acLoci` is now removed, use `--ac_loci` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--bwaIndex` is now removed, use `--bwa` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--chrDir` is now removed, use `--chr_dir` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--chrLength` is now removed, use `--chr_length` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--dbsnpIndex` is now removed, use `--dbsnp_index` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--fastaFai` is now removed, use `--fasta_fai` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--genomeDict` is now removed, use `--dict` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--genomeFile` is now removed, use `--fasta` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--genomeIndex` is now removed, use `--fasta_fai` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--germlineResourceIndex` is now removed, use `--germline_resource_index` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--germlineResource` is now removed, use `--germline_resource` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--igenomesIgnore` is now removed, use `--igenomes_ignore` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--knownIndelsIndex` is now removed, use `--known_indels_index` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--knownIndels` is now removed, use `--known_indels` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--singleCPUMem` is now removed, use `--single_cpu_mem` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--snpeffDb` is now removed, use `--snpeff_db` instead
+- [#107](https://github.com/nf-core/sarek/pull/107) - `--vepCacheVersion` is now removed, use `--vep_cache_version` instead
+- [#152](https://github.com/nf-core/sarek/pull/152) - Removed `Jenkinsfile`
+- [#169](https://github.com/nf-core/sarek/pull/169) - Removed omicX from README
+- [#181](https://github.com/nf-core/sarek/pull/181) - Remove duplicate code in `nextflow.config`
+
 ## [2.5.2] - Jåkkåtjkaskajekna
 
 Jåkkåtjkaskajekna is one of the two glaciers of the Ålkatj Massif.
 
-### `Added`
+### Added
 
 - [#45](https://github.com/nf-core/sarek/pull/45) - Include Workflow figure in `README.md`
 - [#46](https://github.com/nf-core/sarek/pull/46) - Add location to abstracts
@@ -21,8 +152,9 @@ Jåkkåtjkaskajekna is one of the two glaciers of the Ålkatj Massif.
 - [#60](https://github.com/nf-core/sarek/pull/60) - Add new minimal genomes (`TAIR10`, `EB2`, `UMD3.1`, `bosTau8`, `WBcel235`, `ce10`, `CanFam3.1`, `canFam3`, `GRCz10`, `danRer10`, `BDGP6`, `dm6`, `EquCab2`, `equCab2`, `EB1`, `Galgal4`, `galGal4`, `Gm01`, `hg38`, `hg19`, `Mmul_1`, `mm10`, `IRGSP-1.0`, `CHIMP2.1.4`, `panTro4`, `Rnor_6.0`, `rn6`, `R64-1-1`, `sacCer3`, `EF2`, `Sbi1`, `Sscrofa10.2`, `susScr3`, `AGPv3`) to `igenomes.config`
 - [#61](https://github.com/nf-core/sarek/pull/61) - Add params `split_fastq`
 - [#61](https://github.com/nf-core/sarek/pull/61) - Add test `SPLITFASTQ`
+- [#66](https://github.com/nf-core/sarek/pull/66) - Add `Sentieon` possibilities to Sarek
 
-### `Changed`
+### Changed
 
 - [#54](https://github.com/nf-core/sarek/pull/54) - Bump version to `2.5.2dev`
 - [#60](https://github.com/nf-core/sarek/pull/60) - Some process (`BaseRecalibrator`, `ApplyBQSR`, `Mpileup`) have now optional usage of interval files
@@ -33,12 +165,13 @@ Jåkkåtjkaskajekna is one of the two glaciers of the Ålkatj Massif.
 - [#74](https://github.com/nf-core/sarek/pull/74) - Improve CI tests (both Jenkins and GitHub actions tests)
 - [#74](https://github.com/nf-core/sarek/pull/74) - Move all CI from `ci-extra.yml` to `ci.yml`
 
-### `Removed`
+### Removed
 
 - [#46](https://github.com/nf-core/sarek/pull/46) - Remove mention of old `build.nf` script which was included in `main.nf`
 - [#74](https://github.com/nf-core/sarek/pull/74) - Remove `download_image.sh` and `run_tests.sh` scripts
+- [#76](https://github.com/nf-core/sarek/pull/76) - Remove `runOptions = "-u \$(id -u):\$(id -g)"` in `nextflow.config` to enable `Spark` possibilities
 
-### `Fixed`
+### Fixed
 
 - [#40](https://github.com/nf-core/sarek/pull/40) - Fix issue with `publishDirMode` within `test` profile
 - [#42](https://github.com/nf-core/sarek/pull/42) - Fix typos, and minor updates in `README.md`
@@ -52,11 +185,11 @@ Jåkkåtjkaskajekna is one of the two glaciers of the Ålkatj Massif.
 
 Årjep-Ålkatjjekna is one of the two glaciers of the Ålkatj Massif.
 
-### `Added`
+### Added
 
 - [#53](https://github.com/nf-core/sarek/pull/53) - Release `2.5.1`
 
-### `Fixed`
+### Fixed
 
 - [#48](https://github.com/nf-core/sarek/issues/48) - Fix `singularity.autoMounts` issue.
 - [#49](https://github.com/nf-core/sarek/issues/49) - Use correct tag for annotation containers.
@@ -78,7 +211,7 @@ Jåkkåtjkaskajekna is one of the two glaciers of the Ålkatj Massif.
 
 Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/) template.
 
-### `Added`
+### Added
 
 - [#2](https://github.com/nf-core/sarek/pull/2) - Create `nf-core/sarek` `environment.yml` file
 - [#2](https://github.com/nf-core/sarek/pull/2), [#3](https://github.com/nf-core/sarek/pull/3), [#4](https://github.com/nf-core/sarek/pull/4), [#5](https://github.com/nf-core/sarek/pull/5), [#7](https://github.com/nf-core/sarek/pull/7), [#9](https://github.com/nf-core/sarek/pull/9), [#10](https://github.com/nf-core/sarek/pull/10), [#11](https://github.com/nf-core/sarek/pull/11), [#12](https://github.com/nf-core/sarek/pull/12) - Add CI for `nf-core/sarek`
@@ -117,7 +250,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#31](https://github.com/nf-core/sarek/pull/31) - Add extra CI to `GitHub Actions` nf-core extra CI
 - [#35](https://github.com/nf-core/sarek/pull/35) - Building indexes from [nf-core/test-datasets:sarek](https://github.com/nf-core/test-datasets/tree/sarek) for CI and small tests
 
-### `Changed`
+### Changed
 
 - [#1](https://github.com/nf-core/sarek/pull/1), [#2](https://github.com/nf-core/sarek/pull/2), [#3](https://github.com/nf-core/sarek/pull/3), [#4](https://github.com/nf-core/sarek/pull/4), [#5](https://github.com/nf-core/sarek/pull/5), [#6](https://github.com/nf-core/sarek/pull/6), [#7](https://github.com/nf-core/sarek/pull/7), [#8](https://github.com/nf-core/sarek/pull/8), [#9](https://github.com/nf-core/sarek/pull/9), [#10](https://github.com/nf-core/sarek/pull/10), [#11](https://github.com/nf-core/sarek/pull/11), [#12](https://github.com/nf-core/sarek/pull/12), [#18](https://github.com/nf-core/sarek/pull/18), [#20](https://github.com/nf-core/sarek/pull/20), [#21](https://github.com/nf-core/sarek/pull/21), [#23](https://github.com/nf-core/sarek/pull/23), [#29](https://github.com/nf-core/sarek/pull/29) - Update docs
 - [#4](https://github.com/nf-core/sarek/pull/4) - Update `cancerit-allelecount` from `2.1.2` to `4.0.2`
@@ -162,7 +295,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#37](https://github.com/nf-core/sarek/pull/37) - Bump version for Release
 - [#38](https://github.com/nf-core/sarek/pull/38) - File names before merge is based on `${idSample}_${idRun}` instead of `${idRun}`
 
-### `Removed`
+### Removed
 
 - [#9](https://github.com/nf-core/sarek/pull/9) - Removed `relatedness2` graph from `vcftools stats`
 - [#13](https://github.com/nf-core/sarek/pull/13) - Removed `BamQCmapped` and `BamQCrecalibrated` processes
@@ -177,7 +310,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#35](https://github.com/nf-core/sarek/pull/35) - Remove `Mutect2` from `MULTIPLE` test
 - [#35](https://github.com/nf-core/sarek/pull/35) - Remove `referenceMap` and `defineReferenceMap()` and use Channel values instead
 
-### `Fixed`
+### Fixed
 
 - [#3](https://github.com/nf-core/sarek/pull/3) - Fix `Docker` ownership
 - [#11](https://github.com/nf-core/sarek/pull/11) - Fix `MergeMpileup` PublishDir
@@ -196,7 +329,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#38](https://github.com/nf-core/sarek/pull/38) - Avoid collision in `MultiQC`
 - [#39](https://github.com/nf-core/sarek/pull/39) - Fix `ch_dbsnp` channel
 
-### `Deprecated`
+### Deprecated
 
 - [#23](https://github.com/nf-core/sarek/pull/23) - `--sample` is now deprecated, use `--input` instead
 - [#23](https://github.com/nf-core/sarek/pull/23) - `--genomeFile` is now deprecated, use `--fasta` instead
@@ -206,7 +339,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 
 ## [2.3.FIX1] - 2019-03-04
 
-### `Fixed`
+### Fixed
 
 - [#742](https://github.com/SciLifeLab/Sarek/pull/742) - Fix output dirs (`HaplotypeCaller` that was not recognized by `annotate.nf` introduced by [#728](https://github.com/SciLifeLab/Sarek/pull/728))
 
@@ -214,7 +347,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 
 Äpar is one of the main massif in the Sarek National Park.
 
-### `Added`
+### Added
 
 - [#628](https://github.com/SciLifeLab/Sarek/pull/628), [#722](https://github.com/SciLifeLab/Sarek/pull/722) - `ASCAT` now use `.gc` file
 - [#712](https://github.com/SciLifeLab/Sarek/pull/712), [#718](https://github.com/SciLifeLab/Sarek/pull/718) - Added possibilities to run Sarek with `conda`
@@ -233,7 +366,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#735](https://github.com/SciLifeLab/Sarek/pull/735) - Added `--exome` for `Manta`, and for `StrelkaBP`
 - [#735](https://github.com/SciLifeLab/Sarek/pull/735) - Added `Travis CI` test for targeted
 
-### `Changed`
+### Changed
 
 - [#710](https://github.com/SciLifeLab/Sarek/pull/710) - Improve release checklist and script
 - [#711](https://github.com/SciLifeLab/Sarek/pull/711) - Improve configuration priorities
@@ -253,20 +386,20 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#728](https://github.com/SciLifeLab/Sarek/pull/728) - `Strelka` Best Practices output is now prefixed with `StrelkaBP_`
 - [#728](https://github.com/SciLifeLab/Sarek/pull/728) - VCFs and Annotated VCFs are now ordered by Patient, then tools
 - [#732](https://github.com/SciLifeLab/Sarek/pull/732) - Merge `buildContainers.nf` and `buildReferences.nf` in `build.nf`
-- [#732](https://github.com/SciLifeLab/Sarek/pull/732) - Reduce number of CPUs for `RunVEP` to `4` cf: [VEP docs](https://www.ensembl.org/info/docs/tools/vep/script/vep_other.html)
+- [#732](https://github.com/SciLifeLab/Sarek/pull/732) - Reduce number of CPUs for `RunVEP` to `4` cf: [VEP docs](https://www.ensembl.org/info/docs/tools/vep/script/vep_other.html#faster)
 - [#732](https://github.com/SciLifeLab/Sarek/pull/732) - Update `VEP` from `95.1` to `95.2`
 
-### `Removed`
+### Removed
 
 - [#715](https://github.com/SciLifeLab/Sarek/pull/715) - Remove `defReferencesFiles` function from `buildReferences.nf`
 - [#719](https://github.com/SciLifeLab/Sarek/pull/719) - `snpEff` base container is no longer used
 - [#721](https://github.com/SciLifeLab/Sarek/pull/721) - Remove `COSMIC` docs
 - [#728](https://github.com/SciLifeLab/Sarek/pull/728) - Remove `defineDirectoryMap()`
-- [#732](https://github.com/SciLifeLab/Sarek/pull/732) - Remove `--database` option for VEP cf: [VEP docs](https://www.ensembl.org/info/docs/tools/vep/script/vep_other.html)
+- [#732](https://github.com/SciLifeLab/Sarek/pull/732) - Remove `--database` option for VEP cf: [VEP docs](https://www.ensembl.org/info/docs/tools/vep/script/vep_other.html#faster)
 
-### `Fixed`
+### Fixed
 
-- [#720](https://github.com/SciLifeLab/Sarek/pull/720) - `bamQC` is now run on the recalibrated bams, and not after `MarkDuplicates`
+- [#720](https://github.com/SciLifeLab/Sarek/pull/720) - `bamQC` is now run on the recalibrated BAMs, and not after `MarkDuplicates`
 - [#726](https://github.com/SciLifeLab/Sarek/pull/726) - Fix `Ascat` ref file input (one file can't be a set)
 - [#727](https://github.com/SciLifeLab/Sarek/pull/727) - `bamQC` outputs are no longer overwritten (name of dir is now the file instead of sample)
 - [#728](https://github.com/SciLifeLab/Sarek/pull/728) - Fix issue with annotation that was consuming `cache` channels
@@ -275,7 +408,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 
 ## [2.2.2] - 2018-12-19
 
-### `Added`
+### Added
 
 - [#671](https://github.com/SciLifeLab/Sarek/pull/671) - New `publishDirMode` param and docs
 - [#673](https://github.com/SciLifeLab/Sarek/pull/673), [#675](https://github.com/SciLifeLab/Sarek/pull/675),  [#676](https://github.com/SciLifeLab/Sarek/pull/676) - Profiles for BinAC and CFC clusters in Tübingen
@@ -283,9 +416,9 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#692](https://github.com/SciLifeLab/Sarek/pull/692), [#697](https://github.com/SciLifeLab/Sarek/pull/697) - Add `AWS iGenomes` possibilities (within `conf/igenomes.conf`)
 - [#694](https://github.com/SciLifeLab/Sarek/pull/694) - Add monochrome and grey logos for light or dark background
 - [#698](https://github.com/SciLifeLab/Sarek/pull/698) - Add btb profile for munin server
-- [#702](https://github.com/SciLifeLab/Sarek/pull/702) - Add `font-ttf-dejavu-sans-mono` `2.37` and `fontconfig` `2.12.6` to container
+- [#702](https://github.com/SciLifeLab/Sarek/pull/702) - Add `font-ttf-dejavu-sans-mono` `2.37` and `fontconfig` `2.1dev` to container
 
-### `Changed`
+### Changed
 
 - [#663](https://github.com/SciLifeLab/Sarek/pull/663) - Update `do_release.sh` script
 - [#671](https://github.com/SciLifeLab/Sarek/pull/671) - `publishDir` modes are now params
@@ -299,7 +432,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#705](https://github.com/SciLifeLab/Sarek/pull/705) - Change `--TMP_DIR` by `--tmp-dir` for `GATK` `4.0.9.0` `BaseRecalibrator`
 - [#706](https://github.com/SciLifeLab/Sarek/pull/706) - Update `Travis CI` testing
 
-### `Fixed`
+### Fixed
 
 - [#665](https://github.com/SciLifeLab/Sarek/pull/665) - Input bam file now has always the same name (whether it is from a single fastq pair or multiple) in the `MarkDuplicates` process, so metrics too
 - [#672](https://github.com/SciLifeLab/Sarek/pull/672) - Process `PullSingularityContainers` from `buildContainers.nf` now expect a file with the correct `.simg` extension for singularity images, and no longer the `.img` one.
@@ -310,13 +443,13 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 
 ## [2.2.1] - 2018-10-04
 
-### `Changed`
+### Changed
 
 - [#646](https://github.com/SciLifeLab/Sarek/pull/646) - Update [`pathfindr`](https://github.com/NBISweden/pathfindr) submodule
 - [#659](https://github.com/SciLifeLab/Sarek/pull/659) - Update `Nextflow` to `0.32.0`
 - [#660](https://github.com/SciLifeLab/Sarek/pull/660) - Update docs
 
-### `Fixed`
+### Fixed
 
 - [#657](https://github.com/SciLifeLab/Sarek/pull/657) - Fix `RunMultiQC.nf` bug
 - [#659](https://github.com/SciLifeLab/Sarek/pull/659) - Fix bugs due to updating `Nextflow`
@@ -325,7 +458,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 
 Skårki is one of the main massif in the Sarek National Park.
 
-### `Added`
+### Added
 
 - [#613](https://github.com/SciLifeLab/Sarek/pull/613) - Add Issue Templates (bug report and feature request)
 - [#614](https://github.com/SciLifeLab/Sarek/pull/614) - Add PR Template
@@ -337,7 +470,7 @@ Skårki is one of the main massif in the Sarek National Park.
 - [#639](https://github.com/SciLifeLab/Sarek/pull/639) - Add a complete example analysis to docs
 - [#640](https://github.com/SciLifeLab/Sarek/pull/640), [#642](https://github.com/SciLifeLab/Sarek/pull/642) - Add helper script for changing version number
 
-### `Changed`
+### Changed
 
 - [#608](https://github.com/SciLifeLab/Sarek/pull/608) - Update `Nextflow` required version
 - [#615](https://github.com/SciLifeLab/Sarek/pull/615) - Use `splitCsv` instead of `readlines`
@@ -357,13 +490,13 @@ Skårki is one of the main massif in the Sarek National Park.
 - [#642](https://github.com/SciLifeLab/Sarek/pull/642) - `VCFanno` 0.2.8 -> 0.3.0
 - [#642](https://github.com/SciLifeLab/Sarek/pull/642) - `VCFtools` 0.1.15 -> 0.1.16
 
-### `Removed`
+### Removed
 
 - [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Remove old Issue Template
 - [#629](https://github.com/SciLifeLab/Sarek/pull/629) - Remove old Dockerfiles
 - [#637](https://github.com/SciLifeLab/Sarek/pull/637) - Remove old comments
 
-### `Fixed`
+### Fixed
 
 - [#621](https://github.com/SciLifeLab/Sarek/pull/621) - Fix `VEP` tests
 - [#637](https://github.com/SciLifeLab/Sarek/pull/637) - Fix links in MD files
@@ -372,7 +505,7 @@ Skårki is one of the main massif in the Sarek National Park.
 
 Ruotes is one of the main massif in the Sarek National Park.
 
-### `Added`
+### Added
 
 - [#555](https://github.com/SciLifeLab/Sarek/pull/555) - `snpEff` output into `VEP`
 - [#556](https://github.com/SciLifeLab/Sarek/pull/556) - `Strelka` Best Practices
@@ -391,7 +524,7 @@ Ruotes is one of the main massif in the Sarek National Park.
 - [#606](https://github.com/SciLifeLab/Sarek/pull/606) - Add test data as a submodule from [`Sarek-data`](https://github.com/SciLifeLab/Sarek-data)
 - [#608](https://github.com/SciLifeLab/Sarek/pull/608) - Add documentation on how to install Nextflow on `bianca`
 
-### `Changed`
+### Changed
 
 - [#557](https://github.com/SciLifeLab/Sarek/pull/557), [#583](https://github.com/SciLifeLab/Sarek/pull/583), [#585](https://github.com/SciLifeLab/Sarek/pull/585), [#588](https://github.com/SciLifeLab/Sarek/pull/588) - Update help
 - [#560](https://github.com/SciLifeLab/Sarek/pull/560) - `GitHub` langage for the repository is now `Nextflow`
@@ -412,7 +545,7 @@ Ruotes is one of the main massif in the Sarek National Park.
 - [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Update `CHANGELOG`
 - [#617](https://github.com/SciLifeLab/Sarek/pull/617) - Replace deprecated `Nextflow ``$name` syntax with `withName`
 
-### `Fixed`
+### Fixed
 
 - [#560](https://github.com/SciLifeLab/Sarek/pull/560) - Display message for `repository` and `containerPath`
 - [#566](https://github.com/SciLifeLab/Sarek/pull/566) - `slurmDownload` profile
@@ -421,7 +554,7 @@ Ruotes is one of the main massif in the Sarek National Park.
 - [#590](https://github.com/SciLifeLab/Sarek/pull/590), [#593](https://github.com/SciLifeLab/Sarek/pull/593) - Fix `Singularity` installation in `Travis CI` testing
 - [#598](https://github.com/SciLifeLab/Sarek/pull/598), [#601](https://github.com/SciLifeLab/Sarek/pull/601) - Fixes for  `Python` script `selectROI.py` to work with `CLC` viewer
 
-### `Removed`
+### Removed
 
 - [#607](https://github.com/SciLifeLab/Sarek/pull/607) - Remove `Mutect1`
 
@@ -429,7 +562,7 @@ Ruotes is one of the main massif in the Sarek National Park.
 
 First release under the `Sarek` name, from the National Park in Northern Sweden
 
-### `Added`
+### Added
 
 - Basic wrapper script
 - Abstract, posters and figures
@@ -440,7 +573,7 @@ First release under the `Sarek` name, from the National Park in Northern Sweden
 - Some `runOptions` for `docker` (prevent some user right problem)
 - This `CHANGELOG`
 
-### `Changed`
+### Changed
 
 - `CAW` is now `Sarek`
 - Dissect Workflow in 5 new scripts: `annotate.nf`, `main.nf`, `germlineVC.nf`, `runMultiQC.nf` and `somaticVC.nf`
@@ -463,12 +596,12 @@ First release under the `Sarek` name, from the National Park in Northern Sweden
 - `nucleotidesPerSecond` is now `params.nucleotidesPerSecond`
 - Default `params.tag` is now `latest` instead of current version, so `--tag` needs to be specified with the right version to be sure of using the `containers` corresponding
 
-### `Deprecated`
+### Deprecated
 
 - `standard` profile
 - `uppmax-localhost.config` file
 
-### `Removed`
+### Removed
 
 - `scripts/skeleton_batch.sh`
 - Old data and tsv files
@@ -477,14 +610,14 @@ First release under the `Sarek` name, from the National Park in Northern Sweden
 - Some `runOptions` for `Singularity` (binding not needed anymore on `UPPMAX`)
 - `download` profile
 
-### `Fixed`
+### Fixed
 
 - [#530](https://github.com/SciLifeLab/Sarek/issues/530) - Use `$PWD` for default `outDir`
 - [#533](https://github.com/SciLifeLab/Sarek/issues/533) - Replace `VEP` `--pick` option by `--per_gene`
 
 ## [1.2.5] - 2018-01-18
 
-### `Added`
+### Added
 
 - `Zenodo` for DOI
 - Delivery README
@@ -497,7 +630,7 @@ First release under the `Sarek` name, from the National Park in Northern Sweden
 - `aws-batch.config` config file
 - `--noBAMQC` params (failing sometimes on `Bianca`)
 
-### `Changed`
+### Changed
 
 - Update `Nextflow` to `0.26.0` (new fancy report + `AWS Batch`)
 - Extra time on `Travis CI` testing
@@ -505,7 +638,7 @@ First release under the `Sarek` name, from the National Park in Northern Sweden
 - Update `MultiQC` to `1.3` (`MEGAQC` FTW)
 - Move and rename some test files
 
-### `Fixed`
+### Fixed
 
 - Version of `COSMIC` `GRCh37` `v83`
 - Write an error message when `--sampleDir` does not find any FASTQ files
@@ -514,7 +647,7 @@ First release under the `Sarek` name, from the National Park in Northern Sweden
 
 ## [1.2.4] - 2017-10-27
 
-### `Fixed`
+### Fixed
 
 - [#488](https://github.com/SciLifeLab/Sarek/issues/488) - Better CPU requirements for `ConcatVCF`
 - [#489](https://github.com/SciLifeLab/Sarek/issues/489) - Exception handling for `ASCAT`
@@ -522,7 +655,7 @@ First release under the `Sarek` name, from the National Park in Northern Sweden
 
 ## [1.2.3] - 2017-10-18
 
-### `Fixed`
+### Fixed
 
 - [#357](https://github.com/SciLifeLab/Sarek/issues/357) - `ASCAT` works for `GRCh38`
 - [#471](https://github.com/SciLifeLab/Sarek/issues/471) - Running `Singularity` on `/scratch`
@@ -531,23 +664,23 @@ First release under the `Sarek` name, from the National Park in Northern Sweden
 
 ## [1.2.2] - 2017-10-06
 
-### `Fixed`
+### Fixed
 
 - [#479](https://github.com/SciLifeLab/Sarek/issues/479) - Typo in `uppmax-localhost.config`
 
 ## [1.2.1] - 2017-10-06
 
-### `Changed`
+### Changed
 
 - `runascat` and `runconvertallelecounts` containers are now replaced by `r-base`
 - `willmclaren/ensembl-vep:release_90.5` is now base for `vepgrch37` and `vepgrch38`
 
-### `Removed`
+### Removed
 
 - `vep` container
 - `strelka_config.ini` file
 
-### `Fixed`
+### Fixed
 
 - [#471](https://github.com/SciLifeLab/Sarek/issues/471) - Running `Singularity` on /scratch
 - [#472](https://github.com/SciLifeLab/Sarek/issues/472) - Update function to check `Nextflow` version
@@ -555,30 +688,30 @@ First release under the `Sarek` name, from the National Park in Northern Sweden
 
 ## [1.2.0] - 2017-10-02
 
-### `Changed`
+### Changed
 
 - Fix version for Manuscript
 
 ## [1.1] - 2017-09-15
 
-### `Added`
+### Added
 
 - `Singularity` possibilities
 
-### `Changed`
+### Changed
 
 - Reports made by default
 - Intervals file can be a bed file
 - Normal sample preprocessing + `HaplotypeCaller` is possible
 - Better `Travis CI` tests
 
-### `Fixed`
+### Fixed
 
 - Memory requirements
 
 ## [1.0] - 2017-02-16
 
-### `Added`
+### Added
 
 - `Docker` possibilities
 

@@ -4,5 +4,6 @@ data/
 references/
 results/
 .DS_Store
-tests/test_data
+tests/
+testing/
 *.pyc
