@@ -63,8 +63,8 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#164](https://github.com/nf-core/sarek/pull/164) - Update `gatk4-spark` from `4.1.4.1` to `4.1.6.0`
 - [#180](https://github.com/nf-core/sarek/pull/180), [#195](https://github.com/nf-core/sarek/pull/195) - Improve minimal setting
 - [#183](https://github.com/nf-core/sarek/pull/183), [#204](https://github.com/nf-core/sarek/pull/204) - Update `input.md` documentation
-- [#197](https://github.com/nf-core/sarek/pull/197) - Output directory `DuplicateMarked` is now replaced by`DuplicatesMarked`
-- [#204](https://github.com/nf-core/sarek/pull/204) - Output directory `controlFREEC` is now replaced by`Control-FREEC`
+- [#197](https://github.com/nf-core/sarek/pull/197) - Output directory `DuplicateMarked` is now replaced by `DuplicatesMarked`
+- [#204](https://github.com/nf-core/sarek/pull/204) - Output directory `controlFREEC` is now replaced by `Control-FREEC`
 
 ### Fixed
 
