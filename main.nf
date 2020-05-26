@@ -38,26 +38,27 @@ def helpMessage() {
                                       Works also with the path to a directory on mapping step with a single germline sample only
                                       Alternatively, path to VCF input file on annotate step
                                       Multiple VCF files can be specified with quotes
-      --step                   [list] Specify starting step
+      --step                   [list] Specify starting step (only one)
                                       Available: mapping, prepare_recalibration, recalibrate, variant_calling, annotate, Control-FREEC
-                                      Default: mapping
+                                      Default: ${params.step}
       --genome                  [str] Name of iGenomes reference
-                                      Default: GRCh38
+                                      Default: ${params.genome}
 
     Main options:
       --help                   [bool] You're reading it
       --no_intervals           [bool] Disable usage of intervals
+                                      Intervals are part of the genome chopped up, used to speed up preprocessing and variant calling
       --nucleotides_per_second  [int] To estimate interval size
+                                      Default: ${params.nucleotides_per_second}
       --sentieon               [bool] If sentieon is available, will enable it for Preprocessing, and Variant Calling
                                       Adds the following options for --tools: DNAseq, DNAscope and TNscope
-                                      Default: False
-      --skip_qc                 [str] Specify which QC tools to skip when running Sarek
+      --skip_qc                 [str] Specify which QC tools to skip when running Sarek (multiple separated with commas)
                                       Available: all, bamQC, BaseRecalibrator, BCFtools, Documentation
                                       FastQC, MultiQC, samtools, vcftools, versions
                                       Default: None
       --target_bed             [file] Target BED file for whole exome or targeted sequencing
-                                      Default: 1000.0
-      --tools                   [str] Specify tools to use for variant calling:
+                                      Default: None
+      --tools                   [str] Specify tools to use for variant calling (multiple separated with commas):
                                       Available: ASCAT, CNVkit, ControlFREEC, FreeBayes, HaplotypeCaller
                                       Manta, mpileup, MSIsensor, Mutect2, Strelka, TIDDIT
                                       and/or for annotation:
@@ -77,7 +78,7 @@ def helpMessage() {
 
     Preprocessing:
       --markdup_java_options    [str] Establish values for markDuplicates memory consumption
-                                      Default: "-Xms4000m -Xmx7g"
+                                      Default: ${params.markdup_java_options}
       --no_gatk_spark          [bool] Disable usage of GATK Spark implementation of their tools in local mode
       --save_bam_mapped        [bool] Save Mapped BAMs
       --skip_markduplicates    [bool] Skip MarkDuplicates
@@ -88,9 +89,9 @@ def helpMessage() {
       --ascat_purity            [int] Use this parameter to overwrite default behavior from ASCAT regarding purity
                                       Requires that --ascat_ploidy is set
       --cf_coeff                [str] Control-FREEC coefficientOfVariation
-                                      Default: 0.015
+                                      Default: ${params.cf_coeff}
       --cf_ploidy               [int] Control-FREEC ploidy
-                                      Default: 2
+                                      Default: ${params.cf_ploidy}
       --cf_window               [int] Control-FREEC window size
                                       Default: Disabled
       --no_gvcf                [bool] No g.vcf output from GATK HaplotypeCaller
@@ -116,7 +117,7 @@ def helpMessage() {
 
     References options:
       --igenomes_base          [file] Specify base path to AWS iGenomes
-                                      Default: s3://ngi-igenomes/igenomes/
+                                      Default: ${params.igenomes_base}
       --igenomes_ignore        [bool] Do not use AWS iGenomes. Will load genomes.config instead of igenomes.config
       --genomes_base           [file] Specify base path to reference genome
       --save_reference         [bool] Save built references
@@ -152,17 +153,20 @@ def helpMessage() {
 
     Other options:
       --outdir                 [file] Output directory where the results will be saved
-      --publish_dir_mode       [list] Mode of publishing data in the output directory.
+      --publish_dir_mode       [list] Specify mode of publishing data in the output directory (only one)
                                       Available: symlink, rellink, link, copy, copyNoFollow, move
-                                      Default: copy
+                                      Default: ${params.publish_dir_mode}
       --sequencing_center       [str] Name of sequencing center to be displayed in BAM file
       --multiqc_config         [file] Specify a custom config file for MultiQC
       --monochrome_logs        [bool] Logs will be without colors
       --email                   [str] Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
       --email_on_fail           [str] Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you if the workflow fails
       --plaintext_email        [bool] Enable plaintext email
-      --max_multiqc_email_size  [str] Theshold size for MultiQC report to be attached in notification email. If file generated by pipeline exceeds the threshold, it will not be attached (Default: 25MB)
-      -name                     [str] Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic
+      --max_multiqc_email_size  [str] Theshold size for MultiQC report to be attached in notification email
+                                      If file generated by pipeline exceeds the threshold, it will not be attached
+                                      Default: ${params.max_multiqc_email_size}
+      -name                     [str] Name for the pipeline run
+                                      If not specified, Nextflow will automatically generate a random mnemonic
 
     AWSBatch options:
       --awsqueue                [str] The AWSBatch JobQueue that needs to be set when running on AWSBatch
@@ -562,11 +566,19 @@ if (workflow.revision)          summary['Pipeline Release']    = workflow.revisi
 summary['Run Name']          = custom_runName ?: workflow.runName
 summary['Max Resources']     = "${params.max_memory} memory, ${params.max_cpus} cpus, ${params.max_time} time per job"
 if (workflow.containerEngine)   summary['Container']         = "${workflow.containerEngine} - ${workflow.container}"
-if (params.input)               summary['Input']             = params.input
-if (params.target_bed)          summary['Target BED']        = params.target_bed
-if (step)                       summary['Step']              = step
-if (params.tools)               summary['Tools']             = tools.join(', ')
-if (params.skip_qc)             summary['QC tools skip']     = skipQC.join(', ')
+
+summary['Input']             = params.input
+summary['Step']              = step
+summary['Genome']            = params.genome
+
+if (params.no_intervals && step != 'annotate')  summary['Intervals']         = 'Do not use'
+summary['Nucleotides/s']     = params.nucleotides_per_second
+if (params.sentieon)            summary['Sention']                           = "Using Sentieon for Preprocessing and/or Variant Calling"
+if (params.skip_qc)             summary['QC tools skipped']                  = skipQC.join(', ')
+if (params.target_bed)          summary['Target BED']                        = params.target_bed
+if (params.tools)               summary['Tools']                             = tools.join(', ')
+
+if (params.trim_fastq || params.split_fastq) summary['Modify fastqs (trim/split)'] = ""
 
 if (params.trim_fastq) {
     summary['Fastq trim']         = "Fastq trim selected"
@@ -574,67 +586,106 @@ if (params.trim_fastq) {
     summary['Trim R2']            = "${params.clip_r2} bp"
     summary["Trim 3' R1"]         = "${params.three_prime_clip_r1} bp"
     summary["Trim 3' R2"]         = "${params.three_prime_clip_r2} bp"
-    summary["NextSeq Trim"]       = "${params.trim_nextseq} bp"
+    summary['NextSeq Trim']       = "${params.trim_nextseq} bp"
     summary['Saved Trimmed Fastq'] = params.save_trimmed ? 'Yes' : 'No'
 }
+if (params.split_fastq)          summary['Reads in fastq']                   = params.split_fastq
 
-if (params.no_intervals && step != 'annotate')  summary['Intervals']         = 'Do not use'
-if ('haplotypecaller' in tools)                 summary['GVCF']              = params.no_gvcf ? 'No' : 'Yes'
-if ('strelka' in tools && 'manta' in tools )    summary['Strelka BP']        = params.no_strelka_bp ? 'No' : 'Yes'
-if (params.ascat_purity)                        summary['ASCAT purity']      = params.ascat_purity
-if (params.ascat_ploidy)                        summary['ASCAT ploidy']      = params.ascat_ploidy
-if (params.no_gatk_spark)                       summary['MarkDuplicates GATK Spark']      = params.no_gatk_spark ? 'No' : 'Yes'
-if (params.sequencing_center)                   summary['Sequenced by']      = params.sequencing_center
-if (params.pon && 'mutect2' in tools)           summary['Panel of normals']  = params.pon
-if (params.cf_window)                           summary['Window for Control-FREEC']  = params.cf_window
-if (params.cf_coeff)                            summary['coefficientOfVariation for Control-FREEC']  = params.cf_coeff
-if (params.cf_ploidy)                           summary['Ploidy for Control-FREEC']  = params.cf_ploidy
+summary['MarkDuplicates'] = "Options"
+summary['Java options'] = params.markdup_java_options
+summary['GATK Spark']   = params.no_gatk_spark ? 'No' : 'Yes'
 
-summary['Save Reference']    = params.save_reference ? 'Yes' : 'No'
-summary['Nucleotides/s']     = params.nucleotides_per_second
-summary['Output dir']        = params.outdir
-summary['Launch dir']        = workflow.launchDir
-summary['Working dir']       = workflow.workDir
-summary['Script dir']        = workflow.projectDir
-summary['User']              = workflow.userName
-summary['genome']            = params.genome
+summary['Save BAMs mapped']   = params.save_bam_mapped ? 'Yes' : 'No'
+summary['Skip MarkDuplicates']   = params.skip_markduplicates ? 'Yes' : 'No'
 
-if (params.fasta)                   summary['fasta']                 = params.fasta
-if (params.fasta_fai)               summary['fastaFai']              = params.fasta_fai
-if (params.dict)                    summary['dict']                  = params.dict
-if (params.bwa)                     summary['bwa']                   = params.bwa
-if (params.germline_resource)       summary['germlineResource']      = params.germline_resource
-if (params.germline_resource_index) summary['germlineResourceIndex'] = params.germline_resource_index
-if (params.intervals)               summary['intervals']             = params.intervals
-if (params.ac_loci)                 summary['acLoci']                = params.ac_loci
-if (params.ac_loci_gc)              summary['acLociGC']              = params.ac_loci_gc
-if (params.chr_dir)                 summary['chrDir']                = params.chr_dir
-if (params.chr_length)              summary['chrLength']             = params.chr_length
-if (params.dbsnp)                   summary['dbsnp']                 = params.dbsnp
-if (params.dbsnp_index)             summary['dbsnpIndex']            = params.dbsnp_index
-if (params.known_indels)            summary['knownIndels']           = params.known_indels
-if (params.known_indels_index)      summary['knownIndelsIndex']      = params.known_indels_index
-if (params.mappability)             summary['Mappability']           = params.mappability
-if (params.snpeff_db)               summary['snpeffDb']              = params.snpeff_db
-if (params.vep_cache_version)       summary['vepCacheVersion']       = params.vep_cache_version
-if (params.species)                 summary['species']               = params.species
-if (params.snpeff_cache)            summary['snpEff_cache']          = params.snpeff_cache
-if (params.vep_cache)               summary['vep_cache']             = params.vep_cache
-
-if (workflow.profile.contains('awsbatch')) {
-    summary['AWS Region']   = params.awsregion
-    summary['AWS Queue']    = params.awsqueue
-    summary['AWS CLI']      = params.awscli
+if ('ascat' in tools) {
+    summary['ASCAT'] = "Options"
+    if (params.ascat_purity) summary['purity'] = params.ascat_purity
+    if (params.ascat_ploidy) summary['ploidy'] = params.ascat_ploidy
 }
 
+if ('controlfreec' in tools) {
+    summary['Control-FREEC'] = "Options"
+    if (params.cf_window)    summary['window']                 = params.cf_window
+    if (params.cf_coeff)     summary['coefficientOfVariation'] = params.cf_coeff
+    if (params.cf_ploidy)    summary['ploidy']                 = params.cf_ploidy
+}
+
+if ('haplotypecaller' in tools)             summary['GVCF']       = params.no_gvcf ? 'No' : 'Yes'
+if ('strelka' in tools && 'manta' in tools) summary['Strelka BP'] = params.no_strelka_bp ? 'No' : 'Yes'
+if (params.pon && ('mutect2' in tools || (params.sentieon && 'tnscope' in tools))) summary['Panel of normals'] = params.pon
+
+if (params.annotate_tools) summary['Tools to annotate'] = annotate_tools.join(', ')
+
+if (params.annotation_cache) {
+    summary['Annotation cache'] = "Enabled"
+    if (params.snpeff_cache) summary['snpEff cache'] = params.snpeff_cache
+    if (params.vep_cache)    summary['VEP cache']    = params.vep_cache
+}
+
+if (params.cadd_cache) {
+    summary['CADD cache'] = "Enabled"
+    if (params.cadd_indels)  summary['CADD indels']  = params.cadd_indels
+    if (params.cadd_wg_snvs) summary['CADD wg snvs'] = params.cadd_wg_snvs
+}
+
+if (params.genesplicer) summary['genesplicer'] = "Enabled"
+
+if (params.igenomes_base && !params.igenomes_ignore) summary['AWS iGenomes base'] = params.igenomes_base
+if (params.igenomes_ignore)                          summary['AWS iGenomes']      = "Do not use"
+if (params.genomes_base && !params.igenomes_ignore)  summary['Genomes base']      = params.genomes_base
+
+summary['Save Reference']    = params.save_reference ? 'Yes' : 'No'
+
+if (params.ac_loci)                 summary['Loci']                    = params.ac_loci
+if (params.ac_loci_gc)              summary['Loci GC']                 = params.ac_loci_gc
+if (params.bwa)                     summary['BWA indexes']             = params.bwa
+if (params.chr_dir)                 summary['Chromosomes']             = params.chr_dir
+if (params.chr_length)              summary['Chromosomes length']      = params.chr_length
+if (params.dbsnp)                   summary['dbsnp']                   = params.dbsnp
+if (params.dbsnp_index)             summary['dbsnpIndex']              = params.dbsnp_index
+if (params.dict)                    summary['dict']                    = params.dict
+if (params.fasta)                   summary['fasta reference']         = params.fasta
+if (params.fasta_fai)               summary['fasta index']             = params.fasta_fai
+if (params.germline_resource)       summary['germline resource']       = params.germline_resource
+if (params.germline_resource_index) summary['germline resource index'] = params.germline_resource_index
+if (params.intervals)               summary['intervals']               = params.intervals
+if (params.known_indels)            summary['known indels']            = params.known_indels
+if (params.known_indels_index)      summary['known indels index']      = params.known_indels_index
+if (params.mappability)             summary['Mappability']             = params.mappability
+if (params.snpeff_cache)            summary['snpEff cache']            = params.snpeff_cache
+if (params.snpeff_db)               summary['snpEff DB']               = params.snpeff_db
+if (params.species)                 summary['species']                 = params.species
+if (params.vep_cache)               summary['VEP cache']               = params.vep_cache
+if (params.vep_cache_version)       summary['VEP cache version']       = params.vep_cache_version
+
+summary['Output dir']        = params.outdir
+summary['Publish dir mode']  = params.publish_dir_mode
+if (params.sequencing_center) summary['Sequenced by'] = params.sequencing_center
+
+summary['Launch dir']  = workflow.launchDir
+summary['Working dir'] = workflow.workDir
+summary['Script dir']  = workflow.projectDir
+summary['User']        = workflow.userName
+
+if (params.multiqc_config) summary['MultiQC config'] = params.multiqc_config
+
 summary['Config Profile'] = workflow.profile
+
 if (params.config_profile_description) summary['Config Description'] = params.config_profile_description
 if (params.config_profile_contact)     summary['Config Contact']     = params.config_profile_contact
 if (params.config_profile_url)         summary['Config URL']         = params.config_profile_url
+
 if (params.email || params.email_on_fail) {
     summary['E-mail Address']    = params.email
     summary['E-mail on failure'] = params.email_on_fail
     summary['MultiQC maxsize']   = params.max_multiqc_email_size
+}
+
+if (workflow.profile.contains('awsbatch')) {
+    summary['AWS Region'] = params.awsregion
+    summary['AWS Queue']  = params.awsqueue
+    summary['AWS CLI']    = params.awscli
 }
 
 log.info summary.collect { k, v -> "${k.padRight(18)}: $v" }.join("\n")
@@ -677,27 +728,29 @@ process Get_software_versions {
 
     script:
     """
-    alleleCounter --version &> v_allelecount.txt  || true
-    bcftools version > v_bcftools.txt 2>&1 || true
+    alleleCounter --version &> v_allelecount.txt 2>&1 || true
+    bcftools --version &> v_bcftools.txt 2>&1 || true
     bwa &> v_bwa.txt 2>&1 || true
-    configManta.py --version > v_manta.txt 2>&1 || true
-    configureStrelkaGermlineWorkflow.py --version > v_strelka.txt 2>&1 || true
+    cnvkit.py version &> v_cnvkit.txt 2>&1 || true
+    configManta.py --version &> v_manta.txt 2>&1 || true
+    configureStrelkaGermlineWorkflow.py --version &> v_strelka.txt 2>&1 || true
     echo "${workflow.manifest.version}" &> v_pipeline.txt 2>&1 || true
     echo "${workflow.nextflow.version}" &> v_nextflow.txt 2>&1 || true
-    echo "SNPEFF version"\$(snpEff -h 2>&1) > v_snpeff.txt
-    fastqc --version > v_fastqc.txt 2>&1 || true
-    freebayes --version > v_freebayes.txt 2>&1 || true
-    gatk ApplyBQSR --help 2>&1 | grep Version: > v_gatk.txt 2>&1 || true
+    snpEff -version &> v_snpeff.txt 2>&1 || true
+    fastqc --version &> v_fastqc.txt 2>&1 || true
+    freebayes --version &> v_freebayes.txt 2>&1 || true
+    freec &> v_controlfreec.txt 2>&1 || true
+    gatk ApplyBQSR --help &> v_gatk.txt 2>&1 || true
+    msisensor &> v_msisensor.txt 2>&1 || true
     multiqc --version &> v_multiqc.txt 2>&1 || true
     qualimap --version &> v_qualimap.txt 2>&1 || true
-    R --version &> v_r.txt  || true
-    R -e "library(ASCAT); help(package='ASCAT')" &> v_ascat.txt
+    R --version &> v_r.txt 2>&1 || true
+    R -e "library(ASCAT); help(package='ASCAT')" &> v_ascat.txt 2>&1 || true
     samtools --version &> v_samtools.txt 2>&1 || true
     tiddit &> v_tiddit.txt 2>&1 || true
     trim_galore -v &> v_trim_galore.txt 2>&1 || true
     vcftools --version &> v_vcftools.txt 2>&1 || true
     vep --help &> v_vep.txt 2>&1 || true
-    msisensor &> v_msisensor.txt 2>&1 || true
 
     scrape_software_versions.py &> software_versions_mqc.yaml
     """
@@ -2654,6 +2707,8 @@ process Sentieon_TNscope {
         file(fastaFai) from ch_fai
         file(dbsnp) from ch_dbsnp
         file(dbsnpIndex) from ch_dbsnp_tbi
+        file(pon) from ch_pon
+        file(ponIndex) from ch_pon_tbi
 
     output:
         set val("SentieonTNscope"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf") into vcf_sentieon_TNscope
@@ -2661,6 +2716,7 @@ process Sentieon_TNscope {
     when: 'tnscope' in tools && params.sentieon
 
     script:
+    PON = params.pon ? "--pon ${pon}" : ""
     """
     sentieon driver \
         -t ${task.cpus} \
@@ -2673,6 +2729,7 @@ process Sentieon_TNscope {
         --tumor_sample ${idSampleTumor} \
         --normal_sample ${idSampleNormal} \
         --dbsnp ${dbsnp} \
+        ${PON} \
         TNscope_${idSampleTumor}_vs_${idSampleNormal}.vcf
     """
 }
@@ -2877,6 +2934,7 @@ process CNVkit {
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamCNVkit
         file(targetBED) from ch_target_bed
         file(fasta) from ch_fasta
+
     output:
         set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}*"), file("${idSampleNormal}*") into cnvkitOut
 
@@ -2899,7 +2957,7 @@ process CNVkit {
 
 // STEP MSISENSOR.1 - SCAN
 
-// Scan reference genome for microsattelites
+// Scan reference genome for microsatellites
 process MSIsensor_scan {
     label 'cpus_1'
     label 'memory_max'

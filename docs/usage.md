@@ -132,7 +132,7 @@ NXF_OPTS='-Xms1g -Xmx4g'
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/sarek --input sample.tsv -profile docker
+nextflow run nf-core/sarek --input <sample.tsv> -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile.
@@ -197,7 +197,7 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
   - A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
   - Pulls software from DockerHub: [`nfcore/sarek`](http://hub.docker.com/r/nfcore/sarek/)
 - `conda`
-  - Please only use Conda as a last resort `i.e.` when it's not possible to run the pipeline with Docker or Singularity.
+  - Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker or Singularity.
   - A generic configuration profile to be used with [conda](https://conda.io/docs/)
   - Pulls most software from [Bioconda](https://bioconda.github.io/)
 - `test`
@@ -224,30 +224,31 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 
 ### --input
 
-Use this to specify the location of your input TSV file. For example:
+Use this to specify the location of your input TSV file.
+For example:
 TSV file should correspond to the correct step, see [`--step`](#--step) and [input](input.md) documentation for more information
 
 ```bash
---input sample.tsv
+--input <sample.tsv>
 ```
 
-Multiple TSV files can be specified if the path must be enclosed in quotes.
+Multiple TSV files can be specified, using a [glob path](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob), if enclosed in quotes.
 
-Use this to specify the location to a directory with fastq files on `mapping` step for a single germline sample only.
+Use this to specify the location to a directory with fastq files for the `mapping` step of single germline samples only.
 For example:
 
 ```bash
---input /path/to/directory
+--input </path/to/directory>
 ```
 
 Use this to specify the location of your VCF input file on `annotate` step.
 For example:
 
 ```bash
---input sample.vcf
+--input <sample.vcf.gz>
 ```
 
-Multiple VCF files can be specified if the path must be enclosed in quotes
+Multiple VCF files can be specified, using a [glob path](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob), if enclosed in quotes.
 
 ### --step
 
@@ -265,7 +266,7 @@ Disable usage of intervals file, and disable automatic generation of intervals f
 
 ### --nucleotides_per_second
 
-Use this to estimate of how many seconds it will take to call variants on any interval, the default value is `1000` is it's not specified in the `<intervals>.bed` file.
+Use this to estimate of how many seconds it will take to call variants on any interval, the default value is `1000` is it's not specified in the [`intervals`](#--intervals) file.
 
 ### --sentieon
 
@@ -277,6 +278,7 @@ More information in the [sentieon](sentieon.md) documentation.
 ### --skip_qc
 
 Use this to disable specific QC and Reporting tools.
+Multiple tools can be specified, separated by commas.
 Available: `all`, `bamQC`, `BaseRecalibrator`, `BCFtools`, `Documentation`, `FastQC`, `MultiQC`, `samtools`, `vcftools`, `versions`
 Default: `None`
 
@@ -287,7 +289,7 @@ Use this to specify the target BED file for targeted or whole exome sequencing.
 ### --tools
 
 Use this parameter to specify the variant calling and annotation tools to be used.
-Multiple tools can be specified.
+Multiple tools can be specified, separated by commas.
 For example:
 
 ```bash
@@ -296,7 +298,7 @@ For example:
 
 Available variant callers: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `MSIsensor`, `Mutect2`, `Strelka`, `TIDDIT`.
 
-> `/!\` Not all variant callers are available for both germline and somatic variant calling.
+> **WARNING** Not all variant callers are available for both germline and somatic variant calling.
 For more details please check the [variant calling](variant_calling.md) extra documentation.
 
 Available annotation tools: `VEP`, `SnpEff`, `merge`. For more details, please check the [annotation](annotation.md) extra documentation.
@@ -305,7 +307,7 @@ Available annotation tools: `VEP`, `SnpEff`, `merge`. For more details, please c
 
 ### --trim_fastq
 
-Use this to perform adapter trimming [Trim Galore](https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md)
+Use this to perform adapter trimming with [Trim Galore](https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md)
 
 ### --clip_r1
 
@@ -402,7 +404,7 @@ Use this to disable g.vcf output from `GATK HaplotypeCaller`.
 
 ### --no_strelka_bp
 
-Use this not to use `Manta` `candidateSmallIndels` for `Strelka` (not recommended by Best Practices).
+Use this not to use `Manta` `candidateSmallIndels` for `Strelka` (not recommended by Broad Institute's Best Practices).
 
 ### --pon
 
@@ -413,7 +415,7 @@ For tests in iGenomes there is a dummy PON file in the Annotation/GermlineResour
 Provide your PON by:
 
 ```bash
---pon '[path to the PON VCF]'
+--pon </path/to/PON.vcf.gz>
 ```
 
 PON file should be bgzipped.
@@ -436,16 +438,12 @@ Default: `None`
 Enable usage of annotation cache, and disable usage of already built containers within Sarek.
 For more information, follow the [annotation guidelines](annotation.md#using-downloaded-cache).
 
-```bash
---annotation_cache
-```
-
 ### --snpeff_cache
 
 To be used conjointly with [`--annotation_cache`](#--annotation_cache), specify the cache snpEff directory:
 
 ```bash
---snpeff_cache /path/to/snpeff_cache
+--snpeff_cache </path/to/snpeff_cache>
 ```
 
 ### --vep_cache
@@ -453,7 +451,7 @@ To be used conjointly with [`--annotation_cache`](#--annotation_cache), specify 
 To be used conjointly with [`--annotation_cache`](#--annotation_cache), specify the cache VEP directory:
 
 ```bash
---vep_cache /path/to/vep_cache
+--vep_cache </path/to/vep_cache>
 ```
 
 ### --cadd_cache
@@ -588,26 +586,26 @@ The syntax for this reference configuration is as follows:
 ```nextflow
 params {
   genomes {
-    'GRCh38' {
-      ac_loci                  = '<path to the ac_loci file>'
-      ac_loci_gc               = '<path to the ac_loci_gc file>'
-      bwa                      = '<path to the bwa indexes>'
-      chr_dir                  = '<path to the chromosomes folder>'
-      chr_length               = '<path to the chromosomes length file>'
-      dbsnp                    = '<path to the dbsnp file>'
-      dbsnp_index              = '<path to the dbsnp index>'
-      dict                     = '<path to the dict file>'
-      fasta                    = '<path to the fasta file>'
-      fasta_fai                = '<path to the fasta index>'
-      germline_resource        = '<path to the germline_resource file>'
-      germline_resource_index  = '<path to the germline_resource index>'
-      intervals                = '<path to the intervals file>'
-      known_indels             = '<path to the known_indels file>'
-      known_indels_index       = '<path to the known_indels index>'
-      mappability              = '<path to the mappability file>'
-      snpeff_db                = '<version of the snpEff DB>'
+    '<GENOME>' {
+      ac_loci                  = '</path/to/reference.loci>'
+      ac_loci_gc               = '</path/to/ac_loci_gc file>'
+      bwa                      = '</path/to/bwa indexes>'
+      chr_dir                  = '</path/to/chromosomes/>'
+      chr_length               = '</path/to/reference.len>'
+      dbsnp                    = '</path/to/dbsnp.vcf.gz>'
+      dbsnp_index              = '</path/to/dbsnp.vcf.gz.tbi>'
+      dict                     = '</path/to/reference.dict>'
+      fasta                    = '</path/to/reference.fasta>'
+      fasta_fai                = '</path/to/reference.fasta.fai>'
+      germline_resource        = '</path/to/germline_resource.vcf.gz>'
+      germline_resource_index  = '</path/to/germline_resource.vcf.gz.tvi>'
+      intervals                = '</path/to/reference.intervals>'
+      known_indels             = '</path/to/known_indels.vcf.gz>'
+      known_indels_index       = '</path/to/known_indels.vcf.gz.tbi>'
+      mappability              = '</path/to/reference.gem>'
+      snpeff_db                = '<snpEff DB>'
       species                  = '<species>'
-      vep_cache_version        = '<version of the VEP cache>'
+      vep_cache_version        = '<VEP cache version'
     }
     // Any number of additional genomes, key is used with --genome
   }
@@ -647,7 +645,7 @@ Enable saving reference indexes and other files built within Sarek.
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---ac_loci '[path to the loci file]'
+--ac_loci <path/to/reference.loci>
 ```
 
 ### --ac_loci_gc
@@ -655,7 +653,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---ac_loci_gc '[path to the loci GC file]'
+--ac_loci_gc <path/to/reference.loci.gc>
 ```
 
 ### --bwa
@@ -665,7 +663,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 > If none provided, will be generated automatically from the fasta reference.
 
 ```bash
---bwa '[path to the BWA indexes]'
+--bwa <path/to/BWA/indexes>
 ```
 
 ### --chr_dir
@@ -673,7 +671,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---chr_dir '[path to the Chromosomes folder]'
+--chr_dir <path/to/chromosomes/>
 ```
 
 ### --chr_length
@@ -681,7 +679,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---chr_length '[path to the Chromosomes length file]'
+--chr_length <path/to/chromosomes.len>
 ```
 
 ### --dbsnp
@@ -689,7 +687,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---dbsnp '[path to the dbsnp file]'
+--dbsnp <path/to/dbsnp.vcf.gz>
 ```
 
 ### --dbsnp_index
@@ -699,7 +697,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 > If none provided, will be generated automatically from the fasta reference.
 
 ```bash
---dbsnp_index '[path to the dbsnp index]'
+--dbsnp_index <path/to/dbsnp.vcf.gz.tbi>
 ```
 
 ### --dict
@@ -709,7 +707,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 > If none provided, will be generated automatically from the fasta reference.
 
 ```bash
---dict '[path to the fasta dictionary file]'
+--dict <path/to/reference.dict>
 ```
 
 ### --fasta
@@ -717,7 +715,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---fasta '[path to the fasta reference file]'
+--fasta <path/to/reference.fasta>
 ```
 
 ### --fasta_fai
@@ -727,7 +725,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---fasta_fai '[path to the fasta reference index]'
+--fasta_fai <path/to/reference.fasta.fai>
 ```
 
 ### --germline_resource
@@ -738,7 +736,7 @@ You can find a smaller, stripped gnomAD VCF file (most of the annotation is remo
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---germline_resource '[path to my resource.vcf.gz]'
+--germline_resource </path/to/resource.vcf.gz>
 ```
 
 ### --germline_resource_index
@@ -749,10 +747,12 @@ If you prefer, you can specify the full path to your reference genome when you r
 > If none provided, will be generated automatically from the fasta reference.
 
 ```bash
---germline_resource_index '[path to my resource.vcf.gz.idx]'
+--germline_resource_index </path/to/resource.vcf.gz.tbi>
 ```
 
 ### --intervals
+
+Used to speed up Preprocessing and/or Variant Calling, for more information, read the [intervals section in the extra documentation on reference](reference.md#Intervals).
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
@@ -760,7 +760,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 > Use [--no_intervals](#--no_intervals) to disable automatic generation
 
 ```bash
---intervals '[path to the intervals file]'
+--intervals <path/to/reference.intervals>
 ```
 
 ### --known_indels
@@ -768,7 +768,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---known_indels '[path to the known indels file]'
+--known_indels <path/to/known_indels.vcf.gz>
 ```
 
 ### --known_indels_index
@@ -778,7 +778,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 > If none provided, will be generated automatically from the fasta reference.
 
 ```bash
---known_indels_index '[path to the known indels index]'
+--known_indels_index  <path/to/known_indels.vcf.gz.tbi>
 ```
 
 ### --mappability
@@ -786,7 +786,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---mappability '[path to the mappability file]'
+--mappability <path/to/reference.gem>
 ```
 
 ### --snpeff_db
@@ -794,7 +794,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 If you prefer, you can specify the DB version when you run the pipeline:
 
 ```bash
---snpeff_db '[version of the snpEff DB]'
+--snpeff_db <snpEff DB>
 ```
 
 ### --species
@@ -806,7 +806,7 @@ This specifies the species used for running VEP annotation. For human data, this
 If you prefer, you can specify the cache version when you run the pipeline:
 
 ```bash
---vep_cache_version '[version of the VEP cache]'
+--vep_cache_version <VEP cache version>
 ```
 
 ## Other command line parameters
@@ -973,7 +973,7 @@ Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a 
 
 ## Deprecated params
 
-> :warning: These params are deprecated -- They will be removed in a future release.
+> **WARNING** These params are deprecated -- They will be removed in a future release.
 
 ### --annotateVCF
 
