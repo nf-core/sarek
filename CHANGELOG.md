@@ -15,6 +15,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ### Fixed
 
+- [#211](https://github.com/nf-core/sarek/pull/211) - Extend timeout for pushing to DockerHub for VEP containers
+
 ### Deprecated
 
 ### Removed
