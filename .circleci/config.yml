@@ -59,6 +59,7 @@ jobs:
           no_output_timeout: 3h
       - run:
           command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:${SAREK_TAG}.${GENOME}
+          no_output_timeout: 30m
 
   vepgrch38:
     << : *buildvep
