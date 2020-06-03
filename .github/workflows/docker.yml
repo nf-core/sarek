@@ -12,7 +12,7 @@ on:
     - 'environment.yml'
 
 jobs:
-  test:
+  build-n-push:
     env:
       DOCKERHUB_PASS: ${{secrets.DOCKERHUB_PASS}}
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
