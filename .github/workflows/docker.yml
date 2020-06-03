@@ -13,6 +13,7 @@ on:
 
 jobs:
   build-n-push:
+    if: github.repository == 'nf-core/sarek'
     env:
       DOCKERHUB_PASS: ${{secrets.DOCKERHUB_PASS}}
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
