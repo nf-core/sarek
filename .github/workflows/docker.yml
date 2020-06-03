@@ -16,7 +16,7 @@ jobs:
     env:
       DOCKERHUB_PASS: ${{secrets.DOCKERHUB_PASS}}
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      SHA: github.sha
+      SHA: ${{ github.sha }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
