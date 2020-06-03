@@ -1,0 +1,28 @@
+name: nf-core Docker
+# This workflow is triggered on push and PRs to the repository when modification to environment.yml or Dockerfile
+# It runs the pipeline with the minimal test dataset to check that it completes without any syntax errors.
+on:
+  push:
+    paths:
+    - 'Dockerfile'
+    - 'environment.yml'
+  pull_request:
+    paths:
+    - 'Dockerfile'
+    - 'environment.yml'
+
+jobs:
+  test:
+    env:
+      DOCKERHUB_PASS: ${{secrets.DOCKERHUB_PASS}}
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      SHA: github.sha
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build new docker image
+        run: docker build . -t nfcore/sarek:${SHA}
+      - name: Push new docker image
+        run: |
+          echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+          docker push nfcore/sarek:${SHA}
