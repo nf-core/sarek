@@ -4,10 +4,42 @@ name: nf-core CI
 on: [push, pull_request]
 
 jobs:
+  build-n-push:
+    env:
+      DOCKERHUB_PASS: ${{secrets.DOCKERHUB_PASS}}
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      SHA: ${{ github.sha }}
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.tag.outputs.diff }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check if Docker / Conda changed
+        uses: technote-space/get-diff-action@v1
+        with:
+          PREFIX_FILTER: |
+            Dockerfile
+            environment.yml
+      - name: Build new docker image
+        if: env.GIT_DIFF
+        run: docker build . -t nfcore/sarek:${SHA}
+      - name: Push new docker image
+        if: env.GIT_DIFF
+        run: |
+          docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASS}
+          docker push nfcore/sarek:${SHA}
+      - name: Output
+        id: tag
+        run: |
+          if ${{ env.GIT_DIFF }} echo "::set-output name=diff::${SHA}"
+          else echo "::set-output name=diff::dev"
+
   test:
+    needs: build-n-push
     env:
       NXF_VER: ${{ matrix.nxf_ver }}
       NXF_ANSI_LOG: false
+      TAG: ${{ needs.build-n-push.outputs.tag }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -21,8 +53,8 @@ jobs:
           sudo mv nextflow /usr/local/bin/
       - name: Pull docker image
         run: |
-          docker pull nfcore/sarek:dev
-          docker tag nfcore/sarek:dev nfcore/sarek:dev
+          docker pull nfcore/sarek:${TAG}
+          docker tag nfcore/sarek:${TAG} nfcore/sarek:dev
       - name: Run test
         run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker
 
@@ -51,8 +83,10 @@ jobs:
         run: nextflow run ${GITHUB_WORKSPACE} -profile test_annotation,docker --tools ${{ matrix.tools }}
 
   germline:
+    needs: build-n-push
     env:
       NXF_ANSI_LOG: false
+      TAG: ${{ needs.build-n-push.outputs.tag }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -67,7 +101,9 @@ jobs:
           # Only check Nextflow pipeline minimum version
           NXF_VER: '19.10.0'
       - name: Pull docker image
-        run: docker pull nfcore/sarek:dev
+        run: |
+          docker pull nfcore/sarek:${TAG}
+          docker tag nfcore/sarek:${TAG} nfcore/sarek:dev
       - name: Get test data
         run: git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data
       - name: Run germline test
@@ -78,8 +114,10 @@ jobs:
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.markduplicates }} --input=false --step variantCalling
 
   minimal:
+    needs: build-n-push
     env:
       NXF_ANSI_LOG: false
+      TAG: ${{ needs.build-n-push.outputs.tag }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -95,13 +133,17 @@ jobs:
           # Only check Nextflow pipeline minimum version
           NXF_VER: '19.10.0'
       - name: Pull docker image
-        run: docker pull nfcore/sarek:dev
+        run: |
+          docker pull nfcore/sarek:${TAG}
+          docker tag nfcore/sarek:${TAG} nfcore/sarek:dev
       - name: Run test for minimal genomes
         run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --skipQC all --genome ${{ matrix.genome }} ${{ matrix.intervals }} --tools Manta,mpileup,Strelka,FreeBayes
 
   profile:
+    needs: build-n-push
     env:
       NXF_ANSI_LOG: false
+      TAG: ${{ needs.build-n-push.outputs.tag }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -116,13 +158,17 @@ jobs:
           # Only check Nextflow pipeline minimum version
           NXF_VER: '19.10.0'
       - name: Pull docker image
-        run: docker pull nfcore/sarek:dev
+        run: |
+          docker pull nfcore/sarek:${TAG}
+          docker tag nfcore/sarek:${TAG} nfcore/sarek:dev
       - name: Run ${{ matrix.profile }} test
         run: nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker
 
   tools:
+    needs: build-n-push
     env:
       NXF_ANSI_LOG: false
+      TAG: ${{ needs.build-n-push.outputs.tag }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -147,6 +193,24 @@ jobs:
           # Only check Nextflow pipeline minimum version
           NXF_VER: '19.10.0'
       - name: Pull docker image
-        run: docker pull nfcore/sarek:dev
+        run: |
+          docker pull nfcore/sarek:${TAG}
+          docker tag nfcore/sarek:${TAG} nfcore/sarek:dev
       - name: Run ${{ matrix.tool }} test
         run: nextflow run ${GITHUB_WORKSPACE} -profile test_tool,docker --tools ${{ matrix.tool }} ${{ matrix.intervals }}
+
+  delete-n-publish:
+    needs: [test, germline, minimal, profile, tools]
+    env:
+      DOCKERHUB_PASS: ${{secrets.DOCKERHUB_PASS}}
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      TAG: ${{ needs.build-n-push.outputs.tag }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Push docker image
+        if: ${TAG} != 'dev'
+        run: |
+          docker pull nfcore/sarek:${TAG}
+          docker tag nfcore/sarek:${TAG} nfcore/sarek:dev
+          docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASS}
+          docker push nfcore/sarek:${SHA}
