@@ -5,7 +5,7 @@ Using the `mapping` directive one will have a pair of mapped, deduplicated and r
 This is the usual option you have to give when you are starting from raw FASTQ data:
 
 ```bash
-nextflow run nf-core/sarek --input mysample.tsv --tools <tool>
+nextflow run nf-core/sarek --input <mysample.tsv> --tools <tool>
 ```
 
 `mapping` will start by default, you do not have to give any additional parameters, only the TSV file describing the sample (see below).
@@ -20,14 +20,14 @@ Also, older version are renamed with incremented numbers.
 The workflow should be started in this case with the smallest set of options as written above:
 
 ```bash
-nextflow run nf-core/sarek --input mysample.tsv --tools <tool>
+nextflow run nf-core/sarek --input <mysample.tsv> --tools <tool>
 ```
 
 The TSV file should look like:
 
-```text
-SUBJECT_ID  XX    0    SAMPLE_ID    1    /samples/normal_1.fastq.gz    /samples/normal_2.fastq.gz
-```
+| | | | | | | |
+|-|-|-|-|-|-|-|
+|SUBJECT_ID|XX|0|SAMPLE_ID|1|/samples/normal_1.fastq.gz|/samples/normal_2.fastq.gz|
 
 See the [input files documentation](input.md) for more information.
 
@@ -36,7 +36,7 @@ See the [input files documentation](input.md) for more information.
 The `--input` option can be also used to point Sarek to a directory with FASTQ files:
 
 ```bash
-nextflow run nf-core/sarek --input path/to/FASTQ/files --tools <tool>
+nextflow run nf-core/sarek --input </path/to/FASTQ/> --tools <tool>
 ```
 
 The given directory is searched recursively for FASTQ files that are named `*_R1_*.fastq.gz`, and a matching pair with the same name except `_R2_` instead of `_R1_` is expected to exist alongside.
@@ -63,32 +63,32 @@ This is captured in the TSV file only in the following manner, adding read group
 All lanes belonging to the same Sample will be merged together after the FASTQ pairs are mapped to the reference genome.
 Obviously, if you do not have relapse samples, you can leave out the two last lines.
 
-```text
-SUBJECT_ID  XX    0    SAMPLE_ID_N    1    /samples/normal1_1.fastq.gz    /samples/normal1_2.fastq.gz
-SUBJECT_ID  XX    0    SAMPLE_ID_N    2    /samples/normal2_1.fastq.gz    /samples/normal2_2.fastq.gz
-SUBJECT_ID  XX    1    SAMPLE_ID_T    3    /samples/tumor3_1.fastq.gz    /samples/tumor3_2.fastq.gz
-SUBJECT_ID  XX    1    SAMPLE_ID_T    4    /samples/tumor4_1.fastq.gz    /samples/tumor4_2.fastq.gz
-SUBJECT_ID  XX    1    SAMPLE_ID_T    5    /samples/tumor5_1.fastq.gz    /samples/tumor5_2.fastq.gz
-SUBJECT_ID  XX    1    SAMPLE_ID_R    7    /samples/relapse7_1.fastq.gz    /samples/relapse7_2.fastq.gz
-SUBJECT_ID  XX    1    SAMPLE_ID_R    9    /samples/relapse9_1.fastq.gz    /samples/relapse9_2.fastq.gz
-```
+| | | | | | | |
+|-|-|-|-|-|-|-|
+|SUBJECT_ID|XX|0|SAMPLE_ID_N|1|/path/to/normal1_1.fastq.gz|/path/to/normal1_2.fastq.gz|
+|SUBJECT_ID|XX|0|SAMPLE_ID_N|2|/path/to/normal2_1.fastq.gz|/path/to/normal2_2.fastq.gz|
+|SUBJECT_ID|XX|1|SAMPLE_ID_T|3|/path/to/tumor3_1.fastq.gz|/path/to/tumor3_2.fastq.gz|
+|SUBJECT_ID|XX|1|SAMPLE_ID_T|4|/path/to/tumor4_1.fastq.gz|/path/to/tumor4_2.fastq.gz|
+|SUBJECT_ID|XX|1|SAMPLE_ID_T|5|/path/to/tumor5_1.fastq.gz|/path/to/tumor5_2.fastq.gz|
+|SUBJECT_ID|XX|1|SAMPLE_ID_R|7|/path/to/relapse7_1.fastq.gz|/path/to/relapse7_2.fastq.gz|
+|SUBJECT_ID|XX|1|SAMPLE_ID_R|9|/path/to/relapse9_1.fastq.gz|/path/to/relapse9_2.fastq.gz|
 
 See the [input files documentation](input.md) for more information.
 
 ## Starting from recalibration
 
 ```bash
-nextflow run nf-core/sarek --input mysample.tsv --step recalibrate --tools <tool>
+nextflow run nf-core/sarek --input <mysample.tsv> --step recalibrate --tools <tool>
 ```
 
 And the corresponding TSV file should be like:
 Obviously, if you do not have tumor or relapse samples, you can leave out the two last lines.
 
-```text
-SUBJECT_ID  XX    0    SAMPLE_ID_N    /samples/SAMPLE_ID_N.bam    /samples/SAMPLE_ID_N.bai /samples/SAMPLE_ID_N.recal.table
-SUBJECT_ID  XX    1    SAMPLE_ID_T    /samples/SAMPLE_ID_T.bam    /samples/SAMPLE_ID_T.bai /samples/SAMPLE_ID_T.recal.table
-SUBJECT_ID  XX    1    SAMPLE_ID_R    /samples/SAMPLE_ID_R.bam    /samples/SAMPLE_ID_R.bai /samples/SAMPLE_ID_R.recal.table
-```
+| | | | | | | |
+|-|-|-|-|-|-|-|
+|SUBJECT_ID|XX|0|SAMPLE_ID_N|/path/to/SAMPLE_ID_N.bam|/path/to/SAMPLE_ID_N.bai|/path/to/SAMPLE_ID_N.recal.table|
+|SUBJECT_ID|XX|1|SAMPLE_ID_T|/path/to/SAMPLE_ID_T.bam|/path/to/SAMPLE_ID_T.bai|/path/to/SAMPLE_ID_T.recal.table|
+|SUBJECT_ID|XX|1|SAMPLE_ID_R|/path/to/SAMPLE_ID_R.bam|/path/to/SAMPLE_ID_R.bai|/path/to/SAMPLE_ID_R.recal.table|
 
 See the [input files documentation](input.md) for more information.
 
@@ -102,11 +102,11 @@ nextflow run nf-core/sarek --step variantcalling --tools <tool>
 
 And the corresponding TSV file should be like:
 
-```text
-SUBJECT_ID  XX    0    SAMPLE_ID_N    /samples/SAMPLE_ID_N.bam    /samples/SAMPLE_ID_N.bai
-SUBJECT_ID  XX    1    SAMPLE_ID_T    /samples/SAMPLE_ID_T.bam    /samples/SAMPLE_ID_T.bai
-SUBJECT_ID  XX    1    SAMPLE_ID_R    /samples/SAMPLE_ID_R.bam    /samples/SAMPLE_ID_R.bai
-```
+| | | | | | |
+|-|-|-|-|-|-|
+|SUBJECT_ID|XX|0|SAMPLE_ID_N|/path/to/SAMPLE_ID_N.bam|/path/to/SAMPLE_ID_N.bai|
+|SUBJECT_ID|XX|1|SAMPLE_ID_T|/path/to/SAMPLE_ID_T.bam|/path/to/SAMPLE_ID_T.bai|
+|SUBJECT_ID|XX|1|SAMPLE_ID_R|/path/to/SAMPLE_ID_R.bam|/path/to/SAMPLE_ID_R.bai|
 
 See the [input files documentation](input.md) for more information.
 
@@ -116,10 +116,10 @@ In this case, you need to start with `--step=recalibrate` (see previous section)
 ## Using Sarek with targeted (whole exome or panel) sequencing data
 
 The recommended flow for targeted sequencing data is to use the workflow as it is, but also provide a BED file containing targets for all steps using the `--targetBED` option.
-The workflow will pick up these intervals, and activate the `--exome` flag to process deeper coverage.
-It is adviced to pad the variant calling regions (exons or the target) to some extent before submitting to the workflow.
-To add the target BED file configure the flow like:
+The workflow will pick up these intervals, and activate any `--exome` flag in any tools that allow it to process deeper coverage.
+It is advised to pad the variant calling regions (exons or target) to some extent before submitting to the workflow.
+To add the target BED file configure the command line like:
 
 ```bash
-nextflow run nf-core/sarek --tools haplotypecaller,strelka,mutect2 --targetBED targets.bed --input my_panel.tsv
+nextflow run nf-core/sarek --tools haplotypecaller,strelka,mutect2 --target_bed <targets.bed> --input <sample.tsv>
 ```

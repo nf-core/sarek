@@ -1,4 +1,4 @@
-# Variant calling
+# Variant calling <!-- omit in toc -->
 
 - [Germline variant calling](#germline-variant-calling)
 - [Somatic variant calling with tumor - normal pairs](#somatic-variant-calling-with-tumor---normal-pairs)
@@ -6,11 +6,12 @@
 
 ## Germline variant calling
 
-Using Sarek, germline variant calling will be performed always, if a variant calling tool is selected and it allows for germline variant calling.
+Using Sarek, germline variant calling will always be performed if a variant calling tool with a germline mode is selected.
 You can specify the variant caller to use with the `--tools` parameter (see [usage](./usage.md) for more information).
 
 Germline variant calling can currently only be performed with the following variant callers:
 
+- FreeBayes
 - HaplotypeCaller
 - Manta
 - mpileup

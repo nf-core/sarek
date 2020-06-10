@@ -6,39 +6,42 @@ jobs:
     environment:
       GENOME: GRCh37
       SNPEFF_CACHE_VERSION: "75"
+      SAREK_TAG: dev
     steps:
       - checkout
       - setup_remote_docker
       - run:
-          command: docker build -t nfcore/sareksnpeff:dev.${GENOME} containers/snpeff/. --build-arg GENOME=${GENOME} --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION}
+          command: docker build -t nfcore/sareksnpeff:${SAREK_TAG}.${GENOME} containers/snpeff/. --build-arg GENOME=${GENOME} --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION}
       - run:
-          command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push nfcore/sareksnpeff:dev.${GENOME}
+          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sareksnpeff:${SAREK_TAG}.${GENOME}
 
   snpeffgrch38:
     << : *buildsnpeff
     environment:
       GENOME: GRCh38
       SNPEFF_CACHE_VERSION: "86"
+      SAREK_TAG: dev
 
   snpeffgrcm38:
     << : *buildsnpeff
     environment:
       GENOME: GRCm38
       SNPEFF_CACHE_VERSION: "86"
+      SAREK_TAG: dev
 
   snpeffcanfam3_1:
     << : *buildsnpeff
     environment:
       GENOME: CanFam3.1
       SNPEFF_CACHE_VERSION: "86"
+      SAREK_TAG: dev
 
   snpeffwbcel235:
     << : *buildsnpeff
     environment:
       GENOME: WBcel235
       SNPEFF_CACHE_VERSION: "86"
+      SAREK_TAG: dev
 
   vepgrch37: &buildvep
     docker:
@@ -47,14 +50,16 @@ jobs:
       GENOME: GRCh37
       SPECIES: homo_sapiens
       VEP_VERSION: "99"
+      SAREK_TAG: dev
     steps:
       - checkout
       - setup_remote_docker
       - run:
-          command: docker build -t nfcore/sarekvep:dev.${GENOME} containers/vep/. --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
+          command: docker build -t nfcore/sarekvep:${SAREK_TAG}.${GENOME} containers/vep/. --build-arg GENOME=${GENOME} --build-arg SPECIES=${SPECIES} --build-arg VEP_VERSION=${VEP_VERSION}
           no_output_timeout: 3h
       - run:
-          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:dev.${GENOME}
+          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin ; docker push nfcore/sarekvep:${SAREK_TAG}.${GENOME}
+          no_output_timeout: 30m
 
   vepgrch38:
     << : *buildvep
@@ -62,6 +67,7 @@ jobs:
       GENOME: GRCh38
       SPECIES: homo_sapiens
       VEP_VERSION: "99"
+      SAREK_TAG: dev
 
   vepgrcm38:
     << : *buildvep
@@ -69,6 +75,7 @@ jobs:
       GENOME: GRCm38
       SPECIES: mus_musculus
       VEP_VERSION: "99"
+      SAREK_TAG: dev
 
   vepcanfam3_1:
     << : *buildvep
@@ -76,6 +83,7 @@ jobs:
       GENOME: CanFam3.1
       SPECIES: canis_familiaris
       VEP_VERSION: "99"
+      SAREK_TAG: dev
 
   vepwbcel235:
     << : *buildvep
@@ -83,6 +91,7 @@ jobs:
       GENOME: WBcel235
       SPECIES: caenorhabditis_elegans
       VEP_VERSION: "99"
+      SAREK_TAG: dev
 
 workflows:
   version: 2
