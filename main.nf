@@ -4161,21 +4161,12 @@ def checkParameterList(list, realList) {
 // Define list of available tools to annotate
 def defineAnnoList() {
     return [
-<<<<<<< HEAD
         'haplotypecaller',
         'manta',
         'mutect2',
         'platypus',
         'strelka',
         'tiddit'
-=======
-        'HaplotypeCaller',
-        'Manta',
-        'Mutect2',
-        'platypus',
-        'Strelka',
-        'TIDDIT'
->>>>>>> add platypus process to main.nf
     ]
 }
 
