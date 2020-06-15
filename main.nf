@@ -2660,7 +2660,9 @@ process FilterMutect2Calls {
 
 // STEP PLATYPUS VARIANT CALLING
 
-filteredMutect2Output = filteredMutect2Output.dump(tag: 'filter mutect output')
+(platypusVcfInput, filteredMutect2Output) = filteredMutect2Output.into(2)
+platypusVcfInput = platypusVcfInput.spread(bedIntervals)
+pairBamPlatypus = pairBamPlatypus.combine(platypusVcfInput)
 pairBamPlatypus = pairBamPlatypus.dump(tag: 'platypus')
 
 process PlatypusCalling {
