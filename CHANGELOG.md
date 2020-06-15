@@ -4,7 +4,29 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.6dev] - Piellorieppe
+## [dev]
+
+### Added
+
+### Changed
+
+- [#208](https://github.com/nf-core/sarek/pull/208) - Merge changes from the release PR
+- [#208](https://github.com/nf-core/sarek/pull/208) - Bump version to `3.0dev`
+- [#214](https://github.com/nf-core/sarek/pull/214) - Update `GATK` from `4.1.6.0` to `4.1.7.0`
+
+### Fixed
+
+- [#211](https://github.com/nf-core/sarek/pull/211) - Extend timeout for pushing to DockerHub for VEP containers
+- [#212](https://github.com/nf-core/sarek/pull/212) - No AWS test on forks
+- [#214](https://github.com/nf-core/sarek/pull/214) - Fix channels collision between `Freebayes` and `Mutect2` [#200](https://github.com/nf-core/sarek/issues/200)
+- [#214](https://github.com/nf-core/sarek/pull/214) - Fix warning Invalid tag value for `CreateIntervalBeds` [#209](https://github.com/nf-core/sarek/issues/209)
+- [#214](https://github.com/nf-core/sarek/pull/214) - Fix `Mutect2` issue [#210](https://github.com/nf-core/sarek/issues/210)
+
+### Deprecated
+
+### Removed
+
+## [2.6](https://github.com/nf-core/sarek/releases/tag/2.6) - Piellorieppe
 
 Piellorieppe is one of the main massif in the Sarek National Park.
 
@@ -64,8 +86,8 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#164](https://github.com/nf-core/sarek/pull/164) - Update `gatk4-spark` from `4.1.4.1` to `4.1.6.0`
 - [#180](https://github.com/nf-core/sarek/pull/180), [#195](https://github.com/nf-core/sarek/pull/195) - Improve minimal setting
 - [#183](https://github.com/nf-core/sarek/pull/183), [#204](https://github.com/nf-core/sarek/pull/204) - Update `input.md` documentation
-- [#197](https://github.com/nf-core/sarek/pull/197) - Output directory `DuplicateMarked` is now replaced by`DuplicatesMarked`
-- [#204](https://github.com/nf-core/sarek/pull/204) - Output directory `controlFREEC` is now replaced by`Control-FREEC`
+- [#197](https://github.com/nf-core/sarek/pull/197) - Output directory `DuplicateMarked` is now replaced by `DuplicatesMarked`
+- [#204](https://github.com/nf-core/sarek/pull/204) - Output directory `controlFREEC` is now replaced by `Control-FREEC`
 
 ### Fixed
 
@@ -136,7 +158,7 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#169](https://github.com/nf-core/sarek/pull/169) - Removed omicX from README
 - [#181](https://github.com/nf-core/sarek/pull/181) - Remove duplicate code in `nextflow.config`
 
-## [2.5.2] - Jåkkåtjkaskajekna
+## [2.5.2](https://github.com/nf-core/sarek/releases/tag/2.5.2) - Jåkkåtjkaskajekna
 
 Jåkkåtjkaskajekna is one of the two glaciers of the Ålkatj Massif.
 
@@ -182,7 +204,7 @@ Jåkkåtjkaskajekna is one of the two glaciers of the Ålkatj Massif.
 - [#71](https://github.com/nf-core/sarek/pull/71) - Fix typos in `CHANGELOG`
 - [#73](https://github.com/nf-core/sarek/pull/73) - Fix issue with label `memory_max` for `BaseRecalibrator` process [#72](https://github.com/nf-core/sarek/issues/72)
 
-## [2.5.1] - Årjep-Ålkatjjekna
+## [2.5.1](https://github.com/nf-core/sarek/releases/tag/2.5.1) - Årjep-Ålkatjjekna
 
 Årjep-Ålkatjjekna is one of the two glaciers of the Ålkatj Massif.
 
@@ -196,17 +218,7 @@ Jåkkåtjkaskajekna is one of the two glaciers of the Ålkatj Massif.
 - [#49](https://github.com/nf-core/sarek/issues/49) - Use correct tag for annotation containers.
 - [#50](https://github.com/nf-core/sarek/issues/50) - Fix paths for scripts.
 
-## [2.5.1] - Årjep-Ålkatjjekna
-
-Årjep-Ålkatjjekna is one of the two glaciers of the Ålkatj Massif.
-
-### `Fixed`
-
-- [#48](https://github.com/nf-core/sarek/issues/48) - Fix `singularity.autoMounts` issue.
-- [#49](https://github.com/nf-core/sarek/issues/49) - Use correct tag for annotation containers.
-- [#50](https://github.com/nf-core/sarek/issues/50) - Fix paths for scripts.
-
-## [2.5] - Ålkatj
+## [2.5](https://github.com/nf-core/sarek/releases/tag/2.5) - Ålkatj
 
 Ålkatj is one of the main massif in the Sarek National Park.
 
@@ -338,13 +350,13 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#23](https://github.com/nf-core/sarek/pull/23) - `--genomeDict` is now deprecated, use `--dict` instead
 - [#29](https://github.com/nf-core/sarek/pull/29) - `--noReports` is now deprecated, use `--skipQC all`
 
-## [2.3.FIX1] - 2019-03-04
+## [2.3.FIX1](https://github.com/SciLifeLab/Sarek/releases/tag/2.3.FIX1) - 2019-03-04
 
 ### Fixed
 
 - [#742](https://github.com/SciLifeLab/Sarek/pull/742) - Fix output dirs (`HaplotypeCaller` that was not recognized by `annotate.nf` introduced by [#728](https://github.com/SciLifeLab/Sarek/pull/728))
 
-## [2.3] - Äpar - 2019-02-27
+## [2.3](https://github.com/SciLifeLab/Sarek/releases/tag/2.3) - Äpar - 2019-02-27
 
 Äpar is one of the main massif in the Sarek National Park.
 
@@ -407,7 +419,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#728](https://github.com/SciLifeLab/Sarek/pull/728) - Fix multi sample TSV file [#691](https://github.com/SciLifeLab/Sarek/issues/691)
 - [#733](https://github.com/SciLifeLab/Sarek/pull/733) - Fix the possibility to specify reference files on the command line
 
-## [2.2.2] - 2018-12-19
+## [2.2.2](https://github.com/SciLifeLab/Sarek/releases/tag/2.2.2) - 2018-12-19
 
 ### Added
 
@@ -442,7 +454,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#702](https://github.com/SciLifeLab/Sarek/pull/702) - Fix [#701](https://github.com/SciLifeLab/Sarek/issues/701)
 - [#705](https://github.com/SciLifeLab/Sarek/pull/705) - Fix [#704](https://github.com/SciLifeLab/Sarek/issues/704)
 
-## [2.2.1] - 2018-10-04
+## [2.2.1](https://github.com/SciLifeLab/Sarek/releases/tag/2.2.1) - 2018-10-04
 
 ### Changed
 
@@ -455,7 +467,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#657](https://github.com/SciLifeLab/Sarek/pull/657) - Fix `RunMultiQC.nf` bug
 - [#659](https://github.com/SciLifeLab/Sarek/pull/659) - Fix bugs due to updating `Nextflow`
 
-## [2.2.0] - Skårki - 2018-09-21
+## [2.2.0](https://github.com/SciLifeLab/Sarek/releases/tag/2.2.0) - Skårki - 2018-09-21
 
 Skårki is one of the main massif in the Sarek National Park.
 
@@ -502,7 +514,7 @@ Skårki is one of the main massif in the Sarek National Park.
 - [#621](https://github.com/SciLifeLab/Sarek/pull/621) - Fix `VEP` tests
 - [#637](https://github.com/SciLifeLab/Sarek/pull/637) - Fix links in MD files
 
-## [2.1.0] - Ruotes - 2018-08-14
+## [2.1.0](https://github.com/SciLifeLab/Sarek/releases/tag/2.1.0) - Ruotes - 2018-08-14
 
 Ruotes is one of the main massif in the Sarek National Park.
 
@@ -559,7 +571,7 @@ Ruotes is one of the main massif in the Sarek National Park.
 
 - [#607](https://github.com/SciLifeLab/Sarek/pull/607) - Remove `Mutect1`
 
-## [2.0.0] - 2018-03-23
+## [2.0.0](https://github.com/SciLifeLab/Sarek/releases/tag/2.0.0) - 2018-03-23
 
 First release under the `Sarek` name, from the National Park in Northern Sweden
 
@@ -616,7 +628,7 @@ First release under the `Sarek` name, from the National Park in Northern Sweden
 - [#530](https://github.com/SciLifeLab/Sarek/issues/530) - Use `$PWD` for default `outDir`
 - [#533](https://github.com/SciLifeLab/Sarek/issues/533) - Replace `VEP` `--pick` option by `--per_gene`
 
-## [1.2.5] - 2018-01-18
+## [1.2.5](https://github.com/SciLifeLab/Sarek/releases/tag/1.2.5) - 2018-01-18
 
 ### Added
 
@@ -646,7 +658,7 @@ First release under the `Sarek` name, from the National Park in Northern Sweden
 - `base.config` for `ConcatVCF` process
 - File specification for `recalibrationReport` in `RecalibrateBam` process (got error on `AWS Batch`)
 
-## [1.2.4] - 2017-10-27
+## [1.2.4](https://github.com/SciLifeLab/Sarek/releases/tag/1.2.4) - 2017-10-27
 
 ### Fixed
 
@@ -654,7 +666,7 @@ First release under the `Sarek` name, from the National Park in Northern Sweden
 - [#489](https://github.com/SciLifeLab/Sarek/issues/489) - Exception handling for `ASCAT`
 - [#490](https://github.com/SciLifeLab/Sarek/issues/490) - CPU requirements for `runSingleStrelka` and `runSingleManta`
 
-## [1.2.3] - 2017-10-18
+## [1.2.3](https://github.com/SciLifeLab/Sarek/releases/tag/1.2.3) - 2017-10-18
 
 ### Fixed
 
@@ -663,13 +675,13 @@ First release under the `Sarek` name, from the National Park in Northern Sweden
 - [#475](https://github.com/SciLifeLab/Sarek/issues/475) - 16 cpus for local executor
 - [#480](https://github.com/SciLifeLab/Sarek/issues/480) - No `tsv` file needed for step `annotate`
 
-## [1.2.2] - 2017-10-06
+## [1.2.2](https://github.com/SciLifeLab/Sarek/releases/tag/1.2.2) - 2017-10-06
 
 ### Fixed
 
 - [#479](https://github.com/SciLifeLab/Sarek/issues/479) - Typo in `uppmax-localhost.config`
 
-## [1.2.1] - 2017-10-06
+## [1.2.1](https://github.com/SciLifeLab/Sarek/releases/tag/1.2.1) - 2017-10-06
 
 ### Changed
 
@@ -687,13 +699,13 @@ First release under the `Sarek` name, from the National Park in Northern Sweden
 - [#472](https://github.com/SciLifeLab/Sarek/issues/472) - Update function to check `Nextflow` version
 - [#473](https://github.com/SciLifeLab/Sarek/issues/473) - Remove `returnMin()` function
 
-## [1.2.0] - 2017-10-02
+## [1.2.0](https://github.com/SciLifeLab/Sarek/releases/tag/1.2.0) - 2017-10-02
 
 ### Changed
 
 - Fix version for Manuscript
 
-## [1.1] - 2017-09-15
+## [1.1](https://github.com/SciLifeLab/Sarek/releases/tag/1.1) - 2017-09-15
 
 ### Added
 
@@ -710,14 +722,14 @@ First release under the `Sarek` name, from the National Park in Northern Sweden
 
 - Memory requirements
 
-## [1.0] - 2017-02-16
+## [1.0](https://github.com/SciLifeLab/Sarek/releases/tag/1.0) - 2017-02-16
 
 ### Added
 
 - `Docker` possibilities
 
-## [0.9] - 2016-11-16
+## [0.9](https://github.com/SciLifeLab/Sarek/releases/tag/0.9) - 2016-11-16
 
-## [0.8] - 2016-11-16
+## [0.8](https://github.com/SciLifeLab/Sarek/releases/tag/0.8) - 2016-11-16
 
 ## [0.1] - 2016-04-05

@@ -18,7 +18,9 @@
 
 ## Introduction
 
-Sarek is a workflow designed to run analyses on whole genome or targeted sequencing data from regular samples or tumour / normal pairs and could include additional relapses.
+Sarek is a workflow designed to detect variants on whole genome or targeted sequencing data.
+Initially designed for Human, and Mouse, it can work on any species with a reference genome.
+Sarek can also handle tumour / normal pairs and could include additional relapses.
 
 It's built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner.
 It comes with docker containers making installation trivial and results highly reproducible.
@@ -93,16 +95,19 @@ Helpful contributors:
 * [Francesco L](https://github.com/nibscles)
 * [Friederike Hanssen](https://github.com/FriederikeHanssen)
 * [Gisela Gabernet](https://github.com/ggabernet)
+* [Harshil Patel](https://github.com/drpatelh)
+* [James A. Fellows Yates](https://github.com/jfy133)
 * [Jesper Eisfeldt](https://github.com/J35P312)
 * [Johannes Alneberg](https://github.com/alneberg)
-* [Tobias Koch](https://github.com/KochTobi)
 * [Lucia Conde](https://github.com/lconde-ucl)
 * [Malin Larsson](https://github.com/malinlarsson)
 * [Marcel Martin](https://github.com/marcelm)
 * [Nilesh Tawari](https://github.com/nilesh-tawari)
+* [Olga Botvinnik](https://github.com/olgabot)
 * [Phil Ewels](https://github.com/ewels)
 * [Sabrina Krakau](https://github.com/skrakau)
 * [Sebastian-D](https://github.com/Sebastian-D)
+* [Tobias Koch](https://github.com/KochTobi)
 * [Winni Kretzschmar](https://github.com/winni2k)
 * [arontommi](https://github.com/arontommi)
 * [bjornnystedt](https://github.com/bjornnystedt)
@@ -130,7 +135,7 @@ For further information or help, don't hesitate to get in touch on [Slack](https
 ## Citation
 
 If you use `nf-core/sarek` for your analysis, please cite the `Sarek` article as follows:
-> Garcia M, Juhos S, Larsson M et al. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants [version 1; peer review: 2 approved]** *F1000Research* 2020, 9:63 [doi: 10.12688/f1000research.16665.1](https://f1000research.com/articles/9-63/v1).
+> Garcia M, Juhos S, Larsson M et al. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants [version 1; peer review: 2 approved]** *F1000Research* 2020, 9:63 [doi: 10.12688/f1000research.16665.1](http://dx.doi.org/10.12688/f1000research.16665.1).
 
 You can cite the sarek zenodo record for a specific version using the following [doi: 10.5281/zenodo.3476426](https://zenodo.org/badge/latestdoi/184289291)
 

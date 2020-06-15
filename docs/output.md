@@ -75,7 +75,7 @@ Such files are intermediate and not kept in the final files delivered to users.
 If the pipeline is run with the option `--no_gatk_spark` then [GATK MarkDuplicates](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.4.0/picard_sam_markduplicates_MarkDuplicates.php) is used instead.
 
 This directory is the location for the BAM files delivered to users.
-Besides the duplicates marked BAM files, the recalibration tables (`*.recal.table`) are also stored, and can be used to create base recalibrated files.
+Besides the duplicates-marked BAM files, the recalibration tables (`*.recal.table`) are also stored, and can be used to create base recalibrated files.
 
 For further reading and documentation see the [data pre-processing workflow from the GATK best practices](https://software.broadinstitute.org/gatk/best-practices/workflow?id=11165).
 
@@ -102,7 +102,7 @@ For all samples:
 [GATK ApplyBQSR](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_bqsr_ApplyBQSR.php) recalibrates the base qualities of the input reads based on the recalibration table produced by the [`BaseRecalibrator`](#gatk-baserecalibrator) tool.
 
 This directory is usually empty, it is the location for the final recalibrated BAM files.
-Recalibrated BAM files are usually 2-3 times larger than the duplicates marked BAM files.
+Recalibrated BAM files are usually 2-3 times larger than the duplicates-marked BAM files.
 To re-generate recalibrated BAM file you have to apply the recalibration table delivered to the `DuplicatesMarked` directory either within Sarek, or doing this recalibration step yourself.
 
 For further reading and documentation see the [data pre-processing workflow from the GATK best practices](https://software.broadinstitute.org/gatk/best-practices/workflow?id=11165).
@@ -435,15 +435,15 @@ For a Tumor/Normal pair only:
 ### MSI status
 
 [Microsatellite instability](https://en.wikipedia.org/wiki/Microsatellite_instability)
-is a genetic condition associated to deficienceies in the
+is a genetic condition associated to deficiencies in the
 mismatch repair (MMR) system which causes a tendency to accumulate a high
 number of mutations (SNVs and indels).
 
 #### MSIsensor
 
 [MSIsensor](https://github.com/ding-lab/msisensor) is a tool to detect the MSI
-status of a tumor scaning the length of the microsatellite regions. An altered
-distribution of  microsatellite length is associated to a missed replication
+status of a tumor scanning the length of the microsatellite regions. An altered
+distribution of microsatellite length is associated to a missed replication
 slippage which would be corrected under normal mismatch repair (MMR) conditions. It requires
 a normal sample for each tumour to differentiate the somatic and germline
 cases.
