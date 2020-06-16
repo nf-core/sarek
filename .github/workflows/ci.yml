@@ -21,8 +21,8 @@ jobs:
           sudo mv nextflow /usr/local/bin/
       - name: Pull docker image
         run: |
-          docker pull nfcore/sarek:dev
-          docker tag nfcore/sarek:dev nfcore/sarek:dev
+          docker pull fhanssen/nf-core-sarek:tmp
+          docker tag fhanssen/nf-core-sarek:tmp fhanssen/nf-core-sarek:tmp
       - name: Run test
         run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker
 
