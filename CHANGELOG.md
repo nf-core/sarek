@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#208](https://github.com/nf-core/sarek/pull/208) - Merge changes from the release PR
 - [#208](https://github.com/nf-core/sarek/pull/208) - Bump version to `3.0dev`
 - [#214](https://github.com/nf-core/sarek/pull/214) - Update `GATK` from `4.1.6.0` to `4.1.7.0`
+- [#219](https://github.com/nf-core/sarek/pull/219) - Added awsmegatest.yml GitHub actions workflow
 
 ### Fixed
 
@@ -21,6 +22,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#214](https://github.com/nf-core/sarek/pull/214) - Fix channels collision between `Freebayes` and `Mutect2` [#200](https://github.com/nf-core/sarek/issues/200)
 - [#214](https://github.com/nf-core/sarek/pull/214) - Fix warning Invalid tag value for `CreateIntervalBeds` [#209](https://github.com/nf-core/sarek/issues/209)
 - [#214](https://github.com/nf-core/sarek/pull/214) - Fix `Mutect2` issue [#210](https://github.com/nf-core/sarek/issues/210)
+- [#219](https://github.com/nf-core/sarek/pull/219) - Updated awstest.yml GitHub actions workflow
 
 ### Deprecated
 
