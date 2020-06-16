@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.6dev] - Piellorieppe
+## [2.6] - Piellorieppe
 
 Piellorieppe is one of the main massif in the Sarek National Park.
 
@@ -17,6 +17,7 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#117](https://github.com/nf-core/sarek/pull/117) - Add `Trim Galore` possibilities to Sarek
 - [#141](https://github.com/nf-core/sarek/pull/141) - Add containers for `WBcel235`
 - [#150](https://github.com/nf-core/sarek/pull/150), [#151](https://github.com/nf-core/sarek/pull/151), [#154](https://github.com/nf-core/sarek/pull/154) - Add AWS mega test GitHub Actions
+- [#153](https://github.com/nf-core/sarek/pull/153) - Add `CNVkit` possibilities to Sarek
 - [#158](https://github.com/nf-core/sarek/pull/158) - Added `ggplot2` version `3.3.0`
 - [#163](https://github.com/nf-core/sarek/pull/163) - Add [MSIsensor](https://github.com/ding-lab/msisensor) in tools and container
 - [#164](https://github.com/nf-core/sarek/pull/164) - Add `--no_gatk_spark` params and tests
@@ -31,6 +32,8 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#195](https://github.com/nf-core/sarek/pull/195) - Now creating TSV for duplicates marked BAMs in minimal setting
 - [#195](https://github.com/nf-core/sarek/pull/195), [#202](https://github.com/nf-core/sarek/pull/202) - Add `--save_bam_mapped` params to save mapped BAMs.
 - [#197](https://github.com/nf-core/sarek/pull/197) - Add step `prepare_recalibration` to allow restart from DuplicatesMarked BAMs
+- [#204](https://github.com/nf-core/sarek/pull/204) - Add step `Control-FREEC` to allow restart from pileup files
+- [#205](https://github.com/nf-core/sarek/pull/205) - Add `--skip_markduplicates` to allow skipping the `MarkDuplicates` process
 
 ### Changed
 
@@ -57,11 +60,12 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#141](https://github.com/nf-core/sarek/pull/141) - Update `VEP` databases to `99`
 - [#143](https://github.com/nf-core/sarek/pull/143) - Revert `snpEff` cache version to `75` for `GRCh37`
 - [#143](https://github.com/nf-core/sarek/pull/143) - Revert `snpEff` cache version to `86` for `GRCh38`
-- [#152](https://github.com/nf-core/sarek/pull/152), [#158](https://github.com/nf-core/sarek/pull/158), [#164](https://github.com/nf-core/sarek/pull/164), [#174](https://github.com/nf-core/sarek/pull/174), [#194](https://github.com/nf-core/sarek/pull/194) - Update docs
+- [#152](https://github.com/nf-core/sarek/pull/152), [#158](https://github.com/nf-core/sarek/pull/158), [#164](https://github.com/nf-core/sarek/pull/164), [#174](https://github.com/nf-core/sarek/pull/174), [#194](https://github.com/nf-core/sarek/pull/194), [#198](https://github.com/nf-core/sarek/pull/198), [#204](https://github.com/nf-core/sarek/pull/204) - Update docs
 - [#164](https://github.com/nf-core/sarek/pull/164) - Update `gatk4-spark` from `4.1.4.1` to `4.1.6.0`
 - [#180](https://github.com/nf-core/sarek/pull/180), [#195](https://github.com/nf-core/sarek/pull/195) - Improve minimal setting
-- [#183](https://github.com/nf-core/sarek/pull/183) - Update `input.md` documentation
-- [#198](https://github.com/nf-core/sarek/pull/198) - Update docs
+- [#183](https://github.com/nf-core/sarek/pull/183), [#204](https://github.com/nf-core/sarek/pull/204) - Update `input.md` documentation
+- [#197](https://github.com/nf-core/sarek/pull/197) - Output directory `DuplicateMarked` is now replaced by `DuplicatesMarked`
+- [#204](https://github.com/nf-core/sarek/pull/204) - Output directory `controlFREEC` is now replaced by `Control-FREEC`
 
 ### Fixed
 
@@ -131,7 +135,6 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#152](https://github.com/nf-core/sarek/pull/152) - Removed `Jenkinsfile`
 - [#169](https://github.com/nf-core/sarek/pull/169) - Removed omicX from README
 - [#181](https://github.com/nf-core/sarek/pull/181) - Remove duplicate code in `nextflow.config`
-- [#197](https://github.com/nf-core/sarek/pull/197) - Output directory `DuplicateMarked` is now replaced by`DuplicatesMarked`
 
 ## [2.5.2] - Jåkkåtjkaskajekna
 
