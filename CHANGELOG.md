@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#208](https://github.com/nf-core/sarek/pull/208) - Merge changes from the release PR
 - [#208](https://github.com/nf-core/sarek/pull/208) - Bump version to `3.0dev`
 - [#214](https://github.com/nf-core/sarek/pull/214) - Update `GATK` from `4.1.6.0` to `4.1.7.0`
-- [#219](https://github.com/nf-core/sarek/pull/219) - Added awsmegatest.yml GitHub actions workflow
+- [#219](https://github.com/nf-core/sarek/pull/219) - Added `awsfulltest.yml` GitHub Actions workflow
 
 ### Fixed
 
