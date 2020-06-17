@@ -37,4 +37,4 @@ jobs:
           --job-name nf-core-sarek \
           --job-queue $AWS_JOB_QUEUE \
           --job-definition $AWS_JOB_DEFINITION \
-          --container-overrides '{"command": ["nf-core/sarek", "-r '"${GITHUB_SHA}"' -profile test --outdir s3://nf-core-awsmegatests/sarek/results-'"${GITHUB_SHA}"' -w s3://nf-core-awsmegatests/sarek/work-'"${GITHUB_SHA}"' -with-tower"], "environment": [{"name": "TOWER_ACCESS_TOKEN", "value": "'"$TOWER_ACCESS_TOKEN"'"}]}'
+          --container-overrides '{"command": ["nf-core/sarek", "-r '"${GITHUB_SHA}"' -profile test --outdir s3://'"${AWS_S3_BUCKET}"'/sarek/results-'"${GITHUB_SHA}"' -w s3://'"${AWS_S3_BUCKET}"'/sarek/work-'"${GITHUB_SHA}"' -with-tower"], "environment": [{"name": "TOWER_ACCESS_TOKEN", "value": "'"$TOWER_ACCESS_TOKEN"'"}]}'
