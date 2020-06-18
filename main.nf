@@ -1028,7 +1028,7 @@ if (params.no_intervals && step != 'annotate') {
     bedIntervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
 }
 
-(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervals) = bedIntervals.into(6)
+(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, mutectIntervals, bedIntervals, platypusIntervals) = bedIntervals.into(8)
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
@@ -1994,7 +1994,7 @@ bam_recalibrated = bam_recalibrated.dump(tag:'BAM for Variant Calling')
 // Manta will be run in Germline mode, or in Tumor mode depending on status
 // HaplotypeCaller, TIDDIT and Strelka will be run for Normal and Tumor samples
 
-(bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll) = bam_recalibrated.into(6)
+(bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll, platypusRecallAll) = bam_recalibrated.into(7)
 
 (bam_sentieon_DNAseq, bam_sentieon_DNAscope, bam_sentieon_all) = bam_sentieon_deduped_table.into(3)
 
@@ -2396,7 +2396,7 @@ intervalPairBam = pairBam.spread(bedIntervals)
 bamMpileup = bamMpileup.spread(intMpileup)
 
 // intervals for Mutect2 calls, FreeBayes and pileups for Mutect2 filtering
-(pairBamMutect2, pairBamFreeBayes, pairBamPileupSummaries, pairBamPlatypus) = intervalPairBam.into(4)
+(pairBamMutect2, pairBamFreeBayes, pairBamPileupSummaries ) = intervalPairBam.into(3)
 
 // STEP FREEBAYES
 
@@ -2728,9 +2728,19 @@ process FilterMutect2Calls {
 // STEP PLATYPUS VARIANT CALLING
 
 (platypusVcfInput, filteredMutect2Output) = filteredMutect2Output.into(2)
-platypusVcfInput = platypusVcfInput.spread(bedIntervals)
-pairBamPlatypus = pairBamPlatypus.combine(platypusVcfInput)
-pairBamPlatypus = pairBamPlatypus.dump(tag: 'platypus')
+platypusVcfInput = platypusVcfInput.collect()
+platypusVcfInput = platypusVcfInput.spread(mutectIntervals)
+platypusRecallAll = platypusRecallAll.collect()
+platypusRecallAll = platypusRecallAll.spread(platypusIntervals)
+(platypusIdPatient,platypusBams,platypusBais,platypusBed) = platypusRecallAll.into(4)
+platypusIdPatient = platypusIdPatient.first()
+platypusBams = platypusBams.filter{  it.toString().toLowerCase().endsWith('bam') }
+platypusBams = platypusBams.dump(tag: 'platypus' )
+platypusBais = platypusBais.filter{ hasExtension( it, 'bai' ) }
+platypusBed = platypusBed.filter{ hasExtension( it, 'bed' ) }
+(platypusVCFs,platypusTBIs) = platypusVcfInput.into(2)
+platypusVCFs = platypusVCFs.filter{ hasExtension( it, 'gz' ) }
+platypusTBIs = platypusTBIs.filter{ hasExtension( it, 'tbi' ) }
 
 process PlatypusCalling {
 
@@ -2743,28 +2753,30 @@ process PlatypusCalling {
       }
 
     input:
-        set variantcaller, idPatient, idSamplePair, file(mutect_filtered_vcf), file(mutect_filtered_vcf_index), file(stats) from filteredMutect2Output
-        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamPlatypus
+	    val(idPatient) from platypusIdPatient
+		file(bam) from platypusBams
+		file(bai) from platypusBais
+		file(bed) from platypusBed
+		file(vcf) from platypusVCFs
+		file(tbi) from platypusTBIs
         file(fasta) from ch_fasta
-        file(intervals) from ch_intervals
 
     output:
-        set val("Platypus"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into platypusOutput
-        set val("Platypus"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.log") into platypusLogOutput
+        set val("Platypus"), idPatient, file("${idPatient}_${bed}_platypus.vcf" ) into platypusOutput
 
     when: 'platypus' in tools
 
     script:
     """
-    mv "${intervals}" "${intervals}".txt
+    mv "${bed}" "${bed}".txt
     platypus callVariants \
-        --refFile="${fasta}" --bamFiles="${bamNormal}","${bamtumor}" \
-        --output="${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}".vcf \
-        --source="${mutect_filtered_vcf}" \
+        --refFile="${fasta}" --bamFiles="${bam.join(',')}" \
+        --output="${idPatient}_${bed}_platypus".vcf \
+        --source="${vcf.join(',')}" \
         --filterReadPairsWithSmallInserts=0 --maxReads=100000000 \
         --maxVariants=100 --minPosterior=0 \
-        --nCPU=16 --regions="${intervals}".txt \
-        --logFileName "${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}".log
+        --nCPU=4 --regions="${bed}".txt \
+        --logFileName "${idPatient}_${bed}_platypus".log
     """
 }
 
