@@ -1543,7 +1543,11 @@ process BaseRecalibrator {
     label 'cpus_1'
 
     tag {idPatient + "-" + idSample + "-" + intervalBed.baseName}
-
+    publishDir "${params.outdir}/tmp", mode: 'copy',
+        saveAs: { filename ->
+            if (filename.indexOf("tmp.txt") > 0) filename
+            else null
+        }
     input:
         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamBaseRecalibrator
         file(dbsnp) from ch_dbsnp
@@ -1557,6 +1561,7 @@ process BaseRecalibrator {
     output:
         set idPatient, idSample, file("${prefix}${idSample}.recal.table") into tableGatherBQSRReports
         set idPatient, idSample into recalTableTSVnoInt
+        
 
     when: params.known_indels
 
@@ -1565,6 +1570,7 @@ process BaseRecalibrator {
     knownOptions = params.known_indels ? knownIndels.collect{"--known-sites ${it}"}.join(' ') : ""
     prefix = params.no_intervals ? "" : "${intervalBed.baseName}_"
     intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
+    tmp = ${TMPDIR:-/tmp}
     // TODO: --use-original-qualities ???
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
@@ -1577,6 +1583,7 @@ process BaseRecalibrator {
         ${dbsnpOptions} \
         ${knownOptions} \
         --verbosity INFO
+    echo \${TMPDIR:-/tmp} > ${idPatient}_tmp.txt
     """
 }
 
