@@ -872,7 +872,7 @@ if (params.no_intervals && step != 'annotate') {
     bedIntervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
 }
 
-(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervals) = bedIntervals.into(6)
+(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, mutectIntervals, bedIntervals, platypusIntervals) = bedIntervals.into(8)
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
@@ -1982,7 +1982,7 @@ bam_recalibrated = bam_recalibrated.dump(tag:'BAM for Variant Calling')
 // Manta will be run in Germline mode, or in Tumor mode depending on status
 // HaplotypeCaller, TIDDIT and Strelka will be run for Normal and Tumor samples
 
-(bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll) = bam_recalibrated.into(6)
+(bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll, platypusRecallAll) = bam_recalibrated.into(7)
 
 (bam_sentieon_DNAseq, bam_sentieon_DNAscope, bam_sentieon_all) = bam_sentieon_deduped_table.into(3)
 
@@ -2384,7 +2384,7 @@ intervalPairBam = pairBam.spread(bedIntervals)
 bamMpileup = bamMpileup.spread(intMpileup)
 
 // intervals for Mutect2 calls, FreeBayes and pileups for Mutect2 filtering
-(pairBamMutect2, pairBamFreeBayes, pairBamPileupSummaries, pairBamPlatypus) = intervalPairBam.into(4)
+(pairBamMutect2, pairBamFreeBayes, pairBamPileupSummaries ) = intervalPairBam.into(3)
 
 // STEP FREEBAYES
 
