@@ -1570,7 +1570,6 @@ process BaseRecalibrator {
     knownOptions = params.known_indels ? knownIndels.collect{"--known-sites ${it}"}.join(' ') : ""
     prefix = params.no_intervals ? "" : "${intervalBed.baseName}_"
     intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
-    tmp = ${TMPDIR:-/tmp}
     // TODO: --use-original-qualities ???
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
