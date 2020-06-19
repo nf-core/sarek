@@ -1576,6 +1576,7 @@ process BaseRecalibrator {
         BaseRecalibrator \
         -I ${bam} \
         -O ${prefix}${idSample}.recal.table \
+        --tmp-dir . \
         -R ${fasta} \
         ${intervalsOptions} \
         ${dbsnpOptions} \
