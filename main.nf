@@ -1576,14 +1576,14 @@ process BaseRecalibrator {
         BaseRecalibrator \
         -I ${bam} \
         -O ${prefix}${idSample}.recal.table \
-        --tmp-dir '${TMPDIR:-/tmp}' \
+        --tmp-dir \$TMPDIR \
         -R ${fasta} \
         ${intervalsOptions} \
         ${dbsnpOptions} \
         ${knownOptions} \
         --verbosity INFO
         
-    echo '${TMPDIR:-/tmp}' > ${idPatient}_tmp.txt
+    echo \$TMPDIR > ${idPatient}_tmp.txt
     """
 }
 
