@@ -1561,7 +1561,7 @@ process BaseRecalibrator {
     output:
         set idPatient, idSample, file("${prefix}${idSample}.recal.table") into tableGatherBQSRReports
         set idPatient, idSample into recalTableTSVnoInt
-        
+        set idPatient, file("${idPatient}_tmp.txt") into tmp
 
     when: params.known_indels
 
@@ -1582,6 +1582,7 @@ process BaseRecalibrator {
         ${dbsnpOptions} \
         ${knownOptions} \
         --verbosity INFO
+        
     echo \${TMPDIR:-/tmp} > ${idPatient}_tmp.txt
     """
 }
