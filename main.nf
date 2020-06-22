@@ -1583,7 +1583,7 @@ process BaseRecalibrator {
         ${knownOptions} \
         --verbosity INFO
         
-    echo \$TMPDIR > ${idPatient}_tmp.txt
+    echo . > ${idPatient}_tmp.txt
     """
 }
 
