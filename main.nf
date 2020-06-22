@@ -1582,8 +1582,6 @@ process BaseRecalibrator {
         ${dbsnpOptions} \
         ${knownOptions} \
         --verbosity INFO
-        
-    echo . > ${idPatient}_tmp.txt
     """
 }
 
