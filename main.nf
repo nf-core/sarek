@@ -1543,11 +1543,7 @@ process BaseRecalibrator {
     label 'cpus_1'
 
     tag {idPatient + "-" + idSample + "-" + intervalBed.baseName}
-    publishDir "${params.outdir}/tmp", mode: 'copy',
-        saveAs: { filename ->
-            if (filename.indexOf("tmp.txt") > 0) filename
-            else null
-        }
+  
     input:
         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamBaseRecalibrator
         file(dbsnp) from ch_dbsnp
@@ -1561,7 +1557,7 @@ process BaseRecalibrator {
     output:
         set idPatient, idSample, file("${prefix}${idSample}.recal.table") into tableGatherBQSRReports
         set idPatient, idSample into recalTableTSVnoInt
-        set idPatient, file("${idPatient}_tmp.txt") into tmp
+        
 
     when: params.known_indels
 
@@ -1576,14 +1572,12 @@ process BaseRecalibrator {
         BaseRecalibrator \
         -I ${bam} \
         -O ${prefix}${idSample}.recal.table \
-        --tmp-dir \${TMPDIR:-/tmp} \
+        --tmp-dir . \
         -R ${fasta} \
         ${intervalsOptions} \
         ${dbsnpOptions} \
         ${knownOptions} \
         --verbosity INFO
-        
-    echo \${TMPDIR:-/tmp} > ${idPatient}_tmp.txt
     """
 }
 
