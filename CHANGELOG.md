@@ -4,9 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [dev]
+## [dev](https://github.com/nf-core/sarek/tree/dev)
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Deprecated
+
+### Removed
+
+## [2.6.1](https://github.com/nf-core/sarek/releases/tag/2.6.1) - Gådokgaskatjåhkkå
+
+Gådokgaskatjåhkkå is the highest peak in the Piellorieppe massif.
 
 ### Changed
 
@@ -14,6 +26,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#208](https://github.com/nf-core/sarek/pull/208) - Bump version to `3.0dev`
 - [#214](https://github.com/nf-core/sarek/pull/214) - Update `GATK` from `4.1.6.0` to `4.1.7.0`
 - [#219](https://github.com/nf-core/sarek/pull/219) - Added `awsfulltest.yml` GitHub Actions workflow
+- [#222](https://github.com/nf-core/sarek/pull/222) - Bump version to `2.6.1` and minor release
+- [#223](https://github.com/nf-core/sarek/pull/223) - Apply comments from the release PR
 
 ### Fixed
 
@@ -22,11 +36,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - [#214](https://github.com/nf-core/sarek/pull/214) - Fix channels collision between `Freebayes` and `Mutect2` [#200](https://github.com/nf-core/sarek/issues/200)
 - [#214](https://github.com/nf-core/sarek/pull/214) - Fix warning Invalid tag value for `CreateIntervalBeds` [#209](https://github.com/nf-core/sarek/issues/209)
 - [#214](https://github.com/nf-core/sarek/pull/214) - Fix `Mutect2` issue [#210](https://github.com/nf-core/sarek/issues/210)
-- [#219](https://github.com/nf-core/sarek/pull/219) - Updated awstest.yml GitHub actions workflow
-
-### Deprecated
-
-### Removed
+- [#219](https://github.com/nf-core/sarek/pull/219) - Updated `awstest.yml` GitHub actions workflow
+- [#221](https://github.com/nf-core/sarek/pull/221) - Fix issue with `tmp_dir` in `BaseRecalibrator` process
 
 ## [2.6](https://github.com/nf-core/sarek/releases/tag/2.6) - Piellorieppe
 
