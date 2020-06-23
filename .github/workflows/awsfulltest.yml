@@ -1,6 +1,6 @@
-name: nf-core AWS test
+name: nf-core AWS full test
 # This workflow is triggered on push to the master branch and on published releases.
-# It runs the -profile 'test' on AWS batch
+# It runs the -profile 'test_full' on AWS batch
 
 on:
   release:
