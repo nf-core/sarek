@@ -1572,7 +1572,7 @@ process BaseRecalibrator {
         BaseRecalibrator \
         -I ${bam} \
         -O ${prefix}${idSample}.recal.table \
-        --tmp-dir /tmp \
+        --tmp-dir . \
         -R ${fasta} \
         ${intervalsOptions} \
         ${dbsnpOptions} \
@@ -2707,7 +2707,7 @@ process FilterMutect2Calls {
         file(germlineResourceIndex) from ch_germline_resource_tbi
         file(intervals) from ch_intervals
 
-                  output:
+    output:
         set val("Mutect2"), idPatient, idSamplePair, file("Mutect2_filtered_${idSamplePair}.vcf.gz"), file("Mutect2_filtered_${idSamplePair}.vcf.gz.tbi"), file("Mutect2_filtered_${idSamplePair}.vcf.gz.filteringStats.tsv") into filteredMutect2Output
 
     when: 'mutect2' in tools
@@ -3438,6 +3438,10 @@ controlFreecVizOut.dump(tag:'ControlFreecViz')
 (vcfMantaSomaticSV, vcfMantaDiploidSV) = vcfManta.into(2)
 
 vcfKeep = Channel.empty().mix(
+    filteredMutect2Output.map{
+        variantCaller, idPatient, idSample, vcf, tbi, tsv ->
+        [variantcaller, idSample, vcf]
+    },
     vcfConcatenated.map{
         variantcaller, idPatient, idSample, vcf, tbi ->
         [variantcaller, idSample, vcf]
