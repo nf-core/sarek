@@ -872,7 +872,7 @@ if (params.no_intervals && step != 'annotate') {
     bedIntervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
 }
 
-(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, mutectIntervals, bedIntervals, platypusIntervals) = bedIntervals.into(8)
+(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervals, intPlatypusVCF, intPlatpusBam) = bedIntervals.into(8)
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
@@ -1977,12 +1977,13 @@ if (step == 'variantcalling') bam_recalibrated = inputSample
 
 bam_recalibrated = bam_recalibrated.dump(tag:'BAM for Variant Calling')
 
+
 // Here we have a recalibrated bam set
 // The TSV file is formatted like: "idPatient status idSample bamFile baiFile"
 // Manta will be run in Germline mode, or in Tumor mode depending on status
 // HaplotypeCaller, TIDDIT and Strelka will be run for Normal and Tumor samples
 
-(bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll, platypusRecallAll) = bam_recalibrated.into(7)
+(bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll, bamPlatypus) = bam_recalibrated.into(7)
 
 (bam_sentieon_DNAseq, bam_sentieon_DNAscope, bam_sentieon_all) = bam_sentieon_deduped_table.into(3)
 
