@@ -1028,7 +1028,7 @@ if (params.no_intervals && step != 'annotate') {
     bedIntervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
 }
 
-(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, mutectIntervals, bedIntervals, platypusIntervals) = bedIntervals.into(8)
+(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervals, intPlatypusVCF, intPlatpusBam) = bedIntervals.into(8)
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
@@ -1989,12 +1989,13 @@ if (step == 'variantcalling') bam_recalibrated = inputSample
 
 bam_recalibrated = bam_recalibrated.dump(tag:'BAM for Variant Calling')
 
+
 // Here we have a recalibrated bam set
 // The TSV file is formatted like: "idPatient status idSample bamFile baiFile"
 // Manta will be run in Germline mode, or in Tumor mode depending on status
 // HaplotypeCaller, TIDDIT and Strelka will be run for Normal and Tumor samples
 
-(bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll, platypusRecallAll) = bam_recalibrated.into(7)
+(bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll, bamPlatypus) = bam_recalibrated.into(7)
 
 (bam_sentieon_DNAseq, bam_sentieon_DNAscope, bam_sentieon_all) = bam_sentieon_deduped_table.into(3)
 
@@ -2727,56 +2728,54 @@ process FilterMutect2Calls {
 
 // STEP PLATYPUS VARIANT CALLING
 
-(platypusVcfInput, filteredMutect2Output) = filteredMutect2Output.into(2)
-platypusVcfInput = platypusVcfInput.collect()
-platypusVcfInput = platypusVcfInput.spread(mutectIntervals)
-platypusRecallAll = platypusRecallAll.collect()
-platypusRecallAll = platypusRecallAll.spread(platypusIntervals)
-(platypusIdPatient,platypusBams,platypusBais,platypusBed) = platypusRecallAll.into(4)
-platypusIdPatient = platypusIdPatient.first()
-platypusBams = platypusBams.filter{  it.toString().toLowerCase().endsWith('bam') }
-platypusBams = platypusBams.dump(tag: 'platypus' )
-platypusBais = platypusBais.filter{ hasExtension( it, 'bai' ) }
-platypusBed = platypusBed.filter{ hasExtension( it, 'bed' ) }
-(platypusVCFs,platypusTBIs) = platypusVcfInput.into(2)
-platypusVCFs = platypusVCFs.filter{ hasExtension( it, 'gz' ) }
-platypusTBIs = platypusTBIs.filter{ hasExtension( it, 'tbi' ) }
+(intervalFilteredMutect2Output, filteredMutect2Output) = filteredMutect2Output.into(2)
+intervalFilteredMutect2Output = intervalFilteredMutect2Output
+                                    .map{ caller, idPatient, idSamplePair, vcfFile, tbiFile, statsFile ->
+                                          [ idPatient, vcfFile, tbiFile, statsFile]}
+intervalFilteredMutect2Output = intervalFilteredMutect2Output.spread(intPlatypusVCF)
+intervalFilteredMutect2Output = intervalFilteredMutect2Output.groupTuple(by: 4)
+intervalFilteredMutect2Output = intervalFilteredMutect2Output
+                                        .map { idPatient, mutect2Vcf, mutect2Tbi, mutect2Tsv, bed ->
+                                              [ idPatient[0], mutect2Vcf, mutect2Tbi, mutect2Tsv, bed ] } 
+intervalFilteredMutect2Output = intervalFilteredMutect2Output.dump(tag: 'filteredMutect2Output' )   
 
-process PlatypusCalling {
+bamPlatypus = bamPlatypus.spread(intPlatpusBam)
+bamPlatypus = bamPlatypus.groupTuple(by: 4)
+bamPlatypus = bamPlatypus
+                 .map{ idPatient, samples, bams, bais, bed ->
+                       [idPatient[0], samples, bams, bais, bed ] } 
+bamPlatypus = bamPlatypus.dump(tag: 'bamPlatypus' )
 
-    tag {idPatient + "_" + idSampleTumor}
+platypusInput = bamPlatypus.join(intervalFilteredMutect2Output, by: [0,4])
+platypusInput = platypusInput.dump(tag: 'platypusInput')
 
-    publishDir "${params.outdir}/Reports/${idSample}", mode: params.publish_dir_mode,
-      saveAs: {filename ->
-        if (filename.indexOf("log") > 0) "Platypus/${filename}"
-        else null
-      }
+process platypus {
+    
+    echo true
+    tag "${idPatient}"
 
     input:
-	    val(idPatient) from platypusIdPatient
-		file(bam) from platypusBams
-		file(bai) from platypusBais
-		file(bed) from platypusBed
-		file(vcf) from platypusVCFs
-		file(tbi) from platypusTBIs
+        set idPatient, file(intervalBed), samples, file(bams), file(bais), file(mutect2Vcf), file(mutect2Tbi), statsFile from platypusInput
         file(fasta) from ch_fasta
+        file(fastaFai) from ch_fai
 
     output:
-        set val("Platypus"), idPatient, file("${idPatient}_${bed}_platypus.vcf" ) into platypusOutput
-
-    when: 'platypus' in tools
-
+        set val("Platypus"), idPatient, file("platypus_${idPatient}_${intervalBed.baseName}.vcf") into platypusOutput
+ 	
+	when:
+		'platypus' in tools
+   
     script:
     """
-    mv "${bed}" "${bed}".txt
+	awk 'BEGIN{OFS=""}{print \$1,":",\$2,"-",\$3}' ${intervalBed} > ${intervalBed}.txt
     platypus callVariants \
-        --refFile="${fasta}" --bamFiles="${bam.join(',')}" \
-        --output="${idPatient}_${bed}_platypus".vcf \
-        --source="${vcf.join(',')}" \
+        --refFile=${fasta} --bamFiles=${bams.join(',')} \
+        --output=platypus_${idPatient}_${intervalBed.baseName}.vcf \
+        --source=${mutect2Vcf.join(',')} \
         --filterReadPairsWithSmallInserts=0 --maxReads=100000000 \
         --maxVariants=100 --minPosterior=0 \
-        --nCPU=4 --regions="${bed}".txt \
-        --logFileName "${idPatient}_${bed}_platypus".log
+        --nCPU=4 --regions=${intervalBed}.txt \
+        --logFileName platypus_${idPatient}_${intervalBed.baseName}.log
     """
 }
 
@@ -3440,7 +3439,7 @@ controlFreecVizOut.dump(tag:'ControlFreecViz')
 vcfKeep = Channel.empty().mix(
     filteredMutect2Output.map{
         variantCaller, idPatient, idSample, vcf, tbi, tsv ->
-        [variantcaller, idSample, vcf]
+        [variantCaller, idSample, vcf]
     },
     vcfConcatenated.map{
         variantcaller, idPatient, idSample, vcf, tbi ->
