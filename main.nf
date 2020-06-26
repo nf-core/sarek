@@ -2760,7 +2760,7 @@ process platypus {
         file(fastaFai) from ch_fai
 
     output:
-        set val("Platypus"), idPatient, file("platypus_${idPatient}_${intervalBed.baseName}.vcf") into platypusOutput
+        set val("Platypus"), idPatient, file("${intervalBed.baseName}_${idPatient}.vcf") into platypusOutput
  	
 	when:
 		'platypus' in tools
@@ -2770,12 +2770,46 @@ process platypus {
 	awk 'BEGIN{OFS=""}{print \$1,":",\$2,"-",\$3}' ${intervalBed} > ${intervalBed}.txt
     platypus callVariants \
         --refFile=${fasta} --bamFiles=${bams.join(',')} \
-        --output=platypus_${idPatient}_${intervalBed.baseName}.vcf \
+        --output=${intervalBed.baseName}_${idPatient}.vcf \
         --source=${mutect2Vcf.join(',')} \
         --filterReadPairsWithSmallInserts=0 --maxReads=100000000 \
         --maxVariants=100 --minPosterior=0 \
         --nCPU=4 --regions=${intervalBed}.txt \
-        --logFileName platypus_${idPatient}_${intervalBed.baseName}.log
+        --logFileName ${idPatient}_${intervalBed.baseName}.log
+    """
+}
+
+
+// STEP MERGING VCF - platypus
+platypusOutput = platypusOutput.groupTuple(by: 1)
+platypusOutput = platypusOutput
+                     .map{ variantCaller, idPatient, vcf ->  [variantCaller[0],idPatient,vcf] }
+platypusOutput = platypusOutput.dump(tag:'platypus VCF to merge')
+
+process ConcatPlatypusVCF {
+    label 'cpus_8'
+
+    tag "${variantCaller}-${idPatient}"
+
+    publishDir "${params.outdir}/VariantCalling/${idPatient}/${"$variantCaller"}", mode: params.publish_dir_mode
+
+    input:
+        set variantCaller, idPatient, file(vcf) from platypusOutput
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
+
+    output:
+    // we have this funny *_* pattern to avoid copying the raw calls to publishdir
+        set variantCaller, idPatient, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into PlatypusVcfConcatenated
+
+    when: 'platypus' in tools
+
+    script:
+    outputFile = "${variantCaller}_${idPatient}.vcf"
+    options = params.target_bed ? "-t ${targetBED}" : ""
+    intervalsOptions = params.no_intervals ? "-n" : ""
+    """
+    concatenateVCFs.sh -i ${fastaFai} -c ${task.cpus} -o ${outputFile} ${options} ${intervalsOptions}
     """
 }
 
