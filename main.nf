@@ -2373,7 +2373,7 @@ pairBam = bamNormal.cross(bamTumor).map {
 pairBam = pairBam.dump(tag:'BAM Somatic Pair')
 
 // Manta, Strelka, Mutect2, MSIsensor
-(pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBamCalculateContamination, pairBamFilterMutect2, pairBamMsisensor, pairBamCNVkit, pairBam) = pairBam.into(8)
+(pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBamCalculateContamination, pairBamFilterMutect2, pairBamMsisensor, pairBamCNVkit, pairBamPlatypus, pairBam) = pairBam.into(9)
 
 // Making Pair Bam for Sention
 
@@ -2791,8 +2791,6 @@ process ConcatPlatypusVCF {
 
     tag "${variantCaller}-${idPatient}"
 
-    publishDir "${params.outdir}/VariantCalling/${idPatient}/${"$variantCaller"}", mode: params.publish_dir_mode
-
     input:
         set variantCaller, idPatient, file(vcf) from platypusOutput
         file(fastaFai) from ch_fai
@@ -2812,6 +2810,41 @@ process ConcatPlatypusVCF {
     concatenateVCFs.sh -i ${fastaFai} -c ${task.cpus} -o ${outputFile} ${options} ${intervalsOptions}
     """
 }
+
+// only need patientID and normalSampleID
+pairBamPlatypus = pairBamPlatypus
+                   .take(1) 
+				   
+pairBamPlatypus = pairBamPlatypus
+					.map{ idPatient,idSampleNormal,bamNormal,baiNormal,idSampleTumor,bamTumor,baiTumor ->  [idPatient,idSampleNormal] }
+
+pairBamPlatypus = pairBamPlatypus.dump(tag: 'pairBamPlatypus')
+process filterPlatypus {
+	
+	echo true
+
+	tag "${variantCaller}-${idPatient}"
+
+	publishDir "${params.outdir}/VariantCalling/${variantCaller}/${idPatient}", mode: params.publish_dir_mode
+
+	input:
+        set variantCaller, idPatient, file(vcf), file(tbi) from PlatypusVcfConcatenated
+    	set idPatient, idPatientNormal from pairBamPlatypus
+	output:
+        set variantCaller, idPatient, file("${variantCaller}_${idPatient}_filtered.vcf.gz"), file("${variantCaller}_${idPatient}_filtered.vcf.gz.tbi") into PlatypusVcfFiltered
+	
+	when: 'platypus' in tools
+
+	script:
+	"""
+	bgzip -d ${vcf}
+	filter_platypus.py "${variantCaller}_${idPatient}".vcf ${idPatientNormal}
+    bgzip  "${variantCaller}_${idPatient}"_filtered.vcf
+	tabix -p vcf "${variantCaller}_${idPatient}"_filtered.vcf.gz
+	"""
+}
+
+
 
 // STEP SENTIEON TNSCOPE
 
