@@ -2363,6 +2363,7 @@ bamTumor = Channel.create()
 bamRecalAll
     .choice(bamTumor, bamNormal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
 
+(normalBamForPlatypus, bamNormal) = bamNormal.into(2)
 // Crossing Normal and Tumor to get a T/N pair for Somatic Variant Calling
 // Remapping channel to remove common key idPatient
 pairBam = bamNormal.cross(bamTumor).map {
@@ -2740,6 +2741,7 @@ intervalFilteredMutect2Output = intervalFilteredMutect2Output
 intervalFilteredMutect2Output = intervalFilteredMutect2Output.dump(tag: 'filteredMutect2Output' )   
 
 bamPlatypus = bamPlatypus.spread(intPlatpusBam)
+bamPlatypus = bamPlatypus.dump(tag: 'spreadPlatypus')
 bamPlatypus = bamPlatypus.groupTuple(by: 4)
 bamPlatypus = bamPlatypus
                  .map{ idPatient, samples, bams, bais, bed ->
@@ -2812,13 +2814,11 @@ process ConcatPlatypusVCF {
 }
 
 // only need patientID and normalSampleID
-pairBamPlatypus = pairBamPlatypus
-                   .take(1) 
-				   
-pairBamPlatypus = pairBamPlatypus
-					.map{ idPatient,idSampleNormal,bamNormal,baiNormal,idSampleTumor,bamTumor,baiTumor ->  [idPatient,idSampleNormal] }
 
-pairBamPlatypus = pairBamPlatypus.dump(tag: 'pairBamPlatypus')
+normalBamForPlatypus = normalBamForPlatypus
+                              .map{idPatient,idSample,bamNormal,baiNormal -> [idPatient,idSample]}
+
+normalBamForPlatypus = normalBamForPlatypus.dump(tag: 'normalBamForPlatypus')
 process filterPlatypus {
 	
 	echo true
@@ -2829,7 +2829,7 @@ process filterPlatypus {
 
 	input:
         set variantCaller, idPatient, file(vcf), file(tbi) from PlatypusVcfConcatenated
-    	set idPatient, idPatientNormal from pairBamPlatypus
+    	set idPatient, idSample from normalBamForPlatypus
 	output:
         set variantCaller, idPatient, file("${variantCaller}_${idPatient}_filtered.vcf.gz"), file("${variantCaller}_${idPatient}_filtered.vcf.gz.tbi") into PlatypusVcfFiltered
 	
@@ -2838,7 +2838,7 @@ process filterPlatypus {
 	script:
 	"""
 	bgzip -d ${vcf}
-	filter_platypus.py "${variantCaller}_${idPatient}".vcf ${idPatientNormal}
+	filter_platypus.py "${variantCaller}_${idPatient}".vcf ${idSample}
     bgzip  "${variantCaller}_${idPatient}"_filtered.vcf
 	tabix -p vcf "${variantCaller}_${idPatient}"_filtered.vcf.gz
 	"""
