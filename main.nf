@@ -2351,6 +2351,7 @@ bamTumor = Channel.create()
 bamRecalAll
     .choice(bamTumor, bamNormal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
 
+(normalBamForPlatypus, bamNormal) = bamNormal.into(2)
 // Crossing Normal and Tumor to get a T/N pair for Somatic Variant Calling
 // Remapping channel to remove common key idPatient
 pairBam = bamNormal.cross(bamTumor).map {
@@ -2806,6 +2807,7 @@ process ConcatPlatypusVCF {
     """
 }
 
+
 // only need patientID and normalSampleID for filterPlatypus
 
 normalBamForPlatypus = normalBamForPlatypus
@@ -2819,6 +2821,7 @@ normalBamForPlatypus = normalBamForPlatypus.join(PlatypusVcfConcatenated)
 normalBamForPlatypus = normalBamForPlatypus
 								.map{idPatient, idSampleNormal, vcf, tbi, variantCaller -> [variantCaller, idPatient,idSampleNormal, vcf, tbi]}
 normalBamForPlatypus = normalBamForPlatypus.dump(tag: 'normalBamForPlatypus')
+
 
 process filterPlatypus {
 
