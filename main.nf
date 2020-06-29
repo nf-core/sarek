@@ -2730,22 +2730,20 @@ process FilterMutect2Calls {
 // STEP PLATYPUS VARIANT CALLING
 
 (intervalFilteredMutect2Output, filteredMutect2Output) = filteredMutect2Output.into(2)
+// get rid of stats file
 intervalFilteredMutect2Output = intervalFilteredMutect2Output
                                     .map{ caller, idPatient, idSamplePair, vcfFile, tbiFile, statsFile ->
-                                          [ idPatient, vcfFile, tbiFile, statsFile]}
+                                          [ idPatient, idSamplePair, vcfFile, tbiFile]}
+// split using bedIntervals
 intervalFilteredMutect2Output = intervalFilteredMutect2Output.spread(intPlatypusVCF)
-intervalFilteredMutect2Output = intervalFilteredMutect2Output.groupTuple(by: 4)
-intervalFilteredMutect2Output = intervalFilteredMutect2Output
-                                        .map { idPatient, mutect2Vcf, mutect2Tbi, mutect2Tsv, bed ->
-                                              [ idPatient[0], mutect2Vcf, mutect2Tbi, mutect2Tsv, bed ] } 
+// group by patient and bed
+intervalFilteredMutect2Output = intervalFilteredMutect2Output.groupTuple(by: [0,4])
 intervalFilteredMutect2Output = intervalFilteredMutect2Output.dump(tag: 'filteredMutect2Output' )   
 
+// again split using bedIntervals
 bamPlatypus = bamPlatypus.spread(intPlatpusBam)
 bamPlatypus = bamPlatypus.dump(tag: 'spreadPlatypus')
-bamPlatypus = bamPlatypus.groupTuple(by: 4)
-bamPlatypus = bamPlatypus
-                 .map{ idPatient, samples, bams, bais, bed ->
-                       [idPatient[0], samples, bams, bais, bed ] } 
+bamPlatypus = bamPlatypus.groupTuple(by:[0,4])
 bamPlatypus = bamPlatypus.dump(tag: 'bamPlatypus' )
 
 platypusInput = bamPlatypus.join(intervalFilteredMutect2Output, by: [0,4])
@@ -2753,11 +2751,10 @@ platypusInput = platypusInput.dump(tag: 'platypusInput')
 
 process platypus {
     
-    echo true
     tag "${idPatient}"
 
     input:
-        set idPatient, file(intervalBed), samples, file(bams), file(bais), file(mutect2Vcf), file(mutect2Tbi), statsFile from platypusInput
+        set idPatient, file(intervalBed), samples, file(bams), file(bais), idSamplePair, file(mutect2Vcf), file(mutect2Tbi) from platypusInput
         file(fasta) from ch_fasta
         file(fastaFai) from ch_fai
 
@@ -2783,9 +2780,7 @@ process platypus {
 
 
 // STEP MERGING VCF - platypus
-platypusOutput = platypusOutput.groupTuple(by: 1)
-platypusOutput = platypusOutput
-                     .map{ variantCaller, idPatient, vcf ->  [variantCaller[0],idPatient,vcf] }
+platypusOutput = platypusOutput.groupTuple(by: [0,1])
 platypusOutput = platypusOutput.dump(tag:'platypus VCF to merge')
 
 process ConcatPlatypusVCF {
@@ -2800,7 +2795,7 @@ process ConcatPlatypusVCF {
 
     output:
     // we have this funny *_* pattern to avoid copying the raw calls to publishdir
-        set variantCaller, idPatient, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into PlatypusVcfConcatenated
+        set idPatient, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into PlatypusVcfConcatenated
 
     when: 'platypus' in tools
 
@@ -2818,29 +2813,30 @@ process ConcatPlatypusVCF {
 normalBamForPlatypus = normalBamForPlatypus
                               .map{idPatient,idSample,bamNormal,baiNormal -> [idPatient,idSample]}
 
+normalBamForPlatypus = normalBamForPlatypus.join(PlatypusVcfConcatenated)
 normalBamForPlatypus = normalBamForPlatypus.dump(tag: 'normalBamForPlatypus')
+
 process filterPlatypus {
 	
 	echo true
 
-	tag "${variantCaller}-${idPatient}"
+	tag "Platypus-${idPatient}"
 
-	publishDir "${params.outdir}/VariantCalling/${variantCaller}/${idPatient}", mode: params.publish_dir_mode
+	publishDir "${params.outdir}/VariantCalling/Platypus/${idPatient}", mode: params.publish_dir_mode
 
 	input:
-        set variantCaller, idPatient, file(vcf), file(tbi) from PlatypusVcfConcatenated
-    	set idPatient, idSample from normalBamForPlatypus
+    	set idPatient, idSample, file(vcf), file(tbi)from normalBamForPlatypus
 	output:
-        set variantCaller, idPatient, file("${variantCaller}_${idPatient}_filtered.vcf.gz"), file("${variantCaller}_${idPatient}_filtered.vcf.gz.tbi") into PlatypusVcfFiltered
+        set val('Platypus'), idPatient, file("Platypus_${idPatient}_filtered.vcf.gz"), file("Platypus_${idPatient}_filtered.vcf.gz.tbi") into PlatypusVcfFiltered
 	
 	when: 'platypus' in tools
 
 	script:
 	"""
 	bgzip -d ${vcf}
-	filter_platypus.py "${variantCaller}_${idPatient}".vcf ${idSample}
-    bgzip  "${variantCaller}_${idPatient}"_filtered.vcf
-	tabix -p vcf "${variantCaller}_${idPatient}"_filtered.vcf.gz
+	filter_platypus.py "Platypus_${idPatient}".vcf ${idSample}
+    bgzip  "Platypus_${idPatient}"_filtered.vcf
+	tabix -p vcf "Platypus_${idPatient}"_filtered.vcf.gz
 	"""
 }
 
