@@ -2794,7 +2794,7 @@ process ConcatPlatypusVCF {
 
     output:
     // we have this funny *_* pattern to avoid copying the raw calls to publishdir
-        set variantCaller, idPatient, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into PlatypusVcfConcatenated
+        set idPatient, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into PlatypusVcfConcatenated
 
     when: 'platypus' in tools
 
@@ -2822,10 +2822,9 @@ normalBamForPlatypus = normalBamForPlatypus
 								.map{idPatient, idSampleNormal, vcf, tbi, variantCaller -> [variantCaller, idPatient,idSampleNormal, vcf, tbi]}
 normalBamForPlatypus = normalBamForPlatypus.dump(tag: 'normalBamForPlatypus')
 
-
 process filterPlatypus {
 
-	tag "${variantCaller}-${idPatient}"
+	tag "Platypus-${idPatient}"
 
 	publishDir "${params.outdir}/VariantCalling/${idPatient}/${variantCaller}", mode: params.publish_dir_mode
 
