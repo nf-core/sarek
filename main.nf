@@ -2795,7 +2795,7 @@ process ConcatPlatypusVCF {
 
     output:
     // we have this funny *_* pattern to avoid copying the raw calls to publishdir
-        set idPatient, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into PlatypusVcfConcatenated
+        set variantCaller, idPatient, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into PlatypusVcfConcatenated
 
     when: 'platypus' in tools
 
@@ -2813,30 +2813,36 @@ process ConcatPlatypusVCF {
 normalBamForPlatypus = normalBamForPlatypus
                               .map{idPatient,idSample,bamNormal,baiNormal -> [idPatient,idSample]}
 
+// shuffle the platypusOutput for join to work
+PlatypusVcfConcatenated = PlatypusVcfConcatenated
+								.map{variantCaller, idPatient, vcf, tbi -> [idPatient, vcf, tbi, variantCaller]}
 normalBamForPlatypus = normalBamForPlatypus.join(PlatypusVcfConcatenated)
+// shuffle back
+normalBamForPlatypus = normalBamForPlatypus
+								.map{idPatient, idSampleNormal, vcf, tbi, variantCaller -> [variantCaller, idPatient,idSampleNormal, vcf, tbi]}
 normalBamForPlatypus = normalBamForPlatypus.dump(tag: 'normalBamForPlatypus')
 
 process filterPlatypus {
 	
 	echo true
 
-	tag "Platypus-${idPatient}"
+	tag "${variantCaller}-${idPatient}"
 
-	publishDir "${params.outdir}/VariantCalling/Platypus/${idPatient}", mode: params.publish_dir_mode
+	publishDir "${params.outdir}/VariantCalling/${variantCaller}/${idPatient}", mode: params.publish_dir_mode
 
 	input:
-    	set idPatient, idSample, file(vcf), file(tbi)from normalBamForPlatypus
+    	set variantCaller, idPatient, idSampleNormal, file(vcf), file(tbi)from normalBamForPlatypus
 	output:
-        set val('Platypus'), idPatient, file("Platypus_${idPatient}_filtered.vcf.gz"), file("Platypus_${idPatient}_filtered.vcf.gz.tbi") into PlatypusVcfFiltered
+        set variantCaller, idPatient, file("${variantCaller}_${idPatient}_filtered.vcf.gz"), file("${variantCaller}_${idPatient}_filtered.vcf.gz.tbi") into PlatypusVcfFiltered
 	
 	when: 'platypus' in tools
 
 	script:
 	"""
 	bgzip -d ${vcf}
-	filter_platypus.py "Platypus_${idPatient}".vcf ${idSample}
-    bgzip  "Platypus_${idPatient}"_filtered.vcf
-	tabix -p vcf "Platypus_${idPatient}"_filtered.vcf.gz
+	filter_platypus.py "${variantCaller}_${idPatient}".vcf ${idSampleNormal}
+    bgzip  "${variantCaller}_${idPatient}"_filtered.vcf
+	tabix -p vcf "${variantCaller}_${idPatient}"_filtered.vcf.gz
 	"""
 }
 
