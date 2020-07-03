@@ -100,6 +100,7 @@ def helpMessage() {
                                       See: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_CreateSomaticPanelOfNormals.php
       --pon_index              [file] Index of pon panel-of-normals VCF
                                       If none provided, will be generated automatically from the PON
+      --platypus_tef           [int]  Input tumour enrichment factor for platypus filter
 
     Annotation:
       --annotate_tools          [str] Specify from which tools Sarek should look for VCF files to annotate, only for step Annotate
@@ -553,6 +554,8 @@ ch_cadd_wg_snvs_tbi = params.cadd_wg_snvs_tbi ? Channel.value(file(params.cadd_w
 ch_pon = params.pon ? Channel.value(file(params.pon)) : "null"
 ch_target_bed = params.target_bed ? Channel.value(file(params.target_bed)) : "null"
 
+// Tumour enrichment factor required for platypus
+ch_tef = params.platypus_tef ? Channel.value(params.platypus_tef) : "null"
 /*
 ================================================================================
                                 PRINTING SUMMARY
@@ -2816,7 +2819,7 @@ process ConcatPlatypusVCF {
     """
 }
 
-// only need patientID and normalSampleID
+// only need patientID and normalSampleID for filterPlatypus
 
 normalBamForPlatypus = normalBamForPlatypus
                               .map{idPatient,idSample,bamNormal,baiNormal -> [idPatient,idSample]}
@@ -2832,14 +2835,14 @@ normalBamForPlatypus = normalBamForPlatypus.dump(tag: 'normalBamForPlatypus')
 
 process filterPlatypus {
 	
-	echo true
-
 	tag "${variantCaller}-${idPatient}"
 
 	publishDir "${params.outdir}/VariantCalling/${idPatient}/${variantCaller}", mode: params.publish_dir_mode
 
 	input:
     	set variantCaller, idPatient, idSampleNormal, file(vcf), file(tbi)from normalBamForPlatypus
+		val(tef) from ch_tef
+
 	output:
         set variantCaller, idPatient, file("${variantCaller}_${idPatient}_filtered.vcf.gz"), file("${variantCaller}_${idPatient}_filtered.vcf.gz.tbi") into PlatypusVcfFiltered
 	
@@ -2848,7 +2851,7 @@ process filterPlatypus {
 	script:
 	"""
 	bgzip -d ${vcf}
-	filter_platypus.py "${variantCaller}_${idPatient}".vcf ${idSampleNormal}
+	filter_platypus.py "${variantCaller}_${idPatient}".vcf ${idSampleNormal} ${tef}
     bgzip  "${variantCaller}_${idPatient}"_filtered.vcf
 	tabix -p vcf "${variantCaller}_${idPatient}"_filtered.vcf.gz
 	"""

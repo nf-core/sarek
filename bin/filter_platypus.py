@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 ############################################################
-# filter_platypus.py Daniel Nichol 01/05/2018
+# filter_platypus.py Daniel Nichol 01/05/2018 George Cresswell 12/09/2018
 #
 # Filters the vcf file produced by platypus
 #
@@ -10,7 +10,8 @@
 #   3) A genotype is called for all samples (i.e. no sample assigned './.')
 #   4) The genotype phred scores (GQ) are >=10 for all samples
 #   5) The number of reads covering the variant site is >=10 in all samples.
-#   6) The normal sample has no reads exhibing the variant
+#   6) The tumour has a 'tef' times enrichment in VAF from in the tumour with the
+#      largest VAF for the mutation compared to the normal
 #   7) At least one tumour samples has >=3 reads for the variant.
 #
 ############################################################
@@ -32,12 +33,13 @@ filterList =   ['PASS', 'alleleBias', 'Q20', 'Q20;alleleBias','QD', 'Q20;QD', 'Q
 #####################################################################
 # Parse the arguments
 #####################################################################
-if len(sys.argv)!=3:
-    print("python filter_platypus.py <input> <normal_name>")
+if len(sys.argv)!=4:
+    print("python filter_platypus.py <input> <normal_name> <tumour_enrichment>")
     exit()
-elif len(sys.argv) == 3:
+elif len(sys.argv) == 4:
     platypus_file = sys.argv[1]
     normal_name = sys.argv[2]
+    tef = float(sys.argv[3])
 
 #####################################################################
 # Filter the platypus file
@@ -86,9 +88,25 @@ with open(platypus_file[0:-4]+"_filtered.vcf",'w') as platypus_pass:
                     # If the genotype for all samples exist:
                     if ("./." not in allGTs) and (normGT=="0/0") and (tumGTs.count("0/0")!=(samples-1)):
 
-                        # No variant reads for normal and
+                        # What is the maximum vaf of the variant in the tumour samples
+                        tvafs = [float(el[5]) / float(el[4]) for el in tumSamples]
+                        mxtvaf = max(tvafs)
+
+                        # What is the normal vaf?
+                        nvaf = float(normSample[5]) / float(normSample[4])
+
+                        # Enrichment compared to normal
                         # >=3 variant reads for at least one tumour sample
-                        normNVpass = (int(normSample[5]) == 0)
+                        if float(normSample[5])==0:
+                            normNVpass = True
+                        else:
+                            normNVpass = (mxtvaf / nvaf) >= tef
+                            # Some print lines for trouble shooting
+                            # print("TEF filter found passable mutation")
+                            # print(normNVpass)
+                            # print(mxtvaf)
+                            # print(nvaf)
+                            # print(line)
                         tumNVpass = any([float(el[5]) >= 3 for el in tumSamples])
 
                         if normNVpass and tumNVpass:
