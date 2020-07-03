@@ -37,7 +37,6 @@ Here is a list of the variant calling tools that support somatic variant calling
 - Manta
 - MSIsensor
 - Mutect2
-- Platypus
 - Sentieon (check the specific [sentieon](sentieon.md) documentation)
 - Strelka
 
@@ -53,7 +52,6 @@ Here is a list of the variant calling tools that support tumor-only somatic vari
 - Manta
 - mpileup
 - Mutect2
-- Platpus
 - TIDDIT
 
 For more information on the individual variant callers, and where to find the variant calling results, check the [output](output.md) documentation.
