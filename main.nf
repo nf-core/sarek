@@ -2751,6 +2751,8 @@ platypusInput = platypusInput.dump(tag: 'platypusInput')
 
 process platypus {
     
+	label 'cpus_max'
+	label 'memory_max' 
     tag "${idPatient}"
 
     input:
@@ -2765,19 +2767,25 @@ process platypus {
 		'platypus' in tools
    
     script:
+	intervalsOptions = params.no_intervals ? "" : "--regions=${intervalBed}.txt"
     """
-	awk 'BEGIN{OFS=""}{print \$1,":",\$2,"-",\$3}' ${intervalBed} > ${intervalBed}.txt
-    platypus callVariants \
+	if [[ $intervalsOptions == "*regions*" ]]; then
+	    awk 'BEGIN{OFS=""}{print \$1,":",\$2,"-",\$3}' ${intervalBed} > ${intervalBed}.txt
+    fi
+
+	platypus callVariants \
         --refFile=${fasta} --bamFiles=${bams.join(',')} \
         --output=${intervalBed.baseName}_${idPatient}.vcf \
         --source=${mutect2Vcf.join(',')} \
-        --filterReadPairsWithSmallInserts=0 --maxReads=100000000 \
-        --maxVariants=100 --minPosterior=0 \
-        --nCPU=4 --regions=${intervalBed}.txt \
+        --filterReadPairsWithSmallInserts=0 \
+		--maxReads=100000000 \
+        --maxVariants=100 \
+		--minPosterior=0 \
+        --nCPU=${task.cpus} \
+		${intervalsOptions} \
         --logFileName ${idPatient}_${intervalBed.baseName}.log
     """
 }
-
 
 // STEP MERGING VCF - platypus
 platypusOutput = platypusOutput.groupTuple(by: [0,1])
@@ -2828,7 +2836,7 @@ process filterPlatypus {
 
 	tag "${variantCaller}-${idPatient}"
 
-	publishDir "${params.outdir}/VariantCalling/${variantCaller}/${idPatient}", mode: params.publish_dir_mode
+	publishDir "${params.outdir}/VariantCalling/${idPatient}/${variantCaller}", mode: params.publish_dir_mode
 
 	input:
     	set variantCaller, idPatient, idSampleNormal, file(vcf), file(tbi)from normalBamForPlatypus
