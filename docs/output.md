@@ -206,40 +206,6 @@ Files created:
 - `[TUMORSAMPLE]_contamination.table`
   - a text file exported when panel-of-normals provided about sample contamination
 
-#### Platypus
-
-[Platypus](https://www.well.ox.ac.uk/research/research-groups/lunter-group/lunter-group/platypus-a-haplotype-based-variant-caller-for-next-generation-sequence-data)
-
-For further reading and documentation see the [Platypus manual](https://www.well.ox.ac.uk/research/research-groups/lunter-group/lunter-group/platypus-documentation)
-
-The output is automatically filtered
-The filtering criteria are:
-   1) The FILTER tag for the call is in filterList (below)
-   2) The variant is not a known GL variant, or aligned to the decoy genome.
-   3) A genotype is called for all samples (i.e. no sample assigned './.')
-   4) The genotype phred scores (GQ) are >=10 for all samples
-   5) The number of reads covering the variant site is >=10 in all samples.
-   6) The normal sample has no reads exhibing the variant
-   7) At least one tumour samples has >=3 reads for the variant.
-
-
- Filter list 
-
-filterList =   ['PASS', 'alleleBias', 'Q20', 'Q20;alleleBias','QD', 'Q20;QD', 'QD;alleleBias',
-                'Q20;QD;alleleBias', 'SC', 'SC;Q20', 'SC;alleleBias', 'SC;Q20;alleleBias', 'SC;QD',
-                'SC;Q20;QD', 'SC;QD;alleleBias', 'SC;Q20;QD;alleleBias', 'HapScore', 'Q20;HapScore',
-                'HapScore;alleleBias', 'Q20;HapScore;alleleBias', 'QD;HapScore', 'Q20;HapScore;QD',
-                'QD;HapScore;alleleBias', 'Q20;HapScore;QD;alleleBias', 'SC;HapScore', 'SC;Q20;HapScore',
-                'SC;HapScore;alleleBias', 'SC;Q20;HapScore;alleleBias', 'SC;HapScore;QD', 'SC;Q20;HapScore;QD',
-                'SC;HapScore;QD;alleleBias', 'SC;Q20;HapScore;QD;alleleBias']
-
-
-**Ouput directory: `results/VariantCalling/IdPatient/Platypus`**
-
-Files created:
-- `Platypus_IdPatient_filtered.vcf.gz`
-- `Platypus_IdPatient_filtered.vcf.gz.tbi`
-
 #### samtools mpileup
 
 [samtools mpileup](https://www.htslib.org/doc/samtools.html) generate pileup for a BAM file.
