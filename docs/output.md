@@ -21,7 +21,6 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [GATK HaplotypeCaller](#gatk-haplotypecaller)
     - [GATK GenotypeGVCFs](#gatk-genotypegvcfs)
     - [GATK Mutect2](#gatk-mutect2)
-    - [Platypus](#platypus)
     - [samtools mpileup](#samtools-mpileup)
     - [Strelka2](#strelka2)
     - [Sentieon DNAseq](#sentieon-dnaseq)
