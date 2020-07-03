@@ -2742,7 +2742,7 @@ platypusInput = bamPlatypus.join(intervalFilteredMutect2Output, by: [0,4])
 platypusInput = platypusInput.dump(tag: 'platypusInput')
 
 process platypus {
-
+	
 	label 'cpus_max'
 	label 'memory_max' 
     tag "${idPatient}"
