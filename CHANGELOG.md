@@ -12,6 +12,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ### Fixed
 
+- [#229](https://github.com/nf-core/sarek/pull/229) - Fix `Control-FREEC` restart issue [#225](https://github.com/nf-core/sarek/issues/225)
+
 ### Deprecated
 
 ### Removed
