@@ -3387,51 +3387,51 @@ controlFreecVizOut.dump(tag:'ControlFreecViz')
 vcfKeep = Channel.empty().mix(
     filteredMutect2Output.map{
         variantCaller, idPatient, idSample, vcf, tbi, tsv ->
-        [variantcaller, idSample, vcf]
+        [variantCaller, idSample, vcf]
     },
     vcfConcatenated.map{
-        variantcaller, idPatient, idSample, vcf, tbi ->
-        [variantcaller, idSample, vcf]
+        variantCaller, idPatient, idSample, vcf, tbi ->
+        [variantCaller, idSample, vcf]
     },
     vcf_sentieon_compressed.map {
-        variantcaller, idPatient, idSample, vcf, tbi ->
-        [variantcaller, idSample, vcf]
+        variantCaller, idPatient, idSample, vcf, tbi ->
+        [variantCaller, idSample, vcf]
     },
     vcfStrelkaSingle.map {
-        variantcaller, idPatient, idSample, vcf, tbi ->
-        [variantcaller, idSample, vcf[1]]
+        variantCaller, idPatient, idSample, vcf, tbi ->
+        [variantCaller, idSample, vcf[1]]
     },
     vcfMantaSingle.map {
-        variantcaller, idPatient, idSample, vcf, tbi ->
-        [variantcaller, idSample, vcf[2]]
+        variantCaller, idPatient, idSample, vcf, tbi ->
+        [variantCaller, idSample, vcf[2]]
     },
     vcfMantaDiploidSV.map {
-        variantcaller, idPatient, idSample, vcf, tbi ->
-        [variantcaller, idSample, vcf[2]]
+        variantCaller, idPatient, idSample, vcf, tbi ->
+        [variantCaller, idSample, vcf[2]]
     },
     vcfMantaSomaticSV.map {
-        variantcaller, idPatient, idSample, vcf, tbi ->
-        [variantcaller, idSample, vcf[3]]
+        variantCaller, idPatient, idSample, vcf, tbi ->
+        [variantCaller, idSample, vcf[3]]
     },
     vcfStrelkaIndels.map {
-        variantcaller, idPatient, idSample, vcf, tbi ->
-        [variantcaller, idSample, vcf[0]]
+        variantCaller, idPatient, idSample, vcf, tbi ->
+        [variantCaller, idSample, vcf[0]]
     },
     vcfStrelkaSNVS.map {
-        variantcaller, idPatient, idSample, vcf, tbi ->
-        [variantcaller, idSample, vcf[1]]
+        variantCaller, idPatient, idSample, vcf, tbi ->
+        [variantCaller, idSample, vcf[1]]
     },
     vcfStrelkaBPIndels.map {
-        variantcaller, idPatient, idSample, vcf, tbi ->
-        [variantcaller, idSample, vcf[0]]
+        variantCaller, idPatient, idSample, vcf, tbi ->
+        [variantCaller, idSample, vcf[0]]
     },
     vcfStrelkaBPSNVS.map {
-        variantcaller, idPatient, idSample, vcf, tbi ->
-        [variantcaller, idSample, vcf[1]]
+        variantCaller, idPatient, idSample, vcf, tbi ->
+        [variantCaller, idSample, vcf[1]]
     },
     vcfTIDDIT.map {
-        variantcaller, idPatient, idSample, vcf, tbi ->
-        [variantcaller, idSample, vcf]
+        variantCaller, idPatient, idSample, vcf, tbi ->
+        [variantCaller, idSample, vcf]
     })
 
 (vcfBCFtools, vcfVCFtools, vcfAnnotation) = vcfKeep.into(3)
