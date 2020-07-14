@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ### Added
 
+- [#230](https://github.com/nf-core/sarek/pull/230) - Add `ignore_soft_clipped_bases` option for `Mutect2` [#218](https://github.com/nf-core/sarek/issues/218)
+
 ### Changed
 
 - [#237](https://github.com/nf-core/sarek/pull/237) - Switch `bwa 0.7.17` for `bwa-mem2 2.0`

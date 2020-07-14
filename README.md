@@ -104,6 +104,7 @@ Helpful contributors:
 * [Marcel Martin](https://github.com/marcelm)
 * [Nilesh Tawari](https://github.com/nilesh-tawari)
 * [Olga Botvinnik](https://github.com/olgabot)
+* [Paul Cantalupo](https://github.com/pcantalupo)
 * [Phil Ewels](https://github.com/ewels)
 * [Sabrina Krakau](https://github.com/skrakau)
 * [Sebastian-D](https://github.com/Sebastian-D)
