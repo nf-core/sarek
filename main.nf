@@ -94,6 +94,7 @@ def helpMessage() {
                                       Default: ${params.cf_ploidy}
       --cf_window               [int] Control-FREEC window size
                                       Default: Disabled
+      --ignore_soft_clipped_bases [bool] Do not analyze soft clipped bases in the reads for GATK Mutect2
       --no_gvcf                [bool] No g.vcf output from GATK HaplotypeCaller
       --no_strelka_bp          [bool] Will not use Manta candidateSmallIndels for Strelka (not recommended by Best Practices)
       --pon                    [file] Panel-of-normals VCF (bgzipped) for GATK Mutect2 / Sentieon TNscope
@@ -2465,6 +2466,7 @@ process Mutect2 {
     // https://gatkforums.broadinstitute.org/gatk/discussion/11136/how-to-call-somatic-mutations-using-gatk4-mutect2
     PON = params.pon ? "--panel-of-normals ${pon}" : ""
     intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
+    softClippedOption = params.ignore_soft_clipped_bases ? "--dont-use-soft-clipped-bases true" : ""
     """
     # Get raw calls
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
@@ -2473,6 +2475,7 @@ process Mutect2 {
       -I ${bamTumor}  -tumor ${idSampleTumor} \
       -I ${bamNormal} -normal ${idSampleNormal} \
       ${intervalsOptions} \
+      ${softClippedOption} \
       --germline-resource ${germlineResource} \
       ${PON} \
       -O ${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf
