@@ -17,7 +17,7 @@ For annotation, the main container can be used, but the cache has to be download
 - Contain **[ASCAT](https://github.com/Crick-CancerGenomics/ascat)** 2.5.2
 - Contain **[AlleleCount](https://github.com/cancerit/alleleCount)** 4.0.2
 - Contain **[BCFTools](https://github.com/samtools/bcftools)** 1.9
-- Contain **[BWA](https://github.com/lh3/bwa)** 0.7.17
+- Contain **[bwa-mem2](https://github.com/bwa-mem2/bwa-mem2)** 2.0
 - Contain **[Control-FREEC](https://github.com/BoevaLab/FREEC)** 11.5
 - Contain **[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)** 0.11.9
 - Contain **[FreeBayes](https://github.com/ekg/freebayes)** 1.3.2
