@@ -270,45 +270,45 @@ include { FASTQC } from './modules/nf-core/fastqc' params(params)
 include { MULTIQC } from './modules/nf-core/multiqc' params(params)
 
 
-// // PREPARING CHANNELS FOR PREPROCESSING AND QC
+// PREPARING CHANNELS FOR PREPROCESSING AND QC
 
-inputBam = Channel.empty()
-inputPairReads = Channel.empty()
+// inputBam = Channel.empty()
+// inputPairReads = Channel.empty()
 
-if (step in ['preparerecalibration', 'recalibrate', 'variantcalling', 'controlfreec', 'annotate']) {
-    inputBam.close()
-    inputPairReads.close()
-} else inputSample.choice(inputPairReads, inputBam) {hasExtension(it[3], "bam") ? 1 : 0}
+// if (step in ['preparerecalibration', 'recalibrate', 'variantcalling', 'controlfreec', 'annotate']) {
+//     inputBam.close()
+//     inputPairReads.close()
+// } else inputSample.branch(inputPairReads, inputBam) {hasExtension(it[3], "bam") ? 1 : 0}
 
-(inputBam, inputBamFastQC) = inputBam.into(2)
+// (inputBam, inputBamFastQC) = inputBam.into(2)
 
-// Removing inputFile2 which is null in case of uBAM
-inputBamFastQC = inputBamFastQC.map {
-    idPatient, idSample, idRun, inputFile1, inputFile2 ->
-    [idPatient, idSample, idRun, inputFile1]
-}
+// // Removing inputFile2 which is null in case of uBAM
+// inputBamFastQC = inputBamFastQC.map {
+//     idPatient, idSample, idRun, inputFile1, inputFile2 ->
+//     [idPatient, idSample, idRun, inputFile1]
+// }
 
-if (params.split_fastq){
-    inputPairReads = inputPairReads
-        // newly splitfastq are named based on split, so the name is easier to catch
-        .splitFastq(by: params.split_fastq, compress:true, file:"split", pe:true)
-        .map {idPatient, idSample, idRun, reads1, reads2 ->
-            // The split fastq read1 is the 4th element (indexed 3) its name is split_3
-            // The split fastq read2's name is split_4
-            // It's followed by which split it's acutally based on the mother fastq file
-            // Index start at 1
-            // Extracting the index to get a new IdRun
-            splitIndex = reads1.fileName.toString().minus("split_3.").minus(".gz")
-            newIdRun = idRun + "_" + splitIndex
-            // Giving the files a new nice name
-            newReads1 = file("${idSample}_${newIdRun}_R1.fastq.gz")
-            newReads2 = file("${idSample}_${newIdRun}_R2.fastq.gz")
-            [idPatient, idSample, newIdRun, reads1, reads2]}
-}
+// if (params.split_fastq){
+//    inputPairReads = inputPairReads
+//        // newly splitfastq are named based on split, so the name is easier to catch
+//        .splitFastq(by: params.split_fastq, compress:true, file:"split", pe:true)
+//        .map {idPatient, idSample, idRun, reads1, reads2 ->
+//            // The split fastq read1 is the 4th element (indexed 3) its name is split_3
+//            // The split fastq read2's name is split_4
+//            // It's followed by which split it's acutally based on the mother fastq file
+//            // Index start at 1
+//            // Extracting the index to get a new IdRun
+//            splitIndex = reads1.fileName.toString().minus("split_3.").minus(".gz")
+//            newIdRun = idRun + "_" + splitIndex
+//            // Giving the files a new nice name
+//            newReads1 = file("${idSample}_${newIdRun}_R1.fastq.gz")
+//            newReads2 = file("${idSample}_${newIdRun}_R2.fastq.gz")
+//            [idPatient, idSample, newIdRun, reads1, reads2]}
+//}
 
-inputPairReads = inputPairReads.dump(tag:'INPUT')
+// inputPairReads.dump(tag:'INPUT')
 
-(inputPairReads, inputPairReadsTrimGalore, inputPairReadsFastQC) = inputPairReads.into(3)
+// (inputPairReads, inputPairReadsTrimGalore, inputPairReadsFastQC) = inputPairReads.into(3)
 
 
 /*
@@ -319,12 +319,7 @@ inputPairReads = inputPairReads.dump(tag:'INPUT')
 
 workflow {
 
-    CHECK_SAMPLESHEET(inputSample)
-        .splitCsv(header:true, sep:',')
-        .map { check_samplesheet_paths(it) }
-        .set { ch_raw_reads }
-
-    FASTQC(ch_raw_reads)
+    FASTQC(inputSample)
 
     OUTPUT_DOCUMENTATION(
         ch_output_docs,
