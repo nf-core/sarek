@@ -20,7 +20,7 @@ class Headers {
         return colorcodes
     }
 
-    static String nf_core(workflow, monochrome_logs) {x
+    static String nf_core(workflow, monochrome_logs) {
         Map colors = log_colours(monochrome_logs)
         String.format(
             """\n

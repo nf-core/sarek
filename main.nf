@@ -31,6 +31,19 @@ if (params.help) {
     exit 0
 }
 
+/*
+================================================================================
+                        INCLUDE SAREK FUNCTIONS
+================================================================================
+*/
+include { hasExtension; 
+    defineStepList; 
+    extractFastq; 
+    extractInfos; 
+    defineToolList; 
+    checkParameterList; 
+    extractBam;
+    extractFastqFromDir } from './modules/local/functions'
 
 /*
 ================================================================================
@@ -51,39 +64,40 @@ Checks.hostname(workflow, params, log) // Check the hostnames against configured
 ch_multiqc_config = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
 ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
+ch_output_docs_images = file("$baseDir/docs/images/", checkIfExists: true)
 
-// Check if genome exists in the config file
-if (params.genomes && !params.genomes.containsKey(params.genome) && !params.igenomes_ignore) {
-    exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
-} else if (params.genomes && !params.genomes.containsKey(params.genome) && params.igenomes_ignore) {
-    exit 1, "The provided genome '${params.genome}' is not available in the genomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
-}
+// // Check if genome exists in the config file
+// if (params.genomes && !params.genomes.containsKey(params.genome) && !params.igenomes_ignore) {
+//     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
+// } else if (params.genomes && !params.genomes.containsKey(params.genome) && params.igenomes_ignore) {
+//     exit 1, "The provided genome '${params.genome}' is not available in the genomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
+// }
 
 stepList = defineStepList()
 step = params.step ? params.step.toLowerCase().replaceAll('-', '').replaceAll('_', '') : ''
 
-// Handle deprecation
-if (step == 'preprocessing') step = 'mapping'
+// // Handle deprecation
+// if (step == 'preprocessing') step = 'mapping'
 
-if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
-if (!checkParameterExistence(step, stepList)) exit 1, "Unknown step ${step}, see --help for more information"
+// if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
+// if (!checkParameterExistence(step, stepList)) exit 1, "Unknown step ${step}, see --help for more information"
 
 toolList = defineToolList()
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
 if (step == 'controlfreec') tools = ['controlfreec']
 if (!checkParameterList(tools, toolList)) exit 1, 'Unknown tool(s), see --help for more information'
 
-skipQClist = defineSkipQClist()
-skipQC = params.skip_qc ? params.skip_qc == 'all' ? skipQClist : params.skip_qc.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
-if (!checkParameterList(skipQC, skipQClist)) exit 1, 'Unknown QC tool(s), see --help for more information'
+// skipQClist = defineSkipQClist()
+// skipQC = params.skip_qc ? params.skip_qc == 'all' ? skipQClist : params.skip_qc.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
+// if (!checkParameterList(skipQC, skipQClist)) exit 1, 'Unknown QC tool(s), see --help for more information'
 
-annoList = defineAnnoList()
-annotateTools = params.annotate_tools ? params.annotate_tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
-if (!checkParameterList(annotateTools,annoList)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
+// annoList = defineAnnoList()
+// annotateTools = params.annotate_tools ? params.annotate_tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
+// if (!checkParameterList(annotateTools,annoList)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
 
-// Check parameters
-if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
-if (params.cf_window && params.cf_coeff) exit 1, 'Please specify either --cf_window OR --cf_coeff, but not both of them'
+// // Check parameters
+// if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
+// if (params.cf_window && params.cf_coeff) exit 1, 'Please specify either --cf_window OR --cf_coeff, but not both of them'
 
 
 // Handle input
@@ -91,7 +105,7 @@ tsvPath = null
 if (params.input && (hasExtension(params.input, "tsv") || hasExtension(params.input, "vcf") || hasExtension(params.input, "vcf.gz"))) tsvPath = params.input
 if (params.input && (hasExtension(params.input, "vcf") || hasExtension(params.input, "vcf.gz"))) step = "annotate"
 
-save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? true : false
+// save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? true : false
 
 // If no input file specified, trying to get TSV files corresponding to step in the TSV directory
 // only for steps preparerecalibration, recalibrate, variantcalling and controlfreec
@@ -156,60 +170,62 @@ if (tsvPath) {
 
 (genderMap, statusMap, inputSample) = extractInfos(inputSample)
 
+inputSample.dump(tag: 'input sample')
+
 /*
 ================================================================================
                                CHECKING REFERENCES
 ================================================================================
 */
 
-// Initialize each params in params.genomes, catch the command line first if it was defined
-// params.fasta has to be the first one
-params.fasta = params.genome && !('annotate' in step) ? params.genomes[params.genome].fasta ?: null : null
-// The rest can be sorted
-params.ac_loci = params.genome && 'ascat' in tools ? params.genomes[params.genome].ac_loci ?: null : null
-params.ac_loci_gc = params.genome && 'ascat' in tools ? params.genomes[params.genome].ac_loci_gc ?: null : null
-params.bwa = params.genome && params.fasta && 'mapping' in step ? params.genomes[params.genome].bwa ?: null : null
-params.chr_dir = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].chr_dir ?: null : null
-params.chr_length = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].chr_length ?: null : null
-params.dbsnp = params.genome && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? params.genomes[params.genome].dbsnp ?: null : null
-params.dbsnp_index = params.genome && params.dbsnp ? params.genomes[params.genome].dbsnp_index ?: null : null
-params.dict = params.genome && params.fasta ? params.genomes[params.genome].dict ?: null : null
-params.fasta_fai = params.genome && params.fasta ? params.genomes[params.genome].fasta_fai ?: null : null
-params.germline_resource = params.genome && 'mutect2' in tools ? params.genomes[params.genome].germline_resource ?: null : null
-params.germline_resource_index = params.genome && params.germline_resource ? params.genomes[params.genome].germline_resource_index ?: null : null
-params.intervals = params.genome && !('annotate' in step) ? params.genomes[params.genome].intervals ?: null : null
-params.known_indels = params.genome && ('mapping' in step || 'preparerecalibration' in step) ? params.genomes[params.genome].known_indels ?: null : null
-params.known_indels_index = params.genome && params.known_indels ? params.genomes[params.genome].known_indels_index ?: null : null
-params.mappability = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].mappability ?: null : null
-params.snpeff_db = params.genome && 'snpeff' in tools ? params.genomes[params.genome].snpeff_db ?: null : null
-params.species = params.genome && 'vep' in tools ? params.genomes[params.genome].species ?: null : null
-params.vep_cache_version = params.genome && 'vep' in tools ? params.genomes[params.genome].vep_cache_version ?: null : null
+// // Initialize each params in params.genomes, catch the command line first if it was defined
+// // params.fasta has to be the first one
+// params.fasta = params.genome && !('annotate' in step) ? params.genomes[params.genome].fasta ?: null : null
+// // The rest can be sorted
+// params.ac_loci = params.genome && 'ascat' in tools ? params.genomes[params.genome].ac_loci ?: null : null
+// params.ac_loci_gc = params.genome && 'ascat' in tools ? params.genomes[params.genome].ac_loci_gc ?: null : null
+// params.bwa = params.genome && params.fasta && 'mapping' in step ? params.genomes[params.genome].bwa ?: null : null
+// params.chr_dir = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].chr_dir ?: null : null
+// params.chr_length = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].chr_length ?: null : null
+// params.dbsnp = params.genome && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? params.genomes[params.genome].dbsnp ?: null : null
+// params.dbsnp_index = params.genome && params.dbsnp ? params.genomes[params.genome].dbsnp_index ?: null : null
+// params.dict = params.genome && params.fasta ? params.genomes[params.genome].dict ?: null : null
+// params.fasta_fai = params.genome && params.fasta ? params.genomes[params.genome].fasta_fai ?: null : null
+// params.germline_resource = params.genome && 'mutect2' in tools ? params.genomes[params.genome].germline_resource ?: null : null
+// params.germline_resource_index = params.genome && params.germline_resource ? params.genomes[params.genome].germline_resource_index ?: null : null
+// params.intervals = params.genome && !('annotate' in step) ? params.genomes[params.genome].intervals ?: null : null
+// params.known_indels = params.genome && ('mapping' in step || 'preparerecalibration' in step) ? params.genomes[params.genome].known_indels ?: null : null
+// params.known_indels_index = params.genome && params.known_indels ? params.genomes[params.genome].known_indels_index ?: null : null
+// params.mappability = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].mappability ?: null : null
+// params.snpeff_db = params.genome && 'snpeff' in tools ? params.genomes[params.genome].snpeff_db ?: null : null
+// params.species = params.genome && 'vep' in tools ? params.genomes[params.genome].species ?: null : null
+// params.vep_cache_version = params.genome && 'vep' in tools ? params.genomes[params.genome].vep_cache_version ?: null : null
 
-// Initialize channels based on params
-ch_ac_loci = params.ac_loci && 'ascat' in tools ? Channel.value(file(params.ac_loci)) : "null"
-ch_ac_loci_gc = params.ac_loci_gc && 'ascat' in tools ? Channel.value(file(params.ac_loci_gc)) : "null"
-ch_chr_dir = params.chr_dir && 'controlfreec' in tools ? Channel.value(file(params.chr_dir)) : "null"
-ch_chr_length = params.chr_length && 'controlfreec' in tools ? Channel.value(file(params.chr_length)) : "null"
-ch_dbsnp = params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? Channel.value(file(params.dbsnp)) : "null"
-ch_fasta = params.fasta && !('annotate' in step) ? Channel.value(file(params.fasta)) : "null"
-ch_fai = params.fasta_fai && !('annotate' in step) ? Channel.value(file(params.fasta_fai)) : "null"
-ch_germline_resource = params.germline_resource && 'mutect2' in tools ? Channel.value(file(params.germline_resource)) : "null"
-ch_intervals = params.intervals && !params.no_intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : "null"
-ch_known_indels = params.known_indels && ('mapping' in step || 'preparerecalibration' in step) ? Channel.value(file(params.known_indels)) : "null"
-ch_mappability = params.mappability && 'controlfreec' in tools ? Channel.value(file(params.mappability)) : "null"
+// // Initialize channels based on params
+// ch_ac_loci = params.ac_loci && 'ascat' in tools ? Channel.value(file(params.ac_loci)) : "null"
+// ch_ac_loci_gc = params.ac_loci_gc && 'ascat' in tools ? Channel.value(file(params.ac_loci_gc)) : "null"
+// ch_chr_dir = params.chr_dir && 'controlfreec' in tools ? Channel.value(file(params.chr_dir)) : "null"
+// ch_chr_length = params.chr_length && 'controlfreec' in tools ? Channel.value(file(params.chr_length)) : "null"
+// ch_dbsnp = params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? Channel.value(file(params.dbsnp)) : "null"
+// ch_fasta = params.fasta && !('annotate' in step) ? Channel.value(file(params.fasta)) : "null"
+// ch_fai = params.fasta_fai && !('annotate' in step) ? Channel.value(file(params.fasta_fai)) : "null"
+// ch_germline_resource = params.germline_resource && 'mutect2' in tools ? Channel.value(file(params.germline_resource)) : "null"
+// ch_intervals = params.intervals && !params.no_intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : "null"
+// ch_known_indels = params.known_indels && ('mapping' in step || 'preparerecalibration' in step) ? Channel.value(file(params.known_indels)) : "null"
+// ch_mappability = params.mappability && 'controlfreec' in tools ? Channel.value(file(params.mappability)) : "null"
 
-ch_snpeff_cache = params.snpeff_cache ? Channel.value(file(params.snpeff_cache)) : "null"
-ch_snpeff_db = params.snpeff_db ? Channel.value(params.snpeff_db) : "null"
-ch_vep_cache_version = params.vep_cache_version ? Channel.value(params.vep_cache_version) : "null"
-ch_vep_cache = params.vep_cache ? Channel.value(file(params.vep_cache)) : "null"
+// ch_snpeff_cache = params.snpeff_cache ? Channel.value(file(params.snpeff_cache)) : "null"
+// ch_snpeff_db = params.snpeff_db ? Channel.value(params.snpeff_db) : "null"
+// ch_vep_cache_version = params.vep_cache_version ? Channel.value(params.vep_cache_version) : "null"
+// ch_vep_cache = params.vep_cache ? Channel.value(file(params.vep_cache)) : "null"
 
-// Optional files, not defined within the params.genomes[params.genome] scope
-ch_cadd_indels = params.cadd_indels ? Channel.value(file(params.cadd_indels)) : "null"
-ch_cadd_indels_tbi = params.cadd_indels_tbi ? Channel.value(file(params.cadd_indels_tbi)) : "null"
-ch_cadd_wg_snvs = params.cadd_wg_snvs ? Channel.value(file(params.cadd_wg_snvs)) : "null"
-ch_cadd_wg_snvs_tbi = params.cadd_wg_snvs_tbi ? Channel.value(file(params.cadd_wg_snvs_tbi)) : "null"
-ch_pon = params.pon ? Channel.value(file(params.pon)) : "null"
-ch_target_bed = params.target_bed ? Channel.value(file(params.target_bed)) : "null"
+// // Optional files, not defined within the params.genomes[params.genome] scope
+// ch_cadd_indels = params.cadd_indels ? Channel.value(file(params.cadd_indels)) : "null"
+// ch_cadd_indels_tbi = params.cadd_indels_tbi ? Channel.value(file(params.cadd_indels_tbi)) : "null"
+// ch_cadd_wg_snvs = params.cadd_wg_snvs ? Channel.value(file(params.cadd_wg_snvs)) : "null"
+// ch_cadd_wg_snvs_tbi = params.cadd_wg_snvs_tbi ? Channel.value(file(params.cadd_wg_snvs_tbi)) : "null"
+// ch_pon = params.pon ? Channel.value(file(params.pon)) : "null"
+// ch_target_bed = params.target_bed ? Channel.value(file(params.target_bed)) : "null"
 
 /*
 ================================================================================
@@ -224,7 +240,7 @@ if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
     run_name = workflow.runName
 }
 summary = Schema.params_summary(workflow, params, run_name)
-log.info Headers.nf_core(workflow, params, run_name)
+log.info Headers.nf_core(workflow, params.monochrome_logs)
 log.info summary.collect { k,v -> "${k.padRight(20)}: $v" }.join("\n")
 log.info "-\033[2m----------------------------------------------------\033[0m-"
 
@@ -254,6 +270,47 @@ include { FASTQC } from './modules/nf-core/fastqc' params(params)
 include { MULTIQC } from './modules/nf-core/multiqc' params(params)
 
 
+// // PREPARING CHANNELS FOR PREPROCESSING AND QC
+
+inputBam = Channel.empty()
+inputPairReads = Channel.empty()
+
+if (step in ['preparerecalibration', 'recalibrate', 'variantcalling', 'controlfreec', 'annotate']) {
+    inputBam.close()
+    inputPairReads.close()
+} else inputSample.choice(inputPairReads, inputBam) {hasExtension(it[3], "bam") ? 1 : 0}
+
+(inputBam, inputBamFastQC) = inputBam.into(2)
+
+// Removing inputFile2 which is null in case of uBAM
+inputBamFastQC = inputBamFastQC.map {
+    idPatient, idSample, idRun, inputFile1, inputFile2 ->
+    [idPatient, idSample, idRun, inputFile1]
+}
+
+if (params.split_fastq){
+    inputPairReads = inputPairReads
+        // newly splitfastq are named based on split, so the name is easier to catch
+        .splitFastq(by: params.split_fastq, compress:true, file:"split", pe:true)
+        .map {idPatient, idSample, idRun, reads1, reads2 ->
+            // The split fastq read1 is the 4th element (indexed 3) its name is split_3
+            // The split fastq read2's name is split_4
+            // It's followed by which split it's acutally based on the mother fastq file
+            // Index start at 1
+            // Extracting the index to get a new IdRun
+            splitIndex = reads1.fileName.toString().minus("split_3.").minus(".gz")
+            newIdRun = idRun + "_" + splitIndex
+            // Giving the files a new nice name
+            newReads1 = file("${idSample}_${newIdRun}_R1.fastq.gz")
+            newReads2 = file("${idSample}_${newIdRun}_R2.fastq.gz")
+            [idPatient, idSample, newIdRun, reads1, reads2]}
+}
+
+inputPairReads = inputPairReads.dump(tag:'INPUT')
+
+(inputPairReads, inputPairReadsTrimGalore, inputPairReadsFastQC) = inputPairReads.into(3)
+
+
 /*
 ================================================================================
                         RUN THE WORKFLOW
@@ -262,7 +319,7 @@ include { MULTIQC } from './modules/nf-core/multiqc' params(params)
 
 workflow {
 
-    CHECK_SAMPLESHEET(ch_input)
+    CHECK_SAMPLESHEET(inputSample)
         .splitCsv(header:true, sep:',')
         .map { check_samplesheet_paths(it) }
         .set { ch_raw_reads }
@@ -612,45 +669,6 @@ workflow.onComplete {
 
 // (intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervals) = bedIntervals.into(6)
 
-// // PREPARING CHANNELS FOR PREPROCESSING AND QC
-
-// inputBam = Channel.create()
-// inputPairReads = Channel.create()
-
-// if (step in ['preparerecalibration', 'recalibrate', 'variantcalling', 'controlfreec', 'annotate']) {
-//     inputBam.close()
-//     inputPairReads.close()
-// } else inputSample.choice(inputPairReads, inputBam) {hasExtension(it[3], "bam") ? 1 : 0}
-
-// (inputBam, inputBamFastQC) = inputBam.into(2)
-
-// // Removing inputFile2 which is null in case of uBAM
-// inputBamFastQC = inputBamFastQC.map {
-//     idPatient, idSample, idRun, inputFile1, inputFile2 ->
-//     [idPatient, idSample, idRun, inputFile1]
-// }
-
-// if (params.split_fastq){
-//     inputPairReads = inputPairReads
-//         // newly splitfastq are named based on split, so the name is easier to catch
-//         .splitFastq(by: params.split_fastq, compress:true, file:"split", pe:true)
-//         .map {idPatient, idSample, idRun, reads1, reads2 ->
-//             // The split fastq read1 is the 4th element (indexed 3) its name is split_3
-//             // The split fastq read2's name is split_4
-//             // It's followed by which split it's acutally based on the mother fastq file
-//             // Index start at 1
-//             // Extracting the index to get a new IdRun
-//             splitIndex = reads1.fileName.toString().minus("split_3.").minus(".gz")
-//             newIdRun = idRun + "_" + splitIndex
-//             // Giving the files a new nice name
-//             newReads1 = file("${idSample}_${newIdRun}_R1.fastq.gz")
-//             newReads2 = file("${idSample}_${newIdRun}_R2.fastq.gz")
-//             [idPatient, idSample, newIdRun, reads1, reads2]}
-// }
-
-// inputPairReads = inputPairReads.dump(tag:'INPUT')
-
-// (inputPairReads, inputPairReadsTrimGalore, inputPairReadsFastQC) = inputPairReads.into(3)
 
 // // STEP 0.5: QC ON READS
 
