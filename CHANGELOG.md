@@ -6,9 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [dev](https://github.com/nf-core/sarek/tree/dev)
 
+- Switching to DSL2
+
 ### Added
 
 ### Changed
+
+- Update Nextflow `19.10.0` -> `20.04.1`
 
 ### Fixed
 
