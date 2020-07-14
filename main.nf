@@ -315,9 +315,12 @@ include { MULTIQC } from './modules/nf-core/multiqc' params(params)
                         RUN THE WORKFLOW
 ================================================================================
 */
+include { build_indices } from './modules/local/buildindices'
 
-workflow variant_calling{
 
+workflow {
+
+    //build_indices(ch_fasta, ch_dbsnp, ch_germline_resource, ch_known_indels)
     FASTQC(inputSample)
 
     OUTPUT_DOCUMENTATION(
@@ -333,6 +336,22 @@ workflow variant_calling{
         GET_SOFTWARE_VERSIONS.out.software_versions_yml.collect(),
         ch_workflow_summary)
 }
+
+ch_bwa = params.bwa ? Channel.value(file(params.bwa)) : build_indices.out.BWAMEM2_INDEX.out
+
+ch_dict = params.dict ? Channel.value(file(params.dict)) : GATK_CREATE_SEQUENCE_DICTIONARY.out
+
+ch_fai = params.fasta_fai ? Channel.value(file(params.fasta_fai)) : SAMTOOLS_FAIDX.out
+
+ch_dbsnp_tbi = params.dbsnp ? params.dbsnp_index ? Channel.value(file(params.dbsnp_index)) : dbsnp_tbi : "null"
+
+ch_germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? Channel.value(file(params.germline_resource_index)) : germline_resource_tbi : "null"
+
+ch_known_indels_tbi = params.known_indels ? params.known_indels_index ? Channel.value(file(params.known_indels_index)) : known_indels_tbi.collect() : "null"
+
+ch_pon_tbi = params.pon ? params.pon_index ? Channel.value(file(params.pon_index)) : pon_tbi : "null"
+
+ch_intervals = params.no_intervals ? "null" : params.intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : intervalBuilt
 
 /*
 ================================================================================

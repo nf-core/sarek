@@ -1,4 +1,4 @@
-process htslib_tabix {
+process HTSLIB_TABIX {
     tag {vcf}
 
     container 'quay.io/biocontainers/tabix:0.2.6--ha92aebf_0'
