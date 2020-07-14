@@ -731,7 +731,7 @@ process Get_software_versions {
     """
     alleleCounter --version &> v_allelecount.txt 2>&1 || true
     bcftools --version &> v_bcftools.txt 2>&1 || true
-    bwa &> v_bwa.txt 2>&1 || true
+    bwa-mem2 version &> v_bwa.txt 2>&1 || true
     cnvkit.py version &> v_cnvkit.txt 2>&1 || true
     configManta.py --version &> v_manta.txt 2>&1 || true
     configureStrelkaGermlineWorkflow.py --version &> v_strelka.txt 2>&1 || true
@@ -783,7 +783,7 @@ process BuildBWAindexes {
 
     script:
     """
-    bwa index ${fasta}
+    bwa-mem2 index ${fasta}
     """
 }
 
@@ -1223,7 +1223,7 @@ process MapReads {
     input = hasExtension(inputFile1, "bam") ? "-p /dev/stdin - 2> >(tee ${inputFile1}.bwa.stderr.log >&2)" : "${inputFile1} ${inputFile2}"
     """
     ${convertToFastq}
-    bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
+    bwa-mem2 mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
     ${input} | \
     samtools sort --threads ${task.cpus} -m 2G - > ${idSample}_${idRun}.bam
     """
