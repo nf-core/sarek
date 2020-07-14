@@ -13,7 +13,6 @@ process GET_SOFTWARE_VERSIONS {
     path "software_versions.csv", emit: software_versions_csv
 
     script:
-    // TODO nf-core: Get all tools to print their version number here
     """
     alleleCounter --version &> v_allelecount.txt 2>&1 || true
     bcftools --version &> v_bcftools.txt 2>&1 || true

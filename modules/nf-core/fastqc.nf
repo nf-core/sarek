@@ -15,6 +15,8 @@ process FASTQC {
     output:
         path "*.{html,zip}"
 
+    //     when: !('fastqc' in skipQC)
+
     script:
     """
     fastqc -t 2 -q ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
