@@ -19,361 +19,38 @@ nf-core/sarek:
 --------------------------------------------------------------------------------
 */
 
-def helpMessage() {
-    log.info nfcoreHeader()
-    log.info"""
-
-    Usage:
-
-    The typical command for running the pipeline is as follows:
-
-    nextflow run nf-core/sarek --input sample.tsv -profile docker
-
-    Mandatory arguments:
-      -profile                  [str] Configuration profile to use
-                                      Can use multiple (comma separated)
-                                      Available: conda, docker, singularity, test and more
-      --input                  [file] Path to input TSV file on mapping, prepare_recalibration, recalibrate, variant_calling and Control-FREEC steps
-                                      Multiple TSV files can be specified with quotes
-                                      Works also with the path to a directory on mapping step with a single germline sample only
-                                      Alternatively, path to VCF input file on annotate step
-                                      Multiple VCF files can be specified with quotes
-      --step                   [list] Specify starting step (only one)
-                                      Available: mapping, prepare_recalibration, recalibrate, variant_calling, annotate, Control-FREEC
-                                      Default: ${params.step}
-      --genome                  [str] Name of iGenomes reference
-                                      Default: ${params.genome}
-
-    Main options:
-      --help                   [bool] You're reading it
-      --no_intervals           [bool] Disable usage of intervals
-                                      Intervals are part of the genome chopped up, used to speed up preprocessing and variant calling
-      --nucleotides_per_second  [int] To estimate interval size
-                                      Default: ${params.nucleotides_per_second}
-      --sentieon               [bool] If sentieon is available, will enable it for Preprocessing, and Variant Calling
-                                      Adds the following options for --tools: DNAseq, DNAscope and TNscope
-      --skip_qc                 [str] Specify which QC tools to skip when running Sarek (multiple separated with commas)
-                                      Available: all, bamQC, BaseRecalibrator, BCFtools, Documentation
-                                      FastQC, MultiQC, samtools, vcftools, versions
-                                      Default: None
-      --target_bed             [file] Target BED file for whole exome or targeted sequencing
-                                      Default: None
-      --tools                   [str] Specify tools to use for variant calling (multiple separated with commas):
-                                      Available: ASCAT, CNVkit, ControlFREEC, FreeBayes, HaplotypeCaller
-                                      Manta, mpileup, MSIsensor, Mutect2, Strelka, TIDDIT
-                                      and/or for annotation:
-                                      snpEff, VEP, merge
-                                      Default: None
-
-    Modify fastqs (trim/split):
-      --trim_fastq             [bool] Run Trim Galore
-      --clip_r1                 [int] Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
-      --clip_r2                 [int] Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
-      --three_prime_clip_r1     [int] Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
-      --three_prime_clip_r2     [int] Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
-      --trim_nextseq            [int] Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails
-      --save_trimmed           [bool] Save trimmed FastQ file intermediates
-      --split_fastq             [int] Specify how many reads should be contained in the split fastq file
-                                      Default: no split
-
-    Preprocessing:
-      --markdup_java_options    [str] Establish values for markDuplicates memory consumption
-                                      Default: ${params.markdup_java_options}
-      --no_gatk_spark          [bool] Disable usage of GATK Spark implementation of their tools in local mode
-      --save_bam_mapped        [bool] Save Mapped BAMs
-      --skip_markduplicates    [bool] Skip MarkDuplicates
-
-    Variant Calling:
-      --ascat_ploidy            [int] Use this parameter to overwrite default behavior from ASCAT regarding ploidy
-                                      Requires that --ascat_purity is set
-      --ascat_purity            [int] Use this parameter to overwrite default behavior from ASCAT regarding purity
-                                      Requires that --ascat_ploidy is set
-      --cf_coeff                [str] Control-FREEC coefficientOfVariation
-                                      Default: ${params.cf_coeff}
-      --cf_ploidy               [int] Control-FREEC ploidy
-                                      Default: ${params.cf_ploidy}
-      --cf_window               [int] Control-FREEC window size
-                                      Default: Disabled
-      --ignore_soft_clipped_bases [bool] Do not analyze soft clipped bases in the reads for GATK Mutect2
-      --no_gvcf                [bool] No g.vcf output from GATK HaplotypeCaller
-      --no_strelka_bp          [bool] Will not use Manta candidateSmallIndels for Strelka (not recommended by Best Practices)
-      --pon                    [file] Panel-of-normals VCF (bgzipped) for GATK Mutect2 / Sentieon TNscope
-                                      See: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_CreateSomaticPanelOfNormals.php
-      --pon_index              [file] Index of pon panel-of-normals VCF
-                                      If none provided, will be generated automatically from the PON
-
-    Annotation:
-      --annotate_tools          [str] Specify from which tools Sarek should look for VCF files to annotate, only for step Annotate
-                                      Available: HaplotypeCaller, Manta, Mutect2, Strelka, TIDDIT
-                                      Default: None
-      --annotation_cache       [bool] Enable the use of cache for annotation, to be used with --snpeff_cache and/or --vep_cache
-      --snpeff_cache           [file] Specity the path to snpEff cache, to be used with --annotation_cache
-      --vep_cache              [file] Specity the path to VEP cache, to be used with --annotation_cache
-      --cadd_cache             [bool] Enable CADD cache
-      --cadd_indels            [file] Path to CADD InDels file
-      --cadd_indels_tbi        [file] Path to CADD InDels index
-      --cadd_wg_snvs           [file] Path to CADD SNVs file
-      --cadd_wg_snvs_tbi       [file] Path to CADD SNVs index
-      --genesplicer            [file] Enable genesplicer within VEP
-
-    References options:
-      --igenomes_base          [file] Specify base path to AWS iGenomes
-                                      Default: ${params.igenomes_base}
-      --igenomes_ignore        [bool] Do not use AWS iGenomes. Will load genomes.config instead of igenomes.config
-      --genomes_base           [file] Specify base path to reference genome
-      --save_reference         [bool] Save built references
-
-    References:                       If not specified in the configuration file or you wish to overwrite any of the references.
-      --ac_loci                [file] Loci file for ASCAT
-      --ac_loci_gc             [file] Loci GC file for ASCAT
-      --bwa                    [file] BWA indexes
-                                      If none provided, will be generated automatically from the fasta reference
-      --chr_dir                [file] Chromosomes folder
-      --chr_length             [file] Chromosomes length file
-      --dbsnp                  [file] Dbsnp file
-      --dbsnp_index            [file] Dbsnp index
-                                      If none provided, will be generated automatically if a dbsnp file is provided
-      --dict                   [file] Fasta dictionary file
-                                      If none provided, will be generated automatically from the fasta reference
-      --fasta                  [file] Fasta reference
-      --fasta_fai              [file] Fasta reference index
-                                      If none provided, will be generated automatically from the fasta reference
-      --germline_resource      [file] Germline Resource File for GATK Mutect2
-      --germline_resource_index       Germline Resource Index for GATK Mutect2
-                               [file] if none provided, will be generated automatically if a germlineResource file is provided
-      --intervals              [file] Intervals
-                                      If none provided, will be generated automatically from the fasta reference
-                                      Use --no_intervals to disable automatic generation
-      --known_indels           [file] Known indels file
-      --known_indels_index     [file] Known indels index
-                                      If none provided, will be generated automatically if a knownIndels file is provided
-      --mappability            [file] Mappability file for Control-FREEC
-      --snpeff_db               [str] snpEff Database version
-      --species                 [str] Species for VEP
-      --vep_cache_version       [int] VEP cache version
-
-    Other options:
-      --outdir                 [file] Output directory where the results will be saved
-      --publish_dir_mode       [list] Specify mode of publishing data in the output directory (only one)
-                                      Available: symlink, rellink, link, copy, copyNoFollow, move
-                                      Default: ${params.publish_dir_mode}
-      --sequencing_center       [str] Name of sequencing center to be displayed in BAM file
-      --multiqc_config         [file] Specify a custom config file for MultiQC
-      --monochrome_logs        [bool] Logs will be without colors
-      --email                   [str] Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
-      --email_on_fail           [str] Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you if the workflow fails
-      --plaintext_email        [bool] Enable plaintext email
-      --max_multiqc_email_size  [str] Theshold size for MultiQC report to be attached in notification email
-                                      If file generated by pipeline exceeds the threshold, it will not be attached
-                                      Default: ${params.max_multiqc_email_size}
-      -name                     [str] Name for the pipeline run
-                                      If not specified, Nextflow will automatically generate a random mnemonic
-
-    AWSBatch options:
-      --awsqueue                [str] The AWSBatch JobQueue that needs to be set when running on AWSBatch
-      --awsregion               [str] The AWS Region for your AWSBatch job to run on
-      --awscli                  [str] Path to the AWS CLI tool
-    """.stripIndent()
-}
-
-// Show help message
-if (params.help) exit 0, helpMessage()
+nextflow.preview.dsl = 2
 
 /*
-================================================================================
-                                HANDLE OLD PARAMS
-================================================================================
-*/
-
-// Warnings for deprecated params
-
-params.annotateTools = null
-if (params.annotateTools) {
-    log.warn "The params `--annotateTools` is deprecated -- it will be removed in a future release."
-    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--annotate_tools"
-    params.annotate_tools = params.annotateTools
+ * Print help message if required
+ */
+if (params.help) {
+    def command = "nextflow run nf-core/sarek --input sample.tsv -profile docker"
+    log.info Headers.nf_core(workflow, params.monochrome_logs)
+    log.info Schema.params_help("$baseDir/nextflow_schema.json", command)
+    exit 0
 }
 
-params.annotateVCF = null
-if (params.annotateVCF) {
-    log.warn "The params `--annotateVCF` is deprecated -- it will be removed in a future release."
-    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--input"
-    input = params.annotateVCF
-}
-
-params.cadd_InDels = null
-if (params.cadd_InDels) {
-    log.warn "The params `--cadd_InDels is deprecated -- it will be removed in a future release."
-    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--cadd_indels"
-    params.cadd_indels = params.cadd_InDels
-}
-
-params.cadd_InDels_tbi = null
-if (params.cadd_InDels_tbi) {
-    log.warn "The params `--cadd_InDels_tbi is deprecated -- it will be removed in a future release."
-    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--cadd_indels_tbi"
-    params.cadd_indels_tbi = params.cadd_InDels_tbi
-}
-
-params.cadd_WG_SNVs = null
-if (params.cadd_WG_SNVs) {
-    log.warn "The params `--cadd_WG_SNVs is deprecated -- it will be removed in a future release."
-    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--cadd_wg_snvs"
-    params.cadd_wg_snvs = params.cadd_WG_SNVs
-}
-
-params.cadd_WG_SNVs_tbi = null
-if (params.cadd_WG_SNVs_tbi) {
-    log.warn "The params `--cadd_WG_SNVs_tbi is deprecated -- it will be removed in a future release."
-    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--cadd_wg_snvs_tbi"
-    params.cadd_wg_snvs_tbi = params.cadd_WG_SNVs_tbi
-}
-
-params.maxMultiqcEmailFileSize = null
-if (params.maxMultiqcEmailFileSize) {
-    log.warn "The params `--maxMultiqcEmailFileSize` is deprecated -- it will be removed in a future release."
-    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--max_multiqc_email_size"
-    params.max_multiqc_email_size = params.maxMultiqcEmailFileSize
-}
-
-params.noGVCF = null
-if (params.noGVCF) {
-    log.warn "The params `--noGVCF` is deprecated -- it will be removed in a future release."
-    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--no_gvcf"
-    params.no_gvcf = params.noGVCF
-}
-
-params.noReports = null
-if (params.noReports) {
-    log.warn "The params `--noReports` is deprecated -- it will be removed in a future release."
-    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--skip_qc"
-    params.skip_qc = 'all'
-}
-
-params.noStrelkaBP = null
-if (params.noStrelkaBP) {
-    log.warn "The params `--noStrelkaBP` is deprecated -- it will be removed in a future release."
-    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--no_strelka_bp"
-    params.no_strelka_bp = params.noStrelkaBP
-}
-
-params.nucleotidesPerSecond = null
-if (params.nucleotidesPerSecond) {
-    log.warn "The params `--nucleotidesPerSecond` is deprecated -- it will be removed in a future release."
-    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--nucleotides_per_second"
-    params.nucleotides_per_second = params.nucleotidesPerSecond
-}
-
-params.publishDirMode = null
-if (params.publishDirMode) {
-    log.warn "The params `--publishDirMode` is deprecated -- it will be removed in a future release."
-    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--publish_dir_mode"
-    params.publish_dir_mode = params.publishDirMode
-}
-
-params.sample = null
-if (params.sample) {
-    log.warn "The params `--sample` is deprecated -- it will be removed in a future release."
-    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--input"
-    params.input = params.sample
-}
-
-params.sampleDir = null
-if (params.sampleDir) {
-    log.warn "The params `--sampleDir` is deprecated -- it will be removed in a future release."
-    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--input"
-    params.input = params.sampleDir
-}
-
-params.saveGenomeIndex = null
-if (params.saveGenomeIndex) {
-    log.warn "The params `--saveGenomeIndex` is deprecated -- it will be removed in a future release."
-    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--save_reference"
-    params.save_reference = params.saveGenomeIndex
-}
-
-params.skipQC = null
-if (params.skipQC) {
-    log.warn "The params `--skipQC` is deprecated -- it will be removed in a future release."
-    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--skip_qc"
-    params.skip_qc = params.skipQC
-}
-
-params.snpEff_cache = null
-if (params.snpEff_cache) {
-    log.warn "The params `--snpEff_cache` is deprecated -- it will be removed in a future release."
-    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--snpeff_cache"
-    params.snpeff_cache = params.snpEff_cache
-}
-
-params.targetBed = null
-if (params.targetBed) {
-    log.warn "The params `--targetBed` is deprecated -- it will be removed in a future release."
-    log.warn "\tPlease check: https://nf-co.re/sarek/docs/usage.md#--target_bed"
-    params.target_bed = params.targetBed
-}
-
-// Errors for removed params
-
-params.acLoci = null
-if (params.acLoci) exit 1, "The params `--acLoci` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--ac_loci"
-
-params.acLociGC = null
-if (params.acLociGC) exit 1, "The params `--acLociGC` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--ac_loci_gc"
-
-params.bwaIndex = null
-if (params.bwaIndex) exit 1, "The params `--bwaIndex` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--bwa"
-
-params.chrDir = null
-if (params.chrDir) exit 1, "The params `--chrDir` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--chr_dir"
-
-params.chrLength = null
-if (params.chrLength) exit 1, "The params `--chrLength` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--chr_length"
-
-params.dbsnpIndex = null
-if (params.dbsnpIndex) exit 1, "The params `--dbsnpIndex` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--dbsnp_index"
-
-params.fastaFai = null
-if (params.fastaFai) exit 1, "The params `--fastaFai` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--fasta_fai"
-
-params.genomeDict = null
-if (params.genomeDict) exit 1, "The params `--genomeDict` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--dict"
-
-params.genomeFile = null
-if (params.genomeFile) exit 1, "The params `--genomeFile` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--fasta"
-
-params.genomeIndex = null
-if (params.genomeIndex) exit 1, "The params `--genomeIndex` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--fasta_fai"
-
-params.germlineResource = null
-if (params.germlineResource) exit 1, "The params `--germlineResource` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--germline_resource"
-
-params.germlineResourceIndex = null
-if (params.germlineResourceIndex) exit 1, "The params `--germlineResourceIndex` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--germline_resource_index"
-
-params.igenomesIgnore = null
-if (params.igenomesIgnore) exit 1, "The params `--igenomesIgnore` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--igenomes_ignore"
-
-params.knownIndels = null
-if (params.knownIndels) exit 1, "The params `--knownIndels` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--known_indels"
-
-params.knownIndelsIndex = null
-if (params.knownIndelsIndex) exit 1, "The params `--knownIndelsIndex` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--known_indels_index"
-
-params.snpeffDb = null
-if (params.snpeffDb) exit 1, "The params `--snpeffDb` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--snpeff_db"
-
-params.singleCPUMem = null
-if (params.singleCPUMem) exit 1, "The params `--singleCPUMem` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--single_cpu_mem"
-
-params.vepCacheVersion = null
-if (params.vepCacheVersion) exit 1, "The params `--vepCacheVersion` has been removed.\n\tPlease check: https://nf-co.re/sarek/docs/usage.md#--vep_cache_version"
 
 /*
 ================================================================================
                          SET UP CONFIGURATION VARIABLES
 ================================================================================
 */
+
+/*
+ * Check parameters
+ */
+Checks.aws_batch(workflow, params)     // Check AWS batch settings
+Checks.hostname(workflow, params, log) // Check the hostnames against configured profiles
+
+/*
+ * MultiQC
+ * Stage config files
+ */
+ch_multiqc_config = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
+ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
+ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
 
 // Check if genome exists in the config file
 if (params.genomes && !params.genomes.containsKey(params.genome) && !params.igenomes_ignore) {
@@ -408,26 +85,6 @@ if (!checkParameterList(annotateTools,annoList)) exit 1, 'Unknown tool(s) to ann
 if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
 if (params.cf_window && params.cf_coeff) exit 1, 'Please specify either --cf_window OR --cf_coeff, but not both of them'
 
-// Has the run name been specified by the user?
-// This has the bonus effect of catching both -name and --name
-custom_runName = params.name
-if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) custom_runName = workflow.runName
-
-if (workflow.profile.contains('awsbatch')) {
-    // AWSBatch sanity checking
-    if (!params.awsqueue || !params.awsregion) exit 1, "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
-    // Check outdir paths to be S3 buckets if running on AWSBatch
-    // related: https://github.com/nextflow-io/nextflow/issues/813
-    if (!params.outdir.startsWith('s3:')) exit 1, "Outdir not on S3 - specify S3 Bucket to run on AWSBatch!"
-    // Prevent trace files to be stored on S3 since S3 does not support rolling files.
-    if (params.tracedir.startsWith('s3:')) exit 1, "Specify a local tracedir or run without trace! S3 cannot be used for tracefiles."
-}
-
-// MultiQC
-// Stage config files
-ch_multiqc_config = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
-ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
-ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
 
 // Handle input
 tsvPath = null
@@ -560,160 +217,34 @@ ch_target_bed = params.target_bed ? Channel.value(file(params.target_bed)) : "nu
 ================================================================================
 */
 
-// Header log info
-log.info nfcoreHeader()
-def summary = [:]
-if (workflow.revision)          summary['Pipeline Release']    = workflow.revision
-summary['Run Name']          = custom_runName ?: workflow.runName
-summary['Max Resources']     = "${params.max_memory} memory, ${params.max_cpus} cpus, ${params.max_time} time per job"
-if (workflow.containerEngine)   summary['Container']         = "${workflow.containerEngine} - ${workflow.container}"
-
-summary['Input']             = params.input
-summary['Step']              = step
-summary['Genome']            = params.genome
-
-if (params.no_intervals && step != 'annotate')  summary['Intervals']         = 'Do not use'
-summary['Nucleotides/s']     = params.nucleotides_per_second
-if (params.sentieon)            summary['Sention']                           = "Using Sentieon for Preprocessing and/or Variant Calling"
-if (params.skip_qc)             summary['QC tools skipped']                  = skipQC.join(', ')
-if (params.target_bed)          summary['Target BED']                        = params.target_bed
-if (params.tools)               summary['Tools']                             = tools.join(', ')
-
-if (params.trim_fastq || params.split_fastq) summary['Modify fastqs (trim/split)'] = ""
-
-if (params.trim_fastq) {
-    summary['Fastq trim']         = "Fastq trim selected"
-    summary['Trim R1']            = "${params.clip_r1} bp"
-    summary['Trim R2']            = "${params.clip_r2} bp"
-    summary["Trim 3' R1"]         = "${params.three_prime_clip_r1} bp"
-    summary["Trim 3' R2"]         = "${params.three_prime_clip_r2} bp"
-    summary['NextSeq Trim']       = "${params.trim_nextseq} bp"
-    summary['Saved Trimmed Fastq'] = params.save_trimmed ? 'Yes' : 'No'
+// Has the run name been specified by the user?
+// This has the bonus effect of catching both -name and --name
+run_name = params.name
+if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
+    run_name = workflow.runName
 }
-if (params.split_fastq)          summary['Reads in fastq']                   = params.split_fastq
+summary = Schema.params_summary(workflow, params, run_name)
+log.info Headers.nf_core(workflow, params, run_name)
+log.info summary.collect { k,v -> "${k.padRight(20)}: $v" }.join("\n")
+log.info "-\033[2m----------------------------------------------------\033[0m-"
 
-summary['MarkDuplicates'] = "Options"
-summary['Java options'] = params.markdup_java_options
-summary['GATK Spark']   = params.no_gatk_spark ? 'No' : 'Yes'
-
-summary['Save BAMs mapped']   = params.save_bam_mapped ? 'Yes' : 'No'
-summary['Skip MarkDuplicates']   = params.skip_markduplicates ? 'Yes' : 'No'
-
-if ('ascat' in tools) {
-    summary['ASCAT'] = "Options"
-    if (params.ascat_purity) summary['purity'] = params.ascat_purity
-    if (params.ascat_ploidy) summary['ploidy'] = params.ascat_ploidy
-}
-
-if ('controlfreec' in tools) {
-    summary['Control-FREEC'] = "Options"
-    if (params.cf_window)    summary['window']                 = params.cf_window
-    if (params.cf_coeff)     summary['coefficientOfVariation'] = params.cf_coeff
-    if (params.cf_ploidy)    summary['ploidy']                 = params.cf_ploidy
-}
-
-if ('haplotypecaller' in tools)             summary['GVCF']       = params.no_gvcf ? 'No' : 'Yes'
-if ('strelka' in tools && 'manta' in tools) summary['Strelka BP'] = params.no_strelka_bp ? 'No' : 'Yes'
-if (params.pon && ('mutect2' in tools || (params.sentieon && 'tnscope' in tools))) summary['Panel of normals'] = params.pon
-
-if (params.annotate_tools) summary['Tools to annotate'] = annotate_tools.join(', ')
-
-if (params.annotation_cache) {
-    summary['Annotation cache'] = "Enabled"
-    if (params.snpeff_cache) summary['snpEff cache'] = params.snpeff_cache
-    if (params.vep_cache)    summary['VEP cache']    = params.vep_cache
-}
-
-if (params.cadd_cache) {
-    summary['CADD cache'] = "Enabled"
-    if (params.cadd_indels)  summary['CADD indels']  = params.cadd_indels
-    if (params.cadd_wg_snvs) summary['CADD wg snvs'] = params.cadd_wg_snvs
-}
-
-if (params.genesplicer) summary['genesplicer'] = "Enabled"
-
-if (params.igenomes_base && !params.igenomes_ignore) summary['AWS iGenomes base'] = params.igenomes_base
-if (params.igenomes_ignore)                          summary['AWS iGenomes']      = "Do not use"
-if (params.genomes_base && !params.igenomes_ignore)  summary['Genomes base']      = params.genomes_base
-
-summary['Save Reference']    = params.save_reference ? 'Yes' : 'No'
-
-if (params.ac_loci)                 summary['Loci']                    = params.ac_loci
-if (params.ac_loci_gc)              summary['Loci GC']                 = params.ac_loci_gc
-if (params.bwa)                     summary['BWA indexes']             = params.bwa
-if (params.chr_dir)                 summary['Chromosomes']             = params.chr_dir
-if (params.chr_length)              summary['Chromosomes length']      = params.chr_length
-if (params.dbsnp)                   summary['dbsnp']                   = params.dbsnp
-if (params.dbsnp_index)             summary['dbsnpIndex']              = params.dbsnp_index
-if (params.dict)                    summary['dict']                    = params.dict
-if (params.fasta)                   summary['fasta reference']         = params.fasta
-if (params.fasta_fai)               summary['fasta index']             = params.fasta_fai
-if (params.germline_resource)       summary['germline resource']       = params.germline_resource
-if (params.germline_resource_index) summary['germline resource index'] = params.germline_resource_index
-if (params.intervals)               summary['intervals']               = params.intervals
-if (params.known_indels)            summary['known indels']            = params.known_indels
-if (params.known_indels_index)      summary['known indels index']      = params.known_indels_index
-if (params.mappability)             summary['Mappability']             = params.mappability
-if (params.snpeff_cache)            summary['snpEff cache']            = params.snpeff_cache
-if (params.snpeff_db)               summary['snpEff DB']               = params.snpeff_db
-if (params.species)                 summary['species']                 = params.species
-if (params.vep_cache)               summary['VEP cache']               = params.vep_cache
-if (params.vep_cache_version)       summary['VEP cache version']       = params.vep_cache_version
-
-summary['Output dir']        = params.outdir
-summary['Publish dir mode']  = params.publish_dir_mode
-if (params.sequencing_center) summary['Sequenced by'] = params.sequencing_center
-
-summary['Launch dir']  = workflow.launchDir
-summary['Working dir'] = workflow.workDir
-summary['Script dir']  = workflow.projectDir
-summary['User']        = workflow.userName
-
-if (params.multiqc_config) summary['MultiQC config'] = params.multiqc_config
-
-summary['Config Profile'] = workflow.profile
-
-if (params.config_profile_description) summary['Config Description'] = params.config_profile_description
-if (params.config_profile_contact)     summary['Config Contact']     = params.config_profile_contact
-if (params.config_profile_url)         summary['Config URL']         = params.config_profile_url
-
-if (params.email || params.email_on_fail) {
-    summary['E-mail Address']    = params.email
-    summary['E-mail on failure'] = params.email_on_fail
-    summary['MultiQC maxsize']   = params.max_multiqc_email_size
-}
-
-if (workflow.profile.contains('awsbatch')) {
-    summary['AWS Region'] = params.awsregion
-    summary['AWS Queue']  = params.awsqueue
-    summary['AWS CLI']    = params.awscli
-}
-
-log.info summary.collect { k, v -> "${k.padRight(18)}: $v" }.join("\n")
-if (params.monochrome_logs) log.info "----------------------------------------------------"
-else log.info "-\033[2m--------------------------------------------------\033[0m-"
+// params summary for MultiQC
+workflow_summary = Schema.params_mqc_summary(summary)
+ch_workflow_summary = Channel.value(workflow_summary)
 
 if ('mutect2' in tools && !(params.pon)) log.warn "[nf-core/sarek] Mutect2 was requested, but as no panel of normals were given, results will not be optimal"
 if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works if Sentieon is available where nf-core/sarek is run"
 
-// Check the hostnames against configured profiles
-checkHostname()
 
-Channel.from(summary.collect{ [it.key, it.value] })
-    .map { k,v -> "<dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }
-    .reduce { a, b -> return [a, b].join("\n            ") }
-    .map { x -> """
-    id: 'sarek-summary'
-    description: " - this information is collected when the pipeline is started."
-    section_name: 'nf-core/sarek Workflow Summary'
-    section_href: 'https://github.com/nf-core/sarek'
-    plot_type: 'html'
-    data: |
-        <dl class=\"dl-horizontal\">
-            $x
-        </dl>
-    """.stripIndent() }
-    .set { ch_workflow_summary }
+/*
+================================================================================
+                        INCLUDE LOCAL PIPELINE MODULES
+================================================================================
+*/
+
+include { OUTPUT_DOCUMENTATION } from './modules/local/output_documentation' params(params)
+include { GET_SOFTWARE_VERSIONS } from './modules/local/get_software_versions' params(params)
+include { CHECK_SAMPLESHEET; check_samplesheet_paths } from './modules/local/check_samplesheet' params(params)
 
 // Parse software version numbers
 
