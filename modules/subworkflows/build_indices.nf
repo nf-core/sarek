@@ -28,7 +28,7 @@ workflow BUILD_INDICES{
 
     main:
 
-    if(!(params.bwa) && params.fasta && 'mapping' in step) 
+    if(! (params.bwa) && params.fasta && 'mapping' in step) 
         BWAMEM2_INDEX(ch_fasta)
 
     if(!(params.dict) && params.fasta && !('annotate' in step) && !('controlfreec' in step))
@@ -56,14 +56,14 @@ workflow BUILD_INDICES{
 
 
     emit:
-    bwa_built = BWAMEM2_INDEX.out
-    dictBuilt = GATK_CREATE_SEQUENCE_DICTIONARY.out
-    fai_built = SAMTOOLS_FAIDX.out
-    dbsnp_tbi = HTSLIB_TABIX_DBSNP.out
-    germline_resource_tbi = HTSLIB_TABIX_GERMLINE_RESOURCE.out
-    known_indels_tbi = HTSLIB_TABIX_KNOWN_INDELS.out
-    pon_tbi = HTSLIB_TABIX_PON.out
-    intervalBuilt = BUILD_INTERVALS.out
+        bwa_built = BWAMEM2_INDEX.out 
+        dictBuilt = GATK_CREATE_SEQUENCE_DICTIONARY.out
+        fai_built = SAMTOOLS_FAIDX.out
+        dbsnp_tbi = HTSLIB_TABIX_DBSNP.out
+        germline_resource_tbi = HTSLIB_TABIX_GERMLINE_RESOURCE.out
+        known_indels_tbi = HTSLIB_TABIX_KNOWN_INDELS.out
+        pon_tbi = HTSLIB_TABIX_PON.out
+        intervalBuilt = BUILD_INTERVALS.out
 
 }
 

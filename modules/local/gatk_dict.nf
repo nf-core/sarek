@@ -5,10 +5,10 @@ process GATK_CREATE_SEQUENCE_DICTIONARY {
         saveAs: {params.save_reference ? "reference_genome/${it}" : null }
 
     input:
-        path file(fasta)
+        path fasta
 
     output:
-        path file("${fasta.baseName}.dict")
+        path ("${fasta.baseName}.dict")
 
     script:
     """

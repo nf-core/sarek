@@ -43,7 +43,8 @@ include { hasExtension;
     defineToolList; 
     checkParameterList; 
     extractBam;
-    extractFastqFromDir } from './modules/local/functions'
+    extractFastqFromDir;
+    checkParameterExistence } from './modules/local/functions'
 
 /*
 ================================================================================
@@ -76,11 +77,11 @@ ch_output_docs_images = file("$baseDir/docs/images/", checkIfExists: true)
 stepList = defineStepList()
 step = params.step ? params.step.toLowerCase().replaceAll('-', '').replaceAll('_', '') : ''
 
-// // Handle deprecation
-// if (step == 'preprocessing') step = 'mapping'
+// Handle deprecation
+if (step == 'preprocessing') step = 'mapping'
 
-// if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
-// if (!checkParameterExistence(step, stepList)) exit 1, "Unknown step ${step}, see --help for more information"
+if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
+if (!checkParameterExistence(step, stepList)) exit 1, "Unknown step ${step}, see --help for more information"
 
 toolList = defineToolList()
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
@@ -179,6 +180,9 @@ if (tsvPath) {
 */
 
 // Initialize each params in params.genomes, catch the command line first if it was defined
+// params.fasta has to be the first one
+params.fasta = params.genome && !('annotate' in step) ? params.genomes[params.genome].fasta ?: null : null
+
 
 // The rest can be sorted
 params.ac_loci = params.genome && 'ascat' in tools ? params.genomes[params.genome].ac_loci ?: null : null
@@ -201,6 +205,12 @@ params.species = params.genome && 'vep' in tools ? params.genomes[params.genome]
 params.vep_cache_version = params.genome && 'vep' in tools ? params.genomes[params.genome].vep_cache_version ?: null : null
 
 // Initialize channels based on params
+ch_fasta = params.fasta && !('annotate' in step) ? Channel.value(file(params.fasta)) : "null"
+ch_dbsnp = params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? Channel.value(file(params.dbsnp)) : "null"
+ch_germline_resource = params.germline_resource && 'mutect2' in tools ? Channel.value(file(params.germline_resource)) : "null"
+ch_known_indels = params.known_indels && ('mapping' in step || 'preparerecalibration' in step) ? Channel.value(file(params.known_indels)) : "null"
+ch_pon = params.pon ? Channel.value(file(params.pon)) : "null"
+
 ch_ac_loci = params.ac_loci && 'ascat' in tools ? Channel.value(file(params.ac_loci)) : "null"
 ch_ac_loci_gc = params.ac_loci_gc && 'ascat' in tools ? Channel.value(file(params.ac_loci_gc)) : "null"
 ch_chr_dir = params.chr_dir && 'controlfreec' in tools ? Channel.value(file(params.chr_dir)) : "null"
@@ -309,14 +319,16 @@ include { MULTIQC } from './modules/nf-core/multiqc' params(params)
 */
 include { BUILD_INDICES } from './modules/subworkflows/build_indices'  addParams(params)
 
-// params.fasta has to be the first one
-params.fasta = params.genome && !('annotate' in step) ? params.genomes[params.genome].fasta ?: null : null
-ch_fasta = params.fasta && !('annotate' in step) ? Channel.value(file(params.fasta)) : "null"
-ch_dbsnp = params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? Channel.value(file(params.dbsnp)) : "null"
-ch_germline_resource = params.germline_resource && 'mutect2' in tools ? Channel.value(file(params.germline_resource)) : "null"
-ch_known_indels = params.known_indels && ('mapping' in step || 'preparerecalibration' in step) ? Channel.value(file(params.known_indels)) : "null"
-ch_pon = params.pon ? Channel.value(file(params.pon)) : "null"
+ch_fasta.dump(tag: 'ch_fasta')
 
+//ch_bwa = params.bwa ? Channel.value(file(params.bwa)) : BUILD_INDICES.out.bwa_built
+//ch_dict = params.dict ? Channel.value(file(params.dict)) : GATK_CREATE_SEQUENCE_DICTIONARY.out
+//ch_fai = params.fasta_fai ? Channel.value(file(params.fasta_fai)) : SAMTOOLS_FAIDX.out
+//ch_dbsnp_tbi = params.dbsnp ? params.dbsnp_index ? Channel.value(file(params.dbsnp_index)) : dbsnp_tbi : "null"
+//ch_germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? Channel.value(file(params.germline_resource_index)) : germline_resource_tbi : "null"
+//ch_known_indels_tbi = params.known_indels ? params.known_indels_index ? Channel.value(file(params.known_indels_index)) : known_indels_tbi.collect() : "null"
+//ch_pon_tbi = params.pon ? params.pon_index ? Channel.value(file(params.pon_index)) : pon_tbi : "null"
+//ch_intervals = params.no_intervals ? "null" : params.intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : intervalBuilt
 
 workflow {
 
@@ -326,6 +338,7 @@ workflow {
                     ch_germline_resource, 
                     ch_known_indels, 
                     ch_pon)
+
 
     FASTQC(inputSample)
 
@@ -343,21 +356,6 @@ workflow {
         ch_workflow_summary)
 }
 
-// ch_bwa = params.bwa ? Channel.value(file(params.bwa)) : build_indices.out.BWAMEM2_INDEX.out
-
-// ch_dict = params.dict ? Channel.value(file(params.dict)) : GATK_CREATE_SEQUENCE_DICTIONARY.out
-
-// ch_fai = params.fasta_fai ? Channel.value(file(params.fasta_fai)) : SAMTOOLS_FAIDX.out
-
-// ch_dbsnp_tbi = params.dbsnp ? params.dbsnp_index ? Channel.value(file(params.dbsnp_index)) : dbsnp_tbi : "null"
-
-// ch_germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? Channel.value(file(params.germline_resource_index)) : germline_resource_tbi : "null"
-
-// ch_known_indels_tbi = params.known_indels ? params.known_indels_index ? Channel.value(file(params.known_indels_index)) : known_indels_tbi.collect() : "null"
-
-// ch_pon_tbi = params.pon ? params.pon_index ? Channel.value(file(params.pon_index)) : pon_tbi : "null"
-
-// ch_intervals = params.no_intervals ? "null" : params.intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : intervalBuilt
 
 /*
 ================================================================================
