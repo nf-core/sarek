@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [dsl2](https://github.com/nf-core/sarek/tree/dev)
+
+- [#238](https://github.com/nf-core/sarek/pull/238) -Add subworkflow for building all the indices
+
 ## [dev](https://github.com/nf-core/sarek/tree/dev)
 
 - [#234](https://github.com/nf-core/sarek/pull/234) -Switching to DSL2
