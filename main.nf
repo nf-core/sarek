@@ -307,7 +307,7 @@ include { MULTIQC } from './modules/nf-core/multiqc' params(params)
                         RUN THE WORKFLOW
 ================================================================================
 */
-include { BUILD_INDICES } from './modules/local/buildindices'  addParams(params)
+include { BUILD_INDICES } from './modules/subworkflows/build_indices'  addParams(params)
 
 // params.fasta has to be the first one
 params.fasta = params.genome && !('annotate' in step) ? params.genomes[params.genome].fasta ?: null : null
