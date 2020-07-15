@@ -36,15 +36,17 @@ if (params.help) {
                         INCLUDE SAREK FUNCTIONS
 ================================================================================
 */
-include { hasExtension; 
-    defineStepList; 
-    extractFastq; 
-    extractInfos; 
-    defineToolList; 
-    checkParameterList; 
-    extractBam;
-    extractFastqFromDir;
-    checkParameterExistence } from './modules/local/functions'
+include {
+    check_parameter_existence;
+    check_parameter_list;
+    define_step_list;
+    define_tool_list;
+    extract_bam;
+    extract_fastq;
+    extract_fastq_from_dir;
+    extract_infos;
+    has_extension
+} from './modules/local/functions'
 
 /*
 ================================================================================
@@ -55,6 +57,7 @@ include { hasExtension;
 /*
  * Check parameters
  */
+
 Checks.aws_batch(workflow, params)     // Check AWS batch settings
 Checks.hostname(workflow, params, log) // Check the hostnames against configured profiles
 
@@ -62,10 +65,11 @@ Checks.hostname(workflow, params, log) // Check the hostnames against configured
  * MultiQC
  * Stage config files
  */
-ch_multiqc_config = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
-ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
-ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
-ch_output_docs_images = file("$baseDir/docs/images/", checkIfExists: true)
+
+multiqc_config = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
+multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
+output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
+output_docs_images = file("$baseDir/docs/images/", checkIfExists: true)
 
 // // Check if genome exists in the config file
 // if (params.genomes && !params.genomes.containsKey(params.genome) && !params.igenomes_ignore) {
@@ -74,27 +78,27 @@ ch_output_docs_images = file("$baseDir/docs/images/", checkIfExists: true)
 //     exit 1, "The provided genome '${params.genome}' is not available in the genomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
 // }
 
-stepList = defineStepList()
+step_list = define_step_list()
 step = params.step ? params.step.toLowerCase().replaceAll('-', '').replaceAll('_', '') : ''
 
 // Handle deprecation
 if (step == 'preprocessing') step = 'mapping'
 
 if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
-if (!checkParameterExistence(step, stepList)) exit 1, "Unknown step ${step}, see --help for more information"
+if (!check_parameter_existence(step, step_list)) exit 1, "Unknown step ${step}, see --help for more information"
 
-toolList = defineToolList()
+tool_list = define_tool_list()
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
 if (step == 'controlfreec') tools = ['controlfreec']
-if (!checkParameterList(tools, toolList)) exit 1, 'Unknown tool(s), see --help for more information'
+if (!check_parameter_list(tools, tool_list)) exit 1, 'Unknown tool(s), see --help for more information'
 
-// skipQClist = defineSkipQClist()
-// skipQC = params.skip_qc ? params.skip_qc == 'all' ? skipQClist : params.skip_qc.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
-// if (!checkParameterList(skipQC, skipQClist)) exit 1, 'Unknown QC tool(s), see --help for more information'
+// skip__qc_list = define_skip_qc_list()
+// skipQC = params.skip_qc ? params.skip_qc == 'all' ? skip__qc_list : params.skip_qc.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
+// if (!check_parameter_list(skipQC, skip__qc_list)) exit 1, 'Unknown QC tool(s), see --help for more information'
 
-// annoList = defineAnnoList()
-// annotateTools = params.annotate_tools ? params.annotate_tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
-// if (!checkParameterList(annotateTools,annoList)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
+// anno_list = define_anno_list()
+// annotate_tools = params.annotate_tools ? params.annotate_tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
+// if (!check_parameter_list(annotate_tools,anno_list)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
 
 // // Check parameters
 // if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
@@ -102,9 +106,9 @@ if (!checkParameterList(tools, toolList)) exit 1, 'Unknown tool(s), see --help f
 
 
 // Handle input
-tsvPath = null
-if (params.input && (hasExtension(params.input, "tsv") || hasExtension(params.input, "vcf") || hasExtension(params.input, "vcf.gz"))) tsvPath = params.input
-if (params.input && (hasExtension(params.input, "vcf") || hasExtension(params.input, "vcf.gz"))) step = "annotate"
+tsv_path = null
+if (params.input && (has_extension(params.input, "tsv") || has_extension(params.input, "vcf") || has_extension(params.input, "vcf.gz"))) tsv_path = params.input
+if (params.input && (has_extension(params.input, "vcf") || has_extension(params.input, "vcf.gz"))) step = "annotate"
 
 // save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? true : false
 
@@ -113,65 +117,65 @@ if (params.input && (hasExtension(params.input, "vcf") || hasExtension(params.in
 if (!params.input && params.sentieon) {
     switch (step) {
         case 'mapping': break
-        case 'recalibrate': tsvPath = "${params.outdir}/Preprocessing/TSV/sentieon_deduped.tsv"; break
-        case 'variantcalling': tsvPath = "${params.outdir}/Preprocessing/TSV/sentieon_recalibrated.tsv"; break
+        case 'recalibrate': tsv_path = "${params.outdir}/Preprocessing/TSV/sentieon_deduped.tsv"; break
+        case 'variantcalling': tsv_path = "${params.outdir}/Preprocessing/TSV/sentieon_recalibrated.tsv"; break
         case 'annotate': break
         default: exit 1, "Unknown step ${step}"
     }
 } else if (!params.input && !params.sentieon && !params.skip_markduplicates) {
     switch (step) {
         case 'mapping': break
-        case 'preparerecalibration': tsvPath = "${params.outdir}/Preprocessing/TSV/duplicates_marked_no_table.tsv"; break
-        case 'recalibrate': tsvPath = "${params.outdir}/Preprocessing/TSV/duplicates_marked.tsv"; break
-        case 'variantcalling': tsvPath = "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"; break
-        case 'controlfreec': tsvPath = "${params.outdir}/VariantCalling/TSV/control-freec_mpileup.tsv"; break
+        case 'preparerecalibration': tsv_path = "${params.outdir}/Preprocessing/TSV/duplicates_marked_no_table.tsv"; break
+        case 'recalibrate': tsv_path = "${params.outdir}/Preprocessing/TSV/duplicates_marked.tsv"; break
+        case 'variantcalling': tsv_path = "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"; break
+        case 'controlfreec': tsv_path = "${params.outdir}/VariantCalling/TSV/control-freec_mpileup.tsv"; break
         case 'annotate': break
         default: exit 1, "Unknown step ${step}"
     }
 } else if (!params.input && !params.sentieon && params.skip_markduplicates) {
     switch (step) {
         case 'mapping': break
-        case 'preparerecalibration': tsvPath = "${params.outdir}/Preprocessing/TSV/mapped.tsv"; break
-        case 'recalibrate': tsvPath = "${params.outdir}/Preprocessing/TSV/mapped_no_duplicates_marked.tsv"; break
-        case 'variantcalling': tsvPath = "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"; break
-        case 'controlfreec': tsvPath = "${params.outdir}/VariantCalling/TSV/control-freec_mpileup.tsv"; break
+        case 'preparerecalibration': tsv_path = "${params.outdir}/Preprocessing/TSV/mapped.tsv"; break
+        case 'recalibrate': tsv_path = "${params.outdir}/Preprocessing/TSV/mapped_no_duplicates_marked.tsv"; break
+        case 'variantcalling': tsv_path = "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"; break
+        case 'controlfreec': tsv_path = "${params.outdir}/VariantCalling/TSV/control-freec_mpileup.tsv"; break
         case 'annotate': break
         default: exit 1, "Unknown step ${step}"
     }
 }
 
-inputSample = Channel.empty()
-if (tsvPath) {
-    tsvFile = file(tsvPath)
+input_sample = Channel.empty()
+if (tsv_path) {
+    tsv_file = file(tsv_path)
     switch (step) {
-        case 'mapping': inputSample = extractFastq(tsvFile); break
-        case 'preparerecalibration': inputSample = extractBam(tsvFile); break
-        case 'recalibrate': inputSample = extractRecal(tsvFile); break
-        case 'variantcalling': inputSample = extractBam(tsvFile); break
-        case 'controlfreec': inputSample = extractPileup(tsvFile); break
+        case 'mapping': input_sample = extract_fastq(tsv_file); break
+        case 'preparerecalibration': input_sample = extract_bam(tsv_file); break
+        case 'recalibrate': input_sample = extract_recal(tsv_file); break
+        case 'variantcalling': input_sample = extract_bam(tsv_file); break
+        case 'controlfreec': input_sample = extract_pileup(tsv_file); break
         case 'annotate': break
         default: exit 1, "Unknown step ${step}"
     }
-} else if (params.input && !hasExtension(params.input, "tsv")) {
+} else if (params.input && !has_extension(params.input, "tsv")) {
     log.info "No TSV file"
     if (step != 'mapping') exit 1, 'No step other than "mapping" supports a directory as an input'
     log.info "Reading ${params.input} directory"
     log.warn "[nf-core/sarek] in ${params.input} directory, all fastqs are assuming to be from the same sample, which is assumed to be a germline one"
-    inputSample = extractFastqFromDir(params.input)
-    (inputSample, fastqTMP) = inputSample.into(2)
-    fastqTMP.toList().subscribe onNext: {
+    input_sample = extract_fastq_from_dir(params.input)
+    (input_sample, fastq_tmp) = input_sample.into(2)
+    fastq_tmp.toList().subscribe onNext: {
         if (it.size() == 0) exit 1, "No FASTQ files found in --input directory '${params.input}'"
     }
-    tsvFile = params.input  // used in the reports
-} else if (tsvPath && step == 'annotate') {
-    log.info "Annotating ${tsvPath}"
+    tsv_file = params.input  // used in the reports
+} else if (tsv_path && step == 'annotate') {
+    log.info "Annotating ${tsv_path}"
 } else if (step == 'annotate') {
     log.info "Trying automatic annotation on files in the VariantCalling/ directory"
 } else exit 1, 'No sample were defined, see --help'
 
-(genderMap, statusMap, inputSample) = extractInfos(inputSample)
+(gender_map, status_map, input_sample) = extract_infos(input_sample)
 
-// inputSample.dump(tag: 'input sample')
+// input_sample.dump(tag: 'input sample')
 
 /*
 ================================================================================
@@ -182,7 +186,6 @@ if (tsvPath) {
 // Initialize each params in params.genomes, catch the command line first if it was defined
 // params.fasta has to be the first one
 params.fasta = params.genome && !('annotate' in step) ? params.genomes[params.genome].fasta ?: null : null
-
 
 // The rest can be sorted
 params.ac_loci = params.genome && 'ascat' in tools ? params.genomes[params.genome].ac_loci ?: null : null
@@ -205,18 +208,18 @@ params.species = params.genome && 'vep' in tools ? params.genomes[params.genome]
 params.vep_cache_version = params.genome && 'vep' in tools ? params.genomes[params.genome].vep_cache_version ?: null : null
 
 // Initialize channels based on params
-ch_fasta = params.fasta && !('annotate' in step) ? Channel.value(file(params.fasta)) : "null"
-ch_dbsnp = params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? Channel.value(file(params.dbsnp)) : "null"
-ch_germline_resource = params.germline_resource && 'mutect2' in tools ? Channel.value(file(params.germline_resource)) : "null"
-ch_known_indels = params.known_indels && ('mapping' in step || 'preparerecalibration' in step) ? Channel.value(file(params.known_indels)) : "null"
-ch_pon = params.pon ? Channel.value(file(params.pon)) : "null"
+fasta = params.fasta && !('annotate' in step) ? Channel.value(file(params.fasta)) : "null"
+dbsnp = params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? Channel.value(file(params.dbsnp)) : "null"
+germline_resource = params.germline_resource && 'mutect2' in tools ? Channel.value(file(params.germline_resource)) : "null"
+known_indels = params.known_indels && ('mapping' in step || 'preparerecalibration' in step) ? Channel.value(file(params.known_indels)) : "null"
+pon = params.pon ? Channel.value(file(params.pon)) : "null"
 
 ch_ac_loci = params.ac_loci && 'ascat' in tools ? Channel.value(file(params.ac_loci)) : "null"
 ch_ac_loci_gc = params.ac_loci_gc && 'ascat' in tools ? Channel.value(file(params.ac_loci_gc)) : "null"
 ch_chr_dir = params.chr_dir && 'controlfreec' in tools ? Channel.value(file(params.chr_dir)) : "null"
 ch_chr_length = params.chr_length && 'controlfreec' in tools ? Channel.value(file(params.chr_length)) : "null"
-ch_fai = params.fasta_fai && !('annotate' in step) ? Channel.value(file(params.fasta_fai)) : "null"
-ch_intervals = params.intervals && !params.no_intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : "null"
+fai = params.fasta_fai && !('annotate' in step) ? Channel.value(file(params.fasta_fai)) : "null"
+intervals = params.intervals && !params.no_intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : "null"
 ch_mappability = params.mappability && 'controlfreec' in tools ? Channel.value(file(params.mappability)) : "null"
 
 ch_snpeff_cache = params.snpeff_cache ? Channel.value(file(params.snpeff_cache)) : "null"
@@ -250,7 +253,7 @@ log.info "-\033[2m----------------------------------------------------\033[0m-"
 
 // params summary for MultiQC
 workflow_summary = Schema.params_mqc_summary(summary)
-ch_workflow_summary = Channel.value(workflow_summary)
+workflow_summary = Channel.value(workflow_summary)
 
 if ('mutect2' in tools && !(params.pon)) log.warn "[nf-core/sarek] Mutect2 was requested, but as no panel of normals were given, results will not be optimal"
 if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works if Sentieon is available where nf-core/sarek is run"
@@ -260,37 +263,42 @@ if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works
                         INCLUDE LOCAL PIPELINE MODULES
 ================================================================================
 */
-include { OUTPUT_DOCUMENTATION } from './modules/local/output_documentation' params(params)
+
+include { BWAMEM2_MEM }           from './modules/local/bwamem2_mem.nf' addParams(params)
+include { CREATE_INTERVALS_BED }  from './modules/local/create_intervals_bed' addParams(params)
 include { GET_SOFTWARE_VERSIONS } from './modules/local/get_software_versions' params(params)
+include { OUTPUT_DOCUMENTATION }  from './modules/local/output_documentation' params(params)
+include { TRIM_GALORE }           from './modules/local/trim_galore.nf' addParams(params)
 
 /*
 ================================================================================
                         INCLUDE nf-core PIPELINE MODULES
 ================================================================================
 */
-include { FASTQC } from './modules/nf-core/fastqc' params(params)
+
+include { FASTQC }  from './modules/nf-core/fastqc' params(params)
 include { MULTIQC } from './modules/nf-core/multiqc' params(params)
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
-// inputBam = Channel.empty()
-// inputPairReads = Channel.empty()
+// input_bam = Channel.empty()
+// input_pair_reads = Channel.empty()
 
 // if (step in ['preparerecalibration', 'recalibrate', 'variantcalling', 'controlfreec', 'annotate']) {
-//     inputBam.close()
-//     inputPairReads.close()
-// } else inputSample.branch(inputPairReads, inputBam) {hasExtension(it[3], "bam") ? 1 : 0}
+//     input_bam.close()
+//     input_pair_reads.close()
+// } else input_sample.branch(input_pair_reads, input_bam) {has_extension(it[3], "bam") ? 1 : 0}
 
-// (inputBam, inputBamFastQC) = inputBam.into(2)
+// (input_bam, input_bam_fastqc) = input_bam.into(2)
 
 // // Removing inputFile2 which is null in case of uBAM
-// inputBamFastQC = inputBamFastQC.map {
+// input_bam_fastqc = input_bam_fastqc.map {
 //     idPatient, idSample, idRun, inputFile1, inputFile2 ->
 //     [idPatient, idSample, idRun, inputFile1]
 // }
 
 // if (params.split_fastq){
-//    inputPairReads = inputPairReads
+//    input_pair_reads = input_pair_reads
 //        // newly splitfastq are named based on split, so the name is easier to catch
 //        .splitFastq(by: params.split_fastq, compress:true, file:"split", pe:true)
 //        .map {idPatient, idSample, idRun, reads1, reads2 ->
@@ -307,9 +315,9 @@ include { MULTIQC } from './modules/nf-core/multiqc' params(params)
 //            [idPatient, idSample, newIdRun, reads1, reads2]}
 //}
 
-// inputPairReads.dump(tag:'INPUT')
+// input_pair_reads.dump(tag:'INPUT')
 
-// (inputPairReads, inputPairReadsTrimGalore, inputPairReadsFastQC) = inputPairReads.into(3)
+// (input_pair_reads, input_pair_readstrimgalore, input_pair_readsfastqc) = input_pair_reads.into(3)
 
 
 /*
@@ -317,38 +325,34 @@ include { MULTIQC } from './modules/nf-core/multiqc' params(params)
                         RUN THE WORKFLOW
 ================================================================================
 */
-include { BUILD_INDICES } from './modules/subworkflows/build_indices'  addParams(params)
-include { CREATE_INTERVALS_BED } from './modules/local/create_intervals_bed' addParams(params)
-include { TRIM_GALORE } from './modules/local/trim_galore.nf' addParams(params)
-ch_fasta.dump(tag: 'ch_fasta')
 
+include { BUILD_INDICES } from './modules/subworkflows/build_indices' addParams(params)
 
+fasta.dump(tag: 'fasta')
 
 workflow {
 
-    // BUILD INDICES
-
     BUILD_INDICES(
-        ch_dbsnp, 
-        ch_fasta, 
-        ch_germline_resource, 
-        ch_known_indels, 
-        ch_pon,
+        dbsnp,
+        fasta,
+        germline_resource,
+        known_indels,
+        pon,
         step)
 
-    ch_bwa = params.bwa ? Channel.value(file(params.bwa)) : BUILD_INDICES.out.bwa_built
-    ch_dict = params.dict ? Channel.value(file(params.dict)) : BUILD_INDICES.out.dictBuilt
-    ch_fai = params.fasta_fai ? Channel.value(file(params.fasta_fai)) : BUILD_INDICES.out.fai_built
-    ch_dbsnp_tbi = params.dbsnp ? params.dbsnp_index ? Channel.value(file(params.dbsnp_index)) : BUILD_INDICES.out.dbsnp_tbi : "null"
-    ch_germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? Channel.value(file(params.germline_resource_index)) : BUILD_INDICES.out.germline_resource_tbi : "null"
-    ch_known_indels_tbi = params.known_indels ? params.known_indels_index ? Channel.value(file(params.known_indels_index)) : BUILD_INDICES.out.known_indels_tbi.collect() : "null"
-    ch_pon_tbi = params.pon ? params.pon_index ? Channel.value(file(params.pon_index)) : BUILD_INDICES.out.pon_tbi : "null"
-    ch_intervals = params.no_intervals ? "null" : params.intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : BUILD_INDICES.out.intervalBuilt
-    ch_intervals.dump(tag: 'ch_intervals')
+    bwa = params.bwa ? Channel.value(file(params.bwa)) : BUILD_INDICES.out.bwa_built
+    dict = params.dict ? Channel.value(file(params.dict)) : BUILD_INDICES.out.dictBuilt
+    fai = params.fasta_fai ? Channel.value(file(params.fasta_fai)) : BUILD_INDICES.out.fai_built
+    dbsnp_tbi = params.dbsnp ? params.dbsnp_index ? Channel.value(file(params.dbsnp_index)) : BUILD_INDICES.out.dbsnp_tbi : "null"
+    germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? Channel.value(file(params.germline_resource_index)) : BUILD_INDICES.out.germline_resource_tbi : "null"
+    known_indels_tbi = params.known_indels ? params.known_indels_index ? Channel.value(file(params.known_indels_index)) : BUILD_INDICES.out.known_indels_tbi.collect() : "null"
+    pon_tbi = params.pon ? params.pon_index ? Channel.value(file(params.pon_index)) : BUILD_INDICES.out.pon_tbi : "null"
+    intervals = params.no_intervals ? "null" : params.intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : BUILD_INDICES.out.intervalBuilt
+    intervals.dump(tag: 'intervals')
 
     // PREPROCESSING
     if((!params.no_intervals) && step != 'annotate')
-        CREATE_INTERVALS_BED(ch_intervals)
+        CREATE_INTERVALS_BED(intervals)
 
     // BED INTERVAL CHANNEL TRANSFORMING
     ch_bed_intervals = CREATE_INTERVALS_BED.out
@@ -376,26 +380,30 @@ workflow {
     }
 
     //if(!('fastqc' in skipQC))
-    FASTQC(inputSample)
-    
-    if(params.trim_fastq)
-        TRIM_GALORE(inputSample)
+    FASTQC(input_sample)
+
+    if(params.trim_fastq) {
+        TRIM_GALORE(input_sample)
+        BWAMEM2_MEM(TRIM_GALORE.out.trimmed_reads, bwa, fasta, fai)
+    }
+    else {
+        BWAMEM2_MEM(input_sample, bwa, fasta, fai)
+    }
 
     OUTPUT_DOCUMENTATION(
-        ch_output_docs,
-        ch_output_docs_images)
+        output_docs,
+        output_docs_images)
 
     GET_SOFTWARE_VERSIONS()
 
     MULTIQC(
-        ch_multiqc_config,
-        ch_multiqc_custom_config.collect().ifEmpty([]),
-        FASTQC.out.collect().ifEmpty([]),
-        TRIM_GALORE.out.report.collect().ifEmpty([]),
-        GET_SOFTWARE_VERSIONS.out.yml.collect(),
-        ch_workflow_summary)
+        FASTQC.out.ifEmpty([]),
+        multiqc_config,
+        multiqc_custom_config.ifEmpty([]),
+        GET_SOFTWARE_VERSIONS.out.yml,
+        TRIM_GALORE.out.report.ifEmpty([]),
+        workflow_summary)
 }
-
 
 /*
 ================================================================================
@@ -407,8 +415,6 @@ workflow.onComplete {
     Completion.email(workflow, params, summary, run_name, baseDir, multiqc_report, log)
     Completion.summary(workflow, params, log)
 }
-
-
 
 // /*
 // ================================================================================
@@ -434,7 +440,7 @@ workflow.onComplete {
 //     publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idSample}_${idRun}", mode: params.publish_dir_mode
 
 //     input:
-//         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") from inputBamFastQC
+//         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") from input_bam_fastqc
 
 //     output:
 //         file("*.{html,zip}") into fastQCBAMReport
@@ -449,111 +455,18 @@ workflow.onComplete {
 
 // fastQCReport = fastQCFQReport.mix(fastQCBAMReport)
 
-// process TrimGalore {
-//     label 'TrimGalore'
-
-//     tag "${idPatient}-${idRun}"
-
-//     publishDir "${params.outdir}/Reports/${idSample}/TrimGalore/${idSample}_${idRun}", mode: params.publish_dir_mode,
-//       saveAs: {filename ->
-//         if (filename.indexOf("_fastqc") > 0) "FastQC/$filename"
-//         else if (filename.indexOf("trimming_report.txt") > 0) "logs/$filename"
-//         else if (params.save_trimmed) filename
-//         else null
-//       }
-
-//     input:
-//         set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsTrimGalore
-
-//     output:
-//         file("*.{html,zip,txt}") into trimGaloreReport
-//         set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1_val_1.fq.gz"), file("${idSample}_${idRun}_R2_val_2.fq.gz") into outputPairReadsTrimGalore
-
-//     when: params.trim_fastq
-
-//     script:
-//     // Calculate number of --cores for TrimGalore based on value of task.cpus
-//     // See: https://github.com/FelixKrueger/TrimGalore/blob/master/Changelog.md#version-060-release-on-1-mar-2019
-//     // See: https://github.com/nf-core/atacseq/pull/65
-//     def cores = 1
-//     if (task.cpus) {
-//       cores = (task.cpus as int) - 4
-//       if (cores < 1) cores = 1
-//       if (cores > 4) cores = 4
-//       }
-//     c_r1 = params.clip_r1 > 0 ? "--clip_r1 ${params.clip_r1}" : ''
-//     c_r2 = params.clip_r2 > 0 ? "--clip_r2 ${params.clip_r2}" : ''
-//     tpc_r1 = params.three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${params.three_prime_clip_r1}" : ''
-//     tpc_r2 = params.three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${params.three_prime_clip_r2}" : ''
-//     nextseq = params.trim_nextseq > 0 ? "--nextseq ${params.trim_nextseq}" : ''
-//     """
-//     trim_galore \
-//          --cores ${cores} \
-//         --paired \
-//         --fastqc \
-//         --gzip \
-//         ${c_r1} ${c_r2} \
-//         ${tpc_r1} ${tpc_r2} \
-//         ${nextseq} \
-//         ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
-
-//     mv *val_1_fastqc.html "${idSample}_${idRun}_R1.trimmed_fastqc.html"
-//     mv *val_2_fastqc.html "${idSample}_${idRun}_R2.trimmed_fastqc.html"
-//     mv *val_1_fastqc.zip "${idSample}_${idRun}_R1.trimmed_fastqc.zip"
-//     mv *val_2_fastqc.zip "${idSample}_${idRun}_R2.trimmed_fastqc.zip"
-//     """
-// }
-
-// if (!params.trim_fastq) inputPairReadsTrimGalore.close()
+// if (!params.trim_fastq) input_pair_readstrimgalore.close()
 
 // // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
 
-// if (params.trim_fastq) inputPairReads = outputPairReadsTrimGalore
-// else inputPairReads = inputPairReads.mix(inputBam)
+// if (params.trim_fastq) input_pair_reads = outputPairReadsTrimGalore
+// else input_pair_reads = input_pair_reads.mix(input_bam)
 
-// inputPairReads = inputPairReads.dump(tag:'INPUT')
+// input_pair_reads = input_pair_reads.dump(tag:'INPUT')
 
-// (inputPairReads, input_pair_reads_sentieon) = inputPairReads.into(2)
-// if (params.sentieon) inputPairReads.close()
+// (input_pair_reads, input_pair_reads_sentieon) = input_pair_reads.into(2)
+// if (params.sentieon) input_pair_reads.close()
 // else input_pair_reads_sentieon.close()
-
-// process MapReads {
-//     label 'cpus_max'
-
-//     tag "${idPatient}-${idRun}"
-
-//     input:
-//         set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from inputPairReads
-//         file(bwaIndex) from ch_bwa
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
-
-//     output:
-//         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMapped
-//         set idPatient, val("${idSample}_${idRun}"), file("${idSample}_${idRun}.bam") into bamMappedBamQC
-
-//     when: !(params.sentieon)
-
-//     script:
-//     // -K is an hidden option, used to fix the number of reads processed by bwa mem
-//     // Chunk size can affect bwa results, if not specified,
-//     // the number of threads can change which can give not deterministic result.
-//     // cf https://github.com/CCDG/Pipeline-Standardization/blob/master/PipelineStandard.md
-//     // and https://github.com/gatk-workflows/gatk4-data-processing/blob/8ffa26ff4580df4ac3a5aa9e272a4ff6bab44ba2/processing-for-variant-discovery-gatk4.b37.wgs.inputs.json#L29
-//     CN = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
-//     readGroup = "@RG\\tID:${idRun}\\t${CN}PU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
-//     // adjust mismatch penalty for tumor samples
-//     status = statusMap[idPatient, idSample]
-//     extra = status == 1 ? "-B 3" : ""
-//     convertToFastq = hasExtension(inputFile1, "bam") ? "gatk --java-options -Xmx${task.memory.toGiga()}g SamToFastq --INPUT=${inputFile1} --FASTQ=/dev/stdout --INTERLEAVE=true --NON_PF=true | \\" : ""
-//     input = hasExtension(inputFile1, "bam") ? "-p /dev/stdin - 2> >(tee ${inputFile1}.bwa.stderr.log >&2)" : "${inputFile1} ${inputFile2}"
-//     """
-//     ${convertToFastq}
-//     bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
-//     ${input} | \
-//     samtools sort --threads ${task.cpus} -m 2G - > ${idSample}_${idRun}.bam
-//     """
-// }
 
 // bamMapped = bamMapped.dump(tag:'Mapped BAM')
 // // Sort BAM whether they are standalone or should be merged
@@ -579,9 +492,9 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from input_pair_reads_sentieon
-//         file(bwaIndex) from ch_bwa
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
+//         file(bwaIndex) from bwa
+//         file(fasta) from fasta
+//         file(fastaFai) from fai
 
 //     output:
 //         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bam_sentieon_mapped
@@ -597,7 +510,7 @@ workflow.onComplete {
 //     CN = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
 //     readGroup = "@RG\\tID:${idRun}\\t${CN}PU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
 //     // adjust mismatch penalty for tumor samples
-//     status = statusMap[idPatient, idSample]
+//     status = status_map[idPatient, idSample]
 //     extra = status == 1 ? "-B 3" : ""
 //     """
 //     sentieon bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
@@ -703,8 +616,8 @@ workflow.onComplete {
 
 // // Creating a TSV file to restart from this step
 // tsv_bam_indexed.map { idPatient, idSample ->
-//     gender = genderMap[idPatient]
-//     status = statusMap[idPatient, idSample]
+//     gender = gender_map[idPatient]
+//     status = status_map[idPatient, idSample]
 //     bam = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam"
 //     bai = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam.bai"
 //     "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"
@@ -714,8 +627,8 @@ workflow.onComplete {
 
 // tsv_bam_indexed_sample
 //     .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { idPatient, idSample ->
-//         status = statusMap[idPatient, idSample]
-//         gender = genderMap[idPatient]
+//         status = status_map[idPatient, idSample]
+//         gender = gender_map[idPatient]
 //         bam = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam"
 //         bai = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam.bai"
 //         ["mapped_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
@@ -757,7 +670,7 @@ workflow.onComplete {
 //         --ASSUME_SORT_ORDER coordinate \
 //         --CREATE_INDEX true \
 //         --OUTPUT ${idSample}.md.bam
-    
+
 //     mv ${idSample}.md.bai ${idSample}.md.bam.bai
 //     """
 //     else
@@ -777,8 +690,8 @@ workflow.onComplete {
 
 // // Creating a TSV file to restart from this step
 // tsv_bam_duplicates_marked.map { idPatient, idSample ->
-//     gender = genderMap[idPatient]
-//     status = statusMap[idPatient, idSample]
+//     gender = gender_map[idPatient]
+//     status = status_map[idPatient, idSample]
 //     bam = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam"
 //     bai = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam.bai"
 //     "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"
@@ -788,8 +701,8 @@ workflow.onComplete {
 
 // tsv_bam_duplicates_marked_sample
 //     .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { idPatient, idSample ->
-//         status = statusMap[idPatient, idSample]
-//         gender = genderMap[idPatient]
+//         status = status_map[idPatient, idSample]
+//         gender = gender_map[idPatient]
 //         bam = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam"
 //         bai = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam.bai"
 //         ["duplicates_marked_no_table_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
@@ -797,7 +710,7 @@ workflow.onComplete {
 
 // if ('markduplicates' in skipQC) duplicates_marked_report.close()
 
-// if (step == 'preparerecalibration') bam_duplicates_marked = inputSample
+// if (step == 'preparerecalibration') bam_duplicates_marked = input_sample
 
 // bam_duplicates_marked = bam_duplicates_marked.dump(tag:'MD BAM')
 // duplicates_marked_report = duplicates_marked_report.dump(tag:'MD Report')
@@ -828,8 +741,8 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSample, file(bam), file(bai) from bam_sentieon_mapped_merged_indexed
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
+//         file(fasta) from fasta
+//         file(fastaFai) from fai
 
 //     output:
 //         set idPatient, idSample, file("${idSample}.deduped.bam"), file("${idSample}.deduped.bam.bai") into bam_sentieon_dedup
@@ -873,13 +786,13 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamBaseRecalibrator
-//         file(dbsnp) from ch_dbsnp
-//         file(dbsnpIndex) from ch_dbsnp_tbi
-//         file(fasta) from ch_fasta
-//         file(dict) from ch_dict
-//         file(fastaFai) from ch_fai
-//         file(knownIndels) from ch_known_indels
-//         file(knownIndelsIndex) from ch_known_indels_tbi
+//         file(dbsnp) from dbsnp
+//         file(dbsnpIndex) from dbsnp_tbi
+//         file(fasta) from fasta
+//         file(dict) from dict
+//         file(fastaFai) from fai
+//         file(knownIndels) from known_indels
+//         file(knownIndelsIndex) from known_indels_tbi
 
 //     output:
 //         set idPatient, idSample, file("${prefix}${idSample}.recal.table") into tableGatherBQSRReports
@@ -959,8 +872,8 @@ workflow.onComplete {
 // // Create TSV files to restart from this step
 // if (params.skip_markduplicates) {
 //     recalTableTSV.map { idPatient, idSample ->
-//         status = statusMap[idPatient, idSample]
-//         gender = genderMap[idPatient]
+//         status = status_map[idPatient, idSample]
+//         gender = gender_map[idPatient]
 //         bam = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam"
 //         bai = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam.bai"
 //         recalTable = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.recal.table"
@@ -972,8 +885,8 @@ workflow.onComplete {
 //     recalTableSampleTSV
 //         .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV/") {
 //             idPatient, idSample ->
-//             status = statusMap[idPatient, idSample]
-//             gender = genderMap[idPatient]
+//             status = status_map[idPatient, idSample]
+//             gender = gender_map[idPatient]
 //             bam = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam"
 //             bai = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam.bai"
 //             recalTable = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.recal.table"
@@ -981,8 +894,8 @@ workflow.onComplete {
 //     }
 // } else {
 //     recalTableTSV.map { idPatient, idSample ->
-//     status = statusMap[idPatient, idSample]
-//     gender = genderMap[idPatient]
+//     status = status_map[idPatient, idSample]
+//     gender = gender_map[idPatient]
 //     bam = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam"
 //     bai = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam.bai"
 //     recalTable = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.recal.table"
@@ -995,8 +908,8 @@ workflow.onComplete {
 //     recalTableSampleTSV
 //         .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV/") {
 //             idPatient, idSample ->
-//             status = statusMap[idPatient, idSample]
-//             gender = genderMap[idPatient]
+//             status = status_map[idPatient, idSample]
+//             gender = gender_map[idPatient]
 //             bam = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam"
 //             bai = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam.bai"
 //             recalTable = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.recal.table"
@@ -1006,7 +919,7 @@ workflow.onComplete {
 
 // bamApplyBQSR = bamMDToJoin.join(recalTable, by:[0,1])
 
-// if (step == 'recalibrate') bamApplyBQSR = inputSample
+// if (step == 'recalibrate') bamApplyBQSR = input_sample
 
 // bamApplyBQSR = bamApplyBQSR.dump(tag:'BAM + BAI + RECAL TABLE')
 
@@ -1024,9 +937,9 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSample, file(bam), file(bai), file(recalibrationReport), file(intervalBed) from bamApplyBQSR
-//         file(dict) from ch_dict
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
+//         file(dict) from dict
+//         file(fasta) from fasta
+//         file(fastaFai) from fai
 
 //     output:
 //         set idPatient, idSample, file("${prefix}${idSample}.recal.bam") into bam_recalibrated_to_merge
@@ -1066,13 +979,13 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSample, file(bam), file(bai) from bam_sentieon_dedup
-//         file(dbsnp) from ch_dbsnp
-//         file(dbsnpIndex) from ch_dbsnp_tbi
-//         file(fasta) from ch_fasta
-//         file(dict) from ch_dict
-//         file(fastaFai) from ch_fai
-//         file(knownIndels) from ch_known_indels
-//         file(knownIndelsIndex) from ch_known_indels_tbi
+//         file(dbsnp) from dbsnp
+//         file(dbsnpIndex) from dbsnp_tbi
+//         file(fasta) from fasta
+//         file(dict) from dict
+//         file(fastaFai) from fai
+//         file(knownIndels) from known_indels
+//         file(knownIndelsIndex) from known_indels_tbi
 
 //     output:
 //         set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bam_sentieon_recal
@@ -1116,8 +1029,8 @@ workflow.onComplete {
 
 // // Creating a TSV file to restart from this step
 // tsv_sentieon_deduped.map { idPatient, idSample ->
-//     gender = genderMap[idPatient]
-//     status = statusMap[idPatient, idSample]
+//     gender = gender_map[idPatient]
+//     status = status_map[idPatient, idSample]
 //     bam = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam"
 //     bai = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam.bai"
 //     table = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.table"
@@ -1128,8 +1041,8 @@ workflow.onComplete {
 
 // tsv_sentieon_deduped_sample
 //     .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { idPatient, idSample ->
-//         status = statusMap[idPatient, idSample]
-//         gender = genderMap[idPatient]
+//         status = status_map[idPatient, idSample]
+//         gender = gender_map[idPatient]
 //         bam = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam"
 //         bai = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam.bai"
 //         table = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.table"
@@ -1138,8 +1051,8 @@ workflow.onComplete {
 
 // // Creating a TSV file to restart from this step
 // tsv_sentieon_recal.map { idPatient, idSample ->
-//     gender = genderMap[idPatient]
-//     status = statusMap[idPatient, idSample]
+//     gender = gender_map[idPatient]
+//     status = status_map[idPatient, idSample]
 //     bam = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.bam"
 //     bai = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.bam.bai"
 //     "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"
@@ -1149,8 +1062,8 @@ workflow.onComplete {
 
 // tsv_sentieon_recal_sample
 //     .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { idPatient, idSample ->
-//         status = statusMap[idPatient, idSample]
-//         gender = genderMap[idPatient]
+//         status = status_map[idPatient, idSample]
+//         gender = gender_map[idPatient]
 //         bam = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.bam"
 //         bai = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.bam.bai"
 //         ["sentieon_recalibrated_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
@@ -1216,8 +1129,8 @@ workflow.onComplete {
 
 // // Creating a TSV file to restart from this step
 // tsv_bam_recalibrated.map { idPatient, idSample ->
-//     gender = genderMap[idPatient]
-//     status = statusMap[idPatient, idSample]
+//     gender = gender_map[idPatient]
+//     status = status_map[idPatient, idSample]
 //     bam = "${params.outdir}/Preprocessing/${idSample}/Recalibrated/${idSample}.recal.bam"
 //     bai = "${params.outdir}/Preprocessing/${idSample}/Recalibrated/${idSample}.recal.bam.bai"
 //     "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"
@@ -1228,8 +1141,8 @@ workflow.onComplete {
 // tsv_bam_recalibrated_sample
 //     .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") {
 //         idPatient, idSample ->
-//         status = statusMap[idPatient, idSample]
-//         gender = genderMap[idPatient]
+//         status = status_map[idPatient, idSample]
+//         gender = gender_map[idPatient]
 //         bam = "${params.outdir}/Preprocessing/${idSample}/Recalibrated/${idSample}.recal.bam"
 //         bai = "${params.outdir}/Preprocessing/${idSample}/Recalibrated/${idSample}.recal.bam.bai"
 //         ["recalibrated_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
@@ -1310,8 +1223,8 @@ workflow.onComplete {
 // // When no knownIndels for mapping, Channel bam_recalibrated is bam_duplicates_marked
 // if (!params.known_indels && step == 'mapping') bam_recalibrated = bam_duplicates_marked
 
-// // When starting with variant calling, Channel bam_recalibrated is inputSample
-// if (step == 'variantcalling') bam_recalibrated = inputSample
+// // When starting with variant calling, Channel bam_recalibrated is input_sample
+// if (step == 'variantcalling') bam_recalibrated = input_sample
 
 // bam_recalibrated = bam_recalibrated.dump(tag:'BAM for Variant Calling')
 
@@ -1340,11 +1253,11 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamHaplotypeCaller
-//         file(dbsnp) from ch_dbsnp
-//         file(dbsnpIndex) from ch_dbsnp_tbi
-//         file(dict) from ch_dict
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
+//         file(dbsnp) from dbsnp
+//         file(dbsnpIndex) from dbsnp_tbi
+//         file(dict) from dict
+//         file(fasta) from fasta
+//         file(fastaFai) from fai
 
 //     output:
 //         set val("HaplotypeCallerGVCF"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf") into gvcfHaplotypeCaller
@@ -1379,11 +1292,11 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSample, file(intervalBed), file(gvcf) from gvcfGenotypeGVCFs
-//         file(dbsnp) from ch_dbsnp
-//         file(dbsnpIndex) from ch_dbsnp_tbi
-//         file(dict) from ch_dict
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
+//         file(dbsnp) from dbsnp
+//         file(dbsnpIndex) from dbsnp_tbi
+//         file(dict) from dict
+//         file(fasta) from fasta
+//         file(fastaFai) from fai
 
 //     output:
 //     set val("HaplotypeCaller"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into vcfGenotypeGVCFs
@@ -1422,10 +1335,10 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSample, file(bam), file(bai), file(recal) from bam_sentieon_DNAseq
-//         file(dbsnp) from ch_dbsnp
-//         file(dbsnpIndex) from ch_dbsnp_tbi
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
+//         file(dbsnp) from dbsnp
+//         file(dbsnpIndex) from dbsnp_tbi
+//         file(fasta) from fasta
+//         file(fastaFai) from fai
 
 //     output:
 //     set val("SentieonDNAseq"), idPatient, idSample, file("DNAseq_${idSample}.vcf") into vcf_sentieon_DNAseq
@@ -1458,10 +1371,10 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSample, file(bam), file(bai), file(recal) from bam_sentieon_DNAscope
-//         file(dbsnp) from ch_dbsnp
-//         file(dbsnpIndex) from ch_dbsnp_tbi
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
+//         file(dbsnp) from dbsnp
+//         file(dbsnpIndex) from dbsnp_tbi
+//         file(fasta) from fasta
+//         file(fastaFai) from fai
 
 //     output:
 //     set val("SentieonDNAscope"), idPatient, idSample, file("DNAscope_${idSample}.vcf") into vcf_sentieon_DNAscope
@@ -1515,8 +1428,8 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSample, file(bam), file(bai) from bamStrelkaSingle
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
+//         file(fasta) from fasta
+//         file(fastaFai) from fai
 //         file(targetBED) from ch_target_bed
 
 //     output:
@@ -1562,8 +1475,8 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSample, file(bam), file(bai) from bamMantaSingle
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
+//         file(fasta) from fasta
+//         file(fastaFai) from fai
 //         file(targetBED) from ch_target_bed
 
 //     output:
@@ -1574,13 +1487,13 @@ workflow.onComplete {
 //     script:
 //     beforeScript = params.target_bed ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
 //     options = params.target_bed ? "--exome --callRegions call_targets.bed.gz" : ""
-//     status = statusMap[idPatient, idSample]
-//     inputbam = status == 0 ? "--bam" : "--tumorBam"
+//     status = status_map[idPatient, idSample]
+//     input_bam = status == 0 ? "--bam" : "--tumorBam"
 //     vcftype = status == 0 ? "diploid" : "tumor"
 //     """
 //     ${beforeScript}
 //     configManta.py \
-//         ${inputbam} ${bam} \
+//         ${input_bam} ${bam} \
 //         --reference ${fasta} \
 //         ${options} \
 //         --runDir Manta
@@ -1617,8 +1530,8 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSample, file(bam), file(bai) from bamTIDDIT
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
+//         file(fasta) from fasta
+//         file(fastaFai) from fai
 
 //     output:
 //         set val("TIDDIT"), idPatient, idSample, file("*.vcf.gz"), file("*.tbi") into vcfTIDDIT
@@ -1648,15 +1561,15 @@ workflow.onComplete {
 //     tag "${idSample}-${intervalBed.baseName}"
 
 //     label 'cpus_1'
-    
+
 //     input:
 //         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamFreebayesSingle
-//         file(fasta) from ch_fasta
+//         file(fasta) from fasta
 //         file(fastaFai) from ch_software_versions_yaml
-    
+
 //     output:
 //         set val("FreeBayes"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into vcfFreebayesSingle
-    
+
 //     when: 'freebayes' in tools
 
 //     script:
@@ -1686,7 +1599,7 @@ workflow.onComplete {
 // bamTumor = Channel.create()
 
 // bamRecalAll
-//     .choice(bamTumor, bamNormal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
+//     .choice(bamTumor, bamNormal) {status_map[it[0], it[1]] == 0 ? 1 : 0}
 
 // // Crossing Normal and Tumor to get a T/N pair for Somatic Variant Calling
 // // Remapping channel to remove common key idPatient
@@ -1707,7 +1620,7 @@ workflow.onComplete {
 // bam_sentieon_tumor = Channel.create()
 
 // bam_sentieon_all
-//     .choice(bam_sentieon_tumor, bam_sention_normal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
+//     .choice(bam_sentieon_tumor, bam_sention_normal) {status_map[it[0], it[1]] == 0 ? 1 : 0}
 
 // // Crossing Normal and Tumor to get a T/N pair for Somatic Variant Calling
 // // Remapping channel to remove common key idPatient
@@ -1733,8 +1646,8 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamFreeBayes
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
+//         file(fasta) from fasta
+//         file(fastaFai) from fai
 
 //     output:
 //         set val("FreeBayes"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into vcfFreeBayes
@@ -1771,14 +1684,14 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamMutect2
-//         file(dict) from ch_dict
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
-//         file(germlineResource) from ch_germline_resource
-//         file(germlineResourceIndex) from ch_germline_resource_tbi
-//         file(intervals) from ch_intervals
-//         file(pon) from ch_pon
-//         file(ponIndex) from ch_pon_tbi
+//         file(dict) from dict
+//         file(fasta) from fasta
+//         file(fastaFai) from fai
+//         file(germlineResource) from germline_resource
+//         file(germlineResourceIndex) from germline_resource_tbi
+//         file(intervals) from intervals
+//         file(pon) from pon
+//         file(ponIndex) from pon_tbi
 
 //     output:
 //         set val("Mutect2"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2Output
@@ -1820,20 +1733,20 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSamplePair, file(statsFiles), file(vcf) from mutect2Stats // Actual stats files and corresponding VCF chunks
-//         file(dict) from ch_dict
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
-//         file(germlineResource) from ch_germline_resource
-//         file(germlineResourceIndex) from ch_germline_resource_tbi
-//         file(intervals) from ch_intervals
+//         file(dict) from dict
+//         file(fasta) from fasta
+//         file(fastaFai) from fai
+//         file(germlineResource) from germline_resource
+//         file(germlineResourceIndex) from germline_resource_tbi
+//         file(intervals) from intervals
 
 //     output:
 //         set idPatient, idSamplePair, file("${idSamplePair}.vcf.gz.stats") into mergedStatsFile
 
 //     when: 'mutect2' in tools
 
-//     script:   
-//                stats = statsFiles.collect{ "-stats ${it} " }.join(' ')
+//     script:
+//     stats = statsFiles.collect{ "-stats ${it} " }.join(' ')
 //     """
 //     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
 //         MergeMutectStats \
@@ -1859,7 +1772,7 @@ workflow.onComplete {
 
 //     input:
 //         set variantCaller, idPatient, idSample, file(vcf) from vcfConcatenateVCFs
-//         file(fastaFai) from ch_fai
+//         file(fastaFai) from fai
 //         file(targetBED) from ch_target_bed
 
 //     output:
@@ -1895,7 +1808,7 @@ workflow.onComplete {
 
 //     input:
 //         set variantCaller, idPatient, idSample, file(vcf) from mutect2Output
-//         file(fastaFai) from ch_fai
+//         file(fastaFai) from fai
 //         file(targetBED) from ch_target_bed
 
 //     output:
@@ -1929,8 +1842,8 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSampleNormal, idSampleTumor, file(bamNormal), file(baiNormal), file(bamTumor), file(baiTumor), file(intervalBed), file(statsFile) from pairBamPileupSummaries
-//         file(germlineResource) from ch_germline_resource
-//         file(germlineResourceIndex) from ch_germline_resource_tbi
+//         file(germlineResource) from germline_resource
+//         file(germlineResourceIndex) from germline_resource_tbi
 
 //     output:
 //         set idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_pileupsummaries.table") into pileupSummaries
@@ -1962,7 +1875,7 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSampleNormal, idSampleTumor, file(pileupSums) from pileupSummaries
-//         file(dict) from ch_dict
+//         file(dict) from dict
 
 //     output:
 //         set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}_pileupsummaries.table") into mergedPileupFile
@@ -1996,13 +1909,13 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSampleNormal, idSampleTumor, file(bamNormal), file(baiNormal), file(bamTumor), file(baiTumor), file(mergedPileup) from pairBamCalculateContamination
- 
+
 //      output:
 //         set idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${idSampleTumor}_contamination.table") into contaminationTable
 
 //     when: 'mutect2' in tools
 
-//     script:   
+//     script:
 //     """
 //     # calculate contamination
 //     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
@@ -2028,12 +1941,12 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSamplePair, file(unfiltered), file(unfilteredIndex), file(stats), file(contaminationTable) from mutect2CallsToFilter
-//         file(dict) from ch_dict
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
-//         file(germlineResource) from ch_germline_resource
-//         file(germlineResourceIndex) from ch_germline_resource_tbi
-//         file(intervals) from ch_intervals
+//         file(dict) from dict
+//         file(fasta) from fasta
+//         file(fastaFai) from fai
+//         file(germlineResource) from germline_resource
+//         file(germlineResourceIndex) from germline_resource_tbi
+//         file(intervals) from intervals
 
 //     output:
 //         set val("Mutect2"), idPatient, idSamplePair, file("Mutect2_filtered_${idSamplePair}.vcf.gz"), file("Mutect2_filtered_${idSamplePair}.vcf.gz.tbi"), file("Mutect2_filtered_${idSamplePair}.vcf.gz.filteringStats.tsv") into filteredMutect2Output
@@ -2064,13 +1977,13 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), file(recalNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(recalTumor) from bam_pair_sentieon_TNscope
-//         file(dict) from ch_dict
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
-//         file(dbsnp) from ch_dbsnp
-//         file(dbsnpIndex) from ch_dbsnp_tbi
-//         file(pon) from ch_pon
-//         file(ponIndex) from ch_pon_tbi
+//         file(dict) from dict
+//         file(fasta) from fasta
+//         file(fastaFai) from fai
+//         file(dbsnp) from dbsnp
+//         file(dbsnpIndex) from dbsnp_tbi
+//         file(pon) from pon
+//         file(ponIndex) from pon_tbi
 
 //     output:
 //         set val("SentieonTNscope"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf") into vcf_sentieon_TNscope
@@ -2132,9 +2045,9 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamStrelka
-//         file(dict) from ch_dict
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
+//         file(dict) from dict
+//         file(fasta) from fasta
+//         file(fastaFai) from fai
 //         file(targetBED) from ch_target_bed
 
 //     output:
@@ -2181,8 +2094,8 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamManta
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
+//         file(fasta) from fasta
+//         file(fastaFai) from fai
 //         file(targetBED) from ch_target_bed
 
 //     output:
@@ -2247,9 +2160,9 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(mantaCSI), file(mantaCSIi) from pairBamStrelkaBP
-//         file(dict) from ch_dict
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
+//         file(dict) from dict
+//         file(fasta) from fasta
+//         file(fastaFai) from fai
 //         file(targetBED) from ch_target_bed
 
 //     output:
@@ -2295,7 +2208,7 @@ workflow.onComplete {
 //     input:
 //         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamCNVkit
 //         file(targetBED) from ch_target_bed
-//         file(fasta) from ch_fasta
+//         file(fasta) from fasta
 
 //     output:
 //         set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}*"), file("${idSampleNormal}*") into cnvkitOut
@@ -2313,7 +2226,7 @@ workflow.onComplete {
 //       --output-reference output_reference.cnn \
 //       --output-dir ./ \
 //       --diagram \
-//       --scatter 
+//       --scatter
 //     """
 // }
 
@@ -2327,8 +2240,8 @@ workflow.onComplete {
 //     tag "${fasta}"
 
 //     input:
-//     file(fasta) from ch_fasta
-//     file(fastaFai) from ch_fai
+//     file(fasta) from fasta
+//     file(fastaFai) from fai
 
 //     output:
 //     file "microsatellites.list" into msi_scan_ch
@@ -2384,9 +2297,9 @@ workflow.onComplete {
 //     input:
 //         set idPatient, idSample, file(bam), file(bai) from bamAscat
 //         file(acLoci) from ch_ac_loci
-//         file(dict) from ch_dict
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
+//         file(dict) from dict
+//         file(fasta) from fasta
+//         file(fastaFai) from fai
 
 //     output:
 //         set idPatient, idSample, file("${idSample}.alleleCount") into alleleCounterOut
@@ -2407,7 +2320,7 @@ workflow.onComplete {
 // alleleCountOutTumor = Channel.create()
 
 // alleleCounterOut
-//     .choice(alleleCountOutTumor, alleleCountOutNormal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
+//     .choice(alleleCountOutTumor, alleleCountOutNormal) {status_map[it[0], it[1]] == 0 ? 1 : 0}
 
 // alleleCounterOut = alleleCountOutNormal.combine(alleleCountOutTumor, by:0)
 
@@ -2437,7 +2350,7 @@ workflow.onComplete {
 //     when: 'ascat' in tools
 
 //     script:
-//     gender = genderMap[idPatient]
+//     gender = gender_map[idPatient]
 //     """
 //     convertAlleleCounts.r ${idSampleTumor} ${alleleCountTumor} ${idSampleNormal} ${alleleCountNormal} ${gender}
 //     """
@@ -2464,7 +2377,7 @@ workflow.onComplete {
 //     when: 'ascat' in tools
 
 //     script:
-//     gender = genderMap[idPatient]
+//     gender = gender_map[idPatient]
 //     purity_ploidy = (params.ascat_purity && params.ascat_ploidy) ? "--purity ${params.ascat_purity} --ploidy ${params.ascat_ploidy}" : ""
 //     """
 //     for f in *BAF *LogR; do sed 's/chr//g' \$f > tmpFile; mv tmpFile \$f;done
@@ -2495,8 +2408,8 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamMpileup
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
+//         file(fasta) from fasta
+//         file(fastaFai) from fai
 
 //     output:
 //         set idPatient, idSample, file("${prefix}${idSample}.pileup") into mpileupMerge
@@ -2521,8 +2434,8 @@ workflow.onComplete {
 
 // // Creating a TSV file to restart from this step
 // tsv_mpileup.map { idPatient, idSample ->
-//     gender = genderMap[idPatient]
-//     status = statusMap[idPatient, idSample]
+//     gender = gender_map[idPatient]
+//     status = status_map[idPatient, idSample]
 //     mpileup = "${params.outdir}/VariantCalling/${idSample}/Control-FREEC/${idSample}.pileup"
 //     "${idPatient}\t${gender}\t${status}\t${idSample}\t${mpileup}\n"
 // }.collectFile(
@@ -2532,8 +2445,8 @@ workflow.onComplete {
 // tsv_mpileup_sample
 //     .collectFile(storeDir: "${params.outdir}/VariantCalling/TSV") {
 //         idPatient, idSample ->
-//         status = statusMap[idPatient, idSample]
-//         gender = genderMap[idPatient]
+//         status = status_map[idPatient, idSample]
+//         gender = gender_map[idPatient]
 //         mpileup = "${params.outdir}/VariantCalling/${idSample}/Control-FREEC/${idSample}.pileup"
 //         ["control-freec_mpileup_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${mpileup}\n"]
 // }
@@ -2576,10 +2489,10 @@ workflow.onComplete {
 // mpileupOutNormal = Channel.create()
 // mpileupOutTumor = Channel.create()
 
-// if (step == 'controlfreec') mpileupOut = inputSample
+// if (step == 'controlfreec') mpileupOut = input_sample
 
 // mpileupOut
-//     .choice(mpileupOutTumor, mpileupOutNormal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
+//     .choice(mpileupOutTumor, mpileupOutNormal) {status_map[it[0], it[1]] == 0 ? 1 : 0}
 
 // mpileupOut = mpileupOutNormal.combine(mpileupOutTumor, by:0)
 
@@ -2604,10 +2517,10 @@ workflow.onComplete {
 //         file(chrDir) from ch_chr_dir
 //         file(mappability) from ch_mappability
 //         file(chrLength) from ch_chr_length
-//         file(dbsnp) from ch_dbsnp
-//         file(dbsnpIndex) from ch_dbsnp_tbi
-//         file(fasta) from ch_fasta
-//         file(fastaFai) from ch_fai
+//         file(dbsnp) from dbsnp
+//         file(dbsnpIndex) from dbsnp_tbi
+//         file(fasta) from fasta
+//         file(fastaFai) from fai
 
 //     output:
 //         set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.pileup_CNVs"), file("${idSampleTumor}.pileup_ratio.txt"), file("${idSampleTumor}.pileup_normal_CNVs"), file("${idSampleTumor}.pileup_normal_ratio.txt"), file("${idSampleTumor}.pileup_BAF.txt"), file("${idSampleNormal}.pileup_BAF.txt") into controlFreecViz
@@ -2617,9 +2530,9 @@ workflow.onComplete {
 
 //     script:
 //     config = "${idSampleTumor}_vs_${idSampleNormal}.config.txt"
-//     gender = genderMap[idPatient]
-//     // if we are using coefficientOfVariation, we must delete the window parameter 
-//     // it is "window = 20000" in the default settings, without coefficientOfVariation set, 
+//     gender = gender_map[idPatient]
+//     // if we are using coefficientOfVariation, we must delete the window parameter
+//     // it is "window = 20000" in the default settings, without coefficientOfVariation set,
 //     // but we do not like it. Note, it is not written in stone
 //     coeff_or_window = params.cf_window ? "window = ${params.cf_window}" : "coefficientOfVariation = ${params.cf_coeff}"
 
@@ -2833,7 +2746,7 @@ workflow.onComplete {
 //     vcfToAnnotate = Channel.create()
 //     vcfNoAnnotate = Channel.create()
 
-//     if (tsvPath == []) {
+//     if (tsv_path == []) {
 //     // Sarek, by default, annotates all available vcfs that it can find in the VariantCalling directory
 //     // Excluding vcfs from FreeBayes, and g.vcf from HaplotypeCaller
 //     // Basically it's: results/VariantCalling/*/{HaplotypeCaller,Manta,Mutect2,SentieonDNAseq,SentieonDNAscope,SentieonTNscope,Strelka,TIDDIT}/*.vcf.gz
@@ -2858,12 +2771,12 @@ workflow.onComplete {
 //         Channel.fromPath("${params.outdir}/VariantCalling/*/TIDDIT/*.vcf.gz")
 //           .flatten().map{vcf -> ['TIDDIT', vcf.minus(vcf.fileName)[-2].toString(), vcf]}
 //       ).choice(vcfToAnnotate, vcfNoAnnotate) {
-//         annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1
+//         annotate_tools == [] || (annotate_tools != [] && it[0] in annotate_tools) ? 0 : 1
 //       }
-//     } else if (annotateTools == []) {
+//     } else if (annotate_tools == []) {
 //     // Annotate user-submitted VCFs
 //     // If user-submitted, Sarek assume that the idSample should be assumed automatically
-//       vcfToAnnotate = Channel.fromPath(tsvPath)
+//       vcfToAnnotate = Channel.fromPath(tsv_path)
 //         .map{vcf -> ['userspecified', vcf.minus(vcf.fileName)[-2].toString(), vcf]}
 //     } else exit 1, "specify only tools or files to annotate, not both"
 
@@ -3104,10 +3017,10 @@ workflow.onComplete {
 //     publishDir "${params.outdir}/Reports/MultiQC", mode: params.publish_dir_mode
 
 //     input:
-//         file (multiqcConfig) from ch_multiqc_config
-//         file (mqc_custom_config) from ch_multiqc_custom_config.collect().ifEmpty([])
+//         file (multiqcConfig) from multiqc_config
+//         file (mqc_custom_config) from multiqc_custom_config.collect().ifEmpty([])
 //         file (versions) from ch_software_versions_yaml.collect()
-//         file workflow_summary from ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml")
+//         file workflow_summary from workflow_summary.collectFile(name: "workflow_summary_mqc.yaml")
 //         file ('bamQC/*') from bamQCReport.collect().ifEmpty([])
 //         file ('BCFToolsStats/*') from bcftoolsReport.collect().ifEmpty([])
 //         file ('FastQC/*') from fastQCReport.collect().ifEmpty([])
@@ -3135,23 +3048,3 @@ workflow.onComplete {
 // }
 
 // ch_multiqc_report.dump(tag:'MultiQC')
-
-// // Output Description HTML
-// process Output_documentation {
-//     publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode
-
-//     input:
-//         file output_docs from ch_output_docs
-
-//     output:
-//         file "results_description.html"
-
-//     when: !('documentation' in skipQC)
-
-//     script:
-//     """
-//     markdown_to_html.py $output_docs -o results_description.html
-//     """
-// }
-
-
