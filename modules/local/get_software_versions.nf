@@ -9,14 +9,14 @@ process GET_SOFTWARE_VERSIONS {
                 }
 
     output:
-    path 'software_versions_mqc.yaml', emit: software_versions_yml
-    path "software_versions.csv", emit: software_versions_csv
+    path 'software_versions_mqc.yaml', emit: yml
+    path "software_versions.csv", emit: csv
 
     script:
     """
     alleleCounter --version &> v_allelecount.txt 2>&1 || true
     bcftools --version &> v_bcftools.txt 2>&1 || true
-    bwa &> v_bwa.txt 2>&1 || true
+    bwa-mem2 version &> v_bwamem2.txt 2>&1 || true
     cnvkit.py version &> v_cnvkit.txt 2>&1 || true
     configManta.py --version &> v_manta.txt 2>&1 || true
     configureStrelkaGermlineWorkflow.py --version &> v_strelka.txt 2>&1 || true

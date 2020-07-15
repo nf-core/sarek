@@ -5,10 +5,10 @@ process BWAMEM2_INDEX {
         saveAs: {params.save_reference ? "reference_genome/BWAIndex/${it}" : null }
 
     input:
-        path file(fasta)
+        path fasta
 
     output:
-        path file("${fasta}.*")
+        path("${fasta}.*")
 
     script:
     """

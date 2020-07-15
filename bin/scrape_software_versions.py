@@ -7,7 +7,7 @@ regexes = {
     'AlleleCount': ['v_allelecount.txt', r"(\S+)"],
     'ASCAT': ['v_ascat.txt', r"Version:       (\S+)"],
     'bcftools': ['v_bcftools.txt', r"bcftools (\S+)"],
-    'BWA': ['v_bwa.txt', r"Version: (\S+)"],
+    'BWAMEM2': ['v_bwamem2.txt', r"Version: (\S+)"],
     'CNVkit': ['v_cnvkit.txt', r"(\S+)"],
     'Control-FREEC': ['v_controlfreec.txt', r"Control-FREEC\s(\S+)"],
     'FastQC': ['v_fastqc.txt', r"FastQC v(\S+)"],
@@ -35,7 +35,7 @@ results['Nextflow'] = '<span style="color:#999999;\">N/A</span>'
 results['ASCAT'] = '<span style="color:#999999;\">N/A</span>'
 results['AlleleCount'] = '<span style="color:#999999;\">N/A</span>'
 results['bcftools'] = '<span style="color:#999999;\">N/A</span>'
-results['BWA'] = '<span style="color:#999999;\">N/A</span>'
+results['BWA-MEM2'] = '<span style="color:#999999;\">N/A</span>'
 results['CNVkit'] = '<span style="color:#999999;\">N/A</span>'
 results['Control-FREEC'] = '<span style="color:#999999;\">N/A</span>'
 results['FastQC'] = '<span style="color:#999999;\">N/A</span>'

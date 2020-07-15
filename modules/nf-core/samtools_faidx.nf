@@ -5,10 +5,10 @@ process SAMTOOLS_FAIDX {
         saveAs: {params.save_reference ? "reference_genome/${it}" : null }
 
     input:
-        path file(fasta)
+        path fasta
 
     output:
-        path file("${fasta}.fai")
+        path ("${fasta}.fai")
 
     //when: !(params.fasta_fai) && params.fasta && !('annotate' in step)
 

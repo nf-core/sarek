@@ -43,7 +43,8 @@ include { hasExtension;
     defineToolList; 
     checkParameterList; 
     extractBam;
-    extractFastqFromDir } from './modules/local/functions'
+    extractFastqFromDir;
+    checkParameterExistence } from './modules/local/functions'
 
 /*
 ================================================================================
@@ -76,11 +77,11 @@ ch_output_docs_images = file("$baseDir/docs/images/", checkIfExists: true)
 stepList = defineStepList()
 step = params.step ? params.step.toLowerCase().replaceAll('-', '').replaceAll('_', '') : ''
 
-// // Handle deprecation
-// if (step == 'preprocessing') step = 'mapping'
+// Handle deprecation
+if (step == 'preprocessing') step = 'mapping'
 
-// if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
-// if (!checkParameterExistence(step, stepList)) exit 1, "Unknown step ${step}, see --help for more information"
+if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
+if (!checkParameterExistence(step, stepList)) exit 1, "Unknown step ${step}, see --help for more information"
 
 toolList = defineToolList()
 tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
@@ -179,6 +180,9 @@ if (tsvPath) {
 */
 
 // Initialize each params in params.genomes, catch the command line first if it was defined
+// params.fasta has to be the first one
+params.fasta = params.genome && !('annotate' in step) ? params.genomes[params.genome].fasta ?: null : null
+
 
 // The rest can be sorted
 params.ac_loci = params.genome && 'ascat' in tools ? params.genomes[params.genome].ac_loci ?: null : null
@@ -201,6 +205,12 @@ params.species = params.genome && 'vep' in tools ? params.genomes[params.genome]
 params.vep_cache_version = params.genome && 'vep' in tools ? params.genomes[params.genome].vep_cache_version ?: null : null
 
 // Initialize channels based on params
+ch_fasta = params.fasta && !('annotate' in step) ? Channel.value(file(params.fasta)) : "null"
+ch_dbsnp = params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? Channel.value(file(params.dbsnp)) : "null"
+ch_germline_resource = params.germline_resource && 'mutect2' in tools ? Channel.value(file(params.germline_resource)) : "null"
+ch_known_indels = params.known_indels && ('mapping' in step || 'preparerecalibration' in step) ? Channel.value(file(params.known_indels)) : "null"
+ch_pon = params.pon ? Channel.value(file(params.pon)) : "null"
+
 ch_ac_loci = params.ac_loci && 'ascat' in tools ? Channel.value(file(params.ac_loci)) : "null"
 ch_ac_loci_gc = params.ac_loci_gc && 'ascat' in tools ? Channel.value(file(params.ac_loci_gc)) : "null"
 ch_chr_dir = params.chr_dir && 'controlfreec' in tools ? Channel.value(file(params.chr_dir)) : "null"
@@ -308,26 +318,68 @@ include { MULTIQC } from './modules/nf-core/multiqc' params(params)
 ================================================================================
 */
 include { BUILD_INDICES } from './modules/subworkflows/build_indices'  addParams(params)
+include { CREATE_INTERVALS_BED } from './modules/local/create_intervals_bed' addParams(params)
+include { TRIM_GALORE } from './modules/local/trim_galore.nf' addParams(params)
+ch_fasta.dump(tag: 'ch_fasta')
 
-// params.fasta has to be the first one
-params.fasta = params.genome && !('annotate' in step) ? params.genomes[params.genome].fasta ?: null : null
-ch_fasta = params.fasta && !('annotate' in step) ? Channel.value(file(params.fasta)) : "null"
-ch_dbsnp = params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? Channel.value(file(params.dbsnp)) : "null"
-ch_germline_resource = params.germline_resource && 'mutect2' in tools ? Channel.value(file(params.germline_resource)) : "null"
-ch_known_indels = params.known_indels && ('mapping' in step || 'preparerecalibration' in step) ? Channel.value(file(params.known_indels)) : "null"
-ch_pon = params.pon ? Channel.value(file(params.pon)) : "null"
 
 
 workflow {
 
-    BUILD_INDICES(  step, 
-                    ch_fasta, 
-                    ch_dbsnp, 
-                    ch_germline_resource, 
-                    ch_known_indels, 
-                    ch_pon)
+    // BUILD INDICES
 
+    BUILD_INDICES(
+        ch_dbsnp, 
+        ch_fasta, 
+        ch_germline_resource, 
+        ch_known_indels, 
+        ch_pon,
+        step)
+
+    ch_bwa = params.bwa ? Channel.value(file(params.bwa)) : BUILD_INDICES.out.bwa_built
+    ch_dict = params.dict ? Channel.value(file(params.dict)) : BUILD_INDICES.out.dictBuilt
+    ch_fai = params.fasta_fai ? Channel.value(file(params.fasta_fai)) : BUILD_INDICES.out.fai_built
+    ch_dbsnp_tbi = params.dbsnp ? params.dbsnp_index ? Channel.value(file(params.dbsnp_index)) : BUILD_INDICES.out.dbsnp_tbi : "null"
+    ch_germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? Channel.value(file(params.germline_resource_index)) : BUILD_INDICES.out.germline_resource_tbi : "null"
+    ch_known_indels_tbi = params.known_indels ? params.known_indels_index ? Channel.value(file(params.known_indels_index)) : BUILD_INDICES.out.known_indels_tbi.collect() : "null"
+    ch_pon_tbi = params.pon ? params.pon_index ? Channel.value(file(params.pon_index)) : BUILD_INDICES.out.pon_tbi : "null"
+    ch_intervals = params.no_intervals ? "null" : params.intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : BUILD_INDICES.out.intervalBuilt
+    ch_intervals.dump(tag: 'ch_intervals')
+
+    // PREPROCESSING
+    if((!params.no_intervals) && step != 'annotate')
+        CREATE_INTERVALS_BED(ch_intervals)
+
+    // BED INTERVAL CHANNEL TRANSFORMING
+    ch_bed_intervals = CREATE_INTERVALS_BED.out
+        .flatten()
+        .map { intervalFile ->
+            def duration = 0.0
+            for (line in intervalFile.readLines()) {
+                final fields = line.split('\t')
+                if (fields.size() >= 5) duration += fields[4].toFloat()
+                else {
+                    start = fields[1].toInteger()
+                    end = fields[2].toInteger()
+                    duration += (end - start) / params.nucleotides_per_second
+                }
+            }
+            [ duration, intervalFile]
+        }.toSortedList({ a, b -> b[0] <=> a[0] })
+        .flatten().collate(2)
+        .map{duration, intervalFile -> intervalFile}
+    ch_bed_intervals.dump(tag:'bedintervals')
+
+    if (params.no_intervals && step != 'annotate') {
+        file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
+        ch_bed_intervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
+    }
+
+    //if(!('fastqc' in skipQC))
     FASTQC(inputSample)
+    
+    if(params.trim_fastq)
+        TRIM_GALORE(inputSample)
 
     OUTPUT_DOCUMENTATION(
         ch_output_docs,
@@ -338,26 +390,12 @@ workflow {
     MULTIQC(
         ch_multiqc_config,
         ch_multiqc_custom_config.collect().ifEmpty([]),
-        FASTQC.out.collect(),
-        GET_SOFTWARE_VERSIONS.out.software_versions_yml.collect(),
+        FASTQC.out.collect().ifEmpty([]),
+        TRIM_GALORE.out.report.collect().ifEmpty([]),
+        GET_SOFTWARE_VERSIONS.out.yml.collect(),
         ch_workflow_summary)
 }
 
-// ch_bwa = params.bwa ? Channel.value(file(params.bwa)) : build_indices.out.BWAMEM2_INDEX.out
-
-// ch_dict = params.dict ? Channel.value(file(params.dict)) : GATK_CREATE_SEQUENCE_DICTIONARY.out
-
-// ch_fai = params.fasta_fai ? Channel.value(file(params.fasta_fai)) : SAMTOOLS_FAIDX.out
-
-// ch_dbsnp_tbi = params.dbsnp ? params.dbsnp_index ? Channel.value(file(params.dbsnp_index)) : dbsnp_tbi : "null"
-
-// ch_germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? Channel.value(file(params.germline_resource_index)) : germline_resource_tbi : "null"
-
-// ch_known_indels_tbi = params.known_indels ? params.known_indels_index ? Channel.value(file(params.known_indels_index)) : known_indels_tbi.collect() : "null"
-
-// ch_pon_tbi = params.pon ? params.pon_index ? Channel.value(file(params.pon_index)) : pon_tbi : "null"
-
-// ch_intervals = params.no_intervals ? "null" : params.intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : intervalBuilt
 
 /*
 ================================================================================
@@ -371,192 +409,6 @@ workflow.onComplete {
 }
 
 
-// /*
-// ================================================================================
-//                                 BUILDING INDEXES
-// ================================================================================
-// */
-
-// // And then initialize channels based on params or indexes that were just built
-
-// process BuildBWAindexes {
-//     tag "${fasta}"
-
-//     publishDir params.outdir, mode: params.publish_dir_mode,
-//         saveAs: {params.save_reference ? "reference_genome/BWAIndex/${it}" : null }
-
-//     input:
-//         file(fasta) from ch_fasta
-
-//     output:
-//         file("${fasta}.*") into bwa_built
-
-//     when: !(params.bwa) && params.fasta && 'mapping' in step
-
-//     script:
-//     """
-//     bwa index ${fasta}
-//     """
-// }
-
-// ch_bwa = params.bwa ? Channel.value(file(params.bwa)) : bwa_built
-
-// process BuildDict {
-//     tag "${fasta}"
-
-//     publishDir params.outdir, mode: params.publish_dir_mode,
-//         saveAs: {params.save_reference ? "reference_genome/${it}" : null }
-
-//     input:
-//         file(fasta) from ch_fasta
-
-//     output:
-//         file("${fasta.baseName}.dict") into dictBuilt
-
-//     when: !(params.dict) && params.fasta && !('annotate' in step) && !('controlfreec' in step)
-
-//     script:
-//     """
-//     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
-//         CreateSequenceDictionary \
-//         --REFERENCE ${fasta} \
-//         --OUTPUT ${fasta.baseName}.dict
-//     """
-// }
-
-// ch_dict = params.dict ? Channel.value(file(params.dict)) : dictBuilt
-
-// process BuildFastaFai {
-//     tag "${fasta}"
-
-//     publishDir params.outdir, mode: params.publish_dir_mode,
-//         saveAs: {params.save_reference ? "reference_genome/${it}" : null }
-
-//     input:
-//         file(fasta) from ch_fasta
-
-//     output:
-//         file("${fasta}.fai") into fai_built
-
-//     when: !(params.fasta_fai) && params.fasta && !('annotate' in step)
-
-//     script:
-//     """
-//     samtools faidx ${fasta}
-//     """
-// }
-
-// ch_fai = params.fasta_fai ? Channel.value(file(params.fasta_fai)) : fai_built
-
-// process BuildDbsnpIndex {
-//     tag "${dbsnp}"
-
-//     publishDir params.outdir, mode: params.publish_dir_mode,
-//         saveAs: {params.save_reference ? "reference_genome/${it}" : null }
-
-//     input:
-//         file(dbsnp) from ch_dbsnp
-
-//     output:
-//         file("${dbsnp}.tbi") into dbsnp_tbi
-
-//     when: !(params.dbsnp_index) && params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || 'tnscope' in tools)
-
-//     script:
-//     """
-//     tabix -p vcf ${dbsnp}
-//     """
-// }
-
-// ch_dbsnp_tbi = params.dbsnp ? params.dbsnp_index ? Channel.value(file(params.dbsnp_index)) : dbsnp_tbi : "null"
-
-// process BuildGermlineResourceIndex {
-//     tag "${germlineResource}"
-
-//     publishDir params.outdir, mode: params.publish_dir_mode,
-//         saveAs: {params.save_reference ? "reference_genome/${it}" : null }
-
-//     input:
-//         file(germlineResource) from ch_germline_resource
-
-//     output:
-//         file("${germlineResource}.tbi") into germline_resource_tbi
-
-//     when: !(params.germline_resource_index) && params.germline_resource && 'mutect2' in tools
-
-//     script:
-//     """
-//     tabix -p vcf ${germlineResource}
-//     """
-// }
-
-// ch_germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? Channel.value(file(params.germline_resource_index)) : germline_resource_tbi : "null"
-
-// process BuildKnownIndelsIndex {
-//     tag "${knownIndels}"
-
-//     publishDir params.outdir, mode: params.publish_dir_mode,
-//         saveAs: {params.save_reference ? "reference_genome/${it}" : null }
-
-//     input:
-//         each file(knownIndels) from ch_known_indels
-
-//     output:
-//         file("${knownIndels}.tbi") into known_indels_tbi
-
-//     when: !(params.known_indels_index) && params.known_indels && ('mapping' in step || 'preparerecalibration' in step)
-
-//     script:
-//     """
-//     tabix -p vcf ${knownIndels}
-//     """
-// }
-
-// ch_known_indels_tbi = params.known_indels ? params.known_indels_index ? Channel.value(file(params.known_indels_index)) : known_indels_tbi.collect() : "null"
-
-// process BuildPonIndex {
-//     tag "${pon}"
-
-//     publishDir params.outdir, mode: params.publish_dir_mode,
-//         saveAs: {params.save_reference ? "reference_genome/${it}" : null }
-
-//     input:
-//         file(pon) from ch_pon
-
-//     output:
-//         file("${pon}.tbi") into pon_tbi
-
-//     when: !(params.pon_index) && params.pon && ('tnscope' in tools || 'mutect2' in tools)
-
-//     script:
-//     """
-//     tabix -p vcf ${pon}
-//     """
-// }
-
-// ch_pon_tbi = params.pon ? params.pon_index ? Channel.value(file(params.pon_index)) : pon_tbi : "null"
-
-// process BuildIntervals {
-//     tag "${fastaFai}"
-
-//     publishDir params.outdir, mode: params.publish_dir_mode,
-//     saveAs: {params.save_reference ? "reference_genome/${it}" : null }
-
-//     input:
-//         file(fastaFai) from ch_fai
-
-//     output:
-//         file("${fastaFai.baseName}.bed") into intervalBuilt
-
-//     when: !(params.intervals) && !('annotate' in step) && !('controlfreec' in step) 
-
-//     script:
-//     """
-//     awk -v FS='\t' -v OFS='\t' '{ print \$1, \"0\", \$2 }' ${fastaFai} > ${fastaFai.baseName}.bed
-//     """
-// }
-
-// ch_intervals = params.no_intervals ? "null" : params.intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : intervalBuilt
 
 // /*
 // ================================================================================
@@ -564,83 +416,7 @@ workflow.onComplete {
 // ================================================================================
 // */
 
-// // STEP 0: CREATING INTERVALS FOR PARALLELIZATION (PREPROCESSING AND VARIANT CALLING)
-
-// process CreateIntervalBeds {
-//     tag "${intervals}"
-
-//     input:
-//         file(intervals) from ch_intervals
-
-//     output:
-//         file '*.bed' into bedIntervals mode flatten
-
-//     when: (!params.no_intervals) && step != 'annotate'
-
-//     script:
-//     // If the interval file is BED format, the fifth column is interpreted to
-//     // contain runtime estimates, which is then used to combine short-running jobs
-//     if (hasExtension(intervals, "bed"))
-//         """
-//         awk -vFS="\t" '{
-//           t = \$5  # runtime estimate
-//           if (t == "") {
-//             # no runtime estimate in this row, assume default value
-//             t = (\$3 - \$2) / ${params.nucleotides_per_second}
-//           }
-//           if (name == "" || (chunk > 600 && (chunk + t) > longest * 1.05)) {
-//             # start a new chunk
-//             name = sprintf("%s_%d-%d.bed", \$1, \$2+1, \$3)
-//             chunk = 0
-//             longest = 0
-//           }
-//           if (t > longest)
-//             longest = t
-//           chunk += t
-//           print \$0 > name
-//         }' ${intervals}
-//         """
-//     else if (hasExtension(intervals, "interval_list"))
-//         """
-//         grep -v '^@' ${intervals} | awk -vFS="\t" '{
-//           name = sprintf("%s_%d-%d", \$1, \$2, \$3);
-//           printf("%s\\t%d\\t%d\\n", \$1, \$2-1, \$3) > name ".bed"
-//         }'
-//         """
-//     else
-//         """
-//         awk -vFS="[:-]" '{
-//           name = sprintf("%s_%d-%d", \$1, \$2, \$3);
-//           printf("%s\\t%d\\t%d\\n", \$1, \$2-1, \$3) > name ".bed"
-//         }' ${intervals}
-//         """
-// }
-
-// bedIntervals = bedIntervals
-//     .map { intervalFile ->
-//         def duration = 0.0
-//         for (line in intervalFile.readLines()) {
-//             final fields = line.split('\t')
-//             if (fields.size() >= 5) duration += fields[4].toFloat()
-//             else {
-//                 start = fields[1].toInteger()
-//                 end = fields[2].toInteger()
-//                 duration += (end - start) / params.nucleotides_per_second
-//             }
-//         }
-//         [duration, intervalFile]
-//         }.toSortedList({ a, b -> b[0] <=> a[0] })
-//     .flatten().collate(2)
-//     .map{duration, intervalFile -> intervalFile}
-
-// bedIntervals = bedIntervals.dump(tag:'bedintervals')
-
-// if (params.no_intervals && step != 'annotate') {
-//     file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
-//     bedIntervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
-// }
-
-// (intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervals) = bedIntervals.into(6)
+//   (intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervals) = bedIntervals.into(6)
 
 
 // // STEP 0.5: QC ON READS
@@ -648,27 +424,6 @@ workflow.onComplete {
 // // TODO: Use only one process for FastQC for FASTQ files and uBAM files
 // // FASTQ and uBAM files are renamed based on the sample name
 
-// process FastQCFQ {
-//     label 'FastQC'
-//     label 'cpus_2'
-
-//     tag "${idPatient}-${idRun}"
-
-//     publishDir "${params.outdir}/Reports/${idSample}/FastQC/${idSample}_${idRun}", mode: params.publish_dir_mode
-
-//     input:
-//         set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsFastQC
-
-//     output:
-//         file("*.{html,zip}") into fastQCFQReport
-
-//     when: !('fastqc' in skipQC)
-
-//     script:
-//     """
-//     fastqc -t 2 -q ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
-//     """
-// }
 
 // process FastQCBAM {
 //     label 'FastQC'
@@ -693,8 +448,6 @@ workflow.onComplete {
 // }
 
 // fastQCReport = fastQCFQReport.mix(fastQCBAMReport)
-
-// fastQCReport = fastQCReport.dump(tag:'FastQC')
 
 // process TrimGalore {
 //     label 'TrimGalore'

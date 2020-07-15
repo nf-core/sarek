@@ -5,9 +5,6 @@ if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
     custom_runName = workflow.runName
 }
 
-/*
- * MultiQC
- */
 process MULTIQC {
     publishDir "${params.outdir}/multiqc", mode: params.publish_dir_mode
 
@@ -16,6 +13,7 @@ process MULTIQC {
     path mqc_custom_config
     // TODO nf-core: Add in log files from your new processes for MultiQC to find!
     path fastqc
+    path trim_galore
     path software_versions
     val workflow_summary
 
@@ -28,7 +26,6 @@ process MULTIQC {
     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     custom_config_file = params.multiqc_config ? "--config $mqc_custom_config" : ''
-    // TODO nf-core: Specify which MultiQC modules to use with -m for a faster run time
     """
     echo '$workflow_summary' > workflow_summary_mqc.yaml
     multiqc -f $rtitle $rfilename $custom_config_file .
