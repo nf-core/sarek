@@ -6,10 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [dev](https://github.com/nf-core/sarek/tree/dev)
 
+- [#234](https://github.com/nf-core/sarek/pull/234) -Switching to DSL2
+
 ### Added
 
 ### Changed
 
+- [#234](https://github.com/nf-core/sarek/pull/234) - Update Nextflow `19.10.0` -> `20.04.1`
 - [#233](https://github.com/nf-core/sarek/pull/233) - Switch `bwa 0.7.17` for `bwa-mem2 2.0`
 
 ### Fixed
