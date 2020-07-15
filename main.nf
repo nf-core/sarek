@@ -219,7 +219,6 @@ ch_cadd_indels = params.cadd_indels ? Channel.value(file(params.cadd_indels)) : 
 ch_cadd_indels_tbi = params.cadd_indels_tbi ? Channel.value(file(params.cadd_indels_tbi)) : "null"
 ch_cadd_wg_snvs = params.cadd_wg_snvs ? Channel.value(file(params.cadd_wg_snvs)) : "null"
 ch_cadd_wg_snvs_tbi = params.cadd_wg_snvs_tbi ? Channel.value(file(params.cadd_wg_snvs_tbi)) : "null"
-ch_pon = params.pon ? Channel.value(file(params.pon)) : "null"
 ch_target_bed = params.target_bed ? Channel.value(file(params.target_bed)) : "null"
 
 /*
@@ -316,11 +315,17 @@ ch_fasta = params.fasta && !('annotate' in step) ? Channel.value(file(params.fas
 ch_dbsnp = params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? Channel.value(file(params.dbsnp)) : "null"
 ch_germline_resource = params.germline_resource && 'mutect2' in tools ? Channel.value(file(params.germline_resource)) : "null"
 ch_known_indels = params.known_indels && ('mapping' in step || 'preparerecalibration' in step) ? Channel.value(file(params.known_indels)) : "null"
+ch_pon = params.pon ? Channel.value(file(params.pon)) : "null"
 
 
 workflow {
 
-    BUILD_INDICES(step, ch_fasta, ch_dbsnp, ch_germline_resource, ch_known_indels)
+    BUILD_INDICES(  step, 
+                    ch_fasta, 
+                    ch_dbsnp, 
+                    ch_germline_resource, 
+                    ch_known_indels, 
+                    ch_pon)
 
     FASTQC(inputSample)
 
