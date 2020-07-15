@@ -24,14 +24,21 @@ class Headers {
         Map colors = log_colours(monochrome_logs)
         String.format(
             """\n
-            -${colors.dim}----------------------------------------------------${colors.reset}-
-                                                    ${colors.green},--.${colors.black}/${colors.green},-.${colors.reset}
-            ${colors.blue}        ___     __   __   __   ___     ${colors.green}/,-._.--~\'${colors.reset}
-            ${colors.blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${colors.yellow}}  {${colors.reset}
-            ${colors.blue}  | \\| |       \\__, \\__/ |  \\ |___     ${colors.green}\\`-._,-`-,${colors.reset}
-                                                    ${colors.green}`._,._,\'${colors.reset}
-            ${colors.purple}  ${workflow.manifest.name} v${workflow.manifest.version}${colors.reset}
-            -${colors.dim}----------------------------------------------------${colors.reset}-
+    -${colors.dim}----------------------------------------------------${colors.reset}-
+                                            ${colors.green},--.${colors.black}/${colors.green},-.${colors.reset}
+    ${colors.blue}        ___     __   __   __   ___     ${colors.green}/,-._.--~\'${colors.reset}
+    ${colors.blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${colors.yellow}}  {${colors.reset}
+    ${colors.blue}  | \\| |       \\__, \\__/ |  \\ |___     ${colors.green}\\`-._,-`-,${colors.reset}
+                                            ${colors.green}`._,._,\'${colors.reset}
+          ${colors.white}____${colors.reset}
+        ${colors.white}.´ _  `.${colors.reset}
+       ${colors.white}/  ${colors.green}|\\${colors.white}`-_ \\${colors.reset}     ${colors.blue} __        __   ___     ${colors.reset}
+      ${colors.white}|   ${colors.green}| \\${colors.white}  `-|${colors.reset}    ${colors.blue}|__`  /\\  |__) |__  |__/${colors.reset}
+       ${colors.white}\\ ${colors.green}|   \\${colors.white}  /${colors.reset}     ${colors.blue}.__| /¯¯\\ |  \\ |___ |  \\${colors.reset}
+        ${colors.white}`${colors.green}|${colors.white}____${colors.green}\\${colors.white}´${colors.reset}
+
+    ${colors.purple}  ${workflow.manifest.name} v${workflow.manifest.version}${colors.reset}
+-${colors.dim}--------------------------------------------------${colors.reset}-
             """.stripIndent()
         )
     }
