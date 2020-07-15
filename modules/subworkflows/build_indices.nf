@@ -13,8 +13,10 @@ include { HTSLIB_TABIX as HTSLIB_TABIX_KNOWN_INDELS } from '../nf-core/htslib_ta
 include { HTSLIB_TABIX as HTSLIB_TABIX_PON } from '../nf-core/htslib_tabix'
 include { BWAMEM2_INDEX as BWAMEM2_INDEX } from '../nf-core/bwamem2_index.nf'
 include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX } from '../nf-core/samtools_faidx.nf'
-include { GATK_CREATE_SEQUENCE_DICTIONARY as GATK_CREATE_SEQUENCE_DICTIONARY } from './gatk_dict.nf'
-include { BUILD_INTERVALS } from './build_intervals.nf'
+include { GATK_CREATE_SEQUENCE_DICTIONARY as GATK_CREATE_SEQUENCE_DICTIONARY } from '../local/gatk_dict.nf'
+include { BUILD_INTERVALS } from '../local/build_intervals.nf'
+
+
 workflow BUILD_INDICES{
     take:
     step
