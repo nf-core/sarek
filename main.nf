@@ -251,7 +251,6 @@ ch_workflow_summary = Channel.value(workflow_summary)
 if ('mutect2' in tools && !(params.pon)) log.warn "[nf-core/sarek] Mutect2 was requested, but as no panel of normals were given, results will not be optimal"
 if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works if Sentieon is available where nf-core/sarek is run"
 
-
 /*
 ================================================================================
                         INCLUDE LOCAL PIPELINE MODULES
@@ -267,7 +266,6 @@ include { GET_SOFTWARE_VERSIONS } from './modules/local/get_software_versions' p
 */
 include { FASTQC } from './modules/nf-core/fastqc' params(params)
 include { MULTIQC } from './modules/nf-core/multiqc' params(params)
-
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
