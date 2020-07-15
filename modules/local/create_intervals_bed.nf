@@ -1,4 +1,4 @@
-include { hasExtension } from './functions'
+include { has_extension } from './functions'
 
 process CREATE_INTERVALS_BED {
     tag "${intervals}"
@@ -7,13 +7,12 @@ process CREATE_INTERVALS_BED {
         path intervals
 
     output:
-        path ('*.bed')//mode flatten
-
+        path ('*.bed')
 
     script:
     // If the interval file is BED format, the fifth column is interpreted to
     // contain runtime estimates, which is then used to combine short-running jobs
-    if (hasExtension(intervals, "bed"))
+    if (has_extension(intervals, "bed"))
         """
         awk -vFS="\t" '{
           t = \$5  # runtime estimate
@@ -33,7 +32,7 @@ process CREATE_INTERVALS_BED {
           print \$0 > name
         }' ${intervals}
         """
-    else if (hasExtension(intervals, "interval_list"))
+    else if (has_extension(intervals, "interval_list"))
         """
         grep -v '^@' ${intervals} | awk -vFS="\t" '{
           name = sprintf("%s_%d-%d", \$1, \$2, \$3);

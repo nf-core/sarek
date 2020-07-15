@@ -8,7 +8,7 @@ process BWAMEM2_INDEX {
         path fasta
 
     output:
-        path("${fasta}.*")
+        path "${fasta}.*"
 
     script:
     """

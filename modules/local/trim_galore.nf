@@ -5,19 +5,18 @@ process TRIM_GALORE {
 
     publishDir "${params.outdir}/Reports/${idSample}/TrimGalore/${idSample}_${idRun}", mode: params.publish_dir_mode,
       saveAs: {filename ->
-        if (filename.indexOf("_fastqc") > 0) "FastQC/$filename"
-        else if (filename.indexOf("trimming_report.txt") > 0) "logs/$filename"
+        if (filename.indexOf("_fastqc") > 0) "FastQC/${filename}"
+        else if (filename.indexOf("trimming_report.txt") > 0) "logs/${filename}"
         else if (params.save_trimmed) filename
         else null
       }
 
     input:
-        tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz")
+        tuple val(idPatient), val(idSample), val(idRun), path("${idSample}_${idRun}_R1.fastq.gz"), path("${idSample}_${idRun}_R2.fastq.gz")
 
     output:
-        path "*.{html,zip,txt}",  emit: report
-        tuple idPatient, idSample, idRun, file("${idSample}_${idRun}_R1_val_1.fq.gz"), file("${idSample}_${idRun}_R2_val_2.fq.gz") , emit: trimmed_reads
-
+        path "*.{html,zip,txt}", emit: report
+        tuple idPatient, idSample, idRun, path("${idSample}_${idRun}_R1_val_1.fq.gz"), path("${idSample}_${idRun}_R2_val_2.fq.gz"), emit: trimmed_reads
 
     script:
     // Calculate number of --cores for TrimGalore based on value of task.cpus

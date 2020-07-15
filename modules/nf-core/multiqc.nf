@@ -9,25 +9,24 @@ process MULTIQC {
     publishDir "${params.outdir}/multiqc", mode: params.publish_dir_mode
 
     input:
-    path multiqc_config
-    path mqc_custom_config
-    // TODO nf-core: Add in log files from your new processes for MultiQC to find!
-    path fastqc
-    path trim_galore
-    path software_versions
-    val workflow_summary
+        path fastqc
+        path multiqc_config
+        path multiqc_custom_config
+        path software_versions
+        path trim_galore
+        val workflow_summary
 
     output:
-    path "*multiqc_report.html"
-    path "*_data"
-    path "multiqc_plots"
+        path "*multiqc_report.html"
+        path "*_data"
+        path "multiqc_plots"
 
     script:
-    rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
-    rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
-    custom_config_file = params.multiqc_config ? "--config $mqc_custom_config" : ''
+    title = custom_runName ? "--title \"${custom_runName}\"" : ''
+    filename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
+    custom_config_file = params.multiqc_config ? "--config ${multiqc_custom_config}" : ''
     """
-    echo '$workflow_summary' > workflow_summary_mqc.yaml
-    multiqc -f $rtitle $rfilename $custom_config_file .
+    echo '${workflow_summary}' > workflow_summary_mqc.yaml
+    multiqc -f ${title} ${filename} ${custom_config_file} .
     """
 }

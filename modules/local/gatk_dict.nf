@@ -8,7 +8,7 @@ process GATK_CREATE_SEQUENCE_DICTIONARY {
         path fasta
 
     output:
-        path ("${fasta.baseName}.dict")
+        path "${fasta.baseName}.dict"
 
     script:
     """

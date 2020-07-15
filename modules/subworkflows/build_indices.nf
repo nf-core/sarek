@@ -6,16 +6,16 @@
 
 // And then initialize channels based on params or indexes that were just built
 
-
-include { HTSLIB_TABIX as HTSLIB_TABIX_DBSNP } from '../nf-core/htslib_tabix'
-include { HTSLIB_TABIX as HTSLIB_TABIX_GERMLINE_RESOURCE } from '../nf-core/htslib_tabix'
-include { HTSLIB_TABIX as HTSLIB_TABIX_KNOWN_INDELS } from '../nf-core/htslib_tabix'
-include { HTSLIB_TABIX as HTSLIB_TABIX_PON } from '../nf-core/htslib_tabix'
-include { BWAMEM2_INDEX as BWAMEM2_INDEX } from '../nf-core/bwamem2_index.nf'
-include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX } from '../nf-core/samtools_faidx.nf'
-include { GATK_CREATE_SEQUENCE_DICTIONARY as GATK_CREATE_SEQUENCE_DICTIONARY } from '../local/gatk_dict.nf'
 include { BUILD_INTERVALS } from '../local/build_intervals.nf'
-
+include { BWAMEM2_INDEX as BWAMEM2_INDEX } from '../nf-core/bwamem2_index.nf'
+include { GATK_CREATE_SEQUENCE_DICTIONARY as GATK_CREATE_SEQUENCE_DICTIONARY } from '../local/gatk_dict.nf'
+include {
+    HTSLIB_TABIX as HTSLIB_TABIX_DBSNP;
+    HTSLIB_TABIX as HTSLIB_TABIX_GERMLINE_RESOURCE;
+    HTSLIB_TABIX as HTSLIB_TABIX_KNOWN_INDELS;
+    HTSLIB_TABIX as HTSLIB_TABIX_PON;
+} from '../nf-core/htslib_tabix'
+include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX } from '../nf-core/samtools_faidx.nf'
 
 workflow BUILD_INDICES{
     take:
@@ -49,19 +49,17 @@ workflow BUILD_INDICES{
     if (!(params.pon_index) && params.pon && ('tnscope' in tools || 'mutect2' in tools))
         HTSLIB_TABIX_PON(ch_pon)
 
-    if (!(params.intervals) && !('annotate' in step) && !('controlfreec' in step)){
-        ch_fai = params.fasta_fai ? Channel.value(file(params.fasta_fai)) : SAMTOOLS_FAIDX.out
-        ch_fai.dump(tag: 'ch_fai')
-        BUILD_INTERVALS(ch_fai)
+    if (!(params.intervals) && !('annotate' in step) && !('controlfreec' in step)) {
+        BUILD_INTERVALS(SAMTOOLS_FAIDX.out)
     }
 
     emit:
         bwa_built = BWAMEM2_INDEX.out 
+        dbsnp_tbi = HTSLIB_TABIX_DBSNP.out
         dictBuilt = GATK_CREATE_SEQUENCE_DICTIONARY.out
         fai_built = SAMTOOLS_FAIDX.out
-        dbsnp_tbi = HTSLIB_TABIX_DBSNP.out
         germline_resource_tbi = HTSLIB_TABIX_GERMLINE_RESOURCE.out
+        intervalBuilt = BUILD_INTERVALS.out
         known_indels_tbi = HTSLIB_TABIX_KNOWN_INDELS.out
         pon_tbi = HTSLIB_TABIX_PON.out
-        intervalBuilt = BUILD_INTERVALS.out
 }
