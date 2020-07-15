@@ -10,8 +10,6 @@ process BWAMEM2_INDEX {
     output:
         path file("${fasta}.*")
 
-    //when: !(params.bwa) && params.fasta && 'mapping' in step
-
     script:
     """
     bwa-mem2 index ${fasta}

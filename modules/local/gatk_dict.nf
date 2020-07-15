@@ -10,8 +10,6 @@ process GATK_CREATE_SEQUENCE_DICTIONARY {
     output:
         path file("${fasta.baseName}.dict")
 
-    //when: !(params.dict) && params.fasta && !('annotate' in step) && !('controlfreec' in step)
-
     script:
     """
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
