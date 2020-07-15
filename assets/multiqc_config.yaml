@@ -19,6 +19,7 @@ top_modules:
      name: 'FastQC'
      path_filters_exclude: 
         - '*trimmed_fastqc*'
+- 'cutadapt'
 - 'fastqc':
      name: 'FastQC after trimming'
      info: 'FastQC after applying TrimGalore.'

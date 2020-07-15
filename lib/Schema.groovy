@@ -112,10 +112,10 @@ class JSON {
 
     static String params_mqc_summary(summary) {
         String yaml_file_text  = """
-        id: 'nf-core-tcrseq-summary'
+        id: 'nf-core-sarek-summary'
         description: " - this information is collected when the pipeline is started."
-        section_name: 'nf-core/tcrseq Workflow Summary'
-        section_href: 'https://github.com/nf-core/tcrseq'
+        section_name: 'nf-core/sarek Workflow Summary'
+        section_href: 'https://github.com/nf-core/sarek'
         plot_type: 'html'
         data: |
             <dl class=\"dl-horizontal\">
