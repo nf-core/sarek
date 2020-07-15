@@ -12,7 +12,7 @@ include { HTSLIB_TABIX as HTSLIB_TABIX_GERMLINE_RESOURCE } from '../nf-core/htsl
 include { HTSLIB_TABIX as HTSLIB_TABIX_KNOWN_INDELS } from '../nf-core/htslib_tabix'
 include { HTSLIB_TABIX as HTSLIB_TABIX_PON } from '../nf-core/htslib_tabix'
 
-workflow build_indices{
+workflow BUILD_INDICES{
     take:
     ch_fasta
     ch_dbsnp
