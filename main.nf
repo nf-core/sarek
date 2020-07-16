@@ -178,55 +178,50 @@ if (tsv_path) {
 */
 
 // Initialize each params in params.genomes, catch the command line first if it was defined
-// params.fasta has to be the first one
-params.fasta = params.genome && !('annotate' in step) ? params.genomes[params.genome].fasta ?: null : null
 
-// The rest can be sorted
-params.ac_loci = params.genome && 'ascat' in tools ? params.genomes[params.genome].ac_loci ?: null : null
-params.ac_loci_gc = params.genome && 'ascat' in tools ? params.genomes[params.genome].ac_loci_gc ?: null : null
-params.bwa = params.genome && params.fasta && 'mapping' in step ? params.genomes[params.genome].bwa ?: null : null
-params.chr_dir = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].chr_dir ?: null : null
-params.chr_length = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].chr_length ?: null : null
-params.dbsnp = params.genome && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? params.genomes[params.genome].dbsnp ?: null : null
-params.dbsnp_index = params.genome && params.dbsnp ? params.genomes[params.genome].dbsnp_index ?: null : null
-params.dict = params.genome && params.fasta ? params.genomes[params.genome].dict ?: null : null
-params.fasta_fai = params.genome && params.fasta ? params.genomes[params.genome].fasta_fai ?: null : null
-params.germline_resource = params.genome && 'mutect2' in tools ? params.genomes[params.genome].germline_resource ?: null : null
-params.germline_resource_index = params.genome && params.germline_resource ? params.genomes[params.genome].germline_resource_index ?: null : null
-params.intervals = params.genome && !('annotate' in step) ? params.genomes[params.genome].intervals ?: null : null
-params.known_indels = params.genome && ('mapping' in step || 'preparerecalibration' in step) ? params.genomes[params.genome].known_indels ?: null : null
-params.known_indels_index = params.genome && params.known_indels ? params.genomes[params.genome].known_indels_index ?: null : null
-params.mappability = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].mappability ?: null : null
-params.snpeff_db = params.genome && 'snpeff' in tools ? params.genomes[params.genome].snpeff_db ?: null : null
-params.species = params.genome && 'vep' in tools ? params.genomes[params.genome].species ?: null : null
-params.vep_cache_version = params.genome && 'vep' in tools ? params.genomes[params.genome].vep_cache_version ?: null : null
+params.ac_loci                 = params.genome ? params.genomes[params.genome].ac_loci                 ?: false : false
+params.ac_loci_gc              = params.genome ? params.genomes[params.genome].ac_loci_gc              ?: false : false
+params.bwa                     = params.genome ? params.genomes[params.genome].bwa                     ?: false : false
+params.chr_dir                 = params.genome ? params.genomes[params.genome].chr_dir                 ?: false : false
+params.chr_length              = params.genome ? params.genomes[params.genome].chr_length              ?: false : false
+params.dbsnp                   = params.genome ? params.genomes[params.genome].dbsnp                   ?: false : false
+params.dbsnp_index             = params.genome ? params.genomes[params.genome].dbsnp_index             ?: false : false
+params.dict                    = params.genome ? params.genomes[params.genome].dict                    ?: false : false
+params.fasta                   = params.genome ? params.genomes[params.genome].fasta                   ?: false : false
+params.fasta_fai               = params.genome ? params.genomes[params.genome].fasta_fai               ?: false : false
+params.germline_resource       = params.genome ? params.genomes[params.genome].germline_resource       ?: false : false
+params.germline_resource_index = params.genome ? params.genomes[params.genome].germline_resource_index ?: false : false
+params.intervals               = params.genome ? params.genomes[params.genome].intervals               ?: false : false
+params.known_indels            = params.genome ? params.genomes[params.genome].known_indels            ?: false : false
+params.known_indels_index      = params.genome ? params.genomes[params.genome].known_indels_index      ?: false : false
+params.mappability             = params.genome ? params.genomes[params.genome].mappability             ?: false : false
+params.snpeff_db               = params.genome ? params.genomes[params.genome].snpeff_db               ?: false : false
+params.species                 = params.genome ? params.genomes[params.genome].species                 ?: false : false
+params.vep_cache_version       = params.genome ? params.genomes[params.genome].vep_cache_version       ?: false : false
 
 // Initialize channels based on params
-fasta = params.fasta && !('annotate' in step) ? Channel.value(file(params.fasta)) : "null"
-dbsnp = params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? Channel.value(file(params.dbsnp)) : "null"
-germline_resource = params.germline_resource && 'mutect2' in tools ? Channel.value(file(params.germline_resource)) : "null"
-known_indels = params.known_indels && ('mapping' in step || 'preparerecalibration' in step) ? Channel.value(file(params.known_indels)) : "null"
-pon = params.pon ? Channel.value(file(params.pon)) : "null"
-
-ch_ac_loci = params.ac_loci && 'ascat' in tools ? Channel.value(file(params.ac_loci)) : "null"
-ch_ac_loci_gc = params.ac_loci_gc && 'ascat' in tools ? Channel.value(file(params.ac_loci_gc)) : "null"
-ch_chr_dir = params.chr_dir && 'controlfreec' in tools ? Channel.value(file(params.chr_dir)) : "null"
-ch_chr_length = params.chr_length && 'controlfreec' in tools ? Channel.value(file(params.chr_length)) : "null"
-fai = params.fasta_fai && !('annotate' in step) ? Channel.value(file(params.fasta_fai)) : "null"
-intervals = params.intervals && !params.no_intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : "null"
-ch_mappability = params.mappability && 'controlfreec' in tools ? Channel.value(file(params.mappability)) : "null"
-
-ch_snpeff_cache = params.snpeff_cache ? Channel.value(file(params.snpeff_cache)) : "null"
-ch_snpeff_db = params.snpeff_db ? Channel.value(params.snpeff_db) : "null"
-ch_vep_cache_version = params.vep_cache_version ? Channel.value(params.vep_cache_version) : "null"
-ch_vep_cache = params.vep_cache ? Channel.value(file(params.vep_cache)) : "null"
+chr_dir           = params.chr_dir           ?: Channel.empty()
+chr_length        = params.chr_length        ?: Channel.empty()
+dbsnp             = params.dbsnp             ?: Channel.empty()
+fasta             = params.fasta             ?: Channel.empty()
+germline_resource = params.germline_resource ?: Channel.empty()
+known_indels      = params.known_indels      ?: Channel.empty()
+loci              = params.ac_loci           ?: Channel.empty()
+loci_gc           = params.ac_loci_gc        ?: Channel.empty()
+mappability       = params.mappability       ?: Channel.empty()
+pon               = params.pon               ?: Channel.empty()
+snpeff_cache      = params.snpeff_cache      ?: Channel.empty()
+snpeff_db         = params.snpeff_db         ?: Channel.empty()
+snpeff_species    = params.species           ?: Channel.empty()
+vep_cache         = params.vep_cache         ?: Channel.empty()
+vep_cache_version = params.vep_cache_version ?: Channel.empty()
 
 // Optional files, not defined within the params.genomes[params.genome] scope
-ch_cadd_indels = params.cadd_indels ? Channel.value(file(params.cadd_indels)) : "null"
-ch_cadd_indels_tbi = params.cadd_indels_tbi ? Channel.value(file(params.cadd_indels_tbi)) : "null"
-ch_cadd_wg_snvs = params.cadd_wg_snvs ? Channel.value(file(params.cadd_wg_snvs)) : "null"
-ch_cadd_wg_snvs_tbi = params.cadd_wg_snvs_tbi ? Channel.value(file(params.cadd_wg_snvs_tbi)) : "null"
-ch_target_bed = params.target_bed ? Channel.value(file(params.target_bed)) : "null"
+cadd_indels      = params.cadd_indels      ?: Channel.empty()
+cadd_indels_tbi  = params.cadd_indels_tbi  ?: Channel.empty()
+cadd_wg_snvs     = params.cadd_wg_snvs     ?: Channel.empty()
+cadd_wg_snvs_tbi = params.cadd_wg_snvs_tbi ?: Channel.empty()
+target_bed       = params.target_bed       ?: Channel.empty()
 
 /*
 ================================================================================
@@ -322,8 +317,6 @@ include { MULTIQC } from './modules/nf-core/multiqc' params(params)
 
 include { BUILD_INDICES } from './modules/subworkflows/build_indices' addParams(params)
 
-fasta.dump(tag: 'fasta')
-
 workflow {
 
     BUILD_INDICES(
@@ -332,15 +325,17 @@ workflow {
         germline_resource,
         known_indels,
         pon,
-        step)
+        step,
+        tools)
 
     bwa = params.bwa ?: BUILD_INDICES.out.bwa
     dbsnp_tbi = params.dbsnp ? params.dbsnp_index ?: BUILD_INDICES.out.dbsnp_tbi : Channel.empty()
     dict = params.dict ?: BUILD_INDICES.out.dict
     fai = params.fasta_fai ? params.fasta_fai : BUILD_INDICES.out.fai
     germline_resource_tbi = params.germline_resource ? params.germline_resource_index ?: BUILD_INDICES.out.germline_resource_tbi : Channel.empty()
-    intervals = params.no_intervals ? Channel.empty() : params.intervals && !('annotate' in step) ? params.intervals : BUILD_INDICES.out.intervals
-    known_indels_tbi = params.known_indels ? params.known_indels_index ?: BUILD_INDICES.out.known_indels_tbi.collect() : Channel.empty()
+    intervals = params.no_intervals ? Channel.empty() : params.intervals ?: BUILD_INDICES.out.intervals
+    known_indels_tbi = params.known_indels ? params.known_indels_index ?: BUILD_INDICES.out.known_indels_tbi : Channel.empty()
+    // known_indels_tbi = params.known_indels ? params.known_indels_index ?: BUILD_INDICES.out.known_indels_tbi.collect() : Channel.empty()
     pon_tbi = params.pon ? params.pon_index ?: BUILD_INDICES.out.pon_tbi : Channel.empty()
 
     // PREPROCESSING
@@ -2292,7 +2287,7 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSample, file(bam), file(bai) from bamAscat
-//         file(acLoci) from ch_ac_loci
+//         file(acLoci) from loci
 //         file(dict) from dict
 //         file(fasta) from fasta
 //         file(fastaFai) from fai
@@ -2365,7 +2360,7 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSampleNormal, idSampleTumor, file(bafNormal), file(logrNormal), file(bafTumor), file(logrTumor) from convertAlleleCountsOut
-//         file(acLociGC) from ch_ac_loci_gc
+//         file(acLociGC) from loci_gc
 
 //     output:
 //         set val("ASCAT"), idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.*.{png,txt}") into ascatOut
@@ -2510,9 +2505,9 @@ workflow.onComplete {
 
 //     input:
 //         set idPatient, idSampleNormal, idSampleTumor, file(mpileupNormal), file(mpileupTumor) from mpileupOut
-//         file(chrDir) from ch_chr_dir
-//         file(mappability) from ch_mappability
-//         file(chrLength) from ch_chr_length
+//         file(chrDir) from chr_dir
+//         file(mappability) from mappability
+//         file(chrLength) from chr_length
 //         file(dbsnp) from dbsnp
 //         file(dbsnpIndex) from dbsnp_tbi
 //         file(fasta) from fasta
@@ -2801,8 +2796,8 @@ workflow.onComplete {
 
 //     input:
 //         set variantCaller, idSample, file(vcf) from vcfSnpeff
-//         file(dataDir) from ch_snpeff_cache
-//         val snpeffDb from ch_snpeff_db
+//         file(dataDir) from snpeff_cache
+//         val snpeffDb from snpeff_db
 
 //     output:
 //         set file("${reducedVCF}_snpEff.genes.txt"), file("${reducedVCF}_snpEff.html"), file("${reducedVCF}_snpEff.csv") into snpeffReport
@@ -2867,13 +2862,12 @@ workflow.onComplete {
 
 //     input:
 //         set variantCaller, idSample, file(vcf), file(idx) from vcfVep
-//         file(dataDir) from ch_vep_cache
-//         val cache_version from ch_vep_cache_version
-//         file(cadd_InDels) from ch_cadd_indels
-//         file(cadd_InDels_tbi) from ch_cadd_indels_tbi
-//         file(cadd_WG_SNVs) from ch_cadd_wg_snvs
-//         file(cadd_WG_SNVs_tbi) from ch_cadd_wg_snvs_tbi
-
+//         file(dataDir) from vep_cache
+//         val cache_version from vep_cache_version
+//         file(cadd_InDels) from cadd_indels
+//         file(cadd_InDels_tbi) from cadd_indels_tbi
+//         file(cadd_WG_SNVs) from cadd_wg_snvs
+//         file(cadd_WG_SNVs_tbi) from cadd_wg_snvs_tbi
 //     output:
 //         set variantCaller, idSample, file("${reducedVCF}_VEP.ann.vcf") into vepVCF
 //         file("${reducedVCF}_VEP.summary.html") into vepReport
@@ -2930,13 +2924,12 @@ workflow.onComplete {
 
 //     input:
 //         set variantCaller, idSample, file(vcf), file(idx) from compressVCFsnpEffOut
-//         file(dataDir) from ch_vep_cache
-//         val cache_version from ch_vep_cache_version
-//         file(cadd_InDels) from ch_cadd_indels
-//         file(cadd_InDels_tbi) from ch_cadd_indels_tbi
-//         file(cadd_WG_SNVs) from ch_cadd_wg_snvs
-//         file(cadd_WG_SNVs_tbi) from ch_cadd_wg_snvs_tbi
-
+//         file(dataDir) from vep_cache
+//         val cache_version from vep_cache_version
+//         file(cadd_InDels) from cadd_indels
+//         file(cadd_InDels_tbi) from cadd_indels_tbi
+//         file(cadd_WG_SNVs) from cadd_wg_snvs
+//         file(cadd_WG_SNVs_tbi) from cadd_wg_snvs_tbi
 //     output:
 //         set variantCaller, idSample, file("${reducedVCF}_VEP.ann.vcf") into vepVCFmerge
 //         file("${reducedVCF}_VEP.summary.html") into vepReportMerge
