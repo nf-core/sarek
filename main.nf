@@ -200,23 +200,21 @@ params.species                 = params.genome ? params.genomes[params.genome].s
 params.vep_cache_version       = params.genome ? params.genomes[params.genome].vep_cache_version       ?: false : false
 
 // Initialize channels based on params
-fasta = params.fasta && !('annotate' in step) ? params.fasta : Channel.empty()
-dbsnp = params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? params.dbsnp : Channel.empty()
-germline_resource = params.germline_resource && 'mutect2' in tools ? params.germline_resource : Channel.empty()
-known_indels = params.known_indels && ('mapping' in step || 'preparerecalibration' in step) ? params.known_indels : Channel.empty()
-pon = params.pon ? params.pon : Channel.empty()
-
-loci        = params.ac_loci     && 'ascat' in tools        ? params.ac_loci     : Channel.empty()
-loci_gc     = params.ac_loci_gc  && 'ascat' in tools        ? params.ac_loci_gc  : Channel.empty()
-chr_dir     = params.chr_dir     && 'controlfreec' in tools ? params.chr_dir     : Channel.empty()
-chr_length  = params.chr_length  && 'controlfreec' in tools ? params.chr_length  : Channel.empty()
-mappability = params.mappability && 'controlfreec' in tools ? params.mappability : Channel.empty()
-
+chr_dir           = params.chr_dir           ?: Channel.empty()
+chr_length        = params.chr_length        ?: Channel.empty()
+dbsnp             = params.dbsnp             ?: Channel.empty()
+fasta             = params.fasta             ?: Channel.empty()
+germline_resource = params.germline_resource ?: Channel.empty()
+known_indels      = params.known_indels      ?: Channel.empty()
+loci              = params.ac_loci           ?: Channel.empty()
+loci_gc           = params.ac_loci_gc        ?: Channel.empty()
+mappability       = params.mappability       ?: Channel.empty()
+pon               = params.pon               ?: Channel.empty()
 snpeff_cache      = params.snpeff_cache      ?: Channel.empty()
 snpeff_db         = params.snpeff_db         ?: Channel.empty()
 snpeff_species    = params.species           ?: Channel.empty()
-vep_cache_version = params.vep_cache_version ?: Channel.empty()
 vep_cache         = params.vep_cache         ?: Channel.empty()
+vep_cache_version = params.vep_cache_version ?: Channel.empty()
 
 // Optional files, not defined within the params.genomes[params.genome] scope
 cadd_indels      = params.cadd_indels      ?: Channel.empty()
