@@ -5,13 +5,13 @@
 */
 
 // Check if a row has the expected number of item
-def checkNumberOfItem(row, number) {
+def check_number_of_item(row, number) {
     if (row.size() != number) exit 1, "Malformed row in TSV file: ${row}, see --help for more information"
     return true
 }
 
 // Check parameter existence
-def checkParameterExistence(it, list) {
+def check_parameter_existence(it, list) {
     if (!list.contains(it)) {
         log.warn "Unknown parameter: ${it}"
         return false
@@ -20,12 +20,12 @@ def checkParameterExistence(it, list) {
 }
 
 // Compare each parameter with a list of parameters
-def checkParameterList(list, realList) {
-    return list.every{ checkParameterExistence(it, realList) }
+def check_parameter_list(list, realList) {
+    return list.every{ check_parameter_existence(it, realList) }
 }
 
 // Define list of available tools to annotate
-def defineAnnoList() {
+def define_anno_list() {
     return [
         'haplotypecaller',
         'manta',
@@ -36,7 +36,7 @@ def defineAnnoList() {
 }
 
 // Define list of skipable QC tools
-def defineSkipQClist() {
+def define_skip_qc_list() {
     return [
         'bamqc',
         'baserecalibrator',
@@ -53,7 +53,7 @@ def defineSkipQClist() {
 }
 
 // Define list of available step
-def defineStepList() {
+def define_step_list() {
     return [
         'annotate',
         'controlfreec',
@@ -65,7 +65,7 @@ def defineStepList() {
 }
 
 // Define list of available tools
-def defineToolList() {
+def define_tool_list() {
     return [
         'ascat',
         'cnvkit',
@@ -89,20 +89,20 @@ def defineToolList() {
 
 // Channeling the TSV file containing BAM.
 // Format is: "subject gender status sample bam bai"
-def extractBam(tsvFile) {
+def extract_bam(tsvFile) {
     Channel.from(tsvFile)
         .splitCsv(sep: '\t')
         .map { row ->
-            checkNumberOfItem(row, 6)
+            check_number_of_item(row, 6)
             def idPatient = row[0]
             def gender    = row[1]
-            def status    = returnStatus(row[2].toInteger())
+            def status    = return_status(row[2].toInteger())
             def idSample  = row[3]
-            def bamFile   = returnFile(row[4])
-            def baiFile   = returnFile(row[5])
+            def bamFile   = return_file(row[4])
+            def baiFile   = return_file(row[5])
 
-            if (!hasExtension(bamFile, "bam")) exit 1, "File: ${bamFile} has the wrong extension. See --help for more information"
-            if (!hasExtension(baiFile, "bai")) exit 1, "File: ${baiFile} has the wrong extension. See --help for more information"
+            if (!has_extension(bamFile, "bam")) exit 1, "File: ${bamFile} has the wrong extension. See --help for more information"
+            if (!has_extension(baiFile, "bai")) exit 1, "File: ${baiFile} has the wrong extension. See --help for more information"
 
             return [idPatient, gender, status, idSample, bamFile, baiFile]
         }
@@ -111,7 +111,7 @@ def extractBam(tsvFile) {
 // Create a channel of germline FASTQs from a directory pattern: "my_samples/*/"
 // All FASTQ files in subdirectories are collected and emitted;
 // they must have _R1_ and _R2_ in their names.
-def extractFastqFromDir(pattern) {
+def extract_fastq_from_dir(pattern) {
     def fastq = Channel.create()
     // a temporary channel does all the work
     Channel
@@ -125,7 +125,7 @@ def extractFastqFromDir(pattern) {
                 assert path1.getName().contains('_R1_')
                 path2 = file(path1.toString().replace('_R1_', '_R2_'))
                 if (!path2.exists()) error "Path '${path2}' not found"
-                (flowcell, lane) = flowcellLaneFromFastq(path1)
+                (flowcell, lane) = flowcellLane_from_fastq(path1)
                 patient = sampleId
                 gender = 'ZZ'  // unused
                 status = 0  // normal (not tumor)
@@ -138,7 +138,7 @@ def extractFastqFromDir(pattern) {
 }
 
 // Extract gender and status from Channel
-def extractInfos(channel) {
+def extract_infos(channel) {
     def genderMap = [:]
     def statusMap = [:]
     channel = channel.map{ it ->
@@ -156,26 +156,26 @@ def extractInfos(channel) {
 // Channeling the TSV file containing FASTQ or BAM
 // Format is: "subject gender status sample lane fastq1 fastq2"
 // or: "subject gender status sample lane bam"
-def extractFastq(tsvFile) {
+def extract_fastq(tsvFile) {
     Channel.from(tsvFile)
         .splitCsv(sep: '\t')
         .map { row ->
             def idPatient  = row[0]
             def gender     = row[1]
-            def status     = returnStatus(row[2].toInteger())
+            def status     = return_status(row[2].toInteger())
             def idSample   = row[3]
             def idRun      = row[4]
-            def file1      = returnFile(row[5])
+            def file1      = return_file(row[5])
             def file2      = "null"
-            if (hasExtension(file1, "fastq.gz") || hasExtension(file1, "fq.gz") || hasExtension(file1, "fastq") || hasExtension(file1, "fq")) {
-                checkNumberOfItem(row, 7)
-                file2 = returnFile(row[6])
-            if (!hasExtension(file2, "fastq.gz") && !hasExtension(file2, "fq.gz")  && !hasExtension(file2, "fastq") && !hasExtension(file2, "fq")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
-            if (hasExtension(file1, "fastq") || hasExtension(file1, "fq") || hasExtension(file2, "fastq") || hasExtension(file2, "fq")) {
+            if (has_extension(file1, "fastq.gz") || has_extension(file1, "fq.gz") || has_extension(file1, "fastq") || has_extension(file1, "fq")) {
+                check_number_of_item(row, 7)
+                file2 = return_file(row[6])
+            if (!has_extension(file2, "fastq.gz") && !has_extension(file2, "fq.gz")  && !has_extension(file2, "fastq") && !has_extension(file2, "fq")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
+            if (has_extension(file1, "fastq") || has_extension(file1, "fq") || has_extension(file2, "fastq") || has_extension(file2, "fq")) {
                 exit 1, "We do recommend to use gziped fastq file to help you reduce your data footprint."
             }
         }
-        else if (hasExtension(file1, "bam")) checkNumberOfItem(row, 6)
+        else if (has_extension(file1, "bam")) check_number_of_item(row, 6)
         else "No recognisable extention for input file: ${file1}"
 
         [idPatient, gender, status, idSample, idRun, file1, file2]
@@ -184,18 +184,18 @@ def extractFastq(tsvFile) {
 
 // Channeling the TSV file containing mpileup
 // Format is: "subject gender status sample pileup"
-def extractPileup(tsvFile) {
+def extract_pileup(tsvFile) {
     Channel.from(tsvFile)
         .splitCsv(sep: '\t')
         .map { row ->
-            checkNumberOfItem(row, 5)
+            check_number_of_item(row, 5)
             def idPatient = row[0]
             def gender    = row[1]
-            def status    = returnStatus(row[2].toInteger())
+            def status    = return_status(row[2].toInteger())
             def idSample  = row[3]
-            def mpileup   = returnFile(row[4])
+            def mpileup   = return_file(row[4])
 
-            if (!hasExtension(mpileup, "pileup")) exit 1, "File: ${mpileup} has the wrong extension. See --help for more information"
+            if (!has_extension(mpileup, "pileup")) exit 1, "File: ${mpileup} has the wrong extension. See --help for more information"
 
             return [idPatient, gender, status, idSample, mpileup]
         }
@@ -203,29 +203,29 @@ def extractPileup(tsvFile) {
 
 // Channeling the TSV file containing Recalibration Tables.
 // Format is: "subject gender status sample bam bai recalTable"
-def extractRecal(tsvFile) {
+def extract_recal(tsvFile) {
     Channel.from(tsvFile)
         .splitCsv(sep: '\t')
         .map { row ->
-            checkNumberOfItem(row, 7)
+            check_number_of_item(row, 7)
             def idPatient  = row[0]
             def gender     = row[1]
-            def status     = returnStatus(row[2].toInteger())
+            def status     = return_status(row[2].toInteger())
             def idSample   = row[3]
-            def bamFile    = returnFile(row[4])
-            def baiFile    = returnFile(row[5])
-            def recalTable = returnFile(row[6])
+            def bamFile    = return_file(row[4])
+            def baiFile    = return_file(row[5])
+            def recalTable = return_file(row[6])
 
-            if (!hasExtension(bamFile, "bam")) exit 1, "File: ${bamFile} has the wrong extension. See --help for more information"
-            if (!hasExtension(baiFile, "bai")) exit 1, "File: ${baiFile} has the wrong extension. See --help for more information"
-            if (!hasExtension(recalTable, "recal.table")) exit 1, "File: ${recalTable} has the wrong extension. See --help for more information"
+            if (!has_extension(bamFile, "bam")) exit 1, "File: ${bamFile} has the wrong extension. See --help for more information"
+            if (!has_extension(baiFile, "bai")) exit 1, "File: ${baiFile} has the wrong extension. See --help for more information"
+            if (!has_extension(recalTable, "recal.table")) exit 1, "File: ${recalTable} has the wrong extension. See --help for more information"
 
             [idPatient, gender, status, idSample, bamFile, baiFile, recalTable]
     }
 }
 
 // Parse first line of a FASTQ file, return the flowcell id and lane number.
-def flowcellLaneFromFastq(path) {
+def flowcellLane_from_fastq(path) {
     // expected format:
     // xx:yy:FLOWCELLID:LANE:... (seven fields)
     // or
@@ -252,24 +252,24 @@ def flowcellLaneFromFastq(path) {
 }
 
 // Check file extension
-def hasExtension(it, extension) {
+def has_extension(it, extension) {
     it.toString().toLowerCase().endsWith(extension.toLowerCase())
 }
 
 // Return file if it exists
-def returnFile(it) {
+def return_file(it) {
     if (!file(it).exists()) exit 1, "Missing file in TSV file: ${it}, see --help for more information"
     return file(it)
 }
 
 // Remove .ann .gz and .vcf extension from a VCF file
-def reduceVCF(file) {
+def reduce_vcf(file) {
     return file.fileName.toString().minus(".ann").minus(".vcf").minus(".gz")
 }
 
 // Return status [0,1]
 // 0 == Normal, 1 == Tumor
-def returnStatus(it) {
+def return_status(it) {
     if (!(it in [0, 1])) exit 1, "Status is not recognized in TSV file: ${it}, see --help for more information"
     return it
 }

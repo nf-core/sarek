@@ -8,7 +8,7 @@ process SAMTOOLS_FAIDX {
         path fasta
 
     output:
-        path ("${fasta}.fai")
+        path "${fasta}.fai"
 
     //when: !(params.fasta_fai) && params.fasta && !('annotate' in step)
 
