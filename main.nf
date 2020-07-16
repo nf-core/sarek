@@ -249,7 +249,7 @@ if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works
 
 /*
 ================================================================================
-                        INCLUDE LOCAL PIPELINE MODULES
+                         INCLUDE LOCAL PIPELINE MODULES
 ================================================================================
 */
 
@@ -260,7 +260,7 @@ include { TRIM_GALORE }           from './modules/local/trim_galore.nf'
 
 /*
 ================================================================================
-                        INCLUDE LOCAL PIPELINE SUBWORKFLOWS
+                       INCLUDE LOCAL PIPELINE SUBWORKFLOWS
 ================================================================================
 */
 
