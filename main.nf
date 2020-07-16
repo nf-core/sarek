@@ -335,14 +335,13 @@ workflow {
         step)
 
     bwa = params.bwa ?: BUILD_INDICES.out.bwa
-    dbsnp_tbi = params.dbsnp ? params.dbsnp_index ? params.dbsnp_index : BUILD_INDICES.out.dbsnp_tbi : Channel.empty()
+    dbsnp_tbi = params.dbsnp ? params.dbsnp_index ?: BUILD_INDICES.out.dbsnp_tbi : Channel.empty()
     dict = params.dict ?: BUILD_INDICES.out.dict
     fai = params.fasta_fai ? params.fasta_fai : BUILD_INDICES.out.fai
-    germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? params.germline_resource_index : BUILD_INDICES.out.germline_resource_tbi : Channel.empty()
-    // intervals = params.intervals ?: BUILD_INDICES.out.intervals
-    // intervals = params.no_intervals ? Channel.empty() : params.intervals && !('annotate' in step) ?: BUILD_INDICES.out.intervals
-    known_indels_tbi = params.known_indels ? params.known_indels_index ? params.known_indels_index : BUILD_INDICES.out.known_indels_tbi.collect() : Channel.empty()
-    pon_tbi = params.pon ? params.pon_index ? params.pon_index : BUILD_INDICES.out.pon_tbi : Channel.empty()
+    germline_resource_tbi = params.germline_resource ? params.germline_resource_index ?: BUILD_INDICES.out.germline_resource_tbi : Channel.empty()
+    intervals = params.no_intervals ? Channel.empty() : params.intervals && !('annotate' in step) ? params.intervals : BUILD_INDICES.out.intervals
+    known_indels_tbi = params.known_indels ? params.known_indels_index ?: BUILD_INDICES.out.known_indels_tbi.collect() : Channel.empty()
+    pon_tbi = params.pon ? params.pon_index ?: BUILD_INDICES.out.pon_tbi : Channel.empty()
 
     // PREPROCESSING
     if((!params.no_intervals) && step != 'annotate')
@@ -376,14 +375,13 @@ workflow {
     // if(!('fastqc' in skipQC))
     FASTQC(input_sample)
 
-    input_sample.view()
-    bwa.view()
-
     if (params.trim_fastq) {
         TRIM_GALORE(input_sample)
+        result_trim_galore = TRIM_GALORE.out.report
         BWAMEM2_MEM(TRIM_GALORE.out.trimmed_reads, bwa, fasta, fai)
     }
     else {
+        result_trim_galore = Channel.empty()
         BWAMEM2_MEM(input_sample, bwa, fasta, fai)
     }
 
@@ -398,7 +396,7 @@ workflow {
         multiqc_config,
         multiqc_custom_config.ifEmpty([]),
         GET_SOFTWARE_VERSIONS.out.yml,
-        // TRIM_GALORE.out.report.ifEmpty([]),
+        result_trim_galore.ifEmpty([]),
         workflow_summary)
 }
 

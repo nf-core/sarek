@@ -13,7 +13,7 @@ process MULTIQC {
         path multiqc_config
         path multiqc_custom_config
         path software_versions
-        // path trim_galore
+        path trim_galore
         val workflow_summary
 
     output:
