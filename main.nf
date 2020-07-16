@@ -22,20 +22,11 @@ nf-core/sarek:
 nextflow.preview.dsl = 2
 
 /*
- * Print help message if required
- */
-if (params.help) {
-    def command = "nextflow run nf-core/sarek --input sample.tsv -profile docker"
-    log.info Headers.nf_core(workflow, params.monochrome_logs)
-    log.info Schema.params_help("$baseDir/nextflow_schema.json", command)
-    exit 0
-}
-
-/*
 ================================================================================
                         INCLUDE SAREK FUNCTIONS
 ================================================================================
 */
+
 include {
     check_parameter_existence;
     check_parameter_list;
@@ -54,17 +45,12 @@ include {
 ================================================================================
 */
 
-/*
- * Check parameters
- */
+// Check parameters
 
 Checks.aws_batch(workflow, params)     // Check AWS batch settings
 Checks.hostname(workflow, params, log) // Check the hostnames against configured profiles
 
-/*
- * MultiQC
- * Stage config files
- */
+// MultiQC - Stage config files
 
 multiqc_config = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
 multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
@@ -258,6 +244,16 @@ workflow_summary = Channel.value(workflow_summary)
 if ('mutect2' in tools && !(params.pon)) log.warn "[nf-core/sarek] Mutect2 was requested, but as no panel of normals were given, results will not be optimal"
 if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works if Sentieon is available where nf-core/sarek is run"
 
+// Print help message if required
+
+if (params.help) {
+    def command = "nextflow run nf-core/sarek --input sample.tsv -profile docker"
+    log.info Headers.nf_core(workflow, params.monochrome_logs)
+    log.info Schema.params_help("$baseDir/nextflow_schema.json", command)
+    exit 0
+}
+
+
 /*
 ================================================================================
                         INCLUDE LOCAL PIPELINE MODULES
@@ -410,6 +406,7 @@ workflow {
                         SEND COMPLETION EMAIL
 ================================================================================
  */
+
 workflow.onComplete {
     def multiqc_report = []
     Completion.email(workflow, params, summary, run_name, baseDir, multiqc_report, log)
