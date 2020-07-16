@@ -21,6 +21,14 @@ nf-core/sarek:
 
 nextflow.preview.dsl = 2
 
+// Print help message if required
+
+if (params.help) {
+    def command = "nextflow run nf-core/sarek -profile docker --input sample.tsv"
+    log.info Schema.params_help("$baseDir/nextflow_schema.json", command)
+    exit 0
+}
+
 /*
 ================================================================================
                         INCLUDE SAREK FUNCTIONS
@@ -243,16 +251,6 @@ workflow_summary = Channel.value(workflow_summary)
 
 if ('mutect2' in tools && !(params.pon)) log.warn "[nf-core/sarek] Mutect2 was requested, but as no panel of normals were given, results will not be optimal"
 if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works if Sentieon is available where nf-core/sarek is run"
-
-// Print help message if required
-
-if (params.help) {
-    def command = "nextflow run nf-core/sarek --input sample.tsv -profile docker"
-    log.info Headers.nf_core(workflow, params.monochrome_logs)
-    log.info Schema.params_help("$baseDir/nextflow_schema.json", command)
-    exit 0
-}
-
 
 /*
 ================================================================================
