@@ -345,7 +345,7 @@ workflow {
 
     // PREPROCESSING
     if((!params.no_intervals) && step != 'annotate')
-        CREATE_INTERVALS_BED(BUILD_INDICES.out.intervals)
+        CREATE_INTERVALS_BED(intervals)
 
     // BED INTERVAL CHANNEL TRANSFORMING
     ch_bed_intervals = CREATE_INTERVALS_BED.out
