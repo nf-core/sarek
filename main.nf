@@ -21,6 +21,14 @@ nf-core/sarek:
 
 nextflow.preview.dsl = 2
 
+// Print help message if required
+
+if (params.help) {
+    def command = "nextflow run nf-core/sarek -profile docker --input sample.tsv"
+    log.info Schema.params_help("$baseDir/nextflow_schema.json", command)
+    exit 0
+}
+
 /*
 ================================================================================
                         INCLUDE SAREK FUNCTIONS
@@ -244,16 +252,6 @@ workflow_summary = Channel.value(workflow_summary)
 if ('mutect2' in tools && !(params.pon)) log.warn "[nf-core/sarek] Mutect2 was requested, but as no panel of normals were given, results will not be optimal"
 if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works if Sentieon is available where nf-core/sarek is run"
 
-// Print help message if required
-
-if (params.help) {
-    def command = "nextflow run nf-core/sarek --input sample.tsv -profile docker"
-    log.info Headers.nf_core(workflow, params.monochrome_logs)
-    log.info Schema.params_help("$baseDir/nextflow_schema.json", command)
-    exit 0
-}
-
-
 /*
 ================================================================================
                         INCLUDE LOCAL PIPELINE MODULES
@@ -336,15 +334,14 @@ workflow {
         pon,
         step)
 
-    bwa = params.bwa ? Channel.value(file(params.bwa)) : BUILD_INDICES.out.bwa_built
-    dict = params.dict ? Channel.value(file(params.dict)) : BUILD_INDICES.out.dictBuilt
-    fai = params.fasta_fai ? Channel.value(file(params.fasta_fai)) : BUILD_INDICES.out.fai_built
-    dbsnp_tbi = params.dbsnp ? params.dbsnp_index ? Channel.value(file(params.dbsnp_index)) : BUILD_INDICES.out.dbsnp_tbi : "null"
-    germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? Channel.value(file(params.germline_resource_index)) : BUILD_INDICES.out.germline_resource_tbi : "null"
-    known_indels_tbi = params.known_indels ? params.known_indels_index ? Channel.value(file(params.known_indels_index)) : BUILD_INDICES.out.known_indels_tbi.collect() : "null"
-    pon_tbi = params.pon ? params.pon_index ? Channel.value(file(params.pon_index)) : BUILD_INDICES.out.pon_tbi : "null"
-    intervals = params.no_intervals ? "null" : params.intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : BUILD_INDICES.out.intervalBuilt
-    intervals.dump(tag: 'intervals')
+    bwa = params.bwa ?: BUILD_INDICES.out.bwa
+    dbsnp_tbi = params.dbsnp ? params.dbsnp_index ?: BUILD_INDICES.out.dbsnp_tbi : Channel.empty()
+    dict = params.dict ?: BUILD_INDICES.out.dict
+    fai = params.fasta_fai ? params.fasta_fai : BUILD_INDICES.out.fai
+    germline_resource_tbi = params.germline_resource ? params.germline_resource_index ?: BUILD_INDICES.out.germline_resource_tbi : Channel.empty()
+    intervals = params.no_intervals ? Channel.empty() : params.intervals && !('annotate' in step) ? params.intervals : BUILD_INDICES.out.intervals
+    known_indels_tbi = params.known_indels ? params.known_indels_index ?: BUILD_INDICES.out.known_indels_tbi.collect() : Channel.empty()
+    pon_tbi = params.pon ? params.pon_index ?: BUILD_INDICES.out.pon_tbi : Channel.empty()
 
     // PREPROCESSING
     if((!params.no_intervals) && step != 'annotate')
@@ -375,14 +372,16 @@ workflow {
         ch_bed_intervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
     }
 
-    //if(!('fastqc' in skipQC))
+    // if(!('fastqc' in skipQC))
     FASTQC(input_sample)
 
-    if(params.trim_fastq) {
+    if (params.trim_fastq) {
         TRIM_GALORE(input_sample)
+        result_trim_galore = TRIM_GALORE.out.report
         BWAMEM2_MEM(TRIM_GALORE.out.trimmed_reads, bwa, fasta, fai)
     }
     else {
+        result_trim_galore = Channel.empty()
         BWAMEM2_MEM(input_sample, bwa, fasta, fai)
     }
 
@@ -397,7 +396,7 @@ workflow {
         multiqc_config,
         multiqc_custom_config.ifEmpty([]),
         GET_SOFTWARE_VERSIONS.out.yml,
-        TRIM_GALORE.out.report.ifEmpty([]),
+        result_trim_galore.ifEmpty([]),
         workflow_summary)
 }
 
