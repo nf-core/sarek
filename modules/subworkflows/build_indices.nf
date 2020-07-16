@@ -7,15 +7,15 @@
 // And then initialize channels based on params or indexes that were just built
 
 include { BUILD_INTERVALS } from '../local/build_intervals.nf'
-include { BWAMEM2_INDEX as BWAMEM2_INDEX } from '../nf-core/bwamem2_index.nf'
-include { GATK_CREATE_SEQUENCE_DICTIONARY as GATK_CREATE_SEQUENCE_DICTIONARY } from '../local/gatk_dict.nf'
+include { BWAMEM2_INDEX } from '../nf-core/bwamem2_index.nf'
+include { GATK_CREATE_SEQUENCE_DICTIONARY } from '../local/gatk_dict.nf'
 include {
     HTSLIB_TABIX as HTSLIB_TABIX_DBSNP;
     HTSLIB_TABIX as HTSLIB_TABIX_GERMLINE_RESOURCE;
     HTSLIB_TABIX as HTSLIB_TABIX_KNOWN_INDELS;
     HTSLIB_TABIX as HTSLIB_TABIX_PON;
 } from '../nf-core/htslib_tabix'
-include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX } from '../nf-core/samtools_faidx.nf'
+include { SAMTOOLS_FAIDX } from '../nf-core/samtools_faidx.nf'
 
 workflow BUILD_INDICES{
     take:
@@ -53,12 +53,12 @@ workflow BUILD_INDICES{
         BUILD_INTERVALS(SAMTOOLS_FAIDX.out)
 
     emit:
-        bwa                   = BWAMEM2_INDEX
-        dbsnp_tbi             = HTSLIB_TABIX_DBSNP
-        dict                  = GATK_CREATE_SEQUENCE_DICTIONARY
-        fai                   = SAMTOOLS_FAIDX
-        germline_resource_tbi = HTSLIB_TABIX_GERMLINE_RESOURCE
-        intervals             = BUILD_INTERVALS
-        known_indels_tbi      = HTSLIB_TABIX_KNOWN_INDELS
-        pon_tbi               = HTSLIB_TABIX_PON
+        bwa                   = BWAMEM2_INDEX.out
+        dbsnp_tbi             = HTSLIB_TABIX_DBSNP.out
+        dict                  = GATK_CREATE_SEQUENCE_DICTIONARY.out
+        fai                   = SAMTOOLS_FAIDX.out
+        germline_resource_tbi = HTSLIB_TABIX_GERMLINE_RESOURCE.out
+        intervals             = BUILD_INTERVALS.out
+        known_indels_tbi      = HTSLIB_TABIX_KNOWN_INDELS.out
+        pon_tbi               = HTSLIB_TABIX_PON.out
 }
