@@ -21,7 +21,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ### Removed
 
-	[#234](https://github.com/nf-core/sarek/pull/243) - Removing obsolete script [#92]
+- [#234](https://github.com/nf-core/sarek/pull/243) - Removing obsolete script [#92]
 
 ## [2.6.1](https://github.com/nf-core/sarek/releases/tag/2.6.1) - Gådokgaskatjåhkkå
 
