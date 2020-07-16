@@ -6,8 +6,9 @@
 
 // And then initialize channels based on params or indexes that were just built
 
-include { BUILD_INTERVALS } from '../local/build_intervals.nf'
-include { BWAMEM2_INDEX } from '../nf-core/bwamem2_index.nf'
+include { BUILD_INTERVALS }                 from '../local/build_intervals.nf'
+include { BWAMEM2_INDEX }                   from '../nf-core/bwamem2_index.nf'
+include { CREATE_INTERVALS_BED }            from '../local/create_intervals_bed.nf'
 include { GATK_CREATE_SEQUENCE_DICTIONARY } from '../local/gatk_dict.nf'
 include {
     HTSLIB_TABIX as HTSLIB_TABIX_DBSNP;
@@ -15,7 +16,7 @@ include {
     HTSLIB_TABIX as HTSLIB_TABIX_KNOWN_INDELS;
     HTSLIB_TABIX as HTSLIB_TABIX_PON;
 } from '../nf-core/htslib_tabix'
-include { SAMTOOLS_FAIDX } from '../nf-core/samtools_faidx.nf'
+include { SAMTOOLS_FAIDX }                  from '../nf-core/samtools_faidx.nf'
 
 workflow BUILD_INDICES{
     take:
@@ -64,8 +65,11 @@ workflow BUILD_INDICES{
     else
         result_pon_tbi = Channel.empty()
 
-    if (!(params.intervals) && !('annotate' in step) && !('controlfreec' in step))
-        result_intervals = BUILD_INTERVALS(SAMTOOLS_FAIDX.out)
+    if (!('annotate' in step) && !('controlfreec' in step))
+        if (!params.intervals)
+            result_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS(SAMTOOLS_FAIDX.out))
+        else
+            result_intervals = CREATE_INTERVALS_BED(params.intervals)
     else
         result_intervals = Channel.empty()
 
@@ -75,7 +79,7 @@ workflow BUILD_INDICES{
         dict                  = result_dict
         fai                   = result_fai
         germline_resource_tbi = result_germline_resource_tbi
-        intervals             = result_intervals
+        intervals_bed         = result_intervals
         known_indels_tbi      = result_known_indels_tbi
         pon_tbi               = result_pon_tbi
 }

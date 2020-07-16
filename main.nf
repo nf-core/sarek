@@ -86,9 +86,9 @@ tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase().r
 if (step == 'controlfreec') tools = ['controlfreec']
 if (!check_parameter_list(tools, tool_list)) exit 1, 'Unknown tool(s), see --help for more information'
 
-// skip__qc_list = define_skip_qc_list()
-// skipQC = params.skip_qc ? params.skip_qc == 'all' ? skip__qc_list : params.skip_qc.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
-// if (!check_parameter_list(skipQC, skip__qc_list)) exit 1, 'Unknown QC tool(s), see --help for more information'
+// skip_qc_list = define_skip_qc_list()
+// skip_qc = params.skip_qc ? params.skip_qc == 'all' ? skip_qc_list : params.skip_qc.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
+// if (!check_parameter_list(skip_qc, skip_qc_list)) exit 1, 'Unknown QC tool(s), see --help for more information'
 
 // anno_list = define_anno_list()
 // annotate_tools = params.annotate_tools ? params.annotate_tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
@@ -97,7 +97,6 @@ if (!check_parameter_list(tools, tool_list)) exit 1, 'Unknown tool(s), see --hel
 // // Check parameters
 // if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
 // if (params.cf_window && params.cf_coeff) exit 1, 'Please specify either --cf_window OR --cf_coeff, but not both of them'
-
 
 // Handle input
 tsv_path = null
@@ -254,7 +253,6 @@ if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works
 */
 
 include { BWAMEM2_MEM }           from './modules/local/bwamem2_mem.nf' addParams(params)
-include { CREATE_INTERVALS_BED }  from './modules/local/create_intervals_bed' addParams(params)
 include { GET_SOFTWARE_VERSIONS } from './modules/local/get_software_versions' params(params)
 include { OUTPUT_DOCUMENTATION }  from './modules/local/output_documentation' params(params)
 include { TRIM_GALORE }           from './modules/local/trim_galore.nf' addParams(params)
@@ -333,18 +331,15 @@ workflow {
     dict = params.dict ?: BUILD_INDICES.out.dict
     fai = params.fasta_fai ? params.fasta_fai : BUILD_INDICES.out.fai
     germline_resource_tbi = params.germline_resource ? params.germline_resource_index ?: BUILD_INDICES.out.germline_resource_tbi : Channel.empty()
-    intervals = params.no_intervals ? Channel.empty() : params.intervals ?: BUILD_INDICES.out.intervals
+    intervals_bed = params.no_intervals ? Channel.empty() : BUILD_INDICES.out.intervals_bed
     known_indels_tbi = params.known_indels ? params.known_indels_index ?: BUILD_INDICES.out.known_indels_tbi : Channel.empty()
     // known_indels_tbi = params.known_indels ? params.known_indels_index ?: BUILD_INDICES.out.known_indels_tbi.collect() : Channel.empty()
     pon_tbi = params.pon ? params.pon_index ?: BUILD_INDICES.out.pon_tbi : Channel.empty()
 
     // PREPROCESSING
-    if((!params.no_intervals) && step != 'annotate')
-        CREATE_INTERVALS_BED(intervals)
 
     // BED INTERVAL CHANNEL TRANSFORMING
-    ch_bed_intervals = CREATE_INTERVALS_BED.out
-        .flatten()
+    intervals_bed.flatten()
         .map { intervalFile ->
             def duration = 0.0
             for (line in intervalFile.readLines()) {
@@ -360,14 +355,14 @@ workflow {
         }.toSortedList({ a, b -> b[0] <=> a[0] })
         .flatten().collate(2)
         .map{duration, intervalFile -> intervalFile}
-    ch_bed_intervals.dump(tag:'bedintervals')
+    intervals_bed.dump(tag:'bedintervals')
 
     if (params.no_intervals && step != 'annotate') {
         file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
-        ch_bed_intervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
+        intervals_bed = Channel.from(file("${params.outdir}/no_intervals.bed"))
     }
 
-    // if(!('fastqc' in skipQC))
+    // if(!('fastqc' in skip_qc))
     FASTQC(input_sample)
 
     if (params.trim_fastq) {
@@ -436,7 +431,7 @@ workflow.onComplete {
 //     output:
 //         file("*.{html,zip}") into fastQCBAMReport
 
-//     when: !('fastqc' in skipQC)
+//     when: !('fastqc' in skip_qc)
 
 //     script:
 //     """
@@ -649,7 +644,7 @@ workflow.onComplete {
 
 //     script:
 //     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
-//     metrics = 'markduplicates' in skipQC ? '' : "-M ${idSample}.bam.metrics"
+//     metrics = 'markduplicates' in skip_qc ? '' : "-M ${idSample}.bam.metrics"
 //     if (params.no_gatk_spark)
 //     """
 //     gatk --java-options ${markdup_java_options} \
@@ -699,7 +694,7 @@ workflow.onComplete {
 //         ["duplicates_marked_no_table_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
 // }
 
-// if ('markduplicates' in skipQC) duplicates_marked_report.close()
+// if ('markduplicates' in skip_qc) duplicates_marked_report.close()
 
 // if (step == 'preparerecalibration') bam_duplicates_marked = input_sample
 
@@ -725,7 +720,7 @@ workflow.onComplete {
 
 //     publishDir params.outdir, mode: params.publish_dir_mode,
 //         saveAs: {
-//             if (it == "${idSample}_*.txt" && 'sentieon' in skipQC) null
+//             if (it == "${idSample}_*.txt" && 'sentieon' in skip_qc) null
 //             else if (it == "${idSample}_*.txt") "Reports/${idSample}/Sentieon/${it}"
 //             else "Preprocessing/${idSample}/DedupedSentieon/${it}"
 //         }
@@ -854,7 +849,7 @@ workflow.onComplete {
 //     """
 // }
 
-// if ('baserecalibrator' in skipQC) baseRecalibratorReport.close()
+// if ('baserecalibrator' in skip_qc) baseRecalibratorReport.close()
 
 // recalTable = recalTable.dump(tag:'RECAL TABLE')
 
@@ -964,7 +959,7 @@ workflow.onComplete {
 
 //     publishDir params.outdir, mode: params.publish_dir_mode,
 //         saveAs: {
-//             if (it == "${idSample}_recal_result.csv" && 'sentieon' in skipQC) "Reports/${idSample}/Sentieon/${it}"
+//             if (it == "${idSample}_recal_result.csv" && 'sentieon' in skip_qc) "Reports/${idSample}/Sentieon/${it}"
 //             else "Preprocessing/${idSample}/RecalSentieon/${it}"
 //         }
 
@@ -1154,7 +1149,7 @@ workflow.onComplete {
 //     output:
 //         file ("${bam}.samtools.stats.out") into samtoolsStatsReport
 
-//     when: !('samtools' in skipQC)
+//     when: !('samtools' in skip_qc)
 
 //     script:
 //     """
@@ -1181,7 +1176,7 @@ workflow.onComplete {
 //     output:
 //         file("${bam.baseName}") into bamQCReport
 
-//     when: !('bamqc' in skipQC)
+//     when: !('bamqc' in skip_qc)
 
 //     script:
 //     use_bed = params.target_bed ? "-gff ${targetBED}" : ''
@@ -2681,7 +2676,7 @@ workflow.onComplete {
 //     output:
 //         file ("*.bcf.tools.stats.out") into bcftoolsReport
 
-//     when: !('bcftools' in skipQC)
+//     when: !('bcftools' in skip_qc)
 
 //     script:
 //     """
@@ -2704,7 +2699,7 @@ workflow.onComplete {
 //     output:
 //         file ("${reduceVCF(vcf.fileName)}.*") into vcftoolsReport
 
-//     when: !('vcftools' in skipQC)
+//     when: !('vcftools' in skip_qc)
 
 //     script:
 //     """
@@ -3025,7 +3020,7 @@ workflow.onComplete {
 //         file "*_data"
 //         file "multiqc_plots"
 
-//     when: !('multiqc' in skipQC)
+//     when: !('multiqc' in skip_qc)
 
 //     script:
 //     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
