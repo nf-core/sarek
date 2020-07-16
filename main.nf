@@ -253,10 +253,18 @@ if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works
 ================================================================================
 */
 
-include { BWAMEM2_MEM }           from './modules/local/bwamem2_mem.nf' addParams(params)
-include { GET_SOFTWARE_VERSIONS } from './modules/local/get_software_versions' params(params)
-include { OUTPUT_DOCUMENTATION }  from './modules/local/output_documentation' params(params)
-include { TRIM_GALORE }           from './modules/local/trim_galore.nf' addParams(params)
+include { BWAMEM2_MEM }           from './modules/local/bwamem2_mem.nf'
+include { GET_SOFTWARE_VERSIONS } from './modules/local/get_software_versions'
+include { OUTPUT_DOCUMENTATION }  from './modules/local/output_documentation'
+include { TRIM_GALORE }           from './modules/local/trim_galore.nf'
+
+/*
+================================================================================
+                        INCLUDE LOCAL PIPELINE SUBWORKFLOWS
+================================================================================
+*/
+
+include { BUILD_INDICES } from './modules/subworkflows/build_indices'
 
 /*
 ================================================================================
@@ -264,8 +272,8 @@ include { TRIM_GALORE }           from './modules/local/trim_galore.nf' addParam
 ================================================================================
 */
 
-include { FASTQC }  from './modules/nf-core/fastqc' params(params)
-include { MULTIQC } from './modules/nf-core/multiqc' params(params)
+include { FASTQC }  from './modules/nf-core/fastqc'
+include { MULTIQC } from './modules/nf-core/multiqc'
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
@@ -313,8 +321,6 @@ include { MULTIQC } from './modules/nf-core/multiqc' params(params)
                         RUN THE WORKFLOW
 ================================================================================
 */
-
-include { BUILD_INDICES } from './modules/subworkflows/build_indices' addParams(params)
 
 workflow {
 
