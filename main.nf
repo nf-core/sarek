@@ -38,6 +38,7 @@ if (params.help) {
 include {
     check_parameter_existence;
     check_parameter_list;
+    define_skip_qc_list;
     define_step_list;
     define_tool_list;
     extract_bam;
@@ -86,9 +87,9 @@ tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase().r
 if (step == 'controlfreec') tools = ['controlfreec']
 if (!check_parameter_list(tools, tool_list)) exit 1, 'Unknown tool(s), see --help for more information'
 
-// skip_qc_list = define_skip_qc_list()
-// skip_qc = params.skip_qc ? params.skip_qc == 'all' ? skip_qc_list : params.skip_qc.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
-// if (!check_parameter_list(skip_qc, skip_qc_list)) exit 1, 'Unknown QC tool(s), see --help for more information'
+skip_qc_list = define_skip_qc_list()
+skip_qc = params.skip_qc ? params.skip_qc == 'all' ? skip_qc_list : params.skip_qc.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
+if (!check_parameter_list(skip_qc, skip_qc_list)) exit 1, 'Unknown QC tool(s), see --help for more information'
 
 // anno_list = define_anno_list()
 // annotate_tools = params.annotate_tools ? params.annotate_tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
@@ -362,8 +363,10 @@ workflow {
         intervals_bed = Channel.from(file("${params.outdir}/no_intervals.bed"))
     }
 
-    // if(!('fastqc' in skip_qc))
-    FASTQC(input_sample)
+    if(!('fastqc' in skip_qc))
+        result_fastqc = FASTQC(input_sample)
+    else
+        result_fastqc = Channel.empty()
 
     if (params.trim_fastq) {
         TRIM_GALORE(input_sample)
@@ -382,11 +385,11 @@ workflow {
     GET_SOFTWARE_VERSIONS()
 
     MULTIQC(
-        FASTQC.out.ifEmpty([]),
+        result_fastqc.collect().ifEmpty([]),
         multiqc_config,
         multiqc_custom_config.ifEmpty([]),
         GET_SOFTWARE_VERSIONS.out.yml,
-        result_trim_galore.ifEmpty([]),
+        result_trim_galore.collect().ifEmpty([]),
         workflow_summary)
 }
 
