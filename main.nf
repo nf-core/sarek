@@ -338,36 +338,12 @@ workflow {
     dict = params.dict ?: BUILD_INDICES.out.dict
     fai = params.fasta_fai ? params.fasta_fai : BUILD_INDICES.out.fai
     germline_resource_tbi = params.germline_resource ? params.germline_resource_index ?: BUILD_INDICES.out.germline_resource_tbi : Channel.empty()
-    intervals_bed = params.no_intervals ? Channel.empty() : BUILD_INDICES.out.intervals_bed
-    known_indels_tbi = params.known_indels ? params.known_indels_index ?: BUILD_INDICES.out.known_indels_tbi : Channel.empty()
-    // known_indels_tbi = params.known_indels ? params.known_indels_index ?: BUILD_INDICES.out.known_indels_tbi.collect() : Channel.empty()
+    intervals_bed = BUILD_INDICES.out.intervals_bed
+    known_indels_tbi = params.known_indels ? params.known_indels_index ?: BUILD_INDICES.out.known_indels_tbi.collect() : Channel.empty()
     pon_tbi = params.pon ? params.pon_index ?: BUILD_INDICES.out.pon_tbi : Channel.empty()
 
     // PREPROCESSING
-
-    // BED INTERVAL CHANNEL TRANSFORMING
-    intervals_bed.flatten()
-        .map { intervalFile ->
-            def duration = 0.0
-            for (line in intervalFile.readLines()) {
-                final fields = line.split('\t')
-                if (fields.size() >= 5) duration += fields[4].toFloat()
-                else {
-                    start = fields[1].toInteger()
-                    end = fields[2].toInteger()
-                    duration += (end - start) / params.nucleotides_per_second
-                }
-            }
-            [ duration, intervalFile]
-        }.toSortedList({ a, b -> b[0] <=> a[0] })
-        .flatten().collate(2)
-        .map{duration, intervalFile -> intervalFile}
     intervals_bed.dump(tag:'bedintervals')
-
-    if (params.no_intervals && step != 'annotate') {
-        file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
-        intervals_bed = Channel.from(file("${params.outdir}/no_intervals.bed"))
-    }
 
     if(!('fastqc' in skip_qc))
         result_fastqc = FASTQC(input_sample)

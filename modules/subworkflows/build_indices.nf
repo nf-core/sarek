@@ -65,13 +65,33 @@ workflow BUILD_INDICES{
     else
         result_pon_tbi = Channel.empty()
 
-    if (!('annotate' in step) && !('controlfreec' in step))
+    if (params.no_intervals) {
+        file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
+        result_intervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
+    } else if (!('annotate' in step) && !('controlfreec' in step))
         if (!params.intervals)
             result_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS(SAMTOOLS_FAIDX.out))
         else
             result_intervals = CREATE_INTERVALS_BED(params.intervals)
-    else
-        result_intervals = Channel.empty()
+
+    if (!params.no_intervals) {
+        result_intervals.flatten()
+            .map { intervalFile ->
+                def duration = 0.0
+                for (line in intervalFile.readLines()) {
+                    final fields = line.split('\t')
+                    if (fields.size() >= 5) duration += fields[4].toFloat()
+                    else {
+                        start = fields[1].toInteger()
+                        end = fields[2].toInteger()
+                        duration += (end - start) / params.nucleotides_per_second
+                    }
+                }
+                [duration, intervalFile]
+            }.toSortedList({ a, b -> b[0] <=> a[0] })
+            .flatten().collate(2)
+            .map{duration, intervalFile -> intervalFile}
+    }
 
     emit:
         bwa                   = result_bwa
