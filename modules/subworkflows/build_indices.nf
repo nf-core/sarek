@@ -25,6 +25,7 @@ workflow BUILD_INDICES{
         known_indels
         pon
         step
+        tools
 
     main:
 
