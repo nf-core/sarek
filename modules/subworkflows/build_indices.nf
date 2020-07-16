@@ -91,7 +91,6 @@ workflow BUILD_INDICES{
             }.toSortedList({ a, b -> b[0] <=> a[0] })
             .flatten().collate(2)
             .map{duration, intervalFile -> intervalFile}
-            .flatten()
     }
 
     emit:
