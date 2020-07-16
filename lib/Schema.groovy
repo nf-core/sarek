@@ -159,7 +159,7 @@ class JSON {
         if (params.chr_dir)                 summary['Chromosomes']             = params.chr_dir
         if (params.chr_length)              summary['Chromosomes length']      = params.chr_length
         if (params.dbsnp)                   summary['dbsnp']                   = params.dbsnp
-        if (params.dbsnp_index)             summary['dbsnpIndex']              = params.dbsnp_index
+        if (params.dbsnp_index)             summary['dbsnp index']             = params.dbsnp_index
         if (params.dict)                    summary['dict']                    = params.dict
         if (params.fasta)                   summary['fasta reference']         = params.fasta
         if (params.fasta_fai)               summary['fasta index']             = params.fasta_fai
@@ -171,7 +171,7 @@ class JSON {
         if (params.mappability)             summary['Mappability']             = params.mappability
         if (params.snpeff_cache)            summary['snpEff cache']            = params.snpeff_cache
         if (params.snpeff_db)               summary['snpEff DB']               = params.snpeff_db
-        if (params.species)                 summary['species']                 = params.species
+        if (params.species)                 summary['snpEff species']          = params.species
         if (params.vep_cache)               summary['VEP cache']               = params.vep_cache
         if (params.vep_cache_version)       summary['VEP cache version']       = params.vep_cache_version
 
