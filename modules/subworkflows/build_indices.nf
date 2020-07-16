@@ -70,12 +70,12 @@ workflow BUILD_INDICES{
         result_intervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
     } else if (!('annotate' in step) && !('controlfreec' in step))
         if (!params.intervals)
-            intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS(SAMTOOLS_FAIDX.out))
+            result_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS(SAMTOOLS_FAIDX.out))
         else
-            intervals = CREATE_INTERVALS_BED(params.intervals)
+            result_intervals = CREATE_INTERVALS_BED(params.intervals)
 
     if (!params.no_intervals) {
-        intervals.flatten()
+        result_intervals = result_intervals.flatten()
             .map { intervalFile ->
                 def duration = 0.0
                 for (line in intervalFile.readLines()) {
@@ -91,11 +91,7 @@ workflow BUILD_INDICES{
             }.toSortedList({ a, b -> b[0] <=> a[0] })
             .flatten().collate(2)
             .map{duration, intervalFile -> intervalFile}
-            .multiMap{
-                all: it
-                empty: ""
-            }.set{bed}
-        result_intervals = bed.all
+            .flatten()
     }
 
     emit:
