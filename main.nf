@@ -367,16 +367,17 @@ workflow {
             single:   it[2].size() == 1
             multiple: it[2].size() > 1
         }.set { bam }
-    bam.single.map {
-        idPatient, idSample, idRun, bam ->
-        [idPatient, idSample, bam]
+
+    bam_single = bam.single.map {
+        idPatient, idSample, idRun, bam, bai ->
+        [idPatient, idSample, bam[0], bai[0]]
     }
 
-    bam.single.view()
-    bam.multiple.view()
-
     //multipleBam = multipleBam.mix(multipleBamSentieon)
-    MERGE_BAM_MAPPED(bam.multiple)
+
+    bam_mapped = bam_single.mix(MERGE_BAM_MAPPED(bam.multiple))
+
+    bam_mapped.view()
 
     OUTPUT_DOCUMENTATION(
         output_docs,
