@@ -6,8 +6,9 @@
 
 // And then initialize channels based on params or indexes that were just built
 
-include { BUILD_INTERVALS } from '../local/build_intervals.nf'
-include { BWAMEM2_INDEX } from '../nf-core/bwamem2_index.nf'
+include { BUILD_INTERVALS }                 from '../local/build_intervals.nf'
+include { BWAMEM2_INDEX }                   from '../nf-core/bwamem2_index.nf'
+include { CREATE_INTERVALS_BED }            from '../local/create_intervals_bed.nf'
 include { GATK_CREATE_SEQUENCE_DICTIONARY } from '../local/gatk_dict.nf'
 include {
     HTSLIB_TABIX as HTSLIB_TABIX_DBSNP;
@@ -15,7 +16,7 @@ include {
     HTSLIB_TABIX as HTSLIB_TABIX_KNOWN_INDELS;
     HTSLIB_TABIX as HTSLIB_TABIX_PON;
 } from '../nf-core/htslib_tabix'
-include { SAMTOOLS_FAIDX } from '../nf-core/samtools_faidx.nf'
+include { SAMTOOLS_FAIDX }                  from '../nf-core/samtools_faidx.nf'
 
 workflow BUILD_INDICES{
     take:
@@ -25,6 +26,7 @@ workflow BUILD_INDICES{
         known_indels
         pon
         step
+        tools
 
     main:
 
@@ -63,10 +65,33 @@ workflow BUILD_INDICES{
     else
         result_pon_tbi = Channel.empty()
 
-    if (!(params.intervals) && !('annotate' in step) && !('controlfreec' in step))
-        result_intervals = BUILD_INTERVALS(SAMTOOLS_FAIDX.out)
-    else
-        result_intervals = Channel.empty()
+    if (params.no_intervals) {
+        file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
+        result_intervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
+    } else if (!('annotate' in step) && !('controlfreec' in step))
+        if (!params.intervals)
+            result_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS(SAMTOOLS_FAIDX.out))
+        else
+            result_intervals = CREATE_INTERVALS_BED(params.intervals)
+
+    if (!params.no_intervals) {
+        result_intervals = result_intervals.flatten()
+            .map { intervalFile ->
+                def duration = 0.0
+                for (line in intervalFile.readLines()) {
+                    final fields = line.split('\t')
+                    if (fields.size() >= 5) duration += fields[4].toFloat()
+                    else {
+                        start = fields[1].toInteger()
+                        end = fields[2].toInteger()
+                        duration += (end - start) / params.nucleotides_per_second
+                    }
+                }
+                [duration, intervalFile]
+            }.toSortedList({ a, b -> b[0] <=> a[0] })
+            .flatten().collate(2)
+            .map{duration, intervalFile -> intervalFile}
+    }
 
     emit:
         bwa                   = result_bwa
@@ -74,7 +99,7 @@ workflow BUILD_INDICES{
         dict                  = result_dict
         fai                   = result_fai
         germline_resource_tbi = result_germline_resource_tbi
-        intervals             = result_intervals
+        intervals_bed         = result_intervals
         known_indels_tbi      = result_known_indels_tbi
         pon_tbi               = result_pon_tbi
 }

@@ -7,7 +7,7 @@ regexes = {
     'AlleleCount': ['v_allelecount.txt', r"(\S+)"],
     'ASCAT': ['v_ascat.txt', r"Version:       (\S+)"],
     'bcftools': ['v_bcftools.txt', r"bcftools (\S+)"],
-    'BWAMEM2': ['v_bwamem2.txt', r"Version: (\S+)"],
+    'BWA-MEM2': ['v_bwamem2.txt', r"(\S+)"],
     'CNVkit': ['v_cnvkit.txt', r"(\S+)"],
     'Control-FREEC': ['v_controlfreec.txt', r"Control-FREEC\s(\S+)"],
     'FastQC': ['v_fastqc.txt', r"FastQC v(\S+)"],
