@@ -1,16 +1,17 @@
 process MERGE_BAM_MAPPED {
     label 'cpus'
 
-    tag "${idPatient}-${idSample}"
+    tag "${patient}-${sample}"
 
     input:
-        tuple idPatient, idSample, idRun, path(bam), path(bai)// from multiple
+        tuple patient, sample, run, path(bam), path(bai)
 
     output:
-        tuple idPatient, idSample, path("${idSample}.bam") //into bam_mapped_merged
+        tuple patient, sample, path("${sample}.bam"), path("${sample}.bam.bai")
 
     script:
     """
-    samtools merge --threads ${task.cpus} ${idSample}.bam ${bam}
+    samtools merge --threads ${task.cpus} ${sample}.bam ${bam}
+    samtools index ${sample}.bam
     """
 }
