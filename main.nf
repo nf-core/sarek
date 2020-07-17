@@ -253,10 +253,12 @@ if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works
 ================================================================================
 */
 
+
 include { BWAMEM2_MEM }           from './modules/local/bwamem2_mem.nf'
 include { GET_SOFTWARE_VERSIONS } from './modules/local/get_software_versions'
 include { OUTPUT_DOCUMENTATION }  from './modules/local/output_documentation'
 include { TRIM_GALORE }           from './modules/local/trim_galore.nf'
+include { MERGE_BAM_MAPPED }      from './modules/local/merge_mapped_bam' addParams(params)
 
 /*
 ================================================================================
@@ -359,6 +361,22 @@ workflow {
         result_trim_galore = Channel.empty()
         BWAMEM2_MEM(input_sample, bwa, fasta, fai)
     }
+
+    BWAMEM2_MEM.out.groupTuple(by:[0, 1])
+        .branch {
+            single:   it[2].size() == 1
+            multiple: it[2].size() > 1
+        }.set { bam }
+    bam.single.map {
+        idPatient, idSample, idRun, bam ->
+        [idPatient, idSample, bam]
+    }
+
+    bam.single.view()
+    bam.multiple.view()
+
+    //multipleBam = multipleBam.mix(multipleBamSentieon)
+    MERGE_BAM_MAPPED(bam.multiple)
 
     OUTPUT_DOCUMENTATION(
         output_docs,
