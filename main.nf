@@ -263,7 +263,7 @@ include { CREATE_INTERVALS_BED }  from './modules/local/create_intervals_bed' ad
 include { GET_SOFTWARE_VERSIONS } from './modules/local/get_software_versions' params(params)
 include { OUTPUT_DOCUMENTATION }  from './modules/local/output_documentation' params(params)
 include { TRIM_GALORE }           from './modules/local/trim_galore.nf' addParams(params)
-
+include { MERGE_BAM_MAPPED }      from './modules/local/merge_mapped_bam' addParams(params)
 /*
 ================================================================================
                         INCLUDE nf-core PIPELINE MODULES
@@ -384,6 +384,22 @@ workflow {
         result_trim_galore = Channel.empty()
         BWAMEM2_MEM(input_sample, bwa, fasta, fai)
     }
+
+    BWAMEM2_MEM.out.groupTuple(by:[0, 1])
+        .branch {
+            single:   it[2].size() == 1
+            multiple: it[2].size() > 1
+        }.set { bam }
+    bam.single.map {
+        idPatient, idSample, idRun, bam ->
+        [idPatient, idSample, bam]
+    }
+
+    bam.single.view()
+    bam.multiple.view()
+
+    //multipleBam = multipleBam.mix(multipleBamSentieon)
+    MERGE_BAM_MAPPED(bam.multiple)
 
     OUTPUT_DOCUMENTATION(
         output_docs,
