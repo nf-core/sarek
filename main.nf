@@ -38,6 +38,7 @@ if (params.help) {
 include {
     check_parameter_existence;
     check_parameter_list;
+    define_skip_qc_list;
     define_step_list;
     define_tool_list;
     extract_bam;
@@ -86,9 +87,9 @@ tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase().r
 if (step == 'controlfreec') tools = ['controlfreec']
 if (!check_parameter_list(tools, tool_list)) exit 1, 'Unknown tool(s), see --help for more information'
 
-// skip_qc_list = define_skip_qc_list()
-// skip_qc = params.skip_qc ? params.skip_qc == 'all' ? skip_qc_list : params.skip_qc.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
-// if (!check_parameter_list(skip_qc, skip_qc_list)) exit 1, 'Unknown QC tool(s), see --help for more information'
+skip_qc_list = define_skip_qc_list()
+skip_qc = params.skip_qc ? params.skip_qc == 'all' ? skip_qc_list : params.skip_qc.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
+if (!check_parameter_list(skip_qc, skip_qc_list)) exit 1, 'Unknown QC tool(s), see --help for more information'
 
 // anno_list = define_anno_list()
 // annotate_tools = params.annotate_tools ? params.annotate_tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
@@ -248,14 +249,22 @@ if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works
 
 /*
 ================================================================================
-                        INCLUDE LOCAL PIPELINE MODULES
+                         INCLUDE LOCAL PIPELINE MODULES
 ================================================================================
 */
 
-include { BWAMEM2_MEM }           from './modules/local/bwamem2_mem.nf' addParams(params)
-include { GET_SOFTWARE_VERSIONS } from './modules/local/get_software_versions' params(params)
-include { OUTPUT_DOCUMENTATION }  from './modules/local/output_documentation' params(params)
-include { TRIM_GALORE }           from './modules/local/trim_galore.nf' addParams(params)
+include { BWAMEM2_MEM }           from './modules/local/bwamem2_mem.nf'
+include { GET_SOFTWARE_VERSIONS } from './modules/local/get_software_versions'
+include { OUTPUT_DOCUMENTATION }  from './modules/local/output_documentation'
+include { TRIM_GALORE }           from './modules/local/trim_galore.nf'
+
+/*
+================================================================================
+                       INCLUDE LOCAL PIPELINE SUBWORKFLOWS
+================================================================================
+*/
+
+include { BUILD_INDICES } from './modules/subworkflows/build_indices'
 
 /*
 ================================================================================
@@ -263,8 +272,8 @@ include { TRIM_GALORE }           from './modules/local/trim_galore.nf' addParam
 ================================================================================
 */
 
-include { FASTQC }  from './modules/nf-core/fastqc' params(params)
-include { MULTIQC } from './modules/nf-core/multiqc' params(params)
+include { FASTQC }  from './modules/nf-core/fastqc'
+include { MULTIQC } from './modules/nf-core/multiqc'
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
@@ -313,8 +322,6 @@ include { MULTIQC } from './modules/nf-core/multiqc' params(params)
 ================================================================================
 */
 
-include { BUILD_INDICES } from './modules/subworkflows/build_indices' addParams(params)
-
 workflow {
 
     BUILD_INDICES(
@@ -331,39 +338,17 @@ workflow {
     dict = params.dict ?: BUILD_INDICES.out.dict
     fai = params.fasta_fai ? params.fasta_fai : BUILD_INDICES.out.fai
     germline_resource_tbi = params.germline_resource ? params.germline_resource_index ?: BUILD_INDICES.out.germline_resource_tbi : Channel.empty()
-    intervals_bed = params.no_intervals ? Channel.empty() : BUILD_INDICES.out.intervals_bed
-    known_indels_tbi = params.known_indels ? params.known_indels_index ?: BUILD_INDICES.out.known_indels_tbi : Channel.empty()
-    // known_indels_tbi = params.known_indels ? params.known_indels_index ?: BUILD_INDICES.out.known_indels_tbi.collect() : Channel.empty()
+    intervals_bed = BUILD_INDICES.out.intervals_bed
+    known_indels_tbi = params.known_indels ? params.known_indels_index ?: BUILD_INDICES.out.known_indels_tbi.collect() : Channel.empty()
     pon_tbi = params.pon ? params.pon_index ?: BUILD_INDICES.out.pon_tbi : Channel.empty()
 
     // PREPROCESSING
-
-    // BED INTERVAL CHANNEL TRANSFORMING
-    intervals_bed.flatten()
-        .map { intervalFile ->
-            def duration = 0.0
-            for (line in intervalFile.readLines()) {
-                final fields = line.split('\t')
-                if (fields.size() >= 5) duration += fields[4].toFloat()
-                else {
-                    start = fields[1].toInteger()
-                    end = fields[2].toInteger()
-                    duration += (end - start) / params.nucleotides_per_second
-                }
-            }
-            [ duration, intervalFile]
-        }.toSortedList({ a, b -> b[0] <=> a[0] })
-        .flatten().collate(2)
-        .map{duration, intervalFile -> intervalFile}
     intervals_bed.dump(tag:'bedintervals')
 
-    if (params.no_intervals && step != 'annotate') {
-        file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
-        intervals_bed = Channel.from(file("${params.outdir}/no_intervals.bed"))
-    }
-
-    // if(!('fastqc' in skip_qc))
-    FASTQC(input_sample)
+    if(!('fastqc' in skip_qc))
+        result_fastqc = FASTQC(input_sample)
+    else
+        result_fastqc = Channel.empty()
 
     if (params.trim_fastq) {
         TRIM_GALORE(input_sample)
@@ -382,11 +367,11 @@ workflow {
     GET_SOFTWARE_VERSIONS()
 
     MULTIQC(
-        FASTQC.out.ifEmpty([]),
+        result_fastqc.collect().ifEmpty([]),
         multiqc_config,
         multiqc_custom_config.ifEmpty([]),
         GET_SOFTWARE_VERSIONS.out.yml,
-        result_trim_galore.ifEmpty([]),
+        result_trim_galore.collect().ifEmpty([]),
         workflow_summary)
 }
 
