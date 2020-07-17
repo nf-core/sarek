@@ -12,9 +12,7 @@ process MARK_DUPLICATES {
          tuple idPatient, idSample, path("${idSample}.md.bam"), path("${idSample}.md.bam.bai"), emit:  bam_duplicates_marked
          tuple idPatient, idSample, emit: tsv_bam_duplicates_marked
          path "${idSample}.bam.metrics", emit: duplicates_marked_report //is optional , applies when skip_qc is used(not implemented yet)
-     
-     //when: !(params.skip_markduplicates)
-     
+          
      script:
      markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
      //metrics = 'markduplicates' in skip_qc ? '' : "-M ${idSample}.bam.metrics"

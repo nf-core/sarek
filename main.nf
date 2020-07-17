@@ -380,21 +380,20 @@ workflow {
 
     bam_mapped.view()
 
-    if(!(params.skip_markduplicates))
-        MARK_DUPLICATES(bam_mapped)
+    mark_duplicates_report =  !(params.skip_markduplicates) ? MARK_DUPLICATES(bam_mapped).duplicates_marked_report : Channel.empty()
 
     OUTPUT_DOCUMENTATION(
         output_docs,
         output_docs_images)
 
     GET_SOFTWARE_VERSIONS()
-
     MULTIQC(
         result_fastqc.collect().ifEmpty([]),
         multiqc_config,
         multiqc_custom_config.ifEmpty([]),
         GET_SOFTWARE_VERSIONS.out.yml,
         result_trim_galore.collect().ifEmpty([]),
+        mark_duplicates_report.collect().ifEmpty([]),
         workflow_summary)
 }
 
