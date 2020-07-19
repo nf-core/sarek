@@ -14,6 +14,7 @@ process MULTIQC {
         path multiqc_custom_config
         path software_versions
         path trim_galore
+        path mark_duplicates
         val workflow_summary
 
     output:

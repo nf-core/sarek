@@ -259,6 +259,7 @@ include { GET_SOFTWARE_VERSIONS } from './modules/local/get_software_versions'
 include { OUTPUT_DOCUMENTATION }  from './modules/local/output_documentation'
 include { TRIM_GALORE }           from './modules/local/trim_galore.nf'
 include { MERGE_BAM_MAPPED }      from './modules/local/merge_mapped_bam' addParams(params)
+include { MARK_DUPLICATES }       from './modules/local/mark_duplicates' params(params)
 
 /*
 ================================================================================
@@ -379,18 +380,20 @@ workflow {
 
     bam_mapped.view()
 
+    mark_duplicates_report =  !(params.skip_markduplicates) ? MARK_DUPLICATES(bam_mapped).duplicates_marked_report : Channel.empty()
+
     OUTPUT_DOCUMENTATION(
         output_docs,
         output_docs_images)
 
     GET_SOFTWARE_VERSIONS()
-
     MULTIQC(
         result_fastqc.collect().ifEmpty([]),
         multiqc_config,
         multiqc_custom_config.ifEmpty([]),
         GET_SOFTWARE_VERSIONS.out.yml,
         result_trim_galore.collect().ifEmpty([]),
+        mark_duplicates_report.collect().ifEmpty([]),
         workflow_summary)
 }
 
@@ -458,18 +461,6 @@ workflow.onComplete {
 // if (params.sentieon) input_pair_reads.close()
 // else input_pair_reads_sentieon.close()
 
-// bamMapped = bamMapped.dump(tag:'Mapped BAM')
-// // Sort BAM whether they are standalone or should be merged
-
-// singleBam = Channel.create()
-// multipleBam = Channel.create()
-// bamMapped.groupTuple(by:[0, 1])
-//     .choice(singleBam, multipleBam) {it[2].size() > 1 ? 1 : 0}
-// singleBam = singleBam.map {
-//     idPatient, idSample, idRun, bam ->
-//     [idPatient, idSample, bam]
-// }
-// singleBam = singleBam.dump(tag:'Single BAM')
 
 // // STEP 1': MAPPING READS TO REFERENCE GENOME WITH SENTIEON BWA MEM
 
@@ -524,26 +515,7 @@ workflow.onComplete {
 
 // // STEP 1.5: MERGING BAM FROM MULTIPLE LANES
 
-// multipleBam = multipleBam.mix(multipleBamSentieon)
 
-// process MergeBamMapped {
-//     label 'cpus_8'
-
-//     tag "${idPatient}-${idSample}"
-
-//     input:
-//         set idPatient, idSample, idRun, file(bam) from multipleBam
-
-//     output:
-//         set idPatient, idSample, file("${idSample}.bam") into bam_mapped_merged
-
-//     script:
-//     """
-//     samtools merge --threads ${task.cpus} ${idSample}.bam ${bam}
-//     """
-// }
-
-// bam_mapped_merged = bam_mapped_merged.dump(tag:'Merged BAM')
 
 // bam_mapped_merged = bam_mapped_merged.mix(singleBam,singleBamSentieon)
 
