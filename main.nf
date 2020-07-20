@@ -65,7 +65,7 @@ def helpMessage() {
                                       snpEff, VEP, merge
                                       Default: None
 
-Modify fastqs (trim/split):
+    Modify fastqs (trim/split):
       --trim_fastq             [bool] Run Trim Galore
       --clip_r1                 [int] Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
       --clip_r2                 [int] Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
