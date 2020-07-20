@@ -1,11 +1,11 @@
 # You can use this file to create a conda environment for this pipeline:
 # conda env create -f environment.yml
-name: nf-core-sarek-vep-dev
+name: nf-core-sarek-vep-3.0dev
 channels:
   - conda-forge
   - bioconda
   - defaults
 
 dependencies:
-  - ensembl-vep=99.2
-  - genesplicer=1.0
+  - bioconda::ensembl-vep=99.2
+  - bioconda::genesplicer=1.0

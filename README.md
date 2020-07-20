@@ -1,11 +1,13 @@
 # [![Sarek](docs/images/nf-core_sarek_logo.png "Sarek")](https://nf-co.re/sarek)
 
+> **An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing**
+
 [![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A519.10.0-brightgreen.svg)](https://www.nextflow.io/)
 [![nf-core](https://img.shields.io/badge/nf--core-pipeline-brightgreen.svg)](https://nf-co.re/)
 [![DOI](https://zenodo.org/badge/184289291.svg)](https://zenodo.org/badge/latestdoi/184289291)
 
-[![GitHub Actions CI status](https://github.com/nf-core/sarek/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22sarek+CI%22)
-[![GitHub Actions Linting status](https://github.com/nf-core/sarek/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22sarek+linting%22)
+[![GitHub Actions CI status](https://github.com/nf-core/sarek/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22nf-core+CI%22)
+[![GitHub Actions Linting status](https://github.com/nf-core/sarek/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22nf-core+linting%22)
 [![CircleCi build status](https://img.shields.io/circleci/project/github/nf-core/sarek?logo=circleci)](https://circleci.com/gh/nf-core/sarek/)
 
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](http://bioconda.github.io/)
@@ -16,7 +18,9 @@
 
 ## Introduction
 
-Sarek is a workflow designed to run analyses on whole genome or targeted sequencing data from regular samples or tumour / normal pairs and could include additional relapses.
+Sarek is a workflow designed to detect variants on whole genome or targeted sequencing data.
+Initially designed for Human, and Mouse, it can work on any species with a reference genome.
+Sarek can also handle tumour / normal pairs and could include additional relapses.
 
 It's built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner.
 It comes with docker containers making installation trivial and results highly reproducible.
@@ -25,7 +29,7 @@ It comes with docker containers making installation trivial and results highly r
     <img title="Sarek Workflow" src="docs/images/sarek_workflow.png" width=40%>
 </p>
 
-It's listed on the [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek), [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek) and [omicX - Bioinformatics tools](https://omictools.com/sarek-tool).
+It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek) and [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek).
 
 ## Quick Start
 
@@ -67,7 +71,9 @@ The nf-core/sarek pipeline comes with documentation about the pipeline, found in
     * [Input files documentation](docs/input.md)
     * [Documentation about containers](docs/containers.md)
 4. [Output and how to interpret the results](docs/output.md)
+    * [Extra documentation on variant calling](docs/variant_calling.md)
     * [Complementary information about ASCAT](docs/ascat.md)
+    * [Complementary information about Sentieon](docs/sentieon.md)
     * [Extra documentation on annotation](docs/annotation.md)
 5. [Troubleshooting](https://nf-co.re/usage/troubleshooting)
 
@@ -82,19 +88,32 @@ Main authors:
 
 Helpful contributors:
 
-* [Johannes Alneberg](https://github.com/alneberg)
-* [Phil Ewels](https://github.com/ewels)
+* [Adrian Lärkeryd](https://github.com/adrlar)
+* [Alexander Peltzer](https://github.com/apeltzer)
+* [Chela James](https://github.com/chelauk)
+* [David Mas-Ponte](https://github.com/davidmasp)
+* [Francesco L](https://github.com/nibscles)
+* [Friederike Hanssen](https://github.com/FriederikeHanssen)
+* [Gisela Gabernet](https://github.com/ggabernet)
+* [Harshil Patel](https://github.com/drpatelh)
+* [James A. Fellows Yates](https://github.com/jfy133)
 * [Jesper Eisfeldt](https://github.com/J35P312)
+* [Johannes Alneberg](https://github.com/alneberg)
+* [Lucia Conde](https://github.com/lconde-ucl)
 * [Malin Larsson](https://github.com/malinlarsson)
 * [Marcel Martin](https://github.com/marcelm)
-* [Alexander Peltzer](https://github.com/apeltzer)
 * [Nilesh Tawari](https://github.com/nilesh-tawari)
+* [Olga Botvinnik](https://github.com/olgabot)
+* [Phil Ewels](https://github.com/ewels)
+* [Sabrina Krakau](https://github.com/skrakau)
+* [Sebastian-D](https://github.com/Sebastian-D)
+* [Tobias Koch](https://github.com/KochTobi)
+* [Winni Kretzschmar](https://github.com/winni2k)
 * [arontommi](https://github.com/arontommi)
 * [bjornnystedt](https://github.com/bjornnystedt)
+* [cgpu](https://github.com/cgpu)
 * [gulfshores](https://github.com/gulfshores)
-* [KochTobi](https://github.com/KochTobi)
 * [pallolason](https://github.com/pallolason)
-* [Sebastian-D](https://github.com/Sebastian-D)
 * [silviamorins](https://github.com/silviamorins)
 
 ## Contributions & Support
@@ -115,8 +134,8 @@ For further information or help, don't hesitate to get in touch on [Slack](https
 
 ## Citation
 
-If you use `nf-core/sarek` for your analysis, please cite the `Sarek` pre-print as follows:
-> Garcia M, Juhos S, Larsson M et al. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants [version 1; peer review: awaiting peer review].**. *F1000Research* 2020, 9:63. [doi: 10.12688/f1000research.16665.1](https://f1000research.com/articles/9-63/v1).
+If you use `nf-core/sarek` for your analysis, please cite the `Sarek` article as follows:
+> Garcia M, Juhos S, Larsson M et al. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants [version 1; peer review: 2 approved]** *F1000Research* 2020, 9:63 [doi: 10.12688/f1000research.16665.1](http://dx.doi.org/10.12688/f1000research.16665.1).
 
 You can cite the sarek zenodo record for a specific version using the following [doi: 10.5281/zenodo.3476426](https://zenodo.org/badge/latestdoi/184289291)
 

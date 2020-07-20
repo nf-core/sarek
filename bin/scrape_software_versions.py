@@ -8,38 +8,44 @@ regexes = {
     'ASCAT': ['v_ascat.txt', r"Version:       (\S+)"],
     'bcftools': ['v_bcftools.txt', r"bcftools (\S+)"],
     'BWA': ['v_bwa.txt', r"Version: (\S+)"],
+    'CNVkit': ['v_cnvkit.txt', r"(\S+)"],
+    'Control-FREEC': ['v_controlfreec.txt', r"Control-FREEC\s(\S+)"],
     'FastQC': ['v_fastqc.txt', r"FastQC v(\S+)"],
     'FreeBayes': ['v_freebayes.txt', r"version:  v(\d\.\d\.\d+)"],
     'GATK': ['v_gatk.txt', r"Version:(\S+)"],
     'htslib': ['v_samtools.txt', r"htslib (\S+)"],
     'Manta': ['v_manta.txt', r"([0-9.]+)"],
+    'msisensor': ["v_msisensor.txt", r"Version: v(\S+)"],
     'MultiQC': ['v_multiqc.txt', r"multiqc, version (\S+)"],
     'Nextflow': ['v_nextflow.txt', r"(\S+)"],
     'nf-core/sarek': ['v_pipeline.txt', r"(\S+)"],
-    'Qualimap': ['v_qualimap.txt', r"QualiMap v.(\S+)"],
+    'QualiMap': ['v_qualimap.txt', r"QualiMap v.(\S+)"],
     'R': ['v_r.txt', r"R version (\S+)"],
     'samtools': ['v_samtools.txt', r"samtools (\S+)"],
-    'SnpEff': ['v_snpeff.txt', r"version SnpEff (\S+)"],
+    'SnpEff': ['v_snpeff.txt', r"SnpEff\s(\S+)"],
     'Strelka': ['v_strelka.txt', r"([0-9.]+)"],
     'TIDDIT': ['v_tiddit.txt', r"TIDDIT-(\S+)"], 
     'Trim Galore': ['v_trim_galore.txt', r"version (\S+)"], 
     'vcftools': ['v_vcftools.txt', r"([0-9.]+)"],
-    'VEP': ['v_vep.txt', r"ensembl-vep          : (\S+)"],
+    'VEP': ['v_vep.txt', r"ensembl-vep          : (\S+)"]
 }
 results = OrderedDict()
 results['nf-core/sarek'] = '<span style="color:#999999;\">N/A</span>'
 results['Nextflow'] = '<span style="color:#999999;\">N/A</span>'
-results['AlleleCount'] = '<span style="color:#999999;\">N/A</span>'
 results['ASCAT'] = '<span style="color:#999999;\">N/A</span>'
+results['AlleleCount'] = '<span style="color:#999999;\">N/A</span>'
 results['bcftools'] = '<span style="color:#999999;\">N/A</span>'
 results['BWA'] = '<span style="color:#999999;\">N/A</span>'
+results['CNVkit'] = '<span style="color:#999999;\">N/A</span>'
+results['Control-FREEC'] = '<span style="color:#999999;\">N/A</span>'
 results['FastQC'] = '<span style="color:#999999;\">N/A</span>'
 results['FreeBayes'] = '<span style="color:#999999;\">N/A</span>'
 results['GATK'] = '<span style="color:#999999;\">N/A</span>'
 results['htslib'] = '<span style="color:#999999;\">N/A</span>'
 results['Manta'] = '<span style="color:#999999;\">N/A</span>'
+results['msisensor'] = '<span style="color:#999999;\">N/A</span>'
 results['MultiQC'] = '<span style="color:#999999;\">N/A</span>'
-results['Qualimap'] = '<span style="color:#999999;\">N/A</span>'
+results['QualiMap'] = '<span style="color:#999999;\">N/A</span>'
 results['R'] = '<span style="color:#999999;\">N/A</span>'
 results['samtools'] = '<span style="color:#999999;\">N/A</span>'
 results['SnpEff'] = '<span style="color:#999999;\">N/A</span>'

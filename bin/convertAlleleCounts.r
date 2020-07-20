@@ -3,7 +3,6 @@
 # Description:
 # R-script for converting output from AlleleCount to BAF and LogR values.
 #
-# Testing new version of the script
 #
 # Input:
 # AlleleCounter output file for tumor and normal samples

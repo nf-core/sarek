@@ -23,29 +23,27 @@ def helpMessage() {
     log.info nfcoreHeader()
     log.info"""
 
-Usage:
-    --help
-      you're reading it
+    Usage:
 
-  nextflow run download_cache.nf [--snpeff_cache <pathToSNPEFFcache>] [--vep_cache <pathToVEPcache>]
-                                 [--cadd_cache <pathToCADDcache> --cadd_version <CADD Version>]
-    --snpeff_cache <Directoy>
-      Specify path to snpEff cache
-      If none, will use snpEff version specified in configuration
-      Will use snpEff cache version for ${params.genome}: ${params.genomes[params.genome].snpeff_db} in igenomes configuration file:
-      Change with --genome or in configuration files
-    --vep_cache <Directoy>
-      Specify path to VEP cache
-      If none, will use VEP version specified in configuration
-      Will from th iGenomes configuration file for ${params.genome}:
-      VEP cache version: ${params.genomes[params.genome].vep_cache_version}
-      and species ${params.genomes[params.genome].species}
-      Change with --genome or in configuration files
-    --cadd_cache <Directoy>
-      Specify path to CADD cache
-      Will use CADD version specified
-    --cadd_version <version>
-      Will specify which CADD version to download
+    The typical command for running the pipeline is as follows:
+
+    nextflow run nf-core/sarek/download_cache.nf -profile docker --genome <genome> --help
+                                      [--snpeff_cache <pathToSNPEFFcache> --snpeff_db_version <snpEff DB version>]
+                                      [--vep_cache <pathToVEPcache> --vep_cache_version <VEP cache version> --species <species>]
+                                      [--cadd_cache <pathToCADDcache> --cadd_version <CADD Version>]
+
+    Options:
+      --help                   [bool] You're reading it
+      --snpeff_cache           [file] Path to snpEff cache
+      --snpeff_db_version       [str] snpEff DB version
+                                      Default: ${params.genomes[params.genome].snpeff_db}
+      --vep_cache              [file] Path to VEP cache
+      --vep_cache_version       [int] VEP cache version
+                                      Default: ${params.genomes[params.genome].vep_cache_version}
+      --species                 [str] Species
+                                      Default: ${params.genomes[params.genome].species}
+      --cadd_cache             [file] Path to CADD cache
+      --cadd_version            [str] CADD version to download
     """.stripIndent()
 }
 
@@ -216,20 +214,18 @@ process DownloadCADD {
 
 cadd_files = cadd_files.dump(tag: 'cadd_files')
 
-def nfcoreHeader(){
+def nfcoreHeader() {
     // Log colors ANSI codes
-    c_reset  = params.monochrome_logs ? '' : "\033[0m";
-    c_dim    = params.monochrome_logs ? '' : "\033[2m";
     c_black  = params.monochrome_logs ? '' : "\033[0;30m";
-    c_red    = params.monochrome_logs ? '' : "\033[0;31m";
-    c_green  = params.monochrome_logs ? '' : "\033[0;32m";
-    c_yellow = params.monochrome_logs ? '' : "\033[0;33m";
     c_blue   = params.monochrome_logs ? '' : "\033[0;34m";
+    c_dim    = params.monochrome_logs ? '' : "\033[2m";
+    c_green  = params.monochrome_logs ? '' : "\033[0;32m";
     c_purple = params.monochrome_logs ? '' : "\033[0;35m";
-    c_cyan   = params.monochrome_logs ? '' : "\033[0;36m";
+    c_reset  = params.monochrome_logs ? '' : "\033[0m";
     c_white  = params.monochrome_logs ? '' : "\033[0;37m";
+    c_yellow = params.monochrome_logs ? '' : "\033[0;33m";
 
-    return """    ${c_dim}----------------------------------------------------${c_reset}
+    return """    -${c_dim}--------------------------------------------------${c_reset}-
                                             ${c_green},--.${c_black}/${c_green},-.${c_reset}
     ${c_blue}        ___     __   __   __   ___     ${c_green}/,-._.--~\'${c_reset}
     ${c_blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${c_yellow}}  {${c_reset}
@@ -243,7 +239,7 @@ def nfcoreHeader(){
       ${c_white}`${c_green}|${c_reset}____${c_green}\\${c_reset}´${c_reset}
 
     ${c_purple}  nf-core/sarek v${workflow.manifest.version}${c_reset}
-    ${c_dim}----------------------------------------------------${c_reset}
+    -${c_dim}--------------------------------------------------${c_reset}-
     """.stripIndent()
 }
 

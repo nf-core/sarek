@@ -6,8 +6,16 @@
   - [Reproducibility](#reproducibility)
 - [Main arguments](#main-arguments)
   - [-profile](#-profile)
-  - [`--reads`](#--reads)
-  - [--split_fastq](#--split_fastq)
+  - [--input](#--input)
+  - [--step](#--step)
+  - [--help](#--help)
+  - [--no_intervals](#--no_intervals)
+  - [--nucleotides_per_second](#--nucleotides_per_second)
+  - [--sentieon](#--sentieon)
+  - [--skip_qc](#--skip_qc)
+  - [--target_bed](#--target_bed)
+  - [--tools](#--tools)
+- [Modify fastqs (trim/split)](#modify-fastqs-trimsplit)
   - [--trim_fastq](#--trim_fastq)
   - [--clip_r1](#--clip_r1)
   - [--clip_r2](#--clip_r2)
@@ -15,97 +23,98 @@
   - [--three_prime_clip_r2](#--three_prime_clip_r2)
   - [--trim_nextseq](#--trim_nextseq)
   - [--save_trimmed](#--save_trimmed)
-  - [--sample](#--sample)
-  - [--sampleDir](#--sampledir)
-  - [--annotateVCF](#--annotatevcf)
+  - [--split_fastq](#--split_fastq)
+- [Preprocessing](#preprocessing)
+  - [--markdup_java_options](#--markdup_java_options)
+  - [--no_gatk_spark](#--no_gatk_spark)
+  - [--save_bam_mapped](#--save_bam_mapped)
+  - [--skip_markduplicates](#--skip_markduplicates)
+- [Variant Calling](#variant-calling)
+  - [--ascat_ploidy](#--ascat_ploidy)
+  - [--ascat_purity](#--ascat_purity)
+  - [--cf_coeff](#--cf_coeff)
+  - [--cf_ploidy](#--cf_ploidy)
+  - [--cf_window](#--cf_window)
   - [--no_gvcf](#--no_gvcf)
-  - [--noGVCF](#--nogvcf)
-  - [--skip_qc](#--skip_qc)
-  - [--skipQC](#--skipqc)
-  - [--noReports](#--noreports)
-  - [--nucleotides_per_second](#--nucleotides_per_second)
-  - [--nucleotidesPerSecond](#--nucleotidespersecond)
-  - [--step](#--step)
-  - [--tools](#--tools)
-  - [--sentieon](#--sentieon)
   - [--no_strelka_bp](#--no_strelka_bp)
-  - [--noStrelkaBP](#--nostrelkabp)
-  - [--no_intervals](#--no_intervals)
-  - [--target_bed](#--target_bed)
-  - [--targetBED](#--targetbed)
   - [--umi](#--umi)
   - [--read_structure1](#--read_structure1)
   - [--read_structure2](#--read_structure2)
+  - [--pon](#--pon)
+  - [--pon_index](#--pon_index)
+- [Annotation](#annotation)
+  - [--annotate_tools](#--annotate_tools)
+  - [--annotation_cache](#--annotation_cache)
+  - [--snpeff_cache](#--snpeff_cache)
+  - [--vep_cache](#--vep_cache)
+  - [--cadd_cache](#--cadd_cache)
+  - [--cadd_indels](#--cadd_indels)
+  - [--cadd_indels_tbi](#--cadd_indels_tbi)
+  - [--cadd_wg_snvs](#--cadd_wg_snvs)
+  - [--cadd_wg_snvs_tbi](#--cadd_wg_snvs_tbi)
+  - [--genesplicer](#--genesplicer)
 - [Reference genomes](#reference-genomes)
   - [--genome (using iGenomes)](#--genome-using-igenomes)
+  - [--igenomes_base](#--igenomes_base)
+  - [--igenomes_ignore](#--igenomes_ignore)
+  - [--genomes_base](#--genomes_base)
+  - [--save_reference](#--save_reference)
   - [--ac_loci](#--ac_loci)
-  - [--acLoci](#--acloci)
   - [--ac_loci_gc](#--ac_loci_gc)
-  - [--acLociGC](#--aclocigc)
   - [--bwa](#--bwa)
-  - [--ascat_ploidy](#--ascat_ploidy)
-  - [--ascat_purity](#--ascat_purity)
-  - [--bwaIndex](#--bwaindex)
   - [--chr_dir](#--chr_dir)
-  - [--chrDir](#--chrdir)
   - [--chr_length](#--chr_length)
-  - [--chrLength](#--chrlength)
   - [--dbsnp](#--dbsnp)
   - [--dbsnp_index](#--dbsnp_index)
-  - [--dbsnpIndex](#--dbsnpindex)
   - [--dict](#--dict)
   - [--fasta](#--fasta)
   - [--fasta_fai](#--fasta_fai)
-  - [--fastaFai](#--fastafai)
-  - [--genomeDict](#--genomedict)
-  - [--genomeFile](#--genomefile)
-  - [--genomeIndex](#--genomeindex)
   - [--germline_resource](#--germline_resource)
-  - [--germlineResource](#--germlineresource)
   - [--germline_resource_index](#--germline_resource_index)
-  - [--germlineResourceIndex](#--germlineresourceindex)
   - [--intervals](#--intervals)
   - [--known_indels](#--known_indels)
-  - [--knownIndels](#--knownindels)
   - [--known_indels_index](#--known_indels_index)
-  - [--knownIndelsIndex](#--knownindelsindex)
-  - [--pon](#--pon)
-  - [--pon_index](#--pon_index)
+  - [--mappability](#--mappability)
   - [--snpeff_db](#--snpeff_db)
-  - [--snpeffDb](#--snpeffdb)
   - [--species](#--species)
   - [--vep_cache_version](#--vep_cache_version)
-  - [--vepCacheVersion](#--vepcacheversion)
-  - [--igenomes_ignore](#--igenomes_ignore)
-  - [--igenomesIgnore](#--igenomesignore)
-- [Job resources](#job-resources)
-  - [Automatic resubmission](#automatic-resubmission)
-  - [Custom resource requests](#custom-resource-requests)
-- [AWS Batch specific parameters](#aws-batch-specific-parameters)
-  - [--awsqueue](#--awsqueue)
-  - [--awsregion](#--awsregion)
-  - [--awscli](#--awscli)
 - [Other command line parameters](#other-command-line-parameters)
   - [--outdir](#--outdir)
   - [--publish_dir_mode](#--publish_dir_mode)
-  - [--publishDirMode](#--publishdirmode)
   - [--sequencing_center](#--sequencing_center)
+  - [--multiqc_config](#--multiqc_config)
+  - [--monochrome_logs](#--monochrome_logs)
   - [--email](#--email)
   - [--email_on_fail](#--email_on_fail)
+  - [--plaintext_email](#--plaintext_email)
   - [--max_multiqc_email_size](#--max_multiqc_email_size)
   - [-name](#-name)
   - [-resume](#-resume)
   - [-c](#-c)
   - [--custom_config_version](#--custom_config_version)
   - [--custom_config_base](#--custom_config_base)
+- [Job resources](#job-resources)
+  - [Automatic resubmission](#automatic-resubmission)
+  - [Custom resource requests](#custom-resource-requests)
   - [--max_memory](#--max_memory)
-  - [--single_cpu_mem](#--single_cpu_mem)
-  - [--singleCPUMem](#--singlecpumem)
   - [--max_time](#--max_time)
   - [--max_cpus](#--max_cpus)
-  - [--plaintext_email](#--plaintext_email)
-  - [--monochrome_logs](#--monochrome_logs)
-  - [--multiqc_config](#--multiqc_config)
+  - [--single_cpu_mem](#--single_cpu_mem)
+- [AWSBatch specific parameters](#awsbatch-specific-parameters)
+  - [--awsqueue](#--awsqueue)
+  - [--awsregion](#--awsregion)
+  - [--awscli](#--awscli)
+- [Deprecated params](#deprecated-params)
+  - [--annotateVCF](#--annotatevcf)
+  - [--noGVCF](#--nogvcf)
+  - [--noReports](#--noreports)
+  - [--noStrelkaBP](#--nostrelkabp)
+  - [--nucleotidesPerSecond](#--nucleotidespersecond)
+  - [--publishDirMode](#--publishdirmode)
+  - [--sample](#--sample)
+  - [--sampleDir](#--sampledir)
+  - [--skipQC](#--skipqc)
+  - [--targetBED](#--targetbed)
 
 ## Introduction
 
@@ -126,7 +135,7 @@ NXF_OPTS='-Xms1g -Xmx4g'
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/sarek --input sample.tsv -profile docker
+nextflow run nf-core/sarek --input <sample.tsv> -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile.
@@ -162,8 +171,8 @@ It's a good idea to specify a pipeline version when running the pipeline on your
 This ensures that a specific version of the pipeline code and software are used when you run your pipeline.
 If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `2.5.2`).
-Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 2.5.2`.
+First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `2.6`).
+Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 2.6`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 
@@ -197,45 +206,111 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `test`
   - A profile with a complete configuration for automated testing
   - Includes links to test data so needs no other parameters
+- `test_annotation`
+  - A profile with a complete configuration for automated testing
+  - Includes links to test data so needs no other parameters
+- `test_no_gatk_spark`
+  - A profile with a complete configuration for automated testing
+  - Includes links to test data so needs no other parameters
+- `test_split_fastq`
+  - A profile with a complete configuration for automated testing
+  - Includes links to test data so needs no other parameters
+- `test_targeted`
+  - A profile with a complete configuration for automated testing
+  - Includes links to test data so needs no other parameters
+- `test_tool`
+  - A profile with a complete configuration for automated testing
+  - Includes links to test data so needs no other parameters
+- `test_trimming`
+  - A profile with a complete configuration for automated testing
+  - Includes links to test data so needs no other parameters
 
-### `--reads`
+### --input
 
-Use this to specify the location of your input FastQ files. For example:
+Use this to specify the location of your input TSV file.
+For example:
+TSV file should correspond to the correct step, see [`--step`](#--step) and [input](input.md) documentation for more information
 
 ```bash
---input sample.tsv
+--input <sample.tsv>
 ```
 
-Multiple TSV files can be specified if the path must be enclosed in quotes
+Multiple TSV files can be specified, using a [glob path](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob), if enclosed in quotes.
 
-Use this to specify the location to a directory on `mapping` step with a single germline sample only.
+Use this to specify the location to a directory with fastq files for the `mapping` step of single germline samples only.
 For example:
 
 ```bash
---input PathToDirectory
+--input </path/to/directory>
 ```
 
 Use this to specify the location of your VCF input file on `annotate` step.
 For example:
 
 ```bash
---input sample.vcf
+--input <sample.vcf.gz>
 ```
 
-Multiple VCF files can be specified if the path must be enclosed in quotes
+Multiple VCF files can be specified, using a [glob path](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob), if enclosed in quotes.
 
-### --split_fastq
+### --step
 
-Use the Nextflow [`splitFastq`](https://www.nextflow.io/docs/latest/operator.html#splitfastq) operator to specify how many reads should be contained in the split fastq file.
+Use this to specify the starting step:
+Default `mapping`
+Available: `mapping`, `prepare_recalibration`, `recalibrate`, `variant_calling`, `annotate`, `Control-FREEC`
+
+### --help
+
+Will display the help message
+
+### --no_intervals
+
+Disable usage of intervals file, and disable automatic generation of intervals file when none are provided.
+
+### --nucleotides_per_second
+
+Use this to estimate of how many seconds it will take to call variants on any interval, the default value is `1000` is it's not specified in the [`intervals`](#--intervals) file.
+
+### --sentieon
+
+If [Sentieon](https://www.sentieon.com/) is available, use this to enable it for preprocessing, and variant calling.
+Adds the following tools for the [`--tools`](#--tools) options: `DNAseq`, `DNAscope` and `TNscope`.
+
+More information in the [sentieon](sentieon.md) documentation.
+
+### --skip_qc
+
+Use this to disable specific QC and Reporting tools.
+Multiple tools can be specified, separated by commas.
+Available: `all`, `bamQC`, `BaseRecalibrator`, `BCFtools`, `Documentation`, `FastQC`, `MultiQC`, `samtools`, `vcftools`, `versions`
+Default: `None`
+
+### --target_bed
+
+Use this to specify the target BED file for targeted or whole exome sequencing.
+
+### --tools
+
+Use this parameter to specify the variant calling and annotation tools to be used.
+Multiple tools can be specified, separated by commas.
 For example:
 
 ```bash
---split_fastq 10000
+--tools 'Strelka,mutect2,SnpEff'
 ```
+
+Available variant callers: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `MSIsensor`, `Mutect2`, `Strelka`, `TIDDIT`.
+
+> **WARNING** Not all variant callers are available for both germline and somatic variant calling.
+For more details please check the [variant calling](variant_calling.md) extra documentation.
+
+Available annotation tools: `VEP`, `SnpEff`, `merge`. For more details, please check the [annotation](annotation.md) extra documentation.
+
+## Modify fastqs (trim/split)
 
 ### --trim_fastq
 
-Use this to perform adapter trimming [Trim Galore](https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md)
+Use this to perform adapter trimming with [Trim Galore](https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md)
 
 ### --clip_r1
 
@@ -266,98 +341,145 @@ This trimming is in common for the NextSeq and NovaSeq-platforms, where basecall
 
 Option to keep trimmed FASTQs
 
-### --sample
+### --split_fastq
 
-> :warning: This params is deprecated -- it will be removed in a future release.
-> Please check: [`--input`](#--input)
+Use the Nextflow [`splitFastq`](https://www.nextflow.io/docs/latest/operator.html#splitfastq) operator to specify how many reads should be contained in the split fastq file.
+For example:
 
-### --sampleDir
+```bash
+--split_fastq 10000
+```
 
-> :warning: This params is deprecated -- it will be removed in a future release.
-> Please check: [`--input`](#--input)
+## Preprocessing
 
-### --annotateVCF
+### --markdup_java_options
 
-> :warning: This params is deprecated -- it will be removed in a future release.
-> Please check: [`--input`](#--input)
+To control the java options necessary for the GATK `MarkDuplicates` process, you can set this parameter.
+Default: "-Xms4000m -Xmx7g"
+For example:
 
-Multiple VCF files can be specified if the path must be enclosed in quotes
+```bash
+--markdup_java_options "-Xms4000m -Xmx7g"
+```
+
+### --no_gatk_spark
+
+Use this to disable usage of GATK Spark implementation of their tools in local mode.
+
+### --save_bam_mapped
+
+Will save mapped BAMs.
+
+### --skip_markduplicates
+
+Will skip MarkDuplicates. This params will also save the mapped BAMS, to enable restart from step `prepare_recalibration`
+
+## Variant Calling
+
+### --ascat_ploidy
+
+Use this parameter to overwrite default behavior from ASCAT regarding ploidy.
+Requires that [`--ascat_purity`](#--ascat_purity) is set
+
+### --ascat_purity
+
+Use this parameter to overwrite default behavior from ASCAT regarding purity.
+Requires that [`--ascat_ploidy`](#--ascat_ploidy) is set
+
+### --cf_coeff
+
+Control-FREEC `coefficientOfVariation`
+Default: 0.015
+
+### --cf_ploidy
+
+Control-FREEC `ploidy`
+Default: 2
+
+### --cf_window
+
+Control-FREEC `window size`
+Default: Disabled
 
 ### --no_gvcf
 
-Use this to disable g.vcf from `HaplotypeCaller`.
-
-### --noGVCF
-
-> :warning: This params is deprecated -- it will be removed in a future release.
-> Please check: [`--no_gvcf`](#--no_gvcf)
-
-### --skip_qc
-
-Use this to disable specific QC and Reporting tools.
-Available: `all`, `bamQC`, `BaseRecalibrator`, `BCFtools`, `Documentation`, `FastQC`, `MultiQC`, `samtools`, `vcftools`, `versions`
-Default: `None`
-
-### --skipQC
-
-> :warning: This params is deprecated -- it will be removed in a future release.
-> Please check: [`--skip_qc`](#--skip_qc)
-
-### --noReports
-
-> :warning: This params is deprecated -- it will be removed in a future release.
-> Please check: [`--skipQC`](#--skipQC)
-
-### --nucleotides_per_second
-
-Use this to estimate of how many seconds it will take to call variants on any interval, the default value is `1000` is it's not specified in the `<intervals>.bed` file.
-
-### --nucleotidesPerSecond
-
-> :warning: This params is deprecated -- it will be removed in a future release.
-> Please check: [`--nucleotides_per_second`](#--nucleotides_per_second)
-
-### --step
-
-Use this to specify the starting step:
-Default `mapping`
-Available: `mapping`, `recalibrate`, `variantcalling` and `annotate`
-
-### --tools
-
-Use this to specify the tools to run:
-Available: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `Mutect2`, `Strelka`, `TIDDIT`
-
-### --sentieon
-
-If [Sentieon](https://www.sentieon.com/) is available, use this to enable it for preprocessing, and variant calling.
-Adds the following tools for the [`--tools`](#--tools) options: `DNAseq`, `DNAscope` and `TNscope`.
-
-Please refer to the [nf-core/configs](https://github.com/nf-core/configs#adding-a-new-pipeline-specific-config) repository on how to make a pipeline-specific configuration file based on the [munin-sarek specific configuration file](https://github.com/nf-core/configs/blob/master/conf/pipeline/sarek/munin.config).
-
-Or ask us on the [nf-core Slack](http://nf-co.re/join/slack) on the following channels: [#sarek](https://nfcore.slack.com/channels/sarek) [#configs](https://nfcore.slack.com/channels/configs).
+Use this to disable g.vcf output from `GATK HaplotypeCaller`.
 
 ### --no_strelka_bp
 
-Use this not to use `Manta` `candidateSmallIndels` for `Strelka` as Best Practice.
+Use this not to use `Manta` `candidateSmallIndels` for `Strelka` (not recommended by Broad Institute's Best Practices).
 
-### --noStrelkaBP
+### --pon
 
-> :warning: This params is deprecated -- it will be removed in a future release.
-> Please check: [`--no_strelka_bp`](#--no_strelka_bp)
+When a panel of normals [PON](https://gatkforums.broadinstitute.org/gatk/discussion/24057/how-to-call-somatic-mutations-using-gatk4-mutect2#latest) is defined, it will be use to filter somatic calls.
+Without PON, there will be no calls with PASS in the INFO field, only an _unfiltered_ VCF is written.
+It is recommended to make your own panel-of-normals, as it depends on sequencer and library preparation.
+For tests in iGenomes there is a dummy PON file in the Annotation/GermlineResource directory, but it _should not be used_ as a real panel-of-normals file.
+Provide your PON by:
 
-### --no_intervals
+```bash
+--pon </path/to/PON.vcf.gz>
+```
 
-Disable usage of intervals file, and disable automatic generation of intervals file when none are provided.
+PON file should be bgzipped.
 
-### --target_bed
+### --pon_index
 
-Use this to specify the target BED file for targeted or whole exome sequencing.
+Tabix index of the panel-of-normals bgzipped VCF file.
+If none provided, will be generated automatically from the panel-of-normals bgzipped VCF file.
 
-### --targetBED
+## Annotation
 
-> :warning: This params is deprecated -- it will be removed in a future release.
-> Please check: [`--target_bed`](#--target_bed)
+### --annotate_tools
+
+Specify from which tools Sarek should look for VCF files to annotate, only for step `Annotate`.
+Available: `HaplotypeCaller`, `Manta`, `Mutect2`, `Strelka`, `TIDDIT`
+Default: `None`
+
+### --annotation_cache
+
+Enable usage of annotation cache, and disable usage of already built containers within Sarek.
+For more information, follow the [annotation guidelines](annotation.md#using-downloaded-cache).
+
+### --snpeff_cache
+
+To be used conjointly with [`--annotation_cache`](#--annotation_cache), specify the cache snpEff directory:
+
+```bash
+--snpeff_cache </path/to/snpeff_cache>
+```
+
+### --vep_cache
+
+To be used conjointly with [`--annotation_cache`](#--annotation_cache), specify the cache VEP directory:
+
+```bash
+--vep_cache </path/to/vep_cache>
+```
+
+### --cadd_cache
+
+Enable CADD cache.
+
+### --cadd_indels
+
+Path to CADD InDels file.
+
+### --cadd_indels_tbi
+
+Path to CADD InDels index.
+
+### --cadd_wg_snvs
+
+Path to CADD SNVs file.
+
+### --cadd_wg_snvs_tbi
+
+Path to CADD SNVs index.
+
+### --genesplicer
+
+Enable genesplicer within VEP.
 
 ### --umi
 
@@ -482,29 +604,58 @@ The syntax for this reference configuration is as follows:
 ```nextflow
 params {
   genomes {
-    'GRCh38' {
-      ac_loci                  = '<path to the acLoci file>'
-      ac_lociGC                = '<path to the acLociGC file>'
-      bwa                      = '<path to the bwa indexes>'
-      chr_dir                  = '<path to the chromosomes folder>'
-      chr_length               = '<path to the chromosomes lenght file>'
-      dbsnp                    = '<path to the dbsnp file>'
-      dbsnp_index              = '<path to the dbsnp index>'
-      dict                     = '<path to the dict file>'
-      fasta                    = '<path to the fasta file>'
-      fasta_fai                = '<path to the fasta index>'
-      germline_resource        = '<path to the germlineResource file>'
-      germline_resource_index  = '<path to the germlineResource index>'
-      intervals                = '<path to the intervals file>'
-      known_indels             = '<path to the knownIndels file>'
-      known_indels_index       = '<path to the knownIndels index>'
-      snpeff_db                = '<version of the snpEff DB>'
+    '<GENOME>' {
+      ac_loci                  = '</path/to/reference.loci>'
+      ac_loci_gc               = '</path/to/ac_loci_gc file>'
+      bwa                      = '</path/to/bwa indexes>'
+      chr_dir                  = '</path/to/chromosomes/>'
+      chr_length               = '</path/to/reference.len>'
+      dbsnp                    = '</path/to/dbsnp.vcf.gz>'
+      dbsnp_index              = '</path/to/dbsnp.vcf.gz.tbi>'
+      dict                     = '</path/to/reference.dict>'
+      fasta                    = '</path/to/reference.fasta>'
+      fasta_fai                = '</path/to/reference.fasta.fai>'
+      germline_resource        = '</path/to/germline_resource.vcf.gz>'
+      germline_resource_index  = '</path/to/germline_resource.vcf.gz.tvi>'
+      intervals                = '</path/to/reference.intervals>'
+      known_indels             = '</path/to/known_indels.vcf.gz>'
+      known_indels_index       = '</path/to/known_indels.vcf.gz.tbi>'
+      mappability              = '</path/to/reference.gem>'
+      snpeff_db                = '<snpEff DB>'
       species                  = '<species>'
-      vep_cache_version        = '<version of the VEP cache>'
+      vep_cache_version        = '<VEP cache version'
     }
     // Any number of additional genomes, key is used with --genome
   }
 }
+```
+
+### --igenomes_base
+
+Specify base path to AWS iGenomes
+Default: `s3://ngi-igenomes/igenomes/`
+
+### --igenomes_ignore
+
+Do not load `igenomes.config` when running the pipeline.
+You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.
+This option will load the `genomes.config` file instead.
+You can then specify the `--genome custom` and specify any reference file on the command line or within a config file.
+
+```bash
+--igenomes_ignore
+```
+
+### --genomes_base
+
+Specify base path to reference genome
+
+### --save_reference
+
+Enable saving reference indexes and other files built within Sarek.
+
+```bash
+--save_reference
 ```
 
 ### --ac_loci
@@ -512,101 +663,69 @@ params {
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---ac_loci '[path to the acLoci file]'
+--ac_loci <path/to/reference.loci>
 ```
-
-### --acLoci
-
-> :warning: This params has been removed.
-> Please check: [`--ac_loci`](#--ac_loci)
 
 ### --ac_loci_gc
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---ac_loci_gc '[path to the acLociGC file]'
+--ac_loci_gc <path/to/reference.loci.gc>
 ```
-
-### --acLociGC
-
-> :warning: This params has been removed.
-> Please check: [`--ac_loci_gc`](#--ac_loci_gc)
 
 ### --bwa
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
+> If none provided, will be generated automatically from the fasta reference.
+
 ```bash
---bwa '[path to the bwa indexes]'
+--bwa <path/to/BWA/indexes>
 ```
-
-### --ascat_ploidy
-
-Use this parameter to overwrite default behavior from ASCAT regarding ploidy.
-
-### --ascat_purity
-
-Use this parameter to overwrite default behavior from ASCAT regarding purity.
-
-### --bwaIndex
-
-> :warning: This params has been removed.
-> Please check: [`--bwa`](#--bwa)
 
 ### --chr_dir
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---chr_dir '[path to the Chromosomes folder]'
+--chr_dir <path/to/chromosomes/>
 ```
-
-### --chrDir
-
-> :warning: This params has been removed.
-> Please check: [`--chr_dir`](#--chr_dir)
 
 ### --chr_length
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---chr_length '[path to the Chromosomes length file]'
+--chr_length <path/to/chromosomes.len>
 ```
-
-### --chrLength
-
-> :warning: This params has been removed.
-> Please check: [`--chr_length`](#--chr_length)
 
 ### --dbsnp
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---dbsnp '[path to the dbsnp file]'
+--dbsnp <path/to/dbsnp.vcf.gz>
 ```
 
 ### --dbsnp_index
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
+> If none provided, will be generated automatically from the fasta reference.
+
 ```bash
---dbsnp_index '[path to the dbsnp index]'
+--dbsnp_index <path/to/dbsnp.vcf.gz.tbi>
 ```
-
-### --dbsnpIndex
-
-> :warning: This params has been removed.
-> Please check: [`--dbsnp_index`](#--dbsnp_index)
 
 ### --dict
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
+> If none provided, will be generated automatically from the fasta reference.
+
 ```bash
---dict '[path to the dict file]'
+--dict <path/to/reference.dict>
 ```
 
 ### --fasta
@@ -614,73 +733,52 @@ If you prefer, you can specify the full path to your reference genome when you r
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---fasta '[path to the reference fasta file]'
+--fasta <path/to/reference.fasta>
 ```
 
 ### --fasta_fai
 
+> If none provided, will be generated automatically from the fasta reference.
+
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---fasta_fai '[path to the reference index]'
+--fasta_fai <path/to/reference.fasta.fai>
 ```
-
-### --fastaFai
-
-> :warning: This params has been removed.
-> Please check: [`--dbsnp_index`](#--dbsnp_index)
-
-### --genomeDict
-
-> :warning: This params has been removed.
-> Please check: [`--dict`](#--dict)
-
-### --genomeFile
-
-> :warning: This params has been removed.
-> Please check: [`--fasta`](#--fasta)
-
-### --genomeIndex
-
-> :warning: This params has been removed.
-> Please check: [`--fastaFai`](#--fastaFai)
 
 ### --germline_resource
 
 The [germline resource VCF file](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_Mutect2.php#--germline-resource) (bgzipped and tabixed) needed by GATK4 Mutect2 is a collection of calls that are likely present in the sample, with allele frequencies.
 The AF info field must be present.
 You can find a smaller, stripped gnomAD VCF file (most of the annotation is removed and only calls signed by PASS are stored) in the iGenomes Annotation/GermlineResource folder.
-To add your own germline resource supply
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---germline_resource '[path to my resource.vcf.gz]'
+--germline_resource </path/to/resource.vcf.gz>
 ```
-
-### --germlineResource
-
-> :warning: This params has been removed.
-> Please check: [`--germline_resource`](#--germline_resource)
 
 ### --germline_resource_index
 
 Tabix index of the germline resource specified at [`--germline_resource`](#--germline_resource).
-To add your own germline resource supply
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
+
+> If none provided, will be generated automatically from the fasta reference.
 
 ```bash
---germline_resource_index '[path to my resource.vcf.gz.idx]'
+--germline_resource_index </path/to/resource.vcf.gz.tbi>
 ```
-
-### --germlineResourceIndex
-
-> :warning: This params has been removed.
-> Please check: [`--germline_resource_index`](#--germline_resource_index)
 
 ### --intervals
 
+Used to speed up Preprocessing and/or Variant Calling, for more information, read the [intervals section in the extra documentation on reference](reference.md#Intervals).
+
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
+> If none provided, will be generated automatically from the fasta reference.
+> Use [--no_intervals](#--no_intervals) to disable automatic generation
+
 ```bash
---intervals '[path to the intervals file]'
+--intervals <path/to/reference.intervals>
 ```
 
 ### --known_indels
@@ -688,57 +786,34 @@ If you prefer, you can specify the full path to your reference genome when you r
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
---known_indels '[path to the knownIndels file]'
+--known_indels <path/to/known_indels.vcf.gz>
 ```
-
-### --knownIndels
-
-> :warning: This params has been removed.
-> Please check: [`--known_indels`](#--known_indels)
 
 ### --known_indels_index
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
-```bash
---known_indels_index '[path to the knownIndels index]'
-```
-
-### --knownIndelsIndex
-
-> :warning: This params has been removed.
-> Please check: [`--known_indels_index`](#--known_indels_index)
-
-### --pon
-
-When a panel of normals [PON](https://gatkforums.broadinstitute.org/gatk/discussion/24057/how-to-call-somatic-mutations-using-gatk4-mutect2#latest) is defined, you will get filtered somatic calls as a result.
-Without PON, there will be no calls with PASS in the INFO field, only an _unfiltered_ VCF is written.
-It is recommended to make your own panel-of-normals, as it depends on sequencer and library preparation.
-For tests in iGenomes there is a dummy PON file in the Annotation/GermlineResource directory, but it _should not be used_ as a real panel-of-normals file.
-Provide your PON by:
+> If none provided, will be generated automatically from the fasta reference.
 
 ```bash
---pon '[path to the PON VCF]'
+--known_indels_index  <path/to/known_indels.vcf.gz.tbi>
 ```
 
-If the PON file is bgzipped, there has to be a tabixed index file at the same directory.
+### --mappability
 
-### --pon_index
+If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
-Tabix index of the panel-of-normals bgzipped VCF file.
+```bash
+--mappability <path/to/reference.gem>
+```
 
 ### --snpeff_db
 
 If you prefer, you can specify the DB version when you run the pipeline:
 
 ```bash
---snpeff_db '[version of the snpEff DB]'
+--snpeff_db <snpEff DB>
 ```
-
-### --snpeffDb
-
-> :warning: This params has been removed.
-> Please check: [`--snpeff_db`](#--snpeff_db)
 
 ### --species
 
@@ -749,66 +824,8 @@ This specifies the species used for running VEP annotation. For human data, this
 If you prefer, you can specify the cache version when you run the pipeline:
 
 ```bash
---vep_cache_version '[version of the VEP cache]'
+--vep_cache_version <VEP cache version>
 ```
-
-### --vepCacheVersion
-
-> :warning: This params has been removed.
-> Please check: [`--vep_cache_version`](#--vep_cache_version)
-
-### --igenomes_ignore
-
-Do not load `igenomes.config` when running the pipeline.
-You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.
-
-```bash
---igenomes_ignore
-```
-
-### --igenomesIgnore
-
-> :warning: This params has been removed.
-> Please check: [`--igenomes_ignore`](#--igenomes_ignore)
-
-## Job resources
-
-### Automatic resubmission
-
-Each step in the pipeline has a default set of requirements for number of CPUs, memory and time.
-For most of the steps in the pipeline, if the job exits with an error code of `143` (exceeded requested resources) it will automatically resubmit with higher requests (2 x original, then 3 x original).
-If it still fails after three times then the pipeline is stopped.
-
-### Custom resource requests
-
-Wherever process-specific requirements are set in the pipeline, the default value can be changed by creating a custom config file.
-See the files hosted at [`nf-core/configs`](https://github.com/nf-core/configs/tree/master/conf) for examples.
-
-If you are likely to be running `nf-core` pipelines regularly it may be a good idea to request that your custom config file is uploaded to the `nf-core/configs` git repository.
-Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter (see definition below).
-You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
-
-If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack).
-
-## AWS Batch specific parameters
-
-Running the pipeline on AWS Batch requires a couple of specific parameters to be set according to your AWS Batch configuration.
-Please use [`-profile awsbatch`](https://github.com/nf-core/configs/blob/master/conf/awsbatch.config) and then specify all of the following parameters.
-
-### --awsqueue
-
-The JobQueue that you intend to use on AWS Batch.
-
-### --awsregion
-
-The AWS region to run your job in.
-Default is set to `eu-west-1` but can be adjusted to your needs.
-
-### --awscli
-
-The [AWS CLI](https://www.nextflow.io/docs/latest/awscloud.html#aws-cli-installation) path in your custom AMI. Default: `/home/ec2-user/miniconda/bin/aws`.
-
-Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a S3 storage bucket of your choice - you'll get an error message notifying you if you didn't.
 
 ## Other command line parameters
 
@@ -823,14 +840,17 @@ The file publishing method.
 Available: `symlink`, `rellink`, `link`, `copy`, `copyNoFollow`, `move`
 Default: `copy`
 
-### --publishDirMode
-
-> :warning: This params is deprecated -- it will be removed in a future release.
-> Please check: [`--publish_dir_mode`](#--publish_dir_mode)
-
 ### --sequencing_center
 
 The sequencing center that will be used in the BAM CN field
+
+### --multiqc_config
+
+Specify a path to a custom MultiQC configuration file.
+
+### --monochrome_logs
+
+Set to disable colourful command line output and live life in monochrome.
 
 ### --email
 
@@ -840,6 +860,10 @@ If set in your user config file (`~/.nextflow/config`) then you don't need to sp
 ### --email_on_fail
 
 This works exactly as with `--email`, except emails are only sent if the workflow is not successful.
+
+### --plaintext_email
+
+Set to receive plain-text e-mails instead of HTML formatted.
 
 ### --max_multiqc_email_size
 
@@ -905,20 +929,29 @@ nextflow run /path/to/pipeline/ --custom_config_base /path/to/my/configs/configs
 > Note that the nf-core/tools helper package has a `download` command to download all required pipeline
 > files + singularity containers + institutional configs in one go for you, to make this process easier.
 
+## Job resources
+
+### Automatic resubmission
+
+Each step in the pipeline has a default set of requirements for number of CPUs, memory and time.
+For most of the steps in the pipeline, if the job exits with an error code of `143` (exceeded requested resources) it will automatically resubmit with higher requests (2 x original, then 3 x original).
+If it still fails after three times then the pipeline is stopped.
+
+### Custom resource requests
+
+Wherever process-specific requirements are set in the pipeline, the default value can be changed by creating a custom config file.
+See the files hosted at [`nf-core/configs`](https://github.com/nf-core/configs/tree/master/conf) for examples.
+
+If you are likely to be running `nf-core` pipelines regularly it may be a good idea to request that your custom config file is uploaded to the `nf-core/configs` git repository.
+Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter (see definition below).
+You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
+
+If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack).
+
 ### --max_memory
 
 Use to set a top-limit for the default memory requirement for each process.
 Should be a string in the format integer-unit eg. `--max_memory '8.GB'`
-
-### --single_cpu_mem
-
-Use to set memory for a single CPU.
-Should be a string in the format integer-unit eg. `--single_cpu_mem '8.GB'`
-
-### --singleCPUMem
-
-> :warning: This params has been removed.
-> Please check: [`--single_cpu_mem`](#--single_cpu_mem)
 
 ### --max_time
 
@@ -930,14 +963,72 @@ Should be a string in the format integer-unit eg. `--max_time '2.h'`
 Use to set a top-limit for the default CPU requirement for each process.
 Should be a string in the format integer-unit eg. `--max_cpus 1`
 
-### --plaintext_email
+### --single_cpu_mem
 
-Set to receive plain-text e-mails instead of HTML formatted.
+Use to set memory for a single CPU.
+Should be a string in the format integer-unit eg. `--single_cpu_mem '8.GB'`
 
-### --monochrome_logs
+## AWSBatch specific parameters
 
-Set to disable colourful command line output and live life in monochrome.
+Running the pipeline on AWSBatch requires a couple of specific parameters to be set according to your AWSBatch configuration.
+Please use [`-profile awsbatch`](https://github.com/nf-core/configs/blob/master/conf/awsbatch.config) and then specify all of the following parameters.
 
-### --multiqc_config
+### --awsqueue
 
-Specify a path to a custom MultiQC configuration file.
+The JobQueue that you intend to use on AWSBatch.
+
+### --awsregion
+
+The AWS region to run your job in.
+Default is set to `eu-west-1` but can be adjusted to your needs.
+
+### --awscli
+
+The [AWS CLI](https://www.nextflow.io/docs/latest/awscloud.html#aws-cli-installation) path in your custom AMI.
+Default: `/home/ec2-user/miniconda/bin/aws`.
+
+Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a S3 storage bucket of your choice - you'll get an error message notifying you if you didn't.
+
+## Deprecated params
+
+> **WARNING** These params are deprecated -- They will be removed in a future release.
+
+### --annotateVCF
+
+> Please check: [`--input`](#--input)
+
+### --noGVCF
+
+> Please check: [`--no_gvcf`](#--no_gvcf)
+
+### --noReports
+
+> Please check: [`--skipQC`](#--skipQC)
+
+### --noStrelkaBP
+
+> Please check: [`--no_strelka_bp`](#--no_strelka_bp)
+
+### --nucleotidesPerSecond
+
+> Please check: [`--nucleotides_per_second`](#--nucleotides_per_second)
+
+### --publishDirMode
+
+> Please check: [`--publish_dir_mode`](#--publish_dir_mode)
+
+### --sample
+
+> Please check: [`--input`](#--input)
+
+### --sampleDir
+
+> Please check: [`--input`](#--input)
+
+### --skipQC
+
+> Please check: [`--skip_qc`](#--skip_qc)
+
+### --targetBED
+
+> Please check: [`--target_bed`](#--target_bed)

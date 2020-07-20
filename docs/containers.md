@@ -17,14 +17,16 @@ For annotation, the main container can be used, but the cache has to be download
 - Contain **[ASCAT](https://github.com/Crick-CancerGenomics/ascat)** 2.5.2
 - Contain **[AlleleCount](https://github.com/cancerit/alleleCount)** 4.0.2
 - Contain **[BCFTools](https://github.com/samtools/bcftools)** 1.9
-- Contain **[BWA](https://github.com/lh3/bwa)** 0.7.17
+- Contain **[bwa-mem2](https://github.com/bwa-mem2/bwa-mem2)** 2.0
 - Contain **[Control-FREEC](https://github.com/BoevaLab/FREEC)** 11.5
 - Contain **[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)** 0.11.9
 - Contain **[FreeBayes](https://github.com/ekg/freebayes)** 1.3.2
-- Contain **[GATK4-spark](https://github.com/broadinstitute/gatk)** 4.1.4.1
+- Contain **[GATK4-spark](https://github.com/broadinstitute/gatk)** 4.1.6.0
 - Contain **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
+- Contain **[ggplot2](https://github.com/tidyverse/ggplot2)** 3.3.0
 - Contain **[HTSlib](https://github.com/samtools/htslib)** 1.9
 - Contain **[Manta](https://github.com/Illumina/manta)** 1.6.0
+- Contain **[msisensor](https://github.com/ding-lab/msisensor)** 0.5
 - Contain **[MultiQC](https://github.com/ewels/MultiQC/)** 1.8
 - Contain **[Qualimap](http://qualimap.bioinfo.cipf.es)** 2.2.2d
 - Contain **[samtools](https://github.com/samtools/samtools)** 1.9
@@ -41,14 +43,14 @@ For annotation, the main container can be used, but the cache has to be download
 
 - Based on `nfcore/base:1.9`
 - Contain **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
-- Contains cache for `GRCh37`, `GRCh38`, `GRCm38` or `CanFam3.1`
+- Contains cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
 
 ### sarekvep [![sarekvep-docker status](https://img.shields.io/docker/automated/nfcore/sarekvep.svg)](https://hub.docker.com/r/nfcore/sarekvep)
 
 - Based on `nfcore/base:1.9`
 - Contain **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
 - Contain **[VEP](https://github.com/Ensembl/ensembl-vep)** 99.2
-- Contain cache for `GRCh37`, `GRCh38`, `GRCm38` or `CanFam3.1`
+- Contain cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
 
 ## Building your own
 
