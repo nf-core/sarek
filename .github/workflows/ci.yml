@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         # Nextflow versions: check pipeline minimum and current latest
-        nxf_ver: ['20.04.1', '']
+        nxf_ver: ['20.07.0', '']
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
@@ -42,7 +42,7 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           # Only check Nextflow pipeline minimum version
-          NXF_VER: '20.04.1'
+          NXF_VER: '20.07.0'
       - name: Pull docker image
         run: |
           docker pull nfcore/sarek:dev
@@ -65,7 +65,7 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           # Only check Nextflow pipeline minimum version
-          NXF_VER: '19.10.0'
+          NXF_VER: '20.07.0'
       - name: Pull docker image
         run: docker pull nfcore/sarek:dev
       - name: Get test data
@@ -114,7 +114,7 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           # Only check Nextflow pipeline minimum version
-          NXF_VER: '19.10.0'
+          NXF_VER: '20.07.0'
       - name: Pull docker image
         run: docker pull nfcore/sarek:dev
       - name: Run ${{ matrix.profile }} test
@@ -145,7 +145,7 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           # Only check Nextflow pipeline minimum version
-          NXF_VER: '19.10.0'
+          NXF_VER: '20.07.0'
       - name: Pull docker image
         run: docker pull nfcore/sarek:dev
       - name: Run ${{ matrix.tool }} test
