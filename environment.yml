@@ -17,6 +17,7 @@ dependencies:
   - bioconda::control-freec=11.5
   - bioconda::ensembl-vep=99.2
   - bioconda::fastqc=0.11.9
+  - bioconda::fgbio=1.1.0
   - bioconda::freebayes=1.3.2
   - bioconda::gatk4-spark=4.1.7.0
   - bioconda::genesplicer=1.0
@@ -25,6 +26,7 @@ dependencies:
   - bioconda::msisensor=0.5
   - bioconda::multiqc=1.8
   - bioconda::qualimap=2.2.2d
+  - bioconda::samblaster=0.1.24
   - bioconda::samtools=1.9
   - bioconda::snpeff=4.3.1t
   - bioconda::strelka=2.9.10
@@ -34,3 +36,4 @@ dependencies:
   - bioconda::vcftools=0.1.16
   - conda-forge::pigz=2.3.4 
   - conda-forge::r-ggplot2=3.3.0
+  

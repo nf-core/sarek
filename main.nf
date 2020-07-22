@@ -97,6 +97,11 @@ def helpMessage() {
       --ignore_soft_clipped_bases [bool] Do not analyze soft clipped bases in the reads for GATK Mutect2
       --no_gvcf                [bool] No g.vcf output from GATK HaplotypeCaller
       --no_strelka_bp          [bool] Will not use Manta candidateSmallIndels for Strelka (not recommended by Best Practices)
+      --umi                    [bool] If provided, UMIs steps will be run to extract and annotate the reads with UMI and create consensus reads
+      --read_structure1      [string] When processing UMIs, a read structure should always be provided for each of the fastq files. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length). 
+                                      See: https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
+      --read_structure2      [string] When processing UMIs, a read structure should always be provided for each of the fastq files. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length). 
+                                      See: https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
       --pon                    [file] Panel-of-normals VCF (bgzipped) for GATK Mutect2 / Sentieon TNscope
                                       See: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_CreateSomaticPanelOfNormals.php
       --pon_index              [file] Index of pon panel-of-normals VCF
@@ -1068,7 +1073,10 @@ if (params.split_fastq){
 
 inputPairReads = inputPairReads.dump(tag:'INPUT')
 
-(inputPairReads, inputPairReadsTrimGalore, inputPairReadsFastQC) = inputPairReads.into(3)
+(inputPairReads, inputPairReadsTrimGalore, inputPairReadsFastQC, inputPairReadsUMI) = inputPairReads.into(4)
+if(params.umi) inputPairReads.close()
+else inputPairReadsUMI.close()
+
 
 // STEP 0.5: QC ON READS
 
@@ -1178,18 +1186,161 @@ process TrimGalore {
     """
 }
 
-if (!params.trim_fastq) inputPairReadsTrimGalore.close()
+/*
+================================================================================
+                            UMIs PROCESSING
+================================================================================
+*/
+
+// UMI - STEP 1 - ANNOTATE
+// the process needs to convert fastq to unmapped bam
+// and while doing the conversion, tag the bam field RX with the UMI sequence
+
+process UMIFastqToBAM {
+
+  publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publishDirMode
+
+  input:
+  set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsUMI
+
+  output:
+  tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi_converted.bam") into umi_converted_bams_ch
+
+  when: params.umi && params.read_structure1 && params.read_structure2
+
+
+  // tmp folder for fgbio might be solved more elengantly?
+
+  script:
+  """
+  mkdir tmpFolder
+
+  fgbio --tmp-dir=${PWD}/tmpFolder \
+  FastqToBam \
+  -i "${idSample}_${idRun}_R1.fastq.gz" "${idSample}_${idRun}_R2.fastq.gz" \
+  -o "${idSample}_umi_converted.bam" \
+  --read-structures $params.read_structure1 $params.read_structure2 \
+  --sample $idSample \
+  --library $idSample
+  """
+
+}
+
+// UMI - STEP 2 - MAP THE BAM FILE
+// this is necessary because the UMI groups are created based on
+// mapping position + same UMI tag
+
+process UMIMapBamFile {
+
+  input:
+  set idPatient, idSample, idRun, file(convertedBam) from umi_converted_bams_ch
+  file(bwaIndex) from ch_bwa
+  file(fasta) from ch_fasta
+  file(fastaFai) from ch_fai
+
+  output:
+  tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi_unsorted.bam") into umi_aligned_bams_ch
+
+  when: params.umi && params.read_structure1 && params.read_structure2
+
+  script:
+  """
+  samtools bam2fq -T RX ${convertedBam} | \
+  bwa mem -p -t ${task.cpus} -C -M -R \"@RG\\tID:${idSample}\\tSM:${idSample}\\tPL:Illumina\" \
+  ${fasta} - | \
+  samtools view -bS - > ${idSample}_umi_unsorted.bam
+  """
+
+}
+
+// UMI - STEP 3 - GROUP READS BY UMIs
+// We have chose the Adjacency method, following the nice paper and blog explanation integrated in both
+// UMItools and FGBIO
+// https://cgatoxford.wordpress.com/2015/08/14/unique-molecular-identifiers-the-problem-the-solution-and-the-proof/
+// alternatively we can define this as input for the user to choose from
+
+process GroupReadsByUmi {
+
+  publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publishDirMode
+
+  input:
+  set idPatient, idSample, idRun, file(alignedBam) from umi_aligned_bams_ch
+
+  output:
+  file("${idSample}_umi_histogram.txt") into umi_histogram_ch
+  tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi-grouped.bam") into umi_grouped_bams_ch
+
+  when: params.umi && params.read_structure1 && params.read_structure2
+
+  script:
+  """
+  mkdir tmpFolder
+
+  samtools view -h $alignedBam | \
+  samblaster -M --addMateTags | \
+  samtools view -Sb - >${idSample}_unsorted_tagged.bam
+
+  fgbio --tmp-dir=${PWD}/tmpFolder \
+  GroupReadsByUmi \
+  -s Adjacency \
+  -i ${idSample}_unsorted_tagged.bam \
+  -o ${idSample}_umi-grouped.bam \
+  -f ${idSample}_umi_histogram.txt
+  """
+
+}
+
+// UMI - STEP 4 - CALL MOLECULAR CONSENSUS
+// Now that the reads are organised by UMI groups a molecular consensus will be created
+// the resulting bam file will be again unmapped and therefore can be fed into the
+// existing workflow from the step mapping
+
+process CallMolecularConsensusReads {
+
+  publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publishDirMode
+
+  input:
+  set idPatient, idSample, idRun, file(groupedBamFile) from umi_grouped_bams_ch
+
+  output:
+  tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi-consensus.bam") into consensus_bam_ch
+
+  when: params.umi && params.read_structure1 && params.read_structure2
+
+  script:
+  """
+  mkdir tmpFolder
+
+  fgbio --tmp-dir=${PWD}/tmpFolder \
+  CallMolecularConsensusReads \
+  -i $groupedBamFile \
+  -o ${idSample}_umi-consensus.bam \
+  -M 1 -S Coordinate
+  """
+}
+
+// ################# END OF UMI READS PRE-PROCESSING
+// from this moment on the generated uBam files can feed into the existing tools
 
 // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
 
-if (params.trim_fastq) inputPairReads = outputPairReadsTrimGalore
-else inputPairReads = inputPairReads.mix(inputBam)
+if (params.umi){
+  (inputPairReads, input_pair_reads_sentieon) = consensus_bam_ch.into(2)
 
-inputPairReads = inputPairReads.dump(tag:'INPUT')
+  inputPairReads = inputPairReads.dump(tag:'INPUT')
 
-(inputPairReads, input_pair_reads_sentieon) = inputPairReads.into(2)
-if (params.sentieon) inputPairReads.close()
-else input_pair_reads_sentieon.close()
+  if (params.sentieon) inputPairReads.close()
+  else input_pair_reads_sentieon.close()
+}
+else {
+  if (params.trim_fastq) inputPairReads = outputPairReadsTrimGalore
+  else inputPairReads = inputPairReads.mix(inputBam)
+  inputPairReads = inputPairReads.dump(tag:'INPUT')
+
+  (inputPairReads, input_pair_reads_sentieon) = inputPairReads.into(2)
+  if (params.sentieon) inputPairReads.close()
+  else input_pair_reads_sentieon.close()
+}
 
 process MapReads {
     label 'cpus_max'
@@ -2506,7 +2657,7 @@ process MergeMutect2Stats {
 
     when: 'mutect2' in tools
 
-    script:   
+    script:
                stats = statsFiles.collect{ "-stats ${it} " }.join(' ')
     """
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
@@ -2670,7 +2821,7 @@ process CalculateContamination {
 
     input:
         set idPatient, idSampleNormal, idSampleTumor, file(bamNormal), file(baiNormal), file(bamTumor), file(baiTumor), file(mergedPileup) from pairBamCalculateContamination
- 
+
      output:
         set idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${idSampleTumor}_contamination.table") into contaminationTable
 
