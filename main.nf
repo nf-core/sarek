@@ -1333,7 +1333,8 @@ if (params.umi){
   else input_pair_reads_sentieon.close()
 }
 else {
-  inputPairReads = outputPairReadsTrimGalore.mix(inputBam)
+  if (params.trim_fastq) inputPairReads = outputPairReadsTrimGalore
+  else inputPairReads = inputPairReads.mix(inputBam)
   inputPairReads = inputPairReads.dump(tag:'INPUT')
 
   (inputPairReads, input_pair_reads_sentieon) = inputPairReads.into(2)
