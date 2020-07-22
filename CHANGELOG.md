@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 - [#238](https://github.com/nf-core/sarek/pull/238) -Add subworkflow for building all the indices
 - [#241](https://github.com/nf-core/sarek/pull/241) -Add modules and workflows parts for preprocessing steps
+
 ## [dev](https://github.com/nf-core/sarek/tree/dev)
 
 - [#234](https://github.com/nf-core/sarek/pull/234) -Switching to DSL2

@@ -16,7 +16,7 @@ process TRIM_GALORE {
 
     output:
         path "*.{html,zip,txt}", emit: report
-        tuple idPatient, idSample, idRun, path("${idSample}_${idRun}_R1_val_1.fq.gz"), path("${idSample}_${idRun}_R2_val_2.fq.gz"), emit: trimmed_reads
+        tuple val(idPatient), val(idSample), val(idRun), path("${idSample}_${idRun}_R1_val_1.fq.gz"), path("${idSample}_${idRun}_R2_val_2.fq.gz"), emit: trimmed_reads
 
     script:
     // Calculate number of --cores for TrimGalore based on value of task.cpus

@@ -19,7 +19,7 @@ nf-core/sarek:
 --------------------------------------------------------------------------------
 */
 
-nextflow.preview.dsl = 2
+nextflow.enable.dsl=2
 
 // Print help message if required
 
@@ -258,8 +258,9 @@ include { BWAMEM2_MEM }           from './modules/local/bwamem2_mem.nf'
 include { GET_SOFTWARE_VERSIONS } from './modules/local/get_software_versions'
 include { OUTPUT_DOCUMENTATION }  from './modules/local/output_documentation'
 include { TRIM_GALORE }           from './modules/local/trim_galore.nf'
-include { MERGE_BAM_MAPPED }      from './modules/local/merge_mapped_bam' addParams(params)
-include { MARK_DUPLICATES }       from './modules/local/mark_duplicates' params(params)
+include { MERGE_BAM_MAPPED }      from './modules/local/merge_mapped_bam' 
+include { MARK_DUPLICATES }       from './modules/local/mark_duplicates' addParams(skip_qc: skip_qc)
+//include { BASE_RECALIBRATION }    from './modules/local/base_recalibration' params(params)
 
 /*
 ================================================================================
@@ -346,8 +347,6 @@ workflow {
     pon_tbi = params.pon ? params.pon_index ?: BUILD_INDICES.out.pon_tbi : Channel.empty()
 
     // PREPROCESSING
-    intervals_bed.dump(tag:'bedintervals')
-
     if(!('fastqc' in skip_qc))
         result_fastqc = FASTQC(input_sample)
     else
@@ -380,8 +379,20 @@ workflow {
 
     bam_mapped.view()
 
-    mark_duplicates_report =  !(params.skip_markduplicates) ? MARK_DUPLICATES(bam_mapped).duplicates_marked_report : Channel.empty()
+    if(!(params.skip_markduplicates)){
+        MARK_DUPLICATES(bam_mapped)
+        mark_duplicates_report = MARK_DUPLICATES.out.duplicates_marked_report
+        bam_duplicates_marked =  MARK_DUPLICATES.out.bam_duplicates_marked 
+    }
+    else {
+        mark_duplicates_report = Channel.empty()
+        bam_duplicates_marked = Channel.empty()
+    }
 
+    bamBaseRecalibrator = bam_duplicates_marked.combine(BUILD_INDICES.out.intervals_bed)
+    
+    //BASE_RECALIBRATION(bamBaseRecalibrator,dbsnp, dbsnp_index,fasta,)
+    
     OUTPUT_DOCUMENTATION(
         output_docs,
         output_docs_images)
@@ -546,6 +557,7 @@ workflow.onComplete {
 
 // (bam_mapped_merged, bam_mapped_merged_to_index) = bam_mapped_merged.into(2)
 
+//@Maxime: You included this process in merged_bam.nf, right?
 // process IndexBamFile {
 //     label 'cpus_8'
 
@@ -597,56 +609,6 @@ workflow.onComplete {
 // }
 // // STEP 2: MARKING DUPLICATES
 
-// process MarkDuplicates {
-//     label 'cpus_16'
-
-//     tag "${idPatient}-${idSample}"
-
-//     publishDir params.outdir, mode: params.publish_dir_mode,
-//         saveAs: {
-//             if (it == "${idSample}.bam.metrics") "Reports/${idSample}/MarkDuplicates/${it}"
-//             else "Preprocessing/${idSample}/DuplicatesMarked/${it}"
-//         }
-
-//     input:
-//         set idPatient, idSample, file("${idSample}.bam") from bam_mapped_merged
-
-//     output:
-//         set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bam.bai") into bam_duplicates_marked
-//         set idPatient, idSample into tsv_bam_duplicates_marked
-//         file ("${idSample}.bam.metrics") optional true into duplicates_marked_report
-
-//     when: !(params.skip_markduplicates)
-
-//     script:
-//     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
-//     metrics = 'markduplicates' in skip_qc ? '' : "-M ${idSample}.bam.metrics"
-//     if (params.no_gatk_spark)
-//     """
-//     gatk --java-options ${markdup_java_options} \
-//         MarkDuplicates \
-//         --MAX_RECORDS_IN_RAM 50000 \
-//         --INPUT ${idSample}.bam \
-//         --METRICS_FILE ${idSample}.bam.metrics \
-//         --TMP_DIR . \
-//         --ASSUME_SORT_ORDER coordinate \
-//         --CREATE_INDEX true \
-//         --OUTPUT ${idSample}.md.bam
-
-//     mv ${idSample}.md.bai ${idSample}.md.bam.bai
-//     """
-//     else
-//     """
-//     gatk --java-options ${markdup_java_options} \
-//         MarkDuplicatesSpark \
-//         -I ${idSample}.bam \
-//         -O ${idSample}.md.bam \
-//         ${metrics} \
-//         --tmp-dir . \
-//         --create-output-bam-index true \
-//         --spark-master local[${task.cpus}]
-//     """
-// }
 
 // (tsv_bam_duplicates_marked, tsv_bam_duplicates_marked_sample) = tsv_bam_duplicates_marked.into(2)
 
@@ -681,9 +643,7 @@ workflow.onComplete {
 
 // (bamMD, bamMDToJoin, bam_duplicates_marked) = bam_duplicates_marked.into(3)
 
-// bamBaseRecalibrator = bamMD.combine(intBaseRecalibrator)
-
-// bamBaseRecalibrator = bamBaseRecalibrator.dump(tag:'BAM FOR BASERECALIBRATOR')
+// 
 
 // // STEP 2': SENTIEON DEDUP
 
