@@ -19,7 +19,7 @@ nf-core/sarek:
 --------------------------------------------------------------------------------
 */
 
-nextflow.preview.dsl = 2
+nextflow.enable.dsl=2
 
 // Print help message if required
 

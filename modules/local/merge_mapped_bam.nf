@@ -4,10 +4,10 @@ process MERGE_BAM_MAPPED {
     tag "${patient}-${sample}"
 
     input:
-        tuple patient, sample, run, path(bam), path(bai)
+        tuple val(patient), val(sample), val(run), path(bam), path(bai)
 
     output:
-        tuple patient, sample, path("${sample}.bam"), path("${sample}.bam.bai")
+        tuple val(patient), val(sample), path("${sample}.bam"), path("${sample}.bam.bai")
 
     script:
     """
