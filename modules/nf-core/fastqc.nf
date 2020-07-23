@@ -15,9 +15,9 @@ process FASTQC {
         tuple val(meta), path(reads)
 
     output:
-        tuple val(meta), path("*.html"), emit: html
-        tuple val(meta), path("*.zip"),  emit: zip
-        path "*.version.txt",            emit: version
+        path "*.html",        emit: html
+        path "*.version.txt", emit: version
+        path "*.zip",         emit: zip
 
     script:
     prefix = "${meta.id}"
