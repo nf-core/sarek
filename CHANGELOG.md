@@ -9,10 +9,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Added
 
 - [#145](https://github.com/nf-core/sarek/pull/145) - Add `UMI annotation and consensus` functionality to Sarek
+- [#253](https://github.com/nf-core/sarek/pull/253) - Add UMI CI testing
 
 ### Changed
 
 - [#237](https://github.com/nf-core/sarek/pull/237) - Switch `bwa 0.7.17` for `bwa-mem2 2.0`
+- [#253](https://github.com/nf-core/sarek/pull/253) - Update docs
 
 ### Fixed
 
