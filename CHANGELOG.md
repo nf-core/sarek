@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Added
 
 - [#230](https://github.com/nf-core/sarek/pull/230) - Add `ignore_soft_clipped_bases` option for `Mutect2` [#218](https://github.com/nf-core/sarek/issues/218)
+- [#145](https://github.com/nf-core/sarek/pull/145) - Add `UMI annotation and consensus` functionality to Sarek
 
 ### Changed
 
@@ -18,10 +19,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Fixed
 
 - [#229](https://github.com/nf-core/sarek/pull/229) - Fix `Control-FREEC` restart issue [#225](https://github.com/nf-core/sarek/issues/225)
+- [#236](https://github.com/nf-core/sarek/pull/236) - Fix Mutect2 typo issue [#227](https://github.com/nf-core/sarek/issues/227)
 
 ### Deprecated
 
 ### Removed
+
+- [#234](https://github.com/nf-core/sarek/pull/243) - Removing obsolete script [#92]
 
 ## [2.6.1](https://github.com/nf-core/sarek/releases/tag/2.6.1) - Gådokgaskatjåhkkå
 
