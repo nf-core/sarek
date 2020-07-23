@@ -44,7 +44,6 @@ include {
     extract_bam;
     extract_fastq;
     extract_fastq_from_dir;
-    extract_infos;
     has_extension
 } from './modules/local/functions'
 
@@ -66,12 +65,12 @@ multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_
 output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
 output_docs_images = file("$baseDir/docs/images/", checkIfExists: true)
 
-// // Check if genome exists in the config file
-// if (params.genomes && !params.genomes.containsKey(params.genome) && !params.igenomes_ignore) {
-//     exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
-// } else if (params.genomes && !params.genomes.containsKey(params.genome) && params.igenomes_ignore) {
-//     exit 1, "The provided genome '${params.genome}' is not available in the genomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
-// }
+// Check if genome exists in the config file
+if (params.genomes && !params.genomes.containsKey(params.genome) && !params.igenomes_ignore) {
+    exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
+} else if (params.genomes && !params.genomes.containsKey(params.genome) && params.igenomes_ignore) {
+    exit 1, "The provided genome '${params.genome}' is not available in the genomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
+}
 
 step_list = define_step_list()
 step = params.step ? params.step.toLowerCase().replaceAll('-', '').replaceAll('_', '') : ''
@@ -167,8 +166,6 @@ if (tsv_path) {
     log.info "Trying automatic annotation on files in the VariantCalling/ directory"
 } else exit 1, 'No sample were defined, see --help'
 
-(gender_map, status_map, input_sample) = extract_infos(input_sample)
-
 // input_sample.dump(tag: 'input sample')
 
 /*
@@ -199,7 +196,7 @@ params.snpeff_db               = params.genome ? params.genomes[params.genome].s
 params.species                 = params.genome ? params.genomes[params.genome].species                 ?: false : false
 params.vep_cache_version       = params.genome ? params.genomes[params.genome].vep_cache_version       ?: false : false
 
-// Initialize channels based on params
+// Initialize file channels based on params
 chr_dir           = params.chr_dir           ?: Channel.empty()
 chr_length        = params.chr_length        ?: Channel.empty()
 dbsnp             = params.dbsnp             ?: Channel.empty()
@@ -210,6 +207,8 @@ loci              = params.ac_loci           ?: Channel.empty()
 loci_gc           = params.ac_loci_gc        ?: Channel.empty()
 mappability       = params.mappability       ?: Channel.empty()
 pon               = params.pon               ?: Channel.empty()
+
+// Initialize value channels based on params
 snpeff_cache      = params.snpeff_cache      ?: Channel.empty()
 snpeff_db         = params.snpeff_db         ?: Channel.empty()
 snpeff_species    = params.species           ?: Channel.empty()
@@ -252,7 +251,6 @@ if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works
                          INCLUDE LOCAL PIPELINE MODULES
 ================================================================================
 */
-
 
 include { BWAMEM2_MEM }           from './modules/local/bwamem2_mem.nf'
 include { GET_SOFTWARE_VERSIONS } from './modules/local/get_software_versions'
@@ -347,63 +345,100 @@ workflow {
     pon_tbi = params.pon ? params.pon_index ?: BUILD_INDICES.out.pon_tbi : Channel.empty()
 
     // PREPROCESSING
-    if(!('fastqc' in skip_qc))
-        result_fastqc = FASTQC(input_sample)
-    else
-        result_fastqc = Channel.empty()
+
+    fastqc_html    = Channel.empty()
+    fastqc_version = Channel.empty()
+    fastqc_zip     = Channel.empty()
+
+    if (!('fastqc' in skip_qc)) {
+        FASTQC(input_sample)
+        fastqc_html    = FASTQC.out.html
+        fastqc_version = FASTQC.out.version
+        fastqc_zip     = FASTQC.out.zip
+    }
+
+    def bwamem2_mem_options = [:]
+
+    bwamem2_mem_options.args_bwamem2 = "-K 100000000 -M"
+    trim_galore_report = Channel.empty()
 
     if (params.trim_fastq) {
         TRIM_GALORE(input_sample)
-        result_trim_galore = TRIM_GALORE.out.report
-        BWAMEM2_MEM(TRIM_GALORE.out.trimmed_reads, bwa, fasta, fai)
+        BWAMEM2_MEM(TRIM_GALORE.out.trimmed_reads, bwa, fasta, fai, bwamem2_mem_options)
+        trim_galore_report = TRIM_GALORE.out.report
     }
-    else {
-        result_trim_galore = Channel.empty()
-        BWAMEM2_MEM(input_sample, bwa, fasta, fai)
-    }
+    else BWAMEM2_MEM(input_sample, bwa, fasta, fai, bwamem2_mem_options)
 
-    BWAMEM2_MEM.out.groupTuple(by:[0, 1])
-        .branch {
-            single:   it[2].size() == 1
-            multiple: it[2].size() > 1
+    results = BWAMEM2_MEM.out.map{ meta, bam, bai ->
+        patient = meta.patient
+        sample  = meta.sample
+        gender  = meta.gender
+        status  = meta.status
+        [patient, sample, gender, status, bam, bai]
+    }.groupTuple(by: [0,1])
+        .branch{
+            single:   it[4].size() == 1
+            multiple: it[4].size() > 1
         }.set { bam }
 
     bam_single = bam.single.map {
-        idPatient, idSample, idRun, bam, bai ->
-        [idPatient, idSample, bam[0], bai[0]]
+        patient, sample, gender, status, bam, bai ->
+
+        def meta = [:]
+        meta.patient = patient
+        meta.sample = sample
+        meta.gender = gender[0]
+        meta.status = status[0]
+        meta.id = sample
+
+        [meta, bam[0], bai[0]]
     }
 
-    //multipleBam = multipleBam.mix(multipleBamSentieon)
+    bam_multiple = bam.multiple.map {
+        patient, sample, gender, status, bam, bai ->
 
-    bam_mapped = bam_single.mix(MERGE_BAM_MAPPED(bam.multiple))
+        def meta = [:]
+        meta.patient = patient
+        meta.sample = sample
+        meta.gender = gender[0]
+        meta.status = status[0]
+        meta.id = sample
+
+        [meta, bam, bai]
+    }
+
+    // multipleBam = multipleBam.mix(multipleBamSentieon)
+
+    bam_mapped = bam_single.mix(MERGE_BAM_MAPPED(bam_multiple))
 
     bam_mapped.view()
 
-    if(!(params.skip_markduplicates)){
-        MARK_DUPLICATES(bam_mapped)
-        mark_duplicates_report = MARK_DUPLICATES.out.duplicates_marked_report
-        bam_duplicates_marked =  MARK_DUPLICATES.out.bam_duplicates_marked 
-    }
-    else {
-        mark_duplicates_report = Channel.empty()
-        bam_duplicates_marked = Channel.empty()
+    mark_duplicates_report = Channel.empty()
+    bam_duplicates_marked  = Channel.empty()
+
+    if (!(params.skip_markduplicates)) {
+        // MARK_DUPLICATES(bam_mapped)
+        // mark_duplicates_report = MARK_DUPLICATES.out.report
+        // bam_duplicates_marked  =  MARK_DUPLICATES.out.bam 
     }
 
-    bamBaseRecalibrator = bam_duplicates_marked.combine(BUILD_INDICES.out.intervals_bed)
+    // bamBaseRecalibrator = bam_duplicates_marked.combine(BUILD_INDICES.out.intervals_bed)
     
-    //BASE_RECALIBRATION(bamBaseRecalibrator,dbsnp, dbsnp_index,fasta,)
+    // //BASE_RECALIBRATION(bamBaseRecalibrator,dbsnp, dbsnp_index,fasta,)
     
     OUTPUT_DOCUMENTATION(
         output_docs,
         output_docs_images)
 
     GET_SOFTWARE_VERSIONS()
+
     MULTIQC(
-        result_fastqc.collect().ifEmpty([]),
+        fastqc_html.collect().ifEmpty([]),
+        fastqc_zip.collect().ifEmpty([]),
         multiqc_config,
         multiqc_custom_config.ifEmpty([]),
         GET_SOFTWARE_VERSIONS.out.yml,
-        result_trim_galore.collect().ifEmpty([]),
+        trim_galore_report.collect().ifEmpty([]),
         mark_duplicates_report.collect().ifEmpty([]),
         workflow_summary)
 }
