@@ -2807,10 +2807,6 @@ process ConcatPlatypusVCF {
     """
 }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> modify filter platypus
 // only need patientID and normalSampleID for filterPlatypus
 
 normalBamForPlatypus = normalBamForPlatypus
@@ -2826,11 +2822,7 @@ normalBamForPlatypus = normalBamForPlatypus
 normalBamForPlatypus = normalBamForPlatypus.dump(tag: 'normalBamForPlatypus')
 
 process filterPlatypus {
-<<<<<<< HEAD
-
-=======
 	
->>>>>>> modify filter platypus
 	tag "${variantCaller}-${idPatient}"
 
 	publishDir "${params.outdir}/VariantCalling/${idPatient}/${variantCaller}", mode: params.publish_dir_mode
