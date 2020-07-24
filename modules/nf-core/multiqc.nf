@@ -9,7 +9,8 @@ process MULTIQC {
     publishDir "${params.outdir}/multiqc", mode: params.publish_dir_mode
 
     input:
-        path fastqc
+        path fastqc_html
+        path fastqc_zip
         path multiqc_config
         path multiqc_custom_config
         path software_versions

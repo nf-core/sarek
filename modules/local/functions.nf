@@ -137,22 +137,6 @@ def extract_fastq_from_dir(pattern) {
     fastq
 }
 
-// Extract gender and status from Channel
-def extract_infos(channel) {
-    def genderMap = [:]
-    def statusMap = [:]
-    channel = channel.map{ it ->
-        def idPatient = it[0]
-        def gender = it[1]
-        def status = it[2]
-        def idSample = it[3]
-        genderMap[idPatient] = gender
-        statusMap[idPatient, idSample] = status
-        [idPatient] + it[3..-1]
-    }
-    [genderMap, statusMap, channel]
-}
-
 // Channeling the TSV file containing FASTQ or BAM
 // Format is: "subject gender status sample lane fastq1 fastq2"
 // or: "subject gender status sample lane bam"
@@ -160,25 +144,27 @@ def extract_fastq(tsvFile) {
     Channel.from(tsvFile)
         .splitCsv(sep: '\t')
         .map { row ->
-            def idPatient  = row[0]
-            def gender     = row[1]
-            def status     = return_status(row[2].toInteger())
-            def idSample   = row[3]
-            def idRun      = row[4]
-            def file1      = return_file(row[5])
-            def file2      = "null"
-            if (has_extension(file1, "fastq.gz") || has_extension(file1, "fq.gz") || has_extension(file1, "fastq") || has_extension(file1, "fq")) {
+            def meta = [:]
+            meta.patient = row[0]
+            meta.gender  = row[1]
+            meta.status  = return_status(row[2].toInteger())
+            meta.sample  = row[3]
+            meta.run     = row[4]
+            meta.id      = "${meta.sample}-${meta.run}"
+            read1   = return_file(row[5])
+            read2   = "null"
+            if (has_extension(read1, "fastq.gz") || has_extension(read1, "fq.gz") || has_extension(read1, "fastq") || has_extension(read1, "fq")) {
                 check_number_of_item(row, 7)
-                file2 = return_file(row[6])
-            if (!has_extension(file2, "fastq.gz") && !has_extension(file2, "fq.gz")  && !has_extension(file2, "fastq") && !has_extension(file2, "fq")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
-            if (has_extension(file1, "fastq") || has_extension(file1, "fq") || has_extension(file2, "fastq") || has_extension(file2, "fq")) {
+                read2 = return_file(row[6])
+            if (!has_extension(read2, "fastq.gz") && !has_extension(read2, "fq.gz")  && !has_extension(read2, "fastq") && !has_extension(read2, "fq")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
+            if (has_extension(read1, "fastq") || has_extension(read1, "fq") || has_extension(read2, "fastq") || has_extension(read2, "fq")) {
                 exit 1, "We do recommend to use gziped fastq file to help you reduce your data footprint."
             }
         }
-        else if (has_extension(file1, "bam")) check_number_of_item(row, 6)
-        else "No recognisable extention for input file: ${file1}"
+        else if (has_extension(read1, "bam")) check_number_of_item(row, 6)
+        else "No recognisable extention for input file: ${read1}"
 
-        [idPatient, gender, status, idSample, idRun, file1, file2]
+        return [meta, [read1, read2]]
     }
 }
 

@@ -1,29 +1,38 @@
-params.bwa_options = "-K 100000000 -M"
-params.sequencer = "ILLUMINA"
-
 process BWAMEM2_MEM {
-    label 'CPUS_MAX'
+    tag "${meta.id}"
+    label 'process_high'
 
-    tag "${sample}_${run}"
-
-    publishDir "${params.outdir}/bwamem2_mem", mode: 'copy'
+    publishDir "${params.outdir}/bwamem2/${meta.sample}",
+        mode: params.publish_dir_mode,
+        saveAs: { filename ->
+                    if (filename.endsWith('.version.txt')) null
+                    else filename }
 
     input:
-        tuple val(patient), val(sample), val(run), path(read1), path(read2)
+        tuple val(meta), path(reads)
         path bwa
         path fasta
         path fai
+        val options
 
     output:
-        tuple val(patient), val(sample), val(run), path("*.bam"), path("*.bai")
+        tuple val(meta), path("*.bam"), path("*.bai")
 
     script:
     CN = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
-    readGroup = "@RG\\tID:${run}\\t${CN}PU:${run}\\tSM:${sample}\\tLB:${sample}\\tPL:${params.sequencer}"
+    readGroup = "@RG\\tID:${meta.run}\\t${CN}PU:${meta.run}\\tSM:${meta.sample}\\tLB:${meta.sample}\\tPL:ILLUMINA"
+    extra = meta.status == 1 ? "-B 3" : ""
     """
-    bwa-mem2 mem ${params.bwa_options} -R \"${readGroup}\" -t ${task.cpus} \
-    ${fasta} ${read1} ${read2} | \
-    samtools sort --threads ${task.cpus} -m 2G - > ${sample}_${run}.bam
-    samtools index ${sample}_${run}.bam
+    bwa-mem2 mem \
+        ${options.args_bwamem2} \
+        -R \"${readGroup}\" \
+        ${extra} \
+        -t ${task.cpus} \
+        ${fasta} ${reads} | \
+    samtools sort --threads ${task.cpus} -m 2G - > ${meta.id}.bam
+
+    samtools index ${meta.id}.bam
+
+    echo \$(bwa-mem2 version 2>&1) > bwa-mem2.version.txt
     """
 }
