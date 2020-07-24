@@ -406,16 +406,16 @@ workflow {
 
     bam_mapped.view()
 
-    mark_duplicates_report = Channel.empty()
-    bam_duplicates_marked  = Channel.empty()
+    markduplicates_report = Channel.empty()
+    markduplicates_bam    = Channel.empty()
 
     if (!(params.skip_markduplicates)) {
-        // MARK_DUPLICATES(bam_mapped)
-        // mark_duplicates_report = MARK_DUPLICATES.out.report
-        // bam_duplicates_marked  =  MARK_DUPLICATES.out.bam 
+        // MARKDUPLICATES(bam_mapped)
+        // markduplicates_report = MARKDUPLICATES.out.report
+        // markduplicates_bam   =  MARKDUPLICATES.out.bam 
     }
 
-//     // bamBaseRecalibrator = bam_duplicates_marked.combine(BUILD_INDICES.out.intervals_bed)
+//     // bamBaseRecalibrator = markduplicates_bam.combine(BUILD_INDICES.out.intervals_bed)
     
 //     // //BASE_RECALIBRATION(bamBaseRecalibrator,dbsnp, dbsnp_index,fasta,)
     
