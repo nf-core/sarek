@@ -18,8 +18,10 @@ For annotation, the main container can be used, but the cache has to be download
 - Contain **[AlleleCount](https://github.com/cancerit/alleleCount)** 4.0.2
 - Contain **[BCFTools](https://github.com/samtools/bcftools)** 1.9
 - Contain **[bwa-mem2](https://github.com/bwa-mem2/bwa-mem2)** 2.0
+- Contain **[CNVkit](https://github.com/etal/cnvkit)** 0.9.6
 - Contain **[Control-FREEC](https://github.com/BoevaLab/FREEC)** 11.5
 - Contain **[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)** 0.11.9
+- Contain **[fgbio](https://github.com/fulcrumgenomics/fgbio)** 1.1.0
 - Contain **[FreeBayes](https://github.com/ekg/freebayes)** 1.3.2
 - Contain **[GATK4-spark](https://github.com/broadinstitute/gatk)** 4.1.6.0
 - Contain **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
@@ -29,6 +31,7 @@ For annotation, the main container can be used, but the cache has to be download
 - Contain **[msisensor](https://github.com/ding-lab/msisensor)** 0.5
 - Contain **[MultiQC](https://github.com/ewels/MultiQC/)** 1.8
 - Contain **[Qualimap](http://qualimap.bioinfo.cipf.es)** 2.2.2d
+- Contain **[SAMBLASTER](https://github.com/GregoryFaust/samblaster)** 0.1.24
 - Contain **[samtools](https://github.com/samtools/samtools)** 1.9
 - Contain **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
 - Contain **[Strelka2](https://github.com/Illumina/strelka)** 2.9.10

@@ -36,4 +36,3 @@ dependencies:
   - bioconda::vcftools=0.1.16
   - conda-forge::pigz=2.3.4 
   - conda-forge::r-ggplot2=3.3.0
-  

@@ -30,154 +30,155 @@ def helpMessage() {
     nextflow run nf-core/sarek --input sample.tsv -profile docker
 
     Mandatory arguments:
-      -profile                  [str] Configuration profile to use
-                                      Can use multiple (comma separated)
-                                      Available: conda, docker, singularity, test and more
-      --input                  [file] Path to input TSV file on mapping, prepare_recalibration, recalibrate, variant_calling and Control-FREEC steps
-                                      Multiple TSV files can be specified with quotes
-                                      Works also with the path to a directory on mapping step with a single germline sample only
-                                      Alternatively, path to VCF input file on annotate step
-                                      Multiple VCF files can be specified with quotes
-      --step                   [list] Specify starting step (only one)
-                                      Available: mapping, prepare_recalibration, recalibrate, variant_calling, annotate, Control-FREEC
-                                      Default: ${params.step}
-      --genome                  [str] Name of iGenomes reference
-                                      Default: ${params.genome}
+      -profile                      [str] Configuration profile to use
+                                          Can use multiple (comma separated)
+                                          Available: conda, docker, singularity, test and more
+      --input                      [file] Path to input TSV file on mapping, prepare_recalibration, recalibrate, variant_calling and Control-FREEC steps
+                                          Multiple TSV files can be specified with quotes
+                                          Works also with the path to a directory on mapping step with a single germline sample only
+                                          Alternatively, path to VCF input file on annotate step
+                                          Multiple VCF files can be specified with quotes
+      --step                       [list] Specify starting step (only one)
+                                          Available: mapping, prepare_recalibration, recalibrate, variant_calling, annotate, Control-FREEC
+                                          Default: ${params.step}
+      --genome                      [str] Name of iGenomes reference
+                                          Default: ${params.genome}
 
     Main options:
-      --help                   [bool] You're reading it
-      --no_intervals           [bool] Disable usage of intervals
-                                      Intervals are part of the genome chopped up, used to speed up preprocessing and variant calling
-      --nucleotides_per_second  [int] To estimate interval size
-                                      Default: ${params.nucleotides_per_second}
-      --sentieon               [bool] If sentieon is available, will enable it for Preprocessing, and Variant Calling
-                                      Adds the following options for --tools: DNAseq, DNAscope and TNscope
-      --skip_qc                 [str] Specify which QC tools to skip when running Sarek (multiple separated with commas)
-                                      Available: all, bamQC, BaseRecalibrator, BCFtools, Documentation
-                                      FastQC, MultiQC, samtools, vcftools, versions
-                                      Default: None
-      --target_bed             [file] Target BED file for whole exome or targeted sequencing
-                                      Default: None
-      --tools                   [str] Specify tools to use for variant calling (multiple separated with commas):
-                                      Available: ASCAT, CNVkit, ControlFREEC, FreeBayes, HaplotypeCaller
-                                      Manta, mpileup, MSIsensor, Mutect2, Strelka, TIDDIT
-                                      and/or for annotation:
-                                      snpEff, VEP, merge
-                                      Default: None
+      --help                       [bool] You're reading it
+      --no_intervals               [bool] Disable usage of intervals
+                                          Intervals are part of the genome chopped up, used to speed up preprocessing and variant calling
+      --nucleotides_per_second      [int] To estimate interval size
+                                          Default: ${params.nucleotides_per_second}
+      --sentieon                   [bool] If sentieon is available, will enable it for Preprocessing, and Variant Calling
+                                          Adds the following options for --tools: DNAseq, DNAscope and TNscope
+      --skip_qc                     [str] Specify which QC tools to skip when running Sarek (multiple separated with commas)
+                                          Available: all, bamQC, BaseRecalibrator, BCFtools, Documentation
+                                          FastQC, MultiQC, samtools, vcftools, versions
+                                          Default: None
+      --target_bed                 [file] Target BED file for whole exome or targeted sequencing
+                                          Default: None
+      --tools                       [str] Specify tools to use for variant calling (multiple separated with commas):
+                                          Available: ASCAT, CNVkit, ControlFREEC, FreeBayes, HaplotypeCaller
+                                          Manta, mpileup, MSIsensor, Mutect2, Strelka, TIDDIT
+                                          and/or for annotation:
+                                          snpEff, VEP, merge
+                                          Default: None
 
     Modify fastqs (trim/split):
-      --trim_fastq             [bool] Run Trim Galore
-      --clip_r1                 [int] Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
-      --clip_r2                 [int] Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
-      --three_prime_clip_r1     [int] Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
-      --three_prime_clip_r2     [int] Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
-      --trim_nextseq            [int] Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails
-      --save_trimmed           [bool] Save trimmed FastQ file intermediates
-      --split_fastq             [int] Specify how many reads should be contained in the split fastq file
-                                      Default: no split
+      --trim_fastq                 [bool] Run Trim Galore
+      --clip_r1                     [int] Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
+      --clip_r2                     [int] Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
+      --three_prime_clip_r1         [int] Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
+      --three_prime_clip_r2         [int] Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
+      --trim_nextseq                [int] Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails
+      --save_trimmed               [bool] Save trimmed FastQ file intermediates
+      --split_fastq                 [int] Specify how many reads should be contained in the split fastq file
+                                          Default: no split
 
     Preprocessing:
-      --markdup_java_options    [str] Establish values for markDuplicates memory consumption
-                                      Default: ${params.markdup_java_options}
-      --no_gatk_spark          [bool] Disable usage of GATK Spark implementation of their tools in local mode
-      --save_bam_mapped        [bool] Save Mapped BAMs
-      --skip_markduplicates    [bool] Skip MarkDuplicates
+      --markdup_java_options        [str] Establish values for markDuplicates memory consumption
+                                          Default: ${params.markdup_java_options}
+      --no_gatk_spark              [bool] Disable usage of GATK Spark implementation of their tools in local mode
+      --save_bam_mapped            [bool] Save Mapped BAMs
+      --skip_markduplicates        [bool] Skip MarkDuplicates
 
     Variant Calling:
-      --ascat_ploidy            [int] Use this parameter to overwrite default behavior from ASCAT regarding ploidy
-                                      Requires that --ascat_purity is set
-      --ascat_purity            [int] Use this parameter to overwrite default behavior from ASCAT regarding purity
-                                      Requires that --ascat_ploidy is set
-      --cf_coeff                [str] Control-FREEC coefficientOfVariation
-                                      Default: ${params.cf_coeff}
-      --cf_ploidy               [int] Control-FREEC ploidy
-                                      Default: ${params.cf_ploidy}
-      --cf_window               [int] Control-FREEC window size
-                                      Default: Disabled
-      --ignore_soft_clipped_bases [bool] Do not analyze soft clipped bases in the reads for GATK Mutect2
-      --no_gvcf                [bool] No g.vcf output from GATK HaplotypeCaller
-      --no_strelka_bp          [bool] Will not use Manta candidateSmallIndels for Strelka (not recommended by Best Practices)
-      --umi                    [bool] If provided, UMIs steps will be run to extract and annotate the reads with UMI and create consensus reads
-      --read_structure1      [string] When processing UMIs, a read structure should always be provided for each of the fastq files. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length). 
-                                      See: https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
-      --read_structure2      [string] When processing UMIs, a read structure should always be provided for each of the fastq files. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length). 
-                                      See: https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
-      --pon                    [file] Panel-of-normals VCF (bgzipped) for GATK Mutect2 / Sentieon TNscope
-                                      See: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_CreateSomaticPanelOfNormals.php
-      --pon_index              [file] Index of pon panel-of-normals VCF
-                                      If none provided, will be generated automatically from the PON
+      --ascat_ploidy                [int] Use this parameter to overwrite default behavior from ASCAT regarding ploidy
+                                          Requires that --ascat_purity is set
+      --ascat_purity                [int] Use this parameter to overwrite default behavior from ASCAT regarding purity
+                                          Requires that --ascat_ploidy is set
+      --cf_coeff                    [str] Control-FREEC coefficientOfVariation
+                                          Default: ${params.cf_coeff}
+      --cf_ploidy                   [int] Control-FREEC ploidy
+                                          Default: ${params.cf_ploidy}
+      --cf_window                   [int] Control-FREEC window size
+                                          Default: Disabled
+      --no_gvcf                    [bool] No g.vcf output from GATK HaplotypeCaller
+      --no_strelka_bp              [bool] Will not use Manta candidateSmallIndels for Strelka (not recommended by Best Practices)
+      --pon                        [file] Panel-of-normals VCF (bgzipped) for GATK Mutect2 / Sentieon TNscope
+                                          See: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_CreateSomaticPanelOfNormals.php
+      --pon_index                  [file] Index of pon panel-of-normals VCF
+                                          If none provided, will be generated automatically from the PON
+      --ignore_soft_clipped_bases  [bool] Do not analyze soft clipped bases in the reads for GATK Mutect2
+                                          Default: Do not use
+      --umi                        [bool] If provided, UMIs steps will be run to extract and annotate the reads with UMI and create consensus reads
+      --read_structure1          [string] When processing UMIs, a read structure should always be provided for each of the fastq files. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length). 
+                                          See: https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
+      --read_structure2          [string] When processing UMIs, a read structure should always be provided for each of the fastq files. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length). 
+                                          See: https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
 
     Annotation:
-      --annotate_tools          [str] Specify from which tools Sarek should look for VCF files to annotate, only for step Annotate
-                                      Available: HaplotypeCaller, Manta, Mutect2, Strelka, TIDDIT
-                                      Default: None
-      --annotation_cache       [bool] Enable the use of cache for annotation, to be used with --snpeff_cache and/or --vep_cache
-      --snpeff_cache           [file] Specity the path to snpEff cache, to be used with --annotation_cache
-      --vep_cache              [file] Specity the path to VEP cache, to be used with --annotation_cache
-      --cadd_cache             [bool] Enable CADD cache
-      --cadd_indels            [file] Path to CADD InDels file
-      --cadd_indels_tbi        [file] Path to CADD InDels index
-      --cadd_wg_snvs           [file] Path to CADD SNVs file
-      --cadd_wg_snvs_tbi       [file] Path to CADD SNVs index
-      --genesplicer            [file] Enable genesplicer within VEP
+      --annotate_tools              [str] Specify from which tools Sarek should look for VCF files to annotate, only for step Annotate
+                                          Available: HaplotypeCaller, Manta, Mutect2, Strelka, TIDDIT
+                                          Default: None
+      --annotation_cache           [bool] Enable the use of cache for annotation, to be used with --snpeff_cache and/or --vep_cache
+      --snpeff_cache               [file] Specity the path to snpEff cache, to be used with --annotation_cache
+      --vep_cache                  [file] Specity the path to VEP cache, to be used with --annotation_cache
+      --cadd_cache                 [bool] Enable CADD cache
+      --cadd_indels                [file] Path to CADD InDels file
+      --cadd_indels_tbi            [file] Path to CADD InDels index
+      --cadd_wg_snvs               [file] Path to CADD SNVs file
+      --cadd_wg_snvs_tbi           [file] Path to CADD SNVs index
+      --genesplicer                [file] Enable genesplicer within VEP
 
     References options:
-      --igenomes_base          [file] Specify base path to AWS iGenomes
-                                      Default: ${params.igenomes_base}
-      --igenomes_ignore        [bool] Do not use AWS iGenomes. Will load genomes.config instead of igenomes.config
-      --genomes_base           [file] Specify base path to reference genome
-      --save_reference         [bool] Save built references
-
-    References:                       If not specified in the configuration file or you wish to overwrite any of the references.
-      --ac_loci                [file] Loci file for ASCAT
-      --ac_loci_gc             [file] Loci GC file for ASCAT
-      --bwa                    [file] BWA indexes
-                                      If none provided, will be generated automatically from the fasta reference
-      --chr_dir                [file] Chromosomes folder
-      --chr_length             [file] Chromosomes length file
-      --dbsnp                  [file] Dbsnp file
-      --dbsnp_index            [file] Dbsnp index
-                                      If none provided, will be generated automatically if a dbsnp file is provided
-      --dict                   [file] Fasta dictionary file
-                                      If none provided, will be generated automatically from the fasta reference
-      --fasta                  [file] Fasta reference
-      --fasta_fai              [file] Fasta reference index
-                                      If none provided, will be generated automatically from the fasta reference
-      --germline_resource      [file] Germline Resource File for GATK Mutect2
-      --germline_resource_index       Germline Resource Index for GATK Mutect2
-                               [file] if none provided, will be generated automatically if a germlineResource file is provided
-      --intervals              [file] Intervals
-                                      If none provided, will be generated automatically from the fasta reference
-                                      Use --no_intervals to disable automatic generation
-      --known_indels           [file] Known indels file
-      --known_indels_index     [file] Known indels index
-                                      If none provided, will be generated automatically if a knownIndels file is provided
-      --mappability            [file] Mappability file for Control-FREEC
-      --snpeff_db               [str] snpEff Database version
-      --species                 [str] Species for VEP
-      --vep_cache_version       [int] VEP cache version
+      --igenomes_base              [file] Specify base path to AWS iGenomes
+                                          Default: ${params.igenomes_base}
+      --igenomes_ignore            [bool] Do not use AWS iGenomes. Will load genomes.config instead of igenomes.config
+      --genomes_base               [file] Specify base path to reference genome
+      --save_reference             [bool] Save built references
+      
+    References:                           If not specified in the configuration file or you wish to overwrite any of the references.
+      --ac_loci                    [file] Loci file for ASCAT
+      --ac_loci_gc                 [file] Loci GC file for ASCAT
+      --bwa                        [file] BWA indexes
+                                          If none provided, will be generated automatically from the fasta reference
+      --chr_dir                    [file] Chromosomes folder
+      --chr_length                 [file] Chromosomes length file
+      --dbsnp                      [file] Dbsnp file
+      --dbsnp_index                [file] Dbsnp index
+                                          If none provided, will be generated automatically if a dbsnp file is provided
+      --dict                       [file] Fasta dictionary file
+                                          If none provided, will be generated automatically from the fasta reference
+      --fasta                      [file] Fasta reference
+      --fasta_fai                  [file] Fasta reference index
+                                          If none provided, will be generated automatically from the fasta reference
+      --germline_resource          [file] Germline Resource File for GATK Mutect2
+      --germline_resource_index    [file] Germline Resource Index for GATK Mutect2
+                                          if none provided, will be generated automatically if a germlineResource file is provided
+      --intervals                  [file] Intervals
+                                          If none provided, will be generated automatically from the fasta reference
+                                          Use --no_intervals to disable automatic generation
+      --known_indels               [file] Known indels file
+      --known_indels_index         [file] Known indels index
+                                          If none provided, will be generated automatically if a knownIndels file is provided
+      --mappability                [file] Mappability file for Control-FREEC
+      --snpeff_db                   [str] snpEff Database version
+      --species                     [str] Species for VEP
+      --vep_cache_version           [int] VEP cache version
 
     Other options:
-      --outdir                 [file] Output directory where the results will be saved
-      --publish_dir_mode       [list] Specify mode of publishing data in the output directory (only one)
-                                      Available: symlink, rellink, link, copy, copyNoFollow, move
-                                      Default: ${params.publish_dir_mode}
-      --sequencing_center       [str] Name of sequencing center to be displayed in BAM file
-      --multiqc_config         [file] Specify a custom config file for MultiQC
-      --monochrome_logs        [bool] Logs will be without colors
-      --email                   [str] Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
-      --email_on_fail           [str] Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you if the workflow fails
-      --plaintext_email        [bool] Enable plaintext email
-      --max_multiqc_email_size  [str] Theshold size for MultiQC report to be attached in notification email
-                                      If file generated by pipeline exceeds the threshold, it will not be attached
-                                      Default: ${params.max_multiqc_email_size}
-      -name                     [str] Name for the pipeline run
-                                      If not specified, Nextflow will automatically generate a random mnemonic
+      --outdir                     [file] Output directory where the results will be saved
+      --publish_dir_mode           [list] Specify mode of publishing data in the output directory (only one)
+                                          Available: symlink, rellink, link, copy, copyNoFollow, move
+                                          Default: ${params.publish_dir_mode}
+      --sequencing_center           [str] Name of sequencing center to be displayed in BAM file
+      --multiqc_config             [file] Specify a custom config file for MultiQC
+      --monochrome_logs            [bool] Logs will be without colors
+      --email                       [str] Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
+      --email_on_fail               [str] Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you if the workflow fails
+      --plaintext_email            [bool] Enable plaintext email
+      --max_multiqc_email_size      [str] Theshold size for MultiQC report to be attached in notification email
+                                          If file generated by pipeline exceeds the threshold, it will not be attached
+                                          Default: ${params.max_multiqc_email_size}
+      -name                         [str] Name for the pipeline run
+                                          If not specified, Nextflow will automatically generate a random mnemonic
 
     AWSBatch options:
-      --awsqueue                [str] The AWSBatch JobQueue that needs to be set when running on AWSBatch
-      --awsregion               [str] The AWS Region for your AWSBatch job to run on
-      --awscli                  [str] Path to the AWS CLI tool
+      --awsqueue                    [str] The AWSBatch JobQueue that needs to be set when running on AWSBatch
+      --awsregion                   [str] The AWS Region for your AWSBatch job to run on
+      --awscli                      [str] Path to the AWS CLI tool
     """.stripIndent()
 }
 
@@ -412,6 +413,7 @@ if (!checkParameterList(annotateTools,annoList)) exit 1, 'Unknown tool(s) to ann
 // Check parameters
 if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
 if (params.cf_window && params.cf_coeff) exit 1, 'Please specify either --cf_window OR --cf_coeff, but not both of them'
+if (params.umi && !(params.read_structure1 && params.read_structure2)) exit 1, 'Please specify both --read_structure1 and --read_structure2, when using --umi'
 
 // Has the run name been specified by the user?
 // This has the bonus effect of catching both -name and --name
@@ -533,7 +535,7 @@ params.snpeff_db = params.genome && 'snpeff' in tools ? params.genomes[params.ge
 params.species = params.genome && 'vep' in tools ? params.genomes[params.genome].species ?: null : null
 params.vep_cache_version = params.genome && 'vep' in tools ? params.genomes[params.genome].vep_cache_version ?: null : null
 
-// Initialize channels based on params
+// Initialize channels with files based on params
 ch_ac_loci = params.ac_loci && 'ascat' in tools ? Channel.value(file(params.ac_loci)) : "null"
 ch_ac_loci_gc = params.ac_loci_gc && 'ascat' in tools ? Channel.value(file(params.ac_loci_gc)) : "null"
 ch_chr_dir = params.chr_dir && 'controlfreec' in tools ? Channel.value(file(params.chr_dir)) : "null"
@@ -546,6 +548,7 @@ ch_intervals = params.intervals && !params.no_intervals && !('annotate' in step)
 ch_known_indels = params.known_indels && ('mapping' in step || 'preparerecalibration' in step) ? Channel.value(file(params.known_indels)) : "null"
 ch_mappability = params.mappability && 'controlfreec' in tools ? Channel.value(file(params.mappability)) : "null"
 
+// Initialize channels with values based on params
 ch_snpeff_cache = params.snpeff_cache ? Channel.value(file(params.snpeff_cache)) : "null"
 ch_snpeff_db = params.snpeff_db ? Channel.value(params.snpeff_db) : "null"
 ch_vep_cache_version = params.vep_cache_version ? Channel.value(params.vep_cache_version) : "null"
@@ -558,6 +561,10 @@ ch_cadd_wg_snvs = params.cadd_wg_snvs ? Channel.value(file(params.cadd_wg_snvs))
 ch_cadd_wg_snvs_tbi = params.cadd_wg_snvs_tbi ? Channel.value(file(params.cadd_wg_snvs_tbi)) : "null"
 ch_pon = params.pon ? Channel.value(file(params.pon)) : "null"
 ch_target_bed = params.target_bed ? Channel.value(file(params.target_bed)) : "null"
+
+// Optional values, not defined within the params.genomes[params.genome] scope
+ch_read_structure1 = params.read_structure1 ? Channel.value(params.read_structure1) : "null"
+ch_read_structure2 = params.read_structure2 ? Channel.value(params.read_structure2) : "null"
 
 /*
 ================================================================================
@@ -1074,9 +1081,12 @@ if (params.split_fastq){
 inputPairReads = inputPairReads.dump(tag:'INPUT')
 
 (inputPairReads, inputPairReadsTrimGalore, inputPairReadsFastQC, inputPairReadsUMI) = inputPairReads.into(4)
-if(params.umi) inputPairReads.close()
+
+if (params.umi) inputPairReads.close()
 else inputPairReadsUMI.close()
 
+if (params.trim_fastq) inputPairReads.close()
+else inputPairReadsTrimGalore.close()
 
 // STEP 0.5: QC ON READS
 
@@ -1201,27 +1211,28 @@ process UMIFastqToBAM {
   publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publishDirMode
 
   input:
-  set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsUMI
+    set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsUMI
+    val read_structure1 from ch_read_structure1
+    val read_structure2 from ch_read_structure2
 
   output:
-  tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi_converted.bam") into umi_converted_bams_ch
+    tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi_converted.bam") into umi_converted_bams_ch
 
-  when: params.umi && params.read_structure1 && params.read_structure2
-
+  when: params.umi
 
   // tmp folder for fgbio might be solved more elengantly?
 
   script:
   """
-  mkdir tmpFolder
+  mkdir tmp
 
-  fgbio --tmp-dir=${PWD}/tmpFolder \
+  fgbio --tmp-dir=${PWD}/tmp \
   FastqToBam \
   -i "${idSample}_${idRun}_R1.fastq.gz" "${idSample}_${idRun}_R2.fastq.gz" \
   -o "${idSample}_umi_converted.bam" \
-  --read-structures $params.read_structure1 $params.read_structure2 \
-  --sample $idSample \
-  --library $idSample
+  --read-structures ${read_structure1} ${read_structure2} \
+  --sample ${idSample} \
+  --library ${idSample}
   """
 
 }
@@ -1233,20 +1244,20 @@ process UMIFastqToBAM {
 process UMIMapBamFile {
 
   input:
-  set idPatient, idSample, idRun, file(convertedBam) from umi_converted_bams_ch
-  file(bwaIndex) from ch_bwa
-  file(fasta) from ch_fasta
-  file(fastaFai) from ch_fai
+    set idPatient, idSample, idRun, file(convertedBam) from umi_converted_bams_ch
+    file(bwaIndex) from ch_bwa
+    file(fasta) from ch_fasta
+    file(fastaFai) from ch_fai
 
   output:
-  tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi_unsorted.bam") into umi_aligned_bams_ch
+    tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi_unsorted.bam") into umi_aligned_bams_ch
 
-  when: params.umi && params.read_structure1 && params.read_structure2
+  when: params.umi
 
   script:
   """
   samtools bam2fq -T RX ${convertedBam} | \
-  bwa mem -p -t ${task.cpus} -C -M -R \"@RG\\tID:${idSample}\\tSM:${idSample}\\tPL:Illumina\" \
+  bwa-mem2 mem -p -t ${task.cpus} -C -M -R \"@RG\\tID:${idSample}\\tSM:${idSample}\\tPL:Illumina\" \
   ${fasta} - | \
   samtools view -bS - > ${idSample}_umi_unsorted.bam
   """
@@ -1264,23 +1275,23 @@ process GroupReadsByUmi {
   publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publishDirMode
 
   input:
-  set idPatient, idSample, idRun, file(alignedBam) from umi_aligned_bams_ch
+      set idPatient, idSample, idRun, file(alignedBam) from umi_aligned_bams_ch
 
   output:
-  file("${idSample}_umi_histogram.txt") into umi_histogram_ch
-  tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi-grouped.bam") into umi_grouped_bams_ch
+    file("${idSample}_umi_histogram.txt") into umi_histogram_ch
+    tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi-grouped.bam") into umi_grouped_bams_ch
 
-  when: params.umi && params.read_structure1 && params.read_structure2
+  when: params.umi
 
   script:
   """
-  mkdir tmpFolder
+  mkdir tmp
 
-  samtools view -h $alignedBam | \
+  samtools view -h ${alignedBam} | \
   samblaster -M --addMateTags | \
   samtools view -Sb - >${idSample}_unsorted_tagged.bam
 
-  fgbio --tmp-dir=${PWD}/tmpFolder \
+  fgbio --tmp-dir=${PWD}/tmp \
   GroupReadsByUmi \
   -s Adjacency \
   -i ${idSample}_unsorted_tagged.bam \
@@ -1300,18 +1311,18 @@ process CallMolecularConsensusReads {
   publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publishDirMode
 
   input:
-  set idPatient, idSample, idRun, file(groupedBamFile) from umi_grouped_bams_ch
+      set idPatient, idSample, idRun, file(groupedBamFile) from umi_grouped_bams_ch
 
   output:
-  tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi-consensus.bam") into consensus_bam_ch
+      tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi-consensus.bam"), val("null") into consensus_bam_ch
 
-  when: params.umi && params.read_structure1 && params.read_structure2
+  when: params.umi
 
   script:
   """
-  mkdir tmpFolder
+  mkdir tmp
 
-  fgbio --tmp-dir=${PWD}/tmpFolder \
+  fgbio --tmp-dir=${PWD}/tmp \
   CallMolecularConsensusReads \
   -i $groupedBamFile \
   -o ${idSample}_umi-consensus.bam \
@@ -1324,18 +1335,17 @@ process CallMolecularConsensusReads {
 
 // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
 
-if (params.umi){
-  (inputPairReads, input_pair_reads_sentieon) = consensus_bam_ch.into(2)
+input_pair_reads_sentieon = Channel.empty()
 
-  inputPairReads = inputPairReads.dump(tag:'INPUT')
-
-  if (params.sentieon) inputPairReads.close()
-  else input_pair_reads_sentieon.close()
+if (params.umi) {
+  inputPairReads = inputPairReads.dump(tag:'INPUT before BWA-mem2 mem')
+  if (params.sentieon) input_pair_reads_sentieon = consensus_bam_ch
+  else inputPairReads = consensus_bam_ch
 }
 else {
   if (params.trim_fastq) inputPairReads = outputPairReadsTrimGalore
   else inputPairReads = inputPairReads.mix(inputBam)
-  inputPairReads = inputPairReads.dump(tag:'INPUT')
+  inputPairReads = inputPairReads.dump(tag:'INPUT before BWA-mem2 mem')
 
   (inputPairReads, input_pair_reads_sentieon) = inputPairReads.into(2)
   if (params.sentieon) inputPairReads.close()
@@ -4334,16 +4344,16 @@ def extractFastq(tsvFile) {
             if (hasExtension(file1, "fastq.gz") || hasExtension(file1, "fq.gz") || hasExtension(file1, "fastq") || hasExtension(file1, "fq")) {
                 checkNumberOfItem(row, 7)
                 file2 = returnFile(row[6])
-            if (!hasExtension(file2, "fastq.gz") && !hasExtension(file2, "fq.gz")  && !hasExtension(file2, "fastq") && !hasExtension(file2, "fq")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
-            if (hasExtension(file1, "fastq") || hasExtension(file1, "fq") || hasExtension(file2, "fastq") || hasExtension(file2, "fq")) {
-                exit 1, "We do recommend to use gziped fastq file to help you reduce your data footprint."
+                if (!hasExtension(file2, "fastq.gz") && !hasExtension(file2, "fq.gz")  && !hasExtension(file2, "fastq") && !hasExtension(file2, "fq")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
+                if (hasExtension(file1, "fastq") || hasExtension(file1, "fq") || hasExtension(file2, "fastq") || hasExtension(file2, "fq")) {
+                    exit 1, "We do recommend to use gziped fastq file to help you reduce your data footprint."
+                }
             }
-        }
-        else if (hasExtension(file1, "bam")) checkNumberOfItem(row, 6)
-        else "No recognisable extention for input file: ${file1}"
+            else if (hasExtension(file1, "bam")) checkNumberOfItem(row, 6)
+            else "No recognisable extention for input file: ${file1}"
 
-        [idPatient, gender, status, idSample, idRun, file1, file2]
-    }
+            [idPatient, gender, status, idSample, idRun, file1, file2]
+        }
 }
 
 // Channeling the TSV file containing mpileup
