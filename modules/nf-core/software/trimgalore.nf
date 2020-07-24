@@ -1,22 +1,26 @@
 process TRIMGALORE {
-    label 'TrimGalore'
+    tag "${meta.id}"
+    label 'process_high'
 
-    tag "${idPatient}-${idRun}"
+    publishDir "${params.outdir}/${options.publish_dir}",
+        mode: params.publish_dir_mode,
+        saveAs: { filename ->
+                    if (options.publish_results == "none") null
+                    else if (filename.endsWith('.version.txt')) null
+                    else filename }
 
-    publishDir "${params.outdir}/Reports/${idSample}/TrimGalore/${idSample}_${idRun}", mode: params.publish_dir_mode,
-      saveAs: {filename ->
-        if (filename.indexOf("_fastqc") > 0) "FastQC/${filename}"
-        else if (filename.indexOf("trimming_report.txt") > 0) "logs/${filename}"
-        else if (params.save_trimmed) filename
-        else null
-      }
+    container "quay.io/biocontainers/trim-galore:0.6.5--0"
 
     input:
-        tuple val(idPatient), val(idSample), val(idRun), path("${idSample}_${idRun}_R1.fastq.gz"), path("${idSample}_${idRun}_R2.fastq.gz")
+      tuple val(meta), path(reads)
+      val options
 
     output:
-        path "*.{html,zip,txt}", emit: report
-        tuple val(idPatient), val(idSample), val(idRun), path("${idSample}_${idRun}_R1_val_1.fq.gz"), path("${idSample}_${idRun}_R2_val_2.fq.gz"), emit: trimmed_reads
+      tuple val(meta), path("*_1.fq.gz"), path("*_2.fq.gz"), emit: reads
+      path "*.html" ,                                        emit: html optional true
+      path "*.txt" ,                                         emit: log
+      path "*.version.txt",                                  emit: version
+      path "*.zip" ,                                         emit: zip optional true
 
     script:
     // Calculate number of --cores for TrimGalore based on value of task.cpus
@@ -24,29 +28,36 @@ process TRIMGALORE {
     // See: https://github.com/nf-core/atacseq/pull/65
     def cores = 1
     if (task.cpus) {
-      cores = (task.cpus as int) - 4
-      if (cores < 1) cores = 1
-      if (cores > 4) cores = 4
-      }
+        cores = (task.cpus as int) - 4
+        if (meta.single_end) cores = (task.cpus as int) - 3
+        if (cores < 1) cores = 1
+        if (cores > 4) cores = 4
+    }
+
+    // Clipping presets have to be evaluated in the context of SE/PE
     c_r1 = params.clip_r1 > 0 ? "--clip_r1 ${params.clip_r1}" : ''
     c_r2 = params.clip_r2 > 0 ? "--clip_r2 ${params.clip_r2}" : ''
     tpc_r1 = params.three_prime_clip_r1 > 0 ? "--three_prime_clip_r1 ${params.three_prime_clip_r1}" : ''
     tpc_r2 = params.three_prime_clip_r2 > 0 ? "--three_prime_clip_r2 ${params.three_prime_clip_r2}" : ''
-    nextseq = params.trim_nextseq > 0 ? "--nextseq ${params.trim_nextseq}" : ''
-    """
-    trim_galore \
-        --cores ${cores} \
-        --paired \
-        --fastqc \
-        --gzip \
-        ${c_r1} ${c_r2} \
-        ${tpc_r1} ${tpc_r2} \
-        ${nextseq} \
-        ${idSample}_${idRun}_R1.fastq.gz ${idSample}_${idRun}_R2.fastq.gz
 
-    mv *val_1_fastqc.html "${idSample}_${idRun}_R1.trimmed_fastqc.html"
-    mv *val_2_fastqc.html "${idSample}_${idRun}_R2.trimmed_fastqc.html"
-    mv *val_1_fastqc.zip "${idSample}_${idRun}_R1.trimmed_fastqc.zip"
-    mv *val_2_fastqc.zip "${idSample}_${idRun}_R2.trimmed_fastqc.zip"
+    // Added soft-links to original fastqs for consistent naming in MultiQC
+    prefix = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    """
+    [ ! -f  ${prefix}_1.fastq.gz ] && ln -s ${reads[0]} ${prefix}_1.fastq.gz
+    [ ! -f  ${prefix}_2.fastq.gz ] && ln -s ${reads[1]} ${prefix}_2.fastq.gz
+
+    trim_galore \\
+        ${options.args} \\
+        --cores ${cores} \\
+        --paired \\
+        --gzip \\
+        ${c_r1} \\
+        ${c_r2} \\
+        ${tpc_r1} \\
+        ${tpc_r2} \\
+        ${prefix}_1.fastq.gz \\
+        ${prefix}_2.fastq.gz
+
+    trim_galore --version > trim_galore.version.txt
     """
 }

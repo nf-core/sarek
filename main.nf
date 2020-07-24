@@ -252,7 +252,7 @@ if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works
 ================================================================================
 */
 
-include { BWAMEM2_MEM }           from './modules/local/process/bwamem2_mem.nf'
+include { BWAMEM2_MEM }           from './modules/local/process/bwamem2_mem'
 include { GET_SOFTWARE_VERSIONS } from './modules/local/process/get_software_versions'
 include { OUTPUT_DOCUMENTATION }  from './modules/local/process/output_documentation'
 include { MERGE_BAM_MAPPED }      from './modules/local/process/merge_mapped_bam' 
@@ -272,10 +272,16 @@ include { BUILD_INDICES } from './modules/local/subworkflow/build_indices'
 ================================================================================
 */
 
-include { TRIMGALORE }                           from './modules/nf-core/software/trimgalore.nf'
 include { GATK_MARKDUPLICATES as MARKDUPLICATES} from './modules/nf-core/software/gatk_markduplicates'
-include { FASTQC }                               from './modules/nf-core/software/fastqc'
 include { MULTIQC }                              from './modules/nf-core/software/multiqc'
+
+/*
+================================================================================
+                      INCLUDE nf-core PIPELINE SUBWORKFLOWS
+================================================================================
+*/
+
+include { QC_TRIM } from './modules/nf-core/subworkflow/qc_trim'
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
@@ -346,28 +352,15 @@ workflow {
 
     // PREPROCESSING
 
-    fastqc_html    = Channel.empty()
-    fastqc_version = Channel.empty()
-    fastqc_zip     = Channel.empty()
+    QC_TRIM(
+        input_sample,
+        ('fastqc' in skip_qc),
+        !(params.trim_fastq),
+        params.modules['fastqc'],
+        params.modules['trimgalore']
+    )
 
-    if (!('fastqc' in skip_qc)) {
-        FASTQC(input_sample)
-        fastqc_html    = FASTQC.out.html
-        fastqc_version = FASTQC.out.version
-        fastqc_zip     = FASTQC.out.zip
-    }
-
-    def bwamem2_mem_options = [:]
-
-    bwamem2_mem_options.args_bwamem2 = "-K 100000000 -M"
-    trim_galore_report = Channel.empty()
-
-    if (params.trim_fastq) {
-        TRIM_GALORE(input_sample)
-        BWAMEM2_MEM(TRIM_GALORE.out.trimmed_reads, bwa, fasta, fai, bwamem2_mem_options)
-        trim_galore_report = TRIM_GALORE.out.report
-    }
-    else BWAMEM2_MEM(input_sample, bwa, fasta, fai, bwamem2_mem_options)
+    BWAMEM2_MEM(QC_TRIM.out.reads, bwa, fasta, fai, params.modules['bwamem2_mem'])
 
     results = BWAMEM2_MEM.out.map{ meta, bam, bai ->
         patient = meta.patient
@@ -422,25 +415,25 @@ workflow {
         // bam_duplicates_marked  =  MARK_DUPLICATES.out.bam 
     }
 
-    // bamBaseRecalibrator = bam_duplicates_marked.combine(BUILD_INDICES.out.intervals_bed)
+//     // bamBaseRecalibrator = bam_duplicates_marked.combine(BUILD_INDICES.out.intervals_bed)
     
-    // //BASE_RECALIBRATION(bamBaseRecalibrator,dbsnp, dbsnp_index,fasta,)
+//     // //BASE_RECALIBRATION(bamBaseRecalibrator,dbsnp, dbsnp_index,fasta,)
     
-    OUTPUT_DOCUMENTATION(
-        output_docs,
-        output_docs_images)
+//     OUTPUT_DOCUMENTATION(
+//         output_docs,
+//         output_docs_images)
 
-    GET_SOFTWARE_VERSIONS()
+//     GET_SOFTWARE_VERSIONS()
 
-    MULTIQC(
-        fastqc_html.collect().ifEmpty([]),
-        fastqc_zip.collect().ifEmpty([]),
-        multiqc_config,
-        multiqc_custom_config.ifEmpty([]),
-        GET_SOFTWARE_VERSIONS.out.yml,
-        trim_galore_report.collect().ifEmpty([]),
-        mark_duplicates_report.collect().ifEmpty([]),
-        workflow_summary)
+//     MULTIQC(
+//         fastqc_html.collect().ifEmpty([]),
+//         fastqc_zip.collect().ifEmpty([]),
+//         multiqc_config,
+//         multiqc_custom_config.ifEmpty([]),
+//         GET_SOFTWARE_VERSIONS.out.yml,
+//         trimgalore_report.collect().ifEmpty([]),
+//         markduplicates_report.collect().ifEmpty([]),
+//         workflow_summary)
 }
 
 /*
