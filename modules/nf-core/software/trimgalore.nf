@@ -1,4 +1,4 @@
-process TRIM_GALORE {
+process TRIMGALORE {
     label 'TrimGalore'
 
     tag "${idPatient}-${idRun}"

@@ -1,4 +1,4 @@
-process MARK_DUPLICATES {
+process GATK_MARKDUPLICATES {
     label 'cpus_16'
     tag "${id}"
 
