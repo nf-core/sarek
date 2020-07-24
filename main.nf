@@ -45,7 +45,7 @@ include {
     extract_fastq;
     extract_fastq_from_dir;
     has_extension
-} from './modules/local/custom/functions'
+} from './modules/local/functions'
 
 /*
 ================================================================================
@@ -272,10 +272,10 @@ include { BUILD_INDICES } from './modules/local/subworkflow/build_indices'
 ================================================================================
 */
 
-include { TRIM_GALORE }     from './modules/nf-core/software/trim_galore.nf'
-include { MARK_DUPLICATES } from './modules/nf-core/software/mark_duplicates'
-include { FASTQC }          from './modules/nf-core/software/fastqc'
-include { MULTIQC }         from './modules/nf-core/software/multiqc'
+include { TRIMGALORE }                           from './modules/nf-core/software/trimgalore.nf'
+include { GATK_MARKDUPLICATES as MARKDUPLICATES} from './modules/nf-core/software/gatk_markduplicates'
+include { FASTQC }                               from './modules/nf-core/software/fastqc'
+include { MULTIQC }                              from './modules/nf-core/software/multiqc'
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
