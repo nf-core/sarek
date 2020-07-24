@@ -38,8 +38,8 @@ if (params.help) {
 include {
     check_parameter_existence;
     check_parameter_list;
-    define_skip_qc_list;
     define_anno_list;
+    define_skip_qc_list;
     define_step_list;
     define_tool_list;
     extract_bam;
@@ -96,15 +96,16 @@ annotate_tools = params.annotate_tools ? params.annotate_tools.split(',').collec
 if (!check_parameter_list(annotate_tools,anno_list)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
 
 // // Check parameters
-// if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
-// if (params.cf_window && params.cf_coeff) exit 1, 'Please specify either --cf_window OR --cf_coeff, but not both of them'
+if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
+if (params.cf_window && params.cf_coeff) exit 1, 'Please specify either --cf_window OR --cf_coeff, but not both of them'
+if (params.umi && !(params.read_structure1 && params.read_structure2)) exit 1, 'Please specify both --read_structure1 and --read_structure2, when using --umi'
 
 // Handle input
 tsv_path = null
 if (params.input && (has_extension(params.input, "tsv") || has_extension(params.input, "vcf") || has_extension(params.input, "vcf.gz"))) tsv_path = params.input
 if (params.input && (has_extension(params.input, "vcf") || has_extension(params.input, "vcf.gz"))) step = "annotate"
 
-// save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? true : false
+save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? true : false
 
 // If no input file specified, trying to get TSV files corresponding to step in the TSV directory
 // only for steps preparerecalibration, recalibrate, variantcalling and controlfreec
@@ -176,7 +177,6 @@ if (tsv_path) {
 */
 
 // Initialize each params in params.genomes, catch the command line first if it was defined
-
 params.ac_loci                 = params.genome ? params.genomes[params.genome].ac_loci                 ?: false : false
 params.ac_loci_gc              = params.genome ? params.genomes[params.genome].ac_loci_gc              ?: false : false
 params.bwa                     = params.genome ? params.genomes[params.genome].bwa                     ?: false : false
@@ -197,7 +197,7 @@ params.snpeff_db               = params.genome ? params.genomes[params.genome].s
 params.species                 = params.genome ? params.genomes[params.genome].species                 ?: false : false
 params.vep_cache_version       = params.genome ? params.genomes[params.genome].vep_cache_version       ?: false : false
 
-// Initialize file channels based on params
+// Initialize file channels based on params, defined in the params.genomes[params.genome] scope
 chr_dir           = params.chr_dir           ?: Channel.empty()
 chr_length        = params.chr_length        ?: Channel.empty()
 dbsnp             = params.dbsnp             ?: Channel.empty()
@@ -207,21 +207,25 @@ known_indels      = params.known_indels      ?: Channel.empty()
 loci              = params.ac_loci           ?: Channel.empty()
 loci_gc           = params.ac_loci_gc        ?: Channel.empty()
 mappability       = params.mappability       ?: Channel.empty()
-pon               = params.pon               ?: Channel.empty()
 
-// Initialize value channels based on params
-snpeff_cache      = params.snpeff_cache      ?: Channel.empty()
+// Initialize value channels based on params, defined in the params.genomes[params.genome] scope
 snpeff_db         = params.snpeff_db         ?: Channel.empty()
 snpeff_species    = params.species           ?: Channel.empty()
-vep_cache         = params.vep_cache         ?: Channel.empty()
 vep_cache_version = params.vep_cache_version ?: Channel.empty()
 
-// Optional files, not defined within the params.genomes[params.genome] scope
-cadd_indels      = params.cadd_indels      ?: Channel.empty()
-cadd_indels_tbi  = params.cadd_indels_tbi  ?: Channel.empty()
-cadd_wg_snvs     = params.cadd_wg_snvs     ?: Channel.empty()
-cadd_wg_snvs_tbi = params.cadd_wg_snvs_tbi ?: Channel.empty()
-target_bed       = params.target_bed       ?: Channel.empty()
+// Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
+cadd_indels       = params.cadd_indels       ?: Channel.empty()
+cadd_indels_tbi   = params.cadd_indels_tbi   ?: Channel.empty()
+cadd_wg_snvs      = params.cadd_wg_snvs      ?: Channel.empty()
+cadd_wg_snvs_tbi  = params.cadd_wg_snvs_tbi  ?: Channel.empty()
+pon               = params.pon               ?: Channel.empty()
+snpeff_cache      = params.snpeff_cache      ?: Channel.empty()
+target_bed        = params.target_bed        ?: Channel.empty()
+vep_cache         = params.vep_cache         ?: Channel.empty()
+
+// Initialize value channels based on params, not defined within the params.genomes[params.genome] scope
+read_structure1   = params.read_structure1   ?: Channel.empty()
+read_structure2   = params.read_structure2   ?: Channel.empty()
 
 /*
 ================================================================================
