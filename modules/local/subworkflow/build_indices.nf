@@ -6,17 +6,17 @@
 
 // And then initialize channels based on params or indexes that were just built
 
-include { BUILD_INTERVALS }                 from '../local/build_intervals.nf'
-include { BWAMEM2_INDEX }                   from '../nf-core/bwamem2_index.nf'
-include { CREATE_INTERVALS_BED }            from '../local/create_intervals_bed.nf'
-include { GATK_CREATE_SEQUENCE_DICTIONARY } from '../local/gatk_dict.nf'
+include { BUILD_INTERVALS }                 from '../../local/process/build_intervals.nf'
+include { BWAMEM2_INDEX }                   from '../../nf-core/software/bwamem2_index.nf'
+include { CREATE_INTERVALS_BED }            from '../../local/process/create_intervals_bed.nf'
+include { GATK_CREATE_SEQUENCE_DICTIONARY } from '../../nf-core/software/gatk_dict.nf'
 include {
     HTSLIB_TABIX as HTSLIB_TABIX_DBSNP;
     HTSLIB_TABIX as HTSLIB_TABIX_GERMLINE_RESOURCE;
     HTSLIB_TABIX as HTSLIB_TABIX_KNOWN_INDELS;
     HTSLIB_TABIX as HTSLIB_TABIX_PON;
-} from '../nf-core/htslib_tabix'
-include { SAMTOOLS_FAIDX }                  from '../nf-core/samtools_faidx.nf'
+} from '../../nf-core/software/htslib_tabix'
+include { SAMTOOLS_FAIDX }                  from '../../nf-core/software/samtools_faidx.nf'
 
 workflow BUILD_INDICES{
     take:

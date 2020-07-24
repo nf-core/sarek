@@ -1,4 +1,4 @@
-include { has_extension } from './functions'
+include { has_extension } from '../custom/functions'
 
 process CREATE_INTERVALS_BED {
     tag "${intervals}"

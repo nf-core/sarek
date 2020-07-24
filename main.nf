@@ -45,7 +45,7 @@ include {
     extract_fastq;
     extract_fastq_from_dir;
     has_extension
-} from './modules/local/functions'
+} from './modules/local/custom/functions'
 
 /*
 ================================================================================
@@ -252,12 +252,10 @@ if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works
 ================================================================================
 */
 
-include { BWAMEM2_MEM }           from './modules/local/bwamem2_mem.nf'
-include { GET_SOFTWARE_VERSIONS } from './modules/local/get_software_versions'
-include { OUTPUT_DOCUMENTATION }  from './modules/local/output_documentation'
-include { TRIM_GALORE }           from './modules/local/trim_galore.nf'
-include { MERGE_BAM_MAPPED }      from './modules/local/merge_mapped_bam' 
-include { MARK_DUPLICATES }       from './modules/local/mark_duplicates' addParams(skip_qc: skip_qc)
+include { BWAMEM2_MEM }           from './modules/local/process/bwamem2_mem.nf'
+include { GET_SOFTWARE_VERSIONS } from './modules/local/process/get_software_versions'
+include { OUTPUT_DOCUMENTATION }  from './modules/local/process/output_documentation'
+include { MERGE_BAM_MAPPED }      from './modules/local/process/merge_mapped_bam' 
 //include { BASE_RECALIBRATION }    from './modules/local/base_recalibration' params(params)
 
 /*
@@ -266,7 +264,7 @@ include { MARK_DUPLICATES }       from './modules/local/mark_duplicates' addPara
 ================================================================================
 */
 
-include { BUILD_INDICES } from './modules/subworkflows/build_indices'
+include { BUILD_INDICES } from './modules/local/subworkflow/build_indices'
 
 /*
 ================================================================================
@@ -274,8 +272,10 @@ include { BUILD_INDICES } from './modules/subworkflows/build_indices'
 ================================================================================
 */
 
-include { FASTQC }  from './modules/nf-core/fastqc'
-include { MULTIQC } from './modules/nf-core/multiqc'
+include { TRIM_GALORE }     from './modules/nf-core/software/trim_galore.nf'
+include { MARK_DUPLICATES } from './modules/nf-core/software/mark_duplicates'
+include { FASTQC }          from './modules/nf-core/software/fastqc'
+include { MULTIQC }         from './modules/nf-core/software/multiqc'
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
