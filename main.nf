@@ -39,6 +39,7 @@ include {
     check_parameter_existence;
     check_parameter_list;
     define_skip_qc_list;
+    define_anno_list;
     define_step_list;
     define_tool_list;
     extract_bam;
@@ -90,9 +91,9 @@ skip_qc_list = define_skip_qc_list()
 skip_qc = params.skip_qc ? params.skip_qc == 'all' ? skip_qc_list : params.skip_qc.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
 if (!check_parameter_list(skip_qc, skip_qc_list)) exit 1, 'Unknown QC tool(s), see --help for more information'
 
-// anno_list = define_anno_list()
-// annotate_tools = params.annotate_tools ? params.annotate_tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
-// if (!check_parameter_list(annotate_tools,anno_list)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
+anno_list = define_anno_list()
+annotate_tools = params.annotate_tools ? params.annotate_tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
+if (!check_parameter_list(annotate_tools,anno_list)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
 
 // // Check parameters
 // if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
@@ -234,7 +235,7 @@ run_name = params.name
 if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
     run_name = workflow.runName
 }
-summary = Schema.params_summary(workflow, params, run_name)
+summary = Schema.params_summary(workflow, params, run_name, step, tools, skip_qc, annotate_tools)
 log.info Headers.nf_core(workflow, params.monochrome_logs)
 log.info summary.collect { k,v -> "${k.padRight(20)}: $v" }.join("\n")
 log.info "-\033[2m----------------------------------------------------\033[0m-"
@@ -344,9 +345,9 @@ workflow {
     bwa = params.bwa ?: BUILD_INDICES.out.bwa
     dbsnp_tbi = params.dbsnp ? params.dbsnp_index ?: BUILD_INDICES.out.dbsnp_tbi : Channel.empty()
     dict = params.dict ?: BUILD_INDICES.out.dict
-    fai = params.fasta_fai ? params.fasta_fai : BUILD_INDICES.out.fai
+    fai = params.fasta_fai ?: BUILD_INDICES.out.fai
     germline_resource_tbi = params.germline_resource ? params.germline_resource_index ?: BUILD_INDICES.out.germline_resource_tbi : Channel.empty()
-    intervals_bed = BUILD_INDICES.out.intervals_bed
+    intervals = BUILD_INDICES.out.intervals
     known_indels_tbi = params.known_indels ? params.known_indels_index ?: BUILD_INDICES.out.known_indels_tbi.collect() : Channel.empty()
     pon_tbi = params.pon ? params.pon_index ?: BUILD_INDICES.out.pon_tbi : Channel.empty()
 
@@ -404,8 +405,6 @@ workflow {
 
     bam_mapped = bam_single.mix(MERGE_BAM_MAPPED(bam_multiple))
 
-    bam_mapped.view()
-
     markduplicates_report = Channel.empty()
     markduplicates_bam    = Channel.empty()
 
@@ -415,7 +414,7 @@ workflow {
         // markduplicates_bam   =  MARKDUPLICATES.out.bam 
     }
 
-//     // bamBaseRecalibrator = markduplicates_bam.combine(BUILD_INDICES.out.intervals_bed)
+//     // bamBaseRecalibrator = markduplicates_bam.combine(BUILD_INDICES.out.intervals)
     
 //     // //BASE_RECALIBRATION(bamBaseRecalibrator,dbsnp, dbsnp_index,fasta,)
     

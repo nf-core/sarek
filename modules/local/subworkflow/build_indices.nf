@@ -90,7 +90,7 @@ workflow BUILD_INDICES{
         dict                  = result_dict
         fai                   = result_fai
         germline_resource_tbi = result_germline_resource_tbi
-        intervals_bed         = result_intervals
+        intervals             = result_intervals
         known_indels_tbi      = result_known_indels_tbi
         pon_tbi               = result_pon_tbi
 }
