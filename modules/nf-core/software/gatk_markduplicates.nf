@@ -1,6 +1,6 @@
 process GATK_MARKDUPLICATES {
     label 'cpus_16'
-    tag "${id}"
+    tag "${meta.id}"
 
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: {
@@ -13,7 +13,7 @@ process GATK_MARKDUPLICATES {
 
     output:
         tuple val(meta), path("${meta.sample}.md.bam"), path("${meta.sample}.md.bam.bai"), emit: bam
-        tuple val(meta),                                                                   emit: tsv
+        val meta,                                                                          emit: tsv
         path "${meta.sample}.bam.metrics", optional : true,                                emit: report
           
     script:

@@ -261,7 +261,6 @@ include { BWAMEM2_MEM }           from './modules/local/process/bwamem2_mem'
 include { GET_SOFTWARE_VERSIONS } from './modules/local/process/get_software_versions'
 include { OUTPUT_DOCUMENTATION }  from './modules/local/process/output_documentation'
 include { MERGE_BAM_MAPPED }      from './modules/local/process/merge_mapped_bam' 
-//include { BASE_RECALIBRATION }    from './modules/local/base_recalibration' params(params)
 
 /*
 ================================================================================
@@ -277,8 +276,9 @@ include { BUILD_INDICES } from './modules/local/subworkflow/build_indices'
 ================================================================================
 */
 
-include { GATK_MARKDUPLICATES as MARKDUPLICATES} from './modules/nf-core/software/gatk_markduplicates'
-include { MULTIQC }                              from './modules/nf-core/software/multiqc'
+include { GATK_MARKDUPLICATES as MARKDUPLICATES }     from './modules/nf-core/software/gatk_markduplicates'
+include { GATK_BASERECALIBRATOR as BASERECALIBRATOR } from './modules/nf-core/software/gatk_baserecalibrator'
+include { MULTIQC }                                   from './modules/nf-core/software/multiqc'
 
 /*
 ================================================================================
@@ -409,34 +409,36 @@ workflow {
 
     bam_mapped = bam_single.mix(MERGE_BAM_MAPPED(bam_multiple))
 
-    markduplicates_report = Channel.empty()
-    markduplicates_bam    = Channel.empty()
+    report_markduplicates = Channel.empty()
+    bam_markduplicates    = bam_mapped
 
     if (!(params.skip_markduplicates)) {
-        // MARKDUPLICATES(bam_mapped)
-        // markduplicates_report = MARKDUPLICATES.out.report
-        // markduplicates_bam   =  MARKDUPLICATES.out.bam 
+        MARKDUPLICATES(bam_mapped)
+        report_markduplicates = MARKDUPLICATES.out.report
+        bam_markduplicates   =  MARKDUPLICATES.out.bam
     }
 
-//     // bamBaseRecalibrator = markduplicates_bam.combine(BUILD_INDICES.out.intervals)
-    
-//     // //BASE_RECALIBRATION(bamBaseRecalibrator,dbsnp, dbsnp_index,fasta,)
-    
-//     OUTPUT_DOCUMENTATION(
-//         output_docs,
-//         output_docs_images)
+    bam_baserecalibrator = bam_markduplicates.combine(BUILD_INDICES.out.intervals)
 
-//     GET_SOFTWARE_VERSIONS()
+    BASERECALIBRATOR(bam_baserecalibrator, dbsnp, dbsnp_tbi, dict, fai, fasta, known_indels, known_indels_tbi)
 
-//     MULTIQC(
-//         fastqc_html.collect().ifEmpty([]),
-//         fastqc_zip.collect().ifEmpty([]),
-//         multiqc_config,
-//         multiqc_custom_config.ifEmpty([]),
-//         GET_SOFTWARE_VERSIONS.out.yml,
-//         trimgalore_report.collect().ifEmpty([]),
-//         markduplicates_report.collect().ifEmpty([]),
-//         workflow_summary)
+    OUTPUT_DOCUMENTATION(
+        output_docs,
+        output_docs_images)
+
+    GET_SOFTWARE_VERSIONS()
+
+    MULTIQC(
+        GET_SOFTWARE_VERSIONS.out.yml,
+        QC_TRIM.out.fastqc_html.collect().ifEmpty([]),
+        QC_TRIM.out.fastqc_zip.collect().ifEmpty([]),
+        QC_TRIM.out.trimgalore_html.collect().ifEmpty([]),
+        QC_TRIM.out.trimgalore_log.collect().ifEmpty([]),
+        QC_TRIM.out.trimgalore_zip.collect().ifEmpty([]),
+        multiqc_config,
+        multiqc_custom_config.ifEmpty([]),
+        report_markduplicates.collect().ifEmpty([]),
+        workflow_summary)
 }
 
 /*

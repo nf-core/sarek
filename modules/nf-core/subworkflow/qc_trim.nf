@@ -47,7 +47,7 @@ workflow QC_TRIM {
     fastqc_version     //    path: *.version.txt
     reads = trim_reads // channel: [ val(meta), [ reads ] ]
     trimgalore_html    //    path: *.html
-    trimgalore_zip     //    path: *.zip
     trimgalore_log     //    path: *.txt
+    trimgalore_zip     //    path: *.zip
     trimgalore_version //    path: *.version.txt
 }
