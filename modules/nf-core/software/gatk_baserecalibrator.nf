@@ -15,7 +15,7 @@ process GATK_BASERECALIBRATOR {
         
     output:
         tuple val(meta), path("${prefix}${meta.sample}.recal.table"), emit: report
-        val meta, emit: tsv
+        val meta,                                                     emit: tsv
 
     //when: params.known_indels
 

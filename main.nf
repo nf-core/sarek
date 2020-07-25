@@ -277,9 +277,10 @@ include { BUILD_INDICES } from './modules/local/subworkflow/build_indices'
 ================================================================================
 */
 
-include { GATK_MARKDUPLICATES as MARKDUPLICATES }     from './modules/nf-core/software/gatk_markduplicates'
-include { GATK_BASERECALIBRATOR as BASERECALIBRATOR } from './modules/nf-core/software/gatk_baserecalibrator'
-include { MULTIQC }                                   from './modules/nf-core/software/multiqc'
+include { GATK_BASERECALIBRATOR  as BASERECALIBRATOR }  from './modules/nf-core/software/gatk_baserecalibrator'
+include { GATK_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from './modules/nf-core/software/gatk_gatherbqsrreports'
+include { GATK_MARKDUPLICATES    as MARKDUPLICATES }    from './modules/nf-core/software/gatk_markduplicates'
+include { MULTIQC }                                     from './modules/nf-core/software/multiqc'
 
 /*
 ================================================================================
@@ -368,7 +369,7 @@ workflow {
 
     BWAMEM2_MEM(QC_TRIM.out.reads, bwa, fasta, fai, params.modules['bwamem2_mem'])
 
-    results = BWAMEM2_MEM.out.map{ meta, bam, bai ->
+    BWAMEM2_MEM.out.map{ meta, bam, bai ->
         patient = meta.patient
         sample  = meta.sample
         gender  = meta.gender
@@ -378,7 +379,7 @@ workflow {
         .branch{
             single:   it[4].size() == 1
             multiple: it[4].size() > 1
-        }.set { bam }
+        }.set{ bam }
 
     bam_single = bam.single.map {
         patient, sample, gender, status, bam, bai ->
@@ -422,6 +423,31 @@ workflow {
     bam_baserecalibrator = bam_markduplicates.combine(BUILD_INDICES.out.intervals)
 
     BASERECALIBRATOR(bam_baserecalibrator, dbsnp, dbsnp_tbi, dict, fai, fasta, known_indels, known_indels_tbi)
+
+    if (!params.no_intervals) {
+        BASERECALIBRATOR.out.report.map{ meta, table ->
+            patient = meta.patient
+            sample  = meta.sample
+            gender  = meta.gender
+            status  = meta.status
+            [patient, sample, gender, status, table]
+        }.groupTuple(by: [0,1]).set{ recaltable }
+
+        recaltable = recaltable.map {
+            patient, sample, gender, status, recal ->
+
+            def meta = [:]
+            meta.patient = patient
+            meta.sample = sample
+            meta.gender = gender[0]
+            meta.status = status[0]
+            meta.id = sample
+
+            [meta, recal]
+        }
+
+        GATHERBQSRREPORTS(recaltable)
+    }
 
     OUTPUT_DOCUMENTATION(
         output_docs,
