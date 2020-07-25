@@ -257,10 +257,11 @@ if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works
 ================================================================================
 */
 
-include { BWAMEM2_MEM }           from './modules/local/process/bwamem2_mem'
-include { GET_SOFTWARE_VERSIONS } from './modules/local/process/get_software_versions'
-include { OUTPUT_DOCUMENTATION }  from './modules/local/process/output_documentation'
-include { MERGE_BAM_MAPPED }      from './modules/local/process/merge_mapped_bam' 
+include { BWAMEM2_MEM }                  from './modules/local/process/bwamem2_mem'
+include { GET_SOFTWARE_VERSIONS }        from './modules/local/process/get_software_versions'
+include { OUTPUT_DOCUMENTATION }         from './modules/local/process/output_documentation'
+include { MERGE_BAM as MERGE_BAM_MAPPED;
+          MERGE_BAM as MERGE_BAM_RECAL;} from './modules/local/process/merge_bam'
 
 /*
 ================================================================================

@@ -1,4 +1,4 @@
-process MERGE_BAM_MAPPED {
+process MERGE_BAM {
     label 'cpus_8'
 
     tag "${meta.id}"
