@@ -39,6 +39,10 @@
   - [--no_strelka_bp](#--no_strelka_bp)
   - [--pon](#--pon)
   - [--pon_index](#--pon_index)
+  - [--ignore_soft_clipped_bases](#--ignore_soft_clipped_bases)
+  - [--umi](#--umi)
+  - [--read_structure1](#--read_structure1)
+  - [--read_structure2](#--read_structure2)
 - [Annotation](#annotation)
   - [--annotate_tools](#--annotate_tools)
   - [--annotation_cache](#--annotation_cache)
@@ -424,6 +428,25 @@ PON file should be bgzipped.
 
 Tabix index of the panel-of-normals bgzipped VCF file.
 If none provided, will be generated automatically from the panel-of-normals bgzipped VCF file.
+
+### --ignore_soft_clipped_bases
+
+Do not analyze soft clipped bases in the reads for GATK Mutect2 with the `--dont-use-soft-clipped-bases` params.
+
+### --umi
+
+If provided, UMIs steps will be run to extract and annotate the reads with UMIs and create consensus reads: this part of the pipeline uses *FGBIO* to convert the fastq files into a unmapped BAM, where reads are tagged with the UMIs extracted from the fastq sequences. In order to allow the correct tagging, the UMI sequence must be contained in the read sequence itself, and not in the FASTQ name.
+Following this step, the uBam is aligned and reads are then grouped based on mapping position and UMI tag.
+Finally, reads in the same groups are collapsed to create a consensus read. To create consensus, we have chosen to use the *adjacency method* [ref](https://cgatoxford.wordpress.com/2015/08/14/unique-molecular-identifiers-the-problem-the-solution-and-the-proof/).
+In order for the correct tagging to be performed, a read structure needs to be  specified as indicated below.
+
+### --read_structure1
+
+When processing UMIs, a read structure should always be provided for each of the fastq files, to allow the correct annotation of the bam file. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length). The read structure follows a format adopted by different tools, and described [here](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures)
+
+### --read_structure2
+
+When processing UMIs, a read structure should always be provided for each of the fastq files, to allow the correct annotation of the bam file. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length). The read structure follows a format adopted by different tools, and described [here](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures)
 
 ## Annotation
 
