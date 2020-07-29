@@ -1,4 +1,4 @@
-process GATK_CREATE_SEQUENCE_DICTIONARY {
+process GATK_CREATESEQUENCEDICTIONARY {
     tag "${fasta}"
 
     publishDir params.outdir, mode: params.publish_dir_mode,

@@ -38,6 +38,7 @@ if (params.help) {
 include {
     check_parameter_existence;
     check_parameter_list;
+    define_anno_list;
     define_skip_qc_list;
     define_step_list;
     define_tool_list;
@@ -90,20 +91,21 @@ skip_qc_list = define_skip_qc_list()
 skip_qc = params.skip_qc ? params.skip_qc == 'all' ? skip_qc_list : params.skip_qc.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
 if (!check_parameter_list(skip_qc, skip_qc_list)) exit 1, 'Unknown QC tool(s), see --help for more information'
 
-// anno_list = define_anno_list()
-// annotate_tools = params.annotate_tools ? params.annotate_tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
-// if (!check_parameter_list(annotate_tools,anno_list)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
+anno_list = define_anno_list()
+annotate_tools = params.annotate_tools ? params.annotate_tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
+if (!check_parameter_list(annotate_tools,anno_list)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
 
 // // Check parameters
-// if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
-// if (params.cf_window && params.cf_coeff) exit 1, 'Please specify either --cf_window OR --cf_coeff, but not both of them'
+if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
+if (params.cf_window && params.cf_coeff) exit 1, 'Please specify either --cf_window OR --cf_coeff, but not both of them'
+if (params.umi && !(params.read_structure1 && params.read_structure2)) exit 1, 'Please specify both --read_structure1 and --read_structure2, when using --umi'
 
 // Handle input
 tsv_path = null
 if (params.input && (has_extension(params.input, "tsv") || has_extension(params.input, "vcf") || has_extension(params.input, "vcf.gz"))) tsv_path = params.input
 if (params.input && (has_extension(params.input, "vcf") || has_extension(params.input, "vcf.gz"))) step = "annotate"
 
-// save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? true : false
+save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? true : false
 
 // If no input file specified, trying to get TSV files corresponding to step in the TSV directory
 // only for steps preparerecalibration, recalibrate, variantcalling and controlfreec
@@ -175,7 +177,6 @@ if (tsv_path) {
 */
 
 // Initialize each params in params.genomes, catch the command line first if it was defined
-
 params.ac_loci                 = params.genome ? params.genomes[params.genome].ac_loci                 ?: false : false
 params.ac_loci_gc              = params.genome ? params.genomes[params.genome].ac_loci_gc              ?: false : false
 params.bwa                     = params.genome ? params.genomes[params.genome].bwa                     ?: false : false
@@ -196,7 +197,7 @@ params.snpeff_db               = params.genome ? params.genomes[params.genome].s
 params.species                 = params.genome ? params.genomes[params.genome].species                 ?: false : false
 params.vep_cache_version       = params.genome ? params.genomes[params.genome].vep_cache_version       ?: false : false
 
-// Initialize file channels based on params
+// Initialize file channels based on params, defined in the params.genomes[params.genome] scope
 chr_dir           = params.chr_dir           ?: Channel.empty()
 chr_length        = params.chr_length        ?: Channel.empty()
 dbsnp             = params.dbsnp             ?: Channel.empty()
@@ -206,21 +207,25 @@ known_indels      = params.known_indels      ?: Channel.empty()
 loci              = params.ac_loci           ?: Channel.empty()
 loci_gc           = params.ac_loci_gc        ?: Channel.empty()
 mappability       = params.mappability       ?: Channel.empty()
-pon               = params.pon               ?: Channel.empty()
 
-// Initialize value channels based on params
-snpeff_cache      = params.snpeff_cache      ?: Channel.empty()
+// Initialize value channels based on params, defined in the params.genomes[params.genome] scope
 snpeff_db         = params.snpeff_db         ?: Channel.empty()
 snpeff_species    = params.species           ?: Channel.empty()
-vep_cache         = params.vep_cache         ?: Channel.empty()
 vep_cache_version = params.vep_cache_version ?: Channel.empty()
 
-// Optional files, not defined within the params.genomes[params.genome] scope
-cadd_indels      = params.cadd_indels      ?: Channel.empty()
-cadd_indels_tbi  = params.cadd_indels_tbi  ?: Channel.empty()
-cadd_wg_snvs     = params.cadd_wg_snvs     ?: Channel.empty()
-cadd_wg_snvs_tbi = params.cadd_wg_snvs_tbi ?: Channel.empty()
-target_bed       = params.target_bed       ?: Channel.empty()
+// Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
+cadd_indels       = params.cadd_indels       ?: Channel.empty()
+cadd_indels_tbi   = params.cadd_indels_tbi   ?: Channel.empty()
+cadd_wg_snvs      = params.cadd_wg_snvs      ?: Channel.empty()
+cadd_wg_snvs_tbi  = params.cadd_wg_snvs_tbi  ?: Channel.empty()
+pon               = params.pon               ?: Channel.empty()
+snpeff_cache      = params.snpeff_cache      ?: Channel.empty()
+target_bed        = params.target_bed        ?: Channel.empty()
+vep_cache         = params.vep_cache         ?: Channel.empty()
+
+// Initialize value channels based on params, not defined within the params.genomes[params.genome] scope
+read_structure1   = params.read_structure1   ?: Channel.empty()
+read_structure2   = params.read_structure2   ?: Channel.empty()
 
 /*
 ================================================================================
@@ -234,7 +239,7 @@ run_name = params.name
 if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
     run_name = workflow.runName
 }
-summary = Schema.params_summary(workflow, params, run_name)
+summary = Schema.params_summary(workflow, params, run_name, step, tools, skip_qc, annotate_tools)
 log.info Headers.nf_core(workflow, params.monochrome_logs)
 log.info summary.collect { k,v -> "${k.padRight(20)}: $v" }.join("\n")
 log.info "-\033[2m----------------------------------------------------\033[0m-"
@@ -252,13 +257,11 @@ if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works
 ================================================================================
 */
 
-include { BWAMEM2_MEM }           from './modules/local/bwamem2_mem.nf'
-include { GET_SOFTWARE_VERSIONS } from './modules/local/get_software_versions'
-include { OUTPUT_DOCUMENTATION }  from './modules/local/output_documentation'
-include { TRIM_GALORE }           from './modules/local/trim_galore.nf'
-include { MERGE_BAM_MAPPED }      from './modules/local/merge_mapped_bam' 
-include { MARK_DUPLICATES }       from './modules/local/mark_duplicates' addParams(skip_qc: skip_qc)
-//include { BASE_RECALIBRATION }    from './modules/local/base_recalibration' params(params)
+include { BWAMEM2_MEM }                  from './modules/local/process/bwamem2_mem'
+include { GET_SOFTWARE_VERSIONS }        from './modules/local/process/get_software_versions'
+include { OUTPUT_DOCUMENTATION }         from './modules/local/process/output_documentation'
+include { MERGE_BAM as MERGE_BAM_MAPPED;
+          MERGE_BAM as MERGE_BAM_RECAL;} from './modules/local/process/merge_bam'
 
 /*
 ================================================================================
@@ -266,7 +269,7 @@ include { MARK_DUPLICATES }       from './modules/local/mark_duplicates' addPara
 ================================================================================
 */
 
-include { BUILD_INDICES } from './modules/subworkflows/build_indices'
+include { BUILD_INDICES } from './modules/local/subworkflow/build_indices'
 
 /*
 ================================================================================
@@ -274,8 +277,18 @@ include { BUILD_INDICES } from './modules/subworkflows/build_indices'
 ================================================================================
 */
 
-include { FASTQC }  from './modules/nf-core/fastqc'
-include { MULTIQC } from './modules/nf-core/multiqc'
+include { GATK_BASERECALIBRATOR  as BASERECALIBRATOR }  from './modules/nf-core/software/gatk_baserecalibrator'
+include { GATK_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from './modules/nf-core/software/gatk_gatherbqsrreports'
+include { GATK_MARKDUPLICATES    as MARKDUPLICATES }    from './modules/nf-core/software/gatk_markduplicates'
+include { MULTIQC }                                     from './modules/nf-core/software/multiqc'
+
+/*
+================================================================================
+                      INCLUDE nf-core PIPELINE SUBWORKFLOWS
+================================================================================
+*/
+
+include { QC_TRIM } from './modules/nf-core/subworkflow/qc_trim'
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
@@ -338,38 +351,25 @@ workflow {
     bwa = params.bwa ?: BUILD_INDICES.out.bwa
     dbsnp_tbi = params.dbsnp ? params.dbsnp_index ?: BUILD_INDICES.out.dbsnp_tbi : Channel.empty()
     dict = params.dict ?: BUILD_INDICES.out.dict
-    fai = params.fasta_fai ? params.fasta_fai : BUILD_INDICES.out.fai
+    fai = params.fasta_fai ?: BUILD_INDICES.out.fai
     germline_resource_tbi = params.germline_resource ? params.germline_resource_index ?: BUILD_INDICES.out.germline_resource_tbi : Channel.empty()
-    intervals_bed = BUILD_INDICES.out.intervals_bed
+    intervals = BUILD_INDICES.out.intervals
     known_indels_tbi = params.known_indels ? params.known_indels_index ?: BUILD_INDICES.out.known_indels_tbi.collect() : Channel.empty()
     pon_tbi = params.pon ? params.pon_index ?: BUILD_INDICES.out.pon_tbi : Channel.empty()
 
     // PREPROCESSING
 
-    fastqc_html    = Channel.empty()
-    fastqc_version = Channel.empty()
-    fastqc_zip     = Channel.empty()
+    QC_TRIM(
+        input_sample,
+        ('fastqc' in skip_qc),
+        !(params.trim_fastq),
+        params.modules['fastqc'],
+        params.modules['trimgalore']
+    )
 
-    if (!('fastqc' in skip_qc)) {
-        FASTQC(input_sample)
-        fastqc_html    = FASTQC.out.html
-        fastqc_version = FASTQC.out.version
-        fastqc_zip     = FASTQC.out.zip
-    }
+    BWAMEM2_MEM(QC_TRIM.out.reads, bwa, fasta, fai, params.modules['bwamem2_mem'])
 
-    def bwamem2_mem_options = [:]
-
-    bwamem2_mem_options.args_bwamem2 = "-K 100000000 -M"
-    trim_galore_report = Channel.empty()
-
-    if (params.trim_fastq) {
-        TRIM_GALORE(input_sample)
-        BWAMEM2_MEM(TRIM_GALORE.out.trimmed_reads, bwa, fasta, fai, bwamem2_mem_options)
-        trim_galore_report = TRIM_GALORE.out.report
-    }
-    else BWAMEM2_MEM(input_sample, bwa, fasta, fai, bwamem2_mem_options)
-
-    results = BWAMEM2_MEM.out.map{ meta, bam, bai ->
+    BWAMEM2_MEM.out.map{ meta, bam, bai ->
         patient = meta.patient
         sample  = meta.sample
         gender  = meta.gender
@@ -379,7 +379,7 @@ workflow {
         .branch{
             single:   it[4].size() == 1
             multiple: it[4].size() > 1
-        }.set { bam }
+        }.set{ bam }
 
     bam_single = bam.single.map {
         patient, sample, gender, status, bam, bai ->
@@ -411,21 +411,44 @@ workflow {
 
     bam_mapped = bam_single.mix(MERGE_BAM_MAPPED(bam_multiple))
 
-    bam_mapped.view()
-
-    mark_duplicates_report = Channel.empty()
-    bam_duplicates_marked  = Channel.empty()
+    report_markduplicates = Channel.empty()
+    bam_markduplicates    = bam_mapped
 
     if (!(params.skip_markduplicates)) {
-        // MARK_DUPLICATES(bam_mapped)
-        // mark_duplicates_report = MARK_DUPLICATES.out.report
-        // bam_duplicates_marked  =  MARK_DUPLICATES.out.bam 
+        MARKDUPLICATES(bam_mapped)
+        report_markduplicates = MARKDUPLICATES.out.report
+        bam_markduplicates   =  MARKDUPLICATES.out.bam
     }
 
-    // bamBaseRecalibrator = bam_duplicates_marked.combine(BUILD_INDICES.out.intervals_bed)
-    
-    // //BASE_RECALIBRATION(bamBaseRecalibrator,dbsnp, dbsnp_index,fasta,)
-    
+    bam_baserecalibrator = bam_markduplicates.combine(BUILD_INDICES.out.intervals)
+
+    BASERECALIBRATOR(bam_baserecalibrator, dbsnp, dbsnp_tbi, dict, fai, fasta, known_indels, known_indels_tbi)
+
+    if (!params.no_intervals) {
+        BASERECALIBRATOR.out.report.map{ meta, table ->
+            patient = meta.patient
+            sample  = meta.sample
+            gender  = meta.gender
+            status  = meta.status
+            [patient, sample, gender, status, table]
+        }.groupTuple(by: [0,1]).set{ recaltable }
+
+        recaltable = recaltable.map {
+            patient, sample, gender, status, recal ->
+
+            def meta = [:]
+            meta.patient = patient
+            meta.sample = sample
+            meta.gender = gender[0]
+            meta.status = status[0]
+            meta.id = sample
+
+            [meta, recal]
+        }
+
+        GATHERBQSRREPORTS(recaltable)
+    }
+
     OUTPUT_DOCUMENTATION(
         output_docs,
         output_docs_images)
@@ -433,13 +456,15 @@ workflow {
     GET_SOFTWARE_VERSIONS()
 
     MULTIQC(
-        fastqc_html.collect().ifEmpty([]),
-        fastqc_zip.collect().ifEmpty([]),
+        GET_SOFTWARE_VERSIONS.out.yml,
+        QC_TRIM.out.fastqc_html.collect().ifEmpty([]),
+        QC_TRIM.out.fastqc_zip.collect().ifEmpty([]),
+        QC_TRIM.out.trimgalore_html.collect().ifEmpty([]),
+        QC_TRIM.out.trimgalore_log.collect().ifEmpty([]),
+        QC_TRIM.out.trimgalore_zip.collect().ifEmpty([]),
         multiqc_config,
         multiqc_custom_config.ifEmpty([]),
-        GET_SOFTWARE_VERSIONS.out.yml,
-        trim_galore_report.collect().ifEmpty([]),
-        mark_duplicates_report.collect().ifEmpty([]),
+        report_markduplicates.collect().ifEmpty([]),
         workflow_summary)
 }
 

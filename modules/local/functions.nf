@@ -1,9 +1,7 @@
 /*
-================================================================================
-                                 sarek functions
-================================================================================
-*/
-
+ * This file holds several functions used to perform operation in Sarek
+ */
+ 
 // Check if a row has the expected number of item
 def check_number_of_item(row, number) {
     if (row.size() != number) exit 1, "Malformed row in TSV file: ${row}, see --help for more information"
@@ -162,7 +160,7 @@ def extract_fastq(tsvFile) {
             }
         }
         else if (has_extension(read1, "bam")) check_number_of_item(row, 6)
-        else "No recognisable extention for input file: ${read1}"
+        else exit 1, "No recognisable extention for input file: ${read1}"
 
         return [meta, [read1, read2]]
     }

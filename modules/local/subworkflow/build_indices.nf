@@ -6,17 +6,15 @@
 
 // And then initialize channels based on params or indexes that were just built
 
-include { BUILD_INTERVALS }                 from '../local/build_intervals.nf'
-include { BWAMEM2_INDEX }                   from '../nf-core/bwamem2_index.nf'
-include { CREATE_INTERVALS_BED }            from '../local/create_intervals_bed.nf'
-include { GATK_CREATE_SEQUENCE_DICTIONARY } from '../local/gatk_dict.nf'
-include {
-    HTSLIB_TABIX as HTSLIB_TABIX_DBSNP;
-    HTSLIB_TABIX as HTSLIB_TABIX_GERMLINE_RESOURCE;
-    HTSLIB_TABIX as HTSLIB_TABIX_KNOWN_INDELS;
-    HTSLIB_TABIX as HTSLIB_TABIX_PON;
-} from '../nf-core/htslib_tabix'
-include { SAMTOOLS_FAIDX }                  from '../nf-core/samtools_faidx.nf'
+include { BUILD_INTERVALS }                            from '../process/build_intervals.nf'
+include { BWAMEM2_INDEX }                              from '../../nf-core/software/bwamem2_index.nf'
+include { CREATE_INTERVALS_BED }                       from '../process/create_intervals_bed.nf'
+include { GATK_CREATESEQUENCEDICTIONARY as GATK_DICT } from '../../nf-core/software/gatk_createsequencedictionary.nf'
+include { HTSLIB_TABIX as TABIX_DBSNP;
+          HTSLIB_TABIX as TABIX_GERMLINE_RESOURCE;
+          HTSLIB_TABIX as TABIX_KNOWN_INDELS;
+          HTSLIB_TABIX as TABIX_PON;}                  from '../../nf-core/software/htslib_tabix'
+include { SAMTOOLS_FAIDX }                             from '../../nf-core/software/samtools_faidx.nf'
 
 workflow BUILD_INDICES{
     take:
@@ -36,7 +34,7 @@ workflow BUILD_INDICES{
 
     result_dict = Channel.empty()
     if (!(params.dict) && params.fasta && !('annotate' in step) && !('controlfreec' in step))
-        result_dict = GATK_CREATE_SEQUENCE_DICTIONARY(fasta)
+        result_dict = GATK_DICT(fasta)
 
     result_fai = Channel.empty()
     if (!(params.fasta_fai) && params.fasta && !('annotate' in step))
@@ -44,19 +42,19 @@ workflow BUILD_INDICES{
 
     result_dbsnp_tbi = Channel.empty()
     if (!(params.dbsnp_index) && params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || 'tnscope' in tools))
-        result_dbsnp_tbi = HTSLIB_TABIX_DBSNP(dbsnp)
+        result_dbsnp_tbi = TABIX_DBSNP(dbsnp)
 
     result_germline_resource_tbi = Channel.empty()
     if (!(params.germline_resource_index) && params.germline_resource && 'mutect2' in tools)
-        result_germline_resource_tbi = HTSLIB_TABIX_GERMLINE_RESOURCE(germline_resource)
+        result_germline_resource_tbi = TABIX_GERMLINE_RESOURCE(germline_resource)
 
     result_known_indels_tbi = Channel.empty()
     if (!(params.known_indels_index) && params.known_indels && ('mapping' in step || 'preparerecalibration' in step))
-        result_known_indels_tbi = HTSLIB_TABIX_KNOWN_INDELS(known_indels)
+        result_known_indels_tbi = TABIX_KNOWN_INDELS(known_indels)
 
     result_pon_tbi = Channel.empty()
     if (!(params.pon_index) && params.pon && ('tnscope' in tools || 'mutect2' in tools))
-        result_pon_tbi = HTSLIB_TABIX_PON(pon)
+        result_pon_tbi = TABIX_PON(pon)
 
     if (params.no_intervals) {
         file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
@@ -92,7 +90,7 @@ workflow BUILD_INDICES{
         dict                  = result_dict
         fai                   = result_fai
         germline_resource_tbi = result_germline_resource_tbi
-        intervals_bed         = result_intervals
+        intervals             = result_intervals
         known_indels_tbi      = result_known_indels_tbi
         pon_tbi               = result_pon_tbi
 }

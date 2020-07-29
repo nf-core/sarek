@@ -9,13 +9,15 @@ process MULTIQC {
     publishDir "${params.outdir}/multiqc", mode: params.publish_dir_mode
 
     input:
+        path software_versions
         path fastqc_html
         path fastqc_zip
+        path trim_galore_html
+        path trim_galore_log
+        path trim_galore_zip
         path multiqc_config
         path multiqc_custom_config
-        path software_versions
-        path trim_galore
-        path mark_duplicates
+        path report_markduplicates
         val workflow_summary
 
     output:

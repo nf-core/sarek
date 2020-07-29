@@ -78,7 +78,7 @@ class JSON {
         return output
     }
 
-    private static LinkedHashMap params_summary(workflow, params, run_name) {
+    private static LinkedHashMap params_summary(workflow, params, run_name, step, tools, skip_qc, annotate_tools) {
         def Map summary = [:]
         if (workflow.revision) summary['Pipeline Release'] = workflow.revision
         summary['Run Name']         = run_name ?: workflow.runName
@@ -86,14 +86,14 @@ class JSON {
         if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
 
         summary['Input']             = params.input
-        // summary['Step']              = step
+        summary['Step']              = step
         summary['Genome']            = params.genome
-        // if (params.no_intervals && step != 'annotate')  summary['Intervals']         = 'Do not use'
+        if (params.no_intervals && step != 'annotate')  summary['Intervals']         = 'Do not use'
         summary['Nucleotides/s']     = params.nucleotides_per_second
         if (params.sentieon)            summary['Sention']                           = "Using Sentieon for Preprocessing and/or Variant Calling"
-        // if (params.skip_qc)             summary['QC tools skipped']                  = skip_qc.join(', ')
+        if (params.skip_qc)             summary['QC tools skipped']                  = skip_qc.join(', ')
         if (params.target_bed)          summary['Target BED']                        = params.target_bed
-        // if (params.tools)               summary['Tools']                             = tools.join(', ')
+        if (params.tools)               summary['Tools']                             = tools.join(', ')
         if (params.trim_fastq || params.split_fastq) summary['Modify fastqs'] = "trim and/or split"
 
         if (params.trim_fastq) {
@@ -114,24 +114,24 @@ class JSON {
         summary['Save BAMs mapped']   = params.save_bam_mapped ? 'Yes' : 'No'
         summary['Skip MarkDuplicates']   = params.skip_markduplicates ? 'Yes' : 'No'
 
-        // if ('ascat' in tools) {
+        if ('ascat' in tools) {
             summary['ASCAT'] = "Options"
             if (params.ascat_purity) summary['purity'] = params.ascat_purity
             if (params.ascat_ploidy) summary['ploidy'] = params.ascat_ploidy
-        // }
+        }
 
-        // if ('controlfreec' in tools) {
+        if ('controlfreec' in tools) {
             summary['Control-FREEC'] = "Options"
             if (params.cf_window)    summary['window']             = params.cf_window
             if (params.cf_coeff)     summary['coeff of variation'] = params.cf_coeff
             if (params.cf_ploidy)    summary['ploidy']             = params.cf_ploidy
-        // }
+        }
 
-        // if ('haplotypecaller' in tools)             summary['GVCF']       = params.no_gvcf ? 'No' : 'Yes'
-        // if ('strelka' in tools && 'manta' in tools) summary['Strelka BP'] = params.no_strelka_bp ? 'No' : 'Yes'
-        // if (params.pon && ('mutect2' in tools || (params.sentieon && 'tnscope' in tools))) summary['Panel of normals'] = params.pon
+        if ('haplotypecaller' in tools)             summary['GVCF']       = params.no_gvcf ? 'No' : 'Yes'
+        if ('strelka' in tools && 'manta' in tools) summary['Strelka BP'] = params.no_strelka_bp ? 'No' : 'Yes'
+        if (params.pon && ('mutect2' in tools || (params.sentieon && 'tnscope' in tools))) summary['Panel of normals'] = params.pon
 
-        // if (params.annotate_tools) summary['Tools to annotate'] = annotate_tools.join(', ')
+        if (params.annotate_tools) summary['Tools to annotate'] = annotate_tools.join(', ')
 
         if (params.annotation_cache) {
             summary['Annotation cache'] = "Enabled"

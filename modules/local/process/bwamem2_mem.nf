@@ -24,7 +24,7 @@ process BWAMEM2_MEM {
     extra = meta.status == 1 ? "-B 3" : ""
     """
     bwa-mem2 mem \
-        ${options.args_bwamem2} \
+        ${options.args} \
         -R \"${readGroup}\" \
         ${extra} \
         -t ${task.cpus} \
