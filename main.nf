@@ -280,6 +280,7 @@ include { BUILD_INDICES } from './modules/local/subworkflow/build_indices'
 include { GATK_BASERECALIBRATOR  as BASERECALIBRATOR }  from './modules/nf-core/software/gatk_baserecalibrator'
 include { GATK_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from './modules/nf-core/software/gatk_gatherbqsrreports'
 include { GATK_MARKDUPLICATES    as MARKDUPLICATES }    from './modules/nf-core/software/gatk_markduplicates'
+include { GATK_APPLYBQSR         as APPLYBQSR }         from './modules/nf-core/software/gatk_applybqsr'
 include { MULTIQC }                                     from './modules/nf-core/software/multiqc'
 
 /*
@@ -447,7 +448,71 @@ workflow {
         }
 
         GATHERBQSRREPORTS(recaltable)
+        // if ('baserecalibrator' in skip_qc) baseRecalibratorReport.close()
     }
+
+    // (recalTableTSV, recalTableSampleTSV) = recalTableTSV.mix(recalTableTSVnoInt).into(2)
+
+// // Create TSV files to restart from this step
+// if (params.skip_markduplicates) {
+//     recalTableTSV.map { idPatient, idSample ->
+//         status = status_map[idPatient, idSample]
+//         gender = gender_map[idPatient]
+//         bam = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam"
+//         bai = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam.bai"
+//         recalTable = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.recal.table"
+//         "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${recalTable}\n"
+//     }.collectFile(
+//         name: 'mapped_no_duplicates_marked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
+//     )
+
+//     recalTableSampleTSV
+//         .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV/") {
+//             idPatient, idSample ->
+//             status = status_map[idPatient, idSample]
+//             gender = gender_map[idPatient]
+//             bam = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam"
+//             bai = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam.bai"
+//             recalTable = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.recal.table"
+//             ["mapped_no_duplicates_marked_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${recalTable}\n"]
+//     }
+// } else {
+//     recalTableTSV.map { idPatient, idSample ->
+//     status = status_map[idPatient, idSample]
+//     gender = gender_map[idPatient]
+//     bam = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam"
+//     bai = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam.bai"
+//     recalTable = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.recal.table"
+
+//         "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${recalTable}\n"
+//     }.collectFile(
+//         name: 'duplicates_marked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
+//     )
+
+//     recalTableSampleTSV
+//         .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV/") {
+//             idPatient, idSample ->
+//             status = status_map[idPatient, idSample]
+//             gender = gender_map[idPatient]
+//             bam = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam"
+//             bai = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam.bai"
+//             recalTable = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.recal.table"
+//             ["duplicates_marked_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${recalTable}\n"]
+//     }
+
+//}
+    bam_applybqsr = MARKDUPLICATES.out.bam.join(GATHERBQSRREPORTS.out.table, by:[0])   
+
+    //if (step == 'recalibrate') bamApplyBQSR = input_sample
+
+    bam_applybqsr = bam_applybqsr.combine(BUILD_INDICES.out.intervals)
+
+    APPLYBQSR(bam_applybqsr, dict, fasta, fai)
+
+    
+
+
+
 
     OUTPUT_DOCUMENTATION(
         output_docs,
