@@ -357,7 +357,7 @@
                     "default": "null",
                     "fa_icon": "fas fa-file",
                     "description": "Path to CADD InDels file"
-                },                },
+                },
                 "cadd_indels_tbi": {
                     "type": "string",
                     "default": "null",
