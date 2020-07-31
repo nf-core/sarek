@@ -8,9 +8,6 @@ process SAMTOOLS_INDEX {
 
     output:
         tuple val(meta), path(bam), path("*.bai")
-//    samtools index ${idSample}.bam
-
-    //    samtools index ${idSample}.recal.bam
 
     script:
     """

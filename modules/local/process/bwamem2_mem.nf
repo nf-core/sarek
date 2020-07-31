@@ -16,7 +16,7 @@ process BWAMEM2_MEM {
         val options
 
     output:
-        tuple val(meta), path("*.bam")//, path("*.bai")
+        tuple val(meta), path("*.bam")
 
     script:
     CN = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
