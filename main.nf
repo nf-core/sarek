@@ -220,7 +220,8 @@ cadd_wg_snvs      = params.cadd_wg_snvs      ?: Channel.empty()
 cadd_wg_snvs_tbi  = params.cadd_wg_snvs_tbi  ?: Channel.empty()
 pon               = params.pon               ?: Channel.empty()
 snpeff_cache      = params.snpeff_cache      ?: Channel.empty()
-target_bed        = params.target_bed        ?: Channel.empty()
+//ch_target_bed = params.target_bed ? Channel.value(file(params.target_bed)) : "null"
+target_bed        =  params.target_bed        ?: Channel.empty()
 vep_cache         = params.vep_cache         ?: Channel.empty()
 
 // Initialize value channels based on params, not defined within the params.genomes[params.genome] scope
@@ -485,8 +486,8 @@ workflow {
         SAMTOOLS_STATS(MERGE_BAM_RECAL.out)
     //TODO This should work but somehow BAMQC is not called
     bamqc = BWAMEM2_MEM.out.mix(MERGE_BAM_RECAL.out)
-    bamqc.dump()
-    BAMQC(bamqc, target_bed)
+    //if(!('bamqc' in skipQC))
+        BAMQC(bamqc)//, target_bed)
 
 
     /*
