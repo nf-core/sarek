@@ -1,11 +1,16 @@
 # nf-core/sarek: Usage <!-- omit in toc -->
 
-- [Introduction](#introduction)
 - [Running the pipeline](#running-the-pipeline)
   - [Updating the pipeline](#updating-the-pipeline)
   - [Reproducibility](#reproducibility)
-- [Main arguments](#main-arguments)
+- [Core Nextflow arguments](#core-nextflow-arguments)
   - [-profile](#-profile)
+  - [-resume](#-resume)
+  - [-c](#-c)
+    - [Custom resource requests](#custom-resource-requests)
+  - [Running in the background](#running-in-the-background)
+    - [Nextflow memory requirements](#nextflow-memory-requirements)
+- [Pipeline specific arguments](#pipeline-specific-arguments)
   - [--input](#--input)
   - [--step](#--step)
   - [--help](#--help)
@@ -90,13 +95,10 @@
   - [--plaintext_email](#--plaintext_email)
   - [--max_multiqc_email_size](#--max_multiqc_email_size)
   - [-name](#-name)
-  - [-resume](#-resume)
-  - [-c](#-c)
   - [--custom_config_version](#--custom_config_version)
   - [--custom_config_base](#--custom_config_base)
 - [Job resources](#job-resources)
   - [Automatic resubmission](#automatic-resubmission)
-  - [Custom resource requests](#custom-resource-requests)
   - [--max_memory](#--max_memory)
   - [--max_time](#--max_time)
   - [--max_cpus](#--max_cpus)
@@ -116,20 +118,6 @@
   - [--sampleDir](#--sampledir)
   - [--skipQC](#--skipqc)
   - [--targetBED](#--targetbed)
-
-## Introduction
-
-Nextflow handles job submissions on SLURM or other environments, and supervises running the jobs.
-Thus the Nextflow process must run until the pipeline is finished.
-We recommend that you put the process running in the background through `screen` / `tmux` or similar tool.
-Alternatively you can run nextflow within a cluster job submitted your job scheduler.
-
-It is recommended to limit the Nextflow Java virtual machines memory.
-We recommend adding the following line to your environment (typically in `~/.bashrc` or `~./bash_profile`):
-
-```bash
-NXF_OPTS='-Xms1g -Xmx4g'
-```
 
 ## Running the pipeline
 
@@ -177,7 +165,9 @@ Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 2.6
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 
-## Main arguments
+## Core Nextflow arguments
+
+> **NB:** These options are part of Nextflow and use a _single_ hyphen (pipeline parameters use a double-hyphen).
 
 ### -profile
 
@@ -225,6 +215,62 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `test_trimming`
   - A profile with a complete configuration for automated testing
   - Includes links to test data so needs no other parameters
+- `test_umi_qiaseq`
+  - A profile with a complete configuration for automated testing
+  - Includes links to test data so needs no other parameters
+- `test_umi_tso`
+  - A profile with a complete configuration for automated testing
+  - Includes links to test data so needs no other parameters
+
+### -resume
+
+Specify this when restarting a pipeline. Nextflow will used cached results from any pipeline steps where the inputs are the same, continuing from where it got to previously.
+
+You can also supply a run name to resume a specific run: `-resume [run-name]`. Use the `nextflow log` command to show previous run names.
+
+### -c
+
+Specify the path to a specific config file (this is a core Nextflow command). See the [nf-core website documentation](https://nf-co.re/usage/configuration) for more information.
+
+#### Custom resource requests
+
+Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the steps in the pipeline, if the job exits with an error code of `143` (exceeded requested resources) it will automatically resubmit with higher requests (2 x original, then 3 x original). If it still fails after three times then the pipeline is stopped.
+
+Whilst these default requirements will hopefully work for most people with most data, you may find that you want to customise the compute resources that the pipeline requests. You can do this by creating a custom config file. For example, to give the workflow process `VEP` 32GB of memory, you could use the following config:
+
+```nextflow
+process {
+  withName: VEP {
+    memory = 32.GB
+  }
+}
+```
+
+See the main [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for more information.
+
+If you are likely to be running `nf-core` pipelines regularly it may be a good idea to request that your custom config file is uploaded to the `nf-core/configs` git repository. Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter (see definition below). You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
+
+If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack) on the [`#configs` channel](https://nfcore.slack.com/channels/configs).
+
+### Running in the background
+
+Nextflow handles job submissions and supervises the running jobs. The Nextflow process must run until the pipeline is finished.
+
+The Nextflow `-bg` flag launches Nextflow in the background, detached from your terminal so that the workflow does not stop if you log out of your session. The logs are saved to a file.
+
+Alternatively, you can use `screen` / `tmux` or similar tool to create a detached session which you can log back into at a later time.
+Some HPC setups also allow you to run nextflow within a cluster job submitted your job scheduler (from where it submits more jobs).
+
+#### Nextflow memory requirements
+
+In some cases, the Nextflow Java virtual machines can start to request a large amount of memory.
+We recommend adding the following line to your environment to limit this (typically in `~/.bashrc` or `~./bash_profile`):
+
+```bash
+NXF_OPTS='-Xms1g -Xmx4g'
+```
+
+## Pipeline specific arguments
 
 ### --input
 
@@ -442,11 +488,13 @@ In order for the correct tagging to be performed, a read structure needs to be  
 
 ### --read_structure1
 
-When processing UMIs, a read structure should always be provided for each of the fastq files, to allow the correct annotation of the bam file. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length). The read structure follows a format adopted by different tools, and described [here](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures)
+When processing UMIs, a read structure should always be provided for each of the fastq files, to allow the correct annotation of the bam file. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length).
+The read structure follows a format adopted by different tools, and described [here](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures)
 
 ### --read_structure2
 
-When processing UMIs, a read structure should always be provided for each of the fastq files, to allow the correct annotation of the bam file. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length). The read structure follows a format adopted by different tools, and described [here](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures)
+When processing UMIs, a read structure should always be provided for each of the fastq files, to allow the correct annotation of the bam file. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length).
+The read structure follows a format adopted by different tools, and described [here](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures)
 
 ## Annotation
 
@@ -883,24 +931,6 @@ This is used in the MultiQC report (if not default) and in the summary HTML / e-
 
 **NB:** Single hyphen (core Nextflow option)
 
-### -resume
-
-Specify this when restarting a pipeline.
-Nextflow will used cached results from any pipeline steps where the inputs are the same, continuing from where it got to previously.
-
-You can also supply a run name to resume a specific run: `-resume [run-name]`.
-Use the `nextflow log` command to show previous run names.
-
-**NB:** Single hyphen (core Nextflow option)
-
-### -c
-
-Specify the path to a specific config file (this is a core NextFlow command).
-
-**NB:** Single hyphen (core Nextflow option)
-
-Note - you can use this to override pipeline defaults.
-
 ### --custom_config_version
 
 Provide git commit id for custom Institutional configs hosted at `nf-core/configs`.
@@ -921,14 +951,7 @@ If you do need them, you should download the files from the repo and tell nextfl
 For example:
 
 ```bash
-## Download and unzip the config files
-cd /path/to/my/configs
-wget https://github.com/nf-core/configs/archive/master.zip
-unzip master.zip
-
-## Run the pipeline
-cd /path/to/my/data
-nextflow run /path/to/pipeline/ --custom_config_base /path/to/my/configs/configs-master/
+NXF_OPTS='-Xms1g -Xmx4g'
 ```
 
 > Note that the nf-core/tools helper package has a `download` command to download all required pipeline
@@ -941,17 +964,6 @@ nextflow run /path/to/pipeline/ --custom_config_base /path/to/my/configs/configs
 Each step in the pipeline has a default set of requirements for number of CPUs, memory and time.
 For most of the steps in the pipeline, if the job exits with an error code of `143` (exceeded requested resources) it will automatically resubmit with higher requests (2 x original, then 3 x original).
 If it still fails after three times then the pipeline is stopped.
-
-### Custom resource requests
-
-Wherever process-specific requirements are set in the pipeline, the default value can be changed by creating a custom config file.
-See the files hosted at [`nf-core/configs`](https://github.com/nf-core/configs/tree/master/conf) for examples.
-
-If you are likely to be running `nf-core` pipelines regularly it may be a good idea to request that your custom config file is uploaded to the `nf-core/configs` git repository.
-Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter (see definition below).
-You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
-
-If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack).
 
 ### --max_memory
 

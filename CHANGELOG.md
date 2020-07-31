@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [dev](https://github.com/nf-core/sarek/tree/dev)
 
@@ -20,9 +20,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Fixed
 
 - [#229](https://github.com/nf-core/sarek/pull/229) - Fix `Control-FREEC` restart issue [#225](https://github.com/nf-core/sarek/issues/225)
-- [#236](https://github.com/nf-core/sarek/pull/236) - Fix Mutect2 typo issue [#227](https://github.com/nf-core/sarek/issues/227)
-
-### Deprecated
+- [#236](https://github.com/nf-core/sarek/pull/236) - Fix `Mutect2` typo issue [#227](https://github.com/nf-core/sarek/issues/227)
 
 ### Removed
 
