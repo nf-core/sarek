@@ -485,7 +485,7 @@ workflow {
     if(!('samtools' in skip_qc))
         SAMTOOLS_STATS(MERGE_BAM_RECAL.out)
     //TODO This should work but somehow BAMQC is not called
-    bamqc = BWAMEM2_MEM.out.mix(MERGE_BAM_RECAL.out)
+    bamqc = BWAMEM2_MEM.out//.mix(MERGE_BAM_RECAL.out)
     //if(!('bamqc' in skipQC))
         BAMQC(bamqc)//, target_bed)
 
