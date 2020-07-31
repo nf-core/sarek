@@ -38,7 +38,7 @@ Steps to reproduce the behaviour:
 
 - Engine: <!-- [e.g. Conda, Docker or Singularity] -->
 - version: <!-- [e.g. 1.0.0] -->
-- Image tag: <!-- [e.g. nfcore/sarek:1.0.0] -->
+- Image tag: <!-- [e.g. nfcore/sarek:2.6] -->
 
 ## Additional context
 

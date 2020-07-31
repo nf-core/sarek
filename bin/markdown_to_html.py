@@ -6,7 +6,6 @@ import os
 import sys
 import io
 
-
 def convert_markdown(in_fn):
     input_md = io.open(in_fn, mode="r", encoding="utf-8").read()
     html = markdown.markdown(
@@ -19,7 +18,6 @@ def convert_markdown(in_fn):
         },
     )
     return html
-
 
 def wrap_html(contents):
     header = """<!DOCTYPE html><html>
@@ -70,7 +68,6 @@ def wrap_html(contents):
     """
     return header + contents + footer
 
-
 def parse_args(args=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("mdfile", type=argparse.FileType("r"), nargs="?", help="File to convert. Defaults to stdin.")
@@ -79,13 +76,11 @@ def parse_args(args=None):
     )
     return parser.parse_args(args)
 
-
 def main(args=None):
     args = parse_args(args)
     converted_md = convert_markdown(args.mdfile.name)
     html = wrap_html(converted_md)
     args.out.write(html)
-
 
 if __name__ == "__main__":
     sys.exit(main())
