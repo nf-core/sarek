@@ -479,9 +479,10 @@ workflow {
     // STEP 5: QC
 
     SAMTOOLS_STATS(MERGE_BAM_RECAL.out)
-    bamqc = BWAMEM2_MEM.out.mix(MERGE_BAM_RECAL.out)
-    //bamqc.dump()
-    BAMQC(BWAMEM2_MEM.out, target_bed)
+    bamqc = BWAMEM2_MEM.out//.mix(MERGE_BAM_RECAL.out)
+    bamqc.dump()
+    
+    BAMQC(bamqc, target_bed)
 
 
 
