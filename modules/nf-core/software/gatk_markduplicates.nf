@@ -1,6 +1,6 @@
 process GATK_MARKDUPLICATES {
     label 'cpus_16'
-    //tag "${meta.id}"
+    tag "${meta.id}"
 
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: {
