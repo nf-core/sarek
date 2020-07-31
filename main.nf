@@ -518,17 +518,17 @@ workflow {
 
     GET_SOFTWARE_VERSIONS()
 
-    // MULTIQC(
-    //     GET_SOFTWARE_VERSIONS.out.yml,
-    //     QC_TRIM.out.fastqc_html.collect().ifEmpty([]),
-    //     QC_TRIM.out.fastqc_zip.collect().ifEmpty([]),
-    //     QC_TRIM.out.trimgalore_html.collect().ifEmpty([]),
-    //     QC_TRIM.out.trimgalore_log.collect().ifEmpty([]),
-    //     QC_TRIM.out.trimgalore_zip.collect().ifEmpty([]),
-    //     multiqc_config,
-    //     multiqc_custom_config.ifEmpty([]),
-    //     report_markduplicates.collect().ifEmpty([]),
-    //     workflow_summary)
+    MULTIQC(
+        GET_SOFTWARE_VERSIONS.out.yml,
+        QC_TRIM.out.fastqc_html.collect().ifEmpty([]),
+        QC_TRIM.out.fastqc_zip.collect().ifEmpty([]),
+        QC_TRIM.out.trimgalore_html.collect().ifEmpty([]),
+        QC_TRIM.out.trimgalore_log.collect().ifEmpty([]),
+        QC_TRIM.out.trimgalore_zip.collect().ifEmpty([]),
+        multiqc_config,
+        multiqc_custom_config.ifEmpty([]),
+        report_markduplicates.collect().ifEmpty([]),
+        workflow_summary)
 }
 
 /*
