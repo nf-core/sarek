@@ -1,6 +1,13 @@
-<!--
-# nf-core/sarek feature request
+---
+name: nf-core/sarek Feature request
+about: Create a report to help us improve
+title: "[FEATURE]"
+labels: enhancement
+assignees: MaxUlysse
 
+---
+
+<!--
 Hi there!
 
 Thanks for suggesting a new feature for the pipeline!
