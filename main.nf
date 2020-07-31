@@ -242,6 +242,7 @@ if (workflow.profile.contains('awsbatch')) {
 ch_multiqc_config = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
 ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
+ch_output_docs_images = file("$baseDir/docs/images/", checkIfExists: true)
 
 // Handle input
 tsvPath = null
@@ -1015,7 +1016,7 @@ process TrimGalore {
 
 process UMIFastqToBAM {
 
-  publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publishDirMode
+  publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publish_dir_mode
 
   input:
     set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsUMI
@@ -1079,7 +1080,7 @@ process UMIMapBamFile {
 
 process GroupReadsByUmi {
 
-  publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publishDirMode
+  publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publish_dir_mode
 
   input:
       set idPatient, idSample, idRun, file(alignedBam) from umi_aligned_bams_ch
@@ -1115,7 +1116,7 @@ process GroupReadsByUmi {
 
 process CallMolecularConsensusReads {
 
-  publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publishDirMode
+  publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publish_dir_mode
 
   input:
       set idPatient, idSample, idRun, file(groupedBamFile) from umi_grouped_bams_ch
