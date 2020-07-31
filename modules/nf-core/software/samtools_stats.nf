@@ -11,8 +11,6 @@ process SAMTOOLS_STATS {
     output:
         path ("${bam}.samtools.stats.out") 
 
-    //when: !('samtools' in skip_qc)
-
     script:
     """
     samtools stats ${bam} > ${bam}.samtools.stats.out
