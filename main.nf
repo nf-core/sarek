@@ -277,11 +277,13 @@ include { BUILD_INDICES } from './modules/local/subworkflow/build_indices'
 ================================================================================
 */
 
-include { GATK_BASERECALIBRATOR  as BASERECALIBRATOR }  from './modules/nf-core/software/gatk_baserecalibrator'
-include { GATK_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from './modules/nf-core/software/gatk_gatherbqsrreports'
-include { GATK_MARKDUPLICATES    as MARKDUPLICATES }    from './modules/nf-core/software/gatk_markduplicates'
-include { GATK_APPLYBQSR         as APPLYBQSR }         from './modules/nf-core/software/gatk_applybqsr'
-include { MULTIQC }                                     from './modules/nf-core/software/multiqc'
+include { GATK_BASERECALIBRATOR  as BASERECALIBRATOR }      from './modules/nf-core/software/gatk_baserecalibrator'
+include { GATK_GATHERBQSRREPORTS as GATHERBQSRREPORTS }     from './modules/nf-core/software/gatk_gatherbqsrreports'
+include { GATK_MARKDUPLICATES    as MARKDUPLICATES }        from './modules/nf-core/software/gatk_markduplicates'
+include { GATK_APPLYBQSR         as APPLYBQSR }             from './modules/nf-core/software/gatk_applybqsr'
+include { SAMTOOLS_INDEX         as SAMTOOLS_INDEX_MAPPED } from './modules/nf-core/software/samtools_index'
+include { SAMTOOLS_INDEX         as SAMTOOLS_INDEX_RECAL }  from './modules/nf-core/software/samtools_index'
+include { MULTIQC }                                         from './modules/nf-core/software/multiqc'
 
 /*
 ================================================================================
@@ -370,12 +372,12 @@ workflow {
 
     BWAMEM2_MEM(QC_TRIM.out.reads, bwa, fasta, fai, params.modules['bwamem2_mem'])
 
-    BWAMEM2_MEM.out.map{ meta, bam, bai ->
+    BWAMEM2_MEM.out.map{ meta, bam -> //, bai ->
         patient = meta.patient
         sample  = meta.sample
         gender  = meta.gender
         status  = meta.status
-        [patient, sample, gender, status, bam, bai]
+        [patient, sample, gender, status, bam] //, bai]
     }.groupTuple(by: [0,1])
         .branch{
             single:   it[4].size() == 1
@@ -383,7 +385,7 @@ workflow {
         }.set{ bam }
 
     bam_single = bam.single.map {
-        patient, sample, gender, status, bam, bai ->
+        patient, sample, gender, status, bam -> //, bai ->
 
         def meta = [:]
         meta.patient = patient
@@ -392,11 +394,11 @@ workflow {
         meta.status = status[0]
         meta.id = sample
 
-        [meta, bam[0], bai[0]]
+        [meta, bam[0]] // , bai[0]]
     }
 
     bam_multiple = bam.multiple.map {
-        patient, sample, gender, status, bam, bai ->
+        patient, sample, gender, status, bam -> //, bai ->
 
         def meta = [:]
         meta.patient = patient
@@ -405,12 +407,12 @@ workflow {
         meta.status = status[0]
         meta.id = sample
 
-        [meta, bam, bai]
+        [meta, bam]
     }
 
     // multipleBam = multipleBam.mix(multipleBamSentieon)
 
-    bam_mapped = bam_single.mix(MERGE_BAM_MAPPED(bam_multiple))
+    bam_mapped = bam_single.mix(SAMTOOLS_INDEX_MAPPED(MERGE_BAM_MAPPED(bam_multiple)))
 
     report_markduplicates = Channel.empty()
     bam_markduplicates    = bam_mapped
@@ -452,7 +454,6 @@ workflow {
     }
 
     // (recalTableTSV, recalTableSampleTSV) = recalTableTSV.mix(recalTableTSVnoInt).into(2)
-
 // // Create TSV files to restart from this step
 // if (params.skip_markduplicates) {
 //     recalTableTSV.map { idPatient, idSample ->
@@ -501,18 +502,17 @@ workflow {
 //     }
 
 //}
-    bam_applybqsr = MARKDUPLICATES.out.bam.join(GATHERBQSRREPORTS.out.table, by:[0])   
-
-    //if (step == 'recalibrate') bamApplyBQSR = input_sample
-
+    bam_applybqsr = MARKDUPLICATES.out.bam.join(GATHERBQSRREPORTS.out.table) //by:[0]
     bam_applybqsr = bam_applybqsr.combine(BUILD_INDICES.out.intervals)
+
+// if (step == 'recalibrate') bamApplyBQSR = input_sample
 
     APPLYBQSR(bam_applybqsr, dict, fasta, fai)
 
-    
-
-
-
+    APPLYBQSR.out.dump()
+    // (bam_recalibrated_to_merge, bam_recalibrated_to_index) = bam_recalibrated_to_merge.groupTuple(by:[0, 1]).into(2)
+    MERGE_BAM_RECAL(APPLYBQSR.out)
+    SAMTOOLS_INDEX_RECAL(MERGE_BAM_RECAL.out)
 
     OUTPUT_DOCUMENTATION(
         output_docs,

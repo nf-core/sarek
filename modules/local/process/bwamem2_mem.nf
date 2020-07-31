@@ -16,7 +16,7 @@ process BWAMEM2_MEM {
         val options
 
     output:
-        tuple val(meta), path("*.bam"), path("*.bai")
+        tuple val(meta), path("*.bam")//, path("*.bai")
 
     script:
     CN = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
@@ -31,7 +31,7 @@ process BWAMEM2_MEM {
         ${fasta} ${reads} | \
     samtools sort --threads ${task.cpus} -m 2G - > ${meta.id}.bam
 
-    samtools index ${meta.id}.bam
+    # samtools index ${meta.id}.bam
 
     echo \$(bwa-mem2 version 2>&1) > bwa-mem2.version.txt
     """

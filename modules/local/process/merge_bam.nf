@@ -4,14 +4,16 @@ process MERGE_BAM {
     tag "${meta.id}"
 
     input:
-        tuple val(meta), path(bam), path(bai)
+        tuple val(meta), path(bam)//, path(bai) optional: true
 
     output:
-        tuple val(meta), path("${meta.sample}.bam"), path("${meta.sample}.bam.bai")
+        tuple val(meta), path("${meta.sample}.bam")//, path("${meta.sample}.bam.bai") optional: true
 
+    //     when: !(params.no_intervals)
+//    samtools merge --threads ${task.cpus} ${idSample}.bam ${bam}
+//      samtools merge --threads ${task.cpus} ${idSample}.recal.bam ${bam}
     script:
     """
     samtools merge --threads ${task.cpus} ${meta.sample}.bam ${bam}
-    samtools index ${meta.sample}.bam
     """
 }
