@@ -11,7 +11,7 @@ process QUALIMAP_BAMQC {
         path(targetBED) 
 
     output:
-        file("${bam.baseName}") 
+        path("${bam.baseName}") 
 
     //when: !('bamqc' in skip_qc)
 

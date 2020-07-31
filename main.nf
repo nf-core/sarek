@@ -283,6 +283,8 @@ include { GATK_MARKDUPLICATES    as MARKDUPLICATES }        from './modules/nf-c
 include { GATK_APPLYBQSR         as APPLYBQSR }             from './modules/nf-core/software/gatk_applybqsr'
 include { SAMTOOLS_INDEX         as SAMTOOLS_INDEX_MAPPED } from './modules/nf-core/software/samtools_index'
 include { SAMTOOLS_INDEX         as SAMTOOLS_INDEX_RECAL }  from './modules/nf-core/software/samtools_index'
+include { SAMTOOLS_STATS         as SAMTOOLS_STATS }        from './modules/nf-core/software/samtools_stats'
+include { QUALIMAP_BAMQC         as BAMQC }                 from './modules/nf-core/software/qualimap_bamqc'
 include { MULTIQC }                                         from './modules/nf-core/software/multiqc'
 
 /*
@@ -361,6 +363,7 @@ workflow {
     pon_tbi = params.pon ? params.pon_index ?: BUILD_INDICES.out.pon_tbi : Channel.empty()
 
     // PREPROCESSING
+    // STEP 0.5: QC ON READS
 
     QC_TRIM(
         input_sample,
@@ -370,6 +373,8 @@ workflow {
         params.modules['trimgalore']
     )
 
+    // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
+    
     BWAMEM2_MEM(QC_TRIM.out.reads, bwa, fasta, fai, params.modules['bwamem2_mem'])
 
     BWAMEM2_MEM.out.map{ meta, bam -> //, bai ->
@@ -412,20 +417,26 @@ workflow {
 
     // multipleBam = multipleBam.mix(multipleBamSentieon)
 
-    bam_mapped = bam_single.mix(SAMTOOLS_INDEX_MAPPED(MERGE_BAM_MAPPED(bam_multiple)))
+    // STEP 1.5: MERGING BAM FROM MULTIPLE LANES
+       
+    bam_mapped = bam_single.mix(SAMTOOLS_INDEX_MAPPED(MERGE_BAM_MAPPED(bam_multiple))) //for samtools_index_mapped when: save_bam_mapped || !(params.known_indels)
 
     report_markduplicates = Channel.empty()
     bam_markduplicates    = bam_mapped
 
+    // STEP 2: MARKING DUPLICATES
     if (!(params.skip_markduplicates)) {
         MARKDUPLICATES(bam_mapped)
         report_markduplicates = MARKDUPLICATES.out.report
         bam_markduplicates   =  MARKDUPLICATES.out.bam
     }
 
-    bam_baserecalibrator = bam_markduplicates.combine(BUILD_INDICES.out.intervals)
+    // STEP 3: CREATING RECALIBRATION TABLES
 
+    bam_baserecalibrator = bam_markduplicates.combine(BUILD_INDICES.out.intervals)
     BASERECALIBRATOR(bam_baserecalibrator, dbsnp, dbsnp_tbi, dict, fai, fasta, known_indels, known_indels_tbi)
+
+    // STEP 3.5: MERGING RECALIBRATION TABLES
 
     if (!params.no_intervals) {
         BASERECALIBRATOR.out.report.map{ meta, table ->
@@ -453,66 +464,27 @@ workflow {
         // if ('baserecalibrator' in skip_qc) baseRecalibratorReport.close()
     }
 
-    // (recalTableTSV, recalTableSampleTSV) = recalTableTSV.mix(recalTableTSVnoInt).into(2)
-// // Create TSV files to restart from this step
-// if (params.skip_markduplicates) {
-//     recalTableTSV.map { idPatient, idSample ->
-//         status = status_map[idPatient, idSample]
-//         gender = gender_map[idPatient]
-//         bam = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam"
-//         bai = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam.bai"
-//         recalTable = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.recal.table"
-//         "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${recalTable}\n"
-//     }.collectFile(
-//         name: 'mapped_no_duplicates_marked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
-//     )
+    // STEP 4: RECALIBRATING
 
-//     recalTableSampleTSV
-//         .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV/") {
-//             idPatient, idSample ->
-//             status = status_map[idPatient, idSample]
-//             gender = gender_map[idPatient]
-//             bam = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam"
-//             bai = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam.bai"
-//             recalTable = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.recal.table"
-//             ["mapped_no_duplicates_marked_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${recalTable}\n"]
-//     }
-// } else {
-//     recalTableTSV.map { idPatient, idSample ->
-//     status = status_map[idPatient, idSample]
-//     gender = gender_map[idPatient]
-//     bam = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam"
-//     bai = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam.bai"
-//     recalTable = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.recal.table"
-
-//         "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${recalTable}\n"
-//     }.collectFile(
-//         name: 'duplicates_marked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
-//     )
-
-//     recalTableSampleTSV
-//         .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV/") {
-//             idPatient, idSample ->
-//             status = status_map[idPatient, idSample]
-//             gender = gender_map[idPatient]
-//             bam = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam"
-//             bai = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.md.bam.bai"
-//             recalTable = "${params.outdir}/Preprocessing/${idSample}/DuplicatesMarked/${idSample}.recal.table"
-//             ["duplicates_marked_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${recalTable}\n"]
-//     }
-
-//}
     bam_applybqsr = MARKDUPLICATES.out.bam.join(GATHERBQSRREPORTS.out.table) //by:[0]
     bam_applybqsr = bam_applybqsr.combine(BUILD_INDICES.out.intervals)
-
-// if (step == 'recalibrate') bamApplyBQSR = input_sample
-
+        // if (step == 'recalibrate') bamApplyBQSR = input_sample
     APPLYBQSR(bam_applybqsr, dict, fasta, fai)
 
-    APPLYBQSR.out.dump()
-    // (bam_recalibrated_to_merge, bam_recalibrated_to_index) = bam_recalibrated_to_merge.groupTuple(by:[0, 1]).into(2)
+    // STEP 4.5: MERGING AND INDEXING THE RECALIBRATED BAM FILES
+
     MERGE_BAM_RECAL(APPLYBQSR.out)
     SAMTOOLS_INDEX_RECAL(MERGE_BAM_RECAL.out)
+
+    // STEP 5: QC
+
+    SAMTOOLS_STATS(MERGE_BAM_RECAL.out)
+    bamqc = BWAMEM2_MEM.out.mix(MERGE_BAM_RECAL.out)
+    //bamqc.dump()
+    BAMQC(BWAMEM2_MEM.out, target_bed)
+
+
+
 
     OUTPUT_DOCUMENTATION(
         output_docs,
@@ -826,46 +798,8 @@ workflow.onComplete {
 
 // // STEP 3: CREATING RECALIBRATION TABLES
 
-// process BaseRecalibrator {
-//     label 'cpus_1'
+// process BaseRecalibrator 
 
-//     tag "${idPatient}-${idSample}-${intervalBed.baseName}"
-
-//     input:
-//         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamBaseRecalibrator
-//         file(dbsnp) from dbsnp
-//         file(dbsnpIndex) from dbsnp_tbi
-//         file(fasta) from fasta
-//         file(dict) from dict
-//         file(fastaFai) from fai
-//         file(knownIndels) from known_indels
-//         file(knownIndelsIndex) from known_indels_tbi
-
-//     output:
-//         set idPatient, idSample, file("${prefix}${idSample}.recal.table") into tableGatherBQSRReports
-//         set idPatient, idSample into recalTableTSVnoInt
-
-//     when: params.known_indels
-
-//     script:
-//     dbsnpOptions = params.dbsnp ? "--known-sites ${dbsnp}" : ""
-//     knownOptions = params.known_indels ? knownIndels.collect{"--known-sites ${it}"}.join(' ') : ""
-//     prefix = params.no_intervals ? "" : "${intervalBed.baseName}_"
-//     intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
-//     // TODO: --use-original-qualities ???
-//     """
-//     gatk --java-options -Xmx${task.memory.toGiga()}g \
-//         BaseRecalibrator \
-//         -I ${bam} \
-//         -O ${prefix}${idSample}.recal.table \
-//         --tmp-dir . \
-//         -R ${fasta} \
-//         ${intervalsOptions} \
-//         ${dbsnpOptions} \
-//         ${knownOptions} \
-//         --verbosity INFO
-//     """
-// }
 
 // if (!params.no_intervals) tableGatherBQSRReports = tableGatherBQSRReports.groupTuple(by:[0, 1])
 
@@ -878,37 +812,6 @@ workflow.onComplete {
 
 // // STEP 3.5: MERGING RECALIBRATION TABLES
 
-// process GatherBQSRReports {
-//     label 'memory_singleCPU_2_task'
-//     label 'cpus_2'
-
-//     tag "${idPatient}-${idSample}"
-
-//     publishDir params.outdir, mode: params.publish_dir_mode,
-//         saveAs: {
-//             if (it == "${idSample}.recal.table" && !params.skip_markduplicates) "Preprocessing/${idSample}/DuplicatesMarked/${it}"
-//             else "Preprocessing/${idSample}/Mapped/${it}"
-//         }
-
-//     input:
-//         set idPatient, idSample, file(recal) from tableGatherBQSRReports
-
-//     output:
-//         set idPatient, idSample, file("${idSample}.recal.table") into recalTable
-//         file("${idSample}.recal.table") into baseRecalibratorReport
-//         set idPatient, idSample into recalTableTSV
-
-//     when: !(params.no_intervals)
-
-//     script:
-//     input = recal.collect{"-I ${it}"}.join(' ')
-//     """
-//     gatk --java-options -Xmx${task.memory.toGiga()}g \
-//         GatherBQSRReports \
-//         ${input} \
-//         -O ${idSample}.recal.table \
-//     """
-// }
 
 // if ('baserecalibrator' in skip_qc) baseRecalibratorReport.close()
 
@@ -977,33 +880,7 @@ workflow.onComplete {
 // // STEP 4: RECALIBRATING
 
 // process ApplyBQSR {
-//     label 'memory_singleCPU_2_task'
-//     label 'cpus_2'
 
-//     tag "${idPatient}-${idSample}-${intervalBed.baseName}"
-
-//     input:
-//         set idPatient, idSample, file(bam), file(bai), file(recalibrationReport), file(intervalBed) from bamApplyBQSR
-//         file(dict) from dict
-//         file(fasta) from fasta
-//         file(fastaFai) from fai
-
-//     output:
-//         set idPatient, idSample, file("${prefix}${idSample}.recal.bam") into bam_recalibrated_to_merge
-
-//     script:
-//     prefix = params.no_intervals ? "" : "${intervalBed.baseName}_"
-//     intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
-//     """
-//     gatk --java-options -Xmx${task.memory.toGiga()}g \
-//         ApplyBQSR \
-//         -R ${fasta} \
-//         --input ${bam} \
-//         --output ${prefix}${idSample}.recal.bam \
-//         ${intervalsOptions} \
-//         --bqsr-recal-file ${recalibrationReport}
-//     """
-// }
 
 // (bam_recalibrated_to_merge, bam_recalibrated_to_index) = bam_recalibrated_to_merge.groupTuple(by:[0, 1]).into(2)
 
