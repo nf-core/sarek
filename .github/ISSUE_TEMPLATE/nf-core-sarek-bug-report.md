@@ -1,5 +1,5 @@
 ---
-name: Bug report
+name: nf-core/sarek bug report
 about: Create a report to help us improve
 title: "[BUG]"
 labels: bug
