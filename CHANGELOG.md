@@ -11,11 +11,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - [#230](https://github.com/nf-core/sarek/pull/230) - Add `ignore_soft_clipped_bases` option for `Mutect2` [#218](https://github.com/nf-core/sarek/issues/218)
 - [#145](https://github.com/nf-core/sarek/pull/145) - Add `UMI annotation and consensus` functionality to Sarek
 - [#253](https://github.com/nf-core/sarek/pull/253) - Add UMI CI testing
+- [#262](https://github.com/nf-core/sarek/pull/262) - Add `nextflow_schema.json`
 
 ### Changed
 
 - [#237](https://github.com/nf-core/sarek/pull/237) - Switch `bwa 0.7.17` for `bwa-mem2 2.0`
 - [#253](https://github.com/nf-core/sarek/pull/253), [#255](https://github.com/nf-core/sarek/pull/255) - Update docs
+- [#260](https://github.com/nf-core/sarek/pull/260), [#262](https://github.com/nf-core/sarek/pull/262) - Sync with `TEMPLATE` updated from [nf-core/tools](https://github.com/nf-core/tools) [`1.10.2`](https://github.com/nf-core/tools/releases/tag/1.10.2)
+- [#262](https://github.com/nf-core/sarek/pull/262) - Update issue templates to fit the recommended community standards
 
 ### Fixed
 
@@ -24,7 +27,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 
 ### Removed
 
-- [#234](https://github.com/nf-core/sarek/pull/243) - Removing obsolete script [#92]
+- [#234](https://github.com/nf-core/sarek/pull/243) - Removing obsolete script [#92](https://github.com/nf-core/sarek/issues/92)
+- [#262](https://github.com/nf-core/sarek/pull/262) - Removing warning message about deprecated and obsolete params
+- [#262](https://github.com/nf-core/sarek/pull/262) - Removing deprecated params: `annotateTools`, `annotateVCF`, `cadd_InDels`, `cadd_InDels_tbi`, `cadd_WG_SNVs`, `cadd_WG_SNVs_tbi`, `maxMultiqcEmailFileSize`, `noGVCF`, `noReports`, `noStrelkaBP`, `nucleotidesPerSecond`, `publishDirMode`, `sample`, `sampleDir`, `saveGenomeIndex`, `skipQC`, `snpEff_cache`, `targetBed`
 
 ## [2.6.1](https://github.com/nf-core/sarek/releases/tag/2.6.1) - Gådokgaskatjåhkkå
 
