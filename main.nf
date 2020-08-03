@@ -220,7 +220,8 @@ cadd_wg_snvs      = params.cadd_wg_snvs      ?: Channel.empty()
 cadd_wg_snvs_tbi  = params.cadd_wg_snvs_tbi  ?: Channel.empty()
 pon               = params.pon               ?: Channel.empty()
 snpeff_cache      = params.snpeff_cache      ?: Channel.empty()
-target_bed        = params.target_bed        ?: Channel.empty()
+//ch_target_bed = params.target_bed ? Channel.value(file(params.target_bed)) : "null"
+target_bed        =  params.target_bed        ?: Channel.empty()
 vep_cache         = params.vep_cache         ?: Channel.empty()
 
 // Initialize value channels based on params, not defined within the params.genomes[params.genome] scope
@@ -277,10 +278,15 @@ include { BUILD_INDICES } from './modules/local/subworkflow/build_indices'
 ================================================================================
 */
 
-include { GATK_BASERECALIBRATOR  as BASERECALIBRATOR }  from './modules/nf-core/software/gatk_baserecalibrator'
-include { GATK_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from './modules/nf-core/software/gatk_gatherbqsrreports'
-include { GATK_MARKDUPLICATES    as MARKDUPLICATES }    from './modules/nf-core/software/gatk_markduplicates'
-include { MULTIQC }                                     from './modules/nf-core/software/multiqc'
+include { GATK_BASERECALIBRATOR  as BASERECALIBRATOR }      from './modules/nf-core/software/gatk_baserecalibrator'
+include { GATK_GATHERBQSRREPORTS as GATHERBQSRREPORTS }     from './modules/nf-core/software/gatk_gatherbqsrreports'
+include { GATK_MARKDUPLICATES    as MARKDUPLICATES }        from './modules/nf-core/software/gatk_markduplicates'
+include { GATK_APPLYBQSR         as APPLYBQSR }             from './modules/nf-core/software/gatk_applybqsr'
+include { SAMTOOLS_INDEX         as SAMTOOLS_INDEX_MAPPED } from './modules/nf-core/software/samtools_index'
+include { SAMTOOLS_INDEX         as SAMTOOLS_INDEX_RECAL }  from './modules/nf-core/software/samtools_index'
+include { SAMTOOLS_STATS         as SAMTOOLS_STATS }        from './modules/nf-core/software/samtools_stats'
+include { QUALIMAP_BAMQC         as BAMQC }                 from './modules/nf-core/software/qualimap_bamqc'
+include { MULTIQC }                                         from './modules/nf-core/software/multiqc'
 
 /*
 ================================================================================
@@ -357,8 +363,12 @@ workflow {
     known_indels_tbi = params.known_indels ? params.known_indels_index ?: BUILD_INDICES.out.known_indels_tbi.collect() : Channel.empty()
     pon_tbi = params.pon ? params.pon_index ?: BUILD_INDICES.out.pon_tbi : Channel.empty()
 
-    // PREPROCESSING
-
+    /*
+    ================================================================================
+                                      PREPROCESSING
+    ================================================================================
+    */
+    // STEP 0.5: QC ON READS
     QC_TRIM(
         input_sample,
         ('fastqc' in skip_qc),
@@ -367,14 +377,14 @@ workflow {
         params.modules['trimgalore']
     )
 
+    // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
     BWAMEM2_MEM(QC_TRIM.out.reads, bwa, fasta, fai, params.modules['bwamem2_mem'])
-
-    BWAMEM2_MEM.out.map{ meta, bam, bai ->
+    BWAMEM2_MEM.out.map{ meta, bam -> //, bai ->
         patient = meta.patient
         sample  = meta.sample
         gender  = meta.gender
         status  = meta.status
-        [patient, sample, gender, status, bam, bai]
+        [patient, sample, gender, status, bam] //, bai]
     }.groupTuple(by: [0,1])
         .branch{
             single:   it[4].size() == 1
@@ -382,7 +392,7 @@ workflow {
         }.set{ bam }
 
     bam_single = bam.single.map {
-        patient, sample, gender, status, bam, bai ->
+        patient, sample, gender, status, bam -> //, bai ->
 
         def meta = [:]
         meta.patient = patient
@@ -391,11 +401,11 @@ workflow {
         meta.status = status[0]
         meta.id = sample
 
-        [meta, bam[0], bai[0]]
+        [meta, bam[0]] // , bai[0]]
     }
 
     bam_multiple = bam.multiple.map {
-        patient, sample, gender, status, bam, bai ->
+        patient, sample, gender, status, bam -> //, bai ->
 
         def meta = [:]
         meta.patient = patient
@@ -404,26 +414,33 @@ workflow {
         meta.status = status[0]
         meta.id = sample
 
-        [meta, bam, bai]
+        [meta, bam]
     }
 
-    // multipleBam = multipleBam.mix(multipleBamSentieon)
-
+    // STEP 1.5: MERGING AND INDEXING BAM FROM MULTIPLE LANES 
+    
     bam_mapped = bam_single.mix(MERGE_BAM_MAPPED(bam_multiple))
-
+    //if(save_bam_mapped || !(params.known_indels))
+    //TODO: https://github.com/nf-core/sarek/blob/bce378e09de25bb26c388b917f93f84806d3ba27/main.nf#L1478
+    //But  if SAMTOOLS_INDEX is not run, markduplicates does not work
+         bam_mapped = SAMTOOLS_INDEX_MAPPED(bam_mapped)
+        
+    // STEP 2: MARKING DUPLICATES
     report_markduplicates = Channel.empty()
+    
     bam_markduplicates    = bam_mapped
-
     if (!(params.skip_markduplicates)) {
-        MARKDUPLICATES(bam_mapped)
-        report_markduplicates = MARKDUPLICATES.out.report
-        bam_markduplicates   =  MARKDUPLICATES.out.bam
+        bam_mapped.dump()
+         MARKDUPLICATES(bam_mapped)
+         report_markduplicates = MARKDUPLICATES.out.report
+         bam_markduplicates   =  MARKDUPLICATES.out.bam
     }
 
+    // STEP 3: CREATING RECALIBRATION TABLES
     bam_baserecalibrator = bam_markduplicates.combine(BUILD_INDICES.out.intervals)
-
     BASERECALIBRATOR(bam_baserecalibrator, dbsnp, dbsnp_tbi, dict, fai, fasta, known_indels, known_indels_tbi)
 
+    // STEP 3.5: MERGING RECALIBRATION TABLES
     if (!params.no_intervals) {
         BASERECALIBRATOR.out.report.map{ meta, table ->
             patient = meta.patient
@@ -447,8 +464,56 @@ workflow {
         }
 
         GATHERBQSRREPORTS(recaltable)
+        // if ('baserecalibrator' in skip_qc) baseRecalibratorReport.close()
     }
 
+    // STEP 4: RECALIBRATING
+    bam_applybqsr = MARKDUPLICATES.out.bam.join(GATHERBQSRREPORTS.out.table) //by:[0]
+    bam_applybqsr = bam_applybqsr.combine(BUILD_INDICES.out.intervals)
+        // if (step == 'recalibrate') bamApplyBQSR = input_sample
+    APPLYBQSR(bam_applybqsr, dict, fasta, fai)
+
+    // STEP 4.5: MERGING AND INDEXING THE RECALIBRATED BAM FILES
+    if (!(params.no_intervals)){
+        MERGE_BAM_RECAL(APPLYBQSR.out)
+        SAMTOOLS_INDEX_RECAL(MERGE_BAM_RECAL.out)
+    }else{
+        SAMTOOLS_INDEX_RECAL(APPLYBQSR.out)
+    }
+
+    // STEP 5: QC
+    if(!('samtools' in skip_qc))
+        SAMTOOLS_STATS(MERGE_BAM_RECAL.out)
+    //TODO This should work but somehow BAMQC is not called
+    bamqc = BWAMEM2_MEM.out//.mix(MERGE_BAM_RECAL.out)
+    //if(!('bamqc' in skipQC))
+        BAMQC(bamqc)//, target_bed)
+
+
+    /*
+    ================================================================================
+                                GERMLINE VARIANT CALLING
+    ================================================================================
+    */
+
+    /*
+    ================================================================================
+                                SOMATIC VARIANT CALLING
+    ================================================================================
+    */
+
+    /*
+    ================================================================================
+                                    ANNOTATION
+    ================================================================================
+    */
+
+
+    /*
+    ================================================================================
+                                        MultiQC
+    ================================================================================
+    */
     OUTPUT_DOCUMENTATION(
         output_docs,
         output_docs_images)
@@ -486,8 +551,6 @@ workflow.onComplete {
 // ================================================================================
 // */
 
-//   (intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervals) = bedIntervals.into(6)
-
 
 // // STEP 0.5: QC ON READS
 
@@ -519,134 +582,18 @@ workflow.onComplete {
 
 // fastQCReport = fastQCFQReport.mix(fastQCBAMReport)
 
-// if (!params.trim_fastq) input_pair_readstrimgalore.close()
 
 // // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
 
-// if (params.trim_fastq) input_pair_reads = outputPairReadsTrimGalore
-// else input_pair_reads = input_pair_reads.mix(input_bam)
-
-// input_pair_reads = input_pair_reads.dump(tag:'INPUT')
-
-// (input_pair_reads, input_pair_reads_sentieon) = input_pair_reads.into(2)
-// if (params.sentieon) input_pair_reads.close()
-// else input_pair_reads_sentieon.close()
-
-
-// // STEP 1': MAPPING READS TO REFERENCE GENOME WITH SENTIEON BWA MEM
-
-// process Sentieon_MapReads {
-//     label 'cpus_max'
-//     label 'memory_max'
-//     label 'sentieon'
-
-//     tag "${idPatient}-${idRun}"
-
-//     input:
-//         set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from input_pair_reads_sentieon
-//         file(bwaIndex) from bwa
-//         file(fasta) from fasta
-//         file(fastaFai) from fai
-
-//     output:
-//         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bam_sentieon_mapped
-
-//     when: params.sentieon
-
-//     script:
-//     // -K is an hidden option, used to fix the number of reads processed by bwa mem
-//     // Chunk size can affect bwa results, if not specified,
-//     // the number of threads can change which can give not deterministic result.
-//     // cf https://github.com/CCDG/Pipeline-Standardization/blob/master/PipelineStandard.md
-//     // and https://github.com/gatk-workflows/gatk4-data-processing/blob/8ffa26ff4580df4ac3a5aa9e272a4ff6bab44ba2/processing-for-variant-discovery-gatk4.b37.wgs.inputs.json#L29
-//     CN = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
-//     readGroup = "@RG\\tID:${idRun}\\t${CN}PU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
-//     // adjust mismatch penalty for tumor samples
-//     status = status_map[idPatient, idSample]
-//     extra = status == 1 ? "-B 3" : ""
-//     """
-//     sentieon bwa mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
-//     ${inputFile1} ${inputFile2} | \
-//     sentieon util sort -r ${fasta} -o ${idSample}_${idRun}.bam -t ${task.cpus} --sam2bam -i -
-//     """
-// }
-
-// bam_sentieon_mapped = bam_sentieon_mapped.dump(tag:'Sentieon Mapped BAM')
-// // Sort BAM whether they are standalone or should be merged
-
-// singleBamSentieon = Channel.create()
-// multipleBamSentieon = Channel.create()
-// bam_sentieon_mapped.groupTuple(by:[0, 1])
-//     .choice(singleBamSentieon, multipleBamSentieon) {it[2].size() > 1 ? 1 : 0}
-// singleBamSentieon = singleBamSentieon.map {
-//     idPatient, idSample, idRun, bam ->
-//     [idPatient, idSample, bam]
-// }
-// singleBamSentieon = singleBamSentieon.dump(tag:'Single BAM')
+//TODO: needs to be covered when inputBam is supported
+// if (params.trim_fastq) input_pair_reads = outputPairReadsTrimGalore //this is covered
+// else input_pair_reads = input_pair_reads.mix(input_bam) 
 
 // // STEP 1.5: MERGING BAM FROM MULTIPLE LANES
 
 
-
-// bam_mapped_merged = bam_mapped_merged.mix(singleBam,singleBamSentieon)
-
-// (bam_mapped_merged, bam_sentieon_mapped_merged) = bam_mapped_merged.into(2)
-
-// if (!params.sentieon) bam_sentieon_mapped_merged.close()
-// else bam_mapped_merged.close()
-
-// bam_mapped_merged = bam_mapped_merged.dump(tag:'BAMs for MD')
-// bam_sentieon_mapped_merged = bam_sentieon_mapped_merged.dump(tag:'Sentieon BAMs to Index')
-
-// process IndexBamMergedForSentieon {
-//     label 'cpus_8'
-
-//     tag "${idPatient}-${idSample}"
-
-//     input:
-//         set idPatient, idSample, file("${idSample}.bam") from bam_sentieon_mapped_merged
-
-//     output:
-//         set idPatient, idSample, file("${idSample}.bam"), file("${idSample}.bam.bai") into bam_sentieon_mapped_merged_indexed
-
-//     script:
-//     """
-//     samtools index ${idSample}.bam
-//     """
-// }
-
-// (bam_mapped_merged, bam_mapped_merged_to_index) = bam_mapped_merged.into(2)
-
-//@Maxime: You included this process in merged_bam.nf, right?
-// process IndexBamFile {
-//     label 'cpus_8'
-
-//     tag "${idPatient}-${idSample}"
-
-//     publishDir params.outdir, mode: params.publish_dir_mode,
-//         saveAs: {
-//             if (save_bam_mapped) "Preprocessing/${idSample}/Mapped/${it}"
-//             else null
-//         }
-
-//     input:
-//         set idPatient, idSample, file("${idSample}.bam") from bam_mapped_merged_to_index
-
-//     output:
-//         set idPatient, idSample, file("${idSample}.bam"), file("${idSample}.bam.bai") into bam_mapped_merged_indexed
-//         set idPatient, idSample into tsv_bam_indexed
-
-//     when: save_bam_mapped || !(params.known_indels)
-
-//     script:
-//     """
-//     samtools index ${idSample}.bam
-//     """
-// }
-
 // if (!save_bam_mapped) tsv_bam_indexed.close()
 
-// (tsv_bam_indexed, tsv_bam_indexed_sample) = tsv_bam_indexed.into(2)
 
 // // Creating a TSV file to restart from this step
 // tsv_bam_indexed.map { idPatient, idSample ->
@@ -667,10 +614,10 @@ workflow.onComplete {
 //         bai = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam.bai"
 //         ["mapped_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
 // }
+
+
 // // STEP 2: MARKING DUPLICATES
 
-
-// (tsv_bam_duplicates_marked, tsv_bam_duplicates_marked_sample) = tsv_bam_duplicates_marked.into(2)
 
 // // Creating a TSV file to restart from this step
 // tsv_bam_duplicates_marked.map { idPatient, idSample ->
@@ -696,115 +643,9 @@ workflow.onComplete {
 
 // if (step == 'preparerecalibration') bam_duplicates_marked = input_sample
 
-// bam_duplicates_marked = bam_duplicates_marked.dump(tag:'MD BAM')
-// duplicates_marked_report = duplicates_marked_report.dump(tag:'MD Report')
-
-// if (params.skip_markduplicates) bam_duplicates_marked = bam_mapped_merged_indexed
-
-// (bamMD, bamMDToJoin, bam_duplicates_marked) = bam_duplicates_marked.into(3)
-
-// 
-
-// // STEP 2': SENTIEON DEDUP
-
-// process Sentieon_Dedup {
-//     label 'cpus_max'
-//     label 'memory_max'
-//     label 'sentieon'
-
-//     tag "${idPatient}-${idSample}"
-
-//     publishDir params.outdir, mode: params.publish_dir_mode,
-//         saveAs: {
-//             if (it == "${idSample}_*.txt" && 'sentieon' in skip_qc) null
-//             else if (it == "${idSample}_*.txt") "Reports/${idSample}/Sentieon/${it}"
-//             else "Preprocessing/${idSample}/DedupedSentieon/${it}"
-//         }
-
-//     input:
-//         set idPatient, idSample, file(bam), file(bai) from bam_sentieon_mapped_merged_indexed
-//         file(fasta) from fasta
-//         file(fastaFai) from fai
-
-//     output:
-//         set idPatient, idSample, file("${idSample}.deduped.bam"), file("${idSample}.deduped.bam.bai") into bam_sentieon_dedup
-
-//     when: params.sentieon
-
-//     script:
-//     """
-//     sentieon driver \
-//         -t ${task.cpus} \
-//         -i ${bam} \
-//         -r ${fasta} \
-//         --algo GCBias --summary ${idSample}_gc_summary.txt ${idSample}_gc_metric.txt \
-//         --algo MeanQualityByCycle ${idSample}_mq_metric.txt \
-//         --algo QualDistribution ${idSample}_qd_metric.txt \
-//         --algo InsertSizeMetricAlgo ${idSample}_is_metric.txt  \
-//         --algo AlignmentStat ${idSample}_aln_metric.txt
-
-//     sentieon driver \
-//         -t ${task.cpus} \
-//         -i ${bam} \
-//         --algo LocusCollector \
-//         --fun score_info ${idSample}_score.gz
-
-//     sentieon driver \
-//         -t ${task.cpus} \
-//         -i ${bam} \
-//         --algo Dedup \
-//         --rmdup \
-//         --score_info ${idSample}_score.gz  \
-//         --metrics ${idSample}_dedup_metric.txt ${idSample}.deduped.bam
-//     """
-// }
 
 // // STEP 3: CREATING RECALIBRATION TABLES
 
-// process BaseRecalibrator {
-//     label 'cpus_1'
-
-//     tag "${idPatient}-${idSample}-${intervalBed.baseName}"
-
-//     input:
-//         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamBaseRecalibrator
-//         file(dbsnp) from dbsnp
-//         file(dbsnpIndex) from dbsnp_tbi
-//         file(fasta) from fasta
-//         file(dict) from dict
-//         file(fastaFai) from fai
-//         file(knownIndels) from known_indels
-//         file(knownIndelsIndex) from known_indels_tbi
-
-//     output:
-//         set idPatient, idSample, file("${prefix}${idSample}.recal.table") into tableGatherBQSRReports
-//         set idPatient, idSample into recalTableTSVnoInt
-
-//     when: params.known_indels
-
-//     script:
-//     dbsnpOptions = params.dbsnp ? "--known-sites ${dbsnp}" : ""
-//     knownOptions = params.known_indels ? knownIndels.collect{"--known-sites ${it}"}.join(' ') : ""
-//     prefix = params.no_intervals ? "" : "${intervalBed.baseName}_"
-//     intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
-//     // TODO: --use-original-qualities ???
-//     """
-//     gatk --java-options -Xmx${task.memory.toGiga()}g \
-//         BaseRecalibrator \
-//         -I ${bam} \
-//         -O ${prefix}${idSample}.recal.table \
-//         --tmp-dir . \
-//         -R ${fasta} \
-//         ${intervalsOptions} \
-//         ${dbsnpOptions} \
-//         ${knownOptions} \
-//         --verbosity INFO
-//     """
-// }
-
-// if (!params.no_intervals) tableGatherBQSRReports = tableGatherBQSRReports.groupTuple(by:[0, 1])
-
-// tableGatherBQSRReports = tableGatherBQSRReports.dump(tag:'BQSR REPORTS')
 
 // if (params.no_intervals) {
 //     (tableGatherBQSRReports, tableGatherBQSRReportsNoInt) = tableGatherBQSRReports.into(2)
@@ -813,41 +654,9 @@ workflow.onComplete {
 
 // // STEP 3.5: MERGING RECALIBRATION TABLES
 
-// process GatherBQSRReports {
-//     label 'memory_singleCPU_2_task'
-//     label 'cpus_2'
-
-//     tag "${idPatient}-${idSample}"
-
-//     publishDir params.outdir, mode: params.publish_dir_mode,
-//         saveAs: {
-//             if (it == "${idSample}.recal.table" && !params.skip_markduplicates) "Preprocessing/${idSample}/DuplicatesMarked/${it}"
-//             else "Preprocessing/${idSample}/Mapped/${it}"
-//         }
-
-//     input:
-//         set idPatient, idSample, file(recal) from tableGatherBQSRReports
-
-//     output:
-//         set idPatient, idSample, file("${idSample}.recal.table") into recalTable
-//         file("${idSample}.recal.table") into baseRecalibratorReport
-//         set idPatient, idSample into recalTableTSV
-
-//     when: !(params.no_intervals)
-
-//     script:
-//     input = recal.collect{"-I ${it}"}.join(' ')
-//     """
-//     gatk --java-options -Xmx${task.memory.toGiga()}g \
-//         GatherBQSRReports \
-//         ${input} \
-//         -O ${idSample}.recal.table \
-//     """
-// }
 
 // if ('baserecalibrator' in skip_qc) baseRecalibratorReport.close()
 
-// recalTable = recalTable.dump(tag:'RECAL TABLE')
 
 // (recalTableTSV, recalTableSampleTSV) = recalTableTSV.mix(recalTableTSVnoInt).into(2)
 
@@ -899,157 +708,14 @@ workflow.onComplete {
 //     }
 // }
 
-// bamApplyBQSR = bamMDToJoin.join(recalTable, by:[0,1])
-
-// if (step == 'recalibrate') bamApplyBQSR = input_sample
-
-// bamApplyBQSR = bamApplyBQSR.dump(tag:'BAM + BAI + RECAL TABLE')
-
-// bamApplyBQSR = bamApplyBQSR.combine(intApplyBQSR)
-
-// bamApplyBQSR = bamApplyBQSR.dump(tag:'BAM + BAI + RECAL TABLE + INT')
 
 // // STEP 4: RECALIBRATING
 
 // process ApplyBQSR {
-//     label 'memory_singleCPU_2_task'
-//     label 'cpus_2'
 
-//     tag "${idPatient}-${idSample}-${intervalBed.baseName}"
-
-//     input:
-//         set idPatient, idSample, file(bam), file(bai), file(recalibrationReport), file(intervalBed) from bamApplyBQSR
-//         file(dict) from dict
-//         file(fasta) from fasta
-//         file(fastaFai) from fai
-
-//     output:
-//         set idPatient, idSample, file("${prefix}${idSample}.recal.bam") into bam_recalibrated_to_merge
-
-//     script:
-//     prefix = params.no_intervals ? "" : "${intervalBed.baseName}_"
-//     intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
-//     """
-//     gatk --java-options -Xmx${task.memory.toGiga()}g \
-//         ApplyBQSR \
-//         -R ${fasta} \
-//         --input ${bam} \
-//         --output ${prefix}${idSample}.recal.bam \
-//         ${intervalsOptions} \
-//         --bqsr-recal-file ${recalibrationReport}
-//     """
-// }
 
 // (bam_recalibrated_to_merge, bam_recalibrated_to_index) = bam_recalibrated_to_merge.groupTuple(by:[0, 1]).into(2)
 
-// // STEP 4': SENTIEON BQSR
-
-// bam_sentieon_dedup = bam_sentieon_dedup.dump(tag:'deduped.bam')
-
-// process Sentieon_BQSR {
-//     label 'cpus_max'
-//     label 'memory_max'
-//     label 'sentieon'
-
-//     tag "${idPatient}-${idSample}"
-
-//     publishDir params.outdir, mode: params.publish_dir_mode,
-//         saveAs: {
-//             if (it == "${idSample}_recal_result.csv" && 'sentieon' in skip_qc) "Reports/${idSample}/Sentieon/${it}"
-//             else "Preprocessing/${idSample}/RecalSentieon/${it}"
-//         }
-
-//     input:
-//         set idPatient, idSample, file(bam), file(bai) from bam_sentieon_dedup
-//         file(dbsnp) from dbsnp
-//         file(dbsnpIndex) from dbsnp_tbi
-//         file(fasta) from fasta
-//         file(dict) from dict
-//         file(fastaFai) from fai
-//         file(knownIndels) from known_indels
-//         file(knownIndelsIndex) from known_indels_tbi
-
-//     output:
-//         set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bam_sentieon_recal
-//         set idPatient, idSample, file(bam), file(bai), file("${idSample}.recal.table") into bam_sentieon_deduped_table
-//         set idPatient, idSample into tsv_sentieon
-
-//     when: params.sentieon
-
-//     script:
-//     known = knownIndels.collect{"--known-sites ${it}"}.join(' ')
-//     """
-//     sentieon driver  \
-//         -t ${task.cpus} \
-//         -r ${fasta} \
-//         -i ${idSample}.deduped.bam \
-//         --algo QualCal \
-//         -k ${dbsnp} \
-//         ${idSample}.recal.table
-
-//     sentieon driver \
-//         -t ${task.cpus} \
-//         -r ${fasta} \
-//         -i ${idSample}.deduped.bam \
-//         -q ${idSample}.recal.table \
-//         --algo QualCal \
-//         -k ${dbsnp} \
-//         ${idSample}.table.post \
-//         --algo ReadWriter ${idSample}.recal.bam
-
-//     sentieon driver \
-//         -t ${task.cpus} \
-//         --algo QualCal \
-//         --plot \
-//         --before ${idSample}.recal.table \
-//         --after ${idSample}.table.post \
-//         ${idSample}_recal_result.csv
-//     """
-// }
-
-// (tsv_sentieon_deduped, tsv_sentieon_deduped_sample, tsv_sentieon_recal, tsv_sentieon_recal_sample) = tsv_sentieon.into(4)
-
-// // Creating a TSV file to restart from this step
-// tsv_sentieon_deduped.map { idPatient, idSample ->
-//     gender = gender_map[idPatient]
-//     status = status_map[idPatient, idSample]
-//     bam = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam"
-//     bai = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam.bai"
-//     table = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.table"
-//     "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${table}\n"
-// }.collectFile(
-//     name: 'sentieon_deduped.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
-// )
-
-// tsv_sentieon_deduped_sample
-//     .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { idPatient, idSample ->
-//         status = status_map[idPatient, idSample]
-//         gender = gender_map[idPatient]
-//         bam = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam"
-//         bai = "${params.outdir}/Preprocessing/${idSample}/DedupedSentieon/${idSample}.deduped.bam.bai"
-//         table = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.table"
-//         ["sentieon_deduped_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\t${table}\n"]
-// }
-
-// // Creating a TSV file to restart from this step
-// tsv_sentieon_recal.map { idPatient, idSample ->
-//     gender = gender_map[idPatient]
-//     status = status_map[idPatient, idSample]
-//     bam = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.bam"
-//     bai = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.bam.bai"
-//     "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"
-// }.collectFile(
-//     name: 'sentieon_recalibrated.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
-// )
-
-// tsv_sentieon_recal_sample
-//     .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { idPatient, idSample ->
-//         status = status_map[idPatient, idSample]
-//         gender = gender_map[idPatient]
-//         bam = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.bam"
-//         bai = "${params.outdir}/Preprocessing/${idSample}/RecalSentieon/${idSample}.recal.bam.bai"
-//         ["sentieon_recalibrated_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
-// }
 
 // // STEP 4.5: MERGING THE RECALIBRATED BAM FILES
 
@@ -1079,28 +745,7 @@ workflow.onComplete {
 
 // // STEP 4.5': INDEXING THE RECALIBRATED BAM FILES
 
-// process IndexBamRecal {
-//     label 'cpus_8'
 
-//     tag "${idPatient}-${idSample}"
-
-//     publishDir "${params.outdir}/Preprocessing/${idSample}/Recalibrated", mode: params.publish_dir_mode
-
-//     input:
-//         set idPatient, idSample, file("${idSample}.recal.bam") from bam_recalibrated_to_index
-
-//     output:
-//         set idPatient, idSample, file("${idSample}.recal.bam"), file("${idSample}.recal.bam.bai") into bam_recalibrated_indexed
-//         set idPatient, idSample, file("${idSample}.recal.bam") into bam_recalibrated_no_int_qc
-//         set idPatient, idSample into tsv_bam_recalibrated_no_int
-
-//     when: params.no_intervals
-
-//     script:
-//     """
-//     samtools index ${idSample}.recal.bam
-//     """
-// }
 
 // bam_recalibrated = bam_recalibrated.mix(bam_recalibrated_indexed)
 // bam_recalibrated_qc = bam_recalibrated_qc.mix(bam_recalibrated_no_int_qc)
@@ -1132,66 +777,6 @@ workflow.onComplete {
 
 // // STEP 5: QC
 
-// process SamtoolsStats {
-//     label 'cpus_2'
-
-//     tag "${idPatient}-${idSample}"
-
-//     publishDir "${params.outdir}/Reports/${idSample}/SamToolsStats", mode: params.publish_dir_mode
-
-//     input:
-//         set idPatient, idSample, file(bam) from bam_recalibrated_samtools_stats
-
-//     output:
-//         file ("${bam}.samtools.stats.out") into samtoolsStatsReport
-
-//     when: !('samtools' in skip_qc)
-
-//     script:
-//     """
-//     samtools stats ${bam} > ${bam}.samtools.stats.out
-//     """
-// }
-
-// samtoolsStatsReport = samtoolsStatsReport.dump(tag:'SAMTools')
-
-// bamBamQC = bamMappedBamQC.mix(bam_recalibrated_bamqc)
-
-// process BamQC {
-//     label 'memory_max'
-//     label 'cpus_16'
-
-//     tag "${idPatient}-${idSample}"
-
-//     publishDir "${params.outdir}/Reports/${idSample}/bamQC", mode: params.publish_dir_mode
-
-//     input:
-//         set idPatient, idSample, file(bam) from bamBamQC
-//         file(targetBED) from ch_target_bed
-
-//     output:
-//         file("${bam.baseName}") into bamQCReport
-
-//     when: !('bamqc' in skip_qc)
-
-//     script:
-//     use_bed = params.target_bed ? "-gff ${targetBED}" : ''
-//     """
-//     qualimap --java-mem-size=${task.memory.toGiga()}G \
-//         bamqc \
-//         -bam ${bam} \
-//         --paint-chromosome-limits \
-//         --genome-gc-distr HUMAN \
-//         $use_bed \
-//         -nt ${task.cpus} \
-//         -skip-duplicated \
-//         --skip-dup-mode 0 \
-//         -outdir ${bam.baseName} \
-//         -outformat HTML
-//     """
-// }
-
-// bamQCReport = bamQCReport.dump(tag:'BamQC')
 
 // /*
 // ================================================================================
