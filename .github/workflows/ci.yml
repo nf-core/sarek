@@ -24,18 +24,15 @@ jobs:
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
-
       - name: Check if Dockerfile or Conda environment changed
         uses: technote-space/get-diff-action@v1
         with:
           PREFIX_FILTER: |
             Dockerfile
             environment.yml
-
       - name: Build new docker image
         if: env.GIT_DIFF
         run: docker build --no-cache . -t nfcore/sarek:dev
-
       - name: Pull docker image
         if: ${{ !env.GIT_DIFF }}
         run: |
@@ -59,6 +56,10 @@ jobs:
         species: [WBcel235]
     steps:
       - uses: actions/checkout@v2
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
         env:
           # Only check Nextflow pipeline minimum version
           NXF_VER: '19.10.0'

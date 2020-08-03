@@ -1,6 +1,13 @@
-<!--
-# nf-core/sarek bug report
+---
+name: nf-core/sarek Bug report
+about: Create a report to help us improve
+title: "[BUG]"
+labels: bug
+assignees: MaxUlysse
 
+---
+
+<!--
 Hi there!
 
 Thanks for telling us about a problem with the pipeline.
