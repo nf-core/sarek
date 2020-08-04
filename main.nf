@@ -478,7 +478,28 @@ workflow {
 
     // STEP 4.5: MERGING AND INDEXING THE RECALIBRATED BAM FILES
     if (!params.no_intervals) {
-        MERGE_BAM_RECAL(APPLYBQSR.out)
+        APPLYBQSR.out.map{ meta, bam -> //, bai ->
+            patient = meta.patient
+            sample  = meta.sample
+            gender  = meta.gender
+            status  = meta.status
+            [patient, sample, gender, status, bam] //, bai]
+        }.groupTuple(by: [0,1]).set{ bam_recal_to_merge }
+
+        bam_recal_to_merge = bam_recal_to_merge.map {
+            patient, sample, gender, status, bam -> //, bai ->
+
+            def meta = [:]
+            meta.patient = patient
+            meta.sample = sample
+            meta.gender = gender[0]
+            meta.status = status[0]
+            meta.id = sample
+
+            [meta, bam]
+        }
+
+        MERGE_BAM_RECAL(bam_recal_to_merge)
         recal = MERGE_BAM_RECAL.out
     } else {
         recal = APPLYBQSR.out
