@@ -197,16 +197,18 @@ params.snpeff_db               = params.genome ? params.genomes[params.genome].s
 params.species                 = params.genome ? params.genomes[params.genome].species                 ?: false : false
 params.vep_cache_version       = params.genome ? params.genomes[params.genome].vep_cache_version       ?: false : false
 
+file("${params.outdir}/no_file").text = "no_file\n"
+
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-chr_dir           = params.chr_dir           ?: Channel.empty()
-chr_length        = params.chr_length        ?: Channel.empty()
-dbsnp             = params.dbsnp             ?: Channel.empty()
-fasta             = params.fasta             ?: Channel.empty()
-germline_resource = params.germline_resource ?: Channel.empty()
-known_indels      = params.known_indels      ?: Channel.empty()
-loci              = params.ac_loci           ?: Channel.empty()
-loci_gc           = params.ac_loci_gc        ?: Channel.empty()
-mappability       = params.mappability       ?: Channel.empty()
+chr_dir           = params.chr_dir           ? file(params.chr_dir)           : file("${params.outdir}/no_file")
+chr_length        = params.chr_length        ? file(params.chr_length)        : file("${params.outdir}/no_file")
+dbsnp             = params.dbsnp             ? file(params.dbsnp)             : file("${params.outdir}/no_file")
+fasta             = params.fasta             ? file(params.fasta)             : file("${params.outdir}/no_file")
+germline_resource = params.germline_resource ? file(params.germline_resource) : file("${params.outdir}/no_file")
+known_indels      = params.known_indels      ? file(params.known_indels)      : file("${params.outdir}/no_file")
+loci              = params.ac_loci           ? file(params.ac_loci)           : file("${params.outdir}/no_file")
+loci_gc           = params.ac_loci_gc        ? file(params.ac_loci_gc)        : file("${params.outdir}/no_file")
+mappability       = params.mappability       ? file(params.mappability)       : file("${params.outdir}/no_file")
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
 snpeff_db         = params.snpeff_db         ?: Channel.empty()
@@ -214,15 +216,14 @@ snpeff_species    = params.species           ?: Channel.empty()
 vep_cache_version = params.vep_cache_version ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
-cadd_indels       = params.cadd_indels       ?: Channel.empty()
-cadd_indels_tbi   = params.cadd_indels_tbi   ?: Channel.empty()
-cadd_wg_snvs      = params.cadd_wg_snvs      ?: Channel.empty()
-cadd_wg_snvs_tbi  = params.cadd_wg_snvs_tbi  ?: Channel.empty()
-pon               = params.pon               ?: Channel.empty()
-snpeff_cache      = params.snpeff_cache      ?: Channel.empty()
-//ch_target_bed = params.target_bed ? Channel.value(file(params.target_bed)) : "null"
-target_bed        =  params.target_bed        ?: Channel.empty()
-vep_cache         = params.vep_cache         ?: Channel.empty()
+cadd_indels       = params.cadd_indels       ? file(params.cadd_indels)      : file("${params.outdir}/no_file")
+cadd_indels_tbi   = params.cadd_indels_tbi   ? file(params.cadd_indels_tbi)  : file("${params.outdir}/no_file")
+cadd_wg_snvs      = params.cadd_wg_snvs      ? file(params.cadd_wg_snvs)     : file("${params.outdir}/no_file")
+cadd_wg_snvs_tbi  = params.cadd_wg_snvs_tbi  ? file(params.cadd_wg_snvs_tbi) : file("${params.outdir}/no_file")
+pon               = params.pon               ? file(params.pon)              : file("${params.outdir}/no_file")
+snpeff_cache      = params.snpeff_cache      ? file(params.snpeff_cache)     : file("${params.outdir}/no_file")
+target_bed        = params.target_bed        ? file(params.target_bed)       : file("${params.outdir}/no_file")
+vep_cache         = params.vep_cache         ? file(params.vep_cache)        : file("${params.outdir}/no_file")
 
 // Initialize value channels based on params, not defined within the params.genomes[params.genome] scope
 read_structure1   = params.read_structure1   ?: Channel.empty()
@@ -354,14 +355,14 @@ workflow {
         step,
         tools)
 
-    bwa = params.bwa ?: BUILD_INDICES.out.bwa
-    dbsnp_tbi = params.dbsnp ? params.dbsnp_index ?: BUILD_INDICES.out.dbsnp_tbi : Channel.empty()
-    dict = params.dict ?: BUILD_INDICES.out.dict
-    fai = params.fasta_fai ?: BUILD_INDICES.out.fai
-    germline_resource_tbi = params.germline_resource ? params.germline_resource_index ?: BUILD_INDICES.out.germline_resource_tbi : Channel.empty()
+    bwa = params.bwa ? file(params.bwa) : BUILD_INDICES.out.bwa
+    dbsnp_tbi = params.dbsnp ? params.dbsnp_index ? file(params.dbsnp_index) : BUILD_INDICES.out.dbsnp_tbi : Channel.empty()
+    dict = params.dict ? file(params.dict) : BUILD_INDICES.out.dict
+    fai = params.fasta_fai ? file(params.fasta_fai) : BUILD_INDICES.out.fai
+    germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? file(params.germline_resource_index) : BUILD_INDICES.out.germline_resource_tbi : Channel.empty()
     intervals = BUILD_INDICES.out.intervals
-    known_indels_tbi = params.known_indels ? params.known_indels_index ?: BUILD_INDICES.out.known_indels_tbi.collect() : Channel.empty()
-    pon_tbi = params.pon ? params.pon_index ?: BUILD_INDICES.out.pon_tbi : Channel.empty()
+    known_indels_tbi = params.known_indels ? params.known_indels_index ? file(params.known_indels_index) : BUILD_INDICES.out.known_indels_tbi.collect() : Channel.empty()
+    pon_tbi = params.pon ? params.pon_index ? file(params.pon_index) : BUILD_INDICES.out.pon_tbi : Channel.empty()
 
     /*
     ================================================================================
@@ -422,22 +423,21 @@ workflow {
     bam_mapped = bam_single.mix(MERGE_BAM_MAPPED(bam_multiple))
     //if(save_bam_mapped || !(params.known_indels))
     //TODO: https://github.com/nf-core/sarek/blob/bce378e09de25bb26c388b917f93f84806d3ba27/main.nf#L1478
-    //But  if SAMTOOLS_INDEX is not run, markduplicates does not work
-         bam_mapped = SAMTOOLS_INDEX_MAPPED(bam_mapped)
+    //But if SAMTOOLS_INDEX is not run, markduplicates does not work
+    bam_mapped = SAMTOOLS_INDEX_MAPPED(bam_mapped)
         
     // STEP 2: MARKING DUPLICATES
-    report_markduplicates = Channel.empty()
+    markduplicates_report = Channel.empty()
+    markduplicates_bam    = bam_mapped
     
-    bam_markduplicates    = bam_mapped
-    if (!(params.skip_markduplicates)) {
-        bam_mapped.dump()
+    if (!params.skip_markduplicates) {
          MARKDUPLICATES(bam_mapped)
-         report_markduplicates = MARKDUPLICATES.out.report
-         bam_markduplicates   =  MARKDUPLICATES.out.bam
+         markduplicates_report = MARKDUPLICATES.out.report
+         markduplicates_bam    = MARKDUPLICATES.out.bam
     }
 
     // STEP 3: CREATING RECALIBRATION TABLES
-    bam_baserecalibrator = bam_markduplicates.combine(BUILD_INDICES.out.intervals)
+    bam_baserecalibrator = markduplicates_bam.combine(intervals)
     BASERECALIBRATOR(bam_baserecalibrator, dbsnp, dbsnp_tbi, dict, fai, fasta, known_indels, known_indels_tbi)
 
     // STEP 3.5: MERGING RECALIBRATION TABLES
@@ -464,31 +464,34 @@ workflow {
         }
 
         GATHERBQSRREPORTS(recaltable)
-        // if ('baserecalibrator' in skip_qc) baseRecalibratorReport.close()
+        table = GATHERBQSRREPORTS.out.table
+    } else {
+        table = BASERECALIBRATOR.out.report
     }
 
     // STEP 4: RECALIBRATING
-    bam_applybqsr = MARKDUPLICATES.out.bam.join(GATHERBQSRREPORTS.out.table) //by:[0]
-    bam_applybqsr = bam_applybqsr.combine(BUILD_INDICES.out.intervals)
+    applybqsr_bam = markduplicates_bam.join(table)
+
+    applybqsr_bam = applybqsr_bam.combine(intervals)
         // if (step == 'recalibrate') bamApplyBQSR = input_sample
-    APPLYBQSR(bam_applybqsr, dict, fasta, fai)
+    APPLYBQSR(applybqsr_bam, dict, fasta, fai)
 
     // STEP 4.5: MERGING AND INDEXING THE RECALIBRATED BAM FILES
-    if (!(params.no_intervals)){
+    if (!params.no_intervals) {
         MERGE_BAM_RECAL(APPLYBQSR.out)
-        SAMTOOLS_INDEX_RECAL(MERGE_BAM_RECAL.out)
-    }else{
-        SAMTOOLS_INDEX_RECAL(APPLYBQSR.out)
+        recal = MERGE_BAM_RECAL.out
+    } else {
+        recal = APPLYBQSR.out
     }
 
     // STEP 5: QC
-    if(!('samtools' in skip_qc))
-        SAMTOOLS_STATS(MERGE_BAM_RECAL.out)
-    //TODO This should work but somehow BAMQC is not called
-    bamqc = BWAMEM2_MEM.out//.mix(MERGE_BAM_RECAL.out)
-    //if(!('bamqc' in skipQC))
-        BAMQC(bamqc)//, target_bed)
+    if (!('samtools' in skip_qc)) {
+        SAMTOOLS_STATS(BWAMEM2_MEM.out.mix(recal))
+    }
 
+    if (!('bamqc' in skip_qc)) {
+        BAMQC(BWAMEM2_MEM.out.mix(recal), target_bed)
+    }
 
     /*
     ================================================================================
@@ -529,7 +532,7 @@ workflow {
         QC_TRIM.out.trimgalore_zip.collect().ifEmpty([]),
         multiqc_config,
         multiqc_custom_config.ifEmpty([]),
-        report_markduplicates.collect().ifEmpty([]),
+        markduplicates_report.collect().ifEmpty([]),
         workflow_summary)
 }
 
