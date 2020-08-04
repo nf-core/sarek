@@ -14,11 +14,9 @@ process SAMTOOLS_INDEX {
 
     output:
         tuple val(meta), path(bam), path("*.bai")
-        //set idPatient, idSample into tsv_bam_indexed
 
     script:
     """
-    samtools index $bam
+    samtools index ${bam}
     """
-    //     samtools index ${idSample}.recal.bam TODO: is the naming here relevant?
 }
