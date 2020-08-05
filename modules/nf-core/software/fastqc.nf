@@ -3,7 +3,7 @@ process FASTQC {
     label 'process_medium'
     label 'cpus_2'
 
-    publishDir "${params.outdir}/${options.publish_dir}",
+    publishDir "${params.outdir}/${options.publish_dir}/${meta.sample}/${meta.id}",
         mode: params.publish_dir_mode,
         saveAs: { filename ->
                     if (options.publish_results == "none") null

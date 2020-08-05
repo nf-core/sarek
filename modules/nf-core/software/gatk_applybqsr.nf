@@ -11,7 +11,9 @@ process GATK_APPLYBQSR {
         path fai
 
     output:
-        tuple val(meta), path("${prefix}${meta.sample}.recal.bam") 
+        tuple val(meta), path("${prefix}${meta.sample}.recal.bam") , emit: bam
+        val meta,                                                    emit: tsv
+
 
     script:
     prefix = params.no_intervals ? "" : "${interval.baseName}_"
