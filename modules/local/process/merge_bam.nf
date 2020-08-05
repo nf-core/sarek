@@ -14,6 +14,4 @@ process MERGE_BAM {
     """
     samtools merge --threads ${task.cpus} ${meta.sample}.bam ${bam}
     """
-    //TODO Naming?
-    //samtools merge --threads ${task.cpus} ${idSample}.recal.bam ${bam}
 }
