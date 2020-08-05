@@ -6,6 +6,7 @@
 ================================================================================
 Started March 2016.
 Ported to nf-core May 2019.
+Ported to DSL 2 July 2020.
 --------------------------------------------------------------------------------
 nf-core/sarek:
   An open-source analysis pipeline to detect germline or somatic variants
@@ -355,14 +356,14 @@ workflow {
         step,
         tools)
 
-    bwa = params.bwa ? file(params.bwa) : BUILD_INDICES.out.bwa
-    dbsnp_tbi = params.dbsnp ? params.dbsnp_index ? file(params.dbsnp_index) : BUILD_INDICES.out.dbsnp_tbi : Channel.empty()
-    dict = params.dict ? file(params.dict) : BUILD_INDICES.out.dict
-    fai = params.fasta_fai ? file(params.fasta_fai) : BUILD_INDICES.out.fai
-    germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? file(params.germline_resource_index) : BUILD_INDICES.out.germline_resource_tbi : Channel.empty()
+    bwa  = params.bwa       ? file(params.bwa)       : BUILD_INDICES.out.bwa
+    dict = params.dict      ? file(params.dict)      : BUILD_INDICES.out.dict
+    fai  = params.fasta_fai ? file(params.fasta_fai) : BUILD_INDICES.out.fai
     intervals = BUILD_INDICES.out.intervals
-    known_indels_tbi = params.known_indels ? params.known_indels_index ? file(params.known_indels_index) : BUILD_INDICES.out.known_indels_tbi.collect() : Channel.empty()
-    pon_tbi = params.pon ? params.pon_index ? file(params.pon_index) : BUILD_INDICES.out.pon_tbi : Channel.empty()
+    germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? file(params.germline_resource_index) : BUILD_INDICES.out.germline_resource_tbi      : file("${params.outdir}/no_file")
+    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_index             ? file(params.dbsnp_index)             : BUILD_INDICES.out.dbsnp_tbi                  : file("${params.outdir}/no_file")
+    known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? file(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : file("${params.outdir}/no_file")
+    pon_tbi               = params.pon               ? params.pon_index               ? file(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : file("${params.outdir}/no_file")
 
     /*
     ================================================================================
