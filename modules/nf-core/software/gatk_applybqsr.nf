@@ -5,7 +5,7 @@ process GATK_APPLYBQSR {
     tag "${meta.id}-${interval.baseName}"
 
     input:
-        tuple val(meta), path(bam), path(bai), path(recalibrationReport), file(interval)
+        tuple val(meta), path(bam), path(bai), path(recalibrationReport), path(interval)
         path dict
         path fasta
         path fai
