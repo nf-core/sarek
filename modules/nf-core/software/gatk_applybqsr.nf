@@ -5,13 +5,15 @@ process GATK_APPLYBQSR {
     tag "${meta.id}-${interval.baseName}"
 
     input:
-        tuple val(meta), path(bam), path(bai), path(recalibrationReport), file(interval)
+        tuple val(meta), path(bam), path(bai), path(recalibrationReport), path(interval)
         path dict
         path fasta
         path fai
 
     output:
-        tuple val(meta), path("${prefix}${meta.sample}.recal.bam") 
+        tuple val(meta), path("${prefix}${meta.sample}.recal.bam") , emit: bam
+        val meta,                                                    emit: tsv
+
 
     script:
     prefix = params.no_intervals ? "" : "${interval.baseName}_"

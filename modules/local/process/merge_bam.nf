@@ -8,7 +8,8 @@ process MERGE_BAM {
         tuple val(meta), path(bam)
 
     output:
-        tuple val(meta), path("${meta.sample}.bam")
+        tuple val(meta), path("${meta.sample}.bam"), emit: bam
+        val meta,                                    emit: tsv
 
     script:
     """
