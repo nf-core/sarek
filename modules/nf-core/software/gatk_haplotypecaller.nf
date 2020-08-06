@@ -13,8 +13,8 @@ process GATK_HAPLOTYPECALLER {
         path fai
 
     output:
-        tuple val("HaplotypeCallerGVCF"), val(meta), path("${interval.baseName}_${meta.id}.g.vcf")  emit: gvcfHaplotypeCaller
-        tuple val(meta), path(interval), path("${intervalBed.baseName}_${meta.id}.g.vcf")           emit: gvcfGenotypeGVCFs
+        tuple val("HaplotypeCallerGVCF"), val(meta), path("${interval.baseName}_${meta.id}.g.vcf"),  emit: gvcfHaplotypeCaller
+        tuple val(meta), path(interval), path("${interval.baseName}_${meta.id}.g.vcf"),              emit: gvcfGenotypeGVCFs
 
    
 

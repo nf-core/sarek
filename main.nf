@@ -288,6 +288,7 @@ include { SAMTOOLS_INDEX         as SAMTOOLS_INDEX_MAPPED } from './modules/nf-c
 include { SAMTOOLS_INDEX         as SAMTOOLS_INDEX_RECAL }  from './modules/nf-core/software/samtools_index'
 include { SAMTOOLS_STATS         as SAMTOOLS_STATS }        from './modules/nf-core/software/samtools_stats'
 include { QUALIMAP_BAMQC         as BAMQC }                 from './modules/nf-core/software/qualimap_bamqc'
+include { GATK_HAPLOTYPECALLER   as HAPLOTYPECALLER }       from './modules/nf-core/software/gatk_haplotypecaller'
 include { MULTIQC }                                         from './modules/nf-core/software/multiqc'
 
 /*
@@ -557,6 +558,7 @@ workflow {
 
     bam_applybqsr = bam_applybqsr.combine(intervals)
 
+    bam_applybqsr.dump()
     APPLYBQSR(bam_applybqsr, dict, fasta, fai)
 
     bam_recalibrated = APPLYBQSR.out.bam
@@ -589,7 +591,15 @@ workflow {
         bam_recalibrated = MERGE_BAM_RECAL.out.bam
         tsv_recalibrated = MERGE_BAM_RECAL.out.tsv
     }
+    //TODO: set bam_recalibrated with all these steps
+    // // When using sentieon for mapping, Channel bam_recalibrated is bam_sentieon_recal
+// if (params.sentieon && step == 'mapping') bam_recalibrated = bam_sentieon_recal
 
+// // When no knownIndels for mapping, Channel bam_recalibrated is bam_duplicates_marked
+// if (!params.known_indels && step == 'mapping') bam_recalibrated = bam_duplicates_marked
+
+// // When starting with variant calling, Channel bam_recalibrated is input_sample
+// if (step == 'variantcalling') bam_recalibrated = input_sample
     // Creating TSV files to restart from this step
     tsv_recalibrated.collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { meta ->
         patient = meta.patient
@@ -620,6 +630,21 @@ workflow {
                                 GERMLINE VARIANT CALLING
     ================================================================================
     */
+  
+    bam_recalibrated_indexed = SAMTOOLS_INDEX_RECAL(bam_recalibrated, params.modules['samtools_index_mapped'],)
+    bam_haplotypecaller = bam_recalibrated_indexed.combine(intervals)
+    if ('haplotypecaller' in tools)
+        HAPLOTYPECALLER(bam_haplotypecaller, dbsnp,
+                                             dbsnp_tbi,
+                                             dict,
+                                             fasta,
+                                             fai)
+
+    // gvcfHaplotypeCaller = gvcfHaplotypeCaller.groupTuple(by:[0, 1, 2])
+
+// if (params.no_gvcf) gvcfHaplotypeCaller.close()
+// else gvcfHaplotypeCaller = gvcfHaplotypeCaller.dump(tag:'GVCF HaplotypeCaller')
+
 
     /*
     ================================================================================
@@ -696,16 +721,8 @@ workflow.onComplete {
 // ================================================================================
 // */
 
-// // When using sentieon for mapping, Channel bam_recalibrated is bam_sentieon_recal
-// if (params.sentieon && step == 'mapping') bam_recalibrated = bam_sentieon_recal
 
-// // When no knownIndels for mapping, Channel bam_recalibrated is bam_duplicates_marked
-// if (!params.known_indels && step == 'mapping') bam_recalibrated = bam_duplicates_marked
 
-// // When starting with variant calling, Channel bam_recalibrated is input_sample
-// if (step == 'variantcalling') bam_recalibrated = input_sample
-
-// bam_recalibrated = bam_recalibrated.dump(tag:'BAM for Variant Calling')
 
 // // Here we have a recalibrated bam set
 // // The TSV file is formatted like: "idPatient status idSample bamFile baiFile"
@@ -714,55 +731,14 @@ workflow.onComplete {
 
 // (bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll) = bam_recalibrated.into(6)
 
-// (bam_sentieon_DNAseq, bam_sentieon_DNAscope, bam_sentieon_all) = bam_sentieon_deduped_table.into(3)
 
 // // To speed Variant Callers up we are chopping the reference into smaller pieces
 // // Do variant calling by this intervals, and re-merge the VCFs
-
-// bamHaplotypeCaller = bamHaplotypeCallerNoIntervals.spread(intHaplotypeCaller)
 // bamFreebayesSingle = bamFreebayesSingleNoIntervals.spread(intFreebayesSingle)
 
-// // STEP GATK HAPLOTYPECALLER.1
 
-// process HaplotypeCaller {
-//     label 'memory_singleCPU_task_sq'
-//     label 'cpus_2'
 
-//     tag "${idSample}-${intervalBed.baseName}"
 
-//     input:
-//         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamHaplotypeCaller
-//         file(dbsnp) from dbsnp
-//         file(dbsnpIndex) from dbsnp_tbi
-//         file(dict) from dict
-//         file(fasta) from fasta
-//         file(fastaFai) from fai
-
-//     output:
-//         set val("HaplotypeCallerGVCF"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.g.vcf") into gvcfHaplotypeCaller
-//         set idPatient, idSample, file(intervalBed), file("${intervalBed.baseName}_${idSample}.g.vcf") into gvcfGenotypeGVCFs
-
-//     when: 'haplotypecaller' in tools
-
-//     script:
-//     intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
-//     dbsnpOptions = params.dbsnp ? "--D ${dbsnp}" : ""
-//     """
-//     gatk --java-options "-Xmx${task.memory.toGiga()}g -Xms6000m -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10" \
-//         HaplotypeCaller \
-//         -R ${fasta} \
-//         -I ${bam} \
-//         ${intervalsOptions} \
-//         ${dbsnpOptions} \
-//         -O ${intervalBed.baseName}_${idSample}.g.vcf \
-//         -ERC GVCF
-//     """
-// }
-
-// gvcfHaplotypeCaller = gvcfHaplotypeCaller.groupTuple(by:[0, 1, 2])
-
-// if (params.no_gvcf) gvcfHaplotypeCaller.close()
-// else gvcfHaplotypeCaller = gvcfHaplotypeCaller.dump(tag:'GVCF HaplotypeCaller')
 
 // // STEP GATK HAPLOTYPECALLER.2
 
