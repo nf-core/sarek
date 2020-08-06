@@ -3,20 +3,24 @@ process SAMTOOLS_INDEX {
 
     tag "${meta.id}"
 
-//     publishDir params.outdir, mode: params.publish_dir_mode,
-//         saveAs: {
-//             if (save_bam_mapped) "Preprocessing/${idSample}/Mapped/${it}"
-//             else null
-//         }
+    publishDir params.outdir, mode: params.publish_dir_mode,
+        saveAs: {
+            if (save_bam_mapped) "Preprocessing/${meta.sample}/Mapped/${it}"
+            else null
+        }
 
     input:
         tuple val(meta), path(bam)
+        val options
 
     output:
-        tuple val(meta), path(bam), path("*.bai")
+        tuple val(meta), path("${prefix}.bam"), path("*.bai")
 
     script:
+    prefix = options.suffix ? "${meta.id}.${options.suffix}" : "${meta.id}"
     """
-    samtools index ${bam}
+    [ ! -f  ${prefix}.bam ] && ln -s ${bam} ${prefix}.bam
+
+    samtools index ${prefix}.bam
     """
 }
