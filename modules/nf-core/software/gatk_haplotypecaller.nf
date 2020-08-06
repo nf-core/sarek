@@ -16,7 +16,6 @@ process GATK_HAPLOTYPECALLER {
         tuple val("HaplotypeCallerGVCF"), val(meta), path("${interval.baseName}_${meta.id}.g.vcf"),  emit: gvcfHaplotypeCaller
         tuple val(meta), path(interval), path("${interval.baseName}_${meta.id}.g.vcf"),              emit: gvcfGenotypeGVCFs
 
-   
 
     script:
     intervalsOptions = params.no_intervals ? "" : "-L ${interval}"

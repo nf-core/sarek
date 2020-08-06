@@ -593,13 +593,13 @@ workflow {
     }
     //TODO: set bam_recalibrated with all these steps
     // // When using sentieon for mapping, Channel bam_recalibrated is bam_sentieon_recal
-// if (params.sentieon && step == 'mapping') bam_recalibrated = bam_sentieon_recal
+    // if (params.sentieon && step == 'mapping') bam_recalibrated = bam_sentieon_recal
 
-// // When no knownIndels for mapping, Channel bam_recalibrated is bam_duplicates_marked
-// if (!params.known_indels && step == 'mapping') bam_recalibrated = bam_duplicates_marked
+    // // When no knownIndels for mapping, Channel bam_recalibrated is bam_duplicates_marked
+    // if (!params.known_indels && step == 'mapping') bam_recalibrated = bam_duplicates_marked
 
-// // When starting with variant calling, Channel bam_recalibrated is input_sample
-// if (step == 'variantcalling') bam_recalibrated = input_sample
+    // // When starting with variant calling, Channel bam_recalibrated is input_sample
+    // if (step == 'variantcalling') bam_recalibrated = input_sample
     // Creating TSV files to restart from this step
     tsv_recalibrated.collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { meta ->
         patient = meta.patient
