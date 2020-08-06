@@ -289,6 +289,7 @@ include { SAMTOOLS_INDEX         as SAMTOOLS_INDEX_RECAL }  from './modules/nf-c
 include { SAMTOOLS_STATS         as SAMTOOLS_STATS }        from './modules/nf-core/software/samtools_stats'
 include { QUALIMAP_BAMQC         as BAMQC }                 from './modules/nf-core/software/qualimap_bamqc'
 include { GATK_HAPLOTYPECALLER   as HAPLOTYPECALLER }       from './modules/nf-core/software/gatk_haplotypecaller'
+include { GATK_GENOTYPEVCF       as GENOTYPEVCF }           from './modules/nf-core/software/gatk_genotypegvcf'
 include { MULTIQC }                                         from './modules/nf-core/software/multiqc'
 
 /*
@@ -558,7 +559,6 @@ workflow {
 
     bam_applybqsr = bam_applybqsr.combine(intervals)
 
-    bam_applybqsr.dump()
     APPLYBQSR(bam_applybqsr, dict, fasta, fai)
 
     bam_recalibrated = APPLYBQSR.out.bam
@@ -630,22 +630,30 @@ workflow {
                                 GERMLINE VARIANT CALLING
     ================================================================================
     */
-  
+    //TODO double check whether the indexing has to be repeated here. there is a bai file somewhere up at ApplyBQSR
     bam_recalibrated_indexed = SAMTOOLS_INDEX_RECAL(bam_recalibrated, params.modules['samtools_index_mapped'],)
     bam_haplotypecaller = bam_recalibrated_indexed.combine(intervals)
-    if ('haplotypecaller' in tools)
+    if ('haplotypecaller' in tools){
+        // STEP GATK HAPLOTYPECALLER.1
+
         HAPLOTYPECALLER(bam_haplotypecaller, dbsnp,
                                              dbsnp_tbi,
                                              dict,
                                              fasta,
                                              fai)
 
-    // gvcfHaplotypeCaller = gvcfHaplotypeCaller.groupTuple(by:[0, 1, 2])
+   
+        // STEP GATK HAPLOTYPECALLER.2
+        GENOTYPEVCF(HAPLOTYPECALLER.out.gvcfGenotypeGVCFs, dbsnp,
+                                             dbsnp_tbi,
+                                             dict,
+                                             fasta,
+                                             fai)
+        // vcfGenotypeGVCFs = vcfGenotypeGVCFs.groupTuple(by:[0, 1, 2])
 
-// if (params.no_gvcf) gvcfHaplotypeCaller.close()
-// else gvcfHaplotypeCaller = gvcfHaplotypeCaller.dump(tag:'GVCF HaplotypeCaller')
+    }
 
-
+ 
     /*
     ================================================================================
                                 SOMATIC VARIANT CALLING
@@ -740,136 +748,8 @@ workflow.onComplete {
 
 
 
-// // STEP GATK HAPLOTYPECALLER.2
 
-// process GenotypeGVCFs {
-//     tag "${idSample}-${intervalBed.baseName}"
 
-//     input:
-//         set idPatient, idSample, file(intervalBed), file(gvcf) from gvcfGenotypeGVCFs
-//         file(dbsnp) from dbsnp
-//         file(dbsnpIndex) from dbsnp_tbi
-//         file(dict) from dict
-//         file(fasta) from fasta
-//         file(fastaFai) from fai
-
-//     output:
-//     set val("HaplotypeCaller"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into vcfGenotypeGVCFs
-
-//     when: 'haplotypecaller' in tools
-
-//     script:
-//     // Using -L is important for speed and we have to index the interval files also
-//     intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
-//     dbsnpOptions = params.dbsnp ? "--D ${dbsnp}" : ""
-//     """
-//     gatk --java-options -Xmx${task.memory.toGiga()}g \
-//         IndexFeatureFile \
-//         -I ${gvcf}
-
-//     gatk --java-options -Xmx${task.memory.toGiga()}g \
-//         GenotypeGVCFs \
-//         -R ${fasta} \
-//         ${intervalsOptions} \
-//         ${dbsnpOptions} \
-//         -V ${gvcf} \
-//         -O ${intervalBed.baseName}_${idSample}.vcf
-//     """
-// }
-
-// vcfGenotypeGVCFs = vcfGenotypeGVCFs.groupTuple(by:[0, 1, 2])
-
-// // STEP SENTIEON DNAseq
-
-// process Sentieon_DNAseq {
-//     label 'cpus_max'
-//     label 'memory_max'
-//     label 'sentieon'
-
-//     tag "${idSample}"
-
-//     input:
-//         set idPatient, idSample, file(bam), file(bai), file(recal) from bam_sentieon_DNAseq
-//         file(dbsnp) from dbsnp
-//         file(dbsnpIndex) from dbsnp_tbi
-//         file(fasta) from fasta
-//         file(fastaFai) from fai
-
-//     output:
-//     set val("SentieonDNAseq"), idPatient, idSample, file("DNAseq_${idSample}.vcf") into vcf_sentieon_DNAseq
-
-//     when: 'dnaseq' in tools && params.sentieon
-
-//     script:
-//     """
-//     sentieon driver \
-//         -t ${task.cpus} \
-//         -r ${fasta} \
-//         -i ${bam} \
-//         -q ${recal} \
-//         --algo Haplotyper \
-//         -d ${dbsnp} \
-//         DNAseq_${idSample}.vcf
-//     """
-// }
-
-// vcf_sentieon_DNAseq = vcf_sentieon_DNAseq.dump(tag:'sentieon DNAseq')
-
-// // STEP SENTIEON DNAscope
-
-// process Sentieon_DNAscope {
-//     label 'cpus_max'
-//     label 'memory_max'
-//     label 'sentieon'
-
-//     tag "${idSample}"
-
-//     input:
-//         set idPatient, idSample, file(bam), file(bai), file(recal) from bam_sentieon_DNAscope
-//         file(dbsnp) from dbsnp
-//         file(dbsnpIndex) from dbsnp_tbi
-//         file(fasta) from fasta
-//         file(fastaFai) from fai
-
-//     output:
-//     set val("SentieonDNAscope"), idPatient, idSample, file("DNAscope_${idSample}.vcf") into vcf_sentieon_DNAscope
-//     set val("SentieonDNAscope"), idPatient, idSample, file("DNAscope_SV_${idSample}.vcf") into vcf_sentieon_DNAscope_SV
-
-//     when: 'dnascope' in tools && params.sentieon
-
-//     script:
-//     """
-//     sentieon driver \
-//         -t ${task.cpus} \
-//         -r ${fasta} \
-//         -i ${bam} \
-//         -q ${recal} \
-//         --algo DNAscope \
-//         -d ${dbsnp} \
-//         DNAscope_${idSample}.vcf
-
-//     sentieon driver \
-//         -t ${task.cpus} \
-//         -r ${fasta}\
-//         -i ${bam} \
-//         -q ${recal} \
-//         --algo DNAscope \
-//         --var_type bnd \
-//         -d ${dbsnp} \
-//         DNAscope_${idSample}.temp.vcf
-
-//     sentieon driver \
-//         -t ${task.cpus} \
-//         -r ${fasta}\
-//         -q ${recal} \
-//         --algo SVSolver \
-//         -v DNAscope_${idSample}.temp.vcf \
-//         DNAscope_SV_${idSample}.vcf
-//     """
-// }
-
-// vcf_sentieon_DNAscope = vcf_sentieon_DNAscope.dump(tag:'sentieon DNAscope')
-// vcf_sentieon_DNAscope_SV = vcf_sentieon_DNAscope_SV.dump(tag:'sentieon DNAscope SV')
 
 // // STEP STRELKA.1 - SINGLE MODE
 
