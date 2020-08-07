@@ -290,6 +290,7 @@ include { SAMTOOLS_STATS         as SAMTOOLS_STATS }        from './modules/nf-c
 include { QUALIMAP_BAMQC         as BAMQC }                 from './modules/nf-core/software/qualimap_bamqc'
 include { GATK_HAPLOTYPECALLER   as HAPLOTYPECALLER }       from './modules/nf-core/software/gatk_haplotypecaller'
 include { GATK_GENOTYPEVCF       as GENOTYPEVCF }           from './modules/nf-core/software/gatk_genotypegvcf'
+include { STRELKA                as STRELKA }               from './modules/nf-core/software/strelka'
 include { MULTIQC }                                         from './modules/nf-core/software/multiqc'
 
 /*
@@ -631,9 +632,10 @@ workflow {
     ================================================================================
     */
     //TODO double check whether the indexing has to be repeated here. there is a bai file somewhere up at ApplyBQSR
-    bam_recalibrated_indexed = SAMTOOLS_INDEX_RECAL(bam_recalibrated, params.modules['samtools_index_mapped'],)
-    bam_haplotypecaller = bam_recalibrated_indexed.combine(intervals)
+    bam_recalibrated_indexed_variant_calling = SAMTOOLS_INDEX_RECAL(bam_recalibrated, params.modules['samtools_index_mapped'],)
     if ('haplotypecaller' in tools){
+        bam_haplotypecaller = bam_recalibrated_indexed_variant_calling.combine(intervals)
+
         // STEP GATK HAPLOTYPECALLER.1
 
         HAPLOTYPECALLER(bam_haplotypecaller, dbsnp,
@@ -649,10 +651,20 @@ workflow {
                                              dict,
                                              fasta,
                                              fai)
-        // vcfGenotypeGVCFs = vcfGenotypeGVCFs.groupTuple(by:[0, 1, 2])
 
+        GENOTYPEVCF.out.map{name, meta, vcf -> 
+            patient = meta.patient
+            sample  = meta.sample
+            gender  = meta.gender
+            status  = meta.status
+            [name, patient, sample, gender, status, vcf] 
+        }.groupTuple(by: [0,1,2,])
+         .set{ vcfGenotypeGVCFs }
     }
 
+    if ('strelka' in tools) {
+        STRELKA(bam_recalibrated_indexed_variant_calling, fasta, fai, target_bed, params.modules['strelka'])
+    }
  
     /*
     ================================================================================
