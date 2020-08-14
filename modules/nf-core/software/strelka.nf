@@ -14,7 +14,8 @@ process STRELKA {
 
 
     container "quay.io/biocontainers/strelka:2.9.10--0"
-    //conda (params.conda ? "bioconda::strelka=2.9.10" : null)
+    
+    conda (params.conda ? "bioconda::strelka=2.9.10" : null)
 
     input:
     tuple val(meta), path(bam), path (bai)
