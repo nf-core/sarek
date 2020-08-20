@@ -2494,6 +2494,7 @@ vcfConcatenateVCFs = vcfFreeBayes.mix(vcfFreebayesSingle, vcfGenotypeGVCFs, gvcf
 vcfConcatenateVCFs = vcfConcatenateVCFs.dump(tag:'VCF to merge')
 
 process ConcatVCF {
+    label 'concat_vcf'
     label 'cpus_8'
 
     tag "${variantCaller}-${idSample}"
@@ -2530,6 +2531,7 @@ vcfConcatenated = vcfConcatenated.dump(tag:'VCF')
 mutect2Output = mutect2Output.dump(tag:'Mutect2 output VCF to merge')
 
 process ConcatVCF_Mutect2 {
+    label 'concat_vcf'
     label 'cpus_8'
 
     tag "${idSample}"
