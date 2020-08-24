@@ -339,9 +339,9 @@ params.intervals = params.genome && !('annotate' in step) ? params.genomes[param
 params.known_indels = params.genome && ('mapping' in step || 'preparerecalibration' in step) ? params.genomes[params.genome].known_indels ?: null : null
 params.known_indels_index = params.genome && params.known_indels ? params.genomes[params.genome].known_indels_index ?: null : null
 params.mappability = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].mappability ?: null : null
-params.snpeff_db = params.genome && 'snpeff' in tools ? params.genomes[params.genome].snpeff_db ?: null : null
-params.species = params.genome && 'vep' in tools ? params.genomes[params.genome].species ?: null : null
-params.vep_cache_version = params.genome && 'vep' in tools ? params.genomes[params.genome].vep_cache_version ?: null : null
+params.snpeff_db = params.genome && ('snpeff' in tools || 'merge' in tools) ? params.genomes[params.genome].snpeff_db ?: null : null
+params.species = params.genome && ('vep' in tools || 'merge' in tools) ? params.genomes[params.genome].species ?: null : null
+params.vep_cache_version = params.genome && ('vep' in tools || 'merge' in tools) ? params.genomes[params.genome].vep_cache_version ?: null : null
 
 // Initialize channels with files based on params
 ch_ac_loci = params.ac_loci && 'ascat' in tools ? Channel.value(file(params.ac_loci)) : "null"
