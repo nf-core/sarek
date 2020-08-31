@@ -12,11 +12,25 @@
     - [Nextflow memory requirements](#nextflow-memory-requirements)
 - [Pipeline specific arguments](#pipeline-specific-arguments)
   - [--input](#--input)
+    - [Step: mapping from fastq](#step-mapping-from-fastq)
+    - [Step: mapping from uBAM](#step-mapping-from-ubam)
+    - [Step: mapping from an input folder](#step-mapping-from-an-input-folder)
+    - [Step: prepare_recalibration](#step-prepare_recalibration)
+    - [Step: recalibration](#step-recalibration)
+    - [Step: variant_calling](#step-variant_calling)
+    - [Step: Control-FREEC with mpileup files](#step-control-freec-with-mpileup-files)
+    - [Step: annotate with VCF files](#step-annotate-with-vcf-files)
   - [--step](#--step)
   - [--help](#--help)
   - [--no_intervals](#--no_intervals)
   - [--nucleotides_per_second](#--nucleotides_per_second)
   - [--sentieon](#--sentieon)
+    - [Alignment](#alignment)
+    - [Germline SNV/INDEL Variant Calling - DNAseq](#germline-snvindel-variant-calling---dnaseq)
+    - [Germline SNV/INDEL Variant Calling - DNAscope](#germline-snvindel-variant-calling---dnascope)
+    - [Somatic SNV/INDEL Variant Calling - TNscope](#somatic-snvindel-variant-calling---tnscope)
+    - [Structural Variant Calling](#structural-variant-calling)
+  - [--sentieon](#--sentieon-1)
   - [--skip_qc](#--skip_qc)
   - [--target_bed](#--target_bed)
   - [--tools](#--tools)
@@ -274,31 +288,241 @@ NXF_OPTS='-Xms1g -Xmx4g'
 
 ### --input
 
-Use this to specify the location of your input TSV file.
-For example:
-TSV file should correspond to the correct step, see [`--step`](#--step) and [input](input.md) documentation for more information
+Use this to specify the location of your input TSV (Tab Separated Values) file.
+(Note, the delimiter is the tab (`\t`) character, and no header are required)
+There are different kinds of TSV files that can be used as input, depending on the input files available (FASTQ, uBAM, BAM...).
+TSV file should correspond to the correct step, see [`--step`](#--step) for more information.
+For all possible TSV files, described in the next sections, here is an explanation of what the columns refer to:
+
+- `subject` designates the subject, it should be the ID of the subject, and it must be unique for each subject, but one subject can have multiple samples (e.g.
+normal and tumor)
+- `sex` are the sex chromosomes of the subject, (ie `XX`, `XY`...)
+- `status` is the status of the measured sample, (`0` for Normal or `1` for Tumor)
+- `sample` designates the sample, it should be the ID of the sample (it is possible to have more than one tumor sample for each subject, i.e.
+a tumor and a relapse), it must be unique, but samples can have multiple lanes (which will later be merged)
+- `lane` is used when the sample is multiplexed on several lanes, it must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character
+- `fastq1` is the path to the first pair of the FASTQ file
+- `fastq2` is the path to the second pair of the FASTQ file
+- `bam` is the path to the BAM file
+- `bai` is the path to the BAM index file
+- `recaltable` is the path to the recalibration table
+- `mpileup` is the path to the mpileup file
+
+It is recommended to add the absolute path of the files, but relative path should also work.
+
+All examples are given for a normal/tumor pair.
+If no tumors are listed in the TSV file, then the workflow will proceed as if it is a normal sample instead of a normal/tumor pair, producing the germline Variant Calling results only.
+
+Sarek will output results in a different directory for each sample.
+If multiple samples are specified in the TSV file, Sarek will consider all files to be from different samples.
+Multiple TSV files can be specified if the path is enclosed in quotes.
+
+Output from Variant Calling and/or Annotation will be in a specific directory for each sample (or normal/tumor pair if applicable).
+
+#### Step: mapping from fastq
+
+The TSV file to start with the step mapping with paired-end FASTQs should contain the columns:
+
+`subject sex status sample lane fastq1 fastq2`
+
+In this sample (`G15511.tsv`) for the normal case there are 3 read groups, and 2 for the tumor.
+
+| | | | | | |
+|-|-|-|-|-|-|
+|G15511|XX|0|C09DFN|C09DF_1|/path/to/C09DFACXX111207.1_1.fastq.gz|/path/to/C09DFACXX111207.1_2.fastq.gz|
+|G15511|XX|0|C09DFN|C09DF_2|/path/to/C09DFACXX111207.2_1.fastq.gz|/path/to/C09DFACXX111207.2_2.fastq.gz|
+|G15511|XX|0|C09DFN|C09DF_3|/path/to/C09DFACXX111207.3_1.fastq.gz|/path/to/C09DFACXX111207.3_2.fastq.gz|
+|G15511|XX|1|D0ENMT|D0ENM_1|/path/to/D0ENMACXX111207.1_1.fastq.gz|/path/to/D0ENMACXX111207.1_2.fastq.gz|
+|G15511|XX|1|D0ENMT|D0ENM_2|/path/to/D0ENMACXX111207.2_1.fastq.gz|/path/to/D0ENMACXX111207.2_2.fastq.gz|
 
 ```bash
---input <sample.tsv>
+nextflow run nf-core/sarek --input G15511.tsv
 ```
 
-Multiple TSV files can be specified, using a [glob path](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob), if enclosed in quotes.
+#### Step: mapping from uBAM
+
+The TSV file for starting the mapping from uBAM files should contain the columns:
+
+- `subject sex status sample lane bam`
+
+In this sample (`G15511.tsv`) for the normal case there are 3 read groups, and 2 for the tumor.
+
+| | | | | | |
+|-|-|-|-|-|-|
+|G15511|XX|0|C09DFN|C09DF_1|/path/to/C09DFAC_1.bam|
+|G15511|XX|0|C09DFN|C09DF_2|/path/to/C09DFAC_2.bam|
+|G15511|XX|0|C09DFN|C09DF_3|/path/to/C09DFAC_3.bam|
+|G15511|XX|1|D0ENMT|D0ENM_1|/path/to/D0ENMAC_1.bam|
+|G15511|XX|1|D0ENMT|D0ENM_2|/path/to/D0ENMAC_2.bam|
+
+```bash
+nextflow run nf-core/sarek --input G15511.tsv
+```
+
+#### Step: mapping from an input folder
 
 Use this to specify the location to a directory with fastq files for the `mapping` step of single germline samples only.
 For example:
 
 ```bash
---input </path/to/directory>
+nextflow run nf-core/sarek --input </path/to/directory>
 ```
 
-Use this to specify the location of your VCF input file on `annotate` step.
+The input folder, containing the FASTQ files for one subject (ID) should be organized into one sub-folder for every sample.
+All FASTQ files for that sample should be collected here.
+
+```text
+ID
++--sample1
++------sample1_lib_flowcell-index_lane_R1_1000.fastq.gz
++------sample1_lib_flowcell-index_lane_R2_1000.fastq.gz
++------sample1_lib_flowcell-index_lane_R1_1000.fastq.gz
++------sample1_lib_flowcell-index_lane_R2_1000.fastq.gz
++--sample2
++------sample2_lib_flowcell-index_lane_R1_1000.fastq.gz
++------sample2_lib_flowcell-index_lane_R2_1000.fastq.gz
++--sample3
++------sample3_lib_flowcell-index_lane_R1_1000.fastq.gz
++------sample3_lib_flowcell-index_lane_R2_1000.fastq.gz
++------sample3_lib_flowcell-index_lane_R1_1000.fastq.gz
++------sample3_lib_flowcell-index_lane_R2_1000.fastq.gz
+```
+
+FASTQ filename structure:
+
+- `sample_lib_flowcell-index_lane_R1_1000.fastq.gz` and
+- `sample_lib_flowcell-index_lane_R2_1000.fastq.gz`
+
+Where:
+
+- `sample` = sample id
+- `lib` = identifier of library preparation
+- `flowcell` = identifier of flow cell for the sequencing run
+- `lane` = identifier of the lane of the sequencing run
+
+Read group information will be parsed from FASTQ file names according to this:
+
+- `RGID` = "sample_lib_flowcell_index_lane"
+- `RGPL` = "Illumina"
+- `PU` = sample
+- `RGLB` = lib
+
+#### Step: prepare_recalibration
+
+To start from the preparation of the recalibration step (`--step prepare_recalibration`), a TSV file for a normal/tumor pair needs to be given as input containing the paths to the non recalibrated but already mapped BAM files.
+The TSV needs to contain the following columns:
+
+- `subject sex status sample bam bai`
+
+The same way, if you have non recalibrated BAMs and their indexes, you should use a structure like:
+
+| | | | | | |
+|-|-|-|-|-|-|
+|G15511|XX|0|C09DFN|/path/to/G15511.C09DFN.md.bam|/path/to/G15511.C09DFN.md.bai|
+|G15511|XX|1|D0ENMT|/path/to/G15511.D0ENMT.md.bam|/path/to/G15511.D0ENMT.md.bai|
+
+When starting Sarek from the mapping step, a TSV file is generated automatically after the `MarkDuplicates` process.
+This TSV file is stored under `results/Preprocessing/TSV/duplicates_marked_no_table.tsv` and can be used to restart Sarek from the non-recalibrated BAM files.
+Using the parameter `--step prepare_recalibration` will automatically take this file as input.
+
+Additionally, individual TSV files for each sample (`duplicates_marked_no_table_[SAMPLE].tsv`) can be found in the same directory.
+
+If `--skip_markduplicates` has been specified, the TSV file for this step will be slightly different:
+
+| | | | | | |
+|-|-|-|-|-|-|
+|G15511|XX|0|C09DFN|/path/to/G15511.C09DFN.bam|/path/to/G15511.C09DFN.bai|
+|G15511|XX|1|D0ENMT|/path/to/G15511.D0ENMT.bam|/path/to/G15511.D0ENMT.bai|
+
+When starting Sarek from the mapping step with `--skip_markduplicates`, a TSV file is generated automatically after the `Mapping` processes.
+This TSV file is stored under `results/Preprocessing/TSV/mapped.tsv` and can be used to restart Sarek from the non-recalibrated BAM files.
+Using the parameter `--step recalibrate --skip_markduplicates` will automatically take this file as input.
+
+Additionally, individual TSV files for each sample (`mapped_[SAMPLE].tsv`) can be found in the same directory.
+
+#### Step: recalibration
+
+To start from the recalibration step (`--step recalibrate`), a TSV file for a normal/tumor pair needs to be given as input containing the paths to the non recalibrated but already mapped BAM files.
+The TSV needs to contain the following columns:
+
+- `subject sex status sample bam bai recaltable`
+
+The same way, if you have non recalibrated BAMs, their indexes and their recalibration tables, you should use a structure like:
+
+| | | | | | | |
+|-|-|-|-|-|-|-|
+|G15511|XX|0|C09DFN|/path/to/G15511.C09DFN.md.bam|/path/to/G15511.C09DFN.md.bai|/path/to/G15511.C09DFN.recal.table|
+|G15511|XX|1|D0ENMT|/path/to/G15511.D0ENMT.md.bam|/path/to/G15511.D0ENMT.md.bai|/path/to/G15511.D0ENMT.recal.table|
+
+When starting Sarek from the mapping step, a TSV file is generated automatically after the `BaseRecalibrator` processes.
+This TSV file is stored under `results/Preprocessing/TSV/duplicates_marked.tsv` and can be used to restart Sarek from the non-recalibrated BAM files.
+Using `--step recalibrate` will automatically take this file as input.
+
+Additionally, individual TSV files for each sample (`duplicates_marked_[SAMPLE].tsv`) can be found in the same directory.
+
+If `--skip_markduplicates` has been specified, the TSV file for this step will be slightly different:
+
+| | | | | | | |
+|-|-|-|-|-|-|-|
+|G15511|XX|0|C09DFN|/path/to/G15511.C09DFN.bam|/path/to/G15511.C09DFN.bai|/path/to/G15511.C09DFN.recal.table|
+|G15511|XX|1|D0ENMT|/path/to/G15511.D0ENMT.bam|/path/to/G15511.D0ENMT.bai|/path/to/G15511.D0ENMT.recal.table|
+
+When starting Sarek from the mapping step with `--skip_markduplicates`, a TSV file is generated automatically after the `BaseRecalibrator` processes.
+This TSV file is stored under `results/Preprocessing/TSV/mapped_no_duplicates_marked.tsv` and can be used to restart Sarek from the non-recalibrated BAM files.
+Using `--step recalibrate` will automatically take this file as input.
+
+Additionally, individual TSV files for each sample (`mapped_no_duplicates_marked_[SAMPLE].tsv`) can be found in the same directory.
+
+#### Step: variant_calling
+
+A TSV file for a normal/tumor pair with recalibrated BAM files and their indexes can be provided to start Sarek from the variant calling step (`--step variantcalling`).
+The TSV file should contain the columns:
+
+- `subject sex status sample bam bai`
+
+Here is an example for two samples from the same subject:
+
+| | | | | | |
+|-|-|-|-|-|-|
+|G15511|XX|0|C09DFN|/path/to/G15511.C09DFN.recal.bam|/path/to/G15511.C09DFN.recal.bai|
+|G15511|XX|1|D0ENMT|/path/to/G15511.D0ENMT.recal.bam|/path/to/G15511.D0ENMT.recal.bai|
+
+When starting Sarek from the mapping or recalibrate steps, a TSV file is generated automatically after the recalibration processes.
+This TSV file is stored under `results/Preprocessing/TSV/recalibrated.tsv` and can be used to restart Sarek from the recalibrated BAM files.
+Using the parameter `--step variantcalling` will automatically take this file as input.
+
+Additionally, individual TSV files for each sample (`recalibrated_[SAMPLE].tsv`) can be found in the same directory.
+
+#### Step: Control-FREEC with mpileup files
+
+To start from the Control-FREEC step (`--step Control-FREEC`), a TSV file for a normal/tumor pair needs to be given as input containing the paths to the mpileup files.
+The TSV needs to contain the following columns:
+
+- `subject sex status sample mpileup`
+
+Here is an example for one normal/tumor pair from one subjects:
+
+| | | | | |
+|-|-|-|-|-|
+|G15511|XX|0|C09DFN|/path/to/G15511.C09DFN.pileup|
+|G15511|XX|1|D0ENMT|/path/to/G15511.D0ENMT.pileup|
+
+When starting Sarek from the Control-FREEC step, a TSV file is generated automatically after the `mpileup` process.
+This TSV file is stored under `results/VariantCalling/TSV/control-freec_mpileup.tsv` and can be used to restart Sarek from the mpileup files.
+Using the parameter `--step Control-FREEC` will automatically take this file as input.
+
+Additionally, individual TSV files for each sample (`control-freec_mpileup_[SAMPLE].tsv`) can be found in the same directory.
+
+#### Step: annotate with VCF files
+
+Input files for Sarek can be specified using the path to a VCF directory given to the `--input` command only with the annotation step (`--step annotate`).
+As Sarek will use `bgzip` and `tabix` to compress and index VCF files annotated, it expects VCF files to be sorted.
+Multiple VCF files can be specified, using a [glob path](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob), if enclosed in quotes.
 For example:
 
 ```bash
---input <sample.vcf.gz>
+nextflow run nf-core/sarek --step annotate --input "results/VariantCalling/*/{HaplotypeCaller,Manta,Mutect2,Strelka,TIDDIT}/*.vcf.gz" ...
 ```
-
-Multiple VCF files can be specified, using a [glob path](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob), if enclosed in quotes.
 
 ### --step
 
@@ -320,10 +544,55 @@ Use this to estimate of how many seconds it will take to call variants on any in
 
 ### --sentieon
 
-If [Sentieon](https://www.sentieon.com/) is available, use this to enable it for preprocessing, and variant calling.
+[Sentieon](https://www.sentieon.com/) is a commercial solution to process genomics data with high computing efficiency, fast turnaround time, exceptional accuracy, and 100% consistency.
+
+If [Sentieon](https://www.sentieon.com/) is available, use this `--sentieon` params to enable with Sarek to use some Sentieon Analysis Pipelines & Tools.
 Adds the following tools for the [`--tools`](#--tools) options: `DNAseq`, `DNAscope` and `TNscope`.
 
-More information in the [sentieon](sentieon.md) documentation.
+Please refer to the [nf-core/configs](https://github.com/nf-core/configs#adding-a-new-pipeline-specific-config) repository on how to make a pipeline-specific configuration file based on the [munin-sarek specific configuration file](https://github.com/nf-core/configs/blob/master/conf/pipeline/sarek/munin.config).
+
+Or ask us on the [nf-core Slack](http://nf-co.re/join/slack) on the following channels: [#sarek](https://nfcore.slack.com/channels/sarek) or [#configs](https://nfcore.slack.com/channels/configs).
+
+The following Sentieon Analysis Pipelines & Tools are available within Sarek.
+
+#### Alignment
+
+> Sentieon BWA matches BWA-MEM with > 2X speedup.
+
+This tool is enabled by default within Sarek if `--sentieon` is specified and if the pipeline is started with the `mapping` [step](usage.md#--step).
+
+#### Germline SNV/INDEL Variant Calling - DNAseq
+
+> Precision FDA award-winning software.
+> Matches GATK 3.3-4.1, and without down-sampling.
+> Results up to 10x faster and 100% consistent every time.
+
+This tool is enabled within Sarek if `--sentieon` is specified and if `--tools DNAseq` is specified cf [--tools](#--tools).
+
+#### Germline SNV/INDEL Variant Calling - DNAscope
+
+> Improved accuracy and genome characterization.
+> Machine learning enhanced filtering producing top variant calling accuracy.
+
+This tool is enabled within Sarek if `--sentieon` is specified and if `--tools DNAscope` is specified cf [--tools](#--tools).
+
+#### Somatic SNV/INDEL Variant Calling - TNscope
+
+> Winner of ICGC-TCGA DREAM challenge.
+> Improved accuracy, machine learning enhanced filtering.
+> Supports molecular barcodes and unique molecular identifiers.
+
+This tool is enabled within Sarek if `--sentieon` is specified and if `--tools TNscope` is specified cf [--tools](#--tools).
+
+#### Structural Variant Calling
+
+> Germline and somatic SV calling, including translocations, inversions, duplications and large INDELs
+
+This tool is enabled within Sarek if `--sentieon` is specified and if `--tools DNAscope` is specified cf [--tools](#--tools).
+
+### --sentieon
+
+Adds the following tools for the [`--tools`](#--tools) options: `DNAseq`, `DNAscope` and `TNscope`.
 
 ### --skip_qc
 
@@ -335,6 +604,12 @@ Default: `None`
 ### --target_bed
 
 Use this to specify the target BED file for targeted or whole exome sequencing.
+
+The `--targetBED` parameter does _not_  imply that the workflow is running alignment or variant calling only for the supplied targets.
+Instead, we are aligning for the whole genome, and selecting variants only at the very end by intersecting with the provided target file.
+Adding every exon as an interval in case of WES can generate >200K processes or jobs, much more forks, and similar number of directories in the Nextflow work directory.
+Furthermore, primers and/or baits are not 100% specific, (certainly not for MHC and KIR, etc.), quite likely there going to be reads mapping to multiple locations.
+If you are certain that the target is unique for your genome (all the reads will certainly map to only one location), and aligning to the whole genome is an overkill, better to change the reference itself.
 
 ### --tools
 
@@ -556,7 +831,7 @@ If running with docker or AWS, the configuration is set up to use the [AWS-iGeno
 
 ### --genome (using iGenomes)
 
-There are 2 different species supported by Sarek in the iGenomes references.
+Sarek is using [AWS iGenomes](https://ewels.github.io/AWS-iGenomes/), which facilitate storing and sharing references.
 To run the pipeline, you must specify which to use with the `--genome` flag.
 
 You can find the keys to specify the genomes in the [iGenomes config file](../conf/igenomes.config).
@@ -823,8 +1098,32 @@ If you prefer, you can specify the full path to your reference genome when you r
 
 ### --intervals
 
-Used to speed up Preprocessing and/or Variant Calling, for more information, read the [intervals section in the extra documentation on reference](reference.md#Intervals).
+To speed up some preprocessing and variant calling processes, the reference is chopped into smaller pieces.
+The intervals are chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs.
+We are ignoring the `hs37d5` contig that contains concatenated decoy sequences.
+Parts of preprocessing and variant calling are done by these intervals, and the different resulting files are then merged.
+This can parallelize processes, and push down wall clock time significantly.
 
+The calling intervals can be defined using a `.list` or a `.bed` file.
+A `.list` file contains one interval per line in the format `chromosome:start-end` (1-based coordinates).
+
+When the intervals file is in BED format, the file must be a tab-separated text file with one interval per line.
+There must be at least three columns: chromosome, start, and end.
+In BED format, the coordinates are 0-based, so the interval `chrom:1-10` becomes `chrom<tab>0<tab>10`.
+
+Additionally, the "score" column of the BED file can be used to provide an estimate of how many seconds it will take to call variants on that interval.
+The fourth column remains unused.
+Example (the fields would actually be tab-separated, this is not shown here):
+
+`chr1  10000  207666 NA  47.3`
+
+This indicates that variant calling on the interval chr1:10001-207666 takes approximately 47.3 seconds.
+
+The runtime estimate is used in two different ways.
+First, when there are multiple consecutive intervals in the file that take little time to compute, they are processed as a single job, thus reducing the number of processes that needs to be spawned.
+Second, the jobs with largest processing time are started first, which reduces wall-clock time.
+If no runtime is given, a time of 1000 nucleotides per second is assumed.
+Actual figures vary from 2 nucleotides/second to 30000 nucleotides/second.
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 > If none provided, will be generated automatically from the fasta reference.
