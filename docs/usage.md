@@ -31,10 +31,12 @@
     - [Germline SNV/INDEL Variant Calling - DNAscope](#germline-snvindel-variant-calling---dnascope)
     - [Somatic SNV/INDEL Variant Calling - TNscope](#somatic-snvindel-variant-calling---tnscope)
     - [Structural Variant Calling](#structural-variant-calling)
-  - [--sentieon](#--sentieon-1)
   - [--skip_qc](#--skip_qc)
   - [--target_bed](#--target_bed)
   - [--tools](#--tools)
+    - [Germline variant calling](#germline-variant-calling)
+    - [Somatic variant calling with tumor - normal pairs](#somatic-variant-calling-with-tumor---normal-pairs)
+    - [Somatic variant calling with tumor only samples](#somatic-variant-calling-with-tumor-only-samples)
 - [Modify fastqs (trim/split)](#modify-fastqs-trimsplit)
   - [--trim_fastq](#--trim_fastq)
   - [--clip_r1](#--clip_r1)
@@ -622,10 +624,6 @@ This tool is enabled within Sarek if `--sentieon` is specified and if `--tools T
 
 This tool is enabled within Sarek if `--sentieon` is specified and if `--tools DNAscope` is specified cf [--tools](#--tools).
 
-### --sentieon
-
-Adds the following tools for the [`--tools`](#--tools) options: `DNAseq`, `DNAscope` and `TNscope`.
-
 ### --skip_qc
 
 Use this to disable specific QC and Reporting tools.
@@ -655,13 +653,64 @@ Multiple tools can be specified, separated by commas.
 For example:
 
 ```bash
---tools 'Strelka,mutect2,SnpEff'
+--tools Strelka,mutect2,SnpEff
 ```
 
 Available variant callers: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `MSIsensor`, `Mutect2`, `Strelka`, `TIDDIT`.
 
 > **WARNING** Not all variant callers are available for both germline and somatic variant calling.
-For more details please check the [variant calling](variant_calling.md) extra documentation.
+
+#### Germline variant calling
+
+Using Sarek, germline variant calling will always be performed if a variant calling tool with a germline mode is selected.
+You can specify the variant caller to use with the `--tools` parameter (see [usage](./usage.md) for more information).
+
+Germline variant calling can currently only be performed with the following variant callers:
+
+- FreeBayes
+- HaplotypeCaller
+- Manta
+- mpileup
+- Sentieon
+- Strelka
+- TIDDIT
+
+For more information on the individual variant callers, and where to find the variant calling results, check the [output](output.md) documentation.
+
+#### Somatic variant calling with tumor - normal pairs
+
+Using Sarek, somatic variant calling will be performed, if your input tsv file contains tumor / normal pairs (see [input](input.md) documentation for more information).
+Different samples belonging to the same patient, where at least one is marked as normal (`0` in the `Status` column) and at least one is marked as tumor (`1` in the `Status` column) are treated as tumor / normal pairs.
+
+If tumor-normal pairs are provided, both germline variant calling and somatic variant calling will be performed, provided that the selected variant caller allows for it.
+If the selected variant caller allows only for somatic variant calling, then only somatic variant calling results will be generated.
+
+Here is a list of the variant calling tools that support somatic variant calling:
+
+- ASCAT (check the specific [ASCAT](ascat.md) documentation)
+- ControlFREEC
+- FreeBayes
+- Manta
+- MSIsensor
+- Mutect2
+- Sentieon
+- Strelka
+
+For more information on the individual variant callers, and where to find the variant calling results, check the [output](output.md) documentation.
+
+#### Somatic variant calling with tumor only samples
+
+Somatic variant calling with only tumor samples (no matching normal sample), is not recommended by the GATK best practices.
+This is just supported for a limited variant callers.
+
+Here is a list of the variant calling tools that support tumor-only somatic variant calling:
+
+- Manta
+- mpileup
+- Mutect2
+- TIDDIT
+
+For more information on the individual variant callers, and where to find the variant calling results, check the [output](output.md) documentation.
 
 Available annotation tools: `VEP`, `SnpEff`, `merge`. For more details, please check the [annotation](annotation.md) extra documentation.
 
