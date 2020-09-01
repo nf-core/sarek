@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 
 - [#230](https://github.com/nf-core/sarek/pull/230) - Add `ignore_soft_clipped_bases` option for `GATK Mutect2` [#218](https://github.com/nf-core/sarek/issues/218)
 - [#145](https://github.com/nf-core/sarek/pull/145) - Add `UMI annotation and consensus` functionality to `Sarek`
-- [#253](https://github.com/nf-core/sarek/pull/253) - Add UMI CI testing
+- [#253](https://github.com/nf-core/sarek/pull/253) - Add `UMI` `CI` testing
 - [#262](https://github.com/nf-core/sarek/pull/262) - Add `nextflow_schema.json`
 
 ### Changed
