@@ -1,4 +1,4 @@
-FROM nfcore/base:1.9
+FROM nfcore/base:1.10.2
 LABEL \
   author="Maxime Garcia" \
   description="VEP image for use in nf-core/sarek" \

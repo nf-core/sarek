@@ -5,16 +5,6 @@
   - [Reproducibility](#reproducibility)
 - [Core Nextflow arguments](#core-nextflow-arguments)
   - [-profile](#-profile)
-  - [Containers](#containers)
-    - [What is actually inside the containers](#what-is-actually-inside-the-containers)
-      - [sarek ![sarek-docker status](https://hub.docker.com/r/nfcore/sarek)](#sarek-img-srchttpsimgshieldsiodockerautomatednfcoresareksvg-altsarek-docker-status)
-      - [sareksnpeff ![sareksnpeff-docker status](https://hub.docker.com/r/nfcore/sareksnpeff)](#sareksnpeff-img-srchttpsimgshieldsiodockerautomatednfcoresareksnpeffsvg-altsareksnpeff-docker-status)
-      - [sarekvep ![sarekvep-docker status](https://hub.docker.com/r/nfcore/sarekvep)](#sarekvep-img-srchttpsimgshieldsiodockerautomatednfcoresarekvepsvg-altsarekvep-docker-status)
-    - [Building your own](#building-your-own)
-      - [Build with Conda](#build-with-conda)
-      - [Build with Docker](#build-with-docker)
-      - [Pull with Docker](#pull-with-docker)
-      - [Pull with Singularity](#pull-with-singularity)
   - [-resume](#-resume)
   - [-c](#-c)
     - [Custom resource requests](#custom-resource-requests)
@@ -23,12 +13,13 @@
 - [Pipeline specific arguments](#pipeline-specific-arguments)
   - [--step](#--step)
   - [--input](#--input)
-    - [Step: mapping from fastq](#step-mapping-from-fastq)
-    - [Step: mapping from uBAM](#step-mapping-from-ubam)
+    - [Step: mapping from FASTQ](#step-mapping-from-fastq)
+    - [Step: mapping from unmapped BAM](#step-mapping-from-unmapped-bam)
     - [Step: mapping from an input folder](#step-mapping-from-an-input-folder)
-  - [Metadata when using `--input` with a directory](#metadata-when-using---input-with-a-directory)
     - [Step: prepare_recalibration](#step-prepare_recalibration)
-    - [Step: recalibration](#step-recalibration)
+    - [Step: prepare_recalibration with --skip_markduplicates](#step-prepare_recalibration-with---skip_markduplicates)
+    - [Step: recalibrate](#step-recalibrate)
+    - [Step: recalibrate with --skip_markduplicates](#step-recalibrate-with---skip_markduplicates)
     - [Step: variant_calling](#step-variant_calling)
     - [Step: Control-FREEC with mpileup files](#step-control-freec-with-mpileup-files)
     - [Step: annotate with VCF files](#step-annotate-with-vcf-files)
@@ -137,6 +128,12 @@
   - [--max_time](#--max_time)
   - [--max_cpus](#--max_cpus)
   - [--single_cpu_mem](#--single_cpu_mem)
+- [Containers](#containers)
+  - [Building your owns](#building-your-owns)
+    - [Build with Conda](#build-with-conda)
+    - [Build with Docker](#build-with-docker)
+    - [Pull with Docker](#pull-with-docker)
+    - [Pull with Singularity](#pull-with-singularity)
 - [AWSBatch specific parameters](#awsbatch-specific-parameters)
   - [--awsqueue](#--awsqueue)
   - [--awsregion](#--awsregion)
@@ -165,11 +162,10 @@ results         # Finished results (configurable, see below)
 The nf-core/sarek pipeline comes with more documentation about running the pipeline, found in the `docs/` directory:
 
 - [Output and how to interpret the results](output.md)
-- [Extra Documentation on annotation](annotation.md)
 
 ### Updating the pipeline
 
-When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version.
+When you run the above command, `Nextflow` automatically pulls the pipeline code from `GitHub` and stores it as a cached version.
 When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since.
 To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
@@ -183,38 +179,41 @@ It's a good idea to specify a pipeline version when running the pipeline on your
 This ensures that a specific version of the pipeline code and software are used when you run your pipeline.
 If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `2.6`).
-Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 2.6`.
+First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `2.6.1`).
+Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 2.6.1`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 
 ## Core Nextflow arguments
 
-> **NB:** These options are part of Nextflow and use a _single_ hyphen (pipeline parameters use a double-hyphen).
+> **NB:** These options are part of `Nextflow` and use a _single_ hyphen (pipeline parameters use a double-hyphen).
 
 ### -profile
 
-Use this parameter to choose a configuration profile. Profiles can give configuration presets for different compute environments.
+Use this parameter to choose a configuration profile.
+Profiles can give configuration presets for different compute environments.
 
-Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Conda) - see below.
+Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (`Docker`, `Singularity`, `Conda`) - see below.
 
-> We highly recommend the use of Docker or Singularity containers for full pipeline reproducibility, however when this is not possible, Conda is also supported.
+> We highly recommend the use of `Docker` or `Singularity` containers for full pipeline reproducibility, however when this is not possible, `Conda` is also supported.
 
-The pipeline also dynamically loads configurations from [https://github.com/nf-core/configs](https://github.com/nf-core/configs) when it runs, making multiple config profiles for various institutional clusters available at run time. For more information and to see if your system is available in these configs please see the [nf-core/configs documentation](https://github.com/nf-core/configs#documentation).
+The pipeline also dynamically loads configurations from [github.com/nf-core/configs](https://github.com/nf-core/configs) when it runs, making multiple config profiles for various institutional clusters available at run time.
+For more information and to see if your system is available in these configs please see the [nf-core/configs documentation](https://github.com/nf-core/configs#documentation).
 
 Note that multiple profiles can be loaded, for example: `-profile test,docker` - the order of arguments is important!
 They are loaded in sequence, so later profiles can overwrite earlier profiles.
 
-If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`. This is _not_ recommended.
+If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`.
+This is _not_ recommended.
 
 - `docker`
   - A generic configuration profile to be used with [Docker](http://docker.com/)
-  - Pulls software from dockerhub: [`nfcore/sarek`](http://hub.docker.com/r/nfcore/sarek/)
+  - Pulls software from DockerHub: [`nfcore/sarek`](http://hub.docker.com/r/nfcore/sarek/)
 - `singularity`
   - A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
   - Pulls software from DockerHub: [`nfcore/sarek`](http://hub.docker.com/r/nfcore/sarek/)
 - `conda`
-  - Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker or Singularity.
+  - Please only use `Conda` as a last resort i.e. when it's not possible to run the pipeline with `Docker` or `Singularity`.
   - A generic configuration profile to be used with [conda](https://conda.io/docs/)
   - Pulls most software from [Bioconda](https://bioconda.github.io/)
 - `test`
@@ -245,172 +244,27 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
   - A profile with a complete configuration for automated testing
   - Includes links to test data so needs no other parameters
 
-### Containers
-
-Our main container is designed using [Conda](https://conda.io/) to install all tools used in Sarek:
-
-- [sarek](#sarek-)
-
-For annotation, the main container can be used, but the cache has to be downloaded, or additional containers are available with cache (see [extra annotation documentation](annotation.md)):
-
-- [sareksnpeff](#sareksnpeff-)
-- [sarekvep](#sarekvep-)
-
-#### What is actually inside the containers
-
-##### sarek [![sarek-docker status](https://img.shields.io/docker/automated/nfcore/sarek.svg)](https://hub.docker.com/r/nfcore/sarek)
-
-- Based on `nfcore/base:1.9`
-- Contain **[ASCAT](https://github.com/Crick-CancerGenomics/ascat)** 2.5.2
-- Contain **[AlleleCount](https://github.com/cancerit/alleleCount)** 4.0.2
-- Contain **[BCFTools](https://github.com/samtools/bcftools)** 1.9
-- Contain **[bwa-mem2](https://github.com/bwa-mem2/bwa-mem2)** 2.0
-- Contain **[CNVkit](https://github.com/etal/cnvkit)** 0.9.6
-- Contain **[Control-FREEC](https://github.com/BoevaLab/FREEC)** 11.5
-- Contain **[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)** 0.11.9
-- Contain **[fgbio](https://github.com/fulcrumgenomics/fgbio)** 1.1.0
-- Contain **[FreeBayes](https://github.com/ekg/freebayes)** 1.3.2
-- Contain **[GATK4-spark](https://github.com/broadinstitute/gatk)** 4.1.6.0
-- Contain **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
-- Contain **[ggplot2](https://github.com/tidyverse/ggplot2)** 3.3.0
-- Contain **[HTSlib](https://github.com/samtools/htslib)** 1.9
-- Contain **[Manta](https://github.com/Illumina/manta)** 1.6.0
-- Contain **[msisensor](https://github.com/ding-lab/msisensor)** 0.5
-- Contain **[MultiQC](https://github.com/ewels/MultiQC/)** 1.8
-- Contain **[Qualimap](http://qualimap.bioinfo.cipf.es)** 2.2.2d
-- Contain **[SAMBLASTER](https://github.com/GregoryFaust/samblaster)** 0.1.24
-- Contain **[samtools](https://github.com/samtools/samtools)** 1.9
-- Contain **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
-- Contain **[Strelka2](https://github.com/Illumina/strelka)** 2.9.10
-- Contain **[TIDDIT](https://github.com/SciLifeLab/TIDDIT)** 2.7.1
-- Contain **[pigz](https://zlib.net/pigz/)** 2.3.4
-- Contain **[Trim Galore](https://github.com/FelixKrueger/TrimGalore)** 0.6.5
-- Contain **[VCFanno](https://github.com/brentp/vcfanno)** 0.3.2
-- Contain **[VCFtools](https://vcftools.github.io/index.html)** 0.1.16
-- Contain **[VEP](https://github.com/Ensembl/ensembl-vep)** 99.2
-
-##### sareksnpeff [![sareksnpeff-docker status](https://img.shields.io/docker/automated/nfcore/sareksnpeff.svg)](https://hub.docker.com/r/nfcore/sareksnpeff)
-
-- Based on `nfcore/base:1.9`
-- Contain **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
-- Contains cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
-
-##### sarekvep [![sarekvep-docker status](https://img.shields.io/docker/automated/nfcore/sarekvep.svg)](https://hub.docker.com/r/nfcore/sarekvep)
-
-- Based on `nfcore/base:1.9`
-- Contain **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
-- Contain **[VEP](https://github.com/Ensembl/ensembl-vep)** 99.2
-- Contain cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
-
-#### Building your own
-
-Our containers are designed using [Conda](https://conda.io/).
-The [`environment.yml`](../environment.yml) file can be modified if particular versions of tools are more suited to your needs.
-
-The following commands can be used to build/download containers on your own system:
-
-- Adjust `VERSION` for sarek version (typically a release or `dev`).
-
-##### Build with Conda
-
-```Bash
-conda env create -f environment.yml
-```
-
-##### Build with Docker
-
-- `sarek`
-
-```Bash
-docker build -t nfcore/sarek:<VERSION> .
-```
-
-- `sareksnpeff`
-
-Adjust arguments for `GENOME` version and snpEff `CACHE_VERSION`
-
-```Bash
-docker build -t nfcore/sareksnpeff:<VERSION>.<GENOME> containers/snpeff/. --build-arg GENOME=<GENOME> --build-arg CACHE_VERSION=<CACHE_VERSION>
-```
-
-- `sarekvep`
-
-Adjust arguments for `GENOME` version, `SPECIES` name and VEP `VEP_VERSION`
-
-```Bash
-docker build -t nfcore/sarekvep:<VERSION>.<GENOME> containers/vep/. --build-arg GENOME=<GENOME> --build-arg SPECIES=<SPECIES> --build-arg VEP_VERSION=<VEP_VERSION>
-```
-
-##### Pull with Docker
-
-- `sarek`
-
-```Bash
-docker pull nfcore/sarek:<VERSION>
-```
-
-- `sareksnpeff`
-
-Adjust arguments for `GENOME` version
-
-```Bash
-docker pull nfcore/sareksnpeff:<VERSION>.<GENOME>
-```
-
-- `sarekvep`
-
-Adjust arguments for `GENOME` version
-
-```Bash
-docker pull nfcore/sarekvep:<VERSION>.<GENOME>
-```
-
-##### Pull with Singularity
-
-You can directly pull singularity image, in the path used by the Nextflow ENV variable `NXF_SINGULARITY_CACHEDIR`, ie:
-
-```Bash
-cd $NXF_SINGULARITY_CACHEDIR
-singularity build ...
-```
-
-- `sarek`
-
-```Bash
-singularity build nfcore-sarek-<VERSION>.img docker://nfcore/sarek:<VERSION>
-```
-
-- `sareksnpeff`
-
-Adjust arguments for `GENOME` version
-
-```Bash
-singularity build nfcore-sareksnpeff-<VERSION>.<GENOME>.img docker://nfcore/sareksnpeff:<VERSION>.<GENOME>
-```
-
-- `sarekvep`
-
-Adjust arguments for `GENOME` version
-
-```Bash
-singularity build nfcore-sarekvep-<VERSION>.<GENOME>.img docker://nfcore/sarekvep:<VERSION>.<GENOME>
-```
-
 ### -resume
 
-Specify this when restarting a pipeline. Nextflow will used cached results from any pipeline steps where the inputs are the same, continuing from where it got to previously.
+Specify this when restarting a pipeline.
+`Nextflow` will used cached results from any pipeline steps where the inputs are the same, continuing from where it got to previously.
 
 You can also supply a run name to resume a specific run: `-resume [run-name]`. Use the `nextflow log` command to show previous run names.
 
 ### -c
 
-Specify the path to a specific config file (this is a core Nextflow command). See the [nf-core website documentation](https://nf-co.re/usage/configuration) for more information.
+Specify the path to a specific config file (this is a core `Nextflow` command).
+See the [nf-core website documentation](https://nf-co.re/usage/configuration) for more information.
 
 #### Custom resource requests
 
-Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the steps in the pipeline, if the job exits with an error code of `143` (exceeded requested resources) it will automatically resubmit with higher requests (2 x original, then 3 x original). If it still fails after three times then the pipeline is stopped.
+Each step in the pipeline has a default set of requirements for number of CPUs, memory and time.
+For most of the steps in the pipeline, if the job exits with an error code of `143` (exceeded requested resources) it will automatically resubmit with higher requests (2 x original, then 3 x original).
+If it still fails after three times then the pipeline is stopped.
 
-Whilst these default requirements will hopefully work for most people with most data, you may find that you want to customise the compute resources that the pipeline requests. You can do this by creating a custom config file. For example, to give the workflow process `VEP` 32GB of memory, you could use the following config:
+Whilst these default requirements will hopefully work for most people with most data, you may find that you want to customise the compute resources that the pipeline requests.
+You can do this by creating a custom config file.
+For example, to give the workflow process `VEP` 32GB of memory, you could use the following config:
 
 ```nextflow
 process {
@@ -428,16 +282,17 @@ If you have any questions or issues please send us a message on [Slack](https://
 
 ### Running in the background
 
-Nextflow handles job submissions and supervises the running jobs. The Nextflow process must run until the pipeline is finished.
+`Nextflow` handles job submissions and supervises the running jobs.
+The `Nextflow` process must run until the pipeline is finished.
 
-The Nextflow `-bg` flag launches Nextflow in the background, detached from your terminal so that the workflow does not stop if you log out of your session. The logs are saved to a file.
+The `Nextflow` `-bg` flag launches Nextflow in the background, detached from your terminal so that the workflow does not stop if you log out of your session. The logs are saved to a file.
 
 Alternatively, you can use `screen` / `tmux` or similar tool to create a detached session which you can log back into at a later time.
 Some HPC setups also allow you to run nextflow within a cluster job submitted your job scheduler (from where it submits more jobs).
 
 #### Nextflow memory requirements
 
-In some cases, the Nextflow Java virtual machines can start to request a large amount of memory.
+In some cases, the `Nextflow` Java virtual machines can start to request a large amount of memory.
 We recommend adding the following line to your environment to limit this (typically in `~/.bashrc` or `~./bash_profile`):
 
 ```bash
@@ -448,17 +303,23 @@ NXF_OPTS='-Xms1g -Xmx4g'
 
 ### --step
 
+> **NB** only one step must be specified
+
 Use this to specify the starting step:
 Default `mapping`
 Available: `mapping`, `prepare_recalibration`, `recalibrate`, `variant_calling`, `annotate`, `Control-FREEC`
 
+> **NB** step can be specified with no concern for case, or the presence of `-` or `_`
+
 ### --input
 
-Use this to specify the location of your input TSV (Tab Separated Values) file.
+Use this to specify the location of your input `TSV` (Tab Separated Values) file.
 (Note, the delimiter is the tab (`\t`) character, and no header are required)
-There are different kinds of TSV files that can be used as input, depending on the input files available (FASTQ, uBAM, BAM...).
-TSV file should correspond to the correct step, see [`--step`](#--step) for more information.
-For all possible TSV files, described in the next sections, here is an explanation of what the columns refer to:
+There are different kinds of `TSV` files that can be used as input, depending on the input files available (`FASTQ`, `unmapped BAM`, `reclibrated BAM`...).
+`TSV` file should correspond to the correct step, see [`--step`](#--step) for more information.
+For all possible `TSV` files, described in the next sections, here is an explanation of what the columns refer to:
+
+`Sarek` auto-generates `TSV` files for all and for each individual samples, depending of the options specified.
 
 - `subject` designates the subject, it should be the ID of the subject, and it must be unique for each subject, but one subject can have multiple samples (e.g.
 normal and tumor)
@@ -467,28 +328,27 @@ normal and tumor)
 - `sample` designates the sample, it should be the ID of the sample (it is possible to have more than one tumor sample for each subject, i.e.
 a tumor and a relapse), it must be unique, but samples can have multiple lanes (which will later be merged)
 - `lane` is used when the sample is multiplexed on several lanes, it must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character
-- `fastq1` is the path to the first pair of the FASTQ file
-- `fastq2` is the path to the second pair of the FASTQ file
-- `bam` is the path to the BAM file
-- `bai` is the path to the BAM index file
+- `fastq1` is the path to the first pair of the `FASTQ` file
+- `fastq2` is the path to the second pair of the `FASTQ` file
+- `bam` is the path to the `BAM` file
+- `bai` is the path to the `BAM` index file
 - `recaltable` is the path to the recalibration table
 - `mpileup` is the path to the mpileup file
 
 It is recommended to add the absolute path of the files, but relative path should also work.
 
-Sarek currently need at least a normal sample to function.
-If necessary, a tumor sample can be associated to the normal sample as a pair, if specified with the same `subject`and a different `sample`.
-Any additional tumor sample (such as a relapse for example), can be added if specified with the same `subject` and a different `sample`.
+If necessary, a tumor sample can be associated to a normal sample as a pair, if specified with the same `subject`and a different `sample`.
+An additional tumor sample (such as a relapse for example), can be added if specified with the same `subject` and a different `sample`.
 
-Sarek will output results in a different directory for each sample.
-If multiple samples are specified in the TSV file, Sarek will consider all files to be from different samples.
-Multiple TSV files can be specified if the path is enclosed in quotes.
+`Sarek` will output results in a different directory for each sample.
+If multiple samples are specified in the `TSV` file, `Sarek` will consider all files to be from different samples.
+Multiple `TSV` files can be specified if the path is enclosed in quotes.
 
 Output from Variant Calling and/or Annotation will be in a specific directory for each sample (or normal/tumor pair if applicable).
 
-#### Step: mapping from fastq
+#### Step: mapping from FASTQ
 
-The TSV file to start with the step mapping with paired-end FASTQs should contain the columns:
+The `TSV` file to start with the step mapping with paired-end `FASTQs` should contain the columns:
 
 `subject sex status sample lane fastq1 fastq2`
 
@@ -520,9 +380,9 @@ In this example (`example_pair_fastq.tsv`), there are 3 read groups for the norm
 --input example_pair_fastq.tsv
 ```
 
-#### Step: mapping from uBAM
+#### Step: mapping from unmapped BAM
 
-The TSV file for starting the mapping from uBAM files should contain the columns:
+The `TSV` file for starting the mapping from `unmapped BAM` files should contain the columns:
 
 - `subject sex status sample lane bam`
 
@@ -556,15 +416,18 @@ In this example (`example_pair_ubam.tsv`), there are 3 read groups for the norma
 
 #### Step: mapping from an input folder
 
-Use this to specify the location to a directory with fastq files for the `mapping` step of single germline samples only.
+Use this to specify the location to a directory with `FASTQ` files for the `mapping` step of a single germline sample only.
 For example:
 
 ```bash
 --input </path/to/directory>
 ```
 
-The input folder, containing the FASTQ files for one subject (ID) should be organized into one sub-folder for every sample.
-All FASTQ files for that sample should be collected here.
+> **NB** All of the found `FASTQ` files are considered to belong to the sample.
+
+The input folder, containing the `FASTQ` files for one subject (ID) should be organized into one sub-folder for every sample.
+The given directory is searched recursively for `FASTQ` files that are named `*_R1_*.fastq.gz`, and a matching pair with the same name except `_R2_` instead of `_R1_` is expected to exist alongside.
+All `FASTQ` files for that sample should be collected here.
 
 ```text
 ID
@@ -583,7 +446,7 @@ ID
 +------sample3_lib_flowcell-index_lane_R2_1000.fastq.gz
 ```
 
-FASTQ filename structure:
+`FASTQ` filename structure:
 
 - `sample_lib_flowcell-index_lane_R1_1000.fastq.gz` and
 - `sample_lib_flowcell-index_lane_R2_1000.fastq.gz`
@@ -595,96 +458,98 @@ Where:
 - `flowcell` = identifier of flow cell for the sequencing run
 - `lane` = identifier of the lane of the sequencing run
 
-Read group information will be parsed from FASTQ file names according to this:
+Read group information will be parsed from `FASTQ` file names according to this:
 
 - `RGID` = "sample_lib_flowcell_index_lane"
 - `RGPL` = "Illumina"
 - `PU` = sample
 - `RGLB` = lib
 
-The given directory is searched recursively for FASTQ files that are named `*_R1_*.fastq.gz`, and a matching pair with the same name except `_R2_` instead of `_R1_` is expected to exist alongside.
-All of the found FASTQ files are considered to belong to the sample.
-Each FASTQ file pair gets its own read group (`@RG`) in the resulting BAM file.
-
-### Metadata when using `--input` with a directory
-
-When using `--input` with a directory, the metadata about the sample that are written to the BAM header in the `@RG` tag are determined in the following way.
+Each `FASTQ` file pair gets its own read group (`@RG`) in the resulting `BAM` file in the following way.
 
 - The sample name (`SM`) is derived from the the last component of the path given to `--input`.
 That is, you should make sure that that directory has a meaningful name! For example, with `--input=/my/fastqs/sample123`, the sample name will be `sample123`.
 - The read group id is set to *flowcell.samplename.lane*.
-The flowcell id and lane number are auto-detected from the name of the first read in the FASTQ file.
+The flowcell id and lane number are auto-detected from the name of the first read in the `FASTQ` file.
 
 #### Step: prepare_recalibration
 
-To start from the preparation of the recalibration step (`--step prepare_recalibration`), a TSV file for a normal/tumor pair needs to be given as input containing the paths to the non recalibrated but already mapped BAM files.
-The TSV needs to contain the following columns:
+To start from the preparation of the recalibration step (`--step prepare_recalibration`), a `TSV` file needs to be given as input containing the paths to the `non-recalibrated BAM` files.
+The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/duplicates_marked_no_table.tsv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration`.
+
+The `TSV` contains the following columns:
 
 - `subject sex status sample bam bai`
 
-The same way, if you have non recalibrated BAMs and their indexes, you should use a structure like:
+| | | | | | |
+|-|-|-|-|-|-|
+|SUBJECT_ID|XX|0|SAMPLE_ID|/samples/normal.md.bam|/samples/normal.md.bai|
+
+Or, for a normal/tumor pair:
 
 | | | | | | |
 |-|-|-|-|-|-|
 |SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.md.bam|/samples/normal.md.bai|
 |SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.md.bam|/samples/tumor.md.bai|
 
-When starting Sarek from the mapping step, a TSV file is generated automatically after the `MarkDuplicates` process.
-This TSV file is stored under `results/Preprocessing/TSV/duplicates_marked_no_table.tsv` and can be used to restart Sarek from the non-recalibrated BAM files.
-Using the parameter `--step prepare_recalibration` will automatically take this file as input.
+#### Step: prepare_recalibration with --skip_markduplicates
 
-Additionally, individual TSV files for each sample (`duplicates_marked_no_table_[SAMPLE].tsv`) can be found in the same directory.
+The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/mapped.tsv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration --skip_markduplicates`.
+The `TSV` file contains the same columns, but the content is slightly different:
 
-If `--skip_markduplicates` has been specified, the TSV file for this step will be slightly different:
+| | | | | | |
+|-|-|-|-|-|-|
+|SUBJECT_ID|XX|0|SAMPLE_ID|/samples/normal.bam|/samples/normal.bai|
+
+Or, for a normal/tumor pair:
 
 | | | | | | |
 |-|-|-|-|-|-|
 |SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.bam|/samples/normal.bai|
 |SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.bam|/samples/tumor.bai|
 
-When starting Sarek from the mapping step with `--skip_markduplicates`, a TSV file is generated automatically after the `Mapping` processes.
-This TSV file is stored under `results/Preprocessing/TSV/mapped.tsv` and can be used to restart Sarek from the non-recalibrated BAM files.
-Using the parameter `--step recalibrate --skip_markduplicates` will automatically take this file as input.
+#### Step: recalibrate
 
-Additionally, individual TSV files for each sample (`mapped_[SAMPLE].tsv`) can be found in the same directory.
+To start from the recalibrate step (`--step recalibrate`), a `TSV` file needs to be given as input containing the paths to the `non-recalibrated BAM` file and the associated recalibration table.
+The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/duplicates_marked.tsv` and will automatically be used as an input when specifying the parameter `--step recalibrate`.
 
-#### Step: recalibration
-
-To start from the recalibration step (`--step recalibrate`), a TSV file for a normal/tumor pair needs to be given as input containing the paths to the non recalibrated but already mapped BAM files.
-The TSV needs to contain the following columns:
+The `TSV` contains the following columns:
 
 - `subject sex status sample bam bai recaltable`
 
-The same way, if you have non recalibrated BAMs, their indexes and their recalibration tables, you should use a structure like:
-
 | | | | | | | |
 |-|-|-|-|-|-|-|
+|SUBJECT_ID|XX|0|SAMPLE_ID|/samples/normal.md.bam|/samples/normal.md.bai|/samples/normal.recal.table|
+
+Or, for a normal/tumor pair:
+
+| | | | | | |
+|-|-|-|-|-|-|
 |SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.md.bam|/samples/normal.md.bai|/samples/normal.recal.table|
 |SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.md.bam|/samples/tumor.md.bai|/samples/tumor.recal.table|
 
-When starting Sarek from the mapping step, a TSV file is generated automatically after the `BaseRecalibrator` processes.
-This TSV file is stored under `results/Preprocessing/TSV/duplicates_marked.tsv` and can be used to restart Sarek from the non-recalibrated BAM files.
-Using `--step recalibrate` will automatically take this file as input.
+#### Step: recalibrate with --skip_markduplicates
 
-Additionally, individual TSV files for each sample (`duplicates_marked_[SAMPLE].tsv`) can be found in the same directory.
+The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/mapped_no_duplicates_marked.tsv` and will automatically be used as an input when specifying the parameter `--step recalibrate --skip_markduplicates`.
+The `TSV` file contains the same columns, but the content is slightly different:
 
-If `--skip_markduplicates` has been specified, the TSV file for this step will be slightly different:
+| | | | | | | |
+|-|-|-|-|-|-|-|
+|SUBJECT_ID|XX|0|SAMPLE_ID|/samples/normal.bam|/samples/normal.bai|/samples/normal.recal.table|
+
+Or, for a normal/tumor pair:
 
 | | | | | | | |
 |-|-|-|-|-|-|-|
 |SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.bam|/samples/normal.bai|/samples/normal.recal.table|
 |SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.bam|/samples/tumor.bai|/samples/tumor.recal.table|
 
-When starting Sarek from the mapping step with `--skip_markduplicates`, a TSV file is generated automatically after the `BaseRecalibrator` processes.
-This TSV file is stored under `results/Preprocessing/TSV/mapped_no_duplicates_marked.tsv` and can be used to restart Sarek from the non-recalibrated BAM files.
-Using `--step recalibrate` will automatically take this file as input.
-
-Additionally, individual TSV files for each sample (`mapped_no_duplicates_marked_[SAMPLE].tsv`) can be found in the same directory.
-
 #### Step: variant_calling
 
-A TSV file for a normal/tumor pair with recalibrated BAM files and their indexes can be provided to start Sarek from the variant calling step (`--step variantcalling`).
-The TSV file should contain the columns:
+To start from the variant calling step (`--step variant_calling`), a `TSV` file needs to be given as input containing the paths to the `recalibrated BAM` file and the associated index.
+The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/recalibrated.tsv` and will automatically be used as an input when specifying the parameter `--step variant_calling`.
+
+The `TSV` file should contain the columns:
 
 - `subject sex status sample bam bai`
 
@@ -692,19 +557,21 @@ Here is an example for two samples from the same subject:
 
 | | | | | | |
 |-|-|-|-|-|-|
+|SUBJECT_ID|XX|0|SAMPLE_ID|/samples/normal.recal.bam|/samples/normal.recal.bai|
+
+Or, for a normal/tumor pair:
+
+| | | | | | |
+|-|-|-|-|-|-|
 |SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.recal.bam|/samples/normal.recal.bai|
 |SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.recal.bam|/samples/tumor.recal.bai|
 
-When starting Sarek from the mapping or recalibrate steps, a TSV file is generated automatically after the recalibration processes.
-This TSV file is stored under `results/Preprocessing/TSV/recalibrated.tsv` and can be used to restart Sarek from the recalibrated BAM files.
-Using the parameter `--step variantcalling` will automatically take this file as input.
-
-Additionally, individual TSV files for each sample (`recalibrated_[SAMPLE].tsv`) can be found in the same directory.
-
 #### Step: Control-FREEC with mpileup files
 
-To start from the Control-FREEC step (`--step Control-FREEC`), a TSV file for a normal/tumor pair needs to be given as input containing the paths to the mpileup files.
-The TSV needs to contain the following columns:
+To start from the Control-FREEC step (`--step Control-FREEC`), a `TSV` file needs to be given as input containing the paths to the mpileup files.
+The `Sarek`-generated `TSV` file is stored under `results/VariantCalling/TSV/control-freec_mpileup.tsv` and will automatically be used as an input when specifying the parameter `--step Control-FREEC`.
+
+The `TSV` file should contain the columns:
 
 - `subject sex status sample mpileup`
 
@@ -715,17 +582,11 @@ Here is an example for one normal/tumor pair from one subjects:
 |SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.pileup|
 |SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.pileup|
 
-When starting Sarek from the Control-FREEC step, a TSV file is generated automatically after the `mpileup` process.
-This TSV file is stored under `results/VariantCalling/TSV/control-freec_mpileup.tsv` and can be used to restart Sarek from the mpileup files.
-Using the parameter `--step Control-FREEC` will automatically take this file as input.
-
-Additionally, individual TSV files for each sample (`control-freec_mpileup_[SAMPLE].tsv`) can be found in the same directory.
-
 #### Step: annotate with VCF files
 
-Input files for Sarek can be specified using the path to a VCF directory given to the `--input` command only with the annotation step (`--step annotate`).
-As Sarek will use `bgzip` and `tabix` to compress and index VCF files annotated, it expects VCF files to be sorted.
-Multiple VCF files can be specified, using a [glob path](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob), if enclosed in quotes.
+Input files for Sarek can be specified using the path to a `VCF` file given to the `--input` command only with the annotation step (`--step annotate`).
+As `Sarek` will use `bgzip` and `tabix` to compress and index `VCF` files annotated, it expects `VCF` files to be sorted.
+Multiple `VCF` files can be specified, using a [glob path](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob), if enclosed in quotes.
 For example:
 
 ```bash
@@ -734,34 +595,34 @@ For example:
 
 ### --help
 
-Will display the help message
+Will display the help message.
 
 ### --no_intervals
 
-Disable usage of intervals file, and disable automatic generation of intervals file when none are provided.
+Disable usage of [`intervals`](#--intervals) file.
 
 ### --nucleotides_per_second
 
-Use this to estimate of how many seconds it will take to call variants on any interval, the default value is `1000` is it's not specified in the [`intervals`](#--intervals) file.
+Use this to estimate of how many seconds it will take to call variants on any interval, the default value is `1000` when not specified in the [`intervals`](#--intervals) file.
 
 ### --sentieon
 
 [Sentieon](https://www.sentieon.com/) is a commercial solution to process genomics data with high computing efficiency, fast turnaround time, exceptional accuracy, and 100% consistency.
 
-If [Sentieon](https://www.sentieon.com/) is available, use this `--sentieon` params to enable with Sarek to use some Sentieon Analysis Pipelines & Tools.
+If [Sentieon](https://www.sentieon.com/) is available, use this `--sentieon` params to enable with `Sarek` to use some `Sentieon Analysis Pipelines & Tools`.
 Adds the following tools for the [`--tools`](#--tools) options: `DNAseq`, `DNAscope` and `TNscope`.
 
 Please refer to the [nf-core/configs](https://github.com/nf-core/configs#adding-a-new-pipeline-specific-config) repository on how to make a pipeline-specific configuration file based on the [munin-sarek specific configuration file](https://github.com/nf-core/configs/blob/master/conf/pipeline/sarek/munin.config).
 
 Or ask us on the [nf-core Slack](http://nf-co.re/join/slack) on the following channels: [#sarek](https://nfcore.slack.com/channels/sarek) or [#configs](https://nfcore.slack.com/channels/configs).
 
-The following Sentieon Analysis Pipelines & Tools are available within Sarek.
+The following `Sentieon Analysis Pipelines & Tools` are available within `Sarek`.
 
 #### Alignment
 
 > Sentieon BWA matches BWA-MEM with > 2X speedup.
 
-This tool is enabled by default within Sarek if `--sentieon` is specified and if the pipeline is started with the `mapping` [step](usage.md#--step).
+This tool is enabled by default within `Sarek` if `--sentieon` is specified and if the pipeline is started with the `mapping` [step](usage.md#--step).
 
 #### Germline SNV/INDEL Variant Calling - DNAseq
 
@@ -769,14 +630,14 @@ This tool is enabled by default within Sarek if `--sentieon` is specified and if
 > Matches GATK 3.3-4.1, and without down-sampling.
 > Results up to 10x faster and 100% consistent every time.
 
-This tool is enabled within Sarek if `--sentieon` is specified and if `--tools DNAseq` is specified cf [--tools](#--tools).
+This tool is enabled within `Sarek` if `--sentieon` is specified and if `--tools DNAseq` is specified cf [--tools](#--tools).
 
 #### Germline SNV/INDEL Variant Calling - DNAscope
 
 > Improved accuracy and genome characterization.
 > Machine learning enhanced filtering producing top variant calling accuracy.
 
-This tool is enabled within Sarek if `--sentieon` is specified and if `--tools DNAscope` is specified cf [--tools](#--tools).
+This tool is enabled within `Sarek` if `--sentieon` is specified and if `--tools DNAscope` is specified cf [--tools](#--tools).
 
 #### Somatic SNV/INDEL Variant Calling - TNscope
 
@@ -784,13 +645,13 @@ This tool is enabled within Sarek if `--sentieon` is specified and if `--tools D
 > Improved accuracy, machine learning enhanced filtering.
 > Supports molecular barcodes and unique molecular identifiers.
 
-This tool is enabled within Sarek if `--sentieon` is specified and if `--tools TNscope` is specified cf [--tools](#--tools).
+This tool is enabled within `Sarek` if `--sentieon` is specified and if `--tools TNscope` is specified cf [--tools](#--tools).
 
 #### Structural Variant Calling
 
 > Germline and somatic SV calling, including translocations, inversions, duplications and large INDELs
 
-This tool is enabled within Sarek if `--sentieon` is specified and if `--tools DNAscope` is specified cf [--tools](#--tools).
+This tool is enabled within `Sarek` if `--sentieon` is specified and if `--tools DNAscope` is specified cf [--tools](#--tools).
 
 ### --skip_qc
 
@@ -801,18 +662,22 @@ Default: `None`
 
 ### --target_bed
 
-Use this to specify the target BED file for targeted or whole exome sequencing.
+Use this to specify the target `BED` file for targeted or whole exome sequencing.
 
 The `--target_bed` parameter does _not_  imply that the workflow is running alignment or variant calling only for the supplied targets.
 Instead, we are aligning for the whole genome, and selecting variants only at the very end by intersecting with the provided target file.
-Adding every exon as an interval in case of WES can generate >200K processes or jobs, much more forks, and similar number of directories in the Nextflow work directory.
+Adding every exon as an interval in case of `WES` can generate >200K processes or jobs, much more forks, and similar number of directories in the Nextflow work directory.
 Furthermore, primers and/or baits are not 100% specific, (certainly not for MHC and KIR, etc.), quite likely there going to be reads mapping to multiple locations.
 If you are certain that the target is unique for your genome (all the reads will certainly map to only one location), and aligning to the whole genome is an overkill, better to change the reference itself.
 
-The recommended flow for targeted sequencing data is to use the workflow as it is, but also provide a BED file containing targets for all steps using the `--target_bed` option.
+The recommended flow for targeted sequencing data is to use the workflow as it is, but also provide a `BED` file containing targets for all steps using the `--target_bed` option.
 The workflow will pick up these intervals, and activate any `--exome` flag in any tools that allow it to process deeper coverage.
 It is advised to pad the variant calling regions (exons or target) to some extent before submitting to the workflow.
-To add the target BED file configure the command line like:
+To add the target `BED` file configure the command line like:
+
+```bash
+--target_bed <target.bed>
+```
 
 ### --tools
 
@@ -824,7 +689,9 @@ For example:
 --tools Strelka,mutect2,SnpEff
 ```
 
-Available variant callers: `ASCAT`, `ControlFREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `MSIsensor`, `Mutect2`, `Strelka`, `TIDDIT`.
+Available variant callers: `ASCAT`, `Control-FREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `MSIsensor`, `Mutect2`, `Strelka`, `TIDDIT`.
+
+> **NB** tools can be specified with no concern for case
 
 For more information on the individual variant callers, and where to find the variant calling results, check the [output](output.md) documentation.
 
@@ -832,28 +699,27 @@ For more information on the individual variant callers, and where to find the va
 
 For more information, please read the following documentation on [Germline variant calling](#germline-variant-calling), [Somatic variant calling with tumor - normal pairs](#somatic-variant-calling-with-tumor---normal-pairs) and [Somatic variant calling with tumor only samples](#somatic-variant-calling-with-tumor-only-samples)
 
-Available annotation tools: `VEP`, `SnpEff`, `merge`. For more details, please check the [annotation](#annotation-tools) documentation.
+Available annotation tools: `VEP`, `SnpEff`, `merge`.
+For more details, please check the [annotation](#annotation-tools) documentation.
 
 #### Germline variant calling
 
 Using Sarek, germline variant calling will always be performed if a variant calling tool with a germline mode is selected.
-You can specify the variant caller to use with the `--tools` parameter (see [usage](./usage.md) for more information).
-
 Germline variant calling can currently only be performed with the following variant callers:
 
-- FreeBayes
-- HaplotypeCaller
-- Manta
-- mpileup
-- Sentieon
-- Strelka
-- TIDDIT
+- *FreeBayes*
+- *HaplotypeCaller*
+- *Manta*
+- *mpileup*
+- *Sentieon*
+- *Strelka*
+- *TIDDIT*
 
 For more information on the individual variant callers, and where to find the variant calling results, check the [output](output.md) documentation.
 
 #### Somatic variant calling with tumor - normal pairs
 
-Using Sarek, somatic variant calling will be performed, if your input tsv file contains tumor / normal pairs (see [input](input.md) documentation for more information).
+Using Sarek, somatic variant calling will be performed, if your input tsv file contains tumor / normal pairs (see [input](#--input) documentation for more information).
 Different samples belonging to the same patient, where at least one is marked as normal (`0` in the `Status` column) and at least one is marked as tumor (`1` in the `Status` column) are treated as tumor / normal pairs.
 
 If tumor-normal pairs are provided, both germline variant calling and somatic variant calling will be performed, provided that the selected variant caller allows for it.
@@ -861,32 +727,32 @@ If the selected variant caller allows only for somatic variant calling, then onl
 
 Here is a list of the variant calling tools that support somatic variant calling:
 
-- ASCAT (check the specific [ASCAT](ascat.md) documentation)
-- ControlFREEC
-- FreeBayes
-- Manta
-- MSIsensor
-- Mutect2
-- Sentieon
-- Strelka
+- *ASCAT*
+- *Control-FREEC*
+- *FreeBayes*
+- *Manta*
+- *MSIsensor*
+- *Mutect2*
+- *Sentieon*
+- *Strelka*
 
 For more information on the individual variant callers, and where to find the variant calling results, check the [output](output.md) documentation.
 
 #### Somatic variant calling with tumor only samples
 
-Somatic variant calling with only tumor samples (no matching normal sample), is not recommended by the GATK best practices.
+Somatic variant calling with only tumor samples (no matching normal sample), is not recommended by the `GATK best practices`.
 This is just supported for a limited variant callers.
 
 Here is a list of the variant calling tools that support tumor-only somatic variant calling:
 
-- Manta
-- mpileup
-- Mutect2
-- TIDDIT
+- *Manta*
+- *mpileup*
+- *Mutect2*
+- *TIDDIT*
 
 #### Annotation tools
 
-With Sarek, annotation is done using `snpEff`, `VEP`, or even both consecutively:
+With `Sarek`, annotation is done using `snpEff`, `VEP`, or even both consecutively:
 
 - `--tools snpEff`
   - To annotate using `snpEff`
@@ -897,7 +763,7 @@ With Sarek, annotation is done using `snpEff`, `VEP`, or even both consecutively
 - `--tools merge`
   - To annotate using `snpEff` followed by `VEP`
 
-VCF produced by Sarek will be annotated if `snpEff` or `VEP` are specified with the `--tools` command.
+`VCF` produced by `Sarek` will be annotated if `snpEff` or `VEP` are specified with the `--tools` command.
 As Sarek will use `bgzip` and `tabix` to compress and index VCF files annotated, it expects VCF files to be sorted.
 
 In these examples, all command lines will be launched starting with `--step annotate`.
@@ -905,14 +771,14 @@ It can of course be started directly from any other step instead.
 
 #### Using genome specific containers
 
-Sarek has already designed containers with `snpEff` and `VEP` files for Human (`GRCh37`, `GRCh38`), Mouse (`GRCm38`), Dog (`CanFam3.1`) and Roundworm (`WBcel235`).
+`Sarek` has already designed containers with `snpEff` and `VEP` files for Human (`GRCh37`, `GRCh38`), Mouse (`GRCm38`), Dog (`CanFam3.1`) and Roundworm (`WBcel235`).
 Default settings will run using these containers.
-
-The main Sarek container has also `snpEff` and `VEP` installed, but without the cache files that can be downloaded separately.
+The main `Sarek` container has also `snpEff` and `VEP` installed, but without the cache files that can be downloaded separately.
+See [containers documentation](#containers) for more information.
 
 #### Download cache
 
-A Nextflow helper script has been designed to help downloading `snpEff` and `VEP` caches.
+A `Nextflow` helper script has been designed to help downloading `snpEff` and `VEP` caches.
 Such files are meant to be shared between multiple users, so this script is mainly meant for people administrating servers, clusters and advanced users.
 
 ```bash
@@ -923,7 +789,7 @@ nextflow run download_cache.nf --vep_cache </path/to/VEP/cache> --species <speci
 #### Using downloaded cache
 
 Both `snpEff` and `VEP` enable usage of cache.
-If cache is available on the machine where Sarek is run, it is possible to run annotation using cache.
+If cache is available on the machine where `Sarek` is run, it is possible to run annotation using cache.
 You need to specify the cache directory using `--snpeff_cache` and `--vep_cache` in the command lines or within configuration files.
 The cache will only be used when `--annotation_cache` and cache directories are specified (either in command lines or in a configuration file).
 
@@ -936,9 +802,9 @@ nextflow run nf-core/sarek --tools VEP --step annotate --sample <file.vcf.gz> --
 
 #### Using VEP CADD plugin
 
-To enable the use of the VEP CADD plugin:
+To enable the use of the `VEP` `CADD` plugin:
 
-- Download the CADD files
+- Download the `CADD` files
 - Specify them (either on the command line, like in the example or in a configuration file)
 - use the `--cadd_cache` flag
 
@@ -954,7 +820,7 @@ nextflow run nf-core/sarek --step annotate --tools VEP --sample <file.vcf.gz> --
 
 #### Downloading CADD files
 
-An helper script has been designed to help downloading CADD files.
+An helper script has been designed to help downloading `CADD` files.
 Such files are meant to be share between multiple users, so this script is mainly meant for people administrating servers, clusters and advanced users.
 
 ```bash
@@ -963,7 +829,7 @@ nextflow run download_cache.nf --cadd_cache </path/to/CADD/cache> --cadd_version
 
 #### Using VEP GeneSplicer plugin
 
-To enable the use of the VEP GeneSplicer plugin:
+To enable the use of the `VEP` `GeneSplicer` plugin:
 
 - use the `--genesplicer` flag
 
@@ -981,36 +847,36 @@ Use this to perform adapter trimming with [Trim Galore](https://github.com/Felix
 
 ### --clip_r1
 
-Instructs Trim Galore to remove a number of bp from the 5' end of read 1 (or single-end reads).
+Instructs `Trim Galore` to remove a number of bp from the 5' end of read 1 (or single-end reads).
 This may be useful if the qualities were very poor, or if there is some sort of unwanted bias at the 5' end.
 
 ### --clip_r2
 
-Instructs Trim Galore to remove a number of bp from the 5' end of read 2 (paired-end reads only).
+Instructs `Trim Galore` to remove a number of bp from the 5' end of read 2 (paired-end reads only).
 This may be useful if the qualities were very poor, or if there is some sort of unwanted bias at the 5' end.
 
 ### --three_prime_clip_r1
 
-Instructs Trim Galore to remove a number of bp from the 3' end of read 1 (or single-end reads) AFTER adapter/quality trimming has been performed.
+Instructs `Trim Galore` to remove a number of bp from the 3' end of read 1 (or single-end reads) AFTER adapter/quality trimming has been performed.
 This may remove some unwanted bias from the 3' end that is not directly related to adapter sequence or basecall quality.
 
 ### --three_prime_clip_r2
 
-Instructs Trim Galore to remove a number of bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed.
+Instructs `Trim Galore` to remove a number of bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed.
 This may remove some unwanted bias from the 3' end that is not directly related to adapter sequence or basecall quality.
 
 ### --trim_nextseq
 
 This enables the option `--nextseq-trim=3'CUTOFF` within `Cutadapt`, which will set a quality cutoff (that is normally given with `-q` instead), but qualities of G bases are ignored.
-This trimming is in common for the NextSeq and NovaSeq-platforms, where basecalls without any signal are called as high-quality G bases.
+This trimming is in common for the `NextSeq` and `NovaSeq` platforms, where basecalls without any signal are called as high-quality G bases.
 
 ### --save_trimmed
 
-Option to keep trimmed FASTQs
+Option to keep trimmed `FASTQs`
 
 ### --split_fastq
 
-Use the Nextflow [`splitFastq`](https://www.nextflow.io/docs/latest/operator.html#splitfastq) operator to specify how many reads should be contained in the split fastq file.
+Use the `Nextflow` [`splitFastq`](https://www.nextflow.io/docs/latest/operator.html#splitfastq) operator to specify how many reads should be contained in the split fastq file.
 For example:
 
 ```bash
@@ -1021,7 +887,7 @@ For example:
 
 ### --markdup_java_options
 
-To control the java options necessary for the GATK `MarkDuplicates` process, you can set this parameter.
+To control the java options necessary for the `GATK MarkDuplicates` process, you can set this parameter.
 Default: "-Xms4000m -Xmx7g"
 For example:
 
@@ -1031,41 +897,42 @@ For example:
 
 ### --no_gatk_spark
 
-Use this to disable usage of GATK Spark implementation of their tools in local mode.
+Use this to disable usage of `Spark` implementation of the `GATK` tools in local mode.
 
 ### --save_bam_mapped
 
-Will save mapped BAMs.
+Will save `mapped BAMs`.
 
 ### --skip_markduplicates
 
-Will skip MarkDuplicates. This params will also save the mapped BAMS, to enable restart from step `prepare_recalibration`
+Will skip `GATK MarkDuplicates`.
+This params will also save the `mapped BAMS`, to enable restart from step `prepare_recalibration`
 
 ## Variant Calling
 
 ### --ascat_ploidy
 
-Use this parameter to overwrite default behavior from ASCAT regarding ploidy.
-Requires that [`--ascat_purity`](#--ascat_purity) is set
+Use this parameter to overwrite default behavior from `ASCAT` regarding `ploidy`.
+Requires that [`--ascat_purity`](#--ascat_purity) is set.
 
 ### --ascat_purity
 
-Use this parameter to overwrite default behavior from ASCAT regarding purity.
-Requires that [`--ascat_ploidy`](#--ascat_ploidy) is set
+Use this parameter to overwrite default behavior from `ASCAT` regarding `purity`.
+Requires that [`--ascat_ploidy`](#--ascat_ploidy) is set.
 
 ### --cf_coeff
 
-Control-FREEC `coefficientOfVariation`
-Default: 0.015
+Use this parameter to overwrite default behavior from `Control-FREEC` regarding `coefficientOfVariation`
+Default: `0.015`
 
 ### --cf_ploidy
 
-Control-FREEC `ploidy`
-Default: 2
+Use this parameter to overwrite default behavior from `Control-FREEC` regarding `ploidy`
+Default: `2`
 
 ### --cf_window
 
-Control-FREEC `window size`
+Use this parameter to overwrite default behavior from `Control-FREEC` regarding `window size`
 Default: Disabled
 
 ### --no_gvcf
@@ -1078,60 +945,65 @@ Use this not to use `Manta` `candidateSmallIndels` for `Strelka` (not recommende
 
 ### --pon
 
-When a panel of normals [PON](https://gatkforums.broadinstitute.org/gatk/discussion/24057/how-to-call-somatic-mutations-using-gatk4-mutect2#latest) is defined, it will be use to filter somatic calls.
-Without PON, there will be no calls with PASS in the INFO field, only an _unfiltered_ VCF is written.
-It is recommended to make your own panel-of-normals, as it depends on sequencer and library preparation.
-For tests in iGenomes there is a dummy PON file in the Annotation/GermlineResource directory, but it _should not be used_ as a real panel-of-normals file.
-Provide your PON by:
+When a [panel of normals (PON)](https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON) is defined, it will be use to filter somatic calls.
+Without `PON`, there will be no calls with `PASS` in the `INFO` field, only an _unfiltered_ `VCF` is written.
+It is recommended to make your own `PON`, as it depends on sequencer and library preparation.
+For tests in `iGenomes` there is a dummy `PON` file in the Annotation/GermlineResource directory, but it _should not be used_ as a real panel-of-normals file.
+Provide your `PON` with:
 
 ```bash
 --pon </path/to/PON.vcf.gz>
 ```
 
-PON file should be bgzipped.
+`PON` file should be bgzipped.
 
 ### --pon_index
 
-Tabix index of the panel-of-normals bgzipped VCF file.
-If none provided, will be generated automatically from the panel-of-normals bgzipped VCF file.
+Tabix index of the `PON` bgzipped VCF file.
+If none provided, will be generated automatically from the `PON` bgzipped VCF file.
 
 ### --ignore_soft_clipped_bases
 
-Do not analyze soft clipped bases in the reads for GATK Mutect2 with the `--dont-use-soft-clipped-bases` params.
+Do not analyze soft clipped bases in the reads for `GATK Mutect2` with the `--dont-use-soft-clipped-bases` params.
 
 ### --umi
 
-If provided, UMIs steps will be run to extract and annotate the reads with UMIs and create consensus reads: this part of the pipeline uses *FGBIO* to convert the fastq files into a unmapped BAM, where reads are tagged with the UMIs extracted from the fastq sequences. In order to allow the correct tagging, the UMI sequence must be contained in the read sequence itself, and not in the FASTQ name.
-Following this step, the uBam is aligned and reads are then grouped based on mapping position and UMI tag.
-Finally, reads in the same groups are collapsed to create a consensus read. To create consensus, we have chosen to use the *adjacency method* [ref](https://cgatoxford.wordpress.com/2015/08/14/unique-molecular-identifiers-the-problem-the-solution-and-the-proof/).
+If provided, `Unique Molecular Identifiers (UMIs)` steps will be run to extract and annotate the reads with `UMIs` and create consensus reads.
+This part of the pipeline uses [fgbio](https://github.com/fulcrumgenomics/fgbio) to convert the `FASTQ` files into a `unmapped BAM`, where reads are tagged with the `UMIs` extracted from the `FASTQ` sequences.
+In order to allow the correct tagging, the `UMI` sequence must be contained in the read sequence itself, and not in the `FASTQ` filename.
+Following this step, the `unmapped BAM` is aligned and reads are then grouped based on mapping position and `UMI` tag.
+Finally, reads in the same groups are collapsed to create a consensus read.
+To create consensus, we have chosen to use the *adjacency method* [ref](https://cgatoxford.wordpress.com/2015/08/14/unique-molecular-identifiers-the-problem-the-solution-and-the-proof/).
 In order for the correct tagging to be performed, a read structure needs to be  specified as indicated below.
 
 ### --read_structure1
 
-When processing UMIs, a read structure should always be provided for each of the fastq files, to allow the correct annotation of the bam file. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length).
+When processing `UMIs`, a read structure should always be provided for each of the `FASTQ` files, to allow the correct annotation of the `BAM` file.
+If the read does not contain any `UMI`, the structure will be +T (i.e. only template of any length).
 The read structure follows a format adopted by different tools, and described [here](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures)
 
 ### --read_structure2
 
-When processing UMIs, a read structure should always be provided for each of the fastq files, to allow the correct annotation of the bam file. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length).
+When processing `UMIs`, a read structure should always be provided for each of the `FASTQ` files, to allow the correct annotation of the `BAM` file.
+If the read does not contain any UMI, the structure will be +T (i.e. only template of any length).
 The read structure follows a format adopted by different tools, and described [here](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures)
 
 ## Annotation
 
 ### --annotate_tools
 
-Specify from which tools Sarek should look for VCF files to annotate, only for step `Annotate`.
+Specify from which tools `Sarek` should look for `VCF` files to annotate, only for step `Annotate`.
 Available: `HaplotypeCaller`, `Manta`, `Mutect2`, `Strelka`, `TIDDIT`
 Default: `None`
 
 ### --annotation_cache
 
-Enable usage of annotation cache, and disable usage of already built containers within Sarek.
-For more information, follow the [annotation guidelines](annotation.md#using-downloaded-cache).
+Enable usage of annotation cache, and disable usage of already built containers within `Sarek`.
+For more information, follow the [downloaded cache guidelines](#using-downloaded-cache).
 
 ### --snpeff_cache
 
-To be used conjointly with [`--annotation_cache`](#--annotation_cache), specify the cache snpEff directory:
+To be used conjointly with [`--annotation_cache`](#--annotation_cache), specify the cache `snpEff` directory:
 
 ```bash
 --snpeff_cache </path/to/snpeff_cache>
@@ -1139,7 +1011,7 @@ To be used conjointly with [`--annotation_cache`](#--annotation_cache), specify 
 
 ### --vep_cache
 
-To be used conjointly with [`--annotation_cache`](#--annotation_cache), specify the cache VEP directory:
+To be used conjointly with [`--annotation_cache`](#--annotation_cache), specify the cache `VEP` directory:
 
 ```bash
 --vep_cache </path/to/vep_cache>
@@ -1147,39 +1019,39 @@ To be used conjointly with [`--annotation_cache`](#--annotation_cache), specify 
 
 ### --cadd_cache
 
-Enable CADD cache.
+Enable `CADD` cache.
 
 ### --cadd_indels
 
-Path to CADD InDels file.
+Path to `CADD InDels` file.
 
 ### --cadd_indels_tbi
 
-Path to CADD InDels index.
+Path to `CADD InDels` index.
 
 ### --cadd_wg_snvs
 
-Path to CADD SNVs file.
+Path to `CADD SNVs` file.
 
 ### --cadd_wg_snvs_tbi
 
-Path to CADD SNVs index.
+Path to `CADD SNVs` index.
 
 ### --genesplicer
 
-Enable genesplicer within VEP.
+Enable `genesplicer` within `VEP`.
 
 ## Reference genomes
 
-The pipeline config files come bundled with paths to the Illumina iGenomes reference index files.
-If running with docker or AWS, the configuration is set up to use the [AWS-iGenomes](https://ewels.github.io/AWS-iGenomes/) resource.
+The pipeline config files come bundled with paths to the `Illumina iGenomes` reference index files.
+The configuration is set up to use the [AWS-iGenomes](https://ewels.github.io/AWS-iGenomes/) resource.
 
 ### --genome (using iGenomes)
 
 Sarek is using [AWS iGenomes](https://ewels.github.io/AWS-iGenomes/), which facilitate storing and sharing references.
 To run the pipeline, you must specify which to use with the `--genome` flag.
 
-You can find the keys to specify the genomes in the [iGenomes config file](../conf/igenomes.config).
+You can find the keys to specify the genomes in the [iGenomes config file](../conf/igenomes.config)).
 Genomes that are supported are:
 
 - Homo sapiens
@@ -1206,70 +1078,70 @@ Limited support for:
   - `--genome ce10` (UCSC)
 
 - Canis familiaris
-  - `--genome CanFam3.1`  (Ensembl)
-  - `--genome canFam3`  (UCSC)
+  - `--genome CanFam3.1` (Ensembl)
+  - `--genome canFam3` (UCSC)
 
 - Danio rerio
-  - `--genome GRCz10`  (Ensembl)
-  - `--genome danRer10`  (UCSC)
+  - `--genome GRCz10` (Ensembl)
+  - `--genome danRer10` (UCSC)
 
 - Drosophila melanogaster
-  - `--genome BDGP6`  (Ensembl)
-  - `--genome dm6`  (UCSC)
+  - `--genome BDGP6` (Ensembl)
+  - `--genome dm6` (UCSC)
 
 - Equus caballus
-  - `--genome EquCab2`  (Ensembl)
-  - `--genome equCab2`  (UCSC)
+  - `--genome EquCab2` (Ensembl)
+  - `--genome equCab2` (UCSC)
 
 - Escherichia coli K 12 DH10B
-  - `--genome EB1`  (Ensembl)
+  - `--genome EB1` (Ensembl)
 
 - Gallus gallus
-  - `--genome Galgal4`  (Ensembl)
-  - `--genome galgal4`  (UCSC)
+  - `--genome Galgal4` (Ensembl)
+  - `--genome galgal4` (UCSC)
 
 - Glycine max
-  - `--genome Gm01`  (Ensembl)
+  - `--genome Gm01` (Ensembl)
 
 - Homo sapiens
-  - `--genome hg19`  (UCSC)
-  - `--genome hg38`  (UCSC)
+  - `--genome hg19` (UCSC)
+  - `--genome hg38` (UCSC)
 
 - Macaca mulatta
-  - `--genome Mmul_1`  (Ensembl)
+  - `--genome Mmul_1` (Ensembl)
 
 - Mus musculus
-  - `--genome mm10`  (Ensembl)
+  - `--genome mm10` (Ensembl)
 
 - Oryza sativa japonica
-  - `--genome IRGSP-1.0`  (Ensembl)
+  - `--genome IRGSP-1.0` (Ensembl)
 
 - Pan troglodytes
-  - `--genome CHIMP2.1.4`  (Ensembl)
-  - `--genome panTro4`  (UCSC)
+  - `--genome CHIMP2.1.4` (Ensembl)
+  - `--genome panTro4` (UCSC)
 
 - Rattus norvegicus
-  - `--genome Rnor_6.0`  (Ensembl)
-  - `--genome rn6`  (UCSC)
+  - `--genome Rnor_6.0` (Ensembl)
+  - `--genome rn6` (UCSC)
 
 - Saccharomyces cerevisiae
-  - `--genome R64-1-1`  (Ensembl)
-  - `--genome sacCer3`  (UCSC)
+  - `--genome R64-1-1` (Ensembl)
+  - `--genome sacCer3` (UCSC)
 
 - Schizosaccharomyces pombe
-  - `--genome EF2`  (Ensembl)
+  - `--genome EF2` (Ensembl)
 
 - Sorghum bicolor
-  - `--genome Sbi1`  (Ensembl)
+  - `--genome Sbi1` (Ensembl)
 
 - Sus scrofa
-  - `--genome Sscrofa10.2`  (Ensembl)
-  - `--genome susScr3`  (UCSC)
+  - `--genome Sscrofa10.2` (Ensembl)
+  - `--genome susScr3` (UCSC)
 
 - Zea mays
-  - `--genome AGPv3`  (Ensembl)
+  - `--genome AGPv3` (Ensembl)
 
-Note that you can use the same configuration setup to save sets of reference files for your own use, even if they are not part of the iGenomes resource.
+Note that you can use the same configuration setup to save sets of reference files for your own use, even if they are not part of the `AWS iGenomes` resource.
 See the [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for instructions on where to save such a file.
 
 The syntax for this reference configuration is as follows:
@@ -1325,7 +1197,7 @@ Specify base path to reference genome
 
 ### --save_reference
 
-Enable saving reference indexes and other files built within Sarek.
+Enable saving reference indexes and other files built within `Sarek`.
 
 ```bash
 --save_reference
@@ -1385,7 +1257,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
-> If none provided, will be generated automatically from the fasta reference.
+> If none provided, will be generated automatically from dbsnp `VCF` file.
 
 ```bash
 --dbsnp_index <path/to/dbsnp.vcf.gz.tbi>
@@ -1422,8 +1294,8 @@ If you prefer, you can specify the full path to your reference genome when you r
 ### --germline_resource
 
 The [germline resource VCF file](https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_Mutect2.php#--germline-resource) (bgzipped and tabixed) needed by GATK4 Mutect2 is a collection of calls that are likely present in the sample, with allele frequencies.
-The AF info field must be present.
-You can find a smaller, stripped gnomAD VCF file (most of the annotation is removed and only calls signed by PASS are stored) in the iGenomes Annotation/GermlineResource folder.
+The `AF` info field must be present.
+You can find a smaller, stripped gnomAD `VCF` file (most of the annotation is removed and only calls signed by PASS are stored) in the `AWS iGenomes` `Annotation/GermlineResource` folder.
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
 ```bash
@@ -1435,7 +1307,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 Tabix index of the germline resource specified at [`--germline_resource`](#--germline_resource).
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
-> If none provided, will be generated automatically from the fasta reference.
+> If none provided, will be generated automatically from the germline resource `VCF` file.
 
 ```bash
 --germline_resource_index </path/to/resource.vcf.gz.tbi>
@@ -1452,15 +1324,16 @@ This can parallelize processes, and push down wall clock time significantly.
 The calling intervals can be defined using a `.list` or a `.bed` file.
 A `.list` file contains one interval per line in the format `chromosome:start-end` (1-based coordinates).
 
-When the intervals file is in BED format, the file must be a tab-separated text file with one interval per line.
+When the intervals file is in `BED` format, the file must be a tab-separated text file with one interval per line.
 There must be at least three columns: chromosome, start, and end.
-In BED format, the coordinates are 0-based, so the interval `chrom:1-10` becomes `chrom<tab>0<tab>10`.
+In `BED` format, the coordinates are 0-based, so the interval `chrom:1-10` becomes `chrom<tab>0<tab>10`.
 
-Additionally, the "score" column of the BED file can be used to provide an estimate of how many seconds it will take to call variants on that interval.
+Additionally, the `score` column of the `BED` file can be used to provide an estimate of how many seconds it will take to call variants on that interval.
 The fourth column remains unused.
-Example (the fields would actually be tab-separated, this is not shown here):
 
-`chr1  10000  207666 NA  47.3`
+||||||
+|-|-|-|-|-|
+|chr1|10000|207666|NA|47.3|
 
 This indicates that variant calling on the interval chr1:10001-207666 takes approximately 47.3 seconds.
 
@@ -1490,7 +1363,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
-> If none provided, will be generated automatically from the fasta reference.
+> If none provided, will be generated automatically from the known indels `VCF` file.
 
 ```bash
 --known_indels_index  <path/to/known_indels.vcf.gz.tbi>
@@ -1514,7 +1387,8 @@ If you prefer, you can specify the DB version when you run the pipeline:
 
 ### --species
 
-This specifies the species used for running VEP annotation. For human data, this needs to be set to `homo_sapiens`, for mouse data `mus_musculus` as the annotation needs to know where to look for appropriate annotation references. If you use iGenomes or a local resource with `genomes.conf`, this has already been set for you appropriately.
+This specifies the species used for running `VEP` annotation.
+If you use iGenomes or a local resource with `genomes.conf`, this has already been set for you appropriately.
 
 ### --vep_cache_version
 
@@ -1539,11 +1413,11 @@ Default: `copy`
 
 ### --sequencing_center
 
-The sequencing center that will be used in the BAM CN field
+The sequencing center that will be used in the `BAM` `CN` field
 
 ### --multiqc_config
 
-Specify a path to a custom MultiQC configuration file.
+Specify a path to a custom `MultiQC` configuration file.
 
 ### --monochrome_logs
 
@@ -1564,16 +1438,18 @@ Set to receive plain-text e-mails instead of HTML formatted.
 
 ### --max_multiqc_email_size
 
-Threshold size for MultiQC report to be attached in notification email. If file generated by pipeline exceeds the threshold, it will not be attached (Default: 25MB).
+Threshold size for `MultiQC` report to be attached in notification email.
+If file generated by pipeline exceeds the threshold, it will not be attached.
+Default: `25MB`.
 
 ### -name
 
 Name for the pipeline run.
-If not specified, Nextflow will automatically generate a random mnemonic.
+If not specified, `Nextflow` will automatically generate a random mnemonic.
 
-This is used in the MultiQC report (if not default) and in the summary HTML / e-mail (always).
+This is used in the `MultiQC` report (if not default) and in the summary HTML / e-mail (always).
 
-**NB:** Single hyphen (core Nextflow option)
+**NB:** Single hyphen (core `Nextflow` option)
 
 ### --custom_config_version
 
@@ -1588,18 +1464,17 @@ Default is set to `master`.
 
 ### --custom_config_base
 
-If you're running offline, nextflow will not be able to fetch the institutional config files
+If you're running offline, `Nextflow` will not be able to fetch the institutional config files
 from the internet.
 If you don't need them, then this is not a problem.
-If you do need them, you should download the files from the repo and tell nextflow where to find them with the `custom_config_base` option.
+If you do need them, you should download the files from the repository and tell `Nextflow` where to find them with the `custom_config_base` option.
 For example:
 
 ```bash
 NXF_OPTS='-Xms1g -Xmx4g'
 ```
 
-> Note that the nf-core/tools helper package has a `download` command to download all required pipeline
-> files + singularity containers + institutional configs in one go for you, to make this process easier.
+> Note that the nf-core/tools helper package has a `download` command to download all required pipeline files + singularity containers + institutional configs in one go for you, to make this process easier.
 
 ## Job resources
 
@@ -1628,6 +1503,157 @@ Should be a string in the format integer-unit eg. `--max_cpus 1`
 
 Use to set memory for a single CPU.
 Should be a string in the format integer-unit eg. `--single_cpu_mem '8.GB'`
+
+## Containers
+
+`sarek`, our main container is designed using [Conda](https://conda.io/).
+
+[![sarek-docker status](https://img.shields.io/docker/automated/nfcore/sarek.svg)](https://hub.docker.com/r/nfcore/sarek)
+
+Based on [nfcore/base:1.10.2](https://hub.docker.com/r/nfcore/base/tags), it contains:
+
+- **[ASCAT](https://github.com/Crick-CancerGenomics/ascat)** 2.5.2
+- **[AlleleCount](https://github.com/cancerit/alleleCount)** 4.0.2
+- **[BCFTools](https://github.com/samtools/bcftools)** 1.9
+- **[bwa-mem2](https://github.com/bwa-mem2/bwa-mem2)** 2.0
+- **[CNVkit](https://github.com/etal/cnvkit)** 0.9.6
+- **[Control-FREEC](https://github.com/BoevaLab/FREEC)** 11.5
+- **[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)** 0.11.9
+- **[fgbio](https://github.com/fulcrumgenomics/fgbio)** 1.1.0
+- **[FreeBayes](https://github.com/ekg/freebayes)** 1.3.2
+- **[GATK4-spark](https://github.com/broadinstitute/gatk)** 4.1.6.0
+- **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
+- **[ggplot2](https://github.com/tidyverse/ggplot2)** 3.3.0
+- **[HTSlib](https://github.com/samtools/htslib)** 1.9
+- **[Manta](https://github.com/Illumina/manta)** 1.6.0
+- **[msisensor](https://github.com/ding-lab/msisensor)** 0.5
+- **[MultiQC](https://github.com/ewels/MultiQC/)** 1.8
+- **[Qualimap](http://qualimap.bioinfo.cipf.es)** 2.2.2d
+- **[SAMBLASTER](https://github.com/GregoryFaust/samblaster)** 0.1.24
+- **[samtools](https://github.com/samtools/samtools)** 1.9
+- **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
+- **[Strelka2](https://github.com/Illumina/strelka)** 2.9.10
+- **[TIDDIT](https://github.com/SciLifeLab/TIDDIT)** 2.7.1
+- **[pigz](https://zlib.net/pigz/)** 2.3.4
+- **[Trim Galore](https://github.com/FelixKrueger/TrimGalore)** 0.6.5
+- **[VCFanno](https://github.com/brentp/vcfanno)** 0.3.2
+- **[VCFtools](https://vcftools.github.io/index.html)** 0.1.16
+- **[VEP](https://github.com/Ensembl/ensembl-vep)** 99.2
+
+For annotation, the main container can be used, but the cache has to be downloaded, or additional containers are available with cache (see [annotation documentation](#using-downloaded-cache)):
+
+`sareksnpeff`, our `snpeff` container is designed using [Conda](https://conda.io/).
+
+[![sareksnpeff-docker status](https://img.shields.io/docker/automated/nfcore/sareksnpeff.svg)](https://hub.docker.com/r/nfcore/sareksnpeff)
+
+Based on [nfcore/base:1.10.2](https://hub.docker.com/r/nfcore/base/tags), it contains:
+
+- **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
+- Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
+
+`sarekvep`, our `vep` container is designed using [Conda](https://conda.io/).
+
+[![sarekvep-docker status](https://img.shields.io/docker/automated/nfcore/sarekvep.svg)](https://hub.docker.com/r/nfcore/sarekvep)
+
+Based on [nfcore/base:1.10.2](https://hub.docker.com/r/nfcore/base/tags), it contains:
+
+- **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
+- **[VEP](https://github.com/Ensembl/ensembl-vep)** 99.2
+- Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
+
+### Building your owns
+
+Our containers are designed using [Conda](https://conda.io/).
+The [`environment.yml`](../environment.yml) file can be modified if particular versions of tools are more suited to your needs.
+
+The following commands can be used to build/download containers on your own system:
+
+- Adjust `VERSION` for sarek version (typically a release or `dev`).
+
+#### Build with Conda
+
+```Bash
+conda env create -f environment.yml
+```
+
+#### Build with Docker
+
+- `sarek`
+
+```Bash
+docker build -t nfcore/sarek:<VERSION> .
+```
+
+- `sareksnpeff`
+
+Adjust arguments for `GENOME` version and snpEff `CACHE_VERSION`
+
+```Bash
+docker build -t nfcore/sareksnpeff:<VERSION>.<GENOME> containers/snpeff/. --build-arg GENOME=<GENOME> --build-arg CACHE_VERSION=<CACHE_VERSION>
+```
+
+- `sarekvep`
+
+Adjust arguments for `GENOME` version, `SPECIES` name and VEP `VEP_VERSION`
+
+```Bash
+docker build -t nfcore/sarekvep:<VERSION>.<GENOME> containers/vep/. --build-arg GENOME=<GENOME> --build-arg SPECIES=<SPECIES> --build-arg VEP_VERSION=<VEP_VERSION>
+```
+
+#### Pull with Docker
+
+- `sarek`
+
+```Bash
+docker pull nfcore/sarek:<VERSION>
+```
+
+- `sareksnpeff`
+
+Adjust arguments for `GENOME` version
+
+```Bash
+docker pull nfcore/sareksnpeff:<VERSION>.<GENOME>
+```
+
+- `sarekvep`
+
+Adjust arguments for `GENOME` version
+
+```Bash
+docker pull nfcore/sarekvep:<VERSION>.<GENOME>
+```
+
+#### Pull with Singularity
+
+You can directly pull singularity image, in the path used by the Nextflow ENV variable `NXF_SINGULARITY_CACHEDIR`, ie:
+
+```Bash
+cd $NXF_SINGULARITY_CACHEDIR
+singularity build ...
+```
+
+- `sarek`
+
+```Bash
+singularity build nfcore-sarek-<VERSION>.img docker://nfcore/sarek:<VERSION>
+```
+
+- `sareksnpeff`
+
+Adjust arguments for `GENOME` version
+
+```Bash
+singularity build nfcore-sareksnpeff-<VERSION>.<GENOME>.img docker://nfcore/sareksnpeff:<VERSION>.<GENOME>
+```
+
+- `sarekvep`
+
+Adjust arguments for `GENOME` version
+
+```Bash
+singularity build nfcore-sarekvep-<VERSION>.<GENOME>.img docker://nfcore/sarekvep:<VERSION>.<GENOME>
+```
 
 ## AWSBatch specific parameters
 

@@ -129,7 +129,7 @@ For all samples:
 - `duplicates_marked_no_table_[SAMPLE].tsv` `duplicates_marked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
   - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps for a specific sample.
 
-> `/!\` Only with [`--sentieon`](usage.md#--sentieon)
+> **WARNING** Only with [`--sentieon`](usage.md#--sentieon)
 
 For all samples:
 **Output directory: `results/Preprocessing/TSV`**
@@ -193,7 +193,7 @@ For further reading and documentation see the [GenotypeGVCFs manual](https://gat
 [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/360042477952-Mutect2) calls somatic SNVs and indels via local assembly of haplotypes.
 
 For further reading and documentation see the [Mutect2 manual](https://gatk.broadinstitute.org/hc/en-us/articles/360042477952-Mutect2).
-It is recommended to have [panel of normals (PON)](https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON) for this version of Mutect2 using at least 40 normal samples, and you can add your `PON` file to get filtered somatic calls.
+It is recommended to have [panel of normals (PON)](https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON) for this version of `GATK Mutect2` using at least 40 normal samples, and you can add your `PON` file to get filtered somatic calls.
 
 For a Tumor/Normal pair only:
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/Mutect2`**
@@ -253,7 +253,7 @@ For further reading and documentation see the [Strelka2 user guide](https://gith
 
 #### Sentieon DNAseq
 
-> `/!\` Only with [`--sentieon`](usage.md#--sentieon)
+> **WARNING** Only with [`--sentieon`](usage.md#--sentieon)
 
 [Sentieon DNAseq](https://www.sentieon.com/products/#dnaseq) implements the same mathematics used in the Broad Institute's BWA-GATK HaplotypeCaller 3.3-4.1 Best Practices Workflow pipeline.
 
@@ -267,7 +267,7 @@ For further reading and documentation see the [Sentieon DNAseq user guide](https
 
 #### Sentieon DNAscope
 
-> `/!\` Only with [`--sentieon`](usage.md#--sentieon)
+> **WARNING** Only with [`--sentieon`](usage.md#--sentieon)
 
 [Sentieon DNAscope](https://www.sentieon.com/products) calls SNPs and small indels.
 
@@ -281,7 +281,7 @@ For further reading and documentation see the [Sentieon DNAscope user guide](htt
 
 #### Sentieon TNscope
 
-> `/!\` Only with [`--sentieon`](usage.md#--sentieon)
+> **WARNING** Only with [`--sentieon`](usage.md#--sentieon)
 
 [Sentieon TNscope](https://www.sentieon.com/products/#tnscope) calls SNPs and small indels on an Tumor/Normal pair.
 
@@ -360,7 +360,7 @@ For further reading and documentation see the [TIDDIT manual](https://github.com
 
 #### Sentieon DNAscope SV
 
-> `/!\` Only with [`--sentieon`](usage.md#--sentieon)
+> **WARNING** Only with [`--sentieon`](usage.md#--sentieon)
 
 [Sentieon DNAscope](https://www.sentieon.com/products) can perform structural variant calling in addition to calling SNPs and small indels.
 
