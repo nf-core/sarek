@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - [#236](https://github.com/nf-core/sarek/pull/236) - Fix `GATK Mutect2` typo issue [#227](https://github.com/nf-core/sarek/issues/227)
 - [#271](https://github.com/nf-core/sarek/pull/271) - Fix `ConcatVCF_Mutect2` `SIGPIPE` issue [#268](https://github.com/nf-core/sarek/issues/268)
 - [#272](https://github.com/nf-core/sarek/pull/272) - Fix annotation `--tools merge` issue
+- [#279](https://github.com/nf-core/sarek/pull/279) - Fix issue with `--step prepare_recalibration` [#267](https://github.com/nf-core/sarek/issues/267)
 
 ### Removed
 
