@@ -105,7 +105,7 @@ For all samples:
 
 This directory is the location for the final `recalibrated BAM` files.
 `Recalibrated BAM` files are usually 2-3 times larger than the `duplicates-marked BAM` files.
-To re-generate `recalibrated BAM` file you have to apply the recalibration table delivered to the `DuplicatesMarked\` folder either using `Sarek` `([--step recalibrate`](usage.md#step-recalibrate)), or doing this recalibration yourself.
+To re-generate `recalibrated BAM` file you have to apply the recalibration table delivered to the `DuplicatesMarked\` folder either using `Sarek` ( [`--step recalibrate`](usage.md#step-recalibrate) ) , or doing this recalibration yourself.
 
 For all samples:
 **Output directory: `results/Preprocessing/[SAMPLE]/Recalibrated`**
@@ -119,14 +119,14 @@ For further reading and documentation see the [data pre-processing for variant d
 
 The `TSV` files are auto-generated and can be used by `Sarek` for further processing and/or variant calling.
 
-For further reading and documentation see the [`--input` section in the usage documentation](usage.md#--input).
+For further reading and documentation see the [`--input`](usage.md#--input) section in the usage documentation.
 
 For all samples:
 **Output directory: `results/Preprocessing/TSV`**
 
 - `duplicates_marked_no_table.tsv`, `duplicates_marked.tsv` and `recalibrated.tsv`
   - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps.
-- `duplicates_marked_no_table_[SAMPLE].tsv` `duplicates_marked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
+- `duplicates_marked_no_table_[SAMPLE].tsv`, `duplicates_marked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
   - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps for a specific sample.
 
 > **WARNING** Only with [`--sentieon`](usage.md#--sentieon)
@@ -142,7 +142,7 @@ For all samples:
 ## Variant Calling
 
 All the results regarding Variant Calling are collected in this directory.
-If some results from a variant caller do not appear here, please check out the [`--tools` section in the usage documentation](usage.md#--tools) documentation.
+If some results from a variant caller do not appear here, please check out the [`--tools`](usage.md#--tools) section in the usage documentation.
 
 `Recalibrated BAM` files can used as an input to start the Variant Calling.
 
@@ -164,7 +164,7 @@ For further reading and documentation see the [FreeBayes manual](https://github.
 
 [GATK HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/360042913231-HaplotypeCaller) calls germline SNPs and indels via local re-assembly of haplotypes.
 
-Germline calls are provided for all samples, to able comparison of both tumor and normal for possible mixup.
+Germline calls are provided for all samples, to enable comparison of both, tumor and normal, for possible mixup.
 
 For all samples:
 **Output directory: `results/VariantCalling/[SAMPLE]/HaploTypeCaller`**
@@ -178,7 +178,7 @@ For further reading and documentation see the [HaplotypeCaller manual](https://g
 
 [GATK GenotypeGVCFs](https://gatk.broadinstitute.org/hc/en-us/articles/360042914991-GenotypeGVCFs) performs joint genotyping on one or more samples pre-called with HaplotypeCaller.
 
-Germline calls are provided for all samples, to able comparison of both tumor and normal for possible mixup.
+Germline calls are provided for all samples, to enable comparison of both, tumor and normal, for possible mixup.
 
 For all samples:
 **Output directory: `results/VariantCalling/[SAMPLE]/HaplotypeCallerGVCF`**
@@ -193,7 +193,8 @@ For further reading and documentation see the [GenotypeGVCFs manual](https://gat
 [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/360042477952-Mutect2) calls somatic SNVs and indels via local assembly of haplotypes.
 
 For further reading and documentation see the [Mutect2 manual](https://gatk.broadinstitute.org/hc/en-us/articles/360042477952-Mutect2).
-It is recommended to have [panel of normals (PON)](https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON) for this version of `GATK Mutect2` using at least 40 normal samples, and you can add your `PON` file to get filtered somatic calls.
+It is recommended to have [panel of normals (PON)](https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON) for this version of `GATK Mutect2` using at least 40 normal samples.
+Additionally, you can add your `PON` file to get filtered somatic calls.
 
 For a Tumor/Normal pair only:
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/Mutect2`**
@@ -203,21 +204,21 @@ Files created:
 - `Mutect2_unfiltered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `Mutect2_unfiltered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
   - unfiltered (raw) Mutect2 calls `VCF` with Tabix index
 - `Mutect2_filtered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `Mutect2_filtered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
-  - filtered Mutect2 calls `VCF` with Tabix index: these entries has a PASS filter, you can get these when supplying a panel of normals using the `--pon` option
+  - filtered Mutect2 calls `VCF` with Tabix index: these entries have a `PASS` filter, you can get these when supplying a panel of normals using the `--pon` option
 - `[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.stats`
-  - a stats file generated during calling raw variants (needed for filtering)
+  - a stats file generated during calling of raw variants (needed for filtering)
 - `[TUMORSAMPLE]_contamination.table`
-  - a text file exported when panel-of-normals provided about sample contamination
+  - a text file exported when panel-of-normals about sample contamination are provided
 
 #### samtools mpileup
 
-[samtools mpileup](https://www.htslib.org/doc/samtools.html) generate pileup for a `BAM` file.
+[samtools mpileup](https://www.htslib.org/doc/samtools.html) generates pileup of a `BAM` file.
 
 For all samples:
 **Output directory: `results/VariantCalling/[SAMPLE]/mpileup`**
 
 - `[SAMPLE].pileup.gz`
-  - The pileup format is a text-based format for summarizing the base calls of aligned reads to a reference sequence. Alignment records are grouped by sample (SM) identifiers in @RG header lines.
+  - The pileup format is a text-based format for summarizing the base calls of aligned reads to a reference sequence. Alignment records are grouped by sample (`SM`) identifiers in `@RG` header lines.
 
 For further reading and documentation see the [samtools manual](https://www.htslib.org/doc/samtools.html#COMMANDS_AND_OPTIONS).
 
@@ -299,7 +300,7 @@ For further reading and documentation see the [Sentieon TNscope user guide](http
 
 [Manta](https://github.com/Illumina/manta) calls structural variants (SVs) and indels from mapped paired-end sequencing reads.
 It is optimized for analysis of germline variation in small sets of individuals and somatic variation in tumor/normal sample pairs.
-`Manta` provides a candidate list for small indels also that can be fed to `Strelka` following [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example).
+`Manta` provides a candidate list for small indels that can be fed to `Strelka` following [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example).
 
 For all samples:
 **Output directory: `results/VariantCalling/[SAMPLE]/Manta`**
@@ -337,7 +338,7 @@ For further reading and documentation see the [Manta user guide](https://github.
 
 [TIDDIT](https://github.com/SciLifeLab/TIDDIT) identifies intra and inter-chromosomal translocations, deletions, tandem-duplications and inversions.
 
-Germline calls are provided for all samples, to enable comparison of both tumor and normal for possible mixup.
+Germline calls are provided for all samples, to enable comparison of both, tumor and normal, for possible mixup.
 Low quality calls are removed internally, to simplify processing of variant calls but they are saved by `Sarek`.
 
 For all samples:
@@ -475,9 +476,9 @@ For further reading see the [MSIsensor paper](https://www.ncbi.nlm.nih.gov/pubme
 
 ## Variant annotation
 
-This directory contains results from the final annotation steps: two software are used for annotation, [snpEff](http://snpeff.sourceforge.net/) and [VEP](https://www.ensembl.org/info/docs/tools/vep/index.html).
-Only a subset of the VCF files are annotated, and only variants that have a `PASS` filter.
-`FreeBayes` results are not annotated in the moment yet as we are lacking a decent somatic filter.
+This directory contains results from the final annotation steps: two tools are used for annotation, [snpEff](http://snpeff.sourceforge.net/) and [VEP](https://www.ensembl.org/info/docs/tools/vep/index.html).
+Only a subset of the `VCF` files are annotated, and only variants that have a `PASS` filter.
+Currently, `FreeBayes` results are not annotated as we are lacking a decent somatic filter.
 
 ### snpEff
 
@@ -498,7 +499,7 @@ For further reading and documentation see the [snpEff manual](http://snpeff.sour
 [VEP (Variant Effect Predictor)](https://www.ensembl.org/info/docs/tools/vep/index.html), based on `Ensembl`, is a tool to determine the effects of all sorts of variants, including SNPs, indels, structural variants, CNVs.
 The generated `VCF` header contains the software version, also the version numbers for additional databases like `Clinvar` or `dbSNP` used in the `VEP` line.
 The format of the [consequence annotations](https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html) is also in the `VCF` header describing the `INFO` field.
-In the moment it contains:
+Currently, it contains:
 
 - *Consequence*: impact of the variation, if there is any
 - *Codons*: the codon change, i.e. cGt/cAt
@@ -613,7 +614,7 @@ For further reading and documentation see the [bcftools stats manual](https://sa
 [VCFtools](https://vcftools.github.io/) is a program package designed for working with `VCF` files.
 Plots will show:
 
-- the summary counts of each type of transition to transversion ratio for each FILTER category.
+- the summary counts of each type of transition to transversion ratio for each `FILTER` category.
 - the transition to transversion ratio as a function of alternative allele count (using only bi-allelic SNPs).
 - the transition to transversion ratio as a function of SNP quality threshold (using only bi-allelic SNPs).
 
