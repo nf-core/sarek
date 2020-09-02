@@ -18,6 +18,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [GATK BaseRecalibrator](#gatk-baserecalibrator)
     - [GATK ApplyBQSR](#gatk-applybqsr)
   - [TSV files](#tsv-files)
+  - [TSV files with `--skip_markduplicates`](#tsv-files-with---skip_markduplicates)
+  - [TSV files with `--sentieon`](#tsv-files-with---sentieon)
 - [Variant Calling](#variant-calling)
   - [SNVs and small indels](#snvs-and-small-indels)
     - [FreeBayes](#freebayes)
@@ -80,6 +82,7 @@ This directory is the location for the `BAM` files delivered to users.
 Besides the `duplicates-marked BAM` files, the recalibration tables (`*.recal.table`) are also stored, and can be used to create `recalibrated BAM` files.
 
 For all samples:
+
 **Output directory: `results/Preprocessing/[SAMPLE]/DuplicatesMarked`**
 
 - `[SAMPLE].md.bam` and `[SAMPLE].md.bai`
@@ -94,6 +97,7 @@ For further reading and documentation see the [data pre-processing for variant d
 [GATK BaseRecalibrator](https://gatk.broadinstitute.org/hc/en-us/articles/360042477672-BaseRecalibrator) generates a recalibration table based on various co-variates.
 
 For all samples:
+
 **Output directory: `results/Preprocessing/[SAMPLE]/DuplicatesMarked`**
 
 - `[SAMPLE].recal.table`
@@ -108,6 +112,7 @@ This directory is the location for the final `recalibrated BAM` files.
 To re-generate `recalibrated BAM` file you have to apply the recalibration table delivered to the `DuplicatesMarked\` folder either using `Sarek` ( [`--step recalibrate`](usage.md#step-recalibrate) ) , or doing this recalibration yourself.
 
 For all samples:
+
 **Output directory: `results/Preprocessing/[SAMPLE]/Recalibrated`**
 
 - `[SAMPLE].recal.bam` and `[SAMPLE].recal.bam.bai`
@@ -122,6 +127,7 @@ The `TSV` files are auto-generated and can be used by `Sarek` for further proces
 For further reading and documentation see the [`--input`](usage.md#--input) section in the usage documentation.
 
 For all samples:
+
 **Output directory: `results/Preprocessing/TSV`**
 
 - `duplicates_marked_no_table.tsv`, `duplicates_marked.tsv` and `recalibrated.tsv`
@@ -129,9 +135,25 @@ For all samples:
 - `duplicates_marked_no_table_[SAMPLE].tsv`, `duplicates_marked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
   - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps for a specific sample.
 
+### TSV files with `--skip_markduplicates`
+
+> **WARNING** Only with [`--skip_markduplicates`](usage.md#--skip_markduplicates)
+
+For all samples:
+
+**Output directory: `results/Preprocessing/TSV`**
+
+- `mapped.tsv`, `mapped_no_duplicates_marked.tsv` and `recalibrated.tsv`
+  - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps.
+- `mapped_[SAMPLE].tsv`, `mapped_no_duplicates_marked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
+  - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps for a specific sample.
+
+### TSV files with `--sentieon`
+
 > **WARNING** Only with [`--sentieon`](usage.md#--sentieon)
 
 For all samples:
+
 **Output directory: `results/Preprocessing/TSV`**
 
 - `sentieon_deduped.tsv` and `recalibrated_sentieon.tsv`
@@ -153,6 +175,7 @@ If some results from a variant caller do not appear here, please check out the [
 [FreeBayes](https://github.com/ekg/freebayes) is a Bayesian genetic variant detector designed to find small polymorphisms, specifically SNPs, indels, MNPs, and complex events smaller than the length of a short-read sequencing alignment.
 
 For all samples:
+
 **Output directory: `results/VariantCalling/[SAMPLE]/FreeBayes`**
 
 - `FreeBayes_[SAMPLE].vcf.gz` and `FreeBayes_[SAMPLE].vcf.gz.tbi`
@@ -167,6 +190,7 @@ For further reading and documentation see the [FreeBayes manual](https://github.
 Germline calls are provided for all samples, to enable comparison of both, tumor and normal, for possible mixup.
 
 For all samples:
+
 **Output directory: `results/VariantCalling/[SAMPLE]/HaploTypeCaller`**
 
 - `HaplotypeCaller_[SAMPLE].vcf.gz` and `HaplotypeCaller_[SAMPLE].vcf.gz.tbi`
@@ -181,6 +205,7 @@ For further reading and documentation see the [HaplotypeCaller manual](https://g
 Germline calls are provided for all samples, to enable comparison of both, tumor and normal, for possible mixup.
 
 For all samples:
+
 **Output directory: `results/VariantCalling/[SAMPLE]/HaplotypeCallerGVCF`**
 
 - `HaplotypeCaller_[SAMPLE].g.vcf.gz` and `HaplotypeCaller_[SAMPLE].g.vcf.gz.tbi`
@@ -196,7 +221,8 @@ For further reading and documentation see the [Mutect2 manual](https://gatk.broa
 It is recommended to have [panel of normals (PON)](https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON) for this version of `GATK Mutect2` using at least 40 normal samples.
 Additionally, you can add your `PON` file to get filtered somatic calls.
 
-For a Tumor/Normal pair only:
+For a Tumor/Normal pair:
+
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/Mutect2`**
 
 Files created:
@@ -215,6 +241,7 @@ Files created:
 [samtools mpileup](https://www.htslib.org/doc/samtools.html) generates pileup of a `BAM` file.
 
 For all samples:
+
 **Output directory: `results/VariantCalling/[SAMPLE]/mpileup`**
 
 - `[SAMPLE].pileup.gz`
@@ -227,6 +254,7 @@ For further reading and documentation see the [samtools manual](https://www.htsl
 [Strelka2](https://github.com/Illumina/strelka) is a fast and accurate small variant caller optimized for analysis of germline variation in small cohorts and somatic variation in tumor/normal sample pairs.
 
 For all samples:
+
 **Output directory: `results/VariantCalling/[SAMPLE]/Strelka`**
 
 - `Strelka_Sample_genome.vcf.gz` and `Strelka_Sample_genome.vcf.gz.tbi`
@@ -235,6 +263,7 @@ For all samples:
   - `VCF` with Tabix index
 
 For a Tumor/Normal pair:
+
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/Strelka`**
 
 - `Strelka_[TUMORSAMPLE]_vs_[NORMALSAMPLE]_somatic_indels.vcf.gz` and `Strelka_[TUMORSAMPLE]_vs_[NORMALSAMPLE]_somatic_indels.vcf.gz.tbi`
@@ -243,6 +272,7 @@ For a Tumor/Normal pair:
   - `VCF` with Tabix index
 
 Using [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example) with the `candidateSmallIndels` from `Manta`:
+
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/Strelka`**
 
 - `StrelkaBP_[TUMORSAMPLE]_vs_[NORMALSAMPLE]_somatic_indels.vcf.gz` and `StrelkaBP_[TUMORSAMPLE]_vs_[NORMALSAMPLE]_somatic_indels.vcf.gz.tbi`
@@ -259,6 +289,7 @@ For further reading and documentation see the [Strelka2 user guide](https://gith
 [Sentieon DNAseq](https://www.sentieon.com/products/#dnaseq) implements the same mathematics used in the Broad Institute's BWA-GATK HaplotypeCaller 3.3-4.1 Best Practices Workflow pipeline.
 
 For all samples:
+
 **Output directory: `results/VariantCalling/[SAMPLE]/SentieonDNAseq`**
 
 - `DNAseq_Sample.vcf.gz` and `DNAseq_Sample.vcf.gz.tbi`
@@ -273,6 +304,7 @@ For further reading and documentation see the [Sentieon DNAseq user guide](https
 [Sentieon DNAscope](https://www.sentieon.com/products) calls SNPs and small indels.
 
 For all samples:
+
 **Output directory: `results/VariantCalling/[SAMPLE]/SentieonDNAscope`**
 
 - `DNAscope_Sample.vcf.gz` and `DNAscope_Sample.vcf.gz.tbi`
@@ -287,6 +319,7 @@ For further reading and documentation see the [Sentieon DNAscope user guide](htt
 [Sentieon TNscope](https://www.sentieon.com/products/#tnscope) calls SNPs and small indels on an Tumor/Normal pair.
 
 For a Tumor/Normal pair:
+
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/SentieonTNscope`**
 
 - `TNscope_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `TNscope_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
@@ -296,6 +329,7 @@ For further reading and documentation see the [Sentieon TNscope user guide](http
 
 ### Structural Variants
 
+
 #### Manta
 
 [Manta](https://github.com/Illumina/manta) calls structural variants (SVs) and indels from mapped paired-end sequencing reads.
@@ -303,6 +337,7 @@ It is optimized for analysis of germline variation in small sets of individuals 
 `Manta` provides a candidate list for small indels that can be fed to `Strelka` following [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example).
 
 For all samples:
+
 **Output directory: `results/VariantCalling/[SAMPLE]/Manta`**
 
 - `Manta_[SAMPLE].candidateSmallIndels.vcf.gz` and `Manta_[SAMPLE].candidateSmallIndels.vcf.gz.tbi`
@@ -320,7 +355,8 @@ For a Tumor sample only:
 - `Manta_[TUMORSAMPLE].tumorSV.vcf.gz` and `Manta_[TUMORSAMPLE].tumorSV.vcf.gz.tbi`
   - `VCF` with Tabix index
 
-For a Tumor/Normal pair only:
+For a Tumor/Normal pair:
+
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/Manta`**
 
 - `Manta_[TUMORSAMPLE]_vs_[NORMALSAMPLE].candidateSmallIndels.vcf.gz` and `Manta_[TUMORSAMPLE]_vs_[NORMALSAMPLE].candidateSmallIndels.vcf.gz.tbi`
@@ -342,6 +378,7 @@ Germline calls are provided for all samples, to enable comparison of both, tumor
 Low quality calls are removed internally, to simplify processing of variant calls but they are saved by `Sarek`.
 
 For all samples:
+
 **Output directory: `results/VariantCalling/[SAMPLE]/TIDDIT`**
 
 - `TIDDIT_[SAMPLE].vcf.gz` and `TIDDIT_[SAMPLE].vcf.gz.tbi`
@@ -366,6 +403,7 @@ For further reading and documentation see the [TIDDIT manual](https://github.com
 [Sentieon DNAscope](https://www.sentieon.com/products) can perform structural variant calling in addition to calling SNPs and small indels.
 
 For all samples:
+
 **Output directory: `results/VariantCalling/[SAMPLE]/SentieonDNAscope`**
 
 - `DNAscope_SV_Sample.vcf.gz` and `DNAscope_SV_Sample.vcf.gz.tbi`
@@ -380,7 +418,8 @@ For further reading and documentation see the [Sentieon DNAscope user guide](htt
 Running ASCAT on NGS data requires that the `BAM` files are converted into BAF and LogR values.
 This can be done using the software [AlleleCount](https://github.com/cancerit/alleleCount) followed by the provided [ConvertAlleleCounts](https://github.com/nf-core/sarek/blob/master/bin/convertAlleleCounts.r) R-script.
 
-For a Tumor/Normal pair only:
+For a Tumor/Normal pair:
+
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/ASCAT`**
 
 - `[TUMORSAMPLE].BAF` and `[NORMALSAMPLE].BAF`
@@ -395,7 +434,8 @@ It infers tumor purity and ploidy and calculates whole-genome allele-specific co
 `ASCAT` is written in `R` and available here: [github.com/Crick-CancerGenomics/ascat](https://github.com/Crick-CancerGenomics/ascat).
 The `ASCAT` process gives several images as output, described in detail in this [book chapter](http://www.ncbi.nlm.nih.gov/pubmed/22130873).
 
-For a Tumor/Normal pair only:
+For a Tumor/Normal pair:
+
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/ASCAT`**
 
 - `[TUMORSAMPLE].aberrationreliability.png`
@@ -436,7 +476,8 @@ For further reading and documentation see the [ASCAT manual](https://www.crick.a
 `Control-FREEC` automatically computes, normalizes, segments copy number and beta allele frequency profiles, then calls copy number alterations and LOH.
 And also detects subclonal gains and losses and evaluate the most likely average ploidy of the sample.
 
-For a Tumor/Normal pair only:
+For a Tumor/Normal pair:
+
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/ControlFREEC`**
 
 - `[TUMORSAMPLE]_vs_[NORMALSAMPLE].config.txt`
@@ -460,17 +501,18 @@ An altered distribution of microsatellite length is associated to a missed repli
 [MSIsensor](https://github.com/ding-lab/msisensor) is a tool to detect the MSI status of a tumor scanning the length of the microsatellite regions.
 It requires a normal sample for each tumour to differentiate the somatic and germline cases.
 
-For a Tumor/Normal pair only:
+For a Tumor/Normal pair:
+
 **Output directory: `results/VariantCalling/[TUMORSAMPLE]_vs_[NORMALSAMPLE]/MSIsensor`**
 
-- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]`_msisensor
+- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]_msisensor`
   - MSI score output, contains information about the number of somatic sites.
-- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]`_msisensor_dis
+- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]_msisensor_dis`
   - The normal and tumor length distribution for each microsatellite position.
-- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]`_msisensor_germline
-  - somatic sites detected
-- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]`_msisensor_somatic
-  - germ line sites detected
+- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]_msisensor_germline`
+  - Somatic sites detected.
+- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]_msisensor_somatic`
+  - Germline sites detected.
 
 For further reading see the [MSIsensor paper](https://www.ncbi.nlm.nih.gov/pubmed/24371154).
 
@@ -487,6 +529,7 @@ It annotates and predicts the effects of variants on genes (such as amino acid c
 The generated `VCF` header contains the software version and the used command line.
 
 For all samples:
+
 **Output directory: `results/Annotation/[SAMPLE]/snpEff`**
 
 - `VariantCaller_Sample_snpEff.ann.vcf.gz` and `VariantCaller_Sample_snpEff.ann.vcf.gz.tbi`
@@ -514,6 +557,7 @@ Currently, it contains:
 - *BIOTYPE*: Biotype of transcript or regulatory feature
 
 For all samples:
+
 **Output directory: `results/Annotation/[SAMPLE]/VEP`**
 
 - `VariantCaller_Sample_VEP.ann.vcf.gz` and `VariantCaller_Sample_VEP.ann.vcf.gz.tbi`
@@ -531,6 +575,7 @@ For further reading and documentation see the [VEP manual](https://www.ensembl.o
 It provides information about the quality score distribution across your reads, per base sequence content (`%A/T/G/C`), adapter contamination and overrepresented sequences.
 
 For all samples:
+
 **Output directory: `results/Reports/[SAMPLE]/fastqc`**
 
 - `sample_R1_XXX_fastqc.html` and `sample_R2_XXX_fastqc.html`
@@ -553,6 +598,7 @@ Plot will show:
 - Stats by non-reference allele frequency, depth distribution, stats by quality and per-sample counts, singleton stats, etc.
 
 For all samples:
+
 **Output directory: `results/Reports/[SAMPLE]/bamQC`**
 
 - `VariantCaller_[SAMPLE].bcf.tools.stats.out`
@@ -572,6 +618,7 @@ Collecting duplicate metrics slows down performance.
 To disable them use `--skip_qc MarkDuplicates`.
 
 For all samples:
+
 **Output directory: `results/Reports/[SAMPLE]/MarkDuplicates`**
 
 - `[SAMPLE].bam.metrics`
@@ -582,11 +629,13 @@ For further reading and documentation see the [MarkDuplicates manual](https://so
 #### samtools stats
 
 [samtools stats](https://www.htslib.org/doc/samtools.html) collects statistics from BAM files and outputs in a text format.
+
 Plots will show:
 
 - Alignment metrics.
 
 For all samples:
+
 **Output directory: `results/Reports/[SAMPLE]/SamToolsStats`**
 
 - `[SAMPLE].bam.samtools.stats.out`
@@ -596,12 +645,14 @@ For further reading and documentation see the [`samtools` manual](https://www.ht
 
 #### bcftools stats
 
-[bcftools](https://samtools.github.io/bcftools/) is a program for variant calling and manipulating files in the Variant Call Format.
+[bcftools](https://samtools.github.io/bcftools/) is a program for variant calling and manipulating `VCF` files.
+
 Plot will show:
 
 - Stats by non-reference allele frequency, depth distribution, stats by quality and per-sample counts, singleton stats, etc.
 
 For all samples:
+
 **Output directory: `results/Reports/[SAMPLE]/BCFToolsStats`**
 
 - `VariantCaller_[SAMPLE].bcf.tools.stats.out`
@@ -612,6 +663,7 @@ For further reading and documentation see the [bcftools stats manual](https://sa
 #### VCFtools
 
 [VCFtools](https://vcftools.github.io/) is a program package designed for working with `VCF` files.
+
 Plots will show:
 
 - the summary counts of each type of transition to transversion ratio for each `FILTER` category.
@@ -619,6 +671,7 @@ Plots will show:
 - the transition to transversion ratio as a function of SNP quality threshold (using only bi-allelic SNPs).
 
 For all samples:
+
 **Output directory: `results/Reports/[SAMPLE]/VCFTools`**
 
 - `VariantCaller_[SAMPLE].FILTER.summary`
@@ -643,6 +696,7 @@ Plots will shows :
 - the quantity as function of the variant quality score.
 
 For all samples:
+
 **Output directory: `results/Reports/[SAMPLE]/snpEff`**
 
 - `VariantCaller_Sample_snpEff.csv`
@@ -656,9 +710,10 @@ For further reading and documentation see the [snpEff manual](http://snpeff.sour
 
 #### VEP reports
 
-[VEP (Variant Effect Predictor)](https://www.ensembl.org/info/docs/tools/vep/index.html), based on Ensembl, is a tools to determine the effects of all sorts of variants, including SNPs, indels, structural variants, CNVs.
+[VEP (Variant Effect Predictor)](https://www.ensembl.org/info/docs/tools/vep/index.html), based on `Ensembl`, is a tools to determine the effects of all sorts of variants, including SNPs, indels, structural variants, CNVs.
 
 For all samples:
+
 **Output directory: `results/Reports/[SAMPLE]/VEP`**
 
 - `VariantCaller_Sample_VEP.summary.html`
