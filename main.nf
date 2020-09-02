@@ -1951,7 +1951,7 @@ bamQCReport = bamQCReport.dump(tag:'BamQC')
 if (params.sentieon && step == 'mapping') bam_recalibrated = bam_sentieon_recal
 
 // When no knownIndels for mapping, Channel bam_recalibrated is bam_duplicates_marked
-if (!params.known_indels && step == 'mapping') bam_recalibrated = bam_duplicates_marked
+if (!params.known_indels && step in ['mapping', 'preparerecalibration']) bam_recalibrated = bam_duplicates_marked
 
 // When starting with variant calling, Channel bam_recalibrated is inputSample
 if (step == 'variantcalling') bam_recalibrated = inputSample
