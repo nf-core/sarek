@@ -314,9 +314,11 @@ Available: `mapping`, `prepare_recalibration`, `recalibrate`, `variant_calling`,
 ### --input
 
 Use this to specify the location of your input `TSV` (Tab Separated Values) file.
-(Note, the delimiter is the tab (`\t`) character, and no header are required)
-There are different kinds of `TSV` files that can be used as input, depending on the input files available (`FASTQ`, `unmapped BAM`, `reclibrated BAM`...).
-`TSV` file should correspond to the correct step, see [`--step`](#--step) for more information.
+
+> **NB** Delimiter is the tab (`\t`) character, and no header is required
+
+There are different kinds of `TSV` files that can be used as input, depending on the input files available (`FASTQ`, `unmapped BAM`, `recalibrated BAM`...).
+The `TSV` file should correspond to the correct step, see [`--step`](#--step) for more information.
 For all possible `TSV` files, described in the next sections, here is an explanation of what the columns refer to:
 
 `Sarek` auto-generates `TSV` files for all and for each individual samples, depending of the options specified.
@@ -423,7 +425,7 @@ For example:
 --input </path/to/directory>
 ```
 
-> **NB** All of the found `FASTQ` files are considered to belong to the sample.
+> **NB** All of the found `FASTQ` files are considered to belong to the same sample.
 
 The input folder, containing the `FASTQ` files for one subject (ID) should be organized into one sub-folder for every sample.
 The given directory is searched recursively for `FASTQ` files that are named `*_R1_*.fastq.gz`, and a matching pair with the same name except `_R2_` instead of `_R1_` is expected to exist alongside.
@@ -616,7 +618,7 @@ Please refer to the [nf-core/configs](https://github.com/nf-core/configs#adding-
 
 Or ask us on the [nf-core Slack](http://nf-co.re/join/slack) on the following channels: [#sarek](https://nfcore.slack.com/channels/sarek) or [#configs](https://nfcore.slack.com/channels/configs).
 
-The following `Sentieon Analysis Pipelines & Tools` are available within `Sarek`.
+The following `Sentieon Analysis Pipelines & Tools` are available within `Sarek`:
 
 #### Alignment
 
@@ -704,7 +706,7 @@ For more details, please check the [annotation](#annotation-tools) documentation
 
 #### Germline variant calling
 
-Using Sarek, germline variant calling will always be performed if a variant calling tool with a germline mode is selected.
+Using `Sarek`, germline variant calling will always be performed if a variant calling tool with a germline mode is selected.
 Germline variant calling can currently only be performed with the following variant callers:
 
 - *FreeBayes*
@@ -719,7 +721,7 @@ For more information on the individual variant callers, and where to find the va
 
 #### Somatic variant calling with tumor - normal pairs
 
-Using Sarek, somatic variant calling will be performed, if your input tsv file contains tumor / normal pairs (see [input](#--input) documentation for more information).
+Using `Sarek`, somatic variant calling will be performed, if your input tsv file contains tumor / normal pairs (see [input](#--input) documentation for more information).
 Different samples belonging to the same patient, where at least one is marked as normal (`0` in the `Status` column) and at least one is marked as tumor (`1` in the `Status` column) are treated as tumor / normal pairs.
 
 If tumor-normal pairs are provided, both germline variant calling and somatic variant calling will be performed, provided that the selected variant caller allows for it.
@@ -868,7 +870,7 @@ This may remove some unwanted bias from the 3' end that is not directly related 
 ### --trim_nextseq
 
 This enables the option `--nextseq-trim=3'CUTOFF` within `Cutadapt`, which will set a quality cutoff (that is normally given with `-q` instead), but qualities of G bases are ignored.
-This trimming is in common for the `NextSeq` and `NovaSeq` platforms, where basecalls without any signal are called as high-quality G bases.
+This trimming is common for the `NextSeq` and `NovaSeq` platforms, where basecalls without any signal are called as high-quality G bases.
 
 ### --save_trimmed
 
