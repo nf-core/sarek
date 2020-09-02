@@ -329,7 +329,6 @@ For further reading and documentation see the [Sentieon TNscope user guide](http
 
 ### Structural Variants
 
-
 #### Manta
 
 [Manta](https://github.com/Illumina/manta) calls structural variants (SVs) and indels from mapped paired-end sequencing reads.
