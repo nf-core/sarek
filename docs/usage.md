@@ -13,16 +13,16 @@
 - [Pipeline specific arguments](#pipeline-specific-arguments)
   - [--step](#--step)
   - [--input](#--input)
-    - [Step: mapping from FASTQ](#step-mapping-from-fastq)
-    - [Step: mapping from unmapped BAM](#step-mapping-from-unmapped-bam)
-    - [Step: mapping from an input folder](#step-mapping-from-an-input-folder)
-    - [Step: prepare_recalibration](#step-prepare_recalibration)
-    - [Step: prepare_recalibration with --skip_markduplicates](#step-prepare_recalibration-with---skip_markduplicates)
-    - [Step: recalibrate](#step-recalibrate)
-    - [Step: recalibrate with --skip_markduplicates](#step-recalibrate-with---skip_markduplicates)
-    - [Step: variant_calling](#step-variant_calling)
-    - [Step: Control-FREEC with mpileup files](#step-control-freec-with-mpileup-files)
-    - [Step: annotate with VCF files](#step-annotate-with-vcf-files)
+    - [--input <FASTQ> --step mapping](#--input-fastq---step-mapping)
+    - [--input <uBAM> --step mapping](#--input-ubam---step-mapping)
+    - [--input <sample/> --step mapping](#--input-sample---step-mapping)
+    - [--input <TSV> --step prepare_recalibration](#--input-tsv---step-prepare_recalibration)
+    - [--input <TSV> --step prepare_recalibration --skip_markduplicates](#--input-tsv---step-prepare_recalibration---skip_markduplicates)
+    - [--input <TSV> --step recalibrate](#--input-tsv---step-recalibrate)
+    - [--input <TSV> --step recalibrate --skip_markduplicates](#--input-tsv---step-recalibrate---skip_markduplicates)
+    - [--input <TSV> --step variant_calling](#--input-tsv---step-variant_calling)
+    - [--input <TSV> --step Control-FREEC](#--input-tsv---step-control-freec)
+    - [--input <VCF> --step annotate](#--input-vcf---step-annotate)
   - [--help](#--help)
   - [--no_intervals](#--no_intervals)
   - [--nucleotides_per_second](#--nucleotides_per_second)
@@ -34,10 +34,12 @@
     - [Structural Variant Calling](#structural-variant-calling)
   - [--skip_qc](#--skip_qc)
   - [--target_bed](#--target_bed)
-  - [--tools](#--tools)
+  - [--tools for Variant Calling](#--tools-for-variant-calling)
     - [Germline variant calling](#germline-variant-calling)
     - [Somatic variant calling with tumor - normal pairs](#somatic-variant-calling-with-tumor---normal-pairs)
     - [Somatic variant calling with tumor only samples](#somatic-variant-calling-with-tumor-only-samples)
+  - [--tools --sentieon](#--tools---sentieon)
+  - [--tools for Annotation](#--tools-for-annotation)
     - [Annotation tools](#annotation-tools)
     - [Using genome specific containers](#using-genome-specific-containers)
     - [Download cache](#download-cache)
@@ -221,35 +223,36 @@ This is _not_ recommended.
   - Includes links to test data so needs no other parameters
 - `test_annotation`
   - A profile with a complete configuration for automated testing
-  - Includes links to test data so needs no other parameters
+  - Input data is a `VCF` for testing annotation
 - `test_no_gatk_spark`
   - A profile with a complete configuration for automated testing
-  - Includes links to test data so needs no other parameters
+  - Specify `--no_gatk_spark`
 - `test_split_fastq`
   - A profile with a complete configuration for automated testing
-  - Includes links to test data so needs no other parameters
+  - Specify `--split_fastq 500`
 - `test_targeted`
   - A profile with a complete configuration for automated testing
-  - Includes links to test data so needs no other parameters
+  - Include link to a target `BED` file and use `Manta` and `Strelka` for Variant Calling
 - `test_tool`
   - A profile with a complete configuration for automated testing
-  - Includes links to test data so needs no other parameters
+  - Test directly Variant Calling with a specific TSV file and `--step variantcalling`
 - `test_trimming`
   - A profile with a complete configuration for automated testing
-  - Includes links to test data so needs no other parameters
+  - Test trimming options
 - `test_umi_qiaseq`
   - A profile with a complete configuration for automated testing
-  - Includes links to test data so needs no other parameters
+  - Test a specific `UMI` structure
 - `test_umi_tso`
   - A profile with a complete configuration for automated testing
-  - Includes links to test data so needs no other parameters
+  - Test a specific `UMI` structure
 
 ### -resume
 
 Specify this when restarting a pipeline.
 `Nextflow` will used cached results from any pipeline steps where the inputs are the same, continuing from where it got to previously.
 
-You can also supply a run name to resume a specific run: `-resume [run-name]`. Use the `nextflow log` command to show previous run names.
+You can also supply a run name to resume a specific run: `-resume [run-name]`.
+Use the `nextflow log` command to show previous run names.
 
 ### -c
 
@@ -259,7 +262,7 @@ See the [nf-core website documentation](https://nf-co.re/usage/configuration) fo
 #### Custom resource requests
 
 Each step in the pipeline has a default set of requirements for number of CPUs, memory and time.
-For most of the steps in the pipeline, if the job exits with an error code of `143` (exceeded requested resources) it will automatically resubmit with higher requests (2 x original, then 3 x original).
+For most of the steps in the pipeline, if the job exits with an error code of `143` (exceeded requested resources), it will automatically resubmit with higher requests (2 x original, then 3 x original).
 If it still fails after three times then the pipeline is stopped.
 
 Whilst these default requirements will hopefully work for most people with most data, you may find that you want to customise the compute resources that the pipeline requests.
@@ -276,7 +279,9 @@ process {
 
 See the main [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for more information.
 
-If you are likely to be running `nf-core` pipelines regularly it may be a good idea to request that your custom config file is uploaded to the `nf-core/configs` git repository. Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter (see definition below). You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
+If you are likely to be running `nf-core` pipelines regularly it may be a good idea to request that your custom config file is uploaded to the `nf-core/configs` git repository.
+Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter see [-c section](#-c).
+You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
 
 If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack) on the [`#configs` channel](https://nfcore.slack.com/channels/configs).
 
@@ -305,8 +310,10 @@ NXF_OPTS='-Xms1g -Xmx4g'
 
 > **NB** only one step must be specified
 
-Use this to specify the starting step:
-Default `mapping`
+Use this to specify the starting step
+
+Default: `mapping`
+
 Available: `mapping`, `prepare_recalibration`, `recalibrate`, `variant_calling`, `annotate`, `Control-FREEC`
 
 > **NB** step can be specified with no concern for case, or the presence of `-` or `_`
@@ -348,7 +355,7 @@ Multiple `TSV` files can be specified if the path is enclosed in quotes.
 
 Output from Variant Calling and/or Annotation will be in a specific directory for each sample (or normal/tumor pair if applicable).
 
-#### Step: mapping from FASTQ
+#### --input <FASTQ> --step mapping
 
 The `TSV` file to start with the step mapping with paired-end `FASTQs` should contain the columns:
 
@@ -382,7 +389,7 @@ In this example (`example_pair_fastq.tsv`), there are 3 read groups for the norm
 --input example_pair_fastq.tsv
 ```
 
-#### Step: mapping from unmapped BAM
+#### --input <uBAM> --step mapping
 
 The `TSV` file for starting the mapping from `unmapped BAM` files should contain the columns:
 
@@ -416,7 +423,7 @@ In this example (`example_pair_ubam.tsv`), there are 3 read groups for the norma
 --input example_pair_ubam.tsv
 ```
 
-#### Step: mapping from an input folder
+#### --input <sample/> --step mapping
 
 Use this to specify the location to a directory with `FASTQ` files for the `mapping` step of a single germline sample only.
 For example:
@@ -434,30 +441,30 @@ All `FASTQ` files for that sample should be collected here.
 ```text
 ID
 +--sample1
-+------sample1_lib_flowcell-index_lane_R1_1000.fastq.gz
-+------sample1_lib_flowcell-index_lane_R2_1000.fastq.gz
-+------sample1_lib_flowcell-index_lane_R1_1000.fastq.gz
-+------sample1_lib_flowcell-index_lane_R2_1000.fastq.gz
++------sample1_<lib>_<flowcell-index>_lane1_R1_1000.fastq.gz
++------sample1_<lib>_<flowcell-index>_lane1_R2_1000.fastq.gz
++------sample1_<lib>_<flowcell-index>_lane2_R1_1000.fastq.gz
++------sample1_<lib>_<flowcell-index>_lane2_R2_1000.fastq.gz
 +--sample2
-+------sample2_lib_flowcell-index_lane_R1_1000.fastq.gz
-+------sample2_lib_flowcell-index_lane_R2_1000.fastq.gz
++------sample2_<lib>_<flowcell-index>_lane1_R1_1000.fastq.gz
++------sample2_<lib>_<flowcell-index>_lane1_R2_1000.fastq.gz
 +--sample3
-+------sample3_lib_flowcell-index_lane_R1_1000.fastq.gz
-+------sample3_lib_flowcell-index_lane_R2_1000.fastq.gz
-+------sample3_lib_flowcell-index_lane_R1_1000.fastq.gz
-+------sample3_lib_flowcell-index_lane_R2_1000.fastq.gz
++------sample3_<lib>_<flowcell-index>_lane1_R1_1000.fastq.gz
++------sample3_<lib>_<flowcell-index>_lane1_R2_1000.fastq.gz
++------sample3_<lib>_<flowcell-index>_lane2_R1_1000.fastq.gz
++------sample3_<lib>_<flowcell-index>_lane2_R2_1000.fastq.gz
 ```
 
 `FASTQ` filename structure:
 
-- `sample_lib_flowcell-index_lane_R1_1000.fastq.gz` and
-- `sample_lib_flowcell-index_lane_R2_1000.fastq.gz`
+- `<sample>_<lib>_<flowcell-index>_<lane>_R1_<XXX>.fastq.gz` and
+- `<sample>_<lib>_<flowcell-index>_<lane>_R2_<XXX>.fastq.gz`
 
 Where:
 
 - `sample` = sample id
 - `lib` = identifier of library preparation
-- `flowcell` = identifier of flow cell for the sequencing run
+- `flowcell-index` = identifier of flow cell for the sequencing run
 - `lane` = identifier of the lane of the sequencing run
 
 Read group information will be parsed from `FASTQ` file names according to this:
@@ -474,7 +481,7 @@ That is, you should make sure that that directory has a meaningful name! For exa
 - The read group id is set to *flowcell.samplename.lane*.
 The flowcell id and lane number are auto-detected from the name of the first read in the `FASTQ` file.
 
-#### Step: prepare_recalibration
+#### --input <TSV> --step prepare_recalibration
 
 To start from the preparation of the recalibration step (`--step prepare_recalibration`), a `TSV` file needs to be given as input containing the paths to the `non-recalibrated BAM` files.
 The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/duplicates_marked_no_table.tsv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration`.
@@ -494,7 +501,7 @@ Or, for a normal/tumor pair:
 |SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.md.bam|/samples/normal.md.bai|
 |SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.md.bam|/samples/tumor.md.bai|
 
-#### Step: prepare_recalibration with --skip_markduplicates
+#### --input <TSV> --step prepare_recalibration --skip_markduplicates
 
 The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/mapped.tsv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration --skip_markduplicates`.
 The `TSV` file contains the same columns, but the content is slightly different:
@@ -510,7 +517,7 @@ Or, for a normal/tumor pair:
 |SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.bam|/samples/normal.bai|
 |SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.bam|/samples/tumor.bai|
 
-#### Step: recalibrate
+#### --input <TSV> --step recalibrate
 
 To start from the recalibrate step (`--step recalibrate`), a `TSV` file needs to be given as input containing the paths to the `non-recalibrated BAM` file and the associated recalibration table.
 The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/duplicates_marked.tsv` and will automatically be used as an input when specifying the parameter `--step recalibrate`.
@@ -530,7 +537,7 @@ Or, for a normal/tumor pair:
 |SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.md.bam|/samples/normal.md.bai|/samples/normal.recal.table|
 |SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.md.bam|/samples/tumor.md.bai|/samples/tumor.recal.table|
 
-#### Step: recalibrate with --skip_markduplicates
+#### --input <TSV> --step recalibrate --skip_markduplicates
 
 The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/mapped_no_duplicates_marked.tsv` and will automatically be used as an input when specifying the parameter `--step recalibrate --skip_markduplicates`.
 The `TSV` file contains the same columns, but the content is slightly different:
@@ -546,7 +553,7 @@ Or, for a normal/tumor pair:
 |SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.bam|/samples/normal.bai|/samples/normal.recal.table|
 |SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.bam|/samples/tumor.bai|/samples/tumor.recal.table|
 
-#### Step: variant_calling
+#### --input <TSV> --step variant_calling
 
 To start from the variant calling step (`--step variant_calling`), a `TSV` file needs to be given as input containing the paths to the `recalibrated BAM` file and the associated index.
 The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/recalibrated.tsv` and will automatically be used as an input when specifying the parameter `--step variant_calling`.
@@ -568,7 +575,7 @@ Or, for a normal/tumor pair:
 |SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.recal.bam|/samples/normal.recal.bai|
 |SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.recal.bam|/samples/tumor.recal.bai|
 
-#### Step: Control-FREEC with mpileup files
+#### --input <TSV> --step Control-FREEC
 
 To start from the Control-FREEC step (`--step Control-FREEC`), a `TSV` file needs to be given as input containing the paths to the mpileup files.
 The `Sarek`-generated `TSV` file is stored under `results/VariantCalling/TSV/control-freec_mpileup.tsv` and will automatically be used as an input when specifying the parameter `--step Control-FREEC`.
@@ -584,7 +591,7 @@ Here is an example for one normal/tumor pair from one subjects:
 |SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.pileup|
 |SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.pileup|
 
-#### Step: annotate with VCF files
+#### --input <VCF> --step annotate
 
 Input files for Sarek can be specified using the path to a `VCF` file given to the `--input` command only with the annotation step (`--step annotate`).
 As `Sarek` will use `bgzip` and `tabix` to compress and index `VCF` files annotated, it expects `VCF` files to be sorted.
@@ -612,7 +619,7 @@ Use this to estimate of how many seconds it will take to call variants on any in
 [Sentieon](https://www.sentieon.com/) is a commercial solution to process genomics data with high computing efficiency, fast turnaround time, exceptional accuracy, and 100% consistency.
 
 If [Sentieon](https://www.sentieon.com/) is available, use this `--sentieon` params to enable with `Sarek` to use some `Sentieon Analysis Pipelines & Tools`.
-Adds the following tools for the [`--tools`](#--tools) options: `DNAseq`, `DNAscope` and `TNscope`.
+Adds the following tools for the [`--tools`](#--tools---sentieon) options: `DNAseq`, `DNAscope` and `TNscope`.
 
 Please refer to the [nf-core/configs](https://github.com/nf-core/configs#adding-a-new-pipeline-specific-config) repository on how to make a pipeline-specific configuration file based on the [munin-sarek specific configuration file](https://github.com/nf-core/configs/blob/master/conf/pipeline/sarek/munin.config).
 
@@ -632,14 +639,14 @@ This tool is enabled by default within `Sarek` if `--sentieon` is specified and 
 > Matches GATK 3.3-4.1, and without down-sampling.
 > Results up to 10x faster and 100% consistent every time.
 
-This tool is enabled within `Sarek` if `--sentieon` is specified and if `--tools DNAseq` is specified cf [--tools](#--tools).
+This tool is enabled within `Sarek` if `--sentieon` is specified and if `--tools DNAseq` is specified cf [--tools --sentieon](#--tools--sentieon).
 
 #### Germline SNV/INDEL Variant Calling - DNAscope
 
 > Improved accuracy and genome characterization.
 > Machine learning enhanced filtering producing top variant calling accuracy.
 
-This tool is enabled within `Sarek` if `--sentieon` is specified and if `--tools DNAscope` is specified cf [--tools](#--tools).
+This tool is enabled within `Sarek` if `--sentieon` is specified and if `--tools DNAscope` is specified cf [--tools --sentieon](#--tools--sentieon).
 
 #### Somatic SNV/INDEL Variant Calling - TNscope
 
@@ -647,20 +654,24 @@ This tool is enabled within `Sarek` if `--sentieon` is specified and if `--tools
 > Improved accuracy, machine learning enhanced filtering.
 > Supports molecular barcodes and unique molecular identifiers.
 
-This tool is enabled within `Sarek` if `--sentieon` is specified and if `--tools TNscope` is specified cf [--tools](#--tools).
+This tool is enabled within `Sarek` if `--sentieon` is specified and if `--tools TNscope` is specified cf [--tools --sentieon](#--tools--sentieon).
 
 #### Structural Variant Calling
 
 > Germline and somatic SV calling, including translocations, inversions, duplications and large INDELs
 
-This tool is enabled within `Sarek` if `--sentieon` is specified and if `--tools DNAscope` is specified cf [--tools](#--tools).
+This tool is enabled within `Sarek` if `--sentieon` is specified and if `--tools DNAscope` is specified cf [--tools --sentieon](#--tools--sentieon).
 
 ### --skip_qc
 
 Use this to disable specific QC and Reporting tools.
 Multiple tools can be specified, separated by commas.
-Available: `all`, `bamQC`, `BaseRecalibrator`, `BCFtools`, `Documentation`, `FastQC`, `MultiQC`, `samtools`, `vcftools`, `versions`
+
+Available: `all`, `bamQC`, `BaseRecalibrator`, `BCFtools`, `Documentation`, `FastQC`, `MarkDuplicates`, `MultiQC`, `samtools`, `vcftools`, `versions`
+
 Default: `None`
+
+> **NB** `--skip_qc MarkDuplicates` does not skip `MarkDuplicates` but prevent the collection of duplicate metrics that slows down performance
 
 ### --target_bed
 
@@ -681,7 +692,7 @@ To add the target `BED` file configure the command line like:
 --target_bed <target.bed>
 ```
 
-### --tools
+### --tools for Variant Calling
 
 Use this parameter to specify the variant calling and annotation tools to be used.
 Multiple tools can be specified, separated by commas.
@@ -693,16 +704,13 @@ For example:
 
 Available variant callers: `ASCAT`, `Control-FREEC`, `FreeBayes`, `HaplotypeCaller`, `Manta`, `mpileup`, `MSIsensor`, `Mutect2`, `Strelka`, `TIDDIT`.
 
-> **NB** tools can be specified with no concern for case
+> **NB** Tools can be specified with no concern for case
 
 For more information on the individual variant callers, and where to find the variant calling results, check the [output](output.md) documentation.
 
 > **WARNING** Not all variant callers are available for both germline and somatic variant calling.
 
 For more information, please read the following documentation on [Germline variant calling](#germline-variant-calling), [Somatic variant calling with tumor - normal pairs](#somatic-variant-calling-with-tumor---normal-pairs) and [Somatic variant calling with tumor only samples](#somatic-variant-calling-with-tumor-only-samples)
-
-Available annotation tools: `VEP`, `SnpEff`, `merge`.
-For more details, please check the [annotation](#annotation-tools) documentation.
 
 #### Germline variant calling
 
@@ -752,6 +760,18 @@ Here is a list of the variant calling tools that support tumor-only somatic vari
 - *Mutect2*
 - *TIDDIT*
 
+### --tools --sentieon
+
+> **WARNING** Only with `--sentieon`
+
+If [Sentieon](https://www.sentieon.com/) is available, use this `--sentieon` params to enable with `Sarek` to use some `Sentieon Analysis Pipelines & Tools`.
+Adds the following tools for the [`--tools`](#--tools) options: `DNAseq`, `DNAscope` and `TNscope`.
+
+### --tools for Annotation
+
+Available annotation tools: `VEP`, `SnpEff`, `merge`.
+For more details, please check the [annotation](#annotation-tools) documentation.
+
 #### Annotation tools
 
 With `Sarek`, annotation is done using `snpEff`, `VEP`, or even both consecutively:
@@ -774,6 +794,7 @@ It can of course be started directly from any other step instead.
 #### Using genome specific containers
 
 `Sarek` has already designed containers with `snpEff` and `VEP` files for Human (`GRCh37`, `GRCh38`), Mouse (`GRCm38`), Dog (`CanFam3.1`) and Roundworm (`WBcel235`).
+
 Default settings will run using these containers.
 The main `Sarek` container has also `snpEff` and `VEP` installed, but without the cache files that can be downloaded separately.
 See [containers documentation](#containers) for more information.
@@ -890,6 +911,7 @@ For example:
 ### --markdup_java_options
 
 To control the java options necessary for the `GATK MarkDuplicates` process, you can set this parameter.
+
 Default: "-Xms4000m -Xmx7g"
 For example:
 
@@ -925,16 +947,19 @@ Requires that [`--ascat_ploidy`](#--ascat_ploidy) is set.
 ### --cf_coeff
 
 Use this parameter to overwrite default behavior from `Control-FREEC` regarding `coefficientOfVariation`
+
 Default: `0.015`
 
 ### --cf_ploidy
 
 Use this parameter to overwrite default behavior from `Control-FREEC` regarding `ploidy`
+
 Default: `2`
 
 ### --cf_window
 
 Use this parameter to overwrite default behavior from `Control-FREEC` regarding `window size`
+
 Default: Disabled
 
 ### --no_gvcf
@@ -995,7 +1020,9 @@ The read structure follows a format adopted by different tools, and described [h
 ### --annotate_tools
 
 Specify from which tools `Sarek` should look for `VCF` files to annotate, only for step `Annotate`.
+
 Available: `HaplotypeCaller`, `Manta`, `Mutect2`, `Strelka`, `TIDDIT`
+
 Default: `None`
 
 ### --annotation_cache
@@ -1180,6 +1207,7 @@ params {
 ### --igenomes_base
 
 Specify base path to AWS iGenomes
+
 Default: `s3://ngi-igenomes/igenomes/`
 
 ### --igenomes_ignore
@@ -1189,10 +1217,6 @@ You may choose this option if you observe clashes between custom parameters and 
 This option will load the `genomes.config` file instead.
 You can then specify the `--genome custom` and specify any reference file on the command line or within a config file.
 
-```bash
---igenomes_ignore
-```
-
 ### --genomes_base
 
 Specify base path to reference genome
@@ -1200,10 +1224,6 @@ Specify base path to reference genome
 ### --save_reference
 
 Enable saving reference indexes and other files built within `Sarek`.
-
-```bash
---save_reference
-```
 
 ### --ac_loci
 
@@ -1392,6 +1412,10 @@ If you prefer, you can specify the DB version when you run the pipeline:
 This specifies the species used for running `VEP` annotation.
 If you use iGenomes or a local resource with `genomes.conf`, this has already been set for you appropriately.
 
+```bash
+--species <snpEff species>
+```
+
 ### --vep_cache_version
 
 If you prefer, you can specify the cache version when you run the pipeline:
@@ -1405,12 +1429,15 @@ If you prefer, you can specify the cache version when you run the pipeline:
 ### --outdir
 
 The output directory where the results will be saved.
+
 Default: `results/`
 
 ### --publish_dir_mode
 
 The file publishing method.
+
 Available: `symlink`, `rellink`, `link`, `copy`, `copyNoFollow`, `move`
+
 Default: `copy`
 
 ### --sequencing_center
@@ -1442,6 +1469,7 @@ Set to receive plain-text e-mails instead of HTML formatted.
 
 Threshold size for `MultiQC` report to be attached in notification email.
 If file generated by pipeline exceeds the threshold, it will not be attached.
+
 Default: `25MB`.
 
 ### -name
@@ -1457,6 +1485,7 @@ This is used in the `MultiQC` report (if not default) and in the summary HTML / 
 
 Provide git commit id for custom Institutional configs hosted at `nf-core/configs`.
 This was implemented for reproducibility purposes.
+
 Default is set to `master`.
 
 ```bash
@@ -1669,11 +1698,13 @@ The JobQueue that you intend to use on AWSBatch.
 ### --awsregion
 
 The AWS region to run your job in.
+
 Default is set to `eu-west-1` but can be adjusted to your needs.
 
 ### --awscli
 
 The [AWS CLI](https://www.nextflow.io/docs/latest/awscloud.html#aws-cli-installation) path in your custom AMI.
+
 Default: `/home/ec2-user/miniconda/bin/aws`.
 
 Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a S3 storage bucket of your choice - you'll get an error message notifying you if you didn't.
