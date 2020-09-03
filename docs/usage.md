@@ -253,7 +253,7 @@ Specify this when restarting a pipeline.
 
 You can also supply a run name to resume a specific run: `-resume [run-name]`.
 Use the `nextflow log` command to show previous run names.
-
+You can also supply a run name or a session ID to resume a specific run: `-resume [run-name/session id]`. Use the `nextflow log` command to show previous run names and session IDs.
 ### -c
 
 Specify the path to a specific config file (this is a core `Nextflow` command).
