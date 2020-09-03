@@ -613,9 +613,6 @@ Duplicates can arise during sample preparation _e.g._ library construction using
 Duplicate reads can also result from a single amplification cluster, incorrectly detected as multiple clusters by the optical sensor of the sequencing instrument.
 These duplication artifacts are referred to as optical duplicates.
 
-Collecting duplicate metrics slows down performance.
-To disable them use `--skip_qc MarkDuplicates`.
-
 For all samples:
 
 **Output directory: `results/Reports/[SAMPLE]/MarkDuplicates`**
@@ -627,7 +624,7 @@ For further reading and documentation see the [MarkDuplicates manual](https://so
 
 #### samtools stats
 
-[samtools stats](https://www.htslib.org/doc/samtools.html) collects statistics from BAM files and outputs in a text format.
+[samtools stats](https://www.htslib.org/doc/samtools.html) collects statistics from `BAM` files and outputs in a text format.
 
 Plots will show:
 
