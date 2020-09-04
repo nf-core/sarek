@@ -13,16 +13,16 @@
 - [Pipeline specific arguments](#pipeline-specific-arguments)
   - [--step](#--step)
   - [--input](#--input)
-    - [--input \<FASTQ\> --step mapping](#--input-fastq---step-mapping)
-    - [--input \<uBAM\> --step mapping](#--input-ubam---step-mapping)
-    - [--input \<sample/\> --step mapping](#--input-sample---step-mapping)
-    - [--input \<TSV\> --step prepare_recalibration](#--input-tsv---step-prepare_recalibration)
-    - [--input \<TSV\> --step prepare_recalibration --skip_markduplicates](#--input-tsv---step-prepare_recalibration---skip_markduplicates)
-    - [--input \<TSV\> --step recalibrate](#--input-tsv---step-recalibrate)
-    - [--input \<TSV\> --step recalibrate --skip_markduplicates](#--input-tsv---step-recalibrate---skip_markduplicates)
-    - [--input \<TSV\> --step variant_calling](#--input-tsv---step-variant_calling)
-    - [--input \<TSV\> --step Control-FREEC](#--input-tsv---step-control-freec)
-    - [--input \<VCF\> --step annotate](#--input-vcf---step-annotate)
+    - [--input &lt;FASTQ&gt; --step mapping](#--input-fastq---step-mapping)
+    - [--input &lt;uBAM&gt; --step mapping](#--input-ubam---step-mapping)
+    - [--input &lt;sample/&gt; --step mapping](#--input-sample---step-mapping)
+    - [--input &lt;TSV&gt; --step prepare_recalibration](#--input-tsv---step-prepare_recalibration)
+    - [--input &lt;TSV&gt; --step prepare_recalibration --skip_markduplicates](#--input-tsv---step-prepare_recalibration---skip_markduplicates)
+    - [--input &lt;TSV&gt; --step recalibrate](#--input-tsv---step-recalibrate)
+    - [--input &lt;TSV&gt; --step recalibrate --skip_markduplicates](#--input-tsv---step-recalibrate---skip_markduplicates)
+    - [--input &lt;TSV&gt; --step variant_calling](#--input-tsv---step-variant_calling)
+    - [--input &lt;TSV&gt; --step Control-FREEC](#--input-tsv---step-control-freec)
+    - [--input &lt;VCF&gt; --step annotate](#--input-vcf---step-annotate)
   - [--help](#--help)
   - [--no_intervals](#--no_intervals)
   - [--nucleotides_per_second](#--nucleotides_per_second)
@@ -355,7 +355,7 @@ Multiple `TSV` files can be specified if the path is enclosed in quotes.
 
 Output from Variant Calling and/or Annotation will be in a specific directory for each sample (or normal/tumor pair if applicable).
 
-#### --input \<FASTQ\> --step mapping
+#### --input &lt;FASTQ&gt; --step mapping
 
 The `TSV` file to start with the step mapping with paired-end `FASTQs` should contain the columns:
 
@@ -389,7 +389,7 @@ In this example (`example_pair_fastq.tsv`), there are 3 read groups for the norm
 --input example_pair_fastq.tsv
 ```
 
-#### --input \<uBAM\> --step mapping
+#### --input &lt;uBAM&gt; --step mapping
 
 The `TSV` file for starting the mapping from `unmapped BAM` files should contain the columns:
 
@@ -423,7 +423,7 @@ In this example (`example_pair_ubam.tsv`), there are 3 read groups for the norma
 --input example_pair_ubam.tsv
 ```
 
-#### --input \<sample/\> --step mapping
+#### --input &lt;sample/&gt; --step mapping
 
 Use this to specify the location to a directory with `FASTQ` files for the `mapping` step of a single germline sample only.
 For example:
@@ -481,7 +481,7 @@ That is, you should make sure that that directory has a meaningful name! For exa
 - The read group id is set to *flowcell.samplename.lane*.
 The flowcell id and lane number are auto-detected from the name of the first read in the `FASTQ` file.
 
-#### --input \<TSV\> --step prepare_recalibration
+#### --input &lt;TSV&gt; --step prepare_recalibration
 
 To start from the preparation of the recalibration step (`--step prepare_recalibration`), a `TSV` file needs to be given as input containing the paths to the `non-recalibrated BAM` files.
 The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/duplicates_marked_no_table.tsv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration`.
@@ -501,7 +501,7 @@ Or, for a normal/tumor pair:
 |SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.md.bam|/samples/normal.md.bai|
 |SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.md.bam|/samples/tumor.md.bai|
 
-#### --input \<TSV\> --step prepare_recalibration --skip_markduplicates
+#### --input &lt;TSV&gt; --step prepare_recalibration --skip_markduplicates
 
 The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/mapped.tsv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration --skip_markduplicates`.
 The `TSV` file contains the same columns, but the content is slightly different:
@@ -517,7 +517,7 @@ Or, for a normal/tumor pair:
 |SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.bam|/samples/normal.bai|
 |SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.bam|/samples/tumor.bai|
 
-#### --input \<TSV\> --step recalibrate
+#### --input &lt;TSV&gt; --step recalibrate
 
 To start from the recalibrate step (`--step recalibrate`), a `TSV` file needs to be given as input containing the paths to the `non-recalibrated BAM` file and the associated recalibration table.
 The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/duplicates_marked.tsv` and will automatically be used as an input when specifying the parameter `--step recalibrate`.
@@ -537,7 +537,7 @@ Or, for a normal/tumor pair:
 |SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.md.bam|/samples/normal.md.bai|/samples/normal.recal.table|
 |SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.md.bam|/samples/tumor.md.bai|/samples/tumor.recal.table|
 
-#### --input \<TSV\> --step recalibrate --skip_markduplicates
+#### --input &lt;TSV&gt; --step recalibrate --skip_markduplicates
 
 The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/mapped_no_duplicates_marked.tsv` and will automatically be used as an input when specifying the parameter `--step recalibrate --skip_markduplicates`.
 The `TSV` file contains the same columns, but the content is slightly different:
@@ -553,7 +553,7 @@ Or, for a normal/tumor pair:
 |SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.bam|/samples/normal.bai|/samples/normal.recal.table|
 |SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.bam|/samples/tumor.bai|/samples/tumor.recal.table|
 
-#### --input \<TSV\> --step variant_calling
+#### --input &lt;TSV&gt; --step variant_calling
 
 To start from the variant calling step (`--step variant_calling`), a `TSV` file needs to be given as input containing the paths to the `recalibrated BAM` file and the associated index.
 The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/recalibrated.tsv` and will automatically be used as an input when specifying the parameter `--step variant_calling`.
@@ -575,7 +575,7 @@ Or, for a normal/tumor pair:
 |SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.recal.bam|/samples/normal.recal.bai|
 |SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.recal.bam|/samples/tumor.recal.bai|
 
-#### --input \<TSV\> --step Control-FREEC
+#### --input &lt;TSV&gt; --step Control-FREEC
 
 To start from the Control-FREEC step (`--step Control-FREEC`), a `TSV` file needs to be given as input containing the paths to the mpileup files.
 The `Sarek`-generated `TSV` file is stored under `results/VariantCalling/TSV/control-freec_mpileup.tsv` and will automatically be used as an input when specifying the parameter `--step Control-FREEC`.
@@ -591,7 +591,7 @@ Here is an example for one normal/tumor pair from one subjects:
 |SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.pileup|
 |SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.pileup|
 
-#### --input \<VCF\> --step annotate
+#### --input &lt;VCF&gt; --step annotate
 
 Input files for Sarek can be specified using the path to a `VCF` file given to the `--input` command only with the annotation step (`--step annotate`).
 As `Sarek` will use `bgzip` and `tabix` to compress and index `VCF` files annotated, it expects `VCF` files to be sorted.
