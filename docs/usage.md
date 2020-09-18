@@ -923,6 +923,15 @@ Example:
 --aligner "bwa-mem"
 ```
 
+> **WARNING** Current indices for `bwa` in AWS iGenomes are not compatible with `bwa-mem2`.
+> Use `--bwa=false` to have `Sarek` build them automatically.
+
+Example:
+
+```bash
+--aligner "bwa-mem2" --bwa=false
+```
+
 ### --markdup_java_options
 
 To control the java options necessary for the `GATK MarkDuplicates` process, you can set this parameter.
