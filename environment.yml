@@ -12,6 +12,7 @@ dependencies:
   - bioconda::ascat=2.5.2
   - bioconda::bcftools=1.9
   - bioconda::bwa-mem2=2.0
+  - bioconda::bwa=0.7.17
   - bioconda::cancerit-allelecount=4.0.2
   - bioconda::cnvkit=0.9.6
   - bioconda::control-freec=11.5

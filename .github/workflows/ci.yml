@@ -140,6 +140,27 @@ jobs:
       - name: Run ${{ matrix.profile }} test
         run: nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker
 
+  aligner:
+    env:
+      NXF_ANSI_LOG: false
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        aligner: [bwa-mem, bwa-mem2]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+        env:
+          # Only check Nextflow pipeline minimum version
+          NXF_VER: '19.10.0'
+      - name: Pull docker image
+        run: docker pull nfcore/sarek:dev
+      - name: Run ${{ matrix.profile }} test
+        run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner ${{ matrix.aligner }}
+
   tools:
     env:
       NXF_ANSI_LOG: false
