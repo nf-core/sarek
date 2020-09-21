@@ -548,7 +548,7 @@ process get_software_versions {
     when: !('versions' in skipQC)
 
     script:
-    aligner = params.aligner == "bwa-mem2" ?: "bwa"
+    aligner = params.aligner == "bwa-mem2" ? "bwa-mem2" : "bwa"
     """
     alleleCounter --version &> v_allelecount.txt 2>&1 || true
     bcftools --version &> v_bcftools.txt 2>&1 || true
@@ -603,7 +603,7 @@ process BuildBWAindexes {
     when: !(params.bwa) && params.fasta && 'mapping' in step
 
     script:
-    aligner = params.aligner == "bwa-mem2" ?: "bwa"
+    aligner = params.aligner == "bwa-mem2" ? "bwa-mem2" : "bwa"
     """
     ${aligner} index ${fasta}
     """
@@ -1062,7 +1062,7 @@ process UMIMapBamFile {
     when: params.umi
 
     script:
-    aligner = params.aligner == "bwa-mem2" ?: "bwa"
+    aligner = params.aligner == "bwa-mem2" ? "bwa-mem2" : "bwa"
     """
     samtools bam2fq -T RX ${convertedBam} | \
     ${aligner} mem -p -t ${task.cpus} -C -M -R \"@RG\\tID:${idSample}\\tSM:${idSample}\\tPL:Illumina\" \
@@ -1186,7 +1186,7 @@ process MapReads {
     extra = status == 1 ? "-B 3" : ""
     convertToFastq = hasExtension(inputFile1, "bam") ? "gatk --java-options -Xmx${task.memory.toGiga()}g SamToFastq --INPUT=${inputFile1} --FASTQ=/dev/stdout --INTERLEAVE=true --NON_PF=true | \\" : ""
     input = hasExtension(inputFile1, "bam") ? "-p /dev/stdin - 2> >(tee ${inputFile1}.bwa.stderr.log >&2)" : "${inputFile1} ${inputFile2}"
-    aligner = params.aligner == "bwa-mem2" ?: "bwa"
+    aligner = params.aligner == "bwa-mem2" ? "bwa-mem2" : "bwa"
     """
     ${convertToFastq}
     ${aligner} mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
