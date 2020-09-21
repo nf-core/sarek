@@ -548,10 +548,11 @@ process get_software_versions {
     when: !('versions' in skipQC)
 
     script:
+    aligner = params.aligner == "bwa-mem2" ? "bwa-mem2" : "bwa"
     """
     alleleCounter --version &> v_allelecount.txt 2>&1 || true
     bcftools --version &> v_bcftools.txt 2>&1 || true
-    bwa-mem2 version &> v_bwa.txt 2>&1 || true
+    ${aligner} version &> v_bwa.txt 2>&1 || true
     cnvkit.py version &> v_cnvkit.txt 2>&1 || true
     configManta.py --version &> v_manta.txt 2>&1 || true
     configureStrelkaGermlineWorkflow.py --version &> v_strelka.txt 2>&1 || true
@@ -602,8 +603,9 @@ process BuildBWAindexes {
     when: !(params.bwa) && params.fasta && 'mapping' in step
 
     script:
+    aligner = params.aligner == "bwa-mem2" ? "bwa-mem2" : "bwa"
     """
-    bwa-mem2 index ${fasta}
+    ${aligner} index ${fasta}
     """
 }
 
@@ -1015,34 +1017,32 @@ process TrimGalore {
 // and while doing the conversion, tag the bam field RX with the UMI sequence
 
 process UMIFastqToBAM {
+    publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publish_dir_mode
 
-  publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publish_dir_mode
+    input:
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsUMI
+        val read_structure1 from ch_read_structure1
+        val read_structure2 from ch_read_structure2
 
-  input:
-    set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsUMI
-    val read_structure1 from ch_read_structure1
-    val read_structure2 from ch_read_structure2
+    output:
+        tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi_converted.bam") into umi_converted_bams_ch
 
-  output:
-    tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi_converted.bam") into umi_converted_bams_ch
+    when: params.umi
 
-  when: params.umi
+    // tmp folder for fgbio might be solved more elengantly?
 
-  // tmp folder for fgbio might be solved more elengantly?
+    script:
+    """
+    mkdir tmp
 
-  script:
-  """
-  mkdir tmp
-
-  fgbio --tmp-dir=${PWD}/tmp \
-  FastqToBam \
-  -i "${idSample}_${idRun}_R1.fastq.gz" "${idSample}_${idRun}_R2.fastq.gz" \
-  -o "${idSample}_umi_converted.bam" \
-  --read-structures ${read_structure1} ${read_structure2} \
-  --sample ${idSample} \
-  --library ${idSample}
-  """
-
+    fgbio --tmp-dir=${PWD}/tmp \
+    FastqToBam \
+    -i "${idSample}_${idRun}_R1.fastq.gz" "${idSample}_${idRun}_R2.fastq.gz" \
+    -o "${idSample}_umi_converted.bam" \
+    --read-structures ${read_structure1} ${read_structure2} \
+    --sample ${idSample} \
+    --library ${idSample}
+    """
 }
 
 // UMI - STEP 2 - MAP THE BAM FILE
@@ -1050,26 +1050,25 @@ process UMIFastqToBAM {
 // mapping position + same UMI tag
 
 process UMIMapBamFile {
+    input:
+        set idPatient, idSample, idRun, file(convertedBam) from umi_converted_bams_ch
+        file(bwaIndex) from ch_bwa
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fai
 
-  input:
-    set idPatient, idSample, idRun, file(convertedBam) from umi_converted_bams_ch
-    file(bwaIndex) from ch_bwa
-    file(fasta) from ch_fasta
-    file(fastaFai) from ch_fai
+    output:
+        tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi_unsorted.bam") into umi_aligned_bams_ch
 
-  output:
-    tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi_unsorted.bam") into umi_aligned_bams_ch
+    when: params.umi
 
-  when: params.umi
-
-  script:
-  """
-  samtools bam2fq -T RX ${convertedBam} | \
-  bwa-mem2 mem -p -t ${task.cpus} -C -M -R \"@RG\\tID:${idSample}\\tSM:${idSample}\\tPL:Illumina\" \
-  ${fasta} - | \
-  samtools view -bS - > ${idSample}_umi_unsorted.bam
-  """
-
+    script:
+    aligner = params.aligner == "bwa-mem2" ? "bwa-mem2" : "bwa"
+    """
+    samtools bam2fq -T RX ${convertedBam} | \
+    ${aligner} mem -p -t ${task.cpus} -C -M -R \"@RG\\tID:${idSample}\\tSM:${idSample}\\tPL:Illumina\" \
+    ${fasta} - | \
+    samtools view -bS - > ${idSample}_umi_unsorted.bam
+    """
 }
 
 // UMI - STEP 3 - GROUP READS BY UMIs
@@ -1079,34 +1078,32 @@ process UMIMapBamFile {
 // alternatively we can define this as input for the user to choose from
 
 process GroupReadsByUmi {
+    publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publish_dir_mode
 
-  publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publish_dir_mode
+    input:
+        set idPatient, idSample, idRun, file(alignedBam) from umi_aligned_bams_ch
 
-  input:
-      set idPatient, idSample, idRun, file(alignedBam) from umi_aligned_bams_ch
+    output:
+        file("${idSample}_umi_histogram.txt") into umi_histogram_ch
+        tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi-grouped.bam") into umi_grouped_bams_ch
 
-  output:
-    file("${idSample}_umi_histogram.txt") into umi_histogram_ch
-    tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi-grouped.bam") into umi_grouped_bams_ch
+    when: params.umi
 
-  when: params.umi
+    script:
+    """
+    mkdir tmp
 
-  script:
-  """
-  mkdir tmp
+    samtools view -h ${alignedBam} | \
+    samblaster -M --addMateTags | \
+    samtools view -Sb - >${idSample}_unsorted_tagged.bam
 
-  samtools view -h ${alignedBam} | \
-  samblaster -M --addMateTags | \
-  samtools view -Sb - >${idSample}_unsorted_tagged.bam
-
-  fgbio --tmp-dir=${PWD}/tmp \
-  GroupReadsByUmi \
-  -s Adjacency \
-  -i ${idSample}_unsorted_tagged.bam \
-  -o ${idSample}_umi-grouped.bam \
-  -f ${idSample}_umi_histogram.txt
-  """
-
+    fgbio --tmp-dir=${PWD}/tmp \
+    GroupReadsByUmi \
+    -s Adjacency \
+    -i ${idSample}_unsorted_tagged.bam \
+    -o ${idSample}_umi-grouped.bam \
+    -f ${idSample}_umi_histogram.txt
+    """
 }
 
 // UMI - STEP 4 - CALL MOLECULAR CONSENSUS
@@ -1115,27 +1112,26 @@ process GroupReadsByUmi {
 // existing workflow from the step mapping
 
 process CallMolecularConsensusReads {
+    publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publish_dir_mode
 
-  publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publish_dir_mode
+    input:
+        set idPatient, idSample, idRun, file(groupedBamFile) from umi_grouped_bams_ch
 
-  input:
-      set idPatient, idSample, idRun, file(groupedBamFile) from umi_grouped_bams_ch
+    output:
+        tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi-consensus.bam"), val("null") into consensus_bam_ch
 
-  output:
-      tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi-consensus.bam"), val("null") into consensus_bam_ch
+    when: params.umi
 
-  when: params.umi
+    script:
+    """
+    mkdir tmp
 
-  script:
-  """
-  mkdir tmp
-
-  fgbio --tmp-dir=${PWD}/tmp \
-  CallMolecularConsensusReads \
-  -i $groupedBamFile \
-  -o ${idSample}_umi-consensus.bam \
-  -M 1 -S Coordinate
-  """
+    fgbio --tmp-dir=${PWD}/tmp \
+    CallMolecularConsensusReads \
+    -i $groupedBamFile \
+    -o ${idSample}_umi-consensus.bam \
+    -M 1 -S Coordinate
+    """
 }
 
 // ################# END OF UMI READS PRE-PROCESSING
@@ -1146,18 +1142,18 @@ process CallMolecularConsensusReads {
 input_pair_reads_sentieon = Channel.empty()
 
 if (params.umi) {
-  inputPairReads = inputPairReads.dump(tag:'INPUT before BWA-mem2 mem')
-  if (params.sentieon) input_pair_reads_sentieon = consensus_bam_ch
-  else inputPairReads = consensus_bam_ch
+    inputPairReads = inputPairReads.dump(tag:'INPUT before mapping')
+    if (params.sentieon) input_pair_reads_sentieon = consensus_bam_ch
+    else inputPairReads = consensus_bam_ch
 }
 else {
-  if (params.trim_fastq) inputPairReads = outputPairReadsTrimGalore
-  else inputPairReads = inputPairReads.mix(inputBam)
-  inputPairReads = inputPairReads.dump(tag:'INPUT before BWA-mem2 mem')
+    if (params.trim_fastq) inputPairReads = outputPairReadsTrimGalore
+    else inputPairReads = inputPairReads.mix(inputBam)
+    inputPairReads = inputPairReads.dump(tag:'INPUT before mapping')
 
-  (inputPairReads, input_pair_reads_sentieon) = inputPairReads.into(2)
-  if (params.sentieon) inputPairReads.close()
-  else input_pair_reads_sentieon.close()
+    (inputPairReads, input_pair_reads_sentieon) = inputPairReads.into(2)
+    if (params.sentieon) inputPairReads.close()
+    else input_pair_reads_sentieon.close()
 }
 
 process MapReads {
@@ -1190,9 +1186,10 @@ process MapReads {
     extra = status == 1 ? "-B 3" : ""
     convertToFastq = hasExtension(inputFile1, "bam") ? "gatk --java-options -Xmx${task.memory.toGiga()}g SamToFastq --INPUT=${inputFile1} --FASTQ=/dev/stdout --INTERLEAVE=true --NON_PF=true | \\" : ""
     input = hasExtension(inputFile1, "bam") ? "-p /dev/stdin - 2> >(tee ${inputFile1}.bwa.stderr.log >&2)" : "${inputFile1} ${inputFile2}"
+    aligner = params.aligner == "bwa-mem2" ? "bwa-mem2" : "bwa"
     """
     ${convertToFastq}
-    bwa-mem2 mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
+    ${aligner} mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
     ${input} | \
     samtools sort --threads ${task.cpus} -m 2G - > ${idSample}_${idRun}.bam
     """

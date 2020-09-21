@@ -11,6 +11,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 - [Preprocessing](#preprocessing)
   - [Map to Reference](#map-to-reference)
+    - [bwa](#bwa)
     - [BWA-mem2](#bwa-mem2)
   - [Mark Duplicates](#mark-duplicates)
     - [GATK MarkDuplicates](#gatk-markduplicates)
@@ -63,6 +64,12 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 `Sarek` pre-processes raw `FASTQ` files or `unmapped BAM` files, based on [GATK best practices](https://gatk.broadinstitute.org/hc/en-us/sections/360007226651-Best-Practices-Workflows).
 
 ### Map to Reference
+
+#### bwa
+
+[bwa](https://github.com/lh3/bwa) is a software package for mapping low-divergent sequences against a large reference genome.
+
+Such files are intermediate and not kept in the final files delivered to users.
 
 #### BWA-mem2
 

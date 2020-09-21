@@ -57,6 +57,7 @@
   - [--save_trimmed](#--save_trimmed)
   - [--split_fastq](#--split_fastq)
 - [Preprocessing](#preprocessing)
+  - [--aligner](#--aligner)
   - [--markdup_java_options](#--markdup_java_options)
   - [--no_gatk_spark](#--no_gatk_spark)
   - [--save_bam_mapped](#--save_bam_mapped)
@@ -908,6 +909,29 @@ For example:
 
 ## Preprocessing
 
+### --aligner
+
+To control which aligner is used for mapping the reads.
+
+Available: `bwa-mem` and `bwa-mem2`
+
+Default: `bwa-mem`
+
+Example:
+
+```bash
+--aligner "bwa-mem"
+```
+
+> **WARNING** Current indices for `bwa` in AWS iGenomes are not compatible with `bwa-mem2`.
+> Use `--bwa=false` to have `Sarek` build them automatically.
+
+Example:
+
+```bash
+--aligner "bwa-mem2" --bwa=false
+```
+
 ### --markdup_java_options
 
 To control the java options necessary for the `GATK MarkDuplicates` process, you can set this parameter.
@@ -1546,6 +1570,7 @@ Based on [nfcore/base:1.10.2](https://hub.docker.com/r/nfcore/base/tags), it con
 - **[ASCAT](https://github.com/Crick-CancerGenomics/ascat)** 2.5.2
 - **[AlleleCount](https://github.com/cancerit/alleleCount)** 4.0.2
 - **[BCFTools](https://github.com/samtools/bcftools)** 1.9
+- **[bwa](https://github.com/lh3/bwa)** 0.7.17
 - **[bwa-mem2](https://github.com/bwa-mem2/bwa-mem2)** 2.0
 - **[CNVkit](https://github.com/etal/cnvkit)** 0.9.6
 - **[Control-FREEC](https://github.com/BoevaLab/FREEC)** 11.5
