@@ -11,7 +11,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 - [Preprocessing](#preprocessing)
   - [Map to Reference](#map-to-reference)
-    - [bwa](#bwa)
+    - [BWA](#BWA)
     - [BWA-mem2](#bwa-mem2)
   - [Mark Duplicates](#mark-duplicates)
     - [GATK MarkDuplicates](#gatk-markduplicates)
@@ -65,9 +65,9 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 ### Map to Reference
 
-#### bwa
+#### BWA
 
-[bwa](https://github.com/lh3/bwa) is a software package for mapping low-divergent sequences against a large reference genome.
+[BWA](https://github.com/lh3/bwa) is a software package for mapping low-divergent sequences against a large reference genome.
 
 Such files are intermediate and not kept in the final files delivered to users.
 
