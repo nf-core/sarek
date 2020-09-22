@@ -926,6 +926,10 @@ Example:
 > **WARNING** Current indices for `bwa` in AWS iGenomes are not compatible with `bwa-mem2`.
 > Use `--bwa=false` to have `Sarek` build them automatically.
 
+> **WARNING** BWA-mem2 is in active development
+> Sarek might not be able to require the right amount of resources for it at the moment
+> We recommend to use pre-built indexes
+
 Example:
 
 ```bash
