@@ -7,6 +7,7 @@
 // And then initialize channels based on params or indexes that were just built
 
 include { BUILD_INTERVALS }                            from '../process/build_intervals.nf'
+include { BWA_INDEX }                                  from '../../nf-core/software/bwa/index/main.nf'
 include { BWAMEM2_INDEX }                              from '../../nf-core/software/bwamem2_index.nf'
 include { CREATE_INTERVALS_BED }                       from '../process/create_intervals_bed.nf'
 include { GATK_CREATESEQUENCEDICTIONARY as GATK_DICT } from '../../nf-core/software/gatk_createsequencedictionary.nf'
@@ -29,8 +30,10 @@ workflow BUILD_INDICES{
     main:
 
     result_bwa = Channel.empty()
+    version_bwa = Channel.empty()
     if (!(params.bwa) && params.fasta && 'mapping' in step)
-        result_bwa = BWAMEM2_INDEX(fasta)
+        if (params.aligner == "bwa-mem") (result_bwa, version_bwa) = BWA_INDEX(fasta, params.modules['bwa_index'])
+        else                             result_bwa = BWAMEM2_INDEX(fasta)
 
     result_dict = Channel.empty()
     if (!(params.dict) && params.fasta && !('annotate' in step) && !('controlfreec' in step))
@@ -86,6 +89,7 @@ workflow BUILD_INDICES{
 
     emit:
         bwa                   = result_bwa
+        bwa_version           = version_bwa
         dbsnp_tbi             = result_dbsnp_tbi
         dict                  = result_dict
         fai                   = result_fai

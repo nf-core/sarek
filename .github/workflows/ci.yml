@@ -1,30 +1,50 @@
 name: nf-core CI
-# This workflow is triggered on pushes and PRs to the repository.
-# It runs the pipeline with the minimal test dataset to check that it completes without any syntax errors.
-on: [push, pull_request]
+# This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+  release:
+    types: [published]
 
 jobs:
   test:
+    name: Run workflow tests
+    # Only run on push if this is the nf-core dev branch (merged PRs)
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/sarek') }}
+    runs-on: ubuntu-latest
     env:
       NXF_VER: ${{ matrix.nxf_ver }}
       NXF_ANSI_LOG: false
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         # Nextflow versions: check pipeline minimum and current latest
-        nxf_ver: ['20.07.0-RC1', '']
+        nxf_ver: ['20.07.1', '']
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+      - name: Check if Dockerfile or Conda environment changed
+        uses: technote-space/get-diff-action@v1
+        with:
+          PREFIX_FILTER: |
+            Dockerfile
+            environment.yml
+      - name: Build new docker image
+        if: env.GIT_DIFF
+        run: docker build --no-cache . -t nfcore/sarek:dev
+      - name: Pull docker image
+        if: ${{ !env.GIT_DIFF }}
+        run: |
+          docker pull nfcore/sarek:dev
+          docker tag nfcore/sarek:dev nfcore/sarek:dev
       - name: Install Nextflow
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-      - name: Pull docker image
+      - name: Run pipeline with test data
         run: |
-          docker pull nfcore/sarek:dev
-          docker tag nfcore/sarek:dev nfcore/sarek:dev
-      - name: Run test
-        run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker
 
   annotation:
     env:
@@ -42,7 +62,7 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           # Only check Nextflow pipeline minimum version
-          NXF_VER: '20.07.0-RC1'
+          NXF_VER: '20.07.1'
       - name: Pull docker image
         run: |
           docker pull nfcore/sarek:dev
@@ -65,7 +85,7 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           # Only check Nextflow pipeline minimum version
-          NXF_VER: '20.07.0-RC1'
+          NXF_VER: '20.07.1'
       - name: Pull docker image
         run: docker pull nfcore/sarek:dev
       - name: Get test data
@@ -93,7 +113,7 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           # Only check Nextflow pipeline minimum version
-          NXF_VER: '20.07.0-RC1'
+          NXF_VER: '20.07.1'
       - name: Pull docker image
         run: docker pull nfcore/sarek:dev
       - name: Run test for minimal genomes
@@ -105,7 +125,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        profile: [test_split_fastq, test_targeted, test_trimming, test_no_gatk_spark]
+        profile: [test_split_fastq, test_targeted, test_trimming, test_no_gatk_spark, test_umi_tso, test_umi_qiaseq]
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
@@ -114,11 +134,32 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           # Only check Nextflow pipeline minimum version
-          NXF_VER: '20.07.0-RC1'
+          NXF_VER: '20.07.1'
       - name: Pull docker image
         run: docker pull nfcore/sarek:dev
       - name: Run ${{ matrix.profile }} test
         run: nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker
+
+  aligner:
+    env:
+      NXF_ANSI_LOG: false
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        aligner: [bwa-mem, bwa-mem2]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+        env:
+          # Only check Nextflow pipeline minimum version
+          NXF_VER: '20.07.1'
+      - name: Pull docker image
+        run: docker pull nfcore/sarek:dev
+      - name: Run ${{ matrix.profile }} test
+        run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner ${{ matrix.aligner }}
 
   tools:
     env:
@@ -145,7 +186,7 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           # Only check Nextflow pipeline minimum version
-          NXF_VER: '20.07.0-RC1'
+          NXF_VER: '20.07.1'
       - name: Pull docker image
         run: docker pull nfcore/sarek:dev
       - name: Run ${{ matrix.tool }} test

@@ -261,6 +261,7 @@ if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works
 */
 
 include { BWAMEM2_MEM }                   from './modules/local/process/bwamem2_mem'
+include { BWA_MEM }                       from './modules/local/process/bwa_mem'
 include { GET_SOFTWARE_VERSIONS }         from './modules/local/process/get_software_versions'
 include { OUTPUT_DOCUMENTATION }          from './modules/local/process/output_documentation'
 include { MERGE_BAM as MERGE_BAM_MAPPED } from './modules/local/process/merge_bam'
@@ -390,9 +391,18 @@ workflow {
 
     // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
 
-    BWAMEM2_MEM(reads_input, bwa, fasta, fai, params.modules['bwamem2_mem'])
+    bam_bwamem2          = Channel.empty()
+    bwa_mem_out          = Channel.empty()
 
-    bam_bwamem2 = BWAMEM2_MEM.out
+    if (params.aligner == "bwa-mem") {
+        BWA_MEM(reads_input, bwa, fasta, fai, params.modules['bwa_mem'])
+        bwa_mem_out = BWA_MEM.out.bam
+    } else {
+        BWAMEM2_MEM(reads_input, bwa, fasta, fai, params.modules['bwamem2_mem'])
+        bam_bwamem2 = BWAMEM2_MEM.out
+    }
+
+    bam_bwamem2 = bam_bwamem2.mix(bwa_mem_out)
 
     bam_bwamem2.map{ meta, bam ->
         patient = meta.patient
