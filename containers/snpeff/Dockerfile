@@ -1,4 +1,4 @@
-FROM nfcore/base:1.10.2
+FROM nfcore/base:dev
 LABEL \
   author="Maxime Garcia" \
   description="snpEff image for use in nf-core/sarek" \
