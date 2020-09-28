@@ -25,7 +25,7 @@
                     "type": "string",
                     "default": "mapping",
                     "fa_icon": "fas fa-play",
-                    "description": "Starting step",
+                    "description": "Starting step.",
                     "help_text": "(only one)",
                     "enum": [
                         "mapping",
@@ -61,7 +61,7 @@
                     "type": "string",
                     "default": "null",
                     "fa_icon": "fas fa-toolbox",
-                    "description": "Specify tools to use for variant calling and/or for annotation",
+                    "description": "Specify tools to use for variant calling and/or for annotation.",
                     "help_text": "Multiple separated with commas\n\n`DNAseq`, `DNAscope` and `TNscope` are only available with `--sentieon`",
                     "enum": [
                         "null",
@@ -85,29 +85,28 @@
                     ]
                 },
                 "no_intervals": {
-                    "type": "string",
-                    "default": "null",
+                    "type": "boolean",
                     "fa_icon": "fas fa-ban",
-                    "description": "Disable usage of intervals",
+                    "description": "Disable usage of intervals.",
                     "help_text": "Intervals are part of the genome chopped up, used to speed up preprocessing and variant calling"
                 },
                 "nucleotides_per_second": {
-                    "type": "string",
+                    "type": "number",
                     "fa_icon": "fas fa-clock",
-                    "description": "Estimate interval size",
-                    "help_text": "Intervals are part of the genome chopped up, used to speed up preprocessing and variant calling"
+                    "description": "Estimate interval size.",
+                    "help_text": "Intervals are part of the genome chopped up, used to speed up preprocessing and variant calling",
+                    "default": 1000
                 },
                 "sentieon": {
-                    "type": "string",
-                    "default": "null",
+                    "type": "boolean",
                     "fa_icon": "fas fa-tools",
-                    "description": "Enable Sentieon if available",
+                    "description": "Enable Sentieon if available.",
                     "help_text": "Adds the following options for --tools: DNAseq, DNAscope and TNscope"
                 },
                 "skip_qc": {
                     "type": "string",
                     "fa_icon": "fas fa-forward",
-                    "description": "Specify which QC tools to skip",
+                    "description": "Specify which QC tools to skip.",
                     "help_text": "Multiple separated with commas\n\n`--skip_qc BaseRecalibrator` does not skip the process, but is actually just not saving the reports",
                     "enum": [
                         "null",
@@ -121,12 +120,13 @@
                         "samtools",
                         "vcftools",
                         "versions"
-                    ]
+                    ],
+                    "default": "null"
                 },
                 "target_bed": {
                     "type": "string",
                     "fa_icon": "fas fa-crosshairs",
-                    "description": "Target BED file for whole exome or targeted sequencing"
+                    "description": "Target BED file for whole exome or targeted sequencing."
                 }
             },
             "fa_icon": "fas fa-user-cog"
@@ -139,51 +139,59 @@
             "fa_icon": "fas fa-cut",
             "properties": {
                 "trim_fastq": {
-                    "type": "string",
+                    "type": "boolean",
                     "fa_icon": "fas fa-cut",
-                    "description": "Run Trim Galore"
+                    "description": "Run Trim Galore",
+                    "hidden": true
                 },
                 "clip_r1": {
                     "type": "integer",
                     "fa_icon": "fas fa-cut",
                     "description": "Remove bp from the 5' end of read 1",
-                    "help_text": "With Trim Galore"
+                    "help_text": "With Trim Galore",
+                    "hidden": true
                 },
                 "clip_r2": {
                     "type": "integer",
                     "description": "Remove bp from the 5' end of read 5",
-                    "help_text": "With Trim Galore"
+                    "help_text": "With Trim Galore",
+                    "fa_icon": "fas fa-cut",
+                    "hidden": true
                 },
                 "three_prime_clip_r1": {
                     "type": "integer",
                     "fa_icon": "fas fa-cut",
                     "description": "Remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed",
-                    "help_text": "With Trim Galore"
+                    "help_text": "With Trim Galore",
+                    "hidden": true
                 },
                 "three_prime_clip_r2": {
                     "type": "integer",
                     "fa_icon": "fas fa-cut",
                     "description": "Remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed",
-                    "help_text": "With Trim Galore"
+                    "help_text": "With Trim Galore",
+                    "hidden": true
                 },
                 "trim_nextseq": {
                     "type": "integer",
                     "fa_icon": "fas fa-cut",
                     "description": "Apply the --nextseq=X option, to trim based on quality after removing poly-G tails",
-                    "help_text": "With Trim Galore"
+                    "help_text": "With Trim Galore",
+                    "hidden": true
                 },
                 "save_trimmed": {
-                    "type": "string",
+                    "type": "boolean",
                     "fa_icon": "fas fa-save",
-                    "description": "Specify how many reads should be contained in the split FastQ file",
-                    "help_text": "If none specified, FastQs won't be split"
+                    "description": "Save trimmed FastQ file intermediates",
+                    "help_text": "If none specified, FastQs won't be split",
+                    "hidden": true
                 },
                 "split_fastq": {
-                    "type": "string",
-                    "default": "null",
+                    "type": "number",
                     "fa_icon": "fas fa-cut",
-                    "description": "Save trimmed FastQ file intermediates",
-                    "help_text": "If not used, FastQs won't be split"
+                    "description": "Specify how many reads should be contained in the split FastQ file",
+                    "help_text": "If not used, FastQs won't be split",
+                    "hidden": true
                 }
             }
         },
@@ -197,14 +205,22 @@
                 "aligner": {
                     "type": "string",
                     "default": "bwa-mem",
-                    "fa_icon": "fas fa-puzzle-piece"
+                    "fa_icon": "fas fa-puzzle-piece",
+                    "enum": [
+                        "bwa-mem",
+                        "bwa-mem2"
+                    ],
+                    "description": "Specify which aligner to be used to map reads to reference genome",
+                    "help_text": "> **WARNING** Current indices for `bwa` in AWS iGenomes are not compatible with `bwa-mem2`.\n> Use `--bwa=false` to have `Sarek` build them automatically.",
+                    "hidden": true
                 },
                 "markdup_java_options": {
                     "type": "string",
                     "default": "-Xms4000m -Xmx7g",
                     "fa_icon": "fas fa-memory",
                     "description": "Establish values for GATK MarkDuplicates memory consumption",
-                    "help_text": "See https://github.com/SciLifeLab/Sarek/pull/689"
+                    "help_text": "See https://github.com/SciLifeLab/Sarek/pull/689",
+                    "hidden": true
                 },
                 "no_gatk_spark": {
                     "type": "string",
@@ -213,21 +229,16 @@
                     "description": "Disable usage of GATK Spark implementation"
                 },
                 "save_bam_mapped": {
-                    "type": "string",
-                    "default": "null",
+                    "type": "boolean",
                     "fa_icon": "fas fa-download",
                     "description": "Save Mapped BAMs"
                 },
                 "skip_markduplicates": {
-                    "type": "string",
-                    "default": "null",
+                    "type": "boolean",
                     "fa_icon": "fas fa-forward",
                     "description": "Skip GATK MarkDuplicates"
                 }
-            },
-            "required": [
-                "aligner"
-            ]
+            }
         },
         "variant_calling": {
             "title": "Variant Calling",
@@ -268,14 +279,12 @@
                     "description": "Overwrite Control-FREEC window size"
                 },
                 "no_gvcf": {
-                    "type": "string",
-                    "default": "null",
+                    "type": "boolean",
                     "fa_icon": "fas fa-ban",
                     "description": "No g.vcf output from GATK HaplotypeCaller"
                 },
                 "no_strelka_bp": {
-                    "type": "string",
-                    "default": "null",
+                    "type": "boolean",
                     "fa_icon": "fas fa-ban",
                     "description": "Will not use Manta candidateSmallIndels for Strelka",
                     "help_text": "Not recommended by Best Practices"
@@ -293,14 +302,12 @@
                     "help_text": "If none provided, will be generated automatically from the PON"
                 },
                 "ignore_soft_clipped_bases": {
-                    "type": "string",
-                    "default": "null",
+                    "type": "boolean",
                     "fa_icon": "fas fa-ban",
                     "description": "Do not analyze soft clipped bases in the reads for GATK Mutect2"
                 },
                 "umi": {
                     "type": "boolean",
-                    "default": "false",
                     "fa_icon": "fas fa-tape",
                     "description": "If provided, UMIs steps will be run to extract and annotate the reads with UMI and create consensus reads"
                 },
@@ -340,64 +347,72 @@
                         "Mutect2",
                         "Strelka",
                         "TIDDIT"
-                    ]
+                    ],
+                    "hidden": true
                 },
                 "annotation_cache": {
                     "type": "boolean",
-                    "default": "false",
                     "fa_icon": "fas fa-database",
                     "description": "Enable the use of cache for annotation",
-                    "help_text": "To be used with `--snpeff_cache` and/or `--vep_cache`"
+                    "help_text": "To be used with `--snpeff_cache` and/or `--vep_cache`",
+                    "hidden": true
                 },
                 "cadd_cache": {
                     "type": "string",
                     "default": "null",
                     "fa_icon": "fas fa-database",
-                    "description": "Enable CADD cache"
+                    "description": "Enable CADD cache",
+                    "hidden": true
                 },
                 "cadd_indels": {
                     "type": "string",
                     "default": "null",
                     "fa_icon": "fas fa-file",
-                    "description": "Path to CADD InDels file"
+                    "description": "Path to CADD InDels file",
+                    "hidden": true
                 },
                 "cadd_indels_tbi": {
                     "type": "string",
                     "default": "null",
                     "fa_icon": "fas fa-file",
-                    "description": "Path to CADD InDels index"
+                    "description": "Path to CADD InDels index",
+                    "hidden": true
                 },
                 "cadd_wg_snvs": {
                     "type": "string",
                     "default": "null",
                     "fa_icon": "fas fa-file",
-                    "description": "Path to CADD SNVs file"
+                    "description": "Path to CADD SNVs file",
+                    "hidden": true
                 },
                 "cadd_wg_snvs_tbi": {
                     "type": "string",
                     "default": "null",
                     "fa_icon": "fas fa-file",
-                    "description": "Path to CADD SNVs index"
+                    "description": "Path to CADD SNVs index",
+                    "hidden": true
                 },
                 "genesplicer": {
                     "type": "boolean",
-                    "default": "false",
                     "fa_icon": "fas fa-gavel",
-                    "description": "Enable genesplicer within VEP"
+                    "description": "Enable genesplicer within VEP",
+                    "hidden": true
                 },
                 "snpeff_cache": {
                     "type": "string",
                     "default": "null",
                     "fa_icon": "fas fa-database",
                     "description": "Path to snpEff cache",
-                    "help_text": "To be used with `--annotation_cache`"
+                    "help_text": "To be used with `--annotation_cache`",
+                    "hidden": true
                 },
                 "vep_cache": {
                     "type": "string",
                     "default": "null",
                     "fa_icon": "fas fa-database",
                     "description": "Path to VEP cache",
-                    "help_text": "To be used with `--annotation_cache`"
+                    "help_text": "To be used with `--annotation_cache`",
+                    "hidden": true
                 }
             }
         },
@@ -492,8 +507,7 @@
                     "fa_icon": "fas fa-tag"
                 },
                 "save_reference": {
-                    "type": "string",
-                    "default": "null",
+                    "type": "boolean",
                     "fa_icon": "fas fa-download",
                     "description": "Save built references"
                 },
