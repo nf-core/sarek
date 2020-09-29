@@ -10,12 +10,12 @@ include { BUILD_INTERVALS }                            from '../process/build_in
 include { BWA_INDEX }                                  from '../../nf-core/software/bwa/index/main.nf'
 include { BWAMEM2_INDEX }                              from '../../nf-core/software/bwamem2_index.nf'
 include { CREATE_INTERVALS_BED }                       from '../process/create_intervals_bed.nf'
-include { GATK_CREATESEQUENCEDICTIONARY as GATK_DICT } from '../../nf-core/software/gatk_createsequencedictionary.nf'
+include { GATK_CREATESEQUENCEDICTIONARY as GATK_DICT } from '../../nf-core/software/gatk/createsequencedictionary.nf'
 include { HTSLIB_TABIX as TABIX_DBSNP;
           HTSLIB_TABIX as TABIX_GERMLINE_RESOURCE;
           HTSLIB_TABIX as TABIX_KNOWN_INDELS;
           HTSLIB_TABIX as TABIX_PON;}                  from '../../nf-core/software/htslib_tabix'
-include { SAMTOOLS_FAIDX }                             from '../../nf-core/software/samtools_faidx.nf'
+include { SAMTOOLS_FAIDX }                             from '../../nf-core/software/samtools/faidx.nf'
 
 workflow BUILD_INDICES{
     take:

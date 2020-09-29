@@ -1,7 +1,9 @@
 process HTSLIB_TABIX {
-    tag {vcf}
+    tag "${vcf}"
 
     container 'quay.io/biocontainers/tabix:0.2.6--ha92aebf_0'
+
+    conda (params.conda ? "bioconda::tabix=0.2.6" : null)
 
     input:
         path vcf

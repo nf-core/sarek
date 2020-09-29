@@ -8,6 +8,10 @@ if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
 process MULTIQC {
     publishDir "${params.outdir}/multiqc", mode: params.publish_dir_mode
 
+    container "quay.io/biocontainers/multiqc:1.9--py_1"
+
+    conda (params.conda ? "bioconda::multiqc=1.9" : null)
+
     input:
         path software_versions
         path fastqc_html

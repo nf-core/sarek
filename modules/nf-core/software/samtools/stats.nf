@@ -5,6 +5,10 @@ process SAMTOOLS_STATS {
 
     publishDir "${params.outdir}/Reports/${meta.id}/SamToolsStats", mode: params.publish_dir_mode
 
+    container "quay.io/biocontainers/samtools:1.10--h2e538c0_3"
+
+    conda (params.conda ? "bioconda::samtools=1.10" : null)
+
     input:
         tuple val(meta), path(bam) 
 

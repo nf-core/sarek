@@ -11,6 +11,8 @@ process TRIMGALORE {
 
     container "quay.io/biocontainers/trim-galore:0.6.5--0"
 
+    conda (params.conda ? "trim-galore=0.6.5" : null)
+
     input:
       tuple val(meta), path(reads)
       val options

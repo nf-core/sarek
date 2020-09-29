@@ -2,8 +2,11 @@ process MERGE_BAM {
     label 'cpus_8'
 
     tag "${meta.id}"
-    //TODO publishDir
-    
+
+    container "quay.io/biocontainers/samtools:1.10--h2e538c0_3"
+
+    conda (params.conda ? "bioconda::samtools=1.10" : null)
+
     input:
         tuple val(meta), path(bam)
 

@@ -9,6 +9,10 @@ process GATK_GATHERBQSRREPORTS {
             else "Preprocessing/${meta.sample}/Mapped/${it}"
         }
  
+    container "quay.io/biocontainers/gatk4-spark:4.1.8.1--0"
+
+    conda (params.conda ? "bioconda::gatk4-spark=4.1.8.1" : null)
+
     input:
         tuple val(meta), path(recal)
 

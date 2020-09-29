@@ -9,6 +9,10 @@ process SAMTOOLS_INDEX {
             else null
         }
 
+    container "quay.io/biocontainers/samtools:1.10--h2e538c0_3"
+
+    conda (params.conda ? "bioconda::samtools=1.10" : null)
+
     input:
         tuple val(meta), path(bam)
         val options

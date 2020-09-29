@@ -16,7 +16,7 @@ nf-core/sarek:
  https://nf-co.re/sarek
 --------------------------------------------------------------------------------
  @Documentation
- https://nf-co.re/sarek/docs
+ https://nf-co.re/sarek/latest/usage
 --------------------------------------------------------------------------------
 */
 
@@ -260,8 +260,8 @@ if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works
 ================================================================================
 */
 
+include { BWA_MEM as BWAMEM1_MEM }        from './modules/local/process/bwa_mem'
 include { BWAMEM2_MEM }                   from './modules/local/process/bwamem2_mem'
-include { BWA_MEM }                       from './modules/local/process/bwa_mem'
 include { GET_SOFTWARE_VERSIONS }         from './modules/local/process/get_software_versions'
 include { OUTPUT_DOCUMENTATION }          from './modules/local/process/output_documentation'
 include { MERGE_BAM as MERGE_BAM_MAPPED } from './modules/local/process/merge_bam'
@@ -281,16 +281,16 @@ include { BUILD_INDICES } from './modules/local/subworkflow/build_indices'
 ================================================================================
 */
 
-include { GATK_BASERECALIBRATOR  as BASERECALIBRATOR }      from './modules/nf-core/software/gatk_baserecalibrator'
-include { GATK_GATHERBQSRREPORTS as GATHERBQSRREPORTS }     from './modules/nf-core/software/gatk_gatherbqsrreports'
-include { GATK_MARKDUPLICATES    as MARKDUPLICATES }        from './modules/nf-core/software/gatk_markduplicates'
-include { GATK_APPLYBQSR         as APPLYBQSR }             from './modules/nf-core/software/gatk_applybqsr'
-include { SAMTOOLS_INDEX         as SAMTOOLS_INDEX_MAPPED } from './modules/nf-core/software/samtools_index'
-include { SAMTOOLS_INDEX         as SAMTOOLS_INDEX_RECAL }  from './modules/nf-core/software/samtools_index'
-include { SAMTOOLS_STATS         as SAMTOOLS_STATS }        from './modules/nf-core/software/samtools_stats'
+include { GATK_BASERECALIBRATOR  as BASERECALIBRATOR }      from './modules/nf-core/software/gatk/baserecalibrator'
+include { GATK_GATHERBQSRREPORTS as GATHERBQSRREPORTS }     from './modules/nf-core/software/gatk/gatherbqsrreports'
+include { GATK_MARKDUPLICATES    as MARKDUPLICATES }        from './modules/nf-core/software/gatk/markduplicates'
+include { GATK_APPLYBQSR         as APPLYBQSR }             from './modules/nf-core/software/gatk/applybqsr'
+include { SAMTOOLS_INDEX         as SAMTOOLS_INDEX_MAPPED } from './modules/nf-core/software/samtools/index'
+include { SAMTOOLS_INDEX         as SAMTOOLS_INDEX_RECAL }  from './modules/nf-core/software/samtools/index'
+include { SAMTOOLS_STATS         as SAMTOOLS_STATS }        from './modules/nf-core/software/samtools/stats'
 include { QUALIMAP_BAMQC         as BAMQC }                 from './modules/nf-core/software/qualimap_bamqc'
-include { GATK_HAPLOTYPECALLER   as HAPLOTYPECALLER }       from './modules/nf-core/software/gatk_haplotypecaller'
-include { GATK_GENOTYPEVCF       as GENOTYPEVCF }           from './modules/nf-core/software/gatk_genotypegvcf'
+include { GATK_HAPLOTYPECALLER   as HAPLOTYPECALLER }       from './modules/nf-core/software/gatk/haplotypecaller'
+include { GATK_GENOTYPEVCF       as GENOTYPEVCF }           from './modules/nf-core/software/gatk/genotypegvcf'
 include { STRELKA                as STRELKA }               from './modules/nf-core/software/strelka'
 include { MULTIQC }                                         from './modules/nf-core/software/multiqc'
 
@@ -391,20 +391,20 @@ workflow {
 
     // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
 
-    bam_bwamem2          = Channel.empty()
-    bwa_mem_out          = Channel.empty()
+    bam_bwamem1 = Channel.empty()
+    bam_bwamem2 = Channel.empty()
 
     if (params.aligner == "bwa-mem") {
-        BWA_MEM(reads_input, bwa, fasta, fai, params.modules['bwa_mem'])
-        bwa_mem_out = BWA_MEM.out.bam
+        BWAMEM1_MEM(reads_input, bwa, fasta, fai, params.modules['bwa_mem'])
+        bam_bwamem1 = BWAMEM1_MEM.out.bam
     } else {
         BWAMEM2_MEM(reads_input, bwa, fasta, fai, params.modules['bwamem2_mem'])
         bam_bwamem2 = BWAMEM2_MEM.out
     }
 
-    bam_bwamem2 = bam_bwamem2.mix(bwa_mem_out)
+    bam_bwa = bam_bwamem1.mix(bam_bwamem2)
 
-    bam_bwamem2.map{ meta, bam ->
+    bam_bwa.map{ meta, bam ->
         patient = meta.patient
         sample  = meta.sample
         gender  = meta.gender
@@ -414,9 +414,9 @@ workflow {
         .branch{
             single:   it[4].size() == 1
             multiple: it[4].size() > 1
-        }.set{ bam_bwamem2_to_sort }
+        }.set{ bam_bwa_to_sort }
 
-    bam_bwamem2_single = bam_bwamem2_to_sort.single.map {
+    bam_bwa_single = bam_bwa_to_sort.single.map {
         patient, sample, gender, status, bam ->
 
         def meta = [:]
@@ -429,7 +429,7 @@ workflow {
         [meta, bam[0]]
     }
 
-    bam_bwamem2_multiple = bam_bwamem2_to_sort.multiple.map {
+    bam_bwa_multiple = bam_bwa_to_sort.multiple.map {
         patient, sample, gender, status, bam ->
 
         def meta = [:]
@@ -444,8 +444,8 @@ workflow {
 
     // STEP 1.5: MERGING AND INDEXING BAM FROM MULTIPLE LANES 
     
-    MERGE_BAM_MAPPED(bam_bwamem2_multiple)
-    bam_mapped = bam_bwamem2_single.mix(MERGE_BAM_MAPPED.out.bam)
+    MERGE_BAM_MAPPED(bam_bwa_multiple)
+    bam_mapped = bam_bwa_single.mix(MERGE_BAM_MAPPED.out.bam)
     bam_mapped = SAMTOOLS_INDEX_MAPPED(bam_mapped, params.modules['samtools_index_mapped'],
 )
         
@@ -633,8 +633,8 @@ workflow {
     }.collectFile(name: 'recalibrated.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV")
 
     // STEP 5: QC
-    if (!'samtools' in skip_qc) SAMTOOLS_STATS(bam_bwamem2.mix(recal))
-    if (!'bamqc' in skip_qc) BAMQC(bam_bwamem2.mix(recal), target_bed)
+    if (!'samtools' in skip_qc) SAMTOOLS_STATS(bam_bwa.mix(recal))
+    if (!'bamqc' in skip_qc) BAMQC(bam_bwa.mix(recal), target_bed)
 
     /*
     ================================================================================

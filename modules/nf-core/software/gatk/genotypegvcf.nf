@@ -1,6 +1,10 @@
 process GATK_GENOTYPEVCF {
     tag "${meta.id}-${interval.baseName}"
 
+    container "quay.io/biocontainers/gatk4-spark:4.1.8.1--0"
+
+    conda (params.conda ? "bioconda::gatk4-spark=4.1.8.1" : null)
+
     input:
         tuple val(meta), path(interval), path(gvcf)
         path dbsnp

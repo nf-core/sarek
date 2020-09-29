@@ -12,6 +12,8 @@ process FASTQC {
 
     container "quay.io/biocontainers/fastqc:0.11.9--0"
 
+    conda (params.conda ? "bioconda::fastqc=0.11.9" : null)
+
     input:
         tuple val(meta), path(reads)
         val options

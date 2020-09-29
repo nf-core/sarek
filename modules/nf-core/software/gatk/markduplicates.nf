@@ -8,6 +8,10 @@ process GATK_MARKDUPLICATES {
             else "Preprocessing/${meta.sample}/DuplicatesMarked/${it}"
         }
 
+    container "quay.io/biocontainers/gatk4-spark:4.1.8.1--0"
+
+    conda (params.conda ? "bioconda::gatk4-spark=4.1.8.1" : null)
+
     input:
         tuple val(meta), path("${meta.sample}.bam"), path("${meta.sample}.bam.bai")
 

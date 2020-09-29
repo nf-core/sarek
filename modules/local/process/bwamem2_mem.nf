@@ -1,5 +1,6 @@
 process BWAMEM2_MEM {
     tag "${meta.id}"
+
     label 'process_high'
 
     publishDir "${params.outdir}/bwamem2/${meta.sample}",
@@ -7,6 +8,8 @@ process BWAMEM2_MEM {
         saveAs: { filename ->
                     if (filename.endsWith('.version.txt')) null
                     else filename }
+
+    conda (params.conda ? "bioconda::bwa-mem2=2.0 bioconda::samtools=1.10" : null)
 
     input:
         tuple val(meta), path(reads)

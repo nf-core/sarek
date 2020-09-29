@@ -1,5 +1,6 @@
 process BWA_MEM {
     tag "${meta.id}"
+
     label 'process_high'
 
     publishDir "${params.outdir}/bwa/${meta.sample}",

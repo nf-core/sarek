@@ -11,8 +11,6 @@ process STRELKA {
          mode: params.publish_dir_mode,
          saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-
-
     container "quay.io/biocontainers/strelka:2.9.10--0"
     
     conda (params.conda ? "bioconda::strelka=2.9.10" : null)

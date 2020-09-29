@@ -4,6 +4,10 @@
 process OUTPUT_DOCUMENTATION {
     publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode
 
+    container "nfcore/sarek:dsl2"
+
+    conda (params.conda ? "$baseDir/environment.yml" : null)
+
     input:
         path output_docs
         path images
