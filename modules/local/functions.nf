@@ -119,7 +119,7 @@ def extract_fastq_from_dir(folder) {
     fastq = fastq.map{ run, pair ->
         def meta = [:]
         meta.patient = sample
-        meta.sample  = sample
+        meta.sample  = meta.patient
         meta.gender  = 'ZZ' // unused
         meta.status  = 0    // normal (not tumor)
         meta.run     = run
