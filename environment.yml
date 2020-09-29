@@ -12,7 +12,7 @@ dependencies:
   - bioconda::bwa-mem2=2.0
   - bioconda::ensembl-vep=99.2
   - bioconda::genesplicer=1.0
-  - bioconda::samtools=1.9
+  - bioconda::samtools=1.10
   - bioconda::snpeff=4.3.1t
   - conda-forge::pigz=2.3.4 
   - conda-forge::r-ggplot2=3.3.0
