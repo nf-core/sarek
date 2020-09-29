@@ -109,30 +109,26 @@ def extract_bam(tsvFile) {
 // Create a channel of germline FASTQs from a directory pattern: "my_samples/*/"
 // All FASTQ files in subdirectories are collected and emitted;
 // they must have _R1_ and _R2_ in their names.
-def extract_fastq_from_dir(pattern) {
-    def fastq = Channel.create()
-    // a temporary channel does all the work
-    Channel
-        .fromPath(pattern, type: 'dir')
-        .ifEmpty { error "No directories found matching pattern '${pattern}'" }
-        .subscribe onNext: { sampleDir ->
-            // the last name of the sampleDir is assumed to be a unique sample id
-            sampleId = sampleDir.getFileName().toString()
+// All FASTQ files are assumed to be from the same sample.
+def extract_fastq_from_dir(folder) {
+    sample = file(folder).getFileName().toString()
 
-            for (path1 in file("${sampleDir}/**_R1_*.fastq.gz")) {
-                assert path1.getName().contains('_R1_')
-                path2 = file(path1.toString().replace('_R1_', '_R2_'))
-                if (!path2.exists()) error "Path '${path2}' not found"
-                (flowcell, lane) = flowcellLane_from_fastq(path1)
-                patient = sampleId
-                gender = 'ZZ'  // unused
-                status = 0  // normal (not tumor)
-                rgId = "${flowcell}.${sampleId}.${lane}"
-                result = [patient, gender, status, sampleId, rgId, path1, path2]
-                fastq.bind(result)
-            }
-    }, onComplete: { fastq.close() }
-    fastq
+    fastq = Channel.fromFilePairs(folder + '/*{_R1_,_R2_}*.fastq.gz')
+        .ifEmpty { error "No directories found matching folder '${folder}'" }
+
+    fastq = fastq.map{ run, pair ->
+        def meta = [:]
+        meta.patient = sample
+        meta.sample  = sample
+        meta.gender  = 'ZZ' // unused
+        meta.status  = 0    // normal (not tumor)
+        meta.run     = run
+        meta.id      = "${meta.sample}-${meta.run}"
+        read1   = pair[0]
+        read2   = pair[1]
+
+        return [meta, [read1, read2]]
+    }
 }
 
 // Channeling the TSV file containing FASTQ or BAM

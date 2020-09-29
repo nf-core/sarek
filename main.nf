@@ -158,10 +158,6 @@ if (tsv_path) {
     log.info "Reading ${params.input} directory"
     log.warn "[nf-core/sarek] in ${params.input} directory, all fastqs are assuming to be from the same sample, which is assumed to be a germline one"
     input_sample = extract_fastq_from_dir(params.input)
-    (input_sample, fastq_tmp) = input_sample.into(2)
-    fastq_tmp.toList().subscribe onNext: {
-        if (it.size() == 0) exit 1, "No FASTQ files found in --input directory '${params.input}'"
-    }
     tsv_file = params.input  // used in the reports
 } else if (tsv_path && step == 'annotate') {
     log.info "Annotating ${tsv_path}"
