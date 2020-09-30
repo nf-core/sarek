@@ -371,15 +371,16 @@ workflow {
     ================================================================================
     */
 
-    qc_reports = Channel.empty()
-    bam_mapped = Channel.empty()
+    qc_reports  = Channel.empty()
+    bam_mapped  = Channel.empty()
 
     if (step == 'mapping') input_reads = input_sample
+    else input_reads = Channel.empty()
 
     // STEP 0.5: QC ON READS
 
     QC_TRIM(
-        input_sample,
+        input_reads,
         ('fastqc' in skip_qc),
         !(params.trim_fastq),
         params.modules['fastqc'],
@@ -410,6 +411,8 @@ workflow {
     MARKDUPLICATES(bam_mapped)
 
     bam_markduplicates = MARKDUPLICATES.out.bam
+
+    if (step == 'preparerecalibration') bam_markduplicates = input_sample
 
     // STEP 3: CREATING RECALIBRATION TABLES
     bam_baserecalibrator = bam_markduplicates.combine(intervals)

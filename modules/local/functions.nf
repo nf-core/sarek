@@ -92,17 +92,20 @@ def extract_bam(tsvFile) {
         .splitCsv(sep: '\t')
         .map { row ->
             check_number_of_item(row, 6)
-            def idPatient = row[0]
-            def gender    = row[1]
-            def status    = return_status(row[2].toInteger())
-            def idSample  = row[3]
-            def bamFile   = return_file(row[4])
-            def baiFile   = return_file(row[5])
+            def meta = [:]
 
-            if (!has_extension(bamFile, "bam")) exit 1, "File: ${bamFile} has the wrong extension. See --help for more information"
-            if (!has_extension(baiFile, "bai")) exit 1, "File: ${baiFile} has the wrong extension. See --help for more information"
+            meta.patient = row[0]
+            meta.gender  = row[1]
+            meta.status  = return_status(row[2].toInteger())
+            meta.sample  = row[3]
+            meta.id      = meta.sample
+            def bam      = return_file(row[4])
+            def bai      = return_file(row[5])
 
-            return [idPatient, gender, status, idSample, bamFile, baiFile]
+            if (!has_extension(bam, "bam")) exit 1, "File: ${bam} has the wrong extension. See --help for more information"
+            if (!has_extension(bai, "bai")) exit 1, "File: ${bai} has the wrong extension. See --help for more information"
+
+            return [meta, bam, bai]
         }
 }
 
@@ -124,8 +127,8 @@ def extract_fastq_from_dir(folder) {
         meta.status  = 0    // normal (not tumor)
         meta.run     = run
         meta.id      = "${meta.sample}-${meta.run}"
-        read1   = pair[0]
-        read2   = pair[1]
+        def read1    = pair[0]
+        def read2    = pair[1]
 
         return [meta, [read1, read2]]
     }
@@ -145,8 +148,8 @@ def extract_fastq(tsvFile) {
             meta.sample  = row[3]
             meta.run     = row[4]
             meta.id      = "${meta.sample}-${meta.run}"
-            read1   = return_file(row[5])
-            read2   = "null"
+            def read1    = return_file(row[5])
+            def read2    = "null"
             if (has_extension(read1, "fastq.gz") || has_extension(read1, "fq.gz") || has_extension(read1, "fastq") || has_extension(read1, "fq")) {
                 check_number_of_item(row, 7)
                 read2 = return_file(row[6])
