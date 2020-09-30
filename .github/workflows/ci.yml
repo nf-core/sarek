@@ -91,6 +91,7 @@ jobs:
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.markduplicates }} --input data/testdata/tiny/normal --saved_bam_mapped
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.markduplicates }} --input=false --step prepare_recalibration -resume
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.markduplicates }} --input=false --step recalibrate -resume
 
   # germline:
   #   env:

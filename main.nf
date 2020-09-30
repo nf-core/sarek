@@ -377,7 +377,7 @@ workflow {
     if (step == 'mapping') input_reads = input_sample
     else input_reads = Channel.empty()
 
-    // STEP 0.5: QC ON READS
+    // STEP 0.5: QC & TRIM IF SPECIFIED ON READS
 
     QC_TRIM(
         input_reads,
@@ -472,6 +472,8 @@ workflow {
 
     // STEP 4: RECALIBRATING
     bam_applybqsr = bam_markduplicates.join(table_bqsr)
+
+    if (step == 'recalibrate') bam_applybqsr = input_sample
 
     bam_applybqsr = bam_applybqsr.combine(intervals)
 

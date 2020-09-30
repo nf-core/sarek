@@ -48,10 +48,10 @@ workflow MARKDUPLICATES {
 
         // Creating TSV files to restart from this step
         tsv_no_markduplicates.collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { meta ->
-            patient = meta.patient
-            sample  = meta.sample
-            gender  = meta.gender
-            status  = meta.status
+            patient = meta.patient[0]
+            sample  = meta.sample[0]
+            gender  = meta.gender[0]
+            status  = meta.status[0]
             bam   = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.bam"
             bai   = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.bam.bai"
             table = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.recal.table"
@@ -59,10 +59,10 @@ workflow MARKDUPLICATES {
         }
 
         tsv_no_markduplicates.map { meta ->
-            patient = meta.patient
-            sample  = meta.sample
-            gender  = meta.gender
-            status  = meta.status
+            patient = meta.patient[0]
+            sample  = meta.sample[0]
+            gender  = meta.gender[0]
+            status  = meta.status[0]
             bam   = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.bam"
             bai   = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.bam.bai"
             table = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.recal.table"

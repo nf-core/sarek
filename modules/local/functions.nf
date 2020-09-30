@@ -198,15 +198,15 @@ def extract_recal(tsvFile) {
             meta.status  = return_status(row[2].toInteger())
             meta.sample  = row[3]
             meta.id      = meta.sample
-            bam   = return_file(row[4])
-            bai   = return_file(row[5])
-            table = return_file(row[6])
+            def bam      = return_file(row[4])
+            def bai      = return_file(row[5])
+            def table    = return_file(row[6])
 
             if (!has_extension(bam, "bam")) exit 1, "File: ${bam} has the wrong extension. See --help for more information"
             if (!has_extension(bai, "bai")) exit 1, "File: ${bai} has the wrong extension. See --help for more information"
             if (!has_extension(table, "recal.table")) exit 1, "File: ${table} has the wrong extension. See --help for more information"
 
-            return [meta, [bam, bai, table]]
+            return [meta, bam, bai, table]
         }
 }
 
