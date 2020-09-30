@@ -9,6 +9,8 @@ process BWAMEM2_MEM {
                     if (filename.endsWith('.version.txt')) null
                     else filename }
 
+    container "nfcore/sarek:dsl2"
+
     conda (params.conda ? "bioconda::bwa-mem2=2.0 bioconda::samtools=1.10" : null)
 
     input:
