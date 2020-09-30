@@ -267,8 +267,9 @@ include { MERGE_BAM as MERGE_BAM_RECAL  } from './modules/local/process/merge_ba
 ================================================================================
 */
 
-include { BUILD_INDICES } from './modules/local/subworkflow/build_indices'
-include { MAPPING }       from './modules/local/subworkflow/mapping'
+include { BUILD_INDICES }  from './modules/local/subworkflow/build_indices'
+include { MAPPING }        from './modules/local/subworkflow/mapping'
+include { MARKDUPLICATES } from './modules/local/subworkflow/markduplicates'
 
 /*
 ================================================================================
@@ -278,7 +279,6 @@ include { MAPPING }       from './modules/local/subworkflow/mapping'
 
 include { GATK_BASERECALIBRATOR  as BASERECALIBRATOR }      from './modules/nf-core/software/gatk/baserecalibrator'
 include { GATK_GATHERBQSRREPORTS as GATHERBQSRREPORTS }     from './modules/nf-core/software/gatk/gatherbqsrreports'
-include { GATK_MARKDUPLICATES    as MARKDUPLICATES }        from './modules/nf-core/software/gatk/markduplicates'
 include { GATK_APPLYBQSR         as APPLYBQSR }             from './modules/nf-core/software/gatk/applybqsr'
 include { SAMTOOLS_INDEX         as SAMTOOLS_INDEX_RECAL }  from './modules/nf-core/software/samtools/index'
 include { SAMTOOLS_STATS         as SAMTOOLS_STATS }        from './modules/nf-core/software/samtools/stats'
@@ -374,96 +374,42 @@ workflow {
     qc_reports = Channel.empty()
     bam_mapped = Channel.empty()
 
-    if (step == 'mapping') {
+    if (step == 'mapping') input_reads = input_sample
 
-        // STEP 0.5: QC ON READS
+    // STEP 0.5: QC ON READS
 
-        QC_TRIM(
-            input_sample,
-            ('fastqc' in skip_qc),
-            !(params.trim_fastq),
-            params.modules['fastqc'],
-            params.modules['trimgalore']
-        )
-        reads_input = QC_TRIM.out.reads
+    QC_TRIM(
+        input_sample,
+        ('fastqc' in skip_qc),
+        !(params.trim_fastq),
+        params.modules['fastqc'],
+        params.modules['trimgalore']
+    )
+    reads_input = QC_TRIM.out.reads
 
-        qc_reports = qc_reports.mix(
-            QC_TRIM.out.fastqc_html,
-            QC_TRIM.out.fastqc_zip,
-            QC_TRIM.out.trimgalore_html,
-            QC_TRIM.out.trimgalore_log,
-            QC_TRIM.out.trimgalore_zip)
+    qc_reports = qc_reports.mix(
+        QC_TRIM.out.fastqc_html,
+        QC_TRIM.out.fastqc_zip,
+        QC_TRIM.out.trimgalore_html,
+        QC_TRIM.out.trimgalore_log,
+        QC_TRIM.out.trimgalore_zip)
 
-        // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
+    // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
 
-        MAPPING(
-            reads_input,
-            bwa,
-            fasta,
-            fai
-        )
-        bam_mapped = MAPPING.out.bam_mapped
-    }
+    MAPPING(
+        reads_input,
+        bwa,
+        fasta,
+        fai
+    )
+
+    bam_mapped = MAPPING.out.bam_mapped
 
     // STEP 2: MARKING DUPLICATES
 
-    report_markduplicates = Channel.empty()
-    bam_markduplicates    = bam_mapped
-    
-    if (!params.skip_markduplicates) {
-         MARKDUPLICATES(bam_mapped)
-         report_markduplicates = MARKDUPLICATES.out.report
-         bam_markduplicates    = MARKDUPLICATES.out.bam
-         tsv_markduplicates    = MARKDUPLICATES.out.tsv
+    MARKDUPLICATES(bam_mapped)
 
-        // Creating TSV files to restart from this step
-        tsv_markduplicates.collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { meta ->
-            patient = meta.patient
-            sample  = meta.sample
-            gender  = meta.gender
-            status  = meta.status
-            bam   = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.md.bam"
-            bai   = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.md.bam.bai"
-            table = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.recal.table"
-            ["duplicates_marked_${sample}.tsv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\t${table}\n"]
-        }
-
-        tsv_markduplicates.map { meta ->
-            patient = meta.patient
-            sample  = meta.sample
-            gender  = meta.gender
-            status  = meta.status
-            bam   = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.md.bam"
-            bai   = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.md.bam.bai"
-            table = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.recal.table"
-            "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\t${table}\n"
-        }.collectFile(name: 'duplicates_marked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV")
-    } else {
-        tsv_no_markduplicates = bam_markduplicates.map { meta, bam, bai -> [meta] }
-
-        // Creating TSV files to restart from this step
-        tsv_no_markduplicates.collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { meta ->
-            patient = meta.patient
-            sample  = meta.sample
-            gender  = meta.gender
-            status  = meta.status
-            bam   = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.md.bam"
-            bai   = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.md.bam.bai"
-            table = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.recal.table"
-            ["mapped_no_duplicates_marked_${sample}.tsv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\t${table}\n"]
-        }
-
-        tsv_no_markduplicates.map { meta ->
-            patient = meta.patient
-            sample  = meta.sample
-            gender  = meta.gender
-            status  = meta.status
-            bam   = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.md.bam"
-            bai   = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.md.bam.bai"
-            table = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.recal.table"
-            "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\t${table}\n"
-        }.collectFile(name: 'mapped_no_duplicates_marked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV")
-    }
+    bam_markduplicates = MARKDUPLICATES.out.bam
 
     // STEP 3: CREATING RECALIBRATION TABLES
     bam_baserecalibrator = bam_markduplicates.combine(intervals)

@@ -71,6 +71,9 @@ jobs:
     env:
       NXF_ANSI_LOG: false
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        markduplicates: [--skip_markduplicates, '']
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
@@ -86,7 +89,7 @@ jobs:
         run: git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data
       - name: Run germline test
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --input data/testdata/tiny/normal
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.markduplicates }} --input data/testdata/tiny/normal --saved_bam_mapped
 
   # germline:
   #   env:
