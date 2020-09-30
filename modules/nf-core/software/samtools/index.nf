@@ -5,7 +5,7 @@ process SAMTOOLS_INDEX {
 
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: {
-            if (save_bam_mapped) "Preprocessing/${meta.sample}/Mapped/${it}"
+            if (params.save_bam_mapped) "Preprocessing/${meta.sample}/Mapped/${it}"
             else null
         }
 

@@ -46,6 +46,7 @@ include {
     extract_bam;
     extract_fastq;
     extract_fastq_from_dir;
+    extract_recal;
     has_extension
 } from './modules/local/functions'
 
@@ -256,11 +257,8 @@ if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works
 ================================================================================
 */
 
-include { BWA_MEM as BWAMEM1_MEM }        from './modules/local/process/bwa_mem'
-include { BWAMEM2_MEM }                   from './modules/local/process/bwamem2_mem'
 include { GET_SOFTWARE_VERSIONS }         from './modules/local/process/get_software_versions'
 include { OUTPUT_DOCUMENTATION }          from './modules/local/process/output_documentation'
-include { MERGE_BAM as MERGE_BAM_MAPPED } from './modules/local/process/merge_bam'
 include { MERGE_BAM as MERGE_BAM_RECAL  } from './modules/local/process/merge_bam'
 
 /*
@@ -270,6 +268,7 @@ include { MERGE_BAM as MERGE_BAM_RECAL  } from './modules/local/process/merge_ba
 */
 
 include { BUILD_INDICES } from './modules/local/subworkflow/build_indices'
+include { MAPPING }       from './modules/local/subworkflow/mapping'
 
 /*
 ================================================================================
@@ -281,7 +280,6 @@ include { GATK_BASERECALIBRATOR  as BASERECALIBRATOR }      from './modules/nf-c
 include { GATK_GATHERBQSRREPORTS as GATHERBQSRREPORTS }     from './modules/nf-core/software/gatk/gatherbqsrreports'
 include { GATK_MARKDUPLICATES    as MARKDUPLICATES }        from './modules/nf-core/software/gatk/markduplicates'
 include { GATK_APPLYBQSR         as APPLYBQSR }             from './modules/nf-core/software/gatk/applybqsr'
-include { SAMTOOLS_INDEX         as SAMTOOLS_INDEX_MAPPED } from './modules/nf-core/software/samtools/index'
 include { SAMTOOLS_INDEX         as SAMTOOLS_INDEX_RECAL }  from './modules/nf-core/software/samtools/index'
 include { SAMTOOLS_STATS         as SAMTOOLS_STATS }        from './modules/nf-core/software/samtools/stats'
 include { QUALIMAP_BAMQC         as BAMQC }                 from './modules/nf-core/software/qualimap_bamqc'
@@ -373,78 +371,40 @@ workflow {
     ================================================================================
     */
 
-    // STEP 0.5: QC ON READS
+    qc_reports = Channel.empty()
+    bam_mapped = Channel.empty()
 
-    QC_TRIM(
-        input_sample,
-        ('fastqc' in skip_qc),
-        !(params.trim_fastq),
-        params.modules['fastqc'],
-        params.modules['trimgalore']
-    )
+    if (step == 'mapping') {
 
-    reads_input = QC_TRIM.out.reads
+        // STEP 0.5: QC ON READS
 
-    // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
+        QC_TRIM(
+            input_sample,
+            ('fastqc' in skip_qc),
+            !(params.trim_fastq),
+            params.modules['fastqc'],
+            params.modules['trimgalore']
+        )
+        reads_input = QC_TRIM.out.reads
 
-    bam_bwamem1 = Channel.empty()
-    bam_bwamem2 = Channel.empty()
+        qc_reports = qc_reports.mix(
+            QC_TRIM.out.fastqc_html,
+            QC_TRIM.out.fastqc_zip,
+            QC_TRIM.out.trimgalore_html,
+            QC_TRIM.out.trimgalore_log,
+            QC_TRIM.out.trimgalore_zip)
 
-    if (params.aligner == "bwa-mem") {
-        BWAMEM1_MEM(reads_input, bwa, fasta, fai, params.modules['bwa_mem'])
-        bam_bwamem1 = BWAMEM1_MEM.out.bam
-    } else {
-        BWAMEM2_MEM(reads_input, bwa, fasta, fai, params.modules['bwamem2_mem'])
-        bam_bwamem2 = BWAMEM2_MEM.out
+        // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
+
+        MAPPING(
+            reads_input,
+            bwa,
+            fasta,
+            fai
+        )
+        bam_mapped = MAPPING.out.bam_mapped
     }
 
-    bam_bwa = bam_bwamem1.mix(bam_bwamem2)
-
-    bam_bwa.map{ meta, bam ->
-        patient = meta.patient
-        sample  = meta.sample
-        gender  = meta.gender
-        status  = meta.status
-        [patient, sample, gender, status, bam]
-    }.groupTuple(by: [0,1])
-        .branch{
-            single:   it[4].size() == 1
-            multiple: it[4].size() > 1
-        }.set{ bam_bwa_to_sort }
-
-    bam_bwa_single = bam_bwa_to_sort.single.map {
-        patient, sample, gender, status, bam ->
-
-        def meta = [:]
-        meta.patient = patient
-        meta.sample = sample
-        meta.gender = gender[0]
-        meta.status = status[0]
-        meta.id = sample
-
-        [meta, bam[0]]
-    }
-
-    bam_bwa_multiple = bam_bwa_to_sort.multiple.map {
-        patient, sample, gender, status, bam ->
-
-        def meta = [:]
-        meta.patient = patient
-        meta.sample = sample
-        meta.gender = gender[0]
-        meta.status = status[0]
-        meta.id = sample
-
-        [meta, bam]
-    }
-
-    // STEP 1.5: MERGING AND INDEXING BAM FROM MULTIPLE LANES 
-    
-    MERGE_BAM_MAPPED(bam_bwa_multiple)
-    bam_mapped = bam_bwa_single.mix(MERGE_BAM_MAPPED.out.bam)
-    bam_mapped = SAMTOOLS_INDEX_MAPPED(bam_mapped, params.modules['samtools_index_mapped'],
-)
-        
     // STEP 2: MARKING DUPLICATES
 
     report_markduplicates = Channel.empty()
@@ -479,7 +439,7 @@ workflow {
             "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\t${table}\n"
         }.collectFile(name: 'duplicates_marked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV")
     } else {
-        tsv_no_markduplicates = bam_markduplicates.map { meta, bam -> [meta] }
+        tsv_no_markduplicates = bam_markduplicates.map { meta, bam, bai -> [meta] }
 
         // Creating TSV files to restart from this step
         tsv_no_markduplicates.collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { meta ->
@@ -698,15 +658,10 @@ workflow {
 
     MULTIQC(
         GET_SOFTWARE_VERSIONS.out.yml,
-        QC_TRIM.out.fastqc_html.collect().ifEmpty([]),
-        QC_TRIM.out.fastqc_zip.collect().ifEmpty([]),
-        QC_TRIM.out.trimgalore_html.collect().ifEmpty([]),
-        QC_TRIM.out.trimgalore_log.collect().ifEmpty([]),
-        QC_TRIM.out.trimgalore_zip.collect().ifEmpty([]),
         multiqc_config,
         multiqc_custom_config.ifEmpty([]),
-        report_markduplicates.collect().ifEmpty([]),
-        workflow_summary)
+        workflow_summary,
+        qc_reports.collect())
 }
 
 /*
@@ -720,26 +675,6 @@ workflow.onComplete {
     Completion.email(workflow, params, summary, run_name, baseDir, multiqc_report, log)
     Completion.summary(workflow, params, log)
 }
-
-// // Creating a TSV file to restart from this step
-// tsv_bam_indexed.map { idPatient, idSample ->
-//     gender = gender_map[idPatient]
-//     status = status_map[idPatient, idSample]
-//     bam = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam"
-//     bai = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam.bai"
-//     "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"
-// }.collectFile(
-//     name: 'mapped.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
-// )
-
-// tsv_bam_indexed_sample
-//     .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { idPatient, idSample ->
-//         status = status_map[idPatient, idSample]
-//         gender = gender_map[idPatient]
-//         bam = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam"
-//         bai = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam.bai"
-//         ["mapped_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
-// }
 
 // /*
 // ================================================================================

@@ -188,20 +188,23 @@ def extract_recal(tsvFile) {
         .splitCsv(sep: '\t')
         .map { row ->
             check_number_of_item(row, 7)
-            def idPatient  = row[0]
-            def gender     = row[1]
-            def status     = return_status(row[2].toInteger())
-            def idSample   = row[3]
-            def bamFile    = return_file(row[4])
-            def baiFile    = return_file(row[5])
-            def recalTable = return_file(row[6])
+            def meta = [:]
 
-            if (!has_extension(bamFile, "bam")) exit 1, "File: ${bamFile} has the wrong extension. See --help for more information"
-            if (!has_extension(baiFile, "bai")) exit 1, "File: ${baiFile} has the wrong extension. See --help for more information"
-            if (!has_extension(recalTable, "recal.table")) exit 1, "File: ${recalTable} has the wrong extension. See --help for more information"
+            meta.patient = row[0]
+            meta.gender  = row[1]
+            meta.status  = return_status(row[2].toInteger())
+            meta.sample  = row[3]
+            meta.id      = meta.sample
+            bam   = return_file(row[4])
+            bai   = return_file(row[5])
+            table = return_file(row[6])
 
-            [idPatient, gender, status, idSample, bamFile, baiFile, recalTable]
-    }
+            if (!has_extension(bam, "bam")) exit 1, "File: ${bam} has the wrong extension. See --help for more information"
+            if (!has_extension(bai, "bai")) exit 1, "File: ${bai} has the wrong extension. See --help for more information"
+            if (!has_extension(table, "recal.table")) exit 1, "File: ${table} has the wrong extension. See --help for more information"
+
+            return [meta, [bam, bai, table]]
+        }
 }
 
 // Parse first line of a FASTQ file, return the flowcell id and lane number.

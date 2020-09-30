@@ -14,15 +14,10 @@ process MULTIQC {
 
     input:
         path software_versions
-        path fastqc_html
-        path fastqc_zip
-        path trim_galore_html
-        path trim_galore_log
-        path trim_galore_zip
         path multiqc_config
         path multiqc_custom_config
-        path report_markduplicates
         val workflow_summary
+        path qc_reports
 
     output:
         path "*multiqc_report.html"
