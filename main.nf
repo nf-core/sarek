@@ -267,9 +267,10 @@ include { MERGE_BAM as MERGE_BAM_RECAL  } from './modules/local/process/merge_ba
 ================================================================================
 */
 
-include { BUILD_INDICES }  from './modules/local/subworkflow/build_indices'
-include { MAPPING }        from './modules/local/subworkflow/mapping'
-include { MARKDUPLICATES } from './modules/local/subworkflow/markduplicates'
+include { BUILD_INDICES }         from './modules/local/subworkflow/build_indices'
+include { MAPPING }               from './modules/local/subworkflow/mapping'
+include { MARKDUPLICATES }        from './modules/local/subworkflow/markduplicates'
+include { PREPARE_RECALIBRATION } from './modules/local/subworkflow/prepare_recalibration'
 
 /*
 ================================================================================
@@ -415,60 +416,10 @@ workflow {
     if (step == 'preparerecalibration') bam_markduplicates = input_sample
 
     // STEP 3: CREATING RECALIBRATION TABLES
-    bam_baserecalibrator = bam_markduplicates.combine(intervals)
-    BASERECALIBRATOR(bam_baserecalibrator, dbsnp, dbsnp_tbi, dict, fai, fasta, known_indels, known_indels_tbi)
-    table_bqsr = BASERECALIBRATOR.out.report
-    tsv_bqsr   = BASERECALIBRATOR.out.tsv
 
-    // STEP 3.5: MERGING RECALIBRATION TABLES
-    if (!params.no_intervals) {
-        BASERECALIBRATOR.out.report.map{ meta, table ->
-            patient = meta.patient
-            sample  = meta.sample
-            gender  = meta.gender
-            status  = meta.status
-            [patient, sample, gender, status, table]
-        }.groupTuple(by: [0,1]).set{ recaltable }
+    PREPARE_RECALIBRATION(bam_markduplicates, intervals, dbsnp, dbsnp_tbi, dict, fai, fasta, known_indels, known_indels_tbi)
 
-        recaltable = recaltable.map {
-            patient, sample, gender, status, recal ->
-
-            def meta = [:]
-            meta.patient = patient
-            meta.sample = sample
-            meta.gender = gender[0]
-            meta.status = status[0]
-            meta.id = sample
-
-            [meta, recal]
-        }
-
-        GATHERBQSRREPORTS(recaltable)
-        table_bqsr = GATHERBQSRREPORTS.out.table
-        tsv_bqsr   = GATHERBQSRREPORTS.out.tsv
-
-    }
-
-    // Creating TSV files to restart from this step
-    tsv_bqsr.collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { meta ->
-        patient = meta.patient
-        sample  = meta.sample
-        gender  = meta.gender
-        status  = meta.status
-        bam = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.md.bam"
-        bai = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.md.bam.bai"
-        ["duplicates_marked_no_table_${sample}.tsv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"]
-    }
-
-    tsv_bqsr.map { meta ->
-        patient = meta.patient
-        sample  = meta.sample
-        gender  = meta.gender
-        status  = meta.status
-        bam = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.md.bam"
-        bai = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.md.bam.bai"
-        "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"
-    }.collectFile(name: 'duplicates_marked_no_table.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV")
+    table_bqsr = PREPARE_RECALIBRATION.out.table_bqsr
 
     // STEP 4: RECALIBRATING
     bam_applybqsr = bam_markduplicates.join(table_bqsr)
