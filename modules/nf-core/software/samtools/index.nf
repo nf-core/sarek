@@ -4,10 +4,10 @@ process SAMTOOLS_INDEX {
     tag "${meta.id}"
 
     publishDir params.outdir, mode: params.publish_dir_mode,
-        saveAs: {
-            if (params.save_bam_mapped) "Preprocessing/${meta.sample}/Mapped/${it}"
-            else null
-        }
+        saveAs: { filename ->
+                    if (options.publish_results == "none") null
+                    else if (filename.endsWith('.version.txt')) null
+                    else "${options.publish_dir_up}/${meta.sample}/${options.publish_dir_down}/${filename}" }
 
     container "quay.io/biocontainers/samtools:1.10--h2e538c0_3"
 
@@ -18,13 +18,13 @@ process SAMTOOLS_INDEX {
         val options
 
     output:
-        tuple val(meta), path("${prefix}.bam"), path("*.bai")
+        tuple val(meta), path("${name}.bam"), path("*.bai")
 
     script:
-    prefix = options.suffix ? "${meta.id}.${options.suffix}" : "${meta.id}"
+    name = options.suffix ? "${meta.id}.${options.suffix}" : "${meta.id}"
     """
-    [ ! -f  ${prefix}.bam ] && ln -s ${bam} ${prefix}.bam
+    [ ! -f  ${name}.bam ] && ln -s ${bam} ${name}.bam
 
-    samtools index ${prefix}.bam
+    samtools index ${name}.bam
     """
 }
