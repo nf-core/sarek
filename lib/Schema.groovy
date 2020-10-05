@@ -82,9 +82,8 @@ class JSON {
         def Map summary = [:]
         if (workflow.revision) summary['Pipeline Release'] = workflow.revision
         summary['Run Name']         = run_name ?: workflow.runName
-        summary['Max Resources']    = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
-        if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
-
+        summary['Max Resources']    = "${params.max_memory} memory, ${params.max_cpus} cpus, ${params.max_time} time per job"
+        if (workflow.containerEngine) summary['Container'] = "${workflow.containerEngine} - ${workflow.container}"
         summary['Input']             = params.input
         summary['Step']              = step
         summary['Genome']            = params.genome
