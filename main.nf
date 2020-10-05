@@ -3730,10 +3730,11 @@ def extractFastqFromDir(pattern) {
                 path2 = file(path1.toString().replace('_R1_', '_R2_'))
                 if (!path2.exists()) error "Path '${path2}' not found"
                 (flowcell, lane) = flowcellLaneFromFastq(path1)
+                String random = org.apache.commons.lang.RandomStringUtils.random(8, true, true) // random string to avoid duplicate names
                 patient = sampleId
                 gender = 'ZZ'  // unused
                 status = 0  // normal (not tumor)
-                rgId = "${flowcell}.${sampleId}.${lane}"
+                rgId = "${flowcell}.${sampleId}.${lane}.${random}"
                 result = [patient, gender, status, sampleId, rgId, path1, path2]
                 fastq.bind(result)
             }
