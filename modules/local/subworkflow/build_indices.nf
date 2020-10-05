@@ -19,13 +19,13 @@ include { SAMTOOLS_FAIDX }                             from '../../nf-core/softw
 
 workflow BUILD_INDICES{
     take:
-        dbsnp
-        fasta
-        germline_resource
-        known_indels
-        pon
-        step
-        tools
+        dbsnp             // channel: [optional]  dbsnp
+        fasta             // channel: [mandatory] fasta
+        germline_resource // channel: [optional]  germline_resource
+        known_indels      // channel: [optional]  known_indels
+        pon               // channel: [optional]  pon
+        step              //   value: [mandatory] starting step
+        tools             //    list: [optional]  tools to run
 
     main:
 
