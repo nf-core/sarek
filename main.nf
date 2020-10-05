@@ -174,6 +174,8 @@ if (tsv_path) {
 ================================================================================
 */
 
+modules = params.modules
+
 // Initialize each params in params.genomes, catch the command line first if it was defined
 params.ac_loci                 = params.genome ? params.genomes[params.genome].ac_loci                 ?: false : false
 params.ac_loci_gc              = params.genome ? params.genomes[params.genome].ac_loci_gc              ?: false : false
@@ -271,6 +273,7 @@ include { BUILD_INDICES }         from './modules/local/subworkflow/build_indice
 include { MAPPING }               from './modules/local/subworkflow/mapping'
 include { MARKDUPLICATES }        from './modules/local/subworkflow/markduplicates'
 include { PREPARE_RECALIBRATION } from './modules/local/subworkflow/prepare_recalibration'
+include { RECALIBRATE }           from './modules/local/subworkflow/recalibrate'
 
 /*
 ================================================================================
@@ -278,12 +281,6 @@ include { PREPARE_RECALIBRATION } from './modules/local/subworkflow/prepare_reca
 ================================================================================
 */
 
-include { GATK_BASERECALIBRATOR  as BASERECALIBRATOR }      from './modules/nf-core/software/gatk/baserecalibrator'
-include { GATK_GATHERBQSRREPORTS as GATHERBQSRREPORTS }     from './modules/nf-core/software/gatk/gatherbqsrreports'
-include { GATK_APPLYBQSR         as APPLYBQSR }             from './modules/nf-core/software/gatk/applybqsr'
-include { SAMTOOLS_INDEX         as SAMTOOLS_INDEX_RECAL }  from './modules/nf-core/software/samtools/index'
-include { SAMTOOLS_STATS         as SAMTOOLS_STATS }        from './modules/nf-core/software/samtools/stats'
-include { QUALIMAP_BAMQC         as BAMQC }                 from './modules/nf-core/software/qualimap_bamqc'
 include { GATK_HAPLOTYPECALLER   as HAPLOTYPECALLER }       from './modules/nf-core/software/gatk/haplotypecaller'
 include { GATK_GENOTYPEVCF       as GENOTYPEVCF }           from './modules/nf-core/software/gatk/genotypegvcf'
 include { STRELKA                as STRELKA }               from './modules/nf-core/software/strelka'
@@ -372,21 +369,24 @@ workflow {
     ================================================================================
     */
 
-    qc_reports  = Channel.empty()
-    bam_mapped  = Channel.empty()
+    bam_mapped          = Channel.empty()
+    bam_mapped_qc       = Channel.empty()
+    bam_recalibrated_qc = Channel.empty()
+    input_reads         = Channel.empty()
+    qc_reports          = Channel.empty()
 
-    if (step == 'mapping') input_reads = input_sample
-    else input_reads = Channel.empty()
-
-    // STEP 0.5: QC & TRIM IF SPECIFIED ON READS
+    // STEP 0: QC & TRIM
+    // --skip_qc fastqc to skip fastqc
+    // trim only run when --trim_fastq is specified
+    // and have the corresponding options set up
 
     QC_TRIM(
-        input_reads,
-        ('fastqc' in skip_qc),
+        input_sample,
+        ('fastqc' in skip_qc || step != "mapping"),
         !(params.trim_fastq),
-        params.modules['fastqc'],
-        params.modules['trimgalore']
-    )
+        modules['fastqc'],
+        modules['trimgalore'])
+
     reads_input = QC_TRIM.out.reads
 
     qc_reports = qc_reports.mix(
@@ -396,20 +396,32 @@ workflow {
         QC_TRIM.out.trimgalore_log,
         QC_TRIM.out.trimgalore_zip)
 
-    // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
+    // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA-MEM
+
+    if (params.save_bam_mapped) modules['samtools_index_mapping']['publish_results'] = "all"
 
     MAPPING(
+        step,
         reads_input,
+        target_bed,
         bwa,
         fasta,
-        fai
-    )
+        fai,
+        modules['samtools_index_mapping'],
+        modules['merge_bam_mapping'],
+        ('bamqc' in skip_qc),
+        ('samtools' in skip_qc))
 
-    bam_mapped = MAPPING.out.bam_mapped
+    bam_mapped    = MAPPING.out.bam
+    bam_mapped_qc = MAPPING.out.qc
+
+    qc_reports = qc_reports.mix(bam_mapped_qc)
 
     // STEP 2: MARKING DUPLICATES
 
-    MARKDUPLICATES(bam_mapped)
+    MARKDUPLICATES(
+        step,
+        bam_mapped)
 
     bam_markduplicates = MARKDUPLICATES.out.bam
 
@@ -417,7 +429,17 @@ workflow {
 
     // STEP 3: CREATING RECALIBRATION TABLES
 
-    PREPARE_RECALIBRATION(bam_markduplicates, intervals, dbsnp, dbsnp_tbi, dict, fai, fasta, known_indels, known_indels_tbi)
+    PREPARE_RECALIBRATION(
+        step,
+        bam_markduplicates,
+        intervals,
+        dbsnp,
+        dbsnp_tbi,
+        dict,
+        fai,
+        fasta,
+        known_indels,
+        known_indels_tbi)
 
     table_bqsr = PREPARE_RECALIBRATION.out.table_bqsr
 
@@ -426,83 +448,36 @@ workflow {
 
     if (step == 'recalibrate') bam_applybqsr = input_sample
 
-    bam_applybqsr = bam_applybqsr.combine(intervals)
+    RECALIBRATE(
+        step,
+        bam_applybqsr,
+        intervals,
+        target_bed,
+        dict,
+        fasta,
+        fai,
+        modules['samtools_index_recalibrate'],
+        modules['merge_bam_recalibrate'],
+        ('bamqc' in skip_qc),
+        ('samtools' in skip_qc))
 
-    APPLYBQSR(bam_applybqsr, dict, fasta, fai)
+    bam_recalibrated    = RECALIBRATE.out.bam
+    bam_recalibrated_qc = RECALIBRATE.out.qc
 
-    bam_recalibrated = APPLYBQSR.out.bam
-    tsv_recalibrated = APPLYBQSR.out.tsv
+    qc_reports = qc_reports.mix(bam_recalibrated_qc)
 
-    // STEP 4.5: MERGING AND INDEXING THE RECALIBRATED BAM FILES
-    if (!params.no_intervals) {
-        APPLYBQSR.out.bam.map{ meta, bam -> //, bai ->
-            patient = meta.patient
-            sample  = meta.sample
-            gender  = meta.gender
-            status  = meta.status
-            [patient, sample, gender, status, bam] //, bai]
-        }.groupTuple(by: [0,1]).set{ bam_recal_to_merge }
+    if (step == 'variantcalling') bam_variant_calling = input_sample
 
-        bam_recal_to_merge = bam_recal_to_merge.map {
-            patient, sample, gender, status, bam -> //, bai ->
-
-            def meta = [:]
-            meta.patient = patient
-            meta.sample = sample
-            meta.gender = gender[0]
-            meta.status = status[0]
-            meta.id = sample
-
-            [meta, bam]
-        }
-
-        MERGE_BAM_RECAL(bam_recal_to_merge)
-        bam_recalibrated = MERGE_BAM_RECAL.out.bam
-        tsv_recalibrated = MERGE_BAM_RECAL.out.tsv
-    }
-    //TODO: set bam_recalibrated with all these steps
-    // // When using sentieon for mapping, Channel bam_recalibrated is bam_sentieon_recal
-    // if (params.sentieon && step == 'mapping') bam_recalibrated = bam_sentieon_recal
-
-    // // When no knownIndels for mapping, Channel bam_recalibrated is bam_duplicates_marked
-    // if (!params.known_indels && step == 'mapping') bam_recalibrated = bam_duplicates_marked
-
-    // // When starting with variant calling, Channel bam_recalibrated is input_sample
-    // if (step == 'variantcalling') bam_recalibrated = input_sample
-    // Creating TSV files to restart from this step
-    tsv_recalibrated.collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { meta ->
-        patient = meta.patient
-        sample  = meta.sample
-        gender  = meta.gender
-        status  = meta.status
-        bam = "${params.outdir}/Preprocessing/${sample}/Recalibrated/${sample}.md.bam"
-        bai = "${params.outdir}/Preprocessing/${sample}/Recalibrated/${sample}.md.bam.bai"
-        ["recalibrated_${sample}.tsv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"]
-    }
-
-    tsv_recalibrated.map { meta ->
-        patient = meta.patient
-        sample  = meta.sample
-        gender  = meta.gender
-        status  = meta.status
-        bam = "${params.outdir}/Preprocessing/${sample}/Recalibrated/${sample}.md.bam"
-        bai = "${params.outdir}/Preprocessing/${sample}/Recalibrated/${sample}.md.bam.bai"
-        "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"
-    }.collectFile(name: 'recalibrated.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV")
-
-    // STEP 5: QC
-    if (!'samtools' in skip_qc) SAMTOOLS_STATS(bam_bwa.mix(recal))
-    if (!'bamqc' in skip_qc) BAMQC(bam_bwa.mix(recal), target_bed)
+    bam_variant_calling = bam_recalibrated
 
     /*
     ================================================================================
                                 GERMLINE VARIANT CALLING
     ================================================================================
     */
-    //TODO double check whether the indexing has to be repeated here. there is a bai file somewhere up at ApplyBQSR
-    bam_recalibrated_indexed_variant_calling = SAMTOOLS_INDEX_RECAL(bam_recalibrated, params.modules['samtools_index_mapped'],)
+
     if ('haplotypecaller' in tools){
-        bam_haplotypecaller = bam_recalibrated_indexed_variant_calling.combine(intervals)
+        bam_haplotypecaller = bam_variant_calling.combine(intervals)
 
         // STEP GATK HAPLOTYPECALLER.1
 
@@ -531,7 +506,7 @@ workflow {
     }
 
     if ('strelka' in tools) {
-        STRELKA(bam_recalibrated_indexed_variant_calling, fasta, fai, target_bed, params.modules['strelka'])
+        STRELKA(bam_variant_calling, fasta, fai, target_bed, modules['strelka'])
     }
  
     /*
