@@ -9,13 +9,15 @@ process MERGE_BAM {
 
     input:
         tuple val(meta), path(bam)
+        val options
 
     output:
-        tuple val(meta), path("${meta.sample}.bam"), emit: bam
-        val meta,                                    emit: tsv
+        tuple val(meta), path("${name}.bam"), emit: bam
+        val meta,                               emit: tsv
 
     script:
+    name = options.suffix ? "${meta.id}.${options.suffix}" : "${meta.id}"
     """
-    samtools merge --threads ${task.cpus} ${meta.sample}.bam ${bam}
+    samtools merge --threads ${task.cpus} ${name}.bam ${bam}
     """
 }
