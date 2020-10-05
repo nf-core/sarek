@@ -6,6 +6,10 @@ process QUALIMAP_BAMQC {
 
     publishDir "${params.outdir}/Reports/${meta.id}/bamQC", mode: params.publish_dir_mode
 
+    container "quay.io/biocontainers/qualimap:2.2.2d--1"
+
+    conda (params.conda ? "bioconda::qualimap=2.2.2d" : null)
+
     input:
          tuple val(meta), path(bam)
          path(target_bed)
