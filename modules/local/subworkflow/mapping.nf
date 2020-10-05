@@ -13,16 +13,17 @@ include { SAMTOOLS_STATS }         from '../../nf-core/software/samtools/stats'
 
 workflow MAPPING {
     take:
-        step           //   value: [mandatory] starting step
-        input_sample   // channel: [mandatory] input_sample
-        target_bed     // channel: [optional]  target_bed
-        bwa            // channel: [mandatory] bwa
-        fasta          // channel: [mandatory] fasta
-        fai            // channel: [mandatory] fai
-        samtools_opts  //     map: options for SAMTOOLS_INDEX module
-        merge_bam_opts //     map: options for MERGE_BAM module
-        skip_bamqc     // boolean: true/false
-        skip_samtools  // boolean: true/false
+        step            //   value: [mandatory] starting step
+        input_sample    // channel: [mandatory] input_sample
+        target_bed      // channel: [optional]  target_bed
+        bwa             // channel: [mandatory] bwa
+        fasta           // channel: [mandatory] fasta
+        fai             // channel: [mandatory] fai
+        samtools_opts   //     map: options for SAMTOOLS_INDEX module
+        merge_bam_opts  //     map: options for MERGE_BAM module
+        skip_bamqc      // boolean: true/false
+        skip_samtools   // boolean: true/false
+        save_bam_mapped // boolean: true/false
 
     main:
 
@@ -104,8 +105,8 @@ workflow MAPPING {
 
         bam_reports = samtools_stats.mix(qualimap_bamqc)
 
-        if (params.save_bam_mapped) {
-            tsv_bam_mapped = bam_mapped.map { meta, bam, bai -> [meta] }
+        if (save_bam_mapped) {
+            tsv_bam_mapped = bam_mapped.map { meta, bam -> [meta] }
             // Creating TSV files to restart from this step
             tsv_bam_mapped.collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { meta ->
                 patient = meta.patient[0]

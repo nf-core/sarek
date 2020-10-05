@@ -398,7 +398,7 @@ workflow {
 
     // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA-MEM
 
-    if (params.save_bam_mapped) modules['samtools_index_mapping']['publish_results'] = "all"
+    if (save_bam_mapped) modules['samtools_index_mapping'].publish_results = "all"
 
     MAPPING(
         step,
@@ -410,7 +410,8 @@ workflow {
         modules['samtools_index_mapping'],
         modules['merge_bam_mapping'],
         ('bamqc' in skip_qc),
-        ('samtools' in skip_qc))
+        ('samtools' in skip_qc),
+        save_bam_mapped)
 
     bam_mapped    = MAPPING.out.bam
     bam_mapped_qc = MAPPING.out.qc
