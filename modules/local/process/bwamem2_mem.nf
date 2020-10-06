@@ -9,7 +9,7 @@ process BWAMEM2_MEM {
                     if (filename.endsWith('.version.txt')) null
                     else filename }
 
-    container "nfcore/sarek:dsl2"
+    container "quay.io/biocontainers/mulled-v2-e5d375990341c5aef3c9aff74f96f66f65375ef6:876eb6f1d38fbf578296ea94e5aede4e317939e7-0"
 
     conda (params.conda ? "bioconda::bwa-mem2=2.0 bioconda::samtools=1.10" : null)
 
