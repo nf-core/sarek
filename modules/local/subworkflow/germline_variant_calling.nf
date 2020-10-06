@@ -6,6 +6,8 @@
 
 include { GATK_HAPLOTYPECALLER as HAPLOTYPECALLER } from '../../nf-core/software/gatk/haplotypecaller'
 include { GATK_GENOTYPEGVCF as GENOTYPEGVCF }       from '../../nf-core/software/gatk/genotypegvcf'
+include { CONCAT_VCF as CONCAT_GVCF;
+          CONCAT_VCF as CONCAT_HAPLOTYPECALLER}     from '../process/concat_vcf'
 
 
 workflow GERMLINE_VARIANT_CALLING {
@@ -14,10 +16,12 @@ workflow GERMLINE_VARIANT_CALLING {
         intervals           // channel: [mandatory] intervals
         tools               //   list:  [mandatory] list of tools
         target_bed          // channel: [optional]  target_bed
+        dict                // channel: [mandatory] dict
         dbsnp               // channel: [mandatory] dbsnp
         dbsnp_tbi           // channel: [mandatory] dbsnp_tbi
         fasta               // channel: [mandatory] fasta
         fai                 // channel: [mandatory] fai
+        modules             //     map: [mandatory] maps for modules
 
     main:
 
@@ -36,24 +40,64 @@ workflow GERMLINE_VARIANT_CALLING {
             fasta,
             fai)
 
+        haplotypecallergvcf = HAPLOTYPECALLER.out.gvcf.map{ meta, vcf ->
+            patient = meta.patient
+            sample  = meta.sample
+            gender  = meta.gender
+            status  = meta.status
+            [ patient, sample, gender, status, vcf] 
+        }.groupTuple(by: [0,1])
+
+        haplotypecallergvcf = haplotypecallergvcf.map { patient, sample, gender, status, vcf ->
+            def meta = [:]
+            meta.patient = patient
+            meta.sample  = sample
+            meta.gender  = gender[0]
+            meta.status  = status[0]
+            meta.id      = meta.sample
+            [ meta, vcf ]
+        }
+
+        CONCAT_GVCF(
+            haplotypecallergvcf,
+            fai,
+            target_bed,
+            modules['concat_vcf_haplotypecallergvcf'])
    
         // STEP GATK HAPLOTYPECALLER.2
+
         GENOTYPEGVCF(
-            HAPLOTYPECALLER.out.gvcfGenotypeGVCFs,
+            HAPLOTYPECALLER.out.interval_gvcf,
             dbsnp,
             dbsnp_tbi,
             dict,
             fasta,
             fai)
 
-        GENOTYPEGVCF.out.map{ name, meta, vcf -> 
+        haplotypecallervcf = GENOTYPEGVCF.out.map{ meta, vcf ->
             patient = meta.patient
             sample  = meta.sample
             gender  = meta.gender
             status  = meta.status
-            [name, patient, sample, gender, status, vcf] 
-        }.groupTuple(by: [0,1,2,])
-         .set{ vcfGenotypeGVCFs }
+            [ patient, sample, gender, status, vcf] 
+        }.groupTuple(by: [0,1])
+
+        haplotypecallervcf = haplotypecallervcf.map { patient, sample, gender, status, vcf ->
+            def meta = [:]
+            meta.patient = patient
+            meta.sample  = sample
+            meta.gender  = gender[0]
+            meta.status  = status[0]
+            meta.id      = meta.sample
+            [ meta, vcf ]
+        }
+
+        CONCAT_HAPLOTYPECALLER(
+            haplotypecallervcf,
+            fai,
+            target_bed,
+            modules['concat_vcf_haplotypecaller'])
+
     }
 
     emit:

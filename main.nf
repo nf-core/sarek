@@ -485,14 +485,16 @@ workflow {
         intervals,
         tools,
         target_bed,
+        dict,
         dbsnp,
         dbsnp_tbi,
         fasta,
-        fai)
+        fai,
+        modules)
 
-    if ('strelka' in tools) {
-        STRELKA(bam_variant_calling, fasta, fai, target_bed, modules['strelka'])
-    }
+    // if ('strelka' in tools) {
+    //     STRELKA(bam_variant_calling, fasta, fai, target_bed, modules['strelka'])
+    // }
  
     /*
     ================================================================================

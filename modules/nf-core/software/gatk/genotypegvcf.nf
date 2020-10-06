@@ -14,7 +14,7 @@ process GATK_GENOTYPEGVCF {
         path fai
 
     output:
-     tuple val("HaplotypeCaller"), val(meta), path("${interval.baseName}_${meta.id}.vcf")
+        tuple val(meta), path("${interval.baseName}_${meta.id}.vcf")
 
     script:
     // Using -L is important for speed and we have to index the interval files also

@@ -163,33 +163,34 @@ jobs:
   #     - name: Run ${{ matrix.profile }} test
   #       run: nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker
 
-  # tools:
-  #   env:
-  #     NXF_ANSI_LOG: false
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       tool: [Haplotypecaller, Freebayes, Manta, mpileup, MSIsensor, Strelka, TIDDIT]
-  #       intervals: [--no_intervals, '']
-  #       exclude:
-  #         - tool: Manta
-  #           intervals: --no_intervals
-  #         - tool: MSIsensor
-  #           intervals: --no_intervals
-  #         - tool: Strelka
-  #           intervals: --no_intervals
-  #         - tool: TIDDIT
-  #           intervals: --no_intervals
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Install Nextflow
-  #       run: |
-  #         wget -qO- get.nextflow.io | bash
-  #         sudo mv nextflow /usr/local/bin/
-  #       env:
-  #         # Only check Nextflow pipeline minimum version
-  #         NXF_VER: '20.07.1'
-  #     - name: Pull docker image
-  #       run: docker pull nfcore/sarek:dsl2
-  #     - name: Run ${{ matrix.tool }} test
-  #       run: nextflow run ${GITHUB_WORKSPACE} -profile test_tool,docker --tools ${{ matrix.tool }} ${{ matrix.intervals }}
+  tools:
+    env:
+      NXF_ANSI_LOG: false
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # tool: [Haplotypecaller, Freebayes, Manta, mpileup, MSIsensor, Strelka, TIDDIT]
+        tool: [Haplotypecaller]
+        intervals: [--no_intervals, '']
+        # exclude:
+        #   - tool: Manta
+        #     intervals: --no_intervals
+        #   - tool: MSIsensor
+        #     intervals: --no_intervals
+        #   - tool: Strelka
+        #     intervals: --no_intervals
+        #   - tool: TIDDIT
+        #     intervals: --no_intervals
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+        env:
+          # Only check Nextflow pipeline minimum version
+          NXF_VER: '20.07.1'
+      - name: Pull docker image
+        run: docker pull nfcore/sarek:dsl2
+      - name: Run ${{ matrix.tool }} test
+        run: nextflow run ${GITHUB_WORKSPACE} -profile test_tool,docker --tools ${{ matrix.tool }} ${{ matrix.intervals }}
