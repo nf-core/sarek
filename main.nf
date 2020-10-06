@@ -269,11 +269,11 @@ include { MERGE_BAM as MERGE_BAM_RECAL  } from './modules/local/process/merge_ba
 ================================================================================
 */
 
-include { BUILD_INDICES }         from './modules/local/subworkflow/build_indices'
-include { MAPPING }               from './modules/local/subworkflow/mapping'
-include { MARKDUPLICATES }        from './modules/local/subworkflow/markduplicates'
-include { PREPARE_RECALIBRATION } from './modules/local/subworkflow/prepare_recalibration'
-include { RECALIBRATE }           from './modules/local/subworkflow/recalibrate'
+include { BUILD_INDICES }                 from './modules/local/subworkflow/build_indices'
+include { MAPPING }                       from './modules/local/subworkflow/mapping'
+include { MARKDUPLICATES }                from './modules/local/subworkflow/markduplicates'
+include { PREPARE_RECALIBRATION }         from './modules/local/subworkflow/prepare_recalibration'
+include { RECALIBRATE }                   from './modules/local/subworkflow/recalibrate'
 
 /*
 ================================================================================
@@ -281,10 +281,7 @@ include { RECALIBRATE }           from './modules/local/subworkflow/recalibrate'
 ================================================================================
 */
 
-include { GATK_HAPLOTYPECALLER   as HAPLOTYPECALLER }       from './modules/nf-core/software/gatk/haplotypecaller'
-include { GATK_GENOTYPEVCF       as GENOTYPEVCF }           from './modules/nf-core/software/gatk/genotypegvcf'
-include { STRELKA                as STRELKA }               from './modules/nf-core/software/strelka'
-include { MULTIQC }                                         from './modules/nf-core/software/multiqc'
+include { MULTIQC }                       from './modules/nf-core/software/multiqc'
 
 /*
 ================================================================================
@@ -292,7 +289,7 @@ include { MULTIQC }                                         from './modules/nf-c
 ================================================================================
 */
 
-include { QC_TRIM } from './modules/nf-core/subworkflow/qc_trim'
+include { QC_TRIM }                       from './modules/nf-core/subworkflow/qc_trim'
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
@@ -376,9 +373,9 @@ workflow {
     qc_reports          = Channel.empty()
 
     // STEP 0: QC & TRIM
-    // --skip_qc fastqc to skip fastqc
-    // trim only run when --trim_fastq is specified
-    // and have the corresponding options set up
+    // `--skip_qc fastqc` to skip fastqc
+    // trim only with `--trim_fastq`
+    // addtional options to be set up
 
     QC_TRIM(
         input_sample,

@@ -180,7 +180,6 @@ jobs:
   #           intervals: --no_intervals
   #         - tool: TIDDIT
   #           intervals: --no_intervals
-
   #   steps:
   #     - uses: actions/checkout@v2
   #     - name: Install Nextflow
