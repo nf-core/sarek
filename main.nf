@@ -272,6 +272,7 @@ include { MAPPING }                       from './modules/local/subworkflow/mapp
 include { MARKDUPLICATES }                from './modules/local/subworkflow/markduplicates'
 include { PREPARE_RECALIBRATION }         from './modules/local/subworkflow/prepare_recalibration'
 include { RECALIBRATE }                   from './modules/local/subworkflow/recalibrate'
+include { GERMLINE_VARIANT_CALLING }      from './modules/local/subworkflow/germline_variant_calling'
 
 /*
 ================================================================================
@@ -479,34 +480,15 @@ workflow {
     ================================================================================
     */
 
-    if ('haplotypecaller' in tools){
-        bam_haplotypecaller = bam_variant_calling.combine(intervals)
-
-        // STEP GATK HAPLOTYPECALLER.1
-
-        HAPLOTYPECALLER(bam_haplotypecaller, dbsnp,
-                                             dbsnp_tbi,
-                                             dict,
-                                             fasta,
-                                             fai)
-
-   
-        // STEP GATK HAPLOTYPECALLER.2
-        GENOTYPEVCF(HAPLOTYPECALLER.out.gvcfGenotypeGVCFs, dbsnp,
-                                             dbsnp_tbi,
-                                             dict,
-                                             fasta,
-                                             fai)
-
-        GENOTYPEVCF.out.map{name, meta, vcf -> 
-            patient = meta.patient
-            sample  = meta.sample
-            gender  = meta.gender
-            status  = meta.status
-            [name, patient, sample, gender, status, vcf] 
-        }.groupTuple(by: [0,1,2,])
-         .set{ vcfGenotypeGVCFs }
-    }
+    GERMLINE_VARIANT_CALLING(
+        bam_variant_calling,
+        intervals,
+        tools,
+        target_bed,
+        dbsnp,
+        dbsnp_tbi,
+        fasta,
+        fai)
 
     if ('strelka' in tools) {
         STRELKA(bam_variant_calling, fasta, fai, target_bed, modules['strelka'])

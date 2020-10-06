@@ -1,4 +1,4 @@
-process GATK_GENOTYPEVCF {
+process GATK_GENOTYPEGVCF {
     tag "${meta.id}-${interval.baseName}"
 
     container "quay.io/biocontainers/gatk4-spark:4.1.8.1--0"
