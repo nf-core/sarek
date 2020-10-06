@@ -255,17 +255,15 @@ if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works
 
 /*
 ================================================================================
-                         INCLUDE LOCAL PIPELINE MODULES
+                              INCLUDE LOCAL MODULES
 ================================================================================
 */
 
 include { GET_SOFTWARE_VERSIONS }         from './modules/local/process/get_software_versions'
-include { OUTPUT_DOCUMENTATION }          from './modules/local/process/output_documentation'
-include { MERGE_BAM as MERGE_BAM_RECAL  } from './modules/local/process/merge_bam'
 
 /*
 ================================================================================
-                       INCLUDE LOCAL PIPELINE SUBWORKFLOWS
+                           INCLUDE LOCAL SUBWORKFLOWS
 ================================================================================
 */
 
@@ -277,7 +275,7 @@ include { RECALIBRATE }                   from './modules/local/subworkflow/reca
 
 /*
 ================================================================================
-                        INCLUDE nf-core PIPELINE MODULES
+                             INCLUDE nf-core MODULES
 ================================================================================
 */
 
@@ -285,7 +283,7 @@ include { MULTIQC }                       from './modules/nf-core/software/multi
 
 /*
 ================================================================================
-                      INCLUDE nf-core PIPELINE SUBWORKFLOWS
+                          INCLUDE nf-core SUBWORKFLOWS
 ================================================================================
 */
 
@@ -340,6 +338,12 @@ include { QC_TRIM }                       from './modules/nf-core/subworkflow/qc
 
 workflow {
 
+/*
+================================================================================
+                                  BUILD INDICES
+================================================================================
+*/
+
     BUILD_INDICES(
         dbsnp,
         fasta,
@@ -347,7 +351,8 @@ workflow {
         known_indels,
         pon,
         step,
-        tools)
+        tools,
+        modules['bwa_index'])
 
     intervals = BUILD_INDICES.out.intervals
 
@@ -360,11 +365,11 @@ workflow {
     known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? file(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : file("${params.outdir}/no_file")
     pon_tbi               = params.pon               ? params.pon_index               ? file(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : file("${params.outdir}/no_file")
 
-    /*
-    ================================================================================
-                                      PREPROCESSING
-    ================================================================================
-    */
+/*
+================================================================================
+                                  PREPROCESSING
+================================================================================
+*/
 
     bam_mapped          = Channel.empty()
     bam_mapped_qc       = Channel.empty()
@@ -464,9 +469,9 @@ workflow {
 
     qc_reports = qc_reports.mix(bam_recalibrated_qc)
 
-    if (step == 'variantcalling') bam_variant_calling = input_sample
-
     bam_variant_calling = bam_recalibrated
+
+    if (step == 'variantcalling') bam_variant_calling = input_sample
 
     /*
     ================================================================================
@@ -525,9 +530,6 @@ workflow {
                                         MultiQC
     ================================================================================
     */
-    OUTPUT_DOCUMENTATION(
-        output_docs,
-        output_docs_images)
 
     GET_SOFTWARE_VERSIONS()
 

@@ -1,10 +1,10 @@
 /*
 ================================================================================
-                                BUILDING INDEXES
+                                BUILDING INDICES
 ================================================================================
 */
 
-// And then initialize channels based on params or indexes that were just built
+// And then initialize channels based on params or indices that were just built
 
 include { BUILD_INTERVALS }                            from '../process/build_intervals.nf'
 include { BWA_INDEX }                                  from '../../nf-core/software/bwa/index/main.nf'
@@ -26,21 +26,22 @@ workflow BUILD_INDICES{
         pon               // channel: [optional]  pon
         step              //   value: [mandatory] starting step
         tools             //    list: [optional]  tools to run
+        bwa_index_opts    //     map: options for BWA_INDEX module
 
     main:
 
     result_bwa = Channel.empty()
     version_bwa = Channel.empty()
-    if (!(params.bwa) && params.fasta && 'mapping' in step)
-        if (params.aligner == "bwa-mem") (result_bwa, version_bwa) = BWA_INDEX(fasta, params.modules['bwa_index'])
+    if (!(params.bwa) && 'mapping' in step)
+        if (params.aligner == "bwa-mem") (result_bwa, version_bwa) = BWA_INDEX(fasta, bwa_index_opts)
         else                             result_bwa = BWAMEM2_INDEX(fasta)
 
     result_dict = Channel.empty()
-    if (!(params.dict) && params.fasta && !('annotate' in step) && !('controlfreec' in step))
+    if (!(params.dict) && !('annotate' in step) && !('controlfreec' in step))
         result_dict = GATK_DICT(fasta)
 
     result_fai = Channel.empty()
-    if (!(params.fasta_fai) && params.fasta && !('annotate' in step))
+    if (!(params.fasta_fai) && !('annotate' in step))
         result_fai = SAMTOOLS_FAIDX(fasta)
 
     result_dbsnp_tbi = Channel.empty()
