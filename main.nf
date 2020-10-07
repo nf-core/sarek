@@ -381,7 +381,7 @@ workflow {
     // STEP 0: QC & TRIM
     // `--skip_qc fastqc` to skip fastqc
     // trim only with `--trim_fastq`
-    // addtional options to be set up
+    // additional options to be set up
 
     QC_TRIM(
         input_sample,
