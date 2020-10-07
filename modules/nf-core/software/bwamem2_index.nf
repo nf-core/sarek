@@ -4,16 +4,16 @@ process BWAMEM2_INDEX {
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: {params.save_reference ? "reference_genome/BWAIndex/${it}" : null }
 
-    input:
-        path fasta
-
     container "quay.io/biocontainers/bwa-mem2:2.0--he513fc3_1"
 
     conda (params.conda ? "bioconda::bwa-mem2=2.0" : null)
 
+    input:
+        path fasta
+        val options
+
     output:
         path "${fasta}.*"
-        val options
 
     script:
     """
