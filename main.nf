@@ -492,10 +492,6 @@ workflow {
         fai,
         modules)
 
-    // if ('strelka' in tools) {
-    //     STRELKA(bam_variant_calling, fasta, fai, target_bed, modules['strelka'])
-    // }
- 
     /*
     ================================================================================
                                 SOMATIC VARIANT CALLING
