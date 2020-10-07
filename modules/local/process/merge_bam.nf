@@ -13,7 +13,7 @@ process MERGE_BAM {
 
     output:
         tuple val(meta), path("${name}.bam"), emit: bam
-        val meta,                               emit: tsv
+        val meta,                            emit: tsv
 
     script:
     name = options.suffix ? "${meta.id}.${options.suffix}" : "${meta.id}"
