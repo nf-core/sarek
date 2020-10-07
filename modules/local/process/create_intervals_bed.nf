@@ -3,6 +3,10 @@ include { has_extension } from '../functions'
 process CREATE_INTERVALS_BED {
     tag "${intervals}"
 
+    container "biocontainers/biocontainers:v1.2.0_cv1"
+
+    conda (params.conda ? "conda-forge::sed=4.7" : null)
+
     input:
         path intervals
 
