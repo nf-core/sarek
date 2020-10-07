@@ -1,5 +1,5 @@
 # You can use this file to create a conda environment for this pipeline:
-# conda env create -f environment.yml
+#   conda env create -f environment.yml
 name: nf-core-sarek-snpeff-3.0dev
 channels:
   - conda-forge
