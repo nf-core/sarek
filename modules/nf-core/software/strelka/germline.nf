@@ -1,11 +1,11 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName } from './../functions'
 
-process STRELKA {
+process STRELKA_GERMLINE {
     tag "$meta.id"
     
-    label 'cpus_max'
-    label 'memory_max'
+    label 'CPUS_MAX'
+    label 'MEMORY_MAX'
     
     publishDir "${params.outdir}",
          mode: params.publish_dir_mode,
@@ -17,13 +17,14 @@ process STRELKA {
 
     input:
     tuple val(meta), path(bam), path (bai)
-    path(fasta)
-    path(fai)
-    path(target_bed)
+    path fasta
+    path fai
+    path target_bed
     val options
 
     output:
-    tuple val("Strelka"), val(meta), path("*.vcf.gz"), path("*.vcf.gz.tbi"), emit: vcfStrelkaSingle
+    tuple val(meta), path("*_variants.vcf.gz"), path("*_variants.vcf.gz.tbi"), emit: vcf
+    tuple val(meta), path("*_genome.vcf.gz"), path("*_genome.vcf.gz.tbi"), emit: genome_vcf
     path "*.version.txt", emit: version
 
     script:
