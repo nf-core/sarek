@@ -8,7 +8,7 @@ include { GATK_HAPLOTYPECALLER as HAPLOTYPECALLER } from '../../nf-core/software
 include { GATK_GENOTYPEGVCF as GENOTYPEGVCF }       from '../../nf-core/software/gatk/genotypegvcf'
 include { CONCAT_VCF as CONCAT_GVCF;
           CONCAT_VCF as CONCAT_HAPLOTYPECALLER}     from '../process/concat_vcf'
-include { STRELKA_GERMLINE }                        from '../../nf-core/software/strelka/germline'
+include { STRELKA_GERMLINE as STRELKA }             from '../../nf-core/software/strelka/germline'
 
 workflow GERMLINE_VARIANT_CALLING {
     take:
@@ -64,7 +64,7 @@ workflow GERMLINE_VARIANT_CALLING {
             haplotypecaller_interval_gvcf,
             fai,
             target_bed,
-            modules['concat_vcf_haplotypecaller_gvcf'])
+            modules['concat_vcf_haplotypecallergvcf'])
 
         haplotypecaller_gvcf = CONCAT_GVCF.out.vcf
 
@@ -106,14 +106,14 @@ workflow GERMLINE_VARIANT_CALLING {
     }
 
     if ('strelka' in tools) {
-        STRELKA_GERMLINE(
+        STRELKA(
             bam,
             fasta,
             fai,
             target_bed,
             modules['strelka_germline'])
 
-        strelka_vcf = STRELKA_GERMLINE.out.vcf
+        strelka_vcf = STRELKA.out.vcf
     }
 
     emit:
