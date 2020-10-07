@@ -86,7 +86,7 @@ def define_tool_list() {
 }
 
 // Channeling the TSV file containing BAM.
-// Format is: "subject gender status sample bam bai"
+// Format is: "patient gender status sample bam bai"
 def extract_bam(tsvFile) {
     Channel.from(tsvFile)
         .splitCsv(sep: '\t')
@@ -119,6 +119,8 @@ def extract_fastq_from_dir(folder) {
     fastq = Channel.fromFilePairs(folder + '/*{_R1_,_R2_}*.fastq.gz')
         .ifEmpty { error "No directories found matching folder '${folder}'" }
 
+// TODO check if flowcellLane_from_fastq is useful or not
+
     fastq = fastq.map{ run, pair ->
         def meta = [:]
         meta.patient = sample
@@ -135,8 +137,8 @@ def extract_fastq_from_dir(folder) {
 }
 
 // Channeling the TSV file containing FASTQ or BAM
-// Format is: "subject gender status sample lane fastq1 fastq2"
-// or: "subject gender status sample lane bam"
+// Format is: "patient gender status sample lane fastq1 fastq2"
+// or: "patient gender status sample lane bam"
 def extract_fastq(tsvFile) {
     Channel.from(tsvFile)
         .splitCsv(sep: '\t')
@@ -165,27 +167,27 @@ def extract_fastq(tsvFile) {
     }
 }
 
-// Channeling the TSV file containing mpileup
-// Format is: "subject gender status sample pileup"
-def extract_pileup(tsvFile) {
-    Channel.from(tsvFile)
-        .splitCsv(sep: '\t')
-        .map { row ->
-            check_number_of_item(row, 5)
-            def idPatient = row[0]
-            def gender    = row[1]
-            def status    = return_status(row[2].toInteger())
-            def idSample  = row[3]
-            def mpileup   = return_file(row[4])
+// // Channeling the TSV file containing mpileup
+// // Format is: "patient gender status sample pileup"
+// def extract_pileup(tsvFile) {
+//     Channel.from(tsvFile)
+//         .splitCsv(sep: '\t')
+//         .map { row ->
+//             check_number_of_item(row, 5)
+//             def idPatient = row[0]
+//             def gender    = row[1]
+//             def status    = return_status(row[2].toInteger())
+//             def idSample  = row[3]
+//             def mpileup   = return_file(row[4])
 
-            if (!has_extension(mpileup, "pileup")) exit 1, "File: ${mpileup} has the wrong extension. See --help for more information"
+//             if (!has_extension(mpileup, "pileup")) exit 1, "File: ${mpileup} has the wrong extension. See --help for more information"
 
-            return [idPatient, gender, status, idSample, mpileup]
-        }
-}
+//             return [idPatient, gender, status, idSample, mpileup]
+//         }
+// }
 
 // Channeling the TSV file containing Recalibration Tables.
-// Format is: "subject gender status sample bam bai recalTable"
+// Format is: "patient gender status sample bam bai recalTable"
 def extract_recal(tsvFile) {
     Channel.from(tsvFile)
         .splitCsv(sep: '\t')
@@ -210,32 +212,32 @@ def extract_recal(tsvFile) {
         }
 }
 
-// Parse first line of a FASTQ file, return the flowcell id and lane number.
-def flowcellLane_from_fastq(path) {
-    // expected format:
-    // xx:yy:FLOWCELLID:LANE:... (seven fields)
-    // or
-    // FLOWCELLID:LANE:xx:... (five fields)
-    InputStream fileStream = new FileInputStream(path.toFile())
-    InputStream gzipStream = new java.util.zip.GZIPInputStream(fileStream)
-    Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
-    BufferedReader buffered = new BufferedReader(decoder)
-    def line = buffered.readLine()
-    assert line.startsWith('@')
-    line = line.substring(1)
-    def fields = line.split(' ')[0].split(':')
-    String fcid
-    int lane
-    if (fields.size() == 7) {
-        // CASAVA 1.8+ format
-        fcid = fields[2]
-        lane = fields[3].toInteger()
-    } else if (fields.size() == 5) {
-        fcid = fields[0]
-        lane = fields[1].toInteger()
-    }
-    [fcid, lane]
-}
+// // Parse first line of a FASTQ file, return the flowcell id and lane number.
+// def flowcellLane_from_fastq(path) {
+//     // expected format:
+//     // xx:yy:FLOWCELLID:LANE:... (seven fields)
+//     // or
+//     // FLOWCELLID:LANE:xx:... (five fields)
+//     InputStream fileStream = new FileInputStream(path.toFile())
+//     InputStream gzipStream = new java.util.zip.GZIPInputStream(fileStream)
+//     Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
+//     BufferedReader buffered = new BufferedReader(decoder)
+//     def line = buffered.readLine()
+//     assert line.startsWith('@')
+//     line = line.substring(1)
+//     def fields = line.split(' ')[0].split(':')
+//     String fcid
+//     int lane
+//     if (fields.size() == 7) {
+//         // CASAVA 1.8+ format
+//         fcid = fields[2]
+//         lane = fields[3].toInteger()
+//     } else if (fields.size() == 5) {
+//         fcid = fields[0]
+//         lane = fields[1].toInteger()
+//     }
+//     [fcid, lane]
+// }
 
 // Check file extension
 def has_extension(it, extension) {
