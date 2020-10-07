@@ -65,7 +65,7 @@ workflow BUILD_INDICES{
         result_intervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
     } else if (!('annotate' in step) && !('controlfreec' in step))
         if (!params.intervals)
-            result_intervals = CREATE_INTERVALS_BED(result_fai)
+            result_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS(result_fai))
         else
             result_intervals = CREATE_INTERVALS_BED(file(params.intervals))
 
