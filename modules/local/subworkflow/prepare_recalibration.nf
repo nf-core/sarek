@@ -9,16 +9,16 @@ include { GATK_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from '../../nf-core/soft
 
 workflow PREPARE_RECALIBRATION {
     take:
-        step               //   value: [mandatory] starting step
         bam_markduplicates // channel: [mandatory] bam_markduplicates
-        intervals          // channel: [mandatory] intervals
         dbsnp              // channel: [optional]  dbsnp
         dbsnp_tbi          // channel: [optional]  dbsnp_tbi
         dict               // channel: [mandatory] dict
         fai                // channel: [mandatory] fai
         fasta              // channel: [mandatory] fasta
+        intervals          // channel: [mandatory] intervals
         known_indels       // channel: [optional]  known_indels
         known_indels_tbi   // channel: [optional]  known_indels_tbi
+        step               //   value: [mandatory] starting step
 
     main:
 

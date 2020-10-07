@@ -8,11 +8,10 @@ include { TRIMGALORE } from '../software/trimgalore'
 workflow QC_TRIM {
     take:
 
-    reads           // channel: [ val(meta), [ reads ] ]
-    skip_fastqc     // boolean: true/false
-    skip_trimming   // boolean: true/false
-    fastqc_opts     //     map: options for FastQC module
-    trimgalore_opts //     map: options for TrimGalore! module
+    reads         // channel: [ val(meta), [ reads ] ]
+    skip_fastqc   // boolean: true/false
+    skip_trimming // boolean: true/false
+    modules       //     map: options for modules
 
     main:
 
@@ -20,7 +19,7 @@ workflow QC_TRIM {
     fastqc_version = Channel.empty()
     fastqc_zip     = Channel.empty()
     if (!skip_fastqc) {
-        FASTQC(reads, fastqc_opts)
+        FASTQC(reads, modules['fastqc'])
         fastqc_html    = FASTQC.out.html
         fastqc_version = FASTQC.out.version
         fastqc_zip     = FASTQC.out.zip
@@ -32,7 +31,7 @@ workflow QC_TRIM {
     trimgalore_log     = Channel.empty()
     trimgalore_version = Channel.empty()
     if (!skip_trimming) {
-        TRIMGALORE(reads, trimgalore_opts)
+        TRIMGALORE(reads, modules['trimgalore'])
         trim_reads         = TRIMGALORE.out.reads
         trimgalore_html    = TRIMGALORE.out.html
         trimgalore_zip     = TRIMGALORE.out.zip

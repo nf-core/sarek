@@ -350,10 +350,10 @@ workflow {
         fasta,
         germline_resource,
         known_indels,
+        modules,
         pon,
         step,
-        tools,
-        modules['bwa_index'])
+        tools)
 
     intervals = BUILD_INDICES.out.intervals
 
@@ -387,8 +387,7 @@ workflow {
         input_sample,
         ('fastqc' in skip_qc || step != "mapping"),
         !(params.trim_fastq),
-        modules['fastqc'],
-        modules['trimgalore'])
+        modules)
 
     reads_input = QC_TRIM.out.reads
 
@@ -404,17 +403,16 @@ workflow {
     if (save_bam_mapped) modules['samtools_index_mapping'].publish_results = "all"
 
     MAPPING(
-        step,
-        reads_input,
-        target_bed,
-        bwa,
-        fasta,
-        fai,
-        modules['samtools_index_mapping'],
-        modules['merge_bam_mapping'],
         ('bamqc' in skip_qc),
         ('samtools' in skip_qc),
-        save_bam_mapped)
+        bwa,
+        fai,
+        fasta,
+        modules,
+        reads_input,
+        save_bam_mapped,
+        step,
+        target_bed)
 
     bam_mapped    = MAPPING.out.bam
     bam_mapped_qc = MAPPING.out.qc
@@ -424,8 +422,8 @@ workflow {
     // STEP 2: MARKING DUPLICATES
 
     MARKDUPLICATES(
-        step,
-        bam_mapped)
+        bam_mapped,
+        step)
 
     bam_markduplicates = MARKDUPLICATES.out.bam
 
@@ -434,16 +432,16 @@ workflow {
     // STEP 3: CREATING RECALIBRATION TABLES
 
     PREPARE_RECALIBRATION(
-        step,
         bam_markduplicates,
-        intervals,
         dbsnp,
         dbsnp_tbi,
         dict,
         fai,
         fasta,
+        intervals,
         known_indels,
-        known_indels_tbi)
+        known_indels_tbi,
+        step)
 
     table_bqsr = PREPARE_RECALIBRATION.out.table_bqsr
 
@@ -453,17 +451,16 @@ workflow {
     if (step == 'recalibrate') bam_applybqsr = input_sample
 
     RECALIBRATE(
-        step,
-        bam_applybqsr,
-        intervals,
-        target_bed,
-        dict,
-        fasta,
-        fai,
-        modules['samtools_index_recalibrate'],
-        modules['merge_bam_recalibrate'],
         ('bamqc' in skip_qc),
-        ('samtools' in skip_qc))
+        ('samtools' in skip_qc),
+        bam_applybqsr,
+        dict,
+        fai,
+        fasta,
+        intervals,
+        modules,
+        step,
+        target_bed)
 
     bam_recalibrated    = RECALIBRATE.out.bam
     bam_recalibrated_qc = RECALIBRATE.out.qc
@@ -482,15 +479,15 @@ workflow {
 
     GERMLINE_VARIANT_CALLING(
         bam_variant_calling,
-        intervals,
-        tools,
-        target_bed,
-        dict,
         dbsnp,
         dbsnp_tbi,
-        fasta,
+        dict,
         fai,
-        modules)
+        fasta,
+        intervals,
+        modules,
+        target_bed,
+        tools)
 
     /*
     ================================================================================

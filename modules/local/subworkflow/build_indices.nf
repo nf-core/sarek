@@ -23,17 +23,17 @@ workflow BUILD_INDICES{
         fasta             // channel: [mandatory] fasta
         germline_resource // channel: [optional]  germline_resource
         known_indels      // channel: [optional]  known_indels
+        modules           //     map: [mandatory] options for modules
         pon               // channel: [optional]  pon
         step              //   value: [mandatory] starting step
         tools             //    list: [optional]  tools to run
-        bwa_index_opts    //     map: options for BWA_INDEX module
 
     main:
 
     result_bwa = Channel.empty()
     version_bwa = Channel.empty()
     if (!(params.bwa) && 'mapping' in step)
-        if (params.aligner == "bwa-mem") (result_bwa, version_bwa) = BWA_INDEX(fasta, bwa_index_opts)
+        if (params.aligner == "bwa-mem") (result_bwa, version_bwa) = BWA_INDEX(fasta, modules['bwa_index'])
         else                             result_bwa = BWAMEM2_INDEX(fasta)
 
     result_dict = Channel.empty()

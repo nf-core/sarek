@@ -12,34 +12,33 @@ include { QUALIMAP_BAMQC }              from '../../nf-core/software/qualimap_ba
 
 workflow RECALIBRATE {
     take:
-        step           //   value: [mandatory] starting step
-        bam_applybqsr  // channel: [mandatory] bam_applybqsr
-        intervals      // channel: [mandatory] intervals
-        target_bed     // channel: [optional]  target_bed
-        dict           // channel: [mandatory] dict
-        fasta          // channel: [mandatory] fasta
-        fai            // channel: [mandatory] fai
-        samtools_opts  //     map: options for SAMTOOLS_INDEX module
-        merge_bam_opts //     map: options for MERGE_BAM module
         skip_bamqc     // boolean: true/false
         skip_samtools  // boolean: true/false
+        bam            // channel: [mandatory] bam
+        dict           // channel: [mandatory] dict
+        fai            // channel: [mandatory] fai
+        fasta          // channel: [mandatory] fasta
+        intervals      // channel: [mandatory] intervals
+        modules        //     map: options for modules
+        step           //   value: [mandatory] starting step
+        target_bed     // channel: [optional]  target_bed
 
     main:
 
-    bam_recalibrated_indexed = Channel.empty()
-    bam_recalibrated         = Channel.empty()
-    bam_reports              = Channel.empty()
+    bam_recalibrated_index = Channel.empty()
+    bam_recalibrated       = Channel.empty()
+    bam_reports            = Channel.empty()
 
     if (step in ["mapping", "preparerecalibration", "recalibrate"]) {
 
-        bam_applybqsr = bam_applybqsr.combine(intervals)
+        bam_intervals = bam.combine(intervals)
 
-        APPLYBQSR(bam_applybqsr, dict, fasta, fai)
+        APPLYBQSR(bam_intervals, dict, fasta, fai)
 
         // STEP 4.5: MERGING AND INDEXING THE RECALIBRATED BAM FILES
         if (params.no_intervals) {
-            bam_recalibrated         = APPLYBQSR.out.bam
-            tsv_recalibrated         = APPLYBQSR.out.tsv
+            bam_recalibrated = APPLYBQSR.out.bam
+            tsv_recalibrated = APPLYBQSR.out.tsv
         } else {
             APPLYBQSR.out.bam.map{ meta, bam -> //, bai ->
                 patient = meta.patient
@@ -47,9 +46,9 @@ workflow RECALIBRATE {
                 gender  = meta.gender
                 status  = meta.status
                 [patient, sample, gender, status, bam] //, bai]
-            }.groupTuple(by: [0,1]).set{ bam_recal_to_merge }
+            }.groupTuple(by: [0,1]).set{ bam_recalibrated_interval }
 
-            bam_recal_to_merge = bam_recal_to_merge.map {
+            bam_recalibrated_interval = bam_recalibrated_interval.map {
                 patient, sample, gender, status, bam -> //, bai ->
 
                 def meta = [:]
@@ -62,12 +61,12 @@ workflow RECALIBRATE {
                 [meta, bam]
             }
 
-            MERGE_BAM(bam_recal_to_merge, merge_bam_opts)
-            bam_recalibrated         = MERGE_BAM.out.bam
-            tsv_recalibrated         = MERGE_BAM.out.tsv
+            MERGE_BAM(bam_recalibrated_interval, modules['merge_bam_recalibrate'])
+            bam_recalibrated = MERGE_BAM.out.bam
+            tsv_recalibrated = MERGE_BAM.out.tsv
         }
 
-        bam_recalibrated_indexed = SAMTOOLS_INDEX(bam_recalibrated, samtools_opts)
+        bam_recalibrated_index = SAMTOOLS_INDEX(bam_recalibrated, modules['samtools_index_recalibrate'])
 
         qualimap_bamqc = Channel.empty()
         samtools_stats = Channel.empty()
@@ -116,6 +115,6 @@ workflow RECALIBRATE {
     }
 
     emit:
-        bam = bam_recalibrated
+        bam = bam_recalibrated_index
         qc  = bam_reports
 }

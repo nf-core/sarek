@@ -13,15 +13,15 @@ include { STRELKA_GERMLINE as STRELKA }             from '../../nf-core/software
 workflow GERMLINE_VARIANT_CALLING {
     take:
         bam        // channel: [mandatory] bam
-        intervals  // channel: [mandatory] intervals
-        tools      //   list:  [mandatory] list of tools
-        target_bed // channel: [optional]  target_bed
-        dict       // channel: [mandatory] dict
         dbsnp      // channel: [mandatory] dbsnp
         dbsnp_tbi  // channel: [mandatory] dbsnp_tbi
-        fasta      // channel: [mandatory] fasta
+        dict       // channel: [mandatory] dict
         fai        // channel: [mandatory] fai
+        fasta      // channel: [mandatory] fasta
+        intervals  // channel: [mandatory] intervals
         modules    //     map: [mandatory] maps for modules
+        target_bed // channel: [optional]  target_bed
+        tools      //   list:  [mandatory] list of tools
 
     main:
 

@@ -8,8 +8,8 @@ include { GATK_MARKDUPLICATES } from '../../nf-core/software/gatk/markduplicates
 
 workflow MARKDUPLICATES {
     take:
-        step       //   value: [mandatory] starting step
         bam_mapped // channel: [mandatory] bam_mapped
+        step       //   value: [mandatory] starting step
 
     main:
 

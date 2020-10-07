@@ -13,34 +13,31 @@ include { SAMTOOLS_STATS }         from '../../nf-core/software/samtools/stats'
 
 workflow MAPPING {
     take:
-        step            //   value: [mandatory] starting step
-        input_sample    // channel: [mandatory] input_sample
-        target_bed      // channel: [optional]  target_bed
-        bwa             // channel: [mandatory] bwa
-        fasta           // channel: [mandatory] fasta
-        fai             // channel: [mandatory] fai
-        samtools_opts   //     map: options for SAMTOOLS_INDEX module
-        merge_bam_opts  //     map: options for MERGE_BAM module
         skip_bamqc      // boolean: true/false
         skip_samtools   // boolean: true/false
+        bwa             // channel: [mandatory] bwa
+        fai             // channel: [mandatory] fai
+        fasta           // channel: [mandatory] fasta
+        modules         //     map: options for modules
+        reads_input     // channel: [mandatory] reads_input
         save_bam_mapped // boolean: true/false
+        step            //   value: [mandatory] starting step
+        target_bed      // channel: [optional]  target_bed
 
     main:
 
-    bam_mapped_indexed = Channel.empty()
-    bam_reports        = Channel.empty()
+    bam_mapped_index = Channel.empty()
+    bam_reports      = Channel.empty()
 
     if (step == "mapping") {
-        reads_input = input_sample
-
         bam_bwamem1 = Channel.empty()
         bam_bwamem2 = Channel.empty()
 
         if (params.aligner == "bwa-mem") {
-            BWAMEM1_MEM(reads_input, bwa, fasta, fai, params.modules['bwa_mem'])
+            BWAMEM1_MEM(reads_input, bwa, fasta, fai, modules['bwa_mem'])
             bam_bwamem1 = BWAMEM1_MEM.out.bam
         } else {
-            BWAMEM2_MEM(reads_input, bwa, fasta, fai, params.modules['bwamem2_mem'])
+            BWAMEM2_MEM(reads_input, bwa, fasta, fai, modules['bwamem2_mem'])
             bam_bwamem2 = BWAMEM2_MEM.out
         }
 
@@ -86,9 +83,9 @@ workflow MAPPING {
 
         // STEP 1.5: MERGING AND INDEXING BAM FROM MULTIPLE LANES 
         
-        MERGE_BAM(bam_bwa_multiple, merge_bam_opts)
-        bam_mapped = bam_bwa_single.mix(MERGE_BAM.out.bam)
-        bam_mapped_indexed = SAMTOOLS_INDEX(bam_mapped, samtools_opts)
+        MERGE_BAM(bam_bwa_multiple, modules['merge_bam_mapping'])
+        bam_mapped       = bam_bwa_single.mix(MERGE_BAM.out.bam)
+        bam_mapped_index = SAMTOOLS_INDEX(bam_mapped, modules['samtools_index_mapping'])
 
         qualimap_bamqc = Channel.empty()
         samtools_stats = Channel.empty()
@@ -131,6 +128,6 @@ workflow MAPPING {
     }
 
     emit:
-        bam = bam_mapped_indexed
+        bam = bam_mapped_index
         qc  = bam_reports
 }
