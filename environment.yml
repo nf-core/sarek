@@ -6,6 +6,8 @@ channels:
   - bioconda
   - defaults
 dependencies:
+  - conda-forge::llvm-openmp=8.0.1
+  - conda-forge::openmp=8.0.1
   - conda-forge::markdown=3.1.1
   - conda-forge::pymdown-extensions=6.0
   - conda-forge::pygments=2.5.2
