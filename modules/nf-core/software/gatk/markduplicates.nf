@@ -4,8 +4,8 @@ process GATK_MARKDUPLICATES {
 
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: {
-            if (it == "${meta.sample}.bam.metrics") "Reports/${meta.sample}/MarkDuplicates/${it}"
-            else "Preprocessing/${meta.sample}/DuplicatesMarked/${it}"
+            if (it == "${meta.sample}.bam.metrics") "Reports/${meta.sample}/markduplicates/${it}"
+            else "preprocessing/${meta.sample}/markduplicates/${it}"
         }
 
     container "quay.io/biocontainers/gatk4-spark:4.1.8.1--0"

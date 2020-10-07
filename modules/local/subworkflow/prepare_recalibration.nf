@@ -62,14 +62,14 @@ workflow PREPARE_RECALIBRATION {
         }
 
         // Creating TSV files to restart from this step
-        tsv_bqsr.collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { meta ->
+        tsv_bqsr.collectFile(storeDir: "${params.outdir}/preprocessing/tsv") { meta ->
             patient = meta.patient
             sample  = meta.sample
             gender  = meta.gender
             status  = meta.status
-            bam = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.md.bam"
-            bai = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.md.bam.bai"
-            ["duplicates_marked_no_table_${sample}.tsv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"]
+            bam = "${params.outdir}/preprocessing/${sample}/markduplicates/${sample}.md.bam"
+            bai = "${params.outdir}/preprocessing/${sample}/markduplicates/${sample}.md.bam.bai"
+            ["markduplicates_no_table_${sample}.tsv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"]
         }
 
         tsv_bqsr.map { meta ->
@@ -77,10 +77,10 @@ workflow PREPARE_RECALIBRATION {
             sample  = meta.sample
             gender  = meta.gender
             status  = meta.status
-            bam = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.md.bam"
-            bai = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.md.bam.bai"
+            bam = "${params.outdir}/preprocessing/${sample}/markduplicates/${sample}.md.bam"
+            bai = "${params.outdir}/preprocessing/${sample}/markduplicates/${sample}.md.bam.bai"
             "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"
-        }.collectFile(name: 'duplicates_marked_no_table.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV")
+        }.collectFile(name: 'markduplicates_no_table.tsv', sort: true, storeDir: "${params.outdir}/preprocessing/tsv")
     }
 
     emit:

@@ -105,13 +105,13 @@ workflow MAPPING {
         if (save_bam_mapped) {
             tsv_bam_mapped = bam_mapped.map { meta, bam -> [meta] }
             // Creating TSV files to restart from this step
-            tsv_bam_mapped.collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { meta ->
+            tsv_bam_mapped.collectFile(storeDir: "${params.outdir}/preprocessing/tsv") { meta ->
                 patient = meta.patient[0]
                 sample  = meta.sample[0]
                 gender  = meta.gender[0]
                 status  = meta.status[0]
-                bam   = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.bam"
-                bai   = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.bam.bai"
+                bam   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam"
+                bai   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam.bai"
                 ["mapped_${sample}.tsv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"]
             }
 
@@ -120,10 +120,10 @@ workflow MAPPING {
                 sample  = meta.sample[0]
                 gender  = meta.gender[0]
                 status  = meta.status[0]
-                bam   = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.bam"
-                bai   = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.bam.bai"
+                bam   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam"
+                bai   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam.bai"
                 "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"
-            }.collectFile(name: "mapped.tsv", sort: true, storeDir: "${params.outdir}/Preprocessing/TSV")
+            }.collectFile(name: "mapped.tsv", sort: true, storeDir: "${params.outdir}/preprocessing/tsv")
         }
     }
 

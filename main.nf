@@ -78,9 +78,6 @@ if (params.genomes && !params.genomes.containsKey(params.genome) && !params.igen
 step_list = define_step_list()
 step = params.step ? params.step.toLowerCase().replaceAll('-', '').replaceAll('_', '') : ''
 
-// Handle deprecation
-if (step == 'preprocessing') step = 'mapping'
-
 if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
 if (!check_parameter_existence(step, step_list)) exit 1, "Unknown step ${step}, see --help for more information"
 
@@ -114,28 +111,28 @@ save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? t
 if (!params.input && params.sentieon) {
     switch (step) {
         case 'mapping': break
-        case 'recalibrate': tsv_path = "${params.outdir}/Preprocessing/TSV/sentieon_deduped.tsv"; break
-        case 'variantcalling': tsv_path = "${params.outdir}/Preprocessing/TSV/sentieon_recalibrated.tsv"; break
+        case 'recalibrate': tsv_path = "${params.outdir}/preprocessing/tsv/sentieon_deduped.tsv"; break
+        case 'variantcalling': tsv_path = "${params.outdir}/preprocessing/tsv/sentieon_recalibrated.tsv"; break
         case 'annotate': break
         default: exit 1, "Unknown step ${step}"
     }
 } else if (!params.input && !params.sentieon && !params.skip_markduplicates) {
     switch (step) {
         case 'mapping': break
-        case 'preparerecalibration': tsv_path = "${params.outdir}/Preprocessing/TSV/duplicates_marked_no_table.tsv"; break
-        case 'recalibrate': tsv_path = "${params.outdir}/Preprocessing/TSV/duplicates_marked.tsv"; break
-        case 'variantcalling': tsv_path = "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"; break
-        case 'controlfreec': tsv_path = "${params.outdir}/VariantCalling/TSV/control-freec_mpileup.tsv"; break
+        case 'preparerecalibration': tsv_path = "${params.outdir}/preprocessing/tsv/markduplicates_no_table.tsv"; break
+        case 'recalibrate': tsv_path = "${params.outdir}/preprocessing/tsv/markduplicates.tsv"; break
+        case 'variantcalling': tsv_path = "${params.outdir}/preprocessing/tsv/recalibrated.tsv"; break
+        case 'controlfreec': tsv_path = "${params.outdir}/variant_calling/tsv/control-freec_mpileup.tsv"; break
         case 'annotate': break
         default: exit 1, "Unknown step ${step}"
     }
 } else if (!params.input && !params.sentieon && params.skip_markduplicates) {
     switch (step) {
         case 'mapping': break
-        case 'preparerecalibration': tsv_path = "${params.outdir}/Preprocessing/TSV/mapped.tsv"; break
-        case 'recalibrate': tsv_path = "${params.outdir}/Preprocessing/TSV/mapped_no_duplicates_marked.tsv"; break
-        case 'variantcalling': tsv_path = "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"; break
-        case 'controlfreec': tsv_path = "${params.outdir}/VariantCalling/TSV/control-freec_mpileup.tsv"; break
+        case 'preparerecalibration': tsv_path = "${params.outdir}/preprocessing/tsv/mapped.tsv"; break
+        case 'recalibrate': tsv_path = "${params.outdir}/preprocessing/tsv/mapped_no_markduplicates.tsv"; break
+        case 'variantcalling': tsv_path = "${params.outdir}/preprocessing/tsv/recalibrated.tsv"; break
+        case 'controlfreec': tsv_path = "${params.outdir}/variant_calling/tsv/control-freec_mpileup.tsv"; break
         case 'annotate': break
         default: exit 1, "Unknown step ${step}"
     }
@@ -535,75 +532,6 @@ workflow.onComplete {
 //                             GERMLINE VARIANT CALLING
 // ================================================================================
 // */
-
-
-
-
-// // Here we have a recalibrated bam set
-// // The TSV file is formatted like: "idPatient status idSample bamFile baiFile"
-// // Manta will be run in Germline mode, or in Tumor mode depending on status
-// // HaplotypeCaller, TIDDIT and Strelka will be run for Normal and Tumor samples
-
-// (bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll) = bam_recalibrated.into(6)
-
-
-// // To speed Variant Callers up we are chopping the reference into smaller pieces
-// // Do variant calling by this intervals, and re-merge the VCFs
-// bamFreebayesSingle = bamFreebayesSingleNoIntervals.spread(intFreebayesSingle)
-
-
-
-
-
-
-
-
-// // STEP STRELKA.1 - SINGLE MODE
-
-// process StrelkaSingle {
-//     label 'cpus_max'
-//     label 'memory_max'
-
-//     tag "${idSample}"
-
-//     publishDir "${params.outdir}/VariantCalling/${idSample}/Strelka", mode: params.publish_dir_mode
-
-//     input:
-//         set idPatient, idSample, file(bam), file(bai) from bamStrelkaSingle
-//         file(fasta) from fasta
-//         file(fastaFai) from fai
-//         file(targetBED) from ch_target_bed
-
-//     output:
-//         set val("Strelka"), idPatient, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfStrelkaSingle
-
-//     when: 'strelka' in tools
-
-//     script:
-//     beforeScript = params.target_bed ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
-//     options = params.target_bed ? "--exome --callRegions call_targets.bed.gz" : ""
-//     """
-//     ${beforeScript}
-//     configureStrelkaGermlineWorkflow.py \
-//         --bam ${bam} \
-//         --referenceFasta ${fasta} \
-//         ${options} \
-//         --runDir Strelka
-
-//     python Strelka/runWorkflow.py -m local -j ${task.cpus}
-
-//     mv Strelka/results/variants/genome.*.vcf.gz \
-//         Strelka_${idSample}_genome.vcf.gz
-//     mv Strelka/results/variants/genome.*.vcf.gz.tbi \
-//         Strelka_${idSample}_genome.vcf.gz.tbi
-//     mv Strelka/results/variants/variants.vcf.gz \
-//         Strelka_${idSample}_variants.vcf.gz
-//     mv Strelka/results/variants/variants.vcf.gz.tbi \
-//         Strelka_${idSample}_variants.vcf.gz.tbi
-//     """
-// }
-
-// vcfStrelkaSingle = vcfStrelkaSingle.dump(tag:'Strelka - Single Mode')
 
 // // STEP MANTA.1 - SINGLE MODE
 

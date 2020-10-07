@@ -93,13 +93,13 @@ workflow RECALIBRATE {
         // // When starting with variant calling, Channel bam_recalibrated is input_sample
         // if (step == 'variantcalling') bam_recalibrated = input_sample
         // Creating TSV files to restart from this step
-        tsv_recalibrated.collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { meta ->
+        tsv_recalibrated.collectFile(storeDir: "${params.outdir}/preprocessing/tsv") { meta ->
             patient = meta.patient
             sample  = meta.sample
             gender  = meta.gender
             status  = meta.status
-            bam = "${params.outdir}/Preprocessing/${sample}/Recalibrated/${sample}.md.bam"
-            bai = "${params.outdir}/Preprocessing/${sample}/Recalibrated/${sample}.md.bam.bai"
+            bam = "${params.outdir}/preprocessing/${sample}/recalibrated/${sample}.md.bam"
+            bai = "${params.outdir}/preprocessing/${sample}/recalibrated/${sample}.md.bam.bai"
             ["recalibrated_${sample}.tsv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"]
         }
 
@@ -108,10 +108,10 @@ workflow RECALIBRATE {
             sample  = meta.sample
             gender  = meta.gender
             status  = meta.status
-            bam = "${params.outdir}/Preprocessing/${sample}/Recalibrated/${sample}.md.bam"
-            bai = "${params.outdir}/Preprocessing/${sample}/Recalibrated/${sample}.md.bam.bai"
+            bam = "${params.outdir}/preprocessing/${sample}/recalibrated/${sample}.md.bam"
+            bai = "${params.outdir}/preprocessing/${sample}/recalibrated/${sample}.md.bam.bai"
             "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"
-        }.collectFile(name: 'recalibrated.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV")
+        }.collectFile(name: 'recalibrated.tsv', sort: true, storeDir: "${params.outdir}/preprocessing/tsv")
     }
 
     emit:

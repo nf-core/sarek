@@ -13,6 +13,7 @@ process BWAMEM2_INDEX {
 
     output:
         path "${fasta}.*"
+        val options
 
     script:
     """
