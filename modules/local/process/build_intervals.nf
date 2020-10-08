@@ -6,9 +6,9 @@ process BUILD_INTERVALS {
     publishDir params.outdir, mode: params.publish_dir_mode,
     saveAs: {params.save_reference ? "reference_genome/${it}" : null }
 
-    container "biocontainers/biocontainers:v1.2.0_cv1"
+    container "quay.io/biocontainers/gawk:5.1.0"
 
-    conda (params.conda ? "conda-forge::sed=4.7" : null)
+    conda (params.conda ? "anaconda::gawk=5.1.0" : null)
 
     input:
         path fai
