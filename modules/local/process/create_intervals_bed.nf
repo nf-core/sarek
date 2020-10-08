@@ -1,3 +1,4 @@
+include { initOptions; saveFiles; getSoftwareName } from './../../nf-core/software/functions'
 include { has_extension } from '../functions'
 
 process CREATE_INTERVALS_BED {

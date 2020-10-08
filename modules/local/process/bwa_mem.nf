@@ -1,3 +1,5 @@
+include { initOptions; saveFiles; getSoftwareName } from './../../nf-core/software/functions'
+
 process BWA_MEM {
     tag "${meta.id}"
 
@@ -10,7 +12,6 @@ process BWA_MEM {
                     else filename }
 
     container "quay.io/biocontainers/mulled-v2-fe8faa35dbf6dc65a0f7f5d4ea12e31a79f73e40:eabfac3657eda5818bae4090db989e3d41b01542-0"
-    //container "https://depot.galaxyproject.org/singularity/mulled-v2-fe8faa35dbf6dc65a0f7f5d4ea12e31a79f73e40:eabfac3657eda5818bae4090db989e3d41b01542-0"
 
     conda (params.conda ? "bioconda::bwa=0.7.17 bioconda::samtools=1.10" : null)
 

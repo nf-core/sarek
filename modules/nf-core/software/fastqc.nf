@@ -1,3 +1,5 @@
+include { initOptions; saveFiles; getSoftwareName } from './functions'
+
 process FASTQC {
     tag "${meta.id}"
     label 'process_medium'

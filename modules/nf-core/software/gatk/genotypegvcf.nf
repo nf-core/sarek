@@ -1,3 +1,5 @@
+include { initOptions; saveFiles; getSoftwareName } from './../functions'
+
 process GATK_GENOTYPEGVCF {
     tag "${meta.id}-${interval.baseName}"
 

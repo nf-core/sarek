@@ -1,3 +1,5 @@
+include { initOptions; saveFiles; getSoftwareName } from './../functions'
+
 process GATK_BASERECALIBRATOR {
     label 'cpus_1'
 

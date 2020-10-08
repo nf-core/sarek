@@ -1,3 +1,5 @@
+include { initOptions; saveFiles; getSoftwareName } from './../../nf-core/software/functions'
+
 process CONCAT_VCF {
     label 'cpus_8'
 

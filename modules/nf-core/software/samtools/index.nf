@@ -1,3 +1,5 @@
+include { initOptions; saveFiles; getSoftwareName } from './../functions'
+
 process SAMTOOLS_INDEX {
    label 'cpus_8'
 

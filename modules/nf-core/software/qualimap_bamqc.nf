@@ -1,3 +1,5 @@
+include { initOptions; saveFiles; getSoftwareName } from './functions'
+
 process QUALIMAP_BAMQC {
     label 'memory_max'
     label 'cpus_16'

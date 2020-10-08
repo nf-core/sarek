@@ -1,3 +1,5 @@
+include { initOptions; saveFiles; getSoftwareName } from './../functions'
+
 process GATK_MARKDUPLICATES {
     label 'cpus_16'
     tag "${meta.id}"

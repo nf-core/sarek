@@ -1,3 +1,5 @@
+include { initOptions; saveFiles; getSoftwareName } from './../functions'
+
 process SAMTOOLS_STATS {
     label 'cpus_2'
 

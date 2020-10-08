@@ -1,3 +1,5 @@
+include { initOptions; saveFiles; getSoftwareName } from './functions'
+
 process TRIMGALORE {
     tag "${meta.id}"
     label 'process_high'

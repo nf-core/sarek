@@ -1,3 +1,5 @@
+include { initOptions; saveFiles; getSoftwareName } from './../functions'
+
 process GATK_GATHERBQSRREPORTS {
     label 'memory_singleCPU_2_task'
     label 'cpus_2'
@@ -5,8 +7,8 @@ process GATK_GATHERBQSRREPORTS {
 
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: {
-            if (it == "${meta.sample}.recal.table" && !params.skip_markduplicates) "Preprocessing/${meta.sample}/DuplicatesMarked/${it}"
-            else "Preprocessing/${meta.sample}/Mapped/${it}"
+            if (it == "${meta.sample}.recal.table" && !params.skip_markduplicates) "preprocessing/${meta.sample}/markduplicates/${it}"
+            else "preprocessing/${meta.sample}/mapped/${it}"
         }
  
     container "quay.io/biocontainers/gatk4-spark:4.1.8.1--0"

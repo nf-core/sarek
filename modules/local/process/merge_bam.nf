@@ -1,3 +1,5 @@
+include { initOptions; saveFiles; getSoftwareName } from './../../nf-core/software/functions'
+
 process MERGE_BAM {
     label 'cpus_8'
 

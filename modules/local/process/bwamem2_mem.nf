@@ -1,3 +1,5 @@
+include { initOptions; saveFiles; getSoftwareName } from './../../nf-core/software/functions'
+
 process BWAMEM2_MEM {
     tag "${meta.id}"
 

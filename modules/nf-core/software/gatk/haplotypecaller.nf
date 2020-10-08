@@ -1,3 +1,5 @@
+include { initOptions; saveFiles; getSoftwareName } from './../functions'
+
 process GATK_HAPLOTYPECALLER {
     label 'MEMORY_SINGLECPU_TASK_SQ'
     label 'CPUS_2'

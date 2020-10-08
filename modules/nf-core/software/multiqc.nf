@@ -1,3 +1,5 @@
+include { initOptions; saveFiles; getSoftwareName } from './functions'
+
 // Has the run name been specified by the user?
 // this has the bonus effect of catching both -name and --name
 custom_runName = params.name

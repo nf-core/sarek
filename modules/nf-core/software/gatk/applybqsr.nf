@@ -1,3 +1,5 @@
+include { initOptions; saveFiles; getSoftwareName } from './../functions'
+
 process GATK_APPLYBQSR {
     label 'memory_singleCPU_2_task'
     label 'cpus_2'

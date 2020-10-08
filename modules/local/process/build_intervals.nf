@@ -1,3 +1,5 @@
+include { initOptions; saveFiles; getSoftwareName } from './../../nf-core/software/functions'
+
 process BUILD_INTERVALS {
     tag "${fai}"
 
