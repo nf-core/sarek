@@ -24,20 +24,6 @@ jobs:
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
-      - name: Check if Dockerfile or Conda environment changed
-        uses: technote-space/get-diff-action@v1
-        with:
-          PREFIX_FILTER: |
-            Dockerfile
-            environment.yml
-      - name: Build new docker image
-        if: env.GIT_DIFF
-        run: docker build --no-cache . -t nfcore/sarek:dsl2
-      - name: Pull docker image
-        if: ${{ !env.GIT_DIFF }}
-        run: |
-          docker pull nfcore/sarek:dsl2
-          docker tag nfcore/sarek:dsl2 nfcore/sarek:dsl2
       - name: Install Nextflow
         run: |
           wget -qO- get.nextflow.io | bash
@@ -47,6 +33,7 @@ jobs:
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker
 
   aligner:
+    name: Run aligner tests
     env:
       NXF_ANSI_LOG: false
     runs-on: ubuntu-latest
@@ -66,6 +53,7 @@ jobs:
         run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner ${{ matrix.aligner }}
 
   germline:
+    name: Run input from a folder test and restart from step tests
     env:
       NXF_ANSI_LOG: false
     runs-on: ubuntu-latest
@@ -155,6 +143,7 @@ jobs:
   #       run: nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker
 
   tools:
+    name: Run tool tests
     env:
       NXF_ANSI_LOG: false
     runs-on: ubuntu-latest
