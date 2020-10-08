@@ -38,27 +38,27 @@ workflow BUILD_INDICES{
 
     result_dict = Channel.empty()
     if (!(params.dict) && !('annotate' in step) && !('controlfreec' in step))
-        result_dict = GATK_DICT(fasta)
+        result_dict = GATK_DICT(fasta, modules['gatk_createsequencedictionary'])
 
     result_fai = Channel.empty()
     if (!(params.fasta_fai) && !('annotate' in step))
-        result_fai = SAMTOOLS_FAIDX(fasta)
+        result_fai = SAMTOOLS_FAIDX(fasta, modules['samtools_faidx'])
 
     result_dbsnp_tbi = Channel.empty()
     if (!(params.dbsnp_index) && params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || 'tnscope' in tools))
-        result_dbsnp_tbi = TABIX_DBSNP(dbsnp)
+        result_dbsnp_tbi = TABIX_DBSNP(dbsnp, modules['htslib_tabix'])
 
     result_germline_resource_tbi = Channel.empty()
     if (!(params.germline_resource_index) && params.germline_resource && 'mutect2' in tools)
-        result_germline_resource_tbi = TABIX_GERMLINE_RESOURCE(germline_resource)
+        result_germline_resource_tbi = TABIX_GERMLINE_RESOURCE(germline_resource, modules['htslib_tabix'])
 
     result_known_indels_tbi = Channel.empty()
     if (!(params.known_indels_index) && params.known_indels && ('mapping' in step || 'preparerecalibration' in step))
-        result_known_indels_tbi = TABIX_KNOWN_INDELS(known_indels)
+        result_known_indels_tbi = TABIX_KNOWN_INDELS(known_indels, modules['htslib_tabix'])
 
     result_pon_tbi = Channel.empty()
     if (!(params.pon_index) && params.pon && ('tnscope' in tools || 'mutect2' in tools))
-        result_pon_tbi = TABIX_PON(pon)
+        result_pon_tbi = TABIX_PON(pon, modules['htslib_tabix'])
 
     if (params.no_intervals) {
         file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"

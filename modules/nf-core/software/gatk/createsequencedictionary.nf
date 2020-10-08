@@ -26,6 +26,6 @@ process GATK_CREATESEQUENCEDICTIONARY {
         --REFERENCE ${fasta} \
         --OUTPUT ${fasta.baseName}.dict
 
-    echo \$(gatk CreateSequenceDictionary --version 2>&1) | sed 's/^.*The Genome Analysis Toolkit (GATK) v//; s/ HTSJDK.*\$//' > ${software}.version.txt
+    echo \$(gatk CreateSequenceDictionary --version 2>&1) | sed 's/^.*(GATK) v//; s/ HTSJDK.*\$//' > ${software}.version.txt
     """
 }
