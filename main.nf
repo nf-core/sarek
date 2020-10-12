@@ -59,7 +59,7 @@ def helpMessage() {
                                           Default: None
       --tools                       [str] Specify tools to use for variant calling (multiple separated with commas):
                                           Available: ASCAT, CNVkit, ControlFREEC, FreeBayes, HaplotypeCaller
-                                          Manta, mpileup, MSIsensor, Mutect2, Strelka, TIDDIT
+                                          Manta, mpileup, MSIsensor, Mutect2, Platypus, Strelka, TIDDIT
                                           and/or for annotation:
                                           snpEff, VEP, merge
                                           Default: None
@@ -106,6 +106,7 @@ def helpMessage() {
                                           See: https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
       --read_structure2          [string] When processing UMIs, a read structure should always be provided for each of the fastq files. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length). 
                                           See: https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
+      --platypus_tef               [int]  Input tumour enrichment factor for platypus filter
 
     Annotation:
       --annotate_tools              [str] Specify from which tools Sarek should look for VCF files to annotate, only for step Annotate
@@ -762,7 +763,7 @@ process BuildIntervals {
     output:
         file("${fastaFai.baseName}.bed") into intervalBuilt
 
-    when: !(params.intervals) && !('annotate' in step) && !('controlfreec' in step) 
+    when: !(params.intervals) && !('annotate' in step) && !('controlfreec' in step)
 
     script:
     """
@@ -1401,7 +1402,7 @@ process MarkDuplicates {
         --ASSUME_SORT_ORDER coordinate \
         --CREATE_INDEX true \
         --OUTPUT ${idSample}.md.bam
-    
+
     mv ${idSample}.md.bai ${idSample}.md.bam.bai
     """
     else
@@ -2293,15 +2294,15 @@ process FreebayesSingle {
     tag "${idSample}-${intervalBed.baseName}"
 
     label 'cpus_1'
-    
+
     input:
         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamFreebayesSingle
         file(fasta) from ch_fasta
         file(fastaFai) from ch_software_versions_yaml
-    
+
     output:
         set val("FreeBayes"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into vcfFreebayesSingle
-    
+
     when: 'freebayes' in tools
 
     script:
@@ -2650,7 +2651,7 @@ process CalculateContamination {
 
     when: 'mutect2' in tools
 
-    script:   
+    script:
     """
     # calculate contamination
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
@@ -2746,6 +2747,7 @@ process platypus {
 	if [[ $intervalsOptions == "*regions*" ]]; then
 	    awk 'BEGIN{OFS=""}{print \$1,":",\$2,"-",\$3}' ${intervalBed} > ${intervalBed}.txt
     fi
+	
 	platypus callVariants \
         --refFile=${fasta} --bamFiles=${bams.join(',')} \
         --output=${intervalBed.baseName}_${idPatient}.vcf \
@@ -2815,7 +2817,7 @@ process filterPlatypus {
 
 	output:
         set variantCaller, idPatient, file("${variantCaller}_${idPatient}_filtered.vcf.gz"), file("${variantCaller}_${idPatient}_filtered.vcf.gz.tbi") into PlatypusVcfFiltered
-
+	
 	when: 'platypus' in tools
 
 	script:
@@ -3087,7 +3089,7 @@ process CNVkit {
       --output-reference output_reference.cnn \
       --output-dir ./ \
       --diagram \
-      --scatter 
+      --scatter
     """
 }
 
@@ -3392,8 +3394,8 @@ process ControlFREEC {
     script:
     config = "${idSampleTumor}_vs_${idSampleNormal}.config.txt"
     gender = genderMap[idPatient]
-    // if we are using coefficientOfVariation, we must delete the window parameter 
-    // it is "window = 20000" in the default settings, without coefficientOfVariation set, 
+    // if we are using coefficientOfVariation, we must delete the window parameter
+    // it is "window = 20000" in the default settings, without coefficientOfVariation set,
     // but we do not like it. Note, it is not written in stone
     coeff_or_window = params.cf_window ? "window = ${params.cf_window}" : "coefficientOfVariation = ${params.cf_coeff}"
 
