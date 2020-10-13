@@ -256,8 +256,6 @@ if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works
 ================================================================================
 */
 
-include { GET_SOFTWARE_VERSIONS }         from './modules/local/process/get_software_versions'
-
 /*
 ================================================================================
                            INCLUDE LOCAL SUBWORKFLOWS
@@ -505,10 +503,10 @@ workflow {
     ================================================================================
     */
 
-    GET_SOFTWARE_VERSIONS()
+    // GET_SOFTWARE_VERSIONS()
 
     MULTIQC(
-        GET_SOFTWARE_VERSIONS.out.yml,
+        // GET_SOFTWARE_VERSIONS.out.yml,
         multiqc_config,
         multiqc_custom_config.ifEmpty([]),
         workflow_summary,

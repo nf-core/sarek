@@ -1,5 +1,9 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
+environment = params.conda ? "bioconda::trim-galore=0.6.5" : null
+container = "quay.io/biocontainers/trim-galore:0.6.5--0"
+if (workflow.containerEngine == 'singularity') container = "https://depot.galaxyproject.org/singularity/trim-galore:0.6.5--0"
+
 process TRIMGALORE {
     tag "${meta.id}"
     label 'process_high'
@@ -11,9 +15,8 @@ process TRIMGALORE {
                     else if (filename.endsWith('.version.txt')) null
                     else filename }
 
-    container "quay.io/biocontainers/trim-galore:0.6.5--0"
-
-    conda (params.conda ? "trim-galore=0.6.5" : null)
+    conda environment
+    container container
 
     input:
       tuple val(meta), path(reads)

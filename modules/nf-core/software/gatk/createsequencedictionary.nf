@@ -1,14 +1,17 @@
 include { initOptions; saveFiles; getSoftwareName } from './../functions'
 
+environment = params.conda ? "bioconda::gatk4-spark=4.1.8.1" : null
+container = "quay.io/biocontainers/gatk4-spark:4.1.8.1--0"
+if (workflow.containerEngine == 'singularity') container = "https://depot.galaxyproject.org/singularity/gatk4-spark:4.1.8.1--0"
+
 process GATK_CREATESEQUENCEDICTIONARY {
     tag "${fasta}"
 
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    container "quay.io/biocontainers/gatk4-spark:4.1.8.1--0"
-
-    conda (params.conda ? "bioconda::gatk4-spark=4.1.8.1" : null)
+    conda environment
+    container container
 
     input:
         path fasta

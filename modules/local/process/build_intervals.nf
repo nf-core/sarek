@@ -1,14 +1,17 @@
 include { initOptions; saveFiles; getSoftwareName } from './../../nf-core/software/functions'
 
+environment = params.conda ? "anaconda::gawk=5.1.0" : null
+container = "quay.io/biocontainers/gawk:5.1.0"
+if (workflow.containerEngine == 'singularity') container = "https://depot.galaxyproject.org/singularity/gawk:5.1.0"
+
 process BUILD_INTERVALS {
-    tag "${fai}"
+    tag fai
 
     publishDir params.outdir, mode: params.publish_dir_mode,
     saveAs: {params.save_reference ? "reference_genome/${it}" : null }
 
-    container "quay.io/biocontainers/gawk:5.1.0"
-
-    conda (params.conda ? "anaconda::gawk=5.1.0" : null)
+    conda environment
+    container container
 
     input:
         path fai

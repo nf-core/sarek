@@ -1,5 +1,9 @@
 include { initOptions; saveFiles; getSoftwareName } from './../../nf-core/software/functions'
 
+environment = params.conda ? "bioconda::bwa=0.7.17 bioconda::samtools=1.10" : null
+container = "quay.io/biocontainers/mulled-v2-fe8faa35dbf6dc65a0f7f5d4ea12e31a79f73e40:eabfac3657eda5818bae4090db989e3d41b01542-0"
+if (workflow.containerEngine == 'singularity') container = "https://depot.galaxyproject.org/singularity/mulled-v2-fe8faa35dbf6dc65a0f7f5d4ea12e31a79f73e40:eabfac3657eda5818bae4090db989e3d41b01542-0"
+
 process BWA_MEM {
     tag "${meta.id}"
 
@@ -11,9 +15,8 @@ process BWA_MEM {
                     if (filename.endsWith('.version.txt')) null
                     else filename }
 
-    container "quay.io/biocontainers/mulled-v2-fe8faa35dbf6dc65a0f7f5d4ea12e31a79f73e40:eabfac3657eda5818bae4090db989e3d41b01542-0"
-
-    conda (params.conda ? "bioconda::bwa=0.7.17 bioconda::samtools=1.10" : null)
+    conda environment
+    container container
 
     input:
         tuple val(meta), path(reads)

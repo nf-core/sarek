@@ -1,5 +1,9 @@
 include { initOptions; saveFiles; getSoftwareName } from './../functions'
 
+environment = params.conda ? "bioconda::strelka=2.9.10" : null
+container = "quay.io/biocontainers/strelka:2.9.10--0"
+if (workflow.containerEngine == 'singularity') container = "https://depot.galaxyproject.org/singularity/strelka:2.9.10--0"
+
 process STRELKA_GERMLINE {
     tag "$meta.id"
     
@@ -10,9 +14,8 @@ process STRELKA_GERMLINE {
          mode: params.publish_dir_mode,
          saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    container "quay.io/biocontainers/strelka:2.9.10--0"
-    
-    conda (params.conda ? "bioconda::strelka=2.9.10" : null)
+    conda environment
+    container container
 
     input:
     tuple val(meta), path(bam), path (bai)

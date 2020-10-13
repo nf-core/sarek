@@ -1,8 +1,12 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
+environment = params.conda ? "bioconda::qualimap=2.2.2d" : null
+container = "quay.io/biocontainers/multiqc=1.9"
+if (workflow.containerEngine == 'singularity') container = "https://depot.galaxyproject.org/singularity/multiqc:1.9--py_1"
+
 // Has the run name been specified by the user?
 // this has the bonus effect of catching both -name and --name
-custom_runName = params.name
+def custom_runName = params.name
 if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
     custom_runName = workflow.runName
 }
@@ -10,12 +14,11 @@ if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
 process MULTIQC {
     publishDir "${params.outdir}/multiqc", mode: params.publish_dir_mode
 
-    container "quay.io/biocontainers/multiqc:1.9--py_1"
-
-    conda (params.conda ? "bioconda::multiqc=1.9" : null)
+    conda environment
+    container container
 
     input:
-        path software_versions
+        // path software_versions
         path multiqc_config
         path multiqc_custom_config
         val workflow_summary

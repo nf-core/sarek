@@ -1,12 +1,15 @@
 include { initOptions; saveFiles; getSoftwareName } from './../../nf-core/software/functions'
 include { has_extension } from '../functions'
 
+environment = params.conda ? "anaconda::gawk=5.1.0" : null
+container = "quay.io/biocontainers/gawk:5.1.0"
+if (workflow.containerEngine == 'singularity') container = "https://depot.galaxyproject.org/singularity/gawk:5.1.0"
+
 process CREATE_INTERVALS_BED {
     tag "${intervals}"
 
-    container "quay.io/biocontainers/gawk:5.1.0"
-
-    conda (params.conda ? "anaconda::gawk=5.1.0" : null)
+    conda environment
+    container container
 
     input:
         path intervals

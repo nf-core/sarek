@@ -1,5 +1,9 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
+environment = params.conda ? "bioconda::fastqc=0.11.9" : null
+container = "quay.io/biocontainers/fastqc:0.11.9--0"
+if (workflow.containerEngine == 'singularity') container = "https://depot.galaxyproject.org/singularity/fastqc:0.11.9--0"
+
 process FASTQC {
     tag "${meta.id}"
     label 'process_medium'
@@ -12,9 +16,8 @@ process FASTQC {
                     else if (filename.endsWith('.version.txt')) null
                     else filename }
 
-    container "quay.io/biocontainers/fastqc:0.11.9--0"
-
-    conda (params.conda ? "bioconda::fastqc=0.11.9" : null)
+    conda environment
+    container container
 
     input:
         tuple val(meta), path(reads)

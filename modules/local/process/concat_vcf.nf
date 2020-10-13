@@ -1,5 +1,9 @@
 include { initOptions; saveFiles; getSoftwareName } from './../../nf-core/software/functions'
 
+environment = params.conda ? "bioconda::htslib=1.11" : null
+container = "quay.io/biocontainers/htslib:1.11--hd3b49d5_0"
+if (workflow.containerEngine == 'singularity') container = "https://depot.galaxyproject.org/singularity/htslib:1.11--hd3b49d5_0"
+
 process CONCAT_VCF {
     label 'cpus_8'
 
@@ -7,9 +11,8 @@ process CONCAT_VCF {
 
     publishDir "${params.outdir}/VariantCalling/${meta.id}/${options.publish_dir}", mode: params.publish_dir_mode
 
-    container "quay.io/biocontainers/htslib:1.11--hd3b49d5_0"
-
-    conda (params.conda ? "bioconda::htslib=1.11" : null)
+    conda environment
+    container container
 
     input:
         tuple val(meta), path(vcf)

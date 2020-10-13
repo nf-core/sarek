@@ -1,14 +1,17 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
+environment = params.conda ? "bioconda::bwa-mem2=2.0" : null
+container = "quay.io/biocontainers/bwa-mem2:2.0--he513fc3_1"
+if (workflow.containerEngine == 'singularity') container = "https://depot.galaxyproject.org/singularity/bwa-mem2:2.0--he513fc3_1"
+
 process BWAMEM2_INDEX {
     tag "${fasta}"
 
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    container "quay.io/biocontainers/bwa-mem2:2.0--he513fc3_1"
-
-    conda (params.conda ? "bioconda::bwa-mem2=2.0" : null)
+    conda environment
+    container container
 
     input:
         path fasta

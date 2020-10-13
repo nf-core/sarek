@@ -1,5 +1,9 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
+environment = params.conda ? "bioconda::qualimap=2.2.2d" : null
+container = "quay.io/biocontainers/qualimap:2.2.2d--1"
+if (workflow.containerEngine == 'singularity') container = "https://depot.galaxyproject.org/singularity/qualimap:2.2.2d--1"
+
 process QUALIMAP_BAMQC {
     label 'memory_max'
     label 'cpus_16'
@@ -8,9 +12,8 @@ process QUALIMAP_BAMQC {
 
     publishDir "${params.outdir}/Reports/${meta.id}/bamQC", mode: params.publish_dir_mode
 
-    container "quay.io/biocontainers/qualimap:2.2.2d--1"
-
-    conda (params.conda ? "bioconda::qualimap=2.2.2d" : null)
+    conda environment
+    container container
 
     input:
          tuple val(meta), path(bam)
