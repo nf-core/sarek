@@ -1,7 +1,7 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
-environment = params.conda ? "bioconda::qualimap=2.2.2d" : null
-container = "quay.io/biocontainers/multiqc=1.9"
+environment = params.conda ? "bioconda::multiqc=1.9" : null
+container = "quay.io/biocontainers/multiqc:1.9--py_1"
 if (workflow.containerEngine == 'singularity') container = "https://depot.galaxyproject.org/singularity/multiqc:1.9--py_1"
 
 // Has the run name been specified by the user?
