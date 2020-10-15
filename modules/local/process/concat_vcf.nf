@@ -12,7 +12,8 @@ process CONCAT_VCF {
 
     tag "${options.publish_dir}-${meta.id}"
 
-    publishDir "${params.outdir}/VariantCalling/${meta.id}/${options.publish_dir}", mode: params.publish_dir_mode
+    publishDir params.outdir, mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     conda environment
     container container

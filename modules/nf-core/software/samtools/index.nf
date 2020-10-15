@@ -13,10 +13,7 @@ process SAMTOOLS_INDEX {
     tag "${meta.id}"
 
     publishDir params.outdir, mode: params.publish_dir_mode,
-        saveAs: { filename ->
-                    if (options.publish_results == "none") null
-                    else if (filename.endsWith('.version.txt')) null
-                    else "${options.publish_dir_up}/${meta.sample}/${options.publish_dir_down}/${filename}" }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     conda environment
     container container

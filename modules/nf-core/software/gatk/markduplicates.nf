@@ -12,10 +12,7 @@ process GATK_MARKDUPLICATES {
     tag "${meta.id}"
 
     publishDir params.outdir, mode: params.publish_dir_mode,
-        saveAs: {
-            if (it == "${meta.sample}.bam.metrics") "Reports/${meta.sample}/markduplicates/${it}"
-            else "preprocessing/${meta.sample}/markduplicates/${it}"
-        }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     conda environment
     container container

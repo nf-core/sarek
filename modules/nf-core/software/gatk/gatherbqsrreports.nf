@@ -13,10 +13,7 @@ process GATK_GATHERBQSRREPORTS {
     tag "${meta.id}"
 
     publishDir params.outdir, mode: params.publish_dir_mode,
-        saveAs: {
-            if (it == "${meta.sample}.recal.table" && !params.skip_markduplicates) "preprocessing/${meta.sample}/markduplicates/${it}"
-            else "preprocessing/${meta.sample}/mapped/${it}"
-        }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
  
     conda environment
     container container

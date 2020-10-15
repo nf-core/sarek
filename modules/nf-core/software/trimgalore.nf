@@ -11,12 +11,8 @@ process TRIMGALORE {
     tag "${meta.id}"
     label 'process_high'
 
-    publishDir "${params.outdir}/${options.publish_dir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename ->
-                    if (options.publish_results == "none") null
-                    else if (filename.endsWith('.version.txt')) null
-                    else filename }
+    publishDir params.outdir, mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     conda environment
     container container

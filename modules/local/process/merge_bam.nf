@@ -12,6 +12,9 @@ process MERGE_BAM {
 
     tag "${meta.id}"
 
+    publishDir params.outdir, mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
+
     conda environment
     container container
 
