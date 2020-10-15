@@ -1,8 +1,11 @@
 include { initOptions; saveFiles; getSoftwareName } from './../functions'
 
-environment = params.conda ? "bioconda::samtools=1.10" : null
+params.options = [:]
+def options    = initOptions(params.options)
+
+environment = params.enable_conda ? "bioconda::samtools=1.10" : null
 container = "quay.io/biocontainers/samtools:1.10--h2e538c0_3"
-if (workflow.containerEngine == 'singularity') container = "https://depot.galaxyproject.org/singularity/samtools:1.10--h2e538c0_3"
+if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/samtools:1.10--h2e538c0_3"
 
 process SAMTOOLS_INDEX {
    label 'cpus_8'
@@ -20,7 +23,6 @@ process SAMTOOLS_INDEX {
 
     input:
         tuple val(meta), path(bam)
-        val options
 
     output:
         tuple val(meta), path("${name}.bam"), path("*.bai")

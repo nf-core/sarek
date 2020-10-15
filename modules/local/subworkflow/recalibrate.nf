@@ -4,11 +4,17 @@
 ================================================================================
 */
 
-include { GATK_APPLYBQSR as APPLYBQSR } from '../../nf-core/software/gatk/applybqsr'
-include { MERGE_BAM }                   from '../process/merge_bam'
-include { SAMTOOLS_STATS }              from '../../nf-core/software/samtools/stats'
-include { SAMTOOLS_INDEX }              from '../../nf-core/software/samtools/index'
-include { QUALIMAP_BAMQC }              from '../../nf-core/software/qualimap_bamqc'
+params.applybqsr_options      = [:]
+params.merge_bam_options      = [:]
+params.qualimap_bamqc_options = [:]
+params.samtools_index_options = [:]
+params.samtools_stats_options = [:]
+
+include { GATK_APPLYBQSR as APPLYBQSR } from '../../nf-core/software/gatk/applybqsr' addParams(options: params.applybqsr_options)
+include { MERGE_BAM }                   from '../process/merge_bam'                  addParams(options: params.merge_bam_options)
+include { QUALIMAP_BAMQC }              from '../../nf-core/software/qualimap_bamqc' addParams(options: params.qualimap_bamqc_options)
+include { SAMTOOLS_INDEX }              from '../../nf-core/software/samtools/index' addParams(options: params.samtools_index_options)
+include { SAMTOOLS_STATS }              from '../../nf-core/software/samtools/stats' addParams(options: params.samtools_stats_options)
 
 workflow RECALIBRATE {
     take:
@@ -19,7 +25,6 @@ workflow RECALIBRATE {
         fai            // channel: [mandatory] fai
         fasta          // channel: [mandatory] fasta
         intervals      // channel: [mandatory] intervals
-        modules        //     map: options for modules
         step           //   value: [mandatory] starting step
         target_bed     // channel: [optional]  target_bed
 
@@ -61,12 +66,12 @@ workflow RECALIBRATE {
                 [meta, bam]
             }
 
-            MERGE_BAM(bam_recalibrated_interval, modules['merge_bam_recalibrate'])
+            MERGE_BAM(bam_recalibrated_interval)
             bam_recalibrated = MERGE_BAM.out.bam
             tsv_recalibrated = MERGE_BAM.out.tsv
         }
 
-        bam_recalibrated_index = SAMTOOLS_INDEX(bam_recalibrated, modules['samtools_index_recalibrate'])
+        bam_recalibrated_index = SAMTOOLS_INDEX(bam_recalibrated)
 
         qualimap_bamqc = Channel.empty()
         samtools_stats = Channel.empty()

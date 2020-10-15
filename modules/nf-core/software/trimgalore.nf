@@ -1,8 +1,11 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
-environment = params.conda ? "bioconda::trim-galore=0.6.5" : null
+params.options = [:]
+def options    = initOptions(params.options)
+
+environment = params.enable_conda ? "bioconda::trim-galore=0.6.5" : null
 container = "quay.io/biocontainers/trim-galore:0.6.5--0"
-if (workflow.containerEngine == 'singularity') container = "https://depot.galaxyproject.org/singularity/trim-galore:0.6.5--0"
+if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/trim-galore:0.6.5--0"
 
 process TRIMGALORE {
     tag "${meta.id}"
@@ -20,7 +23,6 @@ process TRIMGALORE {
 
     input:
       tuple val(meta), path(reads)
-      val options
 
     output:
       tuple val(meta), path("*_1.fq.gz"), path("*_2.fq.gz"), emit: reads

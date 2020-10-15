@@ -1,8 +1,11 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
-environment = params.conda ? "bioconda::fastqc=0.11.9" : null
+params.options = [:]
+def options    = initOptions(params.options)
+
+environment = params.enable_conda ? "bioconda::fastqc=0.11.9" : null
 container = "quay.io/biocontainers/fastqc:0.11.9--0"
-if (workflow.containerEngine == 'singularity') container = "https://depot.galaxyproject.org/singularity/fastqc:0.11.9--0"
+if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/fastqc:0.11.9--0"
 
 process FASTQC {
     tag "${meta.id}"
@@ -21,7 +24,6 @@ process FASTQC {
 
     input:
         tuple val(meta), path(reads)
-        val options
 
     output:
         path "*.html",        emit: html

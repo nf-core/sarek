@@ -1,8 +1,12 @@
+// Import generic module functions
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
-environment = params.conda ? "bioconda::tabix=0.2.6" : null
+params.options = [:]
+def options    = initOptions(params.options)
+
+environment = params.enable_conda ? "bioconda::tabix=0.2.6" : null
 container = "quay.io/biocontainers/tabix:0.2.6--ha92aebf_0"
-if (workflow.containerEngine == 'singularity') container = "https://depot.galaxyproject.org/singularity/tabix:0.2.6--ha92aebf_0"
+if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/tabix:0.2.6--ha92aebf_0"
 
 process HTSLIB_TABIX {
     tag "${vcf}"
@@ -15,14 +19,12 @@ process HTSLIB_TABIX {
 
     input:
         path vcf
-        val options
 
     output:
         path "${vcf}.tbi"
 
     script:
     def software = getSoftwareName(task.process)
-    def ioptions = initOptions(options)
     """
     tabix -p vcf ${vcf}
 

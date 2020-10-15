@@ -171,7 +171,8 @@ if (tsv_path) {
 ================================================================================
 */
 
-modules = params.modules
+modules = params.modules.clone()
+if (save_bam_mapped) modules['samtools_index_mapping'].publish_results = "all"
 
 // Initialize each params in params.genomes, catch the command line first if it was defined
 params.ac_loci                 = params.genome ? params.genomes[params.genome].ac_loci                 ?: false : false
@@ -262,12 +263,47 @@ if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works
 ================================================================================
 */
 
-include { BUILD_INDICES }                 from './modules/local/subworkflow/build_indices'
-include { MAPPING }                       from './modules/local/subworkflow/mapping'
-include { MARKDUPLICATES }                from './modules/local/subworkflow/markduplicates'
-include { PREPARE_RECALIBRATION }         from './modules/local/subworkflow/prepare_recalibration'
-include { RECALIBRATE }                   from './modules/local/subworkflow/recalibrate'
-include { GERMLINE_VARIANT_CALLING }      from './modules/local/subworkflow/germline_variant_calling'
+include { BUILD_INDICES } from './modules/local/subworkflow/build_indices' addParams(
+    build_intervals_options:         modules['build_intervals'],
+    bwa_index_options:               modules['bwa_index'],
+    bwamem2_index_options:           modules['bwamem2_index'],
+    create_intervals_bed_options:    modules['create_intervals_bed'],
+    gatk_dict_options:               modules['gatk_dict'],
+    samtools_faidx_options:          modules['samtools_faidx'],
+    tabix_dbsnp_options:             modules['tabix_dbsnp'],
+    tabix_germline_resource_options: modules['tabix_germline_resource'],
+    tabix_known_indels_options:      modules['tabix_known_indels'],
+    tabix_pon_options:               modules['tabix_pon']
+)
+include { MAPPING } from './modules/local/subworkflow/mapping' addParams(
+    bwamem1_mem_options:             modules['bwa_mem1_mem'],
+    bwamem2_mem_options:             modules['bwa_mem2_mem'],
+    merge_bam_options:               modules['merge_bam_mapping'],
+    qualimap_bamqc_options:          modules['qualimap_bamqc_mapping'],
+    samtools_index_options:          modules['samtools_index_mapping'],
+    samtools_stats_options:          modules['samtools_stats_mapping']
+)
+include { MARKDUPLICATES } from './modules/local/subworkflow/markduplicates' addParams(
+    markduplicates_options:          modules['markduplicates']
+)
+include { PREPARE_RECALIBRATION } from './modules/local/subworkflow/prepare_recalibration' addParams(
+    baserecalibrator_options:        modules['baserecalibrator'],
+    gatherbqsrreports_options:       modules['gatherbqsrreports']
+)
+include { RECALIBRATE } from './modules/local/subworkflow/recalibrate' addParams(
+    applybqsr_options:               modules['applybqsr'],
+    merge_bam_options:               modules['merge_bam_recalibrate'],
+    qualimap_bamqc_options:          modules['qualimap_bamqc_recalibrate'],
+    samtools_index_options:          modules['samtools_index_recalibrate'],
+    samtools_stats_options:          modules['samtools_stats_recalibrate']
+)
+include { GERMLINE_VARIANT_CALLING } from './modules/local/subworkflow/germline_variant_calling' addParams(
+    haplotypecaller_options:         modules['haplotypecaller'],
+    genotypegvcf_options:            modules['genotypegvcf'],
+    concat_gvcf_options:             modules['concat_gvcf'],
+    concat_haplotypecaller_options:  modules['concat_haplotypecaller'],
+    strelka_options:                 modules['strelka_germline']
+)
 
 /*
 ================================================================================
@@ -283,8 +319,10 @@ include { MULTIQC }                       from './modules/nf-core/software/multi
 ================================================================================
 */
 
-include { QC_TRIM }                       from './modules/nf-core/subworkflow/qc_trim'
-
+include { QC_TRIM }                       from './modules/nf-core/subworkflow/qc_trim' addParams(
+    fastqc_options:                  modules['fastqc'],
+    trimgalore_options:              modules['trimgalore']
+)
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
 // input_bam = Channel.empty()
@@ -345,7 +383,6 @@ workflow {
         fasta,
         germline_resource,
         known_indels,
-        modules,
         pon,
         step,
         tools)
@@ -381,8 +418,7 @@ workflow {
     QC_TRIM(
         input_sample,
         ('fastqc' in skip_qc || step != "mapping"),
-        !(params.trim_fastq),
-        modules)
+        !(params.trim_fastq))
 
     reads_input = QC_TRIM.out.reads
 
@@ -395,15 +431,12 @@ workflow {
 
     // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA-MEM
 
-    if (save_bam_mapped) modules['samtools_index_mapping'].publish_results = "all"
-
     MAPPING(
         ('bamqc' in skip_qc),
         ('samtools' in skip_qc),
         bwa,
         fai,
         fasta,
-        modules,
         reads_input,
         save_bam_mapped,
         step,
@@ -453,7 +486,6 @@ workflow {
         fai,
         fasta,
         intervals,
-        modules,
         step,
         target_bed)
 
@@ -480,7 +512,6 @@ workflow {
         fai,
         fasta,
         intervals,
-        modules,
         target_bed,
         tools)
 

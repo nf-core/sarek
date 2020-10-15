@@ -1,8 +1,11 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
-environment = params.conda ? "bioconda::qualimap=2.2.2d" : null
+params.options = [:]
+def options    = initOptions(params.options)
+
+environment = params.enable_conda ? "bioconda::qualimap=2.2.2d" : null
 container = "quay.io/biocontainers/qualimap:2.2.2d--1"
-if (workflow.containerEngine == 'singularity') container = "https://depot.galaxyproject.org/singularity/qualimap:2.2.2d--1"
+if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/qualimap:2.2.2d--1"
 
 process QUALIMAP_BAMQC {
     label 'memory_max'

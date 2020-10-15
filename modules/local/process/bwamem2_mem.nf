@@ -1,8 +1,11 @@
 include { initOptions; saveFiles; getSoftwareName } from './../../nf-core/software/functions'
 
-environment = params.conda ? "bioconda::bwa-mem2=2.0 bioconda::samtools=1.10" : null
+params.options = [:]
+def options    = initOptions(params.options)
+
+environment = params.enable_conda ? "bioconda::bwa-mem2=2.0 bioconda::samtools=1.10" : null
 container = "quay.io/biocontainers/mulled-v2-e5d375990341c5aef3c9aff74f96f66f65375ef6:876eb6f1d38fbf578296ea94e5aede4e317939e7-0"
-if (workflow.containerEngine == 'singularity') container = "https://depot.galaxyproject.org/singularity/mulled-v2-e5d375990341c5aef3c9aff74f96f66f65375ef6:876eb6f1d38fbf578296ea94e5aede4e317939e7-0"
+if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/mulled-v2-e5d375990341c5aef3c9aff74f96f66f65375ef6:876eb6f1d38fbf578296ea94e5aede4e317939e7-0"
 
 process BWAMEM2_MEM {
     tag "${meta.id}"
@@ -23,7 +26,6 @@ process BWAMEM2_MEM {
         path bwa
         path fasta
         path fai
-        val options
 
     output:
         tuple val(meta), path("*.bam")

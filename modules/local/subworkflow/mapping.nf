@@ -4,12 +4,19 @@
 ================================================================================
 */
 
-include { BWAMEM2_MEM }            from '../process/bwamem2_mem'
-include { BWA_MEM as BWAMEM1_MEM } from '../process/bwa_mem'
-include { MERGE_BAM }              from '../process/merge_bam'
-include { QUALIMAP_BAMQC }         from '../../nf-core/software/qualimap_bamqc'
-include { SAMTOOLS_INDEX }         from '../../nf-core/software/samtools/index'
-include { SAMTOOLS_STATS }         from '../../nf-core/software/samtools/stats'
+params.bwamem1_mem_options    = [:]
+params.bwamem2_mem_options    = [:]
+params.merge_bam_options      = [:]
+params.qualimap_bamqc_options = [:]
+params.samtools_index_options = [:]
+params.samtools_stats_options = [:]
+
+include { BWA_MEM as BWAMEM1_MEM } from '../process/bwa_mem'                    addParams(options: params.bwamem1_mem_options)
+include { BWAMEM2_MEM }            from '../process/bwamem2_mem'                addParams(options: params.bwamem2_mem_options)
+include { MERGE_BAM }              from '../process/merge_bam'                  addParams(options: params.merge_bam_options)
+include { QUALIMAP_BAMQC }         from '../../nf-core/software/qualimap_bamqc' addParams(options: params.qualimap_bamqc_options)
+include { SAMTOOLS_INDEX }         from '../../nf-core/software/samtools/index' addParams(options: params.samtools_index_options)
+include { SAMTOOLS_STATS }         from '../../nf-core/software/samtools/stats' addParams(options: params.samtools_stats_options)
 
 workflow MAPPING {
     take:
@@ -18,7 +25,6 @@ workflow MAPPING {
         bwa             // channel: [mandatory] bwa
         fai             // channel: [mandatory] fai
         fasta           // channel: [mandatory] fasta
-        modules         //     map: options for modules
         reads_input     // channel: [mandatory] reads_input
         save_bam_mapped // boolean: true/false
         step            //   value: [mandatory] starting step
@@ -34,10 +40,10 @@ workflow MAPPING {
         bam_bwamem2 = Channel.empty()
 
         if (params.aligner == "bwa-mem") {
-            BWAMEM1_MEM(reads_input, bwa, fasta, fai, modules['bwa_mem'])
+            BWAMEM1_MEM(reads_input, bwa, fasta, fai)
             bam_bwamem1 = BWAMEM1_MEM.out.bam
         } else {
-            BWAMEM2_MEM(reads_input, bwa, fasta, fai, modules['bwamem2_mem'])
+            BWAMEM2_MEM(reads_input, bwa, fasta, fai)
             bam_bwamem2 = BWAMEM2_MEM.out
         }
 
@@ -83,9 +89,9 @@ workflow MAPPING {
 
         // STEP 1.5: MERGING AND INDEXING BAM FROM MULTIPLE LANES 
         
-        MERGE_BAM(bam_bwa_multiple, modules['merge_bam_mapping'])
+        MERGE_BAM(bam_bwa_multiple)
         bam_mapped       = bam_bwa_single.mix(MERGE_BAM.out.bam)
-        bam_mapped_index = SAMTOOLS_INDEX(bam_mapped, modules['samtools_index_mapping'])
+        bam_mapped_index = SAMTOOLS_INDEX(bam_mapped)
 
         qualimap_bamqc = Channel.empty()
         samtools_stats = Channel.empty()

@@ -4,8 +4,11 @@
 ================================================================================
 */
 
-include { GATK_BASERECALIBRATOR  as BASERECALIBRATOR }  from '../../nf-core/software/gatk/baserecalibrator'
-include { GATK_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from '../../nf-core/software/gatk/gatherbqsrreports'
+params.baserecalibrator_options  = [:]
+params.gatherbqsrreports_options = [:]
+
+include { GATK_BASERECALIBRATOR  as BASERECALIBRATOR }  from '../../nf-core/software/gatk/baserecalibrator'  addParams(options: params.baserecalibrator_options)
+include { GATK_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from '../../nf-core/software/gatk/gatherbqsrreports' addParams(options: params.gatherbqsrreports_options)
 
 workflow PREPARE_RECALIBRATION {
     take:

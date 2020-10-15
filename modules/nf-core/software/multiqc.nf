@@ -1,8 +1,11 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
-environment = params.conda ? "bioconda::multiqc=1.9" : null
+params.options = [:]
+def options    = initOptions(params.options)
+
+environment = params.enable_conda ? "bioconda::multiqc=1.9" : null
 container = "quay.io/biocontainers/multiqc:1.9--py_1"
-if (workflow.containerEngine == 'singularity') container = "https://depot.galaxyproject.org/singularity/multiqc:1.9--py_1"
+if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/multiqc:1.9--py_1"
 
 // Has the run name been specified by the user?
 // this has the bonus effect of catching both -name and --name

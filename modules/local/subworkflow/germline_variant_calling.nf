@@ -4,11 +4,17 @@
 ================================================================================
 */
 
-include { GATK_HAPLOTYPECALLER as HAPLOTYPECALLER } from '../../nf-core/software/gatk/haplotypecaller'
-include { GATK_GENOTYPEGVCF as GENOTYPEGVCF }       from '../../nf-core/software/gatk/genotypegvcf'
-include { CONCAT_VCF as CONCAT_GVCF;
-          CONCAT_VCF as CONCAT_HAPLOTYPECALLER}     from '../process/concat_vcf'
-include { STRELKA_GERMLINE as STRELKA }             from '../../nf-core/software/strelka/germline'
+params.haplotypecaller_options        = [:]
+params.genotypegvcf_options           = [:]
+params.concat_gvcf_options            = [:]
+params.concat_haplotypecaller_options = [:]
+params.strelka_options                = [:]
+
+include { GATK_HAPLOTYPECALLER as HAPLOTYPECALLER } from '../../nf-core/software/gatk/haplotypecaller' addParams(option: params.haplotypecaller_options)
+include { GATK_GENOTYPEGVCF as GENOTYPEGVCF }       from '../../nf-core/software/gatk/genotypegvcf'    addParams(option: params.genotypegvcf_options)
+include { CONCAT_VCF as CONCAT_GVCF }               from '../process/concat_vcf'                       addParams(option: params.concat_gvcf_options)
+include { CONCAT_VCF as CONCAT_HAPLOTYPECALLER }    from '../process/concat_vcf'                       addParams(option: params.concat_haplotypecaller_options)
+include { STRELKA_GERMLINE as STRELKA }             from '../../nf-core/software/strelka/germline'     addParams(option: params.strelka_options)
 
 workflow GERMLINE_VARIANT_CALLING {
     take:
@@ -19,7 +25,6 @@ workflow GERMLINE_VARIANT_CALLING {
         fai        // channel: [mandatory] fai
         fasta      // channel: [mandatory] fasta
         intervals  // channel: [mandatory] intervals
-        modules    //     map: [mandatory] maps for modules
         target_bed // channel: [optional]  target_bed
         tools      //   list:  [mandatory] list of tools
 
@@ -63,8 +68,7 @@ workflow GERMLINE_VARIANT_CALLING {
         CONCAT_GVCF(
             haplotypecaller_interval_gvcf,
             fai,
-            target_bed,
-            modules['concat_vcf_haplotypecallergvcf'])
+            target_bed)
 
         haplotypecaller_gvcf = CONCAT_GVCF.out.vcf
 
@@ -99,8 +103,7 @@ workflow GERMLINE_VARIANT_CALLING {
         CONCAT_HAPLOTYPECALLER(
             haplotypecaller_interval_vcf,
             fai,
-            target_bed,
-            modules['concat_vcf_haplotypecaller'])
+            target_bed)
 
         haplotypecaller_vcf = CONCAT_GVCF.out.vcf
     }
@@ -110,8 +113,7 @@ workflow GERMLINE_VARIANT_CALLING {
             bam,
             fasta,
             fai,
-            target_bed,
-            modules['strelka_germline'])
+            target_bed)
 
         strelka_vcf = STRELKA.out.vcf
     }

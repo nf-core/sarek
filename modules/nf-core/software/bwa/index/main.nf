@@ -1,8 +1,11 @@
 include { initOptions; saveFiles; getSoftwareName } from './../../functions'
 
-environment = params.conda ? "bioconda::bwa=0.7.17" : null
+params.options = [:]
+def options    = initOptions(params.options)
+
+environment = params.enable_conda ? "bioconda::bwa=0.7.17" : null
 container = "quay.io/biocontainers/bwa:0.7.17--hed695b0_7"
-if (workflow.containerEngine == 'singularity') container = "https://depot.galaxyproject.org/singularity/bwa:0.7.17--hed695b0_7"
+if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/bwa:0.7.17--hed695b0_7"
 
 process BWA_INDEX {
     tag "${fasta}"
@@ -17,7 +20,6 @@ process BWA_INDEX {
 
     input:
         path fasta
-        val options
 
     output:
         path "${fasta}.*"   , emit: index

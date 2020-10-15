@@ -1,11 +1,14 @@
 include { initOptions; saveFiles; getSoftwareName } from './../functions'
 
-environment = params.conda ? "bioconda::strelka=2.9.10" : null
+params.options = [:]
+def options    = initOptions(params.options)
+
+environment = params.enable_conda ? "bioconda::strelka=2.9.10" : null
 container = "quay.io/biocontainers/strelka:2.9.10--0"
-if (workflow.containerEngine == 'singularity') container = "https://depot.galaxyproject.org/singularity/strelka:2.9.10--0"
+if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/strelka:2.9.10--0"
 
 process STRELKA_GERMLINE {
-    tag "$meta.id"
+    tag "${meta.id}"
     
     label 'CPUS_MAX'
     label 'MEMORY_MAX'
@@ -18,16 +21,15 @@ process STRELKA_GERMLINE {
     container container
 
     input:
-    tuple val(meta), path(bam), path (bai)
-    path fasta
-    path fai
-    path target_bed
-    val options
+        tuple val(meta), path(bam), path (bai)
+        path fasta
+        path fai
+        path target_bed
 
     output:
-    tuple val(meta), path("*_variants.vcf.gz"), path("*_variants.vcf.gz.tbi"), emit: vcf
-    tuple val(meta), path("*_genome.vcf.gz"), path("*_genome.vcf.gz.tbi"), emit: genome_vcf
-    path "*.version.txt", emit: version
+        tuple val(meta), path("*_variants.vcf.gz"), path("*_variants.vcf.gz.tbi"), emit: vcf
+        tuple val(meta), path("*_genome.vcf.gz"), path("*_genome.vcf.gz.tbi"), emit: genome_vcf
+        path "*.version.txt", emit: version
 
     script:
     def software = getSoftwareName(task.process)

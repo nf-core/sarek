@@ -4,7 +4,9 @@
 ================================================================================
 */
 
-include { GATK_MARKDUPLICATES } from '../../nf-core/software/gatk/markduplicates'
+params.gatk_markduplicates_options = [:]
+
+include { GATK_MARKDUPLICATES } from '../../nf-core/software/gatk/markduplicates' addParams(options: params.gatk_markduplicates_options)
 
 workflow MARKDUPLICATES {
     take:
