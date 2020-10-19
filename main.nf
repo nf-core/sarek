@@ -2708,14 +2708,14 @@ process FilterMutect2Calls {
 // get rid of stats file
 intervalFilteredMutect2Output = intervalFilteredMutect2Output
                                     .map{ caller, idPatient, idSamplePair, vcfFile, tbiFile, statsFile ->
-                                          [ idPatient, idSamplePair, vcfFile, tbiFile]}
+                                        [ idPatient, idSamplePair, vcfFile, tbiFile]}
 // split using bedIntervals
 intervalFilteredMutect2Output = intervalFilteredMutect2Output.spread(intPlatypusVCF)
 // group by patient and bed
 intervalFilteredMutect2Output = intervalFilteredMutect2Output.groupTuple(by: [0,4])
 intervalFilteredMutect2Output = intervalFilteredMutect2Output.dump(tag: 'filteredMutect2Output' )   
 
-// again split using bedIntervals
+// again split recalbam using bedIntervals
 bamPlatypus = bamPlatypus.spread(intPlatpusBam)
 bamPlatypus = bamPlatypus.dump(tag: 'spreadPlatypus')
 bamPlatypus = bamPlatypus.groupTuple(by:[0,4])
