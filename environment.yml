@@ -30,6 +30,7 @@ dependencies:
   - bioconda::multiqc=1.8
   - bioconda::platypus-variant=0.8.1.2
   - bioconda::qualimap=2.2.2d
+  - bioconda::r-sequenza
   - bioconda::samblaster=0.1.24
   - bioconda::samtools=1.9
   - bioconda::sequenza=utils=3.0.0
