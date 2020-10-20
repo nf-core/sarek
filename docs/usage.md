@@ -1745,15 +1745,15 @@ Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a 
 ### Spark related issues
 
 If you have problems running processes that make use of Spark such as ```MarkDuplicates```.
-You are probably experiencing issues with the limit of open files in your system. You can
-check your current limit by typing the following:
+You are probably experiencing issues with the limit of open files in your system.
+You can check your current limit by typing the following:
 
 ```bash
 ulimit -n
 ```
 
-The default limit size is usually 1024 which is quite low to run Spark jobs. In order to increase
-the size limit permantly you can:
+The default limit size is usually 1024 which is quite low to run Spark jobs.
+In order to increase the size limit permanently you can:
 
 Edit the file ```/etc/security/limits.conf``` and add the lines:
 
@@ -1776,5 +1776,4 @@ OPTIONS=”—default-ulimit nofile=65535:65535"
 
 Re-start your session.
 
-Note that the way to increase the open file limit in your system may be slightly different
-or require additional steps.
+Note that the way to increase the open file limit in your system may be slightly different or require additional steps.
