@@ -33,7 +33,7 @@ process STRELKA_GERMLINE {
     script:
     def software = getSoftwareName(task.process)
     def ioptions = initOptions(options)
-    def prefix   = ioptions.suffix ? "Strelka_${meta.id}" : "Strelka_${meta.id}"
+    def prefix   = ioptions.suffix ? "strelka_${meta.id}${ioptions.suffix}" : "strelka_${meta.id}"
     // TODO nf-core: It MUST be possible to pass additional parameters to the tool as a command-line string via the "$ioptions.args" variable
     // TODO nf-core: If the tool supports multi-threading then you MUST provide the appropriate parameter
     //               using the Nextflow "task" variable e.g. "--threads $task.cpus"
@@ -45,17 +45,17 @@ process STRELKA_GERMLINE {
         --bam ${bam} \
         --referenceFasta ${fasta} \
         ${options_strelka} \
-        --runDir Strelka
+        --runDir strelka
 
-    python Strelka/runWorkflow.py -m local -j ${task.cpus}
+    python strelka/runWorkflow.py -m local -j ${task.cpus}
 
-    mv Strelka/results/variants/genome.*.vcf.gz ${prefix}_genome.vcf.gz
+    mv strelka/results/variants/genome.*.vcf.gz ${prefix}_genome.vcf.gz
 
-    mv Strelka/results/variants/genome.*.vcf.gz.tbi ${prefix}_genome.vcf.gz.tbi
+    mv strelka/results/variants/genome.*.vcf.gz.tbi ${prefix}_genome.vcf.gz.tbi
 
-    mv Strelka/results/variants/variants.vcf.gz ${prefix}_variants.vcf.gz
+    mv strelka/results/variants/variants.vcf.gz ${prefix}_variants.vcf.gz
 
-    mv Strelka/results/variants/variants.vcf.gz.tbi ${prefix}_variants.vcf.gz.tbi
+    mv strelka/results/variants/variants.vcf.gz.tbi ${prefix}_variants.vcf.gz.tbi
 
     echo configureStrelkaGermlineWorkflow.py --version &> ${software}.version.txt #2>&1
     """

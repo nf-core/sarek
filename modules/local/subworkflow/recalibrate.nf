@@ -103,8 +103,8 @@ workflow RECALIBRATE {
             sample  = meta.sample
             gender  = meta.gender
             status  = meta.status
-            bam = "${params.outdir}/preprocessing/${sample}/recalibrated/${sample}.md.bam"
-            bai = "${params.outdir}/preprocessing/${sample}/recalibrated/${sample}.md.bam.bai"
+            bam = "${params.outdir}/preprocessing/${sample}/recalibrated/${sample}.recal.bam"
+            bai = "${params.outdir}/preprocessing/${sample}/recalibrated/${sample}.recal.bam.bai"
             ["recalibrated_${sample}.tsv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"]
         }
 
@@ -113,8 +113,8 @@ workflow RECALIBRATE {
             sample  = meta.sample
             gender  = meta.gender
             status  = meta.status
-            bam = "${params.outdir}/preprocessing/${sample}/recalibrated/${sample}.md.bam"
-            bai = "${params.outdir}/preprocessing/${sample}/recalibrated/${sample}.md.bam.bai"
+            bam = "${params.outdir}/preprocessing/${sample}/recalibrated/${sample}.recal.bam"
+            bai = "${params.outdir}/preprocessing/${sample}/recalibrated/${sample}.recal.bam.bai"
             "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"
         }.collectFile(name: 'recalibrated.tsv', sort: true, storeDir: "${params.outdir}/preprocessing/tsv")
     }

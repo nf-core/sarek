@@ -27,7 +27,7 @@ process CONCAT_VCF {
         tuple val(meta), path("*_*.vcf.gz"), path("*_*.vcf.gz.tbi"), emit: vcf
 
     script:
-    name = options.suffix ? "${options.publish_dir}_${meta.id}${options.suffix}" : "${options.publish_dir}_${meta.id}"
+    name = options.suffix ? "${options.suffix}_${meta.id}" : "${meta.id}"
     target_options = params.target_bed ? "-t ${bed}" : ""
     interval_options = params.no_intervals ? "-n" : ""
     """
