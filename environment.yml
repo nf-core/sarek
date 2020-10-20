@@ -9,6 +9,7 @@ dependencies:
   - conda-forge::markdown=3.1.1
   - conda-forge::pymdown-extensions=6.0
   - conda-forge::pygments=2.5.2
+  - bioconda::adam=0.32.0
   - bioconda::ascat=2.5.2
   - bioconda::bcftools=1.9
   - bioconda::bwa=0.7.17

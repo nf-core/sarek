@@ -1417,32 +1417,18 @@ process MarkDuplicates {
     when: !(params.skip_markduplicates)
 
     script:
-    markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
-    metrics = 'markduplicates' in skipQC ? '' : "-M ${idSample}.bam.metrics"
-    if (params.no_gatk_spark)
     """
-    gatk --java-options ${markdup_java_options} \
-        MarkDuplicates \
-        --MAX_RECORDS_IN_RAM 50000 \
-        --INPUT ${idSample}.bam \
-        --METRICS_FILE ${idSample}.bam.metrics \
-        --TMP_DIR . \
-        --ASSUME_SORT_ORDER coordinate \
-        --CREATE_INDEX true \
-        --OUTPUT ${idSample}.md.bam
-    
-    mv ${idSample}.md.bai ${idSample}.md.bam.bai
-    """
-    else
-    """
-    gatk --java-options ${markdup_java_options} \
-        MarkDuplicatesSpark \
-        -I ${idSample}.bam \
-        -O ${idSample}.md.bam \
-        ${metrics} \
-        --tmp-dir . \
-        --create-output-bam-index true \
-        --spark-master local[${task.cpus}]
+    adam-submit \
+      --master local[${task.cpus}] \
+      --driver-memory ${task.memory.toGiga()} \
+      -- \
+      transformAlignments \
+      -mark_duplicate_reads \
+      ${idSample}.bam \
+      ${idSample}.md.bam
+
+    touch ${idSample}.bam.metrics
+    samtools index ${idSample}.md.bam
     """
 }
 
