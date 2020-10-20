@@ -16,7 +16,7 @@ nf-core/sarek:
  https://nf-co.re/sarek
 --------------------------------------------------------------------------------
  @Documentation
- https://nf-co.re/sarek/docs
+ https://nf-co.re/sarek/latest/usage
 --------------------------------------------------------------------------------
 */
 
@@ -46,6 +46,7 @@ include {
     extract_bam;
     extract_fastq;
     extract_fastq_from_dir;
+    extract_recal;
     has_extension
 } from './modules/local/functions'
 
@@ -76,9 +77,6 @@ if (params.genomes && !params.genomes.containsKey(params.genome) && !params.igen
 
 step_list = define_step_list()
 step = params.step ? params.step.toLowerCase().replaceAll('-', '').replaceAll('_', '') : ''
-
-// Handle deprecation
-if (step == 'preprocessing') step = 'mapping'
 
 if (step.contains(',')) exit 1, 'You can choose only one step, see --help for more information'
 if (!check_parameter_existence(step, step_list)) exit 1, "Unknown step ${step}, see --help for more information"
@@ -113,28 +111,28 @@ save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? t
 if (!params.input && params.sentieon) {
     switch (step) {
         case 'mapping': break
-        case 'recalibrate': tsv_path = "${params.outdir}/Preprocessing/TSV/sentieon_deduped.tsv"; break
-        case 'variantcalling': tsv_path = "${params.outdir}/Preprocessing/TSV/sentieon_recalibrated.tsv"; break
+        case 'recalibrate': tsv_path = "${params.outdir}/preprocessing/tsv/sentieon_deduped.tsv"; break
+        case 'variantcalling': tsv_path = "${params.outdir}/preprocessing/tsv/sentieon_recalibrated.tsv"; break
         case 'annotate': break
         default: exit 1, "Unknown step ${step}"
     }
 } else if (!params.input && !params.sentieon && !params.skip_markduplicates) {
     switch (step) {
         case 'mapping': break
-        case 'preparerecalibration': tsv_path = "${params.outdir}/Preprocessing/TSV/duplicates_marked_no_table.tsv"; break
-        case 'recalibrate': tsv_path = "${params.outdir}/Preprocessing/TSV/duplicates_marked.tsv"; break
-        case 'variantcalling': tsv_path = "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"; break
-        case 'controlfreec': tsv_path = "${params.outdir}/VariantCalling/TSV/control-freec_mpileup.tsv"; break
+        case 'preparerecalibration': tsv_path = "${params.outdir}/preprocessing/tsv/markduplicates_no_table.tsv"; break
+        case 'recalibrate': tsv_path = "${params.outdir}/preprocessing/tsv/markduplicates.tsv"; break
+        case 'variantcalling': tsv_path = "${params.outdir}/preprocessing/tsv/recalibrated.tsv"; break
+        case 'controlfreec': tsv_path = "${params.outdir}/variant_calling/tsv/control-freec_mpileup.tsv"; break
         case 'annotate': break
         default: exit 1, "Unknown step ${step}"
     }
 } else if (!params.input && !params.sentieon && params.skip_markduplicates) {
     switch (step) {
         case 'mapping': break
-        case 'preparerecalibration': tsv_path = "${params.outdir}/Preprocessing/TSV/mapped.tsv"; break
-        case 'recalibrate': tsv_path = "${params.outdir}/Preprocessing/TSV/mapped_no_duplicates_marked.tsv"; break
-        case 'variantcalling': tsv_path = "${params.outdir}/Preprocessing/TSV/recalibrated.tsv"; break
-        case 'controlfreec': tsv_path = "${params.outdir}/VariantCalling/TSV/control-freec_mpileup.tsv"; break
+        case 'preparerecalibration': tsv_path = "${params.outdir}/preprocessing/tsv/mapped.tsv"; break
+        case 'recalibrate': tsv_path = "${params.outdir}/preprocessing/tsv/mapped_no_markduplicates.tsv"; break
+        case 'variantcalling': tsv_path = "${params.outdir}/preprocessing/tsv/recalibrated.tsv"; break
+        case 'controlfreec': tsv_path = "${params.outdir}/variant_calling/tsv/control-freec_mpileup.tsv"; break
         case 'annotate': break
         default: exit 1, "Unknown step ${step}"
     }
@@ -158,10 +156,6 @@ if (tsv_path) {
     log.info "Reading ${params.input} directory"
     log.warn "[nf-core/sarek] in ${params.input} directory, all fastqs are assuming to be from the same sample, which is assumed to be a germline one"
     input_sample = extract_fastq_from_dir(params.input)
-    (input_sample, fastq_tmp) = input_sample.into(2)
-    fastq_tmp.toList().subscribe onNext: {
-        if (it.size() == 0) exit 1, "No FASTQ files found in --input directory '${params.input}'"
-    }
     tsv_file = params.input  // used in the reports
 } else if (tsv_path && step == 'annotate') {
     log.info "Annotating ${tsv_path}"
@@ -169,7 +163,27 @@ if (tsv_path) {
     log.info "Trying automatic annotation on files in the VariantCalling/ directory"
 } else exit 1, 'No sample were defined, see --help'
 
-// input_sample.dump(tag: 'input sample')
+/*
+================================================================================
+                     UPDATE MODULES OPTIONS BASED ON PARAMS
+================================================================================
+*/
+
+modules = params.modules
+
+if (params.save_reference)      modules['build_intervals'].publish_files         = ['bed':'intervals']
+if (params.save_reference)      modules['bwa_index'].publish_files               = ['amb':'bwa', 'ann':'bwa', 'bwt':'bwa', 'pac':'bwa', 'sa':'bwa']
+if (params.save_reference)      modules['bwamem2_index'].publish_files           = ['0123':'bwamem2', 'amb':'bwamem2', 'ann':'bwamem2', 'bwt.2bit.64':'bwamem2', 'bwt.8bit.32':'bwamem2', 'pac':'bwamem2']
+if (params.save_reference)      modules['create_intervals_bed'].publish_files    = ['bed':'intervals']
+if (params.save_reference)      modules['dict'].publish_files                    = ['dict':'dict']
+if (params.save_reference)      modules['samtools_faidx'].publish_files          = ['fai':'fai']
+if (params.save_reference)      modules['tabix_dbsnp'].publish_files             = ['vcf.gz.tbi':'dbsnp']
+if (params.save_reference)      modules['tabix_germline_resource'].publish_files = ['vcf.gz.tbi':'germline_resource']
+if (params.save_reference)      modules['tabix_known_indels'].publish_files      = ['vcf.gz.tbi':'known_indels']
+if (params.save_reference)      modules['tabix_pon'].publish_files               = ['vcf.gz.tbi':'pon']
+if (save_bam_mapped)            modules['samtools_index_mapping'].publish_files  = ['bam':'mapped', 'bai':'mapped']
+if (params.skip_markduplicates) modules['baserecalibrator'].publish_files        = ['recal.table':'mapped']
+if (params.skip_markduplicates) modules['gatherbqsrreports'].publish_files       = ['recal.table':'mapped']
 
 /*
 ================================================================================
@@ -256,52 +270,76 @@ if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works
 
 /*
 ================================================================================
-                         INCLUDE LOCAL PIPELINE MODULES
+                              INCLUDE LOCAL MODULES
 ================================================================================
 */
-
-include { BWAMEM2_MEM }                   from './modules/local/process/bwamem2_mem'
-include { BWA_MEM }                       from './modules/local/process/bwa_mem'
-include { GET_SOFTWARE_VERSIONS }         from './modules/local/process/get_software_versions'
-include { OUTPUT_DOCUMENTATION }          from './modules/local/process/output_documentation'
-include { MERGE_BAM as MERGE_BAM_MAPPED } from './modules/local/process/merge_bam'
-include { MERGE_BAM as MERGE_BAM_RECAL  } from './modules/local/process/merge_bam'
 
 /*
 ================================================================================
-                       INCLUDE LOCAL PIPELINE SUBWORKFLOWS
+                           INCLUDE LOCAL SUBWORKFLOWS
 ================================================================================
 */
 
-include { BUILD_INDICES } from './modules/local/subworkflow/build_indices'
+include { BUILD_INDICES } from './modules/local/subworkflow/build_indices' addParams(
+    build_intervals_options:         modules['build_intervals'],
+    bwa_index_options:               modules['bwa_index'],
+    bwamem2_index_options:           modules['bwamem2_index'],
+    create_intervals_bed_options:    modules['create_intervals_bed'],
+    gatk_dict_options:               modules['dict'],
+    samtools_faidx_options:          modules['samtools_faidx'],
+    tabix_dbsnp_options:             modules['tabix_dbsnp'],
+    tabix_germline_resource_options: modules['tabix_germline_resource'],
+    tabix_known_indels_options:      modules['tabix_known_indels'],
+    tabix_pon_options:               modules['tabix_pon']
+)
+include { MAPPING } from './modules/local/subworkflow/mapping' addParams(
+    bwamem1_mem_options:             modules['bwa_mem1_mem'],
+    bwamem2_mem_options:             modules['bwa_mem2_mem'],
+    merge_bam_options:               modules['merge_bam_mapping'],
+    qualimap_bamqc_options:          modules['qualimap_bamqc_mapping'],
+    samtools_index_options:          modules['samtools_index_mapping'],
+    samtools_stats_options:          modules['samtools_stats_mapping']
+)
+include { MARKDUPLICATES } from './modules/local/subworkflow/markduplicates' addParams(
+    markduplicates_options:          modules['markduplicates']
+)
+include { PREPARE_RECALIBRATION } from './modules/local/subworkflow/prepare_recalibration' addParams(
+    baserecalibrator_options:        modules['baserecalibrator'],
+    gatherbqsrreports_options:       modules['gatherbqsrreports']
+)
+include { RECALIBRATE } from './modules/local/subworkflow/recalibrate' addParams(
+    applybqsr_options:               modules['applybqsr'],
+    merge_bam_options:               modules['merge_bam_recalibrate'],
+    qualimap_bamqc_options:          modules['qualimap_bamqc_recalibrate'],
+    samtools_index_options:          modules['samtools_index_recalibrate'],
+    samtools_stats_options:          modules['samtools_stats_recalibrate']
+)
+include { GERMLINE_VARIANT_CALLING } from './modules/local/subworkflow/germline_variant_calling' addParams(
+    haplotypecaller_options:         modules['haplotypecaller'],
+    genotypegvcf_options:            modules['genotypegvcf'],
+    concat_gvcf_options:             modules['concat_gvcf'],
+    concat_haplotypecaller_options:  modules['concat_haplotypecaller'],
+    strelka_options:                 modules['strelka_germline']
+)
 
 /*
 ================================================================================
-                        INCLUDE nf-core PIPELINE MODULES
+                             INCLUDE nf-core MODULES
 ================================================================================
 */
 
-include { GATK_BASERECALIBRATOR  as BASERECALIBRATOR }      from './modules/nf-core/software/gatk_baserecalibrator'
-include { GATK_GATHERBQSRREPORTS as GATHERBQSRREPORTS }     from './modules/nf-core/software/gatk_gatherbqsrreports'
-include { GATK_MARKDUPLICATES    as MARKDUPLICATES }        from './modules/nf-core/software/gatk_markduplicates'
-include { GATK_APPLYBQSR         as APPLYBQSR }             from './modules/nf-core/software/gatk_applybqsr'
-include { SAMTOOLS_INDEX         as SAMTOOLS_INDEX_MAPPED } from './modules/nf-core/software/samtools_index'
-include { SAMTOOLS_INDEX         as SAMTOOLS_INDEX_RECAL }  from './modules/nf-core/software/samtools_index'
-include { SAMTOOLS_STATS         as SAMTOOLS_STATS }        from './modules/nf-core/software/samtools_stats'
-include { QUALIMAP_BAMQC         as BAMQC }                 from './modules/nf-core/software/qualimap_bamqc'
-include { GATK_HAPLOTYPECALLER   as HAPLOTYPECALLER }       from './modules/nf-core/software/gatk_haplotypecaller'
-include { GATK_GENOTYPEVCF       as GENOTYPEVCF }           from './modules/nf-core/software/gatk_genotypegvcf'
-include { STRELKA                as STRELKA }               from './modules/nf-core/software/strelka'
-include { MULTIQC }                                         from './modules/nf-core/software/multiqc'
+include { MULTIQC }                       from './modules/nf-core/software/multiqc'
 
 /*
 ================================================================================
-                      INCLUDE nf-core PIPELINE SUBWORKFLOWS
+                          INCLUDE nf-core SUBWORKFLOWS
 ================================================================================
 */
 
-include { QC_TRIM } from './modules/nf-core/subworkflow/qc_trim'
-
+include { QC_TRIM }                       from './modules/nf-core/subworkflow/qc_trim' addParams(
+    fastqc_options:                  modules['fastqc'],
+    trimgalore_options:              modules['trimgalore']
+)
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
 // input_bam = Channel.empty()
@@ -351,6 +389,12 @@ include { QC_TRIM } from './modules/nf-core/subworkflow/qc_trim'
 
 workflow {
 
+/*
+================================================================================
+                                  BUILD INDICES
+================================================================================
+*/
+
     BUILD_INDICES(
         dbsnp,
         fasta,
@@ -371,311 +415,123 @@ workflow {
     known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? file(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : file("${params.outdir}/no_file")
     pon_tbi               = params.pon               ? params.pon_index               ? file(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : file("${params.outdir}/no_file")
 
-    /*
-    ================================================================================
-                                      PREPROCESSING
-    ================================================================================
-    */
+/*
+================================================================================
+                                  PREPROCESSING
+================================================================================
+*/
 
-    // STEP 0.5: QC ON READS
+    bam_mapped          = Channel.empty()
+    bam_mapped_qc       = Channel.empty()
+    bam_recalibrated_qc = Channel.empty()
+    input_reads         = Channel.empty()
+    qc_reports          = Channel.empty()
+
+    // STEP 0: QC & TRIM
+    // `--skip_qc fastqc` to skip fastqc
+    // trim only with `--trim_fastq`
+    // additional options to be set up
 
     QC_TRIM(
         input_sample,
-        ('fastqc' in skip_qc),
-        !(params.trim_fastq),
-        params.modules['fastqc'],
-        params.modules['trimgalore']
-    )
+        ('fastqc' in skip_qc || step != "mapping"),
+        !(params.trim_fastq))
 
     reads_input = QC_TRIM.out.reads
 
-    // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA MEM
+    qc_reports = qc_reports.mix(
+        QC_TRIM.out.fastqc_html,
+        QC_TRIM.out.fastqc_zip,
+        QC_TRIM.out.trimgalore_html,
+        QC_TRIM.out.trimgalore_log,
+        QC_TRIM.out.trimgalore_zip)
 
-    bam_bwamem2          = Channel.empty()
-    bwa_mem_out          = Channel.empty()
+    // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA-MEM
 
-    if (params.aligner == "bwa-mem") {
-        BWA_MEM(reads_input, bwa, fasta, fai, params.modules['bwa_mem'])
-        bwa_mem_out = BWA_MEM.out.bam
-    } else {
-        BWAMEM2_MEM(reads_input, bwa, fasta, fai, params.modules['bwamem2_mem'])
-        bam_bwamem2 = BWAMEM2_MEM.out
-    }
+    MAPPING(
+        ('bamqc' in skip_qc),
+        ('samtools' in skip_qc),
+        bwa,
+        fai,
+        fasta,
+        reads_input,
+        save_bam_mapped,
+        step,
+        target_bed)
 
-    bam_bwamem2 = bam_bwamem2.mix(bwa_mem_out)
+    bam_mapped    = MAPPING.out.bam
+    bam_mapped_qc = MAPPING.out.qc
 
-    bam_bwamem2.map{ meta, bam ->
-        patient = meta.patient
-        sample  = meta.sample
-        gender  = meta.gender
-        status  = meta.status
-        [patient, sample, gender, status, bam]
-    }.groupTuple(by: [0,1])
-        .branch{
-            single:   it[4].size() == 1
-            multiple: it[4].size() > 1
-        }.set{ bam_bwamem2_to_sort }
+    qc_reports = qc_reports.mix(bam_mapped_qc)
 
-    bam_bwamem2_single = bam_bwamem2_to_sort.single.map {
-        patient, sample, gender, status, bam ->
-
-        def meta = [:]
-        meta.patient = patient
-        meta.sample = sample
-        meta.gender = gender[0]
-        meta.status = status[0]
-        meta.id = sample
-
-        [meta, bam[0]]
-    }
-
-    bam_bwamem2_multiple = bam_bwamem2_to_sort.multiple.map {
-        patient, sample, gender, status, bam ->
-
-        def meta = [:]
-        meta.patient = patient
-        meta.sample = sample
-        meta.gender = gender[0]
-        meta.status = status[0]
-        meta.id = sample
-
-        [meta, bam]
-    }
-
-    // STEP 1.5: MERGING AND INDEXING BAM FROM MULTIPLE LANES 
-    
-    MERGE_BAM_MAPPED(bam_bwamem2_multiple)
-    bam_mapped = bam_bwamem2_single.mix(MERGE_BAM_MAPPED.out.bam)
-    bam_mapped = SAMTOOLS_INDEX_MAPPED(bam_mapped, params.modules['samtools_index_mapped'],
-)
-        
     // STEP 2: MARKING DUPLICATES
 
-    report_markduplicates = Channel.empty()
-    bam_markduplicates    = bam_mapped
-    
-    if (!params.skip_markduplicates) {
-         MARKDUPLICATES(bam_mapped)
-         report_markduplicates = MARKDUPLICATES.out.report
-         bam_markduplicates    = MARKDUPLICATES.out.bam
-         tsv_markduplicates    = MARKDUPLICATES.out.tsv
+    MARKDUPLICATES(
+        bam_mapped,
+        step)
 
-        // Creating TSV files to restart from this step
-        tsv_markduplicates.collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { meta ->
-            patient = meta.patient
-            sample  = meta.sample
-            gender  = meta.gender
-            status  = meta.status
-            bam   = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.md.bam"
-            bai   = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.md.bam.bai"
-            table = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.recal.table"
-            ["duplicates_marked_${sample}.tsv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\t${table}\n"]
-        }
+    bam_markduplicates = MARKDUPLICATES.out.bam
 
-        tsv_markduplicates.map { meta ->
-            patient = meta.patient
-            sample  = meta.sample
-            gender  = meta.gender
-            status  = meta.status
-            bam   = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.md.bam"
-            bai   = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.md.bam.bai"
-            table = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.recal.table"
-            "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\t${table}\n"
-        }.collectFile(name: 'duplicates_marked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV")
-    } else {
-        tsv_no_markduplicates = bam_markduplicates.map { meta, bam -> [meta] }
-
-        // Creating TSV files to restart from this step
-        tsv_no_markduplicates.collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { meta ->
-            patient = meta.patient
-            sample  = meta.sample
-            gender  = meta.gender
-            status  = meta.status
-            bam   = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.md.bam"
-            bai   = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.md.bam.bai"
-            table = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.recal.table"
-            ["mapped_no_duplicates_marked_${sample}.tsv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\t${table}\n"]
-        }
-
-        tsv_no_markduplicates.map { meta ->
-            patient = meta.patient
-            sample  = meta.sample
-            gender  = meta.gender
-            status  = meta.status
-            bam   = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.md.bam"
-            bai   = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.md.bam.bai"
-            table = "${params.outdir}/Preprocessing/${sample}/Mapped/${sample}.recal.table"
-            "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\t${table}\n"
-        }.collectFile(name: 'mapped_no_duplicates_marked.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV")
-    }
+    if (step == 'preparerecalibration') bam_markduplicates = input_sample
 
     // STEP 3: CREATING RECALIBRATION TABLES
-    bam_baserecalibrator = bam_markduplicates.combine(intervals)
-    BASERECALIBRATOR(bam_baserecalibrator, dbsnp, dbsnp_tbi, dict, fai, fasta, known_indels, known_indels_tbi)
-    table_bqsr = BASERECALIBRATOR.out.report
-    tsv_bqsr   = BASERECALIBRATOR.out.tsv
 
-    // STEP 3.5: MERGING RECALIBRATION TABLES
-    if (!params.no_intervals) {
-        BASERECALIBRATOR.out.report.map{ meta, table ->
-            patient = meta.patient
-            sample  = meta.sample
-            gender  = meta.gender
-            status  = meta.status
-            [patient, sample, gender, status, table]
-        }.groupTuple(by: [0,1]).set{ recaltable }
+    PREPARE_RECALIBRATION(
+        bam_markduplicates,
+        dbsnp,
+        dbsnp_tbi,
+        dict,
+        fai,
+        fasta,
+        intervals,
+        known_indels,
+        known_indels_tbi,
+        step)
 
-        recaltable = recaltable.map {
-            patient, sample, gender, status, recal ->
-
-            def meta = [:]
-            meta.patient = patient
-            meta.sample = sample
-            meta.gender = gender[0]
-            meta.status = status[0]
-            meta.id = sample
-
-            [meta, recal]
-        }
-
-        GATHERBQSRREPORTS(recaltable)
-        table_bqsr = GATHERBQSRREPORTS.out.table
-        tsv_bqsr   = GATHERBQSRREPORTS.out.tsv
-
-    }
-
-    // Creating TSV files to restart from this step
-    tsv_bqsr.collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { meta ->
-        patient = meta.patient
-        sample  = meta.sample
-        gender  = meta.gender
-        status  = meta.status
-        bam = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.md.bam"
-        bai = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.md.bam.bai"
-        ["duplicates_marked_no_table_${sample}.tsv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"]
-    }
-
-    tsv_bqsr.map { meta ->
-        patient = meta.patient
-        sample  = meta.sample
-        gender  = meta.gender
-        status  = meta.status
-        bam = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.md.bam"
-        bai = "${params.outdir}/Preprocessing/${sample}/DuplicatesMarked/${sample}.md.bam.bai"
-        "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"
-    }.collectFile(name: 'duplicates_marked_no_table.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV")
+    table_bqsr = PREPARE_RECALIBRATION.out.table_bqsr
 
     // STEP 4: RECALIBRATING
     bam_applybqsr = bam_markduplicates.join(table_bqsr)
 
-    bam_applybqsr = bam_applybqsr.combine(intervals)
+    if (step == 'recalibrate') bam_applybqsr = input_sample
 
-    APPLYBQSR(bam_applybqsr, dict, fasta, fai)
+    RECALIBRATE(
+        ('bamqc' in skip_qc),
+        ('samtools' in skip_qc),
+        bam_applybqsr,
+        dict,
+        fai,
+        fasta,
+        intervals,
+        step,
+        target_bed)
 
-    bam_recalibrated = APPLYBQSR.out.bam
-    tsv_recalibrated = APPLYBQSR.out.tsv
+    bam_recalibrated    = RECALIBRATE.out.bam
+    bam_recalibrated_qc = RECALIBRATE.out.qc
 
-    // STEP 4.5: MERGING AND INDEXING THE RECALIBRATED BAM FILES
-    if (!params.no_intervals) {
-        APPLYBQSR.out.bam.map{ meta, bam -> //, bai ->
-            patient = meta.patient
-            sample  = meta.sample
-            gender  = meta.gender
-            status  = meta.status
-            [patient, sample, gender, status, bam] //, bai]
-        }.groupTuple(by: [0,1]).set{ bam_recal_to_merge }
+    qc_reports = qc_reports.mix(bam_recalibrated_qc)
 
-        bam_recal_to_merge = bam_recal_to_merge.map {
-            patient, sample, gender, status, bam -> //, bai ->
+    bam_variant_calling = bam_recalibrated
 
-            def meta = [:]
-            meta.patient = patient
-            meta.sample = sample
-            meta.gender = gender[0]
-            meta.status = status[0]
-            meta.id = sample
-
-            [meta, bam]
-        }
-
-        MERGE_BAM_RECAL(bam_recal_to_merge)
-        bam_recalibrated = MERGE_BAM_RECAL.out.bam
-        tsv_recalibrated = MERGE_BAM_RECAL.out.tsv
-    }
-    //TODO: set bam_recalibrated with all these steps
-    // // When using sentieon for mapping, Channel bam_recalibrated is bam_sentieon_recal
-    // if (params.sentieon && step == 'mapping') bam_recalibrated = bam_sentieon_recal
-
-    // // When no knownIndels for mapping, Channel bam_recalibrated is bam_duplicates_marked
-    // if (!params.known_indels && step == 'mapping') bam_recalibrated = bam_duplicates_marked
-
-    // // When starting with variant calling, Channel bam_recalibrated is input_sample
-    // if (step == 'variantcalling') bam_recalibrated = input_sample
-    // Creating TSV files to restart from this step
-    tsv_recalibrated.collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { meta ->
-        patient = meta.patient
-        sample  = meta.sample
-        gender  = meta.gender
-        status  = meta.status
-        bam = "${params.outdir}/Preprocessing/${sample}/Recalibrated/${sample}.md.bam"
-        bai = "${params.outdir}/Preprocessing/${sample}/Recalibrated/${sample}.md.bam.bai"
-        ["recalibrated_${sample}.tsv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"]
-    }
-
-    tsv_recalibrated.map { meta ->
-        patient = meta.patient
-        sample  = meta.sample
-        gender  = meta.gender
-        status  = meta.status
-        bam = "${params.outdir}/Preprocessing/${sample}/Recalibrated/${sample}.md.bam"
-        bai = "${params.outdir}/Preprocessing/${sample}/Recalibrated/${sample}.md.bam.bai"
-        "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"
-    }.collectFile(name: 'recalibrated.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV")
-
-    // STEP 5: QC
-    if (!'samtools' in skip_qc) SAMTOOLS_STATS(bam_bwamem2.mix(recal))
-    if (!'bamqc' in skip_qc) BAMQC(bam_bwamem2.mix(recal), target_bed)
+    if (step == 'variantcalling') bam_variant_calling = input_sample
 
     /*
     ================================================================================
                                 GERMLINE VARIANT CALLING
     ================================================================================
     */
-    //TODO double check whether the indexing has to be repeated here. there is a bai file somewhere up at ApplyBQSR
-    bam_recalibrated_indexed_variant_calling = SAMTOOLS_INDEX_RECAL(bam_recalibrated, params.modules['samtools_index_mapped'],)
-    if ('haplotypecaller' in tools){
-        bam_haplotypecaller = bam_recalibrated_indexed_variant_calling.combine(intervals)
 
-        // STEP GATK HAPLOTYPECALLER.1
+    GERMLINE_VARIANT_CALLING(
+        bam_variant_calling,
+        dbsnp,
+        dbsnp_tbi,
+        dict,
+        fai,
+        fasta,
+        intervals,
+        target_bed,
+        tools)
 
-        HAPLOTYPECALLER(bam_haplotypecaller, dbsnp,
-                                             dbsnp_tbi,
-                                             dict,
-                                             fasta,
-                                             fai)
-
-   
-        // STEP GATK HAPLOTYPECALLER.2
-        GENOTYPEVCF(HAPLOTYPECALLER.out.gvcfGenotypeGVCFs, dbsnp,
-                                             dbsnp_tbi,
-                                             dict,
-                                             fasta,
-                                             fai)
-
-        GENOTYPEVCF.out.map{name, meta, vcf -> 
-            patient = meta.patient
-            sample  = meta.sample
-            gender  = meta.gender
-            status  = meta.status
-            [name, patient, sample, gender, status, vcf] 
-        }.groupTuple(by: [0,1,2,])
-         .set{ vcfGenotypeGVCFs }
-    }
-
-    if ('strelka' in tools) {
-        STRELKA(bam_recalibrated_indexed_variant_calling, fasta, fai, target_bed, params.modules['strelka'])
-    }
- 
     /*
     ================================================================================
                                 SOMATIC VARIANT CALLING
@@ -694,23 +550,15 @@ workflow {
                                         MultiQC
     ================================================================================
     */
-    OUTPUT_DOCUMENTATION(
-        output_docs,
-        output_docs_images)
 
-    GET_SOFTWARE_VERSIONS()
+    // GET_SOFTWARE_VERSIONS()
 
     MULTIQC(
-        GET_SOFTWARE_VERSIONS.out.yml,
-        QC_TRIM.out.fastqc_html.collect().ifEmpty([]),
-        QC_TRIM.out.fastqc_zip.collect().ifEmpty([]),
-        QC_TRIM.out.trimgalore_html.collect().ifEmpty([]),
-        QC_TRIM.out.trimgalore_log.collect().ifEmpty([]),
-        QC_TRIM.out.trimgalore_zip.collect().ifEmpty([]),
+        // GET_SOFTWARE_VERSIONS.out.yml,
         multiqc_config,
         multiqc_custom_config.ifEmpty([]),
-        report_markduplicates.collect().ifEmpty([]),
-        workflow_summary)
+        workflow_summary,
+        qc_reports.collect())
 }
 
 /*
@@ -725,100 +573,11 @@ workflow.onComplete {
     Completion.summary(workflow, params, log)
 }
 
-// // Creating a TSV file to restart from this step
-// tsv_bam_indexed.map { idPatient, idSample ->
-//     gender = gender_map[idPatient]
-//     status = status_map[idPatient, idSample]
-//     bam = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam"
-//     bai = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam.bai"
-//     "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"
-// }.collectFile(
-//     name: 'mapped.tsv', sort: true, storeDir: "${params.outdir}/Preprocessing/TSV"
-// )
-
-// tsv_bam_indexed_sample
-//     .collectFile(storeDir: "${params.outdir}/Preprocessing/TSV") { idPatient, idSample ->
-//         status = status_map[idPatient, idSample]
-//         gender = gender_map[idPatient]
-//         bam = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam"
-//         bai = "${params.outdir}/Preprocessing/${idSample}/Mapped/${idSample}.bam.bai"
-//         ["mapped_${idSample}.tsv", "${idPatient}\t${gender}\t${status}\t${idSample}\t${bam}\t${bai}\n"]
-// }
-
 // /*
 // ================================================================================
 //                             GERMLINE VARIANT CALLING
 // ================================================================================
 // */
-
-
-
-
-// // Here we have a recalibrated bam set
-// // The TSV file is formatted like: "idPatient status idSample bamFile baiFile"
-// // Manta will be run in Germline mode, or in Tumor mode depending on status
-// // HaplotypeCaller, TIDDIT and Strelka will be run for Normal and Tumor samples
-
-// (bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll) = bam_recalibrated.into(6)
-
-
-// // To speed Variant Callers up we are chopping the reference into smaller pieces
-// // Do variant calling by this intervals, and re-merge the VCFs
-// bamFreebayesSingle = bamFreebayesSingleNoIntervals.spread(intFreebayesSingle)
-
-
-
-
-
-
-
-
-// // STEP STRELKA.1 - SINGLE MODE
-
-// process StrelkaSingle {
-//     label 'cpus_max'
-//     label 'memory_max'
-
-//     tag "${idSample}"
-
-//     publishDir "${params.outdir}/VariantCalling/${idSample}/Strelka", mode: params.publish_dir_mode
-
-//     input:
-//         set idPatient, idSample, file(bam), file(bai) from bamStrelkaSingle
-//         file(fasta) from fasta
-//         file(fastaFai) from fai
-//         file(targetBED) from ch_target_bed
-
-//     output:
-//         set val("Strelka"), idPatient, idSample, file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfStrelkaSingle
-
-//     when: 'strelka' in tools
-
-//     script:
-//     beforeScript = params.target_bed ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
-//     options = params.target_bed ? "--exome --callRegions call_targets.bed.gz" : ""
-//     """
-//     ${beforeScript}
-//     configureStrelkaGermlineWorkflow.py \
-//         --bam ${bam} \
-//         --referenceFasta ${fasta} \
-//         ${options} \
-//         --runDir Strelka
-
-//     python Strelka/runWorkflow.py -m local -j ${task.cpus}
-
-//     mv Strelka/results/variants/genome.*.vcf.gz \
-//         Strelka_${idSample}_genome.vcf.gz
-//     mv Strelka/results/variants/genome.*.vcf.gz.tbi \
-//         Strelka_${idSample}_genome.vcf.gz.tbi
-//     mv Strelka/results/variants/variants.vcf.gz \
-//         Strelka_${idSample}_variants.vcf.gz
-//     mv Strelka/results/variants/variants.vcf.gz.tbi \
-//         Strelka_${idSample}_variants.vcf.gz.tbi
-//     """
-// }
-
-// vcfStrelkaSingle = vcfStrelkaSingle.dump(tag:'Strelka - Single Mode')
 
 // // STEP MANTA.1 - SINGLE MODE
 
@@ -2359,47 +2118,3 @@ workflow.onComplete {
 // }
 
 // compressVCFOutVEP = compressVCFOutVEP.dump(tag:'VCF')
-
-// /*
-// ================================================================================
-//                                      MultiQC
-// ================================================================================
-// */
-
-// // STEP MULTIQC
-
-// process MultiQC {
-//     publishDir "${params.outdir}/Reports/MultiQC", mode: params.publish_dir_mode
-
-//     input:
-//         file (multiqcConfig) from multiqc_config
-//         file (mqc_custom_config) from multiqc_custom_config.collect().ifEmpty([])
-//         file (versions) from ch_software_versions_yaml.collect()
-//         file workflow_summary from workflow_summary.collectFile(name: "workflow_summary_mqc.yaml")
-//         file ('bamQC/*') from bamQCReport.collect().ifEmpty([])
-//         file ('BCFToolsStats/*') from bcftoolsReport.collect().ifEmpty([])
-//         file ('FastQC/*') from fastQCReport.collect().ifEmpty([])
-//         file ('TrimmedFastQC/*') from trimGaloreReport.collect().ifEmpty([])
-//         file ('MarkDuplicates/*') from duplicates_marked_report.collect().ifEmpty([])
-//         file ('DuplicatesMarked/*.recal.table') from baseRecalibratorReport.collect().ifEmpty([])
-//         file ('SamToolsStats/*') from samtoolsStatsReport.collect().ifEmpty([])
-//         file ('snpEff/*') from snpeffReport.collect().ifEmpty([])
-//         file ('VCFTools/*') from vcftoolsReport.collect().ifEmpty([])
-
-//     output:
-//         file "*multiqc_report.html" into ch_multiqc_report
-//         file "*_data"
-//         file "multiqc_plots"
-
-//     when: !('multiqc' in skip_qc)
-
-//     script:
-//     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
-//     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
-//     custom_config_file = params.multiqc_config ? "--config $mqc_custom_config" : ''
-//     """
-//     multiqc -f ${rtitle} ${rfilename} ${custom_config_file} .
-//     """
-// }
-
-// ch_multiqc_report.dump(tag:'MultiQC')

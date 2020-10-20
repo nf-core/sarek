@@ -1,46 +1,57 @@
 /*
 ================================================================================
-                                BUILDING INDEXES
+                                BUILDING INDICES
 ================================================================================
 */
 
-// And then initialize channels based on params or indexes that were just built
+params.build_intervals_options         = [:]
+params.bwa_index_options               = [:]
+params.bwamem2_index_options           = [:]
+params.create_intervals_bed_options    = [:]
+params.gatk_dict_options               = [:]
+params.samtools_faidx_options          = [:]
+params.tabix_dbsnp_options             = [:]
+params.tabix_germline_resource_options = [:]
+params.tabix_known_indels_options      = [:]
+params.tabix_pon_options               = [:]
 
-include { BUILD_INTERVALS }                            from '../process/build_intervals.nf'
-include { BWA_INDEX }                                  from '../../nf-core/software/bwa/index/main.nf'
-include { BWAMEM2_INDEX }                              from '../../nf-core/software/bwamem2_index.nf'
-include { CREATE_INTERVALS_BED }                       from '../process/create_intervals_bed.nf'
-include { GATK_CREATESEQUENCEDICTIONARY as GATK_DICT } from '../../nf-core/software/gatk_createsequencedictionary.nf'
-include { HTSLIB_TABIX as TABIX_DBSNP;
-          HTSLIB_TABIX as TABIX_GERMLINE_RESOURCE;
-          HTSLIB_TABIX as TABIX_KNOWN_INDELS;
-          HTSLIB_TABIX as TABIX_PON;}                  from '../../nf-core/software/htslib_tabix'
-include { SAMTOOLS_FAIDX }                             from '../../nf-core/software/samtools_faidx.nf'
+// Initialize channels based on params or indices that were just built
+
+include { BUILD_INTERVALS }                            from '../process/build_intervals.nf'                           addParams(options: params.build_intervals_options)
+include { BWA_INDEX as BWAMEM1_INDEX }                 from '../../nf-core/software/bwa/index/main.nf'                addParams(options: params.bwa_index_options)
+include { BWAMEM2_INDEX }                              from '../../nf-core/software/bwamem2_index.nf'                 addParams(options: params.bwamem2_index_options)
+include { CREATE_INTERVALS_BED }                       from '../process/create_intervals_bed.nf'                      addParams(options: params.create_intervals_bed_options)
+include { GATK_CREATESEQUENCEDICTIONARY as GATK_DICT } from '../../nf-core/software/gatk/createsequencedictionary.nf' addParams(options: params.gatk_dict_options)
+include { HTSLIB_TABIX as TABIX_DBSNP }                from '../../nf-core/software/htslib_tabix'                     addParams(options: params.tabix_dbsnp_options)
+include { HTSLIB_TABIX as TABIX_GERMLINE_RESOURCE }    from '../../nf-core/software/htslib_tabix'                     addParams(options: params.tabix_germline_resource_options)
+include { HTSLIB_TABIX as TABIX_KNOWN_INDELS }         from '../../nf-core/software/htslib_tabix'                     addParams(options: params.tabix_known_indels_options)
+include { HTSLIB_TABIX as TABIX_PON }                  from '../../nf-core/software/htslib_tabix'                     addParams(options: params.tabix_pon_options)
+include { SAMTOOLS_FAIDX }                             from '../../nf-core/software/samtools/faidx.nf'                addParams(options: params.samtools_faidx_options)
 
 workflow BUILD_INDICES{
     take:
-        dbsnp
-        fasta
-        germline_resource
-        known_indels
-        pon
-        step
-        tools
+        dbsnp             // channel: [optional]  dbsnp
+        fasta             // channel: [mandatory] fasta
+        germline_resource // channel: [optional]  germline_resource
+        known_indels      // channel: [optional]  known_indels
+        pon               // channel: [optional]  pon
+        step              //   value: [mandatory] starting step
+        tools             //    list: [optional]  tools to run
 
     main:
 
     result_bwa = Channel.empty()
     version_bwa = Channel.empty()
-    if (!(params.bwa) && params.fasta && 'mapping' in step)
-        if (params.aligner == "bwa-mem") (result_bwa, version_bwa) = BWA_INDEX(fasta, params.modules['bwa_index'])
+    if (!(params.bwa) && 'mapping' in step)
+        if (params.aligner == "bwa-mem") (result_bwa, version_bwa) = BWAMEM1_INDEX(fasta)
         else                             result_bwa = BWAMEM2_INDEX(fasta)
 
     result_dict = Channel.empty()
-    if (!(params.dict) && params.fasta && !('annotate' in step) && !('controlfreec' in step))
+    if (!(params.dict) && !('annotate' in step) && !('controlfreec' in step))
         result_dict = GATK_DICT(fasta)
 
     result_fai = Channel.empty()
-    if (!(params.fasta_fai) && params.fasta && !('annotate' in step))
+    if (!(params.fasta_fai) && !('annotate' in step))
         result_fai = SAMTOOLS_FAIDX(fasta)
 
     result_dbsnp_tbi = Channel.empty()
@@ -64,7 +75,7 @@ workflow BUILD_INDICES{
         result_intervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
     } else if (!('annotate' in step) && !('controlfreec' in step))
         if (!params.intervals)
-            result_intervals = CREATE_INTERVALS_BED(result_fai)
+            result_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS(result_fai))
         else
             result_intervals = CREATE_INTERVALS_BED(file(params.intervals))
 

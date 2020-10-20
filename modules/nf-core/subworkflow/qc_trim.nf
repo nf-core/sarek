@@ -1,18 +1,18 @@
 /*
  * Read QC and trimming
  */
+params.fastqc_options     = [:]
+params.trimgalore_options = [:]
 
-include { FASTQC     } from '../software/fastqc'
-include { TRIMGALORE } from '../software/trimgalore'
+include { FASTQC     } from '../software/fastqc'     addParams(options: params.fastqc_options)
+include { TRIMGALORE } from '../software/trimgalore' addParams(options: params.trimgalore_options)
 
 workflow QC_TRIM {
     take:
 
-    reads           // channel: [ val(meta), [ reads ] ]
-    skip_fastqc     // boolean: true/false
-    skip_trimming   // boolean: true/false
-    fastqc_opts     //     map: options for FastQC module
-    trimgalore_opts //     map: options for TrimGalore! module
+    reads         // channel: [ val(meta), [ reads ] ]
+    skip_fastqc   // boolean: true/false
+    skip_trimming // boolean: true/false
 
     main:
 
@@ -20,7 +20,7 @@ workflow QC_TRIM {
     fastqc_version = Channel.empty()
     fastqc_zip     = Channel.empty()
     if (!skip_fastqc) {
-        FASTQC(reads, fastqc_opts)
+        FASTQC(reads)
         fastqc_html    = FASTQC.out.html
         fastqc_version = FASTQC.out.version
         fastqc_zip     = FASTQC.out.zip
@@ -32,7 +32,7 @@ workflow QC_TRIM {
     trimgalore_log     = Channel.empty()
     trimgalore_version = Channel.empty()
     if (!skip_trimming) {
-        TRIMGALORE(reads, trimgalore_opts)
+        TRIMGALORE(reads)
         trim_reads         = TRIMGALORE.out.reads
         trimgalore_html    = TRIMGALORE.out.html
         trimgalore_zip     = TRIMGALORE.out.zip

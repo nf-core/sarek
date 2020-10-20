@@ -1,6 +1,15 @@
+include { initOptions; saveFiles; getSoftwareName } from './functions'
+
+params.options = [:]
+def options    = initOptions(params.options)
+
+environment = params.enable_conda ? "bioconda::multiqc=1.9" : null
+container = "quay.io/biocontainers/multiqc:1.9--py_1"
+if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/multiqc:1.9--py_1"
+
 // Has the run name been specified by the user?
 // this has the bonus effect of catching both -name and --name
-custom_runName = params.name
+def custom_runName = params.name
 if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
     custom_runName = workflow.runName
 }
@@ -8,17 +17,15 @@ if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
 process MULTIQC {
     publishDir "${params.outdir}/multiqc", mode: params.publish_dir_mode
 
+    conda environment
+    container container
+
     input:
-        path software_versions
-        path fastqc_html
-        path fastqc_zip
-        path trim_galore_html
-        path trim_galore_log
-        path trim_galore_zip
+        // path software_versions
         path multiqc_config
         path multiqc_custom_config
-        path report_markduplicates
         val workflow_summary
+        path qc_reports
 
     output:
         path "*multiqc_report.html"

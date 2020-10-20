@@ -39,7 +39,7 @@
                 "outdir": {
                     "type": "string",
                     "description": "The output directory where the results will be saved.",
-                    "default": ".&#x2F;results",
+                    "default": "./results",
                     "fa_icon": "fas fa-folder-open"
                 },
                 "email": {
@@ -152,7 +152,8 @@
                 "clip_r2": {
                     "type": "integer",
                     "description": "Remove bp from the 5' end of read 5",
-                    "help_text": "With Trim Galore"
+                    "help_text": "With Trim Galore",
+                    "fa_icon": "fas fa-cut"
                 },
                 "three_prime_clip_r1": {
                     "type": "integer",
@@ -500,7 +501,7 @@
                 "igenomes_base": {
                     "type": "string",
                     "description": "Directory / URL base for iGenomes references.",
-                    "default": "s3:&#x2F;&#x2F;ngi-igenomes&#x2F;igenomes&#x2F;",
+                    "default": "s3://ngi-igenomes/igenomes/",
                     "fa_icon": "fas fa-cloud-download-alt",
                     "hidden": true
                 },
@@ -596,7 +597,7 @@
                 "tracedir": {
                     "type": "string",
                     "description": "Directory to keep pipeline Nextflow logs and reports.",
-                    "default": "${params.outdir}&#x2F;pipeline_info",
+                    "default": "${params.outdir}/pipeline_info",
                     "fa_icon": "fas fa-cogs",
                     "hidden": true
                 },
@@ -669,7 +670,7 @@
                 "custom_config_base": {
                     "type": "string",
                     "description": "Base directory for Institutional configs.",
-                    "default": "https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;nf-core&#x2F;configs&#x2F;master",
+                    "default": "https://raw.githubusercontent.com/nf-core/configs/master",
                     "hidden": true,
                     "help_text": "If you're running offline, nextflow will not be able to fetch the institutional config files from the internet. If you don't need them, then this is not a problem. If you do need them, you should download the files from the repo and tell nextflow where to find them with the `custom_config_base` option. For example:\n\n```bash\n## Download and unzip the config files\ncd /path/to/my/configs\nwget https://github.com/nf-core/configs/archive/master.zip\nunzip master.zip\n\n## Run the pipeline\ncd /path/to/my/data\nnextflow run /path/to/pipeline/ --custom_config_base /path/to/my/configs/configs-master/\n```\n\n> Note that the nf-core/tools helper package has a `download` command to download all required pipeline files + singularity containers + institutional configs in one go for you, to make this process easier.",
                     "fa_icon": "fas fa-users-cog"
@@ -699,6 +700,22 @@
                     "fa_icon": "fas fa-users-cog"
                 }
             }
+        },
+        "modules": {
+            "title": "Modules",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "pull_docker_container": {
+                    "type": "boolean",
+                    "fa_icon": "fab fa-docker",
+                    "description": "Force pull and use of Docker container instead of default Singularity ones",
+                    "hidden": true,
+                    "help_text": "This may be useful if you are unable to download Singularity containers due to proxy issues."
+                }
+            },
+            "fa_icon": "fas fa-cog"
         }
     },
     "allOf": [
@@ -731,6 +748,9 @@
         },
         {
             "$ref": "#/definitions/institutional_config_options"
+        },
+        {
+            "$ref": "#/definitions/modules"
         }
     ]
 }

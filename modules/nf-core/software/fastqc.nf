@@ -1,20 +1,27 @@
+// Import generic module functions
+include { initOptions; saveFiles; getSoftwareName } from './functions'
+
+params.options = [:]
+def options    = initOptions(params.options)
+
+environment = params.enable_conda ? "bioconda::fastqc=0.11.9" : null
+container = "quay.io/biocontainers/fastqc:0.11.9--0"
+if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/fastqc:0.11.9--0"
+
 process FASTQC {
-    tag "${meta.id}"
     label 'process_medium'
     label 'cpus_2'
 
-    publishDir "${params.outdir}/${options.publish_dir}/${meta.sample}/${meta.id}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename ->
-                    if (options.publish_results == "none") null
-                    else if (filename.endsWith('.version.txt')) null
-                    else filename }
+    tag "${meta.id}"
 
-    container "quay.io/biocontainers/fastqc:0.11.9--0"
+    publishDir params.outdir, mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
+
+    conda environment
+    container container
 
     input:
         tuple val(meta), path(reads)
-        val options
 
     output:
         path "*.html",        emit: html
