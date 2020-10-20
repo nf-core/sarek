@@ -1424,6 +1424,7 @@ process MarkDuplicates {
       -- \
       transformAlignments \
       -mark_duplicate_reads \
+      -single \
       ${idSample}.bam \
       ${idSample}.md.bam
 
