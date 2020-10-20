@@ -1755,19 +1755,20 @@ ulimit -n
 The default limit size is usually 1024 which is quite low to run Spark jobs. In order to increase
 the size limit permantly you can:
 
-Edit the file  ```/etc/security/limits.conf``` and add the lines:
+Edit the file ```/etc/security/limits.conf``` and add the lines:
 
 ```bash
 *     soft   nofile  65535
 *     hard   nofile  65535 
 ```
-Edit the file ```/etc/sysctl.conf```and add the line:
+
+Edit the file ```/etc/sysctl.conf``` and add the line:
 
 ```bash
 fs.file-max = 65535
 ```
 
-Edit the file ```/etc/sysconfig/docker```and add the new limits to OPTIONS like this:
+Edit the file ```/etc/sysconfig/docker``` and add the new limits to OPTIONS like this:
 
 ```bash
 OPTIONS=”—default-ulimit nofile=65535:65535"
