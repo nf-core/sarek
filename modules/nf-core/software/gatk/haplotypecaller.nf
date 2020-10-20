@@ -11,7 +11,7 @@ process GATK_HAPLOTYPECALLER {
     label 'MEMORY_SINGLECPU_TASK_SQ'
     label 'CPUS_2'
 
-    tag "${meta.id}-${interval.baseName}"
+    tag "${meta.id}"
 
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }

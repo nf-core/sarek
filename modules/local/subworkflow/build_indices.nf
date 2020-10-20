@@ -17,16 +17,16 @@ params.tabix_pon_options               = [:]
 
 // Initialize channels based on params or indices that were just built
 
-include { BUILD_INTERVALS }                            from '../process/build_intervals.nf'                           addParams(option: params.build_intervals_options)
-include { BWA_INDEX }                                  from '../../nf-core/software/bwa/index/main.nf'                addParams(option: params.bwa_index_options)
-include { BWAMEM2_INDEX }                              from '../../nf-core/software/bwamem2_index.nf'                 addParams(option: params.bwamem2_index_options)
-include { CREATE_INTERVALS_BED }                       from '../process/create_intervals_bed.nf'                      addParams(option: params.create_intervals_bed_options)
-include { GATK_CREATESEQUENCEDICTIONARY as GATK_DICT } from '../../nf-core/software/gatk/createsequencedictionary.nf' addParams(option: params.gatk_dict_options)
-include { HTSLIB_TABIX as TABIX_DBSNP }                from '../../nf-core/software/htslib_tabix'                     addParams(option: params.tabix_dbsnp_options)
-include { HTSLIB_TABIX as TABIX_GERMLINE_RESOURCE }    from '../../nf-core/software/htslib_tabix'                     addParams(option: params.tabix_germline_resource_options)
-include { HTSLIB_TABIX as TABIX_KNOWN_INDELS }         from '../../nf-core/software/htslib_tabix'                     addParams(option: params.tabix_known_indels_options)
-include { HTSLIB_TABIX as TABIX_PON }                  from '../../nf-core/software/htslib_tabix'                     addParams(option: params.tabix_pon_options)
-include { SAMTOOLS_FAIDX }                             from '../../nf-core/software/samtools/faidx.nf'                addParams(option: params.samtools_faidx_options)
+include { BUILD_INTERVALS }                            from '../process/build_intervals.nf'                           addParams(options: params.build_intervals_options)
+include { BWA_INDEX as BWAMEM1_INDEX }                 from '../../nf-core/software/bwa/index/main.nf'                addParams(options: params.bwa_index_options)
+include { BWAMEM2_INDEX }                              from '../../nf-core/software/bwamem2_index.nf'                 addParams(options: params.bwamem2_index_options)
+include { CREATE_INTERVALS_BED }                       from '../process/create_intervals_bed.nf'                      addParams(options: params.create_intervals_bed_options)
+include { GATK_CREATESEQUENCEDICTIONARY as GATK_DICT } from '../../nf-core/software/gatk/createsequencedictionary.nf' addParams(options: params.gatk_dict_options)
+include { HTSLIB_TABIX as TABIX_DBSNP }                from '../../nf-core/software/htslib_tabix'                     addParams(options: params.tabix_dbsnp_options)
+include { HTSLIB_TABIX as TABIX_GERMLINE_RESOURCE }    from '../../nf-core/software/htslib_tabix'                     addParams(options: params.tabix_germline_resource_options)
+include { HTSLIB_TABIX as TABIX_KNOWN_INDELS }         from '../../nf-core/software/htslib_tabix'                     addParams(options: params.tabix_known_indels_options)
+include { HTSLIB_TABIX as TABIX_PON }                  from '../../nf-core/software/htslib_tabix'                     addParams(options: params.tabix_pon_options)
+include { SAMTOOLS_FAIDX }                             from '../../nf-core/software/samtools/faidx.nf'                addParams(options: params.samtools_faidx_options)
 
 workflow BUILD_INDICES{
     take:
@@ -43,7 +43,7 @@ workflow BUILD_INDICES{
     result_bwa = Channel.empty()
     version_bwa = Channel.empty()
     if (!(params.bwa) && 'mapping' in step)
-        if (params.aligner == "bwa-mem") (result_bwa, version_bwa) = BWA_INDEX(fasta)
+        if (params.aligner == "bwa-mem") (result_bwa, version_bwa) = BWAMEM1_INDEX(fasta)
         else                             result_bwa = BWAMEM2_INDEX(fasta)
 
     result_dict = Channel.empty()

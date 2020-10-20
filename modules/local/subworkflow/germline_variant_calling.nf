@@ -10,11 +10,11 @@ params.concat_gvcf_options            = [:]
 params.concat_haplotypecaller_options = [:]
 params.strelka_options                = [:]
 
-include { GATK_HAPLOTYPECALLER as HAPLOTYPECALLER } from '../../nf-core/software/gatk/haplotypecaller' addParams(option: params.haplotypecaller_options)
-include { GATK_GENOTYPEGVCF as GENOTYPEGVCF }       from '../../nf-core/software/gatk/genotypegvcf'    addParams(option: params.genotypegvcf_options)
-include { CONCAT_VCF as CONCAT_GVCF }               from '../process/concat_vcf'                       addParams(option: params.concat_gvcf_options)
-include { CONCAT_VCF as CONCAT_HAPLOTYPECALLER }    from '../process/concat_vcf'                       addParams(option: params.concat_haplotypecaller_options)
-include { STRELKA_GERMLINE as STRELKA }             from '../../nf-core/software/strelka/germline'     addParams(option: params.strelka_options)
+include { GATK_HAPLOTYPECALLER as HAPLOTYPECALLER } from '../../nf-core/software/gatk/haplotypecaller' addParams(options: params.haplotypecaller_options)
+include { GATK_GENOTYPEGVCF as GENOTYPEGVCF }       from '../../nf-core/software/gatk/genotypegvcf'    addParams(options: params.genotypegvcf_options)
+include { CONCAT_VCF as CONCAT_GVCF }               from '../process/concat_vcf'                       addParams(options: params.concat_gvcf_options)
+include { CONCAT_VCF as CONCAT_HAPLOTYPECALLER }    from '../process/concat_vcf'                       addParams(options: params.concat_haplotypecaller_options)
+include { STRELKA_GERMLINE as STRELKA }             from '../../nf-core/software/strelka/germline'     addParams(options: params.strelka_options)
 
 workflow GERMLINE_VARIANT_CALLING {
     take:

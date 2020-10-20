@@ -9,6 +9,7 @@ if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) 
 
 process GATK_MARKDUPLICATES {
     label 'cpus_16'
+
     tag "${meta.id}"
 
     publishDir params.outdir, mode: params.publish_dir_mode,

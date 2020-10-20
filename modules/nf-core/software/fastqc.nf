@@ -1,3 +1,4 @@
+// Import generic module functions
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
@@ -8,9 +9,10 @@ container = "quay.io/biocontainers/fastqc:0.11.9--0"
 if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/fastqc:0.11.9--0"
 
 process FASTQC {
-    tag "${meta.id}"
     label 'process_medium'
     label 'cpus_2'
+
+    tag "${meta.id}"
 
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }

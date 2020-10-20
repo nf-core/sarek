@@ -105,6 +105,7 @@ if (params.input && (has_extension(params.input, "tsv") || has_extension(params.
 if (params.input && (has_extension(params.input, "vcf") || has_extension(params.input, "vcf.gz"))) step = "annotate"
 
 save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? true : false
+save_reference = params.save_reference
 
 // If no input file specified, trying to get TSV files corresponding to step in the TSV directory
 // only for steps preparerecalibration, recalibrate, variantcalling and controlfreec
@@ -163,16 +164,31 @@ if (tsv_path) {
     log.info "Trying automatic annotation on files in the VariantCalling/ directory"
 } else exit 1, 'No sample were defined, see --help'
 
-// input_sample.dump(tag: 'input sample')
+/*
+================================================================================
+                     UPDATE MODULES OPTIONS BASED ON PARAMS
+================================================================================
+*/
+
+modules = params.modules
+
+if (save_reference)  modules['build_intervals'].publish_files         = ['bed':'intervals']
+if (save_reference)  modules['bwa_index'].publish_files               = ['amb':'bwa', 'ann':'bwa', 'bwt':'bwa', 'pac':'bwa', 'sa':'bwa']
+if (save_reference)  modules['bwamem2_index'].publish_files           = ['0123':'bwamem2', 'amb':'bwamem2', 'ann':'bwamem2', 'bwt.2bit.64':'bwamem2', 'bwt.8bit.32':'bwamem2', 'pac':'bwamem2']
+if (save_reference)  modules['create_intervals_bed'].publish_files    = ['bed':'intervals']
+if (save_reference)  modules['dict'].publish_files                    = ['dict':'dict']
+if (save_reference)  modules['samtools_faidx'].publish_files          = ['fai':'fai']
+if (save_reference)  modules['tabix_dbsnp'].publish_files             = ['vcf.gz.tbi':'dbsnp']
+if (save_reference)  modules['tabix_germline_resource'].publish_files = ['vcf.gz.tbi':'germline_resource']
+if (save_reference)  modules['tabix_known_indels'].publish_files      = ['vcf.gz.tbi':'known_indels']
+if (save_reference)  modules['tabix_pon'].publish_files               = ['vcf.gz.tbi':'pon']
+if (save_bam_mapped) modules['samtools_index_mapping'].publish_files  = ['bam':'mapped', 'bai':'mapped']
 
 /*
 ================================================================================
                                CHECKING REFERENCES
 ================================================================================
 */
-
-modules = params.modules.clone()
-if (save_bam_mapped) modules['samtools_index_mapping'].publish_results = "all"
 
 // Initialize each params in params.genomes, catch the command line first if it was defined
 params.ac_loci                 = params.genome ? params.genomes[params.genome].ac_loci                 ?: false : false
@@ -268,7 +284,7 @@ include { BUILD_INDICES } from './modules/local/subworkflow/build_indices' addPa
     bwa_index_options:               modules['bwa_index'],
     bwamem2_index_options:           modules['bwamem2_index'],
     create_intervals_bed_options:    modules['create_intervals_bed'],
-    gatk_dict_options:               modules['gatk_dict'],
+    gatk_dict_options:               modules['dict'],
     samtools_faidx_options:          modules['samtools_faidx'],
     tabix_dbsnp_options:             modules['tabix_dbsnp'],
     tabix_germline_resource_options: modules['tabix_germline_resource'],
@@ -2101,47 +2117,3 @@ workflow.onComplete {
 // }
 
 // compressVCFOutVEP = compressVCFOutVEP.dump(tag:'VCF')
-
-// /*
-// ================================================================================
-//                                      MultiQC
-// ================================================================================
-// */
-
-// // STEP MULTIQC
-
-// process MultiQC {
-//     publishDir "${params.outdir}/Reports/MultiQC", mode: params.publish_dir_mode
-
-//     input:
-//         file (multiqcConfig) from multiqc_config
-//         file (mqc_custom_config) from multiqc_custom_config.collect().ifEmpty([])
-//         file (versions) from ch_software_versions_yaml.collect()
-//         file workflow_summary from workflow_summary.collectFile(name: "workflow_summary_mqc.yaml")
-//         file ('bamQC/*') from bamQCReport.collect().ifEmpty([])
-//         file ('BCFToolsStats/*') from bcftoolsReport.collect().ifEmpty([])
-//         file ('FastQC/*') from fastQCReport.collect().ifEmpty([])
-//         file ('TrimmedFastQC/*') from trimGaloreReport.collect().ifEmpty([])
-//         file ('MarkDuplicates/*') from duplicates_marked_report.collect().ifEmpty([])
-//         file ('DuplicatesMarked/*.recal.table') from baseRecalibratorReport.collect().ifEmpty([])
-//         file ('SamToolsStats/*') from samtoolsStatsReport.collect().ifEmpty([])
-//         file ('snpEff/*') from snpeffReport.collect().ifEmpty([])
-//         file ('VCFTools/*') from vcftoolsReport.collect().ifEmpty([])
-
-//     output:
-//         file "*multiqc_report.html" into ch_multiqc_report
-//         file "*_data"
-//         file "multiqc_plots"
-
-//     when: !('multiqc' in skip_qc)
-
-//     script:
-//     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
-//     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
-//     custom_config_file = params.multiqc_config ? "--config $mqc_custom_config" : ''
-//     """
-//     multiqc -f ${rtitle} ${rfilename} ${custom_config_file} .
-//     """
-// }
-
-// ch_multiqc_report.dump(tag:'MultiQC')

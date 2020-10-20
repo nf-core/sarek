@@ -41,19 +41,17 @@ def saveFiles(Map args) {
     if (!args.filename.endsWith('.version.txt')) {
         def ioptions = initOptions(args.options)
         def path_list = [ ioptions.publish_dir ?: args.publish_dir ]
-        if (ioptions.publish_by_id) {
-            path_list.add(args.publish_id)
-        }
+        if (ioptions.publish_by_id) path_list.add(args.publish_id)
         if (ioptions.publish_files instanceof Map) {
             for (ext in ioptions.publish_files) {
                 if (args.filename.endsWith(ext.key)) {
                     def ext_list = path_list.collect()
                     ext_list.add(ext.value)
-                    return "${getPathFromList(ext_list)}/$args.filename"
+                    return "${getPathFromList(ext_list)}/${args.filename}"
                 }
             }
         } else if (ioptions.publish_files == null) {
-            return "${getPathFromList(path_list)}/$args.filename"
+            return "${getPathFromList(path_list)}/${args.filename}"
         }
     }
 }

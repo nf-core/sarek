@@ -8,12 +8,12 @@ container = "quay.io/biocontainers/bwa:0.7.17--hed695b0_7"
 if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/bwa:0.7.17--hed695b0_7"
 
 process BWA_INDEX {
-    tag "${fasta}"
-
     label 'process_high'
 
+    tag "${fasta}"
+
     publishDir params.outdir, mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:"false") }
 
     conda environment
     container container

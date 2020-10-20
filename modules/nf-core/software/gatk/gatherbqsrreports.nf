@@ -10,6 +10,7 @@ if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) 
 process GATK_GATHERBQSRREPORTS {
     label 'memory_singleCPU_2_task'
     label 'cpus_2'
+
     tag "${meta.id}"
 
     publishDir params.outdir, mode: params.publish_dir_mode,
