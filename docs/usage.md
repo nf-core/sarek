@@ -141,8 +141,8 @@
   - [--awsqueue](#--awsqueue)
   - [--awsregion](#--awsregion)
   - [--awscli](#--awscli)
-- [Troubleshooting)](#troubleshooting)
-  - [Spark related errors](#spark)
+- [Troubleshooting](#troubleshooting)
+  - [Spark related issues](#spark)
 
 ## Running the pipeline
 
@@ -1743,7 +1743,7 @@ Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a 
 ## Troubleshooting
 
 
-### Spark related errors
+### Spark related issues
 
 If you have problems running processes that make use of Spark such as ```MarkDuplicates```. 
 You are probably experiencing issues with the limit of open files in your system. You can
