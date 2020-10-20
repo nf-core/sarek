@@ -1744,7 +1744,7 @@ Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a 
 
 ### Spark related issues
 
-If you have problems running processes that make use of Spark such as ```MarkDuplicates```. 
+If you have problems running processes that make use of Spark such as ```MarkDuplicates```.
 You are probably experiencing issues with the limit of open files in your system. You can
 check your current limit by typing the following:
 
@@ -1759,7 +1759,7 @@ Edit the file ```/etc/security/limits.conf``` and add the lines:
 
 ```bash
 *     soft   nofile  65535
-*     hard   nofile  65535 
+*     hard   nofile  65535
 ```
 
 Edit the file ```/etc/sysctl.conf``` and add the line:
@@ -1774,7 +1774,7 @@ Edit the file ```/etc/sysconfig/docker``` and add the new limits to OPTIONS like
 OPTIONS=”—default-ulimit nofile=65535:65535"
 ```
 
-Re-start your session. 
+Re-start your session.
 
 Note that the way to increase the open file limit in your system may be slightly different
 or require additional steps.
