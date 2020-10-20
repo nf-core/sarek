@@ -1742,7 +1742,6 @@ Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a 
 
 ## Troubleshooting
 
-
 ### Spark related issues
 
 If you have problems running processes that make use of Spark such as ```MarkDuplicates```. 
@@ -1777,4 +1776,4 @@ OPTIONS=”—default-ulimit nofile=65535:65535"
 Re-start your session. 
 
 Note that the way to increase the open file limit in your system may be slightly different
-or require additional steps. 
+or require additional steps.
