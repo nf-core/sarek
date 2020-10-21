@@ -94,6 +94,8 @@ anno_list = define_anno_list()
 annotate_tools = params.annotate_tools ? params.annotate_tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
 if (!check_parameter_list(annotate_tools,anno_list)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
 
+if (!(params.aligner in ['bwa-mem', 'bwa-mem2'])) exit 1, 'Unknown aligner, see --help for more information'
+
 // // Check parameters
 if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
 if (params.cf_window && params.cf_coeff) exit 1, 'Please specify either --cf_window OR --cf_coeff, but not both of them'
@@ -301,7 +303,7 @@ include { MAPPING } from './modules/local/subworkflow/mapping' addParams(
     samtools_stats_options:          modules['samtools_stats_mapping']
 )
 include { MARKDUPLICATES } from './modules/local/subworkflow/markduplicates' addParams(
-    markduplicates_options:          modules['markduplicates']
+    markduplicates_options:          modules['markduplicates'],
 )
 include { PREPARE_RECALIBRATION } from './modules/local/subworkflow/prepare_recalibration' addParams(
     baserecalibrator_options:        modules['baserecalibrator'],
@@ -315,6 +317,20 @@ include { RECALIBRATE } from './modules/local/subworkflow/recalibrate' addParams
     samtools_stats_options:          modules['samtools_stats_recalibrate']
 )
 include { GERMLINE_VARIANT_CALLING } from './modules/local/subworkflow/germline_variant_calling' addParams(
+    haplotypecaller_options:         modules['haplotypecaller'],
+    genotypegvcf_options:            modules['genotypegvcf'],
+    concat_gvcf_options:             modules['concat_gvcf'],
+    concat_haplotypecaller_options:  modules['concat_haplotypecaller'],
+    strelka_options:                 modules['strelka_germline']
+)
+include { TUMOR_VARIANT_CALLING } from './modules/local/subworkflow/tumor_variant_calling' addParams(
+    haplotypecaller_options:         modules['haplotypecaller'],
+    genotypegvcf_options:            modules['genotypegvcf'],
+    concat_gvcf_options:             modules['concat_gvcf'],
+    concat_haplotypecaller_options:  modules['concat_haplotypecaller'],
+    strelka_options:                 modules['strelka_germline']
+)
+include { PAIR_VARIANT_CALLING } from './modules/local/subworkflow/pair_variant_calling' addParams(
     haplotypecaller_options:         modules['haplotypecaller'],
     genotypegvcf_options:            modules['genotypegvcf'],
     concat_gvcf_options:             modules['concat_gvcf'],
