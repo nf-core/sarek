@@ -303,7 +303,7 @@ include { MAPPING } from './modules/local/subworkflow/mapping' addParams(
     samtools_stats_options:          modules['samtools_stats_mapping']
 )
 include { MARKDUPLICATES } from './modules/local/subworkflow/markduplicates' addParams(
-    markduplicates_options:          modules['markduplicates'],
+    markduplicates_options:          modules['markduplicates']
 )
 include { PREPARE_RECALIBRATION } from './modules/local/subworkflow/prepare_recalibration' addParams(
     baserecalibrator_options:        modules['baserecalibrator'],
