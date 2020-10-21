@@ -323,19 +323,10 @@ include { GERMLINE_VARIANT_CALLING } from './modules/local/subworkflow/germline_
     concat_haplotypecaller_options:  modules['concat_haplotypecaller'],
     strelka_options:                 modules['strelka_germline']
 )
-include { TUMOR_VARIANT_CALLING } from './modules/local/subworkflow/tumor_variant_calling' addParams(
-    haplotypecaller_options:         modules['haplotypecaller'],
-    genotypegvcf_options:            modules['genotypegvcf'],
-    concat_gvcf_options:             modules['concat_gvcf'],
-    concat_haplotypecaller_options:  modules['concat_haplotypecaller'],
-    strelka_options:                 modules['strelka_germline']
-)
+// include { TUMOR_VARIANT_CALLING } from './modules/local/subworkflow/tumor_variant_calling' addParams(
+// )
 include { PAIR_VARIANT_CALLING } from './modules/local/subworkflow/pair_variant_calling' addParams(
-    haplotypecaller_options:         modules['haplotypecaller'],
-    genotypegvcf_options:            modules['genotypegvcf'],
-    concat_gvcf_options:             modules['concat_gvcf'],
-    concat_haplotypecaller_options:  modules['concat_haplotypecaller'],
-    strelka_options:                 modules['strelka_germline']
+    strelka_options:                 modules['strelka_somatic']
 )
 
 /*
@@ -554,16 +545,16 @@ workflow {
 ================================================================================
 */
 
-    TUMOR_VARIANT_CALLING(
-        bam_variant_calling,
-        dbsnp,
-        dbsnp_tbi,
-        dict,
-        fai,
-        fasta,
-        intervals,
-        target_bed,
-        tools)
+    // TUMOR_VARIANT_CALLING(
+    //     bam_variant_calling,
+    //     dbsnp,
+    //     dbsnp_tbi,
+    //     dict,
+    //     fai,
+    //     fasta,
+    //     intervals,
+    //     target_bed,
+    //     tools)
 
     PAIR_VARIANT_CALLING(
         bam_variant_calling,
@@ -1186,55 +1177,6 @@ workflow.onComplete {
 // }
 
 // vcf_sentieon_compressed = vcf_sentieon_compressed.dump(tag:'Sentieon VCF indexed')
-
-// // STEP STRELKA.2 - SOMATIC PAIR
-
-// process Strelka {
-//     label 'cpus_max'
-//     label 'memory_max'
-
-//     tag "${idSampleTumor}_vs_${idSampleNormal}"
-
-//     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Strelka", mode: params.publish_dir_mode
-
-//     input:
-//         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamStrelka
-//         file(dict) from dict
-//         file(fasta) from fasta
-//         file(fastaFai) from fai
-//         file(targetBED) from ch_target_bed
-
-//     output:
-//         set val("Strelka"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfStrelka
-
-//     when: 'strelka' in tools
-
-//     script:
-//     beforeScript = params.target_bed ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
-//     options = params.target_bed ? "--exome --callRegions call_targets.bed.gz" : ""
-//     """
-//     ${beforeScript}
-//     configureStrelkaSomaticWorkflow.py \
-//         --tumor ${bamTumor} \
-//         --normal ${bamNormal} \
-//         --referenceFasta ${fasta} \
-//         ${options} \
-//         --runDir Strelka
-
-//     python Strelka/runWorkflow.py -m local -j ${task.cpus}
-
-//     mv Strelka/results/variants/somatic.indels.vcf.gz \
-//         Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz
-//     mv Strelka/results/variants/somatic.indels.vcf.gz.tbi \
-//         Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz.tbi
-//     mv Strelka/results/variants/somatic.snvs.vcf.gz \
-//         Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
-//     mv Strelka/results/variants/somatic.snvs.vcf.gz.tbi \
-//         Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz.tbi
-//     """
-// }
-
-// vcfStrelka = vcfStrelka.dump(tag:'Strelka')
 
 // // STEP MANTA.2 - SOMATIC PAIR
 

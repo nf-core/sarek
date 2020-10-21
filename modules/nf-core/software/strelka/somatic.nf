@@ -7,7 +7,7 @@ environment = params.enable_conda ? "bioconda::strelka=2.9.10" : null
 container = "quay.io/biocontainers/strelka:2.9.10--0"
 if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/strelka:2.9.10--0"
 
-process STRELKA_GERMLINE {
+process STRELKA_SOMATIC {
     tag "${meta.id}"
     
     label 'CPUS_MAX'
@@ -20,14 +20,14 @@ process STRELKA_GERMLINE {
     container container
 
     input:
-        tuple val(meta), path(bam), path (bai)
+        tuple val(meta), path(bam_normal), path (bai_normal), path(bam_tumor), path (bai_tumor)
         path fasta
         path fai
         path target_bed
 
     output:
-        tuple val(meta), path("*_variants.vcf.gz"), path("*_variants.vcf.gz.tbi"), emit: vcf
-        tuple val(meta), path("*_genome.vcf.gz"), path("*_genome.vcf.gz.tbi"), emit: genome_vcf
+        tuple val(meta), path("*_somatic_indels.vcf.gz"), path("*_somatic_indels.vcf.gz.tbi"), emit: indels_vcf
+        tuple val(meta), path("*_somatic_snvs.vcf.gz"), path("*_somatic_snvs.vcf.gz.tbi"),     emit: snvs_vcf
         path "*.version.txt", emit: version
 
     script:
@@ -41,19 +41,20 @@ process STRELKA_GERMLINE {
     options_strelka = params.target_bed ? ioptions.args : ""
     """
     ${beforeScript}
-    configureStrelkaGermlineWorkflow.py \
-        --bam ${bam} \
+    configureStrelkaSomaticWorkflow.py \
+        --tumor ${bam_tumor} \
+        --normal ${bam_normal} \
         --referenceFasta ${fasta} \
         ${options_strelka} \
         --runDir strelka
 
     python strelka/runWorkflow.py -m local -j ${task.cpus}
 
-    mv strelka/results/variants/genome.*.vcf.gz     ${prefix}_genome.vcf.gz
-    mv strelka/results/variants/genome.*.vcf.gz.tbi ${prefix}_genome.vcf.gz.tbi
-    mv strelka/results/variants/variants.vcf.gz     ${prefix}_variants.vcf.gz
-    mv strelka/results/variants/variants.vcf.gz.tbi ${prefix}_variants.vcf.gz.tbi
+    mv strelka/results/variants/somatic.indels.vcf.gz     ${prefix}_somatic_indels.vcf.gz
+    mv strelka/results/variants/somatic.indels.vcf.gz.tbi ${prefix}_somatic_indels.vcf.gz.tbi
+    mv strelka/results/variants/somatic.snvs.vcf.gz       ${prefix}_somatic_snvs.vcf.gz
+    mv strelka/results/variants/somatic.snvs.vcf.gz.tbi   ${prefix}_somatic_snvs.vcf.gz.tbi
 
-    echo configureStrelkaGermlineWorkflow.py --version &> ${software}.version.txt #2>&1
+    echo configureStrelkaSomaticWorkflow.py --version &> ${software}.version.txt #2>&1
     """
 }
