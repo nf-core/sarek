@@ -8,7 +8,7 @@ params.adam_transformalignments_options = [:]
 params.markduplicates_options           = [:]
 params.samtools_index_options           = [:]
 
-include { ADAM_TRANSFORMALIGNMENTS } from '../../nf-core/software/adam_transformalignments' addParams(options: params.adam_transformalignments_options)
+include { ADAM_TRANSFORMALIGNMENTS } from '../../nf-core/software/adam/transformalignments' addParams(options: params.adam_transformalignments_options)
 include { GATK_MARKDUPLICATES }      from '../../nf-core/software/gatk/markduplicates'      addParams(options: params.markduplicates_options)
 include { SAMTOOLS_INDEX }           from '../../nf-core/software/samtools/index'           addParams(options: params.samtools_index_options)
 

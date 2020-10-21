@@ -198,6 +198,19 @@
                 "aligner": {
                     "type": "string",
                     "default": "bwa-mem",
+                    "enum": [
+                        "bwa-mem",
+                        "bwa-mem2"
+                    ],
+                    "fa_icon": "fas fa-puzzle-piece"
+                },
+                "markduplicates": {
+                    "type": "string",
+                    "default": "gatk",
+                    "enum": [
+                        "adam",
+                        "gatk"
+                    ],
                     "fa_icon": "fas fa-puzzle-piece"
                 },
                 "markdup_java_options": {
@@ -713,6 +726,13 @@
                     "description": "Force pull and use of Docker container instead of default Singularity ones",
                     "hidden": true,
                     "help_text": "This may be useful if you are unable to download Singularity containers due to proxy issues."
+                },
+                "enable_conda": {
+                    "type": "boolean",
+                    "fa_icon": "fas snake",
+                    "description": "Enable conda",
+                    "hidden": true,
+                    "help_text": ""
                 }
             },
             "fa_icon": "fas fa-cog"
