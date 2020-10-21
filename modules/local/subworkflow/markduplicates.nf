@@ -4,9 +4,13 @@
 ================================================================================
 */
 
-params.markduplicates_options = [:]
+params.adam_transformalignments_options = [:]
+params.markduplicates_options           = [:]
+params.samtools_index_options           = [:]
 
-include { GATK_MARKDUPLICATES } from '../../nf-core/software/gatk/markduplicates' addParams(options: params.markduplicates_options)
+include { ADAM_TRANSFORMALIGNMENTS } from '../../nf-core/software/adam_transformalignments' addParams(options: params.adam_transformalignments_options)
+include { GATK_MARKDUPLICATES }      from '../../nf-core/software/gatk/markduplicates'      addParams(options: params.markduplicates_options)
+include { SAMTOOLS_INDEX }           from '../../nf-core/software/samtools/index'           addParams(options: params.samtools_index_options)
 
 workflow MARKDUPLICATES {
     take:
@@ -20,10 +24,18 @@ workflow MARKDUPLICATES {
 
     if (step == "mapping") {
         if (!params.skip_markduplicates) {
-            GATK_MARKDUPLICATES(bam_mapped)
-            report_markduplicates = GATK_MARKDUPLICATES.out.report
-            bam_markduplicates    = GATK_MARKDUPLICATES.out.bam
-            tsv_markduplicates    = GATK_MARKDUPLICATES.out.tsv
+            if (params.markduplicates == 'gatk') {
+                GATK_MARKDUPLICATES(bam_mapped)
+
+                bam_markduplicates    = GATK_MARKDUPLICATES.out.bam
+                report_markduplicates = GATK_MARKDUPLICATES.out.report
+                tsv_markduplicates    = GATK_MARKDUPLICATES.out.tsv
+            } else if (params.markduplicates == 'adam') {
+                ADAM_TRANSFORMALIGNMENTS(bam_mapped)
+
+                bam_markduplicates    = SAMTOOLS_INDEX(ADAM_TRANSFORMALIGNMENTS.out.bam)
+                tsv_markduplicates    = ADAM_TRANSFORMALIGNMENTS.out.tsv
+            }
 
             // Creating TSV files to restart from this step
             tsv_markduplicates.collectFile(storeDir: "${params.outdir}/preprocessing/tsv") { meta ->

@@ -94,6 +94,9 @@ anno_list = define_anno_list()
 annotate_tools = params.annotate_tools ? params.annotate_tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
 if (!check_parameter_list(annotate_tools,anno_list)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
 
+if (!(params.aligner in ['bwa-mem','bwa-mem2'])) exit 1, 'Unknown aligner, see --help for more information'
+if (!(params.markduplicates in ['gatk', 'adam'])) exit 1, 'Unknown markduplicates, see --help for more information'
+
 // // Check parameters
 if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
 if (params.cf_window && params.cf_coeff) exit 1, 'Please specify either --cf_window OR --cf_coeff, but not both of them'
@@ -281,45 +284,47 @@ if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works
 */
 
 include { BUILD_INDICES } from './modules/local/subworkflow/build_indices' addParams(
-    build_intervals_options:         modules['build_intervals'],
-    bwa_index_options:               modules['bwa_index'],
-    bwamem2_index_options:           modules['bwamem2_index'],
-    create_intervals_bed_options:    modules['create_intervals_bed'],
-    gatk_dict_options:               modules['dict'],
-    samtools_faidx_options:          modules['samtools_faidx'],
-    tabix_dbsnp_options:             modules['tabix_dbsnp'],
-    tabix_germline_resource_options: modules['tabix_germline_resource'],
-    tabix_known_indels_options:      modules['tabix_known_indels'],
-    tabix_pon_options:               modules['tabix_pon']
+    build_intervals_options:          modules['build_intervals'],
+    bwa_index_options:                modules['bwa_index'],
+    bwamem2_index_options:            modules['bwamem2_index'],
+    create_intervals_bed_options:     modules['create_intervals_bed'],
+    gatk_dict_options:                modules['dict'],
+    samtools_faidx_options:           modules['samtools_faidx'],
+    tabix_dbsnp_options:              modules['tabix_dbsnp'],
+    tabix_germline_resource_options:  modules['tabix_germline_resource'],
+    tabix_known_indels_options:       modules['tabix_known_indels'],
+    tabix_pon_options:                modules['tabix_pon']
 )
 include { MAPPING } from './modules/local/subworkflow/mapping' addParams(
-    bwamem1_mem_options:             modules['bwa_mem1_mem'],
-    bwamem2_mem_options:             modules['bwa_mem2_mem'],
-    merge_bam_options:               modules['merge_bam_mapping'],
-    qualimap_bamqc_options:          modules['qualimap_bamqc_mapping'],
-    samtools_index_options:          modules['samtools_index_mapping'],
-    samtools_stats_options:          modules['samtools_stats_mapping']
+    bwamem1_mem_options:              modules['bwa_mem1_mem'],
+    bwamem2_mem_options:              modules['bwa_mem2_mem'],
+    merge_bam_options:                modules['merge_bam_mapping'],
+    qualimap_bamqc_options:           modules['qualimap_bamqc_mapping'],
+    samtools_index_options:           modules['samtools_index_mapping'],
+    samtools_stats_options:           modules['samtools_stats_mapping']
 )
 include { MARKDUPLICATES } from './modules/local/subworkflow/markduplicates' addParams(
-    markduplicates_options:          modules['markduplicates']
+    adam_transformalignments_options: modules['adam_transformalignments'],
+    markduplicates_options:           modules['markduplicates'],
+    samtools_index_options:           modules['samtools_index_markduplicates']
 )
 include { PREPARE_RECALIBRATION } from './modules/local/subworkflow/prepare_recalibration' addParams(
-    baserecalibrator_options:        modules['baserecalibrator'],
-    gatherbqsrreports_options:       modules['gatherbqsrreports']
+    baserecalibrator_options:         modules['baserecalibrator'],
+    gatherbqsrreports_options:        modules['gatherbqsrreports']
 )
 include { RECALIBRATE } from './modules/local/subworkflow/recalibrate' addParams(
-    applybqsr_options:               modules['applybqsr'],
-    merge_bam_options:               modules['merge_bam_recalibrate'],
-    qualimap_bamqc_options:          modules['qualimap_bamqc_recalibrate'],
-    samtools_index_options:          modules['samtools_index_recalibrate'],
-    samtools_stats_options:          modules['samtools_stats_recalibrate']
+    applybqsr_options:                modules['applybqsr'],
+    merge_bam_options:                modules['merge_bam_recalibrate'],
+    qualimap_bamqc_options:           modules['qualimap_bamqc_recalibrate'],
+    samtools_index_options:           modules['samtools_index_recalibrate'],
+    samtools_stats_options:           modules['samtools_stats_recalibrate']
 )
 include { GERMLINE_VARIANT_CALLING } from './modules/local/subworkflow/germline_variant_calling' addParams(
-    haplotypecaller_options:         modules['haplotypecaller'],
-    genotypegvcf_options:            modules['genotypegvcf'],
-    concat_gvcf_options:             modules['concat_gvcf'],
-    concat_haplotypecaller_options:  modules['concat_haplotypecaller'],
-    strelka_options:                 modules['strelka_germline']
+    haplotypecaller_options:          modules['haplotypecaller'],
+    genotypegvcf_options:             modules['genotypegvcf'],
+    concat_gvcf_options:              modules['concat_gvcf'],
+    concat_haplotypecaller_options:   modules['concat_haplotypecaller'],
+    strelka_options:                  modules['strelka_germline']
 )
 
 /*
@@ -521,44 +526,11 @@ workflow {
 ================================================================================
 */
 
-    GERMLINE_VARIANT_CALLING(
-        bam_variant_calling,
-        dbsnp,
-        dbsnp_tbi,
-        dict,
-        fai,
-        fasta,
-        intervals,
-        target_bed,
-        tools)
-
 /*
 ================================================================================
                              SOMATIC VARIANT CALLING
 ================================================================================
 */
-
-    TUMOR_VARIANT_CALLING(
-        bam_variant_calling,
-        dbsnp,
-        dbsnp_tbi,
-        dict,
-        fai,
-        fasta,
-        intervals,
-        target_bed,
-        tools)
-
-    PAIR_VARIANT_CALLING(
-        bam_variant_calling,
-        dbsnp,
-        dbsnp_tbi,
-        dict,
-        fai,
-        fasta,
-        intervals,
-        target_bed,
-        tools)
 
 /*
 ================================================================================
