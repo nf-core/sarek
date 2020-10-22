@@ -479,6 +479,7 @@ if (params.intervals)               summary['intervals']               = params.
 if (params.known_indels)            summary['known indels']            = params.known_indels
 if (params.known_indels_index)      summary['known indels index']      = params.known_indels_index
 if (params.mappability)             summary['Mappability']             = params.mappability
+if (params.seqz_gc)                 summary['sequenza GC wiggle']      = params.seqz_gc
 if (params.snpeff_cache)            summary['snpEff cache']            = params.snpeff_cache
 if (params.snpeff_db)               summary['snpEff DB']               = params.snpeff_db
 if (params.species)                 summary['species']                 = params.species
@@ -773,8 +774,7 @@ process BuildIntervals {
 }
 
 ch_intervals = params.no_intervals ? "null" : params.intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : intervalBuilt
-// I think sequenza would work better over whole chromosomes so I split off a channel here for sequenza
-(ch_intervals_for_sequenza, ch_intervals) ch_intervals.into(2)
+
 /*
 ================================================================================
                                   PREPROCESSING
@@ -3113,34 +3113,31 @@ process sequenza_utils_make_gc_wiggle {
     output:
         file("*wig.gz") into seqzGC_built
     
-    when: !(params.seqz_gc) && params.fasta && 'variant_calling' in step
+    when: !(params.seqz_gc) && params.fasta && 'sequenza' in tools
     
     script:
-    """
-    sequenza_utils gc_wiggle -w 50 --fasta ${fasta} -o ${genome}.gc50Base.wig.base
+    genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
+	"""
+    sequenza-utils gc_wiggle -w 50 --fasta ${fasta} -o ${genome}.gc50Base.wig.gz
     """
 }
 
-
-// split using faiIntervals
-pairBamSequenza = pairBamSequenza.spread(ch_intervals_for_sequenza)
-
-sequenza_gc = ch_sequenza_gc.mix(sequenza_gc) 
+ch_seqzGC = params.seqz_gc ? Channel.value(file(params.seqz_gc)) : seqzGC_built
+pairBamSequenza = pairBamSequenza.dump(tag: "sequenza" )
 
 process sequenza_utils {
-    tag "${idSampleTumor}_vs_${idSampleNormal}"
+    
+	tag "${idSampleTumor}_vs_${idSampleNormal}"
 
-    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/sequenza", mode: params.publish_dir_mode
+    publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/sequenza", mode: params.publish_dir_mode
     
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamSequenza
-        file(targetBED) from ch_target_bed
-        file(intervals) from ch_intervals_for_sequenza
         file(fasta) from ch_fasta
-        file(gc_wiggle) from sequenza_gc 
+        file(gc_wiggle) from ch_seqzGC
 
     output:
-        file(*seqz) into sequenza_out
+        set idPatient, idSampleTumor, file("*seqz") into sequenza_out
     
     when: 'sequenza' in tools
 
@@ -3149,12 +3146,80 @@ process sequenza_utils {
     sequenza-utils bam2seqz \
     -F ${fasta} \
     -gc ${gc_wiggle} \
-    -C ${intervals} \
     --het 0.4 \
-    --parallel ${task.cpus} \
     -n ${bamNormal} -t ${bamTumor} -o ${idSampleTumor}_vs_${idSampleNormal}.seqz
-    """"
+    """
 
+}
+
+process find_het_snps {
+   
+	tag "${idPatient}_${idSampleTumor}_het_snps"
+    
+    publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/sequenza", mode: params.publish_dir_mode
+	
+	input:
+        set idPatient, idSampleTumor, file(bam2seqz_out) from sequenza_out
+    
+	output:
+        file("${idPatient}_${idTumor}_het.seqz") into seqz_het_snps_out
+    
+    when: 'sequenza' in tools
+	script:
+	"""
+    zcat ${bam2seqz_out} | head -n 1 > "${idPatient}_${idTumor}_het.seqz"
+    zcat ${bam2seqz_out} | grep het >> "${idPatient}_${idTumor}_het.seqz"
+    """
+}
+
+
+
+process sequenza_seqz_binning {
+
+	tag "${idPatient}_${idSampleTumor}_bin"
+    
+	input:
+	    set idPatient, idSampleTumor, file(bam2seqz) from sequenza_out
+    
+	output:
+        set idPatient, idSampleTumor, file("${idPatient}_${idSampleTumor}-bin50.seqz.gz") into seqz_bin
+    
+	script:
+	"""
+    sequenza-utils seqz_binning -w 50 -s "${bam2seqz}" -o - | gzip > "${idPatient}_${idSampleTumor}-bin50.seqz.gz"
+    """
+}
+
+
+sequenza_output_base = "data/{patient}/sequenza/initial_fit/{patient}_{sample}"
+process sequenza_initial_fit {
+    
+	tag "${idPatient}_${idSampleTumor}_seqz_initial_fit"
+
+	input:
+        set idPatient, idSampleTumor, file(seqz_bin) from seqz_bin
+
+    output:
+	    set idPatient, idSampleTumor, file(*pdf), file(*txt), file(*RData) into seqz_initial_fit
+        results=sequenza_output_base + "_sequenza_extract.RData"
+    params:
+	# All following parameters will be passed as arguments
+        # to the main function of the "analyse_cn_sequenza.R"
+        # script:
+        output_prefix=sequenza_output_base,
+        is_female=lambda wildcards:
+            wildcards.patient in config["female_patient_ids"],
+        min_reads_normal=20,
+        window=1*1e6,
+        gamma=150,
+        kmin=20
+    
+	script:
+	gender = genderMap[idPatient]
+    kmin=20
+	"""
+	analyse_cn_sequenza.R ${seqz_bin) . ${gender}
+	"""
 }
 
 // STEP MSISENSOR.1 - SCAN
@@ -4263,7 +4328,8 @@ def defineToolList() {
         'merge',
         'mpileup',
         'mutect2',
-        'platypus', 
+        'platypus',
+		'sequenza',
         'snpeff',
         'strelka',
         'tiddit',
