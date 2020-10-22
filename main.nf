@@ -328,6 +328,7 @@ include { GERMLINE_VARIANT_CALLING } from './modules/local/subworkflow/germline_
 // include { TUMOR_VARIANT_CALLING } from './modules/local/subworkflow/tumor_variant_calling' addParams(
 // )
 include { PAIR_VARIANT_CALLING } from './modules/local/subworkflow/pair_variant_calling' addParams(
+    msisensor_msi_options:           modules['msisensor_msi'],
     manta_options:                   modules['manta_somatic'],
     strelka_options:                 modules['strelka_somatic']
 )
