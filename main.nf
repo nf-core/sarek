@@ -292,6 +292,9 @@ include { BUILD_INDICES } from './modules/local/subworkflow/build_indices' addPa
     tabix_known_indels_options:      modules['tabix_known_indels'],
     tabix_pon_options:               modules['tabix_pon']
 )
+
+include { SPLIT_FASTQ } from './modules/local/process/seqkit_split2' addParams( seqkit_options: modules['seqkit'] )
+
 include { MAPPING } from './modules/local/subworkflow/mapping' addParams(
     bwamem1_mem_options:             modules['bwa_mem1_mem'],
     bwamem2_mem_options:             modules['bwa_mem2_mem'],
@@ -437,7 +440,7 @@ workflow {
         ('fastqc' in skip_qc || step != "mapping"),
         !(params.trim_fastq))
 
-    reads_input = QC_TRIM.out.reads
+    //reads_input = QC_TRIM.out.reads
 
     qc_reports = qc_reports.mix(
         QC_TRIM.out.fastqc_html,
@@ -447,6 +450,10 @@ workflow {
         QC_TRIM.out.trimgalore_zip)
 
     // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA-MEM
+
+    //TODO: not sure whether to split the reads before qc or after
+
+    reads_input = SPLIT_FASTQ(QC_TRIM.out.reads)
 
     MAPPING(
         ('bamqc' in skip_qc),
