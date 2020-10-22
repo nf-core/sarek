@@ -16,16 +16,17 @@ include { STRELKA_SOMATIC_BEST_PRACTICES as STRELKA_BP } from '../../nf-core/sof
 
 workflow PAIR_VARIANT_CALLING {
     take:
-        bam            // channel: [mandatory] bam
-        dbsnp          // channel: [mandatory] dbsnp
-        dbsnp_tbi      // channel: [mandatory] dbsnp_tbi
-        dict           // channel: [mandatory] dict
-        fai            // channel: [mandatory] fai
-        fasta          // channel: [mandatory] fasta
-        intervals      // channel: [mandatory] intervals
-        msisensor_scan // channel: [optional]  msisensor_scan
-        target_bed     // channel: [optional]  target_bed
-        tools          //    list: [mandatory] list of tools
+        bam               // channel: [mandatory] bam
+        dbsnp             // channel: [mandatory] dbsnp
+        dbsnp_tbi         // channel: [mandatory] dbsnp_tbi
+        dict              // channel: [mandatory] dict
+        fai               // channel: [mandatory] fai
+        fasta             // channel: [mandatory] fasta
+        intervals         // channel: [mandatory] intervals
+        msisensor_scan    // channel: [optional]  msisensor_scan
+        target_bed        // channel: [optional]  target_bed
+        target_bed_gz_tbi // channel: [optional]  target_bed_gz_tbi
+        tools             //    list: [mandatory] list of tools
 
     main:
 
@@ -59,7 +60,7 @@ workflow PAIR_VARIANT_CALLING {
             bam_pair,
             fasta,
             fai,
-            target_bed)
+            target_bed_gz_tbi)
 
         manta_candidate_small_indels_vcf = MANTA.out.candidate_small_indels_vcf
         manta_candidate_sv_vcf           = MANTA.out.candidate_sv_vcf
@@ -74,7 +75,7 @@ workflow PAIR_VARIANT_CALLING {
                 manta_csi_for_strelka_bp,
                 fasta,
                 fai,
-                target_bed)
+                target_bed_gz_tbi)
 
             strelka_indels_vcf = STRELKA_BP.out.indels_vcf
             strelka_snvs_vcf   = STRELKA_BP.out.snvs_vcf
@@ -94,7 +95,7 @@ workflow PAIR_VARIANT_CALLING {
             bam_pair,
             fasta,
             fai,
-            target_bed)
+            target_bed_gz_tbi)
 
         strelka_indels_vcf = STRELKA.out.indels_vcf
         strelka_snvs_vcf   = STRELKA.out.snvs_vcf

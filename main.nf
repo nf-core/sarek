@@ -178,8 +178,9 @@ if (params.save_reference)      modules['bwa_index'].publish_files              
 if (params.save_reference)      modules['bwamem2_index'].publish_files           = ['0123':'bwamem2', 'amb':'bwamem2', 'ann':'bwamem2', 'bwt.2bit.64':'bwamem2', 'bwt.8bit.32':'bwamem2', 'pac':'bwamem2']
 if (params.save_reference)      modules['create_intervals_bed'].publish_files    = ['bed':'intervals']
 if (params.save_reference)      modules['dict'].publish_files                    = ['dict':'dict']
-if (params.save_reference)      modules['samtools_faidx'].publish_files          = ['fai':'fai']
+if (params.save_reference)      modules['index_target_bed'].publish_files        = ['bed.gz':'target', 'bed.gz.tbi':'target']
 if (params.save_reference)      modules['msisensor_scan'].publish_files          = ['list':'msi']
+if (params.save_reference)      modules['samtools_faidx'].publish_files          = ['fai':'fai']
 if (params.save_reference)      modules['tabix_dbsnp'].publish_files             = ['vcf.gz.tbi':'dbsnp']
 if (params.save_reference)      modules['tabix_germline_resource'].publish_files = ['vcf.gz.tbi':'germline_resource']
 if (params.save_reference)      modules['tabix_known_indels'].publish_files      = ['vcf.gz.tbi':'known_indels']
@@ -289,6 +290,7 @@ include { BUILD_INDICES } from './modules/local/subworkflow/build_indices' addPa
     bwamem2_index_options:           modules['bwamem2_index'],
     create_intervals_bed_options:    modules['create_intervals_bed'],
     gatk_dict_options:               modules['dict'],
+    index_target_bed_options:        modules['index_target_bed'],
     msisensor_scan_options:          modules['msisensor_scan'],
     samtools_faidx_options:          modules['samtools_faidx'],
     tabix_dbsnp_options:             modules['tabix_dbsnp'],
@@ -414,6 +416,7 @@ workflow {
         known_indels,
         pon,
         step,
+        target_bed,
         tools)
 
     intervals = BUILD_INDICES.out.intervals
@@ -427,7 +430,8 @@ workflow {
     known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? file(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : file("${params.outdir}/no_file")
     pon_tbi               = params.pon               ? params.pon_index               ? file(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : file("${params.outdir}/no_file")
 
-    msisensor_scan = BUILD_INDICES.out.msisensor_scan
+    msisensor_scan    = BUILD_INDICES.out.msisensor_scan
+    target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
 /*
 ================================================================================
                                   PREPROCESSING
@@ -543,6 +547,7 @@ workflow {
         fasta,
         intervals,
         target_bed,
+        target_bed_gz_tbi,
         tools)
 
 /*
@@ -560,6 +565,7 @@ workflow {
     //     fasta,
     //     intervals,
     //     target_bed,
+    //     target_bed_gz_tbi,
     //     tools)
 
     PAIR_VARIANT_CALLING(
@@ -572,6 +578,7 @@ workflow {
         intervals,
         msisensor_scan,
         target_bed,
+        target_bed_gz_tbi,
         tools)
 
 /*

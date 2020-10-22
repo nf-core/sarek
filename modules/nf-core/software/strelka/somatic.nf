@@ -23,7 +23,7 @@ process STRELKA_SOMATIC {
         tuple val(meta), path(bam_normal), path(bai_normal), path(bam_tumor), path(bai_tumor)
         path fasta
         path fai
-        path target_bed
+        tuple path(target_bed), path(target_bed_tbi)
 
     output:
         tuple val(meta), path("*_somatic_indels.vcf.gz"), path("*_somatic_indels.vcf.gz.tbi"), emit: indels_vcf
@@ -37,10 +37,8 @@ process STRELKA_SOMATIC {
     // TODO nf-core: It MUST be possible to pass additional parameters to the tool as a command-line string via the "$ioptions.args" variable
     // TODO nf-core: If the tool supports multi-threading then you MUST provide the appropriate parameter
     //               using the Nextflow "task" variable e.g. "--threads $task.cpus"
-    beforeScript = params.target_bed ? "bgzip --threads ${task.cpus} -c ${target_bed} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
-    options_strelka = params.target_bed ? ioptions.args : ""
+    options_strelka = params.target_bed ? "--exome --callRegions ${target_bed}" : ""
     """
-    ${beforeScript}
     configureStrelkaSomaticWorkflow.py \
         --tumor ${bam_tumor} \
         --normal ${bam_normal} \
@@ -75,7 +73,7 @@ process STRELKA_SOMATIC_BEST_PRACTICES {
         tuple val(meta), path(bam_normal), path(bai_normal), path(bam_tumor), path(bai_tumor), path(manta_csi), path(manta_csi_tbi)
         path fasta
         path fai
-        path target_bed
+        tuple path(target_bed), path(target_bed_tbi)
 
     output:
         tuple val(meta), path("*_somatic_indels.vcf.gz"), path("*_somatic_indels.vcf.gz.tbi"), emit: indels_vcf
@@ -89,10 +87,8 @@ process STRELKA_SOMATIC_BEST_PRACTICES {
     // TODO nf-core: It MUST be possible to pass additional parameters to the tool as a command-line string via the "$ioptions.args" variable
     // TODO nf-core: If the tool supports multi-threading then you MUST provide the appropriate parameter
     //               using the Nextflow "task" variable e.g. "--threads $task.cpus"
-    beforeScript = params.target_bed ? "bgzip --threads ${task.cpus} -c ${target_bed} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
-    options_strelka = params.target_bed ? ioptions.args : ""
+    options_strelka = params.target_bed ? "--exome --callRegions ${target_bed}" : ""
     """
-    ${beforeScript}
     configureStrelkaSomaticWorkflow.py \
         --tumor ${bam_tumor} \
         --normal ${bam_normal} \

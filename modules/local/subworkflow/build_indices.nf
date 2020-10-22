@@ -9,6 +9,7 @@ params.bwa_index_options               = [:]
 params.bwamem2_index_options           = [:]
 params.create_intervals_bed_options    = [:]
 params.gatk_dict_options               = [:]
+params.index_target_bed_options        = [:]
 params.msisensor_scan_options          = [:]
 params.samtools_faidx_options          = [:]
 params.tabix_dbsnp_options             = [:]
@@ -27,6 +28,7 @@ include { HTSLIB_TABIX as TABIX_DBSNP }                from '../../nf-core/softw
 include { HTSLIB_TABIX as TABIX_GERMLINE_RESOURCE }    from '../../nf-core/software/htslib_tabix'                     addParams(options: params.tabix_germline_resource_options)
 include { HTSLIB_TABIX as TABIX_KNOWN_INDELS }         from '../../nf-core/software/htslib_tabix'                     addParams(options: params.tabix_known_indels_options)
 include { HTSLIB_TABIX as TABIX_PON }                  from '../../nf-core/software/htslib_tabix'                     addParams(options: params.tabix_pon_options)
+include { INDEX_TARGET_BED }                           from '../process/index_target_bed'                             addParams(options: params.index_target_bed_options)
 include { MSISENSOR_SCAN }                             from '../../nf-core/software/msisensor/scan.nf'                addParams(options: params.msisensor_scan_options)
 include { SAMTOOLS_FAIDX }                             from '../../nf-core/software/samtools/faidx.nf'                addParams(options: params.samtools_faidx_options)
 
@@ -38,6 +40,7 @@ workflow BUILD_INDICES{
         known_indels      // channel: [optional]  known_indels
         pon               // channel: [optional]  pon
         step              //   value: [mandatory] starting step
+        target_bed        // channel: [optionnal] target_bed
         tools             //    list: [optional]  tools to run
 
     main:
@@ -60,6 +63,10 @@ workflow BUILD_INDICES{
     if (!(params.dbsnp_index) && params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || 'tnscope' in tools))
         result_dbsnp_tbi = TABIX_DBSNP(dbsnp)
 
+    result_target_bed = Channel.empty()
+    if ((params.target_bed) && ('manta' in tools || 'strelka' in tools))
+        result_target_bed = INDEX_TARGET_BED(target_bed)
+
     result_germline_resource_tbi = Channel.empty()
     if (!(params.germline_resource_index) && params.germline_resource && 'mutect2' in tools)
         result_germline_resource_tbi = TABIX_GERMLINE_RESOURCE(germline_resource)
@@ -76,6 +83,7 @@ workflow BUILD_INDICES{
     if (!(params.pon_index) && params.pon && ('tnscope' in tools || 'mutect2' in tools))
         result_pon_tbi = TABIX_PON(pon)
 
+    result_intervals = Channel.empty()
     if (params.no_intervals) {
         file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
         result_intervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
@@ -115,4 +123,5 @@ workflow BUILD_INDICES{
         known_indels_tbi      = result_known_indels_tbi
         msisensor_scan        = result_msisensor_scan
         pon_tbi               = result_pon_tbi
+        target_bed_gz_tbi     = result_target_bed
 }

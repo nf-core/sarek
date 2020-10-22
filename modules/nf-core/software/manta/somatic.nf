@@ -23,7 +23,7 @@ process MANTA_SOMATIC {
         tuple val(meta), path(bam_normal), path(bai_normal), path(bam_tumor), path(bai_tumor)
         path fasta
         path fai
-        path target_bed
+        tuple path(target_bed), path(target_bed_tbi)
 
     output:
         tuple val(meta), path(bam_normal), path(bai_normal), path(bam_tumor), path(bai_tumor), path("*.candidateSmallIndels.vcf.gz"), path("*.candidateSmallIndels.vcf.gz.tbi"), emit: manta_csi_for_strelka_bp
@@ -40,10 +40,8 @@ process MANTA_SOMATIC {
     // TODO nf-core: It MUST be possible to pass additional parameters to the tool as a command-line string via the "$ioptions.args" variable
     // TODO nf-core: If the tool supports multi-threading then you MUST provide the appropriate parameter
     //               using the Nextflow "task" variable e.g. "--threads $task.cpus"
-    beforeScript = params.target_bed ? "bgzip --threads ${task.cpus} -c ${target_bed} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
-    options_manta = params.target_bed ? ioptions.args : ""
+    options_manta = params.target_bed ? "--exome --callRegions ${target_bed}" : ""
     """
-    ${beforeScript}
     configManta.py \
         --tumorBam ${bam_tumor} \
         --normalBam ${bam_normal} \

@@ -18,15 +18,16 @@ include { STRELKA_GERMLINE as STRELKA }             from '../../nf-core/software
 
 workflow GERMLINE_VARIANT_CALLING {
     take:
-        bam        // channel: [mandatory] bam
-        dbsnp      // channel: [mandatory] dbsnp
-        dbsnp_tbi  // channel: [mandatory] dbsnp_tbi
-        dict       // channel: [mandatory] dict
-        fai        // channel: [mandatory] fai
-        fasta      // channel: [mandatory] fasta
-        intervals  // channel: [mandatory] intervals
-        target_bed // channel: [optional]  target_bed
-        tools      //   list:  [mandatory] list of tools
+        bam               // channel: [mandatory] bam
+        dbsnp             // channel: [mandatory] dbsnp
+        dbsnp_tbi         // channel: [mandatory] dbsnp_tbi
+        dict              // channel: [mandatory] dict
+        fai               // channel: [mandatory] fai
+        fasta             // channel: [mandatory] fasta
+        intervals         // channel: [mandatory] intervals
+        target_bed        // channel: [optional]  target_bed
+        target_bed_gz_tbi // channel: [optional]  target_bed_gz_tbi
+        tools             //   list:  [mandatory] list of tools
 
     main:
 
@@ -113,7 +114,7 @@ workflow GERMLINE_VARIANT_CALLING {
             bam,
             fasta,
             fai,
-            target_bed)
+            target_bed_gz_tbi)
 
         strelka_vcf = STRELKA.out.vcf
     }
