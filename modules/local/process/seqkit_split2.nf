@@ -18,15 +18,17 @@ process SPLIT_FASTQ{
     }
 
     input:
-        tuple val(name), path(read1), path(read2)
+        tuple val(name), path(reads)
 
     output:
         tuple val(name), path ("*.gz")
 
     script:
     def software = getSoftwareName(task.process)
+    def read1 = reads.get(0)
+    def read2 = reads.get(1)
     """
-    seqkit split2 --threads ${task.cpus} -1 $read1 -2 $read2 $options.args
+    seqkit split2 --threads ${task.cpus} -1 ${read1} -2 ${read2} $options.args
     echo \$(seqkit --version 2>&1) > ${software}.version.txt
     """
 }

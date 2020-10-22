@@ -293,7 +293,7 @@ include { BUILD_INDICES } from './modules/local/subworkflow/build_indices' addPa
     tabix_pon_options:               modules['tabix_pon']
 )
 
-include { SPLIT_FASTQ } from './modules/local/process/seqkit_split2' addParams( seqkit_options: modules['seqkit'] )
+include { SPLIT_FASTQ } from './modules/local/process/seqkit_split2' addParams( options: modules['seqkit'] )
 
 include { MAPPING } from './modules/local/subworkflow/mapping' addParams(
     bwamem1_mem_options:             modules['bwa_mem1_mem'],
@@ -452,8 +452,17 @@ workflow {
     // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA-MEM
 
     //TODO: not sure whether to split the reads before qc or after
+    SPLIT_FASTQ(QC_TRIM.out.reads)
+    reads_input = SPLIT_FASTQ.out.map{
+            key, reads ->
+                //TODO maybe this can be replaced by a regex to include part_001 etc.
 
-    reads_input = SPLIT_FASTQ(QC_TRIM.out.reads)
+                //sorts list of split fq files by :
+                //[R1.part_001, R2.part_001, R1.part_002, R2.part_002,R1.part_003, R2.part_003,...]
+                //TODO: determine whether it is possible to have an uneven number of parts, so remainder: true woud need to be used
+                return [key, reads.sort{ a,b -> a.getName().tokenize('.')[ a.getName().tokenize('.').size() - 3] <=> b.getName().tokenize('.')[ b.getName().tokenize('.').size() - 3]}
+                                        .collate(2)]
+        }.transpose()
 
     MAPPING(
         ('bamqc' in skip_qc),
