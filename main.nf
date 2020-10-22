@@ -326,6 +326,7 @@ include { GERMLINE_VARIANT_CALLING } from './modules/local/subworkflow/germline_
 // include { TUMOR_VARIANT_CALLING } from './modules/local/subworkflow/tumor_variant_calling' addParams(
 // )
 include { PAIR_VARIANT_CALLING } from './modules/local/subworkflow/pair_variant_calling' addParams(
+    manta_options:                   modules['manta_somatic'],
     strelka_options:                 modules['strelka_somatic']
 )
 
@@ -1177,61 +1178,6 @@ workflow.onComplete {
 // }
 
 // vcf_sentieon_compressed = vcf_sentieon_compressed.dump(tag:'Sentieon VCF indexed')
-
-// // STEP MANTA.2 - SOMATIC PAIR
-
-// process Manta {
-//     label 'cpus_max'
-//     label 'memory_max'
-
-//     tag "${idSampleTumor}_vs_${idSampleNormal}"
-
-//     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Manta", mode: params.publish_dir_mode
-
-//     input:
-//         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamManta
-//         file(fasta) from fasta
-//         file(fastaFai) from fai
-//         file(targetBED) from ch_target_bed
-
-//     output:
-//         set val("Manta"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfManta
-//         set idPatient, idSampleNormal, idSampleTumor, file("*.candidateSmallIndels.vcf.gz"), file("*.candidateSmallIndels.vcf.gz.tbi") into mantaToStrelka
-
-//     when: 'manta' in tools
-
-//     script:
-//     beforeScript = params.target_bed ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
-//     options = params.target_bed ? "--exome --callRegions call_targets.bed.gz" : ""
-//     """
-//     ${beforeScript}
-//     configManta.py \
-//         --normalBam ${bamNormal} \
-//         --tumorBam ${bamTumor} \
-//         --reference ${fasta} \
-//         ${options} \
-//         --runDir Manta
-
-//     python Manta/runWorkflow.py -m local -j ${task.cpus}
-
-//     mv Manta/results/variants/candidateSmallIndels.vcf.gz \
-//         Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf.gz
-//     mv Manta/results/variants/candidateSmallIndels.vcf.gz.tbi \
-//         Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf.gz.tbi
-//     mv Manta/results/variants/candidateSV.vcf.gz \
-//         Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf.gz
-//     mv Manta/results/variants/candidateSV.vcf.gz.tbi \
-//         Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf.gz.tbi
-//     mv Manta/results/variants/diploidSV.vcf.gz \
-//         Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf.gz
-//     mv Manta/results/variants/diploidSV.vcf.gz.tbi \
-//         Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf.gz.tbi
-//     mv Manta/results/variants/somaticSV.vcf.gz \
-//         Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf.gz
-//     mv Manta/results/variants/somaticSV.vcf.gz.tbi \
-//         Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf.gz.tbi
-//     """
-// }
 
 // vcfManta = vcfManta.dump(tag:'Manta')
 

@@ -5,8 +5,10 @@
 */
 
 params.strelka_options                = [:]
+params.manta_options                  = [:]
 
 include { STRELKA_SOMATIC as STRELKA }             from '../../nf-core/software/strelka/somatic'     addParams(options: params.strelka_options)
+include { MANTA_SOMATIC as MANTA }                 from '../../nf-core/software/manta/somatic'       addParams(options: params.manta_options)
 
 workflow PAIR_VARIANT_CALLING {
     take:
@@ -44,7 +46,23 @@ workflow PAIR_VARIANT_CALLING {
         [meta, normal[4], normal[5], tumor[4], tumor[5]]
     }
 
+    manta_vcf            = Channel.empty()
     strelka_vcf          = Channel.empty()
+
+    if ('manta' in tools) {
+        MANTA(
+            bam_pair,
+            fasta,
+            fai,
+            target_bed)
+
+        manta_candidate_small_indels_vcf = MANTA.out.candidate_small_indels_vcf
+        manta_candidate_sv_vcf           = MANTA.out.candidate_sv_vcf
+        manta_diploid_sv_vcf             = MANTA.out.diploid_sv_vcf
+        manta_somatic_sv_vcf             = MANTA.out.somatic_sv_vcf
+
+        manta_vcf = manta_candidate_small_indels_vcf.mix(manta_candidate_sv_vcf,manta_diploid_sv_vcf,manta_somatic_sv_vcf)
+    }
 
     if ('strelka' in tools) {
         STRELKA(
@@ -55,9 +73,11 @@ workflow PAIR_VARIANT_CALLING {
 
         strelka_indels_vcf = STRELKA.out.indels_vcf
         strelka_snvs_vcf   = STRELKA.out.snvs_vcf
+
         strelka_vcf = strelka_indels_vcf.mix(strelka_snvs_vcf)
     }
 
     emit:
+        manta_vcf            = manta_vcf
         strelka_vcf          = strelka_vcf
 }
