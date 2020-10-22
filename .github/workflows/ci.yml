@@ -150,13 +150,13 @@ jobs:
     strategy:
       matrix:
         # tool: [Haplotypecaller, Freebayes, Manta, mpileup, MSIsensor, Strelka, TIDDIT]
-        tool: [Haplotypecaller, Manta, Strelka]
+        tool: [Haplotypecaller, Manta, MSIsensor, Strelka]
         intervals: [--no_intervals, '']
         exclude:
           - tool: Manta
             intervals: --no_intervals
-        #   - tool: MSIsensor
-        #     intervals: --no_intervals
+          - tool: MSIsensor
+            intervals: --no_intervals
           - tool: Strelka
             intervals: --no_intervals
         #   - tool: TIDDIT

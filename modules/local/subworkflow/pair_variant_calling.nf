@@ -4,23 +4,26 @@
 ================================================================================
 */
 
-params.strelka_options                = [:]
 params.manta_options                  = [:]
+params.msisensor_msi_options          = [:]
+params.strelka_options                = [:]
 
-include { STRELKA_SOMATIC as STRELKA }             from '../../nf-core/software/strelka/somatic'     addParams(options: params.strelka_options)
 include { MANTA_SOMATIC as MANTA }                 from '../../nf-core/software/manta/somatic'       addParams(options: params.manta_options)
+include { MSISENSOR_MSI }                          from '../../nf-core/software/msisensor/msi'       addParams(options: params.msisensor_msi_options)
+include { STRELKA_SOMATIC as STRELKA }             from '../../nf-core/software/strelka/somatic'     addParams(options: params.strelka_options)
 
 workflow PAIR_VARIANT_CALLING {
     take:
-        bam        // channel: [mandatory] bam
-        dbsnp      // channel: [mandatory] dbsnp
-        dbsnp_tbi  // channel: [mandatory] dbsnp_tbi
-        dict       // channel: [mandatory] dict
-        fai        // channel: [mandatory] fai
-        fasta      // channel: [mandatory] fasta
-        intervals  // channel: [mandatory] intervals
-        target_bed // channel: [optional]  target_bed
-        tools      //   list:  [mandatory] list of tools
+        bam            // channel: [mandatory] bam
+        dbsnp          // channel: [mandatory] dbsnp
+        dbsnp_tbi      // channel: [mandatory] dbsnp_tbi
+        dict           // channel: [mandatory] dict
+        fai            // channel: [mandatory] fai
+        fasta          // channel: [mandatory] fasta
+        intervals      // channel: [mandatory] intervals
+        msisensor_scan // channel: [optional]  msisensor_scan
+        target_bed     // channel: [optional]  target_bed
+        tools          //    list: [mandatory] list of tools
 
     main:
 
@@ -62,6 +65,12 @@ workflow PAIR_VARIANT_CALLING {
         manta_somatic_sv_vcf             = MANTA.out.somatic_sv_vcf
 
         manta_vcf = manta_candidate_small_indels_vcf.mix(manta_candidate_sv_vcf,manta_diploid_sv_vcf,manta_somatic_sv_vcf)
+    }
+
+    if ('msisensor' in tools) {
+        MSISENSOR_MSI(
+            bam_pair,
+            msisensor_scan)
     }
 
     if ('strelka' in tools) {

@@ -20,7 +20,7 @@ process MANTA_SOMATIC {
     container container
 
     input:
-        tuple val(meta), path(bam_normal), path (bai_normal), path(bam_tumor), path (bai_tumor)
+        tuple val(meta), path(bam_normal), path(bai_normal), path(bam_tumor), path(bai_tumor)
         path fasta
         path fai
         path target_bed

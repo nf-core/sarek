@@ -9,6 +9,7 @@ params.bwa_index_options               = [:]
 params.bwamem2_index_options           = [:]
 params.create_intervals_bed_options    = [:]
 params.gatk_dict_options               = [:]
+params.msisensor_scan_options          = [:]
 params.samtools_faidx_options          = [:]
 params.tabix_dbsnp_options             = [:]
 params.tabix_germline_resource_options = [:]
@@ -26,6 +27,7 @@ include { HTSLIB_TABIX as TABIX_DBSNP }                from '../../nf-core/softw
 include { HTSLIB_TABIX as TABIX_GERMLINE_RESOURCE }    from '../../nf-core/software/htslib_tabix'                     addParams(options: params.tabix_germline_resource_options)
 include { HTSLIB_TABIX as TABIX_KNOWN_INDELS }         from '../../nf-core/software/htslib_tabix'                     addParams(options: params.tabix_known_indels_options)
 include { HTSLIB_TABIX as TABIX_PON }                  from '../../nf-core/software/htslib_tabix'                     addParams(options: params.tabix_pon_options)
+include { MSISENSOR_SCAN }                             from '../../nf-core/software/msisensor/scan.nf'                addParams(options: params.msisensor_scan_options)
 include { SAMTOOLS_FAIDX }                             from '../../nf-core/software/samtools/faidx.nf'                addParams(options: params.samtools_faidx_options)
 
 workflow BUILD_INDICES{
@@ -65,6 +67,10 @@ workflow BUILD_INDICES{
     result_known_indels_tbi = Channel.empty()
     if (!(params.known_indels_index) && params.known_indels && ('mapping' in step || 'preparerecalibration' in step))
         result_known_indels_tbi = TABIX_KNOWN_INDELS(known_indels)
+
+    result_msisensor_scan = Channel.empty()
+    if ('msisensor' in tools)
+        result_msisensor_scan = MSISENSOR_SCAN(fasta, result_fai)
 
     result_pon_tbi = Channel.empty()
     if (!(params.pon_index) && params.pon && ('tnscope' in tools || 'mutect2' in tools))
@@ -107,5 +113,6 @@ workflow BUILD_INDICES{
         germline_resource_tbi = result_germline_resource_tbi
         intervals             = result_intervals
         known_indels_tbi      = result_known_indels_tbi
+        msisensor_scan        = result_msisensor_scan
         pon_tbi               = result_pon_tbi
 }

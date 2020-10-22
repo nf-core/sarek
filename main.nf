@@ -179,6 +179,7 @@ if (params.save_reference)      modules['bwamem2_index'].publish_files          
 if (params.save_reference)      modules['create_intervals_bed'].publish_files    = ['bed':'intervals']
 if (params.save_reference)      modules['dict'].publish_files                    = ['dict':'dict']
 if (params.save_reference)      modules['samtools_faidx'].publish_files          = ['fai':'fai']
+if (params.save_reference)      modules['msisensor_scan'].publish_files          = ['list':'msi']
 if (params.save_reference)      modules['tabix_dbsnp'].publish_files             = ['vcf.gz.tbi':'dbsnp']
 if (params.save_reference)      modules['tabix_germline_resource'].publish_files = ['vcf.gz.tbi':'germline_resource']
 if (params.save_reference)      modules['tabix_known_indels'].publish_files      = ['vcf.gz.tbi':'known_indels']
@@ -288,6 +289,7 @@ include { BUILD_INDICES } from './modules/local/subworkflow/build_indices' addPa
     bwamem2_index_options:           modules['bwamem2_index'],
     create_intervals_bed_options:    modules['create_intervals_bed'],
     gatk_dict_options:               modules['dict'],
+    msisensor_scan_options:          modules['msisensor_scan'],
     samtools_faidx_options:          modules['samtools_faidx'],
     tabix_dbsnp_options:             modules['tabix_dbsnp'],
     tabix_germline_resource_options: modules['tabix_germline_resource'],
@@ -423,6 +425,7 @@ workflow {
     known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? file(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : file("${params.outdir}/no_file")
     pon_tbi               = params.pon               ? params.pon_index               ? file(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : file("${params.outdir}/no_file")
 
+    msisensor_scan = BUILD_INDICES.out.msisensor_scan
 /*
 ================================================================================
                                   PREPROCESSING
@@ -565,6 +568,7 @@ workflow {
         fai,
         fasta,
         intervals,
+        msisensor_scan,
         target_bed,
         tools)
 
@@ -1269,61 +1273,6 @@ workflow.onComplete {
 //       --output-dir ./ \
 //       --diagram \
 //       --scatter
-//     """
-// }
-
-// // STEP MSISENSOR.1 - SCAN
-
-// // Scan reference genome for microsatellites
-// process MSIsensor_scan {
-//     label 'cpus_1'
-//     label 'memory_max'
-
-//     tag "${fasta}"
-
-//     input:
-//     file(fasta) from fasta
-//     file(fastaFai) from fai
-
-//     output:
-//     file "microsatellites.list" into msi_scan_ch
-
-//     when: 'msisensor' in tools
-
-//     script:
-//     """
-//     msisensor scan -d ${fasta} -o microsatellites.list
-//     """
-// }
-
-// // STEP MSISENSOR.2 - SCORE
-
-// // Score the normal vs somatic pair of bams
-
-// process MSIsensor_msi {
-//     label 'cpus_4'
-//     label 'memory_max'
-
-//     tag "${idSampleTumor}_vs_${idSampleNormal}"
-
-//     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/MSIsensor", mode: params.publish_dir_mode
-
-//     input:
-//         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamMsisensor
-//         file msiSites from msi_scan_ch
-
-//     output:
-//         set val("Msisensor"), idPatient, file("${idSampleTumor}_vs_${idSampleNormal}_msisensor"), file("${idSampleTumor}_vs_${idSampleNormal}_msisensor_dis"), file("${idSampleTumor}_vs_${idSampleNormal}_msisensor_germline"), file("${idSampleTumor}_vs_${idSampleNormal}_msisensor_somatic") into msisensor_out_ch
-
-//     when: 'msisensor' in tools
-
-//     script:
-//     """
-//     msisensor msi -d ${msiSites} \
-//                   -b 4 \
-//                   -n ${bamNormal} \
-//                   -t ${bamTumor} \
-//                   -o ${idSampleTumor}_vs_${idSampleNormal}_msisensor
 //     """
 // }
 

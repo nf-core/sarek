@@ -20,7 +20,7 @@ process STRELKA_GERMLINE {
     container container
 
     input:
-        tuple val(meta), path(bam), path (bai)
+        tuple val(meta), path(bam), path(bai)
         path fasta
         path fai
         path target_bed
