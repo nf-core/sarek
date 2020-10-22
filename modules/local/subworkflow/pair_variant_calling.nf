@@ -7,10 +7,12 @@
 params.manta_options                  = [:]
 params.msisensor_msi_options          = [:]
 params.strelka_options                = [:]
+params.strelka_bp_options             = [:]
 
-include { MANTA_SOMATIC as MANTA }                 from '../../nf-core/software/manta/somatic'       addParams(options: params.manta_options)
-include { MSISENSOR_MSI }                          from '../../nf-core/software/msisensor/msi'       addParams(options: params.msisensor_msi_options)
-include { STRELKA_SOMATIC as STRELKA }             from '../../nf-core/software/strelka/somatic'     addParams(options: params.strelka_options)
+include { MANTA_SOMATIC as MANTA }                       from '../../nf-core/software/manta/somatic'       addParams(options: params.manta_options)
+include { MSISENSOR_MSI }                                from '../../nf-core/software/msisensor/msi'       addParams(options: params.msisensor_msi_options)
+include { STRELKA_SOMATIC as STRELKA }                   from '../../nf-core/software/strelka/somatic'     addParams(options: params.strelka_options)
+include { STRELKA_SOMATIC_BEST_PRACTICES as STRELKA_BP } from '../../nf-core/software/strelka/somatic'     addParams(options: params.strelka_bp_options)
 
 workflow PAIR_VARIANT_CALLING {
     take:
@@ -63,8 +65,22 @@ workflow PAIR_VARIANT_CALLING {
         manta_candidate_sv_vcf           = MANTA.out.candidate_sv_vcf
         manta_diploid_sv_vcf             = MANTA.out.diploid_sv_vcf
         manta_somatic_sv_vcf             = MANTA.out.somatic_sv_vcf
+        manta_csi_for_strelka_bp         = MANTA.out.manta_csi_for_strelka_bp
 
         manta_vcf = manta_candidate_small_indels_vcf.mix(manta_candidate_sv_vcf,manta_diploid_sv_vcf,manta_somatic_sv_vcf)
+
+        if ('strelka' in tools) {
+            STRELKA_BP(
+                manta_csi_for_strelka_bp,
+                fasta,
+                fai,
+                target_bed)
+
+            strelka_indels_vcf = STRELKA_BP.out.indels_vcf
+            strelka_snvs_vcf   = STRELKA_BP.out.snvs_vcf
+
+            strelka_vcf = strelka_vcf.mix(strelka_indels_vcf,strelka_snvs_vcf)
+        }
     }
 
     if ('msisensor' in tools) {
@@ -83,7 +99,7 @@ workflow PAIR_VARIANT_CALLING {
         strelka_indels_vcf = STRELKA.out.indels_vcf
         strelka_snvs_vcf   = STRELKA.out.snvs_vcf
 
-        strelka_vcf = strelka_indels_vcf.mix(strelka_snvs_vcf)
+        strelka_vcf = strelka_vcf.mix(strelka_indels_vcf,strelka_snvs_vcf)
     }
 
     emit:

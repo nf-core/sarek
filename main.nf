@@ -319,17 +319,18 @@ include { RECALIBRATE } from './modules/local/subworkflow/recalibrate' addParams
     samtools_stats_options:          modules['samtools_stats_recalibrate']
 )
 include { GERMLINE_VARIANT_CALLING } from './modules/local/subworkflow/germline_variant_calling' addParams(
-    haplotypecaller_options:         modules['haplotypecaller'],
-    genotypegvcf_options:            modules['genotypegvcf'],
     concat_gvcf_options:             modules['concat_gvcf'],
     concat_haplotypecaller_options:  modules['concat_haplotypecaller'],
+    genotypegvcf_options:            modules['genotypegvcf'],
+    haplotypecaller_options:         modules['haplotypecaller'],
     strelka_options:                 modules['strelka_germline']
 )
 // include { TUMOR_VARIANT_CALLING } from './modules/local/subworkflow/tumor_variant_calling' addParams(
 // )
 include { PAIR_VARIANT_CALLING } from './modules/local/subworkflow/pair_variant_calling' addParams(
-    msisensor_msi_options:           modules['msisensor_msi'],
     manta_options:                   modules['manta_somatic'],
+    msisensor_msi_options:           modules['msisensor_msi'],
+    strelka_bp_options:              modules['strelka_somatic_bp'],
     strelka_options:                 modules['strelka_somatic']
 )
 
@@ -1183,67 +1184,6 @@ workflow.onComplete {
 // }
 
 // vcf_sentieon_compressed = vcf_sentieon_compressed.dump(tag:'Sentieon VCF indexed')
-
-// vcfManta = vcfManta.dump(tag:'Manta')
-
-// // Remmaping channels to match input for StrelkaBP
-// pairBamStrelkaBP = pairBamStrelkaBP.map {
-//     idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor ->
-//     [idPatientNormal, idSampleNormal, idSampleTumor, bamNormal, baiNormal, bamTumor, baiTumor]
-// }.join(mantaToStrelka, by:[0,1,2]).map {
-//     idPatientNormal, idSampleNormal, idSampleTumor, bamNormal, baiNormal, bamTumor, baiTumor, mantaCSI, mantaCSIi ->
-//     [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor, mantaCSI, mantaCSIi]
-// }
-
-// // STEP STRELKA.3 - SOMATIC PAIR - BEST PRACTICES
-
-// process StrelkaBP {
-//     label 'cpus_max'
-//     label 'memory_max'
-
-//     tag "${idSampleTumor}_vs_${idSampleNormal}"
-
-//     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Strelka", mode: params.publish_dir_mode
-
-//     input:
-//         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(mantaCSI), file(mantaCSIi) from pairBamStrelkaBP
-//         file(dict) from dict
-//         file(fasta) from fasta
-//         file(fastaFai) from fai
-//         file(targetBED) from ch_target_bed
-
-//     output:
-//         set val("Strelka"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfStrelkaBP
-
-//     when: 'strelka' in tools && 'manta' in tools && !params.no_strelka_bp
-
-//     script:
-//     beforeScript = params.target_bed ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
-//     options = params.target_bed ? "--exome --callRegions call_targets.bed.gz" : ""
-//     """
-//     ${beforeScript}
-//     configureStrelkaSomaticWorkflow.py \
-//         --tumor ${bamTumor} \
-//         --normal ${bamNormal} \
-//         --referenceFasta ${fasta} \
-//         --indelCandidates ${mantaCSI} \
-//         ${options} \
-//         --runDir Strelka
-
-//     python Strelka/runWorkflow.py -m local -j ${task.cpus}
-
-//     mv Strelka/results/variants/somatic.indels.vcf.gz \
-//         StrelkaBP_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz
-//     mv Strelka/results/variants/somatic.indels.vcf.gz.tbi \
-//         StrelkaBP_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz.tbi
-//     mv Strelka/results/variants/somatic.snvs.vcf.gz \
-//         StrelkaBP_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
-//     mv Strelka/results/variants/somatic.snvs.vcf.gz.tbi \
-//         StrelkaBP_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz.tbi
-//     """
-// }
-
-// vcfStrelkaBP = vcfStrelkaBP.dump(tag:'Strelka BP')
 
 // // STEP CNVkit
 
