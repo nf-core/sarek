@@ -59,7 +59,7 @@ def helpMessage() {
                                           Default: None
       --tools                       [str] Specify tools to use for variant calling (multiple separated with commas):
                                           Available: ASCAT, CNVkit, ControlFREEC, FreeBayes, HaplotypeCaller
-                                          Manta, mpileup, MSIsensor, Mutect2, Platypus, Strelka, TIDDIT
+                                          Manta, mpileup, MSIsensor, Mutect2, Platypus, Sequenza, Strelka, TIDDIT
                                           and/or for annotation:
                                           snpEff, VEP, merge
                                           Default: None
@@ -328,6 +328,7 @@ params.fasta = params.genome && !('annotate' in step) ? params.genomes[params.ge
 params.ac_loci = params.genome && 'ascat' in tools ? params.genomes[params.genome].ac_loci ?: null : null
 params.ac_loci_gc = params.genome && 'ascat' in tools ? params.genomes[params.genome].ac_loci_gc ?: null : null
 params.bwa = params.genome && params.fasta && 'mapping' in step ? params.genomes[params.genome].bwa ?: null : null
+params.seqz_gc = params.genome && params.fasta && 'sequenza' in tools ? params.genomes[params.genome].seqz_gc ?: null : null
 params.chr_dir = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].chr_dir ?: null : null
 params.chr_length = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].chr_length ?: null : null
 params.dbsnp = params.genome && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? params.genomes[params.genome].dbsnp ?: null : null
@@ -772,7 +773,8 @@ process BuildIntervals {
 }
 
 ch_intervals = params.no_intervals ? "null" : params.intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : intervalBuilt
-
+// I think sequenza would work better over whole chromosomes so I split off a channel here for sequenza
+(ch_intervals_for_sequenza, ch_intervals) ch_intervals.into(2)
 /*
 ================================================================================
                                   PREPROCESSING
@@ -2345,7 +2347,7 @@ pairBam = bamNormal.cross(bamTumor).map {
 pairBam = pairBam.dump(tag:'BAM Somatic Pair')
 
 // Manta, Strelka, Mutect2, MSIsensor
-(pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBamCalculateContamination, pairBamFilterMutect2, pairBamMsisensor, pairBamCNVkit, pairBamPlatypus, pairBam) = pairBam.into(9)
+(pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBamCalculateContamination, pairBamFilterMutect2, pairBamMsisensor, pairBamCNVkit, pairBamSequenza, pairBamPlatypus, pairBam) = pairBam.into(10)
 
 // Making Pair Bam for Sention
 
@@ -3091,6 +3093,68 @@ process CNVkit {
       --diagram \
       --scatter
     """
+}
+
+/* 
+ * if necessary
+ * Process a FASTA file to produce a GC Wiggle track file:
+ */ 
+
+process sequenza_utils_make_gc_wiggle {
+
+    tag "${fasta}_sequenza"
+
+    publishDir params.outdir, mode: params.publish_dir_mode,
+        saveAs: {params.save_reference ? "reference_genome/sequenzaGC/${it}" : null }
+
+    input:
+        file(fasta) from ch_fasta
+    
+    output:
+        file("*wig.gz") into seqzGC_built
+    
+    when: !(params.seqz_gc) && params.fasta && 'annotate' in step
+    
+    script:
+    """
+    sequenza_utils gc_wiggle -w 50 --fasta ${fasta} -o ${genome}.gc50Base.wig.base
+    """
+}
+
+
+// split using faiIntervals
+pairBamSequenza = pairBamSequenza.spread(ch_intervals_for_sequenza)
+
+sequenza_gc = ch_sequenza_gc.mix(sequenza_gc) 
+
+process sequenza_utils {
+    tag "${idSampleTumor}_vs_${idSampleNormal}"
+
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/sequenza", mode: params.publish_dir_mode
+    
+    input:
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamSequenza
+        file(targetBED) from ch_target_bed
+        file(intervals) from ch_intervals_for_sequenza
+        file(fasta) from ch_fasta
+        file(gc_wiggle) from sequenza_gc 
+
+    output:
+        file(*seqz) into sequenza_out
+    
+    when: 'sequenza' in tools
+
+    script:
+    """
+    sequenza-utils bam2seqz \
+    -F ${fasta} \
+    -gc ${gc_wiggle} \
+    -C ${intervals} \
+    --het 0.4 \
+    --parallel ${task.cpus} \
+    -n ${bamNormal} -t ${bamTumor} -o ${idSampleTumor}_vs_${idSampleNormal}.seqz
+    """"
+
 }
 
 // STEP MSISENSOR.1 - SCAN
