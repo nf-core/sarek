@@ -3113,7 +3113,7 @@ process sequenza_utils_make_gc_wiggle {
     output:
         file("*wig.gz") into seqzGC_built
     
-    when: !(params.seqz_gc) && params.fasta && 'annotate' in step
+    when: !(params.seqz_gc) && params.fasta && 'variant_calling' in step
     
     script:
     """
