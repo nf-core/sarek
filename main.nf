@@ -3125,19 +3125,26 @@ process sequenza_utils_make_gc_wiggle {
 ch_seqzGC = params.seqz_gc ? Channel.value(file(params.seqz_gc)) : seqzGC_built
 pairBamSequenza = pairBamSequenza.dump(tag: "sequenza" )
 
+ch_seqzChr = ch_fai
+     .splitCsv(sep: "\t")
+     .map{ chr -> chr[0] }
+     .filter( ~/^chr\d+|^chr[X,Y]|^\d+|[X,Y]/ )
+
+pairBamSequenza = params.no_intervals ? pairBamSequenza.spread(ch_seqzChr) : pairBamSequenza.spread(bedIntervals)
+
 process sequenza_utils {
     
-	tag "${idSampleTumor}_vs_${idSampleNormal}"
+	tag "${idSampleTumor}_vs_${idSampleNormal}_${intervalBed}"
 
     publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/sequenza", mode: params.publish_dir_mode
     
     input:
-        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamSequenza
+        set idPatient, idSampleNormal, idSampleTumor, file(bamNormal), file(baiNormal), file(bamTumor), file(baiTumor), file(intervalBed) from pairBamSequenza
         file(fasta) from ch_fasta
         file(gc_wiggle) from ch_seqzGC
-
+        
     output:
-        set idPatient, idSampleTumor, file("*seqz") into sequenza_out
+        set idPatient, idSampleTumor, intervalBed, file("*seqz") into sequenza_out
     
     when: 'sequenza' in tools
 
@@ -3145,11 +3152,30 @@ process sequenza_utils {
     """
     sequenza-utils bam2seqz \
     -F ${fasta} \
+    -C ${intervalBed} \
     -gc ${gc_wiggle} \
     --het 0.4 \
-    -n ${bamNormal} -t ${bamTumor} -o ${idSampleTumor}_vs_${idSampleNormal}.seqz
+    -n ${bamNormal} -t ${bamTumor} -o ${idSampleTumor}_vs_${idSampleNormal}_${intervalBed}.seqz
     """
+}
 
+process merge_seqz_files{
+
+    tag "${idSampleTumor}_vs_${idSampleNormal}_merge"
+
+    input:
+        set idPatient, idSampleTumor, intervalBed, file(seqz) from sequenza_out
+    output:
+        set idPatient, idSampleTumor, file("*.seqz.gz") into merge_seqz_out
+
+    script:
+    input = seqz.collect()
+    """
+        "head -n 1 ${input[0]} | gzip > ${idSampleTumor}_vs_${idSampleNormal}.seqz.gz; "
+        "for file in ${input[@]}; do "
+        "tail -n +2 ${file} | gzip >> ${idSampleTumor}_vs_${idSampleNormal}.seqz.gz;
+        "done"
+    """
 }
 
 process find_het_snps {
@@ -3159,7 +3185,7 @@ process find_het_snps {
     publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/sequenza", mode: params.publish_dir_mode
 	
 	input:
-        set idPatient, idSampleTumor, file(bam2seqz_out) from sequenza_out
+        set idPatient, idSampleTumor, file(bam2seqz_out) from merge_seqz_out
     
 	output:
         file("${idPatient}_${idTumor}_het.seqz") into seqz_het_snps_out
