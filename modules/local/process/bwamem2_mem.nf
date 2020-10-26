@@ -31,6 +31,7 @@ process BWAMEM2_MEM {
     CN = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
     readGroup = "@RG\\tID:${meta.run}\\t${CN}PU:${meta.run}\\tSM:${meta.sample}\\tLB:${meta.sample}\\tPL:ILLUMINA"
     extra = meta.status == 1 ? "-B 3" : ""
+    name = reads.get(0).baseName
     """
     bwa-mem2 mem \
         ${options.args} \
@@ -38,7 +39,7 @@ process BWAMEM2_MEM {
         ${extra} \
         -t ${task.cpus} \
         ${fasta} ${reads} | \
-    samtools sort --threads ${task.cpus} -m 2G - > ${meta.id}.bam
+    samtools sort --threads ${task.cpus} -m 2G - > ${name}.bam
 
     # samtools index ${meta.id}.bam
 
