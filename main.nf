@@ -3206,7 +3206,7 @@ process sequenza_seqz_binning {
 	tag "${idPatient}_${idSampleTumor}_bin"
     
 	input:
-	    set idPatient, idSampleTumor, file(bam2seqz) from merge_sequenza_out
+	    set idPatient, idSampleTumor, file(bam2seqz) from merge_seqz_out
     
 	output:
         set idPatient, idSampleTumor, file("${idPatient}_${idSampleTumor}-bin50.seqz.gz") into seqz_bin
