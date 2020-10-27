@@ -857,7 +857,7 @@ if (params.no_intervals && step != 'annotate') {
     bedIntervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
 }
 
-(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervals, intPlatypusVCF, intPlatpusBam) = bedIntervals.into(8)
+(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervals, intPlatypusVCF, intPlatpusBam, intSequenza) = bedIntervals.into(9)
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
@@ -3123,14 +3123,14 @@ process sequenza_utils_make_gc_wiggle {
 }
 
 ch_seqzGC = params.seqz_gc ? Channel.value(file(params.seqz_gc)) : seqzGC_built
-pairBamSequenza = pairBamSequenza.dump(tag: "sequenza" )
 
 ch_seqzChr = ch_fai
      .splitCsv(sep: "\t")
      .map{ chr -> chr[0] }
      .filter( ~/^chr\d+|^chr[X,Y]|^\d+|[X,Y]/ )
 
-pairBamSequenza = params.no_intervals ? pairBamSequenza.spread(ch_seqzChr) : pairBamSequenza.spread(bedIntervals)
+pairBamSequenza = params.no_intervals ? pairBamSequenza.spread(ch_seqzChr) : pairBamSequenza.spread(intSequenza)
+pairBamSequenza =  pairBamSequenza.dump(tag: "bams")
 
 process sequenza_utils {
     
@@ -3183,6 +3183,8 @@ process merge_seqz_files{
     """
 }
 
+(for_het_merge_seqz_out, merge_seqz_out) = merge_seqz_out.into(2)
+
 process find_het_snps {
    
 	tag "${idPatient}_${idSampleTumor}_het_snps"
@@ -3190,7 +3192,7 @@ process find_het_snps {
     publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/sequenza", mode: params.publish_dir_mode
 	
 	input:
-        set idPatient, idSampleTumor, file(bam2seqz_out) from merge_seqz_out
+        set idPatient, idSampleTumor, file(bam2seqz_out) from for_het_merge_seqz_out
     
 	output:
         file("${idPatient}_${idTumor}_het.seqz") into seqz_het_snps_out
