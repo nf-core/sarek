@@ -3179,6 +3179,7 @@ process merge_seqz_files{
     """
 }
 
+(for_het_merge_seqz_out, merge_seqz_out) = merge_seqz_out.into(2)
 process find_het_snps {
    
 	tag "${idPatient}_${idSampleTumor}_het_snps"
@@ -3186,7 +3187,7 @@ process find_het_snps {
     publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/sequenza", mode: params.publish_dir_mode
 	
 	input:
-        set idPatient, idSampleTumor, file(bam2seqz_out) from merge_seqz_out
+        set idPatient, idSampleTumor, file(bam2seqz_out) for_het_merge_seqz_out
     
 	output:
         file("${idPatient}_${idTumor}_het.seqz") into seqz_het_snps_out
