@@ -3134,7 +3134,7 @@ pairBamSequenza = params.no_intervals ? pairBamSequenza.spread(ch_seqzChr) : pai
 
 process sequenza_utils {
     
-	tag "${idSampleTumor}_vs_${idSampleNormal}_${intervalBed}"
+	tag "${idSampleTumor}_vs_${idSampleNormal}_${intervalBed.baseName}"
 
     publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/sequenza", mode: params.publish_dir_mode
     
@@ -3149,10 +3149,14 @@ process sequenza_utils {
     when: 'sequenza' in tools
 
     script:
+    intervalsOptions =  "-C ${intervalBed.baseName}"
     """
+    \$intervalsOptions=${intervalsOptions}
+    \$intervalsOptions=\${intervalsOptions%.bed}
+    \$intervalsOptions=\${intervalsOptions/_/:}
     sequenza-utils bam2seqz \
     -F ${fasta} \
-    -C ${intervalBed} \
+    \$intervalsOptions \
     -gc ${gc_wiggle} \
     --het 0.4 \
     -n ${bamNormal} -t ${bamTumor} -o ${idSampleTumor}_vs_${idSampleNormal}_${intervalBed}.seqz
