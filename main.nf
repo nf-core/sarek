@@ -3151,9 +3151,9 @@ process sequenza_utils {
     script:
     intervalsOptions =  "-C ${intervalBed.baseName}"
     """
-    intervalsOptions=${intervalsOptions}
-    \$intervalsOptions=\${intervalsOptions%.bed}
-    \$intervalsOptions=\${intervalsOptions/_/:}
+    intervalsOptions="${intervalsOptions}"
+    intervalsOptions="\${intervalsOptions%.bed}"
+    intervalsOptions="\${intervalsOptions/_/:}"
     sequenza-utils bam2seqz \
     -F ${fasta} \
     \$intervalsOptions \
