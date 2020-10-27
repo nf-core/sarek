@@ -3134,7 +3134,7 @@ pairBamSequenza =  pairBamSequenza.dump(tag: "bams")
 
 process sequenza_utils {
     
-	tag "${idSampleTumor}_vs_${idSampleNormal}_${intervalBed.baseName}"
+	tag "${idSampleTumor}_vs_${idSampleNormal}_${chr}"
 
     publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/sequenza", mode: params.publish_dir_mode
     
