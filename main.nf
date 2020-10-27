@@ -3171,10 +3171,11 @@ process merge_seqz_files{
     script:
     input = seqz.collect()
     """
-        "head -n 1 ${input[0]} | gzip > ${idSampleTumor}_vs_${idSampleNormal}.seqz.gz; "
-        "for file in ${input[@]}; do "
-        "tail -n +2 ${file} | gzip >> ${idSampleTumor}_vs_${idSampleNormal}.seqz.gz;
-        "done"
+    my_array=(${input})
+    head -n 1 \${my_array[0]} | gzip > ${idSampleTumor}_vs_${idSampleNormal}.seqz.gz
+    for file in \${my_array[@]}
+    tail -n +2 \$file | gzip >> ${idSampleTumor}_vs_${idSampleNormal}.seqz.gz
+    done
     """
 }
 
