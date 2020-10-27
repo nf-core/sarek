@@ -3217,7 +3217,7 @@ process sequenza_seqz_binning {
     """
 }
 
-
+/*
 sequenza_output_base = "data/{patient}/sequenza/initial_fit/{patient}_{sample}"
 process sequenza_initial_fit {
     
@@ -3248,6 +3248,7 @@ process sequenza_initial_fit {
 	analyse_cn_sequenza.R ${seqz_bin) . ${gender}
 	"""
 }
+*/
 
 // STEP MSISENSOR.1 - SCAN
 
