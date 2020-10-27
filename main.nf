@@ -3156,7 +3156,7 @@ process sequenza_utils {
     ${intervalsOptions} \
     -gc ${gc_wiggle} \
     --het 0.4 \
-    -n ${bamNormal} -t ${bamTumor} -o ${idSampleTumor}_vs_${idSampleNormal}_${intervalBed}.seqz
+    -n ${bamNormal} -t ${bamTumor} -o ${idSampleTumor}_vs_${idSampleNormal}_${chr}.seqz
     """
 }
 
