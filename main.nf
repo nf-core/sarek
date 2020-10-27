@@ -3144,7 +3144,7 @@ process sequenza_utils {
         file(gc_wiggle) from ch_seqzGC
         
     output:
-        set idPatient, idSampleTumor, intervalBed, file("*seqz") into sequenza_out
+        set idPatient, idSampleTumor, chr, file("*seqz") into sequenza_out
     
     when: 'sequenza' in tools
 
@@ -3165,7 +3165,7 @@ process merge_seqz_files{
     tag "${idSampleTumor}_vs_${idSampleNormal}_merge"
 
     input:
-        set idPatient, idSampleTumor, intervalBed, file(seqz) from sequenza_out
+        set idPatient, idSampleTumor, chr, file(seqz) from sequenza_out
     output:
         set idPatient, idSampleTumor, file("*.seqz.gz") into merge_seqz_out
 
