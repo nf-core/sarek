@@ -857,7 +857,7 @@ if (params.no_intervals && step != 'annotate') {
     bedIntervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
 }
 
-(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervals, intPlatypusVCF, intPlatpusBam, intSequenza) = bedIntervals.into(9)
+(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervals, intPlatypusVCF, intPlatpusBam) = bedIntervals.into(8)
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
@@ -3129,7 +3129,7 @@ ch_seqzChr = ch_fai
      .map{ chr -> chr[0] }
      .filter( ~/^chr\d+|^chr[X,Y]|^\d+|[X,Y]/ )
 
-pairBamSequenza = params.no_intervals ? pairBamSequenza.spread(ch_seqzChr) : pairBamSequenza.spread(intSequenza)
+pairBamSequenza =  pairBamSequenza.spread(ch_seqzChr) 
 pairBamSequenza =  pairBamSequenza.dump(tag: "bams")
 
 process sequenza_utils {
@@ -3139,7 +3139,7 @@ process sequenza_utils {
     publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/sequenza", mode: params.publish_dir_mode
     
     input:
-        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamSequenza
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), chr from pairBamSequenza
         file(fasta) from ch_fasta
         file(gc_wiggle) from ch_seqzGC
         
@@ -3149,14 +3149,11 @@ process sequenza_utils {
     when: 'sequenza' in tools
 
     script:
-    intervalsOptions =  "-C ${intervalBed.baseName}"
+    intervalsOptions =  "-C ${chr}"
     """
-    intervalsOptions="${intervalsOptions}"
-    intervalsOptions="\${intervalsOptions%.bed}"
-    intervalsOptions="\${intervalsOptions/_/:}"
     sequenza-utils bam2seqz \
     -F ${fasta} \
-    \$intervalsOptions \
+    ${intervalsOptions} \
     -gc ${gc_wiggle} \
     --het 0.4 \
     -n ${bamNormal} -t ${bamTumor} -o ${idSampleTumor}_vs_${idSampleNormal}_${intervalBed}.seqz
