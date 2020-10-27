@@ -3139,7 +3139,7 @@ process sequenza_utils {
     publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/sequenza", mode: params.publish_dir_mode
     
     input:
-        set idPatient, idSampleNormal, idSampleTumor, file(bamNormal), file(baiNormal), file(bamTumor), file(baiTumor), file(intervalBed) from pairBamSequenza
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamSequenza
         file(fasta) from ch_fasta
         file(gc_wiggle) from ch_seqzGC
         
