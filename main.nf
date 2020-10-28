@@ -3204,8 +3204,6 @@ process find_het_snps {
     """
 }
 
-
-
 process sequenza_seqz_binning {
 
 	tag "${idPatient}_${idSampleTumor}_bin"
@@ -3222,38 +3220,26 @@ process sequenza_seqz_binning {
     """
 }
 
-/*
-sequenza_output_base = "data/{patient}/sequenza/initial_fit/{patient}_{sample}"
+
 process sequenza_initial_fit {
     
 	tag "${idPatient}_${idSampleTumor}_seqz_initial_fit"
+
+    publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/initial_fit", mode: params.publish_dir_mode
 
 	input:
         set idPatient, idSampleTumor, file(seqz_bin) from seqz_bin
 
     output:
 	    set idPatient, idSampleTumor, file(*pdf), file(*txt), file(*RData) into seqz_initial_fit
-        results=sequenza_output_base + "_sequenza_extract.RData"
-    params:
-	# All following parameters will be passed as arguments
-        # to the main function of the "analyse_cn_sequenza.R"
-        # script:
-        output_prefix=sequenza_output_base,
-        is_female=lambda wildcards:
-            wildcards.patient in config["female_patient_ids"],
-        min_reads_normal=20,
-        window=1*1e6,
-        gamma=150,
-        kmin=20
     
 	script:
 	gender = genderMap[idPatient]
-    kmin=20
 	"""
-	analyse_cn_sequenza.R ${seqz_bin) . ${gender}
+	analyse_cn_sequenza.R ${seqz_bin} . ${gender}
 	"""
 }
-*/
+
 
 // STEP MSISENSOR.1 - SCAN
 
