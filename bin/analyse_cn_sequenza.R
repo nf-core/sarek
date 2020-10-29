@@ -1,14 +1,14 @@
-#!Rscript
+#!/usr/bin/env Rscript
 # Load libs:
 if (!require(sequenza)) stop("Package 'sequenza' missing\n.")
 
 args <- commandArgs(TRUE)
-
+print(args)
 input <- args[1]
 output_prefix <- args[2]
 gender <- args[3]
 
-
+params_list <- list("input" = input, "output_prefix" = output_prefix )
 # Function:
 sequenzaAnalysis <- function(input,
                              output_prefix,
@@ -45,13 +45,11 @@ sequenzaAnalysis <- function(input,
   # Extract sequenza data for model:
   cat(sprintf("- Starting analysis for %s\n", input))
   cat("- Calculating gc-stats\n")
-  is_gz_File <- grepl("[.]gz$", input)
-  gc_stats   <- gc.sample.stats(input, gz=is_gz_File)
+  gc_stats   <- gc.sample.stats(input)
   
   
   cat("- Loading data\n")
   modDat <- sequenza.extract(input,
-                             gz=is_gz_File,
                              window=window,
                              overlap=overlap,
                              gamma=gamma,
@@ -93,7 +91,5 @@ sequenzaAnalysis <- function(input,
                    ratio.priority=ratio_priority)
 }
 
-is_named_param <- names(snakemake@params) != ""
-params_list <- c(input=snakemake@input[[1]], snakemake@params[is_named_param])
 do.call(sequenzaAnalysis, params_list)
 

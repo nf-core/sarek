@@ -3175,9 +3175,10 @@ process merge_seqz_files{
     script:
     """
     my_array=(${seqz})
-    head -n 1 \${my_array[0]} | gzip > ${idSampleTumor}_vs_${idSampleNormal}.seqz.gz
-    for file in \${my_array[@]}
-    tail -n +2 \$file | gzip >> ${idSampleTumor}_vs_${idSampleNormal}.seqz.gz
+    head -n 1 "\${my_array[0]}" | gzip > ${idSampleTumor}_vs_${idSampleNormal}.seqz.gz
+    for file in "\${my_array[@]}"
+    do
+	tail -n +2 "\$file" | gzip >> ${idSampleTumor}_vs_${idSampleNormal}.seqz.gz
     done
     """
 }
@@ -3194,13 +3195,12 @@ process find_het_snps {
         set idPatient, idSampleTumor, idSampleNormal,file(bam2seqz_out) from for_het_merge_seqz_out
     
 	output:
-        file("${idPatient}_${idTumor}_het.seqz") into seqz_het_snps_out
+        file("${idPatient}_${idSampleTumor}_het.seqz") into seqz_het_snps_out
     
     when: 'sequenza' in tools
 	script:
 	"""
-    zcat ${bam2seqz_out} | head -n 1 > "${idPatient}_${idTumor}_het.seqz"
-    zcat ${bam2seqz_out} | grep het >> "${idPatient}_${idTumor}_het.seqz"
+    zgrep -aE "chromo|het" ${bam2seqz_out} > ${idPatient}_${idSampleTumor}_het.seqz
     """
 }
 
@@ -3209,7 +3209,7 @@ process sequenza_seqz_binning {
 	tag "${idPatient}_${idSampleTumor}_bin"
     
 	input:
-	    set idPatient, idSampleTumor, file(bam2seqz) from merge_seqz_out
+	    set idPatient, idSampleTumor, idSampleNormal, file(bam2seqz) from merge_seqz_out
     
 	output:
         set idPatient, idSampleTumor, file("${idPatient}_${idSampleTumor}-bin50.seqz.gz") into seqz_bin
@@ -3219,7 +3219,6 @@ process sequenza_seqz_binning {
     sequenza-utils seqz_binning -w 50 -s "${bam2seqz}" -o - | gzip > "${idPatient}_${idSampleTumor}-bin50.seqz.gz"
     """
 }
-
 
 process sequenza_initial_fit {
     
@@ -3231,15 +3230,14 @@ process sequenza_initial_fit {
         set idPatient, idSampleTumor, file(seqz_bin) from seqz_bin
 
     output:
-	    set idPatient, idSampleTumor, file(*pdf), file(*txt), file(*RData) into seqz_initial_fit
+	    set idPatient, idSampleTumor, file("*pdf"), file("*txt"), file("*RData") into seqz_initial_fit
     
 	script:
 	gender = genderMap[idPatient]
 	"""
-	analyse_cn_sequenza.R ${seqz_bin} . ${gender}
+	analyse_cn_sequenza.R ${seqz_bin} ${idSampleTumor} ${gender}
 	"""
 }
-
 
 // STEP MSISENSOR.1 - SCAN
 
