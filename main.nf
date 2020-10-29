@@ -215,8 +215,8 @@ skipQC = params.skip_qc ? params.skip_qc == 'all' ? skipQClist : params.skip_qc.
 if (!checkParameterList(skipQC, skipQClist)) exit 1, 'Unknown QC tool(s), see --help for more information'
 
 annoList = defineAnnoList()
-annotateTools = params.annotate_tools ? params.annotate_tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
-if (!checkParameterList(annotateTools,annoList)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
+annotate_tools = params.annotate_tools ? params.annotate_tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
+if (!checkParameterList(annotate_tools,annoList)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
 
 // Check parameters
 if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
@@ -3780,9 +3780,9 @@ if (step == 'annotate') {
         Channel.fromPath("${params.outdir}/VariantCalling/*/TIDDIT/*.vcf.gz")
           .flatten().map{vcf -> ['TIDDIT', vcf.minus(vcf.fileName)[-2].toString(), vcf]}
       ).choice(vcfToAnnotate, vcfNoAnnotate) {
-        annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1
+        annotate_tools == [] || (annotate_tools != [] && it[0] in annotate_tools) ? 0 : 1
       }
-    } else if (annotateTools == []) {
+    } else if (annotate_tools == []) {
     // Annotate user-submitted VCFs
     // If user-submitted, Sarek assume that the idSample should be assumed automatically
       vcfToAnnotate = Channel.fromPath(tsvPath)
