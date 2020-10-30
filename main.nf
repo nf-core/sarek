@@ -1420,11 +1420,12 @@ process MarkDuplicates {
     """
     adam-submit \
       --master local[${task.cpus}] \
-      --driver-memory ${task.memory.toGiga()} \
+      --driver-memory ${task.memory.toGiga()}g \
       -- \
       transformAlignments \
       -mark_duplicate_reads \
       -single \
+      -stringency LENIENT \
       ${idSample}.bam \
       ${idSample}.md.bam
 
