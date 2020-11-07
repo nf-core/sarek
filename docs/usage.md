@@ -108,7 +108,6 @@
   - [--intervals](#--intervals)
   - [--known_indels](#--known_indels)
   - [--known_indels_index](#--known_indels_index)
-  - [--mappability](#--mappability)
   - [--snpeff_db](#--snpeff_db)
   - [--species](#--species)
   - [--vep_cache_version](#--vep_cache_version)
@@ -1224,7 +1223,6 @@ params {
       intervals                = '</path/to/reference.intervals>'
       known_indels             = '</path/to/known_indels.vcf.gz>'
       known_indels_index       = '</path/to/known_indels.vcf.gz.tbi>'
-      mappability              = '</path/to/reference.gem>'
       snpeff_db                = '<snpEff DB>'
       species                  = '<species>'
       vep_cache_version        = '<VEP cache version'
@@ -1419,14 +1417,6 @@ If you prefer, you can specify the full path to your reference genome when you r
 
 ```bash
 --known_indels_index  <path/to/known_indels.vcf.gz.tbi>
-```
-
-### --mappability
-
-If you prefer, you can specify the full path to your reference genome when you run the pipeline:
-
-```bash
---mappability <path/to/reference.gem>
 ```
 
 ### --snpeff_db
