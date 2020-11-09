@@ -2580,7 +2580,7 @@ process PileupSummariesForMutect2 {
     when: 'mutect2' in tools
 
     script:
-    intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
+    intervalsOptions = params.no_intervals ? "-L ${germlineResource}" : "-L ${intervalBed}"
     """
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
         GetPileupSummaries \
