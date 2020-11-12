@@ -3245,6 +3245,7 @@ process ControlFREEC {
         file(dbsnpIndex) from ch_dbsnp_tbi
         file(fasta) from ch_fasta
         file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
 
     output:
         set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.pileup_CNVs"), file("${idSampleTumor}.pileup_ratio.txt"), file("${idSampleTumor}.pileup_normal_CNVs"), file("${idSampleTumor}.pileup_normal_ratio.txt"), file("${idSampleTumor}.pileup_BAF.txt"), file("${idSampleNormal}.pileup_BAF.txt") into controlFreecViz
@@ -3259,6 +3260,8 @@ process ControlFREEC {
     // it is "window = 20000" in the default settings, without coefficientOfVariation set, 
     // but we do not like it. Note, it is not written in stone
     coeff_or_window = params.cf_window ? "window = ${params.cf_window}" : "coefficientOfVariation = ${params.cf_coeff}"
+    use_bed = params.target_bed ? "captureRegions = ${targetBED}" : ""
+    min_subclone = params.target_bed ? "30" : "20"
 
     """
     touch ${config}
@@ -3270,7 +3273,7 @@ process ControlFREEC {
     echo "contaminationAdjustment = TRUE" >> ${config}
     echo "forceGCcontentNormalization = 1" >> ${config}
     echo "maxThreads = ${task.cpus}" >> ${config}
-    echo "minimalSubclonePresence = 20" >> ${config}
+    echo "minimalSubclonePresence = ${min_subclone}" >> ${config}
     echo "ploidy = ${params.cf_ploidy}" >> ${config}
     echo "sex = ${gender}" >> ${config}
     echo "" >> ${config}
@@ -3289,6 +3292,10 @@ process ControlFREEC {
 
     echo "[BAF]" >> ${config}
     echo "SNPfile = ${dbsnp.fileName}" >> ${config}
+    echo "" >> ${config}
+
+    echo "[target]" >> ${config}
+    echo "${use_bed}" >> ${config}
 
     freec -conf ${config}
     """
