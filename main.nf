@@ -3124,7 +3124,9 @@ process sequenza_utils_make_gc_wiggle {
 
 ch_seqzGC = params.seqz_gc ? Channel.value(file(params.seqz_gc)) : seqzGC_built
 
-ch_seqzChr = ch_fai
+(ch_seqzChr, ch_fai) = ch_fai.into(2)
+
+ch_seqzChr = ch_seqzChr
      .splitCsv(sep: "\t")
      .map{ chr -> chr[0] }
      .filter( ~/^chr\d+|^chr[X,Y]|^\d+|[X,Y]/ )
