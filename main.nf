@@ -3262,6 +3262,9 @@ process ControlFREEC {
     coeff_or_window = params.cf_window ? "window = ${params.cf_window}" : "coefficientOfVariation = ${params.cf_coeff}"
     use_bed = params.target_bed ? "captureRegions = ${targetBED}" : ""
     min_subclone = params.target_bed ? "30" : "20"
+    readCountThreshold = params.target_bed ? "50" : "10"
+    breakPointThreshold = params.target_bed ? "1.2" : "0.8"
+    breakPointType = params.target_bed ? "4" : "2"
 
     """
     touch ${config}
@@ -3276,6 +3279,9 @@ process ControlFREEC {
     echo "minimalSubclonePresence = ${min_subclone}" >> ${config}
     echo "ploidy = ${params.cf_ploidy}" >> ${config}
     echo "sex = ${gender}" >> ${config}
+    echo "readCountThreshold = ${readCountThreshold}" >> ${config}
+    echo "breakPointThreshold = ${breakPointThreshold}" >> ${config}
+    echo "breakPointType = ${breakPointType}" >> ${config}
     echo "" >> ${config}
 
     echo "[control]" >> ${config}
