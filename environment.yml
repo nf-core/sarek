@@ -17,7 +17,7 @@ dependencies:
   - bioconda::bwa=0.7.17
   - bioconda::cancerit-allelecount=4.0.2
   - bioconda::cnvkit=0.9.6
-  - bioconda::control-freec=11.5
+  - bioconda::control-freec=11.6
   - bioconda::ensembl-vep=99.2
   - bioconda::fastqc=0.11.9
   - bioconda::fgbio=1.1.0
