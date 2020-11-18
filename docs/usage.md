@@ -977,7 +977,7 @@ Requires that [`--ascat_ploidy`](#--ascat_ploidy) is set.
 
 Use this parameter to overwrite default behavior from `Control-FREEC` regarding `coefficientOfVariation`
 
-Default: `0.015`
+Default: `0.05`
 
 ### --cf_ploidy
 
@@ -988,6 +988,7 @@ Default: `2`
 ### --cf_window
 
 Use this parameter to overwrite default behavior from `Control-FREEC` regarding `window size`
+It is recommended to use a window size of 0 for exome data.
 
 Default: Disabled
 
