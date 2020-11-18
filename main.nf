@@ -89,7 +89,7 @@ def helpMessage() {
                                           Requires that --ascat_ploidy is set
       --cf_coeff                    [str] Control-FREEC coefficientOfVariation
                                           Default: ${params.cf_coeff}
-      --cf_ploidy                   [int] Control-FREEC ploidy
+      --cf_ploidy                   [str] Control-FREEC ploidy
                                           Default: ${params.cf_ploidy}
       --cf_window                   [int] Control-FREEC window size
                                           Default: Disabled
@@ -218,7 +218,6 @@ if (!checkParameterList(annotate_tools,annoList)) exit 1, 'Unknown tool(s) to an
 
 // Check parameters
 if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
-if (params.cf_window && params.cf_coeff) exit 1, 'Please specify either --cf_window OR --cf_coeff, but not both of them'
 if (params.umi && !(params.read_structure1 && params.read_structure2)) exit 1, 'Please specify both --read_structure1 and --read_structure2, when using --umi'
 
 // Has the run name been specified by the user?
@@ -423,7 +422,7 @@ if ('ascat' in tools) {
 }
 
 if ('controlfreec' in tools) {
-    summary['ControlFREEC'] = "Options"
+    summary['Control-FREEC'] = "Options"
     if (params.cf_window)    summary['window']                 = params.cf_window
     if (params.cf_coeff)     summary['coefficientOfVariation'] = params.cf_coeff
     if (params.cf_ploidy)    summary['ploidy']                 = params.cf_ploidy
@@ -3256,10 +3255,9 @@ process ControlFREEC {
     script:
     config = "${idSampleTumor}_vs_${idSampleNormal}.config.txt"
     gender = genderMap[idPatient]
-    // if we are using coefficientOfVariation, we must delete the window parameter 
-    // it is "window = 20000" in the default settings, without coefficientOfVariation set, 
-    // but we do not like it. Note, it is not written in stone
-    coeff_or_window = params.cf_window ? "window = ${params.cf_window}" : "coefficientOfVariation = ${params.cf_coeff}"
+    // Window has higher priority than coefficientOfVariation if both given
+    window = params.cf_window ? "window = ${params.cf_window}" : ""
+    coeffvar = ${params.cf_coeff} ? "coefficientOfVariation = ${params.cf_coeff}" : ""
     use_bed = params.target_bed ? "captureRegions = ${targetBED}" : ""
     min_subclone = params.target_bed ? "30" : "20"
     readCountThreshold = params.target_bed ? "50" : "10"
@@ -3272,7 +3270,6 @@ process ControlFREEC {
     echo "BedGraphOutput = TRUE" >> ${config}
     echo "chrFiles = \${PWD}/${chrDir.fileName}" >> ${config}
     echo "chrLenFile = \${PWD}/${chrLength.fileName}" >> ${config}
-    echo "${coeff_or_window}" >> ${config}
     echo "contaminationAdjustment = TRUE" >> ${config}
     echo "forceGCcontentNormalization = 1" >> ${config}
     echo "maxThreads = ${task.cpus}" >> ${config}
@@ -3282,6 +3279,8 @@ process ControlFREEC {
     echo "readCountThreshold = ${readCountThreshold}" >> ${config}
     echo "breakPointThreshold = ${breakPointThreshold}" >> ${config}
     echo "breakPointType = ${breakPointType}" >> ${config}
+    echo "${window}" >> ${config}
+    echo "${coeffvar}" >> ${config}
     echo "" >> ${config}
 
     echo "[control]" >> ${config}
