@@ -38,7 +38,7 @@ def helpMessage() {
       -profile                      [str] Configuration profile to use. Can use multiple (comma separated)
                                           Available: conda, docker, singularity, test, awsbatch, <institute> and more
       --step                       [list] Specify starting step (only one)
-                                          Available: mapping, prepare_recalibration, recalibrate, variant_calling, annotate, Control-FREEC
+                                          Available: mapping, prepare_recalibration, recalibrate, variant_calling, annotate, ControlFREEC
                                           Default: ${params.step}
       --genome                      [str] Name of iGenomes reference
                                           Default: ${params.genome}
@@ -423,7 +423,7 @@ if ('ascat' in tools) {
 }
 
 if ('controlfreec' in tools) {
-    summary['Control-FREEC'] = "Options"
+    summary['ControlFREEC'] = "Options"
     if (params.cf_window)    summary['window']                 = params.cf_window
     if (params.cf_coeff)     summary['coefficientOfVariation'] = params.cf_coeff
     if (params.cf_ploidy)    summary['ploidy']                 = params.cf_ploidy
