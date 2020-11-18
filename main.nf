@@ -3257,7 +3257,7 @@ process ControlFREEC {
     gender = genderMap[idPatient]
     // Window has higher priority than coefficientOfVariation if both given
     window = params.cf_window ? "window = ${params.cf_window}" : ""
-    coeffvar = ${params.cf_coeff} ? "coefficientOfVariation = ${params.cf_coeff}" : ""
+    coeffvar = params.cf_coeff ? "coefficientOfVariation = ${params.cf_coeff}" : ""
     use_bed = params.target_bed ? "captureRegions = ${targetBED}" : ""
     min_subclone = params.target_bed ? "30" : "20"
     readCountThreshold = params.target_bed ? "50" : "10"
