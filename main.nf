@@ -3270,7 +3270,6 @@ process ControlFREEC {
     echo "BedGraphOutput = TRUE" >> ${config}
     echo "chrFiles = \${PWD}/${chrDir.fileName}" >> ${config}
     echo "chrLenFile = \${PWD}/${chrLength.fileName}" >> ${config}
-    echo "contaminationAdjustment = TRUE" >> ${config}
     echo "forceGCcontentNormalization = 1" >> ${config}
     echo "maxThreads = ${task.cpus}" >> ${config}
     echo "minimalSubclonePresence = ${min_subclone}" >> ${config}
