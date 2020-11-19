@@ -3317,7 +3317,7 @@ process ControlFreecViz {
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Control-FREEC", mode: params.publish_dir_mode
 
     input:
-        set idPatient, idSampleNormal, idSampleTumor, file(cnvTumor), file(ratioTumor), file(bafTumor) from controlFreecOut
+        set idPatient, idSampleNormal, idSampleTumor, file(cnvTumor), file(ratioTumor), file(bafTumor) from controlFreecViz
 
     output:
         set file("*.txt"), file("*.png"), file("*.bed") into controlFreecVizOut
