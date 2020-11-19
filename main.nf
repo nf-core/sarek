@@ -3324,6 +3324,7 @@ process ControlFreecViz {
 
     when: 'controlfreec' in tools
 
+    script:
     """
     echo "Shaping CNV files to make sure we can assess significance"
     awk 'NF==9{print}' ${cnvTumor} > TUMOR.CNVs
@@ -3336,6 +3337,7 @@ process ControlFreecViz {
 
     echo "############### Creating BED files for TUMOR ##############"
     perl /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/freec2bed.pl -f ${ratioTumor} > ${idSampleTumor}.bed
+    """
 }
 
 controlFreecVizOut.dump(tag:'ControlFreecViz')
