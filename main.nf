@@ -3327,7 +3327,7 @@ process ControlFreecViz {
     script:
     """
     echo "Shaping CNV files to make sure we can assess significance"
-    awk 'NF==9{print}' ${cnvTumor} > TUMOR.CNVs
+    awk 'NF==7{print}' ${cnvTumor} > TUMOR.CNVs
 
     echo "############### Calculating significance values for TUMOR CNVs #############"
     cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args TUMOR.CNVs ${ratioTumor}
