@@ -3383,7 +3383,7 @@ controlFreecVizOut.dump(tag:'ControlFreecViz')
 
 vcfKeep = Channel.empty().mix(
     filteredMutect2Output.map{
-        variantCaller, idPatient, idSample, vcf, tbi, tsv ->
+        variantcaller, idPatient, idSample, vcf, tbi, tsv ->
         [variantcaller, idSample, vcf]
     },
     vcfConcatenated.map{
