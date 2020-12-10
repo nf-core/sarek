@@ -490,6 +490,10 @@
                     "type": "string",
                     "fa_icon": "fas fa-copy"
                 },
+                "mappability": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file"
+                },
                 "snpeff_db": {
                     "type": "string",
                     "fa_icon": "fas fa-database"

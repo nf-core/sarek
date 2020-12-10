@@ -152,6 +152,7 @@ def helpMessage() {
       --known_indels               [file] Known indels file
       --known_indels_index         [file] Known indels index
                                           If none provided, will be generated automatically if a knownIndels file is provided
+      --mappability                [file] Mappability file for Control-FREEC
       --snpeff_db                   [str] snpEff Database version
       --species                     [str] Species for VEP
       --vep_cache_version           [int] VEP cache version
@@ -336,6 +337,7 @@ params.germline_resource_index = params.genome && params.germline_resource ? par
 params.intervals = params.genome && !('annotate' in step) ? params.genomes[params.genome].intervals ?: null : null
 params.known_indels = params.genome && ('mapping' in step || 'preparerecalibration' in step) ? params.genomes[params.genome].known_indels ?: null : null
 params.known_indels_index = params.genome && params.known_indels ? params.genomes[params.genome].known_indels_index ?: null : null
+params.mappability = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].mappability ?: null : null
 params.snpeff_db = params.genome && ('snpeff' in tools || 'merge' in tools) ? params.genomes[params.genome].snpeff_db ?: null : null
 params.species = params.genome && ('vep' in tools || 'merge' in tools) ? params.genomes[params.genome].species ?: null : null
 params.vep_cache_version = params.genome && ('vep' in tools || 'merge' in tools) ? params.genomes[params.genome].vep_cache_version ?: null : null
@@ -351,6 +353,7 @@ ch_fai = params.fasta_fai && !('annotate' in step) ? Channel.value(file(params.f
 ch_germline_resource = params.germline_resource && 'mutect2' in tools ? Channel.value(file(params.germline_resource)) : "null"
 ch_intervals = params.intervals && !params.no_intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : "null"
 ch_known_indels = params.known_indels && ('mapping' in step || 'preparerecalibration' in step) ? Channel.value(file(params.known_indels)) : "null"
+ch_mappability = params.mappability && 'controlfreec' in tools ? Channel.value(file(params.mappability)) : "null"
 
 // Initialize channels with values based on params
 ch_snpeff_cache = params.snpeff_cache ? Channel.value(file(params.snpeff_cache)) : "null"
@@ -469,6 +472,7 @@ if (params.germline_resource_index) summary['germline resource index'] = params.
 if (params.intervals)               summary['intervals']               = params.intervals
 if (params.known_indels)            summary['known indels']            = params.known_indels
 if (params.known_indels_index)      summary['known indels index']      = params.known_indels_index
+if (params.mappability)             summary['Mappability']             = params.mappability
 if (params.snpeff_cache)            summary['snpEff cache']            = params.snpeff_cache
 if (params.snpeff_db)               summary['snpEff DB']               = params.snpeff_db
 if (params.species)                 summary['species']                 = params.species
@@ -3239,6 +3243,7 @@ process ControlFREEC {
     input:
         set idPatient, idSampleNormal, idSampleTumor, file(mpileupNormal), file(mpileupTumor) from mpileupOut
         file(chrDir) from ch_chr_dir
+        file(mappability) from ch_mappability
         file(chrLength) from ch_chr_length
         file(dbsnp) from ch_dbsnp
         file(dbsnpIndex) from ch_dbsnp_tbi
@@ -3259,11 +3264,11 @@ process ControlFREEC {
     window = params.cf_window ? "window = ${params.cf_window}" : ""
     coeffvar = params.cf_coeff ? "coefficientOfVariation = ${params.cf_coeff}" : ""
     use_bed = params.target_bed ? "captureRegions = ${targetBED}" : ""
-    min_subclone = params.target_bed ? "30" : "20"
+    min_subclone = params.target_bed ? "100" : "20"
     readCountThreshold = params.target_bed ? "50" : "10"
     breakPointThreshold = params.target_bed ? "1.2" : "0.8"
     breakPointType = params.target_bed ? "4" : "2"
-
+    mappability = params.mappability ? "gemMappabilityFile = \${PWD}/${mappability}" : ""
     """
     touch ${config}
     echo "[general]" >> ${config}
@@ -3280,8 +3285,9 @@ process ControlFREEC {
     echo "breakPointType = ${breakPointType}" >> ${config}
     echo "${window}" >> ${config}
     echo "${coeffvar}" >> ${config}
+    echo "${mappability}" >> ${config}
     echo "" >> ${config}
-
+    
     echo "[control]" >> ${config}
     echo "inputFormat = pileup" >> ${config}
     echo "mateFile = \${PWD}/${mpileupNormal}" >> ${config}
