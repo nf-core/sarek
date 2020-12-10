@@ -3266,7 +3266,7 @@ process ControlFREEC {
     window = params.cf_window ? "window = ${params.cf_window}" : ""
     coeffvar = params.cf_coeff ? "coefficientOfVariation = ${params.cf_coeff}" : ""
     use_bed = params.target_bed ? "captureRegions = ${targetBED}" : ""
-    # This parameter makes Control-FREEC unstable with WES (default is 100 = disabled)
+    // This parameter makes Control-FREEC unstable with WES (default is 100 = disabled)
     min_subclone = params.target_bed ? "100" : "20"
     readCountThreshold = params.target_bed ? "50" : "10"
     breakPointThreshold = params.target_bed ? "1.2" : "0.8"
@@ -3349,7 +3349,7 @@ process ControlFREECSingle {
     window = params.cf_window ? "window = ${params.cf_window}" : ""
     coeffvar = params.cf_coeff ? "coefficientOfVariation = ${params.cf_coeff}" : ""
     use_bed = params.target_bed ? "captureRegions = ${targetBED}" : ""
-    # This parameter makes Control-FREEC unstable with WES (default is 100 = disabled)
+    // This parameter makes Control-FREEC unstable with WES (default is 100 = disabled)
     min_subclone = params.target_bed ? "100" : "20"
     readCountThreshold = params.target_bed ? "50" : "10"
     breakPointThreshold = params.target_bed ? "1.2" : "0.8"
