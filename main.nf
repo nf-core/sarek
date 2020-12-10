@@ -3274,7 +3274,7 @@ process ControlFREEC {
     readCountThreshold = params.target_bed ? "50" : "10"
     breakPointThreshold = params.target_bed ? "1.2" : "0.8"
     breakPointType = params.target_bed ? "4" : "2"
-    mappability = params.mappability ? "gemMappabilityFile = \${PWD}/${mappability}" : ""
+    mappabilitystr = params.mappability ? "gemMappabilityFile = \${PWD}/${mappability}" : ""
 
     """
     touch ${config}
@@ -3292,7 +3292,7 @@ process ControlFREEC {
     echo "breakPointType = ${breakPointType}" >> ${config}
     echo "${window}" >> ${config}
     echo "${coeffvar}" >> ${config}
-    echo "${mappability}" >> ${config}
+    echo "${mappabilitystr}" >> ${config}
     echo "" >> ${config}
     
     echo "[control]" >> ${config}
@@ -3317,7 +3317,6 @@ process ControlFREEC {
     freec -conf ${config}
     """
 }
-
 
 controlFreecOut.dump(tag:'ControlFREEC')
 
@@ -3358,7 +3357,7 @@ process ControlFREECSingle {
     readCountThreshold = params.target_bed ? "50" : "10"
     breakPointThreshold = params.target_bed ? "1.2" : "0.8"
     breakPointType = params.target_bed ? "4" : "2"
-    mappability = params.mappability ? "gemMappabilityFile = \${PWD}/${mappability}" : ""
+    mappabilitystr = params.mappability ? "gemMappabilityFile = \${PWD}/${mappability}" : ""
 
     """
     touch ${config}
@@ -3376,7 +3375,7 @@ process ControlFREECSingle {
     echo "breakPointType = ${breakPointType}" >> ${config}
     echo "${window}" >> ${config}
     echo "${coeffvar}" >> ${config}
-    echo "${mappability}" >> ${config}
+    echo "${mappabilitystr}" >> ${config}
     echo "" >> ${config}
 
     echo "[sample]" >> ${config}
