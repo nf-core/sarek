@@ -3222,10 +3222,7 @@ if (step == 'controlfreec') mpileupOut = inputSample
 mpileupOut
     .choice(mpileupOutTumor, mpileupOutNormal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
 
-mpileupOutSingle = mpileupOutTumor.map {
-    idPatientNormal, idSampleTumor, mpileupOutTumor ->
-    [idPatientNormal, idSampleTumor, mpileupOutTumor]
-}
+(mpileupOutSingle,mpileupOutTumor) = mpileupOutTumor.into(2)
 
 mpileupOut = mpileupOutNormal.combine(mpileupOutTumor, by:0)
 
