@@ -1424,7 +1424,7 @@ If you prefer, you can specify the full path to your reference genome when you r
 
 ### --mappability
 
-If you prefer, you can specify the full path to your Control-FREEC mappibility when you run the pipeline:
+If you prefer, you can specify the full path to your Control-FREEC mappability when you run the pipeline:
 
 ```bash
 --mappability <path/to/reference.gem>
