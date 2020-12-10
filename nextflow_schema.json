@@ -33,7 +33,7 @@
                         "recalibrate",
                         "variant_calling",
                         "annotate",
-                        "ControlFREEC"
+                        "Control-FREEC"
                     ]
                 },
                 "outdir": {
