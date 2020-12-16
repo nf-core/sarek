@@ -28,9 +28,12 @@ dependencies:
   - bioconda::manta=1.6.0
   - bioconda::msisensor=0.5
   - bioconda::multiqc=1.8
+  - bioconda::platypus-variant=0.8.1.2
   - bioconda::qualimap=2.2.2d
+  - bioconda::r-sequenza=3.0.0
   - bioconda::samblaster=0.1.24
   - bioconda::samtools=1.9
+  - bioconda::sequenza-utils=3.0.0
   - bioconda::snpeff=4.3.1t
   - bioconda::strelka=2.9.10
   - bioconda::tiddit=2.7.1

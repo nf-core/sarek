@@ -59,7 +59,7 @@ def helpMessage() {
                                           Default: None
       --tools                       [str] Specify tools to use for variant calling (multiple separated with commas):
                                           Available: ASCAT, CNVkit, ControlFREEC, FreeBayes, HaplotypeCaller
-                                          Manta, mpileup, MSIsensor, Mutect2, Strelka, TIDDIT
+                                          Manta, mpileup, MSIsensor, Mutect2, Platypus, Sequenza, Strelka, TIDDIT
                                           and/or for annotation:
                                           snpEff, VEP, merge
                                           Default: None
@@ -74,7 +74,6 @@ def helpMessage() {
       --save_trimmed               [bool] Save trimmed FastQ file intermediates
       --split_fastq                 [int] Specify how many reads should be contained in the split fastq file
                                           Default: no split
-
     Preprocessing:
       --markdup_java_options        [str] Establish values for markDuplicates memory consumption
                                           Default: ${params.markdup_java_options}
@@ -101,11 +100,13 @@ def helpMessage() {
                                           If none provided, will be generated automatically from the PON
       --ignore_soft_clipped_bases  [bool] Do not analyze soft clipped bases in the reads for GATK Mutect2
                                           Default: Do not use
+      --platypus_tef               [int]  Input tumour enrichment factor for platypus filter
       --umi                        [bool] If provided, UMIs steps will be run to extract and annotate the reads with UMI and create consensus reads
       --read_structure1          [string] When processing UMIs, a read structure should always be provided for each of the fastq files. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length). 
                                           See: https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
       --read_structure2          [string] When processing UMIs, a read structure should always be provided for each of the fastq files. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length). 
                                           See: https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
+      --platypus_tef               [int]  Input tumour enrichment factor for platypus filter
 
     Annotation:
       --annotate_tools              [str] Specify from which tools Sarek should look for VCF files to annotate, only for step Annotate
@@ -327,6 +328,7 @@ params.fasta = params.genome && !('annotate' in step) ? params.genomes[params.ge
 params.ac_loci = params.genome && 'ascat' in tools ? params.genomes[params.genome].ac_loci ?: null : null
 params.ac_loci_gc = params.genome && 'ascat' in tools ? params.genomes[params.genome].ac_loci_gc ?: null : null
 params.bwa = params.genome && params.fasta && 'mapping' in step ? params.genomes[params.genome].bwa ?: null : null
+params.seqz_gc = params.genome && params.fasta && 'sequenza' in tools ? params.genomes[params.genome].seqz_gc ?: null : null
 params.chr_dir = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].chr_dir ?: null : null
 params.chr_length = params.genome && 'controlfreec' in tools ? params.genomes[params.genome].chr_length ?: null : null
 params.dbsnp = params.genome && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools || 'mutect2' in tools || params.sentieon) ? params.genomes[params.genome].dbsnp ?: null : null
@@ -373,6 +375,9 @@ ch_target_bed = params.target_bed ? Channel.value(file(params.target_bed)) : "nu
 // Optional values, not defined within the params.genomes[params.genome] scope
 ch_read_structure1 = params.read_structure1 ? Channel.value(params.read_structure1) : "null"
 ch_read_structure2 = params.read_structure2 ? Channel.value(params.read_structure2) : "null"
+
+// Tumour enrichment factor required for platypus
+ch_tef = params.platypus_tef ? Channel.value(params.platypus_tef) : "null"
 
 /*
 ================================================================================
@@ -474,6 +479,7 @@ if (params.intervals)               summary['intervals']               = params.
 if (params.known_indels)            summary['known indels']            = params.known_indels
 if (params.known_indels_index)      summary['known indels index']      = params.known_indels_index
 if (params.mappability)             summary['Mappability']             = params.mappability
+if (params.seqz_gc)                 summary['sequenza GC wiggle']      = params.seqz_gc
 if (params.snpeff_cache)            summary['snpEff cache']            = params.snpeff_cache
 if (params.snpeff_db)               summary['snpEff DB']               = params.snpeff_db
 if (params.species)                 summary['species']                 = params.species
@@ -565,6 +571,7 @@ process get_software_versions {
     gatk ApplyBQSR --help &> v_gatk.txt 2>&1 || true
     msisensor &> v_msisensor.txt 2>&1 || true
     multiqc --version &> v_multiqc.txt 2>&1 || true
+    # TODO platypus will not output a version
     qualimap --version &> v_qualimap.txt 2>&1 || true
     R --version &> v_r.txt 2>&1 || true
     R -e "library(ASCAT); help(package='ASCAT')" &> v_ascat.txt 2>&1 || true
@@ -758,7 +765,7 @@ process BuildIntervals {
     output:
         file("${fastaFai.baseName}.bed") into intervalBuilt
 
-    when: !(params.intervals) && !('annotate' in step) && !('controlfreec' in step) 
+    when: !(params.intervals) && !('annotate' in step) && !('controlfreec' in step)
 
     script:
     """
@@ -850,7 +857,7 @@ if (params.no_intervals && step != 'annotate') {
     bedIntervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
 }
 
-(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervals) = bedIntervals.into(6)
+(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervals, intPlatypusVCF, intPlatpusBam) = bedIntervals.into(8)
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
@@ -1397,7 +1404,7 @@ process MarkDuplicates {
         --ASSUME_SORT_ORDER coordinate \
         --CREATE_INDEX true \
         --OUTPUT ${idSample}.md.bam
-    
+
     mv ${idSample}.md.bai ${idSample}.md.bam.bai
     """
     else
@@ -1955,12 +1962,13 @@ if (step == 'variantcalling') bam_recalibrated = inputSample
 
 bam_recalibrated = bam_recalibrated.dump(tag:'BAM for Variant Calling')
 
+
 // Here we have a recalibrated bam set
 // The TSV file is formatted like: "idPatient status idSample bamFile baiFile"
 // Manta will be run in Germline mode, or in Tumor mode depending on status
 // HaplotypeCaller, TIDDIT and Strelka will be run for Normal and Tumor samples
 
-(bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll) = bam_recalibrated.into(6)
+(bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll, bamPlatypus) = bam_recalibrated.into(7)
 
 (bam_sentieon_DNAseq, bam_sentieon_DNAscope, bam_sentieon_all) = bam_sentieon_deduped_table.into(3)
 
@@ -2288,15 +2296,15 @@ process FreebayesSingle {
     tag "${idSample}-${intervalBed.baseName}"
 
     label 'cpus_1'
-    
+
     input:
         set idPatient, idSample, file(bam), file(bai), file(intervalBed) from bamFreebayesSingle
         file(fasta) from ch_fasta
         file(fastaFai) from ch_software_versions_yaml
-    
+
     output:
         set val("FreeBayes"), idPatient, idSample, file("${intervalBed.baseName}_${idSample}.vcf") into vcfFreebayesSingle
-    
+
     when: 'freebayes' in tools
 
     script:
@@ -2328,6 +2336,7 @@ bamTumor = Channel.create()
 bamRecalAll
     .choice(bamTumor, bamNormal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
 
+(normalBamForPlatypus, bamNormal) = bamNormal.into(2)
 // Crossing Normal and Tumor to get a T/N pair for Somatic Variant Calling
 // Remapping channel to remove common key idPatient
 pairBam = bamNormal.cross(bamTumor).map {
@@ -2338,7 +2347,7 @@ pairBam = bamNormal.cross(bamTumor).map {
 pairBam = pairBam.dump(tag:'BAM Somatic Pair')
 
 // Manta, Strelka, Mutect2, MSIsensor
-(pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBamCalculateContamination, pairBamFilterMutect2, pairBamMsisensor, pairBamCNVkit, pairBam) = pairBam.into(8)
+(pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBamCalculateContamination, pairBamFilterMutect2, pairBamMsisensor, pairBamCNVkit, pairBamSequenza, pairBamPlatypus, pairBam) = pairBam.into(10)
 
 // Making Pair Bam for Sention
 
@@ -2362,7 +2371,7 @@ intervalPairBam = pairBam.spread(bedIntervals)
 bamMpileup = bamMpileup.spread(intMpileup)
 
 // intervals for Mutect2 calls, FreeBayes and pileups for Mutect2 filtering
-(pairBamMutect2, pairBamFreeBayes, pairBamPileupSummaries) = intervalPairBam.into(3)
+(pairBamMutect2, pairBamFreeBayes, pairBamPileupSummaries ) = intervalPairBam.into(3)
 
 // STEP FREEBAYES
 
@@ -2644,7 +2653,7 @@ process CalculateContamination {
 
     when: 'mutect2' in tools
 
-    script:   
+    script:
     """
     # calculate contamination
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
@@ -2693,6 +2702,133 @@ process FilterMutect2Calls {
         -R ${fasta} \
         -O Mutect2_filtered_${idSamplePair}.vcf.gz
     """
+}
+
+// STEP PLATYPUS VARIANT CALLING
+
+(intervalFilteredMutect2Output, filteredMutect2Output) = filteredMutect2Output.into(2)
+// get rid of stats file
+intervalFilteredMutect2Output = intervalFilteredMutect2Output
+                                    .map{ caller, idPatient, idSamplePair, vcfFile, tbiFile, statsFile ->
+                                        [ idPatient, idSamplePair, vcfFile, tbiFile]}
+// split using bedIntervals
+intervalFilteredMutect2Output = intervalFilteredMutect2Output.spread(intPlatypusVCF)
+// group by patient and bed
+intervalFilteredMutect2Output = intervalFilteredMutect2Output.groupTuple(by: [0,4])
+intervalFilteredMutect2Output = intervalFilteredMutect2Output.dump(tag: 'filteredMutect2Output' )   
+
+// again split recalbam using bedIntervals
+bamPlatypus = bamPlatypus.spread(intPlatpusBam)
+bamPlatypus = bamPlatypus.dump(tag: 'spreadPlatypus')
+bamPlatypus = bamPlatypus.groupTuple(by:[0,4])
+bamPlatypus = bamPlatypus.dump(tag: 'bamPlatypus' )
+
+platypusInput = bamPlatypus.join(intervalFilteredMutect2Output, by: [0,4])
+platypusInput = platypusInput.dump(tag: 'platypusInput')
+
+process platypus {
+	
+	label 'cpus_max'
+	label 'memory_max' 
+    tag "${idPatient}"
+
+    input:
+        set idPatient, file(intervalBed), samples, file(bams), file(bais), idSamplePair, file(mutect2Vcf), file(mutect2Tbi) from platypusInput
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fai
+
+    output:
+        set val("Platypus"), idPatient, file("${intervalBed.baseName}_${idPatient}.vcf") into platypusOutput
+ 	
+	when:
+		'platypus' in tools
+   
+    script:
+	intervalsOptions = params.no_intervals ? "" : "--regions=${intervalBed}.txt"
+    """
+	if [[ $intervalsOptions == "*regions*" ]]; then
+	    awk 'BEGIN{OFS=""}{print \$1,":",\$2,"-",\$3}' ${intervalBed} > ${intervalBed}.txt
+    fi
+	
+	platypus callVariants \
+        --refFile=${fasta} --bamFiles=${bams.join(',')} \
+        --output=${intervalBed.baseName}_${idPatient}.vcf \
+        --source=${mutect2Vcf.join(',')} \
+        --filterReadPairsWithSmallInserts=0 \
+		--maxReads=100000000 \
+        --maxVariants=100 \
+		--minPosterior=0 \
+        --nCPU=${task.cpus} \
+		${intervalsOptions} \
+        --logFileName ${idPatient}_${intervalBed.baseName}.log
+    """
+}
+
+// STEP MERGING VCF - platypus
+platypusOutput = platypusOutput.groupTuple(by: [0,1])
+platypusOutput = platypusOutput.dump(tag:'platypus VCF to merge')
+
+process ConcatPlatypusVCF {
+    label 'cpus_8'
+
+    tag "${variantCaller}-${idPatient}"
+
+    input:
+        set variantCaller, idPatient, file(vcf) from platypusOutput
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
+
+    output:
+    // we have this funny *_* pattern to avoid copying the raw calls to publishdir
+        set variantCaller, idPatient, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into PlatypusVcfConcatenated
+
+    when: 'platypus' in tools
+
+    script:
+    outputFile = "${variantCaller}_${idPatient}.vcf"
+    options = params.target_bed ? "-t ${targetBED}" : ""
+    intervalsOptions = params.no_intervals ? "-n" : ""
+    """
+    concatenateVCFs.sh -i ${fastaFai} -c ${task.cpus} -o ${outputFile} ${options} ${intervalsOptions}
+    """
+}
+
+// only need patientID and normalSampleID for filterPlatypus
+
+normalBamForPlatypus = normalBamForPlatypus
+                              .map{idPatient,idSample,bamNormal,baiNormal -> [idPatient,idSample]}
+
+// shuffle the platypusOutput for join to work
+PlatypusVcfConcatenated = PlatypusVcfConcatenated
+								.map{variantCaller, idPatient, vcf, tbi -> [idPatient, vcf, tbi, variantCaller]}
+normalBamForPlatypus = normalBamForPlatypus.join(PlatypusVcfConcatenated)
+// shuffle back
+normalBamForPlatypus = normalBamForPlatypus
+								.map{idPatient, idSampleNormal, vcf, tbi, variantCaller -> [variantCaller, idPatient,idSampleNormal, vcf, tbi]}
+normalBamForPlatypus = normalBamForPlatypus.dump(tag: 'normalBamForPlatypus')
+
+process filterPlatypus {
+	
+	tag "${variantCaller}-${idPatient}"
+
+	publishDir "${params.outdir}/VariantCalling/${idPatient}/${variantCaller}", mode: params.publish_dir_mode
+
+	input:
+    	set variantCaller, idPatient, idSampleNormal, file(vcf), file(tbi)from normalBamForPlatypus
+		val(tef) from ch_tef
+
+	output:
+        set variantCaller, idPatient, file("${variantCaller}_${idPatient}_filtered.vcf.gz"), file("${variantCaller}_${idPatient}_filtered.vcf.gz.tbi") into PlatypusVcfFiltered
+	
+	when: 'platypus' in tools
+
+	script:
+	"""
+	bgzip -d ${vcf}
+	filter_platypus.py "${variantCaller}_${idPatient}".vcf ${idSampleNormal} ${tef}
+    bgzip  "${variantCaller}_${idPatient}"_filtered.vcf
+	tabix -p vcf "${variantCaller}_${idPatient}"_filtered.vcf.gz
+	"""
 }
 
 // STEP SENTIEON TNSCOPE
@@ -2955,8 +3091,154 @@ process CNVkit {
       --output-reference output_reference.cnn \
       --output-dir ./ \
       --diagram \
-      --scatter 
+      --scatter
     """
+}
+
+/* 
+ * if necessary
+ * Process a FASTA file to produce a GC Wiggle track file:
+ */ 
+
+process sequenza_utils_make_gc_wiggle {
+
+    tag "${fasta}_sequenza"
+
+    publishDir params.outdir, mode: params.publish_dir_mode,
+        saveAs: {params.save_reference ? "reference_genome/sequenzaGC/${it}" : null }
+
+    input:
+        file(fasta) from ch_fasta
+    
+    output:
+        file("*wig.gz") into seqzGC_built
+    
+    when: !(params.seqz_gc) && params.fasta && 'sequenza' in tools
+    
+    script:
+    genome = params.genome == 'smallGRCh37' ? 'GRCh37' : params.genome
+	"""
+    sequenza-utils gc_wiggle -w 50 --fasta ${fasta} -o ${genome}.gc50Base.wig.gz
+    """
+}
+
+ch_seqzGC = params.seqz_gc ? Channel.value(file(params.seqz_gc)) : seqzGC_built
+
+(ch_seqzChr, ch_fai) = ch_fai.into(2)
+
+ch_seqzChr = ch_seqzChr
+     .splitCsv(sep: "\t")
+     .map{ chr -> chr[0] }
+     .filter( ~/^chr\d+|^chr[X,Y]|^\d+|[X,Y]/ )
+
+pairBamSequenza =  pairBamSequenza.spread(ch_seqzChr) 
+pairBamSequenza =  pairBamSequenza.dump(tag: "bams")
+
+process sequenza_utils {
+    
+	tag "${idSampleTumor}_vs_${idSampleNormal}_${chr}"
+
+    publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/sequenza", mode: params.publish_dir_mode
+    
+    input:
+        set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), chr from pairBamSequenza
+        file(fasta) from ch_fasta
+        file(gc_wiggle) from ch_seqzGC
+        
+    output:
+        set idPatient, idSampleTumor, idSampleNormal, chr, file("*seqz") into sequenza_out
+    
+    when: 'sequenza' in tools
+
+    script:
+    intervalsOptions =  "-C ${chr}"
+    """
+    sequenza-utils bam2seqz \
+    -F ${fasta} \
+    ${intervalsOptions} \
+    -gc ${gc_wiggle} \
+    --het 0.4 \
+    -n ${bamNormal} -t ${bamTumor} -o ${idSampleTumor}_vs_${idSampleNormal}_${chr}.seqz
+    """
+}
+
+sequenza_out = sequenza_out.groupTuple(by:[0,1,2])
+//sequenza_out = sequenza_out.dump(tag: "sequenza")
+
+process merge_seqz_files{
+
+    tag "${idSampleTumor}_vs_${idSampleNormal}_merge"
+
+    input:
+        set idPatient, idSampleTumor, idSampleNormal, chr, file(seqz) from sequenza_out
+    output:
+        set idPatient, idSampleTumor,  idSampleNormal, file("*.seqz.gz") into merge_seqz_out
+
+    script:
+    """
+    my_array=(${seqz})
+    head -n 1 "\${my_array[0]}" | gzip > ${idSampleTumor}_vs_${idSampleNormal}.seqz.gz
+    for file in "\${my_array[@]}"
+    do
+	tail -n +2 "\$file" | gzip >> ${idSampleTumor}_vs_${idSampleNormal}.seqz.gz
+    done
+    """
+}
+
+(for_het_merge_seqz_out, merge_seqz_out) = merge_seqz_out.into(2)
+
+process find_het_snps {
+   
+	tag "${idPatient}_${idSampleTumor}_het_snps"
+    
+    publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/sequenza", mode: params.publish_dir_mode
+	
+	input:
+        set idPatient, idSampleTumor, idSampleNormal,file(bam2seqz_out) from for_het_merge_seqz_out
+    
+	output:
+        file("${idPatient}_${idSampleTumor}_het.seqz") into seqz_het_snps_out
+    
+    when: 'sequenza' in tools
+	script:
+	"""
+    zgrep -aE "chromo|het" ${bam2seqz_out} > ${idPatient}_${idSampleTumor}_het.seqz
+    """
+}
+
+process sequenza_seqz_binning {
+
+	tag "${idPatient}_${idSampleTumor}_bin"
+    
+	input:
+	    set idPatient, idSampleTumor, idSampleNormal, file(bam2seqz) from merge_seqz_out
+    
+	output:
+        set idPatient, idSampleTumor, file("${idPatient}_${idSampleTumor}-bin50.seqz.gz") into seqz_bin
+    
+	script:
+	"""
+    sequenza-utils seqz_binning -w 50 -s "${bam2seqz}" -o - | gzip > "${idPatient}_${idSampleTumor}-bin50.seqz.gz"
+    """
+}
+
+process sequenza_initial_fit {
+    
+	tag "${idPatient}_${idSampleTumor}_seqz_initial_fit"
+
+    publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/initial_fit", mode: params.publish_dir_mode
+
+	input:
+        set idPatient, idSampleTumor, file(seqz_bin) from seqz_bin
+
+    output:
+	    set idPatient, idSampleTumor, file("*pdf"), file("*txt"), file("*RData") into seqz_initial_fit
+    
+	script:
+	gender = genderMap[idPatient]
+	"""
+	analyse_cn_sequenza.R ${seqz_bin} ${idSampleTumor} ${gender}
+	"""
 }
 
 // STEP MSISENSOR.1 - SCAN
@@ -3260,8 +3542,8 @@ process ControlFREEC {
     script:
     config = "${idSampleTumor}_vs_${idSampleNormal}.config.txt"
     gender = genderMap[idPatient]
-    // if we are using coefficientOfVariation, we must delete the window parameter 
-    // it is "window = 20000" in the default settings, without coefficientOfVariation set, 
+    // if we are using coefficientOfVariation, we must delete the window parameter
+    // it is "window = 20000" in the default settings, without coefficientOfVariation set,
     // but we do not like it. Note, it is not written in stone
     coeff_or_window = params.cf_window ? "window = ${params.cf_window}" : "coefficientOfVariation = ${params.cf_coeff}"
 
@@ -4016,6 +4298,7 @@ def defineAnnoList() {
         'haplotypecaller',
         'manta',
         'mutect2',
+        'platypus',
         'strelka',
         'tiddit'
     ]
@@ -4064,6 +4347,8 @@ def defineToolList() {
         'merge',
         'mpileup',
         'mutect2',
+        'platypus',
+		'sequenza',
         'snpeff',
         'strelka',
         'tiddit',
