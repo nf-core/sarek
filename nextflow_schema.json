@@ -263,18 +263,18 @@
                 },
                 "cf_coeff": {
                     "type": "number",
-                    "default": 0.015,
+                    "default": 0.05,
                     "fa_icon": "fas fa-wrench",
                     "description": "Overwrite Control-FREEC coefficientOfVariation"
                 },
                 "cf_ploidy": {
-                    "type": "integer",
-                    "default": 2,
+                    "type": "string",
+                    "default": "2",
                     "fa_icon": "fas fa-wrench",
                     "description": "Overwrite Control-FREEC ploidy"
                 },
                 "cf_window": {
-                    "type": "string",
+                    "type": "number",
                     "fa_icon": "fas fa-wrench",
                     "description": "Overwrite Control-FREEC window size"
                 },

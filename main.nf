@@ -38,7 +38,7 @@ def helpMessage() {
       -profile                      [str] Configuration profile to use. Can use multiple (comma separated)
                                           Available: conda, docker, singularity, test, awsbatch, <institute> and more
       --step                       [list] Specify starting step (only one)
-                                          Available: mapping, prepare_recalibration, recalibrate, variant_calling, annotate, Control-FREEC
+                                          Available: mapping, prepare_recalibration, recalibrate, variant_calling, annotate, ControlFREEC
                                           Default: ${params.step}
       --genome                      [str] Name of iGenomes reference
                                           Default: ${params.genome}
@@ -89,7 +89,7 @@ def helpMessage() {
                                           Requires that --ascat_ploidy is set
       --cf_coeff                    [str] Control-FREEC coefficientOfVariation
                                           Default: ${params.cf_coeff}
-      --cf_ploidy                   [int] Control-FREEC ploidy
+      --cf_ploidy                   [str] Control-FREEC ploidy
                                           Default: ${params.cf_ploidy}
       --cf_window                   [int] Control-FREEC window size
                                           Default: Disabled
@@ -219,7 +219,6 @@ if (!checkParameterList(annotate_tools,annoList)) exit 1, 'Unknown tool(s) to an
 
 // Check parameters
 if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
-if (params.cf_window && params.cf_coeff) exit 1, 'Please specify either --cf_window OR --cf_coeff, but not both of them'
 if (params.umi && !(params.read_structure1 && params.read_structure2)) exit 1, 'Please specify both --read_structure1 and --read_structure2, when using --umi'
 
 // Has the run name been specified by the user?
@@ -3223,6 +3222,8 @@ if (step == 'controlfreec') mpileupOut = inputSample
 mpileupOut
     .choice(mpileupOutTumor, mpileupOutNormal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
 
+(mpileupOutSingle,mpileupOutTumor) = mpileupOutTumor.into(2)
+
 mpileupOut = mpileupOutNormal.combine(mpileupOutTumor, by:0)
 
 mpileupOut = mpileupOut.map {
@@ -3234,8 +3235,7 @@ mpileupOut = mpileupOut.map {
 // STEP CONTROLFREEC.1 - CONTROLFREEC
 
 process ControlFREEC {
-    label 'cpus_max'
-    //label 'memory_singleCPU_2_task'
+    label 'cpus_8'
 
     tag "${idSampleTumor}_vs_${idSampleNormal}"
 
@@ -3250,9 +3250,10 @@ process ControlFREEC {
         file(dbsnpIndex) from ch_dbsnp_tbi
         file(fasta) from ch_fasta
         file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
 
     output:
-        set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.pileup_CNVs"), file("${idSampleTumor}.pileup_ratio.txt"), file("${idSampleTumor}.pileup_normal_CNVs"), file("${idSampleTumor}.pileup_normal_ratio.txt"), file("${idSampleTumor}.pileup_BAF.txt"), file("${idSampleNormal}.pileup_BAF.txt") into controlFreecViz
+        set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.pileup_CNVs"), file("${idSampleTumor}.pileup_ratio.txt"), file("${idSampleTumor}.pileup_BAF.txt") into controlFreecViz
         set file("*.pileup*"), file("${idSampleTumor}_vs_${idSampleNormal}.config.txt") into controlFreecOut
 
     when: 'controlfreec' in tools
@@ -3260,10 +3261,18 @@ process ControlFREEC {
     script:
     config = "${idSampleTumor}_vs_${idSampleNormal}.config.txt"
     gender = genderMap[idPatient]
-    // if we are using coefficientOfVariation, we must delete the window parameter 
-    // it is "window = 20000" in the default settings, without coefficientOfVariation set, 
-    // but we do not like it. Note, it is not written in stone
-    coeff_or_window = params.cf_window ? "window = ${params.cf_window}" : "coefficientOfVariation = ${params.cf_coeff}"
+    // Window has higher priority than coefficientOfVariation if both given
+    window = params.cf_window ? "window = ${params.cf_window}" : ""
+    coeffvar = params.cf_coeff ? "coefficientOfVariation = ${params.cf_coeff}" : ""
+    use_bed = params.target_bed ? "captureRegions = ${targetBED}" : ""
+    // This parameter makes Control-FREEC unstable (still in Beta according to the developers)
+    // so we disable it by setting it to its default value (it is disabled by default)
+    //min_subclone = params.target_bed ? "30" : "20"
+    min_subclone = 100
+    readCountThreshold = params.target_bed ? "50" : "10"
+    breakPointThreshold = params.target_bed ? "1.2" : "0.8"
+    breakPointType = params.target_bed ? "4" : "2"
+    mappabilitystr = params.mappability ? "gemMappabilityFile = \${PWD}/${mappability}" : ""
 
     """
     touch ${config}
@@ -3271,16 +3280,19 @@ process ControlFREEC {
     echo "BedGraphOutput = TRUE" >> ${config}
     echo "chrFiles = \${PWD}/${chrDir.fileName}" >> ${config}
     echo "chrLenFile = \${PWD}/${chrLength.fileName}" >> ${config}
-    echo "gemMappabilityFile = \${PWD}/${mappability}" >> ${config}
-    echo "${coeff_or_window}" >> ${config}
-    echo "contaminationAdjustment = TRUE" >> ${config}
     echo "forceGCcontentNormalization = 1" >> ${config}
     echo "maxThreads = ${task.cpus}" >> ${config}
-    echo "minimalSubclonePresence = 20" >> ${config}
+    echo "minimalSubclonePresence = ${min_subclone}" >> ${config}
     echo "ploidy = ${params.cf_ploidy}" >> ${config}
     echo "sex = ${gender}" >> ${config}
+    echo "readCountThreshold = ${readCountThreshold}" >> ${config}
+    echo "breakPointThreshold = ${breakPointThreshold}" >> ${config}
+    echo "breakPointType = ${breakPointType}" >> ${config}
+    echo "${window}" >> ${config}
+    echo "${coeffvar}" >> ${config}
+    echo "${mappabilitystr}" >> ${config}
     echo "" >> ${config}
-
+    
     echo "[control]" >> ${config}
     echo "inputFormat = pileup" >> ${config}
     echo "mateFile = \${PWD}/${mpileupNormal}" >> ${config}
@@ -3295,12 +3307,94 @@ process ControlFREEC {
 
     echo "[BAF]" >> ${config}
     echo "SNPfile = ${dbsnp.fileName}" >> ${config}
+    echo "" >> ${config}
+
+    echo "[target]" >> ${config}
+    echo "${use_bed}" >> ${config}
 
     freec -conf ${config}
     """
 }
 
 controlFreecOut.dump(tag:'ControlFREEC')
+
+process ControlFREECSingle {
+    label 'cpus_8'
+
+    tag "${idSampleTumor}"
+
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Control-FREEC", mode: params.publish_dir_mode
+
+    input:
+        set idPatient, idSampleTumor, file(mpileupTumor) from mpileupOutSingle
+        file(chrDir) from ch_chr_dir
+        file(mappability) from ch_mappability
+        file(chrLength) from ch_chr_length
+        file(dbsnp) from ch_dbsnp
+        file(dbsnpIndex) from ch_dbsnp_tbi
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
+
+    output:
+        set idPatient, idSampleTumor, file("${idSampleTumor}.pileup_CNVs"), file("${idSampleTumor}.pileup_ratio.txt"), file("${idSampleTumor}.pileup_BAF.txt") into controlFreecVizSingle
+        set file("*.pileup*"), file("${idSampleTumor}.config.txt") into controlFreecOutSingle
+
+    when: 'controlfreec' in tools
+
+    script:
+    config = "${idSampleTumor}.config.txt"
+    gender = genderMap[idPatient]
+    // Window has higher priority than coefficientOfVariation if both given
+    window = params.cf_window ? "window = ${params.cf_window}" : ""
+    coeffvar = params.cf_coeff ? "coefficientOfVariation = ${params.cf_coeff}" : ""
+    use_bed = params.target_bed ? "captureRegions = ${targetBED}" : ""
+    // This parameter makes Control-FREEC unstable (still in Beta according to the developers)
+    // so we disable it by setting it to its default value (it is disabled by default)
+    //min_subclone = params.target_bed ? "30" : "20"
+    min_subclone = 100
+    readCountThreshold = params.target_bed ? "50" : "10"
+    breakPointThreshold = params.target_bed ? "1.2" : "0.8"
+    breakPointType = params.target_bed ? "4" : "2"
+    mappabilitystr = params.mappability ? "gemMappabilityFile = \${PWD}/${mappability}" : ""
+
+    """
+    touch ${config}
+    echo "[general]" >> ${config}
+    echo "BedGraphOutput = TRUE" >> ${config}
+    echo "chrFiles = \${PWD}/${chrDir.fileName}" >> ${config}
+    echo "chrLenFile = \${PWD}/${chrLength.fileName}" >> ${config}
+    echo "forceGCcontentNormalization = 1" >> ${config}
+    echo "maxThreads = ${task.cpus}" >> ${config}
+    echo "minimalSubclonePresence = ${min_subclone}" >> ${config}
+    echo "ploidy = ${params.cf_ploidy}" >> ${config}
+    echo "sex = ${gender}" >> ${config}
+    echo "readCountThreshold = ${readCountThreshold}" >> ${config}
+    echo "breakPointThreshold = ${breakPointThreshold}" >> ${config}
+    echo "breakPointType = ${breakPointType}" >> ${config}
+    echo "${window}" >> ${config}
+    echo "${coeffvar}" >> ${config}
+    echo "${mappabilitystr}" >> ${config}
+    echo "" >> ${config}
+
+    echo "[sample]" >> ${config}
+    echo "inputFormat = pileup" >> ${config}
+    echo "mateFile = \${PWD}/${mpileupTumor}" >> ${config}
+    echo "mateOrientation = FR" >> ${config}
+    echo "" >> ${config}
+
+    echo "[BAF]" >> ${config}
+    echo "SNPfile = ${dbsnp.fileName}" >> ${config}
+    echo "" >> ${config}
+
+    echo "[target]" >> ${config}
+    echo "${use_bed}" >> ${config}
+
+    freec -conf ${config}
+    """
+}
+
+controlFreecOutSingle.dump(tag:'ControlFREECSingle')
 
 // STEP CONTROLFREEC.3 - VISUALIZATION
 
@@ -3312,39 +3406,63 @@ process ControlFreecViz {
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Control-FREEC", mode: params.publish_dir_mode
 
     input:
-        set idPatient, idSampleNormal, idSampleTumor, file(cnvTumor), file(ratioTumor), file(cnvNormal), file(ratioNormal), file(bafTumor), file(bafNormal) from controlFreecViz
+        set idPatient, idSampleNormal, idSampleTumor, file(cnvTumor), file(ratioTumor), file(bafTumor) from controlFreecViz
 
     output:
         set file("*.txt"), file("*.png"), file("*.bed") into controlFreecVizOut
 
     when: 'controlfreec' in tools
 
+    script:
     """
     echo "Shaping CNV files to make sure we can assess significance"
-    awk 'NF==9{print}' ${cnvTumor} > TUMOR.CNVs
-    awk 'NF==7{print}' ${cnvNormal} > NORMAL.CNVs
+    LINEWIDTH=`head -1 ${cnvTumor}| wc -w`; awk 'NF=='$LINEWIDTH'{print}' ${cnvTumor} > TUMOR.CNVs
 
     echo "############### Calculating significance values for TUMOR CNVs #############"
     cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args TUMOR.CNVs ${ratioTumor}
 
-    echo "############### Calculating significance values for NORMAL CNVs ############"
-    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args NORMAL.CNVs ${ratioNormal}
-
     echo "############### Creating graph for TUMOR ratios ###############"
     cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/makeGraph.R | R --slave --args 2 ${ratioTumor} ${bafTumor}
 
-    echo "############### Creating graph for NORMAL ratios ##############"
-    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/makeGraph.R | R --slave --args 2 ${ratioNormal} ${bafNormal}
-
     echo "############### Creating BED files for TUMOR ##############"
     perl /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/freec2bed.pl -f ${ratioTumor} > ${idSampleTumor}.bed
-
-    echo "############### Creating BED files for NORMAL #############"
-    perl /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/freec2bed.pl -f ${ratioNormal} > ${idSampleNormal}.bed
     """
 }
 
 controlFreecVizOut.dump(tag:'ControlFreecViz')
+
+process ControlFreecVizSingle {
+    label 'memory_singleCPU_2_task'
+
+    tag "${idSampleTumor}"
+
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Control-FREEC", mode: params.publish_dir_mode
+
+    input:
+        set idPatient, idSampleTumor, file(cnvTumor), file(ratioTumor), file(bafTumor) from controlFreecVizSingle
+
+    output:
+        set file("*.txt"), file("*.png"), file("*.bed") into controlFreecVizOutSingle
+
+    when: 'controlfreec' in tools
+
+    script:
+    """
+    echo "Shaping CNV files to make sure we can assess significance"
+    LINEWIDTH=`head -1 ${cnvTumor}| wc -w`; awk 'NF=='$LINEWIDTH'{print}' ${cnvTumor} > TUMOR.CNVs
+
+    echo "############### Calculating significance values for TUMOR CNVs #############"
+    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args TUMOR.CNVs ${ratioTumor}
+
+    echo "############### Creating graph for TUMOR ratios ###############"
+    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/makeGraph.R | R --slave --args 2 ${ratioTumor} ${bafTumor}
+
+    echo "############### Creating BED files for TUMOR ##############"
+    perl /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/freec2bed.pl -f ${ratioTumor} > ${idSampleTumor}.bed
+    """
+}
+
+controlFreecVizOutSingle.dump(tag:'ControlFreecVizSingle')
 
 // Remapping channels for QC and annotation
 
