@@ -60,10 +60,13 @@ The nf-core/sarek pipeline comes with documentation about the pipeline which you
 ## Credits
 
 Sarek was developed at the [National Genomics Infastructure](https://ngisweden.scilifelab.se) and [National Bioinformatics Infastructure Sweden](https://nbis.se) which are both platforms at [SciLifeLab](https://scilifelab.se), with the support of [The Swedish Childhood Tumor Biobank (Barntumörbanken)](https://ki.se/forskning/barntumorbanken).
+[QBiC](https://www.qbic.uni-tuebingen.de/) later joined and helped with further development.
 
 Main authors:
 
+* [Gisela Gabernet](https://github.com/ggabernet)
 * [Maxime Garcia](https://github.com/MaxUlysse)
+* [Friederike Hanssen](https://github.com/FriederikeHanssen)
 * [Szilveszter Juhos](https://github.com/szilvajuhos)
 
 Helpful contributors:
@@ -73,8 +76,6 @@ Helpful contributors:
 * [Chela James](https://github.com/chelauk)
 * [David Mas-Ponte](https://github.com/davidmasp)
 * [Francesco L](https://github.com/nibscles)
-* [Friederike Hanssen](https://github.com/FriederikeHanssen)
-* [Gisela Gabernet](https://github.com/ggabernet)
 * [Harshil Patel](https://github.com/drpatelh)
 * [James A. Fellows Yates](https://github.com/jfy133)
 * [Jesper Eisfeldt](https://github.com/J35P312)
@@ -112,6 +113,7 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 [![Barntumörbanken](docs/images/BTB_logo.png)](https://ki.se/forskning/barntumorbanken) | [![SciLifeLab](docs/images/SciLifeLab_logo.png)](https://scilifelab.se)
 :-:|:-:
 [![National Genomics Infrastructure](docs/images/NGI_logo.png)](https://ngisweden.scilifelab.se/) | [![National Bioinformatics Infrastructure Sweden](docs/images/NBIS_logo.png)](https://nbis.se)
+[![QBiC](docs/images/QBiC_logo.png)](hhttps://www.qbic.uni-tuebingen.de) |
 
 ## Citation
 
