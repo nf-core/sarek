@@ -67,13 +67,13 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 
 * `docker`
   * A generic configuration profile to be used with [Docker](https://docker.com/)
-  * Pulls software from Docker Hub: [`{{ cookiecutter.name_docker }}`](https://hub.docker.com/r/{{ cookiecutter.name_docker }}/)
+  * Pulls software from Docker Hub: [`nfcore/sarek`](http://hub.docker.com/r/nfcore/sarek/)
 * `singularity`
   * A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
-  * Pulls software from Docker Hub: [`{{ cookiecutter.name_docker }}`](https://hub.docker.com/r/{{ cookiecutter.name_docker }}/)
+  * Pulls software from Docker Hub: [`nfcore/sarek`](http://hub.docker.com/r/nfcore/sarek/)
 * `podman`
   * A generic configuration profile to be used with [Podman](https://podman.io/)
-  * Pulls software from Docker Hub: [`{{ cookiecutter.name_docker }}`](https://hub.docker.com/r/{{ cookiecutter.name_docker }}/)
+  * Pulls software from Docker Hub: [`nfcore/sarek`](http://hub.docker.com/r/nfcore/sarek/)
 * `conda`
   * Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity or Podman.
   * A generic configuration profile to be used with [Conda](https://conda.io/docs/)
