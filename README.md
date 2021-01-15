@@ -26,7 +26,7 @@ The pipeline is built using [`Nextflow`](https://www.nextflow.io), a workflow to
     <img title="Sarek Workflow" src="docs/images/sarek_workflow.png" width=40%>
 </p>
 
-It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek) and [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek).
+It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/nf-core-sarek) and [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek).
 
 ## Quick Start
 
