@@ -1,9 +1,9 @@
 #!/usr/bin/env nextflow
 
 /*
-################################################################################
+================================================================================
                                   nf-core/sarek
-################################################################################
+================================================================================
 Started March 2016.
 Ported to nf-core May 2019.
 --------------------------------------------------------------------------------
@@ -183,9 +183,9 @@ def helpMessage() {
 if (params.help) exit 0, helpMessage()
 
 /*
-################################################################################
+================================================================================
                          SET UP CONFIGURATION VARIABLES
-################################################################################
+================================================================================
 */
 
 // Check if genome exists in the config file
@@ -315,9 +315,9 @@ if (tsvPath) {
 (genderMap, statusMap, inputSample) = extractInfos(inputSample)
 
 /*
-################################################################################
+================================================================================
                                CHECKING REFERENCES
-################################################################################
+================================================================================
 */
 
 // Initialize each params in params.genomes, catch the command line first if it was defined
@@ -375,9 +375,9 @@ ch_read_structure1 = params.read_structure1 ? Channel.value(params.read_structur
 ch_read_structure2 = params.read_structure2 ? Channel.value(params.read_structure2) : "null"
 
 /*
-################################################################################
+================================================================================
                                 PRINTING SUMMARY
-################################################################################
+================================================================================
 */
 
 // Header log info
@@ -582,9 +582,9 @@ process get_software_versions {
 ch_software_versions_yaml = ch_software_versions_yaml.dump(tag:'SOFTWARE VERSIONS')
 
 /*
-################################################################################
+================================================================================
                                 BUILDING INDEXES
-################################################################################
+================================================================================
 */
 
 // And then initialize channels based on params or indexes that were just built
@@ -770,9 +770,9 @@ process BuildIntervals {
 ch_intervals = params.no_intervals ? "null" : params.intervals && !('annotate' in step) ? Channel.value(file(params.intervals)) : intervalBuilt
 
 /*
-################################################################################
+================================================================================
                                   PREPROCESSING
-################################################################################
+================================================================================
 */
 
 // STEP 0: CREATING INTERVALS FOR PARALLELIZATION (PREPROCESSING AND VARIANT CALLING)
@@ -1008,9 +1008,9 @@ process TrimGalore {
 }
 
 /*
-################################################################################
+================================================================================
                             UMIs PROCESSING
-################################################################################
+================================================================================
 */
 
 // UMI - STEP 1 - ANNOTATE
@@ -1940,9 +1940,9 @@ process BamQC {
 bamQCReport = bamQCReport.dump(tag:'BamQC')
 
 /*
-################################################################################
+================================================================================
                             GERMLINE VARIANT CALLING
-################################################################################
+================================================================================
 */
 
 // When using sentieon for mapping, Channel bam_recalibrated is bam_sentieon_recal
@@ -2315,9 +2315,9 @@ process FreebayesSingle {
 vcfFreebayesSingle = vcfFreebayesSingle.groupTuple(by: [0,1,2])
 
 /*
-################################################################################
+================================================================================
                              SOMATIC VARIANT CALLING
-################################################################################
+================================================================================
 */
 // Ascat, pileup, pileups with no intervals, recalibrated BAMs
 (bamAscat, bamMpileup, bamMpileupNoInt, bamRecalAll) = bamRecalAll.into(4)
@@ -3586,9 +3586,9 @@ process Vcftools {
 vcftoolsReport = vcftoolsReport.dump(tag:'VCFTools')
 
 /*
-################################################################################
+================================================================================
                                    ANNOTATION
-################################################################################
+================================================================================
 */
 
 if (step == 'annotate') {
@@ -3683,7 +3683,6 @@ process Snpeff {
 
 snpeffReport = snpeffReport.dump(tag:'snpEff report')
 
-<<<<<<< HEAD
 // STEP COMPRESS AND INDEX VCF.1 - SNPEFF
 
 process CompressVCFsnpEff {
@@ -3718,33 +3717,6 @@ process VEP {
         if (it == "${reducedVCF}_VEP.summary.html") "Reports/${idSample}/VEP/${it}"
         else null
     }
-=======
-Channel.from(summary.collect{ [it.key, it.value] })
-    .map { k,v -> "<dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }
-    .reduce { a, b -> return [a, b].join("\n            ") }
-    .map { x -> """
-    id: 'nf-core-sarek-summary'
-    description: " - this information is collected when the pipeline is started."
-    section_name: 'nf-core/sarek Workflow Summary'
-    section_href: 'https://github.com/nf-core/sarek'
-    plot_type: 'html'
-    data: |
-        <dl class=\"dl-horizontal\">
-            $x
-        </dl>
-    """.stripIndent() }
-    .set { ch_workflow_summary }
-
-/*
- * Parse software version numbers
- */
-process get_software_versions {
-    publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode,
-        saveAs: { filename ->
-                      if (filename.indexOf(".csv") > 0) filename
-                      else null
-                }
->>>>>>> TEMPLATE
 
     input:
         set variantCaller, idSample, file(vcf), file(idx) from vcfVep
@@ -3756,15 +3728,10 @@ process get_software_versions {
         file(cadd_WG_SNVs_tbi) from ch_cadd_wg_snvs_tbi
 
     output:
-<<<<<<< HEAD
         set variantCaller, idSample, file("${reducedVCF}_VEP.ann.vcf") into vepVCF
         file("${reducedVCF}_VEP.summary.html") into vepReport
 
     when: 'vep' in tools
-=======
-    file 'software_versions_mqc.yaml' into ch_software_versions_yaml
-    file "software_versions.csv"
->>>>>>> TEMPLATE
 
     script:
     reducedVCF = reduceVCF(vcf.fileName)
@@ -3799,7 +3766,6 @@ process get_software_versions {
     """
 }
 
-<<<<<<< HEAD
 vepReport = vepReport.dump(tag:'VEP')
 
 // STEP VEP.2 - VEP AFTER SNPEFF
@@ -3829,24 +3795,6 @@ process VEPmerge {
         file("${reducedVCF}_VEP.summary.html") into vepReportMerge
 
     when: 'merge' in tools
-=======
-/*
- * STEP 1 - FastQC
- */
-process fastqc {
-    tag "$name"
-    label 'process_medium'
-    publishDir "${params.outdir}/fastqc", mode: params.publish_dir_mode,
-        saveAs: { filename ->
-                      filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"
-                }
-
-    input:
-    set val(name), file(reads) from ch_read_files_fastqc
-
-    output:
-    file "*_fastqc.{zip,html}" into ch_fastqc_results
->>>>>>> TEMPLATE
 
     script:
     reducedVCF = reduceVCF(vcf.fileName)
@@ -3855,7 +3803,6 @@ process fastqc {
     cadd = (params.cadd_cache && params.cadd_wg_snvs && params.cadd_indels) ? "--plugin CADD,whole_genome_SNVs.tsv.gz,InDels.tsv.gz" : ""
     genesplicer = params.genesplicer ? "--plugin GeneSplicer,/opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/genesplicer,/opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/share/genesplicer-1.0-1/human,context=200,tmpdir=\$PWD/${reducedVCF}" : "--offline"
     """
-<<<<<<< HEAD
     mkdir ${reducedVCF}
 
     vep \
@@ -3908,9 +3855,9 @@ process CompressVCFvep {
 compressVCFOutVEP = compressVCFOutVEP.dump(tag:'VCF')
 
 /*
-################################################################################
+================================================================================
                                      MultiQC
-################################################################################
+================================================================================
 */
 
 // STEP MULTIQC
@@ -3932,50 +3879,6 @@ process MultiQC {
         file ('SamToolsStats/*') from samtoolsStatsReport.collect().ifEmpty([])
         file ('snpEff/*') from snpeffReport.collect().ifEmpty([])
         file ('VCFTools/*') from vcftoolsReport.collect().ifEmpty([])
-=======
-    fastqc --quiet --threads $task.cpus $reads
-    """
-}
-
-/*
- * STEP 2 - MultiQC
- */
-process multiqc {
-    publishDir "${params.outdir}/MultiQC", mode: params.publish_dir_mode
-
-    input:
-    file (multiqc_config) from ch_multiqc_config
-    file (mqc_custom_config) from ch_multiqc_custom_config.collect().ifEmpty([])
-    // TODO nf-core: Add in log files from your new processes for MultiQC to find!
-    file ('fastqc/*') from ch_fastqc_results.collect().ifEmpty([])
-    file ('software_versions/*') from ch_software_versions_yaml.collect()
-    file workflow_summary from ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml")
-
-    output:
-    file "*multiqc_report.html" into ch_multiqc_report
-    file "*_data"
-    file "multiqc_plots"
-
-    script:
-    rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
-    rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
-    custom_config_file = params.multiqc_config ? "--config $mqc_custom_config" : ''
-    // TODO nf-core: Specify which MultiQC modules to use with -m for a faster run time
-    """
-    multiqc -f $rtitle $rfilename $custom_config_file .
-    """
-}
-
-/*
- * STEP 3 - Output Description HTML
- */
-process output_documentation {
-    publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode
-
-    input:
-    file output_docs from ch_output_docs
-    file images from ch_output_docs_images
->>>>>>> TEMPLATE
 
     output:
         file "*multiqc_report.html" into ch_multiqc_report
@@ -3989,7 +3892,6 @@ process output_documentation {
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     custom_config_file = params.multiqc_config ? "--config $mqc_custom_config" : ''
     """
-<<<<<<< HEAD
     multiqc -f ${rtitle} ${rfilename} ${custom_config_file} .
     """
 }
@@ -4016,15 +3918,6 @@ process Output_documentation {
 }
 
 // Completion e-mail notification
-=======
-    markdown_to_html.py $output_docs -o results_description.html
-    """
-}
-
-/*
- * Completion e-mail notification
- */
->>>>>>> TEMPLATE
 workflow.onComplete {
 
     // Set up the e-mail variables
@@ -4055,11 +3948,6 @@ workflow.onComplete {
     email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
     email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
 
-<<<<<<< HEAD
-=======
-    // TODO nf-core: If not using MultiQC, strip out this code (including params.max_multiqc_email_size)
-    // On success try attach the multiqc report
->>>>>>> TEMPLATE
     def mqc_report = null
     try {
         if (workflow.success) {
@@ -4124,17 +4012,10 @@ workflow.onComplete {
     def output_tf = new File(output_d, "pipeline_report.txt")
     output_tf.withWriter { w -> w << email_txt }
 
-<<<<<<< HEAD
     c_green  = params.monochrome_logs ? '' : "\033[0;32m";
     c_purple = params.monochrome_logs ? '' : "\033[0;35m";
     c_red    = params.monochrome_logs ? '' : "\033[0;31m";
     c_reset  = params.monochrome_logs ? '' : "\033[0m";
-=======
-    c_green = params.monochrome_logs ? '' : "\033[0;32m";
-    c_purple = params.monochrome_logs ? '' : "\033[0;35m";
-    c_red = params.monochrome_logs ? '' : "\033[0;31m";
-    c_reset = params.monochrome_logs ? '' : "\033[0m";
->>>>>>> TEMPLATE
 
     if (workflow.stats.ignoredCount > 0 && workflow.success) {
         log.info "-${c_purple}Warning, pipeline completed, but with errored process(es) ${c_reset}-"
@@ -4151,9 +4032,9 @@ workflow.onComplete {
 }
 
 /*
-################################################################################
+================================================================================
                                 nf-core functions
-################################################################################
+================================================================================
 */
 
 def create_workflow_summary(summary) {
@@ -4175,7 +4056,6 @@ ${summary.collect { k, v -> "            <dt>$k</dt><dd><samp>${v ?: '<span styl
 
 def nfcoreHeader() {
     // Log colors ANSI codes
-<<<<<<< HEAD
     c_black  = params.monochrome_logs ? '' : "\033[0;30m";
     c_blue   = params.monochrome_logs ? '' : "\033[0;34m";
     c_dim    = params.monochrome_logs ? '' : "\033[2m";
@@ -4183,16 +4063,6 @@ def nfcoreHeader() {
     c_purple = params.monochrome_logs ? '' : "\033[0;35m";
     c_reset  = params.monochrome_logs ? '' : "\033[0m";
     c_white  = params.monochrome_logs ? '' : "\033[0;37m";
-=======
-    c_black = params.monochrome_logs ? '' : "\033[0;30m";
-    c_blue = params.monochrome_logs ? '' : "\033[0;34m";
-    c_cyan = params.monochrome_logs ? '' : "\033[0;36m";
-    c_dim = params.monochrome_logs ? '' : "\033[2m";
-    c_green = params.monochrome_logs ? '' : "\033[0;32m";
-    c_purple = params.monochrome_logs ? '' : "\033[0;35m";
-    c_reset = params.monochrome_logs ? '' : "\033[0m";
-    c_white = params.monochrome_logs ? '' : "\033[0;37m";
->>>>>>> TEMPLATE
     c_yellow = params.monochrome_logs ? '' : "\033[0;33m";
 
     return """    -${c_dim}--------------------------------------------------${c_reset}-
@@ -4214,15 +4084,9 @@ def nfcoreHeader() {
 }
 
 def checkHostname() {
-<<<<<<< HEAD
     def c_reset       = params.monochrome_logs ? '' : "\033[0m"
     def c_white       = params.monochrome_logs ? '' : "\033[0;37m"
     def c_red         = params.monochrome_logs ? '' : "\033[1;91m"
-=======
-    def c_reset = params.monochrome_logs ? '' : "\033[0m"
-    def c_white = params.monochrome_logs ? '' : "\033[0;37m"
-    def c_red = params.monochrome_logs ? '' : "\033[1;91m"
->>>>>>> TEMPLATE
     def c_yellow_bold = params.monochrome_logs ? '' : "\033[1;93m"
     if (params.hostnames) {
         def hostname = "hostname".execute().text.trim()
@@ -4241,9 +4105,9 @@ def checkHostname() {
 }
 
 /*
-################################################################################
+================================================================================
                                  sarek functions
-################################################################################
+================================================================================
 */
 
 // Check if a row has the expected number of item
