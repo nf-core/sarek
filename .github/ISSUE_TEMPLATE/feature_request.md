@@ -1,6 +1,6 @@
 ---
-name: nf-core/sarek Feature request
-about: Create a report to help us improve
+name: Feature request
+about: Suggest an idea for the nf-core/sarek pipeline
 title: "[FEATURE]"
 labels: enhancement
 assignees: MaxUlysse
@@ -8,6 +8,8 @@ assignees: MaxUlysse
 ---
 
 <!--
+# nf-core/sarek feature request
+
 Hi there!
 
 Thanks for suggesting a new feature for the pipeline!

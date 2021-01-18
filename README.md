@@ -1,8 +1,8 @@
-# [![Sarek](docs/images/nf-core_sarek_logo.png "Sarek")](https://nf-co.re/sarek)
+# [![nf-core/sarek](docs/images/nf-core-sarek_logo.png "nf-core/sarek")](https://nf-co.re/sarek)
 
 > **An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing**
 
-[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A519.10.0-brightgreen.svg)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A520.04.0-brightgreen.svg)](https://www.nextflow.io/)
 [![nf-core](https://img.shields.io/badge/nf--core-pipeline-brightgreen.svg)](https://nf-co.re/)
 [![DOI](https://zenodo.org/badge/184289291.svg)](https://zenodo.org/badge/latestdoi/184289291)
 
@@ -20,42 +20,53 @@ Sarek is a workflow designed to detect variants on whole genome or targeted sequ
 Initially designed for Human, and Mouse, it can work on any species with a reference genome.
 Sarek can also handle tumour / normal pairs and could include additional relapses.
 
-It's built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner.
-It comes with docker containers making installation trivial and results highly reproducible.
+The pipeline is built using [`Nextflow`](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with `Docker` containers making installation trivial and results highly reproducible.
 
 <p align="center">
     <img title="Sarek Workflow" src="docs/images/sarek_workflow.png" width=40%>
 </p>
 
-It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/Sarek) and [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek).
+It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/nf-core-sarek) and [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek).
 
 ## Quick Start
 
 1. Install [`Nextflow`](https://nf-co.re/usage/installation)
 
-2. Install either [`Docker`](https://docs.docker.com/engine/installation/) or [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/) for full pipeline reproducibility _(please only use [`Conda`](https://conda.io/miniconda.html) as a last resort; see [docs](https://nf-co.re/usage/configuration#basic-configuration-profiles))_
+2. Install any of [`Docker`](https://docs.docker.com/engine/installation/), [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/) or [`Podman`](https://podman.io/) for full pipeline reproducibility _(please only use [`Conda`](https://conda.io/miniconda.html) as a last resort; see [docs](https://nf-co.re/usage/configuration#basic-configuration-profiles))_
 
 3. Download the pipeline and test it on a minimal dataset with a single command:
 
     ```bash
-    nextflow run nf-core/sarek -profile test,<docker/singularity/conda/institute>
+    nextflow run nf-core/sarek -profile test,<docker/singularity/podman/conda/institute>
     ```
 
     > Please check [nf-core/configs](https://github.com/nf-core/configs#documentation) to see if a custom config file to run nf-core pipelines already exists for your Institute.
-    > If so, you can simply use `-profile <institute>` in your command.
-    > This will enable either `docker` or `singularity` and set the appropriate execution settings for your local compute environment.
+    If so, you can simply use `-profile <institute>` in your command.
+    This will enable either `Docker` or `Singularity` and set the appropriate execution settings for your local compute environment.
 
 4. Start running your own analysis!
 
     ```bash
-    nextflow run nf-core/sarek -profile <docker/singularity/conda/institute> --input '*.tsv' --genome GRCh38
+    nextflow run nf-core/sarek -profile <docker/singularity/podman/conda/institute> --input '*.tsv' --genome GRCh38
     ```
 
-See [usage docs](docs/usage.md) for all of the available options when running the pipeline.
+See [usage docs](https://nf-co.re/sarek/usage) for all of the available options when running the pipeline.
+
+## Pipeline Summary
+
+By default, the pipeline currently performs the following:
+
+* Sequencing quality control (`FastQC`)
+* Map Reads to Reference (`BWA mem`)
+* Mark Duplicates (`GATK MarkDuplicatesSpark`)
+* Base (Quality Score) Recalibration (`GATK BaseRecalibrator`, `GATK ApplyBQSR`)
+* Preprocessing quality control (`samtools stats`)
+* Preprocessing quality control (`Qualimap bamqc`)
+* Overall pipeline run summaries (`MultiQC`)
 
 ## Documentation
 
-The nf-core/sarek pipeline comes with documentation about the pipeline which you can read at [https://nf-core/sarek/docs](https://nf-core/sarek/docs) or find in the [`docs/` directory](docs).
+The nf-core/sarek pipeline comes with documentation about the pipeline: [usage](https://nf-co.re/sarek/usage) and [output](https://nf-co.re/sarek/output).
 
 ## Credits
 
@@ -115,12 +126,14 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 [![National Genomics Infrastructure](docs/images/NGI_logo.png)](https://ngisweden.scilifelab.se/) | [![National Bioinformatics Infrastructure Sweden](docs/images/NBIS_logo.png)](https://nbis.se)
 [![QBiC](docs/images/QBiC_logo.png)](hhttps://www.qbic.uni-tuebingen.de) |
 
-## Citation
+## Citations
 
 If you use `nf-core/sarek` for your analysis, please cite the `Sarek` article as follows:
 > Garcia M, Juhos S, Larsson M et al. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants [version 2; peer review: 2 approved]** *F1000Research* 2020, 9:63 [doi: 10.12688/f1000research.16665.2](http://dx.doi.org/10.12688/f1000research.16665.2).
 
 You can cite the sarek zenodo record for a specific version using the following [doi: 10.5281/zenodo.3476426](https://zenodo.org/badge/latestdoi/184289291)
+
+An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
 You can cite the `nf-core` publication as follows:
 

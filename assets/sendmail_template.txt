@@ -14,7 +14,7 @@ Content-Transfer-Encoding: base64
 Content-ID: <nfcorepipelinelogo>
 Content-Disposition: inline; filename="nf-core-sarek_logo.png"
 
-<% out << new File("$baseDir/assets/nf-core-sarek_logo.png").
+<% out << new File("$projectDir/assets/nf-core-sarek_logo.png").
   bytes.
   encodeBase64().
   toString().
