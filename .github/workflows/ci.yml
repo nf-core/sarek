@@ -131,7 +131,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        profile: [test_split_fastq, test_targeted, test_trimming, test_no_gatk_spark, test_umi_tso, test_umi_qiaseq]
+        profile: [test_split_fastq, test_targeted, test_trimming, test_use_gatk_spark, test_umi_tso, test_umi_qiaseq]
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow

@@ -217,11 +217,10 @@
                     "help_text": "See https://github.com/SciLifeLab/Sarek/pull/689",
                     "hidden": true
                 },
-                "no_gatk_spark": {
-                    "type": "string",
-                    "default": "null",
-                    "fa_icon": "fas fa-ban",
-                    "description": "Disable usage of GATK Spark implementation"
+                "use_gatk_spark": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-forward",
+                    "description": "Enable usage of GATK Spark implementation"
                 },
                 "save_bam_mapped": {
                     "type": "boolean",
@@ -230,7 +229,7 @@
                 },
                 "skip_markduplicates": {
                     "type": "boolean",
-                    "fa_icon": "fas fa-forward",
+                    "fa_icon": "fas fa-fast-forward",
                     "description": "Skip GATK MarkDuplicates",
                     "help_text": "This params will also save the mapped BAMS, to enable restart from step prepare_recalibration"
                 }
@@ -275,10 +274,10 @@
                     "description": "Overwrite Control-FREEC window size",
                     "help_text": "It is recommended to use a window size of 0 for exome data"
                 },
-                "no_gvcf": {
+                "generate_gvcf": {
                     "type": "boolean",
-                    "fa_icon": "fas fa-ban",
-                    "description": "No g.vcf output from GATK HaplotypeCaller"
+                    "fa_icon": "fas fa-copy",
+                    "description": "Generate g.vcf output from GATK HaplotypeCaller"
                 },
                 "no_strelka_bp": {
                     "type": "boolean",
