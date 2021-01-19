@@ -13,14 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#230](https://github.com/nf-core/sarek/pull/230) - Add `ignore_soft_clipped_bases` option for `GATK Mutect2` [#218](https://github.com/nf-core/sarek/issues/218)
 - [#253](https://github.com/nf-core/sarek/pull/253) - Add `UMI` `CI` testing
 - [#262](https://github.com/nf-core/sarek/pull/262) - Add `nextflow_schema.json`
-- [#282](https://github.com/nf-core/sarek/pull/282) - Add `--aligner` to choose between bwa and bwa-mem2
+- [#237](https://github.com/nf-core/sarek/pull/237), [#282](https://github.com/nf-core/sarek/pull/282) - Add `--aligner` to choose between `bwa` and `bwa-mem2`
 - [#294](https://github.com/nf-core/sarek/pull/294) - Add `Troubleshooting` section to `docs/usage.md`
 - [#302](https://github.com/nf-core/sarek/pull/302), [#304](https://github.com/nf-core/sarek/pull/304) - Add WES and tumor-only mode for `Control-FREEC`
 
 ### Changed
 
-- [#237](https://github.com/nf-core/sarek/pull/237) - Switch `bwa 0.7.17` for `bwa-mem2 2.0`
-- [#253](https://github.com/nf-core/sarek/pull/253), [#255](https://github.com/nf-core/sarek/pull/255) - Update docs
+- [#253](https://github.com/nf-core/sarek/pull/253), [#255](https://github.com/nf-core/sarek/pull/255), [#326](https://github.com/nf-core/sarek/pull/326) - Update docs
 - [#260](https://github.com/nf-core/sarek/pull/260), [#262](https://github.com/nf-core/sarek/pull/262), [#278](https://github.com/nf-core/sarek/pull/278), [#322](https://github.com/nf-core/sarek/pull/322) - Sync with `TEMPLATE` updated from [nf-core/tools](https://github.com/nf-core/tools) [`1.10.2`](https://github.com/nf-core/tools/releases/tag/1.10.2)
 - [#262](https://github.com/nf-core/sarek/pull/262) - Update issue templates to fit the recommended community standards
 - [#278](https://github.com/nf-core/sarek/pull/278), [#322](https://github.com/nf-core/sarek/pull/322) - Refactor docs
