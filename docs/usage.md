@@ -84,9 +84,9 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 * `test_annotation`
   * A profile with a complete configuration for automated testing
   * Input data is a `VCF` for testing annotation
-* `test_no_gatk_spark`
+* `test_use_gatk_spark`
   * A profile with a complete configuration for automated testing
-  * Specify `--no_gatk_spark`
+  * Specify `--use_gatk_spark`
 * `test_split_fastq`
   * A profile with a complete configuration for automated testing
   * Specify `--split_fastq 500`
