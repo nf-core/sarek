@@ -78,7 +78,7 @@ def helpMessage() {
     Preprocessing:
       --markdup_java_options        [str] Establish values for markDuplicates memory consumption
                                           Default: ${params.markdup_java_options}
-      --no_gatk_spark              [bool] Disable usage of GATK Spark implementation of their tools in local mode
+      --use_gatk_spark             [bool] Enable usage of GATK Spark implementation of their tools in local mode
       --save_bam_mapped            [bool] Save Mapped BAMs
       --skip_markduplicates        [bool] Skip MarkDuplicates
 
@@ -93,7 +93,7 @@ def helpMessage() {
                                           Default: ${params.cf_ploidy}
       --cf_window                   [int] Control-FREEC window size
                                           Default: Disabled
-      --no_gvcf                    [bool] No g.vcf output from GATK HaplotypeCaller
+      --generate_gvcf              [bool] Enable g.vcf output from GATK HaplotypeCaller
       --no_strelka_bp              [bool] Will not use Manta candidateSmallIndels for Strelka (not recommended by Best Practices)
       --pon                        [file] Panel-of-normals VCF (bgzipped) for GATK Mutect2 / Sentieon TNscope
                                           See: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_CreateSomaticPanelOfNormals.php
@@ -414,7 +414,7 @@ if (params.split_fastq)          summary['Reads in fastq']                   = p
 
 summary['MarkDuplicates'] = "Options"
 summary['Java options'] = params.markdup_java_options
-summary['GATK Spark']   = params.no_gatk_spark ? 'No' : 'Yes'
+summary['GATK Spark']   = params.use_gatk_spark ? 'Yes' : 'No'
 
 summary['Save BAMs mapped']   = params.save_bam_mapped ? 'Yes' : 'No'
 summary['Skip MarkDuplicates']   = params.skip_markduplicates ? 'Yes' : 'No'
@@ -432,7 +432,7 @@ if ('controlfreec' in tools) {
     if (params.cf_ploidy)    summary['ploidy']                 = params.cf_ploidy
 }
 
-if ('haplotypecaller' in tools)             summary['GVCF']       = params.no_gvcf ? 'No' : 'Yes'
+if ('haplotypecaller' in tools)             summary['GVCF']       = params.generate_gvcf ? 'Yes' : 'No'
 if ('strelka' in tools && 'manta' in tools) summary['Strelka BP'] = params.no_strelka_bp ? 'No' : 'Yes'
 if (params.pon && ('mutect2' in tools || (params.sentieon && 'tnscope' in tools))) summary['Panel of normals'] = params.pon
 
@@ -1387,7 +1387,18 @@ process MarkDuplicates {
     script:
     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
     metrics = 'markduplicates' in skipQC ? '' : "-M ${idSample}.bam.metrics"
-    if (params.no_gatk_spark)
+    if (params.use_gatk_spark)
+    """
+    gatk --java-options ${markdup_java_options} \
+        MarkDuplicatesSpark \
+        -I ${idSample}.bam \
+        -O ${idSample}.md.bam \
+        ${metrics} \
+        --tmp-dir . \
+        --create-output-bam-index true \
+        --spark-master local[${task.cpus}]
+    """
+    else
     """
     gatk --java-options ${markdup_java_options} \
         MarkDuplicates \
@@ -1400,17 +1411,6 @@ process MarkDuplicates {
         --OUTPUT ${idSample}.md.bam
     
     mv ${idSample}.md.bai ${idSample}.md.bam.bai
-    """
-    else
-    """
-    gatk --java-options ${markdup_java_options} \
-        MarkDuplicatesSpark \
-        -I ${idSample}.bam \
-        -O ${idSample}.md.bam \
-        ${metrics} \
-        --tmp-dir . \
-        --create-output-bam-index true \
-        --spark-master local[${task.cpus}]
     """
 }
 
@@ -2010,7 +2010,7 @@ process HaplotypeCaller {
 
 gvcfHaplotypeCaller = gvcfHaplotypeCaller.groupTuple(by:[0, 1, 2])
 
-if (params.no_gvcf) gvcfHaplotypeCaller.close()
+if (!params.generate_gvcf) gvcfHaplotypeCaller.close()
 else gvcfHaplotypeCaller = gvcfHaplotypeCaller.dump(tag:'GVCF HaplotypeCaller')
 
 // STEP GATK HAPLOTYPECALLER.2
