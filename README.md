@@ -91,6 +91,7 @@ Helpful contributors:
 * [James A. Fellows Yates](https://github.com/jfy133)
 * [Jesper Eisfeldt](https://github.com/J35P312)
 * [Johannes Alneberg](https://github.com/alneberg)
+* [José Fernández Navarro](https://github.com/jfnavarro)
 * [Lucia Conde](https://github.com/lconde-ucl)
 * [Malin Larsson](https://github.com/malinlarsson)
 * [Marcel Martin](https://github.com/marcelm)
