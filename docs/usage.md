@@ -120,11 +120,21 @@ Specify the path to a specific config file (this is a core Nextflow command). Se
 
 Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the steps in the pipeline, if the job exits with an error code of `143` (exceeded requested resources) it will automatically resubmit with higher requests (2 x original, then 3 x original). If it still fails after three times then the pipeline is stopped.
 
-Whilst these default requirements will hopefully work for most people with most data, you may find that you want to customise the compute resources that the pipeline requests. You can do this by creating a custom config file. For example, to give the workflow process `star` 32GB of memory, you could use the following config:
+Whilst these default requirements will hopefully work for most people with most data, you may find that you want to customise the compute resources that the pipeline requests. You can do this by creating a custom config file. For example, to give the workflow process `VEP` 32GB of memory, you could use the following config:
 
 ```nextflow
 process {
   withName: VEP {
+    memory = 32.GB
+  }
+}
+```
+
+Alternatively, to give the workflow both processes `VEP` and `VEPmerge` 32GB of memory, you could use the following config:
+
+```nextflow
+process {
+  withLabel: VEP {
     memory = 32.GB
   }
 }

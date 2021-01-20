@@ -3416,11 +3416,8 @@ process ControlFreecViz {
 
     script:
     """
-    echo "Shaping CNV files to make sure we can assess significance"
-    LINEWIDTH=`head -1 ${cnvTumor}| wc -w`; awk 'NF=='$LINEWIDTH'{print}' ${cnvTumor} > TUMOR.CNVs
-
     echo "############### Calculating significance values for TUMOR CNVs #############"
-    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args TUMOR.CNVs ${ratioTumor}
+    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args ${cnvTumor} ${ratioTumor}
 
     echo "############### Creating graph for TUMOR ratios ###############"
     cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/makeGraph.R | R --slave --args 2 ${ratioTumor} ${bafTumor}
@@ -3449,11 +3446,8 @@ process ControlFreecVizSingle {
 
     script:
     """
-    echo "Shaping CNV files to make sure we can assess significance"
-    LINEWIDTH=`head -1 ${cnvTumor}| wc -w`; awk 'NF=='$LINEWIDTH'{print}' ${cnvTumor} > TUMOR.CNVs
-
     echo "############### Calculating significance values for TUMOR CNVs #############"
-    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args TUMOR.CNVs ${ratioTumor}
+    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args ${cnvTumor} ${ratioTumor}
 
     echo "############### Creating graph for TUMOR ratios ###############"
     cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/makeGraph.R | R --slave --args 2 ${ratioTumor} ${bafTumor}

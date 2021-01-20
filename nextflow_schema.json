@@ -19,14 +19,14 @@
                     "type": "string",
                     "fa_icon": "fas fa-dna",
                     "description": "Path to input file(s).",
-                    "help_text": "Use this to specify the location of your input TSV file on `mapping`, `prepare_recalibration`, `recalibrate`, `variant_calling` and `Control-FREEC` steps (multiple files can be specified with quotes).\nIt can also be used to specify the path to a directory on `mapping` step with a single germline sample only.\nAlternatively, it can be used to specify the path to VCF input file on `annotate` step (multiple files can be specified with quotes).\n\n> **NB** "
+                    "help_text": "Use this to specify the location of your input TSV file on `mapping`, `prepare_recalibration`, `recalibrate`, `variant_calling` and `Control-FREEC` steps (multiple files can be specified with quotes).\nIt can also be used to specify the path to a directory on `mapping` step with a single germline sample only.\nAlternatively, it can be used to specify the path to VCF input file on `annotate` step (multiple files can be specified with quotes)."
                 },
                 "step": {
                     "type": "string",
                     "default": "mapping",
                     "fa_icon": "fas fa-play",
-                    "description": "The starting step.",
-                    "help_text": "Only one step must be specified.\n> **NB** step can be specified with no concern for case, or the presence of `-` or `_`\n",
+                    "description": "Starting step.",
+                    "help_text": "Only one step.\n> **NB** step can be specified with no concern for case, or the presence of `-` or `_`\n",
                     "enum": [
                         "mapping",
                         "prepare_recalibration",
@@ -42,7 +42,8 @@
                     "default": "./results",
                     "fa_icon": "fas fa-folder-open"
                 }
-            }
+            },
+            "help_text": ""
         },
         "main_options": {
             "title": "Main options",
@@ -100,7 +101,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-forward",
                     "description": "Disable specified QC and Reporting tools.",
-                    "help_text": "Multiple tools can be specified, separated by commas.\n\n> **NB** `--skip_qc BaseRecalibrator` is actually just not saving the reports.\n> **NB** `--skip_qc MarkDuplicates` does not skip `MarkDuplicates` but prevent the collection of duplicate metrics that slows down performance.",
+                    "help_text": "Multiple tools can be specified, separated by commas.\n\n> **NB** `--skip_qc BaseRecalibrator` is actually just not saving the reports.\n> **NB** `--skip_qc MarkDuplicates` does not skip `MarkDuplicates` but prevent the collection of duplicate metrics that slows down performance.\n> **NB** tools can be specified with no concern for case, or the presence of `-` or `_`",
                     "enum": [
                         "null",
                         "all",
@@ -138,7 +139,7 @@
                     "fa_icon": "fas fa-cut",
                     "description": "Run Trim Galore.",
                     "hidden": true,
-                    "help_text": "Use this to perform adapter trimming with Trim Galore.\ncf https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md"
+                    "help_text": "Use this to perform adapter trimming with Trim Galore.\ncf [Trim Galore User Guide](https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md)"
                 },
                 "clip_r1": {
                     "type": "integer",
@@ -185,7 +186,7 @@
                     "type": "number",
                     "fa_icon": "fas fa-cut",
                     "description": "Specify how many reads should be contained in the split FastQ file",
-                    "help_text": "Use the Nextflow splitFastq operator to specify how many reads should be contained in the split FASTQ file.\ncf https://www.nextflow.io/docs/latest/operator.html#splitfastq",
+                    "help_text": "Use the Nextflow splitFastq operator to specify how many reads should be contained in the split FASTQ file.\ncf [splitfastq documentation](https://www.nextflow.io/docs/latest/operator.html#splitfastq)",
                     "hidden": true
                 }
             }
@@ -214,7 +215,7 @@
                     "default": "-Xms4000m -Xmx7g",
                     "fa_icon": "fas fa-memory",
                     "description": "Establish values for GATK MarkDuplicates memory consumption",
-                    "help_text": "See https://github.com/SciLifeLab/Sarek/pull/689",
+                    "help_text": "See [SciLifeLab/Sarek/pull/689](https://github.com/SciLifeLab/Sarek/pull/689)",
                     "hidden": true
                 },
                 "use_gatk_spark": {
@@ -231,7 +232,7 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
                     "description": "Skip GATK MarkDuplicates",
-                    "help_text": "This params will also save the mapped BAMS, to enable restart from step prepare_recalibration"
+                    "help_text": "This params will also save the mapped BAMS, to enable restart from step `prepare_recalibration`"
                 }
             }
         },
@@ -247,14 +248,14 @@
                     "default": "null",
                     "fa_icon": "fas fa-wrench",
                     "description": "Overwrite ASCAT ploidy",
-                    "help_text": "Requires that --ascat_purity is set"
+                    "help_text": "Requires that `--ascat_purity` is set"
                 },
                 "ascat_purity": {
                     "type": "string",
                     "default": "null",
                     "fa_icon": "fas fa-wrench",
                     "description": "Overwrite ASCAT purity",
-                    "help_text": "Requires that --ascat_ploidy is set"
+                    "help_text": "Requires that `--ascat_ploidy` is set"
                 },
                 "cf_coeff": {
                     "type": "number",
@@ -289,7 +290,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-file",
                     "description": "Panel-of-normals VCF (bgzipped) for GATK Mutect2 / Sentieon TNscope",
-                    "help_text": "Without PON, there will be no calls with PASS in the INFO field, only an unfiltered VCF is written.\nIt is recommended to make your own PON, as it depends on sequencer and library preparation.\nFor tests in iGenomes there is a dummy PON file in the Annotation/GermlineResource directory, but it should not be used as a real PON file.\n\nSee https://gatk.broadinstitute.org/hc/en-us/articles/360042479112-CreateSomaticPanelOfNormals-BETA\n> **NB** PON file should be bgzipped."
+                    "help_text": "Without PON, there will be no calls with PASS in the INFO field, only an unfiltered VCF is written.\nIt is recommended to make your own PON, as it depends on sequencer and library preparation.\nFor tests in iGenomes there is a dummy PON file in the Annotation/GermlineResource directory, but it should not be used as a real PON file.\n\nSee [PON documentation](https://gatk.broadinstitute.org/hc/en-us/articles/360042479112-CreateSomaticPanelOfNormals-BETA)\n> **NB** PON file should be bgzipped."
                 },
                 "pon_index": {
                     "type": "string",
@@ -301,27 +302,27 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-ban",
                     "description": "Do not analyze soft clipped bases in the reads for GATK Mutect2",
-                    "help_text": "use the --dont-use-soft-clipped-bases params with GATK."
+                    "help_text": "use the `--dont-use-soft-clipped-bases` params with GATK."
                 },
                 "umi": {
                     "type": "boolean",
                     "fa_icon": "fas fa-tape",
                     "description": "If provided, UMIs steps will be run to extract and annotate the reads with UMI and create consensus reads",
-                    "help_text": "This part of the pipeline uses fgbio to convert the FASTQ files into a unmapped BAM, where reads are tagged with the UMIs extracted from the FASTQ sequences.\nIn order to allow the correct tagging, the UMI sequence must be contained in the read sequence itself, and not in the FASTQ filename.\nFollowing this step, the unmapped BAM is aligned and reads are then grouped based on mapping position and UMI tag.\nFinally, reads in the same groups are collapsed to create a consensus read.\nTo create consensus, we have chosen to use the adjacency method\n\ncf https://github.com/fulcrumgenomics/fgbio\ncf https://cgatoxford.wordpress.com/2015/08/14/unique-molecular-identifiers-the-problem-the-solution-and-the-proof/\n\n> **NB** In order for the correct tagging to be performed, a read structure needs to be specified with --read_structure1 and --readstructure2"
+                    "help_text": "This part of the pipeline uses fgbio to convert the FASTQ files into a unmapped BAM, where reads are tagged with the UMIs extracted from the FASTQ sequences.\nIn order to allow the correct tagging, the UMI sequence must be contained in the read sequence itself, and not in the FASTQ filename.\nFollowing this step, the unmapped BAM is aligned and reads are then grouped based on mapping position and UMI tag.\nFinally, reads in the same groups are collapsed to create a consensus read.\nTo create consensus, we have chosen to use the adjacency method\n\ncf [fgbio](https://github.com/fulcrumgenomics/fgbio)\ncf [UMIs, the problem, the solution and the proof](https://cgatoxford.wordpress.com/2015/08/14/unique-molecular-identifiers-the-problem-the-solution-and-the-proof/)\n\n> **NB** In order for the correct tagging to be performed, a read structure needs to be specified with `--read_structure1` and `--readstructure2`"
                 },
                 "read_structure1": {
                     "type": "string",
                     "default": "null",
                     "fa_icon": "fas fa-clipboard-list",
                     "description": "When processing UMIs, a read structure should always be provided for each of the fastq files.",
-                    "help_text": "If the read does not contain any UMI, the structure will be +T (i.e. only template of any length).\nThe read structure follows a format adopted by different tools and described in the fgbio documentation\ncf https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures"
+                    "help_text": "If the read does not contain any UMI, the structure will be +T (i.e. only template of any length).\nThe read structure follows a format adopted by different tools and described in the [fgbio documentation](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures)"
                 },
                 "read_structure2": {
                     "type": "string",
                     "default": "null",
                     "fa_icon": "fas fa-clipboard-list",
                     "description": "When processing UMIs, a read structure should always be provided for each of the fastq files.",
-                    "help_text": "If the read does not contain any UMI, the structure will be +T (i.e. only template of any length).\nThe read structure follows a format adopted by different tools and described in the fgbio documentation\ncf https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures"
+                    "help_text": "If the read does not contain any UMI, the structure will be +T (i.e. only template of any length).\nThe read structure follows a format adopted by different tools and described in the [fgbio documentation](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures)"
                 }
             }
         },
@@ -394,8 +395,7 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-gavel",
                     "description": "Enable the use of the VEP GeneSplicer plugin.",
-                    "hidden": true,
-                    "help_text": "```bash\nnextflow run nf-core/sarek --step annotate --tools VEP --sample <file.vcf.gz> --genesplicer\n```"
+                    "hidden": true
                 },
                 "snpeff_cache": {
                     "type": "string",
@@ -462,7 +462,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-file",
                     "description": "Path to dbsnp index.",
-                    "help_text": "> **NB** If none provided, will be generated automatically from the dbsnp file, if provided"
+                    "help_text": "> **NB** If none provided, will be generated automatically from the dbsnp file."
                 },
                 "dict": {
                     "type": "string",
@@ -597,7 +597,7 @@
                     "description": "Workflow name.",
                     "fa_icon": "fas fa-fingerprint",
                     "hidden": true,
-                    "help_text": "A custom name for the pipeline run. Unlike the core nextflow `-name` option with one hyphen this parameter can be reused multiple times, for example if using `-resume`. Passed through to steps such as MultiQC and used for things like report filenames and titles."
+                    "help_text": "A custom name for the pipeline run. Unlike the core Nextflow `-name` option with one hyphen this parameter can be reused multiple times, for example if using `-resume`. Passed through to steps such as MultiQC and used for things like report filenames and titles."
                 },
                 "email": {
                     "type": "string",
