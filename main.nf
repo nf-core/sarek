@@ -38,7 +38,7 @@ def helpMessage() {
       -profile                      [str] Configuration profile to use. Can use multiple (comma separated)
                                           Available: conda, docker, singularity, test, awsbatch, <institute> and more
       --step                       [list] Specify starting step (only one)
-                                          Available: mapping, prepare_recalibration, recalibrate, variant_calling, annotate, Control-FREEC
+                                          Available: mapping, prepare_recalibration, recalibrate, variant_calling, annotate, ControlFREEC
                                           Default: ${params.step}
       --genome                      [str] Name of iGenomes reference
                                           Default: ${params.genome}
@@ -78,7 +78,7 @@ def helpMessage() {
     Preprocessing:
       --markdup_java_options        [str] Establish values for markDuplicates memory consumption
                                           Default: ${params.markdup_java_options}
-      --no_gatk_spark              [bool] Disable usage of GATK Spark implementation of their tools in local mode
+      --use_gatk_spark             [bool] Enable usage of GATK Spark implementation of their tools in local mode
       --save_bam_mapped            [bool] Save Mapped BAMs
       --skip_markduplicates        [bool] Skip MarkDuplicates
 
@@ -89,11 +89,11 @@ def helpMessage() {
                                           Requires that --ascat_ploidy is set
       --cf_coeff                    [str] Control-FREEC coefficientOfVariation
                                           Default: ${params.cf_coeff}
-      --cf_ploidy                   [int] Control-FREEC ploidy
+      --cf_ploidy                   [str] Control-FREEC ploidy
                                           Default: ${params.cf_ploidy}
       --cf_window                   [int] Control-FREEC window size
                                           Default: Disabled
-      --no_gvcf                    [bool] No g.vcf output from GATK HaplotypeCaller
+      --generate_gvcf              [bool] Enable g.vcf output from GATK HaplotypeCaller
       --no_strelka_bp              [bool] Will not use Manta candidateSmallIndels for Strelka (not recommended by Best Practices)
       --pon                        [file] Panel-of-normals VCF (bgzipped) for GATK Mutect2 / Sentieon TNscope
                                           See: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_CreateSomaticPanelOfNormals.php
@@ -174,7 +174,7 @@ def helpMessage() {
 
     AWSBatch options:
       --awsqueue                    [str] The AWSBatch JobQueue that needs to be set when running on AWSBatch
-      --awsregion                   [str] The AWS Region for your AWSBatch job to run on
+      --awsregion                   [str] The AWS Region for your AWS Batch job to run on
       --awscli                      [str] Path to the AWS CLI tool
     """.stripIndent()
 }
@@ -214,12 +214,11 @@ skipQC = params.skip_qc ? params.skip_qc == 'all' ? skipQClist : params.skip_qc.
 if (!checkParameterList(skipQC, skipQClist)) exit 1, 'Unknown QC tool(s), see --help for more information'
 
 annoList = defineAnnoList()
-annotateTools = params.annotate_tools ? params.annotate_tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
-if (!checkParameterList(annotateTools,annoList)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
+annotate_tools = params.annotate_tools ? params.annotate_tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
+if (!checkParameterList(annotate_tools,annoList)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
 
 // Check parameters
 if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
-if (params.cf_window && params.cf_coeff) exit 1, 'Please specify either --cf_window OR --cf_coeff, but not both of them'
 if (params.umi && !(params.read_structure1 && params.read_structure2)) exit 1, 'Please specify both --read_structure1 and --read_structure2, when using --umi'
 
 // Has the run name been specified by the user?
@@ -227,6 +226,7 @@ if (params.umi && !(params.read_structure1 && params.read_structure2)) exit 1, '
 custom_runName = params.name
 if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) custom_runName = workflow.runName
 
+// Check AWS batch settings
 if (workflow.profile.contains('awsbatch')) {
     // AWSBatch sanity checking
     if (!params.awsqueue || !params.awsregion) exit 1, "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
@@ -239,10 +239,10 @@ if (workflow.profile.contains('awsbatch')) {
 
 // MultiQC
 // Stage config files
-ch_multiqc_config = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
+ch_multiqc_config = file("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
-ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
-ch_output_docs_images = file("$baseDir/docs/images/", checkIfExists: true)
+ch_output_docs = file("$projectDir/docs/output.md", checkIfExists: true)
+ch_output_docs_images = file("$projectDir/docs/images/", checkIfExists: true)
 
 // Handle input
 tsvPath = null
@@ -414,7 +414,7 @@ if (params.split_fastq)          summary['Reads in fastq']                   = p
 
 summary['MarkDuplicates'] = "Options"
 summary['Java options'] = params.markdup_java_options
-summary['GATK Spark']   = params.no_gatk_spark ? 'No' : 'Yes'
+summary['GATK Spark']   = params.use_gatk_spark ? 'Yes' : 'No'
 
 summary['Save BAMs mapped']   = params.save_bam_mapped ? 'Yes' : 'No'
 summary['Skip MarkDuplicates']   = params.skip_markduplicates ? 'Yes' : 'No'
@@ -432,7 +432,7 @@ if ('controlfreec' in tools) {
     if (params.cf_ploidy)    summary['ploidy']                 = params.cf_ploidy
 }
 
-if ('haplotypecaller' in tools)             summary['GVCF']       = params.no_gvcf ? 'No' : 'Yes'
+if ('haplotypecaller' in tools)             summary['GVCF']       = params.generate_gvcf ? 'Yes' : 'No'
 if ('strelka' in tools && 'manta' in tools) summary['Strelka BP'] = params.no_strelka_bp ? 'No' : 'Yes'
 if (params.pon && ('mutect2' in tools || (params.sentieon && 'tnscope' in tools))) summary['Panel of normals'] = params.pon
 
@@ -497,11 +497,8 @@ if (params.config_profile_description) summary['Config Description'] = params.co
 if (params.config_profile_contact)     summary['Config Contact']     = params.config_profile_contact
 if (params.config_profile_url)         summary['Config URL']         = params.config_profile_url
 
-if (params.email || params.email_on_fail) {
-    summary['E-mail Address']    = params.email
-    summary['E-mail on failure'] = params.email_on_fail
-    summary['MultiQC maxsize']   = params.max_multiqc_email_size
-}
+summary['Config Files']   = workflow.configFiles.join(', ')
+
 
 if (workflow.profile.contains('awsbatch')) {
     summary['AWS Region'] = params.awsregion
@@ -509,9 +506,13 @@ if (workflow.profile.contains('awsbatch')) {
     summary['AWS CLI']    = params.awscli
 }
 
-log.info summary.collect { k, v -> "${k.padRight(18)}: $v" }.join("\n")
-if (params.monochrome_logs) log.info "----------------------------------------------------"
-else log.info "-\033[2m--------------------------------------------------\033[0m-"
+if (params.email || params.email_on_fail) {
+    summary['E-mail Address']    = params.email
+    summary['E-mail on failure'] = params.email_on_fail
+    summary['MultiQC maxsize']   = params.max_multiqc_email_size
+}
+log.info summary.collect { k,v -> "${k.padRight(18)}: $v" }.join("\n")
+log.info "-\033[2m--------------------------------------------------\033[0m-"
 
 if ('mutect2' in tools && !(params.pon)) log.warn "[nf-core/sarek] Mutect2 was requested, but as no panel of normals were given, results will not be optimal"
 if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works if Sentieon is available where nf-core/sarek is run"
@@ -548,10 +549,11 @@ process get_software_versions {
     when: !('versions' in skipQC)
 
     script:
+    aligner = params.aligner == "bwa-mem2" ? "bwa-mem2" : "bwa"
     """
     alleleCounter --version &> v_allelecount.txt 2>&1 || true
     bcftools --version &> v_bcftools.txt 2>&1 || true
-    bwa-mem2 version &> v_bwa.txt 2>&1 || true
+    ${aligner} version &> v_bwa.txt 2>&1 || true
     cnvkit.py version &> v_cnvkit.txt 2>&1 || true
     configManta.py --version &> v_manta.txt 2>&1 || true
     configureStrelkaGermlineWorkflow.py --version &> v_strelka.txt 2>&1 || true
@@ -602,8 +604,9 @@ process BuildBWAindexes {
     when: !(params.bwa) && params.fasta && 'mapping' in step
 
     script:
+    aligner = params.aligner == "bwa-mem2" ? "bwa-mem2" : "bwa"
     """
-    bwa-mem2 index ${fasta}
+    ${aligner} index ${fasta}
     """
 }
 
@@ -1015,34 +1018,32 @@ process TrimGalore {
 // and while doing the conversion, tag the bam field RX with the UMI sequence
 
 process UMIFastqToBAM {
+    publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publish_dir_mode
 
-  publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publish_dir_mode
+    input:
+        set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsUMI
+        val read_structure1 from ch_read_structure1
+        val read_structure2 from ch_read_structure2
 
-  input:
-    set idPatient, idSample, idRun, file("${idSample}_${idRun}_R1.fastq.gz"), file("${idSample}_${idRun}_R2.fastq.gz") from inputPairReadsUMI
-    val read_structure1 from ch_read_structure1
-    val read_structure2 from ch_read_structure2
+    output:
+        tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi_converted.bam") into umi_converted_bams_ch
 
-  output:
-    tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi_converted.bam") into umi_converted_bams_ch
+    when: params.umi
 
-  when: params.umi
+    // tmp folder for fgbio might be solved more elengantly?
 
-  // tmp folder for fgbio might be solved more elengantly?
+    script:
+    """
+    mkdir tmp
 
-  script:
-  """
-  mkdir tmp
-
-  fgbio --tmp-dir=${PWD}/tmp \
-  FastqToBam \
-  -i "${idSample}_${idRun}_R1.fastq.gz" "${idSample}_${idRun}_R2.fastq.gz" \
-  -o "${idSample}_umi_converted.bam" \
-  --read-structures ${read_structure1} ${read_structure2} \
-  --sample ${idSample} \
-  --library ${idSample}
-  """
-
+    fgbio --tmp-dir=${PWD}/tmp \
+    FastqToBam \
+    -i "${idSample}_${idRun}_R1.fastq.gz" "${idSample}_${idRun}_R2.fastq.gz" \
+    -o "${idSample}_umi_converted.bam" \
+    --read-structures ${read_structure1} ${read_structure2} \
+    --sample ${idSample} \
+    --library ${idSample}
+    """
 }
 
 // UMI - STEP 2 - MAP THE BAM FILE
@@ -1050,26 +1051,25 @@ process UMIFastqToBAM {
 // mapping position + same UMI tag
 
 process UMIMapBamFile {
+    input:
+        set idPatient, idSample, idRun, file(convertedBam) from umi_converted_bams_ch
+        file(bwaIndex) from ch_bwa
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fai
 
-  input:
-    set idPatient, idSample, idRun, file(convertedBam) from umi_converted_bams_ch
-    file(bwaIndex) from ch_bwa
-    file(fasta) from ch_fasta
-    file(fastaFai) from ch_fai
+    output:
+        tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi_unsorted.bam") into umi_aligned_bams_ch
 
-  output:
-    tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi_unsorted.bam") into umi_aligned_bams_ch
+    when: params.umi
 
-  when: params.umi
-
-  script:
-  """
-  samtools bam2fq -T RX ${convertedBam} | \
-  bwa-mem2 mem -p -t ${task.cpus} -C -M -R \"@RG\\tID:${idSample}\\tSM:${idSample}\\tPL:Illumina\" \
-  ${fasta} - | \
-  samtools view -bS - > ${idSample}_umi_unsorted.bam
-  """
-
+    script:
+    aligner = params.aligner == "bwa-mem2" ? "bwa-mem2" : "bwa"
+    """
+    samtools bam2fq -T RX ${convertedBam} | \
+    ${aligner} mem -p -t ${task.cpus} -C -M -R \"@RG\\tID:${idSample}\\tSM:${idSample}\\tPL:Illumina\" \
+    ${fasta} - | \
+    samtools view -bS - > ${idSample}_umi_unsorted.bam
+    """
 }
 
 // UMI - STEP 3 - GROUP READS BY UMIs
@@ -1079,34 +1079,32 @@ process UMIMapBamFile {
 // alternatively we can define this as input for the user to choose from
 
 process GroupReadsByUmi {
+    publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publish_dir_mode
 
-  publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publish_dir_mode
+    input:
+        set idPatient, idSample, idRun, file(alignedBam) from umi_aligned_bams_ch
 
-  input:
-      set idPatient, idSample, idRun, file(alignedBam) from umi_aligned_bams_ch
+    output:
+        file("${idSample}_umi_histogram.txt") into umi_histogram_ch
+        tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi-grouped.bam") into umi_grouped_bams_ch
 
-  output:
-    file("${idSample}_umi_histogram.txt") into umi_histogram_ch
-    tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi-grouped.bam") into umi_grouped_bams_ch
+    when: params.umi
 
-  when: params.umi
+    script:
+    """
+    mkdir tmp
 
-  script:
-  """
-  mkdir tmp
+    samtools view -h ${alignedBam} | \
+    samblaster -M --addMateTags | \
+    samtools view -Sb - >${idSample}_unsorted_tagged.bam
 
-  samtools view -h ${alignedBam} | \
-  samblaster -M --addMateTags | \
-  samtools view -Sb - >${idSample}_unsorted_tagged.bam
-
-  fgbio --tmp-dir=${PWD}/tmp \
-  GroupReadsByUmi \
-  -s Adjacency \
-  -i ${idSample}_unsorted_tagged.bam \
-  -o ${idSample}_umi-grouped.bam \
-  -f ${idSample}_umi_histogram.txt
-  """
-
+    fgbio --tmp-dir=${PWD}/tmp \
+    GroupReadsByUmi \
+    -s Adjacency \
+    -i ${idSample}_unsorted_tagged.bam \
+    -o ${idSample}_umi-grouped.bam \
+    -f ${idSample}_umi_histogram.txt
+    """
 }
 
 // UMI - STEP 4 - CALL MOLECULAR CONSENSUS
@@ -1115,27 +1113,26 @@ process GroupReadsByUmi {
 // existing workflow from the step mapping
 
 process CallMolecularConsensusReads {
+    publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publish_dir_mode
 
-  publishDir "${params.outdir}/Reports/${idSample}/UMI/${idSample}_${idRun}", mode: params.publish_dir_mode
+    input:
+        set idPatient, idSample, idRun, file(groupedBamFile) from umi_grouped_bams_ch
 
-  input:
-      set idPatient, idSample, idRun, file(groupedBamFile) from umi_grouped_bams_ch
+    output:
+        tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi-consensus.bam"), val("null") into consensus_bam_ch
 
-  output:
-      tuple val(idPatient), val(idSample), val(idRun), file("${idSample}_umi-consensus.bam"), val("null") into consensus_bam_ch
+    when: params.umi
 
-  when: params.umi
+    script:
+    """
+    mkdir tmp
 
-  script:
-  """
-  mkdir tmp
-
-  fgbio --tmp-dir=${PWD}/tmp \
-  CallMolecularConsensusReads \
-  -i $groupedBamFile \
-  -o ${idSample}_umi-consensus.bam \
-  -M 1 -S Coordinate
-  """
+    fgbio --tmp-dir=${PWD}/tmp \
+    CallMolecularConsensusReads \
+    -i $groupedBamFile \
+    -o ${idSample}_umi-consensus.bam \
+    -M 1 -S Coordinate
+    """
 }
 
 // ################# END OF UMI READS PRE-PROCESSING
@@ -1146,18 +1143,18 @@ process CallMolecularConsensusReads {
 input_pair_reads_sentieon = Channel.empty()
 
 if (params.umi) {
-  inputPairReads = inputPairReads.dump(tag:'INPUT before BWA-mem2 mem')
-  if (params.sentieon) input_pair_reads_sentieon = consensus_bam_ch
-  else inputPairReads = consensus_bam_ch
+    inputPairReads = inputPairReads.dump(tag:'INPUT before mapping')
+    if (params.sentieon) input_pair_reads_sentieon = consensus_bam_ch
+    else inputPairReads = consensus_bam_ch
 }
 else {
-  if (params.trim_fastq) inputPairReads = outputPairReadsTrimGalore
-  else inputPairReads = inputPairReads.mix(inputBam)
-  inputPairReads = inputPairReads.dump(tag:'INPUT before BWA-mem2 mem')
+    if (params.trim_fastq) inputPairReads = outputPairReadsTrimGalore
+    else inputPairReads = inputPairReads.mix(inputBam)
+    inputPairReads = inputPairReads.dump(tag:'INPUT before mapping')
 
-  (inputPairReads, input_pair_reads_sentieon) = inputPairReads.into(2)
-  if (params.sentieon) inputPairReads.close()
-  else input_pair_reads_sentieon.close()
+    (inputPairReads, input_pair_reads_sentieon) = inputPairReads.into(2)
+    if (params.sentieon) inputPairReads.close()
+    else input_pair_reads_sentieon.close()
 }
 
 process MapReads {
@@ -1190,9 +1187,10 @@ process MapReads {
     extra = status == 1 ? "-B 3" : ""
     convertToFastq = hasExtension(inputFile1, "bam") ? "gatk --java-options -Xmx${task.memory.toGiga()}g SamToFastq --INPUT=${inputFile1} --FASTQ=/dev/stdout --INTERLEAVE=true --NON_PF=true | \\" : ""
     input = hasExtension(inputFile1, "bam") ? "-p /dev/stdin - 2> >(tee ${inputFile1}.bwa.stderr.log >&2)" : "${inputFile1} ${inputFile2}"
+    aligner = params.aligner == "bwa-mem2" ? "bwa-mem2" : "bwa"
     """
     ${convertToFastq}
-    bwa-mem2 mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
+    ${aligner} mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
     ${input} | \
     samtools sort --threads ${task.cpus} -m 2G - > ${idSample}_${idRun}.bam
     """
@@ -1389,7 +1387,18 @@ process MarkDuplicates {
     script:
     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
     metrics = 'markduplicates' in skipQC ? '' : "-M ${idSample}.bam.metrics"
-    if (params.no_gatk_spark)
+    if (params.use_gatk_spark)
+    """
+    gatk --java-options ${markdup_java_options} \
+        MarkDuplicatesSpark \
+        -I ${idSample}.bam \
+        -O ${idSample}.md.bam \
+        ${metrics} \
+        --tmp-dir . \
+        --create-output-bam-index true \
+        --spark-master local[${task.cpus}]
+    """
+    else
     """
     gatk --java-options ${markdup_java_options} \
         MarkDuplicates \
@@ -1401,17 +1410,6 @@ process MarkDuplicates {
         --OUTPUT ${idSample}.md.bam
     
     mv ${idSample}.md.bai ${idSample}.md.bam.bai
-    """
-    else
-    """
-    gatk --java-options ${markdup_java_options} \
-        MarkDuplicatesSpark \
-        -I ${idSample}.bam \
-        -O ${idSample}.md.bam \
-        ${metrics} \
-        --tmp-dir . \
-        --create-output-bam-index true \
-        --spark-master local[${task.cpus}]
     """
 }
 
@@ -2011,7 +2009,7 @@ process HaplotypeCaller {
 
 gvcfHaplotypeCaller = gvcfHaplotypeCaller.groupTuple(by:[0, 1, 2])
 
-if (params.no_gvcf) gvcfHaplotypeCaller.close()
+if (!params.generate_gvcf) gvcfHaplotypeCaller.close()
 else gvcfHaplotypeCaller = gvcfHaplotypeCaller.dump(tag:'GVCF HaplotypeCaller')
 
 // STEP GATK HAPLOTYPECALLER.2
@@ -3118,7 +3116,7 @@ process Ascat {
         --normalbaf ${bafNormal} \
         --normallogr ${logrNormal} \
         --tumorname ${idSampleTumor} \
-        --basedir ${baseDir} \
+        --basedir ${projectDir} \
         --gcfile ${acLociGC} \
         --gender ${gender} \
         ${purity_ploidy}
@@ -3225,6 +3223,8 @@ if (step == 'controlfreec') mpileupOut = inputSample
 mpileupOut
     .choice(mpileupOutTumor, mpileupOutNormal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
 
+(mpileupOutSingle,mpileupOutTumor) = mpileupOutTumor.into(2)
+
 mpileupOut = mpileupOutNormal.combine(mpileupOutTumor, by:0)
 
 mpileupOut = mpileupOut.map {
@@ -3236,8 +3236,7 @@ mpileupOut = mpileupOut.map {
 // STEP CONTROLFREEC.1 - CONTROLFREEC
 
 process ControlFREEC {
-    label 'cpus_max'
-    //label 'memory_singleCPU_2_task'
+    label 'cpus_8'
 
     tag "${idSampleTumor}_vs_${idSampleNormal}"
 
@@ -3252,9 +3251,10 @@ process ControlFREEC {
         file(dbsnpIndex) from ch_dbsnp_tbi
         file(fasta) from ch_fasta
         file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
 
     output:
-        set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.pileup_CNVs"), file("${idSampleTumor}.pileup_ratio.txt"), file("${idSampleTumor}.pileup_normal_CNVs"), file("${idSampleTumor}.pileup_normal_ratio.txt"), file("${idSampleTumor}.pileup_BAF.txt"), file("${idSampleNormal}.pileup_BAF.txt") into controlFreecViz
+        set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.pileup_CNVs"), file("${idSampleTumor}.pileup_ratio.txt"), file("${idSampleTumor}.pileup_BAF.txt") into controlFreecViz
         set file("*.pileup*"), file("${idSampleTumor}_vs_${idSampleNormal}.config.txt") into controlFreecOut
 
     when: 'controlfreec' in tools
@@ -3262,10 +3262,18 @@ process ControlFREEC {
     script:
     config = "${idSampleTumor}_vs_${idSampleNormal}.config.txt"
     gender = genderMap[idPatient]
-    // if we are using coefficientOfVariation, we must delete the window parameter 
-    // it is "window = 20000" in the default settings, without coefficientOfVariation set, 
-    // but we do not like it. Note, it is not written in stone
-    coeff_or_window = params.cf_window ? "window = ${params.cf_window}" : "coefficientOfVariation = ${params.cf_coeff}"
+    // Window has higher priority than coefficientOfVariation if both given
+    window = params.cf_window ? "window = ${params.cf_window}" : ""
+    coeffvar = params.cf_coeff ? "coefficientOfVariation = ${params.cf_coeff}" : ""
+    use_bed = params.target_bed ? "captureRegions = ${targetBED}" : ""
+    // This parameter makes Control-FREEC unstable (still in Beta according to the developers)
+    // so we disable it by setting it to its default value (it is disabled by default)
+    //min_subclone = params.target_bed ? "30" : "20"
+    min_subclone = 100
+    readCountThreshold = params.target_bed ? "50" : "10"
+    breakPointThreshold = params.target_bed ? "1.2" : "0.8"
+    breakPointType = params.target_bed ? "4" : "2"
+    mappabilitystr = params.mappability ? "gemMappabilityFile = \${PWD}/${mappability}" : ""
 
     """
     touch ${config}
@@ -3273,16 +3281,19 @@ process ControlFREEC {
     echo "BedGraphOutput = TRUE" >> ${config}
     echo "chrFiles = \${PWD}/${chrDir.fileName}" >> ${config}
     echo "chrLenFile = \${PWD}/${chrLength.fileName}" >> ${config}
-    echo "gemMappabilityFile = \${PWD}/${mappability}" >> ${config}
-    echo "${coeff_or_window}" >> ${config}
-    echo "contaminationAdjustment = TRUE" >> ${config}
     echo "forceGCcontentNormalization = 1" >> ${config}
     echo "maxThreads = ${task.cpus}" >> ${config}
-    echo "minimalSubclonePresence = 20" >> ${config}
+    echo "minimalSubclonePresence = ${min_subclone}" >> ${config}
     echo "ploidy = ${params.cf_ploidy}" >> ${config}
     echo "sex = ${gender}" >> ${config}
+    echo "readCountThreshold = ${readCountThreshold}" >> ${config}
+    echo "breakPointThreshold = ${breakPointThreshold}" >> ${config}
+    echo "breakPointType = ${breakPointType}" >> ${config}
+    echo "${window}" >> ${config}
+    echo "${coeffvar}" >> ${config}
+    echo "${mappabilitystr}" >> ${config}
     echo "" >> ${config}
-
+    
     echo "[control]" >> ${config}
     echo "inputFormat = pileup" >> ${config}
     echo "mateFile = \${PWD}/${mpileupNormal}" >> ${config}
@@ -3297,12 +3308,94 @@ process ControlFREEC {
 
     echo "[BAF]" >> ${config}
     echo "SNPfile = ${dbsnp.fileName}" >> ${config}
+    echo "" >> ${config}
+
+    echo "[target]" >> ${config}
+    echo "${use_bed}" >> ${config}
 
     freec -conf ${config}
     """
 }
 
 controlFreecOut.dump(tag:'ControlFREEC')
+
+process ControlFREECSingle {
+    label 'cpus_8'
+
+    tag "${idSampleTumor}"
+
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Control-FREEC", mode: params.publish_dir_mode
+
+    input:
+        set idPatient, idSampleTumor, file(mpileupTumor) from mpileupOutSingle
+        file(chrDir) from ch_chr_dir
+        file(mappability) from ch_mappability
+        file(chrLength) from ch_chr_length
+        file(dbsnp) from ch_dbsnp
+        file(dbsnpIndex) from ch_dbsnp_tbi
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
+
+    output:
+        set idPatient, idSampleTumor, file("${idSampleTumor}.pileup_CNVs"), file("${idSampleTumor}.pileup_ratio.txt"), file("${idSampleTumor}.pileup_BAF.txt") into controlFreecVizSingle
+        set file("*.pileup*"), file("${idSampleTumor}.config.txt") into controlFreecOutSingle
+
+    when: 'controlfreec' in tools
+
+    script:
+    config = "${idSampleTumor}.config.txt"
+    gender = genderMap[idPatient]
+    // Window has higher priority than coefficientOfVariation if both given
+    window = params.cf_window ? "window = ${params.cf_window}" : ""
+    coeffvar = params.cf_coeff ? "coefficientOfVariation = ${params.cf_coeff}" : ""
+    use_bed = params.target_bed ? "captureRegions = ${targetBED}" : ""
+    // This parameter makes Control-FREEC unstable (still in Beta according to the developers)
+    // so we disable it by setting it to its default value (it is disabled by default)
+    //min_subclone = params.target_bed ? "30" : "20"
+    min_subclone = 100
+    readCountThreshold = params.target_bed ? "50" : "10"
+    breakPointThreshold = params.target_bed ? "1.2" : "0.8"
+    breakPointType = params.target_bed ? "4" : "2"
+    mappabilitystr = params.mappability ? "gemMappabilityFile = \${PWD}/${mappability}" : ""
+
+    """
+    touch ${config}
+    echo "[general]" >> ${config}
+    echo "BedGraphOutput = TRUE" >> ${config}
+    echo "chrFiles = \${PWD}/${chrDir.fileName}" >> ${config}
+    echo "chrLenFile = \${PWD}/${chrLength.fileName}" >> ${config}
+    echo "forceGCcontentNormalization = 1" >> ${config}
+    echo "maxThreads = ${task.cpus}" >> ${config}
+    echo "minimalSubclonePresence = ${min_subclone}" >> ${config}
+    echo "ploidy = ${params.cf_ploidy}" >> ${config}
+    echo "sex = ${gender}" >> ${config}
+    echo "readCountThreshold = ${readCountThreshold}" >> ${config}
+    echo "breakPointThreshold = ${breakPointThreshold}" >> ${config}
+    echo "breakPointType = ${breakPointType}" >> ${config}
+    echo "${window}" >> ${config}
+    echo "${coeffvar}" >> ${config}
+    echo "${mappabilitystr}" >> ${config}
+    echo "" >> ${config}
+
+    echo "[sample]" >> ${config}
+    echo "inputFormat = pileup" >> ${config}
+    echo "mateFile = \${PWD}/${mpileupTumor}" >> ${config}
+    echo "mateOrientation = FR" >> ${config}
+    echo "" >> ${config}
+
+    echo "[BAF]" >> ${config}
+    echo "SNPfile = ${dbsnp.fileName}" >> ${config}
+    echo "" >> ${config}
+
+    echo "[target]" >> ${config}
+    echo "${use_bed}" >> ${config}
+
+    freec -conf ${config}
+    """
+}
+
+controlFreecOutSingle.dump(tag:'ControlFREECSingle')
 
 // STEP CONTROLFREEC.3 - VISUALIZATION
 
@@ -3314,39 +3407,63 @@ process ControlFreecViz {
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Control-FREEC", mode: params.publish_dir_mode
 
     input:
-        set idPatient, idSampleNormal, idSampleTumor, file(cnvTumor), file(ratioTumor), file(cnvNormal), file(ratioNormal), file(bafTumor), file(bafNormal) from controlFreecViz
+        set idPatient, idSampleNormal, idSampleTumor, file(cnvTumor), file(ratioTumor), file(bafTumor) from controlFreecViz
 
     output:
         set file("*.txt"), file("*.png"), file("*.bed") into controlFreecVizOut
 
     when: 'controlfreec' in tools
 
+    script:
     """
     echo "Shaping CNV files to make sure we can assess significance"
-    awk 'NF==9{print}' ${cnvTumor} > TUMOR.CNVs
-    awk 'NF==7{print}' ${cnvNormal} > NORMAL.CNVs
+    LINEWIDTH=`head -1 ${cnvTumor}| wc -w`; awk 'NF=='$LINEWIDTH'{print}' ${cnvTumor} > TUMOR.CNVs
 
     echo "############### Calculating significance values for TUMOR CNVs #############"
     cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args TUMOR.CNVs ${ratioTumor}
 
-    echo "############### Calculating significance values for NORMAL CNVs ############"
-    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args NORMAL.CNVs ${ratioNormal}
-
     echo "############### Creating graph for TUMOR ratios ###############"
     cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/makeGraph.R | R --slave --args 2 ${ratioTumor} ${bafTumor}
 
-    echo "############### Creating graph for NORMAL ratios ##############"
-    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/makeGraph.R | R --slave --args 2 ${ratioNormal} ${bafNormal}
-
     echo "############### Creating BED files for TUMOR ##############"
     perl /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/freec2bed.pl -f ${ratioTumor} > ${idSampleTumor}.bed
-
-    echo "############### Creating BED files for NORMAL #############"
-    perl /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/freec2bed.pl -f ${ratioNormal} > ${idSampleNormal}.bed
     """
 }
 
 controlFreecVizOut.dump(tag:'ControlFreecViz')
+
+process ControlFreecVizSingle {
+    label 'memory_singleCPU_2_task'
+
+    tag "${idSampleTumor}"
+
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Control-FREEC", mode: params.publish_dir_mode
+
+    input:
+        set idPatient, idSampleTumor, file(cnvTumor), file(ratioTumor), file(bafTumor) from controlFreecVizSingle
+
+    output:
+        set file("*.txt"), file("*.png"), file("*.bed") into controlFreecVizOutSingle
+
+    when: 'controlfreec' in tools
+
+    script:
+    """
+    echo "Shaping CNV files to make sure we can assess significance"
+    LINEWIDTH=`head -1 ${cnvTumor}| wc -w`; awk 'NF=='$LINEWIDTH'{print}' ${cnvTumor} > TUMOR.CNVs
+
+    echo "############### Calculating significance values for TUMOR CNVs #############"
+    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args TUMOR.CNVs ${ratioTumor}
+
+    echo "############### Creating graph for TUMOR ratios ###############"
+    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/makeGraph.R | R --slave --args 2 ${ratioTumor} ${bafTumor}
+
+    echo "############### Creating BED files for TUMOR ##############"
+    perl /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/freec2bed.pl -f ${ratioTumor} > ${idSampleTumor}.bed
+    """
+}
+
+controlFreecVizOutSingle.dump(tag:'ControlFreecVizSingle')
 
 // Remapping channels for QC and annotation
 
@@ -3502,9 +3619,9 @@ if (step == 'annotate') {
         Channel.fromPath("${params.outdir}/VariantCalling/*/TIDDIT/*.vcf.gz")
           .flatten().map{vcf -> ['TIDDIT', vcf.minus(vcf.fileName)[-2].toString(), vcf]}
       ).choice(vcfToAnnotate, vcfNoAnnotate) {
-        annotateTools == [] || (annotateTools != [] && it[0] in annotateTools) ? 0 : 1
+        annotate_tools == [] || (annotate_tools != [] && it[0] in annotate_tools) ? 0 : 1
       }
-    } else if (annotateTools == []) {
+    } else if (annotate_tools == []) {
     // Annotate user-submitted VCFs
     // If user-submitted, Sarek assume that the idSample should be assumed automatically
       vcfToAnnotate = Channel.fromPath(tsvPath)
@@ -3851,18 +3968,18 @@ workflow.onComplete {
 
     // Render the TXT template
     def engine = new groovy.text.GStringTemplateEngine()
-    def tf = new File("$baseDir/assets/email_template.txt")
+    def tf = new File("$projectDir/assets/email_template.txt")
     def txt_template = engine.createTemplate(tf).make(email_fields)
     def email_txt = txt_template.toString()
 
     // Render the HTML template
-    def hf = new File("$baseDir/assets/email_template.html")
+    def hf = new File("$projectDir/assets/email_template.html")
     def html_template = engine.createTemplate(hf).make(email_fields)
     def email_html = html_template.toString()
 
     // Render the sendmail template
-    def smail_fields = [ email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir", mqcFile: mqc_report, mqcMaxSize: params.max_multiqc_email_size.toBytes() ]
-    def sf = new File("$baseDir/assets/sendmail_template.txt")
+    def smail_fields = [ email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, projectDir: "$projectDir", mqcFile: mqc_report, mqcMaxSize: params.max_multiqc_email_size.toBytes() ]
+    def sf = new File("$projectDir/assets/sendmail_template.txt")
     def sendmail_template = engine.createTemplate(sf).make(smail_fields)
     def sendmail_html = sendmail_template.toString()
 
@@ -4114,10 +4231,11 @@ def extractFastqFromDir(pattern) {
                 path2 = file(path1.toString().replace('_R1_', '_R2_'))
                 if (!path2.exists()) error "Path '${path2}' not found"
                 (flowcell, lane) = flowcellLaneFromFastq(path1)
+                String random = org.apache.commons.lang.RandomStringUtils.random(8, true, true) // random string to avoid duplicate names
                 patient = sampleId
                 gender = 'ZZ'  // unused
                 status = 0  // normal (not tumor)
-                rgId = "${flowcell}.${sampleId}.${lane}"
+                rgId = "${flowcell}.${sampleId}.${lane}.${random}"
                 result = [patient, gender, status, sampleId, rgId, path1, path2]
                 fastq.bind(result)
             }

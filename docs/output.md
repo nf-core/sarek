@@ -1,16 +1,23 @@
 # nf-core/sarek: Output <!-- omit in toc -->
 
-This document describes the output produced by the pipeline.
+## warning Please read this documentation on the nf-core website: [https://nf-co.re/sarek/output](https://nf-co.re/sarek/output) <!-- omit in toc -->
 
-The directories listed below will be created in the results directory after the pipeline has finished.
-All paths are relative to the top-level results directory.
+> _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
+
+## Introduction <!-- omit in toc -->
+
+This document describes the output produced by the pipeline. Most of the plots are taken from the MultiQC report, which summarises results at the end of the pipeline.
+
+The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
 
 ## Pipeline overview <!-- omit in toc -->
 
-The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
+The pipeline is built using [Nextflow](https://www.nextflow.io/)
+and processes data using the following steps:
 
 - [Preprocessing](#preprocessing)
   - [Map to Reference](#map-to-reference)
+    - [bwa](#bwa)
     - [BWA-mem2](#bwa-mem2)
   - [Mark Duplicates](#mark-duplicates)
     - [GATK MarkDuplicates](#gatk-markduplicates)
@@ -63,6 +70,12 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 `Sarek` pre-processes raw `FASTQ` files or `unmapped BAM` files, based on [GATK best practices](https://gatk.broadinstitute.org/hc/en-us/sections/360007226651-Best-Practices-Workflows).
 
 ### Map to Reference
+
+#### bwa
+
+[bwa](https://github.com/lh3/bwa) is a software package for mapping low-divergent sequences against a large reference genome.
+
+Such files are intermediate and not kept in the final files delivered to users.
 
 #### BWA-mem2
 
