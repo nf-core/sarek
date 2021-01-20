@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#284](https://github.com/nf-core/sarek/pull/284) - Update F1000Research publication to version 2
 - [#284](https://github.com/nf-core/sarek/pull/284) - Update Scilifelab logo
 - [#317](https://github.com/nf-core/sarek/pull/317) - Update `README.md` (Add: QBiC + Friederike/Gisela)
+- [#320](https://github.com/nf-core/sarek/pull/278) - Set `MarkDuplicates MAX_RECORDS_IN_RAM` to default value
 
 ### Fixed
 
