@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- [#253](https://github.com/nf-core/sarek/pull/253), [#255](https://github.com/nf-core/sarek/pull/255), [#326](https://github.com/nf-core/sarek/pull/326) - Update docs
+- [#253](https://github.com/nf-core/sarek/pull/253), [#255](https://github.com/nf-core/sarek/pull/255), [#326](https://github.com/nf-core/sarek/pull/326), [#329](https://github.com/nf-core/sarek/pull/329) - Update docs
 - [#260](https://github.com/nf-core/sarek/pull/260), [#262](https://github.com/nf-core/sarek/pull/262), [#278](https://github.com/nf-core/sarek/pull/278), [#322](https://github.com/nf-core/sarek/pull/322) - Sync with `TEMPLATE` updated from [nf-core/tools](https://github.com/nf-core/tools) [`1.10.2`](https://github.com/nf-core/tools/releases/tag/1.10.2)
 - [#262](https://github.com/nf-core/sarek/pull/262) - Update issue templates to fit the recommended community standards
 - [#278](https://github.com/nf-core/sarek/pull/278), [#322](https://github.com/nf-core/sarek/pull/322) - Refactor docs
@@ -42,6 +42,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#293](https://github.com/nf-core/sarek/pull/293) - Fix typo issue when printing infos [#292](https://github.com/nf-core/sarek/issues/292)
 - [#309](https://github.com/nf-core/sarek/pull/309) - Fixed concatenation of many VCF files
 - [#310](https://github.com/nf-core/sarek/pull/310) - Fix Github Actions not running after November 16, 2020 (deprecated Github Actions API [#739](https://github.com/nf-core/tools/issues/739)
+- [#329](https://github.com/nf-core/sarek/pull/329) - Simplify `Control-FREEC` usage
+- [#331](https://github.com/nf-core/sarek/pull/331) - Replace `spread` operator by `combine` to remove `Nextflow` deprecation warning
 
 ### Removed
 
