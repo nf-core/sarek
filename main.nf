@@ -1967,8 +1967,8 @@ bam_recalibrated = bam_recalibrated.dump(tag:'BAM for Variant Calling')
 // To speed Variant Callers up we are chopping the reference into smaller pieces
 // Do variant calling by this intervals, and re-merge the VCFs
 
-bamHaplotypeCaller = bamHaplotypeCallerNoIntervals.spread(intHaplotypeCaller)
-bamFreebayesSingle = bamFreebayesSingleNoIntervals.spread(intFreebayesSingle)
+bamHaplotypeCaller = bamHaplotypeCallerNoIntervals.combine(intHaplotypeCaller)
+bamFreebayesSingle = bamFreebayesSingleNoIntervals.combine(intFreebayesSingle)
 
 // STEP GATK HAPLOTYPECALLER.1
 
@@ -2357,9 +2357,9 @@ bam_pair_sentieon_TNscope = bam_sention_normal.cross(bam_sentieon_tumor).map {
     [normal[0], normal[1], normal[2], normal[3], normal[4], tumor[1], tumor[2], tumor[3], tumor[4]]
 }
 
-intervalPairBam = pairBam.spread(bedIntervals)
+intervalPairBam = pairBam.combine(bedIntervals)
 
-bamMpileup = bamMpileup.spread(intMpileup)
+bamMpileup = bamMpileup.combine(intMpileup)
 
 // intervals for Mutect2 calls, FreeBayes and pileups for Mutect2 filtering
 (pairBamMutect2, pairBamFreeBayes, pairBamPileupSummaries) = intervalPairBam.into(3)
