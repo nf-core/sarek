@@ -244,10 +244,6 @@ vep_cache         = params.vep_cache         ? file(params.vep_cache)        : f
 read_structure1   = params.read_structure1   ?: Channel.empty()
 read_structure2   = params.read_structure2   ?: Channel.empty()
 
-// Optional values, not defined within the params.genomes[params.genome] scope
-ch_read_structure1 = params.read_structure1 ? Channel.value(params.read_structure1) : "null"
-ch_read_structure2 = params.read_structure2 ? Channel.value(params.read_structure2) : "null"
-
 /*
 --------------------------------------------------------------------------------
                                 PRINTING SUMMARY
