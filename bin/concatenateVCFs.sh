@@ -50,7 +50,7 @@ if [ -z ${noInt+x} ]
 then
 	# First make a header from one of the VCF
 	# Remove interval information from the GATK command-line, but leave the rest
-	FIRSTVCF=$(ls *.vcf | head -n 1)
+	FIRSTVCF=$(set +o pipefail; ls *.vcf | head -n 1)
 	sed -n '/^[^#]/q;p' $FIRSTVCF | \
 	awk '!/GATKCommandLine/{print}/GATKCommandLine/{for(i=1;i<=NF;i++){if($i!~/intervals=/ && $i !~ /out=/){printf("%s ",$i)}}printf("\n")}' \
 	> header
