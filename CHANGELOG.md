@@ -9,8 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#238](https://github.com/nf-core/sarek/pull/238) -Add subworkflow for building all the indices
+- [#241](https://github.com/nf-core/sarek/pull/241) -Add modules and workflows parts for preprocessing steps
+
 ### Changed
 
+- [#233](https://github.com/nf-core/sarek/pull/233) - Switch `bwa 0.7.17` for `bwa-mem2 2.0`
+- [#234](https://github.com/nf-core/sarek/pull/234) -Switching to DSL2
+- [#234](https://github.com/nf-core/sarek/pull/234) - Update Nextflow `19.10.0` -> `20.04.1`
 - [#333](https://github.com/nf-core/sarek/pull/333) - Bump `Sarek` version to `3.0dev`
 
 ### Fixed

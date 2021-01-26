@@ -19,27 +19,11 @@ jobs:
       NXF_ANSI_LOG: false
     strategy:
       matrix:
-        # Nextflow versions: check pipeline minimum and current latest
-        nxf_ver: ['20.04.0', '']
+        # Nextflow versions: check pipeline minimum
+        nxf_ver: ['20.11.0-edge']
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
-
-      - name: Check if Dockerfile or Conda environment changed
-        uses: technote-space/get-diff-action@v4
-        with:
-          FILES: |
-            Dockerfile
-            environment.yml
-      - name: Build new docker image
-        if: env.MATCHED_FILES
-        run: docker build --no-cache . -t nfcore/sarek:dev
-
-      - name: Pull docker image
-        if: ${{ !env.MATCHED_FILES }}
-        run: |
-          docker pull nfcore/sarek:dev
-          docker tag nfcore/sarek:dev nfcore/sarek:dev
 
       - name: Install Nextflow
         env:
@@ -47,106 +31,12 @@ jobs:
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-
       - name: Run pipeline with test data
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker
 
-  annotation:
-    env:
-      NXF_ANSI_LOG: false
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        tools: [snpeff, vep]
-        species: [WBcel235]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Nextflow
-        run: |
-          wget -qO- get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
-        env:
-          # Only check Nextflow pipeline minimum version
-          NXF_VER: '20.04.0'
-      - name: Pull docker image
-        run: |
-          docker pull nfcore/sarek:dev
-          docker pull nfcore/sarek${{ matrix.tools }}:dev.${{ matrix.species }}
-      - name: Run annotation test
-        run: nextflow run ${GITHUB_WORKSPACE} -profile test_annotation,docker --tools ${{ matrix.tools }}
-
-  germline:
-    env:
-      NXF_ANSI_LOG: false
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        markduplicates: [--skip_markduplicates, '']
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Nextflow
-        run: |
-          wget -qO- get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
-        env:
-          # Only check Nextflow pipeline minimum version
-          NXF_VER: '20.04.0'
-      - name: Pull docker image
-        run: docker pull nfcore/sarek:dev
-      - name: Get test data
-        run: git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data
-      - name: Run germline test
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.markduplicates }} --input data/testdata/tiny/normal --saved_bam_mapped
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.markduplicates }} --input=false --step prepare_recalibration -resume
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.markduplicates }} --input=false --step recalibrate -resume
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.markduplicates }} --input=false --step variantCalling
-
-  minimal:
-    env:
-      NXF_ANSI_LOG: false
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        genome: [smallerGRCh37, minimalGRCh37]
-        intervals: [--no_intervals, '']
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Nextflow
-        run: |
-          wget -qO- get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
-        env:
-          # Only check Nextflow pipeline minimum version
-          NXF_VER: '20.04.0'
-      - name: Pull docker image
-        run: docker pull nfcore/sarek:dev
-      - name: Run test for minimal genomes
-        run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --skipQC all --genome ${{ matrix.genome }} ${{ matrix.intervals }} --tools Manta,mpileup,Strelka,FreeBayes
-
-  profile:
-    env:
-      NXF_ANSI_LOG: false
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        profile: [test_split_fastq, test_targeted, test_trimming, test_use_gatk_spark, test_umi_tso, test_umi_qiaseq]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Nextflow
-        run: |
-          wget -qO- get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
-        env:
-          # Only check Nextflow pipeline minimum version
-          NXF_VER: '20.04.0'
-      - name: Pull docker image
-        run: docker pull nfcore/sarek:dev
-      - name: Run ${{ matrix.profile }} test
-        run: nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker
-
   aligner:
+    name: Run aligner tests
     env:
       NXF_ANSI_LOG: false
     runs-on: ubuntu-latest
@@ -161,29 +51,18 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           # Only check Nextflow pipeline minimum version
-          NXF_VER: '20.04.0'
-      - name: Pull docker image
-        run: docker pull nfcore/sarek:dev
+          NXF_VER: '20.11.0-edge'
       - name: Run ${{ matrix.profile }} test
         run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner ${{ matrix.aligner }}
 
-  tools:
+  germline:
+    name: Run input from a folder test and restart from step tests
     env:
       NXF_ANSI_LOG: false
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        tool: [Haplotypecaller, Freebayes, Manta, mpileup, MSIsensor, Strelka, TIDDIT]
-        intervals: [--no_intervals, '']
-        exclude:
-          - tool: Manta
-            intervals: --no_intervals
-          - tool: MSIsensor
-            intervals: --no_intervals
-          - tool: Strelka
-            intervals: --no_intervals
-          - tool: TIDDIT
-            intervals: --no_intervals
+        markduplicates: [--skip_markduplicates, '']
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
@@ -192,8 +71,107 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           # Only check Nextflow pipeline minimum version
-          NXF_VER: '20.04.0'
-      - name: Pull docker image
-        run: docker pull nfcore/sarek:dev
+          NXF_VER: '20.11.0-edge'
+      - name: Get test data
+        run: git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data
+      - name: Run germline test with ${{ matrix.markduplicates }} --step mapping
+        run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.markduplicates }} --input data/testdata/tiny/normal --save_bam_mapped
+      - name: Run germline test with ${{ matrix.markduplicates }} --step prepare_recalibration
+        run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.markduplicates }} --input=false --step prepare_recalibration -resume
+      - name: Run germline test with ${{ matrix.markduplicates }} --step recalibrate
+        run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.markduplicates }} --input=false --step recalibrate -resume
+      - name: Run germline test with ${{ matrix.markduplicates }} --step variantCalling
+        run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.markduplicates }} --input=false --step variantCalling
+
+  # annotation:
+  #   env:
+  #     NXF_ANSI_LOG: false
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       tools: [snpeff, vep]
+  #       species: [WBcel235]
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Install Nextflow
+  #       run: |
+  #         wget -qO- get.nextflow.io | bash
+  #         sudo mv nextflow /usr/local/bin/
+  #       env:
+  #         # Only check Nextflow pipeline minimum version
+  #         NXF_VER: '20.11.0-edge'
+  #     - name: Pull docker image
+  #       run: |
+  #         docker pull nfcore/sarek${{ matrix.tools }}:dev.${{ matrix.species }}
+  #     - name: Run annotation test
+  #       run: nextflow run ${GITHUB_WORKSPACE} -profile test_annotation,docker --tools ${{ matrix.tools }}
+
+  # minimal:
+  #   env:
+  #     NXF_ANSI_LOG: false
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       genome: [smallerGRCh37, minimalGRCh37]
+  #       intervals: [--no_intervals, '']
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Install Nextflow
+  #       run: |
+  #         wget -qO- get.nextflow.io | bash
+  #         sudo mv nextflow /usr/local/bin/
+  #       env:
+  #         # Only check Nextflow pipeline minimum version
+  #         NXF_VER: '20.11.0-edge'
+  #     - name: Run test for minimal genomes
+  #       run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --skipQC all --genome ${{ matrix.genome }} ${{ matrix.intervals }} --tools Manta,mpileup,Strelka,FreeBayes
+
+  # profile:
+  #   env:
+  #     NXF_ANSI_LOG: false
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       profile: [test_split_fastq, test_targeted, test_trimming, test_no_gatk_spark, test_umi_tso, test_umi_qiaseq]
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Install Nextflow
+  #       run: |
+  #         wget -qO- get.nextflow.io | bash
+  #         sudo mv nextflow /usr/local/bin/
+  #       env:
+  #         # Only check Nextflow pipeline minimum version
+  #         NXF_VER: '20.11.0-edge'
+  #     - name: Run ${{ matrix.profile }} test
+  #       run: nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker
+
+  tools:
+    name: Run tool tests
+    env:
+      NXF_ANSI_LOG: false
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # tool: [Haplotypecaller, Freebayes, Manta, mpileup, MSIsensor, Strelka, TIDDIT]
+        tool: [Haplotypecaller, Strelka]
+        intervals: [--no_intervals, '']
+        exclude:
+        #   - tool: Manta
+        #     intervals: --no_intervals
+        #   - tool: MSIsensor
+        #     intervals: --no_intervals
+          - tool: Strelka
+            intervals: --no_intervals
+        #   - tool: TIDDIT
+        #     intervals: --no_intervals
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+        env:
+          # Only check Nextflow pipeline minimum version
+          NXF_VER: '20.11.0-edge'
       - name: Run ${{ matrix.tool }} test
         run: nextflow run ${GITHUB_WORKSPACE} -profile test_tool,docker --tools ${{ matrix.tool }} ${{ matrix.intervals }}

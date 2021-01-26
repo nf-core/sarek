@@ -784,6 +784,9 @@
         },
         {
             "$ref": "#/definitions/institutional_config_options"
+        },
+        {
+            "$ref": "#/definitions/modules"
         }
     ]
 }

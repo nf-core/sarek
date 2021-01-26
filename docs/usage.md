@@ -52,18 +52,21 @@ This version number will be logged in reports when you run the pipeline, so that
 
 ### `-profile`
 
-Use this parameter to choose a configuration profile. Profiles can give configuration presets for different compute environments.
+Use this parameter to choose a configuration profile.
+Profiles can give configuration presets for different compute environments.
 
-Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Podman, Conda) - see below.
+Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (`Docker`, `Singularity`, `Podman`, `Conda`) - see below.
 
-> We highly recommend the use of Docker or Singularity containers for full pipeline reproducibility, however when this is not possible, Conda is also supported.
+> We highly recommend the use of `Docker` or `Singularity` containers for full pipeline reproducibility, however when this is not possible, `Conda` is also supported.
 
-The pipeline also dynamically loads configurations from [https://github.com/nf-core/configs](https://github.com/nf-core/configs) when it runs, making multiple config profiles for various institutional clusters available at run time. For more information and to see if your system is available in these configs please see the [nf-core/configs documentation](https://github.com/nf-core/configs#documentation).
+The pipeline also dynamically loads configurations from [github.com/nf-core/configs](https://github.com/nf-core/configs) when it runs, making multiple config profiles for various institutional clusters available at run time.
+For more information and to see if your system is available in these configs please see the [nf-core/configs documentation](https://github.com/nf-core/configs#documentation).
 
 Note that multiple profiles can be loaded, for example: `-profile test,docker` - the order of arguments is important!
 They are loaded in sequence, so later profiles can overwrite earlier profiles.
 
-If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`. This is _not_ recommended.
+If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`.
+This is _not_ recommended.
 
 * `docker`
   * A generic configuration profile to be used with [Docker](https://docker.com/)
@@ -496,36 +499,7 @@ This tool is enabled within `Sarek` if both `--sentieon` and `--tools DNAscope` 
 
 [![sarek-docker status](https://img.shields.io/docker/automated/nfcore/sarek.svg)](https://hub.docker.com/r/nfcore/sarek)
 
-Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags), it contains:
-
-* **[ASCAT](https://github.com/Crick-CancerGenomics/ascat)** 2.5.2
-* **[AlleleCount](https://github.com/cancerit/alleleCount)** 4.0.2
-* **[BCFTools](https://github.com/samtools/bcftools)** 1.9
-* **[bwa](https://github.com/lh3/bwa)** 0.7.17
-* **[bwa-mem2](https://github.com/bwa-mem2/bwa-mem2)** 2.0
-* **[CNVkit](https://github.com/etal/cnvkit)** 0.9.6
-* **[Control-FREEC](https://github.com/BoevaLab/FREEC)** 11.6
-* **[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)** 0.11.9
-* **[fgbio](https://github.com/fulcrumgenomics/fgbio)** 1.1.0
-* **[FreeBayes](https://github.com/ekg/freebayes)** 1.3.2
-* **[GATK4-spark](https://github.com/broadinstitute/gatk)** 4.1.7.0
-* **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
-* **[ggplot2](https://github.com/tidyverse/ggplot2)** 3.3.0
-* **[HTSlib](https://github.com/samtools/htslib)** 1.9
-* **[Manta](https://github.com/Illumina/manta)** 1.6.0
-* **[msisensor](https://github.com/ding-lab/msisensor)** 0.5
-* **[MultiQC](https://github.com/ewels/MultiQC/)** 1.8
-* **[Qualimap](http://qualimap.bioinfo.cipf.es)** 2.2.2d
-* **[SAMBLASTER](https://github.com/GregoryFaust/samblaster)** 0.1.24
-* **[samtools](https://github.com/samtools/samtools)** 1.9
-* **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
-* **[Strelka2](https://github.com/Illumina/strelka)** 2.9.10
-* **[TIDDIT](https://github.com/SciLifeLab/TIDDIT)** 2.7.1
-* **[pigz](https://zlib.net/pigz/)** 2.3.4
-* **[Trim Galore](https://github.com/FelixKrueger/TrimGalore)** 0.6.5
-* **[VCFanno](https://github.com/brentp/vcfanno)** 0.3.2
-* **[VCFtools](https://vcftools.github.io/index.html)** 0.1.16
-* **[VEP](https://github.com/Ensembl/ensembl-vep)** 99.2
+Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags):
 
 For annotation, the main container can be used, but then cache has to be downloaded, or additional containers are available with cache.
 
