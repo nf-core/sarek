@@ -9,6 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+- [#333](https://github.com/nf-core/sarek/pull/333) - Bump `Sarek` version to `3.0dev`
+
+### Fixed
+
+### Deprecated
+
+### Removed
+
+## [2.7](https://github.com/nf-core/sarek/releases/tag/2.7) - Pårte
+
+Pårte is one of the main massif in the Sarek National Park.
+
+### Added
+
 - [#145](https://github.com/nf-core/sarek/pull/145) - Add `UMI annotation and consensus` functionality to `Sarek`
 - [#230](https://github.com/nf-core/sarek/pull/230) - Add `ignore_soft_clipped_bases` option for `GATK Mutect2` [#218](https://github.com/nf-core/sarek/issues/218)
 - [#253](https://github.com/nf-core/sarek/pull/253) - Add `UMI` `CI` testing
