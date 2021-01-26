@@ -14,11 +14,11 @@
    viewBox="0 0 385.63409 166.48314"
    id="svg4924"
    version="1.1"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="nf-core_sarek_logo.svg"
-   inkscape:export-filename="nf-core_sarek_logo.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   sodipodi:docname="nf-core-sarek_logo.svg"
+   inkscape:export-filename="nf-core-sarek_logo.png"
+   inkscape:export-xdpi="100"
+   inkscape:export-ydpi="100">
   <defs
      id="defs4926">
     <clipPath
@@ -154,7 +154,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.979899"
-     inkscape:cx="200.41555"
+     inkscape:cx="24.649009"
      inkscape:cy="34.722335"
      inkscape:document-units="px"
      inkscape:current-layer="layer4"
@@ -166,9 +166,9 @@
      units="px"
      width="200mm"
      inkscape:window-width="1920"
-     inkscape:window-height="1012"
-     inkscape:window-x="1920"
-     inkscape:window-y="312"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata4929">
@@ -178,7 +178,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
