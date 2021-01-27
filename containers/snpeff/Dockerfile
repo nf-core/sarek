@@ -1,4 +1,4 @@
-FROM nfcore/base:1.10.2
+FROM nfcore/base:1.12.1
 LABEL \
   author="Maxime Garcia" \
   description="snpEff image for use in nf-core/sarek" \
@@ -20,3 +20,7 @@ RUN snpEff download -v ${GENOME}.${SNPEFF_CACHE_VERSION}
 
 # Dump the details of the installed packages to a file for posterity
 RUN conda env export --name nf-core-sarek-snpeff-3.0dev > nf-core-sarek-snpeff-3.0dev.yml
+
+# Instruct R processes to use these empty files instead of clashing with a local version
+RUN touch .Rprofile
+RUN touch .Renviron

@@ -1,10 +1,11 @@
+*.code-workspace
 *.pyc
 .DS_Store
 .nextflow*
-.vscode
 data/
 references/
 results/
+testing*
 testing/
 tests/
 work/

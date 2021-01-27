@@ -27,7 +27,7 @@
 7. Wait for reviews
 8. Merge said PR
 9. Make a [release](https://github.com/nf-core/sarek/releases) on GitHub
-10. Update [bio.tools](https://bio.tools/Sarek) with the new release details
+10. Update [bio.tools](https://bio.tools/nf-core-sarek) with the new release details
 11. RT the nf-core automated tweet about the new released version
 12. Make a new branch from `dev`
 13. Checkout the `CHANGELOG.md` from `master`
