@@ -154,7 +154,7 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           # Only check Nextflow pipeline minimum version
-          NXF_VER: '20.07.1'
+          NXF_VER: '20.11.0-edge'
       - name: Run ${{ matrix.profile }} test
         run: nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker
       - name: Show results
