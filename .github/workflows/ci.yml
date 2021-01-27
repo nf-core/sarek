@@ -34,6 +34,8 @@ jobs:
       - name: Run pipeline with test data
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker
+      - name: Show results
+        run: ls -lR results
 
   aligner:
     name: Run aligner tests
@@ -54,6 +56,8 @@ jobs:
           NXF_VER: '20.11.0-edge'
       - name: Run ${{ matrix.profile }} test
         run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner ${{ matrix.aligner }}
+      - name: Show results
+        run: ls -lR results
 
   germline:
     name: Run input from a folder test and restart from step tests
@@ -76,12 +80,20 @@ jobs:
         run: git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data
       - name: Run germline test with ${{ matrix.markduplicates }} --step mapping
         run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.markduplicates }} --input data/testdata/tiny/normal --save_bam_mapped
+      - name: Show results
+        run: ls -lR results
       - name: Run germline test with ${{ matrix.markduplicates }} --step prepare_recalibration
         run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.markduplicates }} --input=false --step prepare_recalibration -resume
+      - name: Show results
+        run: ls -lR results
       - name: Run germline test with ${{ matrix.markduplicates }} --step recalibrate
         run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.markduplicates }} --input=false --step recalibrate -resume
+      - name: Show results
+        run: ls -lR results
       - name: Run germline test with ${{ matrix.markduplicates }} --step variantCalling
         run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker ${{ matrix.markduplicates }} --input=false --step variantCalling
+      - name: Show results
+        run: ls -lR results
 
   # annotation:
   #   env:
@@ -126,24 +138,27 @@ jobs:
   #     - name: Run test for minimal genomes
   #       run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --skipQC all --genome ${{ matrix.genome }} ${{ matrix.intervals }} --tools Manta,mpileup,Strelka,FreeBayes
 
-  # profile:
-  #   env:
-  #     NXF_ANSI_LOG: false
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       profile: [test_split_fastq, test_targeted, test_trimming, test_no_gatk_spark, test_umi_tso, test_umi_qiaseq]
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Install Nextflow
-  #       run: |
-  #         wget -qO- get.nextflow.io | bash
-  #         sudo mv nextflow /usr/local/bin/
-  #       env:
-  #         # Only check Nextflow pipeline minimum version
-  #         NXF_VER: '20.11.0-edge'
-  #     - name: Run ${{ matrix.profile }} test
-  #       run: nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker
+  profile:
+    env:
+      NXF_ANSI_LOG: false
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # profile: [test_split_fastq, test_targeted, test_trimming, test_use_gatk_spark, test_umi_tso, test_umi_qiaseq]
+        profile: [test_use_gatk_spark, test_targeted]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+        env:
+          # Only check Nextflow pipeline minimum version
+          NXF_VER: '20.11.0-edge'
+      - name: Run ${{ matrix.profile }} test
+        run: nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker
+      - name: Show results
+        run: ls -lR results
 
   tools:
     name: Run tool tests
@@ -153,13 +168,13 @@ jobs:
     strategy:
       matrix:
         # tool: [Haplotypecaller, Freebayes, Manta, mpileup, MSIsensor, Strelka, TIDDIT]
-        tool: [Haplotypecaller, Strelka]
+        tool: [Haplotypecaller, Manta, MSIsensor, Strelka]
         intervals: [--no_intervals, '']
         exclude:
-        #   - tool: Manta
-        #     intervals: --no_intervals
-        #   - tool: MSIsensor
-        #     intervals: --no_intervals
+          - tool: Manta
+            intervals: --no_intervals
+          - tool: MSIsensor
+            intervals: --no_intervals
           - tool: Strelka
             intervals: --no_intervals
         #   - tool: TIDDIT
@@ -175,3 +190,5 @@ jobs:
           NXF_VER: '20.11.0-edge'
       - name: Run ${{ matrix.tool }} test
         run: nextflow run ${GITHUB_WORKSPACE} -profile test_tool,docker --tools ${{ matrix.tool }} ${{ matrix.intervals }}
+      - name: Show results
+        run: ls -lR results

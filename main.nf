@@ -94,6 +94,8 @@ anno_list = define_anno_list()
 annotate_tools = params.annotate_tools ? params.annotate_tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '')} : []
 if (!check_parameter_list(annotate_tools,anno_list)) exit 1, 'Unknown tool(s) to annotate, see --help for more information'
 
+if (!(params.aligner in ['bwa-mem', 'bwa-mem2'])) exit 1, 'Unknown aligner, see --help for more information'
+
 // // Check parameters
 if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
 if (params.cf_window && params.cf_coeff) exit 1, 'Please specify either --cf_window OR --cf_coeff, but not both of them'
@@ -176,6 +178,8 @@ if (params.save_reference)      modules['bwa_index'].publish_files              
 if (params.save_reference)      modules['bwamem2_index'].publish_files           = ['0123':'bwamem2', 'amb':'bwamem2', 'ann':'bwamem2', 'bwt.2bit.64':'bwamem2', 'bwt.8bit.32':'bwamem2', 'pac':'bwamem2']
 if (params.save_reference)      modules['create_intervals_bed'].publish_files    = ['bed':'intervals']
 if (params.save_reference)      modules['dict'].publish_files                    = ['dict':'dict']
+if (params.save_reference)      modules['index_target_bed'].publish_files        = ['bed.gz':'target', 'bed.gz.tbi':'target']
+if (params.save_reference)      modules['msisensor_scan'].publish_files          = ['list':'msi']
 if (params.save_reference)      modules['samtools_faidx'].publish_files          = ['fai':'fai']
 if (params.save_reference)      modules['tabix_dbsnp'].publish_files             = ['vcf.gz.tbi':'dbsnp']
 if (params.save_reference)      modules['tabix_germline_resource'].publish_files = ['vcf.gz.tbi':'germline_resource']
@@ -286,6 +290,8 @@ include { BUILD_INDICES } from './modules/local/subworkflow/build_indices' addPa
     bwamem2_index_options:           modules['bwamem2_index'],
     create_intervals_bed_options:    modules['create_intervals_bed'],
     gatk_dict_options:               modules['dict'],
+    index_target_bed_options:        modules['index_target_bed'],
+    msisensor_scan_options:          modules['msisensor_scan'],
     samtools_faidx_options:          modules['samtools_faidx'],
     tabix_dbsnp_options:             modules['tabix_dbsnp'],
     tabix_germline_resource_options: modules['tabix_germline_resource'],
@@ -315,11 +321,19 @@ include { RECALIBRATE } from './modules/local/subworkflow/recalibrate' addParams
     samtools_stats_options:          modules['samtools_stats_recalibrate']
 )
 include { GERMLINE_VARIANT_CALLING } from './modules/local/subworkflow/germline_variant_calling' addParams(
-    haplotypecaller_options:         modules['haplotypecaller'],
-    genotypegvcf_options:            modules['genotypegvcf'],
     concat_gvcf_options:             modules['concat_gvcf'],
     concat_haplotypecaller_options:  modules['concat_haplotypecaller'],
+    genotypegvcf_options:            modules['genotypegvcf'],
+    haplotypecaller_options:         modules['haplotypecaller'],
     strelka_options:                 modules['strelka_germline']
+)
+// include { TUMOR_VARIANT_CALLING } from './modules/local/subworkflow/tumor_variant_calling' addParams(
+// )
+include { PAIR_VARIANT_CALLING } from './modules/local/subworkflow/pair_variant_calling' addParams(
+    manta_options:                   modules['manta_somatic'],
+    msisensor_msi_options:           modules['msisensor_msi'],
+    strelka_bp_options:              modules['strelka_somatic_bp'],
+    strelka_options:                 modules['strelka_somatic']
 )
 
 /*
@@ -402,6 +416,7 @@ workflow {
         known_indels,
         pon,
         step,
+        target_bed,
         tools)
 
     intervals = BUILD_INDICES.out.intervals
@@ -415,6 +430,8 @@ workflow {
     known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? file(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : file("${params.outdir}/no_file")
     pon_tbi               = params.pon               ? params.pon_index               ? file(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : file("${params.outdir}/no_file")
 
+    msisensor_scan    = BUILD_INDICES.out.msisensor_scan
+    target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
 /*
 --------------------------------------------------------------------------------
                                   PREPROCESSING
@@ -530,26 +547,52 @@ workflow {
         fasta,
         intervals,
         target_bed,
+        target_bed_gz_tbi,
         tools)
 
-    /*
-    --------------------------------------------------------------------------------
-                                SOMATIC VARIANT CALLING
-    --------------------------------------------------------------------------------
-    */
+/*
+--------------------------------------------------------------------------------
+                             SOMATIC VARIANT CALLING
+--------------------------------------------------------------------------------
+*/
 
-    /*
-    --------------------------------------------------------------------------------
-                                    ANNOTATION
-    --------------------------------------------------------------------------------
-    */
+    // TUMOR_VARIANT_CALLING(
+    //     bam_variant_calling,
+    //     dbsnp,
+    //     dbsnp_tbi,
+    //     dict,
+    //     fai,
+    //     fasta,
+    //     intervals,
+    //     target_bed,
+    //     target_bed_gz_tbi,
+    //     tools)
+
+    PAIR_VARIANT_CALLING(
+        bam_variant_calling,
+        dbsnp,
+        dbsnp_tbi,
+        dict,
+        fai,
+        fasta,
+        intervals,
+        msisensor_scan,
+        target_bed,
+        target_bed_gz_tbi,
+        tools)
+
+/*
+--------------------------------------------------------------------------------
+                                   ANNOTATION
+--------------------------------------------------------------------------------
+*/
 
 
-    /*
-    --------------------------------------------------------------------------------
-                                        MultiQC
-    --------------------------------------------------------------------------------
-    */
+/*
+--------------------------------------------------------------------------------
+                                     MULTIQC
+--------------------------------------------------------------------------------
+*/
 
     // GET_SOFTWARE_VERSIONS()
 
@@ -563,9 +606,9 @@ workflow {
 
 /*
 --------------------------------------------------------------------------------
-                        SEND COMPLETION EMAIL
+                              SEND COMPLETION EMAIL
 --------------------------------------------------------------------------------
- */
+*/
 
 workflow.onComplete {
     def multiqc_report = []
@@ -1149,171 +1192,6 @@ workflow.onComplete {
 
 // vcf_sentieon_compressed = vcf_sentieon_compressed.dump(tag:'Sentieon VCF indexed')
 
-// // STEP STRELKA.2 - SOMATIC PAIR
-
-// process Strelka {
-//     label 'cpus_max'
-//     label 'memory_max'
-
-//     tag "${idSampleTumor}_vs_${idSampleNormal}"
-
-//     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Strelka", mode: params.publish_dir_mode
-
-//     input:
-//         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamStrelka
-//         file(dict) from dict
-//         file(fasta) from fasta
-//         file(fastaFai) from fai
-//         file(targetBED) from ch_target_bed
-
-//     output:
-//         set val("Strelka"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfStrelka
-
-//     when: 'strelka' in tools
-
-//     script:
-//     beforeScript = params.target_bed ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
-//     options = params.target_bed ? "--exome --callRegions call_targets.bed.gz" : ""
-//     """
-//     ${beforeScript}
-//     configureStrelkaSomaticWorkflow.py \
-//         --tumor ${bamTumor} \
-//         --normal ${bamNormal} \
-//         --referenceFasta ${fasta} \
-//         ${options} \
-//         --runDir Strelka
-
-//     python Strelka/runWorkflow.py -m local -j ${task.cpus}
-
-//     mv Strelka/results/variants/somatic.indels.vcf.gz \
-//         Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz
-//     mv Strelka/results/variants/somatic.indels.vcf.gz.tbi \
-//         Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz.tbi
-//     mv Strelka/results/variants/somatic.snvs.vcf.gz \
-//         Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
-//     mv Strelka/results/variants/somatic.snvs.vcf.gz.tbi \
-//         Strelka_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz.tbi
-//     """
-// }
-
-// vcfStrelka = vcfStrelka.dump(tag:'Strelka')
-
-// // STEP MANTA.2 - SOMATIC PAIR
-
-// process Manta {
-//     label 'cpus_max'
-//     label 'memory_max'
-
-//     tag "${idSampleTumor}_vs_${idSampleNormal}"
-
-//     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Manta", mode: params.publish_dir_mode
-
-//     input:
-//         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamManta
-//         file(fasta) from fasta
-//         file(fastaFai) from fai
-//         file(targetBED) from ch_target_bed
-
-//     output:
-//         set val("Manta"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfManta
-//         set idPatient, idSampleNormal, idSampleTumor, file("*.candidateSmallIndels.vcf.gz"), file("*.candidateSmallIndels.vcf.gz.tbi") into mantaToStrelka
-
-//     when: 'manta' in tools
-
-//     script:
-//     beforeScript = params.target_bed ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
-//     options = params.target_bed ? "--exome --callRegions call_targets.bed.gz" : ""
-//     """
-//     ${beforeScript}
-//     configManta.py \
-//         --normalBam ${bamNormal} \
-//         --tumorBam ${bamTumor} \
-//         --reference ${fasta} \
-//         ${options} \
-//         --runDir Manta
-
-//     python Manta/runWorkflow.py -m local -j ${task.cpus}
-
-//     mv Manta/results/variants/candidateSmallIndels.vcf.gz \
-//         Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf.gz
-//     mv Manta/results/variants/candidateSmallIndels.vcf.gz.tbi \
-//         Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSmallIndels.vcf.gz.tbi
-//     mv Manta/results/variants/candidateSV.vcf.gz \
-//         Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf.gz
-//     mv Manta/results/variants/candidateSV.vcf.gz.tbi \
-//         Manta_${idSampleTumor}_vs_${idSampleNormal}.candidateSV.vcf.gz.tbi
-//     mv Manta/results/variants/diploidSV.vcf.gz \
-//         Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf.gz
-//     mv Manta/results/variants/diploidSV.vcf.gz.tbi \
-//         Manta_${idSampleTumor}_vs_${idSampleNormal}.diploidSV.vcf.gz.tbi
-//     mv Manta/results/variants/somaticSV.vcf.gz \
-//         Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf.gz
-//     mv Manta/results/variants/somaticSV.vcf.gz.tbi \
-//         Manta_${idSampleTumor}_vs_${idSampleNormal}.somaticSV.vcf.gz.tbi
-//     """
-// }
-
-// vcfManta = vcfManta.dump(tag:'Manta')
-
-// // Remmaping channels to match input for StrelkaBP
-// pairBamStrelkaBP = pairBamStrelkaBP.map {
-//     idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor ->
-//     [idPatientNormal, idSampleNormal, idSampleTumor, bamNormal, baiNormal, bamTumor, baiTumor]
-// }.join(mantaToStrelka, by:[0,1,2]).map {
-//     idPatientNormal, idSampleNormal, idSampleTumor, bamNormal, baiNormal, bamTumor, baiTumor, mantaCSI, mantaCSIi ->
-//     [idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor, mantaCSI, mantaCSIi]
-// }
-
-// // STEP STRELKA.3 - SOMATIC PAIR - BEST PRACTICES
-
-// process StrelkaBP {
-//     label 'cpus_max'
-//     label 'memory_max'
-
-//     tag "${idSampleTumor}_vs_${idSampleNormal}"
-
-//     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Strelka", mode: params.publish_dir_mode
-
-//     input:
-//         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(mantaCSI), file(mantaCSIi) from pairBamStrelkaBP
-//         file(dict) from dict
-//         file(fasta) from fasta
-//         file(fastaFai) from fai
-//         file(targetBED) from ch_target_bed
-
-//     output:
-//         set val("Strelka"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("*.vcf.gz"), file("*.vcf.gz.tbi") into vcfStrelkaBP
-
-//     when: 'strelka' in tools && 'manta' in tools && !params.no_strelka_bp
-
-//     script:
-//     beforeScript = params.target_bed ? "bgzip --threads ${task.cpus} -c ${targetBED} > call_targets.bed.gz ; tabix call_targets.bed.gz" : ""
-//     options = params.target_bed ? "--exome --callRegions call_targets.bed.gz" : ""
-//     """
-//     ${beforeScript}
-//     configureStrelkaSomaticWorkflow.py \
-//         --tumor ${bamTumor} \
-//         --normal ${bamNormal} \
-//         --referenceFasta ${fasta} \
-//         --indelCandidates ${mantaCSI} \
-//         ${options} \
-//         --runDir Strelka
-
-//     python Strelka/runWorkflow.py -m local -j ${task.cpus}
-
-//     mv Strelka/results/variants/somatic.indels.vcf.gz \
-//         StrelkaBP_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz
-//     mv Strelka/results/variants/somatic.indels.vcf.gz.tbi \
-//         StrelkaBP_${idSampleTumor}_vs_${idSampleNormal}_somatic_indels.vcf.gz.tbi
-//     mv Strelka/results/variants/somatic.snvs.vcf.gz \
-//         StrelkaBP_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz
-//     mv Strelka/results/variants/somatic.snvs.vcf.gz.tbi \
-//         StrelkaBP_${idSampleTumor}_vs_${idSampleNormal}_somatic_snvs.vcf.gz.tbi
-//     """
-// }
-
-// vcfStrelkaBP = vcfStrelkaBP.dump(tag:'Strelka BP')
-
 // // STEP CNVkit
 
 // process CNVkit {
@@ -1343,61 +1221,6 @@ workflow.onComplete {
 //       --output-dir ./ \
 //       --diagram \
 //       --scatter
-//     """
-// }
-
-// // STEP MSISENSOR.1 - SCAN
-
-// // Scan reference genome for microsatellites
-// process MSIsensor_scan {
-//     label 'cpus_1'
-//     label 'memory_max'
-
-//     tag "${fasta}"
-
-//     input:
-//     file(fasta) from fasta
-//     file(fastaFai) from fai
-
-//     output:
-//     file "microsatellites.list" into msi_scan_ch
-
-//     when: 'msisensor' in tools
-
-//     script:
-//     """
-//     msisensor scan -d ${fasta} -o microsatellites.list
-//     """
-// }
-
-// // STEP MSISENSOR.2 - SCORE
-
-// // Score the normal vs somatic pair of bams
-
-// process MSIsensor_msi {
-//     label 'cpus_4'
-//     label 'memory_max'
-
-//     tag "${idSampleTumor}_vs_${idSampleNormal}"
-
-//     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/MSIsensor", mode: params.publish_dir_mode
-
-//     input:
-//         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor) from pairBamMsisensor
-//         file msiSites from msi_scan_ch
-
-//     output:
-//         set val("Msisensor"), idPatient, file("${idSampleTumor}_vs_${idSampleNormal}_msisensor"), file("${idSampleTumor}_vs_${idSampleNormal}_msisensor_dis"), file("${idSampleTumor}_vs_${idSampleNormal}_msisensor_germline"), file("${idSampleTumor}_vs_${idSampleNormal}_msisensor_somatic") into msisensor_out_ch
-
-//     when: 'msisensor' in tools
-
-//     script:
-//     """
-//     msisensor msi -d ${msiSites} \
-//                   -b 4 \
-//                   -n ${bamNormal} \
-//                   -t ${bamTumor} \
-//                   -o ${idSampleTumor}_vs_${idSampleNormal}_msisensor
 //     """
 // }
 

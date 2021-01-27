@@ -752,6 +752,29 @@
                     "fa_icon": "fas fa-users-cog"
                 }
             }
+        },
+        "modules": {
+            "title": "Modules",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "pull_docker_container": {
+                    "type": "boolean",
+                    "fa_icon": "fab fa-docker",
+                    "description": "Force pull and use of Docker container instead of default Singularity ones",
+                    "hidden": true,
+                    "help_text": "This may be useful if you are unable to download Singularity containers due to proxy issues."
+                },
+                "enable_conda": {
+                    "type": "boolean",
+                    "fa_icon": "fas snake",
+                    "description": "Enable conda",
+                    "hidden": true,
+                    "help_text": ""
+                }
+            },
+            "fa_icon": "fas fa-cog"
         }
     },
     "allOf": [
