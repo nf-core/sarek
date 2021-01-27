@@ -1,17 +1,26 @@
 # nf-core/sarek: Output <!-- omit in toc -->
 
-This document describes the output produced by the pipeline.
+## warning Please read this documentation on the nf-core website: [https://nf-co.re/sarek/output](https://nf-co.re/sarek/output) <!-- omit in toc -->
+
+> _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
+
+## Introduction <!-- omit in toc -->
+
+This document describes the output produced by the pipeline. Most of the plots are taken from the MultiQC report, which summarises results at the end of the pipeline.
+
+The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
 
 The directories listed below will be created in the results directory after the pipeline has finished.
 All paths are relative to the top-level results directory.
 
 ## Pipeline overview <!-- omit in toc -->
 
-The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
+The pipeline is built using [Nextflow](https://www.nextflow.io/)
+and processes data using the following steps:
 
 - [Preprocessing](#preprocessing)
   - [Map to Reference](#map-to-reference)
-    - [BWA](#BWA)
+    - [BWA](#bwa)
     - [BWA-mem2](#bwa-mem2)
   - [Mark Duplicates](#mark-duplicates)
     - [GATK MarkDuplicates](#gatk-markduplicates)
@@ -81,9 +90,9 @@ Such files are intermediate and not kept in the final files delivered to users.
 
 #### GATK MarkDuplicates
 
-By default, `Sarek` will use [GATK MarkDuplicatesSpark](https://gatk.broadinstitute.org/hc/en-us/articles/360042912511-MarkDuplicatesSpark), `Spark` implementation of [GATK MarkDuplicates](https://gatk.broadinstitute.org/hc/en-us/articles/360042477492-MarkDuplicates-Picard), which locates and tags duplicate reads in a `BAM` or `SAM` file, where duplicate reads are defined as originating from a single fragment of DNA.
+By default, `Sarek` will use [GATK MarkDuplicates](https://gatk.broadinstitute.org/hc/en-us/articles/360042477492-MarkDuplicates-Picard), which locates and tags duplicate reads in a `BAM` or `SAM` file, where duplicate reads are defined as originating from a single fragment of DNA.
 
-Specify `--no_gatk_spark` to use `GATK MarkDuplicates` instead.
+Specify `--use_gatk_spark` to use [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/360042912511-MarkDuplicatesSpark) instead, `Spark` implementation of `GATK MarkDuplicates`.
 
 This directory is the location for the `BAM` files delivered to users.
 Besides the `duplicates-marked BAM` files, the recalibration tables (`*.recal.table`) are also stored, and can be used to create `recalibrated BAM` files.
