@@ -108,7 +108,7 @@ class JSON {
 
         summary['MarkDuplicates'] = "Options"
         summary['Java options'] = params.markdup_java_options
-        summary['GATK Spark']   = params.no_gatk_spark ? 'No' : 'Yes'
+        summary['GATK Spark']   = params.use_gatk_spark ? 'Yes' : 'No'
 
         summary['Save BAMs mapped']   = params.save_bam_mapped ? 'Yes' : 'No'
         summary['Skip MarkDuplicates']   = params.skip_markduplicates ? 'Yes' : 'No'
@@ -126,7 +126,7 @@ class JSON {
             if (params.cf_ploidy)    summary['ploidy']             = params.cf_ploidy
         }
 
-        if ('haplotypecaller' in tools)             summary['GVCF']       = params.no_gvcf ? 'No' : 'Yes'
+        if ('haplotypecaller' in tools)             summary['GVCF']       = params.generate_gvcf ? 'Yes' : 'No'
         if ('strelka' in tools && 'manta' in tools) summary['Strelka BP'] = params.no_strelka_bp ? 'No' : 'Yes'
         if (params.pon && ('mutect2' in tools || (params.sentieon && 'tnscope' in tools))) summary['Panel of normals'] = params.pon
 
