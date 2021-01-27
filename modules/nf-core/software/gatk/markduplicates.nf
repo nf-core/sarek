@@ -30,20 +30,7 @@ process GATK_MARKDUPLICATES {
     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
     metrics = 'markduplicates' in params.skip_qc ? '' : "-M ${meta.sample}.bam.metrics"
 
-    if (params.no_gatk_spark)
-    """
-    gatk --java-options ${markdup_java_options} \
-        MarkDuplicates \
-        --MAX_RECORDS_IN_RAM 50000 \
-        --INPUT ${meta.sample}.bam \
-        --METRICS_FILE ${meta.sample}.bam.metrics \
-        --TMP_DIR . \
-        --ASSUME_SORT_ORDER coordinate \
-        --CREATE_INDEX true \
-        --OUTPUT ${meta.sample}.md.bam
-    mv ${meta.sample}.md.bai ${meta.sample}.md.bam.bai
-    """
-    else
+    if (params.use_gatk_spark)
     """
     gatk --java-options ${markdup_java_options} \
         MarkDuplicatesSpark \
@@ -53,5 +40,17 @@ process GATK_MARKDUPLICATES {
         --tmp-dir . \
         --create-output-bam-index true \
         --spark-master local[${task.cpus}]
+    """
+    else
+    """
+    gatk --java-options ${markdup_java_options} \
+        MarkDuplicates \
+        --INPUT ${meta.sample}.bam \
+        --METRICS_FILE ${meta.sample}.bam.metrics \
+        --TMP_DIR . \
+        --ASSUME_SORT_ORDER coordinate \
+        --CREATE_INDEX true \
+        --OUTPUT ${meta.sample}.md.bam
+    mv ${meta.sample}.md.bai ${meta.sample}.md.bam.bai
     """
 }
