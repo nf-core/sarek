@@ -3,9 +3,9 @@ include { initOptions; saveFiles; getSoftwareName } from './../../nf-core/softwa
 params.options = [:]
 def options    = initOptions(params.options)
 
-environment = params.enable_conda ? "bioconda::bwa-mem2=2.0 bioconda::samtools=1.10" : null
-container = "quay.io/biocontainers/mulled-v2-e5d375990341c5aef3c9aff74f96f66f65375ef6:876eb6f1d38fbf578296ea94e5aede4e317939e7-0"
-if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/mulled-v2-e5d375990341c5aef3c9aff74f96f66f65375ef6:876eb6f1d38fbf578296ea94e5aede4e317939e7-0"
+environment = params.enable_conda ? "bioconda::bwa-mem2=2.1--he513fc3_0 bioconda::samtools=1.11--h6270b1f_0" : null
+container = "quay.io/biocontainers/mulled-v2-e5d375990341c5aef3c9aff74f96f66f65375ef6:e6f0d20c9d78572ddbbf00d8767ee6ff865edd4e-0"
+if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/mulled-v2-e5d375990341c5aef3c9aff74f96f66f65375ef6:e6f0d20c9d78572ddbbf00d8767ee6ff865edd4e-0"
 
 process BWAMEM2_MEM {
     label 'process_high'
