@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#241](https://github.com/nf-core/sarek/pull/241), [#248](https://github.com/nf-core/sarek/pull/248), [#250](https://github.com/nf-core/sarek/pull/250), [#257](https://github.com/nf-core/sarek/pull/257), [#259](https://github.com/nf-core/sarek/pull/259) - Add modules and sub workflow for preprocessing
 - [#242](https://github.com/nf-core/sarek/pull/242), [#244](https://github.com/nf-core/sarek/pull/244), [#245](https://github.com/nf-core/sarek/pull/245), [#246](https://github.com/nf-core/sarek/pull/246), [#247](https://github.com/nf-core/sarek/pull/247), [#249](https://github.com/nf-core/sarek/pull/249), [#252](https://github.com/nf-core/sarek/pull/252), [#256](https://github.com/nf-core/sarek/pull/256), [#263](https://github.com/nf-core/sarek/pull/263), [#264](https://github.com/nf-core/sarek/pull/264), [#283](https://github.com/nf-core/sarek/pull/283), [#285](https://github.com/nf-core/sarek/pull/285) - Refactor `dsl2` branch
 - [#257](https://github.com/nf-core/sarek/pull/257) - Use a params modules config file
-- [#266](https://github.com/nf-core/sarek/pull/266), [#285](https://github.com/nf-core/sarek/pull/285) - Add modules and sub workflow for variant calling
+- [#266](https://github.com/nf-core/sarek/pull/266), [#285](https://github.com/nf-core/sarek/pull/285), [#297](https://github.com/nf-core/sarek/pull/297)  - Add modules and sub workflow for variant calling
 - [#333](https://github.com/nf-core/sarek/pull/333) - Bump `Sarek` version to `3.0dev`
 - [#334](https://github.com/nf-core/sarek/pull/334) - Sync `dsl2` and `dev` branches
 
