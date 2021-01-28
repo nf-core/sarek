@@ -3165,6 +3165,9 @@ sequenza_out = sequenza_out.groupTuple(by:[0,1,2])
 //sequenza_out = sequenza_out.dump(tag: "sequenza")
 
 process merge_seqz_files{
+    label 'cpus_4'
+
+    module 'pigz/2.4'
 
     tag "${idSampleTumor}_vs_${idSampleNormal}_merge"
 
@@ -3179,7 +3182,7 @@ process merge_seqz_files{
     head -n 1 "\${my_array[0]}" | gzip > ${idSampleTumor}_vs_${idSampleNormal}.seqz.gz
     for file in "\${my_array[@]}"
     do
-	tail -n +2 "\$file" | gzip >> ${idSampleTumor}_vs_${idSampleNormal}.seqz.gz
+	tail -n +2 "\$file" | pigz >> ${idSampleTumor}_vs_${idSampleNormal}.seqz.gz
     done
     """
 }
