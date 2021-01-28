@@ -141,6 +141,8 @@
   - [--awsqueue](#--awsqueue)
   - [--awsregion](#--awsregion)
   - [--awscli](#--awscli)
+- [Troubleshooting](#troubleshooting)
+  - [Spark related issues](#spark)
 
 ## Running the pipeline
 
@@ -1737,3 +1739,41 @@ The [AWS CLI](https://www.nextflow.io/docs/latest/awscloud.html#aws-cli-installa
 Default: `/home/ec2-user/miniconda/bin/aws`.
 
 Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a S3 storage bucket of your choice - you'll get an error message notifying you if you didn't.
+
+## Troubleshooting
+
+### Spark related issues
+
+If you have problems running processes that make use of Spark such as ```MarkDuplicates```.
+You are probably experiencing issues with the limit of open files in your system.
+You can check your current limit by typing the following:
+
+```bash
+ulimit -n
+```
+
+The default limit size is usually 1024 which is quite low to run Spark jobs.
+In order to increase the size limit permanently you can:
+
+Edit the file ```/etc/security/limits.conf``` and add the lines:
+
+```bash
+*     soft   nofile  65535
+*     hard   nofile  65535
+```
+
+Edit the file ```/etc/sysctl.conf``` and add the line:
+
+```bash
+fs.file-max = 65535
+```
+
+Edit the file ```/etc/sysconfig/docker``` and add the new limits to OPTIONS like this:
+
+```bash
+OPTIONS=”—default-ulimit nofile=65535:65535"
+```
+
+Re-start your session.
+
+Note that the way to increase the open file limit in your system may be slightly different or require additional steps.

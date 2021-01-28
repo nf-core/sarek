@@ -29,6 +29,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - [#272](https://github.com/nf-core/sarek/pull/272) - Fix annotation `--tools merge` issue
 - [#279](https://github.com/nf-core/sarek/pull/279) - Fix issue with `--step prepare_recalibration` [#267](https://github.com/nf-core/sarek/issues/267)
 - [#280](https://github.com/nf-core/sarek/pull/280) - Use HTML codes instead of `<` and `>` in docs
+- [#293](https://github.com/nf-core/sarek/pull/293) - Fix typo issue when printing infos [#292](https://github.com/nf-core/sarek/issues/292)
+- [#309](https://github.com/nf-core/sarek/pull/309) - Fixed concatenation of many VCF files
+- Fix Github Actions not running after November 16, 2020 (deprecated Github Actions API [#739](https://github.com/nf-core/tools/issues/739)
 
 ### Removed
 
