@@ -1370,7 +1370,7 @@ tsv_bam_indexed_sample
 // STEP 2: MARKING DUPLICATES
 
 process MarkDuplicates {
-    label 'cpus_16'
+    label 'process_high'
 
     tag "${idPatient}-${idSample}"
 
@@ -1910,8 +1910,7 @@ samtoolsStatsReport = samtoolsStatsReport.dump(tag:'SAMTools')
 bamBamQC = bamMappedBamQC.mix(bam_recalibrated_bamqc)
 
 process BamQC {
-    label 'memory_max'
-    label 'cpus_16'
+    label 'process_high'
 
     tag "${idPatient}-${idSample}"
 
@@ -1929,7 +1928,7 @@ process BamQC {
     script:
     use_bed = params.target_bed ? "-gff ${targetBED}" : ''
     """
-    qualimap --java-mem-size=${task.memory.toGiga()}G \
+    qualimap --java-mem-size=48G \
         bamqc \
         -bam ${bam} \
         --paint-chromosome-limits \
@@ -2416,7 +2415,7 @@ vcfFreeBayes = vcfFreeBayes.groupTuple(by:[0,1,2])
 process Mutect2 {
     tag "${idSampleTumor}_vs_${idSampleNormal}-${intervalBed.baseName}"
 
-    label 'cpus_1'
+    label 'process_high'
 
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from pairBamMutect2
@@ -2746,7 +2745,7 @@ process platypus {
     script:
 	intervalsOptions = params.no_intervals ? "" : "--regions=${intervalBed}.txt"
     """
-	if [[ $intervalsOptions == "*regions*" ]]; then
+	if [[ -f  == ${intervalBed} ]]; then
 	    awk 'BEGIN{OFS=""}{print \$1,":",\$2,"-",\$3}' ${intervalBed} > ${intervalBed}.txt
     fi
 	
@@ -3222,6 +3221,8 @@ process sequenza_seqz_binning {
 
 process sequenza_initial_fit {
     
+	label 'process_medium'  
+	
 	tag "${idPatient}_${idSampleTumor}_seqz_initial_fit"
 
     publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/initial_fit", mode: params.publish_dir_mode
