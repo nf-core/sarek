@@ -2,17 +2,20 @@
 
 > **An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing**
 
-[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A520.11.0--edge-brightgreen.svg)](https://www.nextflow.io/)
-[![nf-core](https://img.shields.io/badge/nf--core-pipeline-brightgreen.svg)](https://nf-co.re/)
-[![DOI](https://zenodo.org/badge/184289291.svg)](https://zenodo.org/badge/latestdoi/184289291)
-
-[![GitHub Actions CI status](https://github.com/nf-core/sarek/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22nf-core+CI%22)
-[![GitHub Actions Linting status](https://github.com/nf-core/sarek/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22nf-core+linting%22)
+[![GitHub Actions CI Status](https://github.com/nf-core/sarek/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22nf-core+CI%22)
+[![GitHub Actions Linting Status](https://github.com/nf-core/sarek/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22nf-core+linting%22)
 [![CircleCi build status](https://img.shields.io/circleci/project/github/nf-core/sarek?logo=circleci)](https://circleci.com/gh/nf-core/sarek/)
+<!-- [![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/sarek/results) -->
 
-[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](https://bioconda.github.io/)
-[![Docker](https://img.shields.io/docker/automated/nfcore/sarek.svg)](https://hub.docker.com/r/nfcore/sarek)
+[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A520.11.0--edge-23aa62.svg)](https://www.nextflow.io/)
+[![Run with Conda](http://img.shields.io/badge/run%20with-conda-3EB049?logo=anaconda)](https://docs.conda.io/en/latest/)
+[![Run with Docker](https://img.shields.io/badge/run%20with-docker-0db7ed?logo=docker)](https://www.docker.com/)
+[![Run with Singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg)](https://sylabs.io/docs/)
+
+[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.1400710-1073c8)](https://doi.org/10.5281/zenodo.1400710)
 [![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23sarek-4A154B?logo=slack)](https://nfcore.slack.com/channels/sarek)
+[![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?logo=twitter)](https://twitter.com/nf_core)
+[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?logo=youtube)](https://www.youtube.com/c/nf-core)
 
 ## Introduction
 
@@ -22,11 +25,27 @@ Sarek can also handle tumour / normal pairs and could include additional relapse
 
 The pipeline is built using [`Nextflow`](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with `Docker` containers making installation trivial and results highly reproducible.
 
+<!-- On release, automated continuous integration tests run the pipeline on a [full-sized dataset](https://github.com/nf-core/test-datasets/tree/sarek#full-test-dataset-origin) on the AWS cloud infrastructure.
+This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources.
+The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/sarek/results). -->
+
+It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/nf-core-sarek) and [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek).
+
+## Pipeline Summary
+
+By default, the pipeline currently performs the following:
+
+* Sequencing quality control (`FastQC`)
+* Map Reads to Reference (`BWA mem`)
+* Mark Duplicates (`GATK MarkDuplicatesSpark`)
+* Base (Quality Score) Recalibration (`GATK BaseRecalibrator`, `GATK ApplyBQSR`)
+* Preprocessing quality control (`samtools stats`)
+* Preprocessing quality control (`Qualimap bamqc`)
+* Overall pipeline run summaries (`MultiQC`)
+
 <p align="center">
     <img title="Sarek Workflow" src="docs/images/sarek_workflow.png" width=40%>
 </p>
-
-It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/nf-core-sarek) and [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek).
 
 ## Quick Start
 
@@ -51,18 +70,6 @@ It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/nf-
     ```
 
 See [usage docs](https://nf-co.re/sarek/usage) for all of the available options when running the pipeline.
-
-## Pipeline Summary
-
-By default, the pipeline currently performs the following:
-
-* Sequencing quality control (`FastQC`)
-* Map Reads to Reference (`BWA mem`)
-* Mark Duplicates (`GATK MarkDuplicatesSpark`)
-* Base (Quality Score) Recalibration (`GATK BaseRecalibrator`, `GATK ApplyBQSR`)
-* Preprocessing quality control (`samtools stats`)
-* Preprocessing quality control (`Qualimap bamqc`)
-* Overall pipeline run summaries (`MultiQC`)
 
 ## Documentation
 
@@ -110,22 +117,18 @@ Helpful contributors:
 * [pallolason](https://github.com/pallolason)
 * [silviamorins](https://github.com/silviamorins)
 
-## Contributions & Support
-
-If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
-
-For further information or help, don't hesitate to get in touch on the [Slack `#sarek` channel](https://nfcore.slack.com/channels/sarek) (you can join with [this invite](https://nf-co.re/join/slack)), or contact us: [Maxime Garcia](mailto:maxime.garcia@scilifelab.se?subject=[GitHub]%20nf-core/sarek), [Szilvester Juhos](mailto:szilveszter.juhos@scilifelab.se?subject=[GitHub]%20nf-core/sarek)
-
-## CHANGELOG
-
-* [CHANGELOG](CHANGELOG.md)
-
 ## Acknowledgements
 
 [![Barntumörbanken](docs/images/BTB_logo.png)](https://ki.se/forskning/barntumorbanken) | [![SciLifeLab](docs/images/SciLifeLab_logo.png)](https://scilifelab.se)
 :-:|:-:
 [![National Genomics Infrastructure](docs/images/NGI_logo.png)](https://ngisweden.scilifelab.se/) | [![National Bioinformatics Infrastructure Sweden](docs/images/NBIS_logo.png)](https://nbis.se)
 [![QBiC](docs/images/QBiC_logo.png)](hhttps://www.qbic.uni-tuebingen.de) |
+
+## Contributions & Support
+
+If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
+
+For further information or help, don't hesitate to get in touch on the [Slack `#sarek` channel](https://nfcore.slack.com/channels/sarek) (you can join with [this invite](https://nf-co.re/join/slack)), or contact us: [Maxime Garcia](mailto:maxime.garcia@scilifelab.se?subject=[GitHub]%20nf-core/sarek), [Szilvester Juhos](mailto:szilveszter.juhos@scilifelab.se?subject=[GitHub]%20nf-core/sarek)
 
 ## Citations
 
@@ -144,3 +147,7 @@ You can cite the `nf-core` publication as follows:
 >
 > _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).
 > ReadCube: [Full Access Link](https://rdcu.be/b1GjZ)
+
+## CHANGELOG
+
+* [CHANGELOG](CHANGELOG.md)
