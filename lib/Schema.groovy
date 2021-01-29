@@ -4,19 +4,19 @@
 
 import groovy.json.JsonSlurper
 
-class JSON {
+class Schema {
     /*
      * This method tries to read a JSON params file
      */
-    private static LinkedHashMap params_get(String path) {
-        def usage = new LinkedHashMap()
+    private static LinkedHashMap params_load(String json_schema) {
+        def params_map = new LinkedHashMap()
         try {
-            usage = params_try(path)
+            params_map = params_read(json_schema)
         } catch (Exception e) {
             println "Could not read parameters settings from JSON. $e"
-            usage = new LinkedHashMap()
+            params_map = new LinkedHashMap()
         }
-        return usage
+        return params_map
     }
 
     /*
@@ -28,199 +28,201 @@ class JSON {
     Group
         -
     */
-    private static LinkedHashMap params_try(String path) throws Exception {
-
-        def json = new File(path).text
-        def Map usage = (Map) new JsonSlurper().parseText(json).get('properties')
-
+    private static LinkedHashMap params_read(String json_schema) throws Exception {
+        def json = new File(json_schema).text
+        def Map json_params = (Map) new JsonSlurper().parseText(json).get('definitions')
         /* Tree looks like this in nf-core schema
-        *  properties <- this is what the first get('properties') gets us
+         * definitions <- this is what the first get('definitions') gets us
              group 1
-               properties
+               title
                description
+                 properties
+                   parameter 1
+                     type
+                     description
+                   parameter 2
+                     type
+                     description
              group 2
-               properties
+               title
                description
-             group 3
-               properties
-               description
+                 properties
+                   parameter 1
+                     type
+                     description
         */
-        def output_map = new LinkedHashMap()
-
-        // Lets go deeper
-        usage.each { key, val ->
-            def Map submap = usage."$key".properties // Gets the property object of the group
+        def params_map = new LinkedHashMap()
+        json_params.each { key, val ->
+            def Map group = json_params."$key".properties // Gets the property object of the group
+            def title = json_params."$key".title
             def sub_params = new LinkedHashMap()
-            submap.each { innerkey, value ->
-                sub_params.put("$innerkey", "$value.description")
+            group.each { innerkey, value ->
+                sub_params.put(innerkey, value)
             }
-            output_map.put("$key", sub_params)
+            params_map.put(title, sub_params)
         }
-        return output_map
+        return params_map
     }
 
-    static String params_help(path, command) {
-          String output = "Typical pipeline command:\n\n"
-          output += "    ${command}\n\n"
-          output += params_beautify(params_get(path))
+    /*
+     * Get maximum number of characters across all parameter names
+     */
+    private static Integer params_max_chars(params_map) {
+        Integer max_chars = 0
+        for (group in params_map.keySet()) {
+            def group_params = params_map.get(group)  // This gets the parameters of that particular group
+            for (param in group_params.keySet()) {
+                if (param.size() > max_chars) {
+                    max_chars = param.size()
+                }
+            }
+        }
+        return max_chars
     }
 
-    static String params_beautify(usage) {
-        String output = ""
-        for (group in usage.keySet()) {
+    /*
+     * Beautify parameters for --help
+     */
+    private static String params_help(workflow, params, json_schema, command) {
+        String output  = Headers.nf_core(workflow, params.monochrome_logs) + "\n"
+        output        += "Typical pipeline command:\n\n"
+        output        += "    ${command}\n\n"
+        def params_map = params_load(json_schema)
+        def max_chars  = params_max_chars(params_map) + 1
+        for (group in params_map.keySet()) {
             output += group + "\n"
-            def params = usage.get(group)  // This gets the parameters of that particular group
-            for (par in params.keySet()) {
-                output+= "    \u001B[1m" + par.padRight(27) + "\u001B[1m" + params.get(par) + "\n"
+            def group_params = params_map.get(group)  // This gets the parameters of that particular group
+            for (param in group_params.keySet()) {
+                def type = "[" + group_params.get(param).type + "]"
+                def description = group_params.get(param).description
+                output += "    \u001B[1m--" +  param.padRight(max_chars) + "\u001B[1m" + type.padRight(10) + description + "\n"
             }
             output += "\n"
         }
+        output += Headers.dashed_line(params.monochrome_logs)
+        output += "\n\n" + Checks.citation(workflow)
+        output += "\n\n" + Headers.dashed_line(params.monochrome_logs)
         return output
     }
 
-    private static LinkedHashMap params_summary(workflow, params, run_name, step, tools, skip_qc, annotate_tools) {
-        def Map summary = [:]
-        if (workflow.revision) summary['Pipeline Release'] = workflow.revision
-        summary['Run Name']         = run_name ?: workflow.runName
-        summary['Max Resources']    = "${params.max_memory} memory, ${params.max_cpus} cpus, ${params.max_time} time per job"
-        if (workflow.containerEngine) summary['Container'] = "${workflow.containerEngine} - ${workflow.container}"
-        summary['Input']             = params.input
-        summary['Step']              = step
-        summary['Genome']            = params.genome
-        if (params.no_intervals && step != 'annotate')  summary['Intervals']         = 'Do not use'
-        summary['Nucleotides/s']     = params.nucleotides_per_second
-        if (params.sentieon)            summary['Sention']                           = "Using Sentieon for Preprocessing and/or Variant Calling"
-        if (params.skip_qc)             summary['QC tools skipped']                  = skip_qc.join(', ')
-        if (params.target_bed)          summary['Target BED']                        = params.target_bed
-        if (params.tools)               summary['Tools']                             = tools.join(', ')
-        if (params.trim_fastq || params.split_fastq) summary['Modify fastqs'] = "trim and/or split"
-
-        if (params.trim_fastq) {
-            summary['Fastq trim']         = "Fastq trim selected"
-            summary['Trim R1']            = "${params.clip_r1} bp"
-            summary['Trim R2']            = "${params.clip_r2} bp"
-            summary["Trim 3 R1"]         = "${params.three_prime_clip_r1} bp"
-            summary["Trim 3 R2"]         = "${params.three_prime_clip_r2} bp"
-            summary['NextSeq Trim']       = "${params.trim_nextseq} bp"
-            summary['Saved Trimmed Fastq'] = params.save_trimmed ? 'Yes' : 'No'
+    /*
+     * Groovy Map summarising parameters/workflow options used by the pipeline
+     */
+    private static LinkedHashMap params_summary_map(workflow, params, json_schema) {
+        // Get a selection of core Nextflow workflow options
+        def Map workflow_summary = [:]        
+        if (workflow.revision) {
+            workflow_summary['revision'] = workflow.revision
         }
-        if (params.split_fastq)          summary['Reads in fastq']                   = params.split_fastq
-
-        summary['MarkDuplicates'] = "Options"
-        summary['Java options'] = params.markdup_java_options
-        summary['GATK Spark']   = params.use_gatk_spark ? 'Yes' : 'No'
-
-        summary['Save BAMs mapped']   = params.save_bam_mapped ? 'Yes' : 'No'
-        summary['Skip MarkDuplicates']   = params.skip_markduplicates ? 'Yes' : 'No'
-
-        if ('ascat' in tools) {
-            summary['ASCAT'] = "Options"
-            if (params.ascat_purity) summary['purity'] = params.ascat_purity
-            if (params.ascat_ploidy) summary['ploidy'] = params.ascat_ploidy
+        workflow_summary['runName']      = workflow.runName
+        if (workflow.containerEngine) {
+            workflow_summary['containerEngine'] = "$workflow.containerEngine"
         }
-
-        if ('controlfreec' in tools) {
-            summary['Control-FREEC'] = "Options"
-            if (params.cf_window)    summary['window']             = params.cf_window
-            if (params.cf_coeff)     summary['coeff of variation'] = params.cf_coeff
-            if (params.cf_ploidy)    summary['ploidy']             = params.cf_ploidy
+        if (workflow.container) {
+            workflow_summary['container']       = "$workflow.container"
         }
+        workflow_summary['launchDir']    = workflow.launchDir
+        workflow_summary['workDir']      = workflow.workDir
+        workflow_summary['projectDir']   = workflow.projectDir
+        workflow_summary['userName']     = workflow.userName
+        workflow_summary['profile']      = workflow.profile
+        workflow_summary['configFiles']  = workflow.configFiles.join(', ')
+        
+        // Get pipeline parameters defined in JSON Schema
+        def Map params_summary = [:]
+        def blacklist  = ['hostnames']
+        def params_map = params_load(json_schema)
+        for (group in params_map.keySet()) {
+            def sub_params = new LinkedHashMap()
+            def group_params = params_map.get(group)  // This gets the parameters of that particular group
+            for (param in group_params.keySet()) {
+                if (params.containsKey(param) && !blacklist.contains(param)) {
+                    def params_value = params.get(param)
+                    def schema_value = group_params.get(param).default
+                    def param_type   = group_params.get(param).type
+                    if (schema_value == null) {
+                        if (param_type == 'boolean') {
+                            schema_value = false
+                        }
+                        if (param_type == 'string') {
+                            schema_value = ''
+                        }
+                        if (param_type == 'integer') {
+                            schema_value = 0
+                        }
+                    } else {
+                        if (param_type == 'string') {
+                            if (schema_value.contains('$projectDir') || schema_value.contains('${projectDir}')) {
+                                def sub_string = schema_value.replace('\$projectDir','')
+                                sub_string     = sub_string.replace('\${projectDir}','')
+                                if (params_value.contains(sub_string)) {
+                                    schema_value = params_value
+                                }
+                            }
+                            if (schema_value.contains('$params.outdir') || schema_value.contains('${params.outdir}')) {
+                                def sub_string = schema_value.replace('\$params.outdir','')
+                                sub_string     = sub_string.replace('\${params.outdir}','')
+                                if ("${params.outdir}${sub_string}" == params_value) {
+                                    schema_value = params_value
+                                }
+                            }
+                        }
+                    }
 
-        if ('haplotypecaller' in tools)             summary['GVCF']       = params.generate_gvcf ? 'Yes' : 'No'
-        if ('strelka' in tools && 'manta' in tools) summary['Strelka BP'] = params.no_strelka_bp ? 'No' : 'Yes'
-        if (params.pon && ('mutect2' in tools || (params.sentieon && 'tnscope' in tools))) summary['Panel of normals'] = params.pon
-
-        if (params.annotate_tools) summary['Tools to annotate'] = annotate_tools.join(', ')
-
-        if (params.annotation_cache) {
-            summary['Annotation cache'] = "Enabled"
-            if (params.snpeff_cache) summary['snpEff cache'] = params.snpeff_cache
-            if (params.vep_cache)    summary['VEP cache']    = params.vep_cache
+                    if (params_value != schema_value) {
+                        sub_params.put("$param", params_value)
+                    }
+                }
+            }
+            params_summary.put(group, sub_params)
         }
-
-        if (params.cadd_cache) {
-            summary['CADD cache'] = "Enabled"
-            if (params.cadd_indels)  summary['CADD indels']  = params.cadd_indels
-            if (params.cadd_wg_snvs) summary['CADD wg snvs'] = params.cadd_wg_snvs
-        }
-
-        if (params.genesplicer) summary['genesplicer'] = "Enabled"
-
-        if (params.igenomes_base && !params.igenomes_ignore) summary['AWS iGenomes base'] = params.igenomes_base
-        if (params.igenomes_ignore)                          summary['AWS iGenomes']      = "Do not use"
-        if (params.genomes_base && !params.igenomes_ignore)  summary['Genomes base']      = params.genomes_base
-
-        summary['Save Reference']    = params.save_reference ? 'Yes' : 'No'
-
-        if (params.ac_loci)                 summary['Loci']                    = params.ac_loci
-        if (params.ac_loci_gc)              summary['Loci GC']                 = params.ac_loci_gc
-        if (params.bwa)                     summary['BWA indexes']             = params.bwa
-        if (params.chr_dir)                 summary['Chromosomes']             = params.chr_dir
-        if (params.chr_length)              summary['Chromosomes length']      = params.chr_length
-        if (params.dbsnp)                   summary['dbsnp']                   = params.dbsnp
-        if (params.dbsnp_index)             summary['dbsnp index']             = params.dbsnp_index
-        if (params.dict)                    summary['dict']                    = params.dict
-        if (params.fasta)                   summary['fasta reference']         = params.fasta
-        if (params.fasta_fai)               summary['fasta index']             = params.fasta_fai
-        if (params.germline_resource)       summary['germline resource']       = params.germline_resource
-        if (params.germline_resource_index) summary['germline resource index'] = params.germline_resource_index
-        if (params.intervals)               summary['intervals']               = params.intervals
-        if (params.known_indels)            summary['known indels']            = params.known_indels
-        if (params.known_indels_index)      summary['known indels index']      = params.known_indels_index
-        if (params.mappability)             summary['Mappability']             = params.mappability
-        if (params.snpeff_cache)            summary['snpEff cache']            = params.snpeff_cache
-        if (params.snpeff_db)               summary['snpEff DB']               = params.snpeff_db
-        if (params.species)                 summary['snpEff species']          = params.species
-        if (params.vep_cache)               summary['VEP cache']               = params.vep_cache
-        if (params.vep_cache_version)       summary['VEP cache version']       = params.vep_cache_version
-
-        summary['Output dir']       = params.outdir
-        summary['Publish dir mode'] = params.publish_dir_mode
-        if (params.sequencing_center) summary['Sequenced by'] = params.sequencing_center
-
-        summary['Launch dir']       = workflow.launchDir
-        summary['Working dir']      = workflow.workDir
-        summary['Script dir']       = workflow.projectDir
-        summary['User']             = workflow.userName
-
-        if (params.multiqc_config) summary['MultiQC config'] = params.multiqc_config
-
-        summary['Config Profile'] = workflow.profile
-
-        if (params.config_profile_description) summary['Description']   = params.config_profile_description
-        if (params.config_profile_contact)     summary['Contact'] = params.config_profile_contact
-        if (params.config_profile_url)         summary['URL']     = params.config_profile_url
-
-        summary['Config Files'] = workflow.configFiles.join(', ')
-
-        if (params.email || params.email_on_fail) {
-            summary['E-mail Address']    = params.email
-            summary['E-mail on failure'] = params.email_on_fail
-            summary['MultiQC maxsize']   = params.max_multiqc_email_size
-        }
-
-        if (workflow.profile.contains('awsbatch')) {
-            summary['AWS Region']   = params.awsregion
-            summary['AWS Queue']    = params.awsqueue
-            summary['AWS CLI']      = params.awscli
-        }
-
-        return summary
+        return [ 'Core Nextflow options' : workflow_summary ] << params_summary
     }
 
-    static String params_mqc_summary(summary) {
-        String yaml_file_text  = """
-        id: 'nf-core-sarek-summary'
-        description: " - this information is collected when the pipeline is started."
-        section_name: 'nf-core/sarek Workflow Summary'
-        section_href: 'https://github.com/nf-core/sarek'
-        plot_type: 'html'
-        data: |
-            <dl class=\"dl-horizontal\">
-            ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
-            </dl>
-        """.stripIndent()
+    /*
+     * Beautify parameters for summary and return as string
+     */
+    private static String params_summary_log(workflow, params, json_schema) {
+        String output  = Headers.nf_core(workflow, params.monochrome_logs) + "\n"
+        def params_map = params_summary_map(workflow, params, json_schema)
+        def max_chars  = params_max_chars(params_map)
+        for (group in params_map.keySet()) {
+            def group_params = params_map.get(group)  // This gets the parameters of that particular group
+            if (group_params) {
+                output += group + "\n"
+                for (param in group_params.keySet()) {
+                    output += "    \u001B[1m" +  param.padRight(max_chars) + ": \u001B[1m" + group_params.get(param) + "\n"
+                }
+                output += "\n"
+            }
+        }
+        output += Headers.dashed_line(params.monochrome_logs)
+        output += "\n\n" + Checks.citation(workflow)
+        output += "\n\n" + Headers.dashed_line(params.monochrome_logs)
+        return output
+    }
 
+    static String params_summary_multiqc(workflow, summary) {
+        String summary_section = ''
+        for (group in summary.keySet()) {
+            def group_params = summary.get(group)  // This gets the parameters of that particular group
+            if (group_params) {
+                summary_section += "    <p style=\"font-size:110%\"><b>$group</b></p>\n"
+                summary_section += "    <dl class=\"dl-horizontal\">\n"
+                for (param in group_params.keySet()) {
+                    summary_section += "        <dt>$param</dt><dd><samp>${group_params.get(param) ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>\n"
+                }
+                summary_section += "    </dl>\n"
+            }
+        }
+
+        String yaml_file_text  = "id: '${workflow.manifest.name.replace('/','-')}-summary'\n"
+        yaml_file_text        += "description: ' - this information is collected when the pipeline is started.'\n"
+        yaml_file_text        += "section_name: '${workflow.manifest.name} Workflow Summary'\n"
+        yaml_file_text        += "section_href: 'https://github.com/${workflow.manifest.name}'\n"
+        yaml_file_text        += "plot_type: 'html'\n"
+        yaml_file_text        += "data: |\n"
+        yaml_file_text        += "${summary_section}"
         return yaml_file_text
     }
 }
