@@ -22,19 +22,20 @@ nf-core/sarek:
 
 nextflow.enable.dsl=2
 
-// Print help message if required
+////////////////////////////////////////////////////
+/* --               PRINT HELP                 -- */
+////////////////////////////////////////////////////
 
+def json_schema = "$projectDir/nextflow_schema.json"
 if (params.help) {
-    def command = "nextflow run nf-core/sarek -profile docker --input sample.tsv"
-    log.info Schema.params_help("$projectDir/nextflow_schema.json", command)
+    def command = "nextflow run nf-core/sarek -profile docker --input sample.tsv --genome GRCh37"
+    log.info Schema.params_help(workflow, params, json_schema, command)
     exit 0
 }
 
-/*
---------------------------------------------------------------------------------
-                        INCLUDE SAREK FUNCTIONS
---------------------------------------------------------------------------------
-*/
+////////////////////////////////////////////////////
+/* --          INCLUDE SAREK FUNCTIONS         -- */
+////////////////////////////////////////////////////
 
 include {
     check_parameter_existence;
@@ -50,11 +51,9 @@ include {
     has_extension
 } from './modules/local/functions'
 
-/*
---------------------------------------------------------------------------------
-                         SET UP CONFIGURATION VARIABLES
---------------------------------------------------------------------------------
-*/
+////////////////////////////////////////////////////
+/* --      SET UP CONFIGURATION VARIABLES      -- */
+////////////////////////////////////////////////////
 
 // Check parameters
 
@@ -165,11 +164,9 @@ if (tsv_path) {
     log.info "Trying automatic annotation on files in the VariantCalling/ directory"
 } else exit 1, 'No sample were defined, see --help'
 
-/*
---------------------------------------------------------------------------------
-                     UPDATE MODULES OPTIONS BASED ON PARAMS
---------------------------------------------------------------------------------
-*/
+////////////////////////////////////////////////////
+/* --  UPDATE MODULES OPTIONS BASED ON PARAMS  -- */
+////////////////////////////////////////////////////
 
 modules = params.modules
 
@@ -189,13 +186,13 @@ if (save_bam_mapped)            modules['samtools_index_mapping'].publish_files 
 if (params.skip_markduplicates) modules['baserecalibrator'].publish_files        = ['recal.table':'mapped']
 if (params.skip_markduplicates) modules['gatherbqsrreports'].publish_files       = ['recal.table':'mapped']
 
-/*
---------------------------------------------------------------------------------
-                               CHECKING REFERENCES
---------------------------------------------------------------------------------
-*/
+////////////////////////////////////////////////////
+/* --        REFERENCES PARAMETER VALUES       -- */
+////////////////////////////////////////////////////
+/* -- Initialize each params in params.genomes -- */
+/* --  catch the command line first if defined -- */
+////////////////////////////////////////////////////
 
-// Initialize each params in params.genomes, catch the command line first if it was defined
 params.ac_loci                 = params.genome ? params.genomes[params.genome].ac_loci                 ?: false : false
 params.ac_loci_gc              = params.genome ? params.genomes[params.genome].ac_loci_gc              ?: false : false
 params.bwa                     = params.genome ? params.genomes[params.genome].bwa                     ?: false : false
@@ -248,11 +245,9 @@ vep_cache         = params.vep_cache         ? file(params.vep_cache)        : f
 read_structure1   = params.read_structure1   ?: Channel.empty()
 read_structure2   = params.read_structure2   ?: Channel.empty()
 
-/*
---------------------------------------------------------------------------------
-                                PRINTING SUMMARY
---------------------------------------------------------------------------------
-*/
+////////////////////////////////////////////////////
+/* --             PRINTING SUMMARY             -- */
+////////////////////////////////////////////////////
 
 // Has the run name been specified by the user?
 // This has the bonus effect of catching both -name and --name
@@ -272,17 +267,9 @@ workflow_summary = Channel.value(workflow_summary)
 if ('mutect2' in tools && !(params.pon)) log.warn "[nf-core/sarek] Mutect2 was requested, but as no panel of normals were given, results will not be optimal"
 if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works if Sentieon is available where nf-core/sarek is run"
 
-/*
---------------------------------------------------------------------------------
-                              INCLUDE LOCAL MODULES
---------------------------------------------------------------------------------
-*/
-
-/*
---------------------------------------------------------------------------------
-                           INCLUDE LOCAL SUBWORKFLOWS
---------------------------------------------------------------------------------
-*/
+////////////////////////////////////////////////////
+/* --        INCLUDE LOCAL SUBWORKFLOWS        -- */
+////////////////////////////////////////////////////
 
 include { BUILD_INDICES } from './modules/local/subworkflow/build_indices' addParams(
     build_intervals_options:         modules['build_intervals'],
@@ -336,19 +323,15 @@ include { PAIR_VARIANT_CALLING } from './modules/local/subworkflow/pair_variant_
     strelka_options:                 modules['strelka_somatic']
 )
 
-/*
---------------------------------------------------------------------------------
-                             INCLUDE nf-core MODULES
---------------------------------------------------------------------------------
-*/
+////////////////////////////////////////////////////
+/* --          INCLUDE NF-CORE MODULES         -- */
+////////////////////////////////////////////////////
 
 include { MULTIQC }                       from './modules/nf-core/software/multiqc'
 
-/*
---------------------------------------------------------------------------------
-                          INCLUDE nf-core SUBWORKFLOWS
---------------------------------------------------------------------------------
-*/
+////////////////////////////////////////////////////
+/* --       INCLUDE NF-CORE SUBWORKFLOWS       -- */
+////////////////////////////////////////////////////
 
 include { QC_TRIM }                       from './modules/nf-core/subworkflow/qc_trim' addParams(
     fastqc_options:                  modules['fastqc'],
@@ -395,19 +378,16 @@ include { QC_TRIM }                       from './modules/nf-core/subworkflow/qc
 // (input_pair_reads, input_pair_readstrimgalore, input_pair_readsfastqc) = input_pair_reads.into(3)
 
 
-/*
---------------------------------------------------------------------------------
-                        RUN THE WORKFLOW
---------------------------------------------------------------------------------
-*/
+////////////////////////////////////////////////////
+/* --             RUN THE WORKFLOW             -- */
+////////////////////////////////////////////////////
 
 workflow {
 
-/*
---------------------------------------------------------------------------------
-                                  BUILD INDICES
---------------------------------------------------------------------------------
-*/
+
+    ////////////////////////////////////////////////////
+    /* --               BUILD INDICES              -- */
+    ////////////////////////////////////////////////////
 
     BUILD_INDICES(
         dbsnp,
@@ -432,11 +412,10 @@ workflow {
 
     msisensor_scan    = BUILD_INDICES.out.msisensor_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
-/*
---------------------------------------------------------------------------------
-                                  PREPROCESSING
---------------------------------------------------------------------------------
-*/
+
+    ////////////////////////////////////////////////////
+    /* --               PREPROCESSING              -- */
+    ////////////////////////////////////////////////////
 
     bam_mapped          = Channel.empty()
     bam_mapped_qc       = Channel.empty()
@@ -532,11 +511,9 @@ workflow {
 
     if (step == 'variantcalling') bam_variant_calling = input_sample
 
-    /*
-    --------------------------------------------------------------------------------
-                                GERMLINE VARIANT CALLING
-    --------------------------------------------------------------------------------
-    */
+    ////////////////////////////////////////////////////
+    /* --         GERMLINE VARIANT CALLING         -- */
+    ////////////////////////////////////////////////////
 
     GERMLINE_VARIANT_CALLING(
         bam_variant_calling,
@@ -550,11 +527,9 @@ workflow {
         target_bed_gz_tbi,
         tools)
 
-/*
---------------------------------------------------------------------------------
-                             SOMATIC VARIANT CALLING
---------------------------------------------------------------------------------
-*/
+    ////////////////////////////////////////////////////
+    /* --          SOMATIC VARIANT CALLING         -- */
+    ////////////////////////////////////////////////////
 
     // TUMOR_VARIANT_CALLING(
     //     bam_variant_calling,
@@ -581,18 +556,14 @@ workflow {
         target_bed_gz_tbi,
         tools)
 
-/*
---------------------------------------------------------------------------------
-                                   ANNOTATION
---------------------------------------------------------------------------------
-*/
+    ////////////////////////////////////////////////////
+    /* --                ANNOTATION                -- */
+    ////////////////////////////////////////////////////
 
 
-/*
---------------------------------------------------------------------------------
-                                     MULTIQC
---------------------------------------------------------------------------------
-*/
+    ////////////////////////////////////////////////////
+    /* --                  MULTIQC                 -- */
+    ////////////////////////////////////////////////////
 
     // GET_SOFTWARE_VERSIONS()
 
@@ -604,11 +575,9 @@ workflow {
         qc_reports.collect())
 }
 
-/*
---------------------------------------------------------------------------------
-                              SEND COMPLETION EMAIL
---------------------------------------------------------------------------------
-*/
+    ////////////////////////////////////////////////////
+    /* --           SEND COMPLETION EMAIL          -- */
+    ////////////////////////////////////////////////////
 
 workflow.onComplete {
     def multiqc_report = []
