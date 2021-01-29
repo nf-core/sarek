@@ -19,6 +19,7 @@ jobs:
       matrix:
         # Nextflow versions: check pipeline minimum
         nxf_ver: ['20.11.0-edge']
+        engine: ['docker']
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -29,9 +30,12 @@ jobs:
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
+      - name: Run --help
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test,${{ matrix.engine }} --help
       - name: Run pipeline with test data
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker
+          nextflow run ${GITHUB_WORKSPACE} -profile test,${{ matrix.engine }}
       - name: Show results
         run: ls -lR results
 
