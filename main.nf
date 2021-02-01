@@ -192,25 +192,25 @@ if (params.skip_markduplicates) modules['gatherbqsrreports'].publish_files      
 /* --  catch the command line first if defined -- */
 ////////////////////////////////////////////////////
 
-params.ac_loci                 = params.genome ? params.genomes[params.genome].ac_loci                 ?: false : false
-params.ac_loci_gc              = params.genome ? params.genomes[params.genome].ac_loci_gc              ?: false : false
-params.bwa                     = params.genome ? params.genomes[params.genome].bwa                     ?: false : false
-params.chr_dir                 = params.genome ? params.genomes[params.genome].chr_dir                 ?: false : false
-params.chr_length              = params.genome ? params.genomes[params.genome].chr_length              ?: false : false
-params.dbsnp                   = params.genome ? params.genomes[params.genome].dbsnp                   ?: false : false
-params.dbsnp_index             = params.genome ? params.genomes[params.genome].dbsnp_index             ?: false : false
-params.dict                    = params.genome ? params.genomes[params.genome].dict                    ?: false : false
-params.fasta                   = params.genome ? params.genomes[params.genome].fasta                   ?: false : false
-params.fasta_fai               = params.genome ? params.genomes[params.genome].fasta_fai               ?: false : false
-params.germline_resource       = params.genome ? params.genomes[params.genome].germline_resource       ?: false : false
-params.germline_resource_index = params.genome ? params.genomes[params.genome].germline_resource_index ?: false : false
-params.intervals               = params.genome ? params.genomes[params.genome].intervals               ?: false : false
-params.known_indels            = params.genome ? params.genomes[params.genome].known_indels            ?: false : false
-params.known_indels_index      = params.genome ? params.genomes[params.genome].known_indels_index      ?: false : false
-params.mappability             = params.genome ? params.genomes[params.genome].mappability             ?: false : false
-params.snpeff_db               = params.genome ? params.genomes[params.genome].snpeff_db               ?: false : false
-params.species                 = params.genome ? params.genomes[params.genome].species                 ?: false : false
-params.vep_cache_version       = params.genome ? params.genomes[params.genome].vep_cache_version       ?: false : false
+params.ac_loci                 = Checks.get_genome_attribute(params, 'ac_loci')
+params.ac_loci_gc              = Checks.get_genome_attribute(params, 'ac_loci_gc')
+params.bwa                     = Checks.get_genome_attribute(params, 'bwa')
+params.chr_dir                 = Checks.get_genome_attribute(params, 'chr_dir')
+params.chr_length              = Checks.get_genome_attribute(params, 'chr_length')
+params.dbsnp                   = Checks.get_genome_attribute(params, 'dbsnp')
+params.dbsnp_index             = Checks.get_genome_attribute(params, 'dbsnp_index')
+params.dict                    = Checks.get_genome_attribute(params, 'dict')
+params.fasta                   = Checks.get_genome_attribute(params, 'fasta')
+params.fasta_fai               = Checks.get_genome_attribute(params, 'fasta_fai')
+params.germline_resource       = Checks.get_genome_attribute(params, 'germline_resource')
+params.germline_resource_index = Checks.get_genome_attribute(params, 'germline_resource_index')
+params.intervals               = Checks.get_genome_attribute(params, 'intervals')
+params.known_indels            = Checks.get_genome_attribute(params, 'known_indels')
+params.known_indels_index      = Checks.get_genome_attribute(params, 'known_indels_index')
+params.mappability             = Checks.get_genome_attribute(params, 'mappability')
+params.snpeff_db               = Checks.get_genome_attribute(params, 'snpeff_db')
+params.species                 = Checks.get_genome_attribute(params, 'species')
+params.vep_cache_version       = Checks.get_genome_attribute(params, 'vep_cache_version')
 
 file("${params.outdir}/no_file").text = "no_file\n"
 
