@@ -3,18 +3,18 @@ include { initOptions; saveFiles; getSoftwareName } from './../functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-environment = params.enable_conda ? "bioconda::gatk4-spark=4.1.8.1" : null
-container = "quay.io/biocontainers/gatk4-spark:4.1.8.1--0"
-if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/gatk4-spark:4.1.8.1--0"
-
 process GATK_GENOTYPEGVCF {
     tag "${meta.id}"
 
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda environment
-    container container
+    conda (params.enable_conda ? "bioconda::gatk4-spark=4.1.8.1" : null)
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/gatk4-spark:4.1.8.1--0"
+    } else {
+        container "quay.io/biocontainers/gatk4-spark:4.1.8.1--0"
+    }
 
     input:
         tuple val(meta), path(interval), path(gvcf)

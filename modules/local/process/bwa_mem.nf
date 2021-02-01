@@ -4,10 +4,6 @@ include { initOptions; saveFiles; getSoftwareName } from './../../nf-core/softwa
 params.options = [:]
 def options    = initOptions(params.options)
 
-environment = params.enable_conda ? "bioconda::bwa=0.7.17 bioconda::samtools=1.10" : null
-container = "quay.io/biocontainers/mulled-v2-fe8faa35dbf6dc65a0f7f5d4ea12e31a79f73e40:eabfac3657eda5818bae4090db989e3d41b01542-0"
-if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/mulled-v2-fe8faa35dbf6dc65a0f7f5d4ea12e31a79f73e40:eabfac3657eda5818bae4090db989e3d41b01542-0"
-
 process BWA_MEM {
     label 'process_high'
 
@@ -17,8 +13,12 @@ process BWA_MEM {
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
 
-    conda environment
-    container container
+    conda (params.enable_conda ? "bioconda::bwa=0.7.17 bioconda::samtools=1.10" : null)
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/mulled-v2-fe8faa35dbf6dc65a0f7f5d4ea12e31a79f73e40:eabfac3657eda5818bae4090db989e3d41b01542-0"
+    } else {
+        container "quay.io/biocontainers/mulled-v2-fe8faa35dbf6dc65a0f7f5d4ea12e31a79f73e40:eabfac3657eda5818bae4090db989e3d41b01542-0"
+    }
 
     input:
         tuple val(meta), path(reads)

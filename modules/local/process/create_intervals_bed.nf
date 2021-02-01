@@ -4,18 +4,18 @@ include { has_extension } from '../functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-environment = params.enable_conda ? "anaconda::gawk=5.1.0" : null
-container = "quay.io/biocontainers/gawk:5.1.0"
-if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/gawk:5.1.0"
-
 process CREATE_INTERVALS_BED {
     tag "${intervals}"
 
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:"false") }
 
-    conda environment
-    container container
+    conda (params.enable_conda ? "anaconda::gawk=5.1.0" : null)
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/gawk:5.1.0"
+    } else {
+        container "quay.io/biocontainers/gawk:5.1.0"
+    }
 
     input:
         path intervals

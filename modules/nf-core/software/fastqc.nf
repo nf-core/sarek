@@ -4,10 +4,6 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-environment = params.enable_conda ? "bioconda::fastqc=0.11.9" : null
-container = "quay.io/biocontainers/fastqc:0.11.9--0"
-if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/fastqc:0.11.9--0"
-
 process FASTQC {
     label 'process_medium'
     label 'cpus_2'
@@ -17,8 +13,12 @@ process FASTQC {
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda environment
-    container container
+    conda (params.enable_conda ? "bioconda::fastqc=0.11.9" : null)
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/fastqc:0.11.9--0"
+    } else {
+        container "quay.io/biocontainers/fastqc:0.11.9--0"
+    }
 
     input:
         tuple val(meta), path(reads)

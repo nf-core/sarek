@@ -3,10 +3,6 @@ include { initOptions; saveFiles; getSoftwareName } from './../../nf-core/softwa
 params.options = [:]
 def options    = initOptions(params.options)
 
-environment = params.enable_conda ? "bioconda::htslib=1.11" : null
-container = "quay.io/biocontainers/htslib:1.11--hd3b49d5_0"
-if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/htslib:1.11--hd3b49d5_0"
-
 process CONCAT_VCF {
     label 'cpus_8'
 
@@ -15,8 +11,12 @@ process CONCAT_VCF {
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda environment
-    container container
+    conda (params.enable_conda ? "bioconda::htslib=1.11" : null)
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/htslib:1.11--hd3b49d5_0"
+    } else {
+        container "quay.io/biocontainers/htslib:1.11--hd3b49d5_0"
+    }
 
     input:
         tuple val(meta), path(vcf)
