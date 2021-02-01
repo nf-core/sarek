@@ -68,9 +68,10 @@ class Checks {
     private static String citation(workflow) {
         return "If you use ${workflow.manifest.name} for your analysis please cite:\n\n" +
                "* The pipeline\n" + 
-               "  https://doi.org/10.5281/zenodo.1400710\n\n" +
+               "  https://doi.org/10.12688/f1000research.16665.2\n" +
+               "  https://doi.org/10.5281/zenodo.4468605\n\n" +
                "* The nf-core framework\n" +
-               "  https://dx.doi.org/10.1038/s41587-020-0439-x\n" +
+               "  https://doi.org/10.1038/s41587-020-0439-x\n\n" +
                "* Software dependencies\n" +
                "  https://github.com/${workflow.manifest.name}/blob/master/CITATIONS.md"
     }
