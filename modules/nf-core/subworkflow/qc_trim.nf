@@ -4,8 +4,8 @@
 params.fastqc_options     = [:]
 params.trimgalore_options = [:]
 
-include { FASTQC     } from '../software/fastqc/main' addParams(options: params.fastqc_options)
-include { TRIMGALORE } from '../software/trimgalore'  addParams(options: params.trimgalore_options)
+include { FASTQC     } from '../software/fastqc/main'     addParams(options: params.fastqc_options)
+include { TRIMGALORE } from '../software/trimgalore/main' addParams(options: params.trimgalore_options)
 
 workflow QC_TRIM {
     take:
