@@ -28,7 +28,7 @@ nextflow.enable.dsl=2
 
 def json_schema = "$projectDir/nextflow_schema.json"
 if (params.help) {
-    def command = "nextflow run nf-core/sarek -profile docker --input sample.tsv --genome GRCh37"
+    def command = "nextflow run nf-core/sarek -profile docker --input sample.tsv --genome GRCh38"
     log.info Schema.params_help(workflow, params, json_schema, command)
     exit 0
 }
