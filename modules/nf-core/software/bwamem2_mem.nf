@@ -1,14 +1,13 @@
-include { initOptions; saveFiles; getSoftwareName } from './../../nf-core/software/functions'
+include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
 def options    = initOptions(params.options)
 
 process BWAMEM2_MEM {
+    tag "$meta.id"
     label 'process_high'
-
-    tag "${meta.id}"
-
-    publishDir params.outdir, mode: params.publish_dir_mode,
+    publishDir "${params.outdir}",
+        mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     conda (params.enable_conda ? "bioconda::bwa-mem2=2.1--he513fc3_0 bioconda::samtools=1.11--h6270b1f_0" : null)
@@ -19,29 +18,28 @@ process BWAMEM2_MEM {
     }
 
     input:
-        tuple val(meta), path(reads)
-        path bwa
-        path fasta
-        path fai
+    tuple val(meta), path(reads)
+    path  index
+    path  fasta
+    path  fai
 
     output:
-        tuple val(meta), path("*.bam")
+    tuple val(meta), path("*.bam"), emit: bam
+    path  "*.version.txt"         , emit: version
 
     script:
-    CN = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
-    readGroup = "@RG\\tID:${meta.run}\\t${CN}PU:${meta.run}\\tSM:${meta.sample}\\tLB:${meta.sample}\\tPL:ILLUMINA"
-    extra = meta.status == 1 ? "-B 3" : ""
+    def software   = getSoftwareName(task.process)
+    def prefix     = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def read_group = meta.read_group ? "-R ${meta.read_group}" : ""
     """
     bwa-mem2 mem \
-        ${options.args} \
-        -R \"${readGroup}\" \
-        ${extra} \
-        -t ${task.cpus} \
-        ${fasta} ${reads} | \
-    samtools sort --threads ${task.cpus} -m 2G - > ${meta.id}.bam
+        $options.args \
+        $read_group \
+        -t $task.cpus \
+        $fasta \
+        $reads \
+        | samtools $options.args2 --threads $task.cpus -o ${prefix}.bam -
 
-    # samtools index ${meta.id}.bam
-
-    echo \$(bwa-mem2 version 2>&1) > bwa-mem2.version.txt
+    echo \$(bwa-mem2 version 2>&1) > ${software}.version.txt
     """
 }

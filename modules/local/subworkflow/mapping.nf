@@ -15,8 +15,8 @@ params.samtools_stats_options    = [:]
 
 include { BWA_MEM as BWAMEM1_MEM }       from '../../nf-core/software/bwa/mem/main'        addParams(options: params.bwamem1_mem_options)
 include { BWA_MEM as BWAMEM1_MEM_T }     from '../../nf-core/software/bwa/mem/main'        addParams(options: params.bwamem1_mem_tumor_options)
-include { BWAMEM2_MEM }                  from '../process/bwamem2_mem'                     addParams(options: params.bwamem2_mem_options)
-include { BWAMEM2_MEM as BWAMEM2_MEM_T } from '../process/bwamem2_mem'                     addParams(options: params.bwamem2_mem_tumor_options)
+include { BWAMEM2_MEM }                  from '../../nf-core/software/bwamem2_mem.nf'      addParams(options: params.bwamem2_mem_options)
+include { BWAMEM2_MEM as BWAMEM2_MEM_T } from '../../nf-core/software/bwamem2_mem.nf'      addParams(options: params.bwamem2_mem_tumor_options)
 include { MERGE_BAM }                    from '../process/merge_bam'                       addParams(options: params.merge_bam_options)
 include { QUALIMAP_BAMQC }               from '../../nf-core/software/qualimap_bamqc'      addParams(options: params.qualimap_bamqc_options)
 include { SAMTOOLS_INDEX }               from '../../nf-core/software/samtools/index/main' addParams(options: params.samtools_index_options)
