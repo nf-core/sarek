@@ -4,19 +4,23 @@
 ================================================================================
 */
 
-params.bwamem1_mem_options    = [:]
-params.bwamem2_mem_options    = [:]
-params.merge_bam_options      = [:]
-params.qualimap_bamqc_options = [:]
-params.samtools_index_options = [:]
-params.samtools_stats_options = [:]
+params.bwamem1_mem_options       = [:]
+params.bwamem1_mem_tumor_options = [:]
+params.bwamem2_mem_options       = [:]
+params.bwamem2_mem_tumor_options = [:]
+params.merge_bam_options         = [:]
+params.qualimap_bamqc_options    = [:]
+params.samtools_index_options    = [:]
+params.samtools_stats_options    = [:]
 
-include { BWA_MEM as BWAMEM1_MEM } from '../process/bwa_mem'                         addParams(options: params.bwamem1_mem_options)
-include { BWAMEM2_MEM }            from '../process/bwamem2_mem'                     addParams(options: params.bwamem2_mem_options)
-include { MERGE_BAM }              from '../process/merge_bam'                       addParams(options: params.merge_bam_options)
-include { QUALIMAP_BAMQC }         from '../../nf-core/software/qualimap_bamqc'      addParams(options: params.qualimap_bamqc_options)
-include { SAMTOOLS_INDEX }         from '../../nf-core/software/samtools/index/main' addParams(options: params.samtools_index_options)
-include { SAMTOOLS_STATS }         from '../../nf-core/software/samtools/stats/main' addParams(options: params.samtools_stats_options)
+include { BWA_MEM as BWAMEM1_MEM }       from '../../nf-core/software/bwa/mem/main'        addParams(options: params.bwamem1_mem_options)
+include { BWA_MEM as BWAMEM1_MEM_T }     from '../../nf-core/software/bwa/mem/main'        addParams(options: params.bwamem1_mem_tumor_options)
+include { BWAMEM2_MEM }                  from '../process/bwamem2_mem'                     addParams(options: params.bwamem2_mem_options)
+include { BWAMEM2_MEM as BWAMEM2_MEM_T } from '../process/bwamem2_mem'                     addParams(options: params.bwamem2_mem_tumor_options)
+include { MERGE_BAM }                    from '../process/merge_bam'                       addParams(options: params.merge_bam_options)
+include { QUALIMAP_BAMQC }               from '../../nf-core/software/qualimap_bamqc'      addParams(options: params.qualimap_bamqc_options)
+include { SAMTOOLS_INDEX }               from '../../nf-core/software/samtools/index/main' addParams(options: params.samtools_index_options)
+include { SAMTOOLS_STATS }               from '../../nf-core/software/samtools/stats/main' addParams(options: params.samtools_stats_options)
 
 workflow MAPPING {
     take:
@@ -35,13 +39,24 @@ workflow MAPPING {
     bam_mapped_index = Channel.empty()
     bam_reports      = Channel.empty()
 
+    reads_input.groupTuple(by: [0,1])
+            .branch{
+                normal: it[0].status == 0
+                tumor:  it[0].status == 1
+            }.set{ reads_input_status }
+
     if (step == "mapping") {
         bam_bwamem1 = Channel.empty()
         bam_bwamem2 = Channel.empty()
 
         if (params.aligner == "bwa-mem") {
-            BWAMEM1_MEM(reads_input, bwa, fasta, fai)
-            bam_bwamem1 = BWAMEM1_MEM.out.bam
+            BWAMEM1_MEM(reads_input_status.normal, bwa, fasta, fai)
+            bam_bwamem1_n = BWAMEM1_MEM.out.bam
+
+            BWAMEM1_MEM_T(reads_input_status.tumor, bwa, fasta, fai)
+            bam_bwamem1_t = BWAMEM1_MEM_T.out.bam
+
+            bam_bwamem1 = bam_bwamem1_n.mix(bam_bwamem1_t)
         } else {
             BWAMEM2_MEM(reads_input, bwa, fasta, fai)
             bam_bwamem2 = BWAMEM2_MEM.out

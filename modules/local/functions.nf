@@ -123,14 +123,17 @@ def extract_fastq_from_dir(folder) {
 
     fastq = fastq.map{ run, pair ->
         def meta = [:]
-        meta.patient = sample
-        meta.sample  = meta.patient
-        meta.gender  = 'ZZ' // unused
-        meta.status  = 0    // normal (not tumor)
-        meta.run     = run
-        meta.id      = "${meta.sample}-${meta.run}"
-        def read1    = pair[0]
-        def read2    = pair[1]
+        meta.patient    = sample
+        meta.sample     = meta.patient
+        meta.gender     = 'ZZ' // unused
+        meta.status     = 0    // normal (not tumor)
+        meta.run        = run
+        meta.id         = "${meta.sample}-${meta.run}"
+        def read1       = pair[0]
+        def read2       = pair[1]
+        def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
+        def read_group  = "\"@RG\\tID:${meta.run}\\t${CN}PU:${meta.run}\\tSM:${meta.sample}\\tLB:${meta.sample}\\tPL:ILLUMINA\""
+        meta.read_group = read_group
 
         return [meta, [read1, read2]]
     }
@@ -144,14 +147,18 @@ def extract_fastq(tsvFile) {
         .splitCsv(sep: '\t')
         .map { row ->
             def meta = [:]
-            meta.patient = row[0]
-            meta.gender  = row[1]
-            meta.status  = return_status(row[2].toInteger())
-            meta.sample  = row[3]
-            meta.run     = row[4]
-            meta.id      = "${meta.sample}-${meta.run}"
-            def read1    = return_file(row[5])
-            def read2    = "null"
+            meta.patient    = row[0]
+            meta.gender     = row[1]
+            meta.status     = return_status(row[2].toInteger())
+            meta.sample     = row[3]
+            meta.run        = row[4]
+            meta.id         = "${meta.sample}-${meta.run}"
+            def read1       = return_file(row[5])
+            def read2       = "null"
+            def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
+            def read_group  = "\"@RG\\tID:${meta.run}\\t${CN}PU:${meta.run}\\tSM:${meta.sample}\\tLB:${meta.sample}\\tPL:ILLUMINA\""
+            meta.read_group = read_group
+
             if (has_extension(read1, "fastq.gz") || has_extension(read1, "fq.gz") || has_extension(read1, "fastq") || has_extension(read1, "fq")) {
                 check_number_of_item(row, 7)
                 read2 = return_file(row[6])

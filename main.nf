@@ -274,7 +274,9 @@ include { BUILD_INDICES } from './modules/local/subworkflow/build_indices' addPa
 )
 include { MAPPING } from './modules/local/subworkflow/mapping' addParams(
     bwamem1_mem_options:             modules['bwa_mem1_mem'],
+    bwamem1_mem_tumor_options:       modules['bwa_mem1_mem_tumor'],
     bwamem2_mem_options:             modules['bwa_mem2_mem'],
+    bwamem2_mem_tumor_options:       modules['bwa_mem2_mem_tumor'],
     merge_bam_options:               modules['merge_bam_mapping'],
     qualimap_bamqc_options:          modules['qualimap_bamqc_mapping'],
     samtools_index_options:          modules['samtools_index_mapping'],
