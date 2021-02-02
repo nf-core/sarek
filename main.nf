@@ -314,7 +314,7 @@ include { PAIR_VARIANT_CALLING } from './modules/local/subworkflow/pair_variant_
 /* --          INCLUDE NF-CORE MODULES         -- */
 ////////////////////////////////////////////////////
 
-include { MULTIQC }                       from './modules/nf-core/software/multiqc'
+include { MULTIQC }                       from './modules/nf-core/software/multiqc/main'
 
 ////////////////////////////////////////////////////
 /* --       INCLUDE NF-CORE SUBWORKFLOWS       -- */

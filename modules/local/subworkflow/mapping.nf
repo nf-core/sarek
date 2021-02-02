@@ -11,12 +11,12 @@ params.qualimap_bamqc_options = [:]
 params.samtools_index_options = [:]
 params.samtools_stats_options = [:]
 
-include { BWA_MEM as BWAMEM1_MEM } from '../process/bwa_mem'                    addParams(options: params.bwamem1_mem_options)
-include { BWAMEM2_MEM }            from '../process/bwamem2_mem'                addParams(options: params.bwamem2_mem_options)
-include { MERGE_BAM }              from '../process/merge_bam'                  addParams(options: params.merge_bam_options)
-include { QUALIMAP_BAMQC }         from '../../nf-core/software/qualimap_bamqc' addParams(options: params.qualimap_bamqc_options)
-include { SAMTOOLS_INDEX }         from '../../nf-core/software/samtools/index' addParams(options: params.samtools_index_options)
-include { SAMTOOLS_STATS }         from '../../nf-core/software/samtools/stats' addParams(options: params.samtools_stats_options)
+include { BWA_MEM as BWAMEM1_MEM } from '../process/bwa_mem'                         addParams(options: params.bwamem1_mem_options)
+include { BWAMEM2_MEM }            from '../process/bwamem2_mem'                     addParams(options: params.bwamem2_mem_options)
+include { MERGE_BAM }              from '../process/merge_bam'                       addParams(options: params.merge_bam_options)
+include { QUALIMAP_BAMQC }         from '../../nf-core/software/qualimap_bamqc'      addParams(options: params.qualimap_bamqc_options)
+include { SAMTOOLS_INDEX }         from '../../nf-core/software/samtools/index/main' addParams(options: params.samtools_index_options)
+include { SAMTOOLS_STATS }         from '../../nf-core/software/samtools/stats/main' addParams(options: params.samtools_stats_options)
 
 workflow MAPPING {
     take:
@@ -91,7 +91,9 @@ workflow MAPPING {
         
         MERGE_BAM(bam_bwa_multiple)
         bam_mapped       = bam_bwa_single.mix(MERGE_BAM.out.bam)
-        bam_mapped_index = SAMTOOLS_INDEX(bam_mapped)
+
+        SAMTOOLS_INDEX(bam_mapped)
+        bam_mapped_index = bam_mapped.join(SAMTOOLS_INDEX.out.bai)
 
         qualimap_bamqc = Channel.empty()
         samtools_stats = Channel.empty()
@@ -102,8 +104,8 @@ workflow MAPPING {
         }
 
         if (!skip_samtools) {
-            SAMTOOLS_STATS(bam_mapped)
-            samtools_stats = SAMTOOLS_STATS.out
+            SAMTOOLS_STATS(bam_mapped_index)
+            samtools_stats = SAMTOOLS_STATS.out.stats
         }
 
         bam_reports = samtools_stats.mix(qualimap_bamqc)
