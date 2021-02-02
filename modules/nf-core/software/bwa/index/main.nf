@@ -15,7 +15,7 @@ process BWA_INDEX {
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/bwa:0.7.17--hed695b0_7"
     } else {
-        container "biocontainers/bwa:0.7.17--hed695b0_7"
+        container "quay.io/biocontainers/bwa:0.7.17--hed695b0_7"
     }
 
     input:
