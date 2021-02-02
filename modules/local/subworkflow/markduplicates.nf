@@ -6,7 +6,8 @@
 
 params.markduplicates_options = [:]
 
-include { GATK_MARKDUPLICATES } from '../../nf-core/software/gatk/markduplicates' addParams(options: params.markduplicates_options)
+include { GATK_MARKDUPLICATES }       from '../../nf-core/software/gatk/markduplicates' addParams(options: params.markduplicates_options)
+include { GATK_MARKDUPLICATES_SPARK } from '../../nf-core/software/gatk/markduplicates' addParams(options: params.markduplicates_options)
 
 workflow MARKDUPLICATES {
     take:
@@ -20,10 +21,17 @@ workflow MARKDUPLICATES {
 
     if (step == "mapping") {
         if (!params.skip_markduplicates) {
-            GATK_MARKDUPLICATES(bam_mapped)
-            report_markduplicates = GATK_MARKDUPLICATES.out.report
-            bam_markduplicates    = GATK_MARKDUPLICATES.out.bam
-            tsv_markduplicates    = GATK_MARKDUPLICATES.out.tsv
+            if (params.use_gatk_spark) {
+                GATK_MARKDUPLICATES_SPARK(bam_mapped)
+                report_markduplicates = GATK_MARKDUPLICATES_SPARK.out.report
+                bam_markduplicates    = GATK_MARKDUPLICATES_SPARK.out.bam
+                tsv_markduplicates    = GATK_MARKDUPLICATES_SPARK.out.tsv
+            } else {
+                GATK_MARKDUPLICATES(bam_mapped)
+                report_markduplicates = GATK_MARKDUPLICATES.out.report
+                bam_markduplicates    = GATK_MARKDUPLICATES.out.bam
+                tsv_markduplicates    = GATK_MARKDUPLICATES.out.tsv
+            }
 
             // Creating TSV files to restart from this step
             tsv_markduplicates.collectFile(storeDir: "${params.outdir}/preprocessing/tsv") { meta ->
