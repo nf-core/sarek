@@ -45,11 +45,11 @@ workflow BUILD_INDICES{
 
     main:
 
-    result_bwa = Channel.empty()
+    result_bwa  = Channel.empty()
     version_bwa = Channel.empty()
     if (!(params.bwa) && 'mapping' in step)
         if (params.aligner == "bwa-mem") (result_bwa, version_bwa) = BWAMEM1_INDEX(fasta)
-        else                             result_bwa = BWAMEM2_INDEX(fasta)
+        else                             (result_bwa, version_bwa) = BWAMEM2_INDEX(fasta)
 
     result_dict = Channel.empty()
     if (!(params.dict) && !('annotate' in step) && !('controlfreec' in step))

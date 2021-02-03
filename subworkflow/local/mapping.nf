@@ -58,8 +58,13 @@ workflow MAPPING {
 
             bam_bwamem1 = bam_bwamem1_n.mix(bam_bwamem1_t)
         } else {
-            BWAMEM2_MEM(reads_input, bwa, fasta, fai)
-            bam_bwamem2 = BWAMEM2_MEM.out
+            BWAMEM2_MEM(reads_input_status.normal, bwa, fasta, fai)
+            bam_bwamem2_n = BWAMEM2_MEM.out.bam
+
+            BWAMEM2_MEM_T(reads_input_status.tumor, bwa, fasta, fai)
+            bam_bwamem2_t = BWAMEM2_MEM_T.out.bam
+
+            bam_bwamem2 = bam_bwamem2_n.mix(bam_bwamem2_t)
         }
 
         bam_bwa = bam_bwamem1.mix(bam_bwamem2)
