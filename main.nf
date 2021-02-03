@@ -258,7 +258,7 @@ if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works
 /* --        INCLUDE LOCAL SUBWORKFLOWS        -- */
 ////////////////////////////////////////////////////
 
-include { BUILD_INDICES } from './modules/local/subworkflow/build_indices' addParams(
+include { BUILD_INDICES } from './subworkflow/local/build_indices' addParams(
     build_intervals_options:         modules['build_intervals'],
     bwa_index_options:               modules['bwa_index'],
     bwamem2_index_options:           modules['bwamem2_index'],
@@ -272,7 +272,7 @@ include { BUILD_INDICES } from './modules/local/subworkflow/build_indices' addPa
     tabix_known_indels_options:      modules['tabix_known_indels'],
     tabix_pon_options:               modules['tabix_pon']
 )
-include { MAPPING } from './modules/local/subworkflow/mapping' addParams(
+include { MAPPING } from './subworkflow/local/mapping' addParams(
     bwamem1_mem_options:             modules['bwa_mem1_mem'],
     bwamem1_mem_tumor_options:       modules['bwa_mem1_mem_tumor'],
     bwamem2_mem_options:             modules['bwa_mem2_mem'],
@@ -282,30 +282,30 @@ include { MAPPING } from './modules/local/subworkflow/mapping' addParams(
     samtools_index_options:          modules['samtools_index_mapping'],
     samtools_stats_options:          modules['samtools_stats_mapping']
 )
-include { MARKDUPLICATES } from './modules/local/subworkflow/markduplicates' addParams(
+include { MARKDUPLICATES } from './subworkflow/local/markduplicates' addParams(
     markduplicates_options:          modules['markduplicates']
 )
-include { PREPARE_RECALIBRATION } from './modules/local/subworkflow/prepare_recalibration' addParams(
+include { PREPARE_RECALIBRATION } from './subworkflow/local/prepare_recalibration' addParams(
     baserecalibrator_options:        modules['baserecalibrator'],
     gatherbqsrreports_options:       modules['gatherbqsrreports']
 )
-include { RECALIBRATE } from './modules/local/subworkflow/recalibrate' addParams(
+include { RECALIBRATE } from './subworkflow/local/recalibrate' addParams(
     applybqsr_options:               modules['applybqsr'],
     merge_bam_options:               modules['merge_bam_recalibrate'],
     qualimap_bamqc_options:          modules['qualimap_bamqc_recalibrate'],
     samtools_index_options:          modules['samtools_index_recalibrate'],
     samtools_stats_options:          modules['samtools_stats_recalibrate']
 )
-include { GERMLINE_VARIANT_CALLING } from './modules/local/subworkflow/germline_variant_calling' addParams(
+include { GERMLINE_VARIANT_CALLING } from './subworkflow/local/germline_variant_calling' addParams(
     concat_gvcf_options:             modules['concat_gvcf'],
     concat_haplotypecaller_options:  modules['concat_haplotypecaller'],
     genotypegvcf_options:            modules['genotypegvcf'],
     haplotypecaller_options:         modules['haplotypecaller'],
     strelka_options:                 modules['strelka_germline']
 )
-// include { TUMOR_VARIANT_CALLING } from './modules/local/subworkflow/tumor_variant_calling' addParams(
+// include { TUMOR_VARIANT_CALLING } from './subworkflow/local/tumor_variant_calling' addParams(
 // )
-include { PAIR_VARIANT_CALLING } from './modules/local/subworkflow/pair_variant_calling' addParams(
+include { PAIR_VARIANT_CALLING } from './subworkflow/local/pair_variant_calling' addParams(
     manta_options:                   modules['manta_somatic'],
     msisensor_msi_options:           modules['msisensor_msi'],
     strelka_bp_options:              modules['strelka_somatic_bp'],
@@ -322,7 +322,7 @@ include { MULTIQC }                       from './modules/nf-core/software/multi
 /* --       INCLUDE NF-CORE SUBWORKFLOWS       -- */
 ////////////////////////////////////////////////////
 
-include { QC_TRIM }                       from './modules/nf-core/subworkflow/qc_trim' addParams(
+include { FASTQC_TRIMGALORE }             from './subworkflow/nf-core/fastqc_trimgalore' addParams(
     fastqc_options:                  modules['fastqc'],
     trimgalore_options:              modules['trimgalore']
 )
@@ -377,19 +377,19 @@ workflow {
     // trim only with `--trim_fastq`
     // additional options to be set up
 
-    QC_TRIM(
+    FASTQC_TRIMGALORE(
         input_sample,
         ('fastqc' in skip_qc || step != "mapping"),
         !(params.trim_fastq))
 
-    reads_input = QC_TRIM.out.reads
+    reads_input = FASTQC_TRIMGALORE.out.reads
 
     qc_reports = qc_reports.mix(
-        QC_TRIM.out.fastqc_html,
-        QC_TRIM.out.fastqc_zip,
-        QC_TRIM.out.trimgalore_html,
-        QC_TRIM.out.trimgalore_log,
-        QC_TRIM.out.trimgalore_zip)
+        FASTQC_TRIMGALORE.out.fastqc_html,
+        FASTQC_TRIMGALORE.out.fastqc_zip,
+        FASTQC_TRIMGALORE.out.trim_html,
+        FASTQC_TRIMGALORE.out.trim_log,
+        FASTQC_TRIMGALORE.out.trim_zip)
 
     // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA-MEM
 

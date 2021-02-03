@@ -1,5 +1,5 @@
-include { initOptions; saveFiles; getSoftwareName } from './../../nf-core/software/functions'
-include { has_extension } from '../functions'
+// Import generic module functions
+include { initOptions; saveFiles; getSoftwareName; has_extension } from './functions'
 
 params.options = [:]
 def options    = initOptions(params.options)

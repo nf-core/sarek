@@ -9,10 +9,10 @@ params.msisensor_msi_options          = [:]
 params.strelka_options                = [:]
 params.strelka_bp_options             = [:]
 
-include { MANTA_SOMATIC as MANTA }                       from '../../nf-core/software/manta/somatic'       addParams(options: params.manta_options)
-include { MSISENSOR_MSI }                                from '../../nf-core/software/msisensor/msi'       addParams(options: params.msisensor_msi_options)
-include { STRELKA_SOMATIC as STRELKA }                   from '../../nf-core/software/strelka/somatic'     addParams(options: params.strelka_options)
-include { STRELKA_SOMATIC_BEST_PRACTICES as STRELKA_BP } from '../../nf-core/software/strelka/somatic'     addParams(options: params.strelka_bp_options)
+include { MANTA_SOMATIC as MANTA }                       from '../../modules/nf-core/software/manta/somatic'       addParams(options: params.manta_options)
+include { MSISENSOR_MSI }                                from '../../modules/nf-core/software/msisensor/msi'       addParams(options: params.msisensor_msi_options)
+include { STRELKA_SOMATIC as STRELKA }                   from '../../modules/nf-core/software/strelka/somatic'     addParams(options: params.strelka_options)
+include { STRELKA_SOMATIC_BEST_PRACTICES as STRELKA_BP } from '../../modules/nf-core/software/strelka/somatic'     addParams(options: params.strelka_bp_options)
 
 workflow PAIR_VARIANT_CALLING {
     take:

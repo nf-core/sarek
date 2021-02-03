@@ -10,11 +10,11 @@ params.qualimap_bamqc_options = [:]
 params.samtools_index_options = [:]
 params.samtools_stats_options = [:]
 
-include { GATK_APPLYBQSR as APPLYBQSR } from '../../nf-core/software/gatk/applybqsr'      addParams(options: params.applybqsr_options)
-include { MERGE_BAM }                   from '../process/merge_bam'                       addParams(options: params.merge_bam_options)
-include { QUALIMAP_BAMQC }              from '../../nf-core/software/qualimap_bamqc'      addParams(options: params.qualimap_bamqc_options)
-include { SAMTOOLS_INDEX }              from '../../nf-core/software/samtools/index/main' addParams(options: params.samtools_index_options)
-include { SAMTOOLS_STATS }              from '../../nf-core/software/samtools/stats/main' addParams(options: params.samtools_stats_options)
+include { GATK_APPLYBQSR as APPLYBQSR } from '../../modules/nf-core/software/gatk/applybqsr'      addParams(options: params.applybqsr_options)
+include { MERGE_BAM }                   from '../../modules/local/merge_bam'                      addParams(options: params.merge_bam_options)
+include { QUALIMAP_BAMQC }              from '../../modules/nf-core/software/qualimap_bamqc'      addParams(options: params.qualimap_bamqc_options)
+include { SAMTOOLS_INDEX }              from '../../modules/nf-core/software/samtools/index/main' addParams(options: params.samtools_index_options)
+include { SAMTOOLS_STATS }              from '../../modules/nf-core/software/samtools/stats/main' addParams(options: params.samtools_stats_options)
 
 workflow RECALIBRATE {
     take:
