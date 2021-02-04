@@ -440,6 +440,7 @@ if ('controlfreec' in tools) {
 if ('haplotypecaller' in tools)             summary['GVCF']       = params.no_gvcf ? 'No' : 'Yes'
 if ('strelka' in tools && 'manta' in tools) summary['Strelka BP'] = params.no_strelka_bp ? 'No' : 'Yes'
 if (params.pon && ('mutect2' in tools || (params.sentieon && 'tnscope' in tools))) summary['Panel of normals'] = params.pon
+if ('platypus' in tools ) summary['Tumour enrichment factor'] = params.platypus_tef
 
 if (params.annotate_tools) summary['Tools to annotate'] = annotate_tools.join(', ')
 
@@ -3123,9 +3124,7 @@ process sequenza_utils_make_gc_wiggle {
 
 ch_seqzGC = params.seqz_gc ? Channel.value(file(params.seqz_gc)) : seqzGC_built
 
-(ch_seqzChr, ch_fai) = ch_fai.into(2)
-
-ch_seqzChr = ch_seqzChr
+ch_seqzChr = ch_fai
      .splitCsv(sep: "\t")
      .map{ chr -> chr[0] }
      .filter( ~/^chr\d+|^chr[X,Y]|^\d+|[X,Y]/ )
