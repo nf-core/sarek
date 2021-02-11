@@ -6,6 +6,7 @@ def options    = initOptions(params.options)
 process BWAMEM2_MEM {
     tag "$meta.id"
     label 'process_high'
+    label 'BWAMEM2_MEM'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
