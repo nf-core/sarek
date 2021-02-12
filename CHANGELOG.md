@@ -24,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- [#342](https://github.com/nf-core/sarek/pull/342) - Update `README.md`
+
 ### Deprecated
 
 ### Removed
