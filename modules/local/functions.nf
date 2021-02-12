@@ -123,14 +123,17 @@ def extract_fastq_from_dir(folder) {
 
     fastq = fastq.map{ run, pair ->
         def meta = [:]
-        meta.patient = sample
-        meta.sample  = meta.patient
-        meta.gender  = 'ZZ' // unused
-        meta.status  = 0    // normal (not tumor)
-        meta.run     = run
-        meta.id      = "${meta.sample}-${meta.run}"
-        def read1    = pair[0]
-        def read2    = pair[1]
+        meta.patient    = sample
+        meta.sample     = meta.patient
+        meta.gender     = 'ZZ' // unused
+        meta.status     = 0    // normal (not tumor)
+        meta.run        = run
+        meta.id         = "${meta.sample}-${meta.run}"
+        def read1       = pair[0]
+        def read2       = pair[1]
+        def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
+        def read_group  = "\"@RG\\tID:${meta.run}\\t${CN}PU:${meta.run}\\tSM:${meta.sample}\\tLB:${meta.sample}\\tPL:ILLUMINA\""
+        meta.read_group = read_group
 
         return [meta, [read1, read2]]
     }
@@ -144,14 +147,18 @@ def extract_fastq(tsvFile) {
         .splitCsv(sep: '\t')
         .map { row ->
             def meta = [:]
-            meta.patient = row[0]
-            meta.gender  = row[1]
-            meta.status  = return_status(row[2].toInteger())
-            meta.sample  = row[3]
-            meta.run     = row[4]
-            meta.id      = "${meta.sample}-${meta.run}"
-            def read1    = return_file(row[5])
-            def read2    = "null"
+            meta.patient    = row[0]
+            meta.gender     = row[1]
+            meta.status     = return_status(row[2].toInteger())
+            meta.sample     = row[3]
+            meta.run        = row[4]
+            meta.id         = "${meta.sample}-${meta.run}"
+            def read1       = return_file(row[5])
+            def read2       = "null"
+            def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
+            def read_group  = "\"@RG\\tID:${meta.run}\\t${CN}PU:${meta.run}\\tSM:${meta.sample}\\tLB:${meta.sample}\\tPL:ILLUMINA\""
+            meta.read_group = read_group
+
             if (has_extension(read1, "fastq.gz") || has_extension(read1, "fq.gz") || has_extension(read1, "fastq") || has_extension(read1, "fq")) {
                 check_number_of_item(row, 7)
                 read2 = return_file(row[6])
@@ -260,4 +267,62 @@ def reduce_vcf(file) {
 def return_status(it) {
     if (!(it in [0, 1])) exit 1, "Status is not recognized in TSV file: ${it}, see --help for more information"
     return it
+}
+
+/*
+ * nf-core core functions
+ */
+
+/*
+ * Extract name of software tool from process name using $task.process
+ */
+def getSoftwareName(task_process) {
+    return task_process.tokenize(':')[-1].tokenize('_')[0].toLowerCase()
+}
+
+/*
+ * Function to initialise default values and to generate a Groovy Map of available options for nf-core modules
+ */
+def initOptions(Map args) {
+    def Map options = [:]
+    options.args          = args.args ?: ''
+    options.args2         = args.args2 ?: ''
+    options.publish_by_id = args.publish_by_id ?: false
+    options.publish_dir   = args.publish_dir ?: ''
+    options.publish_files = args.publish_files
+    options.suffix        = args.suffix ?: ''
+    return options
+}
+
+/*
+ * Tidy up and join elements of a list to return a path string
+ */
+def getPathFromList(path_list) {
+    def paths = path_list.findAll { item -> !item?.trim().isEmpty() }  // Remove empty entries
+    paths = paths.collect { it.trim().replaceAll("^[/]+|[/]+\$", "") } // Trim whitespace and trailing slashes
+    return paths.join('/')
+}
+
+/*
+ * Function to save/publish module results
+ */
+def saveFiles(Map args) {
+    if (!args.filename.endsWith('.version.txt')) {
+        def ioptions = initOptions(args.options)
+        def path_list = [ ioptions.publish_dir ?: args.publish_dir ]
+        if (ioptions.publish_by_id) {
+            path_list.add(args.publish_id)
+        }
+        if (ioptions.publish_files instanceof Map) {
+            for (ext in ioptions.publish_files) {
+                if (args.filename.endsWith(ext.key)) {
+                    def ext_list = path_list.collect()
+                    ext_list.add(ext.value)
+                    return "${getPathFromList(ext_list)}/$args.filename"
+                }
+            }
+        } else if (ioptions.publish_files == null) {
+            return "${getPathFromList(path_list)}/$args.filename"
+        }
+    }
 }

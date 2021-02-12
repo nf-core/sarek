@@ -24,20 +24,20 @@ params:
         description: |
             Value for the Nextflow `publishDir` mode parameter.
             Available: symlink, rellink, link, copy, copyNoFollow, move.
-    - conda:
+    - enable_conda:
         type: boolean
         description: |
             Run the module with Conda using the software specified
             via the `conda` directive
+    - singularity_pull_docker_container:
+        type: boolean
+        description: |
+            Instead of directly downloading Singularity images for use with Singularity,
+            force the workflow to pull and convert Docker containers instead.
 input:
     - fasta:
         type: file
         description: Input genome fasta file
-    - options:
-        type: map
-        description: |
-            Groovy Map containing module options for passing command-line arguments and
-            output file paths.
 output:
     - index:
         type: file

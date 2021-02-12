@@ -3,10 +3,6 @@ include { initOptions; saveFiles; getSoftwareName } from './../functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-environment = params.enable_conda ? "bioconda::gatk4-spark=4.1.8.1" : null
-container = "quay.io/biocontainers/gatk4-spark:4.1.8.1--0"
-if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/gatk4-spark:4.1.8.1--0"
-
 process GATK_BASERECALIBRATOR {
     label 'cpus_1'
 
@@ -15,8 +11,12 @@ process GATK_BASERECALIBRATOR {
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda environment
-    container container
+    conda (params.enable_conda ? "bioconda::gatk4=4.1.9.0" : null)
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/gatk4:4.1.9.0--py39_0"
+    } else {
+        container "quay.io/biocontainers/gatk4:4.1.9.0--py39_0"
+    }
 
     input:
         tuple val(meta), path(bam), path(bai), path(interval)

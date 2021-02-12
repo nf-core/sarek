@@ -3,10 +3,6 @@ include { initOptions; saveFiles; getSoftwareName } from './../functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-environment = params.enable_conda ? "bioconda::msisensor=0.5" : null
-container = "quay.io/biocontainers/msisensor:0.5--hb3646a4_2"
-if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) container = "https://depot.galaxyproject.org/singularity/msisensor:0.5--hb3646a4_2"
-
 process MSISENSOR_SCAN {
     tag "${fasta}"
     
@@ -16,8 +12,12 @@ process MSISENSOR_SCAN {
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:"false") }
 
-    conda environment
-    container container
+    conda (params.enable_conda ? "bioconda::msisensor=0.5" : null)
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/msisensor:0.5--hb3646a4_2"
+    } else {
+        container "quay.io/biocontainers/msisensor:0.5--hb3646a4_2"
+    }
 
     input:
         path fasta

@@ -495,13 +495,9 @@ This tool is enabled within `Sarek` if both `--sentieon` and `--tools DNAscope` 
 
 ### Containers
 
-`sarek`, our main container is designed using [Conda](https://conda.io/).
+With `Nextflow DSL2`, each process use its own `Conda` environment or container from `biocontainers`.
 
-[![sarek-docker status](https://img.shields.io/docker/automated/nfcore/sarek.svg)](https://hub.docker.com/r/nfcore/sarek)
-
-Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags):
-
-For annotation, the main container can be used, but then cache has to be downloaded, or additional containers are available with cache.
+For annotation, cache has to be downloaded, or specifically designed containers are available with cache.
 
 `sareksnpeff`, our `snpeff` container is designed using [Conda](https://conda.io/).
 
