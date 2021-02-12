@@ -23,7 +23,7 @@ Sarek is a workflow designed to detect variants on whole genome or targeted sequ
 Initially designed for Human, and Mouse, it can work on any species with a reference genome.
 Sarek can also handle tumour / normal pairs and could include additional relapses.
 
-The pipeline is built using [`Nextflow`](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with `Docker` containers making installation trivial and results highly reproducible.
+The pipeline is built using [`Nextflow`](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses containers from [`BioContainers`](https://biocontainers.pro/) making installation trivial and results highly reproducible.
 
 <!-- On release, automated continuous integration tests run the pipeline on a [full-sized dataset](https://github.com/nf-core/test-datasets/tree/sarek#full-test-dataset-origin) on the AWS cloud infrastructure.
 This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources.
@@ -37,7 +37,7 @@ By default, the pipeline currently performs the following:
 
 * Sequencing quality control (`FastQC`)
 * Map Reads to Reference (`BWA mem`)
-* Mark Duplicates (`GATK MarkDuplicatesSpark`)
+* Mark Duplicates (`GATK MarkDuplicates`)
 * Base (Quality Score) Recalibration (`GATK BaseRecalibrator`, `GATK ApplyBQSR`)
 * Preprocessing quality control (`samtools stats`)
 * Preprocessing quality control (`Qualimap bamqc`)
@@ -128,7 +128,7 @@ Helpful contributors:
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
 
-For further information or help, don't hesitate to get in touch on the [Slack `#sarek` channel](https://nfcore.slack.com/channels/sarek) (you can join with [this invite](https://nf-co.re/join/slack)), or contact us: [Maxime Garcia](mailto:maxime.garcia@scilifelab.se?subject=[GitHub]%20nf-core/sarek), [Szilvester Juhos](mailto:szilveszter.juhos@scilifelab.se?subject=[GitHub]%20nf-core/sarek)
+For further information or help, don't hesitate to get in touch on the [Slack `#sarek` channel](https://nfcore.slack.com/channels/sarek) (you can join with [this invite](https://nf-co.re/join/slack)), or contact us: [Gisela Gabernet](mailto:gisela.gabernet@qbic.uni-tuebingen.de?subject=[GitHub]%20nf-core/sarek), [Maxime Garcia](mailto:maxime.garcia@scilifelab.se?subject=[GitHub]%20nf-core/sarek), [Friederike Hanssen](mailto:friederike.hanssen@qbic.uni-tuebingen.de?subject=[GitHub]%20nf-core/sarek), [Szilvester Juhos](mailto:szilveszter.juhos@scilifelab.se?subject=[GitHub]%20nf-core/sarek)
 
 ## Citations
 
