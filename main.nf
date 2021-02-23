@@ -1393,7 +1393,7 @@ process MarkDuplicates {
 
     script:
     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
-    metrics = 'markduplicates' in skipQC ? '' : "-M ${idSample}.bam.metrics"
+    // metrics = 'markduplicates' in skipQC ? '' : "-M ${idSample}.bam.metrics"
     if (params.no_gatk_spark)
     """
     gatk --java-options ${markdup_java_options} \
@@ -1414,12 +1414,45 @@ process MarkDuplicates {
         MarkDuplicatesSpark \
         -I ${idSample}.bam \
         -O ${idSample}.md.bam \
-        ${metrics} \
         --tmp-dir . \
         --create-output-bam-index true \
         --spark-master local[${task.cpus}]
     """
 }
+
+(bam_duplicates_marked,bam_duplicates_marked_for_picard) = bam_duplicates_marked.into(2)
+
+// STEP 2: MARKING DUPLICATES
+
+process EstimateLibraryComplexity {
+
+    label 'process_long'
+
+    tag "${idPatient}-${idSample}"
+
+    publishDir params.outdir, mode: params.publish_dir_mode,
+        saveAs: {
+            if (it == "${idSample}.bam.metrics") "Reports/${idSample}/MarkDuplicates/${it}"
+        }
+
+    input:
+        set idPatient, idSample, file("${idSample}.md.bam") from bam_duplicates_marked_for_picard
+
+    output:
+        file ("${idSample}.bam.metrics") optional true into duplicates_marked_report
+
+    when: !(params.no_gatk_spark) && !('markduplicates' in skipQC)
+
+    script:
+    """
+    gatk 
+        EstimateLibraryComplexity \
+        --INPUT ${idSample}.md.bam \
+        --OUTPUT ${idSample}.bam.metrics 
+    """
+}
+
+
 
 (tsv_bam_duplicates_marked, tsv_bam_duplicates_marked_sample) = tsv_bam_duplicates_marked.into(2)
 
