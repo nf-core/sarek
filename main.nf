@@ -851,7 +851,7 @@ if (params.no_intervals && step != 'annotate') {
     bedIntervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
 }
 
-(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervals) = bedIntervals.into(6)
+(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervalsSingle, bedIntervalsPair) = bedIntervals.into(7)
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
@@ -2344,8 +2344,8 @@ pairBam = pairBam.dump(tag:'BAM Somatic Pair')
 (pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBamMsisensor, pairBamCNVkit, pairBam) = pairBam.into(6)
 
 // Add the intervals
-intervalPairBam = pairBam.combine(bedIntervals)
-intervalBam = singleBamTumor.combine(bedIntervals)
+intervalPairBam = pairBam.combine(bedIntervalsPair)
+intervalBam = singleBamTumor.combine(bedIntervalsSingle)
 
 // intervals for Mutect2 calls, FreeBayes and pileups for Mutect2 filtering
 (pairBamMutect2, pairBamFreeBayes) = intervalPairBam.into(2)
