@@ -418,7 +418,7 @@ if (params.trim_fastq) {
 if (params.split_fastq)          summary['Reads in fastq']                   = params.split_fastq
 
 summary['MarkDuplicates'] = "Options"
-summary['Java options'] = params.markdup_java_options
+summary['Java options'] = params.markdup_java_options ? params.markdup_java_options : 'no markdup java opts'
 summary['GATK Spark']   = params.no_gatk_spark ? 'No' : 'Yes'
 
 summary['Save BAMs mapped']   = params.save_bam_mapped ? 'Yes' : 'No'
@@ -960,8 +960,9 @@ fastQCReport = fastQCFQReport.mix(fastQCBAMReport)
 fastQCReport = fastQCReport.dump(tag:'FastQC')
 
 process TrimGalore {
-    label 'TrimGalore'
-
+    
+	label 'TrimGalore'
+    
     tag "${idPatient}-${idRun}"
 
     publishDir "${params.outdir}/Reports/${idSample}/TrimGalore/${idSample}_${idRun}", mode: params.publish_dir_mode,
@@ -1165,7 +1166,8 @@ else {
 }
 
 process MapReads {
-    label 'cpus_max'
+    
+	label 'cpus_max'
 
     tag "${idPatient}-${idRun}"
 
@@ -1962,7 +1964,7 @@ process BamQC {
     script:
     use_bed = params.target_bed ? "-gff ${targetBED}" : ''
     """
-    qualimap --java-mem-size=48G \
+    qualimap --java-mem-size=16G \
         bamqc \
         -bam ${bam} \
         --paint-chromosome-limits \
