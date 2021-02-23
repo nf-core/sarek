@@ -3099,7 +3099,7 @@ process MSIsensor_msiSingle {
     msisensor-pro pro -d ${msiSites} \
                       -b 4 \
                       -t ${bamTumor} \
-                      -o ${idSampleTumor}_vs_${idSampleNormal}_msisensor
+                      -o ${idSampleTumor}_msisensor
     """
 }
 
