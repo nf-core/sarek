@@ -564,7 +564,7 @@ process get_software_versions {
     freebayes --version &> v_freebayes.txt 2>&1 || true
     freec &> v_controlfreec.txt 2>&1 || true
     gatk ApplyBQSR --help &> v_gatk.txt 2>&1 || true
-    msisensor &> v_msisensor.txt 2>&1 || true
+    msisensor-pro &> v_msisensor.txt 2>&1 || true
     multiqc --version &> v_multiqc.txt 2>&1 || true
     qualimap --version &> v_qualimap.txt 2>&1 || true
     R --version &> v_r.txt 2>&1 || true
@@ -2339,11 +2339,22 @@ pairBam = bamNormal.cross(bamTumor).map {
 pairBam = pairBam.dump(tag:'BAM Somatic Pair')
 bamTumor = bamTumor.dump(tag:'BAM Somatic Tumor Only')
 
-// Manta, Strelka, MSIsensor
+// Manta, Strelka, MSIsensor, Mutect2
 (pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBamMsisensor, pairBamCNVkit, pairBam) = pairBam.into(6)
 
-// Mutect (comtamination and tumor-only)
-(bamTumorContamination, bamTumor) = bamTumor.into(2)
+// Mutect2Single, Mutect2 Contamination, MSIsensorSingle
+(singleBamTumorContamination, singleBamTumor, singleBamMsisensor) = bamTumor.into(3)
+
+// Add the intervals
+intervalPairBam = pairBam.combine(bedIntervals)
+intervalBam = singleBamTumor.combine(bedIntervals)
+
+// intervals for Mutect2 calls, FreeBayes and pileups for Mutect2 filtering
+(pairBamMutect2, pairBamFreeBayes) = intervalPairBam.into(2)
+(singleBamMutect2, bamPileupSummaries) = intervalBam.into(2)
+
+// intervals for MPileup
+bamMpileup = bamMpileup.combine(intMpileup)
 
 // Making Pair Bam for Sention
 
@@ -2360,16 +2371,6 @@ bam_pair_sentieon_TNscope = bam_sention_normal.cross(bam_sentieon_tumor).map {
     normal, tumor ->
     [normal[0], normal[1], normal[2], normal[3], normal[4], tumor[1], tumor[2], tumor[3], tumor[4]]
 }
-
-// Add the intervals
-intervalPairBam = pairBam.combine(bedIntervals)
-intervalBam = bamTumor.combine(bedIntervals)
-
-// intervals for Mutect2 calls, FreeBayes and pileups for Mutect2 filtering
-(pairBamMutect2, pairBamFreeBayes) = intervalPairBam.into(2)
-(singleBamMutect2, bamPileupSummaries) = intervalBam.into(2)
-
-bamMpileup = bamMpileup.combine(intMpileup)
 
 // STEP FREEBAYES
 
@@ -2543,7 +2544,7 @@ process MergeMutect2Stats {
 
 // STEP MERGING VCF - FREEBAYES & GATK HAPLOTYPECALLER
 
-vcfConcatenateVCFs = vcfFreeBayes.mix(vcfFreebayesSingle, vcfGenotypeGVCFs, gvcfHaplotypeCaller, mutect2SingleOutput, mutect2PairOutput)
+vcfConcatenateVCFs = vcfFreeBayes.mix(vcfFreebayesSingle, vcfGenotypeGVCFs, gvcfHaplotypeCaller)
 vcfConcatenateVCFs = vcfConcatenateVCFs.dump(tag:'VCF to merge')
 
 process ConcatVCF {
@@ -3040,7 +3041,7 @@ process MSIsensor_scan {
 
     script:
     """
-    msisensor scan -d ${fasta} -o microsatellites.list
+    msisensor-pro scan -d ${fasta} -o microsatellites.list
     """
 }
 
@@ -3067,11 +3068,37 @@ process MSIsensor_msi {
 
     script:
     """
-    msisensor msi -d ${msiSites} \
-                  -b 4 \
-                  -n ${bamNormal} \
-                  -t ${bamTumor} \
-                  -o ${idSampleTumor}_vs_${idSampleNormal}_msisensor
+    msisensor-pro msi -d ${msiSites} \
+                      -b 4 \
+                      -n ${bamNormal} \
+                      -t ${bamTumor} \
+                      -o ${idSampleTumor}_vs_${idSampleNormal}_msisensor
+    """
+}
+
+process MSIsensor_msiSingle {
+    label 'cpus_4'
+    label 'memory_max'
+
+    tag "${idSampleTumor}"
+
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/MSIsensor", mode: params.publish_dir_mode
+
+    input:
+        set idPatient, idSampleTumor, file(bamTumor), file(baiTumor) from singleBamMsisensor
+        file msiSites from msi_scan_ch
+
+    output:
+        set val("MsisensorSingle"), idPatient, file("${idSampleTumor}_msisensor"), file("${idSampleTumor}_msisensor_dis"), file("${idSampleTumor}_msisensor_somatic") into msisensor_out_ch_single
+
+    when: 'msisensor' in tools
+
+    script:
+    """
+    msisensor-pro pro -d ${msiSites} \
+                      -b 4 \
+                      -t ${bamTumor} \
+                      -o ${idSampleTumor}_vs_${idSampleNormal}_msisensor
     """
 }
 
