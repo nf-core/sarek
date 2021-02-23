@@ -2329,21 +2329,19 @@ bamTumor = Channel.create()
 
 bamRecalAll.choice(bamTumor, bamNormal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
 
+// Mutect2Single, Mutect2 Contamination, MSIsensorSingle
+(singleBamTumorContamination, singleBamTumor, singleBamMsisensor, bamTumor) = bamTumor.into(4)
+
 // Crossing Normal and Tumor to get a T/N pair for Somatic Variant Calling
 // Remapping channel to remove common key idPatient
 pairBam = bamNormal.cross(bamTumor).map {
     normal, tumor ->
     [normal[0], normal[1], normal[2], normal[3], tumor[1], tumor[2], tumor[3]]
 }
-
 pairBam = pairBam.dump(tag:'BAM Somatic Pair')
-bamTumor = bamTumor.dump(tag:'BAM Somatic Tumor Only')
 
 // Manta, Strelka, MSIsensor, Mutect2
 (pairBamManta, pairBamStrelka, pairBamStrelkaBP, pairBamMsisensor, pairBamCNVkit, pairBam) = pairBam.into(6)
-
-// Mutect2Single, Mutect2 Contamination, MSIsensorSingle
-(singleBamTumorContamination, singleBamTumor, singleBamMsisensor) = bamTumor.into(3)
 
 // Add the intervals
 intervalPairBam = pairBam.combine(bedIntervals)
