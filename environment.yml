@@ -26,7 +26,7 @@ dependencies:
   - bioconda::genesplicer=1.0=1
   - bioconda::htslib=1.9=ha228f0b_7
   - bioconda::manta=1.6.0=py27_0
-  - bioconda::msisensor-pro=1.1=hb3646a4_0
+  - bioconda::msisensor=0.5=h25a10a7_1
   - bioconda::multiqc=1.8=py_2
   - bioconda::qualimap=2.2.2d=1
   - bioconda::samblaster=0.1.24=hc9558a2_3

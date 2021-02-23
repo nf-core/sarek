@@ -3025,9 +3025,10 @@ process CNVkit {
 process MSIsensor_scan {
     label 'cpus_1'
     label 'memory_max'
-
+    label 'msisensor'
+    
     tag "${fasta}"
-
+    
     input:
     file(fasta) from ch_fasta
     file(fastaFai) from ch_fai
@@ -3050,9 +3051,10 @@ process MSIsensor_scan {
 process MSIsensor_msi {
     label 'cpus_4'
     label 'memory_max'
-
+    label 'msisensor'
+        
     tag "${idSampleTumor}_vs_${idSampleNormal}"
-
+    
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/MSIsensor", mode: params.publish_dir_mode
 
     input:
@@ -3077,9 +3079,10 @@ process MSIsensor_msi {
 process MSIsensor_msiSingle {
     label 'cpus_4'
     label 'memory_max'
-
+    label 'msisensor'
+        
     tag "${idSampleTumor}"
-
+    
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/MSIsensor", mode: params.publish_dir_mode
 
     input:
