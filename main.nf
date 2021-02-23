@@ -1441,7 +1441,7 @@ process EstimateLibraryComplexity {
         set idPatient, idSample, file("${idSample}.md.bam") from bam_duplicates_marked_for_picard
 
     output:
-        file ("${idSample}.bam.metrics") optional true into duplicates_marked_report
+        file ("${idSample}.bam.metrics") optional true into elc_duplicates_marked_report
 
     when: !(params.no_gatk_spark) && !('markduplicates' in skipQC)
 
@@ -4075,6 +4075,7 @@ process MultiQC {
         file ('FastQC/*') from fastQCReport.collect().ifEmpty([])
         file ('TrimmedFastQC/*') from trimGaloreReport.collect().ifEmpty([])
         file ('MarkDuplicates/*') from duplicates_marked_report.collect().ifEmpty([])
+        file ('MarkDuplicates/*') from elc_duplicates_marked_report.collect().ifEmpty([])
         file ('DuplicatesMarked/*.recal.table') from baseRecalibratorReport.collect().ifEmpty([])
         file ('SamToolsStats/*') from samtoolsStatsReport.collect().ifEmpty([])
         file ('snpEff/*') from snpeffReport.collect().ifEmpty([])
