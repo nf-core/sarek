@@ -2683,7 +2683,7 @@ process MergePileupSummaries {
 
 // STEP GATK MUTECT2.5 - CALCULATING CONTAMINATION
 
-bamTumorContamination = bamTumorContamination.map{
+singleBamTumorContamination = singleBamTumorContamination.map{
     idPatient, idSampleTumor, bamTumor, baiTumor ->
     [idPatient, idSampleTumor, bamTumor, baiTumor]
 }.join(mergedPileupFile, by:[0,1])
@@ -2696,7 +2696,7 @@ process CalculateContamination {
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Mutect2", mode: params.publish_dir_mode
 
     input:
-        set idPatient, idSampleTumor, file(bamTumor), file(baiTumor), file(mergedPileup) from bamTumorContamination
+        set idPatient, idSampleTumor, file(bamTumor), file(baiTumor), file(mergedPileup) from singleBamTumorContamination
 
      output:
         set idPatient, val("${idSampleTumor}"), file("${idSampleTumor}_contamination.table") into contaminationTable
