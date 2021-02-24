@@ -1179,7 +1179,7 @@ process MapReads {
 
     output:
         set idPatient, idSample, idRun, file("${idSample}_${idRun}.bam") into bamMapped
-        set idPatient, val("${idSample}_${idRun}"), file("${idSample}_${idRun}.bam") into bamMappedBamQC
+        //set idPatient, val("${idSample}_${idRun}"), file("${idSample}_${idRun}.bam") into bamMappedBamQC
 
     when: !(params.sentieon)
 
