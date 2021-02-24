@@ -2474,7 +2474,7 @@ process Mutect2Single {
         file(ponIndex) from ch_pon_tbi
 
     output:
-        set val("Mutect2Single"), idPatient, val("${idSampleTumor}"), file("${intervalBed.baseName}_${idSampleTumor}.vcf") into mutect2SingleOutput
+        set val("Mutect2"), idPatient, val("${idSampleTumor}"), file("${intervalBed.baseName}_${idSampleTumor}.vcf") into mutect2SingleOutput
         set idPatient, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}.vcf.stats") optional true into intervalStatsFilesSingle
         set idPatient, val("${idSampleTumor}"), file("${intervalBed.baseName}_${idSampleTumor}.vcf.stats"), file("${intervalBed.baseName}_${idSampleTumor}.vcf") optional true into mutect2StatsSingle
 
