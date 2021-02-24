@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [dev](https://github.com/nf-core/sarek/tree/dev)
+
+### Added
+
+- [#353](https://github.com/nf-core/sarek/pull/353) - Add support for task retries with exit code 247 (exhibited by Picard MarkDuplicates)
+
 ## [2.7](https://github.com/nf-core/sarek/releases/tag/2.7) - Pårte
 
 Pårte is one of the main massif in the Sarek National Park.
