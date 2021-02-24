@@ -3076,6 +3076,7 @@ process MSIsensor_msi {
     """
 }
 
+// TODO: Add the msisensor-pro baseline step
 process MSIsensor_msiSingle {
     label 'cpus_4'
     label 'memory_max'
@@ -3090,7 +3091,7 @@ process MSIsensor_msiSingle {
         file msiSites from msi_scan_ch
 
     output:
-        set val("MsisensorSingle"), idPatient, file("${idSampleTumor}_msisensor"), file("${idSampleTumor}_msisensor_dis"), file("${idSampleTumor}_msisensor_somatic") into msisensor_out_ch_single
+        set val("MsisensorSingle"), idPatient, file("${idSampleTumor}_msisensor"), file("${idSampleTumor}_msisensor_dis"), file("${idSampleTumor}_msisensor_all") into msisensor_out_ch_single
 
     when: 'msisensor' in tools
 
