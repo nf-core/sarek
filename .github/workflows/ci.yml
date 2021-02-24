@@ -33,13 +33,13 @@ jobs:
             environment.yml
       - name: Build new docker image
         if: env.MATCHED_FILES
-        run: docker build --no-cache . -t nfcore/sarek:2.7
+        run: docker build --no-cache . -t nfcore/sarek:dev
 
       - name: Pull docker image
         if: ${{ !env.MATCHED_FILES }}
         run: |
           docker pull nfcore/sarek:dev
-          docker tag nfcore/sarek:dev nfcore/sarek:2.7
+          docker tag nfcore/sarek:dev nfcore/sarek:dev
 
       - name: Install Nextflow
         env:
@@ -71,8 +71,8 @@ jobs:
           NXF_VER: '20.04.0'
       - name: Pull docker image
         run: |
-          docker pull nfcore/sarek:2.7
-          docker pull nfcore/sarek${{ matrix.tools }}:2.7.${{ matrix.species }}
+          docker pull nfcore/sarek:dev
+          docker pull nfcore/sarek${{ matrix.tools }}:dev.${{ matrix.species }}
       - name: Run annotation test
         run: nextflow run ${GITHUB_WORKSPACE} -profile test_annotation,docker --tools ${{ matrix.tools }}
 
@@ -93,7 +93,7 @@ jobs:
           # Only check Nextflow pipeline minimum version
           NXF_VER: '20.04.0'
       - name: Pull docker image
-        run: docker pull nfcore/sarek:2.7
+        run: docker pull nfcore/sarek:dev
       - name: Get test data
         run: git clone --single-branch --branch sarek https://github.com/nf-core/test-datasets.git data
       - name: Run germline test
@@ -121,7 +121,7 @@ jobs:
           # Only check Nextflow pipeline minimum version
           NXF_VER: '20.04.0'
       - name: Pull docker image
-        run: docker pull nfcore/sarek:2.7
+        run: docker pull nfcore/sarek:dev
       - name: Run test for minimal genomes
         run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --skipQC all --genome ${{ matrix.genome }} ${{ matrix.intervals }} --tools Manta,mpileup,Strelka,FreeBayes
 
@@ -142,7 +142,7 @@ jobs:
           # Only check Nextflow pipeline minimum version
           NXF_VER: '20.04.0'
       - name: Pull docker image
-        run: docker pull nfcore/sarek:2.7
+        run: docker pull nfcore/sarek:dev
       - name: Run ${{ matrix.profile }} test
         run: nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker
 
@@ -163,7 +163,7 @@ jobs:
           # Only check Nextflow pipeline minimum version
           NXF_VER: '20.04.0'
       - name: Pull docker image
-        run: docker pull nfcore/sarek:2.7
+        run: docker pull nfcore/sarek:dev
       - name: Run ${{ matrix.profile }} test
         run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner ${{ matrix.aligner }}
 
@@ -194,6 +194,6 @@ jobs:
           # Only check Nextflow pipeline minimum version
           NXF_VER: '20.04.0'
       - name: Pull docker image
-        run: docker pull nfcore/sarek:2.7
+        run: docker pull nfcore/sarek:dev
       - name: Run ${{ matrix.tool }} test
         run: nextflow run ${GITHUB_WORKSPACE} -profile test_tool,docker --tools ${{ matrix.tool }} ${{ matrix.intervals }}
