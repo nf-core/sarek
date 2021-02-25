@@ -1422,7 +1422,7 @@ process MarkDuplicates {
     """
 }
 
-(bam_duplicates_marked,bam_duplicates_marked_for_picard) = bam_duplicates_marked.into(2)
+(bam_duplicates_marked,bam_duplicates_marked_for_tagging,bam_duplicates_marked_for_picard) = bam_duplicates_marked.into(3)
 
 // STEP 2: MARKING DUPLICATES
 
@@ -1454,7 +1454,31 @@ process EstimateLibraryComplexity {
     """
 }
 
+// STEP 3a: SetNmMdAndUqTags
 
+process SetNmMdAndUqTags {
+    label 'cpus_1'
+
+    tag "${idPatient}-${idSample}-${intervalBed.baseName}"
+
+    input:
+    set idPatient, idSample, file(bam), file(bai) from bam_duplicates_marked_for_tagging
+
+    output:
+    set idPatient, idSample, file("*.tagged.bam"), file("*tagged.bam.bai") into tagged_bam_duplicates_marked
+    
+    when: !(params.no_gatk_spark) && !('markduplicates' in skipQC)
+
+    script:
+    """
+    gatk --java-options -Xmx${task.memory.toGiga()}g \
+    SetNmMdAndUqTags \
+    I=${bam} \
+    O=${idSample}.md.tagged.bam
+    --CREATE_INDEX=true
+    mv ${idSample}.md.tagged.bai ${idSample}.md.tagged.bam.bai
+    """
+}
 
 (tsv_bam_duplicates_marked, tsv_bam_duplicates_marked_sample) = tsv_bam_duplicates_marked.into(2)
 
@@ -1486,6 +1510,8 @@ bam_duplicates_marked = bam_duplicates_marked.dump(tag:'MD BAM')
 duplicates_marked_report = duplicates_marked_report.dump(tag:'MD Report')
 
 if (params.skip_markduplicates) bam_duplicates_marked = bam_mapped_merged_indexed
+
+bam_duplicates_marked = bam_duplicates_marked.mix(tagged_bam_duplicates_marked)
 
 (bamMD, bamMDToJoin, bam_duplicates_marked) = bam_duplicates_marked.into(3)
 
