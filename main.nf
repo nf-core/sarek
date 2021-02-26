@@ -1422,7 +1422,7 @@ process MarkDuplicates {
     """
 }
 
-(bam_duplicates_marked,bam_duplicates_marked_for_tagging,bam_duplicates_marked_for_picard) = bam_duplicates_marked.into(3)
+(bam_duplicates_marked_for_tagging,bam_duplicates_marked_for_picard) = bam_duplicates_marked.into(2)
 
 // STEP 2: MARKING DUPLICATES
 
@@ -1447,8 +1447,7 @@ process EstimateLibraryComplexity {
 
     script:
     """
-    gatk 
-        EstimateLibraryComplexity \
+    gatk EstimateLibraryComplexity \
         --INPUT ${idSample}.md.bam \
         --OUTPUT ${idSample}.bam.metrics 
     """
