@@ -1392,7 +1392,7 @@ process MarkDuplicates {
         set idPatient, idSample into tsv_bam_duplicates_marked
         file ("${idSample}.bam.metrics") optional true into duplicates_marked_report
 
-    when: !(params.skip_markduplicates) && (params.no_gatk_spark)
+    when: !(params.skip_markduplicates)
 
     script:
     markdup_java_options = task.memory.toGiga() > 8 ? "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\"" : "-Xms3g -Xmx7g"
@@ -1415,7 +1415,7 @@ process MarkDuplicates {
     gatk --java-options ${markdup_java_options} \
         MarkDuplicatesSpark \
         -I ${idSample}.bam \
-        -O ${idSample}.md.bam \
+        -O ${idSample}.spark.md.bam \
         --tmp-dir . \
         --create-output-bam-index true \
         --spark-master local[${task.cpus}]
