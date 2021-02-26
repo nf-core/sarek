@@ -1459,7 +1459,7 @@ process EstimateLibraryComplexity {
 process SetNmMdAndUqTags {
     label 'cpus_1'
 
-    tag "${idPatient}-${idSample}-${intervalBed.baseName}"
+    tag "${idPatient}-${idSample}"
 
     input:
     set idPatient, idSample, file(bam), file(bai) from bam_duplicates_marked_for_tagging
