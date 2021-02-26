@@ -1387,16 +1387,16 @@ process MarkDuplicates {
         set idPatient, idSample, file("${idSample}.bam") from bam_mapped_merged
 
     output:
-        set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bam.bai") into bam_duplicates_marked
+        set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bam.bai") optional true into bam_duplicates_marked
+        set idPatient, idSample, file("${idSample}.spark.md.bam"), file("${idSample}.spark.md.bam.bai") optional true into spark_bam_duplicates_marked
         set idPatient, idSample into tsv_bam_duplicates_marked
         file ("${idSample}.bam.metrics") optional true into duplicates_marked_report
 
-    when: !(params.skip_markduplicates)
+    when: !(params.skip_markduplicates) && (params.no_gatk_spark)
 
     script:
     markdup_java_options = task.memory.toGiga() > 8 ? "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\"" : "-Xms3g -Xmx7g"
     // metrics = 'markduplicates' in skipQC ? '' : "-M ${idSample}.bam.metrics"
-    if (params.no_gatk_spark)
     """
     gatk --java-options ${markdup_java_options} \
         MarkDuplicates \
@@ -1422,7 +1422,7 @@ process MarkDuplicates {
     """
 }
 
-(bam_duplicates_marked_for_tagging,bam_duplicates_marked_for_picard) = bam_duplicates_marked.into(2)
+(bam_duplicates_marked_for_tagging,bam_duplicates_marked_for_picard) = spark_bam_duplicates_marked.into(2)
 
 // STEP 2: MARKING DUPLICATES
 
@@ -1465,7 +1465,7 @@ process SetNmMdAndUqTags {
     set idPatient, idSample, file(bam), file(bai) from bam_duplicates_marked_for_tagging
 
     output:
-    set idPatient, idSample, file("*.tagged.bam"), file("*tagged.bam.bai") into tagged_bam_duplicates_marked
+    set idPatient, idSample, file("*.tagged.bam"), file("*tagged.bam.bai") into bam_duplicates_marked
     
     when: !(params.no_gatk_spark) && !('markduplicates' in skipQC)
 
@@ -1511,7 +1511,7 @@ duplicates_marked_report = duplicates_marked_report.dump(tag:'MD Report')
 
 if (params.skip_markduplicates) bam_duplicates_marked = bam_mapped_merged_indexed
 
-bam_duplicates_marked = bam_duplicates_marked.mix(tagged_bam_duplicates_marked)
+//bam_duplicates_marked = bam_duplicates_marked.mix(tagged_bam_duplicates_marked)
 
 (bamMD, bamMDToJoin, bam_duplicates_marked) = bam_duplicates_marked.into(3)
 
