@@ -1438,7 +1438,7 @@ process EstimateLibraryComplexity {
         }
 
     input:
-        set idPatient, idSample, file("${idSample}.md.bam") from bam_duplicates_marked_for_picard
+        set idPatient, idSample, file("${idSample}.md.bam") , file("${idSample}.md.bam.bai") from bam_duplicates_marked_for_picard
 
     output:
         file ("${idSample}.bam.metrics") optional true into elc_duplicates_marked_report
