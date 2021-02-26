@@ -1447,7 +1447,8 @@ process EstimateLibraryComplexity {
 
     script:
     """
-    gatk EstimateLibraryComplexity \
+    gatk --java-options -Xmx${task.memory.toGiga()}g \
+    EstimateLibraryComplexity \
         --INPUT ${idSample}.md.bam \
         --OUTPUT ${idSample}.bam.metrics 
     """
