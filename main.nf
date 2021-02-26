@@ -1969,7 +1969,8 @@ process SamtoolsStats {
 
 samtoolsStatsReport = samtoolsStatsReport.dump(tag:'SAMTools')
 
-bamBamQC = bamMappedBamQC.mix(bam_recalibrated_bamqc)
+// bamBamQC = bamMappedBamQC.mix(bam_recalibrated_bamqc) changes because qualimap requires coordinate sorted bam
+bamBamQC = bam_recalibrated_bamqc
 
 process BamQC {
     label 'process_high'
