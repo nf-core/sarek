@@ -1450,7 +1450,9 @@ process EstimateLibraryComplexity {
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g EstimateLibraryComplexity \
         --INPUT ${idSample}.md.bam \
-        --OUTPUT ${idSample}.bam.metrics 
+        --OUTPUT ${idSample}.bam.metrics \
+        --OPTICAL_DUPLICATE_PIXEL_DISTANCE 2500 \
+        --MIN_IDENTICAL_BASES 15
     """
 }
 
