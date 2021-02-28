@@ -1387,7 +1387,8 @@ process MarkDuplicates {
         set idPatient, idSample, file("${idSample}.bam") from bam_mapped_merged
 
     output:
-        set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bam.bai") into bam_duplicates_marked
+        set idPatient, idSample, file("${idSample}.md.bam"), file("${idSample}.md.bam.bai") optional true into bam_duplicates_marked
+        set idPatient, idSample, file("${idSample}.spark.md.bam"), file("${idSample}.spark.md.bam.bai") optional true into spark_bam_duplicates_marked
         set idPatient, idSample into tsv_bam_duplicates_marked
         file ("${idSample}.bam.metrics") optional true into duplicates_marked_report
 
@@ -1415,14 +1416,14 @@ process MarkDuplicates {
     gatk --java-options ${markdup_java_options} \
         MarkDuplicatesSpark \
         -I ${idSample}.bam \
-        -O ${idSample}.md.bam \
+        -O ${idSample}.spark.md.bam \
         --tmp-dir . \
         --create-output-bam-index true \
         --spark-master local[${task.cpus}]
     """
 }
 
-(bam_duplicates_marked_for_tagging,bam_duplicates_marked_for_picard) = bam_duplicates_marked.into(2)
+(bam_duplicates_marked_for_tagging,bam_duplicates_marked_for_picard) = spark_bam_duplicates_marked.into(2)
 
 // STEP 2: MARKING DUPLICATES
 
@@ -1462,6 +1463,9 @@ process SetNmMdAndUqTags {
 
     input:
     set idPatient, idSample, file(bam), file(bai) from bam_duplicates_marked_for_tagging
+    file(fasta) from ch_fasta
+    file(dict) from ch_dict
+    file(fastaFai) from ch_fai
 
     output:
     set idPatient, idSample, file("*.tagged.bam"), file("*tagged.bam.bai") into tagged_bam_duplicates_marked
@@ -1472,9 +1476,10 @@ process SetNmMdAndUqTags {
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
     SetNmMdAndUqTags \
-    I=${bam} \
-    O=${idSample}.md.tagged.bam
-    --CREATE_INDEX=true
+    --INPUT ${bam} \
+    --OUTPUT ${idSample}.md.tagged.bam \
+    --REFERENCE_SEQUENCE ${fasta} \
+	--CREATE_INDEX=true
     mv ${idSample}.md.tagged.bai ${idSample}.md.tagged.bam.bai
     """
 }
