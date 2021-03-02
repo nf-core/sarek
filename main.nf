@@ -82,9 +82,9 @@ def helpMessage() {
       --skip_markduplicates        [bool] Skip MarkDuplicates
 
     Variant Calling:
-      --ascat_ploidy                [int] Use this parameter to overwrite default behavior from ASCAT regarding ploidy
+      --ascat_ploidy                [int] Use this parameter to overwrite default behaviour from ASCAT regarding ploidy
                                           Requires that --ascat_purity is set
-      --ascat_purity                [int] Use this parameter to overwrite default behavior from ASCAT regarding purity
+      --ascat_purity                [int] Use this parameter to overwrite default behaviour from ASCAT regarding purity
                                           Requires that --ascat_ploidy is set
       --cf_coeff                    [str] Control-FREEC coefficientOfVariation
                                           Default: ${params.cf_coeff}
@@ -113,8 +113,8 @@ def helpMessage() {
                                           Available: HaplotypeCaller, Manta, Mutect2, Strelka, TIDDIT
                                           Default: None
       --annotation_cache           [bool] Enable the use of cache for annotation, to be used with --snpeff_cache and/or --vep_cache
-      --snpeff_cache               [file] Specity the path to snpEff cache, to be used with --annotation_cache
-      --vep_cache                  [file] Specity the path to VEP cache, to be used with --annotation_cache
+      --snpeff_cache               [file] Specify the path to snpEff cache, to be used with --annotation_cache
+      --vep_cache                  [file] Specify the path to VEP cache, to be used with --annotation_cache
       --cadd_cache                 [bool] Enable CADD cache
       --cadd_indels                [file] Path to CADD InDels file
       --cadd_indels_tbi            [file] Path to CADD InDels index
@@ -165,7 +165,7 @@ def helpMessage() {
                                           Default: copy
       --sequencing_center           [str] Name of sequencing center to be displayed in BAM file
       --multiqc_config             [file] Specify a custom config file for MultiQC
-      --monochrome_logs            [bool] Logs will be without colors
+      --monochrome_logs            [bool] Logs will be without colours
       --email                       [str] Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
       --email_on_fail               [str] Same as --email, except only send mail if the workflow is not successful
       --plaintext_email            [bool] Enable plaintext email
@@ -858,7 +858,7 @@ if (params.no_intervals && step != 'annotate') {
     bedIntervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
 }
 
-(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervals, intPlatypusVCF, intPlatpusBam) = bedIntervals.into(8)
+(intBaseRecalibrator, intApplyBQSR, intHaplotypeCaller, intFreebayesSingle, intMpileup, bedIntervals, intPlatypusVCF, intPlatypusBam) = bedIntervals.into(8)
 
 // PREPARING CHANNELS FOR PREPROCESSING AND QC
 
@@ -885,7 +885,7 @@ if (params.split_fastq){
         .map {idPatient, idSample, idRun, reads1, reads2 ->
             // The split fastq read1 is the 4th element (indexed 3) its name is split_3
             // The split fastq read2's name is split_4
-            // It's followed by which split it's acutally based on the mother fastq file
+            // It's followed by which split it's actually based on the mother fastq file
             // Index start at 1
             // Extracting the index to get a new IdRun
             splitIndex = reads1.fileName.toString().minus("split_3.").minus(".gz")
@@ -1038,7 +1038,7 @@ process UMIFastqToBAM {
 
     when: params.umi
 
-    // tmp folder for fgbio might be solved more elengantly?
+    // tmp folder for fgbio might be solved more elegantly?
 
     script:
     """
@@ -1191,7 +1191,7 @@ process MapReads {
     // and https://github.com/gatk-workflows/gatk4-data-processing/blob/8ffa26ff4580df4ac3a5aa9e272a4ff6bab44ba2/processing-for-variant-discovery-gatk4.b37.wgs.inputs.json#L29
     CN = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
     readGroup = "@RG\\tID:${idRun}\\t${CN}PU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
-    // adjust mismatch penalty for tumor samples
+    // adjust mismatch penalty for tumour samples
     status = statusMap[idPatient, idSample]
     extra = status == 1 ? "-B 3" : ""
     convertToFastq = hasExtension(inputFile1, "bam") ? "gatk --java-options -Xmx${task.memory.toGiga()}g SamToFastq --INPUT=${inputFile1} --FASTQ=/dev/stdout --INTERLEAVE=true --NON_PF=true | \\" : ""
@@ -1246,7 +1246,7 @@ process Sentieon_MapReads {
     // and https://github.com/gatk-workflows/gatk4-data-processing/blob/8ffa26ff4580df4ac3a5aa9e272a4ff6bab44ba2/processing-for-variant-discovery-gatk4.b37.wgs.inputs.json#L29
     CN = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
     readGroup = "@RG\\tID:${idRun}\\t${CN}PU:${idRun}\\tSM:${idSample}\\tLB:${idSample}\\tPL:illumina"
-    // adjust mismatch penalty for tumor samples
+    // adjust mismatch penalty for tumour samples
     status = statusMap[idPatient, idSample]
     extra = status == 1 ? "-B 3" : ""
     """
@@ -2033,8 +2033,8 @@ bam_recalibrated = bam_recalibrated.dump(tag:'BAM for Variant Calling')
 
 // Here we have a recalibrated bam set
 // The TSV file is formatted like: "idPatient status idSample bamFile baiFile"
-// Manta will be run in Germline mode, or in Tumor mode depending on status
-// HaplotypeCaller, TIDDIT and Strelka will be run for Normal and Tumor samples
+// Manta will be run in Germline mode, or in Tumour mode depending on status
+// HaplotypeCaller, TIDDIT and Strelka will be run for Normal and Tumour samples
 
 (bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll, bamPlatypus) = bam_recalibrated.into(7)
 
@@ -2559,7 +2559,7 @@ process MergeMutect2Stats {
     """
 }
 
-// we are merging the VCFs that are called separatelly for different intervals
+// we are merging the VCFs that are called separately for different intervals
 // so we can have a single sorted VCF containing all the calls for a given caller
 
 // STEP MERGING VCF - FREEBAYES & GATK HAPLOTYPECALLER
@@ -2786,7 +2786,7 @@ intervalFilteredMutect2Output = intervalFilteredMutect2Output.groupTuple(by: [0,
 intervalFilteredMutect2Output = intervalFilteredMutect2Output.dump(tag: 'filteredMutect2Output' )   
 
 // again split recalbam using bedIntervals
-bamPlatypus = bamPlatypus.spread(intPlatpusBam)
+bamPlatypus = bamPlatypus.spread(intPlatypusBam)
 bamPlatypus = bamPlatypus.dump(tag: 'spreadPlatypus')
 bamPlatypus = bamPlatypus.groupTuple(by:[0,4])
 bamPlatypus = bamPlatypus.dump(tag: 'bamPlatypus' )
@@ -3072,7 +3072,7 @@ process Manta {
 
 vcfManta = vcfManta.dump(tag:'Manta')
 
-// Remmaping channels to match input for StrelkaBP
+// Remapping channels to match input for StrelkaBP
 pairBamStrelkaBP = pairBamStrelkaBP.map {
     idPatientNormal, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor ->
     [idPatientNormal, idSampleNormal, idSampleTumor, bamNormal, baiNormal, bamTumor, baiTumor]
@@ -4287,7 +4287,7 @@ ${summary.collect { k, v -> "            <dt>$k</dt><dd><samp>${v ?: '<span styl
 }
 
 def nfcoreHeader() {
-    // Log colors ANSI codes
+    // Log colours ANSI codes
     c_black  = params.monochrome_logs ? '' : "\033[0;30m";
     c_blue   = params.monochrome_logs ? '' : "\033[0;34m";
     c_dim    = params.monochrome_logs ? '' : "\033[2m";
@@ -4374,7 +4374,7 @@ def defineAnnoList() {
     ]
 }
 
-// Define list of skipable QC tools
+// Define list of skippable QC tools
 def defineSkipQClist() {
     return [
         'bamqc',
@@ -4428,7 +4428,7 @@ def defineToolList() {
     ]
 }
 
-// Channeling the TSV file containing BAM.
+// Channelling the TSV file containing BAM.
 // Format is: "subject gender status sample bam bai"
 def extractBam(tsvFile) {
     Channel.from(tsvFile)
@@ -4495,7 +4495,7 @@ def extractInfos(channel) {
     [genderMap, statusMap, channel]
 }
 
-// Channeling the TSV file containing FASTQ or BAM
+// Channelling the TSV file containing FASTQ or BAM
 // Format is: "subject gender status sample lane fastq1 fastq2"
 // or: "subject gender status sample lane bam"
 def extractFastq(tsvFile) {
@@ -4518,13 +4518,13 @@ def extractFastq(tsvFile) {
                 }
             }
             else if (hasExtension(file1, "bam")) checkNumberOfItem(row, 6)
-            else "No recognisable extention for input file: ${file1}"
+            else "No recognisable extension for input file: ${file1}"
 
             [idPatient, gender, status, idSample, idRun, file1, file2]
         }
 }
 
-// Channeling the TSV file containing mpileup
+// Channelling the TSV file containing mpileup
 // Format is: "subject gender status sample pileup"
 def extractPileup(tsvFile) {
     Channel.from(tsvFile)
@@ -4543,7 +4543,7 @@ def extractPileup(tsvFile) {
         }
 }
 
-// Channeling the TSV file containing Recalibration Tables.
+// Channelling the TSV file containing Recalibration Tables.
 // Format is: "subject gender status sample bam bai recalTable"
 def extractRecal(tsvFile) {
     Channel.from(tsvFile)
