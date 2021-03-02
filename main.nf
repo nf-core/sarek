@@ -3234,8 +3234,6 @@ sequenza_out = sequenza_out.groupTuple(by:[0,1,2])
 process merge_seqz_files{
     label 'cpus_4'
 
-    module 'pigz/2.4'
-
     tag "${idSampleTumor}_vs_${idSampleNormal}_merge"
 
     input:
