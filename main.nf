@@ -2428,7 +2428,7 @@ process Mutect2 {
 
     output:
         set val("Mutect2"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2PairOutput
-        set idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf.stats") optional true into intervalStatsFilesPair
+        set idPatient, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf.stats") optional true into intervalStatsFilesPair
         set idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf.stats"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") optional true into mutect2StatsPair
 
     when: 'mutect2' in tools
@@ -2505,7 +2505,7 @@ mutect2StatsSingle = mutect2StatsSingle.groupTuple(by:[0,1])
 
 // STEP GATK MUTECT2.2 - MERGING STATS
 
-mutect2Stats = mutect2StatsSingle.mix(mutect2StatsSingle, mutect2StatsPair)
+mutect2Stats = mutect2StatsSingle.mix(mutect2StatsPair)
 mutect2Stats = mutect2Stats.dump(tag:'Mutect2 Stats')
 
 process MergeMutect2Stats {
@@ -2580,7 +2580,7 @@ vcfConcatenated = vcfConcatenated.dump(tag:'VCF')
 
 // STEP MERGING VCF - MUTECT2
 
-mutect2Output = mutect2SingleOutput.mix(mutect2SingleOutput, mutect2PairOutput)
+mutect2Output = mutect2SingleOutput.mix(mutect2PairOutput)
 mutect2Output = mutect2Output.dump(tag:'Mutect2 output VCF to merge')
 
 process ConcatVCF_Mutect2 {
@@ -2615,7 +2615,7 @@ vcfConcatenatedForFilter = vcfConcatenatedForFilter.dump(tag:'Mutect2 unfiltered
 
 // STEP GATK MUTECT2.3 - GENERATING PILEUP SUMMARIES
 
-intervalStatsFiles = intervalStatsFilesSingle.mix(intervalStatsFilesSingle, intervalStatsFilesPair)
+intervalStatsFiles = intervalStatsFilesSingle.mix(intervalStatsFilesPair)
 intervalStatsFiles = intervalStatsFiles.dump(tag:'Mutect2 Interval Stats')
 
 bamPileupSummaries = bamPileupSummaries.map{
