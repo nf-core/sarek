@@ -2814,7 +2814,7 @@ process platypus {
     script:
 	intervalsOptions = params.no_intervals ? "" : "--regions=${intervalBed}.txt"
     """
-	if [[ -f  == ${intervalBed} ]]; then
+	if [[ -f ${intervalBed} ]]; then
 	    awk 'BEGIN{OFS=""}{print \$1,":",\$2,"-",\$3}' ${intervalBed} > ${intervalBed}.txt
     fi
 	
