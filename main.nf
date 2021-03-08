@@ -93,6 +93,8 @@ def helpMessage() {
                                           Default: ${params.cf_ploidy}
       --cf_window                   [int] Control-FREEC window size
                                           Default: Disabled
+      --cf_contamination_adjustment[bool] Control-FREEC contaminationAdjustment
+                                          Default: Disabled
       --generate_gvcf              [bool] Enable g.vcf output from GATK HaplotypeCaller
       --no_strelka_bp              [bool] Will not use Manta candidateSmallIndels for Strelka (not recommended by Best Practices)
       --pon                        [file] Panel-of-normals VCF (bgzipped) for GATK Mutect2 / Sentieon TNscope
@@ -427,9 +429,10 @@ if ('ascat' in tools) {
 
 if ('controlfreec' in tools) {
     summary['Control-FREEC'] = "Options"
-    if (params.cf_window)    summary['window']                 = params.cf_window
-    if (params.cf_coeff)     summary['coefficientOfVariation'] = params.cf_coeff
-    if (params.cf_ploidy)    summary['ploidy']                 = params.cf_ploidy
+    if (params.cf_window)                   summary['window']                  = params.cf_window
+    if (params.cf_coeff)                    summary['coefficientOfVariation']  = params.cf_coeff
+    if (params.cf_ploidy)                   summary['ploidy']                  = params.cf_ploidy
+    if (params.cf_contamination_adjustment) summary['contaminationAdjustment'] = params.cf_contamination_adjustment
 }
 
 if ('haplotypecaller' in tools)             summary['GVCF']       = params.generate_gvcf ? 'Yes' : 'No'
@@ -3274,7 +3277,7 @@ process ControlFREEC {
     breakPointThreshold = params.target_bed ? "1.2" : "0.8"
     breakPointType = params.target_bed ? "4" : "2"
     mappabilitystr = params.mappability ? "gemMappabilityFile = \${PWD}/${mappability}" : ""
-
+    contamination_adjustment = params.cf_contamination_adjustment ? "contaminationAdjustment = TRUE" : ""
     """
     touch ${config}
     echo "[general]" >> ${config}
@@ -3292,6 +3295,7 @@ process ControlFREEC {
     echo "${window}" >> ${config}
     echo "${coeffvar}" >> ${config}
     echo "${mappabilitystr}" >> ${config}
+    echo "${contamination_adjustment}" >> ${config}
     echo "" >> ${config}
     
     echo "[control]" >> ${config}
@@ -3358,6 +3362,7 @@ process ControlFREECSingle {
     breakPointThreshold = params.target_bed ? "1.2" : "0.8"
     breakPointType = params.target_bed ? "4" : "2"
     mappabilitystr = params.mappability ? "gemMappabilityFile = \${PWD}/${mappability}" : ""
+    contamination_adjustment = params.cf_contamination_adjustment ? "contaminationAdjustment = TRUE" : ""
 
     """
     touch ${config}
@@ -3376,6 +3381,7 @@ process ControlFREECSingle {
     echo "${window}" >> ${config}
     echo "${coeffvar}" >> ${config}
     echo "${mappabilitystr}" >> ${config}
+    echo "${contamination_adjustment}" >> ${config}
     echo "" >> ${config}
 
     echo "[sample]" >> ${config}
