@@ -564,7 +564,7 @@ process get_software_versions {
     freebayes --version &> v_freebayes.txt 2>&1 || true
     freec &> v_controlfreec.txt 2>&1 || true
     gatk ApplyBQSR --help &> v_gatk.txt 2>&1 || true
-    msisensor-pro &> v_msisensor.txt 2>&1 || true
+    msisensor &> v_msisensor.txt 2>&1 || true
     multiqc --version &> v_multiqc.txt 2>&1 || true
     qualimap --version &> v_qualimap.txt 2>&1 || true
     R --version &> v_r.txt 2>&1 || true
