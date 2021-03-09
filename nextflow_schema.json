@@ -263,6 +263,11 @@
                     "fa_icon": "fas fa-wrench",
                     "description": "Overwrite Control-FREEC coefficientOfVariation"
                 },
+                "cf_contamination_adjustment": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-wrench",
+                    "description": "Overwrite Control-FREEC contaminationAdjustement"
+                },
                 "cf_ploidy": {
                     "type": "string",
                     "default": "2",
