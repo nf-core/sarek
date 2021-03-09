@@ -2329,8 +2329,8 @@ bamTumor = Channel.create()
 
 bamRecalAll.choice(bamTumor, bamNormal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
 
-// Mutect2Single, Mutect2 Contamination, MSIsensorSingle
-(singleBamTumorContamination, singleBamTumor, singleBamMsisensor, bamTumor) = bamTumor.into(4)
+// Mutect2Single, Mutect2, MSIsensorSingle
+(singleBamTumor, singleBamMsisensor, bamTumor) = bamTumor.into(3)
 
 // Crossing Normal and Tumor to get a T/N pair for Somatic Variant Calling
 // Remapping channel to remove common key idPatient
@@ -2348,8 +2348,8 @@ intervalPairBam = pairBam.combine(bedIntervalsPair)
 intervalBam = singleBamTumor.combine(bedIntervalsSingle)
 
 // intervals for Mutect2 calls, FreeBayes and pileups for Mutect2 filtering
-(pairBamMutect2, pairBamFreeBayes) = intervalPairBam.into(2)
-(singleBamMutect2, bamPileupSummaries) = intervalBam.into(2)
+(pairBamMutect2, pairBamFreeBayes, bamPileupSummaries) = intervalPairBam.into(3)
+(singleBamMutect2, bamPileupSummariesSingle) = intervalBam.into(2)
 
 // intervals for MPileup
 bamMpileup = bamMpileup.combine(intMpileup)
@@ -2615,26 +2615,28 @@ vcfConcatenatedForFilter = vcfConcatenatedForFilter.dump(tag:'Mutect2 unfiltered
 
 // STEP GATK MUTECT2.3 - GENERATING PILEUP SUMMARIES
 
-intervalStatsFiles = intervalStatsFilesSingle.mix(intervalStatsFilesPair)
-intervalStatsFiles = intervalStatsFiles.dump(tag:'Mutect2 Interval Stats')
+bamPileupSummariesSingle = bamPileupSummariesSingle.join(intervalStatsFiles, by:[0,1])
 
 bamPileupSummaries = bamPileupSummaries.map{
-    idPatient, idSampleTumor, bamTumor, baiTumor, intervalBed ->
-    [idPatient, idSampleTumor, bamTumor, baiTumor, intervalBed]
-}.join(intervalStatsFiles, by:[0,1])
+  idPatient, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor, intervalBed ->
+  [idPatient, idSampleTumor + "_vs_" + idSampleNormal, bamTumor, baiTumor, intervalBed]
+}.join(intervalStatsFilesPair, by:[0,1])
+
+bamPileupSummaries = bamPileupSummaries.mix(bamPileupSummariesSingle)
+bamPileupSummaries = bamPileupSummaries.dump(tag:'Mutect2 Pileup Summaries')
 
 process PileupSummariesForMutect2 {
-    tag "${idSampleTumor}-${intervalBed.baseName}"
+    tag "${idSample}-${intervalBed.baseName}"
 
     label 'cpus_1'
 
     input:
-        set idPatient, idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed), file(statsFile) from bamPileupSummaries
+        set idPatient, idSample, file(bamTumor), file(baiTumor), file(intervalBed), file(statsFile) from bamPileupSummaries
         file(germlineResource) from ch_germline_resource
         file(germlineResourceIndex) from ch_germline_resource_tbi
 
     output:
-        set idPatient, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_pileupsummaries.table") into pileupSummaries
+        set idPatient, idSample, file("${intervalBed.baseName}_${idSample}_pileupsummaries.table") into pileupSummaries
 
     when: 'mutect2' in tools
 
@@ -2646,7 +2648,7 @@ process PileupSummariesForMutect2 {
         -I ${bamTumor} \
         -V ${germlineResource} \
         ${intervalsOptions} \
-        -O ${intervalBed.baseName}_${idSampleTumor}_pileupsummaries.table
+        -O ${intervalBed.baseName}_${idSample}_pileupsummaries.table
     """
 }
 
@@ -2657,16 +2659,16 @@ pileupSummaries = pileupSummaries.groupTuple(by:[0,1])
 process MergePileupSummaries {
     label 'cpus_1'
 
-    tag "${idSampleTumor}"
+    tag "${idSample}"
 
-    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Mutect2", mode: params.publish_dir_mode
+    publishDir "${params.outdir}/VariantCalling/${idSample}/Mutect2", mode: params.publish_dir_mode
 
     input:
-        set idPatient, idSampleTumor, file(pileupSums) from pileupSummaries
+        set idPatient, idSample, file(pileupSums) from pileupSummaries
         file(dict) from ch_dict
 
     output:
-        set idPatient, idSampleTumor, file("${idSampleTumor}_pileupsummaries.table") into mergedPileupFile
+        set idPatient, idSample, file("${idSample}_pileupsummaries.table") into mergedPileupFile
 
     when: 'mutect2' in tools
 
@@ -2677,29 +2679,24 @@ process MergePileupSummaries {
         GatherPileupSummaries \
         --sequence-dictionary ${dict} \
         ${allPileups} \
-        -O ${idSampleTumor}_pileupsummaries.table
+        -O ${idSample}_pileupsummaries.table
     """
 }
 
 // STEP GATK MUTECT2.5 - CALCULATING CONTAMINATION
 
-singleBamTumorContamination = singleBamTumorContamination.map{
-    idPatient, idSampleTumor, bamTumor, baiTumor ->
-    [idPatient, idSampleTumor, bamTumor, baiTumor]
-}.join(mergedPileupFile, by:[0,1])
-
 process CalculateContamination {
     label 'cpus_1'
 
-    tag "${idSampleTumor}"
+    tag "${idSample}"
 
-    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Mutect2", mode: params.publish_dir_mode
+    publishDir "${params.outdir}/VariantCalling/${idSample}/Mutect2", mode: params.publish_dir_mode
 
     input:
-        set idPatient, idSampleTumor, file(bamTumor), file(baiTumor), file(mergedPileup) from singleBamTumorContamination
+        set idPatient, idSample, file(mergedPileup) from mergedPileupFile
 
      output:
-        set idPatient, val("${idSampleTumor}"), file("${idSampleTumor}_contamination.table") into contaminationTable
+        set idPatient, val("${idSample}"), file("${idSample}_contamination.table") into contaminationTable
 
     when: 'mutect2' in tools
 
@@ -2708,8 +2705,8 @@ process CalculateContamination {
     # calculate contamination
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
         CalculateContamination \
-        -I ${idSampleTumor}_pileupsummaries.table \
-        -O ${idSampleTumor}_contamination.table
+        -I ${idSample}_pileupsummaries.table \
+        -O ${idSample}_contamination.table
     """
 }
 
