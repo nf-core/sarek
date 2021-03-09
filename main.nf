@@ -2428,7 +2428,7 @@ process Mutect2 {
 
     output:
         set val("Mutect2"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2PairOutput
-        set idPatient, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf.stats") optional true into intervalStatsFilesPair
+        set idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf.stats") optional true into intervalStatsFilesPair
         set idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf.stats"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") optional true into mutect2StatsPair
 
     when: 'mutect2' in tools
@@ -2444,7 +2444,7 @@ process Mutect2 {
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
       Mutect2 \
       -R ${fasta}\
-      -I ${bamTumor}  -tumor ${idSampleTumor} \
+      -I ${bamTumor} -tumor ${idSampleTumor} \
       -I ${bamNormal} -normal ${idSampleNormal} \
       ${intervalsOptions} \
       ${softClippedOption} \
@@ -2474,9 +2474,9 @@ process Mutect2Single {
         file(ponIndex) from ch_pon_tbi
 
     output:
-        set val("Mutect2"), idPatient, val("${idSampleTumor}"), file("${intervalBed.baseName}_${idSampleTumor}.vcf") into mutect2SingleOutput
+        set val("Mutect2"), idPatient, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}.vcf") into mutect2SingleOutput
         set idPatient, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}.vcf.stats") optional true into intervalStatsFilesSingle
-        set idPatient, val("${idSampleTumor}"), file("${intervalBed.baseName}_${idSampleTumor}.vcf.stats"), file("${intervalBed.baseName}_${idSampleTumor}.vcf") optional true into mutect2StatsSingle
+        set idPatient, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}.vcf.stats"), file("${intervalBed.baseName}_${idSampleTumor}.vcf") optional true into mutect2StatsSingle
 
     when: 'mutect2' in tools
 
