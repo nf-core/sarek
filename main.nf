@@ -2615,7 +2615,7 @@ vcfConcatenatedForFilter = vcfConcatenatedForFilter.dump(tag:'Mutect2 unfiltered
 
 // STEP GATK MUTECT2.3 - GENERATING PILEUP SUMMARIES
 
-bamPileupSummariesSingle = bamPileupSummariesSingle.join(intervalStatsFiles, by:[0,1])
+bamPileupSummariesSingle = bamPileupSummariesSingle.join(intervalStatsFilesSingle, by:[0,1])
 
 bamPileupSummaries = bamPileupSummaries.map{
   idPatient, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor, intervalBed ->
