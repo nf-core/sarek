@@ -3,7 +3,7 @@ include { initOptions; saveFiles; getSoftwareName } from './../functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-process GATK_MARKDUPLICATES {
+process GATK4_MARKDUPLICATES {
     label 'cpus_16'
 
     tag "${meta.id}"
@@ -43,7 +43,7 @@ process GATK_MARKDUPLICATES {
     """
 }
 
-process GATK_MARKDUPLICATES_SPARK {
+process GATK4_MARKDUPLICATES_SPARK {
     label 'cpus_16'
 
     tag "${meta.id}"

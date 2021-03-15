@@ -3,7 +3,7 @@ include { initOptions; saveFiles; getSoftwareName } from './../functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-process GATK_APPLYBQSR {
+process GATK4_APPLYBQSR {
     label 'memory_singleCPU_2_task'
     label 'cpus_2'
 

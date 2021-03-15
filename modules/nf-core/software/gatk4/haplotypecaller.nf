@@ -3,7 +3,7 @@ include { initOptions; saveFiles; getSoftwareName } from './../functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-process GATK_HAPLOTYPECALLER {
+process GATK4_HAPLOTYPECALLER {
     label 'MEMORY_SINGLECPU_TASK_SQ'
     label 'CPUS_2'
 
@@ -22,7 +22,7 @@ process GATK_HAPLOTYPECALLER {
     input:
         tuple val(meta), path(bam), path(bai), file(interval)
         path dbsnp
-        path dbsnpIndex
+        tuple val(meta_dbsnp), path(dbsnp_tbi)
         path dict
         path fasta
         path fai

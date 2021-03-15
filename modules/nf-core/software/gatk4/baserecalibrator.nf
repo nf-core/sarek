@@ -3,12 +3,11 @@ include { initOptions; saveFiles; getSoftwareName } from './../functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-process GATK_BASERECALIBRATOR {
-    label 'cpus_1'
-
-    tag "${meta.id}"
-
-    publishDir params.outdir, mode: params.publish_dir_mode,
+process GATK4_BASERECALIBRATOR {
+    tag "$meta.id"
+    label 'process_medium'
+    publishDir "${params.outdir}",
+        mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     conda (params.enable_conda ? "bioconda::gatk4=4.1.9.0" : null)
@@ -21,12 +20,12 @@ process GATK_BASERECALIBRATOR {
     input:
         tuple val(meta), path(bam), path(bai), path(interval)
         path dbsnp
-        path dbsnp_tbi
+        tuple val(meta_dbsnp), path(dbsnp_tbi)
         path dict
         path fai
         path fasta
         path known_indels
-        path known_indels_tbi
+        tuple val(meta_known_indels), path(known_indels_tbi)
         
     output:
         tuple val(meta), path("${prefix}${meta.sample}.recal.table"), emit: report

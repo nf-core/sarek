@@ -3,7 +3,7 @@ include { initOptions; saveFiles; getSoftwareName } from './../functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-process GATK_GENOTYPEGVCF {
+process GATK4_GENOTYPEGVCF {
     tag "${meta.id}"
 
     publishDir params.outdir, mode: params.publish_dir_mode,
@@ -19,7 +19,7 @@ process GATK_GENOTYPEGVCF {
     input:
         tuple val(meta), path(interval), path(gvcf)
         path dbsnp
-        path dbsnpIndex
+        tuple val(meta_dbsnp), path(dbsnp_tbi)
         path dict
         path fasta
         path fai
