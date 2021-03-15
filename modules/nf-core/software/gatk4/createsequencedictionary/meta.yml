@@ -1,0 +1,51 @@
+name: gatk4_createsequencedictionary
+description: Creates a sequence dictionary for a reference sequence
+keywords:
+    - dictionary
+    - fasta
+tools:
+    - gatk:
+        description: |
+            Developed in the Data Sciences Platform at the Broad Institute, the toolkit offers a wide variety of tools
+            with a primary focus on variant discovery and genotyping. Its powerful processing engine
+            and high-performance computing features make it capable of taking on projects of any size.
+        homepage: https://gatk.broadinstitute.org/hc/en-us
+        documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
+        doi: 10.1158/1538-7445.AM2017-3590
+params:
+    - outdir:
+        type: string
+        description: |
+            The pipeline's output directory. By default, the module will
+            output files into `$params.outdir/<SOFTWARE>`
+    - publish_dir_mode:
+        type: string
+        description: |
+            Value for the Nextflow `publishDir` mode parameter.
+            Available: symlink, rellink, link, copy, copyNoFollow, move.
+    - enable_conda:
+        type: boolean
+        description: |
+            Run the module with Conda using the software specified
+            via the `conda` directive
+    - singularity_pull_docker_container:
+        type: boolean
+        description: |
+            Instead of directly downloading Singularity images for use with Singularity,
+            force the workflow to pull and convert Docker containers instead.
+input:
+    - fasta:
+        type: file
+        description: Input fasta file
+        pattern: "*.{fasta,fa}"
+output:
+    - dict:
+        type: file
+        description: gatk dictionary file
+        pattern: "*.{dict}"
+    - version:
+        type: file
+        description: File containing software version
+        pattern: "*.{version.txt}"
+authors:
+    - "@maxulysse"
