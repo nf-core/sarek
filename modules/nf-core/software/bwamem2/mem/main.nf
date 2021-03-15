@@ -1,3 +1,4 @@
+// Import generic module functions
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
@@ -6,7 +7,6 @@ def options    = initOptions(params.options)
 process BWAMEM2_MEM {
     tag "$meta.id"
     label 'process_high'
-    label 'BWAMEM2_MEM'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
@@ -21,8 +21,6 @@ process BWAMEM2_MEM {
     input:
     tuple val(meta), path(reads)
     path  index
-    path  fasta
-    path  fai
 
     output:
     tuple val(meta), path("*.bam"), emit: bam
@@ -33,13 +31,15 @@ process BWAMEM2_MEM {
     def prefix     = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     def read_group = meta.read_group ? "-R ${meta.read_group}" : ""
     """
-    bwa-mem2 mem \
-        $options.args \
-        $read_group \
-        -t $task.cpus \
-        $fasta \
-        $reads \
-        | samtools $options.args2 --threads $task.cpus -o ${prefix}.bam -
+    INDEX=`find -L ./ -name "*.amb" | sed 's/.amb//'`
+
+    bwa-mem2 mem \\
+        $options.args \\
+        $read_group \\
+        -t $task.cpus \\
+        \$INDEX \\
+        $reads \\
+        | samtools $options.args2 -@ $task.cpus -o ${prefix}.bam -
 
     echo \$(bwa-mem2 version 2>&1) > ${software}.version.txt
     """
