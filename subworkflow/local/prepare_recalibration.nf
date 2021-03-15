@@ -7,8 +7,8 @@
 params.baserecalibrator_options  = [:]
 params.gatherbqsrreports_options = [:]
 
-include { GATK_BASERECALIBRATOR  as BASERECALIBRATOR }  from '../../modules/nf-core/software/gatk/baserecalibrator'  addParams(options: params.baserecalibrator_options)
-include { GATK_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from '../../modules/nf-core/software/gatk/gatherbqsrreports' addParams(options: params.gatherbqsrreports_options)
+include { GATK4_BASERECALIBRATOR  as BASERECALIBRATOR }  from '../../modules/nf-core/software/gatk4/baserecalibrator'  addParams(options: params.baserecalibrator_options)
+include { GATK4_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from '../../modules/nf-core/software/gatk4/gatherbqsrreports' addParams(options: params.gatherbqsrreports_options)
 
 workflow PREPARE_RECALIBRATION {
     take:

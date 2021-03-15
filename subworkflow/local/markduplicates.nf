@@ -6,8 +6,8 @@
 
 params.markduplicates_options = [:]
 
-include { GATK_MARKDUPLICATES }       from '../../modules/nf-core/software/gatk/markduplicates' addParams(options: params.markduplicates_options)
-include { GATK_MARKDUPLICATES_SPARK } from '../../modules/nf-core/software/gatk/markduplicates' addParams(options: params.markduplicates_options)
+include { GATK4_MARKDUPLICATES }       from '../../modules/nf-core/software/gatk4/markduplicates' addParams(options: params.markduplicates_options)
+include { GATK4_MARKDUPLICATES_SPARK } from '../../modules/nf-core/software/gatk4/markduplicates' addParams(options: params.markduplicates_options)
 
 workflow MARKDUPLICATES {
     take:
@@ -22,15 +22,15 @@ workflow MARKDUPLICATES {
     if (step == "mapping") {
         if (!params.skip_markduplicates) {
             if (params.use_gatk_spark) {
-                GATK_MARKDUPLICATES_SPARK(bam_mapped)
-                report_markduplicates = GATK_MARKDUPLICATES_SPARK.out.report
-                bam_markduplicates    = GATK_MARKDUPLICATES_SPARK.out.bam
-                tsv_markduplicates    = GATK_MARKDUPLICATES_SPARK.out.tsv
+                GATK4_MARKDUPLICATES_SPARK(bam_mapped)
+                report_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.report
+                bam_markduplicates    = GATK4_MARKDUPLICATES_SPARK.out.bam
+                tsv_markduplicates    = GATK4_MARKDUPLICATES_SPARK.out.tsv
             } else {
-                GATK_MARKDUPLICATES(bam_mapped)
-                report_markduplicates = GATK_MARKDUPLICATES.out.report
-                bam_markduplicates    = GATK_MARKDUPLICATES.out.bam
-                tsv_markduplicates    = GATK_MARKDUPLICATES.out.tsv
+                GATK4_MARKDUPLICATES(bam_mapped)
+                report_markduplicates = GATK4_MARKDUPLICATES.out.report
+                bam_markduplicates    = GATK4_MARKDUPLICATES.out.bam
+                tsv_markduplicates    = GATK4_MARKDUPLICATES.out.tsv
             }
 
             // Creating TSV files to restart from this step
