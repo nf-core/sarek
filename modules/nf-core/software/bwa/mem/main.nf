@@ -21,8 +21,6 @@ process BWA_MEM {
     input:
     tuple val(meta), path(reads)
     path  index
-    path  fasta
-    path  fai
 
     output:
     tuple val(meta), path("*.bam"), emit: bam
@@ -33,12 +31,14 @@ process BWA_MEM {
     def prefix     = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     def read_group = meta.read_group ? "-R ${meta.read_group}" : ""
     """
-    bwa mem \
-        $options.args \
-        $read_group \
-        -t $task.cpus \
-        $fasta \
-        $reads \
+    INDEX=`find -L ./ -name "*.amb" | sed 's/.amb//'`
+
+    bwa mem \\
+        $options.args \\
+        $read_group \\
+        -t $task.cpus \\
+        \$INDEX \\
+        $reads \\
         | samtools $options.args2 --threads $task.cpus -o ${prefix}.bam -
 
     echo \$(bwa 2>&1) | sed 's/^.*Version: //; s/Contact:.*\$//' > ${software}.version.txt

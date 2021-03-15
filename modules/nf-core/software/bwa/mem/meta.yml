@@ -51,10 +51,7 @@ input:
     - index:
         type: file
         description: BWA genome index files
-        pattern: "*.{amb,ann,bwt,pac,sa}"
-    - fasta:
-        type: file
-        description: Input genome fasta file
+        pattern: "Directory containing BWA index *.{amb,ann,bwt,pac,sa}"
 output:
     - bam:
         type: file
