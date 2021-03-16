@@ -2793,7 +2793,7 @@ process filter_mutect_local {
 	uncompressed = vcf.replaceAll(/\.gz/, "")
 	"""
 	bgzip -d ${vcf}
-	filter_mutect.py ${uncompresed} "${variantCaller}_${idPatient}"_local_filtered.vcf
+	filter_mutect.py ${uncompressed} "${variantCaller}_${idPatient}"_local_filtered.vcf
 	"""
 }
 
