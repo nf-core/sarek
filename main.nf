@@ -100,13 +100,11 @@ def helpMessage() {
                                           If none provided, will be generated automatically from the PON
       --ignore_soft_clipped_bases  [bool] Do not analyze soft clipped bases in the reads for GATK Mutect2
                                           Default: Do not use
-      --platypus_tef               [int]  Input tumour enrichment factor for platypus filter
       --umi                        [bool] If provided, UMIs steps will be run to extract and annotate the reads with UMI and create consensus reads
       --read_structure1          [string] When processing UMIs, a read structure should always be provided for each of the fastq files. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length). 
                                           See: https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
       --read_structure2          [string] When processing UMIs, a read structure should always be provided for each of the fastq files. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length). 
                                           See: https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
-      --platypus_tef               [int]  Input tumour enrichment factor for platypus filter
 
     Annotation:
       --annotate_tools              [str] Specify from which tools Sarek should look for VCF files to annotate, only for step Annotate
@@ -377,7 +375,6 @@ ch_read_structure1 = params.read_structure1 ? Channel.value(params.read_structur
 ch_read_structure2 = params.read_structure2 ? Channel.value(params.read_structure2) : "null"
 
 // Tumour enrichment factor required for platypus
-ch_tef = params.platypus_tef ? Channel.value(params.platypus_tef) : "null"
 
 /*
 ================================================================================
@@ -440,7 +437,6 @@ if ('controlfreec' in tools) {
 if ('haplotypecaller' in tools)             summary['GVCF']       = params.no_gvcf ? 'No' : 'Yes'
 if ('strelka' in tools && 'manta' in tools) summary['Strelka BP'] = params.no_strelka_bp ? 'No' : 'Yes'
 if (params.pon && ('mutect2' in tools || (params.sentieon && 'tnscope' in tools))) summary['Panel of normals'] = params.pon
-if ('platypus' in tools ) summary['Tumour enrichment factor'] = params.platypus_tef
 
 if (params.annotate_tools) summary['Tools to annotate'] = annotate_tools.join(', ')
 
@@ -2517,7 +2513,8 @@ process Mutect2 {
       -R ${fasta}\
       -I ${bamTumor}  -tumor ${idSampleTumor} \
       -I ${bamNormal} -normal ${idSampleNormal} \
-      ${intervalsOptions} \
+      --native-pair-hmm-threads 24 \
+	  ${intervalsOptions} \
       ${softClippedOption} \
       --germline-resource ${germlineResource} \
       ${PON} \
@@ -2772,18 +2769,42 @@ process FilterMutect2Calls {
     """
 }
 
-// STEP PLATYPUS VARIANT CALLING
 
-(intervalFilteredMutect2Output, filteredMutect2Output) = filteredMutect2Output.into(2)
+(filteredMutect2Output, filteredMutect2Output_local) = filteredMutect2Output.into(3)
 // get rid of stats file
-intervalFilteredMutect2Output = intervalFilteredMutect2Output
+filteredMutect2Output_local =  filteredMutect2Output_local
                                     .map{ caller, idPatient, idSamplePair, vcfFile, tbiFile, statsFile ->
                                         [ idPatient, idSamplePair, vcfFile, tbiFile]}
+
+process filter_mutect_local {
+	
+	tag "${variantCaller}-${idPatient}"
+
+	publishDir "${params.outdir}/VariantCalling/${idPatient}/${variantCaller}", mode: params.publish_dir_mode
+
+	input:
+    	set variantCaller, idPatient, idSampleNormal, file(vcf), file(tbi) from filteredMutect2Output_local
+
+	output:
+        set variantCaller, idPatient, file("${variantCaller}_${idPatient}_filtered.vcf.gz"), file("${variantCaller}_${idPatient}_filtered.vcf.gz.tbi") into intervalFilteredMutect2Output	
+	when: 'mutect2' in tools
+
+	script:
+	uncompressed = vcf.replaceAll(/\.gz/, "")
+	"""
+	bgzip -d ${vcf}
+	filter_mutect.py ${uncompresed} "${variantCaller}_${idPatient}"_local_filtered.vcf
+	"""
+}
+
+
 // split using bedIntervals
 intervalFilteredMutect2Output = intervalFilteredMutect2Output.spread(intPlatypusVCF)
 // group by patient and bed
 intervalFilteredMutect2Output = intervalFilteredMutect2Output.groupTuple(by: [0,4])
 intervalFilteredMutect2Output = intervalFilteredMutect2Output.dump(tag: 'filteredMutect2Output' )   
+
+// STEP PLATYPUS VARIANT CALLING
 
 // again split recalbam using bedIntervals
 bamPlatypus = bamPlatypus.spread(intPlatypusBam)
@@ -2883,7 +2904,6 @@ process filterPlatypus {
 
 	input:
     	set variantCaller, idPatient, idSampleNormal, file(vcf), file(tbi)from normalBamForPlatypus
-		val(tef) from ch_tef
 
 	output:
         set variantCaller, idPatient, file("${variantCaller}_${idPatient}_filtered.vcf.gz"), file("${variantCaller}_${idPatient}_filtered.vcf.gz.tbi") into PlatypusVcfFiltered
@@ -2893,7 +2913,7 @@ process filterPlatypus {
 	script:
 	"""
 	bgzip -d ${vcf}
-	filter_platypus.py "${variantCaller}_${idPatient}".vcf ${idSampleNormal} ${tef}
+	filter_platypus.py "${variantCaller}_${idPatient}".vcf ${idSampleNormal}
     bgzip  "${variantCaller}_${idPatient}"_filtered.vcf
 	tabix -p vcf "${variantCaller}_${idPatient}"_filtered.vcf.gz
 	"""
