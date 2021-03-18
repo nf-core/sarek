@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for the nf-core website
+about: Suggest an idea for the nf-core/sarek pipeline
 labels: enhancement
 ---
 
