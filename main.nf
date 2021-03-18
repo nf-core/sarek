@@ -2775,7 +2775,7 @@ process FilterMutect2Calls {
 // get rid of stats file
 filteredMutect2Output_local =  filteredMutect2Output_local
                                     .map{ caller, idPatient, idSamplePair, vcfFile, tbiFile, statsFile ->
-                                        [ idPatient, idSamplePair, vcfFile, tbiFile]}
+                                        [ caller, idPatient, idSamplePair, vcfFile, tbiFile]}
 
 process filter_mutect_local {
 	
@@ -2784,17 +2784,18 @@ process filter_mutect_local {
 	publishDir "${params.outdir}/VariantCalling/${idPatient}/${variantCaller}", mode: params.publish_dir_mode
 
 	input:
-    	set variantCaller, idPatient, idSampleNormal, file(vcf), file(tbi) from filteredMutect2Output_local
+    	set variantCaller, idPatient, idSamplePair, file(vcf), file(tbi) from filteredMutect2Output_local
 
 	output:
-        set variantCaller, idPatient, file("${variantCaller}_${idPatient}_filtered.vcf.gz"), file("${variantCaller}_${idPatient}_filtered.vcf.gz.tbi") into intervalFilteredMutect2Output	
+        set variantCaller, idPatient, file("${variantCaller}_${idPatient}_${idSamplePair}_local_filtered.vcf.gz"), file("${variantCaller}_${idPatient}_${idSamplePair}_local_filtered.vcf.gz.tbi") into intervalFilteredMutect2Output	
 	when: 'mutect2' in tools
 
 	script:
-	uncompressed = vcf.replaceAll(/\.gz/, "")
 	"""
-	bgzip -d ${vcf}
+    bgzip -d ${vcf}
 	filter_mutect.py ${uncompressed} "${variantCaller}_${idPatient}"_local_filtered.vcf
+    bgzip "${variantCaller}_${idPatient}"_local_filtered.vcf
+    tabix -p vcf "${variantCaller}_${idPatient}_${idSamplePair}"_local_filtered.vcf.gz
 	"""
 }
 
