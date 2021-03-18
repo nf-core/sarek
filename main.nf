@@ -2506,6 +2506,7 @@ process Mutect2 {
     PON = params.pon ? "--panel-of-normals ${pon}" : ""
     intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
     softClippedOption = params.ignore_soft_clipped_bases ? "--dont-use-soft-clipped-bases true" : ""
+    threads = "--native-pair-hmm-threads ${task.cpus}"
     """
     # Get raw calls
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
@@ -2513,7 +2514,7 @@ process Mutect2 {
       -R ${fasta}\
       -I ${bamTumor}  -tumor ${idSampleTumor} \
       -I ${bamNormal} -normal ${idSampleNormal} \
-      --native-pair-hmm-threads 24 \
+      ${threads} \
 	  ${intervalsOptions} \
       ${softClippedOption} \
       --germline-resource ${germlineResource} \
