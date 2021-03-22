@@ -2,13 +2,46 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [dev](https://github.com/nf-core/sarek/tree/dev)
+
+### Added
+
+- [#230](https://github.com/nf-core/sarek/pull/230) - Add `ignore_soft_clipped_bases` option for `GATK Mutect2` [#218](https://github.com/nf-core/sarek/issues/218)
+- [#145](https://github.com/nf-core/sarek/pull/145) - Add `UMI annotation and consensus` functionality to `Sarek`
+- [#253](https://github.com/nf-core/sarek/pull/253) - Add `UMI` `CI` testing
+- [#262](https://github.com/nf-core/sarek/pull/262) - Add `nextflow_schema.json`
+
+### Changed
+
+- [#237](https://github.com/nf-core/sarek/pull/237) - Switch `bwa 0.7.17` for `bwa-mem2 2.0`
+- [#253](https://github.com/nf-core/sarek/pull/253), [#255](https://github.com/nf-core/sarek/pull/255) - Update docs
+- [#260](https://github.com/nf-core/sarek/pull/260), [#262](https://github.com/nf-core/sarek/pull/262), [#278](https://github.com/nf-core/sarek/pull/278) - Sync with `TEMPLATE` updated from [nf-core/tools](https://github.com/nf-core/tools) [`1.10.2`](https://github.com/nf-core/tools/releases/tag/1.10.2)
+- [#262](https://github.com/nf-core/sarek/pull/262) - Update issue templates to fit the recommended community standards
+- [#278](https://github.com/nf-core/sarek/pull/278) - Refactor docs
+
+### Fixed
+
+- [#229](https://github.com/nf-core/sarek/pull/229) - Fix `Control-FREEC` restart issue [#225](https://github.com/nf-core/sarek/issues/225)
+- [#236](https://github.com/nf-core/sarek/pull/236) - Fix `GATK Mutect2` typo issue [#227](https://github.com/nf-core/sarek/issues/227)
+- [#271](https://github.com/nf-core/sarek/pull/271) - Fix `ConcatVCF_Mutect2` `SIGPIPE` issue [#268](https://github.com/nf-core/sarek/issues/268)
+- [#272](https://github.com/nf-core/sarek/pull/272) - Fix annotation `--tools merge` issue
+- [#279](https://github.com/nf-core/sarek/pull/279) - Fix issue with `--step prepare_recalibration` [#267](https://github.com/nf-core/sarek/issues/267)
+- [#280](https://github.com/nf-core/sarek/pull/280) - Use HTML codes instead of `<` and `>` in docs
+- [#293](https://github.com/nf-core/sarek/pull/293) - Fix typo issue when printing infos [#292](https://github.com/nf-core/sarek/issues/292)
+- [#309](https://github.com/nf-core/sarek/pull/309) - Fixed concatenation of many VCF files
+- Fix Github Actions not running after November 16, 2020 (deprecated Github Actions API [#739](https://github.com/nf-core/tools/issues/739)
+
+### Removed
+
+- [#234](https://github.com/nf-core/sarek/pull/243) - Removing obsolete script [#92](https://github.com/nf-core/sarek/issues/92)
+- [#262](https://github.com/nf-core/sarek/pull/262) - Removing warning message about deprecated and obsolete params
+- [#262](https://github.com/nf-core/sarek/pull/262) - Removing deprecated params: `annotateTools`, `annotateVCF`, `cadd_InDels`, `cadd_InDels_tbi`, `cadd_WG_SNVs`, `cadd_WG_SNVs_tbi`, `maxMultiqcEmailFileSize`, `noGVCF`, `noReports`, `noStrelkaBP`, `nucleotidesPerSecond`, `publishDirMode`, `sample`, `sampleDir`, `saveGenomeIndex`, `skipQC`, `snpEff_cache`, `targetBed`
 
 ## [2.6.1](https://github.com/nf-core/sarek/releases/tag/2.6.1) - Gådokgaskatjåhkkå
 
 Gådokgaskatjåhkkå is the highest peak in the Piellorieppe massif.
-
-### Added
 
 ### Changed
 
@@ -16,19 +49,18 @@ Gådokgaskatjåhkkå is the highest peak in the Piellorieppe massif.
 - [#208](https://github.com/nf-core/sarek/pull/208) - Bump version to `3.0dev`
 - [#214](https://github.com/nf-core/sarek/pull/214) - Update `GATK` from `4.1.6.0` to `4.1.7.0`
 - [#219](https://github.com/nf-core/sarek/pull/219) - Added `awsfulltest.yml` GitHub Actions workflow
+- [#222](https://github.com/nf-core/sarek/pull/222) - Bump version to `2.6.1` and minor release
+- [#223](https://github.com/nf-core/sarek/pull/223) - Apply comments from the release PR
 
 ### Fixed
 
 - [#211](https://github.com/nf-core/sarek/pull/211) - Extend timeout for pushing to DockerHub for VEP containers
 - [#212](https://github.com/nf-core/sarek/pull/212) - No AWS test on forks
-- [#214](https://github.com/nf-core/sarek/pull/214) - Fix channels collision between `Freebayes` and `Mutect2` [#200](https://github.com/nf-core/sarek/issues/200)
+- [#214](https://github.com/nf-core/sarek/pull/214) - Fix channels collision between `Freebayes` and `GATK Mutect2` [#200](https://github.com/nf-core/sarek/issues/200)
 - [#214](https://github.com/nf-core/sarek/pull/214) - Fix warning Invalid tag value for `CreateIntervalBeds` [#209](https://github.com/nf-core/sarek/issues/209)
-- [#214](https://github.com/nf-core/sarek/pull/214) - Fix `Mutect2` issue [#210](https://github.com/nf-core/sarek/issues/210)
-- [#219](https://github.com/nf-core/sarek/pull/219) - Updated awstest.yml GitHub actions workflow
-
-### Deprecated
-
-### Removed
+- [#214](https://github.com/nf-core/sarek/pull/214) - Fix `GATK Mutect2` issue [#210](https://github.com/nf-core/sarek/issues/210)
+- [#219](https://github.com/nf-core/sarek/pull/219) - Updated `awstest.yml` GitHub actions workflow
+- [#221](https://github.com/nf-core/sarek/pull/221) - Fix issue with `tmp_dir` in `BaseRecalibrator` process
 
 ## [2.6](https://github.com/nf-core/sarek/releases/tag/2.6) - Piellorieppe
 
@@ -36,11 +68,13 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 
 ### Added
 
+- [#142](https://github.com/nf-core/sarek/pull/142) - Add `Platypus` possibilities to Sarek
 - [#76](https://github.com/nf-core/sarek/pull/76) - Add `GATK Spark` possibilities to Sarek
 - [#87](https://github.com/nf-core/sarek/pull/87) - Add `GATK BaseRecalibrator` plot to `MultiQC` report
 - [#115](https://github.com/nf-core/sarek/pull/115) - Add [@szilvajuhos](https://github.com/szilvajuhos) abstract for ESHG2020
 - [#117](https://github.com/nf-core/sarek/pull/117) - Add `Trim Galore` possibilities to Sarek
 - [#141](https://github.com/nf-core/sarek/pull/141) - Add containers for `WBcel235`
+- [#142](https://github.com/nf-core/sarek/pull/142) - Add `Platypus` possibilities to Sarek
 - [#150](https://github.com/nf-core/sarek/pull/150), [#151](https://github.com/nf-core/sarek/pull/151), [#154](https://github.com/nf-core/sarek/pull/154) - Add AWS mega test GitHub Actions
 - [#153](https://github.com/nf-core/sarek/pull/153) - Add `CNVkit` possibilities to Sarek
 - [#158](https://github.com/nf-core/sarek/pull/158) - Added `ggplot2` version `3.3.0`
@@ -107,7 +141,7 @@ Piellorieppe is one of the main massif in the Sarek National Park.
 - [#141](https://github.com/nf-core/sarek/pull/141) - Fix `download_cache.nf` script to download cache for `snpEff` and `VEP`
 - [#143](https://github.com/nf-core/sarek/pull/143) - Fix annotation CI testing with `snpEff` and `VEP`
 - [#144](https://github.com/nf-core/sarek/pull/144) - Fix CircleCI for building `VEP` containers
-- [#146](https://github.com/nf-core/sarek/pull/146) - Fix `--no_intervals` for `Mutect2` cf [#135](https://github.com/nf-core/sarek/issues/135)
+- [#146](https://github.com/nf-core/sarek/pull/146) - Fix `--no_intervals` for `GATK Mutect2` cf [#135](https://github.com/nf-core/sarek/issues/135)
 - [#156](https://github.com/nf-core/sarek/pull/156) - Fix typos
 - [#156](https://github.com/nf-core/sarek/pull/156) - Fix issues with `dbsnp` files while using only `Sention` tools
 - [#158](https://github.com/nf-core/sarek/pull/158) - Fix typo with `params.snpeff_cache` to decide containers for `snpEff`
@@ -233,7 +267,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#2](https://github.com/nf-core/sarek/pull/2), [#3](https://github.com/nf-core/sarek/pull/3), [#4](https://github.com/nf-core/sarek/pull/4), [#5](https://github.com/nf-core/sarek/pull/5), [#7](https://github.com/nf-core/sarek/pull/7), [#9](https://github.com/nf-core/sarek/pull/9), [#10](https://github.com/nf-core/sarek/pull/10), [#11](https://github.com/nf-core/sarek/pull/11), [#12](https://github.com/nf-core/sarek/pull/12) - Add CI for `nf-core/sarek`
 - [#3](https://github.com/nf-core/sarek/pull/3) - Add preprocessing to `nf-core/sarek`
 - [#4](https://github.com/nf-core/sarek/pull/4) - Add variant calling to `nf-core/sarek` with `HaplotypeCaller`, and single mode `Manta` and `Strelka`
-- [#5](https://github.com/nf-core/sarek/pull/5), [#34](https://github.com/nf-core/sarek/pull/34) - Add variant calling to `nf-core/sarek` with `Manta`, `Strelka`, `Strelka Best Practices`, `Mutect2`, `FreeBayes`, `ASCAT`, `ControlFREEC`
+- [#5](https://github.com/nf-core/sarek/pull/5), [#34](https://github.com/nf-core/sarek/pull/34) - Add variant calling to `nf-core/sarek` with `Manta`, `Strelka`, `Strelka Best Practices`, `GATK Mutect2`, `FreeBayes`, `ASCAT`, `ControlFREEC`
 - [#6](https://github.com/nf-core/sarek/pull/6) - Add default containers for annotation to `nf-core/sarek`
 - [#7](https://github.com/nf-core/sarek/pull/7) - Add `MultiQC`
 - [#7](https://github.com/nf-core/sarek/pull/7) - Add annotation
@@ -323,7 +357,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#35](https://github.com/nf-core/sarek/pull/35) - Remove building indexes from `build.nf` script
 - [#35](https://github.com/nf-core/sarek/pull/35) - Remove helper script `build_reference.sh`
 - [#35](https://github.com/nf-core/sarek/pull/35) - Remove `IGVtools`
-- [#35](https://github.com/nf-core/sarek/pull/35) - Remove `Mutect2` from `MULTIPLE` test
+- [#35](https://github.com/nf-core/sarek/pull/35) - Remove `GATK Mutect2` from `MULTIPLE` test
 - [#35](https://github.com/nf-core/sarek/pull/35) - Remove `referenceMap` and `defineReferenceMap()` and use Channel values instead
 
 ### Fixed
