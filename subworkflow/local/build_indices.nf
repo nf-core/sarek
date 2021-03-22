@@ -30,7 +30,7 @@ include { TABIX_TABIX as TABIX_KNOWN_INDELS }            from '../../modules/nf-
 include { TABIX_TABIX as TABIX_PON }                     from '../../modules/nf-core/software/tabix/tabix/main.nf'                    addParams(options: params.tabix_pon_options)
 include { INDEX_TARGET_BED }                             from '../../modules/local/index_target_bed.nf'                               addParams(options: params.index_target_bed_options)
 include { MSISENSOR_SCAN }                               from '../../modules/nf-core/software/msisensor/scan.nf'                      addParams(options: params.msisensor_scan_options)
-include { SAMTOOLS_FAIDX }                               from '../../modules/nf-core/software/samtools/faidx.nf'                      addParams(options: params.samtools_faidx_options)
+include { SAMTOOLS_FAIDX }                               from '../../modules/nf-core/software/samtools/faidx/main.nf'                 addParams(options: params.samtools_faidx_options)
 
 workflow BUILD_INDICES{
     take:
