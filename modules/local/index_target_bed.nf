@@ -5,10 +5,8 @@ params.options = [:]
 def options    = initOptions(params.options)
 
 process INDEX_TARGET_BED {
-    label 'cpus_8'
-
-    tag "${target_bed}"
-
+    tag "$target_bed"
+    label 'process_medium'
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:"false") }
 

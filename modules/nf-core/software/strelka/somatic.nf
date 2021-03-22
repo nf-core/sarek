@@ -4,11 +4,8 @@ params.options = [:]
 def options    = initOptions(params.options)
 
 process STRELKA_SOMATIC {
-    tag "${meta.id}"
-    
-    label 'CPUS_MAX'
-    label 'MEMORY_MAX'
-    
+    tag "$meta.id"
+    label 'process_high'
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 

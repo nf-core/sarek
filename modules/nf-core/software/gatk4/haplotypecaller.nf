@@ -4,11 +4,8 @@ params.options = [:]
 def options    = initOptions(params.options)
 
 process GATK4_HAPLOTYPECALLER {
-    label 'MEMORY_SINGLECPU_TASK_SQ'
-    label 'CPUS_2'
-
-    tag "${meta.id}"
-
+    tag "$meta.id"
+    label 'process_medium'
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
