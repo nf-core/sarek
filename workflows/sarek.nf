@@ -277,7 +277,6 @@ workflow SAREK {
     bam_mapped          = Channel.empty()
     bam_mapped_qc       = Channel.empty()
     bam_recalibrated_qc = Channel.empty()
-    input_reads         = Channel.empty()
     qc_reports          = Channel.empty()
 
     // STEP 0: QC & TRIM
