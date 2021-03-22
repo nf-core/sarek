@@ -2786,15 +2786,16 @@ process filter_mutect_local {
     	set variantCaller, idPatient, idSamplePair, file(vcf), file(tbi) from filteredMutect2Output_local
 
 	output:
-        set variantCaller, idPatient, file("${variantCaller}_${idPatient}_${idSamplePair}_local_filtered.vcf.gz"), file("${variantCaller}_${idPatient}_${idSamplePair}_local_filtered.vcf.gz.tbi") into intervalFilteredMutect2Output	
+    set variantCaller, idPatient, file("${variantCaller}_${idSamplePair}_local_filtered.vcf.gz"), file("${variantCaller}_${idSamplePair}_local_filtered.vcf.gz.tbi") into intervalFilteredMutect2Output	
+	
 	when: 'mutect2' in tools
 
 	script:
 	"""
     bgzip -d ${vcf}
-	filter_mutect.py ${uncompressed} "${variantCaller}_${idPatient}"_local_filtered.vcf
-    bgzip "${variantCaller}_${idPatient}"_local_filtered.vcf
-    tabix -p vcf "${variantCaller}_${idPatient}_${idSamplePair}"_local_filtered.vcf.gz
+	filter_mutect.py "${variantCaller}_filtered_${idSamplePair}".vcf "${variantCaller}_${idSamplePair}"_local_filtered.vcf
+    bgzip "${variantCaller}_${idSamplePair}"_local_filtered.vcf
+    tabix -p vcf "${variantCaller}_${idSamplePair}"_local_filtered.vcf.gz
 	"""
 }
 
