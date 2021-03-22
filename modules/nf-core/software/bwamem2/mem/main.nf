@@ -13,9 +13,9 @@ process BWAMEM2_MEM {
 
     conda (params.enable_conda ? "bioconda::bwa-mem2=2.1 bioconda::samtools=1.11" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/mulled-v2-e5d375990341c5aef3c9aff74f96f66f65375ef6:e6f0d20c9d78572ddbbf00d8767ee6ff865edd4e-0"
+        container "https://depot.galaxyproject.org/singularity/mulled-v2-e5d375990341c5aef3c9aff74f96f66f65375ef6:c3a3d4a6cb4bd1aef4d5bac6589927d3cd1fbe6c-0"
     } else {
-        container "quay.io/biocontainers/mulled-v2-e5d375990341c5aef3c9aff74f96f66f65375ef6:e6f0d20c9d78572ddbbf00d8767ee6ff865edd4e-0"
+        container "quay.io/biocontainers/mulled-v2-e5d375990341c5aef3c9aff74f96f66f65375ef6:c3a3d4a6cb4bd1aef4d5bac6589927d3cd1fbe6c-0"
     }
 
     input:
