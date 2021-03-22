@@ -17,7 +17,7 @@ include { BWA_MEM as BWAMEM1_MEM }       from '../../modules/nf-core/software/bw
 include { BWA_MEM as BWAMEM1_MEM_T }     from '../../modules/nf-core/software/bwa/mem/main'        addParams(options: params.bwamem1_mem_tumor_options)
 include { BWAMEM2_MEM }                  from '../../modules/nf-core/software/bwamem2/mem/main.nf' addParams(options: params.bwamem2_mem_options)
 include { BWAMEM2_MEM as BWAMEM2_MEM_T } from '../../modules/nf-core/software/bwamem2/mem/main.nf' addParams(options: params.bwamem2_mem_tumor_options)
-include { MERGE_BAM }                    from '../../modules/local/merge_bam'                      addParams(options: params.merge_bam_options)
+include { SAMTOOLS_MERGE }               from '../../modules/nf-core/software/samtools/merge/main' addParams(options: params.merge_bam_options)
 include { QUALIMAP_BAMQC }               from '../../modules/nf-core/software/qualimap_bamqc'      addParams(options: params.qualimap_bamqc_options)
 include { SAMTOOLS_INDEX }               from '../../modules/nf-core/software/samtools/index/main' addParams(options: params.samtools_index_options)
 include { SAMTOOLS_STATS }               from '../../modules/nf-core/software/samtools/stats/main' addParams(options: params.samtools_stats_options)
@@ -109,8 +109,8 @@ workflow MAPPING {
 
         // STEP 1.5: MERGING AND INDEXING BAM FROM MULTIPLE LANES 
         
-        MERGE_BAM(bam_bwa_multiple)
-        bam_mapped       = bam_bwa_single.mix(MERGE_BAM.out.bam)
+        SAMTOOLS_MERGE(bam_bwa_multiple)
+        bam_mapped       = bam_bwa_single.mix(SAMTOOLS_MERGE.out.merged_bam)
 
         SAMTOOLS_INDEX(bam_mapped)
         bam_mapped_index = bam_mapped.join(SAMTOOLS_INDEX.out.bai)

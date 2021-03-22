@@ -17,17 +17,17 @@ process GATK4_MARKDUPLICATES {
     }
 
     input:
-        tuple val(meta), path("${meta.sample}.bam"), path("${meta.sample}.bam.bai")
+    tuple val(meta), path("${meta.sample}.bam"), path("${meta.sample}.bam.bai")
 
     output:
-        tuple val(meta), path("${meta.sample}.md.bam"), path("${meta.sample}.md.bam.bai"), emit: bam
-        val meta,                                                                          emit: tsv
-        path "${meta.sample}.bam.metrics", optional : true,                                emit: report
+    tuple val(meta), path("${meta.sample}.md.bam"), path("${meta.sample}.md.bam.bai"), emit: bam
+    path "${meta.sample}.bam.metrics", optional : true,                                emit: report
+    path "*.version.txt" , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
     metrics = 'markduplicates' in params.skip_qc ? '' : "-M ${meta.sample}.bam.metrics"
-
     """
     gatk --java-options ${markdup_java_options} \
         MarkDuplicates \
@@ -38,6 +38,8 @@ process GATK4_MARKDUPLICATES {
         --CREATE_INDEX true \
         --OUTPUT ${meta.sample}.md.bam
     mv ${meta.sample}.md.bai ${meta.sample}.md.bam.bai
+
+    echo \$(gatk MarkDuplicates --version 2>&1) | sed 's/^.*(GATK) v//; s/ HTSJDK.*\$//' > ${software}.version.txt
     """
 }
 
@@ -55,17 +57,17 @@ process GATK4_MARKDUPLICATES_SPARK {
     }
 
     input:
-        tuple val(meta), path("${meta.sample}.bam"), path("${meta.sample}.bam.bai")
+    tuple val(meta), path("${meta.sample}.bam"), path("${meta.sample}.bam.bai")
 
     output:
-        tuple val(meta), path("${meta.sample}.md.bam"), path("${meta.sample}.md.bam.bai"), emit: bam
-        val meta,                                                                          emit: tsv
-        path "${meta.sample}.bam.metrics", optional : true,                                emit: report
+    tuple val(meta), path("${meta.sample}.md.bam"), path("${meta.sample}.md.bam.bai"), emit: bam
+    path "${meta.sample}.bam.metrics", optional : true,                                emit: report
+    path "*.version.txt" , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
     metrics = 'markduplicates' in params.skip_qc ? '' : "-M ${meta.sample}.bam.metrics"
-
     """
     gatk --java-options ${markdup_java_options} \
         MarkDuplicatesSpark \
@@ -75,5 +77,7 @@ process GATK4_MARKDUPLICATES_SPARK {
         --tmp-dir . \
         --create-output-bam-index true \
         --spark-master local[${task.cpus}]
+
+    echo \$(gatk MarkDuplicatesSpark --version 2>&1) | sed 's/^.*(GATK) v//; s/ HTSJDK.*\$//' > ${software}.version.txt
     """
 }

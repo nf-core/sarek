@@ -11,7 +11,7 @@ process BWAMEM2_MEM {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda (params.enable_conda ? "bioconda::bwa-mem2=2.1 bioconda::samtools=1.11" : null)
+    conda (params.enable_conda ? "bioconda::bwa-mem2=2.2 bioconda::samtools=1.12" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/mulled-v2-e5d375990341c5aef3c9aff74f96f66f65375ef6:c3a3d4a6cb4bd1aef4d5bac6589927d3cd1fbe6c-0"
     } else {

@@ -10,11 +10,11 @@ params.qualimap_bamqc_options = [:]
 params.samtools_index_options = [:]
 params.samtools_stats_options = [:]
 
-include { GATK4_APPLYBQSR as APPLYBQSR } from '../../modules/nf-core/software/gatk4/applybqsr'    addParams(options: params.applybqsr_options)
-include { MERGE_BAM }                   from '../../modules/local/merge_bam'                      addParams(options: params.merge_bam_options)
-include { QUALIMAP_BAMQC }              from '../../modules/nf-core/software/qualimap_bamqc'      addParams(options: params.qualimap_bamqc_options)
-include { SAMTOOLS_INDEX }              from '../../modules/nf-core/software/samtools/index/main' addParams(options: params.samtools_index_options)
-include { SAMTOOLS_STATS }              from '../../modules/nf-core/software/samtools/stats/main' addParams(options: params.samtools_stats_options)
+include { GATK4_APPLYBQSR as APPLYBQSR } from '../../modules/nf-core/software/gatk4/applybqsr'     addParams(options: params.applybqsr_options)
+include { QUALIMAP_BAMQC }               from '../../modules/nf-core/software/qualimap_bamqc'      addParams(options: params.qualimap_bamqc_options)
+include { SAMTOOLS_INDEX }               from '../../modules/nf-core/software/samtools/index/main' addParams(options: params.samtools_index_options)
+include { SAMTOOLS_MERGE }               from '../../modules/nf-core/software/samtools/merge/main' addParams(options: params.merge_bam_options)
+include { SAMTOOLS_STATS }               from '../../modules/nf-core/software/samtools/stats/main' addParams(options: params.samtools_stats_options)
 
 workflow RECALIBRATE {
     take:
@@ -43,7 +43,6 @@ workflow RECALIBRATE {
         // STEP 4.5: MERGING AND INDEXING THE RECALIBRATED BAM FILES
         if (params.no_intervals) {
             bam_recalibrated = APPLYBQSR.out.bam
-            tsv_recalibrated = APPLYBQSR.out.tsv
         } else {
             APPLYBQSR.out.bam.map{ meta, bam -> //, bai ->
                 patient = meta.patient
@@ -66,9 +65,8 @@ workflow RECALIBRATE {
                 [meta, bam]
             }
 
-            MERGE_BAM(bam_recalibrated_interval)
-            bam_recalibrated = MERGE_BAM.out.bam
-            tsv_recalibrated = MERGE_BAM.out.tsv
+            SAMTOOLS_MERGE(bam_recalibrated_interval)
+            bam_recalibrated = SAMTOOLS_MERGE.out.merged_bam
         }
 
         SAMTOOLS_INDEX(bam_recalibrated)
@@ -99,7 +97,7 @@ workflow RECALIBRATE {
         // // When starting with variant calling, Channel bam_recalibrated is input_sample
         // if (step == 'variantcalling') bam_recalibrated = input_sample
         // Creating TSV files to restart from this step
-        tsv_recalibrated.collectFile(storeDir: "${params.outdir}/preprocessing/tsv") { meta ->
+        bam_recalibrated_index.collectFile(storeDir: "${params.outdir}/preprocessing/tsv") { meta, bam, bai ->
             patient = meta.patient
             sample  = meta.sample
             gender  = meta.gender
@@ -109,7 +107,7 @@ workflow RECALIBRATE {
             ["recalibrated_${sample}.tsv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"]
         }
 
-        tsv_recalibrated.map { meta ->
+        bam_recalibrated_index.map { meta, bam, bai ->
             patient = meta.patient
             sample  = meta.sample
             gender  = meta.gender

@@ -25,16 +25,14 @@ workflow MARKDUPLICATES {
                 GATK4_MARKDUPLICATES_SPARK(bam_mapped)
                 report_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.report
                 bam_markduplicates    = GATK4_MARKDUPLICATES_SPARK.out.bam
-                tsv_markduplicates    = GATK4_MARKDUPLICATES_SPARK.out.tsv
             } else {
                 GATK4_MARKDUPLICATES(bam_mapped)
                 report_markduplicates = GATK4_MARKDUPLICATES.out.report
                 bam_markduplicates    = GATK4_MARKDUPLICATES.out.bam
-                tsv_markduplicates    = GATK4_MARKDUPLICATES.out.tsv
             }
 
             // Creating TSV files to restart from this step
-            tsv_markduplicates.collectFile(storeDir: "${params.outdir}/preprocessing/tsv") { meta ->
+            bam_markduplicates.collectFile(storeDir: "${params.outdir}/preprocessing/tsv") { meta, bam, bai ->
                 patient = meta.patient
                 sample  = meta.sample
                 gender  = meta.gender
@@ -45,7 +43,7 @@ workflow MARKDUPLICATES {
                 ["markduplicates_${sample}.tsv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\t${table}\n"]
             }
 
-            tsv_markduplicates.map { meta ->
+            bam_markduplicates.map { meta, bam, bai ->
                 patient = meta.patient
                 sample  = meta.sample
                 gender  = meta.gender
@@ -56,10 +54,8 @@ workflow MARKDUPLICATES {
                 "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\t${table}\n"
             }.collectFile(name: 'markduplicates.tsv', sort: true, storeDir: "${params.outdir}/preprocessing/tsv")
         } else {
-            tsv_no_markduplicates = bam_markduplicates.map { meta, bam, bai -> [meta] }
-
             // Creating TSV files to restart from this step
-            tsv_no_markduplicates.collectFile(storeDir: "${params.outdir}/preprocessing/tsv") { meta ->
+            tsv_no_markduplicates.collectFile(storeDir: "${params.outdir}/preprocessing/tsv") { meta, bam, bai ->
                 patient = meta.patient[0]
                 sample  = meta.sample[0]
                 gender  = meta.gender[0]
@@ -70,7 +66,7 @@ workflow MARKDUPLICATES {
                 ["mapped_no_markduplicates_${sample}.tsv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\t${table}\n"]
             }
 
-            tsv_no_markduplicates.map { meta ->
+            tsv_no_markduplicates.map { meta, bam, bai ->
                 patient = meta.patient[0]
                 sample  = meta.sample[0]
                 gender  = meta.gender[0]

@@ -17,17 +17,17 @@ process GATK4_APPLYBQSR {
     }
 
     input:
-        tuple val(meta), path(bam), path(bai), path(recalibrationReport), path(interval)
-        path dict
-        path fasta
-        path fai
+    tuple val(meta), path(bam), path(bai), path(recalibrationReport), path(interval)
+    path dict
+    path fasta
+    path fai
 
     output:
-        tuple val(meta), path("${prefix}${meta.sample}.recal.bam") , emit: bam
-        val meta,                                                    emit: tsv
-
+    tuple val(meta), path("${prefix}${meta.sample}.recal.bam") , emit: bam
+    path "*.version.txt" , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     prefix = params.no_intervals ? "" : "${interval.baseName}_"
     options_intervals = params.no_intervals ? "" : "-L ${interval}"
     """
@@ -38,5 +38,7 @@ process GATK4_APPLYBQSR {
         --output ${prefix}${meta.sample}.recal.bam \
         ${options_intervals} \
         --bqsr-recal-file ${recalibrationReport}
+
+    echo \$(gatk ApplyBQSR --version 2>&1) | sed 's/^.*(GATK) v//; s/ HTSJDK.*\$//' > ${software}.version.txt
     """
 }

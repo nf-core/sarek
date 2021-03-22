@@ -17,19 +17,20 @@ process GATK4_HAPLOTYPECALLER {
     }
 
     input:
-        tuple val(meta), path(bam), path(bai), file(interval)
-        path dbsnp
-        tuple val(meta_dbsnp), path(dbsnp_tbi)
-        path dict
-        path fasta
-        path fai
+    tuple val(meta), path(bam), path(bai), file(interval)
+    path dbsnp
+    tuple val(meta_dbsnp), path(dbsnp_tbi)
+    path dict
+    path fasta
+    path fai
 
     output:
-        tuple val(meta), path("${interval.baseName}_${meta.id}.g.vcf"),                 emit: gvcf
-        tuple val(meta), path(interval), path("${interval.baseName}_${meta.id}.g.vcf"), emit: interval_gvcf
-
+    tuple val(meta), path("${interval.baseName}_${meta.id}.g.vcf"),                 emit: gvcf
+    tuple val(meta), path(interval), path("${interval.baseName}_${meta.id}.g.vcf"), emit: interval_gvcf
+    path "*.version.txt" , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     intervalsOptions = params.no_intervals ? "" : "-L ${interval}"
     dbsnpOptions = params.dbsnp ? "--D ${dbsnp}" : ""
     """
@@ -41,5 +42,7 @@ process GATK4_HAPLOTYPECALLER {
         ${dbsnpOptions} \
         -O ${interval.baseName}_${meta.id}.g.vcf \
         -ERC GVCF
+
+    echo \$(gatk HaplotypeCaller --version 2>&1) | sed 's/^.*(GATK) v//; s/ HTSJDK.*\$//' > ${software}.version.txt
     """
 }

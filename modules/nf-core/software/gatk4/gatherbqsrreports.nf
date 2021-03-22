@@ -17,19 +17,22 @@ process GATK4_GATHERBQSRREPORTS {
     }
 
     input:
-        tuple val(meta), path(recal)
+    tuple val(meta), path(recal)
 
     output:
-        tuple val(meta), path("${meta.sample}.recal.table"), emit: table
-        path "${meta.sample}.recal.table",                   emit: report
-        val meta,                                            emit: tsv
+    tuple val(meta), path("${meta.sample}.recal.table"), emit: table
+    path "${meta.sample}.recal.table",                   emit: report
+    path "*.version.txt" , emit: version
         
     script:
+    def software = getSoftwareName(task.process)
     input = recal.collect{"-I ${it}"}.join(' ')
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
         GatherBQSRReports \
         ${input} \
-        -O ${meta.sample}.recal.table \
+        -O ${meta.sample}.recal.table
+
+    echo \$(gatk GatherBQSRReports --version 2>&1) | sed 's/^.*(GATK) v//; s/ HTSJDK.*\$//' > ${software}.version.txt
     """
 }

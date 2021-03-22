@@ -17,18 +17,20 @@ process GATK4_GENOTYPEGVCF {
     }
 
     input:
-        tuple val(meta), path(interval), path(gvcf)
-        path dbsnp
-        tuple val(meta_dbsnp), path(dbsnp_tbi)
-        path dict
-        path fasta
-        path fai
+    tuple val(meta), path(interval), path(gvcf)
+    path dbsnp
+    tuple val(meta_dbsnp), path(dbsnp_tbi)
+    path dict
+    path fasta
+    path fai
 
     output:
-        tuple val(meta), path("${interval.baseName}_${meta.id}.vcf")
+    tuple val(meta), path("${interval.baseName}_${meta.id}.vcf")
+    path "*.version.txt" , emit: version
 
     script:
     // Using -L is important for speed and we have to index the interval files also
+    def software = getSoftwareName(task.process)
     intervalsOptions = params.no_intervals ? "" : "-L ${interval}"
     dbsnpOptions = params.dbsnp ? "--D ${dbsnp}" : ""
     """
@@ -43,5 +45,7 @@ process GATK4_GENOTYPEGVCF {
         ${dbsnpOptions} \
         -V ${gvcf} \
         -O ${interval.baseName}_${meta.id}.vcf
+
+    echo \$(gatk GenotypeGVCFs --version 2>&1) | sed 's/^.*(GATK) v//; s/ HTSJDK.*\$//' > ${software}.version.txt
     """
 }

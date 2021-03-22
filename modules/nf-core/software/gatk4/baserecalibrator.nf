@@ -18,22 +18,21 @@ process GATK4_BASERECALIBRATOR {
     }
 
     input:
-        tuple val(meta), path(bam), path(bai), path(interval)
-        path dbsnp
-        tuple val(meta_dbsnp), path(dbsnp_tbi)
-        path dict
-        path fai
-        path fasta
-        path known_indels
-        tuple val(meta_known_indels), path(known_indels_tbi)
+    tuple val(meta), path(bam), path(bai), path(interval)
+    path dbsnp
+    tuple val(meta_dbsnp), path(dbsnp_tbi)
+    path dict
+    path fai
+    path fasta
+    path known_indels
+    tuple val(meta_known_indels), path(known_indels_tbi)
         
     output:
-        tuple val(meta), path("${prefix}${meta.sample}.recal.table"), emit: report
-        val meta,                                                     emit: tsv
-
-    //when: params.known_indels
+    tuple val(meta), path("${prefix}${meta.sample}.recal.table"), emit: report
+    path "*.version.txt" , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     options_dbsnp = params.dbsnp ? "--known-sites ${dbsnp}" : ""
     options_intervals = params.no_intervals ? "" : "-L ${interval}"
     options_known_indels = params.known_indels ? known_indels.collect{"--known-sites ${it}"}.join(' ') : ""
@@ -50,5 +49,7 @@ process GATK4_BASERECALIBRATOR {
         ${options_known_indels} \
         ${options_intervals} \
         --verbosity INFO
+
+    echo \$(gatk ApplyBQSR --version 2>&1) | sed 's/^.*(GATK) v//; s/ HTSJDK.*\$//' > ${software}.version.txt
     """
 }
