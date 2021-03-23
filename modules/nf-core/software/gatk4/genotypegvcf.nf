@@ -23,15 +23,16 @@ process GATK4_GENOTYPEGVCF {
     path dict
     path fasta
     path fai
+    val no_intervals
 
     output:
-    tuple val(meta), path("${interval.baseName}_${meta.id}.vcf")
-    path "*.version.txt" , emit: version
+    tuple val(meta), path("${interval.baseName}_${meta.id}.vcf"), emit: vcf
+    path "*.version.txt"                                        , emit: version
 
     script:
     // Using -L is important for speed and we have to index the interval files also
     def software = getSoftwareName(task.process)
-    intervalsOptions = params.no_intervals ? "" : "-L ${interval}"
+    intervalsOptions = no_intervals ? "" : "-L ${interval}"
     dbsnpOptions = params.dbsnp ? "--D ${dbsnp}" : ""
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \

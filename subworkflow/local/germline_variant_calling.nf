@@ -34,6 +34,9 @@ workflow GERMLINE_VARIANT_CALLING {
     haplotypecaller_gvcf = Channel.empty()
     haplotypecaller_vcf  = Channel.empty()
     strelka_vcf          = Channel.empty()
+    no_intervals = false
+
+    if (intervals == []) no_intervals = true
 
     if ('haplotypecaller' in tools) {
         haplotypecaller_interval_bam = bam.combine(intervals)
@@ -46,9 +49,10 @@ workflow GERMLINE_VARIANT_CALLING {
             dbsnp_tbi,
             dict,
             fasta,
-            fai)
+            fai,
+            no_intervals)
 
-        haplotypecaller_interval_gvcf = HAPLOTYPECALLER.out.gvcf.map{ meta, vcf ->
+        haplotypecaller_gvcf = HAPLOTYPECALLER.out.gvcf.map{ meta, vcf ->
             patient = meta.patient
             sample  = meta.sample
             gender  = meta.gender
@@ -56,7 +60,7 @@ workflow GERMLINE_VARIANT_CALLING {
             [ patient, sample, gender, status, vcf] 
         }.groupTuple(by: [0,1])
 
-        haplotypecaller_interval_gvcf = haplotypecaller_interval_gvcf.map { patient, sample, gender, status, vcf ->
+        haplotypecaller_gvcf = haplotypecaller_gvcf.map { patient, sample, gender, status, vcf ->
             def meta = [:]
             meta.patient = patient
             meta.sample  = sample
@@ -67,7 +71,7 @@ workflow GERMLINE_VARIANT_CALLING {
         }
 
         CONCAT_GVCF(
-            haplotypecaller_interval_gvcf,
+            haplotypecaller_gvcf,
             fai,
             target_bed)
 
@@ -81,9 +85,10 @@ workflow GERMLINE_VARIANT_CALLING {
             dbsnp_tbi,
             dict,
             fasta,
-            fai)
+            fai,
+            no_intervals)
 
-        haplotypecaller_interval_vcf = GENOTYPEGVCF.out.map{ meta, vcf ->
+        haplotypecaller_interval_vcf = GENOTYPEGVCF.out.vcf.map{ meta, vcf ->
             patient = meta.patient
             sample  = meta.sample
             gender  = meta.gender

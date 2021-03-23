@@ -23,6 +23,7 @@ process GATK4_HAPLOTYPECALLER {
     path dict
     path fasta
     path fai
+    val no_intervals
 
     output:
     tuple val(meta), path("${interval.baseName}_${meta.id}.g.vcf"),                 emit: gvcf
@@ -31,7 +32,7 @@ process GATK4_HAPLOTYPECALLER {
 
     script:
     def software = getSoftwareName(task.process)
-    intervalsOptions = params.no_intervals ? "" : "-L ${interval}"
+    intervalsOptions = no_intervals ? "" : "-L ${interval}"
     dbsnpOptions = params.dbsnp ? "--D ${dbsnp}" : ""
     """
     gatk --java-options "-Xmx${task.memory.toGiga()}g -Xms6000m -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10" \
