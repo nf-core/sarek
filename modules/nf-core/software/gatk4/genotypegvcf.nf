@@ -3,33 +3,36 @@ include { initOptions; saveFiles; getSoftwareName } from './../functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-process GATK_GENOTYPEGVCF {
-    tag "${meta.id}"
-
+process GATK4_GENOTYPEGVCF {
+    tag "$meta.id"
+    label 'process_medium'
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda (params.enable_conda ? "bioconda::gatk4=4.1.9.0" : null)
+    conda (params.enable_conda ? "bioconda::gatk4=4.2.0.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/gatk4:4.1.9.0--py39_0"
+        container "https://depot.galaxyproject.org/singularity/gatk4:4.2.0.0--0"
     } else {
-        container "quay.io/biocontainers/gatk4:4.1.9.0--py39_0"
+        container "quay.io/biocontainers/gatk4:4.2.0.0--0"
     }
 
     input:
-        tuple val(meta), path(interval), path(gvcf)
-        path dbsnp
-        path dbsnpIndex
-        path dict
-        path fasta
-        path fai
+    tuple val(meta), path(interval), path(gvcf)
+    path dbsnp
+    tuple val(meta_dbsnp), path(dbsnp_tbi)
+    path dict
+    path fasta
+    path fai
+    val no_intervals
 
     output:
-        tuple val(meta), path("${interval.baseName}_${meta.id}.vcf")
+    tuple val(meta), path("${interval.baseName}_${meta.id}.vcf"), emit: vcf
+    path "*.version.txt"                                        , emit: version
 
     script:
     // Using -L is important for speed and we have to index the interval files also
-    intervalsOptions = params.no_intervals ? "" : "-L ${interval}"
+    def software = getSoftwareName(task.process)
+    intervalsOptions = no_intervals ? "" : "-L ${interval}"
     dbsnpOptions = params.dbsnp ? "--D ${dbsnp}" : ""
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
@@ -43,5 +46,7 @@ process GATK_GENOTYPEGVCF {
         ${dbsnpOptions} \
         -V ${gvcf} \
         -O ${interval.baseName}_${meta.id}.vcf
+
+    echo \$(gatk GenotypeGVCFs --version 2>&1) | sed 's/^.*(GATK) v//; s/ HTSJDK.*\$//' > ${software}.version.txt
     """
 }

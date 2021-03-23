@@ -1,21 +1,15 @@
-name: bwa_mem
-description: Performs fastq alignment to a fasta reference using BWA
+name: tabix_tabix
+description: create tabix index from a sorted bgzip tab-delimited genome file
 keywords:
-    - mem
-    - bwa
-    - alignment
-    - map
-    - fastq
-    - bam
-    - sam
+    - index
+    - tabix
+    - vcf
 tools:
-    - bwa:
-        description: |
-            BWA is a software package for mapping DNA sequences against
-            a large reference genome, such as the human genome.
-        homepage: http://bio-bwa.sourceforge.net/
-        documentation: http://www.htslib.org/doc/samtools.html
-        arxiv: arXiv:1303.3997
+    - tabix:
+        description: Generic indexer for TAB-delimited genome position files.
+        homepage: https://www.htslib.org/doc/tabix.html
+        documentation: https://www.htslib.org/doc/tabix.1.html
+        doi: 10.1093/bioinformatics/btq671
 params:
     - outdir:
         type: string
@@ -41,26 +35,27 @@ input:
     - meta:
         type: map
         description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-    - reads:
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - tab:
         type: file
-        description: |
-            List of input FastQ files of size 1 and 2 for single-end and paired-end data,
-            respectively.
-    - index:
-        type: file
-        description: BWA genome index files
-        pattern: "Directory containing BWA index *.{amb,ann,bwt,pac,sa}"
+        description: TAB-delimited genome position file compressed with bgzip
+        pattern: "*.{bed.gz,gff.gz,sam.gz,vcf.gz}"
 output:
-    - bam:
+    - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - tbi:
         type: file
-        description: Output BAM file containing read alignments
-        pattern: "*.{bam}"
+        description: tabix index file
+        pattern: "*.{tbi}"
     - version:
         type: file
         description: File containing software version
         pattern: "*.{version.txt}"
 authors:
+    - "@joseespinosa"
     - "@drpatelh"
-    - "@jeremy1805"
+    - "@maxulysse"

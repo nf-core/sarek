@@ -7,8 +7,8 @@
 params.baserecalibrator_options  = [:]
 params.gatherbqsrreports_options = [:]
 
-include { GATK_BASERECALIBRATOR  as BASERECALIBRATOR }  from '../../modules/nf-core/software/gatk/baserecalibrator'  addParams(options: params.baserecalibrator_options)
-include { GATK_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from '../../modules/nf-core/software/gatk/gatherbqsrreports' addParams(options: params.gatherbqsrreports_options)
+include { GATK4_BASERECALIBRATOR  as BASERECALIBRATOR }  from '../../modules/nf-core/software/gatk4/baserecalibrator'  addParams(options: params.baserecalibrator_options)
+include { GATK4_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from '../../modules/nf-core/software/gatk4/gatherbqsrreports' addParams(options: params.gatherbqsrreports_options)
 
 workflow PREPARE_RECALIBRATION {
     take:
@@ -27,13 +27,11 @@ workflow PREPARE_RECALIBRATION {
 
     bam_baserecalibrator = bam_markduplicates.combine(intervals)
     table_bqsr = Channel.empty()
-    tsv_bqsr   = Channel.empty()
 
     if (step in ["mapping", "preparerecalibration"]) {
 
         BASERECALIBRATOR(bam_baserecalibrator, dbsnp, dbsnp_tbi, dict, fai, fasta, known_indels, known_indels_tbi)
         table_bqsr = BASERECALIBRATOR.out.report
-        tsv_bqsr   = BASERECALIBRATOR.out.tsv
 
         // STEP 3.5: MERGING RECALIBRATION TABLES
         if (!params.no_intervals) {
@@ -60,12 +58,10 @@ workflow PREPARE_RECALIBRATION {
 
             GATHERBQSRREPORTS(recaltable)
             table_bqsr = GATHERBQSRREPORTS.out.table
-            tsv_bqsr   = GATHERBQSRREPORTS.out.tsv
-
         }
 
         // Creating TSV files to restart from this step
-        tsv_bqsr.collectFile(storeDir: "${params.outdir}/preprocessing/tsv") { meta ->
+        table_bqsr.collectFile(storeDir: "${params.outdir}/preprocessing/tsv") { meta, table ->
             patient = meta.patient
             sample  = meta.sample
             gender  = meta.gender
@@ -75,7 +71,7 @@ workflow PREPARE_RECALIBRATION {
             ["markduplicates_no_table_${sample}.tsv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"]
         }
 
-        tsv_bqsr.map { meta ->
+        table_bqsr.map { meta, table ->
             patient = meta.patient
             sample  = meta.sample
             gender  = meta.gender

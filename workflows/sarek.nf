@@ -132,18 +132,16 @@ if (save_bam_mapped)            modules['samtools_index_mapping'].publish_files 
 if (params.skip_markduplicates) modules['baserecalibrator'].publish_files        = ['recal.table':'mapped']
 if (params.skip_markduplicates) modules['gatherbqsrreports'].publish_files       = ['recal.table':'mapped']
 
-file("${params.outdir}/no_file").text = "no_file\n"
-
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-chr_dir           = params.chr_dir           ? file(params.chr_dir)           : file("${params.outdir}/no_file")
-chr_length        = params.chr_length        ? file(params.chr_length)        : file("${params.outdir}/no_file")
-dbsnp             = params.dbsnp             ? file(params.dbsnp)             : file("${params.outdir}/no_file")
-fasta             = params.fasta             ? file(params.fasta)             : file("${params.outdir}/no_file")
-germline_resource = params.germline_resource ? file(params.germline_resource) : file("${params.outdir}/no_file")
-known_indels      = params.known_indels      ? file(params.known_indels)      : file("${params.outdir}/no_file")
-loci              = params.ac_loci           ? file(params.ac_loci)           : file("${params.outdir}/no_file")
-loci_gc           = params.ac_loci_gc        ? file(params.ac_loci_gc)        : file("${params.outdir}/no_file")
-mappability       = params.mappability       ? file(params.mappability)       : file("${params.outdir}/no_file")
+chr_dir           = params.chr_dir           ? file(params.chr_dir)           : []
+chr_length        = params.chr_length        ? file(params.chr_length)        : []
+dbsnp             = params.dbsnp             ? file(params.dbsnp)             : []
+fasta             = params.fasta             ? file(params.fasta)             : []
+germline_resource = params.germline_resource ? file(params.germline_resource) : []
+known_indels      = params.known_indels      ? file(params.known_indels)      : []
+loci              = params.ac_loci           ? file(params.ac_loci)           : []
+loci_gc           = params.ac_loci_gc        ? file(params.ac_loci_gc)        : []
+mappability       = params.mappability       ? file(params.mappability)       : []
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
 snpeff_db         = params.snpeff_db         ?: Channel.empty()
@@ -151,14 +149,14 @@ snpeff_species    = params.species           ?: Channel.empty()
 vep_cache_version = params.vep_cache_version ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
-cadd_indels       = params.cadd_indels       ? file(params.cadd_indels)      : file("${params.outdir}/no_file")
-cadd_indels_tbi   = params.cadd_indels_tbi   ? file(params.cadd_indels_tbi)  : file("${params.outdir}/no_file")
-cadd_wg_snvs      = params.cadd_wg_snvs      ? file(params.cadd_wg_snvs)     : file("${params.outdir}/no_file")
-cadd_wg_snvs_tbi  = params.cadd_wg_snvs_tbi  ? file(params.cadd_wg_snvs_tbi) : file("${params.outdir}/no_file")
-pon               = params.pon               ? file(params.pon)              : file("${params.outdir}/no_file")
-snpeff_cache      = params.snpeff_cache      ? file(params.snpeff_cache)     : file("${params.outdir}/no_file")
-target_bed        = params.target_bed        ? file(params.target_bed)       : file("${params.outdir}/no_file")
-vep_cache         = params.vep_cache         ? file(params.vep_cache)        : file("${params.outdir}/no_file")
+cadd_indels       = params.cadd_indels       ? file(params.cadd_indels)      : []
+cadd_indels_tbi   = params.cadd_indels_tbi   ? file(params.cadd_indels_tbi)  : []
+cadd_wg_snvs      = params.cadd_wg_snvs      ? file(params.cadd_wg_snvs)     : []
+cadd_wg_snvs_tbi  = params.cadd_wg_snvs_tbi  ? file(params.cadd_wg_snvs_tbi) : []
+pon               = params.pon               ? file(params.pon)              : []
+snpeff_cache      = params.snpeff_cache      ? file(params.snpeff_cache)     : []
+target_bed        = params.target_bed        ? file(params.target_bed)       : []
+vep_cache         = params.vep_cache         ? file(params.vep_cache)        : []
 
 // Initialize value channels based on params, not defined within the params.genomes[params.genome] scope
 read_structure1   = params.read_structure1   ?: Channel.empty()
@@ -262,10 +260,10 @@ workflow SAREK {
     dict = params.dict      ? file(params.dict)      : BUILD_INDICES.out.dict
     fai  = params.fasta_fai ? file(params.fasta_fai) : BUILD_INDICES.out.fai
 
-    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_index             ? file(params.dbsnp_index)             : BUILD_INDICES.out.dbsnp_tbi                  : file("${params.outdir}/no_file")
-    germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? file(params.germline_resource_index) : BUILD_INDICES.out.germline_resource_tbi      : file("${params.outdir}/no_file")
-    known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? file(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : file("${params.outdir}/no_file")
-    pon_tbi               = params.pon               ? params.pon_index               ? file(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : file("${params.outdir}/no_file")
+    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_index             ? file(params.dbsnp_index)             : BUILD_INDICES.out.dbsnp_tbi                  : []
+    germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? file(params.germline_resource_index) : BUILD_INDICES.out.germline_resource_tbi      : []
+    known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? file(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : []
+    pon_tbi               = params.pon               ? params.pon_index               ? file(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : []
 
     msisensor_scan    = BUILD_INDICES.out.msisensor_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
@@ -277,7 +275,6 @@ workflow SAREK {
     bam_mapped          = Channel.empty()
     bam_mapped_qc       = Channel.empty()
     bam_recalibrated_qc = Channel.empty()
-    input_reads         = Channel.empty()
     qc_reports          = Channel.empty()
 
     // STEP 0: QC & TRIM
@@ -319,11 +316,15 @@ workflow SAREK {
 
     // STEP 2: MARKING DUPLICATES
 
-    MARKDUPLICATES(
-        bam_mapped,
-        step)
+    bam_markduplicates = channel.empty()
 
-    bam_markduplicates = MARKDUPLICATES.out.bam
+    if (step == 'preparerecalibration') {
+        if (params.skip_markduplicates) bam_markduplicates = bam_mapped
+        else {
+            MARKDUPLICATES(bam_mapped, step)
+            bam_markduplicates = MARKDUPLICATES.out.bam
+        }
+    }
 
     if (step == 'preparerecalibration') bam_markduplicates = input_sample
 

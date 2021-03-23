@@ -1,4 +1,4 @@
-name: bwa_mem
+name: bwamem2_mem
 description: Performs fastq alignment to a fasta reference using BWA
 keywords:
     - mem
@@ -62,5 +62,4 @@ output:
         description: File containing software version
         pattern: "*.{version.txt}"
 authors:
-    - "@drpatelh"
-    - "@jeremy1805"
+    - "@maxulysse"

@@ -11,18 +11,16 @@ process BWA_MEM {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda (params.enable_conda ? "bioconda::bwa=0.7.17 bioconda::samtools=1.10" : null)
+    conda (params.enable_conda ? "bioconda::bwa=0.7.17 bioconda::samtools=1.12" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/mulled-v2-fe8faa35dbf6dc65a0f7f5d4ea12e31a79f73e40:eabfac3657eda5818bae4090db989e3d41b01542-0"
+        container "https://depot.galaxyproject.org/singularity/mulled-v2-f13549097a0d1ca36f9d4f017636fb3609f6c083:f794a548b8692f29264c8984ff116c2141b90d9e-0"
     } else {
-        container "quay.io/biocontainers/mulled-v2-fe8faa35dbf6dc65a0f7f5d4ea12e31a79f73e40:eabfac3657eda5818bae4090db989e3d41b01542-0"
+        container "quay.io/biocontainers/mulled-v2-f13549097a0d1ca36f9d4f017636fb3609f6c083:f794a548b8692f29264c8984ff116c2141b90d9e-0"
     }
 
     input:
     tuple val(meta), path(reads)
     path  index
-    path  fasta
-    path  fai
 
     output:
     tuple val(meta), path("*.bam"), emit: bam
@@ -33,12 +31,14 @@ process BWA_MEM {
     def prefix     = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     def read_group = meta.read_group ? "-R ${meta.read_group}" : ""
     """
-    bwa mem \
-        $options.args \
-        $read_group \
-        -t $task.cpus \
-        $fasta \
-        $reads \
+    INDEX=`find -L ./ -name "*.amb" | sed 's/.amb//'`
+
+    bwa mem \\
+        $options.args \\
+        $read_group \\
+        -t $task.cpus \\
+        \$INDEX \\
+        $reads \\
         | samtools $options.args2 --threads $task.cpus -o ${prefix}.bam -
 
     echo \$(bwa 2>&1) | sed 's/^.*Version: //; s/Contact:.*\$//' > ${software}.version.txt

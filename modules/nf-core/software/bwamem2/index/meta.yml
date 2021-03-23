@@ -1,21 +1,17 @@
-name: bwa_mem
-description: Performs fastq alignment to a fasta reference using BWA
+name: bwamem2_index
+description: Create BWA-mem2 index for reference genome
 keywords:
-    - mem
-    - bwa
-    - alignment
-    - map
-    - fastq
-    - bam
-    - sam
+    - index
+    - fasta
+    - genome
+    - reference
 tools:
     - bwa:
         description: |
-            BWA is a software package for mapping DNA sequences against
+            BWA-mem2 is a software package for mapping DNA sequences against
             a large reference genome, such as the human genome.
-        homepage: http://bio-bwa.sourceforge.net/
-        documentation: http://www.htslib.org/doc/samtools.html
-        arxiv: arXiv:1303.3997
+        homepage: https://github.com/bwa-mem2/bwa-mem2
+        documentation: https://github.com/bwa-mem2/bwa-mem2#usage
 params:
     - outdir:
         type: string
@@ -38,29 +34,17 @@ params:
             Instead of directly downloading Singularity images for use with Singularity,
             force the workflow to pull and convert Docker containers instead.
 input:
-    - meta:
-        type: map
-        description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-    - reads:
+    - fasta:
         type: file
-        description: |
-            List of input FastQ files of size 1 and 2 for single-end and paired-end data,
-            respectively.
+        description: Input genome fasta file
+output:
     - index:
         type: file
         description: BWA genome index files
-        pattern: "Directory containing BWA index *.{amb,ann,bwt,pac,sa}"
-output:
-    - bam:
-        type: file
-        description: Output BAM file containing read alignments
-        pattern: "*.{bam}"
+        pattern: "*.{0132,amb,ann,bwt.2bit.64,pac}"
     - version:
         type: file
         description: File containing software version
         pattern: "*.{version.txt}"
 authors:
-    - "@drpatelh"
-    - "@jeremy1805"
+    - "@maxulysse"

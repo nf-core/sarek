@@ -15,9 +15,9 @@ params.samtools_stats_options    = [:]
 
 include { BWA_MEM as BWAMEM1_MEM }       from '../../modules/nf-core/software/bwa/mem/main'        addParams(options: params.bwamem1_mem_options)
 include { BWA_MEM as BWAMEM1_MEM_T }     from '../../modules/nf-core/software/bwa/mem/main'        addParams(options: params.bwamem1_mem_tumor_options)
-include { BWAMEM2_MEM }                  from '../../modules/nf-core/software/bwamem2_mem.nf'      addParams(options: params.bwamem2_mem_options)
-include { BWAMEM2_MEM as BWAMEM2_MEM_T } from '../../modules/nf-core/software/bwamem2_mem.nf'      addParams(options: params.bwamem2_mem_tumor_options)
-include { MERGE_BAM }                    from '../../modules/local/merge_bam'                      addParams(options: params.merge_bam_options)
+include { BWAMEM2_MEM }                  from '../../modules/nf-core/software/bwamem2/mem/main.nf' addParams(options: params.bwamem2_mem_options)
+include { BWAMEM2_MEM as BWAMEM2_MEM_T } from '../../modules/nf-core/software/bwamem2/mem/main.nf' addParams(options: params.bwamem2_mem_tumor_options)
+include { SAMTOOLS_MERGE }               from '../../modules/nf-core/software/samtools/merge/main' addParams(options: params.merge_bam_options)
 include { QUALIMAP_BAMQC }               from '../../modules/nf-core/software/qualimap_bamqc'      addParams(options: params.qualimap_bamqc_options)
 include { SAMTOOLS_INDEX }               from '../../modules/nf-core/software/samtools/index/main' addParams(options: params.samtools_index_options)
 include { SAMTOOLS_STATS }               from '../../modules/nf-core/software/samtools/stats/main' addParams(options: params.samtools_stats_options)
@@ -50,18 +50,18 @@ workflow MAPPING {
         bam_bwamem2 = Channel.empty()
 
         if (params.aligner == "bwa-mem") {
-            BWAMEM1_MEM(reads_input_status.normal, bwa, fasta, fai)
+            BWAMEM1_MEM(reads_input_status.normal, bwa)
             bam_bwamem1_n = BWAMEM1_MEM.out.bam
 
-            BWAMEM1_MEM_T(reads_input_status.tumor, bwa, fasta, fai)
+            BWAMEM1_MEM_T(reads_input_status.tumor, bwa)
             bam_bwamem1_t = BWAMEM1_MEM_T.out.bam
 
             bam_bwamem1 = bam_bwamem1_n.mix(bam_bwamem1_t)
         } else {
-            BWAMEM2_MEM(reads_input_status.normal, bwa, fasta, fai)
+            BWAMEM2_MEM(reads_input_status.normal, bwa)
             bam_bwamem2_n = BWAMEM2_MEM.out.bam
 
-            BWAMEM2_MEM_T(reads_input_status.tumor, bwa, fasta, fai)
+            BWAMEM2_MEM_T(reads_input_status.tumor, bwa)
             bam_bwamem2_t = BWAMEM2_MEM_T.out.bam
 
             bam_bwamem2 = bam_bwamem2_n.mix(bam_bwamem2_t)
@@ -109,8 +109,8 @@ workflow MAPPING {
 
         // STEP 1.5: MERGING AND INDEXING BAM FROM MULTIPLE LANES 
         
-        MERGE_BAM(bam_bwa_multiple)
-        bam_mapped       = bam_bwa_single.mix(MERGE_BAM.out.bam)
+        SAMTOOLS_MERGE(bam_bwa_multiple)
+        bam_mapped       = bam_bwa_single.mix(SAMTOOLS_MERGE.out.merged_bam)
 
         SAMTOOLS_INDEX(bam_mapped)
         bam_mapped_index = bam_mapped.join(SAMTOOLS_INDEX.out.bai)
@@ -152,6 +152,31 @@ workflow MAPPING {
                 bai   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam.bai"
                 "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"
             }.collectFile(name: "mapped.tsv", sort: true, storeDir: "${params.outdir}/preprocessing/tsv")
+        }
+        if (params.skip_markduplicates) {
+            tsv_bam_mapped = bam_mapped.map { meta, bam -> [meta] }
+            // Creating TSV files to restart from this step
+            tsv_bam_mapped.collectFile(storeDir: "${params.outdir}/preprocessing/tsv") { meta ->
+                patient = meta.patient[0]
+                sample  = meta.sample[0]
+                gender  = meta.gender[0]
+                status  = meta.status[0]
+                bam   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam"
+                bai   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam.bai"
+                table = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.recal.table"
+                ["mapped_no_markduplicates_${sample}.tsv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\t${table}\n"]
+            }
+
+            tsv_bam_mapped.map { meta ->
+                patient = meta.patient[0]
+                sample  = meta.sample[0]
+                gender  = meta.gender[0]
+                status  = meta.status[0]
+                bam   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam"
+                bai   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam.bai"
+                table = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.recal.table"
+                "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\t${table}\n"
+            }.collectFile(name: 'mapped_no_markduplicates.tsv', sort: true, storeDir: "${params.outdir}/preprocessing/tsv")
         }
     }
 

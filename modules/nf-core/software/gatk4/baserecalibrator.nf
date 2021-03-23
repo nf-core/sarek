@@ -3,38 +3,36 @@ include { initOptions; saveFiles; getSoftwareName } from './../functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-process GATK_BASERECALIBRATOR {
-    label 'cpus_1'
-
-    tag "${meta.id}"
-
-    publishDir params.outdir, mode: params.publish_dir_mode,
+process GATK4_BASERECALIBRATOR {
+    tag "$meta.id"
+    label 'process_medium'
+    publishDir "${params.outdir}",
+        mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda (params.enable_conda ? "bioconda::gatk4=4.1.9.0" : null)
+    conda (params.enable_conda ? "bioconda::gatk4=4.2.0.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/gatk4:4.1.9.0--py39_0"
+        container "https://depot.galaxyproject.org/singularity/gatk4:4.2.0.0--0"
     } else {
-        container "quay.io/biocontainers/gatk4:4.1.9.0--py39_0"
+        container "quay.io/biocontainers/gatk4:4.2.0.0--0"
     }
 
     input:
-        tuple val(meta), path(bam), path(bai), path(interval)
-        path dbsnp
-        path dbsnp_tbi
-        path dict
-        path fai
-        path fasta
-        path known_indels
-        path known_indels_tbi
+    tuple val(meta), path(bam), path(bai), path(interval)
+    path dbsnp
+    tuple val(meta_dbsnp), path(dbsnp_tbi)
+    path dict
+    path fai
+    path fasta
+    path known_indels
+    tuple val(meta_known_indels), path(known_indels_tbi)
         
     output:
-        tuple val(meta), path("${prefix}${meta.sample}.recal.table"), emit: report
-        val meta,                                                     emit: tsv
-
-    //when: params.known_indels
+    tuple val(meta), path("${prefix}${meta.sample}.recal.table"), emit: report
+    path "*.version.txt" , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     options_dbsnp = params.dbsnp ? "--known-sites ${dbsnp}" : ""
     options_intervals = params.no_intervals ? "" : "-L ${interval}"
     options_known_indels = params.known_indels ? known_indels.collect{"--known-sites ${it}"}.join(' ') : ""
@@ -51,5 +49,7 @@ process GATK_BASERECALIBRATOR {
         ${options_known_indels} \
         ${options_intervals} \
         --verbosity INFO
+
+    echo \$(gatk ApplyBQSR --version 2>&1) | sed 's/^.*(GATK) v//; s/ HTSJDK.*\$//' > ${software}.version.txt
     """
 }

@@ -1,21 +1,17 @@
-name: bwa_mem
-description: Performs fastq alignment to a fasta reference using BWA
+name: gatk4_createsequencedictionary
+description: Creates a sequence dictionary for a reference sequence
 keywords:
-    - mem
-    - bwa
-    - alignment
-    - map
-    - fastq
-    - bam
-    - sam
+    - dictionary
+    - fasta
 tools:
-    - bwa:
+    - gatk:
         description: |
-            BWA is a software package for mapping DNA sequences against
-            a large reference genome, such as the human genome.
-        homepage: http://bio-bwa.sourceforge.net/
-        documentation: http://www.htslib.org/doc/samtools.html
-        arxiv: arXiv:1303.3997
+            Developed in the Data Sciences Platform at the Broad Institute, the toolkit offers a wide variety of tools
+            with a primary focus on variant discovery and genotyping. Its powerful processing engine
+            and high-performance computing features make it capable of taking on projects of any size.
+        homepage: https://gatk.broadinstitute.org/hc/en-us
+        documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
+        doi: 10.1158/1538-7445.AM2017-3590
 params:
     - outdir:
         type: string
@@ -38,29 +34,18 @@ params:
             Instead of directly downloading Singularity images for use with Singularity,
             force the workflow to pull and convert Docker containers instead.
 input:
-    - meta:
-        type: map
-        description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-    - reads:
+    - fasta:
         type: file
-        description: |
-            List of input FastQ files of size 1 and 2 for single-end and paired-end data,
-            respectively.
-    - index:
-        type: file
-        description: BWA genome index files
-        pattern: "Directory containing BWA index *.{amb,ann,bwt,pac,sa}"
+        description: Input fasta file
+        pattern: "*.{fasta,fa}"
 output:
-    - bam:
+    - dict:
         type: file
-        description: Output BAM file containing read alignments
-        pattern: "*.{bam}"
+        description: gatk dictionary file
+        pattern: "*.{dict}"
     - version:
         type: file
         description: File containing software version
         pattern: "*.{version.txt}"
 authors:
-    - "@drpatelh"
-    - "@jeremy1805"
+    - "@maxulysse"

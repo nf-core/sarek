@@ -4,11 +4,8 @@ params.options = [:]
 def options    = initOptions(params.options)
 
 process QUALIMAP_BAMQC {
-    label 'memory_max'
-    label 'cpus_16'
-
-    tag "${meta.id}"
-
+    tag "$meta.id"
+    label 'process_medium'
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 

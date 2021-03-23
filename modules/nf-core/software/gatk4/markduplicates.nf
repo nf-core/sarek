@@ -3,33 +3,31 @@ include { initOptions; saveFiles; getSoftwareName } from './../functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-process GATK_MARKDUPLICATES {
-    label 'cpus_16'
-
-    tag "${meta.id}"
-
+process GATK4_MARKDUPLICATES {
+    tag "$meta.id"
+    label 'process_medium'
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda (params.enable_conda ? "bioconda::gatk4=4.1.9.0" : null)
+    conda (params.enable_conda ? "bioconda::gatk4=4.2.0.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/gatk4:4.1.9.0--py39_0"
+        container "https://depot.galaxyproject.org/singularity/gatk4:4.2.0.0--0"
     } else {
-        container "quay.io/biocontainers/gatk4:4.1.9.0--py39_0"
+        container "quay.io/biocontainers/gatk4:4.2.0.0--0"
     }
 
     input:
-        tuple val(meta), path("${meta.sample}.bam"), path("${meta.sample}.bam.bai")
+    tuple val(meta), path("${meta.sample}.bam"), path("${meta.sample}.bam.bai")
 
     output:
-        tuple val(meta), path("${meta.sample}.md.bam"), path("${meta.sample}.md.bam.bai"), emit: bam
-        val meta,                                                                          emit: tsv
-        path "${meta.sample}.bam.metrics", optional : true,                                emit: report
+    tuple val(meta), path("${meta.sample}.md.bam"), path("${meta.sample}.md.bam.bai"), emit: bam
+    path "${meta.sample}.bam.metrics", optional : true,                                emit: report
+    path "*.version.txt" , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
     metrics = 'markduplicates' in params.skip_qc ? '' : "-M ${meta.sample}.bam.metrics"
-
     """
     gatk --java-options ${markdup_java_options} \
         MarkDuplicates \
@@ -40,36 +38,36 @@ process GATK_MARKDUPLICATES {
         --CREATE_INDEX true \
         --OUTPUT ${meta.sample}.md.bam
     mv ${meta.sample}.md.bai ${meta.sample}.md.bam.bai
+
+    echo \$(gatk MarkDuplicates --version 2>&1) | sed 's/^.*(GATK) v//; s/ HTSJDK.*\$//' > ${software}.version.txt
     """
 }
 
-process GATK_MARKDUPLICATES_SPARK {
-    label 'cpus_16'
-
-    tag "${meta.id}"
-
+process GATK4_MARKDUPLICATES_SPARK {
+    tag "$meta.id"
+    label 'process_medium'
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda (params.enable_conda ? "bioconda::gatk4-spark=4.1.8.1" : null)
+    conda (params.enable_conda ? "bioconda::gatk4-spark=4.2.0.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/gatk4-spark:4.1.8.1--0"
+        container "https://depot.galaxyproject.org/singularity/gatk4-spark:4.2.0.0--0"
     } else {
-        container "quay.io/biocontainers/gatk4-spark:4.1.8.1--0"
+        container "quay.io/biocontainers/gatk4-spark:4.2.0.0--0"
     }
 
     input:
-        tuple val(meta), path("${meta.sample}.bam"), path("${meta.sample}.bam.bai")
+    tuple val(meta), path("${meta.sample}.bam"), path("${meta.sample}.bam.bai")
 
     output:
-        tuple val(meta), path("${meta.sample}.md.bam"), path("${meta.sample}.md.bam.bai"), emit: bam
-        val meta,                                                                          emit: tsv
-        path "${meta.sample}.bam.metrics", optional : true,                                emit: report
+    tuple val(meta), path("${meta.sample}.md.bam"), path("${meta.sample}.md.bam.bai"), emit: bam
+    path "${meta.sample}.bam.metrics", optional : true,                                emit: report
+    path "*.version.txt" , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     markdup_java_options = task.memory.toGiga() > 8 ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2).trunc() + "g -Xmx" + (task.memory.toGiga() - 1) + "g\""
     metrics = 'markduplicates' in params.skip_qc ? '' : "-M ${meta.sample}.bam.metrics"
-
     """
     gatk --java-options ${markdup_java_options} \
         MarkDuplicatesSpark \
@@ -79,5 +77,7 @@ process GATK_MARKDUPLICATES_SPARK {
         --tmp-dir . \
         --create-output-bam-index true \
         --spark-master local[${task.cpus}]
+
+    echo \$(gatk MarkDuplicatesSpark --version 2>&1) | sed 's/^.*(GATK) v//; s/ HTSJDK.*\$//' > ${software}.version.txt
     """
 }

@@ -5,18 +5,16 @@ params.options = [:]
 def options    = initOptions(params.options)
 
 process CONCAT_VCF {
-    label 'cpus_8'
-
-    tag "${meta.id}"
-
+    tag "$meta.id"
+    label 'process_medium'
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda (params.enable_conda ? "bioconda::htslib=1.11" : null)
+    conda (params.enable_conda ? "bioconda::htslib=1.12" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/htslib:1.11--hd3b49d5_0"
+        container "https://depot.galaxyproject.org/singularity/htslib:1.12--hd3b49d5_0"
     } else {
-        container "quay.io/biocontainers/htslib:1.11--hd3b49d5_0"
+        container "quay.io/biocontainers/htslib:1.12--hd3b49d5_0"
     }
 
     input:

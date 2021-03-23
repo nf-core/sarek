@@ -1,10 +1,12 @@
 // Import generic module functions
-include { saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
+options        = initOptions(params.options)
 
-process SAMTOOLS_STATS {
+process SAMTOOLS_MERGE {
     tag "$meta.id"
+    label 'process_low'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
@@ -17,16 +19,17 @@ process SAMTOOLS_STATS {
     }
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    tuple val(meta),path(bams)
 
     output:
-    tuple val(meta), path("*.stats"), emit: stats
-    path  "*.version.txt"           , emit: version
+    tuple val(meta), path("${prefix}.bam"), emit: merged_bam
+    path  "*.version.txt"                 , emit: version
 
     script:
     def software = getSoftwareName(task.process)
+    prefix       = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     """
-    samtools stats $bam > ${bam}.stats
+    samtools merge ${prefix}.bam $bams
     echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' > ${software}.version.txt
     """
 }
