@@ -316,11 +316,11 @@ workflow SAREK {
 
     // STEP 2: MARKING DUPLICATES
 
-    MARKDUPLICATES(
-        bam_mapped,
-        step)
-
-    bam_markduplicates = MARKDUPLICATES.out.bam
+    if (params.skip_markduplicates) bam_markduplicates = bam_mapped
+    else {
+        MARKDUPLICATES(bam_mapped, step)
+        bam_markduplicates = MARKDUPLICATES.out.bam
+    }
 
     if (step == 'preparerecalibration') bam_markduplicates = input_sample
 
