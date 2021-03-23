@@ -153,6 +153,31 @@ workflow MAPPING {
                 "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"
             }.collectFile(name: "mapped.tsv", sort: true, storeDir: "${params.outdir}/preprocessing/tsv")
         }
+        if (params.skip_markduplicates) {
+            tsv_bam_mapped = bam_mapped.map { meta, bam -> [meta] }
+            // Creating TSV files to restart from this step
+            tsv_bam_mapped.collectFile(storeDir: "${params.outdir}/preprocessing/tsv") { meta ->
+                patient = meta.patient[0]
+                sample  = meta.sample[0]
+                gender  = meta.gender[0]
+                status  = meta.status[0]
+                bam   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam"
+                bai   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam.bai"
+                table = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.recal.table"
+                ["mapped_no_markduplicates_${sample}.tsv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\t${table}\n"]
+            }
+
+            tsv_bam_mapped.map { meta ->
+                patient = meta.patient[0]
+                sample  = meta.sample[0]
+                gender  = meta.gender[0]
+                status  = meta.status[0]
+                bam   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam"
+                bai   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam.bai"
+                table = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.recal.table"
+                "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\t${table}\n"
+            }.collectFile(name: 'mapped_no_markduplicates.tsv', sort: true, storeDir: "${params.outdir}/preprocessing/tsv")
+        }
     }
 
     emit:
