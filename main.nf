@@ -2783,10 +2783,10 @@ process filter_mutect_local {
 	publishDir "${params.outdir}/VariantCalling/${idPatient}/${variantCaller}", mode: params.publish_dir_mode
 
 	input:
-    	set variantCaller, idPatient, idSamplePair, file(vcf), file(tbi) from filteredMutect2Output_local
+    set variantCaller, idPatient, idSamplePair, file(vcf), file(tbi) from filteredMutect2Output_local
 
 	output:
-    set variantCaller, idPatient, file("${variantCaller}_${idSamplePair}_local_filtered.vcf.gz"), file("${variantCaller}_${idSamplePair}_local_filtered.vcf.gz.tbi") into intervalFilteredMutect2Output	
+    set variantCaller, idPatient, idSamplePair, file("${variantCaller}_${idSamplePair}_local_filtered.vcf.gz"), file("${variantCaller}_${idSamplePair}_local_filtered.vcf.gz.tbi") into intervalFilteredMutect2Output	
 	
 	when: 'mutect2' in tools
 
@@ -2803,7 +2803,39 @@ intervalFilteredMutect2Output = intervalFilteredMutect2Output.dump(tag: 'interva
 // split using bedIntervals
 intervalFilteredMutect2Output = intervalFilteredMutect2Output.spread(intPlatypusVCF)
 // group by patient and bed
-intervalFilteredMutect2Output = intervalFilteredMutect2Output.dump(tag: 'filtered_output_before' )  
+intervalFilteredMutect2Output = intervalFilteredMutect2Output.dump(tag: 'filtered_output_before' )
+/*
+The groupTuple operator collects tuples (or lists) of values emitted by the source channel grouping 
+together the elements that share the same key. Finally it emits a new tuple object for each distinct key collected.
+
+Channel
+     .from( [1,'A'], [1,'B'], [2,'C'], [3, 'B'], [1,'C'], [2, 'A'], [3, 'D'] )
+     .groupTuple()
+     .view()
+
+
+[1, [A, B, C]]
+[2, [C, A]]
+[3, [B, D]]
+
+By default the first entry in the tuple is used a the grouping key. A different key can be chosen by using 
+the 'by' parameter and specifying the index of entry to be used as key (the index is zero-based). For example:
+
+Channel
+     .from( [1,'A'], [1,'B'], [2,'C'], [3, 'B'], [1,'C'], [2, 'A'], [3, 'D'] )
+     .groupTuple(by: 1)
+     .view()
+
+Grouping by the second value in each tuple the result is:
+
+[[1, 2], A]
+[[1, 3], B]
+[[2, 1], C]
+[[3], D]
+
+
+*/
+
 intervalFilteredMutect2Output = intervalFilteredMutect2Output.groupTuple(by: [0,4])
 intervalFilteredMutect2Output = intervalFilteredMutect2Output.dump(tag: 'filtered_output_after' )   
 
@@ -2844,7 +2876,7 @@ process platypus {
 	
 	platypus callVariants \
         --refFile=${fasta} --bamFiles=${bams.join(',')} \
-        --output=${intervalBed.baseName}_${idPatient}.vcf \
+        --output=${intervalBed.baseName}_${idPatient}_${idSamplePair}.vcf \
         --source=${mutect2Vcf.join(',')} \
         --filterReadPairsWithSmallInserts=0 \
 		--maxReads=100000000 \
