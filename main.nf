@@ -2876,7 +2876,7 @@ process platypus {
 	
 	platypus callVariants \
         --refFile=${fasta} --bamFiles=${bams.join(',')} \
-        --output="${intervalBed.baseName}_${idPatient}".vcf \
+        --output=${intervalBed.baseName}_${idPatient}.vcf \
         --source=${mutect2Vcf.join(',')} \
         --filterReadPairsWithSmallInserts=0 \
 		--maxReads=100000000 \
