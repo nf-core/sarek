@@ -2935,6 +2935,8 @@ normalBamForPlatypus = normalBamForPlatypus
 normalBamForPlatypus = normalBamForPlatypus.dump(tag: 'normalBamForPlatypus')
 
 process filterPlatypus {
+
+    label 'cpus_1'
 	
 	tag "${variantCaller}-${idPatient}"
 
