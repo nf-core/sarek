@@ -2786,7 +2786,7 @@ process filter_mutect_local {
     set variantCaller, idPatient, idSamplePair, file(vcf), file(tbi) from filteredMutect2Output_local
 
 	output:
-    set variantCaller, idPatient, idSamplePair, file("${variantCaller}_${idSamplePair}_local_filtered.vcf.gz"), file("${variantCaller}_${idSamplePair}_local_filtered.vcf.gz.tbi") into intervalFilteredMutect2Output	
+    set idPatient, idSamplePair, file("${variantCaller}_${idSamplePair}_local_filtered.vcf.gz"), file("${variantCaller}_${idSamplePair}_local_filtered.vcf.gz.tbi") into intervalFilteredMutect2Output	
 	
 	when: 'mutect2' in tools
 
