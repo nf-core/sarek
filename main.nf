@@ -2803,8 +2803,9 @@ process filter_mutect_local {
 // split using bedIntervals
 intervalFilteredMutect2Output = intervalFilteredMutect2Output.spread(intPlatypusVCF)
 // group by patient and bed
+intervalFilteredMutect2Output = intervalFilteredMutect2Output.dump(tag: 'filtered_output_before' )  
 intervalFilteredMutect2Output = intervalFilteredMutect2Output.groupTuple(by: [0,4])
-intervalFilteredMutect2Output = intervalFilteredMutect2Output.dump(tag: 'filteredMutect2Output' )   
+intervalFilteredMutect2Output = intervalFilteredMutect2Output.dump(tag: 'filtered_output_after' )   
 
 // STEP PLATYPUS VARIANT CALLING
 
