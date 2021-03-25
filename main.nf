@@ -2736,6 +2736,7 @@ mutect2CallsToFilter = vcfConcatenatedForFilter.map{
 }.join(mergedStatsFile, by:[0,1]).join(contaminationTable, by:[0,1])
 
 process FilterMutect2Calls {
+    
     label 'cpus_1'
 
     tag "${idSamplePair}"
@@ -2778,6 +2779,8 @@ filteredMutect2Output_local =  filteredMutect2Output_local
 
 process filter_mutect_local {
 	
+    label 'cpus_1'
+
 	tag "${variantCaller}-${idPatient}"
 
 	publishDir "${params.outdir}/VariantCalling/${idPatient}/${variantCaller}", mode: params.publish_dir_mode
