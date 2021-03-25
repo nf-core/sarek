@@ -2770,7 +2770,7 @@ process FilterMutect2Calls {
 }
 
 
-(filteredMutect2Output, filteredMutect2Output_local) = filteredMutect2Output.into(3)
+(filteredMutect2Output, filteredMutect2Output_local) = filteredMutect2Output.into(2)
 // get rid of stats file
 filteredMutect2Output_local =  filteredMutect2Output_local
                                     .map{ caller, idPatient, idSamplePair, vcfFile, tbiFile, statsFile ->
@@ -2799,7 +2799,7 @@ process filter_mutect_local {
 	"""
 }
 
-
+intervalFilteredMutect2Output = intervalFilteredMutect2Output.dump(tag: 'intervalFilteredMutect2Output')
 // split using bedIntervals
 intervalFilteredMutect2Output = intervalFilteredMutect2Output.spread(intPlatypusVCF)
 // group by patient and bed
