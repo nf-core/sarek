@@ -541,6 +541,9 @@ Channel.from(summary.collect{ [it.key, it.value] })
 // Parse software version numbers
 
 process get_software_versions {
+
+    label 'cpus_1'
+
     publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode,
         saveAs: {it.indexOf(".csv") > 0 ? it : null}
 
