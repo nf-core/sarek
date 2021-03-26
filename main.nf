@@ -784,7 +784,7 @@ ch_intervals = params.no_intervals ? "null" : params.intervals && !('annotate' i
 // STEP 0: CREATING INTERVALS FOR PARALLELIZATION (PREPROCESSING AND VARIANT CALLING)
 
 process CreateIntervalBeds {
-    
+
     label 'cpus_1'
 
     tag "${intervals}"
@@ -3238,6 +3238,8 @@ process CNVkit {
  */ 
 
 process sequenza_utils_make_gc_wiggle {
+
+    label 'cpus_1'
 
     tag "${fasta}_sequenza"
 
