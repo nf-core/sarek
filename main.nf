@@ -2889,6 +2889,7 @@ process platypus {
         --maxVariants=100 \
 		--minPosterior=0 \
         --nCPU=${task.cpus} \
+        --getVariantsFromBAMs=0 \
 		${intervalsOptions} \
         --logFileName ${idPatient}_${intervalBed.baseName}.log
     """
