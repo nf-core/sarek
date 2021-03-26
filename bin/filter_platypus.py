@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 ############################################################
 # filter_platypus.py Daniel Nichol 01/05/2018
 #
