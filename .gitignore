@@ -8,3 +8,4 @@ tests/
 testing/
 testing*
 *.pyc
+.vscode/settings.json
