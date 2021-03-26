@@ -2956,8 +2956,8 @@ process filterPlatypus {
 	script:
 	"""
 	bgzip -d ${vcf}
-	filter_platypus.py "${variantCaller}_${idPatient}".vcf ${idSampleNormal}
-    bgzip  "${variantCaller}_${idPatient}"_filtered.vcf
+	filter_platypus.py ${variantCaller}_${idPatient}.vcf ${idSampleNormal}
+    bgzip ${variantCaller}_${idPatient}_filtered.vcf
 	tabix -p vcf "${variantCaller}_${idPatient}"_filtered.vcf.gz
 	"""
 }

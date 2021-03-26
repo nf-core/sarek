@@ -10,7 +10,7 @@
 #   3) A genotype is called for all samples (i.e. no sample assigned './.')
 #   4) The genotype phred scores (GQ) are >=10 for all samples
 #   5) The number of reads covering the variant site is >=10 in all samples.
-#   6) The normal sample has no reads exhibing the variant
+#   6) The normal sample has no reads exhibiting the variant
 #   7) At least one tumour samples has >=3 reads for the variant.
 #
 ############################################################
@@ -45,20 +45,19 @@ elif len(sys.argv) == 3:
 #####################################################################
 with open(platypus_file[0:-4]+"_filtered.vcf",'w') as platypus_pass:
     with open(platypus_file[0:-4]+"_removed.vcf",'w') as platypus_nopass: 
-	with open(platypus_file,'r') as platcalls:
-
+        with open(platypus_file,'r') as platcalls:
             #Copy the header of the platypus file.
             line = ''
             while line[0:6]!="#CHROM":
                 line = platcalls.readline()
                 platypus_pass.write(line)
                 platypus_nopass.write(line)
-         
+
             #Identify the normal sample location in the headers
             header=line[:-1].split('\t')[9:]
             samples= len(header)
             normIx = header.index(normal_name)
-    
+
             line = platcalls.readline()
             while line:
                 record = line[:-1].split('\t')
@@ -71,7 +70,7 @@ with open(platypus_file[0:-4]+"_filtered.vcf",'w') as platypus_pass:
                     if ',' in record[k][4]:
                         record[k][4] = max(record[k][4].split(','))
                         record[k][5] = max(record[k][5].split(','))
-    
+
                 allSamples = record[-samples:]
                 tumSamples = [allSamples[i] for i in range(len(allSamples)) if i!=normIx]
                 normSample = allSamples[normIx]
@@ -80,14 +79,14 @@ with open(platypus_file[0:-4]+"_filtered.vcf",'w') as platypus_pass:
                 if (record[6] in filterList) and (record[0]!='hs37d5') and (record[0][0:2]!='GL'):
                     GQsPass = all([float(el[3]) >= 10 for el in allSamples])
                     NRsPass = all([float(el[4]) >= 5 for el in allSamples])
-    
+
                     # GQs (genotype phred scores) all >= 10, and
                     # NRs (number of reads at site) all >= 0
                     if GQsPass and NRsPass:
                         allGTs = [el[0] for el in allSamples]
                         tumGTs = [el[0] for el in tumSamples]
                         normGT = normSample[0]
-    
+
                         # If the genotype for all samples exist:
                         if ("./." not in allGTs) and (normGT=="0/0") and (tumGTs.count("0/0")!=(samples-1)):
     
@@ -95,10 +94,10 @@ with open(platypus_file[0:-4]+"_filtered.vcf",'w') as platypus_pass:
                             # >=3 variant reads for at least one tumour sample
                             normNVpass = (int(normSample[5]) == 0)
                             tumNVpass = any([float(el[5]) >= 0 for el in tumSamples])
-    
+
                             if normNVpass and tumNVpass:
                                 passed = True
-    
+
                 if passed:
                     platypus_pass.write(line)
                 else:
