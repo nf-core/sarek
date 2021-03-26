@@ -2860,7 +2860,7 @@ process platypus {
 	
 	label 'cpus_max'
 	label 'memory_max' 
-    tag "${idPatient}"
+    tag "Platypus_varcall_${idPatient}"
 
     input:
         set idPatient, file(intervalBed), samples, file(bams), file(bais), idSamplePair, file(mutect2Vcf), file(mutect2Tbi) from platypusInput
@@ -2903,6 +2903,8 @@ process ConcatPlatypusVCF {
     label 'cpus_8'
 
     tag "${variantCaller}-${idPatient}"
+
+    publishDir "${params.outdir}/VariantCalling/${idPatient}/${variantCaller}", mode: params.publish_dir_mode
 
     input:
         set variantCaller, idPatient, file(vcf) from platypusOutput
