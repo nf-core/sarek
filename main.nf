@@ -2861,8 +2861,8 @@ platypusInput = platypusInput.dump(tag: 'platypusInput')
 
 process platypus {
 	
-	label 'cpus_max'
-	label 'memory_max' 
+    label "process_medium"
+
     tag "Platypus_varcall_${idPatient}"
 
     input:
@@ -2903,6 +2903,7 @@ platypusOutput = platypusOutput.groupTuple(by: [0,1])
 platypusOutput = platypusOutput.dump(tag:'platypus VCF to merge')
 
 process ConcatPlatypusVCF {
+    
     label 'cpus_8'
 
     tag "${variantCaller}-${idPatient}"
