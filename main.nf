@@ -3362,7 +3362,7 @@ process sequenza_seqz_binning {
 
 process sequenza_initial_fit {
     
-	label 'memory_max'  
+	label 'process_long'  
 	
 	tag "${idPatient}_${idSampleTumor}_seqz_initial_fit"
 
