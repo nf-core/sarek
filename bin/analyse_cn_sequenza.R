@@ -63,7 +63,8 @@ sequenzaAnalysis <- function(input,
                              assembly=assembly,
                              weighted.mean=weighted_mean,
                              normalization.method=normalization_method,
-                             gc.stats=gc_stats)
+                             parallel=8,
+							 gc.stats=gc_stats)
   
   
   # Fit the model:
