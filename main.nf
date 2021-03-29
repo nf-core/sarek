@@ -2903,7 +2903,7 @@ platypusOutput = platypusOutput.groupTuple(by: [0,1])
 platypusOutput = platypusOutput.dump(tag:'platypus VCF to merge')
 
 process ConcatPlatypusVCF {
-    
+
     label 'cpus_8'
 
     tag "${variantCaller}-${idPatient}"
@@ -3363,7 +3363,9 @@ process sequenza_seqz_binning {
 
 process sequenza_initial_fit {
     
-	label 'memory_max'  
+	memory { 32.GB * task.attempt }
+    errorStrategy { task.exitStatus in 137 ? 'retry' : 'terminate' }
+    maxRetries 4
 	
 	tag "${idPatient}_${idSampleTumor}_seqz_initial_fit"
 
