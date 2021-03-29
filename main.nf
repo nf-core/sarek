@@ -3363,9 +3363,7 @@ process sequenza_seqz_binning {
 
 process sequenza_initial_fit {
     
-	memory { 32.GB * task.attempt }
-    errorStrategy { task.exitStatus in 137 ? 'retry' : 'terminate' }
-    maxRetries 4
+    label 'cpus_8'
 	
 	tag "${idPatient}_${idSampleTumor}_seqz_initial_fit"
 
