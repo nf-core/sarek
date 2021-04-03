@@ -1171,7 +1171,7 @@ process MapReads {
     
 	label 'bwa_mem'
 
-    tag "${idPatient}-${idRun}"
+    tag "${idPatient}-${idSample}"
 
     input:
         set idPatient, idSample, idRun, file(inputFile1), file(inputFile2) from inputPairReads
