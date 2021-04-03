@@ -1169,7 +1169,7 @@ else {
 
 process MapReads {
     
-	label 'cpus_max'
+	label 'bwa_mem'
 
     tag "${idPatient}-${idRun}"
 
@@ -3363,7 +3363,8 @@ process sequenza_seqz_binning {
 
 process sequenza_initial_fit {
     
-    label 'cpus_8'
+    memory { 64.GB * task.attempt }
+	cpus { 8 * task.attempt }
 	
 	tag "${idPatient}_${idSampleTumor}_seqz_initial_fit"
 
