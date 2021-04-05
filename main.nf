@@ -1375,7 +1375,7 @@ tsv_bam_indexed_sample
 // STEP 2: MARKING DUPLICATES
 
 process MarkDuplicates {
-    label 'process_high'
+    label 'mark_duplicates'
 
     tag "${idPatient}-${idSample}"
 
