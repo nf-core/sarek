@@ -1407,7 +1407,7 @@ process MarkDuplicates {
         --INPUT ${idSample}.bam \
         --METRICS_FILE ${idSample}.bam.metrics \
         --TMP_DIR . \
-        --ASSUME_SORT_ORDER unsorted \
+        --ASSUME_SORT_ORDER queryname \
         --CREATE_INDEX true \
         --OUTPUT ${idSample}.md.bam
 
