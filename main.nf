@@ -1203,7 +1203,7 @@ process MapReads {
     ${convertToFastq}
     ${aligner} mem -K 100000000 -R \"${readGroup}\" ${extra} -t ${task.cpus} -M ${fasta} \
     ${input} | \
-    samtools sort -n --threads ${task.cpus} -m 2G - > ${idSample}_${idRun}.bam
+    samtools sort --threads ${task.cpus} -m 2G - > ${idSample}_${idRun}.bam
     """
 }
 
@@ -1407,7 +1407,7 @@ process MarkDuplicates {
         --INPUT ${idSample}.bam \
         --METRICS_FILE ${idSample}.bam.metrics \
         --TMP_DIR . \
-        --ASSUME_SORT_ORDER queryname \
+        --ASSUME_SORT_ORDER coordinate \
         --CREATE_INDEX true \
         --OUTPUT ${idSample}.md.bam
 
