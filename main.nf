@@ -1376,7 +1376,7 @@ tsv_bam_indexed_sample
 
 process MarkDuplicates {
     
-    scratch 'tmp/$SLURM_JOBID'
+    scratch '/tmp/$SLURM_JOBID'
 
     tag "${idPatient}-${idSample}"
 
