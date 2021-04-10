@@ -1375,7 +1375,8 @@ tsv_bam_indexed_sample
 // STEP 2: MARKING DUPLICATES
 
 process MarkDuplicates {
-    label 'mark_duplicates'
+    
+    scratch 'tmp/$SLURM_JOBID'
 
     tag "${idPatient}-${idSample}"
 
@@ -1403,10 +1404,11 @@ process MarkDuplicates {
     """
     gatk --java-options ${markdup_java_options} \
         MarkDuplicates \
-        --MAX_RECORDS_IN_RAM 50000 \
+        --MAX_RECORDS_IN_RAM 500000 \
+        --MAX_FILE_HANDLES_FOR_READ_ENDS_MAP 1020 \
         --INPUT ${idSample}.bam \
         --METRICS_FILE ${idSample}.bam.metrics \
-        --TMP_DIR . \
+        --TMP_DIR /tmp/\$SLURM_JOBID \
         --ASSUME_SORT_ORDER coordinate \
         --CREATE_INDEX true \
         --OUTPUT ${idSample}.md.bam
