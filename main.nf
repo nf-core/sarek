@@ -1376,7 +1376,7 @@ tsv_bam_indexed_sample
 
 process MarkDuplicates {
     
-    scratch '/tmp/$SLURM_JOBID'
+    scratch true
 
     tag "${idPatient}-${idSample}"
 
@@ -1408,7 +1408,7 @@ process MarkDuplicates {
         --MAX_FILE_HANDLES_FOR_READ_ENDS_MAP 1020 \
         --INPUT ${idSample}.bam \
         --METRICS_FILE ${idSample}.bam.metrics \
-        --TMP_DIR /tmp/\$SLURM_JOBID \
+        --TMP_DIR \$TMPDIR \
         --ASSUME_SORT_ORDER coordinate \
         --CREATE_INDEX true \
         --OUTPUT ${idSample}.md.bam
