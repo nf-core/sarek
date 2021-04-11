@@ -3244,6 +3244,8 @@ process sequenza_utils_make_gc_wiggle {
 
     label 'cpus_1'
 
+    scratch true
+
     tag "${fasta}_sequenza"
 
     publishDir params.outdir, mode: params.publish_dir_mode,
@@ -3276,6 +3278,8 @@ pairBamSequenza =  pairBamSequenza.dump(tag: "bams")
 
 process sequenza_utils {
     
+    scratch true
+
 	tag "${idSampleTumor}_vs_${idSampleNormal}_${chr}"
 
     publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/sequenza", mode: params.publish_dir_mode
@@ -3306,6 +3310,9 @@ sequenza_out = sequenza_out.groupTuple(by:[0,1,2])
 //sequenza_out = sequenza_out.dump(tag: "sequenza")
 
 process merge_seqz_files{
+
+    scratch true
+
     label 'cpus_4'
 
     tag "${idSampleTumor}_vs_${idSampleNormal}_merge"
@@ -3329,7 +3336,9 @@ process merge_seqz_files{
 (for_het_merge_seqz_out, merge_seqz_out) = merge_seqz_out.into(2)
 
 process find_het_snps {
-   
+
+    scratch true 
+
 	tag "${idPatient}_${idSampleTumor}_het_snps"
     
     publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/sequenza", mode: params.publish_dir_mode
@@ -3349,6 +3358,8 @@ process find_het_snps {
 
 process sequenza_seqz_binning {
 
+    scratch true
+
 	tag "${idPatient}_${idSampleTumor}_bin"
     
 	input:
@@ -3364,6 +3375,8 @@ process sequenza_seqz_binning {
 }
 
 process sequenza_initial_fit {
+
+    scratch true
     
     memory { 64.GB * task.attempt }
 	cpus { 8 * task.attempt }
