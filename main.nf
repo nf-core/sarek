@@ -1999,9 +1999,10 @@ process BamQC {
     when: !('bamqc' in skipQC)
 
     script:
+	qualimap_java_options = task.memory.toGiga() > 16 ? "--java-mem-size=" + task.memory.toGiga() + "G" : "--java-mem-size=16G"
     use_bed = params.target_bed ? "-gff ${targetBED}" : ''
     """
-    qualimap --java-mem-size=16G \
+    qualimap ${qualimap_java_options} \
         bamqc \
         -bam ${bam} \
         --paint-chromosome-limits \
