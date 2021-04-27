@@ -1,0 +1,4 @@
+markduplicates:
+  - modules/nf-core/software/gatk4/markduplicates.nf
+  - subworkflow/local/markduplicates.nf
+  - tests/subworkflow/local/markduplicates/**
