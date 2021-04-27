@@ -30,36 +30,48 @@ jobs:
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-      - name: Run --help
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,${{ matrix.engine }} --help
-      - name: Run pipeline with test data
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,${{ matrix.engine }}
-      - name: Show results
-        run: ls -lR results
 
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pytest-workflow
+
+      - name: Run pipeline with default settings
+        run: pytest --tag default --kwdof
+  
   aligner:
     name: Run aligner tests
     env:
+      NXF_VER: ${{ matrix.nxf_ver }}
       NXF_ANSI_LOG: false
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        # Nextflow versions: only pipeline minimum version
+        nxf_ver: ['20.11.0-edge']
         aligner: [bwa-mem, bwa-mem2]
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
       - name: Install Nextflow
+        env:
+          CAPSULE_LOG: none
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-        env:
-          # Only check Nextflow pipeline minimum version
-          NXF_VER: '20.11.0-edge'
-      - name: Run ${{ matrix.profile }} test
-        run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --aligner ${{ matrix.aligner }}
-      - name: Show results
-        run: ls -lR results
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pytest-workflow
+
+      - name: Run pipeline with default settings
+        run: pytest --tag ${{ matrix.aligner }} --kwdof
 
   germline:
     name: Run input from a folder test and restart from step tests
