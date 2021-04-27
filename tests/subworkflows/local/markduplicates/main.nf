@@ -2,7 +2,9 @@
 
 nextflow.enable.dsl = 2
 
-include { MARKDUPLICATES } from '../../../../subworkflow/local/markduplicates' addParams( )
+include { MARKDUPLICATES } from '../../../../subworkflow/local/markduplicates' addParams(
+    markduplicates_options:          modules['markduplicates']
+)
 
 workflow test_markduplicates {
     input = [[ id: 'test' ],
