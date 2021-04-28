@@ -3386,7 +3386,7 @@ process sequenza_seqz_binning {
 }
 // TODO make seqz_bin accessible
 
-seqz_bin_tsv,seqz_bin = seqz_bin.into(2)
+(seqz_bin_tsv,seqz_bin) = seqz_bin.into(2)
 seqz_bin_tsv.map { idPatient, idSampleTumor ->
     gender = genderMap[idPatient]
     bin = "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/binned/${idPatient}_${idSampleTumor}-bin50.seqz.gz"
@@ -3409,7 +3409,7 @@ process sequenza_initial_fit {
 
 	input:
         set idPatient, idSampleTumor, file(seqz_bin) from seqz_bin
-		set seq_ploidy from ch_sequenza_ploidy
+		val seq_ploidy from ch_sequenza_ploidy
 
     output:
 	    set idPatient, idSampleTumor, file("*pdf"), file("*txt"), file("*RData") into seqz_initial_fit
