@@ -7,6 +7,31 @@ print(args)
 input <- args[1]
 output_prefix <- args[2]
 gender <- args[3]
+ploidy <- args[4]
+if (ploidy == 7) {
+		low_ploidy = 1
+		up_ploidy = 7
+        }
+else if ( ploidy == 2 ) {
+		low_ploidy = 0.5
+		up_ploidy = 2.5
+        }
+else if (ploidy == 3) {
+		low_ploidy = 2.5
+		up_ploidy = 3.5
+        }
+else if (ploidy == 4) {
+		low_ploidy = 3.5
+		up_ploidy = 4.5
+        }
+else if (ploidy == 5) {
+		low_ploidy = 4.5
+		up_ploidy = 5.5
+        }
+else if (ploidy == 6) {
+		low_ploidy = 5.5
+		up_ploidy = 6.5
+        }
 
 params_list <- list("input" = input, "output_prefix" = output_prefix )
 # Function:
@@ -30,8 +55,8 @@ sequenzaAnalysis <- function(input,
                              method="baf",
                              low_cell=0.1,
                              up_cell=1,
-                             low_ploidy=1,
-                             up_ploidy=7,
+                             low_ploidy,
+                             up_ploidy,
                              CNt_max=20) {
   
   # Define chromosomes to analyse (note these will subset to those that
@@ -70,7 +95,7 @@ sequenzaAnalysis <- function(input,
   # Fit the model:
   cat("- Fitting the model\n")
   cells  <- seq(low_cell, up_cell, 0.01)
-  plo    <- seq(low_ploidy, up_ploidy, 0.05)
+  plo    <- seq(low_ploidy, up_ploidy, 0.1)
   fit    <- sequenza.fit(modDat,
                          female=is_female,
                          segment.filter=segment_filter,

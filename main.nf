@@ -38,7 +38,7 @@ def helpMessage() {
       -profile                      [str] Configuration profile to use. Can use multiple (comma separated)
                                           Available: conda, docker, singularity, test, awsbatch, <institute> and more
       --step                       [list] Specify starting step (only one)
-                                          Available: mapping, prepare_recalibration, recalibrate, variant_calling, annotate, Control-FREEC
+                                          Available: mapping, prepare_recalibration, recalibrate, variant_calling,sequenza_binned, annotate, Control-FREEC
                                           Default: ${params.step}
       --genome                      [str] Name of iGenomes reference
                                           Default: ${params.genome}
@@ -92,6 +92,8 @@ def helpMessage() {
                                           Default: ${params.cf_ploidy}
       --cf_window                   [int] Control-FREEC window size
                                           Default: Disabled
+      --sequenza_ploidy             [int] sequenza ploidy setting 
+	                                      Default: ${params.sequenza_ploidy}
       --no_gvcf                    [bool] No g.vcf output from GATK HaplotypeCaller
       --no_strelka_bp              [bool] Will not use Manta candidateSmallIndels for Strelka (not recommended by Best Practices)
       --pon                        [file] Panel-of-normals VCF (bgzipped) for GATK Mutect2 / Sentieon TNscope
@@ -105,7 +107,6 @@ def helpMessage() {
                                           See: https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
       --read_structure2          [string] When processing UMIs, a read structure should always be provided for each of the fastq files. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length). 
                                           See: https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
-
     Annotation:
       --annotate_tools              [str] Specify from which tools Sarek should look for VCF files to annotate, only for step Annotate
                                           Available: HaplotypeCaller, Manta, Mutect2, Strelka, TIDDIT
@@ -290,6 +291,7 @@ if (tsvPath) {
         case 'preparerecalibration': inputSample = extractBam(tsvFile); break
         case 'recalibrate': inputSample = extractRecal(tsvFile); break
         case 'variantcalling': inputSample = extractBam(tsvFile); break
+		case 'sequenza_binned' : inputSample = extractBin(tsvFile); break
         case 'controlfreec': inputSample = extractPileup(tsvFile); break
         case 'annotate': break
         default: exit 1, "Unknown step ${step}"
@@ -361,6 +363,7 @@ ch_snpeff_cache = params.snpeff_cache ? Channel.value(file(params.snpeff_cache))
 ch_snpeff_db = params.snpeff_db ? Channel.value(params.snpeff_db) : "null"
 ch_vep_cache_version = params.vep_cache_version ? Channel.value(params.vep_cache_version) : "null"
 ch_vep_cache = params.vep_cache ? Channel.value(file(params.vep_cache)) : "null"
+ch_sequenza_ploidy = params.sequenza_ploidy ? Channel.value(params.sequenza_ploidy) : "null"
 
 // Optional files, not defined within the params.genomes[params.genome] scope
 ch_cadd_indels = params.cadd_indels ? Channel.value(file(params.cadd_indels)) : "null"
@@ -433,7 +436,10 @@ if ('controlfreec' in tools) {
     if (params.cf_coeff)     summary['coefficientOfVariation'] = params.cf_coeff
     if (params.cf_ploidy)    summary['ploidy']                 = params.cf_ploidy
 }
-
+if ('Sequenza' in tools) {
+    summary['Sequenza'] = "Options"
+    if (params.sequenza_ploidy)    summary['sequenza ploidy']  = params.sequenza_ploidy
+}
 if ('haplotypecaller' in tools)             summary['GVCF']       = params.no_gvcf ? 'No' : 'Yes'
 if ('strelka' in tools && 'manta' in tools) summary['Strelka BP'] = params.no_strelka_bp ? 'No' : 'Yes'
 if (params.pon && ('mutect2' in tools || (params.sentieon && 'tnscope' in tools))) summary['Panel of normals'] = params.pon
@@ -845,7 +851,7 @@ bedIntervals = bedIntervals
             else {
                 start = fields[1].toInteger()
                 end = fields[2].toInteger()
-                duration += (end - start) / params.nucleotides_per_second
+                duration +nucleotides_per_second
             }
         }
         [duration, intervalFile]
@@ -3283,7 +3289,7 @@ process sequenza_utils {
 
 	tag "${idSampleTumor}_vs_${idSampleNormal}_${chr}"
 
-    publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/sequenza", mode: params.publish_dir_mode
+    //publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/sequenza", mode: params.publish_dir_mode
     
     input:
         set idPatient, idSampleNormal, file(bamNormal), file(baiNormal), idSampleTumor, file(bamTumor), file(baiTumor), chr from pairBamSequenza
@@ -3315,6 +3321,8 @@ process merge_seqz_files{
     scratch true
 
     label 'cpus_4'
+    
+	//publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/sequenza/merged", mode: params.publish_dir_mode
 
     tag "${idSampleTumor}_vs_${idSampleNormal}_merge"
 
@@ -3363,6 +3371,8 @@ process sequenza_seqz_binning {
 
 	tag "${idPatient}_${idSampleTumor}_bin"
     
+    publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/binned", mode: params.publish_dir_mode
+    
 	input:
 	    set idPatient, idSampleTumor, idSampleNormal, file(bam2seqz) from merge_seqz_out
     
@@ -3374,6 +3384,17 @@ process sequenza_seqz_binning {
     sequenza-utils seqz_binning -w 50 -s "${bam2seqz}" -o - | gzip > "${idPatient}_${idSampleTumor}-bin50.seqz.gz"
     """
 }
+// TODO make seqz_bin accessible
+
+seqz_bin_tsv,seqz_bin = seqz_bin.into(2)
+seqz_bin_tsv.map { idPatient, idSampleTumor ->
+    gender = genderMap[idPatient]
+    bin = "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/binned/${idPatient}_${idSampleTumor}-bin50.seqz.gz"
+    "${idPatient}\t${idSampleTumor}\t${gender}\t${bin}"
+}.collectFile(
+    name: 'sequenza_binned.tsv', sort: true, storeDir: "${params.outdir}/CNV_calling/TSV"
+   )
+
 
 process sequenza_initial_fit {
 
@@ -3384,10 +3405,11 @@ process sequenza_initial_fit {
 	
 	tag "${idPatient}_${idSampleTumor}_seqz_initial_fit"
 
-    publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/initial_fit", mode: params.publish_dir_mode
+    publishDir "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/sequenza_fit_${ploidy}", mode: params.publish_dir_mode
 
 	input:
         set idPatient, idSampleTumor, file(seqz_bin) from seqz_bin
+		set seq_ploidy from ch_sequenza_ploidy
 
     output:
 	    set idPatient, idSampleTumor, file("*pdf"), file("*txt"), file("*RData") into seqz_initial_fit
@@ -3395,7 +3417,7 @@ process sequenza_initial_fit {
 	script:
 	gender = genderMap[idPatient]
 	"""
-	analyse_cn_sequenza.R ${seqz_bin} ${idSampleTumor} ${gender}
+	analyse_cn_sequenza.R ${seqz_bin} ${idSampleTumor} ${gender} ${sequenza_ploidy}
 	"""
 }
 
@@ -4488,6 +4510,7 @@ def defineStepList() {
         'mapping',
         'preparerecalibration',
         'recalibrate',
+		'sequenza_binned',
         'variantcalling'
     ]
 }
@@ -4537,6 +4560,22 @@ def extractBam(tsvFile) {
             return [idPatient, gender, status, idSample, bamFile, baiFile]
         }
 }
+// Channelling the TSV containing binned seqz.
+// Format is: "subject gender status bin
+def extractBin(tsvFile) {
+    Channel.from(tsvFile)
+        .splitCsv(sep: '\t')
+        .map { row ->
+            checkNumberOfItem(row, 4)
+            def idPatient      = row[0]
+            def gender         = row[1]
+            def idSampleTumor  = row[2]
+            def binFile        = returnFile(row[3])
+
+            return [idPatient, gender, idSampleTumor, binFile]
+        }
+}
+// Channelling the TSV containing binned seqz.
 
 // Create a channel of germline FASTQs from a directory pattern: "my_samples/*/"
 // All FASTQ files in subdirectories are collected and emitted;
