@@ -291,7 +291,7 @@ if (tsvPath) {
         case 'preparerecalibration': inputSample = extractBam(tsvFile); break
         case 'recalibrate': inputSample = extractRecal(tsvFile); break
         case 'variantcalling': inputSample = extractBam(tsvFile); break
-		case 'sequenza_binned' : inputSample = extractBin(tsvFile); break
+		case 'sequenzabinned' : inputSample = extractBin(tsvFile); break
         case 'controlfreec': inputSample = extractPileup(tsvFile); break
         case 'annotate': break
         default: exit 1, "Unknown step ${step}"
@@ -3397,7 +3397,7 @@ seqz_bin_tsv.map { idPatient, idSampleTumor ->
     name: 'sequenza_binned.tsv', sort: true, storeDir: "${params.outdir}/CNV_calling/TSV"
    )
 
-if (step == 'sequenza_binned') seqz_initial_fit = inputSample
+if (step == 'sequenzabinned') seqz_initial_fit = inputSample
 
 process sequenza_initial_fit {
 
@@ -4513,7 +4513,7 @@ def defineStepList() {
         'mapping',
         'preparerecalibration',
         'recalibrate',
-		'sequenza_binned',
+		'sequenzabinned',
         'variantcalling'
     ]
 }
