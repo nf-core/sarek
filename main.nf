@@ -4578,7 +4578,7 @@ def extractBin(tsvFile) {
             def idSample       = row[3]
             def binFile        = returnFile(row[4])
 
-            return [idPatient, gender, idSample, binFile]
+            return [idPatient, gender, status, idSample, binFile]
         }
 }
 // Channelling the TSV containing binned seqz.
