@@ -933,7 +933,7 @@ process FastQCFQ {
     output:
         file("*.{html,zip}") into fastQCFQReport
 
-    when: !('fastqc' in skipQC)
+    when: !('fastqc' in skipQC) && !('sequenzabinned' in step)
 
     script:
     """
@@ -955,7 +955,7 @@ process FastQCBAM {
     output:
         file("*.{html,zip}") into fastQCBAMReport
 
-    when: !('fastqc' in skipQC)
+    when: !('fastqc' in skipQC) & !('sequenzabinned' in step)
 
     script:
     """
