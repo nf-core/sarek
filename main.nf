@@ -872,11 +872,13 @@ if (params.no_intervals && step != 'annotate') {
 
 inputBam = Channel.create()
 inputPairReads = Channel.create()
+inputSeqz = Channel.create()
 
-if (step in ['preparerecalibration', 'recalibrate', 'variantcalling', 'controlfreec', 'annotate']) {
+if (step in ['preparerecalibration', 'recalibrate', 'variantcalling', 'controlfreec', 'annotate','sequenzabinned']) {
     inputBam.close()
     inputPairReads.close()
 } else inputSample.choice(inputPairReads, inputBam) {hasExtension(it[3], "bam") ? 1 : 0}
+if (step in 'sequenzabinned') inputSeqz = inputSample
 
 (inputBam, inputBamFastQC) = inputBam.into(2)
 
@@ -955,7 +957,7 @@ process FastQCBAM {
     output:
         file("*.{html,zip}") into fastQCBAMReport
 
-    when: !('fastqc' in skipQC) & !('sequenzabinned' in step)
+    when: !('fastqc' in skipQC)
 
     script:
     """
