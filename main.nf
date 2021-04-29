@@ -4569,13 +4569,14 @@ def extractBin(tsvFile) {
     Channel.from(tsvFile)
         .splitCsv(sep: '\t')
         .map { row ->
-            checkNumberOfItem(row, 4)
+            checkNumberOfItem(row, 5)
             def idPatient      = row[0]
             def gender         = row[1]
-            def idSampleTumor  = row[2]
-            def binFile        = returnFile(row[3])
+            def status         = returnStatus(row[2].toInteger())
+            def idSample       = row[3]
+            def binFile        = returnFile(row[4])
 
-            return [idPatient, gender, idSampleTumor, binFile]
+            return [idPatient, gender, idSample, binFile]
         }
 }
 // Channelling the TSV containing binned seqz.
