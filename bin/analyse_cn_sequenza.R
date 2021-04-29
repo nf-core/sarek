@@ -16,10 +16,10 @@ if (ploidy == 7) {
 		up_p = 2.5
         } else if (ploidy == 3) {
 		low_p = 2.5
-		up_ploidy = 3.5
+		up_p = 3.5
         } else if (ploidy == 4) {
 		low_p = 3.5
-		up_ploidy = 4.5
+		up_p = 4.5
         } else if (ploidy == 5) {
 		low_p = 4.5
 		up_p = 5.5
