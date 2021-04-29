@@ -3389,12 +3389,15 @@ process sequenza_seqz_binning {
 
 seqz_bin_tsv.map { idPatient, idSampleTumor ->
     gender = genderMap[idPatient]
+    status = 1
+    idSample = idSampleTumor
     bin = "${params.outdir}/CNV_calling/${idPatient}_${idSampleTumor}/seqz_files/binned/${idPatient}_${idSampleTumor}-bin50.seqz.gz"
-    "${idPatient}\t${idSampleTumor}\t${gender}\t${bin}"
+    "${idPatient}\t${gender}\t${status}\t${idSample}\t${bin}"
 }.collectFile(
     name: 'sequenza_binned.tsv', sort: true, storeDir: "${params.outdir}/CNV_calling/TSV"
    )
 
+if (step == 'sequenza_binned') seqz_initial_fit = inputSample
 
 process sequenza_initial_fit {
 
