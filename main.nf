@@ -3399,7 +3399,7 @@ seqz_bin_tsv.map { idPatient, idSampleTumor ->
     name: 'sequenza_binned.tsv', sort: true, storeDir: "${params.outdir}/CNV_calling/TSV"
    )
 
-if (step == 'sequenzabinned') seqz_initial_fit = inputSample
+seqz_bin = seqz_bin.mix(inputSeqz)
 
 process sequenza_initial_fit {
 
