@@ -20,7 +20,7 @@ jobs:
         # Nextflow versions: check pipeline minimum
         nxf_ver: ['21.04.0', '']
         engine: ['docker']
-        test: ['default', 'aligner', 'gatk4']
+        test: ['default', 'aligner']
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
