@@ -20,7 +20,8 @@ jobs:
         # Nextflow versions: check pipeline minimum
         nxf_ver: ['21.04.0', '']
         engine: ['docker']
-        test: ['default', 'aligner', 'tumor_normal_pair', 'variant_calling']
+
+        test: ['default', 'aligner', 'gatk4_spark', 'targeted', 'tumor_normal_pair', 'variant_calling']
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -120,25 +121,3 @@ jobs:
   #         NXF_VER: '20.11.0-edge'
   #     - name: Run test for minimal genomes
   #       run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --skipQC all --genome ${{ matrix.genome }} ${{ matrix.intervals }} --tools Manta,mpileup,Strelka,FreeBayes
-
-  profile:
-    env:
-      NXF_ANSI_LOG: false
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        # profile: [test_split_fastq, test_targeted, test_trimming, test_use_gatk_spark, test_umi_tso, test_umi_qiaseq]
-        profile: [test_use_gatk_spark, test_targeted]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Nextflow
-        run: |
-          wget -qO- get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
-        env:
-          # Only check Nextflow pipeline minimum version
-          NXF_VER: '20.11.0-edge'
-      - name: Run ${{ matrix.profile }} test
-        run: nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker
-      - name: Show results
-        run: ls -lR results
