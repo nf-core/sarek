@@ -18,8 +18,9 @@ jobs:
     strategy:
       matrix:
         # Nextflow versions: check pipeline minimum
-        nxf_ver: ['20.11.0-edge']
+        nxf_ver: ['21.04.0', '']
         engine: ['docker']
+        test: ['default', 'aligner']
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -39,39 +40,7 @@ jobs:
         run: python -m pip install --upgrade pip pytest-workflow
 
       - name: Run pipeline with default settings
-        run: pytest --tag default --kwdof
-  
-  aligner:
-    name: Run aligner tests
-    env:
-      NXF_VER: ${{ matrix.nxf_ver }}
-      NXF_ANSI_LOG: false
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        # Nextflow versions: only pipeline minimum version
-        nxf_ver: ['20.11.0-edge']
-        aligner: [bwa-mem, bwa-mem2]
-    steps:
-      - name: Check out pipeline code
-        uses: actions/checkout@v2
-
-      - name: Install Nextflow
-        env:
-          CAPSULE_LOG: none
-        run: |
-          wget -qO- get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-      - name: Install dependencies
-        run: python -m pip install --upgrade pip pytest-workflow
-
-      - name: Run pipeline with default settings
-        run: pytest --tag ${{ matrix.aligner }} --kwdof
+        run: pytest --tag ${{ matrix.test }} --kwdof
 
   germline:
     name: Run input from a folder test and restart from step tests
