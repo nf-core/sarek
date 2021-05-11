@@ -39,7 +39,7 @@ jobs:
       - name: Install dependencies
         run: python -m pip install --upgrade pip pytest-workflow
 
-      - name: Run pipeline with default settings
+      - name: Run pipeline with tests settings
         run: pytest --tag ${{ matrix.test }} --kwdof
 
   germline:
