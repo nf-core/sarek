@@ -20,7 +20,7 @@ jobs:
         # Nextflow versions: check pipeline minimum
         nxf_ver: ['21.04.0', '']
         engine: ['docker']
-        test: ['default', 'aligner', 'tumor_normal_pair']
+        test: ['default', 'aligner', 'tumor_normal_pair', 'variant_calling']
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -140,38 +140,5 @@ jobs:
           NXF_VER: '20.11.0-edge'
       - name: Run ${{ matrix.profile }} test
         run: nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker
-      - name: Show results
-        run: ls -lR results
-
-  tools:
-    name: Run tool tests
-    env:
-      NXF_ANSI_LOG: false
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        # tool: [Haplotypecaller, Freebayes, Manta, mpileup, MSIsensor, Strelka, TIDDIT]
-        tool: [Haplotypecaller, Manta, MSIsensor, Strelka]
-        intervals: [--no_intervals, '']
-        exclude:
-          - tool: Manta
-            intervals: --no_intervals
-          - tool: MSIsensor
-            intervals: --no_intervals
-          - tool: Strelka
-            intervals: --no_intervals
-        #   - tool: TIDDIT
-        #     intervals: --no_intervals
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Nextflow
-        run: |
-          wget -qO- get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
-        env:
-          # Only check Nextflow pipeline minimum version
-          NXF_VER: '20.11.0-edge'
-      - name: Run ${{ matrix.tool }} test
-        run: nextflow run ${GITHUB_WORKSPACE} -profile test_tool,docker --tools ${{ matrix.tool }} ${{ matrix.intervals }}
       - name: Show results
         run: ls -lR results
