@@ -89,11 +89,13 @@ def helpMessage() {
                                           Requires that --ascat_ploidy is set
       --cf_coeff                    [str] Control-FREEC coefficientOfVariation
                                           Default: ${params.cf_coeff}
+      --cf_contamination_adjustment[bool] Control-FREEC contaminationAdjustment
+                                          Default: Disabled
+      --cf_contamination            [int] Control-FREEC contamination value
+                                          Default: Disabled
       --cf_ploidy                   [str] Control-FREEC ploidy
                                           Default: ${params.cf_ploidy}
       --cf_window                   [int] Control-FREEC window size
-                                          Default: Disabled
-      --cf_contamination_adjustment[bool] Control-FREEC contaminationAdjustment
                                           Default: Disabled
       --generate_gvcf              [bool] Enable g.vcf output from GATK HaplotypeCaller
       --no_strelka_bp              [bool] Will not use Manta candidateSmallIndels for Strelka (not recommended by Best Practices)
@@ -429,10 +431,11 @@ if ('ascat' in tools) {
 
 if ('controlfreec' in tools) {
     summary['Control-FREEC'] = "Options"
-    if (params.cf_window)                   summary['window']                  = params.cf_window
     if (params.cf_coeff)                    summary['coefficientOfVariation']  = params.cf_coeff
-    if (params.cf_ploidy)                   summary['ploidy']                  = params.cf_ploidy
+    if (params.cf_contamination)            summary['contamination']           = params.cf_contamination
     if (params.cf_contamination_adjustment) summary['contaminationAdjustment'] = params.cf_contamination_adjustment
+    if (params.cf_ploidy)                   summary['ploidy']                  = params.cf_ploidy
+    if (params.cf_window)                   summary['window']                  = params.cf_window
 }
 
 if ('haplotypecaller' in tools)             summary['GVCF']       = params.generate_gvcf ? 'Yes' : 'No'
@@ -3365,6 +3368,7 @@ process ControlFREEC {
     breakPointType = params.target_bed ? "4" : "2"
     mappabilitystr = params.mappability ? "gemMappabilityFile = \${PWD}/${mappability}" : ""
     contamination_adjustment = params.cf_contamination_adjustment ? "contaminationAdjustment = TRUE" : ""
+    contamination_value = params.cf_contamination ? "contamination = ${params.cf_contamination}" : ""
     """
     touch ${config}
     echo "[general]" >> ${config}
@@ -3383,6 +3387,7 @@ process ControlFREEC {
     echo "${coeffvar}" >> ${config}
     echo "${mappabilitystr}" >> ${config}
     echo "${contamination_adjustment}" >> ${config}
+    echo "${contamination_value}" >> ${config}
     echo "" >> ${config}
     
     echo "[control]" >> ${config}
@@ -3450,7 +3455,7 @@ process ControlFREECSingle {
     breakPointType = params.target_bed ? "4" : "2"
     mappabilitystr = params.mappability ? "gemMappabilityFile = \${PWD}/${mappability}" : ""
     contamination_adjustment = params.cf_contamination_adjustment ? "contaminationAdjustment = TRUE" : ""
-
+    contamination_value = params.cf_contamination ? "contamination = ${params.cf_contamination}" : ""
     """
     touch ${config}
     echo "[general]" >> ${config}
@@ -3469,6 +3474,7 @@ process ControlFREECSingle {
     echo "${coeffvar}" >> ${config}
     echo "${mappabilitystr}" >> ${config}
     echo "${contamination_adjustment}" >> ${config}
+    echo "${contamination_value}" >> ${config}
     echo "" >> ${config}
 
     echo "[sample]" >> ${config}
