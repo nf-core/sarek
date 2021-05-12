@@ -19,178 +19,28 @@ nf-core/sarek:
 --------------------------------------------------------------------------------
 */
 
-def helpMessage() {
-    log.info nfcoreHeader()
-    log.info"""
+log.info Headers.nf_core(workflow, params.monochrome_logs)
 
-    Usage:
-
-    The typical command for running the pipeline is as follows:
-
-    nextflow run nf-core/sarek --input sample.tsv -profile docker
-
-    Mandatory arguments:
-      --input                      [file] Path to input TSV file on mapping, prepare_recalibration, recalibrate, variant_calling and Control-FREEC steps
-                                          Multiple TSV files can be specified surrounded with quotes
-                                          Works also with the path to a directory on mapping step with a single germline sample only
-                                          Alternatively, path to VCF input file on annotate step
-                                          Multiple VCF files can be specified surrounded with quotes
-      -profile                      [str] Configuration profile to use. Can use multiple (comma separated)
-                                          Available: conda, docker, singularity, test, awsbatch, <institute> and more
-      --step                       [list] Specify starting step (only one)
-                                          Available: mapping, prepare_recalibration, recalibrate, variant_calling, annotate, ControlFREEC
-                                          Default: ${params.step}
-      --genome                      [str] Name of iGenomes reference
-                                          Default: ${params.genome}
-
-    Main options:
-      --help                       [bool] You're reading it
-      --no_intervals               [bool] Disable usage of intervals
-                                          Intervals are part of the genome chopped up, used to speed up preprocessing and variant calling
-      --nucleotides_per_second      [int] To estimate interval size
-                                          Default: ${params.nucleotides_per_second}
-      --sentieon                   [bool] If sentieon is available, will enable it for Preprocessing, and Variant Calling
-                                          Adds the following options for --tools: DNAseq, DNAscope and TNscope
-      --skip_qc                     [str] Specify which QC tools to skip when running Sarek (multiple separated with commas)
-                                          Available: all, bamQC, BaseRecalibrator, BCFtools, Documentation
-                                          FastQC, MultiQC, samtools, vcftools, versions
-                                          Default: None
-      --target_bed                 [file] Target BED file for whole exome or targeted sequencing
-                                          Default: None
-      --tools                       [str] Specify tools to use for variant calling (multiple separated with commas):
-                                          Available: ASCAT, CNVkit, ControlFREEC, FreeBayes, HaplotypeCaller
-                                          Manta, mpileup, MSIsensor, Mutect2, Strelka, TIDDIT
-                                          and/or for annotation:
-                                          snpEff, VEP, merge
-                                          Default: None
-
-    Modify fastqs (trim/split):
-      --trim_fastq                 [bool] Run Trim Galore
-      --clip_r1                     [int] Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
-      --clip_r2                     [int] Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
-      --three_prime_clip_r1         [int] Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
-      --three_prime_clip_r2         [int] Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
-      --trim_nextseq                [int] Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails
-      --save_trimmed               [bool] Save trimmed FastQ file intermediates
-      --split_fastq                 [int] Specify how many reads should be contained in the split fastq file
-                                          Default: no split
-
-    Preprocessing:
-      --markdup_java_options        [str] Establish values for markDuplicates memory consumption
-                                          Default: ${params.markdup_java_options}
-      --use_gatk_spark             [bool] Enable usage of GATK Spark implementation of their tools in local mode
-      --save_bam_mapped            [bool] Save Mapped BAMs
-      --skip_markduplicates        [bool] Skip MarkDuplicates
-
-    Variant Calling:
-      --ascat_ploidy                [int] Use this parameter to overwrite default behavior from ASCAT regarding ploidy
-                                          Requires that --ascat_purity is set
-      --ascat_purity                [int] Use this parameter to overwrite default behavior from ASCAT regarding purity
-                                          Requires that --ascat_ploidy is set
-      --cf_coeff                    [str] Control-FREEC coefficientOfVariation
-                                          Default: ${params.cf_coeff}
-      --cf_contamination_adjustment[bool] Control-FREEC contaminationAdjustment
-                                          Default: Disabled
-      --cf_contamination            [int] Control-FREEC contamination value
-                                          Default: Disabled
-      --cf_ploidy                   [str] Control-FREEC ploidy
-                                          Default: ${params.cf_ploidy}
-      --cf_window                   [int] Control-FREEC window size
-                                          Default: Disabled
-      --generate_gvcf              [bool] Enable g.vcf output from GATK HaplotypeCaller
-      --no_strelka_bp              [bool] Will not use Manta candidateSmallIndels for Strelka (not recommended by Best Practices)
-      --pon                        [file] Panel-of-normals VCF (bgzipped) for GATK Mutect2 / Sentieon TNscope
-                                          See: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_CreateSomaticPanelOfNormals.php
-      --pon_index                  [file] Index of pon panel-of-normals VCF
-                                          If none provided, will be generated automatically from the PON
-      --ignore_soft_clipped_bases  [bool] Do not analyze soft clipped bases in the reads for GATK Mutect2
-                                          Default: Do not use
-      --umi                        [bool] If provided, UMIs steps will be run to extract and annotate the reads with UMI and create consensus reads
-      --read_structure1          [string] When processing UMIs, a read structure should always be provided for each of the fastq files. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length). 
-                                          See: https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
-      --read_structure2          [string] When processing UMIs, a read structure should always be provided for each of the fastq files. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length). 
-                                          See: https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
-
-    Annotation:
-      --annotate_tools              [str] Specify from which tools Sarek should look for VCF files to annotate, only for step Annotate
-                                          Available: HaplotypeCaller, Manta, Mutect2, Strelka, TIDDIT
-                                          Default: None
-      --annotation_cache           [bool] Enable the use of cache for annotation, to be used with --snpeff_cache and/or --vep_cache
-      --snpeff_cache               [file] Specity the path to snpEff cache, to be used with --annotation_cache
-      --vep_cache                  [file] Specity the path to VEP cache, to be used with --annotation_cache
-      --cadd_cache                 [bool] Enable CADD cache
-      --cadd_indels                [file] Path to CADD InDels file
-      --cadd_indels_tbi            [file] Path to CADD InDels index
-      --cadd_wg_snvs               [file] Path to CADD SNVs file
-      --cadd_wg_snvs_tbi           [file] Path to CADD SNVs index
-      --genesplicer                [file] Enable genesplicer within VEP
-
-    References options:
-      --igenomes_base              [file] Specify base path to AWS iGenomes
-                                          Default: ${params.igenomes_base}
-      --igenomes_ignore            [bool] Do not use AWS iGenomes. Will load genomes.config instead of igenomes.config
-      --genomes_base               [file] Specify base path to reference genome
-      --save_reference             [bool] Save built references
-      
-    References:                           If not specified in the configuration file or you wish to overwrite any of the references.
-      --ac_loci                    [file] Loci file for ASCAT
-      --ac_loci_gc                 [file] Loci GC file for ASCAT
-      --bwa                        [file] BWA indexes
-                                          If none provided, will be generated automatically from the fasta reference
-      --chr_dir                    [file] Chromosomes folder
-      --chr_length                 [file] Chromosomes length file
-      --dbsnp                      [file] Dbsnp file
-      --dbsnp_index                [file] Dbsnp index
-                                          If none provided, will be generated automatically if a dbsnp file is provided
-      --dict                       [file] Fasta dictionary file
-                                          If none provided, will be generated automatically from the fasta reference
-      --fasta                      [file] Fasta reference
-      --fasta_fai                  [file] Fasta reference index
-                                          If none provided, will be generated automatically from the fasta reference
-      --germline_resource          [file] Germline Resource File for GATK Mutect2
-      --germline_resource_index    [file] Germline Resource Index for GATK Mutect2
-                                          if none provided, will be generated automatically if a germlineResource file is provided
-      --intervals                  [file] Intervals
-                                          If none provided, will be generated automatically from the fasta reference
-                                          Use --no_intervals to disable automatic generation
-      --known_indels               [file] Known indels file
-      --known_indels_index         [file] Known indels index
-                                          If none provided, will be generated automatically if a knownIndels file is provided
-      --mappability                [file] Mappability file for Control-FREEC
-      --snpeff_db                   [str] snpEff Database version
-      --species                     [str] Species for VEP
-      --vep_cache_version           [int] VEP cache version
-
-    Other options:
-      --outdir                     [file] The output directory where the results will be saved
-      --publish_dir_mode           [list] Mode for publishing results in the output directory (only one)
-                                          Available: symlink, rellink, link, copy, copyNoFollow, move
-                                          Default: copy
-      --sequencing_center           [str] Name of sequencing center to be displayed in BAM file
-      --multiqc_config             [file] Specify a custom config file for MultiQC
-      --monochrome_logs            [bool] Logs will be without colors
-      --email                       [str] Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
-      --email_on_fail               [str] Same as --email, except only send mail if the workflow is not successful
-      --plaintext_email            [bool] Enable plaintext email
-      --max_multiqc_email_size      [str] Threshold size for MultiQC report to be attached in notification email. If file generated by pipeline exceeds the threshold, it will not be attached
-                                          Default: 25MB
-      -name                         [str] Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic
-
-    AWSBatch options:
-      --awsqueue                    [str] The AWSBatch JobQueue that needs to be set when running on AWSBatch
-      --awsregion                   [str] The AWS Region for your AWS Batch job to run on
-      --awscli                      [str] Path to the AWS CLI tool
-    """.stripIndent()
+////////////////////////////////////////////////////
+/* --               PRINT HELP                 -- */
+////////////////////////////////////////////////////
+def json_schema = "$projectDir/nextflow_schema.json"
+if (params.help) {
+    def command = "nextflow run nf-core/sarek --input sample.tsv -profile docker"
+    log.info NfcoreSchema.params_help(workflow, params, json_schema, command)
+    exit 0
 }
 
-// Show help message
-if (params.help) exit 0, helpMessage()
+////////////////////////////////////////////////////
+/* --         VALIDATE PARAMETERS              -- */
+////////////////////////////////////////////////////
+if (params.validate_params) {
+    NfcoreSchema.validateParameters(params, json_schema, log)
+}
 
-/*
-================================================================================
-                         SET UP CONFIGURATION VARIABLES
-================================================================================
-*/
+////////////////////////////////////////////////////
+/* --     Collect configuration parameters     -- */
+////////////////////////////////////////////////////
 
 // Check if genome exists in the config file
 if (params.genomes && !params.genomes.containsKey(params.genome) && !params.igenomes_ignore) {
@@ -198,6 +48,12 @@ if (params.genomes && !params.genomes.containsKey(params.genome) && !params.igen
 } else if (params.genomes && !params.genomes.containsKey(params.genome) && params.igenomes_ignore) {
     exit 1, "The provided genome '${params.genome}' is not available in the genomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
 }
+
+/*
+================================================================================
+                         SET UP CONFIGURATION VARIABLES
+================================================================================
+*/
 
 stepList = defineStepList()
 step = params.step ? params.step.toLowerCase().replaceAll('-', '').replaceAll('_', '') : ''
@@ -233,12 +89,12 @@ if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) custom_runName = workflow.runName
 // Check AWS batch settings
 if (workflow.profile.contains('awsbatch')) {
     // AWSBatch sanity checking
-    if (!params.awsqueue || !params.awsregion) exit 1, "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
+    if (!params.awsqueue || !params.awsregion) exit 1, 'Specify correct --awsqueue and --awsregion parameters on AWSBatch!'
     // Check outdir paths to be S3 buckets if running on AWSBatch
     // related: https://github.com/nextflow-io/nextflow/issues/813
-    if (!params.outdir.startsWith('s3:')) exit 1, "Outdir not on S3 - specify S3 Bucket to run on AWSBatch!"
+    if (!params.outdir.startsWith('s3:')) exit 1, 'Outdir not on S3 - specify S3 Bucket to run on AWSBatch!'
     // Prevent trace files to be stored on S3 since S3 does not support rolling files.
-    if (params.tracedir.startsWith('s3:')) exit 1, "Specify a local tracedir or run without trace! S3 cannot be used for tracefiles."
+    if (params.tracedir.startsWith('s3:')) exit 1, 'Specify a local tracedir or run without trace! S3 cannot be used for tracefiles.'
 }
 
 // MultiQC
@@ -378,19 +234,27 @@ ch_target_bed = params.target_bed ? Channel.value(file(params.target_bed)) : "nu
 ch_read_structure1 = params.read_structure1 ? Channel.value(params.read_structure1) : "null"
 ch_read_structure2 = params.read_structure2 ? Channel.value(params.read_structure2) : "null"
 
-/*
-================================================================================
-                                PRINTING SUMMARY
-================================================================================
-*/
+////////////////////////////////////////////////////
+/* --         PRINT PARAMETER SUMMARY          -- */
+////////////////////////////////////////////////////
+log.info NfcoreSchema.params_summary_log(workflow, params, json_schema)
 
 // Header log info
-log.info nfcoreHeader()
 def summary = [:]
-if (workflow.revision)          summary['Pipeline Release']    = workflow.revision
-summary['Run Name']          = custom_runName ?: workflow.runName
-summary['Max Resources']     = "${params.max_memory} memory, ${params.max_cpus} cpus, ${params.max_time} time per job"
-if (workflow.containerEngine)   summary['Container']         = "${workflow.containerEngine} - ${workflow.container}"
+if (workflow.revision) summary['Pipeline Release'] = workflow.revision
+summary['Run Name']         = workflow.runName
+summary['Max Resources']    = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
+if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
+summary['Output dir']       = params.outdir
+summary['Launch dir']       = workflow.launchDir
+summary['Working dir']      = workflow.workDir
+summary['Script dir']       = workflow.projectDir
+summary['User']             = workflow.userName
+if (workflow.profile.contains('awsbatch')) {
+    summary['AWS Region']   = params.awsregion
+    summary['AWS Queue']    = params.awsqueue
+    summary['AWS CLI']      = params.awscli
+}
 
 summary['Input']             = params.input
 summary['Step']              = step
@@ -546,11 +410,14 @@ Channel.from(summary.collect{ [it.key, it.value] })
 
 process get_software_versions {
     publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode,
-        saveAs: {it.indexOf(".csv") > 0 ? it : null}
+        saveAs: { filename ->
+                      if (filename.indexOf('.csv') > 0) filename
+                      else null
+        }
 
     output:
-        file 'software_versions_mqc.yaml' into ch_software_versions_yaml
-        file "software_versions.csv"
+    file 'software_versions_mqc.yaml' into ch_software_versions_yaml
+    file 'software_versions.csv'
 
     when: !('versions' in skipQC)
 
@@ -3980,8 +3847,12 @@ process MultiQC {
     when: !('multiqc' in skipQC)
 
     script:
-    rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
-    rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
+    rtitle = ''
+    rfilename = ''
+    if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
+        rtitle = "--title \"${workflow.runName}\""
+        rfilename = "--filename " + workflow.runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report"
+    }
     custom_config_file = params.multiqc_config ? "--config $mqc_custom_config" : ''
     """
     multiqc -f ${rtitle} ${rfilename} ${custom_config_file} .
@@ -4019,7 +3890,7 @@ workflow.onComplete {
     }
     def email_fields = [:]
     email_fields['version'] = workflow.manifest.version
-    email_fields['runName'] = custom_runName ?: workflow.runName
+    email_fields['runName'] = workflow.runName
     email_fields['success'] = workflow.success
     email_fields['dateComplete'] = workflow.complete
     email_fields['duration'] = workflow.duration
@@ -4123,56 +3994,9 @@ workflow.onComplete {
     }
 }
 
-/*
-================================================================================
-                                nf-core functions
-================================================================================
-*/
-
-def create_workflow_summary(summary) {
-    def yaml_file = workDir.resolve('workflow_summary_mqc.yaml')
-    yaml_file.text  = """
-    id: 'nf-core-sarek-summary'
-    description: " - this information is collected when the pipeline is started."
-    section_name: 'nf-core/sarek Workflow Summary'
-    section_href: 'https://github.com/nf-core/sarek'
-    plot_type: 'html'
-    data: |
-        <dl class=\"dl-horizontal\">
-${summary.collect { k, v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
-        </dl>
-    """.stripIndent()
-
-   return yaml_file
-}
-
-def nfcoreHeader() {
-    // Log colors ANSI codes
-    c_black  = params.monochrome_logs ? '' : "\033[0;30m";
-    c_blue   = params.monochrome_logs ? '' : "\033[0;34m";
-    c_dim    = params.monochrome_logs ? '' : "\033[2m";
-    c_green  = params.monochrome_logs ? '' : "\033[0;32m";
-    c_purple = params.monochrome_logs ? '' : "\033[0;35m";
-    c_reset  = params.monochrome_logs ? '' : "\033[0m";
-    c_white  = params.monochrome_logs ? '' : "\033[0;37m";
-    c_yellow = params.monochrome_logs ? '' : "\033[0;33m";
-
-    return """    -${c_dim}--------------------------------------------------${c_reset}-
-                                            ${c_green},--.${c_black}/${c_green},-.${c_reset}
-    ${c_blue}        ___     __   __   __   ___     ${c_green}/,-._.--~\'${c_reset}
-    ${c_blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${c_yellow}}  {${c_reset}
-    ${c_blue}  | \\| |       \\__, \\__/ |  \\ |___     ${c_green}\\`-._,-`-,${c_reset}
-                                            ${c_green}`._,._,\'${c_reset}
-        ${c_white}____${c_reset}
-      ${c_white}.´ _  `.${c_reset}
-     ${c_white}/  ${c_green}|\\${c_reset}`-_ \\${c_reset}     ${c_blue} __        __   ___     ${c_reset}
-    ${c_white}|   ${c_green}| \\${c_reset}  `-|${c_reset}    ${c_blue}|__`  /\\  |__) |__  |__/${c_reset}
-     ${c_white}\\ ${c_green}|   \\${c_reset}  /${c_reset}     ${c_blue}.__| /¯¯\\ |  \\ |___ |  \\${c_reset}
-      ${c_white}`${c_green}|${c_reset}____${c_green}\\${c_reset}´${c_reset}
-
-    ${c_purple}  nf-core/sarek v${workflow.manifest.version}${c_reset}
-    -${c_dim}--------------------------------------------------${c_reset}-
-    """.stripIndent()
+workflow.onError {
+    // Print unexpected parameters - easiest is to just rerun validation
+    NfcoreSchema.validateParameters(params, json_schema, log)
 }
 
 def checkHostname() {
@@ -4181,15 +4005,15 @@ def checkHostname() {
     def c_red         = params.monochrome_logs ? '' : "\033[1;91m"
     def c_yellow_bold = params.monochrome_logs ? '' : "\033[1;93m"
     if (params.hostnames) {
-        def hostname = "hostname".execute().text.trim()
+        def hostname = 'hostname'.execute().text.trim()
         params.hostnames.each { prof, hnames ->
             hnames.each { hname ->
                 if (hostname.contains(hname) && !workflow.profile.contains(prof)) {
-                    log.error "====================================================\n" +
+                    log.error "${c_red}====================================================${c_reset}\n" +
                             "  ${c_red}WARNING!${c_reset} You are running with `-profile $workflow.profile`\n" +
                             "  but your machine hostname is ${c_white}'$hostname'${c_reset}\n" +
                             "  ${c_yellow_bold}It's highly recommended that you use `-profile $prof${c_reset}`\n" +
-                            "============================================================"
+                            "${c_red}====================================================${c_reset}\n"
                 }
             }
         }

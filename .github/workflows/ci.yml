@@ -8,6 +8,9 @@ on:
   release:
     types: [published]
 
+# Uncomment if we need an edge release of Nextflow again
+# env: NXF_EDGE: 1
+
 jobs:
   test:
     name: Run workflow tests

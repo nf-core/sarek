@@ -58,7 +58,7 @@ Have you provided the following extra information/files:
 
 ## Container engine
 
-- Engine: <!-- [e.g. Conda, Docker, Singularity or Podman] -->
+- Engine: <!-- [e.g. Conda, Docker, Singularity, Podman, Shifter or Charliecloud] -->
 - version: <!-- [e.g. 1.0.0] -->
 - Image tag: <!-- [e.g. nfcore/sarek:2.6] -->
 
