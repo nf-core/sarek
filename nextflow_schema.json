@@ -1,5 +1,5 @@
 {
-    "$schema": "https://json-schema.org/draft-07/schema",
+    "$schema": "http://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/nf-core/sarek/master/nextflow_schema.json",
     "title": "nf-core/sarek pipeline parameters",
     "description": "An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing",
