@@ -33,7 +33,11 @@
                         "recalibrate",
                         "variant_calling",
                         "annotate",
-                        "Control-FREEC"
+                        "Control-FREEC",
+                        "ControlFREEC",
+                        "preparerecalibration",
+                        "variantcalling",
+                        "controlfreec"
                     ]
                 },
                 "outdir": {
@@ -75,7 +79,22 @@
                         "merge",
                         "DNAseq",
                         "DNAscope",
-                        "TNscope"
+                        "TNscope",
+                        "ascat",
+                        "cnvkit",
+                        "controlfreec",
+                        "freebayes",
+                        "haplotypecaller",
+                        "manta",
+                        "msisensor",
+                        "mutect2",
+                        "strelka",
+                        "tiddit",
+                        "snpeff",
+                        "vep",
+                        "dnaseq",
+                        "dnascope",
+                        "tnscope"
                     ]
                 },
                 "no_intervals": {
@@ -356,7 +375,12 @@
                         "Manta",
                         "Mutect2",
                         "Strelka",
-                        "TIDDIT"
+                        "TIDDIT",
+                        "haplotypecaller",
+                        "manta",
+                        "mutect2",
+                        "strelka",
+                        "tiddit"
                     ],
                     "hidden": true
                 },
