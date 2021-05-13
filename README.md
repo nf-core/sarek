@@ -76,7 +76,7 @@ Sarek was developed at the [National Genomics Infastructure](https://ngisweden.s
 Main authors:
 
 * [Gisela Gabernet](https://github.com/ggabernet)
-* [Maxime Garcia](https://github.com/MaxUlysse)
+* [Maxime Garcia](https://github.com/maxulysse)
 * [Friederike Hanssen](https://github.com/FriederikeHanssen)
 * [Szilveszter Juhos](https://github.com/szilvajuhos)
 
