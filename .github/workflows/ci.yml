@@ -36,13 +36,13 @@ jobs:
             environment.yml
       - name: Build new docker image
         if: env.MATCHED_FILES
-        run: docker build --no-cache . -t nfcore/sarek:dev
+        run: docker build --no-cache . -t nfcore/sarek:2.7.1
 
       - name: Pull docker image
         if: ${{ !env.MATCHED_FILES }}
         run: |
           docker pull nfcore/sarek:dev
-          docker tag nfcore/sarek:dev nfcore/sarek:dev
+          docker tag nfcore/sarek:dev nfcore/sarek:2.7.1
 
       - name: Install Nextflow
         env:
