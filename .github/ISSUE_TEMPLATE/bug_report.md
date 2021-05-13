@@ -4,7 +4,6 @@ about: Report something that is broken or incorrect
 title: "[BUG]"
 labels: bug
 assignees: MaxUlysse
-
 ---
 
 <!--
@@ -21,7 +20,7 @@ Please delete this text and anything that's not relevant from the template below
 I have checked the following places for your error:
 
 - [ ] [nf-core website: troubleshooting](https://nf-co.re/usage/troubleshooting)
-- [ ] [nf-core/sarek pipeline documentation](https://nf-co.re/nf-core/sarek/usage)
+- [ ] [nf-core/sarek pipeline documentation](https://nf-co.re/sarek/usage)
 
 ## Description of the bug
 
@@ -60,7 +59,7 @@ Have you provided the following extra information/files:
 
 - Engine: <!-- [e.g. Conda, Docker, Singularity, Podman, Shifter or Charliecloud] -->
 - version: <!-- [e.g. 1.0.0] -->
-- Image tag: <!-- [e.g. nfcore/sarek:2.6] -->
+- Image tag: <!-- [e.g. nfcore/sarek:2.7] -->
 
 ## Additional context
 
