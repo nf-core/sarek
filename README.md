@@ -41,8 +41,8 @@ It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/nf-
     ```
 
     > Please check [nf-core/configs](https://github.com/nf-core/configs#documentation) to see if a custom config file to run nf-core pipelines already exists for your Institute.
-    If so, you can simply use `-profile <institute>` in your command.
-    This will enable either `Docker` or `Singularity` and set the appropriate execution settings for your local compute environment.
+    > If so, you can simply use `-profile <institute>` in your command.
+    > This will enable either `Docker` or `Singularity` and set the appropriate execution settings for your local compute environment.
 
 4. Start running your own analysis!
 
