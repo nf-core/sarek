@@ -2147,10 +2147,10 @@
      id="namedview4"
      showgrid="false"
      inkscape:zoom="0.5"
-     inkscape:cx="114.19569"
+     inkscape:cx="-231.80431"
      inkscape:cy="904.42745"
      inkscape:window-x="0"
-     inkscape:window-y="1080"
+     inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="g2380"
      units="mm"
@@ -2176,6 +2176,7 @@
      id="tspan3424"
      y="-2749.4028"
      x="866.00854" /></text>
+
 
 <g
    id="g6139"
@@ -2691,6 +2692,7 @@
    id="text8524"
    transform="matrix(1.9071373,0,0,-1.9071373,430.82327,2077.7321)" />
 
+
 <text
    style="font-style:normal;font-weight:bold;font-size:medium;font-family:sans-serif;color-interpolation:auto;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1.45000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
    x="32.745098"
@@ -2700,6 +2702,7 @@
    xml:space="preserve"
    id="text8514"
    transform="matrix(1.9071373,0,0,-1.9071373,542.56229,2077.7321)" />
+
 
 <g
    style="font-style:normal;font-weight:normal;font-size:medium;font-family:Dialog;color-interpolation:auto;fill:#ffcc99;fill-opacity:1;stroke:#ffcc99;stroke-width:1;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
@@ -3025,6 +3028,7 @@
      style="font-size:11.90393639px"
      id="tspan4885">Preprocessing</tspan></text>
 
+
 </g><flowRoot
    xml:space="preserve"
    id="flowRoot4041"
@@ -3074,6 +3078,7 @@
      id="tspan4907"
      style="font-size:11.90393639px">Annotation</tspan></text>
 
+
 </g><g
    id="g1976"
    transform="translate(2.2888183e-5,-28.5)"><rect
@@ -3096,6 +3101,7 @@
    transform="matrix(2.769692,0,0,-2.769692,990.1937,1587.2949)"><tspan
      id="tspan4923"
      style="font-size:11.90393639px">Reports</tspan></text>
+
 
 <g
    transform="matrix(1.0993996,0,0,1.0993996,747.1333,-146.91204)"
@@ -3451,7 +3457,7 @@
                width="150"
                id="rect2357-0" /></flowRegion><flowPara
              style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro'"
-             id="flowPara2359-7">2.7</flowPara></flowRoot></g></g></g><g
+             id="flowPara2359-7">2.7.1</flowPara></flowRoot></g></g></g><g
      id="g2024"><g
        id="g557-5"
        transform="matrix(0.63891071,0,0,-0.63891071,1686.6721,2304.9241)"><path
@@ -3586,6 +3592,7 @@
      x="2378.6733"
      y="-1482.9191"
      style="stroke-width:0.75" /></text>
+
 
 </g><style
      id="style4691"
