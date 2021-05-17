@@ -393,8 +393,7 @@
                     "hidden": true
                 },
                 "cadd_cache": {
-                    "type": "string",
-                    "default": "null",
+                    "type": "boolean",
                     "fa_icon": "fas fa-database",
                     "description": "Enable CADD cache.",
                     "hidden": true
