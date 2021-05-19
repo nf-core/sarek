@@ -2,10 +2,10 @@
 *.pyc
 .DS_Store
 .nextflow*
+.pytest_cache
 data/
 references/
 results/
 testing*
 testing/
-tests/
 work/

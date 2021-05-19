@@ -1,0 +1,41 @@
+- name: Run variant calling for Haplotypecaller
+  command: nextflow run main.nf -profile test_tool,docker --tools Haplotypecaller
+  tags:
+    - haplotypecaller
+    - intervals
+    - variant_calling
+  files:
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz.tbi
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz.tbi
+    - path: results/variant_calling/9876T/haplotypecaller/haplotypecaller_9876T.vcf.gz
+    - path: results/variant_calling/9876T/haplotypecaller/haplotypecaller_9876T.vcf.gz.tbi
+    - path: results/variant_calling/9876T/haplotypecaller_gvcf/haplotypecaller_gvcf_9876T.vcf.gz
+    - path: results/variant_calling/9876T/haplotypecaller_gvcf/haplotypecaller_gvcf_9876T.vcf.gz.tbi
+- name: Run variant calling for Haplotypecaller without intervals
+  command: nextflow run main.nf -profile test_tool,docker --tools Haplotypecaller --no_intervals
+  tags:
+    - haplotypecaller
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz.tbi
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz.tbi
+    - path: results/variant_calling/9876T/haplotypecaller/haplotypecaller_9876T.vcf.gz
+    - path: results/variant_calling/9876T/haplotypecaller/haplotypecaller_9876T.vcf.gz.tbi
+    - path: results/variant_calling/9876T/haplotypecaller_gvcf/haplotypecaller_gvcf_9876T.vcf.gz
+    - path: results/variant_calling/9876T/haplotypecaller_gvcf/haplotypecaller_gvcf_9876T.vcf.gz.tbi
+- name: Run variant calling for MSIsensor
+  command: nextflow run main.nf -profile test_tool,docker --tools MSIsensor
+  tags:
+    - intervals
+    - msisensor
+    - variant_calling
+  files:
+    - path: results/variant_calling/9876T_vs_1234N/msisensor/msisensor_9876T_vs_1234N_dis.list
+    - path: results/variant_calling/9876T_vs_1234N/msisensor/msisensor_9876T_vs_1234N_germline.list
+    - path: results/variant_calling/9876T_vs_1234N/msisensor/msisensor_9876T_vs_1234N.list
+    - path: results/variant_calling/9876T_vs_1234N/msisensor/msisensor_9876T_vs_1234N_somatic.list
