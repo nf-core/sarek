@@ -312,9 +312,9 @@ if (tsvPath) {
 } else if (step == 'annotate') {
     log.info "Trying automatic annotation on files in the VariantCalling/ directory"
 } else exit 1, 'No sample were defined, see --help'
-
+inputSample = inputSample.dump(tag: "inputb4")
 (genderMap, statusMap, inputSample) = extractInfos(inputSample)
-
+inputSample = inputSample.dump(tag: "after_extract")
 /*
 ================================================================================
                                CHECKING REFERENCES
@@ -878,6 +878,8 @@ if (step in ['preparerecalibration', 'recalibrate', 'variantcalling', 'controlfr
     inputBam.close()
     inputPairReads.close()
 } else inputSample.choice(inputPairReads, inputBam) {hasExtension(it[3], "bam") ? 1 : 0}
+
+inputBam = inputBam.dump(tag: "inputBam")
 if (step in 'sequenzabinned') inputSeqz = inputSample
 
 (inputBam, inputBamFastQC) = inputBam.into(2)
