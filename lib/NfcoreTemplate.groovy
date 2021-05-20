@@ -42,13 +42,10 @@ class NfcoreTemplate {
     //
     // Construct and send completion email
     //
-    public static void email(workflow, params, summary_params, projectDir, log, multiqc_report=[], fail_percent_mapped=[:]) {
+    public static void email(workflow, params, summary_params, projectDir, log, multiqc_report=[]) {
 
         // Set up the e-mail variables
         def subject = "[$workflow.manifest.name] Successful: $workflow.runName"
-        if (fail_percent_mapped.size() > 0) {
-            subject = "[$workflow.manifest.name] Partially successful (${fail_percent_mapped.size()} skipped): $workflow.runName"
-        }
         if (!workflow.success) {
             subject = "[$workflow.manifest.name] FAILED: $workflow.runName"
         }
@@ -82,8 +79,6 @@ class NfcoreTemplate {
         email_fields['commandLine']         = workflow.commandLine
         email_fields['projectDir']          = workflow.projectDir
         email_fields['summary']             = summary << misc_fields
-        email_fields['fail_percent_mapped'] = fail_percent_mapped.keySet()
-        email_fields['min_mapped_reads']    = params.min_mapped_reads
 
         // On success try attach the multiqc report
         def mqc_report = null
@@ -160,30 +155,8 @@ class NfcoreTemplate {
     //
     // Print pipeline summary on completion
     //
-    public static void summary(workflow, params, log, fail_percent_mapped=[:], pass_percent_mapped=[:]) {
+    public static void summary(workflow, params, log) {
         Map colors = logColours(params.monochrome_logs)
-
-        def total_aln_count = pass_percent_mapped.size() + fail_percent_mapped.size()
-        if (pass_percent_mapped.size() > 0) {
-            def idx = 0
-            def samp_aln = ''
-            for (samp in pass_percent_mapped) {
-                samp_aln += "    ${samp.value}%: ${samp.key}\n"
-                idx += 1
-                if (idx > 5) {
-                    samp_aln += "    ..see pipeline reports for full list\n"
-                    break;
-                }
-            }
-            log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} ${pass_percent_mapped.size()}/$total_aln_count samples passed STAR ${params.min_mapped_reads}% mapped threshold:\n${samp_aln}${colors.reset}-"
-        }
-        if (fail_percent_mapped.size() > 0) {
-            def samp_aln = ''
-            for (samp in fail_percent_mapped) {
-                samp_aln += "    ${samp.value}%: ${samp.key}\n"
-            }
-            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} ${fail_percent_mapped.size()}/$total_aln_count samples skipped since they failed STAR ${params.min_mapped_reads}% mapped threshold:\n${samp_aln}${colors.reset}-"
-        }
 
         if (workflow.success) {
             if (workflow.stats.ignoredCount == 0) {
