@@ -52,7 +52,7 @@ workflow GERMLINE_VARIANT_CALLING {
             fai,
             no_intervals)
 
-        haplotypecaller_gvcf = HAPLOTYPECALLER.out.gvcf.map{ meta, vcf ->
+        haplotypecaller_gvcf = HAPLOTYPECALLER.out.vcf.map{ meta, vcf ->
             patient = meta.patient
             sample  = meta.sample
             gender  = meta.gender
@@ -80,7 +80,7 @@ workflow GERMLINE_VARIANT_CALLING {
         // STEP GATK HAPLOTYPECALLER.2
 
         GENOTYPEGVCF(
-            HAPLOTYPECALLER.out.interval_gvcf,
+            HAPLOTYPECALLER.out.interval_vcf,
             dbsnp,
             dbsnp_tbi,
             dict,
