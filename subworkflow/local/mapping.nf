@@ -15,10 +15,10 @@ params.samtools_stats_options    = [:]
 
 include { BWA_MEM as BWAMEM1_MEM }       from '../../modules/nf-core/software/bwa/mem/main'        addParams(options: params.bwamem1_mem_options)
 include { BWA_MEM as BWAMEM1_MEM_T }     from '../../modules/nf-core/software/bwa/mem/main'        addParams(options: params.bwamem1_mem_tumor_options)
-include { BWAMEM2_MEM }                  from '../../modules/nf-core/software/bwamem2/mem/main.nf' addParams(options: params.bwamem2_mem_options)
-include { BWAMEM2_MEM as BWAMEM2_MEM_T } from '../../modules/nf-core/software/bwamem2/mem/main.nf' addParams(options: params.bwamem2_mem_tumor_options)
+include { BWAMEM2_MEM }                  from '../../modules/nf-core/software/bwamem2/mem/main'    addParams(options: params.bwamem2_mem_options)
+include { BWAMEM2_MEM as BWAMEM2_MEM_T } from '../../modules/nf-core/software/bwamem2/mem/main'    addParams(options: params.bwamem2_mem_tumor_options)
 include { SAMTOOLS_MERGE }               from '../../modules/nf-core/software/samtools/merge/main' addParams(options: params.merge_bam_options)
-include { QUALIMAP_BAMQC }               from '../../modules/nf-core/software/qualimap_bamqc'      addParams(options: params.qualimap_bamqc_options)
+include { QUALIMAP_BAMQC }               from '../../modules/nf-core/software/qualimap/bamqc/main' addParams(options: params.qualimap_bamqc_options)
 include { SAMTOOLS_INDEX }               from '../../modules/nf-core/software/samtools/index/main' addParams(options: params.samtools_index_options)
 include { SAMTOOLS_STATS }               from '../../modules/nf-core/software/samtools/stats/main' addParams(options: params.samtools_stats_options)
 
@@ -119,7 +119,7 @@ workflow MAPPING {
         samtools_stats = Channel.empty()
 
         if (!skip_bamqc) {
-            QUALIMAP_BAMQC(bam_mapped, target_bed)
+            QUALIMAP_BAMQC(bam_mapped, target_bed, params.target_bed)
             qualimap_bamqc = QUALIMAP_BAMQC.out
         }
 

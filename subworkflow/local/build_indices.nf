@@ -19,18 +19,18 @@ params.tabix_pon_options               = [:]
 
 // Initialize channels based on params or indices that were just built
 
-include { BUILD_INTERVALS }                              from '../../modules/local/build_intervals.nf'                                addParams(options: params.build_intervals_options)
-include { BWA_INDEX as BWAMEM1_INDEX }                   from '../../modules/nf-core/software/bwa/index/main.nf'                      addParams(options: params.bwa_index_options)
-include { BWAMEM2_INDEX }                                from '../../modules/nf-core/software/bwamem2/index/main.nf'                  addParams(options: params.bwamem2_index_options)
-include { CREATE_INTERVALS_BED }                         from '../../modules/local/create_intervals_bed.nf'                           addParams(options: params.create_intervals_bed_options)
-include { GATK4_CREATESEQUENCEDICTIONARY as GATK4_DICT } from '../../modules/nf-core/software/gatk4/createsequencedictionary/main.nf' addParams(options: params.gatk4_dict_options)
-include { TABIX_TABIX as TABIX_DBSNP }                   from '../../modules/nf-core/software/tabix/tabix/main.nf'                    addParams(options: params.tabix_dbsnp_options)
-include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE }       from '../../modules/nf-core/software/tabix/tabix/main.nf'                    addParams(options: params.tabix_germline_resource_options)
-include { TABIX_TABIX as TABIX_KNOWN_INDELS }            from '../../modules/nf-core/software/tabix/tabix/main.nf'                    addParams(options: params.tabix_known_indels_options)
-include { TABIX_TABIX as TABIX_PON }                     from '../../modules/nf-core/software/tabix/tabix/main.nf'                    addParams(options: params.tabix_pon_options)
-include { INDEX_TARGET_BED }                             from '../../modules/local/index_target_bed.nf'                               addParams(options: params.index_target_bed_options)
-include { MSISENSOR_SCAN }                               from '../../modules/nf-core/software/msisensor/scan.nf'                      addParams(options: params.msisensor_scan_options)
-include { SAMTOOLS_FAIDX }                               from '../../modules/nf-core/software/samtools/faidx/main.nf'                 addParams(options: params.samtools_faidx_options)
+include { BUILD_INTERVALS }                              from '../../modules/local/build_intervals'                                addParams(options: params.build_intervals_options)
+include { BWA_INDEX as BWAMEM1_INDEX }                   from '../../modules/nf-core/software/bwa/index/main'                      addParams(options: params.bwa_index_options)
+include { BWAMEM2_INDEX }                                from '../../modules/nf-core/software/bwamem2/index/main'                  addParams(options: params.bwamem2_index_options)
+include { CREATE_INTERVALS_BED }                         from '../../modules/local/create_intervals_bed'                           addParams(options: params.create_intervals_bed_options)
+include { GATK4_CREATESEQUENCEDICTIONARY as GATK4_DICT } from '../../modules/nf-core/software/gatk4/createsequencedictionary/main' addParams(options: params.gatk4_dict_options)
+include { TABIX_TABIX as TABIX_DBSNP }                   from '../../modules/nf-core/software/tabix/tabix/main'                    addParams(options: params.tabix_dbsnp_options)
+include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE }       from '../../modules/nf-core/software/tabix/tabix/main'                    addParams(options: params.tabix_germline_resource_options)
+include { TABIX_TABIX as TABIX_KNOWN_INDELS }            from '../../modules/nf-core/software/tabix/tabix/main'                    addParams(options: params.tabix_known_indels_options)
+include { TABIX_TABIX as TABIX_PON }                     from '../../modules/nf-core/software/tabix/tabix/main'                    addParams(options: params.tabix_pon_options)
+include { INDEX_TARGET_BED }                             from '../../modules/local/index_target_bed'                               addParams(options: params.index_target_bed_options)
+include { MSISENSOR_SCAN }                               from '../../modules/nf-core/software/msisensor/scan/main'                 addParams(options: params.msisensor_scan_options)
+include { SAMTOOLS_FAIDX }                               from '../../modules/nf-core/software/samtools/faidx/main'                 addParams(options: params.samtools_faidx_options)
 
 workflow BUILD_INDICES{
     take:

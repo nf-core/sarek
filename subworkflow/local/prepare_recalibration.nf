@@ -7,8 +7,8 @@
 params.baserecalibrator_options  = [:]
 params.gatherbqsrreports_options = [:]
 
-include { GATK4_BASERECALIBRATOR  as BASERECALIBRATOR }  from '../../modules/nf-core/software/gatk4/baserecalibrator'  addParams(options: params.baserecalibrator_options)
-include { GATK4_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from '../../modules/nf-core/software/gatk4/gatherbqsrreports' addParams(options: params.gatherbqsrreports_options)
+include { GATK4_BASERECALIBRATOR  as BASERECALIBRATOR }  from '../../modules/nf-core/software/gatk4/baserecalibrator/main'  addParams(options: params.baserecalibrator_options)
+include { GATK4_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from '../../modules/nf-core/software/gatk4/gatherbqsrreports/main' addParams(options: params.gatherbqsrreports_options)
 
 workflow PREPARE_RECALIBRATION {
     take:
@@ -27,15 +27,17 @@ workflow PREPARE_RECALIBRATION {
 
     bam_baserecalibrator = bam_markduplicates.combine(intervals)
     table_bqsr = Channel.empty()
+    // known_sites = Channel.empty().combine(dbsnp,known_indels)
+    // known_sites_tbi = Channel.empty().combine(dbsnp_tbi,known_indels_tbi)
 
     if (step in ["mapping", "preparerecalibration"]) {
 
-        BASERECALIBRATOR(bam_baserecalibrator, dbsnp, dbsnp_tbi, dict, fai, fasta, known_indels, known_indels_tbi)
-        table_bqsr = BASERECALIBRATOR.out.report
+        BASERECALIBRATOR(bam_baserecalibrator, fasta, fai, dict, known_indels, known_indels_tbi)
+        table_bqsr = BASERECALIBRATOR.out.table
 
         // STEP 3.5: MERGING RECALIBRATION TABLES
         if (!params.no_intervals) {
-            BASERECALIBRATOR.out.report.map{ meta, table ->
+            BASERECALIBRATOR.out.table.map{ meta, table ->
                 patient = meta.patient
                 sample  = meta.sample
                 gender  = meta.gender
