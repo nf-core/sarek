@@ -8,7 +8,6 @@
 #   3. Do not have total allelic depth (AD) >=10 in both tumour and normal
 #   4. Do not satisfy (ALT_F1R2 + ALT_F2R1)>=3 in the tumour sample
 ######################################################################
-
 import sys
 import re
 
@@ -17,7 +16,6 @@ if len(sys.argv) != 3:
 
 vcfFileInput = sys.argv[1]
 vcfFileOutput = sys.argv[2]
-
 
 with open(vcfFileInput,'r') as in_vcf:
     with open(vcfFileOutput,'w') as out_vcf:
