@@ -28,10 +28,9 @@ process GATK4_HAPLOTYPECALLER {
     val no_intervals
 
     output:
-    tuple val(meta), path("*.vcf.gz"),                 emit: vcf
-    tuple val(meta), path(interval), path("*.vcf.gz"), emit: interval_vcf
-    tuple val(meta), path("*.tbi"),                    emit: tbi
-    path "*.version.txt",                              emit: version
+    tuple val(meta), path("*.vcf"),                 emit: vcf
+    tuple val(meta), path(interval), path("*.vcf"), emit: interval_vcf
+    path "*.version.txt",                           emit: version
 
     script:
     def software  = getSoftwareName(task.process)
@@ -52,7 +51,7 @@ process GATK4_HAPLOTYPECALLER {
         -I $bam \\
         ${intervalsOptions} \\
         ${dbsnpOptions} \\
-        -O ${prefix}.vcf.gz \\
+        -O ${prefix}.vcf \\
         $options.args
 
     gatk --version | grep Picard | sed "s/Picard Version: //g" > ${software}.version.txt
