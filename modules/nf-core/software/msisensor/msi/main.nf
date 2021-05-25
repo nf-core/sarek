@@ -37,9 +37,9 @@ process MSISENSOR_MSI {
         -o ${prefix} \
         $options.args \
 
-    mv ${prefix}          ${prefix}.list
-    mv ${prefix}_dis      ${prefix}_dis.list
-    mv ${prefix}_germline ${prefix}_germline.list
-    mv ${prefix}_somatic  ${prefix}_somatic.list
+    mv ${prefix}          msisensor_${prefix}.list
+    mv ${prefix}_dis      msisensor_${prefix}_dis.list
+    mv ${prefix}_germline msisensor_${prefix}_germline.list
+    mv ${prefix}_somatic  msisensor_${prefix}_somatic.list
     """
 }
