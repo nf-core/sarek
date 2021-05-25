@@ -47,7 +47,7 @@ workflow PAIR_VARIANT_CALLING {
         meta.normal  = normal[1]
         meta.tumor   = tumor[1]
         meta.gender  = normal[2]
-        meta.id      = "${meta.tumor}_vs_${meta.normal}"
+        meta.id      = "${meta.tumor}_vs_${meta.normal}".toString()
 
         [meta, normal[4], normal[5], tumor[4], tumor[5]]
     }
