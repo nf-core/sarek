@@ -46,8 +46,8 @@ if [ -z ${cpus} ]; then echo "No CPUs defined: setting to 1"; cpus=1; fi
 if [ -z ${outputFile} ]; then echo "Missing output file name"; usage; fi
 
 
-if [ -z ${noInt+x} ] 
-then
+if [ -z ${noInt+x} ]
+	then
 	# First make a header from one of the VCF
 	# Remove interval information from the GATK command-line, but leave the rest
 	FIRSTVCF=$(set +o pipefail; ls *.vcf | head -n 1)
@@ -89,8 +89,8 @@ then
 	tabix rawcalls.vcf.gz
 else
         VCF=$(ls no_intervals*.vcf)
-        cp $VCF rawcalls.vcf 
-        bgzip -@${cpus} rawcalls.vcf
+        cp $VCF rawcalls.vcf
+		bgzip -@${cpus} rawcalls.vcf
         tabix rawcalls.vcf.gz
 fi
 
