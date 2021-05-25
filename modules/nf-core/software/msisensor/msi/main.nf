@@ -27,8 +27,7 @@ process MSISENSOR_MSI {
 
     script:
     def software = getSoftwareName(task.process)
-    def ioptions = initOptions(options)
-    def prefix   = ioptions.suffix ? "msisensor_${meta.id}${ioptions.suffix}" : "msisensor_${meta.id}"
+    def prefix   = options.suffix ? "${meta.id}.${options.suffix}" : "${meta.id}"
     """
     msisensor msi \
         -d ${msisensor_scan} \
