@@ -31,7 +31,6 @@
 - name: Run variant calling for MSIsensor
   command: nextflow run main.nf -profile test_tool,docker --tools MSIsensor
   tags:
-    - intervals
     - msisensor
     - variant_calling
   files:
