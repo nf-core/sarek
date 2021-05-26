@@ -5,5 +5,4 @@
     - gatk4
   files:
    - path: output/preprocessing/test/markduplicates/test.md.bam
-   - path: output/preprocessing/test/markduplicates/test.md.bam.bai
-   - path: output/preprocessing/test/markduplicates/test.recal.table
+   - path: output/preprocessing/test/markduplicates/test.md.bai

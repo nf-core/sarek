@@ -30,7 +30,7 @@ process GATK4_MARKDUPLICATES {
     script:
     def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
-    def metrics  = use_metrics ? "M=${prefix}.bam.metrics" :''
+    def metrics  = use_metrics ? "M=${prefix}.metrics" :''
     """
     gatk MarkDuplicates \\
         I=$bam \\
