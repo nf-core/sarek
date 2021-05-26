@@ -114,7 +114,7 @@ if (tsv_path) {
 /* --  UPDATE MODULES OPTIONS BASED ON PARAMS  -- */
 ////////////////////////////////////////////////////
 
-modules = params.modules
+def modules = params.modules.clone()
 
 if (params.save_reference)      modules['build_intervals'].publish_files         = ['bed':'intervals']
 if (params.save_reference)      modules['bwa_index'].publish_files               = ['amb':'bwa', 'ann':'bwa', 'bwt':'bwa', 'pac':'bwa', 'sa':'bwa']
@@ -321,7 +321,7 @@ workflow SAREK {
     if (step == 'preparerecalibration') {
         if (params.skip_markduplicates) bam_markduplicates = bam_mapped
         else {
-            MARKDUPLICATES(bam_mapped, step)
+            MARKDUPLICATES(bam_mapped, !('markduplicates' in skip_qc))
             bam_markduplicates = MARKDUPLICATES.out.bam
         }
     }

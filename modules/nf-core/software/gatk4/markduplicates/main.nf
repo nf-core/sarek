@@ -30,15 +30,15 @@ process GATK4_MARKDUPLICATES {
     script:
     def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
-    def metrics  = use_metrics ? "-M ${prefix}.bam.metrics" :''
+    def metrics  = use_metrics ? "M=${prefix}.bam.metrics" :''
     """
     gatk MarkDuplicates \\
-        --INPUT $bam \\
+        I=$bam \\
         $metrics \
-        --TMP_DIR . \\
-        --ASSUME_SORT_ORDER coordinate \\
-        --CREATE_INDEX true \\
-        --OUTPUT ${prefix}.bam \\
+        TMP_DIR=. \\
+        ASSUME_SORT_ORDER=coordinate \\
+        CREATE_INDEX=true \\
+        O=${prefix}.bam \\
         $options.args
 
     echo \$(gatk MarkDuplicates --version 2>&1) | sed 's/^.*(GATK) v//; s/ HTSJDK.*\$//' > ${software}.version.txt

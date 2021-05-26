@@ -11,8 +11,8 @@ include { GATK4_MARKDUPLICATES_SPARK } from '../../modules/nf-core/software/gatk
 
 workflow MARKDUPLICATES {
     take:
-        bam_mapped // channel: [mandatory] bam_mapped
-        step       //   value: [mandatory] starting step
+        bam_mapped   // channel: [mandatory] bam_mapped
+        save_metrics //   value: [mandatory] save metrics
 
     main:
 
@@ -20,12 +20,12 @@ workflow MARKDUPLICATES {
     report_markduplicates = Channel.empty()
 
     if (params.use_gatk_spark) {
-        GATK4_MARKDUPLICATES_SPARK(bam_mapped)
-        report_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.report
+        GATK4_MARKDUPLICATES_SPARK(bam_mapped, save_metrics)
+        report_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.metrics
         bam_markduplicates    = GATK4_MARKDUPLICATES_SPARK.out.bam
     } else {
-        GATK4_MARKDUPLICATES(bam_mapped)
-        report_markduplicates = GATK4_MARKDUPLICATES.out.report
+        GATK4_MARKDUPLICATES(bam_mapped, save_metrics)
+        report_markduplicates = GATK4_MARKDUPLICATES.out.metrics
         bam_markduplicates    = GATK4_MARKDUPLICATES.out.bam
     }
 
