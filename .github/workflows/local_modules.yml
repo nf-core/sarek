@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        nxf_version: ['20.11.0-edge']
+        nxf_version: ['21.04.0']
         tags: ['${{ fromJson(needs.changes.outputs.modules) }}']
         profile: ['docker', 'singularity'] ## 'conda'
     env:
