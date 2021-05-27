@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#373](https://github.com/nf-core/sarek/pull/373) - Sync `TEMPLATE` with `tools` 1.14
 - [#376](https://github.com/nf-core/sarek/pull/376) - Better logo on Github dark Mode
+- [#383](https://github.com/nf-core/sarek/pull/383) - Update CHANGELOG
 
 ### Fixed
 
