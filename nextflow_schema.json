@@ -295,7 +295,7 @@
                     "description": "Design known contamination value for Control-FREEC"
                 },
                 "cf_ploidy": {
-                    "type": "string",
+                    "type": "number",
                     "default": "2",
                     "fa_icon": "fas fa-wrench",
                     "description": "Overwrite Control-FREEC ploidy"
