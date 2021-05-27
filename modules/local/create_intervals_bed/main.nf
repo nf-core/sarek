@@ -1,8 +1,8 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; has_extension } from './functions'
+include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 process CREATE_INTERVALS_BED {
     tag "$intervals"
@@ -26,7 +26,7 @@ process CREATE_INTERVALS_BED {
     script:
     // If the interval file is BED format, the fifth column is interpreted to
     // contain runtime estimates, which is then used to combine short-running jobs
-    if (has_extension(intervals, "bed"))
+    if (intervalstoString().toLowerCase().endsWith("bed"))
         """
         awk -vFS="\t" '{
           t = \$5  # runtime estimate
@@ -46,7 +46,7 @@ process CREATE_INTERVALS_BED {
           print \$0 > name
         }' ${intervals}
         """
-    else if (has_extension(intervals, "interval_list"))
+    else if (intervalstoString().toLowerCase().endsWith("interval_list"))
         """
         grep -v '^@' ${intervals} | awk -vFS="\t" '{
           name = sprintf("%s_%d-%d", \$1, \$2, \$3);

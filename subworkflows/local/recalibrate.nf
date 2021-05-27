@@ -25,7 +25,6 @@ workflow RECALIBRATE {
         fai            // channel: [mandatory] fai
         fasta          // channel: [mandatory] fasta
         intervals      // channel: [mandatory] intervals
-        step           //   value: [mandatory] starting step
         target_bed     // channel: [optional]  target_bed
 
     main:
@@ -34,7 +33,7 @@ workflow RECALIBRATE {
     bam_recalibrated       = Channel.empty()
     bam_reports            = Channel.empty()
 
-    if (step in ["mapping", "preparerecalibration", "recalibrate"]) {
+    if (params.step in ["mapping", "preparerecalibration", "recalibrate"]) {
 
         bam_intervals = bam.combine(intervals)
 

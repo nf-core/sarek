@@ -12,8 +12,8 @@ params.strelka_options                = [:]
 
 include { GATK4_HAPLOTYPECALLER as HAPLOTYPECALLER } from '../../modules/nf-core/software/gatk4/haplotypecaller/main' addParams(options: params.haplotypecaller_options)
 include { GATK4_GENOTYPEGVCF as GENOTYPEGVCF }       from '../../modules/nf-core/software/gatk4/genotypegvcf/main'    addParams(options: params.genotypegvcf_options)
-include { CONCAT_VCF as CONCAT_GVCF }                from '../../modules/local/concat_vcf'                            addParams(options: params.concat_gvcf_options)
-include { CONCAT_VCF as CONCAT_HAPLOTYPECALLER }     from '../../modules/local/concat_vcf'                            addParams(options: params.concat_haplotypecaller_options)
+include { CONCAT_VCF as CONCAT_GVCF }                from '../../modules/local/concat_vcf/main'                       addParams(options: params.concat_gvcf_options)
+include { CONCAT_VCF as CONCAT_HAPLOTYPECALLER }     from '../../modules/local/concat_vcf/main'                       addParams(options: params.concat_haplotypecaller_options)
 include { STRELKA_GERMLINE as STRELKA }              from '../../modules/nf-core/software/strelka/germline/main'      addParams(options: params.strelka_options)
 
 workflow GERMLINE_VARIANT_CALLING {
@@ -27,7 +27,6 @@ workflow GERMLINE_VARIANT_CALLING {
         intervals         // channel: [mandatory] intervals
         target_bed        // channel: [optional]  target_bed
         target_bed_gz_tbi // channel: [optional]  target_bed_gz_tbi
-        tools             //   list:  [mandatory] list of tools
 
     main:
 
@@ -38,7 +37,7 @@ workflow GERMLINE_VARIANT_CALLING {
 
     if (intervals == []) no_intervals = true
 
-    if ('haplotypecaller' in tools) {
+    if ('haplotypecaller' in params.tools) {
         haplotypecaller_interval_bam = bam.combine(intervals)
 
         // STEP GATK HAPLOTYPECALLER.1
@@ -114,7 +113,7 @@ workflow GERMLINE_VARIANT_CALLING {
         haplotypecaller_vcf = CONCAT_GVCF.out.vcf
     }
 
-    if ('strelka' in tools) {
+    if ('strelka' in params.tools) {
         STRELKA(
             bam,
             fasta,

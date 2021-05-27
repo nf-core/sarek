@@ -21,7 +21,6 @@ workflow PREPARE_RECALIBRATION {
         intervals          // channel: [mandatory] intervals
         known_indels       // channel: [optional]  known_indels
         known_indels_tbi   // channel: [optional]  known_indels_tbi
-        step               //   value: [mandatory] starting step
 
     main:
 
@@ -30,7 +29,7 @@ workflow PREPARE_RECALIBRATION {
     // known_sites = Channel.empty().combine(dbsnp,known_indels)
     // known_sites_tbi = Channel.empty().combine(dbsnp_tbi,known_indels_tbi)
 
-    if (step in ["mapping", "preparerecalibration"]) {
+    if (params.step in ["mapping", "preparerecalibration"]) {
 
         BASERECALIBRATOR(bam_baserecalibrator, fasta, fai, dict, known_indels, known_indels_tbi)
         table_bqsr = BASERECALIBRATOR.out.table
