@@ -43,7 +43,7 @@ if (params.input) {
         case 'mapping': input_sample = extract_csv(csv_file); break
         // case 'prepare_recalibration': input_sample = extract_bam(csv_file); break
         // case 'recalibrate': input_sample = extract_recal(csv_file); break
-        // case 'variant_calling': input_sample = extract_bam(csv_file); break
+        case 'variant_calling': input_sample = extract_csv(csv_file); break
         // case 'controlfreec': input_sample = extract_pileup(csv_file); break
         // case 'annotate': break
         default: exit 1, "Unknown step ${params.step}"
@@ -239,37 +239,36 @@ workflow SAREK {
     // trim only with `--trim_fastq`
     // additional options to be set up
 
-    FASTQC_TRIMGALORE(
-        input_sample,
-        ('fastqc' in params.skip_qc || params.step != "mapping"),
-        !(params.trim_fastq))
+    if (params.step == 'mapping') {
+        FASTQC_TRIMGALORE(
+            input_sample,
+            !(params.trim_fastq))
 
-    reads_input = FASTQC_TRIMGALORE.out.reads
+        reads_input = FASTQC_TRIMGALORE.out.reads
 
-    qc_reports = qc_reports.mix(
-        FASTQC_TRIMGALORE.out.fastqc_html,
-        FASTQC_TRIMGALORE.out.fastqc_zip,
-        FASTQC_TRIMGALORE.out.trim_html,
-        FASTQC_TRIMGALORE.out.trim_log,
-        FASTQC_TRIMGALORE.out.trim_zip)
+        qc_reports = qc_reports.mix(
+            FASTQC_TRIMGALORE.out.fastqc_html,
+            FASTQC_TRIMGALORE.out.fastqc_zip,
+            FASTQC_TRIMGALORE.out.trim_html,
+            FASTQC_TRIMGALORE.out.trim_log,
+            FASTQC_TRIMGALORE.out.trim_zip)
 
-    // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA-MEM
+        // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA-MEM
 
-    MAPPING(
-        ('bamqc' in params.skip_qc),
-        ('samtools' in params.skip_qc),
-        params.aligner,
-        bwa,
-        fai,
-        fasta,
-        reads_input,
-        save_bam_mapped,
-        target_bed)
+        MAPPING(
+            params.aligner,
+            bwa,
+            fai,
+            fasta,
+            reads_input,
+            save_bam_mapped,
+            target_bed)
 
-    bam_mapped    = MAPPING.out.bam
-    bam_mapped_qc = MAPPING.out.qc
+        bam_mapped    = MAPPING.out.bam
+        bam_mapped_qc = MAPPING.out.qc
 
-    qc_reports = qc_reports.mix(bam_mapped_qc)
+        qc_reports = qc_reports.mix(bam_mapped_qc)
+    }
 
     // STEP 2: MARKING DUPLICATES
 
@@ -379,31 +378,34 @@ def extract_csv(csv_file) {
             def meta = [:]
 
             meta.patient = row.patient
+            meta.sample  = row.sample.toString()
 
             // If no gender specified, gender is not considered (only used for somatic CNV)
-            if (row.gender == "null") {
-                meta.gender == "NA"
+            if (row.gender == null) {
+                meta.gender = "NA"
             } else meta.gender = row.gender.toString()
 
             // If no status specified, sample is considered normal
-            if (row.status == "null") {
-                meta.status == 0
+            if (row.status == null) {
+                meta.status = 0
             } else meta.status = row.status.toInteger()
 
-            if (row.lane == "null") {
-                meta.id         = row.sample.toString()
+            if (row.lane == null) {
+                meta.id = meta.sample
+
+                def bam     = file(row.bam, checkIfExists: true)
+                def bai     = file(row.bai, checkIfExists: true)
+                def file    = [bam, bai]
+                return [meta, file]
             } else {
-                meta.sample     = row.sample.toString()
                 meta.id         = "${row.sample}-${row.lane}".toString()
-            }
-                def read1       = file(row.fastq1)
-                def read2       = file(row.fastq2)
+                def read1       = file(row.fastq1, checkIfExists: true)
+                def read2       = file(row.fastq2, checkIfExists: true)
                 def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ''
                 def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:ILLUMINA\""
                 meta.read_group = read_group
-                def file = [read1, read2]
-            // }
-
-            return [meta, file]
+                def file        = [read1, read2]
+                return [meta, file]
+            }
         }
 }

@@ -24,8 +24,8 @@ include { SAMTOOLS_STATS }               from '../../modules/nf-core/software/sa
 
 workflow MAPPING {
     take:
-        skip_bamqc      // boolean: true/false
-        skip_samtools   // boolean: true/false
+        // skip_bamqc      // boolean: true/false
+        // skip_samtools   // boolean: true/false
         aligner         // string:  [mandatory] "bwa-mem" or "bwa-mem2"
         bwa             // channel: [mandatory] bwa
         fai             // channel: [mandatory] fai
@@ -87,15 +87,15 @@ workflow MAPPING {
     qualimap_bamqc = Channel.empty()
     samtools_stats = Channel.empty()
 
-    if (!skip_bamqc) {
+    // if (!skip_bamqc) {
         QUALIMAP_BAMQC(bam_mapped, target_bed, params.target_bed)
         qualimap_bamqc = QUALIMAP_BAMQC.out
-    }
+    // }
 
-    if (!skip_samtools) {
+    // if (!skip_samtools) {
         SAMTOOLS_STATS(bam_mapped_index)
         samtools_stats = SAMTOOLS_STATS.out.stats
-    }
+    // }
 
     bam_reports = samtools_stats.mix(qualimap_bamqc)
 
