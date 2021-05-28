@@ -7,9 +7,8 @@ options        = initOptions(params.options)
 process GATK4_APPLYBQSR {
     tag "$meta.id"
     label 'process_low'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
+    publishDir params.outdir, mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     conda (params.enable_conda ? "bioconda::gatk4=4.2.0.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {

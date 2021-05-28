@@ -7,8 +7,7 @@ def options    = initOptions(params.options)
 process BWAMEM2_MEM {
     tag "$meta.id"
     label 'process_high'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
+    publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
     conda (params.enable_conda ? "bioconda::bwa-mem2=2.2.1 bioconda::samtools=1.12" : null)

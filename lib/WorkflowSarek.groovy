@@ -43,8 +43,8 @@ class WorkflowSarek {
 
         // // Handle input
         // tsv_path = null
-        // if (params.input && (has_extension(params.input, "tsv") || has_extension(params.input, "vcf") || has_extension(params.input, "vcf.gz"))) tsv_path = params.input
-        // if (params.input && (has_extension(params.input, "vcf") || has_extension(params.input, "vcf.gz"))) step = "annotate"
+        // if (params.input && (hasExtension(params.input, "tsv") || hasExtension(params.input, "vcf") || hasExtension(params.input, "vcf.gz"))) tsv_path = params.input
+        // if (params.input && (hasExtension(params.input, "vcf") || hasExtension(params.input, "vcf.gz"))) step = "annotate"
 
         // if (!params.fasta) {
         //     log.error "Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file."
@@ -95,7 +95,7 @@ class WorkflowSarek {
         //         case 'annotate': break
         //         default: exit 1, "Unknown step ${step}"
         //     }
-        // } else if (params.input && !has_extension(params.input, "tsv")) {
+        // } else if (params.input && !hasExtension(params.input, "tsv")) {
         //     log.info "No TSV file"
         //     if (step != 'mapping') exit 1, 'No step other than "mapping" supports a directory as an input'
         //     log.info "Reading ${params.input} directory"
@@ -109,11 +109,6 @@ class WorkflowSarek {
         // } else exit 1, 'No sample were defined, see --help'
     }
 
-    // // Check if a row has the expected number of item
-    // public static checkNumberOfItem(row, number) {
-    //     if (row.size() != number) exit 1, "Malformed row in TSV file: ${row}, see --help for more information"
-    //     return true
-    // }
 
     // // Check parameter existence
     // public static checkParameterExistence(it, list) {
@@ -183,37 +178,23 @@ class WorkflowSarek {
     //     }
     // }
 
-    // // Channeling the TSV file containing FASTQ or BAM
-    // // Format is: "patient gender status sample lane fastq1 fastq2"
-    // // or: "patient gender status sample lane bam"
-    // public static extractFastq(tsvFile) {
-    //     Channel.from(tsvFile)
-    //         .splitCsv(sep: '\t')
-    //         .map { row ->
-    //             def meta = [:]
-    //             meta.patient    = row[0]
-    //             meta.gender     = row[1]
-    //             meta.status     = returnStatus(row[2].toInteger())
-    //             meta.sample     = row[3]
-    //             meta.run        = row[4]
-    //             meta.id         = "${meta.sample}-${meta.run}"
-    //             def read1       = returnFile(row[5])
-    //             def read2       = "null"
-    //             def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ""
-    //             def read_group  = "\"@RG\\tID:${meta.run}\\t${CN}PU:${meta.run}\\tSM:${meta.sample}\\tLB:${meta.sample}\\tPL:ILLUMINA\""
-    //             meta.read_group = read_group
-
-    //             if (hasExtension(read1, "fastq.gz") || hasExtension(read1, "fq.gz") || hasExtension(read1, "fastq") || hasExtension(read1, "fq")) {
-    //                 checkNumberOfItem(row, 7)
-    //                 read2 = returnFile(row[6])
-    //             if (!hasExtension(read2, "fastq.gz") && !hasExtension(read2, "fq.gz")  && !hasExtension(read2, "fastq") && !hasExtension(read2, "fq")) exit 1, "File: ${file2} has the wrong extension. See --help for more information"
-    //             if (hasExtension(read1, "fastq") || hasExtension(read1, "fq") || hasExtension(read2, "fastq") || hasExtension(read2, "fq")) {
-    //                 exit 1, "We do recommend to use gziped fastq file to help you reduce your data footprint."
-    //             }
-    //         }
-    //         else if (hasExtension(read1, "bam")) checkNumberOfItem(row, 6)
-    //         else exit 1, "No recognisable extention for input file: ${read1}"
-
+    // // Channeling the CSV file containing FASTQ
+    // // Format is: "patient,gender,status,sample,lane,fastq1,fastq2"
+    // public static extractFastq(csv_file) {
+    //     def meta = [:]
+    //     csv_file.eachLine{ line ->
+    //         def row = line.split(",")
+    //         meta.patient    = row[0]
+    //         meta.gender     = row[1]
+    //         meta.status     = row[2]
+    //         meta.sample     = row[3]
+    //         meta.run        = row[4]
+    //         meta.id         = "${meta.sample}-${meta.run}"
+    //         def read1       = file(row[5])
+    //         def read2       = file(row[6])
+    //         def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ''
+    //         def read_group  = "\"@RG\\tID:${meta.run}\\t${CN}PU:${meta.run}\\tSM:${meta.sample}\\tLB:${meta.sample}\\tPL:ILLUMINA\""
+    //         meta.read_group = read_group
     //         return [meta, [read1, read2]]
     //     }
     // }
@@ -289,17 +270,6 @@ class WorkflowSarek {
     // //     }
     // //     [fcid, lane]
     // // }
-
-    // // Check file extension
-    // public static hasExtension(it, extension) {
-    //     it.toString().toLowerCase().endsWith(extension.toLowerCase())
-    // }
-
-    // // Return file if it exists
-    // public static returnFile(it) {
-    //     if (!file(it).exists()) exit 1, "Missing file in TSV file: ${it}, see --help for more information"
-    //     return file(it)
-    // }
 
     // // Remove .ann .gz and .vcf extension from a VCF file
     // public static reduceVcf(file) {

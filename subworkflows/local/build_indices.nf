@@ -32,7 +32,7 @@ include { INDEX_TARGET_BED }                             from '../../modules/loc
 include { MSISENSOR_SCAN }                               from '../../modules/nf-core/software/msisensor/scan/main'                 addParams(options: params.msisensor_scan_options)
 include { SAMTOOLS_FAIDX }                               from '../../modules/nf-core/software/samtools/faidx/main'                 addParams(options: params.samtools_faidx_options)
 
-workflow BUILD_INDICES{
+workflow BUILD_INDICES {
     take:
         dbsnp             // channel: [optional]  dbsnp
         fasta             // channel: [mandatory] fasta

@@ -43,7 +43,30 @@ checkPathParamList = [
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
-if (params.input) { input_sample = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
+input_sample = Channel.empty()
+
+if (params.input) {
+    csv_file = file(params.input)
+    switch (params.step) {
+        case 'mapping': input_sample = extract_csv(csv_file); break
+        // case 'prepare_recalibration': input_sample = extract_bam(csv_file); break
+        // case 'recalibrate': input_sample = extract_recal(csv_file); break
+        // case 'variant_calling': input_sample = extract_bam(csv_file); break
+        // case 'controlfreec': input_sample = extract_pileup(csv_file); break
+        // case 'annotate': break
+        default: exit 1, "Unknown step ${params.step}"
+    }
+} else {
+    switch (params.step) {
+        case 'mapping': break
+        // case 'prepare_recalibration': csv_path = "${params.outdir}/preprocessing/tsv/markduplicates_no_table.tsv"; break
+        // case 'recalibrate': csv_path = "${params.outdir}/preprocessing/tsv/markduplicates.tsv"; break
+        // case 'variant_calling': csv_path = "${params.outdir}/preprocessing/tsv/recalibrated.tsv"; break
+        // case 'controlfreec': csv_path = "${params.outdir}/variant_calling/tsv/control-freec_mpileup.tsv"; break
+        // case 'annotate': break
+        default: exit 1, "Unknown step ${params.step}"
+    }   
+}
 
 save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? true : false
 
@@ -243,12 +266,12 @@ workflow SAREK {
     MAPPING(
         ('bamqc' in params.skip_qc),
         ('samtools' in params.skip_qc),
+        params.aligner,
         bwa,
         fai,
         fasta,
         reads_input,
         save_bam_mapped,
-        params.step,
         target_bed)
 
     bam_mapped    = MAPPING.out.bam
@@ -355,4 +378,39 @@ workflow SAREK {
     /* --                ANNOTATION                -- */
     ////////////////////////////////////////////////////
 
+}
+
+def extract_csv(csv_file) {
+    def meta = [:]
+    Channel.from(csv_file)
+        .splitCsv(header: true)
+        .map{ row ->
+            meta.patient = row.patient
+
+            // If no gender specified, gender is not considered (only used for somatic CNV)
+            if (row.gender == "null") {
+                meta.gender == "NA"
+            } else meta.gender = row.gender
+
+            // If no status specified, sample is considered normal
+            if (row.status == "null") {
+                meta.status == 0
+            } else meta.status = row.status.toInteger()
+
+            if (row.lane == "null") {
+                meta.id         = row.sample
+            } else {
+                meta.sample     = row.sample
+                meta.id         = "${row.sample}-${row.lane}"
+            }
+                def read1       = file(row.fastq1)
+                def read2       = file(row.fastq2)
+                def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ''
+                def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:ILLUMINA\""
+                meta.read_group = read_group
+                def file = [read1, read2]
+            // }
+
+            return [meta, file]
+        }
 }

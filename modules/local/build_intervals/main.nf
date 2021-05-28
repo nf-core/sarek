@@ -7,8 +7,9 @@ options        = initOptions(params.options)
 process BUILD_INTERVALS {
     tag "$fai"
     label 'process_medium'
-    publishDir params.outdir, mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:"false") }
+    publishDir "${params.outdir}",
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
 
     conda (params.enable_conda ? "anaconda::gawk=5.1.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -18,10 +19,10 @@ process BUILD_INTERVALS {
     }
 
     input:
-        path fai
+    path fai
 
     output:
-        path "${fai.baseName}.bed"
+    path "${fai.baseName}.bed"
 
     script:
     """

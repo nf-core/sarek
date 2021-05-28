@@ -7,8 +7,9 @@ options        = initOptions(params.options)
 process CREATE_INTERVALS_BED {
     tag "$intervals"
     label 'process_medium'
-    publishDir params.outdir, mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:"false") }
+    publishDir "${params.outdir}",
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
 
     conda (params.enable_conda ? "anaconda::gawk=5.1.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -18,15 +19,15 @@ process CREATE_INTERVALS_BED {
     }
 
     input:
-        path intervals
+    path intervals
 
     output:
-        path ('*.bed')
+    path ('*.bed')
 
     script:
     // If the interval file is BED format, the fifth column is interpreted to
     // contain runtime estimates, which is then used to combine short-running jobs
-    if (intervalstoString().toLowerCase().endsWith("bed"))
+    if (intervals.toString().toLowerCase().endsWith("bed"))
         """
         awk -vFS="\t" '{
           t = \$5  # runtime estimate
@@ -46,7 +47,7 @@ process CREATE_INTERVALS_BED {
           print \$0 > name
         }' ${intervals}
         """
-    else if (intervalstoString().toLowerCase().endsWith("interval_list"))
+    else if (intervals.toString().toLowerCase().endsWith("interval_list"))
         """
         grep -v '^@' ${intervals} | awk -vFS="\t" '{
           name = sprintf("%s_%d-%d", \$1, \$2, \$3);
