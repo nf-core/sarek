@@ -4,18 +4,10 @@
 ========================================================================================
 */
 
-def valid_params = [
-    aligner : ['bwa-mem', 'bwa-mem2'],
-    step : ['annotate', 'controlfreec', 'mapping', 'preparerecalibration', 'recalibrate', 'variantcalling'],
-    tools : ['ascat', 'cnvkit', 'controlfreec', 'dnascope', 'dnaseq', 'freebayes', 'haplotypecaller', 'manta', 'merge', 'mpileup', 'msisensor', 'mutect2', 'snpeff', 'strelka', 'tiddit', 'tnscope', 'vep'],
-    toolsAnnotate : ['haplotypecaller', 'manta', 'mutect2', 'strelka', 'tiddit'],
-    toolsQcSkip : ['bamqc', 'baserecalibrator', 'bcftools', 'documentation', 'fastqc', 'markduplicates', 'multiqc', 'samtools', 'sentieon', 'vcftools', 'versions']
-]
-
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 
 // Validate input parameters
-WorkflowSarek.initialise(params, log, valid_params)
+WorkflowSarek.initialise(params, log)
 
 // Check input path parameters to see if they exist
 checkPathParamList = [
