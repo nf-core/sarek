@@ -45,55 +45,55 @@ workflow BUILD_INDICES {
 
     result_bwa  = Channel.empty()
     version_bwa = Channel.empty()
-    if (!(params.bwa) && 'mapping' in params.step)
+    if (!(params.bwa) && 'mapping' in params.step.toLowerCase())
         if (params.aligner == "bwa-mem") (result_bwa, version_bwa) = BWAMEM1_INDEX(fasta)
         else                             (result_bwa, version_bwa) = BWAMEM2_INDEX(fasta)
 
     result_dict = Channel.empty()
     version_dict = Channel.empty()
-    if (!(params.dict) && !('annotate' in params.step) && !('controlfreec' in params.step))
+    if (!(params.dict) && !('annotate' in params.step.toLowerCase()) && !('controlfreec' in params.step.toLowerCase()))
         (result_dict, version_dict) = GATK4_DICT(fasta)
 
     result_fai = Channel.empty()
     version_fai = Channel.empty()
-    if (!(params.fasta_fai) && !('annotate' in params.step))
+    if (!(params.fasta_fai) && !('annotate' in params.step.toLowerCase()))
         (result_fai, version_fai) = SAMTOOLS_FAIDX(fasta)
 
     result_dbsnp_tbi = Channel.empty()
     version_dbsnp_tbi = Channel.empty()
-    if (!(params.dbsnp_index) && params.dbsnp && ('mapping' in params.step || 'preparerecalibration' in params.step || 'controlfreec' in params.tools || 'haplotypecaller' in params.tools || 'mutect2' in params.tools || 'tnscope' in params.tools))
+    if (!(params.dbsnp_index) && params.dbsnp && ('mapping' in params.step.toLowerCase() || 'prepare_recalibration' in params.step.toLowerCase() || 'controlfreec' in params.tools.toLowerCase() || 'haplotypecaller' in params.tools.toLowerCase() || 'mutect2' in params.tools.toLowerCase() || 'tnscope' in params.tools.toLowerCase()))
         (result_dbsnp_tbi, version_dbsnp_tbi) = TABIX_DBSNP([[id:"${dbsnp.fileName}"], dbsnp])
 
     result_target_bed = Channel.empty()
     version_target_bed = Channel.empty()
-    if ((params.target_bed) && ('manta' in params.tools || 'strelka' in params.tools))
+    if ((params.target_bed) && ('manta' in params.tools.toLowerCase() || 'strelka' in params.tools.toLowerCase()))
         (result_target_bed, version_target_bed) = INDEX_TARGET_BED(target_bed)
 
     result_germline_resource_tbi = Channel.empty()
     version_germline_resource_tbi = Channel.empty()
-    if (!(params.germline_resource_index) && params.germline_resource && 'mutect2' in params.tools)
+    if (!(params.germline_resource_index) && params.germline_resource && 'mutect2' in params.tools.toLowerCase())
         (result_germline_resource_tbi, version_germline_resource_tbi) = TABIX_GERMLINE_RESOURCE([[id:"${germline_resource.fileName}"], germline_resource])
 
     result_known_indels_tbi = Channel.empty()
     version_known_indels_tbi = Channel.empty()
-    if (!(params.known_indels_index) && params.known_indels && ('mapping' in params.step || 'preparerecalibration' in params.step))
+    if (!(params.known_indels_index) && params.known_indels && ('mapping' in params.step.toLowerCase() || 'preparerecalibration' in params.step.toLowerCase()))
         (result_known_indels_tbi, version_known_indels_tbi) = TABIX_KNOWN_INDELS([[id:"${known_indels.fileName}"], known_indels])
 
     result_msisensor_scan = Channel.empty()
     version_msisensor_scan = Channel.empty()
-    if ('msisensor' in params.tools)
+    if ('msisensor' in params.tools.toLowerCase())
         (result_msisensor_scan, version_msisensor_scan) = MSISENSOR_SCAN(fasta, result_fai)
 
     result_pon_tbi = Channel.empty()
     version_pon_tbi = Channel.empty()
-    if (!(params.pon_index) && params.pon && ('tnscope' in params.tools || 'mutect2' in params.tools))
+    if (!(params.pon_index) && params.pon && ('tnscope' in params.tools.toLowerCase() || 'mutect2' in params.tools.toLowerCase()))
         (result_pon_tbi, version_pon_tbi) = TABIX_PON([[id:"${pon.fileName}"], pon])
 
     result_intervals = Channel.empty()
     if (params.no_intervals) {
         file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
         result_intervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
-    } else if (!('annotate' in params.step) && !('controlfreec' in params.step))
+    } else if (!('annotate' in params.step.toLowerCase()) && !('controlfreec' in params.step.toLowerCase()))
         if (!params.intervals)
             result_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS(result_fai))
         else

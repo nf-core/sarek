@@ -39,7 +39,7 @@ input_sample = Channel.empty()
 
 if (params.input) {
     csv_file = file(params.input)
-    switch (params.step) {
+    switch (params.step.toLowerCase()) {
         case 'mapping': input_sample = extract_csv(csv_file); break
         // case 'prepare_recalibration': input_sample = extract_bam(csv_file); break
         // case 'recalibrate': input_sample = extract_recal(csv_file); break
@@ -49,7 +49,7 @@ if (params.input) {
         default: exit 1, "Unknown step ${params.step}"
     }
 } else {
-    switch (params.step) {
+    switch (params.step.toLowerCase()) {
         case 'mapping': break
         // case 'prepare_recalibration': csv_path = "${params.outdir}/preprocessing/tsv/markduplicates_no_table.tsv"; break
         // case 'recalibrate': csv_path = "${params.outdir}/preprocessing/tsv/markduplicates.tsv"; break
@@ -239,7 +239,7 @@ workflow SAREK {
     // trim only with `--trim_fastq`
     // additional options to be set up
 
-    if (params.step == 'mapping') {
+    if (params.step.toLowerCase() == 'mapping') {
         FASTQC_TRIMGALORE(
             input_sample,
             !(params.trim_fastq))
@@ -274,7 +274,7 @@ workflow SAREK {
 
     bam_markduplicates = channel.empty()
 
-    if (params.step == 'preparerecalibration') {
+    if (params.step.toLowerCase() == 'preparerecalibration') {
         if (params.skip_markduplicates) bam_markduplicates = bam_mapped
         else {
             MARKDUPLICATES(bam_mapped, !('markduplicates' in params.skip_qc))
@@ -282,7 +282,7 @@ workflow SAREK {
         }
     }
 
-    if (params.step == 'preparerecalibration') bam_markduplicates = input_sample
+    if (params.step.toLowerCase() == 'preparerecalibration') bam_markduplicates = input_sample
 
     // STEP 3: CREATING RECALIBRATION TABLES
 
@@ -302,7 +302,7 @@ workflow SAREK {
     // STEP 4: RECALIBRATING
     bam_applybqsr = bam_markduplicates.join(table_bqsr)
 
-    if (params.step == 'recalibrate') bam_applybqsr = input_sample
+    if (params.step.toLowerCase() == 'recalibrate') bam_applybqsr = input_sample
 
     RECALIBRATE(
         ('bamqc' in params.skip_qc),
@@ -321,54 +321,56 @@ workflow SAREK {
 
     bam_variant_calling = bam_recalibrated
 
-    if (params.step == 'variantcalling') bam_variant_calling = input_sample
+    if (params.step.toLowerCase() == 'variant_calling') bam_variant_calling = input_sample
 
-    ////////////////////////////////////////////////////
-    /* --         GERMLINE VARIANT CALLING         -- */
-    ////////////////////////////////////////////////////
+    if (params.tools != null) {
 
-    GERMLINE_VARIANT_CALLING(
-        bam_variant_calling,
-        dbsnp,
-        dbsnp_tbi,
-        dict,
-        fai,
-        fasta,
-        intervals,
-        target_bed,
-        target_bed_gz_tbi)
+        ////////////////////////////////////////////////////
+        /* --         GERMLINE VARIANT CALLING         -- */
+        ////////////////////////////////////////////////////
+    
+        GERMLINE_VARIANT_CALLING(
+            bam_variant_calling,
+            dbsnp,
+            dbsnp_tbi,
+            dict,
+            fai,
+            fasta,
+            intervals,
+            target_bed,
+            target_bed_gz_tbi)
 
-    ////////////////////////////////////////////////////
-    /* --          SOMATIC VARIANT CALLING         -- */
-    ////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////
+        /* --          SOMATIC VARIANT CALLING         -- */
+        ////////////////////////////////////////////////////
 
-    // TUMOR_VARIANT_CALLING(
-    //     bam_variant_calling,
-    //     dbsnp,
-    //     dbsnp_tbi,
-    //     dict,
-    //     fai,
-    //     fasta,
-    //     intervals,
-    //     target_bed,
-    //     target_bed_gz_tbi)
+        // TUMOR_VARIANT_CALLING(
+        //     bam_variant_calling,
+        //     dbsnp,
+        //     dbsnp_tbi,
+        //     dict,
+        //     fai,
+        //     fasta,
+        //     intervals,
+        //     target_bed,
+        //     target_bed_gz_tbi)
 
-    PAIR_VARIANT_CALLING(
-        bam_variant_calling,
-        dbsnp,
-        dbsnp_tbi,
-        dict,
-        fai,
-        fasta,
-        intervals,
-        msisensor_scan,
-        target_bed,
-        target_bed_gz_tbi)
+        PAIR_VARIANT_CALLING(
+            bam_variant_calling,
+            dbsnp,
+            dbsnp_tbi,
+            dict,
+            fai,
+            fasta,
+            intervals,
+            msisensor_scan,
+            target_bed,
+            target_bed_gz_tbi)
 
-    ////////////////////////////////////////////////////
-    /* --                ANNOTATION                -- */
-    ////////////////////////////////////////////////////
-
+        ////////////////////////////////////////////////////
+        /* --                ANNOTATION                -- */
+        ////////////////////////////////////////////////////
+    }
 }
 
 def extract_csv(csv_file) {
@@ -391,21 +393,20 @@ def extract_csv(csv_file) {
             } else meta.status = row.status.toInteger()
 
             if (row.lane == null) {
+            // variant_calling
                 meta.id = meta.sample
-
                 def bam     = file(row.bam, checkIfExists: true)
                 def bai     = file(row.bai, checkIfExists: true)
-                def file    = [bam, bai]
-                return [meta, file]
+                return [meta, bam, bai]
             } else {
+            // mapping with fastq
                 meta.id         = "${row.sample}-${row.lane}".toString()
                 def read1       = file(row.fastq1, checkIfExists: true)
                 def read2       = file(row.fastq2, checkIfExists: true)
                 def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ''
                 def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:ILLUMINA\""
                 meta.read_group = read_group
-                def file        = [read1, read2]
-                return [meta, file]
+                return [meta, [read1, read2]]
             }
         }
 }
