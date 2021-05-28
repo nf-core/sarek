@@ -381,16 +381,17 @@ workflow SAREK {
 }
 
 def extract_csv(csv_file) {
-    def meta = [:]
     Channel.from(csv_file)
         .splitCsv(header: true)
         .map{ row ->
+            def meta = [:]
+
             meta.patient = row.patient
 
             // If no gender specified, gender is not considered (only used for somatic CNV)
             if (row.gender == "null") {
                 meta.gender == "NA"
-            } else meta.gender = row.gender
+            } else meta.gender = row.gender.toString()
 
             // If no status specified, sample is considered normal
             if (row.status == "null") {
@@ -398,10 +399,10 @@ def extract_csv(csv_file) {
             } else meta.status = row.status.toInteger()
 
             if (row.lane == "null") {
-                meta.id         = row.sample
+                meta.id         = row.sample.toString()
             } else {
-                meta.sample     = row.sample
-                meta.id         = "${row.sample}-${row.lane}"
+                meta.sample     = row.sample.toString()
+                meta.id         = "${row.sample}-${row.lane}".toString()
             }
                 def read1       = file(row.fastq1)
                 def read2       = file(row.fastq2)

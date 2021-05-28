@@ -68,46 +68,18 @@ workflow MAPPING {
     bam_bwa = bam_bwamem1.mix(bam_bwamem2)
 
     bam_bwa.map{ meta, bam ->
-        patient = meta.patient
-        sample  = meta.sample
-        gender  = meta.gender
-        status  = meta.status
-        [patient, sample, gender, status, bam]
-    }.branch{
-            single:   it[4].size() == 1
-            multiple: it[4].size() > 1
-        }.set{ bam_bwa_to_sort }
-
-    bam_bwa_single = bam_bwa_to_sort.single.map {
-        patient, sample, gender, status, bam ->
-
-        def meta = [:]
-        meta.patient = patient
-        meta.sample = sample
-        meta.gender = gender[0]
-        meta.status = status[0]
-        meta.id = sample
-
-        [meta, bam[0]]
-    }
-
-    bam_bwa_multiple = bam_bwa_to_sort.multiple.map {
-        patient, sample, gender, status, bam ->
-
-        def meta = [:]
-        meta.patient = patient
-        meta.sample = sample
-        meta.gender = gender[0]
-        meta.status = status
-        meta.id = sample
-
+        meta.remove('read_group')
+        meta.id = meta.sample
         [meta, bam]
-    }
+    }.groupTuple().branch{
+        single:   it[1].size() == 1
+        multiple: it[1].size() > 1
+    }.set{ bam_bwa_to_sort }
 
     // STEP 1.5: MERGING AND INDEXING BAM FROM MULTIPLE LANES 
     
-    SAMTOOLS_MERGE(bam_bwa_multiple)
-    bam_mapped       = bam_bwa_single.mix(SAMTOOLS_MERGE.out.merged_bam)
+    SAMTOOLS_MERGE(bam_bwa_to_sort.multiple)
+    bam_mapped       = bam_bwa_to_sort.single.mix(SAMTOOLS_MERGE.out.merged_bam)
 
     SAMTOOLS_INDEX(bam_mapped)
     bam_mapped_index = bam_mapped.join(SAMTOOLS_INDEX.out.bai)
@@ -128,19 +100,19 @@ workflow MAPPING {
     bam_reports = samtools_stats.mix(qualimap_bamqc)
 
     if (save_bam_mapped) {
-        tsv_bam_mapped = bam_mapped.map { meta, bam -> [meta] }
-        // Creating TSV files to restart from this step
-        tsv_bam_mapped.collectFile(storeDir: "${params.outdir}/preprocessing/tsv") { meta ->
+        csv_bam_mapped = bam_mapped.map { meta, bam -> [meta] }
+        // Creating csv files to restart from this step
+        csv_bam_mapped.collectFile(storeDir: "${params.outdir}/preprocessing/csv") { meta ->
             patient = meta.patient[0]
             sample  = meta.sample[0]
             gender  = meta.gender[0]
             status  = meta.status[0]
             bam   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam"
             bai   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam.bai"
-            ["mapped_${sample}.tsv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"]
+            ["mapped_${sample}.csv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"]
         }
 
-        tsv_bam_mapped.map { meta ->
+        csv_bam_mapped.map { meta ->
             patient = meta.patient[0]
             sample  = meta.sample[0]
             gender  = meta.gender[0]
@@ -148,13 +120,13 @@ workflow MAPPING {
             bam   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam"
             bai   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam.bai"
             "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"
-        }.collectFile(name: "mapped.tsv", sort: true, storeDir: "${params.outdir}/preprocessing/tsv")
+        }.collectFile(name: "mapped.csv", sort: true, storeDir: "${params.outdir}/preprocessing/csv")
     }
 
     if (params.skip_markduplicates) {
-        tsv_bam_mapped = bam_mapped.map { meta, bam -> [meta] }
-        // Creating TSV files to restart from this step
-        tsv_bam_mapped.collectFile(storeDir: "${params.outdir}/preprocessing/tsv") { meta ->
+        csv_bam_mapped = bam_mapped.map { meta, bam -> [meta] }
+        // Creating csv files to restart from this step
+        csv_bam_mapped.collectFile(storeDir: "${params.outdir}/preprocessing/csv") { meta ->
             patient = meta.patient[0]
             sample  = meta.sample[0]
             gender  = meta.gender[0]
@@ -162,10 +134,10 @@ workflow MAPPING {
             bam   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam"
             bai   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam.bai"
             table = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.recal.table"
-            ["mapped_no_markduplicates_${sample}.tsv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\t${table}\n"]
+            ["mapped_no_markduplicates_${sample}.csv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\t${table}\n"]
         }
 
-        tsv_bam_mapped.map { meta ->
+        csv_bam_mapped.map { meta ->
             patient = meta.patient[0]
             sample  = meta.sample[0]
             gender  = meta.gender[0]
@@ -174,7 +146,7 @@ workflow MAPPING {
             bai   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam.bai"
             table = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.recal.table"
             "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\t${table}\n"
-        }.collectFile(name: 'mapped_no_markduplicates.tsv', sort: true, storeDir: "${params.outdir}/preprocessing/tsv")
+        }.collectFile(name: 'mapped_no_markduplicates.csv', sort: true, storeDir: "${params.outdir}/preprocessing/csv")
     }
 
     emit:
