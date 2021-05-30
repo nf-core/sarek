@@ -1,5 +1,5 @@
 - name: Run default pipeline with target bed
-  command: nextflow run main.nf -profile test_targeted,docker
+  command: nextflow run main.nf -profile test,targeted,docker
   tags:
     - preprocessing
     - targeted

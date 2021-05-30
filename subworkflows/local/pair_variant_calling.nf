@@ -54,7 +54,7 @@ workflow PAIR_VARIANT_CALLING {
     manta_vcf            = Channel.empty()
     strelka_vcf          = Channel.empty()
 
-    if ('manta' in params.tools) {
+    if ('manta' in params.tools.toLowerCase()) {
         MANTA(
             bam_pair,
             fasta,
@@ -69,7 +69,7 @@ workflow PAIR_VARIANT_CALLING {
 
         manta_vcf = manta_candidate_small_indels_vcf.mix(manta_candidate_sv_vcf,manta_diploid_sv_vcf,manta_somatic_sv_vcf)
 
-        if ('strelka' in params.tools) {
+        if ('strelka' in params.tools.toLowerCase()) {
             STRELKA_BP(
                 manta_csi_for_strelka_bp,
                 fasta,
@@ -83,13 +83,13 @@ workflow PAIR_VARIANT_CALLING {
         }
     }
 
-    if ('msisensor' in params.tools) {
+    if ('msisensor' in params.tools.toLowerCase()) {
         MSISENSOR_MSI(
             bam_pair,
             msisensor_scan)
     }
 
-    if ('strelka' in params.tools) {
+    if ('strelka' in params.tools.toLowerCase()) {
         STRELKA(
             bam_pair,
             fasta,
