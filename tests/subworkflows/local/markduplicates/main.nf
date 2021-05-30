@@ -5,7 +5,7 @@ nextflow.enable.dsl = 2
 // Don't overwrite global params.modules, create a copy instead and use that within the main script.
 def modules = params.modules.clone()
 
-include { MARKDUPLICATES } from '../../../../subworkflow/local/markduplicates' addParams(
+include { MARKDUPLICATES } from '../../../../subworkflows/local/markduplicates' addParams(
     markduplicates_options: modules['markduplicates']
 )
 
