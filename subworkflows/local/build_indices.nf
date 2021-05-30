@@ -61,17 +61,17 @@ workflow BUILD_INDICES {
 
     result_dbsnp_tbi = Channel.empty()
     version_dbsnp_tbi = Channel.empty()
-    if (!(params.dbsnp_index) && params.dbsnp && ('mapping' in params.step.toLowerCase() || 'prepare_recalibration' in params.step.toLowerCase() || 'controlfreec' in params.tools.toLowerCase() || 'haplotypecaller' in params.tools.toLowerCase() || 'mutect2' in params.tools.toLowerCase() || 'tnscope' in params.tools.toLowerCase()))
+    if (!(params.dbsnp_index) && params.dbsnp && ('mapping' in params.step.toLowerCase() || 'prepare_recalibration' in params.step.toLowerCase() || 'controlfreec' in params.tools.toString().toLowerCase() || 'haplotypecaller' in params.tools.toString().toLowerCase() || 'mutect2' in params.tools.toString().toLowerCase() || 'tnscope' in params.tools.toString().toLowerCase()))
         (result_dbsnp_tbi, version_dbsnp_tbi) = TABIX_DBSNP([[id:"${dbsnp.fileName}"], dbsnp])
 
     result_target_bed = Channel.empty()
     version_target_bed = Channel.empty()
-    if ((params.target_bed) && ('manta' in params.tools.toLowerCase() || 'strelka' in params.tools.toLowerCase()))
+    if ((params.target_bed) && ('manta' in params.tools.toString().toLowerCase() || 'strelka' in params.tools.toString().toLowerCase()))
         (result_target_bed, version_target_bed) = INDEX_TARGET_BED(target_bed)
 
     result_germline_resource_tbi = Channel.empty()
     version_germline_resource_tbi = Channel.empty()
-    if (!(params.germline_resource_index) && params.germline_resource && 'mutect2' in params.tools.toLowerCase())
+    if (!(params.germline_resource_index) && params.germline_resource && 'mutect2' in params.tools.toString().toLowerCase())
         (result_germline_resource_tbi, version_germline_resource_tbi) = TABIX_GERMLINE_RESOURCE([[id:"${germline_resource.fileName}"], germline_resource])
 
     result_known_indels_tbi = Channel.empty()
@@ -81,12 +81,12 @@ workflow BUILD_INDICES {
 
     result_msisensor_scan = Channel.empty()
     version_msisensor_scan = Channel.empty()
-    if ('msisensor' in params.tools.toLowerCase())
+    if ('msisensor' in params.tools.toString().toLowerCase())
         (result_msisensor_scan, version_msisensor_scan) = MSISENSOR_SCAN(fasta, result_fai)
 
     result_pon_tbi = Channel.empty()
     version_pon_tbi = Channel.empty()
-    if (!(params.pon_index) && params.pon && ('tnscope' in params.tools.toLowerCase() || 'mutect2' in params.tools.toLowerCase()))
+    if (!(params.pon_index) && params.pon && ('tnscope' in params.tools.toString().toLowerCase() || 'mutect2' in params.tools.toString().toLowerCase()))
         (result_pon_tbi, version_pon_tbi) = TABIX_PON([[id:"${pon.fileName}"], pon])
 
     result_intervals = Channel.empty()

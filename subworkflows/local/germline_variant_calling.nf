@@ -57,15 +57,17 @@ workflow GERMLINE_VARIANT_CALLING {
             fai,
             no_intervals)
 
-        haplotypecaller_gvcf = HAPLOTYPECALLER.out.vcf.map{ meta,vcf ->
+        haplotypecaller_raw = HAPLOTYPECALLER.out.vcf.map{ meta,vcf ->
             meta.id = meta.sample
             [meta, vcf]
         }.groupTuple()
 
         CONCAT_GVCF(
-            haplotypecaller_gvcf,
+            haplotypecaller_raw,
             fai,
             target_bed)
+
+        haplotypecaller_gvcf = CONCAT_GVCF.out.vcf
 
         // STEP GATK HAPLOTYPECALLER.2
 
@@ -78,15 +80,17 @@ workflow GERMLINE_VARIANT_CALLING {
             fai,
             no_intervals)
 
-        haplotypecaller_vcf = GENOTYPEGVCF.out.vcf.map{ meta, vcf ->
+        haplotypecaller_results = GENOTYPEGVCF.out.vcf.map{ meta, vcf ->
             meta.id = meta.sample
             [meta, vcf]
         }.groupTuple()
 
         CONCAT_HAPLOTYPECALLER(
-            haplotypecaller_vcf,
+            haplotypecaller_results,
             fai,
             target_bed)
+        
+        haplotypecaller_vcf = CONCAT_HAPLOTYPECALLER.out.vcf
     }
 
     if ('strelka' in params.tools.toLowerCase()) {
@@ -100,7 +104,7 @@ workflow GERMLINE_VARIANT_CALLING {
     }
 
     emit:
-        haplotypecaller_gvcf = CONCAT_GVCF.out.vcf
-        haplotypecaller_vcf  = CONCAT_GVCF.out.vcf
+        haplotypecaller_gvcf = haplotypecaller_gvcf
+        haplotypecaller_vcf  = haplotypecaller_vcf
         strelka_vcf          = strelka_vcf
 }
