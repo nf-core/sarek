@@ -20,7 +20,7 @@ process GATK4_HAPLOTYPECALLER {
     input:
     tuple val(meta), path(bam), path(bai), path(interval)
     path dbsnp
-    tuple val(meta_dbsnp), path(dbsnp_tbi)
+    path(dbsnp_tbi)
     path dict
     path fasta
     path fai

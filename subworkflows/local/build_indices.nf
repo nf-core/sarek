@@ -1,7 +1,7 @@
 /*
-================================================================================
-                                BUILDING INDICES
-================================================================================
+========================================================================================
+    BUILDING INDICES
+========================================================================================
 */
 
 params.build_intervals_options         = [:]
@@ -63,6 +63,7 @@ workflow BUILD_INDICES {
     version_dbsnp_tbi = Channel.empty()
     if (!(params.dbsnp_index) && params.dbsnp && ('mapping' in params.step.toLowerCase() || 'prepare_recalibration' in params.step.toLowerCase() || 'controlfreec' in params.tools.toString().toLowerCase() || 'haplotypecaller' in params.tools.toString().toLowerCase() || 'mutect2' in params.tools.toString().toLowerCase() || 'tnscope' in params.tools.toString().toLowerCase()))
         (result_dbsnp_tbi, version_dbsnp_tbi) = TABIX_DBSNP([[id:"${dbsnp.fileName}"], dbsnp])
+    result_dbsnp_tbi = result_dbsnp_tbi.map {meta, tbi -> [tbi]}
 
     result_target_bed = Channel.empty()
     version_target_bed = Channel.empty()
@@ -78,6 +79,7 @@ workflow BUILD_INDICES {
     version_known_indels_tbi = Channel.empty()
     if (!(params.known_indels_index) && params.known_indels && ('mapping' in params.step.toLowerCase() || 'preparerecalibration' in params.step.toLowerCase()))
         (result_known_indels_tbi, version_known_indels_tbi) = TABIX_KNOWN_INDELS([[id:"${known_indels.fileName}"], known_indels])
+    result_known_indels_tbi = result_known_indels_tbi.map {meta, tbi -> [tbi]}
 
     result_msisensor_scan = Channel.empty()
     version_msisensor_scan = Channel.empty()

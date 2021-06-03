@@ -142,7 +142,7 @@ include { BUILD_INDICES } from '../subworkflows/local/build_indices' addParams(
     tabix_known_indels_options:      modules['tabix_known_indels'],
     tabix_pon_options:               modules['tabix_pon']
 )
-include { MAPPING } from '../subworkflows/local/mapping' addParams(
+include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
     bwamem1_mem_options:             modules['bwa_mem1_mem'],
     bwamem1_mem_tumor_options:       modules['bwa_mem1_mem_tumor'],
     bwamem2_mem_options:             modules['bwa_mem2_mem'],
@@ -152,20 +152,24 @@ include { MAPPING } from '../subworkflows/local/mapping' addParams(
     samtools_index_options:          modules['samtools_index_mapping'],
     samtools_stats_options:          modules['samtools_stats_mapping']
 )
-include { MARKDUPLICATES } from '../subworkflows/local/markduplicates' addParams(
+include { MAPPING_CSV } from '../subworkflows/local/mapping_csv'
+include { MARKDUPLICATES } from '../subworkflows/nf-core/markduplicates' addParams(
     markduplicates_options:          modules['markduplicates']
 )
-include { PREPARE_RECALIBRATION } from '../subworkflows/local/prepare_recalibration' addParams(
+include { MARKDUPLICATES_CSV } from '../subworkflows/local/markduplicates_csv'
+include { PREPARE_RECALIBRATION } from '../subworkflows/nf-core/prepare_recalibration' addParams(
     baserecalibrator_options:        modules['baserecalibrator'],
     gatherbqsrreports_options:       modules['gatherbqsrreports']
 )
-include { RECALIBRATE } from '../subworkflows/local/recalibrate' addParams(
+include { PREPARE_RECALIBRATION_CSV } from '../subworkflows/local/prepare_recalibration_csv'
+include { RECALIBRATE } from '../subworkflows/nf-core/recalibrate' addParams(
     applybqsr_options:               modules['applybqsr'],
     merge_bam_options:               modules['merge_bam_recalibrate'],
     qualimap_bamqc_options:          modules['qualimap_bamqc_recalibrate'],
     samtools_index_options:          modules['samtools_index_recalibrate'],
     samtools_stats_options:          modules['samtools_stats_recalibrate']
 )
+include { RECALIBRATE_CSV } from '../subworkflows/local/recalibrate_csv'
 include { GERMLINE_VARIANT_CALLING } from '../subworkflows/local/germline_variant_calling' addParams(
     concat_gvcf_options:             modules['concat_gvcf'],
     concat_haplotypecaller_options:  modules['concat_haplotypecaller'],
@@ -222,6 +226,9 @@ workflow SAREK {
     known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? file(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : []
     pon_tbi               = params.pon               ? params.pon_index               ? file(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : []
 
+    known_sites     = [dbsnp, known_indels]
+    known_sites_tbi = dbsnp_tbi.mix(known_indels_tbi).collect()
+
     msisensor_scan    = BUILD_INDICES.out.msisensor_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
 
@@ -239,7 +246,7 @@ workflow SAREK {
     // trim only with `--trim_fastq`
     // additional options to be set up
 
-    if (params.step.toLowerCase() == 'mapping') {
+    if (params.step == 'mapping') {
         FASTQC_TRIMGALORE(
             input_sample,
             !(params.trim_fastq))
@@ -253,51 +260,54 @@ workflow SAREK {
             FASTQC_TRIMGALORE.out.trim_log,
             FASTQC_TRIMGALORE.out.trim_zip)
 
-        // STEP 1: MAPPING READS TO REFERENCE GENOME WITH BWA-MEM
-
+        // STEP 1: MAPPING READS TO REFERENCE GENOME
         MAPPING(
+            'bamqc' in params.skip_qc,
+            'samtools' in params.skip_qc,
             params.aligner,
             bwa,
             fai,
             fasta,
             reads_input,
-            save_bam_mapped,
             target_bed)
 
         bam_mapped    = MAPPING.out.bam
         bam_mapped_qc = MAPPING.out.qc
 
         qc_reports = qc_reports.mix(bam_mapped_qc)
+
+        // Create CSV to restart from this step
+        MAPPING_CSV(bam_mapped, save_bam_mapped, params.skip_markduplicates)
     }
 
-    // STEP 2: MARKING DUPLICATES
+    if (params.skip_markduplicates) {
+        bam_markduplicates = bam_mapped
+    } else {
+        // STEP 2: MARKING DUPLICATES
+        MARKDUPLICATES(bam_mapped, params.use_gatk_spark, !('markduplicates' in params.skip_qc))
+        bam_markduplicates = MARKDUPLICATES.out.bam
 
-    bam_markduplicates = channel.empty()
-
-    if (params.step.toLowerCase() == 'preparerecalibration') {
-        if (params.skip_markduplicates) bam_markduplicates = bam_mapped
-        else {
-            MARKDUPLICATES(bam_mapped, !('markduplicates' in params.skip_qc))
-            bam_markduplicates = MARKDUPLICATES.out.bam
-        }
+        // Create CSV to restart from this step
+        MARKDUPLICATES_CSV(bam_markduplicates)
     }
 
-    if (params.step.toLowerCase() == 'preparerecalibration') bam_markduplicates = input_sample
+    if (params.step.toLowerCase() == 'prepare_recalibration') {
+        bam_markduplicates = input_sample
+    }
 
     // STEP 3: CREATING RECALIBRATION TABLES
-
     PREPARE_RECALIBRATION(
         bam_markduplicates,
-        dbsnp,
-        dbsnp_tbi,
         dict,
         fai,
         fasta,
         intervals,
-        known_indels,
-        known_indels_tbi)
+        known_sites,
+        known_sites_tbi,
+        params.no_intervals)
 
     table_bqsr = PREPARE_RECALIBRATION.out.table_bqsr
+    PREPARE_RECALIBRATION_CSV(table_bqsr)
 
     // STEP 4: RECALIBRATING
     bam_applybqsr = bam_markduplicates.join(table_bqsr)
@@ -374,39 +384,37 @@ workflow SAREK {
 }
 
 def extract_csv(csv_file) {
-    Channel.from(csv_file)
-        .splitCsv(header: true)
-        .map{ row ->
-            def meta = [:]
+    Channel.from(csv_file).splitCsv(header: true).map{ row ->
+        def meta = [:]
 
-            meta.patient = row.patient
-            meta.sample  = row.sample.toString()
+        meta.patient = row.patient.toString()
+        meta.sample  = row.sample.toString()
 
-            // If no gender specified, gender is not considered (only used for somatic CNV)
-            if (row.gender == null) {
-                meta.gender = "NA"
-            } else meta.gender = row.gender.toString()
+        // If no gender specified, gender is not considered (only used for somatic CNV)
+        if (row.gender == null) {
+            meta.gender = "NA"
+        } else meta.gender = row.gender.toString()
 
-            // If no status specified, sample is considered normal
-            if (row.status == null) {
-                meta.status = 0
-            } else meta.status = row.status.toInteger()
+        // If no status specified, sample is considered normal
+        if (row.status == null) {
+            meta.status = 0
+        } else meta.status = row.status.toInteger()
 
-            if (row.lane == null) {
-            // variant_calling
-                meta.id = meta.sample
-                def bam     = file(row.bam, checkIfExists: true)
-                def bai     = file(row.bai, checkIfExists: true)
-                return [meta, bam, bai]
-            } else {
-            // mapping with fastq
-                meta.id         = "${row.sample}-${row.lane}".toString()
-                def read1       = file(row.fastq1, checkIfExists: true)
-                def read2       = file(row.fastq2, checkIfExists: true)
-                def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ''
-                def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:ILLUMINA\""
-                meta.read_group = read_group
-                return [meta, [read1, read2]]
-            }
+        if (row.lane == null) {
+        // variant_calling
+            meta.id = meta.sample
+            def bam     = file(row.bam, checkIfExists: true)
+            def bai     = file(row.bai, checkIfExists: true)
+            return [meta, bam, bai]
+        } else {
+        // mapping with fastq
+            meta.id         = "${row.sample}-${row.lane}".toString()
+            def read1       = file(row.fastq1, checkIfExists: true)
+            def read2       = file(row.fastq2, checkIfExists: true)
+            def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ''
+            def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:ILLUMINA\""
+            meta.read_group = read_group.toString()
+            return [meta, [read1, read2]]
         }
+    }
 }

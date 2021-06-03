@@ -1,7 +1,7 @@
 /*
-================================================================================
-                            GERMLINE VARIANT CALLING
-================================================================================
+========================================================================================
+    GERMLINE VARIANT CALLING
+========================================================================================
 */
 
 params.haplotypecaller_options        = [:]
@@ -41,10 +41,11 @@ workflow GERMLINE_VARIANT_CALLING {
 
         haplotypecaller_interval_bam = bam.combine(intervals)
 
-        haplotypecaller_interval_bam.map{ meta, bam, bai, intervals ->
-            meta.id = "${meta.sample}_${intervals.baseName}"
-            [meta, bam, bai, intervals]
-        }
+        bam.combine(intervals).map{ meta, bam, bai, intervals ->
+            new_meta = meta.clone()
+            new_meta.id = meta.sample + "_" + intervals.baseName
+            [new_meta, bam, bai, intervals]
+        }.set{haplotypecaller_interval_bam}
 
         // STEP GATK HAPLOTYPECALLER.1
 

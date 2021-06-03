@@ -1,7 +1,7 @@
 /*
-================================================================================
-                                     MAPPING
-================================================================================
+========================================================================================
+    MAPPING
+========================================================================================
 */
 
 params.bwamem1_mem_options       = [:]
@@ -24,14 +24,13 @@ include { SAMTOOLS_STATS }               from '../../modules/nf-core/software/sa
 
 workflow MAPPING {
     take:
-        // skip_bamqc      // boolean: true/false
-        // skip_samtools   // boolean: true/false
+        skip_bamqc      // boolean: true/false
+        skip_samtools   // boolean: true/false
         aligner         // string:  [mandatory] "bwa-mem" or "bwa-mem2"
         bwa             // channel: [mandatory] bwa
         fai             // channel: [mandatory] fai
         fasta           // channel: [mandatory] fasta
-        reads_input     // channel: [mandatory] reads_input
-        save_bam_mapped // boolean: true/false
+        reads_input     // channel: [mandatory] meta, reads_input
         target_bed      // channel: [optional]  target_bed
 
     main:
@@ -39,9 +38,11 @@ workflow MAPPING {
     bam_mapped_index = Channel.empty()
     bam_reports      = Channel.empty()
 
+    // If meta.status is 1, then sample is tumor
+    // else, (even is no meta.status exist) sample is normal
     reads_input.branch{
-            normal: it[0].status == 0
             tumor:  it[0].status == 1
+            normal: true
         }.set{ reads_input_status }
 
     bam_bwamem1 = Channel.empty()
@@ -79,7 +80,7 @@ workflow MAPPING {
     // STEP 1.5: MERGING AND INDEXING BAM FROM MULTIPLE LANES 
     
     SAMTOOLS_MERGE(bam_bwa_to_sort.multiple)
-    bam_mapped       = bam_bwa_to_sort.single.mix(SAMTOOLS_MERGE.out.merged_bam)
+    bam_mapped = bam_bwa_to_sort.single.mix(SAMTOOLS_MERGE.out.merged_bam)
 
     SAMTOOLS_INDEX(bam_mapped)
     bam_mapped_index = bam_mapped.join(SAMTOOLS_INDEX.out.bai)
@@ -87,67 +88,17 @@ workflow MAPPING {
     qualimap_bamqc = Channel.empty()
     samtools_stats = Channel.empty()
 
-    // if (!skip_bamqc) {
+    if (!skip_bamqc) {
         QUALIMAP_BAMQC(bam_mapped, target_bed, params.target_bed)
         qualimap_bamqc = QUALIMAP_BAMQC.out
-    // }
+    }
 
-    // if (!skip_samtools) {
+    if (!skip_samtools) {
         SAMTOOLS_STATS(bam_mapped_index)
         samtools_stats = SAMTOOLS_STATS.out.stats
-    // }
+    }
 
     bam_reports = samtools_stats.mix(qualimap_bamqc)
-
-    if (save_bam_mapped) {
-        csv_bam_mapped = bam_mapped.map { meta, bam -> [meta] }
-        // Creating csv files to restart from this step
-        csv_bam_mapped.collectFile(storeDir: "${params.outdir}/preprocessing/csv") { meta ->
-            patient = meta.patient[0]
-            sample  = meta.sample[0]
-            gender  = meta.gender[0]
-            status  = meta.status[0]
-            bam   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam"
-            bai   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam.bai"
-            ["mapped_${sample}.csv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"]
-        }
-
-        csv_bam_mapped.map { meta ->
-            patient = meta.patient[0]
-            sample  = meta.sample[0]
-            gender  = meta.gender[0]
-            status  = meta.status[0]
-            bam   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam"
-            bai   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam.bai"
-            "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\n"
-        }.collectFile(name: "mapped.csv", sort: true, storeDir: "${params.outdir}/preprocessing/csv")
-    }
-
-    if (params.skip_markduplicates) {
-        csv_bam_mapped = bam_mapped.map { meta, bam -> [meta] }
-        // Creating csv files to restart from this step
-        csv_bam_mapped.collectFile(storeDir: "${params.outdir}/preprocessing/csv") { meta ->
-            patient = meta.patient[0]
-            sample  = meta.sample[0]
-            gender  = meta.gender[0]
-            status  = meta.status[0]
-            bam   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam"
-            bai   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam.bai"
-            table = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.recal.table"
-            ["mapped_no_markduplicates_${sample}.csv", "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\t${table}\n"]
-        }
-
-        csv_bam_mapped.map { meta ->
-            patient = meta.patient[0]
-            sample  = meta.sample[0]
-            gender  = meta.gender[0]
-            status  = meta.status[0]
-            bam   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam"
-            bai   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam.bai"
-            table = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.recal.table"
-            "${patient}\t${gender}\t${status}\t${sample}\t${bam}\t${bai}\t${table}\n"
-        }.collectFile(name: 'mapped_no_markduplicates.csv', sort: true, storeDir: "${params.outdir}/preprocessing/csv")
-    }
 
     emit:
         bam = bam_mapped_index
