@@ -26,7 +26,7 @@
                     "default": "mapping",
                     "fa_icon": "fas fa-play",
                     "description": "Starting step.",
-                    "help_text": "Only one step.\n> **NB** step can be specified with no concern for case, or the presence of `-` or `_`\n",
+                    "help_text": "Only one step",
                     "enum": [
                         "mapping",
                         "prepare_recalibration",
@@ -224,6 +224,7 @@
                 },
                 "use_gatk_spark": {
                     "type": "boolean",
+                    "default": false,
                     "fa_icon": "fas fa-forward",
                     "description": "Enable usage of GATK Spark implementation"
                 },
@@ -234,6 +235,7 @@
                 },
                 "skip_markduplicates": {
                     "type": "boolean",
+                    "default": false,
                     "fa_icon": "fas fa-fast-forward",
                     "description": "Skip GATK MarkDuplicates",
                     "help_text": "This params will also save the mapped BAMS, to enable restart from step `prepare_recalibration`"
@@ -662,7 +664,7 @@
                 },
                 "sequencing_center": {
                     "type": "string",
-                    "default": "null",
+                    "default": null,
                     "fa_icon": "fas fa-university",
                     "description": "Name of sequencing center to be displayed in BAM file",
                     "help_text": "It will be in the CN field",
