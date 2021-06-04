@@ -34,7 +34,7 @@ process GATK4_MARKDUPLICATES_SPARK {
     gatk MarkDuplicatesSpark \\
         -I $bam \\
         $metrics \
-        --tmp_dir . \\
+        --tmp-dir . \\
         --create-output-bam-index true \\
         --spark-master local[${task.cpus}] \\
         -O ${prefix}.bam \\

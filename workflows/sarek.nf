@@ -154,7 +154,8 @@ include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
 )
 include { MAPPING_CSV } from '../subworkflows/local/mapping_csv'
 include { MARKDUPLICATES } from '../subworkflows/nf-core/markduplicates' addParams(
-    markduplicates_options:          modules['markduplicates']
+    markduplicates_options:          modules['markduplicates'],
+    markduplicatesspark_options:     modules['markduplicatesspark']
 )
 include { MARKDUPLICATES_CSV } from '../subworkflows/local/markduplicates_csv'
 include { PREPARE_RECALIBRATION } from '../subworkflows/nf-core/prepare_recalibration' addParams(
