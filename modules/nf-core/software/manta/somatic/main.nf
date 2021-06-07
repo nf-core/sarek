@@ -1,13 +1,15 @@
+// Import generic module functions
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 process MANTA_SOMATIC {
     tag "$meta.id"
     label 'process_high'
-    publishDir params.outdir, mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
+    publishDir "${params.outdir}",
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
     conda (params.enable_conda ? "bioconda::manta=1.6.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -37,16 +39,16 @@ process MANTA_SOMATIC {
     // TODO nf-core: It MUST be possible to pass additional parameters to the tool as a command-line string via the "$ioptions.args" variable
     // TODO nf-core: If the tool supports multi-threading then you MUST provide the appropriate parameter
     //               using the Nextflow "task" variable e.g. "--threads $task.cpus"
-    options_manta = params.target_bed ? "--exome --callRegions ${target_bed}" : ""
+    options_manta = params.target_bed ? "--exome --callRegions $target_bed" : ""
     """
     configManta.py \
-        --tumorBam ${bam_tumor} \
-        --normalBam ${bam_normal} \
-        --reference ${fasta} \
-        ${options_manta} \
+        --tumorBam $bam_tumor \
+        --normalBam $bam_normal \
+        --reference $fasta \
+        $options_manta \
         --runDir manta
 
-    python manta/runWorkflow.py -m local -j ${task.cpus}
+    python manta/runWorkflow.py -m local -j $task.cpus
 
     mv manta/results/variants/candidateSmallIndels.vcf.gz     ${prefix}.candidateSmallIndels.vcf.gz
     mv manta/results/variants/candidateSmallIndels.vcf.gz.tbi ${prefix}.candidateSmallIndels.vcf.gz.tbi

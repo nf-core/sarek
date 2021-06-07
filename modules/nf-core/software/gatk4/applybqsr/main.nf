@@ -31,7 +31,6 @@ process GATK4_APPLYBQSR {
     def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     def intervalsCommand = intervalsBed ? "-L ${intervalsBed}" : ""
-
     """
     gatk ApplyBQSR \\
         -R $fasta \\

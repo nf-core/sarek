@@ -19,7 +19,7 @@ process GATK4_GENOTYPEGVCF {
     input:
     tuple val(meta), path(interval), path(gvcf)
     path dbsnp
-    path(dbsnp_tbi)
+    path dbsnp_tbi
     path dict
     path fasta
     path fai
