@@ -133,7 +133,7 @@ include { BUILD_INDICES } from '../subworkflows/local/build_indices' addParams(
     bwa_index_options:               modules['bwa_index'],
     bwamem2_index_options:           modules['bwamem2_index'],
     create_intervals_bed_options:    modules['create_intervals_bed'],
-    gatk_dict_options:               modules['dict'],
+    gatk4_dict_options:              modules['dict'],
     index_target_bed_options:        modules['index_target_bed'],
     msisensorpro_scan_options:       modules['msisensorpro_scan'],
     samtools_faidx_options:          modules['samtools_faidx'],

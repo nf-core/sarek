@@ -41,6 +41,8 @@ process GATK4_MARKDUPLICATES {
         O=${prefix}.bam \\
         $options.args
 
+    mv ${prefix}.bai ${prefix}.bam.bai
+
     echo \$(gatk MarkDuplicates --version 2>&1) | sed 's/^.*(GATK) v//; s/ HTSJDK.*\$//' > ${software}.version.txt
     """
 }

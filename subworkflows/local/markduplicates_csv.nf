@@ -18,17 +18,6 @@ workflow MARKDUPLICATES_CSV {
             bam   = "${params.outdir}/preprocessing/${sample}/markduplicates/${sample}.md.bam"
             bai   = "${params.outdir}/preprocessing/${sample}/markduplicates/${sample}.md.bam.bai"
             table = "${params.outdir}/preprocessing/${sample}/markduplicates/${sample}.recal.table"
-            ["markduplicates_${sample}.csv", "${patient},${gender},${status},${sample},${bam},${bai},${table}\n"]
-        }
-
-        bam_markduplicates.map { meta, bam, bai ->
-            patient = meta.patient
-            sample  = meta.sample
-            gender  = meta.gender
-            status  = meta.status
-            bam   = "${params.outdir}/preprocessing/${sample}/markduplicates/${sample}.md.bam"
-            bai   = "${params.outdir}/preprocessing/${sample}/markduplicates/${sample}.md.bam.bai"
-            table = "${params.outdir}/preprocessing/${sample}/markduplicates/${sample}.recal.table"
-            "${patient},${gender},${status},${sample},${bam},${bai},${table}\n"
-        }.collectFile(name: 'markduplicates.csv', sort: true, storeDir: "${params.outdir}/preprocessing/csv")
+            ["markduplicates_${sample}.csv", "patient,gender,status,sample,bam,bai,table\n${patient},${gender},${status},${sample},${bam},${bai},${table}\n"]
+        }.collectFile(name: 'markduplicates.csv', keepHeader: true, skip: 1, sort: true, storeDir: "${params.outdir}/preprocessing/csv")
 }

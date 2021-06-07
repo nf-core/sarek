@@ -17,16 +17,6 @@ workflow RECALIBRATE_CSV {
             status  = meta.status
             bam = "${params.outdir}/preprocessing/${sample}/recalibrated/${sample}.recal.bam"
             bai = "${params.outdir}/preprocessing/${sample}/recalibrated/${sample}.recal.bam.bai"
-            ["recalibrated_${sample}.csv", "${patient},${gender},${status},${sample},${bam},${bai}\n"]
-        }
- 
-        bam_recalibrated_index.map { meta, bam, bai ->
-            patient = meta.patient
-            sample  = meta.sample
-            gender  = meta.gender
-            status  = meta.status
-            bam = "${params.outdir}/preprocessing/${sample}/recalibrated/${sample}.recal.bam"
-            bai = "${params.outdir}/preprocessing/${sample}/recalibrated/${sample}.recal.bam.bai"
-            "${patient},${gender},${status},${sample},${bam},${bai}\n"
-        }.collectFile(name: 'recalibrated.csv', sort: true, storeDir: "${params.outdir}/preprocessing/csv")
+            ["recalibrated_${sample}.csv", "patient,gender,status,sample,bam,bai\n${patient},${gender},${status},${sample},${bam},${bai}\n"]
+        }.collectFile(name: 'recalibrated.csv', keepHeader: true, skip: 1, sort: true, storeDir: "${params.outdir}/preprocessing/csv")
 }

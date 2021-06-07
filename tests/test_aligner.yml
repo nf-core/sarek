@@ -6,30 +6,12 @@
   files:
     - path: results/preprocessing/1234N/mapped/1234N.bam
     - path: results/preprocessing/1234N/mapped/1234N.bam.bai
-    - path: results/reports/fastqc/1234N-1234N_M1/1234N-1234N_M1_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M1/1234N-1234N_M1_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M1/1234N-1234N_M1_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M1/1234N-1234N_M1_2_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M2/1234N-1234N_M2_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M2/1234N-1234N_M2_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M2/1234N-1234N_M2_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M2/1234N-1234N_M2_2_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M4/1234N-1234N_M4_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M4/1234N-1234N_M4_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M4/1234N-1234N_M4_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M4/1234N-1234N_M4_2_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M5/1234N-1234N_M5_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M5/1234N-1234N_M5_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M5/1234N-1234N_M5_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M5/1234N-1234N_M5_2_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M6/1234N-1234N_M6_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M6/1234N-1234N_M6_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M6/1234N-1234N_M6_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M6/1234N-1234N_M6_2_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M7/1234N-1234N_M7_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M7/1234N-1234N_M7_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M7/1234N-1234N_M7_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M7/1234N-1234N_M7_2_fastqc.zip
+    - path: results/reports/fastqc/1234N-1234N_M1
+    - path: results/reports/fastqc/1234N-1234N_M2
+    - path: results/reports/fastqc/1234N-1234N_M4
+    - path: results/reports/fastqc/1234N-1234N_M5
+    - path: results/reports/fastqc/1234N-1234N_M6
+    - path: results/reports/fastqc/1234N-1234N_M7
 
 - name: Run bwa-mem2
   command: nextflow run main.nf -profile test,docker --aligner bwa-mem2
@@ -39,27 +21,9 @@
   files:
     - path: results/preprocessing/1234N/mapped/1234N.bam
     - path: results/preprocessing/1234N/mapped/1234N.bam.bai
-    - path: results/reports/fastqc/1234N-1234N_M1/1234N-1234N_M1_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M1/1234N-1234N_M1_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M1/1234N-1234N_M1_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M1/1234N-1234N_M1_2_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M2/1234N-1234N_M2_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M2/1234N-1234N_M2_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M2/1234N-1234N_M2_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M2/1234N-1234N_M2_2_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M4/1234N-1234N_M4_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M4/1234N-1234N_M4_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M4/1234N-1234N_M4_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M4/1234N-1234N_M4_2_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M5/1234N-1234N_M5_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M5/1234N-1234N_M5_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M5/1234N-1234N_M5_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M5/1234N-1234N_M5_2_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M6/1234N-1234N_M6_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M6/1234N-1234N_M6_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M6/1234N-1234N_M6_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M6/1234N-1234N_M6_2_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M7/1234N-1234N_M7_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M7/1234N-1234N_M7_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M7/1234N-1234N_M7_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M7/1234N-1234N_M7_2_fastqc.zip
+    - path: results/reports/fastqc/1234N-1234N_M1
+    - path: results/reports/fastqc/1234N-1234N_M2
+    - path: results/reports/fastqc/1234N-1234N_M4
+    - path: results/reports/fastqc/1234N-1234N_M5
+    - path: results/reports/fastqc/1234N-1234N_M6
+    - path: results/reports/fastqc/1234N-1234N_M7

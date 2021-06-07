@@ -8,46 +8,16 @@
     - path: results/preprocessing/1234N/mapped/1234N.bam.bai
     - path: results/preprocessing/9876T/mapped/9876T.bam
     - path: results/preprocessing/9876T/mapped/9876T.bam.bai
-    - path: results/reports/fastqc/1234N-1234N_M1/1234N-1234N_M1_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M1/1234N-1234N_M1_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M1/1234N-1234N_M1_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M1/1234N-1234N_M1_2_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M2/1234N-1234N_M2_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M2/1234N-1234N_M2_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M2/1234N-1234N_M2_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M2/1234N-1234N_M2_2_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M4/1234N-1234N_M4_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M4/1234N-1234N_M4_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M4/1234N-1234N_M4_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M4/1234N-1234N_M4_2_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M5/1234N-1234N_M5_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M5/1234N-1234N_M5_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M5/1234N-1234N_M5_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M5/1234N-1234N_M5_2_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M6/1234N-1234N_M6_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M6/1234N-1234N_M6_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M6/1234N-1234N_M6_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M6/1234N-1234N_M6_2_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M7/1234N-1234N_M7_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M7/1234N-1234N_M7_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M7/1234N-1234N_M7_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M7/1234N-1234N_M7_2_fastqc.zip
-    - path: results/reports/fastqc/9876T-9876T_M1/9876T-9876T_M1_1_fastqc.html
-    - path: results/reports/fastqc/9876T-9876T_M1/9876T-9876T_M1_1_fastqc.zip
-    - path: results/reports/fastqc/9876T-9876T_M1/9876T-9876T_M1_2_fastqc.html
-    - path: results/reports/fastqc/9876T-9876T_M1/9876T-9876T_M1_2_fastqc.zip
-    - path: results/reports/fastqc/9876T-9876T_M2/9876T-9876T_M2_1_fastqc.html
-    - path: results/reports/fastqc/9876T-9876T_M2/9876T-9876T_M2_1_fastqc.zip
-    - path: results/reports/fastqc/9876T-9876T_M2/9876T-9876T_M2_2_fastqc.html
-    - path: results/reports/fastqc/9876T-9876T_M2/9876T-9876T_M2_2_fastqc.zip
-    - path: results/reports/fastqc/9876T-9876T_M4/9876T-9876T_M4_1_fastqc.html
-    - path: results/reports/fastqc/9876T-9876T_M4/9876T-9876T_M4_1_fastqc.zip
-    - path: results/reports/fastqc/9876T-9876T_M4/9876T-9876T_M4_2_fastqc.html
-    - path: results/reports/fastqc/9876T-9876T_M4/9876T-9876T_M4_2_fastqc.zip
-    - path: results/reports/fastqc/9876T-9876T_M5/9876T-9876T_M5_1_fastqc.html
-    - path: results/reports/fastqc/9876T-9876T_M5/9876T-9876T_M5_1_fastqc.zip
-    - path: results/reports/fastqc/9876T-9876T_M5/9876T-9876T_M5_2_fastqc.html
-    - path: results/reports/fastqc/9876T-9876T_M5/9876T-9876T_M5_2_fastqc.zip
+    - path: results/reports/fastqc/1234N-1234N_M1
+    - path: results/reports/fastqc/1234N-1234N_M2
+    - path: results/reports/fastqc/1234N-1234N_M4
+    - path: results/reports/fastqc/1234N-1234N_M5
+    - path: results/reports/fastqc/1234N-1234N_M6
+    - path: results/reports/fastqc/1234N-1234N_M7
+    - path: results/reports/fastqc/9876T-9876T_M1
+    - path: results/reports/fastqc/9876T-9876T_M2
+    - path: results/reports/fastqc/9876T-9876T_M4
+    - path: results/reports/fastqc/9876T-9876T_M5
     - path: results/reports/qualimap/1234N
     - path: results/reports/qualimap/9876T
     - path: results/reports/samtools_stats/1234N/1234N.bam.stats
