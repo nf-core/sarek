@@ -1,5 +1,5 @@
 - name: subworkflow markduplicates
-  command: nextflow run ./tests/subworkflows/local/markduplicates/ -entry test_markduplicates -c tests/config/nextflow.config
+  command: nextflow run ./tests/subworkflows/nf-core/markduplicates/ -entry test_markduplicates -c tests/config/nextflow.config
   tags:
     - markduplicates
     - gatk4
