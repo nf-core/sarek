@@ -84,7 +84,7 @@ workflow BUILD_INDICES {
     result_msisensor_scan = Channel.empty()
     version_msisensor_scan = Channel.empty()
     if ('msisensor' in params.tools.toString().toLowerCase())
-        (result_msisensor_scan, version_msisensor_scan) = MSISENSOR_SCAN(fasta, result_fai)
+        (result_msisensor_scan, version_msisensor_scan) = MSISENSORPRO_SCAN(fasta)
 
     result_pon_tbi = Channel.empty()
     version_pon_tbi = Channel.empty()

@@ -13,9 +13,9 @@ process MSISENSORPRO_MSI {
 
     conda (params.enable_conda ? "bioconda::msisensor-pro=1.1.a" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/msisensor-pro:1.1.a--hc755212_1"
+        container "https://depot.galaxyproject.org/singularity/msisensor-pro:1.1.a--hb3646a4_0"
     } else {
-        container "quay.io/biocontainers/msisensor-pro:1.1.a--hc755212_1"
+        container "quay.io/biocontainers/msisensor-pro:1.1.a--hb3646a4_0"
     }
 
     input:
@@ -29,7 +29,7 @@ process MSISENSORPRO_MSI {
     def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}.${options.suffix}" : "${meta.id}"
     """
-    msisensor msi \\
+    msisensor-pro msi \\
         -d $msisensor_scan \\
         -n $bam_normal \\
         -t $bam_tumor \\
