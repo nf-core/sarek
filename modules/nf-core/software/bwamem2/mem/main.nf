@@ -2,13 +2,14 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 process BWAMEM2_MEM {
     tag "$meta.id"
     label 'process_high'
-    publishDir params.outdir, mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
+    publishDir "${params.outdir}",
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
     conda (params.enable_conda ? "bioconda::bwa-mem2=2.2.1 bioconda::samtools=1.12" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -26,6 +27,7 @@ process BWAMEM2_MEM {
     path  "*.version.txt"         , emit: version
 
     script:
+    def split_cpus = Math.floor(task.cpus/2)
     def software   = getSoftwareName(task.process)
     def prefix     = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     def read_group = meta.read_group ? "-R ${meta.read_group}" : ""
@@ -35,7 +37,7 @@ process BWAMEM2_MEM {
     bwa-mem2 mem \\
         $options.args \\
         $read_group \\
-        -t $task.cpus \\
+        -t ${split_cpus} \\
         \$INDEX \\
         $reads \\
         | samtools $options.args2 -@ $task.cpus -o ${prefix}.bam -
