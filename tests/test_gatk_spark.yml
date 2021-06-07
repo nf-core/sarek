@@ -7,6 +7,15 @@
   files:
     - path: results/preprocessing/1234N/mapped/1234N.bam
     - path: results/preprocessing/1234N/mapped/1234N.bam.bai
+    - path: results/preprocessing/1234N/markduplicates/1234N.md.bam
+    - path: results/preprocessing/1234N/markduplicates/1234N.md.bam.bai
+    - path: results/preprocessing/1234N/recal_table/1234N.recal.table
+    - path: results/preprocessing/1234N/recalibrated/1234N.recal.bam
+    - path: results/preprocessing/1234N/recalibrated/1234N.recal.bam.bai
+    - path: results/preprocessing/csv/markduplicates.csv
+    - path: results/preprocessing/csv/markduplicates_1234N.csv
+    - path: results/preprocessing/csv/markduplicates_no_table.csv
+    - path: results/preprocessing/csv/markduplicates_no_table_1234N.csv
     - path: results/reports/fastqc/1234N-1234N_M1
     - path: results/reports/fastqc/1234N-1234N_M2
     - path: results/reports/fastqc/1234N-1234N_M4

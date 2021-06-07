@@ -78,21 +78,22 @@ ch_dummy_file = file("$projectDir/assets/dummy_file.txt", checkIfExists: true)
 
 def modules = params.modules.clone()
 
-if (params.save_reference)      modules['build_intervals'].publish_files         = ['bed':'intervals']
-if (params.save_reference)      modules['bwa_index'].publish_files               = ['amb':'bwa', 'ann':'bwa', 'bwt':'bwa', 'pac':'bwa', 'sa':'bwa']
-if (params.save_reference)      modules['bwamem2_index'].publish_files           = ['0123':'bwamem2', 'amb':'bwamem2', 'ann':'bwamem2', 'bwt.2bit.64':'bwamem2', 'bwt.8bit.32':'bwamem2', 'pac':'bwamem2']
-if (params.save_reference)      modules['create_intervals_bed'].publish_files    = ['bed':'intervals']
-if (params.save_reference)      modules['dict'].publish_files                    = ['dict':'dict']
-if (params.save_reference)      modules['index_target_bed'].publish_files        = ['bed.gz':'target', 'bed.gz.tbi':'target']
-if (params.save_reference)      modules['msisensorpro_scan'].publish_files       = ['list':'msi']
-if (params.save_reference)      modules['samtools_faidx'].publish_files          = ['fai':'fai']
-if (params.save_reference)      modules['tabix_dbsnp'].publish_files             = ['vcf.gz.tbi':'dbsnp']
-if (params.save_reference)      modules['tabix_germline_resource'].publish_files = ['vcf.gz.tbi':'germline_resource']
-if (params.save_reference)      modules['tabix_known_indels'].publish_files      = ['vcf.gz.tbi':'known_indels']
-if (params.save_reference)      modules['tabix_pon'].publish_files               = ['vcf.gz.tbi':'pon']
-if (save_bam_mapped)            modules['samtools_index_mapping'].publish_files  = ['bam':'mapped', 'bai':'mapped']
-if (params.skip_markduplicates) modules['baserecalibrator'].publish_files        = ['recal.table':'mapped']
-if (params.skip_markduplicates) modules['gatherbqsrreports'].publish_files       = ['recal.table':'mapped']
+if (params.save_reference)       modules['build_intervals'].publish_files         = ['bed':'intervals']
+if (params.save_reference)       modules['bwa_index'].publish_files               = ['amb':'bwa', 'ann':'bwa', 'bwt':'bwa', 'pac':'bwa', 'sa':'bwa']
+if (params.save_reference)       modules['bwamem2_index'].publish_files           = ['0123':'bwamem2', 'amb':'bwamem2', 'ann':'bwamem2', 'bwt.2bit.64':'bwamem2', 'bwt.8bit.32':'bwamem2', 'pac':'bwamem2']
+if (params.save_reference)       modules['create_intervals_bed'].publish_files    = ['bed':'intervals']
+if (params.save_reference)       modules['dict'].publish_files                    = ['dict':'dict']
+if (params.save_reference)       modules['index_target_bed'].publish_files        = ['bed.gz':'target', 'bed.gz.tbi':'target']
+if (params.save_reference)       modules['msisensorpro_scan'].publish_files       = ['list':'msi']
+if (params.save_reference)       modules['samtools_faidx'].publish_files          = ['fai':'fai']
+if (params.save_reference)       modules['tabix_dbsnp'].publish_files             = ['vcf.gz.tbi':'dbsnp']
+if (params.save_reference)       modules['tabix_germline_resource'].publish_files = ['vcf.gz.tbi':'germline_resource']
+if (params.save_reference)       modules['tabix_known_indels'].publish_files      = ['vcf.gz.tbi':'known_indels']
+if (params.save_reference)       modules['tabix_pon'].publish_files               = ['vcf.gz.tbi':'pon']
+if (save_bam_mapped)             modules['samtools_index_mapping'].publish_files  = ['bam':'mapped', 'bai':'mapped']
+if (params.skip_markduplicates)  modules['baserecalibrator'].publish_files        = ['recal.table':'mapped']
+if (params.skip_markduplicates)  modules['gatherbqsrreports'].publish_files       = ['recal.table':'mapped']
+if (!params.skip_markduplicates) modules['baserecalibrator'].publish_files        = false
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
 chr_dir           = params.chr_dir           ? file(params.chr_dir)           : ch_dummy_file
