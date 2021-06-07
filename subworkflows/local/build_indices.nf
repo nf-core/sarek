@@ -81,10 +81,10 @@ workflow BUILD_INDICES {
         (result_known_indels_tbi, version_known_indels_tbi) = TABIX_KNOWN_INDELS([[id:"${known_indels.fileName}"], known_indels])
     result_known_indels_tbi = result_known_indels_tbi.map {meta, tbi -> [tbi]}
 
-    result_msisensor_scan = Channel.empty()
-    version_msisensor_scan = Channel.empty()
-    if ('msisensor' in params.tools.toString().toLowerCase())
-        (result_msisensor_scan, version_msisensor_scan) = MSISENSORPRO_SCAN(fasta)
+    result_msisensorpro_scan = Channel.empty()
+    version_msisensorpro_scan = Channel.empty()
+    if ('msisensorpro' in params.tools.toString().toLowerCase())
+        (result_msisensorpro_scan, version_msisensorpro_scan) = MSISENSORPRO_SCAN(fasta)
 
     result_pon_tbi = Channel.empty()
     version_pon_tbi = Channel.empty()
@@ -129,7 +129,7 @@ workflow BUILD_INDICES {
         germline_resource_tbi = result_germline_resource_tbi
         intervals             = result_intervals
         known_indels_tbi      = result_known_indels_tbi
-        msisensor_scan        = result_msisensor_scan
+        msisensorpro_scan     = result_msisensorpro_scan
         pon_tbi               = result_pon_tbi
         target_bed_gz_tbi     = result_target_bed
 }

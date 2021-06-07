@@ -23,7 +23,7 @@ workflow PAIR_VARIANT_CALLING {
         fai               // channel: [mandatory] fai
         fasta             // channel: [mandatory] fasta
         intervals         // channel: [mandatory] intervals
-        msisensor_scan    // channel: [optional]  msisensor_scan
+        msisensorpro_scan // channel: [optional]  msisensorpro_scan
         target_bed        // channel: [optional]  target_bed
         target_bed_gz_tbi // channel: [optional]  target_bed_gz_tbi
 
@@ -83,10 +83,10 @@ workflow PAIR_VARIANT_CALLING {
         }
     }
 
-    if ('msisensor' in params.tools.toLowerCase()) {
+    if ('msisensorpro' in params.tools.toLowerCase()) {
         MSISENSORPRO_MSI(
             bam_pair,
-            msisensor_scan)
+            msisensorpro_scan)
     }
 
     if ('strelka' in params.tools.toLowerCase()) {

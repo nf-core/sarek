@@ -20,26 +20,26 @@ process MSISENSORPRO_MSI {
 
     input:
         tuple val(meta), path(bam_normal), path(bai_normal), path(bam_tumor), path(bai_tumor)
-        path msisensor_scan
+        path msisensorpro_scan
 
     output:
-        tuple val(meta), path("msisensor_*.list")
+        tuple val(meta), path("msisensorpro_*.list")
 
     script:
     def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}.${options.suffix}" : "${meta.id}"
     """
     msisensor-pro msi \\
-        -d $msisensor_scan \\
+        -d $msisensorpro_scan \\
         -n $bam_normal \\
         -t $bam_tumor \\
         -o $prefix \\
         -b $task.cpus \\
         $options.args
 
-    mv ${prefix}          msisensor_${prefix}.list
-    mv ${prefix}_dis      msisensor_${prefix}_dis.list
-    mv ${prefix}_germline msisensor_${prefix}_germline.list
-    mv ${prefix}_somatic  msisensor_${prefix}_somatic.list
+    mv ${prefix}          msisensorpro_${prefix}.list
+    mv ${prefix}_dis      msisensorpro_${prefix}_dis.list
+    mv ${prefix}_germline msisensorpro_${prefix}_germline.list
+    mv ${prefix}_somatic  msisensorpro_${prefix}_somatic.list
     """
 }

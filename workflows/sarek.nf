@@ -84,7 +84,7 @@ if (params.save_reference)      modules['bwamem2_index'].publish_files          
 if (params.save_reference)      modules['create_intervals_bed'].publish_files    = ['bed':'intervals']
 if (params.save_reference)      modules['dict'].publish_files                    = ['dict':'dict']
 if (params.save_reference)      modules['index_target_bed'].publish_files        = ['bed.gz':'target', 'bed.gz.tbi':'target']
-if (params.save_reference)      modules['msisensor_scan'].publish_files          = ['list':'msi']
+if (params.save_reference)      modules['msisensorpro_scan'].publish_files       = ['list':'msi']
 if (params.save_reference)      modules['samtools_faidx'].publish_files          = ['fai':'fai']
 if (params.save_reference)      modules['tabix_dbsnp'].publish_files             = ['vcf.gz.tbi':'dbsnp']
 if (params.save_reference)      modules['tabix_germline_resource'].publish_files = ['vcf.gz.tbi':'germline_resource']
@@ -135,7 +135,7 @@ include { BUILD_INDICES } from '../subworkflows/local/build_indices' addParams(
     create_intervals_bed_options:    modules['create_intervals_bed'],
     gatk_dict_options:               modules['dict'],
     index_target_bed_options:        modules['index_target_bed'],
-    msisensor_scan_options:          modules['msisensor_scan'],
+    msisensorpro_scan_options:       modules['msisensorpro_scan'],
     samtools_faidx_options:          modules['samtools_faidx'],
     tabix_dbsnp_options:             modules['tabix_dbsnp'],
     tabix_germline_resource_options: modules['tabix_germline_resource'],
@@ -182,7 +182,7 @@ include { GERMLINE_VARIANT_CALLING } from '../subworkflows/local/germline_varian
 // )
 include { PAIR_VARIANT_CALLING } from '../subworkflows/local/pair_variant_calling' addParams(
     manta_options:                   modules['manta_somatic'],
-    msisensor_msi_options:           modules['msisensor_msi'],
+    msisensorpro_msi_options:        modules['msisensorpro_msi'],
     strelka_bp_options:              modules['strelka_somatic_bp'],
     strelka_options:                 modules['strelka_somatic']
 )
@@ -230,7 +230,7 @@ workflow SAREK {
     known_sites     = [dbsnp, known_indels]
     known_sites_tbi = dbsnp_tbi.mix(known_indels_tbi).collect()
 
-    msisensor_scan    = BUILD_INDICES.out.msisensor_scan
+    msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
 
     ////////////////////////////////////////////////////
@@ -374,7 +374,7 @@ workflow SAREK {
             fai,
             fasta,
             intervals,
-            msisensor_scan,
+            msisensorpro_scan,
             target_bed,
             target_bed_gz_tbi)
 
