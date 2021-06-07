@@ -329,6 +329,8 @@ workflow SAREK {
     bam_recalibrated    = RECALIBRATE.out.bam
     bam_recalibrated_qc = RECALIBRATE.out.qc
 
+    RECALIBRATE_CSV(bam_recalibrated)
+
     qc_reports = qc_reports.mix(bam_recalibrated_qc)
 
     bam_variant_calling = bam_recalibrated

@@ -24,6 +24,9 @@
     - path: results/preprocessing/csv/markduplicates_no_table.csv
     - path: results/preprocessing/csv/markduplicates_no_table_1234N.csv
     - path: results/preprocessing/csv/markduplicates_no_table_9876T.csv
+    - path: results/preprocessing/csv/recalibrated.csv
+    - path: results/preprocessing/csv/recalibrated_1234N.csv
+    - path: results/preprocessing/csv/recalibrated_9876T.csv
     - path: results/reports/fastqc/1234N-1234N_M1
     - path: results/reports/fastqc/1234N-1234N_M2
     - path: results/reports/fastqc/1234N-1234N_M4
