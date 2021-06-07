@@ -4,7 +4,7 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 options        = initOptions(params.options)
 
-sprocess STRELKA_SOMATIC_BEST_PRACTICES {
+process STRELKA_SOMATIC_BEST_PRACTICES {
     tag "$meta.id"
     label 'process_high'
     publishDir "${params.outdir}",
