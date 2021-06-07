@@ -77,7 +77,7 @@ workflow BUILD_INDICES {
 
     result_known_indels_tbi = Channel.empty()
     version_known_indels_tbi = Channel.empty()
-    if (!(params.known_indels_index) && params.known_indels && ('mapping' in params.step.toLowerCase() || 'preparerecalibration' in params.step.toLowerCase()))
+    if (!(params.known_indels_index) && params.known_indels && ('mapping' in params.step.toLowerCase() || 'prepare_recalibration' in params.step.toLowerCase()))
         (result_known_indels_tbi, version_known_indels_tbi) = TABIX_KNOWN_INDELS([[id:"${known_indels.fileName}"], known_indels])
     result_known_indels_tbi = result_known_indels_tbi.map {meta, tbi -> [tbi]}
 

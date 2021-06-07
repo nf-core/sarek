@@ -37,28 +37,22 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 // Check mandatory parameters
 input_sample = Channel.empty()
 
-if (params.input) {
-    csv_file = file(params.input)
-    switch (params.step.toLowerCase()) {
-        case 'mapping': input_sample = extract_csv(csv_file); break
-        // case 'prepare_recalibration': input_sample = extract_bam(csv_file); break
-        // case 'recalibrate': input_sample = extract_recal(csv_file); break
-        case 'variant_calling': input_sample = extract_csv(csv_file); break
-        // case 'controlfreec': input_sample = extract_pileup(csv_file); break
-        // case 'annotate': break
-        default: exit 1, "Unknown step ${params.step}"
-    }
-} else {
+if (params.input) csv_file = file(params.input)
+else {
+    log.warn "No samplesheet specified, attempting to restart from csv files present in ${params.outdir}"
     switch (params.step.toLowerCase()) {
         case 'mapping': break
-        // case 'prepare_recalibration': csv_path = "${params.outdir}/preprocessing/tsv/markduplicates_no_table.tsv"; break
-        // case 'recalibrate': csv_path = "${params.outdir}/preprocessing/tsv/markduplicates.tsv"; break
-        // case 'variant_calling': csv_path = "${params.outdir}/preprocessing/tsv/recalibrated.tsv"; break
-        // case 'controlfreec': csv_path = "${params.outdir}/variant_calling/tsv/control-freec_mpileup.tsv"; break
-        // case 'annotate': break
+        case 'prepare_recalibration': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
+        case 'recalibrate':           csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv", checkIfExists: true); break
+        case 'recalibrate':           csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv", checkIfExists: true); break
+        case 'variant_calling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv", checkIfExists: true); break
+        // case 'controlfreec':          csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
+        case 'annotate': break
         default: exit 1, "Unknown step ${params.step}"
     }   
 }
+
+input_sample = extract_csv(csv_file)
 
 save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? true : false
 
@@ -280,60 +274,62 @@ workflow SAREK {
 
         // Create CSV to restart from this step
         MAPPING_CSV(bam_mapped, save_bam_mapped, params.skip_markduplicates)
+
+        if (params.skip_markduplicates) {
+            bam_markduplicates = bam_mapped
+        } else {
+            // STEP 2: MARKING DUPLICATES
+            MARKDUPLICATES(bam_mapped, params.use_gatk_spark, !('markduplicates' in params.skip_qc))
+            bam_markduplicates = MARKDUPLICATES.out.bam
+
+            // Create CSV to restart from this step
+            MARKDUPLICATES_CSV(bam_markduplicates)
+        }
     }
 
-    if (params.skip_markduplicates) {
-        bam_markduplicates = bam_mapped
-    } else {
-        // STEP 2: MARKING DUPLICATES
-        MARKDUPLICATES(bam_mapped, params.use_gatk_spark, !('markduplicates' in params.skip_qc))
-        bam_markduplicates = MARKDUPLICATES.out.bam
+    if (params.step.toLowerCase() == 'prepare_recalibration') bam_markduplicates = input_sample
 
-        // Create CSV to restart from this step
-        MARKDUPLICATES_CSV(bam_markduplicates)
+    if (params.step.toLowerCase() in ['mapping', 'prepare_recalibration']) {
+        // STEP 3: CREATING RECALIBRATION TABLES
+        PREPARE_RECALIBRATION(
+            bam_markduplicates,
+            dict,
+            fai,
+            fasta,
+            intervals,
+            known_sites,
+            known_sites_tbi,
+            params.no_intervals)
+
+        table_bqsr = PREPARE_RECALIBRATION.out.table_bqsr
+        PREPARE_RECALIBRATION_CSV(table_bqsr)
+
+        bam_applybqsr = bam_markduplicates.join(table_bqsr)
     }
-
-    if (params.step.toLowerCase() == 'prepare_recalibration') {
-        bam_markduplicates = input_sample
-    }
-
-    // STEP 3: CREATING RECALIBRATION TABLES
-    PREPARE_RECALIBRATION(
-        bam_markduplicates,
-        dict,
-        fai,
-        fasta,
-        intervals,
-        known_sites,
-        known_sites_tbi,
-        params.no_intervals)
-
-    table_bqsr = PREPARE_RECALIBRATION.out.table_bqsr
-    PREPARE_RECALIBRATION_CSV(table_bqsr)
-
-    // STEP 4: RECALIBRATING
-    bam_applybqsr = bam_markduplicates.join(table_bqsr)
 
     if (params.step.toLowerCase() == 'recalibrate') bam_applybqsr = input_sample
 
-    RECALIBRATE(
-        ('bamqc' in params.skip_qc),
-        ('samtools' in params.skip_qc),
-        bam_applybqsr,
-        dict,
-        fai,
-        fasta,
-        intervals,
-        target_bed)
+    if (params.step.toLowerCase() in ['mapping', 'prepare_recalibration', 'recalibrate']) {
+        // STEP 4: RECALIBRATING
+        RECALIBRATE(
+            ('bamqc' in params.skip_qc),
+            ('samtools' in params.skip_qc),
+            bam_applybqsr,
+            dict,
+            fai,
+            fasta,
+            intervals,
+            target_bed)
 
-    bam_recalibrated    = RECALIBRATE.out.bam
-    bam_recalibrated_qc = RECALIBRATE.out.qc
+        bam_recalibrated    = RECALIBRATE.out.bam
+        bam_recalibrated_qc = RECALIBRATE.out.qc
 
-    RECALIBRATE_CSV(bam_recalibrated)
+        RECALIBRATE_CSV(bam_recalibrated)
 
-    qc_reports = qc_reports.mix(bam_recalibrated_qc)
+        qc_reports = qc_reports.mix(bam_recalibrated_qc)
 
-    bam_variant_calling = bam_recalibrated
+        bam_variant_calling = bam_recalibrated
+    }
 
     if (params.step.toLowerCase() == 'variant_calling') bam_variant_calling = input_sample
 
@@ -404,13 +400,7 @@ def extract_csv(csv_file) {
             meta.status = 0
         } else meta.status = row.status.toInteger()
 
-        if (row.lane == null) {
-        // variant_calling
-            meta.id = meta.sample
-            def bam     = file(row.bam, checkIfExists: true)
-            def bai     = file(row.bai, checkIfExists: true)
-            return [meta, bam, bai]
-        } else {
+        if (row.lane != null) {
         // mapping with fastq
             meta.id         = "${row.sample}-${row.lane}".toString()
             def read1       = file(row.fastq1, checkIfExists: true)
@@ -419,6 +409,19 @@ def extract_csv(csv_file) {
             def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:ILLUMINA\""
             meta.read_group = read_group.toString()
             return [meta, [read1, read2]]
+        } else if (row.table != null) {
+        // recalibration
+            meta.id = meta.sample
+            def bam     = file(row.bam, checkIfExists: true)
+            def bai     = file(row.bai, checkIfExists: true)
+            def table   = file(row.table, checkIfExists: true)
+            return [meta, bam, bai, table]
+        } else {
+        // prepare_recalibration or variant_calling
+            meta.id = meta.sample
+            def bam     = file(row.bam, checkIfExists: true)
+            def bai     = file(row.bai, checkIfExists: true)
+            return [meta, bam, bai]
         }
     }
 }

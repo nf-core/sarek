@@ -35,7 +35,7 @@ workflow MAPPING_CSV {
                 status  = meta.status[0]
                 bam   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam"
                 bai   = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.bam.bai"
-                table = "${params.outdir}/preprocessing/${sample}/mapped/${sample}.recal.table"
+                table = "${params.outdir}/preprocessing/${sample}/recal_table/${sample}.recal.table"
                 ["mapped_no_markduplicates_${sample}.csv", "patient,gender,status,sample,bam,bai,table\n${patient},${gender},${status},${sample},${bam},${bai},${table}\n"]
             }.collectFile(name: 'mapped_no_markduplicates.csv', keepHeader: true, skip: 1, sort: true, storeDir: "${params.outdir}/preprocessing/csv")
         }
