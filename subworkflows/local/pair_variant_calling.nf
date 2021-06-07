@@ -5,12 +5,12 @@
 */
 
 params.manta_options                  = [:]
-params.msisensor_msi_options          = [:]
+params.msisensorpro_msi_options       = [:]
 params.strelka_options                = [:]
 params.strelka_bp_options             = [:]
 
 include { MANTA_SOMATIC as MANTA }                       from '../../modules/nf-core/software/manta/somatic/main'     addParams(options: params.manta_options)
-include { MSISENSOR_MSI }                                from '../../modules/nf-core/software/msisensor/msi/main'     addParams(options: params.msisensor_msi_options)
+include { MSISENSORPRO_MSI }                             from '../../modules/nf-core/software/msisensorpro/msi/main'  addParams(options: params.msisensorpro_msi_options)
 include { STRELKA_SOMATIC as STRELKA }                   from '../../modules/nf-core/software/strelka/somatic/main'   addParams(options: params.strelka_options)
 include { STRELKA_SOMATIC_BEST_PRACTICES as STRELKA_BP } from '../../modules/nf-core/software/strelka/somaticbp/main' addParams(options: params.strelka_bp_options)
 
@@ -84,7 +84,7 @@ workflow PAIR_VARIANT_CALLING {
     }
 
     if ('msisensor' in params.tools.toLowerCase()) {
-        MSISENSOR_MSI(
+        MSISENSORPRO_MSI(
             bam_pair,
             msisensor_scan)
     }

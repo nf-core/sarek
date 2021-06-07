@@ -29,7 +29,7 @@ include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE }       from '../../modules/nf-
 include { TABIX_TABIX as TABIX_KNOWN_INDELS }            from '../../modules/nf-core/software/tabix/tabix/main'                    addParams(options: params.tabix_known_indels_options)
 include { TABIX_TABIX as TABIX_PON }                     from '../../modules/nf-core/software/tabix/tabix/main'                    addParams(options: params.tabix_pon_options)
 include { INDEX_TARGET_BED }                             from '../../modules/local/index_target_bed/main'                          addParams(options: params.index_target_bed_options)
-include { MSISENSOR_SCAN }                               from '../../modules/nf-core/software/msisensor/scan/main'                 addParams(options: params.msisensor_scan_options)
+include { MSISENSORPRO_SCAN }                            from '../../modules/nf-core/software/msisensorpro/scan/main'              addParams(options: params.msisensorpro_scan_options)
 include { SAMTOOLS_FAIDX }                               from '../../modules/nf-core/software/samtools/faidx/main'                 addParams(options: params.samtools_faidx_options)
 
 workflow BUILD_INDICES {

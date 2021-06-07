@@ -4,18 +4,18 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 options        = initOptions(params.options)
 
-process MSISENSOR_MSI {
+process MSISENSORPRO_MSI {
     tag "$meta.id"
     label 'process_high'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
-    conda (params.enable_conda ? "bioconda::msisensor=0.5" : null)
+    conda (params.enable_conda ? "bioconda::msisensor-pro=1.1.a" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/msisensor:0.5--hb3646a4_2"
+        container "https://depot.galaxyproject.org/singularity/msisensor-pro:1.1.a--hc755212_1"
     } else {
-        container "quay.io/biocontainers/msisensor:0.5--hb3646a4_2"
+        container "quay.io/biocontainers/msisensor-pro:1.1.a--hc755212_1"
     }
 
     input:
@@ -23,19 +23,19 @@ process MSISENSOR_MSI {
         path msisensor_scan
 
     output:
-        tuple val(meta), path("*.list")
+        tuple val(meta), path("msisensor_*.list")
 
     script:
     def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}.${options.suffix}" : "${meta.id}"
     """
-    msisensor msi \
-        -d ${msisensor_scan} \
-        -b 4 \
-        -t ${bam_tumor} \
-        -n ${bam_normal} \
-        -o ${prefix} \
-        $options.args \
+    msisensor msi \\
+        -d $msisensor_scan \\
+        -n $bam_normal \\
+        -t $bam_tumor \\
+        -o $prefix \\
+        -b $task.cpus \\
+        $options.args
 
     mv ${prefix}          msisensor_${prefix}.list
     mv ${prefix}_dis      msisensor_${prefix}_dis.list
