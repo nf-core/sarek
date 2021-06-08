@@ -21,6 +21,7 @@ checkPathParamList = [
     params.chr_length,
     params.dbsnp,
     params.fasta,
+    params.fasta_fai,
     params.germline_resource,
     params.input,
     params.known_indels,
@@ -43,7 +44,6 @@ else {
     switch (params.step.toLowerCase()) {
         case 'mapping': break
         case 'prepare_recalibration': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
-        case 'recalibrate':           csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv", checkIfExists: true); break
         case 'recalibrate':           csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv", checkIfExists: true); break
         case 'variant_calling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv", checkIfExists: true); break
         // case 'controlfreec':          csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
@@ -94,6 +94,7 @@ chr_dir           = params.chr_dir           ? file(params.chr_dir)           : 
 chr_length        = params.chr_length        ? file(params.chr_length)        : ch_dummy_file
 dbsnp             = params.dbsnp             ? file(params.dbsnp)             : ch_dummy_file
 fasta             = params.fasta             ? file(params.fasta)             : ch_dummy_file
+fasta_fai         = params.fasta_fai         ? file(params.fasta_fai)         : ch_dummy_file
 germline_resource = params.germline_resource ? file(params.germline_resource) : ch_dummy_file
 known_indels      = params.known_indels      ? file(params.known_indels)      : ch_dummy_file
 loci              = params.ac_loci           ? file(params.ac_loci)           : ch_dummy_file
@@ -206,6 +207,7 @@ workflow SAREK {
     BUILD_INDICES(
         dbsnp,
         fasta,
+        fasta_fai,
         germline_resource,
         known_indels,
         pon,

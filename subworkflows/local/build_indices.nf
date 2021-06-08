@@ -36,6 +36,7 @@ workflow BUILD_INDICES {
     take:
         dbsnp             // channel: [optional]  dbsnp
         fasta             // channel: [mandatory] fasta
+        fasta_fai         // channel: [optional]  fasta_fai
         germline_resource // channel: [optional]  germline_resource
         known_indels      // channel: [optional]  known_indels
         pon               // channel: [optional]  pon
@@ -55,6 +56,7 @@ workflow BUILD_INDICES {
         (result_dict, version_dict) = GATK4_DICT(fasta)
 
     result_fai = Channel.empty()
+    if (fasta_fai) result_fai = fasta_fai
     version_fai = Channel.empty()
     if (!(params.fasta_fai) && !('annotate' in params.step.toLowerCase()))
         (result_fai, version_fai) = SAMTOOLS_FAIDX(fasta)
