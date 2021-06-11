@@ -1,5 +1,5 @@
 - name: Run default pipeline with gatk_spark
-  command: nextflow run main.nf -profile test_use_gatk_spark,docker
+  command: nextflow run main.nf -profile test,use_gatk_spark,docker
   tags:
     - gatk4
     - gatk4_spark
@@ -7,29 +7,22 @@
   files:
     - path: results/preprocessing/1234N/mapped/1234N.bam
     - path: results/preprocessing/1234N/mapped/1234N.bam.bai
-    - path: results/reports/fastqc/1234N-1234N_M1/1234N-1234N_M1_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M1/1234N-1234N_M1_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M1/1234N-1234N_M1_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M1/1234N-1234N_M1_2_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M2/1234N-1234N_M2_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M2/1234N-1234N_M2_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M2/1234N-1234N_M2_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M2/1234N-1234N_M2_2_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M4/1234N-1234N_M4_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M4/1234N-1234N_M4_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M4/1234N-1234N_M4_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M4/1234N-1234N_M4_2_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M5/1234N-1234N_M5_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M5/1234N-1234N_M5_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M5/1234N-1234N_M5_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M5/1234N-1234N_M5_2_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M6/1234N-1234N_M6_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M6/1234N-1234N_M6_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M6/1234N-1234N_M6_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M6/1234N-1234N_M6_2_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M7/1234N-1234N_M7_1_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M7/1234N-1234N_M7_1_fastqc.zip
-    - path: results/reports/fastqc/1234N-1234N_M7/1234N-1234N_M7_2_fastqc.html
-    - path: results/reports/fastqc/1234N-1234N_M7/1234N-1234N_M7_2_fastqc.zip
+    - path: results/preprocessing/1234N/markduplicates/1234N.md.bam
+    - path: results/preprocessing/1234N/markduplicates/1234N.md.bam.bai
+    - path: results/preprocessing/1234N/recal_table/1234N.recal.table
+    - path: results/preprocessing/1234N/recalibrated/1234N.recal.bam
+    - path: results/preprocessing/1234N/recalibrated/1234N.recal.bam.bai
+    - path: results/preprocessing/csv/markduplicates.csv
+    - path: results/preprocessing/csv/markduplicates_1234N.csv
+    - path: results/preprocessing/csv/markduplicates_no_table.csv
+    - path: results/preprocessing/csv/markduplicates_no_table_1234N.csv
+    - path: results/preprocessing/csv/recalibrated.csv
+    - path: results/preprocessing/csv/recalibrated_1234N.csv
+    - path: results/reports/fastqc/1234N-1234N_M1
+    - path: results/reports/fastqc/1234N-1234N_M2
+    - path: results/reports/fastqc/1234N-1234N_M4
+    - path: results/reports/fastqc/1234N-1234N_M5
+    - path: results/reports/fastqc/1234N-1234N_M6
+    - path: results/reports/fastqc/1234N-1234N_M7
     - path: results/reports/qualimap/1234N
     - path: results/reports/samtools_stats/1234N/1234N.bam.stats

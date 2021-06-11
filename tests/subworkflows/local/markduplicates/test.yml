@@ -1,9 +1,0 @@
-- name: subworkflow markduplicates
-  command: nextflow run ./tests/modules/local/subworkflows/markduplicates/ -entry test_markduplicates -c tests/config/nextflow.config
-  tags:
-    - markduplicates
-    - gatk4
-  files:
-   - path: output/preprocessing/test/markduplicates/test.md.bam
-   - path: output/preprocessing/test/markduplicates/test.md.bam.bai
-   - path: output/preprocessing/test/markduplicates/test.recal.table
