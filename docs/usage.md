@@ -216,8 +216,8 @@ The `TSV` file to start with the mapping step (`--step mapping`) with paired-end
 
 In this example (`example_fastq.tsv`), there are 3 read groups.
 
-| | | | | | |
-|-|-|-|-|-|-|
+| | | | | | | |
+|-|-|-|-|-|-|-|
 |SUBJECT_ID|XX|0|SAMPLE_ID|1|/samples/normal1_1.fastq.gz|/samples/normal1_2.fastq.gz|
 |SUBJECT_ID|XX|0|SAMPLE_ID|2|/samples/normal2_1.fastq.gz|/samples/normal2_2.fastq.gz|
 |SUBJECT_ID|XX|0|SAMPLE_ID|3|/samples/normal3_1.fastq.gz|/samples/normal3_2.fastq.gz|
@@ -230,8 +230,8 @@ Or, for a normal/tumor pair:
 
 In this example (`example_pair_fastq.tsv`), there are 3 read groups for the normal sample and 2 for the tumor sample.
 
-| | | | | | |
-|-|-|-|-|-|-|
+| | | | | | | |
+|-|-|-|-|-|-|-|
 |SUBJECT_ID|XX|0|SAMPLE_ID1|1|/samples/normal1_1.fastq.gz|/samples/normal1_2.fastq.gz|
 |SUBJECT_ID|XX|0|SAMPLE_ID1|2|/samples/normal2_1.fastq.gz|/samples/normal2_2.fastq.gz|
 |SUBJECT_ID|XX|0|SAMPLE_ID1|3|/samples/normal3_1.fastq.gz|/samples/normal3_2.fastq.gz|
@@ -327,8 +327,8 @@ The `TSV` contains the following columns:
 
 Or, for a normal/tumor pair:
 
-| | | | | | |
-|-|-|-|-|-|-|
+| | | | | | | |
+|-|-|-|-|-|-|-|
 |SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.md.bam|/samples/normal.md.bai|/samples/normal.recal.table|
 |SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.md.bam|/samples/tumor.md.bai|/samples/tumor.recal.table|
 
