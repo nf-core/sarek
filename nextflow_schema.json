@@ -1,5 +1,5 @@
 {
-    "$schema": "https://json-schema.org/draft-07/schema",
+    "$schema": "http://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/nf-core/sarek/master/nextflow_schema.json",
     "title": "nf-core/sarek pipeline parameters",
     "description": "An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing",
@@ -33,7 +33,12 @@
                         "recalibrate",
                         "variant_calling",
                         "annotate",
-                        "Control-FREEC"
+                        "Control-FREEC",
+                        "ControlFREEC",
+                        "preparerecalibration",
+                        "variantCalling",
+                        "variantcalling",
+                        "controlfreec"
                     ]
                 },
                 "outdir": {
@@ -57,7 +62,7 @@
                     "fa_icon": "fas fa-toolbox",
                     "description": "Tools to use for variant calling and/or for annotation.",
                     "help_text": "Multiple separated with commas.\n\nGermline variant calling can currently only be performed with the following variant callers:\n- FreeBayes, HaplotypeCaller, Manta, mpileup, Strelka, TIDDIT\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- ASCAT, Control-FREEC, FreeBayes, Manta, MSIsensor, Mutect2, Strelka\n\nTumor-only somatic variant calling can currently only be performed with the following variant callers:\n- Control-FREEC, Manta, mpileup, Mutect2, TIDDIT\n\nAnnotation is done using snpEff, VEP, or even both consecutively.\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted.\n\n\n\n`DNAseq`, `DNAscope` and `TNscope` are only available with `--sentieon`\n\n> **NB** tools can be specified with no concern for case, or the presence of `-` or `_`\n",
-                    "enum": [
+                    "list": [
                         "null",
                         "ASCAT",
                         "CNVkit",
@@ -75,7 +80,22 @@
                         "merge",
                         "DNAseq",
                         "DNAscope",
-                        "TNscope"
+                        "TNscope",
+                        "ascat",
+                        "cnvkit",
+                        "controlfreec",
+                        "freebayes",
+                        "haplotypecaller",
+                        "manta",
+                        "msisensor",
+                        "mutect2",
+                        "strelka",
+                        "tiddit",
+                        "snpeff",
+                        "vep",
+                        "dnaseq",
+                        "dnascope",
+                        "tnscope"
                     ]
                 },
                 "no_intervals": {
@@ -102,7 +122,7 @@
                     "fa_icon": "fas fa-forward",
                     "description": "Disable specified QC and Reporting tools.",
                     "help_text": "Multiple tools can be specified, separated by commas.\n\n> **NB** `--skip_qc BaseRecalibrator` is actually just not saving the reports.\n> **NB** `--skip_qc MarkDuplicates` does not skip `MarkDuplicates` but prevent the collection of duplicate metrics that slows down performance.\n> **NB** tools can be specified with no concern for case, or the presence of `-` or `_`",
-                    "enum": [
+                    "list": [
                         "null",
                         "all",
                         "bamQC",
@@ -263,8 +283,19 @@
                     "fa_icon": "fas fa-wrench",
                     "description": "Overwrite Control-FREEC coefficientOfVariation"
                 },
-                "cf_ploidy": {
+                "cf_contamination_adjustment": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-wrench",
+                    "description": "Overwrite Control-FREEC contaminationAdjustement"
+                },
+                "cf_contamination": {
                     "type": "string",
+                    "default": "null",
+                    "fa_icon": "fas fa-wrench",
+                    "description": "Design known contamination value for Control-FREEC"
+                },
+                "cf_ploidy": {
+                    "type": "number",
                     "default": "2",
                     "fa_icon": "fas fa-wrench",
                     "description": "Overwrite Control-FREEC ploidy"
@@ -339,13 +370,18 @@
                     "fa_icon": "fas fa-hammer",
                     "description": "Specify from which tools Sarek should look for VCF files to annotate",
                     "help_text": "Only for step `annotate`",
-                    "enum": [
+                    "list": [
                         "null",
                         "HaplotypeCaller",
                         "Manta",
                         "Mutect2",
                         "Strelka",
-                        "TIDDIT"
+                        "TIDDIT",
+                        "haplotypecaller",
+                        "manta",
+                        "mutect2",
+                        "strelka",
+                        "tiddit"
                     ],
                     "hidden": true
                 },
@@ -357,8 +393,7 @@
                     "hidden": true
                 },
                 "cadd_cache": {
-                    "type": "string",
-                    "default": "null",
+                    "type": "boolean",
                     "fa_icon": "fas fa-database",
                     "description": "Enable CADD cache.",
                     "hidden": true
@@ -540,23 +575,20 @@
                 "igenomes_base": {
                     "type": "string",
                     "description": "Directory / URL base for iGenomes references.",
-                    "default": "s3://ngi-igenomes/igenomes/",
-                    "fa_icon": "fas fa-cloud-download-alt",
-                    "hidden": true
+                    "default": "s3://ngi-igenomes/igenomes",
+                    "fa_icon": "fas fa-cloud-download-alt"
                 },
                 "genomes_base": {
                     "type": "string",
                     "default": "null",
                     "fa_icon": "fas fa-map-marker-alt",
                     "description": "Directory / URL base for genomes references.",
-                    "help_text": "All files are supposed to be in the same folder",
-                    "hidden": true
+                    "help_text": "All files are supposed to be in the same folder"
                 },
                 "igenomes_ignore": {
                     "type": "boolean",
                     "description": "Do not load the iGenomes reference config.",
                     "fa_icon": "fas fa-ban",
-                    "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline.\nYou may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.\nThis option will load the `genomes.config` file instead.\n\n> **NB** You can then specify the genome custom and specify at least a FASTA genome file."
                 }
             },
@@ -572,14 +604,12 @@
                 "help": {
                     "type": "boolean",
                     "description": "Display help text.",
-                    "hidden": true,
                     "fa_icon": "fas fa-question-circle",
                     "help_text": "You're reading it."
                 },
                 "publish_dir_mode": {
                     "type": "string",
                     "default": "copy",
-                    "hidden": true,
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
                     "fa_icon": "fas fa-copy",
@@ -590,14 +620,8 @@
                         "copy",
                         "copyNoFollow",
                         "move"
-                    ]
-                },
-                "name": {
-                    "type": "string",
-                    "description": "Workflow name.",
-                    "fa_icon": "fas fa-fingerprint",
-                    "hidden": true,
-                    "help_text": "A custom name for the pipeline run. Unlike the core Nextflow `-name` option with one hyphen this parameter can be reused multiple times, for example if using `-resume`. Passed through to steps such as MultiQC and used for things like report filenames and titles."
+                    ],
+                    "hidden": true
                 },
                 "email": {
                     "type": "string",
@@ -605,6 +629,13 @@
                     "fa_icon": "fas fa-envelope",
                     "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
                     "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
+                },
+                "validate_params": {
+                    "type": "boolean",
+                    "description": "Boolean whether to validate parameters against the schema at runtime",
+                    "default": true,
+                    "fa_icon": "fas fa-check-square",
+                    "hidden": true
                 },
                 "email_on_fail": {
                     "type": "string",
@@ -654,7 +685,15 @@
                     "default": "null",
                     "fa_icon": "fas fa-university",
                     "description": "Name of sequencing center to be displayed in BAM file",
-                    "help_text": "It will be in the CN field"
+                    "help_text": "It will be in the CN field",
+                    "hidden": true
+                },
+                "show_hidden_params": {
+                    "type": "boolean",
+                    "fa_icon": "far fa-eye-slash",
+                    "description": "Show all params when using `--help`",
+                    "hidden": true,
+                    "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
                 }
             }
         },
@@ -691,6 +730,7 @@
                     "description": "Maximum amount of memory that can be requested for any single job.",
                     "default": "128.GB",
                     "fa_icon": "fas fa-memory",
+                    "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
                     "hidden": true,
                     "help_text": "Use to set an upper-limit for the memory requirement for each process. Should be a string in the format integer-unit e.g. `--max_memory '8.GB'`"
                 },
@@ -699,6 +739,7 @@
                     "description": "Maximum amount of time that can be requested for any single job.",
                     "default": "240.h",
                     "fa_icon": "far fa-clock",
+                    "pattern": "^(\\d+\\.?\\s*(s|m|h|day)\\s*)+$",
                     "hidden": true,
                     "help_text": "Use to set an upper-limit for the time requirement for each process. Should be a string in the format integer-unit e.g. `--max_time '2.h'`"
                 }
@@ -730,6 +771,12 @@
                 "hostnames": {
                     "type": "string",
                     "description": "Institutional configs hostname.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "config_profile_name": {
+                    "type": "string",
+                    "description": "Institutional config name.",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },
