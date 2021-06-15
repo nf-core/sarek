@@ -19,7 +19,7 @@ process GATK4_BASERECALIBRATOR {
     }
 
     input:
-    tuple val(meta), path(bam), path(bai), path(intervalsBed)
+    tuple val(meta), path(cram), path(crai), path(intervalsBed)
     path fasta
     path fai
     path dict
@@ -38,7 +38,7 @@ process GATK4_BASERECALIBRATOR {
     """
     gatk BaseRecalibrator  \
         -R $fasta \
-        -I $bam \
+        -I $cram \
         $sitesCommand \
         $intervalsCommand \
         $options.args \

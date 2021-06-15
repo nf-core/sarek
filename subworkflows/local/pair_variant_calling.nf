@@ -16,7 +16,7 @@ include { STRELKA_SOMATIC_BEST_PRACTICES as STRELKA_BP } from '../../modules/nf-
 
 workflow PAIR_VARIANT_CALLING {
     take:
-        bam               // channel: [mandatory] bam
+        cram               // channel: [mandatory] cram
         dbsnp             // channel: [mandatory] dbsnp
         dbsnp_tbi         // channel: [mandatory] dbsnp_tbi
         dict              // channel: [mandatory] dict
@@ -29,18 +29,18 @@ workflow PAIR_VARIANT_CALLING {
 
     main:
 
-    bam.map{ meta, bam, bai ->
+    cram.map{ meta, cram, crai ->
         patient = meta.patient
         sample  = meta.sample
         gender  = meta.gender
         status  = meta.status
-        [patient, sample, gender, status, bam, bai]
+        [patient, sample, gender, status, cram, crai]
     }.branch{
         normal: it[3] == 0
         tumor:  it[3] == 1
-    }.set{ bam_to_cross }
+    }.set{ cram_to_cross }
 
-    bam_pair = bam_to_cross.normal.cross(bam_to_cross.tumor).map { normal, tumor ->
+    cram_pair = cram_to_cross.normal.cross(cram_to_cross.tumor).map { normal, tumor ->
         def meta = [:]
         meta.patient = normal[0]
         meta.normal  = normal[1]
@@ -56,7 +56,7 @@ workflow PAIR_VARIANT_CALLING {
 
     if ('manta' in params.tools.toLowerCase()) {
         MANTA(
-            bam_pair,
+            cram_pair,
             fasta,
             fai,
             target_bed_gz_tbi)
@@ -85,13 +85,13 @@ workflow PAIR_VARIANT_CALLING {
 
     if ('msisensorpro' in params.tools.toLowerCase()) {
         MSISENSORPRO_MSI(
-            bam_pair,
+            cram_pair,
             msisensorpro_scan)
     }
 
     if ('strelka' in params.tools.toLowerCase()) {
         STRELKA(
-            bam_pair,
+            cram_pair,
             fasta,
             fai,
             target_bed_gz_tbi)

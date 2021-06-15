@@ -49,7 +49,7 @@ else {
         // case 'controlfreec':          csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
         case 'annotate': break
         default: exit 1, "Unknown step ${params.step}"
-    }   
+    }
 }
 
 input_sample = extract_csv(csv_file)
@@ -139,21 +139,28 @@ include { BUILD_INDICES } from '../subworkflows/local/build_indices' addParams(
     tabix_pon_options:               modules['tabix_pon']
 )
 include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
+    seqkit_split2_options:           modules['seqkit_split2'],
     bwamem1_mem_options:             modules['bwa_mem1_mem'],
     bwamem1_mem_tumor_options:       modules['bwa_mem1_mem_tumor'],
     bwamem2_mem_options:             modules['bwa_mem2_mem'],
     bwamem2_mem_tumor_options:       modules['bwa_mem2_mem_tumor'],
-    merge_bam_options:               modules['merge_bam_mapping'],
-    qualimap_bamqc_options:          modules['qualimap_bamqc_mapping'],
-    samtools_index_options:          modules['samtools_index_mapping'],
-    samtools_stats_options:          modules['samtools_stats_mapping']
 )
+
 include { MAPPING_CSV } from '../subworkflows/local/mapping_csv'
 include { MARKDUPLICATES } from '../subworkflows/nf-core/markduplicates' addParams(
     markduplicates_options:          modules['markduplicates'],
-    markduplicatesspark_options:     modules['markduplicatesspark']
+    markduplicatesspark_options:     modules['markduplicatesspark'],
 )
 include { MARKDUPLICATES_CSV } from '../subworkflows/local/markduplicates_csv'
+
+include { CONVERT_BAM_TO_CRAM } from '../subworkflows/nf-core/convert_bam_to_cram.nf' addParams(
+    merge_bam_options:               modules['merge_bam_mapping'],
+    samtools_index_options:          modules['samtools_index_mapping'],
+    qualimap_bamqc_options:          modules['qualimap_bamqc_mapping'],
+    samtools_stats_options:          modules['samtools_stats_mapping'],
+    samtools_view_options:           modules['samtools_view']
+)
+
 include { PREPARE_RECALIBRATION } from '../subworkflows/nf-core/prepare_recalibration' addParams(
     baserecalibrator_options:        modules['baserecalibrator'],
     gatherbqsrreports_options:       modules['gatherbqsrreports']
@@ -161,7 +168,7 @@ include { PREPARE_RECALIBRATION } from '../subworkflows/nf-core/prepare_recalibr
 include { PREPARE_RECALIBRATION_CSV } from '../subworkflows/local/prepare_recalibration_csv'
 include { RECALIBRATE } from '../subworkflows/nf-core/recalibrate' addParams(
     applybqsr_options:               modules['applybqsr'],
-    merge_bam_options:               modules['merge_bam_recalibrate'],
+    merge_cram_options:              modules['merge_cram_recalibrate'],
     qualimap_bamqc_options:          modules['qualimap_bamqc_recalibrate'],
     samtools_index_options:          modules['samtools_index_recalibrate'],
     samtools_stats_options:          modules['samtools_stats_recalibrate']
@@ -260,41 +267,52 @@ workflow SAREK {
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         MAPPING(
-            'bamqc' in params.skip_qc,
-            'samtools' in params.skip_qc,
             params.aligner,
             bwa,
             fai,
             fasta,
-            reads_input,
-            target_bed)
+            reads_input)
 
         bam_mapped    = MAPPING.out.bam
-        bam_mapped_qc = MAPPING.out.qc
+//         bam_mapped_qc = MAPPING.out.qc
+//         qc_reports = qc_reports.mix(bam_mapped_qc)
 
-        qc_reports = qc_reports.mix(bam_mapped_qc)
-
+        //TODO: is this fine to not have here, if no MD done, then the crams will be provided, but if MD is done then only crams after MD
         // Create CSV to restart from this step
-        MAPPING_CSV(bam_mapped, save_bam_mapped, params.skip_markduplicates)
+        // MAPPING_CSV(bam_mapped, save_bam_mapped, params.skip_markduplicates)
 
         if (params.skip_markduplicates) {
             bam_markduplicates = bam_mapped
         } else {
             // STEP 2: MARKING DUPLICATES
-            MARKDUPLICATES(bam_mapped, params.use_gatk_spark, !('markduplicates' in params.skip_qc))
+            MARKDUPLICATES(bam_mapped, params.use_gatk_spark, !('markduplicates' in params.skip_qc), fasta, fai, dict)
             bam_markduplicates = MARKDUPLICATES.out.bam
 
             // Create CSV to restart from this step
-            MARKDUPLICATES_CSV(bam_markduplicates)
+            // MARKDUPLICATES_CSV(bam_markduplicates)
         }
+        CONVERT_BAM_TO_CRAM(
+            'bamqc' in params.skip_qc,
+            'samtools' in params.skip_qc,
+            fasta,
+            bam_markduplicates,
+            target_bed
+        )
+
+        cram_markduplicates = CONVERT_BAM_TO_CRAM.out.cram
+
+        //TODO: Check with Maxime and add this
+        //CRAM_CSV(cram_markduplicates)
+
+        qc_reports = qc_reports.mix(CONVERT_BAM_TO_CRAM.out.qc)
     }
 
-    if (params.step.toLowerCase() == 'prepare_recalibration') bam_markduplicates = input_sample
+    if (params.step.toLowerCase() == 'prepare_recalibration') cram_markduplicates = input_sample
 
     if (params.step.toLowerCase() in ['mapping', 'prepare_recalibration']) {
         // STEP 3: CREATING RECALIBRATION TABLES
         PREPARE_RECALIBRATION(
-            bam_markduplicates,
+            cram_markduplicates,
             dict,
             fai,
             fasta,
@@ -306,43 +324,45 @@ workflow SAREK {
         table_bqsr = PREPARE_RECALIBRATION.out.table_bqsr
         PREPARE_RECALIBRATION_CSV(table_bqsr)
 
-        bam_applybqsr = bam_markduplicates.join(table_bqsr)
+        cram_applybqsr = cram_markduplicates.join(table_bqsr)
     }
 
-    if (params.step.toLowerCase() == 'recalibrate') bam_applybqsr = input_sample
+    if (params.step.toLowerCase() == 'recalibrate') cram_applybqsr = input_sample
 
     if (params.step.toLowerCase() in ['mapping', 'prepare_recalibration', 'recalibrate']) {
         // STEP 4: RECALIBRATING
         RECALIBRATE(
             ('bamqc' in params.skip_qc),
             ('samtools' in params.skip_qc),
-            bam_applybqsr,
+            cram_applybqsr,
             dict,
             fai,
             fasta,
             intervals,
             target_bed)
 
-        bam_recalibrated    = RECALIBRATE.out.bam
-        bam_recalibrated_qc = RECALIBRATE.out.qc
+        cram_recalibrated    = RECALIBRATE.out.cram
+        cram_recalibrated_qc = RECALIBRATE.out.qc
 
-        RECALIBRATE_CSV(bam_recalibrated)
+        RECALIBRATE_CSV(cram_recalibrated)
 
-        qc_reports = qc_reports.mix(bam_recalibrated_qc)
+        qc_reports = qc_reports.mix(cram_recalibrated_qc)
 
-        bam_variant_calling = bam_recalibrated
+        cram_variant_calling = cram_recalibrated
+
+        cram_variant_calling.dump(tag:'input')
     }
 
-    if (params.step.toLowerCase() == 'variant_calling') bam_variant_calling = input_sample
+    if (params.step.toLowerCase() == 'variant_calling') cram_variant_calling = input_sample
 
     if (params.tools != null) {
 
         ////////////////////////////////////////////////////
         /* --         GERMLINE VARIANT CALLING         -- */
         ////////////////////////////////////////////////////
-    
+        target_bed_gz_tbi.dump(tag:"tbi_gz")
         GERMLINE_VARIANT_CALLING(
-            bam_variant_calling,
+            cram_variant_calling,
             dbsnp,
             dbsnp_tbi,
             dict,
@@ -357,7 +377,7 @@ workflow SAREK {
         ////////////////////////////////////////////////////
 
         // TUMOR_VARIANT_CALLING(
-        //     bam_variant_calling,
+        //     cram_variant_calling,
         //     dbsnp,
         //     dbsnp_tbi,
         //     dict,
@@ -368,7 +388,7 @@ workflow SAREK {
         //     target_bed_gz_tbi)
 
         PAIR_VARIANT_CALLING(
-            bam_variant_calling,
+            cram_variant_calling,
             dbsnp,
             dbsnp_tbi,
             dict,

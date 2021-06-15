@@ -189,8 +189,8 @@
                 "split_fastq": {
                     "type": "number",
                     "fa_icon": "fas fa-cut",
-                    "description": "Specify how many reads should be contained in the split FastQ file",
-                    "help_text": "Use the Nextflow splitFastq operator to specify how many reads should be contained in the split FASTQ file.\ncf [splitfastq documentation](https://www.nextflow.io/docs/latest/operator.html#splitfastq)",
+                    "description": "Specify into how many parts a FastQ file is split into",
+                    "help_text": "Use the the tools seqkit/split2 to split FASTQ file by number of resulting parts",
                     "hidden": true
                 }
             }

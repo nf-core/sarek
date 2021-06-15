@@ -4,7 +4,7 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 options        = initOptions(params.options)
 
-process SAMTOOLS_STATS {
+process SAMTOOLS_MERGE_CRAM {
     tag "$meta.id"
     label 'process_low'
     publishDir "${params.outdir}",
@@ -19,16 +19,17 @@ process SAMTOOLS_STATS {
     }
 
     input:
-    tuple val(meta), path(cram), path(crai)
+    tuple val(meta), path(crams)
 
     output:
-    tuple val(meta), path("*.stats"), emit: stats
-    path  "*.version.txt"           , emit: version
+    tuple val(meta), path("${prefix}.cram"), emit: merged_cram
+    path  "*.version.txt" ,                 emit: version
 
     script:
     def software = getSoftwareName(task.process)
+    prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     """
-    samtools stats $cram > ${cram}.stats
+    samtools merge ${prefix}.cram $crams
     echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' > ${software}.version.txt
     """
 }

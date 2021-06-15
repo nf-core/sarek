@@ -19,7 +19,7 @@ process MSISENSORPRO_MSI {
     }
 
     input:
-        tuple val(meta), path(bam_normal), path(bai_normal), path(bam_tumor), path(bai_tumor)
+        tuple val(meta), path(cram_normal), path(crai_normal), path(cram_tumor), path(crai_tumor)
         path msisensorpro_scan
 
     output:

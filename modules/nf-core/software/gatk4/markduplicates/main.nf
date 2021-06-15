@@ -19,7 +19,7 @@ process GATK4_MARKDUPLICATES {
     }
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    tuple val(meta), path(bam)//, path(bai)
     val use_metrics
 
     output:
@@ -31,9 +31,11 @@ process GATK4_MARKDUPLICATES {
     def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     def metrics  = use_metrics ? "M=${prefix}.metrics" :''
+    def bams     = bam.collect(){ x -> "INPUT=".concat(x.toString()) }.join(" ")
+
     """
     gatk MarkDuplicates \\
-        I=$bam \\
+        ${bams} \\
         $metrics \
         TMP_DIR=. \\
         ASSUME_SORT_ORDER=coordinate \\

@@ -18,7 +18,7 @@ include { STRELKA_GERMLINE as STRELKA }              from '../../modules/nf-core
 
 workflow GERMLINE_VARIANT_CALLING {
     take:
-        bam               // channel: [mandatory] bam
+        cram              // channel: [mandatory] cram
         dbsnp             // channel: [mandatory] dbsnp
         dbsnp_tbi         // channel: [mandatory] dbsnp_tbi
         dict              // channel: [mandatory] dict
@@ -39,18 +39,18 @@ workflow GERMLINE_VARIANT_CALLING {
 
     if ('haplotypecaller' in params.tools.toLowerCase()) {
 
-        haplotypecaller_interval_bam = bam.combine(intervals)
+        haplotypecaller_interval_cram = cram.combine(intervals)
 
-        bam.combine(intervals).map{ meta, bam, bai, intervals ->
+        cram.combine(intervals).map{ meta, cram, crai, intervals ->
             new_meta = meta.clone()
             new_meta.id = meta.sample + "_" + intervals.baseName
-            [new_meta, bam, bai, intervals]
-        }.set{haplotypecaller_interval_bam}
+            [new_meta, cram, crai, intervals]
+        }.set{haplotypecaller_interval_cram}
 
         // STEP GATK HAPLOTYPECALLER.1
 
         HAPLOTYPECALLER(
-            haplotypecaller_interval_bam,
+            haplotypecaller_interval_cram,
             dbsnp,
             dbsnp_tbi,
             dict,
@@ -90,19 +90,23 @@ workflow GERMLINE_VARIANT_CALLING {
             haplotypecaller_results,
             fai,
             target_bed)
-        
+
         haplotypecaller_vcf = CONCAT_HAPLOTYPECALLER.out.vcf
     }
 
+    //TODO: not run somehow when specifying strelka
     if ('strelka' in params.tools.toLowerCase()) {
+        cram.dump(tag:'strelka-input')
         STRELKA(
-            bam,
+            cram,
             fasta,
             fai,
             target_bed_gz_tbi)
 
         strelka_vcf = STRELKA.out.vcf
     }
+
+    //TODO add all the remaining variant caller
 
     emit:
         haplotypecaller_gvcf = haplotypecaller_gvcf

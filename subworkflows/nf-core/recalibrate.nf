@@ -5,7 +5,7 @@
 */
 
 params.applybqsr_options      = [:]
-params.merge_bam_options      = [:]
+params.merge_cram_options      = [:]
 params.qualimap_bamqc_options = [:]
 params.samtools_index_options = [:]
 params.samtools_stats_options = [:]
@@ -13,14 +13,14 @@ params.samtools_stats_options = [:]
 include { GATK4_APPLYBQSR as APPLYBQSR } from '../../modules/nf-core/software/gatk4/applybqsr/main' addParams(options: params.applybqsr_options)
 include { QUALIMAP_BAMQC }               from '../../modules/nf-core/software/qualimap/bamqc/main'  addParams(options: params.qualimap_bamqc_options)
 include { SAMTOOLS_INDEX }               from '../../modules/nf-core/software/samtools/index/main'  addParams(options: params.samtools_index_options)
-include { SAMTOOLS_MERGE }               from '../../modules/nf-core/software/samtools/merge/main'  addParams(options: params.merge_bam_options)
+include { SAMTOOLS_MERGE_CRAM }          from '../../modules/nf-core/software/samtools/merge_cram/main'  addParams(options: params.merge_cram_options)
 include { SAMTOOLS_STATS }               from '../../modules/nf-core/software/samtools/stats/main'  addParams(options: params.samtools_stats_options)
 
 workflow RECALIBRATE {
     take:
         skip_bamqc     // boolean: true/false
         skip_samtools  // boolean: true/false
-        bam            // channel: [mandatory] bam
+        cram           // channel: [mandatory] cram
         dict           // channel: [mandatory] dict
         fai            // channel: [mandatory] fai
         fasta          // channel: [mandatory] fasta
@@ -29,49 +29,50 @@ workflow RECALIBRATE {
 
     main:
 
-    bam_recalibrated_index = Channel.empty()
-    bam_recalibrated       = Channel.empty()
-    bam_reports            = Channel.empty()
+    cram_recalibrated_index = Channel.empty()
+    cram_recalibrated       = Channel.empty()
+    cram_reports            = Channel.empty()
 
-    bam.combine(intervals).map{ meta, bam, bai, recal, intervals ->
+    cram.combine(intervals).map{ meta, cram, crai, recal, intervals ->
         new_meta = meta.clone()
         new_meta.id = meta.sample + "_" + intervals.baseName
-        [new_meta, bam, bai, recal, intervals]
-    }.set{bam_intervals}
+        [new_meta, cram, crai, recal, intervals]
+    }.set{cram_intervals}
 
-    APPLYBQSR(bam_intervals, fasta, fai, dict)
+    APPLYBQSR(cram_intervals, fasta, fai, dict)
 
     // STEP 4.5: MERGING AND INDEXING THE RECALIBRATED BAM FILES
     if (params.no_intervals) {
-        bam_recalibrated = APPLYBQSR.out.bam
+        cram_recalibrated = APPLYBQSR.out.cram
     } else {
-        APPLYBQSR.out.bam.map{ meta, bam ->
+        APPLYBQSR.out.cram.map{ meta, cram ->
             meta.id = meta.sample
-            [meta, bam]
-        }.groupTuple().set{bam_recalibrated_interval}
+            [meta, cram]
+        }.groupTuple().set{cram_recalibrated_interval}
 
-        SAMTOOLS_MERGE(bam_recalibrated_interval)
-        bam_recalibrated = SAMTOOLS_MERGE.out.merged_bam
+        SAMTOOLS_MERGE_CRAM(cram_recalibrated_interval)
+        cram_recalibrated = SAMTOOLS_MERGE_CRAM.out.merged_cram
 
-        SAMTOOLS_INDEX(bam_recalibrated)
-        bam_recalibrated_index = bam_recalibrated.join(SAMTOOLS_INDEX.out.bai)
+        SAMTOOLS_INDEX(cram_recalibrated)
+        cram_recalibrated_index = cram_recalibrated.join(SAMTOOLS_INDEX.out.crai)
 
         qualimap_bamqc = Channel.empty()
         samtools_stats = Channel.empty()
 
         if (!skip_bamqc) {
-            QUALIMAP_BAMQC(bam_recalibrated, target_bed, params.target_bed)
-            qualimap_bamqc = QUALIMAP_BAMQC.out
+            //TODO: Ugh BamQC again not liking crams, until we have a tool that can handle crams, not much choice but piping with samtools
+            // QUALIMAP_BAMQC(bam_recalibrated, target_bed, params.target_bed)
+            // qualimap_bamqc = QUALIMAP_BAMQC.out
         }
 
         if (!skip_samtools) {
-            SAMTOOLS_STATS(bam_recalibrated_index)
+            SAMTOOLS_STATS(cram_recalibrated_index)
             samtools_stats = SAMTOOLS_STATS.out.stats
         }
-        bam_reports = samtools_stats.mix(qualimap_bamqc)
+        cram_reports = samtools_stats.mix(qualimap_bamqc)
     }
 
     emit:
-        bam = bam_recalibrated_index
-        qc  = bam_reports
+        cram = cram_recalibrated_index
+        qc  = cram_reports
 }

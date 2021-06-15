@@ -13,13 +13,13 @@ process GATK4_MARKDUPLICATES_SPARK {
 
     conda (params.enable_conda ? "bioconda::gatk4-spark=4.2.0.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/gatk4-spark:4.2.0.0--0"
+        container "https://depot.galaxyproject.org/singularity/gatk4-spark:4.2.0.0--hdfd78af_1"
     } else {
-        container "quay.io/biocontainers/gatk4-spark:4.2.0.0--0"
+        container "quay.io/biocontainers/gatk4-spark:4.2.0.0--hdfd78af_1"
     }
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    tuple val(meta), path(bam)//, path(bai)
     val use_metrics
 
     output:
@@ -31,9 +31,11 @@ process GATK4_MARKDUPLICATES_SPARK {
     def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     def metrics  = use_metrics ? "-M ${prefix}.bam.metrics" :''
+    def bams     = bam.collect(){ x -> "-I ".concat(x.toString()) }.join(" ")
+
     """
     gatk MarkDuplicatesSpark \\
-        -I $bam \\
+        ${bams} \\
         $metrics \
         --tmp-dir . \\
         --create-output-bam-index true \\

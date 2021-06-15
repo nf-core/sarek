@@ -12,24 +12,29 @@ include { GATK4_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from '../../modules/nf-
 
 workflow PREPARE_RECALIBRATION {
     take:
-        bam_markduplicates // channel: [mandatory] bam_markduplicates
-        dict               // channel: [mandatory] dict
-        fai                // channel: [mandatory] fai
-        fasta              // channel: [mandatory] fasta
-        intervals          // channel: [mandatory] intervals
-        known_sites        // channel: [optional]  known_sites
-        known_sites_tbi    // channel: [optional]  known_sites_tbi
-        no_intervals       //   value: [mandatory] no_intervals
+        cram_markduplicates // channel: [mandatory] cram_markduplicates
+        dict                // channel: [mandatory] dict
+        fai                 // channel: [mandatory] fai
+        fasta               // channel: [mandatory] fasta
+        intervals           // channel: [mandatory] intervals
+        known_sites         // channel: [optional]  known_sites
+        known_sites_tbi     // channel: [optional]  known_sites_tbi
+        no_intervals        //   value: [mandatory] no_intervals
 
     main:
 
-    bam_markduplicates.combine(intervals).map{ meta, bam, bai, intervals ->
+    //TODO: These steps are run even on resume after previous successful runs, maybe sth about the way the channels are joined?
+    cram_markduplicates.combine(intervals).map{ meta, cram, crai, intervals ->
         new_meta = meta.clone()
         new_meta.id = meta.sample + "_" + intervals.baseName
-        [new_meta, bam, bai, intervals]
-    }.set{bam_markduplicates_intervals}
+        [new_meta, cram, crai, intervals]
+    }.set{cram_markduplicates_intervals}
 
-    BASERECALIBRATOR(bam_markduplicates_intervals, fasta, fai, dict, known_sites, known_sites_tbi)
+    if(params.use_gatk_spark){
+
+    }else{
+        BASERECALIBRATOR(cram_markduplicates_intervals, fasta, fai, dict, known_sites, known_sites_tbi)
+    }
 
     // STEP 3.5: MERGING RECALIBRATION TABLES
     if (no_intervals) {

@@ -98,7 +98,7 @@ This is _not_ recommended.
   * Specify `--use_gatk_spark`
 * `test_split_fastq`
   * A profile with a complete configuration for automated testing
-  * Specify `--split_fastq 500`
+  * Specify `--split_fastq 2`
 * `test_targeted`
   * A profile with a complete configuration for automated testing
   * Include link to a target `BED` file and use `Manta` and `Strelka` for Variant Calling

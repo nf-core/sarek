@@ -4,9 +4,9 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 options        = initOptions(params.options)
 
-process SAMTOOLS_STATS {
+process SAMTOOLS_VIEW {
     tag "$meta.id"
-    label 'process_low'
+    label 'process_medium'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
@@ -19,16 +19,19 @@ process SAMTOOLS_STATS {
     }
 
     input:
-    tuple val(meta), path(cram), path(crai)
+    tuple val(meta), path(bam), path(bai)
+    path(fasta)
 
     output:
-    tuple val(meta), path("*.stats"), emit: stats
-    path  "*.version.txt"           , emit: version
+    tuple val(meta), path("*.cram"), path("*.crai"), emit: cram
+    path  "*.version.txt"                          , emit: version
 
     script:
     def software = getSoftwareName(task.process)
+    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     """
-    samtools stats $cram > ${cram}.stats
+    samtools view -T ${fasta} -C $options.args -o ${prefix}.cram $bam
+    samtools index -@ ${task.cpus} ${prefix}.cram
     echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' > ${software}.version.txt
     """
 }
