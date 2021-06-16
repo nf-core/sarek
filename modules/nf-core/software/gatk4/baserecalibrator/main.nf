@@ -41,6 +41,7 @@ process GATK4_BASERECALIBRATOR {
         -I $cram \
         $sitesCommand \
         $intervalsCommand \
+        --tmp-dir . \
         $options.args \
         -O ${prefix}.table
 

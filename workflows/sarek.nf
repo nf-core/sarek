@@ -233,7 +233,7 @@ workflow SAREK {
     pon_tbi               = params.pon               ? params.pon_index               ? file(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : []
 
     known_sites     = [dbsnp, known_indels]
-    known_sites_tbi = dbsnp_tbi//.mix(known_indels_tbi).collect()
+    known_sites_tbi = dbsnp_tbi.mix(known_indels_tbi).collect()
 
     msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi

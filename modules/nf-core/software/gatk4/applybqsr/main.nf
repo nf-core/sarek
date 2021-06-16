@@ -38,6 +38,7 @@ process GATK4_APPLYBQSR {
         -I $cram \\
         --bqsr-recal-file $bqsr_table \\
         $intervalsCommand \\
+        --tmp-dir . \
         -O ${prefix}.cram \\
         $options.args
 

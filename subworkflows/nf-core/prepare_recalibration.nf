@@ -23,7 +23,6 @@ workflow PREPARE_RECALIBRATION {
 
     main:
 
-    //TODO: These steps are run even on resume after previous successful runs, maybe sth about the way the channels are joined?
     cram_markduplicates.combine(intervals).map{ meta, cram, crai, intervals ->
         new_meta = meta.clone()
         new_meta.id = meta.sample + "_" + intervals.baseName

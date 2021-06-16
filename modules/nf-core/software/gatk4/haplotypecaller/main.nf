@@ -51,6 +51,7 @@ process GATK4_HAPLOTYPECALLER {
         ${intervalsOptions} \\
         ${dbsnpOptions} \\
         -O ${prefix}.vcf \\
+        --tmp-dir . \
         $options.args
 
     gatk --version | grep Picard | sed "s/Picard Version: //g" > ${software}.version.txt
