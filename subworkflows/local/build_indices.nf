@@ -64,7 +64,7 @@ workflow BUILD_INDICES {
     result_dbsnp_tbi = Channel.empty()
     version_dbsnp_tbi = Channel.empty()
     if (!(params.dbsnp_index) && params.dbsnp && ('mapping' in params.step.toLowerCase() || 'prepare_recalibration' in params.step.toLowerCase() || 'controlfreec' in params.tools.toString().toLowerCase() || 'haplotypecaller' in params.tools.toString().toLowerCase() || 'mutect2' in params.tools.toString().toLowerCase() || 'tnscope' in params.tools.toString().toLowerCase()))
-        (result_dbsnp_tbi, version_dbsnp_tbi) = TABIX_DBSNP([[id:"dbsnp"], dbsnp])
+        (result_dbsnp_tbi, version_dbsnp_tbi) = TABIX_DBSNP([[id:"${dbsnp.baseName}"], dbsnp])
     result_dbsnp_tbi = result_dbsnp_tbi.map {meta, tbi -> [tbi]}
 
     result_target_bed = Channel.empty()
@@ -75,12 +75,12 @@ workflow BUILD_INDICES {
     result_germline_resource_tbi = Channel.empty()
     version_germline_resource_tbi = Channel.empty()
     if (!(params.germline_resource_index) && params.germline_resource && 'mutect2' in params.tools.toString().toLowerCase())
-        (result_germline_resource_tbi, version_germline_resource_tbi) = TABIX_GERMLINE_RESOURCE([[id:"germline_resource"], germline_resource])
+        (result_germline_resource_tbi, version_germline_resource_tbi) = TABIX_GERMLINE_RESOURCE([[id:"${germline_resource.baseName}"], germline_resource])
 
     result_known_indels_tbi = Channel.empty()
     version_known_indels_tbi = Channel.empty()
     if (!(params.known_indels_index) && params.known_indels && ('mapping' in params.step.toLowerCase() || 'prepare_recalibration' in params.step.toLowerCase()))
-        (result_known_indels_tbi, version_known_indels_tbi) = TABIX_KNOWN_INDELS([[id:"known_indels"], known_indels])
+        (result_known_indels_tbi, version_known_indels_tbi) = TABIX_KNOWN_INDELS([[id:"${known_indels.baseName}"], known_indels])
     result_known_indels_tbi = result_known_indels_tbi.map {meta, tbi -> [tbi]}
 
     result_msisensorpro_scan = Channel.empty()
