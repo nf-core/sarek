@@ -20,27 +20,26 @@ process GATK4_MARKDUPLICATES_SPARK {
 
     input:
     tuple val(meta), path(bam)//, path(bai)
-    val use_metrics
+    path(fasta)
+    path(dict)
+    path(fai)
 
     output:
-    tuple val(meta), path("*.bam"), path("*.bai"),       emit: bam
-    tuple val(meta), path("*.metrics"), optional : true, emit: metrics
-    path "*.version.txt",                                emit: version
+    tuple val(meta), path("*.cram"),       emit: cram
+    path "*.version.txt",                                 emit: version
 
     script:
     def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
-    def metrics  = use_metrics ? "-M ${prefix}.bam.metrics" :''
+    //def metrics  = use_metrics ? "-M ${prefix}.bam.metrics" :''
     def bams     = bam.collect(){ x -> "-I ".concat(x.toString()) }.join(" ")
 
     """
     gatk MarkDuplicatesSpark \\
         ${bams} \\
-        $metrics \
         --tmp-dir . \\
-        --create-output-bam-index true \\
         --spark-master local[${task.cpus}] \\
-        -O ${prefix}.bam \\
+        -O ${prefix}.cram \\
         $options.args
 
     echo \$(gatk MarkDuplicatesSpark --version 2>&1) | sed 's/^.*(GATK) v//; s/ HTSJDK.*\$//' > ${software}.version.txt

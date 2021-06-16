@@ -25,8 +25,8 @@ process GATK4_ESTIMATELIBRARYCOMPLEXITY {
     path(fai)  //need to be present in the path
 
     output:
-    path('*.md.metrics'), emit: report
-    path "*.version.txt"          , emit: version
+    path('*.md.metrics'), emit: metrics
+    path "*.version.txt", emit: version
 
     script:
     def software = getSoftwareName(task.process)
