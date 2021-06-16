@@ -6,9 +6,9 @@
 
 params.markduplicates_options = [:]
 
-include { GATK4_MARKDUPLICATES }                                from '../../modules/nf-core/software/gatk4/markduplicates/main'      addParams(options: params.markduplicates_options)
-include { GATK4_MARKDUPLICATES_SPARK }                          from '../../modules/nf-core/software/gatk4/markduplicatesspark/main' addParams(options: params.markduplicatesspark_options)
-
+include { GATK4_MARKDUPLICATES }                                from '../../modules/nf-core/software/gatk4/markduplicates/main'             addParams(options: params.markduplicates_options)
+include { GATK4_MARKDUPLICATES_SPARK }                          from '../../modules/nf-core/software/gatk4/markduplicatesspark/main'        addParams(options: params.markduplicatesspark_options)
+include { GATK4_ESTIMATELIBRARYCOMPLEXITY }                     from '../../modules/nf-core/software/gatk4/estimatelibrarycomplexity/main'  addParams(options: params.estimatelibrarycomplexity_options)
 workflow MARKDUPLICATES {
     take:
         bam_mapped     // channel: [mandatory] meta, bam, bai
@@ -21,9 +21,12 @@ workflow MARKDUPLICATES {
 
     report_markduplicates = Channel.empty()
 
+    GATK4_ESTIMATELIBRARYCOMPLEXITY(bam_mapped, fasta, fai, dict)
+
     if (use_gatk_spark) {
-        //GATK4_MARKDUPLICATES_SPARK(bam_mapped, save_metrics)//fasta, fai, dict)
-        //report_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.metrics //Here it will Estimate Library complexity
+        //GATK4_MARKDUPLICATES_SPARK(bam_mapped, fasta, fai, dict)
+        GATK4_ESTIMATELIBRARYCOMPLEXITY(bam_mapped, fasta, fai, dict)
+        report_markduplicates = ESTIMATE_LIBRARY_COMPLEXITY.out.metrics //Here it will Estimate Library complexity
         //cram_markduplicates    = GATK4_MARKDUPLICATES_SPARK.out.bam
     } else {
         GATK4_MARKDUPLICATES(bam_mapped, save_metrics)

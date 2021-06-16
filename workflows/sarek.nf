@@ -148,8 +148,9 @@ include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
 
 include { MAPPING_CSV } from '../subworkflows/local/mapping_csv'
 include { MARKDUPLICATES } from '../subworkflows/nf-core/markduplicates' addParams(
-    markduplicates_options:          modules['markduplicates'],
-    markduplicatesspark_options:     modules['markduplicatesspark'],
+    markduplicates_options:             modules['markduplicates'],
+    markduplicatesspark_options:        modules['markduplicatesspark'],
+    estimatelibrarycomplexity_options:  modules['estimatelibrarycomplexity']
 )
 include { MARKDUPLICATES_CSV } from '../subworkflows/local/markduplicates_csv'
 
@@ -232,7 +233,7 @@ workflow SAREK {
     pon_tbi               = params.pon               ? params.pon_index               ? file(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : []
 
     known_sites     = [dbsnp, known_indels]
-    known_sites_tbi = dbsnp_tbi.mix(known_indels_tbi).collect()
+    known_sites_tbi = dbsnp_tbi//.mix(known_indels_tbi).collect()
 
     msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
