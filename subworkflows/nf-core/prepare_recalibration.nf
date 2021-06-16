@@ -29,11 +29,9 @@ workflow PREPARE_RECALIBRATION {
         [new_meta, cram, crai, intervals]
     }.set{cram_markduplicates_intervals}
 
-    if(params.use_gatk_spark){
 
-    }else{
         BASERECALIBRATOR(cram_markduplicates_intervals, fasta, fai, dict, known_sites, known_sites_tbi)
-    }
+
 
     // STEP 3.5: MERGING RECALIBRATION TABLES
     if (no_intervals) {

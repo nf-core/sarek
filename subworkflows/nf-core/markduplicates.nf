@@ -21,13 +21,11 @@ workflow MARKDUPLICATES {
 
     report_markduplicates = Channel.empty()
 
-    GATK4_ESTIMATELIBRARYCOMPLEXITY(bam_mapped, fasta, fai, dict)
-
     if (use_gatk_spark) {
-        //GATK4_MARKDUPLICATES_SPARK(bam_mapped, fasta, fai, dict)
+        GATK4_MARKDUPLICATES_SPARK(bam_mapped, fasta, fai, dict)
         GATK4_ESTIMATELIBRARYCOMPLEXITY(bam_mapped, fasta, fai, dict)
-        report_markduplicates = ESTIMATE_LIBRARY_COMPLEXITY.out.metrics //Here it will Estimate Library complexity
-        //cram_markduplicates    = GATK4_MARKDUPLICATES_SPARK.out.bam
+        report_markduplicates = GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics //Here it will Estimate Library complexity
+        bam_markduplicates    = GATK4_MARKDUPLICATES_SPARK.out.cram
     } else {
         GATK4_MARKDUPLICATES(bam_mapped, save_metrics)
         report_markduplicates = GATK4_MARKDUPLICATES.out.metrics
@@ -36,5 +34,5 @@ workflow MARKDUPLICATES {
 
     emit:
         bam    = bam_markduplicates
-        report  = report_markduplicates
+        report = report_markduplicates
 }
