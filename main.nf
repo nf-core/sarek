@@ -51,9 +51,9 @@ params.known_indels            = WorkflowMain.getGenomeAttribute(params, 'known_
 params.known_indels_index      = WorkflowMain.getGenomeAttribute(params, 'known_indels_index')
 params.mappability             = WorkflowMain.getGenomeAttribute(params, 'mappability')
 params.snpeff_db               = WorkflowMain.getGenomeAttribute(params, 'snpeff_db')
-params.species                 = WorkflowMain.getGenomeAttribute(params, 'species')
 params.vep_cache_version       = WorkflowMain.getGenomeAttribute(params, 'vep_cache_version')
-
+params.vep_genome              = WorkflowMain.getGenomeAttribute(params, 'vep_genome')
+params.vep_species             = WorkflowMain.getGenomeAttribute(params, 'vep_species')
 
 /*
 ========================================================================================

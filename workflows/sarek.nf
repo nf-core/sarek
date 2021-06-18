@@ -35,20 +35,24 @@ checkPathParamList = [
 
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
+// get step and tools
+def step = params.step ? params.step.replaceAll('-', '').replaceAll('_', '') : ''
+def tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
+
 // Check mandatory parameters
 input_sample = Channel.empty()
 
 if (params.input) csv_file = file(params.input)
 else {
     log.warn "No samplesheet specified, attempting to restart from csv files present in ${params.outdir}"
-    switch (params.step.toLowerCase()) {
+    switch (step) {
         case 'mapping': break
         case 'prepare_recalibration': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
         case 'recalibrate':           csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv", checkIfExists: true); break
         case 'variant_calling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv", checkIfExists: true); break
         // case 'controlfreec':          csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
-        case 'annotate': break
-        default: exit 1, "Unknown step ${params.step}"
+        case 'annotate':              csv_file = file("${params.outdir}/variant_calling/csv/recalibrated.csv", checkIfExists: true); break
+        default: exit 1, "Unknown step $step"
     }   
 }
 
@@ -66,28 +70,35 @@ if (anno_readme && file(anno_readme).exists()) {
 // Stage dummy file to be used as an optional input where required
 ch_dummy_file = file("$projectDir/assets/dummy_file.txt", checkIfExists: true)
 
-////////////////////////////////////////////////////
-/* --  UPDATE MODULES OPTIONS BASED ON PARAMS  -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    UPDATE MODULES OPTIONS BASED ON PARAMS
+========================================================================================
+*/
 
 def modules = params.modules.clone()
 
-if (params.save_reference)       modules['build_intervals'].publish_files         = ['bed':'intervals']
-if (params.save_reference)       modules['bwa_index'].publish_files               = ['amb':'bwa', 'ann':'bwa', 'bwt':'bwa', 'pac':'bwa', 'sa':'bwa']
-if (params.save_reference)       modules['bwamem2_index'].publish_files           = ['0123':'bwamem2', 'amb':'bwamem2', 'ann':'bwamem2', 'bwt.2bit.64':'bwamem2', 'bwt.8bit.32':'bwamem2', 'pac':'bwamem2']
-if (params.save_reference)       modules['create_intervals_bed'].publish_files    = ['bed':'intervals']
-if (params.save_reference)       modules['dict'].publish_files                    = ['dict':'dict']
-if (params.save_reference)       modules['index_target_bed'].publish_files        = ['bed.gz':'target', 'bed.gz.tbi':'target']
-if (params.save_reference)       modules['msisensorpro_scan'].publish_files       = ['list':'msi']
-if (params.save_reference)       modules['samtools_faidx'].publish_files          = ['fai':'fai']
-if (params.save_reference)       modules['tabix_dbsnp'].publish_files             = ['vcf.gz.tbi':'dbsnp']
-if (params.save_reference)       modules['tabix_germline_resource'].publish_files = ['vcf.gz.tbi':'germline_resource']
-if (params.save_reference)       modules['tabix_known_indels'].publish_files      = ['vcf.gz.tbi':'known_indels']
-if (params.save_reference)       modules['tabix_pon'].publish_files               = ['vcf.gz.tbi':'pon']
-if (save_bam_mapped)             modules['samtools_index_mapping'].publish_files  = ['bam':'mapped', 'bai':'mapped']
-if (params.skip_markduplicates)  modules['baserecalibrator'].publish_files        = ['recal.table':'mapped']
-if (params.skip_markduplicates)  modules['gatherbqsrreports'].publish_files       = ['recal.table':'mapped']
-if (!params.skip_markduplicates) modules['baserecalibrator'].publish_files        = false
+if (params.save_reference) {
+    modules['build_intervals'].publish_files         = ['bed':'intervals']
+    modules['bwa_index'].publish_files               = ['amb':'bwa', 'ann':'bwa', 'bwt':'bwa', 'pac':'bwa', 'sa':'bwa']
+    modules['bwamem2_index'].publish_files           = ['0123':'bwamem2', 'amb':'bwamem2', 'ann':'bwamem2', 'bwt.2bit.64':'bwamem2', 'bwt.8bit.32':'bwamem2', 'pac':'bwamem2']
+    modules['create_intervals_bed'].publish_files    = ['bed':'intervals']
+    modules['dict'].publish_files                    = ['dict':'dict']
+    modules['bgziptabix_target_bed'].publish_files   = ['bed.gz':'target', 'bed.gz.tbi':'target']
+    modules['msisensorpro_scan'].publish_files       = ['list':'msi']
+    modules['samtools_faidx'].publish_files          = ['fai':'fai']
+    modules['tabix_dbsnp'].publish_files             = ['vcf.gz.tbi':'dbsnp']
+    modules['tabix_germline_resource'].publish_files = ['vcf.gz.tbi':'germline_resource']
+    modules['tabix_known_indels'].publish_files      = ['vcf.gz.tbi':'known_indels']
+    modules['tabix_pon'].publish_files               = ['vcf.gz.tbi':'pon']
+}
+if (save_bam_mapped) modules['samtools_index_mapping'].publish_files  = ['bam':'mapped', 'bai':'mapped']
+if (params.skip_markduplicates) {
+    modules['baserecalibrator'].publish_files        = ['recal.table':'mapped']
+    modules['gatherbqsrreports'].publish_files       = ['recal.table':'mapped']
+} else {
+    modules['baserecalibrator'].publish_files        = false
+}
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
 chr_dir           = params.chr_dir           ? file(params.chr_dir)           : ch_dummy_file
@@ -103,8 +114,9 @@ mappability       = params.mappability       ? file(params.mappability)       : 
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
 snpeff_db         = params.snpeff_db         ?: Channel.empty()
-snpeff_species    = params.species           ?: Channel.empty()
 vep_cache_version = params.vep_cache_version ?: Channel.empty()
+vep_genome        = params.vep_genome        ?: Channel.empty()
+vep_species       = params.vep_species       ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
 cadd_indels       = params.cadd_indels       ? file(params.cadd_indels)      : ch_dummy_file
@@ -120,17 +132,19 @@ vep_cache         = params.vep_cache         ? file(params.vep_cache)        : c
 read_structure1   = params.read_structure1   ?: Channel.empty()
 read_structure2   = params.read_structure2   ?: Channel.empty()
 
-////////////////////////////////////////////////////
-/* --        INCLUDE LOCAL SUBWORKFLOWS        -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    INCLUDE LOCAL SUBWORKFLOWS
+========================================================================================
+*/
 
 include { BUILD_INDICES } from '../subworkflows/local/build_indices' addParams(
+    bgziptabix_target_bed_options:   modules['bgziptabix_target_bed'],
     build_intervals_options:         modules['build_intervals'],
     bwa_index_options:               modules['bwa_index'],
     bwamem2_index_options:           modules['bwamem2_index'],
     create_intervals_bed_options:    modules['create_intervals_bed'],
     gatk4_dict_options:              modules['dict'],
-    index_target_bed_options:        modules['index_target_bed'],
     msisensorpro_scan_options:       modules['msisensorpro_scan'],
     samtools_faidx_options:          modules['samtools_faidx'],
     tabix_dbsnp_options:             modules['tabix_dbsnp'],
@@ -138,34 +152,9 @@ include { BUILD_INDICES } from '../subworkflows/local/build_indices' addParams(
     tabix_known_indels_options:      modules['tabix_known_indels'],
     tabix_pon_options:               modules['tabix_pon']
 )
-include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
-    bwamem1_mem_options:             modules['bwa_mem1_mem'],
-    bwamem1_mem_tumor_options:       modules['bwa_mem1_mem_tumor'],
-    bwamem2_mem_options:             modules['bwa_mem2_mem'],
-    bwamem2_mem_tumor_options:       modules['bwa_mem2_mem_tumor'],
-    merge_bam_options:               modules['merge_bam_mapping'],
-    qualimap_bamqc_options:          modules['qualimap_bamqc_mapping'],
-    samtools_index_options:          modules['samtools_index_mapping'],
-    samtools_stats_options:          modules['samtools_stats_mapping']
-)
 include { MAPPING_CSV } from '../subworkflows/local/mapping_csv'
-include { MARKDUPLICATES } from '../subworkflows/nf-core/markduplicates' addParams(
-    markduplicates_options:          modules['markduplicates'],
-    markduplicatesspark_options:     modules['markduplicatesspark']
-)
 include { MARKDUPLICATES_CSV } from '../subworkflows/local/markduplicates_csv'
-include { PREPARE_RECALIBRATION } from '../subworkflows/nf-core/prepare_recalibration' addParams(
-    baserecalibrator_options:        modules['baserecalibrator'],
-    gatherbqsrreports_options:       modules['gatherbqsrreports']
-)
 include { PREPARE_RECALIBRATION_CSV } from '../subworkflows/local/prepare_recalibration_csv'
-include { RECALIBRATE } from '../subworkflows/nf-core/recalibrate' addParams(
-    applybqsr_options:               modules['applybqsr'],
-    merge_bam_options:               modules['merge_bam_recalibrate'],
-    qualimap_bamqc_options:          modules['qualimap_bamqc_recalibrate'],
-    samtools_index_options:          modules['samtools_index_recalibrate'],
-    samtools_stats_options:          modules['samtools_stats_recalibrate']
-)
 include { RECALIBRATE_CSV } from '../subworkflows/local/recalibrate_csv'
 include { GERMLINE_VARIANT_CALLING } from '../subworkflows/local/germline_variant_calling' addParams(
     concat_gvcf_options:             modules['concat_gvcf'],
@@ -183,27 +172,64 @@ include { PAIR_VARIANT_CALLING } from '../subworkflows/local/pair_variant_callin
     strelka_options:                 modules['strelka_somatic']
 )
 
-////////////////////////////////////////////////////
-/* --          INCLUDE NF-CORE MODULES         -- */
-////////////////////////////////////////////////////
+include { ANNOTATE } from '../subworkflows/local/annotate' addParams(
+    bgziptabix_snpeff:              modules['bgziptabix_snpeff'],
+    bgziptabix_vep:                 modules['bgziptabix_vep'],
+    bgziptabix_vep_merge:           modules['bgziptabix_vep_merge'],
+    snpeff_options:                 modules['snpeff'],
+    vep_merge_options:              modules['vep_merge'],
+    vep_options:                    modules['vep']
+)
 
-include { MULTIQC }                       from '../modules/nf-core/software/multiqc/main'
+/*
+========================================================================================
+    INCLUDE NF-CORE MODULES
+========================================================================================
+*/
 
-////////////////////////////////////////////////////
-/* --       INCLUDE NF-CORE SUBWORKFLOWS       -- */
-////////////////////////////////////////////////////
+include { MULTIQC } from '../modules/nf-core/software/multiqc/main' addParams(
+    multiqc:                        modules['multiqc']
+)
 
-include { FASTQC_TRIMGALORE }             from '../subworkflows/nf-core/fastqc_trimgalore' addParams(
+/*
+========================================================================================
+    INCLUDE NF-CORE SUBWORKFLOWS
+========================================================================================
+*/
+
+include { FASTQC_TRIMGALORE } from '../subworkflows/nf-core/fastqc_trimgalore' addParams(
     fastqc_options:                  modules['fastqc'],
     trimgalore_options:              modules['trimgalore']
+)
+include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
+    bwamem1_mem_options:             modules['bwa_mem1_mem'],
+    bwamem1_mem_tumor_options:       modules['bwa_mem1_mem_tumor'],
+    bwamem2_mem_options:             modules['bwa_mem2_mem'],
+    bwamem2_mem_tumor_options:       modules['bwa_mem2_mem_tumor'],
+    merge_bam_options:               modules['merge_bam_mapping'],
+    qualimap_bamqc_options:          modules['qualimap_bamqc_mapping'],
+    samtools_index_options:          modules['samtools_index_mapping'],
+    samtools_stats_options:          modules['samtools_stats_mapping']
+)
+include { MARKDUPLICATES } from '../subworkflows/nf-core/markduplicates' addParams(
+    markduplicates_options:          modules['markduplicates'],
+    markduplicatesspark_options:     modules['markduplicatesspark']
+)
+include { PREPARE_RECALIBRATION } from '../subworkflows/nf-core/prepare_recalibration' addParams(
+    baserecalibrator_options:        modules['baserecalibrator'],
+    gatherbqsrreports_options:       modules['gatherbqsrreports']
+)
+include { RECALIBRATE } from '../subworkflows/nf-core/recalibrate' addParams(
+    applybqsr_options:               modules['applybqsr'],
+    merge_bam_options:               modules['merge_bam_recalibrate'],
+    qualimap_bamqc_options:          modules['qualimap_bamqc_recalibrate'],
+    samtools_index_options:          modules['samtools_index_recalibrate'],
+    samtools_stats_options:          modules['samtools_stats_recalibrate']
 )
 
 workflow SAREK {
 
-    ////////////////////////////////////////////////////
-    /* --               BUILD INDICES              -- */
-    ////////////////////////////////////////////////////
-
+    // BUILD INDICES
     BUILD_INDICES(
         dbsnp,
         fasta,
@@ -224,19 +250,18 @@ workflow SAREK {
     known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? file(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : []
     pon_tbi               = params.pon               ? params.pon_index               ? file(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : []
 
-    known_sites     = [dbsnp, known_indels]
-    known_sites_tbi = dbsnp_tbi.mix(known_indels_tbi).collect()
+    known_sites     = dbsnp ? [dbsnp, known_indels] : known_indels ? known_indels : []
+    known_sites_tbi = dbsnp_tbi ? dbsnp_tbi.mix(known_indels_tbi).collect() : known_indels_tbi ? known_indels_tbi : ch_dummy_file
 
     msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
 
-    ////////////////////////////////////////////////////
-    /* --               PREPROCESSING              -- */
-    ////////////////////////////////////////////////////
+    // PREPREOCESSING
 
     bam_mapped          = Channel.empty()
     bam_mapped_qc       = Channel.empty()
     bam_recalibrated_qc = Channel.empty()
+    bam_variant_calling = Channel.empty()
     qc_reports          = Channel.empty()
 
     // STEP 0: QC & TRIM
@@ -244,7 +269,7 @@ workflow SAREK {
     // trim only with `--trim_fastq`
     // additional options to be set up
 
-    if (params.step == 'mapping') {
+    if (step == 'mapping') {
         FASTQC_TRIMGALORE(
             input_sample,
             !(params.trim_fastq))
@@ -289,9 +314,9 @@ workflow SAREK {
         }
     }
 
-    if (params.step.toLowerCase() == 'prepare_recalibration') bam_markduplicates = input_sample
+    if (step == 'preparerecalibration') bam_markduplicates = input_sample
 
-    if (params.step.toLowerCase() in ['mapping', 'prepare_recalibration']) {
+    if (step in ['mapping', 'preparerecalibration']) {
         // STEP 3: CREATING RECALIBRATION TABLES
         PREPARE_RECALIBRATION(
             bam_markduplicates,
@@ -309,9 +334,9 @@ workflow SAREK {
         bam_applybqsr = bam_markduplicates.join(table_bqsr)
     }
 
-    if (params.step.toLowerCase() == 'recalibrate') bam_applybqsr = input_sample
+    if (step == 'recalibrate') bam_applybqsr = input_sample
 
-    if (params.step.toLowerCase() in ['mapping', 'prepare_recalibration', 'recalibrate']) {
+    if (step in ['mapping', 'preparerecalibration', 'recalibrate']) {
         // STEP 4: RECALIBRATING
         RECALIBRATE(
             ('bamqc' in params.skip_qc),
@@ -333,14 +358,10 @@ workflow SAREK {
         bam_variant_calling = bam_recalibrated
     }
 
-    if (params.step.toLowerCase() == 'variant_calling') bam_variant_calling = input_sample
+    if (step == 'variantcalling') bam_variant_calling = input_sample
 
-    if (params.tools != null) {
-
-        ////////////////////////////////////////////////////
-        /* --         GERMLINE VARIANT CALLING         -- */
-        ////////////////////////////////////////////////////
-    
+    if (tools != []) {
+        // GERMLINE VARIANT CALLING
         GERMLINE_VARIANT_CALLING(
             bam_variant_calling,
             dbsnp,
@@ -352,10 +373,9 @@ workflow SAREK {
             target_bed,
             target_bed_gz_tbi)
 
-        ////////////////////////////////////////////////////
-        /* --          SOMATIC VARIANT CALLING         -- */
-        ////////////////////////////////////////////////////
+        // SOMATIC VARIANT CALLING
 
+        // TUMOR ONLY VARIANT CALLING
         // TUMOR_VARIANT_CALLING(
         //     bam_variant_calling,
         //     dbsnp,
@@ -367,6 +387,7 @@ workflow SAREK {
         //     target_bed,
         //     target_bed_gz_tbi)
 
+        // PAIR VARIANT CALLING
         PAIR_VARIANT_CALLING(
             bam_variant_calling,
             dbsnp,
@@ -379,51 +400,80 @@ workflow SAREK {
             target_bed,
             target_bed_gz_tbi)
 
-        ////////////////////////////////////////////////////
-        /* --                ANNOTATION                -- */
-        ////////////////////////////////////////////////////
+        // ANNOTATE
+        if (step == 'annotate') vcf_to_annotate = input_sample
+
+        if ('snpeff' in tools || 'vep' in tools) {
+
+            snpeff_tag = "5.0.WBcel235"
+            vep_tag    = "5.0.WBcel235"
+
+            ANNOTATE(
+                vcf_to_annotate,
+                false, //use_cache
+                tools,
+                snpeff_db,
+                snpeff_cache,
+                snpeff_tag,
+                vep_genome,
+                vep_species,
+                vep_cache_version,
+                vep_cache,
+                vep_tag)
+        }
     }
 }
 
+// Function to extract information (meta data + file(s)) from csv file(s)
 def extract_csv(csv_file) {
     Channel.from(csv_file).splitCsv(header: true).map{ row ->
         def meta = [:]
 
-        meta.patient = row.patient.toString()
-        meta.sample  = row.sample.toString()
+        // Meta data to identify samplesheet
+        // Both patient and sample are mandatory
+        // Several sample can belong to the same patient
+        // Sample should be unique for the patient
+        if (row.patient) meta.patient = row.patient.toString()
+        if (row.sample)  meta.sample  = row.sample.toString()
 
-        // If no gender specified, gender is not considered (only used for somatic CNV)
-        if (row.gender == null) {
-            meta.gender = "NA"
-        } else meta.gender = row.gender.toString()
+        // If no gender specified, gender is not considered
+        // gender is only mandatory for somatic CNV
+        if (row.gender) meta.gender = row.gender.toString()
+        else meta.gender = "NA"
 
-        // If no status specified, sample is considered normal
-        if (row.status == null) {
-            meta.status = 0
-        } else meta.status = row.status.toInteger()
+        // If no status specified, sample is assumed normal
+        if (row.status) meta.status = row.status.toInteger()
+        else meta.status = 0
 
-        if (row.lane != null) {
+        if (row.lane && row.fastq2) {
         // mapping with fastq
             meta.id         = "${row.sample}-${row.lane}".toString()
-            def read1       = file(row.fastq1, checkIfExists: true)
-            def read2       = file(row.fastq2, checkIfExists: true)
+            def fastq1      = file(row.fastq1, checkIfExists: true)
+            def fastq2      = file(row.fastq2, checkIfExists: true)
             def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ''
             def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:ILLUMINA\""
             meta.read_group = read_group.toString()
-            return [meta, [read1, read2]]
-        } else if (row.table != null) {
+            return [meta, [fastq1, fastq2]]
+        } else if (row.table) {
         // recalibration
-            meta.id = meta.sample
-            def bam     = file(row.bam, checkIfExists: true)
-            def bai     = file(row.bai, checkIfExists: true)
-            def table   = file(row.table, checkIfExists: true)
+            meta.id   = meta.sample
+            def bam   = file(row.bam,   checkIfExists: true)
+            def bai   = file(row.bai,   checkIfExists: true)
+            def table = file(row.table, checkIfExists: true)
             return [meta, bam, bai, table]
-        } else {
+        } else if (row.bam) {
         // prepare_recalibration or variant_calling
             meta.id = meta.sample
-            def bam     = file(row.bam, checkIfExists: true)
-            def bai     = file(row.bai, checkIfExists: true)
+            def bam = file(row.bam, checkIfExists: true)
+            def bai = file(row.bai, checkIfExists: true)
             return [meta, bam, bai]
+        } else if (row.vcf) {
+        // annotation
+            meta.id = meta.sample
+            def vcf = file(row.vcf, checkIfExists: true)
+            return [meta, vcf]
+        } else {
+            log.warn "Missing or unknown field in csv file header"
         }
     }
 }
