@@ -13,4 +13,4 @@
     - vep
   files:
     - path: results/annotation/1234N/1234N_VEP.ann.gz
-    - path: results/annotation/1234N/1234N_VEP.ann.gz.bai
+    - path: results/annotation/1234N/1234N_VEP.ann.gz.tbi
