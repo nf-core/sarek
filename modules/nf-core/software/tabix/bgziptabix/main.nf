@@ -29,8 +29,8 @@ process TABIX_BGZIPTABIX {
     def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     """
-    bgzip -c $options.args $input > ${prefix}.${input}.gz
-    tabix $options.args2 ${prefix}.${input}.gz
+    bgzip -c $options.args $input > ${prefix}.gz
+    tabix $options.args2 ${prefix}.gz
 
     echo \$(tabix -h 2>&1) | sed 's/^.*Version: //; s/(.*\$//' > ${software}.version.txt
     """

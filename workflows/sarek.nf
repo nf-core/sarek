@@ -173,11 +173,11 @@ include { PAIR_VARIANT_CALLING } from '../subworkflows/local/pair_variant_callin
 )
 
 include { ANNOTATE } from '../subworkflows/local/annotate' addParams(
+    bgziptabix_merge_vep:           modules['bgziptabix_merge_vep'],
     bgziptabix_snpeff:              modules['bgziptabix_snpeff'],
     bgziptabix_vep:                 modules['bgziptabix_vep'],
-    bgziptabix_vep_merge:           modules['bgziptabix_vep_merge'],
+    merge_vep_options:              modules['merge_vep'],
     snpeff_options:                 modules['snpeff'],
-    vep_merge_options:              modules['vep_merge'],
     vep_options:                    modules['vep']
 )
 
@@ -403,7 +403,7 @@ workflow SAREK {
         // ANNOTATE
         if (step == 'annotate') vcf_to_annotate = input_sample
 
-        if ('snpeff' in tools || 'vep' in tools) {
+        if ('merge' in tools || 'snpeff' in tools || 'vep' in tools) {
 
             snpeff_tag = "5.0.WBcel235"
             vep_tag    = "5.0.WBcel235"

@@ -43,9 +43,10 @@ process VEP {
     dir_cache    = use_cache ? "\${PWD}/${vep_cache}" : "/.vep"
     """
     mkdir ${prefix}
+
     vep \
         -i ${vcf} \
-        -o ${prefix}_VEP.ann.vcf \
+        -o ${prefix}.ann.vcf \
         --assembly ${vep_genome} \
         --species ${vep_species} \
         --cache \
@@ -56,7 +57,7 @@ process VEP {
         --fork ${task.cpus} \
         --format vcf \
         --per_gene \
-        --stats_file ${prefix}_VEP.summary.html \
+        --stats_file ${prefix}.summary.html \
         --total_length \
         --vcf
 

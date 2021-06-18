@@ -4,26 +4,26 @@
 ========================================================================================
 */
 
-params.snpeff_options               = [:]
-params.vep_options                  = [:]
-params.vep_merge_options            = [:]
+params.bgziptabix_merge_vep_options = [:]
 params.bgziptabix_snpeff_options    = [:]
 params.bgziptabix_vep_options       = [:]
-params.bgziptabix_vep_merge_options = [:]
+params.merge_vep_options            = [:]
+params.snpeff_options               = [:]
+params.vep_options                  = [:]
 
 include { SNPEFF_ANNOTATE } from '../nf-core/snpeff' addParams(
     snpeff_options:            params.snpeff_options,
     bgziptabix_snpeff_options: params.bgziptabix_snpeff_options
 )
 
-include { VEP_ANNOTATE }    from '../nf-core/vep' addParams(
-    vep_options:               params.vep_options,
-    bgziptabix_vep_options:    params.bgziptabix_vep_options
+include { VEP_ANNOTATE as MERGE_ANNOTATE } from '../nf-core/vep' addParams(
+    vep_options:               params.merge_vep_options,
+    bgziptabix_vep_options:    params.bgziptabix_merge_vep_options
 )
 
-include { VEP_ANNOTATE as VEP_MERGE_ANNOTATE }    from '../nf-core/vep' addParams(
-    vep_merge_options:               params.vep_merge_options,
-    bgziptabix_vep_merge_options:    params.bgziptabix_vep_merge_options
+include { VEP_ANNOTATE } from '../nf-core/vep' addParams(
+    vep_options:               params.vep_options,
+    bgziptabix_vep_options:    params.bgziptabix_vep_options
 )
 
 workflow ANNOTATE {
@@ -51,7 +51,7 @@ workflow ANNOTATE {
 
     if ('merge' in tools) {
         vcf_ann_for_merge = snpeff_vcf_ann.map{ meta, vcf, tbi -> [meta, vcf] } 
-        (merge_vcf_ann, vep_reports, vep_version) = VEP_MERGE_ANNOTATE(vcf_ann_for_merge, vep_genome, vep_species, vep_cache_version, use_cache, vep_cache, vep_tag)
+        (merge_vcf_ann, vep_reports, vep_version) = MERGE_ANNOTATE(vcf_ann_for_merge, vep_genome, vep_species, vep_cache_version, use_cache, vep_cache, vep_tag)
     }
 
     if ('vep' in tools) {
