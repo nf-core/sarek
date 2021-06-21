@@ -1,5 +1,5 @@
 - name: Run variant calling for Haplotypecaller
-  command: nextflow run main.nf -profile test,tool,docker --tools Haplotypecaller
+  command: nextflow run main.nf -profile test,tool,docker --tools haplotypecaller
   tags:
     - haplotypecaller
     - intervals
@@ -10,7 +10,7 @@
     - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz
     - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz.tbi
 - name: Run variant calling for Haplotypecaller without intervals
-  command: nextflow run main.nf -profile test,tool,docker --tools Haplotypecaller --no_intervals
+  command: nextflow run main.nf -profile test,tool,docker --tools haplotypecaller --no_intervals
   tags:
     - haplotypecaller
     - no_intervals

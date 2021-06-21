@@ -53,30 +53,10 @@
             "properties": {
                 "tools": {
                     "type": "string",
-                    "default": null,
                     "fa_icon": "fas fa-toolbox",
                     "description": "Tools to use for variant calling and/or for annotation.",
-                    "help_text": "Multiple separated with commas.\n\nGermline variant calling can currently only be performed with the following variant callers:\n- FreeBayes, HaplotypeCaller, Manta, mpileup, Strelka, TIDDIT\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- ASCAT, Control-FREEC, FreeBayes, Manta, MSIsensorpro, Mutect2, Strelka\n\nTumor-only somatic variant calling can currently only be performed with the following variant callers:\n- Control-FREEC, Manta, mpileup, Mutect2, TIDDIT\n\nAnnotation is done using snpEff, VEP, or even both consecutively.\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted.\n\n\n\n`DNAseq`, `DNAscope` and `TNscope` are only available with `--sentieon`\n\n> **NB** tools can be specified with no concern for case, or the presence of `-` or `_`\n",
-                    "list": [
-                        null,
-                        "ascat",
-                        "cnvkit",
-                        "controlfreec",
-                        "freebayes",
-                        "haplotypecaller",
-                        "manta",
-                        "mpileup",
-                        "msisensorpro",
-                        "mutect2",
-                        "strelka",
-                        "tiddit",
-                        "snpeff",
-                        "vep",
-                        "merge",
-                        "dnaseq",
-                        "dnascope",
-                        "tnscope"
-                    ]
+                    "help_text": "Multiple separated with commas.\n\nGermline variant calling can currently only be performed with the following variant callers:\n- FreeBayes, HaplotypeCaller, Manta, mpileup, Strelka, TIDDIT\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- ASCAT, Control-FREEC, FreeBayes, Manta, MSIsensorpro, Mutect2, Strelka\n\nTumor-only somatic variant calling can currently only be performed with the following variant callers:\n- Control-FREEC, Manta, mpileup, Mutect2, TIDDIT\n\nAnnotation is done using snpEff, VEP, or even both consecutively.\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted.\n\n\n\n`DNAseq`, `DNAscope` and `TNscope` are only available with `--sentieon`\n\n> **NB** tools can be specified with no concern for case.\n",
+                    "pattern": "^((ascat|cnvkit|controlfreec|dnascope|dnaseq|freebayes|haplotypecaller|manta|merge|mpileup|msisensorpro|mutect2|snpeff|strelka|tiddit|tnscope|vep)*,?)*$"
                 },
                 "no_intervals": {
                     "type": "boolean",
@@ -99,23 +79,10 @@
                 },
                 "skip_qc": {
                     "type": "string",
-                    "default": null,
                     "fa_icon": "fas fa-forward",
                     "description": "Disable specified QC and Reporting tools.",
-                    "help_text": "Multiple tools can be specified, separated by commas.\n\n> **NB** `--skip_qc BaseRecalibrator` is actually just not saving the reports.\n> **NB** `--skip_qc MarkDuplicates` does not skip `MarkDuplicates` but prevent the collection of duplicate metrics that slows down performance.\n> **NB** tools can be specified with no concern for case, or the presence of `-` or `_`",
-                    "list": [
-                        null,
-                        "bamqc",
-                        "baserecalibrator",
-                        "bcftools",
-                        "documentation",
-                        "fastqc",
-                        "markduplicates",
-                        "multiqc",
-                        "samtools",
-                        "vcftools",
-                        "versions"
-                    ]
+                    "help_text": "Multiple tools can be specified, separated by commas.\n\n> **NB** `--skip_qc BaseRecalibrator` is actually just not saving the reports.\n> **NB** `--skip_qc MarkDuplicates` does not skip `MarkDuplicates` but prevent the collection of duplicate metrics that slows down performance.\n> **NB** tools can be specified with no concern for case.",
+                    "pattern": "^((bamqc|baserecalibrator|bcftools|documentation|fastqc|markduplicates|multiqc|samtools|vcftools|versions)*(,)*)*$"
                 },
                 "target_bed": {
                     "type": "string",
@@ -251,14 +218,12 @@
             "properties": {
                 "ascat_ploidy": {
                     "type": "string",
-                    "default": null,
                     "fa_icon": "fas fa-wrench",
                     "description": "Overwrite ASCAT ploidy",
                     "help_text": "Requires that `--ascat_purity` is set"
                 },
                 "ascat_purity": {
                     "type": "string",
-                    "default": null,
                     "fa_icon": "fas fa-wrench",
                     "description": "Overwrite ASCAT purity",
                     "help_text": "Requires that `--ascat_ploidy` is set"
@@ -276,7 +241,6 @@
                 },
                 "cf_contamination": {
                     "type": "string",
-                    "default": null,
                     "fa_icon": "fas fa-wrench",
                     "description": "Design known contamination value for Control-FREEC"
                 },
@@ -329,14 +293,12 @@
                 },
                 "read_structure1": {
                     "type": "string",
-                    "default": null,
                     "fa_icon": "fas fa-clipboard-list",
                     "description": "When processing UMIs, a read structure should always be provided for each of the fastq files.",
                     "help_text": "If the read does not contain any UMI, the structure will be +T (i.e. only template of any length).\nThe read structure follows a format adopted by different tools and described in the [fgbio documentation](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures)"
                 },
                 "read_structure2": {
                     "type": "string",
-                    "default": null,
                     "fa_icon": "fas fa-clipboard-list",
                     "description": "When processing UMIs, a read structure should always be provided for each of the fastq files.",
                     "help_text": "If the read does not contain any UMI, the structure will be +T (i.e. only template of any length).\nThe read structure follows a format adopted by different tools and described in the [fgbio documentation](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures)"
@@ -352,23 +314,14 @@
             "properties": {
                 "annotate_tools": {
                     "type": "string",
-                    "default": null,
                     "fa_icon": "fas fa-hammer",
                     "description": "Specify from which tools Sarek should look for VCF files to annotate",
                     "help_text": "Only for step `annotate`",
-                    "list": [
-                        null,
-                        "haplotypecaller",
-                        "manta",
-                        "mutect2",
-                        "strelka",
-                        "tiddit"
-                    ],
+                    "pattern": "^((haplotypecaller|manta|mutect2|strelka|tiddit)*(,)*)*$",
                     "hidden": true
                 },
                 "annotation_cache": {
                     "type": "boolean",
-                    "default": null,
                     "fa_icon": "fas fa-database",
                     "description": "Enable the use of cache for annotation",
                     "help_text": "And disable usage of Sarek snpeff and vep specific containers for annotation\n\nTo be used with `--snpeff_cache` and/or `--vep_cache`",
@@ -382,28 +335,24 @@
                 },
                 "cadd_indels": {
                     "type": "string",
-                    "default": null,
                     "fa_icon": "fas fa-file",
                     "description": "Path to CADD InDels file.",
                     "hidden": true
                 },
                 "cadd_indels_tbi": {
                     "type": "string",
-                    "default": null,
                     "fa_icon": "fas fa-file",
                     "description": "Path to CADD InDels index.",
                     "hidden": true
                 },
                 "cadd_wg_snvs": {
                     "type": "string",
-                    "default": null,
                     "fa_icon": "fas fa-file",
                     "description": "Path to CADD SNVs file.",
                     "hidden": true
                 },
                 "cadd_wg_snvs_tbi": {
                     "type": "string",
-                    "default": null,
                     "fa_icon": "fas fa-file",
                     "description": "Path to CADD SNVs index.",
                     "hidden": true
@@ -416,7 +365,6 @@
                 },
                 "snpeff_cache": {
                     "type": "string",
-                    "default": null,
                     "fa_icon": "fas fa-database",
                     "description": "Path to snpEff cache",
                     "help_text": "To be used with `--annotation_cache`",
@@ -424,7 +372,6 @@
                 },
                 "vep_cache": {
                     "type": "string",
-                    "default": null,
                     "fa_icon": "fas fa-database",
                     "description": "Path to VEP cache",
                     "help_text": "To be used with `--annotation_cache`",
@@ -562,7 +509,6 @@
                 },
                 "genomes_base": {
                     "type": "string",
-                    "default": "null",
                     "fa_icon": "fas fa-map-marker-alt",
                     "description": "Directory / URL base for genomes references.",
                     "help_text": "All files are supposed to be in the same folder"
@@ -664,7 +610,6 @@
                 },
                 "sequencing_center": {
                     "type": "string",
-                    "default": null,
                     "fa_icon": "fas fa-university",
                     "description": "Name of sequencing center to be displayed in BAM file",
                     "help_text": "It will be in the CN field",
