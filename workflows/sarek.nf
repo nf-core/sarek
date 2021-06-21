@@ -72,7 +72,6 @@ ch_dummy_file = file("$projectDir/assets/dummy_file.txt", checkIfExists: true)
 
 def modules = params.modules.clone()
 
-if (params.save_reference)       modules['build_intervals'].publish_files         = ['bed':'intervals']
 if (params.save_reference)       modules['bwa_index'].publish_files               = ['amb':'bwa', 'ann':'bwa', 'bwt':'bwa', 'pac':'bwa', 'sa':'bwa']
 if (params.save_reference)       modules['bwamem2_index'].publish_files           = ['0123':'bwamem2', 'amb':'bwamem2', 'ann':'bwamem2', 'bwt.2bit.64':'bwamem2', 'bwt.8bit.32':'bwamem2', 'pac':'bwamem2']
 if (params.save_reference)       modules['create_intervals_bed'].publish_files    = ['bed':'intervals']
@@ -88,6 +87,7 @@ if (save_bam_mapped)             modules['samtools_index_mapping'].publish_files
 if (params.skip_markduplicates)  modules['baserecalibrator'].publish_files        = ['recal.table':'mapped']
 if (params.skip_markduplicates)  modules['gatherbqsrreports'].publish_files       = ['recal.table':'mapped']
 if (!params.skip_markduplicates) modules['baserecalibrator'].publish_files        = false
+if (params.save_reference)       modules['build_intervals'].publish_files         = ['bed':'intervals']
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
 chr_dir           = params.chr_dir           ? file(params.chr_dir)           : ch_dummy_file
@@ -227,14 +227,14 @@ workflow SAREK {
     dict = params.dict      ? file(params.dict)      : BUILD_INDICES.out.dict
     fai  = params.fasta_fai ? file(params.fasta_fai) : BUILD_INDICES.out.fai
 
-    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_index             ? file(params.dbsnp_index)             : BUILD_INDICES.out.dbsnp_tbi                  : []
+    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_index             ? path(params.dbsnp_index)             : BUILD_INDICES.out.dbsnp_tbi                  : []
     germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? file(params.germline_resource_index) : BUILD_INDICES.out.germline_resource_tbi      : []
-    known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? file(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : []
+    known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? path(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : []
     pon_tbi               = params.pon               ? params.pon_index               ? file(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : []
 
     known_sites     = [dbsnp, known_indels]
     known_sites_tbi = dbsnp_tbi.mix(known_indels_tbi).collect()
-
+    //Caused by: groovy.lang.MissingMethodException: No signature of method: sun.nio.fs.UnixPath.mix() is applicable for argument types: (LinkedList) values: [[/nfsmounts/igenomes/Homo_sapiens/GATK/GRCh38/Annotation/GATKBundle/beta/Homo_sapiens_assembly38.known_indels.vcf.gz.tbi, ...]]
     msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
 
