@@ -150,17 +150,15 @@ include { MAPPING_CSV } from '../subworkflows/local/mapping_csv'
 include { MARKDUPLICATES } from '../subworkflows/nf-core/markduplicates' addParams(
     markduplicates_options:             modules['markduplicates'],
     markduplicatesspark_options:        modules['markduplicatesspark'],
-    estimatelibrarycomplexity_options:  modules['estimatelibrarycomplexity']
-)
-include { MARKDUPLICATES_CSV } from '../subworkflows/local/markduplicates_csv'
-
-include { CONVERT_BAM_TO_CRAM } from '../subworkflows/nf-core/convert_bam_to_cram.nf' addParams(
+    estimatelibrarycomplexity_options:  modules['estimatelibrarycomplexity'],
     merge_bam_options:               modules['merge_bam_mapping'],
     samtools_index_options:          modules['samtools_index_mapping'],
     qualimap_bamqc_options:          modules['qualimap_bamqc_mapping'],
     samtools_stats_options:          modules['samtools_stats_mapping'],
     samtools_view_options:           modules['samtools_view']
 )
+include { MARKDUPLICATES_CSV } from '../subworkflows/local/markduplicates_csv'
+
 
 include { PREPARE_RECALIBRATION } from '../subworkflows/nf-core/prepare_recalibration' addParams(
     baserecalibrator_options:        modules['baserecalibrator'],
@@ -275,37 +273,30 @@ workflow SAREK {
             reads_input)
 
         bam_mapped    = MAPPING.out.bam
-//         bam_mapped_qc = MAPPING.out.qc
-//         qc_reports = qc_reports.mix(bam_mapped_qc)
 
-        //TODO: is this fine to not have here, if no MD done, then the crams will be provided, but if MD is done then only crams after MD
         // Create CSV to restart from this step
         // MAPPING_CSV(bam_mapped, save_bam_mapped, params.skip_markduplicates)
 
-        if (params.skip_markduplicates) {
-            bam_markduplicates = bam_mapped
-        } else {
-            // STEP 2: MARKING DUPLICATES
-            MARKDUPLICATES(bam_mapped, params.use_gatk_spark, !('markduplicates' in params.skip_qc), fasta, fai, dict)
-            bam_markduplicates = MARKDUPLICATES.out.bam
+        // if (params.skip_markduplicates) {
+        //     bam_markduplicates = bam_mapped
+        // } else {
+        // STEP 2: MARKING DUPLICATES AND/OR QC, conversion to CRAm
+        MARKDUPLICATES(bam_mapped, params.use_gatk_spark,
+                        !('markduplicates' in params.skip_qc),
+                        fasta, fai, dict,
+                        'bamqc' in params.skip_qc,
+                        'samtools' in params.skip_qc,
+                        target_bed)
 
-            // Create CSV to restart from this step
-            // MARKDUPLICATES_CSV(bam_markduplicates)
-        }
-        CONVERT_BAM_TO_CRAM(
-            'bamqc' in params.skip_qc,
-            'samtools' in params.skip_qc,
-            fasta,
-            bam_markduplicates,
-            target_bed
-        )
+        // Create CSV to restart from this step
+        // MARKDUPLICATES_CSV(bam_markduplicates)
 
-        cram_markduplicates = CONVERT_BAM_TO_CRAM.out.cram
+        cram_markduplicates = MARKDUPLICATES.out.cram
 
         //TODO: Check with Maxime and add this
         //CRAM_CSV(cram_markduplicates)
 
-        qc_reports = qc_reports.mix(CONVERT_BAM_TO_CRAM.out.qc)
+        qc_reports = qc_reports.mix(MARKDUPLICATES.out.qc)
     }
 
     if (params.step.toLowerCase() == 'prepare_recalibration') cram_markduplicates = input_sample
@@ -314,6 +305,7 @@ workflow SAREK {
         // STEP 3: CREATING RECALIBRATION TABLES
         PREPARE_RECALIBRATION(
             cram_markduplicates,
+            params.use_gatk_spark,
             dict,
             fai,
             fasta,
@@ -333,6 +325,7 @@ workflow SAREK {
     if (params.step.toLowerCase() in ['mapping', 'prepare_recalibration', 'recalibrate']) {
         // STEP 4: RECALIBRATING
         RECALIBRATE(
+            params.use_gatk_spark,
             ('bamqc' in params.skip_qc),
             ('samtools' in params.skip_qc),
             cram_applybqsr,

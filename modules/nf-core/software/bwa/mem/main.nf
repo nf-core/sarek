@@ -34,7 +34,7 @@ process BWA_MEM {
     def read_group = meta.read_group ? "-R ${meta.read_group}" : ""
 
     //MD Spark NEEDS name sorted reads or runtime goes through the roof.
-    //However, if duplicate marking is split, reads need to be coordinate sorted.
+    //However, if duplicate marking is skipped, reads need to be coordinate sorted.
     //Spark can be used also for BQSR, therefore check for both: only name sort if spark + duplicate marking is done
     def sort_order = params.use_gatk_spark & !params.skip_markduplicates ? "-n" : ""
 

@@ -6,13 +6,17 @@
 
 params.baserecalibrator_options  = [:]
 params.gatherbqsrreports_options = [:]
+params.baserecalibrator_spark_options  = [:]
+params.gatherbqsrreports_spark_options = [:]
 
 include { GATK4_BASERECALIBRATOR  as BASERECALIBRATOR }  from '../../modules/nf-core/software/gatk4/baserecalibrator/main'  addParams(options: params.baserecalibrator_options)
 include { GATK4_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from '../../modules/nf-core/software/gatk4/gatherbqsrreports/main' addParams(options: params.gatherbqsrreports_options)
+include { GATK4_BASERECALIBRATOR_SPARK  as BASERECALIBRATOR_SPARK }  from '../../modules/nf-core/software/gatk4/baserecalibratorspark/main'  addParams(options: params.baserecalibrator_spark_options)
 
 workflow PREPARE_RECALIBRATION {
     take:
         cram_markduplicates // channel: [mandatory] cram_markduplicates
+        use_gatk_spark      //   value: [mandatory] use gatk spark
         dict                // channel: [mandatory] dict
         fai                 // channel: [mandatory] fai
         fasta               // channel: [mandatory] fasta
@@ -29,25 +33,30 @@ workflow PREPARE_RECALIBRATION {
         [new_meta, cram, crai, intervals]
     }.set{cram_markduplicates_intervals}
 
-
+    if(use_gatk_spark){
+        BASERECALIBRATOR_SPARK(cram_markduplicates_intervals, fasta, fai, dict, known_sites, known_sites_tbi)
+        table_baserecalibrator = BASERECALIBRATOR_SPARK.out.table
+    }else{
         BASERECALIBRATOR(cram_markduplicates_intervals, fasta, fai, dict, known_sites, known_sites_tbi)
-
+        table_baserecalibrator = BASERECALIBRATOR.out.table
+    }
 
     // STEP 3.5: MERGING RECALIBRATION TABLES
     if (no_intervals) {
-        BASERECALIBRATOR.out.table.map { meta, table ->
+        table_baserecalibrator.map { meta, table ->
             meta.id = meta.sample
             [meta, table]
         }.set{table_bqsr}
     } else {
-        BASERECALIBRATOR.out.table
-            .map{ meta, table ->
+        table_baserecalibrator.map{ meta, table ->
             meta.id = meta.sample
             [meta, table]
         }.groupTuple().set{recaltable}
 
+
         GATHERBQSRREPORTS(recaltable)
         table_bqsr = GATHERBQSRREPORTS.out.table
+
     }
 
     emit:

@@ -4,6 +4,7 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 options        = initOptions(params.options)
 
+//There is a -L option to only output alignments in interval, might be an option for exons/panel data?
 process SAMTOOLS_VIEW {
     tag "$meta.id"
     label 'process_medium'
@@ -21,6 +22,7 @@ process SAMTOOLS_VIEW {
     input:
     tuple val(meta), path(bam), path(bai)
     path(fasta)
+    path(fai)
 
     output:
     tuple val(meta), path("*.cram"), path("*.crai"), emit: cram
@@ -30,8 +32,8 @@ process SAMTOOLS_VIEW {
     def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     """
-    samtools view -T ${fasta} -C $options.args -o ${prefix}.cram $bam
-    samtools index -@ ${task.cpus} ${prefix}.cram
+    samtools view --threads ${task.cpus} -T ${fasta} -C $options.args -o ${prefix}.cram $bam
+    samtools index -@${task.cpus} ${prefix}.cram
     echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' > ${software}.version.txt
     """
 }

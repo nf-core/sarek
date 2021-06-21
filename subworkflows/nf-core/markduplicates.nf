@@ -4,35 +4,104 @@
 ========================================================================================
 */
 
-params.markduplicates_options = [:]
+params.markduplicates_options            = [:]
+params.markduplicatesspark_options       = [:]
+params.estimatelibrarycomplexity_options = [:]
+params.merge_bam_options                 = [:]
+params.qualimap_bamqc_options            = [:]
+params.samtools_stats_options            = [:]
+params.samtools_view_options             = [:]
+params.samtools_index_options            = [:]
 
-include { GATK4_MARKDUPLICATES }                                from '../../modules/nf-core/software/gatk4/markduplicates/main'             addParams(options: params.markduplicates_options)
-include { GATK4_MARKDUPLICATES_SPARK }                          from '../../modules/nf-core/software/gatk4/markduplicatesspark/main'        addParams(options: params.markduplicatesspark_options)
-include { GATK4_ESTIMATELIBRARYCOMPLEXITY }                     from '../../modules/nf-core/software/gatk4/estimatelibrarycomplexity/main'  addParams(options: params.estimatelibrarycomplexity_options)
+include { GATK4_MARKDUPLICATES }                  from '../../modules/nf-core/software/gatk4/markduplicates/main'             addParams(options: params.markduplicates_options)
+include { GATK4_MARKDUPLICATES_SPARK }            from '../../modules/nf-core/software/gatk4/markduplicatesspark/main'        addParams(options: params.markduplicatesspark_options)
+include { GATK4_ESTIMATELIBRARYCOMPLEXITY }       from '../../modules/nf-core/software/gatk4/estimatelibrarycomplexity/main'  addParams(options: params.estimatelibrarycomplexity_options)
+
+include { SAMTOOLS_MERGE }                        from '../../modules/nf-core/software/samtools/merge/main'                   addParams(options: params.merge_bam_options)
+include { SAMTOOLS_INDEX }                        from '../../modules/nf-core/software/samtools/index/main'                   addParams(options: params.samtools_index_options)
+include { QUALIMAP_BAMQC }                        from '../../modules/nf-core/software/qualimap/bamqc/main'                   addParams(options: params.qualimap_bamqc_options)
+include { SAMTOOLS_STATS }                        from '../../modules/nf-core/software/samtools/stats/main'                   addParams(options: params.samtools_stats_options)
+include { SAMTOOLS_VIEW as SAMTOOLS_BAM_TO_CRAM } from '../../modules/nf-core/software/samtools/view/main.nf'                 addParams(options: params.samtools_view_options)
+
+//TODO name is not really covering everything happening here
 workflow MARKDUPLICATES {
     take:
-        bam_mapped     // channel: [mandatory] meta, bam, bai
-        use_gatk_spark // value: [mandatory] use gatk spark
-        save_metrics   // value: [mandatory] save metrics
-        fasta          // channel: [mandatory] fasta
-        fai            // channel: [mandatory] fai
-        dict           // channel: [mandatory] dict
+        bam_mapped          // channel: [mandatory] meta, bam, bai
+        use_gatk_spark      //   value: [mandatory] use gatk spark
+        save_metrics        //   value: [mandatory] save metrics
+        fasta               // channel: [mandatory] fasta
+        fai                 // channel: [mandatory] fai
+        dict                // channel: [mandatory] dict
+        skip_bamqc          // boolean: true/false
+        skip_samtools       // boolean: true/false
+        target_bed          // channel: [optional]  target_bed
+
     main:
 
     report_markduplicates = Channel.empty()
+    if(params.skip_markduplicates){
 
-    if (use_gatk_spark) {
-        GATK4_MARKDUPLICATES_SPARK(bam_mapped, fasta, fai, dict)
-        GATK4_ESTIMATELIBRARYCOMPLEXITY(bam_mapped, fasta, fai, dict)
-        report_markduplicates = GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics //Here it will Estimate Library complexity
-        bam_markduplicates    = GATK4_MARKDUPLICATES_SPARK.out.cram
-    } else {
-        GATK4_MARKDUPLICATES(bam_mapped, save_metrics)
-        report_markduplicates = GATK4_MARKDUPLICATES.out.metrics
-        bam_markduplicates    = GATK4_MARKDUPLICATES.out.bam
+        bam_mapped.branch{
+            single:   it[1].size() == 1
+            multiple: it[1].size() > 1
+        }.set{ bam_to_merge }
+
+        SAMTOOLS_MERGE(bam_to_merge.multiple)
+        bam_merged = bam_to_merge.single.mix(SAMTOOLS_MERGE.out.merged_bam)
+
+        SAMTOOLS_INDEX(bam_merged)
+        bam_markduplicates = bam_merged.join(SAMTOOLS_INDEX.out.bai)
+
+    } else{
+
+        if (use_gatk_spark) {
+
+            //If BAMQC should be run on MD output, then don't convert use MDSpark to convert to cram, but use bam output instead
+            if(!skip_bamqc){
+                GATK4_MARKDUPLICATES_SPARK(bam_mapped, fasta, fai, dict, "bam")
+                SAMTOOLS_INDEX(GATK4_MARKDUPLICATES_SPARK.out.output)
+                bam_markduplicates  = GATK4_MARKDUPLICATES_SPARK.out.output.join(SAMTOOLS_INDEX.out.bai)
+            }else{
+                GATK4_MARKDUPLICATES_SPARK(bam_mapped, fasta, fai, dict, "cram")
+                SAMTOOLS_INDEX(GATK4_MARKDUPLICATES_SPARK.out.output)
+                cram_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.output.join(SAMTOOLS_INDEX.out.crai)
+            }
+
+            if(save_metrics){
+                GATK4_ESTIMATELIBRARYCOMPLEXITY(bam_mapped, fasta, fai, dict)
+                report_markduplicates = GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics
+            }
+
+        } else {
+            GATK4_MARKDUPLICATES(bam_mapped, save_metrics)
+            report_markduplicates = GATK4_MARKDUPLICATES.out.metrics
+            bam_markduplicates    = GATK4_MARKDUPLICATES.out.bam
+        }
     }
 
+    //If skip_markduplicates then QC tools are run on mapped bams,
+    //if !skip_markduplicates, then QC tools are run on duplicate marked bams
+    //After bamqc finishes, convert to cram for further analysis
+    qualimap_bamqc = Channel.empty()
+    if(!skip_bamqc){
+        QUALIMAP_BAMQC(bam_markduplicates, target_bed, params.target_bed)
+        qualimap_bamqc = QUALIMAP_BAMQC.out
+
+        SAMTOOLS_BAM_TO_CRAM(bam_markduplicates, fasta, fai)
+        cram_markduplicates = SAMTOOLS_BAM_TO_CRAM.out.cram
+    }
+
+
+    samtools_stats = Channel.empty()
+    if (!skip_samtools) {
+        SAMTOOLS_STATS(cram_markduplicates)
+        samtools_stats = SAMTOOLS_STATS.out.stats
+    }
+
+    qc_reports = samtools_stats.mix(qualimap_bamqc)
+    qc_reports = report_markduplicates.mix(qc_reports)
+
     emit:
-        bam    = bam_markduplicates
-        report = report_markduplicates
+        cram     = cram_markduplicates
+        qc       = qc_reports
 }

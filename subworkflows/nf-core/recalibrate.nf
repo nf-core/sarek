@@ -5,12 +5,14 @@
 */
 
 params.applybqsr_options      = [:]
+params.applybqsr_spark_options      = [:]
 params.merge_cram_options      = [:]
 params.qualimap_bamqc_options = [:]
 params.samtools_index_options = [:]
 params.samtools_stats_options = [:]
 
 include { GATK4_APPLYBQSR as APPLYBQSR } from '../../modules/nf-core/software/gatk4/applybqsr/main' addParams(options: params.applybqsr_options)
+include { GATK4_APPLYBQSR_SPARK as APPLYBQSR_SPARK } from '../../modules/nf-core/software/gatk4/applybqsrspark/main' addParams(options: params.applybqsr_spark_options)
 include { QUALIMAP_BAMQC }               from '../../modules/nf-core/software/qualimap/bamqc/main'  addParams(options: params.qualimap_bamqc_options)
 include { SAMTOOLS_INDEX }               from '../../modules/nf-core/software/samtools/index/main'  addParams(options: params.samtools_index_options)
 include { SAMTOOLS_MERGE_CRAM }          from '../../modules/nf-core/software/samtools/merge_cram/main'  addParams(options: params.merge_cram_options)
@@ -18,6 +20,7 @@ include { SAMTOOLS_STATS }               from '../../modules/nf-core/software/sa
 
 workflow RECALIBRATE {
     take:
+        use_gatk_spark      //   value: [mandatory] use gatk spark
         skip_bamqc     // boolean: true/false
         skip_samtools  // boolean: true/false
         cram           // channel: [mandatory] cram
@@ -39,13 +42,19 @@ workflow RECALIBRATE {
         [new_meta, cram, crai, recal, intervals]
     }.set{cram_intervals}
 
-    APPLYBQSR(cram_intervals, fasta, fai, dict)
+    if(use_gatk_spark){
+        APPLYBQSR_SPARK(cram_intervals, fasta, fai, dict)
+        cram_applybqsr = APPLYBQSR_SPARK.out.cram
+    }else{
+        APPLYBQSR(cram_intervals, fasta, fai, dict)
+        cram_applybqsr = APPLYBQSR.out.cram
+    }
 
     // STEP 4.5: MERGING AND INDEXING THE RECALIBRATED BAM FILES
     if (params.no_intervals) {
-        cram_recalibrated = APPLYBQSR.out.cram
+        cram_recalibrated = cram_applybqsr
     } else {
-        APPLYBQSR.out.cram.map{ meta, cram ->
+        cram_applybqsr.map{ meta, cram ->
             meta.id = meta.sample
             [meta, cram]
         }.groupTuple().set{cram_recalibrated_interval}
