@@ -18,10 +18,10 @@ include { GATK4_MARKDUPLICATES_SPARK }            from '../../modules/nf-core/so
 include { GATK4_ESTIMATELIBRARYCOMPLEXITY }       from '../../modules/nf-core/software/gatk4/estimatelibrarycomplexity/main'  addParams(options: params.estimatelibrarycomplexity_options)
 
 include { SAMTOOLS_MERGE }                        from '../../modules/nf-core/software/samtools/merge/main'                   addParams(options: params.merge_bam_options)
-include { SAMTOOLS_INDEX }                        from '../../modules/nf-core/software/samtools/index/main'                   addParams(options: params.samtools_index_options)
 include { QUALIMAP_BAMQC }                        from '../../modules/nf-core/software/qualimap/bamqc/main'                   addParams(options: params.qualimap_bamqc_options)
 include { SAMTOOLS_STATS }                        from '../../modules/nf-core/software/samtools/stats/main'                   addParams(options: params.samtools_stats_options)
 include { SAMTOOLS_VIEW as SAMTOOLS_BAM_TO_CRAM } from '../../modules/nf-core/software/samtools/view/main.nf'                 addParams(options: params.samtools_view_options)
+include { SAMTOOLS_INDEX }                        from '../../modules/nf-core/software/samtools/index/main'                   addParams(options: params.samtools_index_options)
 
 //TODO name is not really covering everything happening here
 workflow MARKDUPLICATES {

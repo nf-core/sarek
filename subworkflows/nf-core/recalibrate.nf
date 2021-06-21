@@ -5,7 +5,7 @@
 */
 
 params.applybqsr_options      = [:]
-params.applybqsr_spark_options      = [:]
+params.applybqsr_spark_options = [:]
 params.merge_cram_options      = [:]
 params.qualimap_bamqc_options = [:]
 params.samtools_index_options = [:]

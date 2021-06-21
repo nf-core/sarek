@@ -152,21 +152,23 @@ include { MARKDUPLICATES } from '../subworkflows/nf-core/markduplicates' addPara
     markduplicatesspark_options:        modules['markduplicatesspark'],
     estimatelibrarycomplexity_options:  modules['estimatelibrarycomplexity'],
     merge_bam_options:               modules['merge_bam_mapping'],
-    samtools_index_options:          modules['samtools_index_mapping'],
     qualimap_bamqc_options:          modules['qualimap_bamqc_mapping'],
     samtools_stats_options:          modules['samtools_stats_mapping'],
-    samtools_view_options:           modules['samtools_view']
+    samtools_view_options:           modules['samtools_view'],
+    samtools_index_options:          modules['samtools_index_cram']
 )
-include { MARKDUPLICATES_CSV } from '../subworkflows/local/markduplicates_csv'
+// include { MARKDUPLICATES_CSV } from '../subworkflows/local/markduplicates_csv'
 
 
 include { PREPARE_RECALIBRATION } from '../subworkflows/nf-core/prepare_recalibration' addParams(
     baserecalibrator_options:        modules['baserecalibrator'],
+    baserecalibrator_spark_options:  modules['baserecalibrator_spark'],
     gatherbqsrreports_options:       modules['gatherbqsrreports']
 )
 include { PREPARE_RECALIBRATION_CSV } from '../subworkflows/local/prepare_recalibration_csv'
 include { RECALIBRATE } from '../subworkflows/nf-core/recalibrate' addParams(
     applybqsr_options:               modules['applybqsr'],
+    applybqsr_spark_options:         modules['applybqsr_spark'],
     merge_cram_options:              modules['merge_cram_recalibrate'],
     qualimap_bamqc_options:          modules['qualimap_bamqc_recalibrate'],
     samtools_index_options:          modules['samtools_index_recalibrate'],
@@ -180,20 +182,20 @@ include { GERMLINE_VARIANT_CALLING } from '../subworkflows/local/germline_varian
     haplotypecaller_options:         modules['haplotypecaller'],
     strelka_options:                 modules['strelka_germline']
 )
-// include { TUMOR_VARIANT_CALLING } from '../subworkflows/local/tumor_variant_calling' addParams(
+// // include { TUMOR_VARIANT_CALLING } from '../subworkflows/local/tumor_variant_calling' addParams(
+// // )
+// include { PAIR_VARIANT_CALLING } from '../subworkflows/local/pair_variant_calling' addParams(
+//     manta_options:                   modules['manta_somatic'],
+//     msisensorpro_msi_options:        modules['msisensorpro_msi'],
+//     strelka_bp_options:              modules['strelka_somatic_bp'],
+//     strelka_options:                 modules['strelka_somatic']
 // )
-include { PAIR_VARIANT_CALLING } from '../subworkflows/local/pair_variant_calling' addParams(
-    manta_options:                   modules['manta_somatic'],
-    msisensorpro_msi_options:        modules['msisensorpro_msi'],
-    strelka_bp_options:              modules['strelka_somatic_bp'],
-    strelka_options:                 modules['strelka_somatic']
-)
 
 ////////////////////////////////////////////////////
 /* --          INCLUDE NF-CORE MODULES         -- */
 ////////////////////////////////////////////////////
 
-include { MULTIQC }                       from '../modules/nf-core/software/multiqc/main'
+//include { MULTIQC }                       from '../modules/nf-core/software/multiqc/main'
 
 ////////////////////////////////////////////////////
 /* --       INCLUDE NF-CORE SUBWORKFLOWS       -- */
@@ -251,6 +253,7 @@ workflow SAREK {
     // additional options to be set up
 
     if (params.step == 'mapping') {
+
         FASTQC_TRIMGALORE(
             input_sample,
             !(params.trim_fastq))
@@ -280,7 +283,7 @@ workflow SAREK {
         // if (params.skip_markduplicates) {
         //     bam_markduplicates = bam_mapped
         // } else {
-        // STEP 2: MARKING DUPLICATES AND/OR QC, conversion to CRAm
+        // STEP 2: MARKING DUPLICATES AND/OR QC, conversion to CRAM
         MARKDUPLICATES(bam_mapped, params.use_gatk_spark,
                         !('markduplicates' in params.skip_qc),
                         fasta, fai, dict,
@@ -290,11 +293,10 @@ workflow SAREK {
 
         // Create CSV to restart from this step
         // MARKDUPLICATES_CSV(bam_markduplicates)
-
-        cram_markduplicates = MARKDUPLICATES.out.cram
-
         //TODO: Check with Maxime and add this
         //CRAM_CSV(cram_markduplicates)
+
+        cram_markduplicates = MARKDUPLICATES.out.cram
 
         qc_reports = qc_reports.mix(MARKDUPLICATES.out.qc)
     }
@@ -381,17 +383,17 @@ workflow SAREK {
         //     target_bed,
         //     target_bed_gz_tbi)
 
-        PAIR_VARIANT_CALLING(
-            cram_variant_calling,
-            dbsnp,
-            dbsnp_tbi,
-            dict,
-            fai,
-            fasta,
-            intervals,
-            msisensorpro_scan,
-            target_bed,
-            target_bed_gz_tbi)
+        // PAIR_VARIANT_CALLING(
+        //     cram_variant_calling,
+        //     dbsnp,
+        //     dbsnp_tbi,
+        //     dict,
+        //     fai,
+        //     fasta,
+        //     intervals,
+        //     msisensorpro_scan,
+        //     target_bed,
+        //     target_bed_gz_tbi)
 
         ////////////////////////////////////////////////////
         /* --                ANNOTATION                -- */
