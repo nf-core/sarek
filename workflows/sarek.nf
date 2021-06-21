@@ -227,10 +227,10 @@ workflow SAREK {
     dict = params.dict      ? file(params.dict)      : BUILD_INDICES.out.dict
     fai  = params.fasta_fai ? file(params.fasta_fai) : BUILD_INDICES.out.fai
 
-    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_index             ? path(params.dbsnp_index)             : BUILD_INDICES.out.dbsnp_tbi                  : []
-    germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? file(params.germline_resource_index) : BUILD_INDICES.out.germline_resource_tbi      : []
-    known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? path(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : []
-    pon_tbi               = params.pon               ? params.pon_index               ? file(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : []
+    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_index             ? Channel.fromPath(params.dbsnp_index)             : BUILD_INDICES.out.dbsnp_tbi                  : []
+    germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? Channel.fromPath(params.germline_resource_index) : BUILD_INDICES.out.germline_resource_tbi      : []
+    known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? Channel.fromPath(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : []
+    pon_tbi               = params.pon               ? params.pon_index               ? Channel.fromPath(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : []
 
     known_sites     = [dbsnp, known_indels]
     known_sites_tbi = dbsnp_tbi.mix(known_indels_tbi).collect()
