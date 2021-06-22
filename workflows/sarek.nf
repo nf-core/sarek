@@ -147,7 +147,7 @@ include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
 )
 
 include { MAPPING_CSV } from '../subworkflows/local/mapping_csv'
-include { MARKDUPLICATES as MARKDUPLICATES_NORMAL } from '../subworkflows/nf-core/markduplicates' addParams(
+include { MARKDUPLICATES } from '../subworkflows/nf-core/markduplicates' addParams(
     markduplicates_options:             modules['markduplicates'],
     markduplicatesspark_options:        modules['markduplicatesspark'],
     estimatelibrarycomplexity_options:  modules['estimatelibrarycomplexity'],
@@ -157,18 +157,8 @@ include { MARKDUPLICATES as MARKDUPLICATES_NORMAL } from '../subworkflows/nf-cor
     samtools_view_options:           modules['samtools_view'],
     samtools_index_options:          modules['samtools_index_cram']
 )
-include { MARKDUPLICATES as MARKDUPLICATES_TUMOR } from '../subworkflows/nf-core/markduplicates' addParams(
-    markduplicates_options:             modules['markduplicates'],
-    markduplicatesspark_options:        modules['markduplicatesspark'],
-    estimatelibrarycomplexity_options:  modules['estimatelibrarycomplexity'],
-    merge_bam_options:               modules['merge_bam_mapping'],
-    qualimap_bamqc_options:          modules['qualimap_bamqc_mapping'],
-    samtools_stats_options:          modules['samtools_stats_mapping'],
-    samtools_view_options:           modules['samtools_view'],
-    samtools_index_options:          modules['samtools_index_cram']
-)
-// include { MARKDUPLICATES_CSV } from '../subworkflows/local/markduplicates_csv'
 
+// include { MARKDUPLICATES_CSV } from '../subworkflows/local/markduplicates_csv'
 
 include { PREPARE_RECALIBRATION } from '../subworkflows/nf-core/prepare_recalibration' addParams(
     baserecalibrator_options:        modules['baserecalibrator'],
@@ -294,8 +284,7 @@ workflow SAREK {
         // } else {
 
         // STEP 2: MARKING DUPLICATES AND/OR QC, conversion to CRAM
-        //TODO: fix the blocked channels from mapping to avoid duplicating this here
-        MARKDUPLICATES_NORMAL(bam_mapped, params.use_gatk_spark,
+        MARKDUPLICATES(bam_mapped, params.use_gatk_spark,
                         !('markduplicates' in params.skip_qc),
                         fasta, fai, dict,
                         'bamqc' in params.skip_qc,
@@ -307,9 +296,9 @@ workflow SAREK {
         //TODO: Check with Maxime and add this
         //CRAM_CSV(cram_markduplicates)
 
-        cram_markduplicates = MARKDUPLICATES_NORMAL.out.cram
+        cram_markduplicates = MARKDUPLICATES.out.cram
 
-        qc_reports = qc_reports.mix(MARKDUPLICATES_NORMAL.out.qc)
+        qc_reports = qc_reports.mix(MARKDUPLICATES.out.qc)
     }
 
     if (params.step.toLowerCase() == 'prepare_recalibration') cram_markduplicates = input_sample

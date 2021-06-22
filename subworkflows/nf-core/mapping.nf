@@ -86,31 +86,20 @@ workflow MAPPING {
     }
     //'Mix' here prevents that parts of the channel are already run through MarkDuplicates. mIght actually not be 'mix' but 'groupTuple' that is the problem
     bam_bwa = bam_bwamem1.mix(bam_bwamem2)
-    //This does not look nice, but it at least lets normal/tumor be further processed separatly.
     //Still the problem remains now after splitting, how to join the splits in a non-blocking way.
-    //TODO: find the right channel magic for this, also see https://github.com/nf-core/sarek/issues/362 for some more discussion
-    // bam_normal = bam_bwamem1_n.mix(bam_bwamem2_n)
-    // bam_tumor = bam_bwamem1_t.mix(bam_bwamem2_t)
 
     //Moved this to whereever we merge
     bam_bwa.map{ meta, bam ->
         meta.remove('read_group')
         meta.id = meta.sample
         [meta, bam]
-    }
+    }.dump(tag:'map')
     .map{ meta, bam ->
-        tuple( groupKey(meta, meta.numLanes * params.split_fastq), bam)
-    }
+       def groupKey = groupKey(meta, meta.numLanes * params.split_fastq)
+        tuple(groupKey, bam)
+    }.groupTuple().dump(tag:'groupkey')
     .set{bam_mapped}
     bam_mapped.dump(tag:'mapping')
-    //TODO: groupTuple takes a size in theory, which here would be 'split_fastq' * num_sample_id, unfortunately this would not work anymore
-    //if we have multiple lanes that also need to be merged. Maybe groupKey would be an option: https://www.nextflow.io/docs/latest/operator.html?highlight=groupkey#grouptuple
-        // How to get num_sample_id?, in theory meta.id from reads inpput summed up
-    // bam_tumor.map{ meta, bam ->
-    //     meta.remove('read_group')
-    //     meta.id = meta.sample
-    //     [meta, bam]
-    // }.groupTuple().set{bam_mapped_tumor}
 
     //Moved this to whereever we merge
     //.branch{
