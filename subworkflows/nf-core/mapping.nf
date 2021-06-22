@@ -99,7 +99,7 @@ workflow MAPPING {
         [meta, bam]
     }
     .map{ meta, bam ->
-        groupTuple(size: meta.numLanes * params.split_fastq)
+        tuple( groupKey(meta, meta.numLanes * params.split_fastq), bam)
     }
     .set{bam_mapped}
     bam_mapped.dump(tag:'mapping')
