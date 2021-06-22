@@ -84,15 +84,35 @@ workflow MAPPING {
 
         bam_bwamem2 = bam_bwamem2_n.mix(bam_bwamem2_t)
     }
-
+    //'Mix' here prevents that parts of the channel are already run through MarkDuplicates. mIght actually not be 'mix' but 'groupTuple' that is the problem
     bam_bwa = bam_bwamem1.mix(bam_bwamem2)
+    //This does not look nice, but it at least lets normal/tumor be further processed separatly.
+    //Still the problem remains now after splitting, how to join the splits in a non-blocking way.
+    //TODO: find the right channel magic for this, also see https://github.com/nf-core/sarek/issues/362 for some more discussion
+    // bam_normal = bam_bwamem1_n.mix(bam_bwamem2_n)
+    // bam_tumor = bam_bwamem1_t.mix(bam_bwamem2_t)
 
-    //Is this still needed, I think not can move this to whereever we merge(at least the second half of the statement)
+    //Moved this to whereever we merge
     bam_bwa.map{ meta, bam ->
         meta.remove('read_group')
         meta.id = meta.sample
         [meta, bam]
-    }.groupTuple().set{bam_mapped}
+    }
+    .map{ meta, bam ->
+        groupTuple(size: meta.numLanes * params.split_fastq)
+    }
+    .set{bam_mapped}
+    bam_mapped.dump()
+    //TODO: groupTuple takes a size in theory, which here would be 'split_fastq' * num_sample_id, unfortunately this would not work anymore
+    //if we have multiple lanes that also need to be merged. Maybe groupKey would be an option: https://www.nextflow.io/docs/latest/operator.html?highlight=groupkey#grouptuple
+        // How to get num_sample_id?, in theory meta.id from reads inpput summed up
+    // bam_tumor.map{ meta, bam ->
+    //     meta.remove('read_group')
+    //     meta.id = meta.sample
+    //     [meta, bam]
+    // }.groupTuple().set{bam_mapped_tumor}
+
+    //Moved this to whereever we merge
     //.branch{
     //     single:   it[1].size() == 1
     //     multiple: it[1].size() > 1
@@ -122,5 +142,5 @@ workflow MAPPING {
     // bam_reports = samtools_stats.mix(qualimap_bamqc)
     emit:
         bam = bam_mapped //_index
-        //qc  = bam_reports
+        //bam_mapped_normal = bam_mapped_normal//qc  = bam_reports
 }

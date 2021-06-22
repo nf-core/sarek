@@ -147,7 +147,17 @@ include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
 )
 
 include { MAPPING_CSV } from '../subworkflows/local/mapping_csv'
-include { MARKDUPLICATES } from '../subworkflows/nf-core/markduplicates' addParams(
+include { MARKDUPLICATES as MARKDUPLICATES_NORMAL } from '../subworkflows/nf-core/markduplicates' addParams(
+    markduplicates_options:             modules['markduplicates'],
+    markduplicatesspark_options:        modules['markduplicatesspark'],
+    estimatelibrarycomplexity_options:  modules['estimatelibrarycomplexity'],
+    merge_bam_options:               modules['merge_bam_mapping'],
+    qualimap_bamqc_options:          modules['qualimap_bamqc_mapping'],
+    samtools_stats_options:          modules['samtools_stats_mapping'],
+    samtools_view_options:           modules['samtools_view'],
+    samtools_index_options:          modules['samtools_index_cram']
+)
+include { MARKDUPLICATES as MARKDUPLICATES_TUMOR } from '../subworkflows/nf-core/markduplicates' addParams(
     markduplicates_options:             modules['markduplicates'],
     markduplicatesspark_options:        modules['markduplicatesspark'],
     estimatelibrarycomplexity_options:  modules['estimatelibrarycomplexity'],
@@ -234,7 +244,6 @@ workflow SAREK {
 
     known_sites     = [dbsnp, known_indels]
     known_sites_tbi = dbsnp_tbi.combine(known_indels_tbi).collect()
-    //Caused by: groovy.lang.MissingMethodException: No signature of method: sun.nio.fs.UnixPath.mix() is applicable for argument types: (LinkedList) values: [[/nfsmounts/igenomes/Homo_sapiens/GATK/GRCh38/Annotation/GATKBundle/beta/Homo_sapiens_assembly38.known_indels.vcf.gz.tbi, ...]]
     msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
 
@@ -283,8 +292,10 @@ workflow SAREK {
         // if (params.skip_markduplicates) {
         //     bam_markduplicates = bam_mapped
         // } else {
+
         // STEP 2: MARKING DUPLICATES AND/OR QC, conversion to CRAM
-        MARKDUPLICATES(bam_mapped, params.use_gatk_spark,
+        //TODO: fix the blocked channels from mapping to avoid duplicating this here
+        MARKDUPLICATES_NORMAL(bam_mapped, params.use_gatk_spark,
                         !('markduplicates' in params.skip_qc),
                         fasta, fai, dict,
                         'bamqc' in params.skip_qc,
@@ -296,9 +307,9 @@ workflow SAREK {
         //TODO: Check with Maxime and add this
         //CRAM_CSV(cram_markduplicates)
 
-        cram_markduplicates = MARKDUPLICATES.out.cram
+        cram_markduplicates = MARKDUPLICATES_NORMAL.out.cram
 
-        qc_reports = qc_reports.mix(MARKDUPLICATES.out.qc)
+        qc_reports = qc_reports.mix(MARKDUPLICATES_NORMAL.out.qc)
     }
 
     if (params.step.toLowerCase() == 'prepare_recalibration') cram_markduplicates = input_sample
@@ -402,11 +413,20 @@ workflow SAREK {
 }
 
 def extract_csv(csv_file) {
-    Channel.from(csv_file).splitCsv(header: true).map{ row ->
+    Channel.from(csv_file).splitCsv(header: true)
+    //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
+                        .map{ row -> [[row.patient.toString(), row.sample.toString()], row]}
+                        .groupTuple()
+                        .map{ meta, rows ->
+                            size = rows.size()
+                            return [rows, size]
+                        }.transpose()
+                        .map{ row, numLanes -> //from here do the usual thing for csv parsing
         def meta = [:]
 
         meta.patient = row.patient.toString()
         meta.sample  = row.sample.toString()
+        meta.numLanes = numLanes.toInteger()
 
         // If no gender specified, gender is not considered (only used for somatic CNV)
         if (row.gender == null) {
@@ -433,13 +453,13 @@ def extract_csv(csv_file) {
             def bam     = file(row.bam, checkIfExists: true)
             def bai     = file(row.bai, checkIfExists: true)
             def table   = file(row.table, checkIfExists: true)
-            return [meta, bam, bai, table]
+            return [meta, [bam, bai, table]]
         } else {
         // prepare_recalibration or variant_calling
             meta.id = meta.sample
             def bam     = file(row.bam, checkIfExists: true)
             def bai     = file(row.bai, checkIfExists: true)
-            return [meta, bam, bai]
+            return [meta, [bam, bai]]
         }
     }
 }
