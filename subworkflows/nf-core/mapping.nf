@@ -102,7 +102,7 @@ workflow MAPPING {
         groupTuple(size: meta.numLanes * params.split_fastq)
     }
     .set{bam_mapped}
-    bam_mapped.dump()
+    bam_mapped.dump(tag:'mapping')
     //TODO: groupTuple takes a size in theory, which here would be 'split_fastq' * num_sample_id, unfortunately this would not work anymore
     //if we have multiple lanes that also need to be merged. Maybe groupKey would be an option: https://www.nextflow.io/docs/latest/operator.html?highlight=groupkey#grouptuple
         // How to get num_sample_id?, in theory meta.id from reads inpput summed up
