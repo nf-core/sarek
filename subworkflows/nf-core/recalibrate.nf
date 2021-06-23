@@ -11,12 +11,12 @@ params.qualimap_bamqc_options = [:]
 params.samtools_index_options = [:]
 params.samtools_stats_options = [:]
 
-include { GATK4_APPLYBQSR as APPLYBQSR } from '../../modules/nf-core/software/gatk4/applybqsr/main' addParams(options: params.applybqsr_options)
+include { GATK4_APPLYBQSR as APPLYBQSR }             from '../../modules/nf-core/software/gatk4/applybqsr/main' addParams(options: params.applybqsr_options)
 include { GATK4_APPLYBQSR_SPARK as APPLYBQSR_SPARK } from '../../modules/nf-core/software/gatk4/applybqsrspark/main' addParams(options: params.applybqsr_spark_options)
-include { QUALIMAP_BAMQC }               from '../../modules/nf-core/software/qualimap/bamqc/main'  addParams(options: params.qualimap_bamqc_options)
-include { SAMTOOLS_INDEX }               from '../../modules/nf-core/software/samtools/index/main'  addParams(options: params.samtools_index_options)
-include { SAMTOOLS_MERGE_CRAM }          from '../../modules/nf-core/software/samtools/merge_cram/main'  addParams(options: params.merge_cram_options)
-include { SAMTOOLS_STATS }               from '../../modules/nf-core/software/samtools/stats/main'  addParams(options: params.samtools_stats_options)
+include { QUALIMAP_BAMQC }                           from '../../modules/nf-core/software/qualimap/bamqc/main'  addParams(options: params.qualimap_bamqc_options)
+include { SAMTOOLS_INDEX }                           from '../../modules/nf-core/software/samtools/index/main'  addParams(options: params.samtools_index_options)
+include { SAMTOOLS_MERGE_CRAM }                      from '../../modules/nf-core/software/samtools/merge_cram/main'  addParams(options: params.merge_cram_options)
+include { SAMTOOLS_STATS }                           from '../../modules/nf-core/software/samtools/stats/main'  addParams(options: params.samtools_stats_options)
 
 workflow RECALIBRATE {
     take:
@@ -75,7 +75,7 @@ workflow RECALIBRATE {
         }
 
         if (!skip_samtools) {
-            SAMTOOLS_STATS(cram_recalibrated_index)
+            SAMTOOLS_STATS(cram_recalibrated_index, fasta)
             samtools_stats = SAMTOOLS_STATS.out.stats
         }
         cram_reports = samtools_stats.mix(qualimap_bamqc)

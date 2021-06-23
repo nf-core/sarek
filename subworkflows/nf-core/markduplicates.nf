@@ -94,7 +94,7 @@ workflow MARKDUPLICATES {
 
     samtools_stats = Channel.empty()
     if (!skip_samtools) {
-        SAMTOOLS_STATS(cram_markduplicates)
+        SAMTOOLS_STATS(cram_markduplicates, fasta)
         samtools_stats = SAMTOOLS_STATS.out.stats
     }
 
