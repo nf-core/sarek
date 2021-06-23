@@ -35,16 +35,21 @@ process SNPEFF {
 
     script:
     def software = getSoftwareName(task.process)
+    def avail_mem = 6
+    if (!task.memory) {
+        log.info '[snpEff] Available memory not known - defaulting to 6GB. Specify process memory requirements to change this.'
+    } else {
+        avail_mem = task.memory.giga
+    }
     prefix       = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     cache        = params.use_cache ? "-dataDir \${PWD}/${snpeff_cache}" : ""
     """
-    snpEff -Xmx${task.memory.toGiga()}g \
-        ${snpeff_db} \
-        -csvStats ${prefix}.csv \
-        ${cache} \
-        -canon \
-        -v \
-        ${vcf} \
+    snpEff -Xmx${avail_mem}g \\
+        $snpeff_db \\
+        $options.args \\
+        -csvStats ${prefix}.csv \\
+        $cache \\
+        $vcf \\
         > ${prefix}.ann.vcf
 
     echo \$(snpEff -version 2>&1) > ${software}.version.txt

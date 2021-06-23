@@ -407,10 +407,6 @@ workflow SAREK {
         if (step == 'annotate') vcf_to_annotate = input_sample
 
         if ('merge' in tools || 'snpeff' in tools || 'vep' in tools) {
-
-            snpeff_tag = "5.0.WBcel235"
-            vep_tag    = "5.0.WBcel235"
-
             ANNOTATE(
                 vcf_to_annotate,
                 tools,

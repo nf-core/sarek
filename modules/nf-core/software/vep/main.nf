@@ -42,22 +42,18 @@ process VEP {
     """
     mkdir ${prefix}
 
-    vep \
-        -i ${vcf} \
-        -o ${prefix}.ann.vcf \
-        --assembly ${vep_genome} \
-        --species ${vep_species} \
-        --cache \
-        --cache_version ${vep_cache_version} \
-        --dir_cache ${dir_cache} \
-        --everything \
-        --filter_common \
-        --fork ${task.cpus} \
-        --format vcf \
-        --per_gene \
-        --stats_file ${prefix}.summary.html \
-        --total_length \
-        --vcf
+    vep \\
+        -i $vcf \\
+        -o ${prefix}.ann.vcf \\
+        $options.args \\
+        --assembly $vep_genome \\
+        --species $vep_species \\
+        --cache \\
+        --cache_version $vep_cache_version \\
+        --dir_cache $dir_cache \\
+        --fork $task.cpus \\
+        --format vcf \\
+        --stats_file ${prefix}.summary.html
 
     rm -rf ${prefix}
 
