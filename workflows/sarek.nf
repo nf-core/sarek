@@ -173,9 +173,9 @@ include { PAIR_VARIANT_CALLING } from '../subworkflows/local/pair_variant_callin
 )
 
 include { ANNOTATE } from '../subworkflows/local/annotate' addParams(
-    bgziptabix_merge_vep:           modules['bgziptabix_merge_vep'],
-    bgziptabix_snpeff:              modules['bgziptabix_snpeff'],
-    bgziptabix_vep:                 modules['bgziptabix_vep'],
+    bgziptabix_merge_vep_options:   modules['bgziptabix_merge_vep'],
+    bgziptabix_snpeff_options:      modules['bgziptabix_snpeff'],
+    bgziptabix_vep_options:         modules['bgziptabix_vep'],
     merge_vep_options:              modules['merge_vep'],
     snpeff_options:                 modules['snpeff'],
     vep_options:                    modules['vep']

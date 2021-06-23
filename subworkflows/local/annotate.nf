@@ -12,18 +12,18 @@ params.snpeff_options               = [:]
 params.vep_options                  = [:]
 
 include { SNPEFF_ANNOTATE } from '../nf-core/snpeff' addParams(
-    snpeff_options:            params.snpeff_options,
-    bgziptabix_snpeff_options: params.bgziptabix_snpeff_options
+    bgziptabix_snpeff_options: params.bgziptabix_snpeff_options,
+    snpeff_options:            params.snpeff_options
 )
 
 include { VEP_ANNOTATE as MERGE_ANNOTATE } from '../nf-core/vep' addParams(
-    vep_options:               params.merge_vep_options,
-    bgziptabix_vep_options:    params.bgziptabix_merge_vep_options
+    bgziptabix_vep_options:    params.bgziptabix_merge_vep_options,
+    vep_options:               params.merge_vep_options
 )
 
 include { VEP_ANNOTATE } from '../nf-core/vep' addParams(
-    vep_options:               params.vep_options,
-    bgziptabix_vep_options:    params.bgziptabix_vep_options
+    bgziptabix_vep_options:    params.bgziptabix_vep_options,
+    vep_options:               params.vep_options
 )
 
 workflow ANNOTATE {

@@ -2,11 +2,11 @@
  * Run VEP to annotate VCF files
  */
 
-params.vep_options     = [:]
 params.bgziptabix_vep  = [:]
+params.vep_options     = [:]
 
 include { VEP }              from '../../modules/nf-core/software/vep/main'              addParams(options: params.vep_options)
-include { TABIX_BGZIPTABIX } from '../../modules/nf-core/software/tabix/bgziptabix/main' addParams(options: params.bgziptabix_vep)
+include { TABIX_BGZIPTABIX } from '../../modules/nf-core/software/tabix/bgziptabix/main' addParams(options: params.bgziptabix_vep_options)
 
 workflow VEP_ANNOTATE {
     take:
