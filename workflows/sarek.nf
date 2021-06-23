@@ -173,12 +173,15 @@ include { PAIR_VARIANT_CALLING } from '../subworkflows/local/pair_variant_callin
 )
 
 include { ANNOTATE } from '../subworkflows/local/annotate' addParams(
+    annotation_cache:               params.annotation_cache,
     bgziptabix_merge_vep_options:   modules['bgziptabix_merge_vep'],
     bgziptabix_snpeff_options:      modules['bgziptabix_snpeff'],
     bgziptabix_vep_options:         modules['bgziptabix_vep'],
     merge_vep_options:              modules['merge_vep'],
     snpeff_options:                 modules['snpeff'],
-    vep_options:                    modules['vep']
+    snpeff_tag:                     "${modules['snpeff'].tag_base}.${params.genome}",
+    vep_options:                    modules['vep'],
+    vep_tag:                        "${modules['vep'].tag_base}.${params.genome}"
 )
 
 /*
@@ -410,16 +413,13 @@ workflow SAREK {
 
             ANNOTATE(
                 vcf_to_annotate,
-                false, //use_cache
                 tools,
                 snpeff_db,
                 snpeff_cache,
-                snpeff_tag,
                 vep_genome,
                 vep_species,
                 vep_cache_version,
-                vep_cache,
-                vep_tag)
+                vep_cache)
         }
     }
 }
