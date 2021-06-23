@@ -29,9 +29,7 @@ process SAMTOOLS_STATS {
     script:
     def software = getSoftwareName(task.process)
     """
-    export REF_PATH=/some_dir/cache/%2s/%2s/%s:http://www.ebi.ac.uk/ena/cram/md5/%s
-    export REF_CACHE=/some_dir/cache/%2s/%2s/%s
-    samtools stats --ref-seq ${reference} $cram > ${cram}.stats
+    samtools view -T ${reference} -@${task.cpus} -h $cram  | samtools stats - > ${cram}.stats
     echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' > ${software}.version.txt
     """
 }
