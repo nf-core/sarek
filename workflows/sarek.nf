@@ -255,6 +255,7 @@ workflow SAREK {
 
         FASTQC_TRIMGALORE(
             input_sample,
+            ('fastqc' in params.skip_qc),
             !(params.trim_fastq))
 
         reads_input = FASTQC_TRIMGALORE.out.reads
