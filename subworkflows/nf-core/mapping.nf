@@ -92,12 +92,10 @@ workflow MAPPING {
     bam_bwa.map{ meta, bam ->
         meta.remove('read_group')
         meta.id = meta.sample
-        [meta, bam]
-    }.dump(tag:'map')
-    .map{ meta, bam ->
-       def groupKey = groupKey(meta, meta.numLanes * params.split_fastq)
+        def groupKey = groupKey(meta, meta.numLanes * params.split_fastq)
         tuple(groupKey, bam)
-    }.groupTuple().dump(tag:'groupkey')
+        [meta, bam]
+    }.dump(tag:'groupkey').groupTuple()
     .set{bam_mapped}
     bam_mapped.dump(tag:'mapping')
 
