@@ -30,6 +30,6 @@ workflow VEP_ANNOTATE {
 
     emit:
     vcf            = TABIX_BGZIPTABIX.out.tbi // channel: [ val(meta), vcf, tbi ]
-    vep_reports = VEP.out.reports       //    path: *.html
-    vep_version = VEP.out.version       //    path: *.version.txt
+    vep_report     = VEP.out.report           //    path: *.html
+    vep_version    = VEP.out.version          //    path: *.version.txt
 }

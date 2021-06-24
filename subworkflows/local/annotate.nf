@@ -47,25 +47,35 @@ workflow ANNOTATE {
     vep_cache
 
     main:
-    snpeff_vcf_ann = Channel.empty()
-    merge_vcf_ann = Channel.empty()
-    vep_vcf_ann = Channel.empty()
+    merge_vcf_ann     = Channel.empty()
+    merge_vep_report  = Channel.empty()
+    merge_vep_version = Channel.empty()
+    snpeff_report     = Channel.empty()
+    snpeff_vcf_ann    = Channel.empty()
+    snpeff_version    = Channel.empty()
+    vep_report        = Channel.empty()
+    vep_vcf_ann       = Channel.empty()
+    vep_version       = Channel.empty()
 
     if ('snpeff' in tools || 'merge' in tools) {
-        (snpeff_vcf_ann, snpeff_reports, snpeff_version) = SNPEFF_ANNOTATE(vcf, snpeff_db, snpeff_cache)
+        (snpeff_vcf_ann, snpeff_report, snpeff_version) = SNPEFF_ANNOTATE(vcf, snpeff_db, snpeff_cache)
     }
 
     if ('merge' in tools) {
         vcf_ann_for_merge = snpeff_vcf_ann.map{ meta, vcf, tbi -> [meta, vcf] } 
-        (merge_vcf_ann, merge_vep_reports, merge_vep_version) = MERGE_ANNOTATE(vcf_ann_for_merge, vep_genome, vep_species, vep_cache_version, vep_cache)
+        (merge_vcf_ann, merge_vep_report, merge_vep_version) = MERGE_ANNOTATE(vcf_ann_for_merge, vep_genome, vep_species, vep_cache_version, vep_cache)
     }
 
     if ('vep' in tools) {
-        (vep_vcf_ann, vep_reports, vep_version) = VEP_ANNOTATE(vcf, vep_genome, vep_species, vep_cache_version, vep_cache)
+        (vep_vcf_ann, vep_report, vep_version) = VEP_ANNOTATE(vcf, vep_genome, vep_species, vep_cache_version, vep_cache)
     }
 
     vcf_ann = snpeff_vcf_ann.mix(merge_vcf_ann, vep_vcf_ann)
+    reports = snpeff_report.mix(merge_vep_report, vep_report)
+    version = snpeff_version.first().mix(merge_vep_version.first(), vep_version.first())
 
     emit:
+        reports
         vcf_ann
+        version
 }

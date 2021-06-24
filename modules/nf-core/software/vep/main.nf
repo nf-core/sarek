@@ -32,7 +32,7 @@ process VEP {
 
     output:
     tuple val(meta), path("*.ann.vcf"), emit: vcf
-    path "*.summary.html",              emit: reports
+    path "*.summary.html",              emit: report
     path "*.version.txt",               emit: version
 
     script:

@@ -30,7 +30,7 @@ process SNPEFF {
 
     output:
     tuple val(meta), path("*.ann.vcf"), emit: vcf
-    path "*.csv",                       emit: reports
+    path "*.csv",                       emit: report
     path "*.version.txt",               emit: version
 
     script:
