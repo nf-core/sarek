@@ -59,7 +59,7 @@ workflow RECALIBRATE {
             [meta, cram]
         }.groupTuple().set{cram_recalibrated_interval}
 
-        SAMTOOLS_MERGE_CRAM(cram_recalibrated_interval)
+        SAMTOOLS_MERGE_CRAM(cram_recalibrated_interval, fasta)
         cram_recalibrated = SAMTOOLS_MERGE_CRAM.out.merged_cram
 
         SAMTOOLS_INDEX(cram_recalibrated)
