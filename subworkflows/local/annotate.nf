@@ -37,7 +37,7 @@ include { VEP_ANNOTATE } from '../nf-core/vep' addParams(
 
 workflow ANNOTATE {
     take:
-    vcf          // channel: [ val(meta), vcf, tbi ]
+    vcf          // channel: [ val(meta), vcf ]
     tools
     snpeff_db
     snpeff_cache
