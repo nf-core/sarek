@@ -14,21 +14,21 @@ params.snpeff_tag                   = [:]
 params.vep_options                  = [:]
 params.vep_tag                      = [:]
 
-include { SNPEFF_ANNOTATE } from '../nf-core/snpeff' addParams(
+include { SNPEFF_ANNOTATE } from '../nf-core/snpeff_annotate' addParams(
     bgziptabix_snpeff_options: params.bgziptabix_snpeff_options,
     snpeff_options:            params.snpeff_options,
     snpeff_tag:                params.snpeff_tag,
     use_cache:                 params.annotation_cache
 )
 
-include { VEP_ANNOTATE as MERGE_ANNOTATE } from '../nf-core/vep' addParams(
+include { VEP_ANNOTATE as MERGE_ANNOTATE } from '../nf-core/vep_annotate' addParams(
     bgziptabix_vep_options:    params.bgziptabix_merge_vep_options,
     use_cache:                 params.annotation_cache,
     vep_options:               params.merge_vep_options,
     vep_tag:                   params.vep_tag
 )
 
-include { VEP_ANNOTATE } from '../nf-core/vep' addParams(
+include { VEP_ANNOTATE } from '../nf-core/vep_annotate' addParams(
     bgziptabix_vep_options:    params.bgziptabix_vep_options,
     use_cache:                 params.annotation_cache,
     vep_options:               params.vep_options,
