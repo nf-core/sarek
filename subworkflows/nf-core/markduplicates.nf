@@ -76,6 +76,9 @@ workflow MARKDUPLICATES {
             GATK4_MARKDUPLICATES(bam_mapped, save_metrics)
             report_markduplicates = GATK4_MARKDUPLICATES.out.metrics
             bam_markduplicates    = GATK4_MARKDUPLICATES.out.bam
+
+            SAMTOOLS_BAM_TO_CRAM(bam_markduplicates, fasta, fai)
+            cram_markduplicates = SAMTOOLS_BAM_TO_CRAM.out.cram
         }
     }
 
@@ -86,9 +89,6 @@ workflow MARKDUPLICATES {
     if(!skip_bamqc){
         QUALIMAP_BAMQC(bam_markduplicates, target_bed, params.target_bed)
         qualimap_bamqc = QUALIMAP_BAMQC.out
-
-        SAMTOOLS_BAM_TO_CRAM(bam_markduplicates, fasta, fai)
-        cram_markduplicates = SAMTOOLS_BAM_TO_CRAM.out.cram
     }
 
 
