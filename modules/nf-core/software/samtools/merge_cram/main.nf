@@ -20,6 +20,7 @@ process SAMTOOLS_MERGE_CRAM {
 
     input:
     tuple val(meta), path(crams)
+    path(fasta)
 
     output:
     tuple val(meta), path("${prefix}.cram"), emit: merged_cram
@@ -29,7 +30,7 @@ process SAMTOOLS_MERGE_CRAM {
     def software = getSoftwareName(task.process)
     prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     """
-    samtools merge ${prefix}.cram $crams
+    samtools merge -@${task.cpus} --reference ${fasta} ${prefix}.cram $crams
     echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' > ${software}.version.txt
     """
 }
