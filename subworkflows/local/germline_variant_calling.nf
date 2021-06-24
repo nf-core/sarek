@@ -33,12 +33,13 @@ workflow GERMLINE_VARIANT_CALLING {
     haplotypecaller_gvcf = Channel.empty()
     haplotypecaller_vcf  = Channel.empty()
     strelka_vcf          = Channel.empty()
-    no_intervals = false
 
+    no_intervals = false
     if (intervals == []) no_intervals = true
 
     if ('haplotypecaller' in params.tools.toLowerCase()) {
 
+        //TODO: this is weird: doing the combining twice. Is this by design?
         haplotypecaller_interval_cram = cram.combine(intervals)
 
         cram.combine(intervals).map{ meta, cram, crai, intervals ->

@@ -32,6 +32,11 @@ process GATK4_ESTIMATELIBRARYCOMPLEXITY {
     def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     def bams = bam.collect(){ x -> "-I ".concat(x.toString()) }.join(" ")
+    if (!task.memory) {
+        log.info '[GATK EstimateLibraryComplexity] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
+    } else {
+        avail_mem = task.memory.giga
+    }
     """
     gatk EstimateLibraryComplexity \
         ${bams} \

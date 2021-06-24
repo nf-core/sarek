@@ -5,7 +5,7 @@ params.options = [:]
 options        = initOptions(params.options)
 
 process GATK4_MUTECT2_SOMATIC {
-    tag "$meta.id"
+    //tag "$meta.id"
     label 'process_low'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -27,7 +27,8 @@ process GATK4_MUTECT2_SOMATIC {
     path fai
     val no_intervals
     path(germline_resource)
-    path(germline_resource_tbi)
+    tuple val(id), path(germline_resource_tbi)
+     //target_bed?
 
     output:
     tuple val(meta), path("*.vcf"),       emit: vcf
@@ -50,11 +51,11 @@ process GATK4_MUTECT2_SOMATIC {
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
         Mutect2 \
         -R ${fasta}\
-        -I ${cramTumor} -tumor ${meta.tumor} \
-        -I ${cramNormal} -normal ${meta.normal} \
+        -I ${cram_tumor} -tumor ${meta.tumor} \
+        -I ${cram_normal} -normal ${meta.normal} \
         ${intervalsOptions} \
         ${softClippedOption} \
-        --germline-resource ${germlineResource} \
+        --germline-resource ${germline_resource} \
         ${PON} \
         -O ${prefix}.vcf
 

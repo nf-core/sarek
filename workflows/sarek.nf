@@ -184,12 +184,13 @@ include { GERMLINE_VARIANT_CALLING } from '../subworkflows/local/germline_varian
 )
 // // include { TUMOR_VARIANT_CALLING } from '../subworkflows/local/tumor_variant_calling' addParams(
 // // )
-// include { PAIR_VARIANT_CALLING } from '../subworkflows/local/pair_variant_calling' addParams(
-//     manta_options:                   modules['manta_somatic'],
-//     msisensorpro_msi_options:        modules['msisensorpro_msi'],
-//     strelka_bp_options:              modules['strelka_somatic_bp'],
-//     strelka_options:                 modules['strelka_somatic']
-// )
+include { PAIR_VARIANT_CALLING } from '../subworkflows/local/pair_variant_calling' addParams(
+    manta_options:                   modules['manta_somatic'],
+    msisensorpro_msi_options:        modules['msisensorpro_msi'],
+    strelka_bp_options:              modules['strelka_somatic_bp'],
+    strelka_options:                 modules['strelka_somatic'],
+    mutect2_somatic_options:         modules['mutect2_somatic']
+)
 
 ////////////////////////////////////////////////////
 /* --          INCLUDE NF-CORE MODULES         -- */
@@ -236,6 +237,8 @@ workflow SAREK {
     known_sites_tbi = dbsnp_tbi.combine(known_indels_tbi).collect()
     msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
+
+    germline_resource_tbi.dump(tag:"tbi")
 
     ////////////////////////////////////////////////////
     /* --               PREPROCESSING              -- */
@@ -384,17 +387,21 @@ workflow SAREK {
         //     target_bed,
         //     target_bed_gz_tbi)
 
-        // PAIR_VARIANT_CALLING(
-        //     cram_variant_calling,
-        //     dbsnp,
-        //     dbsnp_tbi,
-        //     dict,
-        //     fai,
-        //     fasta,
-        //     intervals,
-        //     msisensorpro_scan,
-        //     target_bed,
-        //     target_bed_gz_tbi)
+        PAIR_VARIANT_CALLING(
+            cram_variant_calling,
+            dbsnp,
+            dbsnp_tbi,
+            dict,
+            fai,
+            fasta,
+            intervals,
+            msisensorpro_scan,
+            target_bed,
+            target_bed_gz_tbi,
+            germline_resource,
+            germline_resource_tbi,
+            pon,
+            pon_tbi)
 
         ////////////////////////////////////////////////////
         /* --                ANNOTATION                -- */
