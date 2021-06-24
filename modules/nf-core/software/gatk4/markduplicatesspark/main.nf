@@ -26,7 +26,7 @@ process GATK4_MARKDUPLICATES_SPARK {
         val(format) //either "bam" or "cram"
 
     output:
-        tuple val(meta), path('*.${format}'), emit: output
+        tuple val(meta), path("*.${format}"), emit: output
         path("*.version.txt"),           emit: version
 
     script:
