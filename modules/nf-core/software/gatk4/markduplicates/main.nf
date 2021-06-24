@@ -32,7 +32,11 @@ process GATK4_MARKDUPLICATES {
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     def metrics  = use_metrics ? "M=${prefix}.metrics" :''
     def bams     = bam.collect(){ x -> "INPUT=".concat(x.toString()) }.join(" ")
-
+    if (!task.memory) {
+        log.info '[GATK MarkDuplicates] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
+    } else {
+        avail_mem = task.memory.giga
+    }
     """
     gatk MarkDuplicates \\
         ${bams} \\

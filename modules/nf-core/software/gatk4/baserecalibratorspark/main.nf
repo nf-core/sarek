@@ -35,6 +35,11 @@ process GATK4_BASERECALIBRATOR_SPARK {
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     def intervalsCommand = intervalsBed ? "-L ${intervalsBed}" : ""
     def sitesCommand = knownSites.collect{"--known-sites ${it}"}.join(' ')
+    if (!task.memory) {
+        log.info '[GATK BaseRecalibratorSpark] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
+    } else {
+        avail_mem = task.memory.giga
+    }
     """
     gatk BaseRecalibratorSpark  \
         -R $fasta \

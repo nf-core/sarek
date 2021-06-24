@@ -42,6 +42,7 @@ process GATK4_HAPLOTYPECALLER {
     }
     def intervalsOptions = no_intervals ? "" : "-L ${interval}"
     def dbsnpOptions = params.dbsnp ? "--D ${dbsnp}" : ""
+    //TODO allow ploidy argument here since we allow it for the cnv callers? or is this covered with options? Might unintuitive to use
     """
     gatk \\
         --java-options "-Xmx${avail_mem}g" \\

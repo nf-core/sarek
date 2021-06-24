@@ -33,8 +33,12 @@ process GATK4_MARKDUPLICATES_SPARK {
     def software = getSoftwareName(task.process)
     def bams = bam.collect(){ x -> "-I ".concat(x.toString()) }.join(" ")
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    if (!task.memory) {
+        log.info '[GATK MarkDuplicatesSpark] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
+    } else {
+        avail_mem = task.memory.giga
+    }
     """
-
     gatk  \
         MarkDuplicatesSpark \
         ${bams} \

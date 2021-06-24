@@ -28,6 +28,11 @@ process GATK4_GATHERBQSRREPORTS {
     script:
     def software = getSoftwareName(task.process)
     input = recal.collect{"-I ${it}"}.join(' ')
+    if (!task.memory) {
+        log.info '[GATK GatherBQSRReports] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
+    } else {
+        avail_mem = task.memory.giga
+    }
     """
     gatk --java-options -Xmx${task.memory.toGiga()}g \
         GatherBQSRReports \
