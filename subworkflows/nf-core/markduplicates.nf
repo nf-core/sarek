@@ -21,6 +21,7 @@ include { SAMTOOLS_MERGE }                        from '../../modules/nf-core/so
 include { QUALIMAP_BAMQC }                        from '../../modules/nf-core/software/qualimap/bamqc/main'                   addParams(options: params.qualimap_bamqc_options)
 include { SAMTOOLS_STATS }                        from '../../modules/nf-core/software/samtools/stats/main'                   addParams(options: params.samtools_stats_options)
 include { SAMTOOLS_VIEW as SAMTOOLS_BAM_TO_CRAM } from '../../modules/nf-core/software/samtools/view/main.nf'                 addParams(options: params.samtools_view_options)
+include { SAMTOOLS_VIEW as SAMTOOLS_BAM_TO_CRAM_SPARK } from '../../modules/nf-core/software/samtools/view/main.nf'                 addParams(options: params.samtools_view_options)
 include { SAMTOOLS_INDEX }                        from '../../modules/nf-core/software/samtools/index/main'                   addParams(options: params.samtools_index_options)
 
 //TODO name is not really covering everything happening here
@@ -61,6 +62,9 @@ workflow MARKDUPLICATES {
                 GATK4_MARKDUPLICATES_SPARK(bam_mapped, fasta, fai, dict, "bam")
                 SAMTOOLS_INDEX(GATK4_MARKDUPLICATES_SPARK.out.output)
                 bam_markduplicates  = GATK4_MARKDUPLICATES_SPARK.out.output.join(SAMTOOLS_INDEX.out.bai)
+
+                SAMTOOLS_BAM_TO_CRAM_SPARK(bam_markduplicates, fasta, fai)
+                cram_markduplicates = SAMTOOLS_BAM_TO_CRAM_SPARK.out.cram
             }else{
                 GATK4_MARKDUPLICATES_SPARK(bam_mapped, fasta, fai, dict, "cram")
                 SAMTOOLS_INDEX(GATK4_MARKDUPLICATES_SPARK.out.output)
