@@ -1,39 +1,45 @@
-name: MultiQC
-description: Aggregate results from bioinformatics analyses across many samples into a single report
+name: snpEff
+description: Genetic variant annotation and functional effect prediction toolbox
 keywords:
-    - QC
-    - bioinformatics tools
-    - Beautiful stand-alone HTML report
+    - annotation
 tools:
-    - multiqc:
+    - snpeff:
         description: |
-            MultiQC searches a given directory for analysis logs and compiles a HTML report.
-            It's a general use tool, perfect for summarising the output from numerous bioinformatics tools.
-        homepage: https://multiqc.info/
-        documentation: https://multiqc.info/docs/
+            SnpEff is a variant annotation and effect prediction tool.
+            It annotates and predicts the effects of genetic variants on genes and proteins (such as amino acid changes).
+        homepage: https://pcingola.github.io/SnpEff/
+        documentation: https://pcingola.github.io/SnpEff/se_introduction/
 input:
-    - multiqc_files:
+    - meta:
+        type: map
+        description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+    - vcf:
         type: file
         description: |
-            List of reports / files recognised by MultiQC, for example the html and zip output of FastQC
+            vcf to annotate
+    - snpeff_db:
+        type: value
+        description: |
+            which db to annotate with
+    - snpeff_cache:
+        type: file
+        description: |
+            path to snpEff cache (optional)
 output:
+    - vcf_ann:
+        type: file
+        description: |
+            annotated vcf
+        pattern: "*.ann.vcf"
     - report:
         type: file
-        description: MultiQC report file
-        pattern: "multiqc_report.html"
-    - data:
-        type: dir
-        description: MultiQC data dir
-        pattern: "multiqc_data"
-    - plots:
-        type: file
-        description: Plots created by MultiQC
-        pattern: "*_data"
+        description: snpEff report file
+        pattern: "*.html"
     - version:
         type: file
         description: File containing software version
         pattern: "*.{version.txt}"
 authors:
-    - "@abhi18av"
-    - "@bunop"
-    - "@drpatelh"
+    - "@maxulysse"
