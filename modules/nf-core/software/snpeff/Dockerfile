@@ -1,8 +1,8 @@
 FROM nfcore/base:1.14
 LABEL \
-  author="Maxime Garcia" \
-  description="snpEff image for nf-core pipelines" \
-  maintainer="maxime.garcia@scilifelab.se"
+    author="Maxime Garcia" \
+    description="snpEff image for nf-core pipelines" \
+    maintainer="maxime.garcia@scilifelab.se"
 
 # Install the conda environment
 COPY environment.yml /
