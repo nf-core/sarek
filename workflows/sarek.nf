@@ -286,7 +286,7 @@ workflow SAREK {
         // } else {
 
         // STEP 2: MARKING DUPLICATES AND/OR QC, conversion to CRAM
-        MARKDUPLICATES(bam_mapped, params.use_gatk_spark,
+        MARKDUPLICATES(bam_mapped, ('markduplicates' in params.use_gatk_spark),
                         !('markduplicates' in params.skip_qc),
                         fasta, fai, dict,
                         'bamqc' in params.skip_qc,
@@ -309,7 +309,7 @@ workflow SAREK {
         // STEP 3: CREATING RECALIBRATION TABLES
         PREPARE_RECALIBRATION(
             cram_markduplicates,
-            params.use_gatk_spark,
+            ('bqsr' in params.use_gatk_spark),
             dict,
             fai,
             fasta,
@@ -329,7 +329,7 @@ workflow SAREK {
     if (params.step.toLowerCase() in ['mapping', 'prepare_recalibration', 'recalibrate']) {
         // STEP 4: RECALIBRATING
         RECALIBRATE(
-            params.use_gatk_spark,
+            ('bqsr' in params.use_gatk_spark),
             ('bamqc' in params.skip_qc),
             ('samtools' in params.skip_qc),
             cram_applybqsr,

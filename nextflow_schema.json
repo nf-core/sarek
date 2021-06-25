@@ -190,10 +190,11 @@
                     "hidden": true
                 },
                 "use_gatk_spark": {
-                    "type": "boolean",
-                    "default": false,
+                    "type": "string",
                     "fa_icon": "fas fa-forward",
-                    "description": "Enable usage of GATK Spark implementation"
+                    "description": "Tools for which to enable usage of GATK Spark implementation",
+                    "help_text": "Multiple separated with commas.\n\n GATK4 BQSR tools are currently only available as Beta release. Use with caution!",
+                    "pattern": "^((markduplicates|bqsr)*,?)*$"
                 },
                 "save_bam_mapped": {
                     "type": "boolean",
