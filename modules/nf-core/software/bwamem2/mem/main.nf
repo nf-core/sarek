@@ -36,7 +36,7 @@ process BWAMEM2_MEM {
     //MD Spark NEEDS name sorted reads or runtime goes through the roof.
     //However, if duplicate marking is skipped, reads need to be coordinate sorted.
     //Spark can be used also for BQSR, therefore check for both: only name sort if spark + duplicate marking is done
-    def sort_order = params.use_gatk_spark & !params.skip_markduplicates ? "-n" : ""
+    def sort_order = ('markduplicates' in params.use_gatk_spark) & !params.skip_markduplicates ? "-n" : ""
 
     """
     INDEX=`find -L ./ -name "*.amb" | sed 's/.amb//'`
