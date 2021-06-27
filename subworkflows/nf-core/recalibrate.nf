@@ -57,7 +57,7 @@ workflow RECALIBRATE {
         cram_applybqsr.map{ meta, cram ->
             meta.id = meta.sample
             [meta, cram]
-        }.groupTuple().set{cram_recalibrated_interval}
+        }.groupTuple(size: 133).set{cram_recalibrated_interval}
 
         SAMTOOLS_MERGE_CRAM(cram_recalibrated_interval, fasta)
         cram_recalibrated = SAMTOOLS_MERGE_CRAM.out.merged_cram
