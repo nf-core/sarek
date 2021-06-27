@@ -37,7 +37,8 @@ process GATK4_BASERECALIBRATOR {
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     def intervalsCommand = intervalsBed ? "-L ${intervalsBed}" : ""
     //def sitesCommand = knownSites.collect{"--known-sites ${it}"}.join(' ')
-    def sitesCommand = "--known-sites ${dbsnp} --known-sites ${known_indels}"
+    def ki = known_indels.collect{"--known-sites ${it}"}.join(' ')
+    def sitesCommand = "--known-sites ${dbsnp} ${ki}"
     if (!task.memory) {
         log.info '[GATK BaseRecalibrator] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
     } else {
