@@ -32,6 +32,8 @@ workflow PREPARE_RECALIBRATION {
         [new_meta, cram, crai, intervals]
     }.set{cram_markduplicates_intervals}
 
+    cram_markduplicates_intervals.dump(tag:'bqsrinput')
+
     if(use_gatk_spark){
         BASERECALIBRATOR_SPARK(cram_markduplicates_intervals, fasta, fai, dict, known_sites, known_sites_tbi)
         table_baserecalibrator = BASERECALIBRATOR_SPARK.out.table
