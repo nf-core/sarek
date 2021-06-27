@@ -23,10 +23,9 @@ process GATK4_BASERECALIBRATOR {
     path fasta
     path fai
     path dict
+    path known_sites_tbi
     path known_indels
-    path known_indels_tbi
     path dbsnp
-    path dbsnp_tbi
 
     output:
     tuple val(meta), path("*.table"), emit: table

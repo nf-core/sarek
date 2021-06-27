@@ -241,8 +241,6 @@ workflow SAREK {
     msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
 
-    known_indels_tbi = known_indels_tbi.collect()
-    known_indels_tbi.dump(tag:'knwon_indels_tbi')
     ////////////////////////////////////////////////////
     /* --               PREPROCESSING              -- */
     ////////////////////////////////////////////////////
@@ -323,9 +321,7 @@ workflow SAREK {
             known_sites_tbi,
             params.no_intervals,
             known_indels,
-            known_indels_tbi,
-            dbsnp,
-            dbsnp_tbi)
+            dbsnp)
 
         table_bqsr = PREPARE_RECALIBRATION.out.table_bqsr
         PREPARE_RECALIBRATION_CSV(table_bqsr)

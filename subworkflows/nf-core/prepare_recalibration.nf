@@ -24,9 +24,7 @@ workflow PREPARE_RECALIBRATION {
         known_sites_tbi     // channel: [optional]  known_sites_tbi
         no_intervals        //   value: [mandatory] no_intervals
         known_indels
-        known_indels_tbi
         dbsnp
-        dbsnp_tbi
 
     main:
     intervals.dump(tag:'intervals2')
@@ -42,7 +40,7 @@ workflow PREPARE_RECALIBRATION {
         BASERECALIBRATOR_SPARK(cram_markduplicates_intervals, fasta, fai, dict, known_sites, known_sites_tbi)
         table_baserecalibrator = BASERECALIBRATOR_SPARK.out.table
     }else{
-        BASERECALIBRATOR(cram_markduplicates_intervals, fasta, fai, dict, known_indels, known_indels_tbi, dbsnp, dbsnp_tbi)
+        BASERECALIBRATOR(cram_markduplicates_intervals, fasta, fai, dict, known_sites_tbi, known_indels, dbsnp)
         table_baserecalibrator = BASERECALIBRATOR.out.table
     }
 
