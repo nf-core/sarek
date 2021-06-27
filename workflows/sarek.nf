@@ -241,7 +241,8 @@ workflow SAREK {
     msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
 
-    intervals.dump(tag:'intervals')
+    known_indels_tbi = known_indels_tbi.collect()
+    known_indels_tbi.dump(tag:'knwon_indels_tbi')
     ////////////////////////////////////////////////////
     /* --               PREPROCESSING              -- */
     ////////////////////////////////////////////////////
