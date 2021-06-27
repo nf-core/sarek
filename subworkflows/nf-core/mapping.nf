@@ -95,9 +95,9 @@ workflow MAPPING {
         def groupKey = groupKey(meta, meta.numLanes * params.split_fastq)
         tuple(groupKey, bam)
         [meta, bam]
-    }.dump(tag:'groupkey').groupTuple()
+    }//.dump(tag:'groupkey').groupTuple()
     .set{bam_mapped}
-    bam_mapped.dump(tag:'mapping')
+    //bam_mapped.dump(tag:'mapping')
 
     //Moved this to whereever we merge
     //.branch{

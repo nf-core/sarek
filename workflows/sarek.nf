@@ -236,7 +236,7 @@ workflow SAREK {
     dbsnp_ch = Channel.from(dbsnp)
     known_indels_ch = Channel.from(known_indels)
 
-    known_sites     = dbsnp_ch.combine(known_indels_ch)
+    known_sites     = dbsnp_ch.combine(known_indels_ch).collect()
     known_sites_tbi = dbsnp_tbi.combine(known_indels_tbi).collect()
     msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
