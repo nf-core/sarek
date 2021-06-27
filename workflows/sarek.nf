@@ -228,19 +228,23 @@ workflow SAREK {
     dict = params.dict      ? file(params.dict)      : BUILD_INDICES.out.dict
     fai  = params.fasta_fai ? file(params.fasta_fai) : BUILD_INDICES.out.fai
 
-    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_index             ? Channel.from(params.dbsnp_index)             : BUILD_INDICES.out.dbsnp_tbi                  : []
+    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_index             ? Channel.fromPath(params.dbsnp_index)             : BUILD_INDICES.out.dbsnp_tbi                  : []
     germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? Channel.from(params.germline_resource_index) : BUILD_INDICES.out.germline_resource_tbi      : []
-    known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? Channel.from(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : []
+    known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? Channel.fromPath(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : []
     pon_tbi               = params.pon               ? params.pon_index               ? Channel.from(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : []
 
     dbsnp_ch = Channel.from(dbsnp)
     known_indels_ch = Channel.from(known_indels)
 
-    known_sites     = dbsnp_ch.combine(known_indels_ch).collect()
-    known_sites_tbi = dbsnp_tbi.combine(known_indels_tbi).collect()
+    known_sites     = known_indels_ch.concat(dbsnp_ch).collect()
+    known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
     msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
 
+    dbsnp_ch.dump(tag:'dbsnp')
+    known_indels_ch.dump(tag:'known_indels')
+    known_sites.dump(tag:'knownsites')
+    known_sites_tbi.dump(tag:'knownsites_index')
     ////////////////////////////////////////////////////
     /* --               PREPROCESSING              -- */
     ////////////////////////////////////////////////////

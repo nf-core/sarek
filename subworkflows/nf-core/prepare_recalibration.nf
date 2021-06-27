@@ -27,24 +27,23 @@ workflow PREPARE_RECALIBRATION {
         dbsnp
 
     main:
-    intervals.dump(tag:'intervals2')
-    cram_markduplicates.combine(intervals).map{ meta, cram, crai, intervals ->
+    cram_markduplicates.combine(intervals)
+    .map{ meta, cram, crai, intervals ->
         new_meta = meta.clone()
         new_meta.id = meta.sample + "_" + intervals.baseName
         [new_meta, cram, crai, intervals]
-    }.set{cram_markduplicates_intervals}
-
-    cram_markduplicates_intervals.dump(tag:'bqsrinput')
+    }
+    .set{cram_markduplicates_intervals}
 
     if(use_gatk_spark){
         BASERECALIBRATOR_SPARK(cram_markduplicates_intervals, fasta, fai, dict, known_sites, known_sites_tbi)
         table_baserecalibrator = BASERECALIBRATOR_SPARK.out.table
     }else{
-        BASERECALIBRATOR(cram_markduplicates_intervals, fasta, fai, dict, known_sites_tbi, known_indels, dbsnp)
+        BASERECALIBRATOR(cram_markduplicates_intervals, fasta, fai, dict, known_sites_tbi, known_sites)
         table_baserecalibrator = BASERECALIBRATOR.out.table
     }
 
-    // STEP 3.5: MERGING RECALIBRATION TABLES
+    //STEP 3.5: MERGING RECALIBRATION TABLES
     if (no_intervals) {
         table_baserecalibrator.map { meta, table ->
             meta.id = meta.sample

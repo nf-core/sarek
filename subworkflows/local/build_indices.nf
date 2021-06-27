@@ -122,7 +122,6 @@ workflow BUILD_INDICES {
             .map{duration, intervalFile -> intervalFile}
     }
 
-    result_intervals.dump(tag:'intervals')
     emit:
         bwa                   = result_bwa
         bwa_version           = version_bwa
