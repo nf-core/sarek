@@ -233,11 +233,15 @@ workflow SAREK {
     known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? Channel.from(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : []
     pon_tbi               = params.pon               ? params.pon_index               ? Channel.from(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : []
 
-    known_sites     = [dbsnp, known_indels]
+    dbsnp_ch = Channel.from(dbsnp)
+    known_indels_ch = Channel.from(known_indels)
+
+    known_sites     = dbsnp_ch.combine(known_indels_ch)
     known_sites_tbi = dbsnp_tbi.combine(known_indels_tbi).collect()
     msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
 
+    known_sites.dump(tag:'known sites')
     ////////////////////////////////////////////////////
     /* --               PREPROCESSING              -- */
     ////////////////////////////////////////////////////
