@@ -27,9 +27,9 @@ workflow PREPARE_RECALIBRATION {
     main:
 
     cram_markduplicates.combine(intervals).map{ meta, cram, crai, intervals ->
-        new_meta = meta.clone()
-        new_meta.id = meta.sample + "_" + intervals.baseName
-        [new_meta, cram, crai, intervals]
+        //new_meta = meta.clone()
+        meta.id = meta.sample + "_" + intervals.baseName
+        [meta, cram, crai, intervals]
     }.set{cram_markduplicates_intervals}
 
     cram_markduplicates_intervals.dump(tag:'bqsrinput')
