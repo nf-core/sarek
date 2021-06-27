@@ -23,8 +23,10 @@ process GATK4_BASERECALIBRATOR {
     path fasta
     path fai
     path dict
-    path knownSites
-    path knownSites_tbi
+    path known_indels
+    path known_indels_tbi
+    path dbsnp
+    path dbsnp_tbi
 
     output:
     tuple val(meta), path("*.table"), emit: table
@@ -34,7 +36,8 @@ process GATK4_BASERECALIBRATOR {
     def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     def intervalsCommand = intervalsBed ? "-L ${intervalsBed}" : ""
-    def sitesCommand = knownSites.collect{"--known-sites ${it}"}.join(' ')
+    //def sitesCommand = knownSites.collect{"--known-sites ${it}"}.join(' ')
+    def sitesCommand = "--known-sites ${dbsnp} --known-sites ${known_indels}"
     if (!task.memory) {
         log.info '[GATK BaseRecalibrator] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
     } else {

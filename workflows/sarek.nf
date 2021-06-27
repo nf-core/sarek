@@ -320,7 +320,11 @@ workflow SAREK {
             intervals,
             known_sites,
             known_sites_tbi,
-            params.no_intervals)
+            params.no_intervals,
+            known_indels,
+            known_indels_tbi,
+            dbsnp,
+            dbsnp_tbi)
 
         table_bqsr = PREPARE_RECALIBRATION.out.table_bqsr
         PREPARE_RECALIBRATION_CSV(table_bqsr)
