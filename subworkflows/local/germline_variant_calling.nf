@@ -64,33 +64,33 @@ workflow GERMLINE_VARIANT_CALLING {
             [meta, vcf]
         }.groupTuple()
 
-        // CONCAT_GVCF(
-        //     haplotypecaller_raw,
-        //     fai,
-        //     target_bed)
+        CONCAT_GVCF(
+            haplotypecaller_raw,
+            fai,
+            target_bed)
 
-        // haplotypecaller_gvcf = CONCAT_GVCF.out.vcf
+        haplotypecaller_gvcf = CONCAT_GVCF.out.vcf
 
-        // // STEP GATK HAPLOTYPECALLER.2
+        // STEP GATK HAPLOTYPECALLER.2
 
-        // GENOTYPEGVCF(
-        //     HAPLOTYPECALLER.out.interval_vcf,
-        //     dbsnp,
-        //     dbsnp_tbi,
-        //     dict,
-        //     fasta,
-        //     fai,
-        //     no_intervals)
+        GENOTYPEGVCF(
+            HAPLOTYPECALLER.out.interval_vcf,
+            dbsnp,
+            dbsnp_tbi,
+            dict,
+            fasta,
+            fai,
+            no_intervals)
 
-        // haplotypecaller_results = GENOTYPEGVCF.out.vcf.map{ meta, vcf ->
-        //     meta.id = meta.sample
-        //     [meta, vcf]
-        // }.groupTuple()
+        haplotypecaller_results = GENOTYPEGVCF.out.vcf.map{ meta, vcf ->
+            meta.id = meta.sample
+            [meta, vcf]
+        }.groupTuple()
 
-        // CONCAT_HAPLOTYPECALLER(
-        //     haplotypecaller_results,
-        //     fai,
-        //     target_bed)
+        CONCAT_HAPLOTYPECALLER(
+            haplotypecaller_results,
+            fai,
+            target_bed)
 
         haplotypecaller_vcf = CONCAT_HAPLOTYPECALLER.out.vcf
     }
