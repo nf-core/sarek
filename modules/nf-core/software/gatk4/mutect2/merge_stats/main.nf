@@ -19,13 +19,10 @@ process GATK4_MUTECT2_SOMATIC {
     }
 
     input:
-    tuple val(meta), path(cram_normal), path(crai_normal), path(cram_tumor), path(crai_tumor), path(interval)
-    path pon
-    path ponIndex
+    tuple val(meta), path(stats), path(vcf)
     path dict
     path fasta
     path fai
-    val no_intervals
     path(germline_resource)
     path(germline_resource_tbi)
 
