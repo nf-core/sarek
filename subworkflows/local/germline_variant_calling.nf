@@ -18,13 +18,14 @@ include { STRELKA_GERMLINE as STRELKA }              from '../../modules/nf-core
 
 workflow GERMLINE_VARIANT_CALLING {
     take:
-        cram              // channel: [mandatory] cram
+        cram_bqsr              // channel: [mandatory] cram
         dbsnp             // channel: [mandatory] dbsnp
         dbsnp_tbi         // channel: [mandatory] dbsnp_tbi
         dict              // channel: [mandatory] dict
         fai               // channel: [mandatory] fai
         fasta             // channel: [mandatory] fasta
         intervals         // channel: [mandatory] intervals
+        num_intervals
         target_bed        // channel: [optional]  target_bed
         target_bed_gz_tbi // channel: [optional]  target_bed_gz_tbi
 
@@ -42,14 +43,14 @@ workflow GERMLINE_VARIANT_CALLING {
         //TODO: this is weird: doing the combining twice. Is this by design?
         //haplotypecaller_interval_cram = cram.combine(intervals)
 
-        cram.combine(intervals).map{ meta, cram, crai, intervals ->
-            new_meta = meta.clone()
-            new_meta.id = meta.sample + "_" + intervals.baseName
-            [new_meta, cram, crai, intervals]
+        cram_bqsr.combine(intervals).map{ meta, cram, crai, intervals ->
+            //new_meta = meta.clone()
+            meta.id = meta.sample + "_" + intervals.baseName
+            [meta, cram, crai, intervals]
         }.set{haplotypecaller_interval_cram}
 
         // STEP GATK HAPLOTYPECALLER.1
-
+        //haplotypecaller_interval_cram.dump(tag:'haplotyoecaller')
         HAPLOTYPECALLER(
             haplotypecaller_interval_cram,
             dbsnp,
@@ -62,44 +63,44 @@ workflow GERMLINE_VARIANT_CALLING {
         haplotypecaller_raw = HAPLOTYPECALLER.out.vcf.map{ meta,vcf ->
             meta.id = meta.sample
             [meta, vcf]
-        }.groupTuple()
+        }.groupTuple(size: num_intervals)
 
-        CONCAT_GVCF(
-            haplotypecaller_raw,
-            fai,
-            target_bed)
+        // CONCAT_GVCF(
+        //     haplotypecaller_raw,
+        //     fai,
+        //     target_bed)
 
-        haplotypecaller_gvcf = CONCAT_GVCF.out.vcf
+        // haplotypecaller_gvcf = CONCAT_GVCF.out.vcf
 
-        // STEP GATK HAPLOTYPECALLER.2
+        // // STEP GATK HAPLOTYPECALLER.2
 
-        GENOTYPEGVCF(
-            HAPLOTYPECALLER.out.interval_vcf,
-            dbsnp,
-            dbsnp_tbi,
-            dict,
-            fasta,
-            fai,
-            no_intervals)
+        // GENOTYPEGVCF(
+        //     HAPLOTYPECALLER.out.interval_vcf,
+        //     dbsnp,
+        //     dbsnp_tbi,
+        //     dict,
+        //     fasta,
+        //     fai,
+        //     no_intervals)
 
-        haplotypecaller_results = GENOTYPEGVCF.out.vcf.map{ meta, vcf ->
-            meta.id = meta.sample
-            [meta, vcf]
-        }.groupTuple()
+        // haplotypecaller_results = GENOTYPEGVCF.out.vcf.map{ meta, vcf ->
+        //     meta.id = meta.sample
+        //     [meta, vcf]
+        // }.groupTuple()
 
-        CONCAT_HAPLOTYPECALLER(
-            haplotypecaller_results,
-            fai,
-            target_bed)
+        // CONCAT_HAPLOTYPECALLER(
+        //     haplotypecaller_results,
+        //     fai,
+        //     target_bed)
 
-        haplotypecaller_vcf = CONCAT_HAPLOTYPECALLER.out.vcf
+        // haplotypecaller_vcf = CONCAT_HAPLOTYPECALLER.out.vcf
     }
 
     //TODO: not run somehow when specifying strelka
     if ('strelka' in params.tools.toLowerCase()) {
-        cram.dump(tag:'strelka-input')
+        cram_bqsr.dump(tag:'strelka-input')
         STRELKA(
-            cram,
+            cram_bqsr,
             fasta,
             fai,
             target_bed_gz_tbi)

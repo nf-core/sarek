@@ -28,6 +28,7 @@ workflow RECALIBRATE {
         fai            // channel: [mandatory] fai
         fasta          // channel: [mandatory] fasta
         intervals      // channel: [mandatory] intervals
+        num_intervals
         target_bed     // channel: [optional]  target_bed
 
     main:
@@ -57,7 +58,7 @@ workflow RECALIBRATE {
         cram_applybqsr.map{ meta, cram ->
             meta.id = meta.sample
             [meta, cram]
-        }.groupTuple(size: 133).set{cram_recalibrated_interval}
+        }.groupTuple(size: num_intervals).set{cram_recalibrated_interval}
 
         SAMTOOLS_MERGE_CRAM(cram_recalibrated_interval, fasta)
         cram_recalibrated = SAMTOOLS_MERGE_CRAM.out.merged_cram

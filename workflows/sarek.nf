@@ -224,6 +224,11 @@ workflow SAREK {
 
     intervals = BUILD_INDICES.out.intervals
 
+    num_intervals = 0
+    intervals.count().map{
+        num_intervals = it
+    }
+
     bwa  = params.bwa       ? file(params.bwa)       : BUILD_INDICES.out.bwa
     dict = params.dict      ? file(params.dict)      : BUILD_INDICES.out.dict
     fai  = params.fasta_fai ? file(params.fasta_fai) : BUILD_INDICES.out.fai
@@ -234,6 +239,7 @@ workflow SAREK {
     pon_tbi               = params.pon               ? params.pon_index               ? Channel.from(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : []
 
     dbsnp_ch = Channel.from(dbsnp)
+    dbsnp_tbi_ch = Channel.from(dbsnp_tbi)
     known_indels_ch = Channel.from(known_indels)
 
     known_sites     = known_indels_ch.concat(dbsnp_ch).collect()
@@ -241,10 +247,10 @@ workflow SAREK {
     msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
 
-    dbsnp_ch.dump(tag:'dbsnp')
-    known_indels_ch.dump(tag:'known_indels')
-    known_sites.dump(tag:'knownsites')
-    known_sites_tbi.dump(tag:'knownsites_index')
+    //dbsnp_ch.dump(tag:'dbsnp')
+    //known_indels_ch.dump(tag:'known_indels')
+    //known_sites.dump(tag:'knownsites')
+    //known_sites_tbi.dump(tag:'knownsites_index')
     ////////////////////////////////////////////////////
     /* --               PREPROCESSING              -- */
     ////////////////////////////////////////////////////
@@ -321,6 +327,7 @@ workflow SAREK {
             fai,
             fasta,
             intervals,
+            num_intervals,
             known_sites,
             known_sites_tbi,
             params.no_intervals,
@@ -346,6 +353,7 @@ workflow SAREK {
             fai,
             fasta,
             intervals,
+            num_intervals,
             target_bed)
 
         cram_recalibrated    = RECALIBRATE.out.cram
@@ -357,7 +365,7 @@ workflow SAREK {
 
         cram_variant_calling = cram_recalibrated
 
-        cram_variant_calling.dump(tag:'input')
+        //cram_variant_calling.dump(tag:'input')
     }
 
     if (params.step.toLowerCase() == 'variant_calling') cram_variant_calling = input_sample
@@ -367,15 +375,16 @@ workflow SAREK {
         ////////////////////////////////////////////////////
         /* --         GERMLINE VARIANT CALLING         -- */
         ////////////////////////////////////////////////////
-        target_bed_gz_tbi.dump(tag:"tbi_gz")
+        //target_bed_gz_tbi.dump(tag:"tbi_gz")
         GERMLINE_VARIANT_CALLING(
             cram_variant_calling,
             dbsnp,
-            dbsnp_tbi,
+            dbsnp_tbi.collect(),
             dict,
             fai,
             fasta,
             intervals,
+            num_intervals,
             target_bed,
             target_bed_gz_tbi)
 
