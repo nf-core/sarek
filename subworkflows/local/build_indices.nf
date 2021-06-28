@@ -121,8 +121,7 @@ workflow BUILD_INDICES {
             .flatten().collate(2)
             .map{duration, intervalFile -> intervalFile}
     }
-
-    emit:
+     emit:
         bwa                   = result_bwa
         bwa_version           = version_bwa
         dbsnp_tbi             = result_dbsnp_tbi

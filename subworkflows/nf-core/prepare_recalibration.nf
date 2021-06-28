@@ -43,7 +43,14 @@ workflow PREPARE_RECALIBRATION {
         table_baserecalibrator = BASERECALIBRATOR.out.table
     }
 
-    num_intervals = intervals.count().view()
+    //num_intervals =  intervals.toList().size.view() //Integer.valueOf()
+   //.view()
+    //println(intervals.toList().getClass()) //.value.getClass())
+    val_num_intervals = 0
+    num_intervals = intervals.count().map{
+        val_num_intervals = it
+        println val_num_intervals
+    }
 
     //STEP 3.5: MERGING RECALIBRATION TABLES
     if (no_intervals) {
@@ -55,8 +62,7 @@ workflow PREPARE_RECALIBRATION {
         table_baserecalibrator.map{ meta, table ->
             meta.id = meta.sample
             [meta, table]
-        }.groupTuple(size: 133).set{recaltable}
-
+        }.groupTuple(size: val_num_intervals).set{recaltable}
 
         GATHERBQSRREPORTS(recaltable)
         table_bqsr = GATHERBQSRREPORTS.out.table
