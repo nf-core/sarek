@@ -485,10 +485,16 @@
                     "fa_icon": "fas fa-database",
                     "description": "snpEff DB version"
                 },
-                "species": {
+                "vep_genome": {
                     "type": "string",
                     "fa_icon": "fas fa-microscope",
-                    "description": "snpEff species",
+                    "description": "VEP genome",
+                    "help_text": "If you use AWS iGenomes or a local resource with genomes.conf, this has already been set for you appropriately."
+                },
+                "vep_species": {
+                    "type": "string",
+                    "fa_icon": "fas fa-microscope",
+                    "description": "VEP species",
                     "help_text": "If you use AWS iGenomes or a local resource with genomes.conf, this has already been set for you appropriately."
                 },
                 "vep_cache_version": {
