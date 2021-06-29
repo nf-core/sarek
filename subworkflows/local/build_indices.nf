@@ -69,7 +69,7 @@ workflow BUILD_INDICES {
 
     result_target_bed = Channel.empty()
     version_target_bed = Channel.empty()
-    if ((params.target_bed) && ('manta' in params.tools.toString().toLowerCase() || 'strelka' in params.tools.toString().toLowerCase()))
+    if ((params.target_bed) && (params.tools.toString().toLowerCase().contains('manta') || params.tools.toString().toLowerCase().contains('strelka')))
         (result_target_bed, version_target_bed) = INDEX_TARGET_BED(target_bed)
 
     result_germline_resource_tbi = Channel.empty()

@@ -6,7 +6,7 @@ options        = initOptions(params.options)
 
 process STRELKA_GERMLINE {
     tag "$meta.id"
-    label 'process_high'
+    label 'process_low'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
@@ -22,7 +22,7 @@ process STRELKA_GERMLINE {
     tuple val(meta), path(cram), path(crai)
     path  fasta
     path  fai
-    path  target_bed
+    tuple path(target_bed), path(target_bed_tbi)
 
     output:
     tuple val(meta), path("*_variants.vcf.gz"), path("*_variants.vcf.gz.tbi"), emit: vcf
@@ -30,9 +30,9 @@ process STRELKA_GERMLINE {
     path  "*.version.txt"                                                    , emit: version
 
     script:
-    def software = getSoftwareName(task.process)
-    def ioptions = initOptions(options)
-    def prefix   = ioptions.suffix ? "strelka_${meta.id}${ioptions.suffix}" : "strelka_${meta.id}"
+    def software        = getSoftwareName(task.process)
+    def ioptions        = initOptions(options)
+    def prefix          = ioptions.suffix ? "strelka_${meta.id}${ioptions.suffix}" : "strelka_${meta.id}"
     def options_strelka = params.target_bed ? "--exome --callRegions ${target_bed}" : ""
     """
     configureStrelkaGermlineWorkflow.py \\

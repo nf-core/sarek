@@ -13,7 +13,8 @@ process INDEX_TARGET_BED {
 
     conda (params.enable_conda ? "bioconda::htslib=1.12" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/htslib:1.12--hd3b49d5_0"
+        //TODO: No singularity container at the moment, use docker container for the moment
+        container "quay.io/biocontainers/htslib:1.12--h9093b5e_1"
     } else {
         container "quay.io/biocontainers/htslib:1.12--hd3b49d5_0"
     }

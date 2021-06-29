@@ -364,8 +364,6 @@ workflow SAREK {
         qc_reports = qc_reports.mix(cram_recalibrated_qc)
 
         cram_variant_calling = cram_recalibrated
-
-        //cram_variant_calling.dump(tag:'input')
     }
 
     if (params.step.toLowerCase() == 'variant_calling') cram_variant_calling = input_sample
@@ -375,7 +373,6 @@ workflow SAREK {
         ////////////////////////////////////////////////////
         /* --         GERMLINE VARIANT CALLING         -- */
         ////////////////////////////////////////////////////
-        //target_bed_gz_tbi.dump(tag:"tbi_gz")
         GERMLINE_VARIANT_CALLING(
             cram_variant_calling,
             dbsnp,

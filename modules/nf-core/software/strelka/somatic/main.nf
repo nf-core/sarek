@@ -22,7 +22,7 @@ process STRELKA_SOMATIC {
     tuple val(meta), path(cram_normal), path(crai_normal), path(cram_tumor), path(crai_tumor)
     path  fasta
     path  fai
-    path  target_bed
+    tuple path(target_bed), path(target_bed_tbi)
 
     output:
     tuple val(meta), path("*_somatic_indels.vcf.gz"), path("*_somatic_indels.vcf.gz.tbi"), emit: indels_vcf

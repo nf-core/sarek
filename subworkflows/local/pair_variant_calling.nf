@@ -105,7 +105,7 @@ workflow PAIR_VARIANT_CALLING {
             msisensorpro_scan)
     }
 
-    if ('strelka' in params.tools.toLowerCase()) {
+    if (params.tools.toLowerCase().contains('strelka')) {
         STRELKA(
             cram_pair,
             fasta,
