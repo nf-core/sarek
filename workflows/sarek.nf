@@ -51,15 +51,9 @@ else {
         case 'recalibrate':           csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv", checkIfExists: true); break
         case 'variant_calling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv", checkIfExists: true); break
         // case 'controlfreec':          csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
-<<<<<<< HEAD
-        case 'annotate': break
-        default: exit 1, "Unknown step ${params.step}"
-    }
-=======
         case 'annotate':              csv_file = file("${params.outdir}/variant_calling/csv/recalibrated.csv", checkIfExists: true); break
         default: exit 1, "Unknown step $step"
     }
->>>>>>> upstream/dsl2
 }
 
 input_sample = extract_csv(csv_file)
@@ -205,13 +199,13 @@ include { GERMLINE_VARIANT_CALLING } from '../subworkflows/local/germline_varian
 )
 // // include { TUMOR_VARIANT_CALLING } from '../subworkflows/local/tumor_variant_calling' addParams(
 // // )
-include { PAIR_VARIANT_CALLING } from '../subworkflows/local/pair_variant_calling' addParams(
-    manta_options:                   modules['manta_somatic'],
-    msisensorpro_msi_options:        modules['msisensorpro_msi'],
-    strelka_bp_options:              modules['strelka_somatic_bp'],
-    strelka_options:                 modules['strelka_somatic'],
-    mutect2_somatic_options:         modules['mutect2_somatic']
-)
+// include { PAIR_VARIANT_CALLING } from '../subworkflows/local/pair_variant_calling' addParams(
+//     manta_options:                   modules['manta_somatic'],
+//     msisensorpro_msi_options:        modules['msisensorpro_msi'],
+//     strelka_bp_options:              modules['strelka_somatic_bp'],
+//     strelka_options:                 modules['strelka_somatic'],
+//     mutect2_somatic_options:         modules['mutect2_somatic']
+// )
 
 include { ANNOTATE } from '../subworkflows/local/annotate' addParams(
     annotation_cache:               params.annotation_cache,
@@ -245,31 +239,31 @@ include { FASTQC_TRIMGALORE } from '../subworkflows/nf-core/fastqc_trimgalore' a
     fastqc_options:                  modules['fastqc'],
     trimgalore_options:              modules['trimgalore']
 )
-include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
-    bwamem1_mem_options:             modules['bwa_mem1_mem'],
-    bwamem1_mem_tumor_options:       modules['bwa_mem1_mem_tumor'],
-    bwamem2_mem_options:             modules['bwa_mem2_mem'],
-    bwamem2_mem_tumor_options:       modules['bwa_mem2_mem_tumor'],
-    merge_bam_options:               modules['merge_bam_mapping'],
-    qualimap_bamqc_options:          modules['qualimap_bamqc_mapping'],
-    samtools_index_options:          modules['samtools_index_mapping'],
-    samtools_stats_options:          modules['samtools_stats_mapping']
-)
-include { MARKDUPLICATES } from '../subworkflows/nf-core/markduplicates' addParams(
-    markduplicates_options:          modules['markduplicates'],
-    markduplicatesspark_options:     modules['markduplicatesspark']
-)
-include { PREPARE_RECALIBRATION } from '../subworkflows/nf-core/prepare_recalibration' addParams(
-    baserecalibrator_options:        modules['baserecalibrator'],
-    gatherbqsrreports_options:       modules['gatherbqsrreports']
-)
-include { RECALIBRATE } from '../subworkflows/nf-core/recalibrate' addParams(
-    applybqsr_options:               modules['applybqsr'],
-    merge_bam_options:               modules['merge_bam_recalibrate'],
-    qualimap_bamqc_options:          modules['qualimap_bamqc_recalibrate'],
-    samtools_index_options:          modules['samtools_index_recalibrate'],
-    samtools_stats_options:          modules['samtools_stats_recalibrate']
-)
+// include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
+//     bwamem1_mem_options:             modules['bwa_mem1_mem'],
+//     bwamem1_mem_tumor_options:       modules['bwa_mem1_mem_tumor'],
+//     bwamem2_mem_options:             modules['bwa_mem2_mem'],
+//     bwamem2_mem_tumor_options:       modules['bwa_mem2_mem_tumor'],
+//     merge_bam_options:               modules['merge_bam_mapping'],
+//     qualimap_bamqc_options:          modules['qualimap_bamqc_mapping'],
+//     samtools_index_options:          modules['samtools_index_mapping'],
+//     samtools_stats_options:          modules['samtools_stats_mapping']
+// )
+// include { MARKDUPLICATES } from '../subworkflows/nf-core/markduplicates' addParams(
+//     markduplicates_options:          modules['markduplicates'],
+//     markduplicatesspark_options:     modules['markduplicatesspark']
+// )
+// include { PREPARE_RECALIBRATION } from '../subworkflows/nf-core/prepare_recalibration' addParams(
+//     baserecalibrator_options:        modules['baserecalibrator'],
+//     gatherbqsrreports_options:       modules['gatherbqsrreports']
+// )
+// include { RECALIBRATE } from '../subworkflows/nf-core/recalibrate' addParams(
+//     applybqsr_options:               modules['applybqsr'],
+//     merge_bam_options:               modules['merge_bam_recalibrate'],
+//     qualimap_bamqc_options:          modules['qualimap_bamqc_recalibrate'],
+//     samtools_index_options:          modules['samtools_index_recalibrate'],
+//     samtools_stats_options:          modules['samtools_stats_recalibrate']
+// )
 
 workflow SAREK {
 
@@ -281,7 +275,9 @@ workflow SAREK {
         germline_resource,
         known_indels,
         pon,
-        target_bed)
+        target_bed,
+        tools,
+        step)
 
     intervals = BUILD_INDICES.out.intervals
 
@@ -299,11 +295,11 @@ workflow SAREK {
     known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? Channel.fromPath(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : []
     pon_tbi               = params.pon               ? params.pon_index               ? Channel.from(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : []
 
-    //dbsnp_ch = Channel.from(dbsnp)
-    //dbsnp_tbi_ch = Channel.from(dbsnp_tbi)
-    //known_indels_ch = Channel.from(known_indels)
-    known_sites     = dbsnp ? [dbsnp, known_indels] : known_indels ? known_indels : []
-    known_sites_tbi = dbsnp_tbi ? dbsnp_tbi.mix(known_indels_tbi).collect() : known_indels_tbi ? known_indels_tbi : ch_dummy_file
+    dbsnp_ch = Channel.from(dbsnp)
+    dbsnp_tbi_ch = Channel.from(dbsnp_tbi)
+    known_indels_ch = Channel.from(known_indels)
+    //known_sites     = dbsnp ? [dbsnp, known_indels] : known_indels ? known_indels : []
+    //known_sites_tbi = dbsnp_tbi ? dbsnp_tbi.mix(known_indels_tbi).collect() : known_indels_tbi ? known_indels_tbi : ch_dummy_file
 
     known_sites     = known_indels_ch.concat(dbsnp_ch).collect()
     known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
@@ -428,6 +424,7 @@ workflow SAREK {
     if (tools != []) {
         // GERMLINE VARIANT CALLING
         GERMLINE_VARIANT_CALLING(
+            tools,
             cram_variant_calling,
             dbsnp,
             dbsnp_tbi.collect(),
@@ -454,21 +451,22 @@ workflow SAREK {
         //     target_bed_gz_tbi)
 
         // PAIR VARIANT CALLING
-        PAIR_VARIANT_CALLING(
-            cram_variant_calling,
-            dbsnp,
-            dbsnp_tbi,
-            dict,
-            fai,
-            fasta,
-            intervals,
-            msisensorpro_scan,
-            target_bed,
-            target_bed_gz_tbi,
-            germline_resource,
-            germline_resource_tbi,
-            pon,
-            pon_tbi)
+        // PAIR_VARIANT_CALLING(
+        //     tools,
+        //     cram_variant_calling,
+        //     dbsnp,
+        //     dbsnp_tbi,
+        //     dict,
+        //     fai,
+        //     fasta,
+        //     intervals,
+        //     msisensorpro_scan,
+        //     target_bed,
+        //     target_bed_gz_tbi,
+        //     germline_resource,
+        //     germline_resource_tbi,
+        //     pon,
+        //     pon_tbi)
 
         // ANNOTATE
         if (step == 'annotate') vcf_to_annotate = input_sample

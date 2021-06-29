@@ -19,17 +19,10 @@ process STRELKA_GERMLINE {
     }
 
     input:
-<<<<<<< HEAD
     tuple val(meta), path(cram), path(crai)
     path  fasta
     path  fai
     tuple path(target_bed), path(target_bed_tbi)
-=======
-    tuple val(meta), path(bam), path(bai)
-    path fasta
-    path fai
-    tuple path(target_bed), path(tbi)
->>>>>>> upstream/dsl2
 
     output:
     tuple val(meta), path("*_variants.vcf.gz"), path("*_variants.vcf.gz.tbi"), emit: vcf
