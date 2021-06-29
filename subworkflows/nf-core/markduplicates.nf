@@ -52,7 +52,7 @@ workflow MARKDUPLICATES {
 
         SAMTOOLS_INDEX(bam_merged)
         bam_markduplicates = bam_merged.join(SAMTOOLS_INDEX.out.bai)
-
+        //TODO why is there no bam_to_cram here?
     } else{
 
         if (use_gatk_spark) {

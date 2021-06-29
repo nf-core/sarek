@@ -18,6 +18,7 @@ include { STRELKA_GERMLINE as STRELKA }              from '../../modules/nf-core
 
 workflow GERMLINE_VARIANT_CALLING {
     take:
+        tools
         cram              // channel: [mandatory] cram
         dbsnp             // channel: [mandatory] dbsnp
         dbsnp_tbi         // channel: [mandatory] dbsnp_tbi
@@ -38,7 +39,7 @@ workflow GERMLINE_VARIANT_CALLING {
     no_intervals = false
     if (intervals == []) no_intervals = true
 
-    if (params.tools.toLowerCase().contains('haplotypecaller')) {
+    if ('haplotypecaller' in tools) {
 
         cram.combine(intervals).map{ meta, cram, crai, intervals ->
             new_meta = meta.clone()
@@ -92,7 +93,7 @@ workflow GERMLINE_VARIANT_CALLING {
         haplotypecaller_vcf = CONCAT_HAPLOTYPECALLER.out.vcf
     }
 
-    if (params.tools.toLowerCase().contains('strelka')) {
+    if ('strelka' in tools) {
         cram.dump()
         fasta.dump()
         fai.dump()

@@ -18,6 +18,7 @@ include { GATK4_MUTECT2_SOMATIC as MUTECT2 }             from '../../modules/nf-
 
 workflow PAIR_VARIANT_CALLING {
     take:
+        tools
         cram                  // channel: [mandatory] cram
         dbsnp                 // channel: [mandatory] dbsnp
         dbsnp_tbi             // channel: [mandatory] dbsnp_tbi
@@ -70,7 +71,7 @@ workflow PAIR_VARIANT_CALLING {
     manta_vcf            = Channel.empty()
     strelka_vcf          = Channel.empty()
 
-    if ('manta' in params.tools.toLowerCase()) {
+    if ('manta' in tools) {
         MANTA(
             cram_pair,
             fasta,
@@ -85,7 +86,7 @@ workflow PAIR_VARIANT_CALLING {
 
         manta_vcf = manta_candidate_small_indels_vcf.mix(manta_candidate_sv_vcf,manta_diploid_sv_vcf,manta_somatic_sv_vcf)
 
-        if ('strelka' in params.tools.toLowerCase()) {
+        if ('strelka' in tools) {
             STRELKA_BP(
                 manta_csi_for_strelka_bp,
                 fasta,
@@ -99,13 +100,13 @@ workflow PAIR_VARIANT_CALLING {
         }
     }
 
-    if ('msisensorpro' in params.tools.toLowerCase()) {
+    if ('msisensorpro' in tools) {
         MSISENSORPRO_MSI(
             cram_pair,
             msisensorpro_scan)
     }
 
-    if (params.tools.toLowerCase().contains('strelka')) {
+    if ('strelka' in tools)) {
         STRELKA(
             cram_pair,
             fasta,
@@ -118,7 +119,7 @@ workflow PAIR_VARIANT_CALLING {
         strelka_vcf = strelka_vcf.mix(strelka_indels_vcf,strelka_snvs_vcf)
     }
 
-    if ('mutect2' in params.tools.toLowerCase()){
+    if ('mutect2' in tools){
         panel_of_normals.dump()
         //germline_resource.dump(tag:"germline")
         MUTECT2(

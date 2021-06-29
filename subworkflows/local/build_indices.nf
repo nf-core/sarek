@@ -41,64 +41,66 @@ workflow BUILD_INDICES {
         known_indels      // channel: [optional]  known_indels
         pon               // channel: [optional]  pon
         target_bed        // channel: [optionnal] target_bed
+        tools
+        step
 
     main:
 
     result_bwa  = Channel.empty()
     version_bwa = Channel.empty()
-    if (!(params.bwa) && 'mapping' in params.step.toLowerCase())
+    if (!(params.bwa) && 'mapping' in step)
         if (params.aligner == "bwa-mem") (result_bwa, version_bwa) = BWAMEM1_INDEX(fasta)
         else                             (result_bwa, version_bwa) = BWAMEM2_INDEX(fasta)
 
     result_dict = Channel.empty()
     version_dict = Channel.empty()
-    if (!(params.dict) && !('annotate' in params.step.toLowerCase()) && !('controlfreec' in params.step.toLowerCase()))
+    if (!(params.dict) && !('annotate' in step) && !('controlfreec' in step))
         (result_dict, version_dict) = GATK4_DICT(fasta)
 
     result_fai = Channel.empty()
     if (fasta_fai) result_fai = fasta_fai
     version_fai = Channel.empty()
-    if (!(params.fasta_fai) && !('annotate' in params.step.toLowerCase()))
+    if (!(params.fasta_fai) && !('annotate' in step))
         (result_fai, version_fai) = SAMTOOLS_FAIDX(fasta)
 
     result_dbsnp_tbi = Channel.empty()
     version_dbsnp_tbi = Channel.empty()
-    if (!(params.dbsnp_index) && params.dbsnp && ('mapping' in params.step.toLowerCase() || 'prepare_recalibration' in params.step.toLowerCase() || 'controlfreec' in params.tools.toString().toLowerCase() || 'haplotypecaller' in params.tools.toString().toLowerCase() || 'mutect2' in params.tools.toString().toLowerCase() || 'tnscope' in params.tools.toString().toLowerCase()))
+    if (!(params.dbsnp_index) && params.dbsnp && ('mapping' in step || 'prepare_recalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools|| 'mutect2' in tools || 'tnscope' in tools))
         (result_dbsnp_tbi, version_dbsnp_tbi) = TABIX_DBSNP([[id:"${dbsnp.baseName}"], dbsnp])
     result_dbsnp_tbi = result_dbsnp_tbi.map {meta, tbi -> [tbi]}
 
     result_target_bed = Channel.empty()
     version_target_bed = Channel.empty()
-    if ((params.target_bed) && ('manta' in params.tools.toString().toLowerCase() || 'strelka' in params.tools.toString().toLowerCase()))
+    if ((params.target_bed) && ('manta' in tools || 'strelka' in tools))
         (result_target_bed, version_target_bed) = TABIX_BGZIPTABIX([[id:"${target_bed.fileName}"], target_bed])
         result_target_bed = result_target_bed.map {meta, bed, tbi -> [bed, tbi]}
 
     result_germline_resource_tbi = Channel.empty()
     version_germline_resource_tbi = Channel.empty()
-    if (!(params.germline_resource_index) && params.germline_resource && 'mutect2' in params.tools.toString().toLowerCase())
+    if (!(params.germline_resource_index) && params.germline_resource && 'mutect2' in tools)
         (result_germline_resource_tbi, version_germline_resource_tbi) = TABIX_GERMLINE_RESOURCE([[id:"${germline_resource.baseName}"], germline_resource])
 
     result_known_indels_tbi = Channel.empty()
     version_known_indels_tbi = Channel.empty()
-    if (!(params.known_indels_index) && params.known_indels && ('mapping' in params.step.toLowerCase() || 'prepare_recalibration' in params.step.toLowerCase()))
+    if (!(params.known_indels_index) && params.known_indels && ('mapping' in step || 'prepare_recalibration' in step))
         (result_known_indels_tbi, version_known_indels_tbi) = TABIX_KNOWN_INDELS([[id:"${known_indels.baseName}"], known_indels])
     result_known_indels_tbi = result_known_indels_tbi.map {meta, tbi -> [tbi]}
 
     result_msisensorpro_scan = Channel.empty()
     version_msisensorpro_scan = Channel.empty()
-    if ('msisensorpro' in params.tools.toString().toLowerCase())
+    if ('msisensorpro' in tools)
         (result_msisensorpro_scan, version_msisensorpro_scan) = MSISENSORPRO_SCAN(fasta)
 
     result_pon_tbi = Channel.empty()
     version_pon_tbi = Channel.empty()
-    if (!(params.pon_index) && params.pon && ('tnscope' in params.tools.toString().toLowerCase() || 'mutect2' in params.tools.toString().toLowerCase()))
+    if (!(params.pon_index) && params.pon && ('tnscope' in tools || 'mutect2' in tools))
         (result_pon_tbi, version_pon_tbi) = TABIX_PON([[id:"${pon.fileName}"], pon])
 
     result_intervals = Channel.empty()
     if (params.no_intervals) {
         file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
         result_intervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
-    } else if (!('annotate' in params.step.toLowerCase()) && !('controlfreec' in params.step.toLowerCase()))
+    } else if (!('annotate' in step) && !('controlfreec' in step))
         if (!params.intervals)
             result_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS(result_fai))
         else
