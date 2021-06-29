@@ -13,7 +13,7 @@ params.samtools_stats_options = [:]
 
 include { GATK4_APPLYBQSR as APPLYBQSR }             from '../../modules/nf-core/software/gatk4/applybqsr/main' addParams(options: params.applybqsr_options)
 include { GATK4_APPLYBQSR_SPARK as APPLYBQSR_SPARK } from '../../modules/nf-core/software/gatk4/applybqsrspark/main' addParams(options: params.applybqsr_spark_options)
-include { QUALIMAP_BAMQC }                           from '../../modules/nf-core/software/qualimap/bamqc/main'  addParams(options: params.qualimap_bamqc_options)
+include { QUALIMAP_BAMQC_CRAM }                           from '../../modules/nf-core/software/qualimap/bamqc_cram/main'  addParams(options: params.qualimap_bamqc_options)
 include { SAMTOOLS_INDEX }                           from '../../modules/nf-core/software/samtools/index/main'  addParams(options: params.samtools_index_options)
 include { SAMTOOLS_MERGE_CRAM }                      from '../../modules/nf-core/software/samtools/merge_cram/main'  addParams(options: params.merge_cram_options)
 include { SAMTOOLS_STATS }                           from '../../modules/nf-core/software/samtools/stats/main'  addParams(options: params.samtools_stats_options)
@@ -70,7 +70,8 @@ workflow RECALIBRATE {
         samtools_stats = Channel.empty()
 
         if (!skip_bamqc) {
-            //TODO: Ugh BamQC again not liking crams, until we have a tool that can handle crams, not much choice but piping with samtools
+            QUALIMAP_BAMQC_CRAM(cram_recalibrated_index,target_bed, params.target_bed,fasta, fai)//TODO: Ugh BamQC again not liking crams, until we have a tool that can handle crams, not much choice but piping with samtools
+            qualimap_bamqc = QUALIMAP_BAMQC_CRAM.out
             // QUALIMAP_BAMQC(bam_recalibrated, target_bed, params.target_bed)
             // qualimap_bamqc = QUALIMAP_BAMQC.out
         }
