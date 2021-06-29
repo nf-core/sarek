@@ -4,12 +4,12 @@
 ========================================================================================
 */
 
+params.bgziptabix_options              = [:]
 params.build_intervals_options         = [:]
 params.bwa_index_options               = [:]
 params.bwamem2_index_options           = [:]
 params.create_intervals_bed_options    = [:]
 params.gatk4_dict_options              = [:]
-params.index_target_bed_options        = [:]
 params.msisensorpro_scan_options       = [:]
 params.samtools_faidx_options          = [:]
 params.tabix_dbsnp_options             = [:]
@@ -24,13 +24,13 @@ include { BWA_INDEX as BWAMEM1_INDEX }                   from '../../modules/nf-
 include { BWAMEM2_INDEX }                                from '../../modules/nf-core/software/bwamem2/index/main'                  addParams(options: params.bwamem2_index_options)
 include { CREATE_INTERVALS_BED }                         from '../../modules/local/create_intervals_bed/main'                      addParams(options: params.create_intervals_bed_options)
 include { GATK4_CREATESEQUENCEDICTIONARY as GATK4_DICT } from '../../modules/nf-core/software/gatk4/createsequencedictionary/main' addParams(options: params.gatk4_dict_options)
+include { MSISENSORPRO_SCAN }                            from '../../modules/nf-core/software/msisensorpro/scan/main'              addParams(options: params.msisensorpro_scan_options)
+include { SAMTOOLS_FAIDX }                               from '../../modules/nf-core/software/samtools/faidx/main'                 addParams(options: params.samtools_faidx_options)
+include { TABIX_BGZIPTABIX }                             from '../../modules/nf-core/software/tabix/bgziptabix/main'               addParams(options: params.bgziptabix_options)
 include { TABIX_TABIX as TABIX_DBSNP }                   from '../../modules/nf-core/software/tabix/tabix/main'                    addParams(options: params.tabix_dbsnp_options)
 include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE }       from '../../modules/nf-core/software/tabix/tabix/main'                    addParams(options: params.tabix_germline_resource_options)
 include { TABIX_TABIX as TABIX_KNOWN_INDELS }            from '../../modules/nf-core/software/tabix/tabix/main'                    addParams(options: params.tabix_known_indels_options)
 include { TABIX_TABIX as TABIX_PON }                     from '../../modules/nf-core/software/tabix/tabix/main'                    addParams(options: params.tabix_pon_options)
-include { INDEX_TARGET_BED }                             from '../../modules/local/index_target_bed/main'                          addParams(options: params.index_target_bed_options)
-include { MSISENSORPRO_SCAN }                            from '../../modules/nf-core/software/msisensorpro/scan/main'              addParams(options: params.msisensorpro_scan_options)
-include { SAMTOOLS_FAIDX }                               from '../../modules/nf-core/software/samtools/faidx/main'                 addParams(options: params.samtools_faidx_options)
 
 workflow BUILD_INDICES {
     take:
@@ -69,8 +69,9 @@ workflow BUILD_INDICES {
 
     result_target_bed = Channel.empty()
     version_target_bed = Channel.empty()
-    if ((params.target_bed) && (params.tools.toString().toLowerCase().contains('manta') || params.tools.toString().toLowerCase().contains('strelka')))
-        (result_target_bed, version_target_bed) = INDEX_TARGET_BED(target_bed)
+    if ((params.target_bed) && ('manta' in params.tools.toString().toLowerCase() || 'strelka' in params.tools.toString().toLowerCase()))
+        (result_target_bed, version_target_bed) = TABIX_BGZIPTABIX([[id:"${target_bed.fileName}"], target_bed])
+        result_target_bed = result_target_bed.map {meta, bed, tbi -> [bed, tbi]}
 
     result_germline_resource_tbi = Channel.empty()
     version_germline_resource_tbi = Channel.empty()
