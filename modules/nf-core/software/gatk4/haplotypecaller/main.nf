@@ -6,7 +6,7 @@ options        = initOptions(params.options)
 
 process GATK4_HAPLOTYPECALLER {
     tag "$meta.id"
-    label 'process_medium'
+    label 'process_low'
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
@@ -41,7 +41,7 @@ process GATK4_HAPLOTYPECALLER {
         avail_mem = task.memory.giga
     }
     def intervalsOptions = no_intervals ? "" : "-L ${interval}"
-    def dbsnpOptions = params.dbsnp ? "--D ${dbsnp}" : ""
+    def dbsnpOptions = params.dbsnp ? "-D ${dbsnp}" : ""
     //TODO allow ploidy argument here since we allow it for the cnv callers? or is this covered with options? Might unintuitive to use
     """
     gatk \\
@@ -49,6 +49,7 @@ process GATK4_HAPLOTYPECALLER {
         HaplotypeCaller \\
         -R $fasta \\
         -I $cram \\
+        ${dbsnpOptions} \\
         ${intervalsOptions} \\
         -O ${prefix}.vcf \\
         --tmp-dir . \
@@ -58,4 +59,3 @@ process GATK4_HAPLOTYPECALLER {
     """
 }
 
-//        ${dbsnpOptions} \\
