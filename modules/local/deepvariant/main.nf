@@ -34,12 +34,13 @@ process DEEPVARIANT {
     //               MUST be provided as an input via a Groovy Map called "meta".
     //               This information may not be required in some instances e.g. indexing reference genome files:
     //               https://github.com/nf-core/modules/blob/master/software/bwa/index/main.nf
-    tuple val(meta), path(fasta), path(fai)
     tuple val(meta), path(bam), path(bai)
+    path fasta
+    path fai
 
     output:
-    // TODO nf-core: Named file extensions MUST be emitted for ALL output channels
-    tuple val(meta), path("*.vcf*"), emit: vcf
+    tuple val(meta), path("*.vcf*"),  emit: vcf
+    tuple val(meta), path("*.g.vcf*"), emit: gvcf
     path "*.version.txt"          , emit: version
 
     script:
@@ -76,24 +77,21 @@ process DEEPVARIANT {
     echo \$(/opt/deepvariant/bin/run_deepvariant --version)  > ${software}.version.txt
     """
 
-
 }
 
 
 workflow test {
-
-    fasta_ch = Channel.of([[id: "GRCh38_no_alt_analysis_set"],
-                          "${launchDir}/data/GRCh38_no_alt_analysis_set.fasta",
-                          "${launchDir}/data/GRCh38_no_alt_analysis_set.fasta.fai"]
-    )
 
     bam_ch = Channel.of([[id: "HG003.novaseq.pcr-free.35x.dedup.grch38_no_alt.chr20"],
                         "${launchDir}/data/HG003.novaseq.pcr-free.35x.dedup.grch38_no_alt.chr20.bam",
                         "${launchDir}/data/HG003.novaseq.pcr-free.35x.dedup.grch38_no_alt.chr20.bam.bai"]
     )
 
+    fasta_ch = Channel.of("${launchDir}/data/GRCh38_no_alt_analysis_set.fasta")
 
-    DEEPVARIANT(fasta_ch, bam_ch)
+    fai_ch = Channel.of("${launchDir}/data/GRCh38_no_alt_analysis_set.fasta.fai")
+
+    DEEPVARIANT(bam_ch, fasta_ch, fai_ch )
 
 
 }

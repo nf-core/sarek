@@ -5,12 +5,14 @@
 */
 
 params.haplotypecaller_options        = [:]
+params.deepvariant_options            = [:]
 params.genotypegvcf_options           = [:]
 params.concat_gvcf_options            = [:]
 params.concat_haplotypecaller_options = [:]
 params.strelka_options                = [:]
 
 include { GATK4_HAPLOTYPECALLER as HAPLOTYPECALLER } from '../../modules/nf-core/software/gatk4/haplotypecaller/main' addParams(options: params.haplotypecaller_options)
+include { DEEPVARIANT }                              from '../../modules/local/deepvariant/main'                      addParams(options: params.deepvariant_options)
 include { GATK4_GENOTYPEGVCF as GENOTYPEGVCF }       from '../../modules/nf-core/software/gatk4/genotypegvcf/main'    addParams(options: params.genotypegvcf_options)
 include { CONCAT_VCF as CONCAT_GVCF }                from '../../modules/local/concat_vcf/main'                       addParams(options: params.concat_gvcf_options)
 include { CONCAT_VCF as CONCAT_HAPLOTYPECALLER }     from '../../modules/local/concat_vcf/main'                       addParams(options: params.concat_haplotypecaller_options)
@@ -92,6 +94,17 @@ workflow GERMLINE_VARIANT_CALLING {
             target_bed)
         
         haplotypecaller_vcf = CONCAT_HAPLOTYPECALLER.out.vcf
+    }
+
+    if ('deepvariant' in params.tools.toLowerCase()) {
+
+        DEEPVARIANT(
+            bam,
+            fasta,
+            fai)
+
+        deepvariant_vcf = DEEPVARIANT.out.vcf
+        deepvariant_gvcf = DEEPVARIANT.out.gvcf
     }
 
     if ('strelka' in params.tools.toLowerCase()) {
