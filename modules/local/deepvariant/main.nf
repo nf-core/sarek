@@ -52,6 +52,7 @@ process DEEPVARIANT {
         --reads=${bam} \\
         --output_vcf=${prefix}.vcf.gz \\
         --output_gvcf=${prefix}.g.vcf.gz \\
+        --num_shards=${task.cpus} \\
         ${options.args}
 
     echo \$(/opt/deepvariant/bin/run_deepvariant --version)  > ${software}.version.txt
