@@ -103,8 +103,8 @@ workflow GERMLINE_VARIANT_CALLING {
             fasta,
             fai)
 
-        deepvariant_vcf = DEEPVARIANT.out.vcf
-        deepvariant_gvcf = DEEPVARIANT.out.gvcf
+        haplotypecaller_vcf = DEEPVARIANT.out.vcf
+        haplotypecaller_gvcf = DEEPVARIANT.out.gvcf
     }
 
     if ('strelka' in params.tools.toLowerCase()) {
