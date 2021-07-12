@@ -40,39 +40,18 @@ process DEEPVARIANT {
 
     output:
     tuple val(meta), path("*.vcf*"),  emit: vcf
-    tuple val(meta), path("*.g.vcf*"), emit: gvcf
     path "*.version.txt"          , emit: version
 
     script:
     def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     """
-    /opt/deepvariant/bin/run_deepvariant \
-        --ref=${fasta} \
-        --reads=${bam} \
-        --output_vcf=${meta.id}.vcf.gz \
-        --output_gvcf=${meta.id}.g.vcf.gz \
+    /opt/deepvariant/bin/run_deepvariant \\
+        --ref=${fasta} \\
+        --reads=${bam} \\
+        --output_vcf=${prefix}.vcf.gz \\
+        --output_gvcf=${prefix}.g.vcf.gz \\
         ${options.args}
-
-    echo \$(/opt/deepvariant/bin/run_deepvariant --version)  > ${software}.version.txt
-    """
-
-
-    stub:
-
-    def software = getSoftwareName(task.process)
-    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
-    """
-    echo "/opt/deepvariant/bin/run_deepvariant \
-        --ref=${fasta} \
-        --reads=${bam} \
-        --output_vcf=${meta.id}.vcf.gz \
-        --output_gvcf=${meta.id}.g.vcf.gz"
-
-    echo "${options.args}"
-
-    touch ${meta.id}.vcf.gz
-    touch ${meta.id}.g.vcf.gz
 
     echo \$(/opt/deepvariant/bin/run_deepvariant --version)  > ${software}.version.txt
     """
