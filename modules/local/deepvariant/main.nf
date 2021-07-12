@@ -39,7 +39,8 @@ process DEEPVARIANT {
     path fai
 
     output:
-    tuple val(meta), path("*.vcf*"),  emit: vcf
+    tuple val(meta), path("*.vcf.gz"),  emit: vcf
+    tuple val(meta), path("*g.vcf.gz"),  emit: gvcf
     path "*.version.txt"          , emit: version
 
     script:
@@ -55,22 +56,5 @@ process DEEPVARIANT {
 
     echo \$(/opt/deepvariant/bin/run_deepvariant --version)  > ${software}.version.txt
     """
-
-}
-
-
-workflow test {
-
-    bam_ch = Channel.of([[id: "HG003.novaseq.pcr-free.35x.dedup.grch38_no_alt.chr20"],
-                        "${launchDir}/data/HG003.novaseq.pcr-free.35x.dedup.grch38_no_alt.chr20.bam",
-                        "${launchDir}/data/HG003.novaseq.pcr-free.35x.dedup.grch38_no_alt.chr20.bam.bai"]
-    )
-
-    fasta_ch = Channel.of("${launchDir}/data/GRCh38_no_alt_analysis_set.fasta")
-
-    fai_ch = Channel.of("${launchDir}/data/GRCh38_no_alt_analysis_set.fasta.fai")
-
-    DEEPVARIANT(bam_ch, fasta_ch, fai_ch )
-
 
 }
