@@ -45,9 +45,8 @@ workflow PREPARE_RECALIBRATION {
     }
 
     //num_intervals =  intervals.toList().size.view() //Integer.valueOf()
-   //.view()
+    //.view()
     //println(intervals.toList().getClass()) //.value.getClass())
-
 
     //STEP 3.5: MERGING RECALIBRATION TABLES
     if (no_intervals) {
