@@ -14,6 +14,7 @@ regexes = {
     "FastQC": ["v_fastqc.txt", r"FastQC v(\S+)"],
     "FreeBayes": ["v_freebayes.txt", r"version:  v(\d\.\d\.\d+)"],
     "GATK": ["v_gatk.txt", r"Version:(\S+)"],
+    "DeepVariant": ["v_deepvariant.txt", r"Version:(\S+)"],
     "htslib": ["v_samtools.txt", r"htslib (\S+)"],
     "Manta": ["v_manta.txt", r"([0-9.]+)"],
     "MultiQC": ["v_multiqc.txt", r"multiqc, version (\S+)"],
