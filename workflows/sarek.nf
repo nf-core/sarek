@@ -283,7 +283,7 @@ workflow SAREK {
     msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
 
-    // PREPREOCESSING
+    // PREPROCESSING
 
     bam_mapped          = Channel.empty()
     bam_mapped_qc       = Channel.empty()

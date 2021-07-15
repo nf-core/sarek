@@ -89,6 +89,7 @@ Main authors:
 
 Helpful contributors:
 
+* [Abhinav Sharma](https://github.com/abhi18av)
 * [Adrian Lärkeryd](https://github.com/adrlar)
 * [Alexander Peltzer](https://github.com/apeltzer)
 * [Chela James](https://github.com/chelauk)
