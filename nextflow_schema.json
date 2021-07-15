@@ -596,13 +596,6 @@
                     "help_text": "It will be in the CN field",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
-                },
-                "show_hidden_params": {
-                    "type": "boolean",
-                    "fa_icon": "far fa-eye-slash",
-                    "description": "Show all params when using `--help`",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
                 }
             }
         },
@@ -757,29 +750,6 @@
                     "help_text": "This may be useful for example if you are unable to directly pull Singularity containers to run the pipeline due to http/https proxy issues."
                 }
             }
-        },
-        "modules": {
-            "title": "Modules",
-            "type": "object",
-            "description": "",
-            "default": "",
-            "properties": {
-                "pull_docker_container": {
-                    "type": "boolean",
-                    "fa_icon": "fab fa-docker",
-                    "description": "Force pull and use of Docker container instead of default Singularity ones",
-                    "hidden": true,
-                    "help_text": "This may be useful if you are unable to download Singularity containers due to proxy issues."
-                },
-                "enable_conda": {
-                    "type": "boolean",
-                    "fa_icon": "fas snake",
-                    "description": "Enable conda",
-                    "hidden": true,
-                    "help_text": ""
-                }
-            },
-            "fa_icon": "fas fa-cog"
         }
     },
     "allOf": [
