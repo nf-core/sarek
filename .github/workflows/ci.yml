@@ -24,6 +24,8 @@ jobs:
       matrix:
         # Nextflow versions: check pipeline minimum and current latest
         nxf_ver: ['21.04.0', '']
+        engine: ['docker']
+        test: ['default', 'aligner', 'gatk4_spark', 'targeted', 'tumor_normal_pair', 'variant_calling', 'annotation']
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -35,9 +37,12 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
 
-      - name: Run pipeline with test data
-        # TODO nf-core: You can customise CI pipeline run tests as required
-        # For example: adding multiple test runs with different parameters
-        # Remember that you can parallelise this by using strategy.matrix
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pytest-workflow
+
+      - name: Run pipeline with tests settings
+        run: pytest --tag ${{ matrix.test }} --kwdof

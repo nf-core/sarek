@@ -1,0 +1,53 @@
+name: VEP
+description: Ensembl Variant Effect Predictor (VEP)
+keywords:
+    - annotation
+tools:
+    - vep:
+        description: |
+            VEP determines the effect of your variants (SNPs, insertions, deletions, CNVs
+            or structural variants) on genes, transcripts, and protein sequence, as well as regulatory regions. 
+        homepage: https://www.ensembl.org/info/docs/tools/vep/index.html
+        documentation: https://www.ensembl.org/info/docs/tools/vep/script/index.html
+input:
+    - meta:
+        type: map
+        description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+    - vcf:
+        type: file
+        description: |
+            vcf to annotate
+    - vep_genome:
+        type: value
+        description: |
+            which genome to annotate with
+    - vep_species:
+        type: value
+        description: |
+            which species to annotate with
+    - vep_cache_version:
+        type: value
+        description: |
+            which version of the cache to annotate with
+    - vep_cache:
+        type: file
+        description: |
+            path to VEP cache (optional)
+output:
+    - vcf_ann:
+        type: file
+        description: |
+            annotated vcf
+        pattern: "*.ann.vcf"
+    - report:
+        type: file
+        description: VEP report file
+        pattern: "*.html"
+    - version:
+        type: file
+        description: File containing software version
+        pattern: "*.{version.txt}"
+authors:
+    - "@maxulysse"

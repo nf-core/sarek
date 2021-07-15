@@ -1,0 +1,43 @@
+- name: Run default pipeline for tumor normal pair
+  command: nextflow run main.nf -profile test,pair,docker
+  tags:
+    - preprocessing
+    - tumor_normal_pair
+  files:
+    - path: results/preprocessing/1234N/mapped/1234N.bam
+    - path: results/preprocessing/1234N/mapped/1234N.bam.bai
+    - path: results/preprocessing/1234N/markduplicates/1234N.md.bam
+    - path: results/preprocessing/1234N/markduplicates/1234N.md.bam.bai
+    - path: results/preprocessing/1234N/recal_table/1234N.recal.table
+    - path: results/preprocessing/1234N/recalibrated/1234N.recal.bam
+    - path: results/preprocessing/1234N/recalibrated/1234N.recal.bam.bai
+    - path: results/preprocessing/9876T/mapped/9876T.bam
+    - path: results/preprocessing/9876T/mapped/9876T.bam.bai
+    - path: results/preprocessing/9876T/markduplicates/9876T.md.bam
+    - path: results/preprocessing/9876T/markduplicates/9876T.md.bam.bai
+    - path: results/preprocessing/9876T/recal_table/9876T.recal.table
+    - path: results/preprocessing/9876T/recalibrated/9876T.recal.bam
+    - path: results/preprocessing/9876T/recalibrated/9876T.recal.bam.bai
+    - path: results/preprocessing/csv/markduplicates.csv
+    - path: results/preprocessing/csv/markduplicates_1234N.csv
+    - path: results/preprocessing/csv/markduplicates_9876T.csv
+    - path: results/preprocessing/csv/markduplicates_no_table.csv
+    - path: results/preprocessing/csv/markduplicates_no_table_1234N.csv
+    - path: results/preprocessing/csv/markduplicates_no_table_9876T.csv
+    - path: results/preprocessing/csv/recalibrated.csv
+    - path: results/preprocessing/csv/recalibrated_1234N.csv
+    - path: results/preprocessing/csv/recalibrated_9876T.csv
+    - path: results/reports/fastqc/1234N-1234N_M1
+    - path: results/reports/fastqc/1234N-1234N_M2
+    - path: results/reports/fastqc/1234N-1234N_M4
+    - path: results/reports/fastqc/1234N-1234N_M5
+    - path: results/reports/fastqc/1234N-1234N_M6
+    - path: results/reports/fastqc/1234N-1234N_M7
+    - path: results/reports/fastqc/9876T-9876T_M1
+    - path: results/reports/fastqc/9876T-9876T_M2
+    - path: results/reports/fastqc/9876T-9876T_M4
+    - path: results/reports/fastqc/9876T-9876T_M5
+    - path: results/reports/qualimap/1234N
+    - path: results/reports/qualimap/9876T
+    - path: results/reports/samtools_stats/1234N/1234N.bam.stats
+    - path: results/reports/samtools_stats/9876T/9876T.bam.stats
