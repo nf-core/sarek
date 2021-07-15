@@ -8,7 +8,7 @@
     - [nf-core linting](https://github.com/nf-core/sarek/actions?query=workflow%3A%22nf-core+linting%22) are passing on `dev`
 2. Increase version number following [semantic versioning](http://semver.org/spec/v2.0.0.html)
 3. Choose an appropriate codename for the release (if major or minor)
-   - i.e. Peaks in [Sarek National Park](https://en.wikipedia.org/wiki/Sarek_National_Park#Topography)
+    - i.e. Peaks in [Sarek National Park](https://en.wikipedia.org/wiki/Sarek_National_Park#Topography)
 4. Sync `dev` and checkout a new branch for the release
 5. Bump version:
     - `nf-core bump-version . <VERSION>`
