@@ -19,13 +19,13 @@ process MANTA_SOMATIC {
     }
 
     input:
-        tuple val(meta), path(bam_normal), path(bai_normal), path(bam_tumor), path(bai_tumor)
+        tuple val(meta), path(cram_normal), path(crai_normal), path(cram_tumor), path(crai_tumor)
         path fasta
         path fai
         tuple path(target_bed), path(target_bed_tbi)
 
     output:
-        tuple val(meta), path(bam_normal), path(bai_normal), path(bam_tumor), path(bai_tumor), path("*.candidateSmallIndels.vcf.gz"), path("*.candidateSmallIndels.vcf.gz.tbi"), emit: manta_csi_for_strelka_bp
+        tuple val(meta), path(cram_normal), path(crai_normal), path(cram_tumor), path(crai_tumor), path("*.candidateSmallIndels.vcf.gz"), path("*.candidateSmallIndels.vcf.gz.tbi"), emit: manta_csi_for_strelka_bp
         tuple val(meta), path("*.candidateSmallIndels.vcf.gz"), path("*.candidateSmallIndels.vcf.gz.tbi"), emit: candidate_small_indels_vcf
         tuple val(meta), path("*.candidateSV.vcf.gz"), path("*.candidateSV.vcf.gz.tbi"),                   emit: candidate_sv_vcf
         tuple val(meta), path("*.diploidSV.vcf.gz"), path("*.diploidSV.vcf.gz.tbi"),                       emit: diploid_sv_vcf
@@ -42,8 +42,8 @@ process MANTA_SOMATIC {
     options_manta = params.target_bed ? "--exome --callRegions $target_bed" : ""
     """
     configManta.py \
-        --tumorBam $bam_tumor \
-        --normalBam $bam_normal \
+        --tumorBam $cram_tumor \
+        --normalBam $cram_normal \
         --reference $fasta \
         $options_manta \
         --runDir manta

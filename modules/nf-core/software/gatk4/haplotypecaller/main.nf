@@ -6,7 +6,7 @@ options        = initOptions(params.options)
 
 process GATK4_HAPLOTYPECALLER {
     tag "$meta.id"
-    label 'process_medium'
+    label 'process_low'
     publishDir params.outdir, mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
@@ -18,7 +18,7 @@ process GATK4_HAPLOTYPECALLER {
     }
 
     input:
-    tuple val(meta), path(bam), path(bai), path(interval)
+    tuple val(meta), path(cram), path(crai), path(interval)
     path dbsnp
     path dbsnp_tbi
     path dict
@@ -41,18 +41,21 @@ process GATK4_HAPLOTYPECALLER {
         avail_mem = task.memory.giga
     }
     def intervalsOptions = no_intervals ? "" : "-L ${interval}"
-    def dbsnpOptions = params.dbsnp ? "--D ${dbsnp}" : ""
+    def dbsnpOptions = params.dbsnp ? "-D ${dbsnp}" : ""
+    //TODO allow ploidy argument here since we allow it for the cnv callers? or is this covered with options? Might unintuitive to use
     """
     gatk \\
         --java-options "-Xmx${avail_mem}g" \\
         HaplotypeCaller \\
         -R $fasta \\
-        -I $bam \\
-        ${intervalsOptions} \\
+        -I $cram \\
         ${dbsnpOptions} \\
+        ${intervalsOptions} \\
         -O ${prefix}.vcf \\
+        --tmp-dir . \
         $options.args
 
     gatk --version | grep Picard | sed "s/Picard Version: //g" > ${software}.version.txt
     """
 }
+

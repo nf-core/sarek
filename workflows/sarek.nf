@@ -152,10 +152,44 @@ include { BUILD_INDICES } from '../subworkflows/local/build_indices' addParams(
     tabix_known_indels_options:      modules['tabix_known_indels'],
     tabix_pon_options:               modules['tabix_pon']
 )
+include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
+    seqkit_split2_options:           modules['seqkit_split2'],
+    bwamem1_mem_options:             modules['bwa_mem1_mem'],
+    bwamem1_mem_tumor_options:       modules['bwa_mem1_mem_tumor'],
+    bwamem2_mem_options:             modules['bwa_mem2_mem'],
+    bwamem2_mem_tumor_options:       modules['bwa_mem2_mem_tumor'],
+)
+
+include { QC_MARKDUPLICATES } from '../subworkflows/nf-core/qc_markduplicates' addParams(
+    markduplicates_options:             modules['markduplicates'],
+    markduplicatesspark_options:        modules['markduplicatesspark'],
+    estimatelibrarycomplexity_options:  modules['estimatelibrarycomplexity'],
+    merge_bam_options:               modules['merge_bam_mapping'],
+    qualimap_bamqc_options:          modules['qualimap_bamqc_mapping'],
+    samtools_stats_options:          modules['samtools_stats_mapping'],
+    samtools_view_options:           modules['samtools_view'],
+    samtools_index_options:          modules['samtools_index_cram']
+)
+
+
+include { PREPARE_RECALIBRATION } from '../subworkflows/nf-core/prepare_recalibration' addParams(
+    baserecalibrator_options:        modules['baserecalibrator'],
+    baserecalibrator_spark_options:  modules['baserecalibrator_spark'],
+    gatherbqsrreports_options:       modules['gatherbqsrreports']
+)
+include { RECALIBRATE } from '../subworkflows/nf-core/recalibrate' addParams(
+    applybqsr_options:               modules['applybqsr'],
+    applybqsr_spark_options:         modules['applybqsr_spark'],
+    merge_cram_options:              modules['merge_cram_recalibrate'],
+    qualimap_bamqc_options:          modules['qualimap_bamqc_recalibrate'],
+    samtools_index_options:          modules['samtools_index_recalibrate'],
+    samtools_stats_options:          modules['samtools_stats_recalibrate']
+)
 include { MAPPING_CSV } from '../subworkflows/local/mapping_csv'
 include { MARKDUPLICATES_CSV } from '../subworkflows/local/markduplicates_csv'
 include { PREPARE_RECALIBRATION_CSV } from '../subworkflows/local/prepare_recalibration_csv'
 include { RECALIBRATE_CSV } from '../subworkflows/local/recalibrate_csv'
+
 include { GERMLINE_VARIANT_CALLING } from '../subworkflows/local/germline_variant_calling' addParams(
     concat_gvcf_options:             modules['concat_gvcf'],
     concat_haplotypecaller_options:  modules['concat_haplotypecaller'],
@@ -163,14 +197,15 @@ include { GERMLINE_VARIANT_CALLING } from '../subworkflows/local/germline_varian
     haplotypecaller_options:         modules['haplotypecaller'],
     strelka_options:                 modules['strelka_germline']
 )
-// include { TUMOR_VARIANT_CALLING } from '../subworkflows/local/tumor_variant_calling' addParams(
+// // include { TUMOR_VARIANT_CALLING } from '../subworkflows/local/tumor_variant_calling' addParams(
+// // )
+// include { PAIR_VARIANT_CALLING } from '../subworkflows/local/pair_variant_calling' addParams(
+//     manta_options:                   modules['manta_somatic'],
+//     msisensorpro_msi_options:        modules['msisensorpro_msi'],
+//     strelka_bp_options:              modules['strelka_somatic_bp'],
+//     strelka_options:                 modules['strelka_somatic'],
+//     mutect2_somatic_options:         modules['mutect2_somatic']
 // )
-include { PAIR_VARIANT_CALLING } from '../subworkflows/local/pair_variant_calling' addParams(
-    manta_options:                   modules['manta_somatic'],
-    msisensorpro_msi_options:        modules['msisensorpro_msi'],
-    strelka_bp_options:              modules['strelka_somatic_bp'],
-    strelka_options:                 modules['strelka_somatic']
-)
 
 include { ANNOTATE } from '../subworkflows/local/annotate' addParams(
     annotation_cache:               params.annotation_cache,
@@ -207,31 +242,6 @@ include { FASTQC_TRIMGALORE } from '../subworkflows/nf-core/fastqc_trimgalore' a
     fastqc_options:                  modules['fastqc'],
     trimgalore_options:              modules['trimgalore']
 )
-include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
-    bwamem1_mem_options:             modules['bwa_mem1_mem'],
-    bwamem1_mem_tumor_options:       modules['bwa_mem1_mem_tumor'],
-    bwamem2_mem_options:             modules['bwa_mem2_mem'],
-    bwamem2_mem_tumor_options:       modules['bwa_mem2_mem_tumor'],
-    merge_bam_options:               modules['merge_bam_mapping'],
-    qualimap_bamqc_options:          modules['qualimap_bamqc_mapping'],
-    samtools_index_options:          modules['samtools_index_mapping'],
-    samtools_stats_options:          modules['samtools_stats_mapping']
-)
-include { MARKDUPLICATES } from '../subworkflows/nf-core/markduplicates' addParams(
-    markduplicates_options:          modules['markduplicates'],
-    markduplicatesspark_options:     modules['markduplicatesspark']
-)
-include { PREPARE_RECALIBRATION } from '../subworkflows/nf-core/prepare_recalibration' addParams(
-    baserecalibrator_options:        modules['baserecalibrator'],
-    gatherbqsrreports_options:       modules['gatherbqsrreports']
-)
-include { RECALIBRATE } from '../subworkflows/nf-core/recalibrate' addParams(
-    applybqsr_options:               modules['applybqsr'],
-    merge_bam_options:               modules['merge_bam_recalibrate'],
-    qualimap_bamqc_options:          modules['qualimap_bamqc_recalibrate'],
-    samtools_index_options:          modules['samtools_index_recalibrate'],
-    samtools_stats_options:          modules['samtools_stats_recalibrate']
-)
 
 def multiqc_report = []
 
@@ -247,22 +257,36 @@ workflow SAREK {
         germline_resource,
         known_indels,
         pon,
-        target_bed)
+        target_bed,
+        tools,
+        step)
 
     intervals = BUILD_INDICES.out.intervals
+
+    num_intervals = 0
+    intervals.count().map{
+        num_intervals = it
+    }
 
     bwa  = params.bwa       ? file(params.bwa)       : BUILD_INDICES.out.bwa
     dict = params.dict      ? file(params.dict)      : BUILD_INDICES.out.dict
     fai  = params.fasta_fai ? file(params.fasta_fai) : BUILD_INDICES.out.fai
 
-    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_index             ? file(params.dbsnp_index)             : BUILD_INDICES.out.dbsnp_tbi                  : []
-    germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? file(params.germline_resource_index) : BUILD_INDICES.out.germline_resource_tbi      : []
-    known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? file(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : []
-    pon_tbi               = params.pon               ? params.pon_index               ? file(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : []
+    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_index             ? Channel.fromPath(params.dbsnp_index)             : BUILD_INDICES.out.dbsnp_tbi                  : []
+    germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? Channel.from(params.germline_resource_index) : BUILD_INDICES.out.germline_resource_tbi      : []
+    known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? Channel.fromPath(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : []
+    pon_tbi               = params.pon               ? params.pon_index               ? Channel.from(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : []
 
-    known_sites     = dbsnp ? [dbsnp, known_indels] : known_indels ? known_indels : []
-    known_sites_tbi = dbsnp_tbi ? dbsnp_tbi.mix(known_indels_tbi).collect() : known_indels_tbi ? known_indels_tbi : ch_dummy_file
+    dbsnp_ch = Channel.from(dbsnp)
+    dbsnp_tbi_ch = Channel.from(dbsnp_tbi)
+    known_indels_ch = Channel.from(known_indels)
 
+    //TODO @Maxime this is really something we need to fix/figure out. the below version works for me, for human/mouse/and test
+    //known_sites     = dbsnp ? [dbsnp, known_indels] : known_indels ? known_indels : []
+    //known_sites_tbi = dbsnp_tbi ? dbsnp_tbi.mix(known_indels_tbi).collect() : known_indels_tbi ? known_indels_tbi : ch_dummy_file
+
+    known_sites     = known_indels_ch.concat(dbsnp_ch).collect()
+    known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
     msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
 
@@ -282,6 +306,7 @@ workflow SAREK {
     if (step == 'mapping') {
         FASTQC_TRIMGALORE(
             input_sample,
+            ('fastqc' in params.skip_qc),
             !(params.trim_fastq))
 
         reads_input = FASTQC_TRIMGALORE.out.reads
@@ -295,33 +320,34 @@ workflow SAREK {
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         MAPPING(
-            'bamqc' in params.skip_qc,
-            'samtools' in params.skip_qc,
             params.aligner,
             bwa,
             fai,
             fasta,
-            reads_input,
-            target_bed)
+            reads_input)
 
         bam_mapped    = MAPPING.out.bam
-        bam_mapped_qc = MAPPING.out.qc
-
-        qc_reports = qc_reports.mix(bam_mapped_qc)
 
         // Create CSV to restart from this step
-        MAPPING_CSV(bam_mapped, save_bam_mapped, params.skip_markduplicates)
+        // MAPPING_CSV(bam_mapped, save_bam_mapped, params.skip_markduplicates)
 
-        if (params.skip_markduplicates) {
-            bam_markduplicates = bam_mapped
-        } else {
-            // STEP 2: MARKING DUPLICATES
-            MARKDUPLICATES(bam_mapped, params.use_gatk_spark, !('markduplicates' in params.skip_qc))
-            bam_markduplicates = MARKDUPLICATES.out.bam
+        // STEP 2: MARKING DUPLICATES AND/OR QC, conversion to CRAM
+        QC_MARKDUPLICATES(bam_mapped,
+                            ('markduplicates' in params.use_gatk_spark),
+                            !('markduplicates' in params.skip_qc),
+                            fasta, fai, dict,
+                            'bamqc' in params.skip_qc,
+                            'samtools' in params.skip_qc,
+                            target_bed)
 
-            // Create CSV to restart from this step
-            MARKDUPLICATES_CSV(bam_markduplicates)
-        }
+        // Create CSV to restart from this step
+        // MARKDUPLICATES_CSV(bam_markduplicates)
+        //TODO: Check with Maxime and add this
+        //CRAM_CSV(cram_markduplicates)
+
+        cram_markduplicates = MARKDUPLICATES.out.cram
+
+        qc_reports = qc_reports.mix(MARKDUPLICATES.out.qc)
     }
 
     if (step == 'preparerecalibration') bam_markduplicates = input_sample
@@ -329,19 +355,23 @@ workflow SAREK {
     if (step in ['mapping', 'preparerecalibration']) {
         // STEP 3: CREATING RECALIBRATION TABLES
         PREPARE_RECALIBRATION(
-            bam_markduplicates,
+            cram_markduplicates,
+            ('bqsr' in params.use_gatk_spark),
             dict,
             fai,
             fasta,
             intervals,
+            num_intervals,
             known_sites,
             known_sites_tbi,
-            params.no_intervals)
+            params.no_intervals,
+            known_indels,
+            dbsnp)
 
         table_bqsr = PREPARE_RECALIBRATION.out.table_bqsr
         PREPARE_RECALIBRATION_CSV(table_bqsr)
 
-        bam_applybqsr = bam_markduplicates.join(table_bqsr)
+        cram_applybqsr = cram_markduplicates.join(table_bqsr)
     }
 
     if (step == 'recalibrate') bam_applybqsr = input_sample
@@ -349,23 +379,25 @@ workflow SAREK {
     if (step in ['mapping', 'preparerecalibration', 'recalibrate']) {
         // STEP 4: RECALIBRATING
         RECALIBRATE(
+            ('bqsr' in params.use_gatk_spark),
             ('bamqc' in params.skip_qc),
             ('samtools' in params.skip_qc),
-            bam_applybqsr,
+            cram_applybqsr,
             dict,
             fai,
             fasta,
             intervals,
+            num_intervals,
             target_bed)
 
-        bam_recalibrated    = RECALIBRATE.out.bam
-        bam_recalibrated_qc = RECALIBRATE.out.qc
+        cram_recalibrated    = RECALIBRATE.out.cram
+        cram_recalibrated_qc = RECALIBRATE.out.qc
 
-        RECALIBRATE_CSV(bam_recalibrated)
+        RECALIBRATE_CSV(cram_recalibrated)
 
-        qc_reports = qc_reports.mix(bam_recalibrated_qc)
+        qc_reports = qc_reports.mix(cram_recalibrated_qc)
 
-        bam_variant_calling = bam_recalibrated
+        cram_variant_calling = cram_recalibrated
     }
 
     if (step == 'variantcalling') bam_variant_calling = input_sample
@@ -373,13 +405,15 @@ workflow SAREK {
     if (tools != []) {
         // GERMLINE VARIANT CALLING
         GERMLINE_VARIANT_CALLING(
-            bam_variant_calling,
+            tools,
+            cram_variant_calling,
             dbsnp,
-            dbsnp_tbi,
+            dbsnp_tbi.collect(),
             dict,
             fai,
             fasta,
             intervals,
+            num_intervals,
             target_bed,
             target_bed_gz_tbi)
 
@@ -387,7 +421,7 @@ workflow SAREK {
 
         // TUMOR ONLY VARIANT CALLING
         // TUMOR_VARIANT_CALLING(
-        //     bam_variant_calling,
+        //     cram_variant_calling,
         //     dbsnp,
         //     dbsnp_tbi,
         //     dict,
@@ -398,17 +432,22 @@ workflow SAREK {
         //     target_bed_gz_tbi)
 
         // PAIR VARIANT CALLING
-        PAIR_VARIANT_CALLING(
-            bam_variant_calling,
-            dbsnp,
-            dbsnp_tbi,
-            dict,
-            fai,
-            fasta,
-            intervals,
-            msisensorpro_scan,
-            target_bed,
-            target_bed_gz_tbi)
+        // PAIR_VARIANT_CALLING(
+        //     tools,
+        //     cram_variant_calling,
+        //     dbsnp,
+        //     dbsnp_tbi,
+        //     dict,
+        //     fai,
+        //     fasta,
+        //     intervals,
+        //     msisensorpro_scan,
+        //     target_bed,
+        //     target_bed_gz_tbi,
+        //     germline_resource,
+        //     germline_resource_tbi,
+        //     pon,
+        //     pon_tbi)
 
         // ANNOTATE
         if (step == 'annotate') vcf_to_annotate = input_sample
@@ -455,9 +494,20 @@ workflow SAREK {
 
 // Function to extract information (meta data + file(s)) from csv file(s)
 def extract_csv(csv_file) {
-    Channel.from(csv_file).splitCsv(header: true).map{ row ->
+    Channel.from(csv_file).splitCsv(header: true)
+    //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
+                        .map{ row -> [[row.patient.toString(), row.sample.toString()], row]}
+                        .groupTuple()
+                        .map{ meta, rows ->
+                            size = rows.size()
+                            return [rows, size]
+                        }.transpose()
+                        .map{ row, numLanes -> //from here do the usual thing for csv parsing
         def meta = [:]
 
+        meta.numLanes = numLanes.toInteger()
+
+        //TODO since it is mandatory: error/warning if not present?
         // Meta data to identify samplesheet
         // Both patient and sample are mandatory
         // Several sample can belong to the same patient

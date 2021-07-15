@@ -20,13 +20,15 @@ include { STRELKA_GERMLINE as STRELKA }              from '../../modules/nf-core
 
 workflow GERMLINE_VARIANT_CALLING {
     take:
-        bam               // channel: [mandatory] bam
+        tools
+        cram              // channel: [mandatory] cram
         dbsnp             // channel: [mandatory] dbsnp
         dbsnp_tbi         // channel: [mandatory] dbsnp_tbi
         dict              // channel: [mandatory] dict
         fai               // channel: [mandatory] fai
         fasta             // channel: [mandatory] fasta
         intervals         // channel: [mandatory] intervals
+        num_intervals
         target_bed        // channel: [optional]  target_bed
         target_bed_gz_tbi // channel: [optional]  target_bed_gz_tbi
 
@@ -35,24 +37,21 @@ workflow GERMLINE_VARIANT_CALLING {
     haplotypecaller_gvcf = Channel.empty()
     haplotypecaller_vcf  = Channel.empty()
     strelka_vcf          = Channel.empty()
-    no_intervals = false
 
+    no_intervals = false
     if (intervals == []) no_intervals = true
 
-    if ('haplotypecaller' in params.tools.toLowerCase()) {
+    if ('haplotypecaller' in tools) {
 
-        haplotypecaller_interval_bam = bam.combine(intervals)
-
-        bam.combine(intervals).map{ meta, bam, bai, intervals ->
+        cram.combine(intervals).map{ meta, cram, crai, intervals ->
             new_meta = meta.clone()
             new_meta.id = meta.sample + "_" + intervals.baseName
-            [new_meta, bam, bai, intervals]
-        }.set{haplotypecaller_interval_bam}
+            [new_meta, cram, crai, intervals]
+        }.set{haplotypecaller_interval_cram}
 
         // STEP GATK HAPLOTYPECALLER.1
-
         HAPLOTYPECALLER(
-            haplotypecaller_interval_bam,
+            haplotypecaller_interval_cram,
             dbsnp,
             dbsnp_tbi,
             dict,
@@ -63,7 +62,7 @@ workflow GERMLINE_VARIANT_CALLING {
         haplotypecaller_raw = HAPLOTYPECALLER.out.vcf.map{ meta,vcf ->
             meta.id = meta.sample
             [meta, vcf]
-        }.groupTuple()
+        }.groupTuple(size: num_intervals)
 
         CONCAT_GVCF(
             haplotypecaller_raw,
@@ -92,11 +91,11 @@ workflow GERMLINE_VARIANT_CALLING {
             haplotypecaller_results,
             fai,
             target_bed)
-        
+
         haplotypecaller_vcf = CONCAT_HAPLOTYPECALLER.out.vcf
     }
 
-    if ('deepvariant' in params.tools.toLowerCase()) {
+    if ('deepvariant' in tools) {
 
         DEEPVARIANT(
             bam,
@@ -107,15 +106,21 @@ workflow GERMLINE_VARIANT_CALLING {
         deepvariant_gvcf = DEEPVARIANT.out.gvcf
     }
 
-    if ('strelka' in params.tools.toLowerCase()) {
+    if ('strelka' in tools) {
         STRELKA(
-            bam,
+            cram,
             fasta,
             fai,
             target_bed_gz_tbi)
 
         strelka_vcf = STRELKA.out.vcf
     }
+
+    //TODO add all the remaining variant caller:
+    //FREEBAYES
+    //SAMTOOLS MPILEUP
+    //TIDDIT
+    //MANTA
 
     emit:
         haplotypecaller_gvcf = haplotypecaller_gvcf
