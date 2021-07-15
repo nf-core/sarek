@@ -121,7 +121,6 @@ workflow PAIR_VARIANT_CALLING {
 
     if ('mutect2' in tools){
         panel_of_normals.dump()
-        //germline_resource.dump(tag:"germline")
         MUTECT2(
             cram_pair_intervals,
             panel_of_normals,

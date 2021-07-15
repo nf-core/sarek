@@ -160,7 +160,7 @@ include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
     bwamem2_mem_tumor_options:       modules['bwa_mem2_mem_tumor'],
 )
 
-include { MARKDUPLICATES } from '../subworkflows/nf-core/markduplicates' addParams(
+include { QC_MARKDUPLICATES } from '../subworkflows/nf-core/qc_markduplicates' addParams(
     markduplicates_options:             modules['markduplicates'],
     markduplicatesspark_options:        modules['markduplicatesspark'],
     estimatelibrarycomplexity_options:  modules['estimatelibrarycomplexity'],
@@ -239,31 +239,6 @@ include { FASTQC_TRIMGALORE } from '../subworkflows/nf-core/fastqc_trimgalore' a
     fastqc_options:                  modules['fastqc'],
     trimgalore_options:              modules['trimgalore']
 )
-// include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
-//     bwamem1_mem_options:             modules['bwa_mem1_mem'],
-//     bwamem1_mem_tumor_options:       modules['bwa_mem1_mem_tumor'],
-//     bwamem2_mem_options:             modules['bwa_mem2_mem'],
-//     bwamem2_mem_tumor_options:       modules['bwa_mem2_mem_tumor'],
-//     merge_bam_options:               modules['merge_bam_mapping'],
-//     qualimap_bamqc_options:          modules['qualimap_bamqc_mapping'],
-//     samtools_index_options:          modules['samtools_index_mapping'],
-//     samtools_stats_options:          modules['samtools_stats_mapping']
-// )
-// include { MARKDUPLICATES } from '../subworkflows/nf-core/markduplicates' addParams(
-//     markduplicates_options:          modules['markduplicates'],
-//     markduplicatesspark_options:     modules['markduplicatesspark']
-// )
-// include { PREPARE_RECALIBRATION } from '../subworkflows/nf-core/prepare_recalibration' addParams(
-//     baserecalibrator_options:        modules['baserecalibrator'],
-//     gatherbqsrreports_options:       modules['gatherbqsrreports']
-// )
-// include { RECALIBRATE } from '../subworkflows/nf-core/recalibrate' addParams(
-//     applybqsr_options:               modules['applybqsr'],
-//     merge_bam_options:               modules['merge_bam_recalibrate'],
-//     qualimap_bamqc_options:          modules['qualimap_bamqc_recalibrate'],
-//     samtools_index_options:          modules['samtools_index_recalibrate'],
-//     samtools_stats_options:          modules['samtools_stats_recalibrate']
-// )
 
 workflow SAREK {
 
@@ -298,6 +273,8 @@ workflow SAREK {
     dbsnp_ch = Channel.from(dbsnp)
     dbsnp_tbi_ch = Channel.from(dbsnp_tbi)
     known_indels_ch = Channel.from(known_indels)
+
+    //TODO @Maxime this is really something we need to fix/figure out. the below version works for me, for human/mouse/and test
     //known_sites     = dbsnp ? [dbsnp, known_indels] : known_indels ? known_indels : []
     //known_sites_tbi = dbsnp_tbi ? dbsnp_tbi.mix(known_indels_tbi).collect() : known_indels_tbi ? known_indels_tbi : ch_dummy_file
 
@@ -347,17 +324,14 @@ workflow SAREK {
         // Create CSV to restart from this step
         // MAPPING_CSV(bam_mapped, save_bam_mapped, params.skip_markduplicates)
 
-        // if (params.skip_markduplicates) {
-        //     bam_markduplicates = bam_mapped
-        // } else {
-
         // STEP 2: MARKING DUPLICATES AND/OR QC, conversion to CRAM
-        MARKDUPLICATES(bam_mapped, ('markduplicates' in params.use_gatk_spark),
-                        !('markduplicates' in params.skip_qc),
-                        fasta, fai, dict,
-                        'bamqc' in params.skip_qc,
-                        'samtools' in params.skip_qc,
-                        target_bed)
+        QC_MARKDUPLICATES(bam_mapped,
+                            ('markduplicates' in params.use_gatk_spark),
+                            !('markduplicates' in params.skip_qc),
+                            fasta, fai, dict,
+                            'bamqc' in params.skip_qc,
+                            'samtools' in params.skip_qc,
+                            target_bed)
 
         // Create CSV to restart from this step
         // MARKDUPLICATES_CSV(bam_markduplicates)
@@ -498,8 +472,6 @@ def extract_csv(csv_file) {
                         .map{ row, numLanes -> //from here do the usual thing for csv parsing
         def meta = [:]
 
-        //meta.patient = row.patient.toString()
-        //meta.sample  = row.sample.toString()
         meta.numLanes = numLanes.toInteger()
 
         //TODO since it is mandatory: error/warning if not present?

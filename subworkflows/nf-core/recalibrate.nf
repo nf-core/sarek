@@ -70,10 +70,8 @@ workflow RECALIBRATE {
         samtools_stats = Channel.empty()
 
         if (!skip_bamqc) {
-            QUALIMAP_BAMQC_CRAM(cram_recalibrated_index,target_bed, params.target_bed,fasta, fai)//TODO: Ugh BamQC again not liking crams, until we have a tool that can handle crams, not much choice but piping with samtools
+            QUALIMAP_BAMQC_CRAM(cram_recalibrated_index,target_bed, params.target_bed,fasta, fai)
             qualimap_bamqc = QUALIMAP_BAMQC_CRAM.out
-            // QUALIMAP_BAMQC(bam_recalibrated, target_bed, params.target_bed)
-            // qualimap_bamqc = QUALIMAP_BAMQC.out
         }
 
         if (!skip_samtools) {

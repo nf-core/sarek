@@ -1,6 +1,6 @@
 /*
 ========================================================================================
-    MARKDUPLICATES
+    MARKDUPLICATES AND/OR QC after mapping
 ========================================================================================
 */
 
@@ -24,8 +24,7 @@ include { SAMTOOLS_VIEW as SAMTOOLS_BAM_TO_CRAM } from '../../modules/nf-core/so
 include { SAMTOOLS_VIEW as SAMTOOLS_BAM_TO_CRAM_SPARK } from '../../modules/nf-core/software/samtools/view/main.nf'                 addParams(options: params.samtools_view_options)
 include { SAMTOOLS_INDEX }                        from '../../modules/nf-core/software/samtools/index/main'                   addParams(options: params.samtools_index_options)
 
-//TODO name is not really covering everything happening here
-workflow MARKDUPLICATES {
+workflow QC_MARKDUPLICATES {
     take:
         bam_mapped          // channel: [mandatory] meta, bam, bai
         use_gatk_spark      //   value: [mandatory] use gatk spark
@@ -52,12 +51,12 @@ workflow MARKDUPLICATES {
 
         SAMTOOLS_INDEX(bam_merged)
         bam_markduplicates = bam_merged.join(SAMTOOLS_INDEX.out.bai)
-        //TODO why is there no bam_to_cram here?
+        cram_markduplicates = SAMTOOLS_BAM_TO_CRAM(bam_markduplicates, fasta, fai)
     } else{
 
         if (use_gatk_spark) {
 
-            //If BAMQC should be run on MD output, then don't convert use MDSpark to convert to cram, but use bam output instead
+            //If BAMQC should be run on MD output, then don't use MDSpark to convert to cram, but use bam output instead
             if(!skip_bamqc){
                 GATK4_MARKDUPLICATES_SPARK(bam_mapped, fasta, fai, dict, "bam")
                 SAMTOOLS_INDEX(GATK4_MARKDUPLICATES_SPARK.out.output)
