@@ -11,18 +11,18 @@ include { TRIMGALORE       } from '../../modules/nf-core/software/trimgalore/mai
 workflow FASTQC_TRIMGALORE {
     take:
     reads         // channel: [ val(meta), [ reads ] ]
-    // skip_fastqc   // boolean: true/false
+    skip_fastqc   // boolean: true/false
     skip_trimming // boolean: true/false
 
     main:
     fastqc_html    = Channel.empty()
     fastqc_zip     = Channel.empty()
     fastqc_version = Channel.empty()
-    // if (!skip_fastqc) {
+    if (!skip_fastqc) {
         FASTQC ( reads ).html.set { fastqc_html }
         fastqc_zip     = FASTQC.out.zip
         fastqc_version = FASTQC.out.version
-    // }
+    }
 
     trim_reads = reads
     trim_html  = Channel.empty()

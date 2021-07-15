@@ -19,26 +19,32 @@ process GATK4_APPLYBQSR {
     }
 
     input:
-    tuple val(meta), path(bam), path(bai), path(bqsr_table), path(intervalsBed)
+    tuple val(meta), path(cram), path(crai), path(bqsr_table), path(intervalsBed)
     path fasta
     path fastaidx
     path dict
 
     output:
-    tuple val(meta), path("*.bam"), emit: bam
-    path "*.version.txt",           emit: version
+    tuple val(meta), path("*.cram"), emit: cram
+    path "*.version.txt",            emit: version
 
     script:
     def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     def intervalsCommand = intervalsBed ? "-L ${intervalsBed}" : ""
+    if (!task.memory) {
+        log.info '[GATK ApplyBQSR] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
+    } else {
+        avail_mem = task.memory.giga
+    }
     """
     gatk ApplyBQSR \\
         -R $fasta \\
-        -I $bam \\
+        -I $cram \\
         --bqsr-recal-file $bqsr_table \\
         $intervalsCommand \\
-        -O ${prefix}.bam \\
+        --tmp-dir . \
+        -O ${prefix}.cram \\
         $options.args
 
     gatk --version | grep Picard | sed "s/Picard Version: //g" > ${software}.version.txt

@@ -19,10 +19,10 @@ process STRELKA_SOMATIC {
     }
 
     input:
-    tuple val(meta), path(bam_normal), path(bai_normal), path(bam_tumor), path(bai_tumor)
+    tuple val(meta), path(cram_normal), path(crai_normal), path(cram_tumor), path(crai_tumor)
     path  fasta
     path  fai
-    path  target_bed
+    tuple path(target_bed), path(target_bed_tbi)
 
     output:
     tuple val(meta), path("*_somatic_indels.vcf.gz"), path("*_somatic_indels.vcf.gz.tbi"), emit: indels_vcf
@@ -36,8 +36,8 @@ process STRELKA_SOMATIC {
     def options_strelka = params.target_bed ? "--exome --callRegions ${target_bed}" : ""
     """
     configureStrelkaSomaticWorkflow.py \\
-        --tumor $bam_tumor \\
-        --normal $bam_normal \\
+        --tumor $cram_tumor \\
+        --normal $cram_normal \\
         --referenceFasta $fasta \\
         $options_strelka \\
         $options.args \\

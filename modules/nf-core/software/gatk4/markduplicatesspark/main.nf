@@ -1,44 +1,51 @@
-// Import generic module functions
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-options        = initOptions(params.options)
+def options    = initOptions(params.options)
 
 process GATK4_MARKDUPLICATES_SPARK {
+    label 'process_high'
     tag "$meta.id"
-    label 'process_low'
+
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
-    conda (params.enable_conda ? "bioconda::gatk4-spark=4.2.0.0" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/gatk4-spark:4.2.0.0--0"
+    conda (params.enable_conda ? "bioconda::gatk4==4.1.9.0" : null)
+    if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/gatk4:4.1.9.0--py39_0"
     } else {
-        container "quay.io/biocontainers/gatk4-spark:4.2.0.0--0"
+        container "broadinstitute/gatk:4.2.0.0"
     }
 
     input:
-    tuple val(meta), path(bam), path(bai)
-    val use_metrics
+        tuple val(meta), path(bam)
+        path(reference)
+        path(dict) //need to be present in the path
+        path(fai)  //need to be present in the path
+        val(format) //either "bam" or "cram"
 
     output:
-    tuple val(meta), path("*.bam"), path("*.bai"),       emit: bam
-    tuple val(meta), path("*.metrics"), optional : true, emit: metrics
-    path "*.version.txt",                                emit: version
+        tuple val(meta), path("*.${format}"), emit: output
+        path("*.version.txt"),           emit: version
 
     script:
     def software = getSoftwareName(task.process)
+    def bams = bam.collect(){ x -> "-I ".concat(x.toString()) }.join(" ")
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
-    def metrics  = use_metrics ? "-M ${prefix}.bam.metrics" :''
+    if (!task.memory) {
+        log.info '[GATK MarkDuplicatesSpark] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
+    } else {
+        avail_mem = task.memory.giga
+    }
     """
-    gatk MarkDuplicatesSpark \\
-        -I $bam \\
-        $metrics \
-        --tmp-dir . \\
-        --create-output-bam-index true \\
+    gatk  \
+        MarkDuplicatesSpark \
+        ${bams} \
+        -O ${prefix}.${format} \
+        --reference ${reference} \
+        --tmp-dir . \
         --spark-master local[${task.cpus}] \\
-        -O ${prefix}.bam \\
         $options.args
 
     echo \$(gatk MarkDuplicatesSpark --version 2>&1) | sed 's/^.*(GATK) v//; s/ HTSJDK.*\$//' > ${software}.version.txt

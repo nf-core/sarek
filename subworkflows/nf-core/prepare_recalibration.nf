@@ -6,46 +6,64 @@
 
 params.baserecalibrator_options  = [:]
 params.gatherbqsrreports_options = [:]
+params.baserecalibrator_spark_options  = [:]
 
-include { GATK4_BASERECALIBRATOR  as BASERECALIBRATOR }  from '../../modules/nf-core/software/gatk4/baserecalibrator/main'  addParams(options: params.baserecalibrator_options)
-include { GATK4_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from '../../modules/nf-core/software/gatk4/gatherbqsrreports/main' addParams(options: params.gatherbqsrreports_options)
+include { GATK4_BASERECALIBRATOR  as BASERECALIBRATOR }              from '../../modules/nf-core/software/gatk4/baserecalibrator/main'  addParams(options: params.baserecalibrator_options)
+include { GATK4_BASERECALIBRATOR_SPARK  as BASERECALIBRATOR_SPARK }  from '../../modules/nf-core/software/gatk4/baserecalibratorspark/main'  addParams(options: params.baserecalibrator_spark_options)
+include { GATK4_GATHERBQSRREPORTS as GATHERBQSRREPORTS }             from '../../modules/nf-core/software/gatk4/gatherbqsrreports/main' addParams(options: params.gatherbqsrreports_options)
 
 workflow PREPARE_RECALIBRATION {
     take:
-        bam_markduplicates // channel: [mandatory] bam_markduplicates
-        dict               // channel: [mandatory] dict
-        fai                // channel: [mandatory] fai
-        fasta              // channel: [mandatory] fasta
-        intervals          // channel: [mandatory] intervals
-        known_sites        // channel: [optional]  known_sites
-        known_sites_tbi    // channel: [optional]  known_sites_tbi
-        no_intervals       //   value: [mandatory] no_intervals
+        cram_markduplicates // channel: [mandatory] cram_markduplicates
+        use_gatk_spark      //   value: [mandatory] use gatk spark
+        dict                // channel: [mandatory] dict
+        fai                 // channel: [mandatory] fai
+        fasta               // channel: [mandatory] fasta
+        intervals           // channel: [mandatory] intervals
+        num_intervals
+        known_sites         // channel: [optional]  known_sites
+        known_sites_tbi     // channel: [optional]  known_sites_tbi
+        no_intervals        //   value: [mandatory] no_intervals
+        known_indels
+        dbsnp
 
     main:
-
-    bam_markduplicates.combine(intervals).map{ meta, bam, bai, intervals ->
+    cram_markduplicates.combine(intervals)
+    .map{ meta, cram, crai, intervals ->
         new_meta = meta.clone()
         new_meta.id = meta.sample + "_" + intervals.baseName
-        [new_meta, bam, bai, intervals]
-    }.set{bam_markduplicates_intervals}
+        [new_meta, cram, crai, intervals]
+    }
+    .set{cram_markduplicates_intervals}
 
-    BASERECALIBRATOR(bam_markduplicates_intervals, fasta, fai, dict, known_sites, known_sites_tbi)
+    if(use_gatk_spark){
+        BASERECALIBRATOR_SPARK(cram_markduplicates_intervals, fasta, fai, dict, known_sites, known_sites_tbi)
+        table_baserecalibrator = BASERECALIBRATOR_SPARK.out.table
+    }else{
+        BASERECALIBRATOR(cram_markduplicates_intervals, fasta, fai, dict, known_sites_tbi, known_sites)
+        table_baserecalibrator = BASERECALIBRATOR.out.table
+    }
 
-    // STEP 3.5: MERGING RECALIBRATION TABLES
+    //num_intervals =  intervals.toList().size.view() //Integer.valueOf()
+   //.view()
+    //println(intervals.toList().getClass()) //.value.getClass())
+
+
+    //STEP 3.5: MERGING RECALIBRATION TABLES
     if (no_intervals) {
-        BASERECALIBRATOR.out.table.map { meta, table ->
+        table_baserecalibrator.map { meta, table ->
             meta.id = meta.sample
             [meta, table]
         }.set{table_bqsr}
     } else {
-        BASERECALIBRATOR.out.table
-            .map{ meta, table ->
+        table_baserecalibrator.map{ meta, table ->
             meta.id = meta.sample
             [meta, table]
-        }.groupTuple().set{recaltable}
+        }.groupTuple(size: num_intervals).set{recaltable}
 
         GATHERBQSRREPORTS(recaltable)
         table_bqsr = GATHERBQSRREPORTS.out.table
+
     }
 
     emit:

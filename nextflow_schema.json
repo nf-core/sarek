@@ -156,8 +156,8 @@
                 "split_fastq": {
                     "type": "number",
                     "fa_icon": "fas fa-cut",
-                    "description": "Specify how many reads should be contained in the split FastQ file",
-                    "help_text": "Use the Nextflow splitFastq operator to specify how many reads should be contained in the split FASTQ file.\ncf [splitfastq documentation](https://www.nextflow.io/docs/latest/operator.html#splitfastq)",
+                    "description": "Specify how many reads each split of a FastQ file contains. Set 0 to turn of splitting at all",
+                    "help_text": "Use the the tools seqkit/split2 to split FASTQ file by number of reads",
                     "hidden": true
                 }
             }
@@ -190,10 +190,11 @@
                     "hidden": true
                 },
                 "use_gatk_spark": {
-                    "type": "boolean",
-                    "default": false,
+                    "type": "string",
                     "fa_icon": "fas fa-forward",
-                    "description": "Enable usage of GATK Spark implementation"
+                    "description": "Tools for which to enable usage of GATK Spark implementation",
+                    "help_text": "Multiple separated with commas.\n\n GATK4 BQSR tools are currently only available as Beta release. Use with caution!",
+                    "pattern": "^((markduplicates|bqsr)*,?)*$"
                 },
                 "save_bam_mapped": {
                     "type": "boolean",
