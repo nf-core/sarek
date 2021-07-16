@@ -1,34 +1,24 @@
-export GENOME=GRCh37
-export SNPEFF_CACHE_VERSION=75
-export SNPEFF_TAG=5.0
+#!/usr/bin/env bash
+set -euo pipefail
 
-docker build -t nfcore/snpeff:${SNPEFF_TAG}.${GENOME} modules/nf-core/software/snpeff/. --build-arg GENOME=${GENOME} --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION}
-docker push nfcore/snpeff:${SNPEFF_TAG}.${GENOME}
+# Build and push all containers
 
-export GENOME=GRCh38
-export SNPEFF_CACHE_VERSION=99
-export SNPEFF_TAG=5.0
+build_push() {
+    GENOME=$1
+    SNPEFF_CACHE_VERSION=$2
+    SNPEFF_TAG=$3
 
-docker build -t nfcore/snpeff:${SNPEFF_TAG}.${GENOME} modules/nf-core/software/snpeff/. --build-arg GENOME=${GENOME} --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION}
-docker push nfcore/snpeff:${SNPEFF_TAG}.${GENOME}
+    docker build \
+        -t nfcore/snpeff:${SNPEFF_TAG}.${GENOME} \
+        software/snpeff/. \
+        --build-arg GENOME=${GENOME} \
+        --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION}
 
-export GENOME=GRCm38
-export SNPEFF_VERSION=99
-export SNPEFF_TAG=5.0
+    docker push nfcore/snpeff:${SNPEFF_TAG}.${GENOME}
+}
 
-docker build -t nfcore/snpeff:${SNPEFF_TAG}.${GENOME} modules/nf-core/software/snpeff/. --build-arg GENOME=${GENOME} --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION}
-docker push nfcore/snpeff:${SNPEFF_TAG}.${GENOME}
-
-export GENOME=CanFam3.1
-export SNPEFF_VERSION=99
-export SNPEFF_TAG=5.0
-
-docker build -t nfcore/snpeff:${SNPEFF_TAG}.${GENOME} modules/nf-core/software/snpeff/. --build-arg GENOME=${GENOME} --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION}
-docker push nfcore/snpeff:${SNPEFF_TAG}.${GENOME}
-
-export GENOME=WBcel235
-export SNPEFF_VERSION=99
-export SNPEFF_TAG=5.0
-
-docker build -t nfcore/snpeff:${SNPEFF_TAG}.${GENOME} modules/nf-core/software/snpeff/. --build-arg GENOME=${GENOME} --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION}
-docker push nfcore/snpeff:${SNPEFF_TAG}.${GENOME}
+build_push "GRCh37"    "75" "5.0"
+build_push "GRCh38"    "99" "5.0"
+build_push "GRCm38"    "99" "5.0"
+build_push "CanFam3.1" "99" "5.0"
+build_push "WBcel235"  "99" "5.0"

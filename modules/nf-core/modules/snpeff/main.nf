@@ -25,13 +25,13 @@ process SNPEFF {
 
     input:
     tuple val(meta), path(vcf)
-    val (snpeff_db)
-    path (snpeff_cache)
+    val   db
+    path  cache
 
     output:
     tuple val(meta), path("*.ann.vcf"), emit: vcf
-    path "*.csv",                       emit: report
-    path "*.version.txt",               emit: version
+    path "*.csv"                      , emit: report
+    path "*.version.txt"              , emit: version
 
     script:
     def software = getSoftwareName(task.process)
@@ -41,11 +41,11 @@ process SNPEFF {
     } else {
         avail_mem = task.memory.giga
     }
-    prefix       = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     cache        = params.use_cache ? "-dataDir \${PWD}/${snpeff_cache}" : ""
     """
     snpEff -Xmx${avail_mem}g \\
-        $snpeff_db \\
+        $db \\
         $options.args \\
         -csvStats ${prefix}.csv \\
         $cache \\

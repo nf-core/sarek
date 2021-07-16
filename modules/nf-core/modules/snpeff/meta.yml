@@ -9,6 +9,18 @@ tools:
             It annotates and predicts the effects of genetic variants on genes and proteins (such as amino acid changes).
         homepage: https://pcingola.github.io/SnpEff/
         documentation: https://pcingola.github.io/SnpEff/se_introduction/
+params:
+    - use_cache:
+        type: boolean
+        description: |
+          boolean to enable the usage of containers with cache
+          Enable the usage of containers with cache
+          Does not work with conda
+    - snpeff_tag:
+        type: value
+        description: |
+          Specify the tag for the container
+          https://hub.docker.com/r/nfcore/snpeff/tags
 input:
     - meta:
         type: map
@@ -19,16 +31,16 @@ input:
         type: file
         description: |
             vcf to annotate
-    - snpeff_db:
+    - db:
         type: value
         description: |
             which db to annotate with
-    - snpeff_cache:
+    - cache:
         type: file
         description: |
             path to snpEff cache (optional)
 output:
-    - vcf_ann:
+    - vcf:
         type: file
         description: |
             annotated vcf
