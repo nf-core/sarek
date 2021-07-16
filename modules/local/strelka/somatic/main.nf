@@ -4,7 +4,7 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 options        = initOptions(params.options)
 
-process STRELKA_SOMATIC_BEST_PRACTICES {
+process STRELKA_SOMATIC {
     tag "$meta.id"
     label 'process_high'
     publishDir "${params.outdir}",
@@ -19,10 +19,10 @@ process STRELKA_SOMATIC_BEST_PRACTICES {
     }
 
     input:
-    tuple val(meta), path(bam_normal), path(bai_normal), path(bam_tumor), path(bai_tumor), path(manta_csi), path(manta_csi_tbi)
+    tuple val(meta), path(cram_normal), path(crai_normal), path(cram_tumor), path(crai_tumor)
     path  fasta
     path  fai
-    path  target_bed
+    tuple path(target_bed), path(target_bed_tbi)
 
     output:
     tuple val(meta), path("*_somatic_indels.vcf.gz"), path("*_somatic_indels.vcf.gz.tbi"), emit: indels_vcf
@@ -36,10 +36,9 @@ process STRELKA_SOMATIC_BEST_PRACTICES {
     def options_strelka = params.target_bed ? "--exome --callRegions ${target_bed}" : ""
     """
     configureStrelkaSomaticWorkflow.py \\
-        --tumor $bam_tumor \\
-        --normal $bam_normal \\
+        --tumor $cram_tumor \\
+        --normal $cram_normal \\
         --referenceFasta $fasta \\
-        --indelCandidates $manta_csi \
         $options_strelka \\
         $options.args \\
         --runDir strelka
