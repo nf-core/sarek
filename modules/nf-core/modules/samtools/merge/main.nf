@@ -22,8 +22,8 @@ process SAMTOOLS_MERGE {
     tuple val(meta), path(bams)
 
     output:
-    tuple val(meta), path("${prefix}.bam"), emit: merged_bam
-    path  "*.version.txt" ,                 emit: version
+    tuple val(meta), path("${prefix}.bam"), emit: bam
+    path  "*.version.txt"                 , emit: version
 
     script:
     def software = getSoftwareName(task.process)
