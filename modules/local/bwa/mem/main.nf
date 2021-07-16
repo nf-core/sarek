@@ -29,8 +29,13 @@ process BWA_MEM {
     script:
     def split_cpus = Math.floor(task.cpus/2)
     def software   = getSoftwareName(task.process)
-    def prefix     = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def part       = params.split_fastq > 1 ? reads.get(0).name.findAll(/part_([0-9]+)?/).last().concat('.') : ""
+    def prefix     = options.suffix ? "${meta.id}${options.suffix}.${part}" : "${meta.id}.${part}"
     def read_group = meta.read_group ? "-R ${meta.read_group}" : ""
+    //MD Spark NEEDS name sorted reads or runtime goes through the roof.
+    //However, if duplicate marking is skipped, reads need to be coordinate sorted.
+    //Spark can be used also for BQSR, therefore check for both: only name sort if spark + duplicate marking is done
+    def sort_order = ('markduplicates' in params.use_gatk_spark) & !params.skip_markduplicates ? "-n" : ""
     """
     INDEX=`find -L ./ -name "*.amb" | sed 's/.amb//'`
 
@@ -40,7 +45,7 @@ process BWA_MEM {
         -t ${split_cpus} \\
         \$INDEX \\
         $reads \\
-        | samtools view $options.args2 -@ ${split_cpus} -bhS -o ${prefix}.bam -
+        | samtools $options.args2 $sort_order --threads ${split_cpus} -o ${prefix}bam -
 
     echo \$(bwa 2>&1) | sed 's/^.*Version: //; s/Contact:.*\$//' > ${software}.version.txt
     """
