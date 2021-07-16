@@ -19,19 +19,17 @@ process SAMTOOLS_INDEX {
     }
 
     input:
-    tuple val(meta), path(input)
+    tuple val(meta), path(bam)
 
     output:
     tuple val(meta), path("*.bai"), optional:true, emit: bai
     tuple val(meta), path("*.csi"), optional:true, emit: csi
-    tuple val(meta), path("*.crai"), optional:true, emit: crai
-
     path  "*.version.txt"         , emit: version
 
     script:
     def software = getSoftwareName(task.process)
     """
-    samtools index $options.args $input
+    samtools index $options.args $bam
     echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' > ${software}.version.txt
     """
 }

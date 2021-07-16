@@ -41,12 +41,20 @@ output:
         e.g. [ id:'test']
   - vcf:
       type: file
-      description: gzipped germline variant file and associated index file
-      pattern: "(*_variants.vcf.gz, *_variants.vcf.gz.tbi)"
+      description: gzipped germline variant file
+      pattern: "*.{vcf.gz}"
+  - vcf_tbi:
+      type: file
+      description: index file for the vcf file
+      pattern: "*.vcf.gz.tbi"
   - genome_vcf:
       type: file
-      description: variant records and compressed non-variant blocks and associated index file
-      pattern: "(*_genome.vcf.gz, _genome.vcf.gz.tbi)"
+      description: variant records and compressed non-variant blocks
+      pattern: "*_genome.vcf.gz"
+  - genome_vcf_tbi:
+      type: file
+      description: index file for the genome_vcf file
+      pattern: "*_genome.vcf.gz.tbi"
   - version:
       type: file
       description: File containing software version

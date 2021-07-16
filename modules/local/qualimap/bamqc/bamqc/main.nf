@@ -19,7 +19,7 @@ process QUALIMAP_BAMQC {
     }
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    tuple val(meta), path(bam)
     path gff
     val use_gff
 
