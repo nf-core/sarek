@@ -1,7 +1,5 @@
 lint:
   files_unchanged:
-    - .github/ISSUE_TEMPLATE/bug_report.md
-    - .github/ISSUE_TEMPLATE/feature_request.md
     - assets/nf-core-sarek_logo.png
     - docs/images/nf-core-sarek_logo.png
     - lib/NfcoreTemplate.groovy
