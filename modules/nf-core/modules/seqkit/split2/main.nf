@@ -14,7 +14,7 @@ process SEQKIT_SPLIT2 {
 
     conda (params.enable_conda ? "bioconda::seqkit=0.16.0" : null)
 
-    if (workflow.containerEngine == 'singularity' && !params.pull_docker_container) {
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/seqkit:0.16.0--h9ee0642_0"
     } else {
         container "quay.io/biocontainers/seqkit:0.16.0--h9ee0642_0"
