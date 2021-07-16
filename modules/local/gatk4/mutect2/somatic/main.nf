@@ -28,7 +28,7 @@ process GATK4_MUTECT2_SOMATIC {
     val no_intervals
     path(germline_resource)
     tuple val(id), path(germline_resource_tbi)
-     //target_bed?
+    //target_bed?
 
     output:
     tuple val(meta), path("*.vcf"),       emit: vcf
