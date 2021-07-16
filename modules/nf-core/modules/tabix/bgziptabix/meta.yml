@@ -1,6 +1,8 @@
-name: tabix_tabix
-description: create tabix index from a sorted bgzip tab-delimited genome file
+name: tabix_bgziptabix
+description: bgzip a sorted tab-delimited genome file and then create tabix index
 keywords:
+    - bgzip
+    - compress
     - index
     - tabix
     - vcf
@@ -18,23 +20,25 @@ input:
           e.g. [ id:'test', single_end:false ]
     - tab:
         type: file
-        description: TAB-delimited genome position file compressed with bgzip
-        pattern: "*.{bed.gz,gff.gz,sam.gz,vcf.gz}"
+        description: TAB-delimited genome position file
+        pattern: "*.{bed,gff,sam,vcf}"
 output:
     - meta:
         type: map
         description: |
           Groovy Map containing sample information
           e.g. [ id:'test', single_end:false ]
+    - gz:
+        type: file
+        description: Output compressed file
+        pattern: "*.{gz}"
     - tbi:
         type: file
         description: tabix index file
-        pattern: "*.{tbi}"
+        pattern: "*.{gz.tbi}"
     - version:
         type: file
         description: File containing software version
         pattern: "*.{version.txt}"
 authors:
-    - "@joseespinosa"
-    - "@drpatelh"
     - "@maxulysse"
