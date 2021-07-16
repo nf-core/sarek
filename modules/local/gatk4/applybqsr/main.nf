@@ -31,7 +31,7 @@ process GATK4_APPLYBQSR {
     script:
     def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
-    def interval = intervals ? "-L ${intervals}" : ""
+    def intervalsCommand = intervalsBed ? "-L ${intervalsBed}" : ""
     if (!task.memory) {
         log.info '[GATK ApplyBQSR] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
     } else {
@@ -42,8 +42,8 @@ process GATK4_APPLYBQSR {
         -R $fasta \\
         -I $cram \\
         --bqsr-recal-file $bqsr_table \\
-        $interval \\
-        --tmp-dir . \
+        $intervalsCommand \\
+        --tmp-dir . \\
         -O ${prefix}.cram \\
         $options.args
 

@@ -404,6 +404,8 @@ workflow SAREK {
     if (step == 'variantcalling') bam_variant_calling = input_sample
 
     if (tools != []) {
+        vcf_to_annotate = Channel.empty()
+
         // GERMLINE VARIANT CALLING
         GERMLINE_VARIANT_CALLING(
             tools,
@@ -417,6 +419,8 @@ workflow SAREK {
             num_intervals,
             target_bed,
             target_bed_gz_tbi)
+
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf, GERMLINE_VARIANT_CALLING.out.strelka_vcf)
 
         // SOMATIC VARIANT CALLING
 

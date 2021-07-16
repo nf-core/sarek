@@ -23,13 +23,14 @@ process GATK4_MARKDUPLICATES {
     val use_metrics
 
     output:
-    tuple val(meta), path("*.bam")    , emit: bam
-    tuple val(meta), path("*.metrics"), emit: metrics
-    path "*.version.txt"              , emit: version
+    tuple val(meta), path("*.bam"), path("*.bai")      , emit: bam
+    tuple val(meta), path("*.metrics"), optional : true, emit: metrics
+    path "*.version.txt"                               , emit: version
 
     script:
     def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def metrics  = use_metrics ? "M=${prefix}.metrics" :''
     def bams     = bam.collect(){ x -> "INPUT=".concat(x.toString()) }.join(" ")
     if (!task.memory) {
         log.info '[GATK MarkDuplicates] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
@@ -39,13 +40,15 @@ process GATK4_MARKDUPLICATES {
     """
     gatk MarkDuplicates \\
         $bams \\
-        --METRICS_FILE ${prefix}.metrics \\
-        --TMP_DIR . \\
-        --ASSUME_SORT_ORDER coordinate \\
-        --CREATE_INDEX true \\
-        --OUTPUT ${prefix}.bam \\
+        $metrics \\
+        TMP_DIR=. \\
+        ASSUME_SORT_ORDER=coordinate \\
+        CREATE_INDEX=true \\
+        O=${prefix}.bam \\
         $options.args
 
-    echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//' > ${software}.version.txt
+    mv ${prefix}.bai ${prefix}.bam.bai
+
+    echo \$(gatk MarkDuplicates --version 2>&1) | sed 's/^.*(GATK) v//; s/ HTSJDK.*\$//' > ${software}.version.txt
     """
 }
