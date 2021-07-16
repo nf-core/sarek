@@ -18,13 +18,13 @@ ARG VEP_VERSION=99
 
 # Download Genome
 RUN vep_install \
-  -a c \
-  -c .vep \
-  -s ${SPECIES} \
-  -y ${GENOME} \
-  --CACHE_VERSION ${VEP_VERSION} \
-  --CONVERT \
-  --NO_BIOPERL --NO_HTSLIB --NO_TEST --NO_UPDATE
+    -a c \
+    -c .vep \
+    -s ${SPECIES} \
+    -y ${GENOME} \
+    --CACHE_VERSION ${VEP_VERSION} \
+    --CONVERT \
+    --NO_BIOPERL --NO_HTSLIB --NO_TEST --NO_UPDATE
 
 # Dump the details of the installed packages to a file for posterity
 RUN conda env export --name nf-core-vep-104.3 > nf-core-vep-104.3.yml

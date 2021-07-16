@@ -1,4 +1,4 @@
-# You can use this file to create a conda environment for this pipeline:
+# You can use this file to create a conda environment for this module:
 #   conda env create -f environment.yml
 name: nf-core-vep-104.3
 channels:
