@@ -18,7 +18,7 @@ for version_file in version_files:
 print(
     """
 id: 'software_versions'
-section_name: 'nf-core/sarek software versions'
+section_name: 'nf-core/sarek Software Versions'
 section_href: 'https://github.com/nf-core/sarek'
 plot_type: 'html'
 description: 'are collected at run time from the software output.'
@@ -30,7 +30,7 @@ for k, v in sorted(results.items()):
     print("        <dt>{}</dt><dd><samp>{}</samp></dd>".format(k, v))
 print("    </dl>")
 
-# Write out regexes as csv file:
+# Write out as tsv file:
 with open("software_versions.tsv", "w") as f:
     for k, v in sorted(results.items()):
         f.write("{}\t{}\n".format(k, v))
