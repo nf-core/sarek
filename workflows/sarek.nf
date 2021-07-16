@@ -215,8 +215,8 @@ include { ANNOTATE } from '../subworkflows/local/annotate' addParams(
     merge_vep_options:              modules['merge_vep'],
     snpeff_options:                 modules['snpeff'],
     snpeff_tag:                     "${modules['snpeff'].tag_base}.${params.genome}",
-    vep_options:                    modules['vep'],
-    vep_tag:                        "${modules['vep'].tag_base}.${params.genome}"
+    vep_options:                    modules['ensemblvep'],
+    vep_tag:                        "${modules['ensemblvep'].tag_base}.${params.genome}"
 )
 
 /*
@@ -231,6 +231,7 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 def multiqc_options   = modules['multiqc']
 multiqc_options.args += params.multiqc_title ? Utils.joinModuleArgs(["--title \"$params.multiqc_title\""]) : ''
 include { MULTIQC } from '../modules/nf-core/modules/multiqc/main' addParams( options: multiqc_options   )
+include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions' addParams( options: [publish_files : ['tsv':'']] )
 
 /*
 ========================================================================================
@@ -345,9 +346,9 @@ workflow SAREK {
         //TODO: Check with Maxime and add this
         //CRAM_CSV(cram_markduplicates)
 
-        cram_markduplicates = MARKDUPLICATES.out.cram
+        cram_markduplicates = QC_MARKDUPLICATES.out.cram
 
-        qc_reports = qc_reports.mix(MARKDUPLICATES.out.qc)
+        qc_reports = qc_reports.mix(QC_MARKDUPLICATES.out.qc)
     }
 
     if (step == 'preparerecalibration') bam_markduplicates = input_sample
@@ -465,7 +466,7 @@ workflow SAREK {
         }
     }
 
-    ch_software_versions = ch_software_versions.mix(FASTQC.out.version.first().ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.fastqc_version.first().ifEmpty(null))
 
     ch_software_versions
         .map { it -> if (it) [ it.baseName, it ] }
@@ -485,7 +486,7 @@ workflow SAREK {
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
+    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
 
     MULTIQC(ch_multiqc_files.collect())
     multiqc_report       = MULTIQC.out.report.toList()

@@ -21,14 +21,14 @@ include { SNPEFF_ANNOTATE } from '../nf-core/snpeff_annotate' addParams(
     use_cache:                 params.annotation_cache
 )
 
-include { VEP_ANNOTATE as MERGE_ANNOTATE } from '../nf-core/vep_annotate' addParams(
+include { ENSEMBLVEP_ANNOTATE as MERGE_ANNOTATE } from '../nf-core/ensemblvep_annotate' addParams(
     bgziptabix_vep_options:    params.bgziptabix_merge_vep_options,
     use_cache:                 params.annotation_cache,
     vep_options:               params.merge_vep_options,
     vep_tag:                   params.vep_tag
 )
 
-include { VEP_ANNOTATE } from '../nf-core/vep_annotate' addParams(
+include { ENSEMBLVEP_ANNOTATE } from '../nf-core/ensemblvep_annotate' addParams(
     bgziptabix_vep_options:    params.bgziptabix_vep_options,
     use_cache:                 params.annotation_cache,
     vep_options:               params.vep_options,
@@ -67,7 +67,7 @@ workflow ANNOTATE {
     }
 
     if ('vep' in tools) {
-        (vep_vcf_ann, vep_report, vep_version) = VEP_ANNOTATE(vcf, vep_genome, vep_species, vep_cache_version, vep_cache)
+        (vep_vcf_ann, vep_report, vep_version) = ENSEMBLVEP_ANNOTATE(vcf, vep_genome, vep_species, vep_cache_version, vep_cache)
     }
 
     vcf_ann = snpeff_vcf_ann.mix(merge_vcf_ann, vep_vcf_ann)

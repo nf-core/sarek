@@ -10,11 +10,11 @@ params.bwamem1_mem_tumor_options = [:]
 params.bwamem2_mem_options       = [:]
 params.bwamem2_mem_tumor_options = [:]
 
-include { SEQKIT_SPLIT2 }                from '../../modules/nf-core/software/seqkit/split2/main.nf' addParams(options: params.seqkit_split2_options)
-include { BWA_MEM as BWAMEM1_MEM }       from '../../modules/nf-core/software/bwa/mem/main'          addParams(options: params.bwamem1_mem_options)
-include { BWA_MEM as BWAMEM1_MEM_T }     from '../../modules/nf-core/software/bwa/mem/main'          addParams(options: params.bwamem1_mem_tumor_options)
-include { BWAMEM2_MEM }                  from '../../modules/nf-core/software/bwamem2/mem/main'      addParams(options: params.bwamem2_mem_options)
-include { BWAMEM2_MEM as BWAMEM2_MEM_T } from '../../modules/nf-core/software/bwamem2/mem/main'      addParams(options: params.bwamem2_mem_tumor_options)
+include { SEQKIT_SPLIT2 }                from '../../modules/nf-core/modules/seqkit/split2/main.nf' addParams(options: params.seqkit_split2_options)
+include { BWA_MEM as BWAMEM1_MEM }       from '../../modules/local/bwa/mem/main'                    addParams(options: params.bwamem1_mem_options)
+include { BWA_MEM as BWAMEM1_MEM_T }     from '../../modules/local/bwa/mem/main'                    addParams(options: params.bwamem1_mem_tumor_options)
+include { BWAMEM2_MEM }                  from '../../modules/local/bwamem2/mem/main'                addParams(options: params.bwamem2_mem_options)
+include { BWAMEM2_MEM as BWAMEM2_MEM_T } from '../../modules/local/bwamem2/mem/main'                addParams(options: params.bwamem2_mem_tumor_options)
 
 workflow MAPPING {
     take:

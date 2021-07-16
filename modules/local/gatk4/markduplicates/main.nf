@@ -20,6 +20,7 @@ process GATK4_MARKDUPLICATES {
 
     input:
     tuple val(meta), path(bam)
+    val use_metrics
 
     output:
     tuple val(meta), path("*.bam")    , emit: bam
@@ -29,9 +30,15 @@ process GATK4_MARKDUPLICATES {
     script:
     def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def bams     = bam.collect(){ x -> "INPUT=".concat(x.toString()) }.join(" ")
+    if (!task.memory) {
+        log.info '[GATK MarkDuplicates] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
+    } else {
+        avail_mem = task.memory.giga
+    }
     """
     gatk MarkDuplicates \\
-        --INPUT $bam \\
+        $bams \\
         --METRICS_FILE ${prefix}.metrics \\
         --TMP_DIR . \\
         --ASSUME_SORT_ORDER coordinate \\

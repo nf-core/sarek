@@ -11,16 +11,16 @@ params.qualimap_bamqc_options = [:]
 params.samtools_index_options = [:]
 params.samtools_stats_options = [:]
 
-include { GATK4_APPLYBQSR as APPLYBQSR }             from '../../modules/nf-core/software/gatk4/applybqsr/main' addParams(options: params.applybqsr_options)
-include { GATK4_APPLYBQSR_SPARK as APPLYBQSR_SPARK } from '../../modules/nf-core/software/gatk4/applybqsrspark/main' addParams(options: params.applybqsr_spark_options)
-include { QUALIMAP_BAMQC_CRAM }                           from '../../modules/nf-core/software/qualimap/bamqc_cram/main'  addParams(options: params.qualimap_bamqc_options)
-include { SAMTOOLS_INDEX }                           from '../../modules/nf-core/software/samtools/index/main'  addParams(options: params.samtools_index_options)
-include { SAMTOOLS_MERGE_CRAM }                      from '../../modules/nf-core/software/samtools/merge_cram/main'  addParams(options: params.merge_cram_options)
-include { SAMTOOLS_STATS }                           from '../../modules/nf-core/software/samtools/stats/main'  addParams(options: params.samtools_stats_options)
+include { GATK4_APPLYBQSR as APPLYBQSR }             from '../../modules/local/gatk4/applybqsr/main'      addParams(options: params.applybqsr_options)
+include { GATK4_APPLYBQSR_SPARK as APPLYBQSR_SPARK } from '../../modules/local/gatk4/applybqsrspark/main' addParams(options: params.applybqsr_spark_options)
+include { QUALIMAP_BAMQC_CRAM }                      from '../../modules/local/qualimap/bamqccram/main'   addParams(options: params.qualimap_bamqc_options)
+include { SAMTOOLS_INDEX }                           from '../../modules/local/samtools/index/main'       addParams(options: params.samtools_index_options)
+include { SAMTOOLS_MERGE_CRAM }                      from '../../modules/local/samtools/mergecram/main'   addParams(options: params.merge_cram_options)
+include { SAMTOOLS_STATS }                           from '../../modules/local/samtools/stats/main'       addParams(options: params.samtools_stats_options)
 
 workflow RECALIBRATE {
     take:
-        use_gatk_spark      //   value: [mandatory] use gatk spark
+        use_gatk_spark //   value: [mandatory] use gatk spark
         skip_bamqc     // boolean: true/false
         skip_samtools  // boolean: true/false
         cram           // channel: [mandatory] cram

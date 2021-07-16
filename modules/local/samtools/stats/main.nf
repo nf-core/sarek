@@ -19,7 +19,8 @@ process SAMTOOLS_STATS {
     }
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    tuple val(meta), path(cram), path(crai)
+    path(reference)
 
     output:
     tuple val(meta), path("*.stats"), emit: stats
@@ -28,7 +29,7 @@ process SAMTOOLS_STATS {
     script:
     def software = getSoftwareName(task.process)
     """
-    samtools stats $bam > ${bam}.stats
+    samtools stats -@${task.cpus} --reference ${reference} $cram > ${cram}.stats
     echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' > ${software}.version.txt
     """
 }

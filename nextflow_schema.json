@@ -594,8 +594,7 @@
                     "fa_icon": "fas fa-university",
                     "description": "Name of sequencing center to be displayed in BAM file",
                     "help_text": "It will be in the CN field",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
+                    "hidden": true
                 }
             }
         },
