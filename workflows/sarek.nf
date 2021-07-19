@@ -282,12 +282,10 @@ workflow SAREK {
     dbsnp_tbi_ch = Channel.from(dbsnp_tbi)
     known_indels_ch = Channel.from(known_indels)
 
-    //TODO @Maxime this is really something we need to fix/figure out. the below version works for me, for human/mouse/and test
+    //TODO @Rike, is this working for you?
     known_sites     = dbsnp ? [dbsnp, known_indels] : known_indels ? known_indels : []
-    known_sites_tbi = dbsnp_tbi ? dbsnp_tbi.mix(known_indels_tbi).collect() : known_indels_tbi ? known_indels_tbi : ch_dummy_file
+    known_sites_tbi = dbsnp_tbi ? dbsnp_tbi.concat(known_indels_tbi).collect() : ch_dummy_file
 
-    // known_sites       = known_indels_ch.concat(dbsnp_ch).collect()
-    // known_sites_tbi   = dbsnp_tbi.concat(known_indels_tbi).collect()
     msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
 
