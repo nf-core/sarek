@@ -15,15 +15,15 @@
     - path: results/preprocessing/9876T/recal_table/9876T.recal.table
     - path: results/preprocessing/9876T/recalibrated/9876T.recal.cram
     - path: results/preprocessing/9876T/recalibrated/9876T.recal.cram.crai
-    # - path: results/preprocessing/csv/markduplicates.csv
-    # - path: results/preprocessing/csv/markduplicates_1234N.csv
-    # - path: results/preprocessing/csv/markduplicates_9876T.csv
-    # - path: results/preprocessing/csv/markduplicates_no_table.csv
-    # - path: results/preprocessing/csv/markduplicates_no_table_1234N.csv
-    # - path: results/preprocessing/csv/markduplicates_no_table_9876T.csv
-    # - path: results/preprocessing/csv/recalibrated.csv
-    # - path: results/preprocessing/csv/recalibrated_1234N.csv
-    # - path: results/preprocessing/csv/recalibrated_9876T.csv
+    - path: results/preprocessing/csv/markduplicates.csv
+    - path: results/preprocessing/csv/markduplicates_1234N.csv
+    - path: results/preprocessing/csv/markduplicates_9876T.csv
+    - path: results/preprocessing/csv/markduplicates_no_table.csv
+    - path: results/preprocessing/csv/markduplicates_no_table_1234N.csv
+    - path: results/preprocessing/csv/markduplicates_no_table_9876T.csv
+    - path: results/preprocessing/csv/recalibrated.csv
+    - path: results/preprocessing/csv/recalibrated_1234N.csv
+    - path: results/preprocessing/csv/recalibrated_9876T.csv
     - path: results/reports/fastqc/1234N-1234N_M1
     - path: results/reports/fastqc/1234N-1234N_M2
     - path: results/reports/fastqc/1234N-1234N_M4
