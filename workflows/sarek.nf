@@ -339,12 +339,10 @@ workflow SAREK {
                             'samtools' in params.skip_qc,
                             target_bed)
 
-        // Create CSV to restart from this step
-        // MARKDUPLICATES_CSV(bam_markduplicates)
-        //TODO: Check with Maxime and add this
-        //CRAM_CSV(cram_markduplicates)
-
         cram_markduplicates = QC_MARKDUPLICATES.out.cram
+
+        // Create CSV to restart from this step
+        MARKDUPLICATES_CSV(cram_markduplicates)
 
         qc_reports = qc_reports.mix(QC_MARKDUPLICATES.out.qc)
     }
@@ -469,9 +467,7 @@ workflow SAREK {
         }
     }
 
-    if (step == 'mapping') {
-        ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.fastqc_version.first().ifEmpty(null))
-    }
+    if (step == 'mapping') ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.fastqc_version.first().ifEmpty(null))
 
     ch_software_versions
         .map { it -> if (it) [ it.baseName, it ] }
@@ -491,9 +487,7 @@ workflow SAREK {
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
-    if (step == 'mapping') {
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
-    }
+    if (step == 'mapping') ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
 
     MULTIQC(ch_multiqc_files.collect())
     multiqc_report       = MULTIQC.out.report.toList()
@@ -504,13 +498,13 @@ workflow SAREK {
 def extract_csv(csv_file) {
     Channel.from(csv_file).splitCsv(header: true)
     //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
-                        .map{ row -> [[row.patient.toString(), row.sample.toString()], row]}
-                        .groupTuple()
-                        .map{ meta, rows ->
-                            size = rows.size()
-                            return [rows, size]
-                        }.transpose()
-                        .map{ row, numLanes -> //from here do the usual thing for csv parsing
+        .map{ row -> [[row.patient.toString(), row.sample.toString()], row]}
+        .groupTuple()
+        .map{ meta, rows ->
+            size = rows.size()
+            return [rows, size]
+        }.transpose()
+        .map{ row, numLanes -> //from here do the usual thing for csv parsing
         def meta = [:]
 
         meta.numLanes = numLanes.toInteger()
@@ -544,16 +538,16 @@ def extract_csv(csv_file) {
         } else if (row.table) {
         // recalibration
             meta.id   = meta.sample
-            def bam   = file(row.bam,   checkIfExists: true)
-            def bai   = file(row.bai,   checkIfExists: true)
+            def cram  = file(row.cram,  checkIfExists: true)
+            def crai  = file(row.crai,  checkIfExists: true)
             def table = file(row.table, checkIfExists: true)
-            return [meta, bam, bai, table]
-        } else if (row.bam) {
+            return [meta, cram, crai, table]
+        } else if (row.cram) {
         // prepare_recalibration or variant_calling
             meta.id = meta.sample
-            def bam = file(row.bam, checkIfExists: true)
-            def bai = file(row.bai, checkIfExists: true)
-            return [meta, bam, bai]
+            def cram = file(row.cram, checkIfExists: true)
+            def crai = file(row.crai, checkIfExists: true)
+            return [meta, cram, crai]
         } else if (row.vcf) {
         // annotation
             meta.id = meta.sample
