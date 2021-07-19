@@ -152,11 +152,13 @@ include { BUILD_INDICES } from '../subworkflows/local/build_indices' addParams(
     tabix_pon_options:               modules['tabix_pon']
 )
 include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
-    seqkit_split2_options:           modules['seqkit_split2'],
     bwamem1_mem_options:             modules['bwa_mem1_mem'],
     bwamem1_mem_tumor_options:       modules['bwa_mem1_mem_tumor'],
     bwamem2_mem_options:             modules['bwa_mem2_mem'],
     bwamem2_mem_tumor_options:       modules['bwa_mem2_mem_tumor'],
+    merge_bam_options:               modules['merge_bam_mapping'],
+    samtools_index_options:          modules['samtools_index_mapping'],
+    seqkit_split2_options:           modules['seqkit_split2']
 )
 
 include { QC_MARKDUPLICATES } from '../subworkflows/nf-core/qc_markduplicates' addParams(
@@ -316,27 +318,29 @@ workflow SAREK {
             FASTQC_TRIMGALORE.out.trim_zip)
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
-        MAPPING(
-            params.aligner,
+        MAPPING(params.aligner,
             bwa,
             fai,
             fasta,
-            reads_input)
+            reads_input,
+            params.skip_markduplicates)
 
-        bam_mapped    = MAPPING.out.bam
+        bam_mapped  = MAPPING.out.bam
+        bam_indexed = MAPPING.out.bam_indexed
 
         // Create CSV to restart from this step
-        MAPPING_CSV(bam_mapped, save_bam_mapped, params.skip_markduplicates)
+        MAPPING_CSV(bam_indexed, save_bam_mapped, params.skip_markduplicates)
 
         // STEP 2: MARKING DUPLICATES AND/OR QC, conversion to CRAM
         QC_MARKDUPLICATES(bam_mapped,
-                            ('markduplicates' in params.use_gatk_spark),
-                            !('markduplicates' in params.skip_qc),
-                            fasta, fai, dict,
-                            params.skip_markduplicates,
-                            'bamqc' in params.skip_qc,
-                            'samtools' in params.skip_qc,
-                            target_bed)
+            bam_indexed,
+            ('markduplicates' in params.use_gatk_spark),
+            !('markduplicates' in params.skip_qc),
+            fasta, fai, dict,
+            params.skip_markduplicates,
+            'bamqc' in params.skip_qc,
+            'samtools' in params.skip_qc,
+            target_bed)
 
         cram_markduplicates = QC_MARKDUPLICATES.out.cram
 
