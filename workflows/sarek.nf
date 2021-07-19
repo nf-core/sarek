@@ -283,11 +283,11 @@ workflow SAREK {
     known_indels_ch = Channel.from(known_indels)
 
     //TODO @Maxime this is really something we need to fix/figure out. the below version works for me, for human/mouse/and test
-    //known_sites     = dbsnp ? [dbsnp, known_indels] : known_indels ? known_indels : []
-    //known_sites_tbi = dbsnp_tbi ? dbsnp_tbi.mix(known_indels_tbi).collect() : known_indels_tbi ? known_indels_tbi : ch_dummy_file
+    known_sites     = dbsnp ? [dbsnp, known_indels] : known_indels ? known_indels : []
+    known_sites_tbi = dbsnp_tbi ? dbsnp_tbi.mix(known_indels_tbi).collect() : known_indels_tbi ? known_indels_tbi : ch_dummy_file
 
-    known_sites     = known_indels_ch.concat(dbsnp_ch).collect()
-    known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
+    // known_sites       = known_indels_ch.concat(dbsnp_ch).collect()
+    // known_sites_tbi   = dbsnp_tbi.concat(known_indels_tbi).collect()
     msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
 
@@ -401,10 +401,11 @@ workflow SAREK {
         cram_variant_calling = cram_recalibrated
     }
 
-    if (step == 'variantcalling') bam_variant_calling = input_sample
+    if (step in 'variantcalling') cram_variant_calling = input_sample
 
     if (tools != []) {
         vcf_to_annotate = Channel.empty()
+        if (step in 'annotate') cram_variant_calling = Channel.empty()
 
         // GERMLINE VARIANT CALLING
         GERMLINE_VARIANT_CALLING(
@@ -470,7 +471,9 @@ workflow SAREK {
         }
     }
 
-    ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.fastqc_version.first().ifEmpty(null))
+    if (step == 'mapping') {
+        ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.fastqc_version.first().ifEmpty(null))
+    }
 
     ch_software_versions
         .map { it -> if (it) [ it.baseName, it ] }
@@ -490,7 +493,9 @@ workflow SAREK {
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
+    if (step == 'mapping') {
+        ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
+    }
 
     MULTIQC(ch_multiqc_files.collect())
     multiqc_report       = MULTIQC.out.report.toList()
