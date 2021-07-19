@@ -326,7 +326,7 @@ workflow SAREK {
         bam_mapped    = MAPPING.out.bam
 
         // Create CSV to restart from this step
-        // MAPPING_CSV(bam_mapped, save_bam_mapped, params.skip_markduplicates)
+        MAPPING_CSV(bam_mapped, save_bam_mapped, params.skip_markduplicates)
 
         // STEP 2: MARKING DUPLICATES AND/OR QC, conversion to CRAM
         QC_MARKDUPLICATES(bam_mapped,

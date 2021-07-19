@@ -85,7 +85,7 @@ workflow MAPPING {
     }.groupTuple()
     .set{bam_mapped}
 
-    // MarkDuplicates can handles multiple BAMS as input, so no merging/indexing at this step
+    // MarkDuplicates can handle multiple BAMS as input, so no merging/indexing at this step
 
     emit:
         bam = bam_mapped
