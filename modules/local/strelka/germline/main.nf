@@ -19,10 +19,10 @@ process STRELKA_GERMLINE {
     }
 
     input:
-    tuple val(meta), path(bam), path(bai)
-    path  fasta
-    path  fai
-    path  target_bed
+    tuple val(meta), path(cram), path(crai)
+    path (fasta)
+    path (fai)
+    tuple path(target_bed), path(target_bed_tbi)
 
     output:
     tuple val(meta), path("*variants.vcf.gz")    , emit: vcf
@@ -37,7 +37,7 @@ process STRELKA_GERMLINE {
     def regions  = params.target_bed ? "--exome --callRegions ${target_bed}" : ""
     """
     configureStrelkaGermlineWorkflow.py \\
-        --bam $bam \\
+        --bam $cram \\
         --referenceFasta $fasta \\
         $regions \\
         $options.args \\
