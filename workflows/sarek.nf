@@ -164,11 +164,11 @@ include { QC_MARKDUPLICATES } from '../subworkflows/nf-core/qc_markduplicates' a
     markduplicates_options:             modules['markduplicates'],
     markduplicatesspark_options:        modules['markduplicatesspark'],
     estimatelibrarycomplexity_options:  modules['estimatelibrarycomplexity'],
-    merge_bam_options:               modules['merge_bam_mapping'],
-    qualimap_bamqc_options:          modules['qualimap_bamqc_mapping'],
-    samtools_stats_options:          modules['samtools_stats_mapping'],
-    samtools_view_options:           modules['samtools_view'],
-    samtools_index_options:          modules['samtools_index_cram']
+    merge_bam_options:                  modules['merge_bam_mapping'],
+    qualimap_bamqc_options:             modules['qualimap_bamqc_mapping'],
+    samtools_stats_options:             modules['samtools_stats_mapping'],
+    samtools_view_options:              modules['samtools_view'],
+    samtools_index_options:             modules['samtools_index_cram']
 )
 
 

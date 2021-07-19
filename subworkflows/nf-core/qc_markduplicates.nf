@@ -46,7 +46,7 @@ workflow QC_MARKDUPLICATES {
         }.set{ bam_to_merge }
 
         SAMTOOLS_MERGE(bam_to_merge.multiple)
-        bam_merged = bam_to_merge.single.mix(SAMTOOLS_MERGE.out.merged_bam)
+        bam_merged = bam_to_merge.single.mix(SAMTOOLS_MERGE.out.bam)
 
         SAMTOOLS_INDEX(bam_merged)
         bam_markduplicates = bam_merged.join(SAMTOOLS_INDEX.out.bai)

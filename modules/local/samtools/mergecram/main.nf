@@ -23,8 +23,8 @@ process SAMTOOLS_MERGE_CRAM {
     path(fasta)
 
     output:
-    tuple val(meta), path("${prefix}.cram"), emit: merged_cram
-    path  "*.version.txt" ,                 emit: version
+    tuple val(meta), path("${prefix}.cram"), emit: cram
+    path  "*.version.txt"                  , emit: version
 
     script:
     def software = getSoftwareName(task.process)
