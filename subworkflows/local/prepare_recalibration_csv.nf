@@ -15,8 +15,8 @@ workflow PREPARE_RECALIBRATION_CSV {
             sample  = meta.sample
             gender  = meta.gender
             status  = meta.status
-            bam = "${params.outdir}/preprocessing/${sample}/markduplicates/${sample}.md.bam"
-            bai = "${params.outdir}/preprocessing/${sample}/markduplicates/${sample}.md.bam.bai"
-            ["markduplicates_no_table_${sample}.csv", "patient,gender,status,sample,bam,bai\n${patient},${gender},${status},${sample},${bam},${bai}\n"]
+            cram = "${params.outdir}/preprocessing/${sample}/markduplicates/${sample}.md.cram"
+            crai = "${params.outdir}/preprocessing/${sample}/markduplicates/${sample}.md.cram.crai"
+            ["markduplicates_no_table_${sample}.csv", "patient,gender,status,sample,cram,crai\n${patient},${gender},${status},${sample},${cram},${crai}\n"]
         }.collectFile(name: 'markduplicates_no_table.csv', keepHeader: true, skip: 1, sort: true, storeDir: "${params.outdir}/preprocessing/csv")
 }
