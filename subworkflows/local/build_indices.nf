@@ -65,7 +65,7 @@ workflow BUILD_INDICES {
 
     result_dbsnp_tbi = Channel.empty()
     version_dbsnp_tbi = Channel.empty()
-    if (!(params.dbsnp_index) && params.dbsnp && ('mapping' in step || 'prepare_recalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools|| 'mutect2' in tools || 'tnscope' in tools))
+    if (!(params.dbsnp_index) && params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools|| 'mutect2' in tools || 'tnscope' in tools))
         (result_dbsnp_tbi, version_dbsnp_tbi) = TABIX_DBSNP([[id:"${dbsnp.baseName}"], dbsnp])
     result_dbsnp_tbi = result_dbsnp_tbi.map {meta, tbi -> [tbi]}
 
@@ -82,7 +82,7 @@ workflow BUILD_INDICES {
 
     result_known_indels_tbi = Channel.empty()
     version_known_indels_tbi = Channel.empty()
-    if (!(params.known_indels_index) && params.known_indels && ('mapping' in step || 'prepare_recalibration' in step))
+    if (!(params.known_indels_index) && params.known_indels && ('mapping' in step || 'preparerecalibration' in step))
         (result_known_indels_tbi, version_known_indels_tbi) = TABIX_KNOWN_INDELS([[id:"${known_indels.baseName}"], known_indels])
     result_known_indels_tbi = result_known_indels_tbi.map {meta, tbi -> [tbi]}
 

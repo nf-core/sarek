@@ -330,7 +330,14 @@ workflow SAREK {
 
         // Create CSV to restart from this step
         MAPPING_CSV(bam_indexed, save_bam_mapped, params.skip_markduplicates)
+    }
 
+    if (step == 'preparerecalibration') {
+        if (params.skip_markduplicates) bam_indexed         = input_sample
+        else                            cram_markduplicates = input_sample
+    }
+
+    if (step in ['mapping', 'preparerecalibration']) {
         // STEP 2: MARKING DUPLICATES AND/OR QC, conversion to CRAM
         QC_MARKDUPLICATES(bam_mapped,
             bam_indexed,
@@ -348,14 +355,9 @@ workflow SAREK {
         MARKDUPLICATES_CSV(cram_markduplicates)
 
         qc_reports = qc_reports.mix(QC_MARKDUPLICATES.out.qc)
-    }
 
-    if (step == 'preparerecalibration') bam_markduplicates = input_sample
-
-    if (step in ['mapping', 'preparerecalibration']) {
         // STEP 3: CREATING RECALIBRATION TABLES
-        PREPARE_RECALIBRATION(
-            cram_markduplicates,
+        PREPARE_RECALIBRATION(cram_markduplicates,
             ('bqsr' in params.use_gatk_spark),
             dict,
             fai,
@@ -364,9 +366,7 @@ workflow SAREK {
             num_intervals,
             known_sites,
             known_sites_tbi,
-            params.no_intervals,
-            known_indels,
-            dbsnp)
+            params.no_intervals)
 
         table_bqsr = PREPARE_RECALIBRATION.out.table_bqsr
         PREPARE_RECALIBRATION_CSV(table_bqsr)
@@ -501,16 +501,16 @@ workflow SAREK {
 def extract_csv(csv_file) {
     Channel.from(csv_file).splitCsv(header: true)
         //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
-        .map{ row -> [[row.patient.toString(), row.sample.toString()], row]}
-        .groupTuple()
+        .map{ row ->
+            if (!(row.patient && row.sample)) log.warn "Missing or unknown field in csv file header"
+            [[row.patient.toString(), row.sample.toString()], row]
+        }.groupTuple()
         .map{ meta, rows ->
             size = rows.size()
             return [rows, size]
         }.transpose()
         .map{ row, numLanes -> //from here do the usual thing for csv parsing
         def meta = [:]
-
-        meta.numLanes = numLanes.toInteger()
 
         //TODO since it is mandatory: error/warning if not present?
         // Meta data to identify samplesheet
@@ -529,30 +529,44 @@ def extract_csv(csv_file) {
         if (row.status) meta.status = row.status.toInteger()
         else meta.status = 0
 
-        if (row.lane && row.fastq2) {
         // mapping with fastq
+        if (row.lane && row.fastq2) {
             meta.id         = "${row.sample}-${row.lane}".toString()
             def fastq1      = file(row.fastq1, checkIfExists: true)
             def fastq2      = file(row.fastq2, checkIfExists: true)
             def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ''
             def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:ILLUMINA\""
+            meta.numLanes = numLanes.toInteger()
             meta.read_group = read_group.toString()
             return [meta, [fastq1, fastq2]]
-        } else if (row.table) {
         // recalibration
+        } else if (row.table && row.cram) {
             meta.id   = meta.sample
             def cram  = file(row.cram,  checkIfExists: true)
             def crai  = file(row.crai,  checkIfExists: true)
             def table = file(row.table, checkIfExists: true)
             return [meta, cram, crai, table]
-        } else if (row.cram) {
+        // recalibration when skipping MarkDuplicates
+        } else if (row.table && row.bam) {
+            meta.id   = meta.sample
+            def bam   = file(row.bam,   checkIfExists: true)
+            def bai   = file(row.bai,   checkIfExists: true)
+            def table = file(row.table, checkIfExists: true)
+            return [meta, bam, bai, table]
         // prepare_recalibration or variant_calling
+        } else if (row.cram) {
             meta.id = meta.sample
             def cram = file(row.cram, checkIfExists: true)
             def crai = file(row.crai, checkIfExists: true)
             return [meta, cram, crai]
-        } else if (row.vcf) {
+        // prepare_recalibration when skipping MarkDuplicates
+        } else if (row.bam) {
+            meta.id = meta.sample
+            def bam = file(row.bam, checkIfExists: true)
+            def bai = file(row.bai, checkIfExists: true)
+            return [meta, bam, bai]
         // annotation
+        } else if (row.vcf) {
             meta.id = meta.sample
             def vcf = file(row.vcf, checkIfExists: true)
             return [meta, vcf]
