@@ -48,10 +48,10 @@ else {
     switch (step) {
         case 'mapping': break
         case 'prepare_recalibration': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
-        case 'recalibrate':           csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv", checkIfExists: true); break
-        case 'variant_calling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv", checkIfExists: true); break
+        case 'recalibrate':           csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv"         , checkIfExists: true); break
+        case 'variant_calling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv"           , checkIfExists: true); break
         // case 'controlfreec':          csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
-        case 'annotate':              csv_file = file("${params.outdir}/variant_calling/csv/recalibrated.csv", checkIfExists: true); break
+        case 'annotate':              csv_file = file("${params.outdir}/variant_calling/csv/recalibrated.csv"         , checkIfExists: true); break
         default: exit 1, "Unknown step $step"
     }
 }
@@ -92,7 +92,6 @@ if (params.save_reference) {
     modules['tabix_known_indels'].publish_files      = ['vcf.gz.tbi':'known_indels']
     modules['tabix_pon'].publish_files               = ['vcf.gz.tbi':'pon']
 }
-if (save_bam_mapped) modules['samtools_index_mapping'].publish_files  = ['bam':'mapped', 'bai':'mapped']
 if (params.skip_markduplicates) {
     modules['baserecalibrator'].publish_files        = ['recal.table':'mapped']
     modules['gatherbqsrreports'].publish_files       = ['recal.table':'mapped']
@@ -170,7 +169,6 @@ include { QC_MARKDUPLICATES } from '../subworkflows/nf-core/qc_markduplicates' a
     samtools_view_options:              modules['samtools_view'],
     samtools_index_options:             modules['samtools_index_cram']
 )
-
 
 include { PREPARE_RECALIBRATION } from '../subworkflows/nf-core/prepare_recalibration' addParams(
     baserecalibrator_options:        modules['baserecalibrator'],
@@ -273,9 +271,9 @@ workflow SAREK {
     dict = params.dict      ? file(params.dict)      : BUILD_INDICES.out.dict
     fai  = params.fasta_fai ? file(params.fasta_fai) : BUILD_INDICES.out.fai
 
-    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_index             ? Channel.fromPath(params.dbsnp_index)             : BUILD_INDICES.out.dbsnp_tbi                  : []
+    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_index             ? Channel.fromPath(params.dbsnp_index)         : BUILD_INDICES.out.dbsnp_tbi                  : []
     germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? Channel.from(params.germline_resource_index) : BUILD_INDICES.out.germline_resource_tbi      : []
-    known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? Channel.fromPath(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : []
+    known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? Channel.fromPath(params.known_indels_index)  : BUILD_INDICES.out.known_indels_tbi.collect() : []
     pon_tbi               = params.pon               ? params.pon_index               ? Channel.from(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : []
 
     dbsnp_ch = Channel.from(dbsnp)
@@ -335,6 +333,7 @@ workflow SAREK {
                             ('markduplicates' in params.use_gatk_spark),
                             !('markduplicates' in params.skip_qc),
                             fasta, fai, dict,
+                            params.skip_markduplicates,
                             'bamqc' in params.skip_qc,
                             'samtools' in params.skip_qc,
                             target_bed)
@@ -497,7 +496,7 @@ workflow SAREK {
 // Function to extract information (meta data + file(s)) from csv file(s)
 def extract_csv(csv_file) {
     Channel.from(csv_file).splitCsv(header: true)
-    //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
+        //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
         .map{ row -> [[row.patient.toString(), row.sample.toString()], row]}
         .groupTuple()
         .map{ meta, rows ->

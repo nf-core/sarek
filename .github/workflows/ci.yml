@@ -25,7 +25,7 @@ jobs:
         # Nextflow versions: check pipeline minimum and current latest
         nxf_ver: ['21.04.0', '']
         engine: ['docker']
-        test: ['default', 'aligner', 'gatk4_spark', 'targeted', 'tumor_normal_pair', 'variant_calling', 'annotation']
+        test: ['default', 'aligner', 'gatk4_spark', 'targeted', 'skip_markduplicates', 'tumor_normal_pair', 'variant_calling', 'annotation']
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2

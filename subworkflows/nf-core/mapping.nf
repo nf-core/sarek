@@ -77,13 +77,15 @@ workflow MAPPING {
     bam_bwa.map{ meta, bam ->
         meta.remove('read_group')
         meta.id = meta.sample
+        // groupKey is to makes sure that the correct group can advance as soon as it is complete
+        // and not stall the workflow until all pieces are mapped
         def groupKey = groupKey(meta, meta.numLanes * params.split_fastq)
         tuple(groupKey, bam)
         [meta, bam]
-    }.groupTuple() //groupKey above is somehow makes sure, the workflow doesn't stall until all pieces are mapped, but that the correct group can advance as soon as it is complete
+    }.groupTuple()
     .set{bam_mapped}
 
-    // STEP 1.5: MERGING AND INDEXING BAM FROM MULTIPLE LANES // MarkDuplicates can take care of this
+    // MarkDuplicates can handles multiple BAMS as input, so no merging/indexing at this step
 
     emit:
         bam = bam_mapped
