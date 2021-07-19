@@ -68,22 +68,22 @@ class NfcoreTemplate {
         misc_fields['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
 
         def email_fields = [:]
-        email_fields['version']             = workflow.manifest.version
-        email_fields['runName']             = workflow.runName
-        email_fields['success']             = workflow.success
-        email_fields['dateComplete']        = workflow.complete
-        email_fields['duration']            = workflow.duration
-        email_fields['exitStatus']          = workflow.exitStatus
-        email_fields['errorMessage']        = (workflow.errorMessage ?: 'None')
-        email_fields['errorReport']         = (workflow.errorReport ?: 'None')
-        email_fields['commandLine']         = workflow.commandLine
-        email_fields['projectDir']          = workflow.projectDir
-        email_fields['summary']             = summary << misc_fields
+        email_fields['version']      = workflow.manifest.version
+        email_fields['runName']      = workflow.runName
+        email_fields['success']      = workflow.success
+        email_fields['dateComplete'] = workflow.complete
+        email_fields['duration']     = workflow.duration
+        email_fields['exitStatus']   = workflow.exitStatus
+        email_fields['errorMessage'] = (workflow.errorMessage ?: 'None')
+        email_fields['errorReport']  = (workflow.errorReport ?: 'None')
+        email_fields['commandLine']  = workflow.commandLine
+        email_fields['projectDir']   = workflow.projectDir
+        email_fields['summary']      = summary << misc_fields
 
         // On success try attach the multiqc report
         def mqc_report = null
         try {
-            if (workflow.success && !params.skip_multiqc) {
+            if (workflow.success) {
                 mqc_report = multiqc_report.getVal()
                 if (mqc_report.getClass() == ArrayList && mqc_report.size() >= 1) {
                     if (mqc_report.size() > 1) {
@@ -117,7 +117,7 @@ class NfcoreTemplate {
 
         // Render the sendmail template
         def max_multiqc_email_size = params.max_multiqc_email_size as nextflow.util.MemoryUnit
-        def smail_fields           = [ email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, projectDir: "$projectDir", mqcFile: mqc_report, mqcMaxSize:  max_multiqc_email_size.toBytes()]
+        def smail_fields           = [ email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, projectDir: "$projectDir", mqcFile: mqc_report, mqcMaxSize: max_multiqc_email_size.toBytes() ]
         def sf                     = new File("$projectDir/assets/sendmail_template.txt")
         def sendmail_template      = engine.createTemplate(sf).make(smail_fields)
         def sendmail_html          = sendmail_template.toString()
@@ -157,7 +157,6 @@ class NfcoreTemplate {
     //
     public static void summary(workflow, params, log) {
         Map colors = logColours(params.monochrome_logs)
-
         if (workflow.success) {
             if (workflow.stats.ignoredCount == 0) {
                 log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} Pipeline completed successfully${colors.reset}-"
@@ -259,12 +258,12 @@ class NfcoreTemplate {
             ${colors.blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${colors.yellow}}  {${colors.reset}
             ${colors.blue}  | \\| |       \\__, \\__/ |  \\ |___     ${colors.green}\\`-._,-`-,${colors.reset}
                                                     ${colors.green}`._,._,\'${colors.reset}
-                  ${colors.white}____${colors.reset}
-                ${colors.white}.´ _  `.${colors.reset}
-               ${colors.white}/  ${colors.green}|\\${colors.reset}`-_ \\${colors.reset}     ${colors.blue} __        __   ___     ${colors.reset}
-              ${colors.white}|   ${colors.green}| \\${colors.reset}  `-|${colors.reset}    ${colors.blue}|__`  /\\  |__) |__  |__/${colors.reset}
-               ${colors.white}\\ ${colors.green}|   \\${colors.reset}  /${colors.reset}     ${colors.blue}.__| /¯¯\\ |  \\ |___ |  \\${colors.reset}
-                ${colors.white}`${colors.green}|${colors.reset}____${colors.green}\\${colors.reset}´${colors.reset}
+            ${colors.white}      ____${colors.reset}
+            ${colors.white}    .´ _  `.${colors.reset}
+            ${colors.white}   /  ${colors.green}|\\${colors.reset}`-_ \\${colors.reset}     ${colors.blue} __        __   ___     ${colors.reset}
+            ${colors.white}  |   ${colors.green}| \\${colors.reset}  `-|${colors.reset}    ${colors.blue}|__`  /\\  |__) |__  |__/${colors.reset}
+            ${colors.white}   \\ ${colors.green}|   \\${colors.reset}  /${colors.reset}     ${colors.blue}.__| /¯¯\\ |  \\ |___ |  \\${colors.reset}
+            ${colors.white}    `${colors.green}|${colors.reset}____${colors.green}\\${colors.reset}´${colors.reset}
 
             ${colors.purple}  ${workflow.manifest.name} v${workflow.manifest.version}${colors.reset}
             ${dashedLine(monochrome_logs)}

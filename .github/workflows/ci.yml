@@ -22,10 +22,9 @@ jobs:
       NXF_ANSI_LOG: false
     strategy:
       matrix:
-        # Nextflow versions: check pipeline minimum
+        # Nextflow versions: check pipeline minimum and current latest
         nxf_ver: ['21.04.0', '']
         engine: ['docker']
-
         test: ['default', 'aligner', 'gatk4_spark', 'targeted', 'tumor_normal_pair', 'variant_calling', 'annotation']
     steps:
       - name: Check out pipeline code

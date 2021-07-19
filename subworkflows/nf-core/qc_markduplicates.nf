@@ -13,16 +13,15 @@ params.samtools_stats_options            = [:]
 params.samtools_view_options             = [:]
 params.samtools_index_options            = [:]
 
-include { GATK4_MARKDUPLICATES }                  from '../../modules/nf-core/software/gatk4/markduplicates/main'             addParams(options: params.markduplicates_options)
-include { GATK4_MARKDUPLICATES_SPARK }            from '../../modules/nf-core/software/gatk4/markduplicatesspark/main'        addParams(options: params.markduplicatesspark_options)
-include { GATK4_ESTIMATELIBRARYCOMPLEXITY }       from '../../modules/nf-core/software/gatk4/estimatelibrarycomplexity/main'  addParams(options: params.estimatelibrarycomplexity_options)
-
-include { SAMTOOLS_MERGE }                        from '../../modules/nf-core/software/samtools/merge/main'                   addParams(options: params.merge_bam_options)
-include { QUALIMAP_BAMQC }                        from '../../modules/nf-core/software/qualimap/bamqc/main'                   addParams(options: params.qualimap_bamqc_options)
-include { SAMTOOLS_STATS }                        from '../../modules/nf-core/software/samtools/stats/main'                   addParams(options: params.samtools_stats_options)
-include { SAMTOOLS_VIEW as SAMTOOLS_BAM_TO_CRAM } from '../../modules/nf-core/software/samtools/view/main.nf'                 addParams(options: params.samtools_view_options)
-include { SAMTOOLS_VIEW as SAMTOOLS_BAM_TO_CRAM_SPARK } from '../../modules/nf-core/software/samtools/view/main.nf'                 addParams(options: params.samtools_view_options)
-include { SAMTOOLS_INDEX }                        from '../../modules/nf-core/software/samtools/index/main'                   addParams(options: params.samtools_index_options)
+include { GATK4_MARKDUPLICATES }                        from '../../modules/local/gatk4/markduplicates/main'             addParams(options: params.markduplicates_options)
+include { GATK4_MARKDUPLICATES_SPARK }                  from '../../modules/local/gatk4/markduplicatesspark/main'        addParams(options: params.markduplicatesspark_options)
+include { GATK4_ESTIMATELIBRARYCOMPLEXITY }             from '../../modules/local/gatk4/estimatelibrarycomplexity/main'  addParams(options: params.estimatelibrarycomplexity_options)
+include { SAMTOOLS_MERGE }                              from '../../modules/nf-core/modules/samtools/merge/main'         addParams(options: params.merge_bam_options)
+include { QUALIMAP_BAMQC }                              from '../../modules/local/qualimap/bamqc/main'                   addParams(options: params.qualimap_bamqc_options)
+include { SAMTOOLS_STATS }                              from '../../modules/local/samtools/stats/main'                   addParams(options: params.samtools_stats_options)
+include { SAMTOOLS_VIEW as SAMTOOLS_BAM_TO_CRAM }       from '../../modules/local/samtools/view/main.nf'                 addParams(options: params.samtools_view_options)
+include { SAMTOOLS_VIEW as SAMTOOLS_BAM_TO_CRAM_SPARK } from '../../modules/local/samtools/view/main.nf'                 addParams(options: params.samtools_view_options)
+include { SAMTOOLS_INDEX }                              from '../../modules/local/samtools/index/main'                   addParams(options: params.samtools_index_options)
 
 workflow QC_MARKDUPLICATES {
     take:
@@ -47,7 +46,7 @@ workflow QC_MARKDUPLICATES {
         }.set{ bam_to_merge }
 
         SAMTOOLS_MERGE(bam_to_merge.multiple)
-        bam_merged = bam_to_merge.single.mix(SAMTOOLS_MERGE.out.merged_bam)
+        bam_merged = bam_to_merge.single.mix(SAMTOOLS_MERGE.out.bam)
 
         SAMTOOLS_INDEX(bam_merged)
         bam_markduplicates = bam_merged.join(SAMTOOLS_INDEX.out.bai)

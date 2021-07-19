@@ -12,7 +12,7 @@
         An open-source analysis pipeline to detect germline or somatic variants
         from whole genome or targeted sequencing
 ----------------------------------------------------------------------------------------
-    @Homepage
+    @Website
     https://nf-co.re/sarek
 ----------------------------------------------------------------------------------------
     @Documentation
@@ -63,15 +63,16 @@ params.vep_species             = WorkflowMain.getGenomeAttribute(params, 'vep_sp
 
 WorkflowMain.initialise(workflow, params, log)
 
-
 /*
 ========================================================================================
     NAMED WORKFLOW FOR PIPELINE
 ========================================================================================
 */
 
+include { SAREK } from './workflows/sarek'
+
+// WORKFLOW: Run main nf-core/sarek analysis pipeline
 workflow NFCORE_SAREK {
-    include { SAREK } from './workflows/sarek'
     SAREK ()
 }
 
@@ -82,6 +83,7 @@ workflow NFCORE_SAREK {
 */
 
 // WORKFLOW: Execute a single named workflow for the pipeline
+// See: https://github.com/nf-core/rnaseq/issues/619
 workflow {
     NFCORE_SAREK ()
 }

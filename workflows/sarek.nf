@@ -10,7 +10,7 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 WorkflowSarek.initialise(params, log)
 
 // Check input path parameters to see if they exist
-checkPathParamList = [
+def checkPathParamList = [
     params.ac_loci,
     params.ac_loci_gc,
     params.cadd_indels,
@@ -164,11 +164,11 @@ include { QC_MARKDUPLICATES } from '../subworkflows/nf-core/qc_markduplicates' a
     markduplicates_options:             modules['markduplicates'],
     markduplicatesspark_options:        modules['markduplicatesspark'],
     estimatelibrarycomplexity_options:  modules['estimatelibrarycomplexity'],
-    merge_bam_options:               modules['merge_bam_mapping'],
-    qualimap_bamqc_options:          modules['qualimap_bamqc_mapping'],
-    samtools_stats_options:          modules['samtools_stats_mapping'],
-    samtools_view_options:           modules['samtools_view'],
-    samtools_index_options:          modules['samtools_index_cram']
+    merge_bam_options:                  modules['merge_bam_mapping'],
+    qualimap_bamqc_options:             modules['qualimap_bamqc_mapping'],
+    samtools_stats_options:             modules['samtools_stats_mapping'],
+    samtools_view_options:              modules['samtools_view'],
+    samtools_index_options:             modules['samtools_index_cram']
 )
 
 
@@ -215,8 +215,8 @@ include { ANNOTATE } from '../subworkflows/local/annotate' addParams(
     merge_vep_options:              modules['merge_vep'],
     snpeff_options:                 modules['snpeff'],
     snpeff_tag:                     "${modules['snpeff'].tag_base}.${params.genome}",
-    vep_options:                    modules['vep'],
-    vep_tag:                        "${modules['vep'].tag_base}.${params.genome}"
+    vep_options:                    modules['ensemblvep'],
+    vep_tag:                        "${modules['ensemblvep'].tag_base}.${params.genome}"
 )
 
 /*
@@ -225,9 +225,13 @@ include { ANNOTATE } from '../subworkflows/local/annotate' addParams(
 ========================================================================================
 */
 
-include { MULTIQC } from '../modules/nf-core/software/multiqc/main' addParams(
-    multiqc:                        modules['multiqc']
-)
+ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
+ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
+
+def multiqc_options   = modules['multiqc']
+multiqc_options.args += params.multiqc_title ? Utils.joinModuleArgs(["--title \"$params.multiqc_title\""]) : ''
+include { MULTIQC } from '../modules/nf-core/modules/multiqc/main' addParams( options: multiqc_options   )
+include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions' addParams( options: [publish_files : ['tsv':'']] )
 
 /*
 ========================================================================================
@@ -240,7 +244,11 @@ include { FASTQC_TRIMGALORE } from '../subworkflows/nf-core/fastqc_trimgalore' a
     trimgalore_options:              modules['trimgalore']
 )
 
+def multiqc_report = []
+
 workflow SAREK {
+
+    ch_software_versions = Channel.empty()
 
     // BUILD INDICES
     BUILD_INDICES(
@@ -338,9 +346,9 @@ workflow SAREK {
         //TODO: Check with Maxime and add this
         //CRAM_CSV(cram_markduplicates)
 
-        cram_markduplicates = MARKDUPLICATES.out.cram
+        cram_markduplicates = QC_MARKDUPLICATES.out.cram
 
-        qc_reports = qc_reports.mix(MARKDUPLICATES.out.qc)
+        qc_reports = qc_reports.mix(QC_MARKDUPLICATES.out.qc)
     }
 
     if (step == 'preparerecalibration') bam_markduplicates = input_sample
@@ -396,6 +404,8 @@ workflow SAREK {
     if (step == 'variantcalling') bam_variant_calling = input_sample
 
     if (tools != []) {
+        vcf_to_annotate = Channel.empty()
+
         // GERMLINE VARIANT CALLING
         GERMLINE_VARIANT_CALLING(
             tools,
@@ -409,6 +419,8 @@ workflow SAREK {
             num_intervals,
             target_bed,
             target_bed_gz_tbi)
+
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf, GERMLINE_VARIANT_CALLING.out.strelka_vcf)
 
         // SOMATIC VARIANT CALLING
 
@@ -457,6 +469,32 @@ workflow SAREK {
                 vep_cache)
         }
     }
+
+    ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.fastqc_version.first().ifEmpty(null))
+
+    ch_software_versions
+        .map { it -> if (it) [ it.baseName, it ] }
+        .groupTuple()
+        .map { it[1][0] }
+        .flatten()
+        .collect()
+        .set { ch_software_versions }
+
+    GET_SOFTWARE_VERSIONS(ch_software_versions.map{it}.collect())
+
+    workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
+    ch_workflow_summary = Channel.value(workflow_summary)
+
+    ch_multiqc_files = Channel.empty()
+    ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
+    ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
+    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+    ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
+    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
+
+    MULTIQC(ch_multiqc_files.collect())
+    multiqc_report       = MULTIQC.out.report.toList()
+    ch_software_versions = ch_software_versions.mix(MULTIQC.out.version.ifEmpty(null))
 }
 
 // Function to extract information (meta data + file(s)) from csv file(s)

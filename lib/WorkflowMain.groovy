@@ -9,7 +9,7 @@ class WorkflowMain {
     //
     public static String citation(workflow) {
         return "If you use ${workflow.manifest.name} for your analysis please cite:\n\n" +
-            "* The pipeline\n" + 
+            "* The pipeline\n" +
             "  https://doi.org/10.12688/f1000research.16665.2\n" +
             "  https://doi.org/10.5281/zenodo.4468605\n\n" +
             "* The nf-core framework\n" +
@@ -22,7 +22,7 @@ class WorkflowMain {
     // Print help to screen if required
     //
     public static String help(workflow, params, log) {
-        def command = "nextflow run nf-core/sarek --input sample.tsv --genome GRCh38 -profile docker"
+        def command = "nextflow run ${workflow.manifest.name} --input samplesheet.tsv --genome GRCh38 -profile docker"
         def help_string = ''
         help_string += NfcoreTemplate.logo(workflow, params.monochrome_logs)
         help_string += NfcoreSchema.paramsHelp(workflow, params, command)
@@ -71,6 +71,12 @@ class WorkflowMain {
 
         // Check the hostnames against configured profiles
         NfcoreTemplate.hostName(workflow, params, log)
+
+        // Check input has been provided
+        if (!params.input) {
+            log.error "Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'"
+            System.exit(1)
+        }
     }
 
     //

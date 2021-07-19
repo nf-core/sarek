@@ -20,17 +20,17 @@ params.tabix_pon_options               = [:]
 // Initialize channels based on params or indices that were just built
 
 include { BUILD_INTERVALS }                              from '../../modules/local/build_intervals/main'                           addParams(options: params.build_intervals_options)
-include { BWA_INDEX as BWAMEM1_INDEX }                   from '../../modules/nf-core/software/bwa/index/main'                      addParams(options: params.bwa_index_options)
-include { BWAMEM2_INDEX }                                from '../../modules/nf-core/software/bwamem2/index/main'                  addParams(options: params.bwamem2_index_options)
+include { BWA_INDEX as BWAMEM1_INDEX }                   from '../../modules/nf-core/modules/bwa/index/main'                       addParams(options: params.bwa_index_options)
+include { BWAMEM2_INDEX }                                from '../../modules/nf-core/modules/bwamem2/index/main'                   addParams(options: params.bwamem2_index_options)
 include { CREATE_INTERVALS_BED }                         from '../../modules/local/create_intervals_bed/main'                      addParams(options: params.create_intervals_bed_options)
-include { GATK4_CREATESEQUENCEDICTIONARY as GATK4_DICT } from '../../modules/nf-core/software/gatk4/createsequencedictionary/main' addParams(options: params.gatk4_dict_options)
-include { MSISENSORPRO_SCAN }                            from '../../modules/nf-core/software/msisensorpro/scan/main'              addParams(options: params.msisensorpro_scan_options)
-include { SAMTOOLS_FAIDX }                               from '../../modules/nf-core/software/samtools/faidx/main'                 addParams(options: params.samtools_faidx_options)
-include { TABIX_BGZIPTABIX }                             from '../../modules/nf-core/software/tabix/bgziptabix/main'               addParams(options: params.bgziptabix_options)
-include { TABIX_TABIX as TABIX_DBSNP }                   from '../../modules/nf-core/software/tabix/tabix/main'                    addParams(options: params.tabix_dbsnp_options)
-include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE }       from '../../modules/nf-core/software/tabix/tabix/main'                    addParams(options: params.tabix_germline_resource_options)
-include { TABIX_TABIX as TABIX_KNOWN_INDELS }            from '../../modules/nf-core/software/tabix/tabix/main'                    addParams(options: params.tabix_known_indels_options)
-include { TABIX_TABIX as TABIX_PON }                     from '../../modules/nf-core/software/tabix/tabix/main'                    addParams(options: params.tabix_pon_options)
+include { GATK4_CREATESEQUENCEDICTIONARY as GATK4_DICT } from '../../modules/nf-core/modules/gatk4/createsequencedictionary/main'  addParams(options: params.gatk4_dict_options)
+include { MSISENSORPRO_SCAN }                            from '../../modules/local/msisensorpro/scan/main'                         addParams(options: params.msisensorpro_scan_options)
+include { SAMTOOLS_FAIDX }                               from '../../modules/nf-core/modules/samtools/faidx/main'                  addParams(options: params.samtools_faidx_options)
+include { TABIX_BGZIPTABIX }                             from '../../modules/nf-core/modules/tabix/bgziptabix/main'                addParams(options: params.bgziptabix_options)
+include { TABIX_TABIX as TABIX_DBSNP }                   from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_dbsnp_options)
+include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE }       from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_germline_resource_options)
+include { TABIX_TABIX as TABIX_KNOWN_INDELS }            from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_known_indels_options)
+include { TABIX_TABIX as TABIX_PON }                     from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_pon_options)
 
 workflow BUILD_INDICES {
     take:
@@ -124,7 +124,8 @@ workflow BUILD_INDICES {
             .flatten().collate(2)
             .map{duration, intervalFile -> intervalFile}
     }
-     emit:
+
+    emit:
         bwa                   = result_bwa
         bwa_version           = version_bwa
         dbsnp_tbi             = result_dbsnp_tbi
