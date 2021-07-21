@@ -6,6 +6,7 @@
   files:
     - path: results/annotation/1234N/1234N_snpEff.ann.gz
     - path: results/annotation/1234N/1234N_snpEff.ann.gz.tbi
+    - path: results/multiqc
 - name: Run VEP
   command: nextflow run main.nf -profile test,annotation,docker --tools vep
   tags:
@@ -14,6 +15,7 @@
   files:
     - path: results/annotation/1234N/1234N_VEP.ann.gz
     - path: results/annotation/1234N/1234N_VEP.ann.gz.tbi
+    - path: results/multiqc
 - name: Run snpEff followed by VEP
   command: nextflow run main.nf -profile test,annotation,docker --tools merge
   tags:
@@ -26,3 +28,4 @@
     - path: results/annotation/1234N/1234N_snpEff.ann.gz.tbi
     - path: results/annotation/1234N/1234N_snpEff_VEP.ann.gz
     - path: results/annotation/1234N/1234N_snpEff_VEP.ann.gz.tbi
+    - path: results/multiqc
