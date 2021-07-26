@@ -9,3 +9,4 @@ testing/
 testing*
 *.pyc
 .vscode/settings.json
+main.sublime-workspace
