@@ -1,4 +1,4 @@
-FROM nfcore/base:1.10.2
+FROM nfcore/base:1.12.1
 LABEL \
   author="Maxime Garcia" \
   description="snpEff image for use in nf-core/sarek" \
@@ -9,7 +9,7 @@ COPY environment.yml /
 RUN conda env create -f /environment.yml && conda clean -a
 
 # Add conda installation dir to PATH (instead of doing 'conda activate')
-ENV PATH /opt/conda/envs/nf-core-sarek-snpeff-3.0dev/bin:$PATH
+ENV PATH /opt/conda/envs/nf-core-sarek-snpeff-dev/bin:$PATH
 
 # Setup default ARG variables
 ARG GENOME=GRCh38
@@ -19,4 +19,4 @@ ARG SNPEFF_CACHE_VERSION=86
 RUN snpEff download -v ${GENOME}.${SNPEFF_CACHE_VERSION}
 
 # Dump the details of the installed packages to a file for posterity
-RUN conda env export --name nf-core-sarek-snpeff-3.0dev > nf-core-sarek-snpeff-3.0dev.yml
+RUN conda env export --name nf-core-sarek-snpeff-dev > nf-core-sarek-snpeff-dev.yml

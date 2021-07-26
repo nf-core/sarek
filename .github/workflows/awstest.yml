@@ -1,11 +1,20 @@
 name: nf-core AWS test
 # This workflow is triggered on push to the master branch.
-# It runs the -profile 'test' on AWS batch
+# It can be additionally triggered manually with GitHub actions workflow dispatch.
+# It runs the -profile 'test' on AWS batch.
 
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch:
+
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  TOWER_ACCESS_TOKEN: ${{ secrets.AWS_TOWER_TOKEN }}
+  AWS_JOB_DEFINITION: ${{ secrets.AWS_JOB_DEFINITION }}
+  AWS_JOB_QUEUE: ${{ secrets.AWS_JOB_QUEUE }}
+  AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+
 
 jobs:
   run-awstest:
@@ -21,17 +30,13 @@ jobs:
       - name: Install awscli
         run: conda install -c conda-forge awscli
       - name: Start AWS batch job
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          TOWER_ACCESS_TOKEN: ${{ secrets.AWS_TOWER_TOKEN }}
-          AWS_JOB_DEFINITION: ${{ secrets.AWS_JOB_DEFINITION }}
-          AWS_JOB_QUEUE: ${{ secrets.AWS_JOB_QUEUE }}
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+        # TODO nf-core: You can customise CI pipeline run tests as required
+        # For example: adding multiple test runs with different parameters
+        # Remember that you can parallelise this by using strategy.matrix
         run: |
           aws batch submit-job \
           --region eu-west-1 \
           --job-name nf-core-sarek \
           --job-queue $AWS_JOB_QUEUE \
           --job-definition $AWS_JOB_DEFINITION \
-          --container-overrides '{"command": ["nf-core/sarek", "-r '"${GITHUB_SHA}"' -profile test --outdir s3://'"${AWS_S3_BUCKET}"'/sarek/results-'"${GITHUB_SHA}"' -w s3://'"${AWS_S3_BUCKET}"'/sarek/work-'"${GITHUB_SHA}"' -with-tower"], "environment": [{"name": "TOWER_ACCESS_TOKEN", "value": "'"$TOWER_ACCESS_TOKEN"'"}]}'sarek/work-'"${GITHUB_SHA}"' -with-tower"], "environment": [{"name": "TOWER_ACCESS_TOKEN", "value": "'"$TOWER_ACCESS_TOKEN"'"}]}'
+          --container-overrides '{"command": ["nf-core/sarek", "-r '"${GITHUB_SHA}"' -profile test --outdir s3://'"${AWS_S3_BUCKET}"'/sarek/results-'"${GITHUB_SHA}"' -w s3://'"${AWS_S3_BUCKET}"'/sarek/work-'"${GITHUB_SHA}"' -with-tower"], "environment": [{"name": "TOWER_ACCESS_TOKEN", "value": "'"$TOWER_ACCESS_TOKEN"'"}]}'

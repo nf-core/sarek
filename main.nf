@@ -19,174 +19,28 @@ nf-core/sarek:
 --------------------------------------------------------------------------------
 */
 
-def helpMessage() {
-    log.info nfcoreHeader()
-    log.info"""
+log.info Headers.nf_core(workflow, params.monochrome_logs)
 
-    Usage:
-
-    The typical command for running the pipeline is as follows:
-
-    nextflow run nf-core/sarek --input sample.tsv -profile docker
-
-    Mandatory arguments:
-      --input                      [file] Path to input TSV file on mapping, prepare_recalibration, recalibrate, variant_calling and Control-FREEC steps
-                                          Multiple TSV files can be specified surrounded with quotes
-                                          Works also with the path to a directory on mapping step with a single germline sample only
-                                          Alternatively, path to VCF input file on annotate step
-                                          Multiple VCF files can be specified surrounded with quotes
-      -profile                      [str] Configuration profile to use. Can use multiple (comma separated)
-                                          Available: conda, docker, singularity, test, awsbatch, <institute> and more
-      --step                       [list] Specify starting step (only one)
-                                          Available: mapping, prepare_recalibration, recalibrate, variant_calling,sequenza_binned, annotate, Control-FREEC
-                                          Default: ${params.step}
-      --genome                      [str] Name of iGenomes reference
-                                          Default: ${params.genome}
-
-    Main options:
-      --help                       [bool] You're reading it
-      --no_intervals               [bool] Disable usage of intervals
-                                          Intervals are part of the genome chopped up, used to speed up preprocessing and variant calling
-      --nucleotides_per_second      [int] To estimate interval size
-                                          Default: ${params.nucleotides_per_second}
-      --sentieon                   [bool] If sentieon is available, will enable it for Preprocessing, and Variant Calling
-                                          Adds the following options for --tools: DNAseq, DNAscope and TNscope
-      --skip_qc                     [str] Specify which QC tools to skip when running Sarek (multiple separated with commas)
-                                          Available: all, bamQC, BaseRecalibrator, BCFtools, Documentation
-                                          FastQC, MultiQC, samtools, vcftools, versions
-                                          Default: None
-      --target_bed                 [file] Target BED file for whole exome or targeted sequencing
-                                          Default: None
-      --tools                       [str] Specify tools to use for variant calling (multiple separated with commas):
-                                          Available: ASCAT, CNVkit, ControlFREEC, FreeBayes, HaplotypeCaller
-                                          Manta, mpileup, MSIsensor, Mutect2, Platypus, Sequenza, Strelka, TIDDIT
-                                          and/or for annotation:
-                                          snpEff, VEP, merge
-                                          Default: None
-
-    Modify fastqs (trim/split):
-      --trim_fastq                 [bool] Run Trim Galore
-      --clip_r1                     [int] Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)
-      --clip_r2                     [int] Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)
-      --three_prime_clip_r1         [int] Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
-      --three_prime_clip_r2         [int] Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
-      --trim_nextseq                [int] Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails
-      --save_trimmed               [bool] Save trimmed FastQ file intermediates
-      --split_fastq                 [int] Specify how many reads should be contained in the split fastq file
-                                          Default: no split
-    Preprocessing:
-      --markdup_java_options        [str] Establish values for markDuplicates memory consumption
-                                          Default: ${params.markdup_java_options}
-      --no_gatk_spark              [bool] Disable usage of GATK Spark implementation of their tools in local mode
-      --save_bam_mapped            [bool] Save Mapped BAMs
-      --skip_markduplicates        [bool] Skip MarkDuplicates
-
-    Variant Calling:
-      --ascat_ploidy                [int] Use this parameter to overwrite default behaviour from ASCAT regarding ploidy
-                                          Requires that --ascat_purity is set
-      --ascat_purity                [int] Use this parameter to overwrite default behaviour from ASCAT regarding purity
-                                          Requires that --ascat_ploidy is set
-      --cf_coeff                    [str] Control-FREEC coefficientOfVariation
-                                          Default: ${params.cf_coeff}
-      --cf_ploidy                   [int] Control-FREEC ploidy
-                                          Default: ${params.cf_ploidy}
-      --cf_window                   [int] Control-FREEC window size
-                                          Default: Disabled
-      --sequenza_ploidy             [int] sequenza ploidy setting 
-	                                      Default: ${params.sequenza_ploidy}
-      --no_gvcf                    [bool] No g.vcf output from GATK HaplotypeCaller
-      --no_strelka_bp              [bool] Will not use Manta candidateSmallIndels for Strelka (not recommended by Best Practices)
-      --pon                        [file] Panel-of-normals VCF (bgzipped) for GATK Mutect2 / Sentieon TNscope
-                                          See: https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_mutect_CreateSomaticPanelOfNormals.php
-      --pon_index                  [file] Index of pon panel-of-normals VCF
-                                          If none provided, will be generated automatically from the PON
-      --ignore_soft_clipped_bases  [bool] Do not analyze soft clipped bases in the reads for GATK Mutect2
-                                          Default: Do not use
-      --umi                        [bool] If provided, UMIs steps will be run to extract and annotate the reads with UMI and create consensus reads
-      --read_structure1          [string] When processing UMIs, a read structure should always be provided for each of the fastq files. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length). 
-                                          See: https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
-      --read_structure2          [string] When processing UMIs, a read structure should always be provided for each of the fastq files. If the read does not contain any UMI, the structure will be +T (i.e. only template of any length). 
-                                          See: https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
-    Annotation:
-      --annotate_tools              [str] Specify from which tools Sarek should look for VCF files to annotate, only for step Annotate
-                                          Available: HaplotypeCaller, Manta, Mutect2, Strelka, TIDDIT
-                                          Default: None
-      --annotation_cache           [bool] Enable the use of cache for annotation, to be used with --snpeff_cache and/or --vep_cache
-      --snpeff_cache               [file] Specify the path to snpEff cache, to be used with --annotation_cache
-      --vep_cache                  [file] Specify the path to VEP cache, to be used with --annotation_cache
-      --cadd_cache                 [bool] Enable CADD cache
-      --cadd_indels                [file] Path to CADD InDels file
-      --cadd_indels_tbi            [file] Path to CADD InDels index
-      --cadd_wg_snvs               [file] Path to CADD SNVs file
-      --cadd_wg_snvs_tbi           [file] Path to CADD SNVs index
-      --genesplicer                [file] Enable genesplicer within VEP
-
-    References options:
-      --igenomes_base              [file] Specify base path to AWS iGenomes
-                                          Default: ${params.igenomes_base}
-      --igenomes_ignore            [bool] Do not use AWS iGenomes. Will load genomes.config instead of igenomes.config
-      --genomes_base               [file] Specify base path to reference genome
-      --save_reference             [bool] Save built references
-      
-    References:                           If not specified in the configuration file or you wish to overwrite any of the references.
-      --ac_loci                    [file] Loci file for ASCAT
-      --ac_loci_gc                 [file] Loci GC file for ASCAT
-      --bwa                        [file] BWA indexes
-                                          If none provided, will be generated automatically from the fasta reference
-      --chr_dir                    [file] Chromosomes folder
-      --chr_length                 [file] Chromosomes length file
-      --dbsnp                      [file] Dbsnp file
-      --dbsnp_index                [file] Dbsnp index
-                                          If none provided, will be generated automatically if a dbsnp file is provided
-      --dict                       [file] Fasta dictionary file
-                                          If none provided, will be generated automatically from the fasta reference
-      --fasta                      [file] Fasta reference
-      --fasta_fai                  [file] Fasta reference index
-                                          If none provided, will be generated automatically from the fasta reference
-      --germline_resource          [file] Germline Resource File for GATK Mutect2
-      --germline_resource_index    [file] Germline Resource Index for GATK Mutect2
-                                          if none provided, will be generated automatically if a germlineResource file is provided
-      --intervals                  [file] Intervals
-                                          If none provided, will be generated automatically from the fasta reference
-                                          Use --no_intervals to disable automatic generation
-      --known_indels               [file] Known indels file
-      --known_indels_index         [file] Known indels index
-                                          If none provided, will be generated automatically if a knownIndels file is provided
-      --mappability                [file] Mappability file for Control-FREEC
-      --snpeff_db                   [str] snpEff Database version
-      --species                     [str] Species for VEP
-      --vep_cache_version           [int] VEP cache version
-
-    Other options:
-      --outdir                     [file] The output directory where the results will be saved
-      --publish_dir_mode           [list] Mode for publishing results in the output directory (only one)
-                                          Available: symlink, rellink, link, copy, copyNoFollow, move
-                                          Default: copy
-      --sequencing_center           [str] Name of sequencing center to be displayed in BAM file
-      --multiqc_config             [file] Specify a custom config file for MultiQC
-      --monochrome_logs            [bool] Logs will be without colours
-      --email                       [str] Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
-      --email_on_fail               [str] Same as --email, except only send mail if the workflow is not successful
-      --plaintext_email            [bool] Enable plaintext email
-      --max_multiqc_email_size      [str] Threshold size for MultiQC report to be attached in notification email. If file generated by pipeline exceeds the threshold, it will not be attached
-                                          Default: 25MB
-      -name                         [str] Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic
-
-    AWSBatch options:
-      --awsqueue                    [str] The AWSBatch JobQueue that needs to be set when running on AWSBatch
-      --awsregion                   [str] The AWS Region for your AWSBatch job to run on
-      --awscli                      [str] Path to the AWS CLI tool
-    """.stripIndent()
+////////////////////////////////////////////////////
+/* --               PRINT HELP                 -- */
+////////////////////////////////////////////////////
+def json_schema = "$projectDir/nextflow_schema.json"
+if (params.help) {
+    def command = "nextflow run nf-core/sarek --input sample.tsv -profile docker"
+    log.info NfcoreSchema.params_help(workflow, params, json_schema, command)
+    exit 0
 }
 
-// Show help message
-if (params.help) exit 0, helpMessage()
+////////////////////////////////////////////////////
+/* --         VALIDATE PARAMETERS              -- */
+////////////////////////////////////////////////////
+if (params.validate_params) {
+    NfcoreSchema.validateParameters(params, json_schema, log)
+}
 
-/*
-================================================================================
-                         SET UP CONFIGURATION VARIABLES
-================================================================================
-*/
+////////////////////////////////////////////////////
+/* --     Collect configuration parameters     -- */
+////////////////////////////////////////////////////
 
 // Check if genome exists in the config file
 if (params.genomes && !params.genomes.containsKey(params.genome) && !params.igenomes_ignore) {
@@ -194,6 +48,12 @@ if (params.genomes && !params.genomes.containsKey(params.genome) && !params.igen
 } else if (params.genomes && !params.genomes.containsKey(params.genome) && params.igenomes_ignore) {
     exit 1, "The provided genome '${params.genome}' is not available in the genomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
 }
+
+/*
+================================================================================
+                         SET UP CONFIGURATION VARIABLES
+================================================================================
+*/
 
 stepList = defineStepList()
 step = params.step ? params.step.toLowerCase().replaceAll('-', '').replaceAll('_', '') : ''
@@ -219,30 +79,25 @@ if (!checkParameterList(annotate_tools,annoList)) exit 1, 'Unknown tool(s) to an
 
 // Check parameters
 if ((params.ascat_ploidy && !params.ascat_purity) || (!params.ascat_ploidy && params.ascat_purity)) exit 1, 'Please specify both --ascat_purity and --ascat_ploidy, or none of them'
-if (params.cf_window && params.cf_coeff) exit 1, 'Please specify either --cf_window OR --cf_coeff, but not both of them'
 if (params.umi && !(params.read_structure1 && params.read_structure2)) exit 1, 'Please specify both --read_structure1 and --read_structure2, when using --umi'
 
-// Has the run name been specified by the user?
-// This has the bonus effect of catching both -name and --name
-custom_runName = params.name
-if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) custom_runName = workflow.runName
-
+// Check AWS batch settings
 if (workflow.profile.contains('awsbatch')) {
     // AWSBatch sanity checking
-    if (!params.awsqueue || !params.awsregion) exit 1, "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
+    if (!params.awsqueue || !params.awsregion) exit 1, 'Specify correct --awsqueue and --awsregion parameters on AWSBatch!'
     // Check outdir paths to be S3 buckets if running on AWSBatch
     // related: https://github.com/nextflow-io/nextflow/issues/813
-    if (!params.outdir.startsWith('s3:')) exit 1, "Outdir not on S3 - specify S3 Bucket to run on AWSBatch!"
+    if (!params.outdir.startsWith('s3:')) exit 1, 'Outdir not on S3 - specify S3 Bucket to run on AWSBatch!'
     // Prevent trace files to be stored on S3 since S3 does not support rolling files.
-    if (params.tracedir.startsWith('s3:')) exit 1, "Specify a local tracedir or run without trace! S3 cannot be used for tracefiles."
+    if (params.tracedir.startsWith('s3:')) exit 1, 'Specify a local tracedir or run without trace! S3 cannot be used for tracefiles.'
 }
 
 // MultiQC
 // Stage config files
-ch_multiqc_config = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
+ch_multiqc_config = file("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
-ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
-ch_output_docs_images = file("$baseDir/docs/images/", checkIfExists: true)
+ch_output_docs = file("$projectDir/docs/output.md", checkIfExists: true)
+ch_output_docs_images = file("$projectDir/docs/images/", checkIfExists: true)
 
 // Handle input
 tsvPath = null
@@ -317,7 +172,7 @@ inputSample = inputSample.dump(tag: "inputb4")
 inputSample = inputSample.dump(tag: "after_extract")
 /*
 ================================================================================
-                               CHECKING REFERENCES
+//                              CHECKING REFERENCES
 ================================================================================
 */
 
@@ -379,19 +234,27 @@ ch_read_structure2 = params.read_structure2 ? Channel.value(params.read_structur
 
 // Tumour enrichment factor required for platypus
 
-/*
-================================================================================
-                                PRINTING SUMMARY
-================================================================================
-*/
+////////////////////////////////////////////////////
+/* --         PRINT PARAMETER SUMMARY          -- */
+////////////////////////////////////////////////////
+log.info NfcoreSchema.params_summary_log(workflow, params, json_schema)
 
 // Header log info
-log.info nfcoreHeader()
 def summary = [:]
-if (workflow.revision)          summary['Pipeline Release']    = workflow.revision
-summary['Run Name']          = custom_runName ?: workflow.runName
-summary['Max Resources']     = "${params.max_memory} memory, ${params.max_cpus} cpus, ${params.max_time} time per job"
-if (workflow.containerEngine)   summary['Container']         = "${workflow.containerEngine} - ${workflow.container}"
+if (workflow.revision) summary['Pipeline Release'] = workflow.revision
+summary['Run Name']         = workflow.runName
+summary['Max Resources']    = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
+if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
+summary['Output dir']       = params.outdir
+summary['Launch dir']       = workflow.launchDir
+summary['Working dir']      = workflow.workDir
+summary['Script dir']       = workflow.projectDir
+summary['User']             = workflow.userName
+if (workflow.profile.contains('awsbatch')) {
+    summary['AWS Region']   = params.awsregion
+    summary['AWS Queue']    = params.awsqueue
+    summary['AWS CLI']      = params.awscli
+}
 
 summary['Input']             = params.input
 summary['Step']              = step
@@ -418,8 +281,8 @@ if (params.trim_fastq) {
 if (params.split_fastq)          summary['Reads in fastq']                   = params.split_fastq
 
 summary['MarkDuplicates'] = "Options"
-summary['Java options'] = params.markdup_java_options ? params.markdup_java_options : 'no markdup java opts'
-summary['GATK Spark']   = params.no_gatk_spark ? 'No' : 'Yes'
+summary['Java options'] = params.markdup_java_options
+summary['GATK Spark']   = params.use_gatk_spark ? 'Yes' : 'No'
 
 summary['Save BAMs mapped']   = params.save_bam_mapped ? 'Yes' : 'No'
 summary['Skip MarkDuplicates']   = params.skip_markduplicates ? 'Yes' : 'No'
@@ -432,15 +295,17 @@ if ('ascat' in tools) {
 
 if ('controlfreec' in tools) {
     summary['Control-FREEC'] = "Options"
-    if (params.cf_window)    summary['window']                 = params.cf_window
-    if (params.cf_coeff)     summary['coefficientOfVariation'] = params.cf_coeff
-    if (params.cf_ploidy)    summary['ploidy']                 = params.cf_ploidy
+    if (params.cf_coeff)                    summary['coefficientOfVariation']  = params.cf_coeff
+    if (params.cf_contamination)            summary['contamination']           = params.cf_contamination
+    if (params.cf_contamination_adjustment) summary['contaminationAdjustment'] = params.cf_contamination_adjustment
+    if (params.cf_ploidy)                   summary['ploidy']                  = params.cf_ploidy
+    if (params.cf_window)                   summary['window']                  = params.cf_window
 }
 if ('Sequenza' in tools) {
     summary['Sequenza'] = "Options"
     if (params.sequenza_ploidy)    summary['sequenza ploidy']  = params.sequenza_ploidy
 }
-if ('haplotypecaller' in tools)             summary['GVCF']       = params.no_gvcf ? 'No' : 'Yes'
+if ('haplotypecaller' in tools)             summary['GVCF']       = params.generate_gvcf ? 'Yes' : 'No'
 if ('strelka' in tools && 'manta' in tools) summary['Strelka BP'] = params.no_strelka_bp ? 'No' : 'Yes'
 if (params.pon && ('mutect2' in tools || (params.sentieon && 'tnscope' in tools))) summary['Panel of normals'] = params.pon
 
@@ -506,11 +371,8 @@ if (params.config_profile_description) summary['Config Description'] = params.co
 if (params.config_profile_contact)     summary['Config Contact']     = params.config_profile_contact
 if (params.config_profile_url)         summary['Config URL']         = params.config_profile_url
 
-if (params.email || params.email_on_fail) {
-    summary['E-mail Address']    = params.email
-    summary['E-mail on failure'] = params.email_on_fail
-    summary['MultiQC maxsize']   = params.max_multiqc_email_size
-}
+summary['Config Files']   = workflow.configFiles.join(', ')
+
 
 if (workflow.profile.contains('awsbatch')) {
     summary['AWS Region'] = params.awsregion
@@ -518,9 +380,13 @@ if (workflow.profile.contains('awsbatch')) {
     summary['AWS CLI']    = params.awscli
 }
 
-log.info summary.collect { k, v -> "${k.padRight(18)}: $v" }.join("\n")
-if (params.monochrome_logs) log.info "----------------------------------------------------"
-else log.info "-\033[2m--------------------------------------------------\033[0m-"
+if (params.email || params.email_on_fail) {
+    summary['E-mail Address']    = params.email
+    summary['E-mail on failure'] = params.email_on_fail
+    summary['MultiQC maxsize']   = params.max_multiqc_email_size
+}
+log.info summary.collect { k,v -> "${k.padRight(18)}: $v" }.join("\n")
+log.info "-\033[2m--------------------------------------------------\033[0m-"
 
 if ('mutect2' in tools && !(params.pon)) log.warn "[nf-core/sarek] Mutect2 was requested, but as no panel of normals were given, results will not be optimal"
 if (params.sentieon) log.warn "[nf-core/sarek] Sentieon will be used, only works if Sentieon is available where nf-core/sarek is run"
@@ -551,11 +417,14 @@ process get_software_versions {
     label 'cpus_1'
 
     publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode,
-        saveAs: {it.indexOf(".csv") > 0 ? it : null}
+        saveAs: { filename ->
+                      if (filename.indexOf('.csv') > 0) filename
+                      else null
+        }
 
     output:
-        file 'software_versions_mqc.yaml' into ch_software_versions_yaml
-        file "software_versions.csv"
+    file 'software_versions_mqc.yaml' into ch_software_versions_yaml
+    file 'software_versions.csv'
 
     when: !('versions' in skipQC)
 
@@ -2058,8 +1927,8 @@ bam_recalibrated = bam_recalibrated.dump(tag:'BAM for Variant Calling')
 // To speed Variant Callers up we are chopping the reference into smaller pieces
 // Do variant calling by this intervals, and re-merge the VCFs
 
-bamHaplotypeCaller = bamHaplotypeCallerNoIntervals.spread(intHaplotypeCaller)
-bamFreebayesSingle = bamFreebayesSingleNoIntervals.spread(intFreebayesSingle)
+bamHaplotypeCaller = bamHaplotypeCallerNoIntervals.combine(intHaplotypeCaller)
+bamFreebayesSingle = bamFreebayesSingleNoIntervals.combine(intFreebayesSingle)
 
 // STEP GATK HAPLOTYPECALLER.1
 
@@ -2100,7 +1969,7 @@ process HaplotypeCaller {
 
 gvcfHaplotypeCaller = gvcfHaplotypeCaller.groupTuple(by:[0, 1, 2])
 
-if (params.no_gvcf) gvcfHaplotypeCaller.close()
+if (!params.generate_gvcf) gvcfHaplotypeCaller.close()
 else gvcfHaplotypeCaller = gvcfHaplotypeCaller.dump(tag:'GVCF HaplotypeCaller')
 
 // STEP GATK HAPLOTYPECALLER.2
@@ -2404,11 +2273,13 @@ process FreebayesSingle {
 
 vcfFreebayesSingle = vcfFreebayesSingle.groupTuple(by: [0,1,2])
 
+
 /*
 ================================================================================
                              SOMATIC VARIANT CALLING
 ================================================================================
 */
+
 // Ascat, pileup, pileups with no intervals, recalibrated BAMs
 (bamAscat, bamMpileup, bamMpileupNoInt, bamRecalAll) = bamRecalAll.into(4)
 
@@ -2416,8 +2287,10 @@ vcfFreebayesSingle = vcfFreebayesSingle.groupTuple(by: [0,1,2])
 bamNormal = Channel.create()
 bamTumor = Channel.create()
 
-bamRecalAll
-    .choice(bamTumor, bamNormal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
+bamRecalAll.choice(bamTumor, bamNormal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
+
+// Mutect2Single, Mutect2, MSIsensorSingle
+(singleBamTumor, singleBamMsisensor, bamTumor) = bamTumor.into(3)
 
 (normalBamForPlatypus, bamNormal) = bamNormal.into(2)
 // Crossing Normal and Tumor to get a T/N pair for Somatic Variant Calling
@@ -2426,7 +2299,6 @@ pairBam = bamNormal.cross(bamTumor).map {
     normal, tumor ->
     [normal[0], normal[1], normal[2], normal[3], tumor[1], tumor[2], tumor[3]]
 }
-
 pairBam = pairBam.dump(tag:'BAM Somatic Pair')
 
 // Manta, Strelka, Mutect2, MSIsensor
@@ -2438,8 +2310,7 @@ pairBam = pairBam.dump(tag:'BAM Somatic Pair')
 bam_sention_normal = Channel.create()
 bam_sentieon_tumor = Channel.create()
 
-bam_sentieon_all
-    .choice(bam_sentieon_tumor, bam_sention_normal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
+bam_sentieon_all.choice(bam_sentieon_tumor, bam_sention_normal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
 
 // Crossing Normal and Tumor to get a T/N pair for Somatic Variant Calling
 // Remapping channel to remove common key idPatient
@@ -2512,9 +2383,9 @@ process Mutect2 {
         file(ponIndex) from ch_pon_tbi
 
     output:
-        set val("Mutect2"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2Output
-        set idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf.stats") optional true into intervalStatsFiles
-        set idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf.stats"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") optional true into mutect2Stats
+        set val("Mutect2"), idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") into mutect2PairOutput
+        set idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf.stats") optional true into intervalStatsFilesPair
+        set idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf.stats"), file("${intervalBed.baseName}_${idSampleTumor}_vs_${idSampleNormal}.vcf") optional true into mutect2StatsPair
 
     when: 'mutect2' in tools
 
@@ -2530,7 +2401,7 @@ process Mutect2 {
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
       Mutect2 \
       -R ${fasta}\
-      -I ${bamTumor}  -tumor ${idSampleTumor} \
+      -I ${bamTumor} -tumor ${idSampleTumor} \
       -I ${bamNormal} -normal ${idSampleNormal} \
       ${threads} \
 	  ${intervalsOptions} \
@@ -2541,18 +2412,67 @@ process Mutect2 {
     """
 }
 
-mutect2Output = mutect2Output.groupTuple(by:[0,1,2])
-mutect2Stats = mutect2Stats.groupTuple(by:[0,1])
+mutect2PairOutput = mutect2PairOutput.groupTuple(by:[0,1,2])
+mutect2StatsPair = mutect2StatsPair.groupTuple(by:[0,1])
+
+process Mutect2Single {
+    tag "${idSampleTumor}-${intervalBed.baseName}"
+
+    label 'cpus_1'
+
+    input:
+        set idPatient, idSampleTumor, file(bamTumor), file(baiTumor), file(intervalBed) from singleBamMutect2
+        file(dict) from ch_dict
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fai
+        file(germlineResource) from ch_germline_resource
+        file(germlineResourceIndex) from ch_germline_resource_tbi
+        file(intervals) from ch_intervals
+        file(pon) from ch_pon
+        file(ponIndex) from ch_pon_tbi
+
+    output:
+        set val("Mutect2"), idPatient, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}.vcf") into mutect2SingleOutput
+        set idPatient, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}.vcf.stats") optional true into intervalStatsFilesSingle
+        set idPatient, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}.vcf.stats"), file("${intervalBed.baseName}_${idSampleTumor}.vcf") optional true into mutect2StatsSingle
+
+    when: 'mutect2' in tools
+
+    script:
+    // please make a panel-of-normals, using at least 40 samples
+    // https://gatkforums.broadinstitute.org/gatk/discussion/11136/how-to-call-somatic-mutations-using-gatk4-mutect2
+    PON = params.pon ? "--panel-of-normals ${pon}" : ""
+    intervalsOptions = params.no_intervals ? "" : "-L ${intervalBed}"
+    softClippedOption = params.ignore_soft_clipped_bases ? "--dont-use-soft-clipped-bases true" : ""
+    """
+    # Get raw calls
+    gatk --java-options "-Xmx${task.memory.toGiga()}g" \
+      Mutect2 \
+      -R ${fasta}\
+      -I ${bamTumor}  -tumor ${idSampleTumor} \
+      ${intervalsOptions} \
+      ${softClippedOption} \
+      --germline-resource ${germlineResource} \
+      ${PON} \
+      -O ${intervalBed.baseName}_${idSampleTumor}.vcf
+    """
+}
+
+mutect2SingleOutput = mutect2SingleOutput.groupTuple(by:[0,1,2])
+mutect2StatsSingle = mutect2StatsSingle.groupTuple(by:[0,1])
 
 // STEP GATK MUTECT2.2 - MERGING STATS
 
-process MergeMutect2Stats {
-    tag "${idSamplePair}"
+mutect2Stats = mutect2StatsSingle.mix(mutect2StatsPair)
+mutect2Stats = mutect2Stats.dump(tag:'Mutect2 Stats')
 
-    publishDir "${params.outdir}/VariantCalling/${idSamplePair}/Mutect2", mode: params.publish_dir_mode
+process MergeMutect2Stats {
+    tag "${idSample}"
+
+    publishDir "${params.outdir}/VariantCalling/${idSample}/Mutect2", mode: params.publish_dir_mode
 
     input:
-        set idPatient, idSamplePair, file(statsFiles), file(vcf) from mutect2Stats // Actual stats files and corresponding VCF chunks
+        set idPatient, idSample, file(statsFiles), file(vcf) from mutect2Stats // Actual stats files and corresponding VCF chunks
         file(dict) from ch_dict
         file(fasta) from ch_fasta
         file(fastaFai) from ch_fai
@@ -2561,7 +2481,7 @@ process MergeMutect2Stats {
         file(intervals) from ch_intervals
 
     output:
-        set idPatient, idSamplePair, file("${idSamplePair}.vcf.gz.stats") into mergedStatsFile
+        set idPatient, idSample, file("${idSample}.vcf.gz.stats") into mergedStatsFile
 
     when: 'mutect2' in tools
 
@@ -2571,7 +2491,7 @@ process MergeMutect2Stats {
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
         MergeMutectStats \
         ${stats} \
-        -O ${idSamplePair}.vcf.gz.stats
+        -O ${idSample}.vcf.gz.stats
     """
 }
 
@@ -2600,7 +2520,7 @@ process ConcatVCF {
     // we have this funny *_* pattern to avoid copying the raw calls to publishdir
         set variantCaller, idPatient, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into vcfConcatenated
 
-    when: ('haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools)
+    when: ('haplotypecaller' in tools || 'freebayes' in tools)
 
     script:
     if (variantCaller == 'HaplotypeCallerGVCF')
@@ -2616,8 +2536,9 @@ process ConcatVCF {
 
 vcfConcatenated = vcfConcatenated.dump(tag:'VCF')
 
-// STEP MERGING VCF - GATK MUTECT2 (UNFILTERED)
+// STEP MERGING VCF - MUTECT2
 
+mutect2Output = mutect2SingleOutput.mix(mutect2PairOutput)
 mutect2Output = mutect2Output.dump(tag:'Mutect2 output VCF to merge')
 
 process ConcatVCF_Mutect2 {
@@ -2637,7 +2558,7 @@ process ConcatVCF_Mutect2 {
     // we have this funny *_* pattern to avoid copying the raw calls to publishdir
         set variantCaller, idPatient, idSample, file("*_*.vcf.gz"), file("*_*.vcf.gz.tbi") into vcfConcatenatedForFilter
 
-    when: ('haplotypecaller' in tools || 'mutect2' in tools || 'freebayes' in tools)
+    when: 'mutect2' in tools
 
     script:
     outputFile = "Mutect2_unfiltered_${idSample}.vcf"
@@ -2652,23 +2573,28 @@ vcfConcatenatedForFilter = vcfConcatenatedForFilter.dump(tag:'Mutect2 unfiltered
 
 // STEP GATK MUTECT2.3 - GENERATING PILEUP SUMMARIES
 
-pairBamPileupSummaries = pairBamPileupSummaries.map{
-    idPatient, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor, intervalBed ->
-    [idPatient, idSampleNormal, idSampleTumor, bamNormal, baiNormal, bamTumor, baiTumor, intervalBed]
-}.join(intervalStatsFiles, by:[0,1,2])
+bamPileupSummariesSingle = bamPileupSummariesSingle.join(intervalStatsFilesSingle, by:[0,1])
+
+bamPileupSummaries = bamPileupSummaries.map{
+  idPatient, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor, intervalBed ->
+  [idPatient, idSampleTumor + "_vs_" + idSampleNormal, bamTumor, baiTumor, intervalBed]
+}.join(intervalStatsFilesPair, by:[0,1])
+
+bamPileupSummaries = bamPileupSummaries.mix(bamPileupSummariesSingle)
+bamPileupSummaries = bamPileupSummaries.dump(tag:'Mutect2 Pileup Summaries')
 
 process PileupSummariesForMutect2 {
-    tag "${idSampleTumor}_vs_${idSampleNormal}-${intervalBed.baseName}"
+    tag "${idSample}-${intervalBed.baseName}"
 
     label 'cpus_1'
 
     input:
-        set idPatient, idSampleNormal, idSampleTumor, file(bamNormal), file(baiNormal), file(bamTumor), file(baiTumor), file(intervalBed), file(statsFile) from pairBamPileupSummaries
+        set idPatient, idSample, file(bamTumor), file(baiTumor), file(intervalBed), file(statsFile) from bamPileupSummaries
         file(germlineResource) from ch_germline_resource
         file(germlineResourceIndex) from ch_germline_resource_tbi
 
     output:
-        set idPatient, idSampleNormal, idSampleTumor, file("${intervalBed.baseName}_${idSampleTumor}_pileupsummaries.table") into pileupSummaries
+        set idPatient, idSample, file("${intervalBed.baseName}_${idSample}_pileupsummaries.table") into pileupSummaries
 
     when: 'mutect2' in tools
 
@@ -2680,27 +2606,27 @@ process PileupSummariesForMutect2 {
         -I ${bamTumor} \
         -V ${germlineResource} \
         ${intervalsOptions} \
-        -O ${intervalBed.baseName}_${idSampleTumor}_pileupsummaries.table
+        -O ${intervalBed.baseName}_${idSample}_pileupsummaries.table
     """
 }
 
-pileupSummaries = pileupSummaries.groupTuple(by:[0,1,2])
+pileupSummaries = pileupSummaries.groupTuple(by:[0,1])
 
 // STEP GATK MUTECT2.4 - MERGING PILEUP SUMMARIES
 
 process MergePileupSummaries {
     label 'cpus_1'
 
-    tag "${idPatient}_${idSampleTumor}"
+    tag "${idSample}"
 
-    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Mutect2", mode: params.publish_dir_mode
+    publishDir "${params.outdir}/VariantCalling/${idSample}/Mutect2", mode: params.publish_dir_mode
 
     input:
-        set idPatient, idSampleNormal, idSampleTumor, file(pileupSums) from pileupSummaries
+        set idPatient, idSample, file(pileupSums) from pileupSummaries
         file(dict) from ch_dict
 
     output:
-        set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}_pileupsummaries.table") into mergedPileupFile
+        set idPatient, idSample, file("${idSample}_pileupsummaries.table") into mergedPileupFile
 
     when: 'mutect2' in tools
 
@@ -2711,29 +2637,24 @@ process MergePileupSummaries {
         GatherPileupSummaries \
         --sequence-dictionary ${dict} \
         ${allPileups} \
-        -O ${idSampleTumor}_pileupsummaries.table
+        -O ${idSample}_pileupsummaries.table
     """
 }
 
 // STEP GATK MUTECT2.5 - CALCULATING CONTAMINATION
 
-pairBamCalculateContamination = pairBamCalculateContamination.map{
-    idPatient, idSampleNormal, bamNormal, baiNormal, idSampleTumor, bamTumor, baiTumor ->
-    [idPatient, idSampleNormal, idSampleTumor, bamNormal, baiNormal, bamTumor, baiTumor]
-}.join(mergedPileupFile, by:[0,1,2])
-
 process CalculateContamination {
     label 'cpus_1'
 
-    tag "${idSampleTumor}_vs_${idSampleNormal}"
+    tag "${idSample}"
 
-    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Mutect2", mode: params.publish_dir_mode
+    publishDir "${params.outdir}/VariantCalling/${idSample}/Mutect2", mode: params.publish_dir_mode
 
     input:
-        set idPatient, idSampleNormal, idSampleTumor, file(bamNormal), file(baiNormal), file(bamTumor), file(baiTumor), file(mergedPileup) from pairBamCalculateContamination
+        set idPatient, idSample, file(mergedPileup) from mergedPileupFile
 
      output:
-        set idPatient, val("${idSampleTumor}_vs_${idSampleNormal}"), file("${idSampleTumor}_contamination.table") into contaminationTable
+        set idPatient, val("${idSample}"), file("${idSample}_contamination.table") into contaminationTable
 
     when: 'mutect2' in tools
 
@@ -2742,28 +2663,29 @@ process CalculateContamination {
     # calculate contamination
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
         CalculateContamination \
-        -I ${idSampleTumor}_pileupsummaries.table \
-        -O ${idSampleTumor}_contamination.table
+        -I ${idSample}_pileupsummaries.table \
+        -O ${idSample}_contamination.table
     """
 }
+
 
 // STEP GATK MUTECT2.6 - FILTERING CALLS
 
 mutect2CallsToFilter = vcfConcatenatedForFilter.map{
-    variantCaller, idPatient, idSamplePair, vcf, tbi ->
-    [idPatient, idSamplePair, vcf, tbi]
+    variantCaller, idPatient, idSample, vcf, tbi ->
+    [idPatient, idSample, vcf, tbi]
 }.join(mergedStatsFile, by:[0,1]).join(contaminationTable, by:[0,1])
 
 process FilterMutect2Calls {
     
     label 'cpus_1'
 
-    tag "${idSamplePair}"
+    tag "${idSample}"
 
-    publishDir "${params.outdir}/VariantCalling/${idSamplePair}/Mutect2", mode: params.publish_dir_mode
+    publishDir "${params.outdir}/VariantCalling/${idSample}/Mutect2", mode: params.publish_dir_mode
 
     input:
-        set idPatient, idSamplePair, file(unfiltered), file(unfilteredIndex), file(stats), file(contaminationTable) from mutect2CallsToFilter
+        set idPatient, idSample, file(unfiltered), file(unfilteredIndex), file(stats), file(contaminationTable) from mutect2CallsToFilter
         file(dict) from ch_dict
         file(fasta) from ch_fasta
         file(fastaFai) from ch_fai
@@ -2772,7 +2694,7 @@ process FilterMutect2Calls {
         file(intervals) from ch_intervals
 
     output:
-        set val("Mutect2"), idPatient, idSamplePair, file("Mutect2_filtered_${idSamplePair}.vcf.gz"), file("Mutect2_filtered_${idSamplePair}.vcf.gz.tbi"), file("Mutect2_filtered_${idSamplePair}.vcf.gz.filteringStats.tsv") into filteredMutect2Output
+        set val("Mutect2"), idPatient, idSample, file("Mutect2_filtered_${idSample}.vcf.gz"), file("Mutect2_filtered_${idSample}.vcf.gz.tbi"), file("Mutect2_filtered_${idSample}.vcf.gz.filteringStats.tsv") into filteredMutect2Output
 
     when: 'mutect2' in tools
 
@@ -2785,7 +2707,7 @@ process FilterMutect2Calls {
         --contamination-table ${contaminationTable} \
         --stats ${stats} \
         -R ${fasta} \
-        -O Mutect2_filtered_${idSamplePair}.vcf.gz
+        -O Mutect2_filtered_${idSample}.vcf.gz
     """
 }
 
@@ -3419,10 +3341,10 @@ process sequenza_initial_fit {
 		val(seq_ploidy) from ch_sequenza_ploidy
 
     output:
-	    set idPatient, idSampleTumor, file("*pdf"), file("*txt"), file("*RData") into seqz_initial_fit
+        set idPatient, idSampleTumor, file("*pdf"), file("*txt"), file("*RData") into seqz_initial_fit
     
 	script:
-	gender = genderMap[idPatient]
+        gender = genderMap[idPatient]
 	"""
 	analyse_cn_sequenza.R ${seqz_bin} ${idSampleTumor} ${gender} ${seq_ploidy}
 	"""
@@ -3434,9 +3356,10 @@ process sequenza_initial_fit {
 process MSIsensor_scan {
     label 'cpus_1'
     label 'memory_max'
-
+    label 'msisensor'
+    
     tag "${fasta}"
-
+    
     input:
     file(fasta) from ch_fasta
     file(fastaFai) from ch_fai
@@ -3448,7 +3371,7 @@ process MSIsensor_scan {
 
     script:
     """
-    msisensor scan -d ${fasta} -o microsatellites.list
+    msisensor-pro scan -d ${fasta} -o microsatellites.list
     """
 }
 
@@ -3459,9 +3382,10 @@ process MSIsensor_scan {
 process MSIsensor_msi {
     label 'cpus_4'
     label 'memory_max'
-
+    label 'msisensor'
+        
     tag "${idSampleTumor}_vs_${idSampleNormal}"
-
+    
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/MSIsensor", mode: params.publish_dir_mode
 
     input:
@@ -3475,11 +3399,39 @@ process MSIsensor_msi {
 
     script:
     """
-    msisensor msi -d ${msiSites} \
-                  -b 4 \
-                  -n ${bamNormal} \
-                  -t ${bamTumor} \
-                  -o ${idSampleTumor}_vs_${idSampleNormal}_msisensor
+    msisensor-pro msi -d ${msiSites} \
+                      -b 4 \
+                      -n ${bamNormal} \
+                      -t ${bamTumor} \
+                      -o ${idSampleTumor}_vs_${idSampleNormal}_msisensor
+    """
+}
+
+// TODO: Add the msisensor-pro baseline step
+process MSIsensor_msiSingle {
+    label 'cpus_4'
+    label 'memory_max'
+    label 'msisensor'
+        
+    tag "${idSampleTumor}"
+    
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/MSIsensor", mode: params.publish_dir_mode
+
+    input:
+        set idPatient, idSampleTumor, file(bamTumor), file(baiTumor) from singleBamMsisensor
+        file msiSites from msi_scan_ch
+
+    output:
+        set val("MsisensorSingle"), idPatient, file("${idSampleTumor}_msisensor"), file("${idSampleTumor}_msisensor_dis"), file("${idSampleTumor}_msisensor_all") into msisensor_out_ch_single
+
+    when: 'msisensor' in tools
+
+    script:
+    """
+    msisensor-pro pro -d ${msiSites} \
+                      -b 4 \
+                      -t ${bamTumor} \
+                      -o ${idSampleTumor}_msisensor
     """
 }
 
@@ -3585,7 +3537,7 @@ process Ascat {
         --normalbaf ${bafNormal} \
         --normallogr ${logrNormal} \
         --tumorname ${idSampleTumor} \
-        --basedir ${baseDir} \
+        --basedir ${projectDir} \
         --gcfile ${acLociGC} \
         --gender ${gender} \
         ${purity_ploidy}
@@ -3692,6 +3644,8 @@ if (step == 'controlfreec') mpileupOut = inputSample
 mpileupOut
     .choice(mpileupOutTumor, mpileupOutNormal) {statusMap[it[0], it[1]] == 0 ? 1 : 0}
 
+(mpileupOutSingle,mpileupOutTumor) = mpileupOutTumor.into(2)
+
 mpileupOut = mpileupOutNormal.combine(mpileupOutTumor, by:0)
 
 mpileupOut = mpileupOut.map {
@@ -3703,8 +3657,7 @@ mpileupOut = mpileupOut.map {
 // STEP CONTROLFREEC.1 - CONTROLFREEC
 
 process ControlFREEC {
-    label 'cpus_max'
-    //label 'memory_singleCPU_2_task'
+    label 'cpus_8'
 
     tag "${idSampleTumor}_vs_${idSampleNormal}"
 
@@ -3719,9 +3672,10 @@ process ControlFREEC {
         file(dbsnpIndex) from ch_dbsnp_tbi
         file(fasta) from ch_fasta
         file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
 
     output:
-        set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.pileup_CNVs"), file("${idSampleTumor}.pileup_ratio.txt"), file("${idSampleTumor}.pileup_normal_CNVs"), file("${idSampleTumor}.pileup_normal_ratio.txt"), file("${idSampleTumor}.pileup_BAF.txt"), file("${idSampleNormal}.pileup_BAF.txt") into controlFreecViz
+        set idPatient, idSampleNormal, idSampleTumor, file("${idSampleTumor}.pileup_CNVs"), file("${idSampleTumor}.pileup_ratio.txt"), file("${idSampleTumor}.pileup_BAF.txt") into controlFreecViz
         set file("*.pileup*"), file("${idSampleTumor}_vs_${idSampleNormal}.config.txt") into controlFreecOut
 
     when: 'controlfreec' in tools
@@ -3729,27 +3683,41 @@ process ControlFREEC {
     script:
     config = "${idSampleTumor}_vs_${idSampleNormal}.config.txt"
     gender = genderMap[idPatient]
-    // if we are using coefficientOfVariation, we must delete the window parameter
-    // it is "window = 20000" in the default settings, without coefficientOfVariation set,
-    // but we do not like it. Note, it is not written in stone
-    coeff_or_window = params.cf_window ? "window = ${params.cf_window}" : "coefficientOfVariation = ${params.cf_coeff}"
-
+    // Window has higher priority than coefficientOfVariation if both given
+    window = params.cf_window ? "window = ${params.cf_window}" : ""
+    coeffvar = params.cf_coeff ? "coefficientOfVariation = ${params.cf_coeff}" : ""
+    use_bed = params.target_bed ? "captureRegions = ${targetBED}" : ""
+    // This parameter makes Control-FREEC unstable (still in Beta according to the developers)
+    // so we disable it by setting it to its default value (it is disabled by default)
+    //min_subclone = params.target_bed ? "30" : "20"
+    min_subclone = 100
+    readCountThreshold = params.target_bed ? "50" : "10"
+    breakPointThreshold = params.target_bed ? "1.2" : "0.8"
+    breakPointType = params.target_bed ? "4" : "2"
+    mappabilitystr = params.mappability ? "gemMappabilityFile = \${PWD}/${mappability}" : ""
+    contamination_adjustment = params.cf_contamination_adjustment ? "contaminationAdjustment = TRUE" : ""
+    contamination_value = params.cf_contamination ? "contamination = ${params.cf_contamination}" : ""
     """
     touch ${config}
     echo "[general]" >> ${config}
     echo "BedGraphOutput = TRUE" >> ${config}
     echo "chrFiles = \${PWD}/${chrDir.fileName}" >> ${config}
     echo "chrLenFile = \${PWD}/${chrLength.fileName}" >> ${config}
-    echo "gemMappabilityFile = \${PWD}/${mappability}" >> ${config}
-    echo "${coeff_or_window}" >> ${config}
-    echo "contaminationAdjustment = TRUE" >> ${config}
     echo "forceGCcontentNormalization = 1" >> ${config}
     echo "maxThreads = ${task.cpus}" >> ${config}
-    echo "minimalSubclonePresence = 20" >> ${config}
+    echo "minimalSubclonePresence = ${min_subclone}" >> ${config}
     echo "ploidy = ${params.cf_ploidy}" >> ${config}
     echo "sex = ${gender}" >> ${config}
+    echo "readCountThreshold = ${readCountThreshold}" >> ${config}
+    echo "breakPointThreshold = ${breakPointThreshold}" >> ${config}
+    echo "breakPointType = ${breakPointType}" >> ${config}
+    echo "${window}" >> ${config}
+    echo "${coeffvar}" >> ${config}
+    echo "${mappabilitystr}" >> ${config}
+    echo "${contamination_adjustment}" >> ${config}
+    echo "${contamination_value}" >> ${config}
     echo "" >> ${config}
-
+    
     echo "[control]" >> ${config}
     echo "inputFormat = pileup" >> ${config}
     echo "mateFile = \${PWD}/${mpileupNormal}" >> ${config}
@@ -3764,12 +3732,97 @@ process ControlFREEC {
 
     echo "[BAF]" >> ${config}
     echo "SNPfile = ${dbsnp.fileName}" >> ${config}
+    echo "" >> ${config}
+
+    echo "[target]" >> ${config}
+    echo "${use_bed}" >> ${config}
 
     freec -conf ${config}
     """
 }
 
 controlFreecOut.dump(tag:'ControlFREEC')
+
+process ControlFREECSingle {
+    label 'cpus_8'
+
+    tag "${idSampleTumor}"
+
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Control-FREEC", mode: params.publish_dir_mode
+
+    input:
+        set idPatient, idSampleTumor, file(mpileupTumor) from mpileupOutSingle
+        file(chrDir) from ch_chr_dir
+        file(mappability) from ch_mappability
+        file(chrLength) from ch_chr_length
+        file(dbsnp) from ch_dbsnp
+        file(dbsnpIndex) from ch_dbsnp_tbi
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fai
+        file(targetBED) from ch_target_bed
+
+    output:
+        set idPatient, idSampleTumor, file("${idSampleTumor}.pileup_CNVs"), file("${idSampleTumor}.pileup_ratio.txt"), file("${idSampleTumor}.pileup_BAF.txt") into controlFreecVizSingle
+        set file("*.pileup*"), file("${idSampleTumor}.config.txt") into controlFreecOutSingle
+
+    when: 'controlfreec' in tools
+
+    script:
+    config = "${idSampleTumor}.config.txt"
+    gender = genderMap[idPatient]
+    // Window has higher priority than coefficientOfVariation if both given
+    window = params.cf_window ? "window = ${params.cf_window}" : ""
+    coeffvar = params.cf_coeff ? "coefficientOfVariation = ${params.cf_coeff}" : ""
+    use_bed = params.target_bed ? "captureRegions = ${targetBED}" : ""
+    // This parameter makes Control-FREEC unstable (still in Beta according to the developers)
+    // so we disable it by setting it to its default value (it is disabled by default)
+    //min_subclone = params.target_bed ? "30" : "20"
+    min_subclone = 100
+    readCountThreshold = params.target_bed ? "50" : "10"
+    breakPointThreshold = params.target_bed ? "1.2" : "0.8"
+    breakPointType = params.target_bed ? "4" : "2"
+    mappabilitystr = params.mappability ? "gemMappabilityFile = \${PWD}/${mappability}" : ""
+    contamination_adjustment = params.cf_contamination_adjustment ? "contaminationAdjustment = TRUE" : ""
+    contamination_value = params.cf_contamination ? "contamination = ${params.cf_contamination}" : ""
+    """
+    touch ${config}
+    echo "[general]" >> ${config}
+    echo "BedGraphOutput = TRUE" >> ${config}
+    echo "chrFiles = \${PWD}/${chrDir.fileName}" >> ${config}
+    echo "chrLenFile = \${PWD}/${chrLength.fileName}" >> ${config}
+    echo "forceGCcontentNormalization = 1" >> ${config}
+    echo "maxThreads = ${task.cpus}" >> ${config}
+    echo "minimalSubclonePresence = ${min_subclone}" >> ${config}
+    echo "ploidy = ${params.cf_ploidy}" >> ${config}
+    echo "sex = ${gender}" >> ${config}
+    echo "readCountThreshold = ${readCountThreshold}" >> ${config}
+    echo "breakPointThreshold = ${breakPointThreshold}" >> ${config}
+    echo "breakPointType = ${breakPointType}" >> ${config}
+    echo "${window}" >> ${config}
+    echo "${coeffvar}" >> ${config}
+    echo "${mappabilitystr}" >> ${config}
+    echo "${contamination_adjustment}" >> ${config}
+    echo "${contamination_value}" >> ${config}
+    echo "" >> ${config}
+
+    echo "[sample]" >> ${config}
+    echo "inputFormat = pileup" >> ${config}
+    echo "mateFile = \${PWD}/${mpileupTumor}" >> ${config}
+    echo "mateOrientation = FR" >> ${config}
+    echo "" >> ${config}
+
+    echo "[BAF]" >> ${config}
+    echo "SNPfile = ${dbsnp.fileName}" >> ${config}
+    echo "" >> ${config}
+
+    echo "[target]" >> ${config}
+    echo "${use_bed}" >> ${config}
+
+    freec -conf ${config}
+    """
+}
+
+controlFreecOutSingle.dump(tag:'ControlFREECSingle')
 
 // STEP CONTROLFREEC.3 - VISUALIZATION
 
@@ -3781,39 +3834,57 @@ process ControlFreecViz {
     publishDir "${params.outdir}/VariantCalling/${idSampleTumor}_vs_${idSampleNormal}/Control-FREEC", mode: params.publish_dir_mode
 
     input:
-        set idPatient, idSampleNormal, idSampleTumor, file(cnvTumor), file(ratioTumor), file(cnvNormal), file(ratioNormal), file(bafTumor), file(bafNormal) from controlFreecViz
+        set idPatient, idSampleNormal, idSampleTumor, file(cnvTumor), file(ratioTumor), file(bafTumor) from controlFreecViz
 
     output:
         set file("*.txt"), file("*.png"), file("*.bed") into controlFreecVizOut
 
     when: 'controlfreec' in tools
 
+    script:
     """
-    echo "Shaping CNV files to make sure we can assess significance"
-    awk 'NF==9{print}' ${cnvTumor} > TUMOR.CNVs
-    awk 'NF==7{print}' ${cnvNormal} > NORMAL.CNVs
-
     echo "############### Calculating significance values for TUMOR CNVs #############"
-    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args TUMOR.CNVs ${ratioTumor}
-
-    echo "############### Calculating significance values for NORMAL CNVs ############"
-    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args NORMAL.CNVs ${ratioNormal}
+    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args ${cnvTumor} ${ratioTumor}
 
     echo "############### Creating graph for TUMOR ratios ###############"
     cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/makeGraph.R | R --slave --args 2 ${ratioTumor} ${bafTumor}
 
-    echo "############### Creating graph for NORMAL ratios ##############"
-    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/makeGraph.R | R --slave --args 2 ${ratioNormal} ${bafNormal}
-
     echo "############### Creating BED files for TUMOR ##############"
     perl /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/freec2bed.pl -f ${ratioTumor} > ${idSampleTumor}.bed
-
-    echo "############### Creating BED files for NORMAL #############"
-    perl /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/freec2bed.pl -f ${ratioNormal} > ${idSampleNormal}.bed
     """
 }
 
 controlFreecVizOut.dump(tag:'ControlFreecViz')
+
+process ControlFreecVizSingle {
+    label 'memory_singleCPU_2_task'
+
+    tag "${idSampleTumor}"
+
+    publishDir "${params.outdir}/VariantCalling/${idSampleTumor}/Control-FREEC", mode: params.publish_dir_mode
+
+    input:
+        set idPatient, idSampleTumor, file(cnvTumor), file(ratioTumor), file(bafTumor) from controlFreecVizSingle
+
+    output:
+        set file("*.txt"), file("*.png"), file("*.bed") into controlFreecVizOutSingle
+
+    when: 'controlfreec' in tools
+
+    script:
+    """
+    echo "############### Calculating significance values for TUMOR CNVs #############"
+    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/assess_significance.R | R --slave --args ${cnvTumor} ${ratioTumor}
+
+    echo "############### Creating graph for TUMOR ratios ###############"
+    cat /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/makeGraph.R | R --slave --args 2 ${ratioTumor} ${bafTumor}
+
+    echo "############### Creating BED files for TUMOR ##############"
+    perl /opt/conda/envs/nf-core-sarek-${workflow.manifest.version}/bin/freec2bed.pl -f ${ratioTumor} > ${idSampleTumor}.bed
+    """
+}
+
+controlFreecVizOutSingle.dump(tag:'ControlFreecVizSingle')
 
 // Remapping channels for QC and annotation
 
@@ -4238,8 +4309,12 @@ process MultiQC {
     when: !('multiqc' in skipQC)
 
     script:
-    rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
-    rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
+    rtitle = ''
+    rfilename = ''
+    if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
+        rtitle = "--title \"${workflow.runName}\""
+        rfilename = "--filename " + workflow.runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report"
+    }
     custom_config_file = params.multiqc_config ? "--config $mqc_custom_config" : ''
     """
     multiqc -f ${rtitle} ${rfilename} ${custom_config_file} .
@@ -4277,7 +4352,7 @@ workflow.onComplete {
     }
     def email_fields = [:]
     email_fields['version'] = workflow.manifest.version
-    email_fields['runName'] = custom_runName ?: workflow.runName
+    email_fields['runName'] = workflow.runName
     email_fields['success'] = workflow.success
     email_fields['dateComplete'] = workflow.complete
     email_fields['duration'] = workflow.duration
@@ -4319,18 +4394,18 @@ workflow.onComplete {
 
     // Render the TXT template
     def engine = new groovy.text.GStringTemplateEngine()
-    def tf = new File("$baseDir/assets/email_template.txt")
+    def tf = new File("$projectDir/assets/email_template.txt")
     def txt_template = engine.createTemplate(tf).make(email_fields)
     def email_txt = txt_template.toString()
 
     // Render the HTML template
-    def hf = new File("$baseDir/assets/email_template.html")
+    def hf = new File("$projectDir/assets/email_template.html")
     def html_template = engine.createTemplate(hf).make(email_fields)
     def email_html = html_template.toString()
 
     // Render the sendmail template
-    def smail_fields = [ email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir", mqcFile: mqc_report, mqcMaxSize: params.max_multiqc_email_size.toBytes() ]
-    def sf = new File("$baseDir/assets/sendmail_template.txt")
+    def smail_fields = [ email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, projectDir: "$projectDir", mqcFile: mqc_report, mqcMaxSize: params.max_multiqc_email_size.toBytes() ]
+    def sf = new File("$projectDir/assets/sendmail_template.txt")
     def sendmail_template = engine.createTemplate(sf).make(smail_fields)
     def sendmail_html = sendmail_template.toString()
 
@@ -4381,56 +4456,9 @@ workflow.onComplete {
     }
 }
 
-/*
-================================================================================
-                                nf-core functions
-================================================================================
-*/
-
-def create_workflow_summary(summary) {
-    def yaml_file = workDir.resolve('workflow_summary_mqc.yaml')
-    yaml_file.text  = """
-    id: 'nf-core-sarek-summary'
-    description: " - this information is collected when the pipeline is started."
-    section_name: 'nf-core/sarek Workflow Summary'
-    section_href: 'https://github.com/nf-core/sarek'
-    plot_type: 'html'
-    data: |
-        <dl class=\"dl-horizontal\">
-${summary.collect { k, v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
-        </dl>
-    """.stripIndent()
-
-   return yaml_file
-}
-
-def nfcoreHeader() {
-    // Log colours ANSI codes
-    c_black  = params.monochrome_logs ? '' : "\033[0;30m";
-    c_blue   = params.monochrome_logs ? '' : "\033[0;34m";
-    c_dim    = params.monochrome_logs ? '' : "\033[2m";
-    c_green  = params.monochrome_logs ? '' : "\033[0;32m";
-    c_purple = params.monochrome_logs ? '' : "\033[0;35m";
-    c_reset  = params.monochrome_logs ? '' : "\033[0m";
-    c_white  = params.monochrome_logs ? '' : "\033[0;37m";
-    c_yellow = params.monochrome_logs ? '' : "\033[0;33m";
-
-    return """    -${c_dim}--------------------------------------------------${c_reset}-
-                                            ${c_green},--.${c_black}/${c_green},-.${c_reset}
-    ${c_blue}        ___     __   __   __   ___     ${c_green}/,-._.--~\'${c_reset}
-    ${c_blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${c_yellow}}  {${c_reset}
-    ${c_blue}  | \\| |       \\__, \\__/ |  \\ |___     ${c_green}\\`-._,-`-,${c_reset}
-                                            ${c_green}`._,._,\'${c_reset}
-        ${c_white}____${c_reset}
-      ${c_white}.´ _  `.${c_reset}
-     ${c_white}/  ${c_green}|\\${c_reset}`-_ \\${c_reset}     ${c_blue} __        __   ___     ${c_reset}
-    ${c_white}|   ${c_green}| \\${c_reset}  `-|${c_reset}    ${c_blue}|__`  /\\  |__) |__  |__/${c_reset}
-     ${c_white}\\ ${c_green}|   \\${c_reset}  /${c_reset}     ${c_blue}.__| /¯¯\\ |  \\ |___ |  \\${c_reset}
-      ${c_white}`${c_green}|${c_reset}____${c_green}\\${c_reset}´${c_reset}
-
-    ${c_purple}  nf-core/sarek v${workflow.manifest.version}${c_reset}
-    -${c_dim}--------------------------------------------------${c_reset}-
-    """.stripIndent()
+workflow.onError {
+    // Print unexpected parameters - easiest is to just rerun validation
+    NfcoreSchema.validateParameters(params, json_schema, log)
 }
 
 def checkHostname() {
@@ -4439,15 +4467,15 @@ def checkHostname() {
     def c_red         = params.monochrome_logs ? '' : "\033[1;91m"
     def c_yellow_bold = params.monochrome_logs ? '' : "\033[1;93m"
     if (params.hostnames) {
-        def hostname = "hostname".execute().text.trim()
+        def hostname = 'hostname'.execute().text.trim()
         params.hostnames.each { prof, hnames ->
             hnames.each { hname ->
                 if (hostname.contains(hname) && !workflow.profile.contains(prof)) {
-                    log.error "====================================================\n" +
+                    log.error "${c_red}====================================================${c_reset}\n" +
                             "  ${c_red}WARNING!${c_reset} You are running with `-profile $workflow.profile`\n" +
                             "  but your machine hostname is ${c_white}'$hostname'${c_reset}\n" +
                             "  ${c_yellow_bold}It's highly recommended that you use `-profile $prof${c_reset}`\n" +
-                            "============================================================"
+                            "${c_red}====================================================${c_reset}\n"
                 }
             }
         }

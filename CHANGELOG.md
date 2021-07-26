@@ -2,24 +2,60 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [dev](https://github.com/nf-core/sarek/tree/dev)
 
 ### Added
 
-- [#230](https://github.com/nf-core/sarek/pull/230) - Add `ignore_soft_clipped_bases` option for `GATK Mutect2` [#218](https://github.com/nf-core/sarek/issues/218)
-- [#145](https://github.com/nf-core/sarek/pull/145) - Add `UMI annotation and consensus` functionality to `Sarek`
-- [#253](https://github.com/nf-core/sarek/pull/253) - Add `UMI` `CI` testing
-- [#262](https://github.com/nf-core/sarek/pull/262) - Add `nextflow_schema.json`
+- [#353](https://github.com/nf-core/sarek/pull/353) - Add support for task retries with exit code 247 (exhibited by `Picard MarkDuplicates`)
+- [#354](https://github.com/nf-core/sarek/pull/354) - Add tumor only mode for `Mutect2` and `MSIsensor`
+- [#356](https://github.com/nf-core/sarek/pull/356) - Add `--cf_contamination_adjustment` params to adjust contamination with `Control-FREEC`
+- [#372](https://github.com/nf-core/sarek/pull/372) - Add `--cf_contamination` params to specify contamination value with `Control-FREEC`
 
 ### Changed
 
-- [#237](https://github.com/nf-core/sarek/pull/237) - Switch `bwa 0.7.17` for `bwa-mem2 2.0`
-- [#253](https://github.com/nf-core/sarek/pull/253), [#255](https://github.com/nf-core/sarek/pull/255) - Update docs
-- [#260](https://github.com/nf-core/sarek/pull/260), [#262](https://github.com/nf-core/sarek/pull/262), [#278](https://github.com/nf-core/sarek/pull/278) - Sync with `TEMPLATE` updated from [nf-core/tools](https://github.com/nf-core/tools) [`1.10.2`](https://github.com/nf-core/tools/releases/tag/1.10.2)
+- [#373](https://github.com/nf-core/sarek/pull/373) - Sync `TEMPLATE` with `tools` 1.14
+- [#376](https://github.com/nf-core/sarek/pull/376) - Better logo on Github dark Mode
+- [#387](https://github.com/nf-core/sarek/pull/387) - Fix tables for TSV file content
+
+### Fixed
+
+- [#375](https://github.com/nf-core/sarek/pull/375), [#381](https://github.com/nf-core/sarek/pull/381), [#382](https://github.com/nf-core/sarek/pull/382), [#385](https://github.com/nf-core/sarek/pull/385) - Fix bugs due to `TEMPLATE` sync from [#373](https://github.com/nf-core/sarek/pull/373)
+- [#378](https://github.com/nf-core/sarek/pull/378) - Fix `Spark` related issue due to `Docker` settings in `nextflow.config`
+- [#378](https://github.com/nf-core/sarek/pull/378) - Fix `Spark` related issue due to `Docker` settings in `nextflow.config`
+
+### Deprecated
+
+### Removed
+
+- [#368](https://github.com/nf-core/sarek/pull/368) - Remove social preview image to use GitHub OpenGraph
+
+## [2.7](https://github.com/nf-core/sarek/releases/tag/2.7) - Pårte
+
+Pårte is one of the main massif in the Sarek National Park.
+
+### Added
+
+- [#145](https://github.com/nf-core/sarek/pull/145) - Add `UMI annotation and consensus` functionality to `Sarek`
+- [#230](https://github.com/nf-core/sarek/pull/230) - Add `ignore_soft_clipped_bases` option for `GATK Mutect2` [#218](https://github.com/nf-core/sarek/issues/218)
+- [#253](https://github.com/nf-core/sarek/pull/253) - Add `UMI` `CI` testing
+- [#262](https://github.com/nf-core/sarek/pull/262) - Add `nextflow_schema.json`
+- [#237](https://github.com/nf-core/sarek/pull/237), [#282](https://github.com/nf-core/sarek/pull/282) - Add `--aligner` to choose between `bwa` and `bwa-mem2`
+- [#294](https://github.com/nf-core/sarek/pull/294) - Add `Troubleshooting` section to `docs/usage.md`
+- [#302](https://github.com/nf-core/sarek/pull/302), [#304](https://github.com/nf-core/sarek/pull/304) - Add WES and tumor-only mode for `Control-FREEC`
+
+### Changed
+
+- [#253](https://github.com/nf-core/sarek/pull/253), [#255](https://github.com/nf-core/sarek/pull/255), [#326](https://github.com/nf-core/sarek/pull/326), [#329](https://github.com/nf-core/sarek/pull/329) - Update docs
+- [#260](https://github.com/nf-core/sarek/pull/260), [#262](https://github.com/nf-core/sarek/pull/262), [#278](https://github.com/nf-core/sarek/pull/278), [#322](https://github.com/nf-core/sarek/pull/322) - Sync with `TEMPLATE` updated from [nf-core/tools](https://github.com/nf-core/tools) [`1.10.2`](https://github.com/nf-core/tools/releases/tag/1.10.2)
 - [#262](https://github.com/nf-core/sarek/pull/262) - Update issue templates to fit the recommended community standards
-- [#278](https://github.com/nf-core/sarek/pull/278) - Refactor docs
+- [#278](https://github.com/nf-core/sarek/pull/278), [#322](https://github.com/nf-core/sarek/pull/322) - Refactor docs
+- [#284](https://github.com/nf-core/sarek/pull/284) - Update F1000Research publication to version 2
+- [#284](https://github.com/nf-core/sarek/pull/284) - Update Scilifelab logo
+- [#317](https://github.com/nf-core/sarek/pull/317) - Update `README.md` (Add: QBiC + Friederike/Gisela)
+- [#320](https://github.com/nf-core/sarek/pull/278) - Set `MarkDuplicates MAX_RECORDS_IN_RAM` to default value
 
 ### Fixed
 
@@ -29,15 +65,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - [#272](https://github.com/nf-core/sarek/pull/272) - Fix annotation `--tools merge` issue
 - [#279](https://github.com/nf-core/sarek/pull/279) - Fix issue with `--step prepare_recalibration` [#267](https://github.com/nf-core/sarek/issues/267)
 - [#280](https://github.com/nf-core/sarek/pull/280) - Use HTML codes instead of `<` and `>` in docs
+- [#288](https://github.com/nf-core/sarek/pull/288) - Fix `test_annotation` profile
+- [#289](https://github.com/nf-core/sarek/pull/289) - Random string added to `extractFastqFromDir` to avoid name collition
+- [#290](https://github.com/nf-core/sarek/pull/290), [#323](https://github.com/nf-core/sarek/pull/323) - Faster solving of `Conda` environment
 - [#293](https://github.com/nf-core/sarek/pull/293) - Fix typo issue when printing infos [#292](https://github.com/nf-core/sarek/issues/292)
 - [#309](https://github.com/nf-core/sarek/pull/309) - Fixed concatenation of many VCF files
-- Fix Github Actions not running after November 16, 2020 (deprecated Github Actions API [#739](https://github.com/nf-core/tools/issues/739)
+- [#310](https://github.com/nf-core/sarek/pull/310) - Fix Github Actions not running after November 16, 2020 (deprecated Github Actions API [#739](https://github.com/nf-core/tools/issues/739)
+- [#329](https://github.com/nf-core/sarek/pull/329) - Simplify `Control-FREEC` usage
+- [#331](https://github.com/nf-core/sarek/pull/331) - Replace `spread` operator by `combine` to remove `Nextflow` deprecation warning
 
 ### Removed
 
 - [#234](https://github.com/nf-core/sarek/pull/243) - Removing obsolete script [#92](https://github.com/nf-core/sarek/issues/92)
-- [#262](https://github.com/nf-core/sarek/pull/262) - Removing warning message about deprecated and obsolete params
 - [#262](https://github.com/nf-core/sarek/pull/262) - Removing deprecated params: `annotateTools`, `annotateVCF`, `cadd_InDels`, `cadd_InDels_tbi`, `cadd_WG_SNVs`, `cadd_WG_SNVs_tbi`, `maxMultiqcEmailFileSize`, `noGVCF`, `noReports`, `noStrelkaBP`, `nucleotidesPerSecond`, `publishDirMode`, `sample`, `sampleDir`, `saveGenomeIndex`, `skipQC`, `snpEff_cache`, `targetBed`
+- [#262](https://github.com/nf-core/sarek/pull/262) - Removing warning message about deprecated and obsolete params
+- [#324](https://github.com/nf-core/sarek/pull/324) - `--no_gatk_spark` is now removed, use `--use_gatk_spark` instead
+- [#324](https://github.com/nf-core/sarek/pull/324) - `--no_gvcf` is now removed, use `--generate_gvcf` instead
 
 ## [2.6.1](https://github.com/nf-core/sarek/releases/tag/2.6.1) - Gådokgaskatjåhkkå
 

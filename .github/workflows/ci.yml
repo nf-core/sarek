@@ -8,6 +8,9 @@ on:
   release:
     types: [published]
 
+# Uncomment if we need an edge release of Nextflow again
+# env: NXF_EDGE: 1
+
 jobs:
   test:
     name: Run workflow tests
@@ -20,10 +23,11 @@ jobs:
     strategy:
       matrix:
         # Nextflow versions: check pipeline minimum and current latest
-        nxf_ver: ['19.10.0', '']
+        nxf_ver: ['20.04.0', '']
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
+
       - name: Check if Dockerfile or Conda environment changed
         uses: technote-space/get-diff-action@v4
         with:
@@ -31,17 +35,22 @@ jobs:
             Dockerfile
             environment.yml
       - name: Build new docker image
-        if: env.GIT_DIFF
+        if: env.MATCHED_FILES
         run: docker build --no-cache . -t nfcore/sarek:dev
+
       - name: Pull docker image
-        if: ${{ !env.GIT_DIFF }}
+        if: ${{ !env.MATCHED_FILES }}
         run: |
           docker pull nfcore/sarek:dev
           docker tag nfcore/sarek:dev nfcore/sarek:dev
+
       - name: Install Nextflow
+        env:
+          CAPSULE_LOG: none
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
+
       - name: Run pipeline with test data
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker
@@ -62,7 +71,7 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           # Only check Nextflow pipeline minimum version
-          NXF_VER: '19.10.0'
+          NXF_VER: '20.04.0'
       - name: Pull docker image
         run: |
           docker pull nfcore/sarek:dev
@@ -85,7 +94,7 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           # Only check Nextflow pipeline minimum version
-          NXF_VER: '19.10.0'
+          NXF_VER: '20.04.0'
       - name: Pull docker image
         run: docker pull nfcore/sarek:dev
       - name: Get test data
@@ -113,11 +122,11 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           # Only check Nextflow pipeline minimum version
-          NXF_VER: '19.10.0'
+          NXF_VER: '20.04.0'
       - name: Pull docker image
         run: docker pull nfcore/sarek:dev
       - name: Run test for minimal genomes
-        run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --skipQC all --genome ${{ matrix.genome }} ${{ matrix.intervals }} --tools Manta,mpileup,Strelka,FreeBayes
+        run: nextflow run ${GITHUB_WORKSPACE} -profile test,docker --skip_qc all --genome ${{ matrix.genome }} ${{ matrix.intervals }} --tools Manta,mpileup,Strelka,FreeBayes
 
   profile:
     env:
@@ -125,7 +134,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        profile: [test_split_fastq, test_targeted, test_trimming, test_no_gatk_spark, test_umi_tso, test_umi_qiaseq]
+        profile: [test_split_fastq, test_targeted, test_trimming, test_use_gatk_spark, test_umi_tso, test_umi_qiaseq]
     steps:
       - uses: actions/checkout@v2
       - name: Install Nextflow
@@ -134,7 +143,7 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           # Only check Nextflow pipeline minimum version
-          NXF_VER: '19.10.0'
+          NXF_VER: '20.04.0'
       - name: Pull docker image
         run: docker pull nfcore/sarek:dev
       - name: Run ${{ matrix.profile }} test
@@ -155,7 +164,7 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           # Only check Nextflow pipeline minimum version
-          NXF_VER: '19.10.0'
+          NXF_VER: '20.04.0'
       - name: Pull docker image
         run: docker pull nfcore/sarek:dev
       - name: Run ${{ matrix.profile }} test
@@ -186,7 +195,7 @@ jobs:
           sudo mv nextflow /usr/local/bin/
         env:
           # Only check Nextflow pipeline minimum version
-          NXF_VER: '19.10.0'
+          NXF_VER: '20.04.0'
       - name: Pull docker image
         run: docker pull nfcore/sarek:dev
       - name: Run ${{ matrix.tool }} test
