@@ -1,6 +1,13 @@
 # nf-core/sarek: Output <!-- omit in toc -->
 
-This document describes the output produced by the pipeline.
+## Introduction <!-- omit in toc -->
+
+This document describes the output produced by the pipeline. Most of the plots are taken from the MultiQC report, which summarises results at the end of the pipeline.
+
+The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
+
+The directories listed below will be created in the results directory after the pipeline has finished.
+All paths are relative to the top-level results directory.
 
 The directories listed below will be created in the results directory after the pipeline has finished.
 All paths are relative to the top-level results directory.
@@ -11,7 +18,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 - [Preprocessing](#preprocessing)
   - [Map to Reference](#map-to-reference)
-    - [bwa](#bwa)
+    - [BWA](#bwa)
     - [BWA-mem2](#bwa-mem2)
   - [Mark Duplicates](#mark-duplicates)
     - [GATK MarkDuplicates](#gatk-markduplicates)
@@ -57,7 +64,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [VEP reports](#vep-reports)
   - [Reporting](#reporting)
     - [MultiQC](#multiqc)
-- [Pipeline information](#pipeline-information)
+  - [Pipeline information](#pipeline-information)
 
 ## Preprocessing
 
@@ -65,9 +72,9 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 ### Map to Reference
 
-#### bwa
+#### BWA
 
-[bwa](https://github.com/lh3/bwa) is a software package for mapping low-divergent sequences against a large reference genome.
+[BWA](https://github.com/lh3/bwa) is a software package for mapping low-divergent sequences against a large reference genome.
 
 Such files are intermediate and not kept in the final files delivered to users.
 
@@ -81,9 +88,9 @@ Such files are intermediate and not kept in the final files delivered to users.
 
 #### GATK MarkDuplicates
 
-By default, `Sarek` will use [GATK MarkDuplicatesSpark](https://gatk.broadinstitute.org/hc/en-us/articles/360042912511-MarkDuplicatesSpark), `Spark` implementation of [GATK MarkDuplicates](https://gatk.broadinstitute.org/hc/en-us/articles/360042477492-MarkDuplicates-Picard), which locates and tags duplicate reads in a `BAM` or `SAM` file, where duplicate reads are defined as originating from a single fragment of DNA.
+By default, `Sarek` will use [GATK MarkDuplicates](https://gatk.broadinstitute.org/hc/en-us/articles/360042477492-MarkDuplicates-Picard), which locates and tags duplicate reads in a `BAM` or `SAM` file, where duplicate reads are defined as originating from a single fragment of DNA.
 
-Specify `--no_gatk_spark` to use `GATK MarkDuplicates` instead.
+Specify `--use_gatk_spark` to use [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/360042912511-MarkDuplicatesSpark) instead, `Spark` implementation of `GATK MarkDuplicates`.
 
 This directory is the location for the `BAM` files delivered to users.
 Besides the `duplicates-marked BAM` files, the recalibration tables (`*.recal.table`) are also stored, and can be used to create `recalibrated BAM` files.
@@ -93,7 +100,7 @@ For all samples:
 **Output directory: `results/Preprocessing/[SAMPLE]/DuplicatesMarked`**
 
 - `[SAMPLE].md.bam` and `[SAMPLE].md.bai`
-  - `BAM` file and index
+    - `BAM` file and index
 
 For further reading and documentation see the [data pre-processing for variant discovery from the GATK best practices](https://gatk.broadinstitute.org/hc/en-us/articles/360035535912-Data-pre-processing-for-variant-discovery).
 
@@ -108,7 +115,7 @@ For all samples:
 **Output directory: `results/Preprocessing/[SAMPLE]/DuplicatesMarked`**
 
 - `[SAMPLE].recal.table`
-  - Recalibration table associated to the `duplicates-marked BAM` file.
+    - Recalibration table associated to the `duplicates-marked BAM` file.
 
 #### GATK ApplyBQSR
 
@@ -123,7 +130,7 @@ For all samples:
 **Output directory: `results/Preprocessing/[SAMPLE]/Recalibrated`**
 
 - `[SAMPLE].recal.bam` and `[SAMPLE].recal.bam.bai`
-  - `BAM` file and index
+    - `BAM` file and index
 
 For further reading and documentation see the [data pre-processing for variant discovery from the GATK best practices](https://gatk.broadinstitute.org/hc/en-us/articles/360035535912-Data-pre-processing-for-variant-discovery).
 
@@ -138,9 +145,9 @@ For all samples:
 **Output directory: `results/Preprocessing/TSV`**
 
 - `duplicates_marked_no_table.tsv`, `duplicates_marked.tsv` and `recalibrated.tsv`
-  - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps.
+    - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps.
 - `duplicates_marked_no_table_[SAMPLE].tsv`, `duplicates_marked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
-  - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps for a specific sample.
+    - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps for a specific sample.
 
 ### TSV files with `--skip_markduplicates`
 
@@ -151,9 +158,9 @@ For all samples:
 **Output directory: `results/Preprocessing/TSV`**
 
 - `mapped.tsv`, `mapped_no_duplicates_marked.tsv` and `recalibrated.tsv`
-  - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps.
+    - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps.
 - `mapped_[SAMPLE].tsv`, `mapped_no_duplicates_marked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
-  - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps for a specific sample.
+    - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps for a specific sample.
 
 ### TSV files with `--sentieon`
 
@@ -164,9 +171,9 @@ For all samples:
 **Output directory: `results/Preprocessing/TSV`**
 
 - `sentieon_deduped.tsv` and `recalibrated_sentieon.tsv`
-  - `TSV` files to start `Sarek` from `variantcalling` step.
+    - `TSV` files to start `Sarek` from `variantcalling` step.
 - `sentieon_deduped_[SAMPLE].tsv` and `recalibrated_sentieon_[SAMPLE].tsv`
-  - `TSV` files to start `Sarek` from `variantcalling` step for a specific sample.
+    - `TSV` files to start `Sarek` from `variantcalling` step for a specific sample.
 
 ## Variant Calling
 
@@ -186,7 +193,7 @@ For all samples:
 **Output directory: `results/VariantCalling/[SAMPLE]/FreeBayes`**
 
 - `FreeBayes_[SAMPLE].vcf.gz` and `FreeBayes_[SAMPLE].vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 
 For further reading and documentation see the [FreeBayes manual](https://github.com/ekg/freebayes/blob/master/README.md#user-manual-and-guide).
 
@@ -201,7 +208,7 @@ For all samples:
 **Output directory: `results/VariantCalling/[SAMPLE]/HaploTypeCaller`**
 
 - `HaplotypeCaller_[SAMPLE].vcf.gz` and `HaplotypeCaller_[SAMPLE].vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 
 For further reading and documentation see the [HaplotypeCaller manual](https://gatk.broadinstitute.org/hc/en-us/articles/360042913231-HaplotypeCaller).
 
@@ -216,7 +223,7 @@ For all samples:
 **Output directory: `results/VariantCalling/[SAMPLE]/HaplotypeCallerGVCF`**
 
 - `HaplotypeCaller_[SAMPLE].g.vcf.gz` and `HaplotypeCaller_[SAMPLE].g.vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 
 For further reading and documentation see the [GenotypeGVCFs manual](https://gatk.broadinstitute.org/hc/en-us/articles/360042914991-GenotypeGVCFs).
 
@@ -235,13 +242,13 @@ For a Tumor/Normal pair:
 Files created:
 
 - `Mutect2_unfiltered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `Mutect2_unfiltered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
-  - unfiltered (raw) Mutect2 calls `VCF` with Tabix index
+    - unfiltered (raw) Mutect2 calls `VCF` with Tabix index
 - `Mutect2_filtered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `Mutect2_filtered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
-  - filtered Mutect2 calls `VCF` with Tabix index: these entries have a `PASS` filter, you can get these when supplying a panel of normals using the `--pon` option
+    - filtered Mutect2 calls `VCF` with Tabix index: these entries have a `PASS` filter, you can get these when supplying a panel of normals using the `--pon` option
 - `[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.stats`
-  - a stats file generated during calling of raw variants (needed for filtering)
+    - a stats file generated during calling of raw variants (needed for filtering)
 - `[TUMORSAMPLE]_contamination.table`
-  - a text file exported when panel-of-normals about sample contamination are provided
+    - a text file exported when panel-of-normals about sample contamination are provided
 
 #### samtools mpileup
 
@@ -252,7 +259,7 @@ For all samples:
 **Output directory: `results/VariantCalling/[SAMPLE]/mpileup`**
 
 - `[SAMPLE].pileup.gz`
-  - The pileup format is a text-based format for summarizing the base calls of aligned reads to a reference sequence. Alignment records are grouped by sample (`SM`) identifiers in `@RG` header lines.
+    - The pileup format is a text-based format for summarizing the base calls of aligned reads to a reference sequence. Alignment records are grouped by sample (`SM`) identifiers in `@RG` header lines.
 
 For further reading and documentation see the [samtools manual](https://www.htslib.org/doc/samtools.html#COMMANDS_AND_OPTIONS).
 
@@ -265,27 +272,27 @@ For all samples:
 **Output directory: `results/VariantCalling/[SAMPLE]/Strelka`**
 
 - `Strelka_Sample_genome.vcf.gz` and `Strelka_Sample_genome.vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 - `Strelka_Sample_variants.vcf.gz` and `Strelka_Sample_variants.vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 
 For a Tumor/Normal pair:
 
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/Strelka`**
 
 - `Strelka_[TUMORSAMPLE]_vs_[NORMALSAMPLE]_somatic_indels.vcf.gz` and `Strelka_[TUMORSAMPLE]_vs_[NORMALSAMPLE]_somatic_indels.vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 - `Strelka_[TUMORSAMPLE]_vs_[NORMALSAMPLE]_somatic_snvs.vcf.gz` and `Strelka_[TUMORSAMPLE]_vs_[NORMALSAMPLE]_somatic_snvs.vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 
 Using [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example) with the `candidateSmallIndels` from `Manta`:
 
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/Strelka`**
 
 - `StrelkaBP_[TUMORSAMPLE]_vs_[NORMALSAMPLE]_somatic_indels.vcf.gz` and `StrelkaBP_[TUMORSAMPLE]_vs_[NORMALSAMPLE]_somatic_indels.vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 - `StrelkaBP_[TUMORSAMPLE]_vs_[NORMALSAMPLE]_somatic_snvs.vcf.gz` and `StrelkaBP_[TUMORSAMPLE]_vs_[NORMALSAMPLE]_somatic_snvs.vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 
 For further reading and documentation see the [Strelka2 user guide](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md).
 
@@ -300,7 +307,7 @@ For all samples:
 **Output directory: `results/VariantCalling/[SAMPLE]/SentieonDNAseq`**
 
 - `DNAseq_Sample.vcf.gz` and `DNAseq_Sample.vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 
 For further reading and documentation see the [Sentieon DNAseq user guide](https://support.sentieon.com/manual/DNAseq_usage/dnaseq/).
 
@@ -315,7 +322,7 @@ For all samples:
 **Output directory: `results/VariantCalling/[SAMPLE]/SentieonDNAscope`**
 
 - `DNAscope_Sample.vcf.gz` and `DNAscope_Sample.vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 
 For further reading and documentation see the [Sentieon DNAscope user guide](https://support.sentieon.com/manual/DNAscope_usage/dnascope/).
 
@@ -330,7 +337,7 @@ For a Tumor/Normal pair:
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/SentieonTNscope`**
 
 - `TNscope_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `TNscope_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 
 For further reading and documentation see the [Sentieon TNscope user guide](https://support.sentieon.com/manual/TNscope_usage/tnscope/).
 
@@ -347,32 +354,32 @@ For all samples:
 **Output directory: `results/VariantCalling/[SAMPLE]/Manta`**
 
 - `Manta_[SAMPLE].candidateSmallIndels.vcf.gz` and `Manta_[SAMPLE].candidateSmallIndels.vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 - `Manta_[SAMPLE].candidateSV.vcf.gz` and `Manta_[SAMPLE].candidateSV.vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 
 For Normal sample only:
 
 - `Manta_[NORMALSAMPLE].diploidSV.vcf.gz` and `Manta_[NORMALSAMPLE].diploidSV.vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 
 For a Tumor sample only:
 
 - `Manta_[TUMORSAMPLE].tumorSV.vcf.gz` and `Manta_[TUMORSAMPLE].tumorSV.vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 
 For a Tumor/Normal pair:
 
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/Manta`**
 
 - `Manta_[TUMORSAMPLE]_vs_[NORMALSAMPLE].candidateSmallIndels.vcf.gz` and `Manta_[TUMORSAMPLE]_vs_[NORMALSAMPLE].candidateSmallIndels.vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 - `Manta_[TUMORSAMPLE]_vs_[NORMALSAMPLE].candidateSV.vcf.gz` and `Manta_[TUMORSAMPLE]_vs_[NORMALSAMPLE].candidateSV.vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 - `Manta_[TUMORSAMPLE]_vs_[NORMALSAMPLE].diploidSV.vcf.gz` and `Manta_[TUMORSAMPLE]_vs_[NORMALSAMPLE].diploidSV.vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 - `Manta_[TUMORSAMPLE]_vs_[NORMALSAMPLE].somaticSV.vcf.gz` and `Manta_[TUMORSAMPLE]_vs_[NORMALSAMPLE].somaticSV.vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 
 For further reading and documentation see the [Manta user guide](https://github.com/Illumina/manta/blob/master/docs/userGuide/README.md).
 
@@ -388,17 +395,19 @@ For all samples:
 **Output directory: `results/VariantCalling/[SAMPLE]/TIDDIT`**
 
 - `TIDDIT_[SAMPLE].vcf.gz` and `TIDDIT_[SAMPLE].vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 - `TIDDIT_[SAMPLE].signals.tab`
-  - tab file describing coverage across the genome, binned per 50 bp
+    - tab file describing coverage across the genome, binned per 50 bp
 - `TIDDIT_[SAMPLE].ploidy.tab`
-  - tab file describing the estimated ploidy and coverage across each contig
+    - tab file describing the estimated ploidy and coverage across each contig
 - `TIDDIT_[SAMPLE].old.vcf`
-  - `VCF` including the low qualiy calls
+    - `VCF` including the low qualiy calls
 - `TIDDIT_[SAMPLE].wig`
-  - wiggle file containing coverage across the genome, binned per 50 bp
+    - wiggle file containing coverage across the genome, binned per 50 bp
 - `TIDDIT_[SAMPLE].gc.wig`
-  - wiggle file containing fraction of gc content, binned per 50 bp
+    - wiggle file containing fraction of gc content, binned per 50 bp
+
+For further reading and documentation see the [TIDDIT manual](https://github.com/SciLifeLab/TIDDIT/blob/master/README.md).
 
 For further reading and documentation see the [TIDDIT manual](https://github.com/SciLifeLab/TIDDIT/blob/master/README.md).
 
@@ -413,7 +422,7 @@ For all samples:
 **Output directory: `results/VariantCalling/[SAMPLE]/SentieonDNAscope`**
 
 - `DNAscope_SV_Sample.vcf.gz` and `DNAscope_SV_Sample.vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 
 For further reading and documentation see the [Sentieon DNAscope user guide](https://support.sentieon.com/manual/DNAscope_usage/dnascope/).
 
@@ -429,9 +438,9 @@ For a Tumor/Normal pair:
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/ASCAT`**
 
 - `[TUMORSAMPLE].BAF` and `[NORMALSAMPLE].BAF`
-  - file with beta allele frequencies
+    - file with beta allele frequencies
 - `[TUMORSAMPLE].LogR` and `[NORMALSAMPLE].LogR`
-  - file with total copy number on a logarithmic scale
+    - file with total copy number on a logarithmic scale
 
 #### ASCAT
 
@@ -445,23 +454,36 @@ For a Tumor/Normal pair:
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/ASCAT`**
 
 - `[TUMORSAMPLE].aberrationreliability.png`
-  - Image with information about aberration reliability
+    - Image with information about aberration reliability
 - `[TUMORSAMPLE].ASCATprofile.png`
-  - Image with information about ASCAT profile
+    - Image with information about ASCAT profile
 - `[TUMORSAMPLE].ASPCF.png`
-  - Image with information about ASPCF
+    - Image with information about ASPCF
 - `[TUMORSAMPLE].rawprofile.png`
-  - Image with information about raw profile
+    - Image with information about raw profile
 - `[TUMORSAMPLE].sunrise.png`
-  - Image with information about sunrise
+    - Image with information about sunrise
 - `[TUMORSAMPLE].tumour.png`
-  - Image with information about tumor
+    - Image with information about tumor
 - `[TUMORSAMPLE].cnvs.txt`
-  - file with information about CNVS
+    - file with information about CNVS
 - `[TUMORSAMPLE].LogR.PCFed.txt`
-  - file with information about LogR
+    - file with information about LogR
 - `[TUMORSAMPLE].purityploidy.txt`
-  - file with information about purity ploidy
+    - file with information about purity ploidy
+
+The text file `[TUMORSAMPLE].cnvs.txt` countains predictions about copy number state for all the segments.
+The output is a tab delimited text file with the following columns:
+
+- *chr*: chromosome number
+- *startpos*: start position of the segment
+- *endpos*: end position of the segment
+- *nMajor*: number of copies of one of the allels (for example the chromosome inherited from the father)
+- *nMinor*: number of copies of the other allele (for example the chromosome inherited of the mother)
+
+The file `[TUMORSAMPLE].cnvs.txt` contains all segments predicted by ASCAT, both those with normal copy number (nMinor = 1 and nMajor =1) and those corresponding to copy number aberrations.
+
+For further reading and documentation see the [ASCAT manual](https://www.crick.ac.uk/research/labs/peter-van-loo/software).
 
 The text file `[TUMORSAMPLE].cnvs.txt` countains predictions about copy number state for all the segments.
 The output is a tab delimited text file with the following columns:
@@ -487,13 +509,15 @@ For a Tumor/Normal pair:
 **Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/ControlFREEC`**
 
 - `[TUMORSAMPLE]_vs_[NORMALSAMPLE].config.txt`
-  - Configuration file used to run Control-FREEC
+    - Configuration file used to run Control-FREEC
 - `[TUMORSAMPLE].pileup.gz_CNVs` and `[TUMORSAMPLE].pileup.gz_normal_CNVs`
-  - file with coordinates of predicted copy number alterations
+    - file with coordinates of predicted copy number alterations
 - `[TUMORSAMPLE].pileup.gz_ratio.txt` and `[TUMORSAMPLE].pileup.gz_normal_ratio.txt`
-  - file with ratios and predicted copy number alterations for each window
+    - file with ratios and predicted copy number alterations for each window
 - `[TUMORSAMPLE].pileup.gz_BAF.txt` and `[NORMALSAMPLE].pileup.gz_BAF.txt`
-  - file with beta allele frequencies for each possibly heterozygous SNP position
+    - file with beta allele frequencies for each possibly heterozygous SNP position
+
+For further reading and documentation see the [Control-FREEC manual](http://boevalab.com/FREEC/tutorial.html).
 
 For further reading and documentation see the [Control-FREEC manual](http://boevalab.com/FREEC/tutorial.html).
 
@@ -512,13 +536,13 @@ For a Tumor/Normal pair:
 **Output directory: `results/VariantCalling/[TUMORSAMPLE]_vs_[NORMALSAMPLE]/MSIsensor`**
 
 - `[TUMORSAMPLE]_vs_[NORMALSAMPLE]_msisensor`
-  - MSI score output, contains information about the number of somatic sites.
+    - MSI score output, contains information about the number of somatic sites.
 - `[TUMORSAMPLE]_vs_[NORMALSAMPLE]_msisensor_dis`
-  - The normal and tumor length distribution for each microsatellite position.
+    - The normal and tumor length distribution for each microsatellite position.
 - `[TUMORSAMPLE]_vs_[NORMALSAMPLE]_msisensor_germline`
-  - Somatic sites detected.
+    - Somatic sites detected.
 - `[TUMORSAMPLE]_vs_[NORMALSAMPLE]_msisensor_somatic`
-  - Germline sites detected.
+    - Germline sites detected.
 
 For further reading see the [MSIsensor paper](https://www.ncbi.nlm.nih.gov/pubmed/24371154).
 
@@ -539,7 +563,7 @@ For all samples:
 **Output directory: `results/Annotation/[SAMPLE]/snpEff`**
 
 - `VariantCaller_Sample_snpEff.ann.vcf.gz` and `VariantCaller_Sample_snpEff.ann.vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 
 For further reading and documentation see the [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary)
 
@@ -567,7 +591,7 @@ For all samples:
 **Output directory: `results/Annotation/[SAMPLE]/VEP`**
 
 - `VariantCaller_Sample_VEP.ann.vcf.gz` and `VariantCaller_Sample_VEP.ann.vcf.gz.tbi`
-  - `VCF` with Tabix index
+    - `VCF` with Tabix index
 
 For further reading and documentation see the [VEP manual](https://www.ensembl.org/info/docs/tools/vep/index.html)
 
@@ -577,22 +601,23 @@ For further reading and documentation see the [VEP manual](https://www.ensembl.o
 
 #### FastQC
 
-[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads.
-It provides information about the quality score distribution across your reads, per base sequence content (`%A/T/G/C`), adapter contamination and overrepresented sequences.
+[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
 
 For all samples:
 
 **Output directory: `results/Reports/[SAMPLE]/fastqc`**
 
 - `sample_R1_XXX_fastqc.html` and `sample_R2_XXX_fastqc.html`
-  - `FastQC` report containing quality metrics for your untrimmed raw `FASTQ` files
+    - `FastQC` report containing quality metrics for your untrimmed raw `FASTQ` files
 - `sample_R1_XXX_fastqc.zip` and `sample_R2_XXX_fastqc.zip`
-  - Zip archive containing the FastQC report, tab-delimited data file and plot images
+    - Zip archive containing the FastQC report, tab-delimited data file and plot images
 
 > **NB:** The `FastQC` plots displayed in the `MultiQC` report shows _untrimmed_ reads.
 > They may contain adapter sequence and potentially regions with low quality.
 
-For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
+- `fastqc/`
+    - `*_fastqc.html`: FastQC report containing quality metrics.
+    - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
 
 #### bamQC
 
@@ -608,7 +633,7 @@ For all samples:
 **Output directory: `results/Reports/[SAMPLE]/bamQC`**
 
 - `VariantCaller_[SAMPLE].bcf.tools.stats.out`
-  - Raw statistics used by `MultiQC`
+    - Raw statistics used by `MultiQC`
 
 For further reading and documentation see the [Qualimap bamqc manual](http://qualimap.bioinfo.cipf.es/doc_html/analysis.html#id7)
 
@@ -625,7 +650,7 @@ For all samples:
 **Output directory: `results/Reports/[SAMPLE]/MarkDuplicates`**
 
 - `[SAMPLE].bam.metrics`
-  - Raw statistics used by `MultiQC`
+    - Raw statistics used by `MultiQC`
 
 For further reading and documentation see the [MarkDuplicates manual](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.2.0/picard_sam_markduplicates_MarkDuplicates.php).
 
@@ -642,7 +667,7 @@ For all samples:
 **Output directory: `results/Reports/[SAMPLE]/SamToolsStats`**
 
 - `[SAMPLE].bam.samtools.stats.out`
-  - Raw statistics used by `MultiQC`
+    - Raw statistics used by `MultiQC`
 
 For further reading and documentation see the [`samtools` manual](https://www.htslib.org/doc/samtools.html#COMMANDS_AND_OPTIONS)
 
@@ -659,7 +684,7 @@ For all samples:
 **Output directory: `results/Reports/[SAMPLE]/BCFToolsStats`**
 
 - `VariantCaller_[SAMPLE].bcf.tools.stats.out`
-  - Raw statistics used by `MultiQC`
+    - Raw statistics used by `MultiQC`
 
 For further reading and documentation see the [bcftools stats manual](https://samtools.github.io/bcftools/bcftools.html#stats)
 
@@ -678,11 +703,11 @@ For all samples:
 **Output directory: `results/Reports/[SAMPLE]/VCFTools`**
 
 - `VariantCaller_[SAMPLE].FILTER.summary`
-  - Raw statistics used by `MultiQC`
+    - Raw statistics used by `MultiQC`
 - `VariantCaller_[SAMPLE].TsTv.count`
-  - Raw statistics used by `MultiQC`
+    - Raw statistics used by `MultiQC`
 - `VariantCaller_[SAMPLE].TsTv.qual`
-  - Raw statistics used by `MultiQC`
+    - Raw statistics used by `MultiQC`
 
 For further reading and documentation see the [VCFtools manual](https://vcftools.github.io/man_latest.html#OUTPUT%20OPTIONS)
 
@@ -703,11 +728,11 @@ For all samples:
 **Output directory: `results/Reports/[SAMPLE]/snpEff`**
 
 - `VariantCaller_Sample_snpEff.csv`
-  - Raw statistics used by `MultiQC`
+    - Raw statistics used by `MultiQC`
 - `VariantCaller_Sample_snpEff.html`
-  - Statistics to be visualised with a web browser
+    - Statistics to be visualised with a web browser
 - `VariantCaller_Sample_snpEff.genes.txt`
-  - TXT (tab separated) summary counts for variants affecting each transcript and gene
+    - TXT (tab separated) summary counts for variants affecting each transcript and gene
 
 For further reading and documentation see the [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary)
 
@@ -720,7 +745,7 @@ For all samples:
 **Output directory: `results/Reports/[SAMPLE]/VEP`**
 
 - `VariantCaller_Sample_VEP.summary.html`
-  - Summary of the VEP run to be visualised with a web browser
+    - Summary of the VEP run to be visualised with a web browser
 
 For further reading and documentation see the [VEP manual](https://www.ensembl.org/info/docs/tools/vep/index.html)
 
@@ -733,25 +758,34 @@ Most of the pipeline QC results are visualised in the report and further statist
 
 The pipeline has special steps which also allow the software versions to be reported in the `MultiQC` output for future traceability.
 
-**Output files:**
+<details markdown="1">
+<summary>Output files</summary>
 
-- `multiqc/`  
-  - `multiqc_report.html`
-    - Standalone HTML file that can be viewed in your web browser
-  - `multiqc_data/`
-    - Directory containing parsed statistics from the different tools used in the pipeline
-  - `multiqc_plots/`
-    - Directory containing static images from the report in various formats
+- `multiqc/`
+    - `multiqc_report.html`
+        - Standalone HTML file that can be viewed in your web browser
+    - `multiqc_data/`
+        - Directory containing parsed statistics from the different tools used in the pipeline
+    - `multiqc_plots/`
+        - Directory containing static images from the report in various formats
 
 For more information about how to use `MultiQC` reports, see [https://multiqc.info](https://multiqc.info).
 
-## Pipeline information
+</details>
 
-[Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.
+[MultiQC](http://multiqc.info) is a visualization tool that generates a single HTML report summarising all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in the report data directory.
 
-**Output files:**
+Results generated by MultiQC collate pipeline QC from supported tools e.g. FastQC. The pipeline has special steps which also allow the software versions to be reported in the MultiQC output for future traceability. For more information about how to use MultiQC reports, see <http://multiqc.info>.
+
+### Pipeline information
+
+<details markdown="1">
+<summary>Output files</summary>
 
 - `pipeline_info/`
-  - Reports generated by Nextflow: `execution_report.html`, `execution_timeline.html`, `execution_trace.txt` and `pipeline_dag.dot`/`pipeline_dag.svg`.
-  - Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.csv`.
-  - Documentation for interpretation of results in HTML format: `results_description.html`.
+    - Reports generated by Nextflow: `execution_report.html`, `execution_timeline.html`, `execution_trace.txt` and `pipeline_dag.dot`/`pipeline_dag.svg`.
+    - Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.tsv`.
+
+</details>
+
+[Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.
