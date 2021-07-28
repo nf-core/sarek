@@ -23,9 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#266](https://github.com/nf-core/sarek/pull/266), [#285](https://github.com/nf-core/sarek/pull/285), [#297](https://github.com/nf-core/sarek/pull/297)  - Add modules and sub workflow for variant calling
 - [#333](https://github.com/nf-core/sarek/pull/333) - Bump `Sarek` version to `3.0dev`
 - [#334](https://github.com/nf-core/sarek/pull/334) - Sync `dsl2` and `dev` branches
-
-### Fixed
-
 - [#342](https://github.com/nf-core/sarek/pull/342) - Update `README.md`
 
 ### Deprecated
