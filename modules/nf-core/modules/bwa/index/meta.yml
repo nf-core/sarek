@@ -1,0 +1,31 @@
+name: bwa_index
+description: Create BWA index for reference genome
+keywords:
+    - index
+    - fasta
+    - genome
+    - reference
+tools:
+    - bwa:
+        description: |
+            BWA is a software package for mapping DNA sequences against
+            a large reference genome, such as the human genome.
+        homepage: http://bio-bwa.sourceforge.net/
+        documentation: http://www.htslib.org/doc/samtools.html
+        arxiv: arXiv:1303.3997
+input:
+    - fasta:
+        type: file
+        description: Input genome fasta file
+output:
+    - index:
+        type: file
+        description: BWA genome index files
+        pattern: "*.{amb,ann,bwt,pac,sa}"
+    - version:
+        type: file
+        description: File containing software version
+        pattern: "*.{version.txt}"
+authors:
+    - "@drpatelh"
+    - "@maxulysse"
