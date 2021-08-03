@@ -65,26 +65,34 @@ workflow BUILD_INDICES {
 
     result_dbsnp_tbi = Channel.empty()
     version_dbsnp_tbi = Channel.empty()
-    if (!(params.dbsnp_index) && params.dbsnp && ('mapping' in step || 'prepare_recalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools|| 'mutect2' in tools || 'tnscope' in tools))
-        (result_dbsnp_tbi, version_dbsnp_tbi) = TABIX_DBSNP([[id:"${dbsnp.baseName}"], dbsnp])
-    result_dbsnp_tbi = result_dbsnp_tbi.map {meta, tbi -> [tbi]}
+    if (!(params.dbsnp_tbi) && params.dbsnp && ('mapping' in step || 'prepare_recalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools|| 'mutect2' in tools || 'tnscope' in tools)) {
+        dbsnp_id = dbsnp.map {it -> [[id:"$it.baseName"], it]}
+        (result_dbsnp_tbi, version_dbsnp_tbi) = TABIX_DBSNP(dbsnp_id)
+        result_dbsnp_tbi = result_dbsnp_tbi.map {meta, tbi -> [tbi]}
+    }
 
     result_target_bed = Channel.empty()
     version_target_bed = Channel.empty()
-    if ((params.target_bed) && ('manta' in tools || 'strelka' in tools))
-        (result_target_bed, version_target_bed) = TABIX_BGZIPTABIX([[id:"${target_bed.fileName}"], target_bed])
+    if ((params.target_bed) && ('manta' in tools || 'strelka' in tools)) {
+        target_bed_id = target_bed.map {it -> [[id:"$it.baseName"], it]}
+        (result_target_bed, version_target_bed) = TABIX_BGZIPTABIX(target_bed_id)
         result_target_bed = result_target_bed.map {meta, bed, tbi -> [bed, tbi]}
+    }
 
     result_germline_resource_tbi = Channel.empty()
     version_germline_resource_tbi = Channel.empty()
-    if (!(params.germline_resource_index) && params.germline_resource && 'mutect2' in tools)
-        (result_germline_resource_tbi, version_germline_resource_tbi) = TABIX_GERMLINE_RESOURCE([[id:"${germline_resource.baseName}"], germline_resource])
+    if (!(params.germline_resource_tbi) && params.germline_resource && 'mutect2' in tools){
+        germline_resource_id = germline_resource.map {it -> [[id:"$it.baseName"], it]}
+        (result_germline_resource_tbi, version_germline_resource_tbi) = TABIX_GERMLINE_RESOURCE(germline_resource_id)
+    }
 
     result_known_indels_tbi = Channel.empty()
     version_known_indels_tbi = Channel.empty()
-    if (!(params.known_indels_index) && params.known_indels && ('mapping' in step || 'prepare_recalibration' in step))
-        (result_known_indels_tbi, version_known_indels_tbi) = TABIX_KNOWN_INDELS([[id:"${known_indels.baseName}"], known_indels])
-    result_known_indels_tbi = result_known_indels_tbi.map {meta, tbi -> [tbi]}
+    if (!(params.known_indels_tbi) && params.known_indels && ('mapping' in step || 'prepare_recalibration' in step)){
+        known_indels_id = known_indels.map {it -> [[id:"$it.baseName"], it]}
+        (result_known_indels_tbi, version_known_indels_tbi) = TABIX_KNOWN_INDELS(known_indels_id)
+        result_known_indels_tbi = result_known_indels_tbi.map {meta, tbi -> [tbi]}
+    }
 
     result_msisensorpro_scan = Channel.empty()
     version_msisensorpro_scan = Channel.empty()
@@ -93,8 +101,10 @@ workflow BUILD_INDICES {
 
     result_pon_tbi = Channel.empty()
     version_pon_tbi = Channel.empty()
-    if (!(params.pon_index) && params.pon && ('tnscope' in tools || 'mutect2' in tools))
-        (result_pon_tbi, version_pon_tbi) = TABIX_PON([[id:"${pon.fileName}"], pon])
+    if (!(params.pon_tbi) && params.pon && ('tnscope' in tools || 'mutect2' in tools)){
+        pon_id = pon.map {it -> [[id:"$it.baseName"], it]}
+        (result_pon_tbi, version_pon_tbi) = TABIX_PON(pon_id)
+    }
 
     result_intervals = Channel.empty()
     if (params.no_intervals) {

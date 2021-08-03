@@ -20,14 +20,18 @@ def checkPathParamList = [
     params.chr_dir,
     params.chr_length,
     params.dbsnp,
+    params.dbsnp_tbi,
     params.fasta,
     params.fasta_fai,
     params.germline_resource,
+    params.germline_resource_tbi,
     params.input,
     params.known_indels,
+    params.known_indels_tbi,
     params.mappability,
     params.multiqc_config,
     params.pon,
+    params.pon_tbi,
     params.snpeff_cache,
     params.target_bed,
     params.vep_cache
@@ -68,7 +72,7 @@ if (anno_readme && file(anno_readme).exists()) {
 }
 
 // Stage dummy file to be used as an optional input where required
-ch_dummy_file = file("$projectDir/assets/dummy_file.txt", checkIfExists: true)
+ch_dummy_file = Channel.fromPath("$projectDir/assets/dummy_file.txt", checkIfExists: true).collect()
 
 /*
 ========================================================================================
@@ -101,36 +105,40 @@ if (params.skip_markduplicates) {
 }
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-chr_dir           = params.chr_dir           ? file(params.chr_dir)           : ch_dummy_file
-chr_length        = params.chr_length        ? file(params.chr_length)        : ch_dummy_file
-dbsnp             = params.dbsnp             ? file(params.dbsnp)             : ch_dummy_file
-fasta             = params.fasta             ? file(params.fasta)             : ch_dummy_file
-fasta_fai         = params.fasta_fai         ? file(params.fasta_fai)         : ch_dummy_file
-germline_resource = params.germline_resource ? file(params.germline_resource) : ch_dummy_file
-known_indels      = params.known_indels      ? file(params.known_indels)      : ch_dummy_file
-loci              = params.ac_loci           ? file(params.ac_loci)           : ch_dummy_file
-loci_gc           = params.ac_loci_gc        ? file(params.ac_loci_gc)        : ch_dummy_file
-mappability       = params.mappability       ? file(params.mappability)       : ch_dummy_file
+chr_dir               = params.chr_dir               ? Channel.fromPath(params.chr_dir).collect()               : ch_dummy_file
+chr_length            = params.chr_length            ? Channel.fromPath(params.chr_length).collect()            : ch_dummy_file
+dbsnp                 = params.dbsnp                 ? Channel.fromPath(params.dbsnp).collect()                 : ch_dummy_file
+dbsnp_tbi             = params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : ch_dummy_file
+fasta                 = params.fasta                 ? Channel.fromPath(params.fasta).collect()                 : ch_dummy_file
+fasta_fai             = params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : ch_dummy_file
+germline_resource     = params.germline_resource     ? Channel.fromPath(params.germline_resource).collect()     : ch_dummy_file
+germline_resource_tbi = params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : ch_dummy_file
+known_indels          = params.known_indels          ? Channel.fromPath(params.known_indels).collect()          : ch_dummy_file
+known_indels_tbi      = params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : ch_dummy_file
+loci                  = params.ac_loci               ? Channel.fromPath(params.ac_loci).collect()               : ch_dummy_file
+loci_gc               = params.ac_loci_gc            ? Channel.fromPath(params.ac_loci_gc).collect()            : ch_dummy_file
+mappability           = params.mappability           ? Channel.fromPath(params.mappability).collect()           : ch_dummy_file
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
-snpeff_db         = params.snpeff_db         ?: Channel.empty()
-vep_cache_version = params.vep_cache_version ?: Channel.empty()
-vep_genome        = params.vep_genome        ?: Channel.empty()
-vep_species       = params.vep_species       ?: Channel.empty()
+snpeff_db             = params.snpeff_db             ?: Channel.empty()
+vep_cache_version     = params.vep_cache_version     ?: Channel.empty()
+vep_genome            = params.vep_genome            ?: Channel.empty()
+vep_species           = params.vep_species           ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
-cadd_indels       = params.cadd_indels       ? file(params.cadd_indels)      : ch_dummy_file
-cadd_indels_tbi   = params.cadd_indels_tbi   ? file(params.cadd_indels_tbi)  : ch_dummy_file
-cadd_wg_snvs      = params.cadd_wg_snvs      ? file(params.cadd_wg_snvs)     : ch_dummy_file
-cadd_wg_snvs_tbi  = params.cadd_wg_snvs_tbi  ? file(params.cadd_wg_snvs_tbi) : ch_dummy_file
-pon               = params.pon               ? file(params.pon)              : ch_dummy_file
-snpeff_cache      = params.snpeff_cache      ? file(params.snpeff_cache)     : ch_dummy_file
-target_bed        = params.target_bed        ? file(params.target_bed)       : ch_dummy_file
-vep_cache         = params.vep_cache         ? file(params.vep_cache)        : ch_dummy_file
+cadd_indels           = params.cadd_indels           ? Channel.fromPath(params.cadd_indels).collect()           : ch_dummy_file
+cadd_indels_tbi       = params.cadd_indels_tbi       ? Channel.fromPath(params.cadd_indels_tbi).collect()       : ch_dummy_file
+cadd_wg_snvs          = params.cadd_wg_snvs          ? Channel.fromPath(params.cadd_wg_snvs).collect()          : ch_dummy_file
+cadd_wg_snvs_tbi      = params.cadd_wg_snvs_tbi      ? Channel.fromPath(params.cadd_wg_snvs_tbi).collect()      : ch_dummy_file
+pon                   = params.pon                   ? Channel.fromPath(params.pon).collect()                   : ch_dummy_file
+pon_tbi               = params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : ch_dummy_file
+snpeff_cache          = params.snpeff_cache          ? Channel.fromPath(params.snpeff_cache).collect()          : ch_dummy_file
+target_bed            = params.target_bed            ? Channel.fromPath(params.target_bed).collect()            : ch_dummy_file
+vep_cache             = params.vep_cache             ? Channel.fromPath(params.vep_cache).collect()             : ch_dummy_file
 
 // Initialize value channels based on params, not defined within the params.genomes[params.genome] scope
-read_structure1   = params.read_structure1   ?: Channel.empty()
-read_structure2   = params.read_structure2   ?: Channel.empty()
+read_structure1       = params.read_structure1       ?: Channel.empty()
+read_structure2       = params.read_structure2       ?: Channel.empty()
 
 /*
 ========================================================================================
@@ -139,51 +147,50 @@ read_structure2   = params.read_structure2   ?: Channel.empty()
 */
 
 include { BUILD_INDICES } from '../subworkflows/local/build_indices' addParams(
-    bgziptabix_target_bed_options:   modules['bgziptabix_target_bed'],
-    build_intervals_options:         modules['build_intervals'],
-    bwa_index_options:               modules['bwa_index'],
-    bwamem2_index_options:           modules['bwamem2_index'],
-    create_intervals_bed_options:    modules['create_intervals_bed'],
-    gatk4_dict_options:              modules['dict'],
-    msisensorpro_scan_options:       modules['msisensorpro_scan'],
-    samtools_faidx_options:          modules['samtools_faidx'],
-    tabix_dbsnp_options:             modules['tabix_dbsnp'],
-    tabix_germline_resource_options: modules['tabix_germline_resource'],
-    tabix_known_indels_options:      modules['tabix_known_indels'],
-    tabix_pon_options:               modules['tabix_pon']
+    bgziptabix_target_bed_options:     modules['bgziptabix_target_bed'],
+    build_intervals_options:           modules['build_intervals'],
+    bwa_index_options:                 modules['bwa_index'],
+    bwamem2_index_options:             modules['bwamem2_index'],
+    create_intervals_bed_options:      modules['create_intervals_bed'],
+    gatk4_dict_options:                modules['dict'],
+    msisensorpro_scan_options:         modules['msisensorpro_scan'],
+    samtools_faidx_options:            modules['samtools_faidx'],
+    tabix_dbsnp_options:               modules['tabix_dbsnp'],
+    tabix_germline_resource_options:   modules['tabix_germline_resource'],
+    tabix_known_indels_options:        modules['tabix_known_indels'],
+    tabix_pon_options:                 modules['tabix_pon']
 )
 include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
-    seqkit_split2_options:           modules['seqkit_split2'],
-    bwamem1_mem_options:             modules['bwa_mem1_mem'],
-    bwamem1_mem_tumor_options:       modules['bwa_mem1_mem_tumor'],
-    bwamem2_mem_options:             modules['bwa_mem2_mem'],
-    bwamem2_mem_tumor_options:       modules['bwa_mem2_mem_tumor'],
+    bwamem1_mem_options:               modules['bwa_mem1_mem'],
+    bwamem1_mem_tumor_options:         modules['bwa_mem1_mem_tumor'],
+    bwamem2_mem_options:               modules['bwa_mem2_mem'],
+    bwamem2_mem_tumor_options:         modules['bwa_mem2_mem_tumor'],
+    seqkit_split2_options:             modules['seqkit_split2']
 )
 
 include { QC_MARKDUPLICATES } from '../subworkflows/nf-core/qc_markduplicates' addParams(
-    markduplicates_options:             modules['markduplicates'],
-    markduplicatesspark_options:        modules['markduplicatesspark'],
-    estimatelibrarycomplexity_options:  modules['estimatelibrarycomplexity'],
-    merge_bam_options:                  modules['merge_bam_mapping'],
-    qualimap_bamqc_options:             modules['qualimap_bamqc_mapping'],
-    samtools_stats_options:             modules['samtools_stats_mapping'],
-    samtools_view_options:              modules['samtools_view'],
-    samtools_index_options:             modules['samtools_index_cram']
+    estimatelibrarycomplexity_options: modules['estimatelibrarycomplexity'],
+    markduplicates_options:            modules['markduplicates'],
+    markduplicatesspark_options:       modules['markduplicatesspark'],
+    merge_bam_options:                 modules['merge_bam_mapping'],
+    qualimap_bamqc_options:            modules['qualimap_bamqc_mapping'],
+    samtools_index_options:            modules['samtools_index_cram'],
+    samtools_stats_options:            modules['samtools_stats_mapping'],
+    samtools_view_options:             modules['samtools_view']
 )
-
 
 include { PREPARE_RECALIBRATION } from '../subworkflows/nf-core/prepare_recalibration' addParams(
-    baserecalibrator_options:        modules['baserecalibrator'],
-    baserecalibrator_spark_options:  modules['baserecalibrator_spark'],
-    gatherbqsrreports_options:       modules['gatherbqsrreports']
+    baserecalibrator_options:          modules['baserecalibrator'],
+    baserecalibrator_spark_options:    modules['baserecalibrator_spark'],
+    gatherbqsrreports_options:         modules['gatherbqsrreports']
 )
 include { RECALIBRATE } from '../subworkflows/nf-core/recalibrate' addParams(
-    applybqsr_options:               modules['applybqsr'],
-    applybqsr_spark_options:         modules['applybqsr_spark'],
-    merge_cram_options:              modules['merge_cram_recalibrate'],
-    qualimap_bamqc_options:          modules['qualimap_bamqc_recalibrate'],
-    samtools_index_options:          modules['samtools_index_recalibrate'],
-    samtools_stats_options:          modules['samtools_stats_recalibrate']
+    applybqsr_options:                 modules['applybqsr'],
+    applybqsr_spark_options:           modules['applybqsr_spark'],
+    merge_cram_options:                modules['merge_cram_recalibrate'],
+    qualimap_bamqc_options:            modules['qualimap_bamqc_recalibrate'],
+    samtools_index_options:            modules['samtools_index_recalibrate'],
+    samtools_stats_options:            modules['samtools_stats_recalibrate']
 )
 include { MAPPING_CSV } from '../subworkflows/local/mapping_csv'
 include { MARKDUPLICATES_CSV } from '../subworkflows/local/markduplicates_csv'
@@ -273,17 +280,13 @@ workflow SAREK {
     dict = params.dict      ? file(params.dict)      : BUILD_INDICES.out.dict
     fai  = params.fasta_fai ? file(params.fasta_fai) : BUILD_INDICES.out.fai
 
-    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_index             ? Channel.fromPath(params.dbsnp_index)         : BUILD_INDICES.out.dbsnp_tbi                  : []
-    germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? Channel.from(params.germline_resource_index) : BUILD_INDICES.out.germline_resource_tbi      : []
-    known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? Channel.fromPath(params.known_indels_index)  : BUILD_INDICES.out.known_indels_tbi.collect() : []
-    pon_tbi               = params.pon               ? params.pon_index               ? Channel.from(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : []
-
-    dbsnp_ch = Channel.from(dbsnp)
-    dbsnp_tbi_ch = Channel.from(dbsnp_tbi)
-    known_indels_ch = Channel.from(known_indels)
+    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi)             : BUILD_INDICES.out.dbsnp_tbi                  : []
+    germline_resource_tbi = params.germline_resource ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi) : BUILD_INDICES.out.germline_resource_tbi      : []
+    known_indels_tbi      = params.known_indels      ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi)      : BUILD_INDICES.out.known_indels_tbi.collect() : []
+    pon_tbi               = params.pon               ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi)               : BUILD_INDICES.out.pon_tbi                    : []
 
     //TODO @Rike, is this working for you?
-    known_sites     = dbsnp ? [dbsnp, known_indels] : known_indels ? known_indels : []
+    known_sites     = dbsnp     ? dbsnp.concat(known_indels).collect()         : ch_dummy_file
     known_sites_tbi = dbsnp_tbi ? dbsnp_tbi.concat(known_indels_tbi).collect() : ch_dummy_file
 
     msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan

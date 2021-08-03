@@ -73,7 +73,7 @@
                     "fa_icon": "fas fa-clock",
                     "description": "Estimate interval size.",
                     "help_text": "Intervals are part of the genome chopped up, used to speed up preprocessing and variant calling",
-                    "default": 1000
+                    "default": 1000.0
                 },
                 "sentieon": {
                     "type": "boolean",
@@ -278,7 +278,7 @@
                     "description": "Panel-of-normals VCF (bgzipped) for GATK Mutect2 / Sentieon TNscope",
                     "help_text": "Without PON, there will be no calls with PASS in the INFO field, only an unfiltered VCF is written.\nIt is recommended to make your own PON, as it depends on sequencer and library preparation.\nFor tests in iGenomes there is a dummy PON file in the Annotation/GermlineResource directory, but it should not be used as a real PON file.\n\nSee [PON documentation](https://gatk.broadinstitute.org/hc/en-us/articles/360042479112-CreateSomaticPanelOfNormals-BETA)\n> **NB** PON file should be bgzipped."
                 },
-                "pon_index": {
+                "pon_tbi": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
                     "description": "Index of PON panel-of-normals VCF",
@@ -427,7 +427,7 @@
                     "fa_icon": "fas fa-file",
                     "description": "Path to dbsnp file."
                 },
-                "dbsnp_index": {
+                "dbsnp_tbi": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
                     "description": "Path to dbsnp index.",
@@ -460,7 +460,7 @@
                     "description": "Path to GATK Mutect2 Germline Resource File",
                     "help_text": "The germline resource VCF file (bgzipped and tabixed) needed by GATK4 Mutect2 is a collection of calls that are likely present in the sample, with allele frequencies.\nThe AF info field must be present.\nYou can find a smaller, stripped gnomAD VCF file (most of the annotation is removed and only calls signed by PASS are stored) in the AWS iGenomes Annotation/GermlineResource folder."
                 },
-                "germline_resource_index": {
+                "germline_resource_tbi": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
                     "description": "Path to GATK Mutect2 Germline Resource Index",
@@ -477,7 +477,7 @@
                     "fa_icon": "fas fa-copy",
                     "description": "Path to known indels file"
                 },
-                "known_indels_index": {
+                "known_indels_tbi": {
                     "type": "string",
                     "fa_icon": "fas fa-copy",
                     "description": "Path to known indels file index",
