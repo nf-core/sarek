@@ -4,11 +4,13 @@
 ========================================================================================
 */
 
-params.seqkit_split2_options     = [:]
 params.bwamem1_mem_options       = [:]
 params.bwamem1_mem_tumor_options = [:]
 params.bwamem2_mem_options       = [:]
 params.bwamem2_mem_tumor_options = [:]
+params.merge_bam_options         = [:]
+params.samtools_index_options    = [:]
+params.seqkit_split2_options     = [:]
 
 include { BWAMEM2_MEM as BWAMEM2_MEM_T } from '../../modules/local/bwamem2/mem/main'                addParams(options: params.bwamem2_mem_tumor_options)
 include { BWAMEM2_MEM }                  from '../../modules/local/bwamem2/mem/main'                addParams(options: params.bwamem2_mem_options)
