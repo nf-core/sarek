@@ -273,9 +273,9 @@ workflow SAREK {
     dict = params.dict      ? file(params.dict)      : BUILD_INDICES.out.dict
     fai  = params.fasta_fai ? file(params.fasta_fai) : BUILD_INDICES.out.fai
 
-    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_index             ? Channel.fromPath(params.dbsnp_index)             : BUILD_INDICES.out.dbsnp_tbi                  : []
+    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_index             ? Channel.fromPath(params.dbsnp_index)         : BUILD_INDICES.out.dbsnp_tbi                  : []
     germline_resource_tbi = params.germline_resource ? params.germline_resource_index ? Channel.from(params.germline_resource_index) : BUILD_INDICES.out.germline_resource_tbi      : []
-    known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? Channel.fromPath(params.known_indels_index)      : BUILD_INDICES.out.known_indels_tbi.collect() : []
+    known_indels_tbi      = params.known_indels      ? params.known_indels_index      ? Channel.fromPath(params.known_indels_index)  : BUILD_INDICES.out.known_indels_tbi.collect() : []
     pon_tbi               = params.pon               ? params.pon_index               ? Channel.from(params.pon_index)               : BUILD_INDICES.out.pon_tbi                    : []
 
     dbsnp_ch = Channel.from(dbsnp)
