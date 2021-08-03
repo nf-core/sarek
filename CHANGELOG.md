@@ -9,6 +9,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+- [#234](https://github.com/nf-core/sarek/pull/234) - Switching to DSL2
+- [#234](https://github.com/nf-core/sarek/pull/234), [#238](https://github.com/nf-core/sarek/pull/238) - Add modules and sub workflow for building indices
+- [#234](https://github.com/nf-core/sarek/pull/234), [#252](https://github.com/nf-core/sarek/pull/252), [#256](https://github.com/nf-core/sarek/pull/256), [#283](https://github.com/nf-core/sarek/pull/283), [#334](https://github.com/nf-core/sarek/pull/334) - Update Nextflow `19.10.0` -> `20.11.0-edge`
+- [#239](https://github.com/nf-core/sarek/pull/239) - Restore Sarek ascii art to header
+- [#241](https://github.com/nf-core/sarek/pull/241), [#248](https://github.com/nf-core/sarek/pull/248), [#250](https://github.com/nf-core/sarek/pull/250), [#257](https://github.com/nf-core/sarek/pull/257), [#259](https://github.com/nf-core/sarek/pull/259) - Add modules and sub workflow for preprocessing
+- [#242](https://github.com/nf-core/sarek/pull/242), [#244](https://github.com/nf-core/sarek/pull/244), [#245](https://github.com/nf-core/sarek/pull/245), [#246](https://github.com/nf-core/sarek/pull/246), [#247](https://github.com/nf-core/sarek/pull/247), [#249](https://github.com/nf-core/sarek/pull/249), [#252](https://github.com/nf-core/sarek/pull/252), [#256](https://github.com/nf-core/sarek/pull/256), [#263](https://github.com/nf-core/sarek/pull/263), [#264](https://github.com/nf-core/sarek/pull/264), [#283](https://github.com/nf-core/sarek/pull/283), [#285](https://github.com/nf-core/sarek/pull/285), [#338](https://github.com/nf-core/sarek/pull/338) - Refactor `dsl2` branch
+- [#257](https://github.com/nf-core/sarek/pull/257) - Use a params modules config file
+- [#266](https://github.com/nf-core/sarek/pull/266), [#285](https://github.com/nf-core/sarek/pull/285), [#297](https://github.com/nf-core/sarek/pull/297)  - Add modules and sub workflow for variant calling
+- [#333](https://github.com/nf-core/sarek/pull/333) - Bump `Sarek` version to `3.0dev`
+- [#334](https://github.com/nf-core/sarek/pull/334) - Sync `dsl2` and `dev` branches
+- [#342](https://github.com/nf-core/sarek/pull/342) - Update `README.md`
+
+### Deprecated
+
+### Removed
+
+## [2.7.1](https://github.com/nf-core/sarek/releases/tag/2.7.1) - Pårtejekna
+
+Pårtejekna is one of glaciers of the Pårte Massif.
+
+### Added
+
 - [#353](https://github.com/nf-core/sarek/pull/353) - Add support for task retries with exit code 247 (exhibited by `Picard MarkDuplicates`)
 - [#354](https://github.com/nf-core/sarek/pull/354) - Add tumor only mode for `Mutect2` and `MSIsensor`
 - [#356](https://github.com/nf-core/sarek/pull/356) - Add `--cf_contamination_adjustment` params to adjust contamination with `Control-FREEC`
@@ -23,7 +49,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [#375](https://github.com/nf-core/sarek/pull/375), [#381](https://github.com/nf-core/sarek/pull/381), [#382](https://github.com/nf-core/sarek/pull/382), [#385](https://github.com/nf-core/sarek/pull/385) - Fix bugs due to `TEMPLATE` sync from [#373](https://github.com/nf-core/sarek/pull/373)
-- [#378](https://github.com/nf-core/sarek/pull/378) - Fix `Spark` related issue due to `Docker` settings in `nextflow.config`
 - [#378](https://github.com/nf-core/sarek/pull/378) - Fix `Spark` related issue due to `Docker` settings in `nextflow.config`
 
 ### Deprecated
