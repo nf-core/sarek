@@ -335,7 +335,7 @@ workflow SAREK {
     }
 
     if (step == 'preparerecalibration') {
-        bam_mapped = Channel.empty
+        bam_mapped = Channel.empty()
         if (params.skip_markduplicates) {
             bam_indexed = input_sample
         } else cram_markduplicates = input_sample
