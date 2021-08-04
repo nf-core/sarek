@@ -312,6 +312,9 @@ workflow SAREK {
         qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]))
         qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
 
+        ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.fastqc_version.ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.trimgalore_version.ifEmpty(null))
+
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         MAPPING(
             params.aligner,
@@ -470,8 +473,6 @@ workflow SAREK {
                 vep_cache)
         }
     }
-
-    if (step == 'mapping') ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.fastqc_version.first().ifEmpty(null))
 
     ch_software_versions
         .map { it -> if (it) [ it.baseName, it ] }

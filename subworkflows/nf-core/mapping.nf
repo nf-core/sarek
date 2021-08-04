@@ -34,58 +34,72 @@ workflow MAPPING {
     bam_indexed = Channel.empty()
 
     if (params.split_fastq > 1) {
-        reads_input_split = SEQKIT_SPLIT2(reads_input).reads.map{
-                key, reads ->
-                    //TODO maybe this can be replaced by a regex to include part_001 etc.
+        reads_input_split = SEQKIT_SPLIT2(reads_input).reads.map{ key, reads ->
+            //TODO maybe this can be replaced by a regex to include part_001 etc.
 
-                    //sorts list of split fq files by :
-                    //[R1.part_001, R2.part_001, R1.part_002, R2.part_002,R1.part_003, R2.part_003,...]
-                    //TODO: determine whether it is possible to have an uneven number of parts, so remainder: true woud need to be used, I guess this could be possible for unfiltered reads, reads that don't have pairs etc.
-                    return [key, reads.sort{ a,b -> a.getName().tokenize('.')[ a.getName().tokenize('.').size() - 3] <=> b.getName().tokenize('.')[ b.getName().tokenize('.').size() - 3]}.collate(2)]
-            }.transpose()
-    } else {
-        reads_input_split = reads_input
-    }
+            //sorts list of split fq files by :
+            //[R1.part_001, R2.part_001, R1.part_002, R2.part_002,R1.part_003, R2.part_003,...]
+            //TODO: determine whether it is possible to have an uneven number of parts, so remainder: true woud need to be used, I guess this could be possible for unfiltered reads, reads that don't have pairs etc.
+            [key, reads.sort{ a,b -> a.getName().tokenize('.')[ a.getName().tokenize('.').size() - 3] <=> b.getName().tokenize('.')[ b.getName().tokenize('.').size() - 3]}.collate(2)]
+        }.transpose()
+    } else reads_input_split = reads_input
 
     // If meta.status is 1, then sample is tumor
     // else, (even is no meta.status exist) sample is normal
     reads_input_split.branch{
-            tumor:  it[0].status == 1
-            normal: true
-        }.set{ reads_input_status }
+        tumor:  it[0].status == 1
+        normal: true
+    }.set{ reads_input_status }
 
-    bam_bwamem1 = Channel.empty()
-    bam_bwamem2 = Channel.empty()
+    bam_bwamem      = Channel.empty()
+    bam_bwamem1     = Channel.empty()
+    bam_bwamem2     = Channel.empty()
+    tool_versions   = Channel.empty()
 
     if (aligner == "bwa-mem") {
         BWAMEM1_MEM(reads_input_status.normal, bwa)
-        bam_bwamem1_n = BWAMEM1_MEM.out.bam
-
         BWAMEM1_MEM_T(reads_input_status.tumor, bwa)
-        bam_bwamem1_t = BWAMEM1_MEM_T.out.bam
 
-        bam_bwamem1 = bam_bwamem1_n.mix(bam_bwamem1_t)
+        bam_bwamem1_n = BWAMEM1_MEM.out.bam
+        bam_bwamem1_t = BWAMEM1_MEM_T.out.bam
+        bam_bwamem1   = bam_bwamem1_n.mix(bam_bwamem1_t)
+
+        bwamem1_n_version = BWAMEM1_MEM.out.version
+        bwamem1_t_version = BWAMEM1_MEM_T.out.version
+
+        bwamem1_version = bwamem1_n_version.mix(bwamem1_t_version).first()
+
+        tool_versions = tool_versions.mix(bwamem1_version)
     } else {
         BWAMEM2_MEM(reads_input_status.normal, bwa)
-        bam_bwamem2_n = BWAMEM2_MEM.out.bam
-
         BWAMEM2_MEM_T(reads_input_status.tumor, bwa)
+
+        bam_bwamem2_n = BWAMEM2_MEM.out.bam
         bam_bwamem2_t = BWAMEM2_MEM_T.out.bam
+        bam_bwamem2   = bam_bwamem2_n.mix(bam_bwamem2_t)
 
-        bam_bwamem2 = bam_bwamem2_n.mix(bam_bwamem2_t)
+        bwamem2_n_version = BWAMEM2_MEM.out.version
+        bwamem2_t_version = BWAMEM2_MEM_T.out.version
+
+        bwamem2_version = bwamem2_n_version.mix(bwamem2_t_version).first()
+        tool_versions = tool_versions.mix(bwamem1_version)
     }
-    bam_bwa = bam_bwamem1.mix(bam_bwamem2)
 
-    bam_bwa.map{ meta, bam ->
-        meta.remove('read_group')
-        meta.id = meta.sample
+    bam_bwamem = bam_bwamem.mix(bam_bwamem1)
+    bam_bwamem = bam_bwamem.mix(bam_bwamem2)
+
+    bam_bwamem.map{ meta, bam ->
+        new_meta = meta.clone()
+        new_meta.remove('read_group')
+        new_meta.id = meta.sample
+
         // groupKey is to makes sure that the correct group can advance as soon as it is complete
         // and not stall the workflow until all pieces are mapped
         def groupKey = groupKey(meta, meta.numLanes * params.split_fastq)
         tuple(groupKey, bam)
-        [meta, bam]
-    }.groupTuple()
-    .set{bam_mapped}
+
+        [new_meta, bam]
+    }.groupTuple().set{ bam_mapped }
 
     // MarkDuplicates can handle multiple BAMS as input, so no merging/indexing at this step
     // Except if and only if skipping MarkDuplicates
@@ -106,4 +120,5 @@ workflow MAPPING {
     emit:
         bam         = bam_mapped
         bam_indexed = bam_indexed
+        versions    = tool_versions
 }
