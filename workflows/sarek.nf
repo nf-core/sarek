@@ -62,7 +62,7 @@ else {
 
 input_sample = extract_csv(csv_file)
 
-save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? true : false
+def save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? true : false
 
 // Save AWS IGenomes file containing annotation version
 def anno_readme = params.genomes[ params.genome ]?.readme
@@ -141,7 +141,7 @@ read_structure2       = params.read_structure2       ?: Channel.empty()
 
 /*
 ========================================================================================
-    INCLUDE LOCAL SUBWORKFLOWS
+    INCLUDE SUBWORKFLOWS
 ========================================================================================
 */
 
@@ -159,6 +159,7 @@ include { BUILD_INDICES } from '../subworkflows/local/build_indices' addParams(
     tabix_known_indels_options:        modules['tabix_known_indels'],
     tabix_pon_options:                 modules['tabix_pon']
 )
+
 include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
     bwamem1_mem_options:               modules['bwa_mem1_mem'],
     bwamem1_mem_tumor_options:         modules['bwa_mem1_mem_tumor'],
@@ -197,11 +198,11 @@ include { PREPARE_RECALIBRATION_CSV } from '../subworkflows/local/prepare_recali
 include { RECALIBRATE_CSV } from '../subworkflows/local/recalibrate_csv'
 
 include { GERMLINE_VARIANT_CALLING } from '../subworkflows/local/germline_variant_calling' addParams(
-    concat_gvcf_options:             modules['concat_gvcf'],
-    concat_haplotypecaller_options:  modules['concat_haplotypecaller'],
-    genotypegvcf_options:            modules['genotypegvcf'],
-    haplotypecaller_options:         modules['haplotypecaller'],
-    strelka_options:                 modules['strelka_germline']
+    concat_gvcf_options:               modules['concat_gvcf'],
+    concat_haplotypecaller_options:    modules['concat_haplotypecaller'],
+    genotypegvcf_options:              modules['genotypegvcf'],
+    haplotypecaller_options:           modules['haplotypecaller'],
+    strelka_options:                   modules['strelka_germline']
 )
 // // include { TUMOR_VARIANT_CALLING } from '../subworkflows/local/tumor_variant_calling' addParams(
 // // )
@@ -214,15 +215,20 @@ include { GERMLINE_VARIANT_CALLING } from '../subworkflows/local/germline_varian
 // )
 
 include { ANNOTATE } from '../subworkflows/local/annotate' addParams(
-    annotation_cache:               params.annotation_cache,
-    bgziptabix_merge_vep_options:   modules['bgziptabix_merge_vep'],
-    bgziptabix_snpeff_options:      modules['bgziptabix_snpeff'],
-    bgziptabix_vep_options:         modules['bgziptabix_vep'],
-    merge_vep_options:              modules['merge_vep'],
-    snpeff_options:                 modules['snpeff'],
-    snpeff_tag:                     "${modules['snpeff'].tag_base}.${params.genome}",
-    vep_options:                    modules['ensemblvep'],
-    vep_tag:                        "${modules['ensemblvep'].tag_base}.${params.genome}"
+    annotation_cache:                  params.annotation_cache,
+    bgziptabix_merge_vep_options:      modules['bgziptabix_merge_vep'],
+    bgziptabix_snpeff_options:         modules['bgziptabix_snpeff'],
+    bgziptabix_vep_options:            modules['bgziptabix_vep'],
+    merge_vep_options:                 modules['merge_vep'],
+    snpeff_options:                    modules['snpeff'],
+    snpeff_tag:                        "${modules['snpeff'].tag_base}.${params.genome}",
+    vep_options:                       modules['ensemblvep'],
+    vep_tag:                           "${modules['ensemblvep'].tag_base}.${params.genome}"
+)
+
+include { FASTQC_TRIMGALORE } from '../subworkflows/nf-core/fastqc_trimgalore' addParams(
+    fastqc_options:                  modules['fastqc'],
+    trimgalore_options:              modules['trimgalore']
 )
 
 /*
@@ -231,24 +237,12 @@ include { ANNOTATE } from '../subworkflows/local/annotate' addParams(
 ========================================================================================
 */
 
-ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
+ch_multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
-def multiqc_options   = modules['multiqc']
-multiqc_options.args += params.multiqc_title ? Utils.joinModuleArgs(["--title \"$params.multiqc_title\""]) : ''
-include { MULTIQC } from '../modules/nf-core/modules/multiqc/main' addParams( options: multiqc_options   )
-include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions' addParams( options: [publish_files : ['tsv':'']] )
-
-/*
-========================================================================================
-    INCLUDE NF-CORE SUBWORKFLOWS
-========================================================================================
-*/
-
-include { FASTQC_TRIMGALORE } from '../subworkflows/nf-core/fastqc_trimgalore' addParams(
-    fastqc_options:                  modules['fastqc'],
-    trimgalore_options:              modules['trimgalore']
-)
+modules['multiqc'].args += params.multiqc_title ? Utils.joinModuleArgs(["--title \"$params.multiqc_title\""]) : ''
+include { MULTIQC }               from '../modules/nf-core/modules/multiqc/main' addParams( options: modules['multiqc']   )
+include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions'  addParams( options: [publish_files : ['tsv':'']] )
 
 def multiqc_report = []
 
@@ -271,9 +265,7 @@ workflow SAREK {
     intervals = BUILD_INDICES.out.intervals
 
     num_intervals = 0
-    intervals.count().map{
-        num_intervals = it
-    }
+    intervals.count().map{ num_intervals = it }
 
     bwa  = params.bwa       ? file(params.bwa)       : BUILD_INDICES.out.bwa
     dict = params.dict      ? file(params.dict)      : BUILD_INDICES.out.dict
@@ -285,8 +277,8 @@ workflow SAREK {
     pon_tbi               = params.pon               ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi)               : BUILD_INDICES.out.pon_tbi                    : []
 
     //TODO @Rike, is this working for you?
-    known_sites     = dbsnp     ? dbsnp.concat(known_indels).collect()         : ch_dummy_file
-    known_sites_tbi = dbsnp_tbi ? dbsnp_tbi.concat(known_indels_tbi).collect() : ch_dummy_file
+    known_sites     = dbsnp.concat(known_indels).collect()
+    known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
 
     msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
@@ -490,7 +482,7 @@ workflow SAREK {
     ch_workflow_summary = Channel.value(workflow_summary)
 
     ch_multiqc_files = Channel.empty()
-    ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
+    ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_config)
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
