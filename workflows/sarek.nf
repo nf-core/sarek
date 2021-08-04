@@ -257,11 +257,6 @@ workflow SAREK {
         tools,
         step)
 
-    intervals = BUILD_INDICES.out.intervals
-
-    num_intervals = 0
-    intervals.count().map{ num_intervals = it }
-
     bwa                   = params.fasta             ? params.bwa                   ? Channel.fromPath(params.bwa).collect()                   : BUILD_INDICES.out.bwa                   : ch_dummy_file
     dict                  = params.fasta             ? params.dict                  ? Channel.fromPath(params.dict).collect()                  : BUILD_INDICES.out.dict                  : ch_dummy_file
     fai                   = params.fasta             ? params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : BUILD_INDICES.out.fai                   : ch_dummy_file
@@ -274,8 +269,22 @@ workflow SAREK {
     known_sites     = dbsnp.concat(known_indels).collect()
     known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
 
+    intervals     = BUILD_INDICES.out.intervals
+    num_intervals = 0
+    intervals.count().map{ num_intervals = it }
+
     msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
+
+    bwa_version                   = BUILD_INDICES.out.bwa_version
+    dbsnp_tbi_version             = BUILD_INDICES.out.dbsnp_tbi_version
+    dict_version                  = BUILD_INDICES.out.dict_version
+    fai_version                   = BUILD_INDICES.out.fai_version
+    germline_resource_tbi_version = BUILD_INDICES.out.germline_resource_tbi_version
+    known_indels_tbi_version      = BUILD_INDICES.out.known_indels_tbi_version
+    msisensorpro_scan_version     = BUILD_INDICES.out.msisensorpro_scan_version
+    pon_tbi_version               = BUILD_INDICES.out.pon_tbi_version
+    target_bed_version            = BUILD_INDICES.out.target_bed_version
 
     // PREPROCESSING
 
@@ -321,10 +330,8 @@ workflow SAREK {
     }
 
     if (step == 'preparerecalibration') {
-        bam_mapped = Channel.empty()
-        if (params.skip_markduplicates) {
-            bam_indexed = input_sample
-        } else cram_markduplicates = input_sample
+        if (params.skip_markduplicates) bam_indexed         = input_sample
+        else                            cram_markduplicates = input_sample
     }
 
     if (step in ['mapping', 'preparerecalibration']) {
@@ -333,10 +340,12 @@ workflow SAREK {
             bam_indexed,
             ('markduplicates' in params.use_gatk_spark),
             !('markduplicates' in params.skip_qc),
-            fasta, fai, dict,
+            fasta,
+            fai,
+            dict,
             params.skip_markduplicates,
-            'bamqc' in params.skip_qc,
-            'samtools' in params.skip_qc,
+            ('bamqc' in params.skip_qc),
+            ('samtools' in params.skip_qc),
             target_bed)
 
         cram_markduplicates = QC_MARKDUPLICATES.out.cram
