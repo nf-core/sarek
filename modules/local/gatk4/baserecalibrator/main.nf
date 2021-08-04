@@ -23,8 +23,8 @@ process GATK4_BASERECALIBRATOR {
     path fasta
     path fai
     path dict
-    path knownSitesTBI
     path knownSites
+    path knownSites_tbi
 
     output:
     tuple val(meta), path("*.table"), emit: table

@@ -6,13 +6,13 @@
 
 workflow MAPPING_CSV {
     take:
-        bam_mapped          // channel: [mandatory] meta, bam, bai
+        bam_indexed         // channel: [mandatory] meta, bam, bai
         save_bam_mapped     // boolean: [mandatory] save_bam_mapped
         skip_markduplicates // boolean: [mandatory] skip_markduplicates
 
     main:
         if (save_bam_mapped) {
-            csv_bam_mapped = bam_mapped.map { meta, bam, bai -> [meta] }
+            csv_bam_mapped = bam_indexed.map { meta, bam, bai -> [meta] }
             // Creating csv files to restart from this step
             csv_bam_mapped.collectFile(storeDir: "${params.outdir}/preprocessing/csv") { meta ->
                 patient = meta.patient[0]
@@ -26,7 +26,7 @@ workflow MAPPING_CSV {
         }
 
         if (skip_markduplicates) {
-            csv_bam_mapped = bam_mapped.map { meta, bam, bai -> [meta] }
+            csv_bam_mapped = bam_indexed.map { meta, bam, bai -> [meta] }
             // Creating csv files to restart from this step
             csv_bam_mapped.collectFile(storeDir: "${params.outdir}/preprocessing/csv") { meta ->
                 patient = meta.patient[0]

@@ -52,10 +52,10 @@ else {
     switch (step) {
         case 'mapping': break
         case 'prepare_recalibration': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
-        case 'recalibrate':           csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv", checkIfExists: true); break
-        case 'variant_calling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv", checkIfExists: true); break
+        case 'recalibrate':           csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv"         , checkIfExists: true); break
+        case 'variant_calling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv"           , checkIfExists: true); break
         // case 'controlfreec':          csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
-        case 'annotate':              csv_file = file("${params.outdir}/variant_calling/csv/recalibrated.csv", checkIfExists: true); break
+        case 'annotate':              csv_file = file("${params.outdir}/variant_calling/csv/recalibrated.csv"         , checkIfExists: true); break
         default: exit 1, "Unknown step $step"
     }
 }
@@ -96,7 +96,6 @@ if (params.save_reference) {
     modules['tabix_known_indels'].publish_files      = ['vcf.gz.tbi':'known_indels']
     modules['tabix_pon'].publish_files               = ['vcf.gz.tbi':'pon']
 }
-if (save_bam_mapped) modules['samtools_index_mapping'].publish_files  = ['bam':'mapped', 'bai':'mapped']
 if (params.skip_markduplicates) {
     modules['baserecalibrator'].publish_files        = ['recal.table':'mapped']
     modules['gatherbqsrreports'].publish_files       = ['recal.table':'mapped']
@@ -321,26 +320,38 @@ workflow SAREK {
             FASTQC_TRIMGALORE.out.trim_zip)
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
-        MAPPING(
-            params.aligner,
+        MAPPING(params.aligner,
             bwa,
             fai,
             fasta,
-            reads_input)
+            reads_input,
+            params.skip_markduplicates)
 
-        bam_mapped    = MAPPING.out.bam
+        bam_mapped  = MAPPING.out.bam
+        bam_indexed = MAPPING.out.bam_indexed
 
         // Create CSV to restart from this step
-        // MAPPING_CSV(bam_mapped, save_bam_mapped, params.skip_markduplicates)
+        MAPPING_CSV(bam_indexed, save_bam_mapped, params.skip_markduplicates)
+    }
 
+    if (step == 'preparerecalibration') {
+        bam_mapped = Channel.empty()
+        if (params.skip_markduplicates) {
+            bam_indexed = input_sample
+        } else cram_markduplicates = input_sample
+    }
+
+    if (step in ['mapping', 'preparerecalibration']) {
         // STEP 2: MARKING DUPLICATES AND/OR QC, conversion to CRAM
         QC_MARKDUPLICATES(bam_mapped,
-                            ('markduplicates' in params.use_gatk_spark),
-                            !('markduplicates' in params.skip_qc),
-                            fasta, fai, dict,
-                            'bamqc' in params.skip_qc,
-                            'samtools' in params.skip_qc,
-                            target_bed)
+            bam_indexed,
+            ('markduplicates' in params.use_gatk_spark),
+            !('markduplicates' in params.skip_qc),
+            fasta, fai, dict,
+            params.skip_markduplicates,
+            'bamqc' in params.skip_qc,
+            'samtools' in params.skip_qc,
+            target_bed)
 
         cram_markduplicates = QC_MARKDUPLICATES.out.cram
 
@@ -348,14 +359,9 @@ workflow SAREK {
         MARKDUPLICATES_CSV(cram_markduplicates)
 
         qc_reports = qc_reports.mix(QC_MARKDUPLICATES.out.qc)
-    }
 
-    if (step == 'preparerecalibration') bam_markduplicates = input_sample
-
-    if (step in ['mapping', 'preparerecalibration']) {
         // STEP 3: CREATING RECALIBRATION TABLES
-        PREPARE_RECALIBRATION(
-            cram_markduplicates,
+        PREPARE_RECALIBRATION(cram_markduplicates,
             ('bqsr' in params.use_gatk_spark),
             dict,
             fai,
@@ -364,9 +370,7 @@ workflow SAREK {
             num_intervals,
             known_sites,
             known_sites_tbi,
-            params.no_intervals,
-            known_indels,
-            dbsnp)
+            params.no_intervals)
 
         table_bqsr = PREPARE_RECALIBRATION.out.table_bqsr
         PREPARE_RECALIBRATION_CSV(table_bqsr)
@@ -507,17 +511,17 @@ workflow.onComplete {
 // Function to extract information (meta data + file(s)) from csv file(s)
 def extract_csv(csv_file) {
     Channel.from(csv_file).splitCsv(header: true)
-    //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
-        .map{ row -> [[row.patient.toString(), row.sample.toString()], row]}
-        .groupTuple()
+        //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
+        .map{ row ->
+            if (!(row.patient && row.sample)) log.warn "Missing or unknown field in csv file header"
+            [[row.patient.toString(), row.sample.toString()], row]
+        }.groupTuple()
         .map{ meta, rows ->
             size = rows.size()
             return [rows, size]
         }.transpose()
         .map{ row, numLanes -> //from here do the usual thing for csv parsing
         def meta = [:]
-
-        meta.numLanes = numLanes.toInteger()
 
         //TODO since it is mandatory: error/warning if not present?
         // Meta data to identify samplesheet
@@ -536,30 +540,44 @@ def extract_csv(csv_file) {
         if (row.status) meta.status = row.status.toInteger()
         else meta.status = 0
 
-        if (row.lane && row.fastq2) {
         // mapping with fastq
+        if (row.lane && row.fastq2) {
             meta.id         = "${row.sample}-${row.lane}".toString()
             def fastq1      = file(row.fastq1, checkIfExists: true)
             def fastq2      = file(row.fastq2, checkIfExists: true)
             def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ''
             def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:ILLUMINA\""
+            meta.numLanes = numLanes.toInteger()
             meta.read_group = read_group.toString()
             return [meta, [fastq1, fastq2]]
-        } else if (row.table) {
         // recalibration
+        } else if (row.table && row.cram) {
             meta.id   = meta.sample
             def cram  = file(row.cram,  checkIfExists: true)
             def crai  = file(row.crai,  checkIfExists: true)
             def table = file(row.table, checkIfExists: true)
             return [meta, cram, crai, table]
-        } else if (row.cram) {
+        // recalibration when skipping MarkDuplicates
+        } else if (row.table && row.bam) {
+            meta.id   = meta.sample
+            def bam   = file(row.bam,   checkIfExists: true)
+            def bai   = file(row.bai,   checkIfExists: true)
+            def table = file(row.table, checkIfExists: true)
+            return [meta, bam, bai, table]
         // prepare_recalibration or variant_calling
+        } else if (row.cram) {
             meta.id = meta.sample
             def cram = file(row.cram, checkIfExists: true)
             def crai = file(row.crai, checkIfExists: true)
             return [meta, cram, crai]
-        } else if (row.vcf) {
+        // prepare_recalibration when skipping MarkDuplicates
+        } else if (row.bam) {
+            meta.id = meta.sample
+            def bam = file(row.bam, checkIfExists: true)
+            def bai = file(row.bai, checkIfExists: true)
+            return [meta, bam, bai]
         // annotation
+        } else if (row.vcf) {
             meta.id = meta.sample
             def vcf = file(row.vcf, checkIfExists: true)
             return [meta, vcf]

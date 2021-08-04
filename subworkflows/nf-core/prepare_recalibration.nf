@@ -24,29 +24,22 @@ workflow PREPARE_RECALIBRATION {
         known_sites         // channel: [optional]  known_sites
         known_sites_tbi     // channel: [optional]  known_sites_tbi
         no_intervals        //   value: [mandatory] no_intervals
-        known_indels
-        dbsnp
 
     main:
     cram_markduplicates.combine(intervals)
-    .map{ meta, cram, crai, intervals ->
-        new_meta = meta.clone()
-        new_meta.id = meta.sample + "_" + intervals.baseName
-        [new_meta, cram, crai, intervals]
-    }
-    .set{cram_markduplicates_intervals}
+        .map{ meta, cram, crai, intervals ->
+            new_meta = meta.clone()
+            new_meta.id = meta.sample + "_" + intervals.baseName
+            [new_meta, cram, crai, intervals]
+        }.set{cram_markduplicates_intervals}
 
-    if(use_gatk_spark){
+    if (use_gatk_spark) {
         BASERECALIBRATOR_SPARK(cram_markduplicates_intervals, fasta, fai, dict, known_sites, known_sites_tbi)
         table_baserecalibrator = BASERECALIBRATOR_SPARK.out.table
-    }else{
-        BASERECALIBRATOR(cram_markduplicates_intervals, fasta, fai, dict, known_sites_tbi, known_sites)
+    } else {
+        BASERECALIBRATOR(cram_markduplicates_intervals, fasta, fai, dict, known_sites, known_sites_tbi)
         table_baserecalibrator = BASERECALIBRATOR.out.table
     }
-
-    //num_intervals =  intervals.toList().size.view() //Integer.valueOf()
-    //.view()
-    //println(intervals.toList().getClass()) //.value.getClass())
 
     //STEP 3.5: MERGING RECALIBRATION TABLES
     if (no_intervals) {
@@ -62,7 +55,6 @@ workflow PREPARE_RECALIBRATION {
 
         GATHERBQSRREPORTS(recaltable)
         table_bqsr = GATHERBQSRREPORTS.out.table
-
     }
 
     emit:
