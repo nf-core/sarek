@@ -22,7 +22,8 @@
     - path: results/reports/fastqc/1234N-1234N_M5
     - path: results/reports/fastqc/1234N-1234N_M6
     - path: results/reports/fastqc/1234N-1234N_M7
-    - path: results/reports/qualimap/1234N.recal
+    - path: results/reports/qualimap/1234N/1234N.mapped
+    - path: results/reports/qualimap/1234N/1234N.recal
     - path: results/reports/samtools_stats/1234N/1234N.md.cram.stats
     - path: results/reports/samtools_stats/1234N/1234N.recal.cram.stats
 - name: Run default pipeline while skipping MarkDuplicates, starting with prepare_recalibration
@@ -45,6 +46,7 @@
     - path: results/preprocessing/csv/markduplicates_no_table_1234N.csv
     - path: results/preprocessing/csv/recalibrated.csv
     - path: results/preprocessing/csv/recalibrated_1234N.csv
-    - path: results/reports/qualimap/1234N.recal
+    - path: results/reports/qualimap/1234N/1234N.mapped
+    - path: results/reports/qualimap/1234N/1234N.recal
     - path: results/reports/samtools_stats/1234N/1234N.md.cram.stats
     - path: results/reports/samtools_stats/1234N/1234N.recal.cram.stats
