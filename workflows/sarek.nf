@@ -104,40 +104,35 @@ if (params.skip_markduplicates) {
 }
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-chr_dir               = params.chr_dir               ? Channel.fromPath(params.chr_dir).collect()               : ch_dummy_file
-chr_length            = params.chr_length            ? Channel.fromPath(params.chr_length).collect()            : ch_dummy_file
-dbsnp                 = params.dbsnp                 ? Channel.fromPath(params.dbsnp).collect()                 : ch_dummy_file
-dbsnp_tbi             = params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : ch_dummy_file
-fasta                 = params.fasta                 ? Channel.fromPath(params.fasta).collect()                 : ch_dummy_file
-fasta_fai             = params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : ch_dummy_file
-germline_resource     = params.germline_resource     ? Channel.fromPath(params.germline_resource).collect()     : ch_dummy_file
-germline_resource_tbi = params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : ch_dummy_file
-known_indels          = params.known_indels          ? Channel.fromPath(params.known_indels).collect()          : ch_dummy_file
-known_indels_tbi      = params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : ch_dummy_file
-loci                  = params.ac_loci               ? Channel.fromPath(params.ac_loci).collect()               : ch_dummy_file
-loci_gc               = params.ac_loci_gc            ? Channel.fromPath(params.ac_loci_gc).collect()            : ch_dummy_file
-mappability           = params.mappability           ? Channel.fromPath(params.mappability).collect()           : ch_dummy_file
+chr_dir           = params.chr_dir           ? Channel.fromPath(params.chr_dir).collect()           : ch_dummy_file
+chr_length        = params.chr_length        ? Channel.fromPath(params.chr_length).collect()        : ch_dummy_file
+dbsnp             = params.dbsnp             ? Channel.fromPath(params.dbsnp).collect()             : ch_dummy_file
+fasta             = params.fasta             ? Channel.fromPath(params.fasta).collect()             : ch_dummy_file
+germline_resource = params.germline_resource ? Channel.fromPath(params.germline_resource).collect() : ch_dummy_file
+known_indels      = params.known_indels      ? Channel.fromPath(params.known_indels).collect()      : ch_dummy_file
+loci              = params.ac_loci           ? Channel.fromPath(params.ac_loci).collect()           : ch_dummy_file
+loci_gc           = params.ac_loci_gc        ? Channel.fromPath(params.ac_loci_gc).collect()        : ch_dummy_file
+mappability       = params.mappability       ? Channel.fromPath(params.mappability).collect()       : ch_dummy_file
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
-snpeff_db             = params.snpeff_db             ?: Channel.empty()
-vep_cache_version     = params.vep_cache_version     ?: Channel.empty()
-vep_genome            = params.vep_genome            ?: Channel.empty()
-vep_species           = params.vep_species           ?: Channel.empty()
+snpeff_db         = params.snpeff_db         ?: Channel.empty()
+vep_cache_version = params.vep_cache_version ?: Channel.empty()
+vep_genome        = params.vep_genome        ?: Channel.empty()
+vep_species       = params.vep_species       ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
-cadd_indels           = params.cadd_indels           ? Channel.fromPath(params.cadd_indels).collect()           : ch_dummy_file
-cadd_indels_tbi       = params.cadd_indels_tbi       ? Channel.fromPath(params.cadd_indels_tbi).collect()       : ch_dummy_file
-cadd_wg_snvs          = params.cadd_wg_snvs          ? Channel.fromPath(params.cadd_wg_snvs).collect()          : ch_dummy_file
-cadd_wg_snvs_tbi      = params.cadd_wg_snvs_tbi      ? Channel.fromPath(params.cadd_wg_snvs_tbi).collect()      : ch_dummy_file
-pon                   = params.pon                   ? Channel.fromPath(params.pon).collect()                   : ch_dummy_file
-pon_tbi               = params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : ch_dummy_file
-snpeff_cache          = params.snpeff_cache          ? Channel.fromPath(params.snpeff_cache).collect()          : ch_dummy_file
-target_bed            = params.target_bed            ? Channel.fromPath(params.target_bed).collect()            : ch_dummy_file
-vep_cache             = params.vep_cache             ? Channel.fromPath(params.vep_cache).collect()             : ch_dummy_file
+cadd_indels       = params.cadd_indels       ? Channel.fromPath(params.cadd_indels).collect()       : ch_dummy_file
+cadd_indels_tbi   = params.cadd_indels_tbi   ? Channel.fromPath(params.cadd_indels_tbi).collect()   : ch_dummy_file
+cadd_wg_snvs      = params.cadd_wg_snvs      ? Channel.fromPath(params.cadd_wg_snvs).collect()      : ch_dummy_file
+cadd_wg_snvs_tbi  = params.cadd_wg_snvs_tbi  ? Channel.fromPath(params.cadd_wg_snvs_tbi).collect()  : ch_dummy_file
+pon               = params.pon               ? Channel.fromPath(params.pon).collect()               : ch_dummy_file
+snpeff_cache      = params.snpeff_cache      ? Channel.fromPath(params.snpeff_cache).collect()      : ch_dummy_file
+target_bed        = params.target_bed        ? Channel.fromPath(params.target_bed).collect()        : ch_dummy_file
+vep_cache         = params.vep_cache         ? Channel.fromPath(params.vep_cache).collect()         : ch_dummy_file
 
 // Initialize value channels based on params, not defined within the params.genomes[params.genome] scope
-read_structure1       = params.read_structure1       ?: Channel.empty()
-read_structure2       = params.read_structure2       ?: Channel.empty()
+read_structure1   = params.read_structure1   ?: Channel.empty()
+read_structure2   = params.read_structure2   ?: Channel.empty()
 
 /*
 ========================================================================================
@@ -254,7 +249,7 @@ workflow SAREK {
     BUILD_INDICES(
         dbsnp,
         fasta,
-        fasta_fai,
+        params.fasta_fai,
         germline_resource,
         known_indels,
         pon,
@@ -267,14 +262,13 @@ workflow SAREK {
     num_intervals = 0
     intervals.count().map{ num_intervals = it }
 
-    bwa  = params.bwa       ? file(params.bwa)       : BUILD_INDICES.out.bwa
-    dict = params.dict      ? file(params.dict)      : BUILD_INDICES.out.dict
-    fai  = params.fasta_fai ? file(params.fasta_fai) : BUILD_INDICES.out.fai
-
-    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi)             : BUILD_INDICES.out.dbsnp_tbi                  : []
-    germline_resource_tbi = params.germline_resource ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi) : BUILD_INDICES.out.germline_resource_tbi      : []
-    known_indels_tbi      = params.known_indels      ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi)      : BUILD_INDICES.out.known_indels_tbi.collect() : []
-    pon_tbi               = params.pon               ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi)               : BUILD_INDICES.out.pon_tbi                    : []
+    bwa                   = params.fasta             ? params.bwa                   ? Channel.fromPath(params.bwa).collect()                   : BUILD_INDICES.out.bwa                   : ch_dummy_file
+    dict                  = params.fasta             ? params.dict                  ? Channel.fromPath(params.dict).collect()                  : BUILD_INDICES.out.dict                  : ch_dummy_file
+    fai                   = params.fasta             ? params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : BUILD_INDICES.out.fai                   : ch_dummy_file
+    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : BUILD_INDICES.out.dbsnp_tbi             : ch_dummy_file
+    germline_resource_tbi = params.germline_resource ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : BUILD_INDICES.out.germline_resource_tbi : ch_dummy_file
+    known_indels_tbi      = params.known_indels      ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : BUILD_INDICES.out.known_indels_tbi      : ch_dummy_file
+    pon_tbi               = params.pon               ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : BUILD_INDICES.out.pon_tbi               : ch_dummy_file
 
     //TODO @Rike, is this working for you?
     known_sites     = dbsnp.concat(known_indels).collect()
@@ -407,7 +401,7 @@ workflow SAREK {
             tools,
             cram_variant_calling,
             dbsnp,
-            dbsnp_tbi.collect(),
+            dbsnp_tbi,
             dict,
             fai,
             fasta,

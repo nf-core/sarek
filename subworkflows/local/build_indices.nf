@@ -136,15 +136,23 @@ workflow BUILD_INDICES {
     }
 
     emit:
-        bwa                   = result_bwa
-        bwa_version           = version_bwa
-        dbsnp_tbi             = result_dbsnp_tbi
-        dict                  = result_dict
-        fai                   = result_fai
-        germline_resource_tbi = result_germline_resource_tbi
-        intervals             = result_intervals
-        known_indels_tbi      = result_known_indels_tbi
-        msisensorpro_scan     = result_msisensorpro_scan
-        pon_tbi               = result_pon_tbi
-        target_bed_gz_tbi     = result_target_bed
+        bwa                           = result_bwa
+        bwa_version                   = version_bwa
+        dbsnp_tbi                     = result_dbsnp_tbi
+        dbsnp_tbi_version             = version_dbsnp_tbi
+        dict                          = result_dict
+        dict_version                  = version_dict
+        fai                           = result_fai
+        fai_version                   = version_fai
+        germline_resource_tbi         = result_germline_resource_tbi
+        germline_resource_tbi_version = version_germline_resource_tbi
+        intervals                     = result_intervals
+        known_indels_tbi              = result_known_indels_tbi.collect()
+        known_indels_tbi_version      = version_known_indels_tbi
+        msisensorpro_scan             = result_msisensorpro_scan
+        msisensorpro_scan_version     = version_msisensorpro_scan
+        pon_tbi                       = result_pon_tbi
+        pon_tbi_version               = version_pon_tbi
+        target_bed_gz_tbi             = result_target_bed
+        target_bed_version            = version_target_bed
 }
