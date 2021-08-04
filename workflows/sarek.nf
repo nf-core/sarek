@@ -276,15 +276,12 @@ workflow SAREK {
     msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan
     target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
 
-    bwa_version                   = BUILD_INDICES.out.bwa_version
-    dbsnp_tbi_version             = BUILD_INDICES.out.dbsnp_tbi_version
-    dict_version                  = BUILD_INDICES.out.dict_version
-    fai_version                   = BUILD_INDICES.out.fai_version
-    germline_resource_tbi_version = BUILD_INDICES.out.germline_resource_tbi_version
-    known_indels_tbi_version      = BUILD_INDICES.out.known_indels_tbi_version
-    msisensorpro_scan_version     = BUILD_INDICES.out.msisensorpro_scan_version
-    pon_tbi_version               = BUILD_INDICES.out.pon_tbi_version
-    target_bed_version            = BUILD_INDICES.out.target_bed_version
+    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.bwa_version.ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.dict_version.ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.fai_version.ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.msisensorpro_scan_version.ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.target_bed_version.ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.dbsnp_tbi_version.mix(BUILD_INDICES.out.germline_resource_tbi_version, BUILD_INDICES.out.known_indels_tbi_version, BUILD_INDICES.out.pon_tbi_version).first().ifEmpty(null))
 
     // PREPROCESSING
 
