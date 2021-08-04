@@ -19,18 +19,18 @@ params.tabix_pon_options               = [:]
 
 // Initialize channels based on params or indices that were just built
 
-include { BUILD_INTERVALS }                              from '../../modules/local/build_intervals/main'                           addParams(options: params.build_intervals_options)
-include { BWA_INDEX as BWAMEM1_INDEX }                   from '../../modules/nf-core/modules/bwa/index/main'                       addParams(options: params.bwa_index_options)
-include { BWAMEM2_INDEX }                                from '../../modules/nf-core/modules/bwamem2/index/main'                   addParams(options: params.bwamem2_index_options)
-include { CREATE_INTERVALS_BED }                         from '../../modules/local/create_intervals_bed/main'                      addParams(options: params.create_intervals_bed_options)
-include { GATK4_CREATESEQUENCEDICTIONARY as GATK4_DICT } from '../../modules/nf-core/modules/gatk4/createsequencedictionary/main'  addParams(options: params.gatk4_dict_options)
-include { MSISENSORPRO_SCAN }                            from '../../modules/local/msisensorpro/scan/main'                         addParams(options: params.msisensorpro_scan_options)
-include { SAMTOOLS_FAIDX }                               from '../../modules/nf-core/modules/samtools/faidx/main'                  addParams(options: params.samtools_faidx_options)
-include { TABIX_BGZIPTABIX }                             from '../../modules/nf-core/modules/tabix/bgziptabix/main'                addParams(options: params.bgziptabix_options)
-include { TABIX_TABIX as TABIX_DBSNP }                   from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_dbsnp_options)
-include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE }       from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_germline_resource_options)
-include { TABIX_TABIX as TABIX_KNOWN_INDELS }            from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_known_indels_options)
-include { TABIX_TABIX as TABIX_PON }                     from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_pon_options)
+include { BUILD_INTERVALS }                        from '../../modules/local/build_intervals/main'                           addParams(options: params.build_intervals_options)
+include { BWA_INDEX as BWAMEM1_INDEX }             from '../../modules/nf-core/modules/bwa/index/main'                       addParams(options: params.bwa_index_options)
+include { BWAMEM2_INDEX }                          from '../../modules/nf-core/modules/bwamem2/index/main'                   addParams(options: params.bwamem2_index_options)
+include { CREATE_INTERVALS_BED }                   from '../../modules/local/create_intervals_bed/main'                      addParams(options: params.create_intervals_bed_options)
+include { GATK4_CREATESEQUENCEDICTIONARY  }        from '../../modules/nf-core/modules/gatk4/createsequencedictionary/main'  addParams(options: params.gatk4_dict_options)
+include { MSISENSORPRO_SCAN }                      from '../../modules/local/msisensorpro/scan/main'                         addParams(options: params.msisensorpro_scan_options)
+include { SAMTOOLS_FAIDX }                         from '../../modules/nf-core/modules/samtools/faidx/main'                  addParams(options: params.samtools_faidx_options)
+include { TABIX_BGZIPTABIX }                       from '../../modules/nf-core/modules/tabix/bgziptabix/main'                addParams(options: params.bgziptabix_options)
+include { TABIX_TABIX as TABIX_DBSNP }             from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_dbsnp_options)
+include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE } from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_germline_resource_options)
+include { TABIX_TABIX as TABIX_KNOWN_INDELS }      from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_known_indels_options)
+include { TABIX_TABIX as TABIX_PON }               from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_pon_options)
 
 workflow BUILD_INDICES {
     take:
@@ -52,64 +52,64 @@ workflow BUILD_INDICES {
         if (params.aligner == "bwa-mem") (result_bwa, version_bwa) = BWAMEM1_INDEX(fasta)
         else                             (result_bwa, version_bwa) = BWAMEM2_INDEX(fasta)
 
-    result_dict = Channel.empty()
+    result_dict  = Channel.empty()
     version_dict = Channel.empty()
     if (!(params.dict) && !('annotate' in step) && !('controlfreec' in step))
-        (result_dict, version_dict) = GATK4_DICT(fasta)
+        (result_dict, version_dict) = GATK4_CREATESEQUENCEDICTIONARY(fasta)
 
-    result_fai = Channel.empty()
-    if (fasta_fai) result_fai = fasta_fai
+    result_fai  = Channel.empty()
     version_fai = Channel.empty()
+    if (fasta_fai) result_fai = fasta_fai
     if (!(params.fasta_fai) && !('annotate' in step))
         (result_fai, version_fai) = SAMTOOLS_FAIDX(fasta)
 
-    result_dbsnp_tbi = Channel.empty()
+    result_dbsnp_tbi  = Channel.empty()
     version_dbsnp_tbi = Channel.empty()
     if (!(params.dbsnp_tbi) && params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools|| 'mutect2' in tools || 'tnscope' in tools)) {
-        dbsnp_id = dbsnp.map {it -> [[id:"$it.baseName"], it]}
+        dbsnp_id = dbsnp.map{ it -> [[id:it[0].baseName], it] }
         (result_dbsnp_tbi, version_dbsnp_tbi) = TABIX_DBSNP(dbsnp_id)
-        result_dbsnp_tbi = result_dbsnp_tbi.map {meta, tbi -> [tbi]}
+        result_dbsnp_tbi = result_dbsnp_tbi.map{ meta, tbi -> [tbi] }
     }
 
-    result_target_bed = Channel.empty()
+    result_target_bed  = Channel.empty()
     version_target_bed = Channel.empty()
     if ((params.target_bed) && ('manta' in tools || 'strelka' in tools)) {
-        target_bed_id = target_bed.map {it -> [[id:"$it.baseName"], it]}
+        target_bed_id = target_bed.map{ it -> [[id:it[0].baseName], it] }
         (result_target_bed, version_target_bed) = TABIX_BGZIPTABIX(target_bed_id)
-        result_target_bed = result_target_bed.map {meta, bed, tbi -> [bed, tbi]}
+        result_target_bed = result_target_bed.map{ meta, bed, tbi -> [bed, tbi] }
     }
 
-    result_germline_resource_tbi = Channel.empty()
+    result_germline_resource_tbi  = Channel.empty()
     version_germline_resource_tbi = Channel.empty()
     if (!(params.germline_resource_tbi) && params.germline_resource && 'mutect2' in tools) {
-        germline_resource_id = germline_resource.map {it -> [[id:"$it.baseName"], it]}
+        germline_resource_id = germline_resource.map{ it -> [[id:it[0].baseName], it] }
         (result_germline_resource_tbi, version_germline_resource_tbi) = TABIX_GERMLINE_RESOURCE(germline_resource_id)
     }
 
-    result_known_indels_tbi = Channel.empty()
+    result_known_indels_tbi  = Channel.empty()
     version_known_indels_tbi = Channel.empty()
     if (!(params.known_indels_tbi) && params.known_indels && ('mapping' in step || 'preparerecalibration' in step)) {
-        known_indels_id = known_indels.map {it -> [[id:"$it.baseName"], it]}
+        known_indels_id = known_indels.map{ it -> [[id:it[0].baseName], it] }
         (result_known_indels_tbi, version_known_indels_tbi) = TABIX_KNOWN_INDELS(known_indels_id)
-        result_known_indels_tbi = result_known_indels_tbi.map {meta, tbi -> [tbi]}
+        result_known_indels_tbi = result_known_indels_tbi.map{ meta, tbi -> [tbi] }
     }
 
-    result_msisensorpro_scan = Channel.empty()
+    result_msisensorpro_scan  = Channel.empty()
     version_msisensorpro_scan = Channel.empty()
     if ('msisensorpro' in tools)
         (result_msisensorpro_scan, version_msisensorpro_scan) = MSISENSORPRO_SCAN(fasta)
 
-    result_pon_tbi = Channel.empty()
+    result_pon_tbi  = Channel.empty()
     version_pon_tbi = Channel.empty()
     if (!(params.pon_tbi) && params.pon && ('tnscope' in tools || 'mutect2' in tools)) {
-        pon_id = pon.map {it -> [[id:"$it.baseName"], it]}
+        pon_id = pon.map{ it -> [[id:it[0].baseName], it] }
         (result_pon_tbi, version_pon_tbi) = TABIX_PON(pon_id)
     }
 
     result_intervals = Channel.empty()
     if (params.no_intervals) {
         file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
-        result_intervals = Channel.from(file("${params.outdir}/no_intervals.bed"))
+        result_intervals = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
     } else if (!('annotate' in step) && !('controlfreec' in step))
         if (!params.intervals)
             result_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS(result_fai))
@@ -118,7 +118,7 @@ workflow BUILD_INDICES {
 
     if (!params.no_intervals) {
         result_intervals = result_intervals.flatten()
-            .map { intervalFile ->
+            .map{ intervalFile ->
                 def duration = 0.0
                 for (line in intervalFile.readLines()) {
                     final fields = line.split('\t')
