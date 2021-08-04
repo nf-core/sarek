@@ -4,14 +4,14 @@
 ========================================================================================
 */
 
+params.estimatelibrarycomplexity_options = [:]
 params.markduplicates_options            = [:]
 params.markduplicatesspark_options       = [:]
-params.estimatelibrarycomplexity_options = [:]
 params.merge_bam_options                 = [:]
 params.qualimap_bamqc_options            = [:]
+params.samtools_index_options            = [:]
 params.samtools_stats_options            = [:]
 params.samtools_view_options             = [:]
-params.samtools_index_options            = [:]
 
 include { GATK4_ESTIMATELIBRARYCOMPLEXITY }             from '../../modules/local/gatk4/estimatelibrarycomplexity/main'  addParams(options: params.estimatelibrarycomplexity_options)
 include { GATK4_MARKDUPLICATES }                        from '../../modules/local/gatk4/markduplicates/main'             addParams(options: params.markduplicates_options)
@@ -22,7 +22,7 @@ include { SAMTOOLS_STATS }                              from '../../modules/loca
 include { SAMTOOLS_VIEW as SAMTOOLS_BAM_TO_CRAM }       from '../../modules/local/samtools/view/main.nf'                 addParams(options: params.samtools_view_options)
 include { SAMTOOLS_VIEW as SAMTOOLS_BAM_TO_CRAM_SPARK } from '../../modules/local/samtools/view/main.nf'                 addParams(options: params.samtools_view_options)
 
-workflow QC_MARKDUPLICATES {
+workflow MARKDUPLICATES {
     take:
         bam_mapped          // channel: [mandatory] meta, bam
         bam_indexed         // channel: [mandatory] meta, bam, bai

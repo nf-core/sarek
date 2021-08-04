@@ -165,7 +165,7 @@ include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
     seqkit_split2_options:             modules['seqkit_split2']
 )
 
-include { QC_MARKDUPLICATES } from '../subworkflows/nf-core/qc_markduplicates' addParams(
+include { MARKDUPLICATES } from '../subworkflows/nf-core/markduplicates' addParams(
     estimatelibrarycomplexity_options: modules['estimatelibrarycomplexity'],
     markduplicates_options:            modules['markduplicates'],
     markduplicatesspark_options:       modules['markduplicatesspark'],
@@ -335,7 +335,7 @@ workflow SAREK {
 
     if (step in ['mapping', 'preparerecalibration']) {
         // STEP 2: MARKING DUPLICATES AND/OR QC, conversion to CRAM
-        QC_MARKDUPLICATES(
+        MARKDUPLICATES(
             bam_mapped,
             bam_indexed,
             ('markduplicates' in params.use_gatk_spark),
@@ -348,12 +348,12 @@ workflow SAREK {
             ('samtools' in params.skip_qc),
             target_bed)
 
-        cram_markduplicates = QC_MARKDUPLICATES.out.cram
+        cram_markduplicates = MARKDUPLICATES.out.cram
 
         // Create CSV to restart from this step
         MARKDUPLICATES_CSV(cram_markduplicates)
 
-        qc_reports = qc_reports.mix(QC_MARKDUPLICATES.out.qc.collect{it[1]}.ifEmpty([]))
+        qc_reports = qc_reports.mix(MARKDUPLICATES.out.qc.collect{it[1]}.ifEmpty([]))
 
         // STEP 3: CREATING RECALIBRATION TABLES
         PREPARE_RECALIBRATION(

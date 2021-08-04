@@ -7,7 +7,7 @@
   files:
     - path: results/multiqc
     - path: results/preprocessing/1234N/mapped/1234N.bam
-    - path: results/preprocessing/1234N/mapped/1234N.bai
+    - path: results/preprocessing/1234N/mapped/1234N.bam.bai
     - path: results/preprocessing/1234N/mapped/1234N.recal.table
     - path: results/preprocessing/1234N/markduplicates/1234N.md.cram
     - path: results/preprocessing/1234N/markduplicates/1234N.md.cram.crai
