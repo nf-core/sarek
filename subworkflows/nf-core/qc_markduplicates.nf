@@ -82,7 +82,7 @@ workflow QC_MARKDUPLICATES {
     if (!skip_bamqc && !skip_markduplicates) {
     //TODO: after adding CI tests, allow bamqc on mapped bams if no duplicate marking is done
         QUALIMAP_BAMQC(bam_markduplicates, target_bed, params.target_bed)
-        qualimap_bamqc = QUALIMAP_BAMQC.out
+        qualimap_bamqc = QUALIMAP_BAMQC.out.results
     }
 
     samtools_stats = Channel.empty()

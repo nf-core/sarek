@@ -304,15 +304,15 @@ workflow SAREK {
 
         reads_input = FASTQC_TRIMGALORE.out.reads
 
-        qc_reports = qc_reports.mix(
-            FASTQC_TRIMGALORE.out.fastqc_html,
-            FASTQC_TRIMGALORE.out.fastqc_zip,
-            FASTQC_TRIMGALORE.out.trim_html,
-            FASTQC_TRIMGALORE.out.trim_log,
-            FASTQC_TRIMGALORE.out.trim_zip)
+        qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.fastqc_html.collect{it[1]}.ifEmpty([]))
+        qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
+        qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_html.collect{it[1]}.ifEmpty([]))
+        qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]))
+        qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
-        MAPPING(params.aligner,
+        MAPPING(
+            params.aligner,
             bwa,
             fai,
             fasta,
@@ -333,7 +333,8 @@ workflow SAREK {
 
     if (step in ['mapping', 'preparerecalibration']) {
         // STEP 2: MARKING DUPLICATES AND/OR QC, conversion to CRAM
-        QC_MARKDUPLICATES(bam_mapped,
+        QC_MARKDUPLICATES(
+            bam_mapped,
             bam_indexed,
             ('markduplicates' in params.use_gatk_spark),
             !('markduplicates' in params.skip_qc),
@@ -350,10 +351,11 @@ workflow SAREK {
         // Create CSV to restart from this step
         MARKDUPLICATES_CSV(cram_markduplicates)
 
-        qc_reports = qc_reports.mix(QC_MARKDUPLICATES.out.qc)
+        qc_reports = qc_reports.mix(QC_MARKDUPLICATES.out.qc.collect{it[1]}.ifEmpty([]))
 
         // STEP 3: CREATING RECALIBRATION TABLES
-        PREPARE_RECALIBRATION(cram_markduplicates,
+        PREPARE_RECALIBRATION(
+            cram_markduplicates,
             ('bqsr' in params.use_gatk_spark),
             dict,
             fai,
@@ -391,7 +393,7 @@ workflow SAREK {
 
         RECALIBRATE_CSV(cram_recalibrated)
 
-        qc_reports = qc_reports.mix(cram_recalibrated_qc)
+        qc_reports = qc_reports.mix(cram_recalibrated_qc.collect{it[1]}.ifEmpty([]))
 
         cram_variant_calling = cram_recalibrated
     }
@@ -486,8 +488,6 @@ workflow SAREK {
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
-    if (step == 'mapping') ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
-
     ch_multiqc_files = ch_multiqc_files.mix(qc_reports)
 
     MULTIQC(ch_multiqc_files.collect())
