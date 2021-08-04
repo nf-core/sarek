@@ -80,6 +80,7 @@ workflow QC_MARKDUPLICATES {
     //After bamqc finishes, convert to cram for further analysis
     qualimap_bamqc = Channel.empty()
     if (!skip_bamqc && !skip_markduplicates) {
+    //TODO: after adding CI tests, allow bamqc on mapped bams if no duplicate marking is done
         QUALIMAP_BAMQC(bam_markduplicates, target_bed, params.target_bed)
         qualimap_bamqc = QUALIMAP_BAMQC.out
     }
