@@ -82,7 +82,7 @@ workflow MAPPING {
         bwamem2_t_version = BWAMEM2_MEM_T.out.version
 
         bwamem2_version = bwamem2_n_version.mix(bwamem2_t_version).first()
-        tool_versions = tool_versions.mix(bwamem1_version)
+        tool_versions = tool_versions.mix(bwamem2_version)
     }
 
     bam_bwamem = bam_bwamem.mix(bam_bwamem1)
