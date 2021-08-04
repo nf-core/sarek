@@ -12,12 +12,12 @@ process SEQKIT_SPLIT2 {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
-    conda (params.enable_conda ? "bioconda::seqkit=0.16.0" : null)
+    conda (params.enable_conda ? 'bioconda::seqkit=0.16.1' : null)
 
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/seqkit:0.16.0--h9ee0642_0"
+        container "https://depot.galaxyproject.org/singularity/seqkit:0.16.1--h9ee0642_0"
     } else {
-        container "quay.io/biocontainers/seqkit:0.16.0--h9ee0642_0"
+        container "quay.io/biocontainers/seqkit:0.16.1--h9ee0642_0"
     }
 
     input:

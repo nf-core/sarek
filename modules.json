@@ -19,28 +19,28 @@
                 "git_sha": "c8877835c288eb32b2ad1810d38a78e83e791f3d"
             },
             "multiqc": {
-                "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+                "git_sha": "c5235a983d454787fa0c3247b02086969217163b"
             },
             "samtools/faidx": {
-                "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+                "git_sha": "c5235a983d454787fa0c3247b02086969217163b"
             },
             "samtools/merge": {
-                "git_sha": "adfb8a3d6541f363aec83df16df873cbb767b388"
+                "git_sha": "c5235a983d454787fa0c3247b02086969217163b"
             },
             "seqkit/split2": {
-                "git_sha": "65ab646870c4ff74322b4fff22ad51b190791a2c"
+                "git_sha": "c5235a983d454787fa0c3247b02086969217163b"
             },
             "snpeff": {
                 "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
             },
             "tabix/bgziptabix": {
-                "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+                "git_sha": "c5235a983d454787fa0c3247b02086969217163b"
             },
             "tabix/tabix": {
-                "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+                "git_sha": "c5235a983d454787fa0c3247b02086969217163b"
             },
             "trimgalore": {
-                "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+                "git_sha": "c5235a983d454787fa0c3247b02086969217163b"
             }
         }
     }
