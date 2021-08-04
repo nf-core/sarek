@@ -13,14 +13,14 @@ params.samtools_stats_options            = [:]
 params.samtools_view_options             = [:]
 params.samtools_index_options            = [:]
 
+include { GATK4_ESTIMATELIBRARYCOMPLEXITY }             from '../../modules/local/gatk4/estimatelibrarycomplexity/main'  addParams(options: params.estimatelibrarycomplexity_options)
 include { GATK4_MARKDUPLICATES }                        from '../../modules/local/gatk4/markduplicates/main'             addParams(options: params.markduplicates_options)
 include { GATK4_MARKDUPLICATES_SPARK }                  from '../../modules/local/gatk4/markduplicatesspark/main'        addParams(options: params.markduplicatesspark_options)
-include { GATK4_ESTIMATELIBRARYCOMPLEXITY }             from '../../modules/local/gatk4/estimatelibrarycomplexity/main'  addParams(options: params.estimatelibrarycomplexity_options)
 include { QUALIMAP_BAMQC }                              from '../../modules/local/qualimap/bamqc/main'                   addParams(options: params.qualimap_bamqc_options)
+include { SAMTOOLS_INDEX }                              from '../../modules/local/samtools/index/main'                   addParams(options: params.samtools_index_options)
 include { SAMTOOLS_STATS }                              from '../../modules/local/samtools/stats/main'                   addParams(options: params.samtools_stats_options)
 include { SAMTOOLS_VIEW as SAMTOOLS_BAM_TO_CRAM }       from '../../modules/local/samtools/view/main.nf'                 addParams(options: params.samtools_view_options)
 include { SAMTOOLS_VIEW as SAMTOOLS_BAM_TO_CRAM_SPARK } from '../../modules/local/samtools/view/main.nf'                 addParams(options: params.samtools_view_options)
-include { SAMTOOLS_INDEX }                              from '../../modules/local/samtools/index/main'                   addParams(options: params.samtools_index_options)
 
 workflow QC_MARKDUPLICATES {
     take:
@@ -76,19 +76,18 @@ workflow QC_MARKDUPLICATES {
     }
 
     //If skip_markduplicates then QC tools are run on mapped bams,
-    //if !skip_markduplicates, then QC tools are run on duplicate marked bams
+    //if !skip_markduplicates, then QC tools are run on duplicate marked crams
     //After bamqc finishes, convert to cram for further analysis
-    qualimap_bamqc = Channel.empty()
-    if (!skip_bamqc && !skip_markduplicates) {
-    //TODO: after adding CI tests, allow bamqc on mapped bams if no duplicate marking is done
-        QUALIMAP_BAMQC(bam_markduplicates, target_bed, params.target_bed)
-        qualimap_bamqc = QUALIMAP_BAMQC.out.results
-    }
-
     samtools_stats = Channel.empty()
     if (!skip_samtools) {
         SAMTOOLS_STATS(cram_markduplicates, fasta)
         samtools_stats = SAMTOOLS_STATS.out.stats
+    }
+
+    qualimap_bamqc = Channel.empty()
+    if (!skip_bamqc) {
+        QUALIMAP_BAMQC(bam_markduplicates, target_bed, params.target_bed)
+        qualimap_bamqc = QUALIMAP_BAMQC.out.results
     }
 
     qc_reports = samtools_stats.mix(qualimap_bamqc)

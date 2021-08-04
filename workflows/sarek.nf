@@ -39,7 +39,7 @@ def checkPathParamList = [
 
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
-// get step and tools
+// Get step and tools
 def step = params.step ? params.step.replaceAll('-', '').replaceAll('_', '') : ''
 def tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
 
@@ -160,6 +160,8 @@ include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
     bwamem1_mem_tumor_options:         modules['bwa_mem1_mem_tumor'],
     bwamem2_mem_options:               modules['bwa_mem2_mem'],
     bwamem2_mem_tumor_options:         modules['bwa_mem2_mem_tumor'],
+    merge_bam_options:                 modules['merge_bam_mapping'],
+    samtools_index_options:            modules['samtools_index_mapping'],
     seqkit_split2_options:             modules['seqkit_split2']
 )
 
@@ -418,7 +420,8 @@ workflow SAREK {
             target_bed,
             target_bed_gz_tbi)
 
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf, GERMLINE_VARIANT_CALLING.out.strelka_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)
 
         // SOMATIC VARIANT CALLING
 
