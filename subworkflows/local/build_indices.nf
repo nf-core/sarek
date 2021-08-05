@@ -2,7 +2,7 @@
 // BUILDING INDICES
 //
 
-params.bgziptabix_options              = [:]
+params.bgziptabix_target_bed_options   = [:]
 params.build_intervals_options         = [:]
 params.bwa_index_options               = [:]
 params.bwamem2_index_options           = [:]
@@ -24,7 +24,7 @@ include { CREATE_INTERVALS_BED }                   from '../../modules/local/cre
 include { GATK4_CREATESEQUENCEDICTIONARY  }        from '../../modules/nf-core/modules/gatk4/createsequencedictionary/main'  addParams(options: params.gatk4_dict_options)
 include { MSISENSORPRO_SCAN }                      from '../../modules/local/msisensorpro/scan/main'                         addParams(options: params.msisensorpro_scan_options)
 include { SAMTOOLS_FAIDX }                         from '../../modules/nf-core/modules/samtools/faidx/main'                  addParams(options: params.samtools_faidx_options)
-include { TABIX_BGZIPTABIX }                       from '../../modules/nf-core/modules/tabix/bgziptabix/main'                addParams(options: params.bgziptabix_options)
+include { TABIX_BGZIPTABIX }                       from '../../modules/nf-core/modules/tabix/bgziptabix/main'                addParams(options: params.bgziptabix_target_bed_options)
 include { TABIX_TABIX as TABIX_DBSNP }             from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_dbsnp_options)
 include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE } from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_germline_resource_options)
 include { TABIX_TABIX as TABIX_KNOWN_INDELS }      from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_known_indels_options)
@@ -64,7 +64,7 @@ workflow BUILD_INDICES {
     result_target_bed  = Channel.empty()
     version_target_bed = Channel.empty()
     if ((params.target_bed) && ('manta' in tools || 'strelka' in tools)) {
-        target_bed_id = target_bed.map{ it -> [[id:it[0].baseName], it] }
+        target_bed_id = target_bed.map{ it -> [[id:it[0].getName()], it] }
         (result_target_bed, version_target_bed) = TABIX_BGZIPTABIX(target_bed_id)
         result_target_bed = result_target_bed.map{ meta, bed, tbi -> [bed, tbi] }
     }

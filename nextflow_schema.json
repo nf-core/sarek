@@ -158,7 +158,8 @@
                     "hidden": true
                 },
                 "split_fastq": {
-                    "type": "number",
+                    "type": "integer",
+                    "default": 0,
                     "fa_icon": "fas fa-cut",
                     "description": "Specify how many reads each split of a FastQ file contains. Set 0 to turn of splitting at all",
                     "help_text": "Use the the tools seqkit/split2 to split FASTQ file by number of reads",

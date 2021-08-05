@@ -169,7 +169,7 @@ include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
     seqkit_split2_options:             modules['seqkit_split2']
 )
 
-// Mark duplicates (+QC)
+// Mark duplicates (+QC) + convert to CRAM
 include { MARKDUPLICATES } from '../subworkflows/nf-core/markduplicates' addParams(
     estimatelibrarycomplexity_options: modules['estimatelibrarycomplexity'],
     markduplicates_options:            modules['markduplicates'],
@@ -263,6 +263,7 @@ def multiqc_report = []
 workflow SAREK {
 
     ch_software_versions = Channel.empty()
+    qc_reports           = Channel.empty()
 
     // Build indices if needed
     BUILD_INDICES(
@@ -311,7 +312,6 @@ workflow SAREK {
     bam_mapped_qc       = Channel.empty()
     bam_recalibrated_qc = Channel.empty()
     bam_variant_calling = Channel.empty()
-    qc_reports          = Channel.empty()
 
     // STEP 0: QC & TRIM
     // `--skip_qc fastqc` to skip fastqc
@@ -324,14 +324,17 @@ workflow SAREK {
             ('fastqc' in params.skip_qc),
             !(params.trim_fastq))
 
+        // Get reads after optional trimming (+QC)
         reads_input = FASTQC_TRIMGALORE.out.reads
 
+        // Get all qc reports for MultiQC
         qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.fastqc_html.collect{it[1]}.ifEmpty([]))
         qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
         qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_html.collect{it[1]}.ifEmpty([]))
         qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]))
         qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
 
+        // Get versions from all software used
         ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.fastqc_version.ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.trimgalore_version.ifEmpty(null))
 
@@ -346,6 +349,7 @@ workflow SAREK {
             // params.skip_markduplicates,
             // save_bam_mapped)
 
+        // Get mapped reads (BAM) with and without index
         bam_mapped  = MAPPING.out.bam
         bam_indexed = MAPPING.out.bam_indexed
 
@@ -359,7 +363,7 @@ workflow SAREK {
     }
 
     if (step in ['mapping', 'preparerecalibration']) {
-        // STEP 2: MARKING DUPLICATES AND/OR QC, conversion to CRAM
+        // STEP 2: Mark duplicates (+QC) + convert to CRAM
         MARKDUPLICATES(
             bam_mapped,
             bam_indexed,
@@ -380,7 +384,7 @@ workflow SAREK {
 
         qc_reports = qc_reports.mix(MARKDUPLICATES.out.qc.collect{it[1]}.ifEmpty([]))
 
-        // STEP 3: CREATING RECALIBRATION TABLES
+        // STEP 3: Create recalibration tables
         PREPARE_RECALIBRATION(
             cram_markduplicates,
             ('bqsr' in params.use_gatk_spark),
