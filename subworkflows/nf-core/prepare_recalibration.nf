@@ -1,8 +1,6 @@
-/*
-========================================================================================
-    PREPARE RECALIBRATION
-========================================================================================
-*/
+//
+// PREPARE RECALIBRATION
+//
 
 params.baserecalibrator_options        = [:]
 params.gatherbqsrreports_options       = [:]

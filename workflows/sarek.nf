@@ -37,25 +37,23 @@ def checkPathParamList = [
     params.vep_cache
 ]
 
-for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
+for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 
 // Get step and tools
 def step = params.step ? params.step.replaceAll('-', '').replaceAll('_', '') : ''
 def tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
 
 // Check mandatory parameters
-input_sample = Channel.empty()
-
 if (params.input) csv_file = file(params.input)
 else {
     log.warn "No samplesheet specified, attempting to restart from csv files present in ${params.outdir}"
     switch (step) {
-        case 'mapping': break
-        case 'prepare_recalibration': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
-        case 'recalibrate':           csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv"         , checkIfExists: true); break
-        case 'variant_calling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv"           , checkIfExists: true); break
-        // case 'controlfreec':          csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
-        case 'annotate':              csv_file = file("${params.outdir}/variant_calling/csv/recalibrated.csv"         , checkIfExists: true); break
+        case 'mapping': exit 1, "Can't start with step $step without samplesheet"
+        case 'preparerecalibration': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
+        case 'recalibrate':          csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv",          checkIfExists: true); break
+        case 'variantcalling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv",            checkIfExists: true); break
+        // case 'controlfreec':         csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
+        case 'annotate':             csv_file = file("${params.outdir}/variant_calling/csv/recalibrated.csv",          checkIfExists: true); break
         default: exit 1, "Unknown step $step"
     }
 }
@@ -65,23 +63,25 @@ input_sample = extract_csv(csv_file)
 def save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? true : false
 
 // Save AWS IGenomes file containing annotation version
-def anno_readme = params.genomes[ params.genome ]?.readme
+def anno_readme = params.genomes[params.genome]?.readme
 if (anno_readme && file(anno_readme).exists()) {
     file("${params.outdir}/genome/").mkdirs()
     file(anno_readme).copyTo("${params.outdir}/genome/")
 }
 
-// Stage dummy file to be used as an optional input where required
-ch_dummy_file = Channel.fromPath("$projectDir/assets/dummy_file.txt", checkIfExists: true).collect()
-
 /*
 ========================================================================================
-    UPDATE MODULES OPTIONS BASED ON PARAMS
+    IMPORT LOCAL MODULES/SUBWORKFLOWS
 ========================================================================================
 */
 
+// Stage dummy file to be used as an optional input where required
+ch_dummy_file = Channel.fromPath("$projectDir/assets/dummy_file.txt", checkIfExists: true).collect()
+
+// Don't overwrite global params.modules, create a copy instead and use that within the main script
 def modules = params.modules.clone()
 
+// Update modules options based on params
 if (params.save_reference) {
     modules['build_intervals'].publish_files         = ['bed':'intervals']
     modules['bwa_index'].publish_files               = ['amb':'bwa', 'ann':'bwa', 'bwt':'bwa', 'pac':'bwa', 'sa':'bwa']
@@ -134,12 +134,15 @@ vep_cache         = params.vep_cache         ? Channel.fromPath(params.vep_cache
 read_structure1   = params.read_structure1   ?: Channel.empty()
 read_structure2   = params.read_structure2   ?: Channel.empty()
 
-/*
-========================================================================================
-    INCLUDE SUBWORKFLOWS
-========================================================================================
-*/
+// SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
 
+// Create samplesheets to restart from different steps
+include { MAPPING_CSV }               from '../subworkflows/local/mapping_csv'
+include { MARKDUPLICATES_CSV }        from '../subworkflows/local/markduplicates_csv'
+include { PREPARE_RECALIBRATION_CSV } from '../subworkflows/local/prepare_recalibration_csv'
+include { RECALIBRATE_CSV }           from '../subworkflows/local/recalibrate_csv'
+
+// Build indices if needed
 include { BUILD_INDICES } from '../subworkflows/local/build_indices' addParams(
     bgziptabix_target_bed_options:     modules['bgziptabix_target_bed'],
     build_intervals_options:           modules['build_intervals'],
@@ -155,6 +158,7 @@ include { BUILD_INDICES } from '../subworkflows/local/build_indices' addParams(
     tabix_pon_options:                 modules['tabix_pon']
 )
 
+// Map input reads to reference genome (+QC)
 include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
     bwamem1_mem_options:               modules['bwa_mem1_mem'],
     bwamem1_mem_tumor_options:         modules['bwa_mem1_mem_tumor'],
@@ -165,6 +169,7 @@ include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
     seqkit_split2_options:             modules['seqkit_split2']
 )
 
+// Mark duplicates (+QC)
 include { MARKDUPLICATES } from '../subworkflows/nf-core/markduplicates' addParams(
     estimatelibrarycomplexity_options: modules['estimatelibrarycomplexity'],
     markduplicates_options:            modules['markduplicates'],
@@ -176,11 +181,14 @@ include { MARKDUPLICATES } from '../subworkflows/nf-core/markduplicates' addPara
     samtools_view_options:             modules['samtools_view']
 )
 
+// Create recalibration tables
 include { PREPARE_RECALIBRATION } from '../subworkflows/nf-core/prepare_recalibration' addParams(
     baserecalibrator_options:          modules['baserecalibrator'],
     baserecalibrator_spark_options:    modules['baserecalibrator_spark'],
     gatherbqsrreports_options:         modules['gatherbqsrreports']
 )
+
+// Create recalibrated cram files to use for variant calling
 include { RECALIBRATE } from '../subworkflows/nf-core/recalibrate' addParams(
     applybqsr_options:                 modules['applybqsr'],
     applybqsr_spark_options:           modules['applybqsr_spark'],
@@ -189,11 +197,8 @@ include { RECALIBRATE } from '../subworkflows/nf-core/recalibrate' addParams(
     samtools_index_options:            modules['samtools_index_recalibrate'],
     samtools_stats_options:            modules['samtools_stats_recalibrate']
 )
-include { MAPPING_CSV } from '../subworkflows/local/mapping_csv'
-include { MARKDUPLICATES_CSV } from '../subworkflows/local/markduplicates_csv'
-include { PREPARE_RECALIBRATION_CSV } from '../subworkflows/local/prepare_recalibration_csv'
-include { RECALIBRATE_CSV } from '../subworkflows/local/recalibrate_csv'
 
+// Variant calling on a single normal sample
 include { GERMLINE_VARIANT_CALLING } from '../subworkflows/local/germline_variant_calling' addParams(
     concat_gvcf_options:               modules['concat_gvcf'],
     concat_haplotypecaller_options:    modules['concat_haplotypecaller'],
@@ -201,8 +206,10 @@ include { GERMLINE_VARIANT_CALLING } from '../subworkflows/local/germline_varian
     haplotypecaller_options:           modules['haplotypecaller'],
     strelka_options:                   modules['strelka_germline']
 )
+// // Variant calling on a single tumor sample
 // // include { TUMOR_VARIANT_CALLING } from '../subworkflows/local/tumor_variant_calling' addParams(
 // // )
+// // Variant calling on tumor/normal pair
 // include { PAIR_VARIANT_CALLING } from '../subworkflows/local/pair_variant_calling' addParams(
 //     manta_options:                   modules['manta_somatic'],
 //     msisensorpro_msi_options:        modules['msisensorpro_msi'],
@@ -211,6 +218,7 @@ include { GERMLINE_VARIANT_CALLING } from '../subworkflows/local/germline_varian
 //     mutect2_somatic_options:         modules['mutect2_somatic']
 // )
 
+// Annotation
 include { ANNOTATE } from '../subworkflows/local/annotate' addParams(
     annotation_cache:                  params.annotation_cache,
     bgziptabix_merge_vep_options:      modules['bgziptabix_merge_vep'],
@@ -223,23 +231,32 @@ include { ANNOTATE } from '../subworkflows/local/annotate' addParams(
     vep_tag:                           "${modules['ensemblvep'].tag_base}.${params.genome}"
 )
 
+/*
+========================================================================================
+    IMPORT NF-CORE MODULES/SUBWORKFLOWS
+========================================================================================
+*/
+
+// Config files
+ch_multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
+ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
+modules['multiqc'].args += params.multiqc_title ? Utils.joinModuleArgs(["--title \"$params.multiqc_title\""]) : ''
+
+//
+// SUBWORKFLOWS
+//
+
 include { FASTQC_TRIMGALORE } from '../subworkflows/nf-core/fastqc_trimgalore' addParams(
     fastqc_options:                  modules['fastqc'],
     trimgalore_options:              modules['trimgalore']
 )
 
-/*
-========================================================================================
-    INCLUDE NF-CORE MODULES
-========================================================================================
-*/
+//
+// MODULES: Installed directly from nf-core/modules
+//
 
-ch_multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
-ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
-
-modules['multiqc'].args += params.multiqc_title ? Utils.joinModuleArgs(["--title \"$params.multiqc_title\""]) : ''
-include { MULTIQC }               from '../modules/nf-core/modules/multiqc/main' addParams( options: modules['multiqc']   )
-include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions'  addParams( options: [publish_files : ['tsv':'']] )
+include { MULTIQC }               from '../modules/nf-core/modules/multiqc/main' addParams(options: modules['multiqc'])
+include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions'  addParams(options: [publish_files : ['tsv':'']])
 
 def multiqc_report = []
 
@@ -247,7 +264,7 @@ workflow SAREK {
 
     ch_software_versions = Channel.empty()
 
-    // BUILD INDICES
+    // Build indices if needed
     BUILD_INDICES(
         dbsnp,
         fasta,
@@ -259,6 +276,7 @@ workflow SAREK {
         tools,
         step)
 
+    // Gather built indices or get them from the params
     bwa                   = params.fasta             ? params.bwa                   ? Channel.fromPath(params.bwa).collect()                   : BUILD_INDICES.out.bwa                   : ch_dummy_file
     dict                  = params.fasta             ? params.dict                  ? Channel.fromPath(params.dict).collect()                  : BUILD_INDICES.out.dict                  : ch_dummy_file
     fai                   = params.fasta             ? params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : BUILD_INDICES.out.fai                   : ch_dummy_file
@@ -266,24 +284,26 @@ workflow SAREK {
     germline_resource_tbi = params.germline_resource ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : BUILD_INDICES.out.germline_resource_tbi : ch_dummy_file
     known_indels_tbi      = params.known_indels      ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : BUILD_INDICES.out.known_indels_tbi      : ch_dummy_file
     pon_tbi               = params.pon               ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : BUILD_INDICES.out.pon_tbi               : ch_dummy_file
+    msisensorpro_scan     = BUILD_INDICES.out.msisensorpro_scan
+    target_bed_gz_tbi     = BUILD_INDICES.out.target_bed_gz_tbi
 
     //TODO @Rike, is this working for you?
+    // known_sites is made by grouping both the dbsnp and the known indels ressources
+    // Which can either or both be optional
     known_sites     = dbsnp.concat(known_indels).collect()
     known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
 
+    // Intervals for speed up preprocessing/variant calling by spread/gather
     intervals     = BUILD_INDICES.out.intervals
     num_intervals = 0
     intervals.count().map{ num_intervals = it }
 
-    msisensorpro_scan = BUILD_INDICES.out.msisensorpro_scan
-    target_bed_gz_tbi = BUILD_INDICES.out.target_bed_gz_tbi
-
+    // Get versions from all software used
     ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.bwa_version.ifEmpty(null))
-    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.dict_version.ifEmpty(null))
-    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.fai_version.ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.gatk_version.ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.samtools_version.ifEmpty(null))
     ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.msisensorpro_scan_version.ifEmpty(null))
-    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.target_bed_version.ifEmpty(null))
-    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.dbsnp_tbi_version.mix(BUILD_INDICES.out.germline_resource_tbi_version, BUILD_INDICES.out.known_indels_tbi_version, BUILD_INDICES.out.pon_tbi_version).first().ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.tabix_version.ifEmpty(null))
 
     // PREPROCESSING
 
@@ -323,6 +343,8 @@ workflow SAREK {
             fasta,
             reads_input,
             params.skip_markduplicates)
+            // params.skip_markduplicates,
+            // save_bam_mapped)
 
         bam_mapped  = MAPPING.out.bam
         bam_indexed = MAPPING.out.bam_indexed

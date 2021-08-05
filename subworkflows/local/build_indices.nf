@@ -1,8 +1,6 @@
-/*
-========================================================================================
-    BUILDING INDICES
-========================================================================================
-*/
+//
+// BUILDING INDICES
+//
 
 params.bgziptabix_options              = [:]
 params.build_intervals_options         = [:]
@@ -53,23 +51,15 @@ workflow BUILD_INDICES {
         else                             (result_bwa, version_bwa) = BWAMEM2_INDEX(fasta)
 
     result_dict  = Channel.empty()
-    version_dict = Channel.empty()
+    version_gatk = Channel.empty()
     if (!(params.dict) && !('annotate' in step) && !('controlfreec' in step))
-        (result_dict, version_dict) = GATK4_CREATESEQUENCEDICTIONARY(fasta)
+        (result_dict, version_gatk) = GATK4_CREATESEQUENCEDICTIONARY(fasta)
 
     result_fai  = Channel.empty()
-    version_fai = Channel.empty()
+    version_samtools = Channel.empty()
     if (fasta_fai) result_fai = fasta_fai
     if (!(params.fasta_fai) && !('annotate' in step))
-        (result_fai, version_fai) = SAMTOOLS_FAIDX(fasta)
-
-    result_dbsnp_tbi  = Channel.empty()
-    version_dbsnp_tbi = Channel.empty()
-    if (!(params.dbsnp_tbi) && params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools|| 'mutect2' in tools || 'tnscope' in tools)) {
-        dbsnp_id = dbsnp.map{ it -> [[id:it[0].baseName], it] }
-        (result_dbsnp_tbi, version_dbsnp_tbi) = TABIX_DBSNP(dbsnp_id)
-        result_dbsnp_tbi = result_dbsnp_tbi.map{ meta, tbi -> [tbi] }
-    }
+        (result_fai, version_samtools) = SAMTOOLS_FAIDX(fasta)
 
     result_target_bed  = Channel.empty()
     version_target_bed = Channel.empty()
@@ -77,6 +67,14 @@ workflow BUILD_INDICES {
         target_bed_id = target_bed.map{ it -> [[id:it[0].baseName], it] }
         (result_target_bed, version_target_bed) = TABIX_BGZIPTABIX(target_bed_id)
         result_target_bed = result_target_bed.map{ meta, bed, tbi -> [bed, tbi] }
+    }
+
+    result_dbsnp_tbi  = Channel.empty()
+    version_dbsnp_tbi = Channel.empty()
+    if (!(params.dbsnp_tbi) && params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools|| 'mutect2' in tools || 'tnscope' in tools)) {
+        dbsnp_id = dbsnp.map{ it -> [[id:it[0].baseName], it] }
+        (result_dbsnp_tbi, version_dbsnp_tbi) = TABIX_DBSNP(dbsnp_id)
+        result_dbsnp_tbi = result_dbsnp_tbi.map{ meta, tbi -> [tbi] }
     }
 
     result_germline_resource_tbi  = Channel.empty()
@@ -94,17 +92,20 @@ workflow BUILD_INDICES {
         result_known_indels_tbi = result_known_indels_tbi.map{ meta, tbi -> [tbi] }
     }
 
-    result_msisensorpro_scan  = Channel.empty()
-    version_msisensorpro_scan = Channel.empty()
-    if ('msisensorpro' in tools)
-        (result_msisensorpro_scan, version_msisensorpro_scan) = MSISENSORPRO_SCAN(fasta)
-
     result_pon_tbi  = Channel.empty()
     version_pon_tbi = Channel.empty()
     if (!(params.pon_tbi) && params.pon && ('tnscope' in tools || 'mutect2' in tools)) {
         pon_id = pon.map{ it -> [[id:it[0].baseName], it] }
         (result_pon_tbi, version_pon_tbi) = TABIX_PON(pon_id)
     }
+
+    version_tabix = Channel.empty()
+    version_tabix = version_tabix.mix(version_target_bed, version_dbsnp_tbi, version_germline_resource_tbi, version_known_indels_tbi, version_pon_tbi).first()
+
+    result_msisensorpro_scan  = Channel.empty()
+    version_msisensorpro_scan = Channel.empty()
+    if ('msisensorpro' in tools)
+        (result_msisensorpro_scan, version_msisensorpro_scan) = MSISENSORPRO_SCAN(fasta)
 
     result_intervals = Channel.empty()
     if (params.no_intervals) {
@@ -139,20 +140,16 @@ workflow BUILD_INDICES {
         bwa                           = result_bwa
         bwa_version                   = version_bwa
         dbsnp_tbi                     = result_dbsnp_tbi
-        dbsnp_tbi_version             = version_dbsnp_tbi
         dict                          = result_dict
-        dict_version                  = version_dict
         fai                           = result_fai
-        fai_version                   = version_fai
+        gatk_version                  = version_gatk
         germline_resource_tbi         = result_germline_resource_tbi
-        germline_resource_tbi_version = version_germline_resource_tbi
         intervals                     = result_intervals
         known_indels_tbi              = result_known_indels_tbi.collect()
-        known_indels_tbi_version      = version_known_indels_tbi
         msisensorpro_scan             = result_msisensorpro_scan
         msisensorpro_scan_version     = version_msisensorpro_scan
         pon_tbi                       = result_pon_tbi
-        pon_tbi_version               = version_pon_tbi
+        samtools_version              = version_samtools
+        tabix_version                 = version_tabix
         target_bed_gz_tbi             = result_target_bed
-        target_bed_version            = version_target_bed
 }

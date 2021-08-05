@@ -1,8 +1,6 @@
-/*
-========================================================================================
-    MARKDUPLICATES AND/OR QC after mapping
-========================================================================================
-*/
+//
+// MARKDUPLICATES AND/OR QC after mapping
+//
 
 params.estimatelibrarycomplexity_options = [:]
 params.markduplicates_options            = [:]
