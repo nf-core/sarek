@@ -26,6 +26,7 @@ workflow MAPPING {
         fasta               // channel: [mandatory] fasta
         reads_input         // channel: [mandatory] meta, reads_input
         skip_markduplicates // boolean: true/false
+        save_bam_mapped     // boolean: true/false
 
     main:
 
@@ -44,10 +45,10 @@ workflow MAPPING {
 
     // If meta.status is 1, then sample is tumor
     // else, (even is no meta.status exist) sample is normal
-    reads_input_split.branch{
-        tumor:  it[0].status == 1
+    reads_input_split.branch{ meta, reads ->
+        tumor:  meta.status == 1
         normal: true
-    }.set{ reads_input_status }
+    }.set{reads_input_status}
 
     bam_bwamem      = Channel.empty()
     bam_bwamem1     = Channel.empty()
@@ -97,16 +98,18 @@ workflow MAPPING {
         tuple(groupKey, bam)
 
         [new_meta, bam]
-    }.groupTuple().set{ bam_mapped }
+    }.groupTuple().set{bam_mapped}
 
-    // MarkDuplicates can handle multiple BAMS as input, so no merging/indexing at this step
-    // Except if and only if skipping MarkDuplicates
+    // GATK markduplicates can handle multiple BAMS as input
+    // So no merging/indexing at this step
+    // Except if and only if skipping markduplicates
+    // Or saving mapped BAMs
 
-    if (skip_markduplicates) {
+    if (save_bam_mapped || skip_markduplicates) {
         bam_mapped.branch{
             single:   it[1].size() == 1
             multiple: it[1].size() > 1
-        }.set{ bam_to_merge }
+        }.set{bam_to_merge}
 
         SAMTOOLS_MERGE(bam_to_merge.multiple)
         bam_merged = bam_to_merge.single.mix(SAMTOOLS_MERGE.out.bam)

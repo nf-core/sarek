@@ -345,9 +345,8 @@ workflow SAREK {
             fai,
             fasta,
             reads_input,
-            params.skip_markduplicates)
-            // params.skip_markduplicates,
-            // save_bam_mapped)
+            params.skip_markduplicates,
+            save_bam_mapped)
 
         // Get mapped reads (BAM) with and without index
         bam_mapped  = MAPPING.out.bam
