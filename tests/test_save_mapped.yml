@@ -1,8 +1,8 @@
-- name: Run bwa-mem2
+- name: Run save bam mapped
   command: nextflow run main.nf -profile test,docker --save_bam_mapped
   tags:
-    - aligner
-    - bwa-mem2
+    - preprocessing
+    - save_bam_mapped
   files:
     - path: results/multiqc
     - path: results/preprocessing/1234N/mapped/1234N.bam
