@@ -42,6 +42,7 @@ for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 // Get step and tools
 def step = params.step ? params.step.replaceAll('-', '').replaceAll('_', '') : ''
 def tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
+def skip_qc = params.skip_qc ? params.skip_qc.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
 
 // Check mandatory parameters
 if (params.input) csv_file = file(params.input)
@@ -321,7 +322,7 @@ workflow SAREK {
     if (step == 'mapping') {
         FASTQC_TRIMGALORE(
             input_sample,
-            ('fastqc' in params.skip_qc),
+            ('fastqc' in skip_qc),
             !(params.trim_fastq))
 
         // Get reads after optional trimming (+QC)
@@ -365,13 +366,13 @@ workflow SAREK {
             bam_mapped,
             bam_indexed,
             ('markduplicates' in params.use_gatk_spark),
-            !('markduplicates' in params.skip_qc),
+            !('markduplicates' in skip_qc),
             fasta,
             fai,
             dict,
             params.skip_markduplicates,
-            ('bamqc' in params.skip_qc),
-            ('samtools' in params.skip_qc),
+            ('bamqc' in skip_qc),
+            ('samtools' in skip_qc),
             target_bed)
 
         cram_markduplicates = MARKDUPLICATES.out.cram
@@ -406,8 +407,8 @@ workflow SAREK {
         // STEP 4: RECALIBRATING
         RECALIBRATE(
             ('bqsr' in params.use_gatk_spark),
-            ('bamqc' in params.skip_qc),
-            ('samtools' in params.skip_qc),
+            ('bamqc' in skip_qc),
+            ('samtools' in skip_qc),
             cram_applybqsr,
             dict,
             fai,
@@ -505,7 +506,11 @@ workflow SAREK {
         .collect()
         .set { ch_software_versions }
 
-    GET_SOFTWARE_VERSIONS(ch_software_versions.map{it}.collect())
+    ch_version_yaml = Channel.empty()
+    if (!('versions' in skip_qc)) {
+        GET_SOFTWARE_VERSIONS(ch_software_versions.map{it}.collect())
+        ch_version_yaml = GET_SOFTWARE_VERSIONS.out.yaml.collect()
+    }
 
     workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
@@ -514,12 +519,14 @@ workflow SAREK {
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_config)
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
+    ch_multiqc_files = ch_multiqc_files.mix(ch_version_yaml)
     ch_multiqc_files = ch_multiqc_files.mix(qc_reports)
 
-    MULTIQC(ch_multiqc_files.collect())
-    multiqc_report       = MULTIQC.out.report.toList()
-    ch_software_versions = ch_software_versions.mix(MULTIQC.out.version.ifEmpty(null))
+    multiqc_report = Channel.empty()
+    if (!('multiqc' in skip_qc)) {
+        MULTIQC(ch_multiqc_files.collect())
+        multiqc_report       = MULTIQC.out.report.toList()
+    }
 }
 
 workflow.onComplete {
