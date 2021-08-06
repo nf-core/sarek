@@ -546,7 +546,7 @@ def extract_csv(csv_file) {
         }.groupTuple()
         .map{ meta, rows ->
             size = rows.size()
-            return [rows, size]
+            [rows, size]
         }.transpose()
         .map{ row, numLanes -> //from here do the usual thing for csv parsing
         def meta = [:]
