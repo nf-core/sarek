@@ -1,16 +1,14 @@
-/*
-========================================================================================
-    PREPARE RECALIBRATION
-========================================================================================
-*/
+//
+// PREPARE RECALIBRATION
+//
 
-params.baserecalibrator_options  = [:]
-params.gatherbqsrreports_options = [:]
+params.baserecalibrator_options        = [:]
+params.gatherbqsrreports_options       = [:]
 params.baserecalibrator_spark_options  = [:]
 
-include { GATK4_BASERECALIBRATOR  as BASERECALIBRATOR }              from '../../modules/local/gatk4/baserecalibrator/main'      addParams(options: params.baserecalibrator_options)
-include { GATK4_BASERECALIBRATOR_SPARK  as BASERECALIBRATOR_SPARK }  from '../../modules/local/gatk4/baserecalibratorspark/main' addParams(options: params.baserecalibrator_spark_options)
-include { GATK4_GATHERBQSRREPORTS as GATHERBQSRREPORTS }             from '../../modules/local/gatk4/gatherbqsrreports/main'     addParams(options: params.gatherbqsrreports_options)
+include { GATK4_BASERECALIBRATOR  as BASERECALIBRATOR             } from '../../modules/local/gatk4/baserecalibrator/main'      addParams(options: params.baserecalibrator_options)
+include { GATK4_BASERECALIBRATOR_SPARK  as BASERECALIBRATOR_SPARK } from '../../modules/local/gatk4/baserecalibratorspark/main' addParams(options: params.baserecalibrator_spark_options)
+include { GATK4_GATHERBQSRREPORTS as GATHERBQSRREPORTS            } from '../../modules/local/gatk4/gatherbqsrreports/main'     addParams(options: params.gatherbqsrreports_options)
 
 workflow PREPARE_RECALIBRATION {
     take:
@@ -26,6 +24,7 @@ workflow PREPARE_RECALIBRATION {
         no_intervals        //   value: [mandatory] no_intervals
 
     main:
+
     cram_markduplicates.combine(intervals)
         .map{ meta, cram, crai, intervals ->
             new_meta = meta.clone()

@@ -23,6 +23,7 @@
     - path: results/reports/fastqc/1234N-1234N_M5
     - path: results/reports/fastqc/1234N-1234N_M6
     - path: results/reports/fastqc/1234N-1234N_M7
-    - path: results/reports/qualimap/1234N
+    - path: results/reports/qualimap/1234N/1234N.mapped
+    - path: results/reports/qualimap/1234N/1234N.recal
     - path: results/reports/samtools_stats/1234N/1234N.md.cram.stats
     - path: results/reports/samtools_stats/1234N/1234N.recal.cram.stats

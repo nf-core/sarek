@@ -64,6 +64,7 @@
                 },
                 "no_intervals": {
                     "type": "boolean",
+                    "default": false,
                     "fa_icon": "fas fa-ban",
                     "description": "Disable usage of intervals.",
                     "help_text": "Intervals are part of the genome chopped up, used to speed up preprocessing and variant calling"
@@ -77,6 +78,7 @@
                 },
                 "sentieon": {
                     "type": "boolean",
+                    "default": false,
                     "fa_icon": "fas fa-tools",
                     "description": "Enable Sentieon if available.",
                     "help_text": "Sentieon is a commercial solution to process genomics data with high computing efficiency, fast turnaround time, exceptional accuracy, and 100% consistency.\n\n> **NB** Adds the following tools for the `--tools` options: `DNAseq`, `DNAscope` and `TNscope`."
@@ -90,6 +92,8 @@
                 },
                 "target_bed": {
                     "type": "string",
+                    "format": "file-path",
+                    "pattern": "\\.bed$",
                     "fa_icon": "fas fa-crosshairs",
                     "description": "Target BED file for whole exome or targeted sequencing.",
                     "help_text": "This parameter does _not_  imply that the workflow is running alignment or variant calling only for the supplied targets.\nInstead, we are aligning for the whole genome, and selecting variants only at the very end by intersecting with the provided target file.\nAdding every exon as an interval in case of `WES` can generate >200K processes or jobs, much more forks, and similar number of directories in the Nextflow work directory.\nFurthermore, primers and/or baits are not 100% specific, (certainly not for MHC and KIR, etc.), quite likely there going to be reads mapping to multiple locations.\nIf you are certain that the target is unique for your genome (all the reads will certainly map to only one location), and aligning to the whole genome is an overkill, it is actually better to change the reference itself.\n\nThe recommended flow for targeted sequencing data is to use the workflow as it is, but also provide a `BED` file containing targets for all steps using the `--target_bed` option.\nThe workflow will pick up these intervals, and activate any `--exome` flag in any tools that allow it to process deeper coverage.\nIt is advised to pad the variant calling regions (exons or target) to some extent before submitting to the workflow."
@@ -109,6 +113,7 @@
                     "fa_icon": "fas fa-cut",
                     "description": "Run Trim Galore.",
                     "hidden": true,
+                    "default": false,
                     "help_text": "Use this to perform adapter trimming with Trim Galore.\ncf [Trim Galore User Guide](https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md)"
                 },
                 "clip_r1": {
@@ -154,11 +159,13 @@
                 "save_trimmed": {
                     "type": "boolean",
                     "fa_icon": "fas fa-save",
+                    "default": false,
                     "description": "Save trimmed FastQ file intermediates",
                     "hidden": true
                 },
                 "split_fastq": {
-                    "type": "number",
+                    "type": "integer",
+                    "default": 0,
                     "fa_icon": "fas fa-cut",
                     "description": "Specify how many reads each split of a FastQ file contains. Set 0 to turn of splitting at all",
                     "help_text": "Use the the tools seqkit/split2 to split FASTQ file by number of reads",
@@ -203,6 +210,7 @@
                 "save_bam_mapped": {
                     "type": "boolean",
                     "fa_icon": "fas fa-download",
+                    "default": false,
                     "description": "Save Mapped BAMs"
                 },
                 "skip_markduplicates": {
@@ -222,13 +230,13 @@
             "fa_icon": "fas fa-toolbox",
             "properties": {
                 "ascat_ploidy": {
-                    "type": "string",
+                    "type": "number",
                     "fa_icon": "fas fa-wrench",
                     "description": "Overwrite ASCAT ploidy",
                     "help_text": "Requires that `--ascat_purity` is set"
                 },
                 "ascat_purity": {
-                    "type": "string",
+                    "type": "number",
                     "fa_icon": "fas fa-wrench",
                     "description": "Overwrite ASCAT purity",
                     "help_text": "Requires that `--ascat_ploidy` is set"
@@ -241,11 +249,12 @@
                 },
                 "cf_contamination_adjustment": {
                     "type": "boolean",
+                    "default": false,
                     "fa_icon": "fas fa-wrench",
                     "description": "Overwrite Control-FREEC contaminationAdjustement"
                 },
                 "cf_contamination": {
-                    "type": "string",
+                    "type": "number",
                     "fa_icon": "fas fa-wrench",
                     "description": "Design known contamination value for Control-FREEC"
                 },
@@ -263,11 +272,13 @@
                 },
                 "generate_gvcf": {
                     "type": "boolean",
+                    "default": false,
                     "fa_icon": "fas fa-copy",
                     "description": "Generate g.vcf output from GATK HaplotypeCaller"
                 },
                 "no_strelka_bp": {
                     "type": "boolean",
+                    "default": false,
                     "fa_icon": "fas fa-ban",
                     "description": "Will not use Manta candidateSmallIndels for Strelka",
                     "help_text": "Not recommended by Best Practices"
@@ -286,12 +297,14 @@
                 },
                 "ignore_soft_clipped_bases": {
                     "type": "boolean",
+                    "default": false,
                     "fa_icon": "fas fa-ban",
                     "description": "Do not analyze soft clipped bases in the reads for GATK Mutect2",
                     "help_text": "use the `--dont-use-soft-clipped-bases` params with GATK."
                 },
                 "umi": {
                     "type": "boolean",
+                    "default": false,
                     "fa_icon": "fas fa-tape",
                     "description": "If provided, UMIs steps will be run to extract and annotate the reads with UMI and create consensus reads",
                     "help_text": "This part of the pipeline uses fgbio to convert the FASTQ files into a unmapped BAM, where reads are tagged with the UMIs extracted from the FASTQ sequences.\nIn order to allow the correct tagging, the UMI sequence must be contained in the read sequence itself, and not in the FASTQ filename.\nFollowing this step, the unmapped BAM is aligned and reads are then grouped based on mapping position and UMI tag.\nFinally, reads in the same groups are collapsed to create a consensus read.\nTo create consensus, we have chosen to use the adjacency method\n\ncf [fgbio](https://github.com/fulcrumgenomics/fgbio)\ncf [UMIs, the problem, the solution and the proof](https://cgatoxford.wordpress.com/2015/08/14/unique-molecular-identifiers-the-problem-the-solution-and-the-proof/)\n\n> **NB** In order for the correct tagging to be performed, a read structure needs to be specified with `--read_structure1` and `--readstructure2`"
