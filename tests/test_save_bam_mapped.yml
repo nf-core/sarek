@@ -1,4 +1,4 @@
-- name: Run save bam mapped
+- name: Run save_bam_mapped
   command: nextflow run main.nf -profile test,docker --save_bam_mapped
   tags:
     - preprocessing

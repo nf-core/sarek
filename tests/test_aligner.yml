@@ -1,9 +1,9 @@
 - name: Run bwa-mem2
   command: nextflow run main.nf -profile test,docker --aligner bwa-mem2
   tags:
-    - preprocessing
     - aligner
     - bwa-mem2
+    - preprocessing
   files:
     - path: results/multiqc
     - path: results/preprocessing/1234N/markduplicates/1234N.md.cram

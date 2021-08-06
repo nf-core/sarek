@@ -1,8 +1,8 @@
 - name: Run default pipeline while skipping MarkDuplicates
   command: nextflow run main.nf -profile test,docker,skip_markduplicates
   tags:
-    - preprocessing
     - markduplicates
+    - preprocessing
     - skip_markduplicates
   files:
     - path: results/multiqc
@@ -32,9 +32,9 @@
 - name: Run default pipeline while skipping MarkDuplicates, starting with prepare_recalibration
   command: nextflow run main.nf -profile test,docker,prepare_recalibration,skip_markduplicates
   tags:
-    - preprocessing
-    - prepare_recalibration
     - markduplicates
+    - prepare_recalibration
+    - preprocessing
     - skip_markduplicates
   files:
     - path: results/multiqc
