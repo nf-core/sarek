@@ -328,9 +328,7 @@ workflow SAREK {
         reads_input = FASTQC_TRIMGALORE.out.reads
 
         // Get all qc reports for MultiQC
-        qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.fastqc_html.collect{it[1]}.ifEmpty([]))
         qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
-        qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_html.collect{it[1]}.ifEmpty([]))
         qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]))
         qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
 
