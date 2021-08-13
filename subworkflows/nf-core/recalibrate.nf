@@ -1,8 +1,6 @@
-/*
-========================================================================================
-    RECALIBRATE
-========================================================================================
-*/
+//
+// RECALIBRATE
+//
 
 params.applybqsr_options      = [:]
 params.applybqsr_spark_options = [:]
@@ -71,7 +69,7 @@ workflow RECALIBRATE {
 
         if (!skip_bamqc) {
             QUALIMAP_BAMQC_CRAM(cram_recalibrated_index,target_bed, params.target_bed,fasta, fai)
-            qualimap_bamqc = QUALIMAP_BAMQC_CRAM.out
+            qualimap_bamqc = QUALIMAP_BAMQC_CRAM.out.results
         }
 
         if (!skip_samtools) {

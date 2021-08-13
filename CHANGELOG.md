@@ -9,9 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- [#353](https://github.com/nf-core/sarek/pull/353) - Add support for task retries with exit code 247 (exhibited by Picard MarkDuplicates)
-
 ### Changed
+
+### Fixed
 
 - [#234](https://github.com/nf-core/sarek/pull/234) - Switching to DSL2
 - [#234](https://github.com/nf-core/sarek/pull/234), [#238](https://github.com/nf-core/sarek/pull/238) - Add modules and sub workflow for building indices
@@ -23,14 +23,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#266](https://github.com/nf-core/sarek/pull/266), [#285](https://github.com/nf-core/sarek/pull/285), [#297](https://github.com/nf-core/sarek/pull/297)  - Add modules and sub workflow for variant calling
 - [#333](https://github.com/nf-core/sarek/pull/333) - Bump `Sarek` version to `3.0dev`
 - [#334](https://github.com/nf-core/sarek/pull/334) - Sync `dsl2` and `dev` branches
-
-### Fixed
-
 - [#342](https://github.com/nf-core/sarek/pull/342) - Update `README.md`
 
 ### Deprecated
 
 ### Removed
+
+## [2.7.1](https://github.com/nf-core/sarek/releases/tag/2.7.1) - Pårtejekna
+
+Pårtejekna is one of glaciers of the Pårte Massif.
+
+### Added
+
+- [#353](https://github.com/nf-core/sarek/pull/353) - Add support for task retries with exit code 247 (exhibited by `Picard MarkDuplicates`)
+- [#354](https://github.com/nf-core/sarek/pull/354) - Add tumor only mode for `Mutect2` and `MSIsensor`
+- [#356](https://github.com/nf-core/sarek/pull/356) - Add `--cf_contamination_adjustment` params to adjust contamination with `Control-FREEC`
+- [#372](https://github.com/nf-core/sarek/pull/372) - Add `--cf_contamination` params to specify contamination value with `Control-FREEC`
+
+### Changed
+
+- [#373](https://github.com/nf-core/sarek/pull/373) - Sync `TEMPLATE` with `tools` 1.14
+- [#376](https://github.com/nf-core/sarek/pull/376) - Better logo on Github dark Mode
+- [#387](https://github.com/nf-core/sarek/pull/387) - Fix tables for TSV file content
+
+### Fixed
+
+- [#375](https://github.com/nf-core/sarek/pull/375), [#381](https://github.com/nf-core/sarek/pull/381), [#382](https://github.com/nf-core/sarek/pull/382), [#385](https://github.com/nf-core/sarek/pull/385) - Fix bugs due to `TEMPLATE` sync from [#373](https://github.com/nf-core/sarek/pull/373)
+- [#378](https://github.com/nf-core/sarek/pull/378) - Fix `Spark` related issue due to `Docker` settings in `nextflow.config`
+
+### Deprecated
+
+### Removed
+
+- [#368](https://github.com/nf-core/sarek/pull/368) - Remove social preview image to use GitHub OpenGraph
 
 ## [2.7](https://github.com/nf-core/sarek/releases/tag/2.7) - Pårte
 

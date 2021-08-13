@@ -1,6 +1,6 @@
-/*
- * Run snpEff to annotate VCF files
- */
+//
+// Run snpEff to annotate VCF files
+//
 
 params.bgziptabix_snpeff = [:]
 params.snpeff_options    = [:]

@@ -1,0 +1,55 @@
+- name: Run default pipeline while skipping MarkDuplicates
+  command: nextflow run main.nf -profile test,docker,skip_markduplicates
+  tags:
+    - markduplicates
+    - preprocessing
+    - skip_markduplicates
+  files:
+    - path: results/multiqc
+    - path: results/preprocessing/1234N/mapped/1234N.bam
+    - path: results/preprocessing/1234N/mapped/1234N.bam.bai
+    - path: results/preprocessing/1234N/mapped/1234N.recal.table
+    - path: results/preprocessing/1234N/markduplicates/1234N.md.cram
+    - path: results/preprocessing/1234N/markduplicates/1234N.md.cram.crai
+    - path: results/preprocessing/1234N/recalibrated/1234N.recal.cram
+    - path: results/preprocessing/1234N/recalibrated/1234N.recal.cram.crai
+    - path: results/preprocessing/csv/markduplicates.csv
+    - path: results/preprocessing/csv/markduplicates_1234N.csv
+    - path: results/preprocessing/csv/markduplicates_no_table.csv
+    - path: results/preprocessing/csv/markduplicates_no_table_1234N.csv
+    - path: results/preprocessing/csv/recalibrated.csv
+    - path: results/preprocessing/csv/recalibrated_1234N.csv
+    - path: results/reports/fastqc/1234N-1234N_M1
+    - path: results/reports/fastqc/1234N-1234N_M2
+    - path: results/reports/fastqc/1234N-1234N_M4
+    - path: results/reports/fastqc/1234N-1234N_M5
+    - path: results/reports/fastqc/1234N-1234N_M6
+    - path: results/reports/fastqc/1234N-1234N_M7
+    - path: results/reports/qualimap/1234N/1234N.mapped
+    - path: results/reports/qualimap/1234N/1234N.recal
+    - path: results/reports/samtools_stats/1234N/1234N.md.cram.stats
+    - path: results/reports/samtools_stats/1234N/1234N.recal.cram.stats
+- name: Run default pipeline while skipping MarkDuplicates, starting with prepare_recalibration
+  command: nextflow run main.nf -profile test,docker,prepare_recalibration,skip_markduplicates
+  tags:
+    - markduplicates
+    - prepare_recalibration
+    - preprocessing
+    - skip_markduplicates
+  files:
+    - path: results/multiqc
+    - path: results/preprocessing/1234N/mapped/1234N.recal.table
+    - path: results/preprocessing/1234N/markduplicates/1234N.md.cram
+    - path: results/preprocessing/1234N/markduplicates/1234N.md.cram.crai
+    - path: results/preprocessing/1234N/recalibrated/1234N.recal.cram
+    - path: results/preprocessing/1234N/recalibrated/1234N.recal.cram.crai
+    - path: results/preprocessing/csv/markduplicates.csv
+    - path: results/preprocessing/csv/markduplicates_1234N.csv
+    - path: results/preprocessing/csv/markduplicates_no_table.csv
+    - path: results/preprocessing/csv/markduplicates_no_table_1234N.csv
+    - path: results/preprocessing/csv/recalibrated.csv
+    - path: results/preprocessing/csv/recalibrated_1234N.csv
+    - path: results/reports/qualimap/1234N/1234N.mapped
+    - path: results/reports/qualimap/1234N/1234N.recal
+    - path: results/reports/samtools_stats/1234N/1234N.md.cram.stats
+    - path: results/reports/samtools_stats/1234N/1234N.recal.cram.stats

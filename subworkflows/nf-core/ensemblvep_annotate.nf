@@ -1,6 +1,6 @@
-/*
- * Run VEP to annotate VCF files
- */
+//
+// Run VEP to annotate VCF files
+//
 
 params.bgziptabix_vep = [:]
 params.vep_options    = [:]

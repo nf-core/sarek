@@ -1,8 +1,6 @@
-/*
-========================================================================================
-    GERMLINE VARIANT CALLING
-========================================================================================
-*/
+//
+// GERMLINE VARIANT CALLING
+//
 
 params.haplotypecaller_options        = [:]
 params.deepvariant_options            = [:]

@@ -34,8 +34,10 @@
     - path: results/reports/fastqc/9876T-9876T_M2
     - path: results/reports/fastqc/9876T-9876T_M4
     - path: results/reports/fastqc/9876T-9876T_M5
-    - path: results/reports/qualimap/1234N
-    - path: results/reports/qualimap/9876T
+    - path: results/reports/qualimap/1234N/1234N.mapped
+    - path: results/reports/qualimap/1234N/1234N.recal
+    - path: results/reports/qualimap/9876T/9876T.mapped
+    - path: results/reports/qualimap/9876T/9876T.recal
     - path: results/reports/samtools_stats/1234N/1234N.md.cram.stats
     - path: results/reports/samtools_stats/1234N/1234N.recal.cram.stats
     - path: results/reports/samtools_stats/9876T/9876T.md.cram.stats
