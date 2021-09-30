@@ -84,14 +84,15 @@ then
                 tail -n +$((L+1)) ${vcf}
             done
         done
-    ) | bgzip -@${cpus} > rawcalls.vcf.gz
-    tabix rawcalls.vcf.gz
+    ) | bgzip -@${cpus} > rawcalls.unsorted.vcf.gz
 else
     VCF=$(ls no_intervals*.vcf)
-    cp $VCF rawcalls.vcf
-    bgzip -@${cpus} rawcalls.vcf
-    tabix rawcalls.vcf.gz
+    cp $VCF rawcalls.unsorted.vcf
+    bgzip -@${cpus} rawcalls.unsorted.vcf
 fi
+
+bcftools sort rawcalls.unsorted.vcf.gz | bgzip > rawcalls.vcf.gz
+tabix -p vcf rawcalls.vcf.gz
 
 set +u
 
