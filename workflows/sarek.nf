@@ -144,7 +144,7 @@ include { PREPARE_RECALIBRATION_CSV } from '../subworkflows/local/prepare_recali
 include { RECALIBRATE_CSV }           from '../subworkflows/local/recalibrate_csv'
 
 // Build indices if needed
-include { BUILD_INDICES } from '../subworkflows/local/build_indices' addParams(
+include { PREPARE_GENOME } from '../subworkflows/local/prepare_genome' addParams(
     bgziptabix_target_bed_options:     modules['bgziptabix_target_bed'],
     build_intervals_options:           modules['build_intervals'],
     bwa_index_options:                 modules['bwa_index'],
@@ -267,7 +267,7 @@ workflow SAREK {
     qc_reports  = Channel.empty()
 
     // Build indices if needed
-    BUILD_INDICES(
+    PREPARE_GENOME(
         dbsnp,
         fasta,
         params.fasta_fai,
@@ -279,15 +279,15 @@ workflow SAREK {
         step)
 
     // Gather built indices or get them from the params
-    bwa                   = params.fasta             ? params.bwa                   ? Channel.fromPath(params.bwa).collect()                   : BUILD_INDICES.out.bwa                   : ch_dummy_file
-    dict                  = params.fasta             ? params.dict                  ? Channel.fromPath(params.dict).collect()                  : BUILD_INDICES.out.dict                  : ch_dummy_file
-    fai                   = params.fasta             ? params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : BUILD_INDICES.out.fai                   : ch_dummy_file
-    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : BUILD_INDICES.out.dbsnp_tbi             : ch_dummy_file
-    germline_resource_tbi = params.germline_resource ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : BUILD_INDICES.out.germline_resource_tbi : ch_dummy_file
-    known_indels_tbi      = params.known_indels      ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : BUILD_INDICES.out.known_indels_tbi      : ch_dummy_file
+    bwa                   = params.fasta             ? params.bwa                   ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : ch_dummy_file
+    dict                  = params.fasta             ? params.dict                  ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : ch_dummy_file
+    fai                   = params.fasta             ? params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fai                   : ch_dummy_file
+    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : ch_dummy_file
+    germline_resource_tbi = params.germline_resource ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : ch_dummy_file
+    known_indels_tbi      = params.known_indels      ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : ch_dummy_file
     pon_tbi               = params.pon               ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : BUILD_INDICES.out.pon_tbi               : ch_dummy_file
-    msisensorpro_scan     = BUILD_INDICES.out.msisensorpro_scan
-    target_bed_gz_tbi     = BUILD_INDICES.out.target_bed_gz_tbi
+    msisensorpro_scan     = PREPARE_GENOME.out.msisensorpro_scan
+    target_bed_gz_tbi     = PREPARE_GENOME.out.target_bed_gz_tbi
 
     //TODO @Rike, is this working for you?
     // known_sites is made by grouping both the dbsnp and the known indels ressources
@@ -296,16 +296,16 @@ workflow SAREK {
     known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
-    intervals     = BUILD_INDICES.out.intervals
+    intervals     = PREPARE_GENOME.out.intervals
     num_intervals = 0
     intervals.count().map{ num_intervals = it }
 
     // Get versions from all software used
-    ch_versions = ch_versions.mix(BUILD_INDICES.out.bwa_version.ifEmpty(null))
-    ch_versions = ch_versions.mix(BUILD_INDICES.out.gatk_version.ifEmpty(null))
-    ch_versions = ch_versions.mix(BUILD_INDICES.out.samtools_version.ifEmpty(null))
-    ch_versions = ch_versions.mix(BUILD_INDICES.out.msisensorpro_scan_version.ifEmpty(null))
-    ch_versions = ch_versions.mix(BUILD_INDICES.out.tabix_version.ifEmpty(null))
+    ch_versions = ch_versions.mix(PREPARE_GENOME.out.bwa_version.ifEmpty(null))
+    ch_versions = ch_versions.mix(PREPARE_GENOME.out.gatk_version.ifEmpty(null))
+    ch_versions = ch_versions.mix(PREPARE_GENOME.out.samtools_version.ifEmpty(null))
+    ch_versions = ch_versions.mix(PREPARE_GENOME.out.msisensorpro_scan_version.ifEmpty(null))
+    ch_versions = ch_versions.mix(PREPARE_GENOME.out.tabix_version.ifEmpty(null))
 
     // PREPROCESSING
 

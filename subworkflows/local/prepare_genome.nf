@@ -30,7 +30,7 @@ include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE } from '../../modules/nf-core/m
 include { TABIX_TABIX as TABIX_KNOWN_INDELS }      from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_known_indels_options)
 include { TABIX_TABIX as TABIX_PON }               from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_pon_options)
 
-workflow BUILD_INDICES {
+workflow PREPARE_GENOME {
     take:
         dbsnp             // channel: [optional]  dbsnp
         fasta             // channel: [mandatory] fasta
