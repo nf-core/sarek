@@ -301,11 +301,7 @@ workflow SAREK {
     intervals.count().map{ num_intervals = it }
 
     // Get versions from all software used
-    ch_versions = ch_versions.mix(PREPARE_GENOME.out.bwa_version.ifEmpty(null))
-    ch_versions = ch_versions.mix(PREPARE_GENOME.out.gatk_version.ifEmpty(null))
-    ch_versions = ch_versions.mix(PREPARE_GENOME.out.samtools_version.ifEmpty(null))
-    ch_versions = ch_versions.mix(PREPARE_GENOME.out.msisensorpro_scan_version.ifEmpty(null))
-    ch_versions = ch_versions.mix(PREPARE_GENOME.out.tabix_version.ifEmpty(null))
+    ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
     // PREPROCESSING
 
