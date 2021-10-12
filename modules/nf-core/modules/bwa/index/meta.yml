@@ -22,10 +22,10 @@ output:
         type: file
         description: BWA genome index files
         pattern: "*.{amb,ann,bwt,pac,sa}"
-    - version:
+    - versions:
         type: file
-        description: File containing software version
-        pattern: "*.{version.txt}"
+        description: File containing software versions
+        pattern: "versions.yml"
 authors:
     - "@drpatelh"
     - "@maxulysse"

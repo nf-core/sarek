@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -22,14 +22,21 @@ process BWA_INDEX {
     path fasta
 
     output:
-    path "bwa"          , emit: index
-    path "*.version.txt", emit: version
+    path "bwa"         , emit: index
+    path "versions.yml", emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
     """
     mkdir bwa
-    bwa index $options.args $fasta -p bwa/${fasta.baseName}
-    echo \$(bwa 2>&1) | sed 's/^.*Version: //; s/Contact:.*\$//' > ${software}.version.txt
+    bwa \\
+        index \\
+        $options.args \\
+        $fasta \\
+        -p bwa/${fasta.baseName}
+
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        ${getSoftwareName(task.process)}: \$(echo \$(bwa 2>&1) | sed 's/^.*Version: //; s/Contact:.*\$//')
+    END_VERSIONS
     """
 }

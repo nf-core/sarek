@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -22,13 +22,15 @@ process SAMTOOLS_FAIDX {
     path fasta
 
     output:
-    path "*.fai"        , emit: fai
-    path "*.version.txt", emit: version
+    path "*.fai"       , emit: fai
+    path "versions.yml", emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
     """
     samtools faidx $fasta
-    echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        ${getSoftwareName(task.process)}: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+    END_VERSIONS
     """
 }
