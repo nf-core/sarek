@@ -31,5 +31,5 @@ workflow ENSEMBLVEP_ANNOTATE {
     emit:
     vcf            = TABIX_BGZIPTABIX.out.tbi // channel: [ val(meta), vcf, tbi ]
     vep_report     = ENSEMBLVEP.out.report    //    path: *.html
-    vep_version    = ENSEMBLVEP.out.version   //    path: *.version.txt
+    vep_version    = ENSEMBLVEP.out.versions  //    path: versions.yml
 }
