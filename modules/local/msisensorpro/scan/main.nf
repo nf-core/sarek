@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -22,8 +22,8 @@ process MSISENSORPRO_SCAN {
     path fasta
 
     output:
-    path "*.list",        emit: list
-    path "*.version.txt", emit: version
+    path "*.list",       emit: list
+    path "versions.yml", emit: versions
 
     script:
     def software = getSoftwareName(task.process)
@@ -34,6 +34,10 @@ process MSISENSORPRO_SCAN {
         -o ${fasta.baseName}.list \\
         $options.args
 
-    echo \$(msisensor-pro 2>&1) | sed -nE 's/Version:\\sv([0-9]\\.[0-9])/\\1/ p' > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        ${getSoftwareName(task.process)}: echo \$(msisensor-pro 2>&1) | sed -nE 's/Version:\\sv([0-9]\\.[0-9])/\\1/ p': //; s/Contact:.*\$//')
+    END_VERSIONS
+
     """
 }

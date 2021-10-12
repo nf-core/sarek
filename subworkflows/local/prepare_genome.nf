@@ -44,81 +44,104 @@ workflow PREPARE_GENOME {
 
     main:
 
-    result_bwa  = Channel.empty()
+    results_bwa = Channel.empty()
     version_bwa = Channel.empty()
     if (!(params.bwa) && 'mapping' in step)
-        if (params.aligner == "bwa-mem") (result_bwa, version_bwa) = BWAMEM1_INDEX(fasta)
-        else                             (result_bwa, version_bwa) = BWAMEM2_INDEX(fasta)
+        if (params.aligner == "bwa-mem") {
+            BWAMEM1_INDEX(fasta)
+            results_bwa = BWAMEM1_INDEX.out.index
+            version_bwa = BWAMEM1_INDEX.out.versions
+        } else {
+            BWAMEM2_INDEX(fasta)
+            results_bwa = BWAMEM2_INDEX.out.index
+            version_bwa = BWAMEM1_INDEX.out.versions
+        }
 
-    result_dict  = Channel.empty()
+    results_dict = Channel.empty()
     version_gatk = Channel.empty()
-    if (!(params.dict) && !('annotate' in step) && !('controlfreec' in step))
-        (result_dict, version_gatk) = GATK4_CREATESEQUENCEDICTIONARY(fasta)
+    if (!(params.dict) && !('annotate' in step) && !('controlfreec' in step)) {
+        GATK4_CREATESEQUENCEDICTIONARY(fasta)
+        results_dict = GATK4_CREATESEQUENCEDICTIONARY.out.dict
+        version_gatk = GATK4_CREATESEQUENCEDICTIONARY.out.versions
+    }
 
-    result_fai  = Channel.empty()
+    results_fai = Channel.empty()
     version_samtools = Channel.empty()
-    if (fasta_fai) result_fai = fasta_fai
-    if (!(params.fasta_fai) && !('annotate' in step))
-        (result_fai, version_samtools) = SAMTOOLS_FAIDX(fasta)
+    if (fasta_fai) results_fai = fasta_fai
+    if (!(params.fasta_fai) && !('annotate' in step)) {
+        SAMTOOLS_FAIDX(fasta)
+        results_fai = SAMTOOLS_FAIDX.out.fai
+        version_samtools = SAMTOOLS_FAIDX.out.versions
+    }
 
-    result_target_bed  = Channel.empty()
+    results_target_bed = Channel.empty()
     version_target_bed = Channel.empty()
     if ((params.target_bed) && ('manta' in tools || 'strelka' in tools)) {
         target_bed_id = target_bed.map{ it -> [[id:it[0].getName()], it] }
-        (result_target_bed, version_target_bed) = TABIX_BGZIPTABIX(target_bed_id)
-        result_target_bed = result_target_bed.map{ meta, bed, tbi -> [bed, tbi] }
+        TABIX_BGZIPTABIX(target_bed_id)
+        results_target_bed = TABIX_BGZIPTABIX.out.tbi.map{ meta, bed, tbi -> [bed, tbi] }
+        version_target_bed = TABIX_BGZIPTABIX.out.versions
     }
 
-    result_dbsnp_tbi  = Channel.empty()
+    results_dbsnp_tbi = Channel.empty()
     version_dbsnp_tbi = Channel.empty()
     if (!(params.dbsnp_tbi) && params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools|| 'mutect2' in tools || 'tnscope' in tools)) {
         dbsnp_id = dbsnp.map{ it -> [[id:it[0].baseName], it] }
-        (result_dbsnp_tbi, version_dbsnp_tbi) = TABIX_DBSNP(dbsnp_id)
-        result_dbsnp_tbi = result_dbsnp_tbi.map{ meta, tbi -> [tbi] }
+        (results_dbsnp_tbi, version_dbsnp_tbi)
+        TABIX_DBSNP(dbsnp_id)
+        results_dbsnp_tbi = TABIX_DBSNP.out.tbi.map{ meta, bed, tbi -> [bed, tbi] }
+        version_dbsnp_tbi = TABIX_DBSNP.out.versions
     }
 
-    result_germline_resource_tbi  = Channel.empty()
+    results_germline_resource_tbi = Channel.empty()
     version_germline_resource_tbi = Channel.empty()
     if (!(params.germline_resource_tbi) && params.germline_resource && 'mutect2' in tools) {
         germline_resource_id = germline_resource.map{ it -> [[id:it[0].baseName], it] }
-        (result_germline_resource_tbi, version_germline_resource_tbi) = TABIX_GERMLINE_RESOURCE(germline_resource_id)
+        TABIX_GERMLINE_RESOURCE(germline_resource_id)
+        results_germline_resource_tbi = TABIX_GERMLINE_RESOURCE.out.tbi.map{ meta, bed, tbi -> [bed, tbi] }
+        version_germline_resource_tbi = TABIX_GERMLINE_RESOURCE.out.versions
     }
 
-    result_known_indels_tbi  = Channel.empty()
+    results_known_indels_tbi = Channel.empty()
     version_known_indels_tbi = Channel.empty()
     if (!(params.known_indels_tbi) && params.known_indels && ('mapping' in step || 'preparerecalibration' in step)) {
         known_indels_id = known_indels.map{ it -> [[id:it[0].baseName], it] }
-        (result_known_indels_tbi, version_known_indels_tbi) = TABIX_KNOWN_INDELS(known_indels_id)
-        result_known_indels_tbi = result_known_indels_tbi.map{ meta, tbi -> [tbi] }
+        TABIX_KNOWN_INDELS(known_indels_id)
+        results_known_indels_tbi = TABIX_KNOWN_INDELS.out.tbi.map{ meta, bed, tbi -> [bed, tbi] }
+        version_known_indels_tbi = TABIX_KNOWN_INDELS.out.versions
     }
 
-    result_pon_tbi  = Channel.empty()
+    results_pon_tbi = Channel.empty()
     version_pon_tbi = Channel.empty()
     if (!(params.pon_tbi) && params.pon && ('tnscope' in tools || 'mutect2' in tools)) {
         pon_id = pon.map{ it -> [[id:it[0].baseName], it] }
-        (result_pon_tbi, version_pon_tbi) = TABIX_PON(pon_id)
+        TABIX_PON(pon_id)
+        results_pon_tbi = TABIX_PON.out.tbi.map{ meta, bed, tbi -> [bed, tbi] }
+        version_pon_tbi = TABIX_PON.out.versions
     }
 
     version_tabix = Channel.empty()
     version_tabix = version_tabix.mix(version_target_bed, version_dbsnp_tbi, version_germline_resource_tbi, version_known_indels_tbi, version_pon_tbi).first()
 
-    result_msisensorpro_scan  = Channel.empty()
+    results_msisensorpro_scan = Channel.empty()
     version_msisensorpro_scan = Channel.empty()
-    if ('msisensorpro' in tools)
-        (result_msisensorpro_scan, version_msisensorpro_scan) = MSISENSORPRO_SCAN(fasta)
+    if ('msisensorpro' in tools) {
+        MSISENSORPRO_SCAN(fasta)
+        results_msisensorpro_scan = MSISENSORPRO_SCAN.out.list
+        version_msisensorpro_scan = MSISENSORPRO_SCAN.out.versions
+    }
 
-    result_intervals = Channel.empty()
+    results_intervals = Channel.empty()
     if (params.no_intervals) {
         file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
-        result_intervals = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
-    } else if (!('annotate' in step) && !('controlfreec' in step))
-        if (!params.intervals)
-            result_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS(result_fai))
-        else
-            result_intervals = CREATE_INTERVALS_BED(file(params.intervals))
+        results_intervals = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
+    } else if (!('annotate' in step) && !('controlfreec' in step)) {
+        if (!params.intervals) results_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS(results_fai))
+        else                   results_intervals = CREATE_INTERVALS_BED(file(params.intervals))
+    }
 
     if (!params.no_intervals) {
-        result_intervals = result_intervals.flatten()
+        results_intervals = results_intervals.flatten()
             .map{ intervalFile ->
                 def duration = 0.0
                 for (line in intervalFile.readLines()) {
@@ -137,19 +160,19 @@ workflow PREPARE_GENOME {
     }
 
     emit:
-        bwa                           = result_bwa
-        bwa_version                   = version_bwa
-        dbsnp_tbi                     = result_dbsnp_tbi
-        dict                          = result_dict
-        fai                           = result_fai
-        gatk_version                  = version_gatk
-        germline_resource_tbi         = result_germline_resource_tbi
-        intervals                     = result_intervals
-        known_indels_tbi              = result_known_indels_tbi.collect()
-        msisensorpro_scan             = result_msisensorpro_scan
-        msisensorpro_scan_version     = version_msisensorpro_scan
-        pon_tbi                       = result_pon_tbi
-        samtools_version              = version_samtools
-        tabix_version                 = version_tabix
-        target_bed_gz_tbi             = result_target_bed
+        bwa                       = results_bwa
+        bwa_version               = version_bwa
+        dbsnp_tbi                 = results_dbsnp_tbi
+        dict                      = results_dict
+        fai                       = results_fai
+        gatk_version              = version_gatk
+        germline_resource_tbi     = results_germline_resource_tbi
+        intervals                 = results_intervals
+        known_indels_tbi          = results_known_indels_tbi.collect()
+        msisensorpro_scan         = results_msisensorpro_scan
+        msisensorpro_scan_version = version_msisensorpro_scan
+        pon_tbi                   = results_pon_tbi
+        samtools_version          = version_samtools
+        tabix_version             = version_tabix
+        target_bed_gz_tbi         = results_target_bed
 }
