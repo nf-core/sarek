@@ -263,8 +263,8 @@ def multiqc_report = []
 
 workflow SAREK {
 
-    ch_software_versions = Channel.empty()
-    qc_reports           = Channel.empty()
+    ch_versions = Channel.empty()
+    qc_reports  = Channel.empty()
 
     // Build indices if needed
     BUILD_INDICES(
@@ -301,11 +301,11 @@ workflow SAREK {
     intervals.count().map{ num_intervals = it }
 
     // Get versions from all software used
-    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.bwa_version.ifEmpty(null))
-    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.gatk_version.ifEmpty(null))
-    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.samtools_version.ifEmpty(null))
-    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.msisensorpro_scan_version.ifEmpty(null))
-    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.tabix_version.ifEmpty(null))
+    ch_versions = ch_versions.mix(BUILD_INDICES.out.bwa_version.ifEmpty(null))
+    ch_versions = ch_versions.mix(BUILD_INDICES.out.gatk_version.ifEmpty(null))
+    ch_versions = ch_versions.mix(BUILD_INDICES.out.samtools_version.ifEmpty(null))
+    ch_versions = ch_versions.mix(BUILD_INDICES.out.msisensorpro_scan_version.ifEmpty(null))
+    ch_versions = ch_versions.mix(BUILD_INDICES.out.tabix_version.ifEmpty(null))
 
     // PREPROCESSING
 
@@ -334,8 +334,8 @@ workflow SAREK {
         qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
 
         // Get versions from all software used
-        ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.fastqc_version.ifEmpty(null))
-        ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.trimgalore_version.ifEmpty(null))
+        ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.fastqc_version.ifEmpty(null))
+        ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.trimgalore_version.ifEmpty(null))
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         MAPPING(
@@ -498,13 +498,13 @@ workflow SAREK {
         }
     }
 
-    ch_software_versions
+    ch_versions
         .map { it -> if (it) [ it.baseName, it ] }
         .groupTuple()
         .map { it[1][0] }
         .flatten()
         .collect()
-        .set { ch_software_versions }
+        .set { ch_versions }
 
     ch_version_yaml = Channel.empty()
     if (!('versions' in skip_qc)) {
