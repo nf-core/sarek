@@ -256,8 +256,8 @@ include { FASTQC_TRIMGALORE } from '../subworkflows/nf-core/fastqc_trimgalore' a
 // MODULES: Installed directly from nf-core/modules
 //
 
-include { MULTIQC }               from '../modules/nf-core/modules/multiqc/main' addParams(options: modules['multiqc'])
-include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions'  addParams(options: [publish_files : ['tsv':'']])
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main' addParams( options: [publish_files : ['_versions.yml':'']] )
+include { MULTIQC }                     from '../modules/nf-core/modules/multiqc/main'                     addParams(options: modules['multiqc'])
 
 def multiqc_report = []
 
@@ -508,8 +508,8 @@ workflow SAREK {
 
     ch_version_yaml = Channel.empty()
     if (!('versions' in skip_qc)) {
-        GET_SOFTWARE_VERSIONS(ch_software_versions.map{it}.collect())
-        ch_version_yaml = GET_SOFTWARE_VERSIONS.out.yaml.collect()
+        CUSTOM_DUMPSOFTWAREVERSIONS(ch_versions.unique().collectFile())
+        ch_version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect(),
     }
 
     workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
