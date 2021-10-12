@@ -509,7 +509,7 @@ workflow SAREK {
     ch_version_yaml = Channel.empty()
     if (!('versions' in skip_qc)) {
         CUSTOM_DUMPSOFTWAREVERSIONS(ch_versions.unique().collectFile())
-        ch_version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect(),
+        ch_version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
     }
 
     workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
@@ -525,7 +525,7 @@ workflow SAREK {
     multiqc_report = Channel.empty()
     if (!('multiqc' in skip_qc)) {
         MULTIQC(ch_multiqc_files.collect())
-        multiqc_report       = MULTIQC.out.report.toList()
+        multiqc_report = MULTIQC.out.report.toList()
     }
 }
 
