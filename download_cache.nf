@@ -37,9 +37,10 @@ def helpMessage() {
       --snpeff_cache           [file] Path to snpEff cache
       --snpeff_db_version       [str] snpEff DB version
                                       Default: ${params.genomes[params.genome].snpeff_db}
-      --vep_cache              [file] Path to VEP cache
+      --vep_cache              [file] Path to folder for VEP cache installation
       --vep_cache_version       [int] VEP cache version
                                       Default: ${params.genomes[params.genome].vep_cache_version}
+      --vep_cache_local_dir    [file] Path to VEP cache dir, see -u and -f flags in the vep specific documentation
       --species                 [str] Species
                                       Default: ${params.genomes[params.genome].species}
       --cadd_cache             [file] Path to CADD cache
@@ -72,6 +73,9 @@ params.vep_cache_version = params.genome ? params.genomes[params.genome].vep_cac
 
 ch_snpeff_db = params.snpeff_db ? Channel.value(params.snpeff_db) : "null"
 ch_vep_cache_version = params.vep_cache_version ? Channel.value(params.vep_cache_version) : "null"
+
+// local vep cache 
+vep_cache_local_dir = params.vep_cache_local_dir ? file(params.vep_cache_local_dir, checkIfExists: true, type: 'dir') : false
 
 // Header log info
 log.info nfcoreHeader()
@@ -170,14 +174,30 @@ process BuildCache_VEP {
   script:
   genome = params.genome
   """
-  vep_install \
-    -a cf \
-    -c . \
-    -s ${species} \
-    -y ${genome} \
-    --CACHE_VERSION ${vep_cache_version} \
-    --CONVERT \
-    --NO_HTSLIB --NO_TEST --NO_BIOPERL --NO_UPDATE
+  if [ -d "${vep_cache_local_dir}" ] ;
+  then
+    echo "using an already downloaded source, or other ftp source"
+    vep_install \
+      -a cf \
+      -c . \
+      -s ${species} \
+      -y ${genome} \
+      -u ${vep_cache_local_dir} \
+      -f ${vep_cache_local_dir} \
+      --CACHE_VERSION ${vep_cache_version} \
+      --CONVERT \
+      --NO_HTSLIB --NO_TEST --NO_BIOPERL --NO_UPDATE
+  else
+    echo "use software default ftp source"
+    vep_install \
+      -a cf \
+      -c . \
+      -s ${species} \
+      -y ${genome} \
+      --CACHE_VERSION ${vep_cache_version} \
+      --CONVERT \
+      --NO_HTSLIB --NO_TEST --NO_BIOPERL --NO_UPDATE
+  fi
 
   mv ${species}/* .
   rm -rf ${species}
