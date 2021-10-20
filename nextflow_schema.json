@@ -563,7 +563,7 @@
                     "help_text": "If you use AWS iGenomes or a local resource with genomes.conf, this has already been set for you appropriately."
                 },
                 "vep_cache_version": {
-                    "type": "string",
+                    "type": "number",
                     "fa_icon": "fas fa-tag",
                     "description": "VEP cache version"
                 },
