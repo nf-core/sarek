@@ -224,7 +224,7 @@
                     "type": "boolean",
                     "default": false,
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip Base Quality Recalibration",
+                    "description": "Skip Base Quality Recalibration"
                 }
             }
         },
