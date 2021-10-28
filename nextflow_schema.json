@@ -219,6 +219,12 @@
                     "fa_icon": "fas fa-fast-forward",
                     "description": "Skip GATK MarkDuplicates",
                     "help_text": "This params will also save the mapped BAMS, to enable restart from step `prepare_recalibration`"
+                },
+                "skip_bqsr": {
+                    "type": "boolean",
+                    "default": false,
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip Base Quality Recalibration",
                 }
             }
         },
