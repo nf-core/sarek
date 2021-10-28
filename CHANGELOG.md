@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [dev](https://github.com/nf-core/sarek/tree/dev)
 
 ### Added
+- [##448](https://github.com/nf-core/sarek/pull/448) - Allow to skip base quality recalibration with `--skip_bqsr`
 
 ### Changed
 
