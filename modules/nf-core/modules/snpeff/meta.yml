@@ -9,6 +9,7 @@ tools:
             It annotates and predicts the effects of genetic variants on genes and proteins (such as amino acid changes).
         homepage: https://pcingola.github.io/SnpEff/
         documentation: https://pcingola.github.io/SnpEff/se_introduction/
+        licence: ['MIT']
 params:
     - use_cache:
         type: boolean

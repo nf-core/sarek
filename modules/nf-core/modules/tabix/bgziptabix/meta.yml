@@ -12,6 +12,7 @@ tools:
         homepage: https://www.htslib.org/doc/tabix.html
         documentation: https://www.htslib.org/doc/tabix.1.html
         doi: 10.1093/bioinformatics/btq671
+        licence: ['MIT']
 input:
     - meta:
         type: map

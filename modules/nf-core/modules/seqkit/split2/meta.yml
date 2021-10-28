@@ -10,6 +10,7 @@ tools:
         homepage: https://github.com/shenwei356/seqkit
         documentation: https://bioinf.shenwei.me/seqkit/
         doi: 10.1371/journal.pone.0163962
+        licence: ['MIT']
 input:
     - meta:
         type: map

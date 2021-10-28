@@ -13,6 +13,7 @@ tools:
         homepage: http://bio-bwa.sourceforge.net/
         documentation: http://www.htslib.org/doc/samtools.html
         arxiv: arXiv:1303.3997
+        licence: ['GPL-3.0-or-later']
 input:
     - fasta:
         type: file
