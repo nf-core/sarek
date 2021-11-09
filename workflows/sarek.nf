@@ -330,8 +330,7 @@ workflow SAREK {
         qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_zip.collect{ it[1] }.ifEmpty([]))
 
         // Get versions from all software used
-        ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.fastqc_version.ifEmpty(null))
-        ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.trimgalore_version.ifEmpty(null))
+        ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         MAPPING(
