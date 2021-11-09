@@ -41,8 +41,8 @@ for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 
 // Get step and tools
 def step = params.step ? params.step.replaceAll('-', '').replaceAll('_', '') : ''
-def tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
-def skip_qc = params.skip_qc ? params.skip_qc.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
+def tools = params.tools ? params.tools.split(',').collect{ it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '') } : []
+def skip_qc = params.skip_qc ? params.skip_qc.split(',').collect{ it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '') } : []
 
 // Check mandatory parameters
 if (params.input) csv_file = file(params.input)
@@ -248,8 +248,8 @@ modules['multiqc'].args += params.multiqc_title ? Utils.joinModuleArgs(["--title
 //
 
 include { FASTQC_TRIMGALORE } from '../subworkflows/nf-core/fastqc_trimgalore' addParams(
-    fastqc_options:                  modules['fastqc'],
-    trimgalore_options:              modules['trimgalore']
+    fastqc_options:     modules['fastqc'],
+    trimgalore_options: modules['trimgalore']
 )
 
 //
@@ -325,9 +325,9 @@ workflow SAREK {
         reads_input = FASTQC_TRIMGALORE.out.reads
 
         // Get all qc reports for MultiQC
-        qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
-        qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]))
-        qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
+        qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{ it[1] }.ifEmpty([]))
+        qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_log.collect{ it[1] }.ifEmpty([]))
+        qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_zip.collect{ it[1] }.ifEmpty([]))
 
         // Get versions from all software used
         ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.fastqc_version.ifEmpty(null))
@@ -376,7 +376,7 @@ workflow SAREK {
         // Create CSV to restart from this step
         MARKDUPLICATES_CSV(cram_markduplicates)
 
-        qc_reports = qc_reports.mix(MARKDUPLICATES.out.qc.collect{it[1]}.ifEmpty([]))
+        qc_reports = qc_reports.mix(MARKDUPLICATES.out.qc.collect{ it[1] }.ifEmpty([]))
 
         // STEP 3: Create recalibration tables
         if(!params.skip_bqsr){
@@ -422,7 +422,7 @@ workflow SAREK {
 
             RECALIBRATE_CSV(cram_recalibrated)
 
-            qc_reports = qc_reports.mix(cram_recalibrated_qc.collect{it[1]}.ifEmpty([]))
+            qc_reports = qc_reports.mix(cram_recalibrated_qc.collect{ it[1] }.ifEmpty([]))
             cram_variant_calling = cram_recalibrated
 
         }else{
@@ -501,14 +501,6 @@ workflow SAREK {
                 vep_cache)
         }
     }
-
-    ch_versions
-        .map { it -> if (it) [ it.baseName, it ] }
-        .groupTuple()
-        .map { it[1][0] }
-        .flatten()
-        .collect()
-        .set { ch_versions }
 
     ch_version_yaml = Channel.empty()
     if (!('versions' in skip_qc)) {
