@@ -28,7 +28,7 @@
                 "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
             },
             "samtools/merge": {
-                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
+                "git_sha": "ac1e6df076195cec553a2079c9cebd94026a0d47"
             },
             "seqkit/split2": {
                 "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"

@@ -1,5 +1,5 @@
 name: samtools_merge
-description: Merge BAM file
+description: Merge BAM or CRAM file
 keywords:
     - merge
     - bam
@@ -21,20 +21,28 @@ input:
         description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-    - bam:
+    - input_files:
         type: file
-        description: BAM file
+        description: BAM/CRAM file
         pattern: "*.{bam,cram,sam}"
+    - fasta:
+        type: optional file
+        description: Reference file the CRAM was created with
+        pattern: "*.{fasta,fa}"
 output:
     - meta:
         type: map
         description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-    - merged_bam:
+    - bam:
         type: file
         description: BAM file
         pattern: "*.{bam}"
+    - cram:
+        type: file
+        description: CRAM file
+        pattern: "*.{cram}"
     - versions:
         type: file
         description: File containing software versions
@@ -43,3 +51,4 @@ authors:
     - "@drpatelh"
     - "@yuukiiwa "
     - "@maxulysse"
+    - "@FriederikeHanssen"
