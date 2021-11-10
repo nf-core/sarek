@@ -13,7 +13,7 @@ tools:
       documentation: https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-
       tool_dev_url: https://github.com/broadinstitute/gatk
       doi: 10.1158/1538-7445.AM2017-3590
-      licence: ['BSD-3-clause']
+      licence: ['MIT']
 
 input:
   - meta:
@@ -32,10 +32,10 @@ output:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
-  - version:
+  - versions:
       type: file
-      description: File containing software version
-      pattern: "*.{version.txt}"
+      description: File containing software versions
+      pattern: "versions.yml"
   - bam:
       type: file
       description: Marked duplicates BAM file
@@ -47,3 +47,4 @@ output:
 
 authors:
   - "@ajodeh-juma"
+  - "@FriederikeHanssen"

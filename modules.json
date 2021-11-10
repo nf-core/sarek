@@ -21,7 +21,13 @@
             "gatk4/createsequencedictionary": {
                 "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
             },
+            "gatk4/markduplicates": {
+                "git_sha": "ac1e6df076195cec553a2079c9cebd94026a0d47"
+            },
             "multiqc": {
+                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
+            },
+            "qualimap/bamqc": {
                 "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
             },
             "samtools/faidx": {
@@ -31,6 +37,12 @@
                 "git_sha": "1abe23e1592f7cf6a3724589061827df0d8a0252"
             },
             "samtools/merge": {
+                "git_sha": "ac1e6df076195cec553a2079c9cebd94026a0d47"
+            },
+            "samtools/stats": {
+                "git_sha": "ac1e6df076195cec553a2079c9cebd94026a0d47"
+            },
+            "samtools/view": {
                 "git_sha": "ac1e6df076195cec553a2079c9cebd94026a0d47"
             },
             "seqkit/split2": {

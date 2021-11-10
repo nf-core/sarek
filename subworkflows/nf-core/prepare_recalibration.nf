@@ -25,6 +25,8 @@ workflow PREPARE_RECALIBRATION {
 
     main:
 
+    ch_versions = Channel.empty()
+
     cram_markduplicates.combine(intervals)
         .map{ meta, cram, crai, intervals ->
             new_meta = meta.clone()
@@ -58,4 +60,5 @@ workflow PREPARE_RECALIBRATION {
 
     emit:
         table_bqsr = table_bqsr
+        versions   = ch_versions // channel: [versions.yml]
 }

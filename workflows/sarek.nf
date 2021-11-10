@@ -40,8 +40,8 @@ def checkPathParamList = [
 for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 
 // Get step and tools
-def step = params.step ? params.step.replaceAll('-', '').replaceAll('_', '') : ''
-def tools = params.tools ? params.tools.split(',').collect{ it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '') } : []
+def step    = params.step    ? params.step.replaceAll('-', '').replaceAll('_', '') : ''
+def tools   = params.tools   ? params.tools.split(',').collect{ it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '') } : []
 def skip_qc = params.skip_qc ? params.skip_qc.split(',').collect{ it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '') } : []
 
 // Check mandatory parameters
