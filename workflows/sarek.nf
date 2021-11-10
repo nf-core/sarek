@@ -346,6 +346,9 @@ workflow SAREK {
         bam_mapped  = MAPPING.out.bam
         bam_indexed = MAPPING.out.bam_indexed
 
+        // Get versions from all software used
+        ch_versions = ch_versions.mix(MAPPING.out.versions)
+
         // Create CSV to restart from this step
         MAPPING_CSV(bam_indexed, save_bam_mapped, params.skip_markduplicates)
     }
