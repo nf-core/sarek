@@ -11,11 +11,11 @@ process GATK4_CREATESEQUENCEDICTIONARY {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
 
-    conda (params.enable_conda ? "bioconda::gatk4=4.2.0.0" : null)
+    conda (params.enable_conda ? "bioconda::gatk4=4.2.3.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/gatk4:4.2.0.0--0"
+        container "https://depot.galaxyproject.org/singularity/gatk4:4.2.3.0--hdfd78af_0"
     } else {
-        container "quay.io/biocontainers/gatk4:4.2.0.0--0"
+        container "quay.io/biocontainers/gatk4:4.2.3.0--hdfd78af_0"
     }
 
     input:

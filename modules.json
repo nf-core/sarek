@@ -19,10 +19,10 @@
                 "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
             },
             "gatk4/createsequencedictionary": {
-                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
+                "git_sha": "3b600af50eae8264960df817277cfe303d2acd47"
             },
             "gatk4/markduplicates": {
-                "git_sha": "ac1e6df076195cec553a2079c9cebd94026a0d47"
+                "git_sha": "3b600af50eae8264960df817277cfe303d2acd47"
             },
             "multiqc": {
                 "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"

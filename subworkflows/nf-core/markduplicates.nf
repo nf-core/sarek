@@ -39,6 +39,8 @@ workflow MARKDUPLICATES {
     ch_versions = Channel.empty()
     report_markduplicates = Channel.empty()
 
+    bam_mapped.view()
+
     if (skip_markduplicates) {
         bam_markduplicates = bam_indexed
         SAMTOOLS_BAM_TO_CRAM(bam_markduplicates, fasta)
@@ -80,8 +82,12 @@ workflow MARKDUPLICATES {
             report_markduplicates = GATK4_MARKDUPLICATES.out.metrics
             bam_markduplicates    = GATK4_MARKDUPLICATES.out.bam
 
+            bam_markduplicates.view()
+
             SAMTOOLS_BAM_TO_CRAM(bam_markduplicates, fasta)
             cram_markduplicates = SAMTOOLS_BAM_TO_CRAM.out.cram
+
+            cram_markduplicates.view()
 
             ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES.out.versions.first())
             ch_versions = ch_versions.mix(SAMTOOLS_BAM_TO_CRAM.out.versions.first())
