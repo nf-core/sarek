@@ -6,8 +6,8 @@
     - skip_markduplicates
   files:
     - path: results/multiqc
-    - path: results/preprocessing/test/mapped/test.bam
-    - path: results/preprocessing/test/mapped/test.bam.bai
+    # - path: results/preprocessing/test/mapped/test-test_L1.bam
+    - path: results/preprocessing/test/mapped/test-test_L1.bam.bai
     - path: results/preprocessing/test/mapped/test.recal.table
     - path: results/preprocessing/test/markduplicates/test.md.cram
     - path: results/preprocessing/test/markduplicates/test.md.cram.crai
