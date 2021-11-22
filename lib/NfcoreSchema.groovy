@@ -105,9 +105,13 @@ class NfcoreSchema {
 
         // Collect expected parameters from the schema
         def expectedParams = []
+        def enums = [:]
         for (group in schemaParams) {
             for (p in group.value['properties']) {
                 expectedParams.push(p.key)
+                if (group.value['properties'][p.key].containsKey('enum')) {
+                    enums[p.key] = group.value['properties'][p.key]['enum']
+                }
             }
         }
 
@@ -155,7 +159,7 @@ class NfcoreSchema {
             println ''
             log.error 'ERROR: Validation of pipeline parameters failed!'
             JSONObject exceptionJSON = e.toJSON()
-            printExceptions(exceptionJSON, params_json, log)
+            printExceptions(exceptionJSON, params_json, log, enums)
             println ''
             has_error = true
         }
@@ -329,7 +333,7 @@ class NfcoreSchema {
     //
     // Loop over nested exceptions and print the causingException
     //
-    private static void printExceptions(ex_json, params_json, log) {
+    private static void printExceptions(ex_json, params_json, log, enums, limit=5) {
         def causingExceptions = ex_json['causingExceptions']
         if (causingExceptions.length() == 0) {
             def m = ex_json['message'] =~ /required key \[([^\]]+)\] not found/
@@ -345,7 +349,16 @@ class NfcoreSchema {
             else {
                 def param = ex_json['pointerToViolation'] - ~/^#\//
                 def param_val = params_json[param].toString()
-                log.error "* --${param}: ${ex_json['message']} (${param_val})"
+                if (enums.containsKey(param)) {
+                    def error_msg = "* --${param}: '${param_val}' is not a valid choice (Available choices"
+                    if (enums[param].size() > limit) {
+                        log.error "${error_msg} (${limit} of ${enums[param].size()}): ${enums[param][0..limit-1].join(', ')}, ... )"
+                    } else {
+                        log.error "${error_msg}: ${enums[param].join(', ')})"
+                    }
+                } else {
+                    log.error "* --${param}: ${ex_json['message']} (${param_val})"
+                }
             }
         }
         for (ex in causingExceptions) {
