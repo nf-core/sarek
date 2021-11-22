@@ -5,40 +5,32 @@
     - tumor_normal_pair
   files:
     - path: results/multiqc
-    - path: results/preprocessing/1234N/markduplicates/1234N.md.cram
-    - path: results/preprocessing/1234N/markduplicates/1234N.md.cram.crai
-    - path: results/preprocessing/1234N/recal_table/1234N.recal.table
-    - path: results/preprocessing/1234N/recalibrated/1234N.recal.cram
-    - path: results/preprocessing/1234N/recalibrated/1234N.recal.cram.crai
-    - path: results/preprocessing/9876T/markduplicates/9876T.md.cram
-    - path: results/preprocessing/9876T/markduplicates/9876T.md.cram.crai
-    - path: results/preprocessing/9876T/recal_table/9876T.recal.table
-    - path: results/preprocessing/9876T/recalibrated/9876T.recal.cram
-    - path: results/preprocessing/9876T/recalibrated/9876T.recal.cram.crai
+    - path: results/preprocessing/test/markduplicates/test.md.cram
+    - path: results/preprocessing/test/markduplicates/test.md.cram.crai
+    - path: results/preprocessing/test/recal_table/test.recal.table
+    - path: results/preprocessing/test/recalibrated/test.recal.cram
+    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
+    - path: results/preprocessing/test2/markduplicates/test2.md.cram
+    - path: results/preprocessing/test2/markduplicates/test2.md.cram.crai
+    - path: results/preprocessing/test2/recal_table/test2.recal.table
+    - path: results/preprocessing/test2/recalibrated/test2.recal.cram
+    - path: results/preprocessing/test2/recalibrated/test2.recal.cram.crai
     - path: results/preprocessing/csv/markduplicates.csv
-    - path: results/preprocessing/csv/markduplicates_1234N.csv
-    - path: results/preprocessing/csv/markduplicates_9876T.csv
+    - path: results/preprocessing/csv/markduplicates_test.csv
+    - path: results/preprocessing/csv/markduplicates_test2.csv
     - path: results/preprocessing/csv/markduplicates_no_table.csv
-    - path: results/preprocessing/csv/markduplicates_no_table_1234N.csv
-    - path: results/preprocessing/csv/markduplicates_no_table_9876T.csv
+    - path: results/preprocessing/csv/markduplicates_no_table_test.csv
+    - path: results/preprocessing/csv/markduplicates_no_table_test2.csv
     - path: results/preprocessing/csv/recalibrated.csv
-    - path: results/preprocessing/csv/recalibrated_1234N.csv
-    - path: results/preprocessing/csv/recalibrated_9876T.csv
-    - path: results/reports/fastqc/1234N-1234N_M1
-    - path: results/reports/fastqc/1234N-1234N_M2
-    - path: results/reports/fastqc/1234N-1234N_M4
-    - path: results/reports/fastqc/1234N-1234N_M5
-    - path: results/reports/fastqc/1234N-1234N_M6
-    - path: results/reports/fastqc/1234N-1234N_M7
-    - path: results/reports/fastqc/9876T-9876T_M1
-    - path: results/reports/fastqc/9876T-9876T_M2
-    - path: results/reports/fastqc/9876T-9876T_M4
-    - path: results/reports/fastqc/9876T-9876T_M5
-    - path: results/reports/qualimap/1234N/1234N.mapped
-    - path: results/reports/qualimap/1234N/1234N.recal
-    - path: results/reports/qualimap/9876T/9876T.mapped
-    - path: results/reports/qualimap/9876T/9876T.recal
-    - path: results/reports/samtools_stats/1234N/1234N.md.cram.stats
-    - path: results/reports/samtools_stats/1234N/1234N.recal.cram.stats
-    - path: results/reports/samtools_stats/9876T/9876T.md.cram.stats
-    - path: results/reports/samtools_stats/9876T/9876T.recal.cram.stats
+    - path: results/preprocessing/csv/recalibrated_test.csv
+    - path: results/preprocessing/csv/recalibrated_test2.csv
+    - path: results/reports/fastqc/test-test_L1
+    - path: results/reports/fastqc/test2-test2_L1
+    - path: results/reports/qualimap/test/test.mapped
+    - path: results/reports/qualimap/test/test.recal
+    - path: results/reports/qualimap/test2/test2.mapped
+    - path: results/reports/qualimap/test2/test2.recal
+    - path: results/reports/samtools_stats/test/test.md.cram.stats
+    - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/reports/samtools_stats/test2/test2.md.cram.stats
+    - path: results/reports/samtools_stats/test2/test2.recal.cram.stats
