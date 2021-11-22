@@ -1,5 +1,6 @@
 lint:
   files_unchanged:
+    - assets/multiqc_config.yaml
     - assets/nf-core-sarek_logo.png
     - docs/images/nf-core-sarek_logo.png
     - lib/NfcoreTemplate.groovy
