@@ -19,6 +19,7 @@ def checkPathParamList = [
     params.cadd_wg_snvs_tbi,
     params.chr_dir,
     params.chr_length,
+    params.dict,
     params.dbsnp,
     params.dbsnp_tbi,
     params.fasta,
