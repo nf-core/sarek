@@ -62,13 +62,13 @@ workflow RECALIBRATE {
         cram_recalibrated = SAMTOOLS_MERGE_CRAM.out.cram
 
         SAMTOOLS_INDEX(cram_recalibrated)
-        cram_recalibrated_index = cram_recalibrated.join(SAMTOOLS_INDEX.out.crai)
+        cram_recalibrated_index = SAMTOOLS_INDEX.out.cram_crai
 
         qualimap_bamqc = Channel.empty()
         samtools_stats = Channel.empty()
 
         if (!skip_bamqc) {
-            QUALIMAP_BAMQC_CRAM(cram_recalibrated_index,target_bed, params.target_bed,fasta, fai)
+            QUALIMAP_BAMQC_CRAM(cram_recalibrated_index, target_bed, params.target_bed,fasta, fai)
             qualimap_bamqc = QUALIMAP_BAMQC_CRAM.out.results
         }
 
