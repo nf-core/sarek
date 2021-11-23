@@ -19,7 +19,7 @@
                 "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
             },
             "gatk4/createsequencedictionary": {
-                "git_sha": "c8877835c288eb32b2ad1810d38a78e83e791f3d"
+                "git_sha": "3b600af50eae8264960df817277cfe303d2acd47"
             },
             "multiqc": {
                 "git_sha": "c5235a983d454787fa0c3247b02086969217163b"
