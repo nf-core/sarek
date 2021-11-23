@@ -13,6 +13,7 @@ tools:
         homepage: http://bio-bwa.sourceforge.net/
         documentation: http://www.htslib.org/doc/samtools.html
         arxiv: arXiv:1303.3997
+        licence: ['GPL-3.0-or-later']
 input:
     - fasta:
         type: file
@@ -22,10 +23,10 @@ output:
         type: file
         description: BWA genome index files
         pattern: "*.{amb,ann,bwt,pac,sa}"
-    - version:
+    - versions:
         type: file
-        description: File containing software version
-        pattern: "*.{version.txt}"
+        description: File containing software versions
+        pattern: "versions.yml"
 authors:
     - "@drpatelh"
     - "@maxulysse"
