@@ -4,7 +4,7 @@
     "repos": {
         "nf-core/modules": {
             "bwa/index": {
-                "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+                "git_sha": "9475960928a3ba49624b49ef2b48438a4696ed0f"
             },
             "bwamem2/index": {
                 "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
