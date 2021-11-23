@@ -115,7 +115,7 @@ workflow MAPPING {
         bam_merged = bam_to_merge.single.mix(SAMTOOLS_MERGE.out.bam)
 
         SAMTOOLS_INDEX(bam_merged)
-        bam_indexed = bam_merged.join(SAMTOOLS_INDEX.out.bai)
+        bam_indexed = SAMTOOLS_INDEX.out.bam_bai
     }
 
     emit:
