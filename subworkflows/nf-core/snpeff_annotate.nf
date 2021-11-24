@@ -29,5 +29,5 @@ workflow SNPEFF_ANNOTATE {
     emit:
     vcf            = TABIX_BGZIPTABIX.out.tbi // channel: [ val(meta), vcf, tbi ]
     snpeff_report  = SNPEFF.out.report        //    path: *.html
-    snpeff_version = SNPEFF.out.version       //    path: *.version.txt
+    snpeff_version = SNPEFF.out.versions      //    path: *.version.txt
 }
