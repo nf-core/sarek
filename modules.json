@@ -18,8 +18,20 @@
             "fastqc": {
                 "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
             },
+            "freebayes": {
+                "git_sha": "9767b081b9d808d7b6671d34d48c70afb436a5f1"
+            },
             "gatk4/createsequencedictionary": {
                 "git_sha": "3b600af50eae8264960df817277cfe303d2acd47"
+            },
+            "manta/germline": {
+                "git_sha": "ac1e6df076195cec553a2079c9cebd94026a0d47"
+            },
+            "manta/somatic": {
+                "git_sha": "ac1e6df076195cec553a2079c9cebd94026a0d47"
+            },
+            "manta/tumoronly": {
+                "git_sha": "ac1e6df076195cec553a2079c9cebd94026a0d47"
             },
             "multiqc": {
                 "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
@@ -41,6 +53,12 @@
             },
             "snpeff": {
                 "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
+            },
+            "strelka/germline": {
+                "git_sha": "ac1e6df076195cec553a2079c9cebd94026a0d47"
+            },
+            "strelka/somatic": {
+                "git_sha": "ac1e6df076195cec553a2079c9cebd94026a0d47"
             },
             "tabix/bgziptabix": {
                 "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"

@@ -1,8 +1,8 @@
-name: strelka_somatic
-description: Strelka2 is a fast and accurate small variant caller optimized for analysis of somatic variation
+name: strelka_germline
+description: Strelka2 is a fast and accurate small variant caller optimized for analysis of germline variation
 keywords:
   - variantcalling
-  - somatic
+  - germline
   - wgs
   - vcf
   - variants
@@ -21,14 +21,14 @@ input:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test']
-  - bam:
+  - input:
       type: file
-      description: BAM file
-      pattern: "*.{bam}"
-  - bai:
+      description: BAM/CRAM file
+      pattern: "*.{bam,cram}"
+  - input_index:
       type: file
-      description: BAM index file
-      pattern: "*.{bai}"
+      description: BAM/CRAI index file
+      pattern: "*.{bai,crai}"
   - target_bed:
       type: file
       description: An optional bed file
@@ -39,17 +39,25 @@ output:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test']
-  - indels_vcf:
+  - vcf:
       type: file
-      description: gzipped somatic indels file and associated index file
-      pattern: "(*_somatic_indels.vcf.gz, *_somatic_indels.vcf.gz.tbi)"
-  - snvs_vcf:
+      description: gzipped germline variant file
+      pattern: "*.{vcf.gz}"
+  - vcf_tbi:
       type: file
-      description: gzipped somatic snvs file and associated index file
-      pattern: "(*_somatic_snvs.vcf.gz, _somatic_snvs.vcf.gz.tbi)"
-  - version:
+      description: index file for the vcf file
+      pattern: "*.vcf.gz.tbi"
+  - genome_vcf:
       type: file
-      description: File containing software version
-      pattern: "*.{version.txt}"
+      description: variant records and compressed non-variant blocks
+      pattern: "*_genome.vcf.gz"
+  - genome_vcf_tbi:
+      type: file
+      description: index file for the genome_vcf file
+      pattern: "*_genome.vcf.gz.tbi"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
 authors:
   - "@arontommi"

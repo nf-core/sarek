@@ -1,7 +1,8 @@
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+// Import generic module functions
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options        = initOptions(params.options)
 
 process GATK4_GATHERBQSRREPORTS {
     tag "$meta.id"
@@ -40,6 +41,9 @@ process GATK4_GATHERBQSRREPORTS {
         --tmp-dir . \
         -O ${meta.sample}.recal.table
 
-    echo \$(gatk GatherBQSRReports --version 2>&1) | sed 's/^.*(GATK) v//; s/ HTSJDK.*\$//' > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        ${getSoftwareName(task.process)}: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
+    END_VERSIONS
     """
 }

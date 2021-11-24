@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -19,25 +19,26 @@ process STRELKA_GERMLINE {
     }
 
     input:
-    tuple val(meta), path(cram), path(crai)
-    path (fasta)
-    path (fai)
-    tuple path(target_bed), path(target_bed_tbi)
+    tuple val(meta), path(input), path(input_index)
+    path  fasta
+    path  fai
+    path  target_bed
+    path  target_bed_tbi
+
 
     output:
     tuple val(meta), path("*variants.vcf.gz")    , emit: vcf
     tuple val(meta), path("*variants.vcf.gz.tbi"), emit: vcf_tbi
     tuple val(meta), path("*genome.vcf.gz")      , emit: genome_vcf
     tuple val(meta), path("*genome.vcf.gz.tbi")  , emit: genome_vcf_tbi
-    path  "*.version.txt"                        , emit: version
+    path "versions.yml"                          , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
-    def regions  = params.target_bed ? "--exome --callRegions ${target_bed}" : ""
+    def regions  = target_bed ? "--exome --callRegions ${target_bed}" : ""
     """
     configureStrelkaGermlineWorkflow.py \\
-        --bam $cram \\
+        --bam $input \\
         --referenceFasta $fasta \\
         $regions \\
         $options.args \\
@@ -49,6 +50,9 @@ process STRELKA_GERMLINE {
     mv strelka/results/variants/variants.vcf.gz     ${prefix}.variants.vcf.gz
     mv strelka/results/variants/variants.vcf.gz.tbi ${prefix}.variants.vcf.gz.tbi
 
-    echo configureStrelkaGermlineWorkflow.py --version &> ${software}.version.txt #2>&1
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        ${getSoftwareName(task.process)}: \$( configureStrelkaGermlineWorkflow.py --version )
+    END_VERSIONS
     """
 }
