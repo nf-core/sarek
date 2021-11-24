@@ -13,37 +13,37 @@
                 "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
             },
             "ensemblvep": {
-                "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
             },
             "fastqc": {
-                "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
             },
             "gatk4/createsequencedictionary": {
                 "git_sha": "3b600af50eae8264960df817277cfe303d2acd47"
             },
             "multiqc": {
-                "git_sha": "c5235a983d454787fa0c3247b02086969217163b"
+                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
             },
             "samtools/faidx": {
-                "git_sha": "c5235a983d454787fa0c3247b02086969217163b"
+                "git_sha": "19035c99d1cd8412b5046c6bb4af787658b84e5b"
             },
             "samtools/merge": {
-                "git_sha": "c5235a983d454787fa0c3247b02086969217163b"
+                "git_sha": "19035c99d1cd8412b5046c6bb4af787658b84e5b"
             },
             "seqkit/split2": {
-                "git_sha": "c5235a983d454787fa0c3247b02086969217163b"
+                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
             },
             "snpeff": {
-                "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
             },
             "tabix/bgziptabix": {
-                "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
             },
             "tabix/tabix": {
-                "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
             },
             "trimgalore": {
-                "git_sha": "c5235a983d454787fa0c3247b02086969217163b"
+                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
             }
         }
     }
