@@ -26,7 +26,7 @@ process GATK4_APPLYBQSR_SPARK {
 
     output:
     tuple val(meta), path("*.cram"), emit: cram
-    path "*.version.txt",            emit: version
+    path "versions.yml"            , emit: versions
 
     script:
     def software = getSoftwareName(task.process)

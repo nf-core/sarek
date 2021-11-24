@@ -28,7 +28,7 @@ process GATK4_MARKDUPLICATES_SPARK {
 
     output:
     tuple val(meta), path("*.${format}"), emit: output
-    path("*.version.txt")               , emit: version
+    path "versions.yml"                 , emit: versions
 
     script:
     def software = getSoftwareName(task.process)

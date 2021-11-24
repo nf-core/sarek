@@ -30,9 +30,9 @@ process GATK4_MUTECT2_TUMOR {
     path(germline_resource_tbi)
 
     output:
-    tuple val(meta), path("*.vcf"),       emit: vcf
+    tuple val(meta), path("*.vcf")      , emit: vcf
     tuple val(meta), path("*.vcf.stats"), emit: vcf_stats
-    path "*.version.txt"          , emit: version
+    path "versions.yml"                 , emit: versions
 
     script:
     def software = getSoftwareName(task.process)
