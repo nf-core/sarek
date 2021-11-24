@@ -380,48 +380,55 @@ workflow SAREK {
         qc_reports = qc_reports.mix(MARKDUPLICATES.out.qc.collect{it[1]}.ifEmpty([]))
 
         // STEP 3: Create recalibration tables
-        PREPARE_RECALIBRATION(
-            cram_markduplicates,
-            ('bqsr' in params.use_gatk_spark),
-            dict,
-            fasta,
-            fasta_fai,
-            intervals,
-            num_intervals,
-            known_sites,
-            known_sites_tbi,
-            params.no_intervals)
+        if(!params.skip_bqsr){
+            PREPARE_RECALIBRATION(
+                cram_markduplicates,
+                ('bqsr' in params.use_gatk_spark),
+                dict,
+                fasta,
+                fasta_fai,
+                intervals,
+                num_intervals,
+                known_sites,
+                known_sites_tbi,
+                params.no_intervals)
 
-        table_bqsr = PREPARE_RECALIBRATION.out.table_bqsr
-        PREPARE_RECALIBRATION_CSV(table_bqsr)
+            table_bqsr = PREPARE_RECALIBRATION.out.table_bqsr
+            PREPARE_RECALIBRATION_CSV(table_bqsr)
 
-        cram_applybqsr = cram_markduplicates.join(table_bqsr)
+            cram_applybqsr = cram_markduplicates.join(table_bqsr)
+        }
     }
 
     if (step == 'recalibrate') bam_applybqsr = input_sample
 
     if (step in ['mapping', 'preparerecalibration', 'recalibrate']) {
-        // STEP 4: RECALIBRATING
-        RECALIBRATE(
-            ('bqsr' in params.use_gatk_spark),
-            ('bamqc' in skip_qc),
-            ('samtools' in skip_qc),
-            cram_applybqsr,
-            dict,
-            fasta_fai,
-            fasta,
-            intervals,
-            num_intervals,
-            target_bed)
+        if(!params.skip_bqsr){
+            // STEP 4: RECALIBRATING
+            RECALIBRATE(
+                ('bqsr' in params.use_gatk_spark),
+                ('bamqc' in skip_qc),
+                ('samtools' in skip_qc),
+                cram_applybqsr,
+                dict,
+                fasta,
+                fasta_fai,
+                intervals,
+                num_intervals,
+                target_bed)
 
-        cram_recalibrated    = RECALIBRATE.out.cram
-        cram_recalibrated_qc = RECALIBRATE.out.qc
+            cram_recalibrated    = RECALIBRATE.out.cram
+            cram_recalibrated_qc = RECALIBRATE.out.qc
 
-        RECALIBRATE_CSV(cram_recalibrated)
+            RECALIBRATE_CSV(cram_recalibrated)
 
-        qc_reports = qc_reports.mix(cram_recalibrated_qc.collect{it[1]}.ifEmpty([]))
+            qc_reports = qc_reports.mix(cram_recalibrated_qc.collect{it[1]}.ifEmpty([]))
+            cram_variant_calling = cram_recalibrated
 
-        cram_variant_calling = cram_recalibrated
+        }else{
+            cram_variant_calling = cram_markduplicates
+        }
+
     }
 
     if (step in 'variantcalling') cram_variant_calling = input_sample

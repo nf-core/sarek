@@ -11,20 +11,9 @@
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
             "required": [
-                "input",
                 "step"
             ],
             "properties": {
-                "input": {
-                    "type": "string",
-                    "format": "file-path",
-                    "mimetype": "text/csv",
-                    "pattern": "\\.csv$",
-                    "schema": "assets/schema_input.json",
-                    "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with a header row. See [usage docs](https://nf-co.re/sarek/usage#input).",
-                    "fa_icon": "fas fa-file-csv"
-                },
                 "step": {
                     "type": "string",
                     "default": "mapping",
@@ -39,6 +28,16 @@
                         "annotate",
                         "controlfreec"
                     ]
+                },
+                "input": {
+                    "type": "string",
+                    "format": "file-path",
+                    "mimetype": "text/csv",
+                    "pattern": "\\.csv$",
+                    "schema": "assets/schema_input.json",
+                    "description": "Path to comma-separated file containing information about the samples in the experiment.",
+                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with a header row. See [usage docs](https://nf-co.re/sarek/usage#input).",
+                    "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {
                     "type": "string",
@@ -219,6 +218,12 @@
                     "fa_icon": "fas fa-fast-forward",
                     "description": "Skip GATK MarkDuplicates",
                     "help_text": "This params will also save the mapped BAMS, to enable restart from step `prepare_recalibration`"
+                },
+                "skip_bqsr": {
+                    "type": "boolean",
+                    "default": false,
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip Base Quality Recalibration"
                 }
             }
         },
