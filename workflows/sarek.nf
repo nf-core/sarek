@@ -249,23 +249,23 @@ modules['multiqc'].args += params.multiqc_title ? Utils.joinModuleArgs(["--title
 //
 
 include { FASTQC_TRIMGALORE } from '../subworkflows/nf-core/fastqc_trimgalore' addParams(
-    fastqc_options:                  modules['fastqc'],
-    trimgalore_options:              modules['trimgalore']
+    fastqc_options:     modules['fastqc'],
+    trimgalore_options: modules['trimgalore']
 )
 
 //
 // MODULES: Installed directly from nf-core/modules
 //
 
-include { MULTIQC }               from '../modules/nf-core/modules/multiqc/main' addParams(options: modules['multiqc'])
-include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions'  addParams(options: [publish_files : ['tsv':'']])
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main' addParams( options: [publish_files : ['_versions.yml':'']] )
+include { MULTIQC }                     from '../modules/nf-core/modules/multiqc/main'                     addParams( options: modules['multiqc'] )
 
 def multiqc_report = []
 
 workflow SAREK {
 
-    ch_software_versions = Channel.empty()
-    qc_reports           = Channel.empty()
+    ch_versions = Channel.empty()
+    qc_reports  = Channel.empty()
 
     // Build indices if needed
     PREPARE_GENOME(
@@ -302,7 +302,7 @@ workflow SAREK {
     intervals.count().map{ num_intervals = it }
 
     // Get versions from all software used
-    ch_software_versions = ch_software_versions.mix(PREPARE_GENOME.out.versions.ifEmpty(null))
+    ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
     // PREPROCESSING
 
@@ -331,8 +331,7 @@ workflow SAREK {
         qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
 
         // Get versions from all software used
-        ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.fastqc_version.ifEmpty(null))
-        ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.trimgalore_version.ifEmpty(null))
+        ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         MAPPING(
@@ -350,6 +349,9 @@ workflow SAREK {
 
         // Create CSV to restart from this step
         MAPPING_CSV(bam_indexed, save_bam_mapped, params.skip_markduplicates)
+
+        // Get versions from all software used
+        ch_versions = ch_versions.mix(MAPPING.out.versions)
     }
 
     if (step == 'preparerecalibration') {
@@ -502,18 +504,10 @@ workflow SAREK {
         }
     }
 
-    ch_software_versions
-        .map { it -> if (it) [ it.baseName, it ] }
-        .groupTuple()
-        .map { it[1][0] }
-        .flatten()
-        .collect()
-        .set { ch_software_versions }
-
     ch_version_yaml = Channel.empty()
     if (!('versions' in skip_qc)) {
-        GET_SOFTWARE_VERSIONS(ch_software_versions.map{it}.collect())
-        ch_version_yaml = GET_SOFTWARE_VERSIONS.out.yaml.collect()
+        CUSTOM_DUMPSOFTWAREVERSIONS(ch_versions.unique().collectFile())
+        ch_version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
     }
 
     workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
@@ -529,7 +523,7 @@ workflow SAREK {
     multiqc_report = Channel.empty()
     if (!('multiqc' in skip_qc)) {
         MULTIQC(ch_multiqc_files.collect())
-        multiqc_report       = MULTIQC.out.report.toList()
+        multiqc_report = MULTIQC.out.report.toList()
     }
 }
 

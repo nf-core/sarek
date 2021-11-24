@@ -4,7 +4,7 @@ include { initOptions; saveFiles; getSoftwareName; getProcessName } from './func
 params.options = [:]
 options        = initOptions(params.options)
 
-process TABIX_TABIX {
+process TABIX_BGZIPTABIX {
     tag "$meta.id"
     label 'process_medium'
     publishDir "${params.outdir}",
@@ -19,15 +19,17 @@ process TABIX_TABIX {
     }
 
     input:
-    tuple val(meta), path(tab)
+    tuple val(meta), path(input)
 
     output:
-    tuple val(meta), path("*.tbi"), emit: tbi
-    path  "versions.yml"          , emit: versions
+    tuple val(meta), path("*.gz"), path("*.tbi"), emit: gz_tbi
+    path  "versions.yml" ,                        emit: versions
 
     script:
+    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     """
-    tabix $options.args $tab
+    bgzip -c $options.args $input > ${prefix}.gz
+    tabix $options.args2 ${prefix}.gz
 
     cat <<-END_VERSIONS > versions.yml
     ${getProcessName(task.process)}:

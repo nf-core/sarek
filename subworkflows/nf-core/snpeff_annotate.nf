@@ -17,17 +17,16 @@ include { TABIX_BGZIPTABIX } from '../../modules/nf-core/modules/tabix/bgziptabi
 
 workflow SNPEFF_ANNOTATE {
     take:
-    vcf            // channel: [ val(meta), vcf, tbi ]
+    vcf            // channel: [ val(meta), vcf ]
     snpeff_db      //   value: version of db to use
     snpeff_cache   //    path: path_to_snpeff_cache (optionnal)
-    // skip   // boolean: true/false
 
     main:
     SNPEFF(vcf, snpeff_db, snpeff_cache)
     TABIX_BGZIPTABIX(SNPEFF.out.vcf)
 
     emit:
-    vcf            = TABIX_BGZIPTABIX.out.tbi // channel: [ val(meta), vcf, tbi ]
-    snpeff_report  = SNPEFF.out.report        //    path: *.html
-    snpeff_version = SNPEFF.out.versions      //    path: *.version.txt
+    vcf_tbi  = TABIX_BGZIPTABIX.out.gz_tbi // channel: [ val(meta), vcf.gz, vcf.gz.tbi ]
+    reports  = SNPEFF.out.reports          //    path: *.html
+    versions = SNPEFF.out.versions         //    path: versions.yml
 }
