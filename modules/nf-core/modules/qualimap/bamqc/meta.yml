@@ -14,6 +14,7 @@ tools:
         homepage: http://qualimap.bioinfo.cipf.es/
         documentation: http://qualimap.conesalab.org/doc_html/index.html
         doi: 10.1093/bioinformatics/bts503
+        licence: ['GPL-2.0-only']
 input:
     - meta:
         type: map
@@ -41,9 +42,9 @@ output:
         type: dir
         description: Qualimap results dir
         pattern: "*/*"
-    - version:
+    - versions:
         type: file
-        description: File containing software version
-        pattern: "*.{version.txt}"
+        description: File containing software versions
+        pattern: "versions.yml"
 authors:
     - "@phue"
