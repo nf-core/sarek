@@ -41,7 +41,7 @@ workflow MARKDUPLICATES {
     if (skip_markduplicates) {
         bam_markduplicates = bam_indexed
         SAMTOOLS_BAM_TO_CRAM(bam_markduplicates, fasta, fai)
-        cram_markduplicates = SAMTOOLS_BAM_TO_CRAM.out.cram
+        cram_markduplicates = SAMTOOLS_BAM_TO_CRAM.out.cram_crai
     } else {
         if (use_gatk_spark) {
             //If BAMQC should be run on MD output, then don't use MDSpark to convert to cram, but use bam output instead
@@ -51,7 +51,7 @@ workflow MARKDUPLICATES {
                 bam_markduplicates  = GATK4_MARKDUPLICATES_SPARK.out.output.join(SAMTOOLS_INDEX.out.bai)
 
                 SAMTOOLS_BAM_TO_CRAM_SPARK(bam_markduplicates, fasta, fai)
-                cram_markduplicates = SAMTOOLS_BAM_TO_CRAM_SPARK.out.cram
+                cram_markduplicates = SAMTOOLS_BAM_TO_CRAM_SPARK.out.cram_crai
             } else {
                 GATK4_MARKDUPLICATES_SPARK(bam_mapped, fasta, fai, dict, "cram")
                 SAMTOOLS_INDEX(GATK4_MARKDUPLICATES_SPARK.out.output)
@@ -69,7 +69,7 @@ workflow MARKDUPLICATES {
             bam_markduplicates    = GATK4_MARKDUPLICATES.out.bam_bai
 
             SAMTOOLS_BAM_TO_CRAM(bam_markduplicates, fasta, fai)
-            cram_markduplicates = SAMTOOLS_BAM_TO_CRAM.out.cram
+            cram_markduplicates = SAMTOOLS_BAM_TO_CRAM.out.cram_crai
         }
     }
 
