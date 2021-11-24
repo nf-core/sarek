@@ -26,9 +26,9 @@ workflow MARKDUPLICATES {
         bam_indexed         // channel: [mandatory] meta, bam, bai
         use_gatk_spark      //   value: [mandatory] use gatk spark
         save_metrics        //   value: [mandatory] save metrics
-        fasta               // channel: [mandatory] fasta
-        fai                 // channel: [mandatory] fai
         dict                // channel: [mandatory] dict
+        fasta               // channel: [mandatory] fasta
+        fasta_fai           // channel: [mandatory] fasta_fai
         skip_markduplicates // boolean: true/false
         skip_bamqc          // boolean: true/false
         skip_samtools       // boolean: true/false
@@ -40,26 +40,26 @@ workflow MARKDUPLICATES {
 
     if (skip_markduplicates) {
         bam_markduplicates = bam_indexed
-        SAMTOOLS_BAM_TO_CRAM(bam_markduplicates, fasta, fai)
+        SAMTOOLS_BAM_TO_CRAM(bam_markduplicates, fasta, fasta_fai)
         cram_markduplicates = SAMTOOLS_BAM_TO_CRAM.out.cram_crai
     } else {
         if (use_gatk_spark) {
             //If BAMQC should be run on MD output, then don't use MDSpark to convert to cram, but use bam output instead
             if (!skip_bamqc) {
-                GATK4_MARKDUPLICATES_SPARK(bam_mapped, fasta, fai, dict, "bam")
+                GATK4_MARKDUPLICATES_SPARK(bam_mapped, fasta, fasta_fai, dict, "bam")
                 SAMTOOLS_INDEX(GATK4_MARKDUPLICATES_SPARK.out.output)
                 bam_markduplicates  = GATK4_MARKDUPLICATES_SPARK.out.output.join(SAMTOOLS_INDEX.out.bai)
 
-                SAMTOOLS_BAM_TO_CRAM_SPARK(bam_markduplicates, fasta, fai)
+                SAMTOOLS_BAM_TO_CRAM_SPARK(bam_markduplicates, fasta, fasta_fai)
                 cram_markduplicates = SAMTOOLS_BAM_TO_CRAM_SPARK.out.cram_crai
             } else {
-                GATK4_MARKDUPLICATES_SPARK(bam_mapped, fasta, fai, dict, "cram")
+                GATK4_MARKDUPLICATES_SPARK(bam_mapped, fasta, fasta_fai, dict, "cram")
                 SAMTOOLS_INDEX(GATK4_MARKDUPLICATES_SPARK.out.output)
                 cram_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.output.join(SAMTOOLS_INDEX.out.crai)
             }
 
             if (save_metrics) {
-                GATK4_ESTIMATELIBRARYCOMPLEXITY(bam_mapped, fasta, fai, dict)
+                GATK4_ESTIMATELIBRARYCOMPLEXITY(bam_mapped, fasta, fasta_fai, dict)
                 report_markduplicates = GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics
             }
 
@@ -68,7 +68,7 @@ workflow MARKDUPLICATES {
             report_markduplicates = GATK4_MARKDUPLICATES.out.metrics
             bam_markduplicates    = GATK4_MARKDUPLICATES.out.bam_bai
 
-            SAMTOOLS_BAM_TO_CRAM(bam_markduplicates, fasta, fai)
+            SAMTOOLS_BAM_TO_CRAM(bam_markduplicates, fasta, fasta_fai)
             cram_markduplicates = SAMTOOLS_BAM_TO_CRAM.out.cram_crai
         }
     }

@@ -23,8 +23,8 @@ workflow RECALIBRATE {
         skip_samtools  // boolean: true/false
         cram           // channel: [mandatory] cram
         dict           // channel: [mandatory] dict
-        fai            // channel: [mandatory] fai
         fasta          // channel: [mandatory] fasta
+        fasta_fai      // channel: [mandatory] fasta_fai
         intervals      // channel: [mandatory] intervals
         num_intervals
         target_bed     // channel: [optional]  target_bed
@@ -42,10 +42,10 @@ workflow RECALIBRATE {
     }.set{cram_intervals}
 
     if(use_gatk_spark){
-        APPLYBQSR_SPARK(cram_intervals, fasta, fai, dict)
+        APPLYBQSR_SPARK(cram_intervals, fasta, fasta_fai, dict)
         cram_applybqsr = APPLYBQSR_SPARK.out.cram
     }else{
-        APPLYBQSR(cram_intervals, fasta, fai, dict)
+        APPLYBQSR(cram_intervals, fasta, fasta_fai, dict)
         cram_applybqsr = APPLYBQSR.out.cram
     }
 
@@ -68,7 +68,7 @@ workflow RECALIBRATE {
         samtools_stats = Channel.empty()
 
         if (!skip_bamqc) {
-            QUALIMAP_BAMQC_CRAM(cram_recalibrated_index, target_bed, params.target_bed,fasta, fai)
+            QUALIMAP_BAMQC_CRAM(cram_recalibrated_index, target_bed, params.target_bed,fasta, fasta_fai)
             qualimap_bamqc = QUALIMAP_BAMQC_CRAM.out.results
         }
 

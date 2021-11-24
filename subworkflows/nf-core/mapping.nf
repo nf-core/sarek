@@ -22,8 +22,8 @@ workflow MAPPING {
     take:
         aligner             // string:  [mandatory] "bwa-mem" or "bwa-mem2"
         bwa                 // channel: [mandatory] bwa
-        fai                 // channel: [mandatory] fai
         fasta               // channel: [mandatory] fasta
+        fasta_fai           // channel: [mandatory] fasta_fai
         reads_input         // channel: [mandatory] meta, reads_input
         skip_markduplicates // boolean: true/false
         save_bam_mapped     // boolean: true/false

@@ -23,8 +23,8 @@ workflow GERMLINE_VARIANT_CALLING {
         dbsnp             // channel: [mandatory] dbsnp
         dbsnp_tbi         // channel: [mandatory] dbsnp_tbi
         dict              // channel: [mandatory] dict
-        fai               // channel: [mandatory] fai
         fasta             // channel: [mandatory] fasta
+        fasta_fai         // channel: [mandatory] fasta_fai
         intervals         // channel: [mandatory] intervals
         num_intervals
         target_bed        // channel: [optional]  target_bed
@@ -54,7 +54,7 @@ workflow GERMLINE_VARIANT_CALLING {
             dbsnp_tbi,
             dict,
             fasta,
-            fai,
+            fasta_fai,
             no_intervals)
 
         haplotypecaller_raw = HAPLOTYPECALLER.out.vcf.map{ meta,vcf ->
@@ -64,7 +64,7 @@ workflow GERMLINE_VARIANT_CALLING {
 
         CONCAT_GVCF(
             haplotypecaller_raw,
-            fai,
+            fasta_fai,
             target_bed)
 
         haplotypecaller_gvcf = CONCAT_GVCF.out.vcf
@@ -77,7 +77,7 @@ workflow GERMLINE_VARIANT_CALLING {
             dbsnp_tbi,
             dict,
             fasta,
-            fai,
+            fasta_fai,
             no_intervals)
 
         haplotypecaller_results = GENOTYPEGVCF.out.vcf.map{ meta, vcf ->
@@ -87,7 +87,7 @@ workflow GERMLINE_VARIANT_CALLING {
 
         CONCAT_HAPLOTYPECALLER(
             haplotypecaller_results,
-            fai,
+            fasta_fai,
             target_bed)
 
         haplotypecaller_vcf = CONCAT_HAPLOTYPECALLER.out.vcf
@@ -98,7 +98,7 @@ workflow GERMLINE_VARIANT_CALLING {
         DEEPVARIANT(
             bam,
             fasta,
-            fai)
+            fasta_fai)
 
         deepvariant_vcf = DEEPVARIANT.out.vcf
         deepvariant_gvcf = DEEPVARIANT.out.gvcf
@@ -108,7 +108,7 @@ workflow GERMLINE_VARIANT_CALLING {
         STRELKA(
             cram,
             fasta,
-            fai,
+            fasta_fai,
             target_bed_gz_tbi)
 
         strelka_vcf = STRELKA.out.vcf

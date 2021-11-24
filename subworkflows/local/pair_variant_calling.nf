@@ -21,8 +21,8 @@ workflow PAIR_VARIANT_CALLING {
         dbsnp                 // channel: [mandatory] dbsnp
         dbsnp_tbi             // channel: [mandatory] dbsnp_tbi
         dict                  // channel: [mandatory] dict
-        fai                   // channel: [mandatory] fai
         fasta                 // channel: [mandatory] fasta
+        fasta_fai             // channel: [mandatory] fasta_fai
         intervals             // channel: [mandatory] intervals
         msisensorpro_scan     // channel: [optional]  msisensorpro_scan
         target_bed            // channel: [optional]  target_bed
@@ -73,7 +73,7 @@ workflow PAIR_VARIANT_CALLING {
         MANTA(
             cram_pair,
             fasta,
-            fai,
+            fasta_fai,
             target_bed_gz_tbi)
 
         manta_candidate_small_indels_vcf = MANTA.out.candidate_small_indels_vcf
@@ -88,7 +88,7 @@ workflow PAIR_VARIANT_CALLING {
             STRELKA_BP(
                 manta_csi_for_strelka_bp,
                 fasta,
-                fai,
+                fasta_fai,
                 target_bed_gz_tbi)
 
             strelka_indels_vcf = STRELKA_BP.out.indels_vcf
@@ -108,7 +108,7 @@ workflow PAIR_VARIANT_CALLING {
         STRELKA(
             cram_pair,
             fasta,
-            fai,
+            fasta_fai,
             target_bed_gz_tbi)
 
         strelka_indels_vcf = STRELKA.out.indels_vcf
@@ -125,7 +125,7 @@ workflow PAIR_VARIANT_CALLING {
             panel_of_normals_tbi,
             dict,
             fasta,
-            fai,
+            fasta_fai,
             no_intervals,
             germline_resource,
             germline_resource_tbi
