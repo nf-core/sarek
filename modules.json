@@ -33,6 +33,9 @@
             "samtools/merge": {
                 "git_sha": "19035c99d1cd8412b5046c6bb4af787658b84e5b"
             },
+            "samtools/stats": {
+                "git_sha": "19035c99d1cd8412b5046c6bb4af787658b84e5b"
+            },
             "seqkit/split2": {
                 "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
             },
