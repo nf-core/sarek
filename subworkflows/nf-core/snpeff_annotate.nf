@@ -13,7 +13,7 @@ include { SNPEFF } from '../../modules/nf-core/modules/snpeff/main' addParams(
     use_cache:  params.use_cache
 )
 
-include { TABIX_BGZIPTABIX } from '../../modules/nf-core/modules/tabix/bgziptabix/main' addParams(options: params.bgziptabix_snpeff_options)
+include { TABIX_BGZIPTABIX } from '../../modules/local/tabix/bgziptabix/main' addParams(options: params.bgziptabix_snpeff_options)
 
 workflow SNPEFF_ANNOTATE {
     take:

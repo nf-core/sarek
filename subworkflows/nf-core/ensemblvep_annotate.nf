@@ -13,7 +13,7 @@ include { ENSEMBLVEP } from '../../modules/nf-core/modules/ensemblvep/main' addP
     vep_tag:   params.vep_tag
 )
 
-include { TABIX_BGZIPTABIX } from '../../modules/nf-core/modules/tabix/bgziptabix/main' addParams(options: params.bgziptabix_vep_options)
+include { TABIX_BGZIPTABIX } from '../../modules/local/tabix/bgziptabix/main' addParams(options: params.bgziptabix_vep_options)
 
 workflow ENSEMBLVEP_ANNOTATE {
     take:
