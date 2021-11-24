@@ -30,7 +30,7 @@ process GATK4_HAPLOTYPECALLER {
     output:
     tuple val(meta), path("*.vcf")                , emit: vcf
     tuple val(meta), path(interval), path("*.vcf"), emit: interval_vcf
-    path "*.version.txt"                          , emit: version
+    path "versions.yml"                           , emit: versions
 
     script:
     def software  = getSoftwareName(task.process)

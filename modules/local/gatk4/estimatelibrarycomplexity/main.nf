@@ -26,7 +26,7 @@ process GATK4_ESTIMATELIBRARYCOMPLEXITY {
 
     output:
     path('*.md.metrics'), emit: metrics
-    path "*.version.txt", emit: version
+    path "versions.yml" , emit: versions
 
     script:
     def software = getSoftwareName(task.process)

@@ -28,7 +28,7 @@ process GATK4_GENOTYPEGVCF {
 
     output:
     tuple val(meta), path("${interval.baseName}_${meta.id}.vcf"), emit: vcf
-    path "*.version.txt"                                        , emit: version
+    path "versions.yml"                                         , emit: versions
 
     script:
     // Using -L is important for speed and we have to index the interval files also

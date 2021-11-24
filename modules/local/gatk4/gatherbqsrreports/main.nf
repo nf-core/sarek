@@ -23,8 +23,8 @@ process GATK4_GATHERBQSRREPORTS {
 
     output:
     tuple val(meta), path("${meta.sample}.recal.table"), emit: table
-    path "${meta.sample}.recal.table",                   emit: report
-    path "*.version.txt",                                emit: version
+    path "${meta.sample}.recal.table"                  , emit: report
+    path "versions.yml"                                , emit: versions
 
     script:
     def software = getSoftwareName(task.process)
