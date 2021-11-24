@@ -111,7 +111,7 @@ workflow MAPPING {
             multiple: it[1].size() > 1
         }.set{bam_to_merge}
 
-        SAMTOOLS_MERGE(bam_to_merge.multiple)
+        SAMTOOLS_MERGE(bam_to_merge.multiple, [])
         bam_merged = bam_to_merge.single.mix(SAMTOOLS_MERGE.out.bam)
 
         SAMTOOLS_INDEX(bam_merged)
