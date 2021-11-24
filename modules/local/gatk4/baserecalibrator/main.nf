@@ -51,6 +51,9 @@ process GATK4_BASERECALIBRATOR {
         $options.args \
         -O ${prefix}.table
 
-    gatk --version | grep Picard | sed "s/Picard Version: //g" > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        ${getSoftwareName(task.process)}: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
+    END_VERSIONS
     """
 }
