@@ -10,13 +10,13 @@ params.merge_bam_options         = [:]
 params.samtools_index_options    = [:]
 params.seqkit_split2_options     = [:]
 
-include { BWAMEM2_MEM as BWAMEM2_MEM_T } from '../../modules/local/bwamem2/mem/main'                addParams(options: params.bwamem2_mem_tumor_options)
-include { BWAMEM2_MEM }                  from '../../modules/local/bwamem2/mem/main'                addParams(options: params.bwamem2_mem_options)
-include { BWA_MEM as BWAMEM1_MEM }       from '../../modules/local/bwa/mem/main'                    addParams(options: params.bwamem1_mem_options)
-include { BWA_MEM as BWAMEM1_MEM_T }     from '../../modules/local/bwa/mem/main'                    addParams(options: params.bwamem1_mem_tumor_options)
-include { SAMTOOLS_INDEX }               from '../../modules/local/samtools/index/main'             addParams(options: params.samtools_index_options)
-include { SAMTOOLS_MERGE }               from '../../modules/nf-core/modules/samtools/merge/main'   addParams(options: params.merge_bam_options)
-include { SEQKIT_SPLIT2 }                from '../../modules/nf-core/modules/seqkit/split2/main.nf' addParams(options: params.seqkit_split2_options)
+include { BWAMEM2_MEM as BWAMEM2_MEM_T } from '../../modules/local/bwamem2/mem/main'              addParams(options: params.bwamem2_mem_tumor_options)
+include { BWAMEM2_MEM }                  from '../../modules/local/bwamem2/mem/main'              addParams(options: params.bwamem2_mem_options)
+include { BWA_MEM as BWAMEM1_MEM }       from '../../modules/local/bwa/mem/main'                  addParams(options: params.bwamem1_mem_options)
+include { BWA_MEM as BWAMEM1_MEM_T }     from '../../modules/local/bwa/mem/main'                  addParams(options: params.bwamem1_mem_tumor_options)
+include { SAMTOOLS_INDEX }               from '../../modules/local/samtools/index/main'           addParams(options: params.samtools_index_options)
+include { SAMTOOLS_MERGE }               from '../../modules/nf-core/modules/samtools/merge/main' addParams(options: params.merge_bam_options)
+include { SEQKIT_SPLIT2 }                from '../../modules/nf-core/modules/seqkit/split2/main'  addParams(options: params.seqkit_split2_options)
 
 workflow MAPPING {
     take:
