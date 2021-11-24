@@ -16,7 +16,7 @@ include { GATK4_MARKDUPLICATES }                        from '../../modules/loca
 include { GATK4_MARKDUPLICATES_SPARK }                  from '../../modules/local/gatk4/markduplicatesspark/main'       addParams(options: params.markduplicatesspark_options)
 include { QUALIMAP_BAMQC }                              from '../../modules/nf-core/modules/qualimap/bamqc/main'        addParams(options: params.qualimap_bamqc_options)
 include { SAMTOOLS_INDEX }                              from '../../modules/local/samtools/index/main'                  addParams(options: params.samtools_index_options)
-include { SAMTOOLS_STATS }                              from '../../modules/local/samtools/stats/main'                  addParams(options: params.samtools_stats_options)
+include { SAMTOOLS_STATS }                              from '../../modules/nf-core/modules/samtools/stats/main'        addParams(options: params.samtools_stats_options)
 include { SAMTOOLS_VIEW as SAMTOOLS_BAM_TO_CRAM }       from '../../modules/local/samtools/view/main'                   addParams(options: params.samtools_view_options)
 include { SAMTOOLS_VIEW as SAMTOOLS_BAM_TO_CRAM_SPARK } from '../../modules/local/samtools/view/main'                   addParams(options: params.samtools_view_options)
 
