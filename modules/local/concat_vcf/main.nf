@@ -11,12 +11,12 @@ process CONCAT_VCF {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
-    conda (params.enable_conda ? "bioconda::htslib=1.12" : null)
+    conda (params.enable_conda ? "bioconda::bcftools=1.12" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         //TODO: No singularity container at the moment, use docker container for the moment
-        container "quay.io/biocontainers/htslib:1.12--h9093b5e_1"
+        container "quay.io/biocontainers/bcftools:1.12--h45bccc9_1"
     } else {
-        container "quay.io/biocontainers/htslib:1.12--hd3b49d5_0"
+        container "quay.io/biocontainers/bcftools:1.12--h45bccc9_1"
     }
 
 
