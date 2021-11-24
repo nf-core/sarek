@@ -12,6 +12,7 @@ tools:
         homepage: http://www.htslib.org/
         documentation: http://www.htslib.org/doc/samtools.html
         doi: 10.1093/bioinformatics/btp352
+        licence: ['MIT']
 input:
     - fasta:
         type: file
@@ -22,10 +23,10 @@ output:
         type: file
         description: FASTA index file
         pattern: "*.{fai}"
-    - version:
+    - versions:
         type: file
-        description: File containing software version
-        pattern: "*.{version.txt}"
+        description: File containing software versions
+        pattern: "versions.yml"
 authors:
     - "@drpatelh"
     - "@ewels"
