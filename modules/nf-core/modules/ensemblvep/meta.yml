@@ -9,6 +9,7 @@ tools:
             or structural variants) on genes, transcripts, and protein sequence, as well as regulatory regions.
         homepage: https://www.ensembl.org/info/docs/tools/vep/index.html
         documentation: https://www.ensembl.org/info/docs/tools/vep/script/index.html
+        licence: ['Apache-2.0']
 params:
     - use_cache:
         type: boolean
@@ -56,9 +57,9 @@ output:
         type: file
         description: VEP report file
         pattern: "*.html"
-    - version:
+    - versions:
         type: file
-        description: File containing software version
-        pattern: "*.{version.txt}"
+        description: File containing software versions
+        pattern: "versions.yml"
 authors:
     - "@maxulysse"

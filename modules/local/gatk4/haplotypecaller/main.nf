@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -30,7 +30,7 @@ process GATK4_HAPLOTYPECALLER {
     output:
     tuple val(meta), path("*.vcf")                , emit: vcf
     tuple val(meta), path(interval), path("*.vcf"), emit: interval_vcf
-    path "*.version.txt"                          , emit: version
+    path "versions.yml"                           , emit: versions
 
     script:
     def software  = getSoftwareName(task.process)
@@ -55,6 +55,10 @@ process GATK4_HAPLOTYPECALLER {
         -O ${prefix}.vcf \\
         --tmp-dir . \
         $options.args
-    gatk --version | grep Picard | sed "s/Picard Version: //g" > ${software}.version.txt
+
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        ${getSoftwareName(task.process)}: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
+    END_VERSIONS
     """
 }

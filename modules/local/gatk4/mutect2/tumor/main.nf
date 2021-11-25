@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -30,9 +30,9 @@ process GATK4_MUTECT2_TUMOR {
     path(germline_resource_tbi)
 
     output:
-    tuple val(meta), path("*.vcf"),       emit: vcf
+    tuple val(meta), path("*.vcf")      , emit: vcf
     tuple val(meta), path("*.vcf.stats"), emit: vcf_stats
-    path "*.version.txt"          , emit: version
+    path "versions.yml"                 , emit: versions
 
     script:
     def software = getSoftwareName(task.process)
@@ -58,6 +58,9 @@ process GATK4_MUTECT2_TUMOR {
         ${PON} \
         -O ${prefix}.vcf
 
-    echo \$(gatk Mutect2 --version 2>&1) | sed 's/^.*(GATK) v//; s/ HTSJDK.*\$//' > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        ${getSoftwareName(task.process)}: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
+    END_VERSIONS
     """
 }

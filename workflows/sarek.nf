@@ -19,6 +19,7 @@ def checkPathParamList = [
     params.cadd_wg_snvs_tbi,
     params.chr_dir,
     params.chr_length,
+    params.dict,
     params.dbsnp,
     params.dbsnp_tbi,
     params.fasta,
@@ -144,7 +145,7 @@ include { PREPARE_RECALIBRATION_CSV } from '../subworkflows/local/prepare_recali
 include { RECALIBRATE_CSV }           from '../subworkflows/local/recalibrate_csv'
 
 // Build indices if needed
-include { BUILD_INDICES } from '../subworkflows/local/build_indices' addParams(
+include { PREPARE_GENOME } from '../subworkflows/local/prepare_genome' addParams(
     bgziptabix_target_bed_options:     modules['bgziptabix_target_bed'],
     build_intervals_options:           modules['build_intervals'],
     bwa_index_options:                 modules['bwa_index'],
@@ -248,26 +249,26 @@ modules['multiqc'].args += params.multiqc_title ? Utils.joinModuleArgs(["--title
 //
 
 include { FASTQC_TRIMGALORE } from '../subworkflows/nf-core/fastqc_trimgalore' addParams(
-    fastqc_options:                  modules['fastqc'],
-    trimgalore_options:              modules['trimgalore']
+    fastqc_options:     modules['fastqc'],
+    trimgalore_options: modules['trimgalore']
 )
 
 //
 // MODULES: Installed directly from nf-core/modules
 //
 
-include { MULTIQC }               from '../modules/nf-core/modules/multiqc/main' addParams(options: modules['multiqc'])
-include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions'  addParams(options: [publish_files : ['tsv':'']])
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main' addParams( options: [publish_files : ['_versions.yml':'']] )
+include { MULTIQC }                     from '../modules/nf-core/modules/multiqc/main'                     addParams( options: modules['multiqc'] )
 
 def multiqc_report = []
 
 workflow SAREK {
 
-    ch_software_versions = Channel.empty()
-    qc_reports           = Channel.empty()
+    ch_versions = Channel.empty()
+    qc_reports  = Channel.empty()
 
     // Build indices if needed
-    BUILD_INDICES(
+    PREPARE_GENOME(
         dbsnp,
         fasta,
         params.fasta_fai,
@@ -279,15 +280,15 @@ workflow SAREK {
         step)
 
     // Gather built indices or get them from the params
-    bwa                   = params.fasta             ? params.bwa                   ? Channel.fromPath(params.bwa).collect()                   : BUILD_INDICES.out.bwa                   : ch_dummy_file
-    dict                  = params.fasta             ? params.dict                  ? Channel.fromPath(params.dict).collect()                  : BUILD_INDICES.out.dict                  : ch_dummy_file
-    fai                   = params.fasta             ? params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : BUILD_INDICES.out.fai                   : ch_dummy_file
-    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : BUILD_INDICES.out.dbsnp_tbi             : ch_dummy_file
-    germline_resource_tbi = params.germline_resource ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : BUILD_INDICES.out.germline_resource_tbi : ch_dummy_file
-    known_indels_tbi      = params.known_indels      ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : BUILD_INDICES.out.known_indels_tbi      : ch_dummy_file
-    pon_tbi               = params.pon               ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : BUILD_INDICES.out.pon_tbi               : ch_dummy_file
-    msisensorpro_scan     = BUILD_INDICES.out.msisensorpro_scan
-    target_bed_gz_tbi     = BUILD_INDICES.out.target_bed_gz_tbi
+    bwa                   = params.fasta             ? params.bwa                   ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : ch_dummy_file
+    dict                  = params.fasta             ? params.dict                  ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : ch_dummy_file
+    fasta_fai             = params.fasta             ? params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai                   : ch_dummy_file
+    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : ch_dummy_file
+    germline_resource_tbi = params.germline_resource ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : ch_dummy_file
+    known_indels_tbi      = params.known_indels      ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : ch_dummy_file
+    pon_tbi               = params.pon               ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : ch_dummy_file
+    msisensorpro_scan     = PREPARE_GENOME.out.msisensorpro_scan
+    target_bed_gz_tbi     = PREPARE_GENOME.out.target_bed_gz_tbi
 
     //TODO @Rike, is this working for you?
     // known_sites is made by grouping both the dbsnp and the known indels ressources
@@ -296,16 +297,12 @@ workflow SAREK {
     known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
-    intervals     = BUILD_INDICES.out.intervals
+    intervals     = PREPARE_GENOME.out.intervals
     num_intervals = 0
     intervals.count().map{ num_intervals = it }
 
     // Get versions from all software used
-    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.bwa_version.ifEmpty(null))
-    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.gatk_version.ifEmpty(null))
-    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.samtools_version.ifEmpty(null))
-    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.msisensorpro_scan_version.ifEmpty(null))
-    ch_software_versions = ch_software_versions.mix(BUILD_INDICES.out.tabix_version.ifEmpty(null))
+    ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
     // PREPROCESSING
 
@@ -334,15 +331,14 @@ workflow SAREK {
         qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
 
         // Get versions from all software used
-        ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.fastqc_version.ifEmpty(null))
-        ch_software_versions = ch_software_versions.mix(FASTQC_TRIMGALORE.out.trimgalore_version.ifEmpty(null))
+        ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         MAPPING(
             params.aligner,
             bwa,
-            fai,
             fasta,
+            fasta_fai,
             reads_input,
             params.skip_markduplicates,
             save_bam_mapped)
@@ -353,6 +349,9 @@ workflow SAREK {
 
         // Create CSV to restart from this step
         MAPPING_CSV(bam_indexed, save_bam_mapped, params.skip_markduplicates)
+
+        // Get versions from all software used
+        ch_versions = ch_versions.mix(MAPPING.out.versions)
     }
 
     if (step == 'preparerecalibration') {
@@ -367,9 +366,9 @@ workflow SAREK {
             bam_indexed,
             ('markduplicates' in params.use_gatk_spark),
             !('markduplicates' in skip_qc),
-            fasta,
-            fai,
             dict,
+            fasta,
+            fasta_fai,
             params.skip_markduplicates,
             ('bamqc' in skip_qc),
             ('samtools' in skip_qc),
@@ -388,8 +387,8 @@ workflow SAREK {
                 cram_markduplicates,
                 ('bqsr' in params.use_gatk_spark),
                 dict,
-                fai,
                 fasta,
+                fasta_fai,
                 intervals,
                 num_intervals,
                 known_sites,
@@ -406,7 +405,6 @@ workflow SAREK {
     if (step == 'recalibrate') bam_applybqsr = input_sample
 
     if (step in ['mapping', 'preparerecalibration', 'recalibrate']) {
-
         if(!params.skip_bqsr){
             // STEP 4: RECALIBRATING
             RECALIBRATE(
@@ -415,8 +413,8 @@ workflow SAREK {
                 ('samtools' in skip_qc),
                 cram_applybqsr,
                 dict,
-                fai,
                 fasta,
+                fasta_fai,
                 intervals,
                 num_intervals,
                 target_bed)
@@ -448,8 +446,8 @@ workflow SAREK {
             dbsnp,
             dbsnp_tbi,
             dict,
-            fai,
             fasta,
+            fasta_fai,
             intervals,
             num_intervals,
             target_bed,
@@ -466,8 +464,8 @@ workflow SAREK {
         //     dbsnp,
         //     dbsnp_tbi,
         //     dict,
-        //     fai,
         //     fasta,
+        //     fasta_fai,
         //     intervals,
         //     target_bed,
         //     target_bed_gz_tbi)
@@ -479,7 +477,7 @@ workflow SAREK {
         //     dbsnp,
         //     dbsnp_tbi,
         //     dict,
-        //     fai,
+        //     fasta_fai,
         //     fasta,
         //     intervals,
         //     msisensorpro_scan,
@@ -506,18 +504,10 @@ workflow SAREK {
         }
     }
 
-    ch_software_versions
-        .map { it -> if (it) [ it.baseName, it ] }
-        .groupTuple()
-        .map { it[1][0] }
-        .flatten()
-        .collect()
-        .set { ch_software_versions }
-
     ch_version_yaml = Channel.empty()
     if (!('versions' in skip_qc)) {
-        GET_SOFTWARE_VERSIONS(ch_software_versions.map{it}.collect())
-        ch_version_yaml = GET_SOFTWARE_VERSIONS.out.yaml.collect()
+        CUSTOM_DUMPSOFTWAREVERSIONS(ch_versions.unique().collectFile())
+        ch_version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
     }
 
     workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
@@ -533,7 +523,7 @@ workflow SAREK {
     multiqc_report = Channel.empty()
     if (!('multiqc' in skip_qc)) {
         MULTIQC(ch_multiqc_files.collect())
-        multiqc_report       = MULTIQC.out.report.toList()
+        multiqc_report = MULTIQC.out.report.toList()
     }
 }
 

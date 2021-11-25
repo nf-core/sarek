@@ -10,20 +10,20 @@ params.merge_bam_options         = [:]
 params.samtools_index_options    = [:]
 params.seqkit_split2_options     = [:]
 
-include { BWAMEM2_MEM as BWAMEM2_MEM_T } from '../../modules/local/bwamem2/mem/main'                addParams(options: params.bwamem2_mem_tumor_options)
-include { BWAMEM2_MEM }                  from '../../modules/local/bwamem2/mem/main'                addParams(options: params.bwamem2_mem_options)
-include { BWA_MEM as BWAMEM1_MEM }       from '../../modules/local/bwa/mem/main'                    addParams(options: params.bwamem1_mem_options)
-include { BWA_MEM as BWAMEM1_MEM_T }     from '../../modules/local/bwa/mem/main'                    addParams(options: params.bwamem1_mem_tumor_options)
-include { SAMTOOLS_INDEX }               from '../../modules/local/samtools/index/main'             addParams(options: params.samtools_index_options)
-include { SAMTOOLS_MERGE }               from '../../modules/nf-core/modules/samtools/merge/main'   addParams(options: params.merge_bam_options)
-include { SEQKIT_SPLIT2 }                from '../../modules/nf-core/modules/seqkit/split2/main.nf' addParams(options: params.seqkit_split2_options)
+include { BWAMEM2_MEM as BWAMEM2_MEM_T } from '../../modules/local/bwamem2/mem/main'              addParams(options: params.bwamem2_mem_tumor_options)
+include { BWAMEM2_MEM }                  from '../../modules/local/bwamem2/mem/main'              addParams(options: params.bwamem2_mem_options)
+include { BWA_MEM as BWAMEM1_MEM }       from '../../modules/local/bwa/mem/main'                  addParams(options: params.bwamem1_mem_options)
+include { BWA_MEM as BWAMEM1_MEM_T }     from '../../modules/local/bwa/mem/main'                  addParams(options: params.bwamem1_mem_tumor_options)
+include { SAMTOOLS_INDEX }               from '../../modules/local/samtools/index/main'           addParams(options: params.samtools_index_options)
+include { SAMTOOLS_MERGE }               from '../../modules/nf-core/modules/samtools/merge/main' addParams(options: params.merge_bam_options)
+include { SEQKIT_SPLIT2 }                from '../../modules/nf-core/modules/seqkit/split2/main'  addParams(options: params.seqkit_split2_options)
 
 workflow MAPPING {
     take:
         aligner             // string:  [mandatory] "bwa-mem" or "bwa-mem2"
         bwa                 // channel: [mandatory] bwa
-        fai                 // channel: [mandatory] fai
         fasta               // channel: [mandatory] fasta
+        fasta_fai           // channel: [mandatory] fasta_fai
         reads_input         // channel: [mandatory] meta, reads_input
         skip_markduplicates // boolean: true/false
         save_bam_mapped     // boolean: true/false
@@ -63,8 +63,8 @@ workflow MAPPING {
         bam_bwamem1_t = BWAMEM1_MEM_T.out.bam
         bam_bwamem1   = bam_bwamem1_n.mix(bam_bwamem1_t)
 
-        bwamem1_n_version = BWAMEM1_MEM.out.version
-        bwamem1_t_version = BWAMEM1_MEM_T.out.version
+        bwamem1_n_version = BWAMEM1_MEM.out.versions
+        bwamem1_t_version = BWAMEM1_MEM_T.out.versions
 
         bwamem1_version = bwamem1_n_version.mix(bwamem1_t_version).first()
 
@@ -77,8 +77,8 @@ workflow MAPPING {
         bam_bwamem2_t = BWAMEM2_MEM_T.out.bam
         bam_bwamem2   = bam_bwamem2_n.mix(bam_bwamem2_t)
 
-        bwamem2_n_version = BWAMEM2_MEM.out.version
-        bwamem2_t_version = BWAMEM2_MEM_T.out.version
+        bwamem2_n_version = BWAMEM2_MEM.out.versions
+        bwamem2_t_version = BWAMEM2_MEM_T.out.versions
 
         bwamem2_version = bwamem2_n_version.mix(bwamem2_t_version).first()
         tool_versions = tool_versions.mix(bwamem2_version)
@@ -111,11 +111,11 @@ workflow MAPPING {
             multiple: it[1].size() > 1
         }.set{bam_to_merge}
 
-        SAMTOOLS_MERGE(bam_to_merge.multiple)
+        SAMTOOLS_MERGE(bam_to_merge.multiple, [])
         bam_merged = bam_to_merge.single.mix(SAMTOOLS_MERGE.out.bam)
 
         SAMTOOLS_INDEX(bam_merged)
-        bam_indexed = bam_merged.join(SAMTOOLS_INDEX.out.bai)
+        bam_indexed = SAMTOOLS_INDEX.out.bam_bai
     }
 
     emit:

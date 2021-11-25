@@ -8,11 +8,11 @@ params.strelka_options                = [:]
 params.strelka_bp_options             = [:]
 params.mutect2_somatic_options        = [:]
 
-include { MANTA_SOMATIC as MANTA }                       from '../../modules/nf-core/software/manta/somatic/main'           addParams(options: params.manta_options)
-include { MSISENSORPRO_MSI }                             from '../../modules/nf-core/software/msisensorpro/msi/main'        addParams(options: params.msisensorpro_msi_options)
-include { STRELKA_SOMATIC as STRELKA }                   from '../../modules/nf-core/software/strelka/somatic/main'         addParams(options: params.strelka_options)
-include { STRELKA_SOMATIC_BEST_PRACTICES as STRELKA_BP } from '../../modules/nf-core/software/strelka/somaticbp/main'       addParams(options: params.strelka_bp_options)
-include { GATK4_MUTECT2_SOMATIC as MUTECT2 }             from '../../modules/nf-core/software/gatk4/mutect2/somatic/main'   addParams(options: params.mutect2_somatic_options)
+include { MANTA_SOMATIC as MANTA }           from '../../modules/nf-core/software/manta/somatic/main'           addParams(options: params.manta_options)
+include { MSISENSORPRO_MSI }                 from '../../modules/nf-core/software/msisensorpro/msi/main'        addParams(options: params.msisensorpro_msi_options)
+include { STRELKA_SOMATIC as STRELKA }       from '../../modules/nf-core/software/strelka/somatic/main'         addParams(options: params.strelka_options)
+include { STRELKA_SOMATIC as STRELKA_BP }    from '../../modules/nf-core/software/strelka/somatic/main'         addParams(options: params.strelka_bp_options)
+include { GATK4_MUTECT2_SOMATIC as MUTECT2 } from '../../modules/nf-core/software/gatk4/mutect2/somatic/main'   addParams(options: params.mutect2_somatic_options)
 
 workflow PAIR_VARIANT_CALLING {
     take:
@@ -21,8 +21,8 @@ workflow PAIR_VARIANT_CALLING {
         dbsnp                 // channel: [mandatory] dbsnp
         dbsnp_tbi             // channel: [mandatory] dbsnp_tbi
         dict                  // channel: [mandatory] dict
-        fai                   // channel: [mandatory] fai
         fasta                 // channel: [mandatory] fasta
+        fasta_fai             // channel: [mandatory] fasta_fai
         intervals             // channel: [mandatory] intervals
         msisensorpro_scan     // channel: [optional]  msisensorpro_scan
         target_bed            // channel: [optional]  target_bed
@@ -73,7 +73,7 @@ workflow PAIR_VARIANT_CALLING {
         MANTA(
             cram_pair,
             fasta,
-            fai,
+            fasta_fai,
             target_bed_gz_tbi)
 
         manta_candidate_small_indels_vcf = MANTA.out.candidate_small_indels_vcf
@@ -88,7 +88,7 @@ workflow PAIR_VARIANT_CALLING {
             STRELKA_BP(
                 manta_csi_for_strelka_bp,
                 fasta,
-                fai,
+                fasta_fai,
                 target_bed_gz_tbi)
 
             strelka_indels_vcf = STRELKA_BP.out.indels_vcf
@@ -108,7 +108,7 @@ workflow PAIR_VARIANT_CALLING {
         STRELKA(
             cram_pair,
             fasta,
-            fai,
+            fasta_fai,
             target_bed_gz_tbi)
 
         strelka_indels_vcf = STRELKA.out.indels_vcf
@@ -125,7 +125,7 @@ workflow PAIR_VARIANT_CALLING {
             panel_of_normals_tbi,
             dict,
             fasta,
-            fai,
+            fasta_fai,
             no_intervals,
             germline_resource,
             germline_resource_tbi

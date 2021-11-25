@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options = initOptions(params.options)
@@ -31,10 +31,9 @@ process SNPEFF {
     output:
     tuple val(meta), path("*.ann.vcf"), emit: vcf
     path "*.csv"                      , emit: report
-    path "*.version.txt"              , emit: version
+    path "versions.yml"               , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
     def avail_mem = 6
     if (!task.memory) {
         log.info '[snpEff] Available memory not known - defaulting to 6GB. Specify process memory requirements to change this.'
@@ -52,6 +51,9 @@ process SNPEFF {
         $vcf \\
         > ${prefix}.ann.vcf
 
-    echo \$(snpEff -version 2>&1) > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        ${getSoftwareName(task.process)}: \$(echo \$(snpEff -version 2>&1) | cut -f 2 -d ' ')
+    END_VERSIONS
     """
 }

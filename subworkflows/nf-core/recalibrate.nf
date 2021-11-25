@@ -9,12 +9,12 @@ params.qualimap_bamqc_options = [:]
 params.samtools_index_options = [:]
 params.samtools_stats_options = [:]
 
-include { GATK4_APPLYBQSR as APPLYBQSR }             from '../../modules/local/gatk4/applybqsr/main'      addParams(options: params.applybqsr_options)
-include { GATK4_APPLYBQSR_SPARK as APPLYBQSR_SPARK } from '../../modules/local/gatk4/applybqsrspark/main' addParams(options: params.applybqsr_spark_options)
-include { QUALIMAP_BAMQC_CRAM }                      from '../../modules/local/qualimap/bamqccram/main'   addParams(options: params.qualimap_bamqc_options)
-include { SAMTOOLS_INDEX }                           from '../../modules/local/samtools/index/main'       addParams(options: params.samtools_index_options)
-include { SAMTOOLS_MERGE_CRAM }                      from '../../modules/local/samtools/mergecram/main'   addParams(options: params.merge_cram_options)
-include { SAMTOOLS_STATS }                           from '../../modules/local/samtools/stats/main'       addParams(options: params.samtools_stats_options)
+include { GATK4_APPLYBQSR as APPLYBQSR }             from '../../modules/local/gatk4/applybqsr/main'          addParams(options: params.applybqsr_options)
+include { GATK4_APPLYBQSR_SPARK as APPLYBQSR_SPARK } from '../../modules/local/gatk4/applybqsrspark/main'     addParams(options: params.applybqsr_spark_options)
+include { QUALIMAP_BAMQC_CRAM }                      from '../../modules/local/qualimap/bamqccram/main'       addParams(options: params.qualimap_bamqc_options)
+include { SAMTOOLS_INDEX }                           from '../../modules/local/samtools/index/main'           addParams(options: params.samtools_index_options)
+include { SAMTOOLS_MERGE_CRAM }                      from '../../modules/local/samtools/mergecram/main'       addParams(options: params.merge_cram_options)
+include { SAMTOOLS_STATS }                           from '../../modules/nf-core/modules/samtools/stats/main' addParams(options: params.samtools_stats_options)
 
 workflow RECALIBRATE {
     take:
@@ -23,8 +23,8 @@ workflow RECALIBRATE {
         skip_samtools  // boolean: true/false
         cram           // channel: [mandatory] cram
         dict           // channel: [mandatory] dict
-        fai            // channel: [mandatory] fai
         fasta          // channel: [mandatory] fasta
+        fasta_fai      // channel: [mandatory] fasta_fai
         intervals      // channel: [mandatory] intervals
         num_intervals
         target_bed     // channel: [optional]  target_bed
@@ -42,10 +42,10 @@ workflow RECALIBRATE {
     }.set{cram_intervals}
 
     if(use_gatk_spark){
-        APPLYBQSR_SPARK(cram_intervals, fasta, fai, dict)
+        APPLYBQSR_SPARK(cram_intervals, fasta, fasta_fai, dict)
         cram_applybqsr = APPLYBQSR_SPARK.out.cram
     }else{
-        APPLYBQSR(cram_intervals, fasta, fai, dict)
+        APPLYBQSR(cram_intervals, fasta, fasta_fai, dict)
         cram_applybqsr = APPLYBQSR.out.cram
     }
 
@@ -62,13 +62,13 @@ workflow RECALIBRATE {
         cram_recalibrated = SAMTOOLS_MERGE_CRAM.out.cram
 
         SAMTOOLS_INDEX(cram_recalibrated)
-        cram_recalibrated_index = cram_recalibrated.join(SAMTOOLS_INDEX.out.crai)
+        cram_recalibrated_index = SAMTOOLS_INDEX.out.cram_crai
 
         qualimap_bamqc = Channel.empty()
         samtools_stats = Channel.empty()
 
         if (!skip_bamqc) {
-            QUALIMAP_BAMQC_CRAM(cram_recalibrated_index,target_bed, params.target_bed,fasta, fai)
+            QUALIMAP_BAMQC_CRAM(cram_recalibrated_index, target_bed, params.target_bed,fasta, fasta_fai)
             qualimap_bamqc = QUALIMAP_BAMQC_CRAM.out.results
         }
 

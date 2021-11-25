@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -11,11 +11,11 @@ process TABIX_BGZIPTABIX {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
-    conda (params.enable_conda ? "bioconda::tabix=0.2.6" : null)
+    conda (params.enable_conda ? 'bioconda::tabix=1.11' : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/tabix:0.2.6--ha92aebf_0"
+        container "https://depot.galaxyproject.org/singularity/tabix:1.11--hdfd78af_0"
     } else {
-        container "quay.io/biocontainers/tabix:0.2.6--ha92aebf_0"
+        container "quay.io/biocontainers/tabix:1.11--hdfd78af_0"
     }
 
     input:
@@ -23,15 +23,17 @@ process TABIX_BGZIPTABIX {
 
     output:
     tuple val(meta), path("*.gz"), path("*.tbi"), emit: tbi
-    path  "*.version.txt",                        emit: version
+    path  "versions.yml" ,                        emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
     def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
     """
     bgzip -c $options.args $input > ${prefix}.gz
     tabix $options.args2 ${prefix}.gz
 
-    echo \$(tabix -h 2>&1) | sed 's/^.*Version: //; s/(.*\$//' > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        ${getSoftwareName(task.process)}: \$(echo \$(tabix -h 2>&1) | sed 's/^.*Version: //; s/ .*\$//')
+    END_VERSIONS
     """
 }

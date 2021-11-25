@@ -1,5 +1,5 @@
 // Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
+include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
 
 params.options = [:]
 options        = initOptions(params.options)
@@ -26,7 +26,7 @@ process GATK4_APPLYBQSR_SPARK {
 
     output:
     tuple val(meta), path("*.cram"), emit: cram
-    path "*.version.txt",            emit: version
+    path "versions.yml"            , emit: versions
 
     script:
     def software = getSoftwareName(task.process)
@@ -48,7 +48,9 @@ process GATK4_APPLYBQSR_SPARK {
         $options.args \
         --spark-master local[${task.cpus}]
 
-
-    gatk --version | grep Picard | sed "s/Picard Version: //g" > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    ${getProcessName(task.process)}:
+        ${getSoftwareName(task.process)}: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
+    END_VERSIONS
     """
 }
