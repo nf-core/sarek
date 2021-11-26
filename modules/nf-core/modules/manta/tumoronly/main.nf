@@ -1,22 +1,11 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
-
 process MANTA_TUMORONLY {
     tag "$meta.id"
     label 'process_high'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
     conda (params.enable_conda ? "bioconda::manta=1.6.0" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/manta:1.6.0--h9ee0642_1"
-    } else {
-        container "quay.io/biocontainers/manta:1.6.0--h9ee0642_1"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/manta:1.6.0--h9ee0642_1' :
+        'quay.io/biocontainers/manta:1.6.0--h9ee0642_1' }"
 
     input:
     tuple val(meta), path(input), path(input_index)
@@ -35,7 +24,8 @@ process MANTA_TUMORONLY {
     path "versions.yml"                                        , emit: versions
 
     script:
-    def prefix = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
     def options_manta = target_bed ? "--exome --callRegions $target_bed" : ""
     """
     configManta.py \
@@ -59,10 +49,9 @@ process MANTA_TUMORONLY {
     mv manta/results/variants/tumorSV.vcf.gz.tbi \
         ${prefix}.tumor_sv.vcf.gz.tbi
 
-
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
-        ${getSoftwareName(task.process)}: \$( configManta.py --version )
+    "${task.process}":
+        manta: \$( configManta.py --version )
     END_VERSIONS
     """
 }
