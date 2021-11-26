@@ -249,8 +249,8 @@ modules['multiqc'].args += params.multiqc_title ? Utils.joinModuleArgs(["--title
 //
 
 include { FASTQC_TRIMGALORE } from '../subworkflows/nf-core/fastqc_trimgalore' addParams(
-    fastqc_options:     modules['fastqc'],
-    trimgalore_options: modules['trimgalore']
+    fastqc_options:                    modules['fastqc'],
+    trimgalore_options:                modules['trimgalore']
 )
 
 //
