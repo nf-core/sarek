@@ -19,14 +19,10 @@ jobs:
       NXF_ANSI_LOG: false
     strategy:
       matrix:
-        # Nextflow versions
-        include:
-          # Test pipeline minimum Nextflow version
-          - NXF_VER: '21.10.3'
-            NXF_EDGE: ''
-          # Test latest edge release of Nextflow
-          - NXF_VER: ''
-            NXF_EDGE: '1'
+        # Nextflow versions: check pipeline minimum and latest edge version
+        nxf_ver:
+          - 'NXF_VER=21.10.3'
+        #  - 'NXF_EDGE=1'
         engine: ['docker']
         test:
           - 'aligner'
