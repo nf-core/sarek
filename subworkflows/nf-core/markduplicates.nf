@@ -2,23 +2,14 @@
 // MARKDUPLICATES AND/OR QC after mapping
 //
 
-params.estimatelibrarycomplexity_options = [:]
-params.markduplicates_options            = [:]
-params.markduplicatesspark_options       = [:]
-params.merge_bam_options                 = [:]
-params.qualimap_bamqc_options            = [:]
-params.samtools_index_options            = [:]
-params.samtools_stats_options            = [:]
-params.samtools_view_options             = [:]
-
-include { GATK4_ESTIMATELIBRARYCOMPLEXITY }             from '../../modules/local/gatk4/estimatelibrarycomplexity/main' addParams(options: params.estimatelibrarycomplexity_options)
-include { GATK4_MARKDUPLICATES }                        from '../../modules/local/gatk4/markduplicates/main'            addParams(options: params.markduplicates_options)
-include { GATK4_MARKDUPLICATES_SPARK }                  from '../../modules/local/gatk4/markduplicatesspark/main'       addParams(options: params.markduplicatesspark_options)
-include { QUALIMAP_BAMQC }                              from '../../modules/local/qualimap/bamqc/main'                  addParams(options: params.qualimap_bamqc_options)
-include { SAMTOOLS_INDEX }                              from '../../modules/local/samtools/index/main'                  addParams(options: params.samtools_index_options)
-include { SAMTOOLS_STATS }                              from '../../modules/nf-core/modules/samtools/stats/main'        addParams(options: params.samtools_stats_options)
-include { SAMTOOLS_VIEW as SAMTOOLS_BAM_TO_CRAM }       from '../../modules/local/samtools/view/main'                   addParams(options: params.samtools_view_options)
-include { SAMTOOLS_VIEW as SAMTOOLS_BAM_TO_CRAM_SPARK } from '../../modules/local/samtools/view/main'                   addParams(options: params.samtools_view_options)
+include { GATK4_ESTIMATELIBRARYCOMPLEXITY                  } from '../../modules/local/gatk4/estimatelibrarycomplexity/main'
+include { GATK4_MARKDUPLICATES                             } from '../../modules/local/gatk4/markduplicates/main'
+include { GATK4_MARKDUPLICATES_SPARK                       } from '../../modules/local/gatk4/markduplicatesspark/main'
+include { QUALIMAP_BAMQC                                   } from '../../modules/local/qualimap/bamqc/main'
+include { SAMTOOLS_INDEX                                   } from '../../modules/local/samtools/index/main'
+include { SAMTOOLS_STATS                                   } from '../../modules/nf-core/modules/samtools/stats/main'
+include { SAMTOOLS_VIEWINDEX as SAMTOOLS_BAM_TO_CRAM       } from '../../modules/local/samtools/viewindex/main'
+include { SAMTOOLS_VIEWINDEX as SAMTOOLS_BAM_TO_CRAM_SPARK } from '../../modules/local/samtools/viewindex/main'
 
 
 workflow MARKDUPLICATES {
@@ -52,7 +43,7 @@ workflow MARKDUPLICATES {
             if (!skip_bamqc) {
                 GATK4_MARKDUPLICATES_SPARK(bam_mapped, fasta, fasta_fai, dict, "bam")
                 SAMTOOLS_INDEX(GATK4_MARKDUPLICATES_SPARK.out.output)
-                bam_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.output.join(SAMTOOLS_INDEX.out.bai)
+                bam_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.output.join(SAMTOOLS_INDEX.out.bam_bai)
 
                 SAMTOOLS_BAM_TO_CRAM_SPARK(bam_markduplicates, fasta, fasta_fai)
                 cram_markduplicates = SAMTOOLS_BAM_TO_CRAM_SPARK.out.cram_crai
@@ -102,7 +93,7 @@ workflow MARKDUPLICATES {
 
     qualimap_bamqc = Channel.empty()
     if (!skip_bamqc) {
-        QUALIMAP_BAMQC(bam_markduplicates, target_bed, params.target_bed)
+        QUALIMAP_BAMQC(bam_markduplicates, target_bed)
         qualimap_bamqc = QUALIMAP_BAMQC.out.results
 
         ch_versions = ch_versions.mix(QUALIMAP_BAMQC.out.versions.first())

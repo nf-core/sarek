@@ -1,27 +1,21 @@
 process GATK4_MUTECT2_TUMOR {
     tag "$meta.id"
     label 'process_low'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
-    conda (params.enable_conda ? "bioconda::gatk4=4.2.0.0" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/gatk4:4.2.0.0--hdfd78af_1"
-    } else {
-        container "quay.io/biocontainers/gatk4:4.2.0.0--hdfd78af_1"
-    }
+    conda (params.enable_conda ? "bioconda::gatk4=4.2.3.0" : null)
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/gatk4:4.2.3.0--hdfd78af_0' :
+        'quay.io/biocontainers/gatk4:4.2.3.0--hdfd78af_0' }"
 
     input:
     tuple val(meta), path(cram_normal), path(crai_normal), path(cram_tumor), path(crai_tumor), path(interval)
-    path pon
-    path ponIndex
-    path dict
-    path fasta
-    path fai
-    val no_intervals
-    path(germline_resource)
-    path(germline_resource_tbi)
+    path  fasta_fai
+    path  fasta
+    path  dict
+    path  pon
+    path  pon_tbi
+    path  germline_resource
+    path  germline_resource_tbi
 
     output:
     tuple val(meta), path("*.vcf")      , emit: vcf
@@ -29,32 +23,38 @@ process GATK4_MUTECT2_TUMOR {
     path "versions.yml"                 , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
-    def prefix   = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
-    def intervalsOptions = no_intervals ? "" : "-L ${interval}"
-    def softClippedOption = params.ignore_soft_clipped_bases ? "--dont-use-soft-clipped-bases true" : ""
-    def PON = params.pon ? "--panel-of-normals ${pon}" : ""
+    def avail_mem = 3
     if (!task.memory) {
         log.info '[GATK Mutect2] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
     } else {
         avail_mem = task.memory.giga
     }
+    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def intervals_command = intervals_bed ? "-L ${intervals_bed}" : ""
+    def pon_command = pon ? "--panel-of-normals ${pon}" : ""
+    // def softClippedOption = params.ignore_soft_clipped_bases ? "--dont-use-soft-clipped-bases true" : ""
+    if (!task.memory) {
+        log.info '[GATK Mutect2] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
+    } else {
+        avail_mem = task.memory.giga
+    }
+    // def softClippedOption = params.ignore_soft_clipped_bases ? "--dont-use-soft-clipped-bases true" : ""
     """
     # Get raw calls
     gatk --java-options "-Xmx${task.memory.toGiga()}g" \
         Mutect2 \
-        -R ${fasta}\
-        -I ${cramTumor} -tumor ${meta.tumor} \
-        -I ${cramNormal} -normal ${meta.normal} \
-        ${intervalsOptions} \
-        ${softClippedOption} \
-        --germline-resource ${germlineResource} \
-        ${PON} \
+        -R $fasta \
+        -I $cram_tumor -tumor ${meta.tumor} \
+        -I $cram_normal -normal ${meta.normal} \
+        $intervals_command \
+        $pon_command \
+        $args \
+        --germline-resource $germline_resource \
         -O ${prefix}.vcf
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
-        ${getSoftwareName(task.process)}: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
+    "${task.process}":
+        gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
     END_VERSIONS
     """
 }

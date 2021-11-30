@@ -16,10 +16,10 @@ process SAMTOOLS_INDEX {
     tuple val(meta), path(input)
 
     output:
-    tuple val(meta), path("*.bam", includeInputs:true), path("*.bai")  , optional:true, emit: bam_bai
-    tuple val(meta), path("*.bam", includeInputs:true), path("*.csi")  , optional:true, emit: bam_csi
+    tuple val(meta), path("*.bam",  includeInputs:true), path("*.bai") , optional:true, emit: bam_bai
+    tuple val(meta), path("*.bam",  includeInputs:true), path("*.csi") , optional:true, emit: bam_csi
     tuple val(meta), path("*.cram", includeInputs:true), path("*.crai"), optional:true, emit: cram_crai
-    path  "versions.yml"                                                              , emit: version
+    path  "versions.yml"                                                              , emit: versions
 
     script:
     """
