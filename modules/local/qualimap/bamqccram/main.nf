@@ -1,10 +1,4 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
-
-process QUALIMAP_BAMQC_CRAM{ // Import generic module functions {
+process QUALIMAP_BAMQC_CRAM {
     tag "$meta.id"
     label 'process_medium'
     publishDir "${params.outdir}",

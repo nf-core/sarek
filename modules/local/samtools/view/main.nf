@@ -1,9 +1,3 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
-
 //There is a -L option to only output alignments in interval, might be an option for exons/panel data?
 process SAMTOOLS_VIEW {
     tag "$meta.id"
