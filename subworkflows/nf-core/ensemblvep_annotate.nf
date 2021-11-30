@@ -2,18 +2,8 @@
 // Run VEP to annotate VCF files
 //
 
-params.bgziptabix_vep = [:]
-params.vep_options    = [:]
-params.vep_tag        = [:]
-params.use_cache      = [:]
-
-include { ENSEMBLVEP } from '../../modules/nf-core/modules/ensemblvep/main' addParams(
-    options:   params.vep_options,
-    use_cache: params.use_cache,
-    vep_tag:   params.vep_tag
-)
-
-include { TABIX_BGZIPTABIX } from '../../modules/local/tabix/bgziptabix/main' addParams(options: params.bgziptabix_vep_options)
+include { ENSEMBLVEP }       from '../../modules/nf-core/modules/ensemblvep/main'
+include { TABIX_BGZIPTABIX } from '../../modules/local/tabix/bgziptabix/main'
 
 workflow ENSEMBLVEP_ANNOTATE {
     take:

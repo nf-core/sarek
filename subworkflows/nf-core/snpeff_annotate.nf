@@ -2,18 +2,8 @@
 // Run snpEff to annotate VCF files
 //
 
-params.bgziptabix_snpeff = [:]
-params.snpeff_options    = [:]
-params.snpeff_tag        = [:]
-params.use_cache         = [:]
-
-include { SNPEFF } from '../../modules/nf-core/modules/snpeff/main' addParams(
-    options:    params.snpeff_options,
-    snpeff_tag: params.snpeff_tag,
-    use_cache:  params.use_cache
-)
-
-include { TABIX_BGZIPTABIX } from '../../modules/local/tabix/bgziptabix/main' addParams(options: params.bgziptabix_snpeff_options)
+include { SNPEFF           } from '../../modules/nf-core/modules/snpeff/main'
+include { TABIX_BGZIPTABIX } from '../../modules/local/tabix/bgziptabix/main'
 
 workflow SNPEFF_ANNOTATE {
     take:

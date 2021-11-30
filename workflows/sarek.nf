@@ -79,8 +79,8 @@ if (anno_readme && file(anno_readme).exists()) {
 ========================================================================================
 */
 
-// Stage dummy file to be used as an optional input where required
-ch_dummy_file = Channel.fromPath("$projectDir/assets/dummy_file.txt", checkIfExists: true).collect()
+// // Stage dummy file to be used as an optional input where required
+// [] = Channel.fromPath("$projectDir/assets/dummy_file.txt", checkIfExists: true).collect()
 
 // if (params.skip_markduplicates) {
 //     modules['baserecalibrator'].publish_files        = ['recal.table':'mapped']
@@ -90,15 +90,15 @@ ch_dummy_file = Channel.fromPath("$projectDir/assets/dummy_file.txt", checkIfExi
 // }
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-chr_dir           = params.chr_dir           ? Channel.fromPath(params.chr_dir).collect()           : ch_dummy_file
-chr_length        = params.chr_length        ? Channel.fromPath(params.chr_length).collect()        : ch_dummy_file
-dbsnp             = params.dbsnp             ? Channel.fromPath(params.dbsnp).collect()             : ch_dummy_file
-fasta             = params.fasta             ? Channel.fromPath(params.fasta).collect()             : ch_dummy_file
-germline_resource = params.germline_resource ? Channel.fromPath(params.germline_resource).collect() : ch_dummy_file
-known_indels      = params.known_indels      ? Channel.fromPath(params.known_indels).collect()      : ch_dummy_file
-loci              = params.ac_loci           ? Channel.fromPath(params.ac_loci).collect()           : ch_dummy_file
-loci_gc           = params.ac_loci_gc        ? Channel.fromPath(params.ac_loci_gc).collect()        : ch_dummy_file
-mappability       = params.mappability       ? Channel.fromPath(params.mappability).collect()       : ch_dummy_file
+chr_dir           = params.chr_dir           ? Channel.fromPath(params.chr_dir).collect()           : []
+chr_length        = params.chr_length        ? Channel.fromPath(params.chr_length).collect()        : []
+dbsnp             = params.dbsnp             ? Channel.fromPath(params.dbsnp).collect()             : []
+fasta             = params.fasta             ? Channel.fromPath(params.fasta).collect()             : []
+germline_resource = params.germline_resource ? Channel.fromPath(params.germline_resource).collect() : []
+known_indels      = params.known_indels      ? Channel.fromPath(params.known_indels).collect()      : []
+loci              = params.ac_loci           ? Channel.fromPath(params.ac_loci).collect()           : []
+loci_gc           = params.ac_loci_gc        ? Channel.fromPath(params.ac_loci_gc).collect()        : []
+mappability       = params.mappability       ? Channel.fromPath(params.mappability).collect()       : []
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
 snpeff_db         = params.snpeff_db         ?: Channel.empty()
@@ -107,14 +107,14 @@ vep_genome        = params.vep_genome        ?: Channel.empty()
 vep_species       = params.vep_species       ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
-cadd_indels       = params.cadd_indels       ? Channel.fromPath(params.cadd_indels).collect()       : ch_dummy_file
-cadd_indels_tbi   = params.cadd_indels_tbi   ? Channel.fromPath(params.cadd_indels_tbi).collect()   : ch_dummy_file
-cadd_wg_snvs      = params.cadd_wg_snvs      ? Channel.fromPath(params.cadd_wg_snvs).collect()      : ch_dummy_file
-cadd_wg_snvs_tbi  = params.cadd_wg_snvs_tbi  ? Channel.fromPath(params.cadd_wg_snvs_tbi).collect()  : ch_dummy_file
-pon               = params.pon               ? Channel.fromPath(params.pon).collect()               : ch_dummy_file
-snpeff_cache      = params.snpeff_cache      ? Channel.fromPath(params.snpeff_cache).collect()      : ch_dummy_file
-target_bed        = params.target_bed        ? Channel.fromPath(params.target_bed).collect()        : ch_dummy_file
-vep_cache         = params.vep_cache         ? Channel.fromPath(params.vep_cache).collect()         : ch_dummy_file
+cadd_indels       = params.cadd_indels       ? Channel.fromPath(params.cadd_indels).collect()       : []
+cadd_indels_tbi   = params.cadd_indels_tbi   ? Channel.fromPath(params.cadd_indels_tbi).collect()   : []
+cadd_wg_snvs      = params.cadd_wg_snvs      ? Channel.fromPath(params.cadd_wg_snvs).collect()      : []
+cadd_wg_snvs_tbi  = params.cadd_wg_snvs_tbi  ? Channel.fromPath(params.cadd_wg_snvs_tbi).collect()  : []
+pon               = params.pon               ? Channel.fromPath(params.pon).collect()               : []
+snpeff_cache      = params.snpeff_cache      ? Channel.fromPath(params.snpeff_cache).collect()      : []
+target_bed        = params.target_bed        ? Channel.fromPath(params.target_bed).collect()        : []
+vep_cache         = params.vep_cache         ? Channel.fromPath(params.vep_cache).collect()         : []
 
 // Initialize value channels based on params, not defined within the params.genomes[params.genome] scope
 read_structure1   = params.read_structure1   ?: Channel.empty()
@@ -199,13 +199,13 @@ workflow SAREK {
         step)
 
     // Gather built indices or get them from the params
-    bwa                   = params.fasta             ? params.bwa                   ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : ch_dummy_file
-    dict                  = params.fasta             ? params.dict                  ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : ch_dummy_file
-    fasta_fai             = params.fasta             ? params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai                   : ch_dummy_file
-    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : ch_dummy_file
-    germline_resource_tbi = params.germline_resource ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : ch_dummy_file
-    known_indels_tbi      = params.known_indels      ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : ch_dummy_file
-    pon_tbi               = params.pon               ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : ch_dummy_file
+    bwa                   = params.fasta             ? params.bwa                   ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : []
+    dict                  = params.fasta             ? params.dict                  ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : []
+    fasta_fai             = params.fasta             ? params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai             : []
+    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : []
+    germline_resource_tbi = params.germline_resource ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : []
+    known_indels_tbi      = params.known_indels      ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : []
+    pon_tbi               = params.pon               ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : []
     msisensorpro_scan     = PREPARE_GENOME.out.msisensorpro_scan
     target_bed_gz_tbi     = PREPARE_GENOME.out.target_bed_gz_tbi
 
