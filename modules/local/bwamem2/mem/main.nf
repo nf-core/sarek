@@ -1,9 +1,3 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
-
 process BWAMEM2_MEM {
     tag "$meta.id"
     label 'process_high'

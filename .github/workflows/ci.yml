@@ -22,7 +22,6 @@ jobs:
         nxf_ver:
           - 'NXF_VER=21.10.3'
         #  - 'NXF_EDGE=1'
-        engine: ['docker']
         test:
           - 'aligner'
           - 'annotation'

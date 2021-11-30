@@ -13,20 +13,22 @@ WorkflowSarek.initialise(params, log)
 def checkPathParamList = [
     params.ac_loci,
     params.ac_loci_gc,
+    params.bwa,
     params.cadd_indels,
     params.cadd_indels_tbi,
     params.cadd_wg_snvs,
     params.cadd_wg_snvs_tbi,
     params.chr_dir,
     params.chr_length,
-    params.dict,
     params.dbsnp,
     params.dbsnp_tbi,
+    params.dict,
     params.fasta,
     params.fasta_fai,
     params.germline_resource,
     params.germline_resource_tbi,
     params.input,
+    params.intervals,
     params.known_indels,
     params.known_indels_tbi,
     params.mappability,
@@ -80,30 +82,12 @@ if (anno_readme && file(anno_readme).exists()) {
 // Stage dummy file to be used as an optional input where required
 ch_dummy_file = Channel.fromPath("$projectDir/assets/dummy_file.txt", checkIfExists: true).collect()
 
-// Don't overwrite global params.modules, create a copy instead and use that within the main script
-def modules = params.modules.clone()
-
-// Update modules options based on params
-if (params.save_reference) {
-    modules['build_intervals'].publish_files         = ['bed':'intervals']
-    modules['bwa_index'].publish_files               = ['amb':'bwa', 'ann':'bwa', 'bwt':'bwa', 'pac':'bwa', 'sa':'bwa']
-    modules['bwamem2_index'].publish_files           = ['0123':'bwamem2', 'amb':'bwamem2', 'ann':'bwamem2', 'bwt.2bit.64':'bwamem2', 'bwt.8bit.32':'bwamem2', 'pac':'bwamem2']
-    modules['create_intervals_bed'].publish_files    = ['bed':'intervals']
-    modules['dict'].publish_files                    = ['dict':'dict']
-    modules['bgziptabix_target_bed'].publish_files   = ['bed.gz':'target', 'bed.gz.tbi':'target']
-    modules['msisensorpro_scan'].publish_files       = ['list':'msi']
-    modules['samtools_faidx'].publish_files          = ['fai':'fai']
-    modules['tabix_dbsnp'].publish_files             = ['vcf.gz.tbi':'dbsnp']
-    modules['tabix_germline_resource'].publish_files = ['vcf.gz.tbi':'germline_resource']
-    modules['tabix_known_indels'].publish_files      = ['vcf.gz.tbi':'known_indels']
-    modules['tabix_pon'].publish_files               = ['vcf.gz.tbi':'pon']
-}
-if (params.skip_markduplicates) {
-    modules['baserecalibrator'].publish_files        = ['recal.table':'mapped']
-    modules['gatherbqsrreports'].publish_files       = ['recal.table':'mapped']
-} else {
-    modules['baserecalibrator'].publish_files        = false
-}
+// if (params.skip_markduplicates) {
+//     modules['baserecalibrator'].publish_files        = ['recal.table':'mapped']
+//     modules['gatherbqsrreports'].publish_files       = ['recal.table':'mapped']
+// } else {
+//     modules['baserecalibrator'].publish_files        = false
+// }
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
 chr_dir           = params.chr_dir           ? Channel.fromPath(params.chr_dir).collect()           : ch_dummy_file
@@ -139,98 +123,37 @@ read_structure2   = params.read_structure2   ?: Channel.empty()
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
 
 // Create samplesheets to restart from different steps
-include { MAPPING_CSV }               from '../subworkflows/local/mapping_csv'
-include { MARKDUPLICATES_CSV }        from '../subworkflows/local/markduplicates_csv'
+include { MAPPING_CSV               } from '../subworkflows/local/mapping_csv'
+include { MARKDUPLICATES_CSV        } from '../subworkflows/local/markduplicates_csv'
 include { PREPARE_RECALIBRATION_CSV } from '../subworkflows/local/prepare_recalibration_csv'
-include { RECALIBRATE_CSV }           from '../subworkflows/local/recalibrate_csv'
+include { RECALIBRATE_CSV           } from '../subworkflows/local/recalibrate_csv'
 
 // Build indices if needed
-include { PREPARE_GENOME } from '../subworkflows/local/prepare_genome' addParams(
-    bgziptabix_target_bed_options:     modules['bgziptabix_target_bed'],
-    build_intervals_options:           modules['build_intervals'],
-    bwa_index_options:                 modules['bwa_index'],
-    bwamem2_index_options:             modules['bwamem2_index'],
-    create_intervals_bed_options:      modules['create_intervals_bed'],
-    gatk4_dict_options:                modules['dict'],
-    msisensorpro_scan_options:         modules['msisensorpro_scan'],
-    samtools_faidx_options:            modules['samtools_faidx'],
-    tabix_dbsnp_options:               modules['tabix_dbsnp'],
-    tabix_germline_resource_options:   modules['tabix_germline_resource'],
-    tabix_known_indels_options:        modules['tabix_known_indels'],
-    tabix_pon_options:                 modules['tabix_pon']
-)
+include { PREPARE_GENOME            } from '../subworkflows/local/prepare_genome'
 
 // Map input reads to reference genome (+QC)
-include { MAPPING } from '../subworkflows/nf-core/mapping' addParams(
-    bwamem1_mem_options:               modules['bwa_mem1_mem'],
-    bwamem1_mem_tumor_options:         modules['bwa_mem1_mem_tumor'],
-    bwamem2_mem_options:               modules['bwa_mem2_mem'],
-    bwamem2_mem_tumor_options:         modules['bwa_mem2_mem_tumor'],
-    merge_bam_options:                 modules['merge_bam_mapping'],
-    samtools_index_options:            modules['samtools_index_mapping'],
-    seqkit_split2_options:             modules['seqkit_split2']
-)
+include { MAPPING                   } from '../subworkflows/nf-core/mapping'
 
 // Mark duplicates (+QC) + convert to CRAM
-include { MARKDUPLICATES } from '../subworkflows/nf-core/markduplicates' addParams(
-    estimatelibrarycomplexity_options: modules['estimatelibrarycomplexity'],
-    markduplicates_options:            modules['markduplicates'],
-    markduplicatesspark_options:       modules['markduplicatesspark'],
-    merge_bam_options:                 modules['merge_bam_mapping'],
-    qualimap_bamqc_options:            modules['qualimap_bamqc_mapping'],
-    samtools_index_options:            modules['samtools_index_cram'],
-    samtools_stats_options:            modules['samtools_stats_mapping'],
-    samtools_view_options:             modules['samtools_view']
-)
+include { MARKDUPLICATES            } from '../subworkflows/nf-core/markduplicates'
 
 // Create recalibration tables
-include { PREPARE_RECALIBRATION } from '../subworkflows/nf-core/prepare_recalibration' addParams(
-    baserecalibrator_options:          modules['baserecalibrator'],
-    baserecalibrator_spark_options:    modules['baserecalibrator_spark'],
-    gatherbqsrreports_options:         modules['gatherbqsrreports']
-)
+include { PREPARE_RECALIBRATION     } from '../subworkflows/nf-core/prepare_recalibration'
 
 // Create recalibrated cram files to use for variant calling
-include { RECALIBRATE } from '../subworkflows/nf-core/recalibrate' addParams(
-    applybqsr_options:                 modules['applybqsr'],
-    applybqsr_spark_options:           modules['applybqsr_spark'],
-    merge_cram_options:                modules['merge_cram_recalibrate'],
-    qualimap_bamqc_options:            modules['qualimap_bamqc_recalibrate'],
-    samtools_index_options:            modules['samtools_index_recalibrate'],
-    samtools_stats_options:            modules['samtools_stats_recalibrate']
-)
+include { RECALIBRATE               } from '../subworkflows/nf-core/recalibrate'
 
 // Variant calling on a single normal sample
-include { GERMLINE_VARIANT_CALLING } from '../subworkflows/local/germline_variant_calling' addParams(
-    concat_gvcf_options:               modules['concat_gvcf'],
-    concat_haplotypecaller_options:    modules['concat_haplotypecaller'],
-    genotypegvcf_options:              modules['genotypegvcf'],
-    haplotypecaller_options:           modules['haplotypecaller'],
-    strelka_options:                   modules['strelka_germline']
-)
-// // Variant calling on a single tumor sample
-// // include { TUMOR_VARIANT_CALLING } from '../subworkflows/local/tumor_variant_calling' addParams(
-// // )
-// // Variant calling on tumor/normal pair
-// include { PAIR_VARIANT_CALLING } from '../subworkflows/local/pair_variant_calling' addParams(
-//     manta_options:                   modules['manta_somatic'],
-//     msisensorpro_msi_options:        modules['msisensorpro_msi'],
-//     strelka_bp_options:              modules['strelka_somatic_bp'],
-//     strelka_options:                 modules['strelka_somatic'],
-//     mutect2_somatic_options:         modules['mutect2_somatic']
-// )
+include { GERMLINE_VARIANT_CALLING  } from '../subworkflows/local/germline_variant_calling'
+
+// Variant calling on a single tumor sample
+// include { TUMOR_VARIANT_CALLING     } from '../subworkflows/local/tumor_variant_calling'
+// Variant calling on tumor/normal pair
+// include { PAIR_VARIANT_CALLING      } from '../subworkflows/local/pair_variant_calling'
 
 // Annotation
-include { ANNOTATE } from '../subworkflows/local/annotate' addParams(
-    annotation_cache:                  params.annotation_cache,
-    bgziptabix_merge_vep_options:      modules['bgziptabix_merge_vep'],
-    bgziptabix_snpeff_options:         modules['bgziptabix_snpeff'],
-    bgziptabix_vep_options:            modules['bgziptabix_vep'],
-    merge_vep_options:                 modules['merge_vep'],
-    snpeff_options:                    modules['snpeff'],
-    snpeff_tag:                        "${modules['snpeff'].tag_base}.${params.genome}",
-    vep_options:                       modules['ensemblvep'],
-    vep_tag:                           "${modules['ensemblvep'].tag_base}.${params.genome}"
+include { ANNOTATE                     } from '../subworkflows/local/annotate' addParams(
+    annotation_cache:                  params.annotation_cache
 )
 
 /*
@@ -242,23 +165,19 @@ include { ANNOTATE } from '../subworkflows/local/annotate' addParams(
 // Config files
 ch_multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
-modules['multiqc'].args += params.multiqc_title ? Utils.joinModuleArgs(["--title \"$params.multiqc_title\""]) : ''
 
 //
 // SUBWORKFLOWS
 //
 
-include { FASTQC_TRIMGALORE } from '../subworkflows/nf-core/fastqc_trimgalore' addParams(
-    fastqc_options:                    modules['fastqc'],
-    trimgalore_options:                modules['trimgalore']
-)
+include { FASTQC_TRIMGALORE } from '../subworkflows/nf-core/fastqc_trimgalore'
 
 //
 // MODULES: Installed directly from nf-core/modules
 //
 
-include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main' addParams( options: [publish_files : ['_versions.yml':'']] )
-include { MULTIQC }                     from '../modules/nf-core/modules/multiqc/main'                     addParams( options: modules['multiqc'] )
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+include { MULTIQC } from '../modules/nf-core/modules/multiqc/main'
 
 def multiqc_report = []
 
@@ -506,7 +425,7 @@ workflow SAREK {
 
     ch_version_yaml = Channel.empty()
     if (!('versions' in skip_qc)) {
-        CUSTOM_DUMPSOFTWAREVERSIONS(ch_versions.unique().collectFile())
+        CUSTOM_DUMPSOFTWAREVERSIONS(ch_versions.unique().collectFile(name: 'collated_versions.yml'))
         ch_version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
     }
 
@@ -524,6 +443,7 @@ workflow SAREK {
     if (!('multiqc' in skip_qc)) {
         MULTIQC(ch_multiqc_files.collect())
         multiqc_report = MULTIQC.out.report.toList()
+
     }
 }
 

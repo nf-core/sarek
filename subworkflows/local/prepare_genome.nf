@@ -1,34 +1,21 @@
 //
-// BUILDING INDICES
+// PREPARE GENOME
 //
-
-params.bgziptabix_target_bed_options   = [:]
-params.build_intervals_options         = [:]
-params.bwa_index_options               = [:]
-params.bwamem2_index_options           = [:]
-params.create_intervals_bed_options    = [:]
-params.gatk4_dict_options              = [:]
-params.msisensorpro_scan_options       = [:]
-params.samtools_faidx_options          = [:]
-params.tabix_dbsnp_options             = [:]
-params.tabix_germline_resource_options = [:]
-params.tabix_known_indels_options      = [:]
-params.tabix_pon_options               = [:]
 
 // Initialize channels based on params or indices that were just built
 
-include { BUILD_INTERVALS }                        from '../../modules/local/build_intervals/main'                           addParams(options: params.build_intervals_options)
-include { BWA_INDEX as BWAMEM1_INDEX }             from '../../modules/nf-core/modules/bwa/index/main'                       addParams(options: params.bwa_index_options)
-include { BWAMEM2_INDEX }                          from '../../modules/nf-core/modules/bwamem2/index/main'                   addParams(options: params.bwamem2_index_options)
-include { CREATE_INTERVALS_BED }                   from '../../modules/local/create_intervals_bed/main'                      addParams(options: params.create_intervals_bed_options)
-include { GATK4_CREATESEQUENCEDICTIONARY  }        from '../../modules/nf-core/modules/gatk4/createsequencedictionary/main'  addParams(options: params.gatk4_dict_options)
-include { MSISENSORPRO_SCAN }                      from '../../modules/local/msisensorpro/scan/main'                         addParams(options: params.msisensorpro_scan_options)
-include { SAMTOOLS_FAIDX }                         from '../../modules/nf-core/modules/samtools/faidx/main'                  addParams(options: params.samtools_faidx_options)
-include { TABIX_BGZIPTABIX }                       from '../../modules/nf-core/modules/tabix/bgziptabix/main'                addParams(options: params.bgziptabix_target_bed_options)
-include { TABIX_TABIX as TABIX_DBSNP }             from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_dbsnp_options)
-include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE } from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_germline_resource_options)
-include { TABIX_TABIX as TABIX_KNOWN_INDELS }      from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_known_indels_options)
-include { TABIX_TABIX as TABIX_PON }               from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_pon_options)
+include { BUILD_INTERVALS                        } from '../../modules/local/build_intervals/main'
+include { BWA_INDEX as BWAMEM1_INDEX             } from '../../modules/nf-core/modules/bwa/index/main'
+include { BWAMEM2_INDEX                          } from '../../modules/nf-core/modules/bwamem2/index/main'
+include { CREATE_INTERVALS_BED                   } from '../../modules/local/create_intervals_bed/main'
+include { GATK4_CREATESEQUENCEDICTIONARY         } from '../../modules/nf-core/modules/gatk4/createsequencedictionary/main'
+include { MSISENSORPRO_SCAN                      } from '../../modules/local/msisensorpro/scan/main'
+include { SAMTOOLS_FAIDX                         } from '../../modules/nf-core/modules/samtools/faidx/main'
+include { TABIX_BGZIPTABIX                       } from '../../modules/nf-core/modules/tabix/bgziptabix/main'
+include { TABIX_TABIX as TABIX_DBSNP             } from '../../modules/nf-core/modules/tabix/tabix/main'
+include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE } from '../../modules/nf-core/modules/tabix/tabix/main'
+include { TABIX_TABIX as TABIX_KNOWN_INDELS      } from '../../modules/nf-core/modules/tabix/tabix/main'
+include { TABIX_TABIX as TABIX_PON               } from '../../modules/nf-core/modules/tabix/tabix/main'
 
 workflow PREPARE_GENOME {
     take:

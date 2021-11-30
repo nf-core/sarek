@@ -1,9 +1,3 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
-
 process CONCAT_VCF {
     tag "$meta.id"
     label 'process_medium'
