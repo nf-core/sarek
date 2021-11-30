@@ -12,7 +12,7 @@ process INDEX_TARGET_BED {
     path  target_bed
 
     output:
-    tuple path("${target_bed}.gz"), path("${target_bed}.gz.tbi")
+    tuple path("*.gz"), path("*.gz.tbi"), emit: gz_tbi
 
     script:
     """

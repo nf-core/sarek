@@ -12,8 +12,8 @@ process SAMTOOLS_MERGE_CRAM {
     path  fasta
 
     output:
-    tuple val(meta), path("${prefix}.cram"), emit: cram
-    path  "versions.yml"                   , emit: versions
+    tuple val(meta), path("*.cram"), emit: cram
+    path  "versions.yml"           , emit: versions
 
     script:
     def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"

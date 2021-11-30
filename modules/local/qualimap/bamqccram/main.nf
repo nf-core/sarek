@@ -15,11 +15,11 @@ process QUALIMAP_BAMQC_CRAM {
 
     output:
     tuple val(meta), path("${prefix}"), emit: results
-    path  "*.version.txt"             , emit: version
+    path  "versions.yml"              , emit: versions
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
     def collect_pairs = meta.single_end ? '' : '--collect-overlap-pairs'
     def memory = task.memory.toGiga() + "G"
     def regions = gff ? "--gff $gff" : ''

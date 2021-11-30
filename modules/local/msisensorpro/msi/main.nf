@@ -20,7 +20,7 @@ process MSISENSORPRO_MSI {
 
     script:
     def args = task.ext.args  ?: ''
-    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
     """
     msisensor-pro msi \\
         -d $msisensorpro_scan \\
