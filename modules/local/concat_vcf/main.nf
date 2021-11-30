@@ -10,8 +10,8 @@ process CONCAT_VCF {
 
     input:
     tuple val(meta), path(vcf)
-    path fasta_fai
-    path bed
+    path  fasta_fai
+    path  bed
 
     output:
     tuple val(meta), path("*_*.vcf.gz"), path("*_*.vcf.gz.tbi"), emit: vcf

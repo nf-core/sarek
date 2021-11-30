@@ -14,8 +14,8 @@ process GATK4_ESTIMATELIBRARYCOMPLEXITY {
     path  dict
 
     output:
-    path('*.md.metrics'), emit: metrics
-    path "versions.yml" , emit: versions
+    path "*.md.metrics", emit: metrics
+    path "versions.yml", emit: versions
 
     script:
     def args = task.ext.args  ?: ''
