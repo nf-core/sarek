@@ -2,8 +2,8 @@
 // Run snpEff to annotate VCF files
 //
 
-include { SNPEFF           } from '../../modules/nf-core/modules/snpeff/main'
-include { TABIX_BGZIPTABIX } from '../../modules/local/tabix/bgziptabix/main'
+include { SNPEFF                                  } from '../../modules/nf-core/modules/snpeff/main'
+include { TABIX_BGZIPTABIX as BGZIPTABIX_ANNOTATE } from '../../modules/local/tabix/bgziptabix/main'
 
 workflow SNPEFF_ANNOTATE {
     take:
@@ -13,10 +13,10 @@ workflow SNPEFF_ANNOTATE {
 
     main:
     SNPEFF(vcf, snpeff_db, snpeff_cache)
-    TABIX_BGZIPTABIX(SNPEFF.out.vcf)
+    BGZIPTABIX_ANNOTATE(SNPEFF.out.vcf)
 
     emit:
-    vcf_tbi  = TABIX_BGZIPTABIX.out.gz_tbi // channel: [ val(meta), vcf.gz, vcf.gz.tbi ]
-    reports  = SNPEFF.out.report           //    path: *.html
-    versions = SNPEFF.out.versions         //    path: versions.yml
+    vcf_tbi  = BGZIPTABIX_ANNOTATE.out.gz_tbi // channel: [ val(meta), vcf.gz, vcf.gz.tbi ]
+    reports  = SNPEFF.out.report              //    path: *.html
+    versions = SNPEFF.out.versions            //    path: versions.yml
 }
