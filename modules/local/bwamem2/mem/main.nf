@@ -31,7 +31,7 @@ process BWAMEM2_MEM {
         -t ${split_cpus} \\
         \$INDEX \\
         $reads \\
-        | samtools $args2 -@ ${split_cpus} -o ${prefix}bam -
+        | samtools $args2 -@ ${split_cpus} -o ${prefix}.bam -
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
