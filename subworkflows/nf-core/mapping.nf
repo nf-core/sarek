@@ -2,13 +2,13 @@
 // MAPPING
 //
 
-include { BWAMEM2_MEM as BWAMEM2_MEM_T } from '../../modules/local/bwamem2/mem/main'
-include { BWAMEM2_MEM                  } from '../../modules/local/bwamem2/mem/main'
-include { BWA_MEM as BWAMEM1_MEM       } from '../../modules/local/bwa/mem/main'
-include { BWA_MEM as BWAMEM1_MEM_T     } from '../../modules/local/bwa/mem/main'
-include { SAMTOOLS_INDEX               } from '../../modules/local/samtools/index/main'
-include { SAMTOOLS_MERGE               } from '../../modules/nf-core/modules/samtools/merge/main'
-include { SEQKIT_SPLIT2                } from '../../modules/nf-core/modules/seqkit/split2/main'
+include { BWAMEM2_MEM as BWAMEM2_MEM_T    } from '../../modules/local/bwamem2/mem/main'
+include { BWAMEM2_MEM                     } from '../../modules/local/bwamem2/mem/main'
+include { BWA_MEM as BWAMEM1_MEM          } from '../../modules/local/bwa/mem/main'
+include { BWA_MEM as BWAMEM1_MEM_T        } from '../../modules/local/bwa/mem/main'
+include { SAMTOOLS_INDEX as INDEX_MAPPING } from '../../modules/local/samtools/index/main'
+include { SAMTOOLS_MERGE                  } from '../../modules/nf-core/modules/samtools/merge/main'
+include { SEQKIT_SPLIT2                   } from '../../modules/nf-core/modules/seqkit/split2/main'
 
 workflow MAPPING {
     take:
@@ -106,8 +106,8 @@ workflow MAPPING {
         SAMTOOLS_MERGE(bam_to_merge.multiple, [])
         bam_merged = bam_to_merge.single.mix(SAMTOOLS_MERGE.out.bam)
 
-        SAMTOOLS_INDEX(bam_merged)
-        bam_indexed = SAMTOOLS_INDEX.out.bam_bai
+        INDEX_MAPPING(bam_merged)
+        bam_indexed = INDEX_MAPPING.out.bam_bai
     }
 
     emit:

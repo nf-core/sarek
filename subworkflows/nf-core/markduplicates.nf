@@ -6,7 +6,7 @@ include { GATK4_ESTIMATELIBRARYCOMPLEXITY                  } from '../../modules
 include { GATK4_MARKDUPLICATES                             } from '../../modules/local/gatk4/markduplicates/main'
 include { GATK4_MARKDUPLICATES_SPARK                       } from '../../modules/local/gatk4/markduplicatesspark/main'
 include { QUALIMAP_BAMQC                                   } from '../../modules/local/qualimap/bamqc/main'
-include { SAMTOOLS_INDEX                                   } from '../../modules/local/samtools/index/main'
+include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES           } from '../../modules/local/samtools/index/main'
 include { SAMTOOLS_STATS                                   } from '../../modules/nf-core/modules/samtools/stats/main'
 include { SAMTOOLS_VIEWINDEX as SAMTOOLS_BAM_TO_CRAM       } from '../../modules/local/samtools/viewindex/main'
 include { SAMTOOLS_VIEWINDEX as SAMTOOLS_BAM_TO_CRAM_SPARK } from '../../modules/local/samtools/viewindex/main'
@@ -42,22 +42,22 @@ workflow MARKDUPLICATES {
             //If BAMQC should be run on MD output, then don't use MDSpark to convert to cram, but use bam output instead
             if (!skip_bamqc) {
                 GATK4_MARKDUPLICATES_SPARK(bam_mapped, fasta, fasta_fai, dict, "bam")
-                SAMTOOLS_INDEX(GATK4_MARKDUPLICATES_SPARK.out.output)
-                bam_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.output.join(SAMTOOLS_INDEX.out.bam_bai)
+                INDEX_MARKDUPLICATES(GATK4_MARKDUPLICATES_SPARK.out.output)
+                bam_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.output.join(INDEX_MARKDUPLICATES.out.bam_bai)
 
                 SAMTOOLS_BAM_TO_CRAM_SPARK(bam_markduplicates, fasta, fasta_fai)
                 cram_markduplicates = SAMTOOLS_BAM_TO_CRAM_SPARK.out.cram_crai
 
                 ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES_SPARK.out.versions.first())
-                ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
+                ch_versions = ch_versions.mix(INDEX_MARKDUPLICATES.out.versions.first())
                 ch_versions = ch_versions.mix(SAMTOOLS_BAM_TO_CRAM_SPARK.out.versions.first())
             } else {
                 GATK4_MARKDUPLICATES_SPARK(bam_mapped, fasta, fasta_fai, dict, "cram")
-                SAMTOOLS_INDEX(GATK4_MARKDUPLICATES_SPARK.out.output)
-                cram_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.output.join(SAMTOOLS_INDEX.out.crai)
+                INDEX_MARKDUPLICATES(GATK4_MARKDUPLICATES_SPARK.out.output)
+                cram_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.output.join(INDEX_MARKDUPLICATES.out.crai)
 
                 ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES_SPARK.out.versions.first())
-                ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
+                ch_versions = ch_versions.mix(INDEX_MARKDUPLICATES.out.versions.first())
             }
 
             if (save_metrics) {

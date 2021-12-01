@@ -5,7 +5,7 @@
 include { GATK4_APPLYBQSR as APPLYBQSR              } from '../../modules/local/gatk4/applybqsr/main'
 include { GATK4_APPLYBQSR_SPARK as APPLYBQSR_SPARK  } from '../../modules/local/gatk4/applybqsrspark/main'
 include { QUALIMAP_BAMQC_CRAM                       } from '../../modules/local/qualimap/bamqccram/main'
-include { SAMTOOLS_INDEX                            } from '../../modules/local/samtools/index/main'
+include { SAMTOOLS_INDEX as INDEX_RECALIBRATE       } from '../../modules/local/samtools/index/main'
 include { SAMTOOLS_MERGE_CRAM                       } from '../../modules/local/samtools/mergecram/main'
 include { SAMTOOLS_STATS                            } from '../../modules/nf-core/modules/samtools/stats/main'
 
@@ -54,8 +54,8 @@ workflow RECALIBRATE {
         SAMTOOLS_MERGE_CRAM(cram_recalibrated_interval, fasta)
         cram_recalibrated = SAMTOOLS_MERGE_CRAM.out.cram
 
-        SAMTOOLS_INDEX(cram_recalibrated)
-        cram_recalibrated_index = SAMTOOLS_INDEX.out.cram_crai
+        INDEX_RECALIBRATE(cram_recalibrated)
+        cram_recalibrated_index = INDEX_RECALIBRATE.out.cram_crai
 
         qualimap_bamqc = Channel.empty()
         samtools_stats = Channel.empty()
