@@ -33,7 +33,7 @@ process GATK4_MARKDUPLICATES_SPARK {
         MarkDuplicatesSpark \
         $bams \
         -O ${prefix}.${format} \
-        --reference ${reference} \
+        --reference ${fasta} \
         --tmp-dir . \
         --spark-master local[${task.cpus}] \\
         $args
