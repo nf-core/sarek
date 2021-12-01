@@ -8,7 +8,7 @@
     - path: results/multiqc
     - path: results/preprocessing/test/mapped/test-test_L1.bam
     - path: results/preprocessing/test/mapped/test-test_L1.bam.bai
-    - path: results/preprocessing/test/mapped/test.recal.table
+    - path: results/preprocessing/test/recal_table/test.recal.table
     - path: results/preprocessing/test/markduplicates/test.md.cram
     - path: results/preprocessing/test/markduplicates/test.md.cram.crai
     - path: results/preprocessing/test/recalibrated/test.recal.cram
@@ -33,7 +33,7 @@
 #     - skip_markduplicates
 #   files:
 #     - path: results/multiqc
-#     - path: results/preprocessing/test/mapped/test.recal.table
+#     - path: results/preprocessing/test/recal_table/test.recal.table
 #     - path: results/preprocessing/test/markduplicates/test.md.cram
 #     - path: results/preprocessing/test/markduplicates/test.md.cram.crai
 #     - path: results/preprocessing/test/recalibrated/test.recal.cram
