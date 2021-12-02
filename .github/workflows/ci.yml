@@ -8,9 +8,6 @@ on:
   release:
     types: [published]
 
-# Uncomment if we need an edge release of Nextflow again
-# env: NXF_EDGE: 1
-
 jobs:
   test:
     name: Run workflow tests
@@ -18,13 +15,13 @@ jobs:
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/sarek') }}
     runs-on: ubuntu-latest
     env:
-      NXF_VER: ${{ matrix.nxf_ver }}
       NXF_ANSI_LOG: false
     strategy:
       matrix:
-        # Nextflow versions: check pipeline minimum and current latest
-        nxf_ver: ['21.04.0', '']
-        engine: ['docker']
+        # Nextflow versions: check pipeline minimum and latest edge version
+        nxf_ver:
+          - 'NXF_VER=21.10.3'
+        #  - 'NXF_EDGE=1'
         test:
           - 'aligner'
           - 'annotation'
@@ -45,6 +42,8 @@ jobs:
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
+          export ${{ matrix.nxf_ver }}
+          nextflow self-update
 
       - name: Set up Python
         uses: actions/setup-python@v2

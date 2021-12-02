@@ -36,10 +36,10 @@ input:
       type: file
       description: reference fasta file
       pattern: ".{fa,fa.gz,fasta,fasta.gz}"
-  - fai:
+  - fasta_fai:
       type: file
       description: reference fasta file index
-      pattern: "*.fai"
+      pattern: "*.{fa,fasta}.fai"
   - targets:
       type: file
       description: Optional - Limit analysis to targets listed in this BED-format FILE.
@@ -55,8 +55,7 @@ input:
   - cnv:
       type: file
       description: |
-          A copy number map BED file, which has
-          either a sample-level ploidy:
+          A copy number map BED file, which has either a sample-level ploidy:
           sample_name copy_number
           or a region-specific format:
           seq_name start end sample_name copy_number

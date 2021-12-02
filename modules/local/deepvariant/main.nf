@@ -1,27 +1,16 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
-
 process DEEPVARIANT {
     tag "$meta.id"
     label 'process_medium'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
     conda (params.enable_conda ? "bioconda::deepvariant=1.2.0" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "docker://google/deepvariant:1.2.0"
-    } else {
-        container "google/deepvariant:1.2.0"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'docker://google/deepvariant:1.2.0' :
+        'google/deepvariant:1.2.0' }"
 
     input:
     tuple val(meta), path(bam), path(bai)
-    path(fasta)
-    path(fai)
+    path  fasta
+    path  fasta_fai
 
     output:
     tuple val(meta), path("*.vcf.gz"),  emit: vcf
@@ -29,7 +18,7 @@ process DEEPVARIANT {
     path  "versions.yml",               emit: versions
 
     script:
-    def prefix = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def prefix     = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
     """
     /opt/deepvariant/bin/run_deepvariant \\
         --ref=${fasta} \\
@@ -40,7 +29,7 @@ process DEEPVARIANT {
         --num_shards=${task.cpus}
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
+    "${task.process}":
         deepvariant: \$(echo \$(/opt/deepvariant/bin/run_deepvariant --version) | sed 's/^.*version //; s/ .*\$//')
     END_VERSIONS
     """

@@ -2,21 +2,11 @@
 // MAPPING
 //
 
-params.bwamem1_mem_options       = [:]
-params.bwamem1_mem_tumor_options = [:]
-params.bwamem2_mem_options       = [:]
-params.bwamem2_mem_tumor_options = [:]
-params.merge_bam_options         = [:]
-params.samtools_index_options    = [:]
-params.seqkit_split2_options     = [:]
-
-include { BWAMEM2_MEM as BWAMEM2_MEM_T } from '../../modules/local/bwamem2/mem/main'              addParams(options: params.bwamem2_mem_tumor_options)
-include { BWAMEM2_MEM }                  from '../../modules/local/bwamem2/mem/main'              addParams(options: params.bwamem2_mem_options)
-include { BWA_MEM as BWAMEM1_MEM }       from '../../modules/local/bwa/mem/main'                  addParams(options: params.bwamem1_mem_options)
-include { BWA_MEM as BWAMEM1_MEM_T }     from '../../modules/local/bwa/mem/main'                  addParams(options: params.bwamem1_mem_tumor_options)
-include { SAMTOOLS_INDEX }               from '../../modules/local/samtools/index/main'           addParams(options: params.samtools_index_options)
-include { SAMTOOLS_MERGE }               from '../../modules/nf-core/modules/samtools/merge/main' addParams(options: params.merge_bam_options)
-include { SEQKIT_SPLIT2 }                from '../../modules/nf-core/modules/seqkit/split2/main'  addParams(options: params.seqkit_split2_options)
+include { BWAMEM2_MEM                     } from '../../modules/local/bwamem2/mem/main'
+include { BWA_MEM as BWAMEM1_MEM          } from '../../modules/local/bwa/mem/main'
+include { SAMTOOLS_INDEX as INDEX_MAPPING } from '../../modules/local/samtools/index/main'
+include { SAMTOOLS_MERGE                  } from '../../modules/nf-core/modules/samtools/merge/main'
+include { SEQKIT_SPLIT2                   } from '../../modules/nf-core/modules/seqkit/split2/main'
 
 workflow MAPPING {
     take:
@@ -43,44 +33,26 @@ workflow MAPPING {
         }.transpose()
     } else reads_input_split = reads_input
 
-    // If meta.status is 1, then sample is tumor
-    // else, (even is no meta.status exist) sample is normal
-    reads_input_split.branch{ meta, reads ->
-        tumor:  meta.status == 1
-        normal: true
-    }.set{reads_input_status}
-
     bam_bwamem      = Channel.empty()
     bam_bwamem1     = Channel.empty()
     bam_bwamem2     = Channel.empty()
     tool_versions   = Channel.empty()
 
     if (aligner == "bwa-mem") {
-        BWAMEM1_MEM(reads_input_status.normal, bwa)
-        BWAMEM1_MEM_T(reads_input_status.tumor, bwa)
+        BWAMEM1_MEM(reads_input_split, bwa)
 
-        bam_bwamem1_n = BWAMEM1_MEM.out.bam
-        bam_bwamem1_t = BWAMEM1_MEM_T.out.bam
-        bam_bwamem1   = bam_bwamem1_n.mix(bam_bwamem1_t)
+        bam_bwamem1 = BWAMEM1_MEM.out.bam
 
-        bwamem1_n_version = BWAMEM1_MEM.out.versions
-        bwamem1_t_version = BWAMEM1_MEM_T.out.versions
-
-        bwamem1_version = bwamem1_n_version.mix(bwamem1_t_version).first()
+        bwamem1_version = BWAMEM1_MEM.out.versions.first()
 
         tool_versions = tool_versions.mix(bwamem1_version)
     } else {
-        BWAMEM2_MEM(reads_input_status.normal, bwa)
-        BWAMEM2_MEM_T(reads_input_status.tumor, bwa)
+        BWAMEM2_MEM(reads_input_split, bwa)
 
-        bam_bwamem2_n = BWAMEM2_MEM.out.bam
-        bam_bwamem2_t = BWAMEM2_MEM_T.out.bam
-        bam_bwamem2   = bam_bwamem2_n.mix(bam_bwamem2_t)
+        bam_bwamem2 = BWAMEM2_MEM.out.bam
 
-        bwamem2_n_version = BWAMEM2_MEM.out.versions
-        bwamem2_t_version = BWAMEM2_MEM_T.out.versions
+        bwamem2_version = BWAMEM2_MEM.out.versions.first()
 
-        bwamem2_version = bwamem2_n_version.mix(bwamem2_t_version).first()
         tool_versions = tool_versions.mix(bwamem2_version)
     }
 
@@ -114,8 +86,8 @@ workflow MAPPING {
         SAMTOOLS_MERGE(bam_to_merge.multiple, [])
         bam_merged = bam_to_merge.single.mix(SAMTOOLS_MERGE.out.bam)
 
-        SAMTOOLS_INDEX(bam_merged)
-        bam_indexed = SAMTOOLS_INDEX.out.bam_bai
+        INDEX_MAPPING(bam_merged)
+        bam_indexed = INDEX_MAPPING.out.bam_bai
     }
 
     emit:
