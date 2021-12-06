@@ -70,7 +70,7 @@ workflow GERMLINE_VARIANT_CALLING {
 
         // STEP GATK HAPLOTYPECALLER.2
 
-        HAPLOTYPECALLER.out.view()
+        HAPLOTYPECALLER.view()
         GENOTYPEGVCF(
             HAPLOTYPECALLER.out.interval_vcf,
             dbsnp,
