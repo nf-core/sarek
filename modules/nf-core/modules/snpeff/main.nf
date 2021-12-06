@@ -2,11 +2,13 @@ process SNPEFF {
     label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::snpeff=5.0" : null)
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        !task.ext.container_tag ?
+    if (task.ext.use_cache) {
+        container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
             'https://depot.galaxyproject.org/singularity/snpeff:5.0--hdfd78af_1' :
-            'quay.io/biocontainers/snpeff:5.0--hdfd78af_1' :
-            "nfcore/snpeff:${task.ext.container_tag}" }"
+            'quay.io/biocontainers/snpeff:5.0--hdfd78af_1' }"
+    } else {
+        container "nfcore/snpeff:${task.ext.snpeff_tag}"
+    }
 
     input:
     tuple val(meta), path(vcf)
@@ -26,15 +28,15 @@ process SNPEFF {
     } else {
         avail_mem = task.memory.giga
     }
-    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
-    def cache_command = cache ? "-dataDir \${PWD}/${cache}" : ""
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def dir_cache = task.ext.use_cache ? "-dataDir \${PWD}/${cache}" : ""
     """
     snpEff \\
         -Xmx${avail_mem}g \\
         $db \\
         $args \\
         -csvStats ${prefix}.csv \\
-        $cache_command \\
+        $dir_cache \\
         $vcf \\
         > ${prefix}.ann.vcf
 
