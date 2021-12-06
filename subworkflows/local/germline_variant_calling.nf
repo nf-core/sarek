@@ -54,8 +54,7 @@ workflow GERMLINE_VARIANT_CALLING {
             dbsnp_tbi,
             dict,
             fasta,
-            fasta_fai,
-            no_intervals)
+            fasta_fai)
 
         haplotypecaller_raw = HAPLOTYPECALLER.out.vcf.map{ meta,vcf ->
             meta.id = meta.sample
@@ -77,8 +76,7 @@ workflow GERMLINE_VARIANT_CALLING {
             dbsnp_tbi,
             dict,
             fasta,
-            fasta_fai,
-            no_intervals)
+            fasta_fai)
 
         haplotypecaller_results = GENOTYPEGVCF.out.vcf.map{ meta, vcf ->
             meta.id = meta.sample
