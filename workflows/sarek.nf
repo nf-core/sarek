@@ -62,7 +62,7 @@ print(params.step)
 print(params.outdir)
 print(csv_file)
 input_sample = extract_csv(csv_file)
-print(input_sample)
+print(input_sample.view())
 exit 1
 
 def save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? true : false
