@@ -27,7 +27,7 @@ jobs:
           #- 'annotation'
           - 'default'
           - 'gatk4_spark'
-          #- 'save_bam_mapped'
+          - 'save_bam_mapped'
           #- 'skip_markduplicates'
           # - 'targeted'
           # - 'tumor_normal_pair'
