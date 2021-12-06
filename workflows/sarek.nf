@@ -57,9 +57,9 @@ else {
     }
 }
 
+input_sample = extract_csv(csv_file)
 print(input_sample)
 exit 1
-input_sample = extract_csv(csv_file)
 
 def save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? true : false
 
