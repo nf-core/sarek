@@ -8,7 +8,7 @@ process GATK4_GENOTYPEGVCF {
         'quay.io/biocontainers/gatk4:4.2.3.0--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(gvcf), path(intervals_bed)
+    tuple val(meta), path(intervals_bed), path(gvcf)
     path  dbsnp
     path  dbsnp_tbi
     path  dict
