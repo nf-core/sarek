@@ -8,7 +8,7 @@ process BUILD_INTERVALS {
         'quay.io/biocontainers/gawk:5.1.0' }"
 
     input:
-    tuple val(meta), path(fasta_fai)
+    tuple path(fasta_fai)
 
     output:
     path "*.bed", emit bed
