@@ -58,6 +58,9 @@ else {
 }
 
 input_sample = extract_csv(csv_file)
+print(params.input)
+print(params.step)
+print(params.outdir)
 print(input_sample)
 exit 1
 
