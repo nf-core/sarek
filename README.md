@@ -1,4 +1,4 @@
-# [![nf-core/sarek](docs/images/nf-core-sarek_logo.png "nf-core/sarek")](https://nf-co.re/sarek)
+# ![nf-core/sarek](docs/images/nf-core-sarek_logo_light.png#gh-light-mode-only) ![nf-core/sarek](docs/images/nf-core-sarek_logo_dark.png#gh-dark-mode-only)
 
 > **An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing**
 
