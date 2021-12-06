@@ -17,7 +17,7 @@ process GATK4_HAPLOTYPECALLER {
 
     output:
     tuple val(meta), path("*.vcf")                , emit: vcf
-    tuple val(meta), path(interval), path("*.vcf"), emit: interval_vcf
+    tuple val(meta), path(intervals_bed), path("*.vcf"), emit: interval_vcf
     path "versions.yml"                           , emit: versions
 
     script:
