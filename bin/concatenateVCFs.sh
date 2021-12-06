@@ -102,5 +102,5 @@ if [ ! -z ${targetBED+x} ]; then
     tabix ${outputFile}.gz
 else
     # Rename the raw calls as WGS results
-    for f in rawcalls*; do mv -v $f ${outputFile}${f#rawcalls.vcf}; done
+    for f in rawcalls*; do echo 'mv -v $f ${outputFile}${f#rawcalls.vcf}';mv -v $f ${outputFile}${f#rawcalls.vcf}; done
 fi
