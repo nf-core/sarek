@@ -32,7 +32,7 @@ jobs:
           - 'default'
           - 'gatk4_spark'
           - 'save_bam_mapped'
-          #- 'skip_markduplicates'
+          - 'skip_markduplicates'
           # - 'targeted'
           # - 'tumor_normal_pair'
           # - 'variant_calling'
