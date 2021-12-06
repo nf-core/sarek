@@ -8,7 +8,7 @@ process GATK4_HAPLOTYPECALLER {
         'quay.io/biocontainers/gatk4:4.2.3.0--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(cram), path(crai), path(interval)
+    tuple val(meta), path(cram), path(crai), path(interval_bed)
     path  fasta
     path  fasta_fai
     path  dict
