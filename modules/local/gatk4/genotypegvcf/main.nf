@@ -9,11 +9,11 @@ process GATK4_GENOTYPEGVCF {
 
     input:
     tuple val(meta), path(gvcf), path(intervals_bed)
-    path  fasta
-    path  fasta_fai
-    path  dict
     path  dbsnp
     path  dbsnp_tbi
+    path  dict
+    path  fasta
+    path  fasta_fai
 
     output:
     tuple val(meta), path("*.vcf"), emit: vcf
