@@ -1,4 +1,5 @@
 process SNPEFF {
+    tag "$meta.id"
     label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::snpeff=5.0" : null)

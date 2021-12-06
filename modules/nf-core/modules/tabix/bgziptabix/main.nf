@@ -19,7 +19,7 @@ process TABIX_BGZIPTABIX {
     def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    bgzip -c $args $input > ${prefix}.gz
+    bgzip -c $args $input > ${meta.id}_snpEff.ann.vcf.gz
     tabix $args2 ${prefix}.gz
 
     cat <<-END_VERSIONS > versions.yml
