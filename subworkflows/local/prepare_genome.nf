@@ -56,7 +56,7 @@ workflow PREPARE_GENOME {
     ch_fasta_fai = Channel.empty()
     if (fasta_fai) ch_fasta_fai = fasta_fai
     if (!(params.fasta_fai) && !('annotate' in step)) {
-        SAMTOOLS_FAIDX(fasta)
+        SAMTOOLS_FAIDX([],fasta)
         ch_fasta_fai = SAMTOOLS_FAIDX.out.fai
         ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
     }
