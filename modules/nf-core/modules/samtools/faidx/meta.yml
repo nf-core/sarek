@@ -14,11 +14,21 @@ tools:
         doi: 10.1093/bioinformatics/btp352
         licence: ['MIT']
 input:
+    - meta:
+        type: map
+        description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
     - fasta:
         type: file
         description: FASTA file
         pattern: "*.{fa,fasta}"
 output:
+    - meta:
+        type: map
+        description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
     - fai:
         type: file
         description: FASTA index file
