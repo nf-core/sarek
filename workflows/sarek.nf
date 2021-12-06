@@ -57,13 +57,7 @@ else {
     }
 }
 
-print(params.input)
-print(params.step)
-print(params.outdir)
-print(csv_file)
 input_sample = extract_csv(csv_file)
-print(input_sample.view())
-exit 1
 
 def save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? true : false
 
@@ -274,12 +268,12 @@ workflow SAREK {
         ch_versions = ch_versions.mix(MAPPING.out.versions)
     }
 
-    if (params.step == 'preparerecalibration') {
+    if (params.step == 'prepare_recalibration') {
         if (params.skip_markduplicates) bam_indexed         = input_sample
         else                            cram_markduplicates = input_sample
     }
 
-    if (params.step in ['mapping', 'preparerecalibration']) {
+    if (params.step in ['mapping', 'prepare_recalibration']) {
         // STEP 2: Mark duplicates (+QC) + convert to CRAM
         MARKDUPLICATES(
             bam_mapped,
@@ -324,7 +318,7 @@ workflow SAREK {
 
     if (params.step == 'recalibrate') bam_applybqsr = input_sample
 
-    if (params.step in ['mapping', 'preparerecalibration', 'recalibrate']) {
+    if (params.step in ['mapping', 'prepare_recalibration', 'recalibrate']) {
         if(!params.skip_bqsr){
             // STEP 4: RECALIBRATING
             RECALIBRATE(
@@ -353,7 +347,7 @@ workflow SAREK {
 
     }
 
-    if (params.step in 'variantcalling') cram_variant_calling = input_sample
+    if (params.step in 'variant_calling') cram_variant_calling = input_sample
 
     if (params.tools) {
         vcf_to_annotate = Channel.empty()
