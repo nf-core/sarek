@@ -28,7 +28,7 @@ jobs:
             NXF_EDGE: '1'
         test:
           - 'aligner'
-          - 'annotation'
+          #- 'annotation'
           - 'default'
           - 'gatk4_spark'
           - 'save_bam_mapped'
