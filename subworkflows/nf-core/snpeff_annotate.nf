@@ -3,7 +3,7 @@
 //
 
 include { SNPEFF                                  } from '../../modules/nf-core/modules/snpeff/main'
-include { TABIX_BGZIPTABIX as BGZIPTABIX_ANNOTATE } from '../../modules/nf-core/tabix/bgziptabix/main'
+include { TABIX_BGZIPTABIX as BGZIPTABIX_ANNOTATE } from '../../modules/nf-core/modules/tabix/bgziptabix/main'
 
 workflow SNPEFF_ANNOTATE {
     take:
