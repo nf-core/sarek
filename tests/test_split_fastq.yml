@@ -1,0 +1,17 @@
+- name: Run split fastq module
+  command: nextflow run main.nf -profile test,split_fastq,docker
+  tags:
+    - split_fastq
+  files:
+    - path: results/split_reads_seqkit/C097F_N_111207.1.AGTTGCTT_R1_xxx.part_001.fastq.gz
+    - path: results/split_reads_seqkit/C097F_N_111207.1.AGTTGCTT_R1_xxx.part_002.fastq.gz
+    - path: results/split_reads_seqkit/C097F_N_111207.1.AGTTGCTT_R1_xxx.part_003.fastq.gz
+    - path: results/split_reads_seqkit/C097F_N_111207.1.AGTTGCTT_R1_xxx.part_004.fastq.gz
+    - path: results/split_reads_seqkit/C097F_N_111207.1.AGTTGCTT_R1_xxx.part_005.fastq.gz
+    - path: results/split_reads_seqkit/C097F_N_111207.1.AGTTGCTT_R1_xxx.part_006.fastq.gz
+    - path: results/split_reads_seqkit/C097F_N_111207.1.AGTTGCTT_R2_xxx.part_001.fastq.gz
+    - path: results/split_reads_seqkit/C097F_N_111207.1.AGTTGCTT_R2_xxx.part_002.fastq.gz
+    - path: results/split_reads_seqkit/C097F_N_111207.1.AGTTGCTT_R2_xxx.part_003.fastq.gz
+    - path: results/split_reads_seqkit/C097F_N_111207.1.AGTTGCTT_R2_xxx.part_004.fastq.gz
+    - path: results/split_reads_seqkit/C097F_N_111207.1.AGTTGCTT_R2_xxx.part_005.fastq.gz
+    - path: results/split_reads_seqkit/C097F_N_111207.1.AGTTGCTT_R2_xxx.part_006.fastq.gz
