@@ -27,8 +27,8 @@ jobs:
           - NXF_VER: ''
             NXF_EDGE: '1'
         test:
-          #- 'aligner'
-          - 'annotation'
+          - 'aligner'
+          #- 'annotation'
           - 'default'
           - 'split_fastq'
           - 'gatk4_spark'
