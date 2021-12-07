@@ -14,7 +14,7 @@ include { SNPEFF_ANNOTATE } from '../../../../subworkflows/nf-core/snpeff_annota
 
 workflow test_snpeff_annotate {
     input = [[id: 'test'],
-            [file(params.test_data['nf-core']['test_vcf'], checkIfExists: true)]]
+            [file(params.test_data['sarscov2']['illumina']['test_vcf'], checkIfExists: true)]]
 
     SNPEFF_ANNOTATE (
         input,

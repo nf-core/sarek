@@ -14,7 +14,7 @@ include { VEP_ANNOTATE } from '../../../../subworkflows/nf-core/vep_annotate' ad
 
 workflow test_vep_annotate {
     input = [[id: 'test'],
-            [file(params.test_data['nf-core']['test_vcf'], checkIfExists: true)]]
+            [file(params.test_data['sarscov2']['illumina']['test_vcf'], checkIfExists: true)]]
 
     VEP_ANNOTATE (
         input,
