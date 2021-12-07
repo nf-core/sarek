@@ -39,6 +39,9 @@
             "deepvariant": {
                 "git_sha": "c450b08a75cda8878876ccbbe42493d6774397bd"
             },
+            "dragmap/hashtable": {
+                "git_sha": "f3ffa69b8dcde337dce1782c15118323c7ea14d7"
+            },
             "ensemblvep": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
