@@ -3,11 +3,11 @@ process ENSEMBLVEP {
     label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::ensembl-vep=104.3" : null)
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        !task.ext.container_tag ?
+    container "${ task.ext.container_tag ?
+            "nfcore/vep:${task.ext.container_tag}" :
+            workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
             'https://depot.galaxyproject.org/singularity/ensembl-vep:104.3--pl5262h4a94de4_0' :
-            'quay.io/biocontainers/ensembl-vep:104.3--pl5262h4a94de4_0' :
-            "nfcore/vep:${task.ext.container_tag}" }"
+            'quay.io/biocontainers/ensembl-vep:104.3--pl5262h4a94de4_0' }"
 
     input:
     tuple val(meta), path(vcf)
