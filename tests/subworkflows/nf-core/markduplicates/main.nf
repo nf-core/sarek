@@ -12,8 +12,8 @@ include { MARKDUPLICATES } from '../../../../subworkflows/nf-core/markduplicates
 
 workflow test_markduplicates {
     input = [[id: 'test'],
-            [file(params.test_data['nf-core']['test_paired_end_sorted_bam'], checkIfExists: true)],
-            [file(params.test_data['nf-core']['test_paired_end_sorted_bai'], checkIfExists: true)]]
+             [file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true)],
+             [file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true)]]
 
     MARKDUPLICATES ( input, false, true )
 }
