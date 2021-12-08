@@ -16,6 +16,7 @@ tools:
         homepage: http://bio-bwa.sourceforge.net/
         documentation: http://www.htslib.org/doc/samtools.html
         arxiv: arXiv:1303.3997
+        licence: ['GPL-3.0-or-later']
 input:
     - meta:
         type: map
@@ -31,15 +32,19 @@ input:
         type: file
         description: BWA genome index files
         pattern: "Directory containing BWA index *.{amb,ann,bwt,pac,sa}"
+    - sort_bam:
+        type: boolean
+        description: use samtools sort (true) or samtools view (false)
+        pattern: "true or false"
 output:
     - bam:
         type: file
         description: Output BAM file containing read alignments
         pattern: "*.{bam}"
-    - version:
+    - versions:
         type: file
-        description: File containing software version
-        pattern: "*.{version.txt}"
+        description: File containing software versions
+        pattern: "versions.yml"
 authors:
     - "@drpatelh"
     - "@jeremy1805"
