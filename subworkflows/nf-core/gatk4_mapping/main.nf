@@ -33,10 +33,10 @@ workflow GATK4_MAPPING {
         }.transpose()
     } else reads_input_split = reads_input
 
-    bam_mapped      = Channel.empty()
-    bam_bwamem1     = Channel.empty()
-    bam_bwamem2     = Channel.empty()
-    tool_versions   = Channel.empty()
+    bam_bwamem1      = Channel.empty()
+    bam_bwamem2      = Channel.empty()
+    bam_from_aligner = Channel.empty()
+    tool_versions    = Channel.empty()
 
     if (aligner == "bwa-mem") {
         BWAMEM1_MEM(reads_input_split, bwa, true)
@@ -56,10 +56,10 @@ workflow GATK4_MAPPING {
         tool_versions = tool_versions.mix(bwamem2_version)
     }
 
-    bam_aligned = bam_aligned.mix(bam_bwamem1)
-    bam_aligned = bam_aligned.mix(bam_bwamem2)
+    bam_from_aligner = bam_from_aligner.mix(bam_bwamem1)
+    bam_from_aligner = bam_from_aligner.mix(bam_bwamem2)
 
-    bam_aligned.map{ meta, bam ->
+    bam_from_aligner.map{ meta, bam ->
         new_meta = meta.clone()
         new_meta.remove('read_group')
         new_meta.id = meta.sample
