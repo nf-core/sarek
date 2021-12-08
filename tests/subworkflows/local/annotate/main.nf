@@ -19,7 +19,7 @@ include { ANNOTATE } from '../../../../subworkflows/local/annotate' addParams(
 
 workflow test_annotate {
     input = [[id: 'test'],
-            [file(params.test_data['nf-core']['test_vcf'], checkIfExists: true)]]
+             [file(params.test_data['sarscov2']['illumina']['test_vcf'], checkIfExists: true)]]
 
     ANNOTATE(
         input,
