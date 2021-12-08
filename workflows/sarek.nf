@@ -48,9 +48,9 @@ else {
     log.warn "No samplesheet specified, attempting to restart from csv files present in ${params.outdir}"
     switch (params.step) {
         case 'mapping': exit 1, "Can't start with step $params.step without samplesheet"
-        case 'preparerecalibration': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
+        case 'prepare_recalibration': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
         case 'recalibrate':          csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv",          checkIfExists: true); break
-        case 'variantcalling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv",            checkIfExists: true); break
+        case 'variant_calling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv",            checkIfExists: true); break
         // case 'controlfreec':         csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
         case 'annotate':             csv_file = file("${params.outdir}/variant_calling/csv/recalibrated.csv",          checkIfExists: true); break
         default: exit 1, "Unknown step $params.step"
@@ -268,12 +268,12 @@ workflow SAREK {
         ch_versions = ch_versions.mix(MAPPING.out.versions)
     }
 
-    if (params.step == 'preparerecalibration') {
+    if (params.step == 'prepare_recalibration') {
         if (params.skip_markduplicates) bam_indexed         = input_sample
         else                            cram_markduplicates = input_sample
     }
 
-    if (params.step in ['mapping', 'preparerecalibration']) {
+    if (params.step in ['mapping', 'prepare_recalibration']) {
         // STEP 2: Mark duplicates (+QC) + convert to CRAM
         MARKDUPLICATES(
             bam_mapped,
@@ -318,7 +318,7 @@ workflow SAREK {
 
     if (params.step == 'recalibrate') bam_applybqsr = input_sample
 
-    if (params.step in ['mapping', 'preparerecalibration', 'recalibrate']) {
+    if (params.step in ['mapping', 'prepare_recalibration', 'recalibrate']) {
         if(!params.skip_bqsr){
             // STEP 4: RECALIBRATING
             RECALIBRATE(
@@ -347,7 +347,7 @@ workflow SAREK {
 
     }
 
-    if (params.step in 'variantcalling') cram_variant_calling = input_sample
+    if (params.step in 'variant_calling') cram_variant_calling = input_sample
 
     if (params.tools) {
         vcf_to_annotate = Channel.empty()

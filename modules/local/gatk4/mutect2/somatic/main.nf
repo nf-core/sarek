@@ -8,7 +8,7 @@ process GATK4_MUTECT2_MERGE {
         'quay.io/biocontainers/gatk4:4.2.3.0--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(cram_normal), path(crai_normal), path(cram_tumor), path(crai_tumor), path(interval)
+    tuple val(meta), path(cram_normal), path(crai_normal), path(cram_tumor), path(crai_tumor), path(intervals_bed)
     path  fasta_fai
     path  fasta
     path  dict

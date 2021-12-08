@@ -142,9 +142,9 @@ For all samples:
 **Output directory: `results/Preprocessing/TSV`**
 
 - `duplicates_marked_no_table.tsv`, `duplicates_marked.tsv` and `recalibrated.tsv`
-    - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps.
+    - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variant_calling` steps.
 - `duplicates_marked_no_table_[SAMPLE].tsv`, `duplicates_marked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
-    - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps for a specific sample.
+    - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variant_calling` steps for a specific sample.
 
 ### TSV files with `--skip_markduplicates`
 
@@ -155,9 +155,9 @@ For all samples:
 **Output directory: `results/Preprocessing/TSV`**
 
 - `mapped.tsv`, `mapped_no_duplicates_marked.tsv` and `recalibrated.tsv`
-    - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps.
+    - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variant_calling` steps.
 - `mapped_[SAMPLE].tsv`, `mapped_no_duplicates_marked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
-    - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps for a specific sample.
+    - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variant_calling` steps for a specific sample.
 
 ### TSV files with `--sentieon`
 
@@ -168,9 +168,9 @@ For all samples:
 **Output directory: `results/Preprocessing/TSV`**
 
 - `sentieon_deduped.tsv` and `recalibrated_sentieon.tsv`
-    - `TSV` files to start `Sarek` from `variantcalling` step.
+    - `TSV` files to start `Sarek` from `variant_calling` step.
 - `sentieon_deduped_[SAMPLE].tsv` and `recalibrated_sentieon_[SAMPLE].tsv`
-    - `TSV` files to start `Sarek` from `variantcalling` step for a specific sample.
+    - `TSV` files to start `Sarek` from `variant_calling` step for a specific sample.
 
 ## Variant Calling
 
