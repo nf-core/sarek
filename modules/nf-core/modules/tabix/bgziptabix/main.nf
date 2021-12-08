@@ -11,13 +11,13 @@ process TABIX_BGZIPTABIX {
     tuple val(meta), path(input)
 
     output:
-    tuple val(meta), path("*.gz"), path("*.tbi"), emit: tbi
+    tuple val(meta), path("*.gz"), path("*.tbi"), emit: gz_tbi
     path  "versions.yml" ,                        emit: versions
 
     script:
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
-    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     bgzip -c $args $input > ${prefix}.gz
     tabix $args2 ${prefix}.gz

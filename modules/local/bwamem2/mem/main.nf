@@ -19,8 +19,7 @@ process BWAMEM2_MEM {
     def split_cpus = Math.floor(task.cpus/2)
     def args       = task.ext.args  ?: ''
     def args2      = task.ext.args2 ?: ''
-    def part       = params.split_fastq > 1 ? reads.get(0).name.findAll(/part_([0-9]+)?/).last().concat('.') : ""
-    def prefix     = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def prefix     = task.ext.prefix ?: "${meta.id}"
     def read_group = meta.read_group ? "-R ${meta.read_group}" : ""
     """
     INDEX=`find -L ./ -name "*.amb" | sed 's/.amb//'`
