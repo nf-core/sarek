@@ -10,6 +10,7 @@ process DRAGMAP_ALIGN {
     input:
     tuple val(meta), path(reads)
     path  hashmap
+    val   sort_bam
 
     output:
     tuple val(meta), path("*.bam"), emit: bam
@@ -20,6 +21,7 @@ process DRAGMAP_ALIGN {
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def samtools_command = sort_bam ? 'sort' : 'view'
     if (meta.single_end) {
         """
         dragen-os \\
@@ -28,7 +30,7 @@ process DRAGMAP_ALIGN {
             --num-threads $task.cpus \\
             $args \\
             2> ${prefix}.dragmap.log \\
-            | samtools view -@ $task.cpus $args2 -bhS -o ${prefix}.bam -
+            | samtools $samtools_command -@ $task.cpus $args2 -o ${prefix}.bam -
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
@@ -46,7 +48,7 @@ process DRAGMAP_ALIGN {
             --num-threads $task.cpus \\
             $args \\
             2> ${prefix}.dragmap.log \\
-            | samtools view -@ $task.cpus $args2 -bhS -o ${prefix}.bam -
+            | samtools $samtools_command -@ $task.cpus $args2 -o ${prefix}.bam -
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
