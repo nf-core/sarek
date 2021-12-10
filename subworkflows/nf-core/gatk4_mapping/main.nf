@@ -4,7 +4,7 @@
 
 include { BWAMEM2_MEM                     } from '../../../modules/nf-core/modules/bwamem2/mem/main'
 include { BWA_MEM as BWAMEM1_MEM          } from '../../../modules/nf-core/modules/bwa/mem/main'
-include { SAMTOOLS_INDEX as INDEX_MAPPING } from '../../../modules/local/samtools/index/main'
+include { SAMTOOLS_INDEX as INDEX_MAPPING } from '../../../modules/nf-core/modules/samtools/index/main'
 include { SAMTOOLS_MERGE                  } from '../../../modules/nf-core/modules/samtools/merge/main'
 include { SEQKIT_SPLIT2                   } from '../../../modules/nf-core/modules/seqkit/split2/main'
 

@@ -6,7 +6,7 @@ include { GATK4_ESTIMATELIBRARYCOMPLEXITY                  } from '../../modules
 include { GATK4_MARKDUPLICATES                             } from '../../modules/local/gatk4/markduplicates/main'
 include { GATK4_MARKDUPLICATES_SPARK                       } from '../../modules/local/gatk4/markduplicatesspark/main'
 include { QUALIMAP_BAMQC                                   } from '../../modules/local/qualimap/bamqc/main'
-include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES           } from '../../modules/local/samtools/index/main'
+include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES           } from '../../modules/nf-core/modules/samtools/index/main'
 include { SAMTOOLS_STATS                                   } from '../../modules/nf-core/modules/samtools/stats/main'
 include { SAMTOOLS_VIEWINDEX as SAMTOOLS_BAM_TO_CRAM       } from '../../modules/local/samtools/viewindex/main'
 include { SAMTOOLS_VIEWINDEX as SAMTOOLS_BAM_TO_CRAM_SPARK } from '../../modules/local/samtools/viewindex/main'

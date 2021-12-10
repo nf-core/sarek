@@ -1,0 +1,54 @@
+name: gatk4_mapping
+description: |
+  Perform mapping following gatk4 best practices
+keywords:
+  - gatk4
+  - mapping
+modules:
+  - bwa/mem
+  - bwamem2/mem
+  - samtools/index
+  - samtools/merge
+  - seqkit/split2
+input:
+  - aligner:
+      type: string
+      description: |
+        string: 'bwa-mem' or 'bwa-mem2'
+  - bwa:
+      type: file
+      description: |
+        bwa indices
+      pattern: "[ *.{amb,ann,bwt,pac,sa,0132,amb,ann,bwt.2bit.64,pac} ]"
+  - fasta:
+      type: file
+      description: |
+        fasta reference genome
+  - fasta_fai:
+      type: file
+      description: |
+        reference genome index
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test' ]
+  - reads_input:
+      type: fastq
+      description: list containing fastq pairs
+      pattern: "[ *.{fastq.gz,gq.gz} ]"
+  - skip_markduplicates:
+      type: boolean
+      description: |
+
+output:
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: 'versions.yml'
+  - vcf_tbi:
+      type: file
+      description: Compressed vcf file + tabix index
+      pattern: "[ *{.vcf.gz,vcf.gz.tbi} ]"
+authors:
+  - '@maxulysse'
