@@ -18,7 +18,7 @@ process FASTQC {
     script:
     def args = task.ext.args ?: ''
     // Add soft-links to original FastQs for consistent naming in pipeline
-    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     if (meta.single_end) {
         """
         [ ! -f  ${prefix}.fastq.gz ] && ln -s $reads ${prefix}.fastq.gz

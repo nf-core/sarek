@@ -2,29 +2,29 @@ process SEQKIT_SPLIT2 {
     tag "$meta.id"
     label 'process_medium'
 
-    conda (params.enable_conda ? 'bioconda::seqkit=0.16.1' : null)
+    conda (params.enable_conda ? 'bioconda::seqkit=2.1.0' : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/seqkit:0.16.1--h9ee0642_0' :
-        'quay.io/biocontainers/seqkit:0.16.1--h9ee0642_0' }"
+        'https://depot.galaxyproject.org/singularity/seqkit:2.1.0--h9ee0642_0' :
+        'quay.io/biocontainers/seqkit:2.1.0--h9ee0642_0' }"
 
     input:
     tuple val(meta), path(reads)
 
     output:
-    tuple val(meta), path("*${prefix}/*.gz"), emit: reads
-    path "versions.yml"                     , emit: versions
+    tuple val(meta), path("**/*.gz"), emit: reads
+    path "versions.yml"             , emit: versions
 
     script:
-    def args = task.ext.args ?: ''
-    prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def args   = task.ext.args   ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
     if(meta.single_end){
         """
         seqkit \\
             split2 \\
             $args \\
             --threads $task.cpus \\
-            -1 $reads \\
-            --out-dir $prefix
+            $reads \\
+            --out-dir ${prefix}
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
@@ -37,9 +37,9 @@ process SEQKIT_SPLIT2 {
             split2 \\
             $args \\
             --threads $task.cpus \\
-            -1 ${reads[0]} \\
-            -2 ${reads[1]} \\
-            --out-dir $prefix
+            --read1 ${reads[0]} \\
+            --read2 ${reads[1]} \\
+            --out-dir ${prefix}
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":

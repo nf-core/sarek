@@ -23,7 +23,7 @@ process STRELKA_SOMATIC {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def options_target_bed = target_bed ? "--exome --callRegions ${target_bed}" : ""
     def options_manta = manta_candidate_small_indels ? "--indelCandidates ${manta_candidate_small_indels}" : ""
     """

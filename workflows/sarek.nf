@@ -127,7 +127,7 @@ include { RECALIBRATE_CSV           } from '../subworkflows/local/recalibrate_cs
 include { PREPARE_GENOME            } from '../subworkflows/local/prepare_genome'
 
 // Map input reads to reference genome (+QC)
-include { MAPPING                   } from '../subworkflows/nf-core/mapping'
+include { GATK4_MAPPING             } from '../subworkflows/nf-core/gatk4_mapping/main'
 
 // Mark duplicates (+QC) + convert to CRAM
 include { MARKDUPLICATES            } from '../subworkflows/nf-core/markduplicates'
@@ -248,7 +248,7 @@ workflow SAREK {
         ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
-        MAPPING(
+        GATK4_MAPPING(
             params.aligner,
             bwa,
             fasta,
@@ -258,14 +258,14 @@ workflow SAREK {
             save_bam_mapped)
 
         // Get mapped reads (BAM) with and without index
-        bam_mapped  = MAPPING.out.bam
-        bam_indexed = MAPPING.out.bam_indexed
+        bam_mapped  = GATK4_MAPPING.out.bam
+        bam_indexed = GATK4_MAPPING.out.bam_indexed
 
         // Create CSV to restart from this step
         MAPPING_CSV(bam_indexed, save_bam_mapped, params.skip_markduplicates)
 
         // Get versions from all software used
-        ch_versions = ch_versions.mix(MAPPING.out.versions)
+        ch_versions = ch_versions.mix(GATK4_MAPPING.out.versions)
     }
 
     if (params.step == 'prepare_recalibration') {

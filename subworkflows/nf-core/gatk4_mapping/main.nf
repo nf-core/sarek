@@ -2,13 +2,13 @@
 // MAPPING
 //
 
-include { BWAMEM2_MEM                     } from '../../modules/local/bwamem2/mem/main'
-include { BWA_MEM as BWAMEM1_MEM          } from '../../modules/local/bwa/mem/main'
-include { SAMTOOLS_INDEX as INDEX_MAPPING } from '../../modules/local/samtools/index/main'
-include { SAMTOOLS_MERGE                  } from '../../modules/nf-core/modules/samtools/merge/main'
-include { SEQKIT_SPLIT2                   } from '../../modules/nf-core/modules/seqkit/split2/main'
+include { BWAMEM2_MEM                     } from '../../../modules/nf-core/modules/bwamem2/mem/main'
+include { BWA_MEM as BWAMEM1_MEM          } from '../../../modules/nf-core/modules/bwa/mem/main'
+include { SAMTOOLS_INDEX as INDEX_MAPPING } from '../../../modules/local/samtools/index/main'
+include { SAMTOOLS_MERGE                  } from '../../../modules/nf-core/modules/samtools/merge/main'
+include { SEQKIT_SPLIT2                   } from '../../../modules/nf-core/modules/seqkit/split2/main'
 
-workflow MAPPING {
+workflow GATK4_MAPPING {
     take:
         aligner             // string:  [mandatory] "bwa-mem" or "bwa-mem2"
         bwa                 // channel: [mandatory] bwa
@@ -33,13 +33,13 @@ workflow MAPPING {
         }.transpose()
     } else reads_input_split = reads_input
 
-    bam_bwamem      = Channel.empty()
-    bam_bwamem1     = Channel.empty()
-    bam_bwamem2     = Channel.empty()
-    tool_versions   = Channel.empty()
+    bam_bwamem1      = Channel.empty()
+    bam_bwamem2      = Channel.empty()
+    bam_from_aligner = Channel.empty()
+    tool_versions    = Channel.empty()
 
     if (aligner == "bwa-mem") {
-        BWAMEM1_MEM(reads_input_split, bwa)
+        BWAMEM1_MEM(reads_input_split, bwa, true)
 
         bam_bwamem1 = BWAMEM1_MEM.out.bam
 
@@ -47,7 +47,7 @@ workflow MAPPING {
 
         tool_versions = tool_versions.mix(bwamem1_version)
     } else {
-        BWAMEM2_MEM(reads_input_split, bwa)
+        BWAMEM2_MEM(reads_input_split, bwa, true)
 
         bam_bwamem2 = BWAMEM2_MEM.out.bam
 
@@ -56,10 +56,10 @@ workflow MAPPING {
         tool_versions = tool_versions.mix(bwamem2_version)
     }
 
-    bam_bwamem = bam_bwamem.mix(bam_bwamem1)
-    bam_bwamem = bam_bwamem.mix(bam_bwamem2)
+    bam_from_aligner = bam_from_aligner.mix(bam_bwamem1)
+    bam_from_aligner = bam_from_aligner.mix(bam_bwamem2)
 
-    bam_bwamem.map{ meta, bam ->
+    bam_from_aligner.map{ meta, bam ->
         new_meta = meta.clone()
         new_meta.remove('read_group')
         new_meta.id = meta.sample
