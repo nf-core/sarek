@@ -14,7 +14,7 @@ process CONCAT_VCF {
     path  bed
 
     output:
-    tuple val(meta), path("*_*.vcf.gz"), path("*_*.vcf.gz.tbi"), emit: vcf
+    tuple val(meta), path("*.vcf.gz"), path("*.vcf.gz.tbi"), emit: vcf
 
     script:
     def prefix           = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
