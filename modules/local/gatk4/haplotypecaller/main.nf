@@ -8,7 +8,7 @@ process GATK4_HAPLOTYPECALLER {
         'quay.io/biocontainers/gatk4:4.2.3.0--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(cram), path(crai), path(interval_bed)
+    tuple val(meta), path(cram), path(crai), path(intervals_bed)
     path  fasta
     path  fasta_fai
     path  dict
@@ -17,7 +17,7 @@ process GATK4_HAPLOTYPECALLER {
 
     output:
     tuple val(meta), path("*.vcf")                , emit: vcf
-    tuple val(meta), path(interval), path("*.vcf"), emit: interval_vcf
+    tuple val(meta), path("*.vcf"), path(intervals_bed), emit: interval_vcf
     path "versions.yml"                           , emit: versions
 
     script:
