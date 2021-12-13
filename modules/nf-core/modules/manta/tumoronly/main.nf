@@ -25,7 +25,7 @@ process MANTA_TUMORONLY {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def options_manta = target_bed ? "--exome --callRegions $target_bed" : ""
     """
     configManta.py \

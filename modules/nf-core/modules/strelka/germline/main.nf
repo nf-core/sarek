@@ -23,7 +23,7 @@ process STRELKA_GERMLINE {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def regions  = target_bed ? "--exome --callRegions ${target_bed}" : ""
     """
     configureStrelkaGermlineWorkflow.py \\

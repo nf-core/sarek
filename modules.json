@@ -6,65 +6,71 @@
             "bwa/index": {
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
+            "bwa/mem": {
+                "git_sha": "1765225042d40cf01eb9469ea95bf6d0f6810937"
+            },
             "bwamem2/index": {
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+            },
+            "bwamem2/mem": {
+                "git_sha": "1765225042d40cf01eb9469ea95bf6d0f6810937"
             },
             "custom/dumpsoftwareversions": {
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
             "ensemblvep": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "3b366c7c6aac446c1a4ea7c2016092344633b2ec"
             },
             "fastqc": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
             "freebayes": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
             "gatk4/createsequencedictionary": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "7389963d5cb18f81c10dff128c510e518ee4f0f6"
             },
             "manta/germline": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
             "manta/somatic": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
             "manta/tumoronly": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
             "multiqc": {
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
             "samtools/faidx": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "e0aa89141ffecb5f54d230f7ea46de242b74e084"
             },
             "samtools/merge": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "d473a247d2e0c619b0df877ea19d9a5a98c8e3c8"
             },
             "samtools/stats": {
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
             "seqkit/split2": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "d473a247d2e0c619b0df877ea19d9a5a98c8e3c8"
             },
             "snpeff": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "3b366c7c6aac446c1a4ea7c2016092344633b2ec"
             },
             "strelka/germline": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
             "strelka/somatic": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
             "tabix/bgziptabix": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "e22966ce74340cb671576143e5fdbbd71670cffa"
             },
             "tabix/tabix": {
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
             "trimgalore": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             }
         }
     }
