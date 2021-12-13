@@ -69,7 +69,7 @@ workflow PREPARE_GENOME {
     }
 
     ch_dbsnp_tbi = Channel.empty()
-    if (!(params.dbsnp_tbi) && params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools|| 'mutect2' in tools || 'tnscope' in tools)) {
+    if (!(params.dbsnp_tbi) && params.dbsnp && ('mapping' in step || 'prepare_recalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools|| 'mutect2' in tools || 'tnscope' in tools)) {
         TABIX_DBSNP(dbsnp.map{ it -> [[id:it[0].baseName], it] })
         ch_dbsnp_tbi = TABIX_DBSNP.out.tbi.map{ meta, tbi -> [tbi] }
         ch_versions = ch_versions.mix(TABIX_DBSNP.out.versions)
@@ -83,7 +83,7 @@ workflow PREPARE_GENOME {
     }
 
     ch_known_indels_tbi = Channel.empty()
-    if (!(params.known_indels_tbi) && params.known_indels && ('mapping' in step || 'preparerecalibration' in step)) {
+    if (!(params.known_indels_tbi) && params.known_indels && ('mapping' in step || 'prepare_recalibration' in step)) {
         TABIX_KNOWN_INDELS(known_indels.map{ it -> [[id:it[0].baseName], it] })
         ch_known_indels_tbi = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }
         ch_versions = ch_versions.mix(TABIX_KNOWN_INDELS.out.versions)

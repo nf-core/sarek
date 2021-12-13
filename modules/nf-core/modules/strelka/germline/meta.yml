@@ -1,7 +1,7 @@
 name: strelka_germline
 description: Strelka2 is a fast and accurate small variant caller optimized for analysis of germline variation
 keywords:
-  - variantcalling
+  - variant_calling
   - germline
   - wgs
   - vcf
