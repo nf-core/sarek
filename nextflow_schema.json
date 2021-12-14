@@ -309,7 +309,7 @@
                 },
                 "umi": {
                     "type": "boolean",
-                    "default": false,
+                    "default": "",
                     "fa_icon": "fas fa-tape",
                     "description": "If provided, UMIs steps will be run to extract and annotate the reads with UMI and create consensus reads",
                     "help_text": "This part of the pipeline uses fgbio to convert the FASTQ files into a unmapped BAM, where reads are tagged with the UMIs extracted from the FASTQ sequences.\nIn order to allow the correct tagging, the UMI sequence must be contained in the read sequence itself, and not in the FASTQ filename.\nFollowing this step, the unmapped BAM is aligned and reads are then grouped based on mapping position and UMI tag.\nFinally, reads in the same groups are collapsed to create a consensus read.\nTo create consensus, we have chosen to use the adjacency method\n\ncf [fgbio](https://github.com/fulcrumgenomics/fgbio)\ncf [UMIs, the problem, the solution and the proof](https://cgatoxford.wordpress.com/2015/08/14/unique-molecular-identifiers-the-problem-the-solution-and-the-proof/)\n\n> **NB** In order for the correct tagging to be performed, a read structure needs to be specified with `--read_structure1` and `--readstructure2`"
@@ -752,13 +752,6 @@
                     "description": "Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter.",
                     "hidden": true,
                     "fa_icon": "fas fa-bacon"
-                },
-                "singularity_pull_docker_container": {
-                    "type": "boolean",
-                    "description": "Instead of directly downloading Singularity images for use with Singularity, force the workflow to pull and convert Docker containers instead.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-toolbox",
-                    "help_text": "This may be useful for example if you are unable to directly pull Singularity containers to run the pipeline due to http/https proxy issues."
                 }
             }
         }
