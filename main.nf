@@ -1828,7 +1828,7 @@ bam_recalibrated = bam_recalibrated.dump(tag:'BAM for Variant Calling')
 // Manta will be run in Germline mode, or in Tumor mode depending on status
 // HaplotypeCaller, TIDDIT and Strelka will be run for Normal and Tumor samples
 
-(bamMantaSingle, bamStrelkaSingle, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll) = bam_recalibrated.into(6)
+(bamMantaSingle, bamStrelkaSingle, bamDeepVariant, bamTIDDIT, bamFreebayesSingleNoIntervals, bamHaplotypeCallerNoIntervals, bamRecalAll) = bam_recalibrated.into(7)
 
 (bam_sentieon_DNAseq, bam_sentieon_DNAscope, bam_sentieon_all) = bam_sentieon_deduped_table.into(3)
 
@@ -2180,6 +2180,39 @@ process FreebayesSingle {
 }
 
 vcfFreebayesSingle = vcfFreebayesSingle.groupTuple(by: [0,1,2])
+
+
+// STEP DEEPVARIANT MODE
+
+process DeepVariant {
+    tag "${idSample}"
+    label 'process_medium'
+    label 'deepvariant'
+
+    publishDir "${params.outdir}/VariantCalling/${idSample}/DeepVariant", mode: params.publish_dir_mode
+
+    input:
+        set idPatient, idSample, file(bam), file(bai) from bamDeepVariant
+        file(fasta) from ch_fasta
+        file(fastaFai) from ch_fai
+        val modelType from params.model_type
+    
+    output:
+        set val("DeepVariant"), idPatient, idSample, file("${idSample}.vcf.gz") into vcfDeepVariant
+    
+    when: 'deepvariant' in tools
+
+    script:
+    """
+    /opt/deepvariant/bin/run_deepvariant \\
+        --ref=${fasta} \\
+        --reads=${bam} \\
+        --model_type=${modelType} \\
+        --output_vcf=${idSample}.vcf.gz \\
+        --output_gvcf=${idSample}.g.vcf.gz \\
+        --num_shards=${task.cpus}
+    """
+}
 
 
 /*
@@ -3474,6 +3507,10 @@ vcfKeep = Channel.empty().mix(
     vcfTIDDIT.map {
         variantCaller, idPatient, idSample, vcf, tbi ->
         [variantCaller, idSample, vcf]
+    },
+    vcfDeepVariant.map {
+        variantCaller, idPatient, idSample, vcf ->
+        [variantCaller, idSample, vcf]
     })
 
 (vcfBCFtools, vcfVCFtools, vcfAnnotation) = vcfKeep.into(3)
@@ -4087,6 +4124,7 @@ def defineToolList() {
         'ascat',
         'cnvkit',
         'controlfreec',
+        'deepvariant',
         'dnascope',
         'dnaseq',
         'freebayes',
