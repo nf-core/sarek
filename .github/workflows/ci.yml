@@ -29,16 +29,16 @@ jobs:
           - NXF_VER: ''
             NXF_EDGE: '1'
         test:
-          - 'aligner'
+          # - 'aligner'
           - 'annotation'
-          - 'default'
-          - 'split_fastq'
-          - 'gatk4_spark'
-          - 'save_bam_mapped'
-          - 'skip_markduplicates'
-          # - 'targeted'
-          - 'tumor_normal_pair'
-          # - 'variant_calling'
+          # - 'default'
+          # - 'split_fastq'
+          # - 'gatk4_spark'
+          # - 'save_bam_mapped'
+          # - 'skip_markduplicates'
+          # # - 'targeted'
+          # - 'tumor_normal_pair'
+          # # - 'variant_calling'
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
