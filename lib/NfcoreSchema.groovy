@@ -206,7 +206,7 @@ class NfcoreSchema {
                 }
                 def type = '[' + group_params.get(param).type + ']'
                 def description = group_params.get(param).description
-                def defaultValue = group_params.get(param).default ? " [default: " + group_params.get(param).default.toString() + "]" : ''
+                def defaultValue = group_params.get(param).default != null ? " [default: " + group_params.get(param).default.toString() + "]" : ''
                 def description_default = description + colors.dim + defaultValue + colors.reset
                 // Wrap long description texts
                 // Loosely based on https://dzone.com/articles/groovy-plain-text-word-wrap
@@ -362,7 +362,7 @@ class NfcoreSchema {
             }
         }
         for (ex in causingExceptions) {
-            printExceptions(ex, params_json, log)
+            printExceptions(ex, params_json, log, enums)
         }
     }
 
