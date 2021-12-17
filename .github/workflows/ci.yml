@@ -32,7 +32,7 @@ jobs:
           - 'aligner'
           - 'annotation'
           - 'default'
-          #- 'split_fastq'
+          - 'split_fastq'
           - 'gatk4_spark'
           - 'save_bam_mapped'
           - 'skip_markduplicates'
