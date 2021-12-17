@@ -2203,6 +2203,7 @@ process DeepVariant {
     when: 'deepvariant' in tools
 
     script:
+    extraOptions = params.intel_cpus ? "--call_variants_extra_args 'use_openvino=true'" : ""
     """
     /opt/deepvariant/bin/run_deepvariant \\
         --ref=${fasta} \\
@@ -2210,6 +2211,7 @@ process DeepVariant {
         --model_type=${modelType} \\
         --output_vcf=${idSample}.vcf.gz \\
         --output_gvcf=${idSample}.g.vcf.gz \\
+        ${extraOptions} \\
         --num_shards=${task.cpus}
     """
 }
