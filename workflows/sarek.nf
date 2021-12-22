@@ -165,7 +165,8 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 // SUBWORKFLOWS
 //
 
-include { FASTQC_TRIMGALORE } from '../subworkflows/nf-core/fastqc_trimgalore'
+include { FASTQC_TRIMGALORE    } from '../subworkflows/nf-core/fastqc_trimgalore'
+include { CREATE_UMI_CONSENSUS } from '../subworkflows/nf-core/fgbio_create_umi_consensus'
 
 //
 // MODULES: Installed directly from nf-core/modules
@@ -246,6 +247,12 @@ workflow SAREK {
 
         // Get versions from all software used
         ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
+
+        //Since read need additional mapping afterwards, I would argue forhaveing the process here
+        if(params.umi){
+            CREATE_UMI_CONSENSUS(reads_input, fasta, bwa, read_structure, group_by_umi_strategy , aligner)
+            reads_input_split = BAMTOFASTQ(CREATE_UMI_CONSENSUS.out.consensusbam).out
+        }
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         GATK4_MAPPING(

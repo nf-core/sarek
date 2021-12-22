@@ -24,6 +24,15 @@
             "fastqc": {
                 "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
+            "fgbio/callmolecularconsensusreads": {
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+            },
+            "fgbio/fastqtobam": {
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+            },
+            "fgbio/groupreadsbyumi": {
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+            },
             "freebayes": {
                 "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
@@ -41,6 +50,12 @@
             },
             "multiqc": {
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+            },
+            "samblaster": {
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+            },
+            "samtools/bam2fq": {
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
             "samtools/faidx": {
                 "git_sha": "e0aa89141ffecb5f54d230f7ea46de242b74e084"
