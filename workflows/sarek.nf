@@ -249,8 +249,8 @@ workflow SAREK {
         ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
 
         //Since read need additional mapping afterwards, I would argue forhaveing the process here
-        if(params.umi){
-            CREATE_UMI_CONSENSUS(reads_input, fasta, bwa, read_structure, group_by_umi_strategy , aligner)
+        if(params.read_structure){
+            CREATE_UMI_CONSENSUS(reads_input, fasta, bwa, params.read_structure, group_by_umi_strategy , aligner)
             reads_input_split = BAMTOFASTQ(CREATE_UMI_CONSENSUS.out.consensusbam).out
         }
 
