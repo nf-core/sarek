@@ -8,13 +8,12 @@ process GATK4_HAPLOTYPECALLER {
         'quay.io/biocontainers/gatk4:4.2.4.0--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(input), path(input_index)
+    tuple val(meta), path(input), path(input_index), path(intervals)
     path fasta
     path fai
     path dict
     path dbsnp
     path dbsnp_tbi
-    path interval
 
     output:
     tuple val(meta), path("*.vcf.gz"), emit: vcf
@@ -24,7 +23,7 @@ process GATK4_HAPLOTYPECALLER {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def interval_option = interval ? "-L ${interval}" : ""
+    def interval_option = intervals ? "-L ${intervals}" : ""
     def dbsnp_option    = dbsnp ? "-D ${dbsnp}" : ""
     def avail_mem       = 3
     if (!task.memory) {

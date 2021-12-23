@@ -2,8 +2,8 @@
 // MARKDUPLICATES AND/OR QC after mapping
 //
 
-include { GATK4_ESTIMATELIBRARYCOMPLEXITY                  } from '../../modules/local/gatk4/estimatelibrarycomplexity/main'
-include { GATK4_MARKDUPLICATES                             } from '../../modules/local/gatk4/markduplicates/main'
+include { GATK4_ESTIMATELIBRARYCOMPLEXITY                  } from '../../modules/nf-core/modules/gatk4/estimatelibrarycomplexity/main'
+include { GATK4_MARKDUPLICATES                             } from '../../modules/nf-core/modules/gatk4/markduplicates/main'
 include { GATK4_MARKDUPLICATES_SPARK                       } from '../../modules/local/gatk4/markduplicatesspark/main'
 include { QUALIMAP_BAMQC                                   } from '../../modules/local/qualimap/bamqc/main'
 include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES           } from '../../modules/local/samtools/index/main'

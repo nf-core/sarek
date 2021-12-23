@@ -28,6 +28,9 @@ input:
       type: file
       description: BAI/CRAI file from alignment
       pattern: "*.{bai,crai}"
+  - intervals:
+      type: file
+      description: Bed file with the genomic regions included in the library (optional)
   - fasta:
       type: file
       description: The reference fasta file
@@ -40,9 +43,6 @@ input:
       type: file
       description: GATK sequence dictionary
       pattern: "*.dict"
-  - intervalsBed:
-      type: file
-      description: Bed file with the genomic regions included in the library (optional)
   - knownSites:
       type: file
       description: Bed file with the genomic regions included in the library (optional)
