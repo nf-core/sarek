@@ -34,7 +34,7 @@
                 "git_sha": "a6e0629e2430a9d4061ddc8afdf4cff8c93080b5"
             },
             "gatk4/createsequencedictionary": {
-                "git_sha": "7389963d5cb18f81c10dff128c510e518ee4f0f6"
+                "git_sha": "50eafb19c689bca7747a6d44b8e7a555ba172f4b"
             },
             "gatk4/estimatelibrarycomplexity": {
                 "git_sha": "50eafb19c689bca7747a6d44b8e7a555ba172f4b"
