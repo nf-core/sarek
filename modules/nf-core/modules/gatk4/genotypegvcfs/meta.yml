@@ -25,6 +25,9 @@ input:
       description: |
         Tuple of gVCF(.gz) file (first) and its index (second) or the path to a GenomicsDB (and empty)
       pattern: ["*.{vcf,vcf.gz}", "*.{idx,tbi}"]
+  - intervals:
+      type: file
+      description: Bed file with the genomic regions included in the library (optional)
   - fasta:
       type: file
       description: Reference fasta file
@@ -45,10 +48,6 @@ input:
       type: tuple of files
       description: dbSNP VCF index file
       pattern: "*.tbi"
-  - intervals_bed:
-      type: file
-      description: An intevals BED file
-      pattern: "*.bed"
 
 output:
   - meta:
