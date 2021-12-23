@@ -3,7 +3,7 @@
 //
 
 include { GATK4_BASERECALIBRATOR as BASERECALIBRATOR             } from '../../modules/nf-core/modules/gatk4/baserecalibrator/main'
-include { GATK4_BASERECALIBRATOR_SPARK as BASERECALIBRATOR_SPARK } from '../../modules/nf-core/modules/gatk4/baserecalibratorspark/main'
+include { GATK4_BASERECALIBRATOR_SPARK as BASERECALIBRATOR_SPARK } from '../../modules/local/gatk4/baserecalibratorspark/main'
 include { GATK4_GATHERBQSRREPORTS as GATHERBQSRREPORTS           } from '../../modules/nf-core/modules/gatk4/gatherbqsrreports/main'
 
 workflow PREPARE_RECALIBRATION {
