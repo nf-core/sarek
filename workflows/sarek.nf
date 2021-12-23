@@ -248,10 +248,10 @@ workflow SAREK {
         // Get versions from all software used
         ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
 
-        //Since read need additional mapping afterwards, I would argue forhaveing the process here
+        //Since read need additional mapping afterwards, I would argue for haveing the process here
         if(params.read_structure){
-            CREATE_UMI_CONSENSUS(reads_input, fasta, bwa, params.read_structure, group_by_umi_strategy , aligner)
-            reads_input_split = BAMTOFASTQ(CREATE_UMI_CONSENSUS.out.consensusbam).out
+            CREATE_UMI_CONSENSUS(reads_input, fasta, bwa, params.read_structure, params.group_by_umi_strategy , aligner)
+            reads_input = BAMTOFASTQ(CREATE_UMI_CONSENSUS.out.consensusbam).out
         }
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
