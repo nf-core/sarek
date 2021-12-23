@@ -66,6 +66,9 @@
             "multiqc": {
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
+            "qualimap/bamqc": {
+                "git_sha": "d473a247d2e0c619b0df877ea19d9a5a98c8e3c8"
+            },
             "samtools/faidx": {
                 "git_sha": "e0aa89141ffecb5f54d230f7ea46de242b74e084"
             },

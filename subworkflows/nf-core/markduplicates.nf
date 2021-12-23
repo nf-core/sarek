@@ -5,7 +5,7 @@
 include { GATK4_ESTIMATELIBRARYCOMPLEXITY                  } from '../../modules/nf-core/modules/gatk4/estimatelibrarycomplexity/main'
 include { GATK4_MARKDUPLICATES                             } from '../../modules/nf-core/modules/gatk4/markduplicates/main'
 include { GATK4_MARKDUPLICATES_SPARK                       } from '../../modules/local/gatk4/markduplicatesspark/main'
-include { QUALIMAP_BAMQC                                   } from '../../modules/local/qualimap/bamqc/main'
+include { QUALIMAP_BAMQC                                   } from '../../modules/nf-core/modules/qualimap/bamqc/main'
 include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES           } from '../../modules/local/samtools/index/main'
 include { SAMTOOLS_STATS                                   } from '../../modules/nf-core/modules/samtools/stats/main'
 include { SAMTOOLS_VIEWINDEX as SAMTOOLS_BAM_TO_CRAM       } from '../../modules/local/samtools/viewindex/main'
@@ -95,7 +95,7 @@ workflow MARKDUPLICATES {
 
     qualimap_bamqc = Channel.empty()
     if (!skip_bamqc) {
-        QUALIMAP_BAMQC(bam_bai_markduplicates, target_bed)
+        QUALIMAP_BAMQC(bam_bai_markduplicates, target_bed, target_bed.exists())
         qualimap_bamqc = QUALIMAP_BAMQC.out.results
 
         ch_versions = ch_versions.mix(QUALIMAP_BAMQC.out.versions.first())
