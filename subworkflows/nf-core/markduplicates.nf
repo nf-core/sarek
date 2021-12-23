@@ -32,8 +32,8 @@ workflow MARKDUPLICATES {
     report_markduplicates = Channel.empty()
 
     if (skip_markduplicates) {
-        bam_markduplicates = bam_indexed
-        SAMTOOLS_BAM_TO_CRAM(bam_markduplicates, fasta, fasta_fai)
+        bam_bai_markduplicates = bam_indexed
+        SAMTOOLS_BAM_TO_CRAM(bam_bai_markduplicates, fasta, fasta_fai)
         cram_markduplicates = SAMTOOLS_BAM_TO_CRAM.out.cram_crai
 
         ch_versions = ch_versions.mix(SAMTOOLS_BAM_TO_CRAM.out.versions.first())
