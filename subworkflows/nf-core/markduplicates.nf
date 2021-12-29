@@ -95,7 +95,13 @@ workflow MARKDUPLICATES {
 
     qualimap_bamqc = Channel.empty()
     if (!skip_bamqc) {
-        QUALIMAP_BAMQC(bam_bai_markduplicates, target_bed, target_bed.exists())
+
+        bam_bai_markduplicates.map{ meta, bam, bai ->
+            [meta, bam]
+        }.set{bam_markduplicates}
+
+        target_bed_provided = target_bed ?: false
+        QUALIMAP_BAMQC(bam_markduplicates, target_bed, target_bed_provided)
         qualimap_bamqc = QUALIMAP_BAMQC.out.results
 
         ch_versions = ch_versions.mix(QUALIMAP_BAMQC.out.versions.first())
