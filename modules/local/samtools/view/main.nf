@@ -25,7 +25,7 @@ process SAMTOOLS_VIEW {
     path(fai)
 
     output:
-    tuple val(meta), path("*.cram"), path("*.crai"), emit: cram
+    tuple val(meta), path("*.cram"), path("*.crai"), emit: cram_crai
     path  "*.version.txt"                          , emit: version
 
     script:

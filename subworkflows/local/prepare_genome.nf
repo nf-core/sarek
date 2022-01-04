@@ -30,7 +30,7 @@ include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE } from '../../modules/nf-core/m
 include { TABIX_TABIX as TABIX_KNOWN_INDELS }      from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_known_indels_options)
 include { TABIX_TABIX as TABIX_PON }               from '../../modules/nf-core/modules/tabix/tabix/main'                     addParams(options: params.tabix_pon_options)
 
-workflow BUILD_INDICES {
+workflow PREPARE_GENOME {
     take:
         dbsnp             // channel: [optional]  dbsnp
         fasta             // channel: [mandatory] fasta
@@ -38,87 +38,95 @@ workflow BUILD_INDICES {
         germline_resource // channel: [optional]  germline_resource
         known_indels      // channel: [optional]  known_indels
         pon               // channel: [optional]  pon
-        target_bed        // channel: [optionnal] target_bed
-        tools
-        step
+        target_bed        // channel: [optional]  target_bed
+        tools             // value:   [mandatory] tools
+        step              // value:   [mandatory] step
 
     main:
 
-    result_bwa  = Channel.empty()
-    version_bwa = Channel.empty()
-    if (!(params.bwa) && 'mapping' in step)
-        if (params.aligner == "bwa-mem") (result_bwa, version_bwa) = BWAMEM1_INDEX(fasta)
-        else                             (result_bwa, version_bwa) = BWAMEM2_INDEX(fasta)
+    ch_versions = Channel.empty()
 
-    result_dict  = Channel.empty()
-    version_gatk = Channel.empty()
-    if (!(params.dict) && !('annotate' in step) && !('controlfreec' in step))
-        (result_dict, version_gatk) = GATK4_CREATESEQUENCEDICTIONARY(fasta)
+    ch_bwa = Channel.empty()
+    if (!(params.bwa) && 'mapping' in step) {
+        if (params.aligner == "bwa-mem") {
+            BWAMEM1_INDEX(fasta)
+            ch_bwa = BWAMEM1_INDEX.out.index
+            ch_versions = ch_versions.mix(BWAMEM1_INDEX.out.versions)
+        } else if (params.aligner == "bwa-mem2") {
+            BWAMEM2_INDEX(fasta)
+            ch_bwa = BWAMEM2_INDEX.out.index
+            ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
+        }
+    }
 
-    result_fai  = Channel.empty()
-    version_samtools = Channel.empty()
-    if (fasta_fai) result_fai = fasta_fai
-    if (!(params.fasta_fai) && !('annotate' in step))
-        (result_fai, version_samtools) = SAMTOOLS_FAIDX(fasta)
+    ch_dict = Channel.empty()
+    if (!(params.dict) && !('annotate' in step) && !('controlfreec' in step)) {
+        GATK4_CREATESEQUENCEDICTIONARY(fasta)
+        ch_dict = GATK4_CREATESEQUENCEDICTIONARY.out.dict
+        ch_versions = ch_versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
+    }
 
-    result_target_bed  = Channel.empty()
-    version_target_bed = Channel.empty()
+    ch_fasta_fai = Channel.empty()
+    if (fasta_fai) ch_fasta_fai = fasta_fai
+    if (!(params.fasta_fai) && !('annotate' in step)) {
+        SAMTOOLS_FAIDX(fasta)
+        ch_fasta_fai = SAMTOOLS_FAIDX.out.fai
+        ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
+    }
+
+    ch_target_bed = Channel.empty()
     if ((params.target_bed) && ('manta' in tools || 'strelka' in tools)) {
-        target_bed_id = target_bed.map{ it -> [[id:it[0].getName()], it] }
-        (result_target_bed, version_target_bed) = TABIX_BGZIPTABIX(target_bed_id)
-        result_target_bed = result_target_bed.map{ meta, bed, tbi -> [bed, tbi] }
+        TABIX_BGZIPTABIX(target_bed.map{ it -> [[id:it[0].getName()], it] })
+        ch_target_bed = TABIX_BGZIPTABIX.out.tbi.map{ meta, bed, tbi -> [bed, tbi] }
+        ch_versions = ch_versions.mix(TABIX_BGZIPTABIX.out.versions)
     }
 
-    result_dbsnp_tbi  = Channel.empty()
-    version_dbsnp_tbi = Channel.empty()
+    ch_dbsnp_tbi = Channel.empty()
     if (!(params.dbsnp_tbi) && params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools|| 'mutect2' in tools || 'tnscope' in tools)) {
-        dbsnp_id = dbsnp.map{ it -> [[id:it[0].baseName], it] }
-        (result_dbsnp_tbi, version_dbsnp_tbi) = TABIX_DBSNP(dbsnp_id)
-        result_dbsnp_tbi = result_dbsnp_tbi.map{ meta, tbi -> [tbi] }
+        TABIX_DBSNP(dbsnp.map{ it -> [[id:it[0].baseName], it] })
+        ch_dbsnp_tbi = TABIX_DBSNP.out.tbi.map{ meta, tbi -> [tbi] }
+        ch_versions = ch_versions.mix(TABIX_DBSNP.out.versions)
     }
 
-    result_germline_resource_tbi  = Channel.empty()
-    version_germline_resource_tbi = Channel.empty()
+    ch_germline_resource_tbi = Channel.empty()
     if (!(params.germline_resource_tbi) && params.germline_resource && 'mutect2' in tools) {
-        germline_resource_id = germline_resource.map{ it -> [[id:it[0].baseName], it] }
-        (result_germline_resource_tbi, version_germline_resource_tbi) = TABIX_GERMLINE_RESOURCE(germline_resource_id)
+        TABIX_GERMLINE_RESOURCE(germline_resource.map{ it -> [[id:it[0].baseName], it] })
+        ch_germline_resource_tbi = TABIX_GERMLINE_RESOURCE.out.tbi.map{ meta, tbi -> [tbi] }
+        ch_versions = ch_versions.mix(TABIX_GERMLINE_RESOURCE.out.versions)
     }
 
-    result_known_indels_tbi  = Channel.empty()
-    version_known_indels_tbi = Channel.empty()
+    ch_known_indels_tbi = Channel.empty()
     if (!(params.known_indels_tbi) && params.known_indels && ('mapping' in step || 'preparerecalibration' in step)) {
-        known_indels_id = known_indels.map{ it -> [[id:it[0].baseName], it] }
-        (result_known_indels_tbi, version_known_indels_tbi) = TABIX_KNOWN_INDELS(known_indels_id)
-        result_known_indels_tbi = result_known_indels_tbi.map{ meta, tbi -> [tbi] }
+        TABIX_KNOWN_INDELS(known_indels.map{ it -> [[id:it[0].baseName], it] })
+        ch_known_indels_tbi = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }
+        ch_versions = ch_versions.mix(TABIX_KNOWN_INDELS.out.versions)
     }
 
-    result_pon_tbi  = Channel.empty()
-    version_pon_tbi = Channel.empty()
+    ch_pon_tbi = Channel.empty()
     if (!(params.pon_tbi) && params.pon && ('tnscope' in tools || 'mutect2' in tools)) {
-        pon_id = pon.map{ it -> [[id:it[0].baseName], it] }
-        (result_pon_tbi, version_pon_tbi) = TABIX_PON(pon_id)
+        TABIX_PON(pon.map{ it -> [[id:it[0].baseName], it] })
+        ch_pon_tbi = TABIX_PON.out.tbi.map{ meta, tbi -> [tbi] }
+        ch_versions = ch_versions.mix(TABIX_PON.out.versions)
     }
 
-    version_tabix = Channel.empty()
-    version_tabix = version_tabix.mix(version_target_bed, version_dbsnp_tbi, version_germline_resource_tbi, version_known_indels_tbi, version_pon_tbi).first()
+    ch_msisensorpro_scan = Channel.empty()
+    if ('msisensorpro' in tools) {
+        MSISENSORPRO_SCAN(fasta)
+        ch_msisensorpro_scan = MSISENSORPRO_SCAN.out.list
+        ch_versions = ch_versions.mix(MSISENSORPRO_SCAN.out.versions)
+    }
 
-    result_msisensorpro_scan  = Channel.empty()
-    version_msisensorpro_scan = Channel.empty()
-    if ('msisensorpro' in tools)
-        (result_msisensorpro_scan, version_msisensorpro_scan) = MSISENSORPRO_SCAN(fasta)
-
-    result_intervals = Channel.empty()
+    ch_intervals = Channel.empty()
     if (params.no_intervals) {
         file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
-        result_intervals = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
-    } else if (!('annotate' in step) && !('controlfreec' in step))
-        if (!params.intervals)
-            result_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS(result_fai))
-        else
-            result_intervals = CREATE_INTERVALS_BED(file(params.intervals))
+        ch_intervals = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
+    } else if (!('annotate' in step) && !('controlfreec' in step)) {
+        if (!params.intervals) ch_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS(ch_fasta_fai))
+        else                   ch_intervals = CREATE_INTERVALS_BED(file(params.intervals))
+    }
 
     if (!params.no_intervals) {
-        result_intervals = result_intervals.flatten()
+        ch_intervals = ch_intervals.flatten()
             .map{ intervalFile ->
                 def duration = 0.0
                 for (line in intervalFile.readLines()) {
@@ -137,19 +145,16 @@ workflow BUILD_INDICES {
     }
 
     emit:
-        bwa                           = result_bwa
-        bwa_version                   = version_bwa
-        dbsnp_tbi                     = result_dbsnp_tbi
-        dict                          = result_dict
-        fai                           = result_fai
-        gatk_version                  = version_gatk
-        germline_resource_tbi         = result_germline_resource_tbi
-        intervals                     = result_intervals
-        known_indels_tbi              = result_known_indels_tbi.collect()
-        msisensorpro_scan             = result_msisensorpro_scan
-        msisensorpro_scan_version     = version_msisensorpro_scan
-        pon_tbi                       = result_pon_tbi
-        samtools_version              = version_samtools
-        tabix_version                 = version_tabix
-        target_bed_gz_tbi             = result_target_bed
+        bwa                   = ch_bwa                        // path: {bwa,bwamem2}/index
+        dbsnp_tbi             = ch_dbsnp_tbi                  // path: dbsnb.vcf.gz.tbi
+        dict                  = ch_dict                       // path: genome.fasta.dict
+        fasta_fai             = ch_fasta_fai                  // path: genome.fasta.fai
+        germline_resource_tbi = ch_germline_resource_tbi      // path: germline_resource.vcf.gz.tbi
+        intervals             = ch_intervals                  // path: intervals.bed
+        known_indels_tbi      = ch_known_indels_tbi.collect() // path: {known_indels*}.vcf.gz.tbi
+        msisensorpro_scan     = ch_msisensorpro_scan          // path: genome_msi.list
+        pon_tbi               = ch_pon_tbi                    // path: pon.vcf.gz.tbi
+        target_bed_gz_tbi     = ch_target_bed                 // path: target.bed.gz.tbi
+
+        versions              = ch_versions.ifEmpty(null)     // channel: [ versions.yml ]
 }
