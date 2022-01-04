@@ -74,6 +74,7 @@ if (anno_readme && file(anno_readme).exists()) {
 ========================================================================================
 */
 
+<<<<<<< HEAD
 // // Stage dummy file to be used as an optional input where required
 // [] = Channel.fromPath("$projectDir/assets/dummy_file.txt", checkIfExists: true).collect()
 
@@ -150,6 +151,12 @@ include { GERMLINE_VARIANT_CALLING  } from '../subworkflows/local/germline_varia
 include { ANNOTATE                     } from '../subworkflows/local/annotate' addParams(
     annotation_cache:                  params.annotation_cache
 )
+=======
+//
+// SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
+//
+include { INPUT_CHECK } from '../subworkflows/local/input_check'
+>>>>>>> 17f8ffe (Template update for nf-core/tools version 2.2)
 
 /*
 ========================================================================================
@@ -157,13 +164,22 @@ include { ANNOTATE                     } from '../subworkflows/local/annotate' a
 ========================================================================================
 */
 
+<<<<<<< HEAD
 // Config files
 ch_multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
+=======
+>>>>>>> 17f8ffe (Template update for nf-core/tools version 2.2)
 //
 // SUBWORKFLOWS
 //
+<<<<<<< HEAD
+=======
+include { FASTQC                      } from '../modules/nf-core/modules/fastqc/main'
+include { MULTIQC                     } from '../modules/nf-core/modules/multiqc/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+>>>>>>> 17f8ffe (Template update for nf-core/tools version 2.2)
 
 include { FASTQC_TRIMGALORE } from '../subworkflows/nf-core/fastqc_trimgalore'
 
@@ -179,6 +195,7 @@ def multiqc_report = []
 workflow SAREK {
 
     ch_versions = Channel.empty()
+<<<<<<< HEAD
     qc_reports  = Channel.empty()
 
     // Build indices if needed
@@ -425,6 +442,32 @@ workflow SAREK {
         ch_version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
     }
 
+=======
+
+    //
+    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
+    //
+    INPUT_CHECK (
+        ch_input
+    )
+    ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
+
+    //
+    // MODULE: Run FastQC
+    //
+    FASTQC (
+        INPUT_CHECK.out.reads
+    )
+    ch_versions = ch_versions.mix(FASTQC.out.versions.first())
+
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        ch_versions.unique().collectFile(name: 'collated_versions.yml')
+    )
+
+    //
+    // MODULE: MultiQC
+    //
+>>>>>>> 17f8ffe (Template update for nf-core/tools version 2.2)
     workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
 
@@ -432,8 +475,20 @@ workflow SAREK {
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_config)
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+<<<<<<< HEAD
     ch_multiqc_files = ch_multiqc_files.mix(ch_version_yaml)
     ch_multiqc_files = ch_multiqc_files.mix(qc_reports)
+=======
+    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+    ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
+
+    MULTIQC (
+        ch_multiqc_files.collect()
+    )
+    multiqc_report = MULTIQC.out.report.toList()
+    ch_versions    = ch_versions.mix(MULTIQC.out.versions)
+}
+>>>>>>> 17f8ffe (Template update for nf-core/tools version 2.2)
 
     multiqc_report = Channel.empty()
     if (!('multiqc' in params.skip_qc)) {

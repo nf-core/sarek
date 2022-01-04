@@ -3,6 +3,7 @@
     "homePage": "https://github.com/nf-core/sarek",
     "repos": {
         "nf-core/modules": {
+<<<<<<< HEAD
             "bwa/index": {
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
@@ -71,6 +72,16 @@
             },
             "trimgalore": {
                 "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+=======
+            "custom/dumpsoftwareversions": {
+                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+            },
+            "fastqc": {
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+            },
+            "multiqc": {
+                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+>>>>>>> 17f8ffe (Template update for nf-core/tools version 2.2)
             }
         }
     }

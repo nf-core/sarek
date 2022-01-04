@@ -12,7 +12,11 @@ jobs:
     steps:
       - name: Launch workflow via tower
         uses: nf-core/tower-action@v2
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> 17f8ffe (Template update for nf-core/tools version 2.2)
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}

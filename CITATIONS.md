@@ -25,6 +25,7 @@
 
 * [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 
+<<<<<<< HEAD
 * [Control-FREEC](https://pubmed.ncbi.nlm.nih.gov/22155870/)
     > Boeva V, Popova T, Bleakley K, et al.: Control-FREEC: a tool for assessing copy number and allelic content using next-generation sequencing data. Bioinformatics. 2012; 28(3): 423–5. doi: 10.1093/bioinformatics/btr670. Epub 2011 Dec 6. PubMed PMID: 22155870; PubMed Central PMCID: PMC3268243.
 
@@ -34,6 +35,8 @@
 * [Manta](https://pubmed.ncbi.nlm.nih.gov/26647377/)
     > Chen X, Schulz-Trieglaff O, Shaw R, et al.: Manta: rapid detection of structural variants and indels for germline and cancer sequencing applications. Bioinformatics. 2016 Apr 15;32(8):1220-2. doi: 10.1093/bioinformatics/btv710. Epub 2015 Dec 8. PubMed PMID: 26647377.
 
+=======
+>>>>>>> 17f8ffe (Template update for nf-core/tools version 2.2)
 * [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
     > Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
 

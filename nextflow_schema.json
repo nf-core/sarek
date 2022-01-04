@@ -577,12 +577,6 @@
                     "help_text": "If you're running offline, Nextflow will not be able to fetch the institutional config files from the internet. If you don't need them, then this is not a problem. If you do need them, you should download the files from the repo and tell Nextflow where to find them with this parameter.",
                     "fa_icon": "fas fa-users-cog"
                 },
-                "hostnames": {
-                    "type": "string",
-                    "description": "Institutional configs hostname.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
-                },
                 "config_profile_name": {
                     "type": "string",
                     "description": "Institutional config name.",
@@ -664,6 +658,7 @@
                     "fa_icon": "fas fa-question-circle",
                     "hidden": true
                 },
+<<<<<<< HEAD
                 "publish_dir_mode": {
                     "type": "string",
                     "default": "copy",
@@ -687,6 +682,8 @@
                     "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
                     "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
                 },
+=======
+>>>>>>> 17f8ffe (Template update for nf-core/tools version 2.2)
                 "email_on_fail": {
                     "type": "string",
                     "description": "Email address for completion summary, only when pipeline fails.",
@@ -752,13 +749,6 @@
                     "description": "Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter.",
                     "hidden": true,
                     "fa_icon": "fas fa-bacon"
-                },
-                "singularity_pull_docker_container": {
-                    "type": "boolean",
-                    "description": "Instead of directly downloading Singularity images for use with Singularity, force the workflow to pull and convert Docker containers instead.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-toolbox",
-                    "help_text": "This may be useful for example if you are unable to directly pull Singularity containers to run the pipeline due to http/https proxy issues."
                 }
             }
         }

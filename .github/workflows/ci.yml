@@ -28,6 +28,7 @@ jobs:
           # Test latest edge release of Nextflow
           - NXF_VER: ''
             NXF_EDGE: '1'
+<<<<<<< HEAD
         test:
           - 'aligner'
           - 'annotation'
@@ -39,6 +40,8 @@ jobs:
           # - 'targeted'
           - 'tumor_normal_pair'
           # - 'variant_calling'
+=======
+>>>>>>> 17f8ffe (Template update for nf-core/tools version 2.2)
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
