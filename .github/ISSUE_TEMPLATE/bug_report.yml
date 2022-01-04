@@ -2,66 +2,51 @@
 name: Bug report
 description: Report something that is broken or incorrect
 labels: bug
----
+body:
 
-<!--
-# nf-core/sarek bug report
+  - type: markdown
+    attributes:
+      value: |
+        Before you post this issue, please check the documentation:
 
----
+        - [nf-core website: troubleshooting](https://nf-co.re/usage/troubleshooting)
+        - [nf-core/sarek pipeline documentation](https://nf-co.re/sarek/usage)
 
-<!--
-Hi there!
+  - type: textarea
+    id: description
+    attributes:
+      label: Description of the bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
 
-Thanks for telling us about a problem with the pipeline.
+  - type: textarea
+    id: command_used
+    attributes:
+      label: Command used and terminal output
+      description: Steps to reproduce the behaviour. Please paste the command you used to launch the pipeline and the output from your terminal.
+      render: console
+      placeholder: |
+        $ nextflow run ...
 
-Please delete this text and anything that's not relevant from the template below:
--->
+        Some output where something broke
 
-## Check Documentation
+  - type: textarea
+    id: files
+    attributes:
+      label: Relevant files
+      description: |
+        Please upload (drag and drop) and relevant files. Make into a `.zip` file if the extension is not allowed.
+        Your verbose log file `.nextflow.log` is often useful _(this is a hidden file in the directory where you launched the pipeline)_ as well as custom Nextflow configuration files.
 
-I have checked the following places for your error:
-
-- [ ] [nf-core website: troubleshooting](https://nf-co.re/usage/troubleshooting)
-- [ ] [nf-core/sarek pipeline documentation](https://nf-co.re/sarek/usage)
-
-## Description of the bug
-
-<!-- A clear and concise description of what the bug is. -->
-
-## Steps to reproduce
-
-Steps to reproduce the behaviour:
-
-1. Command line: <!-- [e.g. `nextflow run ...`] -->
-2. See error: <!-- [Please provide your error message] -->
-
-## Expected behaviour
-
-<!-- A clear and concise description of what you expected to happen. -->
-
-## Log files
-
-Have you provided the following extra information/files:
-
-- [ ] The command used to run the pipeline
-- [ ] The `.nextflow.log` file <!-- this is a hidden file in the directory where you launched the pipeline -->
-
-## System
-
-- Hardware: <!-- [e.g. HPC, Desktop, Cloud...] -->
-- Executor: <!-- [e.g. slurm, local, awsbatch...] -->
-- OS: <!-- [e.g. CentOS Linux, macOS, Linux Mint...] -->
-- Version <!-- [e.g. 7, 10.13.6, 18.3...] -->
-
-## Nextflow Installation
-
-- Version: <!-- [e.g. 21.04.0] -->
-
-## Container engine
-
-- Engine: <!-- [e.g. Conda, Docker, Singularity, Podman, Shifter or Charliecloud] -->
-- version: <!-- [e.g. 1.0.0] -->
-
-## Additional context
-
-<!-- Add any other context about the problem here. -->
+  - type: textarea
+    id: system
+    attributes:
+      label: System information
+      description: |
+        * Nextflow version _(eg. 21.10.3)_
+        * Hardware _(eg. HPC, Desktop, Cloud)_
+        * Executor _(eg. slurm, local, awsbatch)_
+        * Container engine: _(e.g. Docker, Singularity, Conda, Podman, Shifter or Charliecloud)_
+        * OS _(eg. CentOS Linux, macOS, Linux Mint)_
+        * Version of nf-core/sarek _(eg. 1.1, 1.5, 1.8.2)_
