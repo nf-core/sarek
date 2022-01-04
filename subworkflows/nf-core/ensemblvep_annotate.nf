@@ -2,8 +2,8 @@
 // Run VEP to annotate VCF files
 //
 
-include { ENSEMBLVEP }       from '../../modules/nf-core/modules/ensemblvep/main'
-include { TABIX_BGZIPTABIX } from '../../modules/local/tabix/bgziptabix/main'
+include { ENSEMBLVEP                              } from '../../modules/nf-core/modules/ensemblvep/main'
+include { TABIX_BGZIPTABIX as BGZIPTABIX_ANNOTATE } from '../../modules/local/tabix/bgziptabix/main'
 
 workflow ENSEMBLVEP_ANNOTATE {
     take:
@@ -15,10 +15,10 @@ workflow ENSEMBLVEP_ANNOTATE {
 
     main:
     ENSEMBLVEP(vcf, vep_genome, vep_species, vep_cache_version, vep_cache)
-    TABIX_BGZIPTABIX(ENSEMBLVEP.out.vcf)
+    BGZIPTABIX_ANNOTATE(ENSEMBLVEP.out.vcf)
 
     emit:
-    vcf_tbi  = TABIX_BGZIPTABIX.out.gz_tbi // channel: [ val(meta), vcf.gz, vcf.gz.tbi ]
-    reports  = ENSEMBLVEP.out.report       //    path: *.html
-    versions = ENSEMBLVEP.out.versions     //    path: versions.yml
+    vcf_tbi  = BGZIPTABIX_ANNOTATE.out.gz_tbi // channel: [ val(meta), vcf.gz, vcf.gz.tbi ]
+    reports  = ENSEMBLVEP.out.report          //    path: *.html
+    versions = ENSEMBLVEP.out.versions        //    path: versions.yml
 }

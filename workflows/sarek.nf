@@ -42,23 +42,18 @@ def checkPathParamList = [
 
 for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 
-// Get step and tools
-def step = params.step ? params.step.replaceAll('-', '').replaceAll('_', '') : ''
-def tools = params.tools ? params.tools.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
-def skip_qc = params.skip_qc ? params.skip_qc.split(',').collect{it.trim().toLowerCase().replaceAll('-', '').replaceAll('_', '')} : []
-
 // Check mandatory parameters
 if (params.input) csv_file = file(params.input)
 else {
     log.warn "No samplesheet specified, attempting to restart from csv files present in ${params.outdir}"
-    switch (step) {
-        case 'mapping': exit 1, "Can't start with step $step without samplesheet"
+    switch (params.step) {
+        case 'mapping': exit 1, "Can't start with step $params.step without samplesheet"
         case 'preparerecalibration': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
         case 'recalibrate':          csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv",          checkIfExists: true); break
         case 'variantcalling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv",            checkIfExists: true); break
         // case 'controlfreec':         csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
         case 'annotate':             csv_file = file("${params.outdir}/variant_calling/csv/recalibrated.csv",          checkIfExists: true); break
-        default: exit 1, "Unknown step $step"
+        default: exit 1, "Unknown step $params.step"
     }
 }
 
@@ -195,8 +190,8 @@ workflow SAREK {
         known_indels,
         pon,
         target_bed,
-        tools,
-        step)
+        params.tools,
+        params.step)
 
     // Gather built indices or get them from the params
     bwa                   = params.fasta             ? params.bwa                   ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : []
@@ -231,14 +226,14 @@ workflow SAREK {
     bam_variant_calling = Channel.empty()
 
     // STEP 0: QC & TRIM
-    // `--skip_qc fastqc` to skip fastqc
+    // `--d fastqc` to skip fastqc
     // trim only with `--trim_fastq`
     // additional options to be set up
 
-    if (step == 'mapping') {
+    if (params.step == 'mapping') {
         FASTQC_TRIMGALORE(
             input_sample,
-            ('fastqc' in skip_qc),
+            ('fastqc' in params.skip_qc),
             !(params.trim_fastq))
 
         // Get reads after optional trimming (+QC)
@@ -273,24 +268,24 @@ workflow SAREK {
         ch_versions = ch_versions.mix(MAPPING.out.versions)
     }
 
-    if (step == 'preparerecalibration') {
+    if (params.step == 'preparerecalibration') {
         if (params.skip_markduplicates) bam_indexed         = input_sample
         else                            cram_markduplicates = input_sample
     }
 
-    if (step in ['mapping', 'preparerecalibration']) {
+    if (params.step in ['mapping', 'preparerecalibration']) {
         // STEP 2: Mark duplicates (+QC) + convert to CRAM
         MARKDUPLICATES(
             bam_mapped,
             bam_indexed,
             ('markduplicates' in params.use_gatk_spark),
-            !('markduplicates' in skip_qc),
+            !('markduplicates' in params.skip_qc),
             dict,
             fasta,
             fasta_fai,
             params.skip_markduplicates,
-            ('bamqc' in skip_qc),
-            ('samtools' in skip_qc),
+            ('bamqc' in params.skip_qc),
+            ('samtools' in params.skip_qc),
             target_bed)
 
         cram_markduplicates = MARKDUPLICATES.out.cram
@@ -321,16 +316,15 @@ workflow SAREK {
         }
     }
 
-    if (step == 'recalibrate') bam_applybqsr = input_sample
+    if (params.step == 'recalibrate') bam_applybqsr = input_sample
 
-    if (step in ['mapping', 'preparerecalibration', 'recalibrate']) {
-
+    if (params.step in ['mapping', 'preparerecalibration', 'recalibrate']) {
         if(!params.skip_bqsr){
             // STEP 4: RECALIBRATING
             RECALIBRATE(
                 ('bqsr' in params.use_gatk_spark),
-                ('bamqc' in skip_qc),
-                ('samtools' in skip_qc),
+                ('bamqc' in params.skip_qc),
+                ('samtools' in params.skip_qc),
                 cram_applybqsr,
                 dict,
                 fai,
@@ -353,15 +347,15 @@ workflow SAREK {
 
     }
 
-    if (step in 'variantcalling') cram_variant_calling = input_sample
+    if (params.step in 'variantcalling') cram_variant_calling = input_sample
 
-    if (tools != []) {
+    if (params.tools) {
         vcf_to_annotate = Channel.empty()
-        if (step in 'annotate') cram_variant_calling = Channel.empty()
+        if (params.step in 'annotate') cram_variant_calling = Channel.empty()
 
         // GERMLINE VARIANT CALLING
         GERMLINE_VARIANT_CALLING(
-            tools,
+            params.tools,
             cram_variant_calling,
             dbsnp,
             dbsnp_tbi,
@@ -392,7 +386,7 @@ workflow SAREK {
 
         // PAIR VARIANT CALLING
         // PAIR_VARIANT_CALLING(
-        //     tools,
+        //     params.tools,
         //     cram_variant_calling,
         //     dbsnp,
         //     dbsnp_tbi,
@@ -409,12 +403,13 @@ workflow SAREK {
         //     pon_tbi)
 
         // ANNOTATE
-        if (step == 'annotate') vcf_to_annotate = input_sample
+        if (params.step == 'annotate') vcf_to_annotate = input_sample
 
-        if ('merge' in tools || 'snpeff' in tools || 'vep' in tools) {
+        if (params.tools.contains('merge') || params.tools.contains('snpeff') || params.tools.contains('vep')) {
+
             ANNOTATE(
                 vcf_to_annotate,
-                tools,
+                params.tools,
                 snpeff_db,
                 snpeff_cache,
                 vep_genome,
@@ -425,7 +420,7 @@ workflow SAREK {
     }
 
     ch_version_yaml = Channel.empty()
-    if (!('versions' in skip_qc)) {
+    if (!('versions' in params.skip_qc)) {
         CUSTOM_DUMPSOFTWAREVERSIONS(ch_versions.unique().collectFile(name: 'collated_versions.yml'))
         ch_version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
     }
@@ -441,7 +436,7 @@ workflow SAREK {
     ch_multiqc_files = ch_multiqc_files.mix(qc_reports)
 
     multiqc_report = Channel.empty()
-    if (!('multiqc' in skip_qc)) {
+    if (!('multiqc' in params.skip_qc)) {
         MULTIQC(ch_multiqc_files.collect())
         multiqc_report = MULTIQC.out.report.toList()
 
