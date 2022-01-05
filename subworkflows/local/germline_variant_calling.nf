@@ -41,6 +41,7 @@ workflow GERMLINE_VARIANT_CALLING {
 
     if ('haplotypecaller' in tools) {
 
+        // include interval name into meta.id
         cram.combine(intervals).map{ meta, cram, crai, intervals ->
             new_meta = meta.clone()
             new_meta.id = meta.sample + "_" + intervals.baseName
@@ -68,10 +69,16 @@ workflow GERMLINE_VARIANT_CALLING {
 
         haplotypecaller_gvcf = CONCAT_GVCF.out.vcf
 
-        // STEP GATK HAPLOTYPECALLER.2
+        // include interval name into meta.id
+        HAPLOTYPECALLER.out.interval_vcf.map{ meta, vcf, intervals ->
+            new_meta = meta.clone()
+            new_meta.id = meta.sample + "_" + intervals.baseName
+            [new_meta, vcf, intervals]
+        }.set{haplotypecaller_interval_vcf}
 
+        // STEP GATK HAPLOTYPECALLER.2
         GENOTYPEGVCF(
-            HAPLOTYPECALLER.out.interval_vcf,
+            haplotypecaller_interval_vcf,
             fasta,
             fasta_fai,
             dict,
@@ -82,6 +89,7 @@ workflow GERMLINE_VARIANT_CALLING {
             meta.id = meta.sample
             [meta, vcf]
         }.groupTuple()
+
 
         CONCAT_HAPLOTYPECALLER(
             haplotypecaller_results,
