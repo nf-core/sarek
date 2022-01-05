@@ -2,8 +2,8 @@
 // MARKDUPLICATES AND/OR QC after mapping
 //
 
-include { GATK4_ESTIMATELIBRARYCOMPLEXITY                  } from '../../modules/local/gatk4/estimatelibrarycomplexity/main'
-include { GATK4_MARKDUPLICATES                             } from '../../modules/local/gatk4/markduplicates/main'
+include { GATK4_ESTIMATELIBRARYCOMPLEXITY                  } from '../../modules/nf-core/modules/gatk4/estimatelibrarycomplexity/main'
+include { GATK4_MARKDUPLICATES                             } from '../../modules/nf-core/modules/gatk4/markduplicates/main'
 include { GATK4_MARKDUPLICATES_SPARK                       } from '../../modules/local/gatk4/markduplicatesspark/main'
 include { QUALIMAP_BAMQC                                   } from '../../modules/local/qualimap/bamqc/main'
 include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES           } from '../../modules/local/samtools/index/main'
@@ -32,8 +32,8 @@ workflow MARKDUPLICATES {
     report_markduplicates = Channel.empty()
 
     if (skip_markduplicates) {
-        bam_markduplicates = bam_indexed
-        SAMTOOLS_BAM_TO_CRAM(bam_markduplicates, fasta, fasta_fai)
+        bam_bai_markduplicates = bam_indexed
+        SAMTOOLS_BAM_TO_CRAM(bam_bai_markduplicates, fasta, fasta_fai)
         cram_markduplicates = SAMTOOLS_BAM_TO_CRAM.out.cram_crai
 
         ch_versions = ch_versions.mix(SAMTOOLS_BAM_TO_CRAM.out.versions.first())
@@ -69,10 +69,12 @@ workflow MARKDUPLICATES {
 
         } else {
             GATK4_MARKDUPLICATES(bam_mapped)
-            report_markduplicates = GATK4_MARKDUPLICATES.out.metrics
-            bam_markduplicates    = GATK4_MARKDUPLICATES.out.bam_bai
+            report_markduplicates  = GATK4_MARKDUPLICATES.out.metrics
+            bam_markduplicates     = GATK4_MARKDUPLICATES.out.bam
+            bai_markduplicates     = GATK4_MARKDUPLICATES.out.bai
+            bam_bai_markduplicates = bam_markduplicates.join(bai_markduplicates)
 
-            SAMTOOLS_BAM_TO_CRAM(bam_markduplicates, fasta, fasta_fai)
+            SAMTOOLS_BAM_TO_CRAM(bam_bai_markduplicates, fasta, fasta_fai)
             cram_markduplicates = SAMTOOLS_BAM_TO_CRAM.out.cram_crai
 
             ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES.out.versions.first())
@@ -93,7 +95,7 @@ workflow MARKDUPLICATES {
 
     qualimap_bamqc = Channel.empty()
     if (!skip_bamqc) {
-        QUALIMAP_BAMQC(bam_markduplicates, target_bed)
+        QUALIMAP_BAMQC(bam_bai_markduplicates, target_bed)
         qualimap_bamqc = QUALIMAP_BAMQC.out.results
 
         ch_versions = ch_versions.mix(QUALIMAP_BAMQC.out.versions.first())
