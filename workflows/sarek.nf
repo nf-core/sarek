@@ -112,8 +112,7 @@ target_bed        = params.target_bed        ? Channel.fromPath(params.target_be
 vep_cache         = params.vep_cache         ? Channel.fromPath(params.vep_cache).collect()         : []
 
 // Initialize value channels based on params, not defined within the params.genomes[params.genome] scope
-read_structure1   = params.read_structure1   ?: Channel.empty()
-read_structure2   = params.read_structure2   ?: Channel.empty()
+umi_read_structure   = params.umi_read_structure   ? "${params.umi_read_structure} ${params.umi_read_structure}": Channel.empty()
 
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
 
@@ -156,6 +155,8 @@ include { ANNOTATE                     } from '../subworkflows/local/annotate' a
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
 ========================================================================================
 */
+
+include { CREATE_UMI_CONSENSUS } from '../subworkflows/nf-core/fgbio_create_umi_consensus/main'
 
 // Config files
 ch_multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
@@ -246,6 +247,12 @@ workflow SAREK {
 
         // Get versions from all software used
         ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
+
+         //Since read need additional mapping afterwards, I would argue for haveing the process here
+        if(params.umi_read_structure){
+            CREATE_UMI_CONSENSUS(reads_input, fasta, bwa, umi_read_structure, params.group_by_umi_strategy, params.aligner)
+            reads_input = CREATE_UMI_CONSENSUS.out.consensusreads
+        }
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         GATK4_MAPPING(

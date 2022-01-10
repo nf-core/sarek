@@ -72,7 +72,7 @@
                     "fa_icon": "fas fa-clock",
                     "description": "Estimate interval size.",
                     "help_text": "Intervals are part of the genome chopped up, used to speed up preprocessing and variant calling",
-                    "default": 1000
+                    "default": 1000.0
                 },
                 "sentieon": {
                     "type": "boolean",
@@ -170,6 +170,17 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-vial",
                     "description": "If set, publishes split fastq files. Intended for testing purposes.",
+                    "hidden": true
+                },
+                "umi_read_structure": {
+                    "type": "string",
+                    "default": "None",
+                    "fa_icon": "fas fa-tape",
+                    "hidden": true
+                },
+                "group_by_umi_strategy": {
+                    "type": "string",
+                    "default": "Adjacency",
                     "hidden": true
                 }
             }
@@ -301,25 +312,6 @@
                     "fa_icon": "fas fa-ban",
                     "description": "Do not analyze soft clipped bases in the reads for GATK Mutect2",
                     "help_text": "use the `--dont-use-soft-clipped-bases` params with GATK."
-                },
-                "umi": {
-                    "type": "boolean",
-                    "default": false,
-                    "fa_icon": "fas fa-tape",
-                    "description": "If provided, UMIs steps will be run to extract and annotate the reads with UMI and create consensus reads",
-                    "help_text": "This part of the pipeline uses fgbio to convert the FASTQ files into a unmapped BAM, where reads are tagged with the UMIs extracted from the FASTQ sequences.\nIn order to allow the correct tagging, the UMI sequence must be contained in the read sequence itself, and not in the FASTQ filename.\nFollowing this step, the unmapped BAM is aligned and reads are then grouped based on mapping position and UMI tag.\nFinally, reads in the same groups are collapsed to create a consensus read.\nTo create consensus, we have chosen to use the adjacency method\n\ncf [fgbio](https://github.com/fulcrumgenomics/fgbio)\ncf [UMIs, the problem, the solution and the proof](https://cgatoxford.wordpress.com/2015/08/14/unique-molecular-identifiers-the-problem-the-solution-and-the-proof/)\n\n> **NB** In order for the correct tagging to be performed, a read structure needs to be specified with `--read_structure1` and `--readstructure2`"
-                },
-                "read_structure1": {
-                    "type": "string",
-                    "fa_icon": "fas fa-clipboard-list",
-                    "description": "When processing UMIs, a read structure should always be provided for each of the fastq files.",
-                    "help_text": "If the read does not contain any UMI, the structure will be +T (i.e. only template of any length).\nThe read structure follows a format adopted by different tools and described in the [fgbio documentation](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures)"
-                },
-                "read_structure2": {
-                    "type": "string",
-                    "fa_icon": "fas fa-clipboard-list",
-                    "description": "When processing UMIs, a read structure should always be provided for each of the fastq files.",
-                    "help_text": "If the read does not contain any UMI, the structure will be +T (i.e. only template of any length).\nThe read structure follows a format adopted by different tools and described in the [fgbio documentation](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures)"
                 }
             }
         },

@@ -33,6 +33,8 @@ jobs:
           - 'annotation'
           - 'default'
           - 'split_fastq'
+          - 'umi_quiaseq'
+          - 'umi_tso'
           - 'gatk4_spark'
           - 'save_bam_mapped'
           - 'skip_markduplicates'
