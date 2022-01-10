@@ -1,8 +1,9 @@
-name: gatk4_applybqsr
-description: Apply base quality score recalibration (BQSR) to a bam file
+name: gatk4_haplotypecaller
+description: Call germline SNPs and indels via local re-assembly of haplotypes
 keywords:
-  - bqsr
-  - bam
+  - gatk4
+  - haplotypecaller
+  - haplotype
 tools:
   - gatk4:
     description: |
@@ -12,6 +13,7 @@ tools:
     homepage: https://gatk.broadinstitute.org/hc/en-us
     documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
     doi: 10.1158/1538-7445.AM2017-3590
+    licence: ['Apache-2.0']
 
 input:
   - meta:
@@ -19,25 +21,35 @@ input:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
-  - bam:
+  - input:
       type: file
-      description: BAM file from alignment
-      pattern: "*.{bam}"
-  - bqsr_table:
+      description: BAM/CRAM file from alignment
+      pattern: "*.{bam,cram}"
+  - input_index:
       type: file
-      description: Recalibration table from gatk4_baserecalibrator
+      description: BAI/CRAI file from alignment
+      pattern: "*.{bai,crai}"
+  - intervals:
+      type: file
+      description: Bed file with the genomic regions included in the library (optional)
   - fasta:
       type: file
       description: The reference fasta file
-  - fastaidx:
+      pattern: "*.fasta"
+  - fai:
       type: file
       description: Index of reference fasta file
+      pattern: "fasta.fai"
   - dict:
       type: file
       description: GATK sequence dictionary
-  - intervalsBed:
+      pattern: "*.dict"
+  - dbsnp:
       type: file
-      description: Bed file with the genomic regions included in the library (optional)
+      description: VCF file containing known sites (optional)
+  - dbsnp_tbi:
+      type: file
+      description: VCF index of dbsnp (optional)
 
 output:
   - meta:
@@ -45,14 +57,19 @@ output:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
-  - version:
+  - versions:
       type: file
-      description: File containing software version
-      pattern: "*.{version.txt}"
-  - bam:
+      description: File containing software versions
+      pattern: "versions.yml"
+  - vcf:
       type: file
-      description: Recalibrated BAM file
-      pattern: "*.{bam}"
+      description: Compressed VCF file
+      pattern: "*.vcf.gz"
+  - tbi:
+      type: file
+      description: Index of VCF file
+      pattern: "*.vcf.gz.tbi"
 
 authors:
-  - "@yocra3"
+  - "@suzannejin"
+  - "@FriederikeHanssen"
