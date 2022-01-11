@@ -1,0 +1,53 @@
+- name: Run UMI Quiaseq test
+  command: nextflow run main.nf -profile test,umi_quiaseq,docker
+  tags:
+    - umi_quiaseq
+    - umi
+  files:
+    - path: results/fastqtobam/1234N-SRR7545951_umi_converted.bam
+      md5sum: 1473c98be04aff10f80e2946b111c459
+    - path: results/bam2fastq/1234N-SRR7545951_interleaved.fq.gz
+      md5sum: 17c0cb479e8117016e9f0d835d4df50f
+    - path: results/callumiconsensus/1234N-SRR7545951_umi-consensus.bam
+      md5sum: 3be1adf27d473de12cab895423a5f3ed
+    - path: results/groupreadsbyumi/1234N-SRR7545951_umi-grouped.bam
+      md5sum: e3bb348056513c46d7a60df4d7a8cc97
+    - path: results/groupreadsbyumi/1234N-SRR7545951_umi_histogram.txt
+      md5sum: 2e1e9a774135675a3d1a3b0a88d29c53
+    - path: results/samblaster/1234N-SRR7545951_unsorted_tagged.bam
+      md5sum: daa51939768c256315ce700dabaccad6
+    - path: results/bam2fastqconsensus/1234N-SRR7545951_1.fq.gz
+      md5sum: 1f95ae5bbc7345372005b6673884f853
+    - path: results/bam2fastqconsensus/1234N-SRR7545951_2.fq.gz
+      md5sum: 9902e27a99c2a628d184cb91759d6ff7
+    - path: results/bam2fastqconsensus/1234N-SRR7545951_other.fq.gz
+      md5sum: 709872fc2910431b1e8b7074bfe38c67
+    - path: results/bam2fastqconsensus/1234N-SRR7545951_singleton.fq.gz
+      md5sum: 709872fc2910431b1e8b7074bfe38c67
+
+- name:  Run UMI TSO test
+  command: nextflow run main.nf -profile test,umi_tso,docker
+  tags:
+    - umi_tso
+    - umi
+  files:
+    - path: results/fastqtobam/1234N-HT1080_umi_converted.bam
+      md5sum: 1473c98be04aff10f80e2946b111c459
+    - path: results/bam2fastq/1234N-HT1080_interleaved.fq.gz.fq.gz
+      md5sum: 17c0cb479e8117016e9f0d835d4df50f
+    - path: results/callumiconsensus/1234N-HT1080_umi-consensus.bam
+      md5sum: 3be1adf27d473de12cab895423a5f3ed
+    - path: results/groupreadsbyumi/1234N-HT1080_umi-grouped.bam
+      md5sum: e3bb348056513c46d7a60df4d7a8cc97
+    - path: results/groupreadsbyumi/1234N-HT1080_umi_histogram.txt
+      md5sum: 2e1e9a774135675a3d1a3b0a88d29c53
+    - path: results/samblaster/1234N-HT1080_unsorted_tagged.bam
+      md5sum: daa51939768c256315ce700dabaccad6
+    - path: results/bam2fastqconsensus/1234N-HT1080_1.fq.gz
+      md5sum: 1f95ae5bbc7345372005b6673884f853
+    - path: results/bam2fastqconsensus/1234N-HT1080_2.fq.gz
+      md5sum: 9902e27a99c2a628d184cb91759d6ff7
+    - path: results/bam2fastqconsensus/1234N-HT1080_other.fq.gz
+      md5sum: 709872fc2910431b1e8b7074bfe38c67
+    - path: results/bam2fastqconsensus/1234N-HT1080_singleton.fq.gz
+      md5sum: 709872fc2910431b1e8b7074bfe38c67

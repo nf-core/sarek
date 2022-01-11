@@ -80,6 +80,7 @@ workflow CREATE_UMI_CONSENSUS {
             [meta, [ fq_1, fq_2]]
     }.set{consensusreads}
     consensusreads.dump()
+
     emit:
     umibam         = FASTQTOBAM.out.umibam          // channel: [ val(meta), [ bam ] ]
     groupbam       = GROUPREADSBYUMI.out.bam        // channel: [ val(meta), [ bam ] ]
