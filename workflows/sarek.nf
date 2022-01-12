@@ -165,7 +165,7 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 // SUBWORKFLOWS
 //
 
-include { FASTQC_TRIMGALORE } from '../subworkflows/nf-core/fastqc_trimgalore'
+include { FASTQC_TRIMGALORE    } from '../subworkflows/nf-core/fastqc_trimgalore'
 
 //
 // MODULES: Installed directly from nf-core/modules

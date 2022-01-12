@@ -2,10 +2,10 @@ process GATK4_CREATESEQUENCEDICTIONARY {
     tag "$fasta"
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::gatk4=4.2.3.0" : null)
+    conda (params.enable_conda ? "bioconda::gatk4=4.2.4.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gatk4:4.2.3.0--hdfd78af_0' :
-        'quay.io/biocontainers/gatk4:4.2.3.0--hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/gatk4:4.2.4.0--hdfd78af_0' :
+        'quay.io/biocontainers/gatk4:4.2.4.0--hdfd78af_0' }"
 
     input:
     path fasta
