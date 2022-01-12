@@ -2,7 +2,7 @@
 // RECALIBRATE
 //
 
-include { GATK4_APPLYBQSR as APPLYBQSR              } from '../../modules/local/gatk4/applybqsr/main'
+include { GATK4_APPLYBQSR as APPLYBQSR              } from '../../modules/nf-core/modules/gatk4/applybqsr/main'
 include { GATK4_APPLYBQSR_SPARK as APPLYBQSR_SPARK  } from '../../modules/local/gatk4/applybqsrspark/main'
 include { QUALIMAP_BAMQC_CRAM                       } from '../../modules/local/qualimap/bamqccram/main'
 include { SAMTOOLS_INDEX as INDEX_RECALIBRATE       } from '../../modules/local/samtools/index/main'

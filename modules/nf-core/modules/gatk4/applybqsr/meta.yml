@@ -1,9 +1,8 @@
-name: gatk4_haplotypecaller
-description: Call germline SNPs and indels via local re-assembly of haplotypes
+name: gatk4_applybqsr
+description: Apply base quality score recalibration (BQSR) to a bam file
 keywords:
-  - gatk4
-  - haplotypecaller
-  - haplotype
+  - bqsr
+  - bam
 tools:
   - gatk4:
     description: |
@@ -13,6 +12,7 @@ tools:
     homepage: https://gatk.broadinstitute.org/hc/en-us
     documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
     doi: 10.1158/1538-7445.AM2017-3590
+    licence: ['Apache-2.0']
 
 input:
   - meta:
@@ -20,14 +20,20 @@ input:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
-  - bam:
+  - input:
       type: file
-      description: BAM file
-      pattern: "*.bam"
-  - bai:
+      description: BAM/CRAM file from alignment
+      pattern: "*.{bam,cram}"
+  - input_index:
       type: file
-      description: Index of BAM file
-      pattern: "*.bam.bai"
+      description: BAI/CRAI file from alignment
+      pattern: "*.{bai,crai}"
+  - bqsr_table:
+      type: file
+      description: Recalibration table from gatk4_baserecalibrator
+  - intervals:
+      type: file
+      description: Bed file with the genomic regions included in the library (optional)
   - fasta:
       type: file
       description: The reference fasta file
@@ -35,29 +41,28 @@ input:
   - fai:
       type: file
       description: Index of reference fasta file
-      pattern: "fasta.fai"
+      pattern: "*.fasta.fai"
   - dict:
       type: file
       description: GATK sequence dictionary
       pattern: "*.dict"
+
+
 output:
   - meta:
       type: map
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
-  - version:
+  - versions:
       type: file
-      description: File containing software version
-      pattern: "*.{version.txt}"
-  - vcf:
+      description: File containing software versions
+      pattern: "versions.yml"
+  - bam:
       type: file
-      description: Compressed VCF file
-      pattern: "*.vcf.gz"
-  - tbi:
-      type: file
-      description: Index of VCF file
-      pattern: "*.vcf.gz.tbi"
+      description: Recalibrated BAM file
+      pattern: "*.{bam}"
 
 authors:
-  - "@suzannejin"
+  - "@yocra3"
+  - "@FriederikeHanssen"
