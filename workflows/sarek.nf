@@ -115,7 +115,7 @@ vep_cache         = params.vep_cache         ? Channel.fromPath(params.vep_cache
 umi_read_structure   = params.umi_read_structure   ? "${params.umi_read_structure} ${params.umi_read_structure}": Channel.empty()
 
 // MODULES
-include { SAMTOOLS_BAM2FQ                   as BAM2FASTQCONSENSUS } from '../../../modules/local/samtools/bam2fq/main.nf'
+include { SAMTOOLS_BAM2FQ                   as BAM2FASTQCONSENSUS } from '../modules/local/samtools/bam2fq/main'
 
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
 
@@ -256,14 +256,13 @@ workflow SAREK {
             CREATE_UMI_CONSENSUS(reads_input, fasta, bwa, umi_read_structure, params.group_by_umi_strategy, params.aligner)
 
             split = true
-            BAM2FASTQCONSENSUS( CREATE_UMI_CONSENSUS.out.consensusbams, split )
+            BAM2FASTQCONSENSUS( CREATE_UMI_CONSENSUS.out.consensusbam, split )
 
             BAM2FASTQCONSENSUS.out.reads.map{ meta, reads ->
                 fq_1 = reads.findAll{ it.toString().endsWith("_1.fq.gz") }.get(0)
                 fq_2 = reads.findAll{ it.toString().endsWith("_2.fq.gz") }.get(0)
                 [meta, [ fq_1, fq_2]]
-            }.set{consensusreads}
-            reads_input = BAM2FASTQCONSENSUS.out.reads
+            }.set{reads_input}
         }
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME

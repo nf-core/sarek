@@ -9,7 +9,7 @@ params.concat_gvcf_options            = [:]
 params.concat_haplotypecaller_options = [:]
 params.strelka_options                = [:]
 
-include { GATK_JOINT_GERMLINE_VARIANT_CALLING      } from '../../modules/nf-core/modules/gatk4/haplotypecaller/main'
+include { GATK_JOINT_GERMLINE_VARIANT_CALLING      } from '../../subworkflows/nf-core/joint_germline_variant_calling/main'
 include { GATK4_HAPLOTYPECALLER as HAPLOTYPECALLER } from '../../modules/nf-core/modules/gatk4/haplotypecaller/main'
 include { DEEPVARIANT }                              from '../../modules/local/deepvariant/main'
 include { GATK4_GENOTYPEGVCFS as GENOTYPEGVCF }      from '../../modules/nf-core/modules/gatk4/genotypegvcfs/main'

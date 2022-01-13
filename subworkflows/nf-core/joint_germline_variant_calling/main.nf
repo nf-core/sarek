@@ -2,11 +2,11 @@
 // Run GATK haplotypecaller for all input samples, merge them with genomicsdbimport, perform joint genotyping with genotypeGVCFS and recalibrate with variantrecalibrator & applyvqsr.
 //
 
-include { GATK4_HAPLOTYPECALLER     as HAPLOTYPECALLER     } from '../../../modules/gatk4/haplotypecaller/main'
-include { GATK4_GENOMICSDBIMPORT    as GENOMICSDBIMPORT    } from '../../../modules/gatk4/genomicsdbimport/main'
-include { GATK4_GENOTYPEGVCFS       as GENOTYPEGVCFS       } from '../../../modules/gatk4/genotypegvcfs/main'
-include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR } from '../../../modules/gatk4/variantrecalibrator/main'
-include { GATK4_APPLYVQSR           as APPLYVQSR           } from '../../../modules/gatk4/applyvqsr/main'
+include { GATK4_HAPLOTYPECALLER     as HAPLOTYPECALLER     } from '../../../modules/nf-core/modules/gatk4/haplotypecaller/main'
+include { GATK4_GENOMICSDBIMPORT    as GENOMICSDBIMPORT    } from '../../../modules/nf-core/modules/gatk4/genomicsdbimport/main'
+include { GATK4_GENOTYPEGVCFS       as GENOTYPEGVCFS       } from '../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
+include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR } from '../../../modules/nf-core/modules/gatk4/variantrecalibrator/main'
+include { GATK4_APPLYVQSR           as APPLYVQSR           } from '../../../modules/nf-core/modules/gatk4/applyvqsr/main'
 
 workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     take:
