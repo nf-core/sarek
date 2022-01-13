@@ -18,6 +18,9 @@
             "bwamem2/mem": {
                 "git_sha": "1765225042d40cf01eb9469ea95bf6d0f6810937"
             },
+            "cat/fastq": {
+                "git_sha": "826a5603db5cf5b4f1e55cef9cc0b7c37d3c7e70"
+            },
             "cnvkit/batch": {
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
