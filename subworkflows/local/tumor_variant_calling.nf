@@ -17,7 +17,7 @@ include { CONCAT_VCF as CONCAT_GVCF }                from '../../modules/local/c
 include { CONCAT_VCF as CONCAT_HAPLOTYPECALLER }     from '../../modules/local/concat_vcf/main'
 include { STRELKA_GERMLINE as STRELKA }              from '../../modules/nf-core/modules/strelka/germline/main'
 
-workflow GERMLINE_VARIANT_CALLING {
+workflow TUMOR_VARIANT_CALLING {
     take:
         tools
         cram              // channel: [mandatory] cram

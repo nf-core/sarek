@@ -79,6 +79,7 @@ workflow CREATE_UMI_CONSENSUS {
             fq_2 = reads.findAll{ it.toString().endsWith("_2.fq.gz") }.get(0)
             [meta, [ fq_1, fq_2]]
     }.set{consensusreads}
+    consensusreads = BAM2FASTQCONSENSUS.out.reads
     consensusreads.dump()
 
     emit:
