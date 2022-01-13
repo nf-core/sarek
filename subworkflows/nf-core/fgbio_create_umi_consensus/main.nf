@@ -12,8 +12,6 @@ include { FGBIO_FASTQTOBAM                  as FASTQTOBAM         } from '../../
 include { FGBIO_GROUPREADSBYUMI             as GROUPREADSBYUMI    } from '../../../modules/nf-core/modules/fgbio/groupreadsbyumi/main'
 include { SAMBLASTER                                              } from '../../../modules/nf-core/modules/samblaster/main'
 include { SAMTOOLS_BAM2FQ                   as BAM2FASTQ          } from '../../../modules/nf-core/modules/samtools/bam2fq/main.nf'
-include { SAMTOOLS_BAM2FQ                   as BAM2FASTQCONSENSUS } from '../../../modules/nf-core/modules/samtools/bam2fq/main.nf'
-
 
 workflow CREATE_UMI_CONSENSUS {
     take:
@@ -71,21 +69,9 @@ workflow CREATE_UMI_CONSENSUS {
     CALLUMICONSENSUS ( GROUPREADSBYUMI.out.bam )
     ch_versions = ch_versions.mix(CALLUMICONSENSUS.out.versions)
 
-    split = true
-    BAM2FASTQCONSENSUS( CALLUMICONSENSUS.out.bam, split )
-
-    BAM2FASTQCONSENSUS.out.reads.map{ meta, reads ->
-            fq_1 = reads.findAll{ it.toString().endsWith("_1.fq.gz") }.get(0)
-            fq_2 = reads.findAll{ it.toString().endsWith("_2.fq.gz") }.get(0)
-            [meta, [ fq_1, fq_2]]
-    }.set{consensusreads}
-    consensusreads = BAM2FASTQCONSENSUS.out.reads
-    consensusreads.dump()
-
     emit:
     umibam         = FASTQTOBAM.out.umibam          // channel: [ val(meta), [ bam ] ]
     groupbam       = GROUPREADSBYUMI.out.bam        // channel: [ val(meta), [ bam ] ]
     consensusbam   = CALLUMICONSENSUS.out.bam       // channel: [ val(meta), [ bam ] ]
-    consensusreads = consensusreads                 // channel: [ val(meta), [ *fq.gz ] ]
     versions       = ch_versions                    // channel: [ versions.yml ]
 }
