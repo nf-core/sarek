@@ -10,7 +10,7 @@ include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES           } from '../../modules
 include { SAMTOOLS_STATS                                   } from '../../modules/nf-core/modules/samtools/stats/main'
 include { SAMTOOLS_VIEWINDEX as SAMTOOLS_BAM_TO_CRAM       } from '../../modules/local/samtools/viewindex/main'
 include { SAMTOOLS_VIEWINDEX as SAMTOOLS_BAM_TO_CRAM_SPARK } from '../../modules/local/samtools/viewindex/main'
-
+include { DEEPTOOLS_BAMCOVERAGE                            } from '../../modules/local/deeptools/bamcoverage'
 
 workflow MARKDUPLICATES {
     take:
