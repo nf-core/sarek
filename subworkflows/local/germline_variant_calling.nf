@@ -70,11 +70,12 @@ workflow GERMLINE_VARIANT_CALLING {
         haplotypecaller_gvcf = CONCAT_GVCF.out.vcf
 
         // include interval name into meta.id
-        HAPLOTYPECALLER.out.interval_vcf.map{ meta, vcf, intervals ->
+        haplotypecaller_gvcf.combine(intervals).map{ meta, vcf, vcf_index, intervals ->
             new_meta = meta.clone()
             new_meta.id = meta.sample + "_" + intervals.baseName
-            [new_meta, vcf, intervals]
+            [new_meta, vcf, vcf_index, intervals]
         }.set{haplotypecaller_interval_vcf}
+
 
         // STEP GATK HAPLOTYPECALLER.2
         GENOTYPEGVCF(

@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
 # This script concatenates all VCF files that are in the local directory,
 # that were created from different intervals to make a single final VCF
 
@@ -49,8 +48,8 @@ if [ -z ${noInt+x} ]
 then
     # First make a header from one of the VCF
     # Remove interval information from the GATK command-line, but leave the rest
-    FIRSTVCF=$(set +o pipefail; ls *.vcf | head -n 1)
-    sed -n '/^[^#]/q;p' $FIRSTVCF | \
+    FIRSTVCF=$(set +o pipefail; ls *.vcf.gz | head -n 1)
+    sed -n '/^[^#]/q;p' <(zcat $FIRSTVCF) | \
     awk '!/GATKCommandLine/{print}/GATKCommandLine/{for(i=1;i<=NF;i++){if($i!~/intervals=/ && $i !~ /out=/){printf("%s ",$i)}}printf("\n")}' \
     > header
 
@@ -65,9 +64,9 @@ then
 
         for chr in "${CONTIGS[@]}"; do
             # Skip if globbing would not match any file to avoid errors such as
-            # "ls: cannot access chr3_*.vcf: No such file or directory" when chr3
+            # "ls: cannot access chr3_*.vcf.gz: No such file or directory" when chr3
             # was not processed.
-            pattern="${chr}_*.vcf"
+            pattern="*_${chr}_*.vcf.gz"
             if ! compgen -G "${pattern}" > /dev/null; then continue; fi
 
             # ls -v sorts by numeric value ("version"), which means that chr1_100_
@@ -76,20 +75,19 @@ then
                 # Determine length of header.
                 # The 'q' command makes sed exit when it sees the first non-header
                 # line, which avoids reading in the entire file.
-                L=$(sed -n '/^[^#]/q;p' ${vcf} | wc -l)
+                L=$(sed -n '/^[^#]/q;p' <(zcat ${vcf}) | wc -l)
 
                 # Then print all non-header lines. Since tail is very fast (nearly as
                 # fast as cat), this is way more efficient than using a single sed,
                 # awk or grep command.
-                tail -n +$((L+1)) ${vcf}
+                tail -n +$((L+1)) <(zcat ${vcf})
             done
         done
     ) | bgzip -@${cpus} > rawcalls.vcf.gz
     tabix rawcalls.vcf.gz
 else
-    VCF=$(ls no_intervals*.vcf)
-    cp $VCF rawcalls.vcf
-    bgzip -@${cpus} rawcalls.vcf
+    VCF=$(ls no_intervals*.vcf.gz)
+    mv -v $VCF rawcalls.vcf.gz
     tabix rawcalls.vcf.gz
 fi
 
