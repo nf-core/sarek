@@ -252,7 +252,7 @@ workflow SAREK {
         // Get versions from all software used
         ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
 
-         //Since read need additional mapping afterwards, I would argue for haveing the process here
+        //Since read need additional mapping afterwards, I would argue for haveing the process here
         if(params.umi_read_structure){
             CREATE_UMI_CONSENSUS(reads_input, fasta, bwa, umi_read_structure, params.group_by_umi_strategy, params.aligner)
             ALIGNMENT_TO_FASTQ( CREATE_UMI_CONSENSUS.out.consensusbam, [] )

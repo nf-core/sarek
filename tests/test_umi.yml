@@ -32,21 +32,21 @@
     - umi
   files:
     - path: results/fastqtobam/1234N-HT1080_umi_converted.bam
-      md5sum: 1473c98be04aff10f80e2946b111c459
-    - path: results/bam2fastq/1234N-HT1080_interleaved.fq.gz.fq.gz
-      md5sum: 17c0cb479e8117016e9f0d835d4df50f
+      md5sum: aaf4b9a80f4b780d93820df8b536c531
+    - path: results/bam2fastq/1234N-HT1080_interleaved.fq.gz
+      md5sum: b037fe8e180e805226485d9bea4a69e5
     - path: results/callumiconsensus/1234N-HT1080_umi-consensus.bam
-      md5sum: 3be1adf27d473de12cab895423a5f3ed
+      md5sum: b504115bb95aabe4a840e40de2e157aa
     - path: results/groupreadsbyumi/1234N-HT1080_umi-grouped.bam
-      md5sum: e3bb348056513c46d7a60df4d7a8cc97
+      md5sum: c9c76b410ba208fea76c79cecfb45241
     - path: results/groupreadsbyumi/1234N-HT1080_umi_histogram.txt
-      md5sum: 2e1e9a774135675a3d1a3b0a88d29c53
+      md5sum: 3dec92ae49763c10c0b2e79827d25ffb
     - path: results/samblaster/1234N-HT1080_unsorted_tagged.bam
-      md5sum: daa51939768c256315ce700dabaccad6
+      md5sum: 628bd970fa00615fb9f841bad7c8f597
     - path: results/bam2fastqconsensus/1234N-HT1080_1.fq.gz
-      md5sum: 1f95ae5bbc7345372005b6673884f853
+      md5sum: d9a7a279c05563a37d9a5a6938be68fb
     - path: results/bam2fastqconsensus/1234N-HT1080_2.fq.gz
-      md5sum: 9902e27a99c2a628d184cb91759d6ff7
+      md5sum: afe191dcd48360f96bdb583fa60ff400
     - path: results/bam2fastqconsensus/1234N-HT1080_other.fq.gz
       md5sum: 709872fc2910431b1e8b7074bfe38c67
     - path: results/bam2fastqconsensus/1234N-HT1080_singleton.fq.gz

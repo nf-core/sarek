@@ -18,11 +18,20 @@ process SAMTOOLS_VIEW {
 
     script:
     def args = task.ext.args ?: ''
+    def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def reference = fasta ? "--reference ${fasta} -C" : ""
     def file_type = input.getExtension()
+    if ("$input" == "${prefix}.${file_type}") error "Input and output names are the same, use \"task.ext.prefix\" to disambiguate!"
     """
-    samtools view --threads ${task.cpus-1} ${reference} $args $input > ${prefix}.${file_type}
+    samtools \\
+        view \\
+        --threads ${task.cpus-1} \\
+        ${reference} \\
+        $args \\
+        $input \\
+        $args2 \\
+        > ${prefix}.${file_type}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

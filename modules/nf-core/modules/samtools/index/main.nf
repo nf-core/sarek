@@ -19,7 +19,11 @@ process SAMTOOLS_INDEX {
     script:
     def args = task.ext.args ?: ''
     """
-    samtools index -@ ${task.cpus-1} $args $input
+    samtools \\
+        index \\
+        -@ ${task.cpus-1} \\
+        $args \\
+        $input
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

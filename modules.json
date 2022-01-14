@@ -120,6 +120,9 @@
             "samtools/faidx": {
                 "git_sha": "e0aa89141ffecb5f54d230f7ea46de242b74e084"
             },
+            "samtools/index": {
+                "git_sha": "e751e5040af57e1b4e06ed4e0f3efe6de25c1683"
+            },
             "samtools/merge": {
                 "git_sha": "d473a247d2e0c619b0df877ea19d9a5a98c8e3c8"
             },
@@ -128,6 +131,9 @@
             },
             "samtools/stats": {
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+            },
+            "samtools/view": {
+                "git_sha": "05ba4d901db380c6def3bc242ab18a2d88b25819"
             },
             "seqkit/split2": {
                 "git_sha": "d473a247d2e0c619b0df877ea19d9a5a98c8e3c8"
