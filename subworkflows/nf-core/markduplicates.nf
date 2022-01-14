@@ -14,8 +14,8 @@ include { SAMTOOLS_VIEWINDEX as SAMTOOLS_BAM_TO_CRAM_SPARK } from '../../modules
 
 workflow MARKDUPLICATES {
     take:
-        bam_mapped          // channel: [mandatory] meta, bam
-        bam_indexed         // channel: [mandatory] meta, bam, bai
+        bam_mapped          // channel: [mandatory, if --skip_markdiplicate is false, else optional] meta, bam
+        bam_indexed         // channel: [mandatory, if --skip_markduplicates is set, else optional] meta, bam, bai
         use_gatk_spark      //   value: [mandatory] use gatk spark
         save_metrics        //   value: [mandatory] save metrics
         dict                // channel: [mandatory] dict

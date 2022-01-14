@@ -33,6 +33,7 @@ workflow PREPARE_RECALIBRATION {
     if (use_gatk_spark) {
         BASERECALIBRATOR_SPARK(cram_markduplicates_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
         table_baserecalibrator = BASERECALIBRATOR_SPARK.out.table
+
     } else {
         BASERECALIBRATOR(cram_markduplicates_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
         table_baserecalibrator = BASERECALIBRATOR.out.table

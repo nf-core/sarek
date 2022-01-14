@@ -209,8 +209,16 @@ workflow SAREK {
     target_bed_gz_tbi     = PREPARE_GENOME.out.target_bed_gz_tbi
 
     //TODO @Rike, is this working for you?
+    // -- No still not working, for example when using the prepare_recalibration test profile i get Once a file and once a channel.
+    //    I am pretty sure that that is the reason why it sometimes runs and sometimes doesn't
+    //     [/nf-core/test-datasets/sarek/reference/human_g1k_v37_decoy.small.fasta]
+    //     [/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz, /nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz]
+    //      /work/13/f344923aa6cd33873e1fe43dd24b57/human_g1k_v37_decoy.small.dict
+    //     When adding [],[] in place if known_sites, BASERECALIBRATOR runs else it doesn't work
+
     // known_sites is made by grouping both the dbsnp and the known indels ressources
     // Which can either or both be optional
+    // Actually BQSR has been throughing erros if no none sides were provided so it must be at lest one
     known_sites     = dbsnp.concat(known_indels).collect()
     known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
 
@@ -236,8 +244,15 @@ workflow SAREK {
 
     if (params.step == 'mapping') {
 
+        if(params.is_bam_input){
+            ALIGNMENT_TO_FASTQ(input_sample, [])
+            ALIGNMENT_TO_FASTQ.out.reads.set{input_sample_converted}
+        }else{
+            input_sample_converted = input_sample
+        }
+
         FASTQC_TRIMGALORE(
-            input_sample,
+            input_sample_converted,
             ('fastqc' in params.skip_qc),
             !(params.trim_fastq))
 
@@ -280,12 +295,20 @@ workflow SAREK {
         ch_versions = ch_versions.mix(GATK4_MAPPING.out.versions)
     }
 
-    if (params.step == 'preparerecalibration') {
-        if (params.skip_markduplicates) bam_indexed         = input_sample
-        else                            cram_markduplicates = input_sample
+    if (params.step == 'prepare_recalibration') {
+        bam_indexed = Channel.empty()
+        bam_mapped  = Channel.empty()
+
+        if(params.skip_markduplicates){
+            bam_indexed = input_sample
+        }else{
+            input_sample.map{meta, bam, bai ->
+                        [meta, bam]
+                        }.set{bam_mapped}
+        }
     }
 
-    if (params.step in ['mapping', 'preparerecalibration']) {
+    if (params.step in ['mapping', 'prepare_recalibration']) {
         // STEP 2: Mark duplicates (+QC) + convert to CRAM
         MARKDUPLICATES(
             bam_mapped,
@@ -309,6 +332,7 @@ workflow SAREK {
 
         // STEP 3: Create recalibration tables
         if(!params.skip_bqsr){
+
             PREPARE_RECALIBRATION(
                 cram_markduplicates,
                 ('bqsr' in params.use_gatk_spark),
@@ -330,7 +354,7 @@ workflow SAREK {
 
     if (params.step == 'recalibrate') bam_applybqsr = input_sample
 
-    if (params.step in ['mapping', 'preparerecalibration', 'recalibrate']) {
+    if (params.step in ['mapping', 'prepare_recalibration', 'recalibrate']) {
         if(!params.skip_bqsr){
             // STEP 4: RECALIBRATING
             RECALIBRATE(
@@ -463,6 +487,8 @@ workflow.onComplete {
 }
 
 // Function to extract information (meta data + file(s)) from csv file(s)
+
+is_bam_input = false
 def extract_csv(csv_file) {
     Channel.from(csv_file).splitCsv(header: true)
         //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
@@ -504,6 +530,16 @@ def extract_csv(csv_file) {
             meta.numLanes = numLanes.toInteger()
             meta.read_group = read_group.toString()
             return [meta, [fastq_1, fastq_2]]
+        // start from BAM
+        } else if (row.lane && row.bam) {
+            meta.id         = "${row.sample}-${row.lane}".toString()
+            def bam         = file(row.bam,   checkIfExists: true)
+            def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ''
+            def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:ILLUMINA\""
+            meta.numLanes = numLanes.toInteger()
+            meta.read_group = read_group.toString()
+            is_bam_input = true
+            return [meta, bam]
         // recalibration
         } else if (row.table && row.cram) {
             meta.id   = meta.sample
