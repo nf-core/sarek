@@ -12,8 +12,7 @@ include { SAMTOOLS_VIEW as SAMTOOLS_VIEW_MAP_UNMAP          } from '../../module
 include { SAMTOOLS_MERGE as SAMTOOLS_MERGE_UNMAPPED         } from '../../modules/nf-core/modules/samtools/merge/main'
 include { SAMTOOLS_FASTQ as SAMTOOLS_FASTQ_UNMAPPED         } from '../../modules/local/samtools/fastq/main'
 include { SAMTOOLS_FASTQ as SAMTOOLS_FASTQ_MAPPED           } from '../../modules/local/samtools/fastq/main'
-include { CAT_FASTQ as CAT_FASTQ_R1                         } from '../../modules/nf-core/modules/cat/fastq/main'
-include { CAT_FASTQ as CAT_FASTQ_R2                         } from '../../modules/nf-core/modules/cat/fastq/main'
+include { CAT_FASTQ                                         } from '../../modules/nf-core/modules/cat/fastq/main'
 
 workflow ALIGNMENT_TO_FASTQ {
     take:
@@ -40,38 +39,41 @@ workflow ALIGNMENT_TO_FASTQ {
     SAMTOOLS_VIEW_MAP_UNMAP(input, fasta)
 
     // Merge UNMAP
-    SAMTOOLS_VIEW_UNMAP_UNMAP.bam.join(SAMTOOLS_VIEW_UNMAP_MAP.bam, remainder: true)
-                .join(SAMTOOLS_VIEW_MAP_UNMAP.bam, remainder: true)
-                .set{ all_unmapped_bam }
+    SAMTOOLS_VIEW_UNMAP_UNMAP.out.bam.join(SAMTOOLS_VIEW_UNMAP_MAP.out.bam, remainder: true)
+                .join(SAMTOOLS_VIEW_MAP_UNMAP.out.bam, remainder: true)
+                .map{ meta, unmap_unmap, unmap_map, map_unmap ->
+                    [meta, [unmap_unmap, unmap_map, map_unmap]]
+                }.set{ all_unmapped_bam }
 
-    SAMTOOLS_MERGE(all_unmapped_bam, fasta)
+    SAMTOOLS_MERGE_UNMAPPED(all_unmapped_bam, fasta)
 
     // Collate & convert unmapped
-    SAMTOOLS_FASTQ_UNMAPPED(all_unmapped_bam)
+    SAMTOOLS_FASTQ_UNMAPPED(SAMTOOLS_MERGE_UNMAPPED.out.bam)
 
     // Collate & convert mapped
     SAMTOOLS_FASTQ_MAPPED(SAMTOOLS_VIEW_MAP_MAP.out.bam)
 
     // join Mapped & unmapped fastq
-    SAMTOOLS_FASTQ_UNMAPPED.out.reads.map{ meta, read1, read2, other, singleton ->
-                                           [meta, read1]
-                                        }.set(unmapped_r1)
-    SAMTOOLS_FASTQ_UNMAPPED.out.reads.map{ meta, read1, read2, other, singleton ->
-                                           [meta, read2]
-                                        }.set(unmapped_r2)
+    SAMTOOLS_FASTQ_UNMAPPED.out.reads.map{ meta, reads ->
+                fq_1 = reads.findAll{ it.toString().endsWith("_1.fq.gz") }.get(0)
+                fq_2 = reads.findAll{ it.toString().endsWith("_2.fq.gz") }.get(0)
+                [meta, [ fq_1, fq_2]]
+                }.set{unmapped_reads}
 
-    SAMTOOLS_FASTQ_MAPPED.out.reads.map{ meta, read1, read2, other, singleton ->
-                                           [meta, read1]
-                                        }.set(mapped_r1)
-    SAMTOOLS_FASTQ_MAPPED.out.reads.map{ meta, read1, read2, other, singleton ->
-                                           [meta, read2]
-                                        }.set(mapped_r2)
+    SAMTOOLS_FASTQ_MAPPED.out.reads.map{ meta, reads ->
+                fq_1 = reads.findAll{ it.toString().endsWith("_1.fq.gz") }.get(0)
+                fq_2 = reads.findAll{ it.toString().endsWith("_2.fq.gz") }.get(0)
+                [meta, [ fq_1, fq_2]]
+                }.set{mapped_reads}
 
-    //TODO test if it is not actually possible to use the module with paired reads and concatenate pairs
-    CAT_FASTQ_R1()
-    CAT_FASTQ_R2()
+    mapped_reads.join(unmapped_reads).map{ meta, mapped_reads, unmapped_reads ->
+                                [meta, [mapped_reads[0], mapped_reads[1], unmapped_reads[0], unmapped_reads[1]]]
+                                }.set{ reads_to_concat }
+
+    // Concatenate Mapped_R1 with Unmapped_R1 and Mapped_R2 with Unmapped_R2
+    CAT_FASTQ(reads_to_concat)
 
     emit:
-    reads
+    reads = CAT_FASTQ.out.reads
 
 }

@@ -114,8 +114,6 @@ vep_cache         = params.vep_cache         ? Channel.fromPath(params.vep_cache
 // Initialize value channels based on params, not defined within the params.genomes[params.genome] scope
 umi_read_structure   = params.umi_read_structure   ? "${params.umi_read_structure} ${params.umi_read_structure}": Channel.empty()
 
-// MODULES
-include { SAMTOOLS_BAM2FQ                   as BAM2FASTQCONSENSUS } from '../modules/local/samtools/bam2fq/main'
 
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
 
@@ -127,6 +125,8 @@ include { RECALIBRATE_CSV           } from '../subworkflows/local/recalibrate_cs
 
 // Build indices if needed
 include { PREPARE_GENOME            } from '../subworkflows/local/prepare_genome'
+
+include { ALIGNMENT_TO_FASTQ } from '../subworkflows/local/bam2fastq'
 
 // Map input reads to reference genome (+QC)
 include { GATK4_MAPPING             } from '../subworkflows/nf-core/gatk4_mapping/main'
@@ -235,6 +235,7 @@ workflow SAREK {
     // additional options to be set up
 
     if (params.step == 'mapping') {
+
         FASTQC_TRIMGALORE(
             input_sample,
             ('fastqc' in params.skip_qc),
@@ -254,15 +255,8 @@ workflow SAREK {
          //Since read need additional mapping afterwards, I would argue for haveing the process here
         if(params.umi_read_structure){
             CREATE_UMI_CONSENSUS(reads_input, fasta, bwa, umi_read_structure, params.group_by_umi_strategy, params.aligner)
-
-            split = true
-            BAM2FASTQCONSENSUS( CREATE_UMI_CONSENSUS.out.consensusbam, split )
-
-            BAM2FASTQCONSENSUS.out.reads.map{ meta, reads ->
-                fq_1 = reads.findAll{ it.toString().endsWith("_1.fq.gz") }.get(0)
-                fq_2 = reads.findAll{ it.toString().endsWith("_2.fq.gz") }.get(0)
-                [meta, [ fq_1, fq_2]]
-            }.set{reads_input}
+            ALIGNMENT_TO_FASTQ( CREATE_UMI_CONSENSUS.out.consensusbam, [] )
+            ALIGNMENT_TO_FASTQ.out.reads.set{reads_input}
         }
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
