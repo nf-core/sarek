@@ -1,5 +1,5 @@
 //
-// SOMATIC VARIANT CALLING
+// PAIRED VARIANT CALLING
 //
 
 params.manta_options                  = [:]
