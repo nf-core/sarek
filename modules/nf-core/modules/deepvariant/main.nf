@@ -8,11 +8,11 @@ process DEEPVARIANT {
     }
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'google/deepvariant:1.2.0' :
-        'google/deepvariant:1.2.0' }"
+        'google/deepvariant:1.3.0' :
+        'google/deepvariant:1.3.0' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    tuple val(meta), path(input), path(index), path(intervals)
     path(fasta)
     path(fai)
 
@@ -24,14 +24,16 @@ process DEEPVARIANT {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def regions = intervals ? "--regions ${intervals}" : ""
 
     """
     /opt/deepvariant/bin/run_deepvariant \\
         --ref=${fasta} \\
-        --reads=${bam} \\
+        --reads=${input} \\
         --output_vcf=${prefix}.vcf.gz \\
         --output_gvcf=${prefix}.g.vcf.gz \\
         ${args} \\
+        ${regions} \\
         --num_shards=${task.cpus}
 
     cat <<-END_VERSIONS > versions.yml
@@ -39,5 +41,4 @@ process DEEPVARIANT {
         deepvariant: \$(echo \$(/opt/deepvariant/bin/run_deepvariant --version) | sed 's/^.*version //; s/ .*\$//' )
     END_VERSIONS
     """
-
 }

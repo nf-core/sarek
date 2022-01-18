@@ -18,14 +18,18 @@ input:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
-  - bam:
+  - input:
       type: file
-      description: BAM file
-      pattern: "*.bam"
-  - bai:
+      description: BAM/CRAM file
+      pattern: "*.bam/cram"
+  - index:
       type: file
-      description: Index of BAM file
-      pattern: "*.bai"
+      description: Index of BAM/CRAM file
+      pattern: "*.bai/crai"
+  - interval:
+      type: file
+      description: Interval file for targeted regions
+      pattern: "*.bed"
   - fasta:
       type: file
       description: The reference fasta file
