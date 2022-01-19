@@ -2,98 +2,97 @@
 // GERMLINE VARIANT CALLING
 //
 
-include { GATK_JOINT_GERMLINE_VARIANT_CALLING } from '../../subworkflows/nf-core/joint_germline_variant_calling/main'
-include { DEEPVARIANT                         } from '../../modules/nf-core/modules/deepvariant/main'
-include { STRELKA_GERMLINE as STRELKA         } from '../../modules/nf-core/modules/strelka/germline/main'
-include { FREEBAYES                           } from '../../modules/nf-core/modules/freebayes/main'
-include { MANTA_GERMLINE                      } from '../../modules/nf-core/modules/manta/germline/main'
-include { TIDDIT_SV                           } from '../../modules/nf-core/modules/tiddit/sv/main'
-include { SAMTOOLS_MPILEUP                    } from '../../modules/nf-core/modules/samtools/mpileup/main'
+include { GATK_JOINT_GERMLINE_VARIANT_CALLING        } from '../../subworkflows/nf-core/joint_germline_variant_calling/main'
+include { DEEPVARIANT                                } from '../../modules/nf-core/modules/deepvariant/main'
+include { FREEBAYES                                  } from '../../modules/nf-core/modules/freebayes/main'
+include { GATK4_HAPLOTYPECALLER as HAPLOTYPECALLER   } from '../../modules/nf-core/modules/gatk4/haplotypecaller/main'
+include { MANTA_GERMLINE                             } from '../../modules/nf-core/modules/manta/germline/main'
+include { STRELKA_GERMLINE                           } from '../../modules/nf-core/modules/strelka/germline/main'
+include { TIDDIT_SV                                  } from '../../modules/nf-core/modules/tiddit/sv/main'
+include { TABIX_BGZIPTABIX as TABIX_BGZIP_TIDDIT_SV  } from '../../modules/nf-core/modules/tabix/bgziptabix/main'
 
 workflow GERMLINE_VARIANT_CALLING {
     take:
         tools             // Mandatory, list of tools to apply
-        cram              // channel: [mandatory] cram
+        cram_recalibrated // channel: [mandatory] cram
         dbsnp             // channel: [mandatory] dbsnp
         dbsnp_tbi         // channel: [mandatory] dbsnp_tbi
         dict              // channel: [mandatory] dict
         fasta             // channel: [mandatory] fasta
         fasta_fai         // channel: [mandatory] fasta_fai
-        intervals         // channel: [mandatory] intervals
+        intervals         // channel: [mandatory] intervals/target regions
+        intervals_bed_gz_tbi // channel: [mandatory] intervals/target regions index zipped and indexed
         num_intervals     // val: number of intervals that are used to parallelize exection, either based on capture kit or GATK recommended for WGS
-        target_bed        // channel: [optional]  target_bed
-        target_bed_gz_tbi // channel: [optional]  target_bed_gz_tbi
+        joint_germline    // val: true/false on whether to run joint_germline calling, only works in combination with haplotypecaller at the moment
+        //target_bed        // channel: [optional]  target_bed
+        //target_bed_gz_tbi // channel: [optional]  target_bed_gz_tbi
 
     main:
 
-    // haplotypecaller_gvcf = Channel.empty()
-    // haplotypecaller_vcf  = Channel.empty()
-    // strelka_vcf          = Channel.empty()
+    ch_versions = Channel.empty()
 
-    // no_intervals = false
-    // if (intervals == []) no_intervals = true
+    cram_recalibrated.combine(intervals)
+        .map{ meta, cram, crai, intervals ->
+            new_meta = meta.clone()
+            new_meta.id = meta.sample + "_" + intervals.simpleName
+            [new_meta, cram, crai, intervals]
+        }.set{cram_recalibrated_intervals}
 
-    if ('haplotypecaller' in tools) {
-        //GATK_JOINT_GERMLINE_VARIANT_CALLING(
+    cram_recalibrated.combine(intervals_bed_gz_tbi)
+        .map{ meta, cram, crai, bed, tbi ->
+            new_meta = meta.clone()
+            new_meta.id = meta.sample + "_" + bed.simpleName
+            [new_meta, cram, crai, bed, tbi]
+        }.set{cram_recalibrated_intervals_gz_tbi}
 
-        //)
 
-    //     cram.combine(intervals).map{ meta, cram, crai, intervals ->
-    //         new_meta = meta.clone()
-    //         new_meta.id = meta.sample + "_" + intervals.baseName
-    //         [new_meta, cram, crai, intervals]
-    //     }.set{haplotypecaller_interval_cram}
+    haplotypecaller_gvcf = Channel.empty()
+    haplotypecaller_vcf  = Channel.empty()
+    strelka_vcf          = Channel.empty()
 
-    //     // STEP GATK HAPLOTYPECALLER.1
-    //     HAPLOTYPECALLER(
-    //         haplotypecaller_interval_cram,
-    //         dbsnp,
-    //         dbsnp_tbi,
-    //         dict,
-    //         fasta,
-    //         fasta_fai,
-    //         no_intervals)
+    if (tools.contains('haplotypecaller')) {
 
-    //     haplotypecaller_raw = HAPLOTYPECALLER.out.vcf.map{ meta,vcf ->
-    //         meta.id = meta.sample
-    //         [meta, vcf]
-    //     }.groupTuple(size: num_intervals)
+        //TODO: merge parallelized vcfs, index them all
+        //TODO: Pass over dbsnp/knwon_indels?
+        HAPLOTYPECALLER(
+                cram_recalibrated_intervals,
+                fasta,
+                fasta_fai,
+                dict,
+                dbsnp,
+                dbsnp_tbi
+        )
+        ch_versions = ch_versions.mix(HAPLOTYPECALLER.out.versions)
 
-    //     CONCAT_GVCF(
-    //         haplotypecaller_raw,
-    //         fasta_fai,
-    //         target_bed)
+        haplotypecaller_vcf_gz_tbi = HAPLOTYPECALLER.out.vcf.join(HAPLOTYPECALLER.out.tbi)
 
-    //     haplotypecaller_gvcf = CONCAT_GVCF.out.vcf
+        if(joint_germline){
+            run_haplotypecaller = false
+            run_vqsr            = true
+            //Waiting on some feedback from gavin
+            // GATK_JOINT_GERMLINE_VARIANT_CALLING(
+            //     haplotypecaller_vcf_gz_tbi,
+            //     run_haplotypecaller,
+            //     run_vqsr,
+            //     fasta,
+            //     fasta_fai,
+            //     dict,
+            //     //TODO: replace with known_sites?
+            //     dbsnp,
+            //     dbsnp_tbi,
+            //     "joined",
 
-    //     // STEP GATK HAPLOTYPECALLER.2
+            // )
+        }
 
-    //     GENOTYPEGVCF(
-    //         HAPLOTYPECALLER.out.interval_vcf,
-    //         dbsnp,
-    //         dbsnp_tbi,
-    //         dict,
-    //         fasta,
-    //         fasta_fai,
-    //         no_intervals)
-
-    //     haplotypecaller_results = GENOTYPEGVCF.out.vcf.map{ meta, vcf ->
-    //         meta.id = meta.sample
-    //         [meta, vcf]
-    //     }.groupTuple()
-
-    //     CONCAT_HAPLOTYPECALLER(
-    //         haplotypecaller_results,
-    //         fasta_fai,
-    //         target_bed)
-
-    //     haplotypecaller_vcf = CONCAT_HAPLOTYPECALLER.out.vcf
     }
 
-    if ('deepvariant' in tools) {
-
+    if (tools.contains('deepvariant')) {
+        //TODO: merge parallelized vcfs, index them all
+        //TODO: research if multiple targets can be provided
+        //TODO: Pass over dbsnp/knwon_indels?
         DEEPVARIANT(
-            bam,
+            cram_recalibrated_intervals,
             fasta,
             fasta_fai)
 
@@ -101,56 +100,91 @@ workflow GERMLINE_VARIANT_CALLING {
         deepvariant_gvcf = DEEPVARIANT.out.gvcf
     }
 
-    if ('strelka' in tools) {
-        STRELKA(
-            cram,
-            fasta,
-            fasta_fai,
-            target_bed,
-            target_bed_gz_tbi)
+    if (tools.contains('freebayes')){
+        //TODO: merge parallelized vcfs, index them all
+        //TODO: research if multiple targets can be provided
+        //TODO: Pass over dbsnp/knwon_indels?
+        cram_recalibrated.combine(intervals)
+        .map{ meta, cram, crai, intervals ->
+            new_meta = meta.clone()
+            new_meta.id = meta.sample + "_" + intervals.simpleName
+            [new_meta, cram, crai, [], [], intervals]
+        }.set{cram_recalibrated_intervals_freebayes}
 
-        strelka_vcf = STRELKA.out.vcf
-    }
-
-    if ('freebayes' in tools){
         FREEBAYES(
-            cram,
+            cram_recalibrated_intervals_freebayes,
             fasta,
             fasta_fai,
-            target_bed,
             [],
             [],
             []
         )
+        freebayes_vcf_gz = FREEBAYES.out.vcf
+        ch_versions = ch_versions.mix(FREEBAYES.out.versions)
     }
 
-    if ('mpileup' in tools){
-        SAMTOOLS_MPILEUP(
-            cram,
-            fasta
-        )
-    }
+    if (tools.contains('manta')){
+        //TODO: test data not running
+        //TODO: merge parallelized vcfs, index them all
+        //TODO: Pass over dbsnp/knwon_indels?
+        cram_recalibrated
+        .map{ meta, cram, crai ->
+            new_meta = meta.clone()
+            //new_meta.id = meta.sample + "_" + intervals.simpleName
+            [new_meta, cram, crai, [], []]
+        }.set{cram_recalibrated_manta}
 
-    if ('tiddit' in tools){
-        TIDDIT_SV(
-            cram,
+        MANTA_GERMLINE(
+            cram_recalibrated_manta,
             fasta,
             fasta_fai
         )
+        manta_candidate_small_indels_vcf_tbi = MANTA_GERMLINE.out.candidate_small_indels_vcf.join(MANTA_GERMLINE.out.candidate_small_indels_vcf_tbi)
+        manta_candidate_sv_vcf_tbi = MANTA_GERMLINE.out.candidate_sv_vcf.join(MANTA_GERMLINE.out.candidate_sv_vcf_tbi)
+        manta_diploid_sv_vcf_tbi = MANTA_GERMLINE.out.diploid_sv_vcf.join(MANTA_GERMLINE.out.diploid_sv_vcf)
+
+        ch_versions = ch_versions.mix(MANTA_GERMLINE.out.versions)
     }
 
-    if ('manta' in tools){
-        MANTA_GERMLINE(
-            cram,
+    if (tools.contains('strelka')) {
+        //TODO: research if multiple targets can be provided
+        //TODO: merge parallelized vcfs, index them all
+        //TODO: Pass over dbsnp/knwon_indels?
+
+        STRELKA_GERMLINE(
+            cram_recalibrated_intervals_gz_tbi,
             fasta,
-            fasta_fai,
-            target_bed,
-            target_bed_gz_tbi
-        )
+            fasta_fai
+            )
+
+        strelka_vcf_tbi = STRELKA_GERMLINE.out.vcf.join(STRELKA_GERMLINE.out.vcf_tbi)
+        strelka_genome_vcf_tbi = STRELKA_GERMLINE.out.genome_vcf.join(STRELKA_GERMLINE.out.genome_vcf_tbi)
+
+        ch_versions = ch_versions.mix(STRELKA_GERMLINE.out.versions)
+
+    }
+
+    if (tools.contains('tiddit')){
+        //TODO: test data not running -> maybe something of with the container...?
+        //TODO: Pass over dbsnp/knwon_indels?
+
+        // TIDDIT_SV(
+        //     cram_recalibrated,
+        //     fasta,
+        //     fasta_fai
+        // )
+
+        // TABIX_BGZIP_TIDDIT_SV(TIDDIT_SV.out.vcf)
+        // tiddit_vcf_gz_tbi = TABIX_BGZIP_TIDDIT_SV.out.gz_tbi
+        // tiddit_ploidy = TIDDIT_SV.out.ploidy
+        // tiddit_signals = TIDDIT_SV.out.signals
+        //tiddit_wig     = TIDDIT_SV.out.wig
+        //tiddit_gc_wig  = TIDDIT_SV.out.gc_wig
+
+        ch_versions = ch_versions.mix(TIDDIT_SV.out.versions)
     }
 
     emit:
-        haplotypecaller_gvcf = haplotypecaller_gvcf
-        haplotypecaller_vcf  = haplotypecaller_vcf
-        strelka_vcf          = strelka_vcf
+    strelka_vcf_tbi        = Channel.empty()
+    strelka_genome_vcf_tbi = Channel.empty()
 }

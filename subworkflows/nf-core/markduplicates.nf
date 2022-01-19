@@ -24,11 +24,11 @@ workflow MARKDUPLICATES {
         skip_markduplicates // boolean: true/false
         skip_bamqc          // boolean: true/false
         skip_samtools       // boolean: true/false
-        target_bed          // channel: [optional]  target_bed
+        intervals           // channel: [optional]  target_bed
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions           = Channel.empty()
     report_markduplicates = Channel.empty()
 
     if (skip_markduplicates) {
@@ -95,7 +95,7 @@ workflow MARKDUPLICATES {
 
     qualimap_bamqc = Channel.empty()
     if (!skip_bamqc) {
-        QUALIMAP_BAMQC(bam_bai_markduplicates, target_bed)
+        QUALIMAP_BAMQC(bam_bai_markduplicates, intervals)
         qualimap_bamqc = QUALIMAP_BAMQC.out.results
 
         ch_versions = ch_versions.mix(QUALIMAP_BAMQC.out.versions.first())

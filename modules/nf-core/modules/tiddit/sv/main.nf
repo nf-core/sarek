@@ -8,7 +8,7 @@ process TIDDIT_SV {
         'quay.io/biocontainers/tiddit:2.12.1--py38h1773678_0' }"
 
     input:
-    tuple val(meta), path(bam)
+    tuple val(meta), path(input), path(index)
     path  fasta
     path  fai
 
@@ -16,17 +16,20 @@ process TIDDIT_SV {
     tuple val(meta), path("*.vcf")        , emit: vcf
     tuple val(meta), path("*.ploidy.tab") , emit: ploidy
     tuple val(meta), path("*.signals.tab"), emit: signals
+    //tuple val(meta), path("*.wig")        , emit: wig
+    //tuple val(meta), path("*.gc.wig")     , emit: gc_wig
+
     path  "versions.yml"                  , emit: versions
 
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def reference = fasta == "dummy_file.txt" ? "--ref $fasta" : ""
+    def reference = fasta != "dummy_file.txt" ? "--ref $fasta" : ""
     """
     tiddit \\
         --sv \\
         $args \\
-        --bam $bam \\
+        --bam $input \\
         $reference \\
         -o $prefix
 

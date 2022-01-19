@@ -8,11 +8,12 @@ process STRELKA_GERMLINE {
         'quay.io/biocontainers/strelka:2.9.10--0' }"
 
     input:
-    tuple val(meta), path(input), path(input_index)
+    //TODO: wait for response if this is possible or if only the complete target file is an option
+    tuple val(meta), path(input), path(input_index), path(target_bed), path(target_bed_tbi)
     path  fasta
     path  fai
-    path  target_bed
-    path  target_bed_tbi
+    //path  target_bed
+    //path  target_bed_tbi
 
     output:
     tuple val(meta), path("*variants.vcf.gz")    , emit: vcf
@@ -24,7 +25,7 @@ process STRELKA_GERMLINE {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def regions  = target_bed ? "--exome --callRegions ${target_bed}" : ""
+    def regions  = target_bed ? "--callRegions ${target_bed}" : ""
     """
     configureStrelkaGermlineWorkflow.py \\
         --bam $input \\

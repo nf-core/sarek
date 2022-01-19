@@ -25,7 +25,7 @@ workflow PREPARE_GENOME {
         germline_resource // channel: [optional]  germline_resource
         known_indels      // channel: [optional]  known_indels
         pon               // channel: [optional]  pon
-        target_bed        // channel: [optional]  target_bed
+        //target_bed         // channel: [optional]  intervals/target_bed
         tools             // value:   [mandatory] tools
         step              // value:   [mandatory] step
 
@@ -59,13 +59,6 @@ workflow PREPARE_GENOME {
         SAMTOOLS_FAIDX(fasta.map{ it -> [[id:it[0].getName()], it]})
         ch_fasta_fai = SAMTOOLS_FAIDX.out.fai.map{ meta, fai -> [fai] }
         ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
-    }
-
-    ch_target_bed = Channel.empty()
-    if ((params.target_bed) && ('manta' in tools || 'strelka' in tools)) {
-        TABIX_BGZIPTABIX(target_bed.map{ it -> [[id:it[0].getName()], it] })
-        ch_target_bed = TABIX_BGZIPTABIX.out.tbi.map{ meta, bed, tbi -> [bed, tbi] }
-        ch_versions = ch_versions.mix(TABIX_BGZIPTABIX.out.versions)
     }
 
     ch_dbsnp_tbi = Channel.empty()
@@ -108,8 +101,11 @@ workflow PREPARE_GENOME {
         file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
         ch_intervals = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
     } else if (!('annotate' in step) && !('controlfreec' in step)) {
-        if (!params.intervals) ch_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS(ch_fasta_fai))
-        else                   ch_intervals = CREATE_INTERVALS_BED(file(params.intervals))
+        if (!params.intervals){
+            ch_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS(ch_fasta_fai))
+        }else{
+            ch_intervals = CREATE_INTERVALS_BED(file(params.intervals))
+        }
     }
 
     if (!params.no_intervals) {
@@ -129,7 +125,20 @@ workflow PREPARE_GENOME {
             }.toSortedList({ a, b -> b[0] <=> a[0] })
             .flatten().collate(2)
             .map{duration, intervalFile -> intervalFile}
+
+        //Zip and index the resulting bed files similar to what we previously did with the target bed files
+        // if ((params.target_bed)){ //&& ('manta' in tools || 'strelka' in tools)) {
+        //ch_intervals.view()
+
+        tabix_in = ch_intervals.map{it ->
+            [[id:it.getName()], it] }
+        TABIX_BGZIPTABIX(tabix_in)
+        ch_target_bed = TABIX_BGZIPTABIX.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi] }
+        ch_versions = ch_versions.mix(TABIX_BGZIPTABIX.out.versions)
     }
+
+    //ch_intervals.view()
+    //ch_target_bed.view()
 
     emit:
         bwa                   = ch_bwa                        // path: {bwa,bwamem2}/index
@@ -141,7 +150,7 @@ workflow PREPARE_GENOME {
         known_indels_tbi      = ch_known_indels_tbi.collect() // path: {known_indels*}.vcf.gz.tbi
         msisensorpro_scan     = ch_msisensorpro_scan          // path: genome_msi.list
         pon_tbi               = ch_pon_tbi                    // path: pon.vcf.gz.tbi
-        target_bed_gz_tbi     = ch_target_bed                 // path: target.bed.gz.tbi
+        intervals_bed_gz_tbi   = ch_target_bed               // path: target.bed.gz, target.bed.gz.tbi
 
         versions              = ch_versions.ifEmpty(null)     // channel: [ versions.yml ]
 }

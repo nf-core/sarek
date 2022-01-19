@@ -36,7 +36,7 @@ def checkPathParamList = [
     params.pon,
     params.pon_tbi,
     params.snpeff_cache,
-    params.target_bed,
+    //params.target_bed,
     params.vep_cache
 ]
 
@@ -108,7 +108,7 @@ cadd_wg_snvs      = params.cadd_wg_snvs      ? Channel.fromPath(params.cadd_wg_s
 cadd_wg_snvs_tbi  = params.cadd_wg_snvs_tbi  ? Channel.fromPath(params.cadd_wg_snvs_tbi).collect()  : []
 pon               = params.pon               ? Channel.fromPath(params.pon).collect()               : []
 snpeff_cache      = params.snpeff_cache      ? Channel.fromPath(params.snpeff_cache).collect()      : []
-target_bed        = params.target_bed        ? Channel.fromPath(params.target_bed).collect()        : []
+//target_bed        = params.target_bed        ? Channel.fromPath(params.target_bed).collect()        : []
 vep_cache         = params.vep_cache         ? Channel.fromPath(params.vep_cache).collect()         : []
 
 // Initialize value channels based on params, not defined within the params.genomes[params.genome] scope
@@ -140,18 +140,18 @@ include { PREPARE_RECALIBRATION     } from '../subworkflows/nf-core/prepare_reca
 // Create recalibrated cram files to use for variant calling
 include { RECALIBRATE               } from '../subworkflows/nf-core/recalibrate'
 
-// Variant calling on a single normal sample
+// // Variant calling on a single normal sample
 include { GERMLINE_VARIANT_CALLING  } from '../subworkflows/local/germline_variant_calling'
 
-// Variant calling on a single tumor sample
-// include { TUMOR_VARIANT_CALLING     } from '../subworkflows/local/tumor_variant_calling'
-// Variant calling on tumor/normal pair
-// include { PAIR_VARIANT_CALLING      } from '../subworkflows/local/pair_variant_calling'
+// // Variant calling on a single tumor sample
+// // include { TUMOR_VARIANT_CALLING     } from '../subworkflows/local/tumor_variant_calling'
+// // Variant calling on tumor/normal pair
+// // include { PAIR_VARIANT_CALLING      } from '../subworkflows/local/pair_variant_calling'
 
-// Annotation
-include { ANNOTATE                     } from '../subworkflows/local/annotate' addParams(
-    annotation_cache:                  params.annotation_cache
-)
+// // Annotation
+// include { ANNOTATE                     } from '../subworkflows/local/annotate' addParams(
+//     annotation_cache:                  params.annotation_cache
+// )
 
 /*
 ========================================================================================
@@ -193,7 +193,7 @@ workflow SAREK {
         germline_resource,
         known_indels,
         pon,
-        target_bed,
+        //target_bed,
         params.tools,
         params.step)
 
@@ -206,7 +206,6 @@ workflow SAREK {
     known_indels_tbi      = params.known_indels      ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : Channel.empty()
     pon_tbi               = params.pon               ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : []
     msisensorpro_scan     = PREPARE_GENOME.out.msisensorpro_scan
-    target_bed_gz_tbi     = PREPARE_GENOME.out.target_bed_gz_tbi
 
     //TODO @Rike, is this working for you?
     // -- No still not working, for example when using the prepare_recalibration test profile i get Once a file and once a channel.
@@ -218,12 +217,13 @@ workflow SAREK {
 
     // known_sites is made by grouping both the dbsnp and the known indels ressources
     // Which can either or both be optional
-    // Actually BQSR has been throughing erros if no none sides were provided so it must be at lest one
+    // Actually BQSR has been throughing erros if no sides were provided so it must be at lest one
     known_sites     = dbsnp.concat(known_indels).collect()
     known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
-    intervals     = PREPARE_GENOME.out.intervals
+    intervals                = PREPARE_GENOME.out.intervals
+    intervals_bed_gz_tbi     = PREPARE_GENOME.out.intervals_bed_gz_tbi
     num_intervals = 0
     intervals.count().map{ num_intervals = it }
 
@@ -267,7 +267,7 @@ workflow SAREK {
         // Get versions from all software used
         ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
 
-        //Since read need additional mapping afterwards, I would argue for haveing the process here
+        //Since read need additional mapping afterwards, I would argue for having the process here
         if(params.umi_read_structure){
             CREATE_UMI_CONSENSUS(reads_input, fasta, bwa, umi_read_structure, params.group_by_umi_strategy, params.aligner)
             ALIGNMENT_TO_FASTQ( CREATE_UMI_CONSENSUS.out.consensusbam, [] )
@@ -285,28 +285,32 @@ workflow SAREK {
             save_bam_mapped)
 
         // Get mapped reads (BAM) with and without index
+        // without index: always contains mapped_bams, only used if duplicate marking is done
+        // with Index: Duplicate marking is skipped and/or bams are saved, else empty Channel
         bam_mapped  = GATK4_MAPPING.out.bam
         bam_indexed = GATK4_MAPPING.out.bam_indexed
 
         // Create CSV to restart from this step
+        // TODO: How is this handeled if not save_bam is set (no index should be present)
         MAPPING_CSV(bam_indexed, save_bam_mapped, params.skip_markduplicates)
 
         // Get versions from all software used
         ch_versions = ch_versions.mix(GATK4_MAPPING.out.versions)
     }
 
-    if (params.step == 'prepare_recalibration') {
-        bam_indexed = Channel.empty()
-        bam_mapped  = Channel.empty()
+    // Comment out till we get the tests to pass
+    // if (params.step == 'prepare_recalibration') {
+    //     bam_indexed = Channel.empty()
+    //     bam_mapped  = Channel.empty()
 
-        if(params.skip_markduplicates){
-            bam_indexed = input_sample
-        }else{
-            input_sample.map{meta, bam, bai ->
-                        [meta, bam]
-                        }.set{bam_mapped}
-        }
-    }
+    //     if(params.skip_markduplicates){
+    //         bam_indexed = input_sample
+    //     }else{ //index will be created down the road from the Markduplicatess
+    //         input_sample.map{meta, bam, bai ->
+    //                     [meta, bam]
+    //                     }.set{bam_mapped}
+    //     }
+    // }
 
     if (params.step in ['mapping', 'prepare_recalibration']) {
         // STEP 2: Mark duplicates (+QC) + convert to CRAM
@@ -321,7 +325,7 @@ workflow SAREK {
             params.skip_markduplicates,
             ('bamqc' in params.skip_qc),
             ('samtools' in params.skip_qc),
-            target_bed)
+            intervals) //target_bed)
 
         cram_markduplicates = MARKDUPLICATES.out.cram
 
@@ -352,9 +356,10 @@ workflow SAREK {
         }
     }
 
-    if (params.step == 'recalibrate') bam_applybqsr = input_sample
+    // if (params.step == 'recalibrate') bam_applybqsr = input_sample
 
     if (params.step in ['mapping', 'prepare_recalibration', 'recalibrate']) {
+
         if(!params.skip_bqsr){
             // STEP 4: RECALIBRATING
             RECALIBRATE(
@@ -366,8 +371,9 @@ workflow SAREK {
                 fasta,
                 fasta_fai,
                 intervals,
-                num_intervals,
-                target_bed)
+                num_intervals
+            )
+                //target_bed)
 
             cram_recalibrated    = RECALIBRATE.out.cram
             cram_recalibrated_qc = RECALIBRATE.out.qc
@@ -383,9 +389,10 @@ workflow SAREK {
 
     }
 
-    if (params.step in 'variantcalling') cram_variant_calling = input_sample
+    // if (params.step in 'variantcalling') cram_variant_calling = input_sample
 
     if (params.tools) {
+
         vcf_to_annotate = Channel.empty()
         if (params.step in 'annotate') cram_variant_calling = Channel.empty()
 
@@ -393,18 +400,21 @@ workflow SAREK {
         GERMLINE_VARIANT_CALLING(
             params.tools,
             cram_variant_calling,
+            //TODO: replace dnsnp with knwon_sites?
             dbsnp,
             dbsnp_tbi,
             dict,
             fasta,
             fasta_fai,
             intervals,
+            intervals_bed_gz_tbi,
             num_intervals,
-            target_bed,
-            target_bed_gz_tbi)
+            params.joint_germline)
+            //target_bed,
+           // target_bed_gz_tbi)
 
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)
+        //vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf)
+        //vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)
 
         // SOMATIC VARIANT CALLING
 
@@ -461,22 +471,22 @@ workflow SAREK {
         ch_version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
     }
 
-    workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
-    ch_workflow_summary = Channel.value(workflow_summary)
+    // workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
+    // ch_workflow_summary = Channel.value(workflow_summary)
 
-    ch_multiqc_files = Channel.empty()
-    ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_config)
-    ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_version_yaml)
-    ch_multiqc_files = ch_multiqc_files.mix(qc_reports)
+    // ch_multiqc_files = Channel.empty()
+    // ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_config)
+    // ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
+    // ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+    // ch_multiqc_files = ch_multiqc_files.mix(ch_version_yaml)
+    // ch_multiqc_files = ch_multiqc_files.mix(qc_reports)
 
-    multiqc_report = Channel.empty()
-    if (!('multiqc' in params.skip_qc)) {
-        MULTIQC(ch_multiqc_files.collect())
-        multiqc_report = MULTIQC.out.report.toList()
+    // multiqc_report = Channel.empty()
+    // if (!('multiqc' in params.skip_qc)) {
+    //     MULTIQC(ch_multiqc_files.collect())
+    //     multiqc_report = MULTIQC.out.report.toList()
 
-    }
+    // }
 }
 
 workflow.onComplete {

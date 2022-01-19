@@ -20,7 +20,7 @@ workflow RECALIBRATE {
         fasta_fai      // channel: [mandatory] fasta_fai
         intervals      // channel: [mandatory] intervals
         num_intervals
-        target_bed     // channel: [optional]  target_bed
+        //target_bed     // channel: [optional]  target_bed
 
     main:
 
@@ -61,7 +61,8 @@ workflow RECALIBRATE {
         samtools_stats = Channel.empty()
 
         if (!skip_bamqc) {
-            QUALIMAP_BAMQC_CRAM(cram_recalibrated_index, target_bed, fasta, fasta_fai)
+            //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
+            QUALIMAP_BAMQC_CRAM(cram_recalibrated_index, intervals, fasta, fasta_fai)
             qualimap_bamqc = QUALIMAP_BAMQC_CRAM.out.results
         }
 
