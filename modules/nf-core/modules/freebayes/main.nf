@@ -40,7 +40,7 @@ process FREEBAYES {
             $args \\
             $input > ${prefix}.vcf
 
-        gzip --no-name ${prefix}.vcf
+        bgzip ${prefix}.vcf
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":

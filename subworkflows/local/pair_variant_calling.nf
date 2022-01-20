@@ -1,13 +1,12 @@
 //
 // PAIRED VARIANT CALLING
 //
-
-include { MANTA_SOMATIC as MANTA }           from '../../modules/nf-core/software/manta/somatic/main'
-include { MSISENSORPRO_MSI }                 from '../../modules/nf-core/software/msisensorpro/msi/main'
-include { STRELKA_SOMATIC as STRELKA }       from '../../modules/nf-core/software/strelka/somatic/main'
-include { STRELKA_SOMATIC as STRELKA_BP }    from '../../modules/nf-core/software/strelka/somatic/main'
-include { GATK4_MUTECT2_SOMATIC as MUTECT2 } from '../../modules/nf-core/software/gatk4/mutect2/somatic/main'
-include { GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING }
+include { GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING     } from '../../subworkflows/gatk_tumor_normal_somatic_variant_calling/main'
+include { GATK4_MUTECT2_SOMATIC as MUTECT2              } from '../../modules/nf-core/software/gatk4/mutect2/somatic/main'
+include { MANTA_SOMATIC                                 } from '../../modules/nf-core/software/manta/somatic/main'
+include { MSISENSORPRO_MSI                              } from '../../modules/nf-core/software/msisensorpro/msi/main'
+include { STRELKA_SOMATIC                               } from '../../modules/nf-core/software/strelka/somatic/main'
+include { STRELKA_SOMATIC as STRELKA_SOMATIC_BP         } from '../../modules/nf-core/software/strelka/somatic/main'
 
 workflow PAIR_VARIANT_CALLING {
     take:

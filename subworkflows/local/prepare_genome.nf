@@ -107,7 +107,7 @@ workflow PREPARE_GENOME {
             ch_intervals = CREATE_INTERVALS_BED(file(params.intervals))
         }
     }
-
+    ch_target_bed = Channel.empty()
     if (!params.no_intervals) {
         ch_intervals = ch_intervals.flatten()
             .map{ intervalFile ->
@@ -129,7 +129,8 @@ workflow PREPARE_GENOME {
         //Zip and index the resulting bed files similar to what we previously did with the target bed files
         // if ((params.target_bed)){ //&& ('manta' in tools || 'strelka' in tools)) {
         //ch_intervals.view()
-
+        //TODO: some tools seem to need one continuous bed or at least it is not explitely stated that they can
+        // parallelize over the intervals (here anyways not) so add one bed file having all intervals concated
         tabix_in = ch_intervals.map{it ->
             [[id:it.getName()], it] }
         TABIX_BGZIPTABIX(tabix_in)
