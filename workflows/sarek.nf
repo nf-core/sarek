@@ -48,7 +48,7 @@ else {
     log.warn "No samplesheet specified, attempting to restart from csv files present in ${params.outdir}"
     switch (params.step) {
         case 'mapping': exit 1, "Can't start with step $params.step without samplesheet"
-        case 'preparerecalibration': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
+        case 'prepare_recalibration': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
         case 'recalibrate':          csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv",          checkIfExists: true); break
         case 'variantcalling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv",            checkIfExists: true); break
         // case 'controlfreec':         csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
@@ -143,8 +143,8 @@ include { RECALIBRATE               } from '../subworkflows/nf-core/recalibrate'
 // // Variant calling on a single normal sample
 include { GERMLINE_VARIANT_CALLING  } from '../subworkflows/local/germline_variant_calling'
 
-// // Variant calling on a single tumor sample
-// // include { TUMOR_VARIANT_CALLING     } from '../subworkflows/local/tumor_variant_calling'
+// Variant calling on a single tumor sample
+include { TUMOR_ONLY_VARIANT_CALLING} from '../subworkflows/local/tumor_variant_calling'
 // // Variant calling on tumor/normal pair
 // // include { PAIR_VARIANT_CALLING      } from '../subworkflows/local/pair_variant_calling'
 
@@ -207,20 +207,29 @@ workflow SAREK {
     pon_tbi               = params.pon               ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : []
     msisensorpro_scan     = PREPARE_GENOME.out.msisensorpro_scan
 
-    //TODO @Rike, is this working for you?
+    //TODO @Rike, is this working for you? Now it is, fixed a bug in prepare_genome.nf after chasing smoke for a while
     // -- No still not working, for example when using the prepare_recalibration test profile i get Once a file and once a channel.
     //    I am pretty sure that that is the reason why it sometimes runs and sometimes doesn't
     //     [/nf-core/test-datasets/sarek/reference/human_g1k_v37_decoy.small.fasta]
     //     [/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz, /nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz]
     //      /work/13/f344923aa6cd33873e1fe43dd24b57/human_g1k_v37_decoy.small.dict
     //     When adding [],[] in place if known_sites, BASERECALIBRATOR runs else it doesn't work
-
+    // from what i see only basequliaty recalibration wants both so far. I am not sure if one process is worth the conitnued hassle we have with this...
     // known_sites is made by grouping both the dbsnp and the known indels ressources
     // Which can either or both be optional
     // Actually BQSR has been throughing erros if no sides were provided so it must be at lest one
+    // what does not work: concat - flatten -> emits elements individually
+    // which                concat - collect -> baserecal doesn't start
+    //                      concat - toList -> Not a valid path value type: nextflow.util.ArrayBag ([/nf-core/test-datasets/sarek/reference/Mills_1000G_gold_standard_and_1000G_phase1.indels.b37.small.vcf.gz])
+    //
     known_sites     = dbsnp.concat(known_indels).collect()
     known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
-
+    println known_sites.getClass()
+    println fasta.getClass()
+    known_sites.view()
+    known_sites_tbi.view()
+    fasta.view()
+    known_sites.dump(tag:'knwon_sites')
     // Intervals for speed up preprocessing/variant calling by spread/gather
     intervals                = PREPARE_GENOME.out.intervals
     intervals_bed_gz_tbi     = PREPARE_GENOME.out.intervals_bed_gz_tbi
@@ -299,20 +308,22 @@ workflow SAREK {
     }
 
     // Comment out till we get the tests to pass
-    // if (params.step == 'prepare_recalibration') {
-    //     bam_indexed = Channel.empty()
-    //     bam_mapped  = Channel.empty()
+    if (params.step == 'prepare_recalibration') {
+        bam_indexed = Channel.empty()
+        bam_mapped  = Channel.empty()
 
-    //     if(params.skip_markduplicates){
-    //         bam_indexed = input_sample
-    //     }else{ //index will be created down the road from the Markduplicatess
-    //         input_sample.map{meta, bam, bai ->
-    //                     [meta, bam]
-    //                     }.set{bam_mapped}
-    //     }
-    // }
+        if(params.skip_markduplicates){
+            bam_indexed = input_sample
+        }else{ //index will be created down the road from the Markduplicatess
+            input_sample.map{meta, bam, bai ->
+                        [meta, bam]
+                        }.set{bam_mapped}
+        }
+    }
 
     if (params.step in ['mapping', 'prepare_recalibration']) {
+        bam_indexed.view()
+        bam_mapped.view()
         // STEP 2: Mark duplicates (+QC) + convert to CRAM
         MARKDUPLICATES(
             bam_mapped,
@@ -400,7 +411,6 @@ workflow SAREK {
         GERMLINE_VARIANT_CALLING(
             params.tools,
             cram_variant_calling,
-            //TODO: replace dnsnp with knwon_sites?
             dbsnp,
             dbsnp_tbi,
             dict,
@@ -419,7 +429,9 @@ workflow SAREK {
         // SOMATIC VARIANT CALLING
 
         // TUMOR ONLY VARIANT CALLING
-        // TUMOR_VARIANT_CALLING(
+        //TODO: only pass tumor only patients
+        // TUMOR_ONLY_VARIANT_CALLING(
+        //     params.tools,
         //     cram_variant_calling,
         //     dbsnp,
         //     dbsnp_tbi,
@@ -427,8 +439,15 @@ workflow SAREK {
         //     fasta,
         //     fasta_fai,
         //     intervals,
-        //     target_bed,
-        //     target_bed_gz_tbi)
+        //     intervals_bed_gz_tbi,
+        //     num_intervals,
+        //     germline_resource,
+        //     germline_resource_tbi,
+        //     pon,
+        //     pon_tbi
+        //     )
+            //target_bed,
+            //target_bed_gz_tbi)
 
         // PAIR VARIANT CALLING
         // PAIR_VARIANT_CALLING(

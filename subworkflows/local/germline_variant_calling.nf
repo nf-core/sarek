@@ -2,24 +2,30 @@
 // GERMLINE VARIANT CALLING
 //
 
-include { GATK_JOINT_GERMLINE_VARIANT_CALLING        } from '../../subworkflows/nf-core/joint_germline_variant_calling/main'
-include { BGZIP as BGZIP_DEEPVARIANT_GVCF            } from '../../modules/local/bgzip'
-include { BGZIP as BGZIP_DEEPVARIANT_VCF             } from '../../modules/local/bgzip'
-include { BGZIP as BGZIP_FREEBAYES                   } from '../../modules/local/bgzip'
-include { BGZIP as BGZIP_HAPLOTYPECALLER             } from '../../modules/local/bgzip'
-include { BGZIP as BGZIP_STRELKA                     } from '../../modules/local/bgzip'
-include { CONCAT_VCF as CONCAT_VCF_DEEPVARIANT       } from '../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_GVCF_DEEPVARIANT      } from '../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_VCF_FREEBAYES         } from '../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_VCF_HAPLOTYPECALLER   } from '../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_VCF_STRELKA           } from '../../modules/local/concat_vcf/main'
-include { DEEPVARIANT                                } from '../../modules/nf-core/modules/deepvariant/main'
-include { FREEBAYES                                  } from '../../modules/nf-core/modules/freebayes/main'
-include { GATK4_HAPLOTYPECALLER as HAPLOTYPECALLER   } from '../../modules/nf-core/modules/gatk4/haplotypecaller/main'
-include { MANTA_GERMLINE                             } from '../../modules/nf-core/modules/manta/germline/main'
-include { STRELKA_GERMLINE                           } from '../../modules/nf-core/modules/strelka/germline/main'
-include { TIDDIT_SV                                  } from '../../modules/nf-core/modules/tiddit/sv/main'
-include { TABIX_BGZIPTABIX as TABIX_BGZIP_TIDDIT_SV  } from '../../modules/nf-core/modules/tabix/bgziptabix/main'
+include { BGZIP as BGZIP_DEEPVARIANT_GVCF             } from '../../modules/local/bgzip'
+include { BGZIP as BGZIP_DEEPVARIANT_VCF              } from '../../modules/local/bgzip'
+include { BGZIP as BGZIP_FREEBAYES                    } from '../../modules/local/bgzip'
+include { BGZIP as BGZIP_HAPLOTYPECALLER              } from '../../modules/local/bgzip'
+include { BGZIP as BGZIP_MANTA_SMALL_INDELS           } from '../../modules/local/bgzip'
+include { BGZIP as BGZIP_MANTA_SV                     } from '../../modules/local/bgzip'
+include { BGZIP as BGZIP_MANTA_DIPLOID                } from '../../modules/local/bgzip'
+include { BGZIP as BGZIP_STRELKA                      } from '../../modules/local/bgzip'
+include { CONCAT_VCF as CONCAT_VCF_DEEPVARIANT        } from '../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_GVCF_DEEPVARIANT       } from '../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_VCF_FREEBAYES          } from '../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_VCF_HAPLOTYPECALLER    } from '../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_VCF_MANTA_SMALL_INDELS } from '../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_VCF_MANTA_SV           } from '../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_VCF_MANTA_DIPLOID      } from '../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_VCF_STRELKA            } from '../../modules/local/concat_vcf/main'
+include { DEEPVARIANT                                 } from '../../modules/nf-core/modules/deepvariant/main'
+include { FREEBAYES                                   } from '../../modules/nf-core/modules/freebayes/main'
+include { GATK_JOINT_GERMLINE_VARIANT_CALLING         } from '../../subworkflows/nf-core/joint_germline_variant_calling/main'
+include { GATK4_HAPLOTYPECALLER as HAPLOTYPECALLER    } from '../../modules/nf-core/modules/gatk4/haplotypecaller/main'
+include { MANTA_GERMLINE                              } from '../../modules/nf-core/modules/manta/germline/main'
+include { STRELKA_GERMLINE                            } from '../../modules/nf-core/modules/strelka/germline/main'
+include { TIDDIT_SV                                   } from '../../modules/nf-core/modules/tiddit/sv/main'
+include { TABIX_BGZIPTABIX as TABIX_BGZIP_TIDDIT_SV   } from '../../modules/nf-core/modules/tabix/bgziptabix/main'
 
 workflow GERMLINE_VARIANT_CALLING {
     take:
@@ -44,7 +50,7 @@ workflow GERMLINE_VARIANT_CALLING {
     deepvariant_vcf_gz_tbi      = Channel.empty()
     deepvariant_gvcf_gz_tbi     = Channel.empty()
     freebayes_vcf_gz_tbi        = Channel.empty()
-    haplotypecaller_vcf_gz_tbi  = Channel.empty()
+    haplotypecaller_gvcf_gz_tbi = Channel.empty()
     strelka_vcf_gz_tbi          = Channel.empty()
 
     cram_recalibrated.combine(intervals)
@@ -60,6 +66,7 @@ workflow GERMLINE_VARIANT_CALLING {
             new_meta.id = meta.sample + "_" + bed.simpleName
             [new_meta, cram, crai, bed, tbi]
         }.set{cram_recalibrated_intervals_gz_tbi}
+
 
     if (tools.contains('deepvariant')) {
         //TODO: research if multiple targets can be provided
@@ -128,11 +135,11 @@ workflow GERMLINE_VARIANT_CALLING {
 
         BGZIP_HAPLOTYPECALLER(HAPLOTYPECALLER.out.vcf)
 
-        haplotypecaller_vcf_to_concat = BGZIP_HAPLOTYPECALLER.out.vcf.groupTuple(size: num_intervals)
+        haplotypecaller_gvcf_to_concat = BGZIP_HAPLOTYPECALLER.out.vcf.groupTuple(size: num_intervals)
         //TODO: some tools seem to need one continuous bed or at least it is not explitely stated that they can
         // parallelize over the intervals (here anyways not) so add one bed file having all intervals concated
-        CONCAT_VCF_HAPLOTYPECALLER(haplotypecaller_vcf_to_concat, fasta_fai, intervals)
-        haplotypecaller_vcf_gz_tbi = CONCAT_VCF_HAPLOTYPECALLER.out.vcf
+        CONCAT_VCF_HAPLOTYPECALLER(haplotypecaller_gvcf_to_concat, fasta_fai, intervals)
+        haplotypecaller_gvcf_gz_tbi = CONCAT_VCF_HAPLOTYPECALLER.out.vcf
 
         ch_versions = ch_versions.mix(HAPLOTYPECALLER.out.versions)
         ch_versions = ch_versions.mix(BGZIP_HAPLOTYPECALLER.out.versions)
@@ -216,10 +223,14 @@ workflow GERMLINE_VARIANT_CALLING {
         //tiddit_wig     = TIDDIT_SV.out.wig
         //tiddit_gc_wig  = TIDDIT_SV.out.gc_wig
 
+        //ch_versions = ch_versions.mix(TABIX_BGZIP_TIDDIT_SV.out.versions)
         //ch_versions = ch_versions.mix(TIDDIT_SV.out.versions)
     }
 
     emit:
-    strelka_vcf_tbi        = Channel.empty()
-    strelka_genome_vcf_tbi = Channel.empty()
+    deepvariant_vcf_gz_tbi
+    deepvariant_gvcf_gz_tbi
+    freebayes_vcf_gz_tbi
+    haplotypecaller_gvcf_gz_tbi
+    strelka_vcf_gz_tbi
 }

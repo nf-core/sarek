@@ -41,7 +41,7 @@ jobs:
           - 'tumor_normal_pair'
           # - 'variant_calling'
           # - bam_input
-          # - prepare_recalibration
+          - 'prepare_recalibration'
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2

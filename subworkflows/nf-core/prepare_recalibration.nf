@@ -29,7 +29,7 @@ workflow PREPARE_RECALIBRATION {
             new_meta.id = meta.sample + "_" + intervals.baseName
             [new_meta, cram, crai, intervals]
         }.set{cram_markduplicates_intervals}
-
+    cram_markduplicates_intervals.view()
     if (use_gatk_spark) {
         BASERECALIBRATOR_SPARK(cram_markduplicates_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
         table_baserecalibrator = BASERECALIBRATOR_SPARK.out.table

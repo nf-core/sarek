@@ -9,7 +9,7 @@ include { BWA_INDEX as BWAMEM1_INDEX             } from '../../modules/nf-core/m
 include { BWAMEM2_INDEX                          } from '../../modules/nf-core/modules/bwamem2/index/main'
 include { CREATE_INTERVALS_BED                   } from '../../modules/local/create_intervals_bed/main'
 include { GATK4_CREATESEQUENCEDICTIONARY         } from '../../modules/nf-core/modules/gatk4/createsequencedictionary/main'
-include { MSISENSORPRO_SCAN                      } from '../../modules/local/msisensorpro/scan/main'
+include { MSISENSORPRO_SCAN                      } from '../../modules/nf-core/modules/msisensorpro/scan/main'
 include { SAMTOOLS_FAIDX                         } from '../../modules/nf-core/modules/samtools/faidx/main'
 include { TABIX_BGZIPTABIX                       } from '../../modules/nf-core/modules/tabix/bgziptabix/main'
 include { TABIX_TABIX as TABIX_DBSNP             } from '../../modules/nf-core/modules/tabix/tabix/main'
@@ -62,7 +62,7 @@ workflow PREPARE_GENOME {
     }
 
     ch_dbsnp_tbi = Channel.empty()
-    if (!(params.dbsnp_tbi) && params.dbsnp && ('mapping' in step || 'preparerecalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools|| 'mutect2' in tools || 'tnscope' in tools)) {
+    if (!(params.dbsnp_tbi) && params.dbsnp && ('mapping' in step || 'prepare_recalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools|| 'mutect2' in tools || 'tnscope' in tools)) {
         TABIX_DBSNP(dbsnp.map{ it -> [[id:it[0].baseName], it] })
         ch_dbsnp_tbi = TABIX_DBSNP.out.tbi.map{ meta, tbi -> [tbi] }
         ch_versions = ch_versions.mix(TABIX_DBSNP.out.versions)
@@ -76,7 +76,7 @@ workflow PREPARE_GENOME {
     }
 
     ch_known_indels_tbi = Channel.empty()
-    if (!(params.known_indels_tbi) && params.known_indels && ('mapping' in step || 'preparerecalibration' in step)) {
+    if (!(params.known_indels_tbi) && params.known_indels && ('mapping' in step || 'prepare_recalibration' in step)) {
         TABIX_KNOWN_INDELS(known_indels.map{ it -> [[id:it[0].baseName], it] })
         ch_known_indels_tbi = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }
         ch_versions = ch_versions.mix(TABIX_KNOWN_INDELS.out.versions)
@@ -92,7 +92,7 @@ workflow PREPARE_GENOME {
     ch_msisensorpro_scan = Channel.empty()
     if ('msisensorpro' in tools) {
         MSISENSORPRO_SCAN(fasta)
-        ch_msisensorpro_scan = MSISENSORPRO_SCAN.out.list
+        ch_msisensorpro_scan = MSISENSORPRO_SCAN.out.tab.map{ meta, list -> list}
         ch_versions = ch_versions.mix(MSISENSORPRO_SCAN.out.versions)
     }
 
