@@ -29,9 +29,13 @@ workflow GATK4_MAPPING {
             //sorts list of split fq files by :
             //[R1.part_001, R2.part_001, R1.part_002, R2.part_002,R1.part_003, R2.part_003,...]
             //TODO: determine whether it is possible to have an uneven number of parts, so remainder: true woud need to be used, I guess this could be possible for unfiltered reads, reads that don't have pairs etc.
-            [key, reads.sort{ a,b -> a.getName().tokenize('.')[ a.getName().tokenize('.').size() - 3] <=> b.getName().tokenize('.')[ b.getName().tokenize('.').size() - 3]}.collate(2)]
+            read_files = reads.sort{ a,b -> a.getName().tokenize('.')[ a.getName().tokenize('.').size() - 3] <=> b.getName().tokenize('.')[ b.getName().tokenize('.').size() - 3]}.collate(2)
+            key.size = read_files.size()
+            [key, read_files]
         }.transpose()
     } else reads_input_split = reads_input
+
+
 
     bam_bwamem1      = Channel.empty()
     bam_bwamem2      = Channel.empty()
@@ -66,12 +70,17 @@ workflow GATK4_MAPPING {
 
         // groupKey is to makes sure that the correct group can advance as soon as it is complete
         // and not stall the workflow until all pieces are mapped
-        def groupKey = groupKey(meta, meta.numLanes * params.split_fastq)
+        //TODO: this won't work anymore split_fastq is now number of reads
+        //Harcoding the values works, so it is the number not hte concept that is wrong
+        println meta.numLanes * meta.size
+        def groupKey = groupKey(meta, meta.numLanes * meta.size)//meta.numLanes * params.split_fastq)
+        //println groupKey
         tuple(groupKey, bam)
 
-        [new_meta, bam]
+        //[new_meta, bam] //TODO: this reverts the beautiful groupTuple above
     }.groupTuple().set{bam_mapped}
 
+    bam_mapped.view()
     // GATK markduplicates can handle multiple BAMS as input
     // So no merging/indexing at this step
     // Except if and only if skipping markduplicates
