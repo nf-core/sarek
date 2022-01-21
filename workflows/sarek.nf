@@ -208,28 +208,12 @@ workflow SAREK {
     msisensorpro_scan     = PREPARE_GENOME.out.msisensorpro_scan
 
     //TODO @Rike, is this working for you? Now it is, fixed a bug in prepare_genome.nf after chasing smoke for a while
-    // -- No still not working, for example when using the prepare_recalibration test profile i get Once a file and once a channel.
-    //    I am pretty sure that that is the reason why it sometimes runs and sometimes doesn't
-    //     [/nf-core/test-datasets/sarek/reference/human_g1k_v37_decoy.small.fasta]
-    //     [/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz, /nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz]
-    //      /work/13/f344923aa6cd33873e1fe43dd24b57/human_g1k_v37_decoy.small.dict
-    //     When adding [],[] in place if known_sites, BASERECALIBRATOR runs else it doesn't work
-    // from what i see only basequliaty recalibration wants both so far. I am not sure if one process is worth the conitnued hassle we have with this...
     // known_sites is made by grouping both the dbsnp and the known indels ressources
     // Which can either or both be optional
     // Actually BQSR has been throughing erros if no sides were provided so it must be at lest one
-    // what does not work: concat - flatten -> emits elements individually
-    // which                concat - collect -> baserecal doesn't start
-    //                      concat - toList -> Not a valid path value type: nextflow.util.ArrayBag ([/nf-core/test-datasets/sarek/reference/Mills_1000G_gold_standard_and_1000G_phase1.indels.b37.small.vcf.gz])
-    //
     known_sites     = dbsnp.concat(known_indels).collect()
     known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
-    println known_sites.getClass()
-    println fasta.getClass()
-    known_sites.view()
-    known_sites_tbi.view()
-    fasta.view()
-    known_sites.dump(tag:'knwon_sites')
+
     // Intervals for speed up preprocessing/variant calling by spread/gather
     intervals                = PREPARE_GENOME.out.intervals
     intervals_bed_gz_tbi     = PREPARE_GENOME.out.intervals_bed_gz_tbi
@@ -256,6 +240,7 @@ workflow SAREK {
         if(params.is_bam_input){
             ALIGNMENT_TO_FASTQ(input_sample, [])
             ALIGNMENT_TO_FASTQ.out.reads.set{input_sample_converted}
+            ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ.out.versions)
         }else{
             input_sample_converted = input_sample
         }
@@ -281,6 +266,9 @@ workflow SAREK {
             CREATE_UMI_CONSENSUS(reads_input, fasta, bwa, umi_read_structure, params.group_by_umi_strategy, params.aligner)
             ALIGNMENT_TO_FASTQ( CREATE_UMI_CONSENSUS.out.consensusbam, [] )
             ALIGNMENT_TO_FASTQ.out.reads.set{reads_input}
+
+            ch_versions = ch_versions.mix(CREATE_UMI_CONSENSUS.out.versions)
+            ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ.out.versions)
         }
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
@@ -322,8 +310,7 @@ workflow SAREK {
     }
 
     if (params.step in ['mapping', 'prepare_recalibration']) {
-        bam_indexed.view()
-        bam_mapped.view()
+
         // STEP 2: Mark duplicates (+QC) + convert to CRAM
         MARKDUPLICATES(
             bam_mapped,
@@ -345,6 +332,8 @@ workflow SAREK {
 
         qc_reports = qc_reports.mix(MARKDUPLICATES.out.qc.collect{it[1]}.ifEmpty([]))
 
+        ch_versions = ch_versions.mix(MARKDUPLICATES.out.versions)
+
         // STEP 3: Create recalibration tables
         if(!params.skip_bqsr){
 
@@ -364,6 +353,8 @@ workflow SAREK {
             PREPARE_RECALIBRATION_CSV(table_bqsr)
 
             cram_applybqsr = cram_markduplicates.join(table_bqsr)
+
+            ch_versions = ch_versions.mix(PREPARE_RECALIBRATION.out.versions)
         }
     }
 
@@ -393,6 +384,8 @@ workflow SAREK {
 
             qc_reports = qc_reports.mix(cram_recalibrated_qc.collect{it[1]}.ifEmpty([]))
             cram_variant_calling = cram_recalibrated
+
+            ch_versions = ch_versions.mix(RECALIBRATE.out.versions)
 
         }else{
             cram_variant_calling = cram_markduplicates
@@ -425,7 +418,7 @@ workflow SAREK {
 
         //vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf)
         //vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)
-
+        ch_versions = ch_versions.mix(GERMLINE_VARIANT_CALLING.out.versions)
         // SOMATIC VARIANT CALLING
 
         // TUMOR ONLY VARIANT CALLING
@@ -448,6 +441,8 @@ workflow SAREK {
         //     )
             //target_bed,
             //target_bed_gz_tbi)
+        //        ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
+
 
         // PAIR VARIANT CALLING
         // PAIR_VARIANT_CALLING(
@@ -466,6 +461,8 @@ workflow SAREK {
         //     germline_resource_tbi,
         //     pon,
         //     pon_tbi)
+        //        ch_versions = ch_versions.mix(PAIR_VARIANT_CALLING.out.versions)
+
 
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = input_sample
@@ -481,6 +478,7 @@ workflow SAREK {
                 vep_species,
                 vep_cache_version,
                 vep_cache)
+            ch_versions = ch_versions.mix(ANNOTATE.out.versions)
         }
     }
 

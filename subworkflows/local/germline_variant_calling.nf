@@ -162,6 +162,7 @@ workflow GERMLINE_VARIANT_CALLING {
             //     "joined",
 
             // )
+            // ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
         }
 
     }
@@ -233,4 +234,6 @@ workflow GERMLINE_VARIANT_CALLING {
     freebayes_vcf_gz_tbi
     haplotypecaller_gvcf_gz_tbi
     strelka_vcf_gz_tbi
+
+    versions = ch_versions
 }

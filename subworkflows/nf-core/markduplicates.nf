@@ -110,5 +110,5 @@ workflow MARKDUPLICATES {
         cram     = cram_markduplicates
         qc       = qc_reports
 
-        versions = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
+        versions = ch_versions // channel: [ versions.yml ]
 }

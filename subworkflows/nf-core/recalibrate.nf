@@ -24,6 +24,7 @@ workflow RECALIBRATE {
 
     main:
 
+    ch_versions           = Channel.empty()
     cram_recalibrated_index = Channel.empty()
     cram_recalibrated       = Channel.empty()
     cram_reports            = Channel.empty()
@@ -37,9 +38,11 @@ workflow RECALIBRATE {
     if(use_gatk_spark){
         APPLYBQSR_SPARK(cram_intervals, fasta, fasta_fai, dict)
         cram_applybqsr = APPLYBQSR_SPARK.out.cram
+        ch_versions = ch_versions.mix(APPLYBQSR_SPARK.out.versions)
     }else{
         APPLYBQSR(cram_intervals, fasta, fasta_fai, dict)
         cram_applybqsr = APPLYBQSR.out.cram
+        ch_versions = ch_versions.mix(APPLYBQSR.out.versions)
     }
 
     // STEP 4.5: MERGING AND INDEXING THE RECALIBRATED BAM FILES
@@ -53,9 +56,11 @@ workflow RECALIBRATE {
 
         SAMTOOLS_MERGE_CRAM(cram_recalibrated_interval, fasta)
         cram_recalibrated = SAMTOOLS_MERGE_CRAM.out.cram
+        ch_versions = ch_versions.mix(SAMTOOLS_MERGE_CRAM.out.versions)
 
         INDEX_RECALIBRATE(cram_recalibrated)
         cram_recalibrated_index = INDEX_RECALIBRATE.out.cram_crai
+        ch_versions = ch_versions.mix(INDEX_RECALIBRATE.out.versions)
 
         qualimap_bamqc = Channel.empty()
         samtools_stats = Channel.empty()
@@ -64,11 +69,13 @@ workflow RECALIBRATE {
             //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
             QUALIMAP_BAMQC_CRAM(cram_recalibrated_index, intervals, fasta, fasta_fai)
             qualimap_bamqc = QUALIMAP_BAMQC_CRAM.out.results
+            ch_versions = ch_versions.mix(QUALIMAP_BAMQC_CRAM.out.versions)
         }
 
         if (!skip_samtools) {
             SAMTOOLS_STATS(cram_recalibrated_index, fasta)
             samtools_stats = SAMTOOLS_STATS.out.stats
+            ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions)
         }
         cram_reports = samtools_stats.mix(qualimap_bamqc)
     }
@@ -76,4 +83,5 @@ workflow RECALIBRATE {
     emit:
         cram = cram_recalibrated_index
         qc  = cram_reports
+        versions = ch_versions
 }

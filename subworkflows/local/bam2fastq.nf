@@ -21,22 +21,26 @@ workflow ALIGNMENT_TO_FASTQ {
 
 
     main:
-
+    ch_versions = Channel.empty()
     //Index File if not PROVIDED -> this also requires updates to samtools view possibly URGH
 
     //QC input BAM? -> needs another FASTQC module implementation
 
     //MAP - MAP
     SAMTOOLS_VIEW_MAP_MAP(input, fasta)
+    ch_versions = ch_versions.mix(SAMTOOLS_VIEW_MAP_MAP.out.versions)
 
     // UNMAP - UNMAP
     SAMTOOLS_VIEW_UNMAP_UNMAP(input, fasta)
+    ch_versions = ch_versions.mix(SAMTOOLS_VIEW_UNMAP_UNMAP.out.versions)
 
     // UNMAP - MAP
     SAMTOOLS_VIEW_UNMAP_MAP(input, fasta)
+    ch_versions = ch_versions.mix(SAMTOOLS_VIEW_UNMAP_MAP.out.versions)
 
     //MAP - UNMAP
     SAMTOOLS_VIEW_MAP_UNMAP(input, fasta)
+    ch_versions = ch_versions.mix(SAMTOOLS_VIEW_MAP_UNMAP.out.versions)
 
     // Merge UNMAP
     SAMTOOLS_VIEW_UNMAP_UNMAP.out.bam.join(SAMTOOLS_VIEW_UNMAP_MAP.out.bam, remainder: true)
@@ -46,12 +50,15 @@ workflow ALIGNMENT_TO_FASTQ {
                 }.set{ all_unmapped_bam }
 
     SAMTOOLS_MERGE_UNMAPPED(all_unmapped_bam, fasta)
+    ch_versions = ch_versions.mix(SAMTOOLS_MERGE_UNMAPPED.out.versions)
 
     // Collate & convert unmapped
     SAMTOOLS_FASTQ_UNMAPPED(SAMTOOLS_MERGE_UNMAPPED.out.bam)
+    ch_versions = ch_versions.mix(SAMTOOLS_FASTQ_UNMAPPED.out.versions)
 
     // Collate & convert mapped
     SAMTOOLS_FASTQ_MAPPED(SAMTOOLS_VIEW_MAP_MAP.out.bam)
+    ch_versions = ch_versions.mix(SAMTOOLS_FASTQ_MAPPED.out.versions)
 
     // join Mapped & unmapped fastq
     SAMTOOLS_FASTQ_UNMAPPED.out.reads.map{ meta, reads ->
@@ -72,8 +79,10 @@ workflow ALIGNMENT_TO_FASTQ {
 
     // Concatenate Mapped_R1 with Unmapped_R1 and Mapped_R2 with Unmapped_R2
     CAT_FASTQ(reads_to_concat)
+    ch_versions = ch_versions.mix(CAT_FASTQ.out.versions)
 
     emit:
-    reads = CAT_FASTQ.out.reads
+    reads       = CAT_FASTQ.out.reads
+    versions    = ch_versions
 
 }

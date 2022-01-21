@@ -98,6 +98,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         //     panel_of_normals_tbi,
         //     intervals
         // )
+        // ch_versions = ch_versions.mix()
         //TODO: mutectSTATS
     }
 
