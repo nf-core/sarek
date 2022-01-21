@@ -70,15 +70,13 @@ workflow GATK4_MAPPING {
 
         // groupKey is to makes sure that the correct group can advance as soon as it is complete
         // and not stall the workflow until all pieces are mapped
-        //TODO: this won't work anymore split_fastq is now number of reads
-        //Harcoding the values works, so it is the number not hte concept that is wrong
-        println meta.numLanes * meta.size
-        def groupKey = groupKey(meta, meta.numLanes * meta.size)//meta.numLanes * params.split_fastq)
-        //println groupKey
-        tuple(groupKey, bam)
-
-        //[new_meta, bam] //TODO: this reverts the beautiful groupTuple above
-    }.groupTuple().set{bam_mapped}
+        def groupKey = groupKey(meta, meta.numLanes * meta.size)
+        //Returns the values we need
+        tuple(groupKey, new_meta, bam)
+    }.groupTuple(by:[0,1]).map{ groupKey, new_meta, bam ->
+        println new_meta.getClass()
+        println bam.getClass()
+        [new_meta, bam]}.set{bam_mapped}
 
     bam_mapped.view()
     // GATK markduplicates can handle multiple BAMS as input
