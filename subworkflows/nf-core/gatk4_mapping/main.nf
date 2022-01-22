@@ -33,7 +33,12 @@ workflow GATK4_MAPPING {
             key.size = read_files.size()
             [key, read_files]
         }.transpose()
-    } else reads_input_split = reads_input
+    } else {
+        reads_input_split =  reads_input.map{ meta, reads ->
+            meta.size = 1
+            [meta, reads]
+        }
+    }
 
 
 
@@ -68,15 +73,19 @@ workflow GATK4_MAPPING {
         new_meta.remove('read_group')
         new_meta.id = meta.sample
 
+        println meta.numLanes.getClass()
+        println meta.size.getClass()
+
         // groupKey is to makes sure that the correct group can advance as soon as it is complete
         // and not stall the workflow until all pieces are mapped
         def groupKey = groupKey(meta, meta.numLanes * meta.size)
+
         //Returns the values we need
         tuple(groupKey, new_meta, bam)
-    }.groupTuple(by:[0,1]).map{ groupKey, new_meta, bam ->
-        println new_meta.getClass()
-        println bam.getClass()
-        [new_meta, bam]}.set{bam_mapped}
+    }.groupTuple(by:[0,1]).map{
+        groupKey, new_meta, bam ->
+        [new_meta, bam]
+    }.set{bam_mapped}
 
     bam_mapped.view()
     // GATK markduplicates can handle multiple BAMS as input
