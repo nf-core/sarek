@@ -4,7 +4,7 @@
     - preprocessing
     - targeted
   files:
-    - path: results/multiqc
+    # - path: results/multiqc
     - path: results/preprocessing/1234N/markduplicates/1234N.md.cram
     - path: results/preprocessing/1234N/markduplicates/1234N.md.cram.crai
     - path: results/preprocessing/1234N/recal_table/1234N.recal.table

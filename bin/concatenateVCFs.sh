@@ -57,7 +57,7 @@ then
     # Get list of contigs from the FASTA index (.fai)
     # ##contig header in the VCF cannot be used as it is optional (FreeBayes does not save it, for example)
 
-   CONTIGS=($(cut -f1 ${genomeIndex}))
+    CONTIGS=($(cut -f1 ${genomeIndex}))
 
     #Concatenate VCFs in the correct order
     (

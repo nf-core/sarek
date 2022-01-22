@@ -30,18 +30,18 @@ jobs:
             NXF_EDGE: '1'
         test:
           - 'aligner'
-          #- 'annotation'
+          - 'annotation'
           - 'default'
-          #- 'split_fastq'
-          #- 'umi'
-          #- 'gatk4_spark'
-          #- 'save_bam_mapped'
-          #- 'skip_markduplicates'
+          - 'split_fastq'
+          - 'umi'
+          - 'gatk4_spark'
+          - 'save_bam_mapped'
+          - 'skip_markduplicates'
           # - 'targeted'
-          #- 'tumor_normal_pair'
+          - 'tumor_normal_pair'
           # - 'variant_calling'
           # - bam_input
-          #- 'prepare_recalibration'
+          - 'prepare_recalibration'
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2

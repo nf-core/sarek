@@ -414,7 +414,7 @@ workflow SAREK {
             num_intervals,
             params.joint_germline)
             //target_bed,
-           // target_bed_gz_tbi)
+            // target_bed_gz_tbi)
 
         //vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf)
         //vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)

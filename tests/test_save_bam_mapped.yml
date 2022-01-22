@@ -4,7 +4,7 @@
     - preprocessing
     - save_bam_mapped
   files:
-    - path: results/multiqc
+    # - path: results/multiqc
     - path: results/preprocessing/test/mapped/test-test_L1.bam
     - path: results/preprocessing/test/mapped/test-test_L1.bam.bai
     - path: results/preprocessing/test/markduplicates/test.md.cram
