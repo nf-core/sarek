@@ -146,7 +146,7 @@ include { GERMLINE_VARIANT_CALLING  } from '../subworkflows/local/germline_varia
 // Variant calling on a single tumor sample
 include { TUMOR_ONLY_VARIANT_CALLING} from '../subworkflows/local/tumor_variant_calling'
 // Variant calling on tumor/normal pair
-include { PAIR_VARIANT_CALLING      } from '../subworkflows/local/pair_variant_calling'
+//include { PAIR_VARIANT_CALLING      } from '../subworkflows/local/pair_variant_calling'
 
 // Annotation
 include { ANNOTATE                     } from '../subworkflows/local/annotate' addParams(
