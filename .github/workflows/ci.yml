@@ -29,7 +29,7 @@ jobs:
           - NXF_VER: ''
             NXF_EDGE: '1'
         test:
-          #- 'aligner'
+          - 'aligner'
           #- 'annotation'
           - 'default'
           #- 'split_fastq'

@@ -73,9 +73,6 @@ workflow GATK4_MAPPING {
         new_meta.remove('read_group')
         new_meta.id = meta.sample
 
-        println meta.numLanes.getClass()
-        println meta.size.getClass()
-
         // groupKey is to makes sure that the correct group can advance as soon as it is complete
         // and not stall the workflow until all pieces are mapped
         def groupKey = groupKey(meta, meta.numLanes * meta.size)

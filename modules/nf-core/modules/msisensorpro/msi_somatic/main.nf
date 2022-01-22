@@ -1,14 +1,14 @@
-process MSISENSOR_MSI {
+process MSISENSORPRO_MSI_SOMATIC {
     tag "$meta.id"
     label 'process_low'
 
-    conda (params.enable_conda ? "bioconda::msisensor=0.5" : null)
+    conda (params.enable_conda ? "bioconda:: msisensor-pro=1.2.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/msisensor:0.5--hb3646a4_2' :
-        'quay.io/biocontainers/msisensor:0.5--hb3646a4_2' }"
+        'https://depot.galaxyproject.org/singularity/msisensor-pro:1.2.0--hfc31af2_0' :
+        'quay.io/biocontainers/msisensor-pro:1.2.0--hfc31af2_0' }"
 
     input:
-    tuple val(meta), path(normal_bam), path(normal_bai), path(tumor_bam), path(tumor_bai), val(metascan), path(homopolymers)
+    tuple val(meta), path(normal_bam), path(normal_bai), path(tumor_bam), path(tumor_bai)
 
     output:
     tuple val(meta), path("${prefix}")         , emit: output
@@ -21,7 +21,7 @@ process MSISENSOR_MSI {
     def args = task.ext.args   ?: ''
     prefix   = task.ext.prefix ?: "${meta.id}"
     """
-    msisensor \\
+    msisensor-pro \\
         msi \\
         -d $homopolymers \\
         -n $normal_bam \\

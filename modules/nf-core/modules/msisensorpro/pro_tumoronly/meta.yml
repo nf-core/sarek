@@ -1,0 +1,69 @@
+name: msisensor_msi
+
+description: Evaluate microsattelite instability (MSI) using paired tumor-normal sequencing data
+keywords:
+  - homoploymer,microsatellite
+tools:
+  - msisensor:
+      description: MSIsensor is a C++ program to detect replication slippage variants at microsatellite regions, and differentiate them as somatic or germline.
+      homepage: https://github.com/ding-lab/msisensor
+      documentation: None
+      tool_dev_url: None
+      doi: "10.1093/bioinformatics/btt755"
+      licence: ['MIT']
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - normal_bam:
+      type: file
+      description: Coordinate sorted BAM/CRAM/SAM file from normal tissue
+      pattern: "*.{bam,cram,sam}"
+  - normal_bai:
+      type: file
+      description: Index for coordinate sorted BAM/CRAM/SAM file from normal tissue
+      pattern: "*.{bam,cram,sam}"
+  - tumor_bam:
+      type: file
+      description: Coordinate sorted BAM/CRAM/SAM file from tumor tissue
+      pattern: "*.{bam,cram,sam}"
+  - tumor_bai:
+      type: file
+      description: Index for coordinate sorted BAM/CRAM/SAM file from tumor tissue
+      pattern: "*.{bam,cram,sam}"
+  - homopolymers:
+      type: file
+      description: Output file from MSIsensor scan module
+      pattern: "*.msisensor_scan.tab"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - txt:
+      type: file
+      description: MSIsensor MSI final report file
+      pattern: "*.output"
+  - txt:
+      type: file
+      description: MSIsensor MSI DIS report file
+      pattern: "*.output_dis"
+  - txt:
+      type: file
+      description: MSIsensor MSI germline report file
+      pattern: "*.output_germline"
+  - txt:
+      type: file
+      description: MSIsensor MSI somatic report file
+      pattern: "*.output_somatic"
+authors:
+  - "@kevbrick"
