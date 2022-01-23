@@ -67,7 +67,8 @@ workflow RECALIBRATE {
 
         if (!skip_bamqc) {
             //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
-            QUALIMAP_BAMQC_CRAM(cram_recalibrated_index, intervals, fasta, fasta_fai)
+            //TODO: replace empty list with ONE target file
+            QUALIMAP_BAMQC_CRAM(cram_recalibrated_index, [], fasta, fasta_fai)
             qualimap_bamqc = QUALIMAP_BAMQC_CRAM.out.results
             ch_versions = ch_versions.mix(QUALIMAP_BAMQC_CRAM.out.versions)
         }
