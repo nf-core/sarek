@@ -34,7 +34,7 @@ jobs:
           - 'default'
           - 'split_fastq'
           - 'umi'
-          # - 'gatk4_spark'
+          - 'gatk4_spark'
           - 'save_bam_mapped'
           - 'skip_markduplicates'
           # - 'targeted'
