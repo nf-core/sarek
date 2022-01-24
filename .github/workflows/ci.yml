@@ -30,9 +30,9 @@ jobs:
             NXF_EDGE: '1'
         test:
           - 'aligner'
-          # - 'annotation'
+          - 'annotation'
           - 'default'
-          # - 'split_fastq'
+          - 'split_fastq'
           # - 'umi'
           # - 'gatk4_spark'
           # - 'save_bam_mapped'
