@@ -26,10 +26,10 @@
     - path: results/preprocessing/csv/recalibrated_test2.csv
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/fastqc/test2-test2_L1
-    - path: results/reports/qualimap/test/test.mapped
-    - path: results/reports/qualimap/test/test.recal
-    - path: results/reports/qualimap/test2/test2.mapped
-    - path: results/reports/qualimap/test2/test2.recal
+    #- path: results/reports/qualimap/test/test.mapped
+    #- path: results/reports/qualimap/test/test.recal
+    #- path: results/reports/qualimap/test2/test2.mapped
+    #- path: results/reports/qualimap/test2/test2.recal
     - path: results/reports/samtools_stats/test/test.md.cram.stats
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
     - path: results/reports/samtools_stats/test2/test2.md.cram.stats
