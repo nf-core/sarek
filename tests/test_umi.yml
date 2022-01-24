@@ -57,7 +57,7 @@
     - path: results/bam2fastq/1234N-HT1080_interleaved.fq.gz
       md5sum: b037fe8e180e805226485d9bea4a69e5
     - path: results/callumiconsensus/1234N-HT1080_umi-consensus.bam
-      md5sum: b504115bb95aabe4a840e40de2e157aa
+      md5sum: 807bfe6a82eabdf29aaf8bc6a832f0cd
     - path: results/cat/1234N-HT1080_1.merged.fastq.gz
       md5sum: c8f0d1308df4c46c0716ccfe76f78fb4
     - path: results/cat/1234N-HT1080_2.merged.fastq.gz
@@ -83,7 +83,7 @@
     - path: results/samtools/1234N-HT1080.unmap_map.bam
       md5sum: 6267d0ed8274e1fa7aad8d1e71d98696
     - path: results/samtools/1234N-HT1080.unmap_unmap.bam
-      md5sum: 59151ce086e8ffbe318030347bb4d7c5
+      md5sum: 32ed07aa23900f5722e5983a646a5ac2
     - path: results/samtools/1234N-HT1080.unmapped_1.fq.gz
       md5sum: d9a7a279c05563a37d9a5a6938be68fb
     - path: results/samtools/1234N-HT1080.unmapped_2.fq.gz
