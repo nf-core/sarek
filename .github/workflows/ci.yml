@@ -33,7 +33,7 @@ jobs:
           - 'annotation'
           - 'default'
           # - 'split_fastq'
-          # - 'umi'
+          - 'umi'
           # - 'gatk4_spark'
           # - 'save_bam_mapped'
           # - 'skip_markduplicates'
