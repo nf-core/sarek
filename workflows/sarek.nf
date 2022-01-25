@@ -221,6 +221,8 @@ workflow SAREK {
     intervals                         = PREPARE_GENOME.out.intervals
     intervals_bed_gz_tbi              = PREPARE_GENOME.out.intervals_bed_gz_tbi
     intervals_bed_combined_gz_tbi     = PREPARE_GENOME.out.intervals_combined
+    intervals_bed_combined_gz         = intervals_bed_combined_gz_tbi.map{ bed, tbi -> bed}
+
     num_intervals = 0
     intervals.count().map{ num_intervals = it }
 
@@ -327,7 +329,7 @@ workflow SAREK {
             params.skip_markduplicates,
             ('bamqc' in params.skip_qc),
             ('samtools' in params.skip_qc),
-            intervals) //target_bed)
+            []) //target_bed) // TODO: add interval file
 
         cram_markduplicates = MARKDUPLICATES.out.cram
 
@@ -377,7 +379,8 @@ workflow SAREK {
                 fasta,
                 fasta_fai,
                 intervals,
-                num_intervals
+                num_intervals,
+                [] //TODO add intervals
             )
                 //target_bed)
 
