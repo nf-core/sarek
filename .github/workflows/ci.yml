@@ -39,7 +39,7 @@ jobs:
           - 'skip_markduplicates'
           # - 'targeted'
           - 'tumor_normal_pair'
-          - 'tools'
+          # - 'tools'
           # - bam_input
           - 'prepare_recalibration'
     steps:
