@@ -71,6 +71,7 @@ workflow GATK4_MAPPING {
     bam_from_aligner.map{ meta, bam ->
         new_meta = meta.clone()
         new_meta.remove('read_group')
+        new_meta.remove('size')
         new_meta.id = meta.sample
 
         // groupKey is to makes sure that the correct group can advance as soon as it is complete
@@ -84,7 +85,6 @@ workflow GATK4_MAPPING {
         [new_meta, bam]
     }.set{bam_mapped}
 
-    bam_mapped.view()
     // GATK markduplicates can handle multiple BAMS as input
     // So no merging/indexing at this step
     // Except if and only if skipping markduplicates

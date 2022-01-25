@@ -22,37 +22,37 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
 
     main:
     ch_versions = Channel.empty()
-    mutect2_input = channel.from(input)
+    mutect2_input = Channel.from(input)
 
     //
     //Perform variant calling using mutect2 module in tumor single mode.
     //
     //TODO: intervals? in that case add CONCAT_VCF
-    //MUTECT2 ( mutect2_input , true , false , false , [] , fasta , fai , dict , germline_resource , germline_resource_tbi , panel_of_normals , panel_of_normals_tbi )
-    //ch_versions = ch_versions.mix(MUTECT2.out.versions)
+    MUTECT2 ( mutect2_input , true , false , false , [] , fasta , fai , dict , germline_resource , germline_resource_tbi , panel_of_normals , panel_of_normals_tbi )
+    ch_versions = ch_versions.mix(MUTECT2.out.versions)
 
-    // //
-    // //Generate pileup summary table using getpileupsummaries.
-    // //
-    // pileup_input = channel.from(input).map {
+    //
+    //Generate pileup summary table using getpileupsummaries.
+    //
+    // pileup_input = mutect2_input.map {
     //     meta, input_file, input_index, which_norm ->
     //     [meta, input_file[0], input_index[0]]
     // }
     // GETPILEUPSUMMARIES ( pileup_input , germline_resource , germline_resource_tbi , interval_file )
     // ch_versions = ch_versions.mix(GETPILEUPSUMMARIES.out.versions)
 
-    // //
-    // //Contamination and segmentation tables created using calculatecontamination on the pileup summary table.
-    // //
+    //
+    //Contamination and segmentation tables created using calculatecontamination on the pileup summary table.
+    //
     // ch_pileup = GETPILEUPSUMMARIES.out.table.collect()
     // //[] is a placeholder for the optional input where the matched normal sample would be passed in for tumor-normal samples, which is not necessary for this workflow.
     // ch_pileup.add([])
     // CALCULATECONTAMINATION ( ch_pileup, true )
     // ch_versions = ch_versions.mix(CALCULATECONTAMINATION.out.versions)
 
-    // //
-    // //Mutect2 calls filtered by filtermutectcalls using the contamination and segmentation tables.
-    // //
+    //
+    //Mutect2 calls filtered by filtermutectcalls using the contamination and segmentation tables.
+    //
     // ch_vcf =           MUTECT2.out.vcf.collect()
     // ch_tbi =           MUTECT2.out.tbi.collect()
     // ch_stats =         MUTECT2.out.stats.collect()

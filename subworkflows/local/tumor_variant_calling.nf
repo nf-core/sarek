@@ -30,9 +30,10 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         fasta_fai               // channel: [mandatory] fasta_fai
         intervals               // channel: [mandatory] intervals/target regions
         intervals_bed_gz_tbi    // channel: [mandatory] intervals/target regions index zipped and indexed
+        intervals_bed_combined_gz_tbi    // channel: [mandatory] intervals/target regions index zipped and indexed
         num_intervals           // val: number of intervals that are used to parallelize exection, either based on capture kit or GATK recommended for WGS
         germline_resource
-        germline_resource_tbi // channel
+        germline_resource_tbi   // channel
         panel_of_normals
         panel_of_normals_tbi
         //target_bed        // channel: [optional]  target_bed
@@ -59,7 +60,6 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         }.set{cram_recalibrated_intervals_gz_tbi}
 
     if (tools.contains('freebayes')){
-        //TODO: Pass over dbsnp/knwon_indels?
         cram_recalibrated.combine(intervals).map{ meta, cram, crai, intervals ->
             new_meta = meta.clone()
             new_meta.id = meta.sample + "_" + intervals.simpleName
@@ -78,7 +78,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         BGZIP_FREEBAYES(FREEBAYES.out.vcf)
         freebayes_vcf_to_concat = BGZIP_FREEBAYES.out.vcf.groupTuple(size: num_intervals)
 
-        CONCAT_VCF_FREEBAYES(freebayes_vcf_to_concat,fasta_fai, intervals)
+        CONCAT_VCF_FREEBAYES(freebayes_vcf_to_concat,fasta_fai, intervals_bed_combined_gz_tbi)
         freebayes_vcf_gz_tbi = CONCAT_VCF_FREEBAYES.out.vcf
 
         ch_versions = ch_versions.mix(FREEBAYES.out.versions)
@@ -87,19 +87,19 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
     }
 
     if (tools.contains('mutect2')) {
-        // GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING(
-        //     cram_recalibrated,
-        //     fasta,
-        //     fasta_fai,
-        //     dict,
-        //     germline_resource,
-        //     germline_resource_tbi,
-        //     panel_of_normals,
-        //     panel_of_normals_tbi,
-        //     intervals
-        // )
-        // ch_versions = ch_versions.mix()
-        //TODO: mutectSTATS
+        GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING(
+            cram_recalibrated,
+            fasta,
+            fasta_fai,
+            dict,
+            germline_resource,
+            germline_resource_tbi,
+            panel_of_normals,
+            panel_of_normals_tbi,
+            intervals
+        )
+        //ch_versions = ch_versions.mix()
+        //TODO: mutectSTATS?
     }
 
     if (tools.contains('manta')){
@@ -127,7 +127,6 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
 
     if (tools.contains('strelka')) {
         //TODO: research if multiple targets can be provided: waiting for reply
-        //TODO: Pass over dbsnp/knwon_indels?
 
         STRELKA_TUMORONLY(
             cram_recalibrated_intervals_gz_tbi,
@@ -138,19 +137,13 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         BGZIP_STRELKA(STRELKA_TUMORONLY.out.vcf)
         strelka_vcf_to_concat = BGZIP_STRELKA.out.vcf.groupTuple(size: num_intervals)
 
-        CONCAT_VCF_STRELKA(strelka_vcf_to_concat,fasta_fai, intervals)
+        CONCAT_VCF_STRELKA(strelka_vcf_to_concat,fasta_fai, intervals_bed_combined_gz_tbi)
         strelka_vcf_gz_tbi = CONCAT_VCF_STRELKA.out.vcf
 
         ch_versions = ch_versions.mix(STRELKA_TUMORONLY.out.versions)
         ch_versions = ch_versions.mix(BGZIP_STRELKA.out.versions)
         ch_versions = ch_versions.mix(CONCAT_VCF_STRELKA.out.versions)
     }
-
-    //if (tools.contains('msisensor')){
-        //TODO: Requires a baseline optimally per tumor/sequencing type. I am not convinced it is in
-        // our scope to tupport this at this time
-        //MSISENSORPRO_MSI(cram_recalibrated, msisensorpro_scan)
-    //}
 
     emit:
     strelka_vcf_tbi        = Channel.empty()

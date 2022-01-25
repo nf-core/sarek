@@ -40,7 +40,7 @@ workflow GERMLINE_VARIANT_CALLING {
         intervals_bed_gz_tbi // channel: [mandatory] intervals/target regions index zipped and indexed
         num_intervals     // val: number of intervals that are used to parallelize exection, either based on capture kit or GATK recommended for WGS
         joint_germline    // val: true/false on whether to run joint_germline calling, only works in combination with haplotypecaller at the moment
-        //target_bed        // channel: [optional]  target_bed
+        intervals_bed_combine_gz_tbi        // channel: [mandatory] intervals/target regions index zipped and indexed in one file
         //target_bed_gz_tbi // channel: [optional]  target_bed_gz_tbi
 
     main:
@@ -67,10 +67,13 @@ workflow GERMLINE_VARIANT_CALLING {
             [new_meta, cram, crai, bed, tbi]
         }.set{cram_recalibrated_intervals_gz_tbi}
 
+    intervals_bed_combine_gz_tbi.map{ bed_gz, tbi -> [bed_gz]}.set{intervals_bed_combine_gz}
+
+    //TODO: benchmark if it is better to provide multiple bed files & run on multiple machines + mergeing afterwards || one containing all intervals and run on one larger machine
 
     if (tools.contains('deepvariant')) {
-        //TODO: research if multiple targets can be provided
-        //TODO: Pass over dbsnp/knwon_indels?
+        //TODO: research if multiple targets can be provided: open issue, waiting on answer from maintainers
+        // Answer: numshards runs in parallel but on one machine
         DEEPVARIANT(
             cram_recalibrated_intervals,
             fasta,
@@ -82,8 +85,8 @@ workflow GERMLINE_VARIANT_CALLING {
         deepvariant_vcf_to_concat = BGZIP_DEEPVARIANT_VCF.out.vcf.groupTuple(size: num_intervals)
         deepvariant_gvcf_to_concat = BGZIP_DEEPVARIANT_GVCF.out.vcf.groupTuple(size: num_intervals)
 
-        CONCAT_VCF_DEEPVARIANT(deepvariant_vcf_to_concat,fasta_fai, intervals)
-        CONCAT_GVCF_DEEPVARIANT(deepvariant_gvcf_to_concat,fasta_fai, intervals)
+        CONCAT_VCF_DEEPVARIANT(deepvariant_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
+        CONCAT_GVCF_DEEPVARIANT(deepvariant_gvcf_to_concat,fasta_fai, intervals_bed_combine_gz)
 
         deepvariant_vcf_gz_tbi = CONCAT_VCF_DEEPVARIANT.out.vcf
         deepvariant_gvcf_gz_tbi = CONCAT_GVCF_DEEPVARIANT.out.vcf
@@ -95,7 +98,6 @@ workflow GERMLINE_VARIANT_CALLING {
 
     if (tools.contains('freebayes')){
 
-        //TODO: Pass over dbsnp/knwon_indels?
         cram_recalibrated.combine(intervals).map{ meta, cram, crai, intervals ->
             new_meta = meta.clone()
             new_meta.id = meta.sample + "_" + intervals.simpleName
@@ -114,7 +116,7 @@ workflow GERMLINE_VARIANT_CALLING {
         BGZIP_FREEBAYES(FREEBAYES.out.vcf)
         freebayes_vcf_to_concat = BGZIP_FREEBAYES.out.vcf.groupTuple(size: num_intervals)
 
-        CONCAT_VCF_FREEBAYES(freebayes_vcf_to_concat,fasta_fai, intervals)
+        CONCAT_VCF_FREEBAYES(freebayes_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
         freebayes_vcf_gz_tbi = CONCAT_VCF_FREEBAYES.out.vcf
 
         ch_versions = ch_versions.mix(FREEBAYES.out.versions)
@@ -136,9 +138,7 @@ workflow GERMLINE_VARIANT_CALLING {
         BGZIP_HAPLOTYPECALLER(HAPLOTYPECALLER.out.vcf)
 
         haplotypecaller_gvcf_to_concat = BGZIP_HAPLOTYPECALLER.out.vcf.groupTuple(size: num_intervals)
-        //TODO: some tools seem to need one continuous bed or at least it is not explitely stated that they can
-        // parallelize over the intervals (here anyways not) so add one bed file having all intervals concated
-        CONCAT_VCF_HAPLOTYPECALLER(haplotypecaller_gvcf_to_concat, fasta_fai, intervals)
+        CONCAT_VCF_HAPLOTYPECALLER(haplotypecaller_gvcf_to_concat, fasta_fai, intervals_bed_combine_gz)
         haplotypecaller_gvcf_gz_tbi = CONCAT_VCF_HAPLOTYPECALLER.out.vcf
 
         ch_versions = ch_versions.mix(HAPLOTYPECALLER.out.versions)
@@ -147,7 +147,7 @@ workflow GERMLINE_VARIANT_CALLING {
 
         if(joint_germline){
             run_haplotypecaller = false
-            run_vqsr            = true
+            run_vqsr            = true //parameter?
             //Waiting on some feedback from gavin
             // GATK_JOINT_GERMLINE_VARIANT_CALLING(
             //     haplotypecaller_vcf_gz_tbi,
@@ -156,11 +156,15 @@ workflow GERMLINE_VARIANT_CALLING {
             //     fasta,
             //     fasta_fai,
             //     dict,
-            //     //TODO: replace with known_sites?
             //     dbsnp,
             //     dbsnp_tbi,
             //     "joined",
-
+            //      allelespecific?
+            //      resources?
+            //      annotation?
+            //     "BOTH",
+            //     true,
+            //     truthsensitivity -> parameter or module?
             // )
             // ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
         }
@@ -168,22 +172,20 @@ workflow GERMLINE_VARIANT_CALLING {
     }
 
     if (tools.contains('manta')){
-        //TODO: test data not running
         //TODO: Research if splitting by intervals is ok
         //TODO: merge parallelized vcfs, index them all
-        //TODO: Pass over dbsnp/knwon_indels?
 
-        // MANTA_GERMLINE(
-        //     cram_recalibrated_intervals_gz_tbi,
-        //     fasta,
-        //     fasta_fai
-        // )
+        MANTA_GERMLINE(
+            cram_recalibrated_intervals_gz_tbi,
+            fasta,
+            fasta_fai
+        )
 
-        // manta_candidate_small_indels_vcf_tbi = MANTA_GERMLINE.out.candidate_small_indels_vcf.join(MANTA_GERMLINE.out.candidate_small_indels_vcf_tbi)
-        // manta_candidate_sv_vcf_tbi = MANTA_GERMLINE.out.candidate_sv_vcf.join(MANTA_GERMLINE.out.candidate_sv_vcf_tbi)
-        // manta_diploid_sv_vcf_tbi = MANTA_GERMLINE.out.diploid_sv_vcf.join(MANTA_GERMLINE.out.diploid_sv_vcf)
+        manta_candidate_small_indels_vcf_tbi = MANTA_GERMLINE.out.candidate_small_indels_vcf.join(MANTA_GERMLINE.out.candidate_small_indels_vcf_tbi)
+        manta_candidate_sv_vcf_tbi           = MANTA_GERMLINE.out.candidate_sv_vcf.join(MANTA_GERMLINE.out.candidate_sv_vcf_tbi)
+        manta_diploid_sv_vcf_tbi             = MANTA_GERMLINE.out.diploid_sv_vcf.join(MANTA_GERMLINE.out.diploid_sv_vcf)
 
-        // ch_versions = ch_versions.mix(MANTA_GERMLINE.out.versions)
+        ch_versions = ch_versions.mix(MANTA_GERMLINE.out.versions)
     }
 
     if (tools.contains('strelka')) {
@@ -199,7 +201,7 @@ workflow GERMLINE_VARIANT_CALLING {
         BGZIP_STRELKA(STRELKA_GERMLINE.out.vcf)
         strelka_vcf_to_concat = BGZIP_STRELKA.out.vcf.groupTuple(size: num_intervals)
 
-        CONCAT_VCF_STRELKA(strelka_vcf_to_concat,fasta_fai, intervals)
+        CONCAT_VCF_STRELKA(strelka_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
         strelka_vcf_gz_tbi = CONCAT_VCF_STRELKA.out.vcf
 
         ch_versions = ch_versions.mix(STRELKA_GERMLINE.out.versions)

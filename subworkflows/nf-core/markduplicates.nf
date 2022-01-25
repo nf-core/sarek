@@ -24,7 +24,7 @@ workflow MARKDUPLICATES {
         skip_markduplicates // boolean: true/false
         skip_bamqc          // boolean: true/false
         skip_samtools       // boolean: true/false
-        intervals           // channel: [optional]  target_bed
+        intervals_combined_bed_gz_tbi           // channel: [optional]  target_bed
 
     main:
 
@@ -97,7 +97,7 @@ workflow MARKDUPLICATES {
     if (!skip_bamqc) {
         //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
         //TODO: error when no_intervals is set, also only runs once now, prob a complete list of intervals needs to be provided simialr as to concat_vcf
-        QUALIMAP_BAMQC(bam_bai_markduplicates, [])
+        QUALIMAP_BAMQC(bam_bai_markduplicates, intervals_combined_bed_gz_tbi)
         qualimap_bamqc = QUALIMAP_BAMQC.out.results
 
         ch_versions = ch_versions.mix(QUALIMAP_BAMQC.out.versions.first())

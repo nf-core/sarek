@@ -4,18 +4,19 @@
 
 // Initialize channels based on params or indices that were just built
 
-include { BUILD_INTERVALS                        } from '../../modules/local/build_intervals/main'
-include { BWA_INDEX as BWAMEM1_INDEX             } from '../../modules/nf-core/modules/bwa/index/main'
-include { BWAMEM2_INDEX                          } from '../../modules/nf-core/modules/bwamem2/index/main'
-include { CREATE_INTERVALS_BED                   } from '../../modules/local/create_intervals_bed/main'
-include { GATK4_CREATESEQUENCEDICTIONARY         } from '../../modules/nf-core/modules/gatk4/createsequencedictionary/main'
-include { MSISENSORPRO_SCAN                      } from '../../modules/nf-core/modules/msisensorpro/scan/main'
-include { SAMTOOLS_FAIDX                         } from '../../modules/nf-core/modules/samtools/faidx/main'
-include { TABIX_BGZIPTABIX                       } from '../../modules/nf-core/modules/tabix/bgziptabix/main'
-include { TABIX_TABIX as TABIX_DBSNP             } from '../../modules/nf-core/modules/tabix/tabix/main'
-include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE } from '../../modules/nf-core/modules/tabix/tabix/main'
-include { TABIX_TABIX as TABIX_KNOWN_INDELS      } from '../../modules/nf-core/modules/tabix/tabix/main'
-include { TABIX_TABIX as TABIX_PON               } from '../../modules/nf-core/modules/tabix/tabix/main'
+include { BUILD_INTERVALS                                     } from '../../modules/local/build_intervals/main'
+include { BWA_INDEX as BWAMEM1_INDEX                          } from '../../modules/nf-core/modules/bwa/index/main'
+include { BWAMEM2_INDEX                                       } from '../../modules/nf-core/modules/bwamem2/index/main'
+include { CREATE_INTERVALS_BED                                } from '../../modules/local/create_intervals_bed/main'
+include { GATK4_CREATESEQUENCEDICTIONARY                      } from '../../modules/nf-core/modules/gatk4/createsequencedictionary/main'
+include { MSISENSORPRO_SCAN                                   } from '../../modules/nf-core/modules/msisensorpro/scan/main'
+include { SAMTOOLS_FAIDX                                      } from '../../modules/nf-core/modules/samtools/faidx/main'
+include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_SPLIT } from '../../modules/nf-core/modules/tabix/bgziptabix/main'
+include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_ALL   } from '../../modules/nf-core/modules/tabix/bgziptabix/main'
+include { TABIX_TABIX as TABIX_DBSNP                          } from '../../modules/nf-core/modules/tabix/tabix/main'
+include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE              } from '../../modules/nf-core/modules/tabix/tabix/main'
+include { TABIX_TABIX as TABIX_KNOWN_INDELS                   } from '../../modules/nf-core/modules/tabix/tabix/main'
+include { TABIX_TABIX as TABIX_PON                            } from '../../modules/nf-core/modules/tabix/tabix/main'
 
 workflow PREPARE_GENOME {
     take:
@@ -97,14 +98,22 @@ workflow PREPARE_GENOME {
     }
 
     ch_intervals = Channel.empty()
+    ch_interval_bed_all = Channel.empty()
+
     if (params.no_intervals) {
         file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
         ch_intervals = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
     } else if (!('annotate' in step) && !('controlfreec' in step)) {
         if (!params.intervals){
             ch_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS(ch_fasta_fai))
+            //TODO: how to deal with ch_interval_bed_all if no intervals are provided. Actually should add a CI test for this
         }else{
             ch_intervals = CREATE_INTERVALS_BED(file(params.intervals))
+
+            tabix_in = ch_intervals.map{it -> [[id:it.getName()], it] }
+            TABIX_BGZIPTABIX_INTERVAL_ALL(tabix_in)
+            ch_interval_bed_all = TABIX_BGZIPTABIX_INTERVAL_ALL.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi] }
+            ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_ALL.out.versions)
         }
     }
     ch_target_bed = Channel.empty()
@@ -133,13 +142,10 @@ workflow PREPARE_GENOME {
         // parallelize over the intervals (here anyways not) so add one bed file having all intervals concated
         tabix_in = ch_intervals.map{it ->
             [[id:it.getName()], it] }
-        TABIX_BGZIPTABIX(tabix_in)
-        ch_target_bed = TABIX_BGZIPTABIX.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi] }
-        ch_versions = ch_versions.mix(TABIX_BGZIPTABIX.out.versions)
+        TABIX_BGZIPTABIX_INTERVAL_SPLIT(tabix_in)
+        ch_target_bed = TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi] }
+        ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.versions)
     }
-
-    //ch_intervals.view()
-    //ch_target_bed.view()
 
     emit:
         bwa                   = ch_bwa                        // path: {bwa,bwamem2}/index
@@ -147,11 +153,11 @@ workflow PREPARE_GENOME {
         dict                  = ch_dict                       // path: genome.fasta.dict
         fasta_fai             = ch_fasta_fai                  // path: genome.fasta.fai
         germline_resource_tbi = ch_germline_resource_tbi      // path: germline_resource.vcf.gz.tbi
-        intervals             = ch_intervals                  // path: intervals.bed
+        intervals             = ch_intervals                  // path: intervals.bed                        [intervals split for parallel execution]
         known_indels_tbi      = ch_known_indels_tbi.collect() // path: {known_indels*}.vcf.gz.tbi
         msisensorpro_scan     = ch_msisensorpro_scan          // path: genome_msi.list
         pon_tbi               = ch_pon_tbi                    // path: pon.vcf.gz.tbi
-        intervals_bed_gz_tbi   = ch_target_bed               // path: target.bed.gz, target.bed.gz.tbi
-
-        versions              = ch_versions.ifEmpty(null)     // channel: [ versions.yml ]
+        intervals_bed_gz_tbi  = ch_target_bed                // path: target.bed.gz, target.bed.gz.tbi     [intervals split for parallel execution]
+        intervals_combined    = ch_interval_bed_all           // path: interval.bed.gz, interval.bed.gz.tbi [all intervals in one file]
+        versions              = ch_versions                   // channel: [ versions.yml ]
 }

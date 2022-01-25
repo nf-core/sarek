@@ -126,9 +126,10 @@ include { RECALIBRATE_CSV           } from '../subworkflows/local/recalibrate_cs
 // Build indices if needed
 include { PREPARE_GENOME            } from '../subworkflows/local/prepare_genome'
 
+// Convert BAM files to FASTQ files
 include { ALIGNMENT_TO_FASTQ } from '../subworkflows/local/bam2fastq'
 
-// Map input reads to reference genome (+QC)
+// Map input reads to reference genome
 include { GATK4_MAPPING             } from '../subworkflows/nf-core/gatk4_mapping/main'
 
 // Mark duplicates (+QC) + convert to CRAM
@@ -137,16 +138,17 @@ include { MARKDUPLICATES            } from '../subworkflows/nf-core/markduplicat
 // Create recalibration tables
 include { PREPARE_RECALIBRATION     } from '../subworkflows/nf-core/prepare_recalibration'
 
-// Create recalibrated cram files to use for variant calling
+// Create recalibrated cram files to use for variant calling (+QC)
 include { RECALIBRATE               } from '../subworkflows/nf-core/recalibrate'
 
-// // Variant calling on a single normal sample
+// Variant calling on a single normal sample
 include { GERMLINE_VARIANT_CALLING  } from '../subworkflows/local/germline_variant_calling'
 
 // Variant calling on a single tumor sample
 include { TUMOR_ONLY_VARIANT_CALLING} from '../subworkflows/local/tumor_variant_calling'
+
 // Variant calling on tumor/normal pair
-//include { PAIR_VARIANT_CALLING      } from '../subworkflows/local/pair_variant_calling'
+include { PAIR_VARIANT_CALLING      } from '../subworkflows/local/pair_variant_calling'
 
 // Annotation
 include { ANNOTATE                     } from '../subworkflows/local/annotate' addParams(
@@ -159,8 +161,6 @@ include { ANNOTATE                     } from '../subworkflows/local/annotate' a
 ========================================================================================
 */
 
-include { CREATE_UMI_CONSENSUS } from '../subworkflows/nf-core/fgbio_create_umi_consensus/main'
-
 // Config files
 ch_multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
@@ -170,6 +170,9 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 //
 
 include { FASTQC_TRIMGALORE    } from '../subworkflows/nf-core/fastqc_trimgalore'
+
+// Create umi consensus bams from fastq
+include { CREATE_UMI_CONSENSUS } from '../subworkflows/nf-core/fgbio_create_umi_consensus/main'
 
 //
 // MODULES: Installed directly from nf-core/modules
@@ -215,8 +218,9 @@ workflow SAREK {
     known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
-    intervals                = PREPARE_GENOME.out.intervals
-    intervals_bed_gz_tbi     = PREPARE_GENOME.out.intervals_bed_gz_tbi
+    intervals                         = PREPARE_GENOME.out.intervals
+    intervals_bed_gz_tbi              = PREPARE_GENOME.out.intervals_bed_gz_tbi
+    intervals_bed_combined_gz_tbi     = PREPARE_GENOME.out.intervals_combined
     num_intervals = 0
     intervals.count().map{ num_intervals = it }
 
@@ -393,17 +397,53 @@ workflow SAREK {
 
     }
 
-    // if (params.step in 'variantcalling') cram_variant_calling = input_sample
+    if (params.step in 'variant_calling') cram_variant_calling = input_sample
 
     if (params.tools) {
 
         vcf_to_annotate = Channel.empty()
         if (params.step in 'annotate') cram_variant_calling = Channel.empty()
 
+        //
+        // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
+        //
+
+        cram_variant_calling.branch{
+            normal:  it[0].status == 0
+            tumor:   it[0].status == 1
+        }.set{cram_variantcalling}
+
+        // All Germline samples
+        cram_variantcalling.normal.map{ meta, cram, crai ->
+            [meta.patient, meta, cram, crai]
+        }.set{cram_variant_calling_normal_cross}
+
+        // All tumor samples
+        cram_variantcalling.tumor.map{ meta, cram, crai ->
+            [meta.patient, meta, cram, crai]
+        }.set{cram_variant_calling_tumor_cross}
+
+        // Tumor - normal pairs
+        // Use cross to combine normal with all tumor samples, i.e. multi tumor samples from recurrences
+        cram_variant_calling_pair = cram_variant_calling_normal_cross.cross(cram_variant_calling_tumor_cross)
+        .map { normal, tumor ->
+            def meta = [:]
+            meta.patient = normal[0]
+            meta.normal_id  = normal[1].sample
+            meta.tumor_id   = tumor[1].sample
+            meta.gender     = normal[1].gender
+            meta.id         = "${meta.tumor_id}_vs_${meta.normal_id}".toString()
+
+            [meta, normal[2], normal[3], tumor[2], tumor[3]]
+        }
+
+        //TODO: how to get the tumor only samples from this, somehow need the diff between pair and tumor, can't find a proper function
+        // to join and emit only mismatches/ 'unpartnered' elements basically
+
         // GERMLINE VARIANT CALLING
         GERMLINE_VARIANT_CALLING(
             params.tools,
-            cram_variant_calling,
+            cram_variantcalling.normal,
             dbsnp,
             dbsnp_tbi,
             dict,
@@ -412,7 +452,8 @@ workflow SAREK {
             intervals,
             intervals_bed_gz_tbi,
             num_intervals,
-            params.joint_germline)
+            params.joint_germline,
+            intervals_bed_combined_gz_tbi)
             //target_bed,
             // target_bed_gz_tbi)
 
@@ -423,22 +464,23 @@ workflow SAREK {
 
         // TUMOR ONLY VARIANT CALLING
         //TODO: only pass tumor only patients
-        // TUMOR_ONLY_VARIANT_CALLING(
-        //     params.tools,
-        //     cram_variant_calling,
-        //     dbsnp,
-        //     dbsnp_tbi,
-        //     dict,
-        //     fasta,
-        //     fasta_fai,
-        //     intervals,
-        //     intervals_bed_gz_tbi,
-        //     num_intervals,
-        //     germline_resource,
-        //     germline_resource_tbi,
-        //     pon,
-        //     pon_tbi
-        //     )
+        TUMOR_ONLY_VARIANT_CALLING(
+            params.tools,
+            cram_variantcalling.tumor,
+            dbsnp,
+            dbsnp_tbi,
+            dict,
+            fasta,
+            fasta_fai,
+            intervals,
+            intervals_bed_gz_tbi,
+            intervals_bed_combined_gz_tbi,
+            num_intervals,
+            germline_resource,
+            germline_resource_tbi,
+            pon,
+            pon_tbi
+            )
             //target_bed,
             //target_bed_gz_tbi)
         //        ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
