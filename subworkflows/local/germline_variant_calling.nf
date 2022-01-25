@@ -27,19 +27,21 @@ include { STRELKA_GERMLINE                            } from '../../modules/nf-c
 include { TIDDIT_SV                                   } from '../../modules/nf-core/modules/tiddit/sv/main'
 include { TABIX_BGZIPTABIX as TABIX_BGZIP_TIDDIT_SV   } from '../../modules/nf-core/modules/tabix/bgziptabix/main'
 
+include { SAMTOOLS_VIEW as SAMTOOLS_CONVERT}                           from '../../modules/local/samtoolsview'
+
 workflow GERMLINE_VARIANT_CALLING {
     take:
-        tools             // Mandatory, list of tools to apply
-        cram_recalibrated // channel: [mandatory] cram
-        dbsnp             // channel: [mandatory] dbsnp
-        dbsnp_tbi         // channel: [mandatory] dbsnp_tbi
-        dict              // channel: [mandatory] dict
-        fasta             // channel: [mandatory] fasta
-        fasta_fai         // channel: [mandatory] fasta_fai
-        intervals         // channel: [mandatory] intervals/target regions
-        intervals_bed_gz_tbi // channel: [mandatory] intervals/target regions index zipped and indexed
-        num_intervals     // val: number of intervals that are used to parallelize exection, either based on capture kit or GATK recommended for WGS
-        joint_germline    // val: true/false on whether to run joint_germline calling, only works in combination with haplotypecaller at the moment
+        tools                               // Mandatory, list of tools to apply
+        cram_recalibrated                   // channel: [mandatory] cram
+        dbsnp                               // channel: [mandatory] dbsnp
+        dbsnp_tbi                           // channel: [mandatory] dbsnp_tbi
+        dict                                // channel: [mandatory] dict
+        fasta                               // channel: [mandatory] fasta
+        fasta_fai                           // channel: [mandatory] fasta_fai
+        intervals                           // channel: [mandatory] intervals/target regions
+        intervals_bed_gz_tbi                // channel: [mandatory] intervals/target regions index zipped and indexed
+        num_intervals                       // val: number of intervals that are used to parallelize exection, either based on capture kit or GATK recommended for WGS
+        joint_germline                      // val: true/false on whether to run joint_germline calling, only works in combination with haplotypecaller at the moment
         intervals_bed_combine_gz_tbi        // channel: [mandatory] intervals/target regions index zipped and indexed in one file
         //target_bed_gz_tbi // channel: [optional]  target_bed_gz_tbi
 
@@ -47,11 +49,14 @@ workflow GERMLINE_VARIANT_CALLING {
 
     ch_versions = Channel.empty()
 
-    deepvariant_vcf_gz_tbi      = Channel.empty()
-    deepvariant_gvcf_gz_tbi     = Channel.empty()
-    freebayes_vcf_gz_tbi        = Channel.empty()
-    haplotypecaller_gvcf_gz_tbi = Channel.empty()
-    strelka_vcf_gz_tbi          = Channel.empty()
+    deepvariant_vcf_gz_tbi                  = Channel.empty()
+    deepvariant_gvcf_gz_tbi                 = Channel.empty()
+    freebayes_vcf_gz_tbi                    = Channel.empty()
+    haplotypecaller_gvcf_gz_tbi             = Channel.empty()
+    manta_candidate_small_indels_vcf_tbi    = Channel.empty()
+    manta_candidate_sv_vcf_tbi              = Channel.empty()
+    manta_diploid_sv_vcf_tbi                = Channel.empty()
+    strelka_vcf_gz_tbi                      = Channel.empty()
 
     cram_recalibrated.combine(intervals)
         .map{ meta, cram, crai, intervals ->
@@ -72,8 +77,6 @@ workflow GERMLINE_VARIANT_CALLING {
     //TODO: benchmark if it is better to provide multiple bed files & run on multiple machines + mergeing afterwards || one containing all intervals and run on one larger machine
 
     if (tools.contains('deepvariant')) {
-        //TODO: research if multiple targets can be provided: open issue, waiting on answer from maintainers
-        // Answer: numshards runs in parallel but on one machine
         DEEPVARIANT(
             cram_recalibrated_intervals,
             fasta,
@@ -210,8 +213,8 @@ workflow GERMLINE_VARIANT_CALLING {
     }
 
     if (tools.contains('tiddit')){
-        //TODO: test data not running -> maybe something of with the container...?
-        //TODO: Pass over dbsnp/knwon_indels?
+        //TODO: Update tiddit on bioconda, the current version does not support cram usage, needs newest version
+        // Issue opened, see what the maintainer says
 
         // TIDDIT_SV(
         //     cram_recalibrated,
@@ -235,6 +238,9 @@ workflow GERMLINE_VARIANT_CALLING {
     deepvariant_gvcf_gz_tbi
     freebayes_vcf_gz_tbi
     haplotypecaller_gvcf_gz_tbi
+    manta_candidate_small_indels_vcf_tbi
+    manta_candidate_sv_vcf_tbi
+    manta_diploid_sv_vcf_tbi
     strelka_vcf_gz_tbi
 
     versions = ch_versions
