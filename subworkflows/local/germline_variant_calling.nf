@@ -27,8 +27,6 @@ include { STRELKA_GERMLINE                            } from '../../modules/nf-c
 include { TIDDIT_SV                                   } from '../../modules/nf-core/modules/tiddit/sv/main'
 include { TABIX_BGZIPTABIX as TABIX_BGZIP_TIDDIT_SV   } from '../../modules/nf-core/modules/tabix/bgziptabix/main'
 
-include { SAMTOOLS_VIEW as SAMTOOLS_CONVERT}                           from '../../modules/local/samtoolsview'
-
 workflow GERMLINE_VARIANT_CALLING {
     take:
         tools                               // Mandatory, list of tools to apply
