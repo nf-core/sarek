@@ -128,6 +128,7 @@ workflow PAIR_VARIANT_CALLING {
 
         strelka_vcf = strelka_vcf.mix(strelka_indels_vcf,strelka_snvs_vcf)
     }
+    //tiddit should also work here
 
     emit:
         manta_vcf            = manta_vcf
