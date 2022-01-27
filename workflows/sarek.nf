@@ -426,22 +426,34 @@ workflow SAREK {
             [meta.patient, meta, cram, crai]
         }.set{cram_variant_calling_tumor_cross}
 
+        //Tumor only samples
+        // 1. Group together all tumor samples by patient ID [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2]]
+        cram_variant_calling_tumor_cross.groupTuple().set{ cram_variant_calling_tumor_grouped }
+
+        // 2. Join with normal samples, in each channel there is one key per patient now. Patients without matched normal end up with: [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2], null]
+        cram_variant_calling_tumor_grouped.join(cram_variant_calling_normal_cross, remainder: true).set{cram_variant_calling_tumor_joined}
+
+        // 3. Filter out entries with last entry null
+        cram_variant_calling_tumor_joined.filter{ it ->  !(it.last())}.set{cram_variant_calling_tumor_filtered}
+
+        // 4. Transpose [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2]] back to [patient1, meta1, [cram1,crai1]] [patient1, meta2, [cram2,crai2]]
+        cram_variant_calling_tumor_filtered.transpose().set{transposed}
+        transposed.map{ it -> [it[1], it[2], it[3]]}.set{cram_variant_calling_tumor_only}
+        cram_variant_calling_tumor_only.view()
+
         // Tumor - normal pairs
         // Use cross to combine normal with all tumor samples, i.e. multi tumor samples from recurrences
         cram_variant_calling_pair = cram_variant_calling_normal_cross.cross(cram_variant_calling_tumor_cross)
         .map { normal, tumor ->
             def meta = [:]
-            meta.patient = normal[0]
-            meta.normal_id  = normal[1].sample
-            meta.tumor_id   = tumor[1].sample
-            meta.gender     = normal[1].gender
+            meta.patient    = normal[0]
+            meta.normal_id  = normal[2].sample
+            meta.tumor_id   = tumor[2].sample
+            meta.gender     = normal[2].gender
             meta.id         = "${meta.tumor_id}_vs_${meta.normal_id}".toString()
 
-            [meta, normal[2], normal[3], tumor[2], tumor[3]]
+            [meta, normal[3], normal[4], tumor[3], tumor[4]]
         }
-
-        //TODO: how to get the tumor only samples from this, somehow need the diff between pair and tumor, can't find a proper function
-        // to join and emit only mismatches/ 'unpartnered' elements basically
 
         // GERMLINE VARIANT CALLING
         GERMLINE_VARIANT_CALLING(
@@ -469,7 +481,7 @@ workflow SAREK {
         //TODO: only pass tumor only patients
         TUMOR_ONLY_VARIANT_CALLING(
             params.tools,
-            cram_variantcalling.tumor,
+            cram_variant_calling_tumor_only,
             dbsnp,
             dbsnp_tbi,
             dict,
@@ -492,7 +504,7 @@ workflow SAREK {
         // PAIR VARIANT CALLING
         // PAIR_VARIANT_CALLING(
         //     params.tools,
-        //     cram_variant_calling,
+        //     cram_variant_calling_pair,
         //     dbsnp,
         //     dbsnp_tbi,
         //     dict,
