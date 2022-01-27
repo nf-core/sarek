@@ -436,9 +436,8 @@ workflow SAREK {
         // 3. Filter out entries with last entry null
         cram_variant_calling_tumor_joined.filter{ it ->  !(it.last())}.set{cram_variant_calling_tumor_filtered}
 
-        // 4. Transpose [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2]] back to [patient1, meta1, [cram1,crai1]] [patient1, meta2, [cram2,crai2]]
-        cram_variant_calling_tumor_filtered.transpose().set{transposed}
-        transposed.map{ it -> [it[1], it[2], it[3]]}.set{cram_variant_calling_tumor_only}
+        // 4. Transpose [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2]] back to [patient1, meta1, [cram1,crai1]] [patient1, meta2, [cram2,crai2]] and remove patient ID field & null value for further processing
+        cram_variant_calling_tumor_filtered.transpose().map{ it -> [it[1], it[2], it[3]]}.set{cram_variant_calling_tumor_only}
         cram_variant_calling_tumor_only.view()
 
         // Tumor - normal pairs
