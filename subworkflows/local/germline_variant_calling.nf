@@ -191,7 +191,6 @@ workflow GERMLINE_VARIANT_CALLING {
 
     if (tools.contains('strelka')) {
         //TODO: research if multiple targets can be provided: waiting for reply
-        //TODO: Pass over dbsnp/knwon_indels?
 
         STRELKA_GERMLINE(
             cram_recalibrated_intervals_gz_tbi,
@@ -211,8 +210,9 @@ workflow GERMLINE_VARIANT_CALLING {
     }
 
     if (tools.contains('tiddit')){
-        //TODO: Update tiddit on bioconda, the current version does not support cram usage, needs newest version
-        // Issue opened, see what the maintainer says
+        //TODO: Update tiddit on bioconda, the current version does not support cram usage, needs newest version:
+        // https://github.com/SciLifeLab/TIDDIT/issues/82#issuecomment-1022103264
+        // Issue opened, either this week or end of february
 
         // TIDDIT_SV(
         //     cram_recalibrated,
