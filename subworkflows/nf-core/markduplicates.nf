@@ -14,17 +14,17 @@ include { DEEPTOOLS_BAMCOVERAGE                            } from '../../modules
 
 workflow MARKDUPLICATES {
     take:
-        bam_mapped          // channel: [mandatory, if --skip_markdiplicate is false, else optional] meta, bam
-        bam_indexed         // channel: [mandatory, if --skip_markduplicates is set, else optional] meta, bam, bai
-        use_gatk_spark      //   value: [mandatory] use gatk spark
-        save_metrics        //   value: [mandatory] save metrics
-        dict                // channel: [mandatory] dict
-        fasta               // channel: [mandatory] fasta
-        fasta_fai           // channel: [mandatory] fasta_fai
-        skip_markduplicates // boolean: true/false
-        skip_bamqc          // boolean: true/false
-        skip_samtools       // boolean: true/false
-        intervals_combined_bed_gz_tbi           // channel: [optional]  target_bed
+        bam_mapped                      // channel: [mandatory, if --skip_markdiplicate is false, else optional] meta, bam
+        bam_indexed                     // channel: [mandatory, if --skip_markduplicates is set, else optional] meta, bam, bai
+        use_gatk_spark                  //   value: [mandatory] use gatk spark
+        save_metrics                    //   value: [mandatory] save metrics
+        dict                            // channel: [mandatory] dict
+        fasta                           // channel: [mandatory] fasta
+        fasta_fai                       // channel: [mandatory] fasta_fai
+        skip_markduplicates             // boolean: true/false
+        skip_bamqc                      // boolean: true/false
+        skip_samtools                   // boolean: true/false
+        intervals_combined_bed_gz_tbi   // channel: [optional]  intervals_bed.gz, intervals_bed.gz.tbi
 
     main:
 
@@ -95,8 +95,9 @@ workflow MARKDUPLICATES {
 
     qualimap_bamqc = Channel.empty()
     if (!skip_bamqc) {
-        //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
-        //TODO: error when no_intervals is set, also only runs once now, prob a complete list of intervals needs to be provided simialr as to concat_vcf
+
+        if(!params.wes || params.no_intervals) intervals_combined_bed_gz_tbi = [] //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
+
         QUALIMAP_BAMQC(bam_bai_markduplicates, intervals_combined_bed_gz_tbi)
         qualimap_bamqc = QUALIMAP_BAMQC.out.results
 

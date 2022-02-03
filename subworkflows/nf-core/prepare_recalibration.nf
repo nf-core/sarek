@@ -26,7 +26,7 @@ workflow PREPARE_RECALIBRATION {
     cram_markduplicates.combine(intervals)
         .map{ meta, cram, crai, intervals ->
             new_meta = meta.clone()
-            new_meta.id = meta.sample + "_" + intervals.baseName
+            new_meta.id = intervals.baseName != "no_intervals" ? meta.sample + "_" + intervals.baseName : meta.sample
             [new_meta, cram, crai, intervals]
         }.set{cram_markduplicates_intervals}
 

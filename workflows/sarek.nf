@@ -218,9 +218,9 @@ workflow SAREK {
     known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
-    intervals                         = PREPARE_GENOME.out.intervals
+    intervals                         = PREPARE_GENOME.out.intervals_bed
     intervals_bed_gz_tbi              = PREPARE_GENOME.out.intervals_bed_gz_tbi
-    intervals_bed_combined_gz_tbi     = PREPARE_GENOME.out.intervals_combined
+    intervals_bed_combined_gz_tbi     = PREPARE_GENOME.out.intervals_combined_bed_gz_tbi
     intervals_bed_combined_gz         = intervals_bed_combined_gz_tbi.map{ bed, tbi -> bed}
 
     num_intervals = 0
@@ -295,7 +295,7 @@ workflow SAREK {
 
         // Create CSV to restart from this step
         // TODO: How is this handeled if not save_bam is set (no index should be present)
-        MAPPING_CSV(bam_indexed, save_bam_mapped, params.skip_markduplicates)
+        //MAPPING_CSV(bam_indexed, save_bam_mapped, params.skip_markduplicates)
 
         // Get versions from all software used
         ch_versions = ch_versions.mix(GATK4_MAPPING.out.versions)
@@ -329,7 +329,7 @@ workflow SAREK {
             params.skip_markduplicates,
             ('bamqc' in params.skip_qc),
             ('samtools' in params.skip_qc),
-            []) //target_bed) // TODO: add interval file
+            intervals_bed_combined_gz_tbi) //target_bed) // TODO: add interval file
 
         cram_markduplicates = MARKDUPLICATES.out.cram
 
@@ -380,6 +380,7 @@ workflow SAREK {
                 fasta_fai,
                 intervals,
                 num_intervals,
+                params.no_intervals,
                 [] //TODO add intervals
             )
                 //target_bed)
@@ -410,36 +411,43 @@ workflow SAREK {
         //
         // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
         //
-
+        cram_variantcalling = Channel.empty()
         cram_variant_calling.branch{
             normal:  it[0].status == 0
             tumor:   it[0].status == 1
         }.set{cram_variantcalling}
 
         // All Germline samples
+        cram_variant_calling_normal_cross = Channel.empty()
         cram_variantcalling.normal.map{ meta, cram, crai ->
             [meta.patient, meta, cram, crai]
         }.set{cram_variant_calling_normal_cross}
 
         // All tumor samples
+        cram_variant_calling_tumor_cross = Channel.empty()
         cram_variantcalling.tumor.map{ meta, cram, crai ->
             [meta.patient, meta, cram, crai]
         }.set{cram_variant_calling_tumor_cross}
 
         //Tumor only samples
         // 1. Group together all tumor samples by patient ID [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2]]
+        cram_variant_calling_tumor_grouped = Channel.empty()
+
+        //Downside: this only works by waiting for all tumor samples to finish preprocessing, since no group size is provided
         cram_variant_calling_tumor_cross.groupTuple().set{ cram_variant_calling_tumor_grouped }
 
         // 2. Join with normal samples, in each channel there is one key per patient now. Patients without matched normal end up with: [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2], null]
+        cram_variant_calling_tumor_joined = Channel.empty()
         cram_variant_calling_tumor_grouped.join(cram_variant_calling_normal_cross, remainder: true).set{cram_variant_calling_tumor_joined}
 
         // 3. Filter out entries with last entry null
+        cram_variant_calling_tumor_filtered = Channel.empty()
         cram_variant_calling_tumor_joined.filter{ it ->  !(it.last())}.set{cram_variant_calling_tumor_filtered}
 
         // 4. Transpose [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2]] back to [patient1, meta1, [cram1,crai1], null] [patient1, meta2, [cram2,crai2], null]
         // and remove patient ID field & null value for further processing [meta1, [cram1,crai1]] [meta2, [cram2,crai2]]
+        cram_variant_calling_tumor_only = Channel.empty()
         cram_variant_calling_tumor_filtered.transpose().map{ it -> [it[1], it[2], it[3]]}.set{cram_variant_calling_tumor_only}
-        cram_variant_calling_tumor_only.view()
 
         // Tumor - normal pairs
         // Use cross to combine normal with all tumor samples, i.e. multi tumor samples from recurrences
@@ -454,7 +462,15 @@ workflow SAREK {
 
             [meta, normal[3], normal[4], tumor[3], tumor[4]]
         }
-
+        cram_variantcalling.normal.view()
+        dbsnp.view()
+        dbsnp_tbi.view()
+        dict.view()
+        fasta.view()
+        fasta_fai.view()
+        intervals.view()
+        intervals_bed_gz_tbi.view()
+        intervals_bed_combined_gz_tbi.view()
         // GERMLINE VARIANT CALLING
         GERMLINE_VARIANT_CALLING(
             params.tools,
@@ -466,9 +482,11 @@ workflow SAREK {
             fasta_fai,
             intervals,
             intervals_bed_gz_tbi,
+            intervals_bed_combined_gz_tbi,
             num_intervals,
-            params.joint_germline,
-            intervals_bed_combined_gz_tbi)
+            params.no_intervals,
+            params.joint_germline
+            )
             //target_bed,
             // target_bed_gz_tbi)
 
@@ -479,23 +497,23 @@ workflow SAREK {
 
         // TUMOR ONLY VARIANT CALLING
         //TODO: only pass tumor only patients
-        TUMOR_ONLY_VARIANT_CALLING(
-            params.tools,
-            cram_variant_calling_tumor_only,
-            dbsnp,
-            dbsnp_tbi,
-            dict,
-            fasta,
-            fasta_fai,
-            intervals,
-            intervals_bed_gz_tbi,
-            intervals_bed_combined_gz_tbi,
-            num_intervals,
-            germline_resource,
-            germline_resource_tbi,
-            pon,
-            pon_tbi
-            )
+        // TUMOR_ONLY_VARIANT_CALLING(
+        //     params.tools,
+        //     cram_variant_calling_tumor_only,
+        //     dbsnp,
+        //     dbsnp_tbi,
+        //     dict,
+        //     fasta,
+        //     fasta_fai,
+        //     intervals,
+        //     intervals_bed_gz_tbi,
+        //     intervals_bed_combined_gz_tbi,
+        //     num_intervals,
+        //     germline_resource,
+        //     germline_resource_tbi,
+        //     pon,
+        //     pon_tbi
+        //     )
             //target_bed,
             //target_bed_gz_tbi)
         //        ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
