@@ -26,7 +26,6 @@ workflow PREPARE_GENOME {
         germline_resource // channel: [optional]  germline_resource
         known_indels      // channel: [optional]  known_indels
         pon               // channel: [optional]  pon
-        //target_bed         // channel: [optional]  intervals/target_bed
         tools             // value:   [mandatory] tools
         step              // value:   [mandatory] step
 
@@ -102,40 +101,29 @@ workflow PREPARE_GENOME {
     ch_intervals                        = Channel.empty()
     ch_intervals_bed_gz_tbi             = Channel.empty()
     ch_intervals_combined_bed_gz_tbi    = Channel.empty()     //Create bed.gz and bed.gz.tbi for input/or created interval file. It contains ALL regions.
-    ch_intervals_combined_bed           = Channel.empty()     //Create bed for input/or created interval file. It contains ALL regions.
 
     if (params.no_intervals) {
 
         file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
         ch_intervals = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
-        tabix_in = ch_intervals.map{it -> [[id:it.getName()], it] }
+        tabix_in_combined = ch_intervals.map{it -> [[id:it.getName()], it] }
 
     } else if (!('annotate' in step) && !('controlfreec' in step)) {
         if (!params.intervals){
 
             BUILD_INTERVALS(ch_fasta_fai)
-            tabix_in = BUILD_INTERVALS.out.bed.map{it -> [[id:it.getName()], it] }
+            tabix_in_combined = BUILD_INTERVALS.out.bed.map{it -> [[id:it.getName()], it] }
             ch_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS.out.bed)
 
         }else{
-            //TODO rename all files to have bed ending for qualimap
-            intervals_file = file(params.intervals)
-            // println intervals_file
-            // if(!intervals_file.endsWith(".bed")){
-            //     parent = intervals_file.parent.concat("/")
-            //     println parent
-            //     file_name = parent.concat(intervals_file.simpleName).concat(".bed")
-            //     intervals_file = intervals_file.renameTo(file_name)
-            // }
-            // println intervals_file
 
-            tabix_in = Channel.fromPath(intervals_file).map{it -> [[id:it.baseName], it] }
+            tabix_in_combined = Channel.fromPath(file(params.intervals)).map{it -> [[id:it.baseName], it] }
             ch_intervals = CREATE_INTERVALS_BED(file(params.intervals))
 
         }
     }
 
-    TABIX_BGZIPTABIX_INTERVAL_ALL(tabix_in)
+    TABIX_BGZIPTABIX_INTERVAL_ALL(tabix_in_combined)
     ch_intervals_combined_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_ALL.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi] }
     ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_ALL.out.versions)
 
@@ -176,7 +164,6 @@ workflow PREPARE_GENOME {
         intervals_bed                    = ch_intervals                         // path: intervals.bed                        [intervals split for parallel execution]
         intervals_bed_gz_tbi             = ch_intervals_bed_gz_tbi              // path: target.bed.gz, target.bed.gz.tbi     [intervals split for parallel execution]
         intervals_combined_bed_gz_tbi    = ch_intervals_combined_bed_gz_tbi     // path: interval.bed.gz, interval.bed.gz.tbi [all intervals in one file]
-        intervals_combined_bed           = ch_intervals_combined_bed            // path: interval.bed                         [all intervals in one file]
 
         versions                         = ch_versions                          // channel: [ versions.yml ]
 }

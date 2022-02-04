@@ -61,6 +61,12 @@ input_sample = extract_csv(csv_file)
 
 def save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? true : false
 
+if(params.wes){
+    if(!params.intervals.endsWith("bed")){
+        exit 1, "Target file must be in BED format"
+    }
+}
+
 // Save AWS IGenomes file containing annotation version
 def anno_readme = params.genomes[params.genome]?.readme
 if (anno_readme && file(anno_readme).exists()) {
@@ -73,16 +79,6 @@ if (anno_readme && file(anno_readme).exists()) {
     IMPORT LOCAL MODULES/SUBWORKFLOWS
 ========================================================================================
 */
-
-// // Stage dummy file to be used as an optional input where required
-// [] = Channel.fromPath("$projectDir/assets/dummy_file.txt", checkIfExists: true).collect()
-
-// if (params.skip_markduplicates) {
-//     modules['baserecalibrator'].publish_files        = ['recal.table':'mapped']
-//     modules['gatherbqsrreports'].publish_files       = ['recal.table':'mapped']
-// } else {
-//     modules['baserecalibrator'].publish_files        = false
-// }
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
 chr_dir           = params.chr_dir           ? Channel.fromPath(params.chr_dir).collect()           : []
@@ -200,14 +196,15 @@ workflow SAREK {
         params.step)
 
     // Gather built indices or get them from the params
-    bwa                   = params.fasta             ? params.bwa                   ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : []
-    dict                  = params.fasta             ? params.dict                  ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : []
-    fasta_fai             = params.fasta             ? params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai             : []
-    dbsnp_tbi             = params.dbsnp             ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.empty()
-    germline_resource_tbi = params.germline_resource ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : []
-    known_indels_tbi      = params.known_indels      ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : Channel.empty()
-    pon_tbi               = params.pon               ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : []
-    msisensorpro_scan     = PREPARE_GENOME.out.msisensorpro_scan
+    bwa                    = params.fasta                   ? params.bwa                   ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : []
+    dict                   = params.fasta                   ? params.dict                  ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : []
+    fasta_fai              = params.fasta                   ? params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai             : []
+    dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.empty()
+    germline_resource_tbi  = params.germline_resource       ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : []
+    known_indels_tbi       = params.known_indels            ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : Channel.empty()
+    pon_tbi                = params.pon                     ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : []
+    msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
+    intervals_bed_combined = (params.intervals && params.wes) ? Channel.fromPath(params.intervals).collect()             : []
 
     //TODO @Rike, is this working for you? Now it is, fixed a bug in prepare_genome.nf after chasing smoke for a while
     // known_sites is made by grouping both the dbsnp and the known indels ressources
@@ -220,7 +217,6 @@ workflow SAREK {
     intervals                         = PREPARE_GENOME.out.intervals_bed // multiple interval.bed files, divided by useful intervals for scatter/gather
     intervals_bed_gz_tbi              = PREPARE_GENOME.out.intervals_bed_gz_tbi // multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
     intervals_bed_combined_gz_tbi     = PREPARE_GENOME.out.intervals_combined_bed_gz_tbi  // one file containing all intervals interval.bed.gz/.tbi file
-    intervals_bed_combined            = PREPARE_GENOME.out.intervals_combined_bed         // one file containing all intervals interval.bed file
 
     num_intervals = 0
     intervals.count().map{ num_intervals = it }
@@ -328,8 +324,8 @@ workflow SAREK {
             params.skip_markduplicates,
             ('bamqc' in params.skip_qc),
             ('samtools' in params.skip_qc),
-            intervals_bed_combined) //target_bed) // TODO: add interval file
-        intervals_bed_combined.view()
+            intervals_bed_combined)
+
         cram_markduplicates = MARKDUPLICATES.out.cram
 
         // Create CSV to restart from this step
@@ -380,9 +376,8 @@ workflow SAREK {
                 intervals,
                 num_intervals,
                 params.no_intervals,
-                intervals_bed_combined //TODO add intervals
+                intervals_bed_combined
             )
-                //target_bed)
 
             cram_recalibrated    = RECALIBRATE.out.cram
             cram_recalibrated_qc = RECALIBRATE.out.qc
@@ -461,15 +456,7 @@ workflow SAREK {
 
             [meta, normal[3], normal[4], tumor[3], tumor[4]]
         }
-        cram_variantcalling.normal.view()
-        dbsnp.view()
-        dbsnp_tbi.view()
-        dict.view()
-        fasta.view()
-        fasta_fai.view()
-        intervals.view()
-        intervals_bed_gz_tbi.view()
-        intervals_bed_combined_gz_tbi.view()
+
         // GERMLINE VARIANT CALLING
         GERMLINE_VARIANT_CALLING(
             params.tools,
@@ -482,12 +469,12 @@ workflow SAREK {
             intervals,
             intervals_bed_gz_tbi,
             intervals_bed_combined_gz_tbi,
+            intervals_bed_combined_gz,
             num_intervals,
             params.no_intervals,
             params.joint_germline
             )
-            //target_bed,
-            // target_bed_gz_tbi)
+
 
         //vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf)
         //vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)
@@ -495,27 +482,24 @@ workflow SAREK {
         // SOMATIC VARIANT CALLING
 
         // TUMOR ONLY VARIANT CALLING
-        //TODO: only pass tumor only patients
-        // TUMOR_ONLY_VARIANT_CALLING(
-        //     params.tools,
-        //     cram_variant_calling_tumor_only,
-        //     dbsnp,
-        //     dbsnp_tbi,
-        //     dict,
-        //     fasta,
-        //     fasta_fai,
-        //     intervals,
-        //     intervals_bed_gz_tbi,
-        //     intervals_bed_combined_gz_tbi,
-        //     num_intervals,
-        //     germline_resource,
-        //     germline_resource_tbi,
-        //     pon,
-        //     pon_tbi
-        //     )
-            //target_bed,
-            //target_bed_gz_tbi)
-        //        ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
+        TUMOR_ONLY_VARIANT_CALLING(
+            params.tools,
+            cram_variant_calling_tumor_only,
+            dbsnp,
+            dbsnp_tbi,
+            dict,
+            fasta,
+            fasta_fai,
+            intervals,
+            intervals_bed_gz_tbi,
+            intervals_bed_combined_gz_tbi,
+            num_intervals,
+            germline_resource,
+            germline_resource_tbi,
+            pon,
+            pon_tbi
+        )
+        ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
 
 
         // PAIR VARIANT CALLING

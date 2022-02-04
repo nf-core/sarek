@@ -46,6 +46,7 @@ workflow GERMLINE_VARIANT_CALLING {
         intervals                           // channel: [mandatory] intervals/target regions
         intervals_bed_gz_tbi                // channel: [mandatory] intervals/target regions index zipped and indexed
         intervals_bed_combine_gz_tbi        // channel: [mandatory] intervals/target regions index zipped and indexed in one file
+        intervals_bed_combine_gz            // channel: [mandatory] intervals/target regions index zipped and indexed in one file
         num_intervals                       // val: number of intervals that are used to parallelize exection, either based on capture kit or GATK recommended for WGS
         no_intervals
         joint_germline                      // val: true/false on whether to run joint_germline calling, only works in combination with haplotypecaller at the moment
@@ -73,7 +74,6 @@ workflow GERMLINE_VARIANT_CALLING {
             [new_meta, cram, crai, intervals]
         }.set{cram_recalibrated_intervals}
 
-    cram_recalibrated_intervals.view()
 
     cram_recalibrated.combine(intervals_bed_gz_tbi)
         .map{ meta, cram, crai, bed, tbi ->
@@ -84,9 +84,6 @@ workflow GERMLINE_VARIANT_CALLING {
 
             [new_meta, cram, crai, bed, tbi]
         }.set{cram_recalibrated_intervals_gz_tbi}
-
-    //TODO PASS THIS OVER (ALREADY PROVIDED IN SARKE..NF)
-    intervals_bed_combine_gz_tbi.map{ bed_gz, tbi -> [bed_gz]}.set{intervals_bed_combine_gz}
 
     //TODO: benchmark if it is better to provide multiple bed files & run on multiple machines + mergeing afterwards || one containing all intervals and run on one larger machine
     // Deepvariant: https://github.com/google/deepvariant/issues/510
