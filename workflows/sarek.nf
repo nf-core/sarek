@@ -217,6 +217,7 @@ workflow SAREK {
     intervals                         = PREPARE_GENOME.out.intervals_bed // multiple interval.bed files, divided by useful intervals for scatter/gather
     intervals_bed_gz_tbi              = PREPARE_GENOME.out.intervals_bed_gz_tbi // multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
     intervals_bed_combined_gz_tbi     = PREPARE_GENOME.out.intervals_combined_bed_gz_tbi  // one file containing all intervals interval.bed.gz/.tbi file
+    intervals_bed_combined_gz         = intervals_bed_combined_gz_tbi.map{ bed, tbi -> [bed]}  // one file containing all intervals interval.bed.gz file
 
     num_intervals = 0
     intervals.count().map{ num_intervals = it }
@@ -493,13 +494,15 @@ workflow SAREK {
             intervals,
             intervals_bed_gz_tbi,
             intervals_bed_combined_gz_tbi,
+            intervals_bed_combined_gz,
             num_intervals,
+            params.no_intervals,
             germline_resource,
             germline_resource_tbi,
             pon,
             pon_tbi
         )
-        ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
+        //ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
 
 
         // PAIR VARIANT CALLING
