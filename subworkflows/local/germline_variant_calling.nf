@@ -74,7 +74,6 @@ workflow GERMLINE_VARIANT_CALLING {
             [new_meta, cram, crai, intervals]
         }.set{cram_recalibrated_intervals}
 
-
     cram_recalibrated.combine(intervals_bed_gz_tbi)
         .map{ meta, cram, crai, bed, tbi ->
             new_meta = meta.clone()
@@ -109,8 +108,19 @@ workflow GERMLINE_VARIANT_CALLING {
             BGZIP_DEEPVARIANT_VCF(DEEPVARIANT.out.vcf)
             BGZIP_DEEPVARIANT_GVCF(DEEPVARIANT.out.gvcf)
 
-            deepvariant_vcf_to_concat = BGZIP_DEEPVARIANT_VCF.out.vcf.groupTuple(size: num_intervals)
-            deepvariant_gvcf_to_concat = BGZIP_DEEPVARIANT_GVCF.out.vcf.groupTuple(size: num_intervals)
+            BGZIP_DEEPVARIANT_VCF.out.vcf.map{ meta, vcf ->
+                new_meta = meta.clone()
+                new_meta.id = new_meta.sample
+                [new_meta, vcf]
+            }.groupTuple(size: num_intervals)
+            .set{deepvariant_vcf_to_concat}
+
+            BGZIP_DEEPVARIANT_GVCF.out.vcf.map{ meta, vcf ->
+                new_meta = meta.clone()
+                new_meta.id = new_meta.sample
+                [new_meta, vcf]
+            }.groupTuple(size: num_intervals)
+            .set{deepvariant_gvcf_to_concat}
 
             CONCAT_VCF_DEEPVARIANT(deepvariant_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
             CONCAT_GVCF_DEEPVARIANT(deepvariant_gvcf_to_concat,fasta_fai, intervals_bed_combine_gz)
@@ -151,7 +161,13 @@ workflow GERMLINE_VARIANT_CALLING {
             ch_versions = ch_versions.mix(TABIX_FREEBAYES.out.versions)
         }else{
             BGZIP_FREEBAYES(FREEBAYES.out.vcf)
-            freebayes_vcf_to_concat = BGZIP_FREEBAYES.out.vcf.groupTuple(size: num_intervals)
+
+            BGZIP_FREEBAYES.out.vcf.map{ meta, vcf ->
+                new_meta = meta.clone()
+                new_meta.id = new_meta.sample
+                [new_meta, vcf]
+            }.groupTuple(size: num_intervals)
+            .set{freebayes_vcf_to_concat}
 
             CONCAT_VCF_FREEBAYES(freebayes_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
             freebayes_vcf_gz_tbi = CONCAT_VCF_FREEBAYES.out.vcf
@@ -181,7 +197,13 @@ workflow GERMLINE_VARIANT_CALLING {
         }else{
             BGZIP_HAPLOTYPECALLER(HAPLOTYPECALLER.out.vcf)
 
-            haplotypecaller_gvcf_to_concat = BGZIP_HAPLOTYPECALLER.out.vcf.groupTuple(size: num_intervals)
+            BGZIP_HAPLOTYPECALLER.out.vcf.map{ meta, vcf ->
+                new_meta = meta.clone()
+                new_meta.id = new_meta.sample
+                [new_meta, vcf]
+            }.groupTuple(size: num_intervals)
+            .set{haplotypecaller_gvcf_to_concat}
+
             CONCAT_VCF_HAPLOTYPECALLER(haplotypecaller_gvcf_to_concat, fasta_fai, intervals_bed_combine_gz)
             haplotypecaller_gvcf_gz_tbi = CONCAT_VCF_HAPLOTYPECALLER.out.vcf
 
@@ -236,9 +258,26 @@ workflow GERMLINE_VARIANT_CALLING {
             BGZIP_MANTA_SMALL_INDELS(MANTA_GERMLINE.out.candidate_sv_vcf)
             BGZIP_MANTA_DIPLOID(MANTA_GERMLINE.out.diploid_sv_vcf)
 
-            manta_sv_vcf_to_concat = BGZIP_MANTA_SV.out.vcf.groupTuple(size: num_intervals)
-            manta_small_indels_vcf_to_concat = BGZIP_MANTA_SMALL_INDELS.out.vcf.groupTuple(size: num_intervals)
-            manta_diploid_vcf_to_concat = BGZIP_MANTA_DIPLOID.out.vcf.groupTuple(size: num_intervals)
+            BGZIP_MANTA_SV.out.vcf.map{ meta, vcf ->
+                new_meta = meta.clone()
+                new_meta.id = new_meta.sample
+                [new_meta, vcf]
+            }.groupTuple(size: num_intervals)
+            .set{manta_sv_vcf_to_concat}
+
+            BGZIP_MANTA_SMALL_INDELS.out.vcf.map{ meta, vcf ->
+                new_meta = meta.clone()
+                new_meta.id = new_meta.sample
+                [new_meta, vcf]
+            }.groupTuple(size: num_intervals)
+            .set{manta_small_indels_vcf_to_concat}
+
+            BGZIP_MANTA_DIPLOID.out.vcf.map{ meta, vcf ->
+                new_meta = meta.clone()
+                new_meta.id = new_meta.sample
+                [new_meta, vcf]
+            }.groupTuple(size: num_intervals)
+            .set{manta_diploid_vcf_to_concat}
 
             CONCAT_VCF_MANTA_SV(manta_sv_vcf_to_concat, fasta_fai, intervals_bed_combine_gz)
             CONCAT_VCF_MANTA_SMALL_INDELS(manta_small_indels_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
@@ -274,7 +313,13 @@ workflow GERMLINE_VARIANT_CALLING {
             strelka_vcf_gz_tbi = STRELKA_GERMLINE.out.vcf.join(STRELKA_GERMLINE.out.vcf_tbi)
         }else{
             BGZIP_STRELKA(STRELKA_GERMLINE.out.vcf)
-            strelka_vcf_to_concat = BGZIP_STRELKA.out.vcf.groupTuple(size: num_intervals)
+
+            BGZIP_STRELKA.out.vcf.map{ meta, vcf ->
+                new_meta = meta.clone()
+                new_meta.id = new_meta.sample
+                [new_meta, vcf]
+            }.groupTuple(size: num_intervals)
+            .set{strelka_vcf_to_concat}
 
             CONCAT_VCF_STRELKA(strelka_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
             strelka_vcf_gz_tbi = CONCAT_VCF_STRELKA.out.vcf

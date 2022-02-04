@@ -17,7 +17,7 @@ process GATK4_GETPILEUPSUMMARIES {
 
     output:
     tuple val(meta), path('*.pileups.table'), emit: table
-    path "versions.yml"           , emit: versions
+    path "versions.yml"                     , emit: versions
 
     script:
     def args = task.ext.args ?: ''
