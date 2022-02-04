@@ -73,8 +73,6 @@ then
             # ls -v sorts by numeric value ("version"), which means that chr1_100_
             # is sorted *after* chr1_99_.
             for vcf in $(ls -v ${pattern}); do
-                echo "vcf" > vcf
-                #bgzip -d -@${cpus} ${vcf}
                 # Determine length of header.
                 # The 'q' command makes sed exit when it sees the first non-header
                 # line, which avoids reading in the entire file.
@@ -88,7 +86,6 @@ then
         done
     ) | bgzip -@${cpus} > rawcalls.unsorted.vcf.gz
 else
-    echo "else" > else_
     VCF=$(ls no_intervals*.vcf)
     cp $VCF rawcalls.unsorted.vcf
     bgzip -@${cpus} rawcalls.unsorted.vcf

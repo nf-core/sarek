@@ -196,7 +196,6 @@ workflow SAREK {
         germline_resource,
         known_indels,
         pon,
-        //target_bed,
         params.tools,
         params.step)
 
@@ -218,10 +217,10 @@ workflow SAREK {
     known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
-    intervals                         = PREPARE_GENOME.out.intervals_bed
-    intervals_bed_gz_tbi              = PREPARE_GENOME.out.intervals_bed_gz_tbi
-    intervals_bed_combined_gz_tbi     = PREPARE_GENOME.out.intervals_combined_bed_gz_tbi
-    intervals_bed_combined_gz         = intervals_bed_combined_gz_tbi.map{ bed, tbi -> bed}
+    intervals                         = PREPARE_GENOME.out.intervals_bed // multiple interval.bed files, divided by useful intervals for scatter/gather
+    intervals_bed_gz_tbi              = PREPARE_GENOME.out.intervals_bed_gz_tbi // multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
+    intervals_bed_combined_gz_tbi     = PREPARE_GENOME.out.intervals_combined_bed_gz_tbi  // one file containing all intervals interval.bed.gz/.tbi file
+    intervals_bed_combined            = PREPARE_GENOME.out.intervals_combined_bed         // one file containing all intervals interval.bed file
 
     num_intervals = 0
     intervals.count().map{ num_intervals = it }
@@ -329,8 +328,8 @@ workflow SAREK {
             params.skip_markduplicates,
             ('bamqc' in params.skip_qc),
             ('samtools' in params.skip_qc),
-            intervals_bed_combined_gz_tbi) //target_bed) // TODO: add interval file
-
+            intervals_bed_combined) //target_bed) // TODO: add interval file
+        intervals_bed_combined.view()
         cram_markduplicates = MARKDUPLICATES.out.cram
 
         // Create CSV to restart from this step
@@ -381,7 +380,7 @@ workflow SAREK {
                 intervals,
                 num_intervals,
                 params.no_intervals,
-                [] //TODO add intervals
+                intervals_bed_combined //TODO add intervals
             )
                 //target_bed)
 

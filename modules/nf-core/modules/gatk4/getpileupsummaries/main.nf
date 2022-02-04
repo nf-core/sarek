@@ -8,10 +8,12 @@ process GATK4_GETPILEUPSUMMARIES {
         'quay.io/biocontainers/gatk4:4.2.4.1--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    tuple val(meta), path(input), path(index), path(intervals)
+    path fasta
+    path fai
+    path dict
     path variants
     path variants_tbi
-    path sites
 
     output:
     tuple val(meta), path('*.pileups.table'), emit: table
@@ -20,9 +22,8 @@ process GATK4_GETPILEUPSUMMARIES {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def sitesCommand = ''
-
-    sitesCommand = sites ? " -L ${sites} " : " -L ${variants} "
+    def sitesCommand = intervals ? " -L ${intervals} " : " -L ${variants} "
+    def reference    = fasta ? " -R ${fasta}" :""
 
     def avail_mem = 3
     if (!task.memory) {
@@ -32,9 +33,10 @@ process GATK4_GETPILEUPSUMMARIES {
     }
     """
     gatk --java-options "-Xmx${avail_mem}g" GetPileupSummaries \\
-        -I $bam \\
+        -I $input \\
         -V $variants \\
         $sitesCommand \\
+        ${reference} \\
         -O ${prefix}.pileups.table \\
         $args
 

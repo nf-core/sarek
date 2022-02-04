@@ -32,6 +32,8 @@ workflow PREPARE_GENOME {
 
     main:
 
+    if(!tools) tools = ""
+
     ch_versions = Channel.empty()
 
     ch_bwa = Channel.empty()
@@ -63,14 +65,14 @@ workflow PREPARE_GENOME {
     }
 
     ch_dbsnp_tbi = Channel.empty()
-    if (!(params.dbsnp_tbi) && params.dbsnp && ('mapping' in step || 'prepare_recalibration' in step || 'controlfreec' in tools || 'haplotypecaller' in tools|| 'mutect2' in tools || 'tnscope' in tools)) {
+    if (!(params.dbsnp_tbi) && params.dbsnp && ('mapping' in step || 'prepare_recalibration' in step || tools.contains('controlfreec') || tools.contains('haplotypecaller') || tools.contains('mutect2') || tools.contains('tnscope'))) {
         TABIX_DBSNP(dbsnp.map{ it -> [[id:it[0].baseName], it] })
         ch_dbsnp_tbi = TABIX_DBSNP.out.tbi.map{ meta, tbi -> [tbi] }
         ch_versions = ch_versions.mix(TABIX_DBSNP.out.versions)
     }
 
     ch_germline_resource_tbi = Channel.empty()
-    if (!(params.germline_resource_tbi) && params.germline_resource && 'mutect2' in tools) {
+    if (!(params.germline_resource_tbi) && params.germline_resource && tools.contains('mutect2')) {
         TABIX_GERMLINE_RESOURCE(germline_resource.map{ it -> [[id:it[0].baseName], it] })
         ch_germline_resource_tbi = TABIX_GERMLINE_RESOURCE.out.tbi.map{ meta, tbi -> [tbi] }
         ch_versions = ch_versions.mix(TABIX_GERMLINE_RESOURCE.out.versions)
@@ -84,39 +86,59 @@ workflow PREPARE_GENOME {
     }
 
     ch_pon_tbi = Channel.empty()
-    if (!(params.pon_tbi) && params.pon && ('tnscope' in tools || 'mutect2' in tools)) {
+    if (!(params.pon_tbi) && params.pon && (tools.contains('tnscope') || tools.contains('mutect2'))) {
         TABIX_PON(pon.map{ it -> [[id:it[0].baseName], it] })
         ch_pon_tbi = TABIX_PON.out.tbi.map{ meta, tbi -> [tbi] }
         ch_versions = ch_versions.mix(TABIX_PON.out.versions)
     }
 
     ch_msisensorpro_scan = Channel.empty()
-    if ('msisensorpro' in tools) {
-        MSISENSORPRO_SCAN(fasta)
-        ch_msisensorpro_scan = MSISENSORPRO_SCAN.out.tab.map{ meta, list -> list}
-        ch_versions = ch_versions.mix(MSISENSORPRO_SCAN.out.versions)
-    }
+    // if (tools.contains('msisensorpro')) {
+    //     MSISENSORPRO_SCAN(fasta)
+    //     ch_msisensorpro_scan = MSISENSORPRO_SCAN.out.tab.map{ meta, list -> list}
+    //     ch_versions = ch_versions.mix(MSISENSORPRO_SCAN.out.versions)
+    // }
 
-    ch_intervals = Channel.empty()
-    ch_interval_bed_all = Channel.empty()
+    ch_intervals                        = Channel.empty()
+    ch_intervals_bed_gz_tbi             = Channel.empty()
+    ch_intervals_combined_bed_gz_tbi    = Channel.empty()     //Create bed.gz and bed.gz.tbi for input/or created interval file. It contains ALL regions.
+    ch_intervals_combined_bed           = Channel.empty()     //Create bed for input/or created interval file. It contains ALL regions.
 
     if (params.no_intervals) {
+
         file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
         ch_intervals = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
+        tabix_in = ch_intervals.map{it -> [[id:it.getName()], it] }
+
     } else if (!('annotate' in step) && !('controlfreec' in step)) {
         if (!params.intervals){
-            ch_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS(ch_fasta_fai))
-            //TODO: how to deal with ch_interval_bed_all if no intervals are provided. Actually should add a CI test for this
+
+            BUILD_INTERVALS(ch_fasta_fai)
+            tabix_in = BUILD_INTERVALS.out.bed.map{it -> [[id:it.getName()], it] }
+            ch_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS.out.bed)
+
         }else{
+            //TODO rename all files to have bed ending for qualimap
+            intervals_file = file(params.intervals)
+            // println intervals_file
+            // if(!intervals_file.endsWith(".bed")){
+            //     parent = intervals_file.parent.concat("/")
+            //     println parent
+            //     file_name = parent.concat(intervals_file.simpleName).concat(".bed")
+            //     intervals_file = intervals_file.renameTo(file_name)
+            // }
+            // println intervals_file
+
+            tabix_in = Channel.fromPath(intervals_file).map{it -> [[id:it.baseName], it] }
             ch_intervals = CREATE_INTERVALS_BED(file(params.intervals))
 
-            tabix_in = ch_intervals.map{it -> [[id:it.getName()], it] }
-            TABIX_BGZIPTABIX_INTERVAL_ALL(tabix_in)
-            ch_interval_bed_all = TABIX_BGZIPTABIX_INTERVAL_ALL.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi] }
-            ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_ALL.out.versions)
         }
     }
-    ch_target_bed = Channel.empty()
+
+    TABIX_BGZIPTABIX_INTERVAL_ALL(tabix_in)
+    ch_intervals_combined_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_ALL.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi] }
+    ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_ALL.out.versions)
+
     if (!params.no_intervals) {
         ch_intervals = ch_intervals.flatten()
             .map{ intervalFile ->
@@ -134,30 +156,27 @@ workflow PREPARE_GENOME {
             }.toSortedList({ a, b -> b[0] <=> a[0] })
             .flatten().collate(2)
             .map{duration, intervalFile -> intervalFile}
-
-        //Zip and index the resulting bed files similar to what we previously did with the target bed files
-        // if ((params.target_bed)){ //&& ('manta' in tools || 'strelka' in tools)) {
-        //ch_intervals.view()
-        //TODO: some tools seem to need one continuous bed or at least it is not explitely stated that they can
-        // parallelize over the intervals (here anyways not) so add one bed file having all intervals concated
-        tabix_in = ch_intervals.map{it ->
-            [[id:it.getName()], it] }
-        TABIX_BGZIPTABIX_INTERVAL_SPLIT(tabix_in)
-        ch_target_bed = TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi] }
-        ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.versions)
     }
 
+    // Create bed.gz and bed.gz.tbi for each interval file. They are split by region (see above)
+    tabix_in = ch_intervals.map{it -> [[id:it.baseName], it] }
+    TABIX_BGZIPTABIX_INTERVAL_SPLIT(tabix_in)
+    ch_intervals_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi] }
+    ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.versions)
+
     emit:
-        bwa                   = ch_bwa                        // path: {bwa,bwamem2}/index
-        dbsnp_tbi             = ch_dbsnp_tbi                  // path: dbsnb.vcf.gz.tbi
-        dict                  = ch_dict                       // path: genome.fasta.dict
-        fasta_fai             = ch_fasta_fai                  // path: genome.fasta.fai
-        germline_resource_tbi = ch_germline_resource_tbi      // path: germline_resource.vcf.gz.tbi
-        intervals             = ch_intervals                  // path: intervals.bed                        [intervals split for parallel execution]
-        known_indels_tbi      = ch_known_indels_tbi.collect() // path: {known_indels*}.vcf.gz.tbi
-        msisensorpro_scan     = ch_msisensorpro_scan          // path: genome_msi.list
-        pon_tbi               = ch_pon_tbi                    // path: pon.vcf.gz.tbi
-        intervals_bed_gz_tbi  = ch_target_bed                // path: target.bed.gz, target.bed.gz.tbi     [intervals split for parallel execution]
-        intervals_combined    = ch_interval_bed_all           // path: interval.bed.gz, interval.bed.gz.tbi [all intervals in one file]
-        versions              = ch_versions                   // channel: [ versions.yml ]
+        bwa                              = ch_bwa                               // path: {bwa,bwamem2}/index
+        dbsnp_tbi                        = ch_dbsnp_tbi                         // path: dbsnb.vcf.gz.tbi
+        dict                             = ch_dict                              // path: genome.fasta.dict
+        fasta_fai                        = ch_fasta_fai                         // path: genome.fasta.fai
+        germline_resource_tbi            = ch_germline_resource_tbi             // path: germline_resource.vcf.gz.tbi
+        known_indels_tbi                 = ch_known_indels_tbi.collect()        // path: {known_indels*}.vcf.gz.tbi
+        msisensorpro_scan                = ch_msisensorpro_scan                 // path: genome_msi.list
+        pon_tbi                          = ch_pon_tbi                           // path: pon.vcf.gz.tbi
+        intervals_bed                    = ch_intervals                         // path: intervals.bed                        [intervals split for parallel execution]
+        intervals_bed_gz_tbi             = ch_intervals_bed_gz_tbi              // path: target.bed.gz, target.bed.gz.tbi     [intervals split for parallel execution]
+        intervals_combined_bed_gz_tbi    = ch_intervals_combined_bed_gz_tbi     // path: interval.bed.gz, interval.bed.gz.tbi [all intervals in one file]
+        intervals_combined_bed           = ch_intervals_combined_bed            // path: interval.bed                         [all intervals in one file]
+
+        versions                         = ch_versions                          // channel: [ versions.yml ]
 }

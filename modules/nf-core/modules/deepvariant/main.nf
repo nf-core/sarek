@@ -17,9 +17,9 @@ process DEEPVARIANT {
     path(fai)
 
     output:
-    tuple val(meta), path("*.vcf.gz") ,  emit: vcf
-    tuple val(meta), path("*g.vcf.gz"),  emit: gvcf
-    path "versions.yml"               ,  emit: versions
+    tuple val(meta), path("*[^g].vcf.gz")   , emit: vcf
+    tuple val(meta), path("*.g.vcf.gz")     , emit: gvcf
+    path "versions.yml"                     , emit: versions
 
     script:
     def args = task.ext.args ?: ''

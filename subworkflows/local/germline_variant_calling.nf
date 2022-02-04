@@ -85,6 +85,7 @@ workflow GERMLINE_VARIANT_CALLING {
             [new_meta, cram, crai, bed, tbi]
         }.set{cram_recalibrated_intervals_gz_tbi}
 
+    //TODO PASS THIS OVER (ALREADY PROVIDED IN SARKE..NF)
     intervals_bed_combine_gz_tbi.map{ bed_gz, tbi -> [bed_gz]}.set{intervals_bed_combine_gz}
 
     //TODO: benchmark if it is better to provide multiple bed files & run on multiple machines + mergeing afterwards || one containing all intervals and run on one larger machine
@@ -242,9 +243,9 @@ workflow GERMLINE_VARIANT_CALLING {
             manta_small_indels_vcf_to_concat = BGZIP_MANTA_SMALL_INDELS.out.vcf.groupTuple(size: num_intervals)
             manta_diploid_vcf_to_concat = BGZIP_MANTA_DIPLOID.out.vcf.groupTuple(size: num_intervals)
 
-            CONCAT_VCF_MANTA_SV(manta_sv_vcf_to_concat)
-            CONCAT_VCF_MANTA_SMALL_INDELS(manta_small_indels_vcf_to_concat)
-            CONCAT_VCF_MANTA_DIPLOID(manta_diploid_vcf_to_concat)
+            CONCAT_VCF_MANTA_SV(manta_sv_vcf_to_concat, fasta_fai, intervals_bed_combine_gz)
+            CONCAT_VCF_MANTA_SMALL_INDELS(manta_small_indels_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
+            CONCAT_VCF_MANTA_DIPLOID(manta_diploid_vcf_to_concat, fasta_fai, intervals_bed_combine_gz)
 
             manta_candidate_small_indels_vcf_tbi = CONCAT_VCF_MANTA_SV.out.vcf
             manta_candidate_sv_vcf_tbi           = CONCAT_VCF_MANTA_SMALL_INDELS.out.vcf
