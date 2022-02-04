@@ -86,6 +86,8 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
             [new_meta, table]
         }.groupTuple(size: num_intervals)
 
+        pileup_tables_to_gather.view()
+
         GATHERPILEUPSUMMARIES(pileup_tables_to_gather, dict)
         pileup_table = GATHERPILEUPSUMMARIES.out.table
 
@@ -102,20 +104,11 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     //
     //Mutect2 calls filtered by filtermutectcalls using the contamination and segmentation tables.
     //
-    // ch_vcf =           MUTECT2.out.vcf.collect()
-    // ch_tbi =           MUTECT2.out.tbi.collect()
-    // ch_stats =         MUTECT2.out.stats.collect()
-    // //[] is added as a placeholder for the optional input file artifact priors, which is only used for tumor-normal samples and therefor isn't needed in this workflow.
-    // ch_stats.add([])
-    // ch_segment =       CALCULATECONTAMINATION.out.segmentation.collect()
-    // ch_contamination = CALCULATECONTAMINATION.out.contamination.collect()
-    // //[] is added as a placeholder for entering a contamination estimate value, which is not needed as this workflow uses the contamination table instead.
-    // ch_contamination.add([])
-
-    ch_filtermutect_in = mutect2_vcf_gz_tbi.join(mutect2_stats)
+    ch_filtermutect = mutect2_vcf_gz_tbi.join(mutect2_stats)
                                             .join(CALCULATECONTAMINATION.out.segmentation)
                                             .join(CALCULATECONTAMINATION.out.contamination)
-    ch_filtermutect_in.view()
+    ch_filtermutect.view()
+    ch_filtermutect_in = ch_filtermutect.map{ meta, vcf, tbi, stats, seg, cont -> [meta, vcf, tbi, stats, [], seg, cont, []] }
     FILTERMUTECTCALLS ( ch_filtermutect_in, fasta, fai, dict )
     ch_versions = ch_versions.mix(FILTERMUTECTCALLS.out.versions)
 
