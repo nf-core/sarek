@@ -92,11 +92,11 @@ workflow PREPARE_GENOME {
     }
 
     ch_msisensorpro_scan = Channel.empty()
-    // if (tools.contains('msisensorpro')) {
-    //     MSISENSORPRO_SCAN(fasta)
-    //     ch_msisensorpro_scan = MSISENSORPRO_SCAN.out.tab.map{ meta, list -> list}
-    //     ch_versions = ch_versions.mix(MSISENSORPRO_SCAN.out.versions)
-    // }
+    if (tools.contains('msisensorpro')) {
+        MSISENSORPRO_SCAN(fasta.map{it -> [[id:it[0].getName()], it]})
+        ch_msisensorpro_scan = MSISENSORPRO_SCAN.out.list.map{ meta, list -> list}
+        ch_versions = ch_versions.mix(MSISENSORPRO_SCAN.out.versions)
+    }
 
     ch_intervals                        = Channel.empty()
     ch_intervals_bed_gz_tbi             = Channel.empty()
