@@ -42,6 +42,8 @@ workflow PAIR_VARIANT_CALLING {
 
     main:
 
+    if(!tools) tools = ""
+
     ch_versions          = Channel.empty()
     manta_vcf            = Channel.empty()
     strelka_vcf          = Channel.empty()

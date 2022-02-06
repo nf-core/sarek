@@ -10,6 +10,7 @@ include { BGZIP as BGZIP_MANTA_SMALL_INDELS           } from '../../modules/loca
 include { BGZIP as BGZIP_MANTA_SV                     } from '../../modules/local/bgzip'
 include { BGZIP as BGZIP_MANTA_DIPLOID                } from '../../modules/local/bgzip'
 include { BGZIP as BGZIP_STRELKA                      } from '../../modules/local/bgzip'
+include { BGZIP as BGZIP_STRELKA_GENOME               } from '../../modules/local/bgzip'
 include { CONCAT_VCF as CONCAT_VCF_DEEPVARIANT        } from '../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_GVCF_DEEPVARIANT       } from '../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_VCF_FREEBAYES          } from '../../modules/local/concat_vcf/main'
@@ -18,6 +19,7 @@ include { CONCAT_VCF as CONCAT_VCF_MANTA_SMALL_INDELS } from '../../modules/loca
 include { CONCAT_VCF as CONCAT_VCF_MANTA_SV           } from '../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_VCF_MANTA_DIPLOID      } from '../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_VCF_STRELKA            } from '../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_VCF_STRELKA_GENOME     } from '../../modules/local/concat_vcf/main'
 include { DEEPVARIANT                                 } from '../../modules/nf-core/modules/deepvariant/main'
 include { FREEBAYES                                   } from '../../modules/nf-core/modules/freebayes/main'
 include { GATK_JOINT_GERMLINE_VARIANT_CALLING         } from '../../subworkflows/nf-core/joint_germline_variant_calling/main'
@@ -57,14 +59,11 @@ workflow GERMLINE_VARIANT_CALLING {
 
     ch_versions = Channel.empty()
 
-    deepvariant_vcf_gz_tbi                  = Channel.empty()
-    deepvariant_gvcf_gz_tbi                 = Channel.empty()
-    freebayes_vcf_gz_tbi                    = Channel.empty()
-    haplotypecaller_gvcf_gz_tbi             = Channel.empty()
-    manta_candidate_small_indels_vcf_tbi    = Channel.empty()
-    manta_candidate_sv_vcf_tbi              = Channel.empty()
-    manta_diploid_sv_vcf_tbi                = Channel.empty()
-    strelka_vcf_gz_tbi                      = Channel.empty()
+    deepvariant_vcf_tbi                  = Channel.empty()
+    freebayes_vcf_tbi                    = Channel.empty()
+    haplotypecaller_gvcf_tbi             = Channel.empty()
+    manta_vcf_tbi                        = Channel.empty()
+    strelka_vcf_tbi                      = Channel.empty()
 
     cram_recalibrated.combine(intervals)
         .map{ meta, cram, crai, intervals ->
@@ -132,6 +131,8 @@ workflow GERMLINE_VARIANT_CALLING {
             ch_versions = ch_versions.mix(CONCAT_VCF_DEEPVARIANT.out.versions)
         }
 
+        deepvariant_vcf_tbi = deepvariant_vcf_tbi.mix(deepvariant_vcf_gz_tbi, deepvariant_gvcf_gz_tbi)
+
     }
 
     if (tools.contains('freebayes')){
@@ -175,6 +176,8 @@ workflow GERMLINE_VARIANT_CALLING {
             ch_versions = ch_versions.mix(BGZIP_FREEBAYES.out.versions)
             ch_versions = ch_versions.mix(CONCAT_VCF_FREEBAYES.out.versions)
         }
+
+        freebayes_vcf_tbi = freebayes_vcf_tbi.mix(freebayes_vcf_gz_tbi)
     }
 
     if (tools.contains('haplotypecaller')) {
@@ -211,10 +214,11 @@ workflow GERMLINE_VARIANT_CALLING {
             ch_versions = ch_versions.mix(CONCAT_VCF_HAPLOTYPECALLER.out.versions)
         }
 
+
         if(joint_germline){
             run_haplotypecaller = false
             run_vqsr            = true //parameter?
-            //Waiting on some feedback from gavin
+            //some feedback from gavin
             // GATK_JOINT_GERMLINE_VARIANT_CALLING(
             //     haplotypecaller_vcf_gz_tbi,
             //     run_haplotypecaller,
@@ -234,6 +238,8 @@ workflow GERMLINE_VARIANT_CALLING {
             // )
             // ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
         }
+
+        haplotypecaller_gvcf_tbi = haplotypecaller_gvcf_tbi.mix(haplotypecaller_gvcf_gz_tbi)
 
     }
 
@@ -296,6 +302,8 @@ workflow GERMLINE_VARIANT_CALLING {
             ch_versions = ch_versions.mix(CONCAT_VCF_MANTA_DIPLOID.out.versions)
 
         }
+
+        manta_vcf_tbi = manta_vcf_tbi.mix(manta_candidate_small_indels_vcf_tbi, manta_candidate_sv_vcf_tbi, manta_diploid_sv_vcf_tbi)
     }
 
     if (tools.contains('strelka')) {
@@ -311,8 +319,11 @@ workflow GERMLINE_VARIANT_CALLING {
 
         if(no_intervals){
             strelka_vcf_gz_tbi = STRELKA_GERMLINE.out.vcf.join(STRELKA_GERMLINE.out.vcf_tbi)
+            strelka_genome_vcf_gz_tbi = STRELKA_GERMLINE.out.genome_vcf.join(STRELKA_GERMLINE.out.genome_vcf_tbi)
+
         }else{
             BGZIP_STRELKA(STRELKA_GERMLINE.out.vcf)
+            BGZIP_STRELKA_GENOME(STRELKA_GERMLINE.out.genome_vcf)
 
             BGZIP_STRELKA.out.vcf.map{ meta, vcf ->
                 new_meta = meta.clone()
@@ -321,12 +332,24 @@ workflow GERMLINE_VARIANT_CALLING {
             }.groupTuple(size: num_intervals)
             .set{strelka_vcf_to_concat}
 
+            BGZIP_STRELKA_GENOME.out.vcf.map{ meta, vcf ->
+                new_meta = meta.clone()
+                new_meta.id = new_meta.sample
+                [new_meta, vcf]
+            }.groupTuple(size: num_intervals)
+            .set{strelka_genome_vcf_to_concat}
+
             CONCAT_VCF_STRELKA(strelka_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
+            CONCAT_VCF_STRELKA_GENOME(strelka_genome_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
+
             strelka_vcf_gz_tbi = CONCAT_VCF_STRELKA.out.vcf
+            strelka_genome_vcf_gz_tbi = CONCAT_VCF_STRELKA_GENOME.out.vcf
 
             ch_versions = ch_versions.mix(BGZIP_STRELKA.out.versions)
             ch_versions = ch_versions.mix(CONCAT_VCF_STRELKA.out.versions)
         }
+
+        strelka_vcf_tbi = strelka_vcf_tbi.mix(strelka_vcf_gz_tbi,strelka_genome_vcf_gz_tbi )
     }
 
     if (tools.contains('tiddit')){
@@ -352,14 +375,11 @@ workflow GERMLINE_VARIANT_CALLING {
     }
 
     emit:
-    deepvariant_vcf_gz_tbi
-    deepvariant_gvcf_gz_tbi
-    freebayes_vcf_gz_tbi
-    haplotypecaller_gvcf_gz_tbi
-    manta_candidate_small_indels_vcf_tbi
-    manta_candidate_sv_vcf_tbi
-    manta_diploid_sv_vcf_tbi
-    strelka_vcf_gz_tbi
+    deepvariant_vcf_tbi
+    freebayes_vcf_tbi
+    haplotypecaller_gvcf_tbi
+    manta_vcf_tbi
+    strelka_vcf_tbi
 
     versions = ch_versions
 }

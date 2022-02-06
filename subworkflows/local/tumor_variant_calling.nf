@@ -9,11 +9,13 @@ include { BGZIP as BGZIP_MANTA_SMALL_INDELS           } from '../../modules/loca
 include { BGZIP as BGZIP_MANTA_SV                     } from '../../modules/local/bgzip'
 include { BGZIP as BGZIP_MANTA_TUMOR                  } from '../../modules/local/bgzip'
 include { BGZIP as BGZIP_STRELKA                      } from '../../modules/local/bgzip'
+include { BGZIP as BGZIP_STRELKA_GENOME               } from '../../modules/local/bgzip'
 include { CONCAT_VCF as CONCAT_VCF_FREEBAYES          } from '../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_VCF_MANTA_SMALL_INDELS } from '../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_VCF_MANTA_SV           } from '../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_VCF_MANTA_TUMOR        } from '../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_VCF_STRELKA            } from '../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_VCF_STRELKA_GENOME     } from '../../modules/local/concat_vcf/main'
 include { FREEBAYES                                   } from '../../modules/nf-core/modules/freebayes/main'
 include { GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING     } from '../../subworkflows/nf-core/gatk_tumor_only_somatic_variant_calling/main'
 include { MANTA_TUMORONLY                             } from '../../modules/nf-core/modules/manta/tumoronly/main'
@@ -42,13 +44,14 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
 
     main:
 
-    ch_versions                             = Channel.empty()
-    freebayes_vcf_gz_tbi                    = Channel.empty()
-    manta_candidate_small_indels_vcf_tbi    = Channel.empty()
-    manta_candidate_sv_vcf_tbi              = Channel.empty()
-    manta_tumor_sv_vcf_tbi                  = Channel.empty()
-    mutect2_vcf_gz_tbi                      = Channel.empty()
-    strelka_vcf_gz_tbi                      = Channel.empty()
+    if(!tools) tools = ""
+
+    ch_versions             = Channel.empty()
+    freebayes_vcf_tbi       = Channel.empty()
+    manta_vcf_tbi           = Channel.empty()
+    mutect2_vcf_tbi         = Channel.empty()
+    strelka_vcf_tbi         = Channel.empty()
+    msisensor_output        = Channel.empty()
 
     cram_recalibrated.combine(intervals)
         .map{ meta, cram, crai, intervals ->
@@ -108,6 +111,9 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
             ch_versions = ch_versions.mix(BGZIP_FREEBAYES.out.versions)
             ch_versions = ch_versions.mix(CONCAT_VCF_FREEBAYES.out.versions)
         }
+
+        freebayes_vcf_tbi = freebayes_vcf_tbi.mix(freebayes_vcf_gz_tbi)
+
     }
 
     if (tools.contains('mutect2')) {
@@ -129,6 +135,8 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         )
 
         ch_versions = ch_versions.mix(GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.versions)
+
+        mutect2_vcf_tbi = mutect2_vcf_tbi.mix(GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.mutect2_vcf_gz_tbi)
     }
 
     if (tools.contains('manta')){
@@ -190,6 +198,8 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
             ch_versions = ch_versions.mix(CONCAT_VCF_MANTA_TUMOR.out.versions)
 
         }
+
+        manta_vcf_tbi = manta_vcf_tbi.mix(manta_candidate_small_indels_vcf_tbi, manta_candidate_sv_vcf_tbi, manta_tumor_sv_vcf_tbi)
     }
 
     if (tools.contains('strelka')) {
@@ -205,8 +215,11 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
 
         if(no_intervals){
             strelka_vcf_gz_tbi = STRELKA_TUMORONLY.out.vcf.join(STRELKA_TUMORONLY.out.vcf_tbi)
+            strelka_genome_vcf_gz_tbi = STRELKA_TUMORONLY.out.genome_vcf.join(STRELKA_TUMORONLY.out.genome_vcf_tbi)
+
         }else{
             BGZIP_STRELKA(STRELKA_TUMORONLY.out.vcf)
+            BGZIP_STRELKA_GENOME(STRELKA_TUMORONLY.out.genome_vcf)
 
             BGZIP_STRELKA.out.vcf.map{ meta, vcf ->
                 new_meta = meta.clone()
@@ -215,20 +228,33 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
             }.groupTuple(size: num_intervals)
             .set{strelka_vcf_to_concat}
 
+            BGZIP_STRELKA_GENOME.out.vcf.map{ meta, vcf ->
+                new_meta = meta.clone()
+                new_meta.id = new_meta.sample
+                [new_meta, vcf]
+            }.groupTuple(size: num_intervals)
+            .set{strelka_genome_vcf_to_concat}
+
             CONCAT_VCF_STRELKA(strelka_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
+            CONCAT_VCF_STRELKA_GENOME(strelka_genome_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
+
             strelka_vcf_gz_tbi = CONCAT_VCF_STRELKA.out.vcf
+            strelka_genome_vcf_gz_tbi = CONCAT_VCF_STRELKA_GENOME.out.vcf
 
             ch_versions = ch_versions.mix(BGZIP_STRELKA.out.versions)
             ch_versions = ch_versions.mix(CONCAT_VCF_STRELKA.out.versions)
         }
+
+        strelka_vcf_tbi = strelka_vcf_tbi.mix(strelka_vcf_gz_tbi,strelka_genome_vcf_gz_tbi )
     }
 
 
-    if (tools.contains('tiddit')){
-    }
+    // if (tools.contains('tiddit')){
+    // }
 
     emit:
-    ch_versions
+    versions = ch_versions
+
     freebayes_vcf_gz_tbi
     manta_candidate_small_indels_vcf_tbi
     manta_candidate_sv_vcf_tbi
