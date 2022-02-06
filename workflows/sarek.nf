@@ -450,12 +450,12 @@ workflow SAREK {
         .map { normal, tumor ->
             def meta = [:]
             meta.patient    = normal[0]
-            meta.normal_id  = normal[2].sample
-            meta.tumor_id   = tumor[2].sample
-            meta.gender     = normal[2].gender
+            meta.normal_id  = normal[1].sample
+            meta.tumor_id   = tumor[1].sample
+            meta.gender     = normal[1].gender
             meta.id         = "${meta.tumor_id}_vs_${meta.normal_id}".toString()
 
-            [meta, normal[3], normal[4], tumor[3], tumor[4]]
+            [meta, normal[2], normal[3], tumor[2], tumor[3]]
         }
 
         // GERMLINE VARIANT CALLING
@@ -477,10 +477,9 @@ workflow SAREK {
             )
 
 
-        //vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf)
-        //vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)
+        // //vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf)
+        // //vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)
         ch_versions = ch_versions.mix(GERMLINE_VARIANT_CALLING.out.versions)
-        // SOMATIC VARIANT CALLING
 
         // TUMOR ONLY VARIANT CALLING
         TUMOR_ONLY_VARIANT_CALLING(
@@ -502,27 +501,30 @@ workflow SAREK {
             pon,
             pon_tbi
         )
-        //ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
+        ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
 
 
         // PAIR VARIANT CALLING
-        // PAIR_VARIANT_CALLING(
-        //     params.tools,
-        //     cram_variant_calling_pair,
-        //     dbsnp,
-        //     dbsnp_tbi,
-        //     dict,
-        //     fasta_fai,
-        //     fasta,
-        //     intervals,
-        //     msisensorpro_scan,
-        //     target_bed,
-        //     target_bed_gz_tbi,
-        //     germline_resource,
-        //     germline_resource_tbi,
-        //     pon,
-        //     pon_tbi)
-        //        ch_versions = ch_versions.mix(PAIR_VARIANT_CALLING.out.versions)
+        PAIR_VARIANT_CALLING(
+            params.tools,
+            cram_variant_calling_pair,
+            dbsnp,
+            dbsnp_tbi,
+            dict,
+            fasta,
+            fasta_fai,
+            intervals,
+            intervals_bed_gz_tbi,
+            intervals_bed_combined_gz_tbi,
+            intervals_bed_combined_gz,
+            num_intervals,
+            params.no_intervals,
+            msisensorpro_scan,
+            germline_resource,
+            germline_resource_tbi,
+            pon,
+            pon_tbi)
+        ch_versions = ch_versions.mix(PAIR_VARIANT_CALLING.out.versions)
 
 
         // ANNOTATE
