@@ -93,7 +93,7 @@ workflow PREPARE_GENOME {
 
     ch_msisensorpro_scan = Channel.empty()
     if (tools.contains('msisensorpro')) {
-        MSISENSORPRO_SCAN(fasta.map{it -> [[id:it[0].getName()], it]})
+        MSISENSORPRO_SCAN(fasta.map{it -> [[id:it[0].baseName], it]})
         ch_msisensorpro_scan = MSISENSORPRO_SCAN.out.list.map{ meta, list -> list}
         ch_versions = ch_versions.mix(MSISENSORPRO_SCAN.out.versions)
     }

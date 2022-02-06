@@ -8,10 +8,11 @@ process MSISENSORPRO_MSI_SOMATIC {
         'quay.io/biocontainers/msisensor-pro:1.2.0--hfc31af2_0' }"
 
     input:
-    tuple val(meta), path(normal_bam), path(normal_bai), path(tumor_bam), path(tumor_bai)
+    tuple val(meta), path(normal), path(normal_index), path(tumor), path(tumor_index)
+    path (msisensor_scan)
 
     output:
-    tuple val(meta), path("${prefix}")         , emit: output
+    tuple val(meta), path("${prefix}")         , emit: output_report
     tuple val(meta), path("${prefix}_dis")     , emit: output_dis
     tuple val(meta), path("${prefix}_germline"), emit: output_germline
     tuple val(meta), path("${prefix}_somatic") , emit: output_somatic
@@ -23,9 +24,9 @@ process MSISENSORPRO_MSI_SOMATIC {
     """
     msisensor-pro \\
         msi \\
-        -d $homopolymers \\
-        -n $normal_bam \\
-        -t $tumor_bam \\
+        -d ${msisensor_scan} \\
+        -n ${normal} \\
+        -t ${tumor} \\
         -o $prefix \\
         $args
 

@@ -86,8 +86,6 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
             [new_meta, table]
         }.groupTuple(size: num_intervals)
 
-        pileup_tables_to_gather.view()
-
         GATHERPILEUPSUMMARIES(pileup_tables_to_gather, dict)
         pileup_table = GATHERPILEUPSUMMARIES.out.table
 
@@ -107,7 +105,6 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     ch_filtermutect = mutect2_vcf_gz_tbi.join(mutect2_stats)
                                             .join(CALCULATECONTAMINATION.out.segmentation)
                                             .join(CALCULATECONTAMINATION.out.contamination)
-    ch_filtermutect.view()
     ch_filtermutect_in = ch_filtermutect.map{ meta, vcf, tbi, stats, seg, cont -> [meta, vcf, tbi, stats, [], seg, cont, []] }
     FILTERMUTECTCALLS ( ch_filtermutect_in, fasta, fai, dict )
     ch_versions = ch_versions.mix(FILTERMUTECTCALLS.out.versions)
