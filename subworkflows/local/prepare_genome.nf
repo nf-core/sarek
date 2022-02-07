@@ -102,6 +102,7 @@ workflow PREPARE_GENOME {
     ch_intervals_bed_gz_tbi             = Channel.empty()
     ch_intervals_combined_bed_gz_tbi    = Channel.empty()     //Create bed.gz and bed.gz.tbi for input/or created interval file. It contains ALL regions.
 
+    tabix_in_combined = Channel.empty()
     if (params.no_intervals) {
 
         file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
@@ -123,34 +124,36 @@ workflow PREPARE_GENOME {
         }
     }
 
-    TABIX_BGZIPTABIX_INTERVAL_ALL(tabix_in_combined)
-    ch_intervals_combined_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_ALL.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi] }
-    ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_ALL.out.versions)
+    if (!('annotate' in step) && !('controlfreec' in step)){
+        TABIX_BGZIPTABIX_INTERVAL_ALL(tabix_in_combined)
+        ch_intervals_combined_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_ALL.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi] }
+        ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_ALL.out.versions)
 
-    if (!params.no_intervals) {
-        ch_intervals = ch_intervals.flatten()
-            .map{ intervalFile ->
-                def duration = 0.0
-                for (line in intervalFile.readLines()) {
-                    final fields = line.split('\t')
-                    if (fields.size() >= 5) duration += fields[4].toFloat()
-                    else {
-                        start = fields[1].toInteger()
-                        end = fields[2].toInteger()
-                        duration += (end - start) / params.nucleotides_per_second
+        if (!params.no_intervals) {
+            ch_intervals = ch_intervals.flatten()
+                .map{ intervalFile ->
+                    def duration = 0.0
+                    for (line in intervalFile.readLines()) {
+                        final fields = line.split('\t')
+                        if (fields.size() >= 5) duration += fields[4].toFloat()
+                        else {
+                            start = fields[1].toInteger()
+                            end = fields[2].toInteger()
+                            duration += (end - start) / params.nucleotides_per_second
+                        }
                     }
-                }
-                [duration, intervalFile]
-            }.toSortedList({ a, b -> b[0] <=> a[0] })
-            .flatten().collate(2)
-            .map{duration, intervalFile -> intervalFile}
-    }
+                    [duration, intervalFile]
+                }.toSortedList({ a, b -> b[0] <=> a[0] })
+                .flatten().collate(2)
+                .map{duration, intervalFile -> intervalFile}
+        }
 
-    // Create bed.gz and bed.gz.tbi for each interval file. They are split by region (see above)
-    tabix_in = ch_intervals.map{it -> [[id:it.baseName], it] }
-    TABIX_BGZIPTABIX_INTERVAL_SPLIT(tabix_in)
-    ch_intervals_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi] }
-    ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.versions)
+        // Create bed.gz and bed.gz.tbi for each interval file. They are split by region (see above)
+        tabix_in = ch_intervals.map{it -> [[id:it.baseName], it] }
+        TABIX_BGZIPTABIX_INTERVAL_SPLIT(tabix_in)
+        ch_intervals_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi] }
+        ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.versions)
+    }
 
     emit:
         bwa                              = ch_bwa                               // path: {bwa,bwamem2}/index

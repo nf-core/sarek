@@ -65,7 +65,7 @@ workflow PAIR_VARIANT_CALLING {
             normal_id = meta.normal_id
             tumor_id = meta.tumor_id
 
-            new_tbi = bed.simpleName != "no_intervals" ? bed : []
+            new_bed = bed.simpleName != "no_intervals" ? bed : []
             new_tbi = tbi.simpleName != "no_intervals" ? tbi : []
             id = bed.simpleName != "no_intervals" ? tumor_id + "_vs_" + normal_id + "_" + bed.simpleName : tumor_id + "_vs_" + normal_id
             new_meta = [ id: id, normal_id: meta.normal_id, tumor_id: meta.tumor_id, gender: meta.gender, patient: meta.patient]
@@ -147,7 +147,8 @@ workflow PAIR_VARIANT_CALLING {
 
     cram_pair_strelka = Channel.empty()
     if (tools.contains('strelka') && tools.contains('manta')) {
-            cram_pair.join(manta_somatic_sv_vcf_tbi).combine(intervals_bed_gz_tbi)
+
+            cram_pair.join(manta_somatic_sv_vcf).combine(intervals_bed_gz_tbi)
             .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, bed, tbi ->
                 normal_id = meta.normal_id
                 tumor_id = meta.tumor_id
@@ -176,7 +177,7 @@ workflow PAIR_VARIANT_CALLING {
 
     if(tools.contains('strelka')){
 
-        STRELKA(
+        STRELKA_SOMATIC(
             cram_pair_strelka,
             fasta,
             fasta_fai
