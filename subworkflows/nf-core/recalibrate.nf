@@ -22,7 +22,6 @@ workflow RECALIBRATE {
         num_intervals
         no_intervals
         intervals_combined_bed_gz_tbi
-        //target_bed     // channel: [optional]  target_bed
 
     main:
 

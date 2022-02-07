@@ -9,6 +9,7 @@ process MSISENSORPRO_MSI_SOMATIC {
 
     input:
     tuple val(meta), path(normal), path(normal_index), path(tumor), path(tumor_index)
+    path (fasta)
     path (msisensor_scan)
 
     output:
@@ -21,12 +22,14 @@ process MSISENSORPRO_MSI_SOMATIC {
     script:
     def args = task.ext.args   ?: ''
     prefix   = task.ext.prefix ?: "${meta.id}"
+    def fasta = fasta ? "-g ${fasta}" : ""
     """
     msisensor-pro \\
         msi \\
         -d ${msisensor_scan} \\
         -n ${normal} \\
         -t ${tumor} \\
+        ${fasta} \\
         -o $prefix \\
         $args
 

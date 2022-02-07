@@ -476,35 +476,38 @@ workflow SAREK {
             params.joint_germline
             )
 
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.deepvariant_vcf_tbi)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.freebayes_vcf_tbi)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_gvcf_tbi)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.manta_vcf_tbi)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf_tbi)
 
-        // //vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf)
-        // //vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)
         ch_versions = ch_versions.mix(GERMLINE_VARIANT_CALLING.out.versions)
 
         // TUMOR ONLY VARIANT CALLING
-        TUMOR_ONLY_VARIANT_CALLING(
-            params.tools,
-            cram_variant_calling_tumor_only,
-            dbsnp,
-            dbsnp_tbi,
-            dict,
-            fasta,
-            fasta_fai,
-            intervals,
-            intervals_bed_gz_tbi,
-            intervals_bed_combined_gz_tbi,
-            intervals_bed_combined_gz,
-            num_intervals,
-            params.no_intervals,
-            germline_resource,
-            germline_resource_tbi,
-            pon,
-            pon_tbi
-        )
-        ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
+        // TUMOR_ONLY_VARIANT_CALLING(
+        //     params.tools,
+        //     cram_variant_calling_tumor_only,
+        //     dbsnp,
+        //     dbsnp_tbi,
+        //     dict,
+        //     fasta,
+        //     fasta_fai,
+        //     intervals,
+        //     intervals_bed_gz_tbi,
+        //     intervals_bed_combined_gz_tbi,
+        //     intervals_bed_combined_gz,
+        //     num_intervals,
+        //     params.no_intervals,
+        //     germline_resource,
+        //     germline_resource_tbi,
+        //     pon,
+        //     pon_tbi
+        // )
+        // ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
 
 
-        // PAIR VARIANT CALLING
+        // // PAIR VARIANT CALLING
         PAIR_VARIANT_CALLING(
             params.tools,
             cram_variant_calling_pair,

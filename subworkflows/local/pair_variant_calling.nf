@@ -218,9 +218,14 @@ workflow PAIR_VARIANT_CALLING {
     }
 
     if (tools.contains('msisensorpro')) {
-        // MSISENSORPRO_MSI_SOMATIC(
-        //     cram_pair,
-        //     msisensorpro_scan)
+        cram_pair.view()
+        fasta.view()
+        msisensorpro_scan.view()
+        MSISENSORPRO_MSI_SOMATIC(
+            cram_pair,
+            fasta,
+            msisensorpro_scan)
+        ch_versions = ch_versions.mix(MSISENSORPRO_MSI_SOMATIC.out.versions)
     }
 
     if (tools.contains('mutect2')){
