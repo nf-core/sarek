@@ -33,15 +33,15 @@ jobs:
           - 'annotation'
           - 'default'
           - 'split_fastq'
-          - 'umi'
-          - 'gatk4_spark'
-          - 'save_bam_mapped'
-          - 'skip_markduplicates'
-          # - 'targeted'
-          - 'tumor_normal_pair'
-          # - 'tools'
-          # - bam_input
-          - 'prepare_recalibration'
+          # - 'umi'
+          # - 'gatk4_spark'
+          # - 'save_bam_mapped'
+          # - 'skip_markduplicates'
+          # # - 'targeted'
+          # - 'tumor_normal_pair'
+          # # - 'tools'
+          # # - bam_input
+          # - 'prepare_recalibration'
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
