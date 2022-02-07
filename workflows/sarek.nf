@@ -360,7 +360,7 @@ workflow SAREK {
         }
     }
 
-    // if (params.step == 'recalibrate') bam_applybqsr = input_sample
+    if (params.step == 'recalibrate') bam_applybqsr = input_sample
 
     if (params.step in ['mapping', 'prepare_recalibration', 'recalibrate']) {
 
@@ -484,27 +484,30 @@ workflow SAREK {
         ch_versions = ch_versions.mix(GERMLINE_VARIANT_CALLING.out.versions)
 
         // TUMOR ONLY VARIANT CALLING
-        // TUMOR_ONLY_VARIANT_CALLING(
-        //     params.tools,
-        //     cram_variant_calling_tumor_only,
-        //     dbsnp,
-        //     dbsnp_tbi,
-        //     dict,
-        //     fasta,
-        //     fasta_fai,
-        //     intervals,
-        //     intervals_bed_gz_tbi,
-        //     intervals_bed_combined_gz_tbi,
-        //     intervals_bed_combined_gz,
-        //     num_intervals,
-        //     params.no_intervals,
-        //     germline_resource,
-        //     germline_resource_tbi,
-        //     pon,
-        //     pon_tbi
-        // )
-        // ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
-
+        TUMOR_ONLY_VARIANT_CALLING(
+            params.tools,
+            cram_variant_calling_tumor_only,
+            dbsnp,
+            dbsnp_tbi,
+            dict,
+            fasta,
+            fasta_fai,
+            intervals,
+            intervals_bed_gz_tbi,
+            intervals_bed_combined_gz_tbi,
+            intervals_bed_combined_gz,
+            num_intervals,
+            params.no_intervals,
+            germline_resource,
+            germline_resource_tbi,
+            pon,
+            pon_tbi
+        )
+        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.freebayes_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.mutect2_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.manta_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.strelka_vcf)
+        ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
 
         // // PAIR VARIANT CALLING
         PAIR_VARIANT_CALLING(
@@ -527,6 +530,10 @@ workflow SAREK {
             pon,
             pon_tbi)
 
+        vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.freebayes_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.mutect2_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.manta_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.strelka_vcf)
         ch_versions = ch_versions.mix(PAIR_VARIANT_CALLING.out.versions)
 
 

@@ -46,22 +46,19 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
 
     if(!tools) tools = ""
 
-    ch_versions             = Channel.empty()
-    freebayes_vcf_tbi       = Channel.empty()
-    manta_vcf_tbi           = Channel.empty()
-    mutect2_vcf_tbi         = Channel.empty()
-    strelka_vcf_tbi         = Channel.empty()
-    msisensor_output        = Channel.empty()
+    ch_versions         = Channel.empty()
+    freebayes_vcf       = Channel.empty()
+    manta_vcf           = Channel.empty()
+    mutect2_vcf         = Channel.empty()
+    strelka_vcf         = Channel.empty()
 
-        cram_recalibrated.combine(intervals).map{ meta, cram, crai, intervals ->
-            sample = meta.sample
-            new_intervals = intervals.baseName != "no_intervals" ? intervals : []
-            id = new_intervals ? sample + "_" + new_intervals.baseName : sample
-            new_new_meta = [ id: id, sample: meta.sample, gender: meta.gender, status: meta.status, patient: meta.patient ]
-            [new_new_meta, cram, crai, new_intervals]
-        }.set{cram_recalibrated_intervals}
-
-    cram_recalibrated_intervals.view()
+    cram_recalibrated.combine(intervals).map{ meta, cram, crai, intervals ->
+        sample = meta.sample
+        new_intervals = intervals.baseName != "no_intervals" ? intervals : []
+        id = new_intervals ? sample + "_" + new_intervals.baseName : sample
+        new_new_meta = [ id: id, sample: meta.sample, gender: meta.gender, status: meta.status, patient: meta.patient ]
+        [new_new_meta, cram, crai, new_intervals]
+    }.set{cram_recalibrated_intervals}
 
     cram_recalibrated.combine(intervals_bed_gz_tbi)
         .map{ meta, cram, crai, bed, tbi ->
@@ -96,7 +93,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
 
         if(no_intervals){
             TABIX_FREEBAYES(FREEBAYES.out.vcf)
-            freebayes_vcf_gz_tbi = FREEBAYES.out.vcf.join(TABIX_FREEBAYES.out.tbi)
+            freebayes_vcf_gz = FREEBAYES.out.vcf
             ch_versions = ch_versions.mix(TABIX_FREEBAYES.out.versions)
         }else{
             BGZIP_FREEBAYES(FREEBAYES.out.vcf)
@@ -108,13 +105,13 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
             .set{freebayes_vcf_to_concat}
 
             CONCAT_VCF_FREEBAYES(freebayes_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
-            freebayes_vcf_gz_tbi = CONCAT_VCF_FREEBAYES.out.vcf
+            freebayes_vcf_gz = CONCAT_VCF_FREEBAYES.out.vcf
 
             ch_versions = ch_versions.mix(BGZIP_FREEBAYES.out.versions)
             ch_versions = ch_versions.mix(CONCAT_VCF_FREEBAYES.out.versions)
         }
 
-        freebayes_vcf_tbi = freebayes_vcf_tbi.mix(freebayes_vcf_gz_tbi)
+        freebayes_vcf = freebayes_vcf.mix(freebayes_vcf_gz)
 
     }
 
@@ -153,9 +150,9 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         ch_versions = ch_versions.mix(MANTA_TUMORONLY.out.versions)
 
         if(no_intervals){
-            manta_candidate_small_indels_vcf_tbi = MANTA_TUMORONLY.out.candidate_small_indels_vcf.join(MANTA_TUMORONLY.out.candidate_small_indels_vcf_tbi)
-            manta_candidate_sv_vcf_tbi           = MANTA_TUMORONLY.out.candidate_sv_vcf.join(MANTA_TUMORONLY.out.candidate_sv_vcf_tbi)
-            manta_tumor_sv_vcf_tbi               = MANTA_TUMORONLY.out.tumor_sv_vcf.join(MANTA_TUMORONLY.out.tumor_sv_vcf)
+            manta_candidate_small_indels_vcf = MANTA_TUMORONLY.out.candidate_small_indels_vcf
+            manta_candidate_sv_vcf           = MANTA_TUMORONLY.out.candidate_sv_vcf
+            manta_tumor_sv_vcf               = MANTA_TUMORONLY.out.tumor_sv_vcf
         }else{
 
             BGZIP_MANTA_SV(MANTA_TUMORONLY.out.candidate_small_indels_vcf)
@@ -187,9 +184,9 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
             CONCAT_VCF_MANTA_SMALL_INDELS(manta_small_indels_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
             CONCAT_VCF_MANTA_TUMOR(manta_tumor_sv_vcf_to_concat, fasta_fai, intervals_bed_combine_gz)
 
-            manta_candidate_small_indels_vcf_tbi = CONCAT_VCF_MANTA_SV.out.vcf
-            manta_candidate_sv_vcf_tbi           = CONCAT_VCF_MANTA_SMALL_INDELS.out.vcf
-            manta_tumor_sv_vcf_tbi               = CONCAT_VCF_MANTA_TUMOR.out.vcf
+            manta_candidate_small_indels_vcf = CONCAT_VCF_MANTA_SV.out.vcf
+            manta_candidate_sv_vcf           = CONCAT_VCF_MANTA_SMALL_INDELS.out.vcf
+            manta_tumor_sv_vcf               = CONCAT_VCF_MANTA_TUMOR.out.vcf
 
             ch_versions = ch_versions.mix(BGZIP_MANTA_SV.out.versions)
             ch_versions = ch_versions.mix(BGZIP_MANTA_SMALL_INDELS.out.versions)
@@ -201,7 +198,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
 
         }
 
-        manta_vcf_tbi = manta_vcf_tbi.mix(manta_candidate_small_indels_vcf_tbi, manta_candidate_sv_vcf_tbi, manta_tumor_sv_vcf_tbi)
+        manta_vcf = manta_vcf.mix(manta_candidate_small_indels_vcf, manta_candidate_sv_vcf, manta_tumor_sv_vcf)
     }
 
     if (tools.contains('strelka')) {
@@ -216,8 +213,8 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         ch_versions = ch_versions.mix(STRELKA_TUMORONLY.out.versions)
 
         if(no_intervals){
-            strelka_vcf_gz_tbi = STRELKA_TUMORONLY.out.vcf.join(STRELKA_TUMORONLY.out.vcf_tbi)
-            strelka_genome_vcf_gz_tbi = STRELKA_TUMORONLY.out.genome_vcf.join(STRELKA_TUMORONLY.out.genome_vcf_tbi)
+            strelka_vcf_gz = STRELKA_TUMORONLY.out.vcf
+            strelka_genome_vcf_gz = STRELKA_TUMORONLY.out.genome_vcf
 
         }else{
             BGZIP_STRELKA(STRELKA_TUMORONLY.out.vcf)
@@ -240,14 +237,14 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
             CONCAT_VCF_STRELKA(strelka_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
             CONCAT_VCF_STRELKA_GENOME(strelka_genome_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
 
-            strelka_vcf_gz_tbi = CONCAT_VCF_STRELKA.out.vcf
-            strelka_genome_vcf_gz_tbi = CONCAT_VCF_STRELKA_GENOME.out.vcf
+            strelka_vcf_gz = CONCAT_VCF_STRELKA.out.vcf
+            strelka_genome_vcf_gz = CONCAT_VCF_STRELKA_GENOME.out.vcf
 
             ch_versions = ch_versions.mix(BGZIP_STRELKA.out.versions)
             ch_versions = ch_versions.mix(CONCAT_VCF_STRELKA.out.versions)
         }
 
-        strelka_vcf_tbi = strelka_vcf_tbi.mix(strelka_vcf_gz_tbi,strelka_genome_vcf_gz_tbi )
+        strelka_vcf = strelka_vcf.mix(strelka_vcf_gz,strelka_genome_vcf_gz )
     }
 
 
@@ -257,10 +254,8 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
     emit:
     versions = ch_versions
 
-    freebayes_vcf_gz_tbi
-    manta_candidate_small_indels_vcf_tbi
-    manta_candidate_sv_vcf_tbi
-    manta_tumor_sv_vcf_tbi
-    mutect2_vcf_gz_tbi
-    strelka_vcf_gz_tbi
+    freebayes_vcf
+    manta_vcf
+    mutect2_vcf
+    strelka_vcf
 }

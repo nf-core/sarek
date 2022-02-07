@@ -5,19 +5,18 @@ include { BGZIP as BGZIP_MANTA_SMALL_INDELS           } from '../../modules/loca
 include { BGZIP as BGZIP_MANTA_SV                     } from '../../modules/local/bgzip'
 include { BGZIP as BGZIP_MANTA_DIPLOID                } from '../../modules/local/bgzip'
 include { BGZIP as BGZIP_MANTA_SOMATIC                  } from '../../modules/local/bgzip'
-include { BGZIP as BGZIP_STRELKA                      } from '../../modules/local/bgzip'
-include { BGZIP as BGZIP_STRELKA_BP                      } from '../../modules/local/bgzip'
+include { BGZIP as BGZIP_STRELKA_SNVS                      } from '../../modules/local/bgzip'
+include { BGZIP as BGZIP_STRELKA_INDELS                      } from '../../modules/local/bgzip'
 include { CONCAT_VCF as CONCAT_VCF_MANTA_SMALL_INDELS } from '../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_VCF_MANTA_SV           } from '../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_VCF_MANTA_DIPLOID      } from '../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_VCF_MANTA_SOMATIC        } from '../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_VCF_STRELKA            } from '../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_VCF_STRELKA_BP            } from '../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_VCF_STRELKA_SNVS            } from '../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_VCF_STRELKA_INDELS            } from '../../modules/local/concat_vcf/main'
 include { GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING     } from '../../subworkflows/nf-core/gatk_tumor_normal_somatic_variant_calling/main'
 include { MANTA_SOMATIC                                 } from '../../modules/nf-core/modules/manta/somatic/main'
 include { MSISENSORPRO_MSI_SOMATIC                      } from '../../modules/nf-core/modules/msisensorpro/msi_somatic/main'
 include { STRELKA_SOMATIC                               } from '../../modules/nf-core/modules/strelka/somatic/main'
-include { STRELKA_SOMATIC as STRELKA_BP                 } from '../../modules/nf-core/modules/strelka/somatic/main'
 
 workflow PAIR_VARIANT_CALLING {
     take:
@@ -47,6 +46,9 @@ workflow PAIR_VARIANT_CALLING {
     ch_versions          = Channel.empty()
     manta_vcf            = Channel.empty()
     strelka_vcf          = Channel.empty()
+    msisensorpro_output  = Channel.empty()
+    mutect2_vcf          = Channel.empty()
+
 
     cram_pair.combine(intervals)
         .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
@@ -63,11 +65,11 @@ workflow PAIR_VARIANT_CALLING {
             normal_id = meta.normal_id
             tumor_id = meta.tumor_id
 
-            bed = bed.simpleName != "no_intervals" ? bed : []
-            tbi = tbi.simpleName != "no_intervals" ? tbi : []
+            new_tbi = bed.simpleName != "no_intervals" ? bed : []
+            new_tbi = tbi.simpleName != "no_intervals" ? tbi : []
             id = bed.simpleName != "no_intervals" ? tumor_id + "_vs_" + normal_id + "_" + bed.simpleName : tumor_id + "_vs_" + normal_id
             new_meta = [ id: id, normal_id: meta.normal_id, tumor_id: meta.tumor_id, gender: meta.gender, patient: meta.patient]
-            [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed, tbi]
+            [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, new_bed, new_tbi]
         }.set{cram_pair_intervals_gz_tbi}
 
     if (tools.contains('manta')) {
@@ -80,10 +82,10 @@ workflow PAIR_VARIANT_CALLING {
         ch_versions = ch_versions.mix(MANTA_SOMATIC.out.versions)
 
         if(no_intervals){
-            manta_candidate_small_indels_vcf_tbi = MANTA_SOMATIC.out.candidate_small_indels_vcf.join(MANTA_SOMATIC.out.candidate_small_indels_vcf_tbi)
-            manta_candidate_sv_vcf_tbi           = MANTA_SOMATIC.out.candidate_sv_vcf.join(MANTA_SOMATIC.out.candidate_sv_vcf_tbi)
-            manta_diploid_sv_vcf_tbi             = MANTA_SOMATIC.out.diploid_sv_vcf.join(MANTA_SOMATIC.out.diploid_sv_vcf)
-            manta_somatic_sv_vcf_tbi             = MANTA_SOMATIC.out.somatic_sv_vcf.join(MANTA_SOMATIC.out.somatic_sv_vcf)
+            manta_candidate_small_indels_vcf = MANTA_SOMATIC.out.candidate_small_indels_vcf
+            manta_candidate_sv_vcf           = MANTA_SOMATIC.out.candidate_sv_vcf
+            manta_diploid_sv_vcf             = MANTA_SOMATIC.out.diploid_sv_vcf
+            manta_somatic_sv_vcf             = MANTA_SOMATIC.out.somatic_sv_vcf
         }else{
 
             BGZIP_MANTA_SV(MANTA_SOMATIC.out.candidate_small_indels_vcf)
@@ -124,10 +126,10 @@ workflow PAIR_VARIANT_CALLING {
             CONCAT_VCF_MANTA_DIPLOID(manta_diploid_vcf_to_concat, fasta_fai, intervals_bed_combine_gz)
             CONCAT_VCF_MANTA_SOMATIC(manta_somatic_sv_vcf_to_concat, fasta_fai, intervals_bed_combine_gz)
 
-            manta_candidate_small_indels_vcf_tbi = CONCAT_VCF_MANTA_SV.out.vcf
-            manta_candidate_sv_vcf_tbi           = CONCAT_VCF_MANTA_SMALL_INDELS.out.vcf
-            manta_diploid_sv_vcf_tbi             = CONCAT_VCF_MANTA_DIPLOID.out.vcf
-            manta_somatic_sv_vcf_tbi             = CONCAT_VCF_MANTA_SOMATIC.out.vcf
+            manta_candidate_small_indels_vcf = CONCAT_VCF_MANTA_SV.out.vcf
+            manta_candidate_sv_vcf           = CONCAT_VCF_MANTA_SMALL_INDELS.out.vcf
+            manta_diploid_sv_vcf             = CONCAT_VCF_MANTA_DIPLOID.out.vcf
+            manta_somatic_sv_vcf             = CONCAT_VCF_MANTA_SOMATIC.out.vcf
 
             ch_versions = ch_versions.mix(BGZIP_MANTA_SV.out.versions)
             ch_versions = ch_versions.mix(BGZIP_MANTA_SMALL_INDELS.out.versions)
@@ -141,90 +143,81 @@ workflow PAIR_VARIANT_CALLING {
 
         }
 
-        //manta_vcf = manta_candidate_small_indels_vcf.mix(manta_candidate_sv_vcf,manta_diploid_sv_vcf,manta_somatic_sv_vcf)
+        manta_vcf = manta_vcf.mix(manta_candidate_small_indels_vcf,manta_candidate_sv_vcf,manta_diploid_sv_vcf,manta_somatic_sv_vcf)
 
-        if (tools.contains('strelka')) {
+    cram_pair_strelka = Channel.empty()
+    if (tools.contains('strelka') && tools.contains('manta')) {
             cram_pair.join(manta_somatic_sv_vcf_tbi).combine(intervals_bed_gz_tbi)
             .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, bed, tbi ->
-                new_meta = meta.clone()
-                new_meta.id = bed.simpleName != "no_intervals" ? meta.tumor_id + "_vs_" + meta.normal_id + "_" + bed.simpleName : meta.sample
-                bed = bed.simpleName != "no_intervals" ? bed : []
-                tbi = tbi.simpleName != "no_intervals" ? tbi : []
+                normal_id = meta.normal_id
+                tumor_id = meta.tumor_id
 
-                [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, bed, tbi]
+                new_bed = bed.simpleName != "no_intervals" ? bed : []
+                new_tbi = tbi.simpleName != "no_intervals" ? tbi : []
+                id = bed.simpleName != "no_intervals" ? tumor_id + "_vs_" + normal_id + "_" + bed.simpleName : tumor_id + "_vs_" + normal_id
+                new_meta = [ id: id, normal_id: meta.normal_id, tumor_id: meta.tumor_id, gender: meta.gender, patient: meta.patient]
+                [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, new_bed, new_tbi]
             }.set{cram_pair_strelka}
+    } else if (tools.contains('strelka') && !tools.contains('manta'))
 
-            STRELKA_BP(
-                cram_pair_strelka,
-                fasta,
-                fasta_fai
-                )
-
-            if(no_intervals){
-                strelka_snvs_vcf_gz_tbi = STRELKA_BP.out.vcf_snvs.join(STRELKA_BP.out.vcf_snvs_tbi)
-            }else{
-                BGZIP_STRELKA_BP(STRELKA_BP.out.vcf_snvs)
-
-                BGZIP_STRELKA_BP.out.vcf.map{ meta, vcf ->
-                    new_meta = meta.clone()
-                    new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
-                    [new_meta, vcf]
-                }.groupTuple(size: num_intervals)
-                .set{strelka_vcf_to_concat}
-
-                CONCAT_VCF_STRELKA_BP(strelka_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
-                strelka_vcf_gz_tbi = CONCAT_VCF_STRELKA_BP.out.vcf
-
-                ch_versions = ch_versions.mix(BGZIP_STRELKA_BP.out.versions)
-                ch_versions = ch_versions.mix(CONCAT_VCF_STRELKA_BP.out.versions)
-            }
-            //strelka_vcf = strelka_vcf.mix(strelka_indels_vcf,strelka_snvs_vcf)
-        }
-    }else{
-        if (tools.contains('strelka')) {
-            //TODO: research if multiple targets can be provided: waiting for reply
-            cram_pair.combine(intervals_bed_gz_tbi)
+        cram_pair.combine(intervals_bed_gz_tbi)
             .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed, tbi ->
-                new_meta = meta.clone()
-                new_meta.id = bed.simpleName != "no_intervals" ? meta.tumor_id + "_vs_" + meta.normal_id + "_" + bed.simpleName : meta.sample
-                bed = bed.simpleName != "no_intervals" ? bed : []
-                tbi = tbi.simpleName != "no_intervals" ? tbi : []
+                normal_id = meta.normal_id
+                tumor_id = meta.tumor_id
 
-                [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, [], [], bed, tbi]
+                new_bed = bed.simpleName != "no_intervals" ? bed : []
+                new_tbi = tbi.simpleName != "no_intervals" ? tbi : []
+                id = bed.simpleName != "no_intervals" ? tumor_id + "_vs_" + normal_id + "_" + bed.simpleName : tumor_id + "_vs_" + normal_id
+                new_meta = [ id: id, normal_id: meta.normal_id, tumor_id: meta.tumor_id, gender: meta.gender, patient: meta.patient]
+
+                [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, [], [], new_bed, new_tbi]
             }.set{cram_pair_strelka}
+    }
 
-            STRELKA_SOMATIC(
-                cram_pair_strelka,
-                fasta,
-                fasta_fai)
+    if(tools.contains('strelka')){
 
-            ch_versions = ch_versions.mix(STRELKA_SOMATIC.out.versions)
+        STRELKA(
+            cram_pair_strelka,
+            fasta,
+            fasta_fai
+            )
 
-            if(no_intervals){
-                strelka_snvs_vcf_gz_tbi = STRELKA_SOMATIC.out.vcf_snvs.join(STRELKA_SOMATIC.out.vcf_snvs_tbi)
-            }else{
-                BGZIP_STRELKA(STRELKA_SOMATIC.out.vcf_snvs)
+        if(no_intervals){
+            strelka_snvs_vcf_gz = STRELKA_SOMATIC.out.vcf_snvs
+            strelka_indels_vcf_gz = STRELKA_SOMATIC.out.vcf_indels
+        }else{
+            BGZIP_STRELKA_SNVS(STRELKA_SOMATIC.out.vcf_snvs)
+            BGZIP_STRELKA_INDELS(STRELKA_SOMATIC.out.vcf_indels)
 
-                BGZIP_STRELKA.out.vcf.map{ meta, vcf ->
-                    new_meta = meta.clone()
-                    new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
-                    [new_meta, vcf]
-                }.groupTuple(size: num_intervals)
-                .set{strelka_vcf_to_concat}
+            BGZIP_STRELKA_SNVS.out.vcf.map{ meta, vcf ->
+                new_meta = meta.clone()
+                new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+                [new_meta, vcf]
+            }.groupTuple(size: num_intervals)
+            .set{strelka_snvs_vcf_to_concat}
 
-                CONCAT_VCF_STRELKA(strelka_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
-                strelka_vcf_gz_tbi = CONCAT_VCF_STRELKA.out.vcf
+            BGZIP_STRELKA_INDELS.out.vcf.map{ meta, vcf ->
+                new_meta = meta.clone()
+                new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+                [new_meta, vcf]
+            }.groupTuple(size: num_intervals)
+            .set{strelka_indels_vcf_to_concat}
 
-                ch_versions = ch_versions.mix(BGZIP_STRELKA.out.versions)
-                ch_versions = ch_versions.mix(CONCAT_VCF_STRELKA.out.versions)
-            }
+            CONCAT_VCF_STRELKA_SNVS(strelka_snvs_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
+            CONCAT_VCF_STRELKA_INDELS(strelka_indels_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
+
+            strelka_snvs_vcf_gz = CONCAT_VCF_STRELKA_SNVS.out.vcf
+            strelka_indels_vcf_gz = CONCAT_VCF_STRELKA_INDELS.out.vcf
+
+            ch_versions = ch_versions.mix(BGZIP_STRELKA_SNVS.out.versions)
+            ch_versions = ch_versions.mix(CONCAT_VCF_STRELKA_SNVS.out.versions)
         }
+
+        strelka_vcf = strelka_vcf.mix(strelka_snvs_vcf_gz,strelka_indels_vcf_gz)
     }
 
     if (tools.contains('msisensorpro')) {
-        cram_pair.view()
-        fasta.view()
-        msisensorpro_scan.view()
+
         MSISENSORPRO_MSI_SOMATIC(
             cram_pair,
             fasta,
@@ -256,6 +249,8 @@ workflow PAIR_VARIANT_CALLING {
 
     emit:
     versions    = ch_versions
-        // manta_vcf            = manta_vcf
-        // strelka_vcf          = strelka_vcf
+    manta_vcf
+    strelka_vcf
+    mutect2_vcf
+    msisensorpro_output
 }
