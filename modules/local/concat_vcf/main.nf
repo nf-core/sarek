@@ -13,8 +13,9 @@ process CONCAT_VCF {
     path  target_bed
 
     output:
-    tuple val(meta), path("${prefix}.vcf.gz"), path("${prefix}.vcf.gz.tbi"), emit: vcf
-    path  "versions.yml"                                       , emit: versions
+    tuple val(meta), path("${prefix}.vcf.gz"), emit: vcf
+    path("${prefix}.vcf.gz.tbi")             , emit: tbi
+    path  "versions.yml"                     , emit: versions
 
     script:
     def args = task.ext.args  ?: ''

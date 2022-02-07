@@ -59,35 +59,34 @@ workflow GERMLINE_VARIANT_CALLING {
 
     ch_versions = Channel.empty()
 
-    deepvariant_vcf_tbi                  = Channel.empty()
-    freebayes_vcf_tbi                    = Channel.empty()
-    haplotypecaller_gvcf_tbi             = Channel.empty()
-    manta_vcf_tbi                        = Channel.empty()
-    strelka_vcf_tbi                      = Channel.empty()
+    deepvariant_vcf       = Channel.empty()
+    freebayes_vcf         = Channel.empty()
+    haplotypecaller_gvcf  = Channel.empty()
+    manta_vcf             = Channel.empty()
+    strelka_vcf           = Channel.empty()
 
-    cram_recalibrated.combine(intervals)
-        .map{ meta, cram, crai, intervals ->
-            new_meta = meta.clone()
-            new_meta.id = intervals.baseName != "no_intervals" ? meta.sample + "_" + intervals.baseName : meta.sample
-            intervals = intervals.baseName != "no_intervals" ? intervals : []
-            [new_meta, cram, crai, intervals]
+    cram_recalibrated.combine(intervals).map{ meta, cram, crai, intervals ->
+            sample = meta.sample
+            new_intervals = intervals.baseName != "no_intervals" ? intervals : []
+            id = new_intervals ? sample + "_" + new_intervals.baseName : sample
+            new_new_meta = [ id: id, sample: meta.sample, gender: meta.gender, status: meta.status, patient: meta.patient ]
+            [new_new_meta, cram, crai, new_intervals]
         }.set{cram_recalibrated_intervals}
 
     cram_recalibrated.combine(intervals_bed_gz_tbi)
         .map{ meta, cram, crai, bed, tbi ->
-            new_meta = meta.clone()
-            new_meta.id = bed.simpleName != "no_intervals" ? meta.sample + "_" + bed.simpleName : meta.sample
-            bed = bed.simpleName != "no_intervals" ? bed : []
-            tbi = tbi.simpleName != "no_intervals" ? tbi : []
-
-            [new_meta, cram, crai, bed, tbi]
+            sample = meta.sample
+            new_bed = bed.simpleName != "no_intervals" ? bed : []
+            new_tbi = tbi.simpleName != "no_intervals" ? tbi : []
+            id = new_bed ? sample + "_" + new_bed.simpleName : sample
+            new_meta = [ id: id, sample: meta.sample, gender: meta.gender, status: meta.status, patient: meta.patient ]
+            [new_meta, cram, crai, new_bed, new_tbi]
         }.set{cram_recalibrated_intervals_gz_tbi}
 
     //TODO: benchmark if it is better to provide multiple bed files & run on multiple machines + mergeing afterwards || one containing all intervals and run on one larger machine
     // Deepvariant: https://github.com/google/deepvariant/issues/510
 
     if (tools.contains('deepvariant')) {
-
         DEEPVARIANT(
             cram_recalibrated_intervals,
             fasta,
@@ -98,8 +97,8 @@ workflow GERMLINE_VARIANT_CALLING {
             TABIX_DEEPVARIANT_VCF(DEEPVARIANT.out.vcf)
             TABIX_DEEPVARIANT_GVCF(DEEPVARIANT.out.gvcf)
 
-            deepvariant_vcf_gz_tbi = DEEPVARIANT.out.vcf.join(TABIX_DEEPVARIANT_VCF.out.tbi)
-            deepvariant_gvcf_gz_tbi = DEEPVARIANT.out.gvcf.join(TABIX_DEEPVARIANT_GVCF.out.tbi)
+            deepvariant_vcf_gz = DEEPVARIANT.out.vcf
+            deepvariant_gvcf_gz = DEEPVARIANT.out.gvcf
 
             ch_versions = ch_versions.mix(TABIX_DEEPVARIANT_VCF.out.versions)
             ch_versions = ch_versions.mix(TABIX_DEEPVARIANT_GVCF.out.versions)
@@ -121,28 +120,27 @@ workflow GERMLINE_VARIANT_CALLING {
             }.groupTuple(size: num_intervals)
             .set{deepvariant_gvcf_to_concat}
 
-            CONCAT_VCF_DEEPVARIANT(deepvariant_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
-            CONCAT_GVCF_DEEPVARIANT(deepvariant_gvcf_to_concat,fasta_fai, intervals_bed_combine_gz)
+            CONCAT_VCF_DEEPVARIANT(deepvariant_vcf_to_concat, fasta_fai, intervals_bed_combine_gz)
+            CONCAT_GVCF_DEEPVARIANT(deepvariant_gvcf_to_concat, fasta_fai, intervals_bed_combine_gz)
 
-            deepvariant_vcf_gz_tbi = CONCAT_VCF_DEEPVARIANT.out.vcf
-            deepvariant_gvcf_gz_tbi = CONCAT_GVCF_DEEPVARIANT.out.vcf
+            deepvariant_vcf_gz = CONCAT_VCF_DEEPVARIANT.out.vcf
+            deepvariant_gvcf_gz = CONCAT_GVCF_DEEPVARIANT.out.vcf
 
             ch_versions = ch_versions.mix(BGZIP_DEEPVARIANT_VCF.out.versions)
             ch_versions = ch_versions.mix(CONCAT_VCF_DEEPVARIANT.out.versions)
         }
 
-        deepvariant_vcf_tbi = deepvariant_vcf_tbi.mix(deepvariant_vcf_gz_tbi, deepvariant_gvcf_gz_tbi)
-
+        deepvariant_vcf = deepvariant_vcf.mix(deepvariant_vcf_gz, deepvariant_gvcf_gz)
     }
 
     if (tools.contains('freebayes')){
 
         cram_recalibrated.combine(intervals).map{ meta, cram, crai, intervals ->
-            new_meta = meta.clone()
-            new_meta.id = meta.sample + "_" + intervals.simpleName
-            new_meta.id = intervals.baseName != "no_intervals" ? meta.sample + "_" + intervals.baseName : meta.sample
-            intervals = intervals.baseName != "no_intervals" ? intervals : []
-            [new_meta, cram, crai, [], [], intervals]
+            sample = meta.sample
+            new_intervals = intervals.baseName != "no_intervals" ? intervals : []
+            id = new_intervals ? sample + "_" + new_intervals.baseName : sample
+            new_meta = [ id: id, sample: meta.sample, gender: meta.gender, status: meta.status, patient: meta.patient ]
+            [new_meta, cram, crai, [], [], new_intervals]
         }.set{cram_recalibrated_intervals_freebayes}
 
         FREEBAYES(
@@ -155,10 +153,9 @@ workflow GERMLINE_VARIANT_CALLING {
         )
         ch_versions = ch_versions.mix(FREEBAYES.out.versions)
 
-
         if(no_intervals){
             TABIX_FREEBAYES(FREEBAYES.out.vcf)
-            freebayes_vcf_gz_tbi = FREEBAYES.out.vcf.join(TABIX_FREEBAYES.out.tbi)
+            freebayes_vcf_gz = FREEBAYES.out.vcf
             ch_versions = ch_versions.mix(TABIX_FREEBAYES.out.versions)
         }else{
             BGZIP_FREEBAYES(FREEBAYES.out.vcf)
@@ -171,13 +168,13 @@ workflow GERMLINE_VARIANT_CALLING {
             .set{freebayes_vcf_to_concat}
 
             CONCAT_VCF_FREEBAYES(freebayes_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
-            freebayes_vcf_gz_tbi = CONCAT_VCF_FREEBAYES.out.vcf
+            freebayes_vcf_gz = CONCAT_VCF_FREEBAYES.out.vcf
 
             ch_versions = ch_versions.mix(BGZIP_FREEBAYES.out.versions)
             ch_versions = ch_versions.mix(CONCAT_VCF_FREEBAYES.out.versions)
         }
 
-        freebayes_vcf_tbi = freebayes_vcf_tbi.mix(freebayes_vcf_gz_tbi)
+        freebayes_vcf = freebayes_vcf.mix(freebayes_vcf_gz)
     }
 
     if (tools.contains('haplotypecaller')) {
@@ -195,7 +192,7 @@ workflow GERMLINE_VARIANT_CALLING {
 
         if(no_intervals){
             TABIX_HAPLOTYPECALLER(HAPLOTYPECALLER.out.vcf)
-            haplotypecaller_gvcf_gz_tbi = HAPLOTYPECALLER.out.vcf.join(TABIX_HAPLOTYPECALLER.out.tbi)
+            haplotypecaller_gvcf_gz = HAPLOTYPECALLER.out.vcf
             ch_versions = ch_versions.mix(TABIX_HAPLOTYPECALLER.out.versions)
         }else{
             BGZIP_HAPLOTYPECALLER(HAPLOTYPECALLER.out.vcf)
@@ -208,7 +205,7 @@ workflow GERMLINE_VARIANT_CALLING {
             .set{haplotypecaller_gvcf_to_concat}
 
             CONCAT_VCF_HAPLOTYPECALLER(haplotypecaller_gvcf_to_concat, fasta_fai, intervals_bed_combine_gz)
-            haplotypecaller_gvcf_gz_tbi = CONCAT_VCF_HAPLOTYPECALLER.out.vcf
+            haplotypecaller_gvcf_gz = CONCAT_VCF_HAPLOTYPECALLER.out.vcf
 
             ch_versions = ch_versions.mix(BGZIP_HAPLOTYPECALLER.out.versions)
             ch_versions = ch_versions.mix(CONCAT_VCF_HAPLOTYPECALLER.out.versions)
@@ -239,7 +236,7 @@ workflow GERMLINE_VARIANT_CALLING {
             // ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
         }
 
-        haplotypecaller_gvcf_tbi = haplotypecaller_gvcf_tbi.mix(haplotypecaller_gvcf_gz_tbi)
+        haplotypecaller_gvcf = haplotypecaller_gvcf.mix(haplotypecaller_gvcf_gz)
 
     }
 
@@ -255,9 +252,9 @@ workflow GERMLINE_VARIANT_CALLING {
         ch_versions = ch_versions.mix(MANTA_GERMLINE.out.versions)
 
         if(no_intervals){
-            manta_candidate_small_indels_vcf_tbi = MANTA_GERMLINE.out.candidate_small_indels_vcf.join(MANTA_GERMLINE.out.candidate_small_indels_vcf_tbi)
-            manta_candidate_sv_vcf_tbi           = MANTA_GERMLINE.out.candidate_sv_vcf.join(MANTA_GERMLINE.out.candidate_sv_vcf_tbi)
-            manta_diploid_sv_vcf_tbi             = MANTA_GERMLINE.out.diploid_sv_vcf.join(MANTA_GERMLINE.out.diploid_sv_vcf)
+            manta_candidate_small_indels_vcf = MANTA_GERMLINE.out.candidate_small_indels_vcf
+            manta_candidate_sv_vcf           = MANTA_GERMLINE.out.candidate_sv_vcf
+            manta_diploid_sv_vcf             = MANTA_GERMLINE.out.diploid_sv_vcf
         }else{
 
             BGZIP_MANTA_SV(MANTA_GERMLINE.out.candidate_small_indels_vcf)
@@ -289,9 +286,9 @@ workflow GERMLINE_VARIANT_CALLING {
             CONCAT_VCF_MANTA_SMALL_INDELS(manta_small_indels_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
             CONCAT_VCF_MANTA_DIPLOID(manta_diploid_vcf_to_concat, fasta_fai, intervals_bed_combine_gz)
 
-            manta_candidate_small_indels_vcf_tbi = CONCAT_VCF_MANTA_SV.out.vcf
-            manta_candidate_sv_vcf_tbi           = CONCAT_VCF_MANTA_SMALL_INDELS.out.vcf
-            manta_diploid_sv_vcf_tbi             = CONCAT_VCF_MANTA_DIPLOID.out.vcf
+            manta_candidate_small_indels_vcf = CONCAT_VCF_MANTA_SV.out.vcf
+            manta_candidate_sv_vcf           = CONCAT_VCF_MANTA_SMALL_INDELS.out.vcf
+            manta_diploid_sv_vcf             = CONCAT_VCF_MANTA_DIPLOID.out.vcf
 
             ch_versions = ch_versions.mix(BGZIP_MANTA_SV.out.versions)
             ch_versions = ch_versions.mix(BGZIP_MANTA_SMALL_INDELS.out.versions)
@@ -303,7 +300,7 @@ workflow GERMLINE_VARIANT_CALLING {
 
         }
 
-        manta_vcf_tbi = manta_vcf_tbi.mix(manta_candidate_small_indels_vcf_tbi, manta_candidate_sv_vcf_tbi, manta_diploid_sv_vcf_tbi)
+        manta_vcf = manta_vcf.mix(manta_candidate_small_indels_vcf, manta_candidate_sv_vcf, manta_diploid_sv_vcf)
     }
 
     if (tools.contains('strelka')) {
@@ -318,8 +315,8 @@ workflow GERMLINE_VARIANT_CALLING {
         ch_versions = ch_versions.mix(STRELKA_GERMLINE.out.versions)
 
         if(no_intervals){
-            strelka_vcf_gz_tbi = STRELKA_GERMLINE.out.vcf.join(STRELKA_GERMLINE.out.vcf_tbi)
-            strelka_genome_vcf_gz_tbi = STRELKA_GERMLINE.out.genome_vcf.join(STRELKA_GERMLINE.out.genome_vcf_tbi)
+            strelka_vcf_gz = STRELKA_GERMLINE.out.vcf
+            strelka_genome_vcf_gz = STRELKA_GERMLINE.out.genome_vcf
 
         }else{
             BGZIP_STRELKA(STRELKA_GERMLINE.out.vcf)
@@ -342,14 +339,14 @@ workflow GERMLINE_VARIANT_CALLING {
             CONCAT_VCF_STRELKA(strelka_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
             CONCAT_VCF_STRELKA_GENOME(strelka_genome_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
 
-            strelka_vcf_gz_tbi = CONCAT_VCF_STRELKA.out.vcf
-            strelka_genome_vcf_gz_tbi = CONCAT_VCF_STRELKA_GENOME.out.vcf
+            strelka_vcf_gz = CONCAT_VCF_STRELKA.out.vcf
+            strelka_genome_vcf_gz = CONCAT_VCF_STRELKA_GENOME.out.vcf
 
             ch_versions = ch_versions.mix(BGZIP_STRELKA.out.versions)
             ch_versions = ch_versions.mix(CONCAT_VCF_STRELKA.out.versions)
         }
 
-        strelka_vcf_tbi = strelka_vcf_tbi.mix(strelka_vcf_gz_tbi,strelka_genome_vcf_gz_tbi )
+        strelka_vcf = strelka_vcf.mix(strelka_vcf_gz,strelka_genome_vcf_gz )
     }
 
     if (tools.contains('tiddit')){
@@ -375,11 +372,11 @@ workflow GERMLINE_VARIANT_CALLING {
     }
 
     emit:
-    deepvariant_vcf_tbi
-    freebayes_vcf_tbi
-    haplotypecaller_gvcf_tbi
-    manta_vcf_tbi
-    strelka_vcf_tbi
+    deepvariant_vcf
+    freebayes_vcf
+    haplotypecaller_gvcf
+    manta_vcf
+    strelka_vcf
 
     versions = ch_versions
 }

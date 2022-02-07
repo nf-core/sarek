@@ -50,19 +50,23 @@ workflow PAIR_VARIANT_CALLING {
 
     cram_pair.combine(intervals)
         .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
-            new_meta = meta.clone()
-            new_meta.id = intervals.baseName != "no_intervals" ? meta.tumor_id + "_vs_" + meta.normal_id + "_" + intervals.baseName : meta.sample
-            intervals = intervals.baseName != "no_intervals" ? intervals : []
+            normal_id = meta.normal_id
+            tumor_id = meta.tumor_id
+            new_intervals = intervals.baseName != "no_intervals" ? intervals : []
+            id = new_intervals ? tumor_id + "_vs_" + normal_id + "_" + new_intervals.baseName : tumor_id + "_vs_" + normal_id
+            new_meta = [ id: id, normal_id: meta.normal_id, tumor_id: meta.tumor_id, gender: meta.gender, patient: meta.patient ]
             [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals]
         }.set{cram_pair_intervals}
 
     cram_pair.combine(intervals_bed_gz_tbi)
         .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed, tbi ->
-            new_meta = meta.clone()
-            new_meta.id = bed.simpleName != "no_intervals" ? meta.tumor_id + "_vs_" + meta.normal_id + "_" + bed.simpleName : meta.sample
+            normal_id = meta.normal_id
+            tumor_id = meta.tumor_id
+
             bed = bed.simpleName != "no_intervals" ? bed : []
             tbi = tbi.simpleName != "no_intervals" ? tbi : []
-
+            id = bed.simpleName != "no_intervals" ? tumor_id + "_vs_" + normal_id + "_" + bed.simpleName : tumor_id + "_vs_" + normal_id
+            new_meta = [ id: id, normal_id: meta.normal_id, tumor_id: meta.tumor_id, gender: meta.gender, patient: meta.patient]
             [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed, tbi]
         }.set{cram_pair_intervals_gz_tbi}
 

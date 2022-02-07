@@ -215,9 +215,9 @@ workflow SAREK {
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
     intervals                         = PREPARE_GENOME.out.intervals_bed // multiple interval.bed files, divided by useful intervals for scatter/gather
-    intervals_bed_gz_tbi              = PREPARE_GENOME.out.intervals_bed_gz_tbi // multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
-    intervals_bed_combined_gz_tbi     = PREPARE_GENOME.out.intervals_combined_bed_gz_tbi  // one file containing all intervals interval.bed.gz/.tbi file
-    intervals_bed_combined_gz         = intervals_bed_combined_gz_tbi.map{ bed, tbi -> [bed]}  // one file containing all intervals interval.bed.gz file
+    intervals_bed_gz_tbi              = PREPARE_GENOME.out.intervals_bed_gz_tbi// multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
+    intervals_bed_combined_gz_tbi     = PREPARE_GENOME.out.intervals_combined_bed_gz_tbi.collect()  // one file containing all intervals interval.bed.gz/.tbi file
+    intervals_bed_combined_gz         = intervals_bed_combined_gz_tbi.map{ bed, tbi -> [bed]}.collect()  // one file containing all intervals interval.bed.gz file
 
     num_intervals = 0
     intervals.count().map{ num_intervals = it }
@@ -476,12 +476,11 @@ workflow SAREK {
             params.joint_germline
             )
 
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.deepvariant_vcf_tbi)
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.freebayes_vcf_tbi)
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_gvcf_tbi)
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.manta_vcf_tbi)
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf_tbi)
-
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.deepvariant_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.freebayes_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_gvcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.manta_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)
         ch_versions = ch_versions.mix(GERMLINE_VARIANT_CALLING.out.versions)
 
         // TUMOR ONLY VARIANT CALLING
@@ -527,6 +526,7 @@ workflow SAREK {
             germline_resource_tbi,
             pon,
             pon_tbi)
+
         ch_versions = ch_versions.mix(PAIR_VARIANT_CALLING.out.versions)
 
 

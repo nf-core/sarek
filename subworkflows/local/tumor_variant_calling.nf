@@ -53,24 +53,26 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
     strelka_vcf_tbi         = Channel.empty()
     msisensor_output        = Channel.empty()
 
-    cram_recalibrated.combine(intervals)
-        .map{ meta, cram, crai, intervals ->
-            new_meta = meta.clone()
-            new_meta.id = intervals.baseName != "no_intervals" ? meta.sample + "_" + intervals.baseName : meta.sample
-            intervals = intervals.baseName != "no_intervals" ? intervals : []
-            [new_meta, cram, crai, intervals]
+        cram_recalibrated.combine(intervals).map{ meta, cram, crai, intervals ->
+            sample = meta.sample
+            new_intervals = intervals.baseName != "no_intervals" ? intervals : []
+            id = new_intervals ? sample + "_" + new_intervals.baseName : sample
+            new_new_meta = [ id: id, sample: meta.sample, gender: meta.gender, status: meta.status, patient: meta.patient ]
+            [new_new_meta, cram, crai, new_intervals]
         }.set{cram_recalibrated_intervals}
 
+    cram_recalibrated_intervals.view()
 
     cram_recalibrated.combine(intervals_bed_gz_tbi)
         .map{ meta, cram, crai, bed, tbi ->
-            new_meta = meta.clone()
-            new_meta.id = bed.simpleName != "no_intervals" ? meta.sample + "_" + bed.simpleName : meta.sample
-            bed = bed.simpleName != "no_intervals" ? bed : []
-            tbi = tbi.simpleName != "no_intervals" ? tbi : []
-
-            [new_meta, cram, crai, bed, tbi]
+            sample = meta.sample
+            new_bed = bed.simpleName != "no_intervals" ? bed : []
+            new_tbi = tbi.simpleName != "no_intervals" ? tbi : []
+            id = new_bed ? sample + "_" + new_bed.simpleName : sample
+            new_new_meta = [ id: id, sample: meta.sample, gender: meta.gender, status: meta.status, patient: meta.patient ]
+            [new_meta, cram, crai, new_bed, new_tbi]
         }.set{cram_recalibrated_intervals_gz_tbi}
+
 
     if (tools.contains('freebayes')){
 
