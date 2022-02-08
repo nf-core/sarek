@@ -530,7 +530,6 @@ workflow SAREK {
             pon,
             pon_tbi)
 
-        vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.freebayes_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.mutect2_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.manta_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.strelka_vcf)

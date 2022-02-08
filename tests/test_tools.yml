@@ -1,5 +1,45 @@
 - name: Run variant callers
-  command: nextflow run main.nf -profile test,tools,docker
+  command: nextflow run main.nf -profile test,tools,docker --tools deepvariant
+  tags:
+    - intervals
+    - variant_calling
+  files:
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz.tbi
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz.tbi
+- name: Run variant calling without intervals
+  command: nextflow run main.nf -profile test,tool,docker --tools deepvariant --no_intervals
+  tags:
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz.tbi
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz.tbi
+- name: Run variant callers
+  command: nextflow run main.nf -profile test,tools,docker --tools freebayes
+  tags:
+    - intervals
+    - variant_calling
+  files:
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz.tbi
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz.tbi
+- name: Run variant calling without intervals
+  command: nextflow run main.nf -profile test,tool,docker --tools freebayes --no_intervals
+  tags:
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz.tbi
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz.tbi
+- name: Run variant callers
+  command: nextflow run main.nf -profile test,tools,docker --tools haplotypecaller
   tags:
     - intervals
     - variant_calling
@@ -18,4 +58,73 @@
     - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz.tbi
     - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz
     - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz.tbi
-
+- name: Run variant callers
+  command: nextflow run main.nf -profile test,tools,docker --tools manta
+  tags:
+    - intervals
+    - variant_calling
+  files:
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz.tbi
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz.tbi
+- name: Run variant calling without intervals
+  command: nextflow run main.nf -profile test,tool,docker --tools manta --no_intervals
+  tags:
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz.tbi
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz.tbi
+- name: Run variant callers
+  command: nextflow run main.nf -profile test,tools,docker --tools msisensorpro
+  tags:
+    - intervals
+    - variant_calling
+  files:
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz.tbi
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz.tbi
+- name: Run variant callers
+  command: nextflow run main.nf -profile test,tools,docker --tools mutect2
+  tags:
+    - intervals
+    - variant_calling
+  files:
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz.tbi
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz.tbi
+- name: Run variant calling without intervals
+  command: nextflow run main.nf -profile test,tool,docker --tools mutect2 --no_intervals
+  tags:
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz.tbi
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz.tbi
+- name: Run variant callers
+  command: nextflow run main.nf -profile test,tools,docker --tools manta,strelka
+  tags:
+    - intervals
+    - variant_calling
+  files:
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz.tbi
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz.tbi
+- name: Run variant calling without intervals
+  command: nextflow run main.nf -profile test,tool,docker --tools manta,strelka --no_intervals
+  tags:
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller/haplotypecaller_1234N.vcf.gz.tbi
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz
+    - path: results/variant_calling/1234N/haplotypecaller_gvcf/haplotypecaller_gvcf_1234N.vcf.gz.tbi

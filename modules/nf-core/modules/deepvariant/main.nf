@@ -17,13 +17,13 @@ process DEEPVARIANT {
     path(fai)
 
     output:
-    tuple val(meta), path("*[^g].vcf.gz")   , emit: vcf
-    tuple val(meta), path("*.g.vcf.gz")     , emit: gvcf
+    tuple val(meta), path("${prefix}.vcf.gz")   , emit: vcf
+    tuple val(meta), path("${prefix}.g.vcf.gz")     , emit: gvcf
     path "versions.yml"                     , emit: versions
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     def regions = intervals ? "--regions ${intervals}" : ""
 
     """
