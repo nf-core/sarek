@@ -1,4 +1,37 @@
-markduplicates:
+aligner:
+ - modules/nf-core/modules/bwamem2/**
+ - subworkflows/nf-core/gatk4_mapping/**
+ - tests/test_aligner.yml
+ # TODO Add samtools and seqkit
+
+annotation:
+ # TODO
+
+default:
+  - main.nf
+  - modules/**
+  - subworkflows/**
+  - workflows/**
+
+split_fastq:
+  # TODO
+
+gatk4_spark:
+  # TODO
+
+save_bam_mapped:
+  # TODO
+
+skip_markduplicates:
   - modules/nf-core/software/gatk4/markduplicates/main.nf
   - subworkflow/local/markduplicates.nf
   - tests/subworkflow/local/markduplicates/**
+
+targeted:
+  # TODO
+
+tumor_normal_pair:
+  # TODO
+
+variant_calling:
+  # TODO
