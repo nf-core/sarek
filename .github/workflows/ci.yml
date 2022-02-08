@@ -19,6 +19,8 @@ jobs:
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/sarek') }}
     runs-on: ubuntu-latest
     strategy:
+      # HACK Remove after DSL2 rewrite is done
+      fail-fast: false
       matrix:
         # Nextflow versions
         include:
