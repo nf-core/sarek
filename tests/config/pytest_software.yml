@@ -4,8 +4,8 @@ aligner:
  - tests/test_aligner.yml
  # TODO Add samtools and seqkit
 
-# TODO
-# annotation:
+annotation:
+ # TODO
 
 default:
   - main.nf
@@ -13,25 +13,25 @@ default:
   - subworkflows/**
   - workflows/**
 
-# TODO
-# split_fastq:
+split_fastq:
+  # TODO
 
-# TODO
-# gatk4_spark:
+gatk4_spark:
+  # TODO
 
-# TODO
-# save_bam_mapped:
+save_bam_mapped:
+  # TODO
 
 skip_markduplicates:
   - modules/nf-core/software/gatk4/markduplicates/main.nf
   - subworkflow/local/markduplicates.nf
   - tests/subworkflow/local/markduplicates/**
 
-# TODO
-# targeted:
+targeted:
+  # TODO
 
-# TODO
-# tumor_normal_pair:
+tumor_normal_pair:
+  # TODO
 
-# TODO
-# variant_calling:
+variant_calling:
+  # TODO
