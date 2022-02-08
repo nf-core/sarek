@@ -4,6 +4,7 @@
     - aligner
     - bwa-mem2
     - preprocessing
+    # FIXME
   files:
     - path: results/multiqc
     - path: results/preprocessing/test/markduplicates/test.md.cram
