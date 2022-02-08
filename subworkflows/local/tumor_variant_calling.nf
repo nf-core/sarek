@@ -66,7 +66,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
             new_bed = bed.simpleName != "no_intervals" ? bed : []
             new_tbi = tbi.simpleName != "no_intervals" ? tbi : []
             id = new_bed ? sample + "_" + new_bed.simpleName : sample
-            new_new_meta = [ id: id, sample: meta.sample, gender: meta.gender, status: meta.status, patient: meta.patient ]
+            new_meta = [ id: id, sample: meta.sample, gender: meta.gender, status: meta.status, patient: meta.patient ]
             [new_meta, cram, crai, new_bed, new_tbi]
         }.set{cram_recalibrated_intervals_gz_tbi}
 
