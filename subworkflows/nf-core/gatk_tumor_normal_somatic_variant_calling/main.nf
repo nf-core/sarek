@@ -2,11 +2,12 @@
 // Run GATK mutect2 in tumor normal mode, getepileupsummaries, calculatecontamination, learnreadorientationmodel and filtermutectcalls
 //
 
-// include { BGZIP as BGZIP_MUTECT2                      } from '../../../modules/local/bgzip'
-// include { CONCAT_VCF as CONCAT_VCF_MUTECT2            } from '../../../modules/local/concat_vcf/main'
+include { BGZIP as BGZIP_MUTECT2                      } from '../../../modules/local/bgzip'
+include { CONCAT_VCF as CONCAT_VCF_MUTECT2            } from '../../../modules/local/concat_vcf/main'
 
 include { GATK4_MUTECT2                   as MUTECT2 }                   from '../../../modules/nf-core/modules/gatk4/mutect2/main'
-// include { GATK4_LEARNREADORIENTATIONMODEL as LEARNREADORIENTATIONMODEL } from '../../../modules/nf-core/modules/gatk4/learnreadorientationmodel/main'
+include { GATK4_MERGEMUTECTSTATS       as MERGEMUTECTSTATS }         from '../../../modules/local/gatk4/mergemutectstats'
+include { GATK4_LEARNREADORIENTATIONMODEL as LEARNREADORIENTATIONMODEL } from '../../../modules/nf-core/modules/gatk4/learnreadorientationmodel/main'
 // include { GATK4_GATHERPILEUPSUMMARIES  as GATHERPILEUPSUMMARIES_TUMOR }    from '../../../modules/local/gatk4/gatherpileupsummaries'
 //include { GATK4_GATHERPILEUPSUMMARIES  as GATHERPILEUPSUMMARIES_NORMAL }    from '../../../modules/local/gatk4/gatherpileupsummaries'
 include { GATK4_GETPILEUPSUMMARIES        as GETPILEUPSUMMARIES_TUMOR }  from '../../../modules/nf-core/modules/gatk4/getpileupsummaries/main'
@@ -25,6 +26,8 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     panel_of_normals          // channel: /path/to/panel/of/normals
     panel_of_normals_tbi      // channel: /path/to/panel/of/normals/index
     no_intervals
+    num_intervals
+    intervals_bed_combine_gz
 
     main:
     ch_versions = Channel.empty()
@@ -38,82 +41,88 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     //
     //Generate pileup summary tables using getepileupsummaries. tumor sample should always be passed in as the first input and input list entries of ch_mutect2_in,
     //to ensure correct file order for calculatecontamination.
-    //
-    pileup_tumor_input = input.map {
-        meta, normal, normal_index, tumor, tumor_index, intervals, which_norm ->
-        [meta, tumor, tumor_index, intervals]
-    }
 
-    pileup_normal_input = input.map {
-        meta, normal, normal_index, tumor, tumor_index, intervals, which_norm ->
-        [meta, normal, normal_index, intervals]
-    }
-    GETPILEUPSUMMARIES_TUMOR ( pileup_tumor_input, fasta, fai, dict, germline_resource, germline_resource_tbi )
-    GETPILEUPSUMMARIES_NORMAL ( pileup_normal_input, fasta, fai, dict, germline_resource, germline_resource_tbi )
-    ch_versions = ch_versions.mix(GETPILEUPSUMMARIES_NORMAL.out.versions)
-
-    // if(no_intervals){
-    //     mutect2_vcf_gz_tbi = MUTECT2.out.vcf.join(MUTECT2.out.tbi)
-    //     mutect2_stats = MUTECT2.out.stats
-    //     pileup_table_tumor= GETPILEUPSUMMARIES_TUMOR.out.table
-    //     pileup_table_normal= GETPILEUPSUMMARIES_NORMAL.out.table
-
-    // }else{
-
-    //     //Merge Mutect2 VCF
-    //     BGZIP_MUTECT2(MUTECT2.out.vcf)
-    //     BGZIP_MUTECT2.out.vcf.map{ meta, vcf ->
-    //         new_meta = meta.clone()
-    //         new_meta.id = new_meta.sample
-    //         [new_meta, vcf]
-    //     }.set{bgzip_mutect2}
-
-    //     mutect2_vcf_to_concat = bgzip_mutect2.groupTuple(size: num_intervals)
-
-    //     CONCAT_VCF_MUTECT2(mutect2_vcf_to_concat, fai, intervals_bed_combine_gz)
-    //     mutect2_vcf_gz_tbi = CONCAT_VCF_MUTECT2.out.vcf
-
-    //     ch_versions = ch_versions.mix(BGZIP_MUTECT2.out.versions)
-    //     ch_versions = ch_versions.mix(CONCAT_VCF_MUTECT2.out.versions)
-
-    //     //Merge Muteect2 Stats
-    //     MUTECT2.out.stats.map{ meta, stats ->
-    //         new_meta = meta.clone()
-    //         new_meta.id = new_meta.sample
-    //         [new_meta, stats]
-    //     }.groupTuple(size: num_intervals).set{mutect2_stats_to_merge}
-
-    //     MERGEMUTECTSTATS(mutect2_stats_to_merge)
-    //     mutect2_stats = MERGEMUTECTSTATS.out.stats
-    //     ch_versions = ch_versions.mix(MERGEMUTECTSTATS.out.versions)
-
-    //     //Merge Pileup Summaries
-    //     pileup_tumor_tables_to_gather = GETPILEUPSUMMARIES_TUMOR.out.table.map{ meta, table ->
-    //         new_meta = meta.clone()
-    //         new_meta.id = new_meta.sample
-    //         [new_meta, table]
-    //     }.groupTuple(size: num_intervals)
-
-    //     GATHERPILEUPSUMMARIES_TUMOR(pileup_tumor_tables_to_gather, dict)
-    //     pileup_table_tumor = GATHERPILEUPSUMMARIES_TUMOR.out.table
-
-    //     pileup_normal_tables_to_gather = GETPILEUPSUMMARIES_NORMAL.out.table.map{ meta, table ->
-    //         new_meta = meta.clone()
-    //         new_meta.id = new_meta.sample
-    //         [new_meta, table]
-    //     }.groupTuple(size: num_intervals)
-
-    //     GATHERPILEUPSUMMARIES_NORMAL(pileup_normal_tables_to_gather, dict)
-    //     pileup_table_normal = GATHERPILEUPSUMMARIES_NORMAL.out.table
-
+    // pileup_tumor_input = input.map {
+    //     meta, normal, normal_index, tumor, tumor_index, intervals, which_norm ->
+    //     [meta, tumor, tumor_index, intervals]
     // }
 
-    // //
-    // //Generate artifactpriors using learnreadorientationmodel on the f1r2 output of mutect2.
-    // //
-    // ch_learnread_in = MUTECT2.out.f1r2.groupTuple(size: num_intervals)
-    // LEARNREADORIENTATIONMODEL (ch_learnread_in)
-    // ch_versions = ch_versions.mix(LEARNREADORIENTATIONMODEL.out.versions)
+    // pileup_normal_input = input.map {
+    //     meta, normal, normal_index, tumor, tumor_index, intervals, which_norm ->
+    //     [meta, normal, normal_index, intervals]
+    // }
+    // GETPILEUPSUMMARIES_TUMOR ( pileup_tumor_input, fasta, fai, dict, germline_resource, germline_resource_tbi )
+    // GETPILEUPSUMMARIES_NORMAL ( pileup_normal_input, fasta, fai, dict, germline_resource, germline_resource_tbi )
+    // ch_versions = ch_versions.mix(GETPILEUPSUMMARIES_NORMAL.out.versions)
+
+    if(no_intervals){
+        mutect2_vcf_gz_tbi = MUTECT2.out.vcf.join(MUTECT2.out.tbi)
+        mutect2_stats = MUTECT2.out.stats
+        // pileup_table_tumor= GETPILEUPSUMMARIES_TUMOR.out.table
+        // pileup_table_normal= GETPILEUPSUMMARIES_NORMAL.out.table
+
+    }else{
+
+        //Merge Mutect2 VCF
+        BGZIP_MUTECT2(MUTECT2.out.vcf)
+        BGZIP_MUTECT2.out.vcf.map{ meta, vcf ->
+            new_meta = meta.clone()
+            new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+            [new_meta, vcf]
+        }.set{bgzip_mutect2}
+
+        mutect2_vcf_to_concat = bgzip_mutect2.groupTuple(size: num_intervals)
+
+        CONCAT_VCF_MUTECT2(mutect2_vcf_to_concat, fai, intervals_bed_combine_gz)
+        mutect2_vcf_gz_tbi = CONCAT_VCF_MUTECT2.out.vcf
+
+        ch_versions = ch_versions.mix(BGZIP_MUTECT2.out.versions)
+        ch_versions = ch_versions.mix(CONCAT_VCF_MUTECT2.out.versions)
+
+        //Merge Muteect2 Stats
+        MUTECT2.out.stats.map{ meta, stats ->
+            new_meta = meta.clone()
+            new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+            [new_meta, stats]
+        }.groupTuple(size: num_intervals).set{mutect2_stats_to_merge}
+
+        MERGEMUTECTSTATS(mutect2_stats_to_merge)
+        mutect2_stats = MERGEMUTECTSTATS.out.stats
+        ch_versions = ch_versions.mix(MERGEMUTECTSTATS.out.versions)
+
+        //Merge Pileup Summaries
+        // pileup_tumor_tables_to_gather = GETPILEUPSUMMARIES_TUMOR.out.table.map{ meta, table ->
+        //     new_meta = meta.clone()
+        //     new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+        //     [new_meta, table]
+        // }.groupTuple(size: num_intervals)
+
+        // GATHERPILEUPSUMMARIES_TUMOR(pileup_tumor_tables_to_gather, dict)
+        // pileup_table_tumor = GATHERPILEUPSUMMARIES_TUMOR.out.table
+
+        // pileup_normal_tables_to_gather = GETPILEUPSUMMARIES_NORMAL.out.table.map{ meta, table ->
+        //     new_meta = meta.clone()
+        //     new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+        //     [new_meta, table]
+        // }.groupTuple(size: num_intervals)
+
+        // GATHERPILEUPSUMMARIES_NORMAL(pileup_normal_tables_to_gather, dict)
+        // pileup_table_normal = GATHERPILEUPSUMMARIES_NORMAL.out.table
+
+    }
+
+    //
+    //Generate artifactpriors using learnreadorientationmodel on the f1r2 output of mutect2.
+    //
+    MUTECT2.out.f1r2.map{ meta, f1f2 ->
+        new_meta = meta.clone()
+        new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+        [new_meta, f1f2]
+    }.groupTuple(size: num_intervals)
+    .set{ch_learnread_in}
+
+    LEARNREADORIENTATIONMODEL (ch_learnread_in)
+    ch_versions = ch_versions.mix(LEARNREADORIENTATIONMODEL.out.versions)
 
     // //
     // //Contamination and segmentation tables created using calculatecontamination on the pileup summary table.
