@@ -1,16 +1,18 @@
-name: msisensor_msi
-
-description: Evaluate microsattelite instability (MSI) using paired tumor-normal sequencing data
+name: msisensorpro_msi_somatic
+description: MSIsensor-pro evaluates Microsatellite Instability (MSI) for cancer patients with next generation sequencing data. It accepts the whole genome sequencing, whole exome sequencing and target region (panel) sequencing data as input
 keywords:
-  - homoploymer,microsatellite
+  - micro-satellite-scan
+  - msisensor-pro
+  - msi
+  - somatic
 tools:
-  - msisensor:
-      description: MSIsensor is a C++ program to detect replication slippage variants at microsatellite regions, and differentiate them as somatic or germline.
-      homepage: https://github.com/ding-lab/msisensor
-      documentation: None
-      tool_dev_url: None
-      doi: "10.1093/bioinformatics/btt755"
-      licence: ['MIT']
+  - msisensorpro:
+      description: Microsatellite Instability (MSI) detection using high-throughput sequencing data.
+      homepage: https://github.com/xjtu-omics/msisensor-pro
+      documentation: https://github.com/xjtu-omics/msisensor-pro/wiki
+      tool_dev_url: https://github.com/xjtu-omics/msisensor-pro
+      doi: "doi.org/10.1016/j.gpb.2020.02.001"
+      licence: ['Custom Licence']
 
 input:
   - meta:
@@ -18,26 +20,34 @@ input:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
-  - normal_bam:
+  - normal:
       type: file
-      description: Coordinate sorted BAM/CRAM/SAM file from normal tissue
+      description: BAM/CRAM/SAM file
       pattern: "*.{bam,cram,sam}"
-  - normal_bai:
+  - normal_index:
       type: file
-      description: Index for coordinate sorted BAM/CRAM/SAM file from normal tissue
+      description: BAM/CRAM/SAM index file
+      pattern: "*.{bai,crai,sai}"
+  - tumor:
+      type: file
+      description: BAM/CRAM/SAM file
       pattern: "*.{bam,cram,sam}"
-  - tumor_bam:
+  - tumor_index:
       type: file
-      description: Coordinate sorted BAM/CRAM/SAM file from tumor tissue
-      pattern: "*.{bam,cram,sam}"
-  - tumor_bai:
+      description: BAM/CRAM/SAM index file
+      pattern: "*.{bai,crai,sai}"
+  - intervals:
       type: file
-      description: Index for coordinate sorted BAM/CRAM/SAM file from tumor tissue
-      pattern: "*.{bam,cram,sam}"
-  - homopolymers:
+      description: bed file containing interval information, optional
+      pattern: "*.{bed}"
+  - fasta:
       type: file
-      description: Output file from MSIsensor scan module
-      pattern: "*.msisensor_scan.tab"
+      description: Reference genome
+      pattern: "*.{fasta}"
+  - msisensor_scan:
+      type: file
+      description: Output from msisensor-pro/scan, conaining list of msi regions
+      pattern: "*.list"
 
 output:
   - meta:
@@ -45,25 +55,26 @@ output:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
+  - output_report:
+      type: file
+      description: File containing final report with all detected microsatellites, unstable somatic microsatellites, msi score
+  - output_dis:
+      type: file
+      description: File containing distribution results
+  - output_germline:
+      type: file
+      description: File containing germline results
+  - output_somatic:
+      type: file
+      description: File containing somatic results
   - versions:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
-  - txt:
+  - list:
       type: file
-      description: MSIsensor MSI final report file
-      pattern: "*.output"
-  - txt:
-      type: file
-      description: MSIsensor MSI DIS report file
-      pattern: "*.output_dis"
-  - txt:
-      type: file
-      description: MSIsensor MSI germline report file
-      pattern: "*.output_germline"
-  - txt:
-      type: file
-      description: MSIsensor MSI somatic report file
-      pattern: "*.output_somatic"
+      description: File containing microsatellite list
+      pattern: "*.{list}"
+
 authors:
-  - "@kevbrick"
+  - "@FriederikeHanssen"
