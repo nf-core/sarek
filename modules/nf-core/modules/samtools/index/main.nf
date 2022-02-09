@@ -16,6 +16,9 @@ process SAMTOOLS_INDEX {
     tuple val(meta), path("*.crai"), optional:true, emit: crai
     path  "versions.yml"           , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     """

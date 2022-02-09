@@ -14,11 +14,14 @@ process GATK4_LEARNREADORIENTATIONMODEL {
     tuple val(meta), path("*.tar.gz"), emit: artifactprior
     path "versions.yml"              , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def inputs_list = f1r2.collect(){ it -> "--I ".concat(it.toString()) }.join(" ")
-
+    def inputs_list = []
+    f1r2.each() { a -> inputs_list.add(" -I " + a) }
     def avail_mem = 3
     if (!task.memory) {
         log.info '[GATK LearnReadOrientationModel] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
