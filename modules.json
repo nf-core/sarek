@@ -105,11 +105,11 @@
             "manta/tumoronly": {
                 "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
-            "msisensor/msi": {
-                "git_sha": "d473a247d2e0c619b0df877ea19d9a5a98c8e3c8"
+            "msisensorpro/msi_somatic": {
+                "git_sha": "c8ebd0de36c649a14fc92f2f73cbd9f691a8ce0a"
             },
-            "msisensor/scan": {
-                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+            "msisensorpro/scan": {
+                "git_sha": "c8ebd0de36c649a14fc92f2f73cbd9f691a8ce0a"
             },
             "multiqc": {
                 "git_sha": "e20e57f90b6787ac9a010a980cf6ea98bd990046"
