@@ -16,7 +16,7 @@
     - path: results/preprocessing/csv/markduplicates_no_table_test.csv
     - path: results/preprocessing/csv/recalibrated.csv
     - path: results/preprocessing/csv/recalibrated_test.csv
-    #- path: results/reports/qualimap/test/test.mapped
-    #- path: results/reports/qualimap/test/test.recal
+    - path: results/reports/qualimap/test/test.mapped
+    - path: results/reports/qualimap/test/test.recal
     - path: results/reports/samtools_stats/test/test.md.cram.stats
     - path: results/reports/samtools_stats/test/test.recal.cram.stats

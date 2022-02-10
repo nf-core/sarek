@@ -72,7 +72,7 @@
                     "fa_icon": "fas fa-clock",
                     "description": "Estimate interval size.",
                     "help_text": "Intervals are part of the genome chopped up, used to speed up preprocessing and variant calling",
-                    "default": 1000.0
+                    "default": 1000
                 },
                 "sentieon": {
                     "type": "boolean",
@@ -94,6 +94,11 @@
                     "fa_icon": "fas fa-crosshairs",
                     "description": "Target BED file for whole exome or targeted sequencing.",
                     "help_text": "This parameter does _not_  imply that the workflow is running alignment or variant calling only for the supplied targets.\nInstead, we are aligning for the whole genome, and selecting variants only at the very end by intersecting with the provided target file.\nAdding every exon as an interval in case of `WES` can generate >200K processes or jobs, much more forks, and similar number of directories in the Nextflow work directory.\nFurthermore, primers and/or baits are not 100% specific, (certainly not for MHC and KIR, etc.), quite likely there going to be reads mapping to multiple locations.\nIf you are certain that the target is unique for your genome (all the reads will certainly map to only one location), and aligning to the whole genome is an overkill, it is actually better to change the reference itself.\n\nThe recommended flow for targeted sequencing data is to use the workflow as it is, but also provide a `BED` file containing targets for all steps using the `--target_bed` option.\nThe workflow will pick up these intervals, and activate any `--exome` flag in any tools that allow it to process deeper coverage.\nIt is advised to pad the variant calling regions (exons or target) to some extent before submitting to the workflow."
+                },
+                "wes": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Enable when exome or panel data is provided"
                 }
             },
             "fa_icon": "fas fa-user-cog"
@@ -244,6 +249,11 @@
             "default": "",
             "fa_icon": "fas fa-toolbox",
             "properties": {
+                "joint_germline": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-align-justify",
+                    "description": "Enables GATK4 joint germline variant calling, if also haplotypecaller is selected"
+                },
                 "ascat_ploidy": {
                     "type": "number",
                     "fa_icon": "fas fa-wrench",
