@@ -12,8 +12,8 @@
     - path: results/preprocessing/test/recal_table/test.recal.table
     - path: results/preprocessing/test/recalibrated/test.recal.cram
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
-    - path: results/preprocessing/csv/mapped.csv
-    - path: results/preprocessing/csv/mapped_test.csv
+    #- path: results/preprocessing/csv/mapped.csv
+    #- path: results/preprocessing/csv/mapped_test.csv
     - path: results/preprocessing/csv/markduplicates.csv
     - path: results/preprocessing/csv/markduplicates_test.csv
     - path: results/preprocessing/csv/markduplicates_no_table.csv
