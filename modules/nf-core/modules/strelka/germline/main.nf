@@ -8,12 +8,9 @@ process STRELKA_GERMLINE {
         'quay.io/biocontainers/strelka:2.9.10--0' }"
 
     input:
-    //TODO: wait for response if this is possible or if only the complete target file is an option
-    tuple val(meta), path(input), path(input_index), path(target_bed), path(target_bed_tbi)
+    tuple val(meta), path(input), path(input_index), path (target_bed), path (target_bed_tbi)
     path  fasta
     path  fai
-    //path  target_bed
-    //path  target_bed_tbi
 
     output:
     tuple val(meta), path("*variants.vcf.gz")    , emit: vcf
@@ -21,6 +18,9 @@ process STRELKA_GERMLINE {
     tuple val(meta), path("*genome.vcf.gz")      , emit: genome_vcf
     tuple val(meta), path("*genome.vcf.gz.tbi")  , emit: genome_vcf_tbi
     path "versions.yml"                          , emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''

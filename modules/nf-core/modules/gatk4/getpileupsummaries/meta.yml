@@ -23,14 +23,30 @@ input:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test' ]
-  - bam:
+  - input:
       type: file
-      description: BAM file to be summarised.
-      pattern: "*.bam"
-  - bai:
+      description: BAM/CRAM file to be summarised.
+      pattern: "*.{bam,cram}"
+  - input_index:
       type: file
-      description: BAM file index.
-      pattern: "*.bam.bai"
+      description: BAM/CRAM file index.
+      pattern: "*.{bai,crai}"
+  - intervals:
+      type: file
+      description: File containing specified sites to be used for the summary. If this option is not specified, variants file is used instead automatically.
+      pattern: "*.interval_list"
+  - fasta:
+      type: file
+      description: The reference fasta file
+      pattern: "*.fasta"
+  - fai:
+      type: file
+      description: Index of reference fasta file
+      pattern: "*.fasta.fai"
+  - dict:
+      type: file
+      description: GATK sequence dictionary
+      pattern: "*.dict"
   - variants:
       type: file
       description: Population vcf of germline sequencing, containing allele fractions. Is also used as sites file if no separate sites file is specified.
@@ -39,10 +55,7 @@ input:
       type: file
       description: Index file for the germline resource.
       pattern: "*.vcf.gz.tbi"
-  - sites:
-      type: file
-      description: File containing specified sites to be used for the summary. If this option is not specified, variants file is used instead automatically.
-      pattern: "*.interval_list"
+
 
 output:
   - pileup:

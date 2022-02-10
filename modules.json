@@ -79,7 +79,7 @@
                 "git_sha": "598d7abdb2a8df1aa3471c48d9186a9e3465983f"
             },
             "gatk4/getpileupsummaries": {
-                "git_sha": "e20e57f90b6787ac9a010a980cf6ea98bd990046"
+                "git_sha": "f5d5926516d2319c1af83fb4b33834cc4461ce62"
             },
             "gatk4/haplotypecaller": {
                 "git_sha": "e20e57f90b6787ac9a010a980cf6ea98bd990046"
@@ -91,7 +91,7 @@
                 "git_sha": "e20e57f90b6787ac9a010a980cf6ea98bd990046"
             },
             "gatk4/mutect2": {
-                "git_sha": "598d7abdb2a8df1aa3471c48d9186a9e3465983f"
+                "git_sha": "f5d5926516d2319c1af83fb4b33834cc4461ce62"
             },
             "gatk4/variantrecalibrator": {
                 "git_sha": "e20e57f90b6787ac9a010a980cf6ea98bd990046"
@@ -145,10 +145,10 @@
                 "git_sha": "e20e57f90b6787ac9a010a980cf6ea98bd990046"
             },
             "strelka/germline": {
-                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+                "git_sha": "f5d5926516d2319c1af83fb4b33834cc4461ce62"
             },
             "strelka/somatic": {
-                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+                "git_sha": "f5d5926516d2319c1af83fb4b33834cc4461ce62"
             },
             "tabix/bgziptabix": {
                 "git_sha": "e22966ce74340cb671576143e5fdbbd71670cffa"

@@ -12,7 +12,6 @@ process GATK4_MUTECT2 {
     val  run_single
     val  run_pon
     val  run_mito
-    val  interval_label
     path fasta
     path fai
     path dict
@@ -28,6 +27,9 @@ process GATK4_MUTECT2 {
     tuple val(meta), path("*.f1r2.tar.gz"), optional:true, emit: f1r2
     path "versions.yml"                   , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
@@ -36,7 +38,6 @@ process GATK4_MUTECT2 {
 
     def inputs_command = '-I ' + input.join( ' -I ')
     def interval = intervals ? "-L ${intervals}" : ""
-
 
     if(run_pon) {
         panels_command = ''
@@ -47,7 +48,7 @@ process GATK4_MUTECT2 {
         normals_command = ''
 
     } else if(run_mito){
-        panels_command = "-L ${interval_label} --mitochondria-mode"
+        panels_command = "-L ${intervals} --mitochondria-mode"
         normals_command = ''
 
     } else {
