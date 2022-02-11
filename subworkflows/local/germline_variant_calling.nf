@@ -69,8 +69,7 @@ workflow GERMLINE_VARIANT_CALLING {
             sample = meta.sample
             new_intervals = intervals.baseName != "no_intervals" ? intervals : []
             id = new_intervals ? sample + "_" + new_intervals.baseName : sample
-            [[ id: id, sample: meta.sample, gender: meta.gender, status: meta.status, patient: meta.patient ]
- cram, crai, new_intervals]
+            [[ id: id, sample: meta.sample, gender: meta.gender, status: meta.status, patient: meta.patient ], cram, crai, new_intervals]
         }.set{cram_recalibrated_intervals}
 
     cram_recalibrated.combine(intervals_bed_gz_tbi)
