@@ -214,7 +214,7 @@ workflow GERMLINE_VARIANT_CALLING {
         if(joint_germline){
             run_haplotypecaller = false
             run_vqsr            = true //parameter?
-            some feedback from gavin
+            //some feedback from gavin
             // GATK_JOINT_GERMLINE_VARIANT_CALLING(
             //     haplotypecaller_vcf_gz_tbi,
             //     run_haplotypecaller,
