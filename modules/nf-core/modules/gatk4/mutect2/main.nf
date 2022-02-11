@@ -2,17 +2,16 @@ process GATK4_MUTECT2 {
     tag "$meta.id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::gatk4=4.2.4.0" : null)
+    conda (params.enable_conda ? "bioconda::gatk4=4.2.4.1" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gatk4:4.2.4.0--hdfd78af_0' :
-        'quay.io/biocontainers/gatk4:4.2.4.0--hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/gatk4:4.2.4.1--hdfd78af_0' :
+        'quay.io/biocontainers/gatk4:4.2.4.1--hdfd78af_0' }"
 
     input:
-    tuple val(meta) , path(input) , path(input_index) , val(which_norm)
+    tuple val(meta) , path(input) , path(input_index) , path(intervals), val(which_norm)
     val  run_single
     val  run_pon
     val  run_mito
-    val  interval_label
     path fasta
     path fai
     path dict
@@ -28,6 +27,9 @@ process GATK4_MUTECT2 {
     tuple val(meta), path("*.f1r2.tar.gz"), optional:true, emit: f1r2
     path "versions.yml"                   , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
@@ -35,6 +37,7 @@ process GATK4_MUTECT2 {
     def normals_command = ''
 
     def inputs_command = '-I ' + input.join( ' -I ')
+    def interval = intervals ? "-L ${intervals}" : ""
 
     if(run_pon) {
         panels_command = ''
@@ -45,7 +48,7 @@ process GATK4_MUTECT2 {
         normals_command = ''
 
     } else if(run_mito){
-        panels_command = "-L ${interval_label} --mitochondria-mode"
+        panels_command = "-L ${intervals} --mitochondria-mode"
         normals_command = ''
 
     } else {
@@ -65,6 +68,7 @@ process GATK4_MUTECT2 {
         ${inputs_command} \\
         ${normals_command} \\
         ${panels_command} \\
+        ${interval} \\
         -O ${prefix}.vcf.gz \\
         $args
 

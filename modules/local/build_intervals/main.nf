@@ -11,7 +11,7 @@ process BUILD_INTERVALS {
     path fasta_fai
 
     output:
-    path "*.bed", emit bed
+    path "*.bed", emit: bed
 
     script:
     """

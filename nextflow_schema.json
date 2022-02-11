@@ -59,7 +59,7 @@
                     "fa_icon": "fas fa-toolbox",
                     "description": "Tools to use for variant calling and/or for annotation.",
                     "help_text": "Multiple separated with commas.\n\nGermline variant calling can currently only be performed with the following variant callers:\n- FreeBayes, HaplotypeCaller, Manta, mpileup, Strelka, TIDDIT\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- ASCAT, Control-FREEC, FreeBayes, Manta, MSIsensorpro, Mutect2, Strelka\n\nTumor-only somatic variant calling can currently only be performed with the following variant callers:\n- Control-FREEC, Manta, mpileup, Mutect2, TIDDIT\n\nAnnotation is done using snpEff, VEP, or even both consecutively.\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted.\n\n\n\n`DNAseq`, `DNAscope` and `TNscope` are only available with `--sentieon`\n\n> **NB** tools can be specified with no concern for case.\n",
-                    "pattern": "^((ascat|cnvkit|controlfreec|dnascope|dnaseq|freebayes|haplotypecaller|manta|merge|mpileup|msisensorpro|mutect2|snpeff|strelka|tiddit|tnscope|vep)*,?)*$"
+                    "pattern": "^((ascat|cnvkit|controlfreec|deepvariant|dnascope|dnaseq|freebayes|haplotypecaller|manta|merge|mpileup|msisensorpro|mutect2|snpeff|strelka|tiddit|tnscope|vep)*,?)*$"
                 },
                 "no_intervals": {
                     "type": "boolean",
@@ -85,7 +85,7 @@
                     "fa_icon": "fas fa-forward",
                     "description": "Disable specified QC and Reporting tools.",
                     "help_text": "Multiple tools can be specified, separated by commas.\n\n> **NB** `--skip_qc BaseRecalibrator` is actually just not saving the reports.\n> **NB** `--skip_qc MarkDuplicates` does not skip `MarkDuplicates` but prevent the collection of duplicate metrics that slows down performance.\n> **NB** tools can be specified with no concern for case.",
-                    "pattern": "^((bamqc|baserecalibrator|bcftools|documentation|fastqc|markduplicates|multiqc|samtools|vcftools|versions)*(,)*)*$"
+                    "pattern": "^((bamqc|baserecalibrator|bcftools|documentation|fastqc|markduplicates|multiqc|samtools|vcftools|versions|deeptools)*(,)*)*$"
                 },
                 "target_bed": {
                     "type": "string",
@@ -94,6 +94,11 @@
                     "fa_icon": "fas fa-crosshairs",
                     "description": "Target BED file for whole exome or targeted sequencing.",
                     "help_text": "This parameter does _not_  imply that the workflow is running alignment or variant calling only for the supplied targets.\nInstead, we are aligning for the whole genome, and selecting variants only at the very end by intersecting with the provided target file.\nAdding every exon as an interval in case of `WES` can generate >200K processes or jobs, much more forks, and similar number of directories in the Nextflow work directory.\nFurthermore, primers and/or baits are not 100% specific, (certainly not for MHC and KIR, etc.), quite likely there going to be reads mapping to multiple locations.\nIf you are certain that the target is unique for your genome (all the reads will certainly map to only one location), and aligning to the whole genome is an overkill, it is actually better to change the reference itself.\n\nThe recommended flow for targeted sequencing data is to use the workflow as it is, but also provide a `BED` file containing targets for all steps using the `--target_bed` option.\nThe workflow will pick up these intervals, and activate any `--exome` flag in any tools that allow it to process deeper coverage.\nIt is advised to pad the variant calling regions (exons or target) to some extent before submitting to the workflow."
+                },
+                "wes": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Enable when exome or panel data is provided"
                 }
             },
             "fa_icon": "fas fa-user-cog"
@@ -171,6 +176,17 @@
                     "fa_icon": "fas fa-vial",
                     "description": "If set, publishes split fastq files. Intended for testing purposes.",
                     "hidden": true
+                },
+                "umi_read_structure": {
+                    "type": "string",
+                    "default": "None",
+                    "fa_icon": "fas fa-tape",
+                    "hidden": true
+                },
+                "group_by_umi_strategy": {
+                    "type": "string",
+                    "default": "Adjacency",
+                    "hidden": true
                 }
             }
         },
@@ -233,6 +249,11 @@
             "default": "",
             "fa_icon": "fas fa-toolbox",
             "properties": {
+                "joint_germline": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-align-justify",
+                    "description": "Enables GATK4 joint germline variant calling, if also haplotypecaller is selected"
+                },
                 "ascat_ploidy": {
                     "type": "number",
                     "fa_icon": "fas fa-wrench",
@@ -301,25 +322,6 @@
                     "fa_icon": "fas fa-ban",
                     "description": "Do not analyze soft clipped bases in the reads for GATK Mutect2",
                     "help_text": "use the `--dont-use-soft-clipped-bases` params with GATK."
-                },
-                "umi": {
-                    "type": "boolean",
-                    "default": false,
-                    "fa_icon": "fas fa-tape",
-                    "description": "If provided, UMIs steps will be run to extract and annotate the reads with UMI and create consensus reads",
-                    "help_text": "This part of the pipeline uses fgbio to convert the FASTQ files into a unmapped BAM, where reads are tagged with the UMIs extracted from the FASTQ sequences.\nIn order to allow the correct tagging, the UMI sequence must be contained in the read sequence itself, and not in the FASTQ filename.\nFollowing this step, the unmapped BAM is aligned and reads are then grouped based on mapping position and UMI tag.\nFinally, reads in the same groups are collapsed to create a consensus read.\nTo create consensus, we have chosen to use the adjacency method\n\ncf [fgbio](https://github.com/fulcrumgenomics/fgbio)\ncf [UMIs, the problem, the solution and the proof](https://cgatoxford.wordpress.com/2015/08/14/unique-molecular-identifiers-the-problem-the-solution-and-the-proof/)\n\n> **NB** In order for the correct tagging to be performed, a read structure needs to be specified with `--read_structure1` and `--readstructure2`"
-                },
-                "read_structure1": {
-                    "type": "string",
-                    "fa_icon": "fas fa-clipboard-list",
-                    "description": "When processing UMIs, a read structure should always be provided for each of the fastq files.",
-                    "help_text": "If the read does not contain any UMI, the structure will be +T (i.e. only template of any length).\nThe read structure follows a format adopted by different tools and described in the [fgbio documentation](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures)"
-                },
-                "read_structure2": {
-                    "type": "string",
-                    "fa_icon": "fas fa-clipboard-list",
-                    "description": "When processing UMIs, a read structure should always be provided for each of the fastq files.",
-                    "help_text": "If the read does not contain any UMI, the structure will be +T (i.e. only template of any length).\nThe read structure follows a format adopted by different tools and described in the [fgbio documentation](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures)"
                 }
             }
         },

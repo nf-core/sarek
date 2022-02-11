@@ -26,16 +26,19 @@ workflow PREPARE_RECALIBRATION {
     cram_markduplicates.combine(intervals)
         .map{ meta, cram, crai, intervals ->
             new_meta = meta.clone()
-            new_meta.id = meta.sample + "_" + intervals.baseName
+            new_meta.id = intervals.baseName != "no_intervals" ? meta.sample + "_" + intervals.baseName : meta.sample
             [new_meta, cram, crai, intervals]
         }.set{cram_markduplicates_intervals}
 
     if (use_gatk_spark) {
         BASERECALIBRATOR_SPARK(cram_markduplicates_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
         table_baserecalibrator = BASERECALIBRATOR_SPARK.out.table
+        ch_versions = ch_versions.mix(BASERECALIBRATOR_SPARK.out.versions)
+
     } else {
         BASERECALIBRATOR(cram_markduplicates_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
         table_baserecalibrator = BASERECALIBRATOR.out.table
+        ch_versions = ch_versions.mix(BASERECALIBRATOR.out.versions)
     }
 
     //STEP 3.5: MERGING RECALIBRATION TABLES
@@ -52,6 +55,7 @@ workflow PREPARE_RECALIBRATION {
 
         GATHERBQSRREPORTS(recaltable)
         table_bqsr = GATHERBQSRREPORTS.out.table
+        ch_versions = ch_versions.mix(GATHERBQSRREPORTS.out.versions)
     }
 
     emit:

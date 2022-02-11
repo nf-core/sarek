@@ -36,11 +36,11 @@ jobs:
           - 'default'
           - 'split_fastq'
           - 'gatk4_spark'
-          - 'save_bam_mapped'
+          #- 'save_bam_mapped'
           - 'skip_markduplicates'
-          # - 'targeted'
+          - 'targeted'
           - 'tumor_normal_pair'
-          # - 'variant_calling'
+          - 'variant_calling'
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2

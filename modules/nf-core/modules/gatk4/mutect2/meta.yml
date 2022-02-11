@@ -30,6 +30,10 @@ input:
       type: list
       description: list of BAM file indexes, also able to take CRAM indexes as an input
       pattern: "*.{bam.bai/cram.crai}"
+  - intervals:
+      type: File/string
+      description: Specify region the tools is run on.
+      pattern: ".{bed,interval_list}/chrM"
   - which_norm:
       type: list
       description: optional list of sample headers contained in the normal sample bam files (these are required for tumor_normal_pair mode)
@@ -46,10 +50,6 @@ input:
       type: boolean
       description: Specify whether or not to run in mitochondria-mode instead of tumor_normal_pair mode
       pattern: "true/false"
-  - interval_label:
-      type: string
-      description: Specify the label used for mitochondrial chromosome when mutect2 is run in mitochondria mode.
-      pattern: "chrM"
   - fasta:
       type: file
       description: The reference fasta file
