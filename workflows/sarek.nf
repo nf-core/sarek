@@ -50,7 +50,7 @@ else {
         case 'mapping': exit 1, "Can't start with step $params.step without samplesheet"
         case 'prepare_recalibration': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
         case 'recalibrate':          csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv",          checkIfExists: true); break
-        case 'variantcalling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv",            checkIfExists: true); break
+        case 'variant_calling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv",            checkIfExists: true); break
         // case 'controlfreec':         csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
         case 'annotate':             csv_file = file("${params.outdir}/variant_calling/csv/recalibrated.csv",          checkIfExists: true); break
         default: exit 1, "Unknown step $params.step"
@@ -325,6 +325,7 @@ workflow SAREK {
             params.skip_markduplicates,
             ('bamqc' in params.skip_qc),
             ('samtools' in params.skip_qc),
+            ('deeptools' in params.skip_qc),
             intervals_bed_combined)
 
         cram_markduplicates = MARKDUPLICATES.out.cram
@@ -509,7 +510,7 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.strelka_vcf)
         ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
 
-        // // PAIR VARIANT CALLING
+        // PAIR VARIANT CALLING
         PAIR_VARIANT_CALLING(
             params.tools,
             cram_variant_calling_pair,
