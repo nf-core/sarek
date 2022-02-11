@@ -85,7 +85,7 @@
                     "fa_icon": "fas fa-forward",
                     "description": "Disable specified QC and Reporting tools.",
                     "help_text": "Multiple tools can be specified, separated by commas.\n\n> **NB** `--skip_qc BaseRecalibrator` is actually just not saving the reports.\n> **NB** `--skip_qc MarkDuplicates` does not skip `MarkDuplicates` but prevent the collection of duplicate metrics that slows down performance.\n> **NB** tools can be specified with no concern for case.",
-                    "pattern": "^((bamqc|baserecalibrator|bcftools|documentation|fastqc|markduplicates|multiqc|samtools|vcftools|versions)*(,)*)*$"
+                    "pattern": "^((bamqc|baserecalibrator|bcftools|documentation|fastqc|markduplicates|multiqc|samtools|vcftools|versions|deeptools)*(,)*)*$"
                 },
                 "target_bed": {
                     "type": "string",
