@@ -67,7 +67,7 @@ then
             # Skip if globbing would not match any file to avoid errors such as
             # "ls: cannot access chr3_*.vcf: No such file or directory" when chr3
             # was not processed.
-            pattern="${chr}_*.vcf"
+            pattern="*_${chr}_*.vcf"
             if ! compgen -G "${pattern}" > /dev/null ; then continue; fi
 
             # ls -v sorts by numeric value ("version"), which means that chr1_100_
