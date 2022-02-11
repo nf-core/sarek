@@ -24,6 +24,7 @@ workflow MARKDUPLICATES {
         skip_markduplicates             // boolean: true/false
         skip_bamqc                      // boolean: true/false
         skip_samtools                   // boolean: true/false
+        skip_coverage                   // boolean: true/false
         intervals_combined_bed_gz_tbi   // channel: [optional]  intervals_bed.gz, intervals_bed.gz.tbi
 
     main:
@@ -40,7 +41,7 @@ workflow MARKDUPLICATES {
     } else {
         if (use_gatk_spark) {
             //If BAMQC should be run on MD output, then don't use MDSpark to convert to cram, but use bam output instead
-            if (!skip_bamqc) {
+            if (!skip_bamqc || !skip_coverage) {
                 GATK4_MARKDUPLICATES_SPARK(bam_mapped, fasta, fasta_fai, dict, "bam")
                 INDEX_MARKDUPLICATES(GATK4_MARKDUPLICATES_SPARK.out.output)
                 bam_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.output.join(INDEX_MARKDUPLICATES.out.bam_bai)
@@ -102,6 +103,15 @@ workflow MARKDUPLICATES {
         qualimap_bamqc = QUALIMAP_BAMQC.out.results
 
         ch_versions = ch_versions.mix(QUALIMAP_BAMQC.out.versions.first())
+    }
+
+    deeptools_coverage = Channel.empty()
+    if (!skip_coverage) {
+
+        DEEPTOOLS_BAMCOVERAGE(bam_bai_markduplicates)
+        deeptools_coverage = DEEPTOOLS_BAMCOVERAGE.out.bigwig
+
+        ch_versions = ch_versions.mix(DEEPTOOLS_BAMCOVERAGE.out.versions)
     }
 
     qc_reports = samtools_stats.mix(qualimap_bamqc)

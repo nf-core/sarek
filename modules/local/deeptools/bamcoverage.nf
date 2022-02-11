@@ -8,7 +8,7 @@ process DEEPTOOLS_BAMCOVERAGE {
         'quay.io/biocontainers/deeptools:3.5.1--py_0' }"
 
     input:
-    tuple val(meta), path(bam)
+    tuple val(meta), path(bam), path(bai)
 
     output:
     tuple val(meta), path("*.bigWig"), emit: bigwig
@@ -27,7 +27,7 @@ process DEEPTOOLS_BAMCOVERAGE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        deeptools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' ))
+        deeptools: \$(echo \$(deeptools --version 2>&1) | sed 's/^.*deeptools //; s/Using.*\$//' ))
     END_VERSIONS
     """
 }

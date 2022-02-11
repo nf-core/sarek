@@ -34,7 +34,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     //Perform variant calling using mutect2 module in tumor single mode.
     //
     mutect2_vcf_gz_tbi = Channel.empty()
-    MUTECT2 ( input , true , false , false , [] , fasta , fai , dict , germline_resource , germline_resource_tbi , panel_of_normals , panel_of_normals_tbi )
+    MUTECT2 ( input , true , false , false , fasta , fai , dict , germline_resource , germline_resource_tbi , panel_of_normals , panel_of_normals_tbi )
     ch_versions = ch_versions.mix(MUTECT2.out.versions)
 
     //
@@ -64,7 +64,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
         mutect2_vcf_to_concat = bgzip_mutect2.groupTuple(size: num_intervals)
 
         CONCAT_VCF_MUTECT2(mutect2_vcf_to_concat, fai, intervals_bed_combine_gz)
-        mutect2_vcf_gz_tbi = CONCAT_VCF_MUTECT2.out.vcf
+        mutect2_vcf_gz_tbi = CONCAT_VCF_MUTECT2.out.vcf.join(CONCAT_VCF_MUTECT2.out.tbi)
 
         ch_versions = ch_versions.mix(BGZIP_MUTECT2.out.versions)
         ch_versions = ch_versions.mix(CONCAT_VCF_MUTECT2.out.versions)
