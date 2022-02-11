@@ -9,6 +9,7 @@ include { BWA_INDEX as BWAMEM1_INDEX                          } from '../../modu
 include { BWAMEM2_INDEX                                       } from '../../modules/nf-core/modules/bwamem2/index/main'
 include { CREATE_INTERVALS_BED                                } from '../../modules/local/create_intervals_bed/main'
 include { GATK4_CREATESEQUENCEDICTIONARY                      } from '../../modules/nf-core/modules/gatk4/createsequencedictionary/main'
+include { GATK4_INTERVALLISTTOBED                             } from '../../modules/local/gatk4/intervallisttobed'
 include { MSISENSORPRO_SCAN                                   } from '../../modules/nf-core/modules/msisensorpro/scan/main'
 include { SAMTOOLS_FAIDX                                      } from '../../modules/nf-core/modules/samtools/faidx/main'
 include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_SPLIT } from '../../modules/nf-core/modules/tabix/bgziptabix/main'
@@ -119,12 +120,18 @@ workflow PREPARE_GENOME {
         }else{
 
             tabix_in_combined = Channel.fromPath(file(params.intervals)).map{it -> [[id:it.baseName], it] }
+            if(!params.intervals.endsWith(".bed")){
+                GATK4_INTERVALLISTTOBED(tabix_in_combined)
+                tabix_in_combined = GATK4_INTERVALLISTTOBED.out.bed
+                ch_versions = ch_versions.mix(GATK4_INTERVALLISTTOBED.out.versions)
+            }
             ch_intervals = CREATE_INTERVALS_BED(file(params.intervals))
 
         }
     }
 
     if (!('annotate' in step) && !('controlfreec' in step)){
+
         TABIX_BGZIPTABIX_INTERVAL_ALL(tabix_in_combined)
         ch_intervals_combined_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_ALL.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi] }
         ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_ALL.out.versions)

@@ -38,7 +38,7 @@ jobs:
           - 'gatk4_spark'
           #- 'save_bam_mapped'
           - 'skip_markduplicates'
-          # - 'targeted'
+          - 'targeted'
           - 'tumor_normal_pair'
           - 'variant_calling'
     steps:
