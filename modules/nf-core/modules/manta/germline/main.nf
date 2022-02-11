@@ -31,9 +31,9 @@ process MANTA_GERMLINE {
         --reference $fasta \
         $options_manta \
         $args \
-        --runDir Manta
+        --runDir manta
 
-    python Manta/runWorkflow.py -m local -j $task.cpus
+    python manta/runWorkflow.py -m local -j $task.cpus
 
     mv manta/results/variants/candidateSmallIndels.vcf.gz \
         ${prefix}.candidate_small_indels.vcf.gz
