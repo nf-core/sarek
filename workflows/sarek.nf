@@ -65,6 +65,10 @@ if(params.wes){
     if(!params.intervals.endsWith("bed")){
         exit 1, "Target file must be in BED format"
     }
+}else{
+    if(!params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")){
+        exit 1, "Interval file must end with .bed or .interval_list"
+    }
 }
 
 // Save AWS IGenomes file containing annotation version
