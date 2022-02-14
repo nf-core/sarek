@@ -58,7 +58,7 @@ then
 
     CONTIGS=($(cut -f1 ${genomeIndex}))
 
-    # Concatenate VCFs in the correct order
+    #Concatenate VCFs in the correct order
     (
         cat header
 
@@ -66,8 +66,8 @@ then
             # Skip if globbing would not match any file to avoid errors such as
             # "ls: cannot access chr3_*.vcf.gz: No such file or directory" when chr3
             # was not processed.
-            pattern="*_${chr}_*.vcf.gz"
-            if ! compgen -G "${pattern}" > /dev/null; then continue; fi
+            pattern="*_${chr}_*.vcf"
+            if ! compgen -G "${pattern}" > /dev/null ; then continue; fi
 
             # ls -v sorts by numeric value ("version"), which means that chr1_100_
             # is sorted *after* chr1_99_.
@@ -83,13 +83,15 @@ then
                 tail -n +$((L+1)) <(zcat ${vcf})
             done
         done
-    ) | bgzip -@${cpus} > rawcalls.vcf.gz
-    tabix rawcalls.vcf.gz
+    ) | bgzip -@${cpus} > rawcalls.unsorted.vcf.gz
 else
-    VCF=$(ls no_intervals*.vcf.gz)
-    mv -v $VCF rawcalls.vcf.gz
-    tabix rawcalls.vcf.gz
+    VCF=$(ls no_intervals*.vcf)
+    cp $VCF rawcalls.unsorted.vcf
+    bgzip -@${cpus} rawcalls.unsorted.vcf
 fi
+
+bcftools sort rawcalls.unsorted.vcf.gz | bgzip > rawcalls.vcf.gz
+tabix -p vcf rawcalls.vcf.gz
 
 set +u
 
@@ -100,5 +102,5 @@ if [ ! -z ${targetBED+x} ]; then
     tabix ${outputFile}.gz
 else
     # Rename the raw calls as WGS results
-    for f in rawcalls*; do mv -v $f ${outputFile}${f#rawcalls.vcf}; done
+    for f in rawcalls.vcf*; do mv -v $f ${outputFile}${f#rawcalls.vcf}; done
 fi
