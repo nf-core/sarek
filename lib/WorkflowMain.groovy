@@ -71,7 +71,6 @@ class WorkflowMain {
 
         // Check AWS batch settings
         NfcoreTemplate.awsBatch(workflow, params)
-        }
     }
 
     //
