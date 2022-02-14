@@ -29,9 +29,18 @@ workflow GATK4_MAPPING {
             //sorts list of split fq files by :
             //[R1.part_001, R2.part_001, R1.part_002, R2.part_002,R1.part_003, R2.part_003,...]
             //TODO: determine whether it is possible to have an uneven number of parts, so remainder: true woud need to be used, I guess this could be possible for unfiltered reads, reads that don't have pairs etc.
-            [key, reads.sort{ a,b -> a.getName().tokenize('.')[ a.getName().tokenize('.').size() - 3] <=> b.getName().tokenize('.')[ b.getName().tokenize('.').size() - 3]}.collate(2)]
+            read_files = reads.sort{ a,b -> a.getName().tokenize('.')[ a.getName().tokenize('.').size() - 3] <=> b.getName().tokenize('.')[ b.getName().tokenize('.').size() - 3]}.collate(2)
+            key.size = read_files.size()
+            [key, read_files]
         }.transpose()
-    } else reads_input_split = reads_input
+    } else {
+        reads_input_split =  reads_input.map{ meta, reads ->
+            meta.size = 1
+            [meta, reads]
+        }
+    }
+
+
 
     bam_bwamem1      = Channel.empty()
     bam_bwamem2      = Channel.empty()
@@ -62,15 +71,19 @@ workflow GATK4_MAPPING {
     bam_from_aligner.map{ meta, bam ->
         new_meta = meta.clone()
         new_meta.remove('read_group')
+        new_meta.remove('size')
         new_meta.id = meta.sample
 
         // groupKey is to makes sure that the correct group can advance as soon as it is complete
         // and not stall the workflow until all pieces are mapped
-        def groupKey = groupKey(meta, meta.numLanes * params.split_fastq)
-        tuple(groupKey, bam)
+        def groupKey = groupKey(meta, meta.numLanes * meta.size)
 
+        //Returns the values we need
+        tuple(groupKey, new_meta, bam)
+    }.groupTuple(by:[0,1]).map{
+        groupKey, new_meta, bam ->
         [new_meta, bam]
-    }.groupTuple().set{bam_mapped}
+    }.set{bam_mapped}
 
     // GATK markduplicates can handle multiple BAMS as input
     // So no merging/indexing at this step

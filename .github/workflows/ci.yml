@@ -19,6 +19,8 @@ jobs:
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/sarek') }}
     runs-on: ubuntu-latest
     strategy:
+      # HACK Remove after DSL2 rewrite is done
+      fail-fast: false
       matrix:
         # Nextflow versions
         include:
@@ -34,11 +36,11 @@ jobs:
           - 'default'
           - 'split_fastq'
           - 'gatk4_spark'
-          - 'save_bam_mapped'
+          #- 'save_bam_mapped'
           - 'skip_markduplicates'
-          # - 'targeted'
+          - 'targeted'
           - 'tumor_normal_pair'
-          # - 'variant_calling'
+          - 'variant_calling'
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -62,3 +64,22 @@ jobs:
 
       - name: Run pipeline with tests settings
         run: pytest --tag ${{ matrix.test }} --kwdof
+
+      - name: Output log on failure
+        if: failure()
+        run: |
+          sudo apt install bat > /dev/null
+          batcat --decorations=always --color=always /home/runner/pytest_workflow_*/*/log.{out,err}
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs-${{ matrix.profile }}
+          path: |
+            /home/runner/pytest_workflow_*/*/.nextflow.log
+            /home/runner/pytest_workflow_*/*/log.out
+            /home/runner/pytest_workflow_*/*/log.err
+            /home/runner/pytest_workflow_*/*/work
+            !/home/runner/pytest_workflow_*/*/work/conda
+            !/home/runner/pytest_workflow_*/*/work/singularity
