@@ -1,13 +1,13 @@
 name: samblaster
 description: |
-      This module combines samtools and samblaster in order to use
-      samblaster capability to filter or tag SAM files, with the advantage
-      of maintaining both input and output in BAM format.
-      Samblaster input must contain a sequence header: for this reason it has been piped
-      with the "samtools view -h" command.
-      Additional desired arguments for samtools can be passed using:
-      options.args2 for the input bam file
-      options.args3 for the output bam file
+  This module combines samtools and samblaster in order to use
+  samblaster capability to filter or tag SAM files, with the advantage
+  of maintaining both input and output in BAM format.
+  Samblaster input must contain a sequence header: for this reason it has been piped
+  with the "samtools view -h" command.
+  Additional desired arguments for samtools can be passed using:
+  options.args2 for the input bam file
+  options.args3 for the output bam file
 keywords:
   - sort
 tools:
@@ -21,7 +21,7 @@ tools:
       documentation: https://github.com/GregoryFaust/samblaster
       tool_dev_url: https://github.com/GregoryFaust/samblaster
       doi: "10.1093/bioinformatics/btu314"
-      licence: ['MIT']
+      licence: ["MIT"]
 
 input:
   - meta:

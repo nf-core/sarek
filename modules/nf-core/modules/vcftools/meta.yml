@@ -9,7 +9,7 @@ tools:
       documentation: http://vcftools.sourceforge.net/man_latest.html
       tool_dev_url: None
       doi:
-      licence: ['LGPL']
+      licence: ["LGPL"]
 
 input:
   - meta:

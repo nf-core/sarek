@@ -16,7 +16,7 @@ tools:
       documentation: https://github.com/freebayes/freebayes
       tool_dev_url: https://github.com/freebayes/freebayes
       doi: "arXiv:1207.3907"
-      licence: ['MIT']
+      licence: ["MIT"]
 
 input:
   - meta:
@@ -31,7 +31,11 @@ input:
   - input_index:
       type: file
       description: BAM/CRAM/SAM index file
-      pattern: "*.bam.bai"
+      pattern: "*.{bai,crai}"
+  - target_bed:
+      type: file
+      description: Optional - Limit analysis to targets listed in this BED-format FILE.
+      pattern: "*.bed"
   - fasta:
       type: file
       description: reference fasta file
@@ -40,10 +44,6 @@ input:
       type: file
       description: reference fasta file index
       pattern: "*.{fa,fasta}.fai"
-  - targets:
-      type: file
-      description: Optional - Limit analysis to targets listed in this BED-format FILE.
-      pattern: "*.bed"
   - samples:
       type: file
       description: Optional - Limit analysis to samples listed (one per line) in the FILE.
@@ -55,10 +55,10 @@ input:
   - cnv:
       type: file
       description: |
-          A copy number map BED file, which has either a sample-level ploidy:
-          sample_name copy_number
-          or a region-specific format:
-          seq_name start end sample_name copy_number
+        A copy number map BED file, which has either a sample-level ploidy:
+        sample_name copy_number
+        or a region-specific format:
+        seq_name start end sample_name copy_number
       pattern: "*.bed"
 
 output:

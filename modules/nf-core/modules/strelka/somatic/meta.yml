@@ -13,7 +13,7 @@ tools:
       documentation: https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md
       tool_dev_url: https://github.com/Illumina/strelka
       doi: 10.1038/s41592-018-0051-x
-      licence: ['GPL v3']
+      licence: ["GPL v3"]
 
 input:
   - meta:
