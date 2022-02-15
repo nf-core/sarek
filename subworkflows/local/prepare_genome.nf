@@ -38,15 +38,9 @@ workflow PREPARE_GENOME {
 
     ch_bwa = Channel.empty()
     if (!(params.bwa) && 'mapping' in step) {
-        if (params.aligner == "bwa-mem") {
-            BWAMEM1_INDEX(fasta)
-            ch_bwa = BWAMEM1_INDEX.out.index
-            ch_versions = ch_versions.mix(BWAMEM1_INDEX.out.versions)
-        } else if (params.aligner == "bwa-mem2") {
-            BWAMEM2_INDEX(fasta)
-            ch_bwa = BWAMEM2_INDEX.out.index
-            ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
-        }
+        (ch_bwa, ch_bwa_version) = BWAMEM1_INDEX(fasta)
+        (ch_bwa, ch_bwa_version) = BWAMEM2_INDEX(fasta)
+        ch_versions = ch_versions.mix(ch_bwa_version)
     }
 
     ch_dict = Channel.empty()
