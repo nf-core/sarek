@@ -80,12 +80,12 @@
                     "description": "Enable Sentieon if available.",
                     "help_text": "Sentieon is a commercial solution to process genomics data with high computing efficiency, fast turnaround time, exceptional accuracy, and 100% consistency.\n\n> **NB** Adds the following tools for the `--tools` options: `DNAseq`, `DNAscope` and `TNscope`."
                 },
-                "skip_qc": {
+                "skip_tools": {
                     "type": "string",
                     "fa_icon": "fas fa-forward",
-                    "description": "Disable specified QC and Reporting tools.",
-                    "help_text": "Multiple tools can be specified, separated by commas.\n\n> **NB** `--skip_qc BaseRecalibrator` is actually just not saving the reports.\n> **NB** `--skip_qc MarkDuplicates` does not skip `MarkDuplicates` but prevent the collection of duplicate metrics that slows down performance.\n> **NB** tools can be specified with no concern for case.",
-                    "pattern": "^((bamqc|baserecalibrator|bcftools|documentation|fastqc|markduplicates|multiqc|samtools|vcftools|versions|deeptools)*(,)*)*$"
+                    "description": "Disable specified tools.",
+                    "help_text": "Multiple tools can be specified, separated by commas.\n\n> **NB** `--skip_tools baserecalibrator_qc` is actually just not saving the reports.\n> **NB** `--skip_tools markduplicates_qc` does not skip `MarkDuplicates` but prevent the collection of duplicate metrics that slows down performance.\n> **NB** tools can be specified with no concern for case.",
+                    "pattern": "^((bamqc|baserecalibrator|baserecalibrator_qc|bcftools|documentation|fastqc|markduplicates|markduplicates_qc|multiqc|samtools|vcftools|versions|deeptools)*(,)*)*$"
                 },
                 "target_bed": {
                     "type": "string",
@@ -114,6 +114,7 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-cut",
                     "description": "Run Trim Galore.",
+                    "default": false,
                     "hidden": true,
                     "help_text": "Use this to perform adapter trimming with Trim Galore.\ncf [Trim Galore User Guide](https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md)"
                 },
@@ -179,7 +180,6 @@
                 },
                 "umi_read_structure": {
                     "type": "string",
-                    "default": "None",
                     "fa_icon": "fas fa-tape",
                     "hidden": true
                 },
@@ -228,17 +228,6 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-download",
                     "description": "Save Mapped BAMs"
-                },
-                "skip_markduplicates": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip GATK MarkDuplicates",
-                    "help_text": "This params will also save the mapped BAMS, to enable restart from step `prepare_recalibration`"
-                },
-                "skip_bqsr": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip Base Quality Recalibration"
                 }
             }
         },

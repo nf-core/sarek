@@ -59,14 +59,14 @@ else {
 
 input_sample = extract_csv(csv_file)
 
-def save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? true : false
+def save_bam_mapped = 'markduplicates' in params.skip_tools ? true : params.save_bam_mapped ? true : false
 
-if(params.wes){
-    if(!params.intervals.endsWith("bed")){
+if (params.wes) {
+    if (!params.intervals.endsWith("bed")) {
         exit 1, "Target file must be in BED format"
     }
 }else{
-    if(!params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")){
+    if (!params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) {
         exit 1, "Interval file must end with .bed or .interval_list"
     }
 }
@@ -241,7 +241,7 @@ workflow SAREK {
 
     if (params.step == 'mapping') {
 
-        if(params.is_bam_input){
+        if (params.is_bam_input) {
             ALIGNMENT_TO_FASTQ(input_sample, [])
             ALIGNMENT_TO_FASTQ.out.reads.set{input_sample_converted}
             ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ.out.versions)
@@ -249,24 +249,20 @@ workflow SAREK {
             input_sample_converted = input_sample
         }
 
-        FASTQC_TRIMGALORE(
-            input_sample_converted,
-            ('fastqc' in params.skip_qc),
-            !(params.trim_fastq))
+        FASTQC_TRIMGALORE(input_sample_converted)
 
         // Get reads after optional trimming (+QC)
         reads_input = FASTQC_TRIMGALORE.out.reads
 
         // Get all qc reports for MultiQC
         qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
-        qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]))
         qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
 
         // Get versions from all software used
         ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
 
         //Since read need additional mapping afterwards, I would argue for having the process here
-        if(params.umi_read_structure){
+        if (params.umi_read_structure) {
             CREATE_UMI_CONSENSUS(reads_input, fasta, bwa, umi_read_structure, params.group_by_umi_strategy, params.aligner)
             ALIGNMENT_TO_FASTQ( CREATE_UMI_CONSENSUS.out.consensusbam, [] )
             ALIGNMENT_TO_FASTQ.out.reads.set{reads_input}
@@ -282,7 +278,7 @@ workflow SAREK {
             fasta,
             fasta_fai,
             reads_input,
-            params.skip_markduplicates,
+            'markduplicates' in params.skip_tools,
             save_bam_mapped)
 
         // Get mapped reads (BAM) with and without index
@@ -293,7 +289,7 @@ workflow SAREK {
 
         // Create CSV to restart from this step
         // TODO: How is this handeled if not save_bam is set (no index should be present)
-        //MAPPING_CSV(bam_indexed, save_bam_mapped, params.skip_markduplicates)
+        //MAPPING_CSV(bam_indexed, save_bam_mapped, 'markduplicates' in params.skip_tools)
 
         // Get versions from all software used
         ch_versions = ch_versions.mix(GATK4_MAPPING.out.versions)
@@ -304,7 +300,7 @@ workflow SAREK {
         bam_indexed = Channel.empty()
         bam_mapped  = Channel.empty()
 
-        if(params.skip_markduplicates){
+        if ('markduplicates' in params.skip_tools) {
             bam_indexed = input_sample
         }else{ //index will be created down the road from the Markduplicatess
             input_sample.map{meta, bam, bai ->
@@ -320,14 +316,14 @@ workflow SAREK {
             bam_mapped,
             bam_indexed,
             ('markduplicates' in params.use_gatk_spark),
-            !('markduplicates' in params.skip_qc),
+            !('markduplicates_qc' in params.skip_tools),
             dict,
             fasta,
             fasta_fai,
-            params.skip_markduplicates,
-            ('bamqc' in params.skip_qc),
-            ('samtools' in params.skip_qc),
-            ('deeptools' in params.skip_qc),
+            ('markduplicates' in params.skip_tools),
+            ('bamqc' in params.skip_tools),
+            ('samtools' in params.skip_tools),
+            ('deeptools' in params.skip_tools),
             intervals_bed_combined)
 
         cram_markduplicates = MARKDUPLICATES.out.cram
@@ -340,7 +336,7 @@ workflow SAREK {
         ch_versions = ch_versions.mix(MARKDUPLICATES.out.versions)
 
         // STEP 3: Create recalibration tables
-        if(!params.skip_bqsr){
+        if (!('baserecalibrator' in params.skip_tools)) {
 
             PREPARE_RECALIBRATION(
                 cram_markduplicates,
@@ -367,12 +363,12 @@ workflow SAREK {
 
     if (params.step in ['mapping', 'prepare_recalibration', 'recalibrate']) {
 
-        if(!params.skip_bqsr){
+        if (!('baserecalibrator' in params.skip_tools)) {
             // STEP 4: RECALIBRATING
             RECALIBRATE(
                 ('bqsr' in params.use_gatk_spark),
-                ('bamqc' in params.skip_qc),
-                ('samtools' in params.skip_qc),
+                ('bamqc' in params.skip_tools),
+                ('samtools' in params.skip_tools),
                 cram_applybqsr,
                 dict,
                 fasta,
@@ -558,7 +554,7 @@ workflow SAREK {
     }
 
     ch_version_yaml = Channel.empty()
-    if (!('versions' in params.skip_qc)) {
+    if (!('versions' in params.skip_tools)) {
         CUSTOM_DUMPSOFTWAREVERSIONS(ch_versions.unique().collectFile(name: 'collated_versions.yml'))
         ch_version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
     }
@@ -574,7 +570,7 @@ workflow SAREK {
     // ch_multiqc_files = ch_multiqc_files.mix(qc_reports)
 
     // multiqc_report = Channel.empty()
-    // if (!('multiqc' in params.skip_qc)) {
+    // if (!('multiqc' in params.skip_tools)) {
     //     MULTIQC(ch_multiqc_files.collect())
     //     multiqc_report = MULTIQC.out.report.toList()
 

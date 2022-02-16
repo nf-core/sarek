@@ -32,44 +32,45 @@ workflow PREPARE_GENOME {
 
     ch_versions = Channel.empty()
 
-    (ch_bwa1, ch_bwa_version) = BWAMEM1_INDEX(fasta)
-    (ch_bwa2, ch_bwa_version) = BWAMEM2_INDEX(fasta)
+    BWAMEM1_INDEX(fasta)
+    BWAMEM2_INDEX(fasta)
+    GATK4_CREATESEQUENCEDICTIONARY(fasta)
 
-    ch_bwa = ch_bwa1.mix(ch_bwa2)
-    ch_versions = ch_versions.mix(ch_bwa_version)
+    ch_bwa  = BWAMEM1_INDEX.out.index.mix(BWAMEM2_INDEX.out.index)
+    ch_dict = GATK4_CREATESEQUENCEDICTIONARY.out.dict
 
-    (ch_dict, ch_dict_version) = GATK4_CREATESEQUENCEDICTIONARY(fasta)
-
-    ch_versions = ch_versions.mix(ch_dict_version)
+    ch_versions = ch_versions.mix(BWAMEM1_INDEX.out.versions)
+    ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
+    ch_versions = ch_versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
 
     if (fasta_fai) ch_fasta_fai = fasta_fai
     else {
-        (ch_fasta_fai, ch_fasta_fai_version) = SAMTOOLS_FAIDX(fasta.map{ it -> [[id:it[0].getName()], it] })
-        ch_fasta_fai = ch_fasta_fai.map{ meta, fai -> [fai] }
-        ch_versions  = ch_versions.mix(ch_fasta_fai_version)
+        SAMTOOLS_FAIDX(fasta.map{ it -> [[id:it[0].getName()], it] })
+        ch_fasta_fai = SAMTOOLS_FAIDX.out.fai.map{ meta, fai -> [fai] }
+        ch_versions  = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
     }
 
-    (ch_dbsnp_tbi,             ch_dbsnp_tbi_version)             = TABIX_DBSNP(dbsnp.map{ it -> [[id:it[0].baseName], it] })
-    (ch_germline_resource_tbi, ch_germline_resource_tbi_version) = TABIX_GERMLINE_RESOURCE(germline_resource.map{ it -> [[id:it[0].baseName], it] })
-    (ch_known_indels_tbi,      ch_known_indels_tbi_version)      = TABIX_KNOWN_INDELS(known_indels.map{ it -> [[id:it[0].baseName], it] })
-    (ch_pon_tbi,               ch_pon_tbi_version)               = TABIX_PON(pon.map{ it -> [[id:it[0].baseName], it] })
-    (ch_msisensorpro_scan,     ch_msisensorpro_scan_version)     = MSISENSORPRO_SCAN(fasta.map{ it -> [[id:it[0].baseName], it] })
+    TABIX_DBSNP(dbsnp.map{ it -> [[id:it[0].baseName], it] })
+    TABIX_GERMLINE_RESOURCE(germline_resource.map{ it -> [[id:it[0].baseName], it] })
+    TABIX_KNOWN_INDELS(known_indels.map{ it -> [[id:it[0].baseName], it] })
+    TABIX_PON(pon.map{ it -> [[id:it[0].baseName], it] })
+    MSISENSORPRO_SCAN(fasta.map{ it -> [[id:it[0].baseName], it] })
 
-    ch_dbsnp_tbi             = ch_dbsnp_tbi.map{ meta, tbi -> [tbi] }
-    ch_germline_resource_tbi = ch_germline_resource_tbi.map{ meta, tbi -> [tbi] }
-    ch_known_indels_tbi      = ch_known_indels_tbi.map{ meta, tbi -> [tbi] }
-    ch_pon_tbi               = ch_pon_tbi.map{ meta, tbi -> [tbi] }
-    ch_msisensorpro_scan     = ch_msisensorpro_scan.map{ meta, list -> [list] }
+    ch_dbsnp_tbi             = TABIX_DBSNP.out.tbi.map{ meta, tbi -> [tbi] }
+    ch_germline_resource_tbi = TABIX_GERMLINE_RESOURCE.out.tbi.map{ meta, tbi -> [tbi] }
+    ch_known_indels_tbi      = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }
+    ch_pon_tbi               = TABIX_PON.out.tbi.map{ meta, tbi -> [tbi] }
+    ch_msisensorpro_scan     = MSISENSORPRO_SCAN.out.list.map{ meta, list -> [list] }
 
-    ch_versions = ch_versions.mix(ch_dbsnp_tbi_version)
-    ch_versions = ch_versions.mix(ch_germline_resource_tbi)
-    ch_versions = ch_versions.mix(ch_known_indels_tbi_version)
-    ch_versions = ch_versions.mix(ch_pon_tbi_version)
-    ch_versions = ch_versions.mix(ch_msisensorpro_scan_version)
+    ch_versions = ch_versions.mix(TABIX_DBSNP.out.versions)
+    ch_versions = ch_versions.mix(TABIX_GERMLINE_RESOURCE.out.versions)
+    ch_versions = ch_versions.mix(TABIX_KNOWN_INDELS.out.versions)
+    ch_versions = ch_versions.mix(TABIX_PON.out.versions)
+    ch_versions = ch_versions.mix(MSISENSORPRO_SCAN.out.versions)
 
     ch_intervals                        = Channel.empty()
     ch_intervals_bed_gz_tbi             = Channel.empty()
-    ch_intervals_combined_bed_gz_tbi    = Channel.empty()     //Create bed.gz and bed.gz.tbi for input/or created interval file. It contains ALL regions.
+    ch_intervals_combined_bed_gz_tbi    = Channel.empty() //Create bed.gz and bed.gz.tbi for input/or created interval file. It contains ALL regions.
 
     tabix_in_combined = Channel.empty()
 
@@ -126,17 +127,17 @@ workflow PREPARE_GENOME {
     }
 
     emit:
-        bwa                              = ch_bwa                               // path: {bwa,bwamem2}/index
-        dbsnp_tbi                        = ch_dbsnp_tbi                         // path: dbsnb.vcf.gz.tbi
-        dict                             = ch_dict                              // path: genome.fasta.dict
-        fasta_fai                        = ch_fasta_fai                         // path: genome.fasta.fai
-        germline_resource_tbi            = ch_germline_resource_tbi             // path: germline_resource.vcf.gz.tbi
-        known_indels_tbi                 = ch_known_indels_tbi.collect()        // path: {known_indels*}.vcf.gz.tbi
-        msisensorpro_scan                = ch_msisensorpro_scan                 // path: genome_msi.list
-        pon_tbi                          = ch_pon_tbi                           // path: pon.vcf.gz.tbi
-        intervals_bed                    = ch_intervals                         // path: intervals.bed                        [intervals split for parallel execution]
-        intervals_bed_gz_tbi             = ch_intervals_bed_gz_tbi              // path: target.bed.gz, target.bed.gz.tbi     [intervals split for parallel execution]
-        intervals_combined_bed_gz_tbi    = ch_intervals_combined_bed_gz_tbi     // path: interval.bed.gz, interval.bed.gz.tbi [all intervals in one file]
+        bwa                              = ch_bwa                           // path: {bwamem1,bwamem2}/index
+        dbsnp_tbi                        = ch_dbsnp_tbi                     // path: dbsnb.vcf.gz.tbi
+        dict                             = ch_dict                          // path: genome.fasta.dict
+        fasta_fai                        = ch_fasta_fai                     // path: genome.fasta.fai
+        germline_resource_tbi            = ch_germline_resource_tbi         // path: germline_resource.vcf.gz.tbi
+        known_indels_tbi                 = ch_known_indels_tbi.collect()    // path: {known_indels*}.vcf.gz.tbi
+        msisensorpro_scan                = ch_msisensorpro_scan             // path: genome_msi.list
+        pon_tbi                          = ch_pon_tbi                       // path: pon.vcf.gz.tbi
+        intervals_bed                    = ch_intervals                     // path: intervals.bed                        [intervals split for parallel execution]
+        intervals_bed_gz_tbi             = ch_intervals_bed_gz_tbi          // path: target.bed.gz, target.bed.gz.tbi     [intervals split for parallel execution]
+        intervals_combined_bed_gz_tbi    = ch_intervals_combined_bed_gz_tbi // path: interval.bed.gz, interval.bed.gz.tbi [all intervals in one file]
 
-        versions                         = ch_versions                          // channel: [ versions.yml ]
+        versions                         = ch_versions                      // channel: [ versions.yml ]
 }
