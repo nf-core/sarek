@@ -6,7 +6,6 @@ include { BWAMEM2_MEM                     } from '../../../modules/nf-core/modul
 include { BWA_MEM as BWAMEM1_MEM          } from '../../../modules/nf-core/modules/bwa/mem/main'
 include { SAMTOOLS_INDEX as INDEX_MAPPING } from '../../../modules/local/samtools/index/main'
 include { SAMTOOLS_MERGE as MERGE_MAPPING } from '../../../modules/nf-core/modules/samtools/merge/main'
-include { SEQKIT_SPLIT2                   } from '../../../modules/nf-core/modules/seqkit/split2/main'
 
 workflow GATK4_MAPPING {
     take:
@@ -19,28 +18,8 @@ workflow GATK4_MAPPING {
 
     ch_versions = Channel.empty()
 
-    reads_input = reads_input.map{ meta, reads ->
-        meta.size = 1
-        [meta, reads]
-    }
-
-    SEQKIT_SPLIT2(reads_input)
-
-    reads_input_split = SEQKIT_SPLIT2.out.reads.map{ key, reads ->
-        //TODO maybe this can be replaced by a regex to include part_001 etc.
-
-        //sorts list of split fq files by :
-        //[R1.part_001, R2.part_001, R1.part_002, R2.part_002,R1.part_003, R2.part_003,...]
-        //TODO: determine whether it is possible to have an uneven number of parts, so remainder: true woud need to be used, I guess this could be possible for unfiltered reads, reads that don't have pairs etc.
-        read_files = reads.sort{ a,b -> a.getName().tokenize('.')[ a.getName().tokenize('.').size() - 3] <=> b.getName().tokenize('.')[ b.getName().tokenize('.').size() - 3]}.collate(2)
-        key.size = read_files.size()
-        [key, read_files]
-    }.transpose()
-
-    reads_input_all = reads_input.mix(reads_input_split)
-
-    BWAMEM1_MEM(reads_input_all, bwa, true)
-    BWAMEM2_MEM(reads_input_all, bwa, true)
+    BWAMEM1_MEM(reads_input, bwa, true)
+    BWAMEM2_MEM(reads_input, bwa, true)
 
     ch_versions = ch_versions.mix(BWAMEM1_MEM.out.versions.first())
     ch_versions = ch_versions.mix(BWAMEM2_MEM.out.versions.first())

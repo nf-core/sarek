@@ -118,40 +118,43 @@ umi_read_structure   = params.umi_read_structure   ? "${params.umi_read_structur
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
 
 // Create samplesheets to restart from different steps
-include { MAPPING_CSV               } from '../subworkflows/local/mapping_csv'
-include { MARKDUPLICATES_CSV        } from '../subworkflows/local/markduplicates_csv'
-include { PREPARE_RECALIBRATION_CSV } from '../subworkflows/local/prepare_recalibration_csv'
-include { RECALIBRATE_CSV           } from '../subworkflows/local/recalibrate_csv'
+include { MAPPING_CSV                } from '../subworkflows/local/mapping_csv'
+include { MARKDUPLICATES_CSV         } from '../subworkflows/local/markduplicates_csv'
+include { PREPARE_RECALIBRATION_CSV  } from '../subworkflows/local/prepare_recalibration_csv'
+include { RECALIBRATE_CSV            } from '../subworkflows/local/recalibrate_csv'
 
 // Build indices if needed
-include { PREPARE_GENOME            } from '../subworkflows/local/prepare_genome'
+include { PREPARE_GENOME             } from '../subworkflows/local/prepare_genome'
 
 // Convert BAM files to FASTQ files
-include { ALIGNMENT_TO_FASTQ } from '../subworkflows/local/bam2fastq'
+include { ALIGNMENT_TO_FASTQ         } from '../subworkflows/local/bam2fastq'
+
+// Split FASTQ files
+include { SPLIT_FASTQ                } from '../subworkflows/local/split_fastq'
 
 // Map input reads to reference genome
-include { GATK4_MAPPING             } from '../subworkflows/nf-core/gatk4_mapping/main'
+include { GATK4_MAPPING              } from '../subworkflows/nf-core/gatk4_mapping/main'
 
 // Mark duplicates (+QC) + convert to CRAM
-include { MARKDUPLICATES            } from '../subworkflows/nf-core/markduplicates'
+include { MARKDUPLICATES             } from '../subworkflows/nf-core/markduplicates'
 
 // Create recalibration tables
-include { PREPARE_RECALIBRATION     } from '../subworkflows/nf-core/prepare_recalibration'
+include { PREPARE_RECALIBRATION      } from '../subworkflows/nf-core/prepare_recalibration'
 
 // Create recalibrated cram files to use for variant calling (+QC)
-include { RECALIBRATE               } from '../subworkflows/nf-core/recalibrate'
+include { RECALIBRATE                } from '../subworkflows/nf-core/recalibrate'
 
 // Variant calling on a single normal sample
-include { GERMLINE_VARIANT_CALLING  } from '../subworkflows/local/germline_variant_calling'
+include { GERMLINE_VARIANT_CALLING   } from '../subworkflows/local/germline_variant_calling'
 
 // Variant calling on a single tumor sample
-include { TUMOR_ONLY_VARIANT_CALLING} from '../subworkflows/local/tumor_variant_calling'
+include { TUMOR_ONLY_VARIANT_CALLING } from '../subworkflows/local/tumor_variant_calling'
 
 // Variant calling on tumor/normal pair
-include { PAIR_VARIANT_CALLING      } from '../subworkflows/local/pair_variant_calling'
+include { PAIR_VARIANT_CALLING       } from '../subworkflows/local/pair_variant_calling'
 
 // Annotation
-include { ANNOTATE                     } from '../subworkflows/local/annotate' addParams(
+include { ANNOTATE                   } from '../subworkflows/local/annotate' addParams(
     annotation_cache:                  params.annotation_cache
 )
 
@@ -269,8 +272,15 @@ workflow SAREK {
             ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ.out.versions)
         }
 
-        // STEP 1: MAPPING READS TO REFERENCE GENOME
         // OPTIONNAL SPLIT OF FASTQ FILES WITH SEQKIT_SPLIT2
+        SPLIT_FASTQ(reads_input)
+
+        reads_input_for_mapping = SPLIT_FASTQ.out.reads
+
+        // Get versions from all software used
+        ch_versions = ch_versions.mix(SPLIT_FASTQ.out.versions)
+
+        // STEP 1: MAPPING READS TO REFERENCE GENOME
         GATK4_MAPPING(
             reads_input,
             bwa,
