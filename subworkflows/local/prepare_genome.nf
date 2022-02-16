@@ -44,9 +44,9 @@ workflow PREPARE_GENOME {
 
     if (fasta_fai) ch_fasta_fai = fasta_fai
     else {
-        (ch_fasta_fai, ch_fasta_fai_version) = SAMTOOLS_FAIDX(fasta.map{ it -> [[id:it[0].getName()], it]})
+        (ch_fasta_fai, ch_fasta_fai_version) = SAMTOOLS_FAIDX(fasta.map{ it -> [[id:it[0].getName()], it] })
         ch_fasta_fai = ch_fasta_fai.map{ meta, fai -> [fai] }
-        ch_versions = ch_versions.mix(ch_fasta_fai_version)
+        ch_versions  = ch_versions.mix(ch_fasta_fai_version)
     }
 
     (ch_dbsnp_tbi,             ch_dbsnp_tbi_version)             = TABIX_DBSNP(dbsnp.map{ it -> [[id:it[0].baseName], it] })
@@ -72,33 +72,28 @@ workflow PREPARE_GENOME {
     ch_intervals_combined_bed_gz_tbi    = Channel.empty()     //Create bed.gz and bed.gz.tbi for input/or created interval file. It contains ALL regions.
 
     tabix_in_combined = Channel.empty()
-    if (params.no_intervals) {
 
+    if (params.no_intervals) {
         file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
         ch_intervals = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
         tabix_in_combined = ch_intervals.map{it -> [[id:it.getName()], it] }
-
     } else if (params.step != "annotate" && params.step != "controlfreec") {
-        if (!params.intervals){
-
+        if (!params.intervals) {
             BUILD_INTERVALS(ch_fasta_fai)
             tabix_in_combined = BUILD_INTERVALS.out.bed.map{it -> [[id:it.getName()], it] }
             ch_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS.out.bed)
-
         }else{
-
             tabix_in_combined = Channel.fromPath(file(params.intervals)).map{it -> [[id:it.baseName], it] }
-            if(!params.intervals.endsWith(".bed")){
+            if(!params.intervals.endsWith(".bed")) {
                 GATK4_INTERVALLISTTOBED(tabix_in_combined)
                 tabix_in_combined = GATK4_INTERVALLISTTOBED.out.bed
                 ch_versions = ch_versions.mix(GATK4_INTERVALLISTTOBED.out.versions)
             }
             ch_intervals = CREATE_INTERVALS_BED(file(params.intervals))
-
         }
     }
 
-    if (params.step != "annotate" && params.step != "controlfreec"){
+    if (params.step != "annotate" && params.step != "controlfreec") {
 
         TABIX_BGZIPTABIX_INTERVAL_ALL(tabix_in_combined)
         ch_intervals_combined_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_ALL.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi] }
