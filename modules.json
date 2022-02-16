@@ -76,7 +76,7 @@
                 "git_sha": "e20e57f90b6787ac9a010a980cf6ea98bd990046"
             },
             "gatk4/genotypegvcfs": {
-                "git_sha": "598d7abdb2a8df1aa3471c48d9186a9e3465983f"
+                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "gatk4/getpileupsummaries": {
                 "git_sha": "f5d5926516d2319c1af83fb4b33834cc4461ce62"

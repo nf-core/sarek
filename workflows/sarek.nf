@@ -61,7 +61,9 @@ input_sample = extract_csv(csv_file)
 
 def save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? true : false
 
-if(params.wes){
+if (params.no_intervals){
+// pass
+}else if(params.wes){
     if(!params.intervals.endsWith("bed")){
         exit 1, "Target file must be in BED format"
     }
