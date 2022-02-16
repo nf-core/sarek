@@ -27,71 +27,45 @@ workflow PREPARE_GENOME {
         germline_resource // channel: [optional]  germline_resource
         known_indels      // channel: [optional]  known_indels
         pon               // channel: [optional]  pon
-        tools             // value:   [mandatory] tools
-        step              // value:   [mandatory] step
 
     main:
 
-    if(!tools) tools = ""
-
     ch_versions = Channel.empty()
 
-    ch_bwa = Channel.empty()
-    if (!(params.bwa) && 'mapping' in step) {
-        (ch_bwa, ch_bwa_version) = BWAMEM1_INDEX(fasta)
-        (ch_bwa, ch_bwa_version) = BWAMEM2_INDEX(fasta)
-        ch_versions = ch_versions.mix(ch_bwa_version)
-    }
+    (ch_bwa1, ch_bwa_version) = BWAMEM1_INDEX(fasta)
+    (ch_bwa2, ch_bwa_version) = BWAMEM2_INDEX(fasta)
 
-    ch_dict = Channel.empty()
-    if (!(params.dict) && !('annotate' in step) && !('controlfreec' in step)) {
-        GATK4_CREATESEQUENCEDICTIONARY(fasta)
-        ch_dict = GATK4_CREATESEQUENCEDICTIONARY.out.dict
-        ch_versions = ch_versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
-    }
+    ch_bwa = ch_bwa1.mix(ch_bwa2)
+    ch_versions = ch_versions.mix(ch_bwa_version)
 
-    ch_fasta_fai = Channel.empty()
+    (ch_dict, ch_dict_version) = GATK4_CREATESEQUENCEDICTIONARY(fasta)
+
+    ch_versions = ch_versions.mix(ch_dict_version)
+
     if (fasta_fai) ch_fasta_fai = fasta_fai
-    if (!(params.fasta_fai) && !('annotate' in step)) {
-        SAMTOOLS_FAIDX(fasta.map{ it -> [[id:it[0].getName()], it]})
-        ch_fasta_fai = SAMTOOLS_FAIDX.out.fai.map{ meta, fai -> [fai] }
-        ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
+    else {
+        (ch_fasta_fai, ch_fasta_fai_version) = SAMTOOLS_FAIDX(fasta.map{ it -> [[id:it[0].getName()], it]})
+        ch_fasta_fai = ch_fasta_fai.map{ meta, fai -> [fai] }
+        ch_versions = ch_versions.mix(ch_fasta_fai_version)
     }
 
-    ch_dbsnp_tbi = Channel.empty()
-    if (!(params.dbsnp_tbi) && params.dbsnp && ('mapping' in step || 'prepare_recalibration' in step || tools.contains('controlfreec') || tools.contains('haplotypecaller') || tools.contains('mutect2') || tools.contains('tnscope'))) {
-        TABIX_DBSNP(dbsnp.map{ it -> [[id:it[0].baseName], it] })
-        ch_dbsnp_tbi = TABIX_DBSNP.out.tbi.map{ meta, tbi -> [tbi] }
-        ch_versions = ch_versions.mix(TABIX_DBSNP.out.versions)
-    }
+    (ch_dbsnp_tbi,             ch_dbsnp_tbi_version)             = TABIX_DBSNP(dbsnp.map{ it -> [[id:it[0].baseName], it] })
+    (ch_germline_resource_tbi, ch_germline_resource_tbi_version) = TABIX_GERMLINE_RESOURCE(germline_resource.map{ it -> [[id:it[0].baseName], it] })
+    (ch_known_indels_tbi,      ch_known_indels_tbi_version)      = TABIX_KNOWN_INDELS(known_indels.map{ it -> [[id:it[0].baseName], it] })
+    (ch_pon_tbi,               ch_pon_tbi_version)               = TABIX_PON(pon.map{ it -> [[id:it[0].baseName], it] })
+    (ch_msisensorpro_scan,     ch_msisensorpro_scan_version)     = MSISENSORPRO_SCAN(fasta.map{ it -> [[id:it[0].baseName], it] })
 
-    ch_germline_resource_tbi = Channel.empty()
-    if (!(params.germline_resource_tbi) && params.germline_resource && tools.contains('mutect2')) {
-        TABIX_GERMLINE_RESOURCE(germline_resource.map{ it -> [[id:it[0].baseName], it] })
-        ch_germline_resource_tbi = TABIX_GERMLINE_RESOURCE.out.tbi.map{ meta, tbi -> [tbi] }
-        ch_versions = ch_versions.mix(TABIX_GERMLINE_RESOURCE.out.versions)
-    }
+    ch_dbsnp_tbi             = ch_dbsnp_tbi.map{ meta, tbi -> [tbi] }
+    ch_germline_resource_tbi = ch_germline_resource_tbi.map{ meta, tbi -> [tbi] }
+    ch_known_indels_tbi      = ch_known_indels_tbi.map{ meta, tbi -> [tbi] }
+    ch_pon_tbi               = ch_pon_tbi.map{ meta, tbi -> [tbi] }
+    ch_msisensorpro_scan     = ch_msisensorpro_scan.map{ meta, list -> [list] }
 
-    ch_known_indels_tbi = Channel.empty()
-    if (!(params.known_indels_tbi) && params.known_indels && ('mapping' in step || 'prepare_recalibration' in step)) {
-        TABIX_KNOWN_INDELS(known_indels.map{ it -> [[id:it[0].baseName], it] })
-        ch_known_indels_tbi = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }
-        ch_versions = ch_versions.mix(TABIX_KNOWN_INDELS.out.versions)
-    }
-
-    ch_pon_tbi = Channel.empty()
-    if (!(params.pon_tbi) && params.pon && (tools.contains('tnscope') || tools.contains('mutect2'))) {
-        TABIX_PON(pon.map{ it -> [[id:it[0].baseName], it] })
-        ch_pon_tbi = TABIX_PON.out.tbi.map{ meta, tbi -> [tbi] }
-        ch_versions = ch_versions.mix(TABIX_PON.out.versions)
-    }
-
-    ch_msisensorpro_scan = Channel.empty()
-    if (tools.contains('msisensorpro')) {
-        MSISENSORPRO_SCAN(fasta.map{it -> [[id:it[0].baseName], it]})
-        ch_msisensorpro_scan = MSISENSORPRO_SCAN.out.list.map{ meta, list -> list}
-        ch_versions = ch_versions.mix(MSISENSORPRO_SCAN.out.versions)
-    }
+    ch_versions = ch_versions.mix(ch_dbsnp_tbi_version)
+    ch_versions = ch_versions.mix(ch_germline_resource_tbi)
+    ch_versions = ch_versions.mix(ch_known_indels_tbi_version)
+    ch_versions = ch_versions.mix(ch_pon_tbi_version)
+    ch_versions = ch_versions.mix(ch_msisensorpro_scan_version)
 
     ch_intervals                        = Channel.empty()
     ch_intervals_bed_gz_tbi             = Channel.empty()
@@ -104,7 +78,7 @@ workflow PREPARE_GENOME {
         ch_intervals = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
         tabix_in_combined = ch_intervals.map{it -> [[id:it.getName()], it] }
 
-    } else if (!('annotate' in step) && !('controlfreec' in step)) {
+    } else if (params.step != "annotate" && params.step != "controlfreec") {
         if (!params.intervals){
 
             BUILD_INTERVALS(ch_fasta_fai)
@@ -124,7 +98,7 @@ workflow PREPARE_GENOME {
         }
     }
 
-    if (!('annotate' in step) && !('controlfreec' in step)){
+    if (params.step != "annotate" && params.step != "controlfreec"){
 
         TABIX_BGZIPTABIX_INTERVAL_ALL(tabix_in_combined)
         ch_intervals_combined_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_ALL.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi] }

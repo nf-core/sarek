@@ -89,7 +89,7 @@ chr_dir           = params.chr_dir           ? Channel.fromPath(params.chr_dir).
 chr_length        = params.chr_length        ? Channel.fromPath(params.chr_length).collect()        : []
 dbsnp             = params.dbsnp             ? Channel.fromPath(params.dbsnp).collect()             : Channel.empty()
 fasta             = params.fasta             ? Channel.fromPath(params.fasta).collect()             : []
-germline_resource = params.germline_resource ? Channel.fromPath(params.germline_resource).collect() : []
+germline_resource = params.germline_resource ? Channel.fromPath(params.germline_resource).collect() : Channel.empty()
 known_indels      = params.known_indels      ? Channel.fromPath(params.known_indels).collect()      : Channel.empty()
 loci              = params.ac_loci           ? Channel.fromPath(params.ac_loci).collect()           : []
 loci_gc           = params.ac_loci_gc        ? Channel.fromPath(params.ac_loci_gc).collect()        : []
@@ -106,7 +106,7 @@ cadd_indels       = params.cadd_indels       ? Channel.fromPath(params.cadd_inde
 cadd_indels_tbi   = params.cadd_indels_tbi   ? Channel.fromPath(params.cadd_indels_tbi).collect()   : []
 cadd_wg_snvs      = params.cadd_wg_snvs      ? Channel.fromPath(params.cadd_wg_snvs).collect()      : []
 cadd_wg_snvs_tbi  = params.cadd_wg_snvs_tbi  ? Channel.fromPath(params.cadd_wg_snvs_tbi).collect()  : []
-pon               = params.pon               ? Channel.fromPath(params.pon).collect()               : []
+pon               = params.pon               ? Channel.fromPath(params.pon).collect()               : Channel.empty()
 snpeff_cache      = params.snpeff_cache      ? Channel.fromPath(params.snpeff_cache).collect()      : []
 //target_bed        = params.target_bed        ? Channel.fromPath(params.target_bed).collect()        : []
 vep_cache         = params.vep_cache         ? Channel.fromPath(params.vep_cache).collect()         : []
@@ -195,9 +195,7 @@ workflow SAREK {
         params.fasta_fai,
         germline_resource,
         known_indels,
-        pon,
-        params.tools,
-        params.step)
+        pon)
 
     // Gather built indices or get them from the params
     bwa                    = params.fasta                   ? params.bwa                   ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : []
