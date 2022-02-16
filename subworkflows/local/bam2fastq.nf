@@ -2,7 +2,6 @@
 // BAM/CRAM to FASTQ conversion, paired end only
 //
 
-
 //include { FASTQC                 } from '../../modules/nf-core/modules/fastqc/main'
 include { SAMTOOLS_INDEX                                    } from '../../modules/nf-core/modules/samtools/index/main'
 include { SAMTOOLS_VIEW as SAMTOOLS_VIEW_MAP_MAP            } from '../../modules/nf-core/modules/samtools/view/main'
@@ -18,7 +17,6 @@ workflow ALIGNMENT_TO_FASTQ {
     take:
     input // channel: [meta, alignment (BAM or CRAM), index (optional)]
     fasta // optional: reference file if CRAM format and reference not in header
-
 
     main:
     ch_versions = Channel.empty()
@@ -44,10 +42,10 @@ workflow ALIGNMENT_TO_FASTQ {
 
     // Merge UNMAP
     SAMTOOLS_VIEW_UNMAP_UNMAP.out.bam.join(SAMTOOLS_VIEW_UNMAP_MAP.out.bam, remainder: true)
-                .join(SAMTOOLS_VIEW_MAP_UNMAP.out.bam, remainder: true)
-                .map{ meta, unmap_unmap, unmap_map, map_unmap ->
-                    [meta, [unmap_unmap, unmap_map, map_unmap]]
-                }.set{ all_unmapped_bam }
+        .join(SAMTOOLS_VIEW_MAP_UNMAP.out.bam, remainder: true)
+        .map{ meta, unmap_unmap, unmap_map, map_unmap ->
+            [meta, [unmap_unmap, unmap_map, map_unmap]]
+        }.set{ all_unmapped_bam }
 
     SAMTOOLS_MERGE_UNMAPPED(all_unmapped_bam, fasta)
     ch_versions = ch_versions.mix(SAMTOOLS_MERGE_UNMAPPED.out.versions)
@@ -62,20 +60,20 @@ workflow ALIGNMENT_TO_FASTQ {
 
     // join Mapped & unmapped fastq
     SAMTOOLS_FASTQ_UNMAPPED.out.reads.map{ meta, reads ->
-                fq_1 = reads.findAll{ it.toString().endsWith("_1.fq.gz") }.get(0)
-                fq_2 = reads.findAll{ it.toString().endsWith("_2.fq.gz") }.get(0)
-                [meta, [ fq_1, fq_2]]
-                }.set{unmapped_reads}
+        fq_1 = reads.findAll{ it.toString().endsWith("_1.fq.gz") }.get(0)
+        fq_2 = reads.findAll{ it.toString().endsWith("_2.fq.gz") }.get(0)
+        [meta, [ fq_1, fq_2]]
+        }.set{unmapped_reads}
 
     SAMTOOLS_FASTQ_MAPPED.out.reads.map{ meta, reads ->
-                fq_1 = reads.findAll{ it.toString().endsWith("_1.fq.gz") }.get(0)
-                fq_2 = reads.findAll{ it.toString().endsWith("_2.fq.gz") }.get(0)
-                [meta, [ fq_1, fq_2]]
-                }.set{mapped_reads}
+        fq_1 = reads.findAll{ it.toString().endsWith("_1.fq.gz") }.get(0)
+        fq_2 = reads.findAll{ it.toString().endsWith("_2.fq.gz") }.get(0)
+        [meta, [ fq_1, fq_2]]
+        }.set{mapped_reads}
 
     mapped_reads.join(unmapped_reads).map{ meta, mapped_reads, unmapped_reads ->
-                                [meta, [mapped_reads[0], mapped_reads[1], unmapped_reads[0], unmapped_reads[1]]]
-                                }.set{ reads_to_concat }
+        [meta, [mapped_reads[0], mapped_reads[1], unmapped_reads[0], unmapped_reads[1]]]
+        }.set{ reads_to_concat }
 
     // Concatenate Mapped_R1 with Unmapped_R1 and Mapped_R2 with Unmapped_R2
     CAT_FASTQ(reads_to_concat)
@@ -84,5 +82,4 @@ workflow ALIGNMENT_TO_FASTQ {
     emit:
     reads       = CAT_FASTQ.out.reads
     versions    = ch_versions
-
 }
