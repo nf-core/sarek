@@ -2,120 +2,81 @@
 // MARKDUPLICATES AND/OR QC after mapping
 //
 
-include { GATK4_ESTIMATELIBRARYCOMPLEXITY                  } from '../../modules/nf-core/modules/gatk4/estimatelibrarycomplexity/main'
-include { GATK4_MARKDUPLICATES                             } from '../../modules/nf-core/modules/gatk4/markduplicates/main'
-include { GATK4_MARKDUPLICATES_SPARK                       } from '../../modules/local/gatk4/markduplicatesspark/main'
-include { QUALIMAP_BAMQC                                   } from '../../modules/local/qualimap/bamqc/main'
-include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES           } from '../../modules/local/samtools/index/main'
-include { SAMTOOLS_STATS                                   } from '../../modules/nf-core/modules/samtools/stats/main'
-include { SAMTOOLS_VIEWINDEX as SAMTOOLS_BAM_TO_CRAM       } from '../../modules/local/samtools/viewindex/main'
-include { SAMTOOLS_VIEWINDEX as SAMTOOLS_BAM_TO_CRAM_SPARK } from '../../modules/local/samtools/viewindex/main'
-include { DEEPTOOLS_BAMCOVERAGE                            } from '../../modules/local/deeptools/bamcoverage'
+include { DEEPTOOLS_BAMCOVERAGE                                    } from '../../modules/local/deeptools/bamcoverage'
+include { GATK4_ESTIMATELIBRARYCOMPLEXITY                          } from '../../modules/nf-core/modules/gatk4/estimatelibrarycomplexity/main'
+include { GATK4_MARKDUPLICATES                                     } from '../../modules/nf-core/modules/gatk4/markduplicates/main'
+include { GATK4_MARKDUPLICATES_SPARK                               } from '../../modules/local/gatk4/markduplicatesspark/main'
+include { QUALIMAP_BAMQC                                           } from '../../modules/local/qualimap/bamqc/main'
+include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES                   } from '../../modules/local/samtools/index/main'
+include { SAMTOOLS_STATS                                           } from '../../modules/nf-core/modules/samtools/stats/main'
+include { SAMTOOLS_VIEWINDEX as SAMTOOLS_BAM_TO_CRAM_DUPLICATES    } from '../../modules/local/samtools/viewindex/main'
+include { SAMTOOLS_VIEWINDEX as SAMTOOLS_BAM_TO_CRAM_NO_DUPLICATES } from '../../modules/local/samtools/viewindex/main'
+include { SAMTOOLS_VIEWINDEX as SAMTOOLS_BAM_TO_CRAM_SPARK         } from '../../modules/local/samtools/viewindex/main'
 
 workflow MARKDUPLICATES {
     take:
-        bam_mapped                      // channel: [mandatory, if --skip_markdiplicate is false, else optional] meta, bam
-        bam_indexed                     // channel: [mandatory, if --skip_markduplicates is set, else optional] meta, bam, bai
-        use_gatk_spark                  //   value: [mandatory] use gatk spark
-        save_metrics                    //   value: [mandatory] save metrics
+        bam_mapped                      // channel: [mandatory, if no --skip_tools markduplicates, else optional] meta, bam
+        bam_indexed                     // channel: [mandatory, if --skip_tools markduplicates, else optional] meta, bam, bai
         dict                            // channel: [mandatory] dict
         fasta                           // channel: [mandatory] fasta
         fasta_fai                       // channel: [mandatory] fasta_fai
-        skip_markduplicates             // boolean: true/false
-        skip_bamqc                      // boolean: true/false
-        skip_samtools                   // boolean: true/false
-        skip_coverage                   // boolean: true/false
         intervals_combined_bed_gz_tbi   // channel: [optional]  intervals_bed.gz, intervals_bed.gz.tbi
 
     main:
 
-    ch_versions           = Channel.empty()
-    report_markduplicates = Channel.empty()
+    ch_versions = Channel.empty()
+    qc_reports  = Channel.empty()
 
-    if (skip_markduplicates) {
-        bam_bai_markduplicates = bam_indexed
-        SAMTOOLS_BAM_TO_CRAM(bam_bai_markduplicates, fasta, fasta_fai)
-        cram_markduplicates = SAMTOOLS_BAM_TO_CRAM.out.cram_crai
+    SAMTOOLS_BAM_TO_CRAM_NO_DUPLICATES(bam_indexed, fasta, fasta_fai)
+    cram_markduplicates = SAMTOOLS_BAM_TO_CRAM_NO_DUPLICATES.out.cram_crai
 
-        ch_versions = ch_versions.mix(SAMTOOLS_BAM_TO_CRAM.out.versions.first())
-    } else {
-        if (use_gatk_spark) {
-            //If BAMQC should be run on MD output, then don't use MDSpark to convert to cram, but use bam output instead
-            if (!skip_bamqc || !skip_coverage) {
-                GATK4_MARKDUPLICATES_SPARK(bam_mapped, fasta, fasta_fai, dict, "bam")
-                INDEX_MARKDUPLICATES(GATK4_MARKDUPLICATES_SPARK.out.output)
-                bam_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.output.join(INDEX_MARKDUPLICATES.out.bam_bai)
+    ch_versions = ch_versions.mix(SAMTOOLS_BAM_TO_CRAM_NO_DUPLICATES.out.versions.first())
 
-                SAMTOOLS_BAM_TO_CRAM_SPARK(bam_markduplicates, fasta, fasta_fai)
-                cram_markduplicates = SAMTOOLS_BAM_TO_CRAM_SPARK.out.cram_crai
+    GATK4_MARKDUPLICATES_SPARK(bam_mapped, fasta, fasta_fai, dict)
+    INDEX_MARKDUPLICATES(GATK4_MARKDUPLICATES_SPARK.out.output)
 
-                ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES_SPARK.out.versions.first())
-                ch_versions = ch_versions.mix(INDEX_MARKDUPLICATES.out.versions.first())
-                ch_versions = ch_versions.mix(SAMTOOLS_BAM_TO_CRAM_SPARK.out.versions.first())
-            } else {
-                GATK4_MARKDUPLICATES_SPARK(bam_mapped, fasta, fasta_fai, dict, "cram")
-                INDEX_MARKDUPLICATES(GATK4_MARKDUPLICATES_SPARK.out.output)
-                cram_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.output.join(INDEX_MARKDUPLICATES.out.crai)
+    //If BAMQC should be run on MD output, then don't use MDSpark to convert to cram, but use bam output instead
+    bam_markduplicates  = GATK4_MARKDUPLICATES_SPARK.out.output.join(INDEX_MARKDUPLICATES.out.bam_bai)
+    cram_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.output.join(INDEX_MARKDUPLICATES.out.cram_crai)
 
-                ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES_SPARK.out.versions.first())
-                ch_versions = ch_versions.mix(INDEX_MARKDUPLICATES.out.versions.first())
-            }
+    SAMTOOLS_BAM_TO_CRAM_SPARK(bam_markduplicates, fasta, fasta_fai)
+    cram_markduplicates = SAMTOOLS_BAM_TO_CRAM_SPARK.out.cram_crai
 
-            if (save_metrics) {
-                GATK4_ESTIMATELIBRARYCOMPLEXITY(bam_mapped, fasta, fasta_fai, dict)
-                report_markduplicates = GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics
+    cram_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.output.join(INDEX_MARKDUPLICATES.out.cram_crai)
 
-                ch_versions = ch_versions.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.versions.first())
-            }
+    ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES_SPARK.out.versions.first())
+    ch_versions = ch_versions.mix(INDEX_MARKDUPLICATES.out.versions.first())
+    ch_versions = ch_versions.mix(SAMTOOLS_BAM_TO_CRAM_SPARK.out.versions.first())
 
-        } else {
-            GATK4_MARKDUPLICATES(bam_mapped)
-            report_markduplicates  = GATK4_MARKDUPLICATES.out.metrics
-            bam_markduplicates     = GATK4_MARKDUPLICATES.out.bam
-            bai_markduplicates     = GATK4_MARKDUPLICATES.out.bai
-            bam_bai_markduplicates = bam_markduplicates.join(bai_markduplicates)
+    GATK4_MARKDUPLICATES(bam_mapped)
+    SAMTOOLS_BAM_TO_CRAM_DUPLICATES(GATK4_MARKDUPLICATES.out.bam.join(GATK4_MARKDUPLICATES.out.bai), fasta, fasta_fai)
 
-            SAMTOOLS_BAM_TO_CRAM(bam_bai_markduplicates, fasta, fasta_fai)
-            cram_markduplicates = SAMTOOLS_BAM_TO_CRAM.out.cram_crai
+    cram_markduplicates = SAMTOOLS_BAM_TO_CRAM_DUPLICATES.out.cram_crai
 
-            ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES.out.versions.first())
-            ch_versions = ch_versions.mix(SAMTOOLS_BAM_TO_CRAM.out.versions.first())
-        }
-    }
+    qc_reports = qc_reports.mix(GATK4_MARKDUPLICATES.out.metrics)
 
-    //If skip_markduplicates then QC tools are run on mapped bams,
-    //if !skip_markduplicates, then QC tools are run on duplicate marked crams
-    //After bamqc finishes, convert to cram for further analysis
-    samtools_stats = Channel.empty()
-    if (!skip_samtools) {
-        SAMTOOLS_STATS(cram_markduplicates, fasta)
-        samtools_stats = SAMTOOLS_STATS.out.stats
+    ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES.out.versions.first())
+    ch_versions = ch_versions.mix(SAMTOOLS_BAM_TO_CRAM_DUPLICATES.out.versions.first())
 
-        ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions.first())
-    }
+    // GATK4_ESTIMATELIBRARYCOMPLEXITY is only run with SPARK, otherwise reports is from GATK4_MARKDUPLICATES
+    // If --skip_tools markduplicates then QC tools are run on mapped bams,
+    // If no --skip_tools markduplicates, then QC tools are run on duplicate marked crams
+    // After bamqc finishes, convert to cram for further analysis
 
-    qualimap_bamqc = Channel.empty()
-    if (!skip_bamqc) {
+    GATK4_ESTIMATELIBRARYCOMPLEXITY(bam_mapped, fasta, fasta_fai, dict)
+    SAMTOOLS_STATS(cram_markduplicates, fasta)
+    QUALIMAP_BAMQC(GATK4_MARKDUPLICATES.out.bam.join(GATK4_MARKDUPLICATES.out.bai), intervals_combined_bed_gz_tbi)
+    DEEPTOOLS_BAMCOVERAGE(GATK4_MARKDUPLICATES.out.bam.join(GATK4_MARKDUPLICATES.out.bai))
 
-        if(!params.wes || params.no_intervals) intervals_combined_bed_gz_tbi = [] //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
+    qc_reports = qc_reports.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics)
+    qc_reports = qc_reports.mix(SAMTOOLS_STATS.out.stats)
+    qc_reports = qc_reports.mix(QUALIMAP_BAMQC.out.results)
+    qc_reports = qc_reports.mix(DEEPTOOLS_BAMCOVERAGE.out.bigwig)
 
-        QUALIMAP_BAMQC(bam_bai_markduplicates, intervals_combined_bed_gz_tbi)
-        qualimap_bamqc = QUALIMAP_BAMQC.out.results
-
-        ch_versions = ch_versions.mix(QUALIMAP_BAMQC.out.versions.first())
-    }
-
-    deeptools_coverage = Channel.empty()
-    if (!skip_coverage) {
-
-        DEEPTOOLS_BAMCOVERAGE(bam_bai_markduplicates)
-        deeptools_coverage = DEEPTOOLS_BAMCOVERAGE.out.bigwig
-
-        ch_versions = ch_versions.mix(DEEPTOOLS_BAMCOVERAGE.out.versions)
-    }
-
-    qc_reports = samtools_stats.mix(qualimap_bamqc)
-    qc_reports = report_markduplicates.mix(qc_reports)
+    ch_versions = ch_versions.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.versions.first())
+    ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions.first())
+    ch_versions = ch_versions.mix(DEEPTOOLS_BAMCOVERAGE.out.versions)
+    ch_versions = ch_versions.mix(QUALIMAP_BAMQC.out.versions.first())
 
     emit:
         cram     = cram_markduplicates

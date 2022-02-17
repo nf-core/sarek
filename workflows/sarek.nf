@@ -255,11 +255,9 @@ workflow SAREK {
         // Get reads after optional trimming (+QC)
         reads_input = FASTQC_TRIMGALORE.out.reads
 
-        // Get all qc reports for MultiQC
-        qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
-        qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
-
-        // Get versions from all software used
+        // Get all qc reports + versions from all software used for MultiQC
+        qc_reports  = qc_reports.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
+        qc_reports  = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
         ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
 
         //Since read need additional mapping afterwards, I would argue for having the process here
@@ -306,37 +304,33 @@ workflow SAREK {
         bam_indexed = Channel.empty()
         bam_mapped  = Channel.empty()
 
-        if ('markduplicates' in params.skip_tools) {
-            bam_indexed = input_sample
-        } else { //index will be created down the road from the Markduplicatess
-            bam_mapped = input_sample.map{ meta, bam, bai -> [meta, bam] }
-        }
+        // index will be created down the road from Markduplicates
+        // bam_indexed should only have indexes if Markduplicates is skipped
+
+        if ('markduplicates' in params.skip_tools) bam_indexed = input_sample
+        else bam_mapped = input_sample.map{ meta, bam, bai -> [meta, bam] }
     }
 
     if (params.step in ['mapping', 'prepare_recalibration']) {
 
-        // STEP 2: Mark duplicates (+QC) + convert to CRAM
+    //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
+    intervals_combined_bed_gz_tbi_for_markduplicates = (!params.wes || params.no_intervals) ? [] : intervals_combined_bed_gz_tbi
+
+        // STEP 2: markduplicates (+QC) + convert to CRAM
         MARKDUPLICATES(
             bam_mapped,
             bam_indexed,
-            ('markduplicates' in params.use_gatk_spark),
-            !('markduplicates_report' in params.skip_tools),
             dict,
             fasta,
             fasta_fai,
-            ('markduplicates' in params.skip_tools),
-            ('bamqc' in params.skip_tools),
-            ('samtools' in params.skip_tools),
-            ('deeptools' in params.skip_tools),
-            intervals_bed_combined)
+            intervals_combined_bed_gz_tbi_for_markduplicates)
 
         cram_markduplicates = MARKDUPLICATES.out.cram
 
         // Create CSV to restart from this step
         MARKDUPLICATES_CSV(cram_markduplicates)
 
-        qc_reports = qc_reports.mix(MARKDUPLICATES.out.qc.collect{it[1]}.ifEmpty([]))
-
+        qc_reports  = qc_reports.mix(MARKDUPLICATES.out.qc.collect{it[1]}.ifEmpty([]))
         ch_versions = ch_versions.mix(MARKDUPLICATES.out.versions)
 
         // STEP 3: Create recalibration tables
@@ -388,9 +382,9 @@ workflow SAREK {
 
             RECALIBRATE_CSV(cram_recalibrated)
 
-            qc_reports = qc_reports.mix(cram_recalibrated_qc.collect{it[1]}.ifEmpty([]))
             cram_variant_calling = cram_recalibrated
 
+            qc_reports  = qc_reports.mix(cram_recalibrated_qc.collect{it[1]}.ifEmpty([]))
             ch_versions = ch_versions.mix(RECALIBRATE.out.versions)
 
         } else cram_variant_calling = cram_markduplicates
