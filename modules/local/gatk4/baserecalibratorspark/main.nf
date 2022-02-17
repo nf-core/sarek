@@ -18,6 +18,9 @@ process GATK4_BASERECALIBRATOR_SPARK {
     tuple val(meta), path("*.table"), emit: table
     path "versions.yml"             , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args  ?: ''
     def avail_mem = 3

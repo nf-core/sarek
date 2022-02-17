@@ -17,13 +17,16 @@ process CONCAT_VCF {
     tuple val(meta), path("${prefix}.vcf.gz.tbi"), emit: tbi
     path  "versions.yml"                         , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args  ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
     def target_options   = target_bed ? "-t ${target_bed}" : ""
-
     """
     concatenateVCFs.sh -i ${fasta_fai} -c ${task.cpus} -o ${prefix}.vcf ${target_options} $args
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         bcftools: \$(bcftools --version 2>&1 | head -n1 | sed 's/^.*bcftools //; s/ .*\$//')
