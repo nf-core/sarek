@@ -25,7 +25,7 @@ workflow SPLIT_FASTQ {
     // Empty channel when splitting fastq files
     if (params.split_fastq > 1) reads_no_split = Channel.empty()
 
-    // Remmaping the channel
+    // Remapping the channel
     reads_split = SEQKIT_SPLIT2.out.reads.map{ key, reads ->
         //TODO maybe this can be replaced by a regex to include part_001 etc.
 
