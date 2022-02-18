@@ -46,14 +46,14 @@ workflow MARKDUPLICATES {
 
     // Only one of these channel is not empty:
     // - skipping Markduplicates
-    // - running Markupduplicates spark with cram output
     // - running Markupduplicates spark with bam output
+    // - running Markupduplicates spark with cram output
     // - running Markupduplicates
     cram_markduplicates = Channel.empty().mix(
         SAMTOOLS_BAM_TO_CRAM_NO_DUPLICATES.out.cram_crai,
-        GATK4_MARKDUPLICATES_SPARK.out.output.join(INDEX_MARKDUPLICATES.out.cram_crai),
-        SAMTOOLS_BAM_TO_CRAM_DUPLICATES.out.cram_crai,
-        SAMTOOLS_BAM_TO_CRAM_SPARK.out.cram_crai)
+        SAMTOOLS_BAM_TO_CRAM_SPARK.out.cram_crai,
+        GATK4_MARKDUPLICATES_SPARK.out.output.join(INDEX_MARKDUPLICATES.out.cram_crai)
+        SAMTOOLS_BAM_TO_CRAM_DUPLICATES.out.cram_crai)
 
     // When running Marduplicates spark, and saving reports
     GATK4_ESTIMATELIBRARYCOMPLEXITY(bam_mapped, fasta, fasta_fai, dict)
