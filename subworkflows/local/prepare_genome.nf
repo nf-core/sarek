@@ -3,6 +3,10 @@
 //
 
 // Initialize channels based on params or indices that were just built
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
+// Condition is based on params.step and params.tools
+// If and extra condition exists, it's specified in comments
 
 include { BUILD_INTERVALS                                     } from '../../modules/local/build_intervals/main'
 include { BWA_INDEX as BWAMEM1_INDEX                          } from '../../modules/nf-core/modules/bwa/index/main'
@@ -32,10 +36,11 @@ workflow PREPARE_GENOME {
 
     ch_versions = Channel.empty()
 
-    BWAMEM1_INDEX(fasta)
-    BWAMEM2_INDEX(fasta)
+    BWAMEM1_INDEX(fasta) // params.aligner == bwa-mem
+    BWAMEM2_INDEX(fasta) // params.aligner == bwa-mem2
     GATK4_CREATESEQUENCEDICTIONARY(fasta)
 
+    // There can be only one (ore none), so ch_bwa contains the proper indexes
     ch_bwa  = BWAMEM1_INDEX.out.index.mix(BWAMEM2_INDEX.out.index)
     ch_dict = GATK4_CREATESEQUENCEDICTIONARY.out.dict
 
@@ -43,6 +48,10 @@ workflow PREPARE_GENOME {
     ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
     ch_versions = ch_versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
 
+    // fasta_fai is the one oddball here
+    // It can be generated from the fasta or can be provided
+    // And it can be used to generate intervals
+    // So we need to check if it is provided and if not, generate it
     if (fasta_fai) ch_fasta_fai = fasta_fai
     else {
         SAMTOOLS_FAIDX(fasta.map{ it -> [[id:it[0].getName()], it] })
