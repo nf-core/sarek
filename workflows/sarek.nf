@@ -230,6 +230,7 @@ workflow SAREK {
     intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi                      // multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
     intervals_bed_combined_gz_tbi = PREPARE_INTERVALS.out.intervals_combined_bed_gz_tbi.collect()   // one file containing all intervals interval.bed.gz/.tbi file
     intervals_bed_combined_gz     = intervals_bed_combined_gz_tbi.map{ bed, tbi -> [bed]}.collect() // one file containing all intervals interval.bed.gz file
+    intervals_combined_bed_gz_tbi_for_preprocessing = (!params.wes || params.no_intervals) ? [] : intervals_combined_bed_gz_tbi //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
 
     num_intervals = 0
     intervals.count().map{ num_intervals = it }
@@ -319,10 +320,6 @@ workflow SAREK {
     }
 
     if (params.step in ['mapping', 'prepare_recalibration']) {
-
-    //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
-    intervals_combined_bed_gz_tbi_for_markduplicates = (!params.wes || params.no_intervals) ? [] : intervals_combined_bed_gz_tbi
-
         // STEP 2: markduplicates (+QC) + convert to CRAM
         MARKDUPLICATES(
             bam_mapped,
@@ -330,7 +327,7 @@ workflow SAREK {
             dict,
             fasta,
             fasta_fai,
-            intervals_combined_bed_gz_tbi_for_markduplicates)
+            intervals_combined_bed_gz_tbi_for_preprocessing)
 
         cram_markduplicates = MARKDUPLICATES.out.cram
 
@@ -369,9 +366,6 @@ workflow SAREK {
         if (!('baserecalibrator' in params.skip_tools)) {
             // STEP 4: RECALIBRATING
             RECALIBRATE(
-                ('bqsr' in params.use_gatk_spark),
-                ('bamqc' in params.skip_tools),
-                ('samtools' in params.skip_tools),
                 cram_applybqsr,
                 dict,
                 fasta,
@@ -379,17 +373,13 @@ workflow SAREK {
                 intervals,
                 num_intervals,
                 params.no_intervals,
-                intervals_bed_combined
-            )
+                intervals_combined_bed_gz_tbi_for_preprocessing)
 
-            cram_recalibrated    = RECALIBRATE.out.cram
-            cram_recalibrated_qc = RECALIBRATE.out.qc
+            RECALIBRATE_CSV(RECALIBRATE.out.cram)
 
-            RECALIBRATE_CSV(cram_recalibrated)
+            cram_variant_calling = RECALIBRATE.out.cram
 
-            cram_variant_calling = cram_recalibrated
-
-            qc_reports  = qc_reports.mix(cram_recalibrated_qc.collect{it[1]}.ifEmpty([]))
+            qc_reports  = qc_reports.mix(RECALIBRATE.out.qc.collect{it[1]}.ifEmpty([]))
             ch_versions = ch_versions.mix(RECALIBRATE.out.versions)
 
         } else cram_variant_calling = cram_markduplicates
