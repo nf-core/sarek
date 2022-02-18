@@ -281,14 +281,12 @@ workflow SAREK {
         // OPTIONNAL SPLIT OF FASTQ FILES WITH SEQKIT_SPLIT2
         SPLIT_FASTQ(reads_input)
 
-        reads_input_for_mapping = SPLIT_FASTQ.out.reads
-
         // Get versions from all software used
         ch_versions = ch_versions.mix(SPLIT_FASTQ.out.versions)
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         GATK4_MAPPING(
-            reads_input,
+            SPLIT_FASTQ.out.reads,
             bwa,
             fasta,
             fasta_fai)

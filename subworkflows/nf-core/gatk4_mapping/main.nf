@@ -11,18 +11,19 @@ include { SAMTOOLS_MERGE as MERGE_MAPPING } from '../../../modules/nf-core/modul
 
 workflow GATK4_MAPPING {
     take:
-        reads_input // channel: [mandatory] meta, reads_input
-        bwa         // channel: [mandatory] bwa
-        fasta       // channel: [mandatory] fasta
-        fasta_fai   // channel: [mandatory] fasta_fai
+        reads     // channel: [mandatory] meta, reads
+        bwa       // channel: [mandatory] bwa
+        fasta     // channel: [mandatory] fasta
+        fasta_fai // channel: [mandatory] fasta_fai
 
     main:
 
     ch_versions = Channel.empty()
 
     // Only one of the following will be run
-    BWAMEM1_MEM(reads_input, bwa, true) // If aligner is bwa-mem
-    BWAMEM2_MEM(reads_input, bwa, true) // If aligner is bwa-mem2
+
+    BWAMEM1_MEM(reads, bwa, true) // If aligner is bwa-mem
+    BWAMEM2_MEM(reads, bwa, true) // If aligner is bwa-mem2
 
     ch_versions = ch_versions.mix(BWAMEM1_MEM.out.versions.first())
     ch_versions = ch_versions.mix(BWAMEM2_MEM.out.versions.first())

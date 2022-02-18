@@ -14,7 +14,7 @@ workflow SPLIT_FASTQ {
 
     ch_versions = Channel.empty()
 
-    reads_input = reads_input.map{ meta, reads ->
+    reads_no_split = reads_input.map{ meta, reads ->
         meta.size = 1
         [meta, reads]
     }
@@ -22,7 +22,11 @@ workflow SPLIT_FASTQ {
     // Only if we want to split fastq files
     SEQKIT_SPLIT2(reads_input)
 
-    reads_input_split = SEQKIT_SPLIT2.out.reads.map{ key, reads ->
+    // Empty channel when splitting fastq files
+    if (params.split_fastq > 1) reads_no_split = Channel.empty()
+
+    // Remmaping the channel
+    reads_split = SEQKIT_SPLIT2.out.reads.map{ key, reads ->
         //TODO maybe this can be replaced by a regex to include part_001 etc.
 
         //sorts list of split fq files by :
@@ -33,12 +37,12 @@ workflow SPLIT_FASTQ {
         [key, read_files]
     }.transpose()
 
-    reads_input_all = reads_input.mix(reads_input_split)
+    reads = reads_no_split.mix(reads_split)
 
     ch_versions = ch_versions.mix(SEQKIT_SPLIT2.out.versions)
 
     emit:
-        reads       = reads_input_all
-        versions    = ch_versions
+        reads    = reads
+        versions = ch_versions
 }
 
