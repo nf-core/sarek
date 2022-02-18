@@ -70,7 +70,7 @@ workflow MARKDUPLICATES {
     qc_reports = qc_reports.mix(QUALIMAP_BAMQC.out.results)
     qc_reports = qc_reports.mix(SAMTOOLS_STATS.out.stats)
 
-    // Gather all versions of tools used
+    // Gather versions of all tools used
     ch_versions = ch_versions.mix(DEEPTOOLS_BAMCOVERAGE.out.versions)
     ch_versions = ch_versions.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.versions.first())
     ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES.out.versions.first())
