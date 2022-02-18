@@ -52,7 +52,7 @@ workflow MARKDUPLICATES {
     cram_markduplicates = Channel.empty().mix(
         SAMTOOLS_BAM_TO_CRAM_NO_DUPLICATES.out.cram_crai,
         SAMTOOLS_BAM_TO_CRAM_SPARK.out.cram_crai,
-        GATK4_MARKDUPLICATES_SPARK.out.output.join(INDEX_MARKDUPLICATES.out.cram_crai)
+        GATK4_MARKDUPLICATES_SPARK.out.output.join(INDEX_MARKDUPLICATES.out.cram_crai),
         SAMTOOLS_BAM_TO_CRAM_DUPLICATES.out.cram_crai)
 
     // When running Marduplicates spark, and saving reports
@@ -71,7 +71,7 @@ workflow MARKDUPLICATES {
     qc_reports = qc_reports.mix(SAMTOOLS_STATS.out.stats)
 
     // Gather versions of all tools used
-    ch_versions = ch_versions.mix(DEEPTOOLS_BAMCOVERAGE.out.versions)
+    ch_versions = ch_versions.mix(DEEPTOOLS_BAMCOVERAGE.out.versions.first())
     ch_versions = ch_versions.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.versions.first())
     ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES.out.versions.first())
     ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES_SPARK.out.versions.first())

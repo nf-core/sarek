@@ -1,6 +1,8 @@
 //
 // SPLIT_FASTQ
 //
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
 include { SEQKIT_SPLIT2 } from '../../modules/nf-core/modules/seqkit/split2/main'
 
@@ -17,6 +19,7 @@ workflow SPLIT_FASTQ {
         [meta, reads]
     }
 
+    // Only if we want to split fastq files
     SEQKIT_SPLIT2(reads_input)
 
     reads_input_split = SEQKIT_SPLIT2.out.reads.map{ key, reads ->
@@ -30,9 +33,9 @@ workflow SPLIT_FASTQ {
         [key, read_files]
     }.transpose()
 
-    ch_versions = ch_versions.mix(SEQKIT_SPLIT2.out.versions)
-
     reads_input_all = reads_input.mix(reads_input_split)
+
+    ch_versions = ch_versions.mix(SEQKIT_SPLIT2.out.versions)
 
     emit:
         reads       = reads_input_all

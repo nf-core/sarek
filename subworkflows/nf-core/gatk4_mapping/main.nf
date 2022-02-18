@@ -21,13 +21,14 @@ workflow GATK4_MAPPING {
     ch_versions = Channel.empty()
 
     // Only one of the following will be run
-    BWAMEM1_MEM(reads_input, bwa, true)
-    BWAMEM2_MEM(reads_input, bwa, true)
+    BWAMEM1_MEM(reads_input, bwa, true) // If aligner is bwa-mem
+    BWAMEM2_MEM(reads_input, bwa, true) // If aligner is bwa-mem2
 
     ch_versions = ch_versions.mix(BWAMEM1_MEM.out.versions.first())
     ch_versions = ch_versions.mix(BWAMEM2_MEM.out.versions.first())
 
-    // Removing unneeded fields in the new meta map
+    // Grouping the bams from the same samples not to stall the workflow
+    // Removing unneeded fields in the new_meta map
     bam_mapped = BWAMEM1_MEM.out.bam.mix(BWAMEM2_MEM.out.bam).map{ meta, bam ->
         new_meta = meta.clone()
         new_meta.remove('read_group')
@@ -42,12 +43,13 @@ workflow GATK4_MAPPING {
         tuple(groupKey, new_meta, bam)
     }.groupTuple(by:[0,1]).map{ groupKey, new_meta, bam -> [new_meta, bam] }
 
-    // GATK markduplicates can handle multiple BAMS as input
+    // gatk4 markduplicates can handle multiple bams as input
     // So no merging/indexing at this step
     // Except if and only if skipping markduplicates
-    // Or saving mapped BAMs
+    // Or saving mapped bams
 
-    // Figuring out if there is one or more bam from the same sample
+    // Figuring out if there is one or more bam(s) from the same sample
+    // Is done for all, but not blocking
     bam_mapped.branch{
         single:   it[1].size() == 1
         multiple: it[1].size() > 1

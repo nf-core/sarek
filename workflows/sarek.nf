@@ -89,6 +89,7 @@ chr_dir           = params.chr_dir           ? Channel.fromPath(params.chr_dir).
 chr_length        = params.chr_length        ? Channel.fromPath(params.chr_length).collect()        : []
 dbsnp             = params.dbsnp             ? Channel.fromPath(params.dbsnp).collect()             : Channel.empty()
 fasta             = params.fasta             ? Channel.fromPath(params.fasta).collect()             : Channel.empty()
+fasta_fai         = params.fasta_fai         ? Channel.fromPath(params.fasta_fai).collect()         : Channel.empty()
 germline_resource = params.germline_resource ? Channel.fromPath(params.germline_resource).collect() : Channel.empty()
 known_indels      = params.known_indels      ? Channel.fromPath(params.known_indels).collect()      : Channel.empty()
 loci              = params.ac_loci           ? Channel.fromPath(params.ac_loci).collect()           : []
@@ -125,6 +126,9 @@ include { RECALIBRATE_CSV            } from '../subworkflows/local/recalibrate_c
 
 // Build indices if needed
 include { PREPARE_GENOME             } from '../subworkflows/local/prepare_genome'
+
+// Build intervals if needed
+include { PREPARE_INTERVALS          } from '../subworkflows/local/prepare_intervals'
 
 // Convert BAM files to FASTQ files
 include { ALIGNMENT_TO_FASTQ         } from '../subworkflows/local/bam2fastq'
@@ -195,7 +199,7 @@ workflow SAREK {
     PREPARE_GENOME(
         dbsnp,
         fasta,
-        params.fasta_fai,
+        fasta_fai,
         germline_resource,
         known_indels,
         pon)
@@ -217,11 +221,14 @@ workflow SAREK {
     known_sites     = dbsnp.concat(known_indels).collect()
     known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
 
+    // Build intervals if needed
+    PREPARE_INTERVALS(fasta_fai)
+
     // Intervals for speed up preprocessing/variant calling by spread/gather
     intervals_bed_combined        = (params.intervals && params.wes) ? Channel.fromPath(params.intervals).collect() : []
-    intervals                     = PREPARE_GENOME.out.intervals_bed                                // multiple interval.bed files, divided by useful intervals for scatter/gather
-    intervals_bed_gz_tbi          = PREPARE_GENOME.out.intervals_bed_gz_tbi                         // multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
-    intervals_bed_combined_gz_tbi = PREPARE_GENOME.out.intervals_combined_bed_gz_tbi.collect()      // one file containing all intervals interval.bed.gz/.tbi file
+    intervals                     = PREPARE_INTERVALS.out.intervals_bed                             // multiple interval.bed files, divided by useful intervals for scatter/gather
+    intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi                      // multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
+    intervals_bed_combined_gz_tbi = PREPARE_INTERVALS.out.intervals_combined_bed_gz_tbi.collect()   // one file containing all intervals interval.bed.gz/.tbi file
     intervals_bed_combined_gz     = intervals_bed_combined_gz_tbi.map{ bed, tbi -> [bed]}.collect() // one file containing all intervals interval.bed.gz file
 
     num_intervals = 0
@@ -348,16 +355,15 @@ workflow SAREK {
                 known_sites_tbi,
                 params.no_intervals)
 
-            table_bqsr = PREPARE_RECALIBRATION.out.table_bqsr
-            PREPARE_RECALIBRATION_CSV(table_bqsr)
+            PREPARE_RECALIBRATION_CSV(PREPARE_RECALIBRATION.out.table_bqsr)
 
-            cram_applybqsr = cram_markduplicates.join(table_bqsr)
+            cram_applybqsr = cram_markduplicates.join(PREPARE_RECALIBRATION.out.table_bqsr)
 
             ch_versions = ch_versions.mix(PREPARE_RECALIBRATION.out.versions)
         }
     }
 
-    if (params.step == 'recalibrate') bam_applybqsr = input_sample
+    if (params.step == 'recalibrate') cram_applybqsr = input_sample
 
     if (params.step in ['mapping', 'prepare_recalibration', 'recalibrate']) {
 
