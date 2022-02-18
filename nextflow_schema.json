@@ -222,7 +222,7 @@
                     "fa_icon": "fas fa-forward",
                     "description": "Tools for which to enable usage of GATK Spark implementation",
                     "help_text": "Multiple separated with commas.\n\n GATK4 BQSR tools are currently only available as Beta release. Use with caution!",
-                    "pattern": "^((markduplicates|bqsr)*,?)*$"
+                    "pattern": "^((baserecalibrator|markduplicates)*,?)*$"
                 },
                 "save_bam_mapped": {
                     "type": "boolean",
