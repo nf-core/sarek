@@ -1,6 +1,8 @@
 //
 // MAPPING
 //
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
 include { BWAMEM2_MEM                     } from '../../../modules/nf-core/modules/bwamem2/mem/main'
 include { BWA_MEM as BWAMEM1_MEM          } from '../../../modules/nf-core/modules/bwa/mem/main'
@@ -18,12 +20,14 @@ workflow GATK4_MAPPING {
 
     ch_versions = Channel.empty()
 
+    // Only one of the following will be run
     BWAMEM1_MEM(reads_input, bwa, true)
     BWAMEM2_MEM(reads_input, bwa, true)
 
     ch_versions = ch_versions.mix(BWAMEM1_MEM.out.versions.first())
     ch_versions = ch_versions.mix(BWAMEM2_MEM.out.versions.first())
 
+    // Removing unneeded fields in the new meta map
     bam_mapped = BWAMEM1_MEM.out.bam.mix(BWAMEM2_MEM.out.bam).map{ meta, bam ->
         new_meta = meta.clone()
         new_meta.remove('read_group')
@@ -36,23 +40,21 @@ workflow GATK4_MAPPING {
 
         //Returns the values we need
         tuple(groupKey, new_meta, bam)
-    }.groupTuple(by:[0,1]).map{
-        groupKey, new_meta, bam ->
-        [new_meta, bam]
-    }
+    }.groupTuple(by:[0,1]).map{ groupKey, new_meta, bam -> [new_meta, bam] }
 
     // GATK markduplicates can handle multiple BAMS as input
     // So no merging/indexing at this step
     // Except if and only if skipping markduplicates
     // Or saving mapped BAMs
 
+    // Figuring out if there is one or more bam from the same sample
     bam_mapped.branch{
         single:   it[1].size() == 1
         multiple: it[1].size() > 1
     }.set{bam_to_merge}
 
+    // Only if the when clause is true
     MERGE_MAPPING(bam_to_merge.multiple, [])
-
     INDEX_MAPPING(bam_to_merge.single.mix(MERGE_MAPPING.out.bam))
 
     emit:
