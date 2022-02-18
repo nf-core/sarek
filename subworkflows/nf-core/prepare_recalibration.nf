@@ -1,15 +1,16 @@
 //
 // PREPARE RECALIBRATION
 //
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { GATK4_BASERECALIBRATOR as BASERECALIBRATOR             } from '../../modules/nf-core/modules/gatk4/baserecalibrator/main'
+include { GATK4_BASERECALIBRATOR       as BASERECALIBRATOR       } from '../../modules/nf-core/modules/gatk4/baserecalibrator/main'
 include { GATK4_BASERECALIBRATOR_SPARK as BASERECALIBRATOR_SPARK } from '../../modules/local/gatk4/baserecalibratorspark/main'
-include { GATK4_GATHERBQSRREPORTS as GATHERBQSRREPORTS           } from '../../modules/nf-core/modules/gatk4/gatherbqsrreports/main'
+include { GATK4_GATHERBQSRREPORTS      as GATHERBQSRREPORTS      } from '../../modules/nf-core/modules/gatk4/gatherbqsrreports/main'
 
 workflow PREPARE_RECALIBRATION {
     take:
         cram_markduplicates // channel: [mandatory] cram_markduplicates
-        use_gatk_spark      //   value: [mandatory] use gatk spark
         dict                // channel: [mandatory] dict
         fasta               // channel: [mandatory] fasta
         fasta_fai           // channel: [mandatory] fasta_fai
@@ -23,40 +24,45 @@ workflow PREPARE_RECALIBRATION {
 
     ch_versions = Channel.empty()
 
-    cram_markduplicates.combine(intervals)
+    cram_markduplicates_intervals = cram_markduplicates.combine(intervals)
         .map{ meta, cram, crai, intervals ->
             new_meta = meta.clone()
             new_meta.id = intervals.baseName != "no_intervals" ? meta.sample + "_" + intervals.baseName : meta.sample
             [new_meta, cram, crai, intervals]
-        }.set{cram_markduplicates_intervals}
+        }
 
-    if (use_gatk_spark) {
-        BASERECALIBRATOR_SPARK(cram_markduplicates_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
-        table_baserecalibrator = BASERECALIBRATOR_SPARK.out.table
-        ch_versions = ch_versions.mix(BASERECALIBRATOR_SPARK.out.versions)
+    // Run Baserecalibrator spark or Baserecalibrator
+    BASERECALIBRATOR_SPARK(cram_markduplicates_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
+    BASERECALIBRATOR(cram_markduplicates_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
 
-    } else {
-        BASERECALIBRATOR(cram_markduplicates_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
-        table_baserecalibrator = BASERECALIBRATOR.out.table
-        ch_versions = ch_versions.mix(BASERECALIBRATOR.out.versions)
-    }
+    table_baserecalibrator = BASERECALIBRATOR_SPARK.out.table.mix(BASERECALIBRATOR.out.table)
 
-    //STEP 3.5: MERGING RECALIBRATION TABLES
-    if (no_intervals) {
-        table_baserecalibrator.map { meta, table ->
+    // Remap the table channels
+    // Only one of the two channels will be used
+    table_no_intervals = table_baserecalibrator
+        .map { meta, table ->
             meta.id = meta.sample
             [meta, table]
-        }.set{table_bqsr}
-    } else {
-        table_baserecalibrator.map{ meta, table ->
+        }
+
+    table_intervals = table_baserecalibrator
+        .map{ meta, table ->
             meta.id = meta.sample
             [meta, table]
-        }.groupTuple(size: num_intervals).set{recaltable}
+        }.groupTuple(size: num_intervals)
 
-        GATHERBQSRREPORTS(recaltable)
-        table_bqsr = GATHERBQSRREPORTS.out.table
-        ch_versions = ch_versions.mix(GATHERBQSRREPORTS.out.versions)
-    }
+    // STEP 3.5: MERGING RECALIBRATION TABLES
+    // Empty the no intervals table channel if we have intervals
+    if (!no_intervals) table_no_intervals = Channel.empty()
+
+    // Merge the tables only when we have intervals
+    GATHERBQSRREPORTS(table_intervals)
+    table_bqsr = table_no_intervals.mix(GATHERBQSRREPORTS.out.table)
+
+    // Gather versions of all tools used
+    ch_versions = ch_versions.mix(BASERECALIBRATOR.out.versions)
+    ch_versions = ch_versions.mix(BASERECALIBRATOR_SPARK.out.versions)
+    ch_versions = ch_versions.mix(GATHERBQSRREPORTS.out.versions)
 
     emit:
         table_bqsr = table_bqsr

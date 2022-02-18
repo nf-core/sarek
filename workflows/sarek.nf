@@ -345,7 +345,6 @@ workflow SAREK {
 
             PREPARE_RECALIBRATION(
                 cram_markduplicates,
-                ('bqsr' in params.use_gatk_spark),
                 dict,
                 fasta,
                 fasta_fai,
