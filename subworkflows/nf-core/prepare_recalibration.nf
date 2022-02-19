@@ -31,25 +31,19 @@ workflow PREPARE_RECALIBRATION {
             [new_meta, cram, crai, intervals]
         }
 
-    // Run Baserecalibrator spark or Baserecalibrator
-    BASERECALIBRATOR_SPARK(cram_markduplicates_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
+    // Run Baserecalibrator or Baserecalibrator spark
     BASERECALIBRATOR(cram_markduplicates_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
+    BASERECALIBRATOR_SPARK(cram_markduplicates_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
 
-    table_baserecalibrator = BASERECALIBRATOR_SPARK.out.table.mix(BASERECALIBRATOR.out.table)
+    table_baserecalibrator = BASERECALIBRATOR.out.table.mix(BASERECALIBRATOR_SPARK.out.table)
+        .map{ meta, table ->
+                meta.id = meta.sample
+                [meta, table]
+            }
 
-    // Remap the table channels
     // Only one of the two channels will be used
     table_no_intervals = table_baserecalibrator
-        .map { meta, table ->
-            meta.id = meta.sample
-            [meta, table]
-        }
-
-    table_intervals = table_baserecalibrator
-        .map{ meta, table ->
-            meta.id = meta.sample
-            [meta, table]
-        }.groupTuple(size: num_intervals)
+    table_intervals    = table_baserecalibrator.groupTuple(size: num_intervals)
 
     // STEP 3.5: MERGING RECALIBRATION TABLES
     // Empty the no intervals table channel if we have intervals

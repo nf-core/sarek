@@ -57,9 +57,9 @@ workflow MARKDUPLICATES {
 
     // When running Marduplicates spark, and saving reports
     GATK4_ESTIMATELIBRARYCOMPLEXITY(bam_mapped, fasta, fasta_fai, dict)
-    // Reports on Marduplicates spark bam output
-    QUALIMAP_BAMQC(GATK4_MARKDUPLICATES.out.bam.join(GATK4_MARKDUPLICATES.out.bai), intervals_combined_bed_gz_tbi)
-    DEEPTOOLS_BAMCOVERAGE(GATK4_MARKDUPLICATES.out.bam.join(GATK4_MARKDUPLICATES.out.bai))
+    // Reports on Marduplicates spark bam output or on bam input
+    QUALIMAP_BAMQC(bam_indexed.mix(GATK4_MARKDUPLICATES.out.bam.join(GATK4_MARKDUPLICATES.out.bai)), intervals_combined_bed_gz_tbi)
+    DEEPTOOLS_BAMCOVERAGE(bam_indexed.mix(GATK4_MARKDUPLICATES.out.bam.join(GATK4_MARKDUPLICATES.out.bai)))
     // Other reports run on cram
     SAMTOOLS_STATS(cram_markduplicates, fasta)
 

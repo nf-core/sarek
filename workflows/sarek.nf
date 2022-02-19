@@ -313,7 +313,7 @@ workflow SAREK {
         // index will be created down the road from Markduplicates
         // bam_indexed should only have indexes if Markduplicates is skipped
 
-        if ('markduplicates' in params.skip_tools) bam_indexed = input_sample
+        if (params.skip_tools && 'markduplicates' in params.skip_tools) bam_indexed = input_sample
         else bam_mapped = input_sample.map{ meta, bam, bai -> [meta, bam] }
     }
 
