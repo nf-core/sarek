@@ -30,12 +30,12 @@ workflow PREPARE_INTERVALS {
         file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
         ch_intervals = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
         tabix_in_combined = ch_intervals.map{it -> [[id:it.getName()], it] }
-    } else if (params.step != "annotate" && params.step != "controlfreec") {
+    } else if (params.step != 'annotate' && params.step != 'controlfreec') {
         if (!params.intervals) {
             BUILD_INTERVALS(fasta_fai)
             tabix_in_combined = BUILD_INTERVALS.out.bed.map{it -> [[id:it.getName()], it] }
             ch_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS.out.bed)
-        }else{
+        } else {
             tabix_in_combined = Channel.fromPath(file(params.intervals)).map{it -> [[id:it.baseName], it] }
             if(!params.intervals.endsWith(".bed")) {
                 GATK4_INTERVALLISTTOBED(tabix_in_combined)
@@ -45,8 +45,7 @@ workflow PREPARE_INTERVALS {
             ch_intervals = CREATE_INTERVALS_BED(file(params.intervals))
         }
     }
-
-    if (params.step != "annotate" && params.step != "controlfreec") {
+    if (params.step != 'annotate' && params.step != 'controlfreec') {
 
         TABIX_BGZIPTABIX_INTERVAL_ALL(tabix_in_combined)
         ch_intervals_combined_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_ALL.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi] }
