@@ -17,18 +17,11 @@ workflow GATK4_MAPPING {
         fasta_fai // channel: [mandatory] fasta_fai
 
     main:
-
-    reads.view()
-
     ch_versions = Channel.empty()
 
     // Only one of the following will be run
-
     BWAMEM1_MEM(reads, bwa, true) // If aligner is bwa-mem
     BWAMEM2_MEM(reads, bwa, true) // If aligner is bwa-mem2
-
-    ch_versions = ch_versions.mix(BWAMEM1_MEM.out.versions.first())
-    ch_versions = ch_versions.mix(BWAMEM2_MEM.out.versions.first())
 
     // Grouping the bams from the same samples not to stall the workflow
     // Removing unneeded fields in the new_meta map
@@ -39,17 +32,15 @@ workflow GATK4_MAPPING {
         new_meta.id = meta.sample
 
         // groupKey is to makes sure that the correct group can advance as soon as it is complete
-        // and not stall the workflow until all pieces are mapped
+        // and not stall the workflow until all reads from all channels are mapped
         def groupKey = groupKey(meta, meta.numLanes * meta.size)
 
         //Returns the values we need
         tuple(groupKey, new_meta, bam)
     }.groupTuple(by:[0,1]).map{ groupKey, new_meta, bam -> [new_meta, bam] }
 
-    // gatk4 markduplicates can handle multiple bams as input
-    // So no merging/indexing at this step
-    // Except if and only if skipping markduplicates
-    // Or saving mapped bams
+    // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
+    // Except if and only if skipping markduplicates or saving mapped bams
 
     // Figuring out if there is one or more bam(s) from the same sample
     // Is done for all, but not blocking
@@ -61,6 +52,12 @@ workflow GATK4_MAPPING {
     // Only if the when clause is true
     MERGE_MAPPING(bam_to_merge.multiple, [])
     INDEX_MAPPING(bam_to_merge.single.mix(MERGE_MAPPING.out.bam))
+
+    // Gather versions of all tools used
+    ch_versions = ch_versions.mix(BWAMEM1_MEM.out.versions.first())
+    ch_versions = ch_versions.mix(BWAMEM2_MEM.out.versions.first())
+    ch_versions = ch_versions.mix(INDEX_MAPPING.out.versions.first())
+    ch_versions = ch_versions.mix(MERGE_MAPPING.out.versions.first())
 
     emit:
         bam         = bam_mapped
