@@ -12,11 +12,13 @@ process GATK4_MARKDUPLICATES_SPARK {
     path  fasta
     path  fasta_fai
     path  dict
-    val   format //either "bam" or "cram"
 
     output:
-    tuple val(meta), path("*.${format}"), emit: output
-    path "versions.yml"                 , emit: versions
+    tuple val(meta), path("${prefix}"), emit: output
+    path "versions.yml"               , emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args  ?: ''
@@ -26,13 +28,13 @@ process GATK4_MARKDUPLICATES_SPARK {
     } else {
         avail_mem = task.memory.giga
     }
-    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
     def bams = bam.collect(){ x -> "-I ".concat(x.toString()) }.join(" ")
     """
     gatk  \
         MarkDuplicatesSpark \
         $bams \
-        -O ${prefix}.${format} \
+        -O ${prefix} \
         --reference ${fasta} \
         --tmp-dir . \
         --spark-master local[${task.cpus}] \\

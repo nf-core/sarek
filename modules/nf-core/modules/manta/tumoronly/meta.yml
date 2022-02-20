@@ -15,7 +15,7 @@ tools:
       documentation: https://github.com/Illumina/manta/blob/v1.6.0/docs/userGuide/README.md
       tool_dev_url: https://github.com/Illumina/manta
       doi: "10.1093/bioinformatics/btv710"
-      licence: ['GPL v3']
+      licence: ["GPL v3"]
 
 input:
   - meta:

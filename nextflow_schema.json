@@ -80,12 +80,12 @@
                     "description": "Enable Sentieon if available.",
                     "help_text": "Sentieon is a commercial solution to process genomics data with high computing efficiency, fast turnaround time, exceptional accuracy, and 100% consistency.\n\n> **NB** Adds the following tools for the `--tools` options: `DNAseq`, `DNAscope` and `TNscope`."
                 },
-                "skip_qc": {
+                "skip_tools": {
                     "type": "string",
                     "fa_icon": "fas fa-forward",
-                    "description": "Disable specified QC and Reporting tools.",
-                    "help_text": "Multiple tools can be specified, separated by commas.\n\n> **NB** `--skip_qc BaseRecalibrator` is actually just not saving the reports.\n> **NB** `--skip_qc MarkDuplicates` does not skip `MarkDuplicates` but prevent the collection of duplicate metrics that slows down performance.\n> **NB** tools can be specified with no concern for case.",
-                    "pattern": "^((bamqc|baserecalibrator|bcftools|documentation|fastqc|markduplicates|multiqc|samtools|vcftools|versions|deeptools)*(,)*)*$"
+                    "description": "Disable specified tools.",
+                    "help_text": "Multiple tools can be specified, separated by commas.\n\n> **NB** `--skip_tools baserecalibrator_report` is actually just not saving the reports.\n> **NB** `--skip_tools markduplicates_report` does not skip `MarkDuplicates` but prevent the collection of duplicate metrics that slows down performance.\n> **NB** tools can be specified with no concern for case.",
+                    "pattern": "^((bamqc|baserecalibrator|baserecalibrator_report|bcftools|documentation|fastqc|markduplicates|markduplicates_report|multiqc|samtools|vcftools|versions|deeptools)*(,)*)*$"
                 },
                 "target_bed": {
                     "type": "string",
@@ -114,6 +114,7 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-cut",
                     "description": "Run Trim Galore.",
+                    "default": false,
                     "hidden": true,
                     "help_text": "Use this to perform adapter trimming with Trim Galore.\ncf [Trim Galore User Guide](https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md)"
                 },
@@ -179,7 +180,6 @@
                 },
                 "umi_read_structure": {
                     "type": "string",
-                    "default": "None",
                     "fa_icon": "fas fa-tape",
                     "hidden": true
                 },
@@ -222,23 +222,12 @@
                     "fa_icon": "fas fa-forward",
                     "description": "Tools for which to enable usage of GATK Spark implementation",
                     "help_text": "Multiple separated with commas.\n\n GATK4 BQSR tools are currently only available as Beta release. Use with caution!",
-                    "pattern": "^((markduplicates|bqsr)*,?)*$"
+                    "pattern": "^((baserecalibrator|markduplicates)*,?)*$"
                 },
                 "save_bam_mapped": {
                     "type": "boolean",
                     "fa_icon": "fas fa-download",
                     "description": "Save Mapped BAMs"
-                },
-                "skip_markduplicates": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip GATK MarkDuplicates",
-                    "help_text": "This params will also save the mapped BAMS, to enable restart from step `prepare_recalibration`"
-                },
-                "skip_bqsr": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip Base Quality Recalibration"
                 }
             }
         },
@@ -653,6 +642,22 @@
                     "type": "boolean",
                     "description": "Display help text.",
                     "fa_icon": "fas fa-question-circle",
+                    "hidden": true
+                },
+                "publish_dir_mode": {
+                    "type": "string",
+                    "default": "copy",
+                    "description": "Method used to save pipeline results to output directory.",
+                    "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
+                    "fa_icon": "fas fa-copy",
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "move"
+                    ],
                     "hidden": true
                 },
                 "email": {

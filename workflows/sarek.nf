@@ -59,14 +59,14 @@ else {
 
 input_sample = extract_csv(csv_file)
 
-def save_bam_mapped = params.skip_markduplicates ? true : params.save_bam_mapped ? true : false
+// def save_bam_mapped = 'markduplicates' in params.skip_tools ? true : params.save_bam_mapped ? true : false
 
-if(params.wes){
-    if(!params.intervals.endsWith("bed")){
+if (params.wes) {
+    if (!params.intervals.endsWith("bed")) {
         exit 1, "Target file must be in BED format"
     }
-}else{
-    if(!params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")){
+} else {
+    if (!params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) {
         exit 1, "Interval file must end with .bed or .interval_list"
     }
 }
@@ -88,8 +88,9 @@ if (anno_readme && file(anno_readme).exists()) {
 chr_dir           = params.chr_dir           ? Channel.fromPath(params.chr_dir).collect()           : []
 chr_length        = params.chr_length        ? Channel.fromPath(params.chr_length).collect()        : []
 dbsnp             = params.dbsnp             ? Channel.fromPath(params.dbsnp).collect()             : Channel.empty()
-fasta             = params.fasta             ? Channel.fromPath(params.fasta).collect()             : []
-germline_resource = params.germline_resource ? Channel.fromPath(params.germline_resource).collect() : []
+fasta             = params.fasta             ? Channel.fromPath(params.fasta).collect()             : Channel.empty()
+fasta_fai         = params.fasta_fai         ? Channel.fromPath(params.fasta_fai).collect()         : Channel.empty()
+germline_resource = params.germline_resource ? Channel.fromPath(params.germline_resource).collect() : Channel.empty()
 known_indels      = params.known_indels      ? Channel.fromPath(params.known_indels).collect()      : Channel.empty()
 loci              = params.ac_loci           ? Channel.fromPath(params.ac_loci).collect()           : []
 loci_gc           = params.ac_loci_gc        ? Channel.fromPath(params.ac_loci_gc).collect()        : []
@@ -106,7 +107,7 @@ cadd_indels       = params.cadd_indels       ? Channel.fromPath(params.cadd_inde
 cadd_indels_tbi   = params.cadd_indels_tbi   ? Channel.fromPath(params.cadd_indels_tbi).collect()   : []
 cadd_wg_snvs      = params.cadd_wg_snvs      ? Channel.fromPath(params.cadd_wg_snvs).collect()      : []
 cadd_wg_snvs_tbi  = params.cadd_wg_snvs_tbi  ? Channel.fromPath(params.cadd_wg_snvs_tbi).collect()  : []
-pon               = params.pon               ? Channel.fromPath(params.pon).collect()               : []
+pon               = params.pon               ? Channel.fromPath(params.pon).collect()               : Channel.empty()
 snpeff_cache      = params.snpeff_cache      ? Channel.fromPath(params.snpeff_cache).collect()      : []
 //target_bed        = params.target_bed        ? Channel.fromPath(params.target_bed).collect()        : []
 vep_cache         = params.vep_cache         ? Channel.fromPath(params.vep_cache).collect()         : []
@@ -118,40 +119,46 @@ umi_read_structure   = params.umi_read_structure   ? "${params.umi_read_structur
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
 
 // Create samplesheets to restart from different steps
-include { MAPPING_CSV               } from '../subworkflows/local/mapping_csv'
-include { MARKDUPLICATES_CSV        } from '../subworkflows/local/markduplicates_csv'
-include { PREPARE_RECALIBRATION_CSV } from '../subworkflows/local/prepare_recalibration_csv'
-include { RECALIBRATE_CSV           } from '../subworkflows/local/recalibrate_csv'
+include { MAPPING_CSV                } from '../subworkflows/local/mapping_csv'
+include { MARKDUPLICATES_CSV         } from '../subworkflows/local/markduplicates_csv'
+include { PREPARE_RECALIBRATION_CSV  } from '../subworkflows/local/prepare_recalibration_csv'
+include { RECALIBRATE_CSV            } from '../subworkflows/local/recalibrate_csv'
 
 // Build indices if needed
-include { PREPARE_GENOME            } from '../subworkflows/local/prepare_genome'
+include { PREPARE_GENOME             } from '../subworkflows/local/prepare_genome'
+
+// Build intervals if needed
+include { PREPARE_INTERVALS          } from '../subworkflows/local/prepare_intervals'
 
 // Convert BAM files to FASTQ files
-include { ALIGNMENT_TO_FASTQ } from '../subworkflows/local/bam2fastq'
+include { ALIGNMENT_TO_FASTQ         } from '../subworkflows/local/bam2fastq'
+
+// Split FASTQ files
+include { SPLIT_FASTQ                } from '../subworkflows/local/split_fastq'
 
 // Map input reads to reference genome
-include { GATK4_MAPPING             } from '../subworkflows/nf-core/gatk4_mapping/main'
+include { GATK4_MAPPING              } from '../subworkflows/nf-core/gatk4_mapping/main'
 
 // Mark duplicates (+QC) + convert to CRAM
-include { MARKDUPLICATES            } from '../subworkflows/nf-core/markduplicates'
+include { MARKDUPLICATES             } from '../subworkflows/nf-core/markduplicates'
 
 // Create recalibration tables
-include { PREPARE_RECALIBRATION     } from '../subworkflows/nf-core/prepare_recalibration'
+include { PREPARE_RECALIBRATION      } from '../subworkflows/nf-core/prepare_recalibration'
 
 // Create recalibrated cram files to use for variant calling (+QC)
-include { RECALIBRATE               } from '../subworkflows/nf-core/recalibrate'
+include { RECALIBRATE                } from '../subworkflows/nf-core/recalibrate'
 
 // Variant calling on a single normal sample
-include { GERMLINE_VARIANT_CALLING  } from '../subworkflows/local/germline_variant_calling'
+include { GERMLINE_VARIANT_CALLING   } from '../subworkflows/local/germline_variant_calling'
 
 // Variant calling on a single tumor sample
-include { TUMOR_ONLY_VARIANT_CALLING} from '../subworkflows/local/tumor_variant_calling'
+include { TUMOR_ONLY_VARIANT_CALLING } from '../subworkflows/local/tumor_variant_calling'
 
 // Variant calling on tumor/normal pair
-include { PAIR_VARIANT_CALLING      } from '../subworkflows/local/pair_variant_calling'
+include { PAIR_VARIANT_CALLING       } from '../subworkflows/local/pair_variant_calling'
 
 // Annotation
-include { ANNOTATE                     } from '../subworkflows/local/annotate' addParams(
+include { ANNOTATE                   } from '../subworkflows/local/annotate' addParams(
     annotation_cache:                  params.annotation_cache
 )
 
@@ -192,12 +199,10 @@ workflow SAREK {
     PREPARE_GENOME(
         dbsnp,
         fasta,
-        params.fasta_fai,
+        fasta_fai,
         germline_resource,
         known_indels,
-        pon,
-        params.tools,
-        params.step)
+        pon)
 
     // Gather built indices or get them from the params
     bwa                    = params.fasta                   ? params.bwa                   ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : []
@@ -208,20 +213,24 @@ workflow SAREK {
     known_indels_tbi       = params.known_indels            ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : Channel.empty()
     pon_tbi                = params.pon                     ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : []
     msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
-    intervals_bed_combined = (params.intervals && params.wes) ? Channel.fromPath(params.intervals).collect()             : []
 
     //TODO @Rike, is this working for you? Now it is, fixed a bug in prepare_genome.nf after chasing smoke for a while
     // known_sites is made by grouping both the dbsnp and the known indels ressources
     // Which can either or both be optional
-    // Actually BQSR has been throughing erros if no sides were provided so it must be at lest one
+    // Actually BQSR has been throwing erros if no sides were provided so it must be at least one
     known_sites     = dbsnp.concat(known_indels).collect()
     known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
 
+    // Build intervals if needed
+    PREPARE_INTERVALS(fasta_fai)
+
     // Intervals for speed up preprocessing/variant calling by spread/gather
-    intervals                         = PREPARE_GENOME.out.intervals_bed // multiple interval.bed files, divided by useful intervals for scatter/gather
-    intervals_bed_gz_tbi              = PREPARE_GENOME.out.intervals_bed_gz_tbi// multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
-    intervals_bed_combined_gz_tbi     = PREPARE_GENOME.out.intervals_combined_bed_gz_tbi.collect()  // one file containing all intervals interval.bed.gz/.tbi file
-    intervals_bed_combined_gz         = intervals_bed_combined_gz_tbi.map{ bed, tbi -> [bed]}.collect()  // one file containing all intervals interval.bed.gz file
+    intervals_bed_combined        = (params.intervals && params.wes) ? Channel.fromPath(params.intervals).collect() : []
+    intervals                     = PREPARE_INTERVALS.out.intervals_bed                             // multiple interval.bed files, divided by useful intervals for scatter/gather
+    intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi                      // multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
+    intervals_bed_combined_gz_tbi = PREPARE_INTERVALS.out.intervals_combined_bed_gz_tbi.collect()   // one file containing all intervals interval.bed.gz/.tbi file
+    intervals_bed_combined_gz     = intervals_bed_combined_gz_tbi.map{ bed, tbi -> [bed]}.collect() // one file containing all intervals interval.bed.gz file
+    intervals_combined_bed_gz_tbi_for_preprocessing = (!params.wes || params.no_intervals) ? [] : PREPARE_INTERVALS.out.intervals_bed //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
 
     num_intervals = 0
     intervals.count().map{ num_intervals = it }
@@ -243,49 +252,44 @@ workflow SAREK {
 
     if (params.step == 'mapping') {
 
-        if(params.is_bam_input){
+        if (params.is_bam_input) {
             ALIGNMENT_TO_FASTQ(input_sample, [])
-            ALIGNMENT_TO_FASTQ.out.reads.set{input_sample_converted}
+            input_sample_converted = ALIGNMENT_TO_FASTQ.out.reads
             ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ.out.versions)
-        }else{
-            input_sample_converted = input_sample
-        }
+        } else input_sample_converted = input_sample
 
-        FASTQC_TRIMGALORE(
-            input_sample_converted,
-            ('fastqc' in params.skip_qc),
-            !(params.trim_fastq))
+        FASTQC_TRIMGALORE(input_sample_converted)
 
         // Get reads after optional trimming (+QC)
         reads_input = FASTQC_TRIMGALORE.out.reads
 
-        // Get all qc reports for MultiQC
-        qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
-        qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]))
-        qc_reports = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
-
-        // Get versions from all software used
+        // Get all qc reports + versions from all software used for MultiQC
+        qc_reports  = qc_reports.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
+        qc_reports  = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
         ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
 
         //Since read need additional mapping afterwards, I would argue for having the process here
-        if(params.umi_read_structure){
+        if (params.umi_read_structure) {
             CREATE_UMI_CONSENSUS(reads_input, fasta, bwa, umi_read_structure, params.group_by_umi_strategy, params.aligner)
             ALIGNMENT_TO_FASTQ( CREATE_UMI_CONSENSUS.out.consensusbam, [] )
-            ALIGNMENT_TO_FASTQ.out.reads.set{reads_input}
+            reads_input = ALIGNMENT_TO_FASTQ.out.reads
 
             ch_versions = ch_versions.mix(CREATE_UMI_CONSENSUS.out.versions)
             ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ.out.versions)
         }
 
+        // OPTIONNAL SPLIT OF FASTQ FILES WITH SEQKIT_SPLIT2
+        SPLIT_FASTQ(reads_input)
+
+        // Get versions from all software used
+        ch_versions = ch_versions.mix(SPLIT_FASTQ.out.versions)
+
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         GATK4_MAPPING(
-            params.aligner,
+            SPLIT_FASTQ.out.reads,
             bwa,
             fasta,
-            fasta_fai,
-            reads_input,
-            params.skip_markduplicates,
-            save_bam_mapped)
+            fasta_fai)
 
         // Get mapped reads (BAM) with and without index
         // without index: always contains mapped_bams, only used if duplicate marking is done
@@ -295,7 +299,7 @@ workflow SAREK {
 
         // Create CSV to restart from this step
         // TODO: How is this handeled if not save_bam is set (no index should be present)
-        //MAPPING_CSV(bam_indexed, save_bam_mapped, params.skip_markduplicates)
+        //MAPPING_CSV(bam_indexed, save_bam_mapped, 'markduplicates' in params.skip_tools)
 
         // Get versions from all software used
         ch_versions = ch_versions.mix(GATK4_MAPPING.out.versions)
@@ -306,47 +310,36 @@ workflow SAREK {
         bam_indexed = Channel.empty()
         bam_mapped  = Channel.empty()
 
-        if(params.skip_markduplicates){
-            bam_indexed = input_sample
-        }else{ //index will be created down the road from the Markduplicatess
-            input_sample.map{meta, bam, bai ->
-                        [meta, bam]
-                        }.set{bam_mapped}
-        }
+        // index will be created down the road from Markduplicates
+        // bam_indexed should only have indexes if Markduplicates is skipped
+
+        if (params.skip_tools && 'markduplicates' in params.skip_tools) bam_indexed = input_sample
+        else bam_mapped = input_sample.map{ meta, bam, bai -> [meta, bam] }
     }
 
     if (params.step in ['mapping', 'prepare_recalibration']) {
-
-        // STEP 2: Mark duplicates (+QC) + convert to CRAM
+        // STEP 2: markduplicates (+QC) + convert to CRAM
         MARKDUPLICATES(
             bam_mapped,
             bam_indexed,
-            ('markduplicates' in params.use_gatk_spark),
-            !('markduplicates' in params.skip_qc),
             dict,
             fasta,
             fasta_fai,
-            params.skip_markduplicates,
-            ('bamqc' in params.skip_qc),
-            ('samtools' in params.skip_qc),
-            ('deeptools' in params.skip_qc),
-            intervals_bed_combined)
+            intervals_combined_bed_gz_tbi_for_preprocessing)
 
         cram_markduplicates = MARKDUPLICATES.out.cram
 
         // Create CSV to restart from this step
         MARKDUPLICATES_CSV(cram_markduplicates)
 
-        qc_reports = qc_reports.mix(MARKDUPLICATES.out.qc.collect{it[1]}.ifEmpty([]))
-
+        qc_reports  = qc_reports.mix(MARKDUPLICATES.out.qc.collect{it[1]}.ifEmpty([]))
         ch_versions = ch_versions.mix(MARKDUPLICATES.out.versions)
 
         // STEP 3: Create recalibration tables
-        if(!params.skip_bqsr){
+        if (!('baserecalibrator' in params.skip_tools)) {
 
             PREPARE_RECALIBRATION(
                 cram_markduplicates,
-                ('bqsr' in params.use_gatk_spark),
                 dict,
                 fasta,
                 fasta_fai,
@@ -356,25 +349,21 @@ workflow SAREK {
                 known_sites_tbi,
                 params.no_intervals)
 
-            table_bqsr = PREPARE_RECALIBRATION.out.table_bqsr
-            PREPARE_RECALIBRATION_CSV(table_bqsr)
+            PREPARE_RECALIBRATION_CSV(PREPARE_RECALIBRATION.out.table_bqsr)
 
-            cram_applybqsr = cram_markduplicates.join(table_bqsr)
+            cram_applybqsr = cram_markduplicates.join(PREPARE_RECALIBRATION.out.table_bqsr)
 
             ch_versions = ch_versions.mix(PREPARE_RECALIBRATION.out.versions)
         }
     }
 
-    if (params.step == 'recalibrate') bam_applybqsr = input_sample
+    if (params.step == 'recalibrate') cram_applybqsr = input_sample
 
     if (params.step in ['mapping', 'prepare_recalibration', 'recalibrate']) {
 
-        if(!params.skip_bqsr){
+        if (!('baserecalibrator' in params.skip_tools)) {
             // STEP 4: RECALIBRATING
             RECALIBRATE(
-                ('bqsr' in params.use_gatk_spark),
-                ('bamqc' in params.skip_qc),
-                ('samtools' in params.skip_qc),
                 cram_applybqsr,
                 dict,
                 fasta,
@@ -382,22 +371,16 @@ workflow SAREK {
                 intervals,
                 num_intervals,
                 params.no_intervals,
-                intervals_bed_combined
-            )
+                intervals_combined_bed_gz_tbi_for_preprocessing)
 
-            cram_recalibrated    = RECALIBRATE.out.cram
-            cram_recalibrated_qc = RECALIBRATE.out.qc
+            RECALIBRATE_CSV(RECALIBRATE.out.cram)
 
-            RECALIBRATE_CSV(cram_recalibrated)
+            cram_variant_calling = RECALIBRATE.out.cram
 
-            qc_reports = qc_reports.mix(cram_recalibrated_qc.collect{it[1]}.ifEmpty([]))
-            cram_variant_calling = cram_recalibrated
-
+            qc_reports  = qc_reports.mix(RECALIBRATE.out.qc.collect{it[1]}.ifEmpty([]))
             ch_versions = ch_versions.mix(RECALIBRATE.out.versions)
 
-        }else{
-            cram_variant_calling = cram_markduplicates
-        }
+        } else cram_variant_calling = cram_markduplicates
 
     }
 
@@ -418,36 +401,26 @@ workflow SAREK {
         }.set{cram_variantcalling}
 
         // All Germline samples
-        cram_variant_calling_normal_cross = Channel.empty()
-        cram_variantcalling.normal.map{ meta, cram, crai ->
-            [meta.patient, meta, cram, crai]
-        }.set{cram_variant_calling_normal_cross}
+        cram_variant_calling_normal_cross = cram_variantcalling.normal.map{ meta, cram, crai -> [meta.patient, meta, cram, crai] }
 
         // All tumor samples
-        cram_variant_calling_tumor_cross = Channel.empty()
-        cram_variantcalling.tumor.map{ meta, cram, crai ->
-            [meta.patient, meta, cram, crai]
-        }.set{cram_variant_calling_tumor_cross}
+        cram_variant_calling_tumor_cross = cram_variantcalling.tumor.map{ meta, cram, crai -> [meta.patient, meta, cram, crai] }
 
         //Tumor only samples
         // 1. Group together all tumor samples by patient ID [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2]]
-        cram_variant_calling_tumor_grouped = Channel.empty()
 
         //Downside: this only works by waiting for all tumor samples to finish preprocessing, since no group size is provided
-        cram_variant_calling_tumor_cross.groupTuple().set{ cram_variant_calling_tumor_grouped }
+        cram_variant_calling_tumor_grouped = cram_variant_calling_tumor_cross.groupTuple()
 
         // 2. Join with normal samples, in each channel there is one key per patient now. Patients without matched normal end up with: [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2], null]
-        cram_variant_calling_tumor_joined = Channel.empty()
-        cram_variant_calling_tumor_grouped.join(cram_variant_calling_normal_cross, remainder: true).set{cram_variant_calling_tumor_joined}
+        cram_variant_calling_tumor_joined = cram_variant_calling_tumor_grouped.join(cram_variant_calling_normal_cross, remainder: true)
 
         // 3. Filter out entries with last entry null
-        cram_variant_calling_tumor_filtered = Channel.empty()
-        cram_variant_calling_tumor_joined.filter{ it ->  !(it.last())}.set{cram_variant_calling_tumor_filtered}
+        cram_variant_calling_tumor_filtered = cram_variant_calling_tumor_joined.filter{ it ->  !(it.last()) }
 
         // 4. Transpose [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2]] back to [patient1, meta1, [cram1,crai1], null] [patient1, meta2, [cram2,crai2], null]
         // and remove patient ID field & null value for further processing [meta1, [cram1,crai1]] [meta2, [cram2,crai2]]
-        cram_variant_calling_tumor_only = Channel.empty()
-        cram_variant_calling_tumor_filtered.transpose().map{ it -> [it[1], it[2], it[3]]}.set{cram_variant_calling_tumor_only}
+        cram_variant_calling_tumor_only = cram_variant_calling_tumor_filtered.transpose().map{ it -> [it[1], it[2], it[3]] }
 
         // Tumor - normal pairs
         // Use cross to combine normal with all tumor samples, i.e. multi tumor samples from recurrences
@@ -560,7 +533,7 @@ workflow SAREK {
     }
 
     ch_version_yaml = Channel.empty()
-    if (!('versions' in params.skip_qc)) {
+    if (!('versions' in params.skip_tools)) {
         CUSTOM_DUMPSOFTWAREVERSIONS(ch_versions.unique().collectFile(name: 'collated_versions.yml'))
         ch_version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
     }
@@ -576,7 +549,7 @@ workflow SAREK {
     // ch_multiqc_files = ch_multiqc_files.mix(qc_reports)
 
     // multiqc_report = Channel.empty()
-    // if (!('multiqc' in params.skip_qc)) {
+    // if (!('multiqc' in params.skip_tools)) {
     //     MULTIQC(ch_multiqc_files.collect())
     //     multiqc_report = MULTIQC.out.report.toList()
 

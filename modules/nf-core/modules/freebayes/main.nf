@@ -8,7 +8,7 @@ process FREEBAYES {
         'quay.io/biocontainers/freebayes:1.3.5--py38ha193a2f_3' }"
 
     input:
-    tuple val(meta), path(input_1), path(input_1_index), path(input_2), path(input_2_index), path (target_bed)
+    tuple val(meta), path(input_1), path(input_1_index), path(input_2), path(input_2_index), path(target_bed)
     path fasta
     path fasta_fai
     path samples
@@ -19,11 +19,14 @@ process FREEBAYES {
     tuple val(meta), path("*.vcf.gz"), emit: vcf
     path  "versions.yml"             , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def input            = input_2        ? "${input_1} ${input_2}"        : "${input_1}"
-    def targets_file     = target_bed     ? "--target ${target_bed}"          : ""
+    def targets_file     = target_bed     ? "--target ${target_bed}"       : ""
     def samples_file     = samples        ? "--samples ${samples}"         : ""
     def populations_file = populations    ? "--populations ${populations}" : ""
     def cnv_file         = cnv            ? "--cnv-map ${cnv}"             : ""
@@ -59,7 +62,7 @@ process FREEBAYES {
             $args \\
             $input > ${prefix}.vcf
 
-        gzip --no-name ${prefix}.vcf
+        bgzip ${prefix}.vcf
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
