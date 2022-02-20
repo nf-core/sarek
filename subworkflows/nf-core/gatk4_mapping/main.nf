@@ -18,6 +18,8 @@ workflow GATK4_MAPPING {
 
     main:
 
+    reads.view()
+
     ch_versions = Channel.empty()
 
     // Only one of the following will be run

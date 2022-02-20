@@ -33,6 +33,9 @@ workflow PREPARE_GENOME {
 
     BWAMEM1_INDEX(fasta) // If aligner is bwa-mem
     BWAMEM2_INDEX(fasta) // If aligner is bwa-mem2
+    // if we use mix here, bwa becomes a channel that is comsumed
+    ch_bwa = params.aligner == "bwa-mem" ? BWAMEM1_INDEX.out.index : BWAMEM2_INDEX.out.index
+
     GATK4_CREATESEQUENCEDICTIONARY(fasta)
     MSISENSORPRO_SCAN(fasta.map{ it -> [[id:it[0].baseName], it] })
     SAMTOOLS_FAIDX(fasta.map{ it -> [[id:it[0].getName()], it] })
@@ -53,7 +56,7 @@ workflow PREPARE_GENOME {
     ch_versions = ch_versions.mix(TABIX_PON.out.versions)
 
     emit:
-        bwa                              = BWAMEM1_INDEX.out.index.mix(BWAMEM2_INDEX.out.index)           // path: {bwamem1,bwamem2}/index
+        bwa                              = ch_bwa                                                         // path: {bwamem1,bwamem2}/index
         dbsnp_tbi                        = TABIX_DBSNP.out.tbi.map{ meta, tbi -> [tbi] }                  // path: dbsnb.vcf.gz.tbi
         dict                             = GATK4_CREATESEQUENCEDICTIONARY.out.dict                        // path: genome.fasta.dict
         fasta_fai                        = SAMTOOLS_FAIDX.out.fai.map{ meta, fai -> [fai] }               // path: genome.fasta.fai
