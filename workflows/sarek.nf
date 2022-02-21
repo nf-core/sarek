@@ -394,17 +394,16 @@ workflow SAREK {
         //
         // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
         //
-        cram_variantcalling = Channel.empty()
         cram_variant_calling.branch{
             normal:  it[0].status == 0
             tumor:   it[0].status == 1
-        }.set{cram_variantcalling}
+        }.set{cram_variant_calling_status}
 
         // All Germline samples
-        cram_variant_calling_normal_cross = cram_variantcalling.normal.map{ meta, cram, crai -> [meta.patient, meta, cram, crai] }
+        cram_variant_calling_normal_cross = cram_variant_calling_status.normal.map{ meta, cram, crai -> [meta.patient, meta, cram, crai] }
 
         // All tumor samples
-        cram_variant_calling_tumor_cross = cram_variantcalling.tumor.map{ meta, cram, crai -> [meta.patient, meta, cram, crai] }
+        cram_variant_calling_tumor_cross = cram_variant_calling_status.tumor.map{ meta, cram, crai -> [meta.patient, meta, cram, crai] }
 
         //Tumor only samples
         // 1. Group together all tumor samples by patient ID [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2]]
@@ -425,21 +424,21 @@ workflow SAREK {
         // Tumor - normal pairs
         // Use cross to combine normal with all tumor samples, i.e. multi tumor samples from recurrences
         cram_variant_calling_pair = cram_variant_calling_normal_cross.cross(cram_variant_calling_tumor_cross)
-        .map { normal, tumor ->
-            def meta = [:]
-            meta.patient    = normal[0]
-            meta.normal_id  = normal[1].sample
-            meta.tumor_id   = tumor[1].sample
-            meta.gender     = normal[1].gender
-            meta.id         = "${meta.tumor_id}_vs_${meta.normal_id}".toString()
+            .map { normal, tumor ->
+                def meta = [:]
+                meta.patient    = normal[0]
+                meta.normal_id  = normal[1].sample
+                meta.tumor_id   = tumor[1].sample
+                meta.gender     = normal[1].gender
+                meta.id         = "${meta.tumor_id}_vs_${meta.normal_id}".toString()
 
-            [meta, normal[2], normal[3], tumor[2], tumor[3]]
-        }
+                [meta, normal[2], normal[3], tumor[2], tumor[3]]
+            }
 
         // GERMLINE VARIANT CALLING
         GERMLINE_VARIANT_CALLING(
             params.tools,
-            cram_variantcalling.normal,
+            cram_variant_calling_status.normal,
             dbsnp,
             dbsnp_tbi,
             dict,
@@ -451,15 +450,7 @@ workflow SAREK {
             intervals_bed_combined_gz,
             num_intervals,
             params.no_intervals,
-            params.joint_germline
-            )
-
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.deepvariant_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.freebayes_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_gvcf)
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.manta_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)
-        ch_versions = ch_versions.mix(GERMLINE_VARIANT_CALLING.out.versions)
+            params.joint_germline)
 
         // TUMOR ONLY VARIANT CALLING
         TUMOR_ONLY_VARIANT_CALLING(
@@ -481,11 +472,6 @@ workflow SAREK {
             pon,
             pon_tbi
         )
-        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.freebayes_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.mutect2_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.manta_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.strelka_vcf)
-        ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
 
         // PAIR VARIANT CALLING
         PAIR_VARIANT_CALLING(
@@ -508,11 +494,24 @@ workflow SAREK {
             pon,
             pon_tbi)
 
+        // Gather all vcf files for annotation
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.deepvariant_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.freebayes_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_gvcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.manta_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.freebayes_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.mutect2_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.manta_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.strelka_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.mutect2_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.manta_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.strelka_vcf)
-        ch_versions = ch_versions.mix(PAIR_VARIANT_CALLING.out.versions)
 
+        // Gather version of all tools used
+        ch_versions = ch_versions.mix(PAIR_VARIANT_CALLING.out.versions)
+        ch_versions = ch_versions.mix(GERMLINE_VARIANT_CALLING.out.versions)
+        ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
 
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = input_sample
