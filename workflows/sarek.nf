@@ -230,7 +230,7 @@ workflow SAREK {
     intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi                      // multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
     intervals_bed_combined_gz_tbi = PREPARE_INTERVALS.out.intervals_combined_bed_gz_tbi.collect()   // one file containing all intervals interval.bed.gz/.tbi file
     intervals_bed_combined_gz     = intervals_bed_combined_gz_tbi.map{ bed, tbi -> [bed]}.collect() // one file containing all intervals interval.bed.gz file
-    intervals_combined_bed_gz_tbi_for_preprocessing = (!params.wes || params.no_intervals) ? [] : PREPARE_INTERVALS.out.intervals_bed //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
+    intervals_for_preprocessing   = (!params.wes || params.no_intervals) ? [] : PREPARE_INTERVALS.out.intervals_bed //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
 
     num_intervals = 0
     intervals.count().map{ num_intervals = it }
@@ -325,7 +325,7 @@ workflow SAREK {
             dict,
             fasta,
             fasta_fai,
-            intervals_combined_bed_gz_tbi_for_preprocessing)
+            intervals_for_preprocessing)
 
         cram_markduplicates = MARKDUPLICATES.out.cram
 
@@ -371,7 +371,7 @@ workflow SAREK {
                 intervals,
                 num_intervals,
                 params.no_intervals,
-                intervals_combined_bed_gz_tbi_for_preprocessing)
+                intervals_for_preprocessing)
 
             RECALIBRATE_CSV(RECALIBRATE.out.cram)
 
