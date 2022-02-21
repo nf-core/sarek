@@ -8,11 +8,9 @@ process MANTA_SOMATIC {
         'quay.io/biocontainers/manta:1.6.0--h9ee0642_1' }"
 
     input:
-    tuple val(meta), path(input_normal), path(input_index_normal), path(input_tumor), path(input_index_tumor)
+    tuple val(meta), path(input_normal), path(input_index_normal), path(input_tumor), path(input_index_tumor), path(target_bed), path(target_bed_tbi)
     path fasta
     path fai
-    path target_bed
-    path target_bed_tbi
 
     output:
     tuple val(meta), path("*.candidate_small_indels.vcf.gz")     , emit: candidate_small_indels_vcf

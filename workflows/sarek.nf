@@ -443,7 +443,6 @@ workflow SAREK {
 
         // GERMLINE VARIANT CALLING
         GERMLINE_VARIANT_CALLING(
-            params.tools,
             cram_variant_calling_status.normal,
             dbsnp,
             dbsnp_tbi,
@@ -454,9 +453,8 @@ workflow SAREK {
             intervals_bed_gz_tbi,
             intervals_bed_combined_gz_tbi,
             intervals_bed_combined_gz,
-            num_intervals,
-            params.no_intervals,
-            params.joint_germline)
+            num_intervals)
+            // params.joint_germline)
 
         // TUMOR ONLY VARIANT CALLING
         TUMOR_ONLY_VARIANT_CALLING(
@@ -516,8 +514,8 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.strelka_vcf)
 
         // Gather used softwares versions
-        ch_versions = ch_versions.mix(PAIR_VARIANT_CALLING.out.versions)
         ch_versions = ch_versions.mix(GERMLINE_VARIANT_CALLING.out.versions)
+        ch_versions = ch_versions.mix(PAIR_VARIANT_CALLING.out.versions)
         ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
 
         // ANNOTATE
