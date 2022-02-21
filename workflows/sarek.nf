@@ -341,7 +341,6 @@ workflow SAREK {
 
         // STEP 3: Create recalibration tables
         if (!('baserecalibrator' in params.skip_tools)) {
-
             PREPARE_RECALIBRATION(
                 cram_markduplicates,
                 dict,
@@ -402,24 +401,24 @@ workflow SAREK {
         // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
         //
         cram_variant_calling.branch{
-            normal:  it[0].status == 0
-            tumor:   it[0].status == 1
+            normal: it[0].status == 0
+            tumor:  it[0].status == 1
         }.set{cram_variant_calling_status}
 
         // All Germline samples
-        cram_variant_calling_normal_cross = cram_variant_calling_status.normal.map{ meta, cram, crai -> [meta.patient, meta, cram, crai] }
+        cram_variant_calling_normal_to_cross = cram_variant_calling_status.normal.map{ meta, cram, crai -> [meta.patient, meta, cram, crai] }
 
         // All tumor samples
-        cram_variant_calling_tumor_cross = cram_variant_calling_status.tumor.map{ meta, cram, crai -> [meta.patient, meta, cram, crai] }
+        cram_variant_calling_pair_to_cross = cram_variant_calling_status.tumor.map{ meta, cram, crai -> [meta.patient, meta, cram, crai] }
 
-        //Tumor only samples
+        // Tumor only samples
         // 1. Group together all tumor samples by patient ID [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2]]
 
-        //Downside: this only works by waiting for all tumor samples to finish preprocessing, since no group size is provided
-        cram_variant_calling_tumor_grouped = cram_variant_calling_tumor_cross.groupTuple()
+        // Downside: this only works by waiting for all tumor samples to finish preprocessing, since no group size is provided
+        cram_variant_calling_tumor_grouped = cram_variant_calling_pair_to_cross.groupTuple()
 
         // 2. Join with normal samples, in each channel there is one key per patient now. Patients without matched normal end up with: [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2], null]
-        cram_variant_calling_tumor_joined = cram_variant_calling_tumor_grouped.join(cram_variant_calling_normal_cross, remainder: true)
+        cram_variant_calling_tumor_joined = cram_variant_calling_tumor_grouped.join(cram_variant_calling_normal_to_cross, remainder: true)
 
         // 3. Filter out entries with last entry null
         cram_variant_calling_tumor_filtered = cram_variant_calling_tumor_joined.filter{ it ->  !(it.last()) }
@@ -430,7 +429,7 @@ workflow SAREK {
 
         // Tumor - normal pairs
         // Use cross to combine normal with all tumor samples, i.e. multi tumor samples from recurrences
-        cram_variant_calling_pair = cram_variant_calling_normal_cross.cross(cram_variant_calling_tumor_cross)
+        cram_variant_calling_pair = cram_variant_calling_normal_to_cross.cross(cram_variant_calling_pair_to_cross)
             .map { normal, tumor ->
                 def meta = [:]
                 meta.patient    = normal[0]
