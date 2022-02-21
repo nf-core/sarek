@@ -192,8 +192,10 @@ def multiqc_report = []
 
 workflow SAREK {
 
+    // To gather all QC reports for MultiQC
+    ch_reports  = Channel.empty()
+    // To gather used softwares versions for MultiQC
     ch_versions = Channel.empty()
-    qc_reports  = Channel.empty()
 
     // Build indices if needed
     PREPARE_GENOME(
@@ -235,7 +237,7 @@ workflow SAREK {
     num_intervals = 0
     intervals.count().map{ num_intervals = it }
 
-    // Get versions from all software used
+    // Gather used softwares versions
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
     // PREPROCESSING
@@ -263,26 +265,23 @@ workflow SAREK {
         // Get reads after optional trimming (+QC)
         reads_input = FASTQC_TRIMGALORE.out.reads
 
-        // Get all qc reports + versions from all software used for MultiQC
-        qc_reports  = qc_reports.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
-        qc_reports  = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
-        ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
+        // Gather QC reports
+        ch_reports  = ch_reports.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
+        ch_reports  = ch_reports.mix(FASTQC_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
 
         //Since read need additional mapping afterwards, I would argue for having the process here
         if (params.umi_read_structure) {
             CREATE_UMI_CONSENSUS(reads_input, fasta, bwa, umi_read_structure, params.group_by_umi_strategy, params.aligner)
-            ALIGNMENT_TO_FASTQ( CREATE_UMI_CONSENSUS.out.consensusbam, [] )
+            ALIGNMENT_TO_FASTQ(CREATE_UMI_CONSENSUS.out.consensusbam, [])
             reads_input = ALIGNMENT_TO_FASTQ.out.reads
 
+            // Gather used softwares versions
             ch_versions = ch_versions.mix(CREATE_UMI_CONSENSUS.out.versions)
             ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ.out.versions)
         }
 
         // OPTIONNAL SPLIT OF FASTQ FILES WITH SEQKIT_SPLIT2
         SPLIT_FASTQ(reads_input)
-
-        // Get versions from all software used
-        ch_versions = ch_versions.mix(SPLIT_FASTQ.out.versions)
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         GATK4_MAPPING(
@@ -301,7 +300,9 @@ workflow SAREK {
         // TODO: How is this handeled if not save_bam is set (no index should be present)
         //MAPPING_CSV(bam_indexed, save_bam_mapped, 'markduplicates' in params.skip_tools)
 
-        // Get versions from all software used
+        // Gather used softwares versions
+        ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
+        ch_versions = ch_versions.mix(SPLIT_FASTQ.out.versions)
         ch_versions = ch_versions.mix(GATK4_MAPPING.out.versions)
     }
 
@@ -332,7 +333,10 @@ workflow SAREK {
         // Create CSV to restart from this step
         MARKDUPLICATES_CSV(cram_markduplicates)
 
-        qc_reports  = qc_reports.mix(MARKDUPLICATES.out.qc.collect{it[1]}.ifEmpty([]))
+        // Gather QC reports
+        ch_reports  = ch_reports.mix(MARKDUPLICATES.out.qc.collect{it[1]}.ifEmpty([]))
+
+        // Gather used softwares versions
         ch_versions = ch_versions.mix(MARKDUPLICATES.out.versions)
 
         // STEP 3: Create recalibration tables
@@ -353,6 +357,7 @@ workflow SAREK {
 
             cram_applybqsr = cram_markduplicates.join(PREPARE_RECALIBRATION.out.table_bqsr)
 
+            // Gather used softwares versions
             ch_versions = ch_versions.mix(PREPARE_RECALIBRATION.out.versions)
         }
     }
@@ -377,7 +382,10 @@ workflow SAREK {
 
             cram_variant_calling = RECALIBRATE.out.cram
 
-            qc_reports  = qc_reports.mix(RECALIBRATE.out.qc.collect{it[1]}.ifEmpty([]))
+            // Gather QC reports
+            ch_reports  = ch_reports.mix(RECALIBRATE.out.qc.collect{it[1]}.ifEmpty([]))
+
+            // Gather used softwares versions
             ch_versions = ch_versions.mix(RECALIBRATE.out.versions)
 
         } else cram_variant_calling = cram_markduplicates
@@ -388,7 +396,6 @@ workflow SAREK {
 
     if (params.tools) {
 
-        vcf_to_annotate = Channel.empty()
         if (params.step in 'annotate') cram_variant_calling = Channel.empty()
 
         //
@@ -494,7 +501,8 @@ workflow SAREK {
             pon,
             pon_tbi)
 
-        // Gather all vcf files for annotation
+        // Gather vcf files for annotation
+        vcf_to_annotate = Channel.empty()
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.deepvariant_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.freebayes_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_gvcf)
@@ -508,7 +516,7 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.manta_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.strelka_vcf)
 
-        // Gather version of all tools used
+        // Gather used softwares versions
         ch_versions = ch_versions.mix(PAIR_VARIANT_CALLING.out.versions)
         ch_versions = ch_versions.mix(GERMLINE_VARIANT_CALLING.out.versions)
         ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
@@ -527,6 +535,8 @@ workflow SAREK {
                 vep_species,
                 vep_cache_version,
                 vep_cache)
+
+            // Gather used softwares versions
             ch_versions = ch_versions.mix(ANNOTATE.out.versions)
         }
     }
@@ -545,7 +555,7 @@ workflow SAREK {
     // ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     // ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     // ch_multiqc_files = ch_multiqc_files.mix(ch_version_yaml)
-    // ch_multiqc_files = ch_multiqc_files.mix(qc_reports)
+    // ch_multiqc_files = ch_multiqc_files.mix(ch_reports)
 
     // multiqc_report = Channel.empty()
     // if (!('multiqc' in params.skip_tools)) {
