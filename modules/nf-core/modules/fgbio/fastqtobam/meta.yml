@@ -1,6 +1,6 @@
 name: fgbio_fastqtobam
 description: |
-      Using the FGBIO tools, converts FASTQ files sequenced with UMIs into BAM files, moving the UMI barcode into the RX field of the BAM file
+  Using the FGBIO tools, converts FASTQ files sequenced with UMIs into BAM files, moving the UMI barcode into the RX field of the BAM file
 keywords:
   - fastqtobam
   - fgbio
@@ -11,7 +11,7 @@ tools:
       documentation: http://fulcrumgenomics.github.io/fgbio/tools/latest/
       tool_dev_url: https://github.com/fulcrumgenomics/fgbio
       doi: ""
-      licence: ['MIT']
+      licence: ["MIT"]
 
 input:
   - reads:
@@ -22,11 +22,11 @@ input:
   - read_structure:
       type: string
       description: |
-                  A read structure should always be provided for each of the fastq files.
-                  If single end, the string will contain only one structure (i.e. "2M11S+T"), if paired-end the string
-                  will contain two structures separated by a blank space (i.e. "2M11S+T 2M11S+T").
-                  If the read does not contain any UMI, the structure will be +T (i.e. only template of any length).
-                  https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
+        A read structure should always be provided for each of the fastq files.
+        If single end, the string will contain only one structure (i.e. "2M11S+T"), if paired-end the string
+        will contain two structures separated by a blank space (i.e. "2M11S+T 2M11S+T").
+        If the read does not contain any UMI, the structure will be +T (i.e. only template of any length).
+        https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
 
 output:
   - meta:

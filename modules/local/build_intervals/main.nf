@@ -13,6 +13,9 @@ process BUILD_INTERVALS {
     output:
     path "*.bed", emit: bed
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     awk -v FS='\t' -v OFS='\t' '{ print \$1, \"0\", \$2 }' ${fasta_fai} > ${fasta_fai.baseName}.bed

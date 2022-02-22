@@ -16,6 +16,9 @@ process GATK4_APPLYBQSR_SPARK {
     tuple val(meta), path("*.cram"), emit: cram
     path "versions.yml"            , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args  ?: ''
     def avail_mem = 3

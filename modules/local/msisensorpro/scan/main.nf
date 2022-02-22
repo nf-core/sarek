@@ -14,6 +14,9 @@ process MSISENSORPRO_SCAN {
     tuple val(meta), path("*.list"), emit: list
     path "versions.yml"            , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args  ?: ''
     def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"

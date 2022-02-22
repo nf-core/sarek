@@ -14,6 +14,9 @@ process INDEX_TARGET_BED {
     output:
     tuple path("*.gz"), path("*.gz.tbi"), emit: gz_tbi
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     bgzip --threads ${task.cpus} -c ${target_bed} > ${target_bed}.gz

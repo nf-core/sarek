@@ -16,13 +16,13 @@ process SAMTOOLS_FASTQ {
     tuple val(meta), path("*.fq.gz"), emit: reads
     path "versions.yml"             , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     def args2 = task.ext.args ?: ''
-
     def prefix = task.ext.prefix ?: "${meta.id}"
-
-
     """
     samtools collate -O -@$task.cpus $args $input . |
 

@@ -10,7 +10,7 @@ tools:
       documentation: https://github.com/google/deepvariant
       tool_dev_url: https://github.com/google/deepvariant
       doi: "https://doi.org/10.1038/nbt.4235"
-      licence: ['BSD-3-clause']
+      licence: ["BSD-3-clause"]
 
 input:
   - meta:

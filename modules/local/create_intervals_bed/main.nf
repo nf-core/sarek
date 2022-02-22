@@ -14,6 +14,9 @@ process CREATE_INTERVALS_BED {
     path ("*.bed"), emit: bed
     //TODO version number missing
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     // If intervals file is in BED format,
     // Fifth column is interpreted to contain runtime estimates

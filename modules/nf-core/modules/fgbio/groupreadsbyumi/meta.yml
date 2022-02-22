@@ -1,11 +1,11 @@
 name: fgbio_groupreadsbyumi
 description: |
-      Groups reads together that appear to have come from the same original molecule.
-      Reads are grouped by template, and then templates are sorted by the 5’ mapping positions
-      of the reads from the template, used from earliest mapping position to latest.
-      Reads that have the same end positions are then sub-grouped by UMI sequence.
-      (!) Note: the MQ tag is required on reads with mapped mates (!)
-      This can be added using samblaster with the optional argument --addMateTags.
+  Groups reads together that appear to have come from the same original molecule.
+  Reads are grouped by template, and then templates are sorted by the 5’ mapping positions
+  of the reads from the template, used from earliest mapping position to latest.
+  Reads that have the same end positions are then sub-grouped by UMI sequence.
+  (!) Note: the MQ tag is required on reads with mapped mates (!)
+  This can be added using samblaster with the optional argument --addMateTags.
 keywords:
   - UMI
   - groupreads
@@ -17,7 +17,7 @@ tools:
       documentation: http://fulcrumgenomics.github.io/fgbio/tools/latest/
       tool_dev_url: https://github.com/fulcrumgenomics/fgbio
       doi: ""
-      licence: ['MIT']
+      licence: ["MIT"]
 
 input:
   - meta:
