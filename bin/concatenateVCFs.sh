@@ -4,7 +4,7 @@ set -euo pipefail
 # This script concatenates all VCF files that are in the local directory,
 # that were created from different intervals to make a single final VCF
 
-usage() { echo "Usage: $0 [-i genome_index_file] [-o output.file.no.gz.extension] <-t target.bed> <-T tempDir> <-c cpus> <-n>" 1>&2; exit 1; }
+usage() { echo "Usage: $0 [-i genome_index_file] [-o output.file.no.gz.extension] <-t target.bed> <-c cpus> <-n>" 1>&2; exit 1; }
 
 while [[ $# -gt 0 ]]
 do
@@ -30,11 +30,6 @@ do
             shift # past argument
             shift # past value
             ;;
-        -T)
-            tempDir=$2
-            shift # past argument
-            shift # past value
-            ;;
         -n)
             noInt=1
             shift # past argument
@@ -48,7 +43,6 @@ done
 
 if [ -z ${genomeIndex} ]; then echo "Missing index file "; usage; fi
 if [ -z ${cpus} ]; then echo "No CPUs defined: setting to 1"; cpus=1; fi
-if [ -z ${tempDir} ]; then echo "No tempDir defined: setting to /tmp/"; cpus='/tmp/'; fi
 if [ -z ${outputFile} ]; then echo "Missing output file name"; usage; fi
 
 if [ -z ${noInt+x} ]
@@ -97,7 +91,7 @@ else
     bgzip -@${cpus} rawcalls.unsorted.vcf
 fi
 
-bcftools sort -T ${tempDir} rawcalls.unsorted.vcf.gz | bgzip > rawcalls.vcf.gz
+bcftools sort -T . rawcalls.unsorted.vcf.gz | bgzip > rawcalls.vcf.gz
 tabix -p vcf rawcalls.vcf.gz
 
 set +u
