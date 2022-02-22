@@ -23,7 +23,7 @@ process SAMTOOLS_VIEWINDEX {
 
     script:
     def args = task.ext.args  ?: ''
-    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def reference_command = fasta ? "--reference ${fasta} -C" : ""
     """
     samtools view --threads ${task.cpus-1} ${reference_command} $args $input > ${prefix}.cram

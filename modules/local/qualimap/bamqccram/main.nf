@@ -22,7 +22,7 @@ process QUALIMAP_BAMQC_CRAM {
 
     script:
     def args = task.ext.args ?: ''
-    prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     def collect_pairs = meta.single_end ? '' : '--collect-overlap-pairs'
     def memory = task.memory.toGiga() + "G"
     def regions = gff ? "--gff $gff" : ''
