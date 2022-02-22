@@ -115,8 +115,8 @@ workflow GERMLINE_VARIANT_CALLING {
     deepvariant_vcf = channel.empty().mix(
         CONCAT_GVCF_DEEPVARIANT.out.vcf,
         CONCAT_VCF_DEEPVARIANT.out.vcf,
-        DEEPVARIANT.out.gvcf,
-        DEEPVARIANT.out.vcf)
+        DEEPVARIANT.out.gvcf.join(TABIX_DEEPVARIANT_GVCF.out.tbi),
+        DEEPVARIANT.out.vcf.join(TABIX_DEEPVARIANT_VCF.out.tbi))
 
     // FREEBAYES
 
@@ -154,7 +154,7 @@ workflow GERMLINE_VARIANT_CALLING {
 
     freebayes_vcf = channel.empty().mix(
         CONCAT_VCF_FREEBAYES.out.vcf,
-        FREEBAYES.out.vcf)
+        FREEBAYES.out.vcf.join(TABIX_FREEBAYES.out.tbi))
 
     // HAPLOTYPECALLER
 
