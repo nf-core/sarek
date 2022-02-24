@@ -27,7 +27,10 @@ input:
       pattern: ["*.{vcf,vcf.gz}", "*.{idx,tbi}"]
   - intervals:
       type: file
-      description: Bed file with the genomic regions included in the library (optional)
+      description: Interval file with the genomic regions included in the library (optional)
+  - intervals_index:
+      type: file
+      description: Interval index file (optional)
   - fasta:
       type: file
       description: Reference fasta file

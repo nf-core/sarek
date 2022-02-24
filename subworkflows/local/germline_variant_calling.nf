@@ -24,6 +24,7 @@ include { DEEPVARIANT                                 } from '../../modules/nf-c
 include { FREEBAYES                                   } from '../../modules/nf-core/modules/freebayes/main'
 include { GATK_JOINT_GERMLINE_VARIANT_CALLING         } from '../../subworkflows/nf-core/joint_germline_variant_calling/main'
 include { GATK4_HAPLOTYPECALLER as HAPLOTYPECALLER    } from '../../modules/nf-core/modules/gatk4/haplotypecaller/main'
+include { GATK4_GENOTYPEGVCFS as GENOTYPEGVCFS        } from '../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
 include { MANTA_GERMLINE                              } from '../../modules/nf-core/modules/manta/germline/main'
 include { STRELKA_GERMLINE                            } from '../../modules/nf-core/modules/strelka/germline/main'
 include { TIDDIT_SV                                   } from '../../modules/nf-core/modules/tiddit/sv/main'
@@ -62,6 +63,7 @@ workflow GERMLINE_VARIANT_CALLING {
     deepvariant_vcf       = Channel.empty()
     freebayes_vcf         = Channel.empty()
     haplotypecaller_gvcf  = Channel.empty()
+    genotypegvcfs_vcf     = Channel.empty()
     manta_vcf             = Channel.empty()
     strelka_vcf           = Channel.empty()
 
@@ -192,6 +194,7 @@ workflow GERMLINE_VARIANT_CALLING {
         if(no_intervals){
             TABIX_HAPLOTYPECALLER(HAPLOTYPECALLER.out.vcf)
             haplotypecaller_gvcf_gz = HAPLOTYPECALLER.out.vcf
+            haplotypecaller_gvcf_gz_tbi = HAPLOTYPECALLER.out.tbi
             ch_versions = ch_versions.mix(TABIX_HAPLOTYPECALLER.out.versions)
         }else{
             BGZIP_HAPLOTYPECALLER(HAPLOTYPECALLER.out.vcf)
@@ -205,11 +208,30 @@ workflow GERMLINE_VARIANT_CALLING {
 
             CONCAT_VCF_HAPLOTYPECALLER(haplotypecaller_gvcf_to_concat, fasta_fai, intervals_bed_combine_gz)
             haplotypecaller_gvcf_gz = CONCAT_VCF_HAPLOTYPECALLER.out.vcf
+            haplotypecaller_gvcf_gz_tbi = CONCAT_VCF_HAPLOTYPECALLER.out.tbi
 
             ch_versions = ch_versions.mix(BGZIP_HAPLOTYPECALLER.out.versions)
             ch_versions = ch_versions.mix(CONCAT_VCF_HAPLOTYPECALLER.out.versions)
         }
 
+        haplotypecaller_gvcf_gz.join(haplotypecaller_gvcf_gz_tbi)
+        .combine(intervals_bed_combine_gz_tbi)
+        .map{
+            meta, gvcf, gvf_tbi, intervals, intervals_tbi ->
+            new_intervals = intervals.simpleName != "no_intervals" ? intervals : []
+            new_intervals_tbi = intervals_tbi.simpleName != "no_intervals" ? intervals_tbi : []
+            [meta, gvcf, gvf_tbi, new_intervals, new_intervals_tbi]
+        }.set{haplotypecaller_gvcf_to_call}
+
+        genotypegvcfs_vcf_gz = GENOTYPEGVCFS(
+            haplotypecaller_gvcf_to_call,
+            fasta,
+            fasta_fai,
+            dict,
+            dbsnp,
+            dbsnp_tbi)
+
+        genotypegvcfs_vcf = genotypegvcfs_vcf.mix(genotypegvcfs_vcf_gz)
 
         if(joint_germline){
             run_haplotypecaller = false
@@ -236,7 +258,6 @@ workflow GERMLINE_VARIANT_CALLING {
         }
 
         haplotypecaller_gvcf = haplotypecaller_gvcf.mix(haplotypecaller_gvcf_gz)
-
     }
 
     if (tools.contains('manta')){
@@ -374,6 +395,7 @@ workflow GERMLINE_VARIANT_CALLING {
     deepvariant_vcf
     freebayes_vcf
     haplotypecaller_gvcf
+    genotypegvcfs_vcf
     manta_vcf
     strelka_vcf
 
