@@ -8,7 +8,7 @@ process GATK4_GENOTYPEGVCFS {
         'quay.io/biocontainers/gatk4:4.2.5.0--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(gvcf), path(gvcf_index), path(intervals)
+    tuple val(meta), path(gvcf), path(gvcf_index), path(intervals), path(intervals_index)
     path  fasta
     path  fasta_index
     path  fasta_dict

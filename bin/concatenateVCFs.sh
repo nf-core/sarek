@@ -91,7 +91,7 @@ else
     bgzip -@${cpus} rawcalls.unsorted.vcf
 fi
 
-bcftools sort rawcalls.unsorted.vcf.gz | bgzip > rawcalls.vcf.gz
+bcftools sort -T . rawcalls.unsorted.vcf.gz | bgzip > rawcalls.vcf.gz
 tabix -p vcf rawcalls.vcf.gz
 
 set +u
