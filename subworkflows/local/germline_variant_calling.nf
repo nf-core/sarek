@@ -63,7 +63,7 @@ workflow GERMLINE_VARIANT_CALLING {
     deepvariant_vcf       = Channel.empty()
     freebayes_vcf         = Channel.empty()
     haplotypecaller_gvcf  = Channel.empty()
-    genotypegvcfs_vcf      = Channel.empty()
+    genotypegvcfs_vcf     = Channel.empty()
     manta_vcf             = Channel.empty()
     strelka_vcf           = Channel.empty()
 
