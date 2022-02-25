@@ -20,7 +20,7 @@ include { FREEBAYES                               } from '../../modules/nf-core/
 include { GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk_tumor_only_somatic_variant_calling/main'
 include { MANTA_TUMORONLY                         } from '../../modules/nf-core/modules/manta/tumoronly/main'
 include { STRELKA_GERMLINE as STRELKA_TUMORONLY   } from '../../modules/nf-core/modules/strelka/germline/main'
-include { TABIX_TABIX as TABIX_FREEBAYES          } from '../../modules/nf-core/modules/tabix/tabix/main'
+include { TABIX_TABIX as TABIX_VC_FREEBAYES       } from '../../modules/nf-core/modules/tabix/tabix/main'
 
 workflow TUMOR_ONLY_VARIANT_CALLING {
     take:
@@ -93,9 +93,9 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         ch_versions = ch_versions.mix(FREEBAYES.out.versions)
 
         if(no_intervals){
-            TABIX_FREEBAYES(FREEBAYES.out.vcf)
+            TABIX_VC_FREEBAYES(FREEBAYES.out.vcf)
             freebayes_vcf_gz = FREEBAYES.out.vcf
-            ch_versions = ch_versions.mix(TABIX_FREEBAYES.out.versions)
+            ch_versions = ch_versions.mix(TABIX_VC_FREEBAYES.out.versions)
         }else{
             BGZIP_VC_FREEBAYES(FREEBAYES.out.vcf)
             BGZIP_VC_FREEBAYES.out.vcf.map{ meta, vcf ->
