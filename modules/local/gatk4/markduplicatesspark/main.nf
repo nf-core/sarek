@@ -28,7 +28,7 @@ process GATK4_MARKDUPLICATES_SPARK {
     } else {
         avail_mem = task.memory.giga
     }
-    prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     def bams = bam.collect(){ x -> "-I ".concat(x.toString()) }.join(" ")
     """
     gatk  \

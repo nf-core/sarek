@@ -192,8 +192,10 @@ def multiqc_report = []
 
 workflow SAREK {
 
+    // To gather all QC reports for MultiQC
+    ch_reports  = Channel.empty()
+    // To gather used softwares versions for MultiQC
     ch_versions = Channel.empty()
-    qc_reports  = Channel.empty()
 
     // Build indices if needed
     PREPARE_GENOME(
@@ -230,12 +232,12 @@ workflow SAREK {
     intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi                      // multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
     intervals_bed_combined_gz_tbi = PREPARE_INTERVALS.out.intervals_combined_bed_gz_tbi.collect()   // one file containing all intervals interval.bed.gz/.tbi file
     intervals_bed_combined_gz     = intervals_bed_combined_gz_tbi.map{ bed, tbi -> [bed]}.collect() // one file containing all intervals interval.bed.gz file
-    intervals_combined_bed_gz_tbi_for_preprocessing = (!params.wes || params.no_intervals) ? [] : PREPARE_INTERVALS.out.intervals_bed //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
+    intervals_for_preprocessing   = (!params.wes || params.no_intervals) ? [] : PREPARE_INTERVALS.out.intervals_bed //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
 
     num_intervals = 0
     intervals.count().map{ num_intervals = it }
 
-    // Get versions from all software used
+    // Gather used softwares versions
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
     // PREPROCESSING
@@ -263,26 +265,23 @@ workflow SAREK {
         // Get reads after optional trimming (+QC)
         reads_input = FASTQC_TRIMGALORE.out.reads
 
-        // Get all qc reports + versions from all software used for MultiQC
-        qc_reports  = qc_reports.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
-        qc_reports  = qc_reports.mix(FASTQC_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
-        ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
+        // Gather QC reports
+        ch_reports  = ch_reports.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
+        ch_reports  = ch_reports.mix(FASTQC_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
 
         //Since read need additional mapping afterwards, I would argue for having the process here
         if (params.umi_read_structure) {
             CREATE_UMI_CONSENSUS(reads_input, fasta, bwa, umi_read_structure, params.group_by_umi_strategy, params.aligner)
-            ALIGNMENT_TO_FASTQ( CREATE_UMI_CONSENSUS.out.consensusbam, [] )
+            ALIGNMENT_TO_FASTQ(CREATE_UMI_CONSENSUS.out.consensusbam, [])
             reads_input = ALIGNMENT_TO_FASTQ.out.reads
 
+            // Gather used softwares versions
             ch_versions = ch_versions.mix(CREATE_UMI_CONSENSUS.out.versions)
             ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ.out.versions)
         }
 
         // OPTIONNAL SPLIT OF FASTQ FILES WITH SEQKIT_SPLIT2
         SPLIT_FASTQ(reads_input)
-
-        // Get versions from all software used
-        ch_versions = ch_versions.mix(SPLIT_FASTQ.out.versions)
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         GATK4_MAPPING(
@@ -301,7 +300,9 @@ workflow SAREK {
         // TODO: How is this handeled if not save_bam is set (no index should be present)
         //MAPPING_CSV(bam_indexed, save_bam_mapped, 'markduplicates' in params.skip_tools)
 
-        // Get versions from all software used
+        // Gather used softwares versions
+        ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
+        ch_versions = ch_versions.mix(SPLIT_FASTQ.out.versions)
         ch_versions = ch_versions.mix(GATK4_MAPPING.out.versions)
     }
 
@@ -325,19 +326,21 @@ workflow SAREK {
             dict,
             fasta,
             fasta_fai,
-            intervals_combined_bed_gz_tbi_for_preprocessing)
+            intervals_for_preprocessing)
 
         cram_markduplicates = MARKDUPLICATES.out.cram
 
         // Create CSV to restart from this step
         MARKDUPLICATES_CSV(cram_markduplicates)
 
-        qc_reports  = qc_reports.mix(MARKDUPLICATES.out.qc.collect{it[1]}.ifEmpty([]))
+        // Gather QC reports
+        ch_reports  = ch_reports.mix(MARKDUPLICATES.out.qc.collect{it[1]}.ifEmpty([]))
+
+        // Gather used softwares versions
         ch_versions = ch_versions.mix(MARKDUPLICATES.out.versions)
 
         // STEP 3: Create recalibration tables
         if (!('baserecalibrator' in params.skip_tools)) {
-
             PREPARE_RECALIBRATION(
                 cram_markduplicates,
                 dict,
@@ -353,6 +356,7 @@ workflow SAREK {
 
             cram_applybqsr = cram_markduplicates.join(PREPARE_RECALIBRATION.out.table_bqsr)
 
+            // Gather used softwares versions
             ch_versions = ch_versions.mix(PREPARE_RECALIBRATION.out.versions)
         }
     }
@@ -371,13 +375,16 @@ workflow SAREK {
                 intervals,
                 num_intervals,
                 params.no_intervals,
-                intervals_combined_bed_gz_tbi_for_preprocessing)
+                intervals_for_preprocessing)
 
             RECALIBRATE_CSV(RECALIBRATE.out.cram)
 
             cram_variant_calling = RECALIBRATE.out.cram
 
-            qc_reports  = qc_reports.mix(RECALIBRATE.out.qc.collect{it[1]}.ifEmpty([]))
+            // Gather QC reports
+            ch_reports  = ch_reports.mix(RECALIBRATE.out.qc.collect{it[1]}.ifEmpty([]))
+
+            // Gather used softwares versions
             ch_versions = ch_versions.mix(RECALIBRATE.out.versions)
 
         } else cram_variant_calling = cram_markduplicates
@@ -388,32 +395,30 @@ workflow SAREK {
 
     if (params.tools) {
 
-        vcf_to_annotate = Channel.empty()
         if (params.step in 'annotate') cram_variant_calling = Channel.empty()
 
         //
         // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
         //
-        cram_variantcalling = Channel.empty()
         cram_variant_calling.branch{
-            normal:  it[0].status == 0
-            tumor:   it[0].status == 1
-        }.set{cram_variantcalling}
+            normal: it[0].status == 0
+            tumor:  it[0].status == 1
+        }.set{cram_variant_calling_status}
 
         // All Germline samples
-        cram_variant_calling_normal_cross = cram_variantcalling.normal.map{ meta, cram, crai -> [meta.patient, meta, cram, crai] }
+        cram_variant_calling_normal_to_cross = cram_variant_calling_status.normal.map{ meta, cram, crai -> [meta.patient, meta, cram, crai] }
 
         // All tumor samples
-        cram_variant_calling_tumor_cross = cram_variantcalling.tumor.map{ meta, cram, crai -> [meta.patient, meta, cram, crai] }
+        cram_variant_calling_pair_to_cross = cram_variant_calling_status.tumor.map{ meta, cram, crai -> [meta.patient, meta, cram, crai] }
 
-        //Tumor only samples
+        // Tumor only samples
         // 1. Group together all tumor samples by patient ID [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2]]
 
-        //Downside: this only works by waiting for all tumor samples to finish preprocessing, since no group size is provided
-        cram_variant_calling_tumor_grouped = cram_variant_calling_tumor_cross.groupTuple()
+        // Downside: this only works by waiting for all tumor samples to finish preprocessing, since no group size is provided
+        cram_variant_calling_tumor_grouped = cram_variant_calling_pair_to_cross.groupTuple()
 
         // 2. Join with normal samples, in each channel there is one key per patient now. Patients without matched normal end up with: [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2], null]
-        cram_variant_calling_tumor_joined = cram_variant_calling_tumor_grouped.join(cram_variant_calling_normal_cross, remainder: true)
+        cram_variant_calling_tumor_joined = cram_variant_calling_tumor_grouped.join(cram_variant_calling_normal_to_cross, remainder: true)
 
         // 3. Filter out entries with last entry null
         cram_variant_calling_tumor_filtered = cram_variant_calling_tumor_joined.filter{ it ->  !(it.last()) }
@@ -424,22 +429,21 @@ workflow SAREK {
 
         // Tumor - normal pairs
         // Use cross to combine normal with all tumor samples, i.e. multi tumor samples from recurrences
-        cram_variant_calling_pair = cram_variant_calling_normal_cross.cross(cram_variant_calling_tumor_cross)
-        .map { normal, tumor ->
-            def meta = [:]
-            meta.patient    = normal[0]
-            meta.normal_id  = normal[1].sample
-            meta.tumor_id   = tumor[1].sample
-            meta.gender     = normal[1].gender
-            meta.id         = "${meta.tumor_id}_vs_${meta.normal_id}".toString()
+        cram_variant_calling_pair = cram_variant_calling_normal_to_cross.cross(cram_variant_calling_pair_to_cross)
+            .map { normal, tumor ->
+                def meta = [:]
+                meta.patient    = normal[0]
+                meta.normal_id  = normal[1].sample
+                meta.tumor_id   = tumor[1].sample
+                meta.gender     = normal[1].gender
+                meta.id         = "${meta.tumor_id}_vs_${meta.normal_id}".toString()
 
-            [meta, normal[2], normal[3], tumor[2], tumor[3]]
-        }
+                [meta, normal[2], normal[3], tumor[2], tumor[3]]
+            }
 
         // GERMLINE VARIANT CALLING
         GERMLINE_VARIANT_CALLING(
-            params.tools,
-            cram_variantcalling.normal,
+            cram_variant_calling_status.normal,
             dbsnp,
             dbsnp_tbi,
             dict,
@@ -449,17 +453,8 @@ workflow SAREK {
             intervals_bed_gz_tbi,
             intervals_bed_combined_gz_tbi,
             intervals_bed_combined_gz,
-            num_intervals,
-            params.no_intervals,
-            params.joint_germline
-            )
-
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.deepvariant_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.freebayes_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_gvcf)
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.manta_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)
-        ch_versions = ch_versions.mix(GERMLINE_VARIANT_CALLING.out.versions)
+            num_intervals)
+            // params.joint_germline)
 
         // TUMOR ONLY VARIANT CALLING
         TUMOR_ONLY_VARIANT_CALLING(
@@ -481,11 +476,6 @@ workflow SAREK {
             pon,
             pon_tbi
         )
-        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.freebayes_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.mutect2_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.manta_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.strelka_vcf)
-        ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
 
         // PAIR VARIANT CALLING
         PAIR_VARIANT_CALLING(
@@ -508,11 +498,25 @@ workflow SAREK {
             pon,
             pon_tbi)
 
+        // Gather vcf files for annotation
+        vcf_to_annotate = Channel.empty()
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.deepvariant_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.freebayes_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_gvcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.manta_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.freebayes_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.mutect2_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.manta_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.strelka_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.mutect2_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.manta_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.strelka_vcf)
-        ch_versions = ch_versions.mix(PAIR_VARIANT_CALLING.out.versions)
 
+        // Gather used softwares versions
+        ch_versions = ch_versions.mix(GERMLINE_VARIANT_CALLING.out.versions)
+        ch_versions = ch_versions.mix(PAIR_VARIANT_CALLING.out.versions)
+        ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
 
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = input_sample
@@ -528,6 +532,8 @@ workflow SAREK {
                 vep_species,
                 vep_cache_version,
                 vep_cache)
+
+            // Gather used softwares versions
             ch_versions = ch_versions.mix(ANNOTATE.out.versions)
         }
     }
@@ -546,7 +552,7 @@ workflow SAREK {
     // ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     // ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     // ch_multiqc_files = ch_multiqc_files.mix(ch_version_yaml)
-    // ch_multiqc_files = ch_multiqc_files.mix(qc_reports)
+    // ch_multiqc_files = ch_multiqc_files.mix(ch_reports)
 
     // multiqc_report = Channel.empty()
     // if (!('multiqc' in params.skip_tools)) {

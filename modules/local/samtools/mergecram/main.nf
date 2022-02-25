@@ -19,7 +19,7 @@ process SAMTOOLS_MERGE_CRAM {
     task.ext.when == null || task.ext.when
 
     script:
-    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     samtools merge -@${task.cpus} --reference ${fasta} ${prefix}.cram $crams
 
