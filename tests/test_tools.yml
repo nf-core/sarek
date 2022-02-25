@@ -1,11 +1,16 @@
-- name: Run variant for tumor normal pair with haplotypecaller
-  command: nextflow run main.nf -profile test,tools,docker --tools haplotypecaller
+- name: Run variant calling on tumor normal pair with haplotypecaller
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller
   tags:
-    - tumor_normal_pair
     - germline
     - variant_calling
   files:
     - path: results/variant_calling/sample1/haplotypecaller/sample1.g.vcf.gz
     - path: results/variant_calling/sample1/haplotypecaller/sample1.g.vcf.gz.tbi
-    - path: results/variant_calling/sample2/haplotypecaller/sample2.g.vcf.gz
-    - path: results/variant_calling/sample2/haplotypecaller/sample2.g.vcf.gz.tbi
+- name: Run variant calling on tumor normal pair with haplotypecaller without intervals
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --no_intervals
+  tags:
+    - germline
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample1/haplotypecaller/sample1.g.vcf.gz
+    - path: results/variant_calling/sample1/haplotypecaller/sample1.g.vcf.gz.tbi
