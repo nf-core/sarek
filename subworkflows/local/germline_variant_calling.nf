@@ -183,13 +183,25 @@ workflow GERMLINE_VARIANT_CALLING {
         fasta_fai,
         intervals_bed_combine_gz)
 
+    HAPLOTYPECALLER.out.vcf.groupTuple(size: num_intervals)
+        .branch{
+            intervals:    it[1].size() > 1
+            no_intervals: it[1].size() == 1
+        }.set{haplotypecaller_gvcf_intervals}
+
+    HAPLOTYPECALLER.out.tbi.groupTuple(size: num_intervals)
+        .branch{
+            intervals:    it[1].size() > 1
+            no_intervals: it[1].size() == 1
+        }.set{haplotypecaller_gvcf_tbi_intervals}
+
     haplotypecaller_gvcf = Channel.empty().mix(
         CONCAT_VCF_HAPLOTYPECALLER.out.vcf,
-        HAPLOTYPECALLER.out.vcf)
+        haplotypecaller_gvcf_intervals.intervals)
 
     haplotypecaller_gvcf_tbi = Channel.empty().mix(
         CONCAT_VCF_HAPLOTYPECALLER.out.tbi,
-        HAPLOTYPECALLER.out.tbi)
+        haplotypecaller_gvcf_tbi_intervals.intervals)
 
     genotype_gvcf_to_call = haplotypecaller_gvcf.join(haplotypecaller_gvcf_tbi)
         .combine(intervals_bed_combine_gz_tbi)
@@ -199,6 +211,8 @@ workflow GERMLINE_VARIANT_CALLING {
             new_intervals_tbi = intervals_tbi.simpleName != "no_intervals" ? intervals_tbi : []
             [meta, gvcf, gvf_tbi, new_intervals, new_intervals_tbi]
         }
+
+    // GENOTYPEGVCFS
 
     GENOTYPEGVCFS(
         genotype_gvcf_to_call,
