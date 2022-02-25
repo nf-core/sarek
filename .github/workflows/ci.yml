@@ -39,6 +39,7 @@ jobs:
           - 'manta'
           # - 'save_bam_mapped'
           - 'skip_markduplicates'
+          - 'strelka'
           - 'split_fastq'
           - 'targeted'
           - 'tumor_normal_pair'
