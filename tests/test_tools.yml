@@ -74,3 +74,28 @@
     - path: results/variant_calling/sample1/manta/sample1.candidate_sv.vcf.gz.tbi
     - path: results/variant_calling/sample1/manta/sample1.diploid_sv.vcf.gz
     - path: results/variant_calling/sample1/manta/sample1.diploid_sv.vcf.gz.tbi
+
+- name: Run variant calling on germline sample with strelka
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools strelka
+  tags:
+    - germline
+    - strelka
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample1/strelka/sample1.variants.vcf.gz
+    - path: results/variant_calling/sample1/strelka/sample1.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample1/strelka/sample1.genome.vcf.gz
+    - path: results/variant_calling/sample1/strelka/sample1.genome.vcf.gz.tbi
+
+- name: Run variant calling on germline sample with strelka without intervals
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools strelka --no_intervals
+  tags:
+    - germline
+    - strelka
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample1/strelka/sample1.variants.vcf.gz
+    - path: results/variant_calling/sample1/strelka/sample1.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample1/strelka/sample1.genome.vcf.gz
+    - path: results/variant_calling/sample1/strelka/sample1.genome.vcf.gz.tbi
