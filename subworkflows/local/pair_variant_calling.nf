@@ -1,22 +1,22 @@
 //
 // PAIRED VARIANT CALLING
 //
-include { BGZIP as BGZIP_MANTA_SMALL_INDELS           } from '../../modules/local/bgzip'
-include { BGZIP as BGZIP_MANTA_SV                     } from '../../modules/local/bgzip'
-include { BGZIP as BGZIP_MANTA_DIPLOID                } from '../../modules/local/bgzip'
-include { BGZIP as BGZIP_MANTA_SOMATIC                  } from '../../modules/local/bgzip'
-include { BGZIP as BGZIP_STRELKA_SNVS                      } from '../../modules/local/bgzip'
-include { BGZIP as BGZIP_STRELKA_INDELS                      } from '../../modules/local/bgzip'
-include { CONCAT_VCF as CONCAT_VCF_MANTA_SMALL_INDELS } from '../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_VCF_MANTA_SV           } from '../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_VCF_MANTA_DIPLOID      } from '../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_VCF_MANTA_SOMATIC        } from '../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_VCF_STRELKA_SNVS            } from '../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_VCF_STRELKA_INDELS            } from '../../modules/local/concat_vcf/main'
-include { GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING     } from '../../subworkflows/nf-core/gatk_tumor_normal_somatic_variant_calling/main'
-include { MANTA_SOMATIC                                 } from '../../modules/nf-core/modules/manta/somatic/main'
-include { MSISENSORPRO_MSI_SOMATIC                      } from '../../modules/nf-core/modules/msisensorpro/msi_somatic/main'
-include { STRELKA_SOMATIC                               } from '../../modules/nf-core/modules/strelka/somatic/main'
+include { BGZIP as BGZIP_VC_MANTA_DIPLOID           } from '../../modules/local/bgzip'
+include { BGZIP as BGZIP_VC_MANTA_SMALL_INDELS      } from '../../modules/local/bgzip'
+include { BGZIP as BGZIP_VC_MANTA_SOMATIC           } from '../../modules/local/bgzip'
+include { BGZIP as BGZIP_VC_MANTA_SV                } from '../../modules/local/bgzip'
+include { BGZIP as BGZIP_VC_STRELKA_INDELS          } from '../../modules/local/bgzip'
+include { BGZIP as BGZIP_VC_STRELKA_SNVS            } from '../../modules/local/bgzip'
+include { CONCAT_VCF as CONCAT_MANTA_DIPLOID        } from '../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_MANTA_SMALL_INDELS   } from '../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_MANTA_SOMATIC        } from '../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_MANTA_SV             } from '../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_STRELKA_INDELS       } from '../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_STRELKA_SNVS         } from '../../modules/local/concat_vcf/main'
+include { GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk_tumor_normal_somatic_variant_calling/main'
+include { MANTA_SOMATIC                             } from '../../modules/nf-core/modules/manta/somatic/main'
+include { MSISENSORPRO_MSI_SOMATIC                  } from '../../modules/nf-core/modules/msisensorpro/msi_somatic/main'
+include { STRELKA_SOMATIC                           } from '../../modules/nf-core/modules/strelka/somatic/main'
 
 workflow PAIR_VARIANT_CALLING {
     take:
@@ -88,58 +88,58 @@ workflow PAIR_VARIANT_CALLING {
             manta_somatic_sv_vcf             = MANTA_SOMATIC.out.somatic_sv_vcf
         }else{
 
-            BGZIP_MANTA_SV(MANTA_SOMATIC.out.candidate_small_indels_vcf)
-            BGZIP_MANTA_SMALL_INDELS(MANTA_SOMATIC.out.candidate_sv_vcf)
-            BGZIP_MANTA_DIPLOID(MANTA_SOMATIC.out.diploid_sv_vcf)
-            BGZIP_MANTA_SOMATIC(MANTA_SOMATIC.out.somatic_sv_vcf)
+            BGZIP_VC_MANTA_SV(MANTA_SOMATIC.out.candidate_small_indels_vcf)
+            BGZIP_VC_MANTA_SMALL_INDELS(MANTA_SOMATIC.out.candidate_sv_vcf)
+            BGZIP_VC_MANTA_DIPLOID(MANTA_SOMATIC.out.diploid_sv_vcf)
+            BGZIP_VC_MANTA_SOMATIC(MANTA_SOMATIC.out.somatic_sv_vcf)
 
-            BGZIP_MANTA_SV.out.vcf.map{ meta, vcf ->
+            BGZIP_VC_MANTA_SV.out.vcf.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
                 [new_meta, vcf]
             }.groupTuple(size: num_intervals)
             .set{manta_sv_vcf_to_concat}
 
-            BGZIP_MANTA_SMALL_INDELS.out.vcf.map{ meta, vcf ->
+            BGZIP_VC_MANTA_SMALL_INDELS.out.vcf.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
                 [new_meta, vcf]
             }.groupTuple(size: num_intervals)
             .set{manta_small_indels_vcf_to_concat}
 
-            BGZIP_MANTA_DIPLOID.out.vcf.map{ meta, vcf ->
+            BGZIP_VC_MANTA_DIPLOID.out.vcf.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
                 [new_meta, vcf]
             }.groupTuple(size: num_intervals)
             .set{manta_diploid_vcf_to_concat}
 
-            BGZIP_MANTA_SOMATIC.out.vcf.map{ meta, vcf ->
+            BGZIP_VC_MANTA_SOMATIC.out.vcf.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
                 [new_meta, vcf]
             }.groupTuple(size: num_intervals)
             .set{manta_somatic_sv_vcf_to_concat}
 
-            CONCAT_VCF_MANTA_SV(manta_sv_vcf_to_concat, fasta_fai, intervals_bed_combine_gz)
-            CONCAT_VCF_MANTA_SMALL_INDELS(manta_small_indels_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
-            CONCAT_VCF_MANTA_DIPLOID(manta_diploid_vcf_to_concat, fasta_fai, intervals_bed_combine_gz)
-            CONCAT_VCF_MANTA_SOMATIC(manta_somatic_sv_vcf_to_concat, fasta_fai, intervals_bed_combine_gz)
+            CONCAT_MANTA_SV(manta_sv_vcf_to_concat, fasta_fai, intervals_bed_combine_gz)
+            CONCAT_MANTA_SMALL_INDELS(manta_small_indels_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
+            CONCAT_MANTA_DIPLOID(manta_diploid_vcf_to_concat, fasta_fai, intervals_bed_combine_gz)
+            CONCAT_MANTA_SOMATIC(manta_somatic_sv_vcf_to_concat, fasta_fai, intervals_bed_combine_gz)
 
-            manta_candidate_small_indels_vcf = CONCAT_VCF_MANTA_SV.out.vcf
-            manta_candidate_sv_vcf           = CONCAT_VCF_MANTA_SMALL_INDELS.out.vcf
-            manta_diploid_sv_vcf             = CONCAT_VCF_MANTA_DIPLOID.out.vcf
-            manta_somatic_sv_vcf             = CONCAT_VCF_MANTA_SOMATIC.out.vcf
+            manta_candidate_small_indels_vcf = CONCAT_MANTA_SV.out.vcf
+            manta_candidate_sv_vcf           = CONCAT_MANTA_SMALL_INDELS.out.vcf
+            manta_diploid_sv_vcf             = CONCAT_MANTA_DIPLOID.out.vcf
+            manta_somatic_sv_vcf             = CONCAT_MANTA_SOMATIC.out.vcf
 
-            ch_versions = ch_versions.mix(BGZIP_MANTA_SV.out.versions)
-            ch_versions = ch_versions.mix(BGZIP_MANTA_SMALL_INDELS.out.versions)
-            ch_versions = ch_versions.mix(BGZIP_MANTA_DIPLOID.out.versions)
-            ch_versions = ch_versions.mix(BGZIP_MANTA_SOMATIC.out.versions)
+            ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SV.out.versions)
+            ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SMALL_INDELS.out.versions)
+            ch_versions = ch_versions.mix(BGZIP_VC_MANTA_DIPLOID.out.versions)
+            ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SOMATIC.out.versions)
 
-            ch_versions = ch_versions.mix(CONCAT_VCF_MANTA_SV.out.versions)
-            ch_versions = ch_versions.mix(CONCAT_VCF_MANTA_SMALL_INDELS.out.versions)
-            ch_versions = ch_versions.mix(CONCAT_VCF_MANTA_DIPLOID.out.versions)
-            ch_versions = ch_versions.mix(CONCAT_VCF_MANTA_SOMATIC.out.versions)
+            ch_versions = ch_versions.mix(CONCAT_MANTA_SV.out.versions)
+            ch_versions = ch_versions.mix(CONCAT_MANTA_SMALL_INDELS.out.versions)
+            ch_versions = ch_versions.mix(CONCAT_MANTA_DIPLOID.out.versions)
+            ch_versions = ch_versions.mix(CONCAT_MANTA_SOMATIC.out.versions)
 
         }
 
@@ -187,31 +187,31 @@ workflow PAIR_VARIANT_CALLING {
             strelka_snvs_vcf_gz = STRELKA_SOMATIC.out.vcf_snvs
             strelka_indels_vcf_gz = STRELKA_SOMATIC.out.vcf_indels
         }else{
-            BGZIP_STRELKA_SNVS(STRELKA_SOMATIC.out.vcf_snvs)
-            BGZIP_STRELKA_INDELS(STRELKA_SOMATIC.out.vcf_indels)
+            BGZIP_VC_STRELKA_SNVS(STRELKA_SOMATIC.out.vcf_snvs)
+            BGZIP_VC_STRELKA_INDELS(STRELKA_SOMATIC.out.vcf_indels)
 
-            BGZIP_STRELKA_SNVS.out.vcf.map{ meta, vcf ->
+            BGZIP_VC_STRELKA_SNVS.out.vcf.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
                 [new_meta, vcf]
             }.groupTuple(size: num_intervals)
             .set{strelka_snvs_vcf_to_concat}
 
-            BGZIP_STRELKA_INDELS.out.vcf.map{ meta, vcf ->
+            BGZIP_VC_STRELKA_INDELS.out.vcf.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
                 [new_meta, vcf]
             }.groupTuple(size: num_intervals)
             .set{strelka_indels_vcf_to_concat}
 
-            CONCAT_VCF_STRELKA_SNVS(strelka_snvs_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
-            CONCAT_VCF_STRELKA_INDELS(strelka_indels_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
+            CONCAT_STRELKA_SNVS(strelka_snvs_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
+            CONCAT_STRELKA_INDELS(strelka_indels_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
 
-            strelka_snvs_vcf_gz = CONCAT_VCF_STRELKA_SNVS.out.vcf
-            strelka_indels_vcf_gz = CONCAT_VCF_STRELKA_INDELS.out.vcf
+            strelka_snvs_vcf_gz = CONCAT_STRELKA_SNVS.out.vcf
+            strelka_indels_vcf_gz = CONCAT_STRELKA_INDELS.out.vcf
 
-            ch_versions = ch_versions.mix(BGZIP_STRELKA_SNVS.out.versions)
-            ch_versions = ch_versions.mix(CONCAT_VCF_STRELKA_SNVS.out.versions)
+            ch_versions = ch_versions.mix(BGZIP_VC_STRELKA_SNVS.out.versions)
+            ch_versions = ch_versions.mix(CONCAT_STRELKA_SNVS.out.versions)
         }
 
         strelka_vcf = strelka_vcf.mix(strelka_snvs_vcf_gz,strelka_indels_vcf_gz)
