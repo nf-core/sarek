@@ -19,7 +19,7 @@
     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz.tbi
     - path: results/variant_calling/sample1/haplotypecaller/sample1.g.vcf.gz.tbi
 
-- name: Run variant calling on tumor normal pair with haplotypecaller
+- name: Run variant calling on tumor normal pair with haplotypecaller and generate gvcf
   command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --generate_gvcf
   tags:
     - germline
@@ -28,7 +28,7 @@
     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz
     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz.tbi
 
-- name: Run variant calling on tumor normal pair with haplotypecaller without intervals
+- name: Run variant calling on tumor normal pair with haplotypecaller without intervals  and generate gvcf
   command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller  --generate_gvcf --no_intervals
   tags:
     - germline
