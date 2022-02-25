@@ -195,11 +195,11 @@ workflow GERMLINE_VARIANT_CALLING {
 
     haplotypecaller_gvcf = Channel.empty().mix(
         CONCAT_HAPLOTYPECALLER.out.vcf,
-        haplotypecaller_gvcf_intervals.intervals)
+        haplotypecaller_gvcf_intervals.no_intervals)
 
     haplotypecaller_gvcf_tbi = Channel.empty().mix(
         CONCAT_HAPLOTYPECALLER.out.tbi,
-        haplotypecaller_gvcf_tbi_intervals.intervals)
+        haplotypecaller_gvcf_tbi_intervals.no_intervals)
 
     genotype_gvcf_to_call = haplotypecaller_gvcf.join(haplotypecaller_gvcf_tbi)
         .combine(intervals_bed_combine_gz_tbi)
