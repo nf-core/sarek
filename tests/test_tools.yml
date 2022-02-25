@@ -1,41 +1,47 @@
-- name: Run variant calling on tumor normal pair with haplotypecaller
+- name: Run variant calling on germline sample with haplotypecaller
   command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller
   tags:
     - germline
+    - haplotypecaller
     - variant_calling
   files:
     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz
     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz.tbi
 
-- name: Run variant calling on tumor normal pair with haplotypecaller without intervals
+- name: Run variant calling on germline sample with haplotypecaller without intervals
   command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --no_intervals
   tags:
     - germline
-    - variant_calling
+    - haplotypecaller
     - no_intervals
+    - variant_calling
   files:
-    - path: results/variant_calling/sample1/haplotypecaller/sample1.g.vcf.gz
     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz
     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz.tbi
-    - path: results/variant_calling/sample1/haplotypecaller/sample1.g.vcf.gz.tbi
 
-- name: Run variant calling on tumor normal pair with haplotypecaller and generate gvcf
+- name: Run variant calling on germline sample with haplotypecaller and generate gvcf
   command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --generate_gvcf
   tags:
     - germline
+    - gvcf
+    - haplotypecaller
     - variant_calling
   files:
+    - path: results/variant_calling/sample1/haplotypecaller/sample1.g.vcf.gz
+    - path: results/variant_calling/sample1/haplotypecaller/sample1.g.vcf.gz.tbi
     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz
     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz.tbi
 
-- name: Run variant calling on tumor normal pair with haplotypecaller without intervals  and generate gvcf
-  command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller  --generate_gvcf --no_intervals
+- name: Run variant calling on germline sample with haplotypecaller without intervals and generate gvcf
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --generate_gvcf --no_intervals
   tags:
     - germline
-    - variant_calling
+    - gvcf
+    - haplotypecaller
     - no_intervals
+    - variant_calling
   files:
     - path: results/variant_calling/sample1/haplotypecaller/sample1.g.vcf.gz
+    - path: results/variant_calling/sample1/haplotypecaller/sample1.g.vcf.gz.tbi
     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz
     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz.tbi
-    - path: results/variant_calling/sample1/haplotypecaller/sample1.g.vcf.gz.tbi
