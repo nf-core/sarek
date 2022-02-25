@@ -220,12 +220,12 @@ workflow PAIR_VARIANT_CALLING {
     if (tools.contains('msisensorpro')) {
 
         MSISENSORPRO_MSI_SOMATIC(
-            cram_pair,
+            cram_pair_intervals,
             fasta,
             msisensorpro_scan)
         ch_versions = ch_versions.mix(MSISENSORPRO_MSI_SOMATIC.out.versions)
 
-        msisensorpro_output = msisensorpro_output.mix(MSISENSORPRO_MSI_SOMATIC.out.report)
+        msisensorpro_output = msisensorpro_output.mix(MSISENSORPRO_MSI_SOMATIC.out.output_report)
     }
 
     if (tools.contains('mutect2')){
