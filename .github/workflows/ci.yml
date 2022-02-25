@@ -34,13 +34,14 @@ jobs:
           - 'aligner'
           - 'annotation'
           - 'default'
-          - 'split_fastq'
           - 'gatk4_spark'
-          #- 'save_bam_mapped'
+          - 'haplotypecaller'
+          - 'manta'
+          # - 'save_bam_mapped'
           - 'skip_markduplicates'
+          - 'split_fastq'
           - 'targeted'
           - 'tumor_normal_pair'
-          - 'variant_calling'
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
