@@ -4,7 +4,7 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { DEEPTOOLS_BAMCOVERAGE                                    } from '../../modules/local/deeptools/bamcoverage'
+include { DEEPTOOLS_BAMCOVERAGE                                    } from '../../modules/nf-core/modules/deeptools/bamcoverage/main'
 include { GATK4_ESTIMATELIBRARYCOMPLEXITY                          } from '../../modules/nf-core/modules/gatk4/estimatelibrarycomplexity/main'
 include { GATK4_MARKDUPLICATES                                     } from '../../modules/nf-core/modules/gatk4/markduplicates/main'
 include { GATK4_MARKDUPLICATES_SPARK                               } from '../../modules/local/gatk4/markduplicatesspark/main'

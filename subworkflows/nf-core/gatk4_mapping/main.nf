@@ -31,14 +31,16 @@ workflow GATK4_MAPPING {
         new_meta.remove('size')
         new_meta.id = meta.sample
 
+        println meta
         // groupKey is to makes sure that the correct group can advance as soon as it is complete
         // and not stall the workflow until all reads from all channels are mapped
-        def groupKey = groupKey(meta, meta.numLanes * meta.size)
+        def groupKey = groupKey(new_meta, meta.numLanes * meta.size)
 
         //Returns the values we need
         tuple(groupKey, new_meta, bam)
     }.groupTuple(by:[0,1]).map{ groupKey, new_meta, bam -> [new_meta, bam] }
 
+    bam_mapped.view()
     // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
     // Except if and only if skipping markduplicates or saving mapped bams
 
