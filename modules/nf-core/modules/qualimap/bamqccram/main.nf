@@ -2,10 +2,10 @@ process QUALIMAP_BAMQCCRAM {
     tag "$meta.id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::qualimap=2.2.2d bioconda::samtools=1.12" : null)
+    conda (params.enable_conda ? "bioconda::qualimap=2.2.2d bioconda::samtools=1.15" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-d3934ca6bb4e61334891ffa2e9a4c87a530e3188:4bf11d12f2c3eccf1eb585097c0b6fd31c18c418-0' :
-        'quay.io/biocontainers/mulled-v2-d3934ca6bb4e61334891ffa2e9a4c87a530e3188:4bf11d12f2c3eccf1eb585097c0b6fd31c18c418-0' }"
+        'https://depot.galaxyproject.org/singularity/mulled-v2-d3934ca6bb4e61334891ffa2e9a4c87a530e3188:9838874d42d4477d5042782ee019cec9854da7d5-0' :
+        'quay.io/biocontainers/mulled-v2-d3934ca6bb4e61334891ffa2e9a4c87a530e3188:9838874d42d4477d5042782ee019cec9854da7d5-0' }"
 
     input:
     tuple val(meta), path(cram), path(crai)

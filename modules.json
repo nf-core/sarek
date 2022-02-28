@@ -10,13 +10,13 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "bwa/mem": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "950700bcdc0e9a2b6883d40d2c51c6fc435cd714"
             },
             "bwamem2/index": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "bwamem2/mem": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "950700bcdc0e9a2b6883d40d2c51c6fc435cd714"
             },
             "cat/fastq": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
@@ -128,6 +128,9 @@
             },
             "qualimap/bamqc": {
                 "git_sha": "e31f1ff3b1375b30db08637d8937e25cc046f3cc"
+            },
+            "qualimap/bamqccram": {
+                "git_sha": "950700bcdc0e9a2b6883d40d2c51c6fc435cd714"
             },
             "samblaster": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
