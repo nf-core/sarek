@@ -8,7 +8,7 @@ include { DEEPTOOLS_BAMCOVERAGE                                    } from '../..
 include { GATK4_ESTIMATELIBRARYCOMPLEXITY                          } from '../../modules/nf-core/modules/gatk4/estimatelibrarycomplexity/main'
 include { GATK4_MARKDUPLICATES                                     } from '../../modules/nf-core/modules/gatk4/markduplicates/main'
 include { GATK4_MARKDUPLICATES_SPARK                               } from '../../modules/local/gatk4/markduplicatesspark/main'
-include { QUALIMAP_BAMQC                                           } from '../../modules/local/qualimap/bamqc/main'
+include { QUALIMAP_BAMQC                                           } from '../../modules/nf-core/modules/qualimap/bamqc/main'
 include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES                   } from '../../modules/local/samtools/index/main'
 include { SAMTOOLS_STATS                                           } from '../../modules/nf-core/modules/samtools/stats/main'
 include { SAMTOOLS_VIEWINDEX as SAMTOOLS_BAM_TO_CRAM_DUPLICATES    } from '../../modules/local/samtools/viewindex/main'
@@ -58,7 +58,7 @@ workflow MARKDUPLICATES {
     // When running Marduplicates spark, and saving reports
     GATK4_ESTIMATELIBRARYCOMPLEXITY(bam_mapped, fasta, fasta_fai, dict)
     // Reports on Marduplicates spark bam output or on bam input
-    QUALIMAP_BAMQC(bam_indexed.mix(GATK4_MARKDUPLICATES.out.bam.join(GATK4_MARKDUPLICATES.out.bai)), intervals_combined_bed_gz_tbi)
+    QUALIMAP_BAMQC(bam_mapped.mix(GATK4_MARKDUPLICATES.out.bam), intervals_combined_bed_gz_tbi)
     DEEPTOOLS_BAMCOVERAGE(bam_indexed.mix(GATK4_MARKDUPLICATES.out.bam.join(GATK4_MARKDUPLICATES.out.bai)))
     // Other reports run on cram
     SAMTOOLS_STATS(cram_markduplicates, fasta)
