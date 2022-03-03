@@ -297,7 +297,7 @@ workflow SAREK {
         bam_mapped  = GATK4_MAPPING.out.bam
 
         if (params.save_bam_mapped || (params.skip_tools && 'markduplicates' in params.skip_tools)) {
-            MERGE_INDEX_BAM(bam)
+            MERGE_INDEX_BAM(bam_mapped)
             bam_indexed = MERGE_INDEX_BAM.out.bam_bai
 
             ch_versions = ch_versions.mix(GATK4_MAPPING.out.versions)
