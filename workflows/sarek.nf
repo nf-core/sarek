@@ -329,8 +329,6 @@ workflow SAREK {
         // STEP 2: markduplicates (+QC) + convert to CRAM
         MARKDUPLICATES(
             bam_mapped,
-            bam_indexed,
-            dict,
             fasta,
             fasta_fai,
             intervals_for_preprocessing)
