@@ -1,12 +1,11 @@
-
 process GATK4_GATHERPILEUPSUMMARIES {
     tag "$meta.id"
     label 'process_low'
 
-    conda (params.enable_conda ? "bioconda::gatk4=4.2.4.1" : null)
+    conda (params.enable_conda ? "bioconda::gatk4=4.2.5.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gatk4:4.2.4.1--hdfd78af_0':
-        'quay.io/biocontainers/gatk4:4.2.4.1--hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/gatk4:4.2.5.0--hdfd78af_0' :
+        'quay.io/biocontainers/gatk4:4.2.5.0--hdfd78af_0' }"
 
 
     input:
@@ -14,8 +13,8 @@ process GATK4_GATHERPILEUPSUMMARIES {
     path dict
 
     output:
-    tuple val(meta), path("*.table"), emit: table
-    path "versions.yml"           , emit: versions
+    tuple val(meta), path("*.pileupsummaries.table"), emit: table
+    path "versions.yml"                    , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

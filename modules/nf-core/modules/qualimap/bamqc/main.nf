@@ -8,8 +8,8 @@ process QUALIMAP_BAMQC {
         'quay.io/biocontainers/qualimap:2.2.2d--1' }"
 
     input:
-    tuple val(meta), path(bam), path(index)
-    path  gff
+    tuple val(meta), path(bam)
+    path gff
 
     output:
     tuple val(meta), path("${prefix}"), emit: results
@@ -19,11 +19,13 @@ process QUALIMAP_BAMQC {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
+    def args = task.ext.args   ?: ''
+    prefix   = task.ext.prefix ?: "${meta.id}"
+
     def collect_pairs = meta.single_end ? '' : '--collect-overlap-pairs'
-    def memory = task.memory.toGiga() + "G"
+    def memory     = task.memory.toGiga() + "G"
     def regions = gff ? "--gff $gff" : ''
+
     def strandedness = 'non-strand-specific'
     if (meta.strandedness == 'forward') {
         strandedness = 'strand-specific-forward'

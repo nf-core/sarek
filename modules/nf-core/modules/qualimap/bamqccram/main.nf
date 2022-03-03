@@ -1,11 +1,11 @@
-process QUALIMAP_BAMQC_CRAM {
+process QUALIMAP_BAMQCCRAM {
     tag "$meta.id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::qualimap=2.2.2d bioconda::samtools=1.12" : null)
+    conda (params.enable_conda ? "bioconda::qualimap=2.2.2d bioconda::samtools=1.15" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-d3934ca6bb4e61334891ffa2e9a4c87a530e3188:4bf11d12f2c3eccf1eb585097c0b6fd31c18c418-0' :
-        'quay.io/biocontainers/mulled-v2-d3934ca6bb4e61334891ffa2e9a4c87a530e3188:4bf11d12f2c3eccf1eb585097c0b6fd31c18c418-0' }"
+        'https://depot.galaxyproject.org/singularity/mulled-v2-d3934ca6bb4e61334891ffa2e9a4c87a530e3188:9838874d42d4477d5042782ee019cec9854da7d5-0' :
+        'quay.io/biocontainers/mulled-v2-d3934ca6bb4e61334891ffa2e9a4c87a530e3188:9838874d42d4477d5042782ee019cec9854da7d5-0' }"
 
     input:
     tuple val(meta), path(cram), path(crai)
@@ -21,11 +21,13 @@ process QUALIMAP_BAMQC_CRAM {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
+    def args = task.ext.args   ?: ''
+    prefix   = task.ext.prefix ?: "${meta.id}"
+
     def collect_pairs = meta.single_end ? '' : '--collect-overlap-pairs'
-    def memory = task.memory.toGiga() + "G"
+    def memory     = task.memory.toGiga() + "G"
     def regions = gff ? "--gff $gff" : ''
+
     def strandedness = 'non-strand-specific'
     if (meta.strandedness == 'forward') {
         strandedness = 'strand-specific-forward'
@@ -52,6 +54,7 @@ process QUALIMAP_BAMQC_CRAM {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         qualimap: \$(echo \$(qualimap 2>&1) | sed 's/^.*QualiMap v.//; s/Built.*\$//')
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
     END_VERSIONS
     """
 }

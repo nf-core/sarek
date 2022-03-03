@@ -6,7 +6,7 @@
 
 include { GATK4_APPLYBQSR as APPLYBQSR              } from '../../modules/nf-core/modules/gatk4/applybqsr/main'
 include { GATK4_APPLYBQSR_SPARK as APPLYBQSR_SPARK  } from '../../modules/local/gatk4/applybqsrspark/main'
-include { QUALIMAP_BAMQC_CRAM                       } from '../../modules/local/qualimap/bamqccram/main'
+include { QUALIMAP_BAMQCCRAM                        } from '../../modules/nf-core/modules/qualimap/bamqccram/main'
 include { SAMTOOLS_INDEX as INDEX_RECALIBRATE       } from '../../modules/local/samtools/index/main'
 include { SAMTOOLS_MERGE_CRAM                       } from '../../modules/local/samtools/mergecram/main'
 include { SAMTOOLS_STATS                            } from '../../modules/nf-core/modules/samtools/stats/main'
@@ -55,18 +55,18 @@ workflow RECALIBRATE {
     INDEX_RECALIBRATE(cram_recalibrated_no_intervals.mix(SAMTOOLS_MERGE_CRAM.out.cram))
 
     // Reports on recalibrated cram
-    QUALIMAP_BAMQC_CRAM(INDEX_RECALIBRATE.out.cram_crai, intervals_combined_bed_gz_tbi, fasta, fasta_fai)
+    QUALIMAP_BAMQCCRAM(INDEX_RECALIBRATE.out.cram_crai, intervals_combined_bed_gz_tbi, fasta, fasta_fai)
     SAMTOOLS_STATS(INDEX_RECALIBRATE.out.cram_crai, fasta)
 
     // Gather all reports generated
     qc_reports = qc_reports.mix(SAMTOOLS_STATS.out.stats)
-    qc_reports = qc_reports.mix(QUALIMAP_BAMQC_CRAM.out.results)
+    qc_reports = qc_reports.mix(QUALIMAP_BAMQCCRAM.out.results)
 
     // Gather versions of all tools used
     ch_versions = ch_versions.mix(APPLYBQSR.out.versions)
     ch_versions = ch_versions.mix(APPLYBQSR_SPARK.out.versions)
     ch_versions = ch_versions.mix(INDEX_RECALIBRATE.out.versions)
-    ch_versions = ch_versions.mix(QUALIMAP_BAMQC_CRAM.out.versions)
+    ch_versions = ch_versions.mix(QUALIMAP_BAMQCCRAM.out.versions)
     ch_versions = ch_versions.mix(SAMTOOLS_MERGE_CRAM.out.versions)
     ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions)
 
