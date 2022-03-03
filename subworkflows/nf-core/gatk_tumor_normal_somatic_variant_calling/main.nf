@@ -3,13 +3,13 @@
 //
 
 include { BGZIP                           as BGZIP_MUTECT2               } from '../../../modules/local/bgzip'
-include { CONCAT_VCF                      as CONCAT_VCF_MUTECT2          } from '../../../modules/local/concat_vcf/main'
+include { CONCAT_VCF                      as CONCAT_MUTECT2          } from '../../../modules/local/concat_vcf/main'
 
 include { GATK4_MUTECT2                   as MUTECT2                     } from '../../../modules/nf-core/modules/gatk4/mutect2/main'
-include { GATK4_MERGEMUTECTSTATS          as MERGEMUTECTSTATS            } from '../../../modules/local/gatk4/mergemutectstats'
+include { GATK4_MERGEMUTECTSTATS          as MERGEMUTECTSTATS            } from '../../../modules/nf-core/modules/gatk4/mergemutectstats/main'
 include { GATK4_LEARNREADORIENTATIONMODEL as LEARNREADORIENTATIONMODEL   } from '../../../modules/nf-core/modules/gatk4/learnreadorientationmodel/main'
-include { GATK4_GATHERPILEUPSUMMARIES     as GATHERPILEUPSUMMARIES_TUMOR } from '../../../modules/local/gatk4/gatherpileupsummaries'
-include { GATK4_GATHERPILEUPSUMMARIES     as GATHERPILEUPSUMMARIES_NORMAL} from '../../../modules/local/gatk4/gatherpileupsummaries'
+include { GATK4_GATHERPILEUPSUMMARIES     as GATHERPILEUPSUMMARIES_TUMOR } from '../../../modules/nf-core/modules/gatk4/gatherpileupsummaries/main'
+include { GATK4_GATHERPILEUPSUMMARIES     as GATHERPILEUPSUMMARIES_NORMAL} from '../../../modules/nf-core/modules/gatk4/gatherpileupsummaries/main'
 include { GATK4_GETPILEUPSUMMARIES        as GETPILEUPSUMMARIES_TUMOR    } from '../../../modules/nf-core/modules/gatk4/getpileupsummaries/main'
 include { GATK4_GETPILEUPSUMMARIES        as GETPILEUPSUMMARIES_NORMAL   } from '../../../modules/nf-core/modules/gatk4/getpileupsummaries/main'
 include { GATK4_CALCULATECONTAMINATION    as CALCULATECONTAMINATION      } from '../../../modules/nf-core/modules/gatk4/calculatecontamination/main'

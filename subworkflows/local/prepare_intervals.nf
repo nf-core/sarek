@@ -8,7 +8,7 @@
 
 include { BUILD_INTERVALS                                     } from '../../modules/local/build_intervals/main'
 include { CREATE_INTERVALS_BED                                } from '../../modules/local/create_intervals_bed/main'
-include { GATK4_INTERVALLISTTOBED                             } from '../../modules/local/gatk4/intervallisttobed'
+include { GATK4_INTERVALLISTTOBED                             } from '../../modules/nf-core/modules/gatk4/intervallisttobed/main'
 include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_SPLIT } from '../../modules/nf-core/modules/tabix/bgziptabix/main'
 include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_ALL   } from '../../modules/nf-core/modules/tabix/bgziptabix/main'
 

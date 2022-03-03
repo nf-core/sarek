@@ -33,7 +33,7 @@ workflow GATK4_MAPPING {
 
         // groupKey is to makes sure that the correct group can advance as soon as it is complete
         // and not stall the workflow until all reads from all channels are mapped
-        def groupKey = groupKey(meta, meta.numLanes * meta.size)
+        def groupKey = groupKey(new_meta, meta.numLanes * meta.size)
 
         //Returns the values we need
         tuple(groupKey, new_meta, bam)
