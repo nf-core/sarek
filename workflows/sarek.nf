@@ -140,8 +140,11 @@ include { GATK4_MAPPING              } from '../subworkflows/nf-core/gatk4_mappi
 // Merge and index BAM files (optional)
 include { MERGE_INDEX_BAM            } from '../subworkflows/nf-core/merge_index_bam'
 
-// Mark duplicates (+QC) + convert to CRAM
+// Mark Duplicates (+QC)
 include { MARKDUPLICATES             } from '../subworkflows/nf-core/markduplicates'
+
+// Convert to CRAM (+QC)
+include { BAM_TO_CRAM                } from '../subworkflows/nf-core/bam_to_cram'
 
 // Create recalibration tables
 include { PREPARE_RECALIBRATION      } from '../subworkflows/nf-core/prepare_recalibration'
@@ -300,8 +303,9 @@ workflow SAREK {
             MERGE_INDEX_BAM(bam_mapped)
             bam_indexed = MERGE_INDEX_BAM.out.bam_bai
 
-            ch_versions = ch_versions.mix(GATK4_MAPPING.out.versions)
-        } else bam_indexed = Channel.empty()
+            // Gather used softwares versions
+            ch_versions = ch_versions.mix(MERGE_INDEX_BAM.out.versions)
+        }
 
         // Create CSV to restart from this step
         // TODO: How is this handeled if not save_bam_mapped is set (no index should be present)
@@ -314,18 +318,11 @@ workflow SAREK {
     }
 
     // Comment out till we get the tests to pass
-    if (params.step == 'prepare_recalibration') {
-        bam_indexed = Channel.empty()
-        bam_mapped  = Channel.empty()
-
-        // index will be created down the road from Markduplicates
-        // bam_indexed should only have indexes if Markduplicates is skipped
-
-        if (params.skip_tools && 'markduplicates' in params.skip_tools) bam_indexed = input_sample
-        else bam_mapped = input_sample.map{ meta, bam, bai -> [meta, bam] }
-    }
+    if (params.step == 'prepare_recalibration') bam_mapped = input_sample.map{ meta, bam, bai -> [meta, bam] }
 
     if (params.step in ['mapping', 'prepare_recalibration']) {
+    cram_no_markduplicates = Channel.empty()
+
         // STEP 2: markduplicates (+QC) + convert to CRAM
         MARKDUPLICATES(
             bam_mapped,
@@ -333,7 +330,27 @@ workflow SAREK {
             fasta_fai,
             intervals_for_preprocessing)
 
-        cram_markduplicates = MARKDUPLICATES.out.cram
+        if (params.skip_tools && 'markduplicates' in params.skip_tools) {
+            if (params.step == 'prepare_recalibration') bam_indexed = input_sample
+
+            BAM_TO_CRAM(
+                bam_indexed,
+                fasta,
+                fasta_fai,
+                intervals_for_preprocessing)
+
+            cram_no_markduplicates = BAM_TO_CRAM.out.cram
+
+            // Gather used softwares versions
+            ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions)
+
+            // Gather QC reports
+            ch_reports  = ch_reports.mix(BAM_TO_CRAM.out.qc)
+        }
+
+        cram_markduplicates = Channel.empty().mix(
+            MARKDUPLICATES.out.cram,
+            cram_no_markduplicates)
 
         // Create CSV to restart from this step
         MARKDUPLICATES_CSV(cram_markduplicates)
