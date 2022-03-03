@@ -59,8 +59,6 @@ else {
 
 input_sample = extract_csv(csv_file)
 
-// def save_bam_mapped = 'markduplicates' in params.skip_tools ? true : params.save_bam_mapped ? true : false
-
 if (params.wes) {
     if (!params.intervals.endsWith("bed")) {
         exit 1, "Target file must be in BED format"
@@ -138,6 +136,9 @@ include { SPLIT_FASTQ                } from '../subworkflows/local/split_fastq'
 
 // Map input reads to reference genome
 include { GATK4_MAPPING              } from '../subworkflows/nf-core/gatk4_mapping/main'
+
+// Merge and index BAM files (optional)
+include { MERGE_INDEX_BAM            } from '../subworkflows/nf-core/merge_index_bam'
 
 // Mark duplicates (+QC) + convert to CRAM
 include { MARKDUPLICATES             } from '../subworkflows/nf-core/markduplicates'
@@ -294,10 +295,16 @@ workflow SAREK {
         // without index: always contains mapped_bams, only used if duplicate marking is done
         // with Index: Duplicate marking is skipped and/or bams are saved, else empty Channel
         bam_mapped  = GATK4_MAPPING.out.bam
-        bam_indexed = GATK4_MAPPING.out.bam_indexed
+
+        if (params.save_bam_mapped || (params.skip_tools && 'markduplicates' in params.skip_tools)) {
+            MERGE_INDEX_BAM(bam)
+            bam_indexed = MERGE_INDEX_BAM.out.bam_bai
+
+            ch_versions = ch_versions.mix(GATK4_MAPPING.out.versions)
+        } else bam_indexed = Channel.empty()
 
         // Create CSV to restart from this step
-        // TODO: How is this handeled if not save_bam is set (no index should be present)
+        // TODO: How is this handeled if not save_bam_mapped is set (no index should be present)
         //MAPPING_CSV(bam_indexed, save_bam_mapped, 'markduplicates' in params.skip_tools)
 
         // Gather used softwares versions
