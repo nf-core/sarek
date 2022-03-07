@@ -28,13 +28,13 @@ workflow MARKDUPLICATES_SPARK {
     INDEX_MARKDUPLICATES(GATK4_MARKDUPLICATES_SPARK.out.output)
 
     // Convert Markupduplicates spark bam output to cram when running bamqc and/or deeptools
-    BAM_TO_CRAM(GATK4_MARKDUPLICATES_SPARK.out.output.join(INDEX_MARKDUPLICATES.out.bam_bai), fasta, fasta_fai)
+    BAM_TO_CRAM(INDEX_MARKDUPLICATES.out.bam_bai, fasta, fasta_fai, intervals_combined_bed_gz_tbi)
 
     // Only one of these channel is not empty:
     // - running Markupduplicates spark with bam output
     // - running Markupduplicates spark with cram output
     cram_markduplicates = Channel.empty().mix(
-        BAM_TO_CRAM.out.cram_crai,
+        BAM_TO_CRAM.out.cram,
         GATK4_MARKDUPLICATES_SPARK.out.output.join(INDEX_MARKDUPLICATES.out.cram_crai))
 
     // When running Marduplicates spark, and saving reports
