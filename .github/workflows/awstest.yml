@@ -2,7 +2,7 @@ name: nf-core AWS test
 # This workflow can be triggered manually with the GitHub actions workflow dispatch button.
 # It runs the -profile 'test' on AWS batch
 
-on:
+on: # yamllint disable-line rule:truthy
   workflow_dispatch:
 jobs:
   run-tower:
@@ -12,7 +12,6 @@ jobs:
     steps:
       - name: Launch workflow via tower
         uses: nf-core/tower-action@v2
-        
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
