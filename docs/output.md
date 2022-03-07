@@ -14,54 +14,54 @@ All paths are relative to the top-level results directory.
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
 - [Preprocessing](#preprocessing)
-    - [Map to Reference](#map-to-reference)
-        - [BWA](#bwa)
-        - [BWA-mem2](#bwa-mem2)
-    - [Mark Duplicates](#mark-duplicates)
-        - [GATK MarkDuplicates](#gatk-markduplicates)
-    - [Base (Quality Score) Recalibration](#base-quality-score-recalibration)
-        - [GATK BaseRecalibrator](#gatk-baserecalibrator)
-        - [GATK ApplyBQSR](#gatk-applybqsr)
-    - [TSV files](#tsv-files)
-    - [TSV files with `--skip_markduplicates`](#tsv-files-with---skip_markduplicates)
-    - [TSV files with `--sentieon`](#tsv-files-with---sentieon)
+  - [Map to Reference](#map-to-reference)
+    - [BWA](#bwa)
+    - [BWA-mem2](#bwa-mem2)
+  - [Mark Duplicates](#mark-duplicates)
+    - [GATK MarkDuplicates](#gatk-markduplicates)
+  - [Base (Quality Score) Recalibration](#base-quality-score-recalibration)
+    - [GATK BaseRecalibrator](#gatk-baserecalibrator)
+    - [GATK ApplyBQSR](#gatk-applybqsr)
+  - [TSV files](#tsv-files)
+  - [TSV files with `--skip_markduplicates`](#tsv-files-with---skip_markduplicates)
+  - [TSV files with `--sentieon`](#tsv-files-with---sentieon)
 - [Variant Calling](#variant-calling)
-    - [SNVs and small indels](#snvs-and-small-indels)
-        - [FreeBayes](#freebayes)
-        - [GATK HaplotypeCaller](#gatk-haplotypecaller)
-        - [GATK GenotypeGVCFs](#gatk-genotypegvcfs)
-        - [GATK Mutect2](#gatk-mutect2)
-        - [samtools mpileup](#samtools-mpileup)
-        - [Strelka2](#strelka2)
-        - [Sentieon DNAseq](#sentieon-dnaseq)
-        - [Sentieon DNAscope](#sentieon-dnascope)
-        - [Sentieon TNscope](#sentieon-tnscope)
-    - [Structural Variants](#structural-variants)
-        - [Manta](#manta)
-        - [TIDDIT](#tiddit)
-        - [Sentieon DNAscope SV](#sentieon-dnascope-sv)
-    - [Sample heterogeneity, ploidy and CNVs](#sample-heterogeneity-ploidy-and-cnvs)
-        - [ConvertAlleleCounts](#convertallelecounts)
-        - [ASCAT](#ascat)
-        - [Control-FREEC](#control-freec)
-    - [MSI status](#msi-status)
-        - [MSIsensor](#msisensor)
+  - [SNVs and small indels](#snvs-and-small-indels)
+    - [FreeBayes](#freebayes)
+    - [GATK HaplotypeCaller](#gatk-haplotypecaller)
+    - [GATK GenotypeGVCFs](#gatk-genotypegvcfs)
+    - [GATK Mutect2](#gatk-mutect2)
+    - [samtools mpileup](#samtools-mpileup)
+    - [Strelka2](#strelka2)
+    - [Sentieon DNAseq](#sentieon-dnaseq)
+    - [Sentieon DNAscope](#sentieon-dnascope)
+    - [Sentieon TNscope](#sentieon-tnscope)
+  - [Structural Variants](#structural-variants)
+    - [Manta](#manta)
+    - [TIDDIT](#tiddit)
+    - [Sentieon DNAscope SV](#sentieon-dnascope-sv)
+  - [Sample heterogeneity, ploidy and CNVs](#sample-heterogeneity-ploidy-and-cnvs)
+    - [ConvertAlleleCounts](#convertallelecounts)
+    - [ASCAT](#ascat)
+    - [Control-FREEC](#control-freec)
+  - [MSI status](#msi-status)
+    - [MSIsensor](#msisensor)
 - [Variant annotation](#variant-annotation)
-    - [snpEff](#snpeff)
-    - [VEP](#vep)
+  - [snpEff](#snpeff)
+  - [VEP](#vep)
 - [QC and reporting](#qc-and-reporting)
-    - [QC](#qc)
-        - [FastQC](#fastqc)
-        - [bamQC](#bamqc)
-        - [GATK MarkDuplicates reports](#gatk-markduplicates-reports)
-        - [samtools stats](#samtools-stats)
-        - [bcftools stats](#bcftools-stats)
-        - [VCFtools](#vcftools)
-        - [snpEff reports](#snpeff-reports)
-        - [VEP reports](#vep-reports)
-    - [Reporting](#reporting)
-        - [MultiQC](#multiqc)
-    - [Pipeline information](#pipeline-information)
+  - [QC](#qc)
+    - [FastQC](#fastqc)
+    - [bamQC](#bamqc)
+    - [GATK MarkDuplicates reports](#gatk-markduplicates-reports)
+    - [samtools stats](#samtools-stats)
+    - [bcftools stats](#bcftools-stats)
+    - [VCFtools](#vcftools)
+    - [snpEff reports](#snpeff-reports)
+    - [VEP reports](#vep-reports)
+  - [Reporting](#reporting)
+    - [MultiQC](#multiqc)
+  - [Pipeline information](#pipeline-information)
 
 ## Preprocessing
 
@@ -592,7 +592,7 @@ For all samples:
 - `sample_R1_XXX_fastqc.zip` and `sample_R2_XXX_fastqc.zip`
     - Zip archive containing the FastQC report, tab-delimited data file and plot images
 
-> **NB:** The `FastQC` plots displayed in the `MultiQC` report shows _untrimmed_ reads.
+> **NB:** The `FastQC` plots displayed in the `MultiQC` report shows *untrimmed* reads.
 > They may contain adapter sequence and potentially regions with low quality.
 
 - `fastqc/`
@@ -621,7 +621,7 @@ For further reading and documentation see the [Qualimap bamqc manual](http://qua
 
 More information in the [GATK MarkDuplicates section](#gatk-markduplicates)
 
-Duplicates can arise during sample preparation _e.g._ library construction using PCR.
+Duplicates can arise during sample preparation *e.g.* library construction using PCR.
 Duplicate reads can also result from a single amplification cluster, incorrectly detected as multiple clusters by the optical sensor of the sequencing instrument.
 These duplication artifacts are referred to as optical duplicates.
 
