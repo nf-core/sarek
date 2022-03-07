@@ -143,6 +143,9 @@ include { MERGE_INDEX_BAM            } from '../subworkflows/nf-core/merge_index
 // Mark Duplicates (+QC)
 include { MARKDUPLICATES             } from '../subworkflows/nf-core/markduplicates'
 
+// Mark Duplicates_SPARK (+QC)
+include { MARKDUPLICATES_SPARK       } from '../subworkflows/nf-core/markduplicates_spark'
+
 // Convert to CRAM (+QC)
 include { BAM_TO_CRAM                } from '../subworkflows/nf-core/bam_to_cram'
 
@@ -299,7 +302,7 @@ workflow SAREK {
         // with Index: Duplicate marking is skipped and/or bams are saved, else empty Channel
         bam_mapped  = GATK4_MAPPING.out.bam
 
-        if (params.save_bam_mapped || (params.skip_tools && 'markduplicates' in params.skip_tools)) {
+        if (params.save_bam_mapped || (params.skip_tools && params.skip_tools.contains('markduplicates'))) {
             MERGE_INDEX_BAM(bam_mapped)
             bam_indexed = MERGE_INDEX_BAM.out.bam_bai
 
@@ -309,7 +312,7 @@ workflow SAREK {
 
         // Create CSV to restart from this step
         // TODO: How is this handeled if not save_bam_mapped is set (no index should be present)
-        //MAPPING_CSV(bam_indexed, save_bam_mapped, 'markduplicates' in params.skip_tools)
+        //MAPPING_CSV(bam_indexed, save_bam_mapped, params.skip_tools.contains('markduplicates'))
 
         // Gather used softwares versions
         ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
@@ -321,16 +324,13 @@ workflow SAREK {
     if (params.step == 'prepare_recalibration') bam_mapped = input_sample.map{ meta, bam, bai -> [meta, bam] }
 
     if (params.step in ['mapping', 'prepare_recalibration']) {
-    cram_no_markduplicates = Channel.empty()
+    cram_markduplicates_no_spark = Channel.empty()
+    cram_markduplicates_spark    = Channel.empty()
+    cram_no_markduplicates       = Channel.empty()
 
         // STEP 2: markduplicates (+QC) + convert to CRAM
-        MARKDUPLICATES(
-            bam_mapped,
-            fasta,
-            fasta_fai,
-            intervals_for_preprocessing)
 
-        if (params.skip_tools && 'markduplicates' in params.skip_tools) {
+        if (params.skip_tools && params.skip_tools.contains('markduplicates')) {
             if (params.step == 'prepare_recalibration') bam_indexed = input_sample
 
             BAM_TO_CRAM(
@@ -346,23 +346,47 @@ workflow SAREK {
 
             // Gather QC reports
             ch_reports  = ch_reports.mix(BAM_TO_CRAM.out.qc)
+        } else if (params.use_gatk_spark && params.use_gatk_spark.contains('markduplicates')) {
+            MARKDUPLICATES_SPARK(
+                bam_mapped,
+                dict,
+                fasta,
+                fasta_fai,
+                intervals_for_preprocessing)
+            cram_markduplicates_spark = MARKDUPLICATES_SPARK.out.cram
+
+            // Gather QC reports
+            ch_reports  = ch_reports.mix(MARKDUPLICATES_SPARK.out.qc.collect{it[1]}.ifEmpty([]))
+
+            // Gather used softwares versions
+            ch_versions = ch_versions.mix(MARKDUPLICATES_SPARK.out.versions)
+        } else {
+            MARKDUPLICATES(
+                bam_mapped,
+                fasta,
+                fasta_fai,
+                intervals_for_preprocessing)
+            cram_markduplicates_no_spark = MARKDUPLICATES.out.cram
+
+            // Gather QC reports
+            ch_reports  = ch_reports.mix(MARKDUPLICATES.out.qc.collect{it[1]}.ifEmpty([]))
+
+            // Gather used softwares versions
+            ch_versions = ch_versions.mix(MARKDUPLICATES.out.versions)
         }
 
+
         cram_markduplicates = Channel.empty().mix(
-            MARKDUPLICATES.out.cram,
+            cram_markduplicates_no_spark,
+            cram_markduplicates_spark,
             cram_no_markduplicates)
 
         // Create CSV to restart from this step
         MARKDUPLICATES_CSV(cram_markduplicates)
 
-        // Gather QC reports
-        ch_reports  = ch_reports.mix(MARKDUPLICATES.out.qc.collect{it[1]}.ifEmpty([]))
-
-        // Gather used softwares versions
-        ch_versions = ch_versions.mix(MARKDUPLICATES.out.versions)
 
         // STEP 3: Create recalibration tables
-        if (!('baserecalibrator' in params.skip_tools)) {
+        if (!(params.skip_tools && params.skip_tools.contains('baserecalibrator'))) {
             PREPARE_RECALIBRATION(
                 cram_markduplicates,
                 dict,
@@ -387,7 +411,7 @@ workflow SAREK {
 
     if (params.step in ['mapping', 'prepare_recalibration', 'recalibrate']) {
 
-        if (!('baserecalibrator' in params.skip_tools)) {
+        if (!(params.skip_tools && params.skip_tools.contains('baserecalibrator'))) {
             // STEP 4: RECALIBRATING
             RECALIBRATE(
                 cram_applybqsr,
@@ -561,7 +585,7 @@ workflow SAREK {
     }
 
     ch_version_yaml = Channel.empty()
-    if (!('versions' in params.skip_tools)) {
+        if (!(params.skip_tools && params.skip_tools.contains('versions'))) {
         CUSTOM_DUMPSOFTWAREVERSIONS(ch_versions.unique().collectFile(name: 'collated_versions.yml'))
         ch_version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
     }
@@ -577,7 +601,7 @@ workflow SAREK {
     // ch_multiqc_files = ch_multiqc_files.mix(ch_reports)
 
     // multiqc_report = Channel.empty()
-    // if (!('multiqc' in params.skip_tools)) {
+    // if (!(params.skip_tools && params.skip_tools.contains('multiqc'))) {
     //     MULTIQC(ch_multiqc_files.collect())
     //     multiqc_report = MULTIQC.out.report.toList()
 
