@@ -1,3 +1,4 @@
+repository_type: pipeline
 lint:
   files_unchanged:
     - .github/workflows/linting.yml
