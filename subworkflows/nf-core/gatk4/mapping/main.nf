@@ -4,8 +4,8 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { BWAMEM2_MEM            } from '../../../modules/nf-core/modules/bwamem2/mem/main'
-include { BWA_MEM as BWAMEM1_MEM } from '../../../modules/nf-core/modules/bwa/mem/main'
+include { BWAMEM2_MEM            } from '../../../../modules/nf-core/modules/bwamem2/mem/main'
+include { BWA_MEM as BWAMEM1_MEM } from '../../../../modules/nf-core/modules/bwa/mem/main'
 
 workflow GATK4_MAPPING {
     take:

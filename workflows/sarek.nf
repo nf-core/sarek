@@ -135,25 +135,25 @@ include { ALIGNMENT_TO_FASTQ         } from '../subworkflows/local/bam2fastq'
 include { SPLIT_FASTQ                } from '../subworkflows/local/split_fastq'
 
 // Map input reads to reference genome
-include { GATK4_MAPPING              } from '../subworkflows/nf-core/gatk4_mapping/main'
+include { GATK4_MAPPING              } from '../subworkflows/nf-core/gatk4/mapping/main'
 
 // Merge and index BAM files (optional)
 include { MERGE_INDEX_BAM            } from '../subworkflows/nf-core/merge_index_bam'
 
 // Mark Duplicates (+QC)
-include { MARKDUPLICATES             } from '../subworkflows/nf-core/markduplicates'
+include { MARKDUPLICATES             } from '../subworkflows/nf-core/gatk4/markduplicates/main'
 
 // Mark Duplicates_SPARK (+QC)
-include { MARKDUPLICATES_SPARK       } from '../subworkflows/nf-core/markduplicates_spark'
+include { MARKDUPLICATES_SPARK       } from '../subworkflows/nf-core/gatk4/markduplicates_spark/main'
 
 // Convert to CRAM (+QC)
 include { BAM_TO_CRAM                } from '../subworkflows/nf-core/bam_to_cram'
 
 // Create recalibration tables
-include { PREPARE_RECALIBRATION      } from '../subworkflows/nf-core/prepare_recalibration'
+include { PREPARE_RECALIBRATION      } from '../subworkflows/nf-core/gatk4/prepare_recalibration/main'
 
 // Create recalibrated cram files to use for variant calling (+QC)
-include { RECALIBRATE                } from '../subworkflows/nf-core/recalibrate'
+include { RECALIBRATE                } from '../subworkflows/nf-core/gatk4/recalibrate/main'
 
 // Variant calling on a single normal sample
 include { GERMLINE_VARIANT_CALLING   } from '../subworkflows/local/germline_variant_calling'

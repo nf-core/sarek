@@ -4,11 +4,11 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { GATK4_ESTIMATELIBRARYCOMPLEXITY        } from '../../modules/nf-core/modules/gatk4/estimatelibrarycomplexity/main'
-include { GATK4_MARKDUPLICATES_SPARK             } from '../../modules/local/gatk4/markduplicatesspark/main'
-include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES } from '../../modules/local/samtools/index/main'
-include { SAMTOOLS_STATS                         } from '../../modules/nf-core/modules/samtools/stats/main'
-include { BAM_TO_CRAM                            } from './bam_to_cram'
+include { GATK4_ESTIMATELIBRARYCOMPLEXITY        } from '../../../../modules/nf-core/modules/gatk4/estimatelibrarycomplexity/main'
+include { GATK4_MARKDUPLICATES_SPARK             } from '../../../../modules/local/gatk4/markduplicatesspark/main'
+include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES } from '../../../../modules/local/samtools/index/main'
+include { SAMTOOLS_STATS                         } from '../../../../modules/nf-core/modules/samtools/stats/main'
+include { BAM_TO_CRAM                            } from '../../bam_to_cram'
 
 workflow MARKDUPLICATES_SPARK {
     take:
