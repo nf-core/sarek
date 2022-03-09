@@ -7,7 +7,6 @@
 include { GATK4_ESTIMATELIBRARYCOMPLEXITY        } from '../../../../modules/nf-core/modules/gatk4/estimatelibrarycomplexity/main'
 include { GATK4_MARKDUPLICATES_SPARK             } from '../../../../modules/local/gatk4/markduplicatesspark/main'
 include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES } from '../../../../modules/local/samtools/index/main'
-include { SAMTOOLS_STATS                         } from '../../../../modules/nf-core/modules/samtools/stats/main'
 include { BAM_TO_CRAM                            } from '../../bam_to_cram'
 
 workflow MARKDUPLICATES_SPARK {
@@ -40,23 +39,17 @@ workflow MARKDUPLICATES_SPARK {
     // When running Marduplicates spark, and saving reports
     GATK4_ESTIMATELIBRARYCOMPLEXITY(bam, fasta, fasta_fai, dict)
 
-    // Other reports run on cram (only when running Markupduplicates spark with cram output)
-    // Otherwise it's run in the BAM_TO_CRAM subworkflow
-    // TODO: refactor the BAM_TO_CRAM subworkflow
-    // maybe split the QC part into a separate subworkflow
-    // and/or get specific QC from bam and/or cram
-    SAMTOOLS_STATS(cram_markduplicates, fasta)
+    // Other reports done either with BAM_TO_CRAM subworkflow
+    // or CRAM_QC subworkflow
 
     // Gather all reports generated
     qc_reports = qc_reports.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics)
-    qc_reports = qc_reports.mix(SAMTOOLS_STATS.out.stats)
 
     // Gather versions of all tools used
     ch_versions = ch_versions.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.versions.first())
     ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES_SPARK.out.versions.first())
     ch_versions = ch_versions.mix(INDEX_MARKDUPLICATES.out.versions.first())
     ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions.first())
-    ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions.first())
 
     emit:
         cram     = cram_markduplicates

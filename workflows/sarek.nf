@@ -149,6 +149,9 @@ include { MARKDUPLICATES_SPARK       } from '../subworkflows/nf-core/gatk4/markd
 // Convert to CRAM (+QC)
 include { BAM_TO_CRAM                } from '../subworkflows/nf-core/bam_to_cram'
 
+// CRAM QC
+include { CRAM_QC                    } from '../subworkflows/nf-core/cram_qc'
+
 // Create recalibration tables
 include { PREPARE_RECALIBRATION      } from '../subworkflows/nf-core/gatk4/prepare_recalibration/main'
 
@@ -375,15 +378,22 @@ workflow SAREK {
             ch_versions = ch_versions.mix(MARKDUPLICATES.out.versions)
         }
 
-
         cram_markduplicates = Channel.empty().mix(
             cram_markduplicates_no_spark,
             cram_markduplicates_spark,
             cram_no_markduplicates)
 
+        // Run Samtools stats on CRAM
+        CRAM_QC(cram_markduplicates, fasta)
+
+        // Gather QC reports
+        ch_reports  = ch_reports.mix(CRAM_QC.out.qc.collect{it[1]}.ifEmpty([]))
+
+        // Gather used softwares versions
+        ch_versions = ch_versions.mix(CRAM_QC.out.versions)
+
         // Create CSV to restart from this step
         MARKDUPLICATES_CSV(cram_markduplicates)
-
 
         // STEP 3: Create recalibration tables
         if (!(params.skip_tools && params.skip_tools.contains('baserecalibrator'))) {

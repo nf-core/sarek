@@ -6,7 +6,6 @@
 
 include { DEEPTOOLS_BAMCOVERAGE                      } from '../../modules/nf-core/modules/deeptools/bamcoverage/main'
 include { QUALIMAP_BAMQC                             } from '../../modules/nf-core/modules/qualimap/bamqc/main'
-include { SAMTOOLS_STATS                             } from '../../modules/nf-core/modules/samtools/stats/main'
 include { SAMTOOLS_VIEWINDEX as SAMTOOLS_BAM_TO_CRAM } from '../../modules/local/samtools/viewindex/main'
 
 workflow BAM_TO_CRAM {
@@ -31,18 +30,15 @@ workflow BAM_TO_CRAM {
     QUALIMAP_BAMQC(bam_no_index, intervals_combined_bed_gz_tbi)
 
     // Other reports run on cram
-    SAMTOOLS_STATS(SAMTOOLS_BAM_TO_CRAM.out.cram_crai, fasta)
 
     // Gather all reports generated
     qc_reports = qc_reports.mix(DEEPTOOLS_BAMCOVERAGE.out.bigwig)
     qc_reports = qc_reports.mix(QUALIMAP_BAMQC.out.results)
-    qc_reports = qc_reports.mix(SAMTOOLS_STATS.out.stats)
 
     // Gather versions of all tools used
     ch_versions = ch_versions.mix(DEEPTOOLS_BAMCOVERAGE.out.versions.first())
     ch_versions = ch_versions.mix(QUALIMAP_BAMQC.out.versions.first())
     ch_versions = ch_versions.mix(SAMTOOLS_BAM_TO_CRAM.out.versions.first())
-    ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions.first())
 
     emit:
         cram     = SAMTOOLS_BAM_TO_CRAM.out.cram_crai
