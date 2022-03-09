@@ -378,13 +378,13 @@ workflow SAREK {
             ch_versions = ch_versions.mix(MARKDUPLICATES.out.versions)
         }
 
-        cram_markduplicates = Channel.empty().mix(
+        cram_for_prepare_recalibration = Channel.empty().mix(
             cram_markduplicates_no_spark,
             cram_markduplicates_spark,
             cram_no_markduplicates)
 
         // Run Samtools stats on CRAM
-        CRAM_QC(cram_markduplicates, fasta)
+        CRAM_QC(cram_for_prepare_recalibration, fasta)
 
         // Gather QC reports
         ch_reports  = ch_reports.mix(CRAM_QC.out.qc.collect{it[1]}.ifEmpty([]))
@@ -393,12 +393,12 @@ workflow SAREK {
         ch_versions = ch_versions.mix(CRAM_QC.out.versions)
 
         // Create CSV to restart from this step
-        MARKDUPLICATES_CSV(cram_markduplicates)
+        MARKDUPLICATES_CSV(cram_for_prepare_recalibration)
 
         // STEP 3: Create recalibration tables
         if (!(params.skip_tools && params.skip_tools.contains('baserecalibrator'))) {
             PREPARE_RECALIBRATION(
-                cram_markduplicates,
+                cram_for_prepare_recalibration,
                 dict,
                 fasta,
                 fasta_fai,
@@ -410,7 +410,7 @@ workflow SAREK {
 
             PREPARE_RECALIBRATION_CSV(PREPARE_RECALIBRATION.out.table_bqsr)
 
-            cram_applybqsr = cram_markduplicates.join(PREPARE_RECALIBRATION.out.table_bqsr)
+            cram_applybqsr = cram_for_prepare_recalibration.join(PREPARE_RECALIBRATION.out.table_bqsr)
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(PREPARE_RECALIBRATION.out.versions)
@@ -443,7 +443,7 @@ workflow SAREK {
             // Gather used softwares versions
             ch_versions = ch_versions.mix(RECALIBRATE.out.versions)
 
-        } else cram_variant_calling = cram_markduplicates
+        } else cram_variant_calling = cram_for_prepare_recalibration
 
     }
 
