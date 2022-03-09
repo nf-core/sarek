@@ -1,7 +1,7 @@
 name: nf-core linting
 # This workflow is triggered on pushes and PRs to the repository.
 # It runs the `nf-core lint` and markdown lint tests to ensure that the code meets the nf-core guidelines
-on: # yamllint disable-line rule:truthy
+on:
   push:
   pull_request:
   release:
