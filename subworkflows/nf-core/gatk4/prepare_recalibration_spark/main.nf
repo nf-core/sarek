@@ -45,6 +45,7 @@ workflow PREPARE_RECALIBRATION_SPARK {
 
     // STEP 3.5: MERGING RECALIBRATION TABLES
     // Empty the no intervals table channel if we have intervals
+    // TODO: This is a hack, we should have a better way to do this
     if (!no_intervals) table_no_intervals = Channel.empty()
 
     // Merge the tables only when we have intervals
