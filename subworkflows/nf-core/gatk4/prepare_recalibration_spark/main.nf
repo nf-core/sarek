@@ -1,13 +1,13 @@
 //
-// PREPARE RECALIBRATION
+// PREPARE RECALIBRATION with SPARK
 //
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { GATK4_BASERECALIBRATOR  as BASERECALIBRATOR  } from '../../../../modules/nf-core/modules/gatk4/baserecalibrator/main'
-include { GATK4_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from '../../../../modules/nf-core/modules/gatk4/gatherbqsrreports/main'
+ include { GATK4_BASERECALIBRATOR_SPARK as BASERECALIBRATOR_SPARK } from '../../../../modules/local/gatk4/baserecalibratorspark/main'
+ include { GATK4_GATHERBQSRREPORTS      as GATHERBQSRREPORTS      } from '../../../../modules/nf-core/modules/gatk4/gatherbqsrreports/main'
 
-workflow PREPARE_RECALIBRATION {
+workflow PREPARE_RECALIBRATION_SPARK {
     take:
         cram_markduplicates // channel: [mandatory] cram_markduplicates
         dict                // channel: [mandatory] dict
@@ -30,10 +30,10 @@ workflow PREPARE_RECALIBRATION {
             [new_meta, cram, crai, intervals]
         }
 
-    // Run Baserecalibrator or Baserecalibrator spark
-    BASERECALIBRATOR(cram_markduplicates_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
+    // Run Baserecalibrator spark
+    BASERECALIBRATOR_SPARK(cram_markduplicates_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
 
-    table_baserecalibrator = BASERECALIBRATOR.out.table
+    table_baserecalibrator = BASERECALIBRATOR_SPARK.out.table
         .map{ meta, table ->
                 meta.id = meta.sample
                 [meta, table]
@@ -52,7 +52,7 @@ workflow PREPARE_RECALIBRATION {
     table_bqsr = table_no_intervals.mix(GATHERBQSRREPORTS.out.table)
 
     // Gather versions of all tools used
-    ch_versions = ch_versions.mix(BASERECALIBRATOR.out.versions)
+    ch_versions = ch_versions.mix(BASERECALIBRATOR_SPARK.out.versions)
     ch_versions = ch_versions.mix(GATHERBQSRREPORTS.out.versions)
 
     emit:
