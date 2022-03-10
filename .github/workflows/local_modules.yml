@@ -1,5 +1,5 @@
 name: Local Modules pytest-workflow
-on: [push, pull_request] # yamllint disable-line rule:truthy
+on: [push, pull_request]
 jobs:
   changes:
     name: Check for changes
