@@ -40,9 +40,7 @@ workflow GATK4_MAPPING {
     ch_versions = ch_versions.mix(BWAMEM1_MEM.out.versions.first())
     ch_versions = ch_versions.mix(BWAMEM2_MEM.out.versions.first())
 
-    ch_bam_mapped.view{ "ch_bam_mapped " + it }
-
     emit:
-        bam      = ch_bam_mapped
-        versions = ch_versions
+        bam      = ch_bam_mapped // channel: [ [meta], bam ]
+        versions = ch_versions   // channel: [ versions.yml ]
 }

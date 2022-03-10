@@ -267,13 +267,21 @@ workflow SAREK {
 
     if (params.step == 'mapping') {
 
-        if (params.is_bam_input) {
-            ALIGNMENT_TO_FASTQ(input_sample, [])
-            input_sample_converted = ALIGNMENT_TO_FASTQ.out.reads
-            ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ.out.versions)
-        } else input_sample_converted = input_sample
+        // Figure out if input is fastq or bam
+        input_sample.branch{
+            fastq: it[0].data_type == "fastq"
+            bam:   it[0].data_type == "bam"
+        }.set{input_sample_type}
 
-        FASTQC_TRIMGALORE(input_sample_converted)
+        // convert any bam input to fastq
+        ALIGNMENT_TO_FASTQ(input_sample_type.bam, [])
+
+        // Trimming is done on fastq (inputed or converted)
+        input_for_trimming = input_sample_type.fastq.mix(ALIGNMENT_TO_FASTQ.out.reads)
+        ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ.out.versions)
+
+        // Optionnal trimming (+ QC)
+        FASTQC_TRIMGALORE(input_for_trimming)
 
         // Get reads after optional trimming (+QC)
         reads_input = FASTQC_TRIMGALORE.out.reads
@@ -297,15 +305,14 @@ workflow SAREK {
         SPLIT_FASTQ(reads_input)
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
-        GATK4_MAPPING(
-            SPLIT_FASTQ.out.reads,
+        GATK4_MAPPING(SPLIT_FASTQ.out.reads,
             bwa)
 
-        // Get mapped reads (BAM) with and without index
-        // without index: always contains mapped_bams, only used if duplicate marking is done
-        // with Index: Duplicate marking is skipped and/or bams are saved, else empty Channel
+        // Get mapped reads (bam_mapped)
         bam_mapped  = GATK4_MAPPING.out.bam
 
+        // When saving mapped bams or skipping markduplicates
+        // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
         if (params.save_bam_mapped || (params.skip_tools && params.skip_tools.contains('markduplicates'))) {
             MERGE_INDEX_BAM(bam_mapped)
             bam_indexed = MERGE_INDEX_BAM.out.bam_bai
@@ -708,8 +715,9 @@ def extract_csv(csv_file) {
             def fastq_2     = file(row.fastq_2, checkIfExists: true)
             def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ''
             def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:ILLUMINA\""
-            meta.numLanes = numLanes.toInteger()
+            meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
+            meta.data_type  = "fastq"
             return [meta, [fastq_1, fastq_2]]
         // start from BAM
         } else if (row.lane && row.bam) {
@@ -717,9 +725,9 @@ def extract_csv(csv_file) {
             def bam         = file(row.bam,   checkIfExists: true)
             def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ''
             def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:ILLUMINA\""
-            meta.numLanes = numLanes.toInteger()
+            meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
-            is_bam_input = true
+            meta.data_type  = "bam"
             return [meta, bam]
         // recalibration
         } else if (row.table && row.cram) {
@@ -727,6 +735,7 @@ def extract_csv(csv_file) {
             def cram  = file(row.cram,  checkIfExists: true)
             def crai  = file(row.crai,  checkIfExists: true)
             def table = file(row.table, checkIfExists: true)
+            meta.data_type  = "cram"
             return [meta, cram, crai, table]
         // recalibration when skipping MarkDuplicates
         } else if (row.table && row.bam) {
@@ -734,23 +743,27 @@ def extract_csv(csv_file) {
             def bam   = file(row.bam,   checkIfExists: true)
             def bai   = file(row.bai,   checkIfExists: true)
             def table = file(row.table, checkIfExists: true)
+            meta.data_type  = "bam"
             return [meta, bam, bai, table]
         // prepare_recalibration or variant_calling
         } else if (row.cram) {
             meta.id = meta.sample
             def cram = file(row.cram, checkIfExists: true)
             def crai = file(row.crai, checkIfExists: true)
+            meta.data_type  = "cram"
             return [meta, cram, crai]
         // prepare_recalibration when skipping MarkDuplicates
         } else if (row.bam) {
             meta.id = meta.sample
             def bam = file(row.bam, checkIfExists: true)
             def bai = file(row.bai, checkIfExists: true)
+            meta.data_type  = "bam"
             return [meta, bam, bai]
         // annotation
         } else if (row.vcf) {
             meta.id = meta.sample
             def vcf = file(row.vcf, checkIfExists: true)
+            meta.data_type  = "vcf"
             return [meta, vcf]
         } else {
             log.warn "Missing or unknown field in csv file header"
