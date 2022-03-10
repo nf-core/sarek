@@ -161,6 +161,9 @@ include { PREPARE_RECALIBRATION_SPARK } from '../subworkflows/nf-core/gatk4/prep
 // Create recalibrated cram files to use for variant calling (+QC)
 include { RECALIBRATE                 } from '../subworkflows/nf-core/gatk4/recalibrate/main'
 
+// Create recalibrated cram files to use for variant calling (+QC)
+include { RECALIBRATE_SPARK           } from '../subworkflows/nf-core/gatk4/recalibrate_spark/main'
+
 // Variant calling on a single normal sample
 include { GERMLINE_VARIANT_CALLING    } from '../subworkflows/local/germline_variant_calling'
 
@@ -439,10 +442,30 @@ workflow SAREK {
 
     if (params.step == 'recalibrate') cram_applybqsr = input_sample
 
+    // STEP 4: RECALIBRATING
     if (params.step in ['mapping', 'prepare_recalibration', 'recalibrate']) {
 
         if (!(params.skip_tools && params.skip_tools.contains('baserecalibrator'))) {
-            // STEP 4: RECALIBRATING
+            if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
+            RECALIBRATE_SPARK(
+                cram_applybqsr,
+                dict,
+                fasta,
+                fasta_fai,
+                intervals,
+                num_intervals,
+                params.no_intervals,
+                intervals_for_preprocessing)
+
+            cram_variant_calling = RECALIBRATE_SPARK.out.cram
+
+            // Gather QC reports
+            ch_reports  = ch_reports.mix(RECALIBRATE_SPARK.out.qc.collect{it[1]}.ifEmpty([]))
+
+            // Gather used softwares versions
+            ch_versions = ch_versions.mix(RECALIBRATE_SPARK.out.versions)
+
+            } else {
             RECALIBRATE(
                 cram_applybqsr,
                 dict,
@@ -453,8 +476,6 @@ workflow SAREK {
                 params.no_intervals,
                 intervals_for_preprocessing)
 
-            RECALIBRATE_CSV(RECALIBRATE.out.cram)
-
             cram_variant_calling = RECALIBRATE.out.cram
 
             // Gather QC reports
@@ -462,6 +483,9 @@ workflow SAREK {
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(RECALIBRATE.out.versions)
+            }
+
+            RECALIBRATE_CSV(cram_variant_calling)
 
         } else cram_variant_calling = cram_for_prepare_recalibration
 

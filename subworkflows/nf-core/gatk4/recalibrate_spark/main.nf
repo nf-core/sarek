@@ -1,16 +1,16 @@
 //
-// RECALIBRATE
+// RECALIBRATE SPARK
 //
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { GATK4_APPLYBQSR as APPLYBQSR        } from '../../../../modules/nf-core/modules/gatk4/applybqsr/main'
-include { QUALIMAP_BAMQCCRAM                  } from '../../../../modules/nf-core/modules/qualimap/bamqccram/main'
-include { SAMTOOLS_INDEX as INDEX_RECALIBRATE } from '../../../../modules/local/samtools/index/main'
-include { SAMTOOLS_MERGE_CRAM                 } from '../../../../modules/local/samtools/mergecram/main'
-include { SAMTOOLS_STATS                      } from '../../../../modules/nf-core/modules/samtools/stats/main'
+include { GATK4_APPLYBQSR_SPARK as APPLYBQSR_SPARK  } from '../../../../modules/local/gatk4/applybqsrspark/main'
+include { QUALIMAP_BAMQCCRAM                        } from '../../../../modules/nf-core/modules/qualimap/bamqccram/main'
+include { SAMTOOLS_INDEX as INDEX_RECALIBRATE       } from '../../../../modules/local/samtools/index/main'
+include { SAMTOOLS_MERGE_CRAM                       } from '../../../../modules/local/samtools/mergecram/main'
+include { SAMTOOLS_STATS                            } from '../../../../modules/nf-core/modules/samtools/stats/main'
 
-workflow RECALIBRATE {
+workflow RECALIBRATE_SPARK {
     take:
         cram           // channel: [mandatory] cram
         dict           // channel: [mandatory] dict
@@ -32,16 +32,16 @@ workflow RECALIBRATE {
             [new_meta, cram, crai, recal, intervals]
         }
 
-    // Run Applybqsr
-    APPLYBQSR(cram_intervals, fasta, fasta_fai, dict)
+    // Run Applybqsr spark
+    APPLYBQSR_SPARK(cram_intervals, fasta, fasta_fai, dict)
 
-    cram_recalibrated_no_intervals = APPLYBQSR.out.cram
+    cram_recalibrated_no_intervals = APPLYBQSR_SPARK.out.cram
 
     // Empty the no intervals cram channel if we have intervals
     if (!no_intervals) cram_recalibrated_no_intervals = Channel.empty()
 
     // STEP 4.5: MERGING AND INDEXING THE RECALIBRATED BAM FILES
-    cram_recalibrated_interval = APPLYBQSR.out.cram
+    cram_recalibrated_interval = APPLYBQSR_SPARK.out.cram
         .map{ meta, cram ->
             meta.id = meta.sample
             [meta, cram]
@@ -61,7 +61,7 @@ workflow RECALIBRATE {
     qc_reports = qc_reports.mix(QUALIMAP_BAMQCCRAM.out.results)
 
     // Gather versions of all tools used
-    ch_versions = ch_versions.mix(APPLYBQSR.out.versions)
+    ch_versions = ch_versions.mix(APPLYBQSR_SPARK.out.versions)
     ch_versions = ch_versions.mix(INDEX_RECALIBRATE.out.versions)
     ch_versions = ch_versions.mix(QUALIMAP_BAMQCCRAM.out.versions)
     ch_versions = ch_versions.mix(SAMTOOLS_MERGE_CRAM.out.versions)
