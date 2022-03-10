@@ -253,9 +253,6 @@ workflow SAREK {
     // PREPROCESSING
 
     bam_mapped          = Channel.empty()
-    bam_mapped_qc       = Channel.empty()
-    bam_recalibrated_qc = Channel.empty()
-    bam_variant_calling = Channel.empty()
 
     // STEP 0: QC & TRIM
     // `--d fastqc` to skip fastqc
