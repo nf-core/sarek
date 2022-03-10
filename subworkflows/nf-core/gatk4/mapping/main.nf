@@ -9,25 +9,23 @@ include { BWA_MEM as BWAMEM1_MEM } from '../../../../modules/nf-core/modules/bwa
 
 workflow GATK4_MAPPING {
     take:
-        reads     // channel: [mandatory] meta, reads
-        bwa       // channel: [mandatory] bwa
-        fasta     // channel: [mandatory] fasta
-        fasta_fai // channel: [mandatory] fasta_fai
+        ch_reads // channel: [mandatory] meta, reads
+        ch_bwa   // channel: [mandatory] bwa
 
     main:
 
     ch_versions = Channel.empty()
 
-    // Only one of the following will be run
-    BWAMEM1_MEM(reads, bwa, true) // If aligner is bwa-mem
-    BWAMEM2_MEM(reads, bwa, true) // If aligner is bwa-mem2
+    // Only one of the following should be run
+    BWAMEM1_MEM(ch_reads, ch_bwa, true) // If aligner is bwa-mem
+    BWAMEM2_MEM(ch_reads, ch_bwa, true) // If aligner is bwa-mem2
 
     // Grouping the bams from the same samples not to stall the workflow
-    bam_mapped = BWAMEM1_MEM.out.bam.mix(BWAMEM2_MEM.out.bam).map{ meta, bam ->
+    ch_bam_mapped = BWAMEM1_MEM.out.bam.mix(BWAMEM2_MEM.out.bam).map{ meta, bam ->
         new_meta = meta.clone()
         // Removing unneeded fields in the new_meta map
-        new_meta.remove('read_group')
-        new_meta.remove('size')
+        new_meta.remove('read_group') // read_group is now in the bam header
+        new_meta.remove('size')       // size is only needed for the groupKey
         new_meta.id = meta.sample
 
         // groupKey is to makes sure that the correct group can advance as soon as it is complete
@@ -42,7 +40,9 @@ workflow GATK4_MAPPING {
     ch_versions = ch_versions.mix(BWAMEM1_MEM.out.versions.first())
     ch_versions = ch_versions.mix(BWAMEM2_MEM.out.versions.first())
 
+    ch_bam_mapped.view{ "ch_bam_mapped " + it }
+
     emit:
-        bam         = bam_mapped
-        versions    = ch_versions
+        bam      = ch_bam_mapped
+        versions = ch_versions
 }

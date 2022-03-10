@@ -299,9 +299,7 @@ workflow SAREK {
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         GATK4_MAPPING(
             SPLIT_FASTQ.out.reads,
-            bwa,
-            fasta,
-            fasta_fai)
+            bwa)
 
         // Get mapped reads (BAM) with and without index
         // without index: always contains mapped_bams, only used if duplicate marking is done
