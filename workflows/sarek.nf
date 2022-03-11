@@ -382,7 +382,7 @@ workflow SAREK {
         SAMTOOLS_STATS_CRAM(ch_cram_for_prepare_recalibration, fasta)
 
         // Gather QC reports
-        ch_reports  = ch_reports.mix(SAMTOOLS_STATS_CRAM.out.qc.collect{it[1]}.ifEmpty([]))
+        ch_reports  = ch_reports.mix(SAMTOOLS_STATS_CRAM.out.stats.collect{it[1]}.ifEmpty([]))
 
         // Gather used softwares versions
         ch_versions = ch_versions.mix(SAMTOOLS_STATS_CRAM.out.versions)
