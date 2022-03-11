@@ -14,10 +14,10 @@ workflow PREPARE_RECALIBRATION_SPARK {
         fasta               // channel: [mandatory] fasta
         fasta_fai           // channel: [mandatory] fasta_fai
         intervals           // channel: [mandatory] intervals
-        num_intervals
         known_sites         // channel: [optional]  known_sites
         known_sites_tbi     // channel: [optional]  known_sites_tbi
         no_intervals        //   value: [mandatory] no_intervals
+        num_intervals
 
     main:
 

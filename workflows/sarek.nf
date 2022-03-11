@@ -423,10 +423,10 @@ workflow SAREK {
                 fasta,
                 fasta_fai,
                 intervals,
-                num_intervals,
                 known_sites,
                 known_sites_tbi,
-                params.no_intervals)
+                params.no_intervals,
+                num_intervals)
 
                 ch_table_bqsr_spark = PREPARE_RECALIBRATION_SPARK.out.table_bqsr
 
@@ -438,10 +438,10 @@ workflow SAREK {
                 fasta,
                 fasta_fai,
                 intervals,
-                num_intervals,
                 known_sites,
                 known_sites_tbi,
-                params.no_intervals)
+                params.no_intervals,
+                num_intervals)
 
                 ch_table_bqsr_no_spark = PREPARE_RECALIBRATION.out.table_bqsr
 
@@ -475,9 +475,7 @@ workflow SAREK {
                     fasta,
                     fasta_fai,
                     intervals,
-                    num_intervals,
-                    params.no_intervals,
-                    intervals_for_preprocessing)
+                    num_intervals)
 
                 ch_cram_variant_calling_spark = RECALIBRATE_SPARK.out.cram
 
@@ -490,9 +488,7 @@ workflow SAREK {
                     fasta,
                     fasta_fai,
                     intervals,
-                    num_intervals,
-                    params.no_intervals,
-                    intervals_for_preprocessing)
+                    num_intervals)
 
                 ch_cram_variant_calling_no_spark = RECALIBRATE.out.cram
 
