@@ -337,9 +337,9 @@ workflow SAREK {
 
         // STEP 2: markduplicates (+QC) + convert to CRAM
 
-        // ch_bam_mapped will countain bam mapped with GATK4_MAPPING when step is mapping
+        // ch_bam_for_markduplicates will countain bam mapped with GATK4_MAPPING when step is mapping
         // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
-        ch_bam_mapped = params.step == 'mapping' ?: ch_input_sample.map{ meta, bam, bai -> [meta, bam] }
+        ch_bam_for_markduplicates = params.step == 'mapping' ? ch_bam_mapped : ch_input_sample.map{ meta, bam, bai -> [meta, bam] }
 
         if (params.skip_tools && params.skip_tools.contains('markduplicates')) {
 
@@ -361,7 +361,7 @@ workflow SAREK {
             // Gather QC reports
             ch_reports  = ch_reports.mix(BAM_TO_CRAM.out.qc)
         } else if (params.use_gatk_spark && params.use_gatk_spark.contains('markduplicates')) {
-            MARKDUPLICATES_SPARK(ch_bam_mapped,
+            MARKDUPLICATES_SPARK(ch_bam_for_markduplicates,
                 dict,
                 fasta,
                 fasta_fai,
@@ -374,7 +374,7 @@ workflow SAREK {
             // Gather used softwares versions
             ch_versions = ch_versions.mix(MARKDUPLICATES_SPARK.out.versions)
         } else {
-            MARKDUPLICATES(ch_bam_mapped,
+            MARKDUPLICATES(ch_bam_for_markduplicates,
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing)
