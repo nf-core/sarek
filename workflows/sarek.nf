@@ -246,6 +246,7 @@ workflow SAREK {
 
     // Gather used softwares versions
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
+    ch_versions = ch_versions.mix(PREPARE_INTERVALS.out.versions)
 
     // PREPROCESSING
 
@@ -355,11 +356,11 @@ workflow SAREK {
 
             ch_cram_no_markduplicates = BAM_TO_CRAM.out.cram
 
-            // Gather used softwares versions
-            ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions)
-
             // Gather QC reports
             ch_reports  = ch_reports.mix(BAM_TO_CRAM.out.qc)
+
+            // Gather used softwares versions
+            ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions)
         } else if (params.use_gatk_spark && params.use_gatk_spark.contains('markduplicates')) {
             MARKDUPLICATES_SPARK(ch_bam_for_markduplicates,
                 dict,
@@ -391,7 +392,7 @@ workflow SAREK {
         // ch_cram_for_prepare_recalibration contains either:
         // - crams from markduplicates
         // - crams from markduplicates_spark
-        // - crams converted from bam when skipping markduplicates
+        // - crams converted from bam mapped when skipping markduplicates
         ch_cram_for_prepare_recalibration = Channel.empty().mix(
             ch_cram_markduplicates_no_spark,
             ch_cram_markduplicates_spark,
@@ -400,21 +401,22 @@ workflow SAREK {
         // Run Samtools stats on CRAM
         SAMTOOLS_STATS_CRAM(ch_cram_for_prepare_recalibration, fasta)
 
+        // Create CSV to restart from this step
+        MARKDUPLICATES_CSV(ch_cram_for_prepare_recalibration)
+
         // Gather QC reports
         ch_reports  = ch_reports.mix(SAMTOOLS_STATS_CRAM.out.stats.collect{it[1]}.ifEmpty([]))
 
         // Gather used softwares versions
         ch_versions = ch_versions.mix(SAMTOOLS_STATS_CRAM.out.versions)
 
-        // Create CSV to restart from this step
-        MARKDUPLICATES_CSV(ch_cram_for_prepare_recalibration)
-
         // STEP 3: Create recalibration tables
         if (!(params.skip_tools && params.skip_tools.contains('baserecalibrator'))) {
-            table_bqsr = Channel.empty()
+            ch_table_bqsr_no_spark = Channel.empty()
+            ch_table_bqsr_spark    = Channel.empty()
+
             if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
-            PREPARE_RECALIBRATION_SPARK(
-                ch_cram_for_prepare_recalibration,
+            PREPARE_RECALIBRATION_SPARK(ch_cram_for_prepare_recalibration,
                 dict,
                 fasta,
                 fasta_fai,
@@ -424,13 +426,12 @@ workflow SAREK {
                 known_sites_tbi,
                 params.no_intervals)
 
-                table_bqsr = PREPARE_RECALIBRATION_SPARK.out.table_bqsr
+                ch_table_bqsr_spark = PREPARE_RECALIBRATION_SPARK.out.table_bqsr
 
                 // Gather used softwares versions
                 ch_versions = ch_versions.mix(PREPARE_RECALIBRATION_SPARK.out.versions)
             } else {
-            PREPARE_RECALIBRATION(
-                ch_cram_for_prepare_recalibration,
+            PREPARE_RECALIBRATION(ch_cram_for_prepare_recalibration,
                 dict,
                 fasta,
                 fasta_fai,
@@ -440,62 +441,78 @@ workflow SAREK {
                 known_sites_tbi,
                 params.no_intervals)
 
-                table_bqsr = PREPARE_RECALIBRATION.out.table_bqsr
+                ch_table_bqsr_no_spark = PREPARE_RECALIBRATION.out.table_bqsr
+
                 // Gather used softwares versions
                 ch_versions = ch_versions.mix(PREPARE_RECALIBRATION.out.versions)
             }
 
-            PREPARE_RECALIBRATION_CSV(table_bqsr)
+            // ch_table_bqsr contains either:
+            // - bqsr table from baserecalibrator
+            // - bqsr table from baserecalibrator_spark
+            ch_table_bqsr = Channel.empty().mix(
+                ch_table_bqsr_no_spark,
+                ch_table_bqsr_spark)
 
-            cram_applybqsr = ch_cram_for_prepare_recalibration.join(table_bqsr)
+            // Create CSV to restart from this step
+            PREPARE_RECALIBRATION_CSV(table_bqsr)
         }
     }
-
-    if (params.step == 'recalibrate') cram_applybqsr = ch_input_sample
 
     // STEP 4: RECALIBRATING
     if (params.step in ['mapping', 'prepare_recalibration', 'recalibrate']) {
 
         if (!(params.skip_tools && params.skip_tools.contains('baserecalibrator'))) {
+            ch_cram_applybqsr = params.step == 'recalibrate' ? ch_input_sample : ch_cram_for_prepare_recalibration.join(table_bqsr)
+            ch_cram_variant_calling_no_spark = Channel.empty()
+            ch_cram_variant_calling_spark    = Channel.empty()
+
             if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
-            RECALIBRATE_SPARK(
-                cram_applybqsr,
-                dict,
-                fasta,
-                fasta_fai,
-                intervals,
-                num_intervals,
-                params.no_intervals,
-                intervals_for_preprocessing)
+                RECALIBRATE_SPARK(ch_cram_applybqsr,
+                    dict,
+                    fasta,
+                    fasta_fai,
+                    intervals,
+                    num_intervals,
+                    params.no_intervals,
+                    intervals_for_preprocessing)
 
-            cram_variant_calling = RECALIBRATE_SPARK.out.cram
+                ch_cram_variant_calling_spark = RECALIBRATE_SPARK.out.cram
 
-            // Gather QC reports
-            ch_reports  = ch_reports.mix(RECALIBRATE_SPARK.out.qc.collect{it[1]}.ifEmpty([]))
+                // Gather QC reports
+                ch_reports  = ch_reports.mix(RECALIBRATE_SPARK.out.qc.collect{it[1]}.ifEmpty([]))
 
-            // Gather used softwares versions
-            ch_versions = ch_versions.mix(RECALIBRATE_SPARK.out.versions)
+                // Gather used softwares versions
+                ch_versions = ch_versions.mix(RECALIBRATE_SPARK.out.versions)
 
             } else {
-            RECALIBRATE(
-                cram_applybqsr,
-                dict,
+                RECALIBRATE(ch_cram_applybqsr,
+                    dict,
+                    fasta,
+                    fasta_fai,
+                    intervals,
+                    num_intervals,
+                    params.no_intervals,
+                    intervals_for_preprocessing)
+
+                ch_cram_variant_calling_no_spark = RECALIBRATE.out.cram
+
+                // Gather QC reports
+                ch_reports  = ch_reports.mix(RECALIBRATE.out.qc.collect{it[1]}.ifEmpty([]))
+
+                // Gather used softwares versions
+                ch_versions = ch_versions.mix(RECALIBRATE.out.versions)
+            }
+            cram_variant_calling = Channel.empty().mix(
+                ch_cram_variant_calling_no_spark,
+                ch_cram_variant_calling_spark)
+
+            CRAM_QC(cram_variant_calling,
                 fasta,
                 fasta_fai,
-                intervals,
-                num_intervals,
-                params.no_intervals,
-                intervals_for_preprocessing)
+                intervals_combined_bed_gz_tbi)
 
-            cram_variant_calling = RECALIBRATE.out.cram
-
-            // Gather QC reports
-            ch_reports  = ch_reports.mix(RECALIBRATE.out.qc.collect{it[1]}.ifEmpty([]))
-
-            // Gather used softwares versions
-            ch_versions = ch_versions.mix(RECALIBRATE.out.versions)
-            }
-
+            // Create CSV to restart from this step
             RECALIBRATE_CSV(cram_variant_calling)
 
         } else cram_variant_calling = ch_cram_for_prepare_recalibration
