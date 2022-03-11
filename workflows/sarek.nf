@@ -329,8 +329,23 @@ workflow SAREK {
         // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
         ch_bam_mapped = params.step == 'mapping' ? GATK4_MAPPING.out.bam : ch_input_sample.map{ meta, bam, bai -> [meta, bam] }
 
+        ch_bam_mapped = ch_bam_mapped.map{ meta, bam ->
+            new_meta = meta.clone()
+            // remove no longer necessary fields
+            new_meta.remove('read_group') // Now in the BAM header
+            new_meta.remove('size')       // Was only needed for mapping
+
+            // update ID to be based on the sample name
+            new_meta.id = meta.sample
+
+            [new_meta, bam]
+            }
+
         if (params.skip_tools && params.skip_tools.contains('markduplicates')) {
 
+            // ch_bam_indexed will countain bam mapped with GATK4_MAPPING when step is mapping
+            // which are then merged and indexed
+            // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
             ch_bam_indexed = params.step == 'mapping' ? MERGE_INDEX_BAM.out.bam_bai : ch_input_sample
 
             BAM_TO_CRAM(ch_bam_indexed,
@@ -373,6 +388,10 @@ workflow SAREK {
             ch_versions = ch_versions.mix(MARKDUPLICATES.out.versions)
         }
 
+        // ch_cram_for_prepare_recalibration contains either:
+        // - crams from markduplicates
+        // - crams from markduplicates_spark
+        // - crams converted from bam when skipping markduplicates
         ch_cram_for_prepare_recalibration = Channel.empty().mix(
             ch_cram_markduplicates_no_spark,
             ch_cram_markduplicates_spark,
