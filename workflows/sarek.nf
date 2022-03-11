@@ -293,10 +293,22 @@ workflow SAREK {
         // reads will be sorted
         GATK4_MAPPING(SPLIT_FASTQ.out.reads, bwa, true)
 
+        ch_bam_mapped = GATK4_MAPPING.out.bam.map{ meta, bam ->
+            new_meta = meta.clone()
+            // remove no longer necessary fields
+            new_meta.remove('read_group') // Now in the BAM header
+            new_meta.remove('size')       // Was only needed for mapping
+
+            // update ID to be based on the sample name
+            new_meta.id = meta.sample
+
+            [new_meta, bam]
+            }
+
         // When saving mapped bams or skipping markduplicates
         // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
         if (params.save_bam_mapped || (params.skip_tools && params.skip_tools.contains('markduplicates'))) {
-            MERGE_INDEX_BAM(GATK4_MAPPING.out.bam)
+            MERGE_INDEX_BAM(ch_bam_mapped)
 
             // Create CSV to restart from this step
             MAPPING_CSV(MERGE_INDEX_BAM.out.bam_bai)
@@ -327,19 +339,7 @@ workflow SAREK {
 
         // ch_bam_mapped will countain bam mapped with GATK4_MAPPING when step is mapping
         // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
-        ch_bam_mapped = params.step == 'mapping' ? GATK4_MAPPING.out.bam : ch_input_sample.map{ meta, bam, bai -> [meta, bam] }
-
-        ch_bam_mapped = ch_bam_mapped.map{ meta, bam ->
-            new_meta = meta.clone()
-            // remove no longer necessary fields
-            new_meta.remove('read_group') // Now in the BAM header
-            new_meta.remove('size')       // Was only needed for mapping
-
-            // update ID to be based on the sample name
-            new_meta.id = meta.sample
-
-            [new_meta, bam]
-            }
+        ch_bam_mapped = params.step == 'mapping' ?: ch_input_sample.map{ meta, bam, bai -> [meta, bam] }
 
         if (params.skip_tools && params.skip_tools.contains('markduplicates')) {
 
