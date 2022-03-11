@@ -24,6 +24,9 @@
             "cnvkit/batch": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
+            "controlfreec": {
+                "git_sha": "c189835b1bb444e5ee87416fdbea66e2c2ba365e"
+            },
             "custom/dumpsoftwareversions": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
