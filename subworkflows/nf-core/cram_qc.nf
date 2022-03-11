@@ -20,7 +20,7 @@ workflow CRAM_QC {
 
     // Reports run on cram
     SAMTOOLS_STATS(cram, fasta)
-    QUALIMAP_BAMQCCRAM(INDEX_RECALIBRATE.out.cram_crai, intervals_combined_bed_gz_tbi, fasta, fasta_fai)
+    QUALIMAP_BAMQCCRAM(cram, intervals_combined_bed_gz_tbi, fasta, fasta_fai)
 
     // Gather all reports generated
     qc_reports = qc_reports.mix(SAMTOOLS_STATS.out.stats)

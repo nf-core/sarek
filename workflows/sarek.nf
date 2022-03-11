@@ -455,7 +455,7 @@ workflow SAREK {
                 ch_table_bqsr_spark)
 
             // Create CSV to restart from this step
-            PREPARE_RECALIBRATION_CSV(table_bqsr)
+            PREPARE_RECALIBRATION_CSV(ch_table_bqsr)
         }
     }
 
@@ -463,7 +463,7 @@ workflow SAREK {
     if (params.step in ['mapping', 'prepare_recalibration', 'recalibrate']) {
 
         if (!(params.skip_tools && params.skip_tools.contains('baserecalibrator'))) {
-            ch_cram_applybqsr = params.step == 'recalibrate' ? ch_input_sample : ch_cram_for_prepare_recalibration.join(table_bqsr)
+            ch_cram_applybqsr = params.step == 'recalibrate' ? ch_input_sample : ch_cram_for_prepare_recalibration.join(ch_table_bqsr)
             ch_cram_variant_calling_no_spark = Channel.empty()
             ch_cram_variant_calling_spark    = Channel.empty()
 
@@ -478,9 +478,6 @@ workflow SAREK {
                     intervals_for_preprocessing)
 
                 ch_cram_variant_calling_spark = RECALIBRATE_SPARK.out.cram
-
-                // Gather QC reports
-                ch_reports  = ch_reports.mix(RECALIBRATE_SPARK.out.qc.collect{it[1]}.ifEmpty([]))
 
                 // Gather used softwares versions
                 ch_versions = ch_versions.mix(RECALIBRATE_SPARK.out.versions)
@@ -497,9 +494,6 @@ workflow SAREK {
 
                 ch_cram_variant_calling_no_spark = RECALIBRATE.out.cram
 
-                // Gather QC reports
-                ch_reports  = ch_reports.mix(RECALIBRATE.out.qc.collect{it[1]}.ifEmpty([]))
-
                 // Gather used softwares versions
                 ch_versions = ch_versions.mix(RECALIBRATE.out.versions)
             }
@@ -510,11 +504,16 @@ workflow SAREK {
             CRAM_QC(cram_variant_calling,
                 fasta,
                 fasta_fai,
-                intervals_combined_bed_gz_tbi)
+                intervals_for_preprocessing)
 
             // Create CSV to restart from this step
             RECALIBRATE_CSV(cram_variant_calling)
 
+            // Gather QC reports
+            ch_reports  = ch_reports.mix(CRAM_QC.out.qc.collect{it[1]}.ifEmpty([]))
+
+            // Gather used softwares versions
+            ch_versions = ch_versions.mix(CRAM_QC.out.versions)
         } else cram_variant_calling = ch_cram_for_prepare_recalibration
 
     }
