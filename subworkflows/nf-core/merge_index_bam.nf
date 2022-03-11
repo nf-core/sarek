@@ -14,17 +14,12 @@ workflow MERGE_INDEX_BAM {
     main:
     ch_versions = Channel.empty()
 
-    // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
-    // Except if and only if skipping markduplicates or saving mapped bams
-
     // Figuring out if there is one or more bam(s) from the same sample
-    // Is done for all, but not blocking
     bam.branch{
         single:   it[1].size() == 1
         multiple: it[1].size() > 1
     }.set{bam_to_merge}
 
-    // Only if the when clause is true
     MERGE_BAM(bam_to_merge.multiple, [])
     INDEX_MERGE_BAM(bam_to_merge.single.mix(MERGE_BAM.out.bam))
 

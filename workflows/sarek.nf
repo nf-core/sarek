@@ -306,9 +306,11 @@ workflow SAREK {
             [new_meta, bam]
             }
 
-        // When saving mapped bams or skipping markduplicates
-        // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
+        // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
+        // Except if and only if skipping markduplicates or saving mapped bams
         if (params.save_bam_mapped || (params.skip_tools && params.skip_tools.contains('markduplicates'))) {
+
+            // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
             MERGE_INDEX_BAM(ch_bam_mapped)
 
             // Create CSV to restart from this step
