@@ -33,15 +33,11 @@ workflow PREPARE_RECALIBRATION {
     // Run Baserecalibrator
     BASERECALIBRATOR(cram_markduplicates_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
 
-    BASERECALIBRATOR.out.table.view{ "BASERECALIBRATOR.out.table " + it }
-
     table_baserecalibrator = BASERECALIBRATOR.out.table
         .map{ meta, table ->
                 meta.id = meta.sample
                 [meta, table]
             }
-
-    table_baserecalibrator.view{ "table_baserecalibrator " + it }
 
     // Only one of the two channels will be used
     table_no_intervals = table_baserecalibrator
