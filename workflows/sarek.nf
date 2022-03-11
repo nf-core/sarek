@@ -79,38 +79,41 @@ if (anno_readme && file(anno_readme).exists()) {
 */
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-chr_dir           = params.chr_dir           ? Channel.fromPath(params.chr_dir).collect()           : []
-chr_length        = params.chr_length        ? Channel.fromPath(params.chr_length).collect()        : []
-dbsnp             = params.dbsnp             ? Channel.fromPath(params.dbsnp).collect()             : Channel.empty()
-fasta             = params.fasta             ? Channel.fromPath(params.fasta).collect()             : Channel.empty()
-fasta_fai         = params.fasta_fai         ? Channel.fromPath(params.fasta_fai).collect()         : Channel.empty()
-germline_resource = params.germline_resource ? Channel.fromPath(params.germline_resource).collect() : Channel.empty()
-known_indels      = params.known_indels      ? Channel.fromPath(params.known_indels).collect()      : Channel.empty()
-loci              = params.ac_loci           ? Channel.fromPath(params.ac_loci).collect()           : []
-loci_gc           = params.ac_loci_gc        ? Channel.fromPath(params.ac_loci_gc).collect()        : []
-mappability       = params.mappability       ? Channel.fromPath(params.mappability).collect()       : []
+chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()                  : []
+chr_length         = params.chr_length         ? Channel.fromPath(params.chr_length).collect()               : []
+dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()                    : Channel.empty()
+fasta              = params.fasta              ? Channel.fromPath(params.fasta).collect()                    : Channel.empty()
+fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()                : Channel.empty()
+germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect()        : Channel.empty()
+known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()             : Channel.empty()
+loci               = params.ac_loci            ? Channel.fromPath(params.ac_loci).collect()                  : []
+loci_gc            = params.ac_loci_gc         ? Channel.fromPath(params.ac_loci_gc).collect()               : []
+mappability        = params.mappability        ? Channel.fromPath(params.mappability).collect()              : []
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
-snpeff_db         = params.snpeff_db         ?: Channel.empty()
-vep_cache_version = params.vep_cache_version ?: Channel.empty()
-vep_genome        = params.vep_genome        ?: Channel.empty()
-vep_species       = params.vep_species       ?: Channel.empty()
+snpeff_db          = params.snpeff_db          ?: Channel.empty()
+vep_cache_version  = params.vep_cache_version  ?: Channel.empty()
+vep_genome         = params.vep_genome         ?: Channel.empty()
+vep_species        = params.vep_species        ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
-cadd_indels       = params.cadd_indels       ? Channel.fromPath(params.cadd_indels).collect()       : []
-cadd_indels_tbi   = params.cadd_indels_tbi   ? Channel.fromPath(params.cadd_indels_tbi).collect()   : []
-cadd_wg_snvs      = params.cadd_wg_snvs      ? Channel.fromPath(params.cadd_wg_snvs).collect()      : []
-cadd_wg_snvs_tbi  = params.cadd_wg_snvs_tbi  ? Channel.fromPath(params.cadd_wg_snvs_tbi).collect()  : []
-pon               = params.pon               ? Channel.fromPath(params.pon).collect()               : Channel.empty()
-snpeff_cache      = params.snpeff_cache      ? Channel.fromPath(params.snpeff_cache).collect()      : []
-//target_bed        = params.target_bed        ? Channel.fromPath(params.target_bed).collect()        : []
-vep_cache         = params.vep_cache         ? Channel.fromPath(params.vep_cache).collect()         : []
+cadd_indels        = params.cadd_indels        ? Channel.fromPath(params.cadd_indels).collect()              : []
+cadd_indels_tbi    = params.cadd_indels_tbi    ? Channel.fromPath(params.cadd_indels_tbi).collect()          : []
+cadd_wg_snvs       = params.cadd_wg_snvs       ? Channel.fromPath(params.cadd_wg_snvs).collect()             : []
+cadd_wg_snvs_tbi   = params.cadd_wg_snvs_tbi   ? Channel.fromPath(params.cadd_wg_snvs_tbi).collect()         : []
+pon                = params.pon                ? Channel.fromPath(params.pon).collect()                      : Channel.empty()
+snpeff_cache       = params.snpeff_cache       ? Channel.fromPath(params.snpeff_cache).collect()             : []
+//target_bed         = params.target_bed         ? Channel.fromPath(params.target_bed).collect()               : []
+vep_cache          = params.vep_cache          ? Channel.fromPath(params.vep_cache).collect()                : []
 
 // Initialize value channels based on params, not defined within the params.genomes[params.genome] scope
-umi_read_structure   = params.umi_read_structure   ? "${params.umi_read_structure} ${params.umi_read_structure}": Channel.empty()
+umi_read_structure = params.umi_read_structure ? "${params.umi_read_structure} ${params.umi_read_structure}" : Channel.empty()
 
-
-// SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
+/*
+========================================================================================
+    IMPORT LOCAL/NF-CORE MODULES/SUBWORKFLOWS
+========================================================================================
+*/
 
 // Create samplesheets to restart from different steps
 include { MAPPING_CSV                                    } from '../subworkflows/local/mapping_csv'
@@ -131,6 +134,12 @@ include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_UMI   } from '../subworkflows
 // Split FASTQ files
 include { SPLIT_FASTQ                                    } from '../subworkflows/local/split_fastq'
 
+// Run FASTQC and/or TRIMGALORE
+include { FASTQC_TRIMGALORE                              } from '../subworkflows/nf-core/fastqc_trimgalore'
+
+// Create umi consensus bams from fastq
+include { CREATE_UMI_CONSENSUS                           } from '../subworkflows/nf-core/fgbio_create_umi_consensus/main'
+
 // Map input reads to reference genome
 include { GATK4_MAPPING                                  } from '../subworkflows/nf-core/gatk4/mapping/main'
 
@@ -146,7 +155,8 @@ include { MARKDUPLICATES_SPARK                           } from '../subworkflows
 // Convert to CRAM (+QC)
 include { BAM_TO_CRAM                                    } from '../subworkflows/nf-core/bam_to_cram'
 
-// CRAM QC
+// QC on CRAM
+include { SAMTOOLS_STATS as SAMTOOLS_STATS_CRAM          } from '../modules/nf-core/modules/samtools/stats/main'
 include { CRAM_QC                                        } from '../subworkflows/nf-core/cram_qc'
 
 // Create recalibration tables
@@ -175,31 +185,15 @@ include { ANNOTATE                                       } from '../subworkflows
     annotation_cache:                  params.annotation_cache
 )
 
-/*
-========================================================================================
-    IMPORT NF-CORE MODULES/SUBWORKFLOWS
-========================================================================================
-*/
+// REPORTING VERSIONS OF SOFTWARE USED
+include { CUSTOM_DUMPSOFTWAREVERSIONS                    } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+
+// MULTIQC
+include { MULTIQC                                        } from '../modules/nf-core/modules/multiqc/main'
 
 // Config files
 ch_multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
-
-//
-// SUBWORKFLOWS
-//
-
-include { FASTQC_TRIMGALORE                              } from '../subworkflows/nf-core/fastqc_trimgalore'
-
-// Create umi consensus bams from fastq
-include { CREATE_UMI_CONSENSUS                           } from '../subworkflows/nf-core/fgbio_create_umi_consensus/main'
-
-//
-// MODULES: Installed directly from nf-core/modules
-//
-
-include { CUSTOM_DUMPSOFTWAREVERSIONS                    } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
-include { MULTIQC                                        } from '../modules/nf-core/modules/multiqc/main'
 
 def multiqc_report = []
 
@@ -385,13 +379,13 @@ workflow SAREK {
             ch_cram_no_markduplicates)
 
         // Run Samtools stats on CRAM
-        CRAM_QC(ch_cram_for_prepare_recalibration, fasta)
+        SAMTOOLS_STATS_CRAM(ch_cram_for_prepare_recalibration, fasta)
 
         // Gather QC reports
-        ch_reports  = ch_reports.mix(CRAM_QC.out.qc.collect{it[1]}.ifEmpty([]))
+        ch_reports  = ch_reports.mix(SAMTOOLS_STATS_CRAM.out.qc.collect{it[1]}.ifEmpty([]))
 
         // Gather used softwares versions
-        ch_versions = ch_versions.mix(CRAM_QC.out.versions)
+        ch_versions = ch_versions.mix(SAMTOOLS_STATS_CRAM.out.versions)
 
         // Create CSV to restart from this step
         MARKDUPLICATES_CSV(ch_cram_for_prepare_recalibration)
