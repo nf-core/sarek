@@ -9,12 +9,12 @@ include { MERGE_INDEX_CRAM             } from '../../merge_index_cram'
 
 workflow RECALIBRATE {
     take:
-        cram           // channel: [mandatory] cram
-        dict           // channel: [mandatory] dict
-        fasta          // channel: [mandatory] fasta
-        fasta_fai      // channel: [mandatory] fasta_fai
-        intervals      // channel: [mandatory] intervals
-        num_intervals
+        cram          // channel: [mandatory] cram
+        dict          // channel: [mandatory] dict
+        fasta         // channel: [mandatory] fasta
+        fasta_fai     // channel: [mandatory] fasta_fai
+        intervals     // channel: [mandatory] intervals
+        num_intervals //   value: [mandatory] number of intervals
 
     main:
     ch_versions = Channel.empty()
@@ -22,7 +22,7 @@ workflow RECALIBRATE {
     cram_intervals = cram.combine(intervals)
         .map{ meta, cram, crai, recal, intervals ->
             new_meta = meta.clone()
-            new_meta.id = intervals.baseName != "no_intervals" ? meta.sample + "_" + intervals.baseName : meta.sample
+            new_meta.id = num_intervals == 1 ? meta.sample : meta.sample + "_" + intervals.baseName
             [new_meta, cram, crai, recal, intervals]
         }
 

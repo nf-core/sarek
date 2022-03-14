@@ -14,7 +14,7 @@ include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_ALL   } from '../../modu
 
 workflow PREPARE_INTERVALS {
     take:
-        fasta_fai         // channel: [optional]  fasta_fai
+        fasta_fai // channel: [mandatory] fasta_fai
 
     main:
 

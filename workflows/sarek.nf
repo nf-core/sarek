@@ -60,9 +60,9 @@ else {
 ch_input_sample = extract_csv(csv_file)
 
 if (params.wes) {
-    if (!params.intervals.endsWith("bed")) exit 1, "Target file must be in BED format"
+    if (params.intervals && !params.intervals.endsWith("bed")) exit 1, "Target file must be in BED format"
 } else {
-    if (!params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) exit 1, "Interval file must end with .bed or .interval_list"
+    if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) exit 1, "Interval file must end with .bed or .interval_list"
 }
 
 // Save AWS IGenomes file containing annotation version
@@ -241,8 +241,7 @@ workflow SAREK {
     intervals_bed_combined_gz     = intervals_bed_combined_gz_tbi.map{ bed, tbi -> [bed]}.collect() // one file containing all intervals interval.bed.gz file
     intervals_for_preprocessing   = (!params.wes || params.no_intervals) ? [] : PREPARE_INTERVALS.out.intervals_bed //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
 
-    num_intervals = 0
-    intervals.count().map{ num_intervals = it }
+    num_intervals                 = params.intervals ? count_intervals(file(params.intervals)) : 1
 
     // Gather used softwares versions
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
@@ -425,7 +424,6 @@ workflow SAREK {
                 intervals,
                 known_sites,
                 known_sites_tbi,
-                params.no_intervals,
                 num_intervals)
 
                 ch_table_bqsr_spark = PREPARE_RECALIBRATION_SPARK.out.table_bqsr
@@ -440,7 +438,6 @@ workflow SAREK {
                 intervals,
                 known_sites,
                 known_sites_tbi,
-                params.no_intervals,
                 num_intervals)
 
                 ch_table_bqsr_no_spark = PREPARE_RECALIBRATION.out.table_bqsr
@@ -695,8 +692,6 @@ workflow.onComplete {
 }
 
 // Function to extract information (meta data + file(s)) from csv file(s)
-
-is_bam_input = false
 def extract_csv(csv_file) {
     Channel.from(csv_file).splitCsv(header: true)
         //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
@@ -789,4 +784,15 @@ def extract_csv(csv_file) {
             log.warn "Missing or unknown field in csv file header"
         }
     }
+}
+
+// Function to count number of intervals
+def count_intervals(intervals_file) {
+    count = 0
+
+    intervals_file.eachLine{ it ->
+        count += it.startsWith("@") ? 0 : 1
+    }
+
+    return count
 }

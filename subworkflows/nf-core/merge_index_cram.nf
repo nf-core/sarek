@@ -4,8 +4,8 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { SAMTOOLS_INDEX      as INDEX_RECALIBRATE } from '../../modules/local/samtools/index/main'
-include { SAMTOOLS_MERGE_CRAM as MERGE_CRAM        } from '../../modules/local/samtools/mergecram/main'
+include { SAMTOOLS_INDEX      as INDEX_CRAM } from '../../modules/local/samtools/index/main'
+include { SAMTOOLS_MERGE_CRAM as MERGE_CRAM } from '../../modules/local/samtools/mergecram/main'
 
 workflow MERGE_INDEX_CRAM {
     take:
@@ -28,13 +28,13 @@ workflow MERGE_INDEX_CRAM {
     }.set{cram_to_merge}
 
     MERGE_CRAM(cram_to_merge.multiple, fasta)
-    INDEX_RECALIBRATE(cram_to_merge.single.mix(MERGE_CRAM.out.cram))
+    INDEX_CRAM(cram_to_merge.single.mix(MERGE_CRAM.out.cram))
 
     // Gather versions of all tools used
-    ch_versions = ch_versions.mix(INDEX_RECALIBRATE.out.versions.first())
+    ch_versions = ch_versions.mix(INDEX_CRAM.out.versions.first())
     ch_versions = ch_versions.mix(MERGE_CRAM.out.versions.first())
 
     emit:
-        cram_crai = INDEX_RECALIBRATE.out.cram_crai
+        cram_crai = INDEX_CRAM.out.cram_crai
         versions  = ch_versions
 }
