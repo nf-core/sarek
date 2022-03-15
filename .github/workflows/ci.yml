@@ -66,7 +66,7 @@ jobs:
         run: python -m pip install --upgrade pip pytest-workflow
 
       - name: Run pipeline with tests settings
-        run: pytest --tag ${{ matrix.test }} --kwdof
+        run: pytest --tag ${{ matrix.test }} --kwdof --git-aware
 
       - name: Output log on failure
         if: failure()

@@ -1,6 +1,9 @@
+repository_type: pipeline
 lint:
   files_unchanged:
+    - .github/workflows/branch.yml
     - .github/workflows/linting.yml
+    - .github/workflows/linting_comment.yml
     - assets/multiqc_config.yaml
     - assets/nf-core-sarek_logo_light.png
     - docs/images/nf-core-sarek_logo_dark.png

@@ -13,7 +13,7 @@ include { CONCAT_VCF as CONCAT_MANTA_SOMATIC        } from '../../modules/local/
 include { CONCAT_VCF as CONCAT_MANTA_SV             } from '../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_STRELKA_INDELS       } from '../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_STRELKA_SNVS         } from '../../modules/local/concat_vcf/main'
-include { GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk_tumor_normal_somatic_variant_calling/main'
+include { GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk4/tumor_normal_somatic_variant_calling/main'
 include { MANTA_SOMATIC                             } from '../../modules/nf-core/modules/manta/somatic/main'
 include { MSISENSORPRO_MSI_SOMATIC                  } from '../../modules/nf-core/modules/msisensorpro/msi_somatic/main'
 include { STRELKA_SOMATIC                           } from '../../modules/nf-core/modules/strelka/somatic/main'
