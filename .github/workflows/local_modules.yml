@@ -1,6 +1,5 @@
 name: Local Modules pytest-workflow
 on: [push, pull_request]
-
 jobs:
   changes:
     name: Check for changes

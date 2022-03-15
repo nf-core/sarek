@@ -592,7 +592,7 @@ For all samples:
 - `sample_R1_XXX_fastqc.zip` and `sample_R2_XXX_fastqc.zip`
     - Zip archive containing the FastQC report, tab-delimited data file and plot images
 
-> **NB:** The `FastQC` plots displayed in the `MultiQC` report shows _untrimmed_ reads.
+> **NB:** The `FastQC` plots displayed in the `MultiQC` report shows *untrimmed* reads.
 > They may contain adapter sequence and potentially regions with low quality.
 
 - `fastqc/`
@@ -621,7 +621,7 @@ For further reading and documentation see the [Qualimap bamqc manual](http://qua
 
 More information in the [GATK MarkDuplicates section](#gatk-markduplicates)
 
-Duplicates can arise during sample preparation _e.g._ library construction using PCR.
+Duplicates can arise during sample preparation *e.g.* library construction using PCR.
 Duplicate reads can also result from a single amplification cluster, incorrectly detected as multiple clusters by the optical sensor of the sequencing instrument.
 These duplication artifacts are referred to as optical duplicates.
 
