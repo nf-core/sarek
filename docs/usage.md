@@ -87,7 +87,7 @@ patient,sample,lane,bam
 patient1,test,1,AEG588A1_S1_L002.bam
 ```
 
-In this example (`example_fastq.csv`), there are 3 read groups:
+In this example, there are 3 read groups:
 
 ```console
 patient,sample,lane,fastq_1,fastq_2
@@ -103,7 +103,7 @@ patient1,test,2,AEG588A1_S1_L002.bam
 patient1,test,3,AEG588A1_S1_L002.bam
 ```
 
-In this example (`example_pair_fastq.tsv`), there are 3 read groups for the normal sample and 2 for the tumor sample.
+In this example, there are 3 read groups for the normal sample and 2 for the tumor sample.
 
 ```console
 patient,status,sample,lane,fastq_1,fastq_2
@@ -127,7 +127,9 @@ TREATMENT_REP3,AEG588A6_S6_L003_R1_001.bam
 TREATMENT_REP3,AEG588A6_S6_L004_R1_001.bam
 ```
 
-In this example (`example_pair_fastq.tsv`) all possible columns are used. There are 3 read groups for the normal sample and 2 for the tumor sample including the `gender` information per patient:
+##### Full samplesheet
+
+In this example, all possible columns are used. There are 3 read groups for the normal sample and 2 for the tumor sample including the `gender` information per patient:
 
 ```console
 patient,gender,status,sample,lane,fastq_1,fastq_2
@@ -151,87 +153,61 @@ TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
 TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
 ```
 
-#### Starting with duplicate marking and/or preparing recalibration (`--step prepare_recalibration`)
+#### Start with duplicate marking and/or preparing recalibration (`--step prepare_recalibration`)
 
+To start with duplicate marking the `CSV` file must contain at least the columns `patient`, `sample`, `bam`, `bai`.
 
+Example:
 
-To start from the preparation of the recalibration step (`--step prepare_recalibration`), a `TSV` file needs to be given as input containing the paths to the `non-recalibrated BAM` files.
-The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/duplicates_marked_no_table.tsv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration`.
+```console
+patient,sample,lane,bam
+patient1,test,1,AEG588A1_S1_L002.bam
+```
 
+To start directly with preparing recalibration and skipping duplicate marking the `CSV` file must contain at least the columns `patient`, `sample`, `cram`, `crai` with `non-recalibrated CRAM` files. Additionally, `--skip_tools markduplicates` must be set.
 
-minimal example
-The `TSV` contains the following columns:
+Example:
 
-`subject sex status sample bam bai`
+```console
+patient,sample,lane,bam
+patient1,test,1,AEG588A1_S1_L002.bam
+```
 
-| | | | | | |
-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID|/samples/normal.md.bam|/samples/normal.md.bai|
-
-Or, for a normal/tumor pair:
-
-| | | | | | |
-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.md.bam|/samples/normal.md.bai|
-|SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.md.bam|/samples/tumor.md.bai|
+The `Sarek`-generated `CSV` file is stored under `results/Preprocessing/CSV/duplicates_marked_no_table.tsv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration`.
 
 ##### Full samplesheet
 
-#### Starting with base quality recalibration preparation
+In this example, all possible columns are used including the `gender` information per patient:
 
-minimal example
+```console
+patient,gender,status,sample,lane,fastq_1,fastq_2
+CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
+CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
+TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
+TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
+TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
+TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+```
 
-The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/mapped.tsv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration --skip_markduplicates`.
-The `TSV` file contains the same columns, but the content is slightly different:
+```console
+patient,gender,status,sample,lane,bam
+CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
+CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
+TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
+TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
+TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
+TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+```
 
-| | | | | | |
-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID|/samples/normal.bam|/samples/normal.bai|
+#### Start with base quality recalibration (`--step recalibrate`)
 
-Or, for a normal/tumor pair:
-
-| | | | | | |
-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.bam|/samples/normal.bai|
-|SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.bam|/samples/tumor.bai|
-
-##### Full samplesheet
-
-#### Starting with BQSR
-
+To start with base quality recalibration the `CSV` file must contain at least the columns `patient`, `sample`, `cram`, `crai`, `table`. The column `gender`is optional.
 To start from the recalibrate step (`--step recalibrate`), a `TSV` file needs to be given as input containing the paths to the `non-recalibrated BAM` file and the associated recalibration table.
 The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/duplicates_marked.tsv` and will automatically be used as an input when specifying the parameter `--step recalibrate`.
 
-The `TSV` contains the following columns:
-
-`subject sex status sample bam bai recaltable`
-
-| | | | | | | |
-|-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID|/samples/normal.md.bam|/samples/normal.md.bai|/samples/normal.recal.table|
-
-Or, for a normal/tumor pair:
-
-| | | | | | | |
-|-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.md.bam|/samples/normal.md.bai|/samples/normal.recal.table|
-|SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.md.bam|/samples/tumor.md.bai|/samples/tumor.recal.table|
-
-The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/mapped_no_duplicates_marked.tsv` and will automatically be used as an input when specifying the parameter `--step recalibrate --skip_markduplicates`.
-The `TSV` file contains the same columns, but the content is slightly different:
-
-| | | | | | | |
-|-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID|/samples/normal.bam|/samples/normal.bai|/samples/normal.recal.table|
-
-Or, for a normal/tumor pair:
-
-| | | | | | | |
-|-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.bam|/samples/normal.bai|/samples/normal.recal.table|
-|SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.bam|/samples/tumor.bai|/samples/tumor.recal.table|
-
-#### Starting with variant calling quality
+#### Start with variant calling (`--step variant_calling`)
 
 To start from the variant calling step (`--step variant_calling`), a `TSV` file needs to be given as input containing the paths to the `recalibrated BAM` file and the associated index.
 The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/recalibrated.tsv` and will automatically be used as an input when specifying the parameter `--step variant_calling`.
@@ -268,9 +244,9 @@ Here is an example for one normal/tumor pair from one subjects:
 |SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.pileup|
 |SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.pileup|
 
-##### Full samplesheet
+##### Special case controlfreec
 
-#### Starting with Annotation
+#### Start with annotation
 
 Input files for Sarek can be specified using the path to a `VCF` file given to the `--input` command only with the annotation step (`--step annotate`).
 As `Sarek` will use `bgzip` and `tabix` to compress and index `VCF` files annotated, it expects `VCF` files to be sorted.
@@ -280,8 +256,6 @@ For example:
 ```bash
 --step annotate --input "results/VariantCalling/*/{HaplotypeCaller,Manta,Mutect2,Strelka,TIDDIT}/*.vcf.gz"
 ```
-
-##### Full samplesheet
 
 ### Updating the pipeline
 
