@@ -1,7 +1,7 @@
 image: nfcore/gitpod:latest
 
 vscode:
-  extensions: # based on nf-core.nf-core-extensionpack
+  extensions:  # based on nf-core.nf-core-extensionpack
     - codezombiech.gitignore                 # Language support for .gitignore files
     # - cssho.vscode-svgviewer                 # SVG viewer
     - davidanson.vscode-markdownlint         # Markdown/CommonMark linting and style checking for Visual Studio Code
