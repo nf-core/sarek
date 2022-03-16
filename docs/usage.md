@@ -66,29 +66,42 @@ Output from Variant Calling and/or Annotation will be in a specific directory fo
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
-#### Start with mapping (default or `--step mapping`)
+#### Start with mapping (`--step mapping` (default))
 
-The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
+This step can be started either from `fastq` files or `(u)bams`. The `CSV` must contain at least the columns `patient`, `sample`, `lane`, and either `fastq_1/fastq_2` or `bam`.
 
-The `CSV` file to start with the mapping step (`--step mapping`) with paired-end `FASTQs` should contain the columns:
+The `sample` identifiers have to be the same if you have multiple sequencing runs of the same sample e.g. to increase sequencing depth. This can be indicated using the `lane` column.
+The pipeline will concatenate the raw reads before performing any downstream analysis.
 
-Minimal columns
+##### Examples
 
-Optional columns
-##### Minimal example
+Minimal config file:
 
 ```console
-patient,sample,fastq_1,fastq_2
-patient1,test,AEG588A1_S1_L002_R2_001.fastq.gz
-patient2,test1,AEG588A1_S1_L003_R2_001.fastq.gz
-patient3,test2,AEG588A1_S1_L004_R2_001.fastq.gz
-patient3,test3,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
+patient,sample,lane,fastq_1,fastq_2
+patient1,test,1,AEG588A1_S1_L002_R2_001.fastq.gz,AEG588A1_S1_L002_R2_002.fastq.gz
 ```
 
-In this example (`example_fastq.tsv`), there are 3 read groups.
+```console
+patient,sample,lane,bam
+patient1,test,1,AEG588A1_S1_L002.bam
+```
 
+In this example (`example_fastq.csv`), there are 3 read groups:
 
-Or, for a normal/tumor pair:
+```console
+patient,sample,lane,fastq_1,fastq_2
+patient1,test,1,AEG588A1_S1_L002_R2_001.fastq.gz,AEG588A1_S1_L002_R2_002.fastq.gz
+patient1,test,2,AEG588A1_S1_L002_R2_001.fastq.gz,AEG588A1_S1_L002_R2_002.fastq.gz
+patient1,test,3,AEG588A1_S1_L002_R2_001.fastq.gz,AEG588A1_S1_L002_R2_002.fastq.gz
+```
+
+```console
+patient,sample,lane,bam
+patient1,test,1,AEG588A1_S1_L002.bam
+patient1,test,2,AEG588A1_S1_L002.bam
+patient1,test,3,AEG588A1_S1_L002.bam
+```
 
 In this example (`example_pair_fastq.tsv`), there are 3 read groups for the normal sample and 2 for the tumor sample.
 
@@ -103,40 +116,18 @@ TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
 TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
 ```
 
-#### --input &lt;uBAM&gt; --step mapping
-
-The `TSV` file to start with the mapping step (`--step mapping`) with `unmapped BAM` files should contain the columns:
-
-`subject sex status sample lane bam`
-
-In this example (`example_ubam.tsv`), there are 3 read groups.
-
-| | | | | | |
-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID|1|/samples/normal_1.bam|
-|SUBJECT_ID|XX|0|SAMPLE_ID|2|/samples/normal_2.bam|
-|SUBJECT_ID|XX|0|SAMPLE_ID|3|/samples/normal_3.bam|
-
-```bash
---input example_ubam.tsv
-```
-
-Or, for a normal/tumor pair:
-
-In this example (`example_pair_ubam.tsv`), there are 3 read groups for the normal sample and 2 for the tumor sample.
-
 ```console
 patient,status,sample,lane,bam
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+CONTROL_REP1,AEG588A1_S1_L002_R1_001.bam
+CONTROL_REP2,AEG588A2_S2_L002_R1_001.bam
+CONTROL_REP3,AEG588A3_S3_L002_R1_001.bam
+TREATMENT_REP1,AEG588A4_S4_L003_R1_001.bam
+TREATMENT_REP2,AEG588A5_S5_L003_R1_001.bam
+TREATMENT_REP3,AEG588A6_S6_L003_R1_001.bam
+TREATMENT_REP3,AEG588A6_S6_L004_R1_001.bam
 ```
 
-##### Full samplesheet
+In this example (`example_pair_fastq.tsv`) all possible columns are used. There are 3 read groups for the normal sample and 2 for the tumor sample including the `gender` information per patient:
 
 ```console
 patient,gender,status,sample,lane,fastq_1,fastq_2
@@ -160,13 +151,15 @@ TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
 TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
 ```
 
-#### Starting with duplicate marking
+#### Starting with duplicate marking and/or preparing recalibration (`--step prepare_recalibration`)
 
-minimal example
+
 
 To start from the preparation of the recalibration step (`--step prepare_recalibration`), a `TSV` file needs to be given as input containing the paths to the `non-recalibrated BAM` files.
 The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/duplicates_marked_no_table.tsv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration`.
 
+
+minimal example
 The `TSV` contains the following columns:
 
 `subject sex status sample bam bai`
