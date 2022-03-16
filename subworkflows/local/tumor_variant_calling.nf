@@ -18,7 +18,7 @@ include { CONCAT_VCF as CONCAT_STRELKA            } from '../../modules/local/co
 include { CONCAT_VCF as CONCAT_STRELKA_GENOME     } from '../../modules/local/concat_vcf/main'
 include { FREEBAYES                               } from '../../modules/nf-core/modules/freebayes/main'
 include { GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk4/tumor_only_somatic_variant_calling/main'
-include { MANTA_TUMORONLY                         } from '../../modules/nf-core/modules/manta/tumoronly/main'
+include { MANTA_TUMORONLY                         } from '../../modules/local/manta/tumoronly/main'
 include { STRELKA_GERMLINE as STRELKA_TUMORONLY   } from '../../modules/nf-core/modules/strelka/germline/main'
 include { TABIX_TABIX as TABIX_VC_FREEBAYES       } from '../../modules/nf-core/modules/tabix/tabix/main'
 

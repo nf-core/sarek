@@ -1,6 +1,7 @@
 repository_type: pipeline
 lint:
   files_unchanged:
+    - .github/PULL_REQUEST_TEMPLATE.md
     - .github/workflows/branch.yml
     - .github/workflows/linting.yml
     - .github/workflows/linting_comment.yml
