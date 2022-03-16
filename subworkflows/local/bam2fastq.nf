@@ -2,16 +2,14 @@
 // BAM/CRAM to FASTQ conversion, paired end only
 //
 
-//include { FASTQC                 } from '../../modules/nf-core/modules/fastqc/main'
-include { SAMTOOLS_INDEX                                    } from '../../modules/nf-core/modules/samtools/index/main'
-include { SAMTOOLS_VIEW as SAMTOOLS_VIEW_MAP_MAP            } from '../../modules/nf-core/modules/samtools/view/main'
-include { SAMTOOLS_VIEW as SAMTOOLS_VIEW_UNMAP_UNMAP        } from '../../modules/nf-core/modules/samtools/view/main'
-include { SAMTOOLS_VIEW as SAMTOOLS_VIEW_UNMAP_MAP          } from '../../modules/nf-core/modules/samtools/view/main'
-include { SAMTOOLS_VIEW as SAMTOOLS_VIEW_MAP_UNMAP          } from '../../modules/nf-core/modules/samtools/view/main'
-include { SAMTOOLS_MERGE as SAMTOOLS_MERGE_UNMAPPED         } from '../../modules/nf-core/modules/samtools/merge/main'
-include { SAMTOOLS_FASTQ as SAMTOOLS_FASTQ_UNMAPPED         } from '../../modules/local/samtools/fastq/main'
-include { SAMTOOLS_FASTQ as SAMTOOLS_FASTQ_MAPPED           } from '../../modules/local/samtools/fastq/main'
-include { CAT_FASTQ                                         } from '../../modules/nf-core/modules/cat/fastq/main'
+include { SAMTOOLS_VIEW  as SAMTOOLS_VIEW_MAP_MAP     } from '../../modules/nf-core/modules/samtools/view/main'
+include { SAMTOOLS_VIEW  as SAMTOOLS_VIEW_UNMAP_UNMAP } from '../../modules/nf-core/modules/samtools/view/main'
+include { SAMTOOLS_VIEW  as SAMTOOLS_VIEW_UNMAP_MAP   } from '../../modules/nf-core/modules/samtools/view/main'
+include { SAMTOOLS_VIEW  as SAMTOOLS_VIEW_MAP_UNMAP   } from '../../modules/nf-core/modules/samtools/view/main'
+include { SAMTOOLS_MERGE as SAMTOOLS_MERGE_UNMAPPED   } from '../../modules/nf-core/modules/samtools/merge/main'
+include { SAMTOOLS_FASTQ as SAMTOOLS_FASTQ_UNMAPPED   } from '../../modules/local/samtools/fastq/main'
+include { SAMTOOLS_FASTQ as SAMTOOLS_FASTQ_MAPPED     } from '../../modules/local/samtools/fastq/main'
+include { CAT_FASTQ                                   } from '../../modules/nf-core/modules/cat/fastq/main'
 
 workflow ALIGNMENT_TO_FASTQ {
     take:
@@ -20,25 +18,21 @@ workflow ALIGNMENT_TO_FASTQ {
 
     main:
     ch_versions = Channel.empty()
-    //Index File if not PROVIDED -> this also requires updates to samtools view possibly URGH
+    // Index File if not PROVIDED -> this also requires updates to samtools view possibly URGH
 
     //QC input BAM? -> needs another FASTQC module implementation
 
-    //MAP - MAP
+    // MAP - MAP
     SAMTOOLS_VIEW_MAP_MAP(input, fasta)
-    ch_versions = ch_versions.mix(SAMTOOLS_VIEW_MAP_MAP.out.versions)
 
     // UNMAP - UNMAP
     SAMTOOLS_VIEW_UNMAP_UNMAP(input, fasta)
-    ch_versions = ch_versions.mix(SAMTOOLS_VIEW_UNMAP_UNMAP.out.versions)
 
     // UNMAP - MAP
     SAMTOOLS_VIEW_UNMAP_MAP(input, fasta)
-    ch_versions = ch_versions.mix(SAMTOOLS_VIEW_UNMAP_MAP.out.versions)
 
-    //MAP - UNMAP
+    // MAP - UNMAP
     SAMTOOLS_VIEW_MAP_UNMAP(input, fasta)
-    ch_versions = ch_versions.mix(SAMTOOLS_VIEW_MAP_UNMAP.out.versions)
 
     // Merge UNMAP
     SAMTOOLS_VIEW_UNMAP_UNMAP.out.bam.join(SAMTOOLS_VIEW_UNMAP_MAP.out.bam, remainder: true)
@@ -48,15 +42,12 @@ workflow ALIGNMENT_TO_FASTQ {
         }.set{ all_unmapped_bam }
 
     SAMTOOLS_MERGE_UNMAPPED(all_unmapped_bam, fasta)
-    ch_versions = ch_versions.mix(SAMTOOLS_MERGE_UNMAPPED.out.versions)
 
     // Collate & convert unmapped
     SAMTOOLS_FASTQ_UNMAPPED(SAMTOOLS_MERGE_UNMAPPED.out.bam)
-    ch_versions = ch_versions.mix(SAMTOOLS_FASTQ_UNMAPPED.out.versions)
 
     // Collate & convert mapped
     SAMTOOLS_FASTQ_MAPPED(SAMTOOLS_VIEW_MAP_MAP.out.bam)
-    ch_versions = ch_versions.mix(SAMTOOLS_FASTQ_MAPPED.out.versions)
 
     // join Mapped & unmapped fastq
     SAMTOOLS_FASTQ_UNMAPPED.out.reads.map{ meta, reads ->
@@ -77,7 +68,16 @@ workflow ALIGNMENT_TO_FASTQ {
 
     // Concatenate Mapped_R1 with Unmapped_R1 and Mapped_R2 with Unmapped_R2
     CAT_FASTQ(reads_to_concat)
+
+    // Gather versions of all tools used
     ch_versions = ch_versions.mix(CAT_FASTQ.out.versions)
+    ch_versions = ch_versions.mix(SAMTOOLS_FASTQ_MAPPED.out.versions)
+    ch_versions = ch_versions.mix(SAMTOOLS_FASTQ_UNMAPPED.out.versions)
+    ch_versions = ch_versions.mix(SAMTOOLS_MERGE_UNMAPPED.out.versions)
+    ch_versions = ch_versions.mix(SAMTOOLS_VIEW_MAP_MAP.out.versions)
+    ch_versions = ch_versions.mix(SAMTOOLS_VIEW_MAP_UNMAP.out.versions)
+    ch_versions = ch_versions.mix(SAMTOOLS_VIEW_UNMAP_MAP.out.versions)
+    ch_versions = ch_versions.mix(SAMTOOLS_VIEW_UNMAP_UNMAP.out.versions)
 
     emit:
     reads       = CAT_FASTQ.out.reads

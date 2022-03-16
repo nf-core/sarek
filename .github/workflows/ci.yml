@@ -14,7 +14,7 @@ env:
 
 jobs:
   test:
-    name: Run workflow tests
+    name: Run pipeline with test data
     # Only run on push if this is the nf-core dev branch (merged PRs)
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/sarek') }}
     runs-on: ubuntu-latest
@@ -66,7 +66,7 @@ jobs:
         run: python -m pip install --upgrade pip pytest-workflow
 
       - name: Run pipeline with tests settings
-        run: pytest --tag ${{ matrix.test }} --kwdof
+        run: pytest --tag ${{ matrix.test }} --kwdof --git-aware
 
       - name: Output log on failure
         if: failure()

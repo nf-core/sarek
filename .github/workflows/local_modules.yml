@@ -1,6 +1,5 @@
 name: Local Modules pytest-workflow
 on: [push, pull_request]
-
 jobs:
   changes:
     name: Check for changes
@@ -25,7 +24,7 @@ jobs:
       matrix:
         nxf_version: ['21.04.0']
         tags: ['${{ fromJson(needs.changes.outputs.modules) }}']
-        profile: ['docker', 'singularity'] ## 'conda'
+        profile: ['docker', 'singularity']  # 'conda'
     env:
       NXF_ANSI_LOG: false
     steps:
