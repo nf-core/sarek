@@ -15,20 +15,20 @@ report_section_order:
 export_plots: true
 
 top_modules:
-- 'fastqc':
-  name: 'FastQC'
-  path_filters_exclude:
-    - '*trimmed_fastqc*'
-- 'cutadapt'
-- 'fastqc':
-  name: 'FastQC after trimming'
-  info: 'FastQC after applying TrimGalore.'
-  path_filters:
-    - '*trimmed_fastqc*'
-- 'picard'
-- 'gatk'
-- 'samtools'
-- 'qualimap'
-- 'bcftools'
-- 'vcftools'
-- 'snpeff'
+    - 'fastqc':
+        name: 'FastQC'
+        path_filters_exclude:
+            - '*trimmed_fastqc*'
+    - 'cutadapt'
+    - 'fastqc':
+        name: 'FastQC after trimming'
+        info: 'FastQC after applying TrimGalore.'
+        path_filters:
+            - '*trimmed_fastqc*'
+    - 'picard'
+    - 'gatk'
+    - 'samtools'
+    - 'qualimap'
+    - 'bcftools'
+    - 'vcftools'
+    - 'snpeff'

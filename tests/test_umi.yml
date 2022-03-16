@@ -45,8 +45,7 @@
     - path: results/samtools/1234N-SRR7545951.unmapped_singleton.fq.gz
       md5sum: 709872fc2910431b1e8b7074bfe38c67
 
-
-- name:  Run UMI TSO test
+- name: Run UMI TSO test
   command: nextflow run main.nf -profile test,umi_tso,docker
   tags:
     - umi_tso
