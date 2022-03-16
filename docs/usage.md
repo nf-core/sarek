@@ -2,14 +2,12 @@
 
 ## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/sarek/usage](https://nf-co.re/sarek/usage)
 
-> _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
-
 ## Introduction
 
 Sarek is a workflow designed to detect germline and somatic variants on whole genome, whole exome, or targeted sequencing data.
 
 Initially designed for human and mouse, it can work on any species if a reference genome is available.
-Sarek is designed to handle single samples, such as single normal and single tumor samples, and tumor-normal pairs including additional relapses.
+Sarek is designed to handle single samples, such as single-normal or single-tumor samples, and tumor-normal pairs including additional relapses.
 
 ## Running the pipeline
 
@@ -32,18 +30,18 @@ results         # Finished results (configurable, see below)
 
 ### Input: Samplesheet configurations
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with at least 3 columns, and a header row as shown in the examples below.
+You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use the parameter `--input` to specify its location. It has to be a comma-separated file with at least 3 columns, and a header row as shown in the examples below.
 
 It is recommended to use the absolute path of the files, but relative path should also work.
 
-If necessary, a tumor sample can be associated to a normal sample as a pair, if specified with the same `subject`and a different `sample`.
-An additional tumor sample (such as a relapse for example), can be added if specified with the same `subject` and a different `sample`.
+If necessary, a tumor sample can be associated to a normal sample as a pair, if specified with the same `subject`, a different `sample`, and the respective `status`.
+An additional tumor sample (such as a relapse for example), can be added if specified with the same `subject` and a different `sample`, and the `status` value `1`.
 
-`Sarek` will output results in a different directory for each sample.
-If multiple samples are specified in the `TSV` file, `Sarek` will consider all files to be from different samples.
-Multiple `TSV` files can be specified if the path is enclosed in quotes.
+`Sarek` will output results in a different directory for *each sample*.
+If multiple samples are specified in the `CSV` file, `Sarek` will consider all files to be from different samples.
+Multiple `CSV` files can be specified if the path is enclosed in quotes.
 
-Output from Variant Calling and/or Annotation will be in a specific directory for each sample (or normal/tumor pair if applicable).
+Output from Variant Calling and/or Annotation will be in a specific directory for each sample and tool configuration (or normal/tumor pair if applicable).
 
 
 ```console
@@ -60,59 +58,49 @@ Output from Variant Calling and/or Annotation will be in a specific directory fo
 | `fastq_1`      | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
 | `fastq_2`      | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
 | `bam`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `cram`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
 | `bai`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
+| `cram`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
 | `crai`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `recaltable`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
+| `table`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
 | `mpileup`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
-#### Start with mapping
+#### Start with mapping (default or `--step mapping`)
 
 The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
 
-The `TSV` file to start with the mapping step (`--step mapping`) with paired-end `FASTQs` should contain the columns:
+The `CSV` file to start with the mapping step (`--step mapping`) with paired-end `FASTQs` should contain the columns:
 
+Minimal columns
+
+Optional columns
+##### Minimal example
 
 ```console
-patient,status,sample,fastq_1,fastq_2
-patient1,0,test,AEG588A1_S1_L002_R2_001.fastq.gz
-patient2,1,test1,AEG588A1_S1_L003_R2_001.fastq.gz
-patient3,0,test2,AEG588A1_S1_L004_R2_001.fastq.gz
-patient3,1,test3,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
+patient,sample,fastq_1,fastq_2
+patient1,test,AEG588A1_S1_L002_R2_001.fastq.gz
+patient2,test1,AEG588A1_S1_L003_R2_001.fastq.gz
+patient3,test2,AEG588A1_S1_L004_R2_001.fastq.gz
+patient3,test3,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
 ```
-
-The `TSV` file to start with the mapping step (`--step mapping`) with paired-end `FASTQs` should contain the columns:
-
-`subject sex status sample lane fastq1 fastq2`
 
 In this example (`example_fastq.tsv`), there are 3 read groups.
 
-| | | | | | | |
-|-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID|1|/samples/normal1_1.fastq.gz|/samples/normal1_2.fastq.gz|
-|SUBJECT_ID|XX|0|SAMPLE_ID|2|/samples/normal2_1.fastq.gz|/samples/normal2_2.fastq.gz|
-|SUBJECT_ID|XX|0|SAMPLE_ID|3|/samples/normal3_1.fastq.gz|/samples/normal3_2.fastq.gz|
-
-```bash
---input example_fastq.tsv
-```
 
 Or, for a normal/tumor pair:
 
 In this example (`example_pair_fastq.tsv`), there are 3 read groups for the normal sample and 2 for the tumor sample.
 
-| | | | | | | |
-|-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|1|/samples/normal1_1.fastq.gz|/samples/normal1_2.fastq.gz|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|2|/samples/normal2_1.fastq.gz|/samples/normal2_2.fastq.gz|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|3|/samples/normal3_1.fastq.gz|/samples/normal3_2.fastq.gz|
-|SUBJECT_ID|XX|1|SAMPLE_ID2|1|/samples/tumor1_1.fastq.gz|/samples/tumor1_2.fastq.gz|
-|SUBJECT_ID|XX|1|SAMPLE_ID2|2|/samples/tumor2_1.fastq.gz|/samples/tumor2_2.fastq.gz|
-
-```bash
---input example_pair_fastq.tsv
+```console
+patient,status,sample,lane,fastq_1,fastq_2
+CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
+CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
+TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
+TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
+TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
+TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
 ```
 
 #### --input &lt;uBAM&gt; --step mapping
@@ -137,26 +125,32 @@ Or, for a normal/tumor pair:
 
 In this example (`example_pair_ubam.tsv`), there are 3 read groups for the normal sample and 2 for the tumor sample.
 
-| | | | | | |
-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|1|/samples/normal_1.bam|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|2|/samples/normal_2.bam|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|3|/samples/normal_3.bam|
-|SUBJECT_ID|XX|1|SAMPLE_ID2|1|/samples/tumor_1.bam|
-|SUBJECT_ID|XX|1|SAMPLE_ID2|2|/samples/tumor_2.bam|
-
-```bash
---input example_pair_ubam.tsv
+```console
+patient,status,sample,lane,bam
+CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
+CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
+TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
+TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
+TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
+TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
 ```
 
 ##### Full samplesheet
 
-The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire, however, there is a strict requirement for the first 3 columns to match those defined in the table below.
-
-A final samplesheet file consisting of both single- and paired-end data may look something like the one below. This is for 6 samples, where `TREATMENT_REP3` has been sequenced twice.
-
 ```console
 patient,gender,status,sample,lane,fastq_1,fastq_2
+CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
+CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
+TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
+TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
+TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
+TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+```
+
+```console
+patient,gender,status,sample,lane,bam
 CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
 CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
 CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
