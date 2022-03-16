@@ -1,0 +1,51 @@
+name: tiddit_sv
+description: Identify chromosomal rearrangements.
+keywords:
+  - structural
+  - variants
+  - vcf
+tools:
+  - sv:
+      description: Search for structural variants.
+      homepage: https://github.com/SciLifeLab/TIDDIT
+      documentation: https://github.com/SciLifeLab/TIDDIT/blob/master/README.md
+      doi: 10.12688/f1000research.11168.1
+      licence: ["GPL-3.0-or-later"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - fasta:
+      type: file
+      description: Input FASTA file
+      pattern: "*.{fasta,fa}"
+  - fai:
+      type: file
+      description: FASTA index file
+      pattern: "*.{fai}"
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - vcf:
+      type: file
+      description: vcf
+      pattern: "*.{vcf}"
+  - ploidy:
+      type: file
+      description: tab
+      pattern: "*.{ploidy.tab}"
+  - signals:
+      type: file
+      description: tab
+      pattern: "*.{signals.tab}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@maxulysse"

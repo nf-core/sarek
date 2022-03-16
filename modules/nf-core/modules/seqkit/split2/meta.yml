@@ -1,0 +1,39 @@
+name: seqkit_split2
+description: Split single or paired-end fastq.gz files
+keywords:
+  - split
+  - fastq
+tools:
+  - seqkit:
+    description: |
+      Cross-platform and ultrafast toolkit for FASTA/Q file manipulation, written by Wei Shen.
+    homepage: https://github.com/shenwei356/seqkit
+    documentation: https://bioinf.shenwei.me/seqkit/
+    doi: 10.1371/journal.pone.0163962
+    licence: ["MIT"]
+input:
+  - meta:
+    type: map
+    description: |
+      Groovy Map containing sample information
+      e.g. [ id:'test', single_end:false ]
+  - reads:
+    type: file
+    description: FastQ files
+    pattern: "*.{fq.gz/fastq.gz}"
+output:
+  - meta:
+    type: map
+    description: |
+      Groovy Map containing sample information
+      e.g. [ id:'test', single_end:false ]
+  - reads:
+    type: file
+    description: Split fastq files
+    pattern: "*.{fq.gz/fastq.gz}"
+  - versions:
+    type: file
+    description: File containing software versions
+    pattern: "versions.yml"
+authors:
+  - "@FriederikeHanssen"

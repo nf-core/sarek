@@ -19,6 +19,8 @@ jobs:
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/sarek') }}
     runs-on: ubuntu-latest
     strategy:
+      # HACK Remove after DSL2 rewrite is done
+      fail-fast: false
       matrix:
         # Nextflow versions
         include:
@@ -28,6 +30,20 @@ jobs:
           # Test latest edge release of Nextflow
           - NXF_VER: ''
             NXF_EDGE: '1'
+        test:
+          - 'aligner'
+          - 'annotation'
+          - 'default'
+          - 'deepvariant'
+          - 'gatk4_spark'
+          - 'haplotypecaller'
+          - 'manta'
+          # - 'save_bam_mapped'
+          - 'skip_markduplicates'
+          - 'strelka'
+          - 'split_fastq'
+          - 'targeted'
+          - 'tumor_normal_pair'
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -41,10 +57,32 @@ jobs:
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
+          nextflow self-update
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pytest-workflow
 
-      - name: Run pipeline with test data
-        # TODO nf-core: You can customise CI pipeline run tests as required
-        # For example: adding multiple test runs with different parameters
-        # Remember that you can parallelise this by using strategy.matrix
+      - name: Run pipeline with tests settings
+        run: pytest --tag ${{ matrix.test }} --kwdof --git-aware
+
+      - name: Output log on failure
+        if: failure()
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results
+          sudo apt install bat > /dev/null
+          batcat --decorations=always --color=always /home/runner/pytest_workflow_*/*/log.{out,err}
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs-${{ matrix.profile }}
+          path: |
+            /home/runner/pytest_workflow_*/*/.nextflow.log
+            /home/runner/pytest_workflow_*/*/log.out
+            /home/runner/pytest_workflow_*/*/log.err
+            /home/runner/pytest_workflow_*/*/work
+            !/home/runner/pytest_workflow_*/*/work/conda
+            !/home/runner/pytest_workflow_*/*/work/singularity

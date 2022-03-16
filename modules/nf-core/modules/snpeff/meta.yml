@@ -1,0 +1,58 @@
+name: snpEff
+description: Genetic variant annotation and functional effect prediction toolbox
+keywords:
+  - annotation
+tools:
+  - snpeff:
+      description: |
+        SnpEff is a variant annotation and effect prediction tool.
+        It annotates and predicts the effects of genetic variants on genes and proteins (such as amino acid changes).
+      homepage: https://pcingola.github.io/SnpEff/
+      documentation: https://pcingola.github.io/SnpEff/se_introduction/
+      licence: ["MIT"]
+params:
+  - use_cache:
+      type: boolean
+      description: |
+        boolean to enable the usage of containers with cache
+        Enable the usage of containers with cache
+        Does not work with conda
+  - snpeff_tag:
+      type: value
+      description: |
+        Specify the tag for the container
+        https://hub.docker.com/r/nfcore/snpeff/tags
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - vcf:
+      type: file
+      description: |
+        vcf to annotate
+  - db:
+      type: value
+      description: |
+        which db to annotate with
+  - cache:
+      type: file
+      description: |
+        path to snpEff cache (optional)
+output:
+  - vcf:
+      type: file
+      description: |
+        annotated vcf
+      pattern: "*.ann.vcf"
+  - report:
+      type: file
+      description: snpEff report file
+      pattern: "*.html"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@maxulysse"

@@ -1,0 +1,75 @@
+name: gatk4_genotypegvcfs
+description: |
+  Perform joint genotyping on one or more samples pre-called with HaplotypeCaller.
+keywords:
+  - joint genotyping
+  - genotype
+  - gvcf
+tools:
+  - gatk4:
+      description: Genome Analysis Toolkit (GATK4)
+      homepage: https://gatk.broadinstitute.org/hc/en-us
+      documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
+      tool_dev_url: https://github.com/broadinstitute/gatk
+      doi: "10.1158/1538-7445.AM2017-3590"
+      licence: ["BSD-3-clause"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - gvcf:
+      type: tuple of files
+      description: |
+        Tuple of gVCF(.gz) file (first) and its index (second) or the path to a GenomicsDB (and empty)
+      pattern: ["*.{vcf,vcf.gz}", "*.{idx,tbi}"]
+  - intervals:
+      type: file
+      description: Interval file with the genomic regions included in the library (optional)
+  - intervals_index:
+      type: file
+      description: Interval index file (optional)
+  - fasta:
+      type: file
+      description: Reference fasta file
+      pattern: "*.fasta"
+  - fasta_index:
+      type: file
+      description: Reference fasta index file
+      pattern: "*.fai"
+  - fasta_dict:
+      type: file
+      description: Reference fasta sequence dict file
+      pattern: "*.dict"
+  - dbsnp:
+      type: file
+      description: dbSNP VCF file
+      pattern: "*.vcf.gz"
+  - dbsnp_index:
+      type: tuple of files
+      description: dbSNP VCF index file
+      pattern: "*.tbi"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - vcf:
+      type: file
+      description: Genotyped VCF file
+      pattern: "*.vcf.gz"
+  - tbi:
+      type: file
+      description: Tbi index for VCF file
+      pattern: "*.vcf.gz"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+
+authors:
+  - "@santiagorevale"

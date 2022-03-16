@@ -1,0 +1,75 @@
+name: gatk4_haplotypecaller
+description: Call germline SNPs and indels via local re-assembly of haplotypes
+keywords:
+  - gatk4
+  - haplotypecaller
+  - haplotype
+tools:
+  - gatk4:
+    description: |
+      Developed in the Data Sciences Platform at the Broad Institute, the toolkit offers a wide variety of tools
+      with a primary focus on variant discovery and genotyping. Its powerful processing engine
+      and high-performance computing features make it capable of taking on projects of any size.
+    homepage: https://gatk.broadinstitute.org/hc/en-us
+    documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
+    doi: 10.1158/1538-7445.AM2017-3590
+    licence: ["Apache-2.0"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - input:
+      type: file
+      description: BAM/CRAM file from alignment
+      pattern: "*.{bam,cram}"
+  - input_index:
+      type: file
+      description: BAI/CRAI file from alignment
+      pattern: "*.{bai,crai}"
+  - intervals:
+      type: file
+      description: Bed file with the genomic regions included in the library (optional)
+  - fasta:
+      type: file
+      description: The reference fasta file
+      pattern: "*.fasta"
+  - fai:
+      type: file
+      description: Index of reference fasta file
+      pattern: "fasta.fai"
+  - dict:
+      type: file
+      description: GATK sequence dictionary
+      pattern: "*.dict"
+  - dbsnp:
+      type: file
+      description: VCF file containing known sites (optional)
+  - dbsnp_tbi:
+      type: file
+      description: VCF index of dbsnp (optional)
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - vcf:
+      type: file
+      description: Compressed VCF file
+      pattern: "*.vcf.gz"
+  - tbi:
+      type: file
+      description: Index of VCF file
+      pattern: "*.vcf.gz.tbi"
+
+authors:
+  - "@suzannejin"
+  - "@FriederikeHanssen"

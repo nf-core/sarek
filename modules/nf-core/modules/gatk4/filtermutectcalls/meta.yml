@@ -1,0 +1,84 @@
+name: gatk4_filtermutectcalls
+description: |
+  Filters the raw output of mutect2, can optionally use outputs of calculatecontamination and learnreadorientationmodel to improve filtering.
+keywords:
+  - filtermutectcalls
+  - mutect2
+  - gatk4
+  - filtervcf
+tools:
+  - gatk4:
+      description: |
+        Developed in the Data Sciences Platform at the Broad Institute, the toolkit offers a wide variety of tools
+        with a primary focus on variant discovery and genotyping. Its powerful processing engine
+        and high-performance computing features make it capable of taking on projects of any size.
+      homepage: https://gatk.broadinstitute.org/hc/en-us
+      documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
+      doi: 10.1158/1538-7445.AM2017-3590
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test' ]
+  - vcf:
+      type: file
+      description: compressed vcf file of mutect2calls
+      pattern: "*.vcf.gz"
+  - tbi:
+      type: file
+      description: Index of vcf file
+      pattern: "*vcf.gz.tbi"
+  - stats:
+      type: file
+      description: Stats file that pairs with output vcf file
+      pattern: "*vcf.gz.stats"
+  - orientationbias:
+      type: list
+      description: files containing artifact priors for input vcf. Optional input.
+      pattern: "*.artifact-prior.tar.gz"
+  - segmentation:
+      type: list
+      description: tables containing segmentation information for input vcf. Optional input.
+      pattern: "*.segmentation.table"
+  - contaminationfile:
+      type: list
+      description: table(s) containing contamination contamination data for input vcf. Optional input, takes priority over contaminationest.
+      pattern: "*.contamination.table"
+  - contaminationest:
+      type: val
+      description: estimation of contamination value as a double. Optional input, will only be used if contaminationfile is not specified.
+  - fasta:
+      type: file
+      description: The reference fasta file
+      pattern: "*.fasta"
+  - fai:
+      type: file
+      description: Index of reference fasta file
+      pattern: "*.fasta.fai"
+  - dict:
+      type: file
+      description: GATK sequence dictionary
+      pattern: "*.dict"
+
+output:
+  - vcf:
+      type: file
+      description: file containing filtered mutect2 calls.
+      pattern: "*.vcf.gz"
+  - tbi:
+      type: file
+      description: tbi file that pairs with vcf.
+      pattern: "*.vcf.gz.tbi"
+  - stats:
+      type: file
+      description: file containing statistics of the filtermutectcalls run.
+      pattern: "*.filteringStats.tsv"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+
+authors:
+  - "@GCJMackenzie"

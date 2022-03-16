@@ -116,7 +116,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install nf-core
+          pip install git+https://github.com/nf-core/tools.git@dev
 
       - name: Run nf-core lint
         env:
@@ -138,4 +138,3 @@ jobs:
             lint_log.txt
             lint_results.md
             PR_number.txt
-

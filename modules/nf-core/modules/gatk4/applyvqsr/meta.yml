@@ -1,0 +1,76 @@
+name: gatk4_applyvqsr
+description: |
+  Apply a score cutoff to filter variants based on a recalibration table.
+  AplyVQSR performs the second pass in a two-stage process called Variant Quality Score Recalibration (VQSR).
+  Specifically, it applies filtering to the input variants based on the recalibration table produced
+  in the first step by VariantRecalibrator and a target sensitivity value.
+keywords:
+  - gatk4
+  - applyvqsr
+  - VQSR
+tools:
+  - gatk4:
+      description: |
+        Developed in the Data Sciences Platform at the Broad Institute, the toolkit offers a wide variety of tools
+        with a primary focus on variant discovery and genotyping. Its powerful processing engine
+        and high-performance computing features make it capable of taking on projects of any size.
+      homepage: https://gatk.broadinstitute.org/hc/en-us
+      documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
+      doi: 10.1158/1538-7445.AM2017-3590
+      licence: ["Apache-2.0"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test']
+  - vcf:
+      type: file
+      description: VCF file to be recalibrated, this should be the same file as used for the first stage VariantRecalibrator.
+      pattern: "*.vcf"
+  - tbi:
+      type: file
+      description: Tbi index for the input vcf file.
+      pattern: "*.vcf.tbi"
+  - recal:
+      type: file
+      description: Recalibration file produced when the input vcf was run through VariantRecalibrator in stage 1.
+      pattern: "*.recal"
+  - recalidx:
+      type: file
+      description: Index file for the recalibration file.
+      pattern: ".recal.idx"
+  - tranches:
+      type: boolean
+      description: Tranches file produced when the input vcf was run through VariantRecalibrator in stage 1.
+      pattern: ".tranches"
+  - fasta:
+      type: file
+      description: The reference fasta file
+      pattern: "*.fasta"
+  - fai:
+      type: file
+      description: Index of reference fasta file
+      pattern: "*.fasta.fai"
+  - dict:
+      type: file
+      description: GATK sequence dictionary
+      pattern: "*.dict"
+
+output:
+  - vcf:
+      type: file
+      description: compressed vcf file containing the recalibrated variants.
+      pattern: "*.vcf.gz"
+  - tbi:
+      type: file
+      description: Index of recalibrated vcf file.
+      pattern: "*vcf.gz.tbi"
+  - versions:
+      type: file
+      description: File containing software versions.
+      pattern: "versions.yml"
+
+authors:
+  - "@GCJMackenzie"

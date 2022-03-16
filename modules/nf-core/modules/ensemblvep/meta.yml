@@ -1,0 +1,65 @@
+name: ENSEMBLVEP
+description: Ensembl Variant Effect Predictor (VEP)
+keywords:
+  - annotation
+tools:
+  - ensemblvep:
+      description: |
+        VEP determines the effect of your variants (SNPs, insertions, deletions, CNVs
+        or structural variants) on genes, transcripts, and protein sequence, as well as regulatory regions.
+      homepage: https://www.ensembl.org/info/docs/tools/vep/index.html
+      documentation: https://www.ensembl.org/info/docs/tools/vep/script/index.html
+      licence: ["Apache-2.0"]
+params:
+  - use_cache:
+      type: boolean
+      description: |
+        Enable the usage of containers with cache
+        Does not work with conda
+  - vep_tag:
+      type: value
+      description: |
+        Specify the tag for the container
+        https://hub.docker.com/r/nfcore/vep/tags
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - vcf:
+      type: file
+      description: |
+        vcf to annotate
+  - genome:
+      type: value
+      description: |
+        which genome to annotate with
+  - species:
+      type: value
+      description: |
+        which species to annotate with
+  - cache_version:
+      type: value
+      description: |
+        which version of the cache to annotate with
+  - cache:
+      type: file
+      description: |
+        path to VEP cache (optional)
+output:
+  - vcf:
+      type: file
+      description: |
+        annotated vcf
+      pattern: "*.ann.vcf"
+  - report:
+      type: file
+      description: VEP report file
+      pattern: "*.html"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@maxulysse"

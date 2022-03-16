@@ -1,0 +1,93 @@
+name: strelka_somatic
+description: Strelka2 is a fast and accurate small variant caller optimized for analysis of germline variation in small cohorts and somatic variation in tumor/normal sample pairs
+keywords:
+  - variant calling
+  - germline
+  - wgs
+  - vcf
+  - variants
+tools:
+  - strelka:
+      description: Strelka calls somatic and germline small variants from mapped sequencing reads
+      homepage: https://github.com/Illumina/strelka
+      documentation: https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md
+      tool_dev_url: https://github.com/Illumina/strelka
+      doi: 10.1038/s41592-018-0051-x
+      licence: ["GPL v3"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - input_normal:
+      type: file
+      description: BAM/CRAM/SAM file
+      pattern: "*.{bam,cram,sam}"
+  - input_index_normal:
+      type: file
+      description: BAM/CRAM/SAM index file
+      pattern: "*.{bai,crai,sai}"
+  - input_tumor:
+      type: file
+      description: BAM/CRAM/SAM file
+      pattern: "*.{bam,cram,sam}"
+  - input_index_tumor:
+      type: file
+      description: BAM/CRAM/SAM index file
+      pattern: "*.{bai,crai,sai}"
+  - manta_candidate_small_indels:
+      type: file
+      description: VCF.gz file
+      pattern: "*.{vcf.gz}"
+  - manta_candidate_small_indels_tbi:
+      type: file
+      description: VCF.gz index file
+      pattern: "*.tbi"
+  - fasta:
+      type: file
+      description: Genome reference FASTA file
+      pattern: "*.{fa,fasta}"
+  - fai:
+      type: file
+      description: Genome reference FASTA index file
+      pattern: "*.{fa.fai,fasta.fai}"
+  - target_bed:
+      type: file
+      description: BED file containing target regions for variant calling
+      pattern: "*.{bed}"
+  - target_bed_tbi:
+      type: file
+      description: Index for BED file containing target regions for variant calling
+      pattern: "*.{bed.tbi}"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - vcf_indels:
+      type: file
+      description: Gzipped VCF file containing variants
+      pattern: "*.{vcf.gz}"
+  - vcf_indels_tbi:
+      type: file
+      description: Index for gzipped VCF file containing variants
+      pattern: "*.{vcf.gz.tbi}"
+  - vcf_snvs:
+      type: file
+      description: Gzipped VCF file containing variants
+      pattern: "*.{vcf.gz}"
+  - vcf_snvs_tbi:
+      type: file
+      description: Index for gzipped VCF file containing variants
+      pattern: "*.{vcf.gz.tbi}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+
+authors:
+  - "@drpatelh"

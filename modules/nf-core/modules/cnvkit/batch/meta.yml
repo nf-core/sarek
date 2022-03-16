@@ -1,0 +1,93 @@
+name: cnvkit_batch
+description: Copy number variant detection from high-throughput sequencing data
+keywords:
+  - bam
+  - fasta
+  - copy number
+tools:
+  - cnvkit:
+      description: |
+        CNVkit is a Python library and command-line software toolkit to infer and visualize copy number from high-throughput DNA sequencing data. It is designed for use with hybrid capture, including both whole-exome and custom target panels, and short-read sequencing platforms such as Illumina and Ion Torrent.
+      homepage: https://cnvkit.readthedocs.io/en/stable/index.html
+      documentation: https://cnvkit.readthedocs.io/en/stable/index.html
+      licence: ["Apache-2.0"]
+params:
+  - outdir:
+      type: string
+      description: |
+        The pipeline's output directory. By default, the module will
+        output files into `$params.outdir/<SOFTWARE>`
+  - publish_dir_mode:
+      type: string
+      description: |
+        Value for the Nextflow `publishDir` mode parameter.
+        Available: symlink, rellink, link, copy, copyNoFollow, move.
+  - enable_conda:
+      type: boolean
+      description: |
+        Run the module with Conda using the software specified
+        via the `conda` directive
+  - singularity_pull_docker_container:
+      type: boolean
+      description: |
+        Instead of directly downloading Singularity images for use with Singularity,
+        force the workflow to pull and convert Docker containers instead.
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - tumour:
+      type: file
+      description: |
+        Input tumour sample bam file (or cram)
+  - normal:
+      type: file
+      description: |
+        Input normal sample bam file (or cram)
+  - fasta:
+      type: file
+      description: |
+        Input reference genome fasta file
+  - targetfile:
+      type: file
+      description: |
+        Input target bed file
+  - reference:
+      type: file
+      description: |
+        Input reference cnn-file (only for germline and tumor-only running)
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bed:
+      type: file
+      description: File containing genomic regions
+      pattern: "*.{bed}"
+  - cnn:
+      type: file
+      description: File containing coverage information
+      pattern: "*.{cnn}"
+  - cnr:
+      type: file
+      description: File containing copy number ratio information
+      pattern: "*.{cnr}"
+  - cns:
+      type: file
+      description: File containing copy number segment information
+      pattern: "*.{cns}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@kaurravneet4123"
+  - "@KevinMenden"
+  - "@MaxUlysse"
+  - "@drpatelh"
+  - "@fbdtemme"
+  - "@lassefolkersen"

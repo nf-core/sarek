@@ -1,0 +1,149 @@
+- name: Run variant calling on germline sample with deepvariant
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools deepvariant
+  tags:
+    - deepvariant
+    - germline
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample1/deepvariant/sample1.vcf.gz
+    - path: results/variant_calling/sample1/deepvariant/sample1.vcf.gz.tbi
+
+- name: Run variant calling on germline sample with deepvariant without intervals
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools deepvariant --no_intervals
+  tags:
+    - deepvariant
+    - germline
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample1/deepvariant/sample1.vcf.gz
+    - path: results/variant_calling/sample1/deepvariant/sample1.vcf.gz.tbi
+
+- name: Run variant calling on germline sample with deepvariant and generate gvcf
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools deepvariant --generate_gvcf
+  tags:
+    - deepvariant
+    - germline
+    - gvcf
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample1/deepvariant/sample1.g.vcf.gz
+    - path: results/variant_calling/sample1/deepvariant/sample1.g.vcf.gz.tbi
+    - path: results/variant_calling/sample1/deepvariant/sample1.vcf.gz
+    - path: results/variant_calling/sample1/deepvariant/sample1.vcf.gz.tbi
+
+- name: Run variant calling on germline sample with deepvariant without intervals and generate gvcf
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools deepvariant --generate_gvcf --no_intervals
+  tags:
+    - deepvariant
+    - germline
+    - gvcf
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample1/deepvariant/sample1.g.vcf.gz
+    - path: results/variant_calling/sample1/deepvariant/sample1.g.vcf.gz.tbi
+    - path: results/variant_calling/sample1/deepvariant/sample1.vcf.gz
+    - path: results/variant_calling/sample1/deepvariant/sample1.vcf.gz.tbi
+
+- name: Run variant calling on germline sample with haplotypecaller
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller
+  tags:
+    - germline
+    - haplotypecaller
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz
+    - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz.tbi
+
+- name: Run variant calling on germline sample with haplotypecaller without intervals
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --no_intervals
+  tags:
+    - germline
+    - haplotypecaller
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz
+    - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz.tbi
+
+- name: Run variant calling on germline sample with haplotypecaller and generate gvcf
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --generate_gvcf
+  tags:
+    - germline
+    - gvcf
+    - haplotypecaller
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample1/haplotypecaller/sample1.g.vcf.gz
+    - path: results/variant_calling/sample1/haplotypecaller/sample1.g.vcf.gz.tbi
+    - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz
+    - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz.tbi
+
+- name: Run variant calling on germline sample with haplotypecaller without intervals and generate gvcf
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --generate_gvcf --no_intervals
+  tags:
+    - germline
+    - gvcf
+    - haplotypecaller
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample1/haplotypecaller/sample1.g.vcf.gz
+    - path: results/variant_calling/sample1/haplotypecaller/sample1.g.vcf.gz.tbi
+    - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz
+    - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz.tbi
+
+- name: Run variant calling on germline sample with manta
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools manta
+  tags:
+    - germline
+    - manta
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample1/manta/sample1.candidate_small_indels.vcf.gz
+    - path: results/variant_calling/sample1/manta/sample1.candidate_small_indels.vcf.gz.tbi
+    - path: results/variant_calling/sample1/manta/sample1.candidate_sv.vcf.gz
+    - path: results/variant_calling/sample1/manta/sample1.candidate_sv.vcf.gz.tbi
+    - path: results/variant_calling/sample1/manta/sample1.diploid_sv.vcf.gz
+    - path: results/variant_calling/sample1/manta/sample1.diploid_sv.vcf.gz.tbi
+
+- name: Run variant calling on germline sample with manta without intervals
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools manta --no_intervals
+  tags:
+    - germline
+    - manta
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample1/manta/sample1.candidate_small_indels.vcf.gz
+    - path: results/variant_calling/sample1/manta/sample1.candidate_small_indels.vcf.gz.tbi
+    - path: results/variant_calling/sample1/manta/sample1.candidate_sv.vcf.gz
+    - path: results/variant_calling/sample1/manta/sample1.candidate_sv.vcf.gz.tbi
+    - path: results/variant_calling/sample1/manta/sample1.diploid_sv.vcf.gz
+    - path: results/variant_calling/sample1/manta/sample1.diploid_sv.vcf.gz.tbi
+
+- name: Run variant calling on germline sample with strelka
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools strelka
+  tags:
+    - germline
+    - strelka
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample1/strelka/sample1.variants.vcf.gz
+    - path: results/variant_calling/sample1/strelka/sample1.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample1/strelka/sample1.genome.vcf.gz
+    - path: results/variant_calling/sample1/strelka/sample1.genome.vcf.gz.tbi
+
+- name: Run variant calling on germline sample with strelka without intervals
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools strelka --no_intervals
+  tags:
+    - germline
+    - strelka
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample1/strelka/sample1.variants.vcf.gz
+    - path: results/variant_calling/sample1/strelka/sample1.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample1/strelka/sample1.genome.vcf.gz
+    - path: results/variant_calling/sample1/strelka/sample1.genome.vcf.gz.tbi
