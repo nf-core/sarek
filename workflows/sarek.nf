@@ -728,7 +728,6 @@ def extract_csv(csv_file) {
         .map{ row, numLanes -> //from here do the usual thing for csv parsing
         def meta = [:]
 
-        //TODO since it is mandatory: error/warning if not present?
         // Meta data to identify samplesheet
         // Both patient and sample are mandatory
         // Several sample can belong to the same patient
@@ -766,6 +765,20 @@ def extract_csv(csv_file) {
             meta.read_group = read_group.toString()
             meta.data_type  = "bam"
             return [meta, bam]
+        // prepare_recalibration when skipping MarkDuplicates
+        } else if (row.bam) {
+            meta.id = meta.sample
+            def bam = file(row.bam, checkIfExists: true)
+            def bai = file(row.bai, checkIfExists: true)
+            meta.data_type  = "bam"
+            return [meta, bam, bai]
+        // prepare_recalibration or variant_calling
+        } else if (row.cram) {
+            meta.id = meta.sample
+            def cram = file(row.cram, checkIfExists: true)
+            def crai = file(row.crai, checkIfExists: true)
+            meta.data_type  = "cram"
+            return [meta, cram, crai]
         // recalibration
         } else if (row.table && row.cram) {
             meta.id   = meta.sample
@@ -774,28 +787,6 @@ def extract_csv(csv_file) {
             def table = file(row.table, checkIfExists: true)
             meta.data_type  = "cram"
             return [meta, cram, crai, table]
-        // recalibration when skipping MarkDuplicates
-        } else if (row.table && row.bam) {
-            meta.id   = meta.sample
-            def bam   = file(row.bam,   checkIfExists: true)
-            def bai   = file(row.bai,   checkIfExists: true)
-            def table = file(row.table, checkIfExists: true)
-            meta.data_type  = "bam"
-            return [meta, bam, bai, table]
-        // prepare_recalibration or variant_calling
-        } else if (row.cram) {
-            meta.id = meta.sample
-            def cram = file(row.cram, checkIfExists: true)
-            def crai = file(row.crai, checkIfExists: true)
-            meta.data_type  = "cram"
-            return [meta, cram, crai]
-        // prepare_recalibration when skipping MarkDuplicates
-        } else if (row.bam) {
-            meta.id = meta.sample
-            def bam = file(row.bam, checkIfExists: true)
-            def bai = file(row.bai, checkIfExists: true)
-            meta.data_type  = "bam"
-            return [meta, bam, bai]
         // annotation
         } else if (row.vcf) {
             meta.id = meta.sample
