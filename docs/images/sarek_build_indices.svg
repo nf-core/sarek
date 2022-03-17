@@ -60,9 +60,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="722.42866"
-     inkscape:cy="1069.5067"
+     inkscape:zoom="0.70710678"
+     inkscape:cx="963.52271"
+     inkscape:cy="585.2346"
      inkscape:document-units="mm"
      inkscape:current-layer="g6795"
      inkscape:document-rotation="0"
@@ -74,8 +74,8 @@
      inkscape:guide-bbox="true"
      inkscape:window-width="1847"
      inkscape:window-height="926"
-     inkscape:window-x="72"
-     inkscape:window-y="105"
+     inkscape:window-x="73"
+     inkscape:window-y="75"
      inkscape:window-maximized="0"
      inkscape:pagecheckerboard="false"
      showborder="false">
@@ -106,6 +106,10 @@
        position="178.10841,181.64903"
        orientation="0,-1"
        id="guide5285" />
+    <sodipodi:guide
+       position="313.18642,308.49514"
+       orientation="1,0"
+       id="guide2397" />
   </sodipodi:namedview>
   <metadata
      id="metadata2446">
@@ -293,18 +297,18 @@
       </g>
       <text
          xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:25.82150000000000034px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.645538;"
-         x="1107.0398"
+         style="font-style:normal;font-weight:normal;font-size:25.8215px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.645538"
+         x="1119.95"
          y="-1414.2089"
          id="text3501-5"
          transform="scale(1,-1)"><tspan
            sodipodi:role="line"
-           x="1107.0398"
+           x="1119.95"
            y="-1414.2089"
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:25.6px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;stroke-width:0.645538"
            id="tspan5115">samtools</tspan><tspan
            sodipodi:role="line"
-           x="1107.0398"
+           x="1119.95"
            y="-1381.932"
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:25.6px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;stroke-width:0.645538"
            id="tspan5283">faidx</tspan></text>
@@ -371,18 +375,18 @@
            id="tspan5279">index</tspan></text>
       <text
          xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:25.82150000000000034px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.645538;"
-         x="1230.6316"
+         style="font-style:normal;font-weight:normal;font-size:25.8215px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.645538"
+         x="1249.9968"
          y="-1266.2368"
          id="text3501-5-7-9"
          transform="scale(1,-1)"><tspan
            sodipodi:role="line"
-           x="1230.6316"
+           x="1249.9968"
            y="-1266.2368"
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:25.6px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;stroke-width:0.645538"
            id="tspan3933-9">bwa-mem2</tspan><tspan
            sodipodi:role="line"
-           x="1230.6316"
+           x="1249.9968"
            y="-1233.96"
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:25.6px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;stroke-width:0.645538"
            id="tspan4245">index</tspan></text>
@@ -413,18 +417,18 @@
          sodipodi:nodetypes="csssc" />
       <text
          xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:25.82150000000000034px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.645538;"
-         x="1419.0557"
+         style="font-style:normal;font-weight:normal;font-size:25.8215px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.645538"
+         x="1465.5322"
          y="-1267.0642"
          id="text3501-5-7-9-6"
          transform="scale(1,-1)"><tspan
            sodipodi:role="line"
-           x="1419.0557"
+           x="1465.5322"
            y="-1267.0642"
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:25.6px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;stroke-width:0.645538"
            id="tspan3933-9-0">msisensor-pro</tspan><tspan
            sodipodi:role="line"
-           x="1419.0557"
+           x="1465.5322"
            y="-1234.7874"
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:25.6px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;stroke-width:0.645538"
            id="tspan4245-8">scan</tspan></text>
@@ -440,7 +444,7 @@
          sodipodi:nodetypes="cc" />
       <path
          style="fill:none;stroke:#000000;stroke-width:6.51304;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="M 945.40383,1644.4072 H 1196.494"
+         d="M 945.40383,1644.4358 H 1196.494"
          id="path2500-5-22-3-2"
          sodipodi:nodetypes="cc" />
       <circle
@@ -476,7 +480,7 @@
          sodipodi:nodetypes="cc" />
       <path
          style="fill:none;stroke:#000000;stroke-width:6.45537;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="m 1237.6683,1592.963 v 12.9108 c 0,9.6231 -6.1063,19.0169 -12.9108,25.8215 -6.4554,6.4554 -16.1984,12.9107 -25.8215,12.9107 l -12.9108,10e-5"
+         d="m 1237.6683,1592.7461 v 12.9108 c 0,9.6231 -6.1063,19.0169 -12.9108,25.8215 -6.4554,6.4554 -16.1984,12.9107 -25.8215,12.9107 l -12.9108,10e-5"
          id="path1232-36-5-9-5-3-9"
          sodipodi:nodetypes="csssc" />
       <path
@@ -658,7 +662,154 @@
            id="tspan5291"
            x="1300.4497"
            y="-1362.515"
-           style="stroke-width:0.645538"></tspan></text>
+           style="stroke-width:0.645538" /></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:25.8215px;line-height:1.25;font-family:sans-serif;text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.645538"
+         x="837.453"
+         y="-1881.8734"
+         id="text3501-5-2-8-8"
+         transform="scale(1,-1)"><tspan
+           sodipodi:role="line"
+           x="837.453"
+           y="-1881.8734"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:48.2002px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;stroke-width:0.645538"
+           id="tspan3552-2-21-4-7">nf-core/sarek</tspan><tspan
+           sodipodi:role="line"
+           x="837.453"
+           y="-1837.3284"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30.9858px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;stroke-width:0.645538"
+           id="tspan4444-6-8">index and interval preparation</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-weight:bold;font-size:25.6px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';stroke-width:0.645538"
+         x="1507.0217"
+         y="-1782.1146"
+         id="text2291"
+         transform="scale(1,-1)"><tspan
+           sodipodi:role="line"
+           id="tspan2289"
+           x="1507.0217"
+           y="-1782.1146"
+           style="font-size:34.4287px;stroke-width:0.645538">Legend</tspan><tspan
+           sodipodi:role="line"
+           x="1507.0217"
+           y="-1747.1334"
+           style="stroke-width:0.645538"
+           id="tspan2293" /></text>
+      <circle
+         style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:6.45537;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill;stop-color:#000000"
+         id="path3447-6-1-4"
+         cx="1518.4994"
+         cy="-1746.8677"
+         r="6.4553785"
+         transform="scale(1,-1)" />
+      <path
+         style="fill:none;stroke:#24b064;stroke-width:6.45578532;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 1508.8922,1627.487 h 81.3366"
+         id="path2500-5-22-3-4-5"
+         sodipodi:nodetypes="cc" />
+      <text
+         xml:space="preserve"
+         style="font-weight:bold;font-size:25.6px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';stroke-width:0.645538"
+         x="1552.0266"
+         y="-1739.8605"
+         id="text2372"
+         transform="scale(1,-1)"><tspan
+           sodipodi:role="line"
+           id="tspan2370"
+           x="1552.0266"
+           y="-1739.8605"
+           style="stroke-width:0.645538">start</tspan></text>
+      <g
+         id="g2426"
+         transform="translate(0.3389869,-43.363031)">
+        <g
+           id="g2419">
+          <path
+             style="fill:none;stroke:#000000;stroke-width:6.45579;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 1509.4338,1711.9207 h 22.5939"
+             id="path2500-5-22-0"
+             sodipodi:nodetypes="cc" />
+          <path
+             style="fill:none;stroke:#000000;stroke-width:6.45579;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 1529.6156,1727.244 v -30.6456"
+             id="path2500-5-22-8-56-8"
+             sodipodi:nodetypes="cc" />
+        </g>
+        <text
+           xml:space="preserve"
+           style="font-weight:bold;font-size:25.6px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';stroke-width:0.645538"
+           x="1554.2252"
+           y="-1704.0013"
+           id="text2376"
+           transform="scale(1,-1)"><tspan
+             sodipodi:role="line"
+             id="tspan2374"
+             x="1554.2252"
+             y="-1704.0013"
+             style="stroke-width:0.645538">end step</tspan></text>
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-weight:bold;font-size:25.6px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';stroke-width:0.645538"
+         x="1636.1294"
+         y="-1717.5609"
+         id="text2380"
+         transform="scale(1,-1)"><tspan
+           sodipodi:role="line"
+           id="tspan2378"
+           x="1636.1294"
+           y="-1717.5609"
+           style="stroke-width:0.645538" /></text>
+      <circle
+         style="fill:#ffffff;stroke:#000000;stroke-width:6.45537;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill;stop-color:#000000"
+         id="path3447-5"
+         cx="1518.5552"
+         cy="-1711.4539"
+         transform="scale(1,-1)"
+         r="6.4553785" />
+      <text
+         xml:space="preserve"
+         style="font-weight:bold;font-size:25.6px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';stroke-width:0.645538"
+         x="1613.1267"
+         y="-1621.0233"
+         id="text2372-5"
+         transform="scale(1,-1)"><tspan
+           sodipodi:role="line"
+           id="tspan2370-3"
+           x="1613.1267"
+           y="-1621.0233"
+           style="stroke-width:0.645538">optional</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-weight:bold;font-size:25.6px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';stroke-width:0.645538"
+         x="1552.2095"
+         y="-1701.423"
+         id="text2430"
+         transform="scale(1,-1)"><tspan
+           sodipodi:role="line"
+           id="tspan2428"
+           x="1552.2095"
+           y="-1701.423"
+           style="stroke-width:0.645538">intermediate step</tspan></text>
+      <path
+         style="fill:none;stroke:#000000;stroke-width:6.45579;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 1509.604,1591.0352 h 81.3377"
+         id="path2500-5-22"
+         sodipodi:nodetypes="cc" />
+      <text
+         xml:space="preserve"
+         style="font-weight:bold;font-size:25.6px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';stroke-width:0.645538"
+         x="1613.1265"
+         y="-1582.9371"
+         id="text2372-5-0"
+         transform="scale(1,-1)"><tspan
+           sodipodi:role="line"
+           id="tspan2370-3-5"
+           x="1613.1265"
+           y="-1582.9371"
+           style="stroke-width:0.645538">essential</tspan></text>
     </g>
   </g>
 </svg>
