@@ -11,6 +11,8 @@ Sarek is designed to handle single samples, such as single-normal or single-tumo
 
 ## Running the pipeline
 
+### Quickstart
+
 The typical command for running the pipeline is as follows:
 
 ```console
@@ -34,15 +36,15 @@ You will need to create a samplesheet with information about the samples you wou
 
 It is recommended to use the absolute path of the files, but relative path should also work.
 
-If necessary, a tumor sample can be associated to a normal sample as a pair, if specified with the same `subject`, a different `sample`, and the respective `status`.
-An additional tumor sample (such as a relapse for example), can be added if specified with the same `subject` and a different `sample`, and the `status` value `1`.
+If necessary, a tumor sample can be associated to a normal sample as a pair, if specified with the same `patient` ID, a different `sample`, and the respective `status`.
+An additional tumor sample (such as a relapse for example), can be added if specified with the same `patient` ID, a different `sample`, and the `status` value `1`.
 
 `Sarek` will output results in a different directory for *each sample*.
-If multiple samples are specified in the `CSV` file, `Sarek` will consider all files to be from different samples.
+If multiple samples IDs are specified in the `CSV` file, `Sarek` will consider all files to be from different samples.
+
 Multiple `CSV` files can be specified if the path is enclosed in quotes.
 
 Output from Variant Calling and/or Annotation will be in a specific directory for each sample and tool configuration (or normal/tumor pair if applicable).
-
 
 ```console
 --input '[path to samplesheet file]'
@@ -50,28 +52,25 @@ Output from Variant Calling and/or Annotation will be in a specific directory fo
 
 | Column         | Description                                                                                                                                                                            |
 |----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `patient`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `gender`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `status`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `sample`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `lane`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `fastq_1`      | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
+| `patient`       | Unique custom patient ID; designates the patient, it should be the ID of the patient, and it must be unique for each patient, but one patient can have multiple samples (e.g. normal and tumor).|
+| `gender`       | Sex chromosomes of the patient, i.e. XX, XY..., will only be used for Copy-Number Variation analysis in a tumor/pair.<br /> Optional, Default: `NA` |
+| `status`       | Status of the measured sample, can be `0` (normal) or `1` (tumor).<br /> Optional, Default: `0`|
+| `sample`       | Custom sample ID for each tumor and normal sample; it is possible to have more than one tumor sample for each subject, i.e. a tumor and a relapse; samples can have multiple lanes for which the *same* ID must be used to merge them later (see also `lane`). Sample IDs must be unique for unique biological samples. |
+| `lane`       | Lane ID, used when the `sample` is multiplexed on several lanes, it must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> Required for `--step_mapping` |
+| `fastq_1`      | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz". |
 | `fastq_2`      | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `bam`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `bai`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `cram`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `crai`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `table`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `mpileup`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
+| `bam`       | Full path to (u)BAM file |
+| `bai`       | Full path to BAM index file |
+| `cram`      | Full path to CRAM file |
+| `crai`      | Full path to CRAM index file |
+| `table`     | Full path to recalibration table file |
+| `mpileup`   | Full path to pileup file |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
-#### Start with mapping (`--step mapping` (default))
+#### Start with mapping (`--step mapping` [default])
 
-This step can be started either from `fastq` files or `(u)bams`. The `CSV` must contain at least the columns `patient`, `sample`, `lane`, and either `fastq_1/fastq_2` or `bam`.
-
-The `sample` identifiers have to be the same if you have multiple sequencing runs of the same sample e.g. to increase sequencing depth. This can be indicated using the `lane` column.
-The pipeline will concatenate the raw reads before performing any downstream analysis.
+This step can be started either from `fastq` files or (u)`bam`s. The `CSV` must contain at least the columns `patient`, `sample`, `lane`, and either `fastq_1/fastq_2` or `bam`.
 
 ##### Examples
 
@@ -155,32 +154,36 @@ TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
 
 #### Start with duplicate marking and/or preparing recalibration (`--step prepare_recalibration`)
 
-To start with duplicate marking the `CSV` file must contain at least the columns `patient`, `sample`, `bam`, `bai`.
+##### Duplicate Marking
+
+For starting from duplicate marking, the `CSV` file must contain at least the columns `patient`, `sample`, `bam`, `bai`.
 
 Example:
 
 ```console
-patient,sample,lane,bam
+patient,sample,bam,bai
 patient1,test,1,AEG588A1_S1_L002.bam
 ```
 
-To start directly with preparing recalibration and skipping duplicate marking the `CSV` file must contain at least the columns `patient`, `sample`, `cram`, `crai` with `non-recalibrated CRAM` files. Additionally, `--skip_tools markduplicates` must be set.
+##### Prepare Recalibration
+
+For starting directly from preparing recalibration and skipping duplicate marking, the `CSV` file must contain at least the columns `patient`, `sample`, `cram`, `crai` with *non-recalibrated CRAM* files. Additionally, the parameter `--skip_tools markduplicates` must be set.
 
 Example:
 
 ```console
-patient,sample,lane,bam
+patient,sample,cram,crai
 patient1,test,1,AEG588A1_S1_L002.bam
 ```
 
-The `Sarek`-generated `CSV` file is stored under `results/Preprocessing/CSV/duplicates_marked_no_table.tsv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration`.
+The `Sarek`-generated `CSV` file is stored under `results/Preprocessing/CSV/duplicates_marked_no_table.csv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration`.
 
 ##### Full samplesheet
 
-In this example, all possible columns are used including the `gender` information per patient:
+In this example, all possible columns are used including the `gender` and `status` information per patient:
 
 ```console
-patient,gender,status,sample,lane,fastq_1,fastq_2
+patient,gender,status,sample,bam,bai
 CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
 CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
 CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
@@ -191,7 +194,7 @@ TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
 ```
 
 ```console
-patient,gender,status,sample,lane,bam
+patient,gender,status,sample,cram,crai
 CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
 CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
 CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
@@ -203,52 +206,63 @@ TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
 
 #### Start with base quality recalibration (`--step recalibrate`)
 
-To start with base quality recalibration the `CSV` file must contain at least the columns `patient`, `sample`, `cram`, `crai`, `table`. The column `gender`is optional.
-To start from the recalibrate step (`--step recalibrate`), a `TSV` file needs to be given as input containing the paths to the `non-recalibrated BAM` file and the associated recalibration table.
-The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/duplicates_marked.tsv` and will automatically be used as an input when specifying the parameter `--step recalibrate`.
+For starting from base quality recalibration the `CSV` file must contain at least the columns `patient`, `sample`, `cram`, `crai`, `table` containing the paths to *non-recalibrated CRAM* files and the associated recalibration table.
+
+Example:
+
+```console
+patient,sample,cram,crai,table
+patient1,test,1,AEG588A1_S1_L002.bam
+```
+
+The `Sarek`-generated `CSV` file is stored under `results/Preprocessing/CSV/duplicates_marked.csv` and will automatically be used as an input when specifying the parameter `--step recalibrate`.
+
+##### Full samplesheet
+
+In this example, all possible columns are used including the `gender` and `status` information per patient:
+
+```console
+patient,gender,status,sample,cram,crai,table
+CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
+CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
+TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
+TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
+TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
+TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+```
 
 #### Start with variant calling (`--step variant_calling`)
 
-To start from the variant calling step (`--step variant_calling`), a `TSV` file needs to be given as input containing the paths to the `recalibrated BAM` file and the associated index.
-The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/recalibrated.tsv` and will automatically be used as an input when specifying the parameter `--step variant_calling`.
+For starting from the variant calling step, the `CSV` file must contain at least the columns `patient`, `sample`, `cram`, `crai`.
 
-The `TSV` file should contain the columns:
+Example:
 
-`subject sex status sample bam bai`
+```console
+patient,sample,cram,crai
+patient1,test,1,AEG588A1_S1_L002.bam
+```
 
-Here is an example for two samples from the same subject:
+The `Sarek`-generated `CSV` file is stored under `results/Preprocessing/TSV/recalibrated.tsv` and will automatically be used as an input when specifying the parameter `--step variant_calling`.
 
-| | | | | | |
-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID|/samples/normal.recal.bam|/samples/normal.recal.bai|
+##### Full samplesheet
 
-Or, for a normal/tumor pair:
+In this example, all possible columns are used including the `gender` and `status` information per patient:
 
-| | | | | | |
-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.recal.bam|/samples/normal.recal.bai|
-|SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.recal.bam|/samples/tumor.recal.bai|
+```console
+patient,gender,status,sample,cram,crai
+CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
+CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
+TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
+TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
+TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
+TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+```
 
+#### Start with annotation (`--step annotate`)
 
-To start from the Control-FREEC step (`--step Control-FREEC`), a `TSV` file needs to be given as input containing the paths to the mpileup files.
-The `Sarek`-generated `TSV` file is stored under `results/VariantCalling/TSV/control-freec_mpileup.tsv` and will automatically be used as an input when specifying the parameter `--step Control-FREEC`.
-
-The `TSV` file should contain the columns:
-
-`subject sex status sample mpileup`
-
-Here is an example for one normal/tumor pair from one subjects:
-
-| | | | | |
-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.pileup|
-|SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.pileup|
-
-##### Special case controlfreec
-
-#### Start with annotation
-
-Input files for Sarek can be specified using the path to a `VCF` file given to the `--input` command only with the annotation step (`--step annotate`).
+Starting with annotation, is a special case in that it doesn't require an input sample sheet. The input files for Sarek can be specified using the path to a `VCF` file given to the `--input` command only with the annotation step (`--step annotate`).
 As `Sarek` will use `bgzip` and `tabix` to compress and index `VCF` files annotated, it expects `VCF` files to be sorted.
 Multiple `VCF` files can be specified, using a [glob path](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob), if enclosed in quotes.
 For example:
@@ -269,8 +283,8 @@ nextflow pull nf-core/sarek
 
 It is a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `2.6.1`).
-Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 2.6.1`.
+First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `3.0.0`).
+Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 3.0.0`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 
@@ -278,7 +292,7 @@ This version number will be logged in reports when you run the pipeline, so that
 
 ## Core Nextflow arguments
 
-> **NB:** These options are part of Nextflow and use a _single_ hyphen (pipeline parameters use a double-hyphen).
+> **NB:** These options are part of Nextflow and use a *single* hyphen (pipeline parameters use a double-hyphen).
 
 ### `-profile`
 
@@ -296,7 +310,7 @@ Note that multiple profiles can be loaded, for example: `-profile test,docker` -
 They are loaded in sequence, so later profiles can overwrite earlier profiles.
 
 If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`.
-This is _not_ recommended.
+This is *not* recommended.
 
 * `docker`
     * A generic configuration profile to be used with [Docker](https://docker.com/)
@@ -323,6 +337,24 @@ You can also supply a run name to resume a specific run: `-resume [run-name]`. U
 ### `-c`
 
 Specify the path to a specific config file (this is a core Nextflow command). See the [nf-core website documentation](https://nf-co.re/usage/configuration) for more information.
+
+### Nextflow memory requirements
+
+In some cases, the Nextflow Java virtual machines can start to request a large amount of memory.
+We recommend adding the following line to your environment to limit this (typically in `~/.bashrc` or `~./bash_profile`):
+
+```console
+NXF_OPTS='-Xms1g -Xmx4g'
+```
+
+### Running in the background
+
+Nextflow handles job submissions and supervises the running jobs. The Nextflow process must run until the pipeline is finished.
+
+The Nextflow `-bg` flag launches Nextflow in the background, detached from your terminal so that the workflow does not stop if you log out of your session. The logs are saved to a file.
+
+Alternatively, you can use `screen` / `tmux` or similar tool to create a detached session which you can log back into at a later time.
+Some HPC setups also allow you to run nextflow within a cluster job submitted your job scheduler (from where it submits more jobs).
 
 ## Custom configuration
 
@@ -427,62 +459,6 @@ In most cases, you will only need to create a custom config as a one-off but if 
 See the main [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for more information about creating your own configuration files.
 
 If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack) on the [`#configs` channel](https://nfcore.slack.com/channels/configs).
-
-## Running in the background
-
-Nextflow handles job submissions and supervises the running jobs. The Nextflow process must run until the pipeline is finished.
-
-The Nextflow `-bg` flag launches Nextflow in the background, detached from your terminal so that the workflow does not stop if you log out of your session. The logs are saved to a file.
-
-Alternatively, you can use `screen` / `tmux` or similar tool to create a detached session which you can log back into at a later time.
-Some HPC setups also allow you to run nextflow within a cluster job submitted your job scheduler (from where it submits more jobs).
-
-## Nextflow memory requirements
-
-In some cases, the Nextflow Java virtual machines can start to request a large amount of memory.
-We recommend adding the following line to your environment to limit this (typically in `~/.bashrc` or `~./bash_profile`):
-
-```console
-NXF_OPTS='-Xms1g -Xmx4g'
-```
-
-## Troubleshooting & FAQ
-
-### Spark related issues
-
-If you have problems running processes that make use of Spark such as ```MarkDuplicates```.
-You are probably experiencing issues with the limit of open files in your system.
-You can check your current limit by typing the following:
-
-```bash
-ulimit -n
-```
-
-The default limit size is usually 1024 which is quite low to run Spark jobs.
-In order to increase the size limit permanently you can:
-
-Edit the file ```/etc/security/limits.conf``` and add the lines:
-
-```bash
-*     soft   nofile  65535
-*     hard   nofile  65535
-```
-
-Edit the file ```/etc/sysctl.conf``` and add the line:
-
-```bash
-fs.file-max = 65535
-```
-
-Edit the file ```/etc/sysconfig/docker``` and add the new limits to OPTIONS like this:
-
-```bash
-OPTIONS=”—default-ulimit nofile=65535:65535"
-```
-
-Re-start your session.
-
-Note that the way to increase the open file limit in your system may be slightly different or require additional steps.
 
 ## Tutorials
 
@@ -614,3 +590,41 @@ This tool is enabled within `Sarek` if both `--sentieon` and `--tools TNscope` a
 > Germline and somatic SV calling, including translocations, inversions, duplications and large INDELs
 
 This tool is enabled within `Sarek` if both `--sentieon` and `--tools DNAscope` are specified.
+
+## Troubleshooting & FAQ
+
+### Spark related issues
+
+If you have problems running processes that make use of Spark such as ```MarkDuplicates```.
+You are probably experiencing issues with the limit of open files in your system.
+You can check your current limit by typing the following:
+
+```bash
+ulimit -n
+```
+
+The default limit size is usually 1024 which is quite low to run Spark jobs.
+In order to increase the size limit permanently you can:
+
+Edit the file ```/etc/security/limits.conf``` and add the lines:
+
+```bash
+*     soft   nofile  65535
+*     hard   nofile  65535
+```
+
+Edit the file ```/etc/sysctl.conf``` and add the line:
+
+```bash
+fs.file-max = 65535
+```
+
+Edit the file ```/etc/sysconfig/docker``` and add the new limits to OPTIONS like this:
+
+```bash
+OPTIONS=”—default-ulimit nofile=65535:65535"
+```
+
+Re-start your session.
+
+Note that the way to increase the open file limit in your system may be slightly different or require additional steps.
