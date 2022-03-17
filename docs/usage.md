@@ -104,7 +104,7 @@ patient1,test_sample,3,test_L003.bam
 
 ##### Full samplesheet
 
-In this example, all possible columns are used. There are 3 read groups for the normal sample and 2 for the tumor sample including the `gender` and `status` information per patient:
+In this example, all possible columns are used. There are 3 read groups for the normal sample, 2 for the tumor sample, 1 for the relapse, including the `gender` and `status` information per patient:
 
 ```console
 patient,gender,status,sample,lane,fastq_1,fastq_2
@@ -113,6 +113,7 @@ patient1,XX,0,normal_sample,lane_2,test_L002_1.fastq.gz,test_L002_2.fastq.gz
 patient1,XX,0,normal_sample,lane_3,test_L003_1.fastq.gz,test_L003_2.fastq.gz
 patient1,XX,1,tumor_sample,lane_1,test2_L001_1.fastq.gz,test2_L001_2.fastq.gz
 patient1,XX,1,tumor_sample,lane_2,test2_L002_1.fastq.gz,test2_L002_2.fastq.gz
+patient1,XX,1,relapse_sample,lane_1,test3_L001_1.fastq.gz,test3_L001_2.fastq.gz
 ```
 
 ```console
@@ -122,6 +123,7 @@ patient1,XX,0,normal_sample,lane_2,test_L002.bam
 patient1,XX,0,normal_sample,lane_3,test_L003.bam
 patient1,XX,1,tumor_sample,lane_1,test2_L001.bam
 patient1,XX,1,tumor_sample,lane_2,test2_L002.bam
+patient1,XX,1,relapse_sample,lane_1,test3_L001.bam
 ```
 
 #### Start with duplicate marking and/or preparing recalibration (`--step prepare_recalibration`)
@@ -134,7 +136,7 @@ Example:
 
 ```console
 patient,sample,bam,bai
-patient1,test,1,AEG588A1_S1_L002.bam
+patient1,test_sample,test_mapped.bam,test_mapped.bam.bai
 ```
 
 ##### Prepare Recalibration
@@ -145,7 +147,7 @@ Example:
 
 ```console
 patient,sample,cram,crai
-patient1,test,1,AEG588A1_S1_L002.bam
+patient1,test_sample,test_mapped.cram,test_mapped.cram.crai
 ```
 
 The `Sarek`-generated `CSV` file is stored under `results/Preprocessing/CSV/duplicates_marked_no_table.csv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration`.
@@ -156,24 +158,16 @@ In this example, all possible columns are used including the `gender` and `statu
 
 ```console
 patient,gender,status,sample,bam,bai
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+patient1,XX,0,test_sample,test_mapped.bam,test_mapped.bam.bai
+patient1,XX,1,tumor_sample,test2_mapped.bam,test2_mapped.bam.bai
+patient1,XX,1,relapse_sample,test3_mapped.bam,test3_mapped.bam.bai
 ```
 
 ```console
 patient,gender,status,sample,cram,crai
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+patient1,XX,0,normal_sample,test_mapped.cram,test_mapped.cram.crai
+patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai
+patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai
 ```
 
 #### Start with base quality recalibration (`--step recalibrate`)
@@ -184,7 +178,7 @@ Example:
 
 ```console
 patient,sample,cram,crai,table
-patient1,test,1,AEG588A1_S1_L002.bam
+patient1,test_sample,test_mapped.cram,test_mapped.cram.crai,test.table
 ```
 
 The `Sarek`-generated `CSV` file is stored under `results/Preprocessing/CSV/duplicates_marked.csv` and will automatically be used as an input when specifying the parameter `--step recalibrate`.
@@ -195,13 +189,9 @@ In this example, all possible columns are used including the `gender` and `statu
 
 ```console
 patient,gender,status,sample,cram,crai,table
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+patient1,XX,0,test_sample,test_mapped.cram,test_mapped.cram.crai,test.table
+patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai,test2.table
+patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai,test3.table
 ```
 
 #### Start with variant calling (`--step variant_calling`)
@@ -212,10 +202,10 @@ Example:
 
 ```console
 patient,sample,cram,crai
-patient1,test,1,AEG588A1_S1_L002.bam
+patient1,test_sample,test_mapped.cram,test_mapped.cram.crai
 ```
 
-The `Sarek`-generated `CSV` file is stored under `results/Preprocessing/TSV/recalibrated.tsv` and will automatically be used as an input when specifying the parameter `--step variant_calling`.
+The `Sarek`-generated `CSV` file is stored under `results/Preprocessing/CSV/recalibrated.csv` and will automatically be used as an input when specifying the parameter `--step variant_calling`.
 
 ##### Full samplesheet
 
@@ -223,19 +213,15 @@ In this example, all possible columns are used including the `gender` and `statu
 
 ```console
 patient,gender,status,sample,cram,crai
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+patient1,XX,0,normal_sample,test_mapped.cram,test_mapped.cram.crai
+patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai
+patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai
 ```
 
 #### Start with annotation (`--step annotate`)
 
 Starting with annotation, is a special case in that it doesn't require an input sample sheet. The input files for Sarek can be specified using the path to a `VCF` file given to the `--input` command only with the annotation step (`--step annotate`).
-As `Sarek` will use `bgzip` and `tabix` to compress and index `VCF` files annotated, it expects `VCF` files to be sorted.
+As `Sarek` will use `bgzip` and `tabix` to compress and index the annotated `VCF` files, it expects the input `VCF` files to be sorted.
 Multiple `VCF` files can be specified, using a [glob path](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob), if enclosed in quotes.
 For example:
 
