@@ -34,7 +34,7 @@ results         # Finished results (configurable, see below)
 
 You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use the parameter `--input` to specify its location. It has to be a comma-separated file with at least 3 columns, and a header row as shown in the examples below.
 
-It is recommended to use the absolute path of the files, but relative path should also work.
+It is recommended to use the absolute path of the files, but a relative path should also work.
 
 If necessary, a tumor sample can be associated to a normal sample as a pair, if specified with the same `patient` ID, a different `sample`, and the respective `status`.
 An additional tumor sample (such as a relapse for example), can be added if specified with the same `patient` ID, a different `sample`, and the `status` value `1`.
@@ -42,21 +42,21 @@ An additional tumor sample (such as a relapse for example), can be added if spec
 `Sarek` will output results in a different directory for *each sample*.
 If multiple samples IDs are specified in the `CSV` file, `Sarek` will consider all files to be from different samples.
 
-Multiple `CSV` files can be specified if the path is enclosed in quotes.
-
 Output from Variant Calling and/or Annotation will be in a specific directory for each sample and tool configuration (or normal/tumor pair if applicable).
 
+Multiple `CSV` files can be specified if the path is enclosed in quotes.
+
 ```console
---input '[path to samplesheet file]'
+--input '[path to samplesheet file(s)]'
 ```
 
 | Column         | Description                                                                                                                                                                            |
 |----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `patient`       | Unique custom patient ID; designates the patient, it should be the ID of the patient, and it must be unique for each patient, but one patient can have multiple samples (e.g. normal and tumor).|
-| `gender`       | Sex chromosomes of the patient, i.e. XX, XY..., will only be used for Copy-Number Variation analysis in a tumor/pair.<br /> Optional, Default: `NA` |
-| `status`       | Status of the measured sample, can be `0` (normal) or `1` (tumor).<br /> Optional, Default: `0`|
-| `sample`       | Custom sample ID for each tumor and normal sample; it is possible to have more than one tumor sample for each subject, i.e. a tumor and a relapse; samples can have multiple lanes for which the *same* ID must be used to merge them later (see also `lane`). Sample IDs must be unique for unique biological samples. |
-| `lane`       | Lane ID, used when the `sample` is multiplexed on several lanes, it must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> Required for `--step_mapping` |
+| `patient`       | **Custom patient ID**; designates the patient/subject; must be unique for each patient, but one patient can have multiple samples (e.g. normal and tumor).|
+| `gender`       | **Sex chromosomes of the patient**; i.e. XX, XY..., only used for Copy-Number Variation analysis in a tumor/pair<br /> *Optional, Default: `NA`* |
+| `status`       | **Normal/tumor status of sample**; can be `0` (normal) or `1` (tumor).<br /> *Optional, Default: `0`*|
+| `sample`       | **Custom sample ID** for each tumor and normal sample; more than one tumor sample for each subject is possible, i.e. a tumor and a relapse; samples can have multiple lanes for which the *same* ID must be used to merge them later (see also `lane`). Sample IDs must be unique for unique biological samples |
+| `lane`       | Lane ID, used when the `sample` is multiplexed on several lanes. Must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> *Required for `--step_mapping`* |
 | `fastq_1`      | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz". |
 | `fastq_2`      | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
 | `bam`       | Full path to (u)BAM file |
@@ -78,78 +78,50 @@ Minimal config file:
 
 ```console
 patient,sample,lane,fastq_1,fastq_2
-patient1,test,1,AEG588A1_S1_L002_R2_001.fastq.gz,AEG588A1_S1_L002_R2_002.fastq.gz
+patient1,test_sample,lane_1,test_1.fastq.gz,test_2.fastq.gz
 ```
 
 ```console
 patient,sample,lane,bam
-patient1,test,1,AEG588A1_S1_L002.bam
+patient1,test_sample,lane_1,test.bam
 ```
 
 In this example, there are 3 read groups:
 
 ```console
 patient,sample,lane,fastq_1,fastq_2
-patient1,test,1,AEG588A1_S1_L002_R2_001.fastq.gz,AEG588A1_S1_L002_R2_002.fastq.gz
-patient1,test,2,AEG588A1_S1_L002_R2_001.fastq.gz,AEG588A1_S1_L002_R2_002.fastq.gz
-patient1,test,3,AEG588A1_S1_L002_R2_001.fastq.gz,AEG588A1_S1_L002_R2_002.fastq.gz
+patient1,test_sample,lane_1,test_L001_1.fastq.gz,test_L001_2.fastq.gz
+patient1,test_sample,lane_2,test_L002_1.fastq.gz,test_L002_2.fastq.gz
+patient1,test_sample,lane_3,test_L003_1.fastq.gz,test_L003_2.fastq.gz
 ```
 
 ```console
 patient,sample,lane,bam
-patient1,test,1,AEG588A1_S1_L002.bam
-patient1,test,2,AEG588A1_S1_L002.bam
-patient1,test,3,AEG588A1_S1_L002.bam
-```
-
-In this example, there are 3 read groups for the normal sample and 2 for the tumor sample.
-
-```console
-patient,status,sample,lane,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
-```
-
-```console
-patient,status,sample,lane,bam
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.bam
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.bam
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.bam
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.bam
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.bam
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.bam
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.bam
+patient1,test_sample,1,test_L001.bam
+patient1,test_sample,2,test_L002.bam
+patient1,test_sample,3,test_L003.bam
 ```
 
 ##### Full samplesheet
 
-In this example, all possible columns are used. There are 3 read groups for the normal sample and 2 for the tumor sample including the `gender` information per patient:
+In this example, all possible columns are used. There are 3 read groups for the normal sample and 2 for the tumor sample including the `gender` and `status` information per patient:
 
 ```console
 patient,gender,status,sample,lane,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+patient1,XX,0,normal_sample,lane_1,test_L001_1.fastq.gz,test_L001_2.fastq.gz
+patient1,XX,0,normal_sample,lane_2,test_L002_1.fastq.gz,test_L002_2.fastq.gz
+patient1,XX,0,normal_sample,lane_3,test_L003_1.fastq.gz,test_L003_2.fastq.gz
+patient1,XX,1,tumor_sample,lane_1,test2_L001_1.fastq.gz,test2_L001_2.fastq.gz
+patient1,XX,1,tumor_sample,lane_2,test2_L002_1.fastq.gz,test2_L002_2.fastq.gz
 ```
 
 ```console
 patient,gender,status,sample,lane,bam
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+patient1,XX,0,normal_sample,lane_1,test_L001.bam
+patient1,XX,0,normal_sample,lane_2,test_L002.bam
+patient1,XX,0,normal_sample,lane_3,test_L003.bam
+patient1,XX,1,tumor_sample,lane_1,test2_L001.bam
+patient1,XX,1,tumor_sample,lane_2,test2_L002.bam
 ```
 
 #### Start with duplicate marking and/or preparing recalibration (`--step prepare_recalibration`)
