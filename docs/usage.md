@@ -422,6 +422,18 @@ If you have any questions or issues please send us a message on [Slack](https://
 
 ### Which tool for which data type
 
+Strelka2: WGS, WES, Panel; Tumor, normal, somatic
+Freebayes: WGS, WES, Panel; Tumor,normal,  somatic
+mutect: WGS, WES, Panel; Tumor, somatic
+Haplotypecaller: WGS, WES, Panel; normal
+Deepvariant: WGS, WES, Panel;  normal
+cnvkit: WGS, WES, Panel; Tumor, normal, somatic
+Msisensor: WGS, WES, Panel; Tumor, normal, somatic
+controlfreec: WGS, WES, Panel; Tumor, normal, somatic
+ascat: WGS, WES, Panel; Tumor, normal, somatic
+manta: WGS, WES, Panel; Tumor, normal, somatic
+tiddit: WGS, WES, Panel; Tumor, normal, somatic
+
 ### How to run sarek when not all reference files are in igenomes
 
 ### How to deal with a (custom) annotation cache
