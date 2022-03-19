@@ -25,7 +25,7 @@ include { FREEBAYES                                 } from '../../modules/nf-cor
 include { GATK4_GENOTYPEGVCFS as GENOTYPEGVCFS      } from '../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
 include { GATK4_HAPLOTYPECALLER as HAPLOTYPECALLER  } from '../../modules/nf-core/modules/gatk4/haplotypecaller/main'
 include { GATK_JOINT_GERMLINE_VARIANT_CALLING       } from '../../subworkflows/nf-core/gatk4/joint_germline_variant_calling/main'
-include { MANTA_GERMLINE                            } from '../../modules/nf-core/modules/manta/germline/main'
+include { MANTA_GERMLINE                            } from '../../modules/local/manta/germline/main'
 include { STRELKA_GERMLINE                          } from '../../modules/nf-core/modules/strelka/germline/main'
 include { TABIX_BGZIPTABIX as TABIX_BGZIP_TIDDIT_SV } from '../../modules/nf-core/modules/tabix/bgziptabix/main'
 include { TABIX_TABIX as TABIX_VC_DEEPVARIANT_GVCF  } from '../../modules/nf-core/modules/tabix/tabix/main'

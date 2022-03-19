@@ -114,15 +114,6 @@
             "gatk4/variantrecalibrator": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
-            "manta/germline": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
-            },
-            "manta/somatic": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
-            },
-            "manta/tumoronly": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
-            },
             "msisensorpro/msi_somatic": {
                 "git_sha": "c8ebd0de36c649a14fc92f2f73cbd9f691a8ce0a"
             },
