@@ -6,8 +6,8 @@
 
 include { GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk4/tumor_only_somatic_variant_calling/main'
 include { RUN_STRELKA                             } from './variantcalling/strelka.nf'
-include { RUN_FREEBAYES                             } from './variantcalling/freebayes.nf'
-include { RUN_MANTA_SOMATIC                         } from './variantcalling/manta_somatic.nf'
+include { RUN_FREEBAYES                           } from './variantcalling/freebayes.nf'
+include { RUN_MANTA_TUMORONLY                     } from './variantcalling/manta_tumoronly.nf'
 
 workflow TUMOR_ONLY_VARIANT_CALLING {
     take:
@@ -28,7 +28,6 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         germline_resource_tbi           // channel
         panel_of_normals
         panel_of_normals_tbi
-
 
     main:
 
@@ -97,7 +96,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
     if (tools.contains('manta')){
         //TODO: Research if splitting by intervals is ok, we pretend for now it is fine. Seems to be the consensus on upstream modules implementaiton too
 
-        RUN_MANTA_SOMATIC(cram_recalibrated_intervals_gz_tbi,
+        RUN_MANTA_TUMORONLY(cram_recalibrated_intervals_gz_tbi,
             fasta,
             fasta_fai,
             num_intervals,

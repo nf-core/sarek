@@ -75,7 +75,6 @@ workflow GERMLINE_VARIANT_CALLING {
         ch_versions = ch_versions.mix(RUN_FREEBAYES.out.versions)
     }
 
-
     // HAPLOTYPECALLER
     if (params.tools.contains('haplotypecaller')){
         RUN_HAPLOTYPECALLER(cram_recalibrated_intervals,
