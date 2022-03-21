@@ -1,9 +1,9 @@
-include { BGZIP as BGZIP_VC_HAPLOTYPECALLER         } from '../../modules/local/bgzip'
-include { CONCAT_VCF as CONCAT_HAPLOTYPECALLER      } from '../../modules/local/concat_vcf/main'
-include { GATK4_GENOTYPEGVCFS as GENOTYPEGVCFS      } from '../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
-include { GATK4_HAPLOTYPECALLER as HAPLOTYPECALLER  } from '../../modules/nf-core/modules/gatk4/haplotypecaller/main'
-include { GATK_JOINT_GERMLINE_VARIANT_CALLING       } from '../../subworkflows/nf-core/gatk4/joint_germline_variant_calling/main'
-include { TABIX_TABIX as TABIX_VC_HAPLOTYPECALLER   } from '../../modules/nf-core/modules/tabix/tabix/main'
+include { BGZIP as BGZIP_VC_HAPLOTYPECALLER         } from '../../../modules/local/bgzip'
+include { CONCAT_VCF as CONCAT_HAPLOTYPECALLER      } from '../../../modules/local/concat_vcf/main'
+include { GATK4_GENOTYPEGVCFS as GENOTYPEGVCFS      } from '../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
+include { GATK4_HAPLOTYPECALLER as HAPLOTYPECALLER  } from '../../../modules/nf-core/modules/gatk4/haplotypecaller/main'
+include { GATK_JOINT_GERMLINE_VARIANT_CALLING       } from '../../../subworkflows/nf-core/gatk4/joint_germline_variant_calling/main'
+include { TABIX_TABIX as TABIX_VC_HAPLOTYPECALLER   } from '../../../modules/nf-core/modules/tabix/tabix/main'
 
 workflow RUN_HAPLOTYPECALLER {
     take:

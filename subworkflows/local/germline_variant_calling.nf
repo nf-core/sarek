@@ -7,7 +7,7 @@ include { RUN_FREEBAYES                             } from './variantcalling/fre
 include { RUN_HAPLOTYPECALLER                       } from './variantcalling/haplotypecaller.nf'
 include { RUN_MANTA                                 } from './variantcalling/manta.nf'
 include { RUN_STRELKA                               } from './variantcalling/strelka.nf'
-include { RUN_TIDDIT                                } from './variantcalling/tiddit.nf'
+//include { RUN_TIDDIT                                } from './variantcalling/tiddit.nf'
 
 workflow GERMLINE_VARIANT_CALLING {
     take:

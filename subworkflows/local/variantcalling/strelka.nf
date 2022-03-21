@@ -1,8 +1,8 @@
-include { BGZIP as BGZIP_VC_STRELKA                 } from '../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_STRELKA_GENOME          } from '../../modules/local/bgzip'
-include { CONCAT_VCF as CONCAT_STRELKA              } from '../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_STRELKA_GENOME       } from '../../modules/local/concat_vcf/main'
-include { STRELKA_GERMLINE                          } from '../../modules/nf-core/modules/strelka/germline/main'
+include { BGZIP as BGZIP_VC_STRELKA                 } from '../../../modules/local/bgzip'
+include { BGZIP as BGZIP_VC_STRELKA_GENOME          } from '../../../modules/local/bgzip'
+include { CONCAT_VCF as CONCAT_STRELKA              } from '../../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_STRELKA_GENOME       } from '../../../modules/local/concat_vcf/main'
+include { STRELKA_GERMLINE                          } from '../../../modules/nf-core/modules/strelka/germline/main'
 
 workflow RUN_STRELKA {
     take:
@@ -65,6 +65,7 @@ workflow RUN_STRELKA {
         CONCAT_STRELKA.out.vcf,
         CONCAT_STRELKA_GENOME.out.vcf,
         strelka_genome_vcf.no_intervals,
+        strelka_vcf.no_intervals)
 
     ch_versions = ch_versions.mix(BGZIP_VC_STRELKA.out.versions)
     ch_versions = ch_versions.mix(CONCAT_STRELKA.out.versions)

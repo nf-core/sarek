@@ -1,7 +1,7 @@
-include { BGZIP as BGZIP_VC_FREEBAYES               } from '../../modules/local/bgzip'
-include { CONCAT_VCF as CONCAT_FREEBAYES            } from '../../modules/local/concat_vcf/main'
-include { FREEBAYES                                 } from '../../modules/nf-core/modules/freebayes/main'
-include { TABIX_TABIX as TABIX_VC_FREEBAYES         } from '../../modules/nf-core/modules/tabix/tabix/main'
+include { BGZIP as BGZIP_VC_FREEBAYES               } from '../../../modules/local/bgzip'
+include { CONCAT_VCF as CONCAT_FREEBAYES            } from '../../../modules/local/concat_vcf/main'
+include { FREEBAYES                                 } from '../../../modules/nf-core/modules/freebayes/main'
+include { TABIX_TABIX as TABIX_VC_FREEBAYES         } from '../../../modules/nf-core/modules/tabix/tabix/main'
 
 
 workflow RUN_FREEBAYES {
