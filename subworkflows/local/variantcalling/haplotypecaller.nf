@@ -14,6 +14,8 @@ workflow RUN_HAPLOTYPECALLER {
     dbsnp
     dbsnp_tbi
     num_intervals
+    intervals_bed_combine_gz
+    intervals_bed_combine_gz_tbi
 
     main:
 
@@ -115,4 +117,6 @@ workflow RUN_HAPLOTYPECALLER {
 
     emit:
     versions = ch_versions
+    genotype_gvcf
+    haplotypecaller_gvcf
 }

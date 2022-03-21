@@ -47,4 +47,5 @@ workflow RUN_FREEBAYES {
 
     emit:
     versions = ch_versions
+    freebayes_vcf
 }

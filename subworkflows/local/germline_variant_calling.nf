@@ -5,7 +5,7 @@
 include { RUN_DEEPVARIANT                           } from './variantcalling/deepvariant.nf'
 include { RUN_FREEBAYES                             } from './variantcalling/freebayes.nf'
 include { RUN_HAPLOTYPECALLER                       } from './variantcalling/haplotypecaller.nf'
-include { RUN_MANTA                                 } from './variantcalling/manta.nf'
+include { RUN_MANTA                                 } from './variantcalling/manta_germline.nf'
 include { RUN_STRELKA                               } from './variantcalling/strelka.nf'
 //include { RUN_TIDDIT                                } from './variantcalling/tiddit.nf'
 
@@ -27,6 +27,12 @@ workflow GERMLINE_VARIANT_CALLING {
     main:
 
     ch_versions = Channel.empty()
+    deepvariant          = Channel.empty()
+    freebayes_vcf          = Channel.empty()
+    haplotypecaller_gvcf          = Channel.empty()
+    genotype_gvcf          = Channel.empty()
+    manta_vcf            = Channel.empty()
+    strelka_vcf          = Channel.empty()
 
     // Remap channel with intervals
     cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
@@ -49,54 +55,78 @@ workflow GERMLINE_VARIANT_CALLING {
         }
 
     // DEEPVARIANT
-    RUN_DEEPVARIANT(cram_recalibrated_intervals, fasta, fasta_fai, intervals_bed_combine_gz, num_intervals)
+    if(params.tools.contains('deepvariant')){
+        RUN_DEEPVARIANT(cram_recalibrated_intervals, fasta, fasta_fai, intervals_bed_combine_gz, num_intervals)
 
+        deepvariant_vcf = RUN_DEEPVARIANT.out.deepvariant_vcf
+        ch_versions = ch_versions.mix(RUN_DEEPVARIANT.out.versions)
+
+    }
     // FREEBAYES
+    if (params.tools.contains('freebayes')){
     // Remap channel for Freebayes
-    cram_recalibrated_intervals_freebayes = cram_recalibrated_intervals
-        .map{ meta, cram, crai, intervals ->
-            [meta, cram, crai, [], [], intervals]
-        }
+        cram_recalibrated_intervals_freebayes = cram_recalibrated_intervals
+            .map{ meta, cram, crai, intervals ->
+                [meta, cram, crai, [], [], intervals]
+            }
 
-    RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, fasta, fasta_fai)
+        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, fasta, fasta_fai)
+        freebayes_vcf   = RUN_FREEBAYES.out.freebayes_vcf
+        ch_versions = ch_versions.mix(RUN_FREEBAYES.out.versions)
+    }
+
 
     // HAPLOTYPECALLER
-    RUN_HAPLOTYPECALLER(cram_recalibrated_intervals,
+    if (params.tools.contains('haplotypecaller')){
+        RUN_HAPLOTYPECALLER(cram_recalibrated_intervals,
                         fasta,
                         fasta_fai,
                         dict,
                         dbsnp,
                         dbsnp_tbi,
-                        num_intervals)
+                        num_intervals,
+                        intervals_bed_combine_gz,
+                        intervals_bed_combine_gz_tbi)
+        ch_versions = ch_versions.mix(RUN_HAPLOTYPECALLER.out.versions)
+        haplotypecaller_gvcf = RUN_HAPLOTYPECALLER.out.haplotypecaller_gvcf
+        genotype_gvcf   = RUN_HAPLOTYPECALLER.out.genotype_gvcf
+
+    }
 
     // MANTA
-    RUN_MANTA(cram_recalibrated_intervals_gz_tbi,
-        fasta,
-        fasta_fai,
-        num_intervals)
+    if (params.tools.contains('manta')){
+        RUN_MANTA(cram_recalibrated_intervals_gz_tbi,
+                fasta,
+                fasta_fai,
+                num_intervals,
+                intervals_bed_combine_gz)
+        ch_versions = ch_versions.mix(RUN_MANTA.out.versions)
+        manta_vcf   = RUN_MANTA.out.manta_vcf
+
+    }
 
     // STRELKA
-    RUN_STRELKA(cram_recalibrated_intervals_gz_tbi,
-        fasta,
-        fasta_fai,
-        num_intervals)
+    if (params.tools.contains('strelka')){
+        RUN_STRELKA(cram_recalibrated_intervals_gz_tbi,
+                    fasta,
+                    fasta_fai,
+                    num_intervals,
+                    intervals_bed_combine_gz)
+        ch_versions = ch_versions.mix(RUN_STRELKA.out.versions)
+        strelka_vcf = RUN_STRELKA.out.strelka_vcf
+
+    }
 
     //TIDDIT
     //TODO
 
-    ch_versions = ch_versions.mix(RUN_DEEPVARIANT.out.versions)
-    ch_versions = ch_versions.mix(RUN_FREEBAYES.out.versions)
-    ch_versions = ch_versions.mix(RUN_HAPLOTYPECALLER.out.versions)
-    ch_versions = ch_versions.mix(RUN_MANTA.out.versions)
-    ch_versions = ch_versions.mix(RUN_STRELKA.out.versions)
-
     emit:
     deepvariant_vcf = RUN_DEEPVARIANT.out.deepvariant_vcf
-    freebayes_vcf   = RUN_FREEBAYES.out.freebayes_vcf
-    haplotypecaller_gvcf = RUN_HAPLOTYPECALLER.out.haplotypecaller_gvcf
-    genotype_gvcf   = RUN_HAPLOTYPECALLER.out.genotype_gvcf
-    manta_vcf   = RUN_MANTA.out.manta_vcf
-    strelka_vcf = RUN_STRELKA.out.strelka_vcf
+    freebayes_vcf
+    haplotypecaller_gvcf
+    genotype_gvcf
+    manta_vcf
+    strelka_vcf
 
     versions = ch_versions
 }

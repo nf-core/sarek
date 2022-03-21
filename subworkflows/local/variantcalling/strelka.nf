@@ -10,6 +10,7 @@ workflow RUN_STRELKA {
     fasta
     fasta_fai
     num_intervals
+    intervals_bed_combine_gz
 
     main:
 
