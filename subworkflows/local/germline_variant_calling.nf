@@ -26,11 +26,11 @@ workflow GERMLINE_VARIANT_CALLING {
 
     main:
 
-    ch_versions = Channel.empty()
-    deepvariant          = Channel.empty()
-    freebayes_vcf          = Channel.empty()
-    haplotypecaller_gvcf          = Channel.empty()
-    genotype_gvcf          = Channel.empty()
+    ch_versions          = Channel.empty()
+    deepvariant_vcf      = Channel.empty()
+    freebayes_vcf        = Channel.empty()
+    haplotypecaller_gvcf = Channel.empty()
+    genotype_gvcf        = Channel.empty()
     manta_vcf            = Channel.empty()
     strelka_vcf          = Channel.empty()
 
@@ -121,7 +121,7 @@ workflow GERMLINE_VARIANT_CALLING {
     //TODO
 
     emit:
-    deepvariant_vcf = RUN_DEEPVARIANT.out.deepvariant_vcf
+    deepvariant_vcf
     freebayes_vcf
     haplotypecaller_gvcf
     genotype_gvcf
