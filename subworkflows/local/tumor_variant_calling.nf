@@ -66,31 +66,30 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
             }
 
         FREEBAYES(cram_recalibrated_intervals_freebayes, fasta, fasta_fai)
-        freebayes_vcf   = RUN_FREEBAYES.out.freebayes_vcf
-        ch_versions = ch_versions.mix(RUN_FREEBAYES.out.versions)
+
+        freebayes_vcf = FREEBAYES.out.freebayes_vcf
+        ch_versions   = ch_versions.mix(FREEBAYES.out.versions)
     }
 
     if (tools.contains('mutect2')) {
 
         which_norm = []
         cram_recalibrated_intervals.map{ meta, cram, crai, intervals -> [meta, cram, crai, intervals, which_norm]}.set{cram_recalibrated_mutect2}
-        GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING(
-            cram_recalibrated_mutect2,
-            fasta,
-            fasta_fai,
-            dict,
-            germline_resource,
-            germline_resource_tbi,
-            panel_of_normals,
-            panel_of_normals_tbi,
-            num_intervals,
-            no_intervals,
-            intervals_bed_combine_gz
-        )
-
-        ch_versions = ch_versions.mix(GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.versions)
+        GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING(cram_recalibrated_mutect2,
+                                                fasta,
+                                                fasta_fai,
+                                                dict,
+                                                germline_resource,
+                                                germline_resource_tbi,
+                                                panel_of_normals,
+                                                panel_of_normals_tbi,
+                                                num_intervals,
+                                                no_intervals,
+                                                intervals_bed_combine_gz)
 
         //mutect2_vcf_tbi = mutect2_vcf_tbi.mix(GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.mutect2_vcf_gz_tbi)
+        ch_versions = ch_versions.mix(GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.versions)
+
     }
 
     if (tools.contains('manta')){
@@ -102,19 +101,19 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
                         num_intervals,
                         intervals_bed_combine_gz)
 
-        manta_vcf = manta_vcf.mix(manta_candidate_small_indels_vcf, manta_candidate_sv_vcf, manta_tumor_sv_vcf)
-        ch_versions = ch_versions.mix(RUN_MANTA.out.versions)
+        manta_vcf   = manta_vcf.mix(manta_candidate_small_indels_vcf, manta_candidate_sv_vcf, manta_tumor_sv_vcf)
+        ch_versions = ch_versions.mix(MANTA_TUMORONLY.out.versions)
     }
 
     if (tools.contains('strelka')) {
-        RUN_STRELKA(cram_recalibrated_intervals_gz_tbi,
-                    fasta,
-                    fasta_fai,
-                    num_intervals,
-                    intervals_bed_combine_gz)
-        ch_versions = ch_versions.mix(RUN_STRELKA.out.versions)
-        strelka_vcf = RUN_STRELKA.out.strelka_vcf
+        STRELKA(cram_recalibrated_intervals_gz_tbi,
+                fasta,
+                fasta_fai,
+                num_intervals,
+                intervals_bed_combine_gz)
 
+        strelka_vcf = STRELKA.out.strelka_vcf
+        ch_versions = ch_versions.mix(RUN_STRELKA.out.versions)
     }
 
 

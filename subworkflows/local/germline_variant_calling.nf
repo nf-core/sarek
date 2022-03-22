@@ -59,8 +59,9 @@ workflow GERMLINE_VARIANT_CALLING {
     // DEEPVARIANT
     if(params.tools.contains('deepvariant')){
         DEEPVARIANT(cram_recalibrated_intervals, fasta, fasta_fai, intervals_bed_combine_gz, num_intervals)
-        deepvariant_vcf = RUN_DEEPVARIANT.out.deepvariant_vcf
-        ch_versions = ch_versions.mix(RUN_DEEPVARIANT.out.versions)
+
+        deepvariant_vcf = DEEPVARIANT.out.deepvariant_vcf
+        ch_versions     = ch_versions.mix(DEEPVARIANT.out.versions)
     }
 
     // FREEBAYES
@@ -71,8 +72,9 @@ workflow GERMLINE_VARIANT_CALLING {
                 [meta, cram, crai, [], [], intervals]
             }
         FREEBAYES(cram_recalibrated_intervals_freebayes, fasta, fasta_fai)
-        freebayes_vcf   = RUN_FREEBAYES.out.freebayes_vcf
-        ch_versions = ch_versions.mix(RUN_FREEBAYES.out.versions)
+
+        freebayes_vcf   = FREEBAYES.out.freebayes_vcf
+        ch_versions     = ch_versions.mix(FREEBAYES.out.versions)
     }
 
     // HAPLOTYPECALLER
@@ -86,9 +88,10 @@ workflow GERMLINE_VARIANT_CALLING {
                         num_intervals,
                         intervals_bed_combine_gz,
                         intervals_bed_combine_gz_tbi)
-        ch_versions = ch_versions.mix(RUN_HAPLOTYPECALLER.out.versions)
-        haplotypecaller_gvcf = RUN_HAPLOTYPECALLER.out.haplotypecaller_gvcf
-        genotype_gvcf   = RUN_HAPLOTYPECALLER.out.genotype_gvcf
+
+        haplotypecaller_gvcf = HAPLOTYPECALLER.out.haplotypecaller_gvcf
+        genotype_gvcf        = HAPLOTYPECALLER.out.genotype_gvcf
+        ch_versions          = ch_versions.mix(HAPLOTYPECALLER.out.versions)
 
     }
 
@@ -99,9 +102,9 @@ workflow GERMLINE_VARIANT_CALLING {
                         fasta_fai,
                         intervals_bed_combine_gz,
                         num_intervals)
-        ch_versions = ch_versions.mix(RUN_MANTA.out.versions)
-        manta_vcf   = RUN_MANTA.out.manta_vcf
 
+        manta_vcf   = MANTA_GERMLINE.out.manta_vcf
+        ch_versions = ch_versions.mix(MANTA_GERMLINE.out.versions)
     }
 
     // STRELKA
@@ -111,9 +114,9 @@ workflow GERMLINE_VARIANT_CALLING {
                 fasta_fai,
                 intervals_bed_combine_gz,
                 num_intervals)
-        ch_versions = ch_versions.mix(RUN_STRELKA.out.versions)
-        strelka_vcf = RUN_STRELKA.out.strelka_vcf
 
+        strelka_vcf = STRELKA.out.strelka_vcf
+        ch_versions = ch_versions.mix(STRELKA.out.versions)
     }
 
     //TIDDIT
