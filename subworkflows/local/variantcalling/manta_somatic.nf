@@ -22,7 +22,8 @@ workflow RUN_MANTA_SOMATIC {
 
     MANTA_SOMATIC(cram, fasta, fasta_fai)
 
-    MANTA_SOMATIC.out.candidate_small_indels_vcf..branch{
+    // Figure out if using intervals or no_intervals
+    MANTA_SOMATIC.out.candidate_small_indels_vcf.branch{
             intervals:    num_intervals > 1
             no_intervals: num_intervals == 1
         }.set{manta_candidate_small_indels_vcf}
@@ -43,7 +44,6 @@ workflow RUN_MANTA_SOMATIC {
         }.set{manta_somatic_sv_vcf}
 
     //Only when using intervals
-
     BGZIP_VC_MANTA_SV(manta_candidate_small_indels_vcf.intervals)
 
     CONCAT_MANTA_SV(
