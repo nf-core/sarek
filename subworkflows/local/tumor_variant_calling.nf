@@ -97,8 +97,8 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         RUN_MANTA_TUMORONLY(cram_recalibrated_intervals_gz_tbi,
                             fasta,
                             fasta_fai,
-                            num_intervals,
-                            intervals_bed_combine_gz)
+                            intervals_bed_combine_gz,
+                            num_intervals)
 
         manta_vcf   = RUN_MANTA_TUMORONLY.out.manta_vcf
         ch_versions = ch_versions.mix(RUN_MANTA_TUMORONLY.out.versions)

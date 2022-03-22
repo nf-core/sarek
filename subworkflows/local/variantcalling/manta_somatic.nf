@@ -28,17 +28,17 @@ workflow RUN_MANTA_SOMATIC {
             no_intervals: num_intervals == 1
         }.set{manta_candidate_small_indels_vcf}
 
-    MANTA_SOMATIC.out.candidate_sv_vcf..branch{
+    MANTA_SOMATIC.out.candidate_sv_vcf.branch{
             intervals:    num_intervals > 1
             no_intervals: num_intervals == 1
         }.set{manta_candidate_sv_vcf}
 
-    MANTA_SOMATIC.out.diploid_sv_vcf..branch{
+    MANTA_SOMATIC.out.diploid_sv_vcf.branch{
             intervals:    num_intervals > 1
             no_intervals: num_intervals == 1
         }.set{manta_diploid_sv_vcf}
 
-    MANTA_SOMATIC.out.somatic_sv_vcf..branch{
+    MANTA_SOMATIC.out.somatic_sv_vcf.branch{
             intervals:    num_intervals > 1
             no_intervals: num_intervals == 1
         }.set{manta_somatic_sv_vcf}
@@ -98,7 +98,7 @@ workflow RUN_MANTA_SOMATIC {
         manta_candidate_small_indels_vcf.no_intervals,
         manta_candidate_sv_vcf.no_intervals,
         manta_diploid_sv_vcf.no_intervals,
-        manta_somatic_sv_vc.no_intervalsf
+        manta_somatic_sv_vcf.no_intervals
     )
 
     ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SV.out.versions)
