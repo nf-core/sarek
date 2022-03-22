@@ -64,7 +64,9 @@ workflow RUN_STRELKA_SINGLE {
         strelka_vcf.no_intervals)
 
     ch_versions = ch_versions.mix(BGZIP_VC_STRELKA.out.versions)
+    ch_versions = ch_versions.mix(BGZIP_VC_STRELKA_GENOME.out.versions)
     ch_versions = ch_versions.mix(CONCAT_STRELKA.out.versions)
+    ch_versions = ch_versions.mix(CONCAT_STRELKA_GENOME.out.versions)
     ch_versions = ch_versions.mix(STRELKA_GERMLINE.out.versions)
 
     emit:

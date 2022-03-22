@@ -53,7 +53,9 @@ workflow RUN_STRELKA_SOMATIC {
             intervals_bed_gz)
 
     ch_versions = ch_versions.mix(BGZIP_VC_STRELKA_SNVS.out.versions)
+    ch_versions = ch_versions.mix(BGZIP_VC_STRELKA_INDELS.out.versions)
     ch_versions = ch_versions.mix(CONCAT_STRELKA_SNVS.out.versions)
+    ch_versions = ch_versions.mix(CONCAT_STRELKA_INDELS.out.versions)
     ch_versions = ch_versions.mix(STRELKA_SOMATIC.out.versions)
 
     strelka_vcf = Channel.empty().mix(
