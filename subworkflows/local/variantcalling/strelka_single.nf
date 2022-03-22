@@ -1,12 +1,12 @@
 include { BGZIP as BGZIP_VC_STRELKA                 } from '../../../modules/local/bgzip'
 include { BGZIP as BGZIP_VC_STRELKA_GENOME          } from '../../../modules/local/bgzip'
-include { CONCAT_VCF as CONCAT_STRELKA              } from '../../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_STRELKA_GENOME       } from '../../../modules/local/concat_vcf/main'
-include { STRELKA_GERMLINE                          } from '../../../modules/nf-core/modules/strelka/germline/main'
+include { CONCAT_VCF as CONCAT_STRELKA        } from '../../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_STRELKA_GENOME } from '../../../modules/local/concat_vcf/main'
+include { STRELKA_GERMLINE                    } from '../../../modules/nf-core/modules/strelka/germline/main'
 
 // TODO: Research if splitting by intervals is ok, we pretend for now it is fine.
 // Seems to be the consensus on upstream modules implementation too
-workflow STRELKA_SINGLE {
+workflow RUN_STRELKA_SINGLE {
     take:
     cram                     // channel: [mandatory] [meta, cram, crai, interval.bed.gz, interval.bed.gz.tbi]
     fasta                    // channel: [mandatory]
@@ -34,7 +34,7 @@ workflow STRELKA_SINGLE {
         }.set{strelka_genome_vcf}
 
     // Only when using intervals
-    BGZIP_VC_STRELKA(STRELKA_GERMLINE.out.vcf)
+    BGZIP_VC_STRELKA(strelka_vcf.intervals)
 
     CONCAT_STRELKA(
         BGZIP_VC_STRELKA.out.vcf
@@ -46,7 +46,7 @@ workflow STRELKA_SINGLE {
         fasta_fai,
         intervals_bed_gz)
 
-    BGZIP_VC_STRELKA_GENOME(STRELKA_GERMLINE.out.genome_vcf)
+    BGZIP_VC_STRELKA_GENOME(strelka_genome_vcf.intervals)
 
     CONCAT_STRELKA_GENOME(
         BGZIP_VC_STRELKA_GENOME.out.vcf

@@ -1,15 +1,11 @@
 //
 // PAIRED VARIANT CALLING
 //
-include { BGZIP as BGZIP_VC_STRELKA_INDELS          } from '../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_STRELKA_SNVS            } from '../../modules/local/bgzip'
-include { CONCAT_VCF as CONCAT_STRELKA_INDELS       } from '../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_STRELKA_SNVS         } from '../../modules/local/concat_vcf/main'
 include { GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk4/tumor_normal_somatic_variant_calling/main'
 include { MSISENSORPRO_MSI_SOMATIC                  } from '../../modules/nf-core/modules/msisensorpro/msi_somatic/main'
-include { STRELKA_SOMATIC                           } from '../../modules/nf-core/modules/strelka/somatic/main'
 
-include { RUN_MANTA_SOMATIC                         } from './variantcalling/manta_somatic.nf'
+include { RUN_MANTA_SOMATIC                      } from './variantcalling/manta_somatic.nf'
+include { RUN_STRELKA_SOMATIC                    } from './variantcalling/strelka_somatic.nf'
 
 workflow PAIR_VARIANT_CALLING {
     take:
@@ -73,73 +69,38 @@ workflow PAIR_VARIANT_CALLING {
     //                     intervals_bed_combine_gz)
     // }
 
-    // cram_pair_strelka = Channel.empty()
-    // if (tools.contains('strelka') && tools.contains('manta')) {
-    //     cram_pair_strelka = cram_pair.join(manta_somatic_sv_vcf).combine(intervals_bed_gz_tbi)
-    //         .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, bed, tbi ->
-    //             normal_id = meta.normal_id
-    //             tumor_id = meta.tumor_id
+    cram_pair_strelka = Channel.empty()
+    if (tools.contains('strelka') && tools.contains('manta')) {
+        cram_pair_strelka = cram_pair.join(manta_somatic_sv_vcf).combine(intervals_bed_gz_tbi)
+            .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, bed, tbi ->
+                normal_id = meta.normal_id
+                tumor_id = meta.tumor_id
 
-    //             new_bed = bed.simpleName != "no_intervals" ? bed : []
-    //             new_tbi = tbi.simpleName != "no_intervals" ? tbi : []
-    //             id = bed.simpleName != "no_intervals" ? tumor_id + "_vs_" + normal_id + "_" + bed.simpleName : tumor_id + "_vs_" + normal_id
-    //             new_meta = [ id: id, normal_id: meta.normal_id, tumor_id: meta.tumor_id, gender: meta.gender, patient: meta.patient]
-    //             [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, new_bed, new_tbi]
-    //         }
-    // } else if (tools.contains('strelka') && !tools.contains('manta')) {
-    //     cram_pair_strelka = cram_pair.combine(intervals_bed_gz_tbi)
-    //         .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed, tbi ->
-    //             normal_id = meta.normal_id
-    //             tumor_id = meta.tumor_id
+                new_bed = bed.simpleName != "no_intervals" ? bed : []
+                new_tbi = tbi.simpleName != "no_intervals" ? tbi : []
+                id = bed.simpleName != "no_intervals" ? tumor_id + "_vs_" + normal_id + "_" + bed.simpleName : tumor_id + "_vs_" + normal_id
+                new_meta = [ id: id, normal_id: meta.normal_id, tumor_id: meta.tumor_id, gender: meta.gender, patient: meta.patient]
+                [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, new_bed, new_tbi]
+            }
+    } else if (tools.contains('strelka') && !tools.contains('manta')) {
+        cram_pair_strelka = cram_pair.combine(intervals_bed_gz_tbi)
+            .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed, tbi ->
+                normal_id = meta.normal_id
+                tumor_id = meta.tumor_id
 
-    //             new_bed = bed.simpleName != "no_intervals" ? bed : []
-    //             new_tbi = tbi.simpleName != "no_intervals" ? tbi : []
-    //             id = bed.simpleName != "no_intervals" ? tumor_id + "_vs_" + normal_id + "_" + bed.simpleName : tumor_id + "_vs_" + normal_id
-    //             new_meta = [ id: id, normal_id: meta.normal_id, tumor_id: meta.tumor_id, gender: meta.gender, patient: meta.patient]
+                new_bed = bed.simpleName != "no_intervals" ? bed : []
+                new_tbi = tbi.simpleName != "no_intervals" ? tbi : []
+                id = bed.simpleName != "no_intervals" ? tumor_id + "_vs_" + normal_id + "_" + bed.simpleName : tumor_id + "_vs_" + normal_id
+                new_meta = [ id: id, normal_id: meta.normal_id, tumor_id: meta.tumor_id, gender: meta.gender, patient: meta.patient]
 
-    //             [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, [], [], new_bed, new_tbi]
-    //         }
-    // }
+                [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, [], [], new_bed, new_tbi]
+            }
+    }
 
-    // if (tools.contains('strelka')) {
+    if (tools.contains('strelka')) {
+        RUN_STRELKA_SOMATIC(cram_pair_strelka, fasta, fasta_fai, intervals_bed_combine_gz, num_intervals)
 
-    //     STRELKA_SOMATIC(
-    //         cram_pair_strelka,
-    //         fasta,
-    //         fasta_fai
-    //         )
-
-    //     if (no_intervals) {
-    //         strelka_snvs_vcf_gz = STRELKA_SOMATIC.out.vcf_snvs
-    //         strelka_indels_vcf_gz = STRELKA_SOMATIC.out.vcf_indels
-    //     } else {
-    //         BGZIP_VC_STRELKA_SNVS(STRELKA_SOMATIC.out.vcf_snvs)
-    //         BGZIP_VC_STRELKA_INDELS(STRELKA_SOMATIC.out.vcf_indels)
-
-    //         strelka_snvs_vcf_to_concat = BGZIP_VC_STRELKA_SNVS.out.vcf.map{ meta, vcf ->
-    //             new_meta = meta.clone()
-    //             new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
-    //             [new_meta, vcf]
-    //         }.groupTuple(size: num_intervals)
-
-    //         strelka_indels_vcf_to_concat = BGZIP_VC_STRELKA_INDELS.out.vcf.map{ meta, vcf ->
-    //             new_meta = meta.clone()
-    //             new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
-    //             [new_meta, vcf]
-    //         }.groupTuple(size: num_intervals)
-
-    //         CONCAT_STRELKA_SNVS(strelka_snvs_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
-    //         CONCAT_STRELKA_INDELS(strelka_indels_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
-
-    //         strelka_snvs_vcf_gz = CONCAT_STRELKA_SNVS.out.vcf
-    //         strelka_indels_vcf_gz = CONCAT_STRELKA_INDELS.out.vcf
-
-    //         ch_versions = ch_versions.mix(BGZIP_VC_STRELKA_SNVS.out.versions)
-    //         ch_versions = ch_versions.mix(CONCAT_STRELKA_SNVS.out.versions)
-    //     }
-
-    //     strelka_vcf = strelka_vcf.mix(strelka_snvs_vcf_gz,strelka_indels_vcf_gz)
-    // }
+    }
 
     if (tools.contains('msisensorpro')) {
 

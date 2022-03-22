@@ -8,7 +8,7 @@ include { MANTA_TUMORONLY                         } from '../../../modules/local
 
 // TODO: Research if splitting by intervals is ok, we pretend for now it is fine.
 // Seems to be the consensus on upstream modules implementation too
-workflow MANTA_TUMORONLY {
+workflow RUN_MANTA_TUMORONLY {
     take:
     cram                     // channel: [mandatory] [meta, cram, crai, interval.bed.gz, interval.bed.gz.tbi]
     fasta                    // channel: [mandatory]
@@ -42,7 +42,7 @@ workflow MANTA_TUMORONLY {
         }.set{manta_tumor_sv_vcf}
 
     //Only when using intervals
-    BGZIP_VC_MANTA_SMALL_INDELS(manta_small_indels_vcf)
+    BGZIP_VC_MANTA_SMALL_INDELS(manta_small_indels_vcf.intervals)
 
     CONCAT_MANTA_SMALL_INDELS(
         BGZIP_VC_MANTA_SMALL_INDELS.out.vcf.map{ meta, vcf ->
@@ -53,7 +53,7 @@ workflow MANTA_TUMORONLY {
         fasta_fai,
         intervals_bed_gz)
 
-    BGZIP_VC_MANTA_SV(manta_candidate_sv_vcf)
+    BGZIP_VC_MANTA_SV(manta_candidate_sv_vcf.intervals)
 
     CONCAT_MANTA_SV(
         BGZIP_VC_MANTA_SV.out.vcf.map{ meta, vcf ->
@@ -64,7 +64,7 @@ workflow MANTA_TUMORONLY {
         fasta_fai,
         intervals_bed_gz)
 
-    BGZIP_VC_MANTA_TUMOR(manta_tumor_sv_vcf)
+    BGZIP_VC_MANTA_TUMOR(manta_tumor_sv_vcf.intervals)
 
     CONCAT_MANTA_TUMOR(
         BGZIP_VC_MANTA_TUMOR.out.vcf.map{ meta, vcf ->

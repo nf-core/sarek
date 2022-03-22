@@ -8,7 +8,7 @@ include { MANTA_GERMLINE                            } from '../../../modules/loc
 
 // TODO: Research if splitting by intervals is ok, we pretend for now it is fine.
 // Seems to be the consensus on upstream modules implementation too
-workflow MANTA_GERMLINE {
+workflow RUN_MANTA_GERMLINE {
     take:
     cram                     // channel: [mandatory] [meta, cram, crai, interval.bed.gz, interval.bed.gz.tbi]
     fasta                    // channel: [mandatory]
@@ -42,19 +42,7 @@ workflow MANTA_GERMLINE {
         }.set{manta_diploid_sv_vcf}
 
     // Only when using intervals
-    BGZIP_VC_MANTA_DIPLOID(MANTA_GERMLINE.out.diploid_sv_vcf)
-
-    CONCAT_MANTA_DIPLOID(
-        BGZIP_VC_MANTA_DIPLOID.out.vcf
-            .map{ meta, vcf ->
-                new_meta = meta.clone()
-                new_meta.id = new_meta.sample
-                [new_meta, vcf]
-            }.groupTuple(size: num_intervals),
-        fasta_fai,
-        intervals_bed_gz)
-
-    BGZIP_VC_MANTA_SMALL_INDELS(MANTA_GERMLINE.out.candidate_small_indels_vcf)
+    BGZIP_VC_MANTA_SMALL_INDELS(manta_small_indels_vcf.intervals)
 
     CONCAT_MANTA_SMALL_INDELS(
         BGZIP_VC_MANTA_SMALL_INDELS.out.vcf
@@ -66,10 +54,22 @@ workflow MANTA_GERMLINE {
         fasta_fai,
         intervals_bed_gz)
 
-    BGZIP_VC_MANTA_SV(MANTA_GERMLINE.out.candidate_sv_vcf)
+    BGZIP_VC_MANTA_SV(manta_sv_vcf.intervals)
 
     CONCAT_MANTA_SV(
         BGZIP_VC_MANTA_SV.out.vcf
+            .map{ meta, vcf ->
+                new_meta = meta.clone()
+                new_meta.id = new_meta.sample
+                [new_meta, vcf]
+            }.groupTuple(size: num_intervals),
+        fasta_fai,
+        intervals_bed_gz)
+
+    BGZIP_VC_MANTA_DIPLOID(manta_diploid_sv_vcf.intervals)
+
+    CONCAT_MANTA_DIPLOID(
+        BGZIP_VC_MANTA_DIPLOID.out.vcf
             .map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample

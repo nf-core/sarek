@@ -3,10 +3,10 @@
 // Should be only run on patients without normal sample
 //
 
-include { FREEBAYES                               } from './variantcalling/freebayes.nf'
+include { RUN_FREEBAYES                               } from './variantcalling/freebayes.nf'
 include { GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk4/tumor_only_somatic_variant_calling/main'
-include { MANTA_TUMORONLY                         } from './variantcalling/manta_tumoronly.nf'
-include { STRELKA_SINGLE                          } from './variantcalling/strelka_single.nf'
+include { RUN_MANTA_TUMORONLY                         } from './variantcalling/manta_tumoronly.nf'
+include { RUN_STRELKA_SINGLE                          } from './variantcalling/strelka_single.nf'
 
 workflow TUMOR_ONLY_VARIANT_CALLING {
     take:
@@ -64,10 +64,10 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
                 [meta, cram, crai, [], [], intervals]
             }
 
-        FREEBAYES(cram_recalibrated_intervals_freebayes, fasta, fasta_fai)
+        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, fasta, fasta_fai)
 
-        freebayes_vcf = FREEBAYES.out.freebayes_vcf
-        ch_versions   = ch_versions.mix(FREEBAYES.out.versions)
+        freebayes_vcf = RUN_FREEBAYES.out.freebayes_vcf
+        ch_versions   = ch_versions.mix(RUN_FREEBAYES.out.versions)
     }
 
     if (tools.contains('mutect2')) {
@@ -94,25 +94,25 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
     if (tools.contains('manta')){
         //TODO: Research if splitting by intervals is ok, we pretend for now it is fine. Seems to be the consensus on upstream modules implementaiton too
 
-        MANTA_TUMORONLY(cram_recalibrated_intervals_gz_tbi,
+        RUN_MANTA_TUMORONLY(cram_recalibrated_intervals_gz_tbi,
                         fasta,
                         fasta_fai,
                         num_intervals,
                         intervals_bed_combine_gz)
 
-        manta_vcf   = manta_vcf.mix(manta_candidate_small_indels_vcf, manta_candidate_sv_vcf, manta_tumor_sv_vcf)
-        ch_versions = ch_versions.mix(MANTA_TUMORONLY.out.versions)
+        manta_vcf   = RUN_MANTA_TUMORONLY.out.manta_vcf
+        ch_versions = ch_versions.mix(RUN_MANTA_TUMORONLY.out.versions)
     }
 
     if (tools.contains('strelka')) {
-        STRELKA_SINGLE(cram_recalibrated_intervals_gz_tbi,
+        RUN_STRELKA_SINGLE(cram_recalibrated_intervals_gz_tbi,
                         fasta,
                         fasta_fai,
                         intervals_bed_combine_gz,
                         num_intervals)
 
-        strelka_vcf = STRELKA_SINGLE.out.strelka_vcf
-        ch_versions = ch_versions.mix(STRELKA_SINGLE.out.versions)
+        strelka_vcf = RUN_STRELKA_SINGLE.out.strelka_vcf
+        ch_versions = ch_versions.mix(RUN_STRELKA_SINGLE.out.versions)
     }
 
 

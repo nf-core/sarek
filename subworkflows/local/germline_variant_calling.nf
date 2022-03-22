@@ -2,11 +2,11 @@
 // GERMLINE VARIANT CALLING
 //
 
-include { DEEPVARIANT     } from './variantcalling/deepvariant.nf'
-include { FREEBAYES       } from './variantcalling/freebayes.nf'
-include { HAPLOTYPECALLER } from './variantcalling/haplotypecaller.nf'
-include { MANTA_GERMLINE  } from './variantcalling/manta_germline.nf'
-include { STRELKA_SINGLE  } from './variantcalling/strelka_single.nf'
+include { RUN_DEEPVARIANT     } from './variantcalling/deepvariant.nf'
+include { RUN_FREEBAYES       } from './variantcalling/freebayes.nf'
+include { RUN_HAPLOTYPECALLER } from './variantcalling/haplotypecaller.nf'
+include { RUN_MANTA_GERMLINE  } from './variantcalling/manta_germline.nf'
+include { RUN_STRELKA_SINGLE  } from './variantcalling/strelka_single.nf'
 //include { TIDDIT          } from './variantcalling/tiddit.nf'
 
 workflow GERMLINE_VARIANT_CALLING {
@@ -58,10 +58,10 @@ workflow GERMLINE_VARIANT_CALLING {
 
     // DEEPVARIANT
     if(params.tools.contains('deepvariant')){
-        DEEPVARIANT(cram_recalibrated_intervals, fasta, fasta_fai, intervals_bed_combine_gz, num_intervals)
+        RUN_DEEPVARIANT(cram_recalibrated_intervals, fasta, fasta_fai, intervals_bed_combine_gz, num_intervals)
 
-        deepvariant_vcf = DEEPVARIANT.out.deepvariant_vcf
-        ch_versions     = ch_versions.mix(DEEPVARIANT.out.versions)
+        deepvariant_vcf = RUN_DEEPVARIANT.out.deepvariant_vcf
+        ch_versions     = ch_versions.mix(RUN_DEEPVARIANT.out.versions)
     }
 
     // FREEBAYES
@@ -71,15 +71,15 @@ workflow GERMLINE_VARIANT_CALLING {
             .map{ meta, cram, crai, intervals ->
                 [meta, cram, crai, [], [], intervals]
             }
-        FREEBAYES(cram_recalibrated_intervals_freebayes, fasta, fasta_fai)
+        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, fasta, fasta_fai)
 
-        freebayes_vcf   = FREEBAYES.out.freebayes_vcf
-        ch_versions     = ch_versions.mix(FREEBAYES.out.versions)
+        freebayes_vcf   = RUN_FREEBAYES.out.freebayes_vcf
+        ch_versions     = ch_versions.mix(RUN_FREEBAYES.out.versions)
     }
 
     // HAPLOTYPECALLER
     if (params.tools.contains('haplotypecaller')){
-        HAPLOTYPECALLER(cram_recalibrated_intervals,
+        RUN_HAPLOTYPECALLER(cram_recalibrated_intervals,
                         fasta,
                         fasta_fai,
                         dict,
@@ -89,34 +89,34 @@ workflow GERMLINE_VARIANT_CALLING {
                         intervals_bed_combine_gz,
                         intervals_bed_combine_gz_tbi)
 
-        haplotypecaller_gvcf = HAPLOTYPECALLER.out.haplotypecaller_gvcf
-        genotype_gvcf        = HAPLOTYPECALLER.out.genotype_gvcf
-        ch_versions          = ch_versions.mix(HAPLOTYPECALLER.out.versions)
+        haplotypecaller_gvcf = RUN_HAPLOTYPECALLER.out.haplotypecaller_gvcf
+        genotype_gvcf        = RUN_HAPLOTYPECALLER.out.genotype_gvcf
+        ch_versions          = ch_versions.mix(RUN_HAPLOTYPECALLER.out.versions)
 
     }
 
     // MANTA
     if (params.tools.contains('manta')){
-        MANTA_GERMLINE (cram_recalibrated_intervals_gz_tbi,
+        RUN_MANTA_GERMLINE (cram_recalibrated_intervals_gz_tbi,
                         fasta,
                         fasta_fai,
                         intervals_bed_combine_gz,
                         num_intervals)
 
-        manta_vcf   = MANTA_GERMLINE.out.manta_vcf
-        ch_versions = ch_versions.mix(MANTA_GERMLINE.out.versions)
+        manta_vcf   = RUN_MANTA_GERMLINE.out.manta_vcf
+        ch_versions = ch_versions.mix(RUN_MANTA_GERMLINE.out.versions)
     }
 
     // STRELKA
     if (params.tools.contains('strelka')){
-        STRELKA_SINGLE(cram_recalibrated_intervals_gz_tbi,
+        RUN_STRELKA_SINGLE(cram_recalibrated_intervals_gz_tbi,
                 fasta,
                 fasta_fai,
                 intervals_bed_combine_gz,
                 num_intervals)
 
-        strelka_vcf = STRELKA_SINGLE.out.strelka_vcf
-        ch_versions = ch_versions.mix(STRELKA_SINGLE.out.versions)
+        strelka_vcf = RUN_STRELKA_SINGLE.out.strelka_vcf
+        ch_versions = ch_versions.mix(RUN_STRELKA_SINGLE.out.versions)
     }
 
     //TIDDIT
