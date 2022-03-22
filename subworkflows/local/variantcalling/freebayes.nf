@@ -3,19 +3,20 @@ include { CONCAT_VCF as CONCAT_FREEBAYES            } from '../../../modules/loc
 include { FREEBAYES                                 } from '../../../modules/nf-core/modules/freebayes/main'
 include { TABIX_TABIX as TABIX_VC_FREEBAYES         } from '../../../modules/nf-core/modules/tabix/tabix/main'
 
-
 workflow RUN_FREEBAYES {
     take:
-    cram_recalibrated_intervals_freebayes
-    fasta
-    fasta_fai
+    cram                     // channel: [mandatory] [meta, cram, crai, [], [], interval]
+    fasta                    // channel: [mandatory]
+    fasta_fai                // channel: [mandatory]
+    intervals_bed_gz         // channel: [optional]  Contains a bed.gz file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
+    num_intervals            //     val: [optional]  Number of used intervals, mandatory when intervals are provided.
 
     main:
 
     ch_versions = Channel.empty()
 
     FREEBAYES(
-        cram_recalibrated_intervals_freebayes,
+        cram,
         fasta,
         fasta_fai,
         [], [], [])
@@ -34,8 +35,9 @@ workflow RUN_FREEBAYES {
                 [new_meta, vcf]
             }.groupTuple(size: num_intervals),
         fasta_fai,
-        intervals_bed_combine_gz)
+        intervals_bed_gz)
 
+    // Mix output channels for "no intervals" and "with intervals" results
     freebayes_vcf = Channel.empty().mix(
         CONCAT_FREEBAYES.out.vcf,
         FREEBAYES.out.vcf.join(TABIX_VC_FREEBAYES.out.tbi))
@@ -46,6 +48,6 @@ workflow RUN_FREEBAYES {
     ch_versions = ch_versions.mix(TABIX_VC_FREEBAYES.out.versions)
 
     emit:
-    versions = ch_versions
     freebayes_vcf
+    versions = ch_versions
 }

@@ -20,13 +20,15 @@ workflow GERMLINE_VARIANT_CALLING {
         intervals                    // channel: [mandatory] intervals/target regions
         intervals_bed_gz_tbi         // channel: [mandatory] intervals/target regions index zipped and indexed
         intervals_bed_combine_gz_tbi // channel: [mandatory] intervals/target regions index zipped and indexed in one file
-        intervals_bed_combine_gz     // channel: [mandatory] intervals/target regions index zipped and indexed in one file
+        intervals_bed_combine_gz     // channel: [mandatory] intervals/target regions index zipped in one file
         num_intervals                // val: number of intervals that are used to parallelize exection, either based on capture kit or GATK recommended for WGS
         // joint_germline               // val: true/false on whether to run joint_germline calling, only works in combination with haplotypecaller at the moment
 
     main:
 
     ch_versions          = Channel.empty()
+
+    //TODO: Temporary until the if's can be removed and everything can be handeled with "when" in the modules.config
     deepvariant_vcf      = Channel.empty()
     freebayes_vcf        = Channel.empty()
     haplotypecaller_gvcf = Channel.empty()
@@ -57,19 +59,17 @@ workflow GERMLINE_VARIANT_CALLING {
     // DEEPVARIANT
     if(params.tools.contains('deepvariant')){
         RUN_DEEPVARIANT(cram_recalibrated_intervals, fasta, fasta_fai, intervals_bed_combine_gz, num_intervals)
-
         deepvariant_vcf = RUN_DEEPVARIANT.out.deepvariant_vcf
         ch_versions = ch_versions.mix(RUN_DEEPVARIANT.out.versions)
-
     }
+
     // FREEBAYES
     if (params.tools.contains('freebayes')){
-    // Remap channel for Freebayes
+        // Remap channel for Freebayes
         cram_recalibrated_intervals_freebayes = cram_recalibrated_intervals
             .map{ meta, cram, crai, intervals ->
                 [meta, cram, crai, [], [], intervals]
             }
-
         RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, fasta, fasta_fai)
         freebayes_vcf   = RUN_FREEBAYES.out.freebayes_vcf
         ch_versions = ch_versions.mix(RUN_FREEBAYES.out.versions)
@@ -97,8 +97,8 @@ workflow GERMLINE_VARIANT_CALLING {
         RUN_MANTA(cram_recalibrated_intervals_gz_tbi,
                 fasta,
                 fasta_fai,
-                num_intervals,
-                intervals_bed_combine_gz)
+                intervals_bed_combine_gz,
+                num_intervals)
         ch_versions = ch_versions.mix(RUN_MANTA.out.versions)
         manta_vcf   = RUN_MANTA.out.manta_vcf
 

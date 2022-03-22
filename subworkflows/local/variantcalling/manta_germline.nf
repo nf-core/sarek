@@ -6,22 +6,22 @@ include { CONCAT_VCF as CONCAT_MANTA_SMALL_INDELS   } from '../../../modules/loc
 include { CONCAT_VCF as CONCAT_MANTA_SV             } from '../../../modules/local/concat_vcf/main'
 include { MANTA_GERMLINE                            } from '../../../modules/local/manta/germline/main'
 
+// TODO: Research if splitting by intervals is ok, we pretend for now it is fine.
+// Seems to be the consensus on upstream modules implementation too
 workflow RUN_MANTA {
     take:
-    cram_recalibrated_intervals_gz_tbi
-    fasta
-    fasta_fai
-    num_intervals
-    intervals_bed_combine_gz
+    cram                     // channel: [mandatory] [meta, cram, crai, interval.bed.gz, interval.bed.gz.tbi]
+    fasta                    // channel: [mandatory]
+    fasta_fai                // channel: [mandatory]
+    intervals_bed_gz         // channel: [optional]  Contains a bed.gz file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
+    num_intervals            //     val: [optional]  Number of used intervals, mandatory when intervals are provided.
 
     main:
 
     ch_versions = Channel.empty()
-    // TODO: Research if splitting by intervals is ok, we pretend for now it is fine.
-    // Seems to be the consensus on upstream modules implementation too
 
     MANTA_GERMLINE(
-        cram_recalibrated_intervals_gz_tbi,
+        cram,
         fasta,
         fasta_fai)
 
@@ -55,7 +55,7 @@ workflow RUN_MANTA {
                 [new_meta, vcf]
             }.groupTuple(size: num_intervals),
         fasta_fai,
-        intervals_bed_combine_gz)
+        intervals_bed_gz)
 
     BGZIP_VC_MANTA_SMALL_INDELS(MANTA_GERMLINE.out.candidate_small_indels_vcf)
 
@@ -67,7 +67,7 @@ workflow RUN_MANTA {
                 [new_meta, vcf]
             }.groupTuple(size: num_intervals),
         fasta_fai,
-        intervals_bed_combine_gz)
+        intervals_bed_gz)
 
     BGZIP_VC_MANTA_SV(MANTA_GERMLINE.out.candidate_sv_vcf)
 
@@ -79,8 +79,9 @@ workflow RUN_MANTA {
                 [new_meta, vcf]
             }.groupTuple(size: num_intervals),
         fasta_fai,
-        intervals_bed_combine_gz)
+        intervals_bed_gz)
 
+    // Mix output channels for "no intervals" and "with intervals" results
     manta_vcf = Channel.empty().mix(
         CONCAT_MANTA_DIPLOID.out.vcf,
         CONCAT_MANTA_SMALL_INDELS.out.vcf,
@@ -98,6 +99,6 @@ workflow RUN_MANTA {
     ch_versions = ch_versions.mix(MANTA_GERMLINE.out.versions)
 
     emit:
-    versions = ch_versions
     manta_vcf
+    versions = ch_versions
 }

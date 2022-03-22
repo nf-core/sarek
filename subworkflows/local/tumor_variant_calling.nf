@@ -93,29 +93,29 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         //mutect2_vcf_tbi = mutect2_vcf_tbi.mix(GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.mutect2_vcf_gz_tbi)
     }
 
-    if (tools.contains('manta')){
-        //TODO: Research if splitting by intervals is ok, we pretend for now it is fine. Seems to be the consensus on upstream modules implementaiton too
+    // if (tools.contains('manta')){
+    //     //TODO: Research if splitting by intervals is ok, we pretend for now it is fine. Seems to be the consensus on upstream modules implementaiton too
 
-        RUN_MANTA_TUMORONLY(cram_recalibrated_intervals_gz_tbi,
-            fasta,
-            fasta_fai,
-            num_intervals,
-            intervals_bed_combine_gz)
+    //     RUN_MANTA_TUMORONLY(cram_recalibrated_intervals_gz_tbi,
+    //         fasta,
+    //         fasta_fai,
+    //         num_intervals,
+    //         intervals_bed_combine_gz)
 
-        manta_vcf = manta_vcf.mix(manta_candidate_small_indels_vcf, manta_candidate_sv_vcf, manta_tumor_sv_vcf)
-        ch_versions = ch_versions.mix(RUN_MANTA.out.versions)
-    }
+    //     manta_vcf = manta_vcf.mix(manta_candidate_small_indels_vcf, manta_candidate_sv_vcf, manta_tumor_sv_vcf)
+    //     ch_versions = ch_versions.mix(RUN_MANTA.out.versions)
+    // }
 
-    if (tools.contains('strelka')) {
-        RUN_STRELKA(cram_recalibrated_intervals_gz_tbi,
-                    fasta,
-                    fasta_fai,
-                    num_intervals,
-                    intervals_bed_combine_gz)
-        ch_versions = ch_versions.mix(RUN_STRELKA.out.versions)
-        strelka_vcf = RUN_STRELKA.out.strelka_vcf
+    // if (tools.contains('strelka')) {
+    //     RUN_STRELKA(cram_recalibrated_intervals_gz_tbi,
+    //                 fasta,
+    //                 fasta_fai,
+    //                 num_intervals,
+    //                 intervals_bed_combine_gz)
+    //     ch_versions = ch_versions.mix(RUN_STRELKA.out.versions)
+    //     strelka_vcf = RUN_STRELKA.out.strelka_vcf
 
-    }
+    // }
 
 
     // if (tools.contains('tiddit')){
