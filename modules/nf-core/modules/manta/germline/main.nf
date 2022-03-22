@@ -12,6 +12,7 @@ process MANTA_GERMLINE {
     path fasta
     path fasta_fai
 
+
     output:
     tuple val(meta), path("*candidate_small_indels.vcf.gz")    , emit: candidate_small_indels_vcf
     tuple val(meta), path("*candidate_small_indels.vcf.gz.tbi"), emit: candidate_small_indels_vcf_tbi

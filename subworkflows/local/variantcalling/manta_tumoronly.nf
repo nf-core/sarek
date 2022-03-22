@@ -4,7 +4,7 @@ include { BGZIP as BGZIP_VC_MANTA_TUMOR           } from '../../../modules/local
 include { CONCAT_VCF as CONCAT_MANTA_SMALL_INDELS } from '../../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_MANTA_SV           } from '../../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_MANTA_TUMOR        } from '../../../modules/local/concat_vcf/main'
-include { MANTA_TUMORONLY                         } from '../../../modules/local/manta/tumoronly/main'
+include { MANTA_TUMORONLY                         } from '../../../modules/nf-core/modules/manta/tumoronly/main'
 
 // TODO: Research if splitting by intervals is ok, we pretend for now it is fine.
 // Seems to be the consensus on upstream modules implementation too

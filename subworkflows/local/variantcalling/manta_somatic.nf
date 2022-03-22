@@ -6,7 +6,7 @@ include { CONCAT_VCF as CONCAT_MANTA_DIPLOID      } from '../../../modules/local
 include { CONCAT_VCF as CONCAT_MANTA_SMALL_INDELS } from '../../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_MANTA_SOMATIC      } from '../../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_MANTA_SV           } from '../../../modules/local/concat_vcf/main'
-include { MANTA_SOMATIC                           } from '../../../modules/local/manta/somatic/main'
+include { MANTA_SOMATIC                           } from '../../../modules/nf-core/modules/manta/somatic/main'
 
 workflow RUN_MANTA_SOMATIC {
     take:
@@ -76,7 +76,6 @@ workflow RUN_MANTA_SOMATIC {
             }.groupTuple(size: num_intervals),
         fasta_fai,
         intervals_bed_gz)
-
 
     BGZIP_VC_MANTA_SOMATIC(manta_somatic_sv_vcf.intervals)
 
