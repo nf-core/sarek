@@ -6,7 +6,7 @@ include { STRELKA_GERMLINE                          } from '../../../modules/nf-
 
 // TODO: Research if splitting by intervals is ok, we pretend for now it is fine.
 // Seems to be the consensus on upstream modules implementation too
-workflow RUN_STRELKA {
+workflow STRELKA {
     take:
     cram                     // channel: [mandatory] [meta, cram, crai, interval.bed.gz, interval.bed.gz.tbi]
     fasta                    // channel: [mandatory]

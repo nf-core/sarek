@@ -3,7 +3,7 @@ include { CONCAT_VCF as CONCAT_FREEBAYES            } from '../../../modules/loc
 include { FREEBAYES                                 } from '../../../modules/nf-core/modules/freebayes/main'
 include { TABIX_TABIX as TABIX_VC_FREEBAYES         } from '../../../modules/nf-core/modules/tabix/tabix/main'
 
-workflow RUN_FREEBAYES {
+workflow FREEBAYES {
     take:
     cram                     // channel: [mandatory] [meta, cram, crai, [], [], interval]
     fasta                    // channel: [mandatory]

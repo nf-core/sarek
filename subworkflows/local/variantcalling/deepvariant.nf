@@ -8,7 +8,7 @@ include { TABIX_TABIX as TABIX_VC_DEEPVARIANT_VCF  } from '../../../modules/nf-c
 
 //TODO: benchmark if it is better to provide multiple bed files & run on multiple machines + mergeing afterwards || one containing all intervals and run on one larger machine
 // Deepvariant: https://github.com/google/deepvariant/issues/510
-workflow RUN_DEEPVARIANT {
+workflow DEEPVARIANT {
     take:
     cram                     // channel: [mandatory] [meta, cram, crai, interval]
     fasta                    // channel: [mandatory]

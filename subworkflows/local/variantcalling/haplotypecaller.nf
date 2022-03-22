@@ -5,7 +5,7 @@ include { GATK4_HAPLOTYPECALLER as HAPLOTYPECALLER  } from '../../../modules/nf-
 include { GATK_JOINT_GERMLINE_VARIANT_CALLING       } from '../../../subworkflows/nf-core/gatk4/joint_germline_variant_calling/main'
 include { TABIX_TABIX as TABIX_VC_HAPLOTYPECALLER   } from '../../../modules/nf-core/modules/tabix/tabix/main'
 
-workflow RUN_HAPLOTYPECALLER {
+workflow HAPLOTYPECALLER {
     take:
     cram_recalibrated_intervals
     fasta
