@@ -3,11 +3,10 @@
 // Should be only run on patients without normal sample
 //
 
-
-include { GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk4/tumor_only_somatic_variant_calling/main'
-include { STRELKA                                 } from './variantcalling/strelka.nf'
 include { FREEBAYES                               } from './variantcalling/freebayes.nf'
+include { GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk4/tumor_only_somatic_variant_calling/main'
 include { MANTA_TUMORONLY                         } from './variantcalling/manta_tumoronly.nf'
+include { STRELKA_SINGLE                          } from './variantcalling/strelka_single.nf'
 
 workflow TUMOR_ONLY_VARIANT_CALLING {
     take:
@@ -106,14 +105,14 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
     }
 
     if (tools.contains('strelka')) {
-        STRELKA(cram_recalibrated_intervals_gz_tbi,
-                fasta,
-                fasta_fai,
-                num_intervals,
-                intervals_bed_combine_gz)
+        STRELKA_SINGLE(cram_recalibrated_intervals_gz_tbi,
+                        fasta,
+                        fasta_fai,
+                        intervals_bed_combine_gz,
+                        num_intervals)
 
-        strelka_vcf = STRELKA.out.strelka_vcf
-        ch_versions = ch_versions.mix(RUN_STRELKA.out.versions)
+        strelka_vcf = STRELKA_SINGLE.out.strelka_vcf
+        ch_versions = ch_versions.mix(STRELKA_SINGLE.out.versions)
     }
 
 
