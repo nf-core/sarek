@@ -3,7 +3,6 @@
 //
 include { GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk4/tumor_normal_somatic_variant_calling/main'
 include { MSISENSORPRO_MSI_SOMATIC                  } from '../../modules/nf-core/modules/msisensorpro/msi_somatic/main'
-
 include { RUN_MANTA_SOMATIC                      } from './variantcalling/manta_somatic.nf'
 include { RUN_STRELKA_SOMATIC                    } from './variantcalling/strelka_somatic.nf'
 
@@ -38,17 +37,6 @@ workflow PAIR_VARIANT_CALLING {
     msisensorpro_output  = Channel.empty()
     mutect2_vcf          = Channel.empty()
 
-
-    cram_pair_intervals = cram_pair.combine(intervals)
-        .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
-            normal_id = meta.normal_id
-            tumor_id = meta.tumor_id
-            new_intervals = intervals.baseName != "no_intervals" ? intervals : []
-            id = new_intervals ? tumor_id + "_vs_" + normal_id + "_" + new_intervals.baseName : tumor_id + "_vs_" + normal_id
-            new_meta = [ id: id, normal_id: meta.normal_id, tumor_id: meta.tumor_id, gender: meta.gender, patient: meta.patient ]
-            [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals]
-        }
-
     cram_pair_intervals_gz_tbi = cram_pair.combine(intervals_bed_gz_tbi)
         .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed, tbi ->
             normal_id = meta.normal_id
@@ -61,44 +49,49 @@ workflow PAIR_VARIANT_CALLING {
             [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, new_bed, new_tbi]
         }
 
+    cram_pair_intervals = cram_pair.combine(intervals)
+        .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
+            normal_id = meta.normal_id
+            tumor_id = meta.tumor_id
+            new_intervals = intervals.baseName != "no_intervals" ? intervals : []
+            id = new_intervals ? tumor_id + "_vs_" + normal_id + "_" + new_intervals.baseName : tumor_id + "_vs_" + normal_id
+            new_meta = [ id: id, normal_id: meta.normal_id, tumor_id: meta.tumor_id, gender: meta.gender, patient: meta.patient ]
+            [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals]
+        }
+
     if (tools.contains('manta')) {
-        RUN_MANTA_SOMATIC(cram_pair_intervals_gz_tbi,
-                          fasta,
-                          fasta_fai,
-                          num_intervals,
-                          intervals_bed_combine_gz)
-    }
+        RUN_MANTA_SOMATIC(  cram_pair_intervals_gz_tbi,
+                            fasta,
+                            fasta_fai,
+                            intervals_bed_combine_gz,
+                            num_intervals)
 
-    cram_pair_strelka = Channel.empty()
-    if (tools.contains('strelka') && tools.contains('manta')) {
-        cram_pair_strelka = cram_pair.join(manta_somatic_sv_vcf).combine(intervals_bed_gz_tbi)
-            .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, bed, tbi ->
-                normal_id = meta.normal_id
-                tumor_id = meta.tumor_id
-
-                new_bed = bed.simpleName != "no_intervals" ? bed : []
-                new_tbi = tbi.simpleName != "no_intervals" ? tbi : []
-                id = bed.simpleName != "no_intervals" ? tumor_id + "_vs_" + normal_id + "_" + bed.simpleName : tumor_id + "_vs_" + normal_id
-                new_meta = [ id: id, normal_id: meta.normal_id, tumor_id: meta.tumor_id, gender: meta.gender, patient: meta.patient]
-                [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, new_bed, new_tbi]
-            }
-    } else if (tools.contains('strelka') && !tools.contains('manta')) {
-        cram_pair_strelka = cram_pair.combine(intervals_bed_gz_tbi)
-            .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed, tbi ->
-                normal_id = meta.normal_id
-                tumor_id = meta.tumor_id
-
-                new_bed = bed.simpleName != "no_intervals" ? bed : []
-                new_tbi = tbi.simpleName != "no_intervals" ? tbi : []
-                id = bed.simpleName != "no_intervals" ? tumor_id + "_vs_" + normal_id + "_" + bed.simpleName : tumor_id + "_vs_" + normal_id
-                new_meta = [ id: id, normal_id: meta.normal_id, tumor_id: meta.tumor_id, gender: meta.gender, patient: meta.patient]
-
-                [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, [], [], new_bed, new_tbi]
-            }
+        manta_vcf   = RUN_MANTA_SOMATIC.out.manta_vcf
+        ch_versions = ch_versions.mix(RUN_MANTA_SOMATIC.out.versions)
     }
 
     if (tools.contains('strelka')) {
-        RUN_STRELKA_SOMATIC(cram_pair_strelka, fasta, fasta_fai, intervals_bed_combine_gz, num_intervals)
+
+        if (tools.contains('manta')) {
+            cram_pair_strelka = intervals_bed_gz_tbi.join(manta_somatic_sv_vcf).map{
+                meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed, tbi, manta_vcf, manta_tbi ->
+                [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, bed, tbi]
+            }
+        } else {
+            cram_pair_strelka = cram_pair_intervals_gz_tbi.map{
+                    meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed, tbi ->
+                    [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, [], [], bed, tbi]
+            }
+        }
+
+        RUN_STRELKA_SOMATIC(cram_pair_strelka,
+                            fasta,
+                            fasta_fai,
+                            intervals_bed_combine_gz,
+                            num_intervals)
+
+        strelka_vcf = RUN_STRELKA_SOMATIC.out.strelka_vcf
+        ch_versions = ch_versions.mix(RUN_STRELKA_SOMATIC.out.versions)
     }
 
     if (tools.contains('msisensorpro')) {

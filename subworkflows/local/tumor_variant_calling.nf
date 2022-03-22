@@ -95,21 +95,21 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         //TODO: Research if splitting by intervals is ok, we pretend for now it is fine. Seems to be the consensus on upstream modules implementaiton too
 
         RUN_MANTA_TUMORONLY(cram_recalibrated_intervals_gz_tbi,
-                        fasta,
-                        fasta_fai,
-                        num_intervals,
-                        intervals_bed_combine_gz)
+                            fasta,
+                            fasta_fai,
+                            num_intervals,
+                            intervals_bed_combine_gz)
 
         manta_vcf   = RUN_MANTA_TUMORONLY.out.manta_vcf
         ch_versions = ch_versions.mix(RUN_MANTA_TUMORONLY.out.versions)
     }
 
     if (tools.contains('strelka')) {
-        RUN_STRELKA_SINGLE(cram_recalibrated_intervals_gz_tbi,
-                        fasta,
-                        fasta_fai,
-                        intervals_bed_combine_gz,
-                        num_intervals)
+        RUN_STRELKA_SINGLE( cram_recalibrated_intervals_gz_tbi,
+                            fasta,
+                            fasta_fai,
+                            intervals_bed_combine_gz,
+                            num_intervals)
 
         strelka_vcf = RUN_STRELKA_SINGLE.out.strelka_vcf
         ch_versions = ch_versions.mix(RUN_STRELKA_SINGLE.out.versions)

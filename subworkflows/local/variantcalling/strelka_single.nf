@@ -27,15 +27,9 @@ workflow RUN_STRELKA_SINGLE {
         }
         .set{strelka_vcf}
 
-    strelka_vcf.intervals.view()
-    strelka_vcf.no_intervals.view()
-
-   // STRELKA_GERMLINE.out.vcf.view()
-
     STRELKA_GERMLINE.out.genome_vcf.branch{
             intervals:    num_intervals > 1
             no_intervals: num_intervals == 1
-        }
         }.set{strelka_genome_vcf}
 
     // Only when using intervals

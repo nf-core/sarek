@@ -1,12 +1,12 @@
-include { BGZIP as BGZIP_VC_MANTA_DIPLOID           } from '../../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_MANTA_SMALL_INDELS      } from '../../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_MANTA_SOMATIC           } from '../../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_MANTA_SV                } from '../../../modules/local/bgzip'
-include { CONCAT_VCF as CONCAT_MANTA_DIPLOID        } from '../../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_MANTA_SMALL_INDELS   } from '../../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_MANTA_SOMATIC        } from '../../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_MANTA_SV             } from '../../../modules/local/concat_vcf/main'
-include { MANTA_SOMATIC                             } from '../../../modules/local/manta/somatic/main'
+include { BGZIP as BGZIP_VC_MANTA_DIPLOID         } from '../../../modules/local/bgzip'
+include { BGZIP as BGZIP_VC_MANTA_SMALL_INDELS    } from '../../../modules/local/bgzip'
+include { BGZIP as BGZIP_VC_MANTA_SOMATIC         } from '../../../modules/local/bgzip'
+include { BGZIP as BGZIP_VC_MANTA_SV              } from '../../../modules/local/bgzip'
+include { CONCAT_VCF as CONCAT_MANTA_DIPLOID      } from '../../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_MANTA_SMALL_INDELS } from '../../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_MANTA_SOMATIC      } from '../../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_MANTA_SV           } from '../../../modules/local/concat_vcf/main'
+include { MANTA_SOMATIC                           } from '../../../modules/local/manta/somatic/main'
 
 workflow RUN_MANTA_SOMATIC {
     take:
@@ -19,71 +19,95 @@ workflow RUN_MANTA_SOMATIC {
     main:
 
     ch_versions = Channel.empty()
-    MANTA_SOMATIC(cram_pair_intervals_gz_tbi, fasta, fasta_fai)
 
+    MANTA_SOMATIC(cram, fasta, fasta_fai)
 
-        if (no_intervals) {
-            manta_candidate_small_indels_vcf = MANTA_SOMATIC.out.candidate_small_indels_vcf
-            manta_candidate_sv_vcf           = MANTA_SOMATIC.out.candidate_sv_vcf
-            manta_diploid_sv_vcf             = MANTA_SOMATIC.out.diploid_sv_vcf
-            manta_somatic_sv_vcf             = MANTA_SOMATIC.out.somatic_sv_vcf
-        } else {
-            BGZIP_VC_MANTA_SV(MANTA_SOMATIC.out.candidate_small_indels_vcf)
-            BGZIP_VC_MANTA_SMALL_INDELS(MANTA_SOMATIC.out.candidate_sv_vcf)
-            BGZIP_VC_MANTA_DIPLOID(MANTA_SOMATIC.out.diploid_sv_vcf)
-            BGZIP_VC_MANTA_SOMATIC(MANTA_SOMATIC.out.somatic_sv_vcf)
+    MANTA_SOMATIC.out.candidate_small_indels_vcf..branch{
+            intervals:    num_intervals > 1
+            no_intervals: num_intervals == 1
+        }.set{manta_candidate_small_indels_vcf}
 
-            manta_sv_vcf_to_concat = BGZIP_VC_MANTA_SV.out.vcf.map{ meta, vcf ->
+    MANTA_SOMATIC.out.candidate_sv_vcf..branch{
+            intervals:    num_intervals > 1
+            no_intervals: num_intervals == 1
+        }.set{manta_candidate_sv_vcf}
+
+    MANTA_SOMATIC.out.diploid_sv_vcf..branch{
+            intervals:    num_intervals > 1
+            no_intervals: num_intervals == 1
+        }.set{manta_diploid_sv_vcf}
+
+    MANTA_SOMATIC.out.somatic_sv_vcf..branch{
+            intervals:    num_intervals > 1
+            no_intervals: num_intervals == 1
+        }.set{manta_somatic_sv_vcf}
+
+    //Only when using intervals
+
+    BGZIP_VC_MANTA_SV(manta_candidate_small_indels_vcf.intervals)
+    BGZIP_VC_MANTA_SMALL_INDELS(manta_candidate_sv_vcf.intervals)
+    BGZIP_VC_MANTA_DIPLOID(manta_diploid_sv_vcf.intervals)
+    BGZIP_VC_MANTA_SOMATIC(manta_somatic_sv_vcf.intervals)
+
+    CONCAT_MANTA_SV(
+        BGZIP_VC_MANTA_SV.out.vcf.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
                 [new_meta, vcf]
-            }.groupTuple(size: num_intervals)
+            }.groupTuple(size: num_intervals),
+        fasta_fai,
+        intervals_bed_gz)
 
-            manta_small_indels_vcf_to_concat = BGZIP_VC_MANTA_SMALL_INDELS.out.vcf.map{ meta, vcf ->
+    CONCAT_MANTA_SMALL_INDELS(
+        BGZIP_VC_MANTA_SMALL_INDELS.out.vcf.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
                 [new_meta, vcf]
-            }.groupTuple(size: num_intervals)
+            }.groupTuple(size: num_intervals),
+        fasta_fai,
+        intervals_bed_gz)
 
-            manta_diploid_vcf_to_concat = BGZIP_VC_MANTA_DIPLOID.out.vcf.map{ meta, vcf ->
+    CONCAT_MANTA_DIPLOID(
+        BGZIP_VC_MANTA_DIPLOID.out.vcf.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
                 [new_meta, vcf]
-            }.groupTuple(size: num_intervals)
+            }.groupTuple(size: num_intervals),
+        fasta_fai,
+        intervals_bed_gz)
 
-            manta_somatic_sv_vcf_to_concat = BGZIP_VC_MANTA_SOMATIC.out.vcf.map{ meta, vcf ->
+    CONCAT_MANTA_SOMATIC(
+        BGZIP_VC_MANTA_SOMATIC.out.vcf.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
                 [new_meta, vcf]
-            }.groupTuple(size: num_intervals)
+            }.groupTuple(size: num_intervals),
+        fasta_fai,
+        intervals_bed_gz)
 
-            CONCAT_MANTA_SV(manta_sv_vcf_to_concat, fasta_fai, intervals_bed_combine_gz)
-            CONCAT_MANTA_SMALL_INDELS(manta_small_indels_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
-            CONCAT_MANTA_DIPLOID(manta_diploid_vcf_to_concat, fasta_fai, intervals_bed_combine_gz)
-            CONCAT_MANTA_SOMATIC(manta_somatic_sv_vcf_to_concat, fasta_fai, intervals_bed_combine_gz)
-
-            manta_candidate_small_indels_vcf = CONCAT_MANTA_SV.out.vcf
-            manta_candidate_sv_vcf           = CONCAT_MANTA_SMALL_INDELS.out.vcf
-            manta_diploid_sv_vcf             = CONCAT_MANTA_DIPLOID.out.vcf
-            manta_somatic_sv_vcf             = CONCAT_MANTA_SOMATIC.out.vcf
-
-            ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SV.out.versions)
-            ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SMALL_INDELS.out.versions)
-            ch_versions = ch_versions.mix(BGZIP_VC_MANTA_DIPLOID.out.versions)
-            ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SOMATIC.out.versions)
-
-            ch_versions = ch_versions.mix(CONCAT_MANTA_SV.out.versions)
-            ch_versions = ch_versions.mix(CONCAT_MANTA_SMALL_INDELS.out.versions)
-            ch_versions = ch_versions.mix(CONCAT_MANTA_DIPLOID.out.versions)
-            ch_versions = ch_versions.mix(CONCAT_MANTA_SOMATIC.out.versions)
-
-        }
-
-        manta_vcf = manta_vcf.mix(manta_candidate_small_indels_vcf,manta_candidate_sv_vcf,manta_diploid_sv_vcf,manta_somatic_sv_vcf)
-
+    ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SV.out.versions)
+    ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SMALL_INDELS.out.versions)
+    ch_versions = ch_versions.mix(BGZIP_VC_MANTA_DIPLOID.out.versions)
+    ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SOMATIC.out.versions)
+    ch_versions = ch_versions.mix(CONCAT_MANTA_SV.out.versions)
+    ch_versions = ch_versions.mix(CONCAT_MANTA_SMALL_INDELS.out.versions)
+    ch_versions = ch_versions.mix(CONCAT_MANTA_DIPLOID.out.versions)
+    ch_versions = ch_versions.mix(CONCAT_MANTA_SOMATIC.out.versions)
     ch_versions = ch_versions.mix(MANTA_SOMATIC.out.versions)
 
+    manta_vcf = Channel.empty().mix(
+        CONCAT_MANTA_SV.out.vcf,
+        CONCAT_MANTA_SMALL_INDELS.out.vcf,
+        CONCAT_MANTA_DIPLOID.out.vcf,
+        CONCAT_MANTA_SOMATIC.out.vcf,
+        manta_candidate_small_indels_vcf.no_intervals,
+        manta_candidate_sv_vcf.no_intervals,
+        manta_diploid_sv_vcf.no_intervals,
+        manta_somatic_sv_vc.no_intervalsf
+    )
+
     emit:
+    manta_vcf
     versions = ch_versions
 
 }

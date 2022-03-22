@@ -92,7 +92,6 @@ workflow GERMLINE_VARIANT_CALLING {
         haplotypecaller_gvcf = RUN_HAPLOTYPECALLER.out.haplotypecaller_gvcf
         genotype_gvcf        = RUN_HAPLOTYPECALLER.out.genotype_gvcf
         ch_versions          = ch_versions.mix(RUN_HAPLOTYPECALLER.out.versions)
-
     }
 
     // MANTA
