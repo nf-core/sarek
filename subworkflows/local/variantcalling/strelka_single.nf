@@ -24,8 +24,7 @@ workflow RUN_STRELKA_SINGLE {
     STRELKA_GERMLINE.out.vcf.branch{
             intervals:    num_intervals > 1
             no_intervals: num_intervals == 1
-        }
-        .set{strelka_vcf}
+        }.set{strelka_vcf}
 
     STRELKA_GERMLINE.out.genome_vcf.branch{
             intervals:    num_intervals > 1

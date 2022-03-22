@@ -45,9 +45,6 @@ workflow RUN_MANTA_SOMATIC {
     //Only when using intervals
 
     BGZIP_VC_MANTA_SV(manta_candidate_small_indels_vcf.intervals)
-    BGZIP_VC_MANTA_SMALL_INDELS(manta_candidate_sv_vcf.intervals)
-    BGZIP_VC_MANTA_DIPLOID(manta_diploid_sv_vcf.intervals)
-    BGZIP_VC_MANTA_SOMATIC(manta_somatic_sv_vcf.intervals)
 
     CONCAT_MANTA_SV(
         BGZIP_VC_MANTA_SV.out.vcf.map{ meta, vcf ->
@@ -58,6 +55,8 @@ workflow RUN_MANTA_SOMATIC {
         fasta_fai,
         intervals_bed_gz)
 
+    BGZIP_VC_MANTA_SMALL_INDELS(manta_candidate_sv_vcf.intervals)
+
     CONCAT_MANTA_SMALL_INDELS(
         BGZIP_VC_MANTA_SMALL_INDELS.out.vcf.map{ meta, vcf ->
                 new_meta = meta.clone()
@@ -67,6 +66,8 @@ workflow RUN_MANTA_SOMATIC {
         fasta_fai,
         intervals_bed_gz)
 
+    BGZIP_VC_MANTA_DIPLOID(manta_diploid_sv_vcf.intervals)
+
     CONCAT_MANTA_DIPLOID(
         BGZIP_VC_MANTA_DIPLOID.out.vcf.map{ meta, vcf ->
                 new_meta = meta.clone()
@@ -75,6 +76,9 @@ workflow RUN_MANTA_SOMATIC {
             }.groupTuple(size: num_intervals),
         fasta_fai,
         intervals_bed_gz)
+
+
+    BGZIP_VC_MANTA_SOMATIC(manta_somatic_sv_vcf.intervals)
 
     CONCAT_MANTA_SOMATIC(
         BGZIP_VC_MANTA_SOMATIC.out.vcf.map{ meta, vcf ->
