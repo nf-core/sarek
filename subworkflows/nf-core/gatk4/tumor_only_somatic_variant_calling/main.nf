@@ -61,7 +61,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
 
     //Only when using intervals
     //Merge Mutect2 VCF
-    BGZIP_VC_MUTECT2(mutect2_vcf_gz_tbi.intervals)
+    BGZIP_VC_MUTECT2(mutect2_vcf.intervals)
 
     CONCAT_MUTECT2(BGZIP_VC_MUTECT2.out.vcf.map{ meta, vcf ->
             new_meta = meta.clone()
@@ -107,9 +107,9 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     //
     //Mutect2 calls filtered by filtermutectcalls using the contamination and segmentation tables.
     //
-    ch_filtermutect = mutect2_vcf_gz_tbi.join(mutect2_stats)
-                                            .join(CALCULATECONTAMINATION.out.segmentation)
-                                            .join(CALCULATECONTAMINATION.out.contamination)
+    ch_filtermutect = mutect2_vcf.join(mutect2_stats)
+                                 .join(CALCULATECONTAMINATION.out.segmentation)
+                                 .join(CALCULATECONTAMINATION.out.contamination)
     ch_filtermutect_in = ch_filtermutect.map{ meta, vcf, tbi, stats, seg, cont -> [meta, vcf, tbi, stats, [], seg, cont, []] }
     FILTERMUTECTCALLS ( ch_filtermutect_in, fasta, fai, dict )
 
