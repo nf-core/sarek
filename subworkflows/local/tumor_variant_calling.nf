@@ -3,30 +3,30 @@
 // Should be only run on patients without normal sample
 //
 
-include { RUN_FREEBAYES                               } from './variantcalling/freebayes.nf'
+include { RUN_FREEBAYES                           } from './variantcalling/freebayes.nf'
 include { GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk4/tumor_only_somatic_variant_calling/main'
-include { RUN_MANTA_TUMORONLY                         } from './variantcalling/manta_tumoronly.nf'
-include { RUN_STRELKA_SINGLE                          } from './variantcalling/strelka_single.nf'
+include { RUN_MANTA_TUMORONLY                     } from './variantcalling/manta_tumoronly.nf'
+include { RUN_STRELKA_SINGLE                      } from './variantcalling/strelka_single.nf'
 
 workflow TUMOR_ONLY_VARIANT_CALLING {
     take:
-        tools                           // Mandatory, list of tools to apply
-        cram_recalibrated               // channel: [mandatory] cram
-        dbsnp                           // channel: [mandatory] dbsnp
-        dbsnp_tbi                       // channel: [mandatory] dbsnp_tbi
-        dict                            // channel: [mandatory] dict
-        fasta                           // channel: [mandatory] fasta
-        fasta_fai                       // channel: [mandatory] fasta_fai
-        intervals                       // channel: [mandatory] intervals/target regions
-        intervals_bed_gz_tbi            // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combine_gz_tbi    // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combine_gz        // channel: [mandatory] intervals/target regions index zipped and indexed in one file
-        num_intervals                   // val: number of intervals that are used to parallelize exection, either based on capture kit or GATK recommended for WGS
+        tools                        // Mandatory, list of tools to apply
+        cram_recalibrated            // channel: [mandatory] cram
+        dbsnp                        // channel: [mandatory] dbsnp
+        dbsnp_tbi                    // channel: [mandatory] dbsnp_tbi
+        dict                         // channel: [mandatory] dict
+        fasta                        // channel: [mandatory] fasta
+        fasta_fai                    // channel: [mandatory] fasta_fai
+        intervals                    // channel: [mandatory] intervals/target regions
+        intervals_bed_gz_tbi         // channel: [mandatory] intervals/target regions index zipped and indexed
+        intervals_bed_combine_gz_tbi // channel: [mandatory] intervals/target regions index zipped and indexed
+        intervals_bed_combine_gz     // channel: [mandatory] intervals/target regions index zipped and indexed in one file
+        num_intervals                // val: number of intervals that are used to parallelize exection, either based on capture kit or GATK recommended for WGS
         no_intervals
-        germline_resource
-        germline_resource_tbi           // channel
-        panel_of_normals
-        panel_of_normals_tbi
+        germline_resource            // channel: [optional]  germline_resource
+        germline_resource_tbi        // channel: [optional]  germline_resource_tbi
+        panel_of_normals             // channel: [optional]  panel_of_normals
+        panel_of_normals_tbi         // channel: [optional]  panel_of_normals_tbi
 
     main:
 

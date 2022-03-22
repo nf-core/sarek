@@ -3,29 +3,29 @@
 //
 include { GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk4/tumor_normal_somatic_variant_calling/main'
 include { MSISENSORPRO_MSI_SOMATIC                  } from '../../modules/nf-core/modules/msisensorpro/msi_somatic/main'
-include { RUN_MANTA_SOMATIC                      } from './variantcalling/manta_somatic.nf'
-include { RUN_STRELKA_SOMATIC                    } from './variantcalling/strelka_somatic.nf'
+include { RUN_MANTA_SOMATIC                         } from './variantcalling/manta_somatic.nf'
+include { RUN_STRELKA_SOMATIC                       } from './variantcalling/strelka_somatic.nf'
 
 workflow PAIR_VARIANT_CALLING {
     take:
         tools
-        cram_pair             // channel: [mandatory] cram
-        dbsnp                 // channel: [mandatory] dbsnp
-        dbsnp_tbi             // channel: [mandatory] dbsnp_tbi
-        dict                  // channel: [mandatory] dict
-        fasta                 // channel: [mandatory] fasta
-        fasta_fai             // channel: [mandatory] fasta_fai
-        intervals               // channel: [mandatory] intervals/target regions
-        intervals_bed_gz_tbi    // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combined_gz_tbi    // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combine_gz            // channel: [mandatory] intervals/target regions index zipped and indexed in one file
-        num_intervals                       // val: number of intervals that are used to parallelize exection, either based on capture kit or GATK recommended for WGS
+        cram_pair                     // channel: [mandatory] cram
+        dbsnp                         // channel: [mandatory] dbsnp
+        dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
+        dict                          // channel: [mandatory] dict
+        fasta                         // channel: [mandatory] fasta
+        fasta_fai                     // channel: [mandatory] fasta_fai
+        intervals                     // channel: [mandatory] intervals/target regions
+        intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
+        intervals_bed_combined_gz_tbi // channel: [mandatory] intervals/target regions index zipped and indexed
+        intervals_bed_combine_gz      // channel: [mandatory] intervals/target regions index zipped and indexed in one file
+        num_intervals                 // val: number of intervals that are used to parallelize exection, either based on capture kit or GATK recommended for WGS
         no_intervals
-        msisensorpro_scan     // channel: [optional]  msisensorpro_scan
-        germline_resource     // channel: [optional]  germline_resource
-        germline_resource_tbi // channel: [optional]  germline_resource_tbi
-        panel_of_normals      // channel: [optional]  panel_of_normals
-        panel_of_normals_tbi  // channel: [optional]  panel_of_normals_tbi
+        msisensorpro_scan             // channel: [optional]  msisensorpro_scan
+        germline_resource             // channel: [optional]  germline_resource
+        germline_resource_tbi         // channel: [optional]  germline_resource_tbi
+        panel_of_normals              // channel: [optional]  panel_of_normals
+        panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
 
     main:
 
