@@ -20,10 +20,7 @@ workflow RUN_MANTA {
 
     ch_versions = Channel.empty()
 
-    MANTA_GERMLINE(
-        cram,
-        fasta,
-        fasta_fai)
+    MANTA_GERMLINE(cram, fasta, fasta_fai)
 
     // Figure out if using intervals or no_intervals
     MANTA_GERMLINE.out.candidate_small_indels_vcf.groupTuple(size: num_intervals)

@@ -109,8 +109,8 @@ workflow GERMLINE_VARIANT_CALLING {
         RUN_STRELKA(cram_recalibrated_intervals_gz_tbi,
                     fasta,
                     fasta_fai,
-                    num_intervals,
-                    intervals_bed_combine_gz)
+                    intervals_bed_combine_gz,
+                    num_intervals)
         ch_versions = ch_versions.mix(RUN_STRELKA.out.versions)
         strelka_vcf = RUN_STRELKA.out.strelka_vcf
 
