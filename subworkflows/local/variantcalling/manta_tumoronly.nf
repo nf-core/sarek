@@ -20,25 +20,22 @@ workflow RUN_MANTA_TUMORONLY {
 
     ch_versions = Channel.empty()
 
-    MANTA_TUMORONLY(cram_recalibrated_intervals_gz_tbi, fasta, fasta_fai)
+    MANTA_TUMORONLY(cram, fasta, fasta_fai)
 
     // Figure out if using intervals or no_intervals
-    MANTA_TUMORONLY.out.candidate_small_indels_vcf.groupTuple(size: num_intervals)
-        .branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() == 1
+    MANTA_TUMORONLY.out.candidate_small_indels_vcf.branch{
+            intervals:    num_intervals > 1
+            no_intervals: num_intervals == 1
         }.set{manta_small_indels_vcf}
 
-    MANTA_TUMORONLY.out.candidate_sv_vcf.groupTuple(size: num_intervals)
-        .branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() == 1
+    MANTA_TUMORONLY.out.candidate_sv_vcf.branch{
+            intervals:    num_intervals > 1
+            no_intervals: num_intervals == 1
         }.set{manta_candidate_sv_vcf}
 
-    MANTA_TUMORONLY.out.tumor_sv_vcf.groupTuple(size: num_intervals)
-        .branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() == 1
+    MANTA_TUMORONLY.out.tumor_sv_vcf.branch{
+            intervals:    num_intervals > 1
+            no_intervals: num_intervals == 1
         }.set{manta_tumor_sv_vcf}
 
     //Only when using intervals

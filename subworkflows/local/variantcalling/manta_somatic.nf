@@ -10,21 +10,17 @@ include { MANTA_SOMATIC                             } from '../../../modules/loc
 
 workflow RUN_MANTA_SOMATIC {
     take:
-    cram_pair_intervals_gz_tbi
-    fasta
-    fasta_fai
-    num_intervals
-    intervals_bed_combine_gz
+    cram                     // channel: [mandatory] [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, interval.bed.gz, interval.bed.gz.tbi]
+    fasta                    // channel: [mandatory]
+    fasta_fai                // channel: [mandatory]
+    intervals_bed_gz         // channel: [optional]  Contains a bed.gz file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
+    num_intervals            //     val: [optional]  Number of used intervals, mandatory when intervals are provided.
 
     main:
 
     ch_versions = Channel.empty()
-        MANTA_SOMATIC(
-            cram_pair_intervals_gz_tbi,
-            fasta,
-            fasta_fai)
+    MANTA_SOMATIC(cram_pair_intervals_gz_tbi, fasta, fasta_fai)
 
-        ch_versions = ch_versions.mix(MANTA_SOMATIC.out.versions)
 
         if (no_intervals) {
             manta_candidate_small_indels_vcf = MANTA_SOMATIC.out.candidate_small_indels_vcf
@@ -84,6 +80,8 @@ workflow RUN_MANTA_SOMATIC {
         }
 
         manta_vcf = manta_vcf.mix(manta_candidate_small_indels_vcf,manta_candidate_sv_vcf,manta_diploid_sv_vcf,manta_somatic_sv_vcf)
+
+    ch_versions = ch_versions.mix(MANTA_SOMATIC.out.versions)
 
     emit:
     versions = ch_versions

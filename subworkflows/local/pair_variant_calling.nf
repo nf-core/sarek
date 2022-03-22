@@ -30,9 +30,9 @@ workflow PAIR_VARIANT_CALLING {
 
     main:
 
-    if (!tools) tools = ""
-
     ch_versions          = Channel.empty()
+
+    //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     manta_vcf            = Channel.empty()
     strelka_vcf          = Channel.empty()
     msisensorpro_output  = Channel.empty()
@@ -61,13 +61,13 @@ workflow PAIR_VARIANT_CALLING {
             [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, new_bed, new_tbi]
         }
 
-    // if (tools.contains('manta')) {
-    //     RUN_MANTA_SOMATIC(cram_pair_intervals_gz_tbi,
-    //                     fasta,
-    //                     fasta_fai,
-    //                     num_intervals,
-    //                     intervals_bed_combine_gz)
-    // }
+    if (tools.contains('manta')) {
+        RUN_MANTA_SOMATIC(cram_pair_intervals_gz_tbi,
+                          fasta,
+                          fasta_fai,
+                          num_intervals,
+                          intervals_bed_combine_gz)
+    }
 
     cram_pair_strelka = Channel.empty()
     if (tools.contains('strelka') && tools.contains('manta')) {
@@ -99,17 +99,11 @@ workflow PAIR_VARIANT_CALLING {
 
     if (tools.contains('strelka')) {
         RUN_STRELKA_SOMATIC(cram_pair_strelka, fasta, fasta_fai, intervals_bed_combine_gz, num_intervals)
-
     }
 
     if (tools.contains('msisensorpro')) {
-
-        MSISENSORPRO_MSI_SOMATIC(
-            cram_pair_intervals,
-            fasta,
-            msisensorpro_scan)
+        MSISENSORPRO_MSI_SOMATIC(cram_pair_intervals, fasta, msisensorpro_scan)
         ch_versions = ch_versions.mix(MSISENSORPRO_MSI_SOMATIC.out.versions)
-
         msisensorpro_output = msisensorpro_output.mix(MSISENSORPRO_MSI_SOMATIC.out.output_report)
     }
 

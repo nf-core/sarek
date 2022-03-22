@@ -21,16 +21,21 @@ workflow RUN_STRELKA_SINGLE {
     STRELKA_GERMLINE(cram, fasta, fasta_fai)
 
     // Figure out if using intervals or no_intervals
-    STRELKA_GERMLINE.out.vcf.groupTuple(size: num_intervals)
-        .branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() == 1
-        }.set{strelka_vcf}
+    STRELKA_GERMLINE.out.vcf.branch{
+            intervals:    num_intervals > 1
+            no_intervals: num_intervals == 1
+        }
+        .set{strelka_vcf}
 
-    STRELKA_GERMLINE.out.genome_vcf.groupTuple(size: num_intervals)
-        .branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() == 1
+    strelka_vcf.intervals.view()
+    strelka_vcf.no_intervals.view()
+
+   // STRELKA_GERMLINE.out.vcf.view()
+
+    STRELKA_GERMLINE.out.genome_vcf.branch{
+            intervals:    num_intervals > 1
+            no_intervals: num_intervals == 1
+        }
         }.set{strelka_genome_vcf}
 
     // Only when using intervals

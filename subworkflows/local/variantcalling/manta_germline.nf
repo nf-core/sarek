@@ -23,22 +23,19 @@ workflow RUN_MANTA_GERMLINE {
     MANTA_GERMLINE(cram, fasta, fasta_fai)
 
     // Figure out if using intervals or no_intervals
-    MANTA_GERMLINE.out.candidate_small_indels_vcf.groupTuple(size: num_intervals)
-        .branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() == 1
+    MANTA_GERMLINE.out.candidate_small_indels_vcf.branch{
+            intervals:    num_intervals > 1
+            no_intervals: num_intervals == 1
         }.set{manta_small_indels_vcf}
 
-    MANTA_GERMLINE.out.candidate_sv_vcf.groupTuple(size: num_intervals)
-        .branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() == 1
+    MANTA_GERMLINE.out.candidate_sv_vcf.branch{
+            intervals:    num_intervals > 1
+            no_intervals: num_intervals == 1
         }.set{manta_sv_vcf}
 
-    MANTA_GERMLINE.out.diploid_sv_vcf.groupTuple(size: num_intervals)
-        .branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() == 1
+    MANTA_GERMLINE.out.diploid_sv_vcf.branch{
+            intervals:    num_intervals > 1
+            no_intervals: num_intervals == 1
         }.set{manta_diploid_sv_vcf}
 
     // Only when using intervals
