@@ -89,16 +89,7 @@ workflow RUN_MANTA_SOMATIC {
         fasta_fai,
         intervals_bed_gz)
 
-    ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SV.out.versions)
-    ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SMALL_INDELS.out.versions)
-    ch_versions = ch_versions.mix(BGZIP_VC_MANTA_DIPLOID.out.versions)
-    ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SOMATIC.out.versions)
-    ch_versions = ch_versions.mix(CONCAT_MANTA_SV.out.versions)
-    ch_versions = ch_versions.mix(CONCAT_MANTA_SMALL_INDELS.out.versions)
-    ch_versions = ch_versions.mix(CONCAT_MANTA_DIPLOID.out.versions)
-    ch_versions = ch_versions.mix(CONCAT_MANTA_SOMATIC.out.versions)
-    ch_versions = ch_versions.mix(MANTA_SOMATIC.out.versions)
-
+    // Mix output channels for "no intervals" and "with intervals" results
     manta_vcf = Channel.empty().mix(
         CONCAT_MANTA_SV.out.vcf,
         CONCAT_MANTA_SMALL_INDELS.out.vcf,
@@ -109,6 +100,16 @@ workflow RUN_MANTA_SOMATIC {
         manta_diploid_sv_vcf.no_intervals,
         manta_somatic_sv_vc.no_intervalsf
     )
+
+    ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SV.out.versions)
+    ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SMALL_INDELS.out.versions)
+    ch_versions = ch_versions.mix(BGZIP_VC_MANTA_DIPLOID.out.versions)
+    ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SOMATIC.out.versions)
+    ch_versions = ch_versions.mix(CONCAT_MANTA_SV.out.versions)
+    ch_versions = ch_versions.mix(CONCAT_MANTA_SMALL_INDELS.out.versions)
+    ch_versions = ch_versions.mix(CONCAT_MANTA_DIPLOID.out.versions)
+    ch_versions = ch_versions.mix(CONCAT_MANTA_SOMATIC.out.versions)
+    ch_versions = ch_versions.mix(MANTA_SOMATIC.out.versions)
 
     emit:
     manta_vcf
