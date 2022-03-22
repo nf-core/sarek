@@ -52,17 +52,18 @@ workflow RUN_STRELKA_SOMATIC {
             fasta_fai,
             intervals_bed_gz)
 
-    ch_versions = ch_versions.mix(BGZIP_VC_STRELKA_SNVS.out.versions)
-    ch_versions = ch_versions.mix(BGZIP_VC_STRELKA_INDELS.out.versions)
-    ch_versions = ch_versions.mix(CONCAT_STRELKA_SNVS.out.versions)
-    ch_versions = ch_versions.mix(CONCAT_STRELKA_INDELS.out.versions)
-    ch_versions = ch_versions.mix(STRELKA_SOMATIC.out.versions)
-
+    // Mix output channels for "no intervals" and "with intervals" results
     strelka_vcf = Channel.empty().mix(
                     CONCAT_STRELKA_SNVS.out.vcf,
                     CONCAT_STRELKA_INDELS.out.vcf,
                     strelka_vcf_snvs.no_intervals,
                     strelka_vcf_indels.no_intervals)
+
+    ch_versions = ch_versions.mix(BGZIP_VC_STRELKA_SNVS.out.versions)
+    ch_versions = ch_versions.mix(BGZIP_VC_STRELKA_INDELS.out.versions)
+    ch_versions = ch_versions.mix(CONCAT_STRELKA_SNVS.out.versions)
+    ch_versions = ch_versions.mix(CONCAT_STRELKA_INDELS.out.versions)
+    ch_versions = ch_versions.mix(STRELKA_SOMATIC.out.versions)
 
     emit:
     strelka_vcf

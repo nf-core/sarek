@@ -72,6 +72,7 @@ workflow RUN_MANTA_TUMORONLY {
         fasta_fai,
         intervals_bed_gz)
 
+    // Mix output channels for "no intervals" and "with intervals" results
     manta_vcf = Channel.empty().mix(
         CONCAT_MANTA_SMALL_INDELS.out.vcf,
         CONCAT_MANTA_SV.out.vcf,
