@@ -28,7 +28,7 @@ workflow GERMLINE_VARIANT_CALLING {
 
     ch_versions          = Channel.empty()
 
-    //TODO: Temporary until the if's can be removed and everything can be handeled with "when" in the modules.config
+    //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     deepvariant_vcf      = Channel.empty()
     freebayes_vcf        = Channel.empty()
     haplotypecaller_gvcf = Channel.empty()
