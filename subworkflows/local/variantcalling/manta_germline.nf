@@ -8,7 +8,7 @@ include { MANTA_GERMLINE                            } from '../../../modules/loc
 
 // TODO: Research if splitting by intervals is ok, we pretend for now it is fine.
 // Seems to be the consensus on upstream modules implementation too
-workflow MANTA {
+workflow MANTA_GERMLINE {
     take:
     cram                     // channel: [mandatory] [meta, cram, crai, interval.bed.gz, interval.bed.gz.tbi]
     fasta                    // channel: [mandatory]

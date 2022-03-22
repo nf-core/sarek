@@ -5,7 +5,7 @@
 include { DEEPVARIANT     } from './variantcalling/deepvariant.nf'
 include { FREEBAYES       } from './variantcalling/freebayes.nf'
 include { HAPLOTYPECALLER } from './variantcalling/haplotypecaller.nf'
-include { MANTA           } from './variantcalling/manta_germline.nf'
+include { MANTA_GERMLINE  } from './variantcalling/manta_germline.nf'
 include { STRELKA         } from './variantcalling/strelka.nf'
 //include { TIDDIT          } from './variantcalling/tiddit.nf'
 
@@ -94,11 +94,11 @@ workflow GERMLINE_VARIANT_CALLING {
 
     // MANTA
     if (params.tools.contains('manta')){
-        MANTA(cram_recalibrated_intervals_gz_tbi,
-              fasta,
-              fasta_fai,
-              intervals_bed_combine_gz,
-              num_intervals)
+        MANTA_GERMLINE (cram_recalibrated_intervals_gz_tbi,
+                        fasta,
+                        fasta_fai,
+                        intervals_bed_combine_gz,
+                        num_intervals)
         ch_versions = ch_versions.mix(RUN_MANTA.out.versions)
         manta_vcf   = RUN_MANTA.out.manta_vcf
 
