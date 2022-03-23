@@ -5,6 +5,8 @@
     - germline
     - variant_calling
   files:
+    - path: results/variant_calling/sample1/deepvariant/sample1.g.vcf.gz
+    - path: results/variant_calling/sample1/deepvariant/sample1.g.vcf.gz.tbi
     - path: results/variant_calling/sample1/deepvariant/sample1.vcf.gz
     - path: results/variant_calling/sample1/deepvariant/sample1.vcf.gz.tbi
 
@@ -13,31 +15,6 @@
   tags:
     - deepvariant
     - germline
-    - no_intervals
-    - variant_calling
-  files:
-    - path: results/variant_calling/sample1/deepvariant/sample1.vcf.gz
-    - path: results/variant_calling/sample1/deepvariant/sample1.vcf.gz.tbi
-
-- name: Run variant calling on germline sample with deepvariant and generate gvcf
-  command: nextflow run main.nf -profile test,tools_germline,docker --tools deepvariant --generate_gvcf
-  tags:
-    - deepvariant
-    - germline
-    - gvcf
-    - variant_calling
-  files:
-    - path: results/variant_calling/sample1/deepvariant/sample1.g.vcf.gz
-    - path: results/variant_calling/sample1/deepvariant/sample1.g.vcf.gz.tbi
-    - path: results/variant_calling/sample1/deepvariant/sample1.vcf.gz
-    - path: results/variant_calling/sample1/deepvariant/sample1.vcf.gz.tbi
-
-- name: Run variant calling on germline sample with deepvariant without intervals and generate gvcf
-  command: nextflow run main.nf -profile test,tools_germline,docker --tools deepvariant --generate_gvcf --no_intervals
-  tags:
-    - deepvariant
-    - germline
-    - gvcf
     - no_intervals
     - variant_calling
   files:
