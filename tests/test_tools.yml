@@ -291,14 +291,14 @@
 - name: Run variant calling on somatic sample with msisensor-pro
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools msisensorpro
   tags:
-    - mutect2
+    - msisensorpro
     - somatic
     - variant_calling
   files:
-    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3
-    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3_dis
-    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3_germline
-    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3_somatic
+    - path: results/variant_calling/sample4_vs_sample3/msisensorpro/sample4_vs_sample3
+    - path: results/variant_calling/sample4_vs_sample3/msisensorpro/sample4_vs_sample3_dis
+    - path: results/variant_calling/sample4_vs_sample3/msisensorpro/sample4_vs_sample3_germline
+    - path: results/variant_calling/sample4_vs_sample3/msisensorpro/sample4_vs_sample3_somatic
 
 - name: Run variant calling on germline sample with strelka
   command: nextflow run main.nf -profile test,tools_germline,docker --tools strelka
