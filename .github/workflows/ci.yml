@@ -39,7 +39,7 @@ jobs:
           - "gatk4_spark"
           - "haplotypecaller"
           - "manta"
-          #- "mutect2"
+          - "mutect2"
           #- "msisensorpro"
           # - 'save_bam_mapped'
           - "skip_markduplicates"

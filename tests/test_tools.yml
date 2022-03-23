@@ -235,9 +235,18 @@
     - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.diploid_sv.vcf.gz
     - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.diploid_sv.vcf.gz.tbi
 
-#- name: Run variant calling on tumoronly sample with mutect2
+- name: Run variant calling on tumoronly sample with mutect2
+  command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools mutect2
+  tags:
+    - mutect2
+    - tumor_only
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample2/mutect2/sample2.vcf.gz
+    - path: results/variant_calling/sample2/mutect2/sample2.vcf.gz.tbi
+    - path: results/variant_calling/sample2/mutect2/sample2.vcf.gz.stats
 
-#- name: Run variant calling on tumoronly sample with mutect2 without intervals
+# - name: Run variant calling on tumoronly sample with mutect2 without intervals
 
 #- name: Run variant calling on somatic sample with mutect2
 
