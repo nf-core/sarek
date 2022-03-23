@@ -48,6 +48,11 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
             no_intervals: num_intervals == 1
         }.set{ mutect2_vcf }
 
+    MUTECT2.out.tbi.branch{
+            intervals:    num_intervals > 1
+            no_intervals: num_intervals == 1
+        }.set{ mutect2_tbi }
+
     MUTECT2.out.stats.branch{
             intervals:    num_intervals > 1
             no_intervals: num_intervals == 1
@@ -74,6 +79,10 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     mutect2_vcf = Channel.empty().mix(
         CONCAT_MUTECT2.out.vcf,
         mutect2_vcf.no_intervals)
+
+    mutect2_tbi = Channel.empty().mix(
+        CONCAT_MUTECT2.out.tbi,
+        mutect2_tbi.no_intervals)
 
     //Merge Muteect2 Stats
     MERGEMUTECTSTATS(mutect2_stats.intervals.map{ meta, stats ->
@@ -107,10 +116,12 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     //
     //Mutect2 calls filtered by filtermutectcalls using the contamination and segmentation tables.
     //
-    ch_filtermutect = mutect2_vcf.join(mutect2_stats)
+    ch_filtermutect = mutect2_vcf.join(mutect2_tbi)
+                                 .join(mutect2_stats)
                                  .join(CALCULATECONTAMINATION.out.segmentation)
                                  .join(CALCULATECONTAMINATION.out.contamination)
     ch_filtermutect_in = ch_filtermutect.map{ meta, vcf, tbi, stats, seg, cont -> [meta, vcf, tbi, stats, [], seg, cont, []] }
+
     FILTERMUTECTCALLS ( ch_filtermutect_in, fasta, fai, dict )
 
     ch_versions = ch_versions.mix(BGZIP_VC_MUTECT2.out.versions)

@@ -87,9 +87,9 @@ workflow GERMLINE_VARIANT_CALLING {
                         dict,
                         dbsnp,
                         dbsnp_tbi,
-                        num_intervals,
                         intervals_bed_combine_gz,
-                        intervals_bed_combine_gz_tbi)
+                        intervals_bed_combine_gz_tbi,
+                        num_intervals)
 
         haplotypecaller_gvcf = RUN_HAPLOTYPECALLER.out.haplotypecaller_gvcf
         genotype_gvcf        = RUN_HAPLOTYPECALLER.out.genotype_gvcf

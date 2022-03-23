@@ -7,33 +7,39 @@ include { TABIX_TABIX as TABIX_VC_HAPLOTYPECALLER  } from '../../../../modules/n
 
 workflow RUN_HAPLOTYPECALLER {
     take:
-    cram_recalibrated_intervals
-    fasta
-    fasta_fai
-    dict
-    dbsnp
-    dbsnp_tbi
-    num_intervals
-    intervals_bed_combine_gz
-    intervals_bed_combine_gz_tbi
+    cram                            // channel: [mandatory] [meta, cram, crai, interval.bed.gz, interval.bed.gz.tbi]
+    fasta                           // channel: [mandatory]
+    fasta_fai                       // channel: [mandatory]
+    dict                            // channel: [mandatory]
+    dbsnp                           // channel: [mandatory]
+    dbsnp_tbi                       // channel: [mandatory]
+    intervals_bed_gz                // channel: [optional]  Contains a bed.gz file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
+    intervals_bed_combine_gz_tbi    // channel: [optional]  Contains a [bed.gz, bed.gz.tbi ]file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
+    num_intervals                   //     val: [optional]  Number of used intervals, mandatory when intervals are provided.
 
     main:
 
     ch_versions = Channel.empty()
 
     HAPLOTYPECALLER(
-        cram_recalibrated_intervals,
+        cram,
         fasta,
         fasta_fai,
         dict,
         dbsnp,
         dbsnp_tbi)
 
+    // Figure out if using intervals or no_intervals
+    HAPLOTYPECALLER.out.vcf.branch{
+            intervals:    num_intervals > 1
+            no_intervals: num_intervals == 1
+        }.set{haplotypecaller_vcf_branch}
+
     // Only when no intervals
-    TABIX_VC_HAPLOTYPECALLER(HAPLOTYPECALLER.out.vcf)
+    TABIX_VC_HAPLOTYPECALLER(haplotypecaller_vcf_branch.no_intervals)
 
     // Only when using intervals
-    BGZIP_VC_HAPLOTYPECALLER(HAPLOTYPECALLER.out.vcf)
+    BGZIP_VC_HAPLOTYPECALLER(haplotypecaller_vcf_branch.intervals)
 
     CONCAT_HAPLOTYPECALLER(
         BGZIP_VC_HAPLOTYPECALLER.out.vcf
@@ -43,48 +49,38 @@ workflow RUN_HAPLOTYPECALLER {
                 [new_meta, vcf]
             }.groupTuple(size: num_intervals),
         fasta_fai,
-        intervals_bed_combine_gz)
+        intervals_bed_gz)
 
-    HAPLOTYPECALLER.out.vcf.groupTuple(size: num_intervals)
-        .branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() == 1
-        }.set{haplotypecaller_gvcf_intervals}
-
-    HAPLOTYPECALLER.out.tbi.groupTuple(size: num_intervals)
-        .branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() == 1
-        }.set{haplotypecaller_gvcf_tbi_intervals}
-
-    haplotypecaller_gvcf = Channel.empty().mix(
+    haplotypecaller_vcf = Channel.empty().mix(
         CONCAT_HAPLOTYPECALLER.out.vcf,
-        haplotypecaller_gvcf_intervals.no_intervals)
+        haplotypecaller_vcf_branch.no_intervals)
 
-    haplotypecaller_gvcf_tbi = Channel.empty().mix(
+    haplotypecaller_vcf_tbi = Channel.empty().mix(
         CONCAT_HAPLOTYPECALLER.out.tbi,
-        haplotypecaller_gvcf_tbi_intervals.no_intervals)
+        haplotypecaller_vcf_branch.no_intervals)
 
-    genotype_gvcf_to_call = haplotypecaller_gvcf.join(haplotypecaller_gvcf_tbi)
-        .combine(intervals_bed_combine_gz_tbi)
-        .map{
-            meta, gvcf, gvf_tbi, intervals, intervals_tbi ->
-            new_intervals = intervals.simpleName != "no_intervals" ? intervals : []
-            new_intervals_tbi = intervals_tbi.simpleName != "no_intervals" ? intervals_tbi : []
-            [meta, gvcf, gvf_tbi, new_intervals, new_intervals_tbi]
-        }
+    // genotype_gvcf_to_call = haplotypecaller_gvcf.join(haplotypecaller_gvcf_tbi)
+    //     .combine(intervals_bed_combine_gz_tbi)
+    //     .map{
+    //         meta, gvcf, gvf_tbi, intervals, intervals_tbi ->
+    //         new_intervals = intervals.simpleName != "no_intervals" ? intervals : []
+    //         new_intervals_tbi = intervals_tbi.simpleName != "no_intervals" ? intervals_tbi : []
+    //         [meta, gvcf, gvf_tbi, new_intervals, new_intervals_tbi]
+    //     }
 
     // GENOTYPEGVCFS
 
-    GENOTYPEGVCFS(
-        genotype_gvcf_to_call,
-        fasta,
-        fasta_fai,
-        dict,
-        dbsnp,
-        dbsnp_tbi)
+    // GENOTYPEGVCFS(
+    //     genotype_gvcf_to_call,
+    //     fasta,
+    //     fasta_fai,
+    //     dict,
+    //     dbsnp,
+    //     dbsnp_tbi)
+    //workflow haplotypecaller (default mode)-> CNNScoreVariants
+    //workflow haplotypecaller (ERC mode) -> GenomicsDBimport -> GenotypeGVCFs -> VQSR
 
-    genotype_gvcf = GENOTYPEGVCFS.out.vcf
+    //genotype_gvcf = GENOTYPEGVCFS.out.vcf
 
     // if (joint_germline) {
     //     run_haplotypecaller = false
@@ -100,9 +96,9 @@ workflow RUN_HAPLOTYPECALLER {
     //         dbsnp,
     //         dbsnp_tbi,
     //         "joined",
-    //          allelespecific?
-    //          resources?
-    //          annotation?
+    //         allelespecific?
+    //         resources?
+    //         annotation?
     //         "BOTH",
     //         true,
     //         truthsensitivity -> parameter or module?
