@@ -64,7 +64,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
                 [meta, cram, crai, [], [], intervals]
             }
 
-        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, fasta, fasta_fai)
+        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, fasta, fasta_fai, intervals_bed_combine_gz, num_intervals)
 
         freebayes_vcf = RUN_FREEBAYES.out.freebayes_vcf
         ch_versions   = ch_versions.mix(RUN_FREEBAYES.out.versions)
