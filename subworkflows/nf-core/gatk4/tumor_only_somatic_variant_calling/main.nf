@@ -21,9 +21,8 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     germline_resource_tbi     // channel: /path/to/germline/index
     panel_of_normals          // channel: /path/to/panel/of/normals
     panel_of_normals_tbi      // channel: /path/to/panel/of/normals/index
-    num_intervals
-    no_intervals
     intervals_bed_combine_gz
+    num_intervals
 
     main:
     ch_versions = Channel.empty()
@@ -132,7 +131,6 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     ch_versions = ch_versions.mix(GETPILEUPSUMMARIES.out.versions)
     ch_versions = ch_versions.mix(MERGEMUTECTSTATS.out.versions)
     ch_versions = ch_versions.mix(MUTECT2.out.versions)
-
 
     emit:
     mutect2_vcf         = mutect2_vcf                               // channel: [ val(meta), [ vcf ] ]

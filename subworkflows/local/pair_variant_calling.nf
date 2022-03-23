@@ -101,23 +101,24 @@ workflow PAIR_VARIANT_CALLING {
     }
 
     if (tools.contains('mutect2')) {
-        // cram_pair_intervals.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
-        //         [meta, [normal_cram, tumor_cram], [normal_crai, tumor_crai], intervals, ['normal']]
-        //         }.set{cram_pair_mutect2}
+        cram_pair_intervals.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
+                [meta, [normal_cram, tumor_cram], [normal_crai, tumor_crai], intervals, ['normal']]
+                }.set{cram_pair_mutect2}
 
-        // GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING(
-        //     cram_pair_mutect2,
-        //     fasta,
-        //     fasta_fai,
-        //     dict,
-        //     germline_resource,
-        //     germline_resource_tbi,
-        //     panel_of_normals,
-        //     panel_of_normals_tbi,
-        //     no_intervals,
-        //     num_intervals,
-        //     intervals_bed_combine_gz
-        // )
+        GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING(
+            cram_pair_mutect2,
+            fasta,
+            fasta_fai,
+            dict,
+            germline_resource,
+            germline_resource_tbi,
+            panel_of_normals,
+            panel_of_normals_tbi,
+            intervals_bed_combine_gz,
+            num_intervals
+        )
+
+        // mutect2_vcf = GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.mutect2_vcf
         // ch_versions = ch_versions.mix(GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.versions)
     }
 

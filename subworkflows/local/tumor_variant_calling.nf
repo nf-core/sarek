@@ -82,9 +82,8 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
                                                 germline_resource_tbi,
                                                 panel_of_normals,
                                                 panel_of_normals_tbi,
-                                                num_intervals,
-                                                no_intervals,
-                                                intervals_bed_combine_gz)
+                                                intervals_bed_combine_gz,
+                                                num_intervals)
 
         mutect2_vcf = GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.mutect2_vcf
         ch_versions = ch_versions.mix(GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.versions)
