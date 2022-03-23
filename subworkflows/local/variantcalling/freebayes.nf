@@ -40,7 +40,7 @@ workflow RUN_FREEBAYES {
     // Mix output channels for "no intervals" and "with intervals" results
     freebayes_vcf = Channel.empty().mix(
         CONCAT_FREEBAYES.out.vcf,
-        FREEBAYES.out.vcf.join(TABIX_VC_FREEBAYES.out.tbi))
+        FREEBAYES.out.vcf)
 
     ch_versions = ch_versions.mix(BGZIP_VC_FREEBAYES.out.versions)
     ch_versions = ch_versions.mix(CONCAT_FREEBAYES.out.versions)
