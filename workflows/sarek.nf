@@ -623,6 +623,7 @@ workflow SAREK {
             intervals_bed_gz_tbi,
             intervals_bed_combined_gz_tbi,
             intervals_bed_combined_gz,
+            intervals_bed_combined,
             num_intervals,
             params.no_intervals,
             msisensorpro_scan,

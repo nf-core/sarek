@@ -24,7 +24,6 @@ workflow PREPARE_INTERVALS {
     ch_intervals                     = Channel.empty()
     ch_intervals_bed_gz_tbi          = Channel.empty()
     ch_intervals_combined_bed_gz_tbi = Channel.empty() // Create bed.gz and bed.gz.tbi for input/or created interval file. Contains ALL regions.
-
     tabix_in_combined = Channel.empty()
 
     if (params.no_intervals) {
@@ -78,10 +77,10 @@ workflow PREPARE_INTERVALS {
         ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.versions)
     }
 
+
     emit:
         intervals_bed                    = ch_intervals                     // path: intervals.bed                        [intervals split for parallel execution]
         intervals_bed_gz_tbi             = ch_intervals_bed_gz_tbi          // path: target.bed.gz, target.bed.gz.tbi     [intervals split for parallel execution]
         intervals_combined_bed_gz_tbi    = ch_intervals_combined_bed_gz_tbi // path: interval.bed.gz, interval.bed.gz.tbi [all intervals in one file]
-
         versions                         = ch_versions                      // channel: [ versions.yml ]
 }

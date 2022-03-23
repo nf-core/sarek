@@ -17,8 +17,9 @@ workflow PAIR_VARIANT_CALLING {
         fasta_fai                     // channel: [mandatory] fasta_fai
         intervals                     // channel: [mandatory] intervals/target regions
         intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combined_gz_tbi // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combine_gz      // channel: [mandatory] intervals/target regions index zipped and indexed in one file
+        intervals_bed_combined_gz_tbi // channel: [mandatory] intervals/target regions all in one file zipped and indexed
+        intervals_bed_combine_gz      // channel: [mandatory] intervals/target regions zipped in one file
+        intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
         num_intervals                 // val: number of intervals that are used to parallelize exection, either based on capture kit or GATK recommended for WGS
         no_intervals
         msisensorpro_scan             // channel: [optional]  msisensorpro_scan
@@ -95,7 +96,9 @@ workflow PAIR_VARIANT_CALLING {
     }
 
     if (tools.contains('msisensorpro')) {
-        MSISENSORPRO_MSI_SOMATIC(cram_pair_intervals, fasta, msisensorpro_scan)
+
+        cram_pair_msisensor = cram_pair.combine(intervals_bed_combined)
+        MSISENSORPRO_MSI_SOMATIC(cram_pair_msisensor, fasta, msisensorpro_scan)
         ch_versions = ch_versions.mix(MSISENSORPRO_MSI_SOMATIC.out.versions)
         msisensorpro_output = msisensorpro_output.mix(MSISENSORPRO_MSI_SOMATIC.out.output_report)
     }
@@ -118,8 +121,8 @@ workflow PAIR_VARIANT_CALLING {
             num_intervals
         )
 
-        // mutect2_vcf = GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.mutect2_vcf
-        // ch_versions = ch_versions.mix(GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.versions)
+        mutect2_vcf = GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.mutect2_vcf
+        ch_versions = ch_versions.mix(GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.versions)
     }
 
     // if (tools.contains('tiddit')) {
