@@ -2,11 +2,11 @@
 // GERMLINE VARIANT CALLING
 //
 
-include { RUN_DEEPVARIANT     } from './variantcalling/deepvariant.nf'
-include { RUN_FREEBAYES       } from './variantcalling/freebayes.nf'
-include { RUN_HAPLOTYPECALLER } from './variantcalling/haplotypecaller.nf'
-include { RUN_MANTA_GERMLINE  } from './variantcalling/manta_germline.nf'
-include { RUN_STRELKA_SINGLE  } from './variantcalling/strelka_single.nf'
+include { RUN_DEEPVARIANT     } from '../nf-core/variantcalling/deepvariant/main.nf'
+include { RUN_FREEBAYES       } from '../nf-core/variantcalling/freebayes/main.nf'
+include { RUN_HAPLOTYPECALLER } from '../nf-core/variantcalling/haplotypecaller/main.nf'
+include { RUN_MANTA_GERMLINE  } from '../nf-core/variantcalling/manta/germline/main.nf'
+include { RUN_STRELKA_SINGLE  } from '../nf-core/variantcalling/strelka/single/main.nf'
 //include { TIDDIT          } from './variantcalling/tiddit.nf'
 
 workflow GERMLINE_VARIANT_CALLING {
@@ -40,6 +40,7 @@ workflow GERMLINE_VARIANT_CALLING {
     cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
         .map{ meta, cram, crai, intervals ->
             sample = meta.sample
+            //new_intervals = num_intervals > 1 ? intervals : []
             new_intervals = intervals.baseName != "no_intervals" ? intervals : []
             id = new_intervals ? sample + "_" + new_intervals.baseName : sample
             [[ id: id, sample: meta.sample, gender: meta.gender, status: meta.status, patient: meta.patient ], cram, crai, new_intervals]
@@ -49,6 +50,7 @@ workflow GERMLINE_VARIANT_CALLING {
     cram_recalibrated_intervals_gz_tbi = cram_recalibrated.combine(intervals_bed_gz_tbi)
         .map{ meta, cram, crai, bed, tbi ->
             sample = meta.sample
+            //new_bed = num_intervals > 1 ? bed : [] //TODO can I pass in empty lists? Then I only need to work with the id line
             new_bed = bed.simpleName != "no_intervals" ? bed : []
             new_tbi = tbi.simpleName != "no_intervals" ? tbi : []
             id = new_bed ? sample + "_" + new_bed.simpleName : sample

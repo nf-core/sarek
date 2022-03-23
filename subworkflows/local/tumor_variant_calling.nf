@@ -3,10 +3,10 @@
 // Should be only run on patients without normal sample
 //
 
-include { RUN_FREEBAYES                           } from './variantcalling/freebayes.nf'
+include { RUN_FREEBAYES                           } from '../nf-core/variantcalling/freebayes/main.nf'
 include { GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk4/tumor_only_somatic_variant_calling/main'
-include { RUN_MANTA_TUMORONLY                     } from './variantcalling/manta_tumoronly.nf'
-include { RUN_STRELKA_SINGLE                      } from './variantcalling/strelka_single.nf'
+include { RUN_MANTA_TUMORONLY                     } from '../nf-core/variantcalling/manta/tumoronly/main.nf'
+include { RUN_STRELKA_SINGLE                      } from '../nf-core/variantcalling/strelka/single/main.nf'
 
 workflow TUMOR_ONLY_VARIANT_CALLING {
     take:

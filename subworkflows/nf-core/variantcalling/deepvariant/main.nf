@@ -1,10 +1,10 @@
-include { BGZIP as BGZIP_VC_DEEPVARIANT_GVCF       } from '../../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_DEEPVARIANT_VCF        } from '../../../modules/local/bgzip'
-include { CONCAT_VCF as CONCAT_DEEPVARIANT_GVCF    } from '../../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_DEEPVARIANT_VCF     } from '../../../modules/local/concat_vcf/main'
-include { DEEPVARIANT                              } from '../../../modules/nf-core/modules/deepvariant/main'
-include { TABIX_TABIX as TABIX_VC_DEEPVARIANT_GVCF } from '../../../modules/nf-core/modules/tabix/tabix/main'
-include { TABIX_TABIX as TABIX_VC_DEEPVARIANT_VCF  } from '../../../modules/nf-core/modules/tabix/tabix/main'
+include { BGZIP as BGZIP_VC_DEEPVARIANT_GVCF       } from '../../../../modules/local/bgzip'
+include { BGZIP as BGZIP_VC_DEEPVARIANT_VCF        } from '../../../../modules/local/bgzip'
+include { CONCAT_VCF as CONCAT_DEEPVARIANT_GVCF    } from '../../../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_DEEPVARIANT_VCF     } from '../../../../modules/local/concat_vcf/main'
+include { DEEPVARIANT                              } from '../../../../modules/nf-core/modules/deepvariant/main'
+include { TABIX_TABIX as TABIX_VC_DEEPVARIANT_GVCF } from '../../../../modules/nf-core/modules/tabix/tabix/main'
+include { TABIX_TABIX as TABIX_VC_DEEPVARIANT_VCF  } from '../../../../modules/nf-core/modules/tabix/tabix/main'
 
 //TODO: benchmark if it is better to provide multiple bed files & run on multiple machines + mergeing afterwards || one containing all intervals and run on one larger machine
 // Deepvariant: https://github.com/google/deepvariant/issues/510

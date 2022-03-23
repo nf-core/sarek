@@ -1,12 +1,12 @@
-include { BGZIP as BGZIP_VC_MANTA_DIPLOID         } from '../../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_MANTA_SMALL_INDELS    } from '../../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_MANTA_SOMATIC         } from '../../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_MANTA_SV              } from '../../../modules/local/bgzip'
-include { CONCAT_VCF as CONCAT_MANTA_DIPLOID      } from '../../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_MANTA_SMALL_INDELS } from '../../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_MANTA_SOMATIC      } from '../../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_MANTA_SV           } from '../../../modules/local/concat_vcf/main'
-include { MANTA_SOMATIC                           } from '../../../modules/nf-core/modules/manta/somatic/main'
+include { BGZIP as BGZIP_VC_MANTA_DIPLOID         } from '../../../../../modules/local/bgzip'
+include { BGZIP as BGZIP_VC_MANTA_SMALL_INDELS    } from '../../../../../modules/local/bgzip'
+include { BGZIP as BGZIP_VC_MANTA_SOMATIC         } from '../../../../../modules/local/bgzip'
+include { BGZIP as BGZIP_VC_MANTA_SV              } from '../../../../../modules/local/bgzip'
+include { CONCAT_VCF as CONCAT_MANTA_DIPLOID      } from '../../../../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_MANTA_SMALL_INDELS } from '../../../../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_MANTA_SOMATIC      } from '../../../../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_MANTA_SV           } from '../../../../../modules/local/concat_vcf/main'
+include { MANTA_SOMATIC                           } from '../../../../../modules/nf-core/modules/manta/somatic/main'
 
 workflow RUN_MANTA_SOMATIC {
     take:

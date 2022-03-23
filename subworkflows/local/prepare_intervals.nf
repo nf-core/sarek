@@ -20,6 +20,7 @@ workflow PREPARE_INTERVALS {
 
     ch_versions = Channel.empty()
 
+    // TODO maybe instead []
     ch_intervals                     = Channel.empty()
     ch_intervals_bed_gz_tbi          = Channel.empty()
     ch_intervals_combined_bed_gz_tbi = Channel.empty() // Create bed.gz and bed.gz.tbi for input/or created interval file. Contains ALL regions.
