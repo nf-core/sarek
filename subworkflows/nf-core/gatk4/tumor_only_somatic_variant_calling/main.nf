@@ -115,10 +115,10 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     //
     //Mutect2 calls filtered by filtermutectcalls using the contamination and segmentation tables.
     //
-    ch_filtermutect = mutect2_vcf.join(mutect2_tbi)
-                                 .join(mutect2_stats)
-                                 .join(CALCULATECONTAMINATION.out.segmentation)
-                                 .join(CALCULATECONTAMINATION.out.contamination)
+    ch_filtermutect    = mutect2_vcf.join(mutect2_tbi)
+                                    .join(mutect2_stats)
+                                    .join(CALCULATECONTAMINATION.out.segmentation)
+                                    .join(CALCULATECONTAMINATION.out.contamination)
     ch_filtermutect_in = ch_filtermutect.map{ meta, vcf, tbi, stats, seg, cont -> [meta, vcf, tbi, stats, [], seg, cont, []] }
 
     FILTERMUTECTCALLS ( ch_filtermutect_in, fasta, fai, dict )

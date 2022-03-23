@@ -40,7 +40,7 @@ jobs:
           - "haplotypecaller"
           - "manta"
           - "mutect2"
-          #- "msisensorpro"
+          - "msisensorpro"
           # - 'save_bam_mapped'
           - "skip_markduplicates"
           - "strelka"
