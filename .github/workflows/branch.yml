@@ -42,7 +42,4 @@ jobs:
             Thanks again for your contribution!
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           allow-repeats: false
-<<<<<<< HEAD
-=======
 #
->>>>>>> 72636cd22120ef2fadf4dcf2290ef649b137171c
