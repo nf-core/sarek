@@ -17,57 +17,57 @@ tools:
 
 input:
   - args:
-    type: map
-    description: |
-      Groovy Map containing tool parameters. MUST follow the structure/keywords below and be provided via modules.config.
-      <optional> parameters can be removed from the map, if they are not set. All value must be surrounded by quotes, meta map parameters can be set with, i.e. sex = meta.sex:
-      For default values, please check the documentation above.
+      type: map
+      description: |
+        Groovy Map containing tool parameters. MUST follow the structure/keywords below and be provided via modules.config.
+        Parameters marked as (optional) can be removed from the map, if they are not set. All values must be surrounded by quotes, meta map parameters can be set with, i.e. `sex = meta.sex`:
+        For default values, please check the documentation above.
 
-      ```
-      {
-        [
-          "general" :[
-              "bedgraphoutput": <optional>,
-              "breakpointthreshold": <optional>,
-              "breakpointtype": <optional>,
-              "coefficientofvariation": <optional>,
-              "contamination": <optional>,
-              "contaminationadjustment": <optional>,
-              "degree": <optional>,
-              "forcegccontentnormalization": <optional>,
-              "gccontentprofile": <optional>,
-              "intercept": <optional>,
-              "mincnalength": <optional>,
-              "minmappabilityperwindow": <optional>,
-              "minexpectedgc": <optional>,
-              "maxexpectedgc": <optional>,
-              "minimalsubclonepresence": <optional>,
-              "noisydata": <optional>,
-              "ploidy": <optional>,
-              "printNA": <optional>,
-              "readcountthreshold": <optional >,
-              "sex": <optional>,
-              "step": <optional value>,
-              "telocentromeric": <optional>,
-              "uniquematch": <optional>,
-              "window": <optional>
-          ],
-          "control":[
-              "inputformat": <required>,
-              "mateorientation": <optional>,
-          ],
-          "sample":[
-              "inputformat": <required>,
-              "mateorientation": <optional>,
-          ],
-          "BAF":[
-              "minimalcoverageperposition": <optional>,
-              "minimalqualityperposition": <optional>,
-              "shiftinquality": <optional>
+        ```
+        {
+          [
+            "general" :[
+                "bedgraphoutput": (optional),
+                "breakpointthreshold": (optional),
+                "breakpointtype": (optional),
+                "coefficientofvariation": (optional),
+                "contamination": (optional),
+                "contaminationadjustment": (optional),
+                "degree": (optional),
+                "forcegccontentnormalization": (optional),
+                "gccontentprofile": (optional),
+                "intercept": (optional),
+                "mincnalength": (optional),
+                "minmappabilityperwindow": (optional),
+                "minexpectedgc": (optional),
+                "maxexpectedgc": (optional),
+                "minimalsubclonepresence": (optional),
+                "noisydata": (optional),
+                "ploidy": (optional),
+                "printNA": (optional),
+                "readcountthreshold": (optional),
+                "sex": (optional),
+                "step": (optional),
+                "telocentromeric": (optional),
+                "uniquematch": (optional),
+                "window": (optional)
+            ],
+            "control":[
+                "inputformat": (required),
+                "mateorientation": (optional),
+            ],
+            "sample":[
+                "inputformat": (required),
+                "mateorientation": (optional),
+            ],
+            "BAF":[
+                "minimalcoverageperposition": (optional),
+                "minimalqualityperposition": (optional),
+                "shiftinquality": (optional)
+            ]
           ]
-        ]
-      }
-      ```
+        }
+        ```
 
   - meta:
       type: map
