@@ -9,7 +9,7 @@ tools:
       documentation: None
       tool_dev_url: https://github.com/Crick-CancerGenomics/ascat
       doi: "10.1093/bioinformatics/btaa538"
-      licence: ['GPL v3']
+      licence: ["GPL v3"]
 
 input:
   - args:

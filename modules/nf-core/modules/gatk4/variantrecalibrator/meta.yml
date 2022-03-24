@@ -52,11 +52,11 @@ input:
   - resvcfs:
       type: list
       description: resource files to be used as truth, training and known sites resources, this imports the files into the module, file names are specified again in the resource_labels to be called via the command.
-      pattern: '*/hapmap_3.3.hg38_chr21.vcf.gz'
+      pattern: "*/hapmap_3.3.hg38_chr21.vcf.gz"
   - restbis:
       type: list
       description: tbis for the corresponding vcfs files to be used as truth, training and known resources.
-      pattern: '*/hapmap_3.3.hg38_chr21.vcf.gz.tbi'
+      pattern: "*/hapmap_3.3.hg38_chr21.vcf.gz.tbi"
   - reslabels:
       type: list
       description: labels for the resource files to be used as truth, training and known sites resources, label should include an identifier,which kind of resource(s) it is, prior value and name of the file.

@@ -20,10 +20,10 @@ output:
   - versions:
       type: file
       description: File containing software versions
-      pattern: 'versions.yml'
+      pattern: "versions.yml"
   - vcf_tbi:
       type: file
       description: Compressed vcf file + tabix index
       pattern: "[ *{.vcf.gz,vcf.gz.tbi} ]"
 authors:
-  - '@maxulysse'
+  - "@maxulysse"
