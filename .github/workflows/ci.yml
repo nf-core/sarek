@@ -25,25 +25,28 @@ jobs:
         # Nextflow versions
         include:
           # Test pipeline minimum Nextflow version
-          - NXF_VER: '21.10.3'
-            NXF_EDGE: ''
+          - NXF_VER: "21.10.3"
+            NXF_EDGE: ""
           # Test latest edge release of Nextflow
-          - NXF_VER: ''
-            NXF_EDGE: '1'
+          - NXF_VER: ""
+            NXF_EDGE: "1"
         test:
-          - 'aligner'
-          - 'annotation'
-          - 'default'
-          - 'deepvariant'
-          - 'gatk4_spark'
-          - 'haplotypecaller'
-          - 'manta'
+          - "aligner"
+          - "annotation"
+          - "default"
+          - "deepvariant"
+          - "freebayes"
+          - "gatk4_spark"
+          - "haplotypecaller"
+          - "manta"
+          - "mutect2"
+          - "msisensorpro"
           # - 'save_bam_mapped'
-          - 'skip_markduplicates'
-          - 'strelka'
-          - 'split_fastq'
-          - 'targeted'
-          - 'tumor_normal_pair'
+          - "skip_markduplicates"
+          - "strelka"
+          - "split_fastq"
+          - "targeted"
+          - "tumor_normal_pair"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -61,7 +64,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: "3.x"
       - name: Install dependencies
         run: python -m pip install --upgrade pip pytest-workflow
 

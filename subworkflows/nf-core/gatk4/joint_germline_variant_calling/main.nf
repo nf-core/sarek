@@ -29,32 +29,12 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     main:
     ch_versions       = Channel.empty()
 
-    // haplotypecaller can be skipped if input samples are already in gvcf format, essentially making the subworkflow joint genotyping.
-    if (run_haplotc) {
-        haplotc_input = channel.from(input)
-        //
-        //Perform variant calling using haplotypecaller module. Additional argument "-ERC GVCF" used to run in gvcf mode.
-        //
-        HAPLOTYPECALLER ( haplotc_input, fasta, fai, dict, sites, sites_index )
-
-        ch_versions   = ch_versions.mix(HAPLOTYPECALLER.out.versions.first())
-        ch_vcf        = HAPLOTYPECALLER.out.vcf.collect{it[1]}.toList()
-        ch_index      = HAPLOTYPECALLER.out.tbi.collect{it[1]}.toList()
-
-    } else {
-        // if haplotypecaller is skipped, this channels the input to genomicsdbimport instead of the output vcfs and tbis that normally come from haplotypecaller
-        direct_input  = channel.from(input)
-        ch_vcf        = direct_input.collect{it[1]}.toList()
-        ch_index      = direct_input.collect{it[2]}.toList()
-    }
-
     //
     //Convert all sample vcfs into a genomicsdb workspace using genomicsdbimport.
     //
     gendb_input       = Channel.of([[ id:joint_id ]]).combine(ch_vcf).combine(ch_index).combine([interval_file]).combine(['']).combine([dict])
 
     GENOMICSDBIMPORT ( gendb_input, false, false, false )
-
     ch_versions       = ch_versions.mix(GENOMICSDBIMPORT.out.versions)
 
     //
@@ -65,7 +45,6 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     ch_genotype_in.add([])
 
     GENOTYPEGVCFS ( ch_genotype_in, fasta, fai, dict, sites, sites_index )
-
     ch_versions       = ch_versions.mix(GENOTYPEGVCFS.out.versions)
 
     // setting run_vqsr to false skips the VQSR process, for if user does not wish to perform VQSR,

@@ -3,6 +3,9 @@
     "homePage": "https://github.com/nf-core/sarek",
     "repos": {
         "nf-core/modules": {
+            "ascat": {
+                "git_sha": "d6244b42f596fa26d2ecba4ce862755821ed9da8"
+            },
             "bcftools/stats": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
@@ -23,6 +26,9 @@
             },
             "cnvkit/batch": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+            },
+            "controlfreec": {
+                "git_sha": "c189835b1bb444e5ee87416fdbea66e2c2ba365e"
             },
             "custom/dumpsoftwareversions": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
@@ -107,6 +113,15 @@
             },
             "gatk4/variantrecalibrator": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+            },
+            "manta/germline": {
+                "git_sha": "979e57b7ac6a405a395dd7a6dbe1a275c5bc226b"
+            },
+            "manta/somatic": {
+                "git_sha": "979e57b7ac6a405a395dd7a6dbe1a275c5bc226b"
+            },
+            "manta/tumoronly": {
+                "git_sha": "979e57b7ac6a405a395dd7a6dbe1a275c5bc226b"
             },
             "msisensorpro/msi_somatic": {
                 "git_sha": "c8ebd0de36c649a14fc92f2f73cbd9f691a8ce0a"

@@ -39,14 +39,6 @@ input:
       type: file
       description: BAM/CRAM/SAM index file
       pattern: "*.{bai,crai,sai}"
-  - fasta:
-      type: file
-      description: Genome reference FASTA file
-      pattern: "*.{fa,fasta}"
-  - fai:
-      type: file
-      description: Genome reference FASTA index file
-      pattern: "*.{fa.fai,fasta.fai}"
   - target_bed:
       type: file
       description: BED file containing target regions for variant calling
@@ -55,6 +47,14 @@ input:
       type: file
       description: Index for BED file containing target regions for variant calling
       pattern: "*.{bed.tbi}"
+  - fasta:
+      type: file
+      description: Genome reference FASTA file
+      pattern: "*.{fa,fasta}"
+  - fai:
+      type: file
+      description: Genome reference FASTA index file
+      pattern: "*.{fa.fai,fasta.fai}"
 
 output:
   - meta:
