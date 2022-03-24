@@ -81,6 +81,12 @@ Such files are intermediate and not kept in the final files delivered to users.
 
 Such files are intermediate and not kept in the final files delivered to users.
 
+#### DRAGMAP
+
+[DRAGMAP](https://github.com/Illumina/dragmap) is an open-source software implementation of the DRAGEN mapper, which the Illumina team created so that we would have an open-source way to produce the same results as their proprietary DRAGEN hardware.
+
+Such files are intermediate and not kept in the final files delivered to users.
+
 ### Mark Duplicates
 
 #### GATK MarkDuplicates
