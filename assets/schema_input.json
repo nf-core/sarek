@@ -162,9 +162,13 @@
                 ]
             }
         },
+<<<<<<< HEAD
         "required": [
             "patient",
             "sample"
         ]
+=======
+        "required": ["sample", "fastq_1"]
+>>>>>>> 72636cd22120ef2fadf4dcf2290ef649b137171c
     }
 }
