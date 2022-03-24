@@ -45,27 +45,26 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     MUTECT2.out.vcf.branch{
             intervals:    num_intervals > 1
             no_intervals: num_intervals == 1
-        }.set{ mutect2_vcf }
+        }.set{ mutect2_vcf_branch }
 
     MUTECT2.out.tbi.branch{
             intervals:    num_intervals > 1
             no_intervals: num_intervals == 1
-        }.set{ mutect2_tbi }
+        }.set{ mutect2_tbi_branch }
 
     MUTECT2.out.stats.branch{
             intervals:    num_intervals > 1
             no_intervals: num_intervals == 1
-        }.set{ mutect2_stats }
+        }.set{ mutect2_stats_branch }
 
     GETPILEUPSUMMARIES.out.table.branch{
             intervals:    num_intervals > 1
             no_intervals: num_intervals == 1
-        }set{ pileup_table }
-
+        }set{ pileup_table_branch }
 
     //Only when using intervals
     //Merge Mutect2 VCF
-    BGZIP_VC_MUTECT2(mutect2_vcf.intervals)
+    BGZIP_VC_MUTECT2(mutect2_vcf_branch.intervals)
 
     CONCAT_MUTECT2(BGZIP_VC_MUTECT2.out.vcf.map{ meta, vcf ->
             new_meta = meta.clone()
@@ -77,14 +76,14 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
 
     mutect2_vcf = Channel.empty().mix(
         CONCAT_MUTECT2.out.vcf,
-        mutect2_vcf.no_intervals)
+        mutect2_vcf_branch.no_intervals)
 
     mutect2_tbi = Channel.empty().mix(
         CONCAT_MUTECT2.out.tbi,
-        mutect2_tbi.no_intervals)
+        mutect2_tbi_branch.no_intervals)
 
     //Merge Muteect2 Stats
-    MERGEMUTECTSTATS(mutect2_stats.intervals.map{ meta, stats ->
+    MERGEMUTECTSTATS(mutect2_stats_branch.intervals.map{ meta, stats ->
         new_meta = meta.clone()
         new_meta.id = new_meta.sample
         [new_meta, stats]
@@ -92,7 +91,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
 
     mutect2_stats = Channel.empty().mix(
         MERGEMUTECTSTATS.out.stats,
-        mutect2_stats.no_intervals)
+        mutect2_stats_branch.no_intervals)
 
     //Merge Pileup Summaries
     GATHERPILEUPSUMMARIES( GETPILEUPSUMMARIES.out.table.map{ meta, table ->
@@ -104,7 +103,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
 
     pileup_table = Channel.empty().mix(
         GATHERPILEUPSUMMARIES.out.table,
-        pileup_table.no_intervals)
+        pileup_table_branch.no_intervals)
 
     //
     //Contamination and segmentation tables created using calculatecontamination on the pileup summary table.
@@ -134,7 +133,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
 
     emit:
     mutect2_vcf         = mutect2_vcf                               // channel: [ val(meta), [ vcf ] ]
-    mutect2_stats       = MUTECT2.out.stats                         // channel: [ val(meta), [ stats ] ]
+    mutect2_stats       = mutect2_stats                              // channel: [ val(meta), [ stats ] ]
 
     pileup_table        = pileup_table                              // channel: [ val(meta), [ table ] ]
 
