@@ -17,7 +17,7 @@ workflow CREATE_UMI_CONSENSUS {
     take:
     reads                     // channel: [mandatory] [ val(meta), [ reads ] ]
     fasta                     // channel: [mandatory] /path/to/reference/fasta
-    bwa                       // channel: [mandatory] Pre-computed BWA index (either bwa-mem or bwa-mem2; MUST be matching to chosen aligner)
+    map_index                 // channel: [mandatory] Pre-computed mapping index
     read_structure            // string:  [mandatory] "read_structure"
     groupreadsbyumi_strategy  // string:  [mandatory] grouping strategy - default: "Adjacency"
 
@@ -29,6 +29,7 @@ workflow CREATE_UMI_CONSENSUS {
     FASTQTOBAM(reads, read_structure)
 
     // in order to map uBAM using BWA MEM, we need to convert uBAM to FASTQ
+    // TODO check if DRAGMAP works well with BAM inputs
     // but keep the appropriate UMI tags in the FASTQ comment field and produce
     // an interleaved FASQT file (hence, split = false)
     split = false
@@ -37,7 +38,7 @@ workflow CREATE_UMI_CONSENSUS {
     // appropriately tagged interleaved FASTQ reads are mapped to the reference
     // bams will not be sorted (hence, sort = false)
     sort = false
-    MAPPING_UMI(BAM2FASTQ.out.reads, bwa, sort)
+    MAPPING_UMI(BAM2FASTQ.out.reads, map_index, sort)
 
     // samblaster is used in order to tag mates information in the BAM file
     // this is used in order to group reads by UMI

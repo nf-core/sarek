@@ -14,6 +14,7 @@ def checkPathParamList = [
     params.ac_loci,
     params.ac_loci_gc,
     params.bwa,
+    params.bwamem2,
     params.cadd_indels,
     params.cadd_indels_tbi,
     params.cadd_wg_snvs,
@@ -23,6 +24,7 @@ def checkPathParamList = [
     params.dbsnp,
     params.dbsnp_tbi,
     params.dict,
+    params.dragmap,
     params.fasta,
     params.fasta_fai,
     params.germline_resource,
@@ -226,6 +228,8 @@ workflow SAREK {
 
     // Gather built indices or get them from the params
     bwa                    = params.fasta                   ? params.bwa                   ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : []
+    bwamem2                = params.fasta                   ? params.bwamem2               ? Channel.fromPath(params.bwamem2).collect()               : PREPARE_GENOME.out.bwamem2               : []
+    dragmap                = params.fasta                   ? params.dragmap               ? Channel.fromPath(params.dragmap).collect()               : PREPARE_GENOME.out.hashtable             : []
     dict                   = params.fasta                   ? params.dict                  ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : []
     fasta_fai              = params.fasta                   ? params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai             : []
     dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.empty()
@@ -233,6 +237,11 @@ workflow SAREK {
     known_indels_tbi       = params.known_indels            ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : Channel.empty()
     pon_tbi                = params.pon                     ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : []
     msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
+
+    // Gather index for mapping given the chosen aligner
+    ch_map_index = params.aligner == "bwa-mem" ? bwa :
+        params.aligner == "bwa-mem2" ? bwamem2 :
+        dragmap
 
     //TODO @Rike, is this working for you? Now it is, fixed a bug in prepare_genome.nf after chasing smoke for a while
     // known_sites is made by grouping both the dbsnp and the known indels ressources
@@ -286,7 +295,7 @@ workflow SAREK {
         // Optionnal UMI consensus calling
         CREATE_UMI_CONSENSUS(FASTQC_TRIMGALORE.out.reads,
             fasta,
-            bwa,
+            ch_map_index,
             umi_read_structure,
             params.group_by_umi_strategy)
 
@@ -302,7 +311,7 @@ workflow SAREK {
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         // reads will be sorted
-        GATK4_MAPPING(SPLIT_FASTQ.out.reads, bwa, true)
+        GATK4_MAPPING(SPLIT_FASTQ.out.reads, ch_map_index, true)
 
         ch_bam_mapped = GATK4_MAPPING.out.bam.map{ meta, bam ->
             new_meta = meta.clone()

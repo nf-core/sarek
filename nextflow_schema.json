@@ -411,6 +411,12 @@
                     "description": "Path to BWA mem indices.",
                     "help_text": "> **NB** If none provided, will be generated automatically from the FASTA reference."
                 },
+                "bwamem2": {
+                    "type": "string",
+                    "fa_icon": "fas fa-copy",
+                    "description": "Path to bwamem2 mem indices.",
+                    "help_text": "> **NB** If none provided, will be generated automatically from the FASTA reference, if --aligner bwamem-2 is specified."
+                },
                 "chr_dir": {
                     "type": "string",
                     "fa_icon": "fas fa-folder-open",
@@ -437,6 +443,12 @@
                     "fa_icon": "fas fa-file",
                     "description": "Path to FASTA dictionary file.",
                     "help_text": "> **NB** If none provided, will be generated automatically from the FASTA reference."
+                },
+                "dragmap": {
+                    "type": "string",
+                    "fa_icon": "fas fa-copy",
+                    "description": "Path to dragmap indices.",
+                    "help_text": "> **NB** If none provided, will be generated automatically from the FASTA reference, if --aligner dragmap is specified"
                 },
                 "fasta": {
                     "type": "string",
