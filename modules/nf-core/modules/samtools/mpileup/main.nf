@@ -8,7 +8,7 @@ process SAMTOOLS_MPILEUP {
         'quay.io/biocontainers/samtools:1.15--h1170115_1' }"
 
     input:
-    tuple val(meta), path(bam)
+    tuple val(meta), path(input), path(intervals)
     path  fasta
 
     output:
@@ -21,12 +21,13 @@ process SAMTOOLS_MPILEUP {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def intervals = intervals ? "-l ${intervals}" : ""
     """
     samtools mpileup \\
         --fasta-ref $fasta \\
         --output ${prefix}.mpileup \\
         $args \\
-        $bam
+        $input
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
