@@ -12,7 +12,7 @@ jobs:
       - uses: dorny/paths-filter@v2
         id: filter
         with:
-          filters: 'tests/config/pytest_software.yml'
+          filters: "tests/config/pytest_software.yml"
 
   test:
     runs-on: ubuntu-latest
@@ -22,9 +22,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        nxf_version: ['21.04.0']
-        tags: ['${{ fromJson(needs.changes.outputs.modules) }}']
-        profile: ['docker', 'singularity']  # 'conda'
+        nxf_version: ["21.04.0"]
+        tags: ["${{ fromJson(needs.changes.outputs.modules) }}"]
+        profile: ["docker", "singularity"] # 'conda'
     env:
       NXF_ANSI_LOG: false
     steps:
@@ -33,7 +33,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: "3.x"
 
       - uses: actions/cache@v2
         with:
@@ -45,7 +45,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: "3.x"
 
       - name: Install Python dependencies
         run: python -m pip install --upgrade pip pytest-workflow

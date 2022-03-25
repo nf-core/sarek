@@ -1,7 +1,7 @@
 name: samtools_bam2fq
 description: |
-    The module uses bam2fq method from samtools to
-    convert a SAM, BAM or CRAM file to FASTQ format
+  The module uses bam2fq method from samtools to
+  convert a SAM, BAM or CRAM file to FASTQ format
 keywords:
   - bam2fq
   - samtools
@@ -13,7 +13,7 @@ tools:
       documentation: http://www.htslib.org/doc/1.1/samtools.html
       tool_dev_url: None
       doi: ""
-      licence: ['MIT']
+      licence: ["MIT"]
 
 input:
   - meta:
