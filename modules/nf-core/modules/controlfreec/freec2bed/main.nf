@@ -1,4 +1,4 @@
-process CONTROLFREEC_ASSESSSIGNIFICANCE {
+process CONTROLFREEC_FREEC2BED {
     tag "$meta.id"
     label 'process_low'
 
@@ -8,11 +8,11 @@ process CONTROLFREEC_ASSESSSIGNIFICANCE {
         'quay.io/biocontainers/control-freec:11.6--h1b792b2_1' }"
 
     input:
-    tuple val(meta), path(cnvs), path(ratio)
+    tuple val(meta), path(ratio)
 
     output:
-    tuple val(meta), path("*.p.value.txt"), emit: p_value_txt
-    path "versions.yml"                   , emit: versions
+    tuple val(meta), path("*.bed"), emit: bed
+    path "versions.yml"           , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -21,9 +21,7 @@ process CONTROLFREEC_ASSESSSIGNIFICANCE {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    cat /usr/local/bin/assess_significance.R | R --slave --args ${cnvs} ${ratio}
-
-    mv *.p.value.txt ${prefix}.p.value.txt
+    freec2bed.pl -f ${ratio} ${args} > ${prefix}.bed
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

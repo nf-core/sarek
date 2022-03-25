@@ -71,6 +71,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
                         mappability,
                         intervals_bed_combined,
                         num_intervals)
+        ch_versions = ch_versions.mix(RUN_CONTROLFREEC.out.versions)
     }
 
     if (tools.contains('freebayes')){

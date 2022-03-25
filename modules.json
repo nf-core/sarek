@@ -31,10 +31,16 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "controlfreec/assesssignificance": {
-                "git_sha": "4efa8da5c5bd8b68d667ddade7ed398e16c145f6"
+                "git_sha": "28e5211b3513d80f198beb7090f57242165cc030"
             },
             "controlfreec/freec": {
                 "git_sha": "4efa8da5c5bd8b68d667ddade7ed398e16c145f6"
+            },
+            "controlfreec/freec2bed": {
+                "git_sha": "8a64e73af29a8096e1996e0496df4ae8c449c40b"
+            },
+            "controlfreec/makegraph": {
+                "git_sha": "28e5211b3513d80f198beb7090f57242165cc030"
             },
             "custom/dumpsoftwareversions": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
