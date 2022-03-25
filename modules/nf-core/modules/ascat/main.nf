@@ -137,15 +137,15 @@ process ASCAT {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}.cnvs.txt
-    touch ${prefix}.purityploidy.txt
-    touch ${prefix}.segments.txt
-    touch Tumour.ASCATprofile.png
-    touch Tumour.ASPCF.png
-    touch Tumour.germline.png
-    touch Tumour.rawprofile.png
-    touch Tumour.sunrise.png
-    touch Tumour.tumour.png
+    echo stub > ${prefix}.cnvs.txt
+    echo stub > ${prefix}.purityploidy.txt
+    echo stub > ${prefix}.segments.txt
+    echo stub > Tumour.ASCATprofile.png
+    echo stub > Tumour.ASPCF.png
+    echo stub > Tumour.germline.png
+    echo stub > Tumour.rawprofile.png
+    echo stub > Tumour.sunrise.png
+    echo stub > Tumour.tumour.png
 
     echo 'ASCAT:' > versions.yml
     echo ' ascat: 3.0.0' >> versions.yml

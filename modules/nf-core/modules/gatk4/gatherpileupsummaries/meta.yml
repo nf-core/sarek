@@ -9,7 +9,7 @@ tools:
       documentation: https://gatk.broadinstitute.org/hc/en-us
       tool_dev_url: https://github.com/broadinstitute/gatk
       doi: "10.1158/1538-7445.AM2017-3590"
-      licence: ['BSD-3-clause']
+      licence: ["BSD-3-clause"]
 
 input:
   - meta:

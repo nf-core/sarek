@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#241](https://github.com/nf-core/sarek/pull/241), [#248](https://github.com/nf-core/sarek/pull/248), [#250](https://github.com/nf-core/sarek/pull/250), [#257](https://github.com/nf-core/sarek/pull/257), [#259](https://github.com/nf-core/sarek/pull/259) - Add modules and sub workflow for preprocessing
 - [#242](https://github.com/nf-core/sarek/pull/242), [#244](https://github.com/nf-core/sarek/pull/244), [#245](https://github.com/nf-core/sarek/pull/245), [#246](https://github.com/nf-core/sarek/pull/246), [#247](https://github.com/nf-core/sarek/pull/247), [#249](https://github.com/nf-core/sarek/pull/249), [#252](https://github.com/nf-core/sarek/pull/252), [#256](https://github.com/nf-core/sarek/pull/256), [#263](https://github.com/nf-core/sarek/pull/263), [#264](https://github.com/nf-core/sarek/pull/264), [#283](https://github.com/nf-core/sarek/pull/283), [#285](https://github.com/nf-core/sarek/pull/285), [#338](https://github.com/nf-core/sarek/pull/338) - Refactor `dsl2` branch
 - [#257](https://github.com/nf-core/sarek/pull/257) - Use a params modules config file
-- [#266](https://github.com/nf-core/sarek/pull/266), [#285](https://github.com/nf-core/sarek/pull/285), [#297](https://github.com/nf-core/sarek/pull/297)  - Add modules and sub workflow for variant calling
+- [#266](https://github.com/nf-core/sarek/pull/266), [#285](https://github.com/nf-core/sarek/pull/285), [#297](https://github.com/nf-core/sarek/pull/297) - Add modules and sub workflow for variant calling
 - [#333](https://github.com/nf-core/sarek/pull/333) - Bump `Sarek` version to `3.0dev`
 - [#334](https://github.com/nf-core/sarek/pull/334) - Sync `dsl2` and `dev` branches
 - [#342](https://github.com/nf-core/sarek/pull/342) - Update `README.md`
@@ -377,7 +377,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#7](https://github.com/nf-core/sarek/pull/8), [#23](https://github.com/nf-core/sarek/pull/23) - `--annotateVCF` is now deprecated, use `--input` instead
 - [#8](https://github.com/nf-core/sarek/pull/8), [#12](https://github.com/nf-core/sarek/pull/12) - Improve helper script `build.nf` for downloading and building reference files
 - [#9](https://github.com/nf-core/sarek/pull/9) - `ApplyBQSR` is now parallelized
-- [#9](https://github.com/nf-core/sarek/pull/9) - Fastq files are named following "${idRun}_R1.fastq.gz" in the `FastQC` output for easier reporting
+- [#9](https://github.com/nf-core/sarek/pull/9) - Fastq files are named following "${idRun}\_R1.fastq.gz" in the `FastQC` output for easier reporting
 - [#9](https://github.com/nf-core/sarek/pull/9) - Status is now a map with `idpatient`, `idsample` as keys (ie: `status = statusMap[idPatient, idSample]`)
 - [#9](https://github.com/nf-core/sarek/pull/9) - Use `ensembl-vep` `95.2` instead of `96.0`
 - [#11](https://github.com/nf-core/sarek/pull/11) - Summary HTML from `VEP` is now in the `Reports` directory
@@ -394,7 +394,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#18](https://github.com/nf-core/sarek/pull/18), [#29](https://github.com/nf-core/sarek/pull/29) - `--noReports` is now `--skipQC all`
 - [#18](https://github.com/nf-core/sarek/pull/18), [#21](https://github.com/nf-core/sarek/pull/21) - Update logo
 - [#21](https://github.com/nf-core/sarek/pull/21) - Moved `smallGRCh37` path to `genomes.config`
-- [#23](https://github.com/nf-core/sarek/pull/23) - Rename `genomeFile`, `genomeIndex` and  `genomeDict` by `fasta`, `fastaFai` and `dict`
+- [#23](https://github.com/nf-core/sarek/pull/23) - Rename `genomeFile`, `genomeIndex` and `genomeDict` by `fasta`, `fastaFai` and `dict`
 - [#23](https://github.com/nf-core/sarek/pull/23) - `--sample` is now deprecated, use `--input` instead
 - [#23](https://github.com/nf-core/sarek/pull/23) - `--genomeFile` is now deprecated, use `--fasta` instead
 - [#23](https://github.com/nf-core/sarek/pull/23) - `--genomeIndex` is now deprecated, use `--fastaFai` instead
@@ -529,7 +529,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 ### Added
 
 - [#671](https://github.com/SciLifeLab/Sarek/pull/671) - New `publishDirMode` param and docs
-- [#673](https://github.com/SciLifeLab/Sarek/pull/673), [#675](https://github.com/SciLifeLab/Sarek/pull/675),  [#676](https://github.com/SciLifeLab/Sarek/pull/676) - Profiles for BinAC and CFC clusters in Tübingen
+- [#673](https://github.com/SciLifeLab/Sarek/pull/673), [#675](https://github.com/SciLifeLab/Sarek/pull/675), [#676](https://github.com/SciLifeLab/Sarek/pull/676) - Profiles for BinAC and CFC clusters in Tübingen
 - [#679](https://github.com/SciLifeLab/Sarek/pull/679) - Add container for `CreateIntervalBeds`
 - [#692](https://github.com/SciLifeLab/Sarek/pull/692), [#697](https://github.com/SciLifeLab/Sarek/pull/697) - Add `AWS iGenomes` possibilities (within `conf/igenomes.conf`)
 - [#694](https://github.com/SciLifeLab/Sarek/pull/694) - Add monochrome and grey logos for light or dark background
@@ -629,7 +629,7 @@ Ruotes is one of the main massif in the Sarek National Park.
 - [#556](https://github.com/SciLifeLab/Sarek/pull/556) - `Strelka` Best Practices
 - [#563](https://github.com/SciLifeLab/Sarek/pull/563) - Use `SnpEFF` reports in `MultiQC`
 - [#568](https://github.com/SciLifeLab/Sarek/pull/568) - `VCFTools` process `RunVcftools` for QC
-- [#574](https://github.com/SciLifeLab/Sarek/pull/574), [#580](https://github.com/SciLifeLab/Sarek/pull/580) - Abstracts for `NPMI`, `JOBIM` and  `EACR25`
+- [#574](https://github.com/SciLifeLab/Sarek/pull/574), [#580](https://github.com/SciLifeLab/Sarek/pull/580) - Abstracts for `NPMI`, `JOBIM` and `EACR25`
 - [#577](https://github.com/SciLifeLab/Sarek/pull/577) - New repository for testing: [Sarek-data](https://github.com/SciLifeLab/Sarek-data)
 - [#595](https://github.com/SciLifeLab/Sarek/pull/595) - New library `QC` for functions `bamQC`, `bcftools`, `samtoolsStats`, `vcftools`, `getVersionBCFtools`, `getVersionGATK`, `getVersionManta`, `getVersionSnpEFF`, `getVersionStrelka`, `getVersionVCFtools`, `getVersionVEP`
 - [#595](https://github.com/SciLifeLab/Sarek/pull/595) - New Processes `GetVersionBCFtools`, `GetVersionGATK`, `GetVersionManta`, `GetVersionSnpEFF`, `GetVersionStrelka`, `GetVersionVCFtools`, `GetVersionVEP`
@@ -661,7 +661,7 @@ Ruotes is one of the main massif in the Sarek National Park.
 - [#607](https://github.com/SciLifeLab/Sarek/pull/607) - Update to `GATK4`
 - [#608](https://github.com/SciLifeLab/Sarek/pull/608) - Update `Nextflow` required version
 - [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Update `CHANGELOG`
-- [#617](https://github.com/SciLifeLab/Sarek/pull/617) - Replace deprecated `Nextflow ``$name` syntax with `withName`
+- [#617](https://github.com/SciLifeLab/Sarek/pull/617) - Replace deprecated ` Nextflow ``$name ` syntax with `withName`
 
 ### Fixed
 
@@ -670,7 +670,7 @@ Ruotes is one of the main massif in the Sarek National Park.
 - [#579](https://github.com/SciLifeLab/Sarek/pull/579), [#584](https://github.com/SciLifeLab/Sarek/pull/584) - `Manta` output reorganized after modification for `Strelka Best Practices` process
 - [#585](https://github.com/SciLifeLab/Sarek/pull/583) - Trace file is plain txt
 - [#590](https://github.com/SciLifeLab/Sarek/pull/590), [#593](https://github.com/SciLifeLab/Sarek/pull/593) - Fix `Singularity` installation in `Travis CI` testing
-- [#598](https://github.com/SciLifeLab/Sarek/pull/598), [#601](https://github.com/SciLifeLab/Sarek/pull/601) - Fixes for  `Python` script `selectROI.py` to work with `CLC` viewer
+- [#598](https://github.com/SciLifeLab/Sarek/pull/598), [#601](https://github.com/SciLifeLab/Sarek/pull/601) - Fixes for `Python` script `selectROI.py` to work with `CLC` viewer
 
 ### Removed
 
