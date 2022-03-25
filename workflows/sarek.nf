@@ -136,8 +136,11 @@ include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_UMI   } from '../subworkflows
 // Split FASTQ files
 include { SPLIT_FASTQ                                    } from '../subworkflows/local/split_fastq'
 
-// Run FASTQC and/or TRIMGALORE
-include { FASTQC_TRIMGALORE                              } from '../subworkflows/nf-core/fastqc_trimgalore'
+// Run FASTQC
+include { RUN_FASTQC                                     } from '../subworkflows/nf-core/run_fastqc'
+
+// Run TRIMGALORE
+include { RUN_TRIMGALORE                                 } from '../subworkflows/nf-core/run_trimgalore'
 
 // Create umi consensus bams from fastq
 include { CREATE_UMI_CONSENSUS                           } from '../subworkflows/nf-core/fgbio_create_umi_consensus/main'
@@ -269,11 +272,6 @@ workflow SAREK {
 
     // PREPROCESSING
 
-    // STEP 0: QC & TRIM
-    // `--d fastqc` to skip fastqc
-    // trim only with `--trim_fastq`
-    // additional options to be set up
-
     if (params.step == 'mapping') {
 
         // Figure out if input is fastq or bam
@@ -285,33 +283,72 @@ workflow SAREK {
         // convert any bam input to fastq
         ALIGNMENT_TO_FASTQ_INPUT(ch_input_sample_type.bam, [])
 
-        // Optionnal trimming (+ QC)
-        // Done on fastq (inputed or converted)
+        // gather fastq (inputed or converted)
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
         // But not sure how to handle that with the samplesheet
         // Or if we really want users to be able to do that
-        FASTQC_TRIMGALORE(ch_input_sample_type.fastq.mix(ALIGNMENT_TO_FASTQ_INPUT.out.reads))
+        ch_input_fastq = ch_input_sample_type.fastq.mix(ALIGNMENT_TO_FASTQ_INPUT.out.reads)
 
-        // Optionnal UMI consensus calling
-        CREATE_UMI_CONSENSUS(FASTQC_TRIMGALORE.out.reads,
-            fasta,
-            ch_map_index,
-            umi_read_structure,
-            params.group_by_umi_strategy)
+        // STEP 0: QC & TRIM
+        // `--d fastqc` to skip fastqc
+        // trim only with `--trim_fastq`
+        // additional options to be set up
 
-        // convert back to fastq for further preprocessing
-        ALIGNMENT_TO_FASTQ_UMI(CREATE_UMI_CONSENSUS.out.consensusbam, [])
+        // QC
+        if (!(params.skip_tools && params.skip_tools.contains('fastqc'))) {
+            RUN_FASTQC(ch_input_fastq)
 
-        // Get fastq files for further preprocessing
-        // either out of optionnal trimming or optionnal UMI consensus calling
-        ch_input_sample_to_split = params.umi_read_structure ? ALIGNMENT_TO_FASTQ_UMI.out.reads : FASTQC_TRIMGALORE.out.reads
+            ch_reports  = ch_reports.mix(RUN_FASTQC.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
+            ch_versions = ch_versions.mix(RUN_FASTQC.out.versions)
+        }
 
-        // OPTIONNAL SPLIT OF FASTQ FILES WITH SEQKIT_SPLIT2
-        SPLIT_FASTQ(ch_input_sample_to_split)
+        // Trimming
+        if (params.trim_fastq) {
+            RUN_TRIMGALORE(ch_input_fastq)
+
+            ch_reads = RUN_TRIMGALORE.out.reads
+
+            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
+            ch_versions = ch_versions.mix(RUN_TRIMGALORE.out.versions)
+        } else {
+            ch_reads = ch_input_fastq
+        }
+
+        // UMI consensus calling
+        if (params.umi_read_structure) {
+            CREATE_UMI_CONSENSUS(ch_reads,
+                fasta,
+                ch_map_index,
+                umi_read_structure,
+                params.group_by_umi_strategy)
+
+            // convert back to fastq for further preprocessing
+            ALIGNMENT_TO_FASTQ_UMI(CREATE_UMI_CONSENSUS.out.consensusbam, [])
+
+            ch_input_sample_to_split = ALIGNMENT_TO_FASTQ_UMI.out.reads
+
+            // Gather used softwares versions
+            ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ_UMI.out.versions)
+            ch_versions = ch_versions.mix(CREATE_UMI_CONSENSUS.out.versions)
+        } else {
+            ch_input_sample_to_split = ch_input_fastq
+        }
+
+        // SPLIT OF FASTQ FILES WITH SEQKIT_SPLIT2
+        if (params.split_fastq > 1) {
+            SPLIT_FASTQ(ch_input_sample_to_split)
+
+            ch_reads_to_map = SPLIT_FASTQ.out.reads
+
+            // Gather used softwares versions
+            ch_versions = ch_versions.mix(SPLIT_FASTQ.out.versions)
+        } else {
+            ch_reads_to_map = ch_input_sample_to_split
+        }
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         // reads will be sorted
-        GATK4_MAPPING(SPLIT_FASTQ.out.reads, ch_map_index, true)
+        GATK4_MAPPING(ch_reads_to_map, ch_map_index, true)
 
         ch_bam_mapped = GATK4_MAPPING.out.bam.map{ meta, bam ->
             new_meta = meta.clone()
@@ -339,17 +376,9 @@ workflow SAREK {
             ch_versions = ch_versions.mix(MERGE_INDEX_BAM.out.versions)
         }
 
-        // Gather QC reports
-        ch_reports  = ch_reports.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
-        ch_reports  = ch_reports.mix(FASTQC_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
-
         // Gather used softwares versions
         ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ_INPUT.out.versions)
-        ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ_UMI.out.versions)
-        ch_versions = ch_versions.mix(CREATE_UMI_CONSENSUS.out.versions)
-        ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
         ch_versions = ch_versions.mix(GATK4_MAPPING.out.versions)
-        ch_versions = ch_versions.mix(SPLIT_FASTQ.out.versions)
     }
 
     if (params.step in ['mapping', 'prepare_recalibration']) {
