@@ -34,13 +34,13 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "deeptools/bamcoverage": {
-                "git_sha": "f0800157544a82ae222931764483331a81812012"
+                "git_sha": "fe088745e03f21d07477cc0c655c24ae9f72ac31"
             },
             "deepvariant": {
                 "git_sha": "c450b08a75cda8878876ccbbe42493d6774397bd"
             },
             "dragmap/align": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "e786457fb0da9653659b921fc47985554f28273c"
             },
             "dragmap/hashtable": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
