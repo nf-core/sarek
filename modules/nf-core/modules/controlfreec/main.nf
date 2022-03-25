@@ -35,6 +35,8 @@ process CONTROLFREEC {
     task.ext.when == null || task.ext.when
 
     script:
+
+    println task.ext.args
     //"General" configurations
     def bedgraphoutput              = task.ext.args?["general"]?["bedgraphoutput"]              ? "BedGraphOutput = ${task.ext.args["general"]["bedgraphoutput"]}"                              : ""
     def chr_files                   = chr_directory                                             ? "chrFiles =\${PWD}/${chr_directory}"                                                          : ""

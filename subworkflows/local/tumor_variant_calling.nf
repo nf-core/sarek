@@ -22,12 +22,15 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         intervals_bed_gz_tbi         // channel: [mandatory] intervals/target regions index zipped and indexed
         intervals_bed_combine_gz_tbi // channel: [mandatory] intervals/target regions index zipped and indexed
         intervals_bed_combine_gz     // channel: [mandatory] intervals/target regions index zipped and indexed in one file
+        intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
         num_intervals                // val: number of intervals that are used to parallelize exection, either based on capture kit or GATK recommended for WGS
         no_intervals
         germline_resource            // channel: [optional]  germline_resource
         germline_resource_tbi        // channel: [optional]  germline_resource_tbi
         panel_of_normals             // channel: [optional]  panel_of_normals
         panel_of_normals_tbi         // channel: [optional]  panel_of_normals_tbi
+        chr_length
+        mappability
 
     main:
 
@@ -59,7 +62,15 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
 
     if(tools.contains('controlfreec')){
         cram_recalibrated_intervals.map {meta, cram, crai, intervals -> [meta, cram, intervals]}.set{cram_intervals_no_index}
-        RUN_CONTROLFREEC(cram_intervals_no_index, fasta)
+        RUN_CONTROLFREEC(cram_intervals_no_index,
+                        fasta,
+                        fasta_fai,
+                        dbsnp,
+                        dbsnp_tbi,
+                        chr_length,
+                        mappability,
+                        intervals_bed_combined,
+                        num_intervals)
     }
 
     if (tools.contains('freebayes')){

@@ -21,6 +21,9 @@
             "bwamem2/mem": {
                 "git_sha": "950700bcdc0e9a2b6883d40d2c51c6fc435cd714"
             },
+            "cat/cat": {
+                "git_sha": "3d31fa4d04177579e86044bf111588376e1a0c12"
+            },
             "cat/fastq": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },

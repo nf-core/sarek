@@ -602,12 +602,15 @@ workflow SAREK {
             intervals_bed_gz_tbi,
             intervals_bed_combined_gz_tbi,
             intervals_bed_combined_gz,
+            intervals_bed_combined,
             num_intervals,
             params.no_intervals,
             germline_resource,
             germline_resource_tbi,
             pon,
-            pon_tbi
+            pon_tbi,
+            chr_length,
+            mappability
         )
 
         // PAIR VARIANT CALLING
