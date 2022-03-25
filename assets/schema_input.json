@@ -55,7 +55,6 @@
                         "maxLength": 0
                     }
                 ]
-
             },
             "fastq_1": {
                 "errorMessage": "FastQ file for reads 1 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
@@ -162,9 +161,6 @@
                 ]
             }
         },
-        "required": [
-            "patient",
-            "sample"
-        ]
+        "required": ["patient", "sample"]
     }
 }

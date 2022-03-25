@@ -46,11 +46,11 @@ TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
 TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
 ```
 
-| Column         | Description                                                                                                                                                                            |
-|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `sample`       | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `fastq_1`      | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `fastq_2`      | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
+| Column    | Description                                                                                                                                                                            |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sample`  | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
+| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
+| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
@@ -67,9 +67,9 @@ This will launch the pipeline with the `docker` configuration profile. See below
 Note that the pipeline will create the following files in your working directory:
 
 ```console
-work            # Directory containing the nextflow working files
-results         # Finished results (configurable, see below)
-.nextflow_log   # Log file from Nextflow
+work                # Directory containing the nextflow working files
+<OUTIDR>            # Finished results in specified location (defined with --outdir)
+.nextflow_log       # Log file from Nextflow
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
 
@@ -112,25 +112,25 @@ They are loaded in sequence, so later profiles can overwrite earlier profiles.
 If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`.
 This is _not_ recommended.
 
-* `docker`
-    * A generic configuration profile to be used with [Docker](https://docker.com/)
-* `singularity`
-    * A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
-* `podman`
-    * A generic configuration profile to be used with [Podman](https://podman.io/)
-* `shifter`
-    * A generic configuration profile to be used with [Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)
-* `charliecloud`
-    * A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
-* `conda`
-    * A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter or Charliecloud.
-* `test`
-    * A profile with a complete configuration for automated testing
-    * Includes links to test data so needs no other parameters
+- `docker`
+  - A generic configuration profile to be used with [Docker](https://docker.com/)
+- `singularity`
+  - A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
+- `podman`
+  - A generic configuration profile to be used with [Podman](https://podman.io/)
+- `shifter`
+  - A generic configuration profile to be used with [Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)
+- `charliecloud`
+  - A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
+- `conda`
+  - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter or Charliecloud.
+- `test`
+  - A profile with a complete configuration for automated testing
+  - Includes links to test data so needs no other parameters
 
 ### `-resume`
 
-Specify this when restarting a pipeline. Nextflow will used cached results from any pipeline steps where the inputs are the same, continuing from where it got to previously.
+Specify this when restarting a pipeline. Nextflow will use cached results from any pipeline steps where the inputs are the same, continuing from where it got to previously. For input to be considered the same, not only the names must be identical but the files' contents as well. For more info about this parameter, see [this blog post](https://www.nextflow.io/blog/2019/demystifying-nextflow-resume.html).
 
 You can also supply a run name to resume a specific run: `-resume [run-name]`. Use the `nextflow log` command to show previous run names.
 
@@ -192,6 +192,7 @@ process {
 ```
 
 > **NB:** We specify the full process name i.e. `NFCORE_RNASEQ:RNASEQ:ALIGN_STAR:STAR_ALIGN` in the config file because this takes priority over the short name (`STAR_ALIGN`) and allows existing configuration using the full process name to be correctly overridden.
+>
 > If you get a warning suggesting that the process selector isn't recognised check that the process name has been specified correctly.
 
 ### Updating containers
@@ -202,35 +203,35 @@ The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementatio
 2. Find the latest version of the Biocontainer available on [Quay.io](https://quay.io/repository/biocontainers/pangolin?tag=latest&tab=tags)
 3. Create the custom config accordingly:
 
-    * For Docker:
+   - For Docker:
 
-        ```nextflow
-        process {
-            withName: PANGOLIN {
-                container = 'quay.io/biocontainers/pangolin:3.0.5--pyhdfd78af_0'
-            }
-        }
-        ```
+     ```nextflow
+     process {
+         withName: PANGOLIN {
+             container = 'quay.io/biocontainers/pangolin:3.0.5--pyhdfd78af_0'
+         }
+     }
+     ```
 
-    * For Singularity:
+   - For Singularity:
 
-        ```nextflow
-        process {
-            withName: PANGOLIN {
-                container = 'https://depot.galaxyproject.org/singularity/pangolin:3.0.5--pyhdfd78af_0'
-            }
-        }
-        ```
+     ```nextflow
+     process {
+         withName: PANGOLIN {
+             container = 'https://depot.galaxyproject.org/singularity/pangolin:3.0.5--pyhdfd78af_0'
+         }
+     }
+     ```
 
-    * For Conda:
+   - For Conda:
 
-        ```nextflow
-        process {
-            withName: PANGOLIN {
-                conda = 'bioconda::pangolin=3.0.5'
-            }
-        }
-        ```
+     ```nextflow
+     process {
+         withName: PANGOLIN {
+             conda = 'bioconda::pangolin=3.0.5'
+         }
+     }
+     ```
 
 > **NB:** If you wish to periodically update individual tool-specific results (e.g. Pangolin) generated by the pipeline then you must ensure to keep the `work/` directory otherwise the `-resume` ability of the pipeline will be compromised and it will restart from scratch.
 
@@ -272,18 +273,18 @@ For all possible `TSV` files, described in the next sections, here is an explana
 
 `Sarek` auto-generates `TSV` files for all and for each individual samples, depending of the options specified.
 
-* `subject` designates the subject, it should be the ID of the subject, and it must be unique for each subject, but one subject can have multiple samples (e.g.
-normal and tumor)
-* `sex` are the sex chromosomes of the subject, (ie `XX`, `XY`...) and will only be used for Copy-Number Variation in a tumor/pair.
-* `status` is the status of the measured sample, (`0` for Normal or `1` for Tumor)
-* `sample` designates the sample, it should be the ID of the sample (it is possible to have more than one tumor sample for each subject, i.e. a tumor and a relapse), it must be unique, but samples can have multiple lanes (which will later be merged)
-* `lane` is used when the sample is multiplexed on several lanes, it must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character
-* `fastq1` is the path to the first pair of the `FASTQ` file
-* `fastq2` is the path to the second pair of the `FASTQ` file
-* `bam` is the path to the `BAM` file
-* `bai` is the path to the `BAM` index file
-* `recaltable` is the path to the recalibration table
-* `mpileup` is the path to the mpileup file
+- `subject` designates the subject, it should be the ID of the subject, and it must be unique for each subject, but one subject can have multiple samples (e.g.
+  normal and tumor)
+- `sex` are the sex chromosomes of the subject, (ie `XX`, `XY`...) and will only be used for Copy-Number Variation in a tumor/pair.
+- `status` is the status of the measured sample, (`0` for Normal or `1` for Tumor)
+- `sample` designates the sample, it should be the ID of the sample (it is possible to have more than one tumor sample for each subject, i.e. a tumor and a relapse), it must be unique, but samples can have multiple lanes (which will later be merged)
+- `lane` is used when the sample is multiplexed on several lanes, it must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character
+- `fastq1` is the path to the first pair of the `FASTQ` file
+- `fastq2` is the path to the second pair of the `FASTQ` file
+- `bam` is the path to the `BAM` file
+- `bai` is the path to the `BAM` index file
+- `recaltable` is the path to the recalibration table
+- `mpileup` is the path to the mpileup file
 
 It is recommended to use the absolute path of the files, but relative path should also work.
 
@@ -304,11 +305,11 @@ The `TSV` file to start with the mapping step (`--step mapping`) with paired-end
 
 In this example (`example_fastq.tsv`), there are 3 read groups.
 
-| | | | | | | |
-|-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID|1|/samples/normal1_1.fastq.gz|/samples/normal1_2.fastq.gz|
-|SUBJECT_ID|XX|0|SAMPLE_ID|2|/samples/normal2_1.fastq.gz|/samples/normal2_2.fastq.gz|
-|SUBJECT_ID|XX|0|SAMPLE_ID|3|/samples/normal3_1.fastq.gz|/samples/normal3_2.fastq.gz|
+|            |     |     |           |     |                             |                             |
+| ---------- | --- | --- | --------- | --- | --------------------------- | --------------------------- |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID | 1   | /samples/normal1_1.fastq.gz | /samples/normal1_2.fastq.gz |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID | 2   | /samples/normal2_1.fastq.gz | /samples/normal2_2.fastq.gz |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID | 3   | /samples/normal3_1.fastq.gz | /samples/normal3_2.fastq.gz |
 
 ```bash
 --input example_fastq.tsv
@@ -318,13 +319,13 @@ Or, for a normal/tumor pair:
 
 In this example (`example_pair_fastq.tsv`), there are 3 read groups for the normal sample and 2 for the tumor sample.
 
-| | | | | | | |
-|-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|1|/samples/normal1_1.fastq.gz|/samples/normal1_2.fastq.gz|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|2|/samples/normal2_1.fastq.gz|/samples/normal2_2.fastq.gz|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|3|/samples/normal3_1.fastq.gz|/samples/normal3_2.fastq.gz|
-|SUBJECT_ID|XX|1|SAMPLE_ID2|1|/samples/tumor1_1.fastq.gz|/samples/tumor1_2.fastq.gz|
-|SUBJECT_ID|XX|1|SAMPLE_ID2|2|/samples/tumor2_1.fastq.gz|/samples/tumor2_2.fastq.gz|
+|            |     |     |            |     |                             |                             |
+| ---------- | --- | --- | ---------- | --- | --------------------------- | --------------------------- |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | 1   | /samples/normal1_1.fastq.gz | /samples/normal1_2.fastq.gz |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | 2   | /samples/normal2_1.fastq.gz | /samples/normal2_2.fastq.gz |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | 3   | /samples/normal3_1.fastq.gz | /samples/normal3_2.fastq.gz |
+| SUBJECT_ID | XX  | 1   | SAMPLE_ID2 | 1   | /samples/tumor1_1.fastq.gz  | /samples/tumor1_2.fastq.gz  |
+| SUBJECT_ID | XX  | 1   | SAMPLE_ID2 | 2   | /samples/tumor2_1.fastq.gz  | /samples/tumor2_2.fastq.gz  |
 
 ```bash
 --input example_pair_fastq.tsv
@@ -338,11 +339,11 @@ The `TSV` file to start with the mapping step (`--step mapping`) with `unmapped 
 
 In this example (`example_ubam.tsv`), there are 3 read groups.
 
-| | | | | | |
-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID|1|/samples/normal_1.bam|
-|SUBJECT_ID|XX|0|SAMPLE_ID|2|/samples/normal_2.bam|
-|SUBJECT_ID|XX|0|SAMPLE_ID|3|/samples/normal_3.bam|
+|            |     |     |           |     |                       |
+| ---------- | --- | --- | --------- | --- | --------------------- |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID | 1   | /samples/normal_1.bam |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID | 2   | /samples/normal_2.bam |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID | 3   | /samples/normal_3.bam |
 
 ```bash
 --input example_ubam.tsv
@@ -352,13 +353,13 @@ Or, for a normal/tumor pair:
 
 In this example (`example_pair_ubam.tsv`), there are 3 read groups for the normal sample and 2 for the tumor sample.
 
-| | | | | | |
-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|1|/samples/normal_1.bam|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|2|/samples/normal_2.bam|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|3|/samples/normal_3.bam|
-|SUBJECT_ID|XX|1|SAMPLE_ID2|1|/samples/tumor_1.bam|
-|SUBJECT_ID|XX|1|SAMPLE_ID2|2|/samples/tumor_2.bam|
+|            |     |     |            |     |                       |
+| ---------- | --- | --- | ---------- | --- | --------------------- |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | 1   | /samples/normal_1.bam |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | 2   | /samples/normal_2.bam |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | 3   | /samples/normal_3.bam |
+| SUBJECT_ID | XX  | 1   | SAMPLE_ID2 | 1   | /samples/tumor_1.bam  |
+| SUBJECT_ID | XX  | 1   | SAMPLE_ID2 | 2   | /samples/tumor_2.bam  |
 
 ```bash
 --input example_pair_ubam.tsv
@@ -373,32 +374,32 @@ The `TSV` contains the following columns:
 
 `subject sex status sample bam bai`
 
-| | | | | | |
-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID|/samples/normal.md.bam|/samples/normal.md.bai|
+|            |     |     |           |                        |                        |
+| ---------- | --- | --- | --------- | ---------------------- | ---------------------- |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID | /samples/normal.md.bam | /samples/normal.md.bai |
 
 Or, for a normal/tumor pair:
 
-| | | | | | |
-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.md.bam|/samples/normal.md.bai|
-|SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.md.bam|/samples/tumor.md.bai|
+|            |     |     |            |                        |                        |
+| ---------- | --- | --- | ---------- | ---------------------- | ---------------------- |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | /samples/normal.md.bam | /samples/normal.md.bai |
+| SUBJECT_ID | XX  | 1   | SAMPLE_ID2 | /samples/tumor.md.bam  | /samples/tumor.md.bai  |
 
 #### --input &lt;TSV&gt; --step prepare_recalibration --skip_markduplicates
 
 The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/mapped.tsv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration --skip_markduplicates`.
 The `TSV` file contains the same columns, but the content is slightly different:
 
-| | | | | | |
-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID|/samples/normal.bam|/samples/normal.bai|
+|            |     |     |           |                     |                     |
+| ---------- | --- | --- | --------- | ------------------- | ------------------- |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID | /samples/normal.bam | /samples/normal.bai |
 
 Or, for a normal/tumor pair:
 
-| | | | | | |
-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.bam|/samples/normal.bai|
-|SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.bam|/samples/tumor.bai|
+|            |     |     |            |                     |                     |
+| ---------- | --- | --- | ---------- | ------------------- | ------------------- |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | /samples/normal.bam | /samples/normal.bai |
+| SUBJECT_ID | XX  | 1   | SAMPLE_ID2 | /samples/tumor.bam  | /samples/tumor.bai  |
 
 #### --input &lt;TSV&gt; --step recalibrate
 
@@ -409,32 +410,32 @@ The `TSV` contains the following columns:
 
 `subject sex status sample bam bai recaltable`
 
-| | | | | | | |
-|-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID|/samples/normal.md.bam|/samples/normal.md.bai|/samples/normal.recal.table|
+|            |     |     |           |                        |                        |                             |
+| ---------- | --- | --- | --------- | ---------------------- | ---------------------- | --------------------------- |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID | /samples/normal.md.bam | /samples/normal.md.bai | /samples/normal.recal.table |
 
 Or, for a normal/tumor pair:
 
-| | | | | | | |
-|-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.md.bam|/samples/normal.md.bai|/samples/normal.recal.table|
-|SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.md.bam|/samples/tumor.md.bai|/samples/tumor.recal.table|
+|            |     |     |            |                        |                        |                             |
+| ---------- | --- | --- | ---------- | ---------------------- | ---------------------- | --------------------------- |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | /samples/normal.md.bam | /samples/normal.md.bai | /samples/normal.recal.table |
+| SUBJECT_ID | XX  | 1   | SAMPLE_ID2 | /samples/tumor.md.bam  | /samples/tumor.md.bai  | /samples/tumor.recal.table  |
 
 #### --input &lt;TSV&gt; --step recalibrate --skip_markduplicates
 
 The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/mapped_no_duplicates_marked.tsv` and will automatically be used as an input when specifying the parameter `--step recalibrate --skip_markduplicates`.
 The `TSV` file contains the same columns, but the content is slightly different:
 
-| | | | | | | |
-|-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID|/samples/normal.bam|/samples/normal.bai|/samples/normal.recal.table|
+|            |     |     |           |                     |                     |                             |
+| ---------- | --- | --- | --------- | ------------------- | ------------------- | --------------------------- |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID | /samples/normal.bam | /samples/normal.bai | /samples/normal.recal.table |
 
 Or, for a normal/tumor pair:
 
-| | | | | | | |
-|-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.bam|/samples/normal.bai|/samples/normal.recal.table|
-|SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.bam|/samples/tumor.bai|/samples/tumor.recal.table|
+|            |     |     |            |                     |                     |                             |
+| ---------- | --- | --- | ---------- | ------------------- | ------------------- | --------------------------- |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | /samples/normal.bam | /samples/normal.bai | /samples/normal.recal.table |
+| SUBJECT_ID | XX  | 1   | SAMPLE_ID2 | /samples/tumor.bam  | /samples/tumor.bai  | /samples/tumor.recal.table  |
 
 #### --input &lt;TSV&gt; --step variant_calling
 
@@ -447,16 +448,16 @@ The `TSV` file should contain the columns:
 
 Here is an example for two samples from the same subject:
 
-| | | | | | |
-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID|/samples/normal.recal.bam|/samples/normal.recal.bai|
+|            |     |     |           |                           |                           |
+| ---------- | --- | --- | --------- | ------------------------- | ------------------------- |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID | /samples/normal.recal.bam | /samples/normal.recal.bai |
 
 Or, for a normal/tumor pair:
 
-| | | | | | |
-|-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.recal.bam|/samples/normal.recal.bai|
-|SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.recal.bam|/samples/tumor.recal.bai|
+|            |     |     |            |                           |                           |
+| ---------- | --- | --- | ---------- | ------------------------- | ------------------------- |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | /samples/normal.recal.bam | /samples/normal.recal.bai |
+| SUBJECT_ID | XX  | 1   | SAMPLE_ID2 | /samples/tumor.recal.bam  | /samples/tumor.recal.bai  |
 
 #### --input &lt;TSV&gt; --step Control-FREEC
 
@@ -469,10 +470,10 @@ The `TSV` file should contain the columns:
 
 Here is an example for one normal/tumor pair from one subjects:
 
-| | | | | |
-|-|-|-|-|-|
-|SUBJECT_ID|XX|0|SAMPLE_ID1|/samples/normal.pileup|
-|SUBJECT_ID|XX|1|SAMPLE_ID2|/samples/tumor.pileup|
+|            |     |     |            |                        |
+| ---------- | --- | --- | ---------- | ---------------------- |
+| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | /samples/normal.pileup |
+| SUBJECT_ID | XX  | 1   | SAMPLE_ID2 | /samples/tumor.pileup  |
 
 ### --input &lt;sample/&gt; --step mapping
 
@@ -508,29 +509,29 @@ ID
 
 `FASTQ` filename structure:
 
-* `<sample>_<lib>_<flowcell-index>_<lane>_R1_<XXX>.fastq.gz` and
-* `<sample>_<lib>_<flowcell-index>_<lane>_R2_<XXX>.fastq.gz`
+- `<sample>_<lib>_<flowcell-index>_<lane>_R1_<XXX>.fastq.gz` and
+- `<sample>_<lib>_<flowcell-index>_<lane>_R2_<XXX>.fastq.gz`
 
 Where:
 
-* `sample` = sample id
-* `lib` = identifier of library preparation
-* `flowcell-index` = identifier of flow cell for the sequencing run
-* `lane` = identifier of the lane of the sequencing run
+- `sample` = sample id
+- `lib` = identifier of library preparation
+- `flowcell-index` = identifier of flow cell for the sequencing run
+- `lane` = identifier of the lane of the sequencing run
 
 Read group information will be parsed from `FASTQ` file names according to this:
 
-* `RGID` = "sample_lib_flowcell_index_lane"
-* `RGPL` = "Illumina"
-* `PU` = sample
-* `RGLB` = lib
+- `RGID` = "sample_lib_flowcell_index_lane"
+- `RGPL` = "Illumina"
+- `PU` = sample
+- `RGLB` = lib
 
 Each `FASTQ` file pair gets its own read group (`@RG`) in the resulting `BAM` file in the following way.
 
-* The sample name (`SM`) is derived from the the last component of the path given to `--input`.
-That is, you should make sure that that directory has a meaningful name! For example, with `--input=/my/fastqs/sample123`, the sample name will be `sample123`.
-* The read group id is set to _flowcell.samplename.lane_.
-The flowcell id and lane number are auto-detected from the name of the first read in the `FASTQ` file.
+- The sample name (`SM`) is derived from the the last component of the path given to `--input`.
+  That is, you should make sure that that directory has a meaningful name! For example, with `--input=/my/fastqs/sample123`, the sample name will be `sample123`.
+- The read group id is set to _flowcell.samplename.lane_.
+  The flowcell id and lane number are auto-detected from the name of the first read in the `FASTQ` file.
 
 ### --input &lt;VCF&gt; --step annotate
 
@@ -598,8 +599,8 @@ For annotation, cache has to be downloaded, or specifically designed containers 
 
 Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags), it contains:
 
-* **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
-* Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
+- **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
+- Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
 
 `sarekvep`, our `vep` container is designed using [Conda](https://conda.io/).
 
@@ -607,9 +608,9 @@ Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags), it con
 
 Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags), it contains:
 
-* **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
-* **[VEP](https://github.com/Ensembl/ensembl-vep)** 99.2
-* Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
+- **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
+- **[VEP](https://github.com/Ensembl/ensembl-vep)** 99.2
+- Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
 
 ### Using downloaded cache
 
@@ -627,7 +628,7 @@ nextflow run nf-core/sarek --tools VEP --step annotate --sample <file.vcf.gz> --
 
 ### Spark related issues
 
-If you have problems running processes that make use of Spark such as ```MarkDuplicates```.
+If you have problems running processes that make use of Spark such as `MarkDuplicates`.
 You are probably experiencing issues with the limit of open files in your system.
 You can check your current limit by typing the following:
 
@@ -638,20 +639,20 @@ ulimit -n
 The default limit size is usually 1024 which is quite low to run Spark jobs.
 In order to increase the size limit permanently you can:
 
-Edit the file ```/etc/security/limits.conf``` and add the lines:
+Edit the file `/etc/security/limits.conf` and add the lines:
 
 ```bash
 *     soft   nofile  65535
 *     hard   nofile  65535
 ```
 
-Edit the file ```/etc/sysctl.conf``` and add the line:
+Edit the file `/etc/sysctl.conf` and add the line:
 
 ```bash
 fs.file-max = 65535
 ```
 
-Edit the file ```/etc/sysconfig/docker``` and add the new limits to OPTIONS like this:
+Edit the file `/etc/sysconfig/docker` and add the new limits to OPTIONS like this:
 
 ```bash
 OPTIONS=”—default-ulimit nofile=65535:65535"
@@ -675,9 +676,9 @@ nextflow run download_cache.nf --vep_cache </path/to/VEP/cache> --species <speci
 
 To enable the use of the `VEP` `CADD` plugin:
 
-* Download the `CADD` files
-* Specify them (either on the command line, like in the example or in a configuration file)
-* use the `--cadd_cache` flag
+- Download the `CADD` files
+- Specify them (either on the command line, like in the example or in a configuration file)
+- use the `--cadd_cache` flag
 
 Example:
 

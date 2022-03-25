@@ -15,8 +15,15 @@ workflow SPLIT_FASTQ {
     ch_versions = Channel.empty()
 
     reads_no_split = reads_input.map{ meta, reads ->
-        meta.size = 1
-        [meta, reads]
+        [[ id:meta.id,
+            patient:meta.patient,
+            sample:meta.sample,
+            gender:meta.gender,
+            status:meta.status,
+            numLanes:meta.numLanes,
+            read_group: meta.read_group,
+            data_type:meta.data_type,
+            size:1], reads]
     }
 
     // Only if we want to split fastq files

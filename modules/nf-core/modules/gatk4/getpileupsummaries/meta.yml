@@ -56,7 +56,6 @@ input:
       description: Index file for the germline resource.
       pattern: "*.vcf.gz.tbi"
 
-
 output:
   - pileup:
       type: file

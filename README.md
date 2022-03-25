@@ -30,13 +30,13 @@ It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/nf-
 
 By default, the pipeline currently performs the following:
 
-* Sequencing quality control (`FastQC`)
-* Map Reads to Reference (`BWA mem`)
-* Mark Duplicates (`GATK MarkDuplicates`)
-* Base (Quality Score) Recalibration (`GATK BaseRecalibrator`, `GATK ApplyBQSR`)
-* Preprocessing quality control (`samtools stats`)
-* Preprocessing quality control (`Qualimap bamqc`)
-* Overall pipeline run summaries (`MultiQC`)
+- Sequencing quality control (`FastQC`)
+- Map Reads to Reference (`BWA mem`)
+- Mark Duplicates (`GATK MarkDuplicates`)
+- Base (Quality Score) Recalibration (`GATK BaseRecalibrator`, `GATK ApplyBQSR`)
+- Preprocessing quality control (`samtools stats`)
+- Preprocessing quality control (`Qualimap bamqc`)
+- Overall pipeline run summaries (`MultiQC`)
 
 <p align="center">
     <img title="Sarek Workflow" src="docs/images/sarek_workflow.png" width=40%>
@@ -46,26 +46,26 @@ By default, the pipeline currently performs the following:
 
 1. Install [`Nextflow`](https://www.nextflow.io/docs/latest/getstarted.html#installation) (`>=21.10.3`)
 
-2. Install any of [`Docker`](https://docs.docker.com/engine/installation/), [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/), [`Podman`](https://podman.io/), [`Shifter`](https://nersc.gitlab.io/development/shifter/how-to-use/) or [`Charliecloud`](https://hpc.github.io/charliecloud/) for full pipeline reproducibility _(please only use [`Conda`](https://conda.io/miniconda.html) as a last resort; see [docs](https://nf-co.re/usage/configuration#basic-configuration-profiles))_
+2. Install any of [`Docker`](https://docs.docker.com/engine/installation/), [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/) (you can follow [this tutorial](https://singularity-tutorial.github.io/01-installation/)), [`Podman`](https://podman.io/), [`Shifter`](https://nersc.gitlab.io/development/shifter/how-to-use/) or [`Charliecloud`](https://hpc.github.io/charliecloud/) for full pipeline reproducibility _(you can use [`Conda`](https://conda.io/miniconda.html) both to install Nextflow itself and also to manage software within pipelines. Please only use it within pipelines as a last resort; see [docs](https://nf-co.re/usage/configuration#basic-configuration-profiles))_.
 
 3. Download the pipeline and test it on a minimal dataset with a single command:
 
-    ```console
-    nextflow run nf-core/sarek -profile test,YOURPROFILE --outdir <OUTDIR>
-    ```
+   ```console
+   nextflow run nf-core/sarek -profile test,YOURPROFILE --outdir <OUTDIR>
+   ```
 
-    Note that some form of configuration will be needed so that Nextflow knows how to fetch the required software. This is usually done in the form of a config profile (`YOURPROFILE` in the example command above). You can chain multiple config profiles in a comma-separated string.
+   Note that some form of configuration will be needed so that Nextflow knows how to fetch the required software. This is usually done in the form of a config profile (`YOURPROFILE` in the example command above). You can chain multiple config profiles in a comma-separated string.
 
-    > * The pipeline comes with config profiles called `docker`, `singularity`, `podman`, `shifter`, `charliecloud` and `conda` which instruct the pipeline to use the named tool for software management. For example, `-profile test,docker`.
-    > * Please check [nf-core/configs](https://github.com/nf-core/configs#documentation) to see if a custom config file to run nf-core pipelines already exists for your Institute. If so, you can simply use `-profile <institute>` in your command. This will enable either `docker` or `singularity` and set the appropriate execution settings for your local compute environment.
-    > * If you are using `singularity`, please use the [`nf-core download`](https://nf-co.re/tools/#downloading-pipelines-for-offline-use) command to download images first, before running the pipeline. Setting the [`NXF_SINGULARITY_CACHEDIR` or `singularity.cacheDir`](https://www.nextflow.io/docs/latest/singularity.html?#singularity-docker-hub) Nextflow options enables you to store and re-use the images from a central location for future pipeline runs.
-    > * If you are using `conda`, it is highly recommended to use the [`NXF_CONDA_CACHEDIR` or `conda.cacheDir`](https://www.nextflow.io/docs/latest/conda.html) settings to store the environments in a central location for future pipeline runs.
+   > - The pipeline comes with config profiles called `docker`, `singularity`, `podman`, `shifter`, `charliecloud` and `conda` which instruct the pipeline to use the named tool for software management. For example, `-profile test,docker`.
+   > - Please check [nf-core/configs](https://github.com/nf-core/configs#documentation) to see if a custom config file to run nf-core pipelines already exists for your Institute. If so, you can simply use `-profile <institute>` in your command. This will enable either `docker` or `singularity` and set the appropriate execution settings for your local compute environment.
+   > - If you are using `singularity`, please use the [`nf-core download`](https://nf-co.re/tools/#downloading-pipelines-for-offline-use) command to download images first, before running the pipeline. Setting the [`NXF_SINGULARITY_CACHEDIR` or `singularity.cacheDir`](https://www.nextflow.io/docs/latest/singularity.html?#singularity-docker-hub) Nextflow options enables you to store and re-use the images from a central location for future pipeline runs.
+   > - If you are using `conda`, it is highly recommended to use the [`NXF_CONDA_CACHEDIR` or `conda.cacheDir`](https://www.nextflow.io/docs/latest/conda.html) settings to store the environments in a central location for future pipeline runs.
 
 4. Start running your own analysis!
 
-    ```console
-    nextflow run nf-core/sarek -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> --input samplesheet.csv --outdir <OUTDIR> --genome GRCh38
-    ```
+   ```console
+   nextflow run nf-core/sarek -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> --input samplesheet.csv --outdir <OUTDIR> --genome GRCh38
+   ```
 
 See [usage docs](https://nf-co.re/sarek/usage) for all of the available options when running the pipeline.
 
@@ -80,48 +80,48 @@ Sarek was originally written by Maxime Garcia, Szilveszter Juhos at the [Nationa
 
 Main authors:
 
-* [Gisela Gabernet](https://github.com/ggabernet)
-* [Maxime Garcia](https://github.com/maxulysse)
-* [Friederike Hanssen](https://github.com/FriederikeHanssen)
-* [Szilveszter Juhos](https://github.com/szilvajuhos)
+- [Gisela Gabernet](https://github.com/ggabernet)
+- [Maxime Garcia](https://github.com/maxulysse)
+- [Friederike Hanssen](https://github.com/FriederikeHanssen)
+- [Szilveszter Juhos](https://github.com/szilvajuhos)
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
-* [Abhinav Sharma](https://github.com/abhi18av)
-* [Adrian Lärkeryd](https://github.com/adrlar)
-* [Alexander Peltzer](https://github.com/apeltzer)
-* [Chela James](https://github.com/chelauk)
-* [David Mas-Ponte](https://github.com/davidmasp)
-* [Francesco L](https://github.com/nibscles)
-* [Harshil Patel](https://github.com/drpatelh)
-* [James A. Fellows Yates](https://github.com/jfy133)
-* [Jesper Eisfeldt](https://github.com/J35P312)
-* [Johannes Alneberg](https://github.com/alneberg)
-* [José Fernández Navarro](https://github.com/jfnavarro)
-* [Lucia Conde](https://github.com/lconde-ucl)
-* [Malin Larsson](https://github.com/malinlarsson)
-* [Marcel Martin](https://github.com/marcelm)
-* [Nilesh Tawari](https://github.com/nilesh-tawari)
-* [Olga Botvinnik](https://github.com/olgabot)
-* [Paul Cantalupo](https://github.com/pcantalupo)
-* [Phil Ewels](https://github.com/ewels)
-* [Sabrina Krakau](https://github.com/skrakau)
-* [Sebastian-D](https://github.com/Sebastian-D)
-* [Tobias Koch](https://github.com/KochTobi)
-* [Winni Kretzschmar](https://github.com/winni2k)
-* [arontommi](https://github.com/arontommi)
-* [bjornnystedt](https://github.com/bjornnystedt)
-* [cgpu](https://github.com/cgpu)
-* [gulfshores](https://github.com/gulfshores)
-* [pallolason](https://github.com/pallolason)
-* [silviamorins](https://github.com/silviamorins)
+- [Abhinav Sharma](https://github.com/abhi18av)
+- [Adrian Lärkeryd](https://github.com/adrlar)
+- [Alexander Peltzer](https://github.com/apeltzer)
+- [Chela James](https://github.com/chelauk)
+- [David Mas-Ponte](https://github.com/davidmasp)
+- [Francesco L](https://github.com/nibscles)
+- [Harshil Patel](https://github.com/drpatelh)
+- [James A. Fellows Yates](https://github.com/jfy133)
+- [Jesper Eisfeldt](https://github.com/J35P312)
+- [Johannes Alneberg](https://github.com/alneberg)
+- [José Fernández Navarro](https://github.com/jfnavarro)
+- [Lucia Conde](https://github.com/lconde-ucl)
+- [Malin Larsson](https://github.com/malinlarsson)
+- [Marcel Martin](https://github.com/marcelm)
+- [Nilesh Tawari](https://github.com/nilesh-tawari)
+- [Olga Botvinnik](https://github.com/olgabot)
+- [Paul Cantalupo](https://github.com/pcantalupo)
+- [Phil Ewels](https://github.com/ewels)
+- [Sabrina Krakau](https://github.com/skrakau)
+- [Sebastian-D](https://github.com/Sebastian-D)
+- [Tobias Koch](https://github.com/KochTobi)
+- [Winni Kretzschmar](https://github.com/winni2k)
+- [arontommi](https://github.com/arontommi)
+- [bjornnystedt](https://github.com/bjornnystedt)
+- [cgpu](https://github.com/cgpu)
+- [gulfshores](https://github.com/gulfshores)
+- [pallolason](https://github.com/pallolason)
+- [silviamorins](https://github.com/silviamorins)
 
 ## Acknowledgements
 
-[![Barntumörbanken](docs/images/BTB_logo.png)](https://ki.se/forskning/barntumorbanken) | [![SciLifeLab](docs/images/SciLifeLab_logo.png)](https://scilifelab.se)
-:-:|:-:
-[![National Genomics Infrastructure](docs/images/NGI_logo.png)](https://ngisweden.scilifelab.se/) | [![National Bioinformatics Infrastructure Sweden](docs/images/NBIS_logo.png)](https://nbis.se)
-[![QBiC](docs/images/QBiC_logo.png)](hhttps://www.qbic.uni-tuebingen.de) |
+|      [![Barntumörbanken](docs/images/BTB_logo.png)](https://ki.se/forskning/barntumorbanken)      |            [![SciLifeLab](docs/images/SciLifeLab_logo.png)](https://scilifelab.se)             |
+| :-----------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------: |
+| [![National Genomics Infrastructure](docs/images/NGI_logo.png)](https://ngisweden.scilifelab.se/) | [![National Bioinformatics Infrastructure Sweden](docs/images/NBIS_logo.png)](https://nbis.se) |
+|             [![QBiC](docs/images/QBiC_logo.png)](hhttps://www.qbic.uni-tuebingen.de)              |
 
 ## Contributions & Support
 
@@ -132,11 +132,12 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 ## Citations
 
 If you use `nf-core/sarek` for your analysis, please cite the `Sarek` article as follows:
+
 > Garcia M, Juhos S, Larsson M et al. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants [version 2; peer review: 2 approved]** _F1000Research_ 2020, 9:63 [doi: 10.12688/f1000research.16665.2](http://dx.doi.org/10.12688/f1000research.16665.2).
 
 You can cite the sarek zenodo record for a specific version using the following [doi: 10.5281/zenodo.3476426](https://zenodo.org/badge/latestdoi/184289291)
 
-In addition, references of tools and data used in this pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
+An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
 You can cite the `nf-core` publication as follows:
 
@@ -148,4 +149,4 @@ You can cite the `nf-core` publication as follows:
 
 ## CHANGELOG
 
-* [CHANGELOG](CHANGELOG.md)
+- [CHANGELOG](CHANGELOG.md)

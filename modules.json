@@ -3,6 +3,9 @@
     "homePage": "https://github.com/nf-core/sarek",
     "repos": {
         "nf-core/modules": {
+            "ascat": {
+                "git_sha": "f0800157544a82ae222931764483331a81812012"
+            },
             "bcftools/stats": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
@@ -24,11 +27,14 @@
             "cnvkit/batch": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
+            "controlfreec": {
+                "git_sha": "f0800157544a82ae222931764483331a81812012"
+            },
             "custom/dumpsoftwareversions": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "deeptools/bamcoverage": {
-                "git_sha": "fdb1664885480d9411c24ba45bb4fde4738e5907"
+                "git_sha": "f0800157544a82ae222931764483331a81812012"
             },
             "deepvariant": {
                 "git_sha": "c450b08a75cda8878876ccbbe42493d6774397bd"
@@ -76,7 +82,7 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "gatk4/gatherpileupsummaries": {
-                "git_sha": "8c8be7d7c6c5b17b89f1c392866fc433b0f79d69"
+                "git_sha": "f0800157544a82ae222931764483331a81812012"
             },
             "gatk4/genomicsdbimport": {
                 "git_sha": "967fb22dedc2c8855f00e64c3d7b5814c85242a6"
@@ -85,7 +91,7 @@
                 "git_sha": "2383d43a0fdfdfb1fe15128ad8723b9f6f40d5cc"
             },
             "gatk4/getpileupsummaries": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "f0800157544a82ae222931764483331a81812012"
             },
             "gatk4/haplotypecaller": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
@@ -106,13 +112,22 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "gatk4/variantrecalibrator": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "f0800157544a82ae222931764483331a81812012"
+            },
+            "manta/germline": {
+                "git_sha": "979e57b7ac6a405a395dd7a6dbe1a275c5bc226b"
+            },
+            "manta/somatic": {
+                "git_sha": "979e57b7ac6a405a395dd7a6dbe1a275c5bc226b"
+            },
+            "manta/tumoronly": {
+                "git_sha": "979e57b7ac6a405a395dd7a6dbe1a275c5bc226b"
             },
             "msisensorpro/msi_somatic": {
-                "git_sha": "c8ebd0de36c649a14fc92f2f73cbd9f691a8ce0a"
+                "git_sha": "f0800157544a82ae222931764483331a81812012"
             },
             "msisensorpro/scan": {
-                "git_sha": "c8ebd0de36c649a14fc92f2f73cbd9f691a8ce0a"
+                "git_sha": "f0800157544a82ae222931764483331a81812012"
             },
             "multiqc": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
