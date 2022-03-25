@@ -1,0 +1,42 @@
+name: dragmap_align
+description: Performs fastq alignment to a reference using DRAGMAP
+keywords:
+  - alignment
+  - map
+  - fastq
+  - bam
+  - sam
+tools:
+  - dragmap:
+      description: Dragmap is the Dragen mapper/aligner Open Source Software.
+      homepage: https://github.com/Illumina/dragmap
+      documentation: https://github.com/Illumina/dragmap
+      tool_dev_url: https://github.com/Illumina/dragmap#basic-command-line-usage
+      doi: ""
+      licence: ["GPL v3"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - reads:
+      type: file
+      description: |
+        List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+        respectively.
+  - hashmap:
+      type: file
+      description: DRAGMAP hash table
+      pattern: "Directory containing DRAGMAP hash table *.{cmp,.bin,.txt}"
+output:
+  - bam:
+      type: file
+      description: Output BAM file containing read alignments
+      pattern: "*.{bam}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@Emiller88"
