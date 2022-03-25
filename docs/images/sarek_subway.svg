@@ -736,11 +736,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="507.71758"
-     inkscape:cy="357.26674"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="908.69786"
+     inkscape:cy="240.09243"
      inkscape:document-units="px"
-     inkscape:current-layer="layer4"
+     inkscape:current-layer="g10800"
      showgrid="false"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -2723,7 +2723,7 @@
            x="458.23276"
            y="-78.09214"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.49997234px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';stroke-width:0.93749881"
-           id="tspan8553-8-9">Main workflow</tspan></text>
+           id="tspan8553-8-9">Core workflow</tspan></text>
       <path
          sodipodi:nodetypes="cc"
          id="path9038-0"
