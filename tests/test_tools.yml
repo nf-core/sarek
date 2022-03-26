@@ -1,3 +1,14 @@
+- name: Run variant calling on tumor_only sample with controlfreec
+  command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools controlfreec
+  tags:
+    - controlfreec
+    - no_intervals
+    - tumor_only
+    - variant_calling
+    - copy_number_calling
+  files:
+    - path: results/variant_calling/sample2/controlfreec/sample2.candidate_small_indels.vcf.gz
+
 - name: Run variant calling on germline sample with deepvariant
   command: nextflow run main.nf -profile test,tools_germline,docker --tools deepvariant
   tags:

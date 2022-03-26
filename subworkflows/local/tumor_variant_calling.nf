@@ -3,7 +3,7 @@
 // Should be only run on patients without normal sample
 //
 
-include { RUN_CONTROLFREEC                        } from '../nf-core/variantcalling/controlfreec/main.nf'
+//include { RUN_CONTROLFREEC                        } from '../nf-core/variantcalling/controlfreec/main.nf'
 include { RUN_FREEBAYES                           } from '../nf-core/variantcalling/freebayes/main.nf'
 include { GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk4/tumor_only_somatic_variant_calling/main'
 include { RUN_MANTA_TUMORONLY                     } from '../nf-core/variantcalling/manta/tumoronly/main.nf'
@@ -61,17 +61,17 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         }.set{cram_recalibrated_intervals_gz_tbi}
 
     if(tools.contains('controlfreec')){
-        cram_recalibrated_intervals.map {meta, cram, crai, intervals -> [meta, cram, intervals]}.set{cram_intervals_no_index}
-        RUN_CONTROLFREEC(cram_intervals_no_index,
-                        fasta,
-                        fasta_fai,
-                        dbsnp,
-                        dbsnp_tbi,
-                        chr_length,
-                        mappability,
-                        intervals_bed_combined,
-                        num_intervals)
-        ch_versions = ch_versions.mix(RUN_CONTROLFREEC.out.versions)
+        // cram_recalibrated_intervals.map {meta, cram, crai, intervals -> [meta, cram, intervals]}.set{cram_intervals_no_index}
+        // RUN_CONTROLFREEC(cram_intervals_no_index,
+        //                 fasta,
+        //                 fasta_fai,
+        //                 dbsnp,
+        //                 dbsnp_tbi,
+        //                 chr_length,
+        //                 mappability,
+        //                 intervals_bed_combined,
+        //                 num_intervals)
+        // ch_versions = ch_versions.mix(RUN_CONTROLFREEC.out.versions)
     }
 
     if (tools.contains('freebayes')){

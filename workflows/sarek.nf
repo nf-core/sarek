@@ -633,7 +633,9 @@ workflow SAREK {
             germline_resource,
             germline_resource_tbi,
             pon,
-            pon_tbi)
+            pon_tbi,
+            chr_length,
+            mappability)
 
         // Gather vcf files for annotation
         vcf_to_annotate = Channel.empty()

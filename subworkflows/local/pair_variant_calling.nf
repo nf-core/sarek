@@ -3,6 +3,7 @@
 //
 include { GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk4/tumor_normal_somatic_variant_calling/main'
 include { MSISENSORPRO_MSI_SOMATIC                  } from '../../modules/nf-core/modules/msisensorpro/msi_somatic/main'
+include { RUN_CONTROLFREEC                        } from '../nf-core/variantcalling/controlfreec/main.nf'
 include { RUN_MANTA_SOMATIC                         } from '../nf-core/variantcalling/manta/somatic/main.nf'
 include { RUN_STRELKA_SOMATIC                       } from '../nf-core/variantcalling/strelka/somatic/main.nf'
 
@@ -27,6 +28,8 @@ workflow PAIR_VARIANT_CALLING {
         germline_resource_tbi         // channel: [optional]  germline_resource_tbi
         panel_of_normals              // channel: [optional]  panel_of_normals
         panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
+        chr_length
+        mappability
 
     main:
 
@@ -60,6 +63,25 @@ workflow PAIR_VARIANT_CALLING {
             [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals]
         }
 
+    if (tools.contains('controlfreec')){
+        cram_pair_intervals.map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals
+                -> [meta, normal_cram, intervals]}.set{cram_normal_intervals_no_index}
+
+        cram_pair_intervals.map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals
+                -> [meta, tumor_cram, intervals]}.set{cram_tumor_intervals_no_index}
+
+        RUN_CONTROLFREEC(cram_normal_intervals_no_index,
+                        cram_tumor_intervals_no_index,
+                        fasta,
+                        fasta_fai,
+                        dbsnp,
+                        dbsnp_tbi,
+                        chr_length,
+                        mappability,
+                        intervals_bed_combined,
+                        num_intervals)
+        ch_versions = ch_versions.mix(RUN_CONTROLFREEC.out.versions)
+    }
     if (tools.contains('manta')) {
         RUN_MANTA_SOMATIC(  cram_pair_intervals_gz_tbi,
                             fasta,
