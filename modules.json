@@ -39,6 +39,9 @@
             "controlfreec/freec2bed": {
                 "git_sha": "8a64e73af29a8096e1996e0496df4ae8c449c40b"
             },
+            "controlfreec/freec2circos": {
+                "git_sha": "5acf301ddda04072cf7233a6c8f5fa5df867de99"
+            },
             "controlfreec/makegraph": {
                 "git_sha": "28e5211b3513d80f198beb7090f57242165cc030"
             },
