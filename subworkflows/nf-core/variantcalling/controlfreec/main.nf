@@ -8,6 +8,9 @@ include { CONTROLFREEC_MAKEGRAPH as MAKEGRAPH                    } from '../../.
 include { SAMTOOLS_MPILEUP as MPILEUP_NORMAL                     } from '../../../../modules/nf-core/modules/samtools/mpileup/main'
 include { SAMTOOLS_MPILEUP as MPILEUP_TUMOR                      } from '../../../../modules/nf-core/modules/samtools/mpileup/main'
 
+include { BGZIP_ZIP as BGZIP_ZIP_TUMOR } from '../../../../modules/local/bgzip_zip.nf'
+include { BGZIP_ZIP as BGZIP_ZIP_NORMAL } from '../../../../modules/local/bgzip_zip.nf'
+
 workflow RUN_CONTROLFREEC {
     take:
     cram_normal                     // channel: [mandatory] [meta, cram, crai, interval]
@@ -16,7 +19,7 @@ workflow RUN_CONTROLFREEC {
     fasta_fai                // channel: [mandatory]
     dbsnp // channel: [mand]
     dbsnp_tbi
-    chr_length
+    chr_files
     mappability
     intervals_bed            // channel: [optional]  Contains a bed file of all intervals combined provided with the cram input(s). Should be empty for WGS
     num_intervals            //     val: [optional]  Number of used intervals, mandatory when intervals are provided.
@@ -72,12 +75,15 @@ workflow RUN_CONTROLFREEC {
         [new_meta, pileup]
     }
 
+    // BGZIP_ZIP_TUMOR(controlfreec_input_tumor)
+    // BGZIP_ZIP_NORMAL(controlfreec_input_normal)
+
     //).map{ meta, pileup_normal, pileup_tumor ->
     //    [meta, pileup_normal, pileup_tumor, [], [], [], []]
     //}
 
-    controlfreec_input_normal.view()
-    controlfreec_input_tumor.view()
+    // controlfreec_input_normal.view()
+    // controlfreec_input_tumor.view()
 
     controlfreec_input_normal.join(controlfreec_input_tumor)
     .map{ meta, pileup_normal, pileup_tumor ->
@@ -86,19 +92,19 @@ workflow RUN_CONTROLFREEC {
     controlfreec_input.view()
     FREEC(controlfreec_input,
                 fasta,
-                fasta_fai,
+                fasta_fai, // = chr_length
                 [],
                 dbsnp,
                 dbsnp_tbi,
-                chr_length,
+                chr_files,
                 mappability,
                 intervals_bed,
                 [])
 
-    // ASSESS_SIGNIFICANCE( FREEC.out.CNV.join(FREEC.out.ratio))
-    // FREEC2BED( FREEC.out.ratio )
-    // FREEC2CIRCOS( FREEC.out.ratio )
-    // MAKEGRAPH(FREEC.out.ratio.join(FREEC.out.BAF))
+    ASSESS_SIGNIFICANCE( FREEC.out.CNV.join(FREEC.out.ratio))
+    FREEC2BED( FREEC.out.ratio )
+    FREEC2CIRCOS( FREEC.out.ratio )
+    MAKEGRAPH(FREEC.out.ratio.join(FREEC.out.BAF))
 
     emit:
     versions = ch_versions

@@ -29,7 +29,6 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         germline_resource_tbi        // channel: [optional]  germline_resource_tbi
         panel_of_normals             // channel: [optional]  panel_of_normals
         panel_of_normals_tbi         // channel: [optional]  panel_of_normals_tbi
-        chr_length
         mappability
 
     main:

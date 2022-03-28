@@ -19,7 +19,6 @@ def checkPathParamList = [
     params.cadd_wg_snvs,
     params.cadd_wg_snvs_tbi,
     params.chr_dir,
-    params.chr_length,
     params.dbsnp,
     params.dbsnp_tbi,
     params.dict,
@@ -80,7 +79,6 @@ if (anno_readme && file(anno_readme).exists()) {
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
 chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()                  : []
-chr_length         = params.chr_length         ? Channel.fromPath(params.chr_length).collect()               : []
 dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()                    : Channel.empty()
 fasta              = params.fasta              ? Channel.fromPath(params.fasta).collect()                    : Channel.empty()
 fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()                : Channel.empty()
@@ -609,11 +607,11 @@ workflow SAREK {
             germline_resource_tbi,
             pon,
             pon_tbi,
-            chr_length,
             mappability
         )
 
         // PAIR VARIANT CALLING
+        chr_dir.view()
         PAIR_VARIANT_CALLING(
             params.tools,
             cram_variant_calling_pair,
@@ -634,7 +632,7 @@ workflow SAREK {
             germline_resource_tbi,
             pon,
             pon_tbi,
-            chr_length,
+            chr_dir,
             mappability)
 
         // Gather vcf files for annotation

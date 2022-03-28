@@ -28,7 +28,7 @@ workflow PAIR_VARIANT_CALLING {
         germline_resource_tbi         // channel: [optional]  germline_resource_tbi
         panel_of_normals              // channel: [optional]  panel_of_normals
         panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
-        chr_length
+        chr_files
         mappability
 
     main:
@@ -76,7 +76,7 @@ workflow PAIR_VARIANT_CALLING {
                         fasta_fai,
                         dbsnp,
                         dbsnp_tbi,
-                        chr_length,
+                        chr_files,
                         mappability,
                         intervals_bed_combined,
                         num_intervals)

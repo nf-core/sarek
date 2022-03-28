@@ -416,11 +416,6 @@
                     "fa_icon": "fas fa-folder-open",
                     "description": "Path to chromosomes folder."
                 },
-                "chr_length": {
-                    "type": "string",
-                    "fa_icon": "fas fa-file",
-                    "description": "Path to chromosomes length file."
-                },
                 "dbsnp": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
