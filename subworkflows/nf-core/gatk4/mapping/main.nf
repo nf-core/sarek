@@ -28,9 +28,12 @@ workflow GATK4_MAPPING {
     ch_bam_mapped = BWAMEM1_MEM.out.bam.mix(BWAMEM2_MEM.out.bam, DRAGMAP_ALIGN.out.bam).map{ meta, bam ->
         new_meta = meta.clone()
 
+        numLanes = meta.numLanes ?: 1
+        size     = meta.size     ?: 1
+
         // Use groupKey to make sure that the correct group can advance as soon as it is complete
         // and not stall the workflow until all reads from all channels are mapped
-        def groupKey = groupKey(new_meta, meta.numLanes * meta.size)
+        def groupKey = groupKey(new_meta, numLanes * size)
 
         //Returns the values we need
         tuple(groupKey, new_meta, bam)
