@@ -27,7 +27,7 @@ process GATK4_APPLYBQSR_SPARK {
     } else {
         avail_mem = task.memory.giga
     }
-    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def intervals_command = intervals_bed ? "-L ${intervals_bed}" : ""
     """
     gatk ApplyBQSRSpark \\
