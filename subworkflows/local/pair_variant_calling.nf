@@ -96,7 +96,7 @@ workflow PAIR_VARIANT_CALLING {
     if (tools.contains('strelka')) {
 
         if (tools.contains('manta')) {
-            cram_pair_strelka = intervals_bed_gz_tbi.join(manta_somatic_sv_vcf).map{
+            cram_pair_strelka = intervals_bed_gz_tbi.join(manta_vcf).map{
                 meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed, tbi, manta_vcf, manta_tbi ->
                 [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, bed, tbi]
             }
