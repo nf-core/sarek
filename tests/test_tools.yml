@@ -391,4 +391,36 @@
     - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz.tbi
     - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz
     - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz.tbi
-#TODO: Test for strelka + manta
+
+- name: Run variant calling on somatic sample with strelka & manta (StrelkaBP)
+  command: nextflow run main.nf -profile test,tools_somatic,docker --tools strelka,manta
+  tags:
+    - somatic
+    - strelkabp
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz
+    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz
+    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz.tbi
+
+- name: Run variant calling on somatic sample with & manta (StrelkaBP) without intervals
+  command: nextflow run main.nf -profile test,tools_somatic,docker --tools strelka,manta --no_intervals
+  tags:
+    - no_intervals
+    - somatic
+    - strelkabp
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz
+    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz
+    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz.tbi
