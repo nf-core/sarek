@@ -41,7 +41,7 @@ process CONTROLFREEC_FREEC {
     def chr_length                  = fai                                                       ? "chrLenFile = \${PWD}/${fai}"                                                                 : ""
     def breakpointthreshold         = task.ext.args?["general"]?["breakpointthreshold"]         ? "breakPointThreshold = ${task.ext.args["general"]["breakpointthreshold"]}"                    : ""
     def breakpointtype              = task.ext.args?["general"]?["breakpointtype"]              ? "breakPointType = ${task.ext.args["general"]["breakpointtype"]}"                              : ""
-    def coefficientofvariation      = task.ext.args?["general"]?["coefficient"]                 ? "coefficientOfVariation = ${task.ext.args["general"]["coefficientofvariation"]}"              : ""
+    def coefficientofvariation      = task.ext.args?["general"]?["coefficientofvariation"]      ? "coefficientOfVariation = ${task.ext.args["general"]["coefficientofvariation"]}"              : ""
     def contamination               = task.ext.args?["general"]?["contamination"]               ? "contamination = ${task.ext.args["general"]["contamination"]}"                                : ""
     def contaminationadjustment     = task.ext.args?["general"]?["contaminationadjustment"]     ? "contaminationAdjustment = ${task.ext.args["general"]["contaminationadjustment"]}"            : ""
     def degree                      = task.ext.args?["general"]?["degree"]                      ? "degree = ${task.ext.args["general"]["degree"]}"                                              : ""
