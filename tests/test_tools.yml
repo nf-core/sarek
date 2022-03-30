@@ -1,9 +1,9 @@
 - name: Run variant calling on tumor_only sample with controlfreec
-  command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools controlfreec
+  command: nextflow run main.nf -profile test,tools_somatic,docker --tools controlfreec -c ./tests/nextflow.config
   tags:
     - controlfreec
     - no_intervals
-    - tumor_only
+    - somatic
     - variant_calling
     - copy_number_calling
   files:
