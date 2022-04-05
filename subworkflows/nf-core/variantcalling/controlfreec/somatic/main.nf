@@ -1,5 +1,5 @@
-include { CAT_CAT as CAT_NORMAL                                         } from '../../../../modules/nf-core/modules/cat/cat/main.nf'
-include { CAT_CAT as CAT_TUMOR                                       } from '../../../../modules/nf-core/modules/cat/cat/main.nf'
+include { CAT_CAT as CAT_MPILEUP_NORMAL                          } from '../../../../modules/nf-core/modules/cat/cat/main.nf'
+include { CAT_CAT as CAT_MPILEUP_TUMOR                           } from '../../../../modules/nf-core/modules/cat/cat/main.nf'
 include { CONTROLFREEC_FREEC as FREEC                            } from '../../../../modules/nf-core/modules/controlfreec/freec/main'
 include { CONTROLFREEC_ASSESSSIGNIFICANCE as ASSESS_SIGNIFICANCE } from '../../../../modules/nf-core/modules/controlfreec/assesssignificance/main'
 include { CONTROLFREEC_FREEC2BED as FREEC2BED                    } from '../../../../modules/nf-core/modules/controlfreec/freec2bed/main'
@@ -40,13 +40,13 @@ workflow RUN_CONTROLFREEC {
         }.set{mpileup_tumor}
 
     //Merge mpileup only when intervals and natural order sort them
-    CAT_NORMAL( mpileup_normal.intervals.map{ meta, pileup ->
+    CAT_MPILEUP_NORMAL( mpileup_normal.intervals.map{ meta, pileup ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id + "_normal"
                 [new_meta, pileup]
             }.groupTuple(size: num_intervals, sort:true))
 
-    CAT_TUMOR(mpileup_tumor.intervals.map{ meta, pileup ->
+    CAT_MPILEUP_TUMOR(mpileup_tumor.intervals.map{ meta, pileup ->
             new_meta = meta.clone()
             new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id + "_tumor"
             [new_meta, pileup]
@@ -55,7 +55,7 @@ workflow RUN_CONTROLFREEC {
     // //TODO fix naming for no intervals
 
     controlfreec_input_normal = Channel.empty().mix(
-        CAT_NORMAL.out.file_out,
+        CAT_MPILEUP_NORMAL.out.file_out,
         mpileup_normal.no_intervals
     ).map{ meta, pileup ->
         new_meta = meta.clone()
@@ -63,7 +63,7 @@ workflow RUN_CONTROLFREEC {
         [new_meta, pileup]
     }
     controlfreec_input_tumor = Channel.empty().mix(
-        CAT_TUMOR.out.file_out,
+        CAT_MPILEUP_TUMOR.out.file_out,
         mpileup_tumor.no_intervals
     ).map{ meta, pileup ->
         new_meta = meta.clone()
@@ -76,7 +76,6 @@ workflow RUN_CONTROLFREEC {
         [meta, pileup_normal, pileup_tumor, [], [], [], []]
     }.set{controlfreec_input}
 
-    println params.cf_coeff
     FREEC(controlfreec_input,
                 fasta,
                 fasta_fai,
@@ -92,6 +91,16 @@ workflow RUN_CONTROLFREEC {
     FREEC2BED( FREEC.out.ratio )
     FREEC2CIRCOS( FREEC.out.ratio )
     MAKEGRAPH(FREEC.out.ratio.join(FREEC.out.BAF))
+
+    ch_versions = ch_versions.mix(MPILEUP_NORMAL.out.versions)
+    ch_versions = ch_versions.mix(MPILEUP_TUMOR.out.versions)
+    ch_versions = ch_versions.mix(CAT_MPILEUP_NORMAL.out.versions)
+    ch_versions = ch_versions.mix(CAT_MPILEUP_TUMOR.out.versions)
+    ch_versions = ch_versions.mix(FREEC.out.versions)
+    ch_versions = ch_versions.mix(ASSESS_SIGNIFICANCE.out.versions)
+    ch_versions = ch_versions.mix(FREEC2BED.out.versions)
+    ch_versions = ch_versions.mix(FREEC2CIRCOS.out.versions)
+    ch_versions = ch_versions.mix(MAKEGRAPH.out.versions)
 
     emit:
     versions = ch_versions

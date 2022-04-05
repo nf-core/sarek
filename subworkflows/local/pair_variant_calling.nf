@@ -3,7 +3,7 @@
 //
 include { GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk4/tumor_normal_somatic_variant_calling/main'
 include { MSISENSORPRO_MSI_SOMATIC                  } from '../../modules/nf-core/modules/msisensorpro/msi_somatic/main'
-include { RUN_CONTROLFREEC                        } from '../nf-core/variantcalling/controlfreec/main.nf'
+include { RUN_CONTROLFREEC                        } from '../nf-core/variantcalling/controlfreec/somatic/main.nf'
 include { RUN_MANTA_SOMATIC                         } from '../nf-core/variantcalling/manta/somatic/main.nf'
 include { RUN_STRELKA_SOMATIC                       } from '../nf-core/variantcalling/strelka/somatic/main.nf'
 
@@ -64,11 +64,15 @@ workflow PAIR_VARIANT_CALLING {
         }
 
     if (tools.contains('controlfreec')){
-        cram_pair_intervals.map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals
-                -> [meta, normal_cram, intervals]}.set{cram_normal_intervals_no_index}
+        cram_normal_intervals_no_index = cram_pair_intervals
+                    .map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
+                            [meta, normal_cram, intervals]
+                        }
 
-        cram_pair_intervals.map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals
-                -> [meta, tumor_cram, intervals]}.set{cram_tumor_intervals_no_index}
+        cram_tumor_intervals_no_index = cram_pair_intervals
+                    .map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
+                            [meta, tumor_cram, intervals]
+                        }
 
         RUN_CONTROLFREEC(cram_normal_intervals_no_index,
                         cram_tumor_intervals_no_index,
@@ -96,7 +100,7 @@ workflow PAIR_VARIANT_CALLING {
     }
 
     if (tools.contains('strelka')) {
-        //TODO: Fix manta strelkaBP
+
         if (tools.contains('manta')) {
 
             cram_pair_strelka = cram_pair.join(manta_candidate_small_indels_vcf)
@@ -118,8 +122,6 @@ workflow PAIR_VARIANT_CALLING {
                     [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, [], [], bed, tbi]
             }
         }
-
-
 
         RUN_STRELKA_SOMATIC(cram_pair_strelka,
                             fasta,
