@@ -30,6 +30,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         germline_resource_tbi        // channel: [optional]  germline_resource_tbi
         panel_of_normals             // channel: [optional]  panel_of_normals
         panel_of_normals_tbi         // channel: [optional]  panel_of_normals_tbi
+        chr_files
         mappability
 
     main:
@@ -62,7 +63,8 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
 
     if(tools.contains('controlfreec')){
         cram_recalibrated_intervals.map {meta, cram, crai, intervals -> [meta, cram, intervals]}.set{cram_intervals_no_index}
-        RUN_CONTROLFREEC(cram_intervals_no_index,
+        RUN_CONTROLFREEC( Channel.empty(),
+                        cram_intervals_no_index,
                         fasta,
                         fasta_fai,
                         dbsnp,
