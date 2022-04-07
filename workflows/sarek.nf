@@ -607,11 +607,11 @@ workflow SAREK {
             germline_resource_tbi,
             pon,
             pon_tbi,
+            chr_dir,
             mappability
         )
 
         // PAIR VARIANT CALLING
-        chr_dir.view()
         PAIR_VARIANT_CALLING(
             params.tools,
             cram_variant_calling_pair,
