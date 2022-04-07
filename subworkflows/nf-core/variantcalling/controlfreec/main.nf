@@ -70,17 +70,13 @@ workflow RUN_CONTROLFREEC {
         new_meta.id = new_meta.tumor_id ? new_meta.tumor_id + "_vs_" + new_meta.normal_id + "_tumor" : new_meta.sample
         [new_meta, pileup]
     }
-    controlfreec_input_normal.view()
-    controlfreec_input_tumor.view()
 
+    controlfreec_input_normal.join(controlfreec_input_tumor, remainder: true)
+        .map{ meta, pileup_normal, pileup_tumor ->
+            p = pileup_normal ?: []
+            [meta, p, pileup_tumor, [], [], [], []]
+        }.set{controlfreec_input}
 
-        controlfreec_input_normal.join(controlfreec_input_tumor, remainder: true)
-            .map{ meta, pileup_normal, pileup_tumor ->
-                p = pileup_normal ?: []
-                [meta, p, pileup_tumor, [], [], [], []]
-            }.set{controlfreec_input}
-
-    controlfreec_input.view()
     FREEC(controlfreec_input,
                 fasta,
                 fasta_fai,

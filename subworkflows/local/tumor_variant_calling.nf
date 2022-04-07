@@ -8,7 +8,7 @@ include { RUN_FREEBAYES                           } from '../nf-core/variantcall
 include { GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk4/tumor_only_somatic_variant_calling/main'
 include { RUN_MANTA_TUMORONLY                     } from '../nf-core/variantcalling/manta/tumoronly/main.nf'
 include { RUN_STRELKA_SINGLE                      } from '../nf-core/variantcalling/strelka/single/main.nf'
-include { RUN_CONTROLFREEC                        } from '../nf-core/variantcalling/controlfreec/somatic/main.nf'
+include { RUN_CONTROLFREEC                        } from '../nf-core/variantcalling/controlfreec/main.nf'
 
 workflow TUMOR_ONLY_VARIANT_CALLING {
     take:
