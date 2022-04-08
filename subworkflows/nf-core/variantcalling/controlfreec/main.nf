@@ -1,12 +1,12 @@
-include { CAT_CAT as CAT_MPILEUP_NORMAL                          } from '../../../../../modules/nf-core/modules/cat/cat/main.nf'
-include { CAT_CAT as CAT_MPILEUP_TUMOR                           } from '../../../../../modules/nf-core/modules/cat/cat/main.nf'
-include { CONTROLFREEC_FREEC as FREEC                            } from '../../../../../modules/nf-core/modules/controlfreec/freec/main'
-include { CONTROLFREEC_ASSESSSIGNIFICANCE as ASSESS_SIGNIFICANCE } from '../../../../../modules/nf-core/modules/controlfreec/assesssignificance/main'
-include { CONTROLFREEC_FREEC2BED as FREEC2BED                    } from '../../../../../modules/nf-core/modules/controlfreec/freec2bed/main'
-include { CONTROLFREEC_FREEC2CIRCOS as FREEC2CIRCOS              } from '../../../../../modules/nf-core/modules/controlfreec/freec2circos/main'
-include { CONTROLFREEC_MAKEGRAPH as MAKEGRAPH                    } from '../../../../../modules/nf-core/modules/controlfreec/makegraph/main'
-include { SAMTOOLS_MPILEUP as MPILEUP_NORMAL                     } from '../../../../../modules/nf-core/modules/samtools/mpileup/main'
-include { SAMTOOLS_MPILEUP as MPILEUP_TUMOR                      } from '../../../../../modules/nf-core/modules/samtools/mpileup/main'
+include { CAT_CAT as CAT_MPILEUP_NORMAL                          } from '../../../../modules/nf-core/modules/cat/cat/main.nf'
+include { CAT_CAT as CAT_MPILEUP_TUMOR                           } from '../../../../modules/nf-core/modules/cat/cat/main.nf'
+include { CONTROLFREEC_FREEC as FREEC                            } from '../../../../modules/nf-core/modules/controlfreec/freec/main'
+include { CONTROLFREEC_ASSESSSIGNIFICANCE as ASSESS_SIGNIFICANCE } from '../../../../modules/nf-core/modules/controlfreec/assesssignificance/main'
+include { CONTROLFREEC_FREEC2BED as FREEC2BED                    } from '../../../../modules/nf-core/modules/controlfreec/freec2bed/main'
+include { CONTROLFREEC_FREEC2CIRCOS as FREEC2CIRCOS              } from '../../../../modules/nf-core/modules/controlfreec/freec2circos/main'
+include { CONTROLFREEC_MAKEGRAPH as MAKEGRAPH                    } from '../../../../modules/nf-core/modules/controlfreec/makegraph/main'
+include { SAMTOOLS_MPILEUP as MPILEUP_NORMAL                     } from '../../../../modules/nf-core/modules/samtools/mpileup/main'
+include { SAMTOOLS_MPILEUP as MPILEUP_TUMOR                      } from '../../../../modules/nf-core/modules/samtools/mpileup/main'
 
 workflow RUN_CONTROLFREEC {
     take:
@@ -14,10 +14,10 @@ workflow RUN_CONTROLFREEC {
     cram_tumor               // channel: [mandatory] [meta, cram, crai, interval]
     fasta                    // channel: [mandatory]
     fasta_fai                // channel: [mandatory]
-    dbsnp                    // channel: [mand]
-    dbsnp_tbi
-    chr_files
-    mappability
+    dbsnp                    // channel: [mandatory]
+    dbsnp_tbi                // channel: [mandatory]
+    chr_files                // channel: [mandatory]
+    mappability              // channel: [mandatory]
     intervals_bed            // channel: [optional]  Contains a bed file of all intervals combined provided with the cram input(s). Should be empty for WGS
     num_intervals            //     val: [optional]  Number of used intervals, mandatory when intervals are provided.
 
