@@ -21,9 +21,20 @@ process CONTROLFREEC_ASSESSSIGNIFICANCE {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    cat /usr/local/bin/assess_significance.R | R --slave --args ${cnvs} ${ratio}
+    cat \$(which assess_significance.R) | R --slave --args ${cnvs} ${ratio}
 
     mv *.p.value.txt ${prefix}.p.value.txt
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        controlfreec: \$(echo \$(freec -version 2>&1) | sed 's/^.*Control-FREEC  //; s/:.*\$//' | sed -e "s/Control-FREEC v//g" )
+    END_VERSIONS
+    """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.p.value.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

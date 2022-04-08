@@ -28,4 +28,15 @@ process CONTROLFREEC_FREEC2CIRCOS {
         controlfreec: \$(echo \$(freec -version 2>&1) | sed 's/^.*Control-FREEC  //; s/:.*\$//' | sed -e "s/Control-FREEC v//g" )
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.circos.txt
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        controlfreec: \$(echo \$(freec -version 2>&1) | sed 's/^.*Control-FREEC  //; s/:.*\$//' | sed -e "s/Control-FREEC v//g" )
+    END_VERSIONS
+    """
 }

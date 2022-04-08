@@ -43,4 +43,15 @@ process BWAMEM2_MEM {
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.bam
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        bwamem2: \$(echo \$(bwa-mem2 version 2>&1) | sed 's/.* //')
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+    END_VERSIONS
+    """
 }

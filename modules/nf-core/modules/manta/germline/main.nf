@@ -8,9 +8,10 @@ process MANTA_GERMLINE {
         'quay.io/biocontainers/manta:1.6.0--h9ee0642_1' }"
 
     input:
-    tuple val(meta), path(input), path(index), path(target_bed), path(target_bed_tbi)
+    tuple val(meta), path(input), path(index)
     path fasta
     path fasta_fai
+    tuple path(target_bed), path(target_bed_tbi)
 
 
     output:

@@ -27,4 +27,15 @@ process TABIX_TABIX {
         tabix: \$(echo \$(tabix -h 2>&1) | sed 's/^.*Version: //; s/ .*\$//')
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${tab}.tbi
+    cat <<-END_VERSIONS > versions.yml
+
+    "${task.process}":
+        tabix: \$(echo \$(tabix -h 2>&1) | sed 's/^.*Version: //; s/ .*\$//')
+    END_VERSIONS
+    """
 }

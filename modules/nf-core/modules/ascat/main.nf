@@ -9,6 +9,7 @@ process ASCAT {
 
     input:
     tuple val(meta), path(input_normal), path(index_normal), path(input_tumor), path(index_tumor)
+    path fasta
     path(allele_files)
     path(loci_files)
 
@@ -26,7 +27,7 @@ process ASCAT {
     def args           = task.ext.args        ?: ''
     def prefix         = task.ext.prefix      ?: "${meta.id}"
     def gender         = args.gender          ?  "$args.gender" :        "NULL"
-    def genomeVersion  = args.genomeVersion   ?  "$args.genomeVersion" : "NULL"
+    def genomeVersion  = args.genomeVersion   ?  "$args.genomeVersion" : "NULL" //either "hg19" or "hg38"
     def purity         = args.purity          ?  "$args.purity" :        "NULL"
     def ploidy         = args.ploidy          ?  "$args.ploidy" :        "NULL"
     def gc_files       = args.gc_files        ?  "$args.gc_files" :      "NULL"
@@ -35,7 +36,7 @@ process ASCAT {
     def chrom_names_arg                  = args.chrom_names                   ?  ",chrom_names = $args.chrom_names" : ""
     def min_base_qual_arg                = args.min_base_qual                 ?  ",min_base_qual = $args.min_base_qual" : ""
     def min_map_qual_arg                 = args.min_map_qual                  ?  ",min_map_qual = $args.min_map_qual" : ""
-    def ref_fasta_arg                    = args.ref_fasta                     ?  ",ref.fasta = '$args.ref_fasta'" : ""
+    def ref_fasta_arg                    = fasta                              ?  ",ref.fasta = '$args.ref_fasta'" : ""
     def skip_allele_counting_tumour_arg  = args.skip_allele_counting_tumour   ?  ",skip_allele_counting_tumour = $args.skip_allele_counting_tumour" : ""
     def skip_allele_counting_normal_arg  = args.skip_allele_counting_normal   ?  ",skip_allele_counting_normal = $args.skip_allele_counting_normal" : ""
 
