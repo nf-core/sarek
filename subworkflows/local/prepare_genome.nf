@@ -10,6 +10,8 @@
 
 include { BWA_INDEX as BWAMEM1_INDEX             } from '../../modules/nf-core/modules/bwa/index/main'
 include { BWAMEM2_INDEX                          } from '../../modules/nf-core/modules/bwamem2/index/main'
+include { DRAGMAP_HASHTABLE                      } from '../../modules/nf-core/modules/dragmap/hashtable/main'
+include { CREATE_INTERVALS_BED                   } from '../../modules/local/create_intervals_bed/main'
 include { GATK4_CREATESEQUENCEDICTIONARY         } from '../../modules/nf-core/modules/gatk4/createsequencedictionary/main'
 include { MSISENSORPRO_SCAN                      } from '../../modules/nf-core/modules/msisensorpro/scan/main'
 include { SAMTOOLS_FAIDX                         } from '../../modules/nf-core/modules/samtools/faidx/main'
@@ -33,8 +35,11 @@ workflow PREPARE_GENOME {
 
     BWAMEM1_INDEX(fasta) // If aligner is bwa-mem
     BWAMEM2_INDEX(fasta) // If aligner is bwa-mem2
+    DRAGMAP_HASHTABLE(fasta)
     // if we use mix here, bwa becomes a channel that is comsumed
-    ch_bwa = params.aligner == "bwa-mem" ? BWAMEM1_INDEX.out.index : BWAMEM2_INDEX.out.index
+    ch_bwa = params.aligner == "bwa-mem" ?
+        BWAMEM1_INDEX.out.index : params.aligner == "dragmap" ?
+        DRAGMAP_HASHTABLE.out.hashmap : BWAMEM2_INDEX.out.index
 
     GATK4_CREATESEQUENCEDICTIONARY(fasta)
     MSISENSORPRO_SCAN(fasta.map{ it -> [[id:it[0].baseName], it] })
