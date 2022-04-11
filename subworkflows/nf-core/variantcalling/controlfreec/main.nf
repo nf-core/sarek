@@ -42,15 +42,19 @@ workflow RUN_CONTROLFREEC {
     //Merge mpileup only when intervals and natural order sort them
     CAT_MPILEUP_NORMAL( mpileup_normal.intervals.map{ meta, pileup ->
                 new_meta = meta.clone()
-                new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id + "_normal"
+                new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
                 [new_meta, pileup]
             }.groupTuple(size: num_intervals, sort:true))
 
-    CAT_MPILEUP_TUMOR(mpileup_tumor.intervals.map{ meta, pileup ->
+    CAT_MPILEUP_TUMOR(mpileup_tumor.intervals
+        .map{ meta, pileup ->
             new_meta = meta.clone()
-            new_meta.id = new_meta.tumor_id ? new_meta.tumor_id + "_vs_" + new_meta.normal_id + "_tumor" : new_meta.sample
+            new_meta.id = new_meta.tumor_id ? new_meta.tumor_id + "_vs_" + new_meta.normal_id : new_meta.sample
             [new_meta, pileup]
-        }.groupTuple(size: num_intervals, sort:true))
+        }
+        .groupTuple(size: num_intervals, sort:true))
+
+    mpileup_normal.no_intervals.view()
 
     //TODO fix naming for no intervals
     controlfreec_input_normal = Channel.empty().mix(
@@ -67,7 +71,7 @@ workflow RUN_CONTROLFREEC {
         mpileup_tumor.no_intervals
     ).map{ meta, pileup ->
         new_meta = meta.clone()
-        new_meta.id = new_meta.tumor_id ? new_meta.tumor_id + "_vs_" + new_meta.normal_id + "_tumor" : new_meta.sample
+        new_meta.id = new_meta.tumor_id ? new_meta.tumor_id + "_vs_" + new_meta.normal_id : new_meta.sample
         [new_meta, pileup]
     }
 
@@ -77,6 +81,7 @@ workflow RUN_CONTROLFREEC {
             [meta, p, pileup_tumor, [], [], [], []]
         }.set{controlfreec_input}
 
+    controlfreec_input.view()
     FREEC(controlfreec_input,
                 fasta,
                 fasta_fai,
