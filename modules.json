@@ -13,13 +13,13 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "bwa/mem": {
-                "git_sha": "950700bcdc0e9a2b6883d40d2c51c6fc435cd714"
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "bwamem2/index": {
                 "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
             },
             "bwamem2/mem": {
-                "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "cat/cat": {
                 "git_sha": "eeda4136c096688d04cc40bb3c70d948213ed641"
@@ -151,31 +151,31 @@
                 "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
             },
             "qualimap/bamqccram": {
-                "git_sha": "950700bcdc0e9a2b6883d40d2c51c6fc435cd714"
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "samblaster": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "samtools/bam2fq": {
-                "git_sha": "1ad73f1b2abdea9398680d6d20014838135c9a35"
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "samtools/faidx": {
-                "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "samtools/index": {
-                "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "samtools/merge": {
-                "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "samtools/mpileup": {
-                "git_sha": "b5825fe6b336352024aebccd274da1d131188bfc"
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "samtools/stats": {
-                "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "samtools/view": {
-                "git_sha": "1ad73f1b2abdea9398680d6d20014838135c9a35"
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "seqkit/split2": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
