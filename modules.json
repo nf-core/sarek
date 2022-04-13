@@ -126,6 +126,9 @@
             "gatk4/markduplicates": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
+            "gatk4/markduplicatesspark": {
+                "git_sha": "e04970b7d249365cafa5a52912f9a28840481c05"
+            },
             "gatk4/mergemutectstats": {
                 "git_sha": "3f364e2f31443f6742e8c63bf2083b5583431ef7"
             },
@@ -206,6 +209,9 @@
             },
             "trimgalore": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+            },
+            "untar": {
+                "git_sha": "9ae34a01d1747019fd37753ff4cafb05aec35a2b"
             },
             "vcftools": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
