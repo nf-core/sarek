@@ -246,7 +246,6 @@ workflow SAREK {
         params.aligner == "bwa-mem2" ? bwamem2 :
         dragmap
 
-    //TODO @Rike, is this working for you? Now it is, fixed a bug in prepare_genome.nf after chasing smoke for a while
     // known_sites is made by grouping both the dbsnp and the known indels ressources
     // Which can either or both be optional
     // Actually BQSR has been throwing erros if no sides were provided so it must be at least one
