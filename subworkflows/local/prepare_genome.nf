@@ -19,9 +19,11 @@ include { TABIX_TABIX as TABIX_DBSNP             } from '../../modules/nf-core/m
 include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE } from '../../modules/nf-core/modules/tabix/tabix/main'
 include { TABIX_TABIX as TABIX_KNOWN_INDELS      } from '../../modules/nf-core/modules/tabix/tabix/main'
 include { TABIX_TABIX as TABIX_PON               } from '../../modules/nf-core/modules/tabix/tabix/main'
+include { UNTAR as UNTAR_CHR_DIR                 } from '../../modules/nf-core/modules/untar/main'
 
 workflow PREPARE_GENOME {
     take:
+        chr_dir           // channel: [optional]  chromosome files
         dbsnp             // channel: [optional]  dbsnp
         fasta             // channel: [mandatory] fasta
         fasta_fai         // channel: [optional]  fasta_fai
@@ -49,6 +51,13 @@ workflow PREPARE_GENOME {
     TABIX_KNOWN_INDELS(known_indels.map{ it -> [[id:it[0].baseName], it] })
     TABIX_PON(pon.map{ it -> [[id:it[0].baseName], it] })
 
+    chr_files = chr_dir
+    if ( params.chr_dir.endsWith('tar.gz')){
+        UNTAR_CHR_DIR(chr_dir.map{ it -> [[id:it[0].baseName], it] })
+        chr_files = UNTAR_CHR_DIR.out.untar.map{ it[1] }
+        ch_versions = ch_versions.mix(UNTAR_CHR_DIR.out.versions)
+    }
+
     // Gather versions of all tools used
     ch_versions  = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
     ch_versions = ch_versions.mix(BWAMEM1_INDEX.out.versions)
@@ -69,6 +78,6 @@ workflow PREPARE_GENOME {
         known_indels_tbi                 = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }.collect() // path: {known_indels*}.vcf.gz.tbi
         msisensorpro_scan                = MSISENSORPRO_SCAN.out.list.map{ meta, list -> [list] }         // path: genome_msi.list
         pon_tbi                          = TABIX_PON.out.tbi.map{ meta, tbi -> [tbi] }                    // path: pon.vcf.gz.tbi
-
+        chr_files                        = chr_files
         versions                         = ch_versions                                                    // channel: [ versions.yml ]
 }

@@ -38,8 +38,6 @@ workflow RUN_CONTROLFREEC_TUMORONLY {
         }
         .groupTuple(size: num_intervals, sort:true))
 
-
-    //TODO fix naming for no intervals
     controlfreec_input_tumor = Channel.empty().mix(
         CAT_MPILEUP_TUMOR.out.file_out,
         mpileup_tumor.no_intervals

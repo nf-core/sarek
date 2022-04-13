@@ -215,6 +215,7 @@ workflow SAREK {
 
     // Build indices if needed
     PREPARE_GENOME(
+        chr_dir,
         dbsnp,
         fasta,
         fasta_fai,
@@ -224,6 +225,7 @@ workflow SAREK {
 
     // Gather built indices or get them from the params
     bwa                    = params.fasta                   ? params.bwa                   ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : []
+    chr_files              = PREPARE_GENOME.out.chr_files
     dict                   = params.fasta                   ? params.dict                  ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : []
     fasta_fai              = params.fasta                   ? params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai             : []
     dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.empty()
@@ -607,7 +609,7 @@ workflow SAREK {
             germline_resource_tbi,
             pon,
             pon_tbi,
-            chr_dir,
+            chr_files,
             mappability
         )
 
@@ -632,7 +634,7 @@ workflow SAREK {
             germline_resource_tbi,
             pon,
             pon_tbi,
-            chr_dir,
+            chr_files,
             mappability)
 
         // Gather vcf files for annotation
