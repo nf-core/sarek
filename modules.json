@@ -118,7 +118,7 @@
                 "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "gatk4/markduplicatesspark": {
-                "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
+                "git_sha": "e04970b7d249365cafa5a52912f9a28840481c05"
             },
             "gatk4/mergemutectstats": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
