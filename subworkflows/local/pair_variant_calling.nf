@@ -3,7 +3,7 @@
 //
 include { GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk4/tumor_normal_somatic_variant_calling/main'
 include { MSISENSORPRO_MSI_SOMATIC                  } from '../../modules/nf-core/modules/msisensorpro/msi_somatic/main'
-include { RUN_CONTROLFREEC                        } from '../nf-core/variantcalling/controlfreec/main.nf'
+include { RUN_CONTROLFREEC_SOMATIC                  } from '../nf-core/variantcalling/controlfreec/somatic/main.nf'
 include { RUN_MANTA_SOMATIC                         } from '../nf-core/variantcalling/manta/somatic/main.nf'
 include { RUN_STRELKA_SOMATIC                       } from '../nf-core/variantcalling/strelka/somatic/main.nf'
 
@@ -74,7 +74,7 @@ workflow PAIR_VARIANT_CALLING {
                             [meta, tumor_cram, intervals]
                         }
 
-        RUN_CONTROLFREEC(cram_normal_intervals_no_index,
+        RUN_CONTROLFREEC_SOMATIC(cram_normal_intervals_no_index,
                         cram_tumor_intervals_no_index,
                         fasta,
                         fasta_fai,
@@ -84,8 +84,9 @@ workflow PAIR_VARIANT_CALLING {
                         mappability,
                         intervals_bed_combined,
                         num_intervals)
-        ch_versions = ch_versions.mix(RUN_CONTROLFREEC.out.versions)
+        ch_versions = ch_versions.mix(RUN_CONTROLFREEC_SOMATIC.out.versions)
     }
+
     if (tools.contains('manta')) {
         RUN_MANTA_SOMATIC(  cram_pair_intervals_gz_tbi,
                             fasta,
@@ -102,7 +103,6 @@ workflow PAIR_VARIANT_CALLING {
     if (tools.contains('strelka')) {
 
         if (tools.contains('manta')) {
-
             cram_pair_strelka = cram_pair.join(manta_candidate_small_indels_vcf)
                     .join(manta_candidate_small_indels_vcf_tbi)
                     .combine(intervals_bed_gz_tbi)
