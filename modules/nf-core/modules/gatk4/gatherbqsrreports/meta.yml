@@ -19,7 +19,7 @@ input:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
-  - recal_table:
+  - table:
       type: file
       description: File(s) containing BQSR table(s)
       pattern: "*.table"
@@ -30,14 +30,14 @@ output:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
+  - table:
+      type: file
+      description: File containing joined BQSR table
+      pattern: "*.table"
   - versions:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
-  - recal_table:
-      type: file
-      description: File containing joined BQSR table
-      pattern: "*.table"
 
 authors:
   - "@FriederikeHanssen"

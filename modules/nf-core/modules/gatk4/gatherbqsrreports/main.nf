@@ -8,7 +8,7 @@ process GATK4_GATHERBQSRREPORTS {
         'quay.io/biocontainers/gatk4:4.2.5.0--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(recal_table)
+    tuple val(meta), path(table)
 
     output:
     tuple val(meta), path("*.table"), emit: table
@@ -20,7 +20,7 @@ process GATK4_GATHERBQSRREPORTS {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def input = recal_table.collect{"-I ${it}"}.join(' ')
+    def input_list = table.collect{"--input $it"}.join(' ')
 
     def avail_mem = 3
     if (!task.memory) {
@@ -29,12 +29,11 @@ process GATK4_GATHERBQSRREPORTS {
         avail_mem = task.memory.giga
     }
     """
-    gatk --java-options "-Xmx${avail_mem}g" \\
-        GatherBQSRReports \
-        ${input} \
-        --tmp-dir . \
-        $args \
-        --output ${prefix}.table
+    gatk --java-options "-Xmx${avail_mem}g" GatherBQSRReports \\
+        $input_list \\
+        --output ${prefix}.table \\
+        --tmp-dir . \\
+        $args
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
