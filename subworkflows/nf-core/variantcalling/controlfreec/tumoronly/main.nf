@@ -51,7 +51,7 @@ workflow RUN_CONTROLFREEC_TUMORONLY {
 
     controlfreec_input_tumor
         .map{ meta, pileup_tumor ->
-            [meta, pileup_tumor, [], [], [], []]
+            [meta, [], pileup_tumor, [], [], [], []]
         }.set{controlfreec_input}
 
     FREEC_TUMORONLY(controlfreec_input,

@@ -50,7 +50,7 @@
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.pileup_sample.cpn
 
 - name: Run variant calling on tumor_only sample with controlfreec
-  command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools controlfreec -c ./tests/nextflow.config -stub-run
+  command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools controlfreec -stub-run
   tags:
     - controlfreec
     - tumor_only
