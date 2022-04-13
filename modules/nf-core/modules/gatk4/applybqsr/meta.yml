@@ -61,6 +61,10 @@ output:
       type: file
       description: Recalibrated BAM file
       pattern: "*.{bam}"
+  - cram:
+      type: file
+      description: Recalibrated CRAM file
+      pattern: "*.{cram}"
 
 authors:
   - "@yocra3"

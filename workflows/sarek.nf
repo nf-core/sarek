@@ -14,6 +14,7 @@ def checkPathParamList = [
     params.ac_loci,
     params.ac_loci_gc,
     params.bwa,
+    params.bwamem2,
     params.cadd_indels,
     params.cadd_indels_tbi,
     params.cadd_wg_snvs,
@@ -23,6 +24,7 @@ def checkPathParamList = [
     params.dbsnp,
     params.dbsnp_tbi,
     params.dict,
+    params.dragmap,
     params.fasta,
     params.fasta_fai,
     params.germline_resource,
@@ -49,10 +51,10 @@ else {
     switch (params.step) {
         case 'mapping': exit 1, "Can't start with step $params.step without samplesheet"
         case 'prepare_recalibration': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
-        case 'recalibrate':          csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv",          checkIfExists: true); break
+        case 'recalibrate':           csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv",          checkIfExists: true); break
         case 'variant_calling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv",            checkIfExists: true); break
         // case 'controlfreec':         csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
-        case 'annotate':             csv_file = file("${params.outdir}/variant_calling/csv/recalibrated.csv",          checkIfExists: true); break
+        case 'annotate':              csv_file = file("${params.outdir}/variant_calling/csv/recalibrated.csv",          checkIfExists: true); break
         default: exit 1, "Unknown step $params.step"
     }
 }
@@ -134,8 +136,11 @@ include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_UMI   } from '../subworkflows
 // Split FASTQ files
 include { SPLIT_FASTQ                                    } from '../subworkflows/local/split_fastq'
 
-// Run FASTQC and/or TRIMGALORE
-include { FASTQC_TRIMGALORE                              } from '../subworkflows/nf-core/fastqc_trimgalore'
+// Run FASTQC
+include { RUN_FASTQC                                     } from '../subworkflows/nf-core/run_fastqc'
+
+// Run TRIMGALORE
+include { RUN_TRIMGALORE                                 } from '../subworkflows/nf-core/run_trimgalore'
 
 // Create umi consensus bams from fastq
 include { CREATE_UMI_CONSENSUS                           } from '../subworkflows/nf-core/fgbio_create_umi_consensus/main'
@@ -226,6 +231,8 @@ workflow SAREK {
 
     // Gather built indices or get them from the params
     bwa                    = params.fasta                   ? params.bwa                   ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : []
+    bwamem2                = params.fasta                   ? params.bwamem2               ? Channel.fromPath(params.bwamem2).collect()               : PREPARE_GENOME.out.bwamem2               : []
+    dragmap                = params.fasta                   ? params.dragmap               ? Channel.fromPath(params.dragmap).collect()               : PREPARE_GENOME.out.hashtable             : []
     dict                   = params.fasta                   ? params.dict                  ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : []
     fasta_fai              = params.fasta                   ? params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai             : []
     dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.empty()
@@ -234,7 +241,11 @@ workflow SAREK {
     pon_tbi                = params.pon                     ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : []
     msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
 
-    //TODO @Rike, is this working for you? Now it is, fixed a bug in prepare_genome.nf after chasing smoke for a while
+    // Gather index for mapping given the chosen aligner
+    ch_map_index = params.aligner == "bwa-mem" ? bwa :
+        params.aligner == "bwa-mem2" ? bwamem2 :
+        dragmap
+
     // known_sites is made by grouping both the dbsnp and the known indels ressources
     // Which can either or both be optional
     // Actually BQSR has been throwing erros if no sides were provided so it must be at least one
@@ -252,6 +263,7 @@ workflow SAREK {
     intervals_bed_combined_gz     = intervals_bed_combined_gz_tbi.map{ bed, tbi -> [bed]}.collect() // one file containing all intervals interval.bed.gz file
     intervals_for_preprocessing   = (!params.wes || params.no_intervals) ? [] : PREPARE_INTERVALS.out.intervals_bed //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
 
+    // TODO: needs to figure something out when intervals are made out of the fasta_fai file
     num_intervals                 = !params.no_intervals ? (params.intervals ? count_intervals(file(params.intervals)) : 1) : 1
 
     // Gather used softwares versions
@@ -260,49 +272,83 @@ workflow SAREK {
 
     // PREPROCESSING
 
-    // STEP 0: QC & TRIM
-    // `--d fastqc` to skip fastqc
-    // trim only with `--trim_fastq`
-    // additional options to be set up
-
     if (params.step == 'mapping') {
 
-        // Figure out if input is fastq or bam
+        // Figure out if input is bam or fastq
         ch_input_sample.branch{
-            fastq: it[0].data_type == "fastq"
             bam:   it[0].data_type == "bam"
+            fastq: it[0].data_type == "fastq"
         }.set{ch_input_sample_type}
 
         // convert any bam input to fastq
         ALIGNMENT_TO_FASTQ_INPUT(ch_input_sample_type.bam, [])
 
-        // Optionnal trimming (+ QC)
-        // Done on fastq (inputed or converted)
+        // gather fastq (inputed or converted)
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
         // But not sure how to handle that with the samplesheet
         // Or if we really want users to be able to do that
-        FASTQC_TRIMGALORE(ch_input_sample_type.fastq.mix(ALIGNMENT_TO_FASTQ_INPUT.out.reads))
+        ch_input_fastq = ch_input_sample_type.fastq.mix(ALIGNMENT_TO_FASTQ_INPUT.out.reads)
 
-        // Optionnal UMI consensus calling
-        CREATE_UMI_CONSENSUS(FASTQC_TRIMGALORE.out.reads,
-            fasta,
-            bwa,
-            umi_read_structure,
-            params.group_by_umi_strategy)
+        // STEP 0: QC & TRIM
+        // `--skip_tools fastqc` to skip fastqc
+        // trim only with `--trim_fastq`
+        // additional options to be set up
 
-        // convert back to fastq for further preprocessing
-        ALIGNMENT_TO_FASTQ_UMI(CREATE_UMI_CONSENSUS.out.consensusbam, [])
+        // QC
+        if (!(params.skip_tools && params.skip_tools.contains('fastqc'))) {
+            RUN_FASTQC(ch_input_fastq)
 
-        // Get fastq files for further preprocessing
-        // either out of optionnal trimming or optionnal UMI consensus calling
-        ch_input_sample_to_split = params.umi_read_structure ? ALIGNMENT_TO_FASTQ_UMI.out.reads : FASTQC_TRIMGALORE.out.reads
+            ch_reports  = ch_reports.mix(RUN_FASTQC.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
+            ch_versions = ch_versions.mix(RUN_FASTQC.out.versions)
+        }
 
-        // OPTIONNAL SPLIT OF FASTQ FILES WITH SEQKIT_SPLIT2
-        SPLIT_FASTQ(ch_input_sample_to_split)
+        // Trimming
+        if (params.trim_fastq) {
+            RUN_TRIMGALORE(ch_input_fastq)
+
+            ch_reads = RUN_TRIMGALORE.out.reads
+
+            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
+            ch_versions = ch_versions.mix(RUN_TRIMGALORE.out.versions)
+        } else {
+            ch_reads = ch_input_fastq
+        }
+
+        // UMI consensus calling
+        if (params.umi_read_structure) {
+            CREATE_UMI_CONSENSUS(ch_reads,
+                fasta,
+                ch_map_index,
+                umi_read_structure,
+                params.group_by_umi_strategy)
+
+            // convert back to fastq for further preprocessing
+            ALIGNMENT_TO_FASTQ_UMI(CREATE_UMI_CONSENSUS.out.consensusbam, [])
+
+            ch_input_sample_to_split = ALIGNMENT_TO_FASTQ_UMI.out.reads
+
+            // Gather used softwares versions
+            ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ_UMI.out.versions)
+            ch_versions = ch_versions.mix(CREATE_UMI_CONSENSUS.out.versions)
+        } else {
+            ch_input_sample_to_split = ch_input_fastq
+        }
+
+        // SPLIT OF FASTQ FILES WITH SEQKIT_SPLIT2
+        if (params.split_fastq > 1) {
+            SPLIT_FASTQ(ch_input_sample_to_split)
+
+            ch_reads_to_map = SPLIT_FASTQ.out.reads
+
+            // Gather used softwares versions
+            ch_versions = ch_versions.mix(SPLIT_FASTQ.out.versions)
+        } else {
+            ch_reads_to_map = ch_input_sample_to_split
+        }
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         // reads will be sorted
-        GATK4_MAPPING(SPLIT_FASTQ.out.reads, bwa, true)
+        GATK4_MAPPING(ch_reads_to_map, ch_map_index, true)
 
         ch_bam_mapped = GATK4_MAPPING.out.bam.map{ meta, bam ->
             new_meta = meta.clone()
@@ -330,17 +376,9 @@ workflow SAREK {
             ch_versions = ch_versions.mix(MERGE_INDEX_BAM.out.versions)
         }
 
-        // Gather QC reports
-        ch_reports  = ch_reports.mix(FASTQC_TRIMGALORE.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
-        ch_reports  = ch_reports.mix(FASTQC_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
-
         // Gather used softwares versions
         ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ_INPUT.out.versions)
-        ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ_UMI.out.versions)
-        ch_versions = ch_versions.mix(CREATE_UMI_CONSENSUS.out.versions)
-        ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
         ch_versions = ch_versions.mix(GATK4_MAPPING.out.versions)
-        ch_versions = ch_versions.mix(SPLIT_FASTQ.out.versions)
     }
 
     if (params.step in ['mapping', 'prepare_recalibration']) {
@@ -657,8 +695,7 @@ workflow SAREK {
 
         if (params.tools.contains('merge') || params.tools.contains('snpeff') || params.tools.contains('vep')) {
 
-            ANNOTATE(
-                vcf_to_annotate,
+            ANNOTATE(vcf_to_annotate,
                 params.tools,
                 snpeff_db,
                 snpeff_cache,
