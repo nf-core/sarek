@@ -8,7 +8,7 @@ process GATK4_MARKDUPLICATES_SPARK {
         'broadinstitute/gatk:4.2.3.0' }"
 
     input:
-    tuple val(meta), path(bams)
+    tuple val(meta), path(bam)
     path  fasta
     path  fasta_fai
     path  dict
@@ -23,7 +23,8 @@ process GATK4_MARKDUPLICATES_SPARK {
     script:
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
-    def bam_list = bams.collect(){ bam -> "-I ".concat(bam.toString()) }.join(" ")
+    def input_list = bam.collect{"--input $it"}.join(' ')
+
     def avail_mem = 3
     if (!task.memory) {
         log.info '[GATK MarkDuplicatesSpark] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
@@ -32,12 +33,13 @@ process GATK4_MARKDUPLICATES_SPARK {
     }
     """
     export SPARK_USER=spark3
+
     gatk --java-options "-Xmx${avail_mem}g" MarkDuplicatesSpark \\
+        $input_list \\
+        --output $prefix \\
+        --reference $fasta \\
         --spark-master local[${task.cpus}] \\
-        $bam_list \\
-        --reference ${fasta} \\
         --tmp-dir . \\
-        --output ${prefix} \\
         $args
 
     cat <<-END_VERSIONS > versions.yml
@@ -46,9 +48,3 @@ process GATK4_MARKDUPLICATES_SPARK {
     END_VERSIONS
     """
 }
-
-//export SPARK_LOCAL_IP=127.0.0.1
-    // export SPARK_PUBLIC_DNS=127.0.0.1
-        // --conf spark.jars.ivy=/tmp/.ivy \\
-// export SPARK_USER=spark3
-//--conf 'spark.kryo.referenceTracking=false' \\

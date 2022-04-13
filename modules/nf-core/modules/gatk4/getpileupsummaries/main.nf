@@ -9,15 +9,15 @@ process GATK4_GETPILEUPSUMMARIES {
 
     input:
     tuple val(meta), path(input), path(index), path(intervals)
-    path fasta
-    path fai
-    path dict
-    path variants
-    path variants_tbi
+    path  fasta
+    path  fai
+    path  dict
+    path  variants
+    path  variants_tbi
 
     output:
     tuple val(meta), path('*.pileups.table'), emit: table
-    path "versions.yml"           , emit: versions
+    path "versions.yml"                     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -25,8 +25,8 @@ process GATK4_GETPILEUPSUMMARIES {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def sitesCommand = intervals ? " -L ${intervals} " : " -L ${variants} "
-    def reference    = fasta ? " -R ${fasta}" :""
+    def interval_command = intervals ? "--intervals $intervals" : ""
+    def reference_command = fasta ? "--reference $fasta" : ''
 
     def avail_mem = 3
     if (!task.memory) {
@@ -36,11 +36,12 @@ process GATK4_GETPILEUPSUMMARIES {
     }
     """
     gatk --java-options "-Xmx${avail_mem}g" GetPileupSummaries \\
-        -I $input \\
-        -V $variants \\
-        $sitesCommand \\
-        ${reference} \\
-        -O ${prefix}.pileups.table \\
+        --input $input \\
+        --variant $variants \\
+        --output ${prefix}.pileups.table \\
+        $reference_command \\
+        $sites_command \\
+        --tmp-dir . \\
         $args
 
     cat <<-END_VERSIONS > versions.yml
