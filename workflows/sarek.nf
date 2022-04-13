@@ -51,10 +51,10 @@ else {
     switch (params.step) {
         case 'mapping': exit 1, "Can't start with step $params.step without samplesheet"
         case 'prepare_recalibration': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
-        case 'recalibrate':          csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv",          checkIfExists: true); break
+        case 'recalibrate':           csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv",          checkIfExists: true); break
         case 'variant_calling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv",            checkIfExists: true); break
         // case 'controlfreec':         csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
-        case 'annotate':             csv_file = file("${params.outdir}/variant_calling/csv/recalibrated.csv",          checkIfExists: true); break
+        case 'annotate':              csv_file = file("${params.outdir}/variant_calling/csv/recalibrated.csv",          checkIfExists: true); break
         default: exit 1, "Unknown step $params.step"
     }
 }
@@ -264,6 +264,7 @@ workflow SAREK {
     intervals_bed_combined_gz     = intervals_bed_combined_gz_tbi.map{ bed, tbi -> [bed]}.collect() // one file containing all intervals interval.bed.gz file
     intervals_for_preprocessing   = (!params.wes || params.no_intervals) ? [] : PREPARE_INTERVALS.out.intervals_bed //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
 
+    // TODO: needs to figure something out when intervals are made out of the fasta_fai file
     num_intervals                 = !params.no_intervals ? (params.intervals ? count_intervals(file(params.intervals)) : 1) : 1
 
     // Gather used softwares versions
@@ -290,7 +291,7 @@ workflow SAREK {
         ch_input_fastq = ch_input_sample_type.fastq.mix(ALIGNMENT_TO_FASTQ_INPUT.out.reads)
 
         // STEP 0: QC & TRIM
-        // `--d fastqc` to skip fastqc
+        // `--skip_tools fastqc` to skip fastqc
         // trim only with `--trim_fastq`
         // additional options to be set up
 
@@ -695,8 +696,7 @@ workflow SAREK {
 
         if (params.tools.contains('merge') || params.tools.contains('snpeff') || params.tools.contains('vep')) {
 
-            ANNOTATE(
-                vcf_to_annotate,
+            ANNOTATE(vcf_to_annotate,
                 params.tools,
                 snpeff_db,
                 snpeff_cache,
