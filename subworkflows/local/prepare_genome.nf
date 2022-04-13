@@ -52,6 +52,7 @@ workflow PREPARE_GENOME {
     TABIX_PON(pon.map{ it -> [[id:it[0].baseName], it] })
 
     chr_files = chr_dir
+    //TODO this works, but is not pretty. I will leave this in yuor hands during refactoring @Maxime
     if ( params.chr_dir.endsWith('tar.gz')){
         UNTAR_CHR_DIR(chr_dir.map{ it -> [[id:it[0].baseName], it] })
         chr_files = UNTAR_CHR_DIR.out.untar.map{ it[1] }
