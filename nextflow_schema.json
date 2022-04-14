@@ -10,7 +10,7 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir", "step"],
+            "required": ["step", "input", "outdir"],
             "properties": {
                 "step": {
                     "type": "string",
@@ -112,7 +112,6 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-cut",
                     "description": "Run Trim Galore.",
-                    "default": false,
                     "hidden": true,
                     "help_text": "Use this to perform adapter trimming with Trim Galore.\ncf [Trim Galore User Guide](https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md)"
                 },
@@ -233,16 +232,12 @@
             "default": "",
             "fa_icon": "fas fa-toolbox",
             "properties": {
-                "joint_germline": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-align-justify",
-                    "description": "Enables GATK4 joint germline variant calling, if also haplotypecaller is selected"
-                },
-                "ascat_ploidy": {
+                "ploidy": {
                     "type": "number",
-                    "fa_icon": "fas fa-wrench",
-                    "description": "Overwrite ASCAT ploidy",
-                    "help_text": "Requires that `--ascat_purity` is set"
+                    "fa_icon": "fas fa-bacon",
+                    "default": 2,
+                    "hidden": true,
+                    "description": "genome ploidy; In case of doubt, you can set different values and Control-FREEC will select the one that explains most observed CNAs"
                 },
                 "ascat_purity": {
                     "type": "number",
@@ -254,29 +249,46 @@
                     "type": "number",
                     "default": 0.05,
                     "fa_icon": "fas fa-wrench",
-                    "description": "Overwrite Control-FREEC coefficientOfVariation"
+                    "description": "Overwrite Control-FREEC coefficientOfVariation",
+                    "hidden": true
                 },
                 "cf_contamination_adjustment": {
                     "type": "boolean",
                     "fa_icon": "fas fa-wrench",
-                    "description": "Overwrite Control-FREEC contaminationAdjustement"
+                    "description": "Overwrite Control-FREEC contaminationAdjustement",
+                    "hidden": true
                 },
                 "cf_contamination": {
                     "type": "number",
                     "fa_icon": "fas fa-wrench",
-                    "description": "Design known contamination value for Control-FREEC"
+                    "description": "Design known contamination value for Control-FREEC",
+                    "hidden": true
                 },
-                "cf_ploidy": {
-                    "type": "integer",
-                    "default": 2,
-                    "fa_icon": "fas fa-wrench",
-                    "description": "Overwrite Control-FREEC ploidy"
+                "cf_minqual": {
+                    "type": "string",
+                    "default": "0",
+                    "fa_icon": "fas fa-greater-than",
+                    "hidden": true,
+                    "description": "Minimal sequencing quality for a position to be considered in BAF analysis"
+                },
+                "cf_mincov": {
+                    "type": "string",
+                    "default": "0",
+                    "fa_icon": "fas fa-align-center",
+                    "hidden": true,
+                    "description": "Minimal read coverage for a position to be considered in BAF analysis"
                 },
                 "cf_window": {
                     "type": "number",
                     "fa_icon": "fas fa-wrench",
                     "description": "Overwrite Control-FREEC window size",
-                    "help_text": "It is recommended to use a window size of 0 for exome data"
+                    "help_text": "It is recommended to use a window size of 0 for exome data",
+                    "hidden": true
+                },
+                "joint_germline": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-align-justify",
+                    "description": "Enables GATK4 joint germline variant calling, if also haplotypecaller is selected"
                 },
                 "generate_gvcf": {
                     "type": "boolean",
@@ -421,11 +433,6 @@
                     "type": "string",
                     "fa_icon": "fas fa-folder-open",
                     "description": "Path to chromosomes folder."
-                },
-                "chr_length": {
-                    "type": "string",
-                    "fa_icon": "fas fa-file",
-                    "description": "Path to chromosomes length file."
                 },
                 "dbsnp": {
                     "type": "string",

@@ -1,4 +1,4 @@
-process CONTROLFREEC {
+process CONTROLFREEC_FREEC {
     tag "$meta.id"
     label 'process_low'
 
@@ -21,7 +21,7 @@ process CONTROLFREEC {
 
     output:
     tuple val(meta), path("*_ratio.BedGraph")   , emit: bedgraph, optional: true
-    tuple val(meta), path("*_control.cpn")      , emit: control_cpn
+    tuple val(meta), path("*_control.cpn")      , emit: control_cpn, optional: true
     tuple val(meta), path("*_sample.cpn")       , emit: sample_cpn
     tuple val(meta), path("GC_profile.*.cpn")   , emit: gcprofile_cpn, optional:true
     tuple val(meta), path("*_BAF.txt")          , emit: BAF
@@ -41,7 +41,7 @@ process CONTROLFREEC {
     def chr_length                  = fai                                                       ? "chrLenFile = \${PWD}/${fai}"                                                                 : ""
     def breakpointthreshold         = task.ext.args?["general"]?["breakpointthreshold"]         ? "breakPointThreshold = ${task.ext.args["general"]["breakpointthreshold"]}"                    : ""
     def breakpointtype              = task.ext.args?["general"]?["breakpointtype"]              ? "breakPointType = ${task.ext.args["general"]["breakpointtype"]}"                              : ""
-    def coefficientofvariation      = task.ext.args?["general"]?["coefficient"]                 ? "coefficientOfVariation = ${task.ext.args["general"]["coefficientofvariation"]}"              : ""
+    def coefficientofvariation      = task.ext.args?["general"]?["coefficientofvariation"]      ? "coefficientOfVariation = ${task.ext.args["general"]["coefficientofvariation"]}"              : ""
     def contamination               = task.ext.args?["general"]?["contamination"]               ? "contamination = ${task.ext.args["general"]["contamination"]}"                                : ""
     def contaminationadjustment     = task.ext.args?["general"]?["contaminationadjustment"]     ? "contaminationAdjustment = ${task.ext.args["general"]["contaminationadjustment"]}"            : ""
     def degree                      = task.ext.args?["general"]?["degree"]                      ? "degree = ${task.ext.args["general"]["degree"]}"                                              : ""
@@ -149,6 +149,24 @@ process CONTROLFREEC {
     echo ${target_bed} >> config.txt
 
     freec -conf config.txt
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        controlfreec: \$(echo \$(freec -version 2>&1) | sed 's/^.*Control-FREEC  //; s/:.*\$//' | sed -e "s/Control-FREEC v//g" )
+    END_VERSIONS
+    """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}_ratio.BedGraph
+    touch ${prefix}_sample.cpn
+    touch GC_profile.${prefix}.cpn
+    touch ${prefix}_BAF.txt
+    touch ${prefix}_CNVs
+    touch ${prefix}_info.txt
+    touch ${prefix}_ratio.txt
+    touch config.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

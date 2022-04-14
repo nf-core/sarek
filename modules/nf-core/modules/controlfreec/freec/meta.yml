@@ -1,4 +1,4 @@
-name: controlfreec
+name: controlfreec_freec
 description: Copy number and genotype annotation from whole genome and whole exome sequencing data
 keywords:
   - cna
@@ -7,7 +7,7 @@ keywords:
   - single
   - tumor-only
 tools:
-  - controlfreec:
+  - controlfreec/freec:
       description: Copy number and genotype annotation from whole genome and whole exome sequencing data.
       homepage: http://boevalab.inf.ethz.ch/FREEC
       documentation: http://boevalab.inf.ethz.ch/FREEC/tutorial.html

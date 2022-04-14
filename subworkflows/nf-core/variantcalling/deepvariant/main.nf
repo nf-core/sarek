@@ -22,6 +22,8 @@ workflow RUN_DEEPVARIANT {
 
     DEEPVARIANT(cram, fasta, fasta_fai)
 
+    //TODO Branch annotation?
+
     // Only when no intervals
     TABIX_VC_DEEPVARIANT_VCF(DEEPVARIANT.out.vcf)
     TABIX_VC_DEEPVARIANT_GVCF(DEEPVARIANT.out.gvcf)

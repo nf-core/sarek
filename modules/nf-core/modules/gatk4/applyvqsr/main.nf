@@ -8,15 +8,15 @@ process GATK4_APPLYVQSR {
         'quay.io/biocontainers/gatk4:4.2.5.0--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(vcf), path(tbi), path(recal), path(recalidx), path(tranches)
-    path fasta
-    path fai
-    path dict
+    tuple val(meta), path(vcf), path(vcf_tbi), path(recal), path(recal_index), path(tranches)
+    path  fasta
+    path  fai
+    path  dict
 
     output:
-    tuple val(meta), path("*.vcf.gz")     , emit: vcf
-    tuple val(meta), path("*.tbi")        , emit: tbi
-    path "versions.yml"                   , emit: versions
+    tuple val(meta), path("*.vcf.gz"), emit: vcf
+    tuple val(meta), path("*.tbi")   , emit: tbi
+    path "versions.yml"              , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -24,7 +24,7 @@ process GATK4_APPLYVQSR {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    refCommand = fasta ? "-R ${fasta} " : ''
+    def reference_command = fasta ? "--reference $fasta" : ''
 
     def avail_mem = 3
     if (!task.memory) {
@@ -34,11 +34,12 @@ process GATK4_APPLYVQSR {
     }
     """
     gatk --java-options "-Xmx${avail_mem}g" ApplyVQSR \\
-        ${refCommand} \\
-        -V ${vcf} \\
-        -O ${prefix}.vcf.gz \\
+        --variant ${vcf} \\
+        --output ${prefix}.vcf.gz \\
+        $reference_command \\
         --tranches-file $tranches \\
         --recal-file $recal \\
+        --tmp-dir . \\
         $args
 
     cat <<-END_VERSIONS > versions.yml

@@ -1,3 +1,77 @@
+- name: Run variant calling on somatic samples with controlfreec
+  command: nextflow run main.nf -profile test,tools_somatic,docker --tools controlfreec -c ./tests/nextflow.config
+  tags:
+    - controlfreec
+    - somatic
+    - variant_calling
+    - copy_number_calling
+  files:
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/config.txt
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3_BAF.png
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3_ratio.log2.png
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3_ratio.png
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.bed
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.circos.txt
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.normal.mpileup
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.normal.mpileup_control.cpn
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.p.value.txt
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_BAF.txt
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_CNVs
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_info.txt
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_ratio.BedGraph
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_ratio.txt
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_sample.cpn
+
+- name: Run variant calling on somatic samples with controlfreec without intervals
+  command: nextflow run main.nf -profile test,tools_somatic,docker --tools controlfreec -c ./tests/nextflow.config --no_intervals
+  tags:
+    - controlfreec
+    - no_intervals
+    - somatic
+    - variant_calling
+    - copy_number_calling
+  files:
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/config.txt
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3_BAF.png
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3_ratio.log2.png
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3_ratio.png
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.bed
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.circos.txt
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.normal.mpileup
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.normal.mpileup_control.cpn
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.p.value.txt
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_BAF.txt
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_CNVs
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_info.txt
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_ratio.BedGraph
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_ratio.txt
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_sample.cpn
+
+- name: Run variant calling on tumor_only sample with controlfreec
+  command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools controlfreec -stub-run
+  tags:
+    - controlfreec
+    - tumor_only
+    - variant_calling
+    - copy_number_calling
+  files:
+    - path: results/variant_calling/sample2/controlfreec/config.txt
+    - path: results/variant_calling/sample2/controlfreec/GC_profile.sample2.cpn
+    - path: results/variant_calling/sample2/controlfreec/sample2_BAF.png
+    - path: results/variant_calling/sample2/controlfreec/sample2_BAF.txt
+    - path: results/variant_calling/sample2/controlfreec/sample2_info.txt
+    - path: results/variant_calling/sample2/controlfreec/sample2_ratio.BedGraph
+    - path: results/variant_calling/sample2/controlfreec/sample2_ratio.log2.png
+    - path: results/variant_calling/sample2/controlfreec/sample2_ratio.png
+    - path: results/variant_calling/sample2/controlfreec/sample2_ratio.txt
+    - path: results/variant_calling/sample2/controlfreec/sample2_sample.cpn
+    - path: results/variant_calling/sample2/controlfreec/sample2.bed
+    - path: results/variant_calling/sample2/controlfreec/sample2.circos.txt
+    - path: results/variant_calling/sample2/controlfreec/sample2.tumor.mpileup
+    - path: results/variant_calling/sample2/controlfreec/sample2.p.value.txt
+
 - name: Run variant calling on germline sample with deepvariant
   command: nextflow run main.nf -profile test,tools_germline,docker --tools deepvariant
   tags:
@@ -380,4 +454,36 @@
     - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz.tbi
     - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz
     - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz.tbi
-#TODO: Test for strelka + manta
+
+- name: Run variant calling on somatic sample with strelka & manta (StrelkaBP)
+  command: nextflow run main.nf -profile test,tools_somatic,docker --tools strelka,manta
+  tags:
+    - somatic
+    - strelkabp
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz
+    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz
+    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz.tbi
+
+- name: Run variant calling on somatic sample with & manta (StrelkaBP) without intervals
+  command: nextflow run main.nf -profile test,tools_somatic,docker --tools strelka,manta --no_intervals
+  tags:
+    - no_intervals
+    - somatic
+    - strelkabp
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz
+    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz
+    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz.tbi

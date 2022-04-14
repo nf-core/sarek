@@ -21,10 +21,15 @@ input:
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
   - gvcf:
-      type: tuple of files
+      type: file
       description: |
-        Tuple of gVCF(.gz) file (first) and its index (second) or the path to a GenomicsDB (and empty)
-      pattern: ["*.{vcf,vcf.gz}", "*.{idx,tbi}"]
+        gVCF(.gz) file or to a GenomicsDB
+      pattern: "*.{vcf,vcf.gz}"
+  - gvcf_index:
+      type: file
+      description: |
+        index of gvcf file, or empty when providing GenomicsDB
+      pattern: "*.{idx,tbi}"
   - intervals:
       type: file
       description: Interval file with the genomic regions included in the library (optional)
@@ -35,11 +40,11 @@ input:
       type: file
       description: Reference fasta file
       pattern: "*.fasta"
-  - fasta_index:
+  - fai:
       type: file
       description: Reference fasta index file
       pattern: "*.fai"
-  - fasta_dict:
+  - dict:
       type: file
       description: Reference fasta sequence dict file
       pattern: "*.dict"
@@ -47,8 +52,8 @@ input:
       type: file
       description: dbSNP VCF file
       pattern: "*.vcf.gz"
-  - dbsnp_index:
-      type: tuple of files
+  - dbsnp_tbi:
+      type: file
       description: dbSNP VCF index file
       pattern: "*.tbi"
 
@@ -73,3 +78,4 @@ output:
 
 authors:
   - "@santiagorevale"
+  - "@maxulysse"

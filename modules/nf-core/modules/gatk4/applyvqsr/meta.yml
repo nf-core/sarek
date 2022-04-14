@@ -29,20 +29,20 @@ input:
       type: file
       description: VCF file to be recalibrated, this should be the same file as used for the first stage VariantRecalibrator.
       pattern: "*.vcf"
-  - tbi:
+  - vcf_tbi:
       type: file
-      description: Tbi index for the input vcf file.
+      description: tabix index for the input vcf file.
       pattern: "*.vcf.tbi"
   - recal:
       type: file
       description: Recalibration file produced when the input vcf was run through VariantRecalibrator in stage 1.
       pattern: "*.recal"
-  - recalidx:
+  - recal_index:
       type: file
       description: Index file for the recalibration file.
       pattern: ".recal.idx"
   - tranches:
-      type: boolean
+      type: file
       description: Tranches file produced when the input vcf was run through VariantRecalibrator in stage 1.
       pattern: ".tranches"
   - fasta:

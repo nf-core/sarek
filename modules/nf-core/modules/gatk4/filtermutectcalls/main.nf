@@ -8,10 +8,10 @@ process GATK4_FILTERMUTECTCALLS {
         'quay.io/biocontainers/gatk4:4.2.5.0--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(vcf), path(tbi), path(stats), path(orientationbias), path(segmentation), path(contaminationfile), val(contaminationest)
-    path fasta
-    path fai
-    path dict
+    tuple val(meta), path(vcf), path(vcf_tbi), path(stats), path(orientationbias), path(segmentation), path(table), val(estimate)
+    path  fasta
+    path  fai
+    path  dict
 
     output:
     tuple val(meta), path("*.vcf.gz")            , emit: vcf
@@ -26,20 +26,11 @@ process GATK4_FILTERMUTECTCALLS {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
 
-    def orientationbias_options = ''
-    if (orientationbias) {
-        orientationbias_options = '--orientation-bias-artifact-priors ' + orientationbias.join(' --orientation-bias-artifact-priors ')
-    }
+    def orientationbias_command = orientationbias ? orientationbias.collect{"--orientation-bias-artifact-priors $it"}.join(' ') : ''
+    def segmentation_command    = segmentation    ? segmentation.collect{"--tumor-segmentation $it"}.join(' ')                  : ''
+    def estimate_command        = estimate        ? " --contamination-estimate ${estimate} "                                    : ''
+    def table_command           = table           ? " --contamination-table ${table} "                                          : ''
 
-    def segmentation_options = ''
-    if (segmentation) {
-        segmentation_options = '--tumor-segmentation ' + segmentation.join(' --tumor-segmentation ')
-    }
-
-    def contamination_options = contaminationest ? " --contamination-estimate ${contaminationest} " : ''
-    if (contaminationfile) {
-        contamination_options = '--contamination-table ' + contaminationfile.join(' --contamination-table ')
-    }
     def avail_mem = 3
     if (!task.memory) {
         log.info '[GATK FilterMutectCalls] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
@@ -48,12 +39,14 @@ process GATK4_FILTERMUTECTCALLS {
     }
     """
     gatk --java-options "-Xmx${avail_mem}g" FilterMutectCalls \\
-        -R $fasta \\
-        -V $vcf \\
-        $orientationbias_options \\
-        $segmentation_options \\
-        $contamination_options \\
-        -O ${prefix}.vcf.gz \\
+        --variant $vcf \\
+        --output ${prefix}.vcf.gz \\
+        --reference $fasta \\
+        $orientationbias_command \\
+        $segmentation_command \\
+        $estimate_command \\
+        $table_command \\
+        --tmp-dir . \\
         $args
 
     cat <<-END_VERSIONS > versions.yml

@@ -8,10 +8,7 @@ process GATK4_MUTECT2 {
         'quay.io/biocontainers/gatk4:4.2.5.0--hdfd78af_0' }"
 
     input:
-    tuple val(meta) , path(input) , path(input_index) , path(intervals), val(which_norm)
-    val  run_single
-    val  run_pon
-    val  run_mito
+    tuple val(meta), path(input), path(input_index), path(intervals)
     path fasta
     path fai
     path dict
@@ -33,28 +30,10 @@ process GATK4_MUTECT2 {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def panels_command = ''
-    def normals_command = ''
-
-    def inputs_command = '-I ' + input.join( ' -I ')
-    def interval = intervals ? "-L ${intervals}" : ""
-
-    if(run_pon) {
-        panels_command = ''
-        normals_command = ''
-
-    } else if(run_single) {
-        panels_command = " --germline-resource $germline_resource --panel-of-normals $panel_of_normals"
-        normals_command = ''
-
-    } else if(run_mito){
-        panels_command = "-L ${intervals} --mitochondria-mode"
-        normals_command = ''
-
-    } else {
-        panels_command = " --germline-resource $germline_resource --panel-of-normals $panel_of_normals --f1r2-tar-gz ${prefix}.f1r2.tar.gz"
-        normals_command = '-normal ' + which_norm.join( ' -normal ')
-    }
+    def inputs = input.collect{ "--input $it"}.join(" ")
+    def interval_command = intervals ? "--intervals $intervals" : ""
+    def pon_command = panel_of_normals ? "--panel-of-normals $panel_of_normals" : ""
+    def gr_command = germline_resource ? "--germline-resource $germline_resource" : ""
 
     def avail_mem = 3
     if (!task.memory) {
@@ -64,12 +43,13 @@ process GATK4_MUTECT2 {
     }
     """
     gatk --java-options "-Xmx${avail_mem}g" Mutect2 \\
-        -R ${fasta} \\
-        ${inputs_command} \\
-        ${normals_command} \\
-        ${panels_command} \\
-        ${interval} \\
-        -O ${prefix}.vcf.gz \\
+        $inputs \\
+        --output ${prefix}.vcf.gz \\
+        --reference $fasta \\
+        $pon_command \\
+        $gr_command \\
+        $interval_command \\
+        --tmp-dir . \\
         $args
 
     cat <<-END_VERSIONS > versions.yml

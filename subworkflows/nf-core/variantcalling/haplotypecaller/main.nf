@@ -3,7 +3,6 @@ include { CONCAT_VCF as CONCAT_HAPLOTYPECALLER     } from '../../../../modules/l
 include { GATK4_GENOTYPEGVCFS as GENOTYPEGVCFS     } from '../../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
 include { GATK4_HAPLOTYPECALLER as HAPLOTYPECALLER } from '../../../../modules/nf-core/modules/gatk4/haplotypecaller/main'
 include { GATK_JOINT_GERMLINE_VARIANT_CALLING      } from '../../../../subworkflows/nf-core/gatk4/joint_germline_variant_calling/main'
-include { TABIX_TABIX as TABIX_VC_HAPLOTYPECALLER  } from '../../../../modules/nf-core/modules/tabix/tabix/main'
 
 workflow RUN_HAPLOTYPECALLER {
     take:
@@ -35,8 +34,10 @@ workflow RUN_HAPLOTYPECALLER {
             no_intervals: num_intervals == 1
         }.set{haplotypecaller_vcf_branch}
 
-    // Only when no intervals
-    TABIX_VC_HAPLOTYPECALLER(haplotypecaller_vcf_branch.no_intervals)
+    HAPLOTYPECALLER.out.tbi.branch{
+            intervals:    num_intervals > 1
+            no_intervals: num_intervals == 1
+        }.set{haplotypecaller_tbi_branch}
 
     // Only when using intervals
     BGZIP_VC_HAPLOTYPECALLER(haplotypecaller_vcf_branch.intervals)
@@ -55,7 +56,7 @@ workflow RUN_HAPLOTYPECALLER {
         CONCAT_HAPLOTYPECALLER.out.vcf,
         haplotypecaller_vcf_branch.no_intervals)
 
-    haplotypecaller_vcf_tbi = Channel.empty().mix(
+    haplotypecaller_tbi = Channel.empty().mix(
         CONCAT_HAPLOTYPECALLER.out.tbi,
         haplotypecaller_vcf_branch.no_intervals)
 
@@ -82,38 +83,44 @@ workflow RUN_HAPLOTYPECALLER {
 
     //genotype_gvcf = GENOTYPEGVCFS.out.vcf
 
-    // if (joint_germline) {
-    //     run_haplotypecaller = false
-    //     run_vqsr            = true //parameter?
-    //     some feedback from gavin
-    //     GATK_JOINT_GERMLINE_VARIANT_CALLING(
-    //         haplotypecaller_vcf_gz_tbi,
-    //         run_haplotypecaller,
-    //         run_vqsr,
-    //         fasta,
-    //         fasta_fai,
-    //         dict,
-    //         dbsnp,
-    //         dbsnp_tbi,
-    //         "joined",
-    //         allelespecific?
-    //         resources?
-    //         annotation?
-    //         "BOTH",
-    //         true,
-    //         truthsensitivity -> parameter or module?
-    //     )
-    //     ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
-    // }
+    if (params.joint_germline) {
+
+        haplotypecaller_vcf_list = haplotypecaller_vcf.toList()
+        haplotypecaller_tbi_list = haplotypecaller_vcf.toList()
+
+        joint_germline_vcf_tbi = [ [id: "joint_germline"],
+                                    haplotypecaller_vcf_list,
+                                    haplotypecaller_tbi_list ]
+        // GATK_JOINT_GERMLINE_VARIANT_CALLING(
+        //     joint_germline_vcf_tbi,
+        //     fasta,
+        //     fasta_fai,
+        //     intervals,
+        //     dict,
+        //     dbsnp,
+        //     dbsnp_tbi,
+        //     allelespecific?
+        //     resources?
+        //     annotation?
+        //     "BOTH",
+        //     true,
+        //     truthsensitivity -> parameter or module?
+        // )
+        // ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
+    } else {
+        // CNNScoreVariants
+    }
+
+
     ch_versions = ch_versions.mix(BGZIP_VC_HAPLOTYPECALLER.out.versions)
     ch_versions = ch_versions.mix(CONCAT_HAPLOTYPECALLER.out.versions)
-    ch_versions = ch_versions.mix(GENOTYPEGVCFS.out.versions)
+    //ch_versions = ch_versions.mix(GENOTYPEGVCFS.out.versions)
     //ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
     ch_versions = ch_versions.mix(HAPLOTYPECALLER.out.versions)
     ch_versions = ch_versions.mix(TABIX_VC_HAPLOTYPECALLER.out.versions)
 
     emit:
     versions = ch_versions
-    genotype_gvcf
-    haplotypecaller_gvcf
+    //genotype_gvcf
+    haplotypecaller_vcf
 }
