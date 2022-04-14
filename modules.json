@@ -85,7 +85,7 @@
                 "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "gatk4/applyvqsr": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "gatk4/baserecalibrator": {
                 "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
@@ -94,40 +94,40 @@
                 "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "gatk4/calculatecontamination": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "gatk4/createsequencedictionary": {
                 "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "gatk4/estimatelibrarycomplexity": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "gatk4/filtermutectcalls": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "gatk4/gatherbqsrreports": {
                 "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "gatk4/gatherpileupsummaries": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "gatk4/genomicsdbimport": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "gatk4/genotypegvcfs": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "gatk4/getpileupsummaries": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "gatk4/haplotypecaller": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "gatk4/intervallisttobed": {
                 "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "gatk4/learnreadorientationmodel": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "gatk4/markduplicates": {
                 "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
@@ -135,17 +135,14 @@
             "gatk4/markduplicatesspark": {
                 "git_sha": "e04970b7d249365cafa5a52912f9a28840481c05"
             },
-            "gatk4/markduplicatesspark": {
-                "git_sha": "e04970b7d249365cafa5a52912f9a28840481c05"
-            },
             "gatk4/mergemutectstats": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "gatk4/mutect2": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "gatk4/variantrecalibrator": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "manta/germline": {
                 "git_sha": "ffedf09b6e84b479c9c901274f74bb33f3777243"
@@ -187,7 +184,7 @@
                 "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "samtools/mpileup": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "samtools/stats": {
                 "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"

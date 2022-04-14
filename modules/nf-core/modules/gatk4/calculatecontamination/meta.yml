@@ -32,9 +32,6 @@ input:
       type: file
       description: File containing the pileups summary table of a normal sample that matches with the tumor sample specified in pileup argument. This is an optional input.
       pattern: "*.pileups.table"
-  - segmentout:
-      type: boolean
-      description: specifies whether to output the segmentation table.
 
 output:
   - contamination:
@@ -43,7 +40,7 @@ output:
       pattern: "*.contamination.table"
   - segmentation:
       type: file
-      description: optional output table containing segmentation of tumor minor allele fractions.
+      description: output table containing segmentation of tumor minor allele fractions (optional)
       pattern: "*.segmentation.table"
   - versions:
       type: file
@@ -52,3 +49,4 @@ output:
 
 authors:
   - "@GCJMackenzie"
+  - "@maxulysse"

@@ -10,11 +10,11 @@ process GATK4_GATHERPILEUPSUMMARIES {
 
     input:
     tuple val(meta), path(pileup)
-    path dict
+    path  dict
 
     output:
     tuple val(meta), path("*.pileupsummaries.table"), emit: table
-    path "versions.yml"                    , emit: versions
+    path "versions.yml"                             , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,7 +22,7 @@ process GATK4_GATHERPILEUPSUMMARIES {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def input = pileup.collect{ "-I ${it} " }.join(' ')
+    def input_list = pileup.collect{ "--I $it" }.join(' ')
 
     def avail_mem = 3
     if (!task.memory) {
@@ -31,11 +31,12 @@ process GATK4_GATHERPILEUPSUMMARIES {
         avail_mem = task.memory.giga
     }
     """
-    gatk --java-options "-Xmx${avail_mem}g" \
-        GatherPileupSummaries \
-        --sequence-dictionary ${dict} \
-        ${input} \
-        -O ${prefix}.pileupsummaries.table
+    gatk --java-options "-Xmx${avail_mem}g" GatherPileupSummaries \\
+        $input_list \\
+        --O ${prefix}.pileupsummaries.table \\
+        --sequence-dictionary $dict \\
+        --tmp-dir . \\
+        $args
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

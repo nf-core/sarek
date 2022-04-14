@@ -28,14 +28,15 @@ output:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
+  - table:
+      type: file
+      description: pileup summaries table file
+      pattern: "*.pileupsummaries.table"
   - versions:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
-  - table:
-      type: file
-      description: Pileup file
-      pattern: "*.pileups.table"
 
 authors:
   - "@FriederikeHanssen"
+  - "@maxulysse"

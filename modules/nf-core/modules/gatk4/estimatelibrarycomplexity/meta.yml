@@ -20,7 +20,7 @@ input:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
-  - cram:
+  - input:
       type: file
       description: BAM/CRAM/SAM file
       pattern: "*.{bam,cram,sam}"
@@ -54,3 +54,4 @@ output:
 
 authors:
   - "@FriederikeHanssen"
+  - "@maxulysse"
