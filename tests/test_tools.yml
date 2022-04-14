@@ -12,16 +12,16 @@
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3_ratio.png
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.bed
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.circos.txt
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.normal.pileup
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.normal.pileup_control.cpn
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.normal.mpileup
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.normal.mpileup_control.cpn
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.p.value.txt
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.pileup
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.pileup_BAF.txt
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.pileup_CNVs
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.pileup_info.txt
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.pileup_ratio.BedGraph
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.pileup_ratio.txt
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.pileup_sample.cpn
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_BAF.txt
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_CNVs
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_info.txt
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_ratio.BedGraph
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_ratio.txt
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_sample.cpn
 
 - name: Run variant calling on somatic samples with controlfreec without intervals
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools controlfreec -c ./tests/nextflow.config --no_intervals
@@ -38,16 +38,16 @@
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3_ratio.png
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.bed
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.circos.txt
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.normal.pileup
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.normal.pileup_control.cpn
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.normal.mpileup
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.normal.mpileup_control.cpn
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.p.value.txt
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.pileup
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.pileup_BAF.txt
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.pileup_CNVs
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.pileup_info.txt
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.pileup_ratio.BedGraph
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.pileup_ratio.txt
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.pileup_sample.cpn
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_BAF.txt
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_CNVs
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_info.txt
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_ratio.BedGraph
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_ratio.txt
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_sample.cpn
 
 - name: Run variant calling on tumor_only sample with controlfreec
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools controlfreec -stub-run
@@ -69,7 +69,7 @@
     - path: results/variant_calling/sample2/controlfreec/sample2_sample.cpn
     - path: results/variant_calling/sample2/controlfreec/sample2.bed
     - path: results/variant_calling/sample2/controlfreec/sample2.circos.txt
-    - path: results/variant_calling/sample2/controlfreec/sample2.mpileup
+    - path: results/variant_calling/sample2/controlfreec/sample2.tumor.mpileup
     - path: results/variant_calling/sample2/controlfreec/sample2.p.value.txt
 
 - name: Run variant calling on germline sample with deepvariant
