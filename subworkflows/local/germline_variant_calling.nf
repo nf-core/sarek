@@ -31,7 +31,7 @@ workflow GERMLINE_VARIANT_CALLING {
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     deepvariant_vcf      = Channel.empty()
     freebayes_vcf        = Channel.empty()
-    haplotypecaller_gvcf = Channel.empty()
+    haplotypecaller_vcf  = Channel.empty()
     genotype_gvcf        = Channel.empty()
     manta_vcf            = Channel.empty()
     strelka_vcf          = Channel.empty()
@@ -91,8 +91,8 @@ workflow GERMLINE_VARIANT_CALLING {
                         intervals_bed_combine_gz_tbi,
                         num_intervals)
 
-        haplotypecaller_gvcf = RUN_HAPLOTYPECALLER.out.haplotypecaller_gvcf
-        genotype_gvcf        = RUN_HAPLOTYPECALLER.out.genotype_gvcf
+        haplotypecaller_vcf  = RUN_HAPLOTYPECALLER.out.haplotypecaller_vcf
+        //genotype_gvcf        = RUN_HAPLOTYPECALLER.out.genotype_gvcf
         ch_versions          = ch_versions.mix(RUN_HAPLOTYPECALLER.out.versions)
     }
 
@@ -126,7 +126,7 @@ workflow GERMLINE_VARIANT_CALLING {
     emit:
     deepvariant_vcf
     freebayes_vcf
-    haplotypecaller_gvcf
+    haplotypecaller_vcf
     genotype_gvcf
     manta_vcf
     strelka_vcf

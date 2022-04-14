@@ -20,7 +20,6 @@ def checkPathParamList = [
     params.cadd_wg_snvs,
     params.cadd_wg_snvs_tbi,
     params.chr_dir,
-    params.chr_length,
     params.dbsnp,
     params.dbsnp_tbi,
     params.dict,
@@ -82,7 +81,6 @@ if (anno_readme && file(anno_readme).exists()) {
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
 chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()                  : []
-chr_length         = params.chr_length         ? Channel.fromPath(params.chr_length).collect()               : []
 dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()                    : Channel.empty()
 fasta              = params.fasta              ? Channel.fromPath(params.fasta).collect()                    : Channel.empty()
 fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()                : Channel.empty()
@@ -220,6 +218,7 @@ workflow SAREK {
 
     // Build indices if needed
     PREPARE_GENOME(
+        chr_dir,
         dbsnp,
         fasta,
         fasta_fai,
@@ -229,6 +228,7 @@ workflow SAREK {
 
     // Gather built indices or get them from the params
     bwa                    = params.fasta                   ? params.bwa                   ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : []
+    chr_files              = PREPARE_GENOME.out.chr_files
     bwamem2                = params.fasta                   ? params.bwamem2               ? Channel.fromPath(params.bwamem2).collect()               : PREPARE_GENOME.out.bwamem2               : []
     dragmap                = params.fasta                   ? params.dragmap               ? Channel.fromPath(params.dragmap).collect()               : PREPARE_GENOME.out.hashtable             : []
     dict                   = params.fasta                   ? params.dict                  ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : []
@@ -638,12 +638,15 @@ workflow SAREK {
             intervals_bed_gz_tbi,
             intervals_bed_combined_gz_tbi,
             intervals_bed_combined_gz,
+            intervals_bed_combined,
             num_intervals,
             params.no_intervals,
             germline_resource,
             germline_resource_tbi,
             pon,
-            pon_tbi
+            pon_tbi,
+            chr_files,
+            mappability
         )
 
         // PAIR VARIANT CALLING
@@ -666,13 +669,15 @@ workflow SAREK {
             germline_resource,
             germline_resource_tbi,
             pon,
-            pon_tbi)
+            pon_tbi,
+            chr_files,
+            mappability)
 
         // Gather vcf files for annotation
         vcf_to_annotate = Channel.empty()
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.deepvariant_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.freebayes_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_gvcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.manta_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.freebayes_vcf)

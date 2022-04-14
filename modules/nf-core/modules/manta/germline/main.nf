@@ -8,10 +8,10 @@ process MANTA_GERMLINE {
         'quay.io/biocontainers/manta:1.6.0--h9ee0642_1' }"
 
     input:
+    //Matching the target bed with the input sample allows to parallelize the same sample run across different intervals or a single bed file
     tuple val(meta), path(input), path(index), path(target_bed), path(target_bed_tbi)
     path fasta
     path fasta_fai
-
 
     output:
     tuple val(meta), path("*candidate_small_indels.vcf.gz")    , emit: candidate_small_indels_vcf

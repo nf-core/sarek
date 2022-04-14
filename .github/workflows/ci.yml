@@ -34,6 +34,7 @@ jobs:
           - "aligner"
           - "annotation"
           - "default"
+          - "controlfreec"
           - "deepvariant"
           - "freebayes"
           - "gatk4_spark"
