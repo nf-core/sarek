@@ -186,9 +186,7 @@ include { TUMOR_ONLY_VARIANT_CALLING                     } from '../subworkflows
 include { PAIR_VARIANT_CALLING                           } from '../subworkflows/local/pair_variant_calling'
 
 // Annotation
-include { ANNOTATE                                       } from '../subworkflows/local/annotate' addParams(
-    annotation_cache:                  params.annotation_cache
-)
+include { ANNOTATE                                       } from '../subworkflows/local/annotate'
 
 // REPORTING VERSIONS OF SOFTWARE USED
 include { CUSTOM_DUMPSOFTWAREVERSIONS                    } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'

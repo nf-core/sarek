@@ -14,10 +14,14 @@ workflow ANNOTATION_ENSEMBLVEP {
     vep_cache         //    path: path_to_vep_cache (optionnal)
 
     main:
+    ch_versions = Channel.empty()
+
     ENSEMBLVEP(vcf, vep_genome, vep_species, vep_cache_version, vep_cache)
     ANNOTATION_BGZIPTABIX(ENSEMBLVEP.out.vcf)
 
-    ch_versions = ENSEMBLVEP.out.versions.first().mix(ANNOTATION_BGZIPTABIX.out.versions.first())
+    // Gather versions of all tools used
+    ch_versions = ch_versions.mix(ENSEMBLVEP.out.versions.first())
+    ch_versions = ch_versions.mix(ANNOTATION_BGZIPTABIX.out.versions.first())
 
     emit:
     vcf_tbi  = ANNOTATION_BGZIPTABIX.out.gz_tbi // channel: [ val(meta), vcf.gz, vcf.gz.tbi ]
