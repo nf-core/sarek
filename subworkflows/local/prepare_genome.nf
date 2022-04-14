@@ -56,7 +56,7 @@ workflow PREPARE_GENOME {
     }
 
     // Gather versions of all tools used
-    ch_versions  = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
+    ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
     ch_versions = ch_versions.mix(BWAMEM1_INDEX.out.versions)
     ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
     ch_versions = ch_versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
