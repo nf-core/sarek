@@ -32,7 +32,6 @@ params.ac_loci_gc            = WorkflowMain.getGenomeAttribute(params, 'ac_loci_
 params.bwa                   = WorkflowMain.getGenomeAttribute(params, 'bwa')
 params.bwamem2               = WorkflowMain.getGenomeAttribute(params, 'bwamem2')
 params.chr_dir               = WorkflowMain.getGenomeAttribute(params, 'chr_dir')
-params.chr_length            = WorkflowMain.getGenomeAttribute(params, 'chr_length')
 params.dbsnp                 = WorkflowMain.getGenomeAttribute(params, 'dbsnp')
 params.dbsnp_tbi             = WorkflowMain.getGenomeAttribute(params, 'dbsnp_tbi')
 params.dict                  = WorkflowMain.getGenomeAttribute(params, 'dict')
