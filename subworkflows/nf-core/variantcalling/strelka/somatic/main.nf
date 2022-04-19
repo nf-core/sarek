@@ -58,6 +58,10 @@ workflow RUN_STRELKA_SOMATIC {
                     CONCAT_STRELKA_INDELS.out.vcf,
                     strelka_vcf_snvs.no_intervals,
                     strelka_vcf_indels.no_intervals)
+                .map{ meta, vcf ->
+                    meta.variantcaller = "Strelka"
+                    [meta, vcf]
+                }
 
     ch_versions = ch_versions.mix(BGZIP_VC_STRELKA_SNVS.out.versions)
     ch_versions = ch_versions.mix(BGZIP_VC_STRELKA_INDELS.out.versions)

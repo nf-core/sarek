@@ -77,12 +77,16 @@ workflow RUN_MANTA_GERMLINE {
 
     // Mix output channels for "no intervals" and "with intervals" results
     manta_vcf = Channel.empty().mix(
-        CONCAT_MANTA_DIPLOID.out.vcf,
-        CONCAT_MANTA_SMALL_INDELS.out.vcf,
-        CONCAT_MANTA_SV.out.vcf,
-        manta_diploid_sv_vcf.no_intervals,
-        manta_small_indels_vcf.no_intervals,
-        manta_sv_vcf.no_intervals)
+                    CONCAT_MANTA_DIPLOID.out.vcf,
+                    CONCAT_MANTA_SMALL_INDELS.out.vcf,
+                    CONCAT_MANTA_SV.out.vcf,
+                    manta_diploid_sv_vcf.no_intervals,
+                    manta_small_indels_vcf.no_intervals,
+                    manta_sv_vcf.no_intervals)
+                .map{ meta, vcf ->
+                    meta.variantcaller = "Manta"
+                    [meta, vcf]
+                }
 
     ch_versions = ch_versions.mix(BGZIP_VC_MANTA_DIPLOID.out.versions)
     ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SMALL_INDELS.out.versions)
