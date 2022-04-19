@@ -1,4 +1,4 @@
-process SAMTOOLS_FASTQ {
+process SAMTOOLS_COLLATEFASTQ {
     tag "$meta.id"
     label 'process_low'
 
@@ -24,10 +24,10 @@ process SAMTOOLS_FASTQ {
     def args2 = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    samtools collate -O -@$task.cpus $args $input . |
+    samtools collate \\
+        -O -@$task.cpus $args $input . |
 
-    samtools \\
-        fastq \\
+    samtools fastq \\
         $args2 \\
         -@ $task.cpus \\
         -1 ${prefix}_1.fq.gz \\

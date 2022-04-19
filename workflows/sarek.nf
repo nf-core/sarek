@@ -128,8 +128,8 @@ include { PREPARE_GENOME                                 } from '../subworkflows
 include { PREPARE_INTERVALS                              } from '../subworkflows/local/prepare_intervals'
 
 // Convert BAM files to FASTQ files
-include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_INPUT } from '../subworkflows/local/bam2fastq'
-include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_UMI   } from '../subworkflows/local/bam2fastq'
+include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_INPUT } from '../subworkflows/nf-core/alignment_to_fastq'
+include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_UMI   } from '../subworkflows/nf-core/alignment_to_fastq'
 
 // Split FASTQ files
 include { SPLIT_FASTQ                                    } from '../subworkflows/local/split_fastq'
