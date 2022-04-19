@@ -63,13 +63,18 @@ workflow RUN_STRELKA_SINGLE {
         strelka_genome_vcf.no_intervals,
         strelka_vcf.no_intervals)
 
+    strelka_vcf_out = strelka_vcf.map{ meta, vcf ->
+        meta.variantcaller = "Strelka"
+        [meta, vcf]
+    }
     ch_versions = ch_versions.mix(BGZIP_VC_STRELKA.out.versions)
     ch_versions = ch_versions.mix(BGZIP_VC_STRELKA_GENOME.out.versions)
     ch_versions = ch_versions.mix(CONCAT_STRELKA.out.versions)
     ch_versions = ch_versions.mix(CONCAT_STRELKA_GENOME.out.versions)
     ch_versions = ch_versions.mix(STRELKA_GERMLINE.out.versions)
 
+    strelka_vcf_out.view()
     emit:
-    strelka_vcf
+    strelka_vcf = strelka_vcf_out
     versions = ch_versions
 }

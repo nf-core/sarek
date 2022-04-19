@@ -19,9 +19,9 @@ workflow VCF_QC {
     VCFTOOLS_SUMMARY(vcf, target_bed,[])
 
     emit:
-    versions = ch_versions
-    bcftools_stats = BCFTOOLS_STATS.out.stats
-    vcftools_tstv_counts = VCFTOOLS_TSTV_COUNT.out.tstv_count
-    vcftools_tstv_qual = VCFTOOLS_TSTV_QUAL.out.tstv_qual
+    versions                = ch_versions
+    bcftools_stats          = BCFTOOLS_STATS.out.stats
+    vcftools_tstv_counts    = VCFTOOLS_TSTV_COUNT.out.tstv_count
+    vcftools_tstv_qual      = VCFTOOLS_TSTV_QUAL.out.tstv_qual
     vcftools_filter_summary = VCFTOOLS_SUMMARY.out.filter_summary
 }

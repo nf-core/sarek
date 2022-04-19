@@ -675,7 +675,7 @@ workflow SAREK {
             chr_files,
             mappability)
 
-        // Gather vcf files for annotation
+        // Gather vcf files for annotation and QC
         vcf_to_annotate = Channel.empty()
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.deepvariant_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.freebayes_vcf)
