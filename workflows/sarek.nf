@@ -183,6 +183,8 @@ include { TUMOR_ONLY_VARIANT_CALLING                     } from '../subworkflows
 // Variant calling on tumor/normal pair
 include { PAIR_VARIANT_CALLING                           } from '../subworkflows/local/pair_variant_calling'
 
+include { VCF_QC                                         } from '../subworkflows/nf-core/vcf_qc'
+
 // Annotation
 include { ANNOTATE                                       } from '../subworkflows/local/annotate'
 
@@ -692,6 +694,9 @@ workflow SAREK {
         ch_versions = ch_versions.mix(GERMLINE_VARIANT_CALLING.out.versions)
         ch_versions = ch_versions.mix(PAIR_VARIANT_CALLING.out.versions)
         ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
+
+        //QC
+        VCF_QC(vcf_to_annotate, intervals_bed_combined)
 
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = ch_input_sample
