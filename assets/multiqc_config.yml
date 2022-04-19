@@ -16,7 +16,7 @@ export_plots: true
 
 top_modules:
   - "fastqc":
-    name: "FastQC"
+    name: "FastQC (raw)"
     path_filters_exclude:
       - "*trimmed_fastqc*"
   - "cutadapt"
