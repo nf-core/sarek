@@ -407,7 +407,7 @@ workflow SAREK {
             ch_cram_no_markduplicates = BAM_TO_CRAM.out.cram
 
             // Gather QC reports
-            ch_reports  = ch_reports.mix(BAM_TO_CRAM.out.qc)
+            ch_reports  = ch_reports.mix(BAM_TO_CRAM.out.qc.collect{it[1]}.ifEmpty([]))
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions)
@@ -698,6 +698,12 @@ workflow SAREK {
         //QC
         VCF_QC(vcf_to_annotate, intervals_bed_combined)
 
+        ch_versions = ch_versions.mix(VCF_QC.out.versions)
+        ch_reports  = ch_reports.mix(VCF_QC.out.bcftools_stats.collect{it[1]}.ifEmpty([]))
+        ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_tstv_counts.collect{it[1]}.ifEmpty([]))
+        ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_tstv_qual.collect{it[1]}.ifEmpty([]))
+        ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_filter_summary.collect{it[1]}.ifEmpty([]))
+
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = ch_input_sample
 
@@ -718,27 +724,26 @@ workflow SAREK {
     }
 
     ch_version_yaml = Channel.empty()
-        if (!(params.skip_tools && params.skip_tools.contains('versions'))) {
+    if (!(params.skip_tools && params.skip_tools.contains('versions'))) {
         CUSTOM_DUMPSOFTWAREVERSIONS(ch_versions.unique().collectFile(name: 'collated_versions.yml'))
         ch_version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
     }
 
-    // workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
-    // ch_workflow_summary = Channel.value(workflow_summary)
+    if (!(params.skip_tools && params.skip_tools.contains('multiqc'))) {
+        workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
+        ch_workflow_summary = Channel.value(workflow_summary)
 
-    // ch_multiqc_files = Channel.empty()
-    // ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_config)
-    // ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
-    // ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    // ch_multiqc_files = ch_multiqc_files.mix(ch_version_yaml)
-    // ch_multiqc_files = ch_multiqc_files.mix(ch_reports)
+        ch_multiqc_files =  Channel.empty().mix(ch_version_yaml,
+                                            ch_multiqc_custom_config.collect().ifEmpty([]),
+                                            ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
+                                            ch_reports.collect(),
+                                            Channel.from(ch_multiqc_config))
+        //println ch_multiqc_config
+        //ch_multiqc_files.collect().view()
 
-    // multiqc_report = Channel.empty()
-    // if (!(params.skip_tools && params.skip_tools.contains('multiqc'))) {
-    //     MULTIQC(ch_multiqc_files.collect())
-    //     multiqc_report = MULTIQC.out.report.toList()
-
-    // }
+    MULTIQC(ch_multiqc_files.collect())
+    //multiqc_report = MULTIQC.out.report.toList()
+    }
 }
 
 /*
