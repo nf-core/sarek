@@ -738,11 +738,9 @@ workflow SAREK {
                                             ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
                                             ch_reports.collect(),
                                             Channel.from(ch_multiqc_config))
-        //println ch_multiqc_config
-        //ch_multiqc_files.collect().view()
 
-    MULTIQC(ch_multiqc_files.collect())
-    //multiqc_report = MULTIQC.out.report.toList()
+        MULTIQC(ch_multiqc_files.collect())
+        multiqc_report = MULTIQC.out.report.toList()
     }
 }
 
@@ -851,7 +849,8 @@ def extract_csv(csv_file) {
         } else if (row.vcf) {
             meta.id = meta.sample
             def vcf = file(row.vcf, checkIfExists: true)
-            meta.data_type  = "vcf"
+            meta.data_type     = "vcf"
+            meta.variantcaller = ""
             return [meta, vcf]
         } else {
             log.warn "Missing or unknown field in csv file header"
