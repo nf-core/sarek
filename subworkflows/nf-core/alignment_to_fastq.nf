@@ -2,14 +2,14 @@
 // BAM/CRAM to FASTQ conversion, paired end only
 //
 
-include { SAMTOOLS_VIEW  as SAMTOOLS_VIEW_MAP_MAP         } from '../../modules/nf-core/modules/samtools/view/main'
-include { SAMTOOLS_VIEW  as SAMTOOLS_VIEW_UNMAP_UNMAP     } from '../../modules/nf-core/modules/samtools/view/main'
-include { SAMTOOLS_VIEW  as SAMTOOLS_VIEW_UNMAP_MAP       } from '../../modules/nf-core/modules/samtools/view/main'
-include { SAMTOOLS_VIEW  as SAMTOOLS_VIEW_MAP_UNMAP       } from '../../modules/nf-core/modules/samtools/view/main'
-include { SAMTOOLS_MERGE as SAMTOOLS_MERGE_UNMAPPED       } from '../../modules/nf-core/modules/samtools/merge/main'
-include { SAMTOOLS_COLLATEFASTQ as COLLATE_FASTQ_UNMAPPED } from '../../modules/local/samtools/collatefastq/main'
-include { SAMTOOLS_COLLATEFASTQ as COLLATE_FASTQ_MAPPED   } from '../../modules/local/samtools/collatefastq/main'
-include { CAT_FASTQ                                       } from '../../modules/nf-core/modules/cat/fastq/main'
+include { SAMTOOLS_VIEW  as SAMTOOLS_VIEW_MAP_MAP      } from '../../modules/nf-core/modules/samtools/view/main'
+include { SAMTOOLS_VIEW  as SAMTOOLS_VIEW_UNMAP_UNMAP  } from '../../modules/nf-core/modules/samtools/view/main'
+include { SAMTOOLS_VIEW  as SAMTOOLS_VIEW_UNMAP_MAP    } from '../../modules/nf-core/modules/samtools/view/main'
+include { SAMTOOLS_VIEW  as SAMTOOLS_VIEW_MAP_UNMAP    } from '../../modules/nf-core/modules/samtools/view/main'
+include { SAMTOOLS_MERGE as SAMTOOLS_MERGE_UNMAP       } from '../../modules/nf-core/modules/samtools/merge/main'
+include { SAMTOOLS_COLLATEFASTQ as COLLATE_FASTQ_UNMAP } from '../../modules/local/samtools/collatefastq/main'
+include { SAMTOOLS_COLLATEFASTQ as COLLATE_FASTQ_MAP   } from '../../modules/local/samtools/collatefastq/main'
+include { CAT_FASTQ                                    } from '../../modules/nf-core/modules/cat/fastq/main'
 
 workflow ALIGNMENT_TO_FASTQ {
     take:
@@ -33,29 +33,30 @@ workflow ALIGNMENT_TO_FASTQ {
     SAMTOOLS_VIEW_MAP_UNMAP(input, fasta)
 
     // Merge UNMAP
-    SAMTOOLS_VIEW_UNMAP_UNMAP.out.bam.join(SAMTOOLS_VIEW_UNMAP_MAP.out.bam, remainder: true)
+    all_unmapped_bam = SAMTOOLS_VIEW_UNMAP_UNMAP.out.bam
+        .join(SAMTOOLS_VIEW_UNMAP_MAP.out.bam, remainder: true)
         .join(SAMTOOLS_VIEW_MAP_UNMAP.out.bam, remainder: true)
         .map{ meta, unmap_unmap, unmap_map, map_unmap ->
             [meta, [unmap_unmap, unmap_map, map_unmap]]
-        }.set{ all_unmapped_bam }
+        }
 
-    SAMTOOLS_MERGE_UNMAPPED(all_unmapped_bam, fasta)
+    SAMTOOLS_MERGE_UNMAP(all_unmapped_bam, fasta)
 
     // Collate & convert unmapped
-    COLLATE_FASTQ_UNMAPPED(SAMTOOLS_MERGE_UNMAPPED.out.bam)
+    COLLATE_FASTQ_UNMAP(SAMTOOLS_MERGE_UNMAP.out.bam)
 
     // Collate & convert mapped
-    COLLATE_FASTQ_MAPPED(SAMTOOLS_VIEW_MAP_MAP.out.bam)
+    COLLATE_FASTQ_MAP(SAMTOOLS_VIEW_MAP_MAP.out.bam)
 
     // join Mapped & unmapped fastq
-    unmapped_reads = COLLATE_FASTQ_UNMAPPED.out.reads
+    unmapped_reads = COLLATE_FASTQ_UNMAP.out.reads
         .map{ meta, reads ->
             fq_1 = reads.findAll{ it.toString().endsWith("_1.fq.gz") }.get(0)
             fq_2 = reads.findAll{ it.toString().endsWith("_2.fq.gz") }.get(0)
             [meta, [ fq_1, fq_2]]
         }
 
-    mapped_reads = COLLATE_FASTQ_MAPPED.out.reads
+    mapped_reads = COLLATE_FASTQ_MAP.out.reads
         .map{ meta, reads ->
             fq_1 = reads.findAll{ it.toString().endsWith("_1.fq.gz") }.get(0)
             fq_2 = reads.findAll{ it.toString().endsWith("_2.fq.gz") }.get(0)
@@ -72,9 +73,9 @@ workflow ALIGNMENT_TO_FASTQ {
 
     // Gather versions of all tools used
     ch_versions = ch_versions.mix(CAT_FASTQ.out.versions)
-    ch_versions = ch_versions.mix(COLLATE_FASTQ_MAPPED.out.versions)
-    ch_versions = ch_versions.mix(COLLATE_FASTQ_UNMAPPED.out.versions)
-    ch_versions = ch_versions.mix(SAMTOOLS_MERGE_UNMAPPED.out.versions)
+    ch_versions = ch_versions.mix(COLLATE_FASTQ_MAP.out.versions)
+    ch_versions = ch_versions.mix(COLLATE_FASTQ_UNMAP.out.versions)
+    ch_versions = ch_versions.mix(SAMTOOLS_MERGE_UNMAP.out.versions)
     ch_versions = ch_versions.mix(SAMTOOLS_VIEW_MAP_MAP.out.versions)
     ch_versions = ch_versions.mix(SAMTOOLS_VIEW_MAP_UNMAP.out.versions)
     ch_versions = ch_versions.mix(SAMTOOLS_VIEW_UNMAP_MAP.out.versions)
