@@ -200,9 +200,9 @@ include { MULTIQC                                        } from '../modules/nf-c
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+ch_multiqc_config        = Channel.fromPath(file("$projectDir/assets/multiqc_config.yml", checkIfExists: true))
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
-
+ch_sarek_logo            = Channel.fromPath(file("$projectDir/assets/nf-core-sarek_logo_light.png", checkIfExists: true))
 def multiqc_report = []
 
 /*
@@ -308,13 +308,13 @@ workflow SAREK {
 
             ch_reads = RUN_TRIMGALORE.out.reads
 
-            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
+            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]),
+                                        RUN_TRIMGALORE.out.trim_html.collect{it[1]}.ifEmpty([]),
+                                        RUN_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]))
             ch_versions = ch_versions.mix(RUN_TRIMGALORE.out.versions)
         } else {
             ch_reads = ch_input_fastq
         }
-
-        ch_reads.view()
 
         // UMI consensus calling
         if (params.umi_read_structure) {
@@ -506,6 +506,8 @@ workflow SAREK {
 
             // Create CSV to restart from this step
             PREPARE_RECALIBRATION_CSV(ch_table_bqsr)
+
+            ch_reports  = ch_reports.mix(ch_table_bqsr.map{ meta, table -> table})
         }
     }
 
@@ -722,6 +724,9 @@ workflow SAREK {
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(ANNOTATE.out.versions)
+            ch_reports  = ch_reports.mix(ANNOTATE.out.reports)
+
+            ch_reports.view()
         }
     }
 
@@ -739,7 +744,8 @@ workflow SAREK {
                                             ch_multiqc_custom_config.collect().ifEmpty([]),
                                             ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
                                             ch_reports.collect(),
-                                            Channel.from(ch_multiqc_config))
+                                            ch_multiqc_config,
+                                            ch_sarek_logo)
 
         MULTIQC(ch_multiqc_files.collect())
         multiqc_report = MULTIQC.out.report.toList()
