@@ -1,8 +1,8 @@
-include { BGZIP as BGZIP_VC_STRELKA_INDELS    } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
-include { BGZIP as BGZIP_VC_STRELKA_SNVS      } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
-include { CONCAT_VCF as CONCAT_STRELKA_INDELS } from '../../../../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_STRELKA_SNVS   } from '../../../../../modules/local/concat_vcf/main'
-include { STRELKA_SOMATIC                     } from '../../../../../modules/nf-core/modules/strelka/somatic/main'
+include { TABIX_BGZIP as BGZIP_VC_STRELKA_INDELS } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { TABIX_BGZIP as BGZIP_VC_STRELKA_SNVS   } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { CONCAT_VCF as CONCAT_STRELKA_INDELS    } from '../../../../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_STRELKA_SNVS      } from '../../../../../modules/local/concat_vcf/main'
+include { STRELKA_SOMATIC                        } from '../../../../../modules/nf-core/modules/strelka/somatic/main'
 
 // TODO: Research if splitting by intervals is ok, we pretend for now it is fine.
 // Seems to be the consensus on upstream modules implementation too

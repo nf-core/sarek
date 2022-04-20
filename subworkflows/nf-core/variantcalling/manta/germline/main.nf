@@ -1,10 +1,10 @@
-include { BGZIP as BGZIP_VC_MANTA_DIPLOID         } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
-include { BGZIP as BGZIP_VC_MANTA_SMALL_INDELS    } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
-include { BGZIP as BGZIP_VC_MANTA_SV              } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
-include { CONCAT_VCF as CONCAT_MANTA_DIPLOID      } from '../../../../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_MANTA_SMALL_INDELS } from '../../../../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_MANTA_SV           } from '../../../../../modules/local/concat_vcf/main'
-include { MANTA_GERMLINE                          } from '../../../../../modules/nf-core/modules/manta/germline/main'
+include { TABIX_BGZIP as BGZIP_VC_MANTA_DIPLOID      } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { TABIX_BGZIP as BGZIP_VC_MANTA_SMALL_INDELS } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { TABIX_BGZIP as BGZIP_VC_MANTA_SV           } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { CONCAT_VCF as CONCAT_MANTA_DIPLOID         } from '../../../../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_MANTA_SMALL_INDELS    } from '../../../../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_MANTA_SV              } from '../../../../../modules/local/concat_vcf/main'
+include { MANTA_GERMLINE                             } from '../../../../../modules/nf-core/modules/manta/germline/main'
 
 // TODO: Research if splitting by intervals is ok, we pretend for now it is fine.
 // Seems to be the consensus on upstream modules implementation too

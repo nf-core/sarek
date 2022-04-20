@@ -1,5 +1,5 @@
-include { BGZIP as BGZIP_VC_DEEPVARIANT_GVCF       } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
-include { BGZIP as BGZIP_VC_DEEPVARIANT_VCF        } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { TABIX_BGZIP as BGZIP_VC_DEEPVARIANT_GVCF } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { TABIX_BGZIP as BGZIP_VC_DEEPVARIANT_VCF  } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
 include { CONCAT_VCF as CONCAT_DEEPVARIANT_GVCF    } from '../../../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_DEEPVARIANT_VCF     } from '../../../../modules/local/concat_vcf/main'
 include { DEEPVARIANT                              } from '../../../../modules/nf-core/modules/deepvariant/main'

@@ -2,7 +2,7 @@
 // Run GATK mutect2 in tumor only mode, getepileupsummaries, calculatecontamination and filtermutectcalls
 //
 
-include { BGZIP                        as BGZIP_VC_MUTECT2       } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { TABIX_BGZIP                  as BGZIP_VC_MUTECT2       } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
 include { CONCAT_VCF                   as CONCAT_MUTECT2         } from '../../../../modules/local/concat_vcf/main'
 include { GATK4_MUTECT2                as MUTECT2                } from '../../../../modules/nf-core/modules/gatk4/mutect2/main'
 include { GATK4_MERGEMUTECTSTATS       as MERGEMUTECTSTATS       } from '../../../../modules/nf-core/modules/gatk4/mergemutectstats/main'

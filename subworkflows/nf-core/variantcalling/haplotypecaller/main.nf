@@ -1,4 +1,4 @@
-include { BGZIP as BGZIP_VC_HAPLOTYPECALLER        } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { TABIX_BGZIP as BGZIP_VC_HAPLOTYPECALLER  } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
 include { CONCAT_VCF as CONCAT_HAPLOTYPECALLER     } from '../../../../modules/local/concat_vcf/main'
 include { GATK4_GENOTYPEGVCFS as GENOTYPEGVCFS     } from '../../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
 include { GATK4_HAPLOTYPECALLER as HAPLOTYPECALLER } from '../../../../modules/nf-core/modules/gatk4/haplotypecaller/main'
