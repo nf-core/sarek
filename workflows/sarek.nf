@@ -314,6 +314,8 @@ workflow SAREK {
             ch_reads = ch_input_fastq
         }
 
+        ch_reads.view()
+
         // UMI consensus calling
         if (params.umi_read_structure) {
             CREATE_UMI_CONSENSUS(ch_reads,
@@ -331,7 +333,7 @@ workflow SAREK {
             ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ_UMI.out.versions)
             ch_versions = ch_versions.mix(CREATE_UMI_CONSENSUS.out.versions)
         } else {
-            ch_input_sample_to_split = ch_input_fastq
+            ch_input_sample_to_split = ch_reads
         }
 
         // SPLIT OF FASTQ FILES WITH SEQKIT_SPLIT2
