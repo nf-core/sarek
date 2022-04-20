@@ -1,5 +1,5 @@
-include { BGZIP as BGZIP_VC_STRELKA_INDELS    } from '../../../../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_STRELKA_SNVS      } from '../../../../../modules/local/bgzip'
+include { BGZIP as BGZIP_VC_STRELKA_INDELS    } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { BGZIP as BGZIP_VC_STRELKA_SNVS      } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
 include { CONCAT_VCF as CONCAT_STRELKA_INDELS } from '../../../../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_STRELKA_SNVS   } from '../../../../../modules/local/concat_vcf/main'
 include { STRELKA_SOMATIC                     } from '../../../../../modules/nf-core/modules/strelka/somatic/main'
@@ -34,7 +34,7 @@ workflow RUN_STRELKA_SOMATIC {
     // Only when using intervals
     BGZIP_VC_STRELKA_SNVS(strelka_vcf_snvs.intervals)
 
-    CONCAT_STRELKA_SNVS(BGZIP_VC_STRELKA_SNVS.out.vcf.map{ meta, vcf ->
+    CONCAT_STRELKA_SNVS(BGZIP_VC_STRELKA_SNVS.out.output.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
                 [new_meta, vcf]
@@ -44,7 +44,7 @@ workflow RUN_STRELKA_SOMATIC {
 
     BGZIP_VC_STRELKA_INDELS(strelka_vcf_indels.intervals)
 
-    CONCAT_STRELKA_INDELS(BGZIP_VC_STRELKA_INDELS.out.vcf.map{ meta, vcf ->
+    CONCAT_STRELKA_INDELS(BGZIP_VC_STRELKA_INDELS.out.output.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
                 [new_meta, vcf]

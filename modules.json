@@ -207,6 +207,9 @@
             "strelka/somatic": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
+            "tabix/bgzip": {
+                "git_sha": "37bf3936f3665483d070a5e0e0b314311032af7c"
+            },
             "tabix/bgziptabix": {
                 "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
             },

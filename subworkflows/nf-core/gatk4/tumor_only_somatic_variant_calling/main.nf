@@ -2,7 +2,7 @@
 // Run GATK mutect2 in tumor only mode, getepileupsummaries, calculatecontamination and filtermutectcalls
 //
 
-include { BGZIP                        as BGZIP_VC_MUTECT2       } from '../../../../modules/local/bgzip'
+include { BGZIP                        as BGZIP_VC_MUTECT2       } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
 include { CONCAT_VCF                   as CONCAT_MUTECT2         } from '../../../../modules/local/concat_vcf/main'
 include { GATK4_MUTECT2                as MUTECT2                } from '../../../../modules/nf-core/modules/gatk4/mutect2/main'
 include { GATK4_MERGEMUTECTSTATS       as MERGEMUTECTSTATS       } from '../../../../modules/nf-core/modules/gatk4/mergemutectstats/main'
@@ -66,7 +66,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     //Merge Mutect2 VCF
     BGZIP_VC_MUTECT2(mutect2_vcf_branch.intervals)
 
-    CONCAT_MUTECT2(BGZIP_VC_MUTECT2.out.vcf.map{ meta, vcf ->
+    CONCAT_MUTECT2(BGZIP_VC_MUTECT2.out.output.map{ meta, vcf ->
             new_meta = meta.clone()
             new_meta.id = new_meta.sample
             [new_meta, vcf]

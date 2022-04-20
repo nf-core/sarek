@@ -1,5 +1,5 @@
-include { BGZIP as BGZIP_VC_DEEPVARIANT_GVCF       } from '../../../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_DEEPVARIANT_VCF        } from '../../../../modules/local/bgzip'
+include { BGZIP as BGZIP_VC_DEEPVARIANT_GVCF       } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { BGZIP as BGZIP_VC_DEEPVARIANT_VCF        } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
 include { CONCAT_VCF as CONCAT_DEEPVARIANT_GVCF    } from '../../../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_DEEPVARIANT_VCF     } from '../../../../modules/local/concat_vcf/main'
 include { DEEPVARIANT                              } from '../../../../modules/nf-core/modules/deepvariant/main'
@@ -33,7 +33,7 @@ workflow RUN_DEEPVARIANT {
     BGZIP_VC_DEEPVARIANT_GVCF(DEEPVARIANT.out.gvcf)
 
     CONCAT_DEEPVARIANT_VCF(
-        BGZIP_VC_DEEPVARIANT_VCF.out.vcf
+        BGZIP_VC_DEEPVARIANT_VCF.out.output
             .map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
@@ -43,7 +43,7 @@ workflow RUN_DEEPVARIANT {
         intervals_bed_gz)
 
     CONCAT_DEEPVARIANT_GVCF(
-        BGZIP_VC_DEEPVARIANT_GVCF.out.vcf
+        BGZIP_VC_DEEPVARIANT_GVCF.out.output
             .map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample

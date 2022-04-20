@@ -1,7 +1,7 @@
-include { BGZIP as BGZIP_VC_MANTA_DIPLOID         } from '../../../../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_MANTA_SMALL_INDELS    } from '../../../../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_MANTA_SOMATIC         } from '../../../../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_MANTA_SV              } from '../../../../../modules/local/bgzip'
+include { BGZIP as BGZIP_VC_MANTA_DIPLOID         } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { BGZIP as BGZIP_VC_MANTA_SMALL_INDELS    } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { BGZIP as BGZIP_VC_MANTA_SOMATIC         } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { BGZIP as BGZIP_VC_MANTA_SV              } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
 include { CONCAT_VCF as CONCAT_MANTA_DIPLOID      } from '../../../../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_MANTA_SMALL_INDELS } from '../../../../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_MANTA_SOMATIC      } from '../../../../../modules/local/concat_vcf/main'
@@ -52,7 +52,7 @@ workflow RUN_MANTA_SOMATIC {
     BGZIP_VC_MANTA_SV(manta_candidate_small_indels_vcf.intervals)
 
     CONCAT_MANTA_SV(
-        BGZIP_VC_MANTA_SV.out.vcf.map{ meta, vcf ->
+        BGZIP_VC_MANTA_SV.out.output.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
                 [new_meta, vcf]
@@ -63,7 +63,7 @@ workflow RUN_MANTA_SOMATIC {
     BGZIP_VC_MANTA_SMALL_INDELS(manta_candidate_sv_vcf.intervals)
 
     CONCAT_MANTA_SMALL_INDELS(
-        BGZIP_VC_MANTA_SMALL_INDELS.out.vcf.map{ meta, vcf ->
+        BGZIP_VC_MANTA_SMALL_INDELS.out.output.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
                 [new_meta, vcf]
@@ -74,7 +74,7 @@ workflow RUN_MANTA_SOMATIC {
     BGZIP_VC_MANTA_DIPLOID(manta_diploid_sv_vcf.intervals)
 
     CONCAT_MANTA_DIPLOID(
-        BGZIP_VC_MANTA_DIPLOID.out.vcf.map{ meta, vcf ->
+        BGZIP_VC_MANTA_DIPLOID.out.output.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
                 [new_meta, vcf]
@@ -85,7 +85,7 @@ workflow RUN_MANTA_SOMATIC {
     BGZIP_VC_MANTA_SOMATIC(manta_somatic_sv_vcf.intervals)
 
     CONCAT_MANTA_SOMATIC(
-        BGZIP_VC_MANTA_SOMATIC.out.vcf.map{ meta, vcf ->
+        BGZIP_VC_MANTA_SOMATIC.out.output.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
                 [new_meta, vcf]
