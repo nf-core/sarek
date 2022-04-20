@@ -7,8 +7,8 @@ include { SAMTOOLS_VIEW  as SAMTOOLS_VIEW_UNMAP_UNMAP  } from '../../modules/nf-
 include { SAMTOOLS_VIEW  as SAMTOOLS_VIEW_UNMAP_MAP    } from '../../modules/nf-core/modules/samtools/view/main'
 include { SAMTOOLS_VIEW  as SAMTOOLS_VIEW_MAP_UNMAP    } from '../../modules/nf-core/modules/samtools/view/main'
 include { SAMTOOLS_MERGE as SAMTOOLS_MERGE_UNMAP       } from '../../modules/nf-core/modules/samtools/merge/main'
-include { SAMTOOLS_COLLATEFASTQ as COLLATE_FASTQ_UNMAP } from '../../modules/local/samtools/collatefastq/main'
-include { SAMTOOLS_COLLATEFASTQ as COLLATE_FASTQ_MAP   } from '../../modules/local/samtools/collatefastq/main'
+include { SAMTOOLS_COLLATEFASTQ as COLLATE_FASTQ_UNMAP } from '../../modules/nf-core/modules/samtools/collatefastq/main'
+include { SAMTOOLS_COLLATEFASTQ as COLLATE_FASTQ_MAP   } from '../../modules/nf-core/modules/samtools/collatefastq/main'
 include { CAT_FASTQ                                    } from '../../modules/nf-core/modules/cat/fastq/main'
 
 workflow ALIGNMENT_TO_FASTQ {
