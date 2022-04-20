@@ -4,8 +4,8 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { SAMTOOLS_INDEX      as INDEX_CRAM } from '../../modules/local/samtools/index/main'
-include { SAMTOOLS_MERGE_CRAM as MERGE_CRAM } from '../../modules/local/samtools/mergecram/main'
+include { SAMTOOLS_INDEX as INDEX_CRAM } from '../../modules/local/samtools/index/main'
+include { SAMTOOLS_MERGE as MERGE_CRAM } from '../../modules/nf-core/modules/samtools/merge/main'
 
 workflow MERGE_INDEX_CRAM {
     take:
