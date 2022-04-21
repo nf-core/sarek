@@ -1,4 +1,4 @@
-custom_logo: ../../../docs/images/nf-core_sarek_logo.png
+custom_logo: "nf-core-sarek_logo_light.png"
 custom_logo_url: https://github.com/nf-core/sarek/
 custom_logo_title: "nf-core/sarek"
 
@@ -14,21 +14,53 @@ report_section_order:
 
 export_plots: true
 
-top_modules:
-  - "fastqc":
-    name: "FastQC"
-    path_filters_exclude:
-      - "*trimmed_fastqc*"
-  - "cutadapt"
-  - "fastqc":
-    name: "FastQC after trimming"
-    info: "FastQC after applying TrimGalore."
-    path_filters:
-      - "*trimmed_fastqc*"
-  - "picard"
-  - "gatk"
-  - "samtools"
-  - "qualimap"
-  - "bcftools"
-  - "vcftools"
-  - "snpeff"
+# Run only these modules
+run_modules:
+  - custom_content
+  - fastqc
+  - cutadapt
+  - picard
+  - samtools
+  - qualimap
+  - gatk
+  - bcftools
+  - vcftools
+  - snpeff
+  - vep
+
+module_order:
+  - fastqc:
+      name: "FastQC (raw)"
+      path_filters_exclude:
+        - "*_val_*.zip"
+  - cutadapt:
+      name: "Cutadapt"
+  - fastqc:
+      name: "FastQC (trimmed)"
+      path_filters:
+        - "*_val_*.zip"
+  - picard:
+      name: "GATK4 MarkDuplicates"
+      info: " metrics generated either by GATK4 MarkDuplicates or EstimateLibraryComplexity (with --use_gatk_spark)."
+  - samtools:
+      name: "Samtools Flagstat"
+  - qualimap:
+      name: "Qualimap"
+  - gatk:
+      name: "GATK4 BQSR"
+  - bcftools:
+      name: "Bcftools"
+  - vcftools:
+      name: "Vcftools"
+  - snpeff:
+      name: "SNPeff"
+  - vep:
+      name: "VEP"
+
+extra_fn_clean_exts:
+  - "_val"
+
+sp:
+  snpeff:
+    contents: "SnpEff_version"
+    max_filesize: 5000000

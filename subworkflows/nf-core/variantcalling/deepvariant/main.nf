@@ -54,10 +54,14 @@ workflow RUN_DEEPVARIANT {
 
     // Mix output channels for "no intervals" and "with intervals" results
     deepvariant_vcf = Channel.empty().mix(
-        CONCAT_DEEPVARIANT_GVCF.out.vcf,
-        CONCAT_DEEPVARIANT_VCF.out.vcf,
-        DEEPVARIANT.out.gvcf,
-        DEEPVARIANT.out.vcf)
+                        CONCAT_DEEPVARIANT_GVCF.out.vcf,
+                        CONCAT_DEEPVARIANT_VCF.out.vcf,
+                        DEEPVARIANT.out.gvcf,
+                        DEEPVARIANT.out.vcf)
+                    .map{ meta, vcf ->
+                        meta.variantcaller = "Deepvariant"
+                        [meta, vcf]
+                    }
 
     ch_versions = ch_versions.mix(BGZIP_VC_DEEPVARIANT_GVCF.out.versions)
     ch_versions = ch_versions.mix(BGZIP_VC_DEEPVARIANT_VCF.out.versions)

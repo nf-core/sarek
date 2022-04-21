@@ -54,8 +54,6 @@ workflow RUN_CONTROLFREEC_SOMATIC {
         }
         .groupTuple(size: num_intervals, sort:true))
 
-    mpileup_normal.no_intervals.view()
-
     controlfreec_input_normal = Channel.empty().mix(
         CAT_MPILEUP_NORMAL.out.file_out,
         mpileup_normal.no_intervals
