@@ -59,14 +59,6 @@ module_order:
 
 extra_fn_clean_exts:
   - "_val"
-# Customise the module search patterns to speed up execution time
-#  - Skip module sub-tools that we are not interested in
-#  - Replace file-content searching with filename pattern searching
-#  - Don't add anything that is the same as the MultiQC default
-# See https://multiqc.info/docs/#optimise-file-search-patterns for details
-# sp:
-# cutadapt:
-# fn: "*trimming_report.txt"
 
 sp:
   snpeff:
