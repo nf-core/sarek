@@ -67,3 +67,8 @@ extra_fn_clean_exts:
 # sp:
 # cutadapt:
 # fn: "*trimming_report.txt"
+
+sp:
+  snpeff:
+    contents: "SnpEff_version"
+    max_filesize: 5000000
