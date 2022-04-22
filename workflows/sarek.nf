@@ -266,6 +266,17 @@ workflow SAREK {
     // TODO: needs to figure something out when intervals are made out of the fasta_fai file
     num_intervals                 = !params.no_intervals ? (params.intervals ? count_intervals(file(params.intervals)) : 1) : 1
 
+    test = 1
+    list = intervals.toList().map{
+        num_intervals = it.size
+    }
+    //list.view()
+    //println list.getClass()
+    //println list.get(0)
+    //list.view()
+    //count_intervals2(list)
+    println num_intervals
+    //println num_intervals
     // Gather used softwares versions
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
     ch_versions = ch_versions.mix(PREPARE_INTERVALS.out.versions)
@@ -873,6 +884,18 @@ def count_intervals(intervals_file) {
     intervals_file.eachLine{ it ->
         count += it.startsWith("@") ? 0 : 1
     }
+
+    return count
+}
+
+def count_intervals2(intervals_list) {
+    count = 0
+    //println intervals_list.getClass()
+    intervals_list.each{
+    //    println "$it"
+        count += 1
+    }
+    println count
 
     return count
 }
