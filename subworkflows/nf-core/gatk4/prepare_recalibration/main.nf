@@ -9,22 +9,23 @@ include { GATK4_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from '../../../../modul
 
 workflow PREPARE_RECALIBRATION {
     take:
-        cram            // channel: [mandatory] cram_markduplicates
+        cram            // channel: [mandatory] meta, cram_markduplicates, crai
         dict            // channel: [mandatory] dict
         fasta           // channel: [mandatory] fasta
         fasta_fai       // channel: [mandatory] fasta_fai
-        intervals       // channel: [mandatory] intervals
+        intervals       // channel: [mandatory] intervals, num_intervals
         known_sites     // channel: [optional]  known_sites
         known_sites_tbi // channel: [optional]  known_sites_tbi
-        num_intervals   //   value: [mandatory] number of intervals
+        //num_intervals   //   value: [mandatory] number of intervals
 
     main:
     ch_versions = Channel.empty()
 
     cram_intervals = cram.combine(intervals)
-        .map{ meta, cram, crai, intervals ->
+        .map{ meta, cram, crai, intervals, num_intervals ->
             new_meta = meta.clone()
             new_meta.id = num_intervals == 1 ? meta.sample : meta.sample + "_" + intervals.baseName
+            new_meta.num_intervals = num_intervals
             intervals_new = params.no_intervals ? [] : intervals
             [new_meta, cram, crai, intervals_new]
         }
@@ -36,11 +37,13 @@ workflow PREPARE_RECALIBRATION {
     table_to_merge = BASERECALIBRATOR.out.table
         .map{ meta, table ->
                 meta.id = meta.sample
+
+                def groupKey = groupKey(meta, meta.num_intervals)
                 [meta, table]
-        }.groupTuple(size: num_intervals)
+        }.groupTuple()
     .branch{
-        single:   num_intervals == 1
-        multiple: num_intervals > 1
+        single:   it[1].size() == 1
+        multiple: it[1].size() > 1
     }
 
     // STEP 3.5: MERGING RECALIBRATION TABLES

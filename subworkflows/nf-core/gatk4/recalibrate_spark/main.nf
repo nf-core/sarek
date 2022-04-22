@@ -14,23 +14,24 @@ workflow RECALIBRATE_SPARK {
         fasta         // channel: [mandatory] fasta
         fasta_fai     // channel: [mandatory] fasta_fai
         intervals     // channel: [mandatory] intervals
-        num_intervals //   value: [mandatory] number of intervals
 
     main:
     ch_versions = Channel.empty()
 
     cram_intervals = cram.combine(intervals)
-        .map{ meta, cram, crai, recal, intervals ->
+        .map{ meta, cram, crai, recal, intervals, num_intervals ->
             new_meta = meta.clone()
             new_meta.id = num_intervals == 1 ? meta.sample : meta.sample + "_" + intervals.baseName
-            [new_meta, cram, crai, recal, intervals]
+            new_meta.num_intervals = num_intervals
+            intervals_new = params.no_intervals ? [] : intervals
+            [new_meta, cram, crai, recal, intervals_new]
         }
 
     // Run Applybqsr spark
     APPLYBQSR_SPARK(cram_intervals, fasta, fasta_fai, dict)
 
     // STEP 4.5: MERGING AND INDEXING THE RECALIBRATED BAM FILES
-    MERGE_INDEX_CRAM(APPLYBQSR_SPARK.out.cram, fasta, num_intervals)
+    MERGE_INDEX_CRAM(APPLYBQSR_SPARK.out.cram, fasta)
 
     // Gather versions of all tools used
     ch_versions = ch_versions.mix(APPLYBQSR_SPARK.out.versions)
