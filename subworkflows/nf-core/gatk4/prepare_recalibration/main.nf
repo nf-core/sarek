@@ -51,6 +51,12 @@ workflow PREPARE_RECALIBRATION {
     // Merge the tables only when we have intervals
     GATHERBQSRREPORTS(table_to_merge.multiple)
     table_bqsr = table_to_merge.single.mix(GATHERBQSRREPORTS.out.table)
+                                        .map{ meta, table ->
+                                            new_meta = meta.clone()
+                                                // remove no longer necessary fields to make sure joining can be done correctly
+                                            new_meta.remove('num_intervals')
+                                            [new_meta, table]
+                                        }
 
     // Gather versions of all tools used
     ch_versions = ch_versions.mix(BASERECALIBRATOR.out.versions)

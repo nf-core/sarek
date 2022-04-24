@@ -260,18 +260,14 @@ workflow SAREK {
     intervals_bed_combined_gz_tbi = PREPARE_INTERVALS.out.intervals_combined_bed_gz_tbi.collect()   // one file containing all intervals interval.bed.gz/.tbi file
     intervals_bed_combined_gz     = intervals_bed_combined_gz_tbi.map{ bed, tbi -> [bed]}.collect() // one file containing all intervals interval.bed.gz file
 
-    intervals                     = PREPARE_INTERVALS.out.intervals_bed.collect()    // multiple interval.bed files, divided by useful intervals for scatter/gather
-                                        .map{ it ->
-                                                [it, it.size()]                      // Adding number of intervals as elements
-                                        }.transpose()                                // Transpose to [interval1, num_intervals], [interval2, num_intervals]
+    intervals                     = PREPARE_INTERVALS.out.intervals_bed            // multiple interval.bed files, divided by useful intervals for scatter/gather
+    intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi     // multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
+    // num_intervals = PREPARE_INTERVALS.out.intervals_bed.collect().size()
 
-    intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi       // multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
-                                        //.map{ bed, tbi ->
-                                        //        [bed,tbi, bed.size()]                      // Adding number of intervals as elements
-                                        //}.transpose()                                      // Transpose to [bed1,tbi1, num_intervals], [bed2,tbi2, num_intervals]
-    intervals_bed_gz_tbi.view()
+    // println num_intervals
+    //intervals_bed_gz_tbi.view()
     //TODO this also needs fixing
-    intervals_for_preprocessing   = (!params.wes || params.no_intervals) ? [] : PREPARE_INTERVALS.out.intervals_bed //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
+    intervals_for_preprocessing   = [] // Somehitng is not right: the subworkflow expects a combined intervals file I believe (!params.wes || params.no_intervals) ? [] : PREPARE_INTERVALS.out.intervals_bed //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
     // TODO: needs to figure something out when intervals are made out of the fasta_fai file
     //num_intervals                 =  !params.no_intervals ? (params.intervals ? count_intervals(file(params.intervals)) : 1) : 1
     //intervals_for_preprocessing.view()
@@ -477,18 +473,18 @@ workflow SAREK {
             ch_table_bqsr_spark    = Channel.empty()
 
             if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
-            PREPARE_RECALIBRATION_SPARK(ch_cram_for_prepare_recalibration,
-                dict,
-                fasta,
-                fasta_fai,
-                intervals,
-                known_sites,
-                known_sites_tbi)
+            // PREPARE_RECALIBRATION_SPARK(ch_cram_for_prepare_recalibration,
+            //     dict,
+            //     fasta,
+            //     fasta_fai,
+            //     intervals,
+            //     known_sites,
+            //     known_sites_tbi)
 
-                ch_table_bqsr_spark = PREPARE_RECALIBRATION_SPARK.out.table_bqsr
+            //     ch_table_bqsr_spark = PREPARE_RECALIBRATION_SPARK.out.table_bqsr
 
-                // Gather used softwares versions
-                ch_versions = ch_versions.mix(PREPARE_RECALIBRATION_SPARK.out.versions)
+            //     // Gather used softwares versions
+            //     ch_versions = ch_versions.mix(PREPARE_RECALIBRATION_SPARK.out.versions)
             } else {
             PREPARE_RECALIBRATION(ch_cram_for_prepare_recalibration,
                 dict,
@@ -527,21 +523,22 @@ workflow SAREK {
             ch_cram_variant_calling_spark    = Channel.empty()
 
             if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
-                RECALIBRATE_SPARK(ch_cram_applybqsr,
-                    dict,
-                    fasta,
-                    fasta_fai,
-                    intervals)
 
-                ch_cram_variant_calling_spark = RECALIBRATE_SPARK.out.cram
+                println "recal spark"
+                // RECALIBRATE_SPARK(ch_cram_applybqsr,
+                //     dict,
+                //     fasta,
+                //     fasta_fai,
+                //     intervals)
 
-                // Gather used softwares versions
-                ch_versions = ch_versions.mix(RECALIBRATE_SPARK.out.versions)
+                // ch_cram_variant_calling_spark = RECALIBRATE_SPARK.out.cram
+
+                // // Gather used softwares versions
+                // ch_versions = ch_versions.mix(RECALIBRATE_SPARK.out.versions)
 
             } else {
 
                 println "recal"
-                ch_cram_for_prepare_recalibration.view()
                 RECALIBRATE(ch_cram_applybqsr,
                     dict,
                     fasta,
@@ -635,8 +632,7 @@ workflow SAREK {
     //         intervals,
     //         intervals_bed_gz_tbi,
     //         intervals_bed_combined_gz_tbi,
-    //         intervals_bed_combined_gz,
-    //         num_intervals)
+    //         intervals_bed_combined_gz)
     //         // params.joint_germline)
 
     //     // TUMOR ONLY VARIANT CALLING

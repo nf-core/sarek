@@ -71,16 +71,19 @@ workflow PREPARE_INTERVALS {
         }
 
         // Create bed.gz and bed.gz.tbi for each interval file. They are split by region (see above)
-        tabix_in = ch_intervals.map{it -> [[id:it.baseName], it] }
+        tabix_in = ch_intervals.collect().map{ it -> [it, it.size()]}.transpose().map{bed, size -> [[id:bed.baseName, num_intervals: size], bed] }
         TABIX_BGZIPTABIX_INTERVAL_SPLIT(tabix_in)
-        ch_intervals_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi] }
+        ch_intervals_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi, meta.num_intervals] }
         ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.versions)
     }
 
+    ch_intervals_out = ch_intervals.collect().map{ it ->
+                                   [it, it.size()]                      // Adding number of intervals as elements
+                                   }.transpose()
 
     emit:
-        intervals_bed                    = ch_intervals                     // path: intervals.bed                        [intervals split for parallel execution]
-        intervals_bed_gz_tbi             = ch_intervals_bed_gz_tbi          // path: target.bed.gz, target.bed.gz.tbi     [intervals split for parallel execution]
+        intervals_bed                    = ch_intervals_out                 // path: intervals.bed, num_intervals                        [intervals split for parallel execution]
+        intervals_bed_gz_tbi             = ch_intervals_bed_gz_tbi          // path: target.bed.gz, target.bed.gz.tbi, num_intervals     [intervals split for parallel execution]
         intervals_combined_bed_gz_tbi    = ch_intervals_combined_bed_gz_tbi // path: interval.bed.gz, interval.bed.gz.tbi [all intervals in one file]
         versions                         = ch_versions                      // channel: [ versions.yml ]
 }

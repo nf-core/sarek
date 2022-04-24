@@ -38,7 +38,7 @@ workflow GERMLINE_VARIANT_CALLING {
 
     // Remap channel with intervals
     cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
-        .map{ meta, cram, crai, intervals ->
+        .map{ meta, cram, crai, intervals, num_intervals ->
             sample = meta.sample
             //new_intervals = num_intervals > 1 ? intervals : []
             new_intervals = intervals.baseName != "no_intervals" ? intervals : []

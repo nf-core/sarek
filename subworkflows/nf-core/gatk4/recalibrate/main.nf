@@ -27,21 +27,23 @@ workflow RECALIBRATE {
             [new_meta, cram, crai, recal, intervals_new]
         }
 
-    cram.view()
-    intervals.view()
-    cram_intervals.view()
     // Run Applybqsr
     APPLYBQSR(cram_intervals, fasta, fasta_fai, dict)
 
     // STEP 4.5: MERGING AND INDEXING THE RECALIBRATED BAM FILES
     MERGE_INDEX_CRAM(APPLYBQSR.out.cram, fasta)
 
+    ch_cram_recal_out = MERGE_INDEX_CRAM.out.cram_crai.map{ meta, cram, crai ->
+                            new_meta = meta.clone()
+                            new_meta.remove('num_intervals')
+                            [new_meta, cram, crai]
+                        }
+
     // Gather versions of all tools used
     ch_versions = ch_versions.mix(APPLYBQSR.out.versions)
     ch_versions = ch_versions.mix(MERGE_INDEX_CRAM.out.versions)
 
     emit:
-        cram     = MERGE_INDEX_CRAM.out.cram_crai
-
+        cram     = ch_cram_recal_out
         versions = ch_versions // channel: [ versions.yml ]
 }
