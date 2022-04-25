@@ -1,5 +1,5 @@
 //There is a -L option to only output alignments in interval, might be an option for exons/panel data?
-process SAMTOOLS_VIEWINDEX {
+process SAMTOOLS_BAMTOCRAM {
     tag "$meta.id"
     label 'process_medium'
 
@@ -11,12 +11,11 @@ process SAMTOOLS_VIEWINDEX {
     input:
     tuple val(meta), path(input), path(index)
     path  fasta
-    path  fasta_fai
+    path  fai
 
     output:
-    tuple val(meta), path("*.bam"), path("*.bai")  , optional: true, emit: bam_bai
-    tuple val(meta), path("*.cram"), path("*.crai"), optional: true, emit: cram_crai
-    path  "versions.yml"                                           , emit: versions
+    tuple val(meta), path("*.cram"), path("*.crai"), emit: cram_crai
+    path  "versions.yml"                           , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -24,9 +23,8 @@ process SAMTOOLS_VIEWINDEX {
     script:
     def args = task.ext.args  ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def reference_command = fasta ? "--reference ${fasta} -C" : ""
     """
-    samtools view --threads ${task.cpus-1} ${reference_command} $args $input > ${prefix}.cram
+    samtools view --threads ${task.cpus} --reference ${fasta} -C $args $input > ${prefix}.cram
     samtools index -@${task.cpus} ${prefix}.cram
 
     cat <<-END_VERSIONS > versions.yml
