@@ -261,11 +261,15 @@ workflow SAREK {
     intervals_bed_combined_gz     = intervals_bed_combined_gz_tbi.map{ bed, tbi -> [bed]}.collect() // one file containing all intervals interval.bed.gz file
 
     intervals                     = PREPARE_INTERVALS.out.intervals_bed            // multiple interval.bed files, divided by useful intervals for scatter/gather
-    intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi     // multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
+    intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi.toList().map{
+                                        it ->
+                                   [it, it.size()]                      // Adding number of intervals as elements
+                                   }.transpose()
+    // multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
     // num_intervals = PREPARE_INTERVALS.out.intervals_bed.collect().size()
 
     // println num_intervals
-    //intervals_bed_gz_tbi.view()
+    intervals_bed_gz_tbi.view()
     //TODO this also needs fixing
     intervals_for_preprocessing   = [] // Somehitng is not right: the subworkflow expects a combined intervals file I believe (!params.wes || params.no_intervals) ? [] : PREPARE_INTERVALS.out.intervals_bed //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
     // TODO: needs to figure something out when intervals are made out of the fasta_fai file
