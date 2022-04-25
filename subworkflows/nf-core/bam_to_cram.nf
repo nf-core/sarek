@@ -12,7 +12,7 @@ workflow BAM_TO_CRAM {
     take:
         bam_indexed                   // channel: [mandatory] meta, bam, bai
         fasta                         // channel: [mandatory] fasta
-        fasta_fai                     // channel: [mandatory] fasta_fai
+        fai                           // channel: [mandatory] fai
         intervals_combined_bed_gz_tbi // channel: [optional]  intervals_bed.gz, intervals_bed.gz.tbi
 
     main:
@@ -23,7 +23,7 @@ workflow BAM_TO_CRAM {
     bam_no_index = bam_indexed.map{ meta, bam, bai -> [meta, bam] }
 
     // Convert bam input to cram
-    SAMTOOLS_BAMTOCRAM(bam_indexed, fasta)
+    SAMTOOLS_BAMTOCRAM(bam_indexed, fasta, fai)
 
     // Reports on bam input
     DEEPTOOLS_BAMCOVERAGE(bam_indexed)
