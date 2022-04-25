@@ -260,20 +260,21 @@
                 },
                 "cf_contamination": {
                     "type": "number",
+                    "default": 0,
                     "fa_icon": "fas fa-wrench",
                     "description": "Design known contamination value for Control-FREEC",
                     "hidden": true
                 },
                 "cf_minqual": {
-                    "type": "string",
-                    "default": "0",
+                    "type": "number",
+                    "default": 0,
                     "fa_icon": "fas fa-greater-than",
                     "hidden": true,
                     "description": "Minimal sequencing quality for a position to be considered in BAF analysis"
                 },
                 "cf_mincov": {
-                    "type": "string",
-                    "default": "0",
+                    "type": "number",
+                    "default": 0,
                     "fa_icon": "fas fa-align-center",
                     "hidden": true,
                     "description": "Minimal read coverage for a position to be considered in BAF analysis"
