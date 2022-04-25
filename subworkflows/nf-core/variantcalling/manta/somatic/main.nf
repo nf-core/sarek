@@ -103,17 +103,26 @@ workflow RUN_MANTA_SOMATIC {
         manta_candidate_small_indels_vcf.no_intervals,
         manta_diploid_sv_vcf.no_intervals,
         manta_somatic_sv_vcf.no_intervals
-    )
+    ).map{ meta, vcf ->
+        meta.variantcaller = "Manta"
+        [meta, vcf]
+    }
 
     manta_candidate_small_indels_vcf = Channel.empty().mix(
         CONCAT_MANTA_SMALL_INDELS.out.vcf,
         manta_candidate_small_indels_vcf.no_intervals
-    )
+    ).map{ meta, vcf ->
+        meta.variantcaller = "Manta"
+        [meta, vcf]
+    }
 
     manta_candidate_small_indels_vcf_tbi = Channel.empty().mix(
         CONCAT_MANTA_SMALL_INDELS.out.tbi,
         manta_candidate_small_indels_vcf_tbi.no_intervals
-    )
+    ).map{ meta, vcf ->
+        meta.variantcaller = "Manta"
+        [meta, vcf]
+    }
 
     ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SV.out.versions)
     ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SMALL_INDELS.out.versions)

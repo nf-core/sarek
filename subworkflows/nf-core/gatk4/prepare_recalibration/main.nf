@@ -25,22 +25,23 @@ workflow PREPARE_RECALIBRATION {
         .map{ meta, cram, crai, intervals ->
             new_meta = meta.clone()
             new_meta.id = num_intervals == 1 ? meta.sample : meta.sample + "_" + intervals.baseName
-            [new_meta, cram, crai, intervals]
+            intervals_new = params.no_intervals ? [] : intervals
+            [new_meta, cram, crai, intervals_new]
         }
 
     // Run Baserecalibrator
     BASERECALIBRATOR(cram_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
 
     // Figuring out if there is one or more table(s) from the same sample
-    ch_table = BASERECALIBRATOR.out.table
+    table_to_merge = BASERECALIBRATOR.out.table
         .map{ meta, table ->
                 meta.id = meta.sample
                 [meta, table]
         }.groupTuple(size: num_intervals)
     .branch{
-        single:   it[1].size() == 1
-        multiple: it[1].size() > 1
-    }.set{table_to_merge}
+        single:   num_intervals == 1
+        multiple: num_intervals > 1
+    }
 
     // STEP 3.5: MERGING RECALIBRATION TABLES
 

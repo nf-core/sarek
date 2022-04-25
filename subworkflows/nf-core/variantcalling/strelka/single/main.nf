@@ -58,10 +58,14 @@ workflow RUN_STRELKA_SINGLE {
 
     // Mix output channels for "no intervals" and "with intervals" results
     strelka_vcf = Channel.empty().mix(
-        CONCAT_STRELKA.out.vcf,
-        CONCAT_STRELKA_GENOME.out.vcf,
-        strelka_genome_vcf.no_intervals,
-        strelka_vcf.no_intervals)
+                    CONCAT_STRELKA.out.vcf,
+                    CONCAT_STRELKA_GENOME.out.vcf,
+                    strelka_genome_vcf.no_intervals,
+                    strelka_vcf.no_intervals)
+                .map{ meta, vcf ->
+                    meta.variantcaller = "Strelka"
+                    [meta, vcf]
+                }
 
     ch_versions = ch_versions.mix(BGZIP_VC_STRELKA.out.versions)
     ch_versions = ch_versions.mix(BGZIP_VC_STRELKA_GENOME.out.versions)

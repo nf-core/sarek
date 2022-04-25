@@ -183,6 +183,8 @@ include { TUMOR_ONLY_VARIANT_CALLING                     } from '../subworkflows
 // Variant calling on tumor/normal pair
 include { PAIR_VARIANT_CALLING                           } from '../subworkflows/local/pair_variant_calling'
 
+include { VCF_QC                                         } from '../subworkflows/nf-core/vcf_qc'
+
 // Annotation
 include { ANNOTATE                                       } from '../subworkflows/local/annotate'
 
@@ -198,9 +200,9 @@ include { MULTIQC                                        } from '../modules/nf-c
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+ch_multiqc_config        = Channel.fromPath(file("$projectDir/assets/multiqc_config.yml", checkIfExists: true))
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
-
+ch_sarek_logo            = Channel.fromPath(file("$projectDir/assets/nf-core-sarek_logo_light.png", checkIfExists: true))
 def multiqc_report = []
 
 /*
@@ -306,7 +308,9 @@ workflow SAREK {
 
             ch_reads = RUN_TRIMGALORE.out.reads
 
-            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
+            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]),
+                                        RUN_TRIMGALORE.out.trim_html.collect{it[1]}.ifEmpty([]),
+                                        RUN_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]))
             ch_versions = ch_versions.mix(RUN_TRIMGALORE.out.versions)
         } else {
             ch_reads = ch_input_fastq
@@ -329,7 +333,7 @@ workflow SAREK {
             ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ_UMI.out.versions)
             ch_versions = ch_versions.mix(CREATE_UMI_CONSENSUS.out.versions)
         } else {
-            ch_input_sample_to_split = ch_input_fastq
+            ch_input_sample_to_split = ch_reads
         }
 
         // SPLIT OF FASTQ FILES WITH SEQKIT_SPLIT2
@@ -405,7 +409,7 @@ workflow SAREK {
             ch_cram_no_markduplicates = BAM_TO_CRAM.out.cram
 
             // Gather QC reports
-            ch_reports  = ch_reports.mix(BAM_TO_CRAM.out.qc)
+            ch_reports  = ch_reports.mix(BAM_TO_CRAM.out.qc.collect{it[1]}.ifEmpty([]))
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions)
@@ -502,6 +506,8 @@ workflow SAREK {
 
             // Create CSV to restart from this step
             PREPARE_RECALIBRATION_CSV(ch_table_bqsr)
+
+            ch_reports  = ch_reports.mix(ch_table_bqsr.map{ meta, table -> table})
         }
     }
 
@@ -673,7 +679,7 @@ workflow SAREK {
             chr_files,
             mappability)
 
-        // Gather vcf files for annotation
+        // Gather vcf files for annotation and QC
         vcf_to_annotate = Channel.empty()
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.deepvariant_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.freebayes_vcf)
@@ -693,6 +699,15 @@ workflow SAREK {
         ch_versions = ch_versions.mix(PAIR_VARIANT_CALLING.out.versions)
         ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
 
+        //QC
+        VCF_QC(vcf_to_annotate, intervals_bed_combined)
+
+        ch_versions = ch_versions.mix(VCF_QC.out.versions)
+        ch_reports  = ch_reports.mix(VCF_QC.out.bcftools_stats.collect{it[1]}.ifEmpty([]))
+        ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_tstv_counts.collect{it[1]}.ifEmpty([]))
+        ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_tstv_qual.collect{it[1]}.ifEmpty([]))
+        ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_filter_summary.collect{it[1]}.ifEmpty([]))
+
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = ch_input_sample
 
@@ -709,31 +724,32 @@ workflow SAREK {
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(ANNOTATE.out.versions)
+            ch_reports  = ch_reports.mix(ANNOTATE.out.reports)
+
+            ch_reports.view()
         }
     }
 
     ch_version_yaml = Channel.empty()
-        if (!(params.skip_tools && params.skip_tools.contains('versions'))) {
+    if (!(params.skip_tools && params.skip_tools.contains('versions'))) {
         CUSTOM_DUMPSOFTWAREVERSIONS(ch_versions.unique().collectFile(name: 'collated_versions.yml'))
         ch_version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
     }
 
-    // workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
-    // ch_workflow_summary = Channel.value(workflow_summary)
+    if (!(params.skip_tools && params.skip_tools.contains('multiqc'))) {
+        workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
+        ch_workflow_summary = Channel.value(workflow_summary)
 
-    // ch_multiqc_files = Channel.empty()
-    // ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_config)
-    // ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
-    // ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    // ch_multiqc_files = ch_multiqc_files.mix(ch_version_yaml)
-    // ch_multiqc_files = ch_multiqc_files.mix(ch_reports)
+        ch_multiqc_files =  Channel.empty().mix(ch_version_yaml,
+                                            ch_multiqc_custom_config.collect().ifEmpty([]),
+                                            ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
+                                            ch_reports.collect(),
+                                            ch_multiqc_config,
+                                            ch_sarek_logo)
 
-    // multiqc_report = Channel.empty()
-    // if (!(params.skip_tools && params.skip_tools.contains('multiqc'))) {
-    //     MULTIQC(ch_multiqc_files.collect())
-    //     multiqc_report = MULTIQC.out.report.toList()
-
-    // }
+        MULTIQC(ch_multiqc_files.collect())
+        multiqc_report = MULTIQC.out.report.toList()
+    }
 }
 
 /*
@@ -841,7 +857,8 @@ def extract_csv(csv_file) {
         } else if (row.vcf) {
             meta.id = meta.sample
             def vcf = file(row.vcf, checkIfExists: true)
-            meta.data_type  = "vcf"
+            meta.data_type     = "vcf"
+            meta.variantcaller = ""
             return [meta, vcf]
         } else {
             log.warn "Missing or unknown field in csv file header"
